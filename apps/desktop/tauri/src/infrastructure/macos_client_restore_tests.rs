@@ -359,6 +359,55 @@ fn partial_archive_can_roll_back_without_learning_new_file_identities() {
 }
 
 #[test]
+fn rearmed_logical_plan_keeps_exact_native_objects_and_immutable_rollback_history() {
+    let f = Fixture::new();
+    let parent = f.prepare();
+    assert!(parent
+        .apply_fixture(Decision::Complete, &|p| if p == "after_native" {
+            Err(denied("interrupt"))
+        } else {
+            Ok(())
+        })
+        .is_err());
+    parent
+        .apply_fixture(Decision::Rollback, &|_| Ok(()))
+        .unwrap();
+    let terminal = f
+        .originals
+        .directory
+        .path()
+        .join(format!("restore-{}-outcome.json", parent.id()));
+    let original_terminal = fs::read(&terminal).unwrap();
+    let before = Capture::read(&f.originals.client).unwrap();
+    let orphan = parent.rearm_rolled_back().unwrap();
+    let next = parent.rearm_rolled_back().unwrap();
+    assert_ne!(next.id(), parent.id());
+    assert_ne!(next.id(), orphan.id());
+    assert_eq!(next.object_id(), parent.id());
+    assert_eq!(Capture::read(&f.originals.client).unwrap(), before);
+    assert!(next.review_recovery().unwrap().terminal.is_none());
+    next.require_parent(&session_index::RestorePlan {
+        id: parent.id().into(),
+        sha256: parent.sha256().into(),
+    })
+    .unwrap();
+    assert!(next
+        .require_parent(&session_index::RestorePlan {
+            id: orphan.id().into(),
+            sha256: orphan.sha256().into()
+        })
+        .is_err());
+    next.apply_fixture(Decision::Complete, &|_| Ok(())).unwrap();
+    assert!(f.matches(Phase::Original));
+    assert_eq!(fs::read(&terminal).unwrap(), original_terminal);
+    assert!(next.rearm_rolled_back().is_err());
+    assert!(
+        orphan.review_recovery().is_err(),
+        "unindexed plan is never adopted after objects change"
+    );
+}
+
+#[test]
 fn expiration_or_native_authority_loss_never_creates_a_terminal_success() {
     let f = Fixture::new();
     let pending = f.prepare();
@@ -716,6 +765,21 @@ fn abrupt_exit_after_conflict_receipt_preserves_unknown_bytes_and_cannot_resume_
         let root = PathBuf::from(root);
         let f = Fixture::at(root.clone());
         let pending = f.prepare();
+        let pending = if std::env::var_os("OCXD024_RESTORE_REARM").is_some() {
+            assert!(pending
+                .apply_fixture(Decision::Complete, &|p| if p == "after_native" {
+                    Err(denied("first interruption"))
+                } else {
+                    Ok(())
+                })
+                .is_err());
+            pending
+                .apply_fixture(Decision::Rollback, &|_| Ok(()))
+                .unwrap();
+            pending.rearm_rolled_back().unwrap()
+        } else {
+            pending
+        };
         let phases = f.originals.known.lock().unwrap().clone();
         let note = json!({"attempt":f.originals.attempt(),"original":f.originals.original_sha256(),"phases":phases,"plan":pending.id(),"planSha256":pending.sha256()});
         let mut receipt = File::create(root.join("independent-receipt.json")).unwrap();
@@ -845,58 +909,65 @@ fn actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_know
         ("archive", 3),
         ("terminal", 1),
     ] {
-        let temp = tempfile::tempdir().unwrap();
-        let root = temp.path().canonicalize().unwrap();
-        let child=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::restore::tests::actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_known_generations","--nocapture"]).env(CHILD,&root).env("OCXD024_RESTORE_POINT",point).env("OCXD024_RESTORE_NTH",nth.to_string()).output().unwrap();
-        assert_eq!(
-            child.status.code(),
-            Some(91),
-            "{point}/{nth}: {}",
-            String::from_utf8_lossy(&child.stderr)
-        );
-        let n: serde_json::Value =
-            serde_json::from_slice(&fs::read(root.join("independent-receipt.json")).unwrap())
-                .unwrap();
-        let phases = [Phase::Ready, Phase::PreStop, Phase::Stopped]
-            .into_iter()
-            .enumerate()
-            .map(|(i, p)| (p, n["phases"][i + 1].as_str().unwrap().to_owned()))
-            .collect::<Vec<_>>();
-        let originals = Originals::open(
-            &root.join("desktop"),
-            &root.join("codex 中文 space"),
-            n["attempt"].as_str().unwrap(),
-            n["original"].as_str().unwrap(),
-            &phases,
-        )
-        .unwrap();
-        let pending = Pending::open(
-            &originals,
-            n["plan"].as_str().unwrap(),
-            n["planSha256"].as_str().unwrap(),
-        )
-        .unwrap();
-        let review = pending.review_recovery().unwrap();
-        assert_eq!(
-            review.terminal,
-            (point == "terminal").then_some(Decision::Complete)
-        );
-        assert_eq!(
-            pending.review_recovery().unwrap().fingerprint,
-            review.fingerprint
-        );
-        pending
-            .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
+        for rearmed in [false, true] {
+            let temp = tempfile::tempdir().unwrap();
+            let root = temp.path().canonicalize().unwrap();
+            let mut command = std::process::Command::new(std::env::current_exe().unwrap());
+            command.args(["--exact","infrastructure::macos_client_originals::restore::tests::actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_known_generations","--nocapture"]).env(CHILD,&root).env("OCXD024_RESTORE_POINT",point).env("OCXD024_RESTORE_NTH",nth.to_string());
+            if rearmed {
+                command.env("OCXD024_RESTORE_REARM", "1");
+            }
+            let child = command.output().unwrap();
+            assert_eq!(
+                child.status.code(),
+                Some(91),
+                "{point}/{nth}/rearmed={rearmed}: {}",
+                String::from_utf8_lossy(&child.stderr)
+            );
+            let n: serde_json::Value =
+                serde_json::from_slice(&fs::read(root.join("independent-receipt.json")).unwrap())
+                    .unwrap();
+            let phases = [Phase::Ready, Phase::PreStop, Phase::Stopped]
+                .into_iter()
+                .enumerate()
+                .map(|(i, p)| (p, n["phases"][i + 1].as_str().unwrap().to_owned()))
+                .collect::<Vec<_>>();
+            let originals = Originals::open(
+                &root.join("desktop"),
+                &root.join("codex 中文 space"),
+                n["attempt"].as_str().unwrap(),
+                n["original"].as_str().unwrap(),
+                &phases,
+            )
             .unwrap();
-        let expected = originals.read(Phase::Original).unwrap();
-        let actual = Capture::read(&originals.client).unwrap();
-        assert!(
-            actual
-                .images
-                .iter()
-                .zip(&expected.images)
-                .all(|(a, b)| original_content(a, b)),
-            "{point}/{nth}"
-        );
+            let pending = Pending::open(
+                &originals,
+                n["plan"].as_str().unwrap(),
+                n["planSha256"].as_str().unwrap(),
+            )
+            .unwrap();
+            let review = pending.review_recovery().unwrap();
+            assert_eq!(
+                review.terminal,
+                (point == "terminal").then_some(Decision::Complete)
+            );
+            assert_eq!(
+                pending.review_recovery().unwrap().fingerprint,
+                review.fingerprint
+            );
+            pending
+                .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
+                .unwrap();
+            let expected = originals.read(Phase::Original).unwrap();
+            let actual = Capture::read(&originals.client).unwrap();
+            assert!(
+                actual
+                    .images
+                    .iter()
+                    .zip(&expected.images)
+                    .all(|(a, b)| original_content(a, b)),
+                "{point}/{nth}"
+            );
+        }
     }
 }

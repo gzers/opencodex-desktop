@@ -112,24 +112,36 @@ pub(super) fn project(
         preview.original_evidence = Evidence::Verified;
         preview.phase_count = refs.phases.len();
         preview.attempt_id = Some(refs.attempt.clone());
+        let mut receipt_name = "completion-readback.json".to_string();
         if let Some(plan) = &head.restore_plan {
             // Immutable plan admission here. RestorePrepared gets its full
             // current-object review in finalization_fingerprint below. Do not
             // revalidate live artifacts after a registered Restored session:
             // legitimate later user edits are not interrupted recovery.
-            restore::Pending::open(&originals, &plan.id, &plan.sha256)?;
+            let pending = restore::Pending::open(&originals, &plan.id, &plan.sha256)?;
+            receipt_name = pending.readback_name(if head.state == State::RestoreRolledBack {
+                restore::Decision::Rollback
+            } else {
+                restore::Decision::Complete
+            });
             preview.plan_evidence = Evidence::Verified;
         }
-        match capture_file(&originals.directory, "completion-readback.json", MAX_FRAME)? {
+        match capture_file(&originals.directory, &receipt_name, MAX_FRAME)? {
             Image::Absent => {}
             Image::File { protection, .. } => {
                 require_private(&protection, false)?;
-                preview.completion_evidence = if head.state == State::Restored {
-                    completion::verify_registered(data, &client, &context.working_directory, head)?;
-                    Evidence::Verified
-                } else {
-                    Evidence::Unregistered
-                };
+                preview.completion_evidence =
+                    if matches!(head.state, State::Restored | State::RestoreRolledBack) {
+                        completion::verify_registered(
+                            data,
+                            &client,
+                            &context.working_directory,
+                            head,
+                        )?;
+                        Evidence::Verified
+                    } else {
+                        Evidence::Unregistered
+                    };
             }
         }
         if let Some(fingerprint) = originals.finalization_fingerprint(head)? {

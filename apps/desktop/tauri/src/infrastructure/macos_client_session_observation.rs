@@ -176,7 +176,10 @@ pub(super) fn inspect_map<T>(
         return Err(denied("observation HOME or directory generation differs"));
     }
     let result = read_head(&connection)?;
-    if let Some(head) = result.as_ref().filter(|head| head.state == State::Restored) {
+    if let Some(head) = result
+        .as_ref()
+        .filter(|head| matches!(head.state, State::Restored | State::RestoreRolledBack))
+    {
         completion::verify_registered(
             data.path(),
             client.path(),

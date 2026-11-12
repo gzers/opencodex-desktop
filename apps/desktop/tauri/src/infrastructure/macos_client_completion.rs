@@ -116,6 +116,7 @@ struct Receipt {
 /// Private native issuance only, nonserializable. Index closure must consume
 /// its own independently bound reference, not an arbitrary `completed` boolean.
 pub struct ReadbackProof {
+    decision: restore::Decision,
     attempt: String,
     sha256: String,
     references: session::References,
@@ -125,6 +126,9 @@ pub struct ReadbackProof {
     deadline: Instant,
 }
 impl ReadbackProof {
+    pub(super) fn decision(&self) -> restore::Decision {
+        self.decision
+    }
     pub fn sha256(&self) -> &str {
         &self.sha256
     }
@@ -159,6 +163,11 @@ pub(super) fn verify_registered(
     profile: &Path,
     head: &session_index::Head,
 ) -> io::Result<()> {
+    let decision = match head.state {
+        session_index::State::Restored => restore::Decision::Complete,
+        session_index::State::RestoreRolledBack => restore::Decision::Rollback,
+        _ => return Err(denied("registered readback is not a terminal state")),
+    };
     let refs = head
         .references
         .as_ref()
@@ -181,9 +190,11 @@ pub(super) fn verify_registered(
     )?;
     session::verify_closed_reference_files(&originals, refs)
         .map_err(|_| denied("closed session scope/live reference changed"))?;
+    let pending = restore::Pending::open(&originals, &plan.id, &plan.sha256)?;
+    let receipt_name = pending.readback_name(decision);
     let Image::File {
         bytes, protection, ..
-    } = capture_file(&originals.directory, "completion-readback.json", MAX_FRAME)?
+    } = capture_file(&originals.directory, &receipt_name, MAX_FRAME)?
     else {
         return Err(denied("registered completion receipt absent"));
     };
@@ -214,30 +225,55 @@ pub(super) fn verify_registered(
     if digest(&outcome) != receipt.outcome_sha256
         || outcome
             != encode(
-                &serde_json::json!({"schemaVersion":1,"planSha256":plan.sha256,"decision":"complete"}),
+                &serde_json::json!({"schemaVersion":1,"planSha256":plan.sha256,"decision":decision}),
             )?
     {
         return Err(denied("completion outcome not original plan"));
     }
-    restore::Pending::open(&originals, &plan.id, &plan.sha256)?;
     Ok(())
 }
 impl Originals {
+    pub(super) fn rearm_fingerprint(
+        &self,
+        head: &session_index::Head,
+        leased: bool,
+    ) -> io::Result<Option<String>> {
+        if head.state != session_index::State::RestoreRolledBack {
+            return Ok(None);
+        }
+        verify_registered(&self.data.path, &self.client.path, &self.profile.path, head)?;
+        Ok(self
+            .recovery_fingerprint(head, leased, restore::Decision::Rollback)?
+            .map(|fp| digest(format!("rearm:{fp}").as_bytes())))
+    }
     /// Current partial-plan confirmation, never historical Stop authority.
     pub(super) fn continuation_fingerprint(
         &self,
         head: &session_index::Head,
         leased: bool,
     ) -> io::Result<Option<String>> {
-        if head.state != session_index::State::RestorePrepared {
+        self.recovery_fingerprint(head, leased, restore::Decision::Complete)
+    }
+    pub(super) fn recovery_fingerprint(
+        &self,
+        head: &session_index::Head,
+        leased: bool,
+        decision: restore::Decision,
+    ) -> io::Result<Option<String>> {
+        if head.state != session_index::State::RestorePrepared
+            && head.state != session_index::State::RestoreRolledBack
+        {
             return Ok(None);
         }
         let plan = head
             .restore_plan
             .as_ref()
             .ok_or_else(|| denied("recovery plan absent"))?;
-        let review = restore::Pending::open(self, &plan.id, &plan.sha256)?.review_recovery()?;
-        if review.terminal.is_some() {
+        let pending = restore::Pending::open(self, &plan.id, &plan.sha256)?;
+        let review = pending.review_recovery()?;
+        if review.terminal.is_some()
+            && !(decision == restore::Decision::Rollback && review.terminal == Some(decision))
+        {
             return Ok(None);
         }
         if capture_file(&self.directory, "completion-readback.json", MAX_FRAME)? != Image::Absent {
@@ -249,7 +285,7 @@ impl Originals {
         let grok = GrokSnapshot::read(&self.profile)?;
         if !original
             .tree
-            .recovery_remainder_matches(&codex, &plan.id, leased)
+            .recovery_remainder_matches(&codex, pending.object_id(), leased)
             || !original.grok.restored_matches(&grok)
         {
             return Ok(None);
@@ -268,6 +304,7 @@ impl Originals {
         Ok(Some(digest(&encode(&(
             head,
             review.fingerprint,
+            decision,
             self.data.identity(),
             self.client.identity(),
             self.profile.identity(),
@@ -327,33 +364,33 @@ impl Originals {
         require_private(&protection, false)?;
         let codex_sha = digest(&encode(&codex)?);
         let grok_sha = digest(&encode(&grok)?);
-        let receipt_hash =
-            match capture_file(&self.directory, "completion-readback.json", MAX_FRAME)? {
-                Image::Absent => None,
-                Image::File {
-                    bytes, protection, ..
-                } => {
-                    require_private(&protection, false)?;
-                    let receipt: Receipt = serde_json::from_value(
-                        parse_strict_json_v2(&bytes)
-                            .map_err(|_| denied("invalid pending completion JSON"))?,
-                    )
-                    .map_err(|_| denied("invalid pending completion fields"))?;
-                    if receipt.schema_version != 1
-                        || receipt.references != *refs
-                        || receipt.plan != *plan
-                        || receipt.outcome_sha256 != digest(&outcome)
-                        || receipt.codex_tree_sha256 != codex_sha
-                        || receipt.grok_tree_sha256 != grok_sha
-                        || receipt.stable_locks != stable
-                    {
-                        return Err(denied(
-                            "pending completion differs; not overwritten or adopted",
-                        ));
-                    }
-                    Some(digest(&bytes))
+        let receipt_name = pending.readback_name(restore::Decision::Complete);
+        let receipt_hash = match capture_file(&self.directory, &receipt_name, MAX_FRAME)? {
+            Image::Absent => None,
+            Image::File {
+                bytes, protection, ..
+            } => {
+                require_private(&protection, false)?;
+                let receipt: Receipt = serde_json::from_value(
+                    parse_strict_json_v2(&bytes)
+                        .map_err(|_| denied("invalid pending completion JSON"))?,
+                )
+                .map_err(|_| denied("invalid pending completion fields"))?;
+                if receipt.schema_version != 1
+                    || receipt.references != *refs
+                    || receipt.plan != *plan
+                    || receipt.outcome_sha256 != digest(&outcome)
+                    || receipt.codex_tree_sha256 != codex_sha
+                    || receipt.grok_tree_sha256 != grok_sha
+                    || receipt.stable_locks != stable
+                {
+                    return Err(denied(
+                        "pending completion differs; not overwritten or adopted",
+                    ));
                 }
-            };
+                Some(digest(&bytes))
+            }
+        };
         Ok(Some(digest(&encode(&(
             head,
             self.data.identity(),
@@ -372,7 +409,7 @@ impl Originals {
         plan: session_index::RestorePlan,
         deadline: Instant,
     ) -> io::Result<ReadbackProof> {
-        self.complete_readback_inner(refs, plan, deadline, true)
+        self.complete_readback_inner(refs, plan, deadline, true, restore::Decision::Complete)
     }
     pub(super) fn complete_readback(
         &self,
@@ -380,7 +417,27 @@ impl Originals {
         plan: session_index::RestorePlan,
         deadline: Instant,
     ) -> io::Result<ReadbackProof> {
-        self.complete_readback_inner(references, plan, deadline, false)
+        self.complete_readback_inner(
+            references,
+            plan,
+            deadline,
+            false,
+            restore::Decision::Complete,
+        )
+    }
+    pub(super) fn rollback_readback(
+        &self,
+        references: session::References,
+        plan: session_index::RestorePlan,
+        deadline: Instant,
+    ) -> io::Result<ReadbackProof> {
+        self.complete_readback_inner(
+            references,
+            plan,
+            deadline,
+            true,
+            restore::Decision::Rollback,
+        )
     }
     fn complete_readback_inner(
         &self,
@@ -388,6 +445,7 @@ impl Originals {
         plan: session_index::RestorePlan,
         deadline: Instant,
         reuse_exact_receipt: bool,
+        decision: restore::Decision,
     ) -> io::Result<ReadbackProof> {
         time(deadline)?;
         if references.attempt != self.attempt || references.original_sha256 != self.original_sha256
@@ -396,6 +454,8 @@ impl Originals {
         }
         let original = self.frame(Phase::Original)?.0;
         let stopped = self.frame(Phase::Stopped)?.0;
+        let pending = restore::Pending::open(self, &plan.id, &plan.sha256)?;
+        let receipt_name = pending.readback_name(decision);
         let outcome_name = format!("restore-{}-outcome.json", plan.id);
         let outcome = capture_file(&self.directory, &outcome_name, MAX_FRAME)?;
         let Image::File {
@@ -407,7 +467,7 @@ impl Originals {
         require_private(&protection, false)?;
         if bytes
             != encode(
-                &serde_json::json!({"schemaVersion":1,"planSha256":plan.sha256,"decision":"complete"}),
+                &serde_json::json!({"schemaVersion":1,"planSha256":plan.sha256,"decision":decision}),
             )?
         {
             return Err(denied("artifact outcome does not match independent plan"));
@@ -416,7 +476,17 @@ impl Originals {
         time(deadline)?;
         let grok = GrokSnapshot::read(&self.profile)?;
         time(deadline)?;
-        if !original.tree.restored_matches(&codex, true) || !original.grok.restored_matches(&grok) {
+        let tree_matches = match decision {
+            restore::Decision::Complete => original.tree.restored_matches(&codex, true),
+            restore::Decision::Rollback => {
+                let review = pending.review_recovery()?;
+                review.terminal == Some(restore::Decision::Rollback)
+                    && original
+                        .tree
+                        .recovery_remainder_matches(&codex, pending.object_id(), false)
+            }
+        };
+        if !tree_matches || !original.grok.restored_matches(&grok) {
             return Err(denied(
                 "full client tree original bytes or protection differ",
             ));
@@ -441,10 +511,7 @@ impl Originals {
         prove_released(&self.client, &stable_locks, deadline)?;
         let after = TreeSnapshot::read(&self.client)?;
         time(deadline)?;
-        if !original.tree.restored_matches(&after, true)
-            || !codex.restored_matches(&after, true)
-            || GrokSnapshot::read(&self.profile)? != grok
-        {
+        if !codex.restored_matches(&after, true) || GrokSnapshot::read(&self.profile)? != grok {
             return Err(denied("client tree changed during final lock proof"));
         }
         for (name, expected) in LOCKS.iter().zip(&stable_locks) {
@@ -464,8 +531,8 @@ impl Originals {
         let raw = encode(&receipt)?;
         time(deadline)?;
         if reuse_exact_receipt {
-            match capture_file(&self.directory, "completion-readback.json", MAX_FRAME)? {
-                Image::Absent => create(&self.directory, "completion-readback.json", &raw)?,
+            match capture_file(&self.directory, &receipt_name, MAX_FRAME)? {
+                Image::Absent => create(&self.directory, &receipt_name, &raw)?,
                 Image::File {
                     bytes, protection, ..
                 } => {
@@ -476,13 +543,13 @@ impl Originals {
                 }
             }
         } else {
-            create(&self.directory, "completion-readback.json", &raw)?;
+            create(&self.directory, &receipt_name, &raw)?;
         }
         let Image::File {
             bytes: readback,
             protection,
             ..
-        } = capture_file(&self.directory, "completion-readback.json", MAX_FRAME)?
+        } = capture_file(&self.directory, &receipt_name, MAX_FRAME)?
         else {
             return Err(denied("completion receipt missing"));
         };
@@ -492,6 +559,7 @@ impl Originals {
         }
         time(deadline)?;
         Ok(ReadbackProof {
+            decision,
             attempt: self.attempt.clone(),
             sha256: digest(&raw),
             references: receipt.references,

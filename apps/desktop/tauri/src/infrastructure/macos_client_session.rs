@@ -714,6 +714,41 @@ fn fresh_ready(
     Ok((record.0, before, record.2))
 }
 impl StartupSession {
+    pub(super) fn rearm_fingerprint(
+        &self,
+        head: &session_index::Head,
+        leased: bool,
+    ) -> AppResult<Option<String>> {
+        self.originals
+            .rearm_fingerprint(head, leased)
+            .map_err(error)
+    }
+    pub(super) fn rearm_rolled_back(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        confirmation: &str,
+        lease: &NativeLease,
+        deadline: Instant,
+    ) -> AppResult<(String, String)> {
+        time(deadline)?;
+        lease.require_context(context, &self.originals.client.path)?;
+        if self.rearm_fingerprint(head, true)?.as_deref() != Some(confirmation) {
+            return Err(error(()));
+        }
+        let live = self.live(context)?;
+        let (root, _) = source(context)?;
+        let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)?;
+        let plan = head.restore_plan.as_ref().ok_or_else(|| error(()))?;
+        let parent =
+            restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)?;
+        let pending = parent.rearm_rolled_back().map_err(error)?;
+        lease.require_context(context, &self.originals.client.path)?;
+        owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)?;
+        time(deadline)?;
+        Ok((pending.id().into(), pending.sha256().into()))
+    }
     pub(super) fn continue_interrupted_plan(
         &self,
         context: &ProcessContext,
@@ -722,10 +757,37 @@ impl StartupSession {
         lease: &NativeLease,
         deadline: Instant,
     ) -> AppResult<()> {
+        self.execute_interrupted_plan(
+            context,
+            head,
+            confirmation,
+            lease,
+            deadline,
+            restore::Decision::Complete,
+        )
+    }
+    pub(super) fn recovery_fingerprint(
+        &self,
+        head: &session_index::Head,
+        decision: restore::Decision,
+    ) -> AppResult<Option<String>> {
+        self.originals
+            .recovery_fingerprint(head, false, decision)
+            .map_err(error)
+    }
+    pub(super) fn execute_interrupted_plan(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        confirmation: &str,
+        lease: &NativeLease,
+        deadline: Instant,
+        decision: restore::Decision,
+    ) -> AppResult<()> {
         time(deadline)?;
         if self
             .originals
-            .continuation_fingerprint(head, true)
+            .recovery_fingerprint(head, true, decision)
             .map_err(error)?
             .as_deref()
             != Some(confirmation)
@@ -752,9 +814,7 @@ impl StartupSession {
         let pending =
             restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)?;
         let permit = restore::MutationPermit::from_explicit(authority);
-        pending
-            .apply(restore::Decision::Complete, &permit)
-            .map_err(error)?;
+        pending.apply(decision, &permit).map_err(error)?;
         permit.check(&self.originals).map_err(error)?;
         // The full OS enumeration is a batch-boundary fact. Every native step
         // still rechecks the live native writer lease and exact original
@@ -774,6 +834,15 @@ impl StartupSession {
         head: &session_index::Head,
         deadline: Instant,
     ) -> AppResult<completion::ReadbackProof> {
+        self.explicit_readback(context, head, deadline, restore::Decision::Complete)
+    }
+    pub(super) fn explicit_readback(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        deadline: Instant,
+        decision: restore::Decision,
+    ) -> AppResult<completion::ReadbackProof> {
         time(deadline)?;
         let live = self.live(context)?;
         let (root, _) = source(context)?;
@@ -782,14 +851,13 @@ impl StartupSession {
             owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)
         };
         require_clear()?;
-        let proof = self
-            .originals
-            .complete_readback(
-                head.references.as_ref().ok_or_else(|| error(()))?.clone(),
-                head.restore_plan.as_ref().ok_or_else(|| error(()))?.clone(),
-                deadline,
-            )
-            .map_err(error)?;
+        let refs = head.references.as_ref().ok_or_else(|| error(()))?.clone();
+        let plan = head.restore_plan.as_ref().ok_or_else(|| error(()))?.clone();
+        let proof = match decision {
+            restore::Decision::Complete => self.originals.complete_readback(refs, plan, deadline),
+            restore::Decision::Rollback => self.originals.rollback_readback(refs, plan, deadline),
+        }
+        .map_err(error)?;
         require_clear()?;
         time(deadline)?;
         Ok(proof)

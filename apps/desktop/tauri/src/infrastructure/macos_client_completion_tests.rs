@@ -48,9 +48,17 @@ fn inspect_owned_completion_receipt_without_rewriting_it() {
         &refs.phases,
     )
     .unwrap();
+    let plan = head.restore_plan.as_ref().expect("registered plan");
+    let pending = restore::Pending::open(&originals, &plan.id, &plan.sha256).unwrap();
+    let receipt_name =
+        pending.readback_name(if head.state == session_index::State::RestoreRolledBack {
+            restore::Decision::Rollback
+        } else {
+            restore::Decision::Complete
+        });
     let Image::File {
         bytes, protection, ..
-    } = capture_file(&originals.directory, "completion-readback.json", MAX_FRAME).unwrap()
+    } = capture_file(&originals.directory, &receipt_name, MAX_FRAME).unwrap()
     else {
         panic!("receipt absent");
     };

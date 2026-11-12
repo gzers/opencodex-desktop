@@ -69,6 +69,10 @@ enum Kind {
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct Plan {
+    #[serde(skip)]
+    object_id: String,
+    #[serde(skip)]
+    rearmed: bool,
     schema_version: u32,
     id: String,
     attempt: String,
@@ -76,6 +80,14 @@ struct Plan {
     kinds: [Kind; 3],
     staged: [Option<Identity>; 3],
     evidence: Evidence,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct RearmedPlan {
+    schema_version: u32,
+    id: String,
+    attempt: String,
+    parent: session_index::RestorePlan,
 }
 
 struct Projection {
@@ -333,13 +345,24 @@ fn stage(
     }
 }
 fn read_plan(originals: &Originals, id: &str, expected: &str) -> io::Result<Plan> {
+    originals.frame(Phase::Original)?;
+    read_plan_depth(originals, id, expected, 0)
+}
+fn read_plan_depth(
+    originals: &Originals,
+    id: &str,
+    expected: &str,
+    depth: usize,
+) -> io::Result<Plan> {
+    if depth > 16 {
+        return Err(denied("restore plan lineage exceeds bound"));
+    }
     if uuid::Uuid::parse_str(id)
         .map(|x| x.to_string() != id)
         .unwrap_or(true)
     {
         return Err(denied("invalid original restore plan identity"));
     }
-    originals.frame(Phase::Original)?;
     let file = capture_file(
         &originals.directory,
         &format!("restore-{id}.json"),
@@ -356,11 +379,42 @@ fn read_plan(originals: &Originals, id: &str, expected: &str) -> io::Result<Plan
         return Err(denied("independent restore plan digest differs"));
     }
     let value = parse_strict_json_v2(&bytes).map_err(|_| denied("invalid restore plan JSON"))?;
-    let plan: Plan =
+    if value["schemaVersion"] == 2 {
+        let link: RearmedPlan =
+            serde_json::from_value(value).map_err(|_| denied("invalid rearmed plan fields"))?;
+        if link.schema_version != 2 || link.id != id || link.attempt != originals.attempt {
+            return Err(denied("rearmed plan belongs to another attempt"));
+        }
+        let mut parent =
+            read_plan_depth(originals, &link.parent.id, &link.parent.sha256, depth + 1)?;
+        let Image::File {
+            bytes, protection, ..
+        } = capture_file(
+            &originals.directory,
+            &format!("restore-{}-outcome.json", link.parent.id),
+            MAX_FRAME,
+        )?
+        else {
+            return Err(denied("rearmed parent outcome absent"));
+        };
+        require_private(&protection, false)?;
+        if bytes
+            != encode(
+                &serde_json::json!({"schemaVersion":1,"planSha256":link.parent.sha256,"decision":"rollback"}),
+            )?
+        {
+            return Err(denied("rearmed parent is not immutable rollback"));
+        }
+        parent.id = id.into();
+        parent.rearmed = true;
+        return Ok(parent);
+    }
+    let mut plan: Plan =
         serde_json::from_value(value).map_err(|_| denied("invalid restore plan fields"))?;
     if plan.schema_version != 1 || plan.id != id || plan.attempt != originals.attempt {
         return Err(denied("restore plan belongs to another attempt"));
     }
+    plan.object_id = id.into();
     Ok(plan)
 }
 
@@ -368,6 +422,7 @@ pub struct Pending<'a> {
     originals: &'a Originals,
     id: String,
     sha256: String,
+    object_id: String,
 }
 /// Read-only assessment; this never grants replay authority.
 pub(super) struct RecoveryReview {
@@ -375,6 +430,21 @@ pub(super) struct RecoveryReview {
     pub fingerprint: String,
 }
 impl<'a> Pending<'a> {
+    #[cfg(test)]
+    pub(super) fn prepare_fixture(
+        originals: &'a Originals,
+        evidence: Evidence,
+    ) -> io::Result<Self> {
+        Self::prepare_checked(originals, evidence, &|| Ok(()))
+    }
+    #[cfg(test)]
+    pub(super) fn apply_fixture(
+        &self,
+        decision: Decision,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<()> {
+        self.apply_checked(decision, &|| Ok(()), checkpoint)
+    }
     /// A check then rename is not kernel CAS. On a detected race, preserve the
     /// complete actual pair in an immutable conflict receipt BEFORE attempting
     /// one reverse move. A reverse operation never grants a successful restore
@@ -406,7 +476,7 @@ impl<'a> Pending<'a> {
                 "late conflict changed again; all observed objects retained",
             ));
         }
-        let stage = format!(".ocxd-restore-{}-{i}", self.id);
+        let stage = format!(".ocxd-restore-{}-{i}", self.object_id);
         match plan.kinds[i] {
             // Only our known original was installed into target. The other
             // complete regular object can be returned by another lossless swap.
@@ -474,7 +544,7 @@ impl<'a> Pending<'a> {
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<()> {
         let archived = capture_file(&self.originals.directory, archive_name, MAX_CONTENT)?;
-        let stage_name = format!(".ocxd-restore-{}-{i}", self.id);
+        let stage_name = format!(".ocxd-restore-{}-{i}", self.object_id);
         let staged = capture_file(&self.originals.client, &stage_name, MAX_CONTENT)?;
         let receipt = encode(
             &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,
@@ -521,11 +591,75 @@ impl<'a> Pending<'a> {
     pub fn sha256(&self) -> &str {
         &self.sha256
     }
+    pub(super) fn object_id(&self) -> &str {
+        &self.object_id
+    }
+    pub(super) fn readback_name(&self, decision: Decision) -> String {
+        let base = if decision == Decision::Complete {
+            "completion-readback"
+        } else {
+            "rollback-readback"
+        };
+        if self.id == self.object_id {
+            format!("{base}.json")
+        } else {
+            format!("{base}-{}.json", self.id)
+        }
+    }
+    pub(super) fn require_parent(&self, parent: &session_index::RestorePlan) -> io::Result<()> {
+        let Image::File { bytes, .. } = capture_file(
+            &self.originals.directory,
+            &format!("restore-{}.json", self.id),
+            MAX_FRAME,
+        )?
+        else {
+            return Err(denied("rearmed plan missing"));
+        };
+        let link: RearmedPlan = serde_json::from_value(
+            parse_strict_json_v2(&bytes).map_err(|_| denied("rearmed JSON invalid"))?,
+        )
+        .map_err(|_| denied("rearmed link invalid"))?;
+        if digest(&bytes) != self.sha256 || link.parent != *parent {
+            return Err(denied("rearmed plan parent differs"));
+        }
+        self.load()?;
+        Ok(())
+    }
+    /// A NEW logical decision over the SAME exact native objects. No stage is
+    /// copied, moved or learned here; a crash before index publication leaves
+    /// only an unreferenced immutable plan, never an unindexed client mutation.
+    pub(super) fn rearm_rolled_back(&self) -> io::Result<Self> {
+        if self.review_recovery()?.terminal != Some(Decision::Rollback) {
+            return Err(denied("only exact rolled-back objects may be rearmed"));
+        }
+        let id = uuid::Uuid::new_v4().to_string();
+        let bytes = encode(&RearmedPlan {
+            schema_version: 2,
+            id: id.clone(),
+            attempt: self.originals.attempt.clone(),
+            parent: session_index::RestorePlan {
+                id: self.id.clone(),
+                sha256: self.sha256.clone(),
+            },
+        })?;
+        create(
+            &self.originals.directory,
+            &format!("restore-{id}.json"),
+            &bytes,
+        )?;
+        let result = Self::open(self.originals, &id, &digest(&bytes))?;
+        if result.review_recovery()?.terminal.is_some() {
+            return Err(denied("rearmed plan already has outcome"));
+        }
+        Ok(result)
+    }
     pub fn open(originals: &'a Originals, id: &str, sha256: &str) -> io::Result<Self> {
+        let plan = read_plan(originals, id, sha256)?;
         let result = Self {
             originals,
             id: id.into(),
             sha256: sha256.into(),
+            object_id: plan.object_id,
         };
         result.load()?;
         Ok(result)
@@ -602,6 +736,8 @@ impl<'a> Pending<'a> {
         }
         check()?;
         let plan = Plan {
+            object_id: id.clone(),
+            rearmed: false,
             schema_version: 1,
             id: id.clone(),
             attempt: originals.attempt.clone(),
@@ -614,6 +750,7 @@ impl<'a> Pending<'a> {
         create(&originals.directory, &format!("restore-{id}.json"), &bytes)?;
         let result = Self {
             originals,
+            object_id: id.clone(),
             id,
             sha256: digest(&bytes),
         };
@@ -622,6 +759,9 @@ impl<'a> Pending<'a> {
     }
     fn load(&self) -> io::Result<(Plan, [Capture; 4])> {
         let plan = read_plan(self.originals, &self.id, &self.sha256)?;
+        if plan.object_id != self.object_id {
+            return Err(denied("restore object lineage changed"));
+        }
         let (captures, hashes) = Self::captures(self.originals)?;
         if plan.phases != hashes || plan.kinds != kinds(&captures, &plan.evidence)? {
             return Err(denied("original phases or restore decisions changed"));
@@ -706,7 +846,8 @@ impl<'a> Pending<'a> {
             let pair = self.pair(i)?;
             let archive = self.archive(i)?;
             let after = Self::state_of(&plan, &captures, i, &pair, &archive)?;
-            if intent == Image::Absent && (terminal.is_some() || after || archive != Image::Absent)
+            if intent == Image::Absent
+                && (terminal.is_some() || after || !plan.rearmed && archive != Image::Absent)
             {
                 return Err(denied("published recovery objects lack original intent"));
             }
@@ -753,7 +894,7 @@ impl<'a> Pending<'a> {
     fn archive(&self, i: usize) -> io::Result<Image> {
         capture_file(
             &self.originals.directory,
-            &format!("restore-{}-old-{i}", self.id),
+            &format!("restore-{}-old-{i}", self.object_id),
             MAX_CONTENT,
         )
     }
@@ -762,7 +903,7 @@ impl<'a> Pending<'a> {
             capture_file(&self.originals.client, NAMES[i], MAX_CONTENT)?,
             capture_file(
                 &self.originals.client,
-                &format!(".ocxd-restore-{}-{i}", self.id),
+                &format!(".ocxd-restore-{}-{i}", self.object_id),
                 MAX_CONTENT,
             )?,
         ))
@@ -862,12 +1003,12 @@ impl<'a> Pending<'a> {
             let after = self.state(&plan, &c, i)?;
             let want = decision == Decision::Complete;
             if after != want && plan.kinds[i] != Kind::Keep {
-                let stage = format!(".ocxd-restore-{}-{i}", self.id);
+                let stage = format!(".ocxd-restore-{}-{i}", self.object_id);
                 // An interrupted archive can be undone only by moving back the
                 // exact retained object into a still-absent original stage.
                 let expected_stage = Self::expected(&plan, &c, i, after).1;
                 if self.pair(i)?.1 == Image::Absent && expected_stage != Image::Absent {
-                    let archive = format!("restore-{}-old-{i}", self.id);
+                    let archive = format!("restore-{}-old-{i}", self.object_id);
                     if !same(
                         &capture_file(&self.originals.directory, &archive, MAX_CONTENT)?,
                         &expected_stage,
@@ -957,12 +1098,12 @@ impl<'a> Pending<'a> {
                 if !same(&staged, &expected, false) {
                     return Err(denied("unknown stage cannot be archived"));
                 }
-                let to = format!("restore-{}-old-{i}", self.id);
+                let to = format!("restore-{}-old-{i}", self.object_id);
                 check()?;
                 checkpoint("archive_gap")?;
                 rename(
                     &self.originals.client,
-                    &format!(".ocxd-restore-{}-{i}", self.id),
+                    &format!(".ocxd-restore-{}-{i}", self.object_id),
                     &self.originals.directory,
                     &to,
                     libc::RENAME_EXCL,

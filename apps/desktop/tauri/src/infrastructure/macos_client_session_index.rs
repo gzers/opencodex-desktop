@@ -23,6 +23,10 @@ pub mod continuation;
 pub mod finalization;
 #[path = "macos_client_session_preview.rs"]
 pub mod preview;
+#[path = "macos_client_recovery_rearm.rs"]
+pub mod rearm;
+#[path = "macos_client_recovery_rollback.rs"]
+pub mod rollback;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -33,6 +37,7 @@ pub enum State {
     StopPrepared,
     Stopped,
     RestorePrepared,
+    RestoreRolledBack,
     Restored,
     Failed,
 }
@@ -67,8 +72,12 @@ fn valid_hash(value: &str) -> bool {
             .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
 }
 fn validate(head: &Head) -> io::Result<()> {
-    if matches!(head.state, State::RestorePrepared | State::Restored) != head.restore_plan.is_some()
-        || (head.state == State::Restored) != head.completion_sha256.is_some()
+    if matches!(
+        head.state,
+        State::RestorePrepared | State::Restored | State::RestoreRolledBack
+    ) != head.restore_plan.is_some()
+        || matches!(head.state, State::Restored | State::RestoreRolledBack)
+            != head.completion_sha256.is_some()
         || head
             .completion_sha256
             .as_ref()
@@ -122,7 +131,9 @@ fn validate(head: &Head) -> io::Result<()> {
         State::Captured => Some((0, false)),
         State::Ready => Some((1, true)),
         State::StopPrepared => Some((2, true)),
-        State::Stopped | State::RestorePrepared | State::Restored => Some((3, true)),
+        State::Stopped | State::RestorePrepared | State::Restored | State::RestoreRolledBack => {
+            Some((3, true))
+        }
         State::Preparing => return Err(denied("unpublished originals in preparing index")),
         State::Failed => None,
     };
@@ -554,7 +565,10 @@ impl Index {
         ) || state == State::Failed
             && !matches!(
                 expected.state,
-                State::Stopped | State::RestorePrepared | State::Restored
+                State::Stopped
+                    | State::RestorePrepared
+                    | State::Restored
+                    | State::RestoreRolledBack
             );
         if !allowed {
             return Err(denied("current session transition is not allowed"));
@@ -615,6 +629,82 @@ impl Index {
         expected: &Head,
         proof: &completion::ReadbackProof,
     ) -> io::Result<Head> {
+        if proof.decision() != restore::Decision::Complete {
+            return Err(denied("rollback readback cannot close restored"));
+        }
+        self.close_readback(expected, proof, State::Restored)
+    }
+    pub(super) fn rearm_rolled_back(
+        &self,
+        expected: &Head,
+        id: &str,
+        sha256: &str,
+    ) -> io::Result<Head> {
+        if expected.state != State::RestoreRolledBack {
+            return Err(denied("only registered rollback can rearm"));
+        }
+        completion::verify_registered(
+            self.data.path(),
+            self.client.path(),
+            &self.profile,
+            expected,
+        )?;
+        let refs = expected
+            .references
+            .as_ref()
+            .ok_or_else(|| denied("rearm original references absent"))?;
+        let originals = Originals::open_for_profile(
+            self.data.path(),
+            self.client.path(),
+            &self.profile,
+            &refs.attempt,
+            &refs.original_sha256,
+            &refs.phases,
+        )?;
+        let pending = restore::Pending::open(&originals, id, sha256)?;
+        pending.require_parent(
+            expected
+                .restore_plan
+                .as_ref()
+                .ok_or_else(|| denied("rearm parent absent"))?,
+        )?;
+        if pending.review_recovery()?.terminal.is_some() {
+            return Err(denied("new logical plan already terminated"));
+        }
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: State::RestorePrepared,
+            references: expected.references.clone(),
+            restore_plan: Some(RestorePlan {
+                id: id.into(),
+                sha256: sha256.into(),
+            }),
+            completion_sha256: None,
+        };
+        validate(&next)?;
+        self.write(Some(expected), &next)?;
+        Ok(next)
+    }
+    pub fn close_rolled_back(
+        &self,
+        expected: &Head,
+        proof: &completion::ReadbackProof,
+    ) -> io::Result<Head> {
+        if proof.decision() != restore::Decision::Rollback {
+            return Err(denied("complete readback cannot close rollback"));
+        }
+        self.close_readback(expected, proof, State::RestoreRolledBack)
+    }
+    fn close_readback(
+        &self,
+        expected: &Head,
+        proof: &completion::ReadbackProof,
+        state: State,
+    ) -> io::Result<Head> {
         proof.require_index(expected, self.data.identity(), self.client.identity())?;
         let next = Head {
             revision: expected
@@ -622,7 +712,7 @@ impl Index {
                 .checked_add(1)
                 .ok_or_else(|| denied("session revision overflow"))?,
             ticket: expected.ticket.clone(),
-            state: State::Restored,
+            state,
             references: expected.references.clone(),
             restore_plan: expected.restore_plan.clone(),
             completion_sha256: Some(proof.sha256().into()),
