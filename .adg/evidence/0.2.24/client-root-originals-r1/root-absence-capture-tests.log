@@ -1,0 +1,55 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 31.81s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 7 tests
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_cannot_mint_whole_root_completion_from_an_execution_directory_readback ... 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_absence_cannot_mint_whole_root_completion_from_an_execution_directory_readback' (157362358) panicked at src/infrastructure/macos_client_root_originals_tests.rs:175:64:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "first root original absence cannot be closed by ordinary client recovery" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_execution_original_rejects_a_preexisting_service_owner_object ... 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_absence_execution_original_rejects_a_preexisting_service_owner_object' (157362375) panicked at src/infrastructure/macos_client_root_originals_tests.rs:128:64:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "first root original absence cannot be closed by ordinary client recovery" }
+FAILED
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_ordinary_constructor_and_nonempty_first_root_cannot_create_an_existing_root_baseline ... 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_absence_ordinary_constructor_and_nonempty_first_root_cannot_create_an_existing_root_baseline' (157362385) panicked at src/infrastructure/macos_client_root_originals_tests.rs:115:64:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "first root original absence cannot be closed by ordinary client recovery" }
+FAILED
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_ordinary_open_cannot_accept_a_downgraded_or_rebound_frame_even_with_updated_digest ... 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_absence_ordinary_open_cannot_accept_a_downgraded_or_rebound_frame_even_with_updated_digest' (157362394) panicked at src/infrastructure/macos_client_root_originals_tests.rs:142:68:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "first root original absence cannot be closed by ordinary client recovery" }
+FAILED
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_original_chain_keeps_created_execution_tree_distinct_from_original_user_state ... 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_absence_original_chain_keeps_created_execution_tree_distinct_from_original_user_state' (157362425) panicked at src/infrastructure/macos_client_root_originals_tests.rs:57:64:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "first root original absence cannot be closed by ordinary client recovery" }
+FAILED
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_real_capture_crash_keeps_partial_records_without_making_them_a_registered_original ... 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_absence_real_capture_crash_keeps_partial_records_without_making_them_a_registered_original' (157362434) panicked at src/infrastructure/macos_client_root_originals_tests.rs:292:9:
+assertion `left == right` failed: 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_absence_real_capture_crash_keeps_partial_records_without_making_them_a_registered_original' (157362436) panicked at src/infrastructure/macos_client_root_originals_tests.rs:264:69:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "first root original absence cannot be closed by ordinary client recovery" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+  left: Some(101)
+ right: Some(91)
+FAILED
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_reopened_index_facts_do_not_reconstruct_the_original_capture_custody ... 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_absence_reopened_index_facts_do_not_reconstruct_the_original_capture_custody' (157362445) panicked at src/infrastructure/macos_client_root_originals_tests.rs:207:64:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "first root original absence cannot be closed by ordinary client recovery" }
+FAILED
+
+failures:
+
+failures:
+    infrastructure::macos_client_originals::root_originals_tests::root_absence_cannot_mint_whole_root_completion_from_an_execution_directory_readback
+    infrastructure::macos_client_originals::root_originals_tests::root_absence_execution_original_rejects_a_preexisting_service_owner_object
+    infrastructure::macos_client_originals::root_originals_tests::root_absence_ordinary_constructor_and_nonempty_first_root_cannot_create_an_existing_root_baseline
+    infrastructure::macos_client_originals::root_originals_tests::root_absence_ordinary_open_cannot_accept_a_downgraded_or_rebound_frame_even_with_updated_digest
+    infrastructure::macos_client_originals::root_originals_tests::root_absence_original_chain_keeps_created_execution_tree_distinct_from_original_user_state
+    infrastructure::macos_client_originals::root_originals_tests::root_absence_real_capture_crash_keeps_partial_records_without_making_them_a_registered_original
+    infrastructure::macos_client_originals::root_originals_tests::root_absence_reopened_index_facts_do_not_reconstruct_the_original_capture_custody
+
+test result: FAILED. 0 passed; 7 failed; 0 ignored; 0 measured; 2453 filtered out; finished in 0.93s
+
+error: test failed, to rerun pass `--lib`
