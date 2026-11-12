@@ -41,6 +41,13 @@ fn set(file: &File, kind: libc::c_short) -> io::Result<()> {
     Ok(())
 }
 impl ClaimGate {
+    /// Static original identity only, not current lock or movement authority.
+    pub(crate) fn key(&self) -> (String, String) {
+        (
+            self.identity.device.to_string(),
+            self.identity.inode.to_string(),
+        )
+    }
     /// Existing private file only; no CREATE, truncate, chmod, repair or retry.
     /// An in-process SQLite connection still holding this inode is also a
     /// conflicting owner, so a handoff must close it normally first.

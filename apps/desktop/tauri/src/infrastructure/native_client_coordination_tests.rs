@@ -1,6 +1,8 @@
 use super::*;
 use std::io::Write;
 use std::os::unix::fs::{symlink, DirBuilderExt, MetadataExt, PermissionsExt};
+#[path = "native_client_relocation_tests.rs"]
+mod relocation;
 
 struct Fixture {
     _temp: tempfile::TempDir,
@@ -348,7 +350,7 @@ fn sqlite_vfs_checks_its_actual_open_inode_instead_of_trusting_a_pathname() {
     let displaced = path.with_extension("original-inode");
     fs::rename(path, &displaced).unwrap();
     fs::write(path, b"unknown replacement database").unwrap();
-    assert!(require_original_sqlite_file(&lease.connections[1]).is_err());
+    assert!(require_original_sqlite_file(&lease.connections[0]).is_err());
     assert!(lease.check().is_err());
     assert_eq!(fs::read(path).unwrap(), b"unknown replacement database");
     drop(lease);
@@ -531,6 +533,10 @@ fn official299_native_handover_holds_through_work_and_preserves_original_ownersh
         fs::write(&evidence, serde_json::to_vec_pretty(r).unwrap()).unwrap()
     };
     write(&report);
+    if std::env::var_os("OCXD_NATIVE_COORDINATION_RELOCATION").is_some() {
+        relocation::official_round(&context, &selected, &root, &owner);
+        return;
+    }
     let start = Instant::now();
     let result = with_native_coordination(
         &context,
