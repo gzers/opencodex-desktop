@@ -245,6 +245,28 @@ model_provider = "openai"
         0o600,
     )
     .unwrap();
+    // This round exercises existing Grok input, not merely backup absence.
+    // It is an owned synthetic profile; no installed Grok client is invoked.
+    let grok = profile.join(".grok");
+    crate::infrastructure::platform::create_private_dir_all(&grok.join("agents"), 0o700).unwrap();
+    atomic_write(
+        &grok.join("config.toml"),
+        b"[model.native_fixture]\nmodel = 'native-grok-fixture'\nmodel_provider = 'native'\n",
+        0o600,
+    )
+    .unwrap();
+    atomic_write(
+        &grok.join("config.toml.bak-opencodex"),
+        b"prior synthetic Grok backup\n",
+        0o600,
+    )
+    .unwrap();
+    atomic_write(
+        &grok.join("agents/AGENTS.md"),
+        b"synthetic Grok agent guidance\n",
+        0o600,
+    )
+    .unwrap();
     let paths = [
         ("codex/config.toml", client.join("config.toml")),
         (
@@ -260,6 +282,8 @@ model_provider = "openai"
             "grok/config.toml.bak-opencodex",
             profile.join(".grok/config.toml.bak-opencodex"),
         ),
+        ("grok/config.toml", grok.join("config.toml")),
+        ("grok/agents/AGENTS.md", grok.join("agents/AGENTS.md")),
     ];
     let before: BTreeMap<_, _> = paths
         .iter()
@@ -335,6 +359,9 @@ model_provider = "openai"
         (std::fs::read(client.join("config.toml")).ok() != before["codex/config.toml"]).into();
     write(&report);
     capture("after-start");
+    report["grokConfigChangedDuringStart"] = (std::fs::read(grok.join("config.toml")).unwrap()
+        != b"[model.native_fixture]\nmodel = 'native-grok-fixture'\nmodel_provider = 'native'\n")
+        .into();
     let indexed_after_start =
         crate::infrastructure::macos_client_originals::session_index::Index::open(
             &context, &data, &client,
@@ -443,6 +470,40 @@ model_provider = "openai"
             .validate_restore_plan(&context, &plan.id, &plan.sha256)
             .unwrap();
         report["restorePlanMatchesIndependentIndex"] = true.into();
+    }
+    if let Some(refs) = &after_stop.references {
+        let originals = crate::infrastructure::macos_client_originals::Originals::open_for_profile(
+            &data,
+            &client,
+            &profile,
+            &refs.attempt,
+            &refs.original_sha256,
+            &refs.phases,
+        )
+        .unwrap();
+        for (path, bytes) in [
+            ("config.toml", b"[model.native_fixture]\nmodel = 'native-grok-fixture'\nmodel_provider = 'native'\n".as_slice()),
+            (
+                "config.toml.bak-opencodex",
+                b"prior synthetic Grok backup\n".as_slice(),
+            ),
+            (
+                "agents/AGENTS.md",
+                b"synthetic Grok agent guidance\n".as_slice(),
+            ),
+        ] {
+            assert_eq!(
+                originals
+                    .archived_grok_file(
+                        crate::infrastructure::macos_client_originals::Phase::Original,
+                        path
+                    )
+                    .unwrap()
+                    .as_slice(),
+                bytes
+            );
+        }
+        report["originalGrokConfigBackupAndAgentArchived"] = true.into();
     }
     drop(indexed_after_stop);
     let reopened_at = Instant::now();

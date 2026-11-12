@@ -83,7 +83,7 @@ fn original_frame_binds_client_tree_file_hashes_without_recording_their_content_
     let raw = fs::read(f.journal(originals.attempt()).join("original.json")).unwrap();
     assert_eq!(
         serde_json::from_slice::<serde_json::Value>(&raw).unwrap()["schemaVersion"],
-        3
+        4
     );
     let tree = serde_json::from_slice::<serde_json::Value>(&raw).unwrap()["tree"].clone();
     assert!(tree["entries"]
@@ -134,6 +134,11 @@ fn old_frames_and_tree_references_with_invalid_inventory_are_not_backfilled_or_a
     let mut inventory_only = value.clone();
     inventory_only["schemaVersion"] = 2.into();
     assert!(decode(&encode(&inventory_only).unwrap()).is_err());
+    let mut codex_only = value.clone();
+    codex_only["schemaVersion"] = 3.into();
+    codex_only.as_object_mut().unwrap().remove("grok");
+    codex_only.as_object_mut().unwrap().remove("profileRoot");
+    assert!(decode(&encode(&codex_only).unwrap()).is_err());
     let mut invalid = value;
     invalid["tree"]["totalBytes"] = 0.into();
     let bytes = encode(&invalid).unwrap();

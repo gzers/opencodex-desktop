@@ -555,6 +555,9 @@ pub struct Capture {
 #[path = "macos_client_tree.rs"]
 pub mod tree;
 use tree::TreeSnapshot;
+#[path = "macos_client_grok.rs"]
+pub mod grok;
+use grok::GrokSnapshot;
 
 impl std::fmt::Debug for Capture {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -663,6 +666,8 @@ struct Frame {
     previous_sha256: Option<String>,
     capture: Capture,
     tree: TreeSnapshot,
+    profile_root: Identity,
+    grok: GrokSnapshot,
 }
 fn encode(value: &impl Serialize) -> io::Result<Vec<u8>> {
     serde_json::to_vec(value).map_err(|_| denied("frame encoding failed"))
@@ -678,7 +683,7 @@ fn decode(bytes: &[u8]) -> io::Result<Frame> {
         parse_strict_json_v2(bytes).map_err(|_| denied("invalid or duplicate JSON"))?,
     )
     .map_err(|_| denied("invalid frame fields"))?;
-    if frame.schema_version != 3 {
+    if frame.schema_version != 4 {
         return Err(denied("unsupported client tree frame schema"));
     }
     Ok(frame)
@@ -717,6 +722,7 @@ fn create(directory: &PinnedDirectory, filename: &str, bytes: &[u8]) -> io::Resu
 /// must remain bound by the owning lifecycle transaction; never discover a new
 /// baseline by reading a changed journal. No startup auto-recovery is provided.
 pub struct Originals {
+    profile: PinnedDirectory,
     data: PinnedDirectory,
     client: PinnedDirectory,
     directory: PinnedDirectory,
@@ -725,7 +731,37 @@ pub struct Originals {
     known: std::sync::Mutex<[Option<String>; 4]>,
 }
 impl Originals {
+    #[cfg(test)]
     pub fn begin(data_root: &Path, client_root: &Path) -> io::Result<Self> {
+        // Existing single-client fixtures explicitly use their known parent
+        // as synthetic profile; production must supply ProcessContext profile.
+        Self::begin_for_profile(
+            data_root,
+            client_root,
+            client_root
+                .parent()
+                .ok_or_else(|| denied("test profile missing"))?,
+        )
+    }
+    pub fn begin_for_profile(
+        data_root: &Path,
+        client_root: &Path,
+        profile_root: &Path,
+    ) -> io::Result<Self> {
+        let grok_path = profile_root.join(".grok");
+        if data_root.starts_with(&grok_path)
+            || grok_path.starts_with(data_root)
+            || client_root.starts_with(&grok_path)
+            || grok_path.starts_with(client_root)
+        {
+            return Err(denied("Grok client and journal roots overlap"));
+        }
+        let profile = PinnedDirectory::open(profile_root)?;
+        let ps = stat(profile.file())?;
+        if ps.st_uid != unsafe { libc::geteuid() } || ps.st_mode & 0o022 != 0 {
+            return Err(denied("profile owner or write access unknown"));
+        }
+
         if data_root.starts_with(client_root) || client_root.starts_with(data_root) {
             return Err(denied("client and journal roots must be disjoint"));
         }
@@ -738,6 +774,7 @@ impl Originals {
         }
         let capture = Capture::read(&client)?;
         let tree = TreeSnapshot::read(&client)?;
+        let grok = GrokSnapshot::read(&profile)?;
         let manager = data.child_private("manager-state", true)?;
         let vault = manager.child_private("client-originals", true)?;
         let attempt = uuid::Uuid::new_v4().to_string();
@@ -749,8 +786,9 @@ impl Originals {
         directory.private()?;
         vault.sync()?;
         tree.archive(&client, &directory)?;
+        grok.archive(&profile, &directory)?;
         let frame = Frame {
-            schema_version: 3,
+            schema_version: 4,
             attempt: attempt.clone(),
             uid: unsafe { libc::geteuid() },
             data_root: data.identity().clone(),
@@ -759,21 +797,30 @@ impl Originals {
             previous_sha256: None,
             capture,
             tree,
+            profile_root: profile.identity().clone(),
+            grok,
         };
-        if Capture::read(&client)? != frame.capture || TreeSnapshot::read(&client)? != frame.tree {
+        if Capture::read(&client)? != frame.capture
+            || TreeSnapshot::read(&client)? != frame.tree
+            || GrokSnapshot::read(&profile)? != frame.grok
+        {
             return Err(denied("source changed before original publication"));
         }
         let bytes = encode(&frame)?;
         create(&directory, Phase::Original.filename(), &bytes)?;
         data.recheck()?;
         client.recheck()?;
-        if Capture::read(&client)? != frame.capture || TreeSnapshot::read(&client)? != frame.tree {
+        if Capture::read(&client)? != frame.capture
+            || TreeSnapshot::read(&client)? != frame.tree
+            || GrokSnapshot::read(&profile)? != frame.grok
+        {
             return Err(denied(
                 "source changed during original publication; original retained",
             ));
         }
         let hash = digest(&bytes);
         Ok(Self {
+            profile,
             data,
             client,
             directory,
@@ -782,6 +829,7 @@ impl Originals {
             known: std::sync::Mutex::new([Some(hash), None, None, None]),
         })
     }
+    #[cfg(test)]
     pub fn open(
         data_root: &Path,
         client_root: &Path,
@@ -789,6 +837,26 @@ impl Originals {
         original_sha256: &str,
         expected_phases: &[(Phase, String)],
     ) -> io::Result<Self> {
+        Self::open_for_profile(
+            data_root,
+            client_root,
+            client_root
+                .parent()
+                .ok_or_else(|| denied("test profile missing"))?,
+            attempt,
+            original_sha256,
+            expected_phases,
+        )
+    }
+    pub fn open_for_profile(
+        data_root: &Path,
+        client_root: &Path,
+        profile_root: &Path,
+        attempt: &str,
+        original_sha256: &str,
+        expected_phases: &[(Phase, String)],
+    ) -> io::Result<Self> {
+        let profile = PinnedDirectory::open(profile_root)?;
         if data_root.starts_with(client_root) || client_root.starts_with(data_root) {
             return Err(denied("client and journal roots must be disjoint"));
         }
@@ -823,6 +891,7 @@ impl Originals {
             known[phase.index()] = Some(hash.clone());
         }
         let result = Self {
+            profile,
             data,
             client,
             directory,
@@ -857,8 +926,19 @@ impl Originals {
             .tree
             .archived_file(&self.directory, relative)
     }
+    pub fn archived_grok_file(
+        &self,
+        phase: Phase,
+        relative: &str,
+    ) -> io::Result<zeroize::Zeroizing<Vec<u8>>> {
+        self.frame(phase)?
+            .0
+            .grok
+            .archived_file(&self.directory, relative)
+    }
     fn frame(&self, phase: Phase) -> io::Result<(Frame, Vec<u8>)> {
         self.data.private()?;
+        self.profile.recheck()?;
         self.client.recheck()?;
         self.directory.private()?;
         let image = capture_file(&self.directory, phase.filename(), MAX_FRAME)?;
@@ -881,12 +961,14 @@ impl Originals {
             return Err(denied("sealed phase bytes changed"));
         }
         let frame = decode(&bytes)?;
-        if frame.schema_version != 3
+        if frame.schema_version != 4
             || frame.attempt != self.attempt
             || frame.uid != unsafe { libc::geteuid() }
             || frame.phase != phase
             || frame.data_root != *self.data.identity()
             || frame.client_root != *self.client.identity()
+            || frame.profile_root != *self.profile.identity()
+            || !frame.tree.coordinated()
             || frame.capture.root != frame.client_root
             || frame.tree.root != frame.client_root
             || frame.tree.root_protection != frame.capture.root_protection
@@ -907,6 +989,7 @@ impl Originals {
             return Err(denied("original snapshot digest changed"));
         }
         frame.tree.verify_archive(&self.directory)?;
+        frame.grok.verify_archive(&self.directory)?;
         Ok((frame, bytes))
     }
     /// Seal new actual snapshots in order; never replace a recorded phase or
@@ -931,16 +1014,19 @@ impl Originals {
         }
         let capture = Capture::read(&self.client)?;
         let tree = TreeSnapshot::read(&self.client)?;
+        let grok = GrokSnapshot::read(&self.profile)?;
         checkpoint()?;
         if Capture::read(&self.client)? != capture
             || TreeSnapshot::read(&self.client)? != tree
+            || GrokSnapshot::read(&self.profile)? != grok
             || self.frame(prior)?.1 != previous
         {
             return Err(denied("snapshot changed before durable publication"));
         }
         tree.archive(&self.client, &self.directory)?;
+        grok.archive(&self.profile, &self.directory)?;
         let frame = Frame {
-            schema_version: 3,
+            schema_version: 4,
             attempt: self.attempt.clone(),
             uid: unsafe { libc::geteuid() },
             data_root: self.data.identity().clone(),
@@ -949,6 +1035,8 @@ impl Originals {
             previous_sha256: Some(digest(&previous)),
             capture,
             tree,
+            profile_root: self.profile.identity().clone(),
+            grok,
         };
         let bytes = encode(&frame)?;
         create(&self.directory, phase.filename(), &bytes)?;

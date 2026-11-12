@@ -111,7 +111,7 @@ impl TreeSnapshot {
         vault: &PinnedDirectory,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<()> {
-        if !self.valid() || TreeSnapshot::read(root)? != *self {
+        if !self.valid() || TreeSnapshot::read_mode(root, self.coordination)? != *self {
             return Err(denied("tree changed before byte archive"));
         }
         if vault.path().starts_with(root.path()) || root.path().starts_with(vault.path()) {
@@ -197,7 +197,7 @@ impl TreeSnapshot {
             stable(parent, name, &file, &before, p)?;
             verify_blob(vault, sha256, *bytes)?;
         }
-        if TreeSnapshot::read(root)? != *self {
+        if TreeSnapshot::read_mode(root, self.coordination)? != *self {
             return Err(denied("tree changed while archiving bytes"));
         }
         self.verify_archive(vault)

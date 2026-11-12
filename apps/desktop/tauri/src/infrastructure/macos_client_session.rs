@@ -421,7 +421,9 @@ impl StartupSession {
                 return Err(error(()));
             }
             phase.set("capture-original");
-            let originals = Originals::begin(data_root, client_root).map_err(error)?;
+            let originals =
+                Originals::begin_for_profile(data_root, client_root, &context.working_directory)
+                    .map_err(error)?;
             phase.set("check-original-lease");
             lease.check()?;
             time(deadline)?;
@@ -572,9 +574,10 @@ impl StartupSession {
         client_root: &Path,
         refs: &References,
     ) -> AppResult<Self> {
-        let originals = Originals::open(
+        let originals = Originals::open_for_profile(
             data_root,
             client_root,
+            &context.working_directory,
             &refs.attempt,
             &refs.original_sha256,
             &refs.phases,

@@ -31,6 +31,7 @@ pub struct TreeSnapshot {
     pub(super) root_protection: Protection,
     entries: Vec<Entry>,
     total_bytes: u64,
+    coordination: bool,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
@@ -209,6 +210,7 @@ fn walk(
     entries: &mut Vec<Entry>,
     budget: &mut Budget,
     checkpoint: &impl Fn(&str) -> io::Result<()>,
+    coordination: bool,
 ) -> io::Result<()> {
     if depth > MAX_DEPTH {
         return Err(denied("client tree depth exceeded"));
@@ -232,7 +234,7 @@ fn walk(
         // into '/' and cannot collide with a different descendant path.
         budget.entry(&path)?;
         let observed = lookup(parent, child)?;
-        if relative.is_empty() && coordination_path(text) {
+        if coordination && relative.is_empty() && coordination_path(text) {
             // First-use BEGIN EXCLUSIVE on an empty official claim creates a
             // real rollback journal. Record exact sidecar identity as native
             // coordination too; never open its inode or mistake it for bytes
@@ -292,7 +294,15 @@ fn walk(
         let p = protection(&file, &opened)?;
         budget.protection(&p)?;
         if directory {
-            walk(&file, &path, depth + 1, entries, budget, checkpoint)?;
+            walk(
+                &file,
+                &path,
+                depth + 1,
+                entries,
+                budget,
+                checkpoint,
+                coordination,
+            )?;
             stable(parent, child, &file, &opened, &p)?;
             entries.push(Entry::Directory {
                 path,
@@ -355,6 +365,16 @@ impl TreeSnapshot {
         root: &PinnedDirectory,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<Self> {
+        Self::read_mode_checked(root, true, checkpoint)
+    }
+    pub(crate) fn read_mode(root: &PinnedDirectory, coordination: bool) -> io::Result<Self> {
+        Self::read_mode_checked(root, coordination, &|_| Ok(()))
+    }
+    fn read_mode_checked(
+        root: &PinnedDirectory,
+        coordination: bool,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<Self> {
         let one = || -> io::Result<Self> {
             root.recheck()?;
             let mut entries = Vec::new();
@@ -362,7 +382,15 @@ impl TreeSnapshot {
             let s = stat(root.file())?;
             let p = protection(root.file(), &s)?;
             b.protection(&p)?;
-            walk(root.file(), "", 0, &mut entries, &mut b, checkpoint)?;
+            walk(
+                root.file(),
+                "",
+                0,
+                &mut entries,
+                &mut b,
+                checkpoint,
+                coordination,
+            )?;
             entries.sort_by(|a, b| a.path().cmp(b.path()));
             root.recheck()?;
             Ok(Self {
@@ -370,6 +398,7 @@ impl TreeSnapshot {
                 root_protection: p,
                 entries,
                 total_bytes: b.bytes,
+                coordination,
             })
         };
         let before = one()?;
@@ -384,6 +413,9 @@ impl TreeSnapshot {
     }
     pub fn entry_count(&self) -> usize {
         self.entries.len()
+    }
+    pub(super) fn coordinated(&self) -> bool {
+        self.coordination
     }
     pub(super) fn matches_artifacts(&self, capture: &Capture) -> bool {
         for (name, image) in NAMES.iter().zip(capture.images()) {
@@ -420,6 +452,11 @@ impl TreeSnapshot {
     }
     pub(super) fn valid(&self) -> bool {
         let mut budget = Budget::default();
+        if self.root_protection.uid != unsafe { libc::geteuid() }
+            || self.root_protection.mode & 0o022 != 0
+        {
+            return false;
+        }
         if budget.protection(&self.root_protection).is_err() {
             return false;
         }
@@ -428,7 +465,9 @@ impl TreeSnapshot {
         let mut last = None;
         for e in &self.entries {
             let path = e.path();
-            if coordination_path(path) != matches!(e, Entry::Coordination { .. }) {
+            if (self.coordination && coordination_path(path))
+                != matches!(e, Entry::Coordination { .. })
+            {
                 return false;
             }
             let parts: Vec<_> = path.split('/').collect();
@@ -490,7 +529,8 @@ impl TreeSnapshot {
                     flags,
                     ..
                 } => {
-                    if !coordination_path(path)
+                    if !self.coordination
+                        || !coordination_path(path)
                         || path != CLAIM && !known.contains(CLAIM)
                         || *uid != unsafe { libc::geteuid() }
                         || *mode != 0o600
