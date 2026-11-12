@@ -42,6 +42,29 @@ impl Fixture {
         StartupSession::persist(&self.context, originals, root, selection).unwrap()
     }
 }
+#[test]
+fn indexed_ordinary_session_reopen_keeps_verified_canonical_client_path() {
+    let f = Fixture::new();
+    let physical = f.context.working_directory.join("physical-client");
+    fs::rename(&f.client, &physical).unwrap();
+    std::os::unix::fs::symlink(&physical, &f.client).unwrap();
+    let index = session_index::Index::open(&f.context, &f.data, &physical).unwrap();
+    let preparing = index.reserve_start().unwrap();
+    let originals =
+        Originals::begin_for_profile(&f.data, &physical, &f.context.working_directory).unwrap();
+    let (root, selection) = source(&f.context).unwrap();
+    let session = StartupSession::persist(&f.context, originals, root, selection).unwrap();
+    let head = index
+        .advance(
+            &preparing,
+            session_index::State::Captured,
+            Some(session.references().unwrap()),
+        )
+        .unwrap();
+    let reopened = StartupSession::open_indexed(&f.context, &index, &head).unwrap();
+    assert_eq!(reopened.originals.client.path(), physical);
+    assert!(!reopened.original_root_absent());
+}
 
 #[test]
 fn held_live_observation_revalidates_original_ready_and_archives_without_a_prior_scope_frame_read()

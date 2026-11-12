@@ -159,6 +159,117 @@ pub struct RootStopAdmission<'a> {
     live: Live,
     deadline: Instant,
 }
+#[derive(Clone, Copy)]
+enum RootPhaseAuthority<'a> {
+    Ready(&'a NativeLease),
+    PreStop,
+    Stopped(
+        &'a NativeLease,
+        &'a CompletedLifecycleStop,
+        &'a crate::infrastructure::macos_process_pair::PairExitProof,
+    ),
+}
+/// Current typed phase evidence. Disk frame hashes alone cannot construct it.
+pub struct RootPhaseProof<'a> {
+    session: &'a StartupSession,
+    context: &'a ProcessContext,
+    expected: session_index::Head,
+    authority: RootPhaseAuthority<'a>,
+    deadline: Instant,
+}
+impl RootPhaseProof<'_> {
+    pub(super) fn source(&self) -> &session_index::Head {
+        &self.expected
+    }
+    pub(super) fn state(&self) -> session_index::State {
+        match self.authority {
+            RootPhaseAuthority::Ready(_) => session_index::State::Ready,
+            RootPhaseAuthority::PreStop => session_index::State::StopPrepared,
+            RootPhaseAuthority::Stopped(..) => session_index::State::Stopped,
+        }
+    }
+    pub(super) fn require(
+        &self,
+        data: &Path,
+        client: &Path,
+        profile: &Path,
+    ) -> AppResult<References> {
+        time(self.deadline)?;
+        let origin = self
+            .session
+            .originals
+            .original_root_absence
+            .as_ref()
+            .ok_or_else(|| error(()))?;
+        if data != self.session.originals.data.path()
+            || client != self.session.originals.client.path()
+            || profile != self.session.profile.path()
+            || self.expected.ticket != origin.id
+        {
+            return Err(error(()));
+        }
+        let refs = self.session.references()?;
+        let before = self.expected.references.as_ref().ok_or_else(|| error(()))?;
+        if before.attempt != refs.attempt
+            || before.original_sha256 != refs.original_sha256
+            || before.scope_sha256 != refs.scope_sha256
+            || !refs.phases.starts_with(&before.phases)
+            || before
+                .live_sha256
+                .as_ref()
+                .is_some_and(|s| Some(s) != refs.live_sha256.as_ref())
+        {
+            return Err(error(()));
+        }
+        match self.authority {
+            RootPhaseAuthority::Ready(lease) => {
+                if self.expected.state != session_index::State::Captured || refs.phases.len() != 1 {
+                    return Err(error(()));
+                }
+                lease.require_context(self.context, client)?;
+                self.session
+                    .verify_current_ready(self.context, self.deadline)?;
+            }
+            RootPhaseAuthority::PreStop => {
+                if self.expected.state != session_index::State::Ready || refs.phases.len() != 2 {
+                    return Err(error(()));
+                }
+                self.session
+                    .originals
+                    .frame(Phase::PreStop)
+                    .map_err(error)?;
+                self.session
+                    .verify_current_ready(self.context, self.deadline)?;
+            }
+            RootPhaseAuthority::Stopped(lease, stop, pair) => {
+                if self.expected.state != session_index::State::StopPrepared
+                    || refs.phases.len() != 3
+                {
+                    return Err(error(()));
+                }
+                lease.require_context(self.context, client)?;
+                let live = self.session.live(self.context)?;
+                pair.require(live.process()?, live.parent()?, self.deadline)?;
+                let (root, _) = source(self.context)?;
+                let owner = SystemServiceOwnerProofProvider::new(root, self.context.clone())?;
+                stop.require_original_absence(
+                    data,
+                    live.process()?,
+                    live.parent()?,
+                    &live.record_sha256,
+                    live.port,
+                    &owner,
+                )?;
+                self.session
+                    .originals
+                    .frame(Phase::Stopped)
+                    .map_err(error)?;
+            }
+        }
+        time(self.deadline)?;
+        Ok(refs)
+    }
+}
 impl RootStopAdmission<'_> {
     fn check_before_plan(&self, session: &StartupSession) -> AppResult<()> {
         time(self.deadline)?;
@@ -1409,6 +1520,104 @@ impl StartupSession {
             live_sha256: self.live_sha256.clone(),
         })
     }
+    pub fn original_root_absent(&self) -> bool {
+        self.originals.original_root_absence.is_some()
+    }
+    pub fn open_indexed(
+        context: &ProcessContext,
+        index: &session_index::Index,
+        head: &session_index::Head,
+    ) -> AppResult<Self> {
+        if index.has_original_root_absence() {
+            let originals = index.registered_root_originals(head).map_err(error)?;
+            let refs = head.references.as_ref().ok_or_else(|| error(()))?;
+            let result = Self {
+                originals,
+                scope_sha256: refs.scope_sha256.clone(),
+                live_sha256: refs.live_sha256.clone(),
+                profile: PinnedDirectory::open(&context.working_directory).map_err(error)?,
+                home: PinnedDirectory::open(&context.opencodex_home).map_err(error)?,
+            };
+            if result.live_sha256.is_some() {
+                result.live(context)?;
+            } else {
+                result.scope(context)?;
+            }
+            Ok(result)
+        } else {
+            Self::open(
+                context,
+                index.data_root(),
+                &effective_client(context)?,
+                head.references.as_ref().ok_or_else(|| error(()))?,
+            )
+        }
+    }
+    pub fn first_root_ready<'a>(
+        &'a mut self,
+        context: &'a ProcessContext,
+        lease: &'a NativeLease,
+        expected: &session_index::Head,
+        deadline: Instant,
+    ) -> AppResult<RootPhaseProof<'a>> {
+        if !self.original_root_absent() {
+            return Err(error(()));
+        }
+        self.bind_ready(context, lease, deadline)?;
+        let proof = RootPhaseProof {
+            session: self,
+            context,
+            expected: expected.clone(),
+            authority: RootPhaseAuthority::Ready(lease),
+            deadline,
+        };
+        Ok(proof)
+    }
+    pub fn first_root_pre_stop<'a>(
+        &'a self,
+        context: &'a ProcessContext,
+        expected: &session_index::Head,
+        deadline: Instant,
+    ) -> AppResult<RootPhaseProof<'a>> {
+        if !self.original_root_absent() {
+            return Err(error(()));
+        }
+        self.seal_pre_stop(context, deadline)?;
+        let proof = RootPhaseProof {
+            session: self,
+            context,
+            expected: expected.clone(),
+            authority: RootPhaseAuthority::PreStop,
+            deadline,
+        };
+        Ok(proof)
+    }
+    pub fn first_root_stopped<'a>(
+        &'a self,
+        request: &RootStopRequest<'a>,
+    ) -> AppResult<RootPhaseProof<'a>> {
+        let RootStopRequest {
+            context,
+            stop,
+            pair,
+            lease,
+            head,
+            deadline,
+        } = *request;
+        let deadline = stop.bound_deadline(deadline);
+        if !self.original_root_absent() {
+            return Err(error(()));
+        }
+        self.seal_completed_stop(context, stop, pair, lease, deadline)?;
+        let proof = RootPhaseProof {
+            session: self,
+            context,
+            expected: head.clone(),
+            authority: RootPhaseAuthority::Stopped(lease, stop, pair),
+            deadline,
+        };
+        Ok(proof)
+    }
     pub fn restore_evidence(
         &self,
         context: &ProcessContext,
@@ -1496,31 +1705,54 @@ impl StartupSession {
         deadline: Instant,
         plan: &session_index::RestorePlan,
     ) -> AppResult<()> {
-        let authority = ArtifactRestoreAuthority {
-            session: self,
-            context,
-            stop,
-            pair,
-            lease,
-            deadline,
-        };
-        authority.check(&self.originals)?;
-        let (root, _) = source(context)?;
-        let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
-        if owner.query(context)? != ServiceOwnerProof::Stopped {
-            return Err(error(()));
+        let phase = std::cell::Cell::new("authority-admission");
+        let result = (|| {
+            let authority = ArtifactRestoreAuthority {
+                session: self,
+                context,
+                stop,
+                pair,
+                lease,
+                deadline,
+            };
+            authority.check(&self.originals)?;
+            phase.set("service-stopped");
+            let (root, _) = source(context)?;
+            let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
+            if owner.query(context)? != ServiceOwnerProof::Stopped {
+                return Err(error(()));
+            }
+            let pending =
+                restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)?;
+            phase.set("apply-plan");
+            let permit = restore::MutationPermit::from_authority(authority);
+            pending
+                .apply(restore::Decision::Complete, &permit)
+                .map_err(|e| {
+                    #[cfg(test)]
+                    eprintln!(
+                        "ROOT_ARTIFACT_RESTORE_REFUSAL phase=apply-plan kind={:?} reason={}",
+                        e.kind(),
+                        e
+                    );
+                    error(e)
+                })?;
+            phase.set("post-apply-authority");
+            permit.check(&self.originals).map_err(error)?;
+            phase.set("post-apply-stopped");
+            if owner.query(context)? != ServiceOwnerProof::Stopped {
+                return Err(error(()));
+            }
+            time(deadline)
+        })();
+        if result.is_err() {
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.originals.data.path())
+                .append_event(&format!(
+                    "client-artifact-restore: refused phase={}",
+                    phase.get()
+                ));
         }
-        let pending =
-            restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)?;
-        let permit = restore::MutationPermit::from_authority(authority);
-        pending
-            .apply(restore::Decision::Complete, &permit)
-            .map_err(error)?;
-        permit.check(&self.originals).map_err(error)?;
-        if owner.query(context)? != ServiceOwnerProof::Stopped {
-            return Err(error(()));
-        }
-        time(deadline)
+        result
     }
     fn verify_root_stop_binding(
         &self,

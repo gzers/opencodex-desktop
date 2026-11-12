@@ -5,10 +5,14 @@ use crate::{
     errors::{AppError, AppResult},
     infrastructure::{
         macos_client_originals::{
-            session::StartupSession,
+            root_creation,
+            session::{RootStopRequest, StartupSession},
             session_index::{Head, Index, State},
         },
-        official_client_coordination::{native::with_native_coordination, Context},
+        official_client_coordination::{
+            native::{with_native_coordination, with_native_relocation_coordination, NativeLease},
+            Context,
+        },
     },
     state::ProcessContext,
 };
@@ -49,9 +53,25 @@ impl Active {
         })
     }
     pub fn capture(context: &ProcessContext, data: &Path, deadline: Instant) -> AppResult<Self> {
-        let client = client(context)?;
-        let index = Index::open(context, data, &client).map_err(failure)?;
-        let intent = index.reserve_start().map_err(failure)?;
+        let logical = context.working_directory.join(".codex");
+        let (client, index, intent, first) = match std::fs::symlink_metadata(&logical) {
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
+                let published = root_creation::reserve(data, &context.working_directory, deadline)
+                    .map_err(failure)?
+                    .publish()
+                    .map_err(failure)?;
+                let (index, intent) =
+                    Index::register_first_root(context, data, published).map_err(failure)?;
+                (logical, index, intent, true)
+            }
+            Err(e) => return Err(failure(e)),
+            Ok(_) => {
+                let client = client(context)?;
+                let index = Index::open(context, data, &client).map_err(failure)?;
+                let intent = index.reserve_start().map_err(failure)?;
+                (client, index, intent, false)
+            }
+        };
         #[cfg(test)]
         if std::env::var_os("OCXD024_INTERRUPT_BEFORE_CAPTURE").as_deref()
             == Some(std::ffi::OsStr::new("1"))
@@ -81,14 +101,22 @@ impl Active {
             codex_home: client.clone(),
             control_root: index.control_root().map_err(failure)?,
         };
-        let intent = index.reserve_capture(&intent).map_err(failure)?;
+        let intent = if first {
+            index.reserve_first_root_capture(&intent)
+        } else {
+            index.reserve_capture(&intent)
+        }
+        .map_err(failure)?;
         let reservation = index.capture_reservation(&intent).map_err(failure)?;
         let session = with_native_coordination(&coordination, deadline, |lease| {
             StartupSession::begin_reserved(context, data, &client, lease, deadline, &reservation)
         })?;
-        let head = index
-            .advance(&intent, State::Captured, Some(session.references()?))
-            .map_err(failure)?;
+        let head = if first {
+            index.record_first_root_originals(context, &intent, session.references()?)
+        } else {
+            index.advance(&intent, State::Captured, Some(session.references()?))
+        }
+        .map_err(failure)?;
         #[cfg(test)]
         if std::env::var_os("OCXD024_INTERRUPT_AFTER_CAPTURE").as_deref()
             == Some(std::ffi::OsStr::new("1"))
@@ -123,8 +151,7 @@ impl Active {
         if head.state != State::Ready {
             return Err(failure(()));
         }
-        let refs = head.references.as_ref().ok_or_else(|| failure(()))?;
-        let session = StartupSession::open(context, data, &client, refs)?;
+        let session = StartupSession::open_indexed(context, &index, &head)?;
         Ok(Self {
             index,
             head,
@@ -139,12 +166,25 @@ impl Active {
     pub fn ready(&mut self, context: &ProcessContext, deadline: Instant) -> AppResult<()> {
         let coordination = self.coordination(context)?;
         with_native_coordination(&coordination, deadline, |lease| {
-            self.session.bind_ready(context, lease, deadline)
+            if self.session.original_root_absent() {
+                let proof = self
+                    .session
+                    .first_root_ready(context, lease, &self.head, deadline)?;
+                self.head = self
+                    .index
+                    .record_first_root_phase(&proof)
+                    .map_err(failure)?;
+            } else {
+                self.session.bind_ready(context, lease, deadline)?;
+            }
+            Ok(())
         })?;
-        self.head = self
-            .index
-            .advance(&self.head, State::Ready, Some(self.session.references()?))
-            .map_err(failure)?;
+        if !self.session.original_root_absent() {
+            self.head = self
+                .index
+                .advance(&self.head, State::Ready, Some(self.session.references()?))
+                .map_err(failure)?;
+        }
         Ok(())
     }
     pub fn pre_stop(&mut self, context: &ProcessContext, deadline: Instant) -> AppResult<()> {
@@ -170,15 +210,25 @@ impl Active {
             });
         }
         self.stop_pair = Some(self.session.watch_stop_pair(context, deadline)?);
-        self.session.seal_pre_stop(context, deadline)?;
-        self.head = self
-            .index
-            .advance(
-                &self.head,
-                State::StopPrepared,
-                Some(self.session.references()?),
-            )
-            .map_err(failure)?;
+        if self.session.original_root_absent() {
+            let proof = self
+                .session
+                .first_root_pre_stop(context, &self.head, deadline)?;
+            self.head = self
+                .index
+                .record_first_root_phase(&proof)
+                .map_err(failure)?;
+        } else {
+            self.session.seal_pre_stop(context, deadline)?;
+            self.head = self
+                .index
+                .advance(
+                    &self.head,
+                    State::StopPrepared,
+                    Some(self.session.references()?),
+                )
+                .map_err(failure)?;
+        }
         Ok(())
     }
     pub fn stopped(
@@ -225,15 +275,34 @@ impl Active {
                 }
                 return Err(AppError::RuntimeManaged{code:"owned_fixture_missing_stopped".into(),detail:"owned interruption before Stopped observation/index, after original pair stopped".into()});
             }
-            with_native_coordination(&coordination, deadline, |lease| {
+            let first = self.session.original_root_absent();
+            let operation = |lease: &NativeLease| {
                 mark("seal-stopped");
-                self.session
-                    .seal_completed_stop(context, proof, &pair, lease, deadline)?;
+                if first {
+                    let request = RootStopRequest {
+                        context,
+                        stop: proof,
+                        pair: &pair,
+                        lease,
+                        head: &self.head,
+                        deadline,
+                    };
+                    let phase = self.session.first_root_stopped(&request)?;
+                    self.head = self
+                        .index
+                        .record_first_root_phase(&phase)
+                        .map_err(failure)?;
+                } else {
+                    self.session
+                        .seal_completed_stop(context, proof, &pair, lease, deadline)?;
+                }
                 mark("index-stopped");
-                self.head = self
-                    .index
-                    .advance(&self.head, State::Stopped, Some(self.session.references()?))
-                    .map_err(failure)?;
+                if !first {
+                    self.head = self
+                        .index
+                        .advance(&self.head, State::Stopped, Some(self.session.references()?))
+                        .map_err(failure)?;
+                }
                 mark("prepare-plan");
                 #[cfg(test)]
                 if std::env::var_os("OCXD024_INTERRUPT_BEFORE_PLAN").as_deref()
@@ -263,11 +332,67 @@ impl Active {
                 let plan = self.head.restore_plan.as_ref().ok_or_else(|| failure(()))?;
                 self.session
                     .restore_completed_stop(context, proof, &pair, lease, deadline, plan)?;
+                if first {
+                    mark("root-stop-admission");
+                    let source = self.head.clone();
+                    let request = RootStopRequest {
+                        context,
+                        stop: proof,
+                        pair: &pair,
+                        lease,
+                        head: &source,
+                        deadline,
+                    };
+                    let admission = self.session.admit_root_completed_stop(&request)?;
+                    let mut guard = lease.config_write_guard()?;
+                    mark("root-plan");
+                    let pending = self
+                        .session
+                        .prepare_root_completed_stop(&admission, &mut guard)?;
+                    let prepared = self
+                        .index
+                        .record_root_retirement(&source, pending.id(), pending.sha256())
+                        .map_err(failure)?;
+                    let plan = prepared
+                        .root_retirement
+                        .as_ref()
+                        .ok_or_else(|| failure(()))?
+                        .plan
+                        .clone();
+                    let registration = self
+                        .index
+                        .root_retirement_registration(&source, &prepared, &plan)
+                        .map_err(failure)?;
+                    self.head = prepared;
+                    mark("root-retire");
+                    let readback = self.session.retire_root_completed_stop(
+                        &admission,
+                        &registration,
+                        guard,
+                    )?;
+                    mark("root-close");
+                    self.head = self
+                        .index
+                        .close_root_absence(&self.head, &readback)
+                        .map_err(failure)?;
+                }
                 let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
                     .append_event("client-stop-recovery: assessed-artifact-originals restored and readback verified");
                 mark("release-coordination");
                 Ok(())
-            })?;
+            };
+            if first {
+                with_native_relocation_coordination(&coordination, deadline, operation)?;
+            } else {
+                with_native_coordination(&coordination, deadline, operation)?;
+            }
+            if first {
+                if self.head.state != State::RootAbsent {
+                    return Err(failure(()));
+                }
+                mark("root-absence-complete");
+                return Ok(());
+            }
             mark("full-tree-and-lock-release");
             let plan = self.head.restore_plan.as_ref().ok_or_else(|| failure(()))?;
             let readback = self

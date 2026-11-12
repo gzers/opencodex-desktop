@@ -204,12 +204,16 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
     let data = profile.join(".codex-desktop/desktop");
     let h = profile.join(".codex-desktop/opencodex/home");
     let client = profile.join(".codex");
+    let fresh_clients = std::env::var("OCXD024_FRESH_CLIENTS").unwrap_or_default();
     assert!(
         !h.join("config.json").exists() && !client.join("config.toml").exists(),
         "native fixture must not overwrite preexisting configuration"
     );
-    for path in [&data, &h, &client] {
+    for path in [&data, &h] {
         crate::infrastructure::platform::create_private_dir_all(path, 0o700).unwrap();
+    }
+    if fresh_clients != "codex-absent" {
+        crate::infrastructure::platform::create_private_dir_all(&client, 0o700).unwrap();
     }
     std::fs::create_dir_all(data.join("logs")).unwrap();
     let descriptor = std::fs::read(root.join("resources/runtime-bundle.manifest.json")).unwrap();
@@ -304,13 +308,16 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
         0o600,
     )
     .unwrap();
-    let fresh_clients = std::env::var("OCXD024_FRESH_CLIENTS").unwrap_or_default();
     assert!(matches!(
         fresh_clients.as_str(),
-        "" | "grok-absent" | "codex-empty" | "grok-first-backup" | "catalog-absent"
+        "" | "grok-absent"
+            | "codex-empty"
+            | "grok-first-backup"
+            | "catalog-absent"
+            | "codex-absent"
     ));
     let grok = profile.join(".grok");
-    if fresh_clients != "codex-empty" {
+    if !matches!(fresh_clients.as_str(), "codex-empty" | "codex-absent") {
         atomic_write(
             &client.join("config.toml"),
             br#"model = "gpt-5.4"
@@ -647,6 +654,54 @@ model_provider = "openai"
         )
         .unwrap();
     let after_stop = indexed_after_stop.head().unwrap().unwrap();
+    if fresh_clients == "codex-absent" {
+        let root_absent = after_stop.state
+            == crate::infrastructure::macos_client_originals::session_index::State::RootAbsent;
+        report["scope"]="diagnostic first-root Start/Stop only; next Start and interrupted root recovery remain unaccepted".into();
+        report["accepted"] = false.into();
+        report["rootAbsentTerminal"] =
+            (root_absent && !client.exists() && after_stop.completion_sha256.is_some()).into();
+        report["indexedAfterStop"] = serde_json::to_value(&after_stop).unwrap();
+        write(&report);
+        assert!(root_absent&&!client.exists()&&after_stop.completion_sha256.is_some(),"first-root Stop must commit exact original absence; preserve report and app log on refusal");
+        let _archive = indexed_after_stop
+            .archived_root_originals(&after_stop)
+            .unwrap();
+        let archive_path = data
+            .join("manager-state/client-originals")
+            .join(&after_stop.ticket)
+            .join(format!(
+                "root-retired-{}",
+                after_stop.root_retirement.as_ref().unwrap().plan.id
+            ));
+        assert!(!archive_path.join("config.toml.ocx-write.lock").exists());
+        let raw = std::fs::read(
+            data.join("manager-state/client-originals")
+                .join(&after_stop.ticket)
+                .join("original.json"),
+        )
+        .unwrap();
+        let original: serde_json::Value = serde_json::from_slice(&raw).unwrap();
+        assert_eq!(original["schemaVersion"], 5);
+        assert!(original["originalRootAbsence"].is_object());
+        assert_eq!(
+            after_stop.references.as_ref().unwrap().original_sha256,
+            crate::infrastructure::hash::sha256_hex(&raw)
+        );
+        assert!(restored.values().all(|v| *v));
+        report["originalAbsentProvenanceAndReadback"] = true.into();
+        report["result"] = "failed".into();
+        write(&report);
+        assert!(stop_ok,"RootAbsent alone cannot replace normal Stop success including coordination release and final source checks");
+        assert!(matches!(&start,Ok(v) if v.result==Some(LifecycleResult::Started)));
+        assert!(report["startElapsedMs"].as_u64().unwrap() < 30000);
+        assert!(report["stopElapsedMs"].as_u64().unwrap() < 10000);
+        assert!(!h.join("runtime-port.json").exists() && !h.join("ocx.pid").exists());
+        report["result"] = "passed".into();
+        write(&report);
+        println!("OFFICIAL299_FIRST_ROOT_DIAGNOSTIC {report}");
+        return;
+    }
     report["indexedStopped"] = (after_stop.state
         == crate::infrastructure::macos_client_originals::session_index::State::Stopped)
         .into();

@@ -838,6 +838,10 @@ impl Index {
             .ok_or_else(|| denied("session index closed"))
     }
     fn check(&self) -> io::Result<()> {
+        self.checked_head().map(|_| ())
+    }
+    fn checked_head(&self) -> io::Result<Option<Head>> {
+        let observed_head = read_head(self.connection()?)?;
         self.data.private()?;
         if self.root_registration.is_none() {
             self.client.recheck()?;
@@ -852,14 +856,13 @@ impl Index {
             if stored != self.binding {
                 return Err(denied("registered root binding changed during action"));
             }
-            root_binding::verify_initial_event(self.connection()?, refs)?;
             let context = ProcessContext {
                 runtime:
                     crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(),
                 working_directory: self.profile.clone(),
                 opencodex_home: self.context_home.clone(),
             };
-            let current = read_head(self.connection()?)?;
+            let current = &observed_head;
             let (resolved, origin) = root_binding::resolve(
                 &context,
                 &self.data,
@@ -922,28 +925,16 @@ impl Index {
         if result != rusqlite::ffi::SQLITE_OK || moved != 0 {
             return Err(denied("session index native database changed"));
         }
-        Ok(())
-    }
-    pub fn head(&self) -> io::Result<Option<Head>> {
-        self.check()?;
-        let head = read_head(self.connection()?)?;
-        if self.root_registration.is_some() && head.is_none() {
+        if read_head(self.connection()?)? != observed_head {
+            return Err(denied("session head changed during checked observation"));
+        }
+        if self.root_registration.is_some() && observed_head.is_none() {
             return Err(denied("registered first root session disappeared"));
         }
-        if let (Some(origin), Some(head)) = (
-            &self.root_registration,
-            head.as_ref().filter(|h| h.root_retirement.is_none()),
-        ) {
-            root_binding::verify_capture(
-                &self.binding,
-                origin,
-                &self.data,
-                &self.profile,
-                &self.client,
-                head,
-            )?;
-        }
-        Ok(head)
+        Ok(observed_head)
+    }
+    pub fn head(&self) -> io::Result<Option<Head>> {
+        self.checked_head()
     }
     pub fn registered_root_originals(&self, expected: &Head) -> io::Result<Originals> {
         if self.head()?.as_ref() != Some(expected) {
@@ -962,6 +953,71 @@ impl Index {
             expected,
         )?
         .ok_or_else(|| denied("root Original is not independently registered"))
+    }
+    pub fn has_original_root_absence(&self) -> bool {
+        self.root_registration.is_some()
+    }
+    pub fn archived_root_originals(&self, expected: &Head) -> io::Result<Originals> {
+        if expected.state != State::RootAbsent || self.head()?.as_ref() != Some(expected) {
+            return Err(denied("root archive terminal not current"));
+        }
+        let root = self
+            .root_registration
+            .as_ref()
+            .ok_or_else(|| denied("root archive has no independent origin"))?;
+        let movement = expected
+            .root_retirement
+            .as_ref()
+            .ok_or_else(|| denied("root archive movement not registered"))?;
+        let raw: Vec<u8> = self
+            .connection()?
+            .query_row(
+                "SELECT document FROM events WHERE revision=?1",
+                [movement.source_revision],
+                |r| r.get(0),
+            )
+            .map_err(database_error)?;
+        let source: Head = decode(&raw)?;
+        super::root_retirement::open_archived_originals(
+            self.data.path(),
+            &self.profile,
+            &super::root_retirement::ArchiveReferences {
+                source,
+                original_root: root.clone(),
+                plan_id: movement.plan.id.clone(),
+                plan_sha256: movement.plan.sha256.clone(),
+            },
+        )
+    }
+    pub fn record_first_root_phase(&self, proof: &session::RootPhaseProof<'_>) -> io::Result<Head> {
+        let origin = self
+            .root_registration
+            .as_ref()
+            .ok_or_else(|| denied("root phase has no original absence"))?;
+        let expected = proof.source();
+        if expected.ticket != origin.id || self.head()?.as_ref() != Some(expected) {
+            return Err(denied("root phase source changed"));
+        }
+        let refs = proof
+            .require(self.data.path(), self.client.path(), &self.profile)
+            .map_err(|_| denied("current native root phase proof unconfirmed"))?;
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("root phase revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: proof.state(),
+            references: Some(refs),
+            restore_plan: None,
+            completion_sha256: None,
+            root_retirement: None,
+        };
+        self.write(Some(expected), &next)?;
+        proof
+            .require(self.data.path(), self.client.path(), &self.profile)
+            .map_err(|_| denied("root phase commit lost current authority; references retained"))?;
+        Ok(next)
     }
     fn cancel_history(&self, head: &Head) -> io::Result<Vec<Head>> {
         self.check()?;
@@ -1236,6 +1292,21 @@ impl Index {
     /// Reference publication only. This does not authorize applying the plan;
     /// the native service/family proof and mutation permit remain separate.
     pub fn record_restore_plan(&self, expected: &Head, id: &str, sha256: &str) -> io::Result<Head> {
+        if self.root_registration.is_some() {
+            if expected.state != State::Stopped {
+                return Err(denied(
+                    "first-root restoration requires actual Stopped prefix",
+                ));
+            }
+            let originals = self.registered_root_originals(expected)?;
+            let pending = restore::Pending::open(&originals, id, sha256)?;
+            pending.require_indexed_references(
+                expected
+                    .references
+                    .as_ref()
+                    .ok_or_else(|| denied("root restore references missing"))?,
+            )?;
+        }
         if !matches!(
             expected.state,
             State::Stopped | State::StopPrepared | State::Ready
@@ -1592,6 +1663,14 @@ impl Index {
                 && next.state == State::CaptureReserved
                 || expected.is_some_and(|h| h.state == State::CaptureReserved)
                     && next.state == State::Captured
+                || expected.is_some_and(|h| h.state == State::Captured)
+                    && next.state == State::Ready
+                || expected.is_some_and(|h| h.state == State::Ready)
+                    && next.state == State::StopPrepared
+                || expected.is_some_and(|h| h.state == State::StopPrepared)
+                    && next.state == State::Stopped
+                || expected.is_some_and(|h| h.state == State::Stopped)
+                    && next.state == State::RestorePrepared
                 || expected.is_some_and(|h| {
                     matches!(
                         h.state,

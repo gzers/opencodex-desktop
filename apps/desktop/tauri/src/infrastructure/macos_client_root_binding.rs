@@ -68,14 +68,19 @@ pub(super) fn verify_capture(
     let Some(refs) = &head.references else {
         return Ok(None);
     };
+    validate(head)?;
     if refs.attempt != origin.id
-        || !refs.phases.is_empty()
-        || refs.live_sha256.is_some()
-        || !matches!(head.state, State::Captured | State::Failed)
+        || !matches!(
+            head.state,
+            State::Captured
+                | State::Ready
+                | State::StopPrepared
+                | State::Stopped
+                | State::RestorePrepared
+                | State::Failed
+        )
     {
-        return Err(denied(
-            "first-root capture has unexpected unintegrated phase evidence",
-        ));
+        return Err(denied("first-root capture has unexpected phase evidence"));
     }
     let originals = Originals::open_profile_origin(
         data.path(),
