@@ -189,6 +189,15 @@ impl Active {
                 .append_event(
                 "client-stop-recovery: full-tree protection and two stable-lock releases verified",
             );
+            mark("close-session-index");
+            self.head = self
+                .index
+                .close_restored(&self.head, &readback)
+                .map_err(failure)?;
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
+                .append_event(
+                    "client-stop-recovery: restored session index committed and readback verified",
+                );
             Ok(())
         })();
         // Fixed phase names and monotonic durations only; no paths, source

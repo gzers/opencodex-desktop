@@ -9,6 +9,42 @@ struct Fixture {
     client: PathBuf,
     context: ProcessContext,
 }
+#[test]
+#[ignore = "explicit retained owned fixture; read-only completion integrity observation, no service/new baseline"]
+fn inspect_owned_closed_index_without_starting_or_repairing() {
+    let root = PathBuf::from(std::env::var_os("OCXD024_CLOSED_INDEX_ROOT").expect("owned fixture"));
+    assert!(
+        root.is_absolute()
+            && root.canonicalize().unwrap() == root
+            && root.starts_with("/private/tmp")
+            && root.ancestors().any(|p| p.file_name().is_some_and(|n| n
+                .to_string_lossy()
+                .starts_with("ocxd024-versioned-lifecycle-")))
+    );
+    let profile = root.join("profile");
+    let data = profile.join(".codex-desktop/desktop");
+    let context = ProcessContext {
+        runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(),
+        working_directory: profile.clone(),
+        opencodex_home: profile.join(".codex-desktop/opencodex/home"),
+    };
+    let result = inspect(&context, &data);
+    let expected = std::env::var("OCXD024_CLOSED_INDEX_EXPECT").expect("expected observation");
+    match result {
+        Ok(Some(head)) if expected == "restored" => {
+            assert_eq!(head.state, State::Restored);
+            println!(
+                "{}",
+                serde_json::json!({"observed":"restored","revision":head.revision,"receiptSha256":head.completion_sha256,"readOnly":true})
+            );
+        }
+        Err(error) if expected == "refused" => println!(
+            "{}",
+            serde_json::json!({"observed":"refused","kind":format!("{:?}",error.kind()),"readOnly":true})
+        ),
+        other => panic!("unexpected completion integrity observation: {other:?}"),
+    }
+}
 impl Fixture {
     fn new() -> Self {
         let temp = tempfile::Builder::new()
@@ -536,6 +572,44 @@ fn restore_plan_references_commit_once_with_same_originals_and_survive_reopen() 
     drop(store);
     let reopened = f.open().unwrap();
     assert_eq!(reopened.head().unwrap(), Some(planned));
+    assert!(reopened.reserve_start().is_err());
+}
+
+#[test]
+fn restored_label_and_digest_cannot_forge_a_completed_session_or_new_start() {
+    let f = Fixture::new();
+    let store = f.open().unwrap();
+    let current = stopped(&store);
+    let planned = store
+        .record_restore_plan(
+            &current,
+            "88fe6d0a-56fd-475f-bf92-c5f0f813779a",
+            &"e".repeat(64),
+        )
+        .unwrap();
+    assert!(store
+        .advance(&planned, State::Restored, planned.references.clone())
+        .is_err());
+    let mut forged = planned.clone();
+    forged.state = State::Restored;
+    assert!(validate(&forged).is_err());
+    forged.completion_sha256 = Some("f".repeat(64));
+    forged.revision += 1;
+    validate(&forged).unwrap();
+    // An independently serialized digest/label still lacks original frames and
+    // real bound receipt. Structural JSON validity cannot grant restart.
+    assert!(completion::verify_registered(
+        &f.data,
+        &f.client,
+        &f.context.working_directory,
+        &forged
+    )
+    .is_err());
+    store.write(Some(&planned), &forged).unwrap();
+    assert!(store.reserve_start().is_err());
+    drop(store);
+    assert!(inspect(&f.context, &f.data).is_err());
+    let reopened = f.open().unwrap();
     assert!(reopened.reserve_start().is_err());
 }
 #[test]

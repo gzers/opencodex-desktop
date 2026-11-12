@@ -472,7 +472,9 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
             let proof = owner.stop_lifecycle_verified(context, deadline, data_root)?;
             *_observed_stop = Some(proof.observation(context, data_root)?);
             active.stopped(context, &proof, deadline)?;
-            return Err(client_session_lifecycle::pending_restore());
+            if command.action == LifecycleAction::Stop {
+                return Ok(LifecycleResult::Stopped);
+            }
         }
         #[cfg(not(target_os = "macos"))]
         owner.stop_lifecycle(context, deadline, data_root)?;

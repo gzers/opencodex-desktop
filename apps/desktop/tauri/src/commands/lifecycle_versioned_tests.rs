@@ -456,6 +456,19 @@ model_provider = "openai"
     report["indexedStopped"] = (after_stop.state
         == crate::infrastructure::macos_client_originals::session_index::State::Stopped)
         .into();
+    report["indexedRestored"] = (after_stop.state
+        == crate::infrastructure::macos_client_originals::session_index::State::Restored)
+        .into();
+    if stop_ok {
+        assert_eq!(
+            after_stop.state,
+            crate::infrastructure::macos_client_originals::session_index::State::Restored
+        );
+        assert!(
+            after_stop.completion_sha256.is_some(),
+            "successful Stop requires independent completion digest"
+        );
+    }
     report["indexedRevision"] = serde_json::json!(after_stop.revision);
     report["indexedRestorePrepared"] = (after_stop.state
         == crate::infrastructure::macos_client_originals::session_index::State::RestorePrepared)
@@ -557,6 +570,56 @@ model_provider = "openai"
         && report["startElapsedMs"].as_u64().unwrap() < 30000
         && report["statusElapsedMs"].as_u64().unwrap() < 5000
         && report["stopElapsedMs"].as_u64().unwrap() < 10000;
+    let mut passed = passed;
+    if passed
+        && std::env::var_os("OCXD024_REPEAT_SESSION").as_deref() == Some(std::ffi::OsStr::new("1"))
+    {
+        let again = Instant::now();
+        let second_start = process_action_with_runner(
+            ProcessActionRequest {
+                action: LifecycleAction::Start,
+                confirm: true,
+            },
+            &runner,
+            &context,
+            &log,
+            None,
+        )
+        .unwrap();
+        let second_start_ms = again.elapsed().as_millis();
+        let stopping = Instant::now();
+        let second_stop = process_action_with_runner(
+            ProcessActionRequest {
+                action: LifecycleAction::Stop,
+                confirm: true,
+            },
+            &runner,
+            &context,
+            &log,
+            None,
+        )
+        .unwrap();
+        let second_stop_ms = stopping.elapsed().as_millis();
+        let index = crate::infrastructure::macos_client_originals::session_index::Index::open(
+            &context, &data, &client,
+        )
+        .unwrap();
+        let head = index.head().unwrap().unwrap();
+        let all_restored = paths
+            .iter()
+            .all(|(name, path)| std::fs::read(path).ok() == before[*name]);
+        let repeat_ok = second_start.result == Some(LifecycleResult::Started)
+            && second_stop.result == Some(LifecycleResult::Stopped)
+            && second_start_ms < 30000
+            && second_stop_ms < 10000
+            && all_restored
+            && head.state
+                == crate::infrastructure::macos_client_originals::session_index::State::Restored
+            && head.revision == 14
+            && head.completion_sha256.is_some();
+        report["secondSession"] = serde_json::json!({"start":second_start,"stop":second_stop,"startElapsedMs":second_start_ms,"stopElapsedMs":second_stop_ms,"allOriginalBytesRestored":all_restored,"indexRevision":head.revision,"newTicket":head.ticket!=after_stop.ticket,"result":if repeat_ok{"passed"}else{"failed"}});
+        passed &= repeat_ok && head.ticket != after_stop.ticket;
+    }
     report["result"] = if passed { "passed" } else { "failed" }.into();
     write(&report);
     println!("OFFICIAL299_NATIVE_LIFECYCLE {report}");

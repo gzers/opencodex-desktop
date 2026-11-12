@@ -154,7 +154,7 @@ pub fn inspect(context: &ProcessContext, data_root: &Path) -> io::Result<Option<
     let version: i64 = connection
         .query_row("PRAGMA user_version", [], |r| r.get(0))
         .map_err(database_error)?;
-    if version != 2 {
+    if version != 3 {
         return Err(denied("unsupported current index; not migrated"));
     }
     validate_schema(&connection)?;
@@ -167,6 +167,14 @@ pub fn inspect(context: &ProcessContext, data_root: &Path) -> io::Result<Option<
         return Err(denied("observation HOME or directory generation differs"));
     }
     let result = read_head(&connection)?;
+    if let Some(head) = result.as_ref().filter(|head| head.state == State::Restored) {
+        completion::verify_registered(
+            data.path(),
+            client.path(),
+            &context.working_directory,
+            head,
+        )?;
+    }
     if result.is_none() && entry(&manager, "client-originals")?.is_some() {
         return Err(denied("originals remain without current references"));
     }

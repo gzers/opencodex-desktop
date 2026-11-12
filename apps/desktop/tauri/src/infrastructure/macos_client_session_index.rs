@@ -27,6 +27,7 @@ pub enum State {
     StopPrepared,
     Stopped,
     RestorePrepared,
+    Restored,
     Failed,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -37,6 +38,7 @@ pub struct Head {
     pub state: State,
     pub references: Option<References>,
     pub restore_plan: Option<RestorePlan>,
+    pub completion_sha256: Option<String>,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -59,7 +61,12 @@ fn valid_hash(value: &str) -> bool {
             .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
 }
 fn validate(head: &Head) -> io::Result<()> {
-    if (head.state == State::RestorePrepared) != head.restore_plan.is_some()
+    if matches!(head.state, State::RestorePrepared | State::Restored) != head.restore_plan.is_some()
+        || (head.state == State::Restored) != head.completion_sha256.is_some()
+        || head
+            .completion_sha256
+            .as_ref()
+            .is_some_and(|s| !valid_hash(s))
         || head.restore_plan.as_ref().is_some_and(|plan| {
             uuid::Uuid::parse_str(&plan.id)
                 .map(|v| v.to_string() != plan.id)
@@ -109,7 +116,7 @@ fn validate(head: &Head) -> io::Result<()> {
         State::Captured => Some((0, false)),
         State::Ready => Some((1, true)),
         State::StopPrepared => Some((2, true)),
-        State::Stopped | State::RestorePrepared => Some((3, true)),
+        State::Stopped | State::RestorePrepared | State::Restored => Some((3, true)),
         State::Preparing => return Err(denied("unpublished originals in preparing index")),
         State::Failed => None,
     };
@@ -227,6 +234,7 @@ pub struct Index {
     binding: Vec<u8>,
     data: PinnedDirectory,
     client: PinnedDirectory,
+    profile: PathBuf,
 }
 impl Index {
     pub fn data_root(&self) -> &Path {
@@ -359,7 +367,7 @@ impl Index {
                     connection.execute_batch(sql).map_err(database_error)?;
                 }
                 connection
-                    .execute_batch("PRAGMA user_version=2")
+                    .execute_batch("PRAGMA user_version=3")
                     .map_err(database_error)?;
                 connection
                     .execute(
@@ -367,7 +375,7 @@ impl Index {
                         [&binding],
                     )
                     .map_err(database_error)?;
-            } else if version != 2 {
+            } else if version != 3 {
                 return Err(denied(
                     "unsupported session index version or abandoned initializer",
                 ));
@@ -401,6 +409,7 @@ impl Index {
             binding,
             data,
             client,
+            profile: context.working_directory.clone(),
         };
         result.head()?;
         Ok(result)
@@ -465,24 +474,40 @@ impl Index {
         read_head(self.connection()?)
     }
     pub fn reserve_start(&self) -> io::Result<Head> {
-        if self.head()?.is_some() {
+        let previous = self.head()?;
+        if previous
+            .as_ref()
+            .is_some_and(|head| head.state != State::Restored)
+        {
             return Err(denied(
                 "unfinished original session blocks a new startup baseline",
             ));
         }
-        if observation::entry(&self.action_parent, "client-originals")?.is_some() {
+        if let Some(head) = &previous {
+            completion::verify_registered(
+                self.data.path(),
+                self.client.path(),
+                &self.profile,
+                head,
+            )?;
+        } else if observation::entry(&self.action_parent, "client-originals")?.is_some() {
             return Err(denied(
                 "retained originals cannot become a new startup baseline",
             ));
         }
         let head = Head {
-            revision: 1,
+            revision: previous
+                .as_ref()
+                .map(|h| h.revision.checked_add(1))
+                .unwrap_or(Some(1))
+                .ok_or_else(|| denied("session revision overflow"))?,
             ticket: uuid::Uuid::new_v4().to_string(),
             state: State::Preparing,
             references: None,
             restore_plan: None,
+            completion_sha256: None,
         };
-        self.write(None, &head)?;
+        self.write(previous.as_ref(), &head)?;
         Ok(head)
     }
     pub fn advance(
@@ -498,7 +523,10 @@ impl Index {
                 | (State::Ready, State::StopPrepared)
                 | (State::StopPrepared, State::Stopped)
         ) || state == State::Failed
-            && !matches!(expected.state, State::Stopped | State::RestorePrepared);
+            && !matches!(
+                expected.state,
+                State::Stopped | State::RestorePrepared | State::Restored
+            );
         if !allowed {
             return Err(denied("current session transition is not allowed"));
         }
@@ -524,6 +552,7 @@ impl Index {
             state,
             references,
             restore_plan: None,
+            completion_sha256: None,
         };
         self.write(Some(expected), &next)?;
         Ok(next)
@@ -546,9 +575,52 @@ impl Index {
                 id: id.into(),
                 sha256: sha256.into(),
             }),
+            completion_sha256: None,
         };
         validate(&next)?;
         self.write(Some(expected), &next)?;
+        Ok(next)
+    }
+    pub fn close_restored(
+        &self,
+        expected: &Head,
+        proof: &completion::ReadbackProof,
+    ) -> io::Result<Head> {
+        proof.require_index(expected, self.data.identity(), self.client.identity())?;
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("session revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: State::Restored,
+            references: expected.references.clone(),
+            restore_plan: expected.restore_plan.clone(),
+            completion_sha256: Some(proof.sha256().into()),
+        };
+        completion::verify_registered(self.data.path(), self.client.path(), &self.profile, &next)?;
+        proof.require_index(expected, self.data.identity(), self.client.identity())?;
+        self.write(Some(expected), &next)?;
+        if let Err(error) =
+            proof.require_index(expected, self.data.identity(), self.client.identity())
+        {
+            // A slow durable commit cannot lend a fresh budget or leave a
+            // successful gate behind after the action reports timeout. This
+            // safety demotion is a new retained event, never success recovery.
+            let pending = Head {
+                revision: next
+                    .revision
+                    .checked_add(1)
+                    .ok_or_else(|| denied("session revision overflow"))?,
+                ticket: expected.ticket.clone(),
+                state: State::RestorePrepared,
+                references: expected.references.clone(),
+                restore_plan: expected.restore_plan.clone(),
+                completion_sha256: None,
+            };
+            self.write(Some(&next), &pending)?;
+            return Err(error);
+        }
         Ok(next)
     }
     fn write(&self, expected: Option<&Head>, next: &Head) -> io::Result<()> {

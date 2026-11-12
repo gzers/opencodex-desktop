@@ -233,6 +233,41 @@ fn read_private(originals: &Originals, name: &str, sha: &str) -> AppResult<Vec<u
 fn parse<T: serde::de::DeserializeOwned>(bytes: &[u8]) -> AppResult<T> {
     serde_json::from_value(parse_strict_json_v2(bytes).map_err(error)?).map_err(error)
 }
+pub(super) fn verify_closed_reference_files(
+    originals: &Originals,
+    refs: &References,
+) -> AppResult<()> {
+    let scope: Scope = parse(&read_private(
+        originals,
+        "startup-scope.json",
+        &refs.scope_sha256,
+    )?)?;
+    let live: Live = parse(&read_private(
+        originals,
+        "startup-live.json",
+        refs.live_sha256.as_deref().ok_or_else(|| error(()))?,
+    )?)?;
+    let (_, ready) = originals.frame(Phase::Ready).map_err(error)?;
+    if scope.schema_version != 1
+        || scope.attempt != refs.attempt
+        || scope.original_sha256 != refs.original_sha256
+        || scope.uid != unsafe { libc::geteuid() }
+        || scope.data_identity != *originals.data.identity()
+        || scope.client_identity != *originals.client.identity()
+        || scope.profile_identity != *originals.profile.identity()
+        || scope.data != originals.data.path
+        || scope.client != originals.client.path
+        || scope.profile != originals.profile.path
+        || live.schema_version != 1
+        || live.scope_sha256 != refs.scope_sha256
+        || live.ready_sha256 != digest(&ready)
+    {
+        return Err(error(()));
+    }
+    live.process()?;
+    live.parent()?;
+    Ok(())
+}
 fn private_runtime(home: &PinnedDirectory) -> AppResult<(String, u32, u16)> {
     let image = capture_file(home, "runtime-port.json", 4096).map_err(error)?;
     let Image::File {
