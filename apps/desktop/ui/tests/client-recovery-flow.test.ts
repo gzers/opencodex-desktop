@@ -68,6 +68,21 @@ describe('explicit client recovery interaction', () => {
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue(preparing());vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:2,status:'unchanged'})
     const store=await inspect();store.choose('cancelPreparation');expect(await store.apply('cancelPreparation')).toBe(false);expect(store.preview).toBeNull();expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
   })
+  it('separately confirms reserved partial capture cancellation while promising preservation, not restoration',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),phase:'capture_reserved',revision:2})
+    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:3,status:'cancelled_capture'})
+    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
+    expect(view.text()).toContain('原件捕获已中断，服务尚未启动');expect(button('核对并结束会话')).toBeUndefined()
+    await button('取消启动准备')!.trigger('click');expect(view.text()).toContain('保留已捕获文件，再取消本次启动')
+    await button('确认取消启动准备')!.trigger('click');await flushPromises()
+    expect(view.text()).toContain('本次启动已取消，已捕获文件保留');expect(view.text()).not.toContain('原件保持完整')
+    expect(useClientRecoveryStore().ready).toBe(true);expect(clientRecoveryApi.finishUnchanged).not.toHaveBeenCalled()
+  })
+  it('cannot substitute pre-capture cancellation outcome for a partially captured session',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),phase:'capture_reserved',revision:2})
+    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:3,status:'cancelled_before_capture'})
+    const store=await inspect();store.choose('cancelPreparation');expect(await store.apply('cancelPreparation')).toBe(false);expect(store.preview).toBeNull();expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+  })
   it('requires explicit early closure review and cancellation submits nothing',async()=>{
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue(early())
     const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()

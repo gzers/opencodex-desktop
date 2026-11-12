@@ -2,7 +2,7 @@
 import { clientRecoveryApi, type ClientRecoveryPreview } from '@/features/runtime/client-recovery'
 import { useLifecycleStore } from '@/app/lifecycle/store'
 import type { StatusSnapshot } from '@/contracts/runtimeStatus'
-type Scene = 'prepare' | 'prepare-slow' | 'prepare-error' | 'prepare-refresh-failed' | 'early' | 'early-slow' | 'early-error' | 'early-refresh-failed' | 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
+type Scene = 'capture' | 'capture-slow' | 'capture-error' | 'prepare' | 'prepare-slow' | 'prepare-error' | 'prepare-refresh-failed' | 'early' | 'early-slow' | 'early-error' | 'early-refresh-failed' | 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
 export function installClientRecoveryFixture(initial: string) {
   let scene = initial as Scene, finalized = false, revision = initial.startsWith('rearm') ? 7 : 6
   let phase: 'restore_prepared'|'restore_rolled_back' = initial.startsWith('rearm') ? 'restore_rolled_back' : 'restore_prepared'
@@ -23,6 +23,7 @@ export function installClientRecoveryFixture(initial: string) {
     if (scene === 'pending') { value.canFinalize = false; value.confirmationDigest = null; value.completionEvidence = 'not_recorded' }
     if(scene.startsWith('early'))Object.assign(value,{phase:'captured',revision:2,phaseCount:0,planEvidence:'not_recorded',completionEvidence:'not_recorded',canFinalize:false,confirmationDigest:null,canFinishUnchanged:true,unchangedDigest:'e'.repeat(64)})
     if(scene.startsWith('prepare'))Object.assign(value,{phase:'preparing',revision:1,phaseCount:0,originalEvidence:'not_recorded',planEvidence:'not_recorded',completionEvidence:'not_recorded',canFinalize:false,confirmationDigest:null,canCancelPreparation:true,preparationDigest:'f'.repeat(64)})
+    if(scene.startsWith('capture'))Object.assign(value,{phase:'capture_reserved',revision:2,phaseCount:0,originalEvidence:'not_recorded',planEvidence:'not_recorded',completionEvidence:'not_recorded',canFinalize:false,confirmationDigest:null,canCancelPreparation:true,preparationDigest:'f'.repeat(64)})
     if(scene==='rolled-back'){value.phase='restore_rolled_back';value.canFinalize=false;value.confirmationDigest=null;value.completionEvidence='verified'}
     if (scene.startsWith('continue')||scene.startsWith('rollback')||scene.startsWith('rearm')) {value.canContinue=true;value.canRollback=true;value.rollbackDigest='b'.repeat(64);value.canFinalize=false;value.completionEvidence='not_recorded'}
     if(phase==='restore_rolled_back'){value.canContinue=false;value.canRollback=false;value.canFinalize=false;value.canRearm=true;value.confirmationDigest=null;value.rollbackDigest=null;value.rearmDigest='c'.repeat(64);value.completionEvidence='verified'}
@@ -68,10 +69,10 @@ export function installClientRecoveryFixture(initial: string) {
     return {attemptId:request.attemptId,revision,status:'unchanged'}
   }
   clientRecoveryApi.cancelPreparation=async request=>{
-    calls.push('cancelPreparation');await new Promise(resolve=>setTimeout(resolve,scene==='prepare-slow'?1200:200))
-    if(scene==='prepare-error')throw new Error('启动准备或停止状态尚未核实；原现场保留。')
+    calls.push('cancelPreparation');await new Promise(resolve=>setTimeout(resolve,scene==='prepare-slow'||scene==='capture-slow'?1200:200))
+    if(scene==='prepare-error'||scene==='capture-error')throw new Error('启动准备或停止状态尚未核实；原现场保留。')
     finalized=true;revision=request.revision+1
-    return {attemptId:request.attemptId,revision,status:'cancelled_before_capture'}
+    return {attemptId:request.attemptId,revision,status:scene.startsWith('capture')?'cancelled_capture':'cancelled_before_capture'}
   }
   const api = { calls, setScene(value: Scene) { scene = value },
     state: () => ({ scene, finalized,phase,revision, blocked: useLifecycleStore().clientRecoveryRequired }) }

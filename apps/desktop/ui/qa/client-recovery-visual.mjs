@@ -32,7 +32,7 @@ try {
   while (true) { try { if ((await fetch(base)).ok) break } catch {} if (Date.now() > deadline) throw Error('Vite did not start'); await new Promise(resolve => setTimeout(resolve, 100)) }
   const engine = await pickEngine(); report.engine = engine.name; browser = await engine.launch()
   for (const scene of (process.env.AUDIT_RECOVERY_SCENES?.split(',') ?? ['eligible', 'pending', 'unknown', 'active', 'none', 'unsupported', 'error', 'slow', 'refresh-failed'])) {
-    const sizes = ['eligible','continue','rollback','rearm','early','prepare'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
+    const sizes = ['eligible','continue','rollback','rearm','early','prepare','capture'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
     for (const [width, height, theme] of sizes) {
       const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
       const errors = []; page.on('pageerror', e => errors.push(e.message))
@@ -42,28 +42,28 @@ try {
       await page.locator('dialog[open]').waitFor()
       await page.waitForFunction(() => !document.querySelector('dialog[open]')?.textContent.includes('正在核对原会话和恢复记录'))
       const name = scene + '-' + width + '-' + theme
-      if(scene.startsWith('prepare')){
-        await page.getByText('启动准备已中断，尚未开始捕获原件。',{exact:true}).waitFor()
+      if(scene.startsWith('prepare')||scene.startsWith('capture')){
+        await page.getByText(scene.startsWith('capture')?'原件捕获已中断，服务尚未启动。':'启动准备已中断，尚未开始捕获原件。',{exact:true}).waitFor()
         assert.equal(await page.getByRole('button',{name:'确认继续恢复',exact:true}).count(),0)
         await page.getByRole('button',{name:'取消启动准备',exact:true}).click()
         await page.getByText('保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。',{exact:true}).waitFor()
         const size=await geometry(page);await screenshot(page,name+'-review')
-        if(scene==='prepare'){
+        if(scene==='prepare'||scene==='capture'){
           await page.getByRole('button',{name:'返回',exact:true}).click()
           assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='cancelPreparation').length),0)
           await page.getByRole('button',{name:'取消启动准备',exact:true}).click()
         }
         await page.getByRole('button',{name:'确认取消启动准备',exact:true}).click()
-        if(scene==='prepare-slow'){
+        if(scene==='prepare-slow'||scene==='capture-slow'){
           await page.getByText('正在核对并取消启动准备…',{exact:true}).waitFor()
           await page.getByRole('button',{name:'关闭',exact:true}).last().click()
           await page.getByRole('button',{name:'查看恢复进度',exact:true}).click()
         }
-        if(scene==='prepare-error'){
+        if(scene==='prepare-error'||scene==='capture-error'){
           await page.getByText('启动准备或停止状态尚未核实；原现场保留。',{exact:true}).waitFor()
           assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
         }else{
-          await page.getByText('启动准备已取消，当前配置保持不变。',{exact:true}).waitFor()
+          await page.getByText(scene.startsWith('capture')?'本次启动已取消，已捕获文件保留。':'启动准备已取消，当前配置保持不变。',{exact:true}).waitFor()
           if(scene==='prepare-refresh-failed'){
             await page.getByText('收尾已完成，运行状态读取失败。请刷新运行状态。',{exact:true}).waitFor()
             assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
@@ -251,25 +251,25 @@ try {
     assert.equal(await page.locator('#modalTitle').textContent(), '客户端配置恢复')
     const size = await page.locator('#modal').evaluate(d => { const r = d.getBoundingClientRect(); return { width: r.width, top: r.top, bottom: r.bottom, height: innerHeight } })
     assert(size.width <= 560 && size.top >= 0 && size.bottom <= size.height, JSON.stringify(size))
-    if(scene.startsWith('prepare')){
+    if(scene.startsWith('prepare')||scene.startsWith('capture')){
       assert.equal(await page.locator('#modalConfirm').textContent(),'取消启动准备')
       await page.locator('#modalConfirm').click()
       assert.equal(await page.locator('#modalConfirm').textContent(),'确认取消启动准备')
       await page.getByText('保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。',{exact:true}).waitFor()
       await screenshot(page,'prototype-'+scene+'-review')
-      if(scene==='prepare'){
+      if(scene==='prepare'||scene==='capture'){
         await page.locator('#modalCancel').click();assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),0)
         await page.locator('#modalConfirm').click()
       }
       await page.locator('#modalConfirm').click()
-      if(scene==='prepare-slow'){
+      if(scene==='prepare-slow'||scene==='capture-slow'){
         await page.waitForFunction(()=>window.clientRecovery024.snapshot().executing)
         await page.locator('#modalCancel').click();await page.evaluate(()=>window.clientRecovery024.open())
       }
-      if(scene==='prepare-error')await page.getByText('启动准备或停止状态尚未核实；原现场保留。',{exact:true}).waitFor()
+      if(scene==='prepare-error'||scene==='capture-error')await page.getByText('启动准备或停止状态尚未核实；原现场保留。',{exact:true}).waitFor()
       else{
         await page.waitForFunction(()=>window.clientRecovery024.snapshot().outcome)
-        await page.getByText('启动准备已取消，当前配置保持不变。',{exact:true}).waitFor()
+        await page.getByText(scene.startsWith('capture')?'本次启动已取消，已捕获文件保留。':'启动准备已取消，当前配置保持不变。',{exact:true}).waitFor()
         if(scene==='prepare-refresh-failed'){assert.equal(await page.locator('#modalConfirm').textContent(),'刷新运行状态');await page.locator('#modalConfirm').click()}
         assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().ready),true)
       }

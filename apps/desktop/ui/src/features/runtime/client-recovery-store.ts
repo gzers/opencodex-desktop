@@ -51,7 +51,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   })
   const canCancelPreparation=computed(()=>{
     const p=preview.value
-    return p?.status==='pending'&&p.phase==='preparing'&&p.canCancelPreparation
+    return p?.status==='pending'&&(p.phase==='preparing'||p.phase==='capture_reserved')&&p.canCancelPreparation
       && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm&&!p.canFinishUnchanged
       && p.originalEvidence==='not_recorded'&&p.planEvidence==='not_recorded'&&p.completionEvidence==='not_recorded'&&p.phaseCount===0
       && !!p.attemptId&&Number.isSafeInteger(p.revision)&&p.revision!>0&&hash(p.preparationDigest)
@@ -86,7 +86,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
     if (!outcome.value || refreshing.value || !completionScope) return false
     refreshing.value = true; refreshError.value = ''; ready.value = false; reconfirmed.value = false
     try {
-      if (outcome.value.status === 'restored' || outcome.value.status === 'unchanged' || outcome.value.status === 'cancelled_before_capture') {
+      if (outcome.value.status === 'restored' || outcome.value.status === 'unchanged' || outcome.value.status === 'cancelled_before_capture' || outcome.value.status === 'cancelled_capture') {
         const snapshot = await clientRecoveryApi.status()
         ready.value = useLifecycleStore().acceptFinalizedClientRecovery(completionScope, snapshot)
         if (!ready.value) refreshError.value = '收尾已完成，当前运行状态仍待核对。请刷新运行状态。'
@@ -108,7 +108,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       else { preview.value = null; checked.value = false; refreshError.value = '操作已完成，当前恢复状态仍待核对。请刷新恢复状态。' }
       return reconfirmed.value
     } catch {
-      refreshError.value = (outcome.value.status === 'restored' || outcome.value.status === 'unchanged' || outcome.value.status === 'cancelled_before_capture') ? '收尾已完成，运行状态读取失败。请刷新运行状态。' : '操作已完成，恢复状态读取失败。请刷新恢复状态。'
+      refreshError.value = (outcome.value.status === 'restored' || outcome.value.status === 'unchanged' || outcome.value.status === 'cancelled_before_capture' || outcome.value.status === 'cancelled_capture') ? '收尾已完成，运行状态读取失败。请刷新运行状态。' : '操作已完成，恢复状态读取失败。请刷新恢复状态。'
       return false
     } finally { refreshing.value = false }
   }
@@ -127,7 +127,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       if (before.source !== 'live' || !before.facts.data_root || !before.facts.opencodex_home) throw new Error('当前配置位置尚未核对，请重新检查客户端恢复。')
       completionScope = { dataRoot: before.facts.data_root, home: before.facts.opencodex_home }
       const result = await clientRecoveryApi[next](request)
-      const expected = next === 'cancelPreparation' ? 'cancelled_before_capture' : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next === 'rearm' ? 'restore_prepared' : 'restored'
+      const expected = next === 'cancelPreparation' ? (p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next === 'rearm' ? 'restore_prepared' : 'restored'
       if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + 1) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
       outcome.value = result; preview.value = null; checked.value = false; choice.value = null
       await refresh()
