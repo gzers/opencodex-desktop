@@ -300,32 +300,82 @@ impl PinnedDirectory {
         &self.chain.last().unwrap().1
     }
     pub fn recheck(&self) -> io::Result<()> {
-        let current = Self::open(&self.path)?;
-        if current.chain.len() != self.chain.len()
-            || current.chain.iter().zip(&self.chain).any(
-                |((file, id, observed), (original, expected, original_protection))| {
-                    id != expected
-                        || observed != original_protection
-                        || stat(file)
-                            .map(|s| {
-                                identity(&s) != *expected
-                                    || protection(file, &s)
-                                        .map(|p| p != *original_protection)
-                                        .unwrap_or(true)
-                            })
-                            .unwrap_or(true)
-                        || stat(original)
-                            .map(|s| {
-                                identity(&s) != *expected
-                                    || protection(original, &s)
-                                        .map(|p| p != *original_protection)
-                                        .unwrap_or(true)
-                            })
-                            .unwrap_or(true)
-                },
-            )
-        {
-            return Err(denied("directory generation changed"));
+        self.recheck_checked(&|_| Ok(()))
+    }
+    fn recheck_checked(&self, checkpoint: &impl Fn(usize) -> io::Result<()>) -> io::Result<()> {
+        let components: Vec<_> = self
+            .path
+            .components()
+            .filter_map(|c| {
+                if let Component::Normal(n) = c {
+                    Some(n)
+                } else {
+                    None
+                }
+            })
+            .collect();
+        if self.chain.len() != components.len() + 1 {
+            return Err(denied("directory pin chain differs"));
+        }
+        let path_stat = |i: usize| -> io::Result<libc::stat> {
+            let mut value = std::mem::MaybeUninit::uninit();
+            let child = if i == 0 {
+                CString::new("/").unwrap()
+            } else {
+                name(components[i - 1])?
+            };
+            let parent = if i == 0 {
+                libc::AT_FDCWD
+            } else {
+                self.chain[i - 1].0.as_raw_fd()
+            };
+            if unsafe {
+                libc::fstatat(
+                    parent,
+                    child.as_ptr(),
+                    value.as_mut_ptr(),
+                    libc::AT_SYMLINK_NOFOLLOW,
+                )
+            } != 0
+            {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(unsafe { value.assume_init() })
+        };
+        let matches = |observed: &libc::stat, expected: &Identity, p: &Protection| {
+            identity(observed) == *expected
+                && observed.st_mode & libc::S_IFMT == libc::S_IFDIR
+                && observed.st_uid == p.uid
+                && observed.st_gid == p.gid
+                && observed.st_mode & 0o7777 == p.mode
+                && observed.st_flags == p.flags
+        };
+        // Each pathname entry must be the SAME inode as its retained fd. ACLs
+        // and xattrs belong to that inode, so read their full current values
+        // through the retained fd instead of opening the same directory and
+        // redundantly reading its protection three times. A second full
+        // attribute pass below still fences changes during this scan.
+        for (i, (file, expected, p)) in self.chain.iter().enumerate() {
+            let current = path_stat(i)?;
+            let held = stat(file)?;
+            if !matches(&current, expected, p)
+                || !matches(&held, expected, p)
+                || protection(file, &held)? != *p
+            {
+                return Err(denied("directory generation changed"));
+            }
+            checkpoint(i)?;
+        }
+        // Recheck the complete pathname chain after the attribute reads: a
+        // renamed ancestor or nofollow leaf cannot hide behind retained fds.
+        for (i, (file, expected, p)) in self.chain.iter().enumerate() {
+            let held = stat(file)?;
+            if !matches(&path_stat(i)?, expected, p)
+                || !matches(&held, expected, p)
+                || protection(file, &held)? != *p
+            {
+                return Err(denied("directory pathname generation changed"));
+            }
         }
         Ok(())
     }

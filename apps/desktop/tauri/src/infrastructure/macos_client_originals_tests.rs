@@ -1,4 +1,115 @@
 use super::*;
+#[test]
+fn pinned_directory_recheck_refuses_xattr_change_after_ancestor_attribute_read() {
+    use std::os::unix::fs::DirBuilderExt;
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path().canonicalize().unwrap().join("owned");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&root)
+        .unwrap();
+    let leaf = root.join("leaf");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&leaf)
+        .unwrap();
+    let pin = PinnedDirectory::open(&leaf).unwrap();
+    let ancestor = pin.chain.len() - 2;
+    let key = CString::new("user.ocxd024-in-scan").unwrap();
+    let value = b"changed during scan";
+    assert!(pin
+        .recheck_checked(&|i| {
+            if i == ancestor
+                && unsafe {
+                    libc::fsetxattr(
+                        pin.chain[i].0.as_raw_fd(),
+                        key.as_ptr(),
+                        value.as_ptr().cast(),
+                        value.len(),
+                        0,
+                        0,
+                    )
+                } != 0
+            {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        })
+        .is_err());
+    assert!(xattrs(&pin.chain[ancestor].0)
+        .unwrap()
+        .iter()
+        .any(|(k, v)| k == b"user.ocxd024-in-scan" && v == value));
+}
+#[test]
+fn pinned_directory_recheck_retains_inode_attributes_and_rejects_nofollow_replacement() {
+    use std::os::unix::fs::{symlink, DirBuilderExt, PermissionsExt};
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path().canonicalize().unwrap().join("owned");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&root)
+        .unwrap();
+    let leaf = root.join("leaf");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&leaf)
+        .unwrap();
+    let pin = PinnedDirectory::open(&leaf).unwrap();
+    pin.recheck().unwrap();
+    std::fs::write(leaf.join("allowed-content"), b"same directory").unwrap();
+    pin.recheck().unwrap();
+    std::fs::set_permissions(&leaf, std::fs::Permissions::from_mode(0o755)).unwrap();
+    assert!(pin.recheck().is_err());
+    std::fs::set_permissions(&leaf, std::fs::Permissions::from_mode(0o700)).unwrap();
+    pin.recheck().unwrap();
+    let retained = root.join("retained");
+    std::fs::rename(&leaf, &retained).unwrap();
+    symlink(&retained, &leaf).unwrap();
+    assert!(pin.recheck().is_err());
+    std::fs::remove_file(&leaf).unwrap();
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&leaf)
+        .unwrap();
+    assert!(pin.recheck().is_err());
+    assert_eq!(
+        std::fs::read(retained.join("allowed-content")).unwrap(),
+        b"same directory"
+    );
+}
+#[test]
+fn pinned_directory_recheck_rejects_ancestor_replacement_during_attribute_scan() {
+    use std::os::unix::fs::DirBuilderExt;
+    let tmp = tempfile::tempdir().unwrap();
+    let root = tmp.path().canonicalize().unwrap().join("owned");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&root)
+        .unwrap();
+    let leaf = root.join("leaf");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&leaf)
+        .unwrap();
+    let pin = PinnedDirectory::open(&leaf).unwrap();
+    let last = pin.chain.len() - 1;
+    let retained = root.with_file_name("retained-owned");
+    assert!(pin
+        .recheck_checked(&|i| {
+            if i == last {
+                std::fs::rename(&root, &retained)?;
+                std::fs::DirBuilder::new().mode(0o700).create(&root)?;
+                std::fs::DirBuilder::new()
+                    .mode(0o700)
+                    .create(root.join("leaf"))?;
+            }
+            Ok(())
+        })
+        .is_err());
+    assert!(retained.join("leaf").is_dir());
+    assert!(leaf.is_dir());
+}
 use std::{
     fs,
     os::unix::fs::{symlink, OpenOptionsExt, PermissionsExt},
