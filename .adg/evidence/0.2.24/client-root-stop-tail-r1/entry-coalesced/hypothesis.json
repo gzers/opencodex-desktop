@@ -1,0 +1,20 @@
+{
+  "accepted": false,
+  "hypothesis": "Prior shared-prefix experiment is disqualified after static review (change-and-restore window); per-frame dynamic checks restored plus final context fence and independently asserted injection tests. Tail trace reached final absence then root-close failed. New hypothesis: transaction entry can check storage pins before BEGIN then one complete root/head inside BEGIN before any write, keeping post-write/full COMMIT readback and proof expiry demotion; close removes its duplicate pre-write check. Additional hypothesis: Index complete resolve may return the same currently verified Original to registered_root_originals instead of reopening/validating again. Remove only entry full head checks directly repeated by transactional write or registered_root_originals; all CAS and typed/native checks retained. No assertion/budget or per-frame check weakened. New Profile begins with no .codex. Production Start creates root via retained custody and independent capture; typed real Ready/PreStop/Stopped transitions authorize normal-Stop factory only after independent plan registration. Same exact root must retire with official writer released, complete readback and RootAbsent within original30/5/10 budgets. This is diagnostic first Start/Stop; next Start remains unaccepted.",
+  "temporaryRoot": "/private/tmp/ocxd024-versioned-lifecycle-hf4l1b6n",
+  "exactNewCoordinatorFiles": [
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/721626bd6384f6f2479ae23d02dca49c463930bec49907c14009702ed61e4a67.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/721626bd6384f6f2479ae23d02dca49c463930bec49907c14009702ed61e4a67.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/721626bd6384f6f2479ae23d02dca49c463930bec49907c14009702ed61e4a67.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/721626bd6384f6f2479ae23d02dca49c463930bec49907c14009702ed61e4a67.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/721626bd6384f6f2479ae23d02dca49c463930bec49907c14009702ed61e4a67.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/721626bd6384f6f2479ae23d02dca49c463930bec49907c14009702ed61e4a67.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/721626bd6384f6f2479ae23d02dca49c463930bec49907c14009702ed61e4a67.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/721626bd6384f6f2479ae23d02dca49c463930bec49907c14009702ed61e4a67.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/954bda7e8094b396378c32eca311a89d9086d91044ddde94f860fcafd5c0cd06.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/954bda7e8094b396378c32eca311a89d9086d91044ddde94f860fcafd5c0cd06.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/954bda7e8094b396378c32eca311a89d9086d91044ddde94f860fcafd5c0cd06.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/954bda7e8094b396378c32eca311a89d9086d91044ddde94f860fcafd5c0cd06.sqlite-shm"
+  ],
+  "noBusinessRequests": true
+}

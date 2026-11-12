@@ -1,0 +1,18 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+ROOT_STOP_COST label=admission phase=entry segment_us=32484 total_us=32484
+ROOT_STOP_COST label=admission phase=native segment_us=1331 total_us=33815
+ROOT_STOP_COST label=admission phase=absence segment_us=8273 total_us=42088
+ROOT_STOP_COST label=admission phase=entry segment_us=32206 total_us=32206
+ROOT_STOP_COST label=admission phase=native segment_us=1490 total_us=33697
+ROOT_STOP_COST label=admission phase=absence segment_us=8437 total_us=42134
+ROOT_STOP_COST label=admission phase=entry segment_us=32322 total_us=32322
+ROOT_STOP_COST label=admission phase=native segment_us=1301 total_us=33623
+ROOT_STOP_COST label=admission phase=absence segment_us=8255 total_us=41879
+ROOT_STOP_COST label=admission phase=entry segment_us=32069 total_us=32069
+ROOT_STOP_COST label=admission phase=native segment_us=1399 total_us=33469
+ROOT_STOP_COST label=admission phase=absence segment_us=8110 total_us=41580
+ROOT_STOP_COST label=admission phase=entry segment_us=19 total_us=19
+
+thread 'commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client' (157731619) panicked at src/commands/lifecycle_versioned_tests.rs:666:9:
+first-root Stop must commit exact original absence; preserve report and app log on refusal
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

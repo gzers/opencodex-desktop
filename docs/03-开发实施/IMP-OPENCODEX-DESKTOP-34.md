@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 96；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 97；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main ea9220c70（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 46952673e（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -946,3 +946,16 @@ mainea9220c70按真实计时合并同次重复：cost-diagnostic一次authority3
 证据.adg/evidence/0.2.24/client-root-stop-cost-r1/及122文件manifest约1.35MB，原计时/失败/源/独立原字节与SQLite/帧/plan/readbackSHA核验俱在。四轮child/子审查终止，精确12个新N/K/history经exclusive重获移除，预存global L身份/权限/字节不改并重获释放；独立清理复查主端口，4监听产品证明不冒全清理再验。原字节逐字归档后清四Profile/运行包/重复证据，unitTMP空，无日常配置/官方源码/真实业务/新候选/发布。
 
 下一步精确拆分最后readback后的authority/full absence/Index-close及外层来源检查成本，形成新假设再跑，不盲重跑失败原轮；同10秒/实际mutation前后完整校验不放宽，整Stop通过前不标Restored或新Start可用。然后仍需nextStart/明确中断/状态UI及Windows/NAME/其它完整IMP项，目标active。
+
+
+## 2026-11-13 根Stop收尾定位与提交前去重，原门仍未通过
+
+mainf771c5e2b记录固定测试tail阶段并强化逐帧负控；46952673e将完整resolve已核验的Originals在同次Index观察中返回，registered_root_originals不重开同源原件；入口只删随后完整事务验证覆盖的重复检查。BEGIN前storage pins/VFS仍在，BEGIN内任何引用SQL前完整root/Head/binding，写后check/ROLLBACK、COMMIT后完整head及proof期限/demotion保持。详[Stop收尾合同](0.2.24-contracts/client-root-stop-tail-r1.md)。
+
+两方案明确否决：shared-prefix前后context代替逐帧可漏中途改动再恢复，生产Originals变更完全撤回，额外新末尾fence亦撤回；helper前复用早先完整包准入会漏执行中途改动模块，未实施，read_complete保持。负控注入独立assert成功，Original改755后计划PreStop恢复必须在Ready先拒绝，逐帧规则未放宽。只读复核不代签native。
+
+最终87去重函数（28snapshot/36index/23root，4ignored不计）、fmt/diff/strictClippy通过。四新Profile Stop均失败：否决prefix实验11027ms曾Absent9后过期退Prepared10（只原始定位不可验收）；两中间版本10379/10255ms；最终original-context10493ms（manager10253）停Prepared8，原root仍在/无终态。最终5源和实际库binary完全对应，首轮否决源仅hash/log未单存patch，不宣称完整源码可复建。旧实验更靠后的进度不代替最终来源通过，原Stop10不放宽、nextStart/状态UI/根中断仍未完。
+
+证据.adg/evidence/0.2.24/client-root-stop-tail-r1/含127文件manifest、原假设/trace/失败/无损原字节与独立SQLite/RootBinding/phase核验、复核和来源。所有进程/子审查结束，逐字归档后清四Profile/运行包/重复临时根，unitTMP空，无日常配置/官方源码/真实业务/新候选/发布。清理审计缺口明确：首工具回执12精确新DB删除，复查误覆盖逐inode明细为空，归档不冒存在该明细；准确目标路径和再次全部Absent仍核验。global L身份/权限/字节保持并重获释放，独立清理只查导出主端口，不冒4监听再次全验。
+
+下一步保持helper完整来源/逐帧动态检查和实际写入边界，测量完整inventory并评估同等核验下的并行/批量I/O；无可证伪方案不开新Stop轮，不采用旧摘要cache放行。完整原范围Windows/NAME/其它客户端/代理/版本发行收口保持，Stop和整版未完成，目标active。

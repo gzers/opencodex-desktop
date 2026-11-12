@@ -1,0 +1,39 @@
+{
+  "accepted": false,
+  "verified": [
+    {
+      "round": "prefix-context",
+      "exactRawBytesAndIndependentReferencesVerified": true,
+      "indexState": "root_retirement_prepared",
+      "revision": 10,
+      "sourceEligibility": false,
+      "Stop10Accepted": false
+    },
+    {
+      "round": "commit-coalesced",
+      "exactRawBytesAndIndependentReferencesVerified": true,
+      "indexState": "root_retirement_prepared",
+      "revision": 8,
+      "sourceEligibility": true,
+      "Stop10Accepted": false
+    },
+    {
+      "round": "entry-coalesced",
+      "exactRawBytesAndIndependentReferencesVerified": true,
+      "indexState": "restore_prepared",
+      "revision": 7,
+      "sourceEligibility": true,
+      "Stop10Accepted": false
+    },
+    {
+      "round": "original-context",
+      "exactRawBytesAndIndependentReferencesVerified": true,
+      "indexState": "root_retirement_prepared",
+      "revision": 8,
+      "sourceEligibility": true,
+      "Stop10Accepted": false
+    }
+  ],
+  "rejectedSharedPrefixNotAcceptanceEvidence": true,
+  "nextStartNotAccepted": true
+}
