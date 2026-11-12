@@ -5,7 +5,8 @@
  const css=root.document.createElement('link');css.rel='stylesheet';css.href=new URL('client-recovery-024.css',root.document.currentScript.src).href;root.document.head.append(css);
  const S={scene:'eligible',open:false,reading:false,executing:false,outcome:false,ready:false,error:'',refreshError:'',confirmations:0,choice:null,action:'finalize',phase:'restore_prepared',revision:6,finalized:false};
  const continuing=()=>S.scene.startsWith('continue')||S.scene.startsWith('rollback')||S.scene.startsWith('rearm')||S.scene.startsWith('plan');
- const needsPlan=()=>S.scene.startsWith('plan')&&S.phase==='stopped';
+ const observedPlan=()=>S.scene.startsWith('plan-current');
+ const needsPlan=()=>S.scene.startsWith('plan')&&['stopped','stop_prepared'].includes(S.phase);
  const capture=()=>S.scene.startsWith('capture');
  const preparing=()=>S.scene.startsWith('prepare')||capture();
  const early=()=>S.scene.startsWith('early');
@@ -16,7 +17,7 @@
  function markup(){
   if(S.reading)return '<p role="status">正在核对原会话和恢复记录…</p>';
   if(S.executing)return '<p role="status">'+progress[S.action]+'</p><p>关闭窗口后仍会继续，可重新打开查看。</p>';
-  if(S.choice==='preparePlan')return '<p><strong>准备原件恢复计划？</strong></p><p>重新核对原件、停止后的文件和服务停止状态，再准备恢复计划。当前文件保持，原件保留。</p><p>准备完成后，还需点击“确认继续恢复”。不会自动恢复或启动。</p>';
+  if(S.choice==='preparePlan')return '<p><strong>准备原件恢复计划？</strong></p><p>'+(observedPlan()?'确认后核对服务现在已停止，再按当前状态准备恢复计划。原件和上次操作结果保留。':'重新核对原件、停止后的文件和服务停止状态，再准备恢复计划。当前文件保持，原件保留。')+'</p><p>准备完成后，还需点击“确认继续恢复”。不会自动恢复或启动。</p>';
   if(S.choice==='cancelPreparation')return '<p><strong>取消这次启动准备？</strong></p><p>'+(capture()?'原件捕获已中断。确认后重新核对服务已停止，保留已捕获文件，再取消本次启动。':'本次准备尚未产生新的原件目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。')+'</p><p>保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>';
   if(S.choice==='finishUnchanged')return '<p><strong>核对并结束原会话？</strong></p><p>确认后重新核对服务已停止、原件完整且未改变，再结束这次未完成会话。</p><p>客户端配置保持不变，不会自动启动服务。</p>';
   if(S.choice==='rollback')return '<p><strong>撤销本次恢复？</strong></p><p>将本次恢复的文件退回恢复前的停止状态。启动前原件仍保留，服务保持停止。</p><p>之后可以重新准备恢复，再确认恢复启动前的原件。</p>';
@@ -24,7 +25,7 @@
   if(S.finalized)return '<p role="status">'+(S.action==='cancelPreparation'?(capture()?'本次启动已取消，已捕获文件保留。':'启动准备已取消，当前配置保持不变。'):S.action==='finishUnchanged'?'原件保持完整，原会话已结束。':S.action==='continue'?'客户端配置恢复已完成。':'配置恢复收尾已完成。')+'</p><p>'+(S.ready?'服务保持停止，现在可以启动。':'当前运行状态尚未核实，核对通过后才能启动。')+'</p>'+(S.refreshError?'<p role="alert" class="model-error">'+esc(S.refreshError)+'</p>':'');
   if(S.refreshError)return '<p role="status">本次恢复已撤销。</p><p>当前恢复状态尚未核实，服务保持停止。</p><p role="alert" class="model-error">'+esc(S.refreshError)+'</p>';
   if(S.error)return '<p role="alert" class="model-error">'+esc(S.error)+'</p>';
-  const summary=needsPlan()?['服务已停止，客户端配置尚未恢复。','原件和停止后文件已核对，可以准备恢复计划。']:preparing()?[capture()?'原件捕获已中断，服务尚未启动。':'启动准备已中断，尚未开始捕获原件。','可核对后取消本次准备，保持当前配置。']:early()?['启动前原件保持完整，原会话尚未结束。','可以重新核对服务已停止后结束原会话。客户端配置保持不变。']:rolled()?['本次恢复已撤销，文件已回到恢复前的停止状态。','启动前原件仍保留，尚未恢复；服务保持停止。']:continuing()?['客户端配置恢复中断，可以继续原恢复计划。','确认后恢复到本次启动前的配置，保留当前已归档的文件。服务保持停止。']:summaries[S.scene]||summaries.eligible;
+  const summary=needsPlan()?[observedPlan()?'上次停止未完成核对，配置仍待恢复。':'服务已停止，客户端配置尚未恢复。','可以核对当前状态并准备恢复计划，原件保留。']:preparing()?[capture()?'原件捕获已中断，服务尚未启动。':'启动准备已中断，尚未开始捕获原件。','可核对后取消本次准备，保持当前配置。']:early()?['启动前原件保持完整，原会话尚未结束。','可以重新核对服务已停止后结束原会话。客户端配置保持不变。']:rolled()?['本次恢复已撤销，文件已回到恢复前的停止状态。','启动前原件仍保留，尚未恢复；服务保持停止。']:continuing()?['客户端配置恢复中断，可以继续原恢复计划。','确认后恢复到本次启动前的配置，保留当前已归档的文件。服务保持停止。']:summaries[S.scene]||summaries.eligible;
   const details=!['unknown','none','unsupported'].includes(S.scene)?'<details style="margin-top:16px"><summary>诊断详情</summary><dl class="p24-facts"><dt>会话阶段</dt><dd>'+(preparing()?'正在登记原会话':early()?'原件已保存':rolled()?'本次恢复已撤销':S.scene==='active'?'服务会话已就绪':'配置恢复待核对')+'</dd><dt>客户端原件</dt><dd>'+ (preparing()?'尚未登记':'已核对') +'</dd><dt>恢复计划</dt><dd>'+ (early()||preparing()||needsPlan()?'尚未登记':'已核对') +'</dd><dt>完成记录</dt><dd>'+(rolled()?'已核对':early()||preparing()||continuing()?'尚未登记':'待确认')+'</dd><dt>会话编号</dt><dd><code>f394bd75-355b-4873-83cc-6818efeb547a</code></dd></dl></details>':'';
   return '<p role="status">'+summary[0]+'</p>'+(summary[1]?'<p>'+summary[1]+'</p>':'')+details;
  }
@@ -33,10 +34,10 @@
   S.action=action;S.choice=null;S.executing=true;S.confirmations++;render();
   root.setTimeout(()=>{
    S.executing=false;
-   if(S.scene===action+'-error'||action==='finishUnchanged'&&S.scene==='early-error'||action==='cancelPreparation'&&['prepare-error','capture-error'].includes(S.scene)||action==='preparePlan'&&S.scene==='plan-error'){S.error=action==='preparePlan'?'恢复计划尚未确认完成；原件与当前文件保留。':action==='cancelPreparation'?'启动准备或停止状态尚未核实；原现场保留。':action==='finishUnchanged'?'原件或停止状态尚未核实；原件与现场保留。':action==='rollback'?'撤销恢复未确认完成；原件与当前文件保留。':action==='rearm'?'恢复准备未确认完成；原件与当前文件保留。':'恢复现场已变化，请重新检查。';if(S.open)render();return;}
+   if(S.scene===action+'-error'||action==='finishUnchanged'&&S.scene==='early-error'||action==='cancelPreparation'&&['prepare-error','capture-error'].includes(S.scene)||action==='preparePlan'&&['plan-error','plan-current-error'].includes(S.scene)){S.error=action==='preparePlan'?'恢复计划尚未确认完成；原件与当前文件保留。':action==='cancelPreparation'?'启动准备或停止状态尚未核实；原现场保留。':action==='finishUnchanged'?'原件或停止状态尚未核实；原件与现场保留。':action==='rollback'?'撤销恢复未确认完成；原件与当前文件保留。':action==='rearm'?'恢复准备未确认完成；原件与当前文件保留。':'恢复现场已变化，请重新检查。';if(S.open)render();return;}
    S.revision++;S.outcome=true;
    if(action==='rollback')S.phase='restore_rolled_back';
-   else if(action==='rearm'||action==='preparePlan')S.phase='restore_prepared';
+   else if(action==='rearm'||action==='preparePlan')S.phase=observedPlan()?'recovery_prepared':'restore_prepared';
    else S.finalized=true;
    S.ready=S.finalized&&!['refresh-failed','early-refresh-failed','prepare-refresh-failed'].includes(S.scene);
    S.refreshError=S.scene==='rollback-refresh-failed'?'操作已完成，恢复状态读取失败。请刷新恢复状态。':S.finalized&&!S.ready?'收尾已完成，运行状态读取失败。请刷新运行状态。':'';
@@ -70,5 +71,5 @@
  const entry=root.document.createElement('section');entry.id='clientRecovery024Entry';entry.style.cssText='margin-top:20px;padding-top:16px;border-top:1px solid var(--line)';
  entry.innerHTML='<div class="card-head"><div><h3>客户端配置恢复</h3><p>检查未完成的配置恢复，核对后处理原会话。</p></div><div class="toolbar"><button type="button" class="btn" data-client-recovery024-open>检查客户端恢复</button></div></div>';
  host.querySelector('.selfcheck')?.before(entry);if(!entry.parentNode)host.append(entry);entry.querySelector('button').addEventListener('click',open);
- root.clientRecovery024={open,snapshot:()=>({...S}),setScene:scene=>{if(S.executing)return;Object.assign(S,{scene,outcome:false,finalized:false,ready:false,error:'',refreshError:'',choice:null,phase:scene.startsWith('plan')?'stopped':scene.startsWith('rearm')?'restore_rolled_back':'restore_prepared',revision:scene.startsWith('rearm')?7:6});if(S.open)inspect();}};
+ root.clientRecovery024={open,snapshot:()=>({...S}),setScene:scene=>{if(S.executing)return;Object.assign(S,{scene,outcome:false,finalized:false,ready:false,error:'',refreshError:'',choice:null,phase:scene.startsWith('plan-current')?'stop_prepared':scene.startsWith('plan')?'stopped':scene.startsWith('rearm')?'restore_rolled_back':'restore_prepared',revision:scene.startsWith('rearm')?7:6});if(S.open)inspect();}};
 })(window);
