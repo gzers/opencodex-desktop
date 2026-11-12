@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 62；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 63；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -570,3 +570,12 @@ mainccb6d16d5按固化官方routed-gather/build-entries真实provider/modelId的
 2个原算法失败留证，修后33相关函数/编译/格式/严格Clippy过。新Profile静态custom覆盖base、加1原生ID、禁用另1：Start8550/Status240/Stop8578ms过原30/5/10；before-start与Ready恰2路由，Custom base/context196608/text/low-medium及Custom added/context262144/text实际匹配，禁用custom未出现。七原字节全true/完整树/两锁/Restored revision7，重开1261ms NotRequired/canStarttrue。原函数exit0/resultpassed，诊断acceptedfalse，不冒其它custom/一般组合图或整版，NAME剩余不关闭。
 
 证据.adg/evidence/0.2.24/custom-model-routes-r1/及manifest保留旧失败/源锚点/准确binary/实际ID能力对照、frame/index/plan/receipt/35内容引用/最终树SHA。原主端点/自有镜像/helper缺席，3精确新协调DB排他取得释放后与自有程序/Profile/blob/index/stage/archive/control副本/源提取/重复回执清理，globalL原样保留。无日常/官方/系统/业务修改、新release/app/DMG或发布。其它一般图/全客户端/显式恢复/完整集合/旧revision4及Windows/NAME/System代理/发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 有限目标组合与公开路由声明
+
+mainc12c8d030按固化官方comboPublicModelId与deriveComboCatalogModel规则，从原JSON给有限、已独立绑定全部target的组合声明canonical combo/id或合法公开alias；保持目标路由不改，禁止影子遮蔽/physicalcombo冲突/重复缺失嵌套target/非法alias/nativeAlias接管等未明图。最终原exactReady/原件/锁/退出/恢复/预算不变，元数据由官方派生，不用combo替代NAME。详[有限组合路由](0.2.24-contracts/finite-combo-routes-r1.md)。
+
+原有效combo声明失败留证，修后35相关/编译/格式/严格Clippy过。新Profile2静态能力目标+多目标mixed+单目标Public/fixture+禁用Public/hidden：Start8689/Status227/Stop8701ms，启动前/Ready恰4真实路由，mixed131072/text/仅medium与公开alias196608/text-image/low-medium实际符合原目标交集。七原字节全true/完整树/两锁/Restored revision7，重开1264ms NotRequired/canStarttrue。原函数exit0/resultpassed，诊断acceptedfalse，不冒其它组合/原生图、整版或NAME完成。
+
+证据.adg/evidence/0.2.24/finite-combo-routes-r1/及manifest保留源锚点/旧失败/准确binary与实际4路由能力交集、frame/index/plan/receipt/35引用和最终树SHA匹配。原主端点/自有进程/helper缺席，3精确新协调DB排他取得释放后与自有程序/Profile/blob/index/stage/archive/control副本/源提取和重复回执清理，globalL原样保留。无日常/官方/系统/业务修改、新release/app/DMG或发布。其它一般图/全客户端/显式恢复/完整集合/旧revision4及Windows/NAME/System代理/发布验证/固定候选继续，目标active。

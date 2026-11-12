@@ -1,0 +1,6 @@
+
+thread 'infrastructure::macos_client_originals::session::tests::combo_declaration_uses_canonical_or_public_alias_without_relabeling_target_routes' (156077882) panicked at src/infrastructure/macos_client_session_tests.rs:466:5:
+assertion `left == right` failed
+  left: None
+ right: Some(["P/a", "P/b", "Public/mixed", "combo/mixed"])
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

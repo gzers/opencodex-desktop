@@ -1,0 +1,87 @@
+[
+  {
+    "path": "src/combos/identifiers.ts",
+    "line": 13,
+    "text": "const COMBO_ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;"
+  },
+  {
+    "path": "src/combos/identifiers.ts",
+    "line": 40,
+    "text": "export function comboPublicModelId(id: string, combo: { alias?: string | null }): string {"
+  },
+  {
+    "path": "src/combos/identifiers.ts",
+    "line": 42,
+    "text": "return alias || comboModelId(id);"
+  },
+  {
+    "path": "src/combos/identifiers.ts",
+    "line": 88,
+    "text": "return COMBO_ID_PATTERN.test(id);"
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 75,
+    "text": "export function intersectStrings(values: readonly string[][]): string[] {"
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 97,
+    "text": "export function comboCatalogOmissionReason("
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 116,
+    "text": "const inputModalities = intersectStrings("
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 123,
+    "text": "export function deriveComboCatalogModel("
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 128,
+    "text": "if (comboCatalogOmissionReason(combo, members) !== null) return null;"
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 130,
+    "text": "const derivedInputModalities = intersectStrings("
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 152,
+    "text": ": intersectStrings(advertisedLadders);"
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 153,
+    "text": "const contextWindow = Math.min(...members.map(member => member.contextWindow!));"
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 195,
+    "text": "...(combo.alias ? { alias: combo.alias } : {}),"
+  },
+  {
+    "path": "src/codex/catalog/aggregation.ts",
+    "line": 358,
+    "text": "const reason = comboCatalogOmissionReason(combo, members) ?? \"incomplete_metadata\";"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 613,
+    "text": "if (disabledModelKeys.has(key)) return false;"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 839,
+    "text": "if (disabledModelKeys.has(slugEquivalenceKey(slug))) return false;"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 843,
+    "text": "if (freshExactComboEntries.has(entry)) return true;"
+  }
+]

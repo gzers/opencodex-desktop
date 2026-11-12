@@ -1,0 +1,105 @@
+{
+  "independentBeforeStartRoutes": [
+    "Public/fixture",
+    "combo/mixed",
+    "native-fixture/alpha-fixture",
+    "native-fixture/beta-fixture"
+  ],
+  "actualReadyRows": [
+    {
+      "slug": "combo/mixed",
+      "display_name": "Mixed fixture",
+      "context_window": 131072,
+      "input_modalities": [
+        "text"
+      ],
+      "supported_reasoning_levels": [
+        {
+          "effort": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        }
+      ],
+      "owned_by": "combo"
+    },
+    {
+      "slug": "Public/fixture",
+      "display_name": "Public fixture",
+      "context_window": 196608,
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "supported_reasoning_levels": [
+        {
+          "effort": "low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "effort": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        }
+      ],
+      "owned_by": "combo"
+    },
+    {
+      "slug": "native-fixture/alpha-fixture",
+      "display_name": "native-fixture/alpha-fixture",
+      "context_window": 196608,
+      "input_modalities": [
+        "text",
+        "image"
+      ],
+      "supported_reasoning_levels": [
+        {
+          "effort": "low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "effort": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "effort": "max",
+          "description": "Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "effort": "ultra",
+          "description": "Maximum reasoning with automatic task delegation"
+        }
+      ],
+      "owned_by": null
+    },
+    {
+      "slug": "native-fixture/beta-fixture",
+      "display_name": "native-fixture/beta-fixture",
+      "context_window": 131072,
+      "input_modalities": [
+        "text"
+      ],
+      "supported_reasoning_levels": [
+        {
+          "effort": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "effort": "high",
+          "description": "Greater reasoning depth for complex problems"
+        },
+        {
+          "effort": "max",
+          "description": "Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "effort": "ultra",
+          "description": "Maximum reasoning with automatic task delegation"
+        }
+      ],
+      "owned_by": null
+    }
+  ],
+  "exactFourRouteCoverage": true,
+  "disabledComboAbsent": true,
+  "multipleTargetContextModalitiesAndReasoningIntersectionMatched": true,
+  "singleAliasTargetCapabilitiesPreserved": true,
+  "notNameWorkaround": true
+}
