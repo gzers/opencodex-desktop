@@ -52,6 +52,25 @@ impl Active {
         let client = client(context)?;
         let index = Index::open(context, data, &client).map_err(failure)?;
         let intent = index.reserve_start().map_err(failure)?;
+        #[cfg(test)]
+        if std::env::var_os("OCXD024_INTERRUPT_BEFORE_CAPTURE").as_deref()
+            == Some(std::ffi::OsStr::new("1"))
+        {
+            if !data.starts_with("/private/tmp")
+                || !data.ancestors().any(|p| {
+                    p.file_name().is_some_and(|n| {
+                        n.to_string_lossy()
+                            .starts_with("ocxd024-versioned-lifecycle-")
+                    })
+                })
+            {
+                return Err(failure(()));
+            }
+            return Err(crate::errors::AppError::RuntimeManaged {
+                code: "owned_fixture_preparation_interrupted".into(),
+                detail: "owned interruption after Preparing, before any capture".into(),
+            });
+        }
         let coordination = Context {
             runtime: context.runtime.clone(),
             user_profile: context.working_directory.clone(),

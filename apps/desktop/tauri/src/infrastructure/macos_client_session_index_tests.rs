@@ -92,6 +92,139 @@ fn refs(n: usize) -> References {
 }
 
 #[test]
+fn preparation_cancellation_requires_vault_absence_and_preserves_the_reservation_history() {
+    for mode in ["clear", "empty-vault", "partial", "symlink"] {
+        let f = Fixture::new();
+        std::fs::write(f.client.join("config.toml"), b"current user configuration").unwrap();
+        let index = f.open().unwrap();
+        let head = index.reserve_start().unwrap();
+        let vault = f.data.join("manager-state/client-originals");
+        match mode {
+            "empty-vault" | "partial" => {
+                std::fs::create_dir(&vault).unwrap();
+                if mode == "partial" {
+                    std::fs::write(vault.join("incomplete-frame"), b"retained unknown evidence")
+                        .unwrap();
+                }
+            }
+            "symlink" => symlink(&f.root, &vault).unwrap(),
+            _ => {}
+        }
+        drop(index);
+        let projected = preview::inspect_preview(&f.context, &f.data);
+        if mode == "clear" {
+            assert!(
+                projected.can_cancel_preparation
+                    && !projected.can_finish_unchanged
+                    && !projected.can_continue
+                    && !projected.can_finalize
+            );
+            assert_eq!(projected.attempt_id.as_deref(), Some(head.ticket.as_str()));
+            assert_eq!(projected.original_evidence, preview::Evidence::NotRecorded);
+            assert_eq!(
+                projected.preparation_digest.as_deref(),
+                Some(
+                    preparation::review(&f.context, &f.data)
+                        .unwrap()
+                        .unwrap()
+                        .confirmation_digest
+                        .as_str()
+                )
+            );
+        } else {
+            assert_eq!(projected.status, preview::Status::Unknown);
+            assert!(!projected.can_cancel_preparation);
+        }
+        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+        let proof = preparation::fixture_readback(&f.context, &index, &head, deadline);
+        if mode != "clear" {
+            assert!(proof.is_err(), "{mode}");
+            assert!(std::fs::symlink_metadata(&vault).is_ok());
+            assert_eq!(index.head().unwrap().unwrap(), head);
+            continue;
+        }
+        let proof = proof.unwrap();
+        assert!(index.reserve_start().is_err());
+        let mut stale = head.clone();
+        stale.revision += 1;
+        assert!(index.close_preparation(&stale, &proof).is_err());
+        let closed = index.close_preparation(&head, &proof).unwrap();
+        assert_eq!(closed.state, State::CancelledBeforeCapture);
+        assert_eq!(closed.revision, 2);
+        assert!(closed.references.is_none() && closed.restore_plan.is_none());
+        assert_eq!(closed.ticket, head.ticket);
+        assert!(index.advance(&closed, State::Failed, None).is_err());
+        drop(index);
+        assert_eq!(inspect(&f.context, &f.data).unwrap().unwrap(), closed);
+        std::fs::create_dir(&vault).unwrap();
+        assert!(inspect(&f.context, &f.data).is_err());
+        let blocked = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+        assert!(blocked.reserve_start().is_err());
+        drop(blocked);
+        std::fs::remove_dir(&vault).unwrap();
+        // A later user edit is not compared against a fabricated Original.
+        std::fs::write(f.client.join("config.toml"), b"later user configuration").unwrap();
+        assert_eq!(inspect(&f.context, &f.data).unwrap().unwrap(), closed);
+        let receipt = f.data.join(format!(
+            "manager-state/prepare-cancel-{}-1.json",
+            head.ticket
+        ));
+        let original = std::fs::read(&receipt).unwrap();
+        std::fs::set_permissions(&receipt, std::fs::Permissions::from_mode(0o600)).unwrap();
+        std::fs::write(&receipt, b"{}").unwrap();
+        assert!(inspect(&f.context, &f.data).is_err());
+        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+        assert!(index.reserve_start().is_err());
+        drop(index);
+        std::fs::write(&receipt, &original).unwrap();
+        std::fs::set_permissions(&receipt, std::fs::Permissions::from_mode(0o400)).unwrap();
+        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+        let next = index.reserve_start().unwrap();
+        assert_eq!(next.revision, 3);
+        assert_eq!(next.state, State::Preparing);
+        assert_ne!(next.ticket, head.ticket);
+        assert_eq!(
+            std::fs::read(f.client.join("config.toml")).unwrap(),
+            b"later user configuration"
+        );
+        assert_eq!(std::fs::read(&receipt).unwrap(), original);
+        assert!(!vault.exists());
+    }
+}
+
+#[test]
+fn late_vault_and_missing_or_stale_cancel_proof_never_close_a_preparation() {
+    let f = Fixture::new();
+    let index = f.open().unwrap();
+    let head = index.reserve_start().unwrap();
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+    let proof = preparation::fixture_readback(&f.context, &index, &head, deadline).unwrap();
+    let vault = f.data.join("manager-state/client-originals");
+    std::fs::create_dir(&vault).unwrap();
+    assert!(index.close_preparation(&head, &proof).is_err());
+    assert_eq!(index.head().unwrap().unwrap(), head);
+    assert!(vault.exists());
+    std::fs::remove_dir(&vault).unwrap();
+    let mut another = head.clone();
+    another.ticket = uuid::Uuid::new_v4().to_string();
+    assert!(index.close_preparation(&another, &proof).is_err());
+    assert!(
+        preparation::fixture_readback(&f.context, &index, &head, std::time::Instant::now())
+            .is_err()
+    );
+    let receipt = f.data.join(format!(
+        "manager-state/prepare-cancel-{}-1.json",
+        head.ticket
+    ));
+    std::fs::set_permissions(&receipt, std::fs::Permissions::from_mode(0o600)).unwrap();
+    std::fs::write(&receipt, b"{}").unwrap();
+    assert!(preparation::fixture_readback(&f.context, &index, &head, deadline).is_err());
+    assert_eq!(std::fs::read(receipt).unwrap(), b"{}");
+    assert_eq!(index.head().unwrap().unwrap(), head);
+}
+
+#[test]
 fn observation_is_read_only_and_does_not_initialize_a_missing_session() {
     let f = Fixture::new();
     assert!(inspect(&f.context, &f.data).unwrap().is_none());

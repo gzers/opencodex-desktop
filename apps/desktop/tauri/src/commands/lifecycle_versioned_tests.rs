@@ -448,6 +448,30 @@ model_provider = "openai"
     report["independentOriginalsReferenced"] = after_start.references.is_some().into();
     drop(indexed_after_start);
     write(&report);
+    if std::env::var_os("OCXD024_INTERRUPT_BEFORE_CAPTURE").as_deref()
+        == Some(std::ffi::OsStr::new("1"))
+    {
+        assert!(!started_ok && record.is_none());
+        assert_eq!(
+            after_start.state,
+            crate::infrastructure::macos_client_originals::session_index::State::Preparing
+        );
+        assert!(after_start.references.is_none());
+        assert!(!data.join("manager-state/client-originals").exists());
+        assert!(
+            start.as_ref().unwrap().client_recovery_required && !start.as_ref().unwrap().can_start
+        );
+        report["preparationInterruptionExpected"] = true.into();
+        report["indexedState"] = serde_json::json!(after_start.state);
+        report["indexedRevision"] = after_start.revision.into();
+        report["result"] = "failed".into();
+        report["statusAndStopSkipped"] = "directed pre-capture fixture, no service startup".into();
+        write(&report);
+        panic!(
+            "expected owned Preparing interruption retained at {}",
+            root.display()
+        );
+    }
     if std::env::var_os("OCXD024_INTERRUPT_AFTER_CAPTURE").as_deref()
         == Some(std::ffi::OsStr::new("1"))
     {

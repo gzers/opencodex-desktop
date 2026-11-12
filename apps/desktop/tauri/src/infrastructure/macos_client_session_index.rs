@@ -21,7 +21,10 @@ pub use observation::inspect;
 pub fn unresolved_after_failure(context: &ProcessContext, data: &Path) -> bool {
     match inspect(context, data) {
         Ok(None) => false,
-        Ok(Some(h)) => !matches!(h.state, State::Ready | State::Restored | State::Unchanged),
+        Ok(Some(h)) => !matches!(
+            h.state,
+            State::Ready | State::Restored | State::Unchanged | State::CancelledBeforeCapture
+        ),
         Err(_) => true,
     }
 }
@@ -29,6 +32,8 @@ pub fn unresolved_after_failure(context: &ProcessContext, data: &Path) -> bool {
 pub mod continuation;
 #[path = "macos_client_recovery_finalize.rs"]
 pub mod finalization;
+#[path = "macos_client_prepare_cancel.rs"]
+pub mod preparation;
 #[path = "macos_client_session_preview.rs"]
 pub mod preview;
 #[path = "macos_client_recovery_rearm.rs"]
@@ -50,6 +55,7 @@ pub enum State {
     RestoreRolledBack,
     Restored,
     Unchanged,
+    CancelledBeforeCapture,
     Failed,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -89,7 +95,10 @@ fn validate(head: &Head) -> io::Result<()> {
     ) != head.restore_plan.is_some()
         || matches!(
             head.state,
-            State::Restored | State::RestoreRolledBack | State::Unchanged
+            State::Restored
+                | State::RestoreRolledBack
+                | State::Unchanged
+                | State::CancelledBeforeCapture
         ) != head.completion_sha256.is_some()
         || head
             .completion_sha256
@@ -115,7 +124,10 @@ fn validate(head: &Head) -> io::Result<()> {
         return Err(denied("invalid current session identity"));
     }
     let Some(refs) = &head.references else {
-        return if matches!(head.state, State::Preparing | State::Failed) {
+        return if matches!(
+            head.state,
+            State::Preparing | State::Failed | State::CancelledBeforeCapture
+        ) {
             Ok(())
         } else {
             Err(denied("current session original references missing"))
@@ -148,7 +160,7 @@ fn validate(head: &Head) -> io::Result<()> {
             Some((3, true))
         }
         State::Preparing => return Err(denied("unpublished originals in preparing index")),
-        State::Failed | State::Unchanged => None,
+        State::Failed | State::Unchanged | State::CancelledBeforeCapture => None,
     };
     if expected
         .is_some_and(|(n, live)| refs.phases.len() != n || refs.live_sha256.is_some() != live)
@@ -528,16 +540,20 @@ impl Index {
     }
     pub fn reserve_start(&self) -> io::Result<Head> {
         let previous = self.head()?;
-        if previous
-            .as_ref()
-            .is_some_and(|head| !matches!(head.state, State::Restored | State::Unchanged))
-        {
+        if previous.as_ref().is_some_and(|head| {
+            !matches!(
+                head.state,
+                State::Restored | State::Unchanged | State::CancelledBeforeCapture
+            )
+        }) {
             return Err(denied(
                 "unfinished original session blocks a new startup baseline",
             ));
         }
         if let Some(head) = &previous {
-            if head.state == State::Unchanged {
+            if head.state == State::CancelledBeforeCapture {
+                preparation::verify_registered(&self.data, &self.client, &self.binding, head)?;
+            } else if head.state == State::Unchanged {
                 unchanged::verify_registered(
                     self.data.path(),
                     self.client.path(),
@@ -592,6 +608,7 @@ impl Index {
                     | State::Restored
                     | State::RestoreRolledBack
                     | State::Unchanged
+                    | State::CancelledBeforeCapture
             );
         if !allowed {
             return Err(denied("current session transition is not allowed"));
@@ -656,6 +673,41 @@ impl Index {
             return Err(denied("rollback readback cannot close restored"));
         }
         self.close_readback(expected, proof, State::Restored)
+    }
+    pub(super) fn close_preparation(
+        &self,
+        expected: &Head,
+        proof: &preparation::Proof,
+    ) -> io::Result<Head> {
+        proof.require(expected, &self.binding)?;
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("cancel revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: State::CancelledBeforeCapture,
+            references: None,
+            restore_plan: None,
+            completion_sha256: Some(proof.sha256().into()),
+        };
+        validate(&next)?;
+        preparation::verify_registered(&self.data, &self.client, &self.binding, &next)?;
+        if observation::entry(&self.action_parent, "client-originals")?.is_some() {
+            return Err(denied("vault appeared before cancel commit"));
+        }
+        proof.require(expected, &self.binding)?;
+        self.write(Some(expected), &next)?;
+        if let Err(error) = proof.require(expected, &self.binding) {
+            let mut pending = expected.clone();
+            pending.revision = next
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("cancel demotion overflow"))?;
+            self.write(Some(&next), &pending)?;
+            return Err(error);
+        }
+        Ok(next)
     }
     pub(super) fn close_unchanged(
         &self,

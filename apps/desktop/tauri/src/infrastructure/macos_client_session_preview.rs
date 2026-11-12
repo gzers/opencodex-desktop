@@ -35,6 +35,8 @@ pub struct Preview {
     pub can_finalize: bool,
     pub can_rearm: bool,
     pub can_finish_unchanged: bool,
+    pub can_cancel_preparation: bool,
+    pub preparation_digest: Option<String>,
     pub unchanged_digest: Option<String>,
     pub rollback_digest: Option<String>,
     pub rearm_digest: Option<String>,
@@ -59,6 +61,8 @@ impl Preview {
             can_finalize: false,
             can_rearm: false,
             can_finish_unchanged: false,
+            can_cancel_preparation: false,
+            preparation_digest: None,
             unchanged_digest: None,
             rollback_digest: None,
             rearm_digest: None,
@@ -86,6 +90,8 @@ pub(super) fn project(
             can_finalize: false,
             can_rearm: false,
             can_finish_unchanged: false,
+            can_cancel_preparation: false,
+            preparation_digest: None,
             unchanged_digest: None,
             rollback_digest: None,
             rearm_digest: None,
@@ -95,7 +101,10 @@ pub(super) fn project(
     let mut preview = Preview {
         status: if head.state == State::Ready {
             Status::Active
-        } else if matches!(head.state, State::Restored | State::Unchanged) {
+        } else if matches!(
+            head.state,
+            State::Restored | State::Unchanged | State::CancelledBeforeCapture
+        ) {
             Status::Restored
         } else {
             Status::Pending
@@ -112,11 +121,20 @@ pub(super) fn project(
         can_finalize: false,
         can_rearm: false,
         can_finish_unchanged: false,
+        can_cancel_preparation: false,
+        preparation_digest: None,
         unchanged_digest: None,
         rollback_digest: None,
         rearm_digest: None,
         confirmation_digest: None,
     };
+    if head.state == State::Preparing {
+        preview.preparation_digest = preparation::confirmation(context, data, head)?;
+        preview.can_cancel_preparation = preview.preparation_digest.is_some();
+        if preview.can_cancel_preparation {
+            preview.attempt_id = Some(head.ticket.clone());
+        }
+    }
     if let Some(refs) = &head.references {
         let client = std::fs::canonicalize(context.working_directory.join(".codex"))?;
         let originals = Originals::open_for_profile(

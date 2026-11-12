@@ -179,6 +179,12 @@ pub(super) fn inspect_map<T>(
         return Err(denied("observation HOME or directory generation differs"));
     }
     let result = read_head(&connection)?;
+    if let Some(head) = result
+        .as_ref()
+        .filter(|h| h.state == State::CancelledBeforeCapture)
+    {
+        preparation::verify_registered(&data, &client, &binding, head)?;
+    }
     if let Some(head) = result.as_ref().filter(|h| h.state == State::Unchanged) {
         unchanged::verify_registered(data.path(), client.path(), &context.working_directory, head)?;
     }
