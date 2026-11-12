@@ -345,7 +345,10 @@ fn stage(
     }
 }
 fn read_plan(originals: &Originals, id: &str, expected: &str) -> io::Result<Plan> {
-    originals.frame(Phase::Original)?;
+    // This parses the immutable plan lineage only. Every Pending admission
+    // finishes with load(), whose one fresh four-frame prefix validates the
+    // Original and all independent archives. Do not validate Original twice
+    // within that same load boundary.
     read_plan_depth(originals, id, expected, 0)
 }
 fn read_plan_depth(
@@ -680,13 +683,7 @@ impl<'a> Pending<'a> {
     fn captures(originals: &Originals) -> io::Result<([Capture; 4], [String; 4])> {
         let mut captures = Vec::new();
         let mut hashes = Vec::new();
-        for phase in [
-            Phase::Original,
-            Phase::Ready,
-            Phase::PreStop,
-            Phase::Stopped,
-        ] {
-            let (frame, raw) = originals.frame(phase)?;
+        for (frame, raw) in originals.frames_through(Phase::Stopped)? {
             captures.push(frame.capture);
             hashes.push(digest(&raw));
         }

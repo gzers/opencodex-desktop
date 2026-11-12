@@ -1257,16 +1257,23 @@ impl StartupSession {
             profile: PinnedDirectory::open(&context.working_directory).map_err(error)?,
             home: PinnedDirectory::open(&context.opencodex_home).map_err(error)?,
         };
-        result.scope(context)?;
         if result.live_sha256.is_some() {
             result.live(context)?;
+        } else {
+            result.scope(context)?;
         }
         Ok(result)
     }
     fn scope(&self, context: &ProcessContext) -> AppResult<Scope> {
+        self.originals.frame(Phase::Original).map_err(error)?;
+        self.scope_binding(context)
+    }
+    /// The caller must independently validate the required fresh frame prefix
+    /// in THIS observation. This checks every scope/root/program binding but
+    /// does not redundantly reread Original before live() reads Original+Ready.
+    fn scope_binding(&self, context: &ProcessContext) -> AppResult<Scope> {
         self.profile.recheck().map_err(error)?;
         self.home.recheck().map_err(error)?;
-        self.originals.frame(Phase::Original).map_err(error)?;
         let scope: Scope = parse(&read_private(
             &self.originals,
             "startup-scope.json",
@@ -1296,7 +1303,7 @@ impl StartupSession {
         Ok(scope)
     }
     fn live(&self, context: &ProcessContext) -> AppResult<Live> {
-        self.scope(context)?;
+        self.scope_binding(context)?;
         let sha = self.live_sha256.as_deref().ok_or_else(|| error(()))?;
         let live: Live = parse(&read_private(&self.originals, "startup-live.json", sha)?)?;
         let (_, ready) = self.originals.frame(Phase::Ready).map_err(error)?;

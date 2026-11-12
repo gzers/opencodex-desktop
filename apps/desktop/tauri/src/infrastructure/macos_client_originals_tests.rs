@@ -271,6 +271,102 @@ fn sequential_frames_reopen_only_with_original_and_independently_retained_phase_
 }
 
 #[test]
+fn one_fresh_prefix_validates_each_frame_once_and_rejects_any_later_corruption() {
+    let f = Fixture::new();
+    let originals = Originals::begin(&f.data, &f.client).unwrap();
+    let mut references = Vec::new();
+    for phase in [Phase::Ready, Phase::PreStop, Phase::Stopped] {
+        fs::write(
+            f.client.join("config.toml"),
+            format!("unique-{}", phase.index()),
+        )
+        .unwrap();
+        references.push((phase, originals.seal(phase).unwrap()));
+    }
+    let observed = std::cell::RefCell::new(Vec::new());
+    let frames = originals
+        .frames_through_checked(Phase::Stopped, &|phase| {
+            observed.borrow_mut().push(phase);
+            Ok(())
+        })
+        .unwrap();
+    assert_eq!(
+        *observed.borrow(),
+        vec![
+            Phase::Original,
+            Phase::Ready,
+            Phase::PreStop,
+            Phase::Stopped
+        ]
+    );
+    assert_eq!(frames.len(), 4);
+    for phase in [
+        Phase::Original,
+        Phase::Ready,
+        Phase::PreStop,
+        Phase::Stopped,
+    ] {
+        let path = originals.directory.path().join(phase.filename());
+        let raw = fs::read(&path).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        fs::write(&path, b"{}").unwrap();
+        assert!(
+            originals.frames_through(Phase::Stopped).is_err(),
+            "phase {} not revalidated",
+            phase.index()
+        );
+        assert!(Originals::open(
+            &f.data,
+            &f.client,
+            originals.attempt(),
+            originals.original_sha256(),
+            &references
+        )
+        .is_err());
+        assert_eq!(fs::read(&path).unwrap(), b"{}");
+        fs::write(&path, &raw).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+        assert!(originals.frames_through(Phase::Stopped).is_ok());
+    }
+    // Permuted independent references still require the full highest prefix,
+    // never skip the final phase because the input's last element is earlier.
+    references.swap(0, 2);
+    Originals::open(
+        &f.data,
+        &f.client,
+        originals.attempt(),
+        originals.original_sha256(),
+        &references,
+    )
+    .unwrap();
+    for content in [
+        b"unique-1".as_slice(),
+        b"unique-2".as_slice(),
+        b"unique-3".as_slice(),
+    ] {
+        let path = originals
+            .directory
+            .path()
+            .join(format!("tree-content-{}.blob", digest(content)));
+        let raw = fs::read(&path).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        fs::write(&path, b"altered archive").unwrap();
+        assert!(originals.frames_through(Phase::Stopped).is_err());
+        assert!(Originals::open(
+            &f.data,
+            &f.client,
+            originals.attempt(),
+            originals.original_sha256(),
+            &references
+        )
+        .is_err());
+        fs::write(&path, &raw).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+    }
+    assert!(originals.frames_through(Phase::Stopped).is_ok());
+}
+
+#[test]
 fn skipped_phase_and_second_original_are_never_a_new_baseline() {
     let f = Fixture::new();
     let originals = Originals::begin(&f.data, &f.client).unwrap();

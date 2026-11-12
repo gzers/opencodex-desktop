@@ -903,10 +903,14 @@ impl Originals {
             original_sha256: original_sha256.into(),
             known: std::sync::Mutex::new(known),
         };
-        result.frame(Phase::Original)?;
-        for (phase, _) in expected_phases {
-            result.frame(*phase)?;
-        }
+        // One fresh complete prefix validates every independently named frame
+        // exactly once. No result survives this open/validation boundary.
+        let last = expected_phases
+            .iter()
+            .max_by_key(|(phase, _)| phase.index())
+            .map(|(phase, _)| *phase)
+            .unwrap_or(Phase::Original);
+        result.frames_through(last)?;
         Ok(result)
     }
     pub fn attempt(&self) -> &str {
@@ -941,6 +945,43 @@ impl Originals {
             .archived_file(&self.directory, relative)
     }
     fn frame(&self, phase: Phase) -> io::Result<(Frame, Vec<u8>)> {
+        self.frames_through(phase)?
+            .pop()
+            .ok_or_else(|| denied("empty validated phase prefix"))
+    }
+    fn frames_through(&self, phase: Phase) -> io::Result<Vec<(Frame, Vec<u8>)>> {
+        self.frames_through_checked(phase, &|_| Ok(()))
+    }
+    /// A single validation boundary reads the entire authenticated prefix.
+    /// It keeps no cache across mutations, archive writes or later callers.
+    fn frames_through_checked(
+        &self,
+        last: Phase,
+        observed: &impl Fn(Phase) -> io::Result<()>,
+    ) -> io::Result<Vec<(Frame, Vec<u8>)>> {
+        let mut result = Vec::new();
+        let mut predecessor = None;
+        for phase in [
+            Phase::Original,
+            Phase::Ready,
+            Phase::PreStop,
+            Phase::Stopped,
+        ]
+        .into_iter()
+        .take(last.index() + 1)
+        {
+            let value = self.frame_with_predecessor(phase, predecessor.as_deref())?;
+            observed(phase)?;
+            predecessor = Some(digest(&value.1));
+            result.push(value);
+        }
+        Ok(result)
+    }
+    fn frame_with_predecessor(
+        &self,
+        phase: Phase,
+        predecessor: Option<&str>,
+    ) -> io::Result<(Frame, Vec<u8>)> {
         self.data.private()?;
         self.profile.recheck()?;
         self.client.recheck()?;
@@ -984,12 +1025,14 @@ impl Originals {
         {
             return Err(denied("journal context or snapshot changed"));
         }
-        if let Some(prior) = phase.predecessor() {
-            let (_, previous) = self.frame(prior)?;
-            if frame.previous_sha256.as_deref() != Some(digest(&previous).as_str()) {
+        if phase.predecessor().is_some() {
+            if predecessor.is_none() || frame.previous_sha256.as_deref() != predecessor {
                 return Err(denied("journal predecessor changed"));
             }
-        } else if frame.previous_sha256.is_some() || digest(&bytes) != self.original_sha256 {
+        } else if predecessor.is_some()
+            || frame.previous_sha256.is_some()
+            || digest(&bytes) != self.original_sha256
+        {
             return Err(denied("original snapshot digest changed"));
         }
         frame.tree.verify_archive(&self.directory)?;

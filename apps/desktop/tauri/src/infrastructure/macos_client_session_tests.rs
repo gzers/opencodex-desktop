@@ -44,6 +44,161 @@ impl Fixture {
 }
 
 #[test]
+fn held_live_observation_revalidates_original_ready_and_archives_without_a_prior_scope_frame_read()
+{
+    let f = Fixture::new();
+    let mut session = f.session();
+    fs::write(
+        f.client.join("config.toml"),
+        b"synthetic ready configuration",
+    )
+    .unwrap();
+    let ready_sha = session.originals.seal(Phase::Ready).unwrap();
+    let live = Live {
+        schema_version: 1,
+        scope_sha256: session.scope_sha256.clone(),
+        ready_sha256: ready_sha,
+        record_sha256: "a".repeat(64),
+        generation: [42, unsafe { libc::geteuid() }.into(), 1, 1],
+        port: 12345,
+        parent_generation: [41, unsafe { libc::geteuid() }.into(), 1, 1],
+    };
+    let bytes = encode(&live).unwrap();
+    create(&session.originals.directory, "startup-live.json", &bytes).unwrap();
+    session.live_sha256 = Some(digest(&bytes));
+    session.live(&f.context).unwrap();
+    for name in [
+        "original.json",
+        "ready.json",
+        "startup-scope.json",
+        "startup-live.json",
+    ] {
+        let path = session.originals.directory.path().join(name);
+        let raw = fs::read(&path).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        fs::write(&path, b"{}").unwrap();
+        assert!(
+            session.live(&f.context).is_err(),
+            "held session accepted changed {name}"
+        );
+        assert_eq!(fs::read(&path).unwrap(), b"{}");
+        fs::write(&path, raw).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+        session.live(&f.context).unwrap();
+    }
+    let blob = session.originals.directory.path().join(format!(
+        "tree-content-{}.blob",
+        digest(b"synthetic ready configuration")
+    ));
+    let bytes = fs::read(&blob).unwrap();
+    fs::set_permissions(&blob, fs::Permissions::from_mode(0o600)).unwrap();
+    fs::write(&blob, b"changed archive").unwrap();
+    assert!(session.live(&f.context).is_err());
+    assert_eq!(fs::read(&blob).unwrap(), b"changed archive");
+    fs::write(&blob, bytes).unwrap();
+    fs::set_permissions(&blob, fs::Permissions::from_mode(0o400)).unwrap();
+    session.live(&f.context).unwrap();
+    // Persisted references in this fixture are storage admission only, never
+    // proof that these synthetic PID values actually ran or normally exited.
+}
+
+#[test]
+#[ignore = "read-only one-shot cost diagnosis on retained owned Stop failure; no service or client mutation"]
+fn diagnose_owned_client_readback_cost_without_replaying_files() {
+    let root = PathBuf::from(std::env::var_os("OCXD024_CLIENT_COST_ROOT").expect("owned fixture"));
+    assert!(
+        root.canonicalize().unwrap() == root
+            && root.starts_with("/private/tmp")
+            && root
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .starts_with("ocxd024-versioned-lifecycle-")
+    );
+    let profile = root.join("profile");
+    assert_eq!(
+        std::env::var_os("HOME"),
+        Some(profile.clone().into_os_string())
+    );
+    let data = profile.join(".codex-desktop/desktop");
+    let client = profile.join(".codex");
+    let home = profile.join(".codex-desktop/opencodex/home");
+    let context = ProcessContext {
+        runtime: crate::modules::runtime::RuntimeHandle::initialize_versioned(
+            &data,
+            &root.join("program 中文 space"),
+        ),
+        working_directory: profile.clone(),
+        opencodex_home: home,
+    };
+    let mut rows = Vec::new();
+    let clock = std::time::Instant::now();
+    let head = super::super::session_index::inspect(&context, &data)
+        .unwrap()
+        .unwrap();
+    rows.push(serde_json::json!({"name":"index_observe","ms":clock.elapsed().as_millis()}));
+    let refs = head.references.as_ref().unwrap();
+    let clock = std::time::Instant::now();
+    let originals = Originals::open_for_profile(
+        &data,
+        &client,
+        &profile,
+        &refs.attempt,
+        &refs.original_sha256,
+        &refs.phases,
+    )
+    .unwrap();
+    rows.push(serde_json::json!({"name":"originals_open","ms":clock.elapsed().as_millis()}));
+    let clock = std::time::Instant::now();
+    let progress = std::cell::RefCell::new(Vec::new());
+    originals
+        .frames_through_checked(Phase::Stopped, &|phase| {
+            progress.borrow_mut().push(
+                serde_json::json!({"phase":phase,"cumulativeMs":clock.elapsed().as_millis()}),
+            );
+            Ok(())
+        })
+        .unwrap();
+    rows.push(serde_json::json!({"name":"full_prefix","ms":clock.elapsed().as_millis(),"progress":progress.into_inner()}));
+    let clock = std::time::Instant::now();
+    let plan = head.restore_plan.as_ref().unwrap();
+    let pending = super::super::restore::Pending::open(&originals, &plan.id, &plan.sha256).unwrap();
+    rows.push(serde_json::json!({"name":"pending_open","ms":clock.elapsed().as_millis()}));
+    let clock = std::time::Instant::now();
+    pending.review_recovery().unwrap();
+    rows.push(serde_json::json!({"name":"pending_review","ms":clock.elapsed().as_millis()}));
+    let clock = std::time::Instant::now();
+    TreeSnapshot::read(&originals.client).unwrap();
+    GrokSnapshot::read(&originals.profile).unwrap();
+    rows.push(serde_json::json!({"name":"current_full_trees","ms":clock.elapsed().as_millis()}));
+    let clock = std::time::Instant::now();
+    let session = StartupSession::open(&context, &data, &client, refs).unwrap();
+    rows.push(serde_json::json!({"name":"session_open","ms":clock.elapsed().as_millis()}));
+    let clock = std::time::Instant::now();
+    session.live(&context).unwrap();
+    rows.push(serde_json::json!({"name":"scope_live","ms":clock.elapsed().as_millis()}));
+    let clock = std::time::Instant::now();
+    let (program_root, _) = source(&context).unwrap();
+    let owner = SystemServiceOwnerProofProvider::new(program_root, context.clone()).unwrap();
+    assert_eq!(owner.query(&context).unwrap(), ServiceOwnerProof::Stopped);
+    rows.push(serde_json::json!({"name":"full_current_owner","ms":clock.elapsed().as_millis()}));
+    let clock = std::time::Instant::now();
+    originals.finalization_fingerprint(&head).unwrap();
+    rows.push(
+        serde_json::json!({"name":"finalization_fingerprint","ms":clock.elapsed().as_millis()}),
+    );
+    let report = serde_json::json!({"accepted":false,"readOnly":true,"headRevision":head.revision,"rows":rows});
+    fs::write(
+        root.join("readback-cost.json"),
+        serde_json::to_vec_pretty(&report).unwrap(),
+    )
+    .unwrap();
+    println!("{report}");
+}
+
+#[test]
 fn preparing_cancellation_uses_only_indexed_closed_vault_history_and_keeps_it_intact() {
     use super::super::session_index::{
         preparation,
