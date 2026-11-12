@@ -7,7 +7,7 @@ it('observes the current bound session without supplying paths, credentials or a
   const preview: ClientRecoveryPreview = {
     status: 'pending', phase: 'restore_prepared', revision: 6, attemptId: 'original-attempt',
     originalEvidence: 'verified', planEvidence: 'verified', completionEvidence: 'unregistered',
-    phaseCount: 3, canContinue: false, canRollback: false, canFinalize: false, canRearm:false,canFinishUnchanged:false,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: null,
+    phaseCount: 3, canContinue: false, canRollback: false, canFinalize: false, canRearm:false,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: null,
   }
   invoke.mockResolvedValue(preview)
   expect(await clientRecoveryApi.preview()).toEqual(preview)
@@ -43,4 +43,10 @@ it('ends only the confirmed unchanged early session with no client content or pa
   invoke.mockResolvedValue({attemptId:request.attemptId,revision:3,status:'unchanged'})
   await clientRecoveryApi.finishUnchanged(request)
   expect(invoke.mock.calls).toEqual([['client_recovery_finish_unchanged',{request}]])
+})
+it('cancels the exact pre-capture reservation without accepting any original-file parameters',async()=>{
+  const request={attemptId:'reservation-ticket',revision:1,confirmationDigest:'current-observation-digest'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:2,status:'cancelled_before_capture'})
+  await clientRecoveryApi.cancelPreparation(request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_cancel_preparation',{request}]])
 })

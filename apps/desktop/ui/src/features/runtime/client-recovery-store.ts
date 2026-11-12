@@ -21,35 +21,42 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   })
   const canFinalize = computed(() => {
     const p = preview.value
-    return bound.value && p?.phase === 'restore_prepared' && p.canFinalize && !p.canContinue && !p.canRollback && !p.canRearm && !p.canFinishUnchanged
+    return bound.value && p?.phase === 'restore_prepared' && p.canFinalize && !p.canContinue && !p.canRollback && !p.canRearm && !p.canFinishUnchanged && !p.canCancelPreparation
       && (p.completionEvidence === 'not_recorded' || p.completionEvidence === 'unregistered') && hash(p.confirmationDigest)
   })
   const canContinue = computed(() => {
     const p = preview.value
-    return bound.value && p?.phase === 'restore_prepared' && p.canContinue && !p.canFinalize && !p.canRearm && !p.canFinishUnchanged
+    return bound.value && p?.phase === 'restore_prepared' && p.canContinue && !p.canFinalize && !p.canRearm && !p.canFinishUnchanged && !p.canCancelPreparation
       && p.completionEvidence === 'not_recorded' && hash(p.confirmationDigest)
       && (!p.canRollback || hash(p.rollbackDigest) && p.rollbackDigest !== p.confirmationDigest)
   })
   const canRollback = computed(() => {
     const p = preview.value
-    return bound.value && p?.phase === 'restore_prepared' && p.canRollback && !p.canFinalize && !p.canRearm && !p.canFinishUnchanged
+    return bound.value && p?.phase === 'restore_prepared' && p.canRollback && !p.canFinalize && !p.canRearm && !p.canFinishUnchanged && !p.canCancelPreparation
       && p.completionEvidence === 'not_recorded' && hash(p.rollbackDigest)
       && (!p.canContinue || hash(p.confirmationDigest) && p.rollbackDigest !== p.confirmationDigest)
   })
   const canRearm = computed(() => {
     const p = preview.value
-    return bound.value && p?.phase === 'restore_rolled_back' && p.canRearm && !p.canContinue && !p.canFinalize && !p.canRollback && !p.canFinishUnchanged
+    return bound.value && p?.phase === 'restore_rolled_back' && p.canRearm && !p.canContinue && !p.canFinalize && !p.canRollback && !p.canFinishUnchanged && !p.canCancelPreparation
       && p.completionEvidence === 'verified' && hash(p.rearmDigest)
   })
   const canFinishUnchanged = computed(() => {
     const p=preview.value
     return p?.status==='pending' && ['captured','ready','stop_prepared','stopped','failed'].includes(p.phase ?? '')
-      && p.canFinishUnchanged && !p.canContinue && !p.canRollback && !p.canFinalize && !p.canRearm
+      && p.canFinishUnchanged && !p.canCancelPreparation && !p.canContinue && !p.canRollback && !p.canFinalize && !p.canRearm
       && p.originalEvidence==='verified' && p.planEvidence==='not_recorded'
       && (p.completionEvidence==='not_recorded'||p.completionEvidence==='unregistered')
       && !!p.attemptId && Number.isSafeInteger(p.revision) && p.revision!>0 && hash(p.unchangedDigest)
   })
-  const can = (value: ClientRecoveryAction) => ({ finalize: canFinalize.value, continue: canContinue.value, rollback: canRollback.value, rearm: canRearm.value, finishUnchanged: canFinishUnchanged.value })[value]
+  const canCancelPreparation=computed(()=>{
+    const p=preview.value
+    return p?.status==='pending'&&p.phase==='preparing'&&p.canCancelPreparation
+      && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm&&!p.canFinishUnchanged
+      && p.originalEvidence==='not_recorded'&&p.planEvidence==='not_recorded'&&p.completionEvidence==='not_recorded'&&p.phaseCount===0
+      && !!p.attemptId&&Number.isSafeInteger(p.revision)&&p.revision!>0&&hash(p.preparationDigest)
+  })
+  const can = (value: ClientRecoveryAction) => ({ finalize: canFinalize.value, continue: canContinue.value, rollback: canRollback.value, rearm: canRearm.value, finishUnchanged: canFinishUnchanged.value, cancelPreparation: canCancelPreparation.value })[value]
   let generation = 0
   let completionScope: { dataRoot: string; home: string } | null = null
   async function inspect() {
@@ -79,7 +86,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
     if (!outcome.value || refreshing.value || !completionScope) return false
     refreshing.value = true; refreshError.value = ''; ready.value = false; reconfirmed.value = false
     try {
-      if (outcome.value.status === 'restored' || outcome.value.status === 'unchanged') {
+      if (outcome.value.status === 'restored' || outcome.value.status === 'unchanged' || outcome.value.status === 'cancelled_before_capture') {
         const snapshot = await clientRecoveryApi.status()
         ready.value = useLifecycleStore().acceptFinalizedClientRecovery(completionScope, snapshot)
         if (!ready.value) refreshError.value = '收尾已完成，当前运行状态仍待核对。请刷新运行状态。'
@@ -101,7 +108,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       else { preview.value = null; checked.value = false; refreshError.value = '操作已完成，当前恢复状态仍待核对。请刷新恢复状态。' }
       return reconfirmed.value
     } catch {
-      refreshError.value = (outcome.value.status === 'restored' || outcome.value.status === 'unchanged') ? '收尾已完成，运行状态读取失败。请刷新运行状态。' : '操作已完成，恢复状态读取失败。请刷新恢复状态。'
+      refreshError.value = (outcome.value.status === 'restored' || outcome.value.status === 'unchanged' || outcome.value.status === 'cancelled_before_capture') ? '收尾已完成，运行状态读取失败。请刷新运行状态。' : '操作已完成，恢复状态读取失败。请刷新恢复状态。'
       return false
     } finally { refreshing.value = false }
   }
@@ -110,9 +117,9 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
     if (!can(next) || reading.value || executing.value || refreshing.value) return false
     // Actions that change direction require an explicit review state in this
     // dialog. Direct store calls cannot bypass that confirmation.
-    if ((next === 'rollback' || next === 'rearm' || next === 'finishUnchanged') && choice.value !== next) return false
+    if ((next === 'rollback' || next === 'rearm' || next === 'finishUnchanged' || next === 'cancelPreparation') && choice.value !== next) return false
     const p = preview.value!
-    const digest = next === 'finishUnchanged' ? p.unchangedDigest! : next === 'rollback' ? p.rollbackDigest! : next === 'rearm' ? p.rearmDigest! : p.confirmationDigest!
+    const digest = next === 'cancelPreparation' ? p.preparationDigest! : next === 'finishUnchanged' ? p.unchangedDigest! : next === 'rollback' ? p.rollbackDigest! : next === 'rearm' ? p.rearmDigest! : p.confirmationDigest!
     const request = { attemptId: p.attemptId!, revision: p.revision!, confirmationDigest: digest }
     action.value = next; executing.value = true; error.value = ''; refreshError.value = ''
     try {
@@ -120,7 +127,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       if (before.source !== 'live' || !before.facts.data_root || !before.facts.opencodex_home) throw new Error('当前配置位置尚未核对，请重新检查客户端恢复。')
       completionScope = { dataRoot: before.facts.data_root, home: before.facts.opencodex_home }
       const result = await clientRecoveryApi[next](request)
-      const expected = next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next === 'rearm' ? 'restore_prepared' : 'restored'
+      const expected = next === 'cancelPreparation' ? 'cancelled_before_capture' : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next === 'rearm' ? 'restore_prepared' : 'restored'
       if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + 1) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
       outcome.value = result; preview.value = null; checked.value = false; choice.value = null
       await refresh()
@@ -131,5 +138,5 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
     } finally { executing.value = false }
   }
   return { open, reading, executing, refreshing, checked, error, refreshError, preview, outcome, ready, reconfirmed,
-    action, choice, canFinalize, canContinue, canRollback, canRearm, canFinishUnchanged, continuing, start, close, choose, cancelChoice, inspect, apply, refresh }
+    action, choice, canFinalize, canContinue, canRollback, canRearm, canFinishUnchanged, canCancelPreparation, continuing, start, close, choose, cancelChoice, inspect, apply, refresh }
 })

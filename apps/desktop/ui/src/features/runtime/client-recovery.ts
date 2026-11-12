@@ -3,7 +3,7 @@ import type { StatusSnapshot } from '@/contracts/runtimeStatus'
 
 export type ClientRecoveryStatus = 'not_required' | 'active' | 'pending' | 'restored' | 'unknown' | 'unsupported'
 export type ClientRecoveryEvidence = 'not_recorded' | 'verified' | 'unregistered' | 'unknown'
-export type ClientRecoveryPhase = 'preparing' | 'captured' | 'ready' | 'stop_prepared' | 'stopped' | 'restore_prepared' | 'restore_rolled_back' | 'restored' | 'unchanged' | 'failed'
+export type ClientRecoveryPhase = 'preparing' | 'captured' | 'ready' | 'stop_prepared' | 'stopped' | 'restore_prepared' | 'restore_rolled_back' | 'restored' | 'unchanged' | 'cancelled_before_capture' | 'failed'
 export interface ClientRecoveryPreview {
   status: ClientRecoveryStatus
   phase: ClientRecoveryPhase | null
@@ -17,6 +17,8 @@ export interface ClientRecoveryPreview {
   canRollback: boolean
   canFinalize: boolean
   canRearm: boolean
+  canCancelPreparation: boolean
+  preparationDigest: string | null
   canFinishUnchanged: boolean
   unchangedDigest: string | null
   rollbackDigest: string | null
@@ -25,8 +27,8 @@ export interface ClientRecoveryPreview {
 }
 export interface ClientRecoveryFinalizeRequest { attemptId: string; revision: number; confirmationDigest: string }
 export interface ClientRecoveryFinalizeOutcome { attemptId: string; revision: number; status: 'restored' }
-export type ClientRecoveryAction = 'finalize' | 'continue' | 'rollback' | 'rearm' | 'finishUnchanged'
-export interface ClientRecoveryOutcome { attemptId: string; revision: number; status: 'restored' | 'rolled_back' | 'restore_prepared' | 'unchanged' }
+export type ClientRecoveryAction = 'finalize' | 'continue' | 'rollback' | 'rearm' | 'finishUnchanged' | 'cancelPreparation'
+export interface ClientRecoveryOutcome { attemptId: string; revision: number; status: 'restored' | 'rolled_back' | 'restore_prepared' | 'unchanged' | 'cancelled_before_capture' }
 
 // Inspection takes no file paths and never starts recovery implicitly.
 export const clientRecoveryApi = {
@@ -36,5 +38,6 @@ export const clientRecoveryApi = {
   rollback: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_rollback', { request }),
   rearm: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_rearm', { request }),
   finishUnchanged: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_finish_unchanged', { request }),
+  cancelPreparation: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_cancel_preparation', { request }),
   status: () => invoke<StatusSnapshot>('get_status_snapshot'),
 }
