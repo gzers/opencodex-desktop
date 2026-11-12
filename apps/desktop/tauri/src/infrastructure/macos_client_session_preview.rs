@@ -235,10 +235,16 @@ fn project_history(
             }
         }
         if !preview.can_finish_unchanged
-            && matches!(head.state, State::Stopped | State::StopPrepared)
+            && matches!(
+                head.state,
+                State::Stopped | State::StopPrepared | State::Ready
+            )
         {
             preview.plan_digest = missing_plan::confirmation(context, data, head)?;
             preview.can_prepare_plan = preview.plan_digest.is_some();
+            if preview.can_prepare_plan {
+                preview.status = Status::Pending;
+            }
         }
         if head.state == State::RestoreRolledBack {
             preview.rearm_digest = originals.rearm_fingerprint(head, false)?;

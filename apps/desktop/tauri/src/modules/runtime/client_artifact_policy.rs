@@ -122,6 +122,19 @@ pub struct Observations<'a> {
     pub audit_not_before: chrono::DateTime<chrono::Utc>,
     pub audit_not_after: chrono::DateTime<chrono::Utc>,
 }
+/// Content-only admission for an EXPLICIT new recovery action with no captured
+/// PreStop. This cannot establish stability over the missing interval or issue
+/// native authority. Ordinary assess() still requires its real PreStop evidence.
+pub struct CurrentRecoveryObservations<'a> {
+    pub before: Stage<'a>,
+    pub ready: Stage<'a>,
+    pub current: Stage<'a>,
+    pub declared_routes: Option<&'a [String]>,
+    pub retained_pids: &'a [u32],
+    pub audit_home: &'a str,
+    pub audit_not_before: chrono::DateTime<chrono::Utc>,
+    pub audit_not_after: chrono::DateTime<chrono::Utc>,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Refusal {
     Unknown,
@@ -216,7 +229,7 @@ fn cache(bytes: &[u8]) -> Result<Value, Refusal> {
 fn audit_suffix(
     before: Snapshot<'_>,
     after: Snapshot<'_>,
-    ctx: &Observations<'_>,
+    ctx: &CurrentRecoveryObservations<'_>,
 ) -> Result<(), Refusal> {
     let original = before.bytes()?.unwrap_or_default();
     let actual = after.bytes()?.unwrap_or_default();
@@ -315,6 +328,30 @@ fn audit_suffix(
 /// ownership/exit, official locks and CAS. No partial plan is returned when any
 /// artifact conflicts. Native generation changes after this call must refuse.
 pub fn assess(ctx: &Observations<'_>) -> Result<Assessment, Refusal> {
+    for stage in [ctx.before, ctx.ready, ctx.pre_stop, ctx.stopped] {
+        for row in stage.rows() {
+            row.check()?;
+        }
+    }
+    if ctx.ready.rows() != ctx.pre_stop.rows() {
+        return Err(Refusal::ChangedSinceReady);
+    }
+    assess_current_recovery(&CurrentRecoveryObservations {
+        before: ctx.before,
+        ready: ctx.ready,
+        current: ctx.stopped,
+        declared_routes: ctx.declared_routes,
+        retained_pids: ctx.retained_pids,
+        audit_home: ctx.audit_home,
+        audit_not_before: ctx.audit_not_before,
+        audit_not_after: ctx.audit_not_after,
+    })
+}
+/// Every content, ownership projection and audit bound is checked NOW. No
+/// missing historical snapshot is synthesized or passed to ordinary assess().
+pub fn assess_current_recovery(
+    ctx: &CurrentRecoveryObservations<'_>,
+) -> Result<Assessment, Refusal> {
     let declarations = ctx.declared_routes.ok_or(Refusal::Context)?;
     let routes: BTreeSet<_> = declarations.iter().map(String::as_str).collect();
     if routes.len() != declarations.len()
@@ -330,20 +367,17 @@ pub fn assess(ctx: &Observations<'_>) -> Result<Assessment, Refusal> {
     {
         return Err(Refusal::Context);
     }
-    for stage in [ctx.before, ctx.ready, ctx.pre_stop, ctx.stopped] {
+    for stage in [ctx.before, ctx.ready, ctx.current] {
         for row in stage.rows() {
             row.check()?;
         }
-    }
-    if ctx.ready.rows() != ctx.pre_stop.rows() {
-        return Err(Refusal::ChangedSinceReady);
     }
     for ((original, ready), after) in ctx
         .before
         .rows()
         .into_iter()
         .zip(ctx.ready.rows())
-        .zip(ctx.stopped.rows())
+        .zip(ctx.current.rows())
     {
         if let Snapshot::File { protection, .. } = after {
             if ![original, ready]
@@ -367,20 +401,20 @@ pub fn assess(ctx: &Observations<'_>) -> Result<Assessment, Refusal> {
         return Err(Refusal::Catalog);
     }
     let catalog_action = if ctx
-        .stopped
+        .current
         .catalog
         .content_and_protection(ctx.before.catalog)
     {
         Action::AlreadyOriginal
     } else {
-        if ctx.stopped.catalog == Snapshot::Absent {
+        if ctx.current.catalog == Snapshot::Absent {
             return Err(Refusal::Catalog);
         }
-        let after = catalog(ctx.stopped.catalog)?;
+        let after = catalog(ctx.current.catalog)?;
         native_subset(&after, &before, &ready)?;
         Action::RestoreOriginal
     };
-    let cache_action = if ctx.stopped.cache.content_and_protection(ctx.before.cache) {
+    let cache_action = if ctx.current.cache.content_and_protection(ctx.before.cache) {
         Action::AlreadyOriginal
     } else {
         let ready_bytes = ctx.ready.cache.bytes()?.ok_or(Refusal::Cache)?;
@@ -388,7 +422,7 @@ pub fn assess(ctx: &Observations<'_>) -> Result<Assessment, Refusal> {
         if ready_cache["models"] != ready["models"] {
             return Err(Refusal::Cache);
         }
-        let after_bytes = ctx.stopped.cache.bytes()?.ok_or(Refusal::Cache)?;
+        let after_bytes = ctx.current.cache.bytes()?.ok_or(Refusal::Cache)?;
         if after_bytes != ready_bytes {
             let after = cache(after_bytes)?;
             // The cache envelope is validated independently above. Compare its
@@ -400,10 +434,10 @@ pub fn assess(ctx: &Observations<'_>) -> Result<Assessment, Refusal> {
     };
     // Diagnostic log consistency is supplemental; it produces no ownership proof.
     audit_suffix(ctx.before.audit, ctx.ready.audit, ctx)?;
-    audit_suffix(ctx.before.audit, ctx.stopped.audit, ctx)?;
-    if !ctx.stopped.audit.content_and_protection(ctx.before.audit)
+    audit_suffix(ctx.before.audit, ctx.current.audit, ctx)?;
+    if !ctx.current.audit.content_and_protection(ctx.before.audit)
         && !ctx
-            .stopped
+            .current
             .audit
             .bytes()?
             .unwrap_or_default()
@@ -411,7 +445,7 @@ pub fn assess(ctx: &Observations<'_>) -> Result<Assessment, Refusal> {
     {
         return Err(Refusal::Audit);
     }
-    let audit_action = if ctx.stopped.audit.content_and_protection(ctx.before.audit) {
+    let audit_action = if ctx.current.audit.content_and_protection(ctx.before.audit) {
         Action::AlreadyOriginal
     } else {
         Action::RestoreOriginal

@@ -80,7 +80,7 @@ struct Plan {
     recovery_observation: Option<RecoveryObservation>,
     id: String,
     attempt: String,
-    phases: [String; 4],
+    phases: Vec<String>,
     kinds: [Kind; 3],
     staged: [Option<Identity>; 3],
     evidence: Evidence,
@@ -166,7 +166,27 @@ fn kinds(c: &[Capture; 4], e: &Evidence) -> io::Result<[Kind; 3]> {
         audit_not_after: e.not_after,
     })
     .map_err(|_| denied("client content not eligible for compensation"))?;
-    Ok(std::array::from_fn(|i| {
+    Ok(kind_actions(c, &assessed))
+}
+fn kinds_current(c: &[Capture; 4], e: &Evidence) -> io::Result<[Kind; 3]> {
+    let before = Projection::new(&c[0])?;
+    let ready = Projection::new(&c[1])?;
+    let current = Projection::new(&c[3])?;
+    let assessed = policy::assess_current_recovery(&policy::CurrentRecoveryObservations {
+        before: before.stage(&c[0]),
+        ready: ready.stage(&c[1]),
+        current: current.stage(&c[3]),
+        declared_routes: e.declared_routes.as_deref(),
+        retained_pids: &e.retained_pids,
+        audit_home: &e.audit_home,
+        audit_not_before: e.not_before,
+        audit_not_after: e.not_after,
+    })
+    .map_err(|_| denied("current recovery content not eligible"))?;
+    Ok(kind_actions(c, &assessed))
+}
+fn kind_actions(c: &[Capture; 4], assessed: &policy::Assessment) -> [Kind; 3] {
+    std::array::from_fn(|i| {
         if assessed.0[i].1 == policy::Action::AlreadyOriginal {
             Kind::Keep
         } else {
@@ -177,7 +197,7 @@ fn kinds(c: &[Capture; 4], e: &Evidence) -> io::Result<[Kind; 3]> {
                 _ => Kind::Keep,
             }
         }
-    }))
+    })
 }
 fn same(left: &Image, right: &Image, exact_time: bool) -> bool {
     if exact_time {
@@ -812,8 +832,10 @@ impl<'a> Pending<'a> {
         head: &session_index::Head,
     ) -> io::Result<RecoveryObservation> {
         session_index::validate(head)?;
-        if head.state != session_index::State::StopPrepared
-            || head.restore_plan.is_some()
+        if !matches!(
+            head.state,
+            session_index::State::Ready | session_index::State::StopPrepared
+        ) || head.restore_plan.is_some()
             || head.completion_sha256.is_some()
         {
             return Err(denied(
@@ -830,7 +852,12 @@ impl<'a> Pending<'a> {
             .map_err(|_| denied("original references unavailable"))?;
         if refs.attempt != originals.attempt
             || refs.original_sha256 != originals.original_sha256
-            || refs.phases.len() != 2
+            || refs.phases.len()
+                != if head.state == session_index::State::Ready {
+                    1
+                } else {
+                    2
+                }
             || refs
                 .phases
                 .iter()
@@ -852,9 +879,10 @@ impl<'a> Pending<'a> {
     fn captures_with_observation(
         originals: &Originals,
         observation: Option<&RecoveryObservation>,
-    ) -> io::Result<([Capture; 4], [String; 4])> {
+    ) -> io::Result<([Capture; 4], Vec<String>)> {
         let Some(observation) = observation else {
-            return Self::captures(originals);
+            let (c, h) = Self::captures(originals)?;
+            return Ok((c, h.to_vec()));
         };
         session_index::validate(&observation.source_head)?;
         let refs = observation
@@ -863,11 +891,19 @@ impl<'a> Pending<'a> {
             .as_ref()
             .ok_or_else(|| denied("observation source absent"))?;
         if observation.schema_version != 1
-            || observation.source_head.state != session_index::State::StopPrepared
+            || !matches!(
+                observation.source_head.state,
+                session_index::State::Ready | session_index::State::StopPrepared
+            )
             || observation.source_head.restore_plan.is_some()
             || refs.attempt != originals.attempt
             || refs.original_sha256 != originals.original_sha256
-            || refs.phases.len() != 2
+            || refs.phases.len()
+                != if observation.source_head.state == session_index::State::Ready {
+                    1
+                } else {
+                    2
+                }
             || refs.live_sha256.is_none()
             || !observation.capture.valid()
             || !observation.tree.valid()
@@ -881,7 +917,11 @@ impl<'a> Pending<'a> {
                 "current recovery observation is not bound to original context",
             ));
         }
-        let frames = originals.frames_through(Phase::PreStop)?;
+        let frames = originals.frames_through(if refs.phases.len() == 1 {
+            Phase::Ready
+        } else {
+            Phase::PreStop
+        })?;
         for (index, (phase, hash)) in refs.phases.iter().enumerate() {
             if frames[index + 1].0.phase != *phase || digest(&frames[index + 1].1) != *hash {
                 return Err(denied("observation original prefix changed"));
@@ -893,6 +933,11 @@ impl<'a> Pending<'a> {
             .iter()
             .map(|(f, _)| f.capture.clone())
             .collect::<Vec<_>>();
+        // Slot2 is unused by the fresh current-content classifier when no
+        // PreStop exists. It is never hashed or serialized as a historical frame.
+        if refs.phases.len() == 1 {
+            captures.push(frames[1].0.capture.clone());
+        }
         captures.push(observation.capture.clone());
         let mut hashes = frames.iter().map(|(_, b)| digest(b)).collect::<Vec<_>>();
         hashes.push(digest(&encode(observation)?));
@@ -900,9 +945,7 @@ impl<'a> Pending<'a> {
             captures
                 .try_into()
                 .map_err(|_| denied("original prefix incomplete"))?,
-            hashes
-                .try_into()
-                .map_err(|_| denied("original prefix hash incomplete"))?,
+            hashes,
         ))
     }
     pub(super) fn observed_preparation_fingerprint(
@@ -921,14 +964,27 @@ impl<'a> Pending<'a> {
         evidence: &Evidence,
         observation: &RecoveryObservation,
     ) -> io::Result<String> {
-        let frames = originals.frames_through(Phase::PreStop)?;
+        let missing_pre = head.state == session_index::State::Ready;
+        let frames = originals.frames_through(if missing_pre {
+            Phase::Ready
+        } else {
+            Phase::PreStop
+        })?;
         let c = [
             frames[0].0.capture.clone(),
             frames[1].0.capture.clone(),
-            frames[2].0.capture.clone(),
+            if missing_pre {
+                frames[1].0.capture.clone()
+            } else {
+                frames[2].0.capture.clone()
+            },
             observation.capture.clone(),
         ];
-        let decisions = kinds(&c, evidence)?;
+        let decisions = if missing_pre {
+            kinds_current(&c, evidence)?
+        } else {
+            kinds(&c, evidence)?
+        };
         Ok(digest(&encode(&(
             head,
             &frames.iter().map(|(_, b)| digest(b)).collect::<Vec<_>>(),
@@ -962,7 +1018,14 @@ impl<'a> Pending<'a> {
                 "prepared observation contains changed unowned client content",
             ));
         }
-        let pre = self.originals.frame(Phase::PreStop)?.0;
+        let pre = self
+            .originals
+            .frame(if head.state == session_index::State::Ready {
+                Phase::Ready
+            } else {
+                Phase::PreStop
+            })?
+            .0;
         for name in [
             ".opencodex-native-main.claim.sqlite",
             ".opencodex-native-main.owner.sqlite",
@@ -1105,7 +1168,14 @@ impl<'a> Pending<'a> {
         }
         let (captures, phases) =
             Self::captures_with_observation(originals, recovery_observation.as_ref())?;
-        let ks = kinds(&captures, &evidence)?;
+        let ks = if recovery_observation
+            .as_ref()
+            .is_some_and(|o| o.source_head.state == session_index::State::Ready)
+        {
+            kinds_current(&captures, &evidence)?
+        } else {
+            kinds(&captures, &evidence)?
+        };
         if Capture::read(&originals.client)? != captures[3] {
             return Err(denied("stopped postimage changed; no new baseline"));
         }
@@ -1181,7 +1251,18 @@ impl<'a> Pending<'a> {
         }
         let (captures, hashes) =
             Self::captures_with_observation(self.originals, plan.recovery_observation.as_ref())?;
-        if plan.phases != hashes || plan.kinds != kinds(&captures, &plan.evidence)? {
+        let current = plan
+            .recovery_observation
+            .as_ref()
+            .is_some_and(|o| o.source_head.state == session_index::State::Ready);
+        if plan.phases != hashes
+            || plan.kinds
+                != if current {
+                    kinds_current(&captures, &plan.evidence)?
+                } else {
+                    kinds(&captures, &plan.evidence)?
+                }
+        {
             return Err(denied("original phases or restore decisions changed"));
         }
         for i in 0..3 {

@@ -749,14 +749,16 @@ impl StartupSession {
     ) -> AppResult<Option<String>> {
         if !matches!(
             head.state,
-            session_index::State::Stopped | session_index::State::StopPrepared
+            session_index::State::Stopped
+                | session_index::State::StopPrepared
+                | session_index::State::Ready
         ) || head.restore_plan.is_some()
             || head.references.as_ref() != Some(&self.references()?)
         {
             return Ok(None);
         }
         let evidence = self.restore_evidence(context)?;
-        let decision = if head.state == session_index::State::StopPrepared {
+        let decision = if head.state != session_index::State::Stopped {
             restore::Pending::observed_preparation_fingerprint(&self.originals, head, &evidence)
         } else {
             restore::Pending::preparation_fingerprint(&self.originals, &evidence)
@@ -765,10 +767,10 @@ impl StartupSession {
         let original = self.originals.frame(Phase::Original).map_err(error)?.0;
         let stopped = self
             .originals
-            .frame(if head.state == session_index::State::StopPrepared {
-                Phase::PreStop
-            } else {
-                Phase::Stopped
+            .frame(match head.state {
+                session_index::State::Ready => Phase::Ready,
+                session_index::State::StopPrepared => Phase::PreStop,
+                _ => Phase::Stopped,
             })
             .map_err(error)?
             .0;
@@ -823,7 +825,7 @@ impl StartupSession {
         let (root, _) = source(context)?;
         let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
         owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)?;
-        let pending = if head.state == session_index::State::StopPrepared {
+        let pending = if head.state != session_index::State::Stopped {
             restore::Pending::prepare_observed(
                 &self.originals,
                 head,
@@ -834,7 +836,7 @@ impl StartupSession {
             restore::Pending::prepare(&self.originals, self.restore_evidence(context)?, lease)
         }
         .map_err(error)?;
-        if head.state == session_index::State::StopPrepared
+        if head.state != session_index::State::Stopped
             && pending
                 .prepared_observation_confirmation(head)
                 .map_err(error)?

@@ -35,7 +35,7 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
     </template>
     <template v-else-if="recovery.choice === 'preparePlan'">
       <p class="client-recovery-lead">准备原件恢复计划？</p>
-      <p v-if="recovery.preview?.phase==='stop_prepared'">确认后核对服务现在已停止，再按当前状态准备恢复计划。原件和上次操作结果保留。</p>
+      <p v-if="(recovery.preview?.phase==='stop_prepared'||recovery.preview?.phase==='ready')">确认后核对服务现在已停止，再按当前状态准备恢复计划。原件和上次操作结果保留。</p>
       <p v-else>重新核对原件、停止后的文件和服务停止状态，再准备恢复计划。当前文件保持，原件保留。</p>
       <p>准备完成后，还需点击“确认继续恢复”。不会自动恢复或启动。</p>
     </template>
@@ -62,7 +62,7 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
     </template>
     <template v-else-if="recovery.preview">
       <template v-if="recovery.canPreparePlan">
-        <p v-if="recovery.preview?.phase==='stop_prepared'" class="client-recovery-lead">上次停止未完成核对，配置仍待恢复。</p>
+        <p v-if="(recovery.preview?.phase==='stop_prepared'||recovery.preview?.phase==='ready')" class="client-recovery-lead">上次停止未完成核对，配置仍待恢复。</p>
         <p v-else class="client-recovery-lead">服务已停止，客户端配置尚未恢复。</p>
         <p>可以核对当前状态并准备恢复计划，原件保留。</p>
       </template>

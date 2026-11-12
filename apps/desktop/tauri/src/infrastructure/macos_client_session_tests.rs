@@ -521,7 +521,8 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
         preview::{inspect_preview, Evidence as PreviewEvidence, Status},
         Index, State,
     };
-    for recovery_observed in [false, true] {
+    for prefix_count in [3, 2, 1] {
+        let recovery_observed = prefix_count < 3;
         let f = Fixture::new();
         let wire = |v: serde_json::Value| serde_json::to_vec(&v).unwrap();
         let write = |name: &str, bytes: &[u8]| {
@@ -579,14 +580,18 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
         let ready = index
             .advance(&captured, State::Ready, Some(session.references().unwrap()))
             .unwrap();
-        session.originals.seal(Phase::PreStop).unwrap();
-        let pre = index
-            .advance(
-                &ready,
-                State::StopPrepared,
-                Some(session.references().unwrap()),
-            )
-            .unwrap();
+        let pre = if prefix_count >= 2 {
+            session.originals.seal(Phase::PreStop).unwrap();
+            index
+                .advance(
+                    &ready,
+                    State::StopPrepared,
+                    Some(session.references().unwrap()),
+                )
+                .unwrap()
+        } else {
+            ready
+        };
         write(NAMES[0], &wire(serde_json::json!({"models":[]})));
         let mut audit = fs::read(f.client.join(NAMES[2])).unwrap();
         audit.extend(event("codex-restore", "catalog", "restore"));
@@ -604,7 +609,7 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
         } else {
             State::RestorePrepared
         };
-        let offset = if recovery_observed { 1 } else { 0 };
+        let offset = 3 - prefix_count;
         let evidence = Evidence {
             declared_routes: Some(vec!["channel/model".into()]),
             retained_pids: vec![100, 101],
@@ -766,6 +771,14 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
             inspect_preview(&f.context, &f.data).status,
             Status::Restored
         );
+        if prefix_count == 1 {
+            assert!(!session
+                .originals
+                .directory
+                .path()
+                .join("pre-stop.json")
+                .exists());
+        }
         if recovery_observed {
             assert!(!session
                 .originals
@@ -776,7 +789,7 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
             assert!(restored
                 .references
                 .as_ref()
-                .is_some_and(|r| r.phases.len() == 2));
+                .is_some_and(|r| r.phases.len() == prefix_count as usize));
         }
     }
 }

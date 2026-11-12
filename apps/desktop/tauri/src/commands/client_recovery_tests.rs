@@ -36,11 +36,13 @@ fn prepare_owned_stopped_missing_plan_then_continue() {
     let head = session_index::inspect(&context, &data).unwrap().unwrap();
     if matches!(
         head.state,
-        session_index::State::Stopped | session_index::State::StopPrepared
+        session_index::State::Stopped
+            | session_index::State::StopPrepared
+            | session_index::State::Ready
     ) {
         let request = session_index::missing_plan::review(&context, &data)
             .unwrap()
-            .expect("all four stages admitted");
+            .expect("actual indexed history and current content admitted");
         let idx = data.join("manager-state/client-session-index.sqlite");
         let index_bytes = fs::read(&idx).unwrap();
         if std::env::var_os("OCXD024_MISSING_PLAN_ONCE").is_none() {
@@ -90,7 +92,7 @@ fn prepare_owned_stopped_missing_plan_then_continue() {
         let outcome = result.unwrap();
         assert_eq!(
             outcome.status,
-            if head.state == session_index::State::StopPrepared {
+            if head.state != session_index::State::Stopped {
                 "recovery_prepared"
             } else {
                 "restore_prepared"
@@ -572,6 +574,15 @@ fn finish_owned_captured_session_only_when_original_clients_are_unchanged() {
 #[test]
 #[ignore = "read-only final client recovery gate on retained owned native Profile"]
 fn inspect_owned_client_gate_after_rearm_without_service_actions() {
+    inspect_owned_client_gate(false);
+}
+#[test]
+#[ignore = "read-only historical Ready plus currently stopped service on retained owned Profile"]
+fn inspect_owned_ready_pending_gate_without_service_actions() {
+    inspect_owned_client_gate(true);
+}
+fn inspect_owned_client_gate(pending: bool) {
+    let started = Instant::now();
     let root = PathBuf::from(std::env::var_os("OCXD024_REARM_GATE_ROOT").expect("owned fixture"));
     assert!(
         root.is_absolute()
@@ -614,12 +625,26 @@ fn inspect_owned_client_gate_after_rearm_without_service_actions() {
     .unwrap();
     assert_eq!(
         snapshot.facts.client_recovery,
-        crate::modules::status::ClientRecoveryState::NotRequired
+        if pending {
+            crate::modules::status::ClientRecoveryState::Required
+        } else {
+            crate::modules::status::ClientRecoveryState::NotRequired
+        }
     );
-    assert!(snapshot.can_start && !snapshot.can_stop && !snapshot.can_restart);
+    assert_eq!(snapshot.can_start, !pending);
+    assert!(!snapshot.can_stop && !snapshot.can_restart);
+    assert_eq!(
+        snapshot.matrix.runtime,
+        crate::types::status::RuntimeState::Stopped
+    );
+    assert!(started.elapsed() < std::time::Duration::from_secs(5));
     assert!(snapshot.pid.is_none() && snapshot.port.is_none());
     fs::write(
-        root.join("rearm-final-live-status.json"),
+        root.join(if pending {
+            "ready-pending-live-status.json"
+        } else {
+            "rearm-final-live-status.json"
+        }),
         serde_json::to_vec_pretty(&snapshot).unwrap(),
     )
     .unwrap();

@@ -146,6 +146,79 @@ fn unknown_at_any_stage_or_artifact_never_becomes_absent() {
     }
 }
 
+fn current_observations<'a>(ctx: Observations<'a>) -> CurrentRecoveryObservations<'a> {
+    CurrentRecoveryObservations {
+        before: ctx.before,
+        ready: ctx.ready,
+        current: ctx.stopped,
+        declared_routes: ctx.declared_routes,
+        retained_pids: ctx.retained_pids,
+        audit_home: ctx.audit_home,
+        audit_not_before: ctx.audit_not_before,
+        audit_not_after: ctx.audit_not_after,
+    }
+}
+
+#[test]
+fn current_recovery_has_no_historical_pre_stop_and_does_not_relax_ordinary_stop() {
+    let f = Fixture::new();
+    let mut ctx = f.observations();
+    ctx.pre_stop.catalog = Snapshot::Unknown;
+    assert_eq!(assess(&ctx), Err(Refusal::Unknown));
+    assert!(assess_current_recovery(&current_observations(ctx)).is_ok());
+    let mut ctx = f.observations();
+    ctx.pre_stop.catalog = file(&f.stopped, "changed-before-stop");
+    assert_eq!(assess(&ctx), Err(Refusal::ChangedSinceReady));
+    assert!(assess_current_recovery(&current_observations(ctx)).is_ok());
+}
+
+#[test]
+fn current_recovery_refuses_unknown_external_content_and_unproven_context() {
+    let f = Fixture::new();
+    for stage in 0..3 {
+        for artifact in 0..3 {
+            let mut ctx = current_observations(f.observations());
+            let row = match stage {
+                0 => &mut ctx.before,
+                1 => &mut ctx.ready,
+                _ => &mut ctx.current,
+            };
+            match artifact {
+                0 => row.catalog = Snapshot::Unknown,
+                1 => row.cache = Snapshot::Unknown,
+                _ => row.audit = Snapshot::Unknown,
+            };
+            assert_eq!(assess_current_recovery(&ctx), Err(Refusal::Unknown));
+        }
+    }
+    let user_model = wire(json!({"models":[{"slug":"user/added"}]}));
+    for artifact in 0..3 {
+        let mut ctx = current_observations(f.observations());
+        match artifact {
+            0 => ctx.current.catalog = file(&user_model, "external"),
+            1 => ctx.current.cache = file(&user_model, "external"),
+            _ => ctx.current.audit = file(b"external-event\n", "external"),
+        }
+        assert!(assess_current_recovery(&ctx).is_err());
+    }
+    let mut ctx = current_observations(f.observations());
+    ctx.current.cache = Snapshot::File {
+        bytes: &f.cache,
+        generation: "external",
+        protection: "new-owner",
+    };
+    assert_eq!(
+        assess_current_recovery(&ctx),
+        Err(Refusal::ProtectionChanged)
+    );
+    ctx = current_observations(f.observations());
+    ctx.declared_routes = None;
+    assert_eq!(assess_current_recovery(&ctx), Err(Refusal::Context));
+    ctx = current_observations(f.observations());
+    ctx.retained_pids = &[];
+    assert_eq!(assess_current_recovery(&ctx), Err(Refusal::Context));
+}
+
 #[test]
 fn content_identity_and_access_changes_after_ready_each_refuse_the_batch() {
     let f = Fixture::new();

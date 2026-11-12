@@ -67,6 +67,19 @@ pub enum ClientRecoveryState {
     Unknown,
 }
 impl ClientRecoveryState {
+    // A durable Ready head describes a prior successful start. It cannot
+    // establish that the service is still running after a later interrupted
+    // Stop. Reconcile only with this collector's observed process state.
+    fn observed_runtime(self, runtime: RuntimeState) -> Self {
+        if self != Self::Active {
+            return self;
+        }
+        match runtime {
+            RuntimeState::Running => Self::Active,
+            RuntimeState::Stopped => Self::Required,
+            _ => Self::Unknown,
+        }
+    }
     pub fn blocks_start(self) -> bool {
         self != Self::NotRequired
     }
@@ -830,7 +843,10 @@ where
         self.failure_count = self.failure_count.saturating_add(1);
     }
     fn refresh_manager_facts(&mut self) {
-        self.facts.client_recovery = self.source.client_recovery();
+        self.facts.client_recovery = self
+            .source
+            .client_recovery()
+            .observed_runtime(self.matrix.runtime);
         if let Some((data_root, home)) = self.source.manager_paths() {
             self.facts.data_root = data_root;
             self.facts.opencodex_home = Some(home);
@@ -923,7 +939,8 @@ where
                     self.port = None;
                     self.pid = None;
                 }
-                self.facts.client_recovery = client_recovery;
+                self.facts.client_recovery =
+                    client_recovery.observed_runtime(RuntimeState::Unreachable);
                 if let Some((data_root, home)) = self.source.manager_paths() {
                     self.facts.data_root = data_root;
                     self.facts.opencodex_home = Some(home);
@@ -939,7 +956,7 @@ where
             self.matrix.connection,
             self.matrix.operation,
         );
-        mapped.facts.client_recovery = client_recovery;
+        mapped.facts.client_recovery = client_recovery.observed_runtime(mapped.runtime);
         if let Some((data_root, home)) = self.source.manager_paths() {
             mapped.facts.data_root = data_root;
             mapped.facts.opencodex_home = Some(home);

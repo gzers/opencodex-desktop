@@ -148,6 +148,27 @@ impl Active {
         Ok(())
     }
     pub fn pre_stop(&mut self, context: &ProcessContext, deadline: Instant) -> AppResult<()> {
+        #[cfg(test)]
+        if std::env::var_os("OCXD024_INTERRUPT_BEFORE_PRE_STOP").as_deref()
+            == Some(std::ffi::OsStr::new("1"))
+        {
+            if !self.index.data_root().starts_with("/private/tmp")
+                || !self.index.data_root().ancestors().any(|p| {
+                    p.file_name().is_some_and(|n| {
+                        n.to_string_lossy()
+                            .starts_with("ocxd024-versioned-lifecycle-")
+                    })
+                })
+            {
+                return Err(failure(()));
+            }
+            return Err(AppError::RuntimeManaged {
+                code: "owned_fixture_missing_pre_stop".into(),
+                detail:
+                    "owned interruption before PreStop capture; ordinary fallback Stop retained"
+                        .into(),
+            });
+        }
         self.stop_pair = Some(self.session.watch_stop_pair(context, deadline)?);
         self.session.seal_pre_stop(context, deadline)?;
         self.head = self

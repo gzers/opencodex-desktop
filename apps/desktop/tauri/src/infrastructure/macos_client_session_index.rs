@@ -176,9 +176,14 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
         State::Ready => Some((1, true)),
         State::StopPrepared => Some((2, true)),
         State::Stopped | State::RestorePrepared => Some((3, true)),
-        State::RecoveryPrepared => Some((2, true)),
+        State::RecoveryPrepared => {
+            if !matches!(refs.phases.len(), 1 | 2) {
+                return Err(denied("current recovery prefix incomplete"));
+            }
+            Some((refs.phases.len(), true))
+        }
         State::Restored | State::RestoreRolledBack => {
-            if !matches!(refs.phases.len(), 2 | 3) {
+            if !matches!(refs.phases.len(), 1..=3) {
                 return Err(denied("terminal recovery prefix incomplete"));
             }
             Some((refs.phases.len(), true))
@@ -753,8 +758,10 @@ impl Index {
     /// Reference publication only. This does not authorize applying the plan;
     /// the native service/family proof and mutation permit remain separate.
     pub fn record_restore_plan(&self, expected: &Head, id: &str, sha256: &str) -> io::Result<Head> {
-        if !matches!(expected.state, State::Stopped | State::StopPrepared)
-            || expected.restore_plan.is_some()
+        if !matches!(
+            expected.state,
+            State::Stopped | State::StopPrepared | State::Ready
+        ) || expected.restore_plan.is_some()
         {
             return Err(denied("restore plan cannot replace prior session decision"));
         }
@@ -764,7 +771,7 @@ impl Index {
                 .checked_add(1)
                 .ok_or_else(|| denied("session revision overflow"))?,
             ticket: expected.ticket.clone(),
-            state: if expected.state == State::StopPrepared {
+            state: if matches!(expected.state, State::StopPrepared | State::Ready) {
                 State::RecoveryPrepared
             } else {
                 State::RestorePrepared
@@ -776,7 +783,7 @@ impl Index {
             }),
             completion_sha256: None,
         };
-        if expected.state == State::StopPrepared {
+        if matches!(expected.state, State::StopPrepared | State::Ready) {
             let refs = expected
                 .references
                 .as_ref()
@@ -928,7 +935,7 @@ impl Index {
             state: if expected
                 .references
                 .as_ref()
-                .is_some_and(|r| r.phases.len() == 2)
+                .is_some_and(|r| matches!(r.phases.len(), 1 | 2))
             {
                 State::RecoveryPrepared
             } else {

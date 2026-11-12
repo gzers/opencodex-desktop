@@ -42,23 +42,23 @@ beforeEach(() => {
 })
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
-  it('uses a separate current-state plan when the historical stopped stage is missing, with explicit later continuation',async()=>{
-    const source={...missingPlan(),phase:'stop_prepared' as const,revision:5,phaseCount:2}
-    vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(source).mockResolvedValue({...partial(),phase:'recovery_prepared',revision:6,phaseCount:2})
-    vi.mocked(clientRecoveryApi.preparePlan).mockResolvedValue({...result(),revision:6,status:'recovery_prepared'})
+  it.each([{phase:'stop_prepared' as const,revision:5,phaseCount:2},{phase:'ready' as const,revision:4,phaseCount:1}])('uses actual historical prefix $phase for a separate current-state plan and explicit later continuation',async prefix=>{
+    const source={...missingPlan(),...prefix}
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(source).mockResolvedValue({...partial(),phase:'recovery_prepared',revision:prefix.revision+1,phaseCount:prefix.phaseCount})
+    vi.mocked(clientRecoveryApi.preparePlan).mockResolvedValue({...result(),revision:prefix.revision+1,status:'recovery_prepared'})
     vi.mocked(clientRecoveryApi.status).mockResolvedValue(status(true))
     const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
     expect(view.text()).toContain('上次停止未完成核对');await button('准备恢复计划')!.trigger('click');expect(view.text()).toContain('原件和上次操作结果保留')
     await button('确认准备计划')!.trigger('click');await flushPromises()
     expect(clientRecoveryApi.continue).not.toHaveBeenCalled();expect(useLifecycleStore().clientRecoveryRequired).toBe(true);expect(button('确认继续恢复')).toBeDefined()
-    vi.mocked(clientRecoveryApi.continue).mockResolvedValue({...result(),revision:7});vi.mocked(clientRecoveryApi.status).mockResolvedValueOnce(status(true)).mockResolvedValue(status())
+    vi.mocked(clientRecoveryApi.continue).mockResolvedValue({...result(),revision:prefix.revision+2});vi.mocked(clientRecoveryApi.status).mockResolvedValueOnce(status(true)).mockResolvedValue(status())
     await button('确认继续恢复')!.trigger('click');await flushPromises();expect(useClientRecoveryStore().ready).toBe(true)
   })
   it('requires distinct recovery_prepared receipt and matching two-stage preview, never a fabricated full stage count',async()=>{
     const p={...missingPlan(),phase:'stop_prepared' as const,revision:5,phaseCount:2}
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue(p);vi.mocked(clientRecoveryApi.preparePlan).mockResolvedValue({...result(),revision:6,status:'restore_prepared'})
     const store=await inspect();store.choose('preparePlan');expect(await store.apply('preparePlan')).toBe(false);expect(store.error).toContain('回执');expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
-    for (const candidate of [{...partial(),phase:'recovery_prepared' as const,phaseCount:3},{...partial(),phase:'restore_prepared' as const,phaseCount:2}]){
+    for (const candidate of [{...partial(),phase:'recovery_prepared' as const,phaseCount:3},{...partial(),phase:'recovery_prepared' as const,phaseCount:0},{...partial(),phase:'restore_prepared' as const,phaseCount:1},{...partial(),phase:'restore_prepared' as const,phaseCount:2}]){
       vi.mocked(clientRecoveryApi.preview).mockResolvedValue(candidate);store.start();await flushPromises();expect(store.canContinue).toBe(false);expect(store.canRollback).toBe(false);store.close()
     }
   })
@@ -83,7 +83,7 @@ describe('explicit client recovery interaction', () => {
     pendingAction.resolve({attemptId:missingPlan().attemptId!,revision:7,status:'restore_prepared'});expect(await work).toBe(true);expect(store.reconfirmed).toBe(false)
     store.close();store.start();expect(await store.refresh()).toBe(true);expect(clientRecoveryApi.preparePlan).toHaveBeenCalledTimes(1);expect(clientRecoveryApi.continue).not.toHaveBeenCalled()
   })
-  it.each([{...missingPlan(),phase:'ready' as const},{...missingPlan(),phaseCount:2},{...missingPlan(),planEvidence:'verified' as const},{...missingPlan(),canFinishUnchanged:true},{...missingPlan(),planDigest:null}])('refuses incomplete/contradictory missing-plan evidence %#',async p=>{
+  it.each([{...missingPlan(),phase:'ready' as const},{...missingPlan(),phase:'ready' as const,phaseCount:2},{...missingPlan(),phaseCount:2},{...missingPlan(),planEvidence:'verified' as const},{...missingPlan(),canFinishUnchanged:true},{...missingPlan(),planDigest:null}])('refuses incomplete/contradictory missing-plan evidence %#',async p=>{
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue(p);const store=await inspect();expect(store.canPreparePlan).toBe(false);store.choose('preparePlan');expect(await store.apply('preparePlan')).toBe(false);expect(clientRecoveryApi.preparePlan).not.toHaveBeenCalled()
   })
   it('does not accept a restored receipt as successful plan preparation',async()=>{
