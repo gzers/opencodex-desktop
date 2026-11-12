@@ -15,6 +15,8 @@ use std::{
     path::{Component, Path, PathBuf},
 };
 
+#[path = "macos_client_claim_gate.rs"]
+pub mod claim_gate;
 #[path = "macos_client_completion.rs"]
 pub mod completion;
 #[path = "macos_client_control_release.rs"]
