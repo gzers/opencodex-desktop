@@ -589,6 +589,8 @@ impl<'a> Pending<'a> {
         deadline: Instant,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<AuthorizedReadback> {
+        #[cfg(test)]
+        let tail_started = Instant::now();
         let deadline = deadline.min(permit.deadline);
         time(deadline)?;
         (permit.check)()?;
@@ -624,6 +626,12 @@ impl<'a> Pending<'a> {
                 time(deadline)
             },
             &|phase| {
+                #[cfg(test)]
+                eprintln!(
+                    "ROOT_STOP_TAIL phase={} elapsed_us={}",
+                    phase,
+                    tail_started.elapsed().as_micros()
+                );
                 checkpoint(phase)?;
                 if phase == "after_native" {
                     native
@@ -723,9 +731,13 @@ impl<'a> Pending<'a> {
             deadline,
         };
         let proof = self.apply_guarded(&permit, native, guard, deadline)?;
+        #[cfg(test)]
+        eprintln!("ROOT_STOP_TAIL phase=guarded-proof-returned");
         authority
             .finish_check()
             .map_err(|_| denied("root Stop final absence unconfirmed"))?;
+        #[cfg(test)]
+        eprintln!("ROOT_STOP_TAIL phase=final-absence-confirmed");
         Ok(proof)
     }
     pub(super) fn inspect_live(&self) -> io::Result<()> {

@@ -476,6 +476,97 @@ fn one_fresh_prefix_validates_each_frame_once_and_rejects_any_later_corruption()
     }
     assert!(originals.frames_through(Phase::Stopped).is_ok());
 }
+#[test]
+fn fresh_prefix_per_frame_context_rechecks_xattr_mode_and_replaced_root() {
+    for case in ["xattr", "mode", "replacement"] {
+        let f = Fixture::new();
+        let originals = Originals::begin(&f.data, &f.client).unwrap();
+        for phase in [Phase::Ready, Phase::PreStop, Phase::Stopped] {
+            originals.seal(phase).unwrap();
+        }
+        let observed = std::cell::Cell::new(0usize);
+        assert!(originals
+            .frames_through_checked(Phase::Stopped, &|phase| {
+                observed.set(observed.get() + 1);
+                if phase == Phase::Original {
+                    match case {
+                        "xattr" => {
+                            let name = CString::new("user.ocxd024-prefix-boundary").unwrap();
+                            let bytes = b"must refuse";
+                            assert_eq!(
+                                unsafe {
+                                    libc::fsetxattr(
+                                        originals.client.file().as_raw_fd(),
+                                        name.as_ptr(),
+                                        bytes.as_ptr().cast(),
+                                        bytes.len(),
+                                        0,
+                                        0,
+                                    )
+                                },
+                                0,
+                                "xattr injection must succeed independently"
+                            );
+                        }
+                        "mode" => fs::set_permissions(&f.client, fs::Permissions::from_mode(0o755))
+                            .unwrap(),
+                        "replacement" => {
+                            fs::rename(&f.client, f.root.join("retained-client")).unwrap();
+                            fs::create_dir(&f.client).unwrap();
+                            fs::set_permissions(&f.client, fs::Permissions::from_mode(0o700))
+                                .unwrap();
+                        }
+                        _ => unreachable!(),
+                    }
+                }
+                Ok(())
+            })
+            .is_err());
+        assert_eq!(
+            observed.get(),
+            1,
+            "next frame must refuse after a successful context mutation"
+        );
+        if case == "replacement" {
+            assert_eq!(
+                fs::read(f.root.join("retained-client").join(NAMES[0])).unwrap(),
+                b"original catalog bytes"
+            );
+        }
+    }
+}
+#[test]
+fn fresh_prefix_per_frame_dynamic_check_refuses_permission_change_before_planned_restore() {
+    let f = Fixture::new();
+    let originals = Originals::begin(&f.data, &f.client).unwrap();
+    for phase in [Phase::Ready, Phase::PreStop, Phase::Stopped] {
+        originals.seal(phase).unwrap();
+    }
+    let changed = std::cell::Cell::new(false);
+    let restored = std::cell::Cell::new(false);
+    assert!(originals
+        .frames_through_checked(Phase::Stopped, &|phase| {
+            if phase == Phase::Original {
+                fs::set_permissions(&f.client, fs::Permissions::from_mode(0o755)).unwrap();
+                changed.set(true);
+            }
+            if phase == Phase::PreStop {
+                fs::set_permissions(&f.client, fs::Permissions::from_mode(0o700)).unwrap();
+                restored.set(true);
+            }
+            Ok(())
+        })
+        .is_err());
+    assert!(changed.get());
+    assert!(
+        !restored.get(),
+        "must refuse at Ready before an altered context can be restored later"
+    );
+    assert_eq!(
+        fs::metadata(&f.client).unwrap().permissions().mode() & 0o7777,
+        0o755
+    );
+}
 
 #[test]
 fn skipped_phase_and_second_original_are_never_a_new_baseline() {

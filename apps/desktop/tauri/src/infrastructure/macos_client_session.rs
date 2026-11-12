@@ -418,13 +418,19 @@ impl RootRetirementAuthority<'_> {
         time(self.deadline)
     }
     pub(super) fn finish_check(&self) -> AppResult<()> {
+        #[cfg(test)]
+        let cost = StopCostTrace::new("root-final-absence");
         self.check()?;
+        #[cfg(test)]
+        cost.mark("full-os-absence");
         self.owner.require_finalization_absence(
             self.context,
             self.live.process()?,
             self.live.parent()?,
             self.live.port,
         )?;
+        #[cfg(test)]
+        cost.mark("post-full-check");
         self.check()
     }
 }
