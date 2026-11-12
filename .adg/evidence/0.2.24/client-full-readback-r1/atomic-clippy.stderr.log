@@ -1,0 +1,12 @@
+    Checking opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: unused import: `Write`
+  --> src/infrastructure/official_client_coordination.rs:15:36
+   |
+15 |     io::{BufRead, BufReader, Read, Write},
+   |                                    ^^^^^
+   |
+   = note: `-D unused-imports` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(unused_imports)]`
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

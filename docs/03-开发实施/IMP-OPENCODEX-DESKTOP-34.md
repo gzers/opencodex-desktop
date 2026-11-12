@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 55；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 56；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -503,3 +503,14 @@ main67b2513f4在原真实Stop/Ready父子normal0及同进程claim/N/L/K临界区
 只读字节/模式整树诊断Grok无差额、Codex只见claim事务journal消失和新owner稳定锁；按已采用原文，两锁精确是CodexHOME的claim.sqlite及owner.sqlite，非外部N/K。额外独立竞争/释放/身份安全诊断通过但在Stop计时后，未当生产同预算全树/锁终态通过。下一步须把整树安全属性/两稳定锁释放及余下生命周期门接原秒表及持久成功关闭；不靠直接移除pending报成功。未构建本批release/app/DMG。
 
 证据.adg/evidence/0.2.24/current-session-artifact-restore-r1/及manifest保留原件/失败/实际补偿；自有镜像/helper/原主端点缺席，3精确新协调DB排他取得释放后与自有程序/Profile/双客户端blob/index/stage/archive/测试副本及重复回执清理，既有globalL完整保留。无日常/官方/业务修改或发布。原全范围、旧revision4、Windows/NAME/System代理/发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 完整客户端读回与两稳定锁释放
+
+main c5a24573d接TreeSnapshot/Grok原完整路径/原字节/Protection（ACL/xattrs/flags等）比较、仅精确claim/owner例外、独立Stopped/Original稳定ID核对；原四锁正常释放后两个已存在稳定锁按原pin/VFS重获EXCLUSIVE并正常释放，重读全树后create-only0400回执绑定原References/plan/outcome/完整快照SHA/两锁Identity。前后原Stop/父子退出/当前HOMEStopped保持，Restart外预算显式clamp原Stop.deadline，不续原30/5/10。详[完整客户端读回](0.2.24-contracts/client-full-readback-r1.md)。
+
+首实际轮整树及锁release过；第二新Profile在协调held阶段拒绝/index revision4原失败保留。另确定实验旧release最终名先见空文件使helper51ms即拒绝，定位真实生产竞态；改目录FD内完整暂存fsync→无覆盖rename-excl→目录sync/身份读回，不降2秒helper上限。第二轮/旧revision4的更细首错仍未证同因，不自动关闭。新增2原子通知正反例、6整树/锁反例及复用相关组总47去重函数/编译/格式/严格Clippy过，全部首错留存。
+
+最终新Profile Start7658/Status362/Stop8074ms，原服务与父normal0/4TCP全缺席、三项实际补偿/七路径原字节/完整树安全属性及两稳定锁释放在原10秒内，完整completion回执实际生成；另独立当前树原生快照SHA与回执逐字匹配，35内容引用/index/plan核对。当前索引仍RestorePrepared/revision6、collector348ms Stopped+Required且三门槛false，完整assert保留exit101/accepted=false；不把新增前置通过冒会话终态/完整进程集合/一般范围完成，本批无release/app/DMG。
+
+证据.adg/evidence/0.2.24/client-full-readback-r1/及manifest保留三轮/确定race/原失败与独立最终树。三个原主端点、自有进程/镜像缺席，9精确新协调DB排他取得释放后与全部自有程序/Profile/双客户端blob/index/stage/archive/control副本及重复回执清理；globalL身份/字节/安全模式原样保留。Windows远端仍b2e89665d/0eef59a01。无日常/官方/业务修改或发布，索引终态/恢复/全范围/旧revision4、Windows/NAME/System代理/发布验证/固定候选继续，目标active。

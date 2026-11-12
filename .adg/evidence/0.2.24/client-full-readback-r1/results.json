@@ -1,0 +1,52 @@
+{
+  "accepted": false,
+  "commit": "c5a24573d28c16681bd060f0a115add436ffd506",
+  "rounds": [
+    {
+      "round": "native",
+      "startMs": 8783,
+      "statusMs": 226,
+      "stopMs": 8019,
+      "reopenedMs": 342,
+      "indexRevision": 6,
+      "allSevenOriginalBytesRestored": true,
+      "readbackReceipt": true,
+      "accepted": false,
+      "completeResult": "failed"
+    },
+    {
+      "round": "native2",
+      "startMs": 6698,
+      "statusMs": 240,
+      "stopMs": 4147,
+      "reopenedMs": 365,
+      "indexRevision": 4,
+      "allSevenOriginalBytesRestored": false,
+      "readbackReceipt": false,
+      "accepted": false,
+      "completeResult": "failed"
+    },
+    {
+      "round": "native3",
+      "startMs": 7658,
+      "statusMs": 362,
+      "stopMs": 8074,
+      "reopenedMs": 348,
+      "indexRevision": 6,
+      "allSevenOriginalBytesRestored": true,
+      "readbackReceipt": true,
+      "accepted": false,
+      "completeResult": "failed"
+    }
+  ],
+  "newTreeAndLockChecks": 6,
+  "relatedUniqueFunctions": 47,
+  "newAtomicReleaseChecks": 2,
+  "independentReceiptHashesMatchCurrentTreesBothSuccessfulRounds": true,
+  "originalHoldLimitMs": 2000,
+  "originalStopBudgetMs": 10000,
+  "indexCompletionStillMissing": true,
+  "wholeSessionSuccessNotReported": true,
+  "noNewReleaseAppDMG": true,
+  "oldHeldFailureNotConflatedWithConfirmedRace": true
+}
