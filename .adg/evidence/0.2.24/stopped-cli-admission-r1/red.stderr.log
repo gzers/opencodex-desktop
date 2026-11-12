@@ -1,0 +1,11 @@
+
+thread 'infrastructure::status_source::managed_cli_admission_tests::accepts_only_own_stopped_diagnostic_without_endpoint_authority' (155593794) panicked at src/infrastructure/status_source.rs:871:13:
+assertion `left == right` failed
+  left: Err(Unreachable)
+ right: Ok(())
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::status_source::managed_cli_admission_tests::rejects_missing_foreign_or_contradictory_home_and_residual_pid' (155593795) panicked at src/infrastructure/status_source.rs:910:13:
+assertion `left == right` failed
+  left: Ok(())
+ right: Err(Unreachable)
