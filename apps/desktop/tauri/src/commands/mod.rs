@@ -291,6 +291,15 @@ where
             if let Some(observed) = &observed_stop {
                 value = value.with_stopped_client_recovery(observed);
             }
+            #[cfg(target_os = "macos")]
+            if runner.manages_client_originals()
+                && context.runtime.managed_installation_root().is_some()
+            {
+                let unresolved=crate::infrastructure::macos_client_originals::session_index::unresolved_after_failure(context,runtime_log.data_root());
+                if unresolved {
+                    value = value.with_unresolved_client_recovery();
+                }
+            }
             Ok(value.with_failure(error))
         }
     };

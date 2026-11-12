@@ -72,6 +72,15 @@ impl ProcessActionResult {
     ) -> Self {
         self.stopped_client_recovery()
     }
+    /// Restrict actions after a native pending/unknown index observation. This
+    /// does not assert Stopped or invent service absence after a failed Start.
+    pub(crate) fn with_unresolved_client_recovery(mut self) -> Self {
+        self.can_start = false;
+        self.can_stop = false;
+        self.can_restart = false;
+        self.client_recovery_required = true;
+        self
+    }
     pub fn with_failure(mut self, error: &crate::errors::AppError) -> Self {
         let (code, message) = match error {
             crate::errors::AppError::RuntimeManaged { code, .. } if code == "lifecycle_timeout" => {
@@ -281,6 +290,18 @@ mod tests {
                 assert_eq!(value.result, Some(outcome));
             }
         }
+    }
+    #[test]
+    fn unresolved_originals_restrict_failed_start_without_claiming_stopped() {
+        let error = crate::errors::AppError::NotConfigured;
+        let value = ProcessActionResult::from_state(ProcessLifecycleState::StartingFailed)
+            .with_unresolved_client_recovery()
+            .with_failure(&error);
+        assert_eq!(value.lifecycle_state, ProcessLifecycleState::StartingFailed);
+        assert!(
+            value.result.is_none() && value.failure.is_some() && value.client_recovery_required
+        );
+        assert!(!value.can_start && !value.can_stop && !value.can_restart);
     }
 
     #[test]
