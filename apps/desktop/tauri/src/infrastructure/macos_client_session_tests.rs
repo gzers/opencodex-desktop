@@ -461,6 +461,49 @@ fn custom_declaration_refuses_ambiguous_or_unbound_custom_routes_without_learnin
     }
 }
 #[test]
+fn combo_declaration_uses_canonical_or_public_alias_without_relabeling_target_routes() {
+    let mut config = serde_json::json!({"providers":{"P":{"liveModels":false,"models":["a","b"]}},"combos":{"mixed":{"strategy":"failover","targets":[{"provider":"P","model":"a"},{"provider":"P","model":"b"}]},"named":{"alias":"Public/mixed","targets":[{"provider":"P","model":"a"}]}}});
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec![
+            "P/a".into(),
+            "P/b".into(),
+            "Public/mixed".into(),
+            "combo/mixed".into()
+        ])
+    );
+    config["disabledModels"] = serde_json::json!(["Public/mixed"]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec!["P/a".into(), "P/b".into(), "combo/mixed".into()])
+    );
+}
+#[test]
+fn combo_declaration_rejects_shadowing_missing_targets_nested_or_native_alias_authority() {
+    let base = serde_json::json!({"providers":{"P":{"liveModels":false,"models":["a"]}},"combos":{"mixed":{"targets":[{"provider":"P","model":"a"}]}}});
+    for change in [
+        serde_json::json!({"alias":"P/a"}),
+        serde_json::json!({"alias":"combo/other"}),
+        serde_json::json!({"alias":"a/b/c"}),
+        serde_json::json!({"nativeAlias":true,"alias":"gpt-5.4"}),
+        serde_json::json!({"targets":[]}),
+        serde_json::json!({"targets":[{"provider":"Missing","model":"a"}]}),
+        serde_json::json!({"targets":[{"provider":"P","model":"missing"}]}),
+        serde_json::json!({"targets":[{"provider":"combo","model":"nested"}]}),
+        serde_json::json!({"targets":[{"provider":"P","model":"a"},{"provider":"P","model":"a"}]}),
+    ] {
+        let mut c = base.clone();
+        for (k, v) in change.as_object().unwrap() {
+            c["combos"]["mixed"][k] = v.clone();
+        }
+        assert_eq!(
+            declaration(&serde_json::to_vec(&c).unwrap()).unwrap(),
+            None,
+            "{change}"
+        );
+    }
+}
+#[test]
 fn audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction() {
     assert_eq!(
         audit_home(Path::new("/private/tmp/fixture/profile/opencodex-home")).unwrap(),

@@ -327,6 +327,81 @@ fn declaration_slug_key(slug: &str) -> String {
         _ => slug.to_string(),
     }
 }
+fn combo_identifier(id: &str) -> bool {
+    !id.is_empty()
+        && id.len() <= 64
+        && id.bytes().next().is_some_and(|v| v.is_ascii_alphanumeric())
+        && id
+            .bytes()
+            .all(|v| v.is_ascii_alphanumeric() || b"._-".contains(&v))
+}
+fn add_combo_declarations(
+    value: &serde_json::Value,
+    providers: &serde_json::Map<String, serde_json::Value>,
+    native_ids: &std::collections::BTreeSet<(String, String)>,
+    routes: &mut std::collections::BTreeSet<String>,
+) -> Option<()> {
+    let Some(combos) = value.get("combos") else {
+        return Some(());
+    };
+    let combos = combos.as_object()?;
+    if combos.len() > 1024 || !combos.is_empty() && providers.contains_key("combo") {
+        return None;
+    }
+    for (id, combo) in combos {
+        if !combo_identifier(id)
+            || providers.contains_key(id)
+            || !combo.is_object()
+            || combo
+                .get("nativeAlias")
+                .is_some_and(|v| !v.is_boolean() || v == &serde_json::Value::Bool(true))
+        {
+            return None;
+        }
+        let public = match combo.get("alias") {
+            None | Some(serde_json::Value::Null) => format!("combo/{id}"),
+            Some(serde_json::Value::String(alias)) => {
+                let alias = alias.trim();
+                if alias.is_empty() {
+                    format!("combo/{id}")
+                } else {
+                    let segments: Vec<_> = alias.split('/').collect();
+                    if segments.len() > 2
+                        || !segments.iter().all(|s| combo_identifier(s))
+                        || alias == "combo"
+                        || alias.starts_with("combo/")
+                        || segments.len() == 1
+                            && ["gpt-", "o1-", "o3-", "o4-", "codex-"]
+                                .iter()
+                                .any(|p| alias.starts_with(p))
+                    {
+                        return None;
+                    }
+                    alias.to_string()
+                }
+            }
+            _ => return None,
+        };
+        let targets = combo.get("targets")?.as_array()?;
+        if targets.is_empty() || targets.len() > 256 {
+            return None;
+        }
+        let mut seen = std::collections::BTreeSet::new();
+        for target in targets {
+            let provider = target.get("provider")?.as_str()?.trim();
+            let model = target.get("model")?.as_str()?.trim();
+            if !native_ids.contains(&(provider.into(), model.into()))
+                || !seen.insert((provider, model))
+            {
+                return None;
+            }
+        }
+        if !routes.insert(public) || routes.len() > 4096 {
+            return None;
+        }
+    }
+    Some(())
+}
 // Independent explicit selection declaration. An unbounded discovery graph
 // stays unresolved; nonempty selectedModels is the official final allowlist.
 // It is never learned from the generated catalog or a discovery response.
@@ -355,21 +430,13 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
     if value.get("fastRows").is_some_and(|v| !v.is_boolean()) {
         return Ok(None);
     }
-    for key in ["combos"] {
-        if value.get(key).is_some_and(|v| match v {
-            serde_json::Value::Array(a) => !a.is_empty(),
-            serde_json::Value::Object(o) => !o.is_empty(),
-            _ => true,
-        }) {
-            return Ok(None);
-        }
-    }
     let Some(disabled) = declared_id_list(value.get("disabledModels")) else {
         return Ok(None);
     };
     let disabled: std::collections::BTreeSet<_> =
         disabled.into_iter().map(declaration_slug_key).collect();
     let mut routes = std::collections::BTreeSet::new();
+    let mut native_ids = std::collections::BTreeSet::new();
     let mut custom_by_provider: std::collections::BTreeMap<&str, Vec<&str>> =
         std::collections::BTreeMap::new();
     if let Some(custom) = value.get("customModels") {
@@ -490,6 +557,7 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
             }
         }
         for model in models {
+            native_ids.insert((provider.clone(), model.to_string()));
             // Original 2.99 providers/slug-codec::routedSlug maps inner slash to
             // hyphen, NOT a blind unencoded provider/model concatenation.
             if !routes.insert(format!("{provider}/{}", model.replace('/', "-")))
@@ -498,6 +566,9 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
                 return Ok(None);
             }
         }
+    }
+    if add_combo_declarations(&value, providers, &native_ids, &mut routes).is_none() {
+        return Ok(None);
     }
     Ok(Some(
         routes

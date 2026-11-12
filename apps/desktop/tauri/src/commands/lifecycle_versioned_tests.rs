@@ -282,6 +282,22 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
         ]);
         config["disabledModels"] = serde_json::json!(["native-fixture/custom-disabled"]);
     }
+    if std::env::var_os("OCXD024_COMBO_GRAPH").as_deref() == Some(std::ffi::OsStr::new("1")) {
+        let p = &mut config["providers"]["native-fixture"];
+        p["liveModels"] = false.into();
+        p["models"] = serde_json::json!(["alpha-fixture", "beta-fixture"]);
+        p["selectedModels"] = serde_json::json!([]);
+        config["customModels"] = serde_json::json!([
+            {"provider":"native-fixture","modelId":"alpha-fixture","contextWindow":196608,"inputModalities":["text","image"],"reasoningEfforts":["low","medium"]},
+            {"provider":"native-fixture","modelId":"beta-fixture","contextWindow":131072,"inputModalities":["text"],"reasoningEfforts":["medium","high"]}
+        ]);
+        config["combos"] = serde_json::json!({
+            "mixed":{"strategy":"failover","displayName":"Mixed fixture","targets":[{"provider":"native-fixture","model":"alpha-fixture"},{"provider":"native-fixture","model":"beta-fixture"}]},
+            "named":{"alias":"Public/fixture","displayName":"Public fixture","targets":[{"provider":"native-fixture","model":"alpha-fixture"}]},
+            "hidden":{"alias":"Public/hidden","targets":[{"provider":"native-fixture","model":"beta-fixture"}]}
+        });
+        config["disabledModels"] = serde_json::json!(["Public/hidden"]);
+    }
     atomic_write(
         &h.join("config.json"),
         &serde_json::to_vec(&config).unwrap(),
