@@ -125,6 +125,55 @@ fn original_bytes_with_new_file_identity_need_no_compensation() {
 }
 
 #[test]
+fn absent_optional_artifacts_need_no_catalog_projection_but_still_require_context() {
+    let f = Fixture::new();
+    let absent = Stage {
+        catalog: Snapshot::Absent,
+        cache: Snapshot::Absent,
+        audit: Snapshot::Absent,
+    };
+    let mut ctx = f.observations();
+    ctx.before = absent;
+    ctx.ready = absent;
+    ctx.pre_stop = absent;
+    ctx.stopped = absent;
+    let unchanged = Ok(Assessment([
+        (Artifact::Catalog, Action::AlreadyOriginal),
+        (Artifact::ModelsCache, Action::AlreadyOriginal),
+        (Artifact::CatalogAudit, Action::AlreadyOriginal),
+    ]));
+    assert_eq!(assess(&ctx), unchanged);
+    assert_eq!(
+        assess_current_recovery(&current_observations(ctx)),
+        unchanged
+    );
+    for stage in 0..4 {
+        let mut ctx = f.observations();
+        ctx.before = absent;
+        ctx.ready = absent;
+        ctx.pre_stop = absent;
+        ctx.stopped = absent;
+        match stage {
+            0 => ctx.before.audit = Snapshot::Unknown,
+            1 => ctx.ready.audit = Snapshot::Unknown,
+            2 => ctx.pre_stop.audit = Snapshot::Unknown,
+            _ => ctx.stopped.audit = Snapshot::Unknown,
+        };
+        assert_eq!(assess(&ctx), Err(Refusal::Unknown));
+    }
+    let mut ctx = f.observations();
+    ctx.before = absent;
+    ctx.ready = absent;
+    ctx.pre_stop = absent;
+    ctx.stopped = absent;
+    ctx.declared_routes = None;
+    assert_eq!(assess(&ctx), Err(Refusal::Context));
+    ctx.declared_routes = Some(&f.routes);
+    ctx.stopped.catalog = file(&f.ready, "unowned-new-file");
+    assert!(assess(&ctx).is_err());
+}
+
+#[test]
 fn unknown_at_any_stage_or_artifact_never_becomes_absent() {
     let f = Fixture::new();
     for stage in 0..4 {

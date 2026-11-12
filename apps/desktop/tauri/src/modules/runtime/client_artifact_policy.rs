@@ -372,6 +372,21 @@ pub fn assess_current_recovery(
             row.check()?;
         }
     }
+    // Stock clients need not use a private catalog/cache/audit at all. With
+    // all three absent throughout there is no content to compensate and no
+    // catalog projection from which to demand routed rows. Context and all
+    // unknown checks above still apply; native authority and the remainder of
+    // the complete client tree are checked independently by the session.
+    if [ctx.before, ctx.ready, ctx.current]
+        .iter()
+        .all(|stage| stage.rows().iter().all(|row| *row == Snapshot::Absent))
+    {
+        return Ok(Assessment([
+            (Artifact::Catalog, Action::AlreadyOriginal),
+            (Artifact::ModelsCache, Action::AlreadyOriginal),
+            (Artifact::CatalogAudit, Action::AlreadyOriginal),
+        ]));
+    }
     for ((original, ready), after) in ctx
         .before
         .rows()

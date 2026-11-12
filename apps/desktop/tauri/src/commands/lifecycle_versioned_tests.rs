@@ -304,43 +304,57 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
         0o600,
     )
     .unwrap();
-    atomic_write(
-        &client.join("config.toml"),
-        br#"model = "gpt-5.4"
+    let fresh_clients = std::env::var("OCXD024_FRESH_CLIENTS").unwrap_or_default();
+    assert!(matches!(
+        fresh_clients.as_str(),
+        "" | "grok-absent" | "codex-empty" | "grok-first-backup" | "catalog-absent"
+    ));
+    let grok = profile.join(".grok");
+    if fresh_clients != "codex-empty" {
+        atomic_write(
+            &client.join("config.toml"),
+            br#"model = "gpt-5.4"
 model_provider = "openai"
 "#,
-        0o600,
-    )
-    .unwrap();
-    let catalog = serde_json::json!({"models":[{"slug":"gpt-5.4","display_name":"Native fixture model","description":"synthetic native record","visibility":"list","supported_in_api":true,"priority":0}]});
-    atomic_write(
-        &client.join("opencodex-catalog.json"),
-        &serde_json::to_vec(&catalog).unwrap(),
-        0o600,
-    )
-    .unwrap();
-    // This round exercises existing Grok input, not merely backup absence.
-    // It is an owned synthetic profile; no installed Grok client is invoked.
-    let grok = profile.join(".grok");
-    crate::infrastructure::platform::create_private_dir_all(&grok.join("agents"), 0o700).unwrap();
-    atomic_write(
-        &grok.join("config.toml"),
-        b"[model.native_fixture]\nmodel = 'native-grok-fixture'\nmodel_provider = 'native'\n",
-        0o600,
-    )
-    .unwrap();
-    atomic_write(
-        &grok.join("config.toml.bak-opencodex"),
-        b"prior synthetic Grok backup\n",
-        0o600,
-    )
-    .unwrap();
-    atomic_write(
-        &grok.join("agents/AGENTS.md"),
-        b"synthetic Grok agent guidance\n",
-        0o600,
-    )
-    .unwrap();
+            0o600,
+        )
+        .unwrap();
+        if fresh_clients != "catalog-absent" {
+            let catalog = serde_json::json!({"models":[{"slug":"gpt-5.4","display_name":"Native fixture model","description":"synthetic native record","visibility":"list","supported_in_api":true,"priority":0}]});
+            atomic_write(
+                &client.join("opencodex-catalog.json"),
+                &serde_json::to_vec(&catalog).unwrap(),
+                0o600,
+            )
+            .unwrap();
+        }
+    }
+    if fresh_clients.is_empty() || fresh_clients == "grok-first-backup" {
+        // This round exercises existing Grok input, not merely backup absence.
+        // It is an owned synthetic profile; no installed Grok client is invoked.
+        crate::infrastructure::platform::create_private_dir_all(&grok.join("agents"), 0o700)
+            .unwrap();
+        atomic_write(
+            &grok.join("config.toml"),
+            b"[model.native_fixture]\nmodel = 'native-grok-fixture'\nmodel_provider = 'native'\n",
+            0o600,
+        )
+        .unwrap();
+        if fresh_clients != "grok-first-backup" {
+            atomic_write(
+                &grok.join("config.toml.bak-opencodex"),
+                b"prior synthetic Grok backup\n",
+                0o600,
+            )
+            .unwrap();
+        }
+        atomic_write(
+            &grok.join("agents/AGENTS.md"),
+            b"synthetic Grok agent guidance\n",
+            0o600,
+        )
+        .unwrap();
+    }
     let paths = [
         ("codex/config.toml", client.join("config.toml")),
         (
@@ -433,9 +447,9 @@ model_provider = "openai"
         (std::fs::read(client.join("config.toml")).ok() != before["codex/config.toml"]).into();
     write(&report);
     capture("after-start");
-    report["grokConfigChangedDuringStart"] = (std::fs::read(grok.join("config.toml")).unwrap()
-        != b"[model.native_fixture]\nmodel = 'native-grok-fixture'\nmodel_provider = 'native'\n")
-        .into();
+    report["grokConfigChangedDuringStart"] =
+        (std::fs::read(grok.join("config.toml")).ok() != before["grok/config.toml"]).into();
+    report["initialClientState"] = fresh_clients.clone().into();
     let indexed_after_start =
         crate::infrastructure::macos_client_originals::session_index::Index::open(
             &context, &data, &client,
@@ -664,6 +678,9 @@ model_provider = "openai"
             .unwrap();
         report["restorePlanMatchesIndependentIndex"] = true.into();
     }
+    // Persist lifecycle facts before supplemental archive assertions: a fixture
+    // assumption must not hide the actual product Stop result.
+    write(&report);
     if let Some(refs) = &after_stop.references {
         let originals = crate::infrastructure::macos_client_originals::Originals::open_for_profile(
             &data,
@@ -674,29 +691,67 @@ model_provider = "openai"
             &refs.phases,
         )
         .unwrap();
-        for (path, bytes) in [
-            ("config.toml", b"[model.native_fixture]\nmodel = 'native-grok-fixture'\nmodel_provider = 'native'\n".as_slice()),
-            (
-                "config.toml.bak-opencodex",
-                b"prior synthetic Grok backup\n".as_slice(),
-            ),
-            (
-                "agents/AGENTS.md",
-                b"synthetic Grok agent guidance\n".as_slice(),
-            ),
+        let original_path = data
+            .join("manager-state/client-originals")
+            .join(&refs.attempt)
+            .join("original.json");
+        let raw = std::fs::read(original_path).unwrap();
+        assert_eq!(
+            crate::infrastructure::hash::sha256_hex(&raw),
+            refs.original_sha256
+        );
+        let frame: serde_json::Value = serde_json::from_slice(&raw).unwrap();
+        let grok_state = frame["grok"]["state"].as_str().unwrap();
+        assert!(matches!(grok_state, "absent" | "directory"));
+        for relative in [
+            "config.toml",
+            "config.toml.bak-opencodex",
+            "agents/AGENTS.md",
         ] {
-            assert_eq!(
-                originals
-                    .archived_grok_file(
-                        crate::infrastructure::macos_client_originals::Phase::Original,
-                        path
-                    )
+            let expected = &before[format!("grok/{relative}").as_str()];
+            let entry = if grok_state == "directory" {
+                frame["grok"]["tree"]["entries"]
+                    .as_array()
                     .unwrap()
-                    .as_slice(),
-                bytes
+                    .iter()
+                    .find(|e| e["path"] == relative)
+            } else {
+                None
+            };
+            let archived = originals.archived_grok_file(
+                crate::infrastructure::macos_client_originals::Phase::Original,
+                relative,
             );
+            if let Some(bytes) = expected {
+                let entry =
+                    entry.expect("present original must have an independently recorded file");
+                assert_eq!(entry["kind"], "file");
+                assert_eq!(
+                    entry["sha256"],
+                    crate::infrastructure::hash::sha256_hex(bytes)
+                );
+                assert_eq!(archived.unwrap().as_slice(), bytes);
+            } else {
+                assert!(
+                    entry.is_none(),
+                    "original absence must be recorded, not an archive read error"
+                );
+                assert!(
+                    archived.is_err(),
+                    "no absent original may gain archived file bytes"
+                );
+            }
         }
-        report["originalGrokConfigBackupAndAgentArchived"] = true.into();
+        report["originalGrokPresentAndAbsentPathsVerified"] = true.into();
+        report["originalGrokConfigBackupAndAgentArchived"] = [
+            "grok/config.toml",
+            "grok/config.toml.bak-opencodex",
+            "grok/agents/AGENTS.md",
+        ]
+        .iter()
+        .all(|p| before[*p].is_some())
+        .into();
+        report["originalGrokRootState"] = grok_state.into();
     }
     drop(indexed_after_stop);
     let reopened_at = Instant::now();
