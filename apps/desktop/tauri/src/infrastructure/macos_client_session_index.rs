@@ -8,6 +8,8 @@ use crate::state::ProcessContext;
 use rusqlite::{params, Connection, OptionalExtension};
 use std::time::Instant;
 
+#[path = "macos_client_root_generation.rs"]
+pub mod generation;
 #[path = "macos_client_root_binding.rs"]
 mod root_binding;
 const FILE: &str = "client-session-index.sqlite";
@@ -85,6 +87,18 @@ pub struct Head {
     pub completion_sha256: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub root_retirement: Option<RootRetirement>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub root_generation: Option<RootGeneration>,
+}
+/// Only a generation's initial Preparing event carries its immutable source.
+/// All later phases resolve it by their independently indexed ticket.
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RootGeneration {
+    pub preparing_revision: u64,
+    pub predecessor_revision: u64,
+    pub predecessor_sha256: String,
+    pub binding: Vec<u8>,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -191,6 +205,16 @@ fn valid_hash(value: &str) -> bool {
             .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
 }
 pub(super) fn validate(head: &Head) -> io::Result<()> {
+    if head.root_generation.as_ref().is_some_and(|g| {
+        head.state != State::Preparing
+            || g.preparing_revision != head.revision
+            || g.predecessor_revision.checked_add(1) != Some(head.revision)
+            || !valid_hash(&g.predecessor_sha256)
+            || g.binding.is_empty()
+            || g.binding.len() > 65536
+    }) {
+        return Err(denied("invalid root generation initial reference"));
+    }
     let root_phase = matches!(
         head.state,
         State::RootRetirementPrepared | State::RootAbsent
@@ -778,6 +802,7 @@ impl Index {
                         restore_plan: None,
                         completion_sha256: None,
                         root_retirement: None,
+                        root_generation: None,
                     };
                     validate(&head)?;
                     let bytes = encode(&head)?;
@@ -1121,6 +1146,7 @@ impl Index {
             restore_plan: None,
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         };
         self.write(Some(expected), &next)?;
         proof
@@ -1192,6 +1218,7 @@ impl Index {
             restore_plan: None,
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         };
         self.write(previous.as_ref(), &head)?;
         Ok(head)
@@ -1299,6 +1326,7 @@ impl Index {
             restore_plan: None,
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         };
         if self
             .root_creation_deadline
@@ -1394,6 +1422,7 @@ impl Index {
             restore_plan: None,
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         };
         self.write(Some(expected), &next)?;
         Ok(next)
@@ -1441,6 +1470,7 @@ impl Index {
             }),
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         };
         if matches!(expected.state, State::StopPrepared | State::Ready) {
             let refs = expected
@@ -1498,6 +1528,7 @@ impl Index {
                     sha256: sha256.into(),
                 },
             }),
+            root_generation: None,
         };
         self.write(Some(expected), &next)?;
         Ok(next)
@@ -1534,6 +1565,7 @@ impl Index {
             restore_plan: expected.restore_plan.clone(),
             completion_sha256: Some(digest),
             root_retirement: expected.root_retirement.clone(),
+            root_generation: None,
         };
         self.write(Some(expected), &next)?;
         if let Err(error) = proof.require(&self.data, &self.profile, expected) {
@@ -1583,6 +1615,7 @@ impl Index {
             restore_plan: None,
             completion_sha256: Some(proof.sha256().into()),
             root_retirement: None,
+            root_generation: None,
         };
         validate(&next)?;
         preparation::verify_registered(
@@ -1623,6 +1656,7 @@ impl Index {
             restore_plan: None,
             completion_sha256: Some(proof.sha256().into()),
             root_retirement: None,
+            root_generation: None,
         };
         validate(&next)?;
         unchanged::verify_registered(self.data.path(), self.client.path(), &self.profile, &next)?;
@@ -1698,6 +1732,7 @@ impl Index {
             }),
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         };
         validate(&next)?;
         self.write(Some(expected), &next)?;
@@ -1736,6 +1771,7 @@ impl Index {
             restore_plan: expected.restore_plan.clone(),
             completion_sha256: Some(proof.sha256().into()),
             root_retirement: None,
+            root_generation: None,
         };
         completion::verify_registered(self.data.path(), self.client.path(), &self.profile, &next)?;
         proof.require_index(expected, self.data.identity(), self.client.identity())?;
@@ -1757,6 +1793,7 @@ impl Index {
                 restore_plan: expected.restore_plan.clone(),
                 completion_sha256: None,
                 root_retirement: None,
+                root_generation: None,
             };
             self.write(Some(&next), &pending)?;
             return Err(error);

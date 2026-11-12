@@ -1090,6 +1090,34 @@ mod tests;
 #[path = "macos_client_root_closed_history_tests.rs"]
 mod history_tests;
 #[cfg(test)]
+pub(super) fn fixture_closed_generation() -> (
+    tempfile::TempDir,
+    crate::state::ProcessContext,
+    session_index::Index,
+    Head,
+) {
+    let temp = tempfile::tempdir().unwrap();
+    let (context, index, head) = fixture_closed_generation_at(temp.path().canonicalize().unwrap());
+    (temp, context, index, head)
+}
+#[cfg(test)]
+pub(super) fn fixture_closed_generation_at(
+    root: PathBuf,
+) -> (crate::state::ProcessContext, session_index::Index, Head) {
+    let f = tests::Fixture::at(root);
+    let pending = f.prepare();
+    let prepared = f
+        ._index
+        .record_root_retirement(&f.source, pending.id(), pending.sha256())
+        .unwrap();
+    let proof = pending
+        .fixture_apply_for_index(Instant::now() + std::time::Duration::from_secs(10))
+        .unwrap();
+    let closed = f._index.close_root_absence(&prepared, &proof).unwrap();
+    drop(pending);
+    (f.context, f._index, closed)
+}
+#[cfg(test)]
 #[path = "macos_client_root_retirement_index_tests.rs"]
 mod index_tests;
 #[cfg(test)]

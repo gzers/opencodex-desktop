@@ -11,10 +11,9 @@ const PURPOSE: &str = "create-first-codex-root";
 /// Mere creation evidence cannot initialize an ordinary baseline. Only an
 /// independently registered root binding may validate these records.
 pub(super) fn has_creation_evidence(manager: &PinnedDirectory) -> io::Result<bool> {
-    Ok(
-        entry(manager, REFERENCE)?.is_some()
-            || entry(manager, "client-root-reservation")?.is_some(),
-    )
+    Ok(entry(manager, REFERENCE)?.is_some()
+        || entry(manager, "client-root-reservation")?.is_some()
+        || entry(manager, "client-root-generations")?.is_some())
 }
 pub(super) fn require_no_pending_root(manager: &PinnedDirectory) -> io::Result<()> {
     if has_creation_evidence(manager)? {
@@ -52,6 +51,8 @@ pub struct References {
     pub intent_sha256: String,
     pub created_sha256: String,
     pub published_sha256: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub generation_slot: Option<String>,
 }
 
 /// A move of the original flock/created fd, never a release plus path reopen.
@@ -131,7 +132,18 @@ pub(super) fn verify_indexed_anchor(
     safe_profile(&profile)?;
     data.private()?;
     client.private()?;
-    let vault = manager.child_private("client-root-reservation", false)?;
+    let vault = if let Some(id) = &refs.generation_slot {
+        if id != &refs.id {
+            return Err(denied("root generation slot differs from origin"));
+        }
+        let generations = manager.child_private("client-root-generations", false)?;
+        if tree::names(generations.file())? != vec![std::ffi::OsString::from(id)] {
+            return Err(denied("unregistered root generation slot exists"));
+        }
+        generations.child_private(id, false)?
+    } else {
+        manager.child_private("client-root-reservation", false)?
+    };
     let read = |name: &str, hash: &str| -> io::Result<Vec<u8>> {
         match capture_file(&vault, name, 65536)? {
             Image::File {
@@ -186,7 +198,12 @@ pub(super) fn verify_indexed_anchor(
         id: &refs.id,
         intent_sha256: &refs.intent_sha256,
     })?;
-    match capture_file(manager, REFERENCE, 65536)? {
+    let reference_root = if refs.generation_slot.is_some() {
+        &vault
+    } else {
+        manager
+    };
+    match capture_file(reference_root, REFERENCE, 65536)? {
         Image::File {
             bytes, protection, ..
         } if bytes == expected => require_private(&protection, false),
@@ -206,6 +223,7 @@ pub struct Reservation {
     intent: Intent,
     intent_sha256: String,
     deadline: Instant,
+    generation_slot: Option<String>,
 }
 pub struct PublishedRoot {
     reservation: Reservation,
@@ -247,6 +265,7 @@ fn require_uninitialized(manager: &PinnedDirectory) -> io::Result<()> {
         "client-originals",
         REFERENCE,
         "client-root-reservation",
+        "client-root-generations",
     ] {
         if entry(manager, n)?.is_some() {
             return Err(denied(
@@ -264,6 +283,82 @@ pub fn reserve(
     deadline: Instant,
 ) -> io::Result<Reservation> {
     reserve_checked(data_root, profile_root, deadline, &|_| Ok(()))
+}
+/// Only the held Index can construct this authority. A copied RootAbsent or
+/// on-disk reservation cannot provide the original action flock/context.
+pub(super) fn reserve_generation(
+    authority: &session_index::generation::CreationAuthority<'_>,
+    deadline: Instant,
+) -> io::Result<Reservation> {
+    authority.check()?;
+    time(deadline)?;
+    let (data_root, profile_root, manager_root) = authority.paths();
+    let data = PinnedDirectory::open(data_root)?;
+    let profile = PinnedDirectory::open(profile_root)?;
+    let manager = PinnedDirectory::open(manager_root)?;
+    data.private()?;
+    safe_profile(&profile)?;
+    absent(&profile)?;
+    let generations = manager.child_private("client-root-generations", true)?;
+    if !tree::names(generations.file())?.is_empty() {
+        return Err(denied("unregistered successor root evidence retained"));
+    }
+    let id = uuid::Uuid::new_v4().to_string();
+    let slot = name(OsStr::new(&id))?;
+    if unsafe { libc::mkdirat(generations.file().as_raw_fd(), slot.as_ptr(), 0o700) } != 0 {
+        return Err(io::Error::last_os_error());
+    }
+    let vault = generations.child_private(&id, false)?;
+    // Persist both create-only directory entries before a later SQLite commit
+    // can refer to them. Syncing files inside slot alone does not sync parents.
+    generations.sync()?;
+    manager.sync()?;
+    let intent = Intent {
+        schema_version: 1,
+        purpose: PURPOSE.into(),
+        id: id.clone(),
+        uid: unsafe { libc::geteuid() },
+        data_root: data.path().into(),
+        data_identity: data.identity().clone(),
+        profile: profile.path().into(),
+        profile_identity: profile.identity().clone(),
+        profile_protection: protection(profile.file(), &stat(profile.file())?)?,
+        original_root_absent: true,
+    };
+    let bytes = encode(&intent)?;
+    let intent_sha256 = digest(&bytes);
+    create(&vault, "intent.json", &bytes)?;
+    create(
+        &vault,
+        REFERENCE,
+        &encode(&IntentReference {
+            schema_version: 1,
+            id: &id,
+            intent_sha256: &intent_sha256,
+        })?,
+    )?;
+    vault.sync()?;
+    generations.sync()?;
+    manager.sync()?;
+    let action = authority.clone_action()?;
+    let (action_identity, action_protection) = action_pin(&manager, &action)?;
+    let result = Reservation {
+        data,
+        profile,
+        manager,
+        vault,
+        action,
+        action_identity,
+        action_protection,
+        intent,
+        intent_sha256,
+        deadline,
+        generation_slot: Some(id),
+    };
+    result.check()?;
+    authority.check()?;
+    time(deadline)?;
+    Ok(result)
 }
 fn reserve_checked(
     data_root: &Path,
@@ -353,6 +448,7 @@ fn reserve_checked(
         intent,
         intent_sha256,
         deadline,
+        generation_slot: None,
     };
     result.check()?;
     Ok(result)
@@ -363,6 +459,14 @@ impl Reservation {
         self.data.private()?;
         safe_profile(&self.profile)?;
         self.vault.private()?;
+        if let Some(id) = &self.generation_slot {
+            let generations = self
+                .manager
+                .child_private("client-root-generations", false)?;
+            if tree::names(generations.file())? != vec![std::ffi::OsString::from(id)] {
+                return Err(denied("unregistered root generation slot exists"));
+            }
+        }
         if action_pin(&self.manager, &self.action)?
             != (self.action_identity.clone(), self.action_protection.clone())
         {
@@ -373,7 +477,12 @@ impl Reservation {
             id: &self.intent.id,
             intent_sha256: &self.intent_sha256,
         })?;
-        match capture_file(&self.manager, REFERENCE, 65536)? {
+        let reference_root = if self.generation_slot.is_some() {
+            &self.vault
+        } else {
+            &self.manager
+        };
+        match capture_file(reference_root, REFERENCE, 65536)? {
             Image::File {
                 bytes, protection, ..
             } if bytes == expected => require_private(&protection, false)?,
@@ -464,6 +573,7 @@ impl Reservation {
             intent_sha256: self.intent_sha256.clone(),
             created_sha256,
             published_sha256,
+            generation_slot: self.generation_slot.clone(),
         };
         let result = PublishedRoot {
             reservation: self,
@@ -478,6 +588,37 @@ impl Reservation {
     }
 }
 impl PublishedRoot {
+    pub(super) fn into_generation_transfer(
+        self,
+        data: &PinnedDirectory,
+        profile: &Path,
+        client: &PinnedDirectory,
+    ) -> io::Result<Transfer> {
+        self.check()?;
+        if self.refs.generation_slot.as_deref() != Some(self.refs.id.as_str())
+            || self.reservation.data.path() != data.path()
+            || self.reservation.data.identity() != data.identity()
+            || self.reservation.profile.path() != profile
+            || self.root.path() != client.path()
+            || self.root.identity() != client.identity()
+        {
+            return Err(denied("successor root creation transfer context changed"));
+        }
+        let Self {
+            reservation,
+            created,
+            refs,
+            ..
+        } = self;
+        Ok(Transfer {
+            action: reservation.action,
+            action_identity: reservation.action_identity,
+            action_protection: reservation.action_protection,
+            created,
+            references: refs,
+            deadline: reservation.deadline,
+        })
+    }
     pub(super) fn into_transfer(
         self,
         data: &PinnedDirectory,
@@ -499,6 +640,7 @@ impl PublishedRoot {
             "client-session-index.sqlite-wal",
             "client-session-index.sqlite-shm",
             "client-originals",
+            "client-root-generations",
         ] {
             if entry(&self.reservation.manager, name)?.is_some() {
                 return Err(denied(

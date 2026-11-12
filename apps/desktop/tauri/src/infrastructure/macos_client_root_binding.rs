@@ -26,6 +26,122 @@ pub(super) fn verify_initial_event(
     connection: &Connection,
     refs: &root_creation::References,
 ) -> io::Result<()> {
+    if refs.generation_slot.is_none() {
+        return verify_first_event(connection, refs);
+    }
+    let stored: Vec<u8> = connection
+        .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+            r.get(0)
+        })
+        .map_err(database_error)?;
+    let head =
+        read_head(connection)?.ok_or_else(|| denied("root generation has no current Head"))?;
+    let active = active_binding(connection, &stored, &head)?;
+    if original_root(&active)? != *refs {
+        return Err(denied(
+            "root generation origin not current independently registered source",
+        ));
+    }
+    Ok(())
+}
+/// Resolve second-generation source only from the atomic Preparing event and
+/// the exact prior close. Never overwrite the original singleton binding.
+fn active_binding(connection: &Connection, stored: &[u8], head: &Head) -> io::Result<Vec<u8>> {
+    let first: RootBinding = decode(stored)?;
+    if first.schema_version != 1 || first.original_root.generation_slot.is_some() {
+        return Err(denied("initial root binding is not first generation"));
+    }
+    verify_first_event(connection, &first.original_root)?;
+    if head.ticket == first.original_root.id {
+        return Ok(stored.to_vec());
+    }
+    let history = vault_history::read(connection, head)?;
+    let preparing = history
+        .iter()
+        .find(|h| h.ticket == head.ticket && h.state == State::Preparing)
+        .ok_or_else(|| denied("current generation has no atomic Preparing event"))?;
+    let generation = preparing
+        .root_generation
+        .as_ref()
+        .ok_or_else(|| denied("successor generation references absent"))?;
+    if generation.preparing_revision != preparing.revision
+        || generation.predecessor_revision.checked_add(1) != Some(preparing.revision)
+    {
+        return Err(denied("successor generation source revision invalid"));
+    }
+    let closed = history
+        .iter()
+        .find(|h| h.revision == generation.predecessor_revision)
+        .ok_or_else(|| denied("generation predecessor close missing"))?;
+    if closed.state != State::RootAbsent
+        || closed.ticket != first.original_root.id
+        || digest(&encode(closed)?) != generation.predecessor_sha256
+    {
+        return Err(denied("unsupported or changed successor predecessor"));
+    }
+    // Current primitive supports the second generation only. Later rollover
+    // cannot silently adopt this event as the first generation's provenance.
+    if history
+        .iter()
+        .filter(|h| h.root_generation.is_some())
+        .count()
+        != 1
+    {
+        return Err(denied(
+            "additional root generations not registered by this primitive",
+        ));
+    }
+    let root: RootBinding = decode(&generation.binding)?;
+    if root.schema_version != 1
+        || root.original_root.id != head.ticket
+        || root.original_root.generation_slot.as_deref() != Some(head.ticket.as_str())
+    {
+        return Err(denied("generation binding slot or ticket changed"));
+    }
+    let old: serde_json::Value =
+        serde_json::from_slice(&first.scope).map_err(|_| denied("invalid initial scope"))?;
+    let new: serde_json::Value =
+        serde_json::from_slice(&root.scope).map_err(|_| denied("invalid successor scope"))?;
+    let old = old
+        .as_array()
+        .ok_or_else(|| denied("initial scope not tuple"))?;
+    let new = new
+        .as_array()
+        .ok_or_else(|| denied("successor scope not tuple"))?;
+    if old.len() != 9 || new.len() != 9 || old[..8] != new[..8] || old[8] == new[8] {
+        return Err(denied(
+            "generation must retain context and bind a new root identity",
+        ));
+    }
+    let prefix = history
+        .iter()
+        .take_while(|h| h.revision <= closed.revision)
+        .cloned()
+        .collect::<Vec<_>>();
+    vault_history::inspect_root_closures(
+        &PinnedDirectory::open(Path::new(
+            old[1]
+                .as_str()
+                .ok_or_else(|| denied("scope data path missing"))?,
+        ))?,
+        Path::new(
+            old[3]
+                .as_str()
+                .ok_or_else(|| denied("scope profile path missing"))?,
+        ),
+        stored,
+        &prefix,
+    )?;
+    for h in history.iter().filter(|h| h.revision >= preparing.revision) {
+        if h.ticket != preparing.ticket
+            || h.revision != preparing.revision && h.root_generation.is_some()
+        {
+            return Err(denied("successor events rebound generation source"));
+        }
+    }
+    Ok(generation.binding.clone())
+}
+fn verify_first_event(connection: &Connection, refs: &root_creation::References) -> io::Result<()> {
     let raw: Vec<u8> = connection
         .query_row("SELECT document FROM events WHERE revision=1", [], |r| {
             r.get(0)
@@ -39,6 +155,7 @@ pub(super) fn verify_initial_event(
         || first.references.is_some()
         || first.restore_plan.is_some()
         || first.completion_sha256.is_some()
+        || first.root_generation.is_some()
     {
         return Err(denied(
             "root origin is not bound to the atomic first Preparing event",
@@ -153,11 +270,14 @@ pub(super) fn resolve_originals(
         }
         return Ok((client, None, None));
     }
+    let current = head.ok_or_else(|| denied("registered root has no independent head"))?;
+    let active = active_binding(connection, stored, current)?;
+    let stored = active.as_slice();
     let binding: RootBinding = decode(stored)?;
     if binding.schema_version != 1 {
         return Err(denied("unknown first root binding schema"));
     }
-    verify_initial_event(connection, &binding.original_root)?;
+
     let head = head.ok_or_else(|| denied("registered root has no current independent session"))?;
     if let Some(movement) = &head.root_retirement {
         if !matches!(

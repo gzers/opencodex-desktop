@@ -1122,6 +1122,7 @@ fn an_existing_root_index_cannot_claim_root_absence_without_an_independent_origi
                 sha256: "c".repeat(64),
             },
         }),
+        root_generation: None,
     };
     validate(&head).unwrap();
     let raw = encode(&head).unwrap();

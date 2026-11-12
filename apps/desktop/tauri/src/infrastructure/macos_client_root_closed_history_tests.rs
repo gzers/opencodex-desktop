@@ -338,6 +338,7 @@ fn closed_root_history_rejects_no_reference_unclosed_event_or_unregistered_gener
                 restore_plan: None,
                 completion_sha256: None,
                 root_retirement: None,
+                root_generation: None,
             };
             let raw = encode(&head).unwrap();
             let connection = f._index.fixture_existing_connection().unwrap();

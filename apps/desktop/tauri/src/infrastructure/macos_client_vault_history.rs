@@ -402,6 +402,7 @@ mod tests {
             restore_plan: None,
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         }
     }
     fn database() -> Connection {

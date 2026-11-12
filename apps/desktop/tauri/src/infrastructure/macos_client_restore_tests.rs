@@ -1273,6 +1273,7 @@ fn current_recovery_observation_cannot_manufacture_or_adopt_a_missing_historical
             restore_plan: None,
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         };
         let path = originals.directory.path().join("stopped.json");
         fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
@@ -1404,6 +1405,7 @@ fn prepared_current_observation_must_match_the_reviewed_content_not_a_later_vali
             restore_plan: None,
             completion_sha256: None,
             root_retirement: None,
+            root_generation: None,
         };
         let decision =
             Pending::observed_preparation_fingerprint(&originals, &head, &f.evidence).unwrap();
@@ -1545,6 +1547,7 @@ fn first_use_source(f: &Fixture, prefix_count: usize) -> session_index::Head {
         restore_plan: None,
         completion_sha256: None,
         root_retirement: None,
+        root_generation: None,
     }
 }
 
