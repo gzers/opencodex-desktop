@@ -316,8 +316,12 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
     else {
         return Ok(None);
     };
-    if value.get("defaultModelAliases") != Some(&serde_json::Value::Bool(false))
-        && !providers.is_empty()
+    // Official default/model aliases label rows; they do not change a provider
+    // row's catalogModelSlug. Omitted global/provider flags inherit false.
+    // Never promote a friendly display alias into independent route authority.
+    if value
+        .get("defaultModelAliases")
+        .is_some_and(|v| !v.is_boolean())
     {
         return Ok(None);
     }
@@ -338,16 +342,31 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
     }
     let mut routes = std::collections::BTreeSet::new();
     for (provider, entry) in providers {
+        if !entry.is_object() || entry.get("disabled").is_some_and(|v| !v.is_boolean()) {
+            return Ok(None);
+        }
+        if entry.get("disabled") == Some(&serde_json::Value::Bool(true)) {
+            continue;
+        }
         if provider.is_empty()
             || provider.len() > 256
             || !provider
                 .bytes()
                 .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
             || entry.get("liveModels") != Some(&serde_json::Value::Bool(false))
-            || entry.get("defaultAliases") != Some(&serde_json::Value::Bool(false))
-            || entry
-                .get("modelAliases")
-                .is_some_and(|v| !v.as_object().is_some_and(|o| o.is_empty()))
+            || entry.get("defaultAliases").is_some_and(|v| !v.is_boolean())
+            || entry.get("modelAliases").is_some_and(|v| {
+                !v.as_object().is_some_and(|o| {
+                    o.iter().all(|(id, alias)| {
+                        !id.is_empty()
+                            && id.len() <= 1024
+                            && !id.chars().any(char::is_control)
+                            && alias.as_str().is_some_and(|s| {
+                                s.len() <= 1024 && !s.chars().any(char::is_control)
+                            })
+                    })
+                })
+            })
         {
             return Ok(None);
         }

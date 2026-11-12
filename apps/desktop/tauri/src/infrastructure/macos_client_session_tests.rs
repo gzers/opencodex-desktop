@@ -268,6 +268,56 @@ fn independent_static_route_declaration_uses_official_slash_encoding_and_refuses
     assert!(declaration(br#"{"providers":{},"providers":{}}"#).is_err());
 }
 #[test]
+fn display_alias_flags_never_become_declared_route_ids_and_omitted_flags_are_valid() {
+    let mut config = serde_json::json!({"providers":{"Team_One":{"liveModels":false,"selectedModels":["claude-opus-5-5","gpt-6-sol","vendor/gemini-3.5-pro"]}}});
+    let expected = Some(vec![
+        "Team_One/claude-opus-5-5".into(),
+        "Team_One/gpt-6-sol".into(),
+        "Team_One/vendor-gemini-3.5-pro".into(),
+    ]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        expected
+    );
+    for global in [false, true] {
+        for local in [None, Some(false), Some(true)] {
+            config["defaultModelAliases"] = global.into();
+            if let Some(v) = local {
+                config["providers"]["Team_One"]["defaultAliases"] = v.into();
+            } else {
+                config["providers"]["Team_One"]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove("defaultAliases");
+            }
+            config["providers"]["Team_One"]["modelAliases"] =
+                serde_json::json!({"gpt-6-sol":"custom-sol"});
+            config["fastRows"] = true.into();
+            assert_eq!(
+                declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+                expected
+            );
+        }
+    }
+    config["providers"]["Off"] = serde_json::json!({"disabled":true,"liveModels":true});
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        expected
+    );
+    for (field, value) in [
+        ("defaultAliases", serde_json::json!("bad")),
+        ("modelAliases", serde_json::json!({"gpt-6-sol":3})),
+        ("disabled", serde_json::json!("true")),
+    ] {
+        let mut bad = config.clone();
+        bad["providers"]["Team_One"][field] = value;
+        assert_eq!(
+            declaration(&serde_json::to_vec(&bad).unwrap()).unwrap(),
+            None
+        );
+    }
+}
+#[test]
 fn audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction() {
     assert_eq!(
         audit_home(Path::new("/private/tmp/fixture/profile/opencodex-home")).unwrap(),
