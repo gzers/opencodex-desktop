@@ -551,6 +551,11 @@ pub struct Capture {
     root_protection: Protection,
     images: [Image; 3],
 }
+
+#[path = "macos_client_tree.rs"]
+pub mod tree;
+use tree::TreeSnapshot;
+
 impl std::fmt::Debug for Capture {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("Capture")
@@ -657,6 +662,7 @@ struct Frame {
     phase: Phase,
     previous_sha256: Option<String>,
     capture: Capture,
+    tree: TreeSnapshot,
 }
 fn encode(value: &impl Serialize) -> io::Result<Vec<u8>> {
     serde_json::to_vec(value).map_err(|_| denied("frame encoding failed"))
@@ -668,10 +674,14 @@ fn decode(bytes: &[u8]) -> io::Result<Frame> {
     if bytes.len() > MAX_FRAME {
         return Err(denied("journal frame over limit"));
     }
-    serde_json::from_value(
+    let frame: Frame = serde_json::from_value(
         parse_strict_json_v2(bytes).map_err(|_| denied("invalid or duplicate JSON"))?,
     )
-    .map_err(|_| denied("invalid frame fields"))
+    .map_err(|_| denied("invalid frame fields"))?;
+    if frame.schema_version != 2 {
+        return Err(denied("unsupported client tree frame schema"));
+    }
+    Ok(frame)
 }
 fn create(directory: &PinnedDirectory, filename: &str, bytes: &[u8]) -> io::Result<()> {
     directory.private()?;
@@ -727,6 +737,7 @@ impl Originals {
             return Err(denied("client root owner or write access unknown"));
         }
         let capture = Capture::read(&client)?;
+        let tree = TreeSnapshot::read(&client)?;
         let manager = data.child_private("manager-state", true)?;
         let vault = manager.child_private("client-originals", true)?;
         let attempt = uuid::Uuid::new_v4().to_string();
@@ -738,7 +749,7 @@ impl Originals {
         directory.private()?;
         vault.sync()?;
         let frame = Frame {
-            schema_version: 1,
+            schema_version: 2,
             attempt: attempt.clone(),
             uid: unsafe { libc::geteuid() },
             data_root: data.identity().clone(),
@@ -746,15 +757,16 @@ impl Originals {
             phase: Phase::Original,
             previous_sha256: None,
             capture,
+            tree,
         };
-        if Capture::read(&client)? != frame.capture {
+        if Capture::read(&client)? != frame.capture || TreeSnapshot::read(&client)? != frame.tree {
             return Err(denied("source changed before original publication"));
         }
         let bytes = encode(&frame)?;
         create(&directory, Phase::Original.filename(), &bytes)?;
         data.recheck()?;
         client.recheck()?;
-        if Capture::read(&client)? != frame.capture {
+        if Capture::read(&client)? != frame.capture || TreeSnapshot::read(&client)? != frame.tree {
             return Err(denied(
                 "source changed during original publication; original retained",
             ));
@@ -856,13 +868,17 @@ impl Originals {
             return Err(denied("sealed phase bytes changed"));
         }
         let frame = decode(&bytes)?;
-        if frame.schema_version != 1
+        if frame.schema_version != 2
             || frame.attempt != self.attempt
             || frame.uid != unsafe { libc::geteuid() }
             || frame.phase != phase
             || frame.data_root != *self.data.identity()
             || frame.client_root != *self.client.identity()
             || frame.capture.root != frame.client_root
+            || frame.tree.root != frame.client_root
+            || frame.tree.root_protection != frame.capture.root_protection
+            || !frame.tree.valid()
+            || !frame.tree.matches_artifacts(&frame.capture)
             || frame.capture.root_protection
                 != protection(self.client.file(), &stat(self.client.file())?)?
             || !frame.capture.valid()
@@ -900,12 +916,16 @@ impl Originals {
             }
         }
         let capture = Capture::read(&self.client)?;
+        let tree = TreeSnapshot::read(&self.client)?;
         checkpoint()?;
-        if Capture::read(&self.client)? != capture || self.frame(prior)?.1 != previous {
+        if Capture::read(&self.client)? != capture
+            || TreeSnapshot::read(&self.client)? != tree
+            || self.frame(prior)?.1 != previous
+        {
             return Err(denied("snapshot changed before durable publication"));
         }
         let frame = Frame {
-            schema_version: 1,
+            schema_version: 2,
             attempt: self.attempt.clone(),
             uid: unsafe { libc::geteuid() },
             data_root: self.data.identity().clone(),
@@ -913,6 +933,7 @@ impl Originals {
             phase,
             previous_sha256: Some(digest(&previous)),
             capture,
+            tree,
         };
         let bytes = encode(&frame)?;
         create(&self.directory, phase.filename(), &bytes)?;

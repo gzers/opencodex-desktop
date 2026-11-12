@@ -1,0 +1,507 @@
+//! Read-only descriptor-relative client inventory. Ordinary file contents are
+//! hashed, never persisted here. A separate native coordination record binds
+//! the exact root claim database's stat identity without opening/closing that
+//! SQLite inode (which could release another connection's POSIX record lock).
+//! An inventory is neither a recoverable byte archive nor a mutation permit.
+use super::*;
+use sha2::{Digest, Sha256};
+use std::{ffi::OsString, os::unix::ffi::OsStringExt};
+
+const MAX_ENTRIES: usize = 16_384;
+const MAX_BYTES: u64 = 128 * 1024 * 1024;
+const MAX_FILE: u64 = 16 * 1024 * 1024;
+const MAX_DEPTH: usize = 64;
+const MAX_PROTECTION: usize = 4 * 1024 * 1024;
+const MAX_PATHS: usize = 1024 * 1024;
+const CLAIM: &str = ".opencodex-native-main.claim.sqlite";
+fn coordination_path(path: &str) -> bool {
+    path == CLAIM
+        || ["-journal", "-wal", "-shm"]
+            .iter()
+            .any(|suffix| path.strip_prefix(CLAIM) == Some(*suffix))
+}
+
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct TreeSnapshot {
+    pub(super) root: Identity,
+    pub(super) root_protection: Protection,
+    entries: Vec<Entry>,
+    total_bytes: u64,
+}
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
+enum Entry {
+    Directory {
+        path: String,
+        identity: Identity,
+        protection: Protection,
+    },
+    File {
+        path: String,
+        identity: Identity,
+        protection: Protection,
+        bytes: u64,
+        sha256: String,
+    },
+    // Metadata-only by construction. This is NOT an expanded cleanup exception
+    // or permission to restore/delete a live database. No digest is invented.
+    Coordination {
+        path: String,
+        identity: Identity,
+        uid: u32,
+        gid: u32,
+        mode: u16,
+        flags: u32,
+        bytes: u64,
+    },
+}
+impl Entry {
+    fn path(&self) -> &str {
+        match self {
+            Self::Directory { path, .. }
+            | Self::File { path, .. }
+            | Self::Coordination { path, .. } => path,
+        }
+    }
+}
+impl std::fmt::Debug for TreeSnapshot {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("TreeSnapshot")
+            .field("entries", &self.entries.len())
+            .field("total_bytes", &self.total_bytes)
+            .finish()
+    }
+}
+fn lookup(parent: &File, child: &OsStr) -> io::Result<libc::stat> {
+    let c = name(child)?;
+    let mut s = std::mem::MaybeUninit::uninit();
+    if unsafe {
+        libc::fstatat(
+            parent.as_raw_fd(),
+            c.as_ptr(),
+            s.as_mut_ptr(),
+            libc::AT_SYMLINK_NOFOLLOW,
+        )
+    } != 0
+    {
+        return Err(io::Error::last_os_error());
+    }
+    Ok(unsafe { s.assume_init() })
+}
+fn names(parent: &File) -> io::Result<Vec<OsString>> {
+    // openat(".") gives readdir an independent cursor for this exact directory;
+    // a dup would share the original directory offset across observations.
+    let raw = unsafe {
+        libc::openat(
+            parent.as_raw_fd(),
+            c".".as_ptr(),
+            libc::O_RDONLY | libc::O_DIRECTORY | libc::O_CLOEXEC | libc::O_NOFOLLOW,
+        )
+    };
+    if raw < 0 {
+        return Err(io::Error::last_os_error());
+    }
+    let dir = unsafe { libc::fdopendir(raw) };
+    if dir.is_null() {
+        let e = io::Error::last_os_error();
+        unsafe { libc::close(raw) };
+        return Err(e);
+    }
+    struct Close(*mut libc::DIR);
+    impl Drop for Close {
+        fn drop(&mut self) {
+            unsafe { libc::closedir(self.0) };
+        }
+    }
+    let _close = Close(dir);
+    let mut result = Vec::new();
+    loop {
+        unsafe { *libc::__error() = 0 };
+        let item = unsafe { libc::readdir(dir) };
+        if item.is_null() {
+            let e = io::Error::last_os_error();
+            if e.raw_os_error() != Some(0) {
+                return Err(e);
+            }
+            break;
+        }
+        let item = unsafe { &*item };
+        let n = item.d_namlen as usize;
+        if n == 0 || n >= item.d_name.len() || item.d_name[n] != 0 {
+            return Err(denied("tree directory entry framing unknown"));
+        }
+        let raw: Vec<u8> = item.d_name[..n].iter().map(|c| *c as u8).collect();
+        if raw == b"." || raw == b".." {
+            continue;
+        }
+        if result.len() >= MAX_ENTRIES {
+            return Err(denied("client tree entry count over limit"));
+        }
+        let child = OsString::from_vec(raw);
+        name(&child)?;
+        result.push(child);
+    }
+    result.sort();
+    if result.windows(2).any(|w| w[0] == w[1]) {
+        return Err(denied("duplicate tree directory entry"));
+    }
+    Ok(result)
+}
+#[derive(Default)]
+struct Budget {
+    entries: usize,
+    bytes: u64,
+    security: usize,
+    paths: usize,
+}
+impl Budget {
+    fn entry(&mut self, path: &str) -> io::Result<()> {
+        if path.len() > 4096 || self.entries >= MAX_ENTRIES {
+            return Err(denied("client tree depth or entry budget exceeded"));
+        }
+        self.paths = self
+            .paths
+            .checked_add(path.len())
+            .filter(|n| *n <= MAX_PATHS)
+            .ok_or_else(|| denied("tree path budget exceeded"))?;
+        self.entries += 1;
+        Ok(())
+    }
+    fn protection(&mut self, p: &Protection) -> io::Result<()> {
+        let size = p.acl.as_ref().map_or(0, Vec::len)
+            + p.xattrs
+                .iter()
+                .map(|(k, v)| k.len() + v.len())
+                .sum::<usize>();
+        self.security = self
+            .security
+            .checked_add(size)
+            .filter(|n| *n <= MAX_PROTECTION)
+            .ok_or_else(|| denied("tree protection budget exceeded"))?;
+        Ok(())
+    }
+}
+fn stable(
+    parent: &File,
+    child: &OsStr,
+    file: &File,
+    before: &libc::stat,
+    p: &Protection,
+) -> io::Result<()> {
+    let after = stat(file)?;
+    let current = lookup(parent, child)?;
+    if version(before) != version(&after)
+        || version(&after) != version(&current)
+        || protection(file, &after)? != *p
+    {
+        return Err(denied("client tree object changed during observation"));
+    }
+    Ok(())
+}
+fn walk(
+    parent: &File,
+    relative: &str,
+    depth: usize,
+    entries: &mut Vec<Entry>,
+    budget: &mut Budget,
+    checkpoint: &impl Fn(&str) -> io::Result<()>,
+) -> io::Result<()> {
+    if depth > MAX_DEPTH {
+        return Err(denied("client tree depth exceeded"));
+    }
+    let before = stat(parent)?;
+    let security = protection(parent, &before)?;
+    if before.st_uid != unsafe { libc::geteuid() } || before.st_mode & 0o022 != 0 {
+        return Err(denied("tree directory owner or write access unknown"));
+    }
+    let children = names(parent)?;
+    for child in &children {
+        let text = child
+            .to_str()
+            .ok_or_else(|| denied("client tree path is not UTF8"))?;
+        let path = if relative.is_empty() {
+            text.into()
+        } else {
+            format!("{relative}/{text}")
+        };
+        // Literal backslashes on POSIX stay literal; they are never rewritten
+        // into '/' and cannot collide with a different descendant path.
+        budget.entry(&path)?;
+        let observed = lookup(parent, child)?;
+        if relative.is_empty() && coordination_path(text) {
+            // First-use BEGIN EXCLUSIVE on an empty official claim creates a
+            // real rollback journal. Record exact sidecar identity as native
+            // coordination too; never open its inode or mistake it for bytes
+            // this engine may restore. An orphan sidecar stays refused.
+            if text != CLAIM {
+                let claim = lookup(parent, OsStr::new(CLAIM))?;
+                if claim.st_mode & libc::S_IFMT != libc::S_IFREG
+                    || claim.st_nlink != 1
+                    || claim.st_uid != unsafe { libc::geteuid() }
+                    || claim.st_mode & 0o777 != 0o600
+                    || claim.st_flags != 0
+                {
+                    return Err(denied("tree coordination parent unknown"));
+                }
+            }
+            if observed.st_mode & libc::S_IFMT != libc::S_IFREG
+                || observed.st_nlink != 1
+                || observed.st_uid != unsafe { libc::geteuid() }
+                || observed.st_mode & 0o777 != 0o600
+                || observed.st_flags != 0
+                || observed.st_size < 0
+            {
+                return Err(denied("tree coordination identity unavailable"));
+            }
+            checkpoint(&path)?;
+            if version(&observed) != version(&lookup(parent, child)?) {
+                return Err(denied("tree coordination identity changed"));
+            }
+            entries.push(Entry::Coordination {
+                path,
+                identity: identity(&observed),
+                uid: observed.st_uid,
+                gid: observed.st_gid,
+                mode: observed.st_mode & 0o777,
+                flags: observed.st_flags,
+                bytes: observed.st_size as u64,
+            });
+            continue;
+        }
+        let directory = match observed.st_mode & libc::S_IFMT {
+            libc::S_IFDIR => true,
+            libc::S_IFREG => false,
+            _ => return Err(denied("tree link or special object refused")),
+        };
+        // Reject an already linked file BEFORE opening its inode. In
+        // particular an alias to the SQLite claim cannot cause this observer
+        // to close another fd for an actively locked coordination inode.
+        if !directory && observed.st_nlink != 1 {
+            return Err(denied("tree linked source refused before open"));
+        }
+        checkpoint(&path)?;
+        let file = open_at(parent, child, directory)?;
+        let opened = stat(&file)?;
+        if version(&observed) != version(&opened) || opened.st_uid != unsafe { libc::geteuid() } {
+            return Err(denied("tree object replaced before open"));
+        }
+        let p = protection(&file, &opened)?;
+        budget.protection(&p)?;
+        if directory {
+            walk(&file, &path, depth + 1, entries, budget, checkpoint)?;
+            stable(parent, child, &file, &opened, &p)?;
+            entries.push(Entry::Directory {
+                path,
+                identity: identity(&opened),
+                protection: p,
+            });
+        } else {
+            let bytes =
+                u64::try_from(opened.st_size).map_err(|_| denied("tree file size invalid"))?;
+            if bytes > MAX_FILE {
+                return Err(denied("tree file over limit"));
+            }
+            budget.bytes = budget
+                .bytes
+                .checked_add(bytes)
+                .filter(|n| *n <= MAX_BYTES)
+                .ok_or_else(|| denied("tree bytes over limit"))?;
+            let mut hash = Sha256::new();
+            let mut buffer = zeroize::Zeroizing::new(vec![0; 64 * 1024]);
+            let mut count = 0u64;
+            let mut reader = &file;
+            loop {
+                let n = reader.read(&mut buffer)?;
+                if n == 0 {
+                    break;
+                }
+                count += n as u64;
+                if count > bytes {
+                    return Err(denied("tree file grew during read"));
+                }
+                hash.update(&buffer[..n]);
+            }
+            if count != bytes {
+                return Err(denied("tree file truncated during read"));
+            }
+            checkpoint(&path)?;
+            stable(parent, child, &file, &opened, &p)?;
+            entries.push(Entry::File {
+                path,
+                identity: identity(&opened),
+                protection: p,
+                bytes,
+                sha256: format!("{:x}", hash.finalize()),
+            });
+        }
+    }
+    if names(parent)? != children
+        || version(&stat(parent)?) != version(&before)
+        || protection(parent, &stat(parent)?)? != security
+    {
+        return Err(denied("client tree directory changed during capture"));
+    }
+    Ok(())
+}
+impl TreeSnapshot {
+    pub fn read(root: &PinnedDirectory) -> io::Result<Self> {
+        Self::read_checked(root, &|_| Ok(()))
+    }
+    fn read_checked(
+        root: &PinnedDirectory,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<Self> {
+        let one = || -> io::Result<Self> {
+            root.recheck()?;
+            let mut entries = Vec::new();
+            let mut b = Budget::default();
+            let s = stat(root.file())?;
+            let p = protection(root.file(), &s)?;
+            b.protection(&p)?;
+            walk(root.file(), "", 0, &mut entries, &mut b, checkpoint)?;
+            entries.sort_by(|a, b| a.path().cmp(b.path()));
+            root.recheck()?;
+            Ok(Self {
+                root: identity(&s),
+                root_protection: p,
+                entries,
+                total_bytes: b.bytes,
+            })
+        };
+        let before = one()?;
+        let after = one()?;
+        if before != after {
+            return Err(denied("complete tree changed between observations"));
+        }
+        if !after.valid() {
+            return Err(denied("captured tree inventory invalid"));
+        }
+        Ok(after)
+    }
+    pub fn entry_count(&self) -> usize {
+        self.entries.len()
+    }
+    pub(super) fn matches_artifacts(&self, capture: &Capture) -> bool {
+        for (name, image) in NAMES.iter().zip(capture.images()) {
+            let entry = self.entries.iter().find(|entry| entry.path() == *name);
+            let same = match (image, entry) {
+                (Image::Absent, None) => true,
+                (
+                    Image::File {
+                        identity,
+                        protection,
+                        bytes,
+                        ..
+                    },
+                    Some(Entry::File {
+                        identity: id,
+                        protection: p,
+                        bytes: length,
+                        sha256,
+                        ..
+                    }),
+                ) => {
+                    identity == id
+                        && protection == p
+                        && *length == bytes.len() as u64
+                        && sha256 == &digest(bytes)
+                }
+                _ => false,
+            };
+            if !same {
+                return false;
+            }
+        }
+        true
+    }
+    pub(super) fn valid(&self) -> bool {
+        let mut budget = Budget::default();
+        if budget.protection(&self.root_protection).is_err() {
+            return false;
+        }
+        let mut known = std::collections::BTreeSet::new();
+        let mut directories = std::collections::BTreeSet::new();
+        let mut last = None;
+        for e in &self.entries {
+            let path = e.path();
+            if coordination_path(path) != matches!(e, Entry::Coordination { .. }) {
+                return false;
+            }
+            let parts: Vec<_> = path.split('/').collect();
+            if path.is_empty()
+                || parts.len() > MAX_DEPTH + 1
+                || parts
+                    .iter()
+                    .any(|x| x.is_empty() || *x == "." || *x == ".." || x.contains('\0'))
+                || last.is_some_and(|previous: &str| previous >= path)
+                || budget.entry(path).is_err()
+            {
+                return false;
+            }
+            if let Some((parent, _)) = path.rsplit_once('/') {
+                if !directories.contains(parent) {
+                    return false;
+                }
+            }
+            if !known.insert(path) {
+                return false;
+            }
+            last = Some(path);
+            match e {
+                Entry::Directory { protection, .. } => {
+                    if protection.uid != unsafe { libc::geteuid() }
+                        || protection.mode & 0o022 != 0
+                        || budget.protection(protection).is_err()
+                    {
+                        return false;
+                    }
+                    directories.insert(path);
+                }
+                Entry::File {
+                    protection,
+                    bytes,
+                    sha256,
+                    ..
+                } => {
+                    if protection.uid != unsafe { libc::geteuid() }
+                        || *bytes > MAX_FILE
+                        || sha256.len() != 64
+                        || !sha256
+                            .bytes()
+                            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+                        || budget.protection(protection).is_err()
+                    {
+                        return false;
+                    }
+                    let Some(total) = budget.bytes.checked_add(*bytes).filter(|n| *n <= MAX_BYTES)
+                    else {
+                        return false;
+                    };
+                    budget.bytes = total;
+                }
+                Entry::Coordination {
+                    path,
+                    uid,
+                    mode,
+                    flags,
+                    ..
+                } => {
+                    if !coordination_path(path)
+                        || path != CLAIM && !known.contains(CLAIM)
+                        || *uid != unsafe { libc::geteuid() }
+                        || *mode != 0o600
+                        || *flags != 0
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        budget.bytes == self.total_bytes
+    }
+}
+
+#[cfg(test)]
+#[path = "macos_client_tree_tests.rs"]
+mod tests;

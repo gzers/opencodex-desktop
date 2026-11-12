@@ -69,6 +69,88 @@ fn native_snapshot_retains_exact_original_bytes_and_metadata_without_source_writ
 }
 
 #[test]
+fn original_frame_binds_client_tree_file_hashes_without_recording_their_content_bytes() {
+    let f = Fixture::new();
+    fs::create_dir(f.client.join("config")).unwrap();
+    fs::write(
+        f.client.join("config/config.toml"),
+        b"token = 'tree-secret'\n",
+    )
+    .unwrap();
+    fs::create_dir(f.client.join("agents")).unwrap();
+    fs::write(f.client.join("agents/AGENTS.md"), b"private instruction\n").unwrap();
+    let originals = Originals::begin(&f.data, &f.client).unwrap();
+    let raw = fs::read(f.journal(originals.attempt()).join("original.json")).unwrap();
+    assert_eq!(
+        serde_json::from_slice::<serde_json::Value>(&raw).unwrap()["schemaVersion"],
+        2
+    );
+    let tree = serde_json::from_slice::<serde_json::Value>(&raw).unwrap()["tree"].clone();
+    assert!(tree["entries"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|entry| entry["path"] == "config/config.toml"));
+    assert!(tree["entries"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .any(|entry| entry["path"] == "agents/AGENTS.md"));
+    assert!(!raw
+        .windows(b"tree-secret".len())
+        .any(|bytes| bytes == b"tree-secret"));
+    assert!(!raw
+        .windows(b"private instruction".len())
+        .any(|bytes| bytes == b"private instruction"));
+    assert!(
+        TreeSnapshot::read(&PinnedDirectory::open(&f.client).unwrap())
+            .unwrap()
+            .entry_count()
+            >= 4
+    );
+}
+
+#[test]
+fn complete_tree_capture_refuses_symlink_without_following_it() {
+    let f = Fixture::new();
+    let outside = f.root.join("outside-secret");
+    fs::write(&outside, b"outside").unwrap();
+    symlink(&outside, f.client.join("linked-secret")).unwrap();
+    assert!(Originals::begin(&f.data, &f.client).is_err());
+    assert_eq!(fs::read(&outside).unwrap(), b"outside");
+}
+
+#[test]
+fn old_frames_and_tree_references_with_invalid_inventory_are_not_backfilled_or_adopted() {
+    let f = Fixture::new();
+    let originals = Originals::begin(&f.data, &f.client).unwrap();
+    let path = f.journal(originals.attempt()).join("original.json");
+    let before = fs::read(&path).unwrap();
+    let value: serde_json::Value = serde_json::from_slice(&before).unwrap();
+    let mut old = value.clone();
+    old["schemaVersion"] = 1.into();
+    old.as_object_mut().unwrap().remove("tree");
+    assert!(decode(&encode(&old).unwrap()).is_err());
+    let mut invalid = value;
+    invalid["tree"]["totalBytes"] = 0.into();
+    let bytes = encode(&invalid).unwrap();
+    // Independently supplied hashes cannot make structurally invalid tree
+    // evidence valid. This test supplies its own synthetic bad reference only.
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    fs::write(&path, &bytes).unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+    assert!(Originals::open(
+        &f.data,
+        &f.client,
+        originals.attempt(),
+        &digest(&bytes),
+        &[]
+    )
+    .is_err());
+    assert_eq!(fs::read(&path).unwrap(), bytes);
+}
+
+#[test]
 fn sequential_frames_reopen_only_with_original_and_independently_retained_phase_digests() {
     let f = Fixture::new();
     let originals = Originals::begin(&f.data, &f.client).unwrap();
