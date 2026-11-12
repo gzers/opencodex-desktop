@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 72；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 73；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -660,3 +660,12 @@ main7d6ecdf13注册finish_unchanged真实命令和预览canFinishUnchanged/独�
 24后端session去重用例全部有对应证据：首23过/旧Active断言1失败保留，改当前合同后仅定向重验失败1项，新增坏未登记回执和方向摘要early1项定向过；编译/格式/严格Clippy通过。61前端/类型/生产build过。WebKit首轮在原型busy隐藏关闭处失败保留，软件7项/原型1项局部不冒整组通过；本模块显式modal模式修正后WebKit/Chromium各12软件原型场景过，明暗/窄窗、取消零mutation、重开1mutation、失败限制/只读状态重试及旧Finalize键盘通过，pageerror空。原生算法和预算未变，按摘要复用上批2415ms/完整树/真实状态证据，本批无native重跑或.app/DMG/最终GUI→IPC候选验收。
 
 证据.adg/evidence/0.2.24/client-early-unchanged-ui-r1/及manifest保留首失败/准确源/双引擎截图和复用native摘要；所有browser/Vite/audit终止、unit TMPDIR空，本批无native服务/协调DB/日常/官方/业务改变，归档核对后清重复临时根。Windows远端仍b2e89665d/0eef59a01无新回交，不跑W2。Preparing缺引用/未完捕获、已变化未plan早期恢复及原一般范围/完整集合/旧revision4/Windows/NAME/System代理/发布验证/固定候选继续，目标active，不发布。
+
+
+## 2026-11-12 完全未创建原件保管目录的Preparing取消
+
+main2c6cd6e05新增preparation取消：独立Preparing无refs/plan且整个client-originals缺席才可确认，descriptor-relative拒绝空/部分/链接或任何既存vault，不扫描/收养/删除原件；当前完整两树/原scope指纹、当前官方完整镜像/OS服务停止及记录缺席，原10秒metadata动作，create-only ticket/revision回执+Proof/CAS登记CancelledBeforeCapture，非原件恢复/Unchanged证明。晚到vault保持Unknown拒绝下一次Start，合法新Start另开ticket且旧事件保留。main1524b6a97接真实命令/预览互斥能力和明确取消确认/返回/单promise关闭重开，正确独立取消回执+新live同D/H才清限制，失败保留，读取失败只状态重试；唯一原型同步。详[捕获前取消](0.2.24-contracts/client-prepare-cancel-r1.md)。
+
+25索引相关及71前端/类型/build/格式/严格Clippy过。新Profile官方准备161ms在捕获前按预设中断，原exit101/index1/refsnull/vaultabsent保留，真实StartingFailed三动作false+恢复限制证明前批回执门已生效。独立取消错确认/partial vault/陌生runtime记录拒绝保留；正例2722ms/index2，原vault从未创建/7当前文件保持/完整两树SHA匹配独立取消回执，真实新状态NotRequired/仅Start。服务从未启动，不跑无关启停或双SID。首两引擎green各9项只覆盖软件5真实流程+原型4静态打开，复核截图发现原型分支缺口，证据不改且明确降级范围；修脚本分支后另存各9完整软件/原型确认/返回/slow重开/失败重查通过，pageerror空，不冒首green为全过。
+
+证据.adg/evidence/0.2.24/client-prepare-cancel-r1/及manifest保留所有来源边界/原失败/覆盖局限/真实成功/独立index1/2/完整树。自有进程/隔离程序Profile清理，0新协调DB创建（预列路径不存在）、globalL身份/字节/权限保持，四轮browser/Vite终止、unit TMPDIR空；无日常/官方/业务变化、新.app/DMG/发布。Windows远端仍b2e89665d/0eef59a01无新回交，不跑W2。任何既存vault的Preparing/部分捕获未登记/已变化未plan早期恢复及原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方验证/固定候选继续，目标active。
