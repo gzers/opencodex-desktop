@@ -11,8 +11,8 @@
   if(S.executing)return '<p role="status">'+(continuing()?'正在继续恢复客户端配置…':'正在完成恢复收尾…')+'</p><p>关闭窗口后仍会继续，可重新打开查看。</p>';
   if(S.outcome)return '<p role="status">'+(continuing()?'客户端配置恢复已完成。':'配置恢复收尾已完成。')+'</p><p>'+(S.ready?'服务保持停止，现在可以启动。':'当前运行状态尚未核实，核对通过后才能启动。')+'</p>'+(S.refreshError?'<p role="alert" class="model-error">'+esc(S.refreshError)+'</p>':'');
   if(S.error)return '<p role="alert" class="model-error">'+esc(S.error)+'</p>';
-  const summary=continuing()?['客户端配置恢复中断，可以继续原恢复计划。','确认后恢复到本次启动前的配置，保留当前已归档的文件。服务保持停止。']:summaries[S.scene]||summaries.eligible;
-  const details=!['unknown','none','unsupported'].includes(S.scene)?'<details style="margin-top:16px"><summary>诊断详情</summary><dl class="p24-facts"><dt>会话阶段</dt><dd>'+(S.scene==='active'?'服务会话已就绪':'配置恢复待核对')+'</dd><dt>客户端原件</dt><dd>已核对</dd><dt>恢复计划</dt><dd>已核对</dd><dt>完成记录</dt><dd>'+(continuing()?'尚未登记':'待确认')+'</dd><dt>会话编号</dt><dd><code>f394bd75-355b-4873-83cc-6818efeb547a</code></dd></dl></details>':'';
+  const summary=S.scene==='rolled-back'?['本次恢复已撤销，文件已回到恢复前的停止状态。','启动前原件仍保留，尚未恢复；服务保持停止。']:continuing()?['客户端配置恢复中断，可以继续原恢复计划。','确认后恢复到本次启动前的配置，保留当前已归档的文件。服务保持停止。']:summaries[S.scene]||summaries.eligible;
+  const details=!['unknown','none','unsupported'].includes(S.scene)?'<details style="margin-top:16px"><summary>诊断详情</summary><dl class="p24-facts"><dt>会话阶段</dt><dd>'+(S.scene==='rolled-back'?'本次恢复已撤销':S.scene==='active'?'服务会话已就绪':'配置恢复待核对')+'</dd><dt>客户端原件</dt><dd>已核对</dd><dt>恢复计划</dt><dd>已核对</dd><dt>完成记录</dt><dd>'+(S.scene==='rolled-back'?'已核对':continuing()?'尚未登记':'待确认')+'</dd><dt>会话编号</dt><dd><code>f394bd75-355b-4873-83cc-6818efeb547a</code></dd></dl></details>':'';
   return '<p role="status">'+summary[0]+'</p>'+(summary[1]?'<p>'+summary[1]+'</p>':'')+details;
  }
  function render(){

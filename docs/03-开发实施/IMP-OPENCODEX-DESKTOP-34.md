@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 68；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 69；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -624,3 +624,12 @@ main37e486fad接独立client_recovery_continue、原索引/plan/确认及三文�
 69后端相关、27前端及类型/build/格式/严格Clippy过。新Profile官方Start8654/Status229/Stop5662ms在首目标交换后按预设中断，cache/audit尚未恢复、原exit101/index6保留。独立continue错确认/外部编辑拒绝保持索引；首10195ms、去重复锁外preview后10272ms失败均保留，原10秒不变。定位全OS枚举被逐步重复后归批次前后且保留每步不同事实核对，仅同现场继续9528ms/index7 Restored、重复确认拒绝；无重新安装/服务重跑。独立完整两树SHA匹配完成receipt、35内容引用/15blob及7客户端文件全还原。Chromium7/WebKit7界面与原型场景、末次WebKit3受影响详情/互斥guard场景过，生产排除mock；不冒mock为原生或整版验收。
 
 证据.adg/evidence/0.2.24/client-recovery-continue-r1/及manifest保留所有失败、独立index/帧/计划/原件和准确来源边界。自有进程/主端口缺席、3精确协调DB排他重获释放后和程序/Profile/全部夹具清理，既有globalL身份/字节/权限保持，无日常/官方/业务改变或新.app/DMG/发布。Rollback终态/确认、更早捕获阶段及原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 恢复回退独立终态与原对象重新准备
+
+mainea78757ea新增原生rollback执行器/完整停止后像读回、decision绑定不可序列化证明与RestoreRolledBack索引终态；仍Pending/Required，不能用回退证明关闭Restored或重新Start。新增rearm只create-only发布新逻辑plan、引用原父plan SHA及同一批原生对象，不拍新基线、不复制stage、保留旧不可变Rollback/outcome/回执；父链有界/新索引先登记后才可显式Continue，未登记meta计划不收养、不产生未知客户端对象。main3de2c6370只接准确只读回退状态，不注册rollback/rearm产品IPC/按钮，产品确认交互待下一批。详[回退与重准备合同](0.2.24-contracts/client-recovery-rollback-r1.md)。
+
+75后端去重函数通过，普通和派生plan各11个真实exit91发布中断边界通过；首测试assertDebug编译错误保留并仅改比较，最终格式/编译/严格Clippy通过。一个新Profile原官方Stop首目标交换后按预设中断，原exit101/index6保留；同现场新回退8130ms/index7，真实状态Required/三动作false；重准备9557ms/index8、另一明确确认Continue9434ms/index9 Restored，每次原10秒，无重装或服务重启。两阶段独立完整树SHA匹配各回执；旧Rollback回执逐字/摘要与index7一致，新派生完成回执匹配index9，35内容引用/15blob/最终7文件原字节核对，真实最终状态NotRequired/仅Start。28前端/生产build及软件原型WebKit2只读状态场景过，不冒原生执行已可从UI操作。
+
+证据.adg/evidence/0.2.24/client-recovery-rollback-r1/及manifest保留初始失败和index6/7/9、派生计划/原件/完整回执与准确分阶段源。自有进程/原端点缺席，3精确协调DB排他重获释放后和程序/Profile/全部夹具清理，globalL身份/字节/权限保持；无日常/官方/业务改变或新.app/DMG/发布。下一批产品rollback/rearm确认接线，以及早期捕获/原一般范围/完整集合/旧revision4/Windows/NAME/System代理/发布验证/固定候选继续，目标active。

@@ -1,0 +1,7 @@
+
+running 1 test
+test commands::client_recovery::tests::rollback_owned_interrupted_plan_keeps_original_restoration_required ... {"accepted":false,"elapsedMs":8130,"error":null,"noHistoricalExitProofReconstructed":true,"noProductRollbackCommandOrButtonYet":true,"outcome":{"attemptId":"e15d4e95-4e3a-4ef4-9ee5-6bc819d18117","revision":7,"status":"rolled_back"},"reopened":{"attemptId":"e15d4e95-4e3a-4ef4-9ee5-6bc819d18117","canContinue":false,"canFinalize":false,"canRollback":false,"completionEvidence":"verified","confirmationDigest":null,"originalEvidence":"verified","phase":"restore_rolled_back","phaseCount":3,"planEvidence":"verified","revision":7,"status":"pending"}}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2387 filtered out; finished in 15.48s
+

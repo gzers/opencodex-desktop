@@ -1,0 +1,407 @@
+[model.native_fixture]
+model = 'native-grok-fixture'
+model_provider = 'native'
+
+# >>> opencodex managed block — do not edit (removed by `ocx stop`) >>>
+
+[model_providers.opencodex]
+base_url = "http://127.0.0.1:61345/v1"
+api_backend = "responses"
+api_key = "opencodex-loopback"
+extra_headers = { "x-opencodex-grok" = "1" }
+
+[model.ocx-gpt-5-5]
+model = "gpt-5.5"
+model_provider = "opencodex"
+name = "OCX gpt-5.5"
+context_window = 272000
+supports_reasoning_effort = true
+reasoning_effort = "medium"
+
+[[model.ocx-gpt-5-5.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = false
+
+[[model.ocx-gpt-5-5.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = true
+
+[[model.ocx-gpt-5-5.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-5-5.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[model.ocx-gpt-5-6-sol]
+model = "gpt-5.6-sol"
+model_provider = "opencodex"
+name = "OCX gpt-5.6-sol"
+context_window = 272000
+supports_reasoning_effort = true
+reasoning_effort = "low"
+
+[[model.ocx-gpt-5-6-sol.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = true
+
+[[model.ocx-gpt-5-6-sol.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = false
+
+[[model.ocx-gpt-5-6-sol.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-5-6-sol.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[[model.ocx-gpt-5-6-sol.reasoning_efforts]]
+id = "max"
+value = "max"
+label = "Max"
+description = "Maximum reasoning effort"
+default = false
+
+[model.ocx-gpt-5-6-terra]
+model = "gpt-5.6-terra"
+model_provider = "opencodex"
+name = "OCX gpt-5.6-terra"
+context_window = 272000
+supports_reasoning_effort = true
+reasoning_effort = "medium"
+
+[[model.ocx-gpt-5-6-terra.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = false
+
+[[model.ocx-gpt-5-6-terra.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = true
+
+[[model.ocx-gpt-5-6-terra.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-5-6-terra.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[[model.ocx-gpt-5-6-terra.reasoning_efforts]]
+id = "max"
+value = "max"
+label = "Max"
+description = "Maximum reasoning effort"
+default = false
+
+[model.ocx-gpt-5-6-luna]
+model = "gpt-5.6-luna"
+model_provider = "opencodex"
+name = "OCX gpt-5.6-luna"
+context_window = 272000
+supports_reasoning_effort = true
+reasoning_effort = "medium"
+
+[[model.ocx-gpt-5-6-luna.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = false
+
+[[model.ocx-gpt-5-6-luna.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = true
+
+[[model.ocx-gpt-5-6-luna.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-5-6-luna.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[[model.ocx-gpt-5-6-luna.reasoning_efforts]]
+id = "max"
+value = "max"
+label = "Max"
+description = "Maximum reasoning effort"
+default = false
+
+[model.ocx-gpt-6-astra]
+model = "gpt-6-astra"
+model_provider = "opencodex"
+name = "OCX gpt-6-astra"
+context_window = 272000
+supports_reasoning_effort = true
+reasoning_effort = "low"
+
+[[model.ocx-gpt-6-astra.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = true
+
+[[model.ocx-gpt-6-astra.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = false
+
+[[model.ocx-gpt-6-astra.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-6-astra.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[[model.ocx-gpt-6-astra.reasoning_efforts]]
+id = "max"
+value = "max"
+label = "Max"
+description = "Maximum reasoning effort"
+default = false
+
+[model.ocx-gpt-6-sol]
+model = "gpt-6-sol"
+model_provider = "opencodex"
+name = "OCX gpt-6-sol"
+context_window = 272000
+supports_reasoning_effort = true
+reasoning_effort = "medium"
+
+[[model.ocx-gpt-6-sol.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = false
+
+[[model.ocx-gpt-6-sol.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = true
+
+[[model.ocx-gpt-6-sol.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-6-sol.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[[model.ocx-gpt-6-sol.reasoning_efforts]]
+id = "max"
+value = "max"
+label = "Max"
+description = "Maximum reasoning effort"
+default = false
+
+[model.ocx-gpt-6-luna]
+model = "gpt-6-luna"
+model_provider = "opencodex"
+name = "OCX gpt-6-luna"
+context_window = 272000
+supports_reasoning_effort = true
+reasoning_effort = "medium"
+
+[[model.ocx-gpt-6-luna.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = false
+
+[[model.ocx-gpt-6-luna.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = true
+
+[[model.ocx-gpt-6-luna.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-6-luna.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[[model.ocx-gpt-6-luna.reasoning_efforts]]
+id = "max"
+value = "max"
+label = "Max"
+description = "Maximum reasoning effort"
+default = false
+
+[model.ocx-gpt-6-1-sol]
+model = "gpt-6.1-sol"
+model_provider = "opencodex"
+name = "OCX gpt-6.1-sol"
+context_window = 500000
+supports_reasoning_effort = true
+reasoning_effort = "low"
+
+[[model.ocx-gpt-6-1-sol.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = true
+
+[[model.ocx-gpt-6-1-sol.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = false
+
+[[model.ocx-gpt-6-1-sol.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-6-1-sol.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[[model.ocx-gpt-6-1-sol.reasoning_efforts]]
+id = "max"
+value = "max"
+label = "Max"
+description = "Maximum reasoning effort"
+default = false
+
+[model.ocx-gpt-6-1-terra]
+model = "gpt-6.1-terra"
+model_provider = "opencodex"
+name = "OCX gpt-6.1-terra"
+context_window = 500000
+supports_reasoning_effort = true
+reasoning_effort = "low"
+
+[[model.ocx-gpt-6-1-terra.reasoning_efforts]]
+id = "low"
+value = "low"
+label = "Low"
+description = "Quick, fast implementations"
+default = true
+
+[[model.ocx-gpt-6-1-terra.reasoning_efforts]]
+id = "medium"
+value = "medium"
+label = "Medium"
+description = "Balanced effort"
+default = false
+
+[[model.ocx-gpt-6-1-terra.reasoning_efforts]]
+id = "high"
+value = "high"
+label = "High"
+description = "Highest quality with extensive reasoning"
+default = false
+
+[[model.ocx-gpt-6-1-terra.reasoning_efforts]]
+id = "xhigh"
+value = "xhigh"
+label = "XHigh"
+description = "Extra high reasoning effort"
+default = false
+
+[[model.ocx-gpt-6-1-terra.reasoning_efforts]]
+id = "max"
+value = "max"
+label = "Max"
+description = "Maximum reasoning effort"
+default = false
+
+[model.ocx-native-fixture-claude-opus-5-5]
+model = "native-fixture/claude-opus-5-5"
+model_provider = "opencodex"
+name = "OCX native-fixture/claude-opus-5-5"
+
+[model.ocx-native-fixture-gpt-6-sol]
+model = "native-fixture/gpt-6-sol"
+model_provider = "opencodex"
+name = "OCX native-fixture/gpt-6-sol"
+
+[model.ocx-native-fixture-vendor-gemini-3-5-pro]
+model = "native-fixture/vendor/gemini-3.5-pro"
+model_provider = "opencodex"
+name = "OCX native-fixture/vendor/gemini-3.5-pro"
+# <<< opencodex managed block <<<
