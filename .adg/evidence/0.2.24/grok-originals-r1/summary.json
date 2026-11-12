@@ -1,0 +1,171 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "completedScope": "frame4 profile-bound Grok absent/tree/bytes including original config, existing backup, nested Agent files; Codex and plain client coordination semantics distinct",
+  "relatedTestsPassed": 87,
+  "unitResults": {
+    "groups": {
+      "grok": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2332 filtered out; finished in 1.25s"
+        ]
+      },
+      "tree": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2335 filtered out; finished in 0.00s",
+          "test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 2327 filtered out; finished in 0.16s"
+        ]
+      },
+      "archive": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2332 filtered out; finished in 0.36s"
+        ]
+      },
+      "originals": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 2314 filtered out; finished in 2.43s"
+        ]
+      },
+      "restore": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 2316 filtered out; finished in 37.69s"
+        ]
+      },
+      "session": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 2326 filtered out; finished in 0.88s"
+        ]
+      },
+      "index": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2335 filtered out; finished in 0.00s",
+          "test result: ok. 20 passed; 0 failed; 1 ignored; 0 measured; 2315 filtered out; finished in 1.03s"
+        ]
+      }
+    },
+    "binarySha256": "a929269c147a54bd0d0693ae1e484ff8f19cfd68feacee39e56127f528cfbb5f"
+  },
+  "checks": {
+    "fmt-final": 0,
+    "clippy-final": 0,
+    "build-proof": 0
+  },
+  "firstClippyError": "test Unix permissions literal0 corrected to0o000; same semantics, original stderr retained",
+  "preflightErrors": "one rg expression used an unescaped parenthesis/brace; only original tool output, no separate stderr. No product changes from this search error.",
+  "native": {
+    "accepted": false,
+    "businessRequests": false,
+    "clientChangedDuringStart": true,
+    "grokConfigChangedDuringStart": true,
+    "independentOriginalsReferenced": true,
+    "indexedReady": true,
+    "indexedRestorePrepared": true,
+    "indexedRevision": 6,
+    "indexedStopped": false,
+    "nativeClientRestored": {
+      "codex/config.toml": true,
+      "codex/models_cache.json": false,
+      "codex/opencodex-catalog-audit.jsonl": false,
+      "codex/opencodex-catalog.json": false,
+      "grok/agents/AGENTS.md": true,
+      "grok/config.toml": true,
+      "grok/config.toml.bak-opencodex": true
+    },
+    "officialVersion": "2.99.0",
+    "originalGrokConfigBackupAndAgentArchived": true,
+    "pidRecordAbsent": true,
+    "record": {
+      "pid": 83579,
+      "port": 51921
+    },
+    "recordAbsent": true,
+    "reopenedRecoveryGate": true,
+    "reopenedSnapshot": {
+      "can_restart": false,
+      "can_start": false,
+      "can_stop": false,
+      "facts": {
+        "client_recovery": "required",
+        "data_root": "/private/tmp/ocxd024-versioned-lifecycle-lzu70ogc/fixtures/profile/.codex-desktop/desktop",
+        "health": "unknown",
+        "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-lzu70ogc/fixtures/profile/.codex-desktop/opencodex/home",
+        "protection": "none",
+        "reboot_safe": true,
+        "runtime_label": "bundled",
+        "service_present": null,
+        "shim_present": null,
+        "startup_status": "native",
+        "version_drift": "2.99.0"
+      },
+      "matrix": {
+        "connection": "unconfigured",
+        "operation": "idle",
+        "runtime": "stopped"
+      },
+      "pid": null,
+      "port": null,
+      "source": "live"
+    },
+    "reopenedStatusElapsedMs": 801,
+    "restorePlanMatchesIndependentIndex": true,
+    "result": "failed",
+    "serviceStarted": true,
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "clientRecoveryRequired": false,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startBudgetMs": 30000,
+    "startElapsedMs": 16473,
+    "status": {
+      "pid": "83579",
+      "port": 51921,
+      "ready": true,
+      "status": "running"
+    },
+    "statusBudgetMs": 5000,
+    "statusElapsedMs": 1102,
+    "stop": {
+      "canRestart": false,
+      "canStart": false,
+      "canStop": false,
+      "clientRecoveryRequired": true,
+      "failure": {
+        "code": "client_original_restore_pending",
+        "message": "\u670d\u52a1\u5df2\u6b63\u5e38\u505c\u6b62\uff0c\u5ba2\u6237\u7aef\u914d\u7f6e\u539f\u4ef6\u6062\u590d\u5c1a\u672a\u5b8c\u6210\uff1b\u539f\u4f1a\u8bdd\u548c\u73b0\u573a\u5df2\u4fdd\u7559"
+      },
+      "lifecycleState": "stopped",
+      "result": null
+    },
+    "stopBudgetMs": 10000,
+    "stopElapsedMs": 9813,
+    "stoppedRecoveryObservation": true
+  },
+  "actualGrokArchiveObjects": "all4schema4 frames and15unique referenced ordinary objects verified; Grok config79bytes original ->8655ready/prestop ->79stopped, prior backup+Agent original bytes archived and unchanged; raw output only fixed synthetic3originals",
+  "cleanup": {
+    "ownedProcessesRemaining": [],
+    "primaryPortAbsent": true,
+    "tcpSnapshotFramingValid": true,
+    "exactDatabasesExclusivelyReacquiredReleased": [
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/0d279de06f8039e81444d9692e19dc7ce27be4683fe15617d92ce418cb8227ac.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/0d279de06f8039e81444d9692e19dc7ce27be4683fe15617d92ce418cb8227ac.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/history-write-locks/01f00ed3f68e8c19e87a8a08400c5affacb72b50117ac89282347b88575bbf4c.sqlite"
+    ],
+    "ownProgramProfileGrokCodexBlobsFramesIndicesStageAndTestRootsRemoved": true,
+    "dailyConfigurationModified": false,
+    "officialRuntimeModified": false,
+    "realBusinessRequests": false,
+    "installedGrokOrAgentClientExecuted": false
+  },
+  "remaining": "actual Codex3compensation/full guarded family/listeners/writers, external Agent or custom roots/links/larger trees/missing Codex root/flags/cross-volume/general graphs/explicit recovery; oldrevision4failure, Windows/NAME/complex System/release/fixed candidate. Stop9813ms leaves little original10s budget, no additional budget allowed."
+}

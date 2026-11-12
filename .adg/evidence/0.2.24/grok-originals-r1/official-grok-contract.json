@@ -1,0 +1,54 @@
+{
+  "archiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "sources": [
+    {
+      "path": "package/src/grok/inject.ts",
+      "sha256": "573581a32d5a2d31ec7cffe1ed94a1721c74a76ceab2407d38dea5cbc3003875",
+      "contractLines": [
+        {
+          "line": 68,
+          "text": "export function resolveGrokHome(grokHome?: string): string {"
+        },
+        {
+          "line": 69,
+          "text": "  return grokHome ?? (process.env.GROK_HOME || join(homedir(), \".grok\"));"
+        },
+        {
+          "line": 97,
+          "text": "    const path = join(resolveGrokHome(grokHome), \"config.toml\");"
+        },
+        {
+          "line": 1001,
+          "text": "      + \"Repair ~/.grok/config.toml manually (see config.toml.bak-opencodex) and re-run.\","
+        },
+        {
+          "line": 1133,
+          "text": "  const grokHome = resolveGrokHome(opts.grokHome);"
+        },
+        {
+          "line": 1169,
+          "text": "  const backupPath = join(grokHome, \"config.toml.bak-opencodex\");"
+        },
+        {
+          "line": 1324,
+          "text": "  const grokHome = resolveGrokHome(opts.grokHome);"
+        },
+        {
+          "line": 1421,
+          "text": "      if (orphanCount > 0) copyBackupOnce(destination, join(grokHome, \"config.toml.bak-opencodex\"));"
+        }
+      ]
+    },
+    {
+      "path": "package/src/cli/index.ts",
+      "sha256": "8d176afa6d6a5aa65c4e6b2e964401fadbfeb9b11b14386c503a321aecc17206",
+      "contractLines": [
+        {
+          "line": 785,
+          "text": "  if (shouldSyncGrokOnStart(config)) try {"
+        }
+      ]
+    }
+  ],
+  "officialPackageChanged": false
+}
