@@ -1,0 +1,27 @@
+{
+  "accepted": false,
+  "failuresPreserved": [
+    {
+      "evidence": "empty-config-tests.log",
+      "result": "1passed/3failed",
+      "reason": "new unit fixtures used legacy client-directory staging; product intentionally requires private journal stages",
+      "correction": "Use actual production journal-staging test factory; assertions unchanged."
+    },
+    {
+      "evidence": "hypothesis.json:firstObservedCompileError",
+      "result": "compile E0277",
+      "reason": "inferred unsized slice for independent phases",
+      "correction": "Explicit Vec<(Phase,String)>; original error retained as structured observation, full console remains in chat tool output."
+    },
+    {
+      "result": "guard compile visibility errors",
+      "reason": "Guard initially reached private capture_file/protection fields",
+      "correction": "Add narrow exact config_write_lock_image read-only method; no arbitrary capture or protection writes exposed. Full initial error text remains in chat tool output, not claimed as a retained raw log."
+    },
+    {
+      "evidence": "first-native-scope-review.json",
+      "result": "native content restoration passed but lacked independent official config lock",
+      "correction": "First result kept; add pipe-bound unchanged official lock, verify competing writer and parent death, then new lock-enabled native round rather than adopt old success."
+    }
+  ]
+}

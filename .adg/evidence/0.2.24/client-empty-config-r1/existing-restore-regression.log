@@ -1,0 +1,41 @@
+    Blocking waiting for file lock on artifact directory
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 24.36s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 32 tests
+test infrastructure::macos_client_originals::restore::tests::a_second_object_external_change_refuses_the_whole_batch_before_any_original_publish ... ok
+test infrastructure::macos_client_originals::restore::tests::a_second_writer_in_compensation_gap_keeps_both_payloads_and_no_terminal_result ... ok
+test infrastructure::macos_client_originals::restore::tests::abrupt_exit_after_conflict_receipt_preserves_unknown_bytes_and_cannot_resume_as_success ... ok
+test infrastructure::macos_client_originals::restore::tests::actual_acl_and_opaque_xattrs_are_restored_with_original_content ... ok
+test infrastructure::macos_client_originals::restore::tests::actual_external_process_replacement_in_native_gap_is_returned_and_conflict_is_durable ... ok
+test infrastructure::macos_client_originals::restore::tests::actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_known_generations ... ok
+test infrastructure::macos_client_originals::restore::tests::complete_restores_real_original_bytes_permissions_and_absence_without_discarding_postimages ... ok
+test infrastructure::macos_client_originals::restore::tests::completed_inspection_never_adopts_partial_rollback_or_unknown_postimages ... ok
+test infrastructure::macos_client_originals::restore::tests::current_recovery_observation_cannot_manufacture_or_adopt_a_missing_historical_stopped_frame ... ok
+test infrastructure::macos_client_originals::restore::tests::damaged_or_third_party_archived_postimage_blocks_continuation ... ok
+test infrastructure::macos_client_originals::restore::tests::expiration_or_native_authority_loss_never_creates_a_terminal_success ... ok
+test infrastructure::macos_client_originals::restore::tests::external_edit_between_preflight_and_native_step_is_preserved ... ok
+test infrastructure::macos_client_originals::restore::tests::failure_after_native_exchange_can_explicitly_roll_back_to_the_frozen_stopped_images ... ok
+test infrastructure::macos_client_originals::restore::tests::failure_during_archive_retains_known_objects_and_can_continue_the_same_plan ... ok
+test infrastructure::macos_client_originals::restore::tests::independent_plan_digest_and_all_phase_digests_are_required_on_reopen ... ok
+test infrastructure::macos_client_originals::restore::tests::interrupted_journal_preparation_never_changes_clients_and_retry_preserves_unindexed_files ... ok
+test infrastructure::macos_client_originals::restore::tests::journal_native_gap_returns_late_external_object_and_never_claims_success ... ok
+test infrastructure::macos_client_originals::restore::tests::journal_staging_requires_exact_plan_bound_objects_and_preserves_external_edits ... ok
+test infrastructure::macos_client_originals::restore::tests::journal_staging_survives_every_registered_publication_boundary_and_rearm ... ok
+test infrastructure::macos_client_originals::restore::tests::late_archive_source_replacement_is_returned_to_stage_and_never_committed_as_original ... ok
+test infrastructure::macos_client_originals::restore::tests::late_cache_edit_in_remove_gap_is_returned_without_overwriting_a_new_destination ... ok
+test infrastructure::macos_client_originals::restore::tests::late_catalog_replacement_after_final_check_is_preserved_at_original_path_and_refused ... ok
+test infrastructure::macos_client_originals::restore::tests::late_stage_replacement_does_not_reverse_over_an_unknown_published_object ... ok
+test infrastructure::macos_client_originals::restore::tests::missing_plan_proposal_reuses_only_original_four_frames_and_exact_stopped_postimages ... ok
+test infrastructure::macos_client_originals::restore::tests::new_stage_readback_cannot_adopt_a_same_bytes_replacement_before_plan_binding ... ok
+test infrastructure::macos_client_originals::restore::tests::partial_archive_can_roll_back_without_learning_new_file_identities ... ok
+test infrastructure::macos_client_originals::restore::tests::prepared_current_observation_must_match_the_reviewed_content_not_a_later_valid_subset ... ok
+test infrastructure::macos_client_originals::restore::tests::rearmed_logical_plan_keeps_exact_native_objects_and_immutable_rollback_history ... ok
+test infrastructure::macos_client_originals::restore::tests::recovery_review_binds_the_whole_batch_without_changing_any_object ... ok
+test infrastructure::macos_client_originals::restore::tests::recovery_review_rejects_missing_intent_damaged_terminal_and_replaced_archive ... ok
+test infrastructure::macos_client_originals::restore::tests::same_bytes_replacement_inode_and_stage_symlink_are_not_owned ... ok
+test infrastructure::macos_client_originals::restore::tests::unknown_preexisting_archive_destination_refuses_before_any_target_mutation ... ok
+
+test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 2398 filtered out; finished in 87.80s
+

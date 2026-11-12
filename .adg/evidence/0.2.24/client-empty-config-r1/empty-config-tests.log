@@ -1,0 +1,54 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 57.79s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 4 tests
+test infrastructure::macos_client_originals::restore::tests::first_use_empty_config_publication_race_returns_outside_bytes_and_refuses_success ... FAILED
+test infrastructure::macos_client_originals::restore::tests::first_use_empty_config_real_crash_reopens_only_the_original_known_objects ... FAILED
+test infrastructure::macos_client_originals::restore::tests::first_use_empty_config_refuses_new_content_replacement_and_missing_ready_provenance ... ok
+test infrastructure::macos_client_originals::restore::tests::first_use_empty_config_uses_the_same_reversible_engine_and_keeps_original_absence ... FAILED
+
+failures:
+
+---- infrastructure::macos_client_originals::restore::tests::first_use_empty_config_publication_race_returns_outside_bytes_and_refuses_success stdout ----
+
+thread 'infrastructure::macos_client_originals::restore::tests::first_use_empty_config_publication_race_returns_outside_bytes_and_refuses_success' (157157710) panicked at src/infrastructure/macos_client_restore_tests.rs:85:86:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "empty config requires private journal stages" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- infrastructure::macos_client_originals::restore::tests::first_use_empty_config_real_crash_reopens_only_the_original_known_objects stdout ----
+
+thread 'infrastructure::macos_client_originals::restore::tests::first_use_empty_config_real_crash_reopens_only_the_original_known_objects' (157157712) panicked at src/infrastructure/macos_client_restore_tests.rs:1703:9:
+assertion `left == right` failed: 
+running 1 test
+test infrastructure::macos_client_originals::restore::tests::first_use_empty_config_real_crash_reopens_only_the_original_known_objects ... FAILED
+
+failures:
+
+failures:
+    infrastructure::macos_client_originals::restore::tests::first_use_empty_config_real_crash_reopens_only_the_original_known_objects
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2427 filtered out; finished in 0.34s
+
+ 
+thread 'infrastructure::macos_client_originals::restore::tests::first_use_empty_config_real_crash_reopens_only_the_original_known_objects' (157157714) panicked at src/infrastructure/macos_client_restore_tests.rs:85:86:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "empty config requires private journal stages" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+  left: Some(101)
+ right: Some(91)
+
+---- infrastructure::macos_client_originals::restore::tests::first_use_empty_config_uses_the_same_reversible_engine_and_keeps_original_absence stdout ----
+
+thread 'infrastructure::macos_client_originals::restore::tests::first_use_empty_config_uses_the_same_reversible_engine_and_keeps_original_absence' (157157732) panicked at src/infrastructure/macos_client_restore_tests.rs:85:86:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "empty config requires private journal stages" }
+
+
+failures:
+    infrastructure::macos_client_originals::restore::tests::first_use_empty_config_publication_race_returns_outside_bytes_and_refuses_success
+    infrastructure::macos_client_originals::restore::tests::first_use_empty_config_real_crash_reopens_only_the_original_known_objects
+    infrastructure::macos_client_originals::restore::tests::first_use_empty_config_uses_the_same_reversible_engine_and_keeps_original_absence
+
+test result: FAILED. 1 passed; 3 failed; 0 ignored; 0 measured; 2424 filtered out; finished in 2.58s
+
+error: test failed, to rerun pass `--lib`
