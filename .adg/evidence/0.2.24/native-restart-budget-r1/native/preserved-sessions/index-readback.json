@@ -1,0 +1,337 @@
+{
+  "schema": 3,
+  "head": {
+    "revision": 14,
+    "ticket": "db76f1c5-a0b1-4129-afae-51cb02d8b39c",
+    "state": "restored",
+    "references": {
+      "attempt": "f45adfc4-e468-47b1-a39b-f84d9c60bfea",
+      "originalSha256": "34dfd5b30884af61204498f36837ecfeeb7069cf0b4950a579441086541f263f",
+      "scopeSha256": "253d6e36a913dd8679d5a2a60b7f2e434e44dae7f77c120b77e46720e949cf54",
+      "phases": [
+        [
+          "ready",
+          "0a6b0c626c0a169de598ff8a55e439f10b123b9f70d314c3a2ac6944d127871b"
+        ],
+        [
+          "pre_stop",
+          "6228588cfd37342b3c384be31dd21a90c1bcc0f8d5e75f105cf0bf058c2eeb9d"
+        ],
+        [
+          "stopped",
+          "7f3fc6430ce66c25c0a9ae44f8c42909d1b44541d9e92f1069d3064594a53dfd"
+        ]
+      ],
+      "liveSha256": "674b39e2549380e1ddded569a17a68aeab341a6b30a1bce2433c2fd41ea87ba2"
+    },
+    "restorePlan": {
+      "id": "60b31eb3-8abe-4020-8fde-c5d9e10961d4",
+      "sha256": "598550d352506d5539f9ac4ed393a962128e95a2d25b3fbb2b191c939ef39b86"
+    },
+    "completionSha256": "5d887697176dd11099f8b6aa44bfbb2a0557d9ddf00826f71482009eff563fe9"
+  },
+  "events": [
+    {
+      "revision": 1,
+      "ticket": "822721df-f8be-49cc-b9ef-3337cf4d4370",
+      "state": "preparing",
+      "references": null,
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 2,
+      "ticket": "822721df-f8be-49cc-b9ef-3337cf4d4370",
+      "state": "captured",
+      "references": {
+        "attempt": "bfcb93aa-88e5-4f1f-b579-64941d0ac129",
+        "originalSha256": "6910e57c61bb8ebe365403187cf1eaac117f7e9ce7b2e386ddf1e28b4177ea2c",
+        "scopeSha256": "459e446141a41bd8f78b6b51130e9fbc82c28379bda66d67e3516b43965550ba",
+        "phases": [],
+        "liveSha256": null
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 3,
+      "ticket": "822721df-f8be-49cc-b9ef-3337cf4d4370",
+      "state": "ready",
+      "references": {
+        "attempt": "bfcb93aa-88e5-4f1f-b579-64941d0ac129",
+        "originalSha256": "6910e57c61bb8ebe365403187cf1eaac117f7e9ce7b2e386ddf1e28b4177ea2c",
+        "scopeSha256": "459e446141a41bd8f78b6b51130e9fbc82c28379bda66d67e3516b43965550ba",
+        "phases": [
+          [
+            "ready",
+            "21d5754c3baf1de1ce8126761e7b9ffb73c8edc88e9b5dda1a6cd750abc97ab2"
+          ]
+        ],
+        "liveSha256": "a330bb4b73e8d4dced85a2aebe71071e59fea1c84d836144fe338793031ebf16"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 4,
+      "ticket": "822721df-f8be-49cc-b9ef-3337cf4d4370",
+      "state": "stop_prepared",
+      "references": {
+        "attempt": "bfcb93aa-88e5-4f1f-b579-64941d0ac129",
+        "originalSha256": "6910e57c61bb8ebe365403187cf1eaac117f7e9ce7b2e386ddf1e28b4177ea2c",
+        "scopeSha256": "459e446141a41bd8f78b6b51130e9fbc82c28379bda66d67e3516b43965550ba",
+        "phases": [
+          [
+            "ready",
+            "21d5754c3baf1de1ce8126761e7b9ffb73c8edc88e9b5dda1a6cd750abc97ab2"
+          ],
+          [
+            "pre_stop",
+            "614d5c8fd829739d86a860c5d03dfc8375fbe9cdc73c671a43fd2f4d752fe3de"
+          ]
+        ],
+        "liveSha256": "a330bb4b73e8d4dced85a2aebe71071e59fea1c84d836144fe338793031ebf16"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 5,
+      "ticket": "822721df-f8be-49cc-b9ef-3337cf4d4370",
+      "state": "stopped",
+      "references": {
+        "attempt": "bfcb93aa-88e5-4f1f-b579-64941d0ac129",
+        "originalSha256": "6910e57c61bb8ebe365403187cf1eaac117f7e9ce7b2e386ddf1e28b4177ea2c",
+        "scopeSha256": "459e446141a41bd8f78b6b51130e9fbc82c28379bda66d67e3516b43965550ba",
+        "phases": [
+          [
+            "ready",
+            "21d5754c3baf1de1ce8126761e7b9ffb73c8edc88e9b5dda1a6cd750abc97ab2"
+          ],
+          [
+            "pre_stop",
+            "614d5c8fd829739d86a860c5d03dfc8375fbe9cdc73c671a43fd2f4d752fe3de"
+          ],
+          [
+            "stopped",
+            "98ef218d741b6e357d5751cf1f22e8a7ec7ea922a208147a08d32bfce7ea463c"
+          ]
+        ],
+        "liveSha256": "a330bb4b73e8d4dced85a2aebe71071e59fea1c84d836144fe338793031ebf16"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 6,
+      "ticket": "822721df-f8be-49cc-b9ef-3337cf4d4370",
+      "state": "restore_prepared",
+      "references": {
+        "attempt": "bfcb93aa-88e5-4f1f-b579-64941d0ac129",
+        "originalSha256": "6910e57c61bb8ebe365403187cf1eaac117f7e9ce7b2e386ddf1e28b4177ea2c",
+        "scopeSha256": "459e446141a41bd8f78b6b51130e9fbc82c28379bda66d67e3516b43965550ba",
+        "phases": [
+          [
+            "ready",
+            "21d5754c3baf1de1ce8126761e7b9ffb73c8edc88e9b5dda1a6cd750abc97ab2"
+          ],
+          [
+            "pre_stop",
+            "614d5c8fd829739d86a860c5d03dfc8375fbe9cdc73c671a43fd2f4d752fe3de"
+          ],
+          [
+            "stopped",
+            "98ef218d741b6e357d5751cf1f22e8a7ec7ea922a208147a08d32bfce7ea463c"
+          ]
+        ],
+        "liveSha256": "a330bb4b73e8d4dced85a2aebe71071e59fea1c84d836144fe338793031ebf16"
+      },
+      "restorePlan": {
+        "id": "686b228e-b5b2-478d-82f2-2042d65bf332",
+        "sha256": "abf58db7525b666aa5f71ecddfca7e434e95d6d3a9c2e5c21808024b4048fcbf"
+      },
+      "completionSha256": null
+    },
+    {
+      "revision": 7,
+      "ticket": "822721df-f8be-49cc-b9ef-3337cf4d4370",
+      "state": "restored",
+      "references": {
+        "attempt": "bfcb93aa-88e5-4f1f-b579-64941d0ac129",
+        "originalSha256": "6910e57c61bb8ebe365403187cf1eaac117f7e9ce7b2e386ddf1e28b4177ea2c",
+        "scopeSha256": "459e446141a41bd8f78b6b51130e9fbc82c28379bda66d67e3516b43965550ba",
+        "phases": [
+          [
+            "ready",
+            "21d5754c3baf1de1ce8126761e7b9ffb73c8edc88e9b5dda1a6cd750abc97ab2"
+          ],
+          [
+            "pre_stop",
+            "614d5c8fd829739d86a860c5d03dfc8375fbe9cdc73c671a43fd2f4d752fe3de"
+          ],
+          [
+            "stopped",
+            "98ef218d741b6e357d5751cf1f22e8a7ec7ea922a208147a08d32bfce7ea463c"
+          ]
+        ],
+        "liveSha256": "a330bb4b73e8d4dced85a2aebe71071e59fea1c84d836144fe338793031ebf16"
+      },
+      "restorePlan": {
+        "id": "686b228e-b5b2-478d-82f2-2042d65bf332",
+        "sha256": "abf58db7525b666aa5f71ecddfca7e434e95d6d3a9c2e5c21808024b4048fcbf"
+      },
+      "completionSha256": "3d459d96db302f980a6c4a4cd476f21acc1352163ae46ea82ae55a5ceaff7509"
+    },
+    {
+      "revision": 8,
+      "ticket": "db76f1c5-a0b1-4129-afae-51cb02d8b39c",
+      "state": "preparing",
+      "references": null,
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 9,
+      "ticket": "db76f1c5-a0b1-4129-afae-51cb02d8b39c",
+      "state": "captured",
+      "references": {
+        "attempt": "f45adfc4-e468-47b1-a39b-f84d9c60bfea",
+        "originalSha256": "34dfd5b30884af61204498f36837ecfeeb7069cf0b4950a579441086541f263f",
+        "scopeSha256": "253d6e36a913dd8679d5a2a60b7f2e434e44dae7f77c120b77e46720e949cf54",
+        "phases": [],
+        "liveSha256": null
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 10,
+      "ticket": "db76f1c5-a0b1-4129-afae-51cb02d8b39c",
+      "state": "ready",
+      "references": {
+        "attempt": "f45adfc4-e468-47b1-a39b-f84d9c60bfea",
+        "originalSha256": "34dfd5b30884af61204498f36837ecfeeb7069cf0b4950a579441086541f263f",
+        "scopeSha256": "253d6e36a913dd8679d5a2a60b7f2e434e44dae7f77c120b77e46720e949cf54",
+        "phases": [
+          [
+            "ready",
+            "0a6b0c626c0a169de598ff8a55e439f10b123b9f70d314c3a2ac6944d127871b"
+          ]
+        ],
+        "liveSha256": "674b39e2549380e1ddded569a17a68aeab341a6b30a1bce2433c2fd41ea87ba2"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 11,
+      "ticket": "db76f1c5-a0b1-4129-afae-51cb02d8b39c",
+      "state": "stop_prepared",
+      "references": {
+        "attempt": "f45adfc4-e468-47b1-a39b-f84d9c60bfea",
+        "originalSha256": "34dfd5b30884af61204498f36837ecfeeb7069cf0b4950a579441086541f263f",
+        "scopeSha256": "253d6e36a913dd8679d5a2a60b7f2e434e44dae7f77c120b77e46720e949cf54",
+        "phases": [
+          [
+            "ready",
+            "0a6b0c626c0a169de598ff8a55e439f10b123b9f70d314c3a2ac6944d127871b"
+          ],
+          [
+            "pre_stop",
+            "6228588cfd37342b3c384be31dd21a90c1bcc0f8d5e75f105cf0bf058c2eeb9d"
+          ]
+        ],
+        "liveSha256": "674b39e2549380e1ddded569a17a68aeab341a6b30a1bce2433c2fd41ea87ba2"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 12,
+      "ticket": "db76f1c5-a0b1-4129-afae-51cb02d8b39c",
+      "state": "stopped",
+      "references": {
+        "attempt": "f45adfc4-e468-47b1-a39b-f84d9c60bfea",
+        "originalSha256": "34dfd5b30884af61204498f36837ecfeeb7069cf0b4950a579441086541f263f",
+        "scopeSha256": "253d6e36a913dd8679d5a2a60b7f2e434e44dae7f77c120b77e46720e949cf54",
+        "phases": [
+          [
+            "ready",
+            "0a6b0c626c0a169de598ff8a55e439f10b123b9f70d314c3a2ac6944d127871b"
+          ],
+          [
+            "pre_stop",
+            "6228588cfd37342b3c384be31dd21a90c1bcc0f8d5e75f105cf0bf058c2eeb9d"
+          ],
+          [
+            "stopped",
+            "7f3fc6430ce66c25c0a9ae44f8c42909d1b44541d9e92f1069d3064594a53dfd"
+          ]
+        ],
+        "liveSha256": "674b39e2549380e1ddded569a17a68aeab341a6b30a1bce2433c2fd41ea87ba2"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 13,
+      "ticket": "db76f1c5-a0b1-4129-afae-51cb02d8b39c",
+      "state": "restore_prepared",
+      "references": {
+        "attempt": "f45adfc4-e468-47b1-a39b-f84d9c60bfea",
+        "originalSha256": "34dfd5b30884af61204498f36837ecfeeb7069cf0b4950a579441086541f263f",
+        "scopeSha256": "253d6e36a913dd8679d5a2a60b7f2e434e44dae7f77c120b77e46720e949cf54",
+        "phases": [
+          [
+            "ready",
+            "0a6b0c626c0a169de598ff8a55e439f10b123b9f70d314c3a2ac6944d127871b"
+          ],
+          [
+            "pre_stop",
+            "6228588cfd37342b3c384be31dd21a90c1bcc0f8d5e75f105cf0bf058c2eeb9d"
+          ],
+          [
+            "stopped",
+            "7f3fc6430ce66c25c0a9ae44f8c42909d1b44541d9e92f1069d3064594a53dfd"
+          ]
+        ],
+        "liveSha256": "674b39e2549380e1ddded569a17a68aeab341a6b30a1bce2433c2fd41ea87ba2"
+      },
+      "restorePlan": {
+        "id": "60b31eb3-8abe-4020-8fde-c5d9e10961d4",
+        "sha256": "598550d352506d5539f9ac4ed393a962128e95a2d25b3fbb2b191c939ef39b86"
+      },
+      "completionSha256": null
+    },
+    {
+      "revision": 14,
+      "ticket": "db76f1c5-a0b1-4129-afae-51cb02d8b39c",
+      "state": "restored",
+      "references": {
+        "attempt": "f45adfc4-e468-47b1-a39b-f84d9c60bfea",
+        "originalSha256": "34dfd5b30884af61204498f36837ecfeeb7069cf0b4950a579441086541f263f",
+        "scopeSha256": "253d6e36a913dd8679d5a2a60b7f2e434e44dae7f77c120b77e46720e949cf54",
+        "phases": [
+          [
+            "ready",
+            "0a6b0c626c0a169de598ff8a55e439f10b123b9f70d314c3a2ac6944d127871b"
+          ],
+          [
+            "pre_stop",
+            "6228588cfd37342b3c384be31dd21a90c1bcc0f8d5e75f105cf0bf058c2eeb9d"
+          ],
+          [
+            "stopped",
+            "7f3fc6430ce66c25c0a9ae44f8c42909d1b44541d9e92f1069d3064594a53dfd"
+          ]
+        ],
+        "liveSha256": "674b39e2549380e1ddded569a17a68aeab341a6b30a1bce2433c2fd41ea87ba2"
+      },
+      "restorePlan": {
+        "id": "60b31eb3-8abe-4020-8fde-c5d9e10961d4",
+        "sha256": "598550d352506d5539f9ac4ed393a962128e95a2d25b3fbb2b191c939ef39b86"
+      },
+      "completionSha256": "5d887697176dd11099f8b6aa44bfbb2a0557d9ddf00826f71482009eff563fe9"
+    }
+  ]
+}

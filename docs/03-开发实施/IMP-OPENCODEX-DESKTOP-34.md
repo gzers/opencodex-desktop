@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 57；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 58；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -525,3 +525,12 @@ main00d01df24以schema3独立Index登记Restored+completionSha256，close只接�
 8个只读完整性场景：合法/坏receipt缺失/坏receipt/outcome/scope/live分别接受或拒绝，索引字节不改；自有fixture还原及完成后合法用户配置编辑仍可观察Restored，不重放旧恢复。独立索引核对14events、两套原件/Scope/Live/plan/receipt/outcome/content全部匹配，最终两树原生快照SHA与第二份完成receipt一致。只读helper后加不改产品算法，未重跑服务。
 
 证据.adg/evidence/0.2.24/client-session-close-r1/及manifest保留来源/初失败/双会话和反例。两个真实服务主端点、自有进程/helper缺席，3精确新协调DB排他重获释放后，与全部自有程序/Profile/双套blob/index/stage/archive/control测试副本和重复回执清理，既有globalL原样保留。未改日常/官方/系统配置，无业务/发布；未出新release/app/DMG。一般范围/完整集合/显式恢复/Restart命令及旧revision4、Windows/NAME/System代理/发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 单次Restart与原Stop入口预算
+
+main82e2d21f1将managed action入口一次建立outer/stop_deadline，Restart总30秒且从原入口计Stop10秒，覆盖source准入/load/PreStop/官方停止/退出/监听/实际恢复/整树/两锁/索引终态，不在较晚StopProof起点重新赠10秒。固定stop-phase trace留真实阶段耗时；共享平台调用一致收紧，Windows独占模块未改/未原生通过。详[Restart预算](0.2.24-contracts/native-restart-budget-r1.md)。
+
+21项相关函数/编译/格式/严格Clippy通过；新增前置耗7秒仅余3秒的预算断言。新Profile原样官方2.99一次真实Restart：初始Start8529/Status232ms，Restart14996ms，内旧完整Stop阶段8449ms，新实际PID10551→10591/端口62448、Ready revision10；最终Stop9004ms（段trace8997）Restored revision14/七原字节全true，重开1298ms Stopped+NotRequired/canStart=true。原30/5/10保持，原集成函数exit0/resultpassed，外层诊断acceptedfalse，不冒整版或release验收。
+
+证据.adg/evidence/0.2.24/native-restart-budget-r1/及manifest含准确源/binary、真实Restart原输出、两段预算、schema3索引14events/两原件各自frame/plan/receipt/outcome/content、最终两树原生快照SHA匹配。两个主端点/自有镜像/进程缺席，3精确新协调DB排他取得释放后与自有程序/Profile/双套blob/index/stage/archive/control副本和重复回执清理；原globalL完整保留。无日常/官方/系统/业务修改或发布，无新release/app/DMG。一般范围/显式恢复/完整集合及旧revision4、Windows/NAME/System代理/发布验证/固定候选仍继续，目标active。

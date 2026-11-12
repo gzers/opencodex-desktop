@@ -1,0 +1,105 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "grokConfigChangedDuringStart": true,
+  "independentOriginalsReferenced": true,
+  "indexedReady": true,
+  "indexedRestorePrepared": false,
+  "indexedRestored": true,
+  "indexedRevision": 14,
+  "indexedStopped": false,
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "originalGrokConfigBackupAndAgentArchived": true,
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 10551,
+    "port": 62448
+  },
+  "recordAbsent": true,
+  "reopenedRecoveryGate": true,
+  "reopenedSnapshot": {
+    "can_restart": false,
+    "can_start": true,
+    "can_stop": false,
+    "facts": {
+      "client_recovery": "not_required",
+      "data_root": "/private/tmp/ocxd024-versioned-lifecycle-wcf7o2ss/fixtures/profile/.codex-desktop/desktop",
+      "health": "unknown",
+      "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-wcf7o2ss/fixtures/profile/.codex-desktop/opencodex/home",
+      "protection": "none",
+      "reboot_safe": true,
+      "runtime_label": "bundled",
+      "service_present": null,
+      "shim_present": null,
+      "startup_status": "native",
+      "version_drift": "2.99.0"
+    },
+    "matrix": {
+      "connection": "unconfigured",
+      "operation": "idle",
+      "runtime": "stopped"
+    },
+    "pid": null,
+    "port": null,
+    "source": "live"
+  },
+  "reopenedStatusElapsedMs": 1298,
+  "restorePlanMatchesIndependentIndex": true,
+  "result": "passed",
+  "serviceStarted": true,
+  "singleRestart": {
+    "elapsedMs": 14996,
+    "indexRevision": 10,
+    "indexState": "ready",
+    "newPid": 10591,
+    "newPort": 62448,
+    "oldPid": 10551,
+    "result": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "clientRecoveryRequired": false,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "verified": true
+  },
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 8529,
+  "status": {
+    "pid": "10551",
+    "port": 62448,
+    "ready": true,
+    "status": "running"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 232,
+  "stop": {
+    "canRestart": false,
+    "canStart": true,
+    "canStop": false,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "stopped",
+    "result": "stopped"
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 9004
+}

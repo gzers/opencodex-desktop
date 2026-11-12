@@ -1,0 +1,5 @@
+{
+  "accepted": false,
+  "hypothesis": "Restart currently passes outer30s into pre-stop work then creates10s Stopproof later; stop phase could exceed10s. Bound both clocks at original managed action entry (outer30,Stop10), use same stopDeadline for admission/preStop/normalexit/restoration/closure, never reset it. Real single Restart command must complete old session index7 and new Ready10 with NEW real PID before final ordinary Stop reachesRestored14; unchanged official299, original30/5/10, no business/daily operations.",
+  "noExtraNoHypothesisRerun": true
+}

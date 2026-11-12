@@ -1,0 +1,44 @@
+{
+  "accepted": false,
+  "scope": "Mac single real Restart plus final ordinaryStop affected validation, not whole version/candidate",
+  "code": "82e2d21f11a4588e05aa6801e5b07da8ff42e203",
+  "relatedFunctionsPassed": 21,
+  "initialStartMs": 8529,
+  "initialStatusMs": 232,
+  "singleRestart": {
+    "elapsedMs": 14996,
+    "indexRevision": 10,
+    "indexState": "ready",
+    "newPid": 10591,
+    "newPort": 62448,
+    "oldPid": 10551,
+    "result": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "clientRecoveryRequired": false,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "verified": true
+  },
+  "finalStopMs": 9004,
+  "reopenedMs": 1298,
+  "finalIndexRevision": 14,
+  "sevenOriginalPaths": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "actualStopPhaseTraceMs": 8449,
+  "independentOriginalStopBudgetMs": 10000,
+  "restartOuterBudgetMs": 30000,
+  "nativeTestExit": 0,
+  "bothOriginalsAnd14EventsRetained": true,
+  "noNewReleaseAppDMG": true,
+  "dailyOrOfficialChanged": false
+}
