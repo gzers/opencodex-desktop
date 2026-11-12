@@ -5,6 +5,8 @@ use crate::modules::runtime::{program_selection::tests::Fixture, RuntimeHandle};
 use std::sync::atomic::{AtomicUsize, Ordering};
 #[path = "lifecycle_loopback_models_fixture.rs"]
 mod loopback_models;
+#[path = "lifecycle_root_cycles_fixture.rs"]
+mod root_cycles;
 
 struct AdmissionProbe(AtomicUsize);
 #[test]
@@ -414,6 +416,7 @@ model_provider = "openai"
     };
     let runner = Mutex::new(ControlledProcessRunner::new(&profile));
     let log = crate::infrastructure::runtime_log::RuntimeLog::new(&data);
+    let unwind_cleanup = root_cycles::StopOnUnwind::new(&context, &runner, &log, &evidence);
     let mut report = serde_json::json!({"accepted":false,"officialVersion":"2.99.0","serviceStarted":false,"startBudgetMs":30000,"statusBudgetMs":5000,"stopBudgetMs":10000,"businessRequests":false});
     let write = |report: &serde_json::Value| {
         atomic_write(
@@ -557,7 +560,7 @@ model_provider = "openai"
     report["statusElapsedMs"] = serde_json::json!(status_started.elapsed().as_millis());
     report["status"] = match &status {
         Ok(value) => {
-            serde_json::json!({"status":value["status"],"ready":value["ready"],"pid":value["pid"],"port":value["port"]})
+            serde_json::json!({"status":value["status"],"ready":value["ready"],"pid":value["pid"],"port":value["port"],"statusObservation":value["statusObservation"],"officialReadiness":value["officialReadiness"],"opencodexHome":value["opencodexHome"]})
         }
         Err(error) => serde_json::json!({"error":format!("{error:?}")}),
     };
@@ -604,6 +607,7 @@ model_provider = "openai"
         write(&report);
     }
     let stopped_at = Instant::now();
+    unwind_cleanup.stop_attempted();
     let stop = process_action_with_runner(
         ProcessActionRequest {
             action: LifecycleAction::Stop,
@@ -693,12 +697,56 @@ model_provider = "openai"
         report["result"] = "failed".into();
         write(&report);
         assert!(stop_ok,"RootAbsent alone cannot replace normal Stop success including coordination release and final source checks");
+        assert!(
+            matches!(&stop,Ok(v) if v.lifecycle_state==ProcessLifecycleState::Stopped && v.failure.is_none() && !v.client_recovery_required && v.can_start && !v.can_stop && !v.can_restart)
+        );
         assert!(matches!(&start,Ok(v) if v.result==Some(LifecycleResult::Started)));
         assert!(report["startElapsedMs"].as_u64().unwrap() < 30000);
         assert!(report["stopElapsedMs"].as_u64().unwrap() < 10000);
         assert!(!h.join("runtime-port.json").exists() && !h.join("ocx.pid").exists());
-        report["result"] = "passed".into();
+        report["result"] = if std::env::var_os("OCXD024_ROOT_CYCLES").as_deref()
+            == Some(std::ffi::OsStr::new("2"))
+        {
+            "failed"
+        } else {
+            "passed"
+        }
+        .into();
         write(&report);
+        if std::env::var_os("OCXD024_ROOT_CYCLES").as_deref() == Some(std::ffi::OsStr::new("2")) {
+            let first_status_ok = matches!(&status,Ok(v) if v["status"]=="running" && v["ready"]==true
+                && record.as_ref().is_some_and(|r|r["pid"].as_u64().is_some_and(|n|n>0)&&r["port"].as_u64().is_some_and(|n|n>0))
+                && v["statusObservation"]=="attested-same-connection" && v["officialReadiness"]=="ready"
+                && v["pid"].as_str().and_then(|v|v.parse::<u64>().ok())==record.as_ref().and_then(|r|r["pid"].as_u64())
+                && v["port"].as_u64()==record.as_ref().and_then(|r|r["port"].as_u64())
+                && v["opencodexHome"].as_str()==h.to_str());
+            report["firstAttestedStatusGate"] = first_status_ok.into();
+            write(&report);
+            assert!(
+                first_status_ok
+                    && report["indexedReady"] == true
+                    && report["statusElapsedMs"].as_u64().unwrap() < 5000
+            );
+            report["result"] = "failed".into();
+            report["scope"] = "directed two-generation root lifecycle; fixed application candidate and whole version unaccepted".into();
+            write(&report);
+            let cycles = root_cycles::run(root_cycles::Request {
+                context: &context,
+                runner: &runner,
+                log: &log,
+                evidence: &evidence,
+                first_index: indexed_after_stop,
+                first_head: after_stop,
+                first_report: &report,
+            });
+            let passed = cycles["passed"] == true;
+            report["rootCycles"] = cycles;
+            report["result"] = if passed { "passed" } else { "failed" }.into();
+            write(&report);
+            assert!(passed,"two-generation original lifecycle did not satisfy every gate; retain root-cycles.json and app log");
+            println!("OFFICIAL299_TWO_ROOT_CYCLES_DIAGNOSTIC {report}");
+            return;
+        }
         println!("OFFICIAL299_FIRST_ROOT_DIAGNOSTIC {report}");
         return;
     }

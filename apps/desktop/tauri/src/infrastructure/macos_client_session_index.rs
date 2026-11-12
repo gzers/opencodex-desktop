@@ -898,7 +898,7 @@ impl Index {
             .ok_or_else(|| denied("session index closed"))
     }
     #[cfg(test)]
-    pub(super) fn fixture_existing_connection(&self) -> io::Result<&Connection> {
+    pub(crate) fn fixture_existing_connection(&self) -> io::Result<&Connection> {
         self.connection()
     }
     fn check(&self) -> io::Result<()> {
