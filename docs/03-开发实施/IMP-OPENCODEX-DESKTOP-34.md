@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 70；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 71；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -642,3 +642,12 @@ main026529269注册真实rollback/rearm命令，沿现有运行/更新/binding�
 22后端session、44前端/类型/生产build/格式/严格Clippy通过；新增测试busy枚举首build失败保留，改既有applying后过。WebKit/Chromium各22软件原型场景通过，补三明确确认链与原型慢操作关闭重开后各12受影响检查过，明暗/窄窗无溢出、返回零写入、错误保留限制、前两步不自动恢复、最后新状态解除限制，pageerror为空。生产排除mock。原生执行器与预算未变，明确按摘要复用上批8130/9557/9434ms原生证据，不无假设重跑服务；未新建.app/DMG或冒签名候选GUI→IPC整链已过。
 
 证据.adg/evidence/0.2.24/client-recovery-rollback-ui-r1/及manifest保存首错/准确源/原型观察摘要/四轮截图和复用源。全部browser/Vite/audit进程退出，unit TMPDIR空，本批无native服务/协调DB/日常或业务改动；重复临时根归档核对后清理。Windows远端仍b2e89665d/0eef59a01，无新回交，不跑W2。早期中断阶段/一般客户端和路由图/完整集合/旧revision4以及Windows/NAME/System代理/官方发布验证/固定候选继续，目标active，不发布。
+
+
+## 2026-11-12 早期中断原件完整保持的原生收尾
+
+main97bd68a53接Captured/Ready/StopPrepared/Stopped/带独立引用Failed且无plan的完整原件不变分支：原scope/frames/完整树与安全属性、最新frame两锁存在及原生身份/可选0-2锁真实EXCLUSIVE重获释放、当前完整官方镜像/OS停止及记录缺席后，create-only revision独立回执+Proof/CAS登记Unchanged；不写客户端、不重造旧正常退出、不从Preparing无引用或未知文件发许可。独立观察坏回执Unknown，合法关闭后用户编辑不回放；新启动须核对旧闭合引用。无新产品IPC/按钮，下一批接确认。详[早期完整原件收尾合同](0.2.24-contracts/client-early-unchanged-r1.md)。
+
+真实新Profile原官方Start3283ms在Captured前置后按预设中断，服务未启动/客户端未改、原exit101/index2/旧canStarttrue回执保持。独立finish错确认/外部编辑/陌生runtime记录拒绝不改索引；正例2415ms/index3 Unchanged，独立完整两树SHA/7路径原字节及5blob/原scope摘要吻合，真实状态NotRequired/仅Start。发现旧启动失败回执未带持久pending限制，main590536842补只读索引门：pending/unknown关闭三动作并带恢复限制，保留StartingFailed而不伪报Stopped；仅DTO/索引反例验证后加门，不改写早期原生证据。65后端相关及44前端/类型/build/格式/严格Clippy过；初编译可见性错误原件保留。
+
+证据.adg/evidence/0.2.24/client-early-unchanged-r1/及manifest保留所有失败/index2/3/原件/准确源。自有进程缺席，2实际新协调DB排他重获释放后与程序/Profile/全部夹具清理、globalL身份/字节/权限保持，未改日常/官方/业务或新建.app/DMG/发布。早期完整原件产品确认、Preparing/不完整引用、已改写未plan早期恢复及原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方发布验证/固定候选继续，目标active。

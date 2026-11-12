@@ -1,0 +1,19 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 40.11s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 11 tests
+test types::process_action::tests::confirmed_actions_return_terminal_gates_without_a_later_status_poll ... ok
+test types::process_action::tests::native_admission_stage_is_retained_in_logs_not_product_message ... ok
+test types::process_action::tests::observed_stop_with_recovery_failure_is_not_running_or_complete ... ok
+test types::process_action::tests::requires_confirm_for_every_action ... ok
+test types::process_action::tests::result_exposes_frozen_action_gates ... ok
+test types::process_action::tests::serializes_camel_case_frontend_contract ... ok
+test types::process_action::tests::startup_timing_diagnostics_stay_out_of_the_product_failure_message ... ok
+test types::process_action::tests::stop_timeout_keeps_running_state_and_hides_internal_phase_timings ... ok
+test types::process_action::tests::stopped_service_with_pending_original_restore_keeps_distinct_actionable_failure ... ok
+test types::process_action::tests::unresolved_originals_restrict_failed_start_without_claiming_stopped ... ok
+test types::process_action::tests::unsuccessful_results_cannot_claim_running_or_stopped ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 2386 filtered out; finished in 0.00s
+
