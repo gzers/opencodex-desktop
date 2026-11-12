@@ -32,7 +32,7 @@ try {
   while (true) { try { if ((await fetch(base)).ok) break } catch {} if (Date.now() > deadline) throw Error('Vite did not start'); await new Promise(resolve => setTimeout(resolve, 100)) }
   const engine = await pickEngine(); report.engine = engine.name; browser = await engine.launch()
   for (const scene of (process.env.AUDIT_RECOVERY_SCENES?.split(',') ?? ['eligible', 'pending', 'unknown', 'active', 'none', 'unsupported', 'error', 'slow', 'refresh-failed'])) {
-    const sizes = scene === 'eligible' ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
+    const sizes = scene === 'eligible' || scene === 'continue' ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
     for (const [width, height, theme] of sizes) {
       const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
       const errors = []; page.on('pageerror', e => errors.push(e.message))
@@ -42,7 +42,35 @@ try {
       await page.locator('dialog[open]').waitFor()
       await page.waitForFunction(() => !document.querySelector('dialog[open]')?.textContent.includes('正在核对原会话和恢复记录'))
       const name = scene + '-' + width + '-' + theme
-      if (scene === 'eligible') {
+      if (scene.startsWith('continue')) {
+        assert.equal(await page.getByRole('button',{name:'确认完成收尾',exact:true}).count(),0)
+        await page.getByRole('button',{name:'确认继续恢复',exact:true}).waitFor()
+        await page.getByText('诊断详情',{exact:true}).click()
+        await page.getByText('尚未登记',{exact:true}).waitFor()
+        const size=await geometry(page);await screenshot(page,name)
+        if(scene==='continue'){
+          await page.keyboard.press('Escape');await page.locator('dialog[open]').waitFor({state:'hidden'})
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='continue').length),0)
+          await page.getByRole('button',{name:'检查客户端恢复',exact:true}).click()
+          await page.getByRole('button',{name:'确认继续恢复',exact:true}).waitFor()
+        }
+        await page.getByRole('button',{name:'确认继续恢复',exact:true}).click()
+        if(scene==='continue-slow'){
+          await page.getByText('正在继续恢复客户端配置…',{exact:true}).waitFor()
+          await page.getByRole('button',{name:'关闭',exact:true}).last().click()
+          await page.getByRole('button',{name:'查看恢复进度',exact:true}).click()
+        }
+        if(scene==='continue-error'){
+          await page.getByText('恢复现场已变化，请重新检查。',{exact:true}).waitFor()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
+        }else{
+          await page.getByText('服务保持停止，现在可以启动。',{exact:true}).waitFor()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),false)
+        }
+        assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='continue').length),1)
+        assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='finalize').length),0)
+        await screenshot(page,name+'-result');record(name,{geometry:size,oneExplicitContinuation:true,noFinalizeSubstitution:true})
+      } else if (scene === 'eligible') {
         await page.keyboard.press('Escape'); await page.locator('dialog[open]').waitFor({ state: 'hidden' })
         assert.equal(await page.evaluate(() => window.__clientRecoveryFixture.calls.filter(n => n === 'finalize').length), 0)
         await page.getByRole('button', { name: '检查客户端恢复', exact: true }).click()
@@ -103,7 +131,20 @@ try {
     assert.equal(await page.locator('#modalTitle').textContent(), '客户端配置恢复')
     const size = await page.locator('#modal').evaluate(d => { const r = d.getBoundingClientRect(); return { width: r.width, top: r.top, bottom: r.bottom, height: innerHeight } })
     assert(size.width <= 560 && size.top >= 0 && size.bottom <= size.height, JSON.stringify(size))
-    if (scene === 'eligible' || scene === 'slow' || scene === 'refresh-failed') {
+    if (scene.startsWith('continue')) {
+      assert.equal(await page.locator('#modalConfirm').textContent(),'确认继续恢复')
+      await page.locator('#clientRecovery024Body summary').click()
+      await page.locator('#clientRecovery024Body').getByText('尚未登记',{exact:true}).waitFor()
+      await screenshot(page,'prototype-'+scene);await page.locator('#modalConfirm').click()
+      if(scene==='continue-error'){
+        await page.getByText('恢复现场已变化，请重新检查。',{exact:true}).waitFor()
+        assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().outcome),false)
+      }else{
+        await page.waitForFunction(()=>window.clientRecovery024.snapshot().outcome)
+        assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().ready),true)
+      }
+      assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),1)
+    } else if (scene === 'eligible' || scene === 'slow' || scene === 'refresh-failed') {
       assert.equal(await page.locator('#modalConfirm').textContent(), '确认完成收尾')
       await screenshot(page, 'prototype-' + scene)
       await page.locator('#modalConfirm').click()

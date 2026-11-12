@@ -10,11 +10,19 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   const preview = shallowRef<ClientRecoveryPreview | null>(null)
   const outcome = shallowRef<ClientRecoveryFinalizeOutcome | null>(null)
   const ready = ref(false)
+  const continuing = ref(false)
   const canFinalize = computed(() => {
     const p = preview.value
-    return p?.status === 'pending' && p.phase === 'restore_prepared' && p.canFinalize
+    return p?.status === 'pending' && p.phase === 'restore_prepared' && p.canFinalize && !p.canContinue && !p.canRollback
       && p.originalEvidence === 'verified' && p.planEvidence === 'verified'
       && (p.completionEvidence === 'not_recorded' || p.completionEvidence === 'unregistered')
+      && !!p.attemptId && Number.isSafeInteger(p.revision) && p.revision! > 0
+      && typeof p.confirmationDigest === 'string' && /^[a-f0-9]{64}$/.test(p.confirmationDigest)
+  })
+  const canContinue = computed(() => {
+    const p = preview.value
+    return p?.status === 'pending' && p.phase === 'restore_prepared' && p.canContinue && !p.canFinalize && !p.canRollback
+      && p.originalEvidence === 'verified' && p.planEvidence === 'verified' && p.completionEvidence === 'not_recorded'
       && !!p.attemptId && Number.isSafeInteger(p.revision) && p.revision! > 0
       && typeof p.confirmationDigest === 'string' && /^[a-f0-9]{64}$/.test(p.confirmationDigest)
   })
@@ -25,6 +33,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
     const seq = ++generation
     reading.value = true; checked.value = false; preview.value = null; outcome.value = null
     error.value = ''; refreshError.value = ''; ready.value = false; completionScope = null
+    continuing.value = false
     try {
       const p = await clientRecoveryApi.preview()
       if (seq !== generation || !open.value) return
@@ -54,7 +63,8 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
     finally { refreshing.value = false }
   }
   async function apply() {
-    if (!canFinalize.value || reading.value || executing.value || refreshing.value) return false
+    if ((!canFinalize.value && !canContinue.value) || reading.value || executing.value || refreshing.value) return false
+    continuing.value = canContinue.value
     const p = preview.value!
     const request = { attemptId: p.attemptId!, revision: p.revision!, confirmationDigest: p.confirmationDigest! }
     executing.value = true; error.value = ''; refreshError.value = ''
@@ -65,7 +75,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
         throw new Error('当前配置位置尚未核对，请重新检查客户端恢复。')
       }
       completionScope = { dataRoot: before.facts.data_root, home: before.facts.opencodex_home }
-      const result = await clientRecoveryApi.finalize(request)
+      const result = await (continuing.value ? clientRecoveryApi.continue(request) : clientRecoveryApi.finalize(request))
       if (result.status !== 'restored' || result.attemptId !== request.attemptId || result.revision !== request.revision + 1) {
         throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
       }
@@ -77,5 +87,5 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       completionScope = null; return false
     } finally { executing.value = false }
   }
-  return { open, reading, executing, refreshing, checked, error, refreshError, preview, outcome, ready, canFinalize, start, close, inspect, apply, refresh }
+  return { open, reading, executing, refreshing, checked, error, refreshError, preview, outcome, ready, canFinalize, canContinue, continuing, start, close, inspect, apply, refresh }
 })

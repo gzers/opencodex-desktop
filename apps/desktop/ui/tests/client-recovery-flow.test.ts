@@ -26,11 +26,40 @@ beforeEach(() => {
   setActivePinia(createPinia())
   vi.spyOn(clientRecoveryApi, 'preview').mockResolvedValue(preview())
   vi.spyOn(clientRecoveryApi, 'finalize').mockResolvedValue(result())
+  vi.spyOn(clientRecoveryApi, 'continue').mockResolvedValue(result())
   vi.spyOn(clientRecoveryApi, 'status').mockResolvedValue(status())
   const lifecycle = useLifecycleStore(); lifecycle.statusSnapshot = status(true); lifecycle.clientRecoveryRequired = true
 })
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('continues an exact interrupted plan only after explicit confirmation, then reconciles fresh status', async () => {
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({ ...preview(),canFinalize:false,canContinue:true,completionEvidence:'not_recorded' })
+    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
+    expect(view.text()).toContain('恢复到本次启动前的配置')
+    expect(button('确认完成收尾')).toBeUndefined();expect(clientRecoveryApi.continue).not.toHaveBeenCalled()
+    await button('确认继续恢复')!.trigger('click');await flushPromises()
+    expect(clientRecoveryApi.continue).toHaveBeenCalledTimes(1);expect(clientRecoveryApi.finalize).not.toHaveBeenCalled()
+    expect(useClientRecoveryStore().ready).toBe(true);expect(useLifecycleStore().clientRecoveryRequired).toBe(false)
+  })
+  it('retains a single continuation through close/reopen and cannot switch into finalization',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preview(),canFinalize:false,canContinue:true,completionEvidence:'not_recorded'})
+    const action=pending<ReturnType<typeof result>>();vi.mocked(clientRecoveryApi.continue).mockReturnValue(action.promise)
+    const store=await inspect();const operation=store.apply();await flushPromises();store.close();store.start()
+    expect(await store.apply()).toBe(false);expect(store.continuing).toBe(true)
+    action.resolve(result());expect(await operation).toBe(true);expect(clientRecoveryApi.continue).toHaveBeenCalledTimes(1)
+    expect(clientRecoveryApi.finalize).not.toHaveBeenCalled()
+  })
+  it('requires independent partial-plan evidence and keeps the gate when continuation is refused',async()=>{
+    for (const changed of [{completionEvidence:'unregistered' as const},{planEvidence:'unknown' as const},{confirmationDigest:null},{status:'active' as const},{canFinalize:true}]) {
+      vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preview(),canFinalize:false,canContinue:true,completionEvidence:'not_recorded',...changed})
+      const store=await inspect();expect(store.canContinue).toBe(false);store.close()
+    }
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preview(),canFinalize:false,canContinue:true,completionEvidence:'not_recorded'})
+    vi.mocked(clientRecoveryApi.continue).mockRejectedValue(new Error('现场已变化'))
+    const store=await inspect();expect(await store.apply()).toBe(false);expect(store.preview).toBeNull()
+    expect(useLifecycleStore().clientRecoveryRequired).toBe(true);expect(await store.apply()).toBe(false)
+    expect(clientRecoveryApi.continue).toHaveBeenCalledTimes(1)
+  })
   it('checks only on entry and cancellation never submits a mutation', async () => {
     const { button, view } = render(); expect(clientRecoveryApi.preview).not.toHaveBeenCalled()
     await button('检查客户端恢复')!.trigger('click'); await flushPromises()

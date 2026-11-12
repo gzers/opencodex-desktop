@@ -25,5 +25,6 @@ export interface ClientRecoveryFinalizeOutcome { attemptId: string; revision: nu
 export const clientRecoveryApi = {
   preview: () => invoke<ClientRecoveryPreview>('client_recovery_preview'),
   finalize: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryFinalizeOutcome>('client_recovery_finalize', { request }),
+  continue: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryFinalizeOutcome>('client_recovery_continue', { request }),
   status: () => invoke<StatusSnapshot>('get_status_snapshot'),
 }

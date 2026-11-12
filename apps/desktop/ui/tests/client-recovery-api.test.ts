@@ -26,3 +26,9 @@ it('does not turn an IPC failure into absent recovery or dispatch a retry/mutati
   await expect(clientRecoveryApi.preview()).rejects.toBe(error)
   expect(invoke).toHaveBeenCalledTimes(1)
 })
+it('continues only a reviewed attempt using the dedicated path-free command',async()=>{
+  const request={attemptId:'original-attempt',revision:6,confirmationDigest:'reviewed-fingerprint'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:7,status:'restored'})
+  await clientRecoveryApi.continue(request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_continue',{request}]])
+})
