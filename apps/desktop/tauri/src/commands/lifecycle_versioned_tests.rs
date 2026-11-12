@@ -5,6 +5,21 @@ use crate::modules::runtime::{program_selection::tests::Fixture, RuntimeHandle};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 struct AdmissionProbe(AtomicUsize);
+#[test]
+fn managed_restart_has_original_entry_stop_deadline_inside_original_total_budget() {
+    let started = std::time::Instant::now();
+    let (outer, stop) = managed_lifecycle_deadlines(LifecycleAction::Restart, started);
+    assert_eq!(outer - started, std::time::Duration::from_secs(30));
+    assert_eq!(stop - started, std::time::Duration::from_secs(10));
+    let delayed = started + std::time::Duration::from_secs(7);
+    assert_eq!(stop - delayed, std::time::Duration::from_secs(3));
+    assert!(
+        stop < delayed + crate::modules::process::stop_timeout(),
+        "pre-stop admission cannot reset Stop's clock"
+    );
+    let (outer, stop) = managed_lifecycle_deadlines(LifecycleAction::Stop, started);
+    assert_eq!(outer, stop);
+}
 
 #[test]
 fn an_error_code_from_a_runner_cannot_forge_a_stopped_native_observation() {
@@ -402,6 +417,45 @@ model_provider = "openai"
     write(&report);
     // Even failed confirmation may have started our own service. Try the same
     // production Stop once; no direct signal or alternate client teardown.
+    let mut restart_verified = true;
+    if started_ok
+        && std::env::var_os("OCXD024_SINGLE_RESTART").as_deref() == Some(std::ffi::OsStr::new("1"))
+    {
+        let t = Instant::now();
+        let result = process_action_with_runner(
+            ProcessActionRequest {
+                action: LifecycleAction::Restart,
+                confirm: true,
+            },
+            &runner,
+            &context,
+            &log,
+            None,
+        )
+        .unwrap();
+        let elapsed = t.elapsed().as_millis();
+        let current: Option<serde_json::Value> = std::fs::read(h.join("runtime-port.json"))
+            .ok()
+            .and_then(|b| serde_json::from_slice(&b).ok());
+        let index = crate::infrastructure::macos_client_originals::session_index::Index::open(
+            &context, &data, &client,
+        )
+        .unwrap();
+        let head = index.head().unwrap().unwrap();
+        drop(index);
+        let old = record.as_ref().and_then(|r| r["pid"].as_u64());
+        let new = current.as_ref().and_then(|r| r["pid"].as_u64());
+        restart_verified = result.result == Some(LifecycleResult::Started)
+            && elapsed < 30000
+            && old.is_some()
+            && new.is_some()
+            && old != new
+            && head.state
+                == crate::infrastructure::macos_client_originals::session_index::State::Ready
+            && head.revision == 10;
+        report["singleRestart"] = serde_json::json!({"result":result,"elapsedMs":elapsed,"oldPid":old,"newPid":new,"newPort":current.as_ref().map(|v|v["port"].clone()),"indexState":head.state,"indexRevision":head.revision,"verified":restart_verified});
+        write(&report);
+    }
     let stopped_at = Instant::now();
     let stop = process_action_with_runner(
         ProcessActionRequest {
@@ -561,6 +615,7 @@ model_provider = "openai"
         atomic_write(&evidence.join("runtime.log"), &bytes, 0o600).unwrap();
     }
     let passed = started_ok
+        && restart_verified
         && reopened_gate
         && stop_ok
         && restored.values().all(|v| *v)

@@ -371,6 +371,19 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
 ) -> AppResult<crate::modules::process::LifecycleResult> {
     execute_lifecycle_observed(runner, command, context, data_root, &mut None)
 }
+fn managed_lifecycle_deadlines(
+    action: LifecycleAction,
+    started: std::time::Instant,
+) -> (std::time::Instant, std::time::Instant) {
+    use crate::modules::process::{restart_limit, runner_start_timeout, stop_timeout};
+    let outer = started
+        + match action {
+            LifecycleAction::Stop => stop_timeout(),
+            LifecycleAction::Restart => restart_limit(),
+            LifecycleAction::Start => runner_start_timeout(),
+        };
+    (outer, outer.min(started + stop_timeout()))
+}
 fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
     runner: &R,
     command: &crate::modules::process::ProcessCommand,
@@ -378,15 +391,9 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
     data_root: &std::path::Path,
     _observed_stop: &mut Option<runtime_recovery_v2_owner::StoppedObservation>,
 ) -> AppResult<crate::modules::process::LifecycleResult> {
-    use crate::modules::process::{restart_limit, runner_start_timeout, LifecycleResult};
-    let deadline = std::time::Instant::now()
-        + if command.action == LifecycleAction::Stop {
-            crate::modules::process::stop_timeout()
-        } else if command.action == LifecycleAction::Restart {
-            restart_limit()
-        } else {
-            runner_start_timeout()
-        };
+    use crate::modules::process::LifecycleResult;
+    let action_started = std::time::Instant::now();
+    let (deadline, stop_deadline) = managed_lifecycle_deadlines(command.action, action_started);
     let Some(root) = context.runtime.managed_installation_root() else {
         return runner.execute(command);
     };
@@ -459,28 +466,42 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
             let mut active = match active {
                 Ok(active) => active,
                 Err(error) => {
-                    let proof = owner.stop_lifecycle_verified(context, deadline, data_root)?;
+                    let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
                     *_observed_stop = Some(proof.observation(context, data_root)?);
                     return Err(error);
                 }
             };
-            if let Err(error) = active.pre_stop(context, deadline) {
-                let proof = owner.stop_lifecycle_verified(context, deadline, data_root)?;
+            if let Err(error) = active.pre_stop(context, stop_deadline) {
+                let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
                 *_observed_stop = Some(proof.observation(context, data_root)?);
                 return Err(error);
             }
-            let proof = owner.stop_lifecycle_verified(context, deadline, data_root)?;
+            let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
             *_observed_stop = Some(proof.observation(context, data_root)?);
-            active.stopped(context, &proof, deadline)?;
+            active.stopped(context, &proof, stop_deadline)?;
+            if std::time::Instant::now() >= stop_deadline {
+                return Err(AppError::Timeout);
+            }
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(
+                &format!(
+                    "lifecycle-stop-phase: complete elapsed_ms={} budget_ms=10000 action={}",
+                    action_started.elapsed().as_millis(),
+                    if command.action == LifecycleAction::Restart {
+                        "restart"
+                    } else {
+                        "stop"
+                    }
+                ),
+            );
             if command.action == LifecycleAction::Stop {
                 return Ok(LifecycleResult::Stopped);
             }
         }
         #[cfg(not(target_os = "macos"))]
-        owner.stop_lifecycle(context, deadline, data_root)?;
+        owner.stop_lifecycle(context, stop_deadline, data_root)?;
         #[cfg(target_os = "macos")]
         if !runner.manages_client_originals() || identity.package_version != "2.99.0" {
-            owner.stop_lifecycle(context, deadline, data_root)?;
+            owner.stop_lifecycle(context, stop_deadline, data_root)?;
         }
         if command.action == LifecycleAction::Stop {
             return Ok(LifecycleResult::Stopped);
