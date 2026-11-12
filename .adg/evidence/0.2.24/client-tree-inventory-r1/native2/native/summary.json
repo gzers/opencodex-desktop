@@ -1,0 +1,85 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": false,
+  "independentOriginalsReferenced": false,
+  "indexedReady": false,
+  "indexedRestorePrepared": false,
+  "indexedRevision": 1,
+  "indexedStopped": false,
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "pidRecordAbsent": true,
+  "record": null,
+  "recordAbsent": true,
+  "reopenedRecoveryGate": false,
+  "reopenedSnapshot": {
+    "can_restart": false,
+    "can_start": false,
+    "can_stop": false,
+    "facts": {
+      "client_recovery": "required",
+      "data_root": "/private/tmp/ocxd024-versioned-lifecycle-atu9whf3/fixtures/profile/.codex-desktop/desktop",
+      "health": "unknown",
+      "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-atu9whf3/fixtures/profile/.codex-desktop/opencodex/home",
+      "protection": null,
+      "reboot_safe": null,
+      "runtime_label": null,
+      "service_present": null,
+      "shim_present": null,
+      "startup_status": null,
+      "version_drift": null
+    },
+    "matrix": {
+      "connection": "unconfigured",
+      "operation": "idle",
+      "runtime": "loading"
+    },
+    "pid": null,
+    "port": null,
+    "source": "live"
+  },
+  "reopenedStatusElapsedMs": 780,
+  "result": "failed",
+  "serviceStarted": false,
+  "start": {
+    "canRestart": false,
+    "canStart": true,
+    "canStop": false,
+    "clientRecoveryRequired": false,
+    "failure": {
+      "code": "lifecycle_unconfirmed",
+      "message": "操作未确认完成，已保留当前配置，请查看诊断日志。"
+    },
+    "lifecycleState": "starting_failed",
+    "result": null
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 3122,
+  "status": {
+    "error": "Unreachable"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 802,
+  "stop": {
+    "canRestart": false,
+    "canStart": false,
+    "canStop": false,
+    "clientRecoveryRequired": true,
+    "failure": {
+      "code": "client_original_session_unconfirmed",
+      "message": "客户端原件会话未核对，原件及当前输入已保留；请检查诊断后处理原会话"
+    },
+    "lifecycleState": "stopped",
+    "result": null
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 659,
+  "stoppedRecoveryObservation": true
+}

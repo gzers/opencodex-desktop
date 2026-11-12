@@ -1,0 +1,4 @@
+
+thread 'infrastructure::macos_client_originals::tree::tests::empty_official_claim_initial_transaction_is_observed_without_reading_its_live_journal' (155534835) panicked at src/infrastructure/macos_client_tree_tests.rs:250:5:
+empty claim inventory: Some(Custom { kind: PermissionDenied, error: "tree coordination sidecar requires native recovery" })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

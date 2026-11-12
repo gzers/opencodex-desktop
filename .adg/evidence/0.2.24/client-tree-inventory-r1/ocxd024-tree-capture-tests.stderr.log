@@ -1,0 +1,45 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.36s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-089f843b7e93e877)
+
+thread 'infrastructure::macos_client_originals::tests::actual_process_exit_preserves_original_and_explicit_phase_identity' (155486974) panicked at src/infrastructure/macos_client_originals_tests.rs:497:5:
+assertion `left == right` failed
+  left: Some(101)
+ right: Some(91)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::macos_client_originals::tests::extended_attributes_are_original_bytes_and_changes_invalidate_snapshots' (155486980) panicked at src/infrastructure/macos_client_originals_tests.rs:291:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::insecure_existing_data_directory_or_journal_file_is_not_repaired' (155486981) panicked at src/infrastructure/macos_client_originals_tests.rs:361:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::interrupted_phase_publication_is_retained_and_never_overwritten_as_empty' (155486982) panicked at src/infrastructure/macos_client_originals_tests.rs:464:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::native_acl_is_captured_without_chmod_or_acl_repair' (155486985) panicked at src/infrastructure/macos_client_originals_tests.rs:346:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::native_snapshot_retains_exact_original_bytes_and_metadata_without_source_writes' (155486987) panicked at src/infrastructure/macos_client_originals_tests.rs:49:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::original_frame_binds_the_complete_client_tree_without_recording_secret_bytes' (155486988) panicked at src/infrastructure/macos_client_originals_tests.rs:82:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::replaced_parent_is_refused_even_if_its_contents_are_identical' (155486990) panicked at src/infrastructure/macos_client_originals_tests.rs:213:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::sequential_frames_reopen_only_with_original_and_independently_retained_phase_digests' (155486992) panicked at src/infrastructure/macos_client_originals_tests.rs:126:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::skipped_phase_and_second_original_are_never_a_new_baseline' (155486994) panicked at src/infrastructure/macos_client_originals_tests.rs:179:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::source_changed_between_capture_and_publication_leaves_no_ready_frame' (155486995) panicked at src/infrastructure/macos_client_originals_tests.rs:438:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::source_directory_permission_change_refuses_without_tightening_it' (155486996) panicked at src/infrastructure/macos_client_originals_tests.rs:233:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+
+thread 'infrastructure::macos_client_originals::tests::tampered_frame_duplicate_json_and_replaced_original_are_rejected' (155486997) panicked at src/infrastructure/macos_client_originals_tests.rs:417:58:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "tree object kind or link count changed" }
+error: test failed, to rerun pass `--lib`

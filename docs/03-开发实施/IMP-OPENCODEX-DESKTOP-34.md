@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 45；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 46；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -409,3 +409,12 @@ main526007952将系统静态代理快照接到安装pack/install及面板npm vie
 main4a7980904在原静态代理支持范围内补固定npm HTTPS/HTTP CONNECT与SOCKS5h HTTP/HTTPS远端DNS的实际协议检查，strict-ssl=true，使用本次合成CA正例及不信任CA负例（原npm UNABLE_TO_VERIFY_LEAF_SIGNATURE/exit1）；三个正常路径exit0、原npmrc不变。Mac原读取解析提取到同算法macos_map，两项真实CF字典类型/共同代理/IPv6 SOCKS/例外及拒绝规则检查通过，未修改系统代理。详[代理隧道与原生字典合同](0.2.24-contracts/npm-proxy-transports-r1.md)。
 
 3个去重函数、内部4种新传输场景以及编译/格式/严格Clippy通过。首lint读字节数错误保留并用read_exact修正；最终源码提取及负例加强后，仅重验受影响的4传输和新字典项，没有plain HTTP五场景/完整服务无假设重跑。证据.adg/evidence/0.2.24/npm-proxy-transports-r1/保存准确源/binary/公共证书/摘要/manifest；原测试工具/profile/cache/binary/CA及server私钥、代理/registry/Node进程与重复根清理。没有官方/日常/系统代理改动或真实registry安装/业务请求。完整System/PAC分协议复杂例外、Windows、NAME、实际恢复/完整集合监听写者与revision4首错、发布验证/固定候选继续，不发布、不关闭目标。
+
+
+## 2026-11-12 原件帧绑定Codex树清单
+
+main94ed6dc11将描述符相对.codex树身份/保护/普通内容SHA清单写入每阶段schema2帧，独立原摘要因而绑定完整观察范围；tree与原三件字节/身份互相核对，普通内容哈希流式zeroize、不把哈希冒字节备份。固定claim与精确3sidecars为元数据协调条目，不开关其SQLite inode、不增恢复/删除权限。主线实际仍缺Grok/外部Agent、全树可恢复字节和写回许可，边界16MiB文件/128MiB总等超界拒绝，不能缩范围称完成。详[树清单合同](0.2.24-contracts/client-tree-inventory-r1.md)。启动固定阶段诊断独立main51c1f7dbf。
+
+88项相关回归及最终8树增量、编译/格式/严格Clippy通过。真实其它进程目录替换及活跃SQLite锁保留通过，旧帧不补齐；开发目录link/schema/错误阶段assert首错保留。首两轮原包Start前原件失败、索引revision1，阶段诊断和空claim BEGIN EXCLUSIVE实际journal反例共同定位sidecar过度拒绝；修正后新profile第三轮Start13918ms/Status1087ms/Stop含计划8402ms，原30/5/10不变，四schema2 phase原摘要/tree/plan/stage读回、RestorePrepared/revision6。实际三件仍未还原，完整断言保留exit101/accepted=false；新collector仍Required但运行Loading/reopenedGate=false，未归因、不得当已过，前批revision4首错亦保持。
+
+证据.adg/evidence/0.2.24/client-tree-inventory-r1/含三轮原件与失败/各来源/manifest；原主端点、自有镜像/测试与全部精确新协调DB/程序/profile/binary/索引/stage/旧日志/重复根已清理，日常/官方/业务无改动。后继可恢复全范围字节/完整集合监听写者/显式恢复及reopened故障继续；Windows/NAME/System/发布验证/固定候选不删，目标active，不发布。
