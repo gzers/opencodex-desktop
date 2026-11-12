@@ -1,0 +1,17 @@
+{
+  "accepted": false,
+  "exitCode": 0,
+  "elapsedSeconds": 0.958,
+  "binarySha256": "20bd63773a0d2a734b3e0ff99173de9aff807fca0056d19a09db63bbc02a70d2",
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/private/tmp/ocxd024-versioned-lifecycle-e03urlfr/fixture.sb",
+    "/private/tmp/ocxd024-versioned-lifecycle-e03urlfr/fixtures/tests-after-status",
+    "--exact",
+    "commands::client_recovery::tests::inspect_owned_client_gate_after_rearm_without_service_actions",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ]
+}

@@ -1,0 +1,12 @@
+
+running 1 test
+test commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client ... OFFICIAL299_NATIVE_LIFECYCLE {"accepted":false,"businessRequests":false,"clientChangedDuringStart":true,"grokConfigChangedDuringStart":true,"independentOriginalsReferenced":true,"indexedReady":true,"indexedRestorePrepared":false,"indexedRestored":false,"indexedRevision":4,"indexedStopped":false,"nativeClientRestored":{"codex/config.toml":true,"codex/models_cache.json":false,"codex/opencodex-catalog-audit.jsonl":false,"codex/opencodex-catalog.json":false,"grok/agents/AGENTS.md":true,"grok/config.toml":true,"grok/config.toml.bak-opencodex":true},"officialVersion":"2.99.0","originalGrokConfigBackupAndAgentArchived":true,"pidRecordAbsent":true,"record":{"pid":1452,"port":54146},"recordAbsent":true,"reopenedRecoveryGate":false,"reopenedSnapshot":{"can_restart":false,"can_start":false,"can_stop":false,"facts":{"client_recovery":"active","data_root":"/private/tmp/ocxd024-versioned-lifecycle-e03urlfr/fixtures/profile/.codex-desktop/desktop","health":"unknown","opencodex_home":"/private/tmp/ocxd024-versioned-lifecycle-e03urlfr/fixtures/profile/.codex-desktop/opencodex/home","protection":"none","reboot_safe":true,"runtime_label":"bundled","service_present":null,"shim_present":null,"startup_status":"native","version_drift":"2.99.0"},"matrix":{"connection":"unconfigured","operation":"idle","runtime":"stopped"},"pid":null,"port":null,"source":"live"},"reopenedStatusElapsedMs":363,"result":"failed","serviceStarted":true,"start":{"canRestart":true,"canStart":false,"canStop":true,"clientRecoveryRequired":false,"lifecycleState":"running","result":"started"},"startBudgetMs":30000,"startElapsedMs":8739,"status":{"pid":"1452","port":54146,"ready":true,"status":"running"},"statusBudgetMs":5000,"statusElapsedMs":227,"stop":{"canRestart":false,"canStart":false,"canStop":false,"clientRecoveryRequired":true,"failure":{"code":"lifecycle_unconfirmed","message":"操作未确认完成，已保留当前配置，请查看诊断日志。"},"lifecycleState":"stopped","result":null},"stopBudgetMs":10000,"stopElapsedMs":1289,"stoppedRecoveryObservation":true}
+FAILED
+
+failures:
+
+failures:
+    commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2420 filtered out; finished in 80.02s
+

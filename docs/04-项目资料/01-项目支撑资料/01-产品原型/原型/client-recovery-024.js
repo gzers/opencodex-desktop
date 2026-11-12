@@ -5,8 +5,8 @@
  const css=root.document.createElement('link');css.rel='stylesheet';css.href=new URL('client-recovery-024.css',root.document.currentScript.src).href;root.document.head.append(css);
  const S={scene:'eligible',open:false,reading:false,executing:false,outcome:false,ready:false,error:'',refreshError:'',confirmations:0,choice:null,action:'finalize',phase:'restore_prepared',revision:6,finalized:false};
  const continuing=()=>S.scene.startsWith('continue')||S.scene.startsWith('rollback')||S.scene.startsWith('rearm')||S.scene.startsWith('plan');
- const observedPlan=()=>S.scene.startsWith('plan-current');
- const needsPlan=()=>S.scene.startsWith('plan')&&['stopped','stop_prepared'].includes(S.phase);
+ const observedPlan=()=>(S.scene.startsWith('plan-current')||S.scene.startsWith('plan-ready'));
+ const needsPlan=()=>S.scene.startsWith('plan')&&['stopped','stop_prepared','ready'].includes(S.phase);
  const capture=()=>S.scene.startsWith('capture');
  const preparing=()=>S.scene.startsWith('prepare')||capture();
  const early=()=>S.scene.startsWith('early');
@@ -34,7 +34,7 @@
   S.action=action;S.choice=null;S.executing=true;S.confirmations++;render();
   root.setTimeout(()=>{
    S.executing=false;
-   if(S.scene===action+'-error'||action==='finishUnchanged'&&S.scene==='early-error'||action==='cancelPreparation'&&['prepare-error','capture-error'].includes(S.scene)||action==='preparePlan'&&['plan-error','plan-current-error'].includes(S.scene)){S.error=action==='preparePlan'?'恢复计划尚未确认完成；原件与当前文件保留。':action==='cancelPreparation'?'启动准备或停止状态尚未核实；原现场保留。':action==='finishUnchanged'?'原件或停止状态尚未核实；原件与现场保留。':action==='rollback'?'撤销恢复未确认完成；原件与当前文件保留。':action==='rearm'?'恢复准备未确认完成；原件与当前文件保留。':'恢复现场已变化，请重新检查。';if(S.open)render();return;}
+   if(S.scene===action+'-error'||action==='finishUnchanged'&&S.scene==='early-error'||action==='cancelPreparation'&&['prepare-error','capture-error'].includes(S.scene)||action==='preparePlan'&&['plan-error','plan-current-error','plan-ready-error'].includes(S.scene)){S.error=action==='preparePlan'?'恢复计划尚未确认完成；原件与当前文件保留。':action==='cancelPreparation'?'启动准备或停止状态尚未核实；原现场保留。':action==='finishUnchanged'?'原件或停止状态尚未核实；原件与现场保留。':action==='rollback'?'撤销恢复未确认完成；原件与当前文件保留。':action==='rearm'?'恢复准备未确认完成；原件与当前文件保留。':'恢复现场已变化，请重新检查。';if(S.open)render();return;}
    S.revision++;S.outcome=true;
    if(action==='rollback')S.phase='restore_rolled_back';
    else if(action==='rearm'||action==='preparePlan')S.phase=observedPlan()?'recovery_prepared':'restore_prepared';
@@ -71,5 +71,5 @@
  const entry=root.document.createElement('section');entry.id='clientRecovery024Entry';entry.style.cssText='margin-top:20px;padding-top:16px;border-top:1px solid var(--line)';
  entry.innerHTML='<div class="card-head"><div><h3>客户端配置恢复</h3><p>检查未完成的配置恢复，核对后处理原会话。</p></div><div class="toolbar"><button type="button" class="btn" data-client-recovery024-open>检查客户端恢复</button></div></div>';
  host.querySelector('.selfcheck')?.before(entry);if(!entry.parentNode)host.append(entry);entry.querySelector('button').addEventListener('click',open);
- root.clientRecovery024={open,snapshot:()=>({...S}),setScene:scene=>{if(S.executing)return;Object.assign(S,{scene,outcome:false,finalized:false,ready:false,error:'',refreshError:'',choice:null,phase:scene.startsWith('plan-current')?'stop_prepared':scene.startsWith('plan')?'stopped':scene.startsWith('rearm')?'restore_rolled_back':'restore_prepared',revision:scene.startsWith('rearm')?7:6});if(S.open)inspect();}};
+ root.clientRecovery024={open,snapshot:()=>({...S}),setScene:scene=>{if(S.executing)return;Object.assign(S,{scene,outcome:false,finalized:false,ready:false,error:'',refreshError:'',choice:null,phase:scene.startsWith('plan-ready')?'ready':scene.startsWith('plan-current')?'stop_prepared':scene.startsWith('plan')?'stopped':scene.startsWith('rearm')?'restore_rolled_back':'restore_prepared',revision:scene.startsWith('rearm')?7:6});if(S.open)inspect();}};
 })(window);
