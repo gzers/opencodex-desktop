@@ -1,0 +1,15 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.38s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 8 tests
+test infrastructure::macos_client_originals::root_creation::tests::first_root_action_flock_excludes_a_real_second_process ... ok
+test infrastructure::macos_client_originals::root_creation::tests::first_root_created_or_published_directory_replacement_is_refused_without_cleanup ... ok
+test infrastructure::macos_client_originals::root_creation::tests::first_root_deadline_and_nonempty_publication_never_grant_index_transfer ... ok
+test infrastructure::macos_client_originals::root_creation::tests::first_root_existing_target_or_final_publish_race_is_never_replaced_or_adopted ... ok
+test infrastructure::macos_client_originals::root_creation::tests::first_root_intent_precedes_exclusive_publication_and_retains_original_absence ... ok
+test infrastructure::macos_client_originals::root_creation::tests::first_root_pending_creation_is_rejected_by_actual_lifecycle_index_and_read_only_observation ... ok
+test infrastructure::macos_client_originals::root_creation::tests::first_root_real_crash_preserves_absence_or_created_root_without_minting_reopen_authority ... ok
+test infrastructure::macos_client_originals::root_creation::tests::first_root_rejects_foreign_stage_prior_index_and_changed_profile_or_reference ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2445 filtered out; finished in 0.59s
+
