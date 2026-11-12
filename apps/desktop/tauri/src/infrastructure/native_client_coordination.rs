@@ -194,21 +194,7 @@ pub fn with_native_coordination<T>(
     deadline: Instant,
     operation: impl FnOnce(&NativeLease) -> AppResult<T>,
 ) -> AppResult<T> {
-    let (admission, selected) = with_coordination_inner(
-        context,
-        deadline,
-        |helper| {
-            helper.check()?;
-            Ok((
-                helper
-                    .held
-                    .clone()
-                    .ok_or_else(|| fail("client_native_coordination_missing_admission"))?,
-                helper.selected.clone(),
-            ))
-        },
-        false,
-    )?;
+    let (admission, selected) = native_admission(context, deadline)?;
     with_admission(context, &admission, &selected, deadline, operation, &|_| {
         Ok(())
     })

@@ -156,12 +156,14 @@ fn spawn_reader(
     (rx, thread)
 }
 
-/// A borrow valid only inside with_coordination. check() proves this helper is
-/// still live before its bounded lease expires; it is NOT a service/restore
-/// permit. The caller must retain its separate native writer/exit proof.
+/// Public with_coordination work retains its bounded helper borrow checks.
+/// Native-admission use is private and metadata-only: child liveness by itself
+/// is NOT a live lock or mutation proof, and successful release/reacquisition
+/// must precede any native work. Neither use is a service/restore permit.
 pub struct Lease {
     child: RefCell<Child>,
     expires: Instant,
+    usage: LeaseUse,
     deadline: Instant,
     operation: String,
     context_sha256: String,
@@ -174,12 +176,27 @@ pub struct Lease {
     released: bool,
     selected: program_selection::SelectedProgram,
 }
+/// Admission copies ONLY metadata, demands the official released receipt and
+/// normal child exit, then reacquires all native locks before work can run.
+/// It never authorizes a mutation while borrowing this helper. Public borrowed
+/// callbacks retain the original conservative two-second Rust expiry.
+#[derive(Clone, Copy)]
+enum LeaseUse {
+    BorrowedWork,
+    NativeAdmission,
+}
+impl LeaseUse {
+    fn expired(self, now: Instant, expires: Instant, deadline: Instant) -> bool {
+        now >= deadline || matches!(self, Self::BorrowedWork) && now >= expires
+    }
+}
 impl Lease {
     pub fn check(&self) -> AppResult<()> {
         if self.held.is_none()
             || self.released
-            || Instant::now() >= self.expires
-            || Instant::now() >= self.deadline
+            || self
+                .usage
+                .expired(Instant::now(), self.expires, self.deadline)
             || self.child.borrow_mut().try_wait().map_err(io)?.is_some()
         {
             return Err(fail("client_coordination_expired"));
@@ -282,7 +299,28 @@ pub fn with_coordination<T>(
     deadline: Instant,
     operation: impl FnOnce(&Lease) -> AppResult<T>,
 ) -> AppResult<T> {
-    with_coordination_inner(context, deadline, operation, true)
+    with_coordination_inner(context, deadline, operation, LeaseUse::BorrowedWork)
+}
+
+fn native_admission(
+    context: &Context,
+    deadline: Instant,
+) -> AppResult<(Record, program_selection::SelectedProgram)> {
+    with_coordination_inner(
+        context,
+        deadline,
+        |helper| {
+            helper.check()?;
+            Ok((
+                helper
+                    .held
+                    .clone()
+                    .ok_or_else(|| fail("client_native_coordination_missing_admission"))?,
+                helper.selected.clone(),
+            ))
+        },
+        LeaseUse::NativeAdmission,
+    )
 }
 
 /// The native handover remains inside one outer operation. It performs the
@@ -293,7 +331,7 @@ fn with_coordination_inner<T>(
     context: &Context,
     deadline: Instant,
     operation: impl FnOnce(&Lease) -> AppResult<T>,
-    final_inventory: bool,
+    usage: LeaseUse,
 ) -> AppResult<T> {
     let started = Instant::now();
     if started >= deadline {
@@ -400,6 +438,7 @@ fn with_coordination_inner<T>(
     let mut lease = Lease {
         child: RefCell::new(child),
         expires: Instant::now() + hold,
+        usage,
         deadline,
         operation: id,
         context_sha256,
@@ -427,7 +466,7 @@ fn with_coordination_inner<T>(
         return Err(fail("client_coordination_timeout"));
     }
     program_selection::verify_current(&root, &selected)?;
-    if final_inventory {
+    if matches!(usage, LeaseUse::BorrowedWork) {
         program_image::verify(&selected)?;
     }
     if Instant::now() >= deadline {

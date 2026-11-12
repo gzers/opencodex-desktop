@@ -101,6 +101,30 @@ fn expired_deadline_refuses_before_source_or_control_access() {
     assert_eq!(fs::read_dir(temp.path()).unwrap().count(), 0);
 }
 
+#[test]
+fn native_admission_never_treats_import_time_as_a_mutation_lease_or_extends_the_outer_deadline() {
+    let start = Instant::now();
+    let expires = start + MAX_HOLD;
+    let deadline = start + Duration::from_secs(5);
+    let cold_held = start + Duration::from_millis(2100);
+    assert!(
+        LeaseUse::BorrowedWork.expired(cold_held, expires, deadline),
+        "public helper work retains two-second conservative window"
+    );
+    assert!(
+        !LeaseUse::NativeAdmission.expired(cold_held, expires, deadline),
+        "copying admission metadata is not native work"
+    );
+    for usage in [LeaseUse::BorrowedWork, LeaseUse::NativeAdmission] {
+        assert!(usage.expired(deadline, expires, deadline));
+        assert!(usage.expired(deadline + Duration::from_millis(1), expires, deadline));
+    }
+    // Official hold timer/policy and protocol are byte-identical; normal
+    // released+exit and actual native lock reacquisition remain mandatory.
+    assert_eq!(MAX_HOLD, Duration::from_millis(2000));
+    assert!(HELPER.contains("const expires=performance.now()+p.holdMs"));
+}
+
 #[cfg(target_arch = "aarch64")]
 #[test]
 fn synthetic_or_unknown_archive_identity_never_runs_official_coordination() {
