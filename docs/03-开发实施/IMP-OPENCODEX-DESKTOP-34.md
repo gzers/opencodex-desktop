@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 63；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 64；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -579,3 +579,12 @@ mainc12c8d030按固化官方comboPublicModelId与deriveComboCatalogModel规则�
 原有效combo声明失败留证，修后35相关/编译/格式/严格Clippy过。新Profile2静态能力目标+多目标mixed+单目标Public/fixture+禁用Public/hidden：Start8689/Status227/Stop8701ms，启动前/Ready恰4真实路由，mixed131072/text/仅medium与公开alias196608/text-image/low-medium实际符合原目标交集。七原字节全true/完整树/两锁/Restored revision7，重开1264ms NotRequired/canStarttrue。原函数exit0/resultpassed，诊断acceptedfalse，不冒其它组合/原生图、整版或NAME完成。
 
 证据.adg/evidence/0.2.24/finite-combo-routes-r1/及manifest保留源锚点/旧失败/准确binary与实际4路由能力交集、frame/index/plan/receipt/35引用和最终树SHA匹配。原主端点/自有进程/helper缺席，3精确新协调DB排他取得释放后与自有程序/Profile/blob/index/stage/archive/control副本/源提取和重复回执清理，globalL原样保留。无日常/官方/系统/业务修改、新release/app/DMG或发布。其它一般图/全客户端/显式恢复/完整集合/旧revision4及Windows/NAME/System代理/发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 显式恢复只读诊断前置
+
+main2ce09eb97注册client_recovery_preview无路径IPC及前端严格类型API，用inspect_map在原shared action观察租约内核对索引/完整原件/Scope/Live/plan，不在锁外二次读取；固定DTO只输出阶段/revision/attempt及证据状态，未登记completion不收养，unknown不冒不存在。continue/rollback一律false，不自动apply，不把预览当OS退出或写许可。其它平台unsupported，尚无界面组件/执行器，不标显式恢复完成。详[恢复诊断](0.2.24-contracts/client-recovery-preview-r1.md)。
+
+49后端+2前端合同/类型/编译/格式/严格Clippy通过，4新增用例覆盖不初始化/持久阶段/全程shared锁/损坏原件与Scope/缺plan拒绝/未登记完成无权限/输出无私密原文。原新夹具目录假设和Vitest返回mock清理首错保留，仅测试修正，产品断言不降。未跑原包/GUI或Windows执行，不重复无假设服务轮。
+
+证据.adg/evidence/0.2.24/client-recovery-preview-r1/及manifest保存源/binary/首错/结果；4新增只为清理在精确自有TMPDIR重验后确认为空并删除，去重统计不增加；所有精确helper命令缺席，本批无外部协调DB/程序/Profile/官方或日常配置改动、业务、新.app/DMG或发布。Windows远端仍b2e89665d/0eef59a01。后继显式执行/确认/UI与其它一般图/全客户端/完整集合/旧revision4及Windows/NAME/System代理/发布验证/固定候选继续，目标active。

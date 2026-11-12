@@ -1,0 +1,4 @@
+
+thread 'infrastructure::macos_client_originals::session::tests::recovery_preview_reads_under_action_lock_without_initializing_or_disclosing_original_bytes' (156096994) panicked at src/infrastructure/macos_client_session_tests.rs:56:5:
+assertion failed: !f.data.join("manager-state").exists()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

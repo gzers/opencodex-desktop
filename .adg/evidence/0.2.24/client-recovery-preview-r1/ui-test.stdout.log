@@ -1,0 +1,11 @@
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/client-recovery-api.test.ts (2 tests | 1 failed) 3ms
+   × does not turn an IPC failure into absent recovery or dispatch a retry/mutation 1ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  13:44:35
+   Duration  334ms (environment 90%, transform 6%, import 3%, tests 1%, worker 1%)
+
