@@ -373,6 +373,7 @@ impl Index {
         }
         let binding = scope(context, &data, &client)?;
         let manager = data.child_private("manager-state", allow_create)?;
+        super::root_creation::require_no_pending_root(&manager)?;
         if observation::entry(&manager, FILE)?.is_none()
             && observation::entry(&manager, "client-originals")?.is_some()
         {

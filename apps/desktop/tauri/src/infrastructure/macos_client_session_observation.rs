@@ -52,7 +52,10 @@ pub(in crate::infrastructure::macos_client_originals) fn entry(
     }
     Ok(Some(unsafe { value.assume_init() }))
 }
-fn action_pin(parent: &PinnedDirectory, file: &File) -> io::Result<(Identity, Protection)> {
+pub(in crate::infrastructure::macos_client_originals) fn action_pin(
+    parent: &PinnedDirectory,
+    file: &File,
+) -> io::Result<(Identity, Protection)> {
     parent.private()?;
     let s = stat(file)?;
     let path = entry(parent, "client-session-action.lock")?
@@ -102,6 +105,7 @@ pub(super) fn inspect_map_history<T>(
         return project(None, &[]);
     }
     let manager = data.child_private("manager-state", false)?;
+    super::super::root_creation::require_no_pending_root(&manager)?;
     let action = entry(&manager, "client-session-action.lock")?;
     let index = entry(&manager, FILE)?;
     if action.is_none() && index.is_none() {

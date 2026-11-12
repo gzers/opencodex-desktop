@@ -21,6 +21,8 @@ pub mod completion;
 mod control_release;
 #[path = "macos_client_restore.rs"]
 pub mod restore;
+#[path = "macos_client_root_creation.rs"]
+pub mod root_creation;
 #[path = "macos_client_session.rs"]
 pub mod session;
 #[path = "macos_client_session_index.rs"]
