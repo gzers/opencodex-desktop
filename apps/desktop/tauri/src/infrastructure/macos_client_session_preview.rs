@@ -32,6 +32,8 @@ pub struct Preview {
     pub phase_count: usize,
     pub can_continue: bool,
     pub can_rollback: bool,
+    pub can_finalize: bool,
+    pub confirmation_digest: Option<String>,
 }
 impl Preview {
     pub fn unsupported() -> Self {
@@ -49,10 +51,16 @@ impl Preview {
             phase_count: 0,
             can_continue: false,
             can_rollback: false,
+            can_finalize: false,
+            confirmation_digest: None,
         }
     }
 }
-fn project(context: &ProcessContext, data: &Path, head: Option<&Head>) -> io::Result<Preview> {
+pub(super) fn project(
+    context: &ProcessContext,
+    data: &Path,
+    head: Option<&Head>,
+) -> io::Result<Preview> {
     let Some(head) = head else {
         return Ok(Preview {
             status: Status::NotRequired,
@@ -65,6 +73,8 @@ fn project(context: &ProcessContext, data: &Path, head: Option<&Head>) -> io::Re
             phase_count: 0,
             can_continue: false,
             can_rollback: false,
+            can_finalize: false,
+            confirmation_digest: None,
         });
     };
     let mut preview = Preview {
@@ -84,6 +94,8 @@ fn project(context: &ProcessContext, data: &Path, head: Option<&Head>) -> io::Re
         phase_count: 0,
         can_continue: false,
         can_rollback: false,
+        can_finalize: false,
+        confirmation_digest: None,
     };
     if let Some(refs) = &head.references {
         let client = std::fs::canonicalize(context.working_directory.join(".codex"))?;
@@ -115,6 +127,10 @@ fn project(context: &ProcessContext, data: &Path, head: Option<&Head>) -> io::Re
                     Evidence::Unregistered
                 };
             }
+        }
+        if let Some(fingerprint) = originals.finalization_fingerprint(head)? {
+            preview.can_finalize = true;
+            preview.confirmation_digest = Some(fingerprint);
         }
     }
     // Persisted bytes or a readback preview never manufacture the original

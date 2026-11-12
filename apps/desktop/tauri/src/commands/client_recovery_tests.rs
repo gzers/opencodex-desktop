@@ -1,0 +1,117 @@
+use super::*;
+use crate::{
+    infrastructure::macos_client_originals::session_index::{self, preview},
+    modules::runtime::RuntimeHandle,
+    state::ProcessContext,
+};
+use std::{fs, os::unix::fs::PermissionsExt, path::PathBuf, time::Instant};
+#[test]
+#[ignore = "explicit retained owned Profile whose ordinary Stop completed artifacts then intentionally failed before index closure"]
+fn finalize_owned_completed_fixture_with_fresh_admission() {
+    let root = PathBuf::from(std::env::var_os("OCXD024_FINALIZE_ROOT").expect("owned fixture"));
+    assert!(
+        root.is_absolute()
+            && root.canonicalize().unwrap() == root
+            && root.starts_with("/private/tmp")
+            && root
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .starts_with("ocxd024-versioned-lifecycle-")
+    );
+    let profile = root.join("profile");
+    assert_eq!(
+        std::env::var_os("HOME"),
+        Some(profile.clone().into_os_string())
+    );
+    let data = profile.join(".codex-desktop/desktop");
+    let home = profile.join(".codex-desktop/opencodex/home");
+    let runtime = RuntimeHandle::initialize_versioned(&data, &root.join("program 中文 space"));
+    let context = ProcessContext {
+        runtime,
+        working_directory: profile.clone(),
+        opencodex_home: home.clone(),
+    };
+    let before = preview::inspect_preview(&context, &data);
+    assert_eq!(before.phase, Some(session_index::State::RestorePrepared));
+    assert!(before.can_finalize);
+    assert!(!before.can_continue && !before.can_rollback);
+    let request = Request {
+        attempt_id: before.attempt_id.clone().unwrap(),
+        revision: before.revision.unwrap(),
+        confirmation_digest: before.confirmation_digest.clone().unwrap(),
+    };
+    let index = data.join("manager-state/client-session-index.sqlite");
+    let index_before = fs::read(&index).unwrap();
+    for wrong in [
+        Request {
+            confirmation_digest: "a".repeat(64),
+            ..request.clone()
+        },
+        Request {
+            revision: request.revision + 1,
+            ..request.clone()
+        },
+        Request {
+            attempt_id: uuid::Uuid::new_v4().to_string(),
+            ..request.clone()
+        },
+    ] {
+        assert!(session_index::finalization::finalize(&context, &data, wrong).is_err());
+        assert_eq!(fs::read(&index).unwrap(), index_before);
+    }
+    let config = profile.join(".codex/config.toml");
+    let config_before = fs::read(&config).unwrap();
+    fs::write(&config, b"user edit while recovery pending").unwrap();
+    assert!(!preview::inspect_preview(&context, &data).can_finalize);
+    assert!(session_index::finalization::finalize(&context, &data, request.clone()).is_err());
+    assert_eq!(
+        fs::read(&config).unwrap(),
+        b"user edit while recovery pending"
+    );
+    assert_eq!(fs::read(&index).unwrap(), index_before);
+    fs::write(&config, &config_before).unwrap();
+    let path = home.join("runtime-port.json");
+    assert!(!path.exists());
+    fs::write(
+        &path,
+        serde_json::to_vec(
+            &serde_json::json!({"pid":std::process::id(),"port":1,"hostname":"127.0.0.1"}),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    assert!(session_index::finalization::finalize(&context, &data, request.clone()).is_err());
+    assert_eq!(fs::read(&index).unwrap(), index_before);
+    assert!(path.exists());
+    fs::remove_file(path).unwrap();
+    let current = preview::inspect_preview(&context, &data);
+    assert!(current.can_finalize);
+    assert_eq!(
+        current.confirmation_digest.as_deref(),
+        Some(request.confirmation_digest.as_str())
+    );
+    let t = Instant::now();
+    let outcome = session_index::finalization::finalize(&context, &data, request.clone()).unwrap();
+    let elapsed = t.elapsed().as_millis();
+    assert!(elapsed < 10000);
+    assert_eq!(outcome.revision, 7);
+    assert_eq!(outcome.status, "restored");
+    assert_eq!(fs::read(&config).unwrap(), config_before);
+    let restored = preview::inspect_preview(&context, &data);
+    assert_eq!(restored.status, preview::Status::Restored);
+    assert!(!restored.can_finalize);
+    let after = fs::read(&index).unwrap();
+    assert!(session_index::finalization::finalize(&context, &data, request).is_err());
+    assert_eq!(fs::read(&index).unwrap(), after);
+    let report = serde_json::json!({"accepted":false,"scope":"explicit metadata finalization after prior actual file compensation; no client artifacts written","elapsedMs":elapsed,"outcome":outcome,"reopened":restored,"staleAttemptRevisionAndDigestRefused":true,"externalConfigEditPreservedAndRefused":true,"foreignRuntimeRecordPreservedAndRefused":true,"duplicateConfirmationRefused":true,"clientConfigBytesUnchangedByFinalization":true});
+    fs::write(
+        root.join("explicit-finalize-summary.json"),
+        serde_json::to_vec_pretty(&report).unwrap(),
+    )
+    .unwrap();
+    println!("{report}");
+}

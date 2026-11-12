@@ -223,11 +223,119 @@ pub(super) fn verify_registered(
     Ok(())
 }
 impl Originals {
+    pub(super) fn finalization_fingerprint(
+        &self,
+        head: &session_index::Head,
+    ) -> io::Result<Option<String>> {
+        if head.state != session_index::State::RestorePrepared {
+            return Ok(None);
+        }
+        let refs = head
+            .references
+            .as_ref()
+            .ok_or_else(|| denied("finalization original references absent"))?;
+        let plan = head
+            .restore_plan
+            .as_ref()
+            .ok_or_else(|| denied("finalization original plan absent"))?;
+        let pending = restore::Pending::open(self, &plan.id, &plan.sha256)?;
+        if !pending.already_completed()? {
+            return Ok(None);
+        }
+        let original = self.frame(Phase::Original)?.0;
+        let stopped = self.frame(Phase::Stopped)?.0;
+        let codex = TreeSnapshot::read(&self.client)?;
+        let grok = GrokSnapshot::read(&self.profile)?;
+        if !original.tree.restored_matches(&codex, true) || !original.grok.restored_matches(&grok) {
+            return Ok(None);
+        }
+        let stable = [
+            stopped.tree.stable_identity(LOCKS[0])?,
+            stopped.tree.stable_identity(LOCKS[1])?,
+        ];
+        for (name, id) in LOCKS.iter().zip(&stable) {
+            if codex.stable_identity(name)? != *id
+                || !original.tree.original_stable_identity_matches(name, id)
+            {
+                return Ok(None);
+            }
+        }
+        let outcome = capture_file(
+            &self.directory,
+            &format!("restore-{}-outcome.json", plan.id),
+            MAX_FRAME,
+        )?;
+        let Image::File {
+            bytes: outcome,
+            protection,
+            ..
+        } = outcome
+        else {
+            return Ok(None);
+        };
+        require_private(&protection, false)?;
+        let codex_sha = digest(&encode(&codex)?);
+        let grok_sha = digest(&encode(&grok)?);
+        let receipt_hash =
+            match capture_file(&self.directory, "completion-readback.json", MAX_FRAME)? {
+                Image::Absent => None,
+                Image::File {
+                    bytes, protection, ..
+                } => {
+                    require_private(&protection, false)?;
+                    let receipt: Receipt = serde_json::from_value(
+                        parse_strict_json_v2(&bytes)
+                            .map_err(|_| denied("invalid pending completion JSON"))?,
+                    )
+                    .map_err(|_| denied("invalid pending completion fields"))?;
+                    if receipt.schema_version != 1
+                        || receipt.references != *refs
+                        || receipt.plan != *plan
+                        || receipt.outcome_sha256 != digest(&outcome)
+                        || receipt.codex_tree_sha256 != codex_sha
+                        || receipt.grok_tree_sha256 != grok_sha
+                        || receipt.stable_locks != stable
+                    {
+                        return Err(denied(
+                            "pending completion differs; not overwritten or adopted",
+                        ));
+                    }
+                    Some(digest(&bytes))
+                }
+            };
+        Ok(Some(digest(&encode(&(
+            head,
+            self.data.identity(),
+            self.client.identity(),
+            self.profile.identity(),
+            codex_sha,
+            grok_sha,
+            digest(&outcome),
+            receipt_hash,
+        ))?)))
+    }
+    pub(super) fn finalize_readback(
+        &self,
+        refs: session::References,
+        plan: session_index::RestorePlan,
+        deadline: Instant,
+    ) -> io::Result<ReadbackProof> {
+        self.complete_readback_inner(refs, plan, deadline, true)
+    }
     pub(super) fn complete_readback(
         &self,
         references: session::References,
         plan: session_index::RestorePlan,
         deadline: Instant,
+    ) -> io::Result<ReadbackProof> {
+        self.complete_readback_inner(references, plan, deadline, false)
+    }
+    fn complete_readback_inner(
+        &self,
+        references: session::References,
+        plan: session_index::RestorePlan,
+        deadline: Instant,
+        reuse_exact_receipt: bool,
     ) -> io::Result<ReadbackProof> {
         time(deadline)?;
         if references.attempt != self.attempt || references.original_sha256 != self.original_sha256
@@ -303,7 +411,21 @@ impl Originals {
         };
         let raw = encode(&receipt)?;
         time(deadline)?;
-        create(&self.directory, "completion-readback.json", &raw)?;
+        if reuse_exact_receipt {
+            match capture_file(&self.directory, "completion-readback.json", MAX_FRAME)? {
+                Image::Absent => create(&self.directory, "completion-readback.json", &raw)?,
+                Image::File {
+                    bytes, protection, ..
+                } => {
+                    require_private(&protection, false)?;
+                    if bytes != raw {
+                        return Err(denied("previous completion receipt changed; not replaced"));
+                    }
+                }
+            }
+        } else {
+            create(&self.directory, "completion-readback.json", &raw)?;
+        }
         let Image::File {
             bytes: readback,
             protection,

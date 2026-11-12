@@ -618,6 +618,45 @@ impl<'a> Pending<'a> {
     pub fn apply(&self, decision: Decision, permit: &MutationPermit<'_>) -> io::Result<()> {
         self.apply_checked(decision, &|| permit.check(self.originals), &|_| Ok(()))
     }
+    /// Inspection only. The immutable terminal decision is necessary but not
+    /// sufficient: every original publication and archived postimage must still
+    /// be this plan's exact native objects, with no stage left to write.
+    pub(super) fn already_completed(&self) -> io::Result<bool> {
+        let terminal = capture_file(
+            &self.originals.directory,
+            &format!("restore-{}-outcome.json", self.id),
+            MAX_FRAME,
+        )?;
+        let Image::File {
+            bytes, protection, ..
+        } = terminal
+        else {
+            return Ok(false);
+        };
+        require_private(&protection, false)?;
+        if bytes
+            != encode(
+                &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"decision":"complete"}),
+            )?
+        {
+            return Ok(false);
+        }
+        let (plan, c) = self.load()?;
+        for i in 0..3 {
+            if plan.kinds[i] != Kind::Keep && !self.state(&plan, &c, i)? {
+                return Ok(false);
+            }
+            if self.pair(i)?.1 != Image::Absent {
+                return Ok(false);
+            }
+        }
+        let current = Capture::read(&self.originals.client)?;
+        Ok(current
+            .images
+            .iter()
+            .zip(&c[0].images)
+            .all(|(a, b)| original_content(a, b)))
+    }
     fn pair(&self, i: usize) -> io::Result<(Image, Image)> {
         Ok((
             capture_file(&self.originals.client, NAMES[i], MAX_CONTENT)?,

@@ -134,6 +134,28 @@ fn complete_restores_real_original_bytes_permissions_and_absence_without_discard
         .is_err());
     assert!(f.matches(Phase::Original));
 }
+#[test]
+fn completed_inspection_never_adopts_partial_rollback_or_unknown_postimages() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    assert!(!pending.already_completed().unwrap());
+    pending
+        .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
+        .unwrap();
+    assert!(pending.already_completed().unwrap());
+    let path = f.originals.client.path().join(NAMES[0]);
+    let before = fs::read(&path).unwrap();
+    fs::write(&path, b"outside edit after publication").unwrap();
+    assert!(pending.already_completed().is_err() || !pending.already_completed().unwrap());
+    assert_eq!(fs::read(&path).unwrap(), b"outside edit after publication");
+    assert!(!before.is_empty());
+    let f = Fixture::new();
+    let pending = f.prepare();
+    pending
+        .apply_checked(Decision::Rollback, &|| Ok(()), &|_| Ok(()))
+        .unwrap();
+    assert!(!pending.already_completed().unwrap());
+}
 
 #[test]
 fn a_second_object_external_change_refuses_the_whole_batch_before_any_original_publish() {

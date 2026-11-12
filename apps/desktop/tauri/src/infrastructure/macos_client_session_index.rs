@@ -17,6 +17,8 @@ const TABLES: [(&str, &str); 3] = [
 #[path = "macos_client_session_observation.rs"]
 mod observation;
 pub use observation::inspect;
+#[path = "macos_client_recovery_finalize.rs"]
+pub mod finalization;
 #[path = "macos_client_session_preview.rs"]
 pub mod preview;
 
@@ -254,6 +256,21 @@ impl Index {
         data_root: &Path,
         client_root: &Path,
     ) -> io::Result<Self> {
+        Self::open_inner(context, data_root, client_root, true)
+    }
+    pub fn open_existing(
+        context: &ProcessContext,
+        data_root: &Path,
+        client_root: &Path,
+    ) -> io::Result<Self> {
+        Self::open_inner(context, data_root, client_root, false)
+    }
+    fn open_inner(
+        context: &ProcessContext,
+        data_root: &Path,
+        client_root: &Path,
+        allow_create: bool,
+    ) -> io::Result<Self> {
         let data = PinnedDirectory::open(data_root)?;
         data.private()?;
         let client = PinnedDirectory::open(client_root)?;
@@ -261,7 +278,7 @@ impl Index {
             return Err(denied("session index/client roots overlap"));
         }
         let binding = scope(context, &data, &client)?;
-        let manager = data.child_private("manager-state", true)?;
+        let manager = data.child_private("manager-state", allow_create)?;
         if observation::entry(&manager, FILE)?.is_none()
             && observation::entry(&manager, "client-originals")?.is_some()
         {
@@ -276,7 +293,7 @@ impl Index {
                 manager.file().as_raw_fd(),
                 action_cname.as_ptr(),
                 libc::O_RDWR
-                    | libc::O_CREAT
+                    | if allow_create { libc::O_CREAT } else { 0 }
                     | libc::O_NOFOLLOW
                     | libc::O_CLOEXEC
                     | libc::O_NONBLOCK,
@@ -317,13 +334,21 @@ impl Index {
         let mut created = false;
         match capture_file(&manager, FILE, MAX_INDEX as usize)? {
             Image::Absent => {
+                if !allow_create {
+                    return Err(denied("recovery index missing; not initialized"));
+                }
                 let file = crate::infrastructure::platform::create_new_private_file(&path, 0o600)?;
                 file.sync_all()?;
                 drop(file);
                 manager.sync()?;
                 created = true;
             }
-            Image::File { bytes, .. } if bytes.is_empty() => created = true,
+            Image::File { bytes, .. } if bytes.is_empty() => {
+                if !allow_create {
+                    return Err(denied("recovery index empty; not initialized"));
+                }
+                created = true;
+            }
             Image::File { .. } => {}
         }
         for suffix in ["-journal", "-wal", "-shm"] {

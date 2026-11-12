@@ -687,6 +687,43 @@ fn fresh_ready(
     Ok((record.0, before, record.2))
 }
 impl StartupSession {
+    /// Metadata-only explicit recovery. This NEVER reissues the old normal
+    /// exit proof, enters Pending.apply, or writes any client artifact.
+    pub fn finalize_existing_complete(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        deadline: Instant,
+    ) -> AppResult<completion::ReadbackProof> {
+        time(deadline)?;
+        if self
+            .originals
+            .finalization_fingerprint(head)
+            .map_err(error)?
+            .is_none()
+        {
+            return Err(error(()));
+        }
+        let live = self.live(context)?;
+        let (root, _) = source(context)?;
+        let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        let require_clear = || {
+            owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)
+        };
+        require_clear()?;
+        time(deadline)?;
+        let result = self
+            .originals
+            .finalize_readback(
+                head.references.as_ref().ok_or_else(|| error(()))?.clone(),
+                head.restore_plan.as_ref().ok_or_else(|| error(()))?.clone(),
+                deadline,
+            )
+            .map_err(error)?;
+        require_clear()?;
+        time(deadline)?;
+        Ok(result)
+    }
     pub fn watch_stop_pair(
         &self,
         context: &ProcessContext,

@@ -109,6 +109,32 @@ fn observation_is_read_only_and_does_not_initialize_a_missing_session() {
     );
 }
 #[test]
+fn recovery_open_existing_never_initializes_missing_or_empty_storage() {
+    let f = Fixture::new();
+    assert!(Index::open_existing(&f.context, &f.data, &f.client).is_err());
+    assert!(!f.data.join("manager-state").exists());
+    let index = f.open().unwrap();
+    drop(index);
+    let manager = f.data.join("manager-state");
+    fs::remove_file(manager.join("client-session-action.lock")).unwrap();
+    assert!(Index::open_existing(&f.context, &f.data, &f.client).is_err());
+    assert!(!manager.join("client-session-action.lock").exists());
+    let file = crate::infrastructure::platform::create_new_private_file(
+        &manager.join("client-session-action.lock"),
+        0o600,
+    )
+    .unwrap();
+    drop(file);
+    fs::remove_file(manager.join(FILE)).unwrap();
+    assert!(Index::open_existing(&f.context, &f.data, &f.client).is_err());
+    assert!(!manager.join(FILE).exists());
+    let file = crate::infrastructure::platform::create_new_private_file(&manager.join(FILE), 0o600)
+        .unwrap();
+    drop(file);
+    assert!(Index::open_existing(&f.context, &f.data, &f.client).is_err());
+    assert!(fs::read(manager.join(FILE)).unwrap().is_empty());
+}
+#[test]
 fn evidence_projection_keeps_shared_action_lock_for_the_entire_read_callback() {
     let f = Fixture::new();
     let index = f.open().unwrap();

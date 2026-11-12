@@ -185,6 +185,32 @@ impl CompletedLifecycleStop {
 }
 impl SystemServiceOwnerProofProvider {
     #[cfg(target_os = "macos")]
+    pub(crate) fn require_finalization_absence(
+        &self,
+        context: &ProcessContext,
+        service: crate::infrastructure::macos_process_exit::Generation,
+        launcher: crate::infrastructure::macos_process_exit::Generation,
+        port: u16,
+    ) -> AppResult<()> {
+        self.same_context(context)?;
+        if port == 0
+            || service.pid == launcher.pid
+            || service.uid != launcher.uid
+            || service.uid.to_string() != self.owner
+            || self.query_inner()? != ServiceOwnerProof::Stopped
+            || self.host.process(service.pid)?.is_some()
+            || self.host.process(launcher.pid)?.is_some()
+            || !self.host.port_clear(port)?
+            || self.query_inner()? != ServiceOwnerProof::Stopped
+        {
+            return Err(fail(
+                "client_recovery_service_unconfirmed",
+                "原会话服务、启动进程或监听尚未确认缺席，未完成恢复收尾",
+            ));
+        }
+        Ok(())
+    }
+    #[cfg(target_os = "macos")]
     fn captured_tcp_clear(
         &self,
         listeners: &crate::infrastructure::macos_tcp_listeners::TcpListeners,

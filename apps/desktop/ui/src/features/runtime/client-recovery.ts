@@ -14,9 +14,14 @@ export interface ClientRecoveryPreview {
   phaseCount: number
   canContinue: boolean
   canRollback: boolean
+  canFinalize: boolean
+  confirmationDigest: string | null
 }
+export interface ClientRecoveryFinalizeRequest { attemptId: string; revision: number; confirmationDigest: string }
+export interface ClientRecoveryFinalizeOutcome { attemptId: string; revision: number; status: 'restored' }
 
 // Inspection takes no file paths and never starts recovery implicitly.
 export const clientRecoveryApi = {
   preview: () => invoke<ClientRecoveryPreview>('client_recovery_preview'),
+  finalize: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryFinalizeOutcome>('client_recovery_finalize', { request }),
 }
