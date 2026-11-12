@@ -1,7 +1,7 @@
 //! Reversible whole-directory preservation for an originally absent client root.
-//! Storage/native-move layer only: production lifecycle authority factory and
-//! independent terminal registration are NOT implemented here. Public disk
-//! records or successful readback cannot construct MutationPermit.
+//! Production movement is owned by the current normal-Stop session authority
+//! and independently registered plan. Public disk records, read-only history
+//! or successful stored receipts cannot construct MutationPermit.
 use super::*;
 use crate::infrastructure::official_client_coordination::native::{config::Guard, NativeLease};
 use session_index::{observation::entry, Head};
@@ -122,6 +122,15 @@ pub fn open_archived_originals(
     profile_root: &Path,
     reference: &ArchiveReferences,
 ) -> io::Result<Originals> {
+    let archived = open_archive_reference(data_root, profile_root, reference)?;
+    Pending::open(&archived, &reference.plan_id, &reference.plan_sha256)?.inspect_retired()?;
+    Ok(archived)
+}
+fn open_archive_reference(
+    data_root: &Path,
+    profile_root: &Path,
+    reference: &ArchiveReferences,
+) -> io::Result<Originals> {
     session_index::validate(&reference.source)?;
     let refs = reference
         .source
@@ -168,8 +177,62 @@ pub fn open_archived_originals(
             "root archive source Head differs from independent reference",
         ));
     }
-    pending.inspect_retired()?;
     Ok(archived)
+}
+/// Independent index facts identifying a CLOSED historical generation. Mere
+/// serialized references never authorize movement, root creation or Start.
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ClosedRootReferences {
+    pub source: Head,
+    pub closed: Head,
+    pub original_root: root_creation::References,
+}
+/// Open only the retained archive recorded by this closed generation. Current
+/// user roots and current Grok state do NOT define historical evidence.
+/// Callers must obtain source/closed/origin from their independent index.
+pub fn open_closed_history(
+    data_root: &Path,
+    profile_root: &Path,
+    reference: &ClosedRootReferences,
+) -> io::Result<Originals> {
+    session_index::validate(&reference.source)?;
+    session_index::validate(&reference.closed)?;
+    let closed = &reference.closed;
+    let source = &reference.source;
+    let movement = closed
+        .root_retirement
+        .as_ref()
+        .ok_or_else(|| denied("historical root closure has no independent movement"))?;
+    let completion = closed
+        .completion_sha256
+        .as_deref()
+        .ok_or_else(|| denied("historical root closure has no independent completion"))?;
+    if closed.state != session_index::State::RootAbsent
+        || source.root_retirement.is_some()
+        || movement.source_revision != source.revision
+        || closed.revision <= source.revision.saturating_add(1)
+        || closed.ticket != source.ticket
+        || closed.references != source.references
+        || closed.restore_plan != source.restore_plan
+        || reference.original_root.id != closed.ticket
+    {
+        return Err(denied("historical root closure rebases independent source"));
+    }
+    let archive = open_archive_reference(
+        data_root,
+        profile_root,
+        &ArchiveReferences {
+            source: source.clone(),
+            original_root: reference.original_root.clone(),
+            plan_id: movement.plan.id.clone(),
+            plan_sha256: movement.plan.sha256.clone(),
+        },
+    )?;
+    let pending = Pending::open(&archive, &movement.plan.id, &movement.plan.sha256)?;
+    pending.require_source(source)?;
+    pending.verify_historical_close(completion)?;
+    Ok(archive)
 }
 fn time(deadline: Instant) -> io::Result<()> {
     if Instant::now() >= deadline {
@@ -767,6 +830,66 @@ impl<'a> Pending<'a> {
             )),
         }
     }
+    /// Historical-only exact archive validation. It deliberately never reads
+    /// current .codex or current .grok and cannot manufacture fresh permission.
+    /// Current-root completion still uses verify_retire_readback above.
+    fn verify_historical_close(&self, expected_sha256: &str) -> io::Result<()> {
+        self.verify_historical_close_checked(expected_sha256, &|_| Ok(()))
+    }
+    fn verify_historical_close_checked(
+        &self,
+        expected_sha256: &str,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<()> {
+        let plan = self.load()?;
+        let (archive, _) = self.archive_prefix(&plan)?;
+        let tree = TreeSnapshot::read(&archive.client)?;
+        if tree != plan.released_tree()? {
+            return Err(denied(
+                "closed historical root is not the exact released execution tree",
+            ));
+        }
+        // Grok evidence is read from immutable phase blobs and the original
+        // plan, never from the next action's user path or model configuration.
+        plan.grok.verify_archive(&archive.directory)?;
+        let intent = encode(
+            &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"direction":Direction::Retire}),
+        )?;
+        let intent_name = format!("root-retirement-{}-Retire-intent.json", self.id);
+        let require_record = |filename: &str, expected: &[u8]| -> io::Result<()> {
+            match capture_file(&archive.directory, filename, MAX_FRAME)? {
+                Image::File {
+                    bytes, protection, ..
+                } if bytes == expected => require_private(&protection, false),
+                _ => Err(denied("closed historical root record missing or changed")),
+            }
+        };
+        require_record(&intent_name, &intent)?;
+        let receipt = self.receipt_bytes(&plan, Direction::Retire, &tree)?;
+        if digest(&receipt) != expected_sha256 {
+            return Err(denied(
+                "historical root completion differs from independent digest",
+            ));
+        }
+        let receipt_name = format!("root-retirement-{}-Retire-readback.json", self.id);
+        require_record(&receipt_name, &receipt)?;
+        checkpoint("historical-readback")?;
+        // Keep this whole observation read-only and reject archive or record
+        // changes that persist during evidence projection, without adopting a
+        // new digest or tying the old close to the next current root.
+        let confirmed = self.load()?;
+        if encode(&confirmed)? != encode(&plan)? {
+            return Err(denied("historical root plan changed during observation"));
+        }
+        let (again, _) = self.archive_prefix(&confirmed)?;
+        if TreeSnapshot::read(&again.client)? != tree {
+            return Err(denied("historical root archive changed during observation"));
+        }
+        confirmed.grok.verify_archive(&again.directory)?;
+        require_record(&intent_name, &intent)?;
+        require_record(&receipt_name, &receipt)?;
+        Ok(())
+    }
     fn receipt_bytes(
         &self,
         plan: &Plan,
@@ -963,6 +1086,9 @@ impl<'a> Pending<'a> {
 #[path = "macos_client_root_retirement_tests.rs"]
 mod tests;
 
+#[cfg(test)]
+#[path = "macos_client_root_closed_history_tests.rs"]
+mod history_tests;
 #[cfg(test)]
 #[path = "macos_client_root_retirement_index_tests.rs"]
 mod index_tests;

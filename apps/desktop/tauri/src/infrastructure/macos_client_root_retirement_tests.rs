@@ -19,11 +19,27 @@ impl Fixture {
         value
     }
     pub(super) fn at(root: PathBuf) -> Self {
+        Self::at_with_grok(root, None)
+    }
+    pub(super) fn new_with_grok(bytes: &[u8]) -> Self {
+        let temp = tempfile::tempdir().unwrap();
+        let mut value = Self::at_with_grok(temp.path().canonicalize().unwrap(), Some(bytes));
+        value._temp = Some(temp);
+        value
+    }
+    fn at_with_grok(root: PathBuf, grok: Option<&[u8]>) -> Self {
         let data = root.join("desktop");
         let profile = root.join("profile");
         let home = profile.join("home");
         for p in [&data, &profile, &home] {
             fs::DirBuilder::new().mode(0o700).create(p).unwrap();
+        }
+        if let Some(bytes) = grok {
+            let path = profile.join(".grok");
+            fs::DirBuilder::new().mode(0o700).create(&path).unwrap();
+            fs::write(path.join("config.toml"), bytes).unwrap();
+            fs::set_permissions(path.join("config.toml"), fs::Permissions::from_mode(0o600))
+                .unwrap();
         }
         let context = crate::state::ProcessContext {
             runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(

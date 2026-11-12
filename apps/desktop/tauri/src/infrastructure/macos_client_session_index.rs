@@ -870,6 +870,10 @@ impl Index {
             .as_ref()
             .ok_or_else(|| denied("session index closed"))
     }
+    #[cfg(test)]
+    pub(super) fn fixture_existing_connection(&self) -> io::Result<&Connection> {
+        self.connection()
+    }
     fn check(&self) -> io::Result<()> {
         self.checked_head().map(|_| ())
     }
@@ -1023,6 +1027,73 @@ impl Index {
                 plan_sha256: movement.plan.sha256.clone(),
             },
         )
+    }
+    /// Read-only retained-history audit through the SAME held independent
+    /// SQLite connection and action fd. This does not check current root
+    /// absence and cannot reserve/capture a new root generation.
+    pub fn closed_root_history(
+        &self,
+        expected: &Head,
+    ) -> io::Result<Vec<super::root_retirement::ClosedRootReferences>> {
+        self.closed_root_history_checked(expected, &|| Ok(()))
+    }
+    #[cfg(test)]
+    pub(super) fn fixture_closed_root_history_checked(
+        &self,
+        expected: &Head,
+        checkpoint: &impl Fn() -> io::Result<()>,
+    ) -> io::Result<Vec<super::root_retirement::ClosedRootReferences>> {
+        self.closed_root_history_checked(expected, checkpoint)
+    }
+    fn closed_root_history_checked(
+        &self,
+        expected: &Head,
+        checkpoint: &impl Fn() -> io::Result<()>,
+    ) -> io::Result<Vec<super::root_retirement::ClosedRootReferences>> {
+        self.check_storage()?;
+        if self.root_registration.is_none()
+            || read_head(self.connection()?)?.as_ref() != Some(expected)
+        {
+            return Err(denied(
+                "root history is not current independently held index",
+            ));
+        }
+        let stored: Vec<u8> = self
+            .connection()?
+            .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+                r.get(0)
+            })
+            .map_err(database_error)?;
+        if stored != self.binding {
+            return Err(denied("root history independent binding changed"));
+        }
+        let origin = root_binding::original_root(&stored)?;
+        if self.root_registration.as_ref() != Some(&origin) {
+            return Err(denied("root history original origin changed"));
+        }
+        root_binding::verify_initial_event(self.connection()?, &origin)?;
+        let history = vault_history::read(self.connection()?, expected)?;
+        let references =
+            vault_history::inspect_root_closures(&self.data, &self.profile, &stored, &history)?;
+        checkpoint()?;
+        self.check_storage()?;
+        if read_head(self.connection()?)?.as_ref() != Some(expected)
+            || vault_history::read(self.connection()?, expected)? != history
+        {
+            return Err(denied("root history index changed during evidence review"));
+        }
+        let confirmed: Vec<u8> = self
+            .connection()?
+            .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+                r.get(0)
+            })
+            .map_err(database_error)?;
+        if confirmed != stored {
+            return Err(denied(
+                "root history binding changed during evidence review",
+            ));
+        }
+        Ok(references)
     }
     pub fn record_first_root_phase(&self, proof: &session::RootPhaseProof<'_>) -> io::Result<Head> {
         let origin = self

@@ -61,6 +61,170 @@ pub(super) fn read(connection: &Connection, current: &Head) -> io::Result<Vec<He
     }
     Ok(heads)
 }
+/// Complete independent history review for retained CLOSED root attempts. It
+/// is a fact-only prerequisite for generation rollover, never a Start permit.
+/// Current scene absence must be checked separately by the lifecycle owner.
+pub(super) fn inspect_root_closures(
+    data: &PinnedDirectory,
+    profile: &Path,
+    binding: &[u8],
+    history: &[Head],
+) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
+    let origin = root_binding::original_root(binding)?;
+    if history
+        .first()
+        .is_none_or(|h| h.revision != 1 || h.ticket != origin.id || h.state != State::Preparing)
+        || history
+            .last()
+            .is_none_or(|h| h.ticket != origin.id || h.state != State::RootAbsent)
+        || history.iter().any(|h| h.ticket != origin.id)
+    {
+        return Err(denied(
+            "root history has an unclosed or unsupported generation",
+        ));
+    }
+    for pair in history.windows(2) {
+        let before = &pair[0];
+        let after = &pair[1];
+        if before.revision.checked_add(1) != Some(after.revision)
+            || !matches!(
+                (before.state, after.state),
+                (State::Preparing, State::CaptureReserved)
+                    | (State::CaptureReserved, State::Captured)
+                    | (State::Captured, State::Ready)
+                    | (State::Ready, State::StopPrepared)
+                    | (State::StopPrepared, State::Stopped)
+                    | (State::Stopped, State::RestorePrepared)
+                    | (
+                        State::Captured | State::Stopped | State::RestorePrepared,
+                        State::RootRetirementPrepared
+                    )
+                    | (State::RootRetirementPrepared, State::RootAbsent)
+                    | (State::RootAbsent, State::RootRetirementPrepared)
+            )
+        {
+            return Err(denied(
+                "root history phase sequence is not a registered closed lifecycle",
+            ));
+        }
+        if let Some(refs) = &before.references {
+            if after.references.as_ref().is_none_or(|next| {
+                next.attempt != refs.attempt
+                    || next.original_sha256 != refs.original_sha256
+                    || next.scope_sha256 != refs.scope_sha256
+                    || !next.phases.starts_with(&refs.phases)
+                    || refs.live_sha256.is_some() && next.live_sha256 != refs.live_sha256
+            }) {
+                return Err(denied("root historical phase chain rebases references"));
+            }
+        }
+        if before.root_retirement.is_some() && before.root_retirement != after.root_retirement
+            || before.restore_plan.is_some() && before.restore_plan != after.restore_plan
+        {
+            return Err(denied(
+                "root history changes an already registered recovery decision",
+            ));
+        }
+    }
+    let mut latest = BTreeMap::<String, &Head>::new();
+    let mut immutable = BTreeMap::new();
+    for head in history {
+        if let Some(refs) = &head.references {
+            let key = (refs.original_sha256.clone(), refs.scope_sha256.clone());
+            if refs.attempt != head.ticket
+                || immutable
+                    .insert(refs.attempt.clone(), key.clone())
+                    .is_some_and(|old| old != key)
+            {
+                return Err(denied("closed root history rebases original references"));
+            }
+            latest.insert(refs.attempt.clone(), head);
+        }
+    }
+    if latest.is_empty() || latest.len() > 512 {
+        return Err(denied(
+            "closed root history has no bounded indexed attempt set",
+        ));
+    }
+    let mut references = Vec::with_capacity(latest.len());
+    for closed in latest.values() {
+        if closed.state != State::RootAbsent {
+            return Err(denied(
+                "root history contains an unclosed or interrupted attempt",
+            ));
+        }
+        let movement = closed
+            .root_retirement
+            .as_ref()
+            .ok_or_else(|| denied("closed root history movement missing"))?;
+        let source = history
+            .iter()
+            .find(|h| h.revision == movement.source_revision)
+            .ok_or_else(|| denied("historical source event missing"))?;
+        let predecessor = history
+            .iter()
+            .find(|h| h.revision.checked_add(1) == Some(closed.revision))
+            .ok_or_else(|| denied("historical close predecessor missing"))?;
+        let initial_plan = history
+            .iter()
+            .find(|h| source.revision.checked_add(1) == Some(h.revision))
+            .ok_or_else(|| denied("historical initial plan registration missing"))?;
+        let matches_prepared = |head: &Head| {
+            head.state == State::RootRetirementPrepared
+                && head.ticket == closed.ticket
+                && head.references == closed.references
+                && head.restore_plan == closed.restore_plan
+                && head.root_retirement == closed.root_retirement
+                && head.completion_sha256.is_none()
+        };
+        if !matches_prepared(predecessor) || !matches_prepared(initial_plan) {
+            return Err(denied(
+                "historical root close lacks exact registered plan predecessor",
+            ));
+        }
+        // First-generation origin remains independently fixed in the original
+        // binding. Later generations must supply their own indexed provenance
+        // when that registration is implemented; never reuse this origin.
+        if closed.ticket != origin.id {
+            return Err(denied("root history generation has no registered origin"));
+        }
+        let reference = super::super::root_retirement::ClosedRootReferences {
+            source: source.clone(),
+            closed: (**closed).clone(),
+            original_root: origin.clone(),
+        };
+        super::super::root_retirement::open_closed_history(data.path(), profile, &reference)?;
+        references.push(reference);
+    }
+    let manager = data.child_private("manager-state", false)?;
+    let vault = manager.child_private("client-originals", false)?;
+    let names = super::super::tree::names(vault.file())?;
+    let actual = names
+        .iter()
+        .map(|n| {
+            n.to_str()
+                .map(str::to_owned)
+                .ok_or_else(|| denied("unknown historical root vault name"))
+        })
+        .collect::<io::Result<Vec<_>>>()?;
+    let expected = latest.keys().cloned().collect::<Vec<_>>();
+    if actual != expected {
+        return Err(denied(
+            "root historical vault differs from exact indexed closed attempts",
+        ));
+    }
+    // Repeat exact retained evidence after the directory projection. No names
+    // or current file values are promoted into independent history facts.
+    for reference in &references {
+        super::super::root_retirement::open_closed_history(data.path(), profile, reference)?;
+    }
+    if super::super::tree::names(vault.file())? != names {
+        return Err(denied("root history vault changed during review"));
+    }
+    vault.private()?;
+    manager.recheck()?;
+    Ok(references)
+}
 pub(super) fn inspect(
     data: &PinnedDirectory,
     client: &PinnedDirectory,

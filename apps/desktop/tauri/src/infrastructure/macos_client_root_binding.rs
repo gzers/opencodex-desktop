@@ -54,6 +54,13 @@ pub(super) fn scope_bytes(stored: &[u8]) -> io::Result<Vec<u8>> {
     }
     Ok(binding.scope)
 }
+pub(super) fn original_root(stored: &[u8]) -> io::Result<root_creation::References> {
+    let binding: RootBinding = decode(stored)?;
+    if binding.schema_version != 1 {
+        return Err(denied("unknown original-root binding"));
+    }
+    Ok(binding.original_root)
+}
 
 /// Facts-only reopen from the current independent head and origin binding.
 /// No Original digest is learned by scanning an on-disk frame.
