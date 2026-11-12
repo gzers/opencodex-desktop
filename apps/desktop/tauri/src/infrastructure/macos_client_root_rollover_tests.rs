@@ -22,7 +22,7 @@ fn close_successor(context: &ProcessContext, index: Index, preparing: &Head) -> 
     drop(originals);
     (index, closed)
 }
-fn fixture_at(root: PathBuf, count: usize) -> (ProcessContext, Index, Head) {
+pub(super) fn fixture_at(root: PathBuf, count: usize) -> (ProcessContext, Index, Head) {
     let (context, mut index, mut closed) =
         super::super::super::root_retirement::fixture_closed_generation_at(root);
     for _ in 1..count {
@@ -33,7 +33,7 @@ fn fixture_at(root: PathBuf, count: usize) -> (ProcessContext, Index, Head) {
     }
     (context, index, closed)
 }
-fn fixture(count: usize) -> (tempfile::TempDir, ProcessContext, Index, Head) {
+pub(super) fn fixture(count: usize) -> (tempfile::TempDir, ProcessContext, Index, Head) {
     let temp = tempfile::tempdir().unwrap();
     let (context, index, head) = fixture_at(temp.path().canonicalize().unwrap(), count);
     (temp, context, index, head)

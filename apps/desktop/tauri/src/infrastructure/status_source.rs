@@ -439,31 +439,13 @@ impl StatusSource for OfficialStatusSource {
         }
         #[cfg(target_os = "macos")]
         if let Some(data) = &self.client_recovery_root {
-            use crate::infrastructure::macos_client_originals::session_index::{
-                inspect, State as Phase,
-            };
             let context = crate::state::ProcessContext {
                 runtime: self.runtime.clone(),
                 working_directory: self.working_directory.clone(),
                 opencodex_home: self.environment.opencodex_home.clone(),
             };
-            return match inspect(&context, data) {
-                Ok(None) => State::NotRequired,
-                Ok(Some(head)) if head.state == Phase::Ready => State::Active,
-                Ok(Some(head))
-                    if matches!(
-                        head.state,
-                        Phase::Restored
-                            | Phase::Unchanged
-                            | Phase::CancelledBeforeCapture
-                            | Phase::CancelledCapture
-                    ) =>
-                {
-                    State::NotRequired
-                }
-                Ok(Some(_)) => State::Required,
-                Err(_) => State::Unknown,
-            };
+            return crate::infrastructure::macos_client_originals::session_index::generation::inspect_client_recovery(&context, data)
+                .unwrap_or(State::Unknown);
         }
         // No native backend/input means unknown, including unsupported managed
         // platforms. Do not substitute an absent JSON field or a guessed path.

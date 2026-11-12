@@ -99,7 +99,12 @@ fn indexed_root_move_plan_survives_absent_logical_root_and_only_current_readback
     assert!(reopened.reserve_start().is_err());
     drop(reopened);
     let p = session_index::preview::inspect_preview(&f.context, f.originals.data.path());
-    assert_eq!(p.status, session_index::preview::Status::Pending);
+    assert_eq!(p.status, session_index::preview::Status::Restored);
+    assert!(session_index::generation::inspect_successor_eligibility(
+        &f.context,
+        f.originals.data.path()
+    )
+    .unwrap());
     assert_eq!(p.phase, Some(session_index::State::RootAbsent));
     assert_eq!(
         p.original_evidence,

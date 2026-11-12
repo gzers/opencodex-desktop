@@ -5,7 +5,6 @@ use crate::{
     errors::{AppError, AppResult},
     infrastructure::{
         macos_client_originals::{
-            root_creation,
             session::{RootStopRequest, StartupSession},
             session_index::{Head, Index, State},
         },
@@ -53,25 +52,11 @@ impl Active {
         })
     }
     pub fn capture(context: &ProcessContext, data: &Path, deadline: Instant) -> AppResult<Self> {
-        let logical = context.working_directory.join(".codex");
-        let (client, index, intent, first) = match std::fs::symlink_metadata(&logical) {
-            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {
-                let published = root_creation::reserve(data, &context.working_directory, deadline)
-                    .map_err(failure)?
-                    .publish()
-                    .map_err(failure)?;
-                let (index, intent) =
-                    Index::register_first_root(context, data, published).map_err(failure)?;
-                (logical, index, intent, true)
-            }
-            Err(e) => return Err(failure(e)),
-            Ok(_) => {
-                let client = client(context)?;
-                let index = Index::open(context, data, &client).map_err(failure)?;
-                let intent = index.reserve_start().map_err(failure)?;
-                (client, index, intent, false)
-            }
-        };
+        let (index, intent) =
+            Index::prepare_start_capture(context, data, deadline).map_err(failure)?;
+        let client = client(context)?;
+        let first = index.has_original_root_absence();
+        let successor = intent.root_generation.is_some();
         #[cfg(test)]
         if std::env::var_os("OCXD024_INTERRUPT_BEFORE_CAPTURE").as_deref()
             == Some(std::ffi::OsStr::new("1"))
@@ -102,7 +87,11 @@ impl Active {
             control_root: index.control_root().map_err(failure)?,
         };
         let intent = if first {
-            index.reserve_first_root_capture(&intent)
+            if successor {
+                index.reserve_successor_root_capture(&intent)
+            } else {
+                index.reserve_first_root_capture(&intent)
+            }
         } else {
             index.reserve_capture(&intent)
         }
@@ -112,7 +101,11 @@ impl Active {
             StartupSession::begin_reserved(context, data, &client, lease, deadline, &reservation)
         })?;
         let head = if first {
-            index.record_first_root_originals(context, &intent, session.references()?)
+            if successor {
+                index.record_successor_root_originals(context, &intent, session.references()?)
+            } else {
+                index.record_first_root_originals(context, &intent, session.references()?)
+            }
         } else {
             index.advance(&intent, State::Captured, Some(session.references()?))
         }

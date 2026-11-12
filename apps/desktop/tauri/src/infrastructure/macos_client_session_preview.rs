@@ -149,7 +149,12 @@ fn project_history(
         confirmation_digest: None,
     };
     if root_origin.is_some() && head.root_retirement.is_some() {
-        preview.status = Status::Pending;
+        preview.status =
+            if generation::successor_eligible_checked(context, data, head, history, root_origin)? {
+                Status::Restored
+            } else {
+                Status::Pending
+            };
         preview.attempt_id = head.references.as_ref().map(|r| r.attempt.clone());
         preview.original_evidence = Evidence::Verified;
         preview.plan_evidence = Evidence::Verified;

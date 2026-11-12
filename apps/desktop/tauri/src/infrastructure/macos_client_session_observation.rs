@@ -4,6 +4,33 @@
 //! POSIX locks. Busy/unsafe/interrupted state is unknown, never an empty index.
 use super::*;
 use std::os::unix::fs::FileExt;
+/// Observe through the pin opened BEFORE SQLite locks. No auxiliary fd is
+/// opened/closed, and immutable SQLite page caching is not the mutation check.
+fn index_image(pin: &CoordinationFilePin) -> io::Result<String> {
+    use sha2::{Digest, Sha256};
+    pin.recheck()?;
+    let before = stat(&pin.file)?;
+    if before.st_size < 100 || before.st_size as u64 > MAX_INDEX {
+        return Err(denied("observed index size invalid"));
+    }
+    let mut hash = Sha256::new();
+    hash.update(encode(&version(&before))?);
+    let mut buffer = zeroize::Zeroizing::new(vec![0u8; 64 * 1024]);
+    let mut offset = 0u64;
+    while offset < before.st_size as u64 {
+        let len = ((before.st_size as u64 - offset) as usize).min(buffer.len());
+        pin.file.read_exact_at(&mut buffer[..len], offset)?;
+        hash.update(&buffer[..len]);
+        offset += len as u64;
+    }
+    let mut extra = [0u8; 1];
+    if pin.file.read_at(&mut extra, offset)? != 0 || version(&stat(&pin.file)?) != version(&before)
+    {
+        return Err(denied("observed index changed during byte review"));
+    }
+    pin.recheck()?;
+    Ok(format!("{:x}", hash.finalize()))
+}
 fn no_sidecars(manager: &PinnedDirectory) -> io::Result<()> {
     for suffix in ["-journal", "-wal", "-shm"] {
         if entry(manager, &format!("{FILE}{suffix}"))?.is_some() {
@@ -153,6 +180,7 @@ pub(super) fn inspect_map_history_root<T>(
     let pin = CoordinationFilePin::open(&manager.path().join(FILE))?;
     no_sidecars(&manager)?;
     rollback_header(&pin)?;
+    let original_image = index_image(&pin)?;
     // immutable forbids SQLite recovery/sidecar creation even if a foreign
     // writer changes the header. The outer flock excludes cooperative writers;
     // header/sidecar/VFS/path checks still reject interrupted or changed views.
@@ -219,13 +247,14 @@ pub(super) fn inspect_map_history_root<T>(
         scope(context, &data, &client)?
     };
     let history = if let Some(head) = result.as_ref().filter(|h| {
-        matches!(
-            h.state,
-            State::Preparing
-                | State::CaptureReserved
-                | State::CancelledBeforeCapture
-                | State::CancelledCapture
-        )
+        root_registration.is_some()
+            || matches!(
+                h.state,
+                State::Preparing
+                    | State::CaptureReserved
+                    | State::CancelledBeforeCapture
+                    | State::CancelledCapture
+            )
     }) {
         vault_history::read(&connection, head)?
     } else {
@@ -263,6 +292,9 @@ pub(super) fn inspect_map_history_root<T>(
     if result.is_none() && entry(&manager, "client-originals")?.is_some() {
         return Err(denied("originals remain without current references"));
     }
+    // Project under the SAME read transaction/connection, not after closing
+    // SQLite. The complete independent view is repeated before returning.
+    let projected = project(result.as_ref(), &history, root_registration.as_ref())?;
     let mut moved = 1i32;
     let status = unsafe {
         rusqlite::ffi::sqlite3_file_control(
@@ -291,6 +323,29 @@ pub(super) fn inspect_map_history_root<T>(
     if confirmed.identity() != client.identity() {
         return Err(denied("observed root physical generation changed"));
     }
+    let confirmed_binding: Vec<u8> = connection
+        .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+            r.get(0)
+        })
+        .map_err(database_error)?;
+    if confirmed_binding != stored
+        || read_head(&connection)? != result
+        || !history.is_empty()
+            && result.as_ref().is_some_and(|head| {
+                vault_history::read(&connection, head)
+                    .map(|h| h != history)
+                    .unwrap_or(true)
+            })
+    {
+        return Err(denied(
+            "observation independent view changed during projection",
+        ));
+    }
+    if index_image(&pin)? != original_image {
+        return Err(denied(
+            "index bytes or version changed during evidence projection",
+        ));
+    }
     if (if root_registration.is_some() {
         scope_at(context, &data, &client, &logical)?
     } else {
@@ -305,7 +360,9 @@ pub(super) fn inspect_map_history_root<T>(
         .close()
         .map_err(|_| denied("observation connection did not close"))?;
     pin.recheck()?;
-    let projected = project(result.as_ref(), &history, root_registration.as_ref())?;
+    if index_image(&pin)? != original_image {
+        return Err(denied("index changed at observation return boundary"));
+    }
     data.private()?;
     client.recheck()?;
     pin.recheck()?;
