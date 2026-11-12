@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 60；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 61；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -552,3 +552,12 @@ main8fd4bbf45按固化官方retained-sync/build-entries非空selectedModels过�
 28项相关/编译/格式/严格Clippy过。测试专用loopbackGET/models返回4个合成ID含1未选、静态models故意过期；第一新Profile未识别请求/0发现，Ready为空而恢复门正确拒绝（Stopped revision5），首错保留。只读官方request形状与夹具方法/path正规解析后，第二新Profile实际1次GET /v1/models、0其它/业务请求；Start6591/Status232/Stop8815ms，3声明与Ready逐项相等、未选/过期ID排除，七原件全恢复、整树/两锁/Restored revision7，重开1256ms NotRequired/canStarttrue。原函数exit0/resultpassed，外层acceptedfalse，不冒开放动态/一般图或整版。
 
 证据.adg/evidence/0.2.24/selected-live-routes-r1/及manifest留旧算法/夹具编译/第一轮拒绝、准确源/binary/实际发现和选择对照、两轮frame/index各35内容引用、成功plan/receipt/归档原后像与最终树SHA匹配。两个服务+两个模拟发现端点、自有进程/线程缺席，6精确新协调DB排他重获释放后与两套自有程序/Profile/blob/index/stage/archive/control副本/源提取和重复回执清理，globalL原样保留。无日常/官方/系统/真实业务修改、新release/app/DMG或发布。开放选择与其它一般图/客户端/显式恢复/完整集合/旧revision4及Windows/NAME/System代理/发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 静态全选名单与禁用模型声明
+
+mainee1d607bd按固化官方configuredIds与最终disabledModelKeys规则，空/省略静态选择使用models∪retainModels去重名单，models为空才补defaultModel；非空选择仍优先，开放动态仍None。disabledModels按官方完整slug编码等价过滤，原碰撞先拒绝再过滤，不借禁用隐瞒歧义，不影响另一渠道同ID。原exactReady/原件/身份/锁/预算保持，combos/custom等未知继续。详[静态全选过滤](0.2.24-contracts/static-all-selected-routes-r1.md)。
+
+3个原算法失败先验保留，修后31相关/编译/格式/严格Clippy过。新Profile真实名单2+retain2含重复、全选空数组、禁用1项：Start9066/Status230/Stop8663ms，启动前声明与Ready都精确2启用路由，retain-only存在/禁用项排除；七原字节全true/完整树/两锁/Restored revision7，重开1247ms NotRequired/canStarttrue。原函数exit0/resultpassed，外层acceptedfalse，未重复无依赖旧验证或冒整版。
+
+证据.adg/evidence/0.2.24/static-all-selected-routes-r1/及manifest保留旧失败/源锚点/准确binary与实际名单对照、四frame/index/plan/receipt/35内容引用及最终树SHA匹配。原主端点/自有镜像/helper缺席，3精确新协调DB排他取得释放后连同自有程序/Profile/blob/index/stage/archive/control副本/源提取/重复回执清理，globalL原样保留。无日常/官方/系统/业务修改、新release/app/DMG或发布。其它一般图/全客户端/显式恢复/完整集合/旧revision4及Windows/NAME/System代理/发布验证/固定候选继续，目标active。

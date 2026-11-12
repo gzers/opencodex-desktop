@@ -1,0 +1,72 @@
+[
+  {
+    "path": "src/codex/catalog/provider-models.ts",
+    "line": 204,
+    "text": "const seedStaticDefault = prov.liveModels === false"
+  },
+  {
+    "path": "src/codex/catalog/provider-models.ts",
+    "line": 210,
+    "text": "const configuredIds = [...new Set(["
+  },
+  {
+    "path": "src/codex/catalog/provider-models.ts",
+    "line": 211,
+    "text": "...((seedVertexDefault || seedStaticDefault) && prov.defaultModel ? [prov.defaultModel] : []),"
+  },
+  {
+    "path": "src/codex/catalog/provider-models.ts",
+    "line": 212,
+    "text": "...(prov.models ?? []),"
+  },
+  {
+    "path": "src/codex/catalog/provider-models.ts",
+    "line": 213,
+    "text": "...(prov.retainModels ?? []),"
+  },
+  {
+    "path": "src/codex/catalog/provider-models.ts",
+    "line": 215,
+    "text": "const configured: CatalogModel[] = configuredIds.map(id => applyProviderConfigHints("
+  },
+  {
+    "path": "src/codex/catalog/provider-models.ts",
+    "line": 251,
+    "text": "const ids = [...configuredIds];"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 588,
+    "text": "const disabledModelKeys = new Set([...disabledModels].map(slugEquivalenceKey));"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 592,
+    "text": "const selectedModelKeysByProvider = new Map([...selectedModelsByProvider].map(([provider, models]) => ("
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 613,
+    "text": "if (disabledModelKeys.has(key)) return false;"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 617,
+    "text": "const selected = selectedModelKeysByProvider.get(provider);"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 839,
+    "text": "if (disabledModelKeys.has(slugEquivalenceKey(slug))) return false;"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 847,
+    "text": "const selected = selectedModelKeysByProvider.get(provider);"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 848,
+    "text": "return selected === undefined || selected.has(slugEquivalenceKey(slug));"
+  }
+]

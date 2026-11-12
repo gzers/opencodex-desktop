@@ -1,0 +1,30 @@
+{
+  "selectedModels": [],
+  "models": [
+    "claude-opus-5-5",
+    "gpt-6-sol"
+  ],
+  "retainModels": [
+    "gpt-6-sol",
+    "vendor/gemini-3.5-pro"
+  ],
+  "disabledModels": [
+    "native-fixture/gpt-6-sol"
+  ],
+  "independentBeforeStartRoutes": [
+    "native-fixture/claude-opus-5-5",
+    "native-fixture/vendor-gemini-3.5-pro"
+  ],
+  "actualReadyRows": [
+    {
+      "slug": "native-fixture/claude-opus-5-5",
+      "displayName": "native-fixture/opus"
+    },
+    {
+      "slug": "native-fixture/vendor-gemini-3.5-pro",
+      "displayName": "native-fixture/g3p"
+    }
+  ],
+  "exactTwoEnabledRows": true,
+  "configProjectionContainsNoCredentials": true
+}
