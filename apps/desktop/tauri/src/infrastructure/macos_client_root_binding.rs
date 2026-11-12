@@ -114,6 +114,21 @@ pub(super) fn resolve(
     head: Option<&Head>,
     connection: &Connection,
 ) -> io::Result<(PinnedDirectory, Option<root_creation::References>)> {
+    resolve_originals(context, data, manager, stored, head, connection)
+        .map(|(client, origin, _)| (client, origin))
+}
+pub(super) fn resolve_originals(
+    context: &ProcessContext,
+    data: &PinnedDirectory,
+    manager: &PinnedDirectory,
+    stored: &[u8],
+    head: Option<&Head>,
+    connection: &Connection,
+) -> io::Result<(
+    PinnedDirectory,
+    Option<root_creation::References>,
+    Option<Originals>,
+)> {
     let logical = context.working_directory.join(".codex");
     let value = crate::modules::model_config::schema_v2::parse_strict_json_v2(stored)
         .map_err(|_| denied("root scope binding is not strict JSON"))?;
@@ -129,7 +144,7 @@ pub(super) fn resolve(
         if scope(context, data, &client)? != stored {
             return Err(denied("ordinary index context changed"));
         }
-        return Ok((client, None));
+        return Ok((client, None, None));
     }
     let binding: RootBinding = decode(stored)?;
     if binding.schema_version != 1 {
@@ -221,7 +236,7 @@ pub(super) fn resolve(
         if scope_at(context, data, &client, &logical)? != binding.scope {
             return Err(denied("retired root logical context changed"));
         }
-        return Ok((client, Some(binding.original_root)));
+        return Ok((client, Some(binding.original_root), Some(originals)));
     }
     let path = std::fs::canonicalize(&logical)?;
     let client = PinnedDirectory::open(&path)?;
@@ -235,7 +250,7 @@ pub(super) fn resolve(
         &client,
         &binding.original_root,
     )?;
-    verify_capture(
+    let originals = verify_capture(
         stored,
         &binding.original_root,
         data,
@@ -243,5 +258,5 @@ pub(super) fn resolve(
         &client,
         head,
     )?;
-    Ok((client, Some(binding.original_root)))
+    Ok((client, Some(binding.original_root), originals))
 }

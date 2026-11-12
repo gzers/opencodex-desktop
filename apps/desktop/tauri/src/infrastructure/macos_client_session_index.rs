@@ -874,6 +874,10 @@ impl Index {
         self.checked_head().map(|_| ())
     }
     fn checked_head(&self) -> io::Result<Option<Head>> {
+        self.checked_head_originals().map(|v| v.0)
+    }
+    fn checked_head_originals(&self) -> io::Result<(Option<Head>, Option<Originals>)> {
+        let mut originals = None;
         let observed_head = read_head(self.connection()?)?;
         self.data.private()?;
         if self.root_registration.is_none() {
@@ -896,7 +900,7 @@ impl Index {
                 opencodex_home: self.context_home.clone(),
             };
             let current = &observed_head;
-            let (resolved, origin) = root_binding::resolve(
+            let (resolved, origin, observed_originals) = root_binding::resolve_originals(
                 &context,
                 &self.data,
                 &self.action_parent,
@@ -904,6 +908,7 @@ impl Index {
                 current.as_ref(),
                 self.connection()?,
             )?;
+            originals = observed_originals;
             if resolved.identity() != self.client.identity() || origin.as_ref() != Some(refs) {
                 return Err(denied("indexed current root or origin changed"));
             }
@@ -920,7 +925,7 @@ impl Index {
         if self.root_registration.is_some() && observed_head.is_none() {
             return Err(denied("registered first root session disappeared"));
         }
-        Ok(observed_head)
+        Ok((observed_head, originals))
     }
     /// Current independent storage/lock facts only. This is never root or
     /// mutation authority; root content must be verified in the SAME caller
@@ -978,22 +983,11 @@ impl Index {
         self.checked_head()
     }
     pub fn registered_root_originals(&self, expected: &Head) -> io::Result<Originals> {
-        if self.head()?.as_ref() != Some(expected) {
+        let (head, originals) = self.checked_head_originals()?;
+        if head.as_ref() != Some(expected) || self.root_registration.is_none() {
             return Err(denied("root Original references changed before inspection"));
         }
-        let origin = self
-            .root_registration
-            .as_ref()
-            .ok_or_else(|| denied("ordinary existing-root index has no original absence"))?;
-        root_binding::verify_capture(
-            &self.binding,
-            origin,
-            &self.data,
-            &self.profile,
-            &self.client,
-            expected,
-        )?
-        .ok_or_else(|| denied("root Original is not independently registered"))
+        originals.ok_or_else(|| denied("root Original is not independently registered"))
     }
     pub fn has_original_root_absence(&self) -> bool {
         self.root_registration.is_some()
@@ -1036,7 +1030,10 @@ impl Index {
             .as_ref()
             .ok_or_else(|| denied("root phase has no original absence"))?;
         let expected = proof.source();
-        if expected.ticket != origin.id || self.head()?.as_ref() != Some(expected) {
+        // write() still requires the complete current Head inside BEGIN
+        // immediately before references mutate; do not repeat that same full
+        // observation before the typed proof without an intervening write.
+        if expected.ticket != origin.id {
             return Err(denied("root phase source changed"));
         }
         let refs = proof
@@ -1401,7 +1398,6 @@ impl Index {
         id: &str,
         sha256: &str,
     ) -> io::Result<Head> {
-        self.check()?;
         if expected.root_retirement.is_some()
             || !matches!(
                 expected.state,
@@ -1456,7 +1452,6 @@ impl Index {
         let digest = proof
             .require(&self.data, &self.profile, expected)?
             .to_string();
-        self.check()?;
         let next = Head {
             revision: expected
                 .revision
@@ -1739,7 +1734,10 @@ impl Index {
                 "independent root retirement references cannot be discarded",
             ));
         }
-        self.check()?;
+        // Before opening the transaction check the actual action/DB pins. The
+        // complete root/current-head check below runs inside the transaction
+        // immediately before any reference mutation, not twice without writes.
+        self.check_storage()?;
         let c = self.connection()?;
         c.execute_batch("BEGIN IMMEDIATE").map_err(database_error)?;
         let run = (|| -> io::Result<()> {
@@ -1748,7 +1746,7 @@ impl Index {
                     r.get(0)
                 })
                 .map_err(database_error)?;
-            if binding != self.binding || self.head()?.as_ref() != expected {
+            if binding != self.binding || self.checked_head()?.as_ref() != expected {
                 return Err(denied("current session changed before reference commit"));
             }
             let bytes = encode(next)?;
