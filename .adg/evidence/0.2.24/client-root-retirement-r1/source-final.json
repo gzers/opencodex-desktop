@@ -1,0 +1,28 @@
+{
+  "commit": "947fc8139c825f3415706f8938f27e06b5003b9a",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+      "sha256": "9e915e93b0fc127c7326b89f45c14003c062556d2ea0ea03a7cb0e2af25854d1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_creation.rs",
+      "sha256": "d9fb804e8d4e366023250bffc8b4650ffb3be728694f51f5b9f94b1db7da30ca"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement.rs",
+      "sha256": "c967a97cecaab459a57fa7ef6479bb8337dc7a5cbea3eaacd0df30b3d7e23bae"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement_tests.rs",
+      "sha256": "5fda9b60af1f006e756a2c96f5ba58451ac34188ae47caf413f2938cd59e7322"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "sha256": "1659822bc1988a783e41a5a5ac59a5f0aee7341753a165f0c0d2b3e2da7daff7"
+    }
+  ],
+  "finalCompiledTestBinarySha256": "28b121837b844bc0ce731d0be120575f5c984360e0bfd856122d288970dc425e",
+  "scope": "Sequential affected batches; later archive-bootstrap public API was verified by its own exact directed test and strict Clippy. Earlier tests do not claim they executed this later API.",
+  "accepted": false
+}
