@@ -33,6 +33,22 @@ pub struct TreeSnapshot {
     total_bytes: u64,
     coordination: bool,
 }
+
+/// Recorded content/identity projection only, never a native mutation permit.
+#[derive(Clone, PartialEq, Eq)]
+pub(super) struct RecordedFile {
+    identity: Identity,
+    pub(super) protection: Protection,
+    bytes: u64,
+    sha256: String,
+}
+impl RecordedFile {
+    pub(super) fn matches(&self, image: &Image) -> bool {
+        matches!(image, Image::File { identity, protection, bytes, .. }
+            if *identity == self.identity && *protection == self.protection
+                && bytes.len() as u64 == self.bytes && digest(bytes) == self.sha256)
+    }
+}
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case", deny_unknown_fields)]
 enum Entry {
@@ -360,6 +376,24 @@ fn walk(
     Ok(())
 }
 impl TreeSnapshot {
+    pub(super) fn recorded_file(&self, path: &str) -> io::Result<Option<RecordedFile>> {
+        match self.entries.iter().find(|entry| entry.path() == path) {
+            None => Ok(None),
+            Some(Entry::File {
+                identity,
+                protection,
+                bytes,
+                sha256,
+                ..
+            }) => Ok(Some(RecordedFile {
+                identity: identity.clone(),
+                protection: protection.clone(),
+                bytes: *bytes,
+                sha256: sha256.clone(),
+            })),
+            _ => Err(denied("recorded target is not a regular file")),
+        }
+    }
     /// Only the exact three plan targets/stages are separately governed by
     /// Pending's native-object review. Everything else keeps the ordinary full
     /// readback rules. A live claim journal is ignored only inside a checked
@@ -370,12 +404,23 @@ impl TreeSnapshot {
         plan: &str,
         leased: bool,
     ) -> bool {
-        self.recovery_remainder_inner(current, Some(plan), leased)
+        self.recovery_remainder_inner(current, Some(plan), leased, false)
     }
     pub(super) fn preplan_remainder_matches(&self, current: &Self, leased: bool) -> bool {
-        self.recovery_remainder_inner(current, None, leased)
+        self.recovery_remainder_inner(current, None, leased, false)
     }
-    fn recovery_remainder_inner(&self, current: &Self, plan: Option<&str>, leased: bool) -> bool {
+    /// Only Pending may select this projection after admitting an explicit
+    /// fourth artifact. Its native object review owns that exact file.
+    pub(super) fn remainder_with_empty_config(&self, current: &Self, leased: bool) -> bool {
+        self.recovery_remainder_inner(current, None, leased, true)
+    }
+    fn recovery_remainder_inner(
+        &self,
+        current: &Self,
+        plan: Option<&str>,
+        leased: bool,
+        empty_config: bool,
+    ) -> bool {
         if plan.is_some_and(|plan| {
             uuid::Uuid::parse_str(plan)
                 .map(|p| p.to_string() != plan)
@@ -394,6 +439,7 @@ impl TreeSnapshot {
             tree.entries.retain(|entry| {
                 let path = entry.path();
                 !(NAMES.contains(&path)
+                    || empty_config && path == "config.toml"
                     || stages.iter().any(|s| s == path)
                     || leased
                         && matches!(entry, Entry::Coordination { path, .. }

@@ -11,6 +11,9 @@ use std::{cell::Cell, marker::PhantomData};
 /// that can release these connections while the callback continues. Expired
 /// work must stop and remains a failure, but locks last until its stack unwinds.
 /// This proves coordinator ownership only, not service exit or file provenance.
+#[path = "native_config_write_guard.rs"]
+pub mod config;
+
 pub struct NativeLease {
     connections: Vec<rusqlite::Connection>,
     pins: Vec<CoordinationFilePin>,

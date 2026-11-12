@@ -1,12 +1,27 @@
-//! Native reversible file publication, confined to the three admitted artifacts.
+//! Native reversible publication of the assessed artifacts and, when admitted,
+//! one originally absent first-use Codex config. All targets share the same
+//! native-object review, conflict preservation and immutable outcome.
 //! Ordinary current-session calls require borrowed original Stop/pair/lease
 //! authority. Content assessment or private journals alone cannot mint it.
 //! Descriptor checks followed by rename are not a kernel compare-and-swap on
 //! an expected inode. The lifecycle factory must prove live official writer
 //! exclusion across the mutation, not merely a formerly valid lease.
-//! Whole-session success remains separate from this three-file publication.
+//! Whole-session success remains separate from artifact publication.
 use super::*;
 use crate::modules::runtime::client_artifact_policy as policy;
+#[path = "macos_client_empty_config.rs"]
+mod empty_config;
+use empty_config::{EmptyConfig, History as ConfigHistory};
+fn target_name(i: usize) -> io::Result<&'static str> {
+    if i == 3 {
+        Ok("config.toml")
+    } else {
+        NAMES
+            .get(i)
+            .copied()
+            .ok_or_else(|| denied("invalid artifact index"))
+    }
+}
 
 unsafe extern "C" {
     fn acl_copy_int(bytes: *const libc::c_void) -> *mut libc::c_void;
@@ -33,6 +48,16 @@ impl<'a> MutationPermit<'a> {
         Self {
             authority: Authority::Explicit(authority),
         }
+    }
+    fn config_write_guard(
+        &self,
+    ) -> io::Result<crate::infrastructure::official_client_coordination::native::config::Guard<'_>>
+    {
+        match &self.authority {
+            Authority::Current(a) => a.config_write_guard(),
+            Authority::Explicit(a) => a.config_write_guard(),
+        }
+        .map_err(|_| denied("official config write exclusion unavailable"))
     }
     pub(super) fn check(&self, originals: &Originals) -> io::Result<()> {
         match &self.authority {
@@ -78,6 +103,8 @@ struct Plan {
     journal_stages: bool,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     recovery_observation: Option<RecoveryObservation>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    empty_config: Option<EmptyConfig>,
     id: String,
     attempt: String,
     phases: Vec<String>,
@@ -85,6 +112,19 @@ struct Plan {
     staged: [Option<Identity>; 3],
     evidence: Evidence,
 }
+impl Plan {
+    fn count(&self) -> usize {
+        3 + usize::from(self.empty_config.is_some())
+    }
+    fn kind(&self, i: usize) -> Kind {
+        if i == 3 {
+            Kind::Remove
+        } else {
+            self.kinds[i]
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 struct RearmedPlan {
@@ -469,9 +509,13 @@ fn read_plan_depth(
         (
             plan.schema_version,
             plan.journal_stages,
-            plan.recovery_observation.is_some()
+            plan.recovery_observation.is_some(),
+            plan.empty_config.is_some()
         ),
-        (1, false, false) | (3, true, false) | (4, true, true)
+        (1, false, false, false)
+            | (3, true, false, false)
+            | (4, true, true, false)
+            | (5, true, _, true)
     ) || plan.id != id
         || plan.attempt != originals.attempt
     {
@@ -487,6 +531,7 @@ pub struct Pending<'a> {
     sha256: String,
     object_id: String,
     journal_stages: bool,
+    empty_config: bool,
 }
 /// Read-only assessment; this never grants replay authority.
 pub(super) struct RecoveryReview {
@@ -500,8 +545,9 @@ impl<'a> Pending<'a> {
         originals: &Originals,
         evidence: &Evidence,
     ) -> io::Result<String> {
-        let (captures, phases) = Self::captures(originals)?;
+        let (captures, phases, config) = Self::captures(originals)?;
         let decisions = kinds(&captures, evidence)?;
+        let empty_config = config.capture(&originals.client)?;
         let current = Capture::read(&originals.client)?;
         if current != captures[3] {
             return Err(denied(
@@ -513,6 +559,7 @@ impl<'a> Pending<'a> {
         Ok(digest(&encode(&(
             phases,
             decisions,
+            empty_config,
             current,
             &evidence.declared_routes,
             &evidence.retained_pids,
@@ -589,7 +636,7 @@ impl<'a> Pending<'a> {
             ));
         }
         let stage = format!(".ocxd-restore-{}-{i}", self.object_id);
-        match plan.kinds[i] {
+        match plan.kind(i) {
             // Only our known original was installed into target. The other
             // complete regular object can be returned by another lossless swap.
             Kind::Swap
@@ -600,7 +647,7 @@ impl<'a> Pending<'a> {
                     self.staging(),
                     &stage,
                     &self.originals.client,
-                    NAMES[i],
+                    target_name(i)?,
                     libc::RENAME_SWAP,
                 )?;
             }
@@ -615,7 +662,7 @@ impl<'a> Pending<'a> {
                     self.staging(),
                     &stage,
                     &self.originals.client,
-                    NAMES[i],
+                    target_name(i)?,
                     libc::RENAME_EXCL,
                 )?;
             }
@@ -628,7 +675,7 @@ impl<'a> Pending<'a> {
                     self.staging(),
                     &stage,
                     &self.originals.client,
-                    NAMES[i],
+                    target_name(i)?,
                     libc::RENAME_EXCL,
                 )?;
             }
@@ -716,6 +763,60 @@ impl<'a> Pending<'a> {
     pub(super) fn object_id(&self) -> &str {
         &self.object_id
     }
+    /// Called only on a Pending whose immutable plan/source was admitted by
+    /// open()/load(). This is a content projection, not native permission.
+    pub(super) fn remainder_matches(
+        &self,
+        original: &TreeSnapshot,
+        current: &TreeSnapshot,
+        leased: bool,
+    ) -> bool {
+        if self.empty_config {
+            original.remainder_with_empty_config(current, leased)
+        } else if self.stages_in_journal() {
+            original.preplan_remainder_matches(current, leased)
+        } else {
+            original.recovery_remainder_matches(current, self.object_id(), leased)
+        }
+    }
+    pub(super) fn empty_config_preplan_matches(
+        originals: &Originals,
+        head: &session_index::Head,
+        original: &TreeSnapshot,
+        current: &TreeSnapshot,
+        leased: bool,
+    ) -> io::Result<bool> {
+        if original.recorded_file("config.toml")?.is_some()
+            || current.recorded_file("config.toml")?.is_none()
+        {
+            return Ok(false);
+        }
+        let config = if head.state == session_index::State::Stopped {
+            Self::captures(originals)?.2
+        } else {
+            let missing_pre = head.state == session_index::State::Ready;
+            if !missing_pre && head.state != session_index::State::StopPrepared {
+                return Ok(false);
+            }
+            let frames = originals.frames_through(if missing_pre {
+                Phase::Ready
+            } else {
+                Phase::PreStop
+            })?;
+            ConfigHistory::new(
+                &frames[0].0.tree,
+                &frames[1].0.tree,
+                if missing_pre {
+                    None
+                } else {
+                    Some(&frames[2].0.tree)
+                },
+                current,
+            )?
+        };
+        Ok(config.capture(&originals.client)?.is_some()
+            && original.remainder_with_empty_config(current, leased))
+    }
     pub(super) fn readback_name(&self, decision: Decision) -> String {
         let base = if decision == Decision::Complete {
             "completion-readback"
@@ -783,6 +884,7 @@ impl<'a> Pending<'a> {
             sha256: sha256.into(),
             object_id: plan.object_id,
             journal_stages: plan.journal_stages,
+            empty_config: plan.empty_config.is_some(),
         };
         result.load()?;
         Ok(result)
@@ -879,10 +981,10 @@ impl<'a> Pending<'a> {
     fn captures_with_observation(
         originals: &Originals,
         observation: Option<&RecoveryObservation>,
-    ) -> io::Result<([Capture; 4], Vec<String>)> {
+    ) -> io::Result<([Capture; 4], Vec<String>, ConfigHistory)> {
         let Some(observation) = observation else {
-            let (c, h) = Self::captures(originals)?;
-            return Ok((c, h.to_vec()));
+            let (c, h, config) = Self::captures(originals)?;
+            return Ok((c, h.to_vec(), config));
         };
         session_index::validate(&observation.source_head)?;
         let refs = observation
@@ -927,6 +1029,16 @@ impl<'a> Pending<'a> {
                 return Err(denied("observation original prefix changed"));
             }
         }
+        let config = ConfigHistory::new(
+            &frames[0].0.tree,
+            &frames[1].0.tree,
+            if refs.phases.len() == 2 {
+                Some(&frames[2].0.tree)
+            } else {
+                None
+            },
+            &observation.tree,
+        )?;
         observation.tree.verify_archive(&originals.directory)?;
         observation.grok.verify_archive(&originals.directory)?;
         let mut captures = frames
@@ -946,6 +1058,7 @@ impl<'a> Pending<'a> {
                 .try_into()
                 .map_err(|_| denied("original prefix incomplete"))?,
             hashes,
+            config,
         ))
     }
     pub(super) fn observed_preparation_fingerprint(
@@ -980,6 +1093,17 @@ impl<'a> Pending<'a> {
             },
             observation.capture.clone(),
         ];
+        let config = ConfigHistory::new(
+            &frames[0].0.tree,
+            &frames[1].0.tree,
+            if missing_pre {
+                None
+            } else {
+                Some(&frames[2].0.tree)
+            },
+            &observation.tree,
+        )?;
+        let empty_config = config.capture(&originals.client)?;
         let decisions = if missing_pre {
             kinds_current(&c, evidence)?
         } else {
@@ -989,6 +1113,7 @@ impl<'a> Pending<'a> {
             head,
             &frames.iter().map(|(_, b)| digest(b)).collect::<Vec<_>>(),
             decisions,
+            empty_config,
             c[3].clone(),
             &evidence.declared_routes,
             &evidence.retained_pids,
@@ -1009,9 +1134,7 @@ impl<'a> Pending<'a> {
             return Err(denied("prepared observation source head changed"));
         }
         let original = self.originals.frame(Phase::Original)?.0;
-        if !original
-            .tree
-            .preplan_remainder_matches(&observation.tree, true)
+        if !self.remainder_matches(&original.tree, &observation.tree, true)
             || !original.grok.restored_matches(&observation.grok)
         {
             return Err(denied(
@@ -1110,10 +1233,17 @@ impl<'a> Pending<'a> {
         }
         Ok(())
     }
-    fn captures(originals: &Originals) -> io::Result<([Capture; 4], [String; 4])> {
+    fn captures(originals: &Originals) -> io::Result<([Capture; 4], [String; 4], ConfigHistory)> {
+        let frames = originals.frames_through(Phase::Stopped)?;
+        let config = ConfigHistory::new(
+            &frames[0].0.tree,
+            &frames[1].0.tree,
+            Some(&frames[2].0.tree),
+            &frames[3].0.tree,
+        )?;
         let mut captures = Vec::new();
         let mut hashes = Vec::new();
-        for (frame, raw) in originals.frames_through(Phase::Stopped)? {
+        for (frame, raw) in frames {
             captures.push(frame.capture);
             hashes.push(digest(&raw));
         }
@@ -1124,6 +1254,7 @@ impl<'a> Pending<'a> {
             hashes
                 .try_into()
                 .map_err(|_| denied("phase digests incomplete"))?,
+            config,
         ))
     }
     #[cfg(test)]
@@ -1166,8 +1297,12 @@ impl<'a> Pending<'a> {
                 "restore staging and client are on different volumes",
             ));
         }
-        let (captures, phases) =
+        let (captures, phases, config) =
             Self::captures_with_observation(originals, recovery_observation.as_ref())?;
+        let empty_config = config.capture(&originals.client)?;
+        if empty_config.is_some() && !journal_stages {
+            return Err(denied("empty config requires private journal stages"));
+        }
         let ks = if recovery_observation
             .as_ref()
             .is_some_and(|o| o.source_head.state == session_index::State::Ready)
@@ -1208,14 +1343,18 @@ impl<'a> Pending<'a> {
             }
             checkpoint("staged")?;
         }
-        if Capture::read(&originals.client)? != captures[3] {
+        if Capture::read(&originals.client)? != captures[3]
+            || config.capture(&originals.client)? != empty_config
+        {
             return Err(denied("source changed while preparing original stages"));
         }
         check()?;
         let plan = Plan {
             object_id: id.clone(),
             rearmed: false,
-            schema_version: if recovery_observation.is_some() {
+            schema_version: if empty_config.is_some() {
+                5
+            } else if recovery_observation.is_some() {
                 4
             } else if journal_stages {
                 3
@@ -1224,6 +1363,7 @@ impl<'a> Pending<'a> {
             },
             journal_stages,
             recovery_observation,
+            empty_config,
             id: id.clone(),
             attempt: originals.attempt.clone(),
             phases,
@@ -1238,6 +1378,7 @@ impl<'a> Pending<'a> {
             originals,
             object_id: id.clone(),
             journal_stages,
+            empty_config: plan.empty_config.is_some(),
             id,
             sha256: digest(&bytes),
         };
@@ -1246,11 +1387,15 @@ impl<'a> Pending<'a> {
     }
     fn load(&self) -> io::Result<(Plan, [Capture; 4])> {
         let plan = read_plan(self.originals, &self.id, &self.sha256)?;
-        if plan.object_id != self.object_id || plan.journal_stages != self.journal_stages {
+        if plan.object_id != self.object_id
+            || plan.journal_stages != self.journal_stages
+            || plan.empty_config.is_some() != self.empty_config
+        {
             return Err(denied("restore object lineage changed"));
         }
-        let (captures, hashes) =
+        let (captures, hashes, config) =
             Self::captures_with_observation(self.originals, plan.recovery_observation.as_ref())?;
+        config.validate(plan.empty_config.as_ref())?;
         let current = plan
             .recovery_observation
             .as_ref()
@@ -1273,6 +1418,30 @@ impl<'a> Pending<'a> {
         Ok((plan, captures))
     }
     pub fn apply(&self, decision: Decision, permit: &MutationPermit<'_>) -> io::Result<()> {
+        if self.empty_config {
+            let guard = std::cell::RefCell::new(permit.config_write_guard()?);
+            let result = self.apply_checked(
+                decision,
+                &|| {
+                    permit.check(self.originals)?;
+                    guard
+                        .borrow_mut()
+                        .check()
+                        .map_err(|_| denied("official config writer exclusion changed"))
+                },
+                &|_| Ok(()),
+            );
+            // Even a failed publication must release normally when possible;
+            // the original result remains failed and no lock timeout grants success.
+            let released = guard
+                .into_inner()
+                .finish()
+                .map_err(|_| denied("official config writer release unconfirmed"));
+            result?;
+            released?;
+            return Ok(());
+        }
+
         #[cfg(test)]
         if std::env::var_os("OCXD024_INTERRUPT_ARTIFACT").as_deref() == Some(OsStr::new("1")) {
             if !self.originals.data.path.starts_with("/private/tmp")
@@ -1341,7 +1510,7 @@ impl<'a> Pending<'a> {
             }
         };
         let mut observed = Vec::new();
-        for i in 0..3 {
+        for i in 0..plan.count() {
             let pair = self.pair(i)?;
             let archive = self.archive(i)?;
             let after = Self::state_of(&plan, &captures, i, &pair, &archive)?;
@@ -1356,10 +1525,19 @@ impl<'a> Pending<'a> {
                 } else {
                     &captures[3]
                 };
-                if !original_content(&pair.0, &expected.images[i]) {
+                let expected_image = if i == 3 {
+                    if decision == Decision::Complete {
+                        &Image::Absent
+                    } else {
+                        &plan.empty_config.as_ref().unwrap().stopped
+                    }
+                } else {
+                    &expected.images[i]
+                };
+                if !original_content(&pair.0, expected_image) {
                     return Err(denied("terminal client bytes or protection differ"));
                 }
-                if (plan.kinds[i] != Kind::Keep && after != (decision == Decision::Complete))
+                if (plan.kind(i) != Kind::Keep && after != (decision == Decision::Complete))
                     || pair.1 != Image::Absent
                 {
                     return Err(denied("recovery terminal disagrees with native objects"));
@@ -1399,7 +1577,7 @@ impl<'a> Pending<'a> {
     }
     fn pair(&self, i: usize) -> io::Result<(Image, Image)> {
         Ok((
-            capture_file(&self.originals.client, NAMES[i], MAX_CONTENT)?,
+            capture_file(&self.originals.client, target_name(i)?, MAX_CONTENT)?,
             capture_file(
                 self.staging(),
                 &format!(".ocxd-restore-{}-{i}", self.object_id),
@@ -1408,9 +1586,17 @@ impl<'a> Pending<'a> {
         ))
     }
     fn expected(plan: &Plan, c: &[Capture; 4], i: usize, after: bool) -> (Image, Image) {
-        let old = c[3].images[i].clone();
-        let desired = stat_image(&c[0].images[i], plan.staged[i].as_ref());
-        match (plan.kinds[i], after) {
+        let old = if i == 3 {
+            plan.empty_config.as_ref().unwrap().stopped.clone()
+        } else {
+            c[3].images[i].clone()
+        };
+        let desired = if i == 3 {
+            Image::Absent
+        } else {
+            stat_image(&c[0].images[i], plan.staged[i].as_ref())
+        };
+        match (plan.kind(i), after) {
             (Kind::Keep, _) => (old, Image::Absent),
             (Kind::Swap, false) => (old, desired),
             (Kind::Swap, true) => (desired, old),
@@ -1480,7 +1666,7 @@ impl<'a> Pending<'a> {
         }
         // Audit the whole batch before first mutation. No partial authorization
         // is created just because one catalog object happens to be eligible.
-        for i in 0..3 {
+        for i in 0..plan.count() {
             self.state(&plan, &c, i)?;
         }
         let intent = format!("restore-{}-intent.json", self.id);
@@ -1496,12 +1682,13 @@ impl<'a> Pending<'a> {
             _ => return Err(denied("restore intent changed")),
         }
         checkpoint("intent")?;
-        for (i, target_name) in NAMES.iter().enumerate() {
+        for i in 0..plan.count() {
+            let target_name = target_name(i)?;
             check()?;
             self.load()?;
             let after = self.state(&plan, &c, i)?;
             let want = decision == Decision::Complete;
-            if after != want && plan.kinds[i] != Kind::Keep {
+            if after != want && plan.kind(i) != Kind::Keep {
                 let stage = format!(".ocxd-restore-{}-{i}", self.object_id);
                 // An interrupted archive can be undone only by moving back the
                 // exact retained object into a still-absent original stage.
@@ -1531,7 +1718,7 @@ impl<'a> Pending<'a> {
                 }
                 check()?;
                 checkpoint("native_gap")?;
-                match plan.kinds[i] {
+                match plan.kind(i) {
                     Kind::Swap => rename(
                         self.staging(),
                         &stage,
@@ -1579,8 +1766,8 @@ impl<'a> Pending<'a> {
             checkpoint("step")?;
         }
         check()?;
-        for i in 0..3 {
-            if plan.kinds[i] != Kind::Keep
+        for i in 0..plan.count() {
+            if plan.kind(i) != Kind::Keep
                 && self.state(&plan, &c, i)? != (decision == Decision::Complete)
             {
                 return Err(denied("restore final state differs"));
@@ -1589,7 +1776,7 @@ impl<'a> Pending<'a> {
         // Move obsolete known objects into the protected journal, never delete
         // a guessed pathname. EXDEV leaves the transaction pending; no copy /
         // unsafe unlink fallback is performed for a different filesystem.
-        for i in 0..3 {
+        for i in 0..plan.count() {
             check()?;
             let (_, staged) = self.pair(i)?;
             if staged != Image::Absent {
@@ -1627,6 +1814,17 @@ impl<'a> Pending<'a> {
             .any(|(a, b)| !original_content(a, b))
         {
             return Err(denied("full original bytes or protection not restored"));
+        }
+        if let Some(config) = &plan.empty_config {
+            let actual = capture_file(&self.originals.client, "config.toml", 4096)?;
+            let expected = if decision == Decision::Complete {
+                &Image::Absent
+            } else {
+                &config.stopped
+            };
+            if !original_content(&actual, expected) {
+                return Err(denied("optional config target differs at terminal"));
+            }
         }
         check()?;
         let outcome = encode(

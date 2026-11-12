@@ -1439,3 +1439,392 @@ fn prepared_current_observation_must_match_the_reviewed_content_not_a_later_vali
         );
     }
 }
+
+fn first_use_config_at(root: PathBuf, prefix_count: usize) -> Fixture {
+    first_use_config_initial(root, prefix_count, false, true)
+}
+fn first_use_config_initial(
+    root: PathBuf,
+    prefix_count: usize,
+    originally_present: bool,
+    ready_present: bool,
+) -> Fixture {
+    let data = root.join("desktop");
+    let client = root.join("codex 中文 space");
+    for p in [&data, &client] {
+        fs::DirBuilder::new().mode(0o700).create(p).unwrap();
+    }
+    for name in [
+        ".opencodex-native-main.claim.sqlite",
+        ".opencodex-native-main.owner.sqlite",
+    ] {
+        fs::write(client.join(name), b"").unwrap();
+        fs::set_permissions(client.join(name), fs::Permissions::from_mode(0o600)).unwrap();
+    }
+    if originally_present {
+        fs::write(client.join("config.toml"), b"\n").unwrap();
+        fs::set_permissions(
+            client.join("config.toml"),
+            fs::Permissions::from_mode(0o600),
+        )
+        .unwrap();
+    }
+    let originals = Originals::begin(&data, &client).unwrap();
+    if ready_present {
+        fs::write(
+            client.join("config.toml"),
+            b"model_provider = 'opencodex'\n",
+        )
+        .unwrap();
+        fs::set_permissions(
+            client.join("config.toml"),
+            fs::Permissions::from_mode(0o600),
+        )
+        .unwrap();
+    }
+    originals.seal(Phase::Ready).unwrap();
+    if prefix_count >= 2 {
+        originals.seal(Phase::PreStop).unwrap();
+    }
+    fs::write(client.join("config.toml"), b"\n").unwrap();
+    fs::set_permissions(
+        client.join("config.toml"),
+        fs::Permissions::from_mode(0o600),
+    )
+    .unwrap();
+    if prefix_count == 3 {
+        originals.seal(Phase::Stopped).unwrap();
+    }
+    Fixture {
+        _temp: None,
+        originals,
+        evidence: Evidence {
+            declared_routes: Some(vec!["channel/model".into()]),
+            retained_pids: vec![100, 101],
+            audit_home: "synthetic-captured-home".into(),
+            not_before: chrono::DateTime::parse_from_rfc3339("2026-11-11T10:00:00Z")
+                .unwrap()
+                .into(),
+            not_after: chrono::DateTime::parse_from_rfc3339("2026-11-11T10:00:02Z")
+                .unwrap()
+                .into(),
+        },
+    }
+}
+fn first_use_config(prefix_count: usize) -> Fixture {
+    let temp = tempfile::tempdir().unwrap();
+    let mut f = first_use_config_at(temp.path().canonicalize().unwrap(), prefix_count);
+    f._temp = Some(temp);
+    f
+}
+fn first_use_source(f: &Fixture, prefix_count: usize) -> session_index::Head {
+    let phases = [Phase::Ready, Phase::PreStop, Phase::Stopped]
+        .into_iter()
+        .take(prefix_count)
+        .map(|p| (p, digest(&f.originals.frame(p).unwrap().1)))
+        .collect();
+    session_index::Head {
+        revision: 4 + prefix_count as u64,
+        ticket: uuid::Uuid::new_v4().to_string(),
+        state: if prefix_count == 1 {
+            session_index::State::Ready
+        } else if prefix_count == 2 {
+            session_index::State::StopPrepared
+        } else {
+            session_index::State::Stopped
+        },
+        references: Some(session::References {
+            attempt: f.originals.attempt().into(),
+            original_sha256: f.originals.original_sha256().into(),
+            scope_sha256: "b".repeat(64),
+            phases,
+            live_sha256: Some("c".repeat(64)),
+        }),
+        restore_plan: None,
+        completion_sha256: None,
+    }
+}
+
+#[test]
+fn first_use_empty_config_uses_the_same_reversible_engine_and_keeps_original_absence() {
+    for prefix in [3, 2, 1] {
+        let f = first_use_config(prefix);
+        let original_bytes = f.originals.frame(Phase::Original).unwrap().1;
+        let source = first_use_source(&f, prefix);
+        let pending = if prefix == 3 {
+            Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap()
+        } else {
+            Pending::prepare_observed_fixture(&f.originals, &source, f.evidence.clone()).unwrap()
+        };
+        let path = f.originals.client.path().join("config.toml");
+        assert_eq!(fs::read(&path).unwrap(), b"\n");
+        let (plan, _) = pending.load().unwrap();
+        assert_eq!(plan.schema_version, 5);
+        assert_eq!(plan.count(), 4);
+        assert!(plan.empty_config.is_some());
+        assert!(pending
+            .apply_fixture(Decision::Complete, &|point| if point == "after_native" {
+                Err(denied("fourth-artifact interruption"))
+            } else {
+                Ok(())
+            })
+            .is_err());
+        assert!(!path.exists());
+        assert_eq!(pending.review_recovery().unwrap().terminal, None);
+        pending
+            .apply_fixture(Decision::Rollback, &|_| Ok(()))
+            .unwrap();
+        assert_eq!(fs::read(&path).unwrap(), b"\n");
+        assert_eq!(
+            pending.review_recovery().unwrap().terminal,
+            Some(Decision::Rollback)
+        );
+        let next = pending.rearm_rolled_back().unwrap();
+        next.apply_fixture(Decision::Complete, &|_| Ok(())).unwrap();
+        assert!(!path.exists());
+        assert_eq!(
+            next.review_recovery().unwrap().terminal,
+            Some(Decision::Complete)
+        );
+        assert_eq!(next.object_id(), pending.object_id());
+        assert_eq!(
+            fs::read(
+                f.originals
+                    .directory
+                    .path()
+                    .join(format!("restore-{}-old-3", pending.object_id()))
+            )
+            .unwrap(),
+            b"\n"
+        );
+        assert_eq!(
+            f.originals.frame(Phase::Original).unwrap().1,
+            original_bytes
+        );
+        let original = f.originals.frame(Phase::Original).unwrap().0;
+        assert!(original
+            .tree
+            .restored_matches(&TreeSnapshot::read(&f.originals.client).unwrap(), true));
+        if prefix < 3 {
+            assert!(!f.originals.directory.path().join("stopped.json").exists());
+        }
+        if prefix == 1 {
+            assert!(!f.originals.directory.path().join("pre-stop.json").exists());
+        }
+    }
+}
+
+#[test]
+fn first_use_empty_config_refuses_new_content_replacement_and_missing_ready_provenance() {
+    for kind in [0, 1, 2] {
+        let f = first_use_config(3);
+        let path = f.originals.client.path().join("config.toml");
+        if kind == 0 {
+            fs::write(&path, b"model='outside'\n").unwrap();
+        }
+        if kind == 1 {
+            fs::rename(
+                &path,
+                f.originals
+                    .client
+                    .path()
+                    .parent()
+                    .unwrap()
+                    .join("displaced-empty-config"),
+            )
+            .unwrap();
+            fs::write(&path, b"\n").unwrap();
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        }
+        if kind == 2 {
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o640)).unwrap();
+        }
+        let actual = capture_file(&f.originals.client, "config.toml", 4096).unwrap();
+        assert!(Pending::prepare_fixture(&f.originals, f.evidence.clone()).is_err());
+        assert_eq!(
+            capture_file(&f.originals.client, "config.toml", 4096).unwrap(),
+            actual
+        );
+    }
+    let f = Fixture::new(); // No config existed at either Original or Ready.
+    fs::write(f.originals.client.path().join("config.toml"), b"\n").unwrap();
+    // Already independently captured Stopped did not include it: never learn it.
+    assert!(Pending::prepare_fixture(&f.originals, f.evidence.clone()).is_err());
+    assert!(!f
+        .originals
+        .frame(Phase::Original)
+        .unwrap()
+        .0
+        .tree
+        .restored_matches(&TreeSnapshot::read(&f.originals.client).unwrap(), true));
+    assert_eq!(
+        fs::read(f.originals.client.path().join("config.toml")).unwrap(),
+        b"\n"
+    );
+}
+
+#[test]
+fn first_use_empty_config_publication_race_returns_outside_bytes_and_refuses_success() {
+    let f = first_use_config(3);
+    let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+    let path = f.originals.client.path().join("config.toml");
+    let once = Cell::new(false);
+    assert!(pending
+        .apply_fixture(Decision::Complete, &|point| {
+            if point == "native_gap" && !once.replace(true) {
+                fs::rename(
+                    &path,
+                    f.originals
+                        .client
+                        .path()
+                        .parent()
+                        .unwrap()
+                        .join("displaced-owned-config"),
+                )?;
+                fs::write(&path, b"outside-user-configuration")?;
+            }
+            Ok(())
+        })
+        .is_err());
+    assert_eq!(fs::read(&path).unwrap(), b"outside-user-configuration");
+    assert!(pending.review_recovery().is_err());
+    assert!(!f
+        .originals
+        .directory
+        .path()
+        .join(format!("restore-{}-outcome.json", pending.id()))
+        .exists());
+}
+
+#[test]
+fn first_use_empty_config_real_crash_reopens_only_the_original_known_objects() {
+    const CHILD: &str = "OCXD024_EMPTY_CONFIG_CRASH";
+    if let Some(root) = std::env::var_os(CHILD) {
+        let root = PathBuf::from(root);
+        let f = first_use_config_at(root.clone(), 3);
+        let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+        let refs = [Phase::Ready, Phase::PreStop, Phase::Stopped]
+            .into_iter()
+            .map(|p| (p, digest(&f.originals.frame(p).unwrap().1)))
+            .collect::<Vec<_>>();
+        fs::write(root.join("independent-receipt.json"),wire(json!({"attempt":f.originals.attempt(),"original":f.originals.original_sha256(),"phases":refs,"id":pending.id(),"sha256":pending.sha256()}))).unwrap();
+        let wanted = std::env::var("OCXD024_EMPTY_CONFIG_BOUNDARY").unwrap();
+        pending
+            .apply_fixture(Decision::Complete, &|point| {
+                if point == wanted
+                    && (point != "archive"
+                        || f.originals
+                            .directory
+                            .path()
+                            .join(format!("restore-{}-old-3", pending.object_id()))
+                            .exists())
+                {
+                    std::process::exit(91);
+                }
+                Ok(())
+            })
+            .unwrap();
+        panic!("boundary not reached");
+    }
+    for boundary in ["after_native", "archive_gap", "archive", "terminal"] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let out=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::restore::tests::first_use_empty_config_real_crash_reopens_only_the_original_known_objects","--nocapture"]).env(CHILD,&root).env("OCXD024_EMPTY_CONFIG_BOUNDARY",boundary).output().unwrap();
+        assert_eq!(
+            out.status.code(),
+            Some(91),
+            "{} {}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let value: serde_json::Value =
+            serde_json::from_slice(&fs::read(root.join("independent-receipt.json")).unwrap())
+                .unwrap();
+        let phases: Vec<(Phase, String)> = serde_json::from_value(value["phases"].clone()).unwrap();
+        let originals = Originals::open(
+            &root.join("desktop"),
+            &root.join("codex 中文 space"),
+            value["attempt"].as_str().unwrap(),
+            value["original"].as_str().unwrap(),
+            &phases,
+        )
+        .unwrap();
+        let pending = Pending::open(
+            &originals,
+            value["id"].as_str().unwrap(),
+            value["sha256"].as_str().unwrap(),
+        )
+        .unwrap();
+        pending
+            .apply_fixture(Decision::Complete, &|_| Ok(()))
+            .unwrap();
+        assert!(!originals.client.path().join("config.toml").exists());
+        assert_eq!(
+            pending.review_recovery().unwrap().terminal,
+            Some(Decision::Complete)
+        );
+    }
+}
+
+#[test]
+fn first_use_empty_config_never_removes_existing_original_or_unrecorded_ready_content() {
+    let temp = tempfile::tempdir().unwrap();
+    let f = first_use_config_initial(temp.path().canonicalize().unwrap(), 3, true, true);
+    let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+    assert!(!pending.empty_config);
+    assert_eq!(pending.load().unwrap().0.count(), 3);
+    pending
+        .apply_fixture(Decision::Complete, &|_| Ok(()))
+        .unwrap();
+    assert_eq!(
+        fs::read(f.originals.client.path().join("config.toml")).unwrap(),
+        b"\n"
+    );
+    let temp = tempfile::tempdir().unwrap();
+    let f = first_use_config_initial(temp.path().canonicalize().unwrap(), 3, false, false);
+    assert!(Pending::prepare_fixture(&f.originals, f.evidence.clone()).is_err());
+    assert_eq!(
+        fs::read(f.originals.client.path().join("config.toml")).unwrap(),
+        b"\n"
+    );
+    let f = first_use_config(1);
+    fs::write(
+        f.originals.client.path().join("config.toml"),
+        b"model='outside-before-stop'\n",
+    )
+    .unwrap();
+    f.originals.seal(Phase::PreStop).unwrap();
+    fs::write(f.originals.client.path().join("config.toml"), b"\n").unwrap();
+    f.originals.seal(Phase::Stopped).unwrap();
+    assert!(Pending::prepare_fixture(&f.originals, f.evidence.clone()).is_err());
+}
+
+#[test]
+fn first_use_empty_config_plan_cannot_be_downgraded_to_omit_the_fourth_target() {
+    let f = first_use_config(3);
+    let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+    let bytes = fs::read(
+        f.originals
+            .directory
+            .path()
+            .join(format!("restore-{}.json", pending.id())),
+    )
+    .unwrap();
+    let mut value: serde_json::Value = serde_json::from_slice(&bytes).unwrap();
+    let id = uuid::Uuid::new_v4().to_string();
+    value["id"] = json!(id);
+    value["schemaVersion"] = json!(3);
+    value.as_object_mut().unwrap().remove("emptyConfig");
+    let bytes = wire(value);
+    create(
+        &f.originals.directory,
+        &format!("restore-{id}.json"),
+        &bytes,
+    )
+    .unwrap();
+    assert!(Pending::open(&f.originals, &id, &digest(&bytes)).is_err());
+    assert_eq!(
+        fs::read(f.originals.client.path().join("config.toml")).unwrap(),
+        b"\n"
+    );
+}

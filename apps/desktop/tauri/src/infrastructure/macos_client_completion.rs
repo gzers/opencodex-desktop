@@ -311,13 +311,7 @@ impl Originals {
         let stopped_tree = pending.stopped_tree()?;
         let codex = TreeSnapshot::read(&self.client)?;
         let grok = GrokSnapshot::read(&self.profile)?;
-        let remainder_matches = if pending.stages_in_journal() {
-            original.tree.preplan_remainder_matches(&codex, leased)
-        } else {
-            original
-                .tree
-                .recovery_remainder_matches(&codex, pending.object_id(), leased)
-        };
+        let remainder_matches = pending.remainder_matches(&original.tree, &codex, leased);
         if !remainder_matches || !original.grok.restored_matches(&grok) {
             return Ok((None, None));
         }
@@ -525,13 +519,7 @@ impl Originals {
             restore::Decision::Rollback => {
                 let review = pending.review_recovery()?;
                 review.terminal == Some(restore::Decision::Rollback)
-                    && if pending.stages_in_journal() {
-                        original.tree.preplan_remainder_matches(&codex, false)
-                    } else {
-                        original
-                            .tree
-                            .recovery_remainder_matches(&codex, pending.object_id(), false)
-                    }
+                    && pending.remainder_matches(&original.tree, &codex, false)
             }
         };
         if !tree_matches || !original.grok.restored_matches(&grok) {

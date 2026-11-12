@@ -264,7 +264,7 @@ impl Active {
                 self.session
                     .restore_completed_stop(context, proof, &pair, lease, deadline, plan)?;
                 let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
-                    .append_event("client-stop-recovery: three-artifact-originals restored and readback verified");
+                    .append_event("client-stop-recovery: assessed-artifact-originals restored and readback verified");
                 mark("release-coordination");
                 Ok(())
             })?;

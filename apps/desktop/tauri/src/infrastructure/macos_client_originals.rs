@@ -1165,3 +1165,26 @@ impl Originals {
 #[cfg(test)]
 #[path = "macos_client_originals_tests.rs"]
 mod tests;
+
+// Narrow read-only projection for the exact official config writer lock. It
+// shares the original descriptor/ACL/xattr checks without exposing arbitrary
+// artifact capture or granting mutation authority to the lock adapter.
+impl PinnedDirectory {
+    pub(crate) fn config_write_lock_image(&self) -> io::Result<Image> {
+        let image = capture_file(self, "config.toml.ocx-write.lock", 4096)?;
+        if let Image::File { protection, .. } = &image {
+            if protection.uid != unsafe { libc::geteuid() }
+                || protection.mode != 0o600
+                || protection.flags != 0
+                || protection.acl.is_some()
+                || protection
+                    .xattrs
+                    .iter()
+                    .any(|(k, v)| k != b"com.apple.provenance" || v.len() > 64)
+            {
+                return Err(denied("unsafe official config write lock image"));
+            }
+        }
+        Ok(image)
+    }
+}

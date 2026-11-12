@@ -521,278 +521,306 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
         preview::{inspect_preview, Evidence as PreviewEvidence, Status},
         Index, State,
     };
-    for prefix_count in [3, 2, 1] {
-        let recovery_observed = prefix_count < 3;
-        let f = Fixture::new();
-        let wire = |v: serde_json::Value| serde_json::to_vec(&v).unwrap();
-        let write = |name: &str, bytes: &[u8]| {
-            fs::write(f.client.join(name), bytes).unwrap();
-            fs::set_permissions(f.client.join(name), fs::Permissions::from_mode(0o600)).unwrap();
-        };
-        write("config.toml", b"native='original'");
-        write(
-            NAMES[0],
-            &wire(
-                serde_json::json!({"models":[{"slug":"native-5.4","display_name":"original native"}]}),
-            ),
-        );
-        for name in [
-            ".opencodex-native-main.claim.sqlite",
-            ".opencodex-native-main.owner.sqlite",
-        ] {
-            write(name, b"");
-        }
-        let index = Index::open(&f.context, &f.data, &f.client).unwrap();
-        let first = index.reserve_start().unwrap();
-        let mut session = f.session();
-        let captured = index
-            .advance(&first, State::Captured, Some(session.references().unwrap()))
-            .unwrap();
-        let ready = serde_json::json!({"models":[{"slug":"native-5.4","display_name":"native projection"},{"slug":"channel/model","display_name":"routed"}]});
-        let event = |writer: &str, target: &str, intent: &str| {
-            let mut b = wire(
-                serde_json::json!({"at":"2026-11-11T10:00:01Z","pid":101,"ppid":100,"command":writer,"opencodexHome":"synthetic-captured-home","target":target,"outcome":"written","intent":intent,"writer":writer,"configSource":"file","routedBefore":0,"routedAfter":1}),
+    for originally_absent_config in [false, true] {
+        for prefix_count in [3, 2, 1] {
+            let recovery_observed = prefix_count < 3;
+            let f = Fixture::new();
+            let wire = |v: serde_json::Value| serde_json::to_vec(&v).unwrap();
+            let write = |name: &str, bytes: &[u8]| {
+                fs::write(f.client.join(name), bytes).unwrap();
+                fs::set_permissions(f.client.join(name), fs::Permissions::from_mode(0o600))
+                    .unwrap();
+            };
+            if !originally_absent_config {
+                write("config.toml", b"native='original'");
+            }
+            write(
+                NAMES[0],
+                &wire(
+                    serde_json::json!({"models":[{"slug":"native-5.4","display_name":"original native"}]}),
+                ),
             );
-            b.push(10);
-            b
-        };
-        write(NAMES[0], &wire(ready.clone()));
-        write(
-            NAMES[1],
-            &wire(
-                serde_json::json!({"fetched_at":"2000-01-01T00:00:00Z","client_version":"0.0.0","models":ready["models"]}),
-            ),
-        );
-        write(NAMES[2], &event("startup-cache", "cache", "cache"));
-        let ready_sha = session.originals.seal(Phase::Ready).unwrap();
-        let live = Live {
-            schema_version: 1,
-            scope_sha256: session.scope_sha256.clone(),
-            ready_sha256: ready_sha,
-            record_sha256: "a".repeat(64),
-            generation: [42, unsafe { libc::geteuid() }.into(), 1, 1],
-            port: 12345,
-            parent_generation: [41, unsafe { libc::geteuid() }.into(), 1, 1],
-        };
-        let bytes = encode(&live).unwrap();
-        create(&session.originals.directory, "startup-live.json", &bytes).unwrap();
-        session.live_sha256 = Some(digest(&bytes));
-        let ready = index
-            .advance(&captured, State::Ready, Some(session.references().unwrap()))
-            .unwrap();
-        let pre = if prefix_count >= 2 {
-            session.originals.seal(Phase::PreStop).unwrap();
-            index
-                .advance(
-                    &ready,
-                    State::StopPrepared,
-                    Some(session.references().unwrap()),
-                )
-                .unwrap()
-        } else {
-            ready
-        };
-        write(NAMES[0], &wire(serde_json::json!({"models":[]})));
-        let mut audit = fs::read(f.client.join(NAMES[2])).unwrap();
-        audit.extend(event("codex-restore", "catalog", "restore"));
-        write(NAMES[2], &audit);
-        let stopped = if recovery_observed {
-            pre
-        } else {
-            session.originals.seal(Phase::Stopped).unwrap();
-            index
-                .advance(&pre, State::Stopped, Some(session.references().unwrap()))
-                .unwrap()
-        };
-        let prepared_state = if recovery_observed {
-            State::RecoveryPrepared
-        } else {
-            State::RestorePrepared
-        };
-        let offset = 3 - prefix_count;
-        let evidence = Evidence {
-            declared_routes: Some(vec!["channel/model".into()]),
-            retained_pids: vec![100, 101],
-            audit_home: "synthetic-captured-home".into(),
-            not_before: chrono::DateTime::parse_from_rfc3339("2026-11-11T10:00:00Z")
-                .unwrap()
-                .into(),
-            not_after: chrono::DateTime::parse_from_rfc3339("2026-11-11T10:00:02Z")
-                .unwrap()
-                .into(),
-        };
-        let pending = if recovery_observed {
-            Pending::prepare_observed_fixture(&session.originals, &stopped, evidence)
-        } else {
-            Pending::prepare_fixture(&session.originals, evidence)
-        }
-        .unwrap();
-        let head = index
-            .record_restore_plan(&stopped, pending.id(), pending.sha256())
-            .unwrap();
-        assert!(pending
-            .apply_fixture(Decision::Complete, &|p| if p == "after_native" {
-                Err(denied("fixture interruption"))
+            for name in [
+                ".opencodex-native-main.claim.sqlite",
+                ".opencodex-native-main.owner.sqlite",
+            ] {
+                write(name, b"");
+            }
+            let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+            let first = index.reserve_start().unwrap();
+            let mut session = f.session();
+            let captured = index
+                .advance(&first, State::Captured, Some(session.references().unwrap()))
+                .unwrap();
+            if originally_absent_config {
+                write("config.toml", b"model_provider='opencodex'\n");
+            }
+            let ready = serde_json::json!({"models":[{"slug":"native-5.4","display_name":"native projection"},{"slug":"channel/model","display_name":"routed"}]});
+            let event = |writer: &str, target: &str, intent: &str| {
+                let mut b = wire(
+                    serde_json::json!({"at":"2026-11-11T10:00:01Z","pid":101,"ppid":100,"command":writer,"opencodexHome":"synthetic-captured-home","target":target,"outcome":"written","intent":intent,"writer":writer,"configSource":"file","routedBefore":0,"routedAfter":1}),
+                );
+                b.push(10);
+                b
+            };
+            write(NAMES[0], &wire(ready.clone()));
+            write(
+                NAMES[1],
+                &wire(
+                    serde_json::json!({"fetched_at":"2000-01-01T00:00:00Z","client_version":"0.0.0","models":ready["models"]}),
+                ),
+            );
+            write(NAMES[2], &event("startup-cache", "cache", "cache"));
+            let ready_sha = session.originals.seal(Phase::Ready).unwrap();
+            let live = Live {
+                schema_version: 1,
+                scope_sha256: session.scope_sha256.clone(),
+                ready_sha256: ready_sha,
+                record_sha256: "a".repeat(64),
+                generation: [42, unsafe { libc::geteuid() }.into(), 1, 1],
+                port: 12345,
+                parent_generation: [41, unsafe { libc::geteuid() }.into(), 1, 1],
+            };
+            let bytes = encode(&live).unwrap();
+            create(&session.originals.directory, "startup-live.json", &bytes).unwrap();
+            session.live_sha256 = Some(digest(&bytes));
+            let ready = index
+                .advance(&captured, State::Ready, Some(session.references().unwrap()))
+                .unwrap();
+            let pre = if prefix_count >= 2 {
+                session.originals.seal(Phase::PreStop).unwrap();
+                index
+                    .advance(
+                        &ready,
+                        State::StopPrepared,
+                        Some(session.references().unwrap()),
+                    )
+                    .unwrap()
             } else {
-                Ok(())
-            })
-            .is_err());
-        pending
-            .apply_fixture(Decision::Rollback, &|_| Ok(()))
+                ready
+            };
+            if originally_absent_config {
+                write("config.toml", b"\n");
+            }
+            write(NAMES[0], &wire(serde_json::json!({"models":[]})));
+            let mut audit = fs::read(f.client.join(NAMES[2])).unwrap();
+            audit.extend(event("codex-restore", "catalog", "restore"));
+            write(NAMES[2], &audit);
+            let stopped = if recovery_observed {
+                pre
+            } else {
+                session.originals.seal(Phase::Stopped).unwrap();
+                index
+                    .advance(&pre, State::Stopped, Some(session.references().unwrap()))
+                    .unwrap()
+            };
+            let prepared_state = if recovery_observed {
+                State::RecoveryPrepared
+            } else {
+                State::RestorePrepared
+            };
+            let offset = 3 - prefix_count;
+            let evidence = Evidence {
+                declared_routes: Some(vec!["channel/model".into()]),
+                retained_pids: vec![100, 101],
+                audit_home: "synthetic-captured-home".into(),
+                not_before: chrono::DateTime::parse_from_rfc3339("2026-11-11T10:00:00Z")
+                    .unwrap()
+                    .into(),
+                not_after: chrono::DateTime::parse_from_rfc3339("2026-11-11T10:00:02Z")
+                    .unwrap()
+                    .into(),
+            };
+            let pending = if recovery_observed {
+                Pending::prepare_observed_fixture(&session.originals, &stopped, evidence)
+            } else {
+                Pending::prepare_fixture(&session.originals, evidence)
+            }
             .unwrap();
-        assert_eq!(
-            pending.review_recovery().unwrap().terminal,
-            Some(Decision::Rollback)
-        );
-        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
-        assert!(session
-            .originals
-            .complete_readback(
-                session.references().unwrap(),
-                head.restore_plan.clone().unwrap(),
-                deadline
-            )
-            .is_err());
-        write("config.toml", b"outside edit after rollback");
-        assert!(session
-            .originals
-            .rollback_readback(
-                session.references().unwrap(),
-                head.restore_plan.clone().unwrap(),
-                deadline
-            )
-            .is_err());
-        assert_eq!(
-            fs::read(f.client.join("config.toml")).unwrap(),
-            b"outside edit after rollback"
-        );
-        write("config.toml", b"native='original'");
-        let proof = session
-            .originals
-            .rollback_readback(
-                session.references().unwrap(),
-                head.restore_plan.clone().unwrap(),
-                deadline,
-            )
-            .unwrap();
-        assert!(index.close_restored(&head, &proof).is_err());
-        let rolled = index.close_rolled_back(&head, &proof).unwrap();
-        assert_eq!(rolled.state, State::RestoreRolledBack);
-        assert_eq!(rolled.revision, 7 - offset);
-        assert!(index.reserve_start().is_err());
-        assert!(index.advance(&rolled, State::Failed, None).is_err());
-        drop(index);
-        let preview = inspect_preview(&f.context, &f.data);
-        assert_eq!(preview.status, Status::Pending);
-        assert_eq!(preview.phase, Some(State::RestoreRolledBack));
-        assert_eq!(preview.completion_evidence, PreviewEvidence::Verified);
-        assert!(preview.can_rearm && preview.rearm_digest.is_some());
-        let rearm_request = super::super::session_index::rearm::review(&f.context, &f.data)
-            .unwrap()
-            .unwrap();
-        assert_eq!(
-            preview.rearm_digest.as_deref(),
-            Some(rearm_request.confirmation_digest.as_str())
-        );
-        assert!(!preview.can_continue && !preview.can_finalize && !preview.can_rollback);
-        let path = session
-            .originals
-            .directory
-            .path()
-            .join("rollback-readback.json");
-        let original = fs::read(&path).unwrap();
-        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
-        fs::write(&path, b"{}").unwrap();
-        assert!(session
-            .originals
-            .rollback_readback(
-                session.references().unwrap(),
-                head.restore_plan.clone().unwrap(),
-                deadline
-            )
-            .is_err());
-        assert_eq!(fs::read(&path).unwrap(), b"{}");
-        assert_eq!(inspect_preview(&f.context, &f.data).status, Status::Unknown);
-        fs::write(&path, &original).unwrap();
-        fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
-        let next_plan = pending.rearm_rolled_back().unwrap();
-        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
-        let rearmed = index
-            .rearm_rolled_back(&rolled, next_plan.id(), next_plan.sha256())
-            .unwrap();
-        assert_eq!(rearmed.revision, 8 - offset);
-        assert!(rearmed.references == rolled.references);
-        assert_eq!(rearmed.state, prepared_state);
-        assert!(index.reserve_start().is_err());
-        assert!(index
-            .rearm_rolled_back(&rolled, next_plan.id(), next_plan.sha256())
-            .is_err());
-        drop(index);
-        let preview = inspect_preview(&f.context, &f.data);
-        assert!(
-            preview.can_continue
-                && !preview.can_finalize
-                && preview.can_rollback
-                && !preview.can_rearm
-        );
-        assert_ne!(preview.confirmation_digest, preview.rollback_digest);
-        let rollback_request = super::super::session_index::rollback::review(&f.context, &f.data)
-            .unwrap()
-            .unwrap();
-        assert_eq!(
-            preview.rollback_digest.as_deref(),
-            Some(rollback_request.confirmation_digest.as_str())
-        );
-        assert_ne!(
-            preview.confirmation_digest.as_deref(),
-            Some(rollback_request.confirmation_digest.as_str())
-        );
-        assert_eq!(preview.completion_evidence, PreviewEvidence::NotRecorded);
-        next_plan
-            .apply_fixture(Decision::Complete, &|_| Ok(()))
-            .unwrap();
-        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
-        let proof = session
-            .originals
-            .complete_readback(
-                session.references().unwrap(),
-                rearmed.restore_plan.clone().unwrap(),
-                deadline,
-            )
-            .unwrap();
-        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
-        assert!(index.close_rolled_back(&rearmed, &proof).is_err());
-        let restored = index.close_restored(&rearmed, &proof).unwrap();
-        assert_eq!(restored.revision, 9 - offset);
-        assert_eq!(fs::read(&path).unwrap(), original);
-        assert_eq!(next_plan.object_id(), pending.object_id());
-        drop(index);
-        assert_eq!(
-            inspect_preview(&f.context, &f.data).status,
-            Status::Restored
-        );
-        if prefix_count == 1 {
-            assert!(!session
+            let head = index
+                .record_restore_plan(&stopped, pending.id(), pending.sha256())
+                .unwrap();
+            assert!(pending
+                .apply_fixture(Decision::Complete, &|p| if p == "after_native" {
+                    Err(denied("fixture interruption"))
+                } else {
+                    Ok(())
+                })
+                .is_err());
+            pending
+                .apply_fixture(Decision::Rollback, &|_| Ok(()))
+                .unwrap();
+            assert_eq!(
+                pending.review_recovery().unwrap().terminal,
+                Some(Decision::Rollback)
+            );
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+            assert!(session
+                .originals
+                .complete_readback(
+                    session.references().unwrap(),
+                    head.restore_plan.clone().unwrap(),
+                    deadline
+                )
+                .is_err());
+            write("config.toml", b"outside edit after rollback");
+            assert!(session
+                .originals
+                .rollback_readback(
+                    session.references().unwrap(),
+                    head.restore_plan.clone().unwrap(),
+                    deadline
+                )
+                .is_err());
+            assert_eq!(
+                fs::read(f.client.join("config.toml")).unwrap(),
+                b"outside edit after rollback"
+            );
+            write(
+                "config.toml",
+                if originally_absent_config {
+                    b"\n".as_slice()
+                } else {
+                    b"native='original'".as_slice()
+                },
+            );
+            let proof = session
+                .originals
+                .rollback_readback(
+                    session.references().unwrap(),
+                    head.restore_plan.clone().unwrap(),
+                    deadline,
+                )
+                .unwrap();
+            assert!(index.close_restored(&head, &proof).is_err());
+            let rolled = index.close_rolled_back(&head, &proof).unwrap();
+            assert_eq!(rolled.state, State::RestoreRolledBack);
+            assert_eq!(rolled.revision, 7 - offset);
+            assert!(index.reserve_start().is_err());
+            assert!(index.advance(&rolled, State::Failed, None).is_err());
+            drop(index);
+            let preview = inspect_preview(&f.context, &f.data);
+            assert_eq!(preview.status, Status::Pending);
+            assert_eq!(preview.phase, Some(State::RestoreRolledBack));
+            assert_eq!(preview.completion_evidence, PreviewEvidence::Verified);
+            assert!(preview.can_rearm && preview.rearm_digest.is_some());
+            let rearm_request = super::super::session_index::rearm::review(&f.context, &f.data)
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                preview.rearm_digest.as_deref(),
+                Some(rearm_request.confirmation_digest.as_str())
+            );
+            assert!(!preview.can_continue && !preview.can_finalize && !preview.can_rollback);
+            let path = session
                 .originals
                 .directory
                 .path()
-                .join("pre-stop.json")
-                .exists());
-        }
-        if recovery_observed {
-            assert!(!session
+                .join("rollback-readback.json");
+            let original = fs::read(&path).unwrap();
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+            fs::write(&path, b"{}").unwrap();
+            assert!(session
                 .originals
-                .directory
-                .path()
-                .join("stopped.json")
-                .exists());
-            assert!(restored
-                .references
-                .as_ref()
-                .is_some_and(|r| r.phases.len() == prefix_count as usize));
+                .rollback_readback(
+                    session.references().unwrap(),
+                    head.restore_plan.clone().unwrap(),
+                    deadline
+                )
+                .is_err());
+            assert_eq!(fs::read(&path).unwrap(), b"{}");
+            assert_eq!(inspect_preview(&f.context, &f.data).status, Status::Unknown);
+            fs::write(&path, &original).unwrap();
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+            let next_plan = pending.rearm_rolled_back().unwrap();
+            let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+            let rearmed = index
+                .rearm_rolled_back(&rolled, next_plan.id(), next_plan.sha256())
+                .unwrap();
+            assert_eq!(rearmed.revision, 8 - offset);
+            assert!(rearmed.references == rolled.references);
+            assert_eq!(rearmed.state, prepared_state);
+            assert!(index.reserve_start().is_err());
+            assert!(index
+                .rearm_rolled_back(&rolled, next_plan.id(), next_plan.sha256())
+                .is_err());
+            drop(index);
+            let preview = inspect_preview(&f.context, &f.data);
+            assert!(
+                preview.can_continue
+                    && !preview.can_finalize
+                    && preview.can_rollback
+                    && !preview.can_rearm
+            );
+            assert_ne!(preview.confirmation_digest, preview.rollback_digest);
+            let rollback_request =
+                super::super::session_index::rollback::review(&f.context, &f.data)
+                    .unwrap()
+                    .unwrap();
+            assert_eq!(
+                preview.rollback_digest.as_deref(),
+                Some(rollback_request.confirmation_digest.as_str())
+            );
+            assert_ne!(
+                preview.confirmation_digest.as_deref(),
+                Some(rollback_request.confirmation_digest.as_str())
+            );
+            assert_eq!(preview.completion_evidence, PreviewEvidence::NotRecorded);
+            next_plan
+                .apply_fixture(Decision::Complete, &|_| Ok(()))
+                .unwrap();
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+            let proof = session
+                .originals
+                .complete_readback(
+                    session.references().unwrap(),
+                    rearmed.restore_plan.clone().unwrap(),
+                    deadline,
+                )
+                .unwrap();
+            let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+            assert!(index.close_rolled_back(&rearmed, &proof).is_err());
+            let restored = index.close_restored(&rearmed, &proof).unwrap();
+            assert_eq!(restored.revision, 9 - offset);
+            if originally_absent_config {
+                assert!(!f.client.join("config.toml").exists());
+            } else {
+                assert_eq!(
+                    fs::read(f.client.join("config.toml")).unwrap(),
+                    b"native='original'"
+                );
+            }
+            assert_eq!(fs::read(&path).unwrap(), original);
+            assert_eq!(next_plan.object_id(), pending.object_id());
+            drop(index);
+            assert_eq!(
+                inspect_preview(&f.context, &f.data).status,
+                Status::Restored
+            );
+            if prefix_count == 1 {
+                assert!(!session
+                    .originals
+                    .directory
+                    .path()
+                    .join("pre-stop.json")
+                    .exists());
+            }
+            if recovery_observed {
+                assert!(!session
+                    .originals
+                    .directory
+                    .path()
+                    .join("stopped.json")
+                    .exists());
+                assert!(restored
+                    .references
+                    .as_ref()
+                    .is_some_and(|r| r.phases.len() == prefix_count as usize));
+            }
         }
     }
 }
+
 #[test]
 fn recovery_preview_reads_under_action_lock_without_initializing_or_disclosing_original_bytes() {
     use super::super::session_index::{

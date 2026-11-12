@@ -132,7 +132,8 @@ pub struct StartupSession {
     profile: PinnedDirectory,
     home: PinnedDirectory,
 }
-/// Borrow-scoped permission for this session's THREE assessed artifacts only.
+/// Borrow-scoped permission for this session's assessed Codex artifacts,
+/// including an individually admitted originally absent first-use config.
 /// The official K and L writers remain excluded by the native lease throughout
 /// publication. This is not whole-family quiescence or complete client recovery.
 pub(super) struct ArtifactRestoreAuthority<'a> {
@@ -144,6 +145,13 @@ pub(super) struct ArtifactRestoreAuthority<'a> {
     deadline: Instant,
 }
 impl ArtifactRestoreAuthority<'_> {
+    pub(super) fn config_write_guard(
+        &self,
+    ) -> AppResult<crate::infrastructure::official_client_coordination::native::config::Guard<'_>>
+    {
+        self.lease.config_write_guard()
+    }
+
     pub(super) fn check(&self, originals: &Originals) -> AppResult<()> {
         time(self.deadline)?;
         if !std::ptr::eq(originals, &self.session.originals) {
@@ -179,6 +187,13 @@ pub(super) struct ExplicitRestoreAuthority<'a> {
     deadline: Instant,
 }
 impl ExplicitRestoreAuthority<'_> {
+    pub(super) fn config_write_guard(
+        &self,
+    ) -> AppResult<crate::infrastructure::official_client_coordination::native::config::Guard<'_>>
+    {
+        self.lease.config_write_guard()
+    }
+
     pub(super) fn check(&self, originals: &Originals) -> AppResult<()> {
         time(self.deadline)?;
         if !std::ptr::eq(originals, &self.session.originals) {
@@ -775,7 +790,15 @@ impl StartupSession {
             .map_err(error)?
             .0;
         let codex = TreeSnapshot::read(&self.originals.client).map_err(error)?;
-        if !original.tree.preplan_remainder_matches(&codex, leased)
+        if !(original.tree.preplan_remainder_matches(&codex, leased)
+            || restore::Pending::empty_config_preplan_matches(
+                &self.originals,
+                head,
+                &original.tree,
+                &codex,
+                leased,
+            )
+            .map_err(error)?)
             || !original
                 .grok
                 .restored_matches(&GrokSnapshot::read(&self.originals.profile).map_err(error)?)
