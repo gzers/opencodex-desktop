@@ -32,7 +32,7 @@ try {
   while (true) { try { if ((await fetch(base)).ok) break } catch {} if (Date.now() > deadline) throw Error('Vite did not start'); await new Promise(resolve => setTimeout(resolve, 100)) }
   const engine = await pickEngine(); report.engine = engine.name; browser = await engine.launch()
   for (const scene of (process.env.AUDIT_RECOVERY_SCENES?.split(',') ?? ['eligible', 'pending', 'unknown', 'active', 'none', 'unsupported', 'error', 'slow', 'refresh-failed'])) {
-    const sizes = ['eligible','continue','rollback','rearm'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
+    const sizes = ['eligible','continue','rollback','rearm','early'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
     for (const [width, height, theme] of sizes) {
       const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
       const errors = []; page.on('pageerror', e => errors.push(e.message))
@@ -42,7 +42,41 @@ try {
       await page.locator('dialog[open]').waitFor()
       await page.waitForFunction(() => !document.querySelector('dialog[open]')?.textContent.includes('正在核对原会话和恢复记录'))
       const name = scene + '-' + width + '-' + theme
-      if(scene.startsWith('rollback')||scene.startsWith('rearm')){
+      if(scene.startsWith('early')){
+        await page.getByText('启动前原件保持完整，原会话尚未结束。',{exact:true}).waitFor()
+        assert.equal(await page.getByRole('button',{name:'确认继续恢复',exact:true}).count(),0)
+        await page.getByRole('button',{name:'核对并结束会话',exact:true}).click()
+        await page.getByText('客户端配置保持不变，不会自动启动服务。',{exact:true}).waitFor()
+        const size=await geometry(page);await screenshot(page,name+'-review')
+        if(scene==='early'){
+          await page.getByRole('button',{name:'返回',exact:true}).click()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='finishUnchanged').length),0)
+          await page.getByRole('button',{name:'核对并结束会话',exact:true}).click()
+        }
+        await page.getByRole('button',{name:'确认结束会话',exact:true}).click()
+        if(scene==='early-slow'){
+          await page.getByText('正在核对原件并结束原会话…',{exact:true}).waitFor()
+          await page.getByRole('button',{name:'关闭',exact:true}).last().click()
+          await page.getByRole('button',{name:'查看恢复进度',exact:true}).click()
+        }
+        if(scene==='early-error'){
+          await page.getByText('原件或停止状态尚未核实；原件与现场保留。',{exact:true}).waitFor()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
+        }else{
+          await page.getByText('原件保持完整，原会话已结束。',{exact:true}).waitFor()
+          if(scene==='early-refresh-failed'){
+            await page.getByText('收尾已完成，运行状态读取失败。请刷新运行状态。',{exact:true}).waitFor()
+            assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
+            await page.evaluate(()=>window.__clientRecoveryFixture.setScene('early'))
+            await page.getByRole('button',{name:'刷新运行状态',exact:true}).click()
+          }
+          await page.getByText('服务保持停止，现在可以启动。',{exact:true}).waitFor()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),false)
+        }
+        assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='finishUnchanged').length),1)
+        assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>['finalize','continue','rollback','rearm'].includes(n)).length),0)
+        await screenshot(page,name+'-result');record(name,{geometry:size,explicitReview:true,noReplayCommand:true,oneConfirmation:true})
+      }else if(scene.startsWith('rollback')||scene.startsWith('rearm')){
         const action=scene.startsWith('rollback')?'rollback':'rearm'
         const choose=action==='rollback'?'撤销本次恢复':'重新准备恢复',confirm=action==='rollback'?'确认撤销恢复':'确认重新准备'
         await page.getByRole('button',{name:choose,exact:true}).click()
@@ -183,7 +217,30 @@ try {
     assert.equal(await page.locator('#modalTitle').textContent(), '客户端配置恢复')
     const size = await page.locator('#modal').evaluate(d => { const r = d.getBoundingClientRect(); return { width: r.width, top: r.top, bottom: r.bottom, height: innerHeight } })
     assert(size.width <= 560 && size.top >= 0 && size.bottom <= size.height, JSON.stringify(size))
-    if(scene.startsWith('rollback')||scene.startsWith('rearm')){
+    if(scene.startsWith('early')){
+      assert.equal(await page.locator('#modalConfirm').textContent(),'核对并结束会话')
+      await page.locator('#modalConfirm').click()
+      assert.equal(await page.locator('#modalConfirm').textContent(),'确认结束会话')
+      await page.getByText('客户端配置保持不变，不会自动启动服务。',{exact:true}).waitFor()
+      await screenshot(page,'prototype-'+scene+'-review')
+      if(scene==='early'){
+        await page.locator('#modalCancel').click();assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),0)
+        await page.locator('#modalConfirm').click()
+      }
+      await page.locator('#modalConfirm').click()
+      if(scene==='early-slow'){
+        await page.waitForFunction(()=>window.clientRecovery024.snapshot().executing)
+        await page.locator('#modalCancel').click();await page.evaluate(()=>window.clientRecovery024.open())
+      }
+      if(scene==='early-error')await page.getByText('原件或停止状态尚未核实；原件与现场保留。',{exact:true}).waitFor()
+      else{
+        await page.waitForFunction(()=>window.clientRecovery024.snapshot().outcome)
+        await page.getByText('原件保持完整，原会话已结束。',{exact:true}).waitFor()
+        if(scene==='early-refresh-failed'){assert.equal(await page.locator('#modalConfirm').textContent(),'刷新运行状态');await page.locator('#modalConfirm').click()}
+        assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().ready),true)
+      }
+      assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),1)
+    }else if(scene.startsWith('rollback')||scene.startsWith('rearm')){
       const action=scene.startsWith('rollback')?'rollback':'rearm'
       const confirm=action==='rollback'?'确认撤销恢复':'确认重新准备'
       if(action==='rollback')await page.locator('[data-recovery-rollback]').click();else await page.locator('#modalConfirm').click()

@@ -17,14 +17,16 @@ export interface ClientRecoveryPreview {
   canRollback: boolean
   canFinalize: boolean
   canRearm: boolean
+  canFinishUnchanged: boolean
+  unchangedDigest: string | null
   rollbackDigest: string | null
   rearmDigest: string | null
   confirmationDigest: string | null
 }
 export interface ClientRecoveryFinalizeRequest { attemptId: string; revision: number; confirmationDigest: string }
 export interface ClientRecoveryFinalizeOutcome { attemptId: string; revision: number; status: 'restored' }
-export type ClientRecoveryAction = 'finalize' | 'continue' | 'rollback' | 'rearm'
-export interface ClientRecoveryOutcome { attemptId: string; revision: number; status: 'restored' | 'rolled_back' | 'restore_prepared' }
+export type ClientRecoveryAction = 'finalize' | 'continue' | 'rollback' | 'rearm' | 'finishUnchanged'
+export interface ClientRecoveryOutcome { attemptId: string; revision: number; status: 'restored' | 'rolled_back' | 'restore_prepared' | 'unchanged' }
 
 // Inspection takes no file paths and never starts recovery implicitly.
 export const clientRecoveryApi = {
@@ -33,5 +35,6 @@ export const clientRecoveryApi = {
   continue: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryFinalizeOutcome>('client_recovery_continue', { request }),
   rollback: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_rollback', { request }),
   rearm: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_rearm', { request }),
+  finishUnchanged: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_finish_unchanged', { request }),
   status: () => invoke<StatusSnapshot>('get_status_snapshot'),
 }

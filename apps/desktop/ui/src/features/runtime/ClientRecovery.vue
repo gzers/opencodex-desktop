@@ -9,7 +9,9 @@ const recovery = useClientRecoveryStore(), lifecycle = useLifecycleStore()
 const busy = computed(() => recovery.reading || recovery.executing || recovery.refreshing)
 const phases: Record<ClientRecoveryPhase, string> = { preparing: '正在登记原会话', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', unchanged: '原件保持，原会话已结束', failed: '原会话需要核对' }
 const evidence = (value: ClientRecoveryEvidence) => ({ verified: '已核对', not_recorded: '尚未登记', unregistered: '待确认', unknown: '未核实' })[value]
-const progress = computed(() => ({ finalize:'正在完成恢复收尾…',continue:'正在继续恢复客户端配置…',rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…' })[recovery.action])
+const progress = computed(() => ({ finalize:'正在完成恢复收尾…',continue:'正在继续恢复客户端配置…',rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…',finishUnchanged:'正在核对原件并结束原会话…' })[recovery.action])
+const restoredOutcome = computed(() => recovery.outcome?.status === 'restored' || recovery.outcome?.status === 'unchanged')
+const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤销恢复' : recovery.choice === 'finishUnchanged' ? '确认结束会话' : '确认重新准备')
 </script>
 <template>
   <section class="client-recovery-entry" aria-labelledby="clientRecoveryTitle">
@@ -31,8 +33,13 @@ const progress = computed(() => ({ finalize:'正在完成恢复收尾…',contin
       <p>核对保留的原件和当前文件，准备新的恢复计划。准备完成后，还需点击“确认继续恢复”。</p>
       <p>此次准备不会更改客户端配置，服务保持停止。</p>
     </template>
-    <template v-else-if="recovery.outcome?.status === 'restored'">
-      <p role="status">{{ recovery.continuing ? '客户端配置恢复已完成。' : '配置恢复收尾已完成。' }}</p>
+    <template v-else-if="recovery.choice === 'finishUnchanged'">
+      <p class="client-recovery-lead">核对并结束原会话？</p>
+      <p>确认后重新核对服务已停止、原件完整且未改变，再结束这次未完成会话。</p>
+      <p>客户端配置保持不变，不会自动启动服务。</p>
+    </template>
+    <template v-else-if="restoredOutcome">
+      <p role="status">{{ recovery.outcome?.status === 'unchanged' ? '原件保持完整，原会话已结束。' : recovery.continuing ? '客户端配置恢复已完成。' : '配置恢复收尾已完成。' }}</p>
       <p v-if="recovery.ready">服务保持停止，现在可以启动。</p>
       <p v-else-if="recovery.refreshing">正在核对当前运行状态，核对通过后才能启动。</p>
       <p v-else>当前运行状态尚未核实，核对通过后才能启动。</p>
@@ -42,7 +49,11 @@ const progress = computed(() => ({ finalize:'正在完成恢复收尾…',contin
       <p>当前恢复状态尚未核实，服务保持停止。</p>
     </template>
     <template v-else-if="recovery.preview">
-      <template v-if="recovery.canFinalize">
+      <template v-if="recovery.canFinishUnchanged">
+        <p class="client-recovery-lead">启动前原件保持完整，原会话尚未结束。</p>
+        <p>可以重新核对服务已停止后结束原会话。客户端配置保持不变。</p>
+      </template>
+      <template v-else-if="recovery.canFinalize">
         <p class="client-recovery-lead">客户端配置已恢复，尚有一项收尾未完成。</p>
         <p>确认后重新核对原会话并完成收尾。客户端配置保持不变。</p>
       </template>
@@ -72,14 +83,15 @@ const progress = computed(() => ({ finalize:'正在完成恢复收尾…',contin
     <template #actions>
       <UiButton v-if="recovery.choice && !recovery.executing" @click="recovery.cancelChoice()">返回</UiButton>
       <UiButton v-else @click="recovery.close()">{{ busy || recovery.outcome ? '关闭' : '取消' }}</UiButton>
-      <UiButton v-if="recovery.choice && !recovery.executing" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.apply(recovery.choice!)">{{ recovery.choice === 'rollback' ? '确认撤销恢复' : '确认重新准备' }}</UiButton>
-      <UiButton v-else-if="recovery.outcome?.status === 'restored' && !recovery.ready" :disabled="busy" @click="recovery.refresh()">刷新运行状态</UiButton>
-      <UiButton v-else-if="recovery.outcome && recovery.outcome.status !== 'restored' && !recovery.reconfirmed" :disabled="busy" @click="recovery.refresh()">刷新恢复状态</UiButton>
+      <UiButton v-if="recovery.choice && !recovery.executing" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.apply(recovery.choice!)">{{ confirmLabel }}</UiButton>
+      <UiButton v-else-if="restoredOutcome && !recovery.ready" :disabled="busy" @click="recovery.refresh()">刷新运行状态</UiButton>
+      <UiButton v-else-if="recovery.outcome && !restoredOutcome && !recovery.reconfirmed" :disabled="busy" @click="recovery.refresh()">刷新恢复状态</UiButton>
       <template v-else-if="!recovery.executing">
         <UiButton v-if="recovery.canRollback" :disabled="busy || lifecycle.processActionBusy" @click="recovery.choose('rollback')">撤销本次恢复</UiButton>
         <UiButton v-if="recovery.canFinalize" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.apply('finalize')">确认完成收尾</UiButton>
         <UiButton v-else-if="recovery.canContinue" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.apply('continue')">确认继续恢复</UiButton>
         <UiButton v-else-if="recovery.canRearm" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.choose('rearm')">重新准备恢复</UiButton>
+        <UiButton v-else-if="recovery.canFinishUnchanged" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.choose('finishUnchanged')">核对并结束会话</UiButton>
         <UiButton v-else-if="!recovery.outcome" :disabled="busy" @click="recovery.inspect()">重新检查</UiButton>
       </template>
     </template>

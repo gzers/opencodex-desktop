@@ -2,7 +2,7 @@
 import { clientRecoveryApi, type ClientRecoveryPreview } from '@/features/runtime/client-recovery'
 import { useLifecycleStore } from '@/app/lifecycle/store'
 import type { StatusSnapshot } from '@/contracts/runtimeStatus'
-type Scene = 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
+type Scene = 'early' | 'early-slow' | 'early-error' | 'early-refresh-failed' | 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
 export function installClientRecoveryFixture(initial: string) {
   let scene = initial as Scene, finalized = false, revision = initial.startsWith('rearm') ? 7 : 6
   let phase: 'restore_prepared'|'restore_rolled_back' = initial.startsWith('rearm') ? 'restore_rolled_back' : 'restore_prepared'
@@ -19,8 +19,9 @@ export function installClientRecoveryFixture(initial: string) {
     if (scene === 'error' || scene==='rollback-refresh-failed'&&phase==='restore_rolled_back') throw new Error('模拟读取失败，请重新检查。')
     const value: ClientRecoveryPreview = { status: 'pending', phase, revision,
       attemptId: 'f394bd75-355b-4873-83cc-6818efeb547a', originalEvidence: 'verified', planEvidence: 'verified',
-      completionEvidence: 'unregistered', phaseCount: 3, canContinue: false, canRollback: false, canFinalize: true, canRearm:false,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) }
+      completionEvidence: 'unregistered', phaseCount: 3, canContinue: false, canRollback: false, canFinalize: true, canRearm:false,canFinishUnchanged:false,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) }
     if (scene === 'pending') { value.canFinalize = false; value.confirmationDigest = null; value.completionEvidence = 'not_recorded' }
+    if(scene.startsWith('early'))Object.assign(value,{phase:'captured',revision:2,phaseCount:0,planEvidence:'not_recorded',completionEvidence:'not_recorded',canFinalize:false,confirmationDigest:null,canFinishUnchanged:true,unchangedDigest:'e'.repeat(64)})
     if(scene==='rolled-back'){value.phase='restore_rolled_back';value.canFinalize=false;value.confirmationDigest=null;value.completionEvidence='verified'}
     if (scene.startsWith('continue')||scene.startsWith('rollback')||scene.startsWith('rearm')) {value.canContinue=true;value.canRollback=true;value.rollbackDigest='b'.repeat(64);value.canFinalize=false;value.completionEvidence='not_recorded'}
     if(phase==='restore_rolled_back'){value.canContinue=false;value.canRollback=false;value.canFinalize=false;value.canRearm=true;value.confirmationDigest=null;value.rollbackDigest=null;value.rearmDigest='c'.repeat(64);value.completionEvidence='verified'}
@@ -56,8 +57,14 @@ export function installClientRecoveryFixture(initial: string) {
   }
   clientRecoveryApi.status = async () => {
     calls.push('status')
-    if (scene === 'refresh-failed' && finalized) throw new Error('mock status unavailable')
+    if ((scene === 'refresh-failed'||scene==='early-refresh-failed') && finalized) throw new Error('mock status unavailable')
     return snapshot()
+  }
+  clientRecoveryApi.finishUnchanged=async request=>{
+    calls.push('finishUnchanged');await new Promise(resolve=>setTimeout(resolve,scene==='early-slow'?1200:200))
+    if(scene==='early-error')throw new Error('原件或停止状态尚未核实；原件与现场保留。')
+    finalized=true;revision=request.revision+1
+    return {attemptId:request.attemptId,revision,status:'unchanged'}
   }
   const api = { calls, setScene(value: Scene) { scene = value },
     state: () => ({ scene, finalized,phase,revision, blocked: useLifecycleStore().clientRecoveryRequired }) }

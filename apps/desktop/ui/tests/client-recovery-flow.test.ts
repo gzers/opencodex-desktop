@@ -9,12 +9,13 @@ import type { StatusSnapshot } from '@/contracts/runtimeStatus'
 const preview = (): ClientRecoveryPreview => ({ status: 'pending', phase: 'restore_prepared', revision: 6,
   attemptId: 'f394bd75-355b-4873-83cc-6818efeb547a', originalEvidence: 'verified', planEvidence: 'verified',
   completionEvidence: 'unregistered', phaseCount: 3, canContinue: false, canRollback: false,
-  canFinalize: true, canRearm:false,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) })
+  canFinalize: true, canRearm:false,canFinishUnchanged:false,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) })
 const status = (required = false): StatusSnapshot => ({ source: 'live', matrix: { runtime: 'stopped', connection: 'unconfigured', operation: 'idle' },
   facts: { data_root: '/fixture/desktop', opencodex_home: '/fixture/home', client_recovery: required ? 'required' : 'not_required', health: 'unknown',
     runtime_label: 'bundled', protection: null, reboot_safe: true, service_present: null, shim_present: null, version_drift: null },
   pid: null, port: null, can_start: !required, can_stop: false, can_restart: false })
 const result = () => ({ attemptId: preview().attemptId!, revision: 7, status: 'restored' as const })
+const early = ():ClientRecoveryPreview=>({...preview(),phase:'captured',revision:2,planEvidence:'not_recorded',completionEvidence:'not_recorded',phaseCount:0,canFinalize:false,confirmationDigest:null,canFinishUnchanged:true,unchangedDigest:'e'.repeat(64)})
 const partial = ():ClientRecoveryPreview=>({...preview(),canFinalize:false,canContinue:true,canRollback:true,completionEvidence:'not_recorded',rollbackDigest:'b'.repeat(64)})
 const rolled = ():ClientRecoveryPreview=>({...preview(),phase:'restore_rolled_back',revision:7,canFinalize:false,canRearm:true,completionEvidence:'verified',confirmationDigest:null,rearmDigest:'c'.repeat(64)})
 function pending<T>() { let resolve!: (v: T) => void; const promise = new Promise<T>(done => { resolve = done }); return { promise, resolve } }
@@ -31,11 +32,67 @@ beforeEach(() => {
   vi.spyOn(clientRecoveryApi, 'continue').mockResolvedValue(result())
   vi.spyOn(clientRecoveryApi,'rollback').mockResolvedValue({...result(),status:'rolled_back'})
   vi.spyOn(clientRecoveryApi,'rearm').mockResolvedValue({...result(),revision:8,status:'restore_prepared'})
+  vi.spyOn(clientRecoveryApi,'finishUnchanged').mockResolvedValue({...result(),revision:3,status:'unchanged'})
   vi.spyOn(clientRecoveryApi, 'status').mockResolvedValue(status())
   const lifecycle = useLifecycleStore(); lifecycle.statusSnapshot = status(true); lifecycle.clientRecoveryRequired = true
 })
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('requires explicit early closure review and cancellation submits nothing',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(early())
+    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
+    expect(view.text()).toContain('启动前原件保持完整');expect(button('确认完成收尾')).toBeUndefined()
+    expect(await useClientRecoveryStore().apply('finishUnchanged')).toBe(false)
+    await button('核对并结束会话')!.trigger('click');expect(view.text()).toContain('客户端配置保持不变，不会自动启动服务')
+    await button('返回')!.trigger('click');expect(clientRecoveryApi.finishUnchanged).not.toHaveBeenCalled()
+    await button('核对并结束会话')!.trigger('click');await button('确认结束会话')!.trigger('click');await flushPromises()
+    expect(clientRecoveryApi.finishUnchanged).toHaveBeenCalledWith({attemptId:preview().attemptId,revision:2,confirmationDigest:'e'.repeat(64)})
+    expect(view.text()).toContain('原件保持完整，原会话已结束');expect(view.text()).not.toContain('配置恢复收尾已完成')
+    expect(useClientRecoveryStore().ready).toBe(true);expect(useLifecycleStore().clientRecoveryRequired).toBe(false)
+    expect(clientRecoveryApi.finalize).not.toHaveBeenCalled();expect(clientRecoveryApi.continue).not.toHaveBeenCalled()
+  })
+  it('holds one early closure through close/remount and ignores duplicate confirmation',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(early())
+    const inFlight=pending<{attemptId:string;revision:number;status:'unchanged'}>();vi.mocked(clientRecoveryApi.finishUnchanged).mockReturnValue(inFlight.promise)
+    const store=await inspect();store.choose('finishUnchanged');const work=store.apply('finishUnchanged');await flushPromises()
+    store.close();store.start();expect(store.executing).toBe(true);expect(await store.apply('finishUnchanged')).toBe(false)
+    inFlight.resolve({attemptId:preview().attemptId!,revision:3,status:'unchanged'});expect(await work).toBe(true)
+    expect(clientRecoveryApi.finishUnchanged).toHaveBeenCalledTimes(1)
+  })
+  it('retries only status after successful early closure with failed refresh',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(early())
+    vi.mocked(clientRecoveryApi.status).mockResolvedValueOnce(status(true)).mockRejectedValueOnce(new Error('offline')).mockResolvedValue(status())
+    const store=await inspect();store.choose('finishUnchanged');expect(await store.apply('finishUnchanged')).toBe(true)
+    expect(store.outcome?.status).toBe('unchanged');expect(store.ready).toBe(false);expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    store.close();store.start();await flushPromises();expect(await store.refresh()).toBe(true)
+    expect(clientRecoveryApi.finishUnchanged).toHaveBeenCalledTimes(1);expect(clientRecoveryApi.preview).toHaveBeenCalledTimes(1)
+  })
+  it.each([{...early(),phase:'preparing' as const},{...early(),originalEvidence:'unknown' as const},{...early(),planEvidence:'verified' as const},{...early(),completionEvidence:'unknown' as const},{...early(),canRollback:true},{...early(),unchangedDigest:null},{...early(),status:'active' as const}])('refuses incomplete or contradictory early evidence %#',async p=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(p);const store=await inspect();expect(store.canFinishUnchanged).toBe(false)
+    store.choose('finishUnchanged');expect(await store.apply('finishUnchanged')).toBe(false);expect(clientRecoveryApi.finishUnchanged).not.toHaveBeenCalled()
+  })
+  it.each([{...result(),revision:3},{...result(),revision:99,status:'unchanged'},{...result(),revision:3,status:'unchanged',attemptId:'other'}])('refuses wrong early response %# and keeps recovery blocked',async response=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(early());vi.mocked(clientRecoveryApi.finishUnchanged).mockResolvedValue(response as never)
+    const store=await inspect();store.choose('finishUnchanged');expect(await store.apply('finishUnchanged')).toBe(false)
+    expect(store.error).toContain('回执');expect(store.preview).toBeNull();expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+  })
+  it.each(['scope','running'] as const)('keeps early closure gate when fresh %s status contradicts completion',async mode=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(early());const after=status()
+    if(mode==='scope')after.facts.data_root='/another/desktop'
+    else{after.matrix.runtime='running';after.pid='123';after.port=12345}
+    vi.mocked(clientRecoveryApi.status).mockResolvedValueOnce(status(true)).mockResolvedValueOnce(after)
+    const store=await inspect();store.choose('finishUnchanged');expect(await store.apply('finishUnchanged')).toBe(true)
+    expect(store.ready).toBe(false);expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    expect(clientRecoveryApi.finishUnchanged).toHaveBeenCalledTimes(1)
+  })
+  it('keeps the early recovery input restricted after backend refusal and requires new inspection',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(early())
+    vi.mocked(clientRecoveryApi.finishUnchanged).mockRejectedValue(new Error('原件或停止状态尚未核实'))
+    const store=await inspect();store.choose('finishUnchanged');expect(await store.apply('finishUnchanged')).toBe(false)
+    expect(store.preview).toBeNull();expect(store.outcome).toBeNull();expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    store.choose('finishUnchanged');expect(await store.apply('finishUnchanged')).toBe(false)
+    expect(clientRecoveryApi.finishUnchanged).toHaveBeenCalledTimes(1)
+  })
   it('requires rollback review, cancellation writes nothing and direction uses its own digest',async()=>{
     vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(partial()).mockResolvedValue(rolled())
     vi.mocked(clientRecoveryApi.status).mockResolvedValue(status(true))
@@ -206,7 +263,7 @@ describe('explicit client recovery interaction', () => {
   })
   it('reopening a completed view inspects the current session instead of retaining an old success', async () => {
     const store = await inspect(); await store.apply(); expect(store.ready).toBe(true)
-    store.close(); vi.mocked(clientRecoveryApi.preview).mockResolvedValue({ ...preview(), revision: 20, canFinalize: false, canRearm:false,rollbackDigest:null,rearmDigest:null, confirmationDigest: null })
+    store.close(); vi.mocked(clientRecoveryApi.preview).mockResolvedValue({ ...preview(), revision: 20, canFinalize: false, canRearm:false,canFinishUnchanged:false,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: null })
     store.start(); await flushPromises(); expect(store.outcome).toBeNull(); expect(store.preview?.revision).toBe(20)
     expect(store.canFinalize).toBe(false); expect(clientRecoveryApi.finalize).toHaveBeenCalledTimes(1)
   })
