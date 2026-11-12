@@ -23,6 +23,8 @@ mod control_release;
 pub mod restore;
 #[path = "macos_client_root_creation.rs"]
 pub mod root_creation;
+#[path = "macos_client_root_retirement.rs"]
+pub mod root_retirement;
 #[path = "macos_client_session.rs"]
 pub mod session;
 #[path = "macos_client_session_index.rs"]
@@ -740,6 +742,7 @@ pub struct Originals {
     attempt: String,
     original_sha256: String,
     original_root_absence: Option<root_creation::References>,
+    retired_root_slot: Option<String>,
     known: std::sync::Mutex<[Option<String>; 4]>,
 }
 pub(super) struct OriginalKeys<'a> {
@@ -941,6 +944,7 @@ impl Originals {
             attempt,
             original_sha256: hash.clone(),
             original_root_absence,
+            retired_root_slot: None,
             known: std::sync::Mutex::new([Some(hash), None, None, None]),
         })
     }
@@ -1045,6 +1049,7 @@ impl Originals {
             attempt: attempt.into(),
             original_sha256: original_sha256.into(),
             original_root_absence,
+            retired_root_slot: None,
             known: std::sync::Mutex::new(known),
         };
         // One fresh complete prefix validates every independently named frame
@@ -1056,6 +1061,13 @@ impl Originals {
             .unwrap_or(Phase::Original);
         result.frames_through(last)?;
         Ok(result)
+    }
+    pub(super) fn logical_client(&self) -> PathBuf {
+        if self.original_root_absence.is_some() {
+            self.profile.path().join(".codex")
+        } else {
+            self.client.path().into()
+        }
     }
     pub fn attempt(&self) -> &str {
         &self.attempt
@@ -1183,12 +1195,18 @@ impl Originals {
             return Err(denied("original snapshot digest changed"));
         }
         if let Some(origin) = &self.original_root_absence {
-            root_creation::verify_indexed(
+            let anchor = if let Some(slot) = &self.retired_root_slot {
+                self.directory.path().join(slot)
+            } else {
+                self.profile.path().join(".codex")
+            };
+            root_creation::verify_indexed_anchor(
                 &self.data.child_private("manager-state", false)?,
                 &self.data,
                 self.profile.path(),
                 &self.client,
                 origin,
+                &anchor,
             )?;
             if phase == Phase::Original && !frame.tree.first_root_execution_baseline() {
                 return Err(denied("first root Original includes unowned client data"));
@@ -1208,6 +1226,9 @@ impl Originals {
         phase: Phase,
         checkpoint: impl FnOnce() -> io::Result<()>,
     ) -> io::Result<String> {
+        if self.retired_root_slot.is_some() {
+            return Err(denied("archived root view cannot publish new history"));
+        }
         let prior = phase
             .predecessor()
             .ok_or_else(|| denied("original cannot be resealed"))?;

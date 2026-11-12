@@ -308,7 +308,7 @@ pub(super) fn verify_index_scope(
         || scope.client_identity != *originals.client.identity()
         || scope.profile_identity != *originals.profile.identity()
         || scope.data != originals.data.path
-        || scope.client != originals.client.path
+        || scope.client != originals.logical_client()
         || scope.profile != originals.profile.path
         || scope.home != home.path
         || scope.home_identity != *home.identity()
@@ -343,7 +343,7 @@ pub(super) fn verify_closed_reference_files(
         || scope.client_identity != *originals.client.identity()
         || scope.profile_identity != *originals.profile.identity()
         || scope.data != originals.data.path
-        || scope.client != originals.client.path
+        || scope.client != originals.logical_client()
         || scope.profile != originals.profile.path
         || live.schema_version != 1
         || live.scope_sha256 != refs.scope_sha256
@@ -375,7 +375,7 @@ pub(super) fn verify_captured_reference_files(
         || scope.client_identity != *originals.client.identity()
         || scope.profile_identity != *originals.profile.identity()
         || scope.data != originals.data.path
-        || scope.client != originals.client.path
+        || scope.client != originals.logical_client()
         || scope.profile != originals.profile.path
     {
         return Err(error(()));

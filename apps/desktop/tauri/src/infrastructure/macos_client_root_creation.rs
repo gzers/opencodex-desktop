@@ -90,6 +90,25 @@ pub(super) fn verify_indexed(
     client: &PinnedDirectory,
     refs: &References,
 ) -> io::Result<()> {
+    verify_indexed_anchor(
+        manager,
+        data,
+        profile,
+        client,
+        refs,
+        &profile.join(".codex"),
+    )
+}
+/// Only an owning immutable retirement plan may supply an alternative physical
+/// anchor. The logical user root in Intent remains profile/.codex.
+pub(super) fn verify_indexed_anchor(
+    manager: &PinnedDirectory,
+    data: &PinnedDirectory,
+    profile: &Path,
+    client: &PinnedDirectory,
+    refs: &References,
+    expected_anchor: &Path,
+) -> io::Result<()> {
     if uuid::Uuid::parse_str(&refs.id)
         .map(|v| v.to_string() != refs.id)
         .unwrap_or(true)
@@ -146,7 +165,7 @@ pub(super) fn verify_indexed(
         || intent.profile != profile.path()
         || intent.profile_identity != *profile.identity()
         || intent.profile_protection != protection(profile.file(), &stat(profile.file())?)?
-        || client.path() != profile.path().join(".codex")
+        || client.path() != expected_anchor
         || created.schema_version != 1
         || !created.root_empty
         || created.intent_sha256 != refs.intent_sha256
