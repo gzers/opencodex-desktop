@@ -1,0 +1,11 @@
+
+thread 'infrastructure::macos_client_originals::session::tests::custom_declaration_overlays_same_model_and_adds_only_enabled_selected_custom_routes' (156061114) panicked at src/infrastructure/macos_client_session_tests.rs:423:5:
+assertion `left == right` failed
+  left: None
+ right: Some(["P/base", "P/vendor-custom"])
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::macos_client_originals::session::tests::custom_declaration_refuses_ambiguous_or_unbound_custom_routes_without_learning_from_catalog' (156061115) panicked at src/infrastructure/macos_client_session_tests.rs:460:9:
+assertion `left == right` failed
+  left: Some(["P/vendor-custom"])
+ right: None

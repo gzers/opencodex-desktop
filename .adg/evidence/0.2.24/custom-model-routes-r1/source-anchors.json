@@ -1,0 +1,72 @@
+[
+  {
+    "path": "src/codex/catalog/routed-gather.ts",
+    "line": 468,
+    "text": "for (const custom of config.customModels ?? []) {"
+  },
+  {
+    "path": "src/codex/catalog/routed-gather.ts",
+    "line": 557,
+    "text": "const customModels = (config.customModels ?? []).map(cm => {"
+  },
+  {
+    "path": "src/codex/catalog/routed-gather.ts",
+    "line": 774,
+    "text": "const customBySlug = new Map<string, CatalogModel[]>();"
+  },
+  {
+    "path": "src/codex/catalog/routed-gather.ts",
+    "line": 777,
+    "text": "const bucket = customBySlug.get(key);"
+  },
+  {
+    "path": "src/codex/catalog/routed-gather.ts",
+    "line": 779,
+    "text": "else customBySlug.set(key, [custom]);"
+  },
+  {
+    "path": "src/codex/catalog/routed-gather.ts",
+    "line": 784,
+    "text": "const replacements = customBySlug.get(key);"
+  },
+  {
+    "path": "src/codex/catalog/routed-gather.ts",
+    "line": 790,
+    "text": "models.push(...customModels.filter(custom => !placedInSlot.has(routedSlug(custom.provider, custom.id))));"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 588,
+    "text": "const disabledModelKeys = new Set([...disabledModels].map(slugEquivalenceKey));"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 592,
+    "text": "const selectedModelKeysByProvider = new Map([...selectedModelsByProvider].map(([provider, models]) => ("
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 613,
+    "text": "if (disabledModelKeys.has(key)) return false;"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 617,
+    "text": "const selected = selectedModelKeysByProvider.get(provider);"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 839,
+    "text": "if (disabledModelKeys.has(slugEquivalenceKey(slug))) return false;"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 847,
+    "text": "const selected = selectedModelKeysByProvider.get(provider);"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 848,
+    "text": "return selected === undefined || selected.has(slugEquivalenceKey(slug));"
+  }
+]
