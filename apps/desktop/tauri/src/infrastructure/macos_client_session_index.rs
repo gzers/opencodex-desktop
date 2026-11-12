@@ -6,7 +6,10 @@ use super::session::References;
 use super::*;
 use crate::state::ProcessContext;
 use rusqlite::{params, Connection, OptionalExtension};
+use std::time::Instant;
 
+#[path = "macos_client_root_binding.rs"]
+mod root_binding;
 const FILE: &str = "client-session-index.sqlite";
 const MAX_INDEX: u64 = 16 * 1024 * 1024;
 const TABLES: [(&str, &str); 3] = [
@@ -311,6 +314,8 @@ pub struct Index {
     data: PinnedDirectory,
     client: PinnedDirectory,
     profile: PathBuf,
+    root_registration: Option<super::root_creation::References>,
+    root_created_fd: Option<File>,
 }
 /// Borrowed independent index authority, never constructed from capture files.
 pub struct CaptureReservation<'a> {
@@ -350,20 +355,53 @@ impl Index {
         data_root: &Path,
         client_root: &Path,
     ) -> io::Result<Self> {
-        Self::open_inner(context, data_root, client_root, true)
+        Self::open_inner(context, data_root, client_root, true, None, &|_| Ok(()))
     }
     pub fn open_existing(
         context: &ProcessContext,
         data_root: &Path,
         client_root: &Path,
     ) -> io::Result<Self> {
-        Self::open_inner(context, data_root, client_root, false)
+        Self::open_inner(context, data_root, client_root, false, None, &|_| Ok(()))
+    }
+    /// Registers original absence and Preparing atomically, retaining the same
+    /// creation action flock. It does NOT authorize ordinary capture yet.
+    pub fn register_first_root(
+        context: &ProcessContext,
+        data: &Path,
+        root: super::root_creation::PublishedRoot,
+    ) -> io::Result<(Self, Head)> {
+        Self::register_first_root_checked(context, data, root, &|_| Ok(()))
+    }
+    fn register_first_root_checked(
+        context: &ProcessContext,
+        data: &Path,
+        root: super::root_creation::PublishedRoot,
+        checkpoint: &dyn Fn(&str) -> io::Result<()>,
+    ) -> io::Result<(Self, Head)> {
+        let client = root.path().to_path_buf();
+        let index = Self::open_inner(context, data, &client, true, Some(root), checkpoint)?;
+        let head = index
+            .head()?
+            .ok_or_else(|| denied("first root has no atomic Preparing event"))?;
+        if head.state != State::Preparing
+            || head.revision != 1
+            || index
+                .root_registration
+                .as_ref()
+                .is_none_or(|r| r.id != head.ticket)
+        {
+            return Err(denied("first root initial event differs"));
+        }
+        Ok((index, head))
     }
     fn open_inner(
         context: &ProcessContext,
         data_root: &Path,
         client_root: &Path,
         allow_create: bool,
+        root: Option<super::root_creation::PublishedRoot>,
+        checkpoint: &dyn Fn(&str) -> io::Result<()>,
     ) -> io::Result<Self> {
         let data = PinnedDirectory::open(data_root)?;
         data.private()?;
@@ -371,9 +409,18 @@ impl Index {
         if data_root.starts_with(client_root) || client_root.starts_with(data_root) {
             return Err(denied("session index/client roots overlap"));
         }
-        let binding = scope(context, &data, &client)?;
+        let base_binding = scope(context, &data, &client)?;
         let manager = data.child_private("manager-state", allow_create)?;
-        super::root_creation::require_no_pending_root(&manager)?;
+        let transfer = root
+            .map(|root| root.into_transfer(&data, &context.working_directory, &client))
+            .transpose()?;
+        let origin = transfer.as_ref().map(|t| t.references.clone());
+        let transfer_deadline = transfer.as_ref().map(|t| t.deadline);
+        let binding = root_binding::encode_binding(&base_binding, origin.as_ref())?;
+        if origin.is_none() && observation::entry(&manager, FILE)?.is_none() {
+            super::root_creation::require_no_pending_root(&manager)?;
+        }
+
         if observation::entry(&manager, FILE)?.is_none()
             && observation::entry(&manager, "client-originals")?.is_some()
         {
@@ -381,51 +428,87 @@ impl Index {
                 "originals without an index cannot initialize a new baseline",
             ));
         }
-        let action_name = "client-session-action.lock";
-        let action_cname = name(OsStr::new(action_name))?;
-        let fd = unsafe {
-            libc::openat(
-                manager.file().as_raw_fd(),
-                action_cname.as_ptr(),
-                libc::O_RDWR
-                    | if allow_create { libc::O_CREAT } else { 0 }
-                    | libc::O_NOFOLLOW
-                    | libc::O_CLOEXEC
-                    | libc::O_NONBLOCK,
-                0o600,
-            )
-        };
-        if fd < 0 {
-            return Err(io::Error::last_os_error());
-        }
-        let action_file = unsafe { File::from_raw_fd(fd) };
-        let action_stat = stat(&action_file)?;
-        let action_protection = protection(&action_file, &action_stat)?;
-        if action_stat.st_nlink != 1
-            || action_stat.st_mode & libc::S_IFMT != libc::S_IFREG
-            || action_stat.st_uid != unsafe { libc::geteuid() }
-            || action_stat.st_mode & 0o777 != 0o600
-            || acl(&action_file)?.is_some()
-            || action_protection.flags != 0
-            || action_protection
-                .xattrs
-                .iter()
-                .any(|(k, v)| k != b"com.apple.provenance" || v.len() > 64)
-        {
-            return Err(denied("current session action lock unsafe; not repaired"));
-        }
-        action_file
-            .try_lock()
-            .map_err(|_| denied("another current session action is running"))?;
-        let action_identity = identity(&action_stat);
-        // Reopen/check this separate action lock BEFORE keeping its own handle;
-        // this lock uses flock, not the SQLite fcntl locks on the index inode.
-        let check = open_at(manager.file(), OsStr::new(action_name), false)?;
-        if identity(&stat(&check)?) != action_identity {
-            return Err(denied("session action lock redirected"));
-        }
-        drop(check);
+        let (action_file, action_identity, action_protection, root_created_fd) =
+            if let Some(transfer) = transfer {
+                if observation::action_pin(&manager, &transfer.action)?
+                    != (
+                        transfer.action_identity.clone(),
+                        transfer.action_protection.clone(),
+                    )
+                {
+                    return Err(denied("transferred root action changed"));
+                }
+                checkpoint("root_lock_transferred")?;
+                (
+                    transfer.action,
+                    transfer.action_identity,
+                    transfer.action_protection,
+                    Some(transfer.created),
+                )
+            } else {
+                let action_name = "client-session-action.lock";
+                let action_cname = name(OsStr::new(action_name))?;
+                let fd = unsafe {
+                    libc::openat(
+                        manager.file().as_raw_fd(),
+                        action_cname.as_ptr(),
+                        libc::O_RDWR
+                            | if allow_create { libc::O_CREAT } else { 0 }
+                            | libc::O_NOFOLLOW
+                            | libc::O_CLOEXEC
+                            | libc::O_NONBLOCK,
+                        0o600,
+                    )
+                };
+                if fd < 0 {
+                    return Err(io::Error::last_os_error());
+                }
+                let action_file = unsafe { File::from_raw_fd(fd) };
+                let action_stat = stat(&action_file)?;
+                let action_protection = protection(&action_file, &action_stat)?;
+                if action_stat.st_nlink != 1
+                    || action_stat.st_mode & libc::S_IFMT != libc::S_IFREG
+                    || action_stat.st_uid != unsafe { libc::geteuid() }
+                    || action_stat.st_mode & 0o777 != 0o600
+                    || acl(&action_file)?.is_some()
+                    || action_protection.flags != 0
+                    || action_protection
+                        .xattrs
+                        .iter()
+                        .any(|(k, v)| k != b"com.apple.provenance" || v.len() > 64)
+                {
+                    return Err(denied("current session action lock unsafe; not repaired"));
+                }
+                action_file
+                    .try_lock()
+                    .map_err(|_| denied("another current session action is running"))?;
+                let action_identity = identity(&action_stat);
+                // Reopen/check this separate action lock BEFORE keeping its own handle;
+                // this lock uses flock, not the SQLite fcntl locks on the index inode.
+                let check = open_at(manager.file(), OsStr::new(action_name), false)?;
+                if identity(&stat(&check)?) != action_identity {
+                    return Err(denied("session action lock redirected"));
+                }
+                drop(check);
+                (action_file, action_identity, action_protection, None)
+            };
         let path = manager.path().join(FILE);
+        let preserve_root_initializer =
+            origin.is_none() && super::root_creation::has_creation_evidence(&manager)?;
+        if preserve_root_initializer {
+            let entry = observation::entry(&manager, FILE)?
+                .ok_or_else(|| denied("unregistered root initializer has no index"))?;
+            if entry.st_size < 100 || entry.st_size as u64 > MAX_INDEX {
+                return Err(denied("uncommitted first-root initializer is preserved"));
+            }
+            for suffix in ["-journal", "-wal", "-shm"] {
+                if observation::entry(&manager, &format!("{FILE}{suffix}"))?.is_some() {
+                    return Err(denied(
+                        "first-root initializer sidecar is preserved; no ordinary recovery",
+                    ));
+                }
+            }
+        }
         let mut created = false;
         match capture_file(&manager, FILE, MAX_INDEX as usize)? {
             Image::Absent => {
@@ -473,6 +556,8 @@ impl Index {
         let version: i64 = connection
             .query_row("PRAGMA user_version", [], |r| r.get(0))
             .map_err(database_error)?;
+        let mut root_registration = None;
+        let mut actual_binding = Vec::new();
         let setup = (|| -> io::Result<()> {
             if version == 0 && created {
                 let tables: i64 = connection
@@ -497,6 +582,25 @@ impl Index {
                         [&binding],
                     )
                     .map_err(database_error)?;
+                if let Some(refs) = &origin {
+                    let head = Head {
+                        revision: 1,
+                        ticket: refs.id.clone(),
+                        state: State::Preparing,
+                        references: None,
+                        restore_plan: None,
+                        completion_sha256: None,
+                    };
+                    validate(&head)?;
+                    let bytes = encode(&head)?;
+                    connection
+                        .execute(
+                            "INSERT INTO events(revision,document) VALUES(1,?1)",
+                            [&bytes],
+                        )
+                        .map_err(database_error)?;
+                    connection.execute("INSERT INTO current_session(singleton,revision,document) VALUES(1,1,?1)",[&bytes]).map_err(database_error)?;
+                }
             } else if version != 3 {
                 return Err(denied(
                     "unsupported session index version or abandoned initializer",
@@ -508,10 +612,26 @@ impl Index {
                     r.get(0)
                 })
                 .map_err(database_error)?;
-            if stored != binding {
-                return Err(denied(
-                    "session index bound to different directory generation or HOME",
-                ));
+            root_registration = root_binding::verify_binding(
+                &base_binding,
+                &stored,
+                &manager,
+                &data,
+                &context.working_directory,
+                &client,
+            )?;
+            if origin
+                .as_ref()
+                .is_some_and(|expected| root_registration.as_ref() != Some(expected))
+            {
+                return Err(denied("first root registration source changed"));
+            }
+            if let Some(refs) = &root_registration {
+                root_binding::verify_initial_event(&connection, refs)?;
+            }
+            actual_binding = stored;
+            if root_registration.is_some() && read_head(&connection)?.is_none() {
+                return Err(denied("first root registration lacks its Preparing event"));
             }
             Ok(())
         })();
@@ -519,7 +639,16 @@ impl Index {
             let _ = connection.execute_batch("ROLLBACK");
             return Err(error);
         }
+        if origin.is_some() {
+            checkpoint("before_root_index_commit")?;
+        }
+        if transfer_deadline.is_some_and(|d| Instant::now() >= d) {
+            return Err(denied("root index transfer expired"));
+        }
         connection.execute_batch("COMMIT").map_err(database_error)?;
+        if origin.is_some() {
+            checkpoint("root_index_committed")?;
+        }
         pin.recheck()?;
         let result = Self {
             connection: Some(connection),
@@ -528,12 +657,17 @@ impl Index {
             action_parent: manager,
             action_identity,
             action_protection,
-            binding,
+            binding: actual_binding,
             data,
             client,
             profile: context.working_directory.clone(),
+            root_registration,
+            root_created_fd,
         };
         result.head()?;
+        if transfer_deadline.is_some_and(|d| Instant::now() >= d) {
+            return Err(denied("root index registration completed after deadline"));
+        }
         Ok(result)
     }
     fn connection(&self) -> io::Result<&Connection> {
@@ -544,6 +678,30 @@ impl Index {
     fn check(&self) -> io::Result<()> {
         self.data.private()?;
         self.client.recheck()?;
+        if let Some(refs) = &self.root_registration {
+            let stored: Vec<u8> = self
+                .connection()?
+                .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+                    r.get(0)
+                })
+                .map_err(database_error)?;
+            if stored != self.binding {
+                return Err(denied("registered root binding changed during action"));
+            }
+            root_binding::verify_initial_event(self.connection()?, refs)?;
+            super::root_creation::verify_indexed(
+                &self.action_parent,
+                &self.data,
+                &self.profile,
+                &self.client,
+                refs,
+            )?;
+            if let Some(fd) = &self.root_created_fd {
+                if identity(&stat(fd)?) != *self.client.identity() {
+                    return Err(denied("original root creation descriptor changed"));
+                }
+            }
+        }
         self.action_parent.private()?;
         self.pin.recheck()?;
         if identity(&stat(&self.action_file)?) != self.action_identity {
@@ -593,7 +751,11 @@ impl Index {
     }
     pub fn head(&self) -> io::Result<Option<Head>> {
         self.check()?;
-        read_head(self.connection()?)
+        let head = read_head(self.connection()?)?;
+        if self.root_registration.is_some() && head.is_none() {
+            return Err(denied("registered first root session disappeared"));
+        }
+        Ok(head)
     }
     fn cancel_history(&self, head: &Head) -> io::Result<Vec<Head>> {
         self.check()?;
@@ -664,6 +826,12 @@ impl Index {
     }
     /// This durable commit PRECEDES the first capture directory or blob.
     pub fn reserve_capture(&self, expected: &Head) -> io::Result<Head> {
+        if self.root_registration.is_some() {
+            return Err(denied(
+                "first-root original-absence capture is not integrated; no ordinary baseline",
+            ));
+        }
+
         if expected.state != State::Preparing
             || expected.references.is_some()
             || expected.restore_plan.is_some()
@@ -697,6 +865,11 @@ impl Index {
         state: State,
         references: Option<References>,
     ) -> io::Result<Head> {
+        if self.root_registration.is_some() && state != State::Failed {
+            return Err(denied(
+                "root-aware original capture and restoration are not integrated",
+            ));
+        }
         let allowed = matches!(
             (expected.state, state),
             (State::Preparing, State::Captured)
@@ -820,6 +993,11 @@ impl Index {
         expected: &Head,
         proof: &preparation::Proof,
     ) -> io::Result<Head> {
+        if self.root_registration.is_some() {
+            return Err(denied(
+                "first root original absence cannot be closed by ordinary client recovery",
+            ));
+        }
         proof.require(expected, &self.binding)?;
         let next = Head {
             revision: expected
@@ -1008,6 +1186,11 @@ impl Index {
     }
     fn write(&self, expected: Option<&Head>, next: &Head) -> io::Result<()> {
         validate(next)?;
+        if self.root_registration.is_some() {
+            return Err(denied(
+                "first root original absence cannot be closed by ordinary client recovery",
+            ));
+        }
         self.check()?;
         let c = self.connection()?;
         c.execute_batch("BEGIN IMMEDIATE").map_err(database_error)?;
@@ -1063,3 +1246,7 @@ impl Drop for Index {
 #[cfg(test)]
 #[path = "macos_client_session_index_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "macos_client_root_registration_tests.rs"]
+mod root_registration_tests;

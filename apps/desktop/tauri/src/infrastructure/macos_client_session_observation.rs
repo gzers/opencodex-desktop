@@ -105,9 +105,11 @@ pub(super) fn inspect_map_history<T>(
         return project(None, &[]);
     }
     let manager = data.child_private("manager-state", false)?;
-    super::super::root_creation::require_no_pending_root(&manager)?;
     let action = entry(&manager, "client-session-action.lock")?;
     let index = entry(&manager, FILE)?;
+    if index.is_none() {
+        super::super::root_creation::require_no_pending_root(&manager)?;
+    }
     if action.is_none() && index.is_none() {
         return if entry(&manager, "client-originals")?.is_none() {
             project(None, &[])
@@ -186,10 +188,23 @@ pub(super) fn inspect_map_history<T>(
             r.get(0)
         })
         .map_err(database_error)?;
-    if stored != binding {
-        return Err(denied("observation HOME or directory generation differs"));
+    let root_registration = root_binding::verify_binding(
+        &binding,
+        &stored,
+        &manager,
+        &data,
+        &context.working_directory,
+        &client,
+    )?;
+    if let Some(refs) = &root_registration {
+        root_binding::verify_initial_event(&connection, refs)?;
     }
     let result = read_head(&connection)?;
+    if root_registration.is_some() && result.is_none() {
+        return Err(denied(
+            "registered first root session has no Preparing event",
+        ));
+    }
     let history = if let Some(head) = result.as_ref().filter(|h| {
         matches!(
             h.state,
@@ -213,7 +228,7 @@ pub(super) fn inspect_map_history<T>(
             &data,
             &client,
             &context.working_directory,
-            &binding,
+            &stored,
             head,
             &history,
         )?;
@@ -252,6 +267,14 @@ pub(super) fn inspect_map_history<T>(
     pin.recheck()?;
     no_sidecars(&manager)?;
     rollback_header(&pin)?;
+    root_binding::verify_binding(
+        &binding,
+        &stored,
+        &manager,
+        &data,
+        &context.working_directory,
+        &client,
+    )?;
     if scope(context, &data, &client)? != binding
         || action_pin(&manager, &action_file)? != action_before
     {

@@ -8,15 +8,19 @@ use session_index::observation::{action_pin, entry};
 use std::time::Instant;
 const REFERENCE: &str = "client-root-intent.json";
 const PURPOSE: &str = "create-first-codex-root";
-/// Until lifecycle index transfer is implemented, ordinary Start/observation
-/// must not reinterpret a newly published first-use directory as old input.
+/// Mere creation evidence cannot initialize an ordinary baseline. Only an
+/// independently registered root binding may validate these records.
+pub(super) fn has_creation_evidence(manager: &PinnedDirectory) -> io::Result<bool> {
+    Ok(
+        entry(manager, REFERENCE)?.is_some()
+            || entry(manager, "client-root-reservation")?.is_some(),
+    )
+}
 pub(super) fn require_no_pending_root(manager: &PinnedDirectory) -> io::Result<()> {
-    for name in [REFERENCE, "client-root-reservation"] {
-        if entry(manager, name)?.is_some() {
-            return Err(denied(
-                "first client root is not registered with lifecycle; preserved",
-            ));
-        }
+    if has_creation_evidence(manager)? {
+        return Err(denied(
+            "first client root is not registered with lifecycle; preserved",
+        ));
     }
     Ok(())
 }
@@ -41,13 +45,134 @@ struct IntentReference<'a> {
     id: &'a str,
     intent_sha256: &'a str,
 }
-#[derive(Clone, Serialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct References {
     pub id: String,
     pub intent_sha256: String,
     pub created_sha256: String,
     pub published_sha256: String,
+}
+
+/// A move of the original flock/created fd, never a release plus path reopen.
+pub(super) struct Transfer {
+    pub(super) action: File,
+    pub(super) action_identity: Identity,
+    pub(super) action_protection: Protection,
+    pub(super) created: File,
+    pub(super) references: References,
+    pub(super) deadline: Instant,
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct CreatedRecord {
+    schema_version: u32,
+    intent_sha256: String,
+    root_identity: Identity,
+    root_protection: Protection,
+    root_empty: bool,
+}
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct PublishedRecord {
+    schema_version: u32,
+    intent_sha256: String,
+    created_sha256: String,
+    root_identity: Identity,
+    root_protection: Protection,
+}
+/// Read-only validation of facts already referenced by the independent index.
+/// This function cannot construct PublishedRoot/Transfer or a service permit.
+pub(super) fn verify_indexed(
+    manager: &PinnedDirectory,
+    data: &PinnedDirectory,
+    profile: &Path,
+    client: &PinnedDirectory,
+    refs: &References,
+) -> io::Result<()> {
+    if uuid::Uuid::parse_str(&refs.id)
+        .map(|v| v.to_string() != refs.id)
+        .unwrap_or(true)
+        || [
+            &refs.intent_sha256,
+            &refs.created_sha256,
+            &refs.published_sha256,
+        ]
+        .iter()
+        .any(|s| {
+            s.len() != 64
+                || !s
+                    .bytes()
+                    .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+        })
+    {
+        return Err(denied("invalid indexed root references"));
+    }
+    let profile = PinnedDirectory::open(profile)?;
+    safe_profile(&profile)?;
+    data.private()?;
+    client.private()?;
+    let vault = manager.child_private("client-root-reservation", false)?;
+    let read = |name: &str, hash: &str| -> io::Result<Vec<u8>> {
+        match capture_file(&vault, name, 65536)? {
+            Image::File {
+                bytes, protection, ..
+            } if digest(&bytes) == hash => {
+                require_private(&protection, false)?;
+                Ok(bytes)
+            }
+            _ => Err(denied("indexed root provenance is missing or changed")),
+        }
+    };
+    let intent_bytes = read("intent.json", &refs.intent_sha256)?;
+    let intent: Intent = serde_json::from_value(
+        crate::modules::model_config::schema_v2::parse_strict_json_v2(&intent_bytes)
+            .map_err(|_| denied("invalid root intent"))?,
+    )
+    .map_err(|_| denied("invalid root intent fields"))?;
+    let created: CreatedRecord =
+        serde_json::from_slice(&read("created.json", &refs.created_sha256)?)
+            .map_err(|_| denied("invalid root creation fields"))?;
+    let published: PublishedRecord =
+        serde_json::from_slice(&read("published.json", &refs.published_sha256)?)
+            .map_err(|_| denied("invalid root publication fields"))?;
+    if intent.schema_version != 1
+        || intent.id != refs.id
+        || intent.purpose != PURPOSE
+        || !intent.original_root_absent
+        || intent.uid != unsafe { libc::geteuid() }
+        || intent.data_root != data.path()
+        || intent.data_identity != *data.identity()
+        || intent.profile != profile.path()
+        || intent.profile_identity != *profile.identity()
+        || intent.profile_protection != protection(profile.file(), &stat(profile.file())?)?
+        || client.path() != profile.path().join(".codex")
+        || created.schema_version != 1
+        || !created.root_empty
+        || created.intent_sha256 != refs.intent_sha256
+        || published.schema_version != 1
+        || published.intent_sha256 != refs.intent_sha256
+        || published.created_sha256 != refs.created_sha256
+        || published.root_identity != created.root_identity
+        || published.root_protection != created.root_protection
+        || created.root_identity != *client.identity()
+        || created.root_protection != protection(client.file(), &stat(client.file())?)?
+    {
+        return Err(denied(
+            "indexed root provenance does not bind this original absence and created directory",
+        ));
+    }
+    let expected = encode(&IntentReference {
+        schema_version: 1,
+        id: &refs.id,
+        intent_sha256: &refs.intent_sha256,
+    })?;
+    match capture_file(manager, REFERENCE, 65536)? {
+        Image::File {
+            bytes, protection, ..
+        } if bytes == expected => require_private(&protection, false),
+        _ => Err(denied("root intent reference changed")),
+    }
 }
 /// This lease uses the SAME action flock as the ordinary independent index.
 /// Index integration must transfer this custody, not acquire a second lock.
@@ -334,6 +459,49 @@ impl Reservation {
     }
 }
 impl PublishedRoot {
+    pub(super) fn into_transfer(
+        self,
+        data: &PinnedDirectory,
+        profile: &Path,
+        client: &PinnedDirectory,
+    ) -> io::Result<Transfer> {
+        self.check()?;
+        if self.reservation.data.path() != data.path()
+            || self.reservation.data.identity() != data.identity()
+            || self.reservation.profile.path() != profile
+            || self.root.path() != client.path()
+            || self.root.identity() != client.identity()
+        {
+            return Err(denied("root creation transfer context changed"));
+        }
+        for name in [
+            "client-session-index.sqlite",
+            "client-session-index.sqlite-journal",
+            "client-session-index.sqlite-wal",
+            "client-session-index.sqlite-shm",
+            "client-originals",
+        ] {
+            if entry(&self.reservation.manager, name)?.is_some() {
+                return Err(denied(
+                    "root creation cannot replace an existing lifecycle index",
+                ));
+            }
+        }
+        let Self {
+            reservation,
+            created,
+            refs,
+            ..
+        } = self;
+        Ok(Transfer {
+            action: reservation.action,
+            action_identity: reservation.action_identity,
+            action_protection: reservation.action_protection,
+            created,
+            references: refs,
+            deadline: reservation.deadline,
+        })
+    }
     pub fn references(&self) -> io::Result<References> {
         self.check()?;
         Ok(self.refs.clone())

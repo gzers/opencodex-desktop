@@ -94,6 +94,12 @@ fn inspect_objects(
     if !eligible(head) {
         return Ok(None);
     }
+    let manager = data.child_private("manager-state", false)?;
+    // Root-aware cancellation/restoration must consume original directory
+    // absence. The ordinary unchanged-client shortcut cannot discharge it.
+    if super::super::root_creation::has_creation_evidence(&manager)? {
+        return Ok(None);
+    }
     let retained_vault = vault_history::inspect(
         data,
         client,
@@ -102,7 +108,6 @@ fn inspect_objects(
         head,
         history,
     )?;
-    let manager = data.child_private("manager-state", false)?;
     let profile = PinnedDirectory::open(&context.working_directory)?;
     let codex = TreeSnapshot::read(client)?;
     let grok = GrokSnapshot::read(&profile)?;
