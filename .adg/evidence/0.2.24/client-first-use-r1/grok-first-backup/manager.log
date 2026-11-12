@@ -1,0 +1,9 @@
+2026-11-12T13:52:40.542Z [manager] start: start confirmed
+2026-11-12T13:52:41.790Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-12T13:52:42.805Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-12T13:52:42.810Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-12T13:52:42.856Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-12T13:52:46.425Z [manager] client-stop-recovery: three-artifact-originals restored and readback verified
+2026-11-12T13:52:47.793Z [manager] client-stop-recovery: measured elapsed_ms=4976 timings=[("original-pair-exit", 0), ("native-coordination", 43), ("seal-stopped", 976), ("index-stopped", 1443), ("prepare-plan", 1449), ("index-plan", 1866), ("restore-three-artifacts", 1872), ("release-coordination", 3612), ("full-tree-and-lock-release", 4371)]
+2026-11-12T13:52:47.798Z [manager] client-stop-recovery: failed phase=full-tree-and-lock-release code=client_session_unconfirmed
+2026-11-12T13:52:47.802Z [manager] stop: failed (managed runtime operation failed: client_original_restore_pending; 服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留; duration_ms=7000)

@@ -1,0 +1,6 @@
+
+thread 'commands::client_recovery::tests::inspect_owned_client_gate_after_rearm_without_service_actions' (157093638) panicked at src/commands/client_recovery_tests.rs:636:5:
+assertion `left == right` failed
+  left: NotFound
+ right: Stopped
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

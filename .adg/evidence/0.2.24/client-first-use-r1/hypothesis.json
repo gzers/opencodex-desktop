@@ -1,0 +1,24 @@
+{
+  "accepted": false,
+  "hypotheses": [
+    {
+      "case": "grok-absent",
+      "judgment": "Existing Codex but absent Grok should complete actual Start/Stop with Grok root still absent; no empty-directory substitution."
+    },
+    {
+      "case": "codex-empty",
+      "judgment": "Empty existing Codex and absent Grok should complete Start/Stop with native configuration/catalog/cache/audit restored to absence; only already-adopted stable coordination locks allowed."
+    },
+    {
+      "case": "grok-first-backup",
+      "judgment": "Existing Grok config and agents but absent config.toml.bak-opencodex should restore backup absence and original config/agent bytes after normal Stop; no broad residual exception."
+    }
+  ],
+  "boundaries": [
+    "Unmodified pinned official2.99",
+    "Original30/5/10 budgets",
+    "One real round for each distinct initial state; failures kept",
+    "No business/model requests; only localhost and denied daily HOME"
+  ],
+  "sourceRoot": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes"
+}

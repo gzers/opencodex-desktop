@@ -1,0 +1,84 @@
+{
+  "accepted": false,
+  "rows": [
+    {
+      "case": "grok-absent",
+      "nativeDriverExitCode": 101,
+      "recordedDriverError": [
+        "src/commands/lifecycle_versioned_tests.rs:706:22:",
+        "called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: \"Grok root was absent in original phase\" }"
+      ],
+      "indexState": "restored",
+      "indexRevision": 8,
+      "originalNativeNormalExit0": true,
+      "captured4TCPAbsent": true,
+      "ordinaryProductStopCompleted": true,
+      "stopActionDurationMs": 6644,
+      "unrestoredOriginalPaths": [],
+      "accepted": false,
+      "result": "product completed; driver archive assertion was wrong; independent native full trees and live state passed"
+    },
+    {
+      "case": "codex-empty",
+      "nativeDriverExitCode": 101,
+      "recordedDriverError": [
+        "src/commands/lifecycle_versioned_tests.rs:706:22:",
+        "called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: \"Grok root was absent in original phase\" }"
+      ],
+      "indexState": "stopped",
+      "indexRevision": 6,
+      "originalNativeNormalExit0": true,
+      "captured4TCPAbsent": true,
+      "ordinaryProductStopCompleted": false,
+      "stopActionDurationMs": 3059,
+      "unrestoredOriginalPaths": [
+        "codex/config.toml"
+      ],
+      "accepted": false,
+      "result": "product incomplete: absent optional artifacts require no projection; new newline-only config also needs reversible removal"
+    },
+    {
+      "case": "grok-first-backup",
+      "nativeDriverExitCode": 101,
+      "recordedDriverError": [
+        "src/commands/lifecycle_versioned_tests.rs:706:22:",
+        "called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: \"tree file not independently archived\" }"
+      ],
+      "indexState": "restore_prepared",
+      "indexRevision": 7,
+      "originalNativeNormalExit0": true,
+      "captured4TCPAbsent": true,
+      "ordinaryProductStopCompleted": false,
+      "stopActionDurationMs": 7000,
+      "unrestoredOriginalPaths": [
+        "grok/config.toml.bak-opencodex"
+      ],
+      "accepted": false,
+      "result": "product incomplete: newly created Grok backup must be explicitly included in reversible original-absence restoration"
+    },
+    {
+      "accepted": false,
+      "result": "passed-directed-no-private-artifacts",
+      "startMs": 6495,
+      "statusMs": 264,
+      "stopMs": 5744,
+      "allThreeArtifactsAbsentAcrossFourActualFrames": true,
+      "noProjectedRowsInvented": true,
+      "planKinds": [
+        "keep",
+        "keep",
+        "keep"
+      ],
+      "originalReferenceHashesMatch": true,
+      "independentFullNativeTreeHashesMatchReceipt": true,
+      "originalAndCurrentGrokAbsent": true,
+      "correctRuntimeContextCollectorPassed": true,
+      "supplementalStatusHelperWithWrongReusedProgramContextFailedAndWasNotCounted": true,
+      "actualProgramRoot": "/private/tmp/ocxd024-versioned-lifecycle-_xf814_t/fixtures/program \u4e2d\u6587 space",
+      "finalIndexState": "restored",
+      "finalIndexRevision": 8,
+      "case": "catalog-absent",
+      "nativeDriverExitCode": 0
+    }
+  ]
+}
