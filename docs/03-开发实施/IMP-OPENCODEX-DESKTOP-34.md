@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 65；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 66；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -597,3 +597,12 @@ main317eb9dee新增原文件已完整恢复但index未关闭分支：preview绑�
 71去重后端+3前端合同/类型/编译/格式/严格Clippy过。新ownedProfile真实官方Start11864/Status240/Stop8425ms，实际七文件补偿/整树/两锁后故障seam在index关闭前拒绝，原动作exit101/failed/Required/index6保留。另进程最终源重新当前准入的显式metadata正例6631ms/index7 Restored，错attempt/revision/digest、外部config编辑和陌生runtime记录均拒绝保留，重复确认拒绝，原普通失败不改写。客户端文件未被重放覆盖；最终树原生SHA与原completion一致，三项归档旧后像与Stopped字节匹配。两阶段binary/源码边界明确，open_existing后加仅收紧显式路径，不冒旧binary含最终新补丁。
 
 证据.adg/evidence/0.2.24/client-explicit-finalize-r1/及manifest保留原失败/index6和显式另动作/index7、所有来源/正反例/35内容引用/最终树。原端点/自有镜像/helper缺席，3精确新协调DB排他取得释放后连同自有程序/Profile/blob/index/stage/archive/control副本/重复回执清理，globalL原样保留。无日常/官方/系统/业务修改、新release/app/DMG或发布。部分中断继续回退/确认UI与其它一般图/全客户端/完整集合/旧revision4及Windows/NAME/System代理/发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 客户端收尾确认界面与状态闭环
+
+main d14125821在诊断中心Doctor后接ClientRecovery真实组件/持久store，入口显式preview、仅原完整已补偿现场确认metadata收尾；关闭/重挂不重复提交，回执精确匹配attempt/revision+1/status，成功后新live同D/H且Stopped/NotRequired/可Start才解除原UIlatch。普通迟到状态仍不清原失败latch；未知/位置变化/刷新失败保留限制，成功回执可只读刷新，不重试mutation。部分continue/rollback不显示。原唯一总原型新client-recovery024模块与2行loader/css同步入口/文案/状态/560px，无真实调用。详[收尾界面](0.2.24-contracts/client-recovery-ui-r1.md)。
+
+WebKit新QA真复现summary后Tab跳BODY，main ed63c511f修共享UiDialog每步Tab显式有序移动（仅top层/未消费事件），原失败焦点轨迹/截图保留。96前端相关含其它dialog消费者通过；最后文案/unknowncompletionguard增量40项/build过。Chromium和WebKit各15软件与原型mock场景过，键盘取消/焦点9步、明暗/900×600无溢出、执行关闭重开1mutation、refresh失败只读重试均证实；最终WebKit2受影响refresh场景增量过。一次错误原型路径失败保留、修真实路径再过，不冒早期原型已验。生产dist排除审计mock并含真正UI/IPC契约，类型/build过，未新建native包或拿mock代原生。
+
+证据.adg/evidence/0.2.24/client-recovery-ui-r1/及manifest保存所有源/原型index观察SHA、原失败/截图/双引擎summary/生产构建。所有9轮browser/Vite及精确audit脚本/Vitest退出，无本批native服务/外部DB/日常系统或业务操作；只复制核验证据后清重复临时根，正常dist保留。prototype其它用户index/原型未改未提交，本批只自己的新模块/loader/css。无发布。部分中断继续回退/其它一般图/客户端/完整集合/旧revision4及Windows/NAME/System代理/发布验证/固定候选继续，目标active。

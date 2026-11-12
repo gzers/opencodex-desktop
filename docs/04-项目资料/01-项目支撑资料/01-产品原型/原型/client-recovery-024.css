@@ -1,0 +1,6 @@
+/* This dialog follows the software's shared 560px dialog, without changing other prototypes. */
+#modal.client-recovery-024-modal{width:min(560px,calc(100% - 32px));max-width:560px}
+#modal.client-recovery-024-modal .p24-dialog>p{line-height:1.6;margin:0 0 16px}
+#modal.client-recovery-024-modal .p24-dialog>p:first-child{font-weight:600}
+#modal.client-recovery-024-modal .p24-facts{grid-template-columns:6em minmax(0,1fr);gap:8px 12px;margin-top:12px}
+#modal.client-recovery-024-modal .p24-facts dd{overflow-wrap:anywhere;min-width:0}

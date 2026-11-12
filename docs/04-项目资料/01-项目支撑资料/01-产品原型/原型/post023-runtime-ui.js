@@ -71,4 +71,6 @@
  }
  root.post023Prototype={state:()=>copy(S),paths,open:{restore:restoreDialog,update:updateDialog,editor:editorDialog,install:installDialog,backup:backupDialog},setScenario:(key,value)=>{if(key==='environment')setEnvironment(value);else {S[key]=value;renderProgram();renderUpdateCard();renderRecoveryCard();}return copy(S);}};
  mount();
+ // Additional adopted recovery surface, kept in the existing total prototype.
+ const cr=root.document.createElement('script');cr.src=new URL('client-recovery-024.js',root.document.currentScript.src).href;cr.dataset.clientRecovery024='true';root.document.head.append(cr);
 })(window);

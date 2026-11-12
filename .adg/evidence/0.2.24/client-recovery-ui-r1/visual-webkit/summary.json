@@ -1,0 +1,12 @@
+{
+  "accepted": false,
+  "scope": "mock browser UI/prototype only; no native finalization or business operations",
+  "engine": "webkit",
+  "checks": [],
+  "result": "failed",
+  "error": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert(await page.locator('dialog[open]').evaluate(d => d.contains(document.activeElement)))\n\n    at file:///Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui/qa/client-recovery-visual.mjs:51:73\n    at runNextTicks (node:internal/process/task_queues:65:5)\n    at process.processImmediate (node:internal/timers:541:9)",
+  "cleanup": {
+    "browserClosed": true,
+    "ownedViteProcessExited": true
+  }
+}

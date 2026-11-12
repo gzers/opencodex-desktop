@@ -1,0 +1,5 @@
+{
+  "accepted": false,
+  "hypothesis": "Expose existing metadata-only finalize through diagnostic UI matching prototype; no partialcontinue/rollback buttons. Query on explicit entry, inspect-only on cancel, bind displayedoriginalattempt/revision/digest for onefinalize, reject mismatchedoutcome; refresh new real status scoped sameD/H before clearing frontendrecoverylatch. Closure/remount duringapply preserves onepromise; failure/unknown requires freshinspection not auto retry. Successfulserverreceipt+freshscopedNotRequired snapshot should unblock sameUIinstance; stale/no-result/refreshfailure keepsgate. Mockbrowser and componentstates loading/eligible/pending/unknown/unsupported/success/error/narrow/dark verified; no nativebusiness/daily operations.",
+  "fullRecoveryAndWindowsStillPending": true
+}
