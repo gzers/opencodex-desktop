@@ -1,0 +1,7 @@
+{
+  "socketHeader": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/proc_info.h",
+  "socketHeaderSha256": "e427fa96b348537b21552b9de71e01039410bcad2cedee5584c5e5fddafd70fc",
+  "bridge": "target SDK sizeof(socket_fdinfo) and named fields; only stable16byte result crosses Rust boundary; no guessed offsets, raw IP addresses or kernel socket handles logged",
+  "scope": "current UID/PID/birth TCP IPv4+IPv6 LISTEN at stable observed FD views; not process-family, UDP/Unix descriptors or transferable/late listeners",
+  "buildDependency": "existing locked cc1.6.0 direct build dependency; compile C only when actual CARGO_CFG_TARGET_OS=macos"
+}

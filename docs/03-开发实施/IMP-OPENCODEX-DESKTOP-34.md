@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 49；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 50；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -445,3 +445,12 @@ main6d34836ed新增schema4 Profile原生身份及.grok缺席/完整有界普通�
 87相关回归、编译/格式/严格Clippy通过，首测试权限字面量lint保留并等价修正。真实全新Profile含有效Grok原配置/已有备份/内嵌Agent：Start16473ms/Status1102ms/Stop含双树归档9813ms均原30/5/10内，Grok配置确实79→8655→79字节，原SHA恢复、备份和Agent保持，独立原档可读；四schema4 frame/Profile/索引revision6/plan/stage及15内容对象吻合，新collector801ms Stopped+Required。Codex三件仍未恢复、原assert保留exit101/accepted=false，不能把Grok窄证据冒整版/恢复许可完成；后继实际apply仍同原10秒。
 
 证据.adg/evidence/0.2.24/grok-originals-r1/及manifest保留固定合成原件和匹配表/来源，不输出动态令牌原件；自己的程序/Profile/双客户端树/全部blob/frame/index/stage/test及精确协调DB/重复根清理，日常/官方/业务未改。完整进程集合监听写者/实际补偿/显式恢复、外部Agent和一般路径等原范围及Windows/NAME/System/发布验证/固定候选继续，目标active，不发布。
+
+
+## 2026-11-12 原服务代次TCP监听核对
+
+main1a7133e40用目标Darwin SDK C桥/完整FD两观察核对原UID/PID/birth的TCP IPv4/6监听，主运行port必须实际归属此代次；普通Stop后所有捕获端口都须在原TCP全局表明确缺席，次要端口/查询未知不通过。CompletedStop保留原监听Generation，缺监听不能靠单PID exit0补齐。18相关检查及编译/格式/严格Clippy通过，原预算/认证/完整性/无强杀不变；仍不是UDP/Unix/后代转移或持续写者证明，不开放MutationPermit/apply。详[TCP归属合同](0.2.24-contracts/macos-tcp-ownership-r1.md)。
+
+首原包脚本错误使用旧binary089f（新cc依赖使实际产物7a），工作树快照不等可执行源证明；错误轮原件保留并明确不计新TCP验证。改为读取本轮build路径及匹配18项结果的SHA再执行，新profile完整核验同一官方镜像：Start13958ms/Status1138ms/Stop含归档9996ms，捕获4个不同TCP且原exit0后4项全部检查缺席，索引revision6/四frame/plan/stage/字节及新collector794ms门槛正确。原30/5/10保持，几乎无余量，实际补偿仍false/原assert exit101/accepted=false，优化关键路径仍必需，不能给apply另开预算。
+
+证据.adg/evidence/0.2.24/macos-tcp-ownership-r1/及manifest保留首错/错误binary分类/有效来源/原件/端口数量trace；两原主端点、自有进程/全部精确协调DB/程序/Profile/blob/frame/index/stage/test及重复根清理，未改日常/官方或业务。完整进程集合/持续写者许可/实际恢复/显式恢复及Windows/NAME/System/发布验证/固定候选等原范围继续，目标active，不发布。

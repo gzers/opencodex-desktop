@@ -1,0 +1,9 @@
+{
+  "classification": "invalid_for_new_tcp_product_verification",
+  "actualBinarySha256": "714af6a72fdde7a0f0dc7adacd44137baa053647f9d72e7be9d89687c9d5407e",
+  "expectedCompiledBinarySha256": "edfd86fc60730edbc61eb6e39598ccf4a8bae0a5f65473096d7c70e4c48b2e7c",
+  "reason": "Inherited launcher hardcoded089f843b; new cc build dependency changed actual test executable7a2a7cb1. Worktree source snapshot in source.json was not an executable/source certificate. Prior standalone18 checks used exact build binary and remain valid.",
+  "sourceAssertionsWeakened": false,
+  "priorDirectoryPreserved": true,
+  "action": "One fresh profile with immutable same official image; exact build-record path plus SHA guard before execution; require real TCP count traces, no existing profile retry"
+}

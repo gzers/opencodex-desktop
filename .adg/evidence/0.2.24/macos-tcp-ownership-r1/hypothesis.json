@@ -1,0 +1,4 @@
+{
+  "hypothesis": "Current ordinary MacStop binds a real PID exit but checks only runtime-record primary port, not other listeners owned by that process. Capture whole native process FD table with target SDK socket_fdinfo bridge, twice bound to same UID/PID/birth, require primary ownership, retain TCP4/6listener set through completedStop and check each captured port absent within original10s. UDP/Unix/family/transferred late sockets not covered, no mutation factory. Prove real2port+UDP child, changed listener refusal and generation/budget negatives, then actual unchanged official299 chain if passes.",
+  "accepted": false
+}
