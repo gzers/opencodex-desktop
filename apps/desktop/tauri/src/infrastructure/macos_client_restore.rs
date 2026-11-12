@@ -17,16 +17,29 @@ unsafe extern "C" {
 /// No public constructor/deserializer/default and no transferable stored
 /// success boolean. The session owner is the only authority constructor.
 pub struct MutationPermit<'a> {
-    authority: session::ArtifactRestoreAuthority<'a>,
+    authority: Authority<'a>,
+}
+enum Authority<'a> {
+    Current(session::ArtifactRestoreAuthority<'a>),
+    Explicit(session::ExplicitRestoreAuthority<'a>),
 }
 impl<'a> MutationPermit<'a> {
     pub(super) fn from_authority(authority: session::ArtifactRestoreAuthority<'a>) -> Self {
-        Self { authority }
+        Self {
+            authority: Authority::Current(authority),
+        }
+    }
+    pub(super) fn from_explicit(authority: session::ExplicitRestoreAuthority<'a>) -> Self {
+        Self {
+            authority: Authority::Explicit(authority),
+        }
     }
     pub(super) fn check(&self, originals: &Originals) -> io::Result<()> {
-        self.authority
-            .check(originals)
-            .map_err(|_| denied("current Stop/pair/original/coordination authority changed"))
+        match &self.authority {
+            Authority::Current(a) => a.check(originals),
+            Authority::Explicit(a) => a.check(originals),
+        }
+        .map_err(|_| denied("current session/original/coordination authority changed"))
     }
 }
 
@@ -621,6 +634,28 @@ impl<'a> Pending<'a> {
         Ok((plan, captures))
     }
     pub fn apply(&self, decision: Decision, permit: &MutationPermit<'_>) -> io::Result<()> {
+        #[cfg(test)]
+        if std::env::var_os("OCXD024_INTERRUPT_ARTIFACT").as_deref() == Some(OsStr::new("1")) {
+            if !self.originals.data.path.starts_with("/private/tmp")
+                || !self.originals.data.path.ancestors().any(|p| {
+                    p.file_name().is_some_and(|n| {
+                        n.to_string_lossy()
+                            .starts_with("ocxd024-versioned-lifecycle-")
+                    })
+                })
+            {
+                return Err(denied("interruption fixture root refused"));
+            }
+            return self.apply_checked(decision, &|| permit.check(self.originals), &|point| {
+                if point == "after_native" {
+                    Err(denied(
+                        "owned fixture interrupted after first native publication",
+                    ))
+                } else {
+                    Ok(())
+                }
+            });
+        }
         self.apply_checked(decision, &|| permit.check(self.originals), &|_| Ok(()))
     }
     /// Verify the entire batch and its journals without learning new objects.

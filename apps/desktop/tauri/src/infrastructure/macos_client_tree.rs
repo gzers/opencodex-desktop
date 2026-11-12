@@ -358,6 +358,49 @@ fn walk(
     Ok(())
 }
 impl TreeSnapshot {
+    /// Only the exact three plan targets/stages are separately governed by
+    /// Pending's native-object review. Everything else keeps the ordinary full
+    /// readback rules. A live claim journal is ignored only inside a checked
+    /// same-process NativeLease; all other sidecars and foreign stages refuse.
+    pub(super) fn recovery_remainder_matches(
+        &self,
+        current: &Self,
+        plan: &str,
+        leased: bool,
+    ) -> bool {
+        if uuid::Uuid::parse_str(plan)
+            .map(|p| p.to_string() != plan)
+            .unwrap_or(true)
+            || !self.valid()
+            || !current.valid()
+        {
+            return false;
+        }
+        let stages: Vec<_> = (0..3)
+            .map(|i| format!(".ocxd-restore-{plan}-{i}"))
+            .collect();
+        let filtered = |tree: &Self| {
+            let mut tree = tree.clone();
+            tree.entries.retain(|entry| {
+                let path = entry.path();
+                !(NAMES.contains(&path)
+                    || stages.iter().any(|s| s == path)
+                    || leased
+                        && matches!(entry, Entry::Coordination { path, .. }
+                        if path == ".opencodex-native-main.claim.sqlite-journal"))
+            });
+            tree.total_bytes = tree
+                .entries
+                .iter()
+                .map(|entry| match entry {
+                    Entry::File { bytes, .. } => *bytes,
+                    _ => 0,
+                })
+                .sum();
+            tree
+        };
+        filtered(self).restored_matches(&filtered(current), true)
+    }
     /// Compare restored content and ALL security attributes, not rename-driven
     /// inode/timestamp changes. Only the two adopted top-level stable lock names
     /// may differ; their native release/identity proof is owned separately.

@@ -223,6 +223,56 @@ pub(super) fn verify_registered(
     Ok(())
 }
 impl Originals {
+    /// Current partial-plan confirmation, never historical Stop authority.
+    pub(super) fn continuation_fingerprint(
+        &self,
+        head: &session_index::Head,
+        leased: bool,
+    ) -> io::Result<Option<String>> {
+        if head.state != session_index::State::RestorePrepared {
+            return Ok(None);
+        }
+        let plan = head
+            .restore_plan
+            .as_ref()
+            .ok_or_else(|| denied("recovery plan absent"))?;
+        let review = restore::Pending::open(self, &plan.id, &plan.sha256)?.review_recovery()?;
+        if review.terminal.is_some() {
+            return Ok(None);
+        }
+        if capture_file(&self.directory, "completion-readback.json", MAX_FRAME)? != Image::Absent {
+            return Err(denied("partial plan has unexpected completion evidence"));
+        }
+        let original = self.frame(Phase::Original)?.0;
+        let stopped = self.frame(Phase::Stopped)?.0;
+        let codex = TreeSnapshot::read(&self.client)?;
+        let grok = GrokSnapshot::read(&self.profile)?;
+        if !original
+            .tree
+            .recovery_remainder_matches(&codex, &plan.id, leased)
+            || !original.grok.restored_matches(&grok)
+        {
+            return Ok(None);
+        }
+        for name in LOCKS {
+            let id = codex.stable_identity(name)?;
+            if stopped.tree.stable_identity(name)? != id
+                || !original.tree.original_stable_identity_matches(name, &id)
+            {
+                return Ok(None);
+            }
+        }
+        // Full tree changes caused by coordinator acquisition are deliberately
+        // not confirmation input. The remainder and stable identities above
+        // are revalidated, while exact artifact generations remain bound here.
+        Ok(Some(digest(&encode(&(
+            head,
+            review.fingerprint,
+            self.data.identity(),
+            self.client.identity(),
+            self.profile.identity(),
+        ))?)))
+    }
     pub(super) fn finalization_fingerprint(
         &self,
         head: &session_index::Head,

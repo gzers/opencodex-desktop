@@ -6,6 +6,90 @@ use crate::{
 };
 use std::{fs, os::unix::fs::PermissionsExt, path::PathBuf, time::Instant};
 #[test]
+#[ignore = "explicit owned Profile retained after first native artifact publication; no service actions"]
+fn continue_owned_interrupted_plan_with_fresh_native_authority() {
+    let root = PathBuf::from(std::env::var_os("OCXD024_CONTINUE_ROOT").expect("owned fixture"));
+    assert!(
+        root.is_absolute()
+            && root.canonicalize().unwrap() == root
+            && root.starts_with("/private/tmp")
+            && root
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .starts_with("ocxd024-versioned-lifecycle-")
+    );
+    let profile = root.join("profile");
+    assert_eq!(
+        std::env::var_os("HOME"),
+        Some(profile.clone().into_os_string())
+    );
+    let data = profile.join(".codex-desktop/desktop");
+    let context = ProcessContext {
+        runtime: RuntimeHandle::initialize_versioned(&data, &root.join("program 中文 space")),
+        working_directory: profile.clone(),
+        opencodex_home: profile.join(".codex-desktop/opencodex/home"),
+    };
+    let before = preview::inspect_preview(&context, &data);
+    assert!(before.can_continue && !before.can_finalize && !before.can_rollback);
+    let request = Request {
+        attempt_id: before.attempt_id.clone().unwrap(),
+        revision: before.revision.unwrap(),
+        confirmation_digest: before.confirmation_digest.unwrap(),
+    };
+    let index = data.join("manager-state/client-session-index.sqlite");
+    let index_before = fs::read(&index).unwrap();
+    if std::env::var_os("OCXD024_CONTINUE_ONCE").is_none() {
+        for wrong in [
+            Request {
+                revision: request.revision + 1,
+                ..request.clone()
+            },
+            Request {
+                confirmation_digest: "a".repeat(64),
+                ..request.clone()
+            },
+            Request {
+                attempt_id: uuid::Uuid::new_v4().to_string(),
+                ..request.clone()
+            },
+        ] {
+            assert!(session_index::continuation::resume(&context, &data, wrong).is_err());
+            assert_eq!(fs::read(&index).unwrap(), index_before);
+        }
+        let config = profile.join(".codex/config.toml");
+        let original = fs::read(&config).unwrap();
+        fs::write(&config, b"external config edit while pending").unwrap();
+        assert!(!preview::inspect_preview(&context, &data).can_continue);
+        assert!(session_index::continuation::resume(&context, &data, request.clone()).is_err());
+        assert_eq!(
+            fs::read(&config).unwrap(),
+            b"external config edit while pending"
+        );
+        assert_eq!(fs::read(&index).unwrap(), index_before);
+        fs::write(config, original).unwrap();
+    }
+    let t = Instant::now();
+    let result = session_index::continuation::resume(&context, &data, request.clone());
+    let elapsed = t.elapsed().as_millis();
+    let report = serde_json::json!({"accepted":false,"elapsedMs":elapsed,"outcome":result.as_ref().ok(),"error":result.as_ref().err().map(|e|e.to_string()),"reopened":preview::inspect_preview(&context,&data),"noHistoricalExitProofReconstructed":true});
+    fs::write(
+        root.join("explicit-continue-summary.json"),
+        serde_json::to_vec_pretty(&report).unwrap(),
+    )
+    .unwrap();
+    println!("{report}");
+    let outcome = result.unwrap();
+    assert!(elapsed < 10000);
+    assert_eq!(outcome.status, "restored");
+    assert_eq!(outcome.revision, request.revision + 1);
+    let after = fs::read(&index).unwrap();
+    assert!(session_index::continuation::resume(&context, &data, request).is_err());
+    assert_eq!(fs::read(&index).unwrap(), after);
+}
+#[test]
 #[ignore = "explicit retained owned Profile whose ordinary Stop completed artifacts then intentionally failed before index closure"]
 fn finalize_owned_completed_fixture_with_fresh_admission() {
     let root = PathBuf::from(std::env::var_os("OCXD024_FINALIZE_ROOT").expect("owned fixture"));

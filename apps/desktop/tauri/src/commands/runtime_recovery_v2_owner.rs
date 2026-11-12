@@ -184,6 +184,40 @@ impl CompletedLifecycleStop {
     }
 }
 impl SystemServiceOwnerProofProvider {
+    /// Per-publication checks INSIDE an already owned official native writer
+    /// lease. The session factory requires full OS Stopped before issuing the
+    /// borrow-scoped permit and again after publication. Do not replace that
+    /// admission with this narrower record/process/endpoint recheck.
+    #[cfg(target_os = "macos")]
+    pub(crate) fn require_excluded_recovery_absence(
+        &self,
+        context: &ProcessContext,
+        service: crate::infrastructure::macos_process_exit::Generation,
+        launcher: crate::infrastructure::macos_process_exit::Generation,
+        port: u16,
+    ) -> AppResult<()> {
+        self.same_context(context)?;
+        if port == 0
+            || service.pid == launcher.pid
+            || service.uid != launcher.uid
+            || service.uid.to_string() != self.owner
+            || !self.service_home_valid()?
+            || self.record()?.is_some()
+            || self.read("ocx.pid", 64)?.is_some()
+            || self.host.process(service.pid)?.is_some()
+            || self.host.process(launcher.pid)?.is_some()
+            || !self.host.port_clear(port)?
+            || !self.host.manager_absent()?
+            || self.record()?.is_some()
+            || self.read("ocx.pid", 64)?.is_some()
+        {
+            return Err(fail(
+                "client_recovery_service_unconfirmed",
+                "原会话进程或监听尚未确认缺席，恢复未完成",
+            ));
+        }
+        Ok(())
+    }
     #[cfg(target_os = "macos")]
     pub(crate) fn require_finalization_absence(
         &self,

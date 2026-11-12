@@ -111,6 +111,78 @@ impl Fixture {
     }
 }
 
+#[cfg(target_os = "macos")]
+#[test]
+fn excluded_recovery_step_refuses_any_record_process_endpoint_manager_or_context_change() {
+    struct CurrentUserHost(Arc<FakeHost>);
+    impl Host for CurrentUserHost {
+        fn owner(&self) -> AppResult<String> {
+            Ok(unsafe { libc::geteuid() }.to_string())
+        }
+        fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>> {
+            self.0.process(pid)
+        }
+        fn processes(&self) -> AppResult<Vec<ProcessIdentity>> {
+            panic!("per-step check must not claim full batch enumeration")
+        }
+        fn port_clear(&self, port: u16) -> AppResult<bool> {
+            self.0.port_clear(port)
+        }
+        fn manager_absent(&self) -> AppResult<bool> {
+            self.0.manager_absent()
+        }
+    }
+    for mode in [
+        "clear",
+        "record",
+        "pid",
+        "process",
+        "launcher",
+        "port",
+        "manager",
+        "unknown-port",
+        "context",
+        "identity",
+    ] {
+        let mut f = Fixture::new();
+        f.provider.owner = unsafe { libc::geteuid() }.to_string();
+        f.provider.host = Arc::new(CurrentUserHost(f.host.clone()));
+        let service = crate::infrastructure::macos_process_exit::Generation {
+            pid: 4242,
+            uid: unsafe { libc::geteuid() },
+            start_seconds: 1,
+            start_micros: 1,
+        };
+        let launcher = crate::infrastructure::macos_process_exit::Generation {
+            pid: 4241,
+            ..service
+        };
+        let mut context = f.provider.context.clone();
+        let mut port = 19555;
+        match mode {
+            "record" => f.record(4242),
+            "pid" => std::fs::write(context.opencodex_home.join("ocx.pid"), b"4242").unwrap(),
+            "process" | "launcher" => {
+                let pid = if mode == "process" { 4242 } else { 4241 };
+                f.host.processes.lock().unwrap().insert(pid, f.process(pid));
+            }
+            "port" => f.host.listener.store(true, Ordering::SeqCst),
+            "manager" => f.host.manager.store(true, Ordering::SeqCst),
+            "unknown-port" => f.host.port_error.store(true, Ordering::SeqCst),
+            "context" => context.opencodex_home = context.opencodex_home.join("other"),
+            "identity" => port = 0,
+            _ => {}
+        }
+        assert_eq!(
+            f.provider
+                .require_excluded_recovery_absence(&context, service, launcher, port)
+                .is_ok(),
+            mode == "clear",
+            "{mode}"
+        );
+    }
+}
+
 #[test]
 fn positive_absence_requires_runtime_scan_endpoint_and_service_evidence() {
     let f = Fixture::new();

@@ -135,6 +135,9 @@ pub(super) fn project(
         if let Some(fingerprint) = originals.finalization_fingerprint(head)? {
             preview.can_finalize = true;
             preview.confirmation_digest = Some(fingerprint);
+        } else if let Some(fingerprint) = originals.continuation_fingerprint(head, false)? {
+            preview.can_continue = true;
+            preview.confirmation_digest = Some(fingerprint);
         }
     }
     // Persisted bytes or a readback preview never manufacture the original

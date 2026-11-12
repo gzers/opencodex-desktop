@@ -53,6 +53,60 @@ impl Fixture {
     }
 }
 #[test]
+fn recovery_remainder_exempts_only_separately_reviewed_exact_plan_objects() {
+    let f = Fixture::new();
+    let plan = uuid::Uuid::new_v4().to_string();
+    fs::write(f.client.join("config.toml"), b"native='original'").unwrap();
+    fs::set_permissions(
+        f.client.join("config.toml"),
+        fs::Permissions::from_mode(0o644),
+    )
+    .unwrap();
+    let original = TreeSnapshot::read(&f.pin()).unwrap();
+    fs::write(f.client.join(NAMES[0]), b"plan target").unwrap();
+    let stage = f.client.join(format!(".ocxd-restore-{plan}-0"));
+    fs::write(&stage, b"plan stage").unwrap();
+    assert!(original.recovery_remainder_matches(
+        &TreeSnapshot::read(&f.pin()).unwrap(),
+        &plan,
+        false
+    ));
+    assert!(!original.recovery_remainder_matches(
+        &TreeSnapshot::read(&f.pin()).unwrap(),
+        "../bad",
+        false
+    ));
+    fs::write(f.client.join(".ocxd-restore-foreign-0"), b"unknown stage").unwrap();
+    assert!(!original.recovery_remainder_matches(
+        &TreeSnapshot::read(&f.pin()).unwrap(),
+        &plan,
+        false
+    ));
+    fs::remove_file(f.client.join(".ocxd-restore-foreign-0")).unwrap();
+    fs::write(f.client.join("config.toml"), b"outside config edit").unwrap();
+    assert!(!original.recovery_remainder_matches(
+        &TreeSnapshot::read(&f.pin()).unwrap(),
+        &plan,
+        false
+    ));
+    fs::write(f.client.join("config.toml"), b"native='original'").unwrap();
+    assert!(original.recovery_remainder_matches(
+        &TreeSnapshot::read(&f.pin()).unwrap(),
+        &plan,
+        false
+    ));
+    fs::set_permissions(
+        f.client.join("config.toml"),
+        fs::Permissions::from_mode(0o600),
+    )
+    .unwrap();
+    assert!(!original.recovery_remainder_matches(
+        &TreeSnapshot::read(&f.pin()).unwrap(),
+        &plan,
+        false
+    ));
+}
+#[test]
 fn complete_inventory_keeps_literal_paths_and_empty_directories_and_hashes_without_serialized_contents(
 ) {
     let f = Fixture::new();

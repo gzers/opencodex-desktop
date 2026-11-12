@@ -103,6 +103,54 @@ pub async fn client_recovery_finalize(
     })
     .await
 }
+#[tauri::command]
+pub async fn client_recovery_continue(
+    request: Request,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    install: tauri::State<'_, SharedRuntimeInstall>,
+    app: tauri::AppHandle,
+) -> AppResult<Outcome> {
+    use tauri::Manager;
+    let fail = || AppError::RuntimeManaged {
+        code: "client_recovery_continue_refused".into(),
+        detail: "当前有其它运行或更新操作，恢复继续未执行".into(),
+    };
+    let lease = {
+        let updates = app.state::<crate::commands::update::SharedUpdateStatus>();
+        let state = updates.lock().map_err(|_| fail())?;
+        if state.installing || state.pending_restart.is_some() {
+            return Err(fail());
+        }
+        install.acquire().ok_or_else(fail)?
+    };
+    let data = data.0.clone();
+    let context = context.inner().clone();
+    super::run_blocking("continue interrupted client recovery", move || {
+        let _lease = lease;
+        crate::modules::runtime::protection::ensure_binding_ready(&data)?;
+        #[cfg(target_os = "macos")]
+        {
+            crate::infrastructure::macos_client_originals::session_index::continuation::resume(
+                &context, &data, request,
+            )
+        }
+        #[cfg(not(target_os = "macos"))]
+        {
+            let _ = (
+                context,
+                request.attempt_id,
+                request.revision,
+                request.confirmation_digest,
+            );
+            Err(AppError::RuntimeManaged {
+                code: "client_recovery_unsupported".into(),
+                detail: "当前平台的客户端恢复继续尚未接入".into(),
+            })
+        }
+    })
+    .await
+}
 #[cfg(all(test, target_os = "macos", target_arch = "aarch64"))]
 #[path = "client_recovery_tests.rs"]
 mod tests;

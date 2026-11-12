@@ -169,6 +169,33 @@ impl ArtifactRestoreAuthority<'_> {
         time(self.deadline)
     }
 }
+/// A distinct user-confirmed action after interruption. This proves CURRENT
+/// absence and live writer exclusion, never reconstructs normal exit history.
+pub(super) struct ExplicitRestoreAuthority<'a> {
+    session: &'a StartupSession,
+    context: &'a ProcessContext,
+    owner: SystemServiceOwnerProofProvider,
+    lease: &'a NativeLease,
+    deadline: Instant,
+}
+impl ExplicitRestoreAuthority<'_> {
+    pub(super) fn check(&self, originals: &Originals) -> AppResult<()> {
+        time(self.deadline)?;
+        if !std::ptr::eq(originals, &self.session.originals) {
+            return Err(error(()));
+        }
+        self.lease
+            .require_context(self.context, &originals.client.path)?;
+        let live = self.session.live(self.context)?;
+        self.owner.require_excluded_recovery_absence(
+            self.context,
+            live.process()?,
+            live.parent()?,
+            live.port,
+        )?;
+        time(self.deadline)
+    }
+}
 fn effective_client(context: &ProcessContext) -> AppResult<PathBuf> {
     // The production controlled runner clears CODEX_HOME and supplies the
     // startup user's HOME. On macOS official defaultCodexHome therefore uses
@@ -687,6 +714,86 @@ fn fresh_ready(
     Ok((record.0, before, record.2))
 }
 impl StartupSession {
+    pub(super) fn continue_interrupted_plan(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        confirmation: &str,
+        lease: &NativeLease,
+        deadline: Instant,
+    ) -> AppResult<()> {
+        time(deadline)?;
+        if self
+            .originals
+            .continuation_fingerprint(head, true)
+            .map_err(error)?
+            .as_deref()
+            != Some(confirmation)
+        {
+            return Err(error(()));
+        }
+        let (root, _) = source(context)?;
+        let authority = ExplicitRestoreAuthority {
+            session: self,
+            context,
+            lease,
+            deadline,
+            owner: SystemServiceOwnerProofProvider::new(root, context.clone())?,
+        };
+        let live = self.live(context)?;
+        authority.owner.require_finalization_absence(
+            context,
+            live.process()?,
+            live.parent()?,
+            live.port,
+        )?;
+        authority.check(&self.originals)?;
+        let plan = head.restore_plan.as_ref().ok_or_else(|| error(()))?;
+        let pending =
+            restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)?;
+        let permit = restore::MutationPermit::from_explicit(authority);
+        pending
+            .apply(restore::Decision::Complete, &permit)
+            .map_err(error)?;
+        permit.check(&self.originals).map_err(error)?;
+        // The full OS enumeration is a batch-boundary fact. Every native step
+        // still rechecks the live native writer lease and exact original
+        // process/port/records, just as ordinary Stop retains its exit proof.
+        let (root, _) = source(context)?;
+        SystemServiceOwnerProofProvider::new(root, context.clone())?.require_finalization_absence(
+            context,
+            live.process()?,
+            live.parent()?,
+            live.port,
+        )?;
+        time(deadline)
+    }
+    pub(super) fn continued_readback(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        deadline: Instant,
+    ) -> AppResult<completion::ReadbackProof> {
+        time(deadline)?;
+        let live = self.live(context)?;
+        let (root, _) = source(context)?;
+        let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        let require_clear = || {
+            owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)
+        };
+        require_clear()?;
+        let proof = self
+            .originals
+            .complete_readback(
+                head.references.as_ref().ok_or_else(|| error(()))?.clone(),
+                head.restore_plan.as_ref().ok_or_else(|| error(()))?.clone(),
+                deadline,
+            )
+            .map_err(error)?;
+        require_clear()?;
+        time(deadline)?;
+        Ok(proof)
+    }
     /// Metadata-only explicit recovery. This NEVER reissues the old normal
     /// exit proof, enters Pending.apply, or writes any client artifact.
     pub fn finalize_existing_complete(

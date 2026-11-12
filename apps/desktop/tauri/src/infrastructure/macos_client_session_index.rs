@@ -17,6 +17,8 @@ const TABLES: [(&str, &str); 3] = [
 #[path = "macos_client_session_observation.rs"]
 mod observation;
 pub use observation::inspect;
+#[path = "macos_client_recovery_continue.rs"]
+pub mod continuation;
 #[path = "macos_client_recovery_finalize.rs"]
 pub mod finalization;
 #[path = "macos_client_session_preview.rs"]

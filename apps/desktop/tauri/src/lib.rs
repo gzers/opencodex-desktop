@@ -704,6 +704,7 @@ pub fn run() {
             commands::runtime_activation::runtime_activation_preview,
             commands::client_recovery::client_recovery_preview,
             commands::client_recovery::client_recovery_finalize,
+            commands::client_recovery::client_recovery_continue,
             commands::runtime_builtin::runtime_builtin_preview,
             commands::about::runtime_version_facts,
             commands::runtime_builtin::runtime_preparation_status,
