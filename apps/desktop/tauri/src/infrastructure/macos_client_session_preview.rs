@@ -113,6 +113,10 @@ pub(super) fn project(
         preview.phase_count = refs.phases.len();
         preview.attempt_id = Some(refs.attempt.clone());
         if let Some(plan) = &head.restore_plan {
+            // Immutable plan admission here. RestorePrepared gets its full
+            // current-object review in finalization_fingerprint below. Do not
+            // revalidate live artifacts after a registered Restored session:
+            // legitimate later user edits are not interrupted recovery.
             restore::Pending::open(&originals, &plan.id, &plan.sha256)?;
             preview.plan_evidence = Evidence::Verified;
         }

@@ -356,6 +356,11 @@ pub struct Pending<'a> {
     id: String,
     sha256: String,
 }
+/// Read-only assessment; this never grants replay authority.
+pub(super) struct RecoveryReview {
+    pub terminal: Option<Decision>,
+    pub fingerprint: String,
+}
 impl<'a> Pending<'a> {
     /// A check then rename is not kernel CAS. On a detected race, preserve the
     /// complete actual pair in an immutable conflict receipt BEFORE attempting
@@ -618,44 +623,104 @@ impl<'a> Pending<'a> {
     pub fn apply(&self, decision: Decision, permit: &MutationPermit<'_>) -> io::Result<()> {
         self.apply_checked(decision, &|| permit.check(self.originals), &|_| Ok(()))
     }
-    /// Inspection only. The immutable terminal decision is necessary but not
-    /// sufficient: every original publication and archived postimage must still
-    /// be this plan's exact native objects, with no stage left to write.
-    pub(super) fn already_completed(&self) -> io::Result<bool> {
-        let terminal = capture_file(
-            &self.originals.directory,
-            &format!("restore-{}-outcome.json", self.id),
-            MAX_FRAME,
-        )?;
-        let Image::File {
-            bytes, protection, ..
-        } = terminal
-        else {
-            return Ok(false);
+    /// Verify the entire batch and its journals without learning new objects.
+    /// Known partial states are evidence, never proof of writer exclusion.
+    pub(super) fn review_recovery(&self) -> io::Result<RecoveryReview> {
+        let (plan, captures) = self.load()?;
+        let journal = |suffix: &str| {
+            capture_file(
+                &self.originals.directory,
+                &format!("restore-{}-{suffix}.json", self.id),
+                MAX_FRAME,
+            )
         };
-        require_private(&protection, false)?;
-        if bytes
-            != encode(
-                &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"decision":"complete"}),
-            )?
-        {
-            return Ok(false);
+        let intent = journal("intent")?;
+        let expected_intent =
+            encode(&serde_json::json!({"schemaVersion":1,"planSha256":self.sha256}))?;
+        match &intent {
+            Image::Absent => {}
+            Image::File {
+                bytes, protection, ..
+            } if *bytes == expected_intent => {
+                require_private(protection, false)?;
+            }
+            _ => return Err(denied("recovery intent changed; no replacement baseline")),
         }
-        let (plan, c) = self.load()?;
+        let terminal_image = journal("outcome")?;
+        let terminal = match &terminal_image {
+            Image::Absent => None,
+            Image::File {
+                bytes, protection, ..
+            } => {
+                require_private(protection, false)?;
+                let mut found = None;
+                for decision in [Decision::Complete, Decision::Rollback] {
+                    if *bytes
+                        == encode(
+                            &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"decision":decision}),
+                        )?
+                    {
+                        found = Some(decision);
+                    }
+                }
+                Some(found.ok_or_else(|| denied("recovery terminal changed"))?)
+            }
+        };
+        let mut observed = Vec::new();
         for i in 0..3 {
-            if plan.kinds[i] != Kind::Keep && !self.state(&plan, &c, i)? {
-                return Ok(false);
+            let pair = self.pair(i)?;
+            let archive = self.archive(i)?;
+            let after = Self::state_of(&plan, &captures, i, &pair, &archive)?;
+            if intent == Image::Absent && (terminal.is_some() || after || archive != Image::Absent)
+            {
+                return Err(denied("published recovery objects lack original intent"));
             }
-            if self.pair(i)?.1 != Image::Absent {
-                return Ok(false);
+            if let Some(decision) = terminal {
+                let expected = if decision == Decision::Complete {
+                    &captures[0]
+                } else {
+                    &captures[3]
+                };
+                if !original_content(&pair.0, &expected.images[i]) {
+                    return Err(denied("terminal client bytes or protection differ"));
+                }
+                if (plan.kinds[i] != Kind::Keep && after != (decision == Decision::Complete))
+                    || pair.1 != Image::Absent
+                {
+                    return Err(denied("recovery terminal disagrees with native objects"));
+                }
+            }
+            observed.push((pair, archive, after));
+        }
+        self.load()?;
+        if journal("intent")? != intent || journal("outcome")? != terminal_image {
+            return Err(denied("recovery journal changed during review"));
+        }
+        for (i, (pair, archive, _)) in observed.iter().enumerate() {
+            if self.pair(i)? != *pair || self.archive(i)? != *archive {
+                return Err(denied("recovery objects changed during review"));
             }
         }
-        let current = Capture::read(&self.originals.client)?;
-        Ok(current
-            .images
-            .iter()
-            .zip(&c[0].images)
-            .all(|(a, b)| original_content(a, b)))
+        Ok(RecoveryReview {
+            terminal,
+            fingerprint: digest(&encode(&(
+                &self.id,
+                &self.sha256,
+                intent,
+                terminal_image,
+                observed,
+                self.originals.data.identity(),
+                self.originals.client.identity(),
+                self.originals.directory.identity(),
+            ))?),
+        })
+    }
+    fn archive(&self, i: usize) -> io::Result<Image> {
+        capture_file(
+            &self.originals.directory,
+            &format!("restore-{}-old-{i}", self.id),
+            MAX_CONTENT,
+        )
     }
     fn pair(&self, i: usize) -> io::Result<(Image, Image)> {
         Ok((
@@ -682,16 +747,21 @@ impl<'a> Pending<'a> {
     }
     fn state(&self, plan: &Plan, c: &[Capture; 4], i: usize) -> io::Result<bool> {
         let actual = self.pair(i)?;
-        let archive = capture_file(
-            &self.originals.directory,
-            &format!("restore-{}-old-{i}", self.id),
-            MAX_CONTENT,
-        )?;
+        let archive = self.archive(i)?;
+        Self::state_of(plan, c, i, &actual, &archive)
+    }
+    fn state_of(
+        plan: &Plan,
+        c: &[Capture; 4],
+        i: usize,
+        actual: &(Image, Image),
+        archive: &Image,
+    ) -> io::Result<bool> {
         for after in [false, true] {
             let wanted = Self::expected(plan, c, i, after);
             if same(&actual.0, &wanted.0, false)
                 && same(&actual.1, &wanted.1, false)
-                && archive == Image::Absent
+                && *archive == Image::Absent
             {
                 return Ok(after);
             }
@@ -702,7 +772,7 @@ impl<'a> Pending<'a> {
             let wanted = Self::expected(plan, c, i, after);
             if same(&actual.0, &wanted.0, false)
                 && actual.1 == Image::Absent
-                && same(&archive, &wanted.1, false)
+                && same(archive, &wanted.1, false)
             {
                 return Ok(after);
             }

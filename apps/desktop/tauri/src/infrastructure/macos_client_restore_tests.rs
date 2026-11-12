@@ -138,15 +138,30 @@ fn complete_restores_real_original_bytes_permissions_and_absence_without_discard
 fn completed_inspection_never_adopts_partial_rollback_or_unknown_postimages() {
     let f = Fixture::new();
     let pending = f.prepare();
-    assert!(!pending.already_completed().unwrap());
+    assert!(!pending
+        .review_recovery()
+        .map(|r| r.terminal == Some(Decision::Complete))
+        .unwrap());
     pending
         .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
         .unwrap();
-    assert!(pending.already_completed().unwrap());
+    assert!(pending
+        .review_recovery()
+        .map(|r| r.terminal == Some(Decision::Complete))
+        .unwrap());
     let path = f.originals.client.path().join(NAMES[0]);
     let before = fs::read(&path).unwrap();
     fs::write(&path, b"outside edit after publication").unwrap();
-    assert!(pending.already_completed().is_err() || !pending.already_completed().unwrap());
+    assert!(
+        pending
+            .review_recovery()
+            .map(|r| r.terminal == Some(Decision::Complete))
+            .is_err()
+            || !pending
+                .review_recovery()
+                .map(|r| r.terminal == Some(Decision::Complete))
+                .unwrap()
+    );
     assert_eq!(fs::read(&path).unwrap(), b"outside edit after publication");
     assert!(!before.is_empty());
     let f = Fixture::new();
@@ -154,7 +169,76 @@ fn completed_inspection_never_adopts_partial_rollback_or_unknown_postimages() {
     pending
         .apply_checked(Decision::Rollback, &|| Ok(()), &|_| Ok(()))
         .unwrap();
-    assert!(!pending.already_completed().unwrap());
+    assert!(!pending
+        .review_recovery()
+        .map(|r| r.terminal == Some(Decision::Complete))
+        .unwrap());
+}
+
+#[test]
+fn recovery_review_binds_the_whole_batch_without_changing_any_object() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let before = Capture::read(&f.originals.client).unwrap();
+    let review = pending.review_recovery().unwrap();
+    assert_eq!(review.terminal, None);
+    assert_eq!(
+        pending.review_recovery().unwrap().fingerprint,
+        review.fingerprint
+    );
+    assert_eq!(Capture::read(&f.originals.client).unwrap(), before);
+    assert!(!f
+        .originals
+        .directory
+        .path()
+        .join(format!("restore-{}-intent.json", pending.id()))
+        .exists());
+    let stopped = f.originals.frame(Phase::Stopped).unwrap().1;
+    let ready = f.originals.frame(Phase::Ready).unwrap().1;
+    let path = f.originals.client.path().join(NAMES[1]);
+    fs::write(&path, b"outside cache edit").unwrap();
+    assert!(pending.review_recovery().is_err());
+    assert_eq!(fs::read(&path).unwrap(), b"outside cache edit");
+    assert_eq!(f.originals.frame(Phase::Stopped).unwrap().1, stopped);
+    assert_eq!(f.originals.frame(Phase::Ready).unwrap().1, ready);
+}
+
+#[test]
+fn recovery_review_rejects_missing_intent_damaged_terminal_and_replaced_archive() {
+    for mode in ["intent", "outcome", "archive"] {
+        let f = Fixture::new();
+        let pending = f.prepare();
+        let initial = pending.review_recovery().unwrap().fingerprint;
+        pending
+            .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
+            .unwrap();
+        let complete = pending.review_recovery().unwrap();
+        assert_eq!(complete.terminal, Some(Decision::Complete));
+        assert_ne!(complete.fingerprint, initial);
+        let directory = f.originals.directory.path();
+        match mode {
+            "intent" => {
+                fs::remove_file(directory.join(format!("restore-{}-intent.json", pending.id())))
+                    .unwrap()
+            }
+            "outcome" => {
+                let p = directory.join(format!("restore-{}-outcome.json", pending.id()));
+                fs::set_permissions(&p, fs::Permissions::from_mode(0o600)).unwrap();
+                fs::write(p, b"{}").unwrap();
+            }
+            "archive" => {
+                let p = directory.join(format!("restore-{}-old-0", pending.id()));
+                let bytes = fs::read(&p).unwrap();
+                let replacement = directory.join("replacement");
+                fs::write(&replacement, &bytes).unwrap();
+                fs::rename(replacement, p).unwrap();
+            }
+            _ => unreachable!(),
+        }
+        let before = Capture::read(&f.originals.client).unwrap();
+        assert!(pending.review_recovery().is_err(), "{mode}");
+        assert_eq!(Capture::read(&f.originals.client).unwrap(), before);
+    }
 }
 
 #[test]
@@ -792,6 +876,15 @@ fn actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_know
             n["planSha256"].as_str().unwrap(),
         )
         .unwrap();
+        let review = pending.review_recovery().unwrap();
+        assert_eq!(
+            review.terminal,
+            (point == "terminal").then_some(Decision::Complete)
+        );
+        assert_eq!(
+            pending.review_recovery().unwrap().fingerprint,
+            review.fingerprint
+        );
         pending
             .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
             .unwrap();

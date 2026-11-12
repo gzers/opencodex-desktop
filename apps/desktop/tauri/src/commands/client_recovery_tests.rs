@@ -43,6 +43,41 @@ fn finalize_owned_completed_fixture_with_fresh_admission() {
         revision: before.revision.unwrap(),
         confirmation_digest: before.confirmation_digest.clone().unwrap(),
     };
+    // Target only a retained failed finalization, without repeating already
+    // passed negative cases or starting/stopping the official service again.
+    if std::env::var_os("OCXD024_FINALIZE_ONCE").is_some() {
+        let started = Instant::now();
+        let result = session_index::finalization::finalize(&context, &data, request);
+        let elapsed = started.elapsed().as_millis();
+        let report = serde_json::json!({"accepted":false,"scope":"single explicit finalize of retained owned pending index; no service actions", "elapsedMs":elapsed,
+            "outcome":result.as_ref().ok(),"error":result.as_ref().err().map(|e|e.to_string()),
+            "reopened":preview::inspect_preview(&context,&data)});
+        fs::write(
+            root.join("explicit-finalize-once.json"),
+            serde_json::to_vec_pretty(&report).unwrap(),
+        )
+        .unwrap();
+        println!("{report}");
+        let outcome = result.unwrap();
+        assert!(elapsed < 10000);
+        assert_eq!(outcome.revision, before.revision.unwrap() + 1);
+        assert_eq!(outcome.status, "restored");
+        // After durable closure, a legitimate user cache edit must not reopen
+        // recovery or be compared against the old artifact postimages.
+        let cache = profile.join(".codex/models_cache.json");
+        assert!(!cache.exists());
+        fs::write(&cache, b"owned user edit after closed recovery").unwrap();
+        assert_eq!(
+            preview::inspect_preview(&context, &data).status,
+            preview::Status::Restored
+        );
+        assert_eq!(
+            fs::read(&cache).unwrap(),
+            b"owned user edit after closed recovery"
+        );
+        fs::remove_file(cache).unwrap();
+        return;
+    }
     let index = data.join("manager-state/client-session-index.sqlite");
     let index_before = fs::read(&index).unwrap();
     for wrong in [

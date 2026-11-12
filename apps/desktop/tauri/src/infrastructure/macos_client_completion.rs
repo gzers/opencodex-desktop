@@ -239,7 +239,8 @@ impl Originals {
             .as_ref()
             .ok_or_else(|| denied("finalization original plan absent"))?;
         let pending = restore::Pending::open(self, &plan.id, &plan.sha256)?;
-        if !pending.already_completed()? {
+        let review = pending.review_recovery()?;
+        if review.terminal != Some(restore::Decision::Complete) {
             return Ok(None);
         }
         let original = self.frame(Phase::Original)?.0;
@@ -312,6 +313,7 @@ impl Originals {
             grok_sha,
             digest(&outcome),
             receipt_hash,
+            review.fingerprint,
         ))?)))
     }
     pub(super) fn finalize_readback(
