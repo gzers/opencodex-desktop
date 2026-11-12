@@ -1,0 +1,255 @@
+{
+  "accepted": false,
+  "scope": "filesystem custody and fail-closed reopening only; no service admission or restoration",
+  "result": "passed",
+  "actualParentVerifiedChildExit91Count": 4,
+  "absenceReferenceAndImmutableRecordHashesVerified": true,
+  "rootExistsOnlyAfterNativePublication": true,
+  "noLifecycleIndexOrOriginalFrameCreated": true,
+  "evidence": [
+    {
+      "accepted": false,
+      "boundary": "intent_published",
+      "childExitCode": 91,
+      "files": [
+        {
+          "bytes": 145,
+          "identity": {
+            "birthNanos": 839977280,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569155
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-intent.json",
+          "rawUtf8": "{\"schemaVersion\":1,\"id\":\"abfefb87-c207-445c-8ea2-f86212eb319b\",\"intentSha256\":\"a3f8a5d8de472dae86b95b240e66b74699094c52adf96967ba1e29c50c78a9fb\"}",
+          "sha256": "9a1f66838f4361e3bd6ac0c282a2ecc0733a7412c476f729a9ad1e4e140f1b4e"
+        },
+        {
+          "bytes": 703,
+          "identity": {
+            "birthNanos": 835107722,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569154
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-reservation/intent.json",
+          "rawUtf8": "{\"schemaVersion\":1,\"purpose\":\"create-first-codex-root\",\"id\":\"abfefb87-c207-445c-8ea2-f86212eb319b\",\"uid\":501,\"dataRoot\":\"/private/tmp/ocxd024-root-custody-d3qqd5g7/unit-tmp/.tmpGDNiap/desktop\",\"dataIdentity\":{\"device\":16777231,\"inode\":444569149,\"birthSeconds\":1794497490,\"birthNanos\":829479328},\"profile\":\"/private/tmp/ocxd024-root-custody-d3qqd5g7/unit-tmp/.tmpGDNiap/profile\",\"profileIdentity\":{\"device\":16777231,\"inode\":444569150,\"birthSeconds\":1794497490,\"birthNanos\":829512703},\"profileProtection\":{\"uid\":501,\"gid\":0,\"mode\":448,\"flags\":0,\"acl\":null,\"xattrs\":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},\"originalRootAbsent\":true}",
+          "sha256": "a3f8a5d8de472dae86b95b240e66b74699094c52adf96967ba1e29c50c78a9fb"
+        },
+        {
+          "bytes": 0,
+          "identity": {
+            "birthNanos": 831823419,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569152
+          },
+          "mode": 33152,
+          "path": "desktop/manager-state/client-session-action.lock",
+          "rawUtf8": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "noSessionIndex": true,
+      "rootPresent": false
+    },
+    {
+      "accepted": false,
+      "boundary": "created",
+      "childExitCode": 91,
+      "files": [
+        {
+          "bytes": 145,
+          "identity": {
+            "birthNanos": 864991197,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569163
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-intent.json",
+          "rawUtf8": "{\"schemaVersion\":1,\"id\":\"c28f584f-da69-49a6-86c2-1161a15d4be0\",\"intentSha256\":\"36eaeca605d81e6f29a6b03a8af10b3d86d2d3ce3981ba78e2587d20836b57e8\"}",
+          "sha256": "c04c7a21f9b7d7e06030052b9eb8862dceb7712bdefdf1844be990e4d8c00572"
+        },
+        {
+          "bytes": 411,
+          "identity": {
+            "birthNanos": 878007116,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569165
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-reservation/created.json",
+          "rawUtf8": "{\"intentSha256\":\"36eaeca605d81e6f29a6b03a8af10b3d86d2d3ce3981ba78e2587d20836b57e8\",\"rootEmpty\":true,\"rootIdentity\":{\"birthNanos\":875953359,\"birthSeconds\":1794497490,\"device\":16777231,\"inode\":444569164},\"rootProtection\":{\"acl\":null,\"flags\":0,\"gid\":0,\"mode\":448,\"uid\":501,\"xattrs\":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},\"schemaVersion\":1}",
+          "sha256": "8d976c4c6a577657b6f53e21f5b578d98111efe68046a1cc97384c2e9a1818d0"
+        },
+        {
+          "bytes": 703,
+          "identity": {
+            "birthNanos": 860287348,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569162
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-reservation/intent.json",
+          "rawUtf8": "{\"schemaVersion\":1,\"purpose\":\"create-first-codex-root\",\"id\":\"c28f584f-da69-49a6-86c2-1161a15d4be0\",\"uid\":501,\"dataRoot\":\"/private/tmp/ocxd024-root-custody-d3qqd5g7/unit-tmp/.tmpusZDvU/desktop\",\"dataIdentity\":{\"device\":16777231,\"inode\":444569157,\"birthSeconds\":1794497490,\"birthNanos\":854703663},\"profile\":\"/private/tmp/ocxd024-root-custody-d3qqd5g7/unit-tmp/.tmpusZDvU/profile\",\"profileIdentity\":{\"device\":16777231,\"inode\":444569158,\"birthSeconds\":1794497490,\"birthNanos\":854745704},\"profileProtection\":{\"uid\":501,\"gid\":0,\"mode\":448,\"flags\":0,\"acl\":null,\"xattrs\":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},\"originalRootAbsent\":true}",
+          "sha256": "36eaeca605d81e6f29a6b03a8af10b3d86d2d3ce3981ba78e2587d20836b57e8"
+        },
+        {
+          "bytes": 0,
+          "identity": {
+            "birthNanos": 857066087,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569160
+          },
+          "mode": 33152,
+          "path": "desktop/manager-state/client-session-action.lock",
+          "rawUtf8": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "noSessionIndex": true,
+      "rootPresent": false
+    },
+    {
+      "accepted": false,
+      "boundary": "root_published",
+      "childExitCode": 91,
+      "files": [
+        {
+          "bytes": 145,
+          "identity": {
+            "birthNanos": 902968450,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569173
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-intent.json",
+          "rawUtf8": "{\"schemaVersion\":1,\"id\":\"a5889321-e557-4807-a3d6-5e6e90a62caa\",\"intentSha256\":\"615337381bc6f3d10dfd2a209ad3aa680f483f6c541a9be4ea1374ba427bdf51\"}",
+          "sha256": "1ac86e16c42aecc18d0b9175b22b8cf047249f6a9c176d66629e1be3d0c69ef6"
+        },
+        {
+          "bytes": 411,
+          "identity": {
+            "birthNanos": 914571447,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569175
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-reservation/created.json",
+          "rawUtf8": "{\"intentSha256\":\"615337381bc6f3d10dfd2a209ad3aa680f483f6c541a9be4ea1374ba427bdf51\",\"rootEmpty\":true,\"rootIdentity\":{\"birthNanos\":912783733,\"birthSeconds\":1794497490,\"device\":16777231,\"inode\":444569174},\"rootProtection\":{\"acl\":null,\"flags\":0,\"gid\":0,\"mode\":448,\"uid\":501,\"xattrs\":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},\"schemaVersion\":1}",
+          "sha256": "16702a3a7eb30edda8ce0c980c458fd59b8b74e4dd09e4b29e978b1503d217b9"
+        },
+        {
+          "bytes": 703,
+          "identity": {
+            "birthNanos": 897939641,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569172
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-reservation/intent.json",
+          "rawUtf8": "{\"schemaVersion\":1,\"purpose\":\"create-first-codex-root\",\"id\":\"a5889321-e557-4807-a3d6-5e6e90a62caa\",\"uid\":501,\"dataRoot\":\"/private/tmp/ocxd024-root-custody-d3qqd5g7/unit-tmp/.tmp9qFZo3/desktop\",\"dataIdentity\":{\"device\":16777231,\"inode\":444569167,\"birthSeconds\":1794497490,\"birthNanos\":892525415},\"profile\":\"/private/tmp/ocxd024-root-custody-d3qqd5g7/unit-tmp/.tmp9qFZo3/profile\",\"profileIdentity\":{\"device\":16777231,\"inode\":444569168,\"birthSeconds\":1794497490,\"birthNanos\":892564165},\"profileProtection\":{\"uid\":501,\"gid\":0,\"mode\":448,\"flags\":0,\"acl\":null,\"xattrs\":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},\"originalRootAbsent\":true}",
+          "sha256": "615337381bc6f3d10dfd2a209ad3aa680f483f6c541a9be4ea1374ba427bdf51"
+        },
+        {
+          "bytes": 0,
+          "identity": {
+            "birthNanos": 894848131,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569170
+          },
+          "mode": 33152,
+          "path": "desktop/manager-state/client-session-action.lock",
+          "rawUtf8": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "noSessionIndex": true,
+      "rootPresent": true
+    },
+    {
+      "accepted": false,
+      "boundary": "publication_recorded",
+      "childExitCode": 91,
+      "files": [
+        {
+          "bytes": 145,
+          "identity": {
+            "birthNanos": 948992730,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569183
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-intent.json",
+          "rawUtf8": "{\"schemaVersion\":1,\"id\":\"73d1213c-6833-4bf4-85b7-b35ded6b0d23\",\"intentSha256\":\"47e091ec28680314d9e20356fdec0bccc9e1187cfd0b1316f211f2aeb1cd099c\"}",
+          "sha256": "94d2ab333554a52447eea5010fd68346cc16ca42c5b622b0398da29435ebc8d9"
+        },
+        {
+          "bytes": 411,
+          "identity": {
+            "birthNanos": 960751770,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569185
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-reservation/created.json",
+          "rawUtf8": "{\"intentSha256\":\"47e091ec28680314d9e20356fdec0bccc9e1187cfd0b1316f211f2aeb1cd099c\",\"rootEmpty\":true,\"rootIdentity\":{\"birthNanos\":958982805,\"birthSeconds\":1794497490,\"device\":16777231,\"inode\":444569184},\"rootProtection\":{\"acl\":null,\"flags\":0,\"gid\":0,\"mode\":448,\"uid\":501,\"xattrs\":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},\"schemaVersion\":1}",
+          "sha256": "77053b00d119920fa3949a97bb6860d42296231c852391f15fa09eef87d0574c"
+        },
+        {
+          "bytes": 703,
+          "identity": {
+            "birthNanos": 944212214,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569182
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-reservation/intent.json",
+          "rawUtf8": "{\"schemaVersion\":1,\"purpose\":\"create-first-codex-root\",\"id\":\"73d1213c-6833-4bf4-85b7-b35ded6b0d23\",\"uid\":501,\"dataRoot\":\"/private/tmp/ocxd024-root-custody-d3qqd5g7/unit-tmp/.tmpOU75xV/desktop\",\"dataIdentity\":{\"device\":16777231,\"inode\":444569177,\"birthSeconds\":1794497490,\"birthNanos\":938854863},\"profile\":\"/private/tmp/ocxd024-root-custody-d3qqd5g7/unit-tmp/.tmpOU75xV/profile\",\"profileIdentity\":{\"device\":16777231,\"inode\":444569178,\"birthSeconds\":1794497490,\"birthNanos\":938890863},\"profileProtection\":{\"uid\":501,\"gid\":0,\"mode\":448,\"flags\":0,\"acl\":null,\"xattrs\":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},\"originalRootAbsent\":true}",
+          "sha256": "47e091ec28680314d9e20356fdec0bccc9e1187cfd0b1316f211f2aeb1cd099c"
+        },
+        {
+          "bytes": 477,
+          "identity": {
+            "birthNanos": 977602660,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569188
+          },
+          "mode": 33024,
+          "path": "desktop/manager-state/client-root-reservation/published.json",
+          "rawUtf8": "{\"createdSha256\":\"77053b00d119920fa3949a97bb6860d42296231c852391f15fa09eef87d0574c\",\"intentSha256\":\"47e091ec28680314d9e20356fdec0bccc9e1187cfd0b1316f211f2aeb1cd099c\",\"rootIdentity\":{\"birthNanos\":958982805,\"birthSeconds\":1794497490,\"device\":16777231,\"inode\":444569184},\"rootProtection\":{\"acl\":null,\"flags\":0,\"gid\":0,\"mode\":448,\"uid\":501,\"xattrs\":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},\"schemaVersion\":1}",
+          "sha256": "d5740a6ea8767e701b0cbdd91f7f72a403fc97422984563d38be27f820f93095"
+        },
+        {
+          "bytes": 0,
+          "identity": {
+            "birthNanos": 941138037,
+            "birthSeconds": 1794497490,
+            "device": 16777231,
+            "inode": 444569180
+          },
+          "mode": 33152,
+          "path": "desktop/manager-state/client-session-action.lock",
+          "rawUtf8": "",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "noSessionIndex": true,
+      "rootPresent": true
+    }
+  ]
+}
