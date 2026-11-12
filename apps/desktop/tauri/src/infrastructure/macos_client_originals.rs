@@ -678,7 +678,7 @@ fn decode(bytes: &[u8]) -> io::Result<Frame> {
         parse_strict_json_v2(bytes).map_err(|_| denied("invalid or duplicate JSON"))?,
     )
     .map_err(|_| denied("invalid frame fields"))?;
-    if frame.schema_version != 2 {
+    if frame.schema_version != 3 {
         return Err(denied("unsupported client tree frame schema"));
     }
     Ok(frame)
@@ -748,8 +748,9 @@ impl Originals {
         let directory = PinnedDirectory::open(&vault.path.join(&attempt))?;
         directory.private()?;
         vault.sync()?;
+        tree.archive(&client, &directory)?;
         let frame = Frame {
-            schema_version: 2,
+            schema_version: 3,
             attempt: attempt.clone(),
             uid: unsafe { libc::geteuid() },
             data_root: data.identity().clone(),
@@ -844,6 +845,18 @@ impl Originals {
     pub fn read(&self, phase: Phase) -> io::Result<Capture> {
         Ok(self.frame(phase)?.0.capture)
     }
+    /// Read only a file named by the independently bound phase tree. Never
+    /// falls back to current source bytes or learns a new content reference.
+    pub fn archived_tree_file(
+        &self,
+        phase: Phase,
+        relative: &str,
+    ) -> io::Result<zeroize::Zeroizing<Vec<u8>>> {
+        self.frame(phase)?
+            .0
+            .tree
+            .archived_file(&self.directory, relative)
+    }
     fn frame(&self, phase: Phase) -> io::Result<(Frame, Vec<u8>)> {
         self.data.private()?;
         self.client.recheck()?;
@@ -868,7 +881,7 @@ impl Originals {
             return Err(denied("sealed phase bytes changed"));
         }
         let frame = decode(&bytes)?;
-        if frame.schema_version != 2
+        if frame.schema_version != 3
             || frame.attempt != self.attempt
             || frame.uid != unsafe { libc::geteuid() }
             || frame.phase != phase
@@ -893,6 +906,7 @@ impl Originals {
         } else if frame.previous_sha256.is_some() || digest(&bytes) != self.original_sha256 {
             return Err(denied("original snapshot digest changed"));
         }
+        frame.tree.verify_archive(&self.directory)?;
         Ok((frame, bytes))
     }
     /// Seal new actual snapshots in order; never replace a recorded phase or
@@ -924,8 +938,9 @@ impl Originals {
         {
             return Err(denied("snapshot changed before durable publication"));
         }
+        tree.archive(&self.client, &self.directory)?;
         let frame = Frame {
-            schema_version: 2,
+            schema_version: 3,
             attempt: self.attempt.clone(),
             uid: unsafe { libc::geteuid() },
             data_root: self.data.identity().clone(),

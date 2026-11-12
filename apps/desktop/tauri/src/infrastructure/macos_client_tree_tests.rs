@@ -238,6 +238,10 @@ fn inventory_does_not_release_an_active_same_process_sqlite_claim_lock() {
 #[test]
 fn empty_official_claim_initial_transaction_is_observed_without_reading_its_live_journal() {
     let f = Fixture::new();
+    fs::write(f.client.join("config.toml"), b"native original config").unwrap();
+    let vault_path = f.root.join("vault");
+    fs::create_dir(&vault_path).unwrap();
+    fs::set_permissions(&vault_path, fs::Permissions::from_mode(0o700)).unwrap();
     let path = f.client.join(CLAIM);
     drop(crate::infrastructure::platform::create_new_private_file(&path, 0o600).unwrap());
     let c =
@@ -251,6 +255,17 @@ fn empty_official_claim_initial_transaction_is_observed_without_reading_its_live
         capture.is_ok(),
         "empty claim inventory: {:?}",
         capture.err()
+    );
+    let capture = capture.unwrap();
+    let vault = PinnedDirectory::open(&vault_path).unwrap();
+    capture.archive(&f.pin(), &vault).unwrap();
+    capture.verify_archive(&vault).unwrap();
+    assert_eq!(
+        capture
+            .archived_file(&vault, "config.toml")
+            .unwrap()
+            .as_slice(),
+        b"native original config"
     );
     let output=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::tree::tests::inventory_does_not_release_an_active_same_process_sqlite_claim_lock","--nocapture"]).env("OCXD024_TREE_CLAIM_PROBE",&path).output().unwrap();
     assert!(

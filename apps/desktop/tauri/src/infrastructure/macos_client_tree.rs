@@ -1,11 +1,14 @@
 //! Read-only descriptor-relative client inventory. Ordinary file contents are
-//! hashed, never persisted here. A separate native coordination record binds
+//! hashed in the inventory and archived separately by its owning frame. A native
+//! coordination record binds
 //! the exact root claim database's stat identity without opening/closing that
 //! SQLite inode (which could release another connection's POSIX record lock).
-//! An inventory is neither a recoverable byte archive nor a mutation permit.
+//! An inventory alone is neither a byte archive nor a mutation permit.
 use super::*;
 use sha2::{Digest, Sha256};
 use std::{ffi::OsString, os::unix::ffi::OsStringExt};
+#[path = "macos_client_tree_archive.rs"]
+mod archive;
 
 const MAX_ENTRIES: usize = 16_384;
 const MAX_BYTES: u64 = 128 * 1024 * 1024;

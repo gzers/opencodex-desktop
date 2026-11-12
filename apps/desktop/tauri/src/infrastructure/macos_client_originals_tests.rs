@@ -83,7 +83,7 @@ fn original_frame_binds_client_tree_file_hashes_without_recording_their_content_
     let raw = fs::read(f.journal(originals.attempt()).join("original.json")).unwrap();
     assert_eq!(
         serde_json::from_slice::<serde_json::Value>(&raw).unwrap()["schemaVersion"],
-        2
+        3
     );
     let tree = serde_json::from_slice::<serde_json::Value>(&raw).unwrap()["tree"].clone();
     assert!(tree["entries"]
@@ -131,6 +131,9 @@ fn old_frames_and_tree_references_with_invalid_inventory_are_not_backfilled_or_a
     old["schemaVersion"] = 1.into();
     old.as_object_mut().unwrap().remove("tree");
     assert!(decode(&encode(&old).unwrap()).is_err());
+    let mut inventory_only = value.clone();
+    inventory_only["schemaVersion"] = 2.into();
+    assert!(decode(&encode(&inventory_only).unwrap()).is_err());
     let mut invalid = value;
     invalid["tree"]["totalBytes"] = 0.into();
     let bytes = encode(&invalid).unwrap();
@@ -148,6 +151,65 @@ fn old_frames_and_tree_references_with_invalid_inventory_are_not_backfilled_or_a
     )
     .is_err());
     assert_eq!(fs::read(&path).unwrap(), bytes);
+}
+
+#[test]
+fn phase_archive_reopens_original_config_and_agent_bytes_and_refuses_missing_blobs_without_repair()
+{
+    let f = Fixture::new();
+    fs::create_dir(f.client.join("agents")).unwrap();
+    fs::write(f.client.join("config.toml"), b"model='native'\n").unwrap();
+    fs::write(
+        f.client.join("agents/AGENTS.md"),
+        b"original private instructions",
+    )
+    .unwrap();
+    let originals = Originals::begin(&f.data, &f.client).unwrap();
+    let attempt = originals.attempt().to_owned();
+    let original = originals.original_sha256().to_owned();
+    fs::write(f.client.join("config.toml"), b"model='routed'\n").unwrap();
+    let ready = originals.seal(Phase::Ready).unwrap();
+    let reopened = Originals::open(
+        &f.data,
+        &f.client,
+        &attempt,
+        &original,
+        &[(Phase::Ready, ready)],
+    )
+    .unwrap();
+    assert_eq!(
+        reopened
+            .archived_tree_file(Phase::Original, "config.toml")
+            .unwrap()
+            .as_slice(),
+        b"model='native'\n"
+    );
+    assert_eq!(
+        reopened
+            .archived_tree_file(Phase::Ready, "config.toml")
+            .unwrap()
+            .as_slice(),
+        b"model='routed'\n"
+    );
+    assert_eq!(
+        reopened
+            .archived_tree_file(Phase::Original, "agents/AGENTS.md")
+            .unwrap()
+            .as_slice(),
+        b"original private instructions"
+    );
+    let missing = f.journal(&attempt).join(format!(
+        "tree-content-{}.blob",
+        digest(b"original private instructions")
+    ));
+    fs::remove_file(&missing).unwrap();
+    assert!(Originals::open(&f.data, &f.client, &attempt, &original, &[]).is_err());
+    assert!(reopened.seal(Phase::PreStop).is_err());
+    assert!(!missing.exists());
+    assert_eq!(
+        fs::read(f.client.join("config.toml")).unwrap(),
+        b"model='routed'\n"
+    );
 }
 
 #[test]
