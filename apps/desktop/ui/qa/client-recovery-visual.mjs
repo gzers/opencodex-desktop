@@ -46,7 +46,7 @@ try {
         await page.getByText('启动准备已中断，尚未开始捕获原件。',{exact:true}).waitFor()
         assert.equal(await page.getByRole('button',{name:'确认继续恢复',exact:true}).count(),0)
         await page.getByRole('button',{name:'取消启动准备',exact:true}).click()
-        await page.getByText('保持当前配置，不恢复或删除文件，也不会自动启动。',{exact:true}).waitFor()
+        await page.getByText('保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。',{exact:true}).waitFor()
         const size=await geometry(page);await screenshot(page,name+'-review')
         if(scene==='prepare'){
           await page.getByRole('button',{name:'返回',exact:true}).click()
@@ -255,7 +255,7 @@ try {
       assert.equal(await page.locator('#modalConfirm').textContent(),'取消启动准备')
       await page.locator('#modalConfirm').click()
       assert.equal(await page.locator('#modalConfirm').textContent(),'确认取消启动准备')
-      await page.getByText('保持当前配置，不恢复或删除文件，也不会自动启动。',{exact:true}).waitFor()
+      await page.getByText('保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。',{exact:true}).waitFor()
       await screenshot(page,'prototype-'+scene+'-review')
       if(scene==='prepare'){
         await page.locator('#modalCancel').click();assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),0)

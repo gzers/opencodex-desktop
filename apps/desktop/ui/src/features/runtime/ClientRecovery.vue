@@ -35,8 +35,8 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
     </template>
     <template v-else-if="recovery.choice === 'cancelPreparation'">
       <p class="client-recovery-lead">取消这次启动准备？</p>
-      <p>尚未创建原件保管目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。</p>
-      <p>保持当前配置，不恢复或删除文件，也不会自动启动。</p>
+      <p>本次准备尚未产生新的原件目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。</p>
+      <p>保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
     </template>
     <template v-else-if="recovery.choice === 'finishUnchanged'">
       <p class="client-recovery-lead">核对并结束原会话？</p>

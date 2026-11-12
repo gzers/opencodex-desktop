@@ -44,7 +44,7 @@ describe('explicit client recovery interaction', () => {
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue(preparing())
     const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
     expect(button('核对并结束会话')).toBeUndefined();expect(await useClientRecoveryStore().apply('cancelPreparation')).toBe(false)
-    await button('取消启动准备')!.trigger('click');expect(view.text()).toContain('保持当前配置，不恢复或删除文件')
+    await button('取消启动准备')!.trigger('click');expect(view.text()).toContain('保持当前配置和已保留原件，不恢复或删除文件')
     await button('返回')!.trigger('click');expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled()
     await button('取消启动准备')!.trigger('click');await button('确认取消启动准备')!.trigger('click');await flushPromises()
     expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledWith({attemptId:preparing().attemptId,revision:1,confirmationDigest:'f'.repeat(64)})
