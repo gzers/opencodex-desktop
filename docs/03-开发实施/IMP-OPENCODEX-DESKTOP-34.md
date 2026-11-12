@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 71；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 72；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -651,3 +651,12 @@ main97bd68a53接Captured/Ready/StopPrepared/Stopped/带独立引用Failed且无p
 真实新Profile原官方Start3283ms在Captured前置后按预设中断，服务未启动/客户端未改、原exit101/index2/旧canStarttrue回执保持。独立finish错确认/外部编辑/陌生runtime记录拒绝不改索引；正例2415ms/index3 Unchanged，独立完整两树SHA/7路径原字节及5blob/原scope摘要吻合，真实状态NotRequired/仅Start。发现旧启动失败回执未带持久pending限制，main590536842补只读索引门：pending/unknown关闭三动作并带恢复限制，保留StartingFailed而不伪报Stopped；仅DTO/索引反例验证后加门，不改写早期原生证据。65后端相关及44前端/类型/build/格式/严格Clippy过；初编译可见性错误原件保留。
 
 证据.adg/evidence/0.2.24/client-early-unchanged-r1/及manifest保留所有失败/index2/3/原件/准确源。自有进程缺席，2实际新协调DB排他重获释放后与程序/Profile/全部夹具清理、globalL身份/字节/权限保持，未改日常/官方/业务或新建.app/DMG/发布。早期完整原件产品确认、Preparing/不完整引用、已改写未plan早期恢复及原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 早期原件保持的产品确认入口
+
+main7d6ecdf13注册finish_unchanged真实命令和预览canFinishUnchanged/独立摘要，沿原运行/更新/binding门进入已验证原生执行器；未知/Preparing无引用/已有plan或原件变化均不给能力。Ready持久引用不冒活进程证据，原件完整时预览Pending、执行仍新OS停止证明。未登记早期回执只能与同Head/当前全树逐字一致，坏值Unknown保留，不自动收养。main5b3d9e797接同UiDialog明确“核对并结束会话”→确认/返回、原件保持而未回写的文案、在途关闭重挂1promise、正确unchanged回执+新live同D/H才清限制，读取失败只刷新不再mutation。唯一总原型同步同4场景。详[早期产品确认](0.2.24-contracts/client-early-unchanged-ui-r1.md)。
+
+24后端session去重用例全部有对应证据：首23过/旧Active断言1失败保留，改当前合同后仅定向重验失败1项，新增坏未登记回执和方向摘要early1项定向过；编译/格式/严格Clippy通过。61前端/类型/生产build过。WebKit首轮在原型busy隐藏关闭处失败保留，软件7项/原型1项局部不冒整组通过；本模块显式modal模式修正后WebKit/Chromium各12软件原型场景过，明暗/窄窗、取消零mutation、重开1mutation、失败限制/只读状态重试及旧Finalize键盘通过，pageerror空。原生算法和预算未变，按摘要复用上批2415ms/完整树/真实状态证据，本批无native重跑或.app/DMG/最终GUI→IPC候选验收。
+
+证据.adg/evidence/0.2.24/client-early-unchanged-ui-r1/及manifest保留首失败/准确源/双引擎截图和复用native摘要；所有browser/Vite/audit终止、unit TMPDIR空，本批无native服务/协调DB/日常/官方/业务改变，归档核对后清重复临时根。Windows远端仍b2e89665d/0eef59a01无新回交，不跑W2。Preparing缺引用/未完捕获、已变化未plan早期恢复及原一般范围/完整集合/旧revision4/Windows/NAME/System代理/发布验证/固定候选继续，目标active，不发布。
