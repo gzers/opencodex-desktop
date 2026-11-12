@@ -39,7 +39,11 @@ fn synthetic_scope(originals: &Originals, context: &ProcessContext) -> Reference
         live_sha256: None,
     }
 }
-fn captured(context: &ProcessContext, index: &Index, preparing: &Head) -> (Head, Originals) {
+pub(super) fn captured(
+    context: &ProcessContext,
+    index: &Index,
+    preparing: &Head,
+) -> (Head, Originals) {
     let reserved = index.reserve_successor_root_capture(preparing).unwrap();
     assert!(reserved.root_generation.is_none());
     let permit = index.capture_reservation(&reserved).unwrap();
@@ -524,14 +528,17 @@ fn successor_capture_storage_close_retains_both_archives_and_does_not_grant_thir
         Index::open_existing(&context, &data, &context.working_directory.join(".codex")).unwrap();
     assert_eq!(reopened.head().unwrap(), Some(closed.clone()));
     assert!(reopened.reserve_start().is_err());
-    assert!(reopened
+    let (third, preparing_third) = reopened
         .create_successor_root(&context, &closed, Instant::now() + Duration::from_secs(10))
-        .is_err());
+        .unwrap();
+    assert_eq!(preparing_third.state, State::Preparing);
+    assert!(third.reserve_start().is_err());
+    assert!(third.reserve_first_root_capture(&preparing_third).is_err());
     println!(
         "SUCCESSOR_CAPTURE_CLOSE_EVIDENCE {}",
         serde_json::json!({
             "accepted":false,"scope":"synthetic storage close, not normal service Stop",
-            "closed":closed,"oldArchiveUnchanged":true,"thirdStartStillRefused":true
+            "closed":closed,"oldArchiveUnchanged":true,"thirdPreparingRegistered":true,"thirdStartStillRefused":true
         })
     );
 }

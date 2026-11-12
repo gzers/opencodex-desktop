@@ -410,7 +410,7 @@ impl<'a> Pending<'a> {
         if digest(&bytes) != self.sha256 {
             return Err(denied("root movement plan independent digest differs"));
         }
-        let plan: Plan = serde_json::from_value(
+        let mut plan: Plan = serde_json::from_value(
             parse_strict_json_v2(&bytes).map_err(|_| denied("invalid root plan JSON"))?,
         )
         .map_err(|_| denied("invalid root plan fields"))?;
@@ -468,6 +468,12 @@ impl<'a> Pending<'a> {
                 return Err(denied("root writer marker projection is invalid"));
             }
         }
+        plan.origin.inherit_namespace(
+            self.originals
+                .original_root_absence
+                .as_ref()
+                .ok_or_else(|| denied("root plan lacks owning indexed origin"))?,
+        )?;
         Ok(plan)
     }
     /// Open the SAME directory object in its plan-bound private archive. Its

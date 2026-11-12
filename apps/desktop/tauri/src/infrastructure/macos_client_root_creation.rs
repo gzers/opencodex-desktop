@@ -44,7 +44,7 @@ struct IntentReference<'a> {
     id: &'a str,
     intent_sha256: &'a str,
 }
-#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct References {
     pub id: String,
@@ -53,6 +53,86 @@ pub struct References {
     pub published_sha256: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub generation_slot: Option<String>,
+    // A transient exact namespace observation supplied by the owning index or
+    // live creation transfer. Never serialized or reconstructed from a file.
+    #[serde(skip)]
+    namespace: Option<Vec<String>>,
+}
+impl PartialEq for References {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id
+            && self.intent_sha256 == other.intent_sha256
+            && self.created_sha256 == other.created_sha256
+            && self.published_sha256 == other.published_sha256
+            && self.generation_slot == other.generation_slot
+    }
+}
+impl Eq for References {}
+impl References {
+    pub(super) fn bind_indexed_slots(
+        &mut self,
+        namespace: &session_index::root_lineage::IndexedNamespace,
+    ) {
+        self.namespace = Some(namespace.names().to_vec());
+    }
+    pub(super) fn inherit_namespace(&mut self, source: &Self) -> io::Result<()> {
+        if self != source {
+            return Err(denied("namespace cannot rebind root provenance"));
+        }
+        self.namespace = source.namespace.clone();
+        Ok(())
+    }
+    fn expected_slots(&self) -> Vec<String> {
+        self.namespace
+            .clone()
+            .unwrap_or_else(|| self.generation_slot.iter().cloned().collect())
+    }
+    pub(super) fn verify_namespace(&self, manager: &PinnedDirectory) -> io::Result<()> {
+        verify_generation_slots(manager, &self.expected_slots())
+    }
+}
+/// Exact indexed names, or the live Reservation's known indexed names plus its
+/// sole create-only pending slot. Enumeration never supplies new references.
+pub(super) fn verify_generation_slots(
+    manager: &PinnedDirectory,
+    expected: &[String],
+) -> io::Result<()> {
+    if expected.len() > 511
+        || expected.windows(2).any(|p| p[0] >= p[1])
+        || expected.iter().any(|id| {
+            uuid::Uuid::parse_str(id)
+                .map(|u| u.to_string() != *id)
+                .unwrap_or(true)
+        })
+    {
+        return Err(denied("invalid indexed generation namespace"));
+    }
+    if entry(manager, "client-root-generations")?.is_none() {
+        return if expected.is_empty() {
+            Ok(())
+        } else {
+            Err(denied("indexed root generation slots missing"))
+        };
+    }
+    let generations = manager.child_private("client-root-generations", false)?;
+    let names = tree::names(generations.file())?;
+    let wanted = expected
+        .iter()
+        .map(std::ffi::OsString::from)
+        .collect::<Vec<_>>();
+    if names != wanted {
+        return Err(denied(
+            "root generation namespace differs from independent index",
+        ));
+    }
+    for id in expected {
+        generations.child_private(id, false)?.private()?;
+    }
+    if tree::names(generations.file())? != names {
+        return Err(denied("root generation namespace changed during review"));
+    }
+    generations.private()?;
+    manager.recheck()
 }
 
 /// A move of the original flock/created fd, never a release plus path reopen.
@@ -63,6 +143,30 @@ pub(super) struct Transfer {
     pub(super) created: File,
     pub(super) references: References,
     pub(super) deadline: Instant,
+    _sealed: (),
+}
+impl Transfer {
+    pub(super) fn bind_predecessor_namespace(
+        &self,
+        origin: &mut References,
+        indexed: &[String],
+    ) -> io::Result<()> {
+        let mut expected = indexed.to_vec();
+        if expected.contains(&self.references.id) {
+            return Err(denied("pending generation reuses indexed slot"));
+        }
+        expected.push(self.references.id.clone());
+        expected.sort();
+        if self.references.generation_slot.as_deref() != Some(self.references.id.as_str())
+            || self.references.namespace.as_ref() != Some(&expected)
+        {
+            return Err(denied(
+                "pending generation namespace not held by creation transfer",
+            ));
+        }
+        origin.namespace = Some(expected);
+        Ok(())
+    }
 }
 #[derive(Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -132,14 +236,12 @@ pub(super) fn verify_indexed_anchor(
     safe_profile(&profile)?;
     data.private()?;
     client.private()?;
+    verify_generation_slots(manager, &refs.expected_slots())?;
     let vault = if let Some(id) = &refs.generation_slot {
         if id != &refs.id {
             return Err(denied("root generation slot differs from origin"));
         }
         let generations = manager.child_private("client-root-generations", false)?;
-        if tree::names(generations.file())? != vec![std::ffi::OsString::from(id)] {
-            return Err(denied("unregistered root generation slot exists"));
-        }
         generations.child_private(id, false)?
     } else {
         manager.child_private("client-root-reservation", false)?
@@ -208,7 +310,8 @@ pub(super) fn verify_indexed_anchor(
             bytes, protection, ..
         } if bytes == expected => require_private(&protection, false),
         _ => Err(denied("root intent reference changed")),
-    }
+    }?;
+    refs.verify_namespace(manager)
 }
 /// This lease uses the SAME action flock as the ordinary independent index.
 /// Index integration must transfer this custody, not acquire a second lock.
@@ -224,6 +327,7 @@ pub struct Reservation {
     intent_sha256: String,
     deadline: Instant,
     generation_slot: Option<String>,
+    generation_slots: Vec<String>,
 }
 pub struct PublishedRoot {
     reservation: Reservation,
@@ -299,11 +403,23 @@ pub(super) fn reserve_generation(
     data.private()?;
     safe_profile(&profile)?;
     absent(&profile)?;
-    let generations = manager.child_private("client-root-generations", true)?;
-    if !tree::names(generations.file())?.is_empty() {
-        return Err(denied("unregistered successor root evidence retained"));
+    let indexed = authority.slots()?;
+    if indexed.len() >= 511 {
+        return Err(denied("root generation count exhausted before creation"));
     }
+    verify_generation_slots(&manager, &indexed)?;
+    // Clone while the namespace still matches the predecessor. Later checks
+    // are bound to the live Reservation's exact indexed-plus-pending set.
+    let action = authority.clone_action()?;
+    let (action_identity, action_protection) = action_pin(&manager, &action)?;
+    let generations = manager.child_private("client-root-generations", true)?;
     let id = uuid::Uuid::new_v4().to_string();
+    let mut generation_slots = indexed;
+    if generation_slots.contains(&id) {
+        return Err(denied("new generation id already indexed"));
+    }
+    generation_slots.push(id.clone());
+    generation_slots.sort();
     let slot = name(OsStr::new(&id))?;
     if unsafe { libc::mkdirat(generations.file().as_raw_fd(), slot.as_ptr(), 0o700) } != 0 {
         return Err(io::Error::last_os_error());
@@ -340,8 +456,6 @@ pub(super) fn reserve_generation(
     vault.sync()?;
     generations.sync()?;
     manager.sync()?;
-    let action = authority.clone_action()?;
-    let (action_identity, action_protection) = action_pin(&manager, &action)?;
     let result = Reservation {
         data,
         profile,
@@ -354,9 +468,9 @@ pub(super) fn reserve_generation(
         intent_sha256,
         deadline,
         generation_slot: Some(id),
+        generation_slots,
     };
     result.check()?;
-    authority.check()?;
     time(deadline)?;
     Ok(result)
 }
@@ -449,6 +563,7 @@ fn reserve_checked(
         intent_sha256,
         deadline,
         generation_slot: None,
+        generation_slots: Vec::new(),
     };
     result.check()?;
     Ok(result)
@@ -460,12 +575,12 @@ impl Reservation {
         safe_profile(&self.profile)?;
         self.vault.private()?;
         if let Some(id) = &self.generation_slot {
-            let generations = self
-                .manager
-                .child_private("client-root-generations", false)?;
-            if tree::names(generations.file())? != vec![std::ffi::OsString::from(id)] {
-                return Err(denied("unregistered root generation slot exists"));
+            if !self.generation_slots.contains(id) {
+                return Err(denied("pending generation absent from owned namespace"));
             }
+            verify_generation_slots(&self.manager, &self.generation_slots)?;
+        } else {
+            verify_generation_slots(&self.manager, &[])?;
         }
         if action_pin(&self.manager, &self.action)?
             != (self.action_identity.clone(), self.action_protection.clone())
@@ -574,6 +689,7 @@ impl Reservation {
             created_sha256,
             published_sha256,
             generation_slot: self.generation_slot.clone(),
+            namespace: Some(self.generation_slots.clone()),
         };
         let result = PublishedRoot {
             reservation: self,
@@ -617,6 +733,7 @@ impl PublishedRoot {
             created,
             references: refs,
             deadline: reservation.deadline,
+            _sealed: (),
         })
     }
     pub(super) fn into_transfer(
@@ -661,6 +778,7 @@ impl PublishedRoot {
             created,
             references: refs,
             deadline: reservation.deadline,
+            _sealed: (),
         })
     }
     pub fn references(&self) -> io::Result<References> {

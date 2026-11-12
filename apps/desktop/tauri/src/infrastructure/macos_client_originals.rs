@@ -1157,20 +1157,32 @@ impl Originals {
         phase: Phase,
         relative: &str,
     ) -> io::Result<zeroize::Zeroizing<Vec<u8>>> {
-        self.frame(phase)?
+        let bytes = self
+            .frame(phase)?
             .0
             .tree
-            .archived_file(&self.directory, relative)
+            .archived_file(&self.directory, relative)?;
+        self.verify_root_namespace()?;
+        Ok(bytes)
     }
     pub fn archived_grok_file(
         &self,
         phase: Phase,
         relative: &str,
     ) -> io::Result<zeroize::Zeroizing<Vec<u8>>> {
-        self.frame(phase)?
+        let bytes = self
+            .frame(phase)?
             .0
             .grok
-            .archived_file(&self.directory, relative)
+            .archived_file(&self.directory, relative)?;
+        self.verify_root_namespace()?;
+        Ok(bytes)
+    }
+    fn verify_root_namespace(&self) -> io::Result<()> {
+        if let Some(origin) = &self.original_root_absence {
+            origin.verify_namespace(&self.data.child_private("manager-state", false)?)?;
+        }
+        Ok(())
     }
     fn frame(&self, phase: Phase) -> io::Result<(Frame, Vec<u8>)> {
         self.frames_through(phase)?
@@ -1203,6 +1215,7 @@ impl Originals {
             predecessor = Some(digest(&value.1));
             result.push(value);
         }
+        self.verify_root_namespace()?;
         Ok(result)
     }
     fn frame_with_predecessor(
@@ -1286,6 +1299,7 @@ impl Originals {
         }
         frame.tree.verify_archive(&self.directory)?;
         frame.grok.verify_archive(&self.directory)?;
+        self.verify_root_namespace()?;
         Ok((frame, bytes))
     }
     /// Seal new actual snapshots in order; never replace a recorded phase or

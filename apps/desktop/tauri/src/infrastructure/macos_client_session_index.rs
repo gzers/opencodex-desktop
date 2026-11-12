@@ -12,6 +12,8 @@ use std::time::Instant;
 pub mod generation;
 #[path = "macos_client_root_binding.rs"]
 mod root_binding;
+#[path = "macos_client_root_lineage.rs"]
+pub(super) mod root_lineage;
 const FILE: &str = "client-session-index.sqlite";
 const MAX_INDEX: u64 = 16 * 1024 * 1024;
 const TABLES: [(&str, &str); 3] = [
@@ -1092,12 +1094,13 @@ impl Index {
         if stored != self.binding {
             return Err(denied("root history independent binding changed"));
         }
-        let origin = root_binding::original_root(&stored)?;
-        if self.root_registration.as_ref() != Some(&origin) {
+        let history = vault_history::read(self.connection()?, expected)?;
+        let lineage = root_lineage::parse(&stored, &history)?;
+        if self.root_registration.as_ref() != Some(&lineage.current().origin) {
             return Err(denied("root history original origin changed"));
         }
-        root_binding::verify_initial_event(self.connection()?, &origin)?;
-        let history = vault_history::read(self.connection()?, expected)?;
+        let slots = lineage.slots();
+        super::root_creation::verify_generation_slots(&self.action_parent, &slots)?;
         let references =
             vault_history::inspect_root_closures(&self.data, &self.profile, &stored, &history)?;
         checkpoint()?;
@@ -1118,6 +1121,7 @@ impl Index {
                 "root history binding changed during evidence review",
             ));
         }
+        super::root_creation::verify_generation_slots(&self.action_parent, &slots)?;
         Ok(references)
     }
     pub fn record_first_root_phase(&self, proof: &session::RootPhaseProof<'_>) -> io::Result<Head> {
@@ -1317,11 +1321,9 @@ impl Index {
             || !refs.phases.is_empty()
             || refs.live_sha256.is_some()
             || scope(context, &self.data, &self.client)?
-                != root_binding::scope_bytes(&root_binding::active_binding(
-                    self.connection()?,
-                    &self.binding,
-                    expected,
-                )?)?
+                != root_binding::scope_bytes(
+                    &root_binding::active_binding(self.connection()?, &self.binding, expected)?.0,
+                )?
         {
             return Err(denied(
                 "root Original references do not match live indexed capture custody",

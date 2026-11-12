@@ -22,193 +22,80 @@ pub(super) fn encode_binding(
         }),
     }
 }
+/// Only independently registered initial events can name an origin, including
+/// retained historical generations. This grants no current-root permission.
 pub(super) fn verify_initial_event(
     connection: &Connection,
     refs: &root_creation::References,
 ) -> io::Result<()> {
-    if refs.generation_slot.is_none() {
-        return verify_first_event(connection, refs);
-    }
     let stored: Vec<u8> = connection
         .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
             r.get(0)
         })
         .map_err(database_error)?;
-    let head =
-        read_head(connection)?.ok_or_else(|| denied("root generation has no current Head"))?;
-    let active = active_binding(connection, &stored, &head)?;
-    if original_root(&active)? != *refs {
+    let head = read_head(connection)?.ok_or_else(|| denied("root origin has no current Head"))?;
+    let history = vault_history::read(connection, &head)?;
+    let lineage = root_lineage::parse(&stored, &history)?;
+    if !lineage.generations().iter().any(|g| g.origin == *refs) {
         return Err(denied(
-            "root generation origin not current independently registered source",
+            "origin is not independently registered in root lineage",
         ));
+    }
+    let scope: serde_json::Value = serde_json::from_slice(&scope_bytes(&stored)?)
+        .map_err(|_| denied("root lineage context invalid"))?;
+    let data = scope
+        .get(1)
+        .and_then(|v| v.as_str())
+        .ok_or_else(|| denied("root lineage data path missing"))?;
+    let manager = PinnedDirectory::open(Path::new(data))?.child_private("manager-state", false)?;
+    root_creation::verify_generation_slots(&manager, &lineage.slots())?;
+    let confirmed: Vec<u8> = connection
+        .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+            r.get(0)
+        })
+        .map_err(database_error)?;
+    if confirmed != stored || vault_history::read(connection, &head)? != history {
+        return Err(denied("root origin source changed during observation"));
     }
     Ok(())
 }
-/// Resolve second-generation source only from the atomic Preparing event and
-/// the exact prior close. Never overwrite the original singleton binding.
+/// Audit the entire bounded indexed lineage and exact namespace through the
+/// held connection. The singleton binding never changes.
 pub(super) fn active_binding(
     connection: &Connection,
     stored: &[u8],
     head: &Head,
-) -> io::Result<Vec<u8>> {
-    let first: RootBinding = decode(stored)?;
-    if first.schema_version != 1 || first.original_root.generation_slot.is_some() {
-        return Err(denied("initial root binding is not first generation"));
-    }
-    verify_first_event(connection, &first.original_root)?;
-    if head.ticket == first.original_root.id {
-        return Ok(stored.to_vec());
-    }
+) -> io::Result<(Vec<u8>, root_creation::References)> {
     let history = vault_history::read(connection, head)?;
-    let preparing = history
-        .iter()
-        .find(|h| h.ticket == head.ticket && h.state == State::Preparing)
-        .ok_or_else(|| denied("current generation has no atomic Preparing event"))?;
-    let generation = preparing
-        .root_generation
-        .as_ref()
-        .ok_or_else(|| denied("successor generation references absent"))?;
-    if generation.preparing_revision != preparing.revision
-        || generation.predecessor_revision.checked_add(1) != Some(preparing.revision)
-    {
-        return Err(denied("successor generation source revision invalid"));
-    }
-    let closed = history
-        .iter()
-        .find(|h| h.revision == generation.predecessor_revision)
-        .ok_or_else(|| denied("generation predecessor close missing"))?;
-    if closed.state != State::RootAbsent
-        || closed.ticket != first.original_root.id
-        || digest(&encode(closed)?) != generation.predecessor_sha256
-    {
-        return Err(denied("unsupported or changed successor predecessor"));
-    }
-    // Current primitive supports the second generation only. Later rollover
-    // cannot silently adopt this event as the first generation's provenance.
-    if history
-        .iter()
-        .filter(|h| h.root_generation.is_some())
-        .count()
-        != 1
-    {
-        return Err(denied(
-            "additional root generations not registered by this primitive",
-        ));
-    }
-    let root: RootBinding = decode(&generation.binding)?;
-    if root.schema_version != 1
-        || root.original_root.id != head.ticket
-        || root.original_root.generation_slot.as_deref() != Some(head.ticket.as_str())
-    {
-        return Err(denied("generation binding slot or ticket changed"));
-    }
-    let old: serde_json::Value =
-        serde_json::from_slice(&first.scope).map_err(|_| denied("invalid initial scope"))?;
-    let new: serde_json::Value =
-        serde_json::from_slice(&root.scope).map_err(|_| denied("invalid successor scope"))?;
-    let old = old
-        .as_array()
-        .ok_or_else(|| denied("initial scope not tuple"))?;
-    let new = new
-        .as_array()
-        .ok_or_else(|| denied("successor scope not tuple"))?;
-    if old.len() != 9 || new.len() != 9 || old[..8] != new[..8] || old[8] == new[8] {
-        return Err(denied(
-            "generation must retain context and bind a new root identity",
-        ));
-    }
-    let prefix = history
-        .iter()
-        .take_while(|h| h.revision <= closed.revision)
-        .cloned()
-        .collect::<Vec<_>>();
-    let current_history = history
-        .iter()
-        .filter(|h| h.revision >= preparing.revision)
-        .collect::<Vec<_>>();
-    for h in &current_history {
-        if h.ticket != preparing.ticket
-            || h.revision != preparing.revision && h.root_generation.is_some()
-            || h.references.as_ref().is_some_and(|r| r.attempt != h.ticket)
-        {
-            return Err(denied("successor events rebound generation source"));
-        }
-    }
-    for pair in current_history.windows(2) {
-        let before = pair[0];
-        let after = pair[1];
-        if !matches!(
-            (before.state, after.state),
-            (State::Preparing, State::CaptureReserved)
-                | (State::CaptureReserved, State::Captured)
-                | (State::Captured, State::Ready)
-                | (State::Ready, State::StopPrepared)
-                | (State::StopPrepared, State::Stopped)
-                | (State::Stopped, State::RestorePrepared)
-                | (
-                    State::Captured | State::Stopped | State::RestorePrepared,
-                    State::RootRetirementPrepared
-                )
-                | (State::RootRetirementPrepared, State::RootAbsent)
-                | (State::RootAbsent, State::RootRetirementPrepared)
-                | (
-                    State::Captured | State::Ready | State::StopPrepared,
-                    State::Failed
-                )
-        ) || before.references.as_ref().is_some_and(|refs| {
-            after.references.as_ref().is_none_or(|next| {
-                next.attempt != refs.attempt
-                    || next.original_sha256 != refs.original_sha256
-                    || next.scope_sha256 != refs.scope_sha256
-                    || !next.phases.starts_with(&refs.phases)
-                    || refs.live_sha256.is_some() && next.live_sha256 != refs.live_sha256
-            })
-        }) || before.root_retirement.is_some() && before.root_retirement != after.root_retirement
-            || before.restore_plan.is_some() && before.restore_plan != after.restore_plan
-        {
-            return Err(denied(
-                "successor phase chain differs from registered lifecycle",
-            ));
-        }
-    }
-    vault_history::inspect_root_closures_with_current(
-        &PinnedDirectory::open(Path::new(
-            old[1]
-                .as_str()
-                .ok_or_else(|| denied("scope data path missing"))?,
-        ))?,
-        Path::new(
-            old[3]
-                .as_str()
-                .ok_or_else(|| denied("scope profile path missing"))?,
-        ),
-        stored,
-        &prefix,
-        head,
-    )?;
-    Ok(generation.binding.clone())
-}
-fn verify_first_event(connection: &Connection, refs: &root_creation::References) -> io::Result<()> {
-    let raw: Vec<u8> = connection
-        .query_row("SELECT document FROM events WHERE revision=1", [], |r| {
+    let lineage = root_lineage::parse(stored, &history)?;
+    let scope: serde_json::Value = serde_json::from_slice(&scope_bytes(stored)?)
+        .map_err(|_| denied("root lineage context invalid"))?;
+    let data = scope
+        .get(1)
+        .and_then(|v| v.as_str())
+        .ok_or_else(|| denied("root lineage data path missing"))?;
+    let profile = scope
+        .get(3)
+        .and_then(|v| v.as_str())
+        .ok_or_else(|| denied("root lineage profile path missing"))?;
+    let data = PinnedDirectory::open(Path::new(data))?;
+    let manager = data.child_private("manager-state", false)?;
+    let slots = lineage.slots();
+    root_creation::verify_generation_slots(&manager, &slots)?;
+    vault_history::inspect_root_history(&data, Path::new(profile), stored, &history)?;
+    root_creation::verify_generation_slots(&manager, &slots)?;
+    let confirmed: Vec<u8> = connection
+        .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
             r.get(0)
         })
         .map_err(database_error)?;
-    let first: Head = decode(&raw)?;
-    validate(&first)?;
-    if first.revision != 1
-        || first.ticket != refs.id
-        || first.state != State::Preparing
-        || first.references.is_some()
-        || first.restore_plan.is_some()
-        || first.completion_sha256.is_some()
-        || first.root_generation.is_some()
-    {
-        return Err(denied(
-            "root origin is not bound to the atomic first Preparing event",
-        ));
+    if confirmed != stored || vault_history::read(connection, head)? != history {
+        return Err(denied("root lineage changed during complete observation"));
     }
-    Ok(())
+    Ok((
+        lineage.current().binding.clone(),
+        lineage.current().origin.clone(),
+    ))
 }
 
 pub(super) fn scope_bytes(stored: &[u8]) -> io::Result<Vec<u8>> {
@@ -318,9 +205,10 @@ pub(super) fn resolve_originals(
         return Ok((client, None, None));
     }
     let current = head.ok_or_else(|| denied("registered root has no independent head"))?;
-    let active = active_binding(connection, stored, current)?;
+    let (active, origin) = active_binding(connection, stored, current)?;
     let stored = active.as_slice();
-    let binding: RootBinding = decode(stored)?;
+    let mut binding: RootBinding = decode(stored)?;
+    binding.original_root.inherit_namespace(&origin)?;
     if binding.schema_version != 1 {
         return Err(denied("unknown first root binding schema"));
     }

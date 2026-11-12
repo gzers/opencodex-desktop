@@ -13,7 +13,7 @@ impl CreationAuthority<'_> {
                 .index
                 .root_registration
                 .as_ref()
-                .is_none_or(|r| r.generation_slot.is_some())
+                .is_none_or(|r| r.id != self.closed.ticket)
         {
             return Err(denied(
                 "successor root predecessor generation not supported",
@@ -21,6 +21,13 @@ impl CreationAuthority<'_> {
         }
         self.index.closed_root_history(&self.closed)?;
         Ok(())
+    }
+    pub(in crate::infrastructure::macos_client_originals) fn slots(
+        &self,
+    ) -> io::Result<Vec<String>> {
+        self.check()?;
+        let history = vault_history::read(self.index.connection()?, &self.closed)?;
+        Ok(root_lineage::parse(&self.index.binding, &history)?.slots())
     }
     pub(in crate::infrastructure::macos_client_originals) fn paths(&self) -> (&Path, &Path, &Path) {
         (
@@ -54,7 +61,7 @@ impl Index {
         }
         self.record_root_originals(context, expected, refs)
     }
-    /// Second-generation capture requires the ORIGINAL live creation fd and
+    /// Successor capture requires the ORIGINAL live creation fd and
     /// deadline. A facts-only reopen can resolve Preparing, but cannot mint
     /// this reservation from the provenance files or an empty pathname.
     pub fn reserve_successor_root_capture(&self, expected: &Head) -> io::Result<Head> {
@@ -96,7 +103,7 @@ impl Index {
         }
         Ok(next)
     }
-    /// A concrete second-generation primitive. First-generation historical
+    /// A successor-generation primitive. All retained historical
     /// facts are audited before creation; new origin/Preparing are committed
     /// together. No production Start calls this until capture/history rollover
     /// and current status eligibility are integrated and verified.
@@ -130,10 +137,10 @@ impl Index {
             || self
                 .root_registration
                 .as_ref()
-                .is_none_or(|r| r.generation_slot.is_some())
+                .is_none_or(|r| r.id != expected.ticket)
         {
             return Err(denied(
-                "successor root requires exact current first closed generation",
+                "successor root requires exact current closed generation",
             ));
         }
         if observation::entry(&PinnedDirectory::open(&self.profile)?, ".codex")?.is_some() {
@@ -152,7 +159,9 @@ impl Index {
         checkpoint("generation_reserved")?;
         let published = reservation.publish()?;
         checkpoint("generation_published")?;
-        authority.check()?;
+        // The live Reservation now pins the exact old-plus-pending namespace.
+        // Full predecessor evidence is revalidated below using that transfer,
+        // not by pretending the new slot has already been committed.
         time()?;
         let client = PinnedDirectory::open(published.path())?;
         let transfer = published.into_generation_transfer(&self.data, &self.profile, &client)?;
@@ -207,7 +216,13 @@ impl Index {
             if stored != self.binding {
                 return Err(denied("successor original binding changed"));
             }
-            vault_history::inspect_root_closures(&self.data, &self.profile, &stored, &history)?;
+            vault_history::inspect_root_closures_pending(
+                &self.data,
+                &self.profile,
+                &stored,
+                &history,
+                &transfer,
+            )?;
             super::super::root_creation::verify_indexed(
                 &self.action_parent,
                 &self.data,
@@ -333,6 +348,9 @@ impl Index {
 #[cfg(test)]
 #[path = "macos_client_root_successor_capture_tests.rs"]
 mod capture_tests;
+#[cfg(test)]
+#[path = "macos_client_root_rollover_tests.rs"]
+mod rollover_tests;
 #[cfg(test)]
 #[path = "macos_client_root_generation_tests.rs"]
 mod tests;
