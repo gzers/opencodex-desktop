@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 95；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 96；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 59ec750f6（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main ea9220c70（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -931,3 +931,18 @@ main59ec750f6接Active首次NotFound创建custody/独立CaptureReserved/原Absen
 证据.adg/evidence/0.2.24/client-first-root-lifecycle-r1/及132文件manifest约1.08MB，四轮真实原始输出/固定阶段耗时、source/binary、无损原字节和独立SQLite链/Origin/Scope/Live/plan核验俱在。全部test/native/子审查句柄终止；精确12个新N/K/historyDB经exclusive重获删除，预存global L身份/权限/字节不变并重获释放；独立清理复核主端口，产品4监听证明不冒更广清理。先逐字归档四Profile原件后清四临时根/复用runtime/重复证据，unitTMP空，未改日常配置/官方源码/真实业务，无新包或发布。
 
 下一步限定root-retire剩余耗时：按当前authority/Index/frame/native子阶段精确测量再修，同预算/判定/读回不放宽，无新假设不重跑；通过后接nextStart/RootAbsent UI/明确中断并整链复验。当前Stop门失败，P24-04/05未完，Windows W1/W2、NAME和其它原完整版本范围保持，目标active。
+
+
+## 2026-11-13 Stop根许可成本测量与同次核验/持锁事务合并
+
+mainea9220c70按真实计时合并同次重复：cost-diagnostic一次authority341ms（Index125/source215），root current_prefix复用同次完整已核验四帧避免open/Original/Ready/Stopped重读后source约68ms；原frames/前驱/Protection/独立SHA/blob/当前树/Grok/source仍完整。工厂仅删实际mutation gate之前的重复entry check，写/移动/释放/回执/最终absence周围检查保留，无跨动作cache。详[Stop成本合同](0.2.24-contracts/client-root-stop-cost-r1.md)。
+
+首根Stop把完整admission移在artifact恢复前，一次准确Codex Guard贯穿原目标恢复和根retirement，到根正常release后最终full absence/完整读回才可能结案；普通会话独立restore不变，Grok仍用独立Guard，失败Drop不冒成功。RootAuthority同checkpoint用当前Index binding/initial source event/plan/Head/VFS/action事实夹住一次完整原件/四帧/scope/live/当前程序来源；初始registration/普通require仍完整，窄facts不独立授权限，Stop/Pair/全部端口/记录/期限保持。
+
+四原包定向轮Stop仍失败：cost10310ms/prefix10372ms原root仍在；retained-writer10287ms已真实移动并relocated但无Retire读回；facts-coalesced10334ms已正常writer release、精确Retire readback存在，但Index仍Prepared8/null completion，期限内关闭未完成。最后一次authority约80ms而非341ms，局部成本减少不冒预算通过。四轮Start<30s、service/launcher exit0和4捕获监听缺席，不代替完整Stop。所有acceptedfalse，nextStart/根中断/状态UI仍未完。
+
+最终52去重函数（4Stop/23move/26originals重1）、fmt/diff/strictClippy通过；复杂tuple及RefCell temporary编译失败日志保留，类型别名/局部结果修正，不禁lint。三次只读审查确认prefix/同Guard事务/事实夹完整观察未见直接弱化，未代签native。最终6源和实际库binary与最后失败原包轮完全对应。
+
+证据.adg/evidence/0.2.24/client-root-stop-cost-r1/及122文件manifest约1.35MB，原计时/失败/源/独立原字节与SQLite/帧/plan/readbackSHA核验俱在。四轮child/子审查终止，精确12个新N/K/history经exclusive重获移除，预存global L身份/权限/字节不改并重获释放；独立清理复查主端口，4监听产品证明不冒全清理再验。原字节逐字归档后清四Profile/运行包/重复证据，unitTMP空，无日常配置/官方源码/真实业务/新候选/发布。
+
+下一步精确拆分最后readback后的authority/full absence/Index-close及外层来源检查成本，形成新假设再跑，不盲重跑失败原轮；同10秒/实际mutation前后完整校验不放宽，整Stop通过前不标Restored或新Start可用。然后仍需nextStart/明确中断/状态UI及Windows/NAME/其它完整IMP项，目标active。

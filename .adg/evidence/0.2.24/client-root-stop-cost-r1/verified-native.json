@@ -1,0 +1,46 @@
+{
+  "accepted": false,
+  "verifiedFailedRounds": [
+    {
+      "round": "cost-diagnostic",
+      "startPassedWithin30s": true,
+      "normalServiceLauncherExitAndFourListenersAbsent": true,
+      "independentState": "root_retirement_prepared",
+      "indexRevision": 8,
+      "allPhaseAndSourceReferencesExact": true,
+      "StopAccepted": false,
+      "stopElapsedMs": 10310
+    },
+    {
+      "round": "prefix-optimized",
+      "startPassedWithin30s": true,
+      "normalServiceLauncherExitAndFourListenersAbsent": true,
+      "independentState": "root_retirement_prepared",
+      "indexRevision": 8,
+      "allPhaseAndSourceReferencesExact": true,
+      "StopAccepted": false,
+      "stopElapsedMs": 10372
+    },
+    {
+      "round": "retained-writer",
+      "startPassedWithin30s": true,
+      "normalServiceLauncherExitAndFourListenersAbsent": true,
+      "independentState": "root_retirement_prepared",
+      "indexRevision": 8,
+      "allPhaseAndSourceReferencesExact": true,
+      "StopAccepted": false,
+      "stopElapsedMs": 10287
+    },
+    {
+      "round": "facts-coalesced",
+      "startPassedWithin30s": true,
+      "normalServiceLauncherExitAndFourListenersAbsent": true,
+      "independentState": "root_retirement_prepared",
+      "indexRevision": 8,
+      "allPhaseAndSourceReferencesExact": true,
+      "StopAccepted": false,
+      "stopElapsedMs": 10334
+    }
+  ],
+  "failureRemains": "Stop10 still failed; final round disk readback does not independently close RootRetirementPrepared; next Start unaccepted"
+}

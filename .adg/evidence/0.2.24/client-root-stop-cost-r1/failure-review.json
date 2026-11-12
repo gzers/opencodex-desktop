@@ -1,0 +1,45 @@
+{
+  "accepted": false,
+  "nativeRounds": [
+    {
+      "label": "cost-diagnostic",
+      "StopPassed": false,
+      "firstCheckMs": 341.024
+    },
+    {
+      "label": "prefix-optimized",
+      "StopPassed": false,
+      "firstCheckMs": 200.995,
+      "scopePrefixMs": 67.944
+    },
+    {
+      "label": "retained-writer",
+      "StopPassed": false,
+      "rootMoved": true,
+      "normalReleaseTrace": false
+    },
+    {
+      "label": "facts-coalesced",
+      "StopPassed": false,
+      "checkApproximatelyMs": 80,
+      "rootMoved": true,
+      "normalReleaseTrace": true,
+      "RetireReadbackExists": true,
+      "independentCompletionSha": null
+    }
+  ],
+  "allOriginalFailuresPreserved": true,
+  "compileFailures": [
+    {
+      "log": "strict-clippy.log",
+      "cause": "complex tuple return types and needless borrow",
+      "fix": "private FramePrefix/OpenedPrefix aliases, remove redundant reference; no lint suppression"
+    },
+    {
+      "log": "retained-writer-compile.log",
+      "cause": "RefCell temporary borrow outlived return expression",
+      "fix": "store final result locally, release borrow before returning"
+    }
+  ],
+  "nextHypothesis": "At last proof/receipt/final-absence/Index-close chain, measure remaining repeated same-observation reads versus final full image admission. Keep every actual write/move/release/commit boundary and original10s; no success from disk readback alone."
+}

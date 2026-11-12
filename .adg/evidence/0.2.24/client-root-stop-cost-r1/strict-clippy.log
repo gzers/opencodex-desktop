@@ -1,0 +1,64 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/infrastructure/macos_client_root_retirement.rs:412:46
+    |
+412 |     fn archive_prefix(&self, plan: &Plan) -> io::Result<(Originals, Vec<(Frame, Vec<u8>)>)> {
+    |                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#type_complexity
+    = note: `-D clippy::type-complexity` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::type_complexity)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/infrastructure/macos_client_root_retirement.rs:479:43
+    |
+479 |     fn live_prefix(&self, plan: &Plan) -> io::Result<(Originals, Vec<(Frame, Vec<u8>)>)> {
+    |                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#type_complexity
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/infrastructure/macos_client_root_retirement.rs:497:44
+    |
+497 |     fn checked_live(&self, plan: &Plan) -> io::Result<(Originals, Vec<(Frame, Vec<u8>)>)> {
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#type_complexity
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/infrastructure/macos_client_root_retirement.rs:524:47
+    |
+524 |     fn checked_retired(&self, plan: &Plan) -> io::Result<(Originals, Vec<(Frame, Vec<u8>)>)> {
+    |                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#type_complexity
+
+error: very complex type used. Consider factoring parts into `type` definitions
+   --> src/infrastructure/macos_client_root_retirement.rs:694:44
+    |
+694 |     pub(super) fn current_prefix(&self) -> io::Result<(Originals, Vec<(Frame, Vec<u8>)>)> {
+    |                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#type_complexity
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+    --> src/infrastructure/macos_client_session.rs:1886:23
+     |
+1886 |             || digest(&ready) != live.ready_sha256
+     |                       ^^^^^^ help: change this to: `ready`
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+     = note: `-D clippy::needless-borrow` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`
+
+error: very complex type used. Consider factoring parts into `type` definitions
+    --> src/infrastructure/macos_client_originals.rs:1066:10
+     |
+1066 |     ) -> io::Result<(Self, Vec<(Frame, Vec<u8>)>)> {
+     |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#type_complexity
+
+error: could not compile `opencodex-desktop` (lib) due to 7 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 7 previous errors

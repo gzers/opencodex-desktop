@@ -1,0 +1,72 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+ROOT_STOP_COST label=admission phase=entry segment_us=32808 total_us=32808
+ROOT_STOP_COST label=admission phase=native segment_us=1317 total_us=34126
+ROOT_STOP_COST label=admission phase=absence segment_us=8593 total_us=42719
+ROOT_STOP_COST label=admission phase=entry segment_us=33680 total_us=33680
+ROOT_STOP_COST label=admission phase=native segment_us=1421 total_us=35101
+ROOT_STOP_COST label=admission phase=absence segment_us=8638 total_us=43740
+ROOT_STOP_COST label=admission phase=entry segment_us=32751 total_us=32751
+ROOT_STOP_COST label=admission phase=native segment_us=1335 total_us=34086
+ROOT_STOP_COST label=admission phase=absence segment_us=8613 total_us=42700
+ROOT_STOP_COST label=admission phase=entry segment_us=33372 total_us=33372
+ROOT_STOP_COST label=admission phase=native segment_us=1448 total_us=34820
+ROOT_STOP_COST label=admission phase=absence segment_us=8300 total_us=43121
+ROOT_STOP_COST label=admission phase=entry segment_us=31697 total_us=31697
+ROOT_STOP_COST label=admission phase=native segment_us=1336 total_us=33033
+ROOT_STOP_COST label=admission phase=absence segment_us=7908 total_us=40941
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=119309 total_us=119309
+ROOT_STOP_COST label=root-authority phase=native segment_us=1631 total_us=120940
+ROOT_STOP_COST label=root-source phase=entry segment_us=3119 total_us=3119
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=60409 total_us=63529
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2560 total_us=66089
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=873 total_us=66962
+ROOT_STOP_COST label=root-source phase=program-source segment_us=516 total_us=67478
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=67526 total_us=188466
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9644 total_us=198111
+CONFIG_GUARD_TRACE expected=prepared actual=prepared phase=prepare
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=118553 total_us=118553
+ROOT_STOP_COST label=root-authority phase=native segment_us=1588 total_us=120141
+ROOT_STOP_COST label=root-source phase=entry segment_us=3009 total_us=3009
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=60439 total_us=63448
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2684 total_us=66133
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=743 total_us=66877
+ROOT_STOP_COST label=root-source phase=program-source segment_us=589 total_us=67466
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=67514 total_us=187655
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9516 total_us=197172
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=118278 total_us=118278
+ROOT_STOP_COST label=root-authority phase=native segment_us=1686 total_us=119964
+ROOT_STOP_COST label=root-source phase=entry segment_us=3026 total_us=3026
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=59884 total_us=62910
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2416 total_us=65327
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=747 total_us=66075
+ROOT_STOP_COST label=root-source phase=program-source segment_us=533 total_us=66608
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=66658 total_us=186623
+ROOT_STOP_COST label=root-authority phase=absence segment_us=8623 total_us=195246
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=118782 total_us=118782
+ROOT_STOP_COST label=root-authority phase=native segment_us=1592 total_us=120375
+ROOT_STOP_COST label=root-source phase=entry segment_us=3047 total_us=3047
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=61025 total_us=64073
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2389 total_us=66463
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=780 total_us=67244
+ROOT_STOP_COST label=root-source phase=program-source segment_us=511 total_us=67755
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=67789 total_us=188164
+ROOT_STOP_COST label=root-authority phase=absence segment_us=8521 total_us=196685
+CONFIG_GUARD_TRACE expected=relocated actual=relocated phase=relocate
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=138568 total_us=138568
+ROOT_STOP_COST label=root-authority phase=native segment_us=2435 total_us=141004
+ROOT_STOP_COST label=root-source phase=entry segment_us=3059 total_us=3059
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=63431 total_us=66491
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2393 total_us=68884
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=720 total_us=69605
+ROOT_STOP_COST label=root-source phase=program-source segment_us=521 total_us=70127
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=70166 total_us=211170
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9047 total_us=220218
+
+thread 'commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client' (157692663) panicked at src/commands/lifecycle_versioned_tests.rs:666:9:
+first-root Stop must commit exact original absence; preserve report and app log on refusal
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

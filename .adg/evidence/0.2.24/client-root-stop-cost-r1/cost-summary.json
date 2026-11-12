@@ -1,0 +1,18 @@
+{
+  "accepted": false,
+  "diagnosticNativeExitCode": 101,
+  "measuredAuthorityMs": 341.024,
+  "indexRegistrationMs": 124.597,
+  "sourcePrefixAndFramesMs": 214.722,
+  "sourceCurrentOpenMs": 118.37,
+  "sourceIndexScopeMs": 25.248,
+  "sourceReadyStoppedRereadMs": 67.493,
+  "admissionRepeatedMs": [
+    40.726,
+    41.016,
+    42.129
+  ],
+  "preservedRawTrace": "cost-diagnostic/native.stderr.log",
+  "change": "same-call fresh prefix forwarding, no cache; remove duplicated entry full checks before actual gated move",
+  "nativeStopStillUnaccepted": true
+}
