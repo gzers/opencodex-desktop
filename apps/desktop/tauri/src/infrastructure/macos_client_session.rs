@@ -382,6 +382,27 @@ fn fresh_ready(
     Ok((record.0, before, record.2))
 }
 impl StartupSession {
+    pub fn watch_stop_pair(
+        &self,
+        context: &ProcessContext,
+        deadline: Instant,
+    ) -> AppResult<crate::infrastructure::macos_process_pair::PairWatch> {
+        let live = self.live(context)?;
+        crate::infrastructure::macos_process_pair::PairWatch::capture(
+            live.process()?,
+            live.parent()?,
+            deadline,
+        )
+    }
+    pub fn require_stopped_pair(
+        &self,
+        context: &ProcessContext,
+        proof: &crate::infrastructure::macos_process_pair::PairExitProof,
+        deadline: Instant,
+    ) -> AppResult<()> {
+        let live = self.live(context)?;
+        proof.require(live.process()?, live.parent()?, deadline)
+    }
     pub fn verify_current_ready(
         &self,
         context: &ProcessContext,
@@ -518,10 +539,12 @@ impl StartupSession {
         &'a self,
         context: &ProcessContext,
         stop: &CompletedLifecycleStop,
+        pair: &crate::infrastructure::macos_process_pair::PairExitProof,
         lease: &NativeLease,
         deadline: Instant,
     ) -> AppResult<crate::infrastructure::macos_client_originals::restore::Pending<'a>> {
         time(deadline)?;
+        self.require_stopped_pair(context, pair, deadline)?;
         lease.require_context(context, &self.originals.client.path)?;
         let live = self.live(context)?;
         stop.require_original(
@@ -718,8 +741,11 @@ impl StartupSession {
         &self,
         context: &ProcessContext,
         stop: &CompletedLifecycleStop,
+        pair: &crate::infrastructure::macos_process_pair::PairExitProof,
         lease: &NativeLease,
+        deadline: Instant,
     ) -> AppResult<String> {
+        self.require_stopped_pair(context, pair, deadline)?;
         lease.require_context(context, &self.originals.client.path)?;
         let live = self.live(context)?;
         stop.require_original(

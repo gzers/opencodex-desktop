@@ -432,14 +432,16 @@ fn official299_real_startup_originals_ready_binding_and_completed_stop_roundtrip
     let reopened = StartupSession::open(&context, &data, &client, &refs).unwrap();
     let stop_time = Instant::now();
     let stop_deadline = stop_time + std::time::Duration::from_secs(10);
+    let mut pair = reopened.watch_stop_pair(&context, stop_deadline).unwrap();
     reopened.seal_pre_stop(&context, stop_deadline).unwrap();
     let owner = SystemServiceOwnerProofProvider::new(program, context.clone()).unwrap();
     let stopped = owner.stop_lifecycle_verified(&context, stop_deadline, &data);
     report["ordinaryStopVerified"] = serde_json::json!(stopped.is_ok());
     write(&report);
     let stopped = stopped.unwrap();
+    let pair = pair.wait(stop_deadline).unwrap();
     let bound = with_native_coordination(&coordination, stop_deadline, |lease| {
-        reopened.seal_completed_stop(&context, &stopped, lease)
+        reopened.seal_completed_stop(&context, &stopped, &pair, lease, stop_deadline)
     });
     report["completedStopBound"] = serde_json::json!(bound.is_ok());
     report["stopTotalMs"] = serde_json::json!(stop_time.elapsed().as_millis());

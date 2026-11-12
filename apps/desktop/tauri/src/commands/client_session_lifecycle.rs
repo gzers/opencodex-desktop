@@ -36,6 +36,7 @@ pub(super) struct Active {
     head: Head,
     session: StartupSession,
     client: PathBuf,
+    stop_pair: Option<crate::infrastructure::macos_process_pair::PairWatch>,
 }
 impl Active {
     fn coordination(&self, context: &ProcessContext) -> AppResult<Context> {
@@ -69,6 +70,7 @@ impl Active {
             head,
             session,
             client,
+            stop_pair: None,
         })
     }
     pub fn load(context: &ProcessContext, data: &Path) -> AppResult<Self> {
@@ -85,6 +87,7 @@ impl Active {
             head,
             session,
             client,
+            stop_pair: None,
         })
     }
     pub fn verify_ready(&self, context: &ProcessContext, deadline: Instant) -> AppResult<()> {
@@ -102,6 +105,7 @@ impl Active {
         Ok(())
     }
     pub fn pre_stop(&mut self, context: &ProcessContext, deadline: Instant) -> AppResult<()> {
+        self.stop_pair = Some(self.session.watch_stop_pair(context, deadline)?);
         self.session.seal_pre_stop(context, deadline)?;
         self.head = self
             .index
@@ -129,26 +133,40 @@ impl Active {
                 .borrow_mut()
                 .push((next, started.elapsed().as_millis()));
         };
-        let result = with_native_coordination(&coordination, deadline, |lease| {
-            mark("seal-stopped");
-            self.session.seal_completed_stop(context, proof, lease)?;
-            mark("index-stopped");
-            self.head = self
-                .index
-                .advance(&self.head, State::Stopped, Some(self.session.references()?))
-                .map_err(failure)?;
-            mark("prepare-plan");
-            let pending = self
-                .session
-                .prepare_restore(context, proof, lease, deadline)?;
-            mark("index-plan");
-            self.head = self
-                .index
-                .record_restore_plan(&self.head, pending.id(), pending.sha256())
-                .map_err(failure)?;
-            mark("release-coordination");
-            Ok(())
-        });
+        let result = (|| {
+            mark("original-pair-exit");
+            let pair = self
+                .stop_pair
+                .as_mut()
+                .ok_or_else(|| failure(()))?
+                .wait(deadline)?;
+            self.session
+                .require_stopped_pair(context, &pair, deadline)?;
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
+                .append_event("stop-proof: original-native-launcher-and-service confirmed code=0");
+            mark("native-coordination");
+            with_native_coordination(&coordination, deadline, |lease| {
+                mark("seal-stopped");
+                self.session
+                    .seal_completed_stop(context, proof, &pair, lease, deadline)?;
+                mark("index-stopped");
+                self.head = self
+                    .index
+                    .advance(&self.head, State::Stopped, Some(self.session.references()?))
+                    .map_err(failure)?;
+                mark("prepare-plan");
+                let pending = self
+                    .session
+                    .prepare_restore(context, proof, &pair, lease, deadline)?;
+                mark("index-plan");
+                self.head = self
+                    .index
+                    .record_restore_plan(&self.head, pending.id(), pending.sha256())
+                    .map_err(failure)?;
+                mark("release-coordination");
+                Ok(())
+            })
+        })();
         // Fixed phase names and monotonic durations only; no paths, source
         // bytes, process arguments, token or native ownership material.
         let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())

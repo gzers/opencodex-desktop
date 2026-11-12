@@ -12,6 +12,8 @@ pub mod macos_client_originals;
 #[cfg(target_os = "macos")]
 pub mod macos_process_exit;
 #[cfg(target_os = "macos")]
+pub mod macos_process_pair;
+#[cfg(target_os = "macos")]
 pub mod macos_tcp_listeners;
 pub mod official_cli_source;
 #[cfg(target_os = "macos")]
