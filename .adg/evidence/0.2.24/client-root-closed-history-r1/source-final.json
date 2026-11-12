@@ -1,0 +1,33 @@
+{
+  "accepted": false,
+  "commit": "0ac19863e1e00d890d5185fafd12945aceeddc18",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs",
+      "sha256": "d27f1d69cb50c13c083dcb69bc0bc0b499bc557dcf3a3b735fa9597c65209c9b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_closed_history_tests.rs",
+      "sha256": "254e474f1e8289e6f3104c14a80ef621efad871f618b35c95889e9108bd623c5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement.rs",
+      "sha256": "c7e64e8a0b76a76f1b68a1f65cdaef071e61ce5b66da41b6fa1bb837e0a9af4b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement_tests.rs",
+      "sha256": "9b8aa4a2efa5ae2211bfdd367d5c647c0af5fa741b1d78d30e2d1c70ae62bd6c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "816b6188e64f73fd089d06ad2a4bad2acfe1a8b4ee14d0231dbc4d45b92969b9"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+      "sha256": "ec45d7dd2be551066dc75d5ce2d01f534fe418525815777545dd4b3dbe1d13e9"
+    }
+  ],
+  "actualLibraryTestBinary": "apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97",
+  "actualLibraryTestBinarySha256": "ad8f11f9b166abf59338be8bb011ea3ed907a0c2fedfd7276a440fbc60ced6d4",
+  "scope": "Final fourteen history functions and affected retirement/index regressions use final sources. Earlier seven/eight passing logs predate all-event and Prepared-predecessor hardening; they are not final-source proof. No official runtime/native service run in this batch."
+}

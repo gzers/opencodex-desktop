@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 98；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 99；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 97a3bf93b（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 0ac19863e（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -972,3 +972,16 @@ debug原包Start8877/Status228，Stop10754ms（manager10352）RootAbsent9已提�
 证据.adg/evidence/0.2.24/image-inventory-parallel-r1/含140文件manifest约311KB、不同source/binary/build配置、完整对照/原输出/失败＋release通过/负控和独立SQLite原字节。所有编译/test/native/agent句柄已实际结束；精确9新N/K/history逐轮exclusive重获后移除，预存global L身份/权限/字节保持并重获释放；清理独立查主端口不冒4监听额外全验。先逐字归档再清1benchmark＋3native根/复用runtime/复制binary/重复证据，unitTMP空，工程target保留，无日常配置/真实业务/官方源码/新appDMG/Windows候选或发布。
 
 下一项明确nextStart：只读分析表明first-only marker/初binding/Preparing1/capturecreatedfd与代内origin.id==attempt、vault历史缺RootAbsent闭合支持不能直接放开reserve。拟保旧archive，每后继独立generation+attempt，先历史精确验证→index/events追加代际来源/前驱→create-only新代custody→atomicPreparing→同源readonly后继资格驱动状态/实际Start→两完整release原包循环及中断/CAS/新root反例；未实施。Stop回执canStarttrue不冒已支持第二次启动，RootAbsent状态Required不一致待一并接。缺Ready/一般图路径/进程集合与刷新/NAME/复杂代理/Windows W1W2/版本发行收口全目标保持，P24-04/05未关、目标active。
+
+
+## 2026-11-13 根闭合历史独立核验，后继generation仍待登记
+
+main0ac19863e新增仅事实的open_closed_history：原独立source/closed/origin、准确plan/intent/readback/completionSHA、原archive身份/Protection/完整树、schema5原件/phase/blob/scope/live及旧Grok归档严格核验；当前codex/Grok变化不当旧baseline。当前RootAbsent入口仍要求实际缺席/当前恢复，历史入口不创建Start/move许可。详[根闭合历史合同](0.2.24-contracts/client-root-closed-history-r1.md)。
+
+Index借同SQLite/action核有界canonical完整events，所有事件首尾/阶段连接/refs/live前缀/注册决策检查；refsNone未闭合事件或未知generation不能被略过。source+1初Prepared与closed-1 prepared必须完整对应plan/source/ticket/refs/restorePlan，原source文档比不可变plan，exact vault names和观察后全部原件/索引再查保持。现只支持独立初origin首代，故明确拒绝其它代次ticket，不假称已经多次启动。
+
+最终14新增历史场景、根恢复总37、索引36共73去重函数通过，4ignored不计，fmt/diff/strictClippy通过。新root/Grok与历史分离、空archive同内容换inode、原件/回执/属性/缺provenance或plan/blob/extra vault/refsNone事件/中间Prepared换hash以及投影时binding/action/events改变均拒绝保全。完整fourphase/live/schema2 marker释放为明确合成storage场景，非官方Stop证书。只读审查初两漏检已修复并补实测反例，不代签nextStart。
+
+证据.adg/evidence/0.2.24/client-root-closed-history-r1/含30文件manifest约1.32MB、最终6源/真实库binary、日志/静态审查/原base64JSON与独立SQLite引用核验；早期7/8项仅其阶段证据。全部test/agent子进程终止，TempDir清理、unitTMP空、逐字归档后删重复根。未执行官方runtime/服务/全局DB，无日常配置/真实业务/新候选/发布。
+
+下一步仍需newgeneration create-only custody、独立前驱关闭/本代origin/scope/Preparing原子登记及状态/实际Start同源资格，再至少两完整release原包循环和中断/新用户root/CAS/deadline负控。当前未开放RootAbsent→Start，首次release通过不冒第二次，P24-04/05与Windows/NAME/其它原全范围保持未完，目标active。
