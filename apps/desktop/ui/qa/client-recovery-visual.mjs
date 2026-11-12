@@ -32,7 +32,7 @@ try {
   while (true) { try { if ((await fetch(base)).ok) break } catch {} if (Date.now() > deadline) throw Error('Vite did not start'); await new Promise(resolve => setTimeout(resolve, 100)) }
   const engine = await pickEngine(); report.engine = engine.name; browser = await engine.launch()
   for (const scene of (process.env.AUDIT_RECOVERY_SCENES?.split(',') ?? ['eligible', 'pending', 'unknown', 'active', 'none', 'unsupported', 'error', 'slow', 'refresh-failed'])) {
-    const sizes = scene === 'eligible' || scene === 'continue' ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
+    const sizes = ['eligible','continue','rollback','rearm'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
     for (const [width, height, theme] of sizes) {
       const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
       const errors = []; page.on('pageerror', e => errors.push(e.message))
@@ -42,7 +42,54 @@ try {
       await page.locator('dialog[open]').waitFor()
       await page.waitForFunction(() => !document.querySelector('dialog[open]')?.textContent.includes('正在核对原会话和恢复记录'))
       const name = scene + '-' + width + '-' + theme
-      if (scene.startsWith('continue')) {
+      if(scene.startsWith('rollback')||scene.startsWith('rearm')){
+        const action=scene.startsWith('rollback')?'rollback':'rearm'
+        const choose=action==='rollback'?'撤销本次恢复':'重新准备恢复',confirm=action==='rollback'?'确认撤销恢复':'确认重新准备'
+        await page.getByRole('button',{name:choose,exact:true}).click()
+        await page.getByRole('button',{name:confirm,exact:true}).waitFor()
+        let size=await geometry(page);await screenshot(page,name+'-review')
+        if(scene===action){
+          await page.getByRole('button',{name:'返回',exact:true}).click()
+          assert.equal(await page.evaluate(action=>window.__clientRecoveryFixture.calls.filter(n=>n===action).length,action),0)
+          await page.getByRole('button',{name:choose,exact:true}).click()
+        }
+        await page.getByRole('button',{name:confirm,exact:true}).click()
+        if(scene.endsWith('-slow')){
+          await page.getByText(action==='rollback'?'正在撤销本次恢复…':'正在重新准备原件恢复…',{exact:true}).waitFor()
+          await page.getByRole('button',{name:'关闭',exact:true}).last().click()
+          await page.getByRole('button',{name:'查看恢复进度',exact:true}).click()
+        }
+        if(scene.endsWith('-error')){
+          await page.getByText(action==='rollback'?'撤销恢复未确认完成；原件与当前文件保留。':'恢复准备未确认完成；原件与当前文件保留。',{exact:true}).waitFor()
+          assert.equal(await page.getByRole('button',{name:confirm,exact:true}).count(),0)
+        }else{
+          if(scene==='rollback-refresh-failed'){
+            await page.getByText('操作已完成，恢复状态读取失败。请刷新恢复状态。',{exact:true}).waitFor()
+            await screenshot(page,name+'-refresh-failure')
+            await page.evaluate(()=>window.__clientRecoveryFixture.setScene('rollback'))
+            await page.getByRole('button',{name:'刷新恢复状态',exact:true}).click()
+          }
+          await page.getByRole('button',{name:action==='rollback'?'重新准备恢复':'确认继续恢复',exact:true}).waitFor()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='continue').length),0)
+        }
+        assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
+        assert.equal(await page.evaluate(action=>window.__clientRecoveryFixture.calls.filter(n=>n===action).length,action),1)
+        await screenshot(page,name+'-result');record(name,{geometry:size,explicitReview:true,oneMutation:true,gateRetained:true,noAutomaticContinue:true})
+        if(scene==='rollback'&&width===1180){
+          await page.getByRole('button',{name:'重新准备恢复',exact:true}).click()
+          await page.getByRole('button',{name:'确认重新准备',exact:true}).click()
+          await page.getByRole('button',{name:'确认继续恢复',exact:true}).waitFor()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='continue').length),0)
+          await page.getByRole('button',{name:'确认继续恢复',exact:true}).click()
+          await page.getByText('服务保持停止，现在可以启动。',{exact:true}).waitFor()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),false)
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='rollback').length),1)
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='rearm').length),1)
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='continue').length),1)
+          record('app-full-rollback-rearm-continue',{threeSeparateConfirmations:true,onlyFinalRestoreUnblocks:true})
+        }
+      }else if (scene.startsWith('continue')) {
         assert.equal(await page.getByRole('button',{name:'确认完成收尾',exact:true}).count(),0)
         await page.getByRole('button',{name:'确认继续恢复',exact:true}).waitFor()
         await page.getByText('诊断详情',{exact:true}).click()
@@ -136,7 +183,45 @@ try {
     assert.equal(await page.locator('#modalTitle').textContent(), '客户端配置恢复')
     const size = await page.locator('#modal').evaluate(d => { const r = d.getBoundingClientRect(); return { width: r.width, top: r.top, bottom: r.bottom, height: innerHeight } })
     assert(size.width <= 560 && size.top >= 0 && size.bottom <= size.height, JSON.stringify(size))
-    if (scene.startsWith('continue')) {
+    if(scene.startsWith('rollback')||scene.startsWith('rearm')){
+      const action=scene.startsWith('rollback')?'rollback':'rearm'
+      const confirm=action==='rollback'?'确认撤销恢复':'确认重新准备'
+      if(action==='rollback')await page.locator('[data-recovery-rollback]').click();else await page.locator('#modalConfirm').click()
+      assert.equal(await page.locator('#modalConfirm').textContent(),confirm)
+      await screenshot(page,'prototype-'+scene+'-review')
+      if(scene===action){
+        await page.locator('#modalCancel').click()
+        assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),0)
+        if(action==='rollback')await page.locator('[data-recovery-rollback]').click();else await page.locator('#modalConfirm').click()
+      }
+      await page.locator('#modalConfirm').click()
+      if(scene.endsWith('-slow')){
+        await page.waitForFunction(()=>window.clientRecovery024.snapshot().executing)
+        await page.locator('#modalCancel').click()
+        await page.evaluate(()=>window.clientRecovery024.open())
+      }
+      if(scene.endsWith('-error'))await page.getByText(action==='rollback'?'撤销恢复未确认完成；原件与当前文件保留。':'恢复准备未确认完成；原件与当前文件保留。',{exact:true}).waitFor()
+      else{
+        await page.waitForFunction(()=>!window.clientRecovery024.snapshot().executing&&window.clientRecovery024.snapshot().outcome)
+        if(scene==='rollback-refresh-failed'){
+          assert.equal(await page.locator('#modalConfirm').textContent(),'刷新恢复状态');await page.locator('#modalConfirm').click()
+        }
+        assert.equal(await page.locator('#modalConfirm').textContent(),action==='rollback'?'重新准备恢复':'确认继续恢复')
+      }
+      assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),1)
+      assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().finalized),false)
+      if(scene==='rollback'){
+        await page.locator('#modalConfirm').click();assert.equal(await page.locator('#modalConfirm').textContent(),'确认重新准备')
+        await page.locator('#modalConfirm').click()
+        await page.waitForFunction(()=>!window.clientRecovery024.snapshot().executing&&window.clientRecovery024.snapshot().phase==='restore_prepared')
+        assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),2)
+        assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().finalized),false)
+        await page.locator('#modalConfirm').click()
+        await page.waitForFunction(()=>window.clientRecovery024.snapshot().finalized)
+        assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),3)
+        record('prototype-full-rollback-rearm-continue',{threeSeparateConfirmations:true,memoryOnly:true})
+      }
+    }else if (scene.startsWith('continue')) {
       assert.equal(await page.locator('#modalConfirm').textContent(),'确认继续恢复')
       await page.locator('#clientRecovery024Body summary').click()
       await page.locator('#clientRecovery024Body').getByText('尚未登记',{exact:true}).waitFor()

@@ -7,7 +7,7 @@ it('observes the current bound session without supplying paths, credentials or a
   const preview: ClientRecoveryPreview = {
     status: 'pending', phase: 'restore_prepared', revision: 6, attemptId: 'original-attempt',
     originalEvidence: 'verified', planEvidence: 'verified', completionEvidence: 'unregistered',
-    phaseCount: 3, canContinue: false, canRollback: false, canFinalize: false, confirmationDigest: null,
+    phaseCount: 3, canContinue: false, canRollback: false, canFinalize: false, canRearm:false,rollbackDigest:null,rearmDigest:null, confirmationDigest: null,
   }
   invoke.mockResolvedValue(preview)
   expect(await clientRecoveryApi.preview()).toEqual(preview)
@@ -31,4 +31,10 @@ it('continues only a reviewed attempt using the dedicated path-free command',asy
   invoke.mockResolvedValue({attemptId:request.attemptId,revision:7,status:'restored'})
   await clientRecoveryApi.continue(request)
   expect(invoke.mock.calls).toEqual([['client_recovery_continue',{request}]])
+})
+it.each(['rollback','rearm'] as const)('dispatches %s only with the reviewed attempt/revision/direction digest',async action=>{
+  const request={attemptId:'original-attempt',revision:7,confirmationDigest:action+'-reviewed-digest'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:8,status:action==='rollback'?'rolled_back':'restore_prepared'})
+  await clientRecoveryApi[action](request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_'+action,{request}]])
 })

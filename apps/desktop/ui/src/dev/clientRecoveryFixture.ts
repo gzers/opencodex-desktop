@@ -2,9 +2,10 @@
 import { clientRecoveryApi, type ClientRecoveryPreview } from '@/features/runtime/client-recovery'
 import { useLifecycleStore } from '@/app/lifecycle/store'
 import type { StatusSnapshot } from '@/contracts/runtimeStatus'
-type Scene = 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
+type Scene = 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
 export function installClientRecoveryFixture(initial: string) {
-  let scene = initial as Scene, finalized = false
+  let scene = initial as Scene, finalized = false, revision = initial.startsWith('rearm') ? 7 : 6
+  let phase: 'restore_prepared'|'restore_rolled_back' = initial.startsWith('rearm') ? 'restore_rolled_back' : 'restore_prepared'
   const calls: string[] = []
   const data = '/fixtures/client-recovery/desktop', home = '/fixtures/client-recovery/home'
   const snapshot = (): StatusSnapshot => ({ source: 'live', matrix: { runtime: 'stopped', connection: 'unconfigured', operation: 'idle' },
@@ -15,13 +16,14 @@ export function installClientRecoveryFixture(initial: string) {
   clientRecoveryApi.preview = async () => {
     calls.push('preview')
     await new Promise(resolve => setTimeout(resolve, 100))
-    if (scene === 'error') throw new Error('模拟读取失败，请重新检查。')
-    const value: ClientRecoveryPreview = { status: 'pending', phase: 'restore_prepared', revision: 6,
+    if (scene === 'error' || scene==='rollback-refresh-failed'&&phase==='restore_rolled_back') throw new Error('模拟读取失败，请重新检查。')
+    const value: ClientRecoveryPreview = { status: 'pending', phase, revision,
       attemptId: 'f394bd75-355b-4873-83cc-6818efeb547a', originalEvidence: 'verified', planEvidence: 'verified',
-      completionEvidence: 'unregistered', phaseCount: 3, canContinue: false, canRollback: false, canFinalize: true, confirmationDigest: 'a'.repeat(64) }
+      completionEvidence: 'unregistered', phaseCount: 3, canContinue: false, canRollback: false, canFinalize: true, canRearm:false,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) }
     if (scene === 'pending') { value.canFinalize = false; value.confirmationDigest = null; value.completionEvidence = 'not_recorded' }
     if(scene==='rolled-back'){value.phase='restore_rolled_back';value.canFinalize=false;value.confirmationDigest=null;value.completionEvidence='verified'}
-    if (scene.startsWith('continue')) {value.canContinue=true;value.canFinalize=false;value.completionEvidence='not_recorded'}
+    if (scene.startsWith('continue')||scene.startsWith('rollback')||scene.startsWith('rearm')) {value.canContinue=true;value.canRollback=true;value.rollbackDigest='b'.repeat(64);value.canFinalize=false;value.completionEvidence='not_recorded'}
+    if(phase==='restore_rolled_back'){value.canContinue=false;value.canRollback=false;value.canFinalize=false;value.canRearm=true;value.confirmationDigest=null;value.rollbackDigest=null;value.rearmDigest='c'.repeat(64);value.completionEvidence='verified'}
     if (scene === 'unknown' || scene === 'unsupported') { value.status = scene; value.phase = null; value.attemptId = null; value.revision = null; value.canFinalize = false; value.confirmationDigest = null }
     if (scene === 'active') { value.status = 'active'; value.phase = 'ready'; value.canFinalize = false; value.confirmationDigest = null }
     if (scene === 'none') { value.status = 'not_required'; value.phase = null; value.canFinalize = false; value.confirmationDigest = null }
@@ -40,13 +42,25 @@ export function installClientRecoveryFixture(initial: string) {
     finalized=true
     return {attemptId:request.attemptId,revision:request.revision+1,status:'restored'}
   }
+  clientRecoveryApi.rollback=async request=>{
+    calls.push('rollback');await new Promise(resolve=>setTimeout(resolve,scene==='rollback-slow'?1200:200))
+    if(scene==='rollback-error')throw new Error('撤销恢复未确认完成；原件与当前文件保留。')
+    phase='restore_rolled_back';revision=request.revision+1
+    return {attemptId:request.attemptId,revision,status:'rolled_back'}
+  }
+  clientRecoveryApi.rearm=async request=>{
+    calls.push('rearm');await new Promise(resolve=>setTimeout(resolve,scene==='rearm-slow'?1200:200))
+    if(scene==='rearm-error')throw new Error('恢复准备未确认完成；原件与当前文件保留。')
+    phase='restore_prepared';revision=request.revision+1
+    return {attemptId:request.attemptId,revision,status:'restore_prepared'}
+  }
   clientRecoveryApi.status = async () => {
     calls.push('status')
     if (scene === 'refresh-failed' && finalized) throw new Error('mock status unavailable')
     return snapshot()
   }
   const api = { calls, setScene(value: Scene) { scene = value },
-    state: () => ({ scene, finalized, blocked: useLifecycleStore().clientRecoveryRequired }) }
+    state: () => ({ scene, finalized,phase,revision, blocked: useLifecycleStore().clientRecoveryRequired }) }
   // Tests use a fresh browser page per scene. Progress store owns active work.
   Object.assign(window, { __clientRecoveryFixture: api })
 }
