@@ -14,7 +14,7 @@
  function markup(){
   if(S.reading)return '<p role="status">正在核对原会话和恢复记录…</p>';
   if(S.executing)return '<p role="status">'+progress[S.action]+'</p><p>关闭窗口后仍会继续，可重新打开查看。</p>';
-  if(S.choice==='cancelPreparation')return '<p><strong>取消这次启动准备？</strong></p><p>尚未创建原件保管目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。</p><p>保持当前配置，不恢复或删除文件，也不会自动启动。</p>';
+  if(S.choice==='cancelPreparation')return '<p><strong>取消这次启动准备？</strong></p><p>本次准备尚未产生新的原件目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。</p><p>保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>';
   if(S.choice==='finishUnchanged')return '<p><strong>核对并结束原会话？</strong></p><p>确认后重新核对服务已停止、原件完整且未改变，再结束这次未完成会话。</p><p>客户端配置保持不变，不会自动启动服务。</p>';
   if(S.choice==='rollback')return '<p><strong>撤销本次恢复？</strong></p><p>将本次恢复的文件退回恢复前的停止状态。启动前原件仍保留，服务保持停止。</p><p>之后可以重新准备恢复，再确认恢复启动前的原件。</p>';
   if(S.choice==='rearm')return '<p><strong>重新准备原件恢复？</strong></p><p>核对保留的原件和当前文件，准备新的恢复计划。准备完成后，还需点击“确认继续恢复”。</p><p>此次准备不会更改客户端配置，服务保持停止。</p>';
