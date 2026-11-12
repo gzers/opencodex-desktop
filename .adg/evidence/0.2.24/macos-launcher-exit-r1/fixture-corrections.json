@@ -1,0 +1,6 @@
+{
+  "firstPairTests": "1 helper passed and5 functional tests failed at ready gate; helpers rejected default canonical /private/var temporary root before any spawn. Explicit private/tmp fixture root fixed; raw failure retained.",
+  "helperOwnership": "Clippy found an unmatched Child on the deliberate launcher-exec path. Ordinary unwind now releases/reaps through HelperChild RAII; deliberate exec negative preserves its controlled leaf until outer fixture releases it. No product exit assertion relaxed.",
+  "oldExitRegression": "9 existing exit checks passed; nonchild test failed same default temporary root assertion. Changed only its tempfile constructor to explicit /private/tmp. Raw failure retained.",
+  "fixedChecks": "40 functions including1 helper entry;39 functional checks. Existing manual originals/native entry and manual owner entry remain ignored, not counted as executed."
+}

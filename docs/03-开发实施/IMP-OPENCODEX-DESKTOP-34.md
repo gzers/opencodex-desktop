@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 52；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 53；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -472,3 +472,12 @@ main17ac170c4仅在Mac ARM64给原锁定sha2 0.10.9启用上游CPU检测硬件�
 45项debug及同组45项release、编译/格式/全目标严格Clippy通过。准确binary的两轮新Profile实际debug Start8623/Status230/Stop4775ms，release5546/222/3559ms；各原PID内核exit0、4项捕获TCP全缺席、四frame/索引RestorePrepared/revision6/plan/stage及35项内容引用匹配，新collector353/376ms Stopped+Required且三门槛false。原30/5/10不变，实际release窄样本为后续apply留下6441ms；catalog/cache/audit仍未补偿、完整断言仍exit101/accepted=false。前批release10048ms失败原证据不覆盖，不以本样本冒一般路径/大树/完整恢复预算通过。
 
 证据.adg/evidence/0.2.24/macos-sha256-backend-r1/及manifest保留探针/真实CPU/上游源摘要/产品平台特性与源码、两原包轮原件及日志。两主端点、自有服务/launcher/test/probe镜像均缺席，6个精确新协调DB排他取得/释放后与全部自有Profile/程序/blob/index/stage/副本binary/独立host target和重复临时回执清理。未改日常配置/系统设置/官方包，无业务请求、新.app/DMG或发布。当前样本性能已改善，后继完整进程集合/持续写者/实际恢复与显式恢复/全范围、旧revision4首错、WindowsW0/W1/W2、NAME、System代理、官方发布验证/固定候选保持，目标active。
+
+
+## 2026-11-12 原启动父进程与服务双正常退出
+
+main e62fc8a35新增PairWatch，从已独立绑定Ready Live读取两代，在PreStop/官方停止前核对UID/PID/出生时间及父子关系并保留双ExitWatch；原服务Stop证明之后，两者都须本次内核normal0才可继续seal_stopped/prepare_restore。未退/非零/信号/fork/exec/错代次拒绝，原30/5/10秒和正常官方Stop/4捕获TCP等门不变，无强杀。PairExitProof不可序列化，不当完整进程集合/其它监听/持续写者许可；实际apply仍关。详[启动父进程退出](0.2.24-contracts/macos-launcher-exit-r1.md)。
+
+40相关函数通过（含1辅助入口，39功能判定），编译/格式/严格Clippy通过。先前pair和旧nonchild临时根/private/var拒绝、helper回收lint首错保留；修正夹具，不降判定，旧测试单独main2fc3cb04a。新Profile当前原包一轮Start11317/Status231/Stop4947ms，原父与服务normal0真实trace、四frame/索引RestorePrepared/revision6/plan/stage及35内容引用匹配，新collector371ms Stopped+Required且三门槛false。catalog/cache/audit仍未补偿，原完整assert仍exit101/accepted=false；本批未重构release/app/DMG，不借前批release样本代签。
+
+证据.adg/evidence/0.2.24/macos-launcher-exit-r1/及manifest保留首错/来源/原件；所有自有helper/Node/Bun/launcher/test镜像为空、原主端点完整TCP表缺席，3个精确新协调DB排他取得/释放后，全部自有程序/Profile/blob/index/stage/副本和重复回执清理。未改日常/官方或业务，无发布。完整集合/写者/实际恢复与显式恢复/全范围、旧revision4首错、Windows/NAME/System代理/发布验证/固定候选继续，目标active。

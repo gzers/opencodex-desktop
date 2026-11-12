@@ -1,0 +1,16 @@
+
+thread 'infrastructure::macos_process_pair::tests::launcher_fork_or_exec_is_refused_even_while_service_has_not_exited' (155824491) panicked at src/infrastructure/macos_process_pair_tests.rs:14:9:
+owned pair fixture gate timed out
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::macos_process_pair::tests::either_nonzero_exit_refuses_the_pair_without_partial_success' (155824490) panicked at src/infrastructure/macos_process_pair_tests.rs:14:9:
+owned pair fixture gate timed out
+
+thread 'infrastructure::macos_process_pair::tests::service_exit_alone_never_completes_the_bound_pair' (155824568) panicked at src/infrastructure/macos_process_pair_tests.rs:14:9:
+owned pair fixture gate timed out
+
+thread 'infrastructure::macos_process_pair::tests::queued_and_cached_pair_cannot_outlive_the_original_deadline' (155824567) panicked at src/infrastructure/macos_process_pair_tests.rs:14:9:
+owned pair fixture gate timed out
+
+thread 'infrastructure::macos_process_pair::tests::unrelated_duplicate_and_wrong_generation_are_refused_before_subscription' (155824934) panicked at src/infrastructure/macos_process_pair_tests.rs:14:9:
+owned pair fixture gate timed out
