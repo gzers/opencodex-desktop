@@ -1,0 +1,6 @@
+
+thread 'infrastructure::macos_client_originals::session::tests::explicit_nonempty_live_selection_is_independent_while_open_discovery_remains_unknown' (156011066) panicked at src/infrastructure/macos_client_session_tests.rs:327:5:
+assertion `left == right` failed
+  left: None
+ right: Some(["Live/claude-opus-5-5", "Live/vendor-gemini-3.5-pro"])
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

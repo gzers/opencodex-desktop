@@ -1,0 +1,11 @@
+2026-11-12T04:59:23.351Z [manager] start: start confirmed
+2026-11-12T04:59:24.700Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-12T04:59:25.672Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-12T04:59:25.676Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-12T04:59:25.737Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-12T04:59:30.556Z [manager] client-stop-recovery: three-artifact-originals restored and readback verified
+2026-11-12T04:59:31.954Z [manager] client-stop-recovery: full-tree protection and two stable-lock releases verified
+2026-11-12T04:59:32.414Z [manager] client-stop-recovery: restored session index committed and readback verified
+2026-11-12T04:59:32.418Z [manager] client-stop-recovery: measured elapsed_ms=6735 timings=[("original-pair-exit", 0), ("native-coordination", 59), ("seal-stopped", 1012), ("index-stopped", 1536), ("prepare-plan", 1541), ("index-plan", 2258), ("restore-three-artifacts", 2264), ("release-coordination", 4877), ("full-tree-and-lock-release", 5661), ("close-session-index", 6274)]
+2026-11-12T04:59:32.422Z [manager] lifecycle-stop-phase: complete elapsed_ms=8807 budget_ms=10000 action=stop
+2026-11-12T04:59:32.426Z [manager] stop: stop completed

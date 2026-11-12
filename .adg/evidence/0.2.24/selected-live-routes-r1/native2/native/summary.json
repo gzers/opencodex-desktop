@@ -1,0 +1,98 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "grokConfigChangedDuringStart": true,
+  "independentOriginalsReferenced": true,
+  "indexedReady": true,
+  "indexedRestorePrepared": false,
+  "indexedRestored": true,
+  "indexedRevision": 7,
+  "indexedStopped": false,
+  "localModelDiscovery": {
+    "getModelsRequests": 1,
+    "listenerClosed": true,
+    "observedMethodAndPathOnly": [
+      "GET /v1/models"
+    ],
+    "port": 51320,
+    "syntheticLoopbackOnly": true,
+    "unexpectedOrBusinessRequests": 0
+  },
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "originalGrokConfigBackupAndAgentArchived": true,
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 14296,
+    "port": 51329
+  },
+  "recordAbsent": true,
+  "reopenedRecoveryGate": true,
+  "reopenedSnapshot": {
+    "can_restart": false,
+    "can_start": true,
+    "can_stop": false,
+    "facts": {
+      "client_recovery": "not_required",
+      "data_root": "/private/tmp/ocxd024-versioned-lifecycle-acydjx5a/fixtures/profile/.codex-desktop/desktop",
+      "health": "unknown",
+      "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-acydjx5a/fixtures/profile/.codex-desktop/opencodex/home",
+      "protection": "none",
+      "reboot_safe": true,
+      "runtime_label": "bundled",
+      "service_present": null,
+      "shim_present": null,
+      "startup_status": "native",
+      "version_drift": "2.99.0"
+    },
+    "matrix": {
+      "connection": "unconfigured",
+      "operation": "idle",
+      "runtime": "stopped"
+    },
+    "pid": null,
+    "port": null,
+    "source": "live"
+  },
+  "reopenedStatusElapsedMs": 1256,
+  "restorePlanMatchesIndependentIndex": true,
+  "result": "passed",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 6591,
+  "status": {
+    "pid": "14296",
+    "port": 51329,
+    "ready": true,
+    "status": "running"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 232,
+  "stop": {
+    "canRestart": false,
+    "canStart": true,
+    "canStop": false,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "stopped",
+    "result": "stopped"
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 8815
+}

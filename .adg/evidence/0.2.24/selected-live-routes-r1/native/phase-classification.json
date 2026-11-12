@@ -1,0 +1,188 @@
+{
+  "scopeRoutes": [
+    "native-fixture/claude-opus-5-5",
+    "native-fixture/gpt-6-sol",
+    "native-fixture/vendor-gemini-3.5-pro"
+  ],
+  "phases": [
+    {
+      "phase": "original",
+      "artifacts": [
+        {
+          "slot": 0,
+          "state": "file",
+          "sha256": "4d96a7e658dd859d2bb884b4ee1e69339fd91f4d7d58383b02282ba09e718754",
+          "slugs": [
+            "gpt-5.4"
+          ],
+          "rowCount": 1
+        },
+        {
+          "slot": 1,
+          "state": "absent",
+          "sha256": null
+        },
+        {
+          "slot": 2,
+          "state": "absent",
+          "sha256": null
+        }
+      ]
+    },
+    {
+      "phase": "ready",
+      "artifacts": [
+        {
+          "slot": 0,
+          "state": "file",
+          "sha256": "a89a54060898bec9db4536d2721160cc8ea54e1d396a4572434d351186578c20",
+          "slugs": [],
+          "rowCount": 0
+        },
+        {
+          "slot": 1,
+          "state": "file",
+          "sha256": "a89a54060898bec9db4536d2721160cc8ea54e1d396a4572434d351186578c20",
+          "slugs": [],
+          "rowCount": 0
+        },
+        {
+          "slot": 2,
+          "state": "file",
+          "sha256": "2a050fe031d00c813bd4759c79af58a3cf836f4dd8baa6158441b7d8a27e1fdd",
+          "audit": [
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "startup-cache",
+              "target": "cache",
+              "outcome": "written"
+            },
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "retained-sync",
+              "target": "catalog",
+              "outcome": "written"
+            },
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "cache-invalidate",
+              "target": "cache",
+              "outcome": "written"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "pre-stop",
+      "artifacts": [
+        {
+          "slot": 0,
+          "state": "file",
+          "sha256": "a89a54060898bec9db4536d2721160cc8ea54e1d396a4572434d351186578c20",
+          "slugs": [],
+          "rowCount": 0
+        },
+        {
+          "slot": 1,
+          "state": "file",
+          "sha256": "a89a54060898bec9db4536d2721160cc8ea54e1d396a4572434d351186578c20",
+          "slugs": [],
+          "rowCount": 0
+        },
+        {
+          "slot": 2,
+          "state": "file",
+          "sha256": "2a050fe031d00c813bd4759c79af58a3cf836f4dd8baa6158441b7d8a27e1fdd",
+          "audit": [
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "startup-cache",
+              "target": "cache",
+              "outcome": "written"
+            },
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "retained-sync",
+              "target": "catalog",
+              "outcome": "written"
+            },
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "cache-invalidate",
+              "target": "cache",
+              "outcome": "written"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "stopped",
+      "artifacts": [
+        {
+          "slot": 0,
+          "state": "file",
+          "sha256": "c8cdda2058dfad73596cb9baef30bb2a825485859ad54c8d9cf5a10a457b0c8c",
+          "slugs": [],
+          "rowCount": 0
+        },
+        {
+          "slot": 1,
+          "state": "file",
+          "sha256": "a89a54060898bec9db4536d2721160cc8ea54e1d396a4572434d351186578c20",
+          "slugs": [],
+          "rowCount": 0
+        },
+        {
+          "slot": 2,
+          "state": "file",
+          "sha256": "811bb4d32c12dc4e1d95acf82bd9a6b4b424ae16192fb63c6103502462dc79e5",
+          "audit": [
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "startup-cache",
+              "target": "cache",
+              "outcome": "written"
+            },
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "retained-sync",
+              "target": "catalog",
+              "outcome": "written"
+            },
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "cache-invalidate",
+              "target": "cache",
+              "outcome": "written"
+            },
+            {
+              "pid": 13857,
+              "ppid": 13856,
+              "writer": "codex-restore",
+              "target": "catalog",
+              "outcome": "written"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "localDiscovery": {
+    "getModelsRequests": 0,
+    "listenerClosed": true,
+    "port": 50602,
+    "syntheticLoopbackOnly": true,
+    "unexpectedOrBusinessRequests": 1
+  }
+}
