@@ -222,14 +222,13 @@ fn with_admission<T>(
     valid?;
     release?;
     let (target, platform) = program_layout::host_target()?;
-    let selected = program_selection::read(&root, platform, target)?
+    let selected = program_selection::read_complete(&root, platform, target)?
         .ok_or_else(|| fail("client_native_coordination_source"))?;
     if selected != *expected
         || context.runtime.executable().as_ref() != Some(&expected.stable_entry)
     {
         return Err(fail("client_native_coordination_source"));
     }
-    program_image::verify(&selected)?;
     if Instant::now() >= deadline {
         return Err(fail("client_native_coordination_timeout"));
     }

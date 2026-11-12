@@ -86,6 +86,99 @@ impl Fixture {
     fn read(&self) -> AppResult<Option<SelectedProgram>> {
         read(&self.root, Platform::Macos, "darwin-arm64")
     }
+    fn complete(&self) -> AppResult<Option<SelectedProgram>> {
+        read_complete(&self.root, Platform::Macos, "darwin-arm64")
+    }
+}
+
+#[test]
+fn complete_admission_matches_selection_and_never_reuses_a_prior_content_check() {
+    let f = Fixture::new();
+    let expected = f.read().unwrap().unwrap();
+    super::super::program_image::verify(&expected).unwrap();
+    assert_eq!(f.complete().unwrap(), Some(expected.clone()));
+    let other = f.paths.package_root.join("ordinary-package-data");
+    fs::write(&other, b"unexpected content after successful admission").unwrap();
+    assert_eq!(f.read().unwrap(), Some(expected.clone()));
+    assert!(f.complete().is_err());
+    assert_eq!(
+        fs::read(&other).unwrap(),
+        b"unexpected content after successful admission"
+    );
+    fs::remove_file(other).unwrap();
+    assert_eq!(f.complete().unwrap(), Some(expected));
+    let missing = f.root.join("not-created");
+    assert_eq!(
+        read_complete(&missing, Platform::Macos, "darwin-arm64").unwrap(),
+        None
+    );
+    assert!(!missing.exists());
+}
+
+#[test]
+fn complete_tree_seal_does_not_replace_any_named_executable_digest() {
+    for index in 0..6 {
+        let mut f = Fixture::new();
+        let package = f.paths.package_root.join(install::PACKAGE_SUBPATH);
+        let paths = [
+            package.join("package.json"),
+            package.join("bin/ocx.mjs"),
+            f.paths.node.clone(),
+            f.paths.npm.clone(),
+            f.paths.bun.clone(),
+            f.paths.package_root.join("node_modules/bun/bin/bun.exe"),
+        ];
+        f.complete().unwrap().unwrap();
+        fs::write(&paths[index], b"different critical file").unwrap();
+        assert!(f.complete().is_err(), "stale tree, critical index {index}");
+        // Even a self-consistent updated tree must still satisfy the separate
+        // manifest digest of EACH critical role, including Bun's launcher copy.
+        f.image.tree_sha256 =
+            super::super::program_image::content_digest(&f.paths.version_root).unwrap();
+        f.publish();
+        assert!(f.complete().is_err(), "tree alone, critical index {index}");
+        assert_eq!(fs::read(&paths[index]).unwrap(), b"different critical file");
+    }
+}
+
+#[test]
+fn complete_admission_rejects_links_empty_directories_and_executable_changes() {
+    for case in ["symlink", "hardlink", "empty-directory", "executable"] {
+        let f = Fixture::new();
+        f.complete().unwrap().unwrap();
+        let extra = f.paths.version_root.join("unexpected");
+        match case {
+            "symlink" => {
+                std::os::unix::fs::symlink(f.root.join("outside-not-read"), &extra).unwrap()
+            }
+            "hardlink" => fs::hard_link(&f.paths.npm, &extra).unwrap(),
+            "empty-directory" => fs::create_dir(&extra).unwrap(),
+            "executable" => {
+                fs::set_permissions(&f.paths.npm, fs::Permissions::from_mode(0o755)).unwrap()
+            }
+            _ => unreachable!(),
+        }
+        assert!(f.complete().is_err(), "{case}");
+        assert!(f.paths.version_root.exists());
+    }
+}
+
+#[test]
+fn complete_admission_still_binds_current_record_manifest_and_stable_entry() {
+    for case in ["selection", "manifest", "stable-entry", "pending"] {
+        let f = Fixture::new();
+        let selected = f.complete().unwrap().unwrap();
+        let path = match case {
+            "selection" => f.root.join("runtime/current.json"),
+            "manifest" => f.paths.version_root.join(IMAGE_MANIFEST),
+            "stable-entry" => selected.stable_entry,
+            "pending" => f.root.join("runtime").join(ACTIVATION_PENDING),
+            _ => unreachable!(),
+        };
+        fs::write(&path, b"unconfirmed").unwrap();
+        assert!(f.complete().is_err(), "{case}");
+        assert_eq!(fs::read(path).unwrap(), b"unconfirmed");
+    }
 }
 
 #[test]

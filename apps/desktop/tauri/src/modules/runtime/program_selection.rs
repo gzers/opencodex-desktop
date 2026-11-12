@@ -194,7 +194,36 @@ pub fn read(
     platform: Platform,
     target: &str,
 ) -> AppResult<Option<SelectedProgram>> {
-    read_inner(program_root, platform, target, false)
+    read_inner(
+        program_root,
+        platform,
+        target,
+        false,
+        Admission::CriticalFiles,
+    )
+}
+
+#[derive(Clone, Copy)]
+enum Admission {
+    CriticalFiles,
+    CompleteImage,
+}
+
+/// Fresh complete admission for an action boundary. One full inventory binds
+/// both the tree seal and every named executable digest; no durable cache or
+/// metadata-only admission replaces file content reads.
+pub fn read_complete(
+    program_root: &Path,
+    platform: Platform,
+    target: &str,
+) -> AppResult<Option<SelectedProgram>> {
+    read_inner(
+        program_root,
+        platform,
+        target,
+        false,
+        Admission::CompleteImage,
+    )
 }
 
 /// Installer-only final readback while its own serialized journal is present.
@@ -204,7 +233,13 @@ pub(super) fn read_activating(
     platform: Platform,
     target: &str,
 ) -> AppResult<Option<SelectedProgram>> {
-    read_inner(program_root, platform, target, true)
+    read_inner(
+        program_root,
+        platform,
+        target,
+        true,
+        Admission::CriticalFiles,
+    )
 }
 
 fn read_inner(
@@ -212,6 +247,7 @@ fn read_inner(
     platform: Platform,
     target: &str,
     activating: bool,
+    admission: Admission,
 ) -> AppResult<Option<SelectedProgram>> {
     let expected_prefix = if platform == Platform::Windows {
         "win32-"
@@ -263,7 +299,7 @@ fn read_inner(
     {
         return Err(invalid("运行程序选择记录身份不符"));
     }
-    let selected = read_image(program_root, platform, target, &selection)?;
+    let selected = read_image_inner(program_root, platform, target, &selection, admission)?;
     let image_bytes = metadata(
         program_root,
         &selected.paths.version_root.join(IMAGE_MANIFEST),
@@ -296,6 +332,21 @@ pub(super) fn read_image(
     platform: Platform,
     target: &str,
     selection: &CurrentSelection,
+) -> AppResult<SelectedProgram> {
+    read_image_inner(
+        program_root,
+        platform,
+        target,
+        selection,
+        Admission::CriticalFiles,
+    )
+}
+fn read_image_inner(
+    program_root: &Path,
+    platform: Platform,
+    target: &str,
+    selection: &CurrentSelection,
+    admission: Admission,
 ) -> AppResult<SelectedProgram> {
     if !matches!(
         (platform, target),
@@ -353,6 +404,15 @@ pub(super) fn read_image(
     }
     let package = paths.package_root.join(install::PACKAGE_SUBPATH);
     let script = package.join(&image.bin);
+    let inventory = if matches!(admission, Admission::CompleteImage) {
+        let rows = super::program_image::inventory(&paths.version_root)?;
+        if rows.is_empty() || super::program_image::inventory_digest(&rows)? != image.tree_sha256 {
+            return Err(invalid("运行程序完整文件树与版本清单不一致"));
+        }
+        Some(rows)
+    } else {
+        None
+    };
     for (path, expected) in [
         (package.join("package.json"), &image.package_sha256),
         (script.clone(), &image.bin_sha256),
@@ -364,7 +424,22 @@ pub(super) fn read_image(
             &image.bun_launcher_sha256,
         ),
     ] {
-        if file_digest(program_root, &path)? != *expected {
+        let actual = if let Some(rows) = &inventory {
+            let relative = path
+                .strip_prefix(&paths.version_root)
+                .map_err(|_| invalid("关键运行文件不属于所选版本"))?;
+            let name = relative
+                .to_str()
+                .ok_or_else(|| invalid("关键文件路径不可读"))?
+                .replace(char::from(92), "/");
+            match rows.get(&name) {
+                Some(super::program_image::Entry::File { sha256, .. }) => sha256.clone(),
+                _ => return Err(invalid("完整文件树缺少关键运行文件")),
+            }
+        } else {
+            file_digest(program_root, &path)?
+        };
+        if actual != *expected {
             return Err(invalid("运行程序文件与版本清单不一致"));
         }
     }

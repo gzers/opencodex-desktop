@@ -342,7 +342,7 @@ fn with_coordination_inner<T>(
         .managed_installation_root()
         .ok_or_else(|| fail("client_coordination_source"))?;
     let (target, platform) = program_layout::host_target()?;
-    let selected = program_selection::read(&root, platform, target)?
+    let selected = program_selection::read_complete(&root, platform, target)?
         .ok_or_else(|| fail("client_coordination_source"))?;
     if selected.selection.version != "2.99.0"
         || selected.image.official_archive_sha256
@@ -351,7 +351,6 @@ fn with_coordination_inner<T>(
     {
         return Err(fail("client_coordination_source"));
     }
-    program_image::verify(&selected)?;
     let package = selected.paths.package_root.join(PACKAGE_SUBPATH);
     let mut roots = Vec::new();
     for path in [
