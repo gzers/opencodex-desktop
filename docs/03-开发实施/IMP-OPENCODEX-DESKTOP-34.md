@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 54；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 55；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -492,3 +492,14 @@ main e62fc8a35新增PairWatch，从已独立绑定Ready Live读取两代，在Pr
 普通原包新ProfileStart8784/Status234/Stop4996ms过原30/5/10；原服务与父normal0、4捕获TCP全缺席、四frame/独立索引revision6/plan/stage/35内容引用匹配，collector360ms Stopped+Required且三门槛false。实际catalog/cache/audit仍未补偿，完整assert保留exit101/accepted=false，不把L组件闭合冒完整恢复许可或候选通过。
 
 证据.adg/evidence/0.2.24/official-writer-exclusion-r1/及manifest保留源锚点、原失败和真实writer原输出。四自有Profile/程序/进程/原件blob/index/stage/副本和9个精确新协调DB排他取得释放后清理；既有用户globalL的inode/字节/0600/owner与父目录0700保持且独立排他重获释放，不删该原文件或留sidecar。未改日常配置/官方包，无业务/新.app/DMG/发布。完整集合/持续写者许可/实际恢复/显式恢复/全范围及旧revision4、Windows/NAME/System代理/发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 当前停止会话首次实际三项补偿
+
+main67b2513f4在原真实Stop/Ready父子normal0及同进程claim/N/L/K临界区中，由私有借用ArtifactRestoreAuthority接Pending实际Complete；每次文件变更前核对本Originals/原Live/两代退出/Stop摘要及同一原deadline、四锁/owner/VFS和运行记录缺席，前后新OS归属必须Stopped。原批并发拒绝/迟到写者内容保全/无覆盖归档与突退算法不改；不从布尔/磁盘outcome发许可。只完成计划授权三件，整会话终态继续Required。详[当前三项实际补偿](0.2.24-contracts/current-session-artifact-restore-r1.md)。
+
+61项相关去重函数及编译/格式/严格Clippy通过；旧external-writer夹具临时根首错保留，同binary只定向重验失败1项，不重跑已过19项，不降断言。新Profile原包实际Stop7473ms（内部7467）过原10秒，原服务与父normal0及4捕获TCP全缺席，三项真实apply/readback、catalog原退休模型字节恢复、cache/audit原缺席恢复；7目标路径nativeClientRestored全true。四frame/索引revision6/plan/35内容引用及实际发布inode/归档后像/outcome逐项匹配。当前仍RestorePrepared/Stopped+Required/三门槛false，原完整assert保留exit101/accepted=false，不能冒整个Stop成功。
+
+只读字节/模式整树诊断Grok无差额、Codex只见claim事务journal消失和新owner稳定锁；按已采用原文，两锁精确是CodexHOME的claim.sqlite及owner.sqlite，非外部N/K。额外独立竞争/释放/身份安全诊断通过但在Stop计时后，未当生产同预算全树/锁终态通过。下一步须把整树安全属性/两稳定锁释放及余下生命周期门接原秒表及持久成功关闭；不靠直接移除pending报成功。未构建本批release/app/DMG。
+
+证据.adg/evidence/0.2.24/current-session-artifact-restore-r1/及manifest保留原件/失败/实际补偿；自有镜像/helper/原主端点缺席，3精确新协调DB排他取得释放后与自有程序/Profile/双客户端blob/index/stage/archive/测试副本及重复回执清理，既有globalL完整保留。无日常/官方/业务修改或发布。原全范围、旧revision4、Windows/NAME/System代理/发布验证/固定候选继续，目标active。
