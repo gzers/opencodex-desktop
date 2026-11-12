@@ -32,6 +32,14 @@ beforeEach(() => {
 })
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('shows a verified rollback as stopped-but-unrestored and never clears the recovery gate',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preview(),phase:'restore_rolled_back',canContinue:false,canFinalize:false,canRollback:false,completionEvidence:'verified',confirmationDigest:null})
+    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
+    expect(view.text()).toContain('本次恢复已撤销');expect(view.text()).toContain('启动前原件仍保留，尚未恢复')
+    expect(button('确认继续恢复')).toBeUndefined();expect(button('确认完成收尾')).toBeUndefined()
+    expect(await useClientRecoveryStore().apply()).toBe(false);expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    expect(clientRecoveryApi.finalize).not.toHaveBeenCalled();expect(clientRecoveryApi.continue).not.toHaveBeenCalled()
+  })
   it('continues an exact interrupted plan only after explicit confirmation, then reconciles fresh status', async () => {
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue({ ...preview(),canFinalize:false,canContinue:true,completionEvidence:'not_recorded' })
     const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()

@@ -7,7 +7,7 @@ import { useLifecycleStore } from '@/app/lifecycle/store'
 import type { ClientRecoveryEvidence, ClientRecoveryPhase } from './client-recovery'
 const recovery = useClientRecoveryStore(), lifecycle = useLifecycleStore()
 const busy = computed(() => recovery.reading || recovery.executing || recovery.refreshing)
-const phases: Record<ClientRecoveryPhase, string> = { preparing: '正在登记原会话', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对', restored: '恢复已完成', failed: '原会话需要核对' }
+const phases: Record<ClientRecoveryPhase, string> = { preparing: '正在登记原会话', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', failed: '原会话需要核对' }
 const evidence = (value: ClientRecoveryEvidence) => ({ verified: '已核对', not_recorded: '尚未登记', unregistered: '待确认', unknown: '未核实' })[value]
 </script>
 <template>
@@ -37,6 +37,7 @@ const evidence = (value: ClientRecoveryEvidence) => ({ verified: '已核对', no
       </template>
       <p v-else-if="recovery.preview.status === 'not_required' || recovery.preview.status === 'restored'" role="status">没有待处理的客户端配置恢复。</p>
       <p v-else-if="recovery.preview.status === 'active'" role="status">当前会话正在使用。请先正常停止 OpenCodex，再检查恢复状态。</p>
+      <template v-else-if="recovery.preview.status === 'pending' && recovery.preview.phase === 'restore_rolled_back'"><p role="status">本次恢复已撤销，文件已回到恢复前的停止状态。</p><p>启动前原件仍保留，尚未恢复；服务保持停止。</p></template>
       <template v-else-if="recovery.preview.status === 'pending'"><p role="status">配置恢复尚未完成，原会话已保留。</p><p>当前现场不能直接收尾，请查看诊断详情和应用日志。</p></template>
       <p v-else-if="recovery.preview.status === 'unsupported'" role="status">当前平台暂不支持此恢复操作。</p>
       <template v-else><p role="status">客户端恢复状态尚未核实。</p><p>请重新检查；若仍无法核对，请保留原文件并查看应用日志。</p></template>

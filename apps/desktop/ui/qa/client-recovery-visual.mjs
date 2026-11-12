@@ -111,6 +111,11 @@ try {
         assert.equal(await page.evaluate(() => window.__clientRecoveryFixture.calls.filter(n => n === 'finalize').length), 1)
         record(name, { statusOnlyRetry: true })
       } else {
+        if(scene==='rolled-back'){
+          await page.getByText('启动前原件仍保留，尚未恢复；服务保持停止。',{exact:true}).waitFor()
+          assert.equal(await page.getByRole('button',{name:'确认继续恢复',exact:true}).count(),0)
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
+        }
         assert.equal(await page.getByRole('button', { name: '确认完成收尾', exact: true }).count(), 0)
         assert.equal(await page.evaluate(() => window.__clientRecoveryFixture.calls.filter(n => n === 'finalize').length), 0)
         const size = await geometry(page); await screenshot(page, name); record(name, { noExecutablePartialRecovery: true, geometry: size })
@@ -153,6 +158,10 @@ try {
       assert.equal(await page.evaluate(() => window.clientRecovery024.snapshot().confirmations), 1)
       assert.equal(await page.evaluate(() => window.clientRecovery024.snapshot().ready), true)
     } else {
+      if(scene==='rolled-back'){
+        await page.locator('#clientRecovery024Body').getByText('启动前原件仍保留，尚未恢复；服务保持停止。',{exact:true}).waitFor()
+        assert.notEqual(await page.locator('#modalConfirm').textContent(),'确认继续恢复')
+      }
       assert.notEqual(await page.locator('#modalConfirm').textContent(), '确认完成收尾')
       await screenshot(page, 'prototype-' + scene)
     }
