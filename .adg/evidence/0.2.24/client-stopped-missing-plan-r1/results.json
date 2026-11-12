@@ -1,0 +1,42 @@
+{
+  "accepted": false,
+  "scope": "Only all4independently captured Stopped without plan, exact stopped postimages and original remainder; prepare native stage and register plan, then separate explicit Continue",
+  "backendDistinctCases": 60,
+  "groups": {
+    "restore": 25,
+    "tree": 9,
+    "session": 26
+  },
+  "uiCases": 82,
+  "browserChecks": {
+    "visual-webkit": 7,
+    "visual-chromium": 7
+  },
+  "initialNative": {
+    "startMs": 8956,
+    "statusMs": 236,
+    "interruptedStopMs": 3529,
+    "state": "stopped",
+    "revision": 6
+  },
+  "newPlanAction": {
+    "elapsedMs": 3412,
+    "state": "restore_prepared",
+    "revision": 7,
+    "targetFilesReplaced": false
+  },
+  "separateContinue": {
+    "elapsedMs": 6372,
+    "state": "restored",
+    "revision": 8
+  },
+  "oldStopFailurePreserved": true,
+  "fullTreesIndependentlyMatchNewReceipt": true,
+  "all7OriginalClientPathsMatch": true,
+  "firstSyntaxErrorRetained": "proposal-test.log",
+  "firstSyntheticScopeFixtureFailureRetained": "proposal-fixed.log",
+  "firstVisibilityCompileFailureRetained": "restore-tests.log",
+  "wrongExpectedRestoredCacheTimesTestFailureRetained": "restore-fixed.log",
+  "noBudgetOrFactRelaxation": true,
+  "remaining": "Missing Ready/PreStop/Stopped referenced stages, preplan staging interruption, general client/graph/family scope, Windows/NAME/Systemproxy/verifier/fixed candidate remain."
+}

@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 76；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 77；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -696,3 +696,12 @@ main47ad91a93在任何新attempt目录/blob前独立提交CaptureReserved(ticket
 77后端去重、73前端/类型/生产build/格式/strictClippy通过；新增4个实际exit91捕获边界重开保留/错slot/错refs拒绝，两引擎各10软件原型场景过。新Profile原官方Start2279ms在Codex归档后中断、Original未发布/2blob保留、原exit101/index2 CaptureReserved/refsnull保留；独立取消3163ms/index3、错确认/未知另槽/runtime记录拒绝，真实NotRequired/仅Start、完整当前树SHA/取消receipt一致。再用户明确同现场普通Start9441/Stop9455ms（入口Stop9448）完整新原件恢复/index11 Restored过原预算；新attempt绑定新ticket、旧部分证据身份/字节/权限保持，独立全树/新receipt/真实状态及7文件核对过。不冒自动启动或一般目录/候选预算全过。
 
 证据.adg/evidence/0.2.24/client-capture-reservation-r1/及manifest含index2/3/11、完整新原件和部分证据/准确分阶段源；自有服务/原端口/测试进程缺席，3精确DB排他重获释放后和程序/Profile/全部夹具清理，globalL身份/字节/权限保持、unitTMP空、browser/Vite退出，无日常/官方/业务变化或.app/DMG/发布。无预留旧残留继续拒绝，不做迁移；已变化未plan早期恢复/一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方验证/固定候选继续，Windows远端仍b2e89665d/0eef59a01，目标active。
+
+
+## 2026-11-12 四阶段齐备Stopped缺失恢复计划的显式准备
+
+mainfe5be4b97对已独立Stopped/4帧和Live齐备、无plan分支新增只读policy准入/独立指纹和当前原生准备：当前三文件须精确Stopped后像，计划之外全Codex/Grok原件/保护及两稳定锁身份保持，任何未知stage/外部编辑/路由不明拒绝；完整官方准入/当前OS停止/原PID端口缺席及同进程锁下只暂存原件/计划并CAS登记RestorePrepared，不重建旧正常退出，不回写目标或自动恢复。main5870c915a接专用命令/预览和“准备恢复计划”明确确认/返回/单promise关闭重开，成功新live仍Required及同plan preview后才展示Continue，后续另行确认恢复；唯一原型同3场景。详[缺失计划准备合同](0.2.24-contracts/client-stopped-missing-plan-r1.md)。
+
+60去重后端和82前端/类型/build/格式/strictClippy通过；括号/可见性、合成scope身份误用和错误回原字节断言首失败均保留，仅修代码/测试边界，不降精确native/change或准入。两引擎各7软件/原型场景过，pageerror空；生产排除mock。新Profile原官方Start8956/Status236/Stop3529ms按预设在独立Stopped index6、首次stage/plan前中断，原exit101/Required及尚未恢复文件保持。独立prepare3412ms/index7目标字节不改，另一明确Continue6372ms/index8 Restored，原每次10秒；错确认/外部config拒绝不改索引，无重跑服务。独立完整两树SHA及原件/plan/receipt/35引用15blob/index8和7原文件、新live NotRequired/仅Start核对通过，不用后继成功改判原Stop完成。
+
+证据.adg/evidence/0.2.24/client-stopped-missing-plan-r1/及manifest保留首错/准确分阶段源/原中断和成功/截图。自有进程/原端点缺席，3精确DB排他重获释放后与程序/Profile/全部原件stagearchive夹具清理，globalL身份/字节/权限保持、unitTMP空/browser退出，无日常/官方/业务修改或.app/DMG/发布。Pending.prepare若在暂存后索引前中断仍因未登记stage拒绝并保留，未冒已恢复；下一批补计划准备归属/恢复及缺阶段早期恢复，原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方验证/固定候选继续。Windows远端仍b2e89665d/0eef59a01，目标active。

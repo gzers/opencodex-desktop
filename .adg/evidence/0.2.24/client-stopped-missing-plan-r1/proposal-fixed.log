@@ -1,0 +1,22 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 40.04s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 1 test
+test infrastructure::macos_client_originals::session::tests::rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start ... FAILED
+
+failures:
+
+---- infrastructure::macos_client_originals::session::tests::rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start stdout ----
+
+thread 'infrastructure::macos_client_originals::session::tests::rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start' (156847099) panicked at src/infrastructure/macos_client_session_tests.rs:611:10:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "client_session_unconfirmed", detail: "启动原件与当前服务的绑定未确认；原件和现场保留，未恢复客户端文件" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    infrastructure::macos_client_originals::session::tests::rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2409 filtered out; finished in 1.09s
+
+error: test failed, to rerun pass `--lib`

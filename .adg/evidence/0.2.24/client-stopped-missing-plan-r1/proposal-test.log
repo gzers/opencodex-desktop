@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: unexpected closing delimiter: `}`
+    --> src/infrastructure/macos_client_restore.rs:1150:1
+     |
+ 438 |     pub(super) fn preparation_fingerprint(originals:&Originals,evidence:&Evidence)->io::Result<String>{
+     |                                                                                                       - the nearest open delimiter
+...
+ 445 |         Ok(digest(&encode(&(phases,decisions,current,&evidence.declared_routes,&evidence.retained_pids,&evidence.audit_home,evidence.not_before))?)))
+     |                                                                                                                                                     - missing open `(` for this delimiter
+...
+1150 | }
+     | ^ unexpected closing delimiter
+
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

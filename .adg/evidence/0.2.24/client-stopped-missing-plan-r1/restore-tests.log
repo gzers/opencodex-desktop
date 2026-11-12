@@ -1,0 +1,39 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0603]: function `confirmation` is private
+  --> src/commands/client_recovery_tests.rs:38:51
+   |
+38 |         let digest = session_index::missing_plan::confirmation(&context, &data, &head)
+   |                                                   ^^^^^^^^^^^^ private function
+   |
+note: the function `confirmation` is defined here
+  --> src/infrastructure/macos_client_missing_plan.rs:16:1
+   |
+16 | / pub(super) fn confirmation(
+17 | |     context: &ProcessContext,
+18 | |     data: &Path,
+19 | |     head: &Head,
+...  |
+33 | |         .map_err(|_| denied("missing-plan content admission refused"))
+34 | | }
+   | |_^
+
+error[E0603]: function `confirmation` is private
+  --> src/commands/client_recovery_tests.rs:73:63
+   |
+73 |             confirmation_digest: session_index::missing_plan::confirmation(&context, &data, &head)
+   |                                                               ^^^^^^^^^^^^ private function
+   |
+note: the function `confirmation` is defined here
+  --> src/infrastructure/macos_client_missing_plan.rs:16:1
+   |
+16 | / pub(super) fn confirmation(
+17 | |     context: &ProcessContext,
+18 | |     data: &Path,
+19 | |     head: &Head,
+...  |
+33 | |         .map_err(|_| denied("missing-plan content admission refused"))
+34 | | }
+   | |_^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors
