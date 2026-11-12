@@ -363,6 +363,7 @@ export async function installAuditHarness() {
   }
 
   applyScenario(params.get('scenario'), app, notif)
+  if (params.has('client-recovery')) (await import('./clientRecoveryFixture')).installClientRecoveryFixture(params.get('client-recovery') ?? 'eligible')
   window.document.documentElement.dataset.auditHarness = 'installed'
 
   if (params.get('report') === '1') {

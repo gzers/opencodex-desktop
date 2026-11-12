@@ -1,4 +1,5 @@
 import { invoke } from '@tauri-apps/api/core'
+import type { StatusSnapshot } from '@/contracts/runtimeStatus'
 
 export type ClientRecoveryStatus = 'not_required' | 'active' | 'pending' | 'restored' | 'unknown' | 'unsupported'
 export type ClientRecoveryEvidence = 'not_recorded' | 'verified' | 'unregistered' | 'unknown'
@@ -24,4 +25,5 @@ export interface ClientRecoveryFinalizeOutcome { attemptId: string; revision: nu
 export const clientRecoveryApi = {
   preview: () => invoke<ClientRecoveryPreview>('client_recovery_preview'),
   finalize: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryFinalizeOutcome>('client_recovery_finalize', { request }),
+  status: () => invoke<StatusSnapshot>('get_status_snapshot'),
 }

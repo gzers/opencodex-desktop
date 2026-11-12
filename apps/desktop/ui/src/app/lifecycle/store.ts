@@ -76,6 +76,20 @@ export const useLifecycleStore = defineStore("lifecycle", {
     processAutoDismissTimer: null as number | null,
   }),
   actions: {
+    // A matching explicit response owns this transition. A late ordinary
+    // snapshot must still never discharge the independent recovery latch.
+    acceptFinalizedClientRecovery(scope: { dataRoot: string; home: string }, snapshot: StatusSnapshot) {
+      const current = this.statusSnapshot?.facts
+      if (current && (current.data_root !== scope.dataRoot || current.opencodex_home !== scope.home)
+        || snapshot.source !== 'live' || snapshot.facts.data_root !== scope.dataRoot
+        || snapshot.facts.opencodex_home !== scope.home || snapshot.facts.client_recovery !== 'not_required'
+        || snapshot.matrix.runtime !== 'stopped' || snapshot.pid !== null || snapshot.port !== null
+        || !snapshot.can_start || snapshot.can_stop || snapshot.can_restart || this.processActionBusy) return false
+      this.setStatusSnapshot(snapshot)
+      this.clientRecoveryRequired = false; this.lastStartFailed = false; this.statusError = false
+      this.lifecycleState = 'stopped'; this.runtimeState = 'stopped'
+      return true
+    },
     processActionBlocked(action: LifecycleAction) {
       const recovery = this.statusSnapshot?.facts.client_recovery
       if (recovery && recovery !== 'not_required') {
