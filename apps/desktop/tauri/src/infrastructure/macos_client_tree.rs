@@ -358,6 +358,99 @@ fn walk(
     Ok(())
 }
 impl TreeSnapshot {
+    /// Compare restored content and ALL security attributes, not rename-driven
+    /// inode/timestamp changes. Only the two adopted top-level stable lock names
+    /// may differ; their native release/identity proof is owned separately.
+    pub(super) fn restored_matches(&self, current: &Self, codex: bool) -> bool {
+        if !self.valid()
+            || !current.valid()
+            || self.root != current.root
+            || self.root_protection != current.root_protection
+            || self.coordination != codex
+            || current.coordination != codex
+        {
+            return false;
+        }
+        let stable = |path: &str| {
+            codex
+                && matches!(
+                    path,
+                    ".opencodex-native-main.claim.sqlite" | ".opencodex-native-main.owner.sqlite"
+                )
+        };
+        // An original claim journal observed inside the native transaction is
+        // metadata-only, never user content. Final readback requires it absent,
+        // together with ALL other SQLite sidecars; no sidecar may be retained.
+        if current.entries.iter().any(|entry| {
+            matches!(entry, Entry::Coordination{path,..} if !stable(path))
+                || codex
+                    && ["-journal", "-wal", "-shm"].iter().any(|suffix| {
+                        entry
+                            .path()
+                            .strip_prefix(".opencodex-native-main.owner.sqlite")
+                            == Some(*suffix)
+                    })
+        }) {
+            return false;
+        }
+        let include = |entry: &&Entry| {
+            !(stable(entry.path()) || codex && matches!(entry, Entry::Coordination { .. }))
+        };
+        let left: Vec<_> = self.entries.iter().filter(include).collect();
+        let right: Vec<_> = current.entries.iter().filter(include).collect();
+        left.len() == right.len()
+            && left.into_iter().zip(right).all(|(a, b)| match (a, b) {
+                (
+                    Entry::Directory {
+                        path: a,
+                        identity: ai,
+                        protection: ap,
+                    },
+                    Entry::Directory {
+                        path: b,
+                        identity: bi,
+                        protection: bp,
+                    },
+                ) => a == b && ai == bi && ap == bp,
+                (
+                    Entry::File {
+                        path: a,
+                        protection: ap,
+                        bytes: ab,
+                        sha256: ah,
+                        ..
+                    },
+                    Entry::File {
+                        path: b,
+                        protection: bp,
+                        bytes: bb,
+                        sha256: bh,
+                        ..
+                    },
+                ) => a == b && ap == bp && ab == bb && ah == bh,
+                _ => false,
+            })
+    }
+    pub(super) fn stable_identity(&self, path: &str) -> io::Result<Identity> {
+        if !self.coordination || !matches!(path, CLAIM | ".opencodex-native-main.owner.sqlite") {
+            return Err(denied("not an adopted Codex stable lock"));
+        }
+        match self.entries.iter().find(|entry| entry.path() == path) {
+            Some(Entry::Coordination { identity, .. }) | Some(Entry::File { identity, .. }) => {
+                Ok(identity.clone())
+            }
+            _ => Err(denied("stable lock not independently captured")),
+        }
+    }
+    pub(super) fn original_stable_identity_matches(&self, path: &str, expected: &Identity) -> bool {
+        match self.entries.iter().find(|entry| entry.path() == path) {
+            None => true,
+            Some(Entry::Coordination { identity, .. }) | Some(Entry::File { identity, .. }) => {
+                identity == expected
+            }
+            _ => false,
+        }
+    }
     pub fn read(root: &PinnedDirectory) -> io::Result<Self> {
         Self::read_checked(root, &|_| Ok(()))
     }

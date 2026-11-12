@@ -665,6 +665,41 @@ impl StartupSession {
         }
         time(deadline)
     }
+    pub fn completed_readback(
+        &self,
+        context: &ProcessContext,
+        stop: &CompletedLifecycleStop,
+        pair: &crate::infrastructure::macos_process_pair::PairExitProof,
+        deadline: Instant,
+        plan: &session_index::RestorePlan,
+    ) -> AppResult<completion::ReadbackProof> {
+        // Restart has a larger outer budget; it cannot lend that extra time
+        // to completion of this Stop generation.
+        let deadline = stop.bound_deadline(deadline);
+        self.require_stopped_pair(context, pair, deadline)?;
+        let live = self.live(context)?;
+        stop.require_original(
+            context,
+            &self.originals.data.path,
+            live.process()?,
+            &live.record_sha256,
+        )?;
+        let (root, _) = source(context)?;
+        let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        if owner.query(context)? != ServiceOwnerProof::Stopped {
+            return Err(error(()));
+        }
+        let proof = self
+            .originals
+            .complete_readback(self.references()?, plan.clone(), deadline)
+            .map_err(error)?;
+        if owner.query(context)? != ServiceOwnerProof::Stopped {
+            return Err(error(()));
+        }
+        self.require_stopped_pair(context, pair, deadline)?;
+        time(deadline)?;
+        Ok(proof)
+    }
     pub fn open(
         context: &ProcessContext,
         data_root: &Path,

@@ -5,6 +5,51 @@ use std::os::unix::fs::{DirBuilderExt, MetadataExt, PermissionsExt};
 fn message(kind: &str) -> Vec<u8> {
     serde_json::to_vec(&json!({"schema":SCHEMA,"kind":kind,"operation":"fd510ba0-ec79-47cf-8456-ac2efaa87ce3","pid":42,"contextSha256":"a".repeat(64),"locks":[{"device":"1","inode":"2"},{"device":"1","inode":"3"},{"device":"1","inode":"4"},{"device":"1","inode":"5"}],"paths":["/private/claim.sqlite","/private/native.sqlite","/private/lifecycle.sqlite","/private/catalog.sqlite"],"owner":"absent"})).unwrap()
 }
+#[test]
+fn release_notice_is_absent_until_complete_and_never_overwrites_another_receipt() {
+    let temp = tempfile::tempdir_in("/private/tmp").unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    fs::set_permissions(&root, fs::Permissions::from_mode(0o700)).unwrap();
+    let pin = PinnedDirectory::open(&root).unwrap();
+    let operation = uuid::Uuid::new_v4().to_string();
+    publish_release_checked(&pin, &operation, &|| {
+        assert!(!root.join("release").exists());
+        std::thread::sleep(Duration::from_millis(20));
+        assert!(!root.join("release").exists());
+        Ok(())
+    })
+    .unwrap();
+    assert_eq!(
+        fs::read(root.join("release")).unwrap(),
+        format!("{operation}\n").as_bytes()
+    );
+    let after = fs::metadata(root.join("release")).unwrap();
+    assert_eq!(after.nlink(), 1);
+    assert_eq!(after.permissions().mode() & 0o777, 0o600);
+    let other = uuid::Uuid::new_v4().to_string();
+    assert!(publish_release(&pin, &other).is_err());
+    assert_eq!(
+        fs::read(root.join("release")).unwrap(),
+        format!("{operation}\n").as_bytes()
+    );
+}
+#[test]
+fn interrupted_release_staging_never_exposes_partial_final_nonce() {
+    let temp = tempfile::tempdir_in("/private/tmp").unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    fs::set_permissions(&root, fs::Permissions::from_mode(0o700)).unwrap();
+    let pin = PinnedDirectory::open(&root).unwrap();
+    let operation = uuid::Uuid::new_v4().to_string();
+    assert!(
+        publish_release_checked(&pin, &operation, &|| Err(fail("fixture_interrupted"))).is_err()
+    );
+    assert!(!root.join("release").exists());
+    let staged = root.join(format!(".release-{operation}.tmp"));
+    assert!(staged.exists());
+    assert_eq!(fs::read(staged).unwrap(), b"");
+    assert!(publish_release(&pin, &operation).is_err());
+    assert!(!root.join("release").exists());
+}
 
 #[test]
 fn bounded_fixed_coordination_protocol_rejects_unknown_duplicate_and_bad_lock_identity() {

@@ -171,7 +171,25 @@ impl Active {
                     .append_event("client-stop-recovery: three-artifact-originals restored and readback verified");
                 mark("release-coordination");
                 Ok(())
-            })
+            })?;
+            mark("full-tree-and-lock-release");
+            let plan = self.head.restore_plan.as_ref().ok_or_else(|| failure(()))?;
+            let readback = self
+                .session
+                .completed_readback(context, proof, &pair, deadline, plan)?;
+            if self
+                .head
+                .references
+                .as_ref()
+                .is_none_or(|refs| refs.attempt != readback.attempt())
+            {
+                return Err(failure(()));
+            }
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
+                .append_event(
+                "client-stop-recovery: full-tree protection and two stable-lock releases verified",
+            );
+            Ok(())
         })();
         // Fixed phase names and monotonic durations only; no paths, source
         // bytes, process arguments, token or native ownership material.

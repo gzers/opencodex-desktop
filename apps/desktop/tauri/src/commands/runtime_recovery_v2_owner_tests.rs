@@ -353,6 +353,12 @@ mod completed_stop_binding {
             normal_exit: Some(normal),
             tcp_listeners: Some(listeners),
         };
+        assert_eq!(
+            proof.bound_deadline(Instant::now() + Duration::from_secs(35)),
+            proof.deadline
+        );
+        let earlier = proof.deadline - Duration::from_millis(1);
+        assert_eq!(proof.bound_deadline(earlier), earlier);
         assert!(
             matches!(proof.require_original(&f.provider.context,f._root.path(),generation,&"a".repeat(64)),Err(AppError::RuntimeManaged{code,..}) if code=="lifecycle_timeout")
         );

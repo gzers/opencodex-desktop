@@ -1,4 +1,5 @@
 use super::*;
+use std::io::Write;
 use std::os::unix::fs::{symlink, DirBuilderExt, MetadataExt, PermissionsExt};
 
 struct Fixture {

@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 use std::{
     cell::RefCell,
     fs::{self},
-    io::{BufRead, BufReader, Read, Write},
+    io::{BufRead, BufReader, Read},
     os::unix::fs::DirBuilderExt,
     path::{Path, PathBuf},
     process::{Child, Command, Stdio},
@@ -34,6 +34,20 @@ fn fail(code: &str) -> AppError {
 }
 fn io<T>(_: T) -> AppError {
     fail("client_coordination_unconfirmed")
+}
+fn publish_release(control: &PinnedDirectory, operation: &str) -> AppResult<()> {
+    publish_release_checked(control, operation, &|| Ok(()))
+}
+fn publish_release_checked(
+    control: &PinnedDirectory,
+    operation: &str,
+    checkpoint: &impl Fn() -> AppResult<()>,
+) -> AppResult<()> {
+    control
+        .publish_complete_release(operation, &|| {
+            checkpoint().map_err(|_| std::io::Error::other("release staging interrupted"))
+        })
+        .map_err(io)
 }
 
 pub struct Context {
@@ -226,11 +240,10 @@ impl Lease {
         Ok(r)
     }
     fn request_release(&self) -> AppResult<()> {
-        self.control.private().map_err(io)?;
-        let mut f = super::platform::create_new_private_file(&self.release, 0o600).map_err(io)?;
-        writeln!(f, "{}", self.operation).map_err(io)?;
-        f.sync_all().map_err(io)?;
-        Ok(())
+        if self.release != self.control.path().join("release") {
+            return Err(fail("client_coordination_release"));
+        }
+        publish_release(&self.control, &self.operation)
     }
     fn finish(&mut self) -> AppResult<()> {
         self.check()?;

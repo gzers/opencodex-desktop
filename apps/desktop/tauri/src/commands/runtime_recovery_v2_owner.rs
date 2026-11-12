@@ -118,6 +118,10 @@ pub(crate) struct StoppedObservation {
 }
 impl CompletedLifecycleStop {
     #[cfg(target_os = "macos")]
+    pub(crate) fn bound_deadline(&self, candidate: Instant) -> Instant {
+        self.deadline.min(candidate)
+    }
+    #[cfg(target_os = "macos")]
     pub(crate) fn observation(
         &self,
         context: &ProcessContext,
