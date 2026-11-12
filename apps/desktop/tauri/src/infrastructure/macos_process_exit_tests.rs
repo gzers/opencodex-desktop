@@ -266,7 +266,7 @@ fn same_uid_nonchild_process_is_observed_without_waitpid_or_reaping_its_launcher
         }
         std::process::exit(0);
     }
-    let root = tempfile::tempdir().unwrap();
+    let root = tempfile::tempdir_in("/private/tmp").unwrap();
     let root = root.path().canonicalize().unwrap();
     let result = Command::new(std::env::current_exe().unwrap())
         .args(["--exact", TEST, "--nocapture"])
