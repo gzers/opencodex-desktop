@@ -65,6 +65,25 @@ impl Active {
         let head = index
             .advance(&intent, State::Captured, Some(session.references()?))
             .map_err(failure)?;
+        #[cfg(test)]
+        if std::env::var_os("OCXD024_INTERRUPT_AFTER_CAPTURE").as_deref()
+            == Some(std::ffi::OsStr::new("1"))
+        {
+            if !data.starts_with("/private/tmp")
+                || !data.ancestors().any(|p| {
+                    p.file_name().is_some_and(|n| {
+                        n.to_string_lossy()
+                            .starts_with("ocxd024-versioned-lifecycle-")
+                    })
+                })
+            {
+                return Err(failure(()));
+            }
+            return Err(crate::errors::AppError::RuntimeManaged {
+                code: "owned_fixture_capture_interrupted".into(),
+                detail: "owned fixture interruption after independent Captured index".into(),
+            });
+        }
         Ok(Self {
             index,
             head,

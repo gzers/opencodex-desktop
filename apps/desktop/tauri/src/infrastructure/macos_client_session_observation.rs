@@ -28,7 +28,10 @@ fn rollback_header(pin: &CoordinationFilePin) -> io::Result<()> {
     Ok(())
 }
 
-pub(super) fn entry(parent: &PinnedDirectory, child: &str) -> io::Result<Option<libc::stat>> {
+pub(in crate::infrastructure::macos_client_originals) fn entry(
+    parent: &PinnedDirectory,
+    child: &str,
+) -> io::Result<Option<libc::stat>> {
     let child = name(OsStr::new(child))?;
     let mut value = std::mem::MaybeUninit::uninit();
     if unsafe {
@@ -176,6 +179,9 @@ pub(super) fn inspect_map<T>(
         return Err(denied("observation HOME or directory generation differs"));
     }
     let result = read_head(&connection)?;
+    if let Some(head) = result.as_ref().filter(|h| h.state == State::Unchanged) {
+        unchanged::verify_registered(data.path(), client.path(), &context.working_directory, head)?;
+    }
     if let Some(head) = result
         .as_ref()
         .filter(|head| matches!(head.state, State::Restored | State::RestoreRolledBack))

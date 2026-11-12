@@ -44,6 +44,175 @@ impl Fixture {
 }
 
 #[test]
+fn early_captured_originals_close_without_replay_and_remain_independently_verified() {
+    use super::super::session_index::{
+        preview::{inspect_preview, Evidence, Status},
+        unchanged, Index, State,
+    };
+    for locks in 0..=2 {
+        let f = Fixture::new();
+        fs::write(f.client.join("config.toml"), b"original user configuration").unwrap();
+        for name in [
+            ".opencodex-native-main.claim.sqlite",
+            ".opencodex-native-main.owner.sqlite",
+        ]
+        .into_iter()
+        .take(locks)
+        {
+            fs::write(f.client.join(name), b"").unwrap();
+            fs::set_permissions(f.client.join(name), fs::Permissions::from_mode(0o600)).unwrap();
+        }
+        let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+        let intent = index.reserve_start().unwrap();
+        let session = f.session();
+        let captured = index
+            .advance(
+                &intent,
+                State::Captured,
+                Some(session.references().unwrap()),
+            )
+            .unwrap();
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+        fs::write(f.client.join("config.toml"), b"outside change").unwrap();
+        assert!(unchanged::fixture_readback(&session.originals, &captured, deadline).is_err());
+        assert_eq!(
+            fs::read(f.client.join("config.toml")).unwrap(),
+            b"outside change"
+        );
+        fs::write(f.client.join("config.toml"), b"original user configuration").unwrap();
+        fs::write(f.client.join(".ocxd-restore-foreign"), b"unindexed stage").unwrap();
+        assert!(unchanged::fixture_readback(&session.originals, &captured, deadline).is_err());
+        fs::remove_file(f.client.join(".ocxd-restore-foreign")).unwrap();
+        assert!(super::super::session_index::unresolved_after_failure(
+            &f.context, &f.data
+        ));
+        let proof = unchanged::fixture_readback(&session.originals, &captured, deadline).unwrap();
+        let mut stale = captured.clone();
+        stale.revision += 1;
+        assert!(index.close_unchanged(&stale, &proof).is_err());
+        let closed = index.close_unchanged(&captured, &proof).unwrap();
+        assert_eq!(closed.state, State::Unchanged);
+        assert_eq!(closed.revision, 3);
+        assert!(closed.restore_plan.is_none());
+        assert!(closed.references == captured.references);
+        assert!(index.advance(&closed, State::Failed, None).is_err());
+        drop(index);
+        let p = inspect_preview(&f.context, &f.data);
+        assert!(!super::super::session_index::unresolved_after_failure(
+            &f.context, &f.data
+        ));
+        assert_eq!(p.status, Status::Restored);
+        assert_eq!(p.phase, Some(State::Unchanged));
+        assert_eq!(p.completion_evidence, Evidence::Verified);
+        // Later edits are legitimate, not permission to replay old bytes.
+        fs::write(
+            f.client.join("config.toml"),
+            b"legitimate edit after closure",
+        )
+        .unwrap();
+        assert_eq!(
+            inspect_preview(&f.context, &f.data).status,
+            Status::Restored
+        );
+        let receipt = session
+            .originals
+            .directory
+            .path()
+            .join(format!("unchanged-readback-{}.json", captured.revision));
+        let original = fs::read(&receipt).unwrap();
+        fs::set_permissions(&receipt, fs::Permissions::from_mode(0o600)).unwrap();
+        fs::write(&receipt, b"{}").unwrap();
+        assert_eq!(inspect_preview(&f.context, &f.data).status, Status::Unknown);
+        assert!(super::super::session_index::unresolved_after_failure(
+            &f.context, &f.data
+        ));
+        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+        assert!(index.reserve_start().is_err());
+        drop(index);
+        fs::write(&receipt, original).unwrap();
+        fs::set_permissions(&receipt, fs::Permissions::from_mode(0o400)).unwrap();
+        let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+        let next = index.reserve_start().unwrap();
+        assert_eq!(next.state, State::Preparing);
+        assert_eq!(next.revision, 4);
+        assert_eq!(
+            fs::read(f.client.join("config.toml")).unwrap(),
+            b"legitimate edit after closure"
+        );
+    }
+}
+#[test]
+fn unchanged_early_readback_preserves_each_original_phase_and_refuses_unbound_preparing() {
+    use super::super::session_index::{inspect, unchanged, Index, State};
+    for state in [
+        State::Ready,
+        State::StopPrepared,
+        State::Stopped,
+        State::Failed,
+    ] {
+        let f = Fixture::new();
+        let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+        let first = index.reserve_start().unwrap();
+        // An unbound Preparing is not an empty successful session.
+        let session = f.session();
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+        assert!(unchanged::fixture_readback(&session.originals, &first, deadline).is_err());
+        let mut session = session;
+        let mut head = index
+            .advance(&first, State::Captured, Some(session.references().unwrap()))
+            .unwrap();
+        if state == State::Failed {
+            head = index
+                .advance(&head, State::Failed, Some(session.references().unwrap()))
+                .unwrap();
+        } else {
+            let ready_sha = session.originals.seal(Phase::Ready).unwrap();
+            let live = Live {
+                schema_version: 1,
+                scope_sha256: session.scope_sha256.clone(),
+                ready_sha256: ready_sha,
+                record_sha256: "a".repeat(64),
+                generation: [42, unsafe { libc::geteuid() }.into(), 1, 1],
+                port: 12345,
+                parent_generation: [41, unsafe { libc::geteuid() }.into(), 1, 1],
+            };
+            let raw = encode(&live).unwrap();
+            create(&session.originals.directory, "startup-live.json", &raw).unwrap();
+            session.live_sha256 = Some(digest(&raw));
+            head = index
+                .advance(&head, State::Ready, Some(session.references().unwrap()))
+                .unwrap();
+            if matches!(state, State::StopPrepared | State::Stopped) {
+                session.originals.seal(Phase::PreStop).unwrap();
+                head = index
+                    .advance(
+                        &head,
+                        State::StopPrepared,
+                        Some(session.references().unwrap()),
+                    )
+                    .unwrap();
+            }
+            if state == State::Stopped {
+                session.originals.seal(Phase::Stopped).unwrap();
+                head = index
+                    .advance(&head, State::Stopped, Some(session.references().unwrap()))
+                    .unwrap();
+            }
+        }
+        assert_eq!(head.state, state);
+        let proof = unchanged::fixture_readback(&session.originals, &head, deadline).unwrap();
+        let closed = index.close_unchanged(&head, &proof).unwrap();
+        assert!(closed.references == head.references);
+        assert_eq!(closed.revision, head.revision + 1);
+        drop(index);
+        assert_eq!(
+            inspect(&f.context, &f.data).unwrap().unwrap().state,
+            State::Unchanged
+        );
+    }
+}
+
+#[test]
 fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
     use super::super::restore::{Decision, Evidence, Pending};
     use super::super::session_index::{

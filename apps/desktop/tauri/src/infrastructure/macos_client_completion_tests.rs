@@ -100,6 +100,20 @@ impl Fixture {
     }
 }
 #[test]
+fn optional_stable_release_does_not_create_absent_locks_or_adopt_new_objects() {
+    let f = Fixture::new();
+    let deadline = Instant::now() + Duration::from_secs(10);
+    prove_optional_released(&f.client, &[None, None], deadline).unwrap();
+    assert!(!f.client.path.join(LOCKS[0]).exists() && !f.client.path.join(LOCKS[1]).exists());
+    let pair = f.locks();
+    assert!(prove_optional_released(&f.client, &[Some(pair[0].clone()), None], deadline).is_err());
+    fs::remove_file(f.client.path.join(LOCKS[1])).unwrap();
+    prove_optional_released(&f.client, &[Some(pair[0].clone()), None], deadline).unwrap();
+    fs::remove_file(f.client.path.join(LOCKS[0])).unwrap();
+    assert!(prove_optional_released(&f.client, &[Some(pair[0].clone()), None], deadline).is_err());
+    assert!(!f.client.path.join(LOCKS[0]).exists());
+}
+#[test]
 fn full_readback_accepts_atomic_original_replacement_but_no_content_or_protection_change() {
     let f = Fixture::new();
     fs::create_dir(f.client.path.join("agents")).unwrap();

@@ -89,7 +89,7 @@ pub(super) fn project(
     let mut preview = Preview {
         status: if head.state == State::Ready {
             Status::Active
-        } else if head.state == State::Restored {
+        } else if matches!(head.state, State::Restored | State::Unchanged) {
             Status::Restored
         } else {
             Status::Pending
@@ -124,7 +124,16 @@ pub(super) fn project(
         preview.original_evidence = Evidence::Verified;
         preview.phase_count = refs.phases.len();
         preview.attempt_id = Some(refs.attempt.clone());
-        let mut receipt_name = "completion-readback.json".to_string();
+        let mut receipt_name = if head.state == State::Unchanged {
+            format!(
+                "unchanged-readback-{}.json",
+                head.revision
+                    .checked_sub(1)
+                    .ok_or_else(|| denied("early revision invalid"))?
+            )
+        } else {
+            "completion-readback.json".to_string()
+        };
         if let Some(plan) = &head.restore_plan {
             // Immutable plan admission here. RestorePrepared gets its full
             // current-object review in finalization_fingerprint below. Do not
@@ -145,6 +154,14 @@ pub(super) fn project(
                 preview.completion_evidence =
                     if matches!(head.state, State::Restored | State::RestoreRolledBack) {
                         completion::verify_registered(
+                            data,
+                            &client,
+                            &context.working_directory,
+                            head,
+                        )?;
+                        Evidence::Verified
+                    } else if head.state == State::Unchanged {
+                        unchanged::verify_registered(
                             data,
                             &client,
                             &context.working_directory,

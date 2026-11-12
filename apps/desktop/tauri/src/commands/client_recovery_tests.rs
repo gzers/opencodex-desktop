@@ -6,6 +6,134 @@ use crate::{
 };
 use std::{fs, os::unix::fs::PermissionsExt, path::PathBuf, time::Instant};
 #[test]
+#[ignore = "owned official runtime retained after independent Captured interruption, metadata-only early closure"]
+fn finish_owned_captured_session_only_when_original_clients_are_unchanged() {
+    let root = PathBuf::from(std::env::var_os("OCXD024_UNCHANGED_ROOT").expect("owned fixture"));
+    assert!(
+        root.is_absolute()
+            && root.canonicalize().unwrap() == root
+            && root.starts_with("/private/tmp")
+            && root
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .starts_with("ocxd024-versioned-lifecycle-")
+    );
+    let profile = root.join("profile");
+    assert_eq!(
+        std::env::var_os("HOME"),
+        Some(profile.clone().into_os_string())
+    );
+    let data = profile.join(".codex-desktop/desktop");
+    let home = profile.join(".codex-desktop/opencodex/home");
+    let context = ProcessContext {
+        runtime: RuntimeHandle::initialize_versioned(&data, &root.join("program 中文 space")),
+        working_directory: profile.clone(),
+        opencodex_home: home.clone(),
+    };
+    let request = session_index::unchanged::review(&context, &data)
+        .unwrap()
+        .expect("exact original tree captured");
+    let index = data.join("manager-state/client-session-index.sqlite");
+    let index_before = fs::read(&index).unwrap();
+    for wrong in [
+        Request {
+            revision: request.revision + 1,
+            ..request.clone()
+        },
+        Request {
+            confirmation_digest: "a".repeat(64),
+            ..request.clone()
+        },
+    ] {
+        assert!(session_index::unchanged::finish(&context, &data, wrong).is_err());
+        assert_eq!(fs::read(&index).unwrap(), index_before);
+    }
+    let config = profile.join(".codex/config.toml");
+    let bytes = fs::read(&config).unwrap();
+    fs::write(&config, b"outside edit during early recovery").unwrap();
+    assert!(session_index::unchanged::review(&context, &data)
+        .unwrap()
+        .is_none());
+    assert!(session_index::unchanged::finish(&context, &data, request.clone()).is_err());
+    assert_eq!(
+        fs::read(&config).unwrap(),
+        b"outside edit during early recovery"
+    );
+    assert_eq!(fs::read(&index).unwrap(), index_before);
+    fs::write(&config, &bytes).unwrap();
+    let request = session_index::unchanged::review(&context, &data)
+        .unwrap()
+        .unwrap();
+    let runtime_record = home.join("runtime-port.json");
+    assert!(!runtime_record.exists());
+    fs::write(
+        &runtime_record,
+        serde_json::to_vec(
+            &serde_json::json!({"pid":std::process::id(),"port":1,"hostname":"127.0.0.1"}),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    fs::set_permissions(&runtime_record, fs::Permissions::from_mode(0o600)).unwrap();
+    assert!(session_index::unchanged::finish(&context, &data, request).is_err());
+    assert_eq!(fs::read(&index).unwrap(), index_before);
+    fs::remove_file(runtime_record).unwrap();
+    let request = session_index::unchanged::review(&context, &data)
+        .unwrap()
+        .unwrap();
+    let start = Instant::now();
+    let result = session_index::unchanged::finish(&context, &data, request.clone());
+    let elapsed = start.elapsed().as_millis();
+    let report = serde_json::json!({"accepted":false,"elapsedMs":elapsed,"outcome":result.as_ref().ok(),"error":result.as_ref().err().map(|e|e.to_string()),"reopened":preview::inspect_preview(&context,&data),"noClientFileReplay":true,"noHistoricalExitProofReconstructed":true});
+    fs::write(
+        root.join("early-unchanged-summary.json"),
+        serde_json::to_vec_pretty(&report).unwrap(),
+    )
+    .unwrap();
+    println!("{report}");
+    let outcome = result.unwrap();
+    assert_eq!(outcome.status, "unchanged");
+    assert_eq!(outcome.revision, request.revision + 1);
+    assert!(elapsed < 10000);
+    assert_eq!(fs::read(config).unwrap(), bytes);
+    let after = fs::read(&index).unwrap();
+    assert!(session_index::unchanged::finish(&context, &data, request).is_err());
+    assert_eq!(fs::read(&index).unwrap(), after);
+    let source = crate::infrastructure::status_source::OfficialStatusSource::new(
+        context.runtime.clone(),
+        &profile,
+        crate::modules::process::EnvironmentPolicy {
+            home: Some(profile.clone().into_os_string()),
+            opencodex_home: home,
+            ..Default::default()
+        },
+    )
+    .with_client_recovery_root(data);
+    let snapshot = tauri::async_runtime::block_on(async {
+        tokio::task::spawn_blocking(move || {
+            let mut collector = crate::modules::status::StatusCollector::new(source);
+            super::super::status_snapshot_from_collector(&mut collector)
+        })
+        .await
+        .unwrap()
+    })
+    .unwrap();
+    assert_eq!(
+        snapshot.facts.client_recovery,
+        crate::modules::status::ClientRecoveryState::NotRequired
+    );
+    assert!(snapshot.can_start && !snapshot.can_stop && !snapshot.can_restart);
+    assert!(snapshot.pid.is_none() && snapshot.port.is_none());
+    fs::write(
+        root.join("early-final-live-status.json"),
+        serde_json::to_vec_pretty(&snapshot).unwrap(),
+    )
+    .unwrap();
+}
+#[test]
 #[ignore = "read-only final client recovery gate on retained owned native Profile"]
 fn inspect_owned_client_gate_after_rearm_without_service_actions() {
     let root = PathBuf::from(std::env::var_os("OCXD024_REARM_GATE_ROOT").expect("owned fixture"));

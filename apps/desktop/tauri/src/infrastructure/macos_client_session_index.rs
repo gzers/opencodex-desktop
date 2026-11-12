@@ -15,8 +15,16 @@ const TABLES: [(&str, &str); 3] = [
     ("events", "CREATE TABLE events(revision INTEGER PRIMARY KEY, document BLOB NOT NULL)"),
 ];
 #[path = "macos_client_session_observation.rs"]
-mod observation;
+pub(super) mod observation;
 pub use observation::inspect;
+/// Failure-response restriction only; this does not establish process state.
+pub fn unresolved_after_failure(context: &ProcessContext, data: &Path) -> bool {
+    match inspect(context, data) {
+        Ok(None) => false,
+        Ok(Some(h)) => !matches!(h.state, State::Ready | State::Restored | State::Unchanged),
+        Err(_) => true,
+    }
+}
 #[path = "macos_client_recovery_continue.rs"]
 pub mod continuation;
 #[path = "macos_client_recovery_finalize.rs"]
@@ -27,6 +35,8 @@ pub mod preview;
 pub mod rearm;
 #[path = "macos_client_recovery_rollback.rs"]
 pub mod rollback;
+#[path = "macos_client_unchanged.rs"]
+pub mod unchanged;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -39,6 +49,7 @@ pub enum State {
     RestorePrepared,
     RestoreRolledBack,
     Restored,
+    Unchanged,
     Failed,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -76,8 +87,10 @@ fn validate(head: &Head) -> io::Result<()> {
         head.state,
         State::RestorePrepared | State::Restored | State::RestoreRolledBack
     ) != head.restore_plan.is_some()
-        || matches!(head.state, State::Restored | State::RestoreRolledBack)
-            != head.completion_sha256.is_some()
+        || matches!(
+            head.state,
+            State::Restored | State::RestoreRolledBack | State::Unchanged
+        ) != head.completion_sha256.is_some()
         || head
             .completion_sha256
             .as_ref()
@@ -135,7 +148,7 @@ fn validate(head: &Head) -> io::Result<()> {
             Some((3, true))
         }
         State::Preparing => return Err(denied("unpublished originals in preparing index")),
-        State::Failed => None,
+        State::Failed | State::Unchanged => None,
     };
     if expected
         .is_some_and(|(n, live)| refs.phases.len() != n || refs.live_sha256.is_some() != live)
@@ -517,19 +530,28 @@ impl Index {
         let previous = self.head()?;
         if previous
             .as_ref()
-            .is_some_and(|head| head.state != State::Restored)
+            .is_some_and(|head| !matches!(head.state, State::Restored | State::Unchanged))
         {
             return Err(denied(
                 "unfinished original session blocks a new startup baseline",
             ));
         }
         if let Some(head) = &previous {
-            completion::verify_registered(
-                self.data.path(),
-                self.client.path(),
-                &self.profile,
-                head,
-            )?;
+            if head.state == State::Unchanged {
+                unchanged::verify_registered(
+                    self.data.path(),
+                    self.client.path(),
+                    &self.profile,
+                    head,
+                )?;
+            } else {
+                completion::verify_registered(
+                    self.data.path(),
+                    self.client.path(),
+                    &self.profile,
+                    head,
+                )?;
+            }
         } else if observation::entry(&self.action_parent, "client-originals")?.is_some() {
             return Err(denied(
                 "retained originals cannot become a new startup baseline",
@@ -569,6 +591,7 @@ impl Index {
                     | State::RestorePrepared
                     | State::Restored
                     | State::RestoreRolledBack
+                    | State::Unchanged
             );
         if !allowed {
             return Err(denied("current session transition is not allowed"));
@@ -633,6 +656,38 @@ impl Index {
             return Err(denied("rollback readback cannot close restored"));
         }
         self.close_readback(expected, proof, State::Restored)
+    }
+    pub(super) fn close_unchanged(
+        &self,
+        expected: &Head,
+        proof: &unchanged::Proof,
+    ) -> io::Result<Head> {
+        proof.require(expected, self.data.identity(), self.client.identity())?;
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("early close revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: State::Unchanged,
+            references: expected.references.clone(),
+            restore_plan: None,
+            completion_sha256: Some(proof.sha256().into()),
+        };
+        validate(&next)?;
+        unchanged::verify_registered(self.data.path(), self.client.path(), &self.profile, &next)?;
+        proof.require(expected, self.data.identity(), self.client.identity())?;
+        self.write(Some(expected), &next)?;
+        if let Err(error) = proof.require(expected, self.data.identity(), self.client.identity()) {
+            let mut pending = expected.clone();
+            pending.revision = next
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("early demotion revision overflow"))?;
+            self.write(Some(&next), &pending)?;
+            return Err(error);
+        }
+        Ok(next)
     }
     pub(super) fn rearm_rolled_back(
         &self,

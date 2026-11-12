@@ -47,6 +47,13 @@ fn prove_released(
     expected: &[Identity; 2],
     deadline: Instant,
 ) -> io::Result<()> {
+    prove_optional_released(client, &expected.clone().map(Some), deadline)
+}
+pub(super) fn prove_optional_released(
+    client: &PinnedDirectory,
+    expected: &[Option<Identity>; 2],
+    deadline: Instant,
+) -> io::Result<()> {
     time(deadline)?;
     // All raw pins precede ANY SQLite acquisition; close all connections before
     // dropping any pin, preserving process-associated POSIX lock semantics.
@@ -55,13 +62,22 @@ fn prove_released(
         pins: Vec::new(),
     };
     for (name, identity) in LOCKS.iter().zip(expected) {
+        let Some(identity) = identity else {
+            if session_index::observation::entry(client, name)?.is_some() {
+                return Err(denied("uncaptured stable lock appeared"));
+            }
+            continue;
+        };
         let pin = CoordinationFilePin::open(&client.path.join(name))?;
         if pin.identity != *identity {
             return Err(denied("stable lock generation changed"));
         }
         pair.pins.push(pin);
     }
-    for name in LOCKS {
+    for (name, identity) in LOCKS.into_iter().zip(expected) {
+        if identity.is_none() {
+            continue;
+        }
         time(deadline)?;
         let c = rusqlite::Connection::open_with_flags(
             client.path.join(name),
@@ -99,6 +115,11 @@ fn prove_released(
         pin.recheck()?;
     }
     client.recheck()?;
+    for (name, identity) in LOCKS.iter().zip(expected) {
+        if identity.is_none() && session_index::observation::entry(client, name)?.is_some() {
+            return Err(denied("stable lock appeared during release proof"));
+        }
+    }
     time(deadline)
 }
 

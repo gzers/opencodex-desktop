@@ -485,6 +485,19 @@ impl TreeSnapshot {
             _ => Err(denied("stable lock not independently captured")),
         }
     }
+    pub(super) fn optional_stable_identity(&self, path: &str) -> io::Result<Option<Identity>> {
+        if !self.valid()
+            || !self.coordination
+            || !matches!(path, CLAIM | ".opencodex-native-main.owner.sqlite")
+        {
+            return Err(denied("invalid optional stable lock inventory"));
+        }
+        if self.entries.iter().any(|e| e.path() == path) {
+            self.stable_identity(path).map(Some)
+        } else {
+            Ok(None)
+        }
+    }
     pub(super) fn original_stable_identity_matches(&self, path: &str, expected: &Identity) -> bool {
         match self.entries.iter().find(|entry| entry.path() == path) {
             None => true,

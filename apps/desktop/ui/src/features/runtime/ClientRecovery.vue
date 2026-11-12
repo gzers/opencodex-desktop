@@ -7,7 +7,7 @@ import { useLifecycleStore } from '@/app/lifecycle/store'
 import type { ClientRecoveryEvidence, ClientRecoveryPhase } from './client-recovery'
 const recovery = useClientRecoveryStore(), lifecycle = useLifecycleStore()
 const busy = computed(() => recovery.reading || recovery.executing || recovery.refreshing)
-const phases: Record<ClientRecoveryPhase, string> = { preparing: '正在登记原会话', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', failed: '原会话需要核对' }
+const phases: Record<ClientRecoveryPhase, string> = { preparing: '正在登记原会话', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', unchanged: '原件保持，原会话已结束', failed: '原会话需要核对' }
 const evidence = (value: ClientRecoveryEvidence) => ({ verified: '已核对', not_recorded: '尚未登记', unregistered: '待确认', unknown: '未核实' })[value]
 const progress = computed(() => ({ finalize:'正在完成恢复收尾…',continue:'正在继续恢复客户端配置…',rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…' })[recovery.action])
 </script>

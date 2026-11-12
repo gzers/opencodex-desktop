@@ -3,7 +3,7 @@ import type { StatusSnapshot } from '@/contracts/runtimeStatus'
 
 export type ClientRecoveryStatus = 'not_required' | 'active' | 'pending' | 'restored' | 'unknown' | 'unsupported'
 export type ClientRecoveryEvidence = 'not_recorded' | 'verified' | 'unregistered' | 'unknown'
-export type ClientRecoveryPhase = 'preparing' | 'captured' | 'ready' | 'stop_prepared' | 'stopped' | 'restore_prepared' | 'restore_rolled_back' | 'restored' | 'failed'
+export type ClientRecoveryPhase = 'preparing' | 'captured' | 'ready' | 'stop_prepared' | 'stopped' | 'restore_prepared' | 'restore_rolled_back' | 'restored' | 'unchanged' | 'failed'
 export interface ClientRecoveryPreview {
   status: ClientRecoveryStatus
   phase: ClientRecoveryPhase | null

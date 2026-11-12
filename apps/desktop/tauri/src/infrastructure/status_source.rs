@@ -450,7 +450,9 @@ impl StatusSource for OfficialStatusSource {
             return match inspect(&context, data) {
                 Ok(None) => State::NotRequired,
                 Ok(Some(head)) if head.state == Phase::Ready => State::Active,
-                Ok(Some(head)) if head.state == Phase::Restored => State::NotRequired,
+                Ok(Some(head)) if matches!(head.state, Phase::Restored | Phase::Unchanged) => {
+                    State::NotRequired
+                }
                 Ok(Some(_)) => State::Required,
                 Err(_) => State::Unknown,
             };

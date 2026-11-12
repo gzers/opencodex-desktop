@@ -326,6 +326,33 @@ pub(super) fn verify_closed_reference_files(
     live.parent()?;
     Ok(())
 }
+pub(super) fn verify_captured_reference_files(
+    originals: &Originals,
+    refs: &References,
+) -> AppResult<()> {
+    if refs.live_sha256.is_some() || !refs.phases.is_empty() {
+        return Err(error(()));
+    }
+    let scope: Scope = parse(&read_private(
+        originals,
+        "startup-scope.json",
+        &refs.scope_sha256,
+    )?)?;
+    if scope.schema_version != 1
+        || scope.attempt != refs.attempt
+        || scope.original_sha256 != refs.original_sha256
+        || scope.uid != unsafe { libc::geteuid() }
+        || scope.data_identity != *originals.data.identity()
+        || scope.client_identity != *originals.client.identity()
+        || scope.profile_identity != *originals.profile.identity()
+        || scope.data != originals.data.path
+        || scope.client != originals.client.path
+        || scope.profile != originals.profile.path
+    {
+        return Err(error(()));
+    }
+    Ok(())
+}
 fn private_runtime(home: &PinnedDirectory) -> AppResult<(String, u32, u16)> {
     let image = capture_file(home, "runtime-port.json", 4096).map_err(error)?;
     let Image::File {
@@ -714,6 +741,34 @@ fn fresh_ready(
     Ok((record.0, before, record.2))
 }
 impl StartupSession {
+    pub(super) fn require_early_absence(
+        &self,
+        context: &ProcessContext,
+        deadline: Instant,
+    ) -> AppResult<()> {
+        time(deadline)?;
+        self.scope(context)?;
+        let (root, _) = source(context)?;
+        let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        if self.live_sha256.is_some() {
+            let live = self.live(context)?;
+            owner.require_finalization_absence(
+                context,
+                live.process()?,
+                live.parent()?,
+                live.port,
+            )?;
+        } else if owner.query(context)? != ServiceOwnerProof::Stopped {
+            return Err(error(()));
+        }
+        if capture_file(&self.home, "runtime-port.json", 4096).map_err(error)? != Image::Absent
+            || capture_file(&self.home, "ocx.pid", 64).map_err(error)? != Image::Absent
+            || owner.query(context)? != ServiceOwnerProof::Stopped
+        {
+            return Err(error(()));
+        }
+        time(deadline)
+    }
     pub(super) fn rearm_fingerprint(
         &self,
         head: &session_index::Head,
