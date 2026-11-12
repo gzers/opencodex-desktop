@@ -1,0 +1,5 @@
+{
+  "accepted": false,
+  "hypothesis": "A live official config lock holder can prepare one exact absent destination before relocation, retain original root+lock inode and bytes, reanchor only after the same directory moved, and release through unchanged official public APIs at the exact current anchor. Parent EOF before/after relocation must release the same original lock without touching replacement user roots. Native OFD and N/L/K remain held; no permission is inferred from disk receipts.",
+  "scope": "Desktop adapter/holder only; no official source patch, production root movement factory, Start/Stop acceptance or daily config"
+}

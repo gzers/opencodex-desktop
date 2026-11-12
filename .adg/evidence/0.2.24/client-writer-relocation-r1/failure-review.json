@@ -1,0 +1,15 @@
+{
+  "accepted": false,
+  "firstOfficialExitCode": 101,
+  "firstFailure": "client_config_write_guard_unconfirmed",
+  "directDiagnosisPhase": "initial-check",
+  "cause": "APFS directory nlink changes with own lock/claims directory entries. Comparing original nlink as a directory identity invariant falsely rejects the same root.",
+  "correction": "Retain directory dev/ino/birthtime/uid/gid/mode and fd identity; lock-file nlink remains exactly single. Rust still enforces native root Protection and unchanged lock Image. No file/root inode replacement relaxed.",
+  "correctedDirectProbe": "held then expected failed-command event on pipe EOF, exit1, root nlink returns2: cleanup not success.",
+  "failedLogsPreserved": [
+    "official/native.stdout.log",
+    "official/native.stderr.log",
+    "direct-probe-result.json"
+  ],
+  "nextRoundHypothesis": "Same current holder must survive own namespace changes and all seven independent scenarios plus actual parent exit91; stage trace is fixed allowlisted data only."
+}

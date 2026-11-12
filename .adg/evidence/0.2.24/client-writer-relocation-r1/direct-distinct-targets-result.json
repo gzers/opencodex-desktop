@@ -1,0 +1,48 @@
+{
+  "accepted": false,
+  "helperSha256": "a496948e55873316f35914768be8ce27a7f057b2ac6b0bb1a433254b35db8936",
+  "scope": "Direct exact current helper with pinned Bun/unmodified official public lock APIs; simultaneous Codex and Grok holders, no service",
+  "bothHoldersReady": true,
+  "codexNormalReleaseLeavesGrokHeld": true,
+  "grokNormalRelease": true,
+  "bothExitCodes": [
+    0,
+    0
+  ],
+  "bothConfigBytesUnchanged": true,
+  "events": [
+    {
+      "schema": "ocxd-config-write-guard/2",
+      "kind": "held",
+      "operation": "b4e572c2-c293-4cef-9883-7d36c1b66314",
+      "pid": 42689,
+      "targetSha256": "8d1b1a8a1dfe9f8ed5094363c880c8cd3b6d5a607881aeb747f7602dfc7919a3",
+      "phase": "initial-check"
+    },
+    {
+      "schema": "ocxd-config-write-guard/2",
+      "kind": "held",
+      "operation": "35e3518d-8c28-46db-8c2c-38e4fa92308c",
+      "pid": 42692,
+      "targetSha256": "7b3278b35f12c939d067bdbee84f4e2e01c316af728511e7d8a92f74dc9b7e54",
+      "phase": "initial-check"
+    },
+    {
+      "schema": "ocxd-config-write-guard/2",
+      "kind": "released",
+      "operation": "b4e572c2-c293-4cef-9883-7d36c1b66314",
+      "pid": 42689,
+      "targetSha256": "8d1b1a8a1dfe9f8ed5094363c880c8cd3b6d5a607881aeb747f7602dfc7919a3",
+      "phase": "release"
+    },
+    {
+      "schema": "ocxd-config-write-guard/2",
+      "kind": "released",
+      "operation": "35e3518d-8c28-46db-8c2c-38e4fa92308c",
+      "pid": 42692,
+      "targetSha256": "7b3278b35f12c939d067bdbee84f4e2e01c316af728511e7d8a92f74dc9b7e54",
+      "phase": "release"
+    }
+  ],
+  "noCleanupSignal": true
+}

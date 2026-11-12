@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 91；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 92；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 0b8b1e74e（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main e3085eb87（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -881,3 +881,14 @@ main0b8b1e74e增加显式with_native_relocation_coordination，共用原官方�
 证据.adg/evidence/0.2.24/client-native-handoff-r1/含假设、源码/binary、完整日志、官方writer输出、global L前后身份/权限/字节及核验脚本。全部child实际wait，精确新N/K各在exclusive重获后删，预存global L保持identity/mode/bytes不变并重获释放，测试Profile/program和重复临时根清理，无日常配置/服务/业务请求/新包或发布。
 
 本批仅协调层，官方config writer holder尚无移动协议，生产root MutationPermit/正常Stop完整证明/独立根关闭/next Start/缺Ready等仍未完。下一步接原holder准确物理路径与token/正常释放，再接真实根恢复许可与原包隔离启停。Windows W1与其它完整IMP范围不缩减，W2仍等固定候选，目标active。
+
+
+## 2026-11-13 官方配置写锁的移动连续性与正常释放
+
+maine3085eb87将Desktop holder接到未修改官方acquireConfigWriteLock/release公开API，保留原活体root/lock fd及原token/字节；先登记唯一Absent目的地，再在NativeLease已OFD reanchor后核对同一目录/锁和原路径缺席。消息绑定operation/PID/targetSHA与固定阶段，失败poison拒绝，不从序列化字段构造移动许可。EOF只在原/唯一目的地核对准确原对象并官方释放；新根/相同token新inode拒绝保全。详[写锁移动合同](0.2.24-contracts/client-writer-relocation-r1.md)。
+
+首原包轮exit101保留，后继直探initial-check定位APFS目录nlink因自己创建锁/claims项改变，不能当root identity。修正只核对root代次/uid/gid/mode，原锁single-link/inode/字节仍严格，未放宽文件或权限。最终19常规函数（含2探针）、fmt/diff-check/node语法/strictClippy通过，原包7场景＋父进程真实exit91通过。正常移动/释放、三个EOF边界、同token替换保全、新用户根保护、非法命令拒绝均有证据；EOF实际wait正常exit1不冒成功且无清理信号。最长场景4738ms含刻意持锁2100ms<原10秒，供应/整轮90.665s不冒动作预算。Codex/Grok双helper直探证明两锁独立，分开正常release退出0且配置字节不变。
+
+证据.adg/evidence/0.2.24/client-writer-relocation-r1/保留失败/直探/最终源码与实际库binary/官方原始输出/可重放核验和清理；所有accepted false。两轮child实际结束，测试Profile/program/直接probe目录及精确新N/K清理，预存global L身份/权限/字节保持并exclusive重获释放，重复临时根逐字归档后删除。无服务/日常配置/真实业务/新包/发布。
+
+生产整根许可仍未构造；root-retirement当前完整树匹配不能直接忽略本次活体写锁。下一步把仅本动作的Guard原Image纳入临时对象连续性，移动后官方正常释放并确认其Absent及完整预期树，才可独立关闭原根缺席；再接正常Stop/launcher/TCP、原件与原deadline、next Start及明确中断入口。不能增永久残留例外或从磁盘重建holder。缺Ready/其它完整IMP范围及固定候选Windows W2仍未完成，目标active。
