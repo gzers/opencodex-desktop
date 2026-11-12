@@ -182,6 +182,34 @@ impl CompletedLifecycleStop {
         }
         Ok(())
     }
+    /// Recheck the complete captured TCP set during this SAME normal Stop
+    /// action, not just the advertised primary port or a past stopped label.
+    #[cfg(target_os = "macos")]
+    pub(crate) fn require_original_absence(
+        &self,
+        data_root: &Path,
+        service: crate::infrastructure::macos_process_exit::Generation,
+        launcher: crate::infrastructure::macos_process_exit::Generation,
+        record_digest: &str,
+        port: u16,
+        owner: &SystemServiceOwnerProofProvider,
+    ) -> AppResult<()> {
+        self.require_original(&owner.context, data_root, service, record_digest)?;
+        owner.require_excluded_recovery_absence(&owner.context, service, launcher, port)?;
+        let listeners = self.tcp_listeners.as_ref().ok_or_else(|| {
+            fail(
+                "client_stop_binding_unknown",
+                "原停止监听集合缺失，未恢复客户端目录",
+            )
+        })?;
+        if !owner.captured_tcp_clear(listeners)? {
+            return Err(fail(
+                "client_stop_listener_reappeared",
+                "原服务监听端口重新被占用，目录恢复未获准",
+            ));
+        }
+        self.require_original(&owner.context, data_root, service, record_digest)
+    }
 }
 impl SystemServiceOwnerProofProvider {
     /// Per-publication checks INSIDE an already owned official native writer

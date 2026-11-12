@@ -8,6 +8,51 @@ use std::{
 };
 use tests::Fixture;
 #[test]
+fn root_stop_movement_registration_requires_actual_current_index_and_exact_original_source() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let plan = session_index::RestorePlan {
+        id: pending.id().into(),
+        sha256: pending.sha256().into(),
+    };
+    let mut forged = f.source.clone();
+    forged.revision += 1;
+    forged.state = session_index::State::RootRetirementPrepared;
+    forged.root_retirement = Some(session_index::RootRetirement {
+        source_revision: f.source.revision,
+        plan: plan.clone(),
+    });
+    assert!(f
+        ._index
+        .root_retirement_registration(&f.source, &forged, &plan)
+        .is_err());
+    let prepared = f
+        ._index
+        .record_root_retirement(&f.source, pending.id(), pending.sha256())
+        .unwrap();
+    let registration = f
+        ._index
+        .root_retirement_registration(&f.source, &prepared, &plan)
+        .unwrap();
+    registration.require(&f.source, &plan).unwrap();
+    let mut wrong = f.source.clone();
+    wrong.state = session_index::State::Stopped;
+    assert!(registration.require(&wrong, &plan).is_err());
+    let mut wrong = plan.clone();
+    wrong.sha256 = "a".repeat(64);
+    assert!(registration.require(&f.source, &wrong).is_err());
+    let proof = pending
+        .fixture_apply_for_index(Instant::now() + Duration::from_secs(10))
+        .unwrap();
+    registration.require(&f.source, &plan).unwrap();
+    f._index.close_root_absence(&prepared, &proof).unwrap();
+    assert!(registration.require(&f.source, &plan).is_err());
+    println!(
+        "ROOT_STOP_REGISTRATION_EVIDENCE {}",
+        serde_json::json!({"accepted":false,"headCopyWithoutActualRegistrationRefused":true,"exactSourceEventRequired":true,"currentRegistrationVerifiedAcrossMove":true,"staleAfterCloseRefused":true,"storageOnlyNoNormalStopPermission":true})
+    );
+}
+#[test]
 fn indexed_root_move_plan_survives_absent_logical_root_and_only_current_readback_closes_it() {
     let f = Fixture::new();
     let pending = f.prepare();

@@ -671,6 +671,50 @@ impl<'a> Pending<'a> {
         }
         Ok(())
     }
+    pub(super) fn belongs_to(&self, originals: &Originals) -> bool {
+        std::ptr::eq(self.originals, originals)
+    }
+    /// Reopen only this independently referenced plan's exact physical root,
+    /// retaining original logical scope. No new frame, scan or authority.
+    pub(super) fn current_originals(&self) -> io::Result<Originals> {
+        let plan = self.load()?;
+        if entry(&self.originals.profile, ".codex")?.is_some() {
+            self.live_matches(&plan)?;
+            self.live_view(&plan)
+        } else {
+            self.retired_matches(&plan)
+        }
+    }
+    /// The sole production factory takes the concrete session-owned authority,
+    /// whose fields and construction live in the normal-Stop session module.
+    /// No arbitrary callback or serialized record can call this as permission.
+    pub(super) fn apply_completed_stop(
+        &self,
+        authority: session::RootRetirementAuthority<'_>,
+        native: &NativeLease,
+        guard: Guard<'_>,
+        deadline: Instant,
+    ) -> io::Result<AuthorizedReadback> {
+        authority
+            .require_pending(self)
+            .map_err(|_| denied("root Stop authority does not bind this plan"))?;
+        let deadline = deadline.min(authority.deadline());
+        let check = || {
+            authority
+                .check()
+                .map_err(|_| denied("current normal Stop root authority unconfirmed"))
+        };
+        check()?;
+        let permit = MutationPermit {
+            check: &check,
+            deadline,
+        };
+        let proof = self.apply_guarded(&permit, native, guard, deadline)?;
+        authority
+            .finish_check()
+            .map_err(|_| denied("root Stop final absence unconfirmed"))?;
+        Ok(proof)
+    }
     pub(super) fn inspect_live(&self) -> io::Result<()> {
         let plan = self.load()?;
         self.live_matches(&plan)

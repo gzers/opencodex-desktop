@@ -92,6 +92,51 @@ pub struct RootRetirement {
     pub source_revision: u64,
     pub plan: RestorePlan,
 }
+/// Borrow of the actually held independent index, not a serializable Head.
+/// Only record verification below constructs it; its current CAS generation
+/// is rechecked throughout movement, before any root terminal close.
+pub struct RootRetirementRegistration<'a> {
+    index: &'a Index,
+    prepared: Head,
+}
+impl RootRetirementRegistration<'_> {
+    pub(crate) fn require(&self, source: &Head, plan: &RestorePlan) -> io::Result<()> {
+        let Some(movement) = self.prepared.root_retirement.as_ref() else {
+            return Err(denied("root plan not independently registered"));
+        };
+        if self.prepared.state != State::RootRetirementPrepared
+            || movement.source_revision != source.revision
+            || movement.plan != *plan
+            || self.prepared.ticket != source.ticket
+            || self.prepared.references != source.references
+            || self.prepared.restore_plan != source.restore_plan
+            || self.index.head()?.as_ref() != Some(&self.prepared)
+        {
+            return Err(denied("current root retirement registration changed"));
+        }
+        let raw: Vec<u8> = self
+            .index
+            .connection()?
+            .query_row(
+                "SELECT document FROM events WHERE revision=?1",
+                [movement.source_revision],
+                |r| r.get(0),
+            )
+            .map_err(database_error)?;
+        let registered: Head = decode(&raw)?;
+        if registered != *source {
+            return Err(denied("root registration source event differs"));
+        }
+        Ok(())
+    }
+    pub(crate) fn plan(&self) -> io::Result<&RestorePlan> {
+        self.prepared
+            .root_retirement
+            .as_ref()
+            .map(|r| &r.plan)
+            .ok_or_else(|| denied("root registration plan missing"))
+    }
+}
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct RestorePlan {
@@ -1277,6 +1322,19 @@ impl Index {
         };
         self.write(Some(expected), &next)?;
         Ok(next)
+    }
+    pub fn root_retirement_registration<'a>(
+        &'a self,
+        source: &Head,
+        prepared: &Head,
+        plan: &RestorePlan,
+    ) -> io::Result<RootRetirementRegistration<'a>> {
+        let proof = RootRetirementRegistration {
+            index: self,
+            prepared: prepared.clone(),
+        };
+        proof.require(source, plan)?;
+        Ok(proof)
     }
     pub fn close_root_absence(
         &self,

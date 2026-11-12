@@ -14,6 +14,9 @@ use crate::{
     state::ProcessContext,
 };
 use std::time::Instant;
+#[cfg(test)]
+#[path = "macos_client_root_stop_binding_tests.rs"]
+mod root_stop_binding_tests;
 
 fn error<T>(_: T) -> AppError {
     AppError::RuntimeManaged {
@@ -131,6 +134,135 @@ pub struct StartupSession {
     live_sha256: Option<String>,
     profile: PinnedDirectory,
     home: PinnedDirectory,
+}
+/// Borrowed action inputs only; constructing this does not grant authority.
+/// The normal-Stop factory independently validates every field.
+pub struct RootStopRequest<'a> {
+    pub context: &'a ProcessContext,
+    pub stop: &'a CompletedLifecycleStop,
+    pub pair: &'a crate::infrastructure::macos_process_pair::PairExitProof,
+    pub lease: &'a NativeLease,
+    pub head: &'a session_index::Head,
+    pub deadline: Instant,
+}
+/// Full OS absence is admitted before a config writer helper is spawned.
+/// Borrowed current Stop/pair/lease survive the operation; no serde or copied
+/// status can recreate this admission after interruption.
+pub struct RootStopAdmission<'a> {
+    session: &'a StartupSession,
+    context: &'a ProcessContext,
+    stop: &'a CompletedLifecycleStop,
+    pair: &'a crate::infrastructure::macos_process_pair::PairExitProof,
+    lease: &'a NativeLease,
+    head: session_index::Head,
+    scope: Scope,
+    live: Live,
+    deadline: Instant,
+}
+impl RootStopAdmission<'_> {
+    fn check_before_plan(&self, session: &StartupSession) -> AppResult<()> {
+        time(self.deadline)?;
+        if !std::ptr::eq(session, self.session)
+            || self.head.references.as_ref() != Some(&session.references()?)
+            || session.scope(self.context)? != self.scope
+            || session.live(self.context)? != self.live
+        {
+            return Err(error(()));
+        }
+        self.lease
+            .require_context(self.context, &session.originals.logical_client())?;
+        self.pair
+            .require(self.live.process()?, self.live.parent()?, self.deadline)?;
+        let owner = SystemServiceOwnerProofProvider::new(
+            self.scope.program_root.clone(),
+            self.context.clone(),
+        )?;
+        self.stop.require_original_absence(
+            session.originals.data.path(),
+            self.live.process()?,
+            self.live.parent()?,
+            &self.live.record_sha256,
+            self.live.port,
+            &owner,
+        )?;
+        time(self.deadline)
+    }
+}
+/// Current normal-Stop authority only. Values are never deserialized and no
+/// public constructor accepts a callback, bool, PID list or copied receipt.
+pub(super) struct RootRetirementAuthority<'a> {
+    session: &'a StartupSession,
+    context: &'a ProcessContext,
+    stop: &'a CompletedLifecycleStop,
+    pair: &'a crate::infrastructure::macos_process_pair::PairExitProof,
+    lease: &'a NativeLease,
+    owner: SystemServiceOwnerProofProvider,
+    head: session_index::Head,
+    plan: session_index::RestorePlan,
+    scope: Scope,
+    live: Live,
+    deadline: Instant,
+    registration: &'a session_index::RootRetirementRegistration<'a>,
+}
+impl RootRetirementAuthority<'_> {
+    pub(super) fn deadline(&self) -> Instant {
+        self.deadline
+    }
+    pub(super) fn require_pending(&self, pending: &root_retirement::Pending<'_>) -> AppResult<()> {
+        if !pending.belongs_to(&self.session.originals)
+            || pending.id() != self.plan.id
+            || pending.sha256() != self.plan.sha256
+        {
+            return Err(error(()));
+        }
+        pending.require_source(&self.head).map_err(error)?;
+        self.check()
+    }
+    pub(super) fn check(&self) -> AppResult<()> {
+        time(self.deadline)?;
+        self.registration
+            .require(&self.head, &self.plan)
+            .map_err(error)?;
+        self.lease
+            .require_context(self.context, &self.session.originals.logical_client())?;
+        self.session.profile.recheck().map_err(error)?;
+        self.session.home.recheck().map_err(error)?;
+        self.session.verify_root_stop_binding(
+            self.context,
+            &self.head,
+            &self.plan,
+            &self.scope,
+            &self.live,
+        )?;
+        let live = &self.live;
+        self.pair
+            .require(live.process()?, live.parent()?, self.deadline)?;
+        self.stop.require_original_absence(
+            self.session.originals.data.path(),
+            live.process()?,
+            live.parent()?,
+            &live.record_sha256,
+            live.port,
+            &self.owner,
+        )?;
+        if capture_file(&self.session.home, "runtime-port.json", 4096).map_err(error)?
+            != Image::Absent
+            || capture_file(&self.session.home, "ocx.pid", 64).map_err(error)? != Image::Absent
+        {
+            return Err(error(()));
+        }
+        time(self.deadline)
+    }
+    pub(super) fn finish_check(&self) -> AppResult<()> {
+        self.check()?;
+        self.owner.require_finalization_absence(
+            self.context,
+            self.live.process()?,
+            self.live.parent()?,
+            self.live.port,
+        )?;
+        self.check()
+    }
 }
 /// Borrow-scoped permission for this session's assessed Codex artifacts,
 /// including an individually admitted originally absent first-use config.
@@ -1389,6 +1521,173 @@ impl StartupSession {
             return Err(error(()));
         }
         time(deadline)
+    }
+    fn verify_root_stop_binding(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        plan: &session_index::RestorePlan,
+        expected_scope: &Scope,
+        expected_live: &Live,
+    ) -> AppResult<()> {
+        if head.references.as_ref() != Some(&self.references()?) {
+            return Err(error(()));
+        }
+        let pending = root_retirement::Pending::open(&self.originals, &plan.id, &plan.sha256)
+            .map_err(error)?;
+        pending.require_source(head).map_err(error)?;
+        let view = pending.current_originals().map_err(error)?;
+        let refs = head.references.as_ref().ok_or_else(|| error(()))?;
+        verify_index_scope(&view, refs, &context.opencodex_home)?;
+        let scope: Scope = parse(&read_private(
+            &view,
+            "startup-scope.json",
+            &refs.scope_sha256,
+        )?)?;
+        let live: Live = parse(&read_private(
+            &view,
+            "startup-live.json",
+            refs.live_sha256.as_deref().ok_or_else(|| error(()))?,
+        )?)?;
+        let (_, ready) = view.frame(Phase::Ready).map_err(error)?;
+        view.frame(Phase::Stopped).map_err(error)?;
+        if scope != *expected_scope
+            || live != *expected_live
+            || digest(&ready) != live.ready_sha256
+            || live.scope_sha256 != refs.scope_sha256
+        {
+            return Err(error(()));
+        }
+        let (root, selection) = source(context)?;
+        if root != scope.program_root || selection != scope.selection {
+            return Err(error(()));
+        }
+        Ok(())
+    }
+    fn require_root_stop(
+        &self,
+        context: &ProcessContext,
+        stop: &CompletedLifecycleStop,
+        pair: &crate::infrastructure::macos_process_pair::PairExitProof,
+        lease: &NativeLease,
+        head: &session_index::Head,
+        deadline: Instant,
+    ) -> AppResult<(Scope, Live, SystemServiceOwnerProofProvider, Instant)> {
+        let deadline = stop.bound_deadline(deadline);
+        time(deadline)?;
+        if self.originals.original_root_absence.is_none()
+            || head.root_retirement.is_some()
+            || !matches!(
+                head.state,
+                session_index::State::Stopped | session_index::State::RestorePrepared
+            )
+            || head.references.as_ref() != Some(&self.references()?)
+        {
+            return Err(error(()));
+        }
+        // Exact original normal Stop history is mandatory. A preexisting
+        // Stopped observation, Ready-only recovery or disk receipt cannot join.
+        self.originals.frame(Phase::Stopped).map_err(error)?;
+        let scope = self.scope(context)?;
+        let live = self.live(context)?;
+        lease.require_context(context, &self.originals.logical_client())?;
+        pair.require(live.process()?, live.parent()?, deadline)?;
+        let owner =
+            SystemServiceOwnerProofProvider::new(scope.program_root.clone(), context.clone())?;
+        owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)?;
+        stop.require_original_absence(
+            self.originals.data.path(),
+            live.process()?,
+            live.parent()?,
+            &live.record_sha256,
+            live.port,
+            &owner,
+        )?;
+        time(deadline)?;
+        Ok((scope, live, owner, deadline))
+    }
+    /// Must run before creating the config Guard; its Bun holder is itself a
+    /// current same-HOME runtime-shaped process and cannot pass a whole-scope
+    /// unused scan. Held-phase checks below stay constrained by this admission.
+    pub fn admit_root_completed_stop<'a>(
+        &'a self,
+        request: &RootStopRequest<'a>,
+    ) -> AppResult<RootStopAdmission<'a>> {
+        let RootStopRequest {
+            context,
+            stop,
+            pair,
+            lease,
+            head,
+            deadline,
+        } = *request;
+        let (scope, live, _, deadline) =
+            self.require_root_stop(context, stop, pair, lease, head, deadline)?;
+        Ok(RootStopAdmission {
+            session: self,
+            context,
+            stop,
+            pair,
+            lease,
+            head: head.clone(),
+            scope,
+            live,
+            deadline,
+        })
+    }
+    pub fn prepare_root_completed_stop<'a>(
+        &'a self,
+        admission: &RootStopAdmission<'_>,
+        guard: &mut crate::infrastructure::official_client_coordination::native::config::Guard<'_>,
+    ) -> AppResult<root_retirement::Pending<'a>> {
+        admission.check_before_plan(self)?;
+        let pending = root_retirement::Pending::prepare_guarded(
+            admission.context,
+            &self.originals,
+            &admission.head,
+            admission.lease,
+            guard,
+        )
+        .map_err(error)?;
+        admission.check_before_plan(self)?;
+        Ok(pending)
+    }
+    pub fn retire_root_completed_stop(
+        &self,
+        admission: &RootStopAdmission<'_>,
+        registration: &session_index::RootRetirementRegistration<'_>,
+        guard: crate::infrastructure::official_client_coordination::native::config::Guard<'_>,
+    ) -> AppResult<root_retirement::AuthorizedReadback> {
+        admission.check_before_plan(self)?;
+        let plan = registration.plan().map_err(error)?.clone();
+        registration
+            .require(&admission.head, &plan)
+            .map_err(error)?;
+        let pending = root_retirement::Pending::open(&self.originals, &plan.id, &plan.sha256)
+            .map_err(error)?;
+        let owner = SystemServiceOwnerProofProvider::new(
+            admission.scope.program_root.clone(),
+            admission.context.clone(),
+        )?;
+        let authority = RootRetirementAuthority {
+            session: self,
+            context: admission.context,
+            stop: admission.stop,
+            pair: admission.pair,
+            lease: admission.lease,
+            owner,
+            head: admission.head.clone(),
+            plan,
+            scope: admission.scope.clone(),
+            live: admission.live.clone(),
+            deadline: admission.deadline,
+            registration,
+        };
+        let proof = pending
+            .apply_completed_stop(authority, admission.lease, guard, admission.deadline)
+            .map_err(error)?;
+        time(admission.deadline)?;
+        Ok(proof)
     }
     pub fn completed_readback(
         &self,

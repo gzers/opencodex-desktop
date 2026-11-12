@@ -4,14 +4,14 @@ use std::{
     os::unix::fs::{DirBuilderExt, PermissionsExt},
 };
 
-struct Fixture {
+pub(super) struct Fixture {
     _program: crate::modules::runtime::program_selection::tests::Fixture,
-    data: PathBuf,
-    client: PathBuf,
-    context: ProcessContext,
+    pub(super) data: PathBuf,
+    pub(super) client: PathBuf,
+    pub(super) context: ProcessContext,
 }
 impl Fixture {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let p = crate::modules::runtime::program_selection::tests::Fixture::new();
         let data = p.root.join("desktop");
         let profile = p.root.join("profile");

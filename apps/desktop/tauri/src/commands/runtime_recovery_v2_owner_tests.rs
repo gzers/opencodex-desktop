@@ -12,10 +12,16 @@ struct FakeHost {
     blocked_ports: Mutex<Vec<u16>>,
     queried_ports: Mutex<Vec<u16>>,
     port_error: AtomicBool,
+    owner_override: Mutex<Option<String>>,
 }
 impl Host for FakeHost {
     fn owner(&self) -> AppResult<String> {
-        Ok("fixture-user".into())
+        Ok(self
+            .owner_override
+            .lock()
+            .unwrap()
+            .clone()
+            .unwrap_or_else(|| "fixture-user".into()))
     }
     fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>> {
         Ok(self.processes.lock().unwrap().get(&pid).cloned())
@@ -240,6 +246,102 @@ mod completed_stop_binding {
         process::{Command, Stdio},
         time::Duration,
     };
+    #[test]
+    fn captured_listener_exit_child() {
+        let Some(marker) = std::env::var_os("OCXD_ROOT_STOP_LISTENER_MARKER") else {
+            return;
+        };
+        let one = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let two = std::net::TcpListener::bind("[::1]:0").unwrap();
+        std::fs::write(
+            marker,
+            serde_json::to_vec(&[
+                one.local_addr().unwrap().port(),
+                two.local_addr().unwrap().port(),
+            ])
+            .unwrap(),
+        )
+        .unwrap();
+        let mut byte = [0u8; 1];
+        std::io::stdin().read_exact(&mut byte).unwrap();
+        assert_eq!(byte, [1]);
+        drop((one, two));
+    }
+    #[test]
+    fn root_stop_current_absence_rechecks_secondary_listener_and_refuses_unknown_or_new_owner() {
+        let mut f = Fixture::new();
+        let owner = unsafe { libc::geteuid() }.to_string();
+        *f.host.owner_override.lock().unwrap() = Some(owner.clone());
+        f.provider.owner = owner;
+        let marker = f._root.path().join("owned-listener-ports.json");
+        let mut child=Command::new(std::env::current_exe().unwrap()).args(["--exact","commands::runtime_recovery_v2_owner::tests::completed_stop_binding::captured_listener_exit_child","--nocapture","--test-threads=1"]).env("OCXD_ROOT_STOP_LISTENER_MARKER",&marker).stdin(Stdio::piped()).stdout(Stdio::null()).stderr(Stdio::piped()).spawn().unwrap();
+        let until = Instant::now() + Duration::from_secs(10);
+        while !marker.exists() {
+            assert!(child.try_wait().unwrap().is_none());
+            assert!(Instant::now() < until);
+            std::thread::sleep(Duration::from_millis(2));
+        }
+        let ports: Vec<u16> = serde_json::from_slice(&std::fs::read(marker).unwrap()).unwrap();
+        let service = Generation::observe(child.id()).unwrap();
+        let mut watch = ExitWatch::capture(service).unwrap();
+        let listeners =
+            crate::infrastructure::macos_tcp_listeners::TcpListeners::capture(service, until)
+                .unwrap();
+        assert!(ports.iter().all(|p| listeners.ports().contains(p)));
+        child.stdin.take().unwrap().write_all(&[1]).unwrap();
+        let normal = loop {
+            if let Some(proof) = watch.normal_exit(until).unwrap() {
+                break proof;
+            }
+            std::thread::sleep(Duration::from_millis(2));
+        };
+        assert!(child.wait_with_output().unwrap().status.success());
+        let (launcher, _, _) = normal_exit();
+        // This wrapper is an explicit reference-predicate fixture; it does NOT
+        // enter the production root permission factory or certify an official
+        // runtime. Exit and listeners above are actual kernel evidence.
+        let proof = CompletedLifecycleStop {
+            context: f.provider.context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            deadline: until,
+            normal_exit: Some(normal),
+            tcp_listeners: Some(listeners),
+        };
+        let require = || {
+            proof.require_original_absence(
+                f._root.path(),
+                service,
+                launcher,
+                &"a".repeat(64),
+                ports[0],
+                &f.provider,
+            )
+        };
+        require().unwrap();
+        f.host.blocked_ports.lock().unwrap().push(ports[1]);
+        assert!(
+            matches!(require(),Err(AppError::RuntimeManaged{code,..}) if code=="client_stop_listener_reappeared")
+        );
+        assert!(f.host.queried_ports.lock().unwrap().contains(&ports[1]));
+        f.host.blocked_ports.lock().unwrap().clear();
+        f.host.port_error.store(true, Ordering::SeqCst);
+        assert!(require().is_err());
+        f.host.port_error.store(false, Ordering::SeqCst);
+        f.host.manager.store(true, Ordering::SeqCst);
+        assert!(require().is_err());
+        f.host.manager.store(false, Ordering::SeqCst);
+        std::fs::write(f.provider.context.opencodex_home.join("ocx.pid"), b"99999").unwrap();
+        assert!(require().is_err());
+        std::fs::remove_file(f.provider.context.opencodex_home.join("ocx.pid")).unwrap();
+        require().unwrap();
+        *f.host.owner_override.lock().unwrap() = Some("outside-owner".into());
+        assert!(require().is_err());
+        println!(
+            "ROOT_STOP_CURRENT_ABSENCE_EVIDENCE {}",
+            serde_json::json!({"accepted":false,"kernelServiceNormalExit":true,"kernelCapturedTcpPorts":ports.len(),"secondaryPortRefused":true,"unknownPortRefused":true,"managerAndRecordReappearanceRefused":true,"ownerChangeRefused":true,"syntheticReferenceWrapperNotOfficialStop":true})
+        );
+    }
 
     fn normal_exit() -> (
         Generation,
