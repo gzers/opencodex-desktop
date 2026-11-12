@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 93；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 94；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main c576a3b75（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main fed7d21ad（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -905,3 +905,16 @@ mainc576a3b75将实际Guard Image绑定到schema2根计划，Original不含该�
 证据.adg/evidence/0.2.24/client-root-transient-r1/及374文件manifest含失败/差异、最终7源和实际库binary、独立原JSON/SQLite投影、原根/临时Image/释放树摘要事件链与可重放verify_all。原生payload无损gzip保留全字节，Bun缓存派生重复副本清理；诊断cleanup的预期移除字段有勘误，最终真实清理另证。六轮child/holder终止，精确新N/K移除，预存global L身份/权限/字节不变并重获释放；失败Profile/复用运行包/重复临时根在证据归档核验后清理，无日常配置/真实业务/新候选/发布。
 
 下一步接真实当前正常Stop/launcher/TCP与原件来源，构造跨本次物理重锚持续核验的生产许可，再接完整缺根启停、next Start与明确中断操作；当前factory仍缺、Ready/capture guard不解。Windows W1、缺Ready/一般客户端图路径/完整进程集合与刷新/NAME/System代理/发布验证/README/固定候选等原完整范围保持，目标active。
+
+
+## 2026-11-13 当前正常Stop根恢复许可与独立登记绑定
+
+mainfed7d21ad新增生产RootStopAdmission/RootRetirementAuthority及唯一具体类型factory：完整OS absence在创建config Guard前，持Guard阶段绑定同session/Scope/Live/真实Stop/Pair/NativeLease，正常释放后再完整收尾；字段私有、无serde，不能从磁盘事实/callback制造生产许可。每次checkpoint按plan准确live/archive核对原logical scope/原件/Ready→PreStop→Stopped链、当前程序来源、原record/generation、主和全部捕获TCP/manager/记录缺席及原deadline。详[根正常Stop权限合同](0.2.24-contracts/client-root-stop-authority-r1.md)。
+
+强制RootRetirementRegistration借用真实Index，只从当前RootRetirementPrepared构造；每次复核完整source event、plan、ticket/refs/restorePlan和当前CAS代次，未登记Head副本、错source、已关闭旧凭证拒绝。admit/prepare/retire明确分开，避免把source Head误当已登记Head，保留原归档定位。实现入口已落代码，但还未从完整缺根产品状态机调用，不因此开放Ready/capture/next Start。
+
+32去重相关函数通过（root-stop4/completed-stop7/root-movement23，2重复）、fmt/diff-check/strictClippy通过。内核真实双端口子进程捕获/正常exit0/wait进入显式合成外层Stop谓词，验证secondary端口/未知/manager/记录/owner变化拒绝，不冒官方Stop证书；合成帧根binding在移动前后复验原件Scope/Live/历史/plan，新用户根/篡改拒绝；实际SQLite登记凭证验证未登记副本拒绝、source完整匹配及关闭失效。早期Fixture可见性编译失败、Clippy参数过多及修正原log保留；只读复核指出并确认Guard完整扫描顺序和先登记强约束，未代签执行。
+
+证据.adg/evidence/0.2.24/client-root-stop-authority-r1/含22文件manifest、最终8源/真实库binary、测试日志/失败/复核及核验脚本；所有测试child与子审查已结束，unitTMP空、自有重复临时根在逐字归档后清理。无官方包/服务/全局DB/日常配置/真实业务/新候选或发布。
+
+下一步接缺根原件capture与Active、受证明约束的Ready/PreStop/Stopped及根恢复状态编排，顺序为admit→Guard/plan→真实Index登记→当前许可移动/正常释放/读回/关闭，处理next Start与明确中断，再跑原官方2.99完整隔离30/5/10/30验收。当前factory未做该整链验证，P24-04/05及Windows/NAME/其它原完整范围保持未完，目标active。

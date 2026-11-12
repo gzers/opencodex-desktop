@@ -1,0 +1,16 @@
+    Blocking waiting for file lock on artifact directory
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 11.04s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 7 tests
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::captured_listener_exit_child ... ok
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::completed_stop_reference_never_gets_a_fresh_budget_for_subsequent_work ... ok
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::fixed_internal_reference_check_binds_runtime_handle_profile_home_digest_and_generation ... ok
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::malformed_record_digest_and_a_record_without_native_exit_cannot_authorize_restore ... ok
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::preexisting_stopped_observation_has_no_fresh_exit_or_compensation_authority ... ok
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::root_stop_current_absence_rechecks_secondary_listener_and_refuses_unknown_or_new_owner ... ROOT_STOP_CURRENT_ABSENCE_EVIDENCE {"accepted":false,"kernelCapturedTcpPorts":2,"kernelServiceNormalExit":true,"managerAndRecordReappearanceRefused":true,"ownerChangeRefused":true,"secondaryPortRefused":true,"syntheticReferenceWrapperNotOfficialStop":true,"unknownPortRefused":true}
+ok
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::secondary_captured_listener_or_unknown_socket_table_blocks_complete_stop_predicate ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2502 filtered out; finished in 0.08s
+
