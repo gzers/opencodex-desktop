@@ -1,0 +1,15 @@
+2026-11-12T07:12:19.223Z [manager] start: start confirmed
+2026-11-12T07:12:20.527Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-12T07:12:21.526Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-12T07:12:21.531Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-12T07:12:21.615Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-12T07:12:25.136Z [manager] client-stop-recovery: measured elapsed_ms=3596 timings=[("original-pair-exit", 0), ("native-coordination", 79), ("seal-stopped", 1074), ("index-stopped", 1636), ("prepare-plan", 1644), ("index-plan", 2426), ("restore-three-artifacts", 2433)]
+2026-11-12T07:12:25.140Z [manager] client-stop-recovery: failed phase=restore-three-artifacts code=client_session_unconfirmed
+2026-11-12T07:12:25.143Z [manager] stop: failed (managed runtime operation failed: client_original_restore_pending; 服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留; duration_ms=5658)
+2026-11-12T07:13:24.799Z [manager] client-recovery-continue: refused phase=confirm-preview elapsed_ms=1834
+2026-11-12T07:13:26.638Z [manager] client-recovery-continue: refused phase=confirm-preview elapsed_ms=1832
+2026-11-12T07:13:28.473Z [manager] client-recovery-continue: refused phase=confirm-preview elapsed_ms=1830
+2026-11-12T07:13:32.195Z [manager] client-recovery-continue: refused phase=confirm-preview elapsed_ms=1860
+2026-11-12T07:13:42.390Z [manager] client-recovery-continue: refused phase=continue-original-plan elapsed_ms=10191
+2026-11-12T07:16:03.140Z [manager] client-recovery-continue: refused phase=continue-original-plan elapsed_ms=10269
+2026-11-12T07:18:59.887Z [manager] client-recovery-continue: refused phase=open-existing-index elapsed_ms=902

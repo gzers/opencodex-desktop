@@ -1,0 +1,12 @@
+
+running 1 test
+test commands::client_recovery::tests::continue_owned_interrupted_plan_with_fresh_native_authority ... {"accepted":false,"elapsedMs":10272,"error":"managed runtime operation failed: client_session_unconfirmed; 启动原件与当前服务的绑定未确认；原件和现场保留，未恢复客户端文件","noHistoricalExitProofReconstructed":true,"outcome":null,"reopened":{"attemptId":"a3dfd351-ee1a-41ec-9017-71333d2554bf","canContinue":true,"canFinalize":false,"canRollback":false,"completionEvidence":"not_recorded","confirmationDigest":"f33e114fdb79401f0afe9805a01b1baddd712a75c9eaa9b6dc7716630a0e6dc2","originalEvidence":"verified","phase":"restore_prepared","phaseCount":3,"planEvidence":"verified","revision":6,"status":"pending"}}
+FAILED
+
+failures:
+
+failures:
+    commands::client_recovery::tests::continue_owned_interrupted_plan_with_fresh_native_authority
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2384 filtered out; finished in 14.28s
+

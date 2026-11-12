@@ -1,0 +1,89 @@
+{
+  "baseCommit": "82764eabc56bb70e332a1879ec738ba9d15a86af",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery.rs",
+      "sha256": "61589326582f16ce6e3c2d8ebf0b06dd9f0be212c21aa713b9692542cd113ccf"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery_tests.rs",
+      "sha256": "6dff90af56c4925e152d4d5f3a2e279d6c6be21ad26ecfa74bdb8d55456248b1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "sha256": "b1ef44bd0dcd7c9a4109c5eaf69b1f1c3742df216dd45c7fa65efc26e1713cd1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner_tests.rs",
+      "sha256": "0db51d1c1a00cb51403701d0beaab444c538cb53bb3e3a39229a7dafe904dcb7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_completion.rs",
+      "sha256": "574397663238b4ed22a2d30839cc735efbc52a811cf315265251e3b692d5b621"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_recovery_continue.rs",
+      "sha256": "5a8a210542a001f558ebaa7b77d8d1f945975bbdd511881b04a41e98f616597d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore.rs",
+      "sha256": "ee6f5ecc8dd23b3b803325bc6712815a1cbdfd21409ce7cc5e295eb60d16f9f6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "sha256": "f0d01702a4c0d2a38444ea10c018ff2849a4473003111a0fd6af9d7bbb477d22"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "63e480c23f891a435ff8ed3986e48693a7b1ce454a26d97ef934232f33136161"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "sha256": "dff75c7b3d2e30b08ffe19fa9586cf1c38e4fc6e0433cc4cdcd9eaf0cdc9f71e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_tree.rs",
+      "sha256": "783cba95f4995b1e3c57c1986fc97c5bbe3fb70e4914e6cef4fbbcbf3017ba57"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_tree_tests.rs",
+      "sha256": "1bfcd9f1771998ac3b56e023cd90cc3042062f78ba56ef4a9bba9aec63c5017e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "e7e89b4dcac4a88e4b6dc1bba96f23dd6bc54e84435b7391b555e87d91d28ad6"
+    },
+    {
+      "path": "apps/desktop/ui/qa/client-recovery-visual.mjs",
+      "sha256": "6dccd18c28fc5dd93e9b7b5d22452f4a66609a0c06ecff6b9cf2feea0bfdc471"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/clientRecoveryFixture.ts",
+      "sha256": "5034a6166b2ba51418fb53e80f86a9b4ca20bca308a60990587166a68ef3f1b7"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "sha256": "ea359c806d6d37d3075186876dccfc14bab449a4f2326f8f9ac6cefb79a001ce"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery-store.ts",
+      "sha256": "859d6a1f9baa3eaa66a7134c692358de63d84192b2f21379fcf410886cc6032e"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery.ts",
+      "sha256": "32273234e26f4a367bbf4b11cc803823846f54b6eee65e6364b6df9c1321b535"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-api.test.ts",
+      "sha256": "d32593ca957a2a0a2b948e577240fd2427ccbb45ba10d3b83fa135e9bc2615e2"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "sha256": "6577185c69ae5f27d4cd69246339809e6d82f258d8982b9dfdd8590d42aa1d86"
+    }
+  ],
+  "nativeSuccessExecutable": "11ab12013c4df76dca21ae909a4ecdeb44c60ddbae673f281d105594557762f1",
+  "sourceBoundary": "Success used owner-tests build before last added negative host test; later test refinements and diagnostic error text do not change continuation algorithm. Final compile/clippy recorded separately. Not a frozen candidate. Final error mapping preserves partial-outcome semantics; no new algorithm or native rerun for this text/code mapping. Final all-target strict clippy recorded.",
+  "codeCommit": "bc887457fe4db5b107279381a0d85195a6b76e10",
+  "backendCommit": "37e486fad250805a007cb20002768ca44b07c556"
+}

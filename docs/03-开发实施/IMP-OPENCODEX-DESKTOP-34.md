@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 67；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 68；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -615,3 +615,12 @@ main82764eabc将RestorePrepared的3目标/暂存/归档、intent/terminal与原�
 23原生事务含11真实exit91中断边界、21会话、6读回检查及最终格式/编译/严格Clippy过。新Profile原官方Start8771/Status225/Stop8795ms，7文件全恢复后按预设index关闭前中断，原失败/index6保留。新核对首收尾拒绝，定向trace确认close-index10624ms超原10秒；原失败目录保留。合并同观察内重复读取且保留全部不同事实门后，仅同保留现场收尾8898ms/index7 Restored通过，未重跑服务或已过反例；合法后续合成cache编辑保持Restored及原输入。诊断accepted=false，不冒整版或候选验收。
 
 证据.adg/evidence/0.2.24/client-recovery-review-r1/及manifest保留两次收尾失败/准确来源/成功与两独立index、35内容引用/15blob/七文件核对。自有进程/原主端口缺席、3精确新协调DB排他重获释放后与程序/Profile/全部夹具清理，既有globalL身份/字节/权限保持。Windows远端仍b2e89665d/0eef59a01。无日常/官方/业务改变、新.app/DMG或发布；部分继续回退与原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方发布验证/固定候选继续，目标active。
+
+
+## 2026-11-12 部分中断恢复显式继续与界面
+
+main37e486fad接独立client_recovery_continue、原索引/plan/确认及三文件NativeLease借用权限，当前OS停止/原父子PID/port/manager及记录缺席，批次前后完整枚举、每次publication锁/代次/原字节/权限复核；不重建历史正常退出，不改官方或旧预算。计划之外全Codex/Grok原树及两稳定锁绑定，未知编辑拒绝；释放锁后整树/回执/index关闭才Restored。mainbc887457f接真实确认/关闭重开单promise/成功新live同D/H解除限制，唯一总原型同入口和三内存场景同步。详[显式继续合同](0.2.24-contracts/client-recovery-continue-r1.md)。
+
+69后端相关、27前端及类型/build/格式/严格Clippy过。新Profile官方Start8654/Status229/Stop5662ms在首目标交换后按预设中断，cache/audit尚未恢复、原exit101/index6保留。独立continue错确认/外部编辑拒绝保持索引；首10195ms、去重复锁外preview后10272ms失败均保留，原10秒不变。定位全OS枚举被逐步重复后归批次前后且保留每步不同事实核对，仅同现场继续9528ms/index7 Restored、重复确认拒绝；无重新安装/服务重跑。独立完整两树SHA匹配完成receipt、35内容引用/15blob及7客户端文件全还原。Chromium7/WebKit7界面与原型场景、末次WebKit3受影响详情/互斥guard场景过，生产排除mock；不冒mock为原生或整版验收。
+
+证据.adg/evidence/0.2.24/client-recovery-continue-r1/及manifest保留所有失败、独立index/帧/计划/原件和准确来源边界。自有进程/主端口缺席、3精确协调DB排他重获释放后和程序/Profile/全部夹具清理，既有globalL身份/字节/权限保持，无日常/官方/业务改变或新.app/DMG/发布。Rollback终态/确认、更早捕获阶段及原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方发布验证/固定候选继续，目标active。
