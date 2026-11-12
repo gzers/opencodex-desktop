@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 82；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 83；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main b60bd1079（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main d5970bc55（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -25,7 +25,7 @@ revision: 82；2026-11-12。用户要求本机与Windows可独立开发部分并
 | P24-02 | 共享保存/手动备份/恢复与现有安装事务保护已接；版本化升级接线及候选验收未完 | 本机POST-04保存重核、POST-08原生JSON单层导入/完整备份/回退，复用真实配置事务。 | 保留草稿/密钥意图、有限等价变化不误锁，真实冲突拒绝；导入仅保留本机port和模式，其它按源替换，备份失败零覆盖。 | 后端8例及原型已定；不把Read的模版匹配暗当无副作用刷新。 |
 | P24-03 | Mac终端/通知/网络/内置准备及版本事实/更新前重核已接；Windows/PATH和原生候选未完 | 本机POST-03同版本同HOME CLI核心及Mac入口；POST-05环境阶段/就绪区分、POST-06应用网络/更新说明；已采用UI接线。 | CLI显式启停/冲突不覆盖；内置环境不依赖系统Node；npm/GitHub错误准确；原型一致。 | 03路径/CLI接线依01；网络/UI可先独立推进。 |
 | P24-W1 | 原生PATH/安装器024资源部分已放行；完整共享接线未完 | Windows后端接共享调用合同；Windows当前用户CLI/PATH和自定义安装根/版本目录/卸载平台适配。 | 实际运行版本/HOME/安装根一致；用户级入口/PATH有归属与撤销，安装更新不误删配置或别用户对象。 | W0可先提交；共享mod/入口/版本/工作流由本机接线；不能先猜清单文件名再返工。 |
-| P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置可逆恢复已接；缺根/首次Grok备份、一般范围/候选预算/缺Ready/Windows未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
+| P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置及Grok备份可逆恢复已接；缺根/一般范围/候选预算/缺Ready/Windows未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
 | P24-NAME | 剩余技术方案未定，局部等待 | 非直接合法运行键名称及多协议派生组名称展示/官方刷新保持；普通合法英文改名已有能力不重复开发。 | 原始模型/认证/能力保持，明确改名可改实际键及引用；正式显示出口、默认客户端/刷新/重启/回退有证据。 | 10组真实保存确认，中文等新增/改名均转内部键；不私改原样2.99、不用combo降能力/双写轮询。只阻塞依赖它的名称改动和整版最终验收。 |
 | P24-05 | Mac真实024工程.app及正常首次供应已验证；旧工程DMG早于最新源码，非冻结候选，Windows/NAME/完整原生未完 | 本机完成共享逻辑/页面/原型对照、Mac真实原包与必要安装/CLI/升级回退；构建并固定Windows集成候选。 | 给精确代码SHA、官方包版本/SHA、安装器SHA、调用合同和一次完整受影响原生验收表。 | 共享页面不重复交Windows；Mac可在Windows开发期间做有用检查。 |
 | P24-W2 | 最后交接，当前不跑 | 用户把本对话生成的最终简短提示词交Windows；针对固定集成候选，一轮采集所有受影响原生项状态/证据。 | 双SID真实桌面并行、受保护生命周期/恢复及原预算、路径/CLI/相关安装更新卸载；失败保留，未知不通过。 | 按最终diff选必需项。不是旧r5第六轮，也不在未集成源码上提前宣称产品通过。 |
@@ -768,3 +768,18 @@ main b60bd1079补首次空目录Stop残留config.toml：Original明确无该文�
 证据.adg/evidence/0.2.24/client-empty-config-r1/及148文件manifest保留初错/内容首pass局限/锁验证/父死/最终pass及原件。归档逐字核对后2隔离Profile/程序/所有测试根清理；6精确新协调DB实际EXCLUSIVE重获释放后删除，config锁及claims缺席/自有进程主端口缺席，globalL身份/字节/owner/权限保持、排他重获释放/无sidecar，unitTMP空。无官方/日常/业务修改或新.app/DMG/发布。
 
 剩余仍须Grok首次备份的精确可逆恢复及它自己的官方写入排他、整个.codex缺根归属/原缺席、缺Ready/一般客户端与路由图/全进程集合及活跃刷新/旧revision4、Windows W1产品接线/NAME/System代理/发布验证/README/固定候选W2。Windows远端本轮重新fetch仍b2e89665d/0eef59a01，无新交接；本批原生只证明新增空配置合同，不代表整版accepted或所有竞争写者已覆盖。目标active。
+
+
+## 2026-11-12 Grok首次备份可逆恢复与两配置写者隔离
+
+main d5970bc55补Grok首次生成config.toml.bak-opencodex：Original必须明确无backup且有原config，Ready backup须字节与保护匹配Original config，实际PreStop/Stopped须保持同一已记录对象，当前Image/根identity匹配可信tree才schema6 plan登记可选grokBackup。固定第五目标在原profile/.grok，而Codex可选空配置仍第四目标；indices只枚举存在的目标，不能靠位置枚举把Grok备份当Codex文件。原三件和空配置共用同一精确对象状态机/RENAME_EXCL移入journal/archive/冲突反向保全、Rollback/rearm和完整读回。既有backup不动，未知新文件/新根/权限/复制内容或代次变化拒绝，不扩残留忽略例外。详[Grok备份合同](0.2.24-contracts/client-grok-backup-r1.md)。
+
+共享管道holder只允许两个固定canonical target：实际Codex根或当前profile/.grok；保持HOME/Profile/OPENCODEX_HOME和原官方源码准入。可选Codex和Grok恢复各借用目标config.toml自己的官方锁，保持每步同native许可/child/锁Image检查、正常release/exit0/锁缺席；双目标时两把都持有，任一失败仍失败，按反序释放。当前complete仍整Codex+整Grok严格比Original；Rollback由plan精确backup和原余项共同核验，不能清启动限制。缺PreStop/Stopped仍仅按已有明确当前观察/sourceHead规则，不补造历史；错误确认或新备份均须新明确核对。
+
+65相关后端函数最终过（新Grok6、旧restore38、终态1、completion7/Grok4/tree9）：新真实exit91在第五对象交换/归档/终态边界重开原plan继续；新旧/替换/外部gap/根代次/历史PreStop变化拒绝；终态函数现4种配置来源×refs3/2/1共12情形，完整Rollback读回→独立撤销头→rearm→Complete→Restored保持。初闭包引用lifetime和plan字段部分move编译错误由本轮结构化记录及chat原输出保留，不冒原始独立日志。最终格式/编译/strictClippy过；无UI变化，不重复页面验证。
+
+一个新隔离Profile原样官方2.99实际Start9025/Status234/Stop9189ms，原30/5/10秒不变，整driver exit0/result passed/index8 Restored。Original backup缺席、Ready/PreStop/Stopped同一backup的字节/保护/identity，匹配Original config；schema6/grokBackup root和Stopped Image、old-4归档对象/原4frame/Scope/Live/plan摘要均独立核对，最终backupAbsent且原config/Agent保持。独立完整Codex/Grok当前原生两树SHA匹配completion，正确Program上下文Stopped/NotRequired/无PID/port/仅Start。停止贴近预算，不能从单样本过推一般树/最终候选余量达标；原首次备份旧失败在client-first-use-r1保留，不被本次新通过覆盖。
+
+同一保留现场另执行无服务动作的两锁定向：真实官方另一writer在仅Grok锁时Grok locked/Codex可写，同时持两锁时两者locked，先正常释放Grok只放行Grok，再正常释放Codex才放行Codex；两锁与claims均实际缺席。不把N/K/L当Grok锁、不从子PID活性推断持锁。证据.adg/evidence/0.2.24/client-grok-backup-r1/及89文件manifest保存精确源/最终binary一致性/原件/真实trace和两锁。先归档逐字核验再清理本Profile/程序/全部夹具；3精确新协调DB实际EXCLUSIVE重获释放后删除，自有进程/主端口及两配置锁/claims缺席，globalL身份/字节/权限/owner保持并排他重获释放/无sidecar，unitTMP空，无日常/官方/业务变化或新.app/DMG/发布。
+
+下一步整个.codex缺根创建归属/原缺席、缺Ready中断、一般客户端/路径/图/完整进程集合/活跃官方刷新与旧revision4，Windows产品接线及W1贡献、NAME非合法键/派生组、复杂System代理、官方发布验证/README/版本和固定候选W2继续；不把本批备份恢复等同整版完成。Windows本轮fetch仍b2e89665d/0eef59a01无新提交，目标active。
