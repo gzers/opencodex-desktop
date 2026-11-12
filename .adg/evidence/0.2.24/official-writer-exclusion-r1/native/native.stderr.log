@@ -1,0 +1,4 @@
+
+thread 'infrastructure::official_client_coordination::native::tests::official299_native_handover_holds_through_work_and_preserves_original_ownership' (155864266) panicked at src/infrastructure/native_client_coordination_tests.rs:577:24:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "client_coordination_lifecycle", detail: "官方客户端协调未确认，原件及当前文件保留；未执行未获准的恢复" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
