@@ -1,0 +1,25 @@
+{
+  "accepted": false,
+  "scope": "Synthetic kernel/SQLite feasibility only, not production lock transfer or service authority",
+  "pythonSqliteVersion": "3.54.0",
+  "sqliteBeforeTransfer": "busy",
+  "retainedWholeFileFcntlBeforeMove": {
+    "result": "busy",
+    "error": "database is locked"
+  },
+  "retainedWholeFileFcntlAfterMove": {
+    "result": "busy",
+    "error": "database is locked"
+  },
+  "identityAndModeUnchanged": true,
+  "bytesSha256": "d2240e0cfc4cc82de23ebed82a31a7d749af4b3e77e5dad8a8678e1b56e15649",
+  "releasedSQLiteNormalAcquisition": {
+    "result": "acquired",
+    "error": null
+  },
+  "negativeAuxiliaryCloseReleasesLock": {
+    "result": "acquired",
+    "error": null
+  },
+  "decision": "Descriptor child traversal is unavailable on macOS. Any future relocation authority needs a dedicated no-auxiliary-open lifetime for the original claim inode; lock handoff must revalidate after reacquisition, retain N/L/K and unchanged official writer holders. Do not remove current VFS checks or use this synthetic result as production permission."
+}

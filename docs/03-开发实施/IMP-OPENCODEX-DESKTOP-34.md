@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 88；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 89；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 7131fdadc（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -852,3 +852,10 @@ main 7131fdadc在移动前CAS登记RootRetirementPrepared，绑定原source revi
 证据.adg/evidence/0.2.24/client-root-index-r1/含104文件manifest、分阶段source/binary与验证范围、失败、截图、3崩溃+正例原字节和可重放离线核验。归档逐字校验后清理自有重复临时根；unitTMP空，browser/Vite与测试child均结束。无官方服务/真实业务/日常配置/全局协调DB变化，无新.app/DMG或发布。
 
 生产MutationPermit仍无factory，NativeLease/官方写者锁和SQLite路径在根移动后的当前权限尚待接线，next Start仍拒绝；下一步优先完成真实当前Stop/launcher/TCP缺席与写者排他及重定位后的持续校验，再接完整缺根启停和用户明确中断恢复，按原官方2.99/30-5-10预算做隔离原生验证。本批没有新增Windows原生影响，不另跑W2；Windows W1可继续现有独占任务，固定集成候选后才交最终受影响Windows验收。缺Ready/一般路径与客户端图/完整进程集合和活跃刷新/旧revision4首错、NAME/System代理/发布验证/README/固定候选等完整范围不缩减，目标active。
+
+
+### 2026-11-13 根移动后的锁权限可行性定向实验
+
+证据.adg/evidence/0.2.24/client-root-relocation-feasibility-r1/保留原假设与结果。macOS实际/dev/fd/<directoryfd>/sample读取ENOENT，故不能用该路径绕开原逻辑路径变化。合成SQLite在原连接正常rollback/close后，用原retained fd取得全文件fcntl排他，真实独立子进程在目录移动前后均database is locked，原inode/mode/字节保持，释放后可正常获取。负控确认打开并关闭同inode另一fd会释放进程关联锁，子进程随即获取；因此后继不能在转交期间调用会open/close claim inode的通用读回。系统Python SQLite3.54.0，不冒生产rusqlite/原官方启停验收。
+
+核对原包SHA与未修改官方源码：config writer acquisition会canonicalize绝对路径，现Desktop holder并无重定位协议；NativeLease仍核对原VFS路径。后继需独立设计当前claim锁转交/重新准入与no-auxiliary-open生命周期、N/L/K持续排他、官方writer真实holder在移动后准确路径/token核对与正常释放。此实验不批准直接改变handle.path、不删除现VFS检查、不增加生产MutationPermit factory，尚无生产代码变更。完整实验自有目录和fd/连接/子进程清理，证据逐字归档后删重复根，无日常HOME/全局DB/官方运行修改，目标active。
