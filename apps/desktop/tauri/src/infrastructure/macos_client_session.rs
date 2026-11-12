@@ -403,23 +403,43 @@ impl StartupSession {
         lease: &NativeLease,
         deadline: Instant,
     ) -> AppResult<Self> {
-        time(deadline)?;
-        if client_root != effective_client(context)? {
-            return Err(error(()));
+        let phase = std::cell::Cell::new("deadline");
+        let result = (|| {
+            time(deadline)?;
+            phase.set("effective-client");
+            if client_root != effective_client(context)? {
+                return Err(error(()));
+            }
+            phase.set("native-lease");
+            lease.require_context(context, client_root)?;
+            phase.set("program-source");
+            let (program_root, selection) = source(context)?;
+            phase.set("owner-observation");
+            let owner =
+                SystemServiceOwnerProofProvider::new(program_root.clone(), context.clone())?;
+            if owner.query(context)? != ServiceOwnerProof::Stopped {
+                return Err(error(()));
+            }
+            phase.set("capture-original");
+            let originals = Originals::begin(data_root, client_root).map_err(error)?;
+            phase.set("check-original-lease");
+            lease.check()?;
+            time(deadline)?;
+            phase.set("persist-scope");
+            let result = Self::persist(context, originals, program_root, selection)?;
+            phase.set("final-lease");
+            lease.check()?;
+            time(deadline)?;
+            Ok(result)
+        })();
+        if result.is_err() {
+            // Fixed stage only. Never expose source config, argv, paths,
+            // inherited environment or arbitrary error strings in this trace.
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(
+                &format!("client-start-original: refused phase={}", phase.get()),
+            );
         }
-        lease.require_context(context, client_root)?;
-        let (program_root, selection) = source(context)?;
-        let owner = SystemServiceOwnerProofProvider::new(program_root.clone(), context.clone())?;
-        if owner.query(context)? != ServiceOwnerProof::Stopped {
-            return Err(error(()));
-        }
-        let originals = Originals::begin(data_root, client_root).map_err(error)?;
-        lease.check()?;
-        time(deadline)?;
-        let result = Self::persist(context, originals, program_root, selection)?;
-        lease.check()?;
-        time(deadline)?;
-        Ok(result)
+        result
     }
     fn persist(
         context: &ProcessContext,
