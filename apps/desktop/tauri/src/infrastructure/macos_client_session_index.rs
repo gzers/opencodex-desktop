@@ -101,6 +101,39 @@ pub struct RootRetirementRegistration<'a> {
 }
 impl RootRetirementRegistration<'_> {
     pub(crate) fn require(&self, source: &Head, plan: &RestorePlan) -> io::Result<()> {
+        self.require_index_facts(source, plan)?;
+        if self.index.head()?.as_ref() != Some(&self.prepared) {
+            return Err(denied(
+                "current root registration changed during observation",
+            ));
+        }
+        self.require_index_facts(source, plan)
+    }
+    /// Only RootRetirementAuthority pairs this with a fresh full root/frame
+    /// observation in the same checkpoint and repeats facts afterwards. It
+    /// grants no standalone root permission and keeps no observation cache.
+    pub(in crate::infrastructure::macos_client_originals) fn require_index_facts(
+        &self,
+        source: &Head,
+        plan: &RestorePlan,
+    ) -> io::Result<()> {
+        self.index.check_storage()?;
+        let origin = self
+            .index
+            .root_registration
+            .as_ref()
+            .ok_or_else(|| denied("root registration original absence missing"))?;
+        let stored: Vec<u8> = self
+            .index
+            .connection()?
+            .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+                r.get(0)
+            })
+            .map_err(database_error)?;
+        if stored != self.index.binding || origin.id != source.ticket {
+            return Err(denied("root registration context changed"));
+        }
+        root_binding::verify_initial_event(self.index.connection()?, origin)?;
         let Some(movement) = self.prepared.root_retirement.as_ref() else {
             return Err(denied("root plan not independently registered"));
         };
@@ -110,7 +143,7 @@ impl RootRetirementRegistration<'_> {
             || self.prepared.ticket != source.ticket
             || self.prepared.references != source.references
             || self.prepared.restore_plan != source.restore_plan
-            || self.index.head()?.as_ref() != Some(&self.prepared)
+            || read_head(self.index.connection()?)?.as_ref() != Some(&self.prepared)
         {
             return Err(denied("current root retirement registration changed"));
         }
@@ -880,6 +913,20 @@ impl Index {
                 }
             }
         }
+        self.check_storage()?;
+        if read_head(self.connection()?)? != observed_head {
+            return Err(denied("session head changed during checked observation"));
+        }
+        if self.root_registration.is_some() && observed_head.is_none() {
+            return Err(denied("registered first root session disappeared"));
+        }
+        Ok(observed_head)
+    }
+    /// Current independent storage/lock facts only. This is never root or
+    /// mutation authority; root content must be verified in the SAME caller
+    /// boundary when using the narrow observation path below.
+    fn check_storage(&self) -> io::Result<()> {
+        self.data.private()?;
         self.action_parent.private()?;
         self.pin.recheck()?;
         if identity(&stat(&self.action_file)?) != self.action_identity {
@@ -925,13 +972,7 @@ impl Index {
         if result != rusqlite::ffi::SQLITE_OK || moved != 0 {
             return Err(denied("session index native database changed"));
         }
-        if read_head(self.connection()?)? != observed_head {
-            return Err(denied("session head changed during checked observation"));
-        }
-        if self.root_registration.is_some() && observed_head.is_none() {
-            return Err(denied("registered first root session disappeared"));
-        }
-        Ok(observed_head)
+        Ok(())
     }
     pub fn head(&self) -> io::Result<Option<Head>> {
         self.checked_head()

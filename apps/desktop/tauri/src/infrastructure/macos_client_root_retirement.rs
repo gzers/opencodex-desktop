@@ -409,7 +409,7 @@ impl<'a> Pending<'a> {
     }
     /// Open the SAME directory object in its plan-bound private archive. Its
     /// original logical path remains profile/.codex in immutable scope facts.
-    fn archive_view(&self, plan: &Plan) -> io::Result<Originals> {
+    fn archive_prefix(&self, plan: &Plan) -> io::Result<OpenedPrefix> {
         let refs = plan
             .source
             .references
@@ -440,7 +440,7 @@ impl<'a> Pending<'a> {
             known: std::sync::Mutex::new(known),
         };
         let last = refs.phases.last().map_or(Phase::Original, |(p, _)| *p);
-        archived.frames_through(last)?;
+        let frames = archived.frames_through(last)?;
 
         let Image::File {
             bytes, protection, ..
@@ -457,9 +457,12 @@ impl<'a> Pending<'a> {
         let home = value["home"]
             .as_str()
             .ok_or_else(|| denied("root source HOME missing"))?;
-        session::verify_index_scope(&archived, refs, Path::new(home))
+        session::verify_index_scope_prefix(&archived, refs, Path::new(home), &frames)
             .map_err(|_| denied("archived root lost original logical scope"))?;
-        let original = archived.frame(Phase::Original)?.0;
+        let original = &frames
+            .first()
+            .ok_or_else(|| denied("empty Original prefix"))?
+            .0;
         if plan.write_guard.is_some() && original.tree.has_config_guard()
             || !original.tree.restored_matches(&plan.released_tree()?, true)
             || !original.grok.restored_matches(&plan.grok)
@@ -468,15 +471,18 @@ impl<'a> Pending<'a> {
                 "retired execution tree differs from original initialized state",
             ));
         }
-        Ok(archived)
+        Ok((archived, frames))
     }
     fn live_view(&self, plan: &Plan) -> io::Result<Originals> {
+        self.live_prefix(plan).map(|v| v.0)
+    }
+    fn live_prefix(&self, plan: &Plan) -> io::Result<OpenedPrefix> {
         let refs = plan
             .source
             .references
             .as_ref()
             .ok_or_else(|| denied("root source references missing"))?;
-        Originals::open_profile_origin(
+        Originals::open_profile_origin_prefix(
             self.originals.data.path(),
             &self.originals.profile.path().join(".codex"),
             self.originals.profile.path(),
@@ -488,9 +494,12 @@ impl<'a> Pending<'a> {
             Some(plan.origin.clone()),
         )
     }
-    fn live_matches(&self, plan: &Plan) -> io::Result<()> {
-        let live = self.live_view(plan)?;
-        let original = live.frame(Phase::Original)?.0;
+    fn checked_live(&self, plan: &Plan) -> io::Result<OpenedPrefix> {
+        let (live, frames) = self.live_prefix(plan)?;
+        let original = &frames
+            .first()
+            .ok_or_else(|| denied("empty Original prefix"))?
+            .0;
         if plan.write_guard.is_some() && original.tree.has_config_guard()
             || !original.tree.restored_matches(&plan.released_tree()?, true)
             || !original.grok.restored_matches(&plan.grok)
@@ -507,15 +516,18 @@ impl<'a> Pending<'a> {
                 "live root changed or archive destination already exists",
             ));
         }
-        Ok(())
+        Ok((live, frames))
     }
-    fn retired_matches(&self, plan: &Plan) -> io::Result<Originals> {
+    fn live_matches(&self, plan: &Plan) -> io::Result<()> {
+        self.checked_live(plan).map(|_| ())
+    }
+    fn checked_retired(&self, plan: &Plan) -> io::Result<OpenedPrefix> {
         if entry(&self.originals.profile, ".codex")?.is_some() {
             return Err(denied(
                 "a current client root exists; absence is not restored",
             ));
         }
-        let archived = self.archive_view(plan)?;
+        let (archived, frames) = self.archive_prefix(plan)?;
         if !plan.matches_tree(&TreeSnapshot::read(&archived.client)?)?
             || GrokSnapshot::read(&archived.profile)? != plan.grok
         {
@@ -524,7 +536,10 @@ impl<'a> Pending<'a> {
         if entry(&archived.profile, ".codex")?.is_some() {
             return Err(denied("client root absence changed during readback"));
         }
-        Ok(archived)
+        Ok((archived, frames))
+    }
+    fn retired_matches(&self, plan: &Plan) -> io::Result<Originals> {
+        self.checked_retired(plan).map(|v| v.0)
     }
     /// Read-only frames in their exact plan-bound archive. This cannot seal
     /// new history or construct root movement/service authority.
@@ -676,13 +691,12 @@ impl<'a> Pending<'a> {
     }
     /// Reopen only this independently referenced plan's exact physical root,
     /// retaining original logical scope. No new frame, scan or authority.
-    pub(super) fn current_originals(&self) -> io::Result<Originals> {
+    pub(super) fn current_prefix(&self) -> io::Result<OpenedPrefix> {
         let plan = self.load()?;
         if entry(&self.originals.profile, ".codex")?.is_some() {
-            self.live_matches(&plan)?;
-            self.live_view(&plan)
+            self.checked_live(&plan)
         } else {
-            self.retired_matches(&plan)
+            self.checked_retired(&plan)
         }
     }
     /// The sole production factory takes the concrete session-owned authority,
@@ -704,7 +718,6 @@ impl<'a> Pending<'a> {
                 .check()
                 .map_err(|_| denied("current normal Stop root authority unconfirmed"))
         };
-        check()?;
         let permit = MutationPermit {
             check: &check,
             deadline,

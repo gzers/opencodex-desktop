@@ -1570,6 +1570,58 @@ impl<'a> Pending<'a> {
         }
         Ok((plan, captures))
     }
+    /// One current normal-Stop transaction may keep its Codex writer through
+    /// artifact restoration and whole-root retirement. The session owner must
+    /// bind the supplied Guard to its lease; this method cannot issue release
+    /// or root authority. Grok still holds/releases its own separate writer.
+    pub(super) fn apply_retaining_codex(
+        &self,
+        permit: &MutationPermit<'_>,
+        codex: &mut crate::infrastructure::official_client_coordination::native::config::Guard<'_>,
+    ) -> io::Result<()> {
+        permit.check(self.originals)?;
+        codex
+            .check()
+            .map_err(|_| denied("retained Codex writer unconfirmed"))?;
+        let grok = if self.grok_root.is_some() {
+            Some(std::cell::RefCell::new(permit.grok_write_guard()?))
+        } else {
+            None
+        };
+        let codex = std::cell::RefCell::new(codex);
+        let result = self.apply_checked(
+            Decision::Complete,
+            &|| {
+                permit.check(self.originals)?;
+                codex
+                    .borrow_mut()
+                    .check()
+                    .map_err(|_| denied("retained Codex writer changed"))?;
+                if let Some(grok) = &grok {
+                    grok.borrow_mut()
+                        .check()
+                        .map_err(|_| denied("Grok writer changed"))?;
+                }
+                Ok(())
+            },
+            &|_| Ok(()),
+        );
+        let released = if let Some(grok) = grok {
+            grok.into_inner()
+                .finish()
+                .map_err(|_| denied("Grok writer release unconfirmed"))
+        } else {
+            Ok(())
+        };
+        result?;
+        released?;
+        permit.check(self.originals)?;
+        let current = codex
+            .borrow_mut()
+            .check()
+            .map_err(|_| denied("retained Codex writer unconfirmed after restore"));
+        current
+    }
     pub fn apply(&self, decision: Decision, permit: &MutationPermit<'_>) -> io::Result<()> {
         if self.empty_config || self.grok_root.is_some() {
             let codex = if self.empty_config {

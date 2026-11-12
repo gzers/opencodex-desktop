@@ -786,6 +786,8 @@ fn create(directory: &PinnedDirectory, filename: &str, bytes: &[u8]) -> io::Resu
 /// A protected set of immutable snapshots, not a restore permit. original_sha256
 /// must remain bound by the owning lifecycle transaction; never discover a new
 /// baseline by reading a changed journal. No startup auto-recovery is provided.
+type FramePrefix = Vec<(Frame, Vec<u8>)>;
+type OpenedPrefix = (Originals, FramePrefix);
 pub struct Originals {
     profile: PinnedDirectory,
     data: PinnedDirectory,
@@ -1046,6 +1048,24 @@ impl Originals {
         keys: OriginalKeys<'_>,
         original_root_absence: Option<root_creation::References>,
     ) -> io::Result<Self> {
+        Self::open_profile_origin_prefix(
+            data_root,
+            client_root,
+            profile_root,
+            keys,
+            original_root_absence,
+        )
+        .map(|v| v.0)
+    }
+    /// Facts consumed within one fresh observation. This does not cache frames
+    /// on Originals, adopt hashes or grant any native mutation permission.
+    fn open_profile_origin_prefix(
+        data_root: &Path,
+        client_root: &Path,
+        profile_root: &Path,
+        keys: OriginalKeys<'_>,
+        original_root_absence: Option<root_creation::References>,
+    ) -> io::Result<OpenedPrefix> {
         let OriginalKeys {
             attempt,
             original_sha256,
@@ -1111,8 +1131,8 @@ impl Originals {
             .max_by_key(|(phase, _)| phase.index())
             .map(|(phase, _)| *phase)
             .unwrap_or(Phase::Original);
-        result.frames_through(last)?;
-        Ok(result)
+        let frames = result.frames_through(last)?;
+        Ok((result, frames))
     }
     pub(super) fn logical_client(&self) -> PathBuf {
         if self.original_root_absence.is_some() {

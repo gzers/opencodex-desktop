@@ -329,9 +329,6 @@ impl Active {
                     .record_restore_plan(&self.head, pending.id(), pending.sha256())
                     .map_err(failure)?;
                 mark("restore-three-artifacts");
-                let plan = self.head.restore_plan.as_ref().ok_or_else(|| failure(()))?;
-                self.session
-                    .restore_completed_stop(context, proof, &pair, lease, deadline, plan)?;
                 if first {
                     mark("root-stop-admission");
                     let source = self.head.clone();
@@ -345,6 +342,9 @@ impl Active {
                     };
                     let admission = self.session.admit_root_completed_stop(&request)?;
                     let mut guard = lease.config_write_guard()?;
+                    mark("root-artifacts-held");
+                    self.session
+                        .restore_root_artifacts(&admission, &mut guard)?;
                     mark("root-plan");
                     let pending = self
                         .session
@@ -375,6 +375,10 @@ impl Active {
                         .index
                         .close_root_absence(&self.head, &readback)
                         .map_err(failure)?;
+                } else {
+                    let plan = self.head.restore_plan.as_ref().ok_or_else(|| failure(()))?;
+                    self.session
+                        .restore_completed_stop(context, proof, &pair, lease, deadline, plan)?;
                 }
                 let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
                     .append_event("client-stop-recovery: assessed-artifact-originals restored and readback verified");

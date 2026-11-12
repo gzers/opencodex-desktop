@@ -15,6 +15,41 @@ use crate::{
 };
 use std::time::Instant;
 #[cfg(test)]
+struct StopCostTrace {
+    label: &'static str,
+    phase: std::cell::Cell<&'static str>,
+    start: Instant,
+    last: std::cell::Cell<Instant>,
+}
+#[cfg(test)]
+impl StopCostTrace {
+    fn new(label: &'static str) -> Self {
+        let now = Instant::now();
+        Self {
+            label,
+            phase: std::cell::Cell::new("entry"),
+            start: now,
+            last: std::cell::Cell::new(now),
+        }
+    }
+    fn mark(&self, phase: &'static str) {
+        let now = Instant::now();
+        eprintln!(
+            "ROOT_STOP_COST label={} phase={} segment_us={} total_us={}",
+            self.label,
+            self.phase.replace(phase),
+            now.duration_since(self.last.replace(now)).as_micros(),
+            now.duration_since(self.start).as_micros()
+        );
+    }
+}
+#[cfg(test)]
+impl Drop for StopCostTrace {
+    fn drop(&mut self) {
+        self.mark("end");
+    }
+}
+#[cfg(test)]
 #[path = "macos_client_root_stop_binding_tests.rs"]
 mod root_stop_binding_tests;
 
@@ -272,6 +307,8 @@ impl RootPhaseProof<'_> {
 }
 impl RootStopAdmission<'_> {
     fn check_before_plan(&self, session: &StartupSession) -> AppResult<()> {
+        #[cfg(test)]
+        let cost = StopCostTrace::new("admission");
         time(self.deadline)?;
         if !std::ptr::eq(session, self.session)
             || self.head.references.as_ref() != Some(&session.references()?)
@@ -280,6 +317,8 @@ impl RootStopAdmission<'_> {
         {
             return Err(error(()));
         }
+        #[cfg(test)]
+        cost.mark("native");
         self.lease
             .require_context(self.context, &session.originals.logical_client())?;
         self.pair
@@ -288,6 +327,8 @@ impl RootStopAdmission<'_> {
             self.scope.program_root.clone(),
             self.context.clone(),
         )?;
+        #[cfg(test)]
+        cost.mark("absence");
         self.stop.require_original_absence(
             session.originals.data.path(),
             self.live.process()?,
@@ -326,18 +367,25 @@ impl RootRetirementAuthority<'_> {
         {
             return Err(error(()));
         }
-        pending.require_source(&self.head).map_err(error)?;
-        self.check()
+        pending.require_source(&self.head).map_err(error)
     }
     pub(super) fn check(&self) -> AppResult<()> {
+        #[cfg(test)]
+        let cost = StopCostTrace::new("root-authority");
         time(self.deadline)?;
+        #[cfg(test)]
+        cost.mark("registration");
         self.registration
-            .require(&self.head, &self.plan)
+            .require_index_facts(&self.head, &self.plan)
             .map_err(error)?;
+        #[cfg(test)]
+        cost.mark("native");
         self.lease
             .require_context(self.context, &self.session.originals.logical_client())?;
         self.session.profile.recheck().map_err(error)?;
         self.session.home.recheck().map_err(error)?;
+        #[cfg(test)]
+        cost.mark("source-frames");
         self.session.verify_root_stop_binding(
             self.context,
             &self.head,
@@ -345,6 +393,11 @@ impl RootRetirementAuthority<'_> {
             &self.scope,
             &self.live,
         )?;
+        self.registration
+            .require_index_facts(&self.head, &self.plan)
+            .map_err(error)?;
+        #[cfg(test)]
+        cost.mark("absence");
         let live = &self.live;
         self.pair
             .require(live.process()?, live.parent()?, self.deadline)?;
@@ -537,6 +590,22 @@ pub(super) fn verify_index_scope(
     refs: &References,
     home: &Path,
 ) -> AppResult<()> {
+    verify_index_scope_inner(originals, refs, home, None)
+}
+pub(super) fn verify_index_scope_prefix(
+    originals: &Originals,
+    refs: &References,
+    home: &Path,
+    frames: &[(Frame, Vec<u8>)],
+) -> AppResult<()> {
+    verify_index_scope_inner(originals, refs, home, Some(frames))
+}
+fn verify_index_scope_inner(
+    originals: &Originals,
+    refs: &References,
+    home: &Path,
+    frames: Option<&[(Frame, Vec<u8>)]>,
+) -> AppResult<()> {
     let scope: Scope = parse(&read_private(
         originals,
         "startup-scope.json",
@@ -559,7 +628,26 @@ pub(super) fn verify_index_scope(
         return Err(error(()));
     }
     if refs.live_sha256.is_some() {
-        verify_closed_reference_files(originals, refs)?;
+        let Some(frames) = frames else {
+            return verify_closed_reference_files(originals, refs);
+        };
+        let (_, ready) = frames
+            .get(Phase::Ready.index())
+            .filter(|v| v.0.phase == Phase::Ready)
+            .ok_or_else(|| error(()))?;
+        let live: Live = parse(&read_private(
+            originals,
+            "startup-live.json",
+            refs.live_sha256.as_deref().ok_or_else(|| error(()))?,
+        )?)?;
+        if live.schema_version != 1
+            || live.scope_sha256 != refs.scope_sha256
+            || live.ready_sha256 != digest(ready)
+        {
+            return Err(error(()));
+        }
+        live.process()?;
+        live.parent()?;
     }
     Ok(())
 }
@@ -1762,34 +1850,49 @@ impl StartupSession {
         expected_scope: &Scope,
         expected_live: &Live,
     ) -> AppResult<()> {
+        #[cfg(test)]
+        let cost = StopCostTrace::new("root-source");
         if head.references.as_ref() != Some(&self.references()?) {
             return Err(error(()));
         }
         let pending = root_retirement::Pending::open(&self.originals, &plan.id, &plan.sha256)
             .map_err(error)?;
         pending.require_source(head).map_err(error)?;
-        let view = pending.current_originals().map_err(error)?;
+        #[cfg(test)]
+        cost.mark("open-current-originals");
+        let (view, frames) = pending.current_prefix().map_err(error)?;
+        #[cfg(test)]
+        cost.mark("index-scope");
         let refs = head.references.as_ref().ok_or_else(|| error(()))?;
-        verify_index_scope(&view, refs, &context.opencodex_home)?;
+        verify_index_scope_prefix(&view, refs, &context.opencodex_home, &frames)?;
         let scope: Scope = parse(&read_private(
             &view,
             "startup-scope.json",
             &refs.scope_sha256,
         )?)?;
+        #[cfg(test)]
+        cost.mark("ready-stopped-frames");
         let live: Live = parse(&read_private(
             &view,
             "startup-live.json",
             refs.live_sha256.as_deref().ok_or_else(|| error(()))?,
         )?)?;
-        let (_, ready) = view.frame(Phase::Ready).map_err(error)?;
-        view.frame(Phase::Stopped).map_err(error)?;
+        let (_, ready) = frames
+            .get(Phase::Ready.index())
+            .filter(|v| v.0.phase == Phase::Ready)
+            .ok_or_else(|| error(()))?;
+        if frames.last().is_none_or(|v| v.0.phase != Phase::Stopped) {
+            return Err(error(()));
+        }
         if scope != *expected_scope
             || live != *expected_live
-            || digest(&ready) != live.ready_sha256
+            || digest(ready) != live.ready_sha256
             || live.scope_sha256 != refs.scope_sha256
         {
             return Err(error(()));
         }
+        #[cfg(test)]
+        cost.mark("program-source");
         let (root, selection) = source(context)?;
         if root != scope.program_root || selection != scope.selection {
             return Err(error(()));
@@ -1883,6 +1986,39 @@ impl StartupSession {
         .map_err(error)?;
         admission.check_before_plan(self)?;
         Ok(pending)
+    }
+    /// This is an intermediate stage, never normal-Stop completion. The same
+    /// live writer remains held until the root transaction normally releases
+    /// it and performs its full final absence/source checks.
+    pub fn restore_root_artifacts(
+        &self,
+        admission: &RootStopAdmission<'_>,
+        guard: &mut crate::infrastructure::official_client_coordination::native::config::Guard<'_>,
+    ) -> AppResult<()> {
+        admission.check_before_plan(self)?;
+        guard.root_image(admission.lease, &self.originals.logical_client())?;
+        let plan = admission
+            .head
+            .restore_plan
+            .as_ref()
+            .ok_or_else(|| error(()))?;
+        let pending =
+            restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)?;
+        let authority = ArtifactRestoreAuthority {
+            session: self,
+            context: admission.context,
+            stop: admission.stop,
+            pair: admission.pair,
+            lease: admission.lease,
+            deadline: admission.deadline,
+        };
+        authority.check(&self.originals)?;
+        let permit = restore::MutationPermit::from_authority(authority);
+        pending
+            .apply_retaining_codex(&permit, guard)
+            .map_err(error)?;
+        admission.check_before_plan(self)?;
+        time(admission.deadline)
     }
     pub fn retire_root_completed_stop(
         &self,
