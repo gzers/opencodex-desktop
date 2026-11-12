@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 58；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 59；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -534,3 +534,12 @@ main82e2d21f1将managed action入口一次建立outer/stop_deadline，Restart总
 21项相关函数/编译/格式/严格Clippy通过；新增前置耗7秒仅余3秒的预算断言。新Profile原样官方2.99一次真实Restart：初始Start8529/Status232ms，Restart14996ms，内旧完整Stop阶段8449ms，新实际PID10551→10591/端口62448、Ready revision10；最终Stop9004ms（段trace8997）Restored revision14/七原字节全true，重开1298ms Stopped+NotRequired/canStart=true。原30/5/10保持，原集成函数exit0/resultpassed，外层诊断acceptedfalse，不冒整版或release验收。
 
 证据.adg/evidence/0.2.24/native-restart-budget-r1/及manifest含准确源/binary、真实Restart原输出、两段预算、schema3索引14events/两原件各自frame/plan/receipt/outcome/content、最终两树原生快照SHA匹配。两个主端点/自有镜像/进程缺席，3精确新协调DB排他取得释放后与自有程序/Profile/双套blob/index/stage/archive/control副本和重复回执清理；原globalL完整保留。无日常/官方/系统/业务修改或发布，无新release/app/DMG。一般范围/显式恢复/完整集合及旧revision4、Windows/NAME/System代理/发布验证/固定候选仍继续，目标active。
+
+
+## 2026-11-12 静态显示别名图的恢复声明
+
+maine6619359d按未改官方2.99源码及pure4组实测核清：defaultModelAliases/defaultAliases及modelAliases改显示名，不改provider的磁盘catalogModelSlug；对外Fast行不是本链磁盘路由。declaration允许有界合法显示别名与省略默认布尔、跳过明确disabled渠道，仍只从真实provider键/selectedModels独立声明，非法类型/碰撞/动态等未知图拒绝。原exactReady集合/归属/四锁/补偿和预算不变，不抄官方aliasregex。详[静态别名路由](0.2.24-contracts/static-display-alias-routes-r1.md)。
+
+27相关函数/编译/格式/严格Clippy过；pure无发现/网络调用并有sandbox拒绝探针。新Profile真实3模型、globalAlias=true/渠道省略/显式custom-sol/Fast=true：Start9054/Status232/Stop8872ms，启动前3真实slug与Ready逐项匹配，实际display为opus/custom-sol/g3p，无Fast/display别名被虚构为恢复路由。原父子normal0/4TCP缺席、7路径全还原、完整树/两锁及Restored revision7；重开1283ms NotRequired/canStart=true。原集成函数exit0/resultpassed，外层acceptedfalse，不冒一般图/整版，NAME剩余不随本批关闭。
+
+证据.adg/evidence/0.2.24/static-display-alias-routes-r1/及manifest含固化官方源锚点/pure与实际scope-Ready显示对照、原件35引用/完整树/准确binary。3精确新协调DB排他取得释放后连同自有程序/Profile/blob/index/stage/archive/control副本/pure约414MB导入及src/重复回执清理，原主端点/自有进程缺席，globalL原样保留。无日常/官方/系统/业务修改、新release/app/DMG或发布。动态/一般选择与自定义组合图/全客户端/显式恢复/旧revision4等原范围及Windows/NAME/System代理/发布验证/固定候选继续，目标active。

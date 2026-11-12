@@ -1,0 +1,7 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-write*)
+(allow file-write* (subpath "/private/tmp/ocxd024-route-graph-ah_14gbb"))
+(allow file-write* (literal "/dev/null"))
+(deny file-read* (subpath "/Users/ezio"))

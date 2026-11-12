@@ -1,0 +1,68 @@
+[
+  {
+    "path": "src/providers/default-aliases.ts",
+    "sha256": "e612a3140938bf7b601a0206d7261215bf73c6e3d93123785e09330809b32ddd",
+    "anchors": [
+      {
+        "line": 70,
+        "text": "return provider.defaultAliases ?? config.defaultModelAliases ?? false;"
+      },
+      {
+        "line": 73,
+        "text": "export function effectiveModelAliases("
+      }
+    ]
+  },
+  {
+    "path": "src/providers/slug-codec.ts",
+    "sha256": "b3fbe9cfdad3a5ccde17d25820066a5175ee7fd709ae12b5817df735c71020e0",
+    "anchors": []
+  },
+  {
+    "path": "src/codex/catalog/parsing.ts",
+    "sha256": "b4886ad9662565c58c8e5b678aba6409e17e1ebd24e500152600aa331838c202",
+    "anchors": [
+      {
+        "line": 899,
+        "text": "return model.alias ?? routedSlug(model.provider, model.id);"
+      }
+    ]
+  },
+  {
+    "path": "src/codex/catalog/routed-gather.ts",
+    "sha256": "fd7e1f3ff29fef7a590549d8f2e05b89e0afd6341c72a0e54217d66d29dc7f71",
+    "anchors": [
+      {
+        "line": 792,
+        "text": "const aliasDisplayNames = new Map(activeProviders.flatMap(({ name, provider }) => {"
+      },
+      {
+        "line": 814,
+        "text": "const displayName = aliasDisplayNames.get(`${model.provider}/${model.id}`);"
+      },
+      {
+        "line": 823,
+        "text": "const named = displayName && !model.displayName ? copyReasoningHintSource(model, { ...model, displayName }) : model;"
+      }
+    ]
+  },
+  {
+    "path": "src/codex/catalog/derive-entry.ts",
+    "sha256": "39c8b95208f0aaf0cedfb782626b2446a6885cc556c2c54c66b8cdaf26145baa",
+    "anchors": []
+  },
+  {
+    "path": "src/server/fast-row.ts",
+    "sha256": "1880dc10c3c8d9d22a5a9838f23953c110f3cbb84732abeee15e2fc8d5e0abcd",
+    "anchors": [
+      {
+        "line": 33,
+        "text": "const FAST_ROW_SUFFIX = \"--fast\";"
+      },
+      {
+        "line": 286,
+        "text": "export function expandFastRow<T extends { id: string }>("
+      }
+    ]
+  }
+]
