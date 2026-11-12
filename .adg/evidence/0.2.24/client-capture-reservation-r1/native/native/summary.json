@@ -1,0 +1,33 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": false,
+  "grokConfigChangedDuringStart": false,
+  "independentOriginalsReferenced": false,
+  "indexRevision": 2,
+  "indexState": "capture_reserved",
+  "indexedReady": false,
+  "officialVersion": "2.99.0",
+  "record": null,
+  "reservedAttempt": "a0b946e4-3edc-4e0e-954c-a6bf8c6ba3bc",
+  "reservedCaptureInterruptionExpected": true,
+  "result": "failed",
+  "serviceStarted": false,
+  "start": {
+    "canRestart": false,
+    "canStart": false,
+    "canStop": false,
+    "clientRecoveryRequired": true,
+    "failure": {
+      "code": "lifecycle_unconfirmed",
+      "message": "操作未确认完成，已保留当前配置，请查看诊断日志。"
+    },
+    "lifecycleState": "starting_failed",
+    "result": null
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 2279,
+  "statusAndStopSkipped": "directed capture-only failure; no service started",
+  "statusBudgetMs": 5000,
+  "stopBudgetMs": 10000
+}

@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 75；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 76；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -687,3 +687,12 @@ main3e3bb6ab5将Originals.open和Pending.captures的同次4帧前驱递归重复
 105相关去重函数和只读probe1项通过，新增逐帧/逐blob坏值在后续open拒绝、held live原件/scope/ready/归档改变拒绝，restore普通/rearmed各11真实exit91边界保持；初probe测试root shadow/move编译错误保留并仅改helper，最终格式/编译/strictClippy过。首prefix-only新ProfileStart10396/Status267/Stop10296ms在完整readback阶段超10秒，原exit101/index6失败保留；同现场只读成本定位后才合并剩余重复，再开单轮新ProfileStart10239/Status271/Stop9415ms（入口段9407），真实父子normal0/4TCP缺席/三文件补偿/完整两树权限/两锁释放/receipt/index7 Restored全在原预算，重开1020ms NotRequired/仅Start、原函数exit0。外层acceptedfalse，原10539/10296失败不改写；余量585ms非一般大树或候选稳定性结论。
 
 证据.adg/evidence/0.2.24/stop-fresh-prefix-r1/及manifest保留两轮/成本/原失败来源/准确binary及独立index6/7、成功完整树SHA、两轮共14原文件字节/缺席和blob/归档。两原主端口/自有进程缺席，6精确新DB排他重获释放后与两程序/Profile/原件/全部夹具清理，globalL身份/字节/权限保持、unitTMP空，无日常/官方/业务改动或.app/DMG/发布。Windows远端仍b2e89665d/0eef59a01；一般范围/候选预算/真正部分捕获/已变化未plan/完整集合/旧revision4/Windows/NAME/System代理/官方验证/固定候选继续，目标active。
+
+
+## 2026-11-12 写入前预留捕获归属及部分原件取消
+
+main47ad91a93在任何新attempt目录/blob前独立提交CaptureReserved(ticket)，生产借用同Index/action锁的不可序列化reservation，原head/根重核后EXCL创建；Captured refs必须原ticket，无预留便利begin仅test。中断无Original refs；取消只快照保全精确预留槽，不解析/收养为恢复源、不写删客户端或原件。CancelledCapture回执绑定原head/历史/完整partial树，未知另槽/链接/变更拒绝，历史保留部分证据后下一明确Start新ticket。main562d655ef软件/唯一原型区分部分捕获取消/捕获前取消/恢复完成，正确独立回执+新状态才清限制，保持确认/返回/关闭重开单promise。详[捕获预留合同](0.2.24-contracts/client-capture-reservation-r1.md)。
+
+77后端去重、73前端/类型/生产build/格式/strictClippy通过；新增4个实际exit91捕获边界重开保留/错slot/错refs拒绝，两引擎各10软件原型场景过。新Profile原官方Start2279ms在Codex归档后中断、Original未发布/2blob保留、原exit101/index2 CaptureReserved/refsnull保留；独立取消3163ms/index3、错确认/未知另槽/runtime记录拒绝，真实NotRequired/仅Start、完整当前树SHA/取消receipt一致。再用户明确同现场普通Start9441/Stop9455ms（入口Stop9448）完整新原件恢复/index11 Restored过原预算；新attempt绑定新ticket、旧部分证据身份/字节/权限保持，独立全树/新receipt/真实状态及7文件核对过。不冒自动启动或一般目录/候选预算全过。
+
+证据.adg/evidence/0.2.24/client-capture-reservation-r1/及manifest含index2/3/11、完整新原件和部分证据/准确分阶段源；自有服务/原端口/测试进程缺席，3精确DB排他重获释放后和程序/Profile/全部夹具清理，globalL身份/字节/权限保持、unitTMP空、browser/Vite退出，无日常/官方/业务变化或.app/DMG/发布。无预留旧残留继续拒绝，不做迁移；已变化未plan早期恢复/一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方验证/固定候选继续，Windows远端仍b2e89665d/0eef59a01，目标active。

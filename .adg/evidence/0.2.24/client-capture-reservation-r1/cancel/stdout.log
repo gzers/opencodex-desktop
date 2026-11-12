@@ -1,0 +1,7 @@
+
+running 1 test
+test commands::client_recovery::tests::cancel_owned_preparing_without_vault_preserves_current_clients ... {"accepted":false,"elapsedMs":3163,"error":null,"noClientFileReplay":true,"noVaultCreated":false,"outcome":{"attemptId":"a0b946e4-3edc-4e0e-954c-a6bf8c6ba3bc","revision":3,"status":"cancelled_capture"},"reopened":{"attemptId":null,"canCancelPreparation":false,"canContinue":false,"canFinalize":false,"canFinishUnchanged":false,"canRearm":false,"canRollback":false,"completionEvidence":"not_recorded","confirmationDigest":null,"originalEvidence":"not_recorded","phase":"cancelled_capture","phaseCount":0,"planEvidence":"not_recorded","preparationDigest":null,"rearmDigest":null,"revision":3,"rollbackDigest":null,"status":"restored","unchangedDigest":null}}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2408 filtered out; finished in 6.96s
+
