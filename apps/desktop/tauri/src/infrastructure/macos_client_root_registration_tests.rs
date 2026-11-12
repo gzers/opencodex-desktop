@@ -292,3 +292,26 @@ fn first_root_registration_real_crash_never_commits_absence_without_preparing_or
         );
     }
 }
+
+#[test]
+fn first_root_capture_custody_keeps_original_deadline_without_expiring_readonly_facts() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let (data, profile, context) = setup(&root);
+    let (mut index, head) =
+        Index::register_first_root(&context, &data, publish(&data, &profile)).unwrap();
+    index.root_creation_deadline = Some(Instant::now());
+    assert!(index.reserve_first_root_capture(&head).is_err());
+    assert_eq!(index.head().unwrap(), Some(head));
+    assert!(!data.join("manager-state/client-originals").exists());
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let (data, profile, context) = setup(&root);
+    let (mut index, head) =
+        Index::register_first_root(&context, &data, publish(&data, &profile)).unwrap();
+    let reserved = index.reserve_first_root_capture(&head).unwrap();
+    index.root_creation_deadline = Some(Instant::now());
+    let permit = index.capture_reservation(&reserved).unwrap();
+    assert!(permit.root_absence().is_err());
+    assert_eq!(index.head().unwrap(), Some(reserved));
+}

@@ -1010,6 +1010,7 @@ fn process_exit_during_reserved_capture_retains_partial_objects_without_adopting
             &client,
             &context.working_directory,
             authority.attempt(),
+            authority.root_absence().unwrap(),
             &|p| {
                 authority.require(&data, &client, &context.working_directory)?;
                 if p == point {

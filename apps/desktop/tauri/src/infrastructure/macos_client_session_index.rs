@@ -316,6 +316,7 @@ pub struct Index {
     profile: PathBuf,
     root_registration: Option<super::root_creation::References>,
     root_created_fd: Option<File>,
+    root_creation_deadline: Option<Instant>,
 }
 /// Borrowed independent index authority, never constructed from capture files.
 pub struct CaptureReservation<'a> {
@@ -334,6 +335,43 @@ impl CaptureReservation<'_> {
             return Err(denied("capture reservation/index/root changed"));
         }
         Ok(())
+    }
+    pub(super) fn root_absence(&self) -> io::Result<Option<super::root_creation::References>> {
+        self.require(
+            self.index.data.path(),
+            self.index.client.path(),
+            &self.index.profile,
+        )?;
+        if self.index.root_registration.is_some()
+            && (self.index.root_created_fd.is_none()
+                || self
+                    .index
+                    .root_creation_deadline
+                    .is_none_or(|d| Instant::now() >= d))
+        {
+            return Err(denied("first root capture lost original creation custody"));
+        }
+        Ok(self.index.root_registration.clone())
+    }
+    pub fn reopen_root_originals(
+        &self,
+        original_sha256: &str,
+        phases: &[(Phase, String)],
+    ) -> io::Result<Originals> {
+        let origin = self
+            .root_absence()?
+            .ok_or_else(|| denied("root-aware reopen requires independently registered absence"))?;
+        Originals::open_profile_origin(
+            self.index.data.path(),
+            self.index.client.path(),
+            &self.index.profile,
+            super::OriginalKeys {
+                attempt: self.attempt(),
+                original_sha256,
+                expected_phases: phases,
+            },
+            Some(origin),
+        )
     }
     pub(super) fn attempt(&self) -> &str {
         &self.head.ticket
@@ -663,6 +701,7 @@ impl Index {
             profile: context.working_directory.clone(),
             root_registration,
             root_created_fd,
+            root_creation_deadline: transfer_deadline,
         };
         result.head()?;
         if transfer_deadline.is_some_and(|d| Instant::now() >= d) {
@@ -755,7 +794,35 @@ impl Index {
         if self.root_registration.is_some() && head.is_none() {
             return Err(denied("registered first root session disappeared"));
         }
+        if let (Some(origin), Some(head)) = (&self.root_registration, head.as_ref()) {
+            root_binding::verify_capture(
+                &self.binding,
+                origin,
+                &self.data,
+                &self.profile,
+                &self.client,
+                head,
+            )?;
+        }
         Ok(head)
+    }
+    pub fn registered_root_originals(&self, expected: &Head) -> io::Result<Originals> {
+        if self.head()?.as_ref() != Some(expected) {
+            return Err(denied("root Original references changed before inspection"));
+        }
+        let origin = self
+            .root_registration
+            .as_ref()
+            .ok_or_else(|| denied("ordinary existing-root index has no original absence"))?;
+        root_binding::verify_capture(
+            &self.binding,
+            origin,
+            &self.data,
+            &self.profile,
+            &self.client,
+            expected,
+        )?
+        .ok_or_else(|| denied("root Original is not independently registered"))
     }
     fn cancel_history(&self, head: &Head) -> io::Result<Vec<Head>> {
         self.check()?;
@@ -832,6 +899,29 @@ impl Index {
             ));
         }
 
+        self.reserve_capture_inner(expected)
+    }
+    pub fn reserve_first_root_capture(&self, expected: &Head) -> io::Result<Head> {
+        self.check()?;
+        let root = self
+            .root_registration
+            .as_ref()
+            .ok_or_else(|| denied("first-root capture has no registered absence"))?;
+        if self.root_created_fd.is_none()
+            || self
+                .root_creation_deadline
+                .is_none_or(|d| Instant::now() >= d)
+            || expected.ticket != root.id
+            || expected.revision != 1
+            || !super::tree::names(self.client.file())?.is_empty()
+        {
+            return Err(denied(
+                "first-root capture lacks live empty-root creation custody",
+            ));
+        }
+        self.reserve_capture_inner(expected)
+    }
+    fn reserve_capture_inner(&self, expected: &Head) -> io::Result<Head> {
         if expected.state != State::Preparing
             || expected.references.is_some()
             || expected.restore_plan.is_some()
@@ -849,6 +939,78 @@ impl Index {
         next.state = State::CaptureReserved;
         validate(&next)?;
         self.write(Some(expected), &next)?;
+        Ok(next)
+    }
+    /// Store the first initialized tree only with its separately registered
+    /// original-root absence. No ordinary Captured/Ready transition is granted.
+    pub fn record_first_root_originals(
+        &self,
+        context: &ProcessContext,
+        expected: &Head,
+        refs: References,
+    ) -> io::Result<Head> {
+        self.check()?;
+        let origin = self
+            .root_registration
+            .as_ref()
+            .ok_or_else(|| denied("root capture requires indexed original absence"))?;
+        if self.root_created_fd.is_none()
+            || self
+                .root_creation_deadline
+                .is_none_or(|d| Instant::now() >= d)
+            || expected.state != State::CaptureReserved
+            || expected.ticket != origin.id
+            || refs.attempt != origin.id
+            || !refs.phases.is_empty()
+            || refs.live_sha256.is_some()
+            || scope(context, &self.data, &self.client)?
+                != root_binding::scope_bytes(&self.binding)?
+        {
+            return Err(denied(
+                "root Original references do not match live indexed capture custody",
+            ));
+        }
+        let originals = Originals::open_profile_origin(
+            self.data.path(),
+            self.client.path(),
+            &self.profile,
+            super::OriginalKeys {
+                attempt: &refs.attempt,
+                original_sha256: &refs.original_sha256,
+                expected_phases: &refs.phases,
+            },
+            Some(origin.clone()),
+        )?;
+        session::verify_index_scope(&originals, &refs, &context.opencodex_home)
+            .map_err(|_| denied("root Original startup scope is not bound to this context"))?;
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("root capture revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: State::Captured,
+            references: Some(refs),
+            restore_plan: None,
+            completion_sha256: None,
+        };
+        if self
+            .root_creation_deadline
+            .is_none_or(|d| Instant::now() >= d)
+        {
+            return Err(denied(
+                "first-root Original registration expired before commit",
+            ));
+        }
+        self.write(Some(expected), &next)?;
+        if self
+            .root_creation_deadline
+            .is_none_or(|d| Instant::now() >= d)
+        {
+            return Err(denied(
+                "first-root Original registered after deadline; exact references retained",
+            ));
+        }
         Ok(next)
     }
     pub fn capture_reservation<'a>(&'a self, head: &Head) -> io::Result<CaptureReservation<'a>> {
@@ -1147,6 +1309,11 @@ impl Index {
         proof: &completion::ReadbackProof,
         state: State,
     ) -> io::Result<Head> {
+        if self.root_registration.is_some() {
+            return Err(denied(
+                "first root original absence cannot be closed by ordinary client recovery",
+            ));
+        }
         proof.require_index(expected, self.data.identity(), self.client.identity())?;
         let next = Head {
             revision: expected
@@ -1186,9 +1353,15 @@ impl Index {
     }
     fn write(&self, expected: Option<&Head>, next: &Head) -> io::Result<()> {
         validate(next)?;
-        if self.root_registration.is_some() {
+        if self.root_registration.is_some()
+            && !(expected.is_some_and(|h| h.state == State::Preparing)
+                && next.state == State::CaptureReserved
+                || expected.is_some_and(|h| h.state == State::CaptureReserved)
+                    && next.state == State::Captured
+                || next.state == State::Failed)
+        {
             return Err(denied(
-                "first root original absence cannot be closed by ordinary client recovery",
+                "first root cannot enter an unintegrated ordinary lifecycle transition",
             ));
         }
         self.check()?;

@@ -674,6 +674,8 @@ struct Frame {
     tree: TreeSnapshot,
     profile_root: Identity,
     grok: GrokSnapshot,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    original_root_absence: Option<root_creation::References>,
 }
 fn encode(value: &impl Serialize) -> io::Result<Vec<u8>> {
     serde_json::to_vec(value).map_err(|_| denied("frame encoding failed"))
@@ -689,7 +691,10 @@ fn decode(bytes: &[u8]) -> io::Result<Frame> {
         parse_strict_json_v2(bytes).map_err(|_| denied("invalid or duplicate JSON"))?,
     )
     .map_err(|_| denied("invalid frame fields"))?;
-    if frame.schema_version != 4 {
+    if !matches!(
+        (frame.schema_version, frame.original_root_absence.is_some()),
+        (4, false) | (5, true)
+    ) {
         return Err(denied("unsupported client tree frame schema"));
     }
     Ok(frame)
@@ -734,7 +739,13 @@ pub struct Originals {
     directory: PinnedDirectory,
     attempt: String,
     original_sha256: String,
+    original_root_absence: Option<root_creation::References>,
     known: std::sync::Mutex<[Option<String>; 4]>,
+}
+pub(super) struct OriginalKeys<'a> {
+    pub(super) attempt: &'a str,
+    pub(super) original_sha256: &'a str,
+    pub(super) expected_phases: &'a [(Phase, String)],
 }
 impl Originals {
     #[cfg(test)]
@@ -759,6 +770,7 @@ impl Originals {
             client_root,
             profile_root,
             &uuid::Uuid::new_v4().to_string(),
+            None,
             &|_| Ok(()),
         )
     }
@@ -774,8 +786,10 @@ impl Originals {
             client_root,
             profile_root,
             reservation.attempt(),
+            reservation.root_absence()?,
             &|point| {
                 reservation.require(data_root, client_root, profile_root)?;
+                reservation.root_absence()?;
                 #[cfg(test)]
                 if std::env::var("OCXD024_CAPTURE_INTERRUPT_POINT")
                     .ok()
@@ -806,6 +820,7 @@ impl Originals {
         client_root: &Path,
         profile_root: &Path,
         attempt: &str,
+        original_root_absence: Option<root_creation::References>,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<Self> {
         if uuid::Uuid::parse_str(attempt)
@@ -838,9 +853,33 @@ impl Originals {
         if source.st_uid != unsafe { libc::geteuid() } || source.st_mode & 0o022 != 0 {
             return Err(denied("client root owner or write access unknown"));
         }
+        let existing_manager =
+            if session_index::observation::entry(&data, "manager-state")?.is_some() {
+                Some(data.child_private("manager-state", false)?)
+            } else {
+                None
+            };
+        if let Some(origin) = &original_root_absence {
+            let manager = existing_manager
+                .as_ref()
+                .ok_or_else(|| denied("registered root manager is absent"))?;
+            if origin.id != attempt {
+                return Err(denied(
+                    "first-root original attempt differs from root origin",
+                ));
+            }
+            root_creation::verify_indexed(manager, &data, profile_root, &client, origin)?;
+        } else if let Some(manager) = &existing_manager {
+            root_creation::require_no_pending_root(manager)?;
+        }
         let capture = Capture::read(&client)?;
         let tree = TreeSnapshot::read(&client)?;
         let grok = GrokSnapshot::read(&profile)?;
+        if original_root_absence.is_some() && !tree.first_root_execution_baseline() {
+            return Err(denied(
+                "new client data cannot become the original absent-root baseline",
+            ));
+        }
         let manager = data.child_private("manager-state", true)?;
         let vault = manager.child_private("client-originals", true)?;
         let attempt = attempt.to_owned();
@@ -857,7 +896,11 @@ impl Originals {
         grok.archive(&profile, &directory)?;
         checkpoint("grok_archived")?;
         let frame = Frame {
-            schema_version: 4,
+            schema_version: if original_root_absence.is_some() {
+                5
+            } else {
+                4
+            },
             attempt: attempt.clone(),
             uid: unsafe { libc::geteuid() },
             data_root: data.identity().clone(),
@@ -868,6 +911,7 @@ impl Originals {
             tree,
             profile_root: profile.identity().clone(),
             grok,
+            original_root_absence: original_root_absence.clone(),
         };
         if Capture::read(&client)? != frame.capture
             || TreeSnapshot::read(&client)? != frame.tree
@@ -896,6 +940,7 @@ impl Originals {
             directory,
             attempt,
             original_sha256: hash.clone(),
+            original_root_absence,
             known: std::sync::Mutex::new([Some(hash), None, None, None]),
         })
     }
@@ -926,6 +971,30 @@ impl Originals {
         original_sha256: &str,
         expected_phases: &[(Phase, String)],
     ) -> io::Result<Self> {
+        Self::open_profile_origin(
+            data_root,
+            client_root,
+            profile_root,
+            OriginalKeys {
+                attempt,
+                original_sha256,
+                expected_phases,
+            },
+            None,
+        )
+    }
+    pub(super) fn open_profile_origin(
+        data_root: &Path,
+        client_root: &Path,
+        profile_root: &Path,
+        keys: OriginalKeys<'_>,
+        original_root_absence: Option<root_creation::References>,
+    ) -> io::Result<Self> {
+        let OriginalKeys {
+            attempt,
+            original_sha256,
+            expected_phases,
+        } = keys;
         let profile = PinnedDirectory::open(profile_root)?;
         if data_root.starts_with(client_root) || client_root.starts_with(data_root) {
             return Err(denied("client and journal roots must be disjoint"));
@@ -943,8 +1012,16 @@ impl Originals {
         let data = PinnedDirectory::open(data_root)?;
         data.private()?;
         let client = PinnedDirectory::open(client_root)?;
-        let directory = data
-            .child_private("manager-state", false)?
+        let manager = data.child_private("manager-state", false)?;
+        if let Some(origin) = &original_root_absence {
+            if origin.id != attempt {
+                return Err(denied("root-aware original source differs"));
+            }
+            root_creation::verify_indexed(&manager, &data, profile_root, &client, origin)?;
+        } else {
+            root_creation::require_no_pending_root(&manager)?;
+        }
+        let directory = manager
             .child_private("client-originals", false)?
             .child_private(attempt, false)?;
         let mut known = [Some(original_sha256.to_owned()), None, None, None];
@@ -967,6 +1044,7 @@ impl Originals {
             directory,
             attempt: attempt.into(),
             original_sha256: original_sha256.into(),
+            original_root_absence,
             known: std::sync::Mutex::new(known),
         };
         // One fresh complete prefix validates every independently named frame
@@ -1072,7 +1150,10 @@ impl Originals {
             return Err(denied("sealed phase bytes changed"));
         }
         let frame = decode(&bytes)?;
-        if frame.schema_version != 4
+        if !matches!(
+            (frame.schema_version, frame.original_root_absence.is_some()),
+            (4, false) | (5, true)
+        ) || frame.original_root_absence != self.original_root_absence
             || frame.attempt != self.attempt
             || frame.uid != unsafe { libc::geteuid() }
             || frame.phase != phase
@@ -1100,6 +1181,18 @@ impl Originals {
             || digest(&bytes) != self.original_sha256
         {
             return Err(denied("original snapshot digest changed"));
+        }
+        if let Some(origin) = &self.original_root_absence {
+            root_creation::verify_indexed(
+                &self.data.child_private("manager-state", false)?,
+                &self.data,
+                self.profile.path(),
+                &self.client,
+                origin,
+            )?;
+            if phase == Phase::Original && !frame.tree.first_root_execution_baseline() {
+                return Err(denied("first root Original includes unowned client data"));
+            }
         }
         frame.tree.verify_archive(&self.directory)?;
         frame.grok.verify_archive(&self.directory)?;
@@ -1139,7 +1232,11 @@ impl Originals {
         tree.archive(&self.client, &self.directory)?;
         grok.archive(&self.profile, &self.directory)?;
         let frame = Frame {
-            schema_version: 4,
+            schema_version: if self.original_root_absence.is_some() {
+                5
+            } else {
+                4
+            },
             attempt: self.attempt.clone(),
             uid: unsafe { libc::geteuid() },
             data_root: self.data.identity().clone(),
@@ -1150,6 +1247,7 @@ impl Originals {
             tree,
             profile_root: self.profile.identity().clone(),
             grok,
+            original_root_absence: self.original_root_absence.clone(),
         };
         let bytes = encode(&frame)?;
         create(&self.directory, phase.filename(), &bytes)?;
@@ -1190,3 +1288,7 @@ impl PinnedDirectory {
         Ok(image)
     }
 }
+
+#[cfg(test)]
+#[path = "macos_client_root_originals_tests.rs"]
+mod root_originals_tests;

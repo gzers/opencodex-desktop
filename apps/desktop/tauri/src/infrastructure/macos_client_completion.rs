@@ -484,6 +484,11 @@ impl Originals {
         reuse_exact_receipt: bool,
         decision: restore::Decision,
     ) -> io::Result<ReadbackProof> {
+        if self.original_root_absence.is_some() {
+            return Err(denied(
+                "original root absence requires whole-root restoration proof",
+            ));
+        }
         time(deadline)?;
         if references.attempt != self.attempt || references.original_sha256 != self.original_sha256
         {

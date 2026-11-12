@@ -99,10 +99,23 @@ pub(super) fn inspect_map_history<T>(
     data_root: &Path,
     project: impl FnOnce(Option<&Head>, &[Head]) -> io::Result<T>,
 ) -> io::Result<T> {
+    inspect_map_history_root(context, data_root, |head, history, _origin| {
+        project(head, history)
+    })
+}
+pub(super) fn inspect_map_history_root<T>(
+    context: &ProcessContext,
+    data_root: &Path,
+    project: impl FnOnce(
+        Option<&Head>,
+        &[Head],
+        Option<&super::super::root_creation::References>,
+    ) -> io::Result<T>,
+) -> io::Result<T> {
     let data = PinnedDirectory::open(data_root)?;
     data.private()?;
     if entry(&data, "manager-state")?.is_none() {
-        return project(None, &[]);
+        return project(None, &[], None);
     }
     let manager = data.child_private("manager-state", false)?;
     let action = entry(&manager, "client-session-action.lock")?;
@@ -112,7 +125,7 @@ pub(super) fn inspect_map_history<T>(
     }
     if action.is_none() && index.is_none() {
         return if entry(&manager, "client-originals")?.is_none() {
-            project(None, &[])
+            project(None, &[], None)
         } else {
             Err(denied("originals remain without their independent index"))
         };
@@ -200,6 +213,16 @@ pub(super) fn inspect_map_history<T>(
         root_binding::verify_initial_event(&connection, refs)?;
     }
     let result = read_head(&connection)?;
+    if let (Some(origin), Some(head)) = (root_registration.as_ref(), result.as_ref()) {
+        root_binding::verify_capture(
+            &stored,
+            origin,
+            &data,
+            &context.working_directory,
+            &client,
+            head,
+        )?;
+    }
     if root_registration.is_some() && result.is_none() {
         return Err(denied(
             "registered first root session has no Preparing event",
@@ -285,7 +308,7 @@ pub(super) fn inspect_map_history<T>(
         .close()
         .map_err(|_| denied("observation connection did not close"))?;
     pin.recheck()?;
-    let projected = project(result.as_ref(), &history)?;
+    let projected = project(result.as_ref(), &history, root_registration.as_ref())?;
     data.private()?;
     client.recheck()?;
     pin.recheck()?;

@@ -79,13 +79,14 @@ pub(super) fn project(
     data: &Path,
     head: Option<&Head>,
 ) -> io::Result<Preview> {
-    project_history(context, data, head, &[])
+    project_history(context, data, head, &[], None)
 }
 fn project_history(
     context: &ProcessContext,
     data: &Path,
     head: Option<&Head>,
     history: &[Head],
+    root_origin: Option<&super::super::root_creation::References>,
 ) -> io::Result<Preview> {
     let Some(head) = head else {
         return Ok(Preview {
@@ -156,19 +157,40 @@ fn project_history(
     }
     if let Some(refs) = &head.references {
         let client = std::fs::canonicalize(context.working_directory.join(".codex"))?;
-        let originals = Originals::open_for_profile(
-            data,
-            &client,
-            &context.working_directory,
-            &refs.attempt,
-            &refs.original_sha256,
-            &refs.phases,
-        )?;
+        let originals = if let Some(origin) = root_origin {
+            Originals::open_profile_origin(
+                data,
+                &client,
+                &context.working_directory,
+                super::super::OriginalKeys {
+                    attempt: &refs.attempt,
+                    original_sha256: &refs.original_sha256,
+                    expected_phases: &refs.phases,
+                },
+                Some(origin.clone()),
+            )?
+        } else {
+            Originals::open_for_profile(
+                data,
+                &client,
+                &context.working_directory,
+                &refs.attempt,
+                &refs.original_sha256,
+                &refs.phases,
+            )?
+        };
         session::verify_index_scope(&originals, refs, &context.opencodex_home)
             .map_err(|_| denied("recovery evidence scope/live changed"))?;
         preview.original_evidence = Evidence::Verified;
         preview.phase_count = refs.phases.len();
         preview.attempt_id = Some(refs.attempt.clone());
+        // A verified execution snapshot plus original-root absence is useful
+        // read-only evidence, not permission for the existing-root shortcuts.
+        if root_origin.is_some() {
+            preview.status = Status::Pending;
+            return Ok(preview);
+        }
+
         let mut receipt_name = if head.state == State::Unchanged {
             format!(
                 "unchanged-readback-{}.json",
@@ -265,8 +287,8 @@ fn project_history(
     Ok(preview)
 }
 pub fn inspect_preview(context: &ProcessContext, data: &Path) -> Preview {
-    observation::inspect_map_history(context, data, |head, history| {
-        project_history(context, data, head, history)
+    observation::inspect_map_history_root(context, data, |head, history, origin| {
+        project_history(context, data, head, history, origin)
     })
     .unwrap_or_else(|_| Preview::unavailable(Status::Unknown))
 }

@@ -382,6 +382,16 @@ fn walk(
     Ok(())
 }
 impl TreeSnapshot {
+    /// This is an INITIALIZED execution tree, not a pre-existing user root.
+    /// Native coordination may initialize only its exact claim and held
+    /// sidecars before Original capture; the service owner does not exist yet. Any client data introduced meanwhile refuses.
+    pub(super) fn first_root_execution_baseline(&self) -> bool {
+        self.valid()
+            && self.coordination
+            && self.entries.iter().all(
+                |entry| matches!(entry,Entry::Coordination{path,..} if coordination_path(path)),
+            )
+    }
     pub(super) fn grok_backup_remainder_matches(&self, current: &Self) -> bool {
         let without_backup = |tree: &Self| {
             let mut value = tree.clone();
