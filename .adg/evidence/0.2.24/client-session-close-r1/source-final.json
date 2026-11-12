@@ -1,0 +1,43 @@
+{
+  "commit": "00d01df249fbdac6c5317caf8da11f6164352473",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "sha256": "671b760e44113aa9338b831b7f3a0085023c927d4a21d21a6313e328aa8fe10f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "sha256": "78125829bcb6340cbbb2652a24de7dd87cc5c7b2cffb8781d4486b8dd13a7aea"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/mod.rs",
+      "sha256": "60ff2a16885da35f06933ea329b76e5d2d75b6573d6e688c9c8f774e73525bca"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_completion.rs",
+      "sha256": "0876ef38d6a57b8331171a06ecc97b03c94f6e2ab687d5583350ca8fb77e1f3d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "sha256": "f0791f6bfba400c2aa0067405b9ba09f8dedd90f91e9ddc1b706e443ac1d48a2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "d42b53e304882bf573d17b56b8605392df160c9492f6517b4cb724b68297aca1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index_tests.rs",
+      "sha256": "e643d5ef24aeaf554a8168dc2bd2dd51e1ced2898e0031e08895f7098f167a7e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs",
+      "sha256": "01544ba3d48936e61de216107838ce4aa4c77011412a6f2a2aafed3e5c8936e4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "sha256": "00e416b7a12b619ea518a070b0cbc117101ee37a6cb35bbdf9378aa36249acd6"
+    }
+  ],
+  "nativeBinaryBuild": "build-fixed.jsonl + checks-fixed.json",
+  "finalReadOnlyBuild": "read-only-build.jsonl; only ignored read-only test helper added after native run, product source unchanged"
+}
