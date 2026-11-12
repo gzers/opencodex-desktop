@@ -433,6 +433,32 @@ pub(super) struct RecoveryReview {
     pub fingerprint: String,
 }
 impl<'a> Pending<'a> {
+    /// Read-only compensation decision over all four independently registered
+    /// frames. No current bytes become a replacement Ready/Stopped baseline.
+    pub(super) fn preparation_fingerprint(
+        originals: &Originals,
+        evidence: &Evidence,
+    ) -> io::Result<String> {
+        let (captures, phases) = Self::captures(originals)?;
+        let decisions = kinds(&captures, evidence)?;
+        let current = Capture::read(&originals.client)?;
+        if current != captures[3] {
+            return Err(denied(
+                "stopped postimage changed before missing-plan preparation",
+            ));
+        }
+        // not_after is freshly checked by the assessor, not a source fact to
+        // freeze across UI time. Every audit entry must still pass bounds.
+        Ok(digest(&encode(&(
+            phases,
+            decisions,
+            current,
+            &evidence.declared_routes,
+            &evidence.retained_pids,
+            &evidence.audit_home,
+            evidence.not_before,
+        ))?))
+    }
     #[cfg(test)]
     pub(super) fn prepare_fixture(
         originals: &'a Originals,

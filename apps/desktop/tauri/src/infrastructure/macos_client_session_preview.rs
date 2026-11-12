@@ -34,6 +34,8 @@ pub struct Preview {
     pub can_rollback: bool,
     pub can_finalize: bool,
     pub can_rearm: bool,
+    pub can_prepare_plan: bool,
+    pub plan_digest: Option<String>,
     pub can_finish_unchanged: bool,
     pub can_cancel_preparation: bool,
     pub preparation_digest: Option<String>,
@@ -60,6 +62,8 @@ impl Preview {
             can_rollback: false,
             can_finalize: false,
             can_rearm: false,
+            can_prepare_plan: false,
+            plan_digest: None,
             can_finish_unchanged: false,
             can_cancel_preparation: false,
             preparation_digest: None,
@@ -97,6 +101,8 @@ fn project_history(
             can_rollback: false,
             can_finalize: false,
             can_rearm: false,
+            can_prepare_plan: false,
+            plan_digest: None,
             can_finish_unchanged: false,
             can_cancel_preparation: false,
             preparation_digest: None,
@@ -131,6 +137,8 @@ fn project_history(
         can_rollback: false,
         can_finalize: false,
         can_rearm: false,
+        can_prepare_plan: false,
+        plan_digest: None,
         can_finish_unchanged: false,
         can_cancel_preparation: false,
         preparation_digest: None,
@@ -225,6 +233,10 @@ fn project_history(
                     preview.completion_evidence = Evidence::Unregistered;
                 }
             }
+        }
+        if !preview.can_finish_unchanged && head.state == State::Stopped {
+            preview.plan_digest = missing_plan::confirmation(context, data, head)?;
+            preview.can_prepare_plan = preview.plan_digest.is_some();
         }
         if head.state == State::RestoreRolledBack {
             preview.rearm_digest = originals.rearm_fingerprint(head, false)?;

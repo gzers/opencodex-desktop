@@ -36,6 +36,8 @@ pub fn unresolved_after_failure(context: &ProcessContext, data: &Path) -> bool {
 pub mod continuation;
 #[path = "macos_client_recovery_finalize.rs"]
 pub mod finalization;
+#[path = "macos_client_missing_plan.rs"]
+pub mod missing_plan;
 #[path = "macos_client_prepare_cancel.rs"]
 pub mod preparation;
 #[path = "macos_client_session_preview.rs"]

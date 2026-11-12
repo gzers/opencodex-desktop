@@ -6,6 +6,116 @@ use crate::{
 };
 use std::{fs, os::unix::fs::PermissionsExt, path::PathBuf, time::Instant};
 #[test]
+#[ignore = "owned official Stopped index retained before original plan creation; prepare only then separate continue"]
+fn prepare_owned_stopped_missing_plan_then_continue() {
+    let root = PathBuf::from(std::env::var_os("OCXD024_MISSING_PLAN_ROOT").expect("owned fixture"));
+    assert!(
+        root.canonicalize().unwrap() == root
+            && root.starts_with("/private/tmp")
+            && root
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .starts_with("ocxd024-versioned-lifecycle-")
+    );
+    let profile = root.join("profile");
+    assert_eq!(
+        std::env::var_os("HOME"),
+        Some(profile.clone().into_os_string())
+    );
+    let data = profile.join(".codex-desktop/desktop");
+    let home = profile.join(".codex-desktop/opencodex/home");
+    let client = profile.join(".codex");
+    let context = ProcessContext {
+        runtime: RuntimeHandle::initialize_versioned(&data, &root.join("program 中文 space")),
+        working_directory: profile.clone(),
+        opencodex_home: home,
+    };
+    let head = session_index::inspect(&context, &data).unwrap().unwrap();
+    if head.state == session_index::State::Stopped {
+        let request = session_index::missing_plan::review(&context, &data)
+            .unwrap()
+            .expect("all four stages admitted");
+        let idx = data.join("manager-state/client-session-index.sqlite");
+        let index_bytes = fs::read(&idx).unwrap();
+        if std::env::var_os("OCXD024_MISSING_PLAN_ONCE").is_none() {
+            for wrong in [
+                Request {
+                    revision: request.revision + 1,
+                    ..request.clone()
+                },
+                Request {
+                    confirmation_digest: "a".repeat(64),
+                    ..request.clone()
+                },
+            ] {
+                assert!(session_index::missing_plan::prepare(&context, &data, wrong).is_err());
+                assert_eq!(fs::read(&idx).unwrap(), index_bytes);
+            }
+            let cache = client.join("config.toml");
+            let bytes = fs::read(&cache).unwrap();
+            fs::write(&cache, b"outside stopped cache edit").unwrap();
+            assert!(
+                session_index::missing_plan::prepare(&context, &data, request.clone()).is_err()
+            );
+            assert_eq!(fs::read(&cache).unwrap(), b"outside stopped cache edit");
+            assert_eq!(fs::read(&idx).unwrap(), index_bytes);
+            fs::write(&cache, bytes).unwrap();
+        }
+        let request = session_index::missing_plan::review(&context, &data)
+            .unwrap()
+            .unwrap();
+        let paths = [
+            client.join("config.toml"),
+            client.join("opencodex-catalog.json"),
+            client.join("models_cache.json"),
+            client.join("opencodex-catalog-audit.jsonl"),
+        ];
+        let before: Vec<_> = paths.iter().map(|p| fs::read(p).ok()).collect();
+        let clock = Instant::now();
+        let result = session_index::missing_plan::prepare(&context, &data, request.clone());
+        let elapsed = clock.elapsed().as_millis();
+        let report = serde_json::json!({"accepted":false,"elapsedMs":elapsed,"outcome":result.as_ref().ok(),"error":result.as_ref().err().map(|e|e.to_string()),"currentTargetFilesUnchanged":paths.iter().zip(&before).all(|(p,b)|fs::read(p).ok()==*b),"noHistoricalExitProofReconstructed":true});
+        fs::write(
+            root.join("missing-plan-prepare.json"),
+            serde_json::to_vec_pretty(&report).unwrap(),
+        )
+        .unwrap();
+        println!("{report}");
+        let outcome = result.unwrap();
+        assert_eq!(outcome.status, "restore_prepared");
+        assert_eq!(outcome.revision, request.revision + 1);
+        assert!(elapsed < 10000);
+        assert!(paths
+            .iter()
+            .zip(&before)
+            .all(|(p, b)| fs::read(p).ok() == *b));
+    }
+    let preview = preview::inspect_preview(&context, &data);
+    assert!(preview.can_continue);
+    let request = Request {
+        attempt_id: preview.attempt_id.unwrap(),
+        revision: preview.revision.unwrap(),
+        confirmation_digest: preview.confirmation_digest.unwrap(),
+    };
+    let clock = Instant::now();
+    let result = session_index::continuation::resume(&context, &data, request.clone());
+    let elapsed = clock.elapsed().as_millis();
+    let report = serde_json::json!({"accepted":false,"elapsedMs":elapsed,"outcome":result.as_ref().ok(),"error":result.as_ref().err().map(|e|e.to_string()),"reopened":preview::inspect_preview(&context,&data),"separateExplicitContinue":true});
+    fs::write(
+        root.join("missing-plan-continue.json"),
+        serde_json::to_vec_pretty(&report).unwrap(),
+    )
+    .unwrap();
+    println!("{report}");
+    let outcome = result.unwrap();
+    assert_eq!(outcome.status, "restored");
+    assert_eq!(outcome.revision, request.revision + 1);
+    assert!(elapsed < 10000);
+}
+#[test]
 #[ignore = "single ordinary Start/Stop on owned fixture after cancelled reserved capture; retains all partial evidence"]
 fn ordinary_owned_lifecycle_after_cancelled_partial_capture() {
     let root = PathBuf::from(

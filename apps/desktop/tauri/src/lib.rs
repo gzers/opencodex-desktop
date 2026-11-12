@@ -707,6 +707,7 @@ pub fn run() {
             commands::client_recovery::client_recovery_continue,
             commands::client_recovery::client_recovery_rollback,
             commands::client_recovery::client_recovery_rearm,
+            commands::client_recovery::client_recovery_prepare_plan,
             commands::client_recovery::client_recovery_finish_unchanged,
             commands::client_recovery::client_recovery_cancel_preparation,
             commands::runtime_builtin::runtime_builtin_preview,

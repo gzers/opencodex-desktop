@@ -370,16 +370,24 @@ impl TreeSnapshot {
         plan: &str,
         leased: bool,
     ) -> bool {
-        if uuid::Uuid::parse_str(plan)
-            .map(|p| p.to_string() != plan)
-            .unwrap_or(true)
-            || !self.valid()
+        self.recovery_remainder_inner(current, Some(plan), leased)
+    }
+    pub(super) fn preplan_remainder_matches(&self, current: &Self, leased: bool) -> bool {
+        self.recovery_remainder_inner(current, None, leased)
+    }
+    fn recovery_remainder_inner(&self, current: &Self, plan: Option<&str>, leased: bool) -> bool {
+        if plan.is_some_and(|plan| {
+            uuid::Uuid::parse_str(plan)
+                .map(|p| p.to_string() != plan)
+                .unwrap_or(true)
+        }) || !self.valid()
             || !current.valid()
         {
             return false;
         }
-        let stages: Vec<_> = (0..3)
-            .map(|i| format!(".ocxd-restore-{plan}-{i}"))
+        let stages: Vec<_> = plan
+            .into_iter()
+            .flat_map(|plan| (0..3).map(move |i| format!(".ocxd-restore-{plan}-{i}")))
             .collect();
         let filtered = |tree: &Self| {
             let mut tree = tree.clone();

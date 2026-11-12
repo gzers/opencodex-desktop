@@ -202,6 +202,38 @@ fn recovery_review_binds_the_whole_batch_without_changing_any_object() {
     assert_eq!(f.originals.frame(Phase::Stopped).unwrap().1, stopped);
     assert_eq!(f.originals.frame(Phase::Ready).unwrap().1, ready);
 }
+#[test]
+fn missing_plan_proposal_reuses_only_original_four_frames_and_exact_stopped_postimages() {
+    let f = Fixture::new();
+    let before = Capture::read(&f.originals.client).unwrap();
+    let digest = Pending::preparation_fingerprint(&f.originals, &f.evidence).unwrap();
+    assert_eq!(
+        digest,
+        Pending::preparation_fingerprint(&f.originals, &f.evidence).unwrap()
+    );
+    assert_eq!(Capture::read(&f.originals.client).unwrap(), before);
+    let names = fs::read_dir(f.originals.directory.path())
+        .unwrap()
+        .map(|p| p.unwrap().file_name())
+        .collect::<Vec<_>>();
+    assert!(!names
+        .iter()
+        .any(|s| s.to_string_lossy().starts_with("restore-")));
+    let cache = f.originals.client.path().join(NAMES[1]);
+    let bytes = fs::read(&cache).unwrap();
+    fs::write(&cache, b"outside post-stop cache").unwrap();
+    assert!(Pending::preparation_fingerprint(&f.originals, &f.evidence).is_err());
+    assert_eq!(fs::read(&cache).unwrap(), b"outside post-stop cache");
+    fs::write(&cache, bytes).unwrap();
+    // Returning bytes does not recreate the exact captured change metadata;
+    // an outside write must not become a replacement stopped baseline.
+    assert!(Pending::preparation_fingerprint(&f.originals, &f.evidence).is_err());
+    let f = Fixture::new();
+    let mut unknown = f.evidence.clone();
+    unknown.declared_routes = None;
+    assert!(Pending::preparation_fingerprint(&f.originals, &unknown).is_err());
+    assert!(Pending::preparation_fingerprint(&f.originals, &f.evidence).is_ok());
+}
 
 #[test]
 fn recovery_review_rejects_missing_intent_damaged_terminal_and_replaced_archive() {

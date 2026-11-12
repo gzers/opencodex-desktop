@@ -741,6 +741,82 @@ fn fresh_ready(
     Ok((record.0, before, record.2))
 }
 impl StartupSession {
+    pub(super) fn missing_plan_fingerprint(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        leased: bool,
+    ) -> AppResult<Option<String>> {
+        if head.state != session_index::State::Stopped
+            || head.restore_plan.is_some()
+            || head.references.as_ref() != Some(&self.references()?)
+        {
+            return Ok(None);
+        }
+        let evidence = self.restore_evidence(context)?;
+        let decision =
+            restore::Pending::preparation_fingerprint(&self.originals, &evidence).map_err(error)?;
+        let original = self.originals.frame(Phase::Original).map_err(error)?.0;
+        let stopped = self.originals.frame(Phase::Stopped).map_err(error)?.0;
+        let codex = TreeSnapshot::read(&self.originals.client).map_err(error)?;
+        if !original.tree.preplan_remainder_matches(&codex, leased)
+            || !original
+                .grok
+                .restored_matches(&GrokSnapshot::read(&self.originals.profile).map_err(error)?)
+        {
+            return Ok(None);
+        }
+        for name in [
+            ".opencodex-native-main.claim.sqlite",
+            ".opencodex-native-main.owner.sqlite",
+        ] {
+            let id = codex.stable_identity(name).map_err(error)?;
+            if stopped.tree.stable_identity(name).map_err(error)? != id
+                || !original.tree.original_stable_identity_matches(name, &id)
+            {
+                return Ok(None);
+            }
+        }
+        Ok(Some(digest(
+            &encode(&(
+                head,
+                decision,
+                self.originals.data.identity(),
+                self.originals.client.identity(),
+                self.originals.profile.identity(),
+            ))
+            .map_err(error)?,
+        )))
+    }
+    pub(super) fn prepare_missing_plan(
+        &self,
+        context: &ProcessContext,
+        head: &session_index::Head,
+        confirmation: &str,
+        lease: &NativeLease,
+        deadline: Instant,
+    ) -> AppResult<(String, String)> {
+        time(deadline)?;
+        lease.require_context(context, &self.originals.client.path)?;
+        if self
+            .missing_plan_fingerprint(context, head, true)?
+            .as_deref()
+            != Some(confirmation)
+        {
+            return Err(error(()));
+        }
+        let live = self.live(context)?;
+        let (root, _) = source(context)?;
+        let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)?;
+        let pending =
+            restore::Pending::prepare(&self.originals, self.restore_evidence(context)?, lease)
+                .map_err(error)?;
+        lease.require_context(context, &self.originals.client.path)?;
+        owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)?;
+        time(deadline)?;
+        Ok((pending.id().into(), pending.sha256().into()))
+    }
     pub(super) fn require_early_absence(
         &self,
         context: &ProcessContext,

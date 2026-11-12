@@ -39,6 +39,8 @@ pub struct Preview {
     can_rollback: bool,
     can_finalize: bool,
     can_rearm: bool,
+    can_prepare_plan: bool,
+    plan_digest: Option<String>,
     can_finish_unchanged: bool,
     can_cancel_preparation: bool,
     preparation_digest: Option<String>,
@@ -59,7 +61,7 @@ pub async fn client_recovery_preview(
         {Ok(crate::infrastructure::macos_client_originals::session_index::preview::inspect_preview(&context,&data))}
         #[cfg(not(target_os="macos"))]
         {let _=(data,context);Ok(Preview{status:"unsupported",phase:None,revision:None,attempt_id:None,
-            original_evidence:"unknown",plan_evidence:"unknown",completion_evidence:"unknown",phase_count:0,can_continue:false,can_rollback:false,can_finalize:false,can_rearm:false,can_finish_unchanged:false,can_cancel_preparation:false,preparation_digest:None,unchanged_digest:None,rollback_digest:None,rearm_digest:None,confirmation_digest:None})}
+            original_evidence:"unknown",plan_evidence:"unknown",completion_evidence:"unknown",phase_count:0,can_continue:false,can_rollback:false,can_finalize:false,can_rearm:false,can_prepare_plan:false,plan_digest:None,can_finish_unchanged:false,can_cancel_preparation:false,preparation_digest:None,unchanged_digest:None,rollback_digest:None,rearm_digest:None,confirmation_digest:None})}
     }).await
 }
 #[tauri::command]
@@ -345,6 +347,54 @@ pub async fn client_recovery_cancel_preparation(
             Err(AppError::RuntimeManaged {
                 code: "client_recovery_unsupported".into(),
                 detail: "当前平台的客户端取消启动准备尚未接入".into(),
+            })
+        }
+    })
+    .await
+}
+#[tauri::command]
+pub async fn client_recovery_prepare_plan(
+    request: Request,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    install: tauri::State<'_, SharedRuntimeInstall>,
+    app: tauri::AppHandle,
+) -> AppResult<Outcome> {
+    use tauri::Manager;
+    let fail = || AppError::RuntimeManaged {
+        code: "client_recovery_prepare_plan_refused".into(),
+        detail: "当前有其它运行或更新操作，准备恢复计划未执行".into(),
+    };
+    let lease = {
+        let updates = app.state::<crate::commands::update::SharedUpdateStatus>();
+        let state = updates.lock().map_err(|_| fail())?;
+        if state.installing || state.pending_restart.is_some() {
+            return Err(fail());
+        }
+        install.acquire().ok_or_else(fail)?
+    };
+    let data = data.0.clone();
+    let context = context.inner().clone();
+    super::run_blocking("prepare missing client restore plan", move || {
+        let _lease = lease;
+        crate::modules::runtime::protection::ensure_binding_ready(&data)?;
+        #[cfg(target_os = "macos")]
+        {
+            crate::infrastructure::macos_client_originals::session_index::missing_plan::prepare(
+                &context, &data, request,
+            )
+        }
+        #[cfg(not(target_os = "macos"))]
+        {
+            let _ = (
+                context,
+                request.attempt_id,
+                request.revision,
+                request.confirmation_digest,
+            );
+            Err(AppError::RuntimeManaged {
+                code: "client_recovery_unsupported".into(),
+                detail: "当前平台的客户端准备恢复计划尚未接入".into(),
             })
         }
     })

@@ -66,6 +66,7 @@ fn recovery_remainder_exempts_only_separately_reviewed_exact_plan_objects() {
     fs::write(f.client.join(NAMES[0]), b"plan target").unwrap();
     let stage = f.client.join(format!(".ocxd-restore-{plan}-0"));
     fs::write(&stage, b"plan stage").unwrap();
+    assert!(!original.preplan_remainder_matches(&TreeSnapshot::read(&f.pin()).unwrap(), false));
     assert!(original.recovery_remainder_matches(
         &TreeSnapshot::read(&f.pin()).unwrap(),
         &plan,
@@ -83,6 +84,8 @@ fn recovery_remainder_exempts_only_separately_reviewed_exact_plan_objects() {
         false
     ));
     fs::remove_file(f.client.join(".ocxd-restore-foreign-0")).unwrap();
+    fs::remove_file(&stage).unwrap();
+    assert!(original.preplan_remainder_matches(&TreeSnapshot::read(&f.pin()).unwrap(), false));
     fs::write(f.client.join("config.toml"), b"outside config edit").unwrap();
     assert!(!original.recovery_remainder_matches(
         &TreeSnapshot::read(&f.pin()).unwrap(),
