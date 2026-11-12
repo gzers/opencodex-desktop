@@ -252,6 +252,7 @@ fn independent_static_route_declaration_uses_official_slash_encoding_and_refuses
     );
     let mut dynamic = static_graph.clone();
     dynamic["providers"]["Team_One"]["liveModels"] = true.into();
+    dynamic["providers"]["Team_One"]["selectedModels"] = serde_json::json!([]);
     assert_eq!(
         declaration(&serde_json::to_vec(&dynamic).unwrap()).unwrap(),
         None
@@ -316,6 +317,36 @@ fn display_alias_flags_never_become_declared_route_ids_and_omitted_flags_are_val
             None
         );
     }
+}
+#[test]
+fn explicit_nonempty_live_selection_is_independent_while_open_discovery_remains_unknown() {
+    let mut config = serde_json::json!({"providers":{"Live":{"liveModels":true,"models":["stale-known-model"],"selectedModels":["claude-opus-5-5","vendor/gemini-3.5-pro"]}}});
+    let expected = Some(vec![
+        "Live/claude-opus-5-5".into(),
+        "Live/vendor-gemini-3.5-pro".into(),
+    ]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        expected
+    );
+    config["providers"]["Live"]
+        .as_object_mut()
+        .unwrap()
+        .remove("liveModels");
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        expected
+    );
+    for models in [serde_json::json!([]), serde_json::json!(null)] {
+        let mut c = config.clone();
+        c["providers"]["Live"]["selectedModels"] = models;
+        assert_eq!(declaration(&serde_json::to_vec(&c).unwrap()).unwrap(), None);
+    }
+    config["providers"]["Live"]["liveModels"] = serde_json::json!("true");
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        None
+    );
 }
 #[test]
 fn audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction() {

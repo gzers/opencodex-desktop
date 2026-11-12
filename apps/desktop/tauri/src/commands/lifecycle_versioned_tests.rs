@@ -3,6 +3,8 @@
 use super::*;
 use crate::modules::runtime::{program_selection::tests::Fixture, RuntimeHandle};
 use std::sync::atomic::{AtomicUsize, Ordering};
+#[path = "lifecycle_loopback_models_fixture.rs"]
+mod loopback_models;
 
 struct AdmissionProbe(AtomicUsize);
 #[test]
@@ -238,6 +240,9 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
         "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
     );
     runtime::program_image::verify(&selected).unwrap();
+    let mut local_discovery = (std::env::var_os("OCXD024_DYNAMIC_SELECTED").as_deref()
+        == Some(std::ffi::OsStr::new("1")))
+    .then(loopback_models::Server::start);
     let mut config = serde_json::json!({"hostname":"127.0.0.1","port":0,"openaiProviderTierVersion":2,"defaultProvider":"native-fixture","defaultModelAliases":false,"providers":{"native-fixture":{"adapter":"openai-chat","baseUrl":"http://127.0.0.1:1/v1","allowPrivateNetwork":true,"apiKey":"synthetic-unused","models":["native-fixture-model"],"selectedModels":["native-fixture-model"],"liveModels":false,"defaultAliases":false}}});
     if std::env::var_os("OCXD024_ALIAS_GRAPH").as_deref() == Some(std::ffi::OsStr::new("1")) {
         config["defaultModelAliases"] = true.into();
@@ -247,6 +252,14 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
         p["selectedModels"] = p["models"].clone();
         p.as_object_mut().unwrap().remove("defaultAliases");
         p["modelAliases"] = serde_json::json!({"gpt-6-sol":"custom-sol"});
+    }
+    if let Some(server) = &local_discovery {
+        let p = &mut config["providers"]["native-fixture"];
+        p["baseUrl"] = server.base_url().into();
+        p["liveModels"] = true.into();
+        p["models"] = serde_json::json!(["stale-known-model"]);
+        p["selectedModels"] =
+            serde_json::json!(["claude-opus-5-5", "gpt-6-sol", "vendor/gemini-3.5-pro"]);
     }
     atomic_write(
         &h.join("config.json"),
@@ -683,6 +696,14 @@ model_provider = "openai"
             && head.completion_sha256.is_some();
         report["secondSession"] = serde_json::json!({"start":second_start,"stop":second_stop,"startElapsedMs":second_start_ms,"stopElapsedMs":second_stop_ms,"allOriginalBytesRestored":all_restored,"indexRevision":head.revision,"newTicket":head.ticket!=after_stop.ticket,"result":if repeat_ok{"passed"}else{"failed"}});
         passed &= repeat_ok && head.ticket != after_stop.ticket;
+    }
+    if let Some(mut server) = local_discovery.take() {
+        let discovery = server.finish();
+        passed &= discovery["getModelsRequests"]
+            .as_u64()
+            .is_some_and(|n| n > 0)
+            && discovery["unexpectedOrBusinessRequests"] == 0;
+        report["localModelDiscovery"] = discovery;
     }
     report["result"] = if passed { "passed" } else { "failed" }.into();
     write(&report);

@@ -304,8 +304,9 @@ fn declared_routes(home: &PinnedDirectory) -> AppResult<Option<Vec<String>>> {
     };
     declaration(&bytes)
 }
-// Preliminary independent static declaration. Unsupported/dynamic graphs stay
-// unresolved rather than learning route authority from the generated catalog.
+// Independent explicit selection declaration. An unbounded discovery graph
+// stays unresolved; nonempty selectedModels is the official final allowlist.
+// It is never learned from the generated catalog or a discovery response.
 // The actual content policy subsequently requires EXACT ready route coverage.
 fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
     let bytes = zeroize::Zeroizing::new(bytes.to_vec());
@@ -353,7 +354,7 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
             || !provider
                 .bytes()
                 .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
-            || entry.get("liveModels") != Some(&serde_json::Value::Bool(false))
+            || entry.get("liveModels").is_some_and(|v| !v.is_boolean())
             || entry.get("defaultAliases").is_some_and(|v| !v.is_boolean())
             || entry.get("modelAliases").is_some_and(|v| {
                 !v.as_object().is_some_and(|o| {
@@ -376,6 +377,9 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
         else {
             return Ok(None);
         };
+        if models.is_empty() && entry.get("liveModels") != Some(&serde_json::Value::Bool(false)) {
+            return Ok(None);
+        }
         for model in models {
             let Some(model) = model
                 .as_str()
