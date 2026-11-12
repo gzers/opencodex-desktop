@@ -1,0 +1,34 @@
+{
+  "accepted": false,
+  "baseCommit": "8b0dd88dfa72afa3694cbffe69aeed0154a8db7f",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "sha256": "101a772c93c4d6d00fbb90e7ad616fa7110d94925d998b4234c091d5d780d0af"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "bd71db314cb5a9ed051e47df3dfccdd0582870699770cb65a4edd4054d067a9e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_root_cycles_fixture.rs",
+      "sha256": "c273313666a8c60b1c2ea499a36bb3fa49d4953770ce59cad4ee96fafdb28beb"
+    }
+  ],
+  "purpose": "final source freeze before dedicated release no-run build; not attestation or candidate",
+  "binarySha256": "442c6e39f89b77a5cce5753d1b8f26d948e0fbab3eb54226b8deaa02daced1e5",
+  "binaryPath": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/deps/opencodex_desktop_lib-b66c44cd6a6eaaaf",
+  "releaseBuild": {
+    "command": [
+      "cargo",
+      "test",
+      "--release",
+      "--lib",
+      "--no-run"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 374.73
+  },
+  "scope": "Current final test code plus parent product commit compiled under existing release opt-level=s/LTO. No fixed app or source publication claim.",
+  "committedTestSource": "2e74359b406a09b116822f60946aa870704bd3c9"
+}

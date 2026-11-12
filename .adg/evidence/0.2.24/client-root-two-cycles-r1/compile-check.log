@@ -1,0 +1,149 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0603]: struct import `TreeSnapshot` is private
+   --> src/commands/lifecycle_root_cycles_fixture.rs:8:26
+    |
+  8 |         PinnedDirectory, TreeSnapshot,
+    |                          ^^^^^^^^^^^^ private struct import
+    |
+note: the struct import `TreeSnapshot` is defined here...
+   --> src/infrastructure/macos_client_originals.rs:617:5
+    |
+617 | use tree::TreeSnapshot;
+    |     ^^^^^^^^^^^^^^^^^^
+note: ...and refers to the struct `TreeSnapshot` which is defined here
+   --> src/infrastructure/macos_client_tree.rs:29:1
+    |
+ 29 | pub struct TreeSnapshot {
+    | ^^^^^^^^^^^^^^^^^^^^^^^ you could import this directly
+help: import `TreeSnapshot` directly
+    |
+  8 |         PinnedDirectory, infrastructure::macos_client_originals::tree::TreeSnapshot,
+    |                          ++++++++++++++++++++++++++++++++++++++++++++++
+
+error[E0277]: the trait bound `serde_json::Value: From<u128>` is not satisfied
+   --> src/commands/lifecycle_root_cycles_fixture.rs:141:61
+    |
+141 |     report["firstStoppedStatusElapsedMs"] = first_status_ms.into();
+    |                                                             ^^^^ the trait `From<u128>` is not implemented for `serde_json::Value`
+    |
+    = help: the following other types implement trait `From<T>`:
+              `serde_json::Value` implements `From<&[T]>`
+              `serde_json::Value` implements `From<&jsonptr::pointer::Pointer>`
+              `serde_json::Value` implements `From<&str>`
+              `serde_json::Value` implements `From<()>`
+              `serde_json::Value` implements `From<Cow<'_, str>>`
+              `serde_json::Value` implements `From<[T; N]>`
+              `serde_json::Value` implements `From<bool>`
+              `serde_json::Value` implements `From<f32>`
+            and 17 others
+    = note: required for `u128` to implement `Into<serde_json::Value>`
+
+error[E0277]: the trait bound `serde_json::Value: From<u128>` is not satisfied
+   --> src/commands/lifecycle_root_cycles_fixture.rs:156:47
+    |
+156 |     report["secondStartElapsedMs"] = start_ms.into();
+    |                                               ^^^^ the trait `From<u128>` is not implemented for `serde_json::Value`
+    |
+    = help: the following other types implement trait `From<T>`:
+              `serde_json::Value` implements `From<&[T]>`
+              `serde_json::Value` implements `From<&jsonptr::pointer::Pointer>`
+              `serde_json::Value` implements `From<&str>`
+              `serde_json::Value` implements `From<()>`
+              `serde_json::Value` implements `From<Cow<'_, str>>`
+              `serde_json::Value` implements `From<[T; N]>`
+              `serde_json::Value` implements `From<bool>`
+              `serde_json::Value` implements `From<f32>`
+            and 17 others
+    = note: required for `u128` to implement `Into<serde_json::Value>`
+
+error[E0277]: the trait bound `u64: From<std::string::String>` is not satisfied
+   --> src/commands/lifecycle_root_cycles_fixture.rs:181:12
+    |
+181 |         && v.pid.map(u64::from)==second_record["pid"].as_u64()
+    |            ^^^^^^^^^^^^^^^^^^^^ the trait `From<std::string::String>` is not implemented for `u64`
+    |
+    = help: the following other types implement trait `From<T>`:
+              `u64` implements `From<bool>`
+              `u64` implements `From<char>`
+              `u64` implements `From<deranged::RangedU64<MIN, MAX>>`
+              `u64` implements `From<std::ascii::Char>`
+              `u64` implements `From<u16>`
+              `u64` implements `From<u32>`
+              `u64` implements `From<u8>`
+              `u64` implements `From<zerocopy::byteorder::U16<O>>`
+            and 2 others
+
+error[E0277]: the trait bound `u64: From<std::string::String>` is not satisfied
+   --> src/commands/lifecycle_root_cycles_fixture.rs:181:22
+    |
+181 |         && v.pid.map(u64::from)==second_record["pid"].as_u64()
+    |                      ^^^ the trait `From<std::string::String>` is not implemented for `u64`
+    |
+    = help: the following other types implement trait `From<T>`:
+              `u64` implements `From<bool>`
+              `u64` implements `From<char>`
+              `u64` implements `From<deranged::RangedU64<MIN, MAX>>`
+              `u64` implements `From<std::ascii::Char>`
+              `u64` implements `From<u16>`
+              `u64` implements `From<u32>`
+              `u64` implements `From<u8>`
+              `u64` implements `From<zerocopy::byteorder::U16<O>>`
+            and 2 others
+
+error[E0277]: the trait bound `serde_json::Value: From<u128>` is not satisfied
+   --> src/commands/lifecycle_root_cycles_fixture.rs:186:51
+    |
+186 |     report["secondLiveStatusElapsedMs"] = live_ms.into();
+    |                                                   ^^^^ the trait `From<u128>` is not implemented for `serde_json::Value`
+    |
+    = help: the following other types implement trait `From<T>`:
+              `serde_json::Value` implements `From<&[T]>`
+              `serde_json::Value` implements `From<&jsonptr::pointer::Pointer>`
+              `serde_json::Value` implements `From<&str>`
+              `serde_json::Value` implements `From<()>`
+              `serde_json::Value` implements `From<Cow<'_, str>>`
+              `serde_json::Value` implements `From<[T; N]>`
+              `serde_json::Value` implements `From<bool>`
+              `serde_json::Value` implements `From<f32>`
+            and 17 others
+    = note: required for `u128` to implement `Into<serde_json::Value>`
+
+error[E0277]: the trait bound `serde_json::Value: From<u128>` is not satisfied
+   --> src/commands/lifecycle_root_cycles_fixture.rs:203:45
+    |
+203 |     report["secondStopElapsedMs"] = stop_ms.into();
+    |                                             ^^^^ the trait `From<u128>` is not implemented for `serde_json::Value`
+    |
+    = help: the following other types implement trait `From<T>`:
+              `serde_json::Value` implements `From<&[T]>`
+              `serde_json::Value` implements `From<&jsonptr::pointer::Pointer>`
+              `serde_json::Value` implements `From<&str>`
+              `serde_json::Value` implements `From<()>`
+              `serde_json::Value` implements `From<Cow<'_, str>>`
+              `serde_json::Value` implements `From<[T; N]>`
+              `serde_json::Value` implements `From<bool>`
+              `serde_json::Value` implements `From<f32>`
+            and 17 others
+    = note: required for `u128` to implement `Into<serde_json::Value>`
+
+error[E0277]: the trait bound `serde_json::Value: From<u128>` is not satisfied
+   --> src/commands/lifecycle_root_cycles_fixture.rs:216:57
+    |
+216 |     report["secondStoppedStatusElapsedMs"] = stopped_ms.into();
+    |                                                         ^^^^ the trait `From<u128>` is not implemented for `serde_json::Value`
+    |
+    = help: the following other types implement trait `From<T>`:
+              `serde_json::Value` implements `From<&[T]>`
+              `serde_json::Value` implements `From<&jsonptr::pointer::Pointer>`
+              `serde_json::Value` implements `From<&str>`
+              `serde_json::Value` implements `From<()>`
+              `serde_json::Value` implements `From<Cow<'_, str>>`
+              `serde_json::Value` implements `From<[T; N]>`
+              `serde_json::Value` implements `From<bool>`
+              `serde_json::Value` implements `From<f32>`
+            and 17 others
+    = note: required for `u128` to implement `Into<serde_json::Value>`
+
+Some errors have detailed explanations: E0277, E0603.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib test) due to 8 previous errors
