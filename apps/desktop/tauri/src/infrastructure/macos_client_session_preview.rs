@@ -111,7 +111,10 @@ fn project_history(
             Status::Active
         } else if matches!(
             head.state,
-            State::Restored | State::Unchanged | State::CancelledBeforeCapture
+            State::Restored
+                | State::Unchanged
+                | State::CancelledBeforeCapture
+                | State::CancelledCapture
         ) {
             Status::Restored
         } else {
@@ -136,7 +139,7 @@ fn project_history(
         rearm_digest: None,
         confirmation_digest: None,
     };
-    if head.state == State::Preparing {
+    if matches!(head.state, State::Preparing | State::CaptureReserved) {
         preview.preparation_digest = preparation::confirmation(context, data, head, history)?;
         preview.can_cancel_preparation = preview.preparation_digest.is_some();
         if preview.can_cancel_preparation {

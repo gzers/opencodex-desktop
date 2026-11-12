@@ -752,6 +752,66 @@ impl Originals {
         client_root: &Path,
         profile_root: &Path,
     ) -> io::Result<Self> {
+        Self::begin_profile_attempt(
+            data_root,
+            client_root,
+            profile_root,
+            &uuid::Uuid::new_v4().to_string(),
+            &|_| Ok(()),
+        )
+    }
+    pub(super) fn begin_reserved_profile(
+        data_root: &Path,
+        client_root: &Path,
+        profile_root: &Path,
+        reservation: &session_index::CaptureReservation<'_>,
+    ) -> io::Result<Self> {
+        reservation.require(data_root, client_root, profile_root)?;
+        Self::begin_profile_attempt(
+            data_root,
+            client_root,
+            profile_root,
+            reservation.attempt(),
+            &|point| {
+                reservation.require(data_root, client_root, profile_root)?;
+                #[cfg(test)]
+                if std::env::var("OCXD024_CAPTURE_INTERRUPT_POINT")
+                    .ok()
+                    .as_deref()
+                    == Some(point)
+                {
+                    if !data_root.starts_with("/private/tmp")
+                        || !data_root.ancestors().any(|p| {
+                            p.file_name().is_some_and(|n| {
+                                n.to_string_lossy()
+                                    .starts_with("ocxd024-versioned-lifecycle-")
+                            })
+                        })
+                    {
+                        return Err(denied("capture interruption fixture refused"));
+                    }
+                    return Err(denied(
+                        "owned capture interruption after reserved publication",
+                    ));
+                }
+                let _ = point;
+                Ok(())
+            },
+        )
+    }
+    fn begin_profile_attempt(
+        data_root: &Path,
+        client_root: &Path,
+        profile_root: &Path,
+        attempt: &str,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<Self> {
+        if uuid::Uuid::parse_str(attempt)
+            .map(|v| v.to_string() != attempt)
+            .unwrap_or(true)
+        {
+            return Err(denied("capture attempt is not canonical"));
+        }
         let grok_path = profile_root.join(".grok");
         if data_root.starts_with(&grok_path)
             || grok_path.starts_with(data_root)
@@ -781,16 +841,19 @@ impl Originals {
         let grok = GrokSnapshot::read(&profile)?;
         let manager = data.child_private("manager-state", true)?;
         let vault = manager.child_private("client-originals", true)?;
-        let attempt = uuid::Uuid::new_v4().to_string();
+        let attempt = attempt.to_owned();
         let c = name(OsStr::new(&attempt))?;
         if unsafe { libc::mkdirat(vault.file().as_raw_fd(), c.as_ptr(), 0o700) } != 0 {
             return Err(io::Error::last_os_error());
         }
+        checkpoint("directory_created")?;
         let directory = PinnedDirectory::open(&vault.path.join(&attempt))?;
         directory.private()?;
         vault.sync()?;
         tree.archive(&client, &directory)?;
+        checkpoint("codex_archived")?;
         grok.archive(&profile, &directory)?;
+        checkpoint("grok_archived")?;
         let frame = Frame {
             schema_version: 4,
             attempt: attempt.clone(),
@@ -812,6 +875,7 @@ impl Originals {
         }
         let bytes = encode(&frame)?;
         create(&directory, Phase::Original.filename(), &bytes)?;
+        checkpoint("original_published")?;
         data.recheck()?;
         client.recheck()?;
         if Capture::read(&client)? != frame.capture

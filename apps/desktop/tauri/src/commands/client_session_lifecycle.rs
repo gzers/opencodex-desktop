@@ -81,8 +81,10 @@ impl Active {
             codex_home: client.clone(),
             control_root: index.control_root().map_err(failure)?,
         };
+        let intent = index.reserve_capture(&intent).map_err(failure)?;
+        let reservation = index.capture_reservation(&intent).map_err(failure)?;
         let session = with_native_coordination(&coordination, deadline, |lease| {
-            StartupSession::begin(context, data, &client, lease, deadline)
+            StartupSession::begin_reserved(context, data, &client, lease, deadline, &reservation)
         })?;
         let head = index
             .advance(&intent, State::Captured, Some(session.references()?))

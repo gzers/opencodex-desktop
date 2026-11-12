@@ -23,7 +23,11 @@ pub fn unresolved_after_failure(context: &ProcessContext, data: &Path) -> bool {
         Ok(None) => false,
         Ok(Some(h)) => !matches!(
             h.state,
-            State::Ready | State::Restored | State::Unchanged | State::CancelledBeforeCapture
+            State::Ready
+                | State::Restored
+                | State::Unchanged
+                | State::CancelledBeforeCapture
+                | State::CancelledCapture
         ),
         Err(_) => true,
     }
@@ -49,6 +53,7 @@ mod vault_history;
 #[serde(rename_all = "snake_case")]
 pub enum State {
     Preparing,
+    CaptureReserved,
     Captured,
     Ready,
     StopPrepared,
@@ -58,6 +63,7 @@ pub enum State {
     Restored,
     Unchanged,
     CancelledBeforeCapture,
+    CancelledCapture,
     Failed,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -101,6 +107,7 @@ fn validate(head: &Head) -> io::Result<()> {
                 | State::RestoreRolledBack
                 | State::Unchanged
                 | State::CancelledBeforeCapture
+                | State::CancelledCapture
         ) != head.completion_sha256.is_some()
         || head
             .completion_sha256
@@ -128,7 +135,11 @@ fn validate(head: &Head) -> io::Result<()> {
     let Some(refs) = &head.references else {
         return if matches!(
             head.state,
-            State::Preparing | State::Failed | State::CancelledBeforeCapture
+            State::Preparing
+                | State::CaptureReserved
+                | State::Failed
+                | State::CancelledBeforeCapture
+                | State::CancelledCapture
         ) {
             Ok(())
         } else {
@@ -161,8 +172,13 @@ fn validate(head: &Head) -> io::Result<()> {
         State::Stopped | State::RestorePrepared | State::Restored | State::RestoreRolledBack => {
             Some((3, true))
         }
-        State::Preparing => return Err(denied("unpublished originals in preparing index")),
-        State::Failed | State::Unchanged | State::CancelledBeforeCapture => None,
+        State::Preparing | State::CaptureReserved => {
+            return Err(denied("unpublished originals in preparing index"))
+        }
+        State::Failed
+        | State::Unchanged
+        | State::CancelledBeforeCapture
+        | State::CancelledCapture => None,
     };
     if expected
         .is_some_and(|(n, live)| refs.phases.len() != n || refs.live_sha256.is_some() != live)
@@ -279,6 +295,28 @@ pub struct Index {
     data: PinnedDirectory,
     client: PinnedDirectory,
     profile: PathBuf,
+}
+/// Borrowed independent index authority, never constructed from capture files.
+pub struct CaptureReservation<'a> {
+    index: &'a Index,
+    head: Head,
+}
+impl CaptureReservation<'_> {
+    pub(super) fn require(&self, data: &Path, client: &Path, profile: &Path) -> io::Result<()> {
+        if self.head.state != State::CaptureReserved
+            || self.head.references.is_some()
+            || self.index.head()?.as_ref() != Some(&self.head)
+            || self.index.data.path() != data
+            || self.index.client.path() != client
+            || self.index.profile != profile
+        {
+            return Err(denied("capture reservation/index/root changed"));
+        }
+        Ok(())
+    }
+    pub(super) fn attempt(&self) -> &str {
+        &self.head.ticket
+    }
 }
 impl Index {
     pub fn data_root(&self) -> &Path {
@@ -549,7 +587,10 @@ impl Index {
         if previous.as_ref().is_some_and(|head| {
             !matches!(
                 head.state,
-                State::Restored | State::Unchanged | State::CancelledBeforeCapture
+                State::Restored
+                    | State::Unchanged
+                    | State::CancelledBeforeCapture
+                    | State::CancelledCapture
             )
         }) {
             return Err(denied(
@@ -557,7 +598,10 @@ impl Index {
             ));
         }
         if let Some(head) = &previous {
-            if head.state == State::CancelledBeforeCapture {
+            if matches!(
+                head.state,
+                State::CancelledBeforeCapture | State::CancelledCapture
+            ) {
                 preparation::verify_registered(
                     &self.data,
                     &self.client,
@@ -601,6 +645,35 @@ impl Index {
         self.write(previous.as_ref(), &head)?;
         Ok(head)
     }
+    /// This durable commit PRECEDES the first capture directory or blob.
+    pub fn reserve_capture(&self, expected: &Head) -> io::Result<Head> {
+        if expected.state != State::Preparing
+            || expected.references.is_some()
+            || expected.restore_plan.is_some()
+            || expected.completion_sha256.is_some()
+        {
+            return Err(denied(
+                "capture reservation cannot replace current originals",
+            ));
+        }
+        let mut next = expected.clone();
+        next.revision = next
+            .revision
+            .checked_add(1)
+            .ok_or_else(|| denied("capture revision overflow"))?;
+        next.state = State::CaptureReserved;
+        validate(&next)?;
+        self.write(Some(expected), &next)?;
+        Ok(next)
+    }
+    pub fn capture_reservation<'a>(&'a self, head: &Head) -> io::Result<CaptureReservation<'a>> {
+        let reservation = CaptureReservation {
+            index: self,
+            head: head.clone(),
+        };
+        reservation.require(self.data.path(), self.client.path(), &self.profile)?;
+        Ok(reservation)
+    }
     pub fn advance(
         &self,
         expected: &Head,
@@ -610,6 +683,7 @@ impl Index {
         let allowed = matches!(
             (expected.state, state),
             (State::Preparing, State::Captured)
+                | (State::CaptureReserved, State::Captured)
                 | (State::Captured, State::Ready)
                 | (State::Ready, State::StopPrepared)
                 | (State::StopPrepared, State::Stopped)
@@ -622,9 +696,20 @@ impl Index {
                     | State::RestoreRolledBack
                     | State::Unchanged
                     | State::CancelledBeforeCapture
+                    | State::CancelledCapture
             );
         if !allowed {
             return Err(denied("current session transition is not allowed"));
+        }
+        if expected.state == State::CaptureReserved
+            && (state != State::Captured
+                || references
+                    .as_ref()
+                    .is_none_or(|r| r.attempt != expected.ticket))
+        {
+            return Err(denied(
+                "captured references differ from independently reserved attempt",
+            ));
         }
         if let Some(before) = &expected.references {
             let after = references
@@ -699,7 +784,11 @@ impl Index {
                 .checked_add(1)
                 .ok_or_else(|| denied("cancel revision overflow"))?,
             ticket: expected.ticket.clone(),
-            state: State::CancelledBeforeCapture,
+            state: if expected.state == State::CaptureReserved {
+                State::CancelledCapture
+            } else {
+                State::CancelledBeforeCapture
+            },
             references: None,
             restore_plan: None,
             completion_sha256: Some(proof.sha256().into()),

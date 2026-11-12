@@ -453,7 +453,10 @@ impl StatusSource for OfficialStatusSource {
                 Ok(Some(head))
                     if matches!(
                         head.state,
-                        Phase::Restored | Phase::Unchanged | Phase::CancelledBeforeCapture
+                        Phase::Restored
+                            | Phase::Unchanged
+                            | Phase::CancelledBeforeCapture
+                            | Phase::CancelledCapture
                     ) =>
                 {
                     State::NotRequired

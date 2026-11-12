@@ -186,18 +186,25 @@ pub(super) fn inspect_map_history<T>(
         return Err(denied("observation HOME or directory generation differs"));
     }
     let result = read_head(&connection)?;
-    let history = if let Some(head) = result
-        .as_ref()
-        .filter(|h| matches!(h.state, State::Preparing | State::CancelledBeforeCapture))
-    {
+    let history = if let Some(head) = result.as_ref().filter(|h| {
+        matches!(
+            h.state,
+            State::Preparing
+                | State::CaptureReserved
+                | State::CancelledBeforeCapture
+                | State::CancelledCapture
+        )
+    }) {
         vault_history::read(&connection, head)?
     } else {
         Vec::new()
     };
-    if let Some(head) = result
-        .as_ref()
-        .filter(|h| h.state == State::CancelledBeforeCapture)
-    {
+    if let Some(head) = result.as_ref().filter(|h| {
+        matches!(
+            h.state,
+            State::CancelledBeforeCapture | State::CancelledCapture
+        )
+    }) {
         preparation::verify_registered(
             &data,
             &client,

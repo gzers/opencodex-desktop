@@ -448,6 +448,28 @@ model_provider = "openai"
     report["independentOriginalsReferenced"] = after_start.references.is_some().into();
     drop(indexed_after_start);
     write(&report);
+    if std::env::var_os("OCXD024_CAPTURE_INTERRUPT_POINT").is_some() {
+        assert!(!started_ok && record.is_none());
+        assert_eq!(
+            after_start.state,
+            crate::infrastructure::macos_client_originals::session_index::State::CaptureReserved
+        );
+        assert!(after_start.references.is_none());
+        assert!(
+            start.as_ref().unwrap().client_recovery_required && !start.as_ref().unwrap().can_start
+        );
+        report["reservedCaptureInterruptionExpected"] = true.into();
+        report["reservedAttempt"] = after_start.ticket.clone().into();
+        report["indexRevision"] = after_start.revision.into();
+        report["indexState"] = serde_json::json!(after_start.state);
+        report["result"] = "failed".into();
+        report["statusAndStopSkipped"] = "directed capture-only failure; no service started".into();
+        write(&report);
+        panic!(
+            "expected owned reserved capture interruption at {}",
+            root.display()
+        );
+    }
     if std::env::var_os("OCXD024_INTERRUPT_BEFORE_CAPTURE").as_deref()
         == Some(std::ffi::OsStr::new("1"))
     {
@@ -556,7 +578,7 @@ model_provider = "openai"
             && old != new
             && head.state
                 == crate::infrastructure::macos_client_originals::session_index::State::Ready
-            && head.revision == 10;
+            && head.revision == 12;
         report["singleRestart"] = serde_json::json!({"result":result,"elapsedMs":elapsed,"oldPid":old,"newPid":new,"newPort":current.as_ref().map(|v|v["port"].clone()),"indexState":head.state,"indexRevision":head.revision,"verified":restart_verified});
         write(&report);
     }
@@ -774,7 +796,7 @@ model_provider = "openai"
             && all_restored
             && head.state
                 == crate::infrastructure::macos_client_originals::session_index::State::Restored
-            && head.revision == 14
+            && head.revision == 16
             && head.completion_sha256.is_some();
         report["secondSession"] = serde_json::json!({"start":second_start,"stop":second_stop,"startElapsedMs":second_start_ms,"stopElapsedMs":second_stop_ms,"allOriginalBytesRestored":all_restored,"indexRevision":head.revision,"newTicket":head.ticket!=after_stop.ticket,"result":if repeat_ok{"passed"}else{"failed"}});
         passed &= repeat_ok && head.ticket != after_stop.ticket;
@@ -820,7 +842,7 @@ model_provider = "openai"
             head.state,
             crate::infrastructure::macos_client_originals::session_index::State::Preparing
         );
-        assert_eq!(head.revision, 8);
+        assert_eq!(head.revision, 9);
         assert!(head.references.is_none());
         assert!(result.client_recovery_required && !result.can_start);
         assert!(paths

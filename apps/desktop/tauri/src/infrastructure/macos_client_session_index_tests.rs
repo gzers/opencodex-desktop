@@ -906,3 +906,192 @@ fn retained_product_index_reopens_with_final_lock_validation_and_preserves_origi
     assert_eq!(index.head().unwrap(), Some(head.clone()));
     println!("RETAINED_INDEX_STOPPED revision={} phases={} original_sha256={} baseline_overwrite_refused=true",head.revision,references.phases.len(),references.original_sha256);
 }
+
+fn reserved_capture_fixture(root: &Path) -> (ProcessContext, PathBuf, PathBuf) {
+    let data = root.join("desktop");
+    let profile = root.join("profile");
+    let client = profile.join(".codex");
+    let home = profile.join("opencodex-home");
+    for path in [&data, &profile, &client, &home] {
+        std::fs::DirBuilder::new()
+            .recursive(true)
+            .create(path)
+            .unwrap();
+        std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o700)).unwrap();
+    }
+    std::fs::write(
+        client.join("config.toml"),
+        b"original current client configuration",
+    )
+    .unwrap();
+    std::fs::set_permissions(
+        client.join("config.toml"),
+        std::fs::Permissions::from_mode(0o600),
+    )
+    .unwrap();
+    (
+        ProcessContext {
+            runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(
+            ),
+            working_directory: profile,
+            opencodex_home: home,
+        },
+        data,
+        client,
+    )
+}
+#[test]
+fn capture_reservation_precedes_files_and_cannot_be_rebound_or_reused() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let (context, data, client) = reserved_capture_fixture(&root);
+    let index = Index::open(&context, &data, &client).unwrap();
+    let head = index.reserve_start().unwrap();
+    assert!(index.capture_reservation(&head).is_err());
+    let reserved = index.reserve_capture(&head).unwrap();
+    assert_eq!(reserved.state, State::CaptureReserved);
+    assert_eq!(reserved.ticket, head.ticket);
+    assert_eq!(reserved.revision, 2);
+    assert!(!data.join("manager-state/client-originals").exists());
+    assert!(index.reserve_capture(&head).is_err());
+    assert!(index.reserve_capture(&reserved).is_err());
+    let authority = index.capture_reservation(&reserved).unwrap();
+    assert!(authority
+        .require(&data, &context.opencodex_home, &context.working_directory)
+        .is_err());
+    let originals =
+        Originals::begin_reserved_profile(&data, &client, &context.working_directory, &authority)
+            .unwrap();
+    assert_eq!(originals.attempt(), reserved.ticket);
+    assert!(Originals::begin_reserved_profile(
+        &data,
+        &client,
+        &context.working_directory,
+        &authority
+    )
+    .is_err());
+    let refs = References {
+        attempt: reserved.ticket.clone(),
+        original_sha256: originals.original_sha256().into(),
+        scope_sha256: "b".repeat(64),
+        phases: vec![],
+        live_sha256: None,
+    };
+    let mut wrong = refs.clone();
+    wrong.attempt = uuid::Uuid::new_v4().to_string();
+    assert!(index
+        .advance(&reserved, State::Captured, Some(wrong))
+        .is_err());
+    let captured = index
+        .advance(&reserved, State::Captured, Some(refs))
+        .unwrap();
+    assert_eq!(captured.revision, 3);
+    assert!(authority
+        .require(&data, &client, &context.working_directory)
+        .is_err());
+    assert_eq!(
+        std::fs::read(client.join("config.toml")).unwrap(),
+        b"original current client configuration"
+    );
+}
+#[test]
+fn process_exit_during_reserved_capture_retains_partial_objects_without_adopting_originals() {
+    const CHILD: &str = "OCXD024_RESERVED_CAPTURE_CHILD";
+    if let Some(root) = std::env::var_os(CHILD) {
+        let root = PathBuf::from(root);
+        let (context, data, client) = reserved_capture_fixture(&root);
+        let index = Index::open(&context, &data, &client).unwrap();
+        let head = index.reserve_start().unwrap();
+        let reserved = index.reserve_capture(&head).unwrap();
+        let authority = index.capture_reservation(&reserved).unwrap();
+        let point = std::env::var("OCXD024_RESERVED_CAPTURE_POINT").unwrap();
+        let _ = Originals::begin_profile_attempt(
+            &data,
+            &client,
+            &context.working_directory,
+            authority.attempt(),
+            &|p| {
+                authority.require(&data, &client, &context.working_directory)?;
+                if p == point {
+                    std::process::exit(91);
+                }
+                Ok(())
+            },
+        );
+        panic!("capture boundary not reached");
+    }
+    for point in [
+        "directory_created",
+        "codex_archived",
+        "grok_archived",
+        "original_published",
+    ] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let output=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::session_index::tests::process_exit_during_reserved_capture_retains_partial_objects_without_adopting_originals","--nocapture"]).env(CHILD,&root).env("OCXD024_RESERVED_CAPTURE_POINT",point).output().unwrap();
+        assert_eq!(
+            output.status.code(),
+            Some(91),
+            "{point}: {}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let data = root.join("desktop");
+        let profile = root.join("profile");
+        let client = profile.join(".codex");
+        let context = ProcessContext {
+            runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(
+            ),
+            working_directory: profile.clone(),
+            opencodex_home: profile.join("opencodex-home"),
+        };
+        let head = inspect(&context, &data).unwrap().unwrap();
+        assert_eq!(head.state, State::CaptureReserved);
+        assert!(head.references.is_none());
+        assert_eq!(head.revision, 2);
+        let vault = data.join("manager-state/client-originals");
+        let slot = vault.join(&head.ticket);
+        assert!(slot.is_dir());
+        let before =
+            TreeSnapshot::read_mode(&PinnedDirectory::open(&slot).unwrap(), false).unwrap();
+        let orphan = vault.join(uuid::Uuid::new_v4().to_string());
+        std::fs::create_dir(&orphan).unwrap();
+        assert!(preparation::review(&context, &data).is_err());
+        std::fs::remove_dir(orphan).unwrap();
+        let request = preparation::review(&context, &data).unwrap().unwrap();
+        assert_eq!(request.attempt_id, head.ticket);
+        let index = Index::open_existing(&context, &data, &client).unwrap();
+        let proof = preparation::fixture_readback(
+            &context,
+            &index,
+            &head,
+            std::time::Instant::now() + std::time::Duration::from_secs(10),
+        )
+        .unwrap();
+        let closed = index.close_preparation(&head, &proof).unwrap();
+        assert_eq!(closed.state, State::CancelledCapture);
+        assert_eq!(closed.revision, 3);
+        drop(index);
+        assert_eq!(
+            TreeSnapshot::read_mode(&PinnedDirectory::open(&slot).unwrap(), false).unwrap(),
+            before
+        );
+        assert!(closed.references.is_none());
+        assert_eq!(inspect(&context, &data).unwrap().unwrap(), closed);
+        // Partially captured bytes are retained, not adopted as config source.
+        let changed = slot.join("outside-after-cancel");
+        std::fs::write(&changed, b"retained new evidence").unwrap();
+        assert!(inspect(&context, &data).is_err());
+        assert_eq!(std::fs::read(&changed).unwrap(), b"retained new evidence");
+        std::fs::remove_file(changed).unwrap();
+        let index = Index::open_existing(&context, &data, &client).unwrap();
+        let next = index.reserve_start().unwrap();
+        assert_eq!(next.revision, 4);
+        assert_ne!(next.ticket, head.ticket);
+        drop(index);
+        assert!(preparation::review(&context, &data).unwrap().is_some());
+        assert_eq!(
+            std::fs::read(client.join("config.toml")).unwrap(),
+            b"original current client configuration"
+        );
+    }
+}

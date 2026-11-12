@@ -23,13 +23,16 @@ fn time(deadline: Instant) -> io::Result<()> {
     }
 }
 fn eligible(head: &Head) -> bool {
-    head.state == State::Preparing
+    matches!(head.state, State::Preparing | State::CaptureReserved)
         && head.references.is_none()
         && head.restore_plan.is_none()
         && head.completion_sha256.is_none()
 }
 fn filename(head: &Head) -> String {
-    let revision = if head.state == State::CancelledBeforeCapture {
+    let revision = if matches!(
+        head.state,
+        State::CancelledBeforeCapture | State::CancelledCapture
+    ) {
         head.revision.saturating_sub(1)
     } else {
         head.revision
@@ -91,8 +94,14 @@ fn inspect_objects(
     if !eligible(head) {
         return Ok(None);
     }
-    let retained_vault =
-        vault_history::inspect(data, client, &context.working_directory, head, history)?;
+    let retained_vault = vault_history::inspect(
+        data,
+        client,
+        &context.working_directory,
+        binding,
+        head,
+        history,
+    )?;
     let manager = data.child_private("manager-state", false)?;
     let profile = PinnedDirectory::open(&context.working_directory)?;
     let codex = TreeSnapshot::read(client)?;
@@ -124,8 +133,14 @@ fn inspect_objects(
             }
         }
     }
-    if vault_history::inspect(data, client, &context.working_directory, head, history)?
-        != result.retained_vault
+    if vault_history::inspect(
+        data,
+        client,
+        &context.working_directory,
+        binding,
+        head,
+        history,
+    )? != result.retained_vault
     {
         return Err(denied("retained vault changed during cancellation review"));
     }
@@ -229,6 +244,57 @@ fn readback(
         deadline,
     })
 }
+pub(super) fn retained_capture(
+    data: &PinnedDirectory,
+    binding: &[u8],
+    head: &Head,
+    history: &[Head],
+) -> io::Result<Option<(String, Option<TreeSnapshot>)>> {
+    if head.state != State::CancelledCapture {
+        return Ok(None);
+    }
+    let manager = data.child_private("manager-state", false)?;
+    let Image::File {
+        bytes, protection, ..
+    } = capture_file(&manager, &filename(head), MAX_FRAME)?
+    else {
+        return Err(denied("retained capture receipt absent"));
+    };
+    require_private(&protection, false)?;
+    if head.completion_sha256.as_deref() != Some(digest(&bytes).as_str()) {
+        return Err(denied("retained capture receipt changed"));
+    }
+    let receipt: Receipt = serde_json::from_value(
+        parse_strict_json_v2(&bytes).map_err(|_| denied("capture receipt JSON invalid"))?,
+    )
+    .map_err(|_| denied("capture receipt invalid"))?;
+    let prefix = history
+        .iter()
+        .take_while(|h| h.revision <= receipt.original_head.revision)
+        .cloned()
+        .collect::<Vec<_>>();
+    if receipt.schema_version != 2
+        || receipt.original_head.state != State::CaptureReserved
+        || receipt.original_head.ticket != head.ticket
+        || receipt.original_head.revision.checked_add(1) != Some(head.revision)
+        || prefix.last() != Some(&receipt.original_head)
+        || receipt.binding_sha256 != digest(binding)
+        || !receipt.retained_vault.matches_history(&prefix)
+    {
+        return Err(denied(
+            "retained capture is not independently bound to reservation history",
+        ));
+    }
+    validate(&receipt.original_head)?;
+    let entry = receipt
+        .retained_vault
+        .reserved_capture()
+        .ok_or_else(|| denied("registered capture slot evidence absent"))?;
+    if entry.0 != head.ticket {
+        return Err(denied("retained slot does not match reserved ticket"));
+    }
+    Ok(Some(entry.clone()))
+}
 pub(super) fn verify_registered(
     data: &PinnedDirectory,
     client: &PinnedDirectory,
@@ -237,8 +303,10 @@ pub(super) fn verify_registered(
     head: &Head,
     history: &[Head],
 ) -> io::Result<()> {
-    if head.state != State::CancelledBeforeCapture
-        || head.references.is_some()
+    if !matches!(
+        head.state,
+        State::CancelledBeforeCapture | State::CancelledCapture
+    ) || head.references.is_some()
         || head.restore_plan.is_some()
     {
         return Err(denied("not a pre-capture cancellation terminal"));
@@ -271,13 +339,24 @@ pub(super) fn verify_registered(
     }
     data.private()?;
     client.recheck()?;
+    if (receipt.original_head.state == State::CaptureReserved)
+        != (head.state == State::CancelledCapture)
+    {
+        return Err(denied("cancel stage differs from reservation"));
+    }
     let prefix = history
         .iter()
         .take_while(|h| h.revision <= receipt.original_head.revision)
         .cloned()
         .collect::<Vec<_>>();
-    if vault_history::inspect(data, client, profile, &receipt.original_head, &prefix)?
-        != receipt.retained_vault
+    if vault_history::inspect(
+        data,
+        client,
+        profile,
+        binding,
+        &receipt.original_head,
+        &prefix,
+    )? != receipt.retained_vault
     {
         return Err(denied("registered retained vault proof changed"));
     }
@@ -353,7 +432,11 @@ pub fn cancel(context: &ProcessContext, data: &Path, request: Request) -> AppRes
         Ok(Outcome {
             attempt_id: head.ticket,
             revision: next.revision,
-            status: "cancelled_before_capture",
+            status: if head.state == State::CaptureReserved {
+                "cancelled_capture"
+            } else {
+                "cancelled_before_capture"
+            },
         })
     })();
     if result.is_err() {

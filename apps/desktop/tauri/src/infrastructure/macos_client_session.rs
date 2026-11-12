@@ -989,12 +989,40 @@ impl StartupSession {
         }
         Ok(())
     }
+    #[cfg(test)]
     pub fn begin(
         context: &ProcessContext,
         data_root: &Path,
         client_root: &Path,
         lease: &NativeLease,
         deadline: Instant,
+    ) -> AppResult<Self> {
+        Self::begin_capture(context, data_root, client_root, lease, deadline, None)
+    }
+    pub fn begin_reserved(
+        context: &ProcessContext,
+        data_root: &Path,
+        client_root: &Path,
+        lease: &NativeLease,
+        deadline: Instant,
+        reservation: &session_index::CaptureReservation<'_>,
+    ) -> AppResult<Self> {
+        Self::begin_capture(
+            context,
+            data_root,
+            client_root,
+            lease,
+            deadline,
+            Some(reservation),
+        )
+    }
+    fn begin_capture(
+        context: &ProcessContext,
+        data_root: &Path,
+        client_root: &Path,
+        lease: &NativeLease,
+        deadline: Instant,
+        reservation: Option<&session_index::CaptureReservation<'_>>,
     ) -> AppResult<Self> {
         let phase = std::cell::Cell::new("deadline");
         let result = (|| {
@@ -1014,9 +1042,18 @@ impl StartupSession {
                 return Err(error(()));
             }
             phase.set("capture-original");
-            let originals =
-                Originals::begin_for_profile(data_root, client_root, &context.working_directory)
-                    .map_err(error)?;
+            let originals = match reservation {
+                Some(reservation) => Originals::begin_reserved_profile(
+                    data_root,
+                    client_root,
+                    &context.working_directory,
+                    reservation,
+                ),
+                None => {
+                    Originals::begin_for_profile(data_root, client_root, &context.working_directory)
+                }
+            }
+            .map_err(error)?;
             phase.set("check-original-lease");
             lease.check()?;
             time(deadline)?;

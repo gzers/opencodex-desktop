@@ -8,6 +8,15 @@ pub(super) struct Evidence {
     history_sha256: String,
     vault: Option<(Identity, Protection)>,
     attempts: Vec<(String, Identity, String)>,
+    reserved_capture: Option<(String, Option<TreeSnapshot>)>,
+}
+impl Evidence {
+    pub(super) fn matches_history(&self, history: &[Head]) -> bool {
+        encode(&history).is_ok_and(|raw| digest(&raw) == self.history_sha256)
+    }
+    pub(super) fn reserved_capture(&self) -> Option<&(String, Option<TreeSnapshot>)> {
+        self.reserved_capture.as_ref()
+    }
 }
 /// Read only through the caller's EXISTING SQLite connection. Never open or
 /// close an auxiliary index fd while its process-associated lock is held.
@@ -56,6 +65,7 @@ pub(super) fn inspect(
     data: &PinnedDirectory,
     client: &PinnedDirectory,
     profile: &Path,
+    binding: &[u8],
     current: &Head,
     history: &[Head],
 ) -> io::Result<Evidence> {
@@ -63,8 +73,16 @@ pub(super) fn inspect(
         return Err(denied("vault review missing original indexed history"));
     }
     let mut expected = BTreeMap::<String, &Head>::new();
+    let mut cancelled = BTreeMap::<String, Option<TreeSnapshot>>::new();
     let mut originals = BTreeMap::<String, (&str, &str)>::new();
     for head in history.iter().take(history.len().saturating_sub(1)) {
+        if head.state == State::CancelledCapture {
+            let (attempt, snapshot) = preparation::retained_capture(data, binding, head, history)?
+                .ok_or_else(|| denied("cancelled capture binding missing"))?;
+            if cancelled.insert(attempt, snapshot).is_some() {
+                return Err(denied("duplicate cancelled capture reservation"));
+            }
+        }
         if let Some(refs) = &head.references {
             if originals
                 .insert(
@@ -99,18 +117,35 @@ pub(super) fn inspect(
             }
         }
     }
+    if expected
+        .keys()
+        .any(|attempt| cancelled.contains_key(attempt))
+    {
+        return Err(denied(
+            "attempt is both cancelled capture and admitted original",
+        ));
+    }
+    let current_reserved =
+        (current.state == State::CaptureReserved).then(|| current.ticket.clone());
+    if current_reserved
+        .as_ref()
+        .is_some_and(|ticket| expected.contains_key(ticket) || cancelled.contains_key(ticket))
+    {
+        return Err(denied("reserved capture reuses prior attempt"));
+    }
     let manager = data.child_private("manager-state", false)?;
     if observation::entry(&manager, "client-originals")?.is_none() {
-        if !expected.is_empty() {
+        if !expected.is_empty() || cancelled.values().any(Option::is_some) {
             return Err(denied("indexed closed originals disappeared"));
         }
         return Ok(Evidence {
             history_sha256: digest(&encode(&history)?),
             vault: None,
             attempts: Vec::new(),
+            reserved_capture: current_reserved.map(|id| (id, None)),
         });
     }
-    if expected.is_empty() {
+    if expected.is_empty() && cancelled.is_empty() && current_reserved.is_none() {
         return Err(denied("vault exists without closed indexed attempts"));
     }
     let vault = manager.child_private("client-originals", false)?;
@@ -120,7 +155,36 @@ pub(super) fn inspect(
     );
     require_private(&before.1, true)?;
     let names = super::super::tree::names(vault.file())?;
-    let wanted: Vec<_> = expected.keys().cloned().collect();
+    let mut wanted: Vec<_> = expected
+        .keys()
+        .cloned()
+        .chain(
+            cancelled
+                .iter()
+                .filter_map(|(id, s)| s.as_ref().map(|_| id.clone())),
+        )
+        .collect();
+    let reserved_capture = if let Some(ticket) = current_reserved {
+        if observation::entry(&vault, &ticket)?.is_some() {
+            let directory = vault.child_private(&ticket, false)?;
+            let snapshot = TreeSnapshot::read_mode(&directory, false)?;
+            wanted.push(ticket.clone());
+            Some((ticket, Some(snapshot)))
+        } else {
+            Some((ticket, None))
+        }
+    } else {
+        None
+    };
+    wanted.sort();
+    for (id, expected) in &cancelled {
+        if let Some(expected) = expected {
+            let directory = vault.child_private(id, false)?;
+            if TreeSnapshot::read_mode(&directory, false)? != *expected {
+                return Err(denied("retained cancelled capture changed"));
+            }
+        }
+    }
     let mut actual = names
         .iter()
         .map(|n| {
@@ -158,6 +222,7 @@ pub(super) fn inspect(
         history_sha256: digest(&encode(&history)?),
         vault: Some(before),
         attempts,
+        reserved_capture,
     })
 }
 

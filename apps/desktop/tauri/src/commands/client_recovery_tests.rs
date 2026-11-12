@@ -6,6 +6,100 @@ use crate::{
 };
 use std::{fs, os::unix::fs::PermissionsExt, path::PathBuf, time::Instant};
 #[test]
+#[ignore = "single ordinary Start/Stop on owned fixture after cancelled reserved capture; retains all partial evidence"]
+fn ordinary_owned_lifecycle_after_cancelled_partial_capture() {
+    let root = PathBuf::from(
+        std::env::var_os("OCXD024_AFTER_CAPTURE_CANCEL_ROOT").expect("owned fixture"),
+    );
+    assert!(
+        root.canonicalize().unwrap() == root
+            && root.starts_with("/private/tmp")
+            && root
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .starts_with("ocxd024-versioned-lifecycle-")
+    );
+    let profile = root.join("profile");
+    assert_eq!(
+        std::env::var_os("HOME"),
+        Some(profile.clone().into_os_string())
+    );
+    let data = profile.join(".codex-desktop/desktop");
+    let client = profile.join(".codex");
+    let home = profile.join(".codex-desktop/opencodex/home");
+    let context = ProcessContext {
+        runtime: RuntimeHandle::initialize_versioned(&data, &root.join("program 中文 space")),
+        working_directory: profile.clone(),
+        opencodex_home: home,
+    };
+    let old = session_index::inspect(&context, &data).unwrap().unwrap();
+    assert_eq!(old.state, session_index::State::CancelledCapture);
+    let paths = [
+        client.join("config.toml"),
+        client.join("opencodex-catalog.json"),
+        client.join("models_cache.json"),
+        client.join("opencodex-catalog-audit.jsonl"),
+        profile.join(".grok/config.toml"),
+        profile.join(".grok/config.toml.bak-opencodex"),
+        profile.join(".grok/agents/AGENTS.md"),
+    ];
+    let before: Vec<_> = paths.iter().map(|p| fs::read(p).ok()).collect();
+    let runner = std::sync::Mutex::new(
+        crate::infrastructure::process_runner::ControlledProcessRunner::new(&profile),
+    );
+    let log = crate::infrastructure::runtime_log::RuntimeLog::new(&data);
+    let clock = Instant::now();
+    let start = super::super::process_action_with_runner(
+        crate::types::process_action::ProcessActionRequest {
+            action: crate::modules::process::LifecycleAction::Start,
+            confirm: true,
+        },
+        &runner,
+        &context,
+        &log,
+        None,
+    )
+    .unwrap();
+    let start_ms = clock.elapsed().as_millis();
+    // A failed Start may have launched the owned service; use ordinary Stop
+    // exactly once, preserving any error and never using force termination.
+    let clock = Instant::now();
+    let stop = super::super::process_action_with_runner(
+        crate::types::process_action::ProcessActionRequest {
+            action: crate::modules::process::LifecycleAction::Stop,
+            confirm: true,
+        },
+        &runner,
+        &context,
+        &log,
+        None,
+    )
+    .unwrap();
+    let stop_ms = clock.elapsed().as_millis();
+    let head = session_index::inspect(&context, &data).unwrap().unwrap();
+    let all = paths
+        .iter()
+        .zip(&before)
+        .all(|(p, b)| fs::read(p).ok() == *b);
+    let passed = start.result == Some(crate::modules::process::LifecycleResult::Started)
+        && stop.result == Some(crate::modules::process::LifecycleResult::Stopped)
+        && start_ms < 30000
+        && stop_ms < 10000
+        && all
+        && head.state == session_index::State::Restored;
+    let report = serde_json::json!({"accepted":false,"result":if passed{"passed"}else{"failed"},"start":start,"startElapsedMs":start_ms,"stop":stop,"stopElapsedMs":stop_ms,"headState":head.state,"headRevision":head.revision,"oldCancelledTicket":old.ticket,"newAttempt":head.references.as_ref().map(|r|&r.attempt),"all7OriginalPathsMatch":all,"noBusinessRequests":true});
+    fs::write(
+        root.join("after-cancel-lifecycle.json"),
+        serde_json::to_vec_pretty(&report).unwrap(),
+    )
+    .unwrap();
+    println!("{report}");
+    assert!(passed);
+}
+#[test]
 #[ignore = "directed next Start interrupted before capture on same owned recovered native fixture"]
 fn prepare_next_owned_start_after_registered_closure() {
     let root =
@@ -175,7 +269,14 @@ fn cancel_owned_preparing_without_vault_preserves_current_clients() {
     println!("{report}");
     let outcome = result.unwrap();
     assert!(elapsed < 10000);
-    assert_eq!(outcome.status, "cancelled_before_capture");
+    assert_eq!(
+        outcome.status,
+        if std::env::var_os("OCXD024_RESERVED_CANCEL").is_some() {
+            "cancelled_capture"
+        } else {
+            "cancelled_before_capture"
+        }
+    );
     assert_eq!(outcome.revision, request.revision + 1);
     assert_eq!(fs::read(config).unwrap(), bytes);
     let after = fs::read(&idx).unwrap();
@@ -799,7 +900,7 @@ fn finalize_owned_completed_fixture_with_fresh_admission() {
     let outcome = session_index::finalization::finalize(&context, &data, request.clone()).unwrap();
     let elapsed = t.elapsed().as_millis();
     assert!(elapsed < 10000);
-    assert_eq!(outcome.revision, 7);
+    assert_eq!(outcome.revision, request.revision + 1);
     assert_eq!(outcome.status, "restored");
     assert_eq!(fs::read(&config).unwrap(), config_before);
     let restored = preview::inspect_preview(&context, &data);
