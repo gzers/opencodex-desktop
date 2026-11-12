@@ -11,7 +11,7 @@ summary: "用户已授权目标模式执行；本机P24-00共享程序位置合�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 77；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 78；2026-11-12。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 当前代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b，发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -705,3 +705,14 @@ mainfe5be4b97对已独立Stopped/4帧和Live齐备、无plan分支新增只读po
 60去重后端和82前端/类型/build/格式/strictClippy通过；括号/可见性、合成scope身份误用和错误回原字节断言首失败均保留，仅修代码/测试边界，不降精确native/change或准入。两引擎各7软件/原型场景过，pageerror空；生产排除mock。新Profile原官方Start8956/Status236/Stop3529ms按预设在独立Stopped index6、首次stage/plan前中断，原exit101/Required及尚未恢复文件保持。独立prepare3412ms/index7目标字节不改，另一明确Continue6372ms/index8 Restored，原每次10秒；错确认/外部config拒绝不改索引，无重跑服务。独立完整两树SHA及原件/plan/receipt/35引用15blob/index8和7原文件、新live NotRequired/仅Start核对通过，不用后继成功改判原Stop完成。
 
 证据.adg/evidence/0.2.24/client-stopped-missing-plan-r1/及manifest保留首错/准确分阶段源/原中断和成功/截图。自有进程/原端点缺席，3精确DB排他重获释放后与程序/Profile/全部原件stagearchive夹具清理，globalL身份/字节/权限保持、unitTMP空/browser退出，无日常/官方/业务修改或.app/DMG/发布。Pending.prepare若在暂存后索引前中断仍因未登记stage拒绝并保留，未冒已恢复；下一批补计划准备归属/恢复及缺阶段早期恢复，原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方验证/固定候选继续。Windows远端仍b2e89665d/0eef59a01，目标active。
+
+
+## 2026-11-12 计划登记前只在事务目录暂存与中断重试
+
+main55bc44300将生产Pending.prepare暂存位置移到已登记原件的私有事务目录，计划及原stage identity独立登记后才可向固定客户端目标原生交换。中断仅留私有未登记事务，新明确准备另id、原件原四帧/精确Stopped/全树余项/OS停止/同进程锁等门仍在，不收养/删除/覆盖旧文件；journal布局不忽略客户端任何stage，跨卷先拒绝。stage读回新增创建fd到路径原生身份/nlink绑定，字节权限相同的外部替换亦拒绝保留；原Complete/Rollback/rearm/归档冲突保全及10秒不变，UI/IPC不改。详[私有暂存与证据](0.2.24-contracts/client-journal-staging-r1.md)。
+
+90相关去重用例/最终格式编译strictClippy通过：7个实际exit91准备边界保持客户端Stopped/无stage、重试后所有旧文件身份字节保护不变；登记后新journal与夹具client布局普通/真实rearmed各11共44边界过。审计旧测试父设rearm flag但child未消费，原green不能证明真实rearm路径，旧证据不改且本批实际走Complete中断→Rollback→rearm再退出，覆盖局限记录保留。新布局ACL/xattr及rollback独立终态/rearm→Complete读回定向过。
+
+新Profile原官方Stop在私有stage_bytes处按预设中断，原exit101/index6 Stopped/无plan保留、客户端根无stage，两私有残留preparing+partialstage保持。新明确PreparePlan4765ms/index7，四目标不改、新id/schema3/journalStages绑定；另明确Continue6550ms/index8 Restored，原每次10秒、不重跑服务、不改判旧Stop。两旧残留文件bytes/inode/mode与前置相同，独立新完整两树SHA/四帧scopeLivePlanReceipt/index8/15blob及7原路径匹配、真实NotRequired/仅Start。准确首次/guard后续source和binary分开，不冒早期binary含后加guard。
+
+证据.adg/evidence/0.2.24/client-journal-staging-r1/及manifest保存原中断/成功/旧覆盖局限/原件和所有残留/准确来源；自有进程原端口缺席，3精确DB排他重获释放后与程序/Profile/全部夹具清理，globalL身份字节权限保持、unitTMP空，无日常/官方/业务变化或.app/DMG/发布。缺阶段已变化早期恢复、原一般范围/完整集合/旧revision4/Windows/NAME/System代理/官方验证/固定候选继续，Windows远端b2e89665d/0eef59a01，目标active。

@@ -1,0 +1,14 @@
+{
+  "finding": "Existing crash test parent set OCXD024_RESTORE_REARM but child did not consume it; prior two runs did not prove rearmed publication paths.",
+  "newBehavior": "Child explicitly interrupts first Complete, applies Rollback, rearms NEW plan, then exits at named boundary. Journal wrapper repeats complete matrix with protected-journal staging.",
+  "boundariesPerPlan": 11,
+  "matrix": [
+    "client fixture ordinary",
+    "client fixture actual rearmed",
+    "journal ordinary",
+    "journal actual rearmed"
+  ],
+  "actualExit91CountForPublicationMatrix": 44,
+  "preparationExit91Count": 7,
+  "priorEvidenceRetainedNotReclassified": true
+}
