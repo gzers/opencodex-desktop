@@ -92,6 +92,14 @@ fn prepare_owned_stopped_missing_plan_then_continue() {
             .iter()
             .zip(&before)
             .all(|(p, b)| fs::read(p).ok() == *b));
+        assert!(
+            fs::read_dir(&client).unwrap().all(|p| !p
+                .unwrap()
+                .file_name()
+                .to_string_lossy()
+                .starts_with(".ocxd-restore-")),
+            "preparation must not publish a client-side stage before index admission"
+        );
     }
     let preview = preview::inspect_preview(&context, &data);
     assert!(preview.can_continue);

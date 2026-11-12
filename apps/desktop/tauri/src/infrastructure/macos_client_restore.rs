@@ -74,6 +74,8 @@ struct Plan {
     #[serde(skip)]
     rearmed: bool,
     schema_version: u32,
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    journal_stages: bool,
     id: String,
     attempt: String,
     phases: [String; 4],
@@ -309,6 +311,7 @@ fn stage(
     client: &PinnedDirectory,
     filename: &str,
     original: &Image,
+    checkpoint: &impl Fn(&str) -> io::Result<()>,
 ) -> io::Result<Option<Identity>> {
     let Image::File {
         protection, bytes, ..
@@ -330,15 +333,29 @@ fn stage(
         return Err(io::Error::last_os_error());
     }
     let mut file = unsafe { File::from_raw_fd(fd) };
+    checkpoint("stage_created")?;
     file.write_all(bytes)?;
+    checkpoint("stage_bytes")?;
     metadata(&file, protection)?;
+    checkpoint("stage_protected")?;
     file.sync_all()?;
     client.sync()?;
+    checkpoint("stage_synced")?;
+    let staged_stat = stat(&file)?;
+    if staged_stat.st_nlink != 1 {
+        return Err(denied("created stage lost its original file identity"));
+    }
     let captured = capture_file(client, filename, MAX_CONTENT)?;
     if !original_content(&captured, original) {
         return Err(denied("original staging readback differs"));
     }
     if let Image::File { identity, .. } = captured {
+        if identity != super::identity(&staged_stat)
+            || super::identity(&stat(&file)?) != identity
+            || stat(&file)?.st_nlink != 1
+        {
+            return Err(denied("stage path no longer names the created file"));
+        }
         Ok(Some(identity))
     } else {
         Err(denied("stage vanished"))
@@ -414,7 +431,12 @@ fn read_plan_depth(
     }
     let mut plan: Plan =
         serde_json::from_value(value).map_err(|_| denied("invalid restore plan fields"))?;
-    if plan.schema_version != 1 || plan.id != id || plan.attempt != originals.attempt {
+    if !matches!(
+        (plan.schema_version, plan.journal_stages),
+        (1, false) | (3, true)
+    ) || plan.id != id
+        || plan.attempt != originals.attempt
+    {
         return Err(denied("restore plan belongs to another attempt"));
     }
     plan.object_id = id.into();
@@ -426,6 +448,7 @@ pub struct Pending<'a> {
     id: String,
     sha256: String,
     object_id: String,
+    journal_stages: bool,
 }
 /// Read-only assessment; this never grants replay authority.
 pub(super) struct RecoveryReview {
@@ -464,7 +487,7 @@ impl<'a> Pending<'a> {
         originals: &'a Originals,
         evidence: Evidence,
     ) -> io::Result<Self> {
-        Self::prepare_checked(originals, evidence, &|| Ok(()))
+        Self::prepare_layout(originals, evidence, true, &|| Ok(()), &|_| Ok(()))
     }
     #[cfg(test)]
     pub(super) fn apply_fixture(
@@ -514,7 +537,7 @@ impl<'a> Pending<'a> {
                     && matches!(actual.1, Image::File { .. }) =>
             {
                 rename(
-                    &self.originals.client,
+                    self.staging(),
                     &stage,
                     &self.originals.client,
                     NAMES[i],
@@ -529,7 +552,7 @@ impl<'a> Pending<'a> {
                     && matches!(actual.1, Image::File { .. }) =>
             {
                 rename(
-                    &self.originals.client,
+                    self.staging(),
                     &stage,
                     &self.originals.client,
                     NAMES[i],
@@ -542,7 +565,7 @@ impl<'a> Pending<'a> {
                     && matches!(actual.1, Image::File { .. }) =>
             {
                 rename(
-                    &self.originals.client,
+                    self.staging(),
                     &stage,
                     &self.originals.client,
                     NAMES[i],
@@ -574,7 +597,7 @@ impl<'a> Pending<'a> {
     ) -> io::Result<()> {
         let archived = capture_file(&self.originals.directory, archive_name, MAX_CONTENT)?;
         let stage_name = format!(".ocxd-restore-{}-{i}", self.object_id);
-        let staged = capture_file(&self.originals.client, &stage_name, MAX_CONTENT)?;
+        let staged = capture_file(self.staging(), &stage_name, MAX_CONTENT)?;
         let receipt = encode(
             &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,
             "artifact":i,"archive":archived,"stage":staged}),
@@ -592,19 +615,19 @@ impl<'a> Pending<'a> {
         check()?;
         checkpoint("compensation_gap")?;
         if capture_file(&self.originals.directory, archive_name, MAX_CONTENT)? != archived
-            || capture_file(&self.originals.client, &stage_name, MAX_CONTENT)? != Image::Absent
+            || capture_file(self.staging(), &stage_name, MAX_CONTENT)? != Image::Absent
         {
             return Err(denied("archive conflict changed again; retained"));
         }
         rename(
             &self.originals.directory,
             archive_name,
-            &self.originals.client,
+            self.staging(),
             &stage_name,
             libc::RENAME_EXCL,
         )?;
         if !same(
-            &capture_file(&self.originals.client, &stage_name, MAX_CONTENT)?,
+            &capture_file(self.staging(), &stage_name, MAX_CONTENT)?,
             &archived,
             false,
         ) {
@@ -613,6 +636,16 @@ impl<'a> Pending<'a> {
         Err(denied(
             "late archive source returned to stage; transaction remains failed",
         ))
+    }
+    fn staging(&self) -> &PinnedDirectory {
+        if self.journal_stages {
+            &self.originals.directory
+        } else {
+            &self.originals.client
+        }
+    }
+    pub(super) fn stages_in_journal(&self) -> bool {
+        self.journal_stages
     }
     pub fn id(&self) -> &str {
         &self.id
@@ -689,6 +722,7 @@ impl<'a> Pending<'a> {
             id: id.into(),
             sha256: sha256.into(),
             object_id: plan.object_id,
+            journal_stages: plan.journal_stages,
         };
         result.load()?;
         Ok(result)
@@ -700,11 +734,38 @@ impl<'a> Pending<'a> {
         evidence: Evidence,
         lease: &crate::infrastructure::official_client_coordination::native::NativeLease,
     ) -> io::Result<Self> {
-        Self::prepare_checked(originals, evidence, &|| {
-            lease
-                .check()
-                .map_err(|_| denied("official coordination expired"))
-        })
+        Self::prepare_layout(
+            originals,
+            evidence,
+            true,
+            &|| {
+                lease
+                    .check()
+                    .map_err(|_| denied("official coordination expired"))
+            },
+            &|point| {
+                #[cfg(test)]
+                if std::env::var("OCXD024_PLAN_PREPARE_INTERRUPT")
+                    .ok()
+                    .as_deref()
+                    == Some(point)
+                {
+                    if !originals.data.path.starts_with("/private/tmp")
+                        || !originals.data.path.ancestors().any(|p| {
+                            p.file_name().is_some_and(|n| {
+                                n.to_string_lossy()
+                                    .starts_with("ocxd024-versioned-lifecycle-")
+                            })
+                        })
+                    {
+                        return Err(denied("plan interruption fixture refused"));
+                    }
+                    return Err(denied("owned journal staging interruption"));
+                }
+                let _ = point;
+                Ok(())
+            },
+        )
     }
     fn captures(originals: &Originals) -> io::Result<([Capture; 4], [String; 4])> {
         let mut captures = Vec::new();
@@ -722,12 +783,29 @@ impl<'a> Pending<'a> {
                 .map_err(|_| denied("phase digests incomplete"))?,
         ))
     }
+    #[cfg(test)]
     fn prepare_checked(
         originals: &'a Originals,
         evidence: Evidence,
         check: &impl Fn() -> io::Result<()>,
     ) -> io::Result<Self> {
+        Self::prepare_layout(originals, evidence, false, check, &|_| Ok(()))
+    }
+    fn prepare_layout(
+        originals: &'a Originals,
+        evidence: Evidence,
+        journal_stages: bool,
+        check: &impl Fn() -> io::Result<()>,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<Self> {
         check()?;
+        if journal_stages
+            && originals.directory.identity().device != originals.client.identity().device
+        {
+            return Err(denied(
+                "restore staging and client are on different volumes",
+            ));
+        }
         let (captures, phases) = Self::captures(originals)?;
         let ks = kinds(&captures, &evidence)?;
         if Capture::read(&originals.client)? != captures[3] {
@@ -741,6 +819,12 @@ impl<'a> Pending<'a> {
                 &serde_json::json!({"schemaVersion":1,"attempt":originals.attempt,"id":id,"phases":phases,"kinds":ks}),
             )?,
         )?;
+        checkpoint("preparing")?;
+        let staging = if journal_stages {
+            &originals.directory
+        } else {
+            &originals.client
+        };
         let mut staged = std::array::from_fn(|_| None);
         // Every target is checked before staging. Failed staging is retained,
         // never cleaned by guessed filename or used as a replacement original.
@@ -748,11 +832,13 @@ impl<'a> Pending<'a> {
             check()?;
             if matches!(ks[i], Kind::Swap | Kind::Publish) {
                 staged[i] = stage(
-                    &originals.client,
+                    staging,
                     &format!(".ocxd-restore-{id}-{i}"),
                     &captures[0].images[i],
+                    checkpoint,
                 )?;
             }
+            checkpoint("staged")?;
         }
         if Capture::read(&originals.client)? != captures[3] {
             return Err(denied("source changed while preparing original stages"));
@@ -761,7 +847,8 @@ impl<'a> Pending<'a> {
         let plan = Plan {
             object_id: id.clone(),
             rearmed: false,
-            schema_version: 1,
+            schema_version: if journal_stages { 3 } else { 1 },
+            journal_stages,
             id: id.clone(),
             attempt: originals.attempt.clone(),
             phases,
@@ -771,9 +858,11 @@ impl<'a> Pending<'a> {
         };
         let bytes = encode(&plan)?;
         create(&originals.directory, &format!("restore-{id}.json"), &bytes)?;
+        checkpoint("plan_published")?;
         let result = Self {
             originals,
             object_id: id.clone(),
+            journal_stages,
             id,
             sha256: digest(&bytes),
         };
@@ -782,7 +871,7 @@ impl<'a> Pending<'a> {
     }
     fn load(&self) -> io::Result<(Plan, [Capture; 4])> {
         let plan = read_plan(self.originals, &self.id, &self.sha256)?;
-        if plan.object_id != self.object_id {
+        if plan.object_id != self.object_id || plan.journal_stages != self.journal_stages {
             return Err(denied("restore object lineage changed"));
         }
         let (captures, hashes) = Self::captures(self.originals)?;
@@ -925,7 +1014,7 @@ impl<'a> Pending<'a> {
         Ok((
             capture_file(&self.originals.client, NAMES[i], MAX_CONTENT)?,
             capture_file(
-                &self.originals.client,
+                self.staging(),
                 &format!(".ocxd-restore-{}-{i}", self.object_id),
                 MAX_CONTENT,
             )?,
@@ -1042,7 +1131,7 @@ impl<'a> Pending<'a> {
                     rename(
                         &self.originals.directory,
                         &archive,
-                        &self.originals.client,
+                        self.staging(),
                         &stage,
                         libc::RENAME_EXCL,
                     )?;
@@ -1057,7 +1146,7 @@ impl<'a> Pending<'a> {
                 checkpoint("native_gap")?;
                 match plan.kinds[i] {
                     Kind::Swap => rename(
-                        &self.originals.client,
+                        self.staging(),
                         &stage,
                         &self.originals.client,
                         target_name,
@@ -1066,19 +1155,19 @@ impl<'a> Pending<'a> {
                     Kind::Remove if want => rename(
                         &self.originals.client,
                         target_name,
-                        &self.originals.client,
+                        self.staging(),
                         &stage,
                         libc::RENAME_EXCL,
                     )?,
                     Kind::Remove => rename(
-                        &self.originals.client,
+                        self.staging(),
                         &stage,
                         &self.originals.client,
                         target_name,
                         libc::RENAME_EXCL,
                     )?,
                     Kind::Publish if want => rename(
-                        &self.originals.client,
+                        self.staging(),
                         &stage,
                         &self.originals.client,
                         target_name,
@@ -1087,7 +1176,7 @@ impl<'a> Pending<'a> {
                     Kind::Publish => rename(
                         &self.originals.client,
                         target_name,
-                        &self.originals.client,
+                        self.staging(),
                         &stage,
                         libc::RENAME_EXCL,
                     )?,
@@ -1125,7 +1214,7 @@ impl<'a> Pending<'a> {
                 check()?;
                 checkpoint("archive_gap")?;
                 rename(
-                    &self.originals.client,
+                    self.staging(),
                     &format!(".ocxd-restore-{}-{i}", self.object_id),
                     &self.originals.directory,
                     &to,

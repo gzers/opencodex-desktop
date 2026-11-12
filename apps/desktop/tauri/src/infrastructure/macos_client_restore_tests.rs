@@ -547,7 +547,11 @@ fn actual_acl_and_opaque_xattrs_are_restored_with_original_content() {
     assert!(protection.xattrs.iter().any(
         |(key, value)| key == b"user.ocxd024-restore" && value == b"opaque original attribute"
     ));
-    let pending = f.prepare();
+    let pending =
+        Pending::prepare_layout(&f.originals, f.evidence.clone(), true, &|| Ok(()), &|_| {
+            Ok(())
+        })
+        .unwrap();
     pending
         .apply_checked(Decision::Complete, &|| Ok(()), &|_| Ok(()))
         .unwrap();
@@ -905,7 +909,29 @@ fn actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_know
     if let Some(root) = std::env::var_os(CHILD) {
         let root = PathBuf::from(root);
         let f = Fixture::at(root.clone());
-        let pending = f.prepare();
+        let pending = if std::env::var_os("OCXD024_JOURNAL_LAYOUT").is_some() {
+            Pending::prepare_layout(&f.originals, f.evidence.clone(), true, &|| Ok(()), &|_| {
+                Ok(())
+            })
+            .unwrap()
+        } else {
+            f.prepare()
+        };
+        let pending = if std::env::var_os("OCXD024_RESTORE_REARM").is_some() {
+            assert!(pending
+                .apply_fixture(Decision::Complete, &|p| if p == "after_native" {
+                    Err(denied("injected interrupted publication"))
+                } else {
+                    Ok(())
+                })
+                .is_err());
+            pending
+                .apply_fixture(Decision::Rollback, &|_| Ok(()))
+                .unwrap();
+            pending.rearm_rolled_back().unwrap()
+        } else {
+            pending
+        };
         let point = std::env::var("OCXD024_RESTORE_POINT").unwrap();
         let nth: usize = std::env::var("OCXD024_RESTORE_NTH")
             .unwrap()
@@ -1002,4 +1028,206 @@ fn actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_know
             );
         }
     }
+}
+
+#[test]
+fn interrupted_journal_preparation_never_changes_clients_and_retry_preserves_unindexed_files() {
+    const CHILD: &str = "OCXD024_JOURNAL_PREP_CHILD";
+    if let Some(root) = std::env::var_os(CHILD) {
+        let root = PathBuf::from(root);
+        let f = Fixture::at(root.clone());
+        let note = json!({"attempt":f.originals.attempt(),"original":f.originals.original_sha256(),"phases":f.originals.known.lock().unwrap().clone(),"evidence":f.evidence});
+        let mut receipt = File::create(root.join("independent-receipt.json")).unwrap();
+        receipt.write_all(&wire(note)).unwrap();
+        receipt.sync_all().unwrap();
+        let point = std::env::var("OCXD024_JOURNAL_PREP_POINT").unwrap();
+        let _ = Pending::prepare_layout(&f.originals, f.evidence.clone(), true, &|| Ok(()), &|p| {
+            if p == point {
+                std::process::exit(91);
+            }
+            Ok(())
+        });
+        panic!("preparation interruption boundary not reached");
+    }
+    for point in [
+        "preparing",
+        "stage_created",
+        "stage_bytes",
+        "stage_protected",
+        "stage_synced",
+        "staged",
+        "plan_published",
+    ] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let child=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::restore::tests::interrupted_journal_preparation_never_changes_clients_and_retry_preserves_unindexed_files","--nocapture"]).env(CHILD,&root).env("OCXD024_JOURNAL_PREP_POINT",point).output().unwrap();
+        assert_eq!(
+            child.status.code(),
+            Some(91),
+            "{point}: {}",
+            String::from_utf8_lossy(&child.stderr)
+        );
+        let note: serde_json::Value =
+            serde_json::from_slice(&fs::read(root.join("independent-receipt.json")).unwrap())
+                .unwrap();
+        let phases = [Phase::Ready, Phase::PreStop, Phase::Stopped]
+            .into_iter()
+            .enumerate()
+            .map(|(i, p)| (p, note["phases"][i + 1].as_str().unwrap().to_string()))
+            .collect::<Vec<_>>();
+        let originals = Originals::open(
+            &root.join("desktop"),
+            &root.join("codex 中文 space"),
+            note["attempt"].as_str().unwrap(),
+            note["original"].as_str().unwrap(),
+            &phases,
+        )
+        .unwrap();
+        let before = Capture::read(&originals.client).unwrap();
+        assert_eq!(before, originals.read(Phase::Stopped).unwrap());
+        assert!(fs::read_dir(originals.client.path()).unwrap().all(|p| !p
+            .unwrap()
+            .file_name()
+            .to_string_lossy()
+            .starts_with(".ocxd-restore-")));
+        let retained = fs::read_dir(originals.directory.path())
+            .unwrap()
+            .map(|p| {
+                let n = p.unwrap().file_name().to_string_lossy().into_owned();
+                let image = capture_file(&originals.directory, &n, MAX_FRAME).unwrap();
+                (n, image)
+            })
+            .collect::<Vec<_>>();
+        let evidence: Evidence = serde_json::from_value(note["evidence"].clone()).unwrap();
+        let next =
+            Pending::prepare_layout(&originals, evidence, true, &|| Ok(()), &|_| Ok(())).unwrap();
+        assert!(next.stages_in_journal());
+        assert_eq!(Capture::read(&originals.client).unwrap(), before);
+        for (n, image) in &retained {
+            assert_eq!(
+                capture_file(&originals.directory, n, MAX_FRAME).unwrap(),
+                *image,
+                "unindexed evidence changed at {point}: {n}"
+            );
+        }
+        next.apply_fixture(Decision::Complete, &|_| Ok(())).unwrap();
+        let actual = Capture::read(&originals.client).unwrap();
+        let original = originals.read(Phase::Original).unwrap();
+        assert!(actual
+            .images
+            .iter()
+            .zip(&original.images)
+            .all(|(a, b)| original_content(a, b)));
+        for (n, image) in &retained {
+            assert_eq!(
+                capture_file(&originals.directory, n, MAX_FRAME).unwrap(),
+                *image,
+                "orphan stage/plan adopted or overwritten"
+            );
+        }
+    }
+}
+#[test]
+fn journal_staging_requires_exact_plan_bound_objects_and_preserves_external_edits() {
+    for unknown in ["stage", "target"] {
+        let f = Fixture::new();
+        let pending =
+            Pending::prepare_layout(&f.originals, f.evidence.clone(), true, &|| Ok(()), &|_| {
+                Ok(())
+            })
+            .unwrap();
+        let path = if unknown == "stage" {
+            f.originals
+                .directory
+                .path()
+                .join(format!(".ocxd-restore-{}-0", pending.id()))
+        } else {
+            f.originals.client.path().join(NAMES[1])
+        };
+        let before = fs::read(&path).unwrap();
+        let replacement = path.with_extension("replacement");
+        fs::write(&replacement, &before).unwrap();
+        fs::rename(replacement, &path).unwrap();
+        let current = Capture::read(&f.originals.client).unwrap();
+        assert!(pending.review_recovery().is_err());
+        assert!(pending
+            .apply_fixture(Decision::Complete, &|_| Ok(()))
+            .is_err());
+        assert_eq!(Capture::read(&f.originals.client).unwrap(), current);
+        assert_eq!(fs::read(&path).unwrap(), before);
+    }
+}
+#[test]
+fn journal_native_gap_returns_late_external_object_and_never_claims_success() {
+    let f = Fixture::new();
+    let pending =
+        Pending::prepare_layout(&f.originals, f.evidence.clone(), true, &|| Ok(()), &|_| {
+            Ok(())
+        })
+        .unwrap();
+    let once = Cell::new(false);
+    let error = pending.apply_fixture(Decision::Complete, &|point| {
+        if point == "native_gap" && !once.replace(true) {
+            let path = f.originals.client.path().join(NAMES[0]);
+            let replacement = path.with_extension("outside");
+            fs::write(&replacement, b"late external catalog")?;
+            fs::rename(replacement, path)?;
+        }
+        Ok(())
+    });
+    assert!(error.is_err());
+    assert_eq!(
+        fs::read(f.originals.client.path().join(NAMES[0])).unwrap(),
+        b"late external catalog"
+    );
+    assert!(pending.review_recovery().is_err());
+    assert!(pending
+        .apply_fixture(Decision::Rollback, &|_| Ok(()))
+        .is_err());
+}
+#[test]
+fn journal_staging_survives_every_registered_publication_boundary_and_rearm() {
+    let output=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::restore::tests::actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_known_generations","--nocapture","--test-threads=1"]).env("OCXD024_JOURNAL_LAYOUT","1").output().unwrap();
+    assert!(
+        output.status.success(),
+        "{}\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+}
+
+#[test]
+fn new_stage_readback_cannot_adopt_a_same_bytes_replacement_before_plan_binding() {
+    let f = Fixture::new();
+    let original = f.originals.read(Phase::Original).unwrap();
+    let stage_name = "synthetic-created-stage";
+    let path = f.originals.directory.path().join(stage_name);
+    let result = stage(
+        &f.originals.directory,
+        stage_name,
+        &original.images[0],
+        &|point| {
+            if point == "stage_synced" {
+                let replacement = path.with_extension("other");
+                let Image::File {
+                    protection, bytes, ..
+                } = &original.images[0]
+                else {
+                    panic!("original absent");
+                };
+                let mut file = File::create(&replacement)?;
+                file.write_all(bytes)?;
+                metadata(&file, protection)?;
+                file.sync_all()?;
+                fs::rename(replacement, &path)?;
+            }
+            Ok(())
+        },
+    );
+    assert!(result.is_err());
+    let Image::File { bytes, .. } = &original.images[0] else {
+        panic!("original absent");
+    };
+    assert_eq!(fs::read(path).unwrap(), *bytes);
+    assert!(f.matches(Phase::Stopped));
 }

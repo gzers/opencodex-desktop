@@ -306,11 +306,14 @@ impl Originals {
         let stopped = self.frame(Phase::Stopped)?.0;
         let codex = TreeSnapshot::read(&self.client)?;
         let grok = GrokSnapshot::read(&self.profile)?;
-        if !original
-            .tree
-            .recovery_remainder_matches(&codex, pending.object_id(), leased)
-            || !original.grok.restored_matches(&grok)
-        {
+        let remainder_matches = if pending.stages_in_journal() {
+            original.tree.preplan_remainder_matches(&codex, leased)
+        } else {
+            original
+                .tree
+                .recovery_remainder_matches(&codex, pending.object_id(), leased)
+        };
+        if !remainder_matches || !original.grok.restored_matches(&grok) {
             return Ok((None, None));
         }
         for name in LOCKS {
@@ -513,9 +516,13 @@ impl Originals {
             restore::Decision::Rollback => {
                 let review = pending.review_recovery()?;
                 review.terminal == Some(restore::Decision::Rollback)
-                    && original
-                        .tree
-                        .recovery_remainder_matches(&codex, pending.object_id(), false)
+                    && if pending.stages_in_journal() {
+                        original.tree.preplan_remainder_matches(&codex, false)
+                    } else {
+                        original
+                            .tree
+                            .recovery_remainder_matches(&codex, pending.object_id(), false)
+                    }
             }
         };
         if !tree_matches || !original.grok.restored_matches(&grok) {
