@@ -33,6 +33,9 @@ pub struct Preview {
     pub can_continue: bool,
     pub can_rollback: bool,
     pub can_finalize: bool,
+    pub can_rearm: bool,
+    pub rollback_digest: Option<String>,
+    pub rearm_digest: Option<String>,
     pub confirmation_digest: Option<String>,
 }
 impl Preview {
@@ -52,6 +55,9 @@ impl Preview {
             can_continue: false,
             can_rollback: false,
             can_finalize: false,
+            can_rearm: false,
+            rollback_digest: None,
+            rearm_digest: None,
             confirmation_digest: None,
         }
     }
@@ -74,6 +80,9 @@ pub(super) fn project(
             can_continue: false,
             can_rollback: false,
             can_finalize: false,
+            can_rearm: false,
+            rollback_digest: None,
+            rearm_digest: None,
             confirmation_digest: None,
         });
     };
@@ -95,6 +104,9 @@ pub(super) fn project(
         can_continue: false,
         can_rollback: false,
         can_finalize: false,
+        can_rearm: false,
+        rollback_digest: None,
+        rearm_digest: None,
         confirmation_digest: None,
     };
     if let Some(refs) = &head.references {
@@ -144,12 +156,18 @@ pub(super) fn project(
                     };
             }
         }
-        if let Some(fingerprint) = originals.finalization_fingerprint(head)? {
+        if head.state == State::RestoreRolledBack {
+            preview.rearm_digest = originals.rearm_fingerprint(head, false)?;
+            preview.can_rearm = preview.rearm_digest.is_some();
+        } else if let Some(fingerprint) = originals.finalization_fingerprint(head)? {
             preview.can_finalize = true;
             preview.confirmation_digest = Some(fingerprint);
-        } else if let Some(fingerprint) = originals.continuation_fingerprint(head, false)? {
-            preview.can_continue = true;
-            preview.confirmation_digest = Some(fingerprint);
+        } else {
+            let (continuation, rollback) = originals.recovery_fingerprints(head, false)?;
+            preview.can_continue = continuation.is_some();
+            preview.confirmation_digest = continuation;
+            preview.can_rollback = rollback.is_some();
+            preview.rollback_digest = rollback;
         }
     }
     // Persisted bytes or a readback preview never manufacture the original

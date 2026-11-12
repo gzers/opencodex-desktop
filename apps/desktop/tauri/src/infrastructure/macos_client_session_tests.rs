@@ -194,6 +194,14 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
     assert_eq!(preview.status, Status::Pending);
     assert_eq!(preview.phase, Some(State::RestoreRolledBack));
     assert_eq!(preview.completion_evidence, PreviewEvidence::Verified);
+    assert!(preview.can_rearm && preview.rearm_digest.is_some());
+    let rearm_request = super::super::session_index::rearm::review(&f.context, &f.data)
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        preview.rearm_digest.as_deref(),
+        Some(rearm_request.confirmation_digest.as_str())
+    );
     assert!(!preview.can_continue && !preview.can_finalize && !preview.can_rollback);
     let path = session
         .originals
@@ -229,7 +237,21 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
         .is_err());
     drop(index);
     let preview = inspect_preview(&f.context, &f.data);
-    assert!(preview.can_continue && !preview.can_finalize);
+    assert!(
+        preview.can_continue && !preview.can_finalize && preview.can_rollback && !preview.can_rearm
+    );
+    assert_ne!(preview.confirmation_digest, preview.rollback_digest);
+    let rollback_request = super::super::session_index::rollback::review(&f.context, &f.data)
+        .unwrap()
+        .unwrap();
+    assert_eq!(
+        preview.rollback_digest.as_deref(),
+        Some(rollback_request.confirmation_digest.as_str())
+    );
+    assert_ne!(
+        preview.confirmation_digest.as_deref(),
+        Some(rollback_request.confirmation_digest.as_str())
+    );
     assert_eq!(preview.completion_evidence, PreviewEvidence::NotRecorded);
     next_plan
         .apply_fixture(Decision::Complete, &|_| Ok(()))

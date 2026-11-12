@@ -280,7 +280,7 @@ fn continue_owned_interrupted_plan_with_fresh_native_authority() {
         opencodex_home: profile.join(".codex-desktop/opencodex/home"),
     };
     let before = preview::inspect_preview(&context, &data);
-    assert!(before.can_continue && !before.can_finalize && !before.can_rollback);
+    assert!(before.can_continue && !before.can_finalize && before.can_rollback);
     let request = Request {
         attempt_id: before.attempt_id.clone().unwrap(),
         revision: before.revision.unwrap(),

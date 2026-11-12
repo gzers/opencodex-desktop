@@ -38,6 +38,9 @@ pub struct Preview {
     can_continue: bool,
     can_rollback: bool,
     can_finalize: bool,
+    can_rearm: bool,
+    rollback_digest: Option<String>,
+    rearm_digest: Option<String>,
     confirmation_digest: Option<String>,
 }
 #[tauri::command]
@@ -52,7 +55,7 @@ pub async fn client_recovery_preview(
         {Ok(crate::infrastructure::macos_client_originals::session_index::preview::inspect_preview(&context,&data))}
         #[cfg(not(target_os="macos"))]
         {let _=(data,context);Ok(Preview{status:"unsupported",phase:None,revision:None,attempt_id:None,
-            original_evidence:"unknown",plan_evidence:"unknown",completion_evidence:"unknown",phase_count:0,can_continue:false,can_rollback:false,can_finalize:false,confirmation_digest:None})}
+            original_evidence:"unknown",plan_evidence:"unknown",completion_evidence:"unknown",phase_count:0,can_continue:false,can_rollback:false,can_finalize:false,can_rearm:false,rollback_digest:None,rearm_digest:None,confirmation_digest:None})}
     }).await
 }
 #[tauri::command]
@@ -146,6 +149,102 @@ pub async fn client_recovery_continue(
             Err(AppError::RuntimeManaged {
                 code: "client_recovery_unsupported".into(),
                 detail: "当前平台的客户端恢复继续尚未接入".into(),
+            })
+        }
+    })
+    .await
+}
+#[tauri::command]
+pub async fn client_recovery_rollback(
+    request: Request,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    install: tauri::State<'_, SharedRuntimeInstall>,
+    app: tauri::AppHandle,
+) -> AppResult<Outcome> {
+    use tauri::Manager;
+    let fail = || AppError::RuntimeManaged {
+        code: "client_recovery_rollback_refused".into(),
+        detail: "当前有其它运行或更新操作，撤销恢复未执行".into(),
+    };
+    let lease = {
+        let updates = app.state::<crate::commands::update::SharedUpdateStatus>();
+        let state = updates.lock().map_err(|_| fail())?;
+        if state.installing || state.pending_restart.is_some() {
+            return Err(fail());
+        }
+        install.acquire().ok_or_else(fail)?
+    };
+    let data = data.0.clone();
+    let context = context.inner().clone();
+    super::run_blocking("rollback client recovery", move || {
+        let _lease = lease;
+        crate::modules::runtime::protection::ensure_binding_ready(&data)?;
+        #[cfg(target_os = "macos")]
+        {
+            crate::infrastructure::macos_client_originals::session_index::rollback::rollback(
+                &context, &data, request,
+            )
+        }
+        #[cfg(not(target_os = "macos"))]
+        {
+            let _ = (
+                context,
+                request.attempt_id,
+                request.revision,
+                request.confirmation_digest,
+            );
+            Err(AppError::RuntimeManaged {
+                code: "client_recovery_unsupported".into(),
+                detail: "当前平台的客户端撤销恢复尚未接入".into(),
+            })
+        }
+    })
+    .await
+}
+#[tauri::command]
+pub async fn client_recovery_rearm(
+    request: Request,
+    data: tauri::State<'_, SharedDataRoot>,
+    context: tauri::State<'_, SharedProcessContext>,
+    install: tauri::State<'_, SharedRuntimeInstall>,
+    app: tauri::AppHandle,
+) -> AppResult<Outcome> {
+    use tauri::Manager;
+    let fail = || AppError::RuntimeManaged {
+        code: "client_recovery_rearm_refused".into(),
+        detail: "当前有其它运行或更新操作，重新准备恢复未执行".into(),
+    };
+    let lease = {
+        let updates = app.state::<crate::commands::update::SharedUpdateStatus>();
+        let state = updates.lock().map_err(|_| fail())?;
+        if state.installing || state.pending_restart.is_some() {
+            return Err(fail());
+        }
+        install.acquire().ok_or_else(fail)?
+    };
+    let data = data.0.clone();
+    let context = context.inner().clone();
+    super::run_blocking("rearm client recovery", move || {
+        let _lease = lease;
+        crate::modules::runtime::protection::ensure_binding_ready(&data)?;
+        #[cfg(target_os = "macos")]
+        {
+            crate::infrastructure::macos_client_originals::session_index::rearm::prepare(
+                &context, &data, request,
+            )
+        }
+        #[cfg(not(target_os = "macos"))]
+        {
+            let _ = (
+                context,
+                request.attempt_id,
+                request.revision,
+                request.confirmation_digest,
+            );
+            Err(AppError::RuntimeManaged {
+                code: "client_recovery_unsupported".into(),
+                detail: "当前平台的客户端重新准备恢复尚未接入".into(),
             })
         }
     })

@@ -246,24 +246,28 @@ impl Originals {
             .recovery_fingerprint(head, leased, restore::Decision::Rollback)?
             .map(|fp| digest(format!("rearm:{fp}").as_bytes())))
     }
-    /// Current partial-plan confirmation, never historical Stop authority.
-    pub(super) fn continuation_fingerprint(
-        &self,
-        head: &session_index::Head,
-        leased: bool,
-    ) -> io::Result<Option<String>> {
-        self.recovery_fingerprint(head, leased, restore::Decision::Complete)
-    }
     pub(super) fn recovery_fingerprint(
         &self,
         head: &session_index::Head,
         leased: bool,
         decision: restore::Decision,
     ) -> io::Result<Option<String>> {
+        let (complete, rollback) = self.recovery_fingerprints(head, leased)?;
+        Ok(if decision == restore::Decision::Complete {
+            complete
+        } else {
+            rollback
+        })
+    }
+    pub(super) fn recovery_fingerprints(
+        &self,
+        head: &session_index::Head,
+        leased: bool,
+    ) -> io::Result<(Option<String>, Option<String>)> {
         if head.state != session_index::State::RestorePrepared
             && head.state != session_index::State::RestoreRolledBack
         {
-            return Ok(None);
+            return Ok((None, None));
         }
         let plan = head
             .restore_plan
@@ -271,10 +275,8 @@ impl Originals {
             .ok_or_else(|| denied("recovery plan absent"))?;
         let pending = restore::Pending::open(self, &plan.id, &plan.sha256)?;
         let review = pending.review_recovery()?;
-        if review.terminal.is_some()
-            && !(decision == restore::Decision::Rollback && review.terminal == Some(decision))
-        {
-            return Ok(None);
+        if review.terminal == Some(restore::Decision::Complete) {
+            return Ok((None, None));
         }
         if capture_file(&self.directory, "completion-readback.json", MAX_FRAME)? != Image::Absent {
             return Err(denied("partial plan has unexpected completion evidence"));
@@ -288,27 +290,36 @@ impl Originals {
             .recovery_remainder_matches(&codex, pending.object_id(), leased)
             || !original.grok.restored_matches(&grok)
         {
-            return Ok(None);
+            return Ok((None, None));
         }
         for name in LOCKS {
             let id = codex.stable_identity(name)?;
             if stopped.tree.stable_identity(name)? != id
                 || !original.tree.original_stable_identity_matches(name, &id)
             {
-                return Ok(None);
+                return Ok((None, None));
             }
         }
         // Full tree changes caused by coordinator acquisition are deliberately
         // not confirmation input. The remainder and stable identities above
         // are revalidated, while exact artifact generations remain bound here.
-        Ok(Some(digest(&encode(&(
-            head,
-            review.fingerprint,
-            decision,
-            self.data.identity(),
-            self.client.identity(),
-            self.profile.identity(),
-        ))?)))
+        let fingerprint = |decision| -> io::Result<String> {
+            Ok(digest(&encode(&(
+                head,
+                &review.fingerprint,
+                decision,
+                self.data.identity(),
+                self.client.identity(),
+                self.profile.identity(),
+            ))?))
+        };
+        let complete = if review.terminal.is_none() {
+            Some(fingerprint(restore::Decision::Complete)?)
+        } else {
+            None
+        };
+        let rollback = Some(fingerprint(restore::Decision::Rollback)?);
+        Ok((complete, rollback))
     }
     pub(super) fn finalization_fingerprint(
         &self,
