@@ -42,6 +42,8 @@ pub mod rearm;
 pub mod rollback;
 #[path = "macos_client_unchanged.rs"]
 pub mod unchanged;
+#[path = "macos_client_vault_history.rs"]
+mod vault_history;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -538,6 +540,10 @@ impl Index {
         self.check()?;
         read_head(self.connection()?)
     }
+    fn cancel_history(&self, head: &Head) -> io::Result<Vec<Head>> {
+        self.check()?;
+        vault_history::read(self.connection()?, head)
+    }
     pub fn reserve_start(&self) -> io::Result<Head> {
         let previous = self.head()?;
         if previous.as_ref().is_some_and(|head| {
@@ -552,7 +558,14 @@ impl Index {
         }
         if let Some(head) = &previous {
             if head.state == State::CancelledBeforeCapture {
-                preparation::verify_registered(&self.data, &self.client, &self.binding, head)?;
+                preparation::verify_registered(
+                    &self.data,
+                    &self.client,
+                    &self.profile,
+                    &self.binding,
+                    head,
+                    &self.cancel_history(head)?,
+                )?;
             } else if head.state == State::Unchanged {
                 unchanged::verify_registered(
                     self.data.path(),
@@ -692,10 +705,14 @@ impl Index {
             completion_sha256: Some(proof.sha256().into()),
         };
         validate(&next)?;
-        preparation::verify_registered(&self.data, &self.client, &self.binding, &next)?;
-        if observation::entry(&self.action_parent, "client-originals")?.is_some() {
-            return Err(denied("vault appeared before cancel commit"));
-        }
+        preparation::verify_registered(
+            &self.data,
+            &self.client,
+            &self.profile,
+            &self.binding,
+            &next,
+            &self.cancel_history(expected)?,
+        )?;
         proof.require(expected, &self.binding)?;
         self.write(Some(expected), &next)?;
         if let Err(error) = proof.require(expected, &self.binding) {

@@ -44,6 +44,114 @@ impl Fixture {
 }
 
 #[test]
+fn preparing_cancellation_uses_only_indexed_closed_vault_history_and_keeps_it_intact() {
+    use super::super::session_index::{
+        preparation,
+        preview::{inspect_preview, Status},
+        unchanged, Index, State,
+    };
+    let f = Fixture::new();
+    fs::write(f.client.join("config.toml"), b"user configuration").unwrap();
+    let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+    let initial = index.reserve_start().unwrap();
+    let session = f.session();
+    let captured = index
+        .advance(
+            &initial,
+            State::Captured,
+            Some(session.references().unwrap()),
+        )
+        .unwrap();
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(10);
+    let proof = unchanged::fixture_readback(&session.originals, &captured, deadline).unwrap();
+    let closed = index.close_unchanged(&captured, &proof).unwrap();
+    let original_frame =
+        fs::read(session.originals.directory.path().join("original.json")).unwrap();
+    let close_receipt = session
+        .originals
+        .directory
+        .path()
+        .join(format!("unchanged-readback-{}.json", captured.revision));
+    let close_bytes = fs::read(&close_receipt).unwrap();
+    let preparing = index.reserve_start().unwrap();
+    assert_eq!(preparing.revision, 4);
+    assert_ne!(preparing.ticket, closed.ticket);
+    drop(index);
+    let projected = inspect_preview(&f.context, &f.data);
+    assert!(projected.can_cancel_preparation);
+    assert_eq!(projected.status, Status::Pending);
+    let projected_json = serde_json::to_string(&projected).unwrap();
+    assert!(
+        !projected_json.contains(&session.references().unwrap().attempt)
+            && !projected_json.contains("user configuration")
+            && !projected_json.contains(f.client.to_str().unwrap())
+    );
+    let request = preparation::review(&f.context, &f.data).unwrap().unwrap();
+    assert_eq!(
+        projected.preparation_digest.as_deref(),
+        Some(request.confirmation_digest.as_str())
+    );
+    let vault = f.data.join("manager-state/client-originals");
+    let orphan = vault.join(uuid::Uuid::new_v4().to_string());
+    fs::create_dir(&orphan).unwrap();
+    fs::write(orphan.join("partial-frame"), b"unindexed capture").unwrap();
+    assert!(preparation::review(&f.context, &f.data).is_err());
+    assert_eq!(inspect_preview(&f.context, &f.data).status, Status::Unknown);
+    assert_eq!(
+        fs::read(orphan.join("partial-frame")).unwrap(),
+        b"unindexed capture"
+    );
+    fs::remove_file(orphan.join("partial-frame")).unwrap();
+    fs::remove_dir(orphan).unwrap();
+    fs::set_permissions(&close_receipt, fs::Permissions::from_mode(0o600)).unwrap();
+    fs::write(&close_receipt, b"{}").unwrap();
+    assert!(preparation::review(&f.context, &f.data).is_err());
+    assert_eq!(fs::read(&close_receipt).unwrap(), b"{}");
+    fs::write(&close_receipt, &close_bytes).unwrap();
+    fs::set_permissions(&close_receipt, fs::Permissions::from_mode(0o400)).unwrap();
+    let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+    let proof = preparation::fixture_readback(
+        &f.context,
+        &index,
+        &preparing,
+        std::time::Instant::now() + std::time::Duration::from_secs(10),
+    )
+    .unwrap();
+    let cancelled = index.close_preparation(&preparing, &proof).unwrap();
+    assert_eq!(cancelled.revision, 5);
+    assert_eq!(cancelled.state, State::CancelledBeforeCapture);
+    drop(index);
+    assert_eq!(
+        inspect_preview(&f.context, &f.data).status,
+        Status::Restored
+    );
+    assert_eq!(
+        fs::read(session.originals.directory.path().join("original.json")).unwrap(),
+        original_frame
+    );
+    assert_eq!(fs::read(&close_receipt).unwrap(), close_bytes);
+    assert_eq!(
+        fs::read(f.client.join("config.toml")).unwrap(),
+        b"user configuration"
+    );
+    // New unknown captures after a completed cancellation still block startup;
+    // only an explicit subsequent Start can introduce a new capture baseline.
+    let orphan = vault.join(uuid::Uuid::new_v4().to_string());
+    fs::create_dir(&orphan).unwrap();
+    assert_eq!(inspect_preview(&f.context, &f.data).status, Status::Unknown);
+    let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+    assert!(index.reserve_start().is_err());
+    drop(index);
+    fs::remove_dir(orphan).unwrap();
+    let index = Index::open_existing(&f.context, &f.data, &f.client).unwrap();
+    let next = index.reserve_start().unwrap();
+    assert_eq!(next.state, State::Preparing);
+    assert_eq!(next.revision, 6);
+    drop(index);
+    assert!(inspect_preview(&f.context, &f.data).can_cancel_preparation);
+}
+
+#[test]
 fn early_captured_originals_close_without_replay_and_remain_independently_verified() {
     use super::super::session_index::{
         preview::{inspect_preview, Evidence, Status},

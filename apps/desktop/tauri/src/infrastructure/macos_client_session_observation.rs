@@ -89,17 +89,24 @@ pub(super) fn inspect_map<T>(
     data_root: &Path,
     project: impl FnOnce(Option<&Head>) -> io::Result<T>,
 ) -> io::Result<T> {
+    inspect_map_history(context, data_root, |head, _history| project(head))
+}
+pub(super) fn inspect_map_history<T>(
+    context: &ProcessContext,
+    data_root: &Path,
+    project: impl FnOnce(Option<&Head>, &[Head]) -> io::Result<T>,
+) -> io::Result<T> {
     let data = PinnedDirectory::open(data_root)?;
     data.private()?;
     if entry(&data, "manager-state")?.is_none() {
-        return project(None);
+        return project(None, &[]);
     }
     let manager = data.child_private("manager-state", false)?;
     let action = entry(&manager, "client-session-action.lock")?;
     let index = entry(&manager, FILE)?;
     if action.is_none() && index.is_none() {
         return if entry(&manager, "client-originals")?.is_none() {
-            project(None)
+            project(None, &[])
         } else {
             Err(denied("originals remain without their independent index"))
         };
@@ -179,11 +186,26 @@ pub(super) fn inspect_map<T>(
         return Err(denied("observation HOME or directory generation differs"));
     }
     let result = read_head(&connection)?;
+    let history = if let Some(head) = result
+        .as_ref()
+        .filter(|h| matches!(h.state, State::Preparing | State::CancelledBeforeCapture))
+    {
+        vault_history::read(&connection, head)?
+    } else {
+        Vec::new()
+    };
     if let Some(head) = result
         .as_ref()
         .filter(|h| h.state == State::CancelledBeforeCapture)
     {
-        preparation::verify_registered(&data, &client, &binding, head)?;
+        preparation::verify_registered(
+            &data,
+            &client,
+            &context.working_directory,
+            &binding,
+            head,
+            &history,
+        )?;
     }
     if let Some(head) = result.as_ref().filter(|h| h.state == State::Unchanged) {
         unchanged::verify_registered(data.path(), client.path(), &context.working_directory, head)?;
@@ -229,7 +251,7 @@ pub(super) fn inspect_map<T>(
         .close()
         .map_err(|_| denied("observation connection did not close"))?;
     pin.recheck()?;
-    let projected = project(result.as_ref())?;
+    let projected = project(result.as_ref(), &history)?;
     data.private()?;
     client.recheck()?;
     pin.recheck()?;

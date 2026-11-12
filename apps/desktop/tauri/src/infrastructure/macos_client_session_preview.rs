@@ -75,6 +75,14 @@ pub(super) fn project(
     data: &Path,
     head: Option<&Head>,
 ) -> io::Result<Preview> {
+    project_history(context, data, head, &[])
+}
+fn project_history(
+    context: &ProcessContext,
+    data: &Path,
+    head: Option<&Head>,
+    history: &[Head],
+) -> io::Result<Preview> {
     let Some(head) = head else {
         return Ok(Preview {
             status: Status::NotRequired,
@@ -129,7 +137,7 @@ pub(super) fn project(
         confirmation_digest: None,
     };
     if head.state == State::Preparing {
-        preview.preparation_digest = preparation::confirmation(context, data, head)?;
+        preview.preparation_digest = preparation::confirmation(context, data, head, history)?;
         preview.can_cancel_preparation = preview.preparation_digest.is_some();
         if preview.can_cancel_preparation {
             preview.attempt_id = Some(head.ticket.clone());
@@ -234,6 +242,8 @@ pub(super) fn project(
     Ok(preview)
 }
 pub fn inspect_preview(context: &ProcessContext, data: &Path) -> Preview {
-    observation::inspect_map(context, data, |head| project(context, data, head))
-        .unwrap_or_else(|_| Preview::unavailable(Status::Unknown))
+    observation::inspect_map_history(context, data, |head, history| {
+        project_history(context, data, head, history)
+    })
+    .unwrap_or_else(|_| Preview::unavailable(Status::Unknown))
 }

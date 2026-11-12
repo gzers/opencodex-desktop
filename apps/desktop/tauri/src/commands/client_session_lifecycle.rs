@@ -55,6 +55,9 @@ impl Active {
         #[cfg(test)]
         if std::env::var_os("OCXD024_INTERRUPT_BEFORE_CAPTURE").as_deref()
             == Some(std::ffi::OsStr::new("1"))
+            || std::env::var_os("OCXD024_HISTORY_PREPARING").as_deref()
+                == Some(std::ffi::OsStr::new("1"))
+                && intent.revision > 1
         {
             if !data.starts_with("/private/tmp")
                 || !data.ancestors().any(|p| {

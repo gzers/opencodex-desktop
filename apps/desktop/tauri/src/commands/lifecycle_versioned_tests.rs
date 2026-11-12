@@ -795,4 +795,47 @@ model_provider = "openai"
         "production native lifecycle failed; owned fixture retained at {}",
         root.display()
     );
+    if std::env::var_os("OCXD024_HISTORY_PREPARING").as_deref() == Some(std::ffi::OsStr::new("1")) {
+        let start = Instant::now();
+        let result = process_action_with_runner(
+            ProcessActionRequest {
+                action: LifecycleAction::Start,
+                confirm: true,
+            },
+            &runner,
+            &context,
+            &log,
+            None,
+        )
+        .unwrap();
+        let elapsed = start.elapsed().as_millis();
+        let index =
+            crate::infrastructure::macos_client_originals::session_index::Index::open_existing(
+                &context, &data, &client,
+            )
+            .unwrap();
+        let head = index.head().unwrap().unwrap();
+        drop(index);
+        assert_eq!(
+            head.state,
+            crate::infrastructure::macos_client_originals::session_index::State::Preparing
+        );
+        assert_eq!(head.revision, 8);
+        assert!(head.references.is_none());
+        assert!(result.client_recovery_required && !result.can_start);
+        assert!(paths
+            .iter()
+            .all(|(name, path)| std::fs::read(path).ok() == before[*name]));
+        let report = serde_json::json!({"accepted":false,"precedingNativeLifecycle":"summary.json","expectedPreparingInterruption":true,"elapsedMs":elapsed,"result":result,"indexState":head.state,"indexRevision":head.revision,"historicalVaultRetained":data.join("manager-state/client-originals").exists(),"currentClientsUnchanged":true});
+        atomic_write(
+            &evidence.join("historical-preparing.json"),
+            &serde_json::to_vec_pretty(&report).unwrap(),
+            0o600,
+        )
+        .unwrap();
+        panic!(
+            "expected historical Preparing interruption retained at {}",
+            root.display()
+        );
+    }
 }

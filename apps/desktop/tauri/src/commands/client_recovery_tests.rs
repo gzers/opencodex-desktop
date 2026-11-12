@@ -6,6 +6,76 @@ use crate::{
 };
 use std::{fs, os::unix::fs::PermissionsExt, path::PathBuf, time::Instant};
 #[test]
+#[ignore = "directed next Start interrupted before capture on same owned recovered native fixture"]
+fn prepare_next_owned_start_after_registered_closure() {
+    let root =
+        PathBuf::from(std::env::var_os("OCXD024_HISTORY_PREPARE_ROOT").expect("owned fixture"));
+    assert!(
+        root.is_absolute()
+            && root.canonicalize().unwrap() == root
+            && root.starts_with("/private/tmp")
+            && root
+                .parent()
+                .unwrap()
+                .file_name()
+                .unwrap()
+                .to_string_lossy()
+                .starts_with("ocxd024-versioned-lifecycle-")
+    );
+    assert_eq!(
+        std::env::var_os("OCXD024_INTERRUPT_BEFORE_CAPTURE").as_deref(),
+        Some(std::ffi::OsStr::new("1"))
+    );
+    let profile = root.join("profile");
+    assert_eq!(
+        std::env::var_os("HOME"),
+        Some(profile.clone().into_os_string())
+    );
+    let data = profile.join(".codex-desktop/desktop");
+    let context = ProcessContext {
+        runtime: RuntimeHandle::initialize_versioned(&data, &root.join("program 中文 space")),
+        working_directory: profile.clone(),
+        opencodex_home: profile.join(".codex-desktop/opencodex/home"),
+    };
+    let previous = session_index::inspect(&context, &data).unwrap().unwrap();
+    assert!(matches!(
+        previous.state,
+        session_index::State::Restored | session_index::State::Unchanged
+    ));
+    let runner = std::sync::Mutex::new(
+        crate::infrastructure::process_runner::ControlledProcessRunner::new(&profile),
+    );
+    let started = Instant::now();
+    let result = super::super::process_action_with_runner(
+        crate::types::process_action::ProcessActionRequest {
+            action: crate::modules::process::LifecycleAction::Start,
+            confirm: true,
+        },
+        &runner,
+        &context,
+        &crate::infrastructure::runtime_log::RuntimeLog::new(&data),
+        None,
+    )
+    .unwrap();
+    let elapsed = started.elapsed().as_millis();
+    assert!(
+        result.result.is_none()
+            && result.client_recovery_required
+            && !result.can_start
+            && !result.can_stop
+            && !result.can_restart
+    );
+    let head = session_index::inspect(&context, &data).unwrap().unwrap();
+    assert_eq!(head.state, session_index::State::Preparing);
+    assert_eq!(head.revision, previous.revision + 1);
+    assert!(head.references.is_none());
+    assert_ne!(head.ticket, previous.ticket);
+    assert!(elapsed < 30000);
+    let preview = preview::inspect_preview(&context, &data);
+    assert!(preview.can_cancel_preparation);
+    fs::write(root.join("next-historical-preparing.json"),serde_json::to_vec_pretty(&serde_json::json!({"accepted":false,"elapsedMs":elapsed,"result":result,"indexState":head.state,"indexRevision":head.revision,"previousRegisteredState":previous.state,"previousRevision":previous.revision,"canCancelFromIndexedHistory":preview.can_cancel_preparation,"noNewServiceStarted":true})).unwrap()).unwrap();
+}
+#[test]
 #[ignore = "owned pinned official fixture retained after Preparing and before capture; cancel metadata only"]
 fn cancel_owned_preparing_without_vault_preserves_current_clients() {
     let root =
@@ -56,18 +126,28 @@ fn cancel_owned_preparing_without_vault_preserves_current_clients() {
         assert_eq!(fs::read(&idx).unwrap(), before);
     }
     let vault = data.join("manager-state/client-originals");
-    assert!(!vault.exists());
-    fs::create_dir(&vault).unwrap();
-    fs::write(vault.join("partial-original"), b"unknown retained evidence").unwrap();
+    let historical = std::env::var_os("OCXD024_HISTORY_CANCEL").is_some();
+    assert_eq!(vault.exists(), historical);
+    let injection = if historical {
+        vault.join(uuid::Uuid::new_v4().to_string())
+    } else {
+        vault.clone()
+    };
+    fs::create_dir(&injection).unwrap();
+    fs::write(
+        injection.join("partial-original"),
+        b"unknown retained evidence",
+    )
+    .unwrap();
     assert!(session_index::preparation::review(&context, &data).is_err());
     assert!(session_index::preparation::cancel(&context, &data, request.clone()).is_err());
     assert_eq!(
-        fs::read(vault.join("partial-original")).unwrap(),
+        fs::read(injection.join("partial-original")).unwrap(),
         b"unknown retained evidence"
     );
     assert_eq!(fs::read(&idx).unwrap(), before);
-    fs::remove_file(vault.join("partial-original")).unwrap();
-    fs::remove_dir(vault).unwrap();
+    fs::remove_file(injection.join("partial-original")).unwrap();
+    fs::remove_dir(injection).unwrap();
     let record = home.join("runtime-port.json");
     assert!(!record.exists());
     fs::write(
@@ -96,7 +176,7 @@ fn cancel_owned_preparing_without_vault_preserves_current_clients() {
     let outcome = result.unwrap();
     assert!(elapsed < 10000);
     assert_eq!(outcome.status, "cancelled_before_capture");
-    assert_eq!(outcome.revision, 2);
+    assert_eq!(outcome.revision, request.revision + 1);
     assert_eq!(fs::read(config).unwrap(), bytes);
     let after = fs::read(&idx).unwrap();
     assert!(session_index::preparation::cancel(&context, &data, request).is_err());

@@ -1,6 +1,6 @@
-//! Explicit cancellation BEFORE any original vault exists. This is NOT a
-//! restore/unchanged-original proof. Any retained vault (even empty, unrelated,
-//! unsafe or partial) refuses cancellation; nothing is scanned or deleted.
+//! Explicit pre-capture cancellation. A retained vault is admitted ONLY when
+//! its exact attempt set comes from independently closed indexed history.
+//! No capture is scanned/adopted or deleted; no original restore is claimed.
 use super::finalization::{Outcome, Request};
 use super::*;
 use crate::{
@@ -44,11 +44,13 @@ struct Receipt {
     binding_sha256: String,
     codex_sha256: String,
     grok_sha256: String,
+    retained_vault: vault_history::Evidence,
 }
 struct Review {
     codex: TreeSnapshot,
     grok: GrokSnapshot,
     fingerprint: String,
+    retained_vault: vault_history::Evidence,
 }
 pub struct Proof {
     head: Head,
@@ -68,23 +70,14 @@ impl Proof {
         &self.sha256
     }
 }
-fn vault_absent(data: &PinnedDirectory) -> io::Result<PinnedDirectory> {
-    data.private()?;
-    let manager = data.child_private("manager-state", false)?;
-    if observation::entry(&manager, "client-originals")?.is_some() {
-        return Err(denied(
-            "original vault exists; cancellation cannot discard unknown originals",
-        ));
-    }
-    Ok(manager)
-}
 fn receipt(head: &Head, binding: &[u8], review: &Review) -> io::Result<Receipt> {
     Ok(Receipt {
-        schema_version: 1,
+        schema_version: 2,
         original_head: head.clone(),
         binding_sha256: digest(binding),
         codex_sha256: digest(&encode(&review.codex)?),
         grok_sha256: digest(&encode(&review.grok)?),
+        retained_vault: review.retained_vault.clone(),
     })
 }
 fn inspect_objects(
@@ -93,22 +86,32 @@ fn inspect_objects(
     client: &PinnedDirectory,
     head: &Head,
     binding: &[u8],
+    history: &[Head],
 ) -> io::Result<Option<Review>> {
     if !eligible(head) {
         return Ok(None);
     }
-    let manager = vault_absent(data)?;
+    let retained_vault =
+        vault_history::inspect(data, client, &context.working_directory, head, history)?;
+    let manager = data.child_private("manager-state", false)?;
     let profile = PinnedDirectory::open(&context.working_directory)?;
     let codex = TreeSnapshot::read(client)?;
     let grok = GrokSnapshot::read(&profile)?;
     if scope(context, data, client)? != binding {
         return Err(denied("preparing scope changed"));
     }
-    let fingerprint = digest(&encode(&(head, digest(binding), &codex, &grok))?);
+    let fingerprint = digest(&encode(&(
+        head,
+        digest(binding),
+        &codex,
+        &grok,
+        &retained_vault,
+    ))?);
     let result = Review {
         codex,
         grok,
         fingerprint,
+        retained_vault,
     };
     match capture_file(&manager, &filename(head), MAX_FRAME)? {
         Image::Absent => {}
@@ -121,11 +124,15 @@ fn inspect_objects(
             }
         }
     }
-    vault_absent(data)?;
+    if vault_history::inspect(data, client, &context.working_directory, head, history)?
+        != result.retained_vault
+    {
+        return Err(denied("retained vault changed during cancellation review"));
+    }
     Ok(Some(result))
 }
 pub fn review(context: &ProcessContext, data: &Path) -> AppResult<Option<Request>> {
-    observation::inspect_map(context, data, |head| {
+    observation::inspect_map_history(context, data, |head, history| {
         let Some(head) = head.filter(|h| eligible(h)) else {
             return Ok(None);
         };
@@ -135,7 +142,7 @@ pub fn review(context: &ProcessContext, data: &Path) -> AppResult<Option<Request
         )?)?;
         let binding = scope(context, &data, &client)?;
         Ok(
-            inspect_objects(context, &data, &client, head, &binding)?.map(|r| Request {
+            inspect_objects(context, &data, &client, head, &binding, history)?.map(|r| Request {
                 attempt_id: head.ticket.clone(),
                 revision: head.revision,
                 confirmation_digest: r.fingerprint,
@@ -150,6 +157,7 @@ pub(super) fn confirmation(
     context: &ProcessContext,
     data: &Path,
     head: &Head,
+    history: &[Head],
 ) -> io::Result<Option<String>> {
     if !eligible(head) {
         return Ok(None);
@@ -159,7 +167,7 @@ pub(super) fn confirmation(
         context.working_directory.join(".codex"),
     )?)?;
     let binding = scope(context, &data, &client)?;
-    Ok(inspect_objects(context, &data, &client, head, &binding)?.map(|r| r.fingerprint))
+    Ok(inspect_objects(context, &data, &client, head, &binding, history)?.map(|r| r.fingerprint))
 }
 fn readback(
     context: &ProcessContext,
@@ -168,17 +176,21 @@ fn readback(
     head: &Head,
     binding: &[u8],
     deadline: Instant,
+    history: &[Head],
 ) -> io::Result<Proof> {
     time(deadline)?;
-    let first = inspect_objects(context, data, client, head, binding)?
+    let first = inspect_objects(context, data, client, head, binding, history)?
         .ok_or_else(|| denied("not a preparing reservation"))?;
-    let second = inspect_objects(context, data, client, head, binding)?
+    let second = inspect_objects(context, data, client, head, binding, history)?
         .ok_or_else(|| denied("preparing state changed"))?;
-    if first.codex != second.codex || first.grok != second.grok {
+    if first.codex != second.codex
+        || first.grok != second.grok
+        || first.retained_vault != second.retained_vault
+    {
         return Err(denied("current client objects changed during cancellation"));
     }
     let raw = encode(&receipt(head, binding, &second)?)?;
-    let manager = vault_absent(data)?;
+    let manager = data.child_private("manager-state", false)?;
     time(deadline)?;
     match capture_file(&manager, &filename(head), MAX_FRAME)? {
         Image::Absent => create(&manager, &filename(head), &raw)?,
@@ -201,9 +213,12 @@ fn readback(
     if bytes != raw {
         return Err(denied("cancel receipt changed"));
     }
-    let final_read = inspect_objects(context, data, client, head, binding)?
+    let final_read = inspect_objects(context, data, client, head, binding, history)?
         .ok_or_else(|| denied("preparing state changed"))?;
-    if final_read.codex != first.codex || final_read.grok != first.grok {
+    if final_read.codex != first.codex
+        || final_read.grok != first.grok
+        || final_read.retained_vault != first.retained_vault
+    {
         return Err(denied("client objects changed before cancellation close"));
     }
     time(deadline)?;
@@ -217,8 +232,10 @@ fn readback(
 pub(super) fn verify_registered(
     data: &PinnedDirectory,
     client: &PinnedDirectory,
+    profile: &Path,
     binding: &[u8],
     head: &Head,
+    history: &[Head],
 ) -> io::Result<()> {
     if head.state != State::CancelledBeforeCapture
         || head.references.is_some()
@@ -242,7 +259,7 @@ pub(super) fn verify_registered(
     )
     .map_err(|_| denied("cancel receipt fields invalid"))?;
     validate(&receipt.original_head)?;
-    if receipt.schema_version != 1
+    if receipt.schema_version != 2
         || !eligible(&receipt.original_head)
         || receipt.original_head.ticket != head.ticket
         || receipt.original_head.revision.checked_add(1) != Some(head.revision)
@@ -254,65 +271,102 @@ pub(super) fn verify_registered(
     }
     data.private()?;
     client.recheck()?;
-    vault_absent(data)?;
+    let prefix = history
+        .iter()
+        .take_while(|h| h.revision <= receipt.original_head.revision)
+        .cloned()
+        .collect::<Vec<_>>();
+    if vault_history::inspect(data, client, profile, &receipt.original_head, &prefix)?
+        != receipt.retained_vault
+    {
+        return Err(denied("registered retained vault proof changed"));
+    }
     Ok(())
 }
 pub fn cancel(context: &ProcessContext, data: &Path, request: Request) -> AppResult<Outcome> {
-    let deadline = Instant::now() + crate::modules::process::stop_timeout();
-    let client = std::fs::canonicalize(context.working_directory.join(".codex")).map_err(fail)?;
-    let index = Index::open_existing(context, data, &client).map_err(fail)?;
-    let head = index.head().map_err(fail)?.ok_or_else(|| fail(()))?;
-    let review = inspect_objects(context, &index.data, &index.client, &head, &index.binding)
+    let started = Instant::now();
+    let deadline = started + crate::modules::process::stop_timeout();
+    let phase = std::cell::Cell::new("open-existing-index");
+    let result: AppResult<Outcome> = (|| {
+        let client =
+            std::fs::canonicalize(context.working_directory.join(".codex")).map_err(fail)?;
+        let index = Index::open_existing(context, data, &client).map_err(fail)?;
+        let head = index.head().map_err(fail)?.ok_or_else(|| fail(()))?;
+        let history = index.cancel_history(&head).map_err(fail)?;
+        phase.set("confirm-indexed-history-and-current-clients");
+        let review = inspect_objects(
+            context,
+            &index.data,
+            &index.client,
+            &head,
+            &index.binding,
+            &history,
+        )
         .map_err(fail)?
         .ok_or_else(|| fail(()))?;
-    if head.ticket != request.attempt_id
-        || head.revision != request.revision
-        || review.fingerprint != request.confirmation_digest
-    {
-        return Err(fail(()));
-    }
-    let root = context
-        .runtime
-        .managed_installation_root()
-        .ok_or_else(|| fail(()))?;
-    let (target, platform) = crate::modules::runtime::program_layout::host_target()?;
-    let selected =
-        crate::modules::runtime::program_selection::read_complete(&root, platform, target)?
-            .ok_or_else(|| fail(()))?;
-    let owner = SystemServiceOwnerProofProvider::new(root.clone(), context.clone())?;
-    let home = PinnedDirectory::open(&context.opencodex_home).map_err(fail)?;
-    let require_absent = || -> AppResult<()> {
-        if owner.query(context)? != ServiceOwnerProof::Stopped
-            || capture_file(&home, "runtime-port.json", 4096).map_err(fail)? != Image::Absent
-            || capture_file(&home, "ocx.pid", 64).map_err(fail)? != Image::Absent
-            || owner.query(context)? != ServiceOwnerProof::Stopped
+        if head.ticket != request.attempt_id
+            || head.revision != request.revision
+            || review.fingerprint != request.confirmation_digest
         {
             return Err(fail(()));
         }
-        Ok(())
-    };
-    require_absent()?;
-    let proof = readback(
-        context,
-        &index.data,
-        &index.client,
-        &head,
-        &index.binding,
-        deadline,
-    )
-    .map_err(fail)?;
-    require_absent()?;
-    crate::modules::runtime::program_selection::verify_current(&root, &selected)?;
-    crate::modules::runtime::program_image::verify(&selected)?;
-    let next = index.close_preparation(&head, &proof).map_err(fail)?;
-    Ok(Outcome {
-        attempt_id: head.ticket,
-        revision: next.revision,
-        status: "cancelled_before_capture",
-    })
+        let root = context
+            .runtime
+            .managed_installation_root()
+            .ok_or_else(|| fail(()))?;
+        phase.set("admit-current-image");
+        let (target, platform) = crate::modules::runtime::program_layout::host_target()?;
+        let selected =
+            crate::modules::runtime::program_selection::read_complete(&root, platform, target)?
+                .ok_or_else(|| fail(()))?;
+        let owner = SystemServiceOwnerProofProvider::new(root.clone(), context.clone())?;
+        let home = PinnedDirectory::open(&context.opencodex_home).map_err(fail)?;
+        let require_absent = || -> AppResult<()> {
+            if owner.query(context)? != ServiceOwnerProof::Stopped
+                || capture_file(&home, "runtime-port.json", 4096).map_err(fail)? != Image::Absent
+                || capture_file(&home, "ocx.pid", 64).map_err(fail)? != Image::Absent
+                || owner.query(context)? != ServiceOwnerProof::Stopped
+            {
+                return Err(fail(()));
+            }
+            Ok(())
+        };
+        phase.set("current-service-absence");
+        require_absent()?;
+        phase.set("history-and-client-readback");
+        let proof = readback(
+            context,
+            &index.data,
+            &index.client,
+            &head,
+            &index.binding,
+            deadline,
+            &history,
+        )
+        .map_err(fail)?;
+        phase.set("recheck-current-absence-and-image");
+        require_absent()?;
+        crate::modules::runtime::program_selection::verify_current(&root, &selected)?;
+        crate::modules::runtime::program_image::verify(&selected)?;
+        phase.set("close-preparation-index");
+        let next = index.close_preparation(&head, &proof).map_err(fail)?;
+        Ok(Outcome {
+            attempt_id: head.ticket,
+            revision: next.revision,
+            status: "cancelled_before_capture",
+        })
+    })();
+    if result.is_err() {
+        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data).append_event(&format!(
+            "client-preparation-cancel: refused phase={} elapsed_ms={}",
+            phase.get(),
+            started.elapsed().as_millis()
+        ));
+    }
+    result.map_err(fail)
 }
 #[cfg(test)]
-pub(super) fn fixture_readback(
+pub(in crate::infrastructure::macos_client_originals) fn fixture_readback(
     context: &ProcessContext,
     index: &Index,
     head: &Head,
@@ -325,6 +379,7 @@ pub(super) fn fixture_readback(
         head,
         &index.binding,
         deadline,
+        &index.cancel_history(head)?,
     )
 }
 
@@ -369,10 +424,11 @@ mod tests {
         let raw: Vec<u8> = c
             .query_row("SELECT document FROM current_session", [], |r| r.get(0))
             .unwrap();
-        c.close().unwrap();
         let head: Head = decode(&raw).unwrap();
-        verify_registered(&data, &client, &binding, &head).unwrap();
-        let manager = vault_absent(&data).unwrap();
+        let history = vault_history::read(&c, &head).unwrap();
+        c.close().unwrap();
+        verify_registered(&data, &client, &profile, &binding, &head, &history).unwrap();
+        let manager = data.child_private("manager-state", false).unwrap();
         let Image::File { bytes, .. } =
             capture_file(&manager, &filename(&head), MAX_FRAME).unwrap()
         else {
@@ -386,7 +442,7 @@ mod tests {
         assert_eq!(digest(&grok), receipt.grok_sha256);
         println!(
             "{}",
-            serde_json::json!({"receiptSha256":digest(&bytes),"codexTreeBase64":base64::engine::general_purpose::STANDARD.encode(codex),"grokTreeBase64":base64::engine::general_purpose::STANDARD.encode(grok),"completeCurrentTreesMatchReceipt":true,"vaultAbsent":true,"readOnly":true})
+            serde_json::json!({"receiptSha256":digest(&bytes),"codexTreeBase64":base64::engine::general_purpose::STANDARD.encode(codex),"grokTreeBase64":base64::engine::general_purpose::STANDARD.encode(grok),"completeCurrentTreesMatchReceipt":true,"retainedVaultVerifiedFromIndexedHistory":true,"readOnly":true})
         );
     }
 }

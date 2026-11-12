@@ -93,7 +93,9 @@ fn lookup(parent: &File, child: &OsStr) -> io::Result<libc::stat> {
     }
     Ok(unsafe { s.assume_init() })
 }
-fn names(parent: &File) -> io::Result<Vec<OsString>> {
+pub(in crate::infrastructure::macos_client_originals) fn names(
+    parent: &File,
+) -> io::Result<Vec<OsString>> {
     // openat(".") gives readdir an independent cursor for this exact directory;
     // a dup would share the original directory offset across observations.
     let raw = unsafe {
