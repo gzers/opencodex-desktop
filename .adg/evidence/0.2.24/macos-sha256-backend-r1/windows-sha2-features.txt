@@ -1,0 +1,70 @@
+sha2 v0.10.9
+├── sha2 feature "default"
+│   └── tauri-codegen v2.7.1
+│       ├── tauri-codegen feature "brotli"
+│       │   └── tauri-codegen feature "compression"
+│       │       └── tauri-macros feature "compression"
+│       │           └── tauri feature "compression"
+│       │               └── tauri feature "default"
+│       │                   └── opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+│       │                       └── opencodex-desktop feature "default" (command-line)
+│       ├── tauri-codegen feature "compression" (*)
+│       └── tauri-codegen feature "default"
+│           └── tauri-macros v2.7.1 (proc-macro)
+│               ├── tauri-macros feature "compression" (*)
+│               └── tauri-macros feature "default"
+│                   └── tauri v2.12.1
+│                       ├── tauri-plugin-dialog v2.8.1
+│                       │   ├── tauri-plugin-dialog feature "default"
+│                       │   │   └── opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri) (*)
+│                       │   └── tauri-plugin-dialog feature "gtk3"
+│                       │       └── tauri-plugin-dialog feature "default" (*)
+│                       ├── tauri-plugin-fs v2.6.0
+│                       │   └── tauri-plugin-fs feature "default"
+│                       │       └── tauri-plugin-dialog v2.8.1 (*)
+│                       ├── tauri-plugin-process v2.4.0
+│                       │   └── tauri-plugin-process feature "default"
+│                       │       └── opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri) (*)
+│                       └── tauri-plugin-updater v2.13.1
+│                           ├── tauri-plugin-updater feature "default"
+│                           │   └── opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri) (*)
+│                           ├── tauri-plugin-updater feature "rustls-tls"
+│                           │   └── tauri-plugin-updater feature "default" (*)
+│                           ├── tauri-plugin-updater feature "system-proxy"
+│                           │   └── tauri-plugin-updater feature "default" (*)
+│                           └── tauri-plugin-updater feature "zip"
+│                               └── tauri-plugin-updater feature "default" (*)
+│                       ├── tauri feature "common-controls-v6"
+│                       │   └── tauri feature "default" (*)
+│                       ├── tauri feature "compression" (*)
+│                       ├── tauri feature "dbus"
+│                       │   └── tauri feature "default" (*)
+│                       ├── tauri feature "default" (*)
+│                       ├── tauri feature "dynamic-acl"
+│                       │   └── tauri feature "default" (*)
+│                       ├── tauri feature "image"
+│                       │   └── tauri feature "image-png"
+│                       │       └── opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri) (*)
+│                       ├── tauri feature "image-png" (*)
+│                       ├── tauri feature "tauri-runtime-wry"
+│                       │   └── tauri feature "wry"
+│                       │       └── tauri feature "default" (*)
+│                       ├── tauri feature "tray-icon"
+│                       │   └── opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri) (*)
+│                       ├── tauri feature "unstable"
+│                       │   └── opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri) (*)
+│                       ├── tauri feature "webkit2gtk"
+│                       │   └── tauri feature "wry" (*)
+│                       ├── tauri feature "webview2-com"
+│                       │   └── tauri feature "wry" (*)
+│                       ├── tauri feature "wry" (*)
+│                       └── tauri feature "x11"
+│                           └── tauri feature "default" (*)
+└── sha2 feature "std"
+    └── sha2 feature "default" (*)
+
+sha2 v0.10.9
+├── sha2 feature "default"
+│   └── opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri) (*)
+└── sha2 feature "std"
+    └── sha2 feature "default" (*)
