@@ -1,0 +1,69 @@
+{
+  "accepted": false,
+  "commit": "7131fdadc7495aa31f4bec46c885f9bd757d5774",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore_tests.rs",
+      "sha256": "1a2435a22cc38b0fafb5972f10867908f43fa3bcf610615b3d30a0f3343d7882"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs",
+      "sha256": "a5d88446079deb7ab5940d1e63ebcafaf440e2ba5c7fc83ca9e351e47ae4229f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement.rs",
+      "sha256": "5f25debfcb01693ee51869644ad8731267f289f6aceb249f1d12a2c0d41c2f67"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement_index_tests.rs",
+      "sha256": "2cf686a48d1608416982ac768732495d3593607d4e66e494e16992c4ef98a4a1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement_tests.rs",
+      "sha256": "640e7726543d606ef20e7ea136e2236122c5e50fff8163698d805e1e61a4bc9b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "5bff03c503a06418c5bffd673aa5c6b45c456d97f25bf0c5fc0cf76b5cbeab55"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index_tests.rs",
+      "sha256": "0ab60148d440ffa13b7dfd909b714a77ec660c8cf49a90f513432db73cb3f9ea"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs",
+      "sha256": "f8858c2a7b978b176570f5bda4bbe85e7825f4224a48aab514a33efaa1cf4917"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "sha256": "5b4b6def02e73086c5445490a4bc5de8ccc5ab1c0c000e4f3df2a9c3ec278e98"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+      "sha256": "8a9d6c7e29ce4cf4c7ce5b4af9ac83b34cbec1317c37958003d5ceb71f6ded74"
+    },
+    {
+      "path": "apps/desktop/ui/qa/client-recovery-visual.mjs",
+      "sha256": "378152dd882affde88ab7af17d44e0454a135d73bfdad666916b1ae5c88cb2dc"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/clientRecoveryFixture.ts",
+      "sha256": "5e220d3a086cf435ef613ad7b460ad725596117d7d1e39cef2ccb024fbbd34d1"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "sha256": "af323f5e212e59ab6d3b8bdc86c01f30bb16c4a256ec032e54fa22403729f66c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery.ts",
+      "sha256": "18a11b5fe88ee5785863375ca7b0d99c0a51cfba21b3f68ac01e0c9f3b0b3405"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "sha256": "602e57b035c8a827e14e5c0ec38e7c39d628308c65a854ad9104d23711c58c47"
+    }
+  ],
+  "finalCompiledTestBinary": "apps/desktop/tauri/target/debug/deps/opencodex_desktop-8c45127ef563f082",
+  "finalCompiledTestBinarySha256": "9230f6f622aec91a6e0199a6433644ee90461bffae7735bba82857372f28ad6a",
+  "scope": "Sequential affected batches; later ordinary-root downgrade rejection and permit-deadline changes have dedicated tests and final strict Clippy. Earlier logs do not claim execution of later edits. No production missing-root lifecycle acceptance."
+}

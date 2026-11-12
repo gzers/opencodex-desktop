@@ -1,0 +1,9 @@
+{
+  "accepted": false,
+  "command": "cargo test --lib indexed_root_ -- --test-threads=1",
+  "result": "2passed/2failed",
+  "firstError": "session roots overlap",
+  "cause": "Old overlap rule compared private archived physical root inside DataRoot rather than the original logical client path.",
+  "correction": "Keep original user-root/data disjointness; only independently resolved root-retirement archives use their separately verified fixed physical vault slot. Arbitrary archive paths still rejected.",
+  "rawOutput": "Initial result retained in chat tool output; not claimed as a separate original log."
+}

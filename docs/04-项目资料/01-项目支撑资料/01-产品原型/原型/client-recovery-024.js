@@ -13,7 +13,7 @@
  const rolled=()=>S.phase==='restore_rolled_back'||S.scene==='rolled-back';
  const labels={rollback:'撤销本次恢复',rearm:'重新准备恢复',continue:'确认继续恢复',finalize:'确认完成收尾',finishUnchanged:'确认结束会话',cancelPreparation:'确认取消启动准备',preparePlan:'确认准备计划'};
  const progress={rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…',continue:'正在继续恢复客户端配置…',finalize:'正在完成恢复收尾…',finishUnchanged:'正在核对原件并结束原会话…',cancelPreparation:'正在核对并取消启动准备…',preparePlan:'正在核对并准备恢复计划…'};
- const summaries={eligible:['客户端配置已恢复，尚有一项收尾未完成。','确认后重新核对原会话并完成收尾。客户端配置保持不变。'],pending:['配置恢复尚未完成，原会话已保留。','当前现场不能直接收尾，请查看诊断详情和应用日志。'],unknown:['客户端恢复状态尚未核实。','请重新检查；若仍无法核对，请保留原文件并查看应用日志。'],active:['当前会话正在使用。请先正常停止 OpenCodex，再检查恢复状态。',''],none:['没有待处理的客户端配置恢复。',''],unsupported:['当前平台暂不支持此恢复操作。','']};
+ const summaries={'root-plan':['配置恢复尚未完成，原会话已保留。','当前现场不能直接收尾，请查看诊断详情和应用日志。'],'root-absent':['配置恢复尚未完成，原会话已保留。','当前现场不能直接收尾，请查看诊断详情和应用日志。'],eligible:['客户端配置已恢复，尚有一项收尾未完成。','确认后重新核对原会话并完成收尾。客户端配置保持不变。'],pending:['配置恢复尚未完成，原会话已保留。','当前现场不能直接收尾，请查看诊断详情和应用日志。'],unknown:['客户端恢复状态尚未核实。','请重新检查；若仍无法核对，请保留原文件并查看应用日志。'],active:['当前会话正在使用。请先正常停止 OpenCodex，再检查恢复状态。',''],none:['没有待处理的客户端配置恢复。',''],unsupported:['当前平台暂不支持此恢复操作。','']};
  function markup(){
   if(S.reading)return '<p role="status">正在核对原会话和恢复记录…</p>';
   if(S.executing)return '<p role="status">'+progress[S.action]+'</p><p>关闭窗口后仍会继续，可重新打开查看。</p>';
@@ -26,7 +26,7 @@
   if(S.refreshError)return '<p role="status">本次恢复已撤销。</p><p>当前恢复状态尚未核实，服务保持停止。</p><p role="alert" class="model-error">'+esc(S.refreshError)+'</p>';
   if(S.error)return '<p role="alert" class="model-error">'+esc(S.error)+'</p>';
   const summary=needsPlan()?[observedPlan()?'上次停止未完成核对，配置仍待恢复。':'服务已停止，客户端配置尚未恢复。','可以核对当前状态并准备恢复计划，原件保留。']:preparing()?[capture()?'原件捕获已中断，服务尚未启动。':'启动准备已中断，尚未开始捕获原件。','可核对后取消本次准备，保持当前配置。']:early()?['启动前原件保持完整，原会话尚未结束。','可以重新核对服务已停止后结束原会话。客户端配置保持不变。']:rolled()?['本次恢复已撤销，文件已回到恢复前的停止状态。','启动前原件仍保留，尚未恢复；服务保持停止。']:continuing()?['客户端配置恢复中断，可以继续原恢复计划。','确认后恢复到本次启动前的配置，保留当前已归档的文件。服务保持停止。']:summaries[S.scene]||summaries.eligible;
-  const details=!['unknown','none','unsupported'].includes(S.scene)?'<details style="margin-top:16px"><summary>诊断详情</summary><dl class="p24-facts"><dt>会话阶段</dt><dd>'+(preparing()?'正在登记原会话':early()?'原件已保存':rolled()?'本次恢复已撤销':S.scene==='active'?'服务会话已就绪':'配置恢复待核对')+'</dd><dt>客户端原件</dt><dd>'+ (preparing()?'尚未登记':'已核对') +'</dd><dt>恢复计划</dt><dd>'+ (early()||preparing()||needsPlan()?'尚未登记':'已核对') +'</dd><dt>完成记录</dt><dd>'+(rolled()?'已核对':early()||preparing()||continuing()?'尚未登记':'待确认')+'</dd><dt>会话编号</dt><dd><code>f394bd75-355b-4873-83cc-6818efeb547a</code></dd></dl></details>':'';
+  const details=!['unknown','none','unsupported'].includes(S.scene)?'<details style="margin-top:16px"><summary>诊断详情</summary><dl class="p24-facts"><dt>会话阶段</dt><dd>'+(S.scene==='root-plan'?'客户端目录恢复待核对':S.scene==='root-absent'?'原目录缺席已核对':preparing()?'正在登记原会话':early()?'原件已保存':rolled()?'本次恢复已撤销':S.scene==='active'?'服务会话已就绪':'配置恢复待核对')+'</dd><dt>客户端原件</dt><dd>'+ (preparing()?'尚未登记':'已核对') +'</dd><dt>恢复计划</dt><dd>'+ (early()||preparing()||needsPlan()?'尚未登记':'已核对') +'</dd><dt>完成记录</dt><dd>'+(S.scene==='root-absent'||rolled()?'已核对':S.scene==='root-plan'?'尚未登记':early()||preparing()||continuing()?'尚未登记':'待确认')+'</dd><dt>会话编号</dt><dd><code>f394bd75-355b-4873-83cc-6818efeb547a</code></dd></dl></details>':'';
   return '<p role="status">'+summary[0]+'</p>'+(summary[1]?'<p>'+summary[1]+'</p>':'')+details;
  }
  function run(action){

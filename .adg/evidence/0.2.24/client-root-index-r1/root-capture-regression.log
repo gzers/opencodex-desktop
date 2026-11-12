@@ -1,0 +1,16 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.18s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 9 tests
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_cannot_mint_whole_root_completion_from_an_execution_directory_readback ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_captured_originals_are_independently_registered_with_their_scope_before_ready ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_execution_original_rejects_a_preexisting_service_owner_object ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_execution_snapshot_accepts_only_actual_initial_claim_transaction_metadata ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_ordinary_constructor_and_nonempty_first_root_cannot_create_an_existing_root_baseline ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_ordinary_open_cannot_accept_a_downgraded_or_rebound_frame_even_with_updated_digest ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_original_chain_keeps_created_execution_tree_distinct_from_original_user_state ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_real_capture_crash_keeps_partial_records_without_making_them_a_registered_original ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_absence_reopened_index_facts_do_not_reconstruct_the_original_capture_custody ... ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 2468 filtered out; finished in 4.00s
+

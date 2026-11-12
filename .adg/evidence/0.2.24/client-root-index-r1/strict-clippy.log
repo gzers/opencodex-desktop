@@ -1,0 +1,28 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: redundant pattern matching, consider using `is_none()`
+   --> src/infrastructure/macos_client_root_binding.rs:154:24
+    |
+154 |           let archived = match observation::entry(
+    |  ________________________^
+155 | |             &PinnedDirectory::open(&context.working_directory)?,
+156 | |             ".codex",
+157 | |         )? {
+158 | |             None => true,
+159 | |             Some(_) => false,
+160 | |         };
+    | |_________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#redundant_pattern_matching
+    = note: `-D clippy::redundant-pattern-matching` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::redundant_pattern_matching)]`
+help: try
+    |
+154 ~         let archived = observation::entry(
+155 +             &PinnedDirectory::open(&context.working_directory)?,
+156 +             ".codex",
+157 ~         )?.is_none();
+    |
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

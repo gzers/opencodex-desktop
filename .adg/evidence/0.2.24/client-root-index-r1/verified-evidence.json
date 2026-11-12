@@ -1,0 +1,46 @@
+{
+  "accepted": false,
+  "scope": "Offline original-byte/SQLite supplement to real storage/index tests; synthetic move factory is not production service permission",
+  "verified": [
+    {
+      "scene": "plan_registered",
+      "allRawByteHashesVerified": true,
+      "sourceEventAndImmutablePlanExactMatch": true,
+      "originFrameAndStartupScopeReferencesMatch": true,
+      "indexPhase": "root_retirement_prepared",
+      "indexRevision": 4,
+      "terminalReceiptVerifiedOnlyWhenIndependentlyClosed": false,
+      "noNativeServiceAuthorizationClaim": true
+    },
+    {
+      "scene": "root_moved",
+      "allRawByteHashesVerified": true,
+      "sourceEventAndImmutablePlanExactMatch": true,
+      "originFrameAndStartupScopeReferencesMatch": true,
+      "indexPhase": "root_retirement_prepared",
+      "indexRevision": 4,
+      "terminalReceiptVerifiedOnlyWhenIndependentlyClosed": false,
+      "noNativeServiceAuthorizationClaim": true
+    },
+    {
+      "scene": "root_closed",
+      "allRawByteHashesVerified": true,
+      "sourceEventAndImmutablePlanExactMatch": true,
+      "originFrameAndStartupScopeReferencesMatch": true,
+      "indexPhase": "root_absent",
+      "indexRevision": 5,
+      "terminalReceiptVerifiedOnlyWhenIndependentlyClosed": true,
+      "noNativeServiceAuthorizationClaim": true
+    },
+    {
+      "scene": "positive",
+      "allRawByteHashesVerified": true,
+      "sourceEventAndImmutablePlanExactMatch": true,
+      "originFrameAndStartupScopeReferencesMatch": true,
+      "indexPhase": "root_absent",
+      "indexRevision": 5,
+      "terminalReceiptVerifiedOnlyWhenIndependentlyClosed": true,
+      "noNativeServiceAuthorizationClaim": true
+    }
+  ]
+}

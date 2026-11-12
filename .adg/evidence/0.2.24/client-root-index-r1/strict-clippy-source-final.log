@@ -1,0 +1,10 @@
+    Checking opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0063]: missing field `deadline` in initializer of `infrastructure::macos_client_originals::root_retirement::MutationPermit<'_>`
+   --> src/infrastructure/macos_client_root_retirement_tests.rs:282:18
+    |
+282 |     let permit = MutationPermit { check: &|| Ok(()) };
+    |                  ^^^^^^^^^^^^^^ missing `deadline`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
