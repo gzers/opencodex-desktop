@@ -702,6 +702,7 @@ pub fn run() {
             commands::native_config_import::model_v2_native_rollback_list,
             commands::native_config_import::model_v2_native_config_backup,
             commands::runtime_activation::runtime_activation_preview,
+            commands::client_recovery::client_recovery_preview,
             commands::runtime_builtin::runtime_builtin_preview,
             commands::about::runtime_version_facts,
             commands::runtime_builtin::runtime_preparation_status,

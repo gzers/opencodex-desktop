@@ -3,6 +3,7 @@
 pub mod about;
 pub mod backup;
 pub mod cleanup;
+pub mod client_recovery;
 #[cfg(target_os = "macos")]
 mod client_session_lifecycle;
 pub mod codex_shim;

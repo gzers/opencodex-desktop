@@ -233,6 +233,37 @@ fn read_private(originals: &Originals, name: &str, sha: &str) -> AppResult<Vec<u
 fn parse<T: serde::de::DeserializeOwned>(bytes: &[u8]) -> AppResult<T> {
     serde_json::from_value(parse_strict_json_v2(bytes).map_err(error)?).map_err(error)
 }
+pub(super) fn verify_index_scope(
+    originals: &Originals,
+    refs: &References,
+    home: &Path,
+) -> AppResult<()> {
+    let scope: Scope = parse(&read_private(
+        originals,
+        "startup-scope.json",
+        &refs.scope_sha256,
+    )?)?;
+    let home = PinnedDirectory::open(home).map_err(error)?;
+    if scope.schema_version != 1
+        || scope.attempt != refs.attempt
+        || scope.original_sha256 != refs.original_sha256
+        || scope.uid != unsafe { libc::geteuid() }
+        || scope.data_identity != *originals.data.identity()
+        || scope.client_identity != *originals.client.identity()
+        || scope.profile_identity != *originals.profile.identity()
+        || scope.data != originals.data.path
+        || scope.client != originals.client.path
+        || scope.profile != originals.profile.path
+        || scope.home != home.path
+        || scope.home_identity != *home.identity()
+    {
+        return Err(error(()));
+    }
+    if refs.live_sha256.is_some() {
+        verify_closed_reference_files(originals, refs)?;
+    }
+    Ok(())
+}
 pub(super) fn verify_closed_reference_files(
     originals: &Originals,
     refs: &References,

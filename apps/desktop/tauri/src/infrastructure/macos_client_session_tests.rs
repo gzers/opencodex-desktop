@@ -42,6 +42,173 @@ impl Fixture {
         StartupSession::persist(&self.context, originals, root, selection).unwrap()
     }
 }
+#[test]
+fn recovery_preview_reads_under_action_lock_without_initializing_or_disclosing_original_bytes() {
+    use super::super::session_index::{
+        preview::{inspect_preview, Evidence, Status},
+        Index, State,
+    };
+    let f = Fixture::new();
+    let entries = || {
+        let mut names = fs::read_dir(f.data.join("manager-state"))
+            .unwrap()
+            .map(|p| p.unwrap().file_name())
+            .collect::<Vec<_>>();
+        names.sort();
+        names
+    };
+    let before_entries = entries();
+    assert_eq!(
+        inspect_preview(&f.context, &f.data).status,
+        Status::NotRequired
+    );
+    assert_eq!(entries(), before_entries);
+    assert!(!f
+        .data
+        .join("manager-state/client-session-index.sqlite")
+        .exists());
+    assert!(!f
+        .data
+        .join("manager-state/client-session-action.lock")
+        .exists());
+    let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+    let first = index.reserve_start().unwrap();
+    assert_eq!(
+        inspect_preview(&f.context, &f.data).status,
+        Status::Unknown,
+        "busy observer must not open the SQLite inode and release writer locks"
+    );
+    drop(index);
+    let path = f.data.join("manager-state/client-session-index.sqlite");
+    let before = fs::read(&path).unwrap();
+    let preview = inspect_preview(&f.context, &f.data);
+    assert_eq!(preview.status, Status::Pending);
+    assert_eq!(preview.phase, Some(State::Preparing));
+    assert_eq!(preview.revision, Some(first.revision));
+    assert!(!preview.can_continue && !preview.can_rollback);
+    assert_eq!(preview.original_evidence, Evidence::NotRecorded);
+    assert_eq!(fs::read(&path).unwrap(), before);
+}
+#[test]
+fn recovery_preview_validates_bound_frames_scope_plan_and_never_adopts_unregistered_completion() {
+    use super::super::session_index::{
+        preview::{inspect_preview, Evidence, Status},
+        Index, State,
+    };
+    let f = Fixture::new();
+    let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+    let first = index.reserve_start().unwrap();
+    let mut session = f.session();
+    let captured = index
+        .advance(&first, State::Captured, Some(session.references().unwrap()))
+        .unwrap();
+    drop(index);
+    let before = fs::read(f.data.join("manager-state/client-session-index.sqlite")).unwrap();
+    let preview = inspect_preview(&f.context, &f.data);
+    assert_eq!(preview.status, Status::Pending);
+    assert_eq!(preview.original_evidence, Evidence::Verified);
+    assert_eq!(preview.phase_count, 0);
+    let receipt = session
+        .originals
+        .directory
+        .path()
+        .join("completion-readback.json");
+    create(
+        &session.originals.directory,
+        "completion-readback.json",
+        b"{}",
+    )
+    .unwrap();
+    let preview = inspect_preview(&f.context, &f.data);
+    assert_eq!(preview.completion_evidence, Evidence::Unregistered);
+    assert!(!preview.can_continue && !preview.can_rollback);
+    assert_eq!(fs::read(&receipt).unwrap(), b"{}");
+    // A hand-written live reference is valid storage data ONLY, never an OS
+    // readiness/exit or mutation grant. The preview must not emit its contents.
+    let ready_sha = session.originals.seal(Phase::Ready).unwrap();
+    let live = Live {
+        schema_version: 1,
+        scope_sha256: session.scope_sha256.clone(),
+        ready_sha256: ready_sha,
+        record_sha256: "a".repeat(64),
+        generation: [42, unsafe { libc::geteuid() }.into(), 1, 1],
+        port: 12345,
+        parent_generation: [41, unsafe { libc::geteuid() }.into(), 1, 1],
+    };
+    let bytes = encode(&live).unwrap();
+    create(&session.originals.directory, "startup-live.json", &bytes).unwrap();
+    session.live_sha256 = Some(digest(&bytes));
+    let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+    let ready = index
+        .advance(&captured, State::Ready, Some(session.references().unwrap()))
+        .unwrap();
+    drop(index);
+    let preview = inspect_preview(&f.context, &f.data);
+    assert_eq!(preview.status, Status::Active);
+    assert_eq!(preview.original_evidence, Evidence::Verified);
+    let serialized = serde_json::to_string(&preview).unwrap();
+    assert!(
+        !serialized.contains("generation")
+            && !serialized.contains("recordSha256")
+            && !serialized.contains("startup-live")
+            && !serialized.contains(f.context.opencodex_home.to_str().unwrap())
+    );
+    assert_ne!(
+        fs::read(f.data.join("manager-state/client-session-index.sqlite")).unwrap(),
+        before
+    );
+    let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+    session.originals.seal(Phase::PreStop).unwrap();
+    let pre = index
+        .advance(
+            &ready,
+            State::StopPrepared,
+            Some(session.references().unwrap()),
+        )
+        .unwrap();
+    session.originals.seal(Phase::Stopped).unwrap();
+    let stop = index
+        .advance(&pre, State::Stopped, Some(session.references().unwrap()))
+        .unwrap();
+    index
+        .record_restore_plan(&stop, &uuid::Uuid::new_v4().to_string(), &"b".repeat(64))
+        .unwrap();
+    drop(index);
+    assert_eq!(
+        inspect_preview(&f.context, &f.data).status,
+        Status::Unknown,
+        "missing original plan must not offer execution"
+    );
+}
+#[test]
+fn recovery_preview_rejects_scope_or_original_corruption_and_preserves_every_file() {
+    use super::super::session_index::{
+        preview::{inspect_preview, Status},
+        Index, State,
+    };
+    for file in ["startup-scope.json", "original.json"] {
+        let f = Fixture::new();
+        let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+        let head = index.reserve_start().unwrap();
+        let session = f.session();
+        index
+            .advance(&head, State::Captured, Some(session.references().unwrap()))
+            .unwrap();
+        drop(index);
+        let target = session.originals.directory.path().join(file);
+        fs::set_permissions(&target, fs::Permissions::from_mode(0o600)).unwrap();
+        fs::write(&target, b"{broken").unwrap();
+        fs::set_permissions(&target, fs::Permissions::from_mode(0o400)).unwrap();
+        let index_path = f.data.join("manager-state/client-session-index.sqlite");
+        let before = fs::read(&index_path).unwrap();
+        let preview = inspect_preview(&f.context, &f.data);
+        assert_eq!(preview.status, Status::Unknown);
+        assert!(preview.attempt_id.is_none());
+        assert!(!preview.can_continue && !preview.can_rollback);
+        assert_eq!(fs::read(index_path).unwrap(), before);
+        assert_eq!(fs::read(target).unwrap(), b"{broken");
+    }
+}
 
 #[test]
 fn immutable_startup_scope_reopens_only_with_independent_original_and_scope_references() {

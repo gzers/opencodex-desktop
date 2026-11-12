@@ -77,17 +77,26 @@ fn action_pin(parent: &PinnedDirectory, file: &File) -> io::Result<(Identity, Pr
 }
 
 pub fn inspect(context: &ProcessContext, data_root: &Path) -> io::Result<Option<Head>> {
+    inspect_map(context, data_root, |head| Ok(head.cloned()))
+}
+/// Keep the shared action lock until the projection has finished reading its
+/// independently referenced original evidence. No later unlocked second read.
+pub(super) fn inspect_map<T>(
+    context: &ProcessContext,
+    data_root: &Path,
+    project: impl FnOnce(Option<&Head>) -> io::Result<T>,
+) -> io::Result<T> {
     let data = PinnedDirectory::open(data_root)?;
     data.private()?;
     if entry(&data, "manager-state")?.is_none() {
-        return Ok(None);
+        return project(None);
     }
     let manager = data.child_private("manager-state", false)?;
     let action = entry(&manager, "client-session-action.lock")?;
     let index = entry(&manager, FILE)?;
     if action.is_none() && index.is_none() {
         return if entry(&manager, "client-originals")?.is_none() {
-            Ok(None)
+            project(None)
         } else {
             Err(denied("originals remain without their independent index"))
         };
@@ -205,5 +214,16 @@ pub fn inspect(context: &ProcessContext, data_root: &Path) -> io::Result<Option<
         .close()
         .map_err(|_| denied("observation connection did not close"))?;
     pin.recheck()?;
-    Ok(result)
+    let projected = project(result.as_ref())?;
+    data.private()?;
+    client.recheck()?;
+    pin.recheck()?;
+    if scope(context, &data, &client)? != binding
+        || action_pin(&manager, &action_file)? != action_before
+    {
+        return Err(denied(
+            "observation context changed during evidence projection",
+        ));
+    }
+    Ok(projected)
 }

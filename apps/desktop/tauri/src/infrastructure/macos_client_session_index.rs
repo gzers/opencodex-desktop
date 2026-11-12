@@ -17,6 +17,8 @@ const TABLES: [(&str, &str); 3] = [
 #[path = "macos_client_session_observation.rs"]
 mod observation;
 pub use observation::inspect;
+#[path = "macos_client_session_preview.rs"]
+pub mod preview;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]

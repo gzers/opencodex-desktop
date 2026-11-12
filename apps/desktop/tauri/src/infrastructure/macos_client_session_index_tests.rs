@@ -108,6 +108,33 @@ fn observation_is_read_only_and_does_not_initialize_a_missing_session() {
         entries
     );
 }
+#[test]
+fn evidence_projection_keeps_shared_action_lock_for_the_entire_read_callback() {
+    let f = Fixture::new();
+    let index = f.open().unwrap();
+    let original = index.reserve_start().unwrap();
+    drop(index);
+    let action = f.data.join("manager-state/client-session-action.lock");
+    let before = fs::read(f.data.join("manager-state").join(FILE)).unwrap();
+    let revision = observation::inspect_map(&f.context, &f.data, |head| {
+        assert_eq!(head, Some(&original));
+        let competing = File::open(&action)?;
+        assert!(
+            competing.try_lock().is_err(),
+            "evidence callback must still hold its shared action lease"
+        );
+        Ok(head.unwrap().revision)
+    })
+    .unwrap();
+    assert_eq!(revision, 1);
+    assert_eq!(
+        fs::read(f.data.join("manager-state").join(FILE)).unwrap(),
+        before
+    );
+    let released = File::open(action).unwrap();
+    released.try_lock().unwrap();
+    released.unlock().unwrap();
+}
 
 #[test]
 fn retained_originals_without_current_references_are_unknown_and_cannot_initialize_or_reserve() {
