@@ -355,7 +355,7 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
     if value.get("fastRows").is_some_and(|v| !v.is_boolean()) {
         return Ok(None);
     }
-    for key in ["combos", "customModels"] {
+    for key in ["combos"] {
         if value.get(key).is_some_and(|v| match v {
             serde_json::Value::Array(a) => !a.is_empty(),
             serde_json::Value::Object(o) => !o.is_empty(),
@@ -370,6 +370,30 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
     let disabled: std::collections::BTreeSet<_> =
         disabled.into_iter().map(declaration_slug_key).collect();
     let mut routes = std::collections::BTreeSet::new();
+    let mut custom_by_provider: std::collections::BTreeMap<&str, Vec<&str>> =
+        std::collections::BTreeMap::new();
+    if let Some(custom) = value.get("customModels") {
+        let Some(custom) = custom.as_array().filter(|rows| rows.len() <= 4096) else {
+            return Ok(None);
+        };
+        let mut seen = std::collections::BTreeSet::new();
+        for row in custom {
+            let Some(provider) = row.get("provider").and_then(serde_json::Value::as_str) else {
+                return Ok(None);
+            };
+            let Some(id) = row
+                .get("modelId")
+                .and_then(serde_json::Value::as_str)
+                .filter(|s| !s.is_empty() && s.len() <= 1024 && !s.chars().any(char::is_control))
+            else {
+                return Ok(None);
+            };
+            if !providers.contains_key(provider) || !seen.insert((provider, id)) {
+                return Ok(None);
+            }
+            custom_by_provider.entry(provider).or_default().push(id);
+        }
+    }
     for (provider, entry) in providers {
         if !entry.is_object() || entry.get("disabled").is_some_and(|v| !v.is_boolean()) {
             return Ok(None);
@@ -433,6 +457,38 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
             }
             ids.into_iter().collect()
         };
+        // Same native model may be overlaid with custom metadata; different
+        // native IDs that encode to one slug are still ambiguous and refuse.
+        // Check this even for unselected/disabled custom rows, before filtering.
+        let mut encoded_custom = std::collections::BTreeMap::new();
+        for id in models.iter().copied().chain(
+            custom_by_provider
+                .get(provider.as_str())
+                .into_iter()
+                .flatten()
+                .copied(),
+        ) {
+            let encoded = id.replace('/', "-");
+            if encoded_custom
+                .insert(encoded, id)
+                .is_some_and(|prior| prior != id)
+            {
+                return Ok(None);
+            }
+        }
+        let mut models = models;
+        if entry
+            .get("selectedModels")
+            .is_none_or(|v| v.as_array().is_some_and(|s| s.is_empty()))
+        {
+            if let Some(custom) = custom_by_provider.get(provider.as_str()) {
+                for id in custom {
+                    if !models.contains(id) {
+                        models.push(id);
+                    }
+                }
+            }
+        }
         for model in models {
             // Original 2.99 providers/slug-codec::routedSlug maps inner slash to
             // hyphen, NOT a blind unencoded provider/model concatenation.

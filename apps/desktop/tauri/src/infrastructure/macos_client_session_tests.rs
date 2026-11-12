@@ -418,6 +418,49 @@ fn selection_defaults_disabled_equivalence_is_scoped_and_does_not_grant_collidin
     }
 }
 #[test]
+fn custom_declaration_overlays_same_model_and_adds_only_enabled_selected_custom_routes() {
+    let mut config = serde_json::json!({"providers":{"P":{"liveModels":false,"models":["base"]}},"customModels":[{"provider":"P","modelId":"base","displayName":"friendly"},{"provider":"P","modelId":"vendor/custom","contextWindow":200000}]});
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec!["P/base".into(), "P/vendor-custom".into()])
+    );
+    config["providers"]["P"]["selectedModels"] = serde_json::json!(["base"]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec!["P/base".into()])
+    );
+    config["providers"]["P"]["selectedModels"] = serde_json::json!(["vendor/custom"]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec!["P/vendor-custom".into()])
+    );
+    config["disabledModels"] = serde_json::json!(["P/vendor-custom"]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec![])
+    );
+}
+#[test]
+fn custom_declaration_refuses_ambiguous_or_unbound_custom_routes_without_learning_from_catalog() {
+    let config = serde_json::json!({"providers":{"P":{"liveModels":false,"models":["vendor/custom"]}},"customModels":[{"provider":"P","modelId":"vendor-custom"}]});
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        None
+    );
+    for custom in [
+        serde_json::json!(null),
+        serde_json::json!({}),
+        serde_json::json!([{"provider":"Missing","modelId":"x"}]),
+        serde_json::json!([{"provider":"P","modelId":""}]),
+        serde_json::json!([{"provider":"P","modelId":3}]),
+        serde_json::json!([{"provider":"P","modelId":"same"},{"provider":"P","modelId":"same"}]),
+    ] {
+        let mut c = config.clone();
+        c["customModels"] = custom;
+        assert_eq!(declaration(&serde_json::to_vec(&c).unwrap()).unwrap(), None);
+    }
+}
+#[test]
 fn audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction() {
     assert_eq!(
         audit_home(Path::new("/private/tmp/fixture/profile/opencodex-home")).unwrap(),

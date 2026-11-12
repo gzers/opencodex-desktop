@@ -270,6 +270,18 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
         p["defaultModel"] = "gpt-6-sol".into();
         config["disabledModels"] = serde_json::json!(["native-fixture/gpt-6-sol"]);
     }
+    if std::env::var_os("OCXD024_CUSTOM_GRAPH").as_deref() == Some(std::ffi::OsStr::new("1")) {
+        let p = &mut config["providers"]["native-fixture"];
+        p["liveModels"] = false.into();
+        p["models"] = serde_json::json!(["gpt-6-sol"]);
+        p["selectedModels"] = serde_json::json!([]);
+        config["customModels"] = serde_json::json!([
+            {"provider":"native-fixture","modelId":"gpt-6-sol","displayName":"Custom base","contextWindow":196608,"inputModalities":["text"],"reasoningEfforts":["low","medium"]},
+            {"provider":"native-fixture","modelId":"vendor/custom-native","displayName":"Custom added","contextWindow":262144,"inputModalities":["text"]},
+            {"provider":"native-fixture","modelId":"custom-disabled","displayName":"Excluded custom"}
+        ]);
+        config["disabledModels"] = serde_json::json!(["native-fixture/custom-disabled"]);
+    }
     atomic_write(
         &h.join("config.json"),
         &serde_json::to_vec(&config).unwrap(),
