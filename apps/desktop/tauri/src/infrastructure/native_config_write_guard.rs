@@ -6,7 +6,10 @@ use super::*;
 use crate::infrastructure::macos_client_originals::Image;
 use std::{io::Write, sync::mpsc, thread};
 const HELPER: &str = include_str!("client_config_guard299.mjs");
-const SCHEMA: &str = "ocxd-config-write-guard/1";
+const SCHEMA: &str = "ocxd-config-write-guard/2";
+#[cfg(test)]
+#[path = "native_config_guard_relocation_tests.rs"]
+pub(super) mod relocation_tests;
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Event {
@@ -14,6 +17,9 @@ struct Event {
     kind: String,
     operation: String,
     pid: u32,
+    #[serde(rename = "targetSha256")]
+    target_sha256: String,
+    phase: String,
 }
 pub struct Guard<'a> {
     native: &'a NativeLease,
@@ -24,6 +30,8 @@ pub struct Guard<'a> {
     operation: String,
     image: Option<Image>,
     released: bool,
+    planned: Option<PathBuf>,
+    poisoned: bool,
 }
 fn guard_error<T>(_: T) -> AppError {
     fail("client_config_write_guard_unconfirmed")
@@ -90,7 +98,7 @@ impl NativeLease {
         let (tx, rx) = mpsc::channel();
         let reader = thread::spawn(move || {
             let mut stream = BufReader::new(stdout);
-            for _ in 0..2 {
+            for _ in 0..4 {
                 let mut line = Vec::new();
                 let result = (&mut stream).take(513).read_until(b'\n', &mut line);
                 if !matches!(result,Ok(n) if n>0&&n<=512&&line.ends_with(b"\n")) {
@@ -114,8 +122,10 @@ impl NativeLease {
             operation,
             image: None,
             released: false,
+            planned: None,
+            poisoned: false,
         };
-        guard.event("held")?;
+        guard.event("held", &target_path)?;
         let image = guard
             .target
             .config_write_lock_image()
@@ -138,7 +148,7 @@ impl NativeLease {
     }
 }
 impl Guard<'_> {
-    fn event(&self, wanted: &str) -> AppResult<()> {
+    fn event(&self, wanted: &str, target: &Path) -> AppResult<()> {
         let remaining = self
             .native
             .deadline
@@ -147,16 +157,119 @@ impl Guard<'_> {
             return Err(guard_error(()));
         }
         let e = self.rx.recv_timeout(remaining).map_err(guard_error)??;
+        if ![
+            "input",
+            "root-pin",
+            "acquire",
+            "initial-check",
+            "command",
+            "prepare",
+            "relocate",
+            "release",
+        ]
+        .contains(&e.phase.as_str())
+        {
+            return Err(guard_error(()));
+        }
+        #[cfg(test)]
+        eprintln!(
+            "CONFIG_GUARD_TRACE expected={} actual={} phase={}",
+            wanted, e.kind, e.phase
+        );
         if e.schema != SCHEMA
             || e.kind != wanted
             || e.pid != self.child.id()
             || e.operation != self.operation
+            || e.target_sha256
+                != crate::infrastructure::hash::sha256_hex(target.as_os_str().as_encoded_bytes())
         {
             return Err(guard_error(()));
         }
         Ok(())
     }
+    fn command(&mut self, kind: &str, target: Option<&Path>) -> AppResult<()> {
+        let mut value = serde_json::json!({"operation":self.operation,"kind":kind});
+        if let Some(target) = target {
+            value["target"] = serde_json::to_value(target).map_err(guard_error)?;
+        }
+        let mut bytes = serde_json::to_vec(&value).map_err(guard_error)?;
+        bytes.push(b'\n');
+        if bytes.len() > 16384 {
+            return Err(guard_error(()));
+        }
+        self.child
+            .stdin
+            .as_mut()
+            .ok_or_else(|| guard_error(()))?
+            .write_all(&bytes)
+            .map_err(guard_error)
+    }
+    /// Register the single exact absent destination before moving anything.
+    /// This is holder continuity, not root movement/lifecycle authorization.
+    pub fn prepare_relocation(&mut self, target: &Path) -> AppResult<()> {
+        self.check()?;
+        if self.planned.is_some()
+            || self.target.path() != self.native.client.path()
+            || self.native.claim_gate.borrow().is_none()
+        {
+            return Err(guard_error(()));
+        }
+        let parent = target.parent().ok_or_else(|| guard_error(()))?;
+        if !target.is_absolute()
+            || fs::canonicalize(parent).map_err(guard_error)? != parent
+            || !matches!(fs::symlink_metadata(target),Err(e) if e.kind()==std::io::ErrorKind::NotFound)
+        {
+            return Err(guard_error(()));
+        }
+        self.poisoned = true;
+        self.command("prepare", Some(target))?;
+        // Retain this target even when the acknowledgement fails: helper EOF
+        // cleanup may already know it, but no mutation permission is returned.
+        self.planned = Some(target.to_path_buf());
+        self.event("prepared", target)?;
+        self.poisoned = false;
+        let result = self.check();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    pub fn reanchor(&mut self, target: &Path) -> AppResult<()> {
+        self.native.check()?;
+        if self.poisoned
+            || self.planned.as_deref() != Some(target)
+            || self.native.claim_mode.get() != ClaimMode::Ofd
+            || self.child.try_wait().map_err(guard_error)?.is_some()
+        {
+            return Err(guard_error(()));
+        }
+        let parent = PinnedDirectory::open(target).map_err(guard_error)?;
+        if parent.identity() != self.target.identity()
+            || self.image.as_ref() != Some(&parent.config_write_lock_image().map_err(guard_error)?)
+            || self
+                .native
+                .physical_client
+                .borrow()
+                .as_ref()
+                .is_none_or(|p| p.path() != target || p.identity() != parent.identity())
+        {
+            return Err(guard_error(()));
+        }
+        self.poisoned = true;
+        self.command("relocate", Some(target))?;
+        self.event("relocated", target)?;
+        self.target = parent;
+        self.poisoned = false;
+        let result = self.check();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
     pub fn check(&mut self) -> AppResult<()> {
+        if self.poisoned {
+            return Err(guard_error(()));
+        }
         self.native.check()?;
         self.target.recheck().map_err(guard_error)?;
         if self.child.try_wait().map_err(guard_error)?.is_some()
@@ -169,14 +282,9 @@ impl Guard<'_> {
     }
     pub fn finish(mut self) -> AppResult<()> {
         self.check()?;
-        self.child
-            .stdin
-            .as_mut()
-            .ok_or_else(|| guard_error(()))?
-            .write_all(format!("release:{}\n", self.operation).as_bytes())
-            .map_err(guard_error)?;
+        self.command("release", None)?;
         self.child.stdin.take();
-        self.event("released")?;
+        self.event("released", self.target.path())?;
         loop {
             if Instant::now() >= self.native.deadline {
                 return Err(guard_error(()));

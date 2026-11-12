@@ -533,6 +533,10 @@ fn official299_native_handover_holds_through_work_and_preserves_original_ownersh
         fs::write(&evidence, serde_json::to_vec_pretty(r).unwrap()).unwrap()
     };
     write(&report);
+    if std::env::var_os("OCXD_NATIVE_WRITER_RELOCATION").is_some() {
+        config::relocation_tests::official_round(&context, &selected, &root);
+        return;
+    }
     if std::env::var_os("OCXD_NATIVE_COORDINATION_RELOCATION").is_some() {
         relocation::official_round(&context, &selected, &root, &owner);
         return;
