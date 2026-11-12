@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 89；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 90；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 7131fdadc（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 94c897bbf（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -859,3 +859,14 @@ main 7131fdadc在移动前CAS登记RootRetirementPrepared，绑定原source revi
 证据.adg/evidence/0.2.24/client-root-relocation-feasibility-r1/保留原假设与结果。macOS实际/dev/fd/<directoryfd>/sample读取ENOENT，故不能用该路径绕开原逻辑路径变化。合成SQLite在原连接正常rollback/close后，用原retained fd取得全文件fcntl排他，真实独立子进程在目录移动前后均database is locked，原inode/mode/字节保持，释放后可正常获取。负控确认打开并关闭同inode另一fd会释放进程关联锁，子进程随即获取；因此后继不能在转交期间调用会open/close claim inode的通用读回。系统Python SQLite3.54.0，不冒生产rusqlite/原官方启停验收。
 
 核对原包SHA与未修改官方源码：config writer acquisition会canonicalize绝对路径，现Desktop holder并无重定位协议；NativeLease仍核对原VFS路径。后继需独立设计当前claim锁转交/重新准入与no-auxiliary-open生命周期、N/L/K持续排他、官方writer真实holder在移动后准确路径/token核对与正常释放。此实验不批准直接改变handle.path、不删除现VFS检查、不增加生产MutationPermit factory，尚无生产代码变更。完整实验自有目录和fd/连接/子进程清理，证据逐字归档后删重复根，无日常HOME/全局DB/官方运行修改，目标active。
+
+
+## 2026-11-13 随原目录移动的OFD排他原语
+
+main94c897bbf新增ClaimGate，使用Darwin F_OFD_SETLK whole-file排他，与项目实际bundled SQLite跨进程互斥。先prepare原私有fd，再由调用方正常关闭claim SQLite，acquire借用原pin且失败不关闭fd；不创建/修复原文件、不等待/降级。物理anchor必须仍是原parent identity/Protection及claim inode，期限过后保持锁但操作拒绝，显式finish/drop或真实进程退出才释放。此批尚未接生产NativeLease或根移动factory，不能拿锁原语替代Stop/官方writer证明。详[OFD合同](0.2.24-contracts/client-claim-ofd-r1.md)。
+
+最终9函数通过（8实质案例+1独立SQLite子进程探针），原8项先期日志保留。真实跨进程验证目录移动前后/额外File关闭/另一SQLite连接关闭后均仍排他，原identity/字节不变；外国持锁立即拒绝，本进程未释放SQLite时失败也不误解锁；父目录/inode/mode/链接变化及新用户根拒绝，到期不提前解锁。实际child在移动后exit91，父wait91，系统释放准确原inode，无清理信号。fmt/diff-check/strictClippy过；证据.adg/evidence/0.2.24/client-claim-ofd-r1/已逐字归档并清理自有临时根，无官方服务/业务/日常配置/全局DB/新包修改。
+
+证据勘误：上一批root-index的source-final误将应用测试宿主摘要标为库测试binary，原记录不改，新增previous-source-correction记明。旧库摘要未在重建前保存，不能以本批摘要代补；其源码commit/逐文件hash、原测试输出及独立字节投影仍保留。本批按实际执行日志定位库宿主并记录准确摘要。
+
+下一步以OFD原语接真实NativeLease和目录重定位，保留N/L/K、原官方writer与当前正常Stop/launcher/TCP事实；随后接缺根Start/Stop和next Start及明确中断处理，再做原包隔离原生验收。默认生产锁路径/VFS检查未放宽；其它完整剩余范围和固定候选/Windows W2顺序保持，目标active。

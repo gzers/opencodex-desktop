@@ -1,6 +1,6 @@
 # 整根归档独立登记与缺根状态核验
 
-revision: 1；2026-11-13；IMP-34 P24-04；main 7131fdadc。承接[整根归档原语](client-root-retirement-r1.md)。accepted=false，非冻结候选。完成存储与独立索引接线；生产移动许可、缺根启停及下一次Start未完成。
+revision: 2；2026-11-13；IMP-34 P24-04；main 7131fdadc。承接[整根归档原语](client-root-retirement-r1.md)。accepted=false，非冻结候选。完成存储与独立索引接线；生产移动许可、缺根启停及下一次Start未完成。
 
 ## 独立阶段与当前证明
 
@@ -33,3 +33,6 @@ RootAbsent是存储终态事实，当前status仍Required，preview仍Pending，
 真实NativeLease仍绑定逻辑路径，官方writer holders也在逻辑config路径检查/释放；不能去掉校验来让目录移动通过。下一批要把当前正常service/launcher退出、TCP缺席、两官方writer排他与稳定锁释放、SQLite/claim原身份保全接入重定位权限，在原动作预算中完成根移动及独立关闭，再接下一次Start与明确中断操作。完整原包2.99隔离原生启停后才能宣称产品通过。
 
 本批不新增Windows原生验证；W1独占贡献和最后固定候选W2仍按TEAM。其它IMP-34剩余范围与发布边界保持。
+
+
+后继勘误：本批source-final中finalCompiledTestBinary误选应用测试宿主，不能作为库测试二进制摘要证明；原文件不改，准确范围及来源见[OFD后继合同的证据勘误](client-claim-ofd-r1.md)。原源码/测试日志/字节投影保留。
