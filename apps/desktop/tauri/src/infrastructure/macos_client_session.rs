@@ -747,17 +747,31 @@ impl StartupSession {
         head: &session_index::Head,
         leased: bool,
     ) -> AppResult<Option<String>> {
-        if head.state != session_index::State::Stopped
-            || head.restore_plan.is_some()
+        if !matches!(
+            head.state,
+            session_index::State::Stopped | session_index::State::StopPrepared
+        ) || head.restore_plan.is_some()
             || head.references.as_ref() != Some(&self.references()?)
         {
             return Ok(None);
         }
         let evidence = self.restore_evidence(context)?;
-        let decision =
-            restore::Pending::preparation_fingerprint(&self.originals, &evidence).map_err(error)?;
+        let decision = if head.state == session_index::State::StopPrepared {
+            restore::Pending::observed_preparation_fingerprint(&self.originals, head, &evidence)
+        } else {
+            restore::Pending::preparation_fingerprint(&self.originals, &evidence)
+        }
+        .map_err(error)?;
         let original = self.originals.frame(Phase::Original).map_err(error)?.0;
-        let stopped = self.originals.frame(Phase::Stopped).map_err(error)?.0;
+        let stopped = self
+            .originals
+            .frame(if head.state == session_index::State::StopPrepared {
+                Phase::PreStop
+            } else {
+                Phase::Stopped
+            })
+            .map_err(error)?
+            .0;
         let codex = TreeSnapshot::read(&self.originals.client).map_err(error)?;
         if !original.tree.preplan_remainder_matches(&codex, leased)
             || !original
@@ -809,9 +823,25 @@ impl StartupSession {
         let (root, _) = source(context)?;
         let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
         owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)?;
-        let pending =
+        let pending = if head.state == session_index::State::StopPrepared {
+            restore::Pending::prepare_observed(
+                &self.originals,
+                head,
+                self.restore_evidence(context)?,
+                lease,
+            )
+        } else {
             restore::Pending::prepare(&self.originals, self.restore_evidence(context)?, lease)
-                .map_err(error)?;
+        }
+        .map_err(error)?;
+        if head.state == session_index::State::StopPrepared
+            && pending
+                .prepared_observation_confirmation(head)
+                .map_err(error)?
+                != confirmation
+        {
+            return Err(error(()));
+        }
         lease.require_context(context, &self.originals.client.path)?;
         owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)?;
         time(deadline)?;

@@ -61,6 +61,7 @@ pub enum State {
     StopPrepared,
     Stopped,
     RestorePrepared,
+    RecoveryPrepared,
     RestoreRolledBack,
     Restored,
     Unchanged,
@@ -98,10 +99,13 @@ fn valid_hash(value: &str) -> bool {
             .bytes()
             .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
 }
-fn validate(head: &Head) -> io::Result<()> {
+pub(super) fn validate(head: &Head) -> io::Result<()> {
     if matches!(
         head.state,
-        State::RestorePrepared | State::Restored | State::RestoreRolledBack
+        State::RestorePrepared
+            | State::RecoveryPrepared
+            | State::Restored
+            | State::RestoreRolledBack
     ) != head.restore_plan.is_some()
         || matches!(
             head.state,
@@ -171,8 +175,13 @@ fn validate(head: &Head) -> io::Result<()> {
         State::Captured => Some((0, false)),
         State::Ready => Some((1, true)),
         State::StopPrepared => Some((2, true)),
-        State::Stopped | State::RestorePrepared | State::Restored | State::RestoreRolledBack => {
-            Some((3, true))
+        State::Stopped | State::RestorePrepared => Some((3, true)),
+        State::RecoveryPrepared => Some((2, true)),
+        State::Restored | State::RestoreRolledBack => {
+            if !matches!(refs.phases.len(), 2 | 3) {
+                return Err(denied("terminal recovery prefix incomplete"));
+            }
+            Some((refs.phases.len(), true))
         }
         State::Preparing | State::CaptureReserved => {
             return Err(denied("unpublished originals in preparing index"))
@@ -694,6 +703,7 @@ impl Index {
                 expected.state,
                 State::Stopped
                     | State::RestorePrepared
+                    | State::RecoveryPrepared
                     | State::Restored
                     | State::RestoreRolledBack
                     | State::Unchanged
@@ -743,7 +753,9 @@ impl Index {
     /// Reference publication only. This does not authorize applying the plan;
     /// the native service/family proof and mutation permit remain separate.
     pub fn record_restore_plan(&self, expected: &Head, id: &str, sha256: &str) -> io::Result<Head> {
-        if expected.state != State::Stopped || expected.restore_plan.is_some() {
+        if !matches!(expected.state, State::Stopped | State::StopPrepared)
+            || expected.restore_plan.is_some()
+        {
             return Err(denied("restore plan cannot replace prior session decision"));
         }
         let next = Head {
@@ -752,7 +764,11 @@ impl Index {
                 .checked_add(1)
                 .ok_or_else(|| denied("session revision overflow"))?,
             ticket: expected.ticket.clone(),
-            state: State::RestorePrepared,
+            state: if expected.state == State::StopPrepared {
+                State::RecoveryPrepared
+            } else {
+                State::RestorePrepared
+            },
             references: expected.references.clone(),
             restore_plan: Some(RestorePlan {
                 id: id.into(),
@@ -760,6 +776,23 @@ impl Index {
             }),
             completion_sha256: None,
         };
+        if expected.state == State::StopPrepared {
+            let refs = expected
+                .references
+                .as_ref()
+                .ok_or_else(|| denied("recovery plan source absent"))?;
+            let originals = Originals::open_for_profile(
+                self.data.path(),
+                self.client.path(),
+                &self.profile,
+                &refs.attempt,
+                &refs.original_sha256,
+                &refs.phases,
+            )?;
+            let pending = restore::Pending::open(&originals, id, sha256)?;
+            pending.require_indexed_references(refs)?;
+            pending.require_recovery_source(expected)?;
+        }
         validate(&next)?;
         self.write(Some(expected), &next)?;
         Ok(next)
@@ -892,7 +925,15 @@ impl Index {
                 .checked_add(1)
                 .ok_or_else(|| denied("revision overflow"))?,
             ticket: expected.ticket.clone(),
-            state: State::RestorePrepared,
+            state: if expected
+                .references
+                .as_ref()
+                .is_some_and(|r| r.phases.len() == 2)
+            {
+                State::RecoveryPrepared
+            } else {
+                State::RestorePrepared
+            },
             references: expected.references.clone(),
             restore_plan: Some(RestorePlan {
                 id: id.into(),
@@ -947,7 +988,7 @@ impl Index {
                     .checked_add(1)
                     .ok_or_else(|| denied("session revision overflow"))?,
                 ticket: expected.ticket.clone(),
-                state: State::RestorePrepared,
+                state: expected.state,
                 references: expected.references.clone(),
                 restore_plan: expected.restore_plan.clone(),
                 completion_sha256: None,

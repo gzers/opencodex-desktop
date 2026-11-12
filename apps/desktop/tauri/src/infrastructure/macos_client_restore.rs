@@ -76,6 +76,8 @@ struct Plan {
     schema_version: u32,
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     journal_stages: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    recovery_observation: Option<RecoveryObservation>,
     id: String,
     attempt: String,
     phases: [String; 4],
@@ -90,6 +92,18 @@ struct RearmedPlan {
     id: String,
     attempt: String,
     parent: session_index::RestorePlan,
+}
+/// An observation made NOW in a separate confirmed recovery action. It is not
+/// the missing historical Stopped frame or a persisted normal-exit certificate.
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct RecoveryObservation {
+    schema_version: u32,
+    source_head: session_index::Head,
+    observed_at: chrono::DateTime<chrono::Utc>,
+    capture: Capture,
+    tree: TreeSnapshot,
+    grok: GrokSnapshot,
 }
 
 struct Projection {
@@ -432,8 +446,12 @@ fn read_plan_depth(
     let mut plan: Plan =
         serde_json::from_value(value).map_err(|_| denied("invalid restore plan fields"))?;
     if !matches!(
-        (plan.schema_version, plan.journal_stages),
-        (1, false) | (3, true)
+        (
+            plan.schema_version,
+            plan.journal_stages,
+            plan.recovery_observation.is_some()
+        ),
+        (1, false, false) | (3, true, false) | (4, true, true)
     ) || plan.id != id
         || plan.attempt != originals.attempt
     {
@@ -488,6 +506,28 @@ impl<'a> Pending<'a> {
         evidence: Evidence,
     ) -> io::Result<Self> {
         Self::prepare_layout(originals, evidence, true, &|| Ok(()), &|_| Ok(()))
+    }
+    #[cfg(test)]
+    pub(super) fn prepare_observed_fixture(
+        originals: &'a Originals,
+        head: &session_index::Head,
+        evidence: Evidence,
+    ) -> io::Result<Self> {
+        let observation = Self::observe_current(originals, head)?;
+        observation
+            .tree
+            .archive(&originals.client, &originals.directory)?;
+        observation
+            .grok
+            .archive(&originals.profile, &originals.directory)?;
+        Self::prepare_observation_layout(
+            originals,
+            evidence,
+            true,
+            Some(observation),
+            &|| Ok(()),
+            &|_| Ok(()),
+        )
     }
     #[cfg(test)]
     pub(super) fn apply_fixture(
@@ -767,6 +807,246 @@ impl<'a> Pending<'a> {
             },
         )
     }
+    fn observe_current(
+        originals: &Originals,
+        head: &session_index::Head,
+    ) -> io::Result<RecoveryObservation> {
+        session_index::validate(head)?;
+        if head.state != session_index::State::StopPrepared
+            || head.restore_plan.is_some()
+            || head.completion_sha256.is_some()
+        {
+            return Err(denied(
+                "current observation requires interrupted StopPrepared",
+            ));
+        }
+        let refs = head
+            .references
+            .as_ref()
+            .ok_or_else(|| denied("recovery original references absent"))?;
+        let known = originals
+            .known
+            .lock()
+            .map_err(|_| denied("original references unavailable"))?;
+        if refs.attempt != originals.attempt
+            || refs.original_sha256 != originals.original_sha256
+            || refs.phases.len() != 2
+            || refs
+                .phases
+                .iter()
+                .any(|(phase, hash)| known[phase.index()].as_ref() != Some(hash))
+            || refs.live_sha256.is_none()
+        {
+            return Err(denied("recovery observation references differ"));
+        }
+        drop(known);
+        Ok(RecoveryObservation {
+            schema_version: 1,
+            source_head: head.clone(),
+            observed_at: chrono::Utc::now(),
+            capture: Capture::read(&originals.client)?,
+            tree: TreeSnapshot::read(&originals.client)?,
+            grok: GrokSnapshot::read(&originals.profile)?,
+        })
+    }
+    fn captures_with_observation(
+        originals: &Originals,
+        observation: Option<&RecoveryObservation>,
+    ) -> io::Result<([Capture; 4], [String; 4])> {
+        let Some(observation) = observation else {
+            return Self::captures(originals);
+        };
+        session_index::validate(&observation.source_head)?;
+        let refs = observation
+            .source_head
+            .references
+            .as_ref()
+            .ok_or_else(|| denied("observation source absent"))?;
+        if observation.schema_version != 1
+            || observation.source_head.state != session_index::State::StopPrepared
+            || observation.source_head.restore_plan.is_some()
+            || refs.attempt != originals.attempt
+            || refs.original_sha256 != originals.original_sha256
+            || refs.phases.len() != 2
+            || refs.live_sha256.is_none()
+            || !observation.capture.valid()
+            || !observation.tree.valid()
+            || !observation.tree.coordinated()
+            || observation.capture.root != *originals.client.identity()
+            || observation.tree.root != *originals.client.identity()
+            || !observation.tree.matches_artifacts(&observation.capture)
+            || observation.tree.root_protection != observation.capture.root_protection
+        {
+            return Err(denied(
+                "current recovery observation is not bound to original context",
+            ));
+        }
+        let frames = originals.frames_through(Phase::PreStop)?;
+        for (index, (phase, hash)) in refs.phases.iter().enumerate() {
+            if frames[index + 1].0.phase != *phase || digest(&frames[index + 1].1) != *hash {
+                return Err(denied("observation original prefix changed"));
+            }
+        }
+        observation.tree.verify_archive(&originals.directory)?;
+        observation.grok.verify_archive(&originals.directory)?;
+        let mut captures = frames
+            .iter()
+            .map(|(f, _)| f.capture.clone())
+            .collect::<Vec<_>>();
+        captures.push(observation.capture.clone());
+        let mut hashes = frames.iter().map(|(_, b)| digest(b)).collect::<Vec<_>>();
+        hashes.push(digest(&encode(observation)?));
+        Ok((
+            captures
+                .try_into()
+                .map_err(|_| denied("original prefix incomplete"))?,
+            hashes
+                .try_into()
+                .map_err(|_| denied("original prefix hash incomplete"))?,
+        ))
+    }
+    pub(super) fn observed_preparation_fingerprint(
+        originals: &Originals,
+        head: &session_index::Head,
+        evidence: &Evidence,
+    ) -> io::Result<String> {
+        let observation = Self::observe_current(originals, head)?;
+        // Read-only inspection does not require an archive for new current
+        // bytes yet. Assess from the original3-frame prefix and current image.
+        Self::observation_fingerprint(originals, head, evidence, &observation)
+    }
+    fn observation_fingerprint(
+        originals: &Originals,
+        head: &session_index::Head,
+        evidence: &Evidence,
+        observation: &RecoveryObservation,
+    ) -> io::Result<String> {
+        let frames = originals.frames_through(Phase::PreStop)?;
+        let c = [
+            frames[0].0.capture.clone(),
+            frames[1].0.capture.clone(),
+            frames[2].0.capture.clone(),
+            observation.capture.clone(),
+        ];
+        let decisions = kinds(&c, evidence)?;
+        Ok(digest(&encode(&(
+            head,
+            &frames.iter().map(|(_, b)| digest(b)).collect::<Vec<_>>(),
+            decisions,
+            c[3].clone(),
+            &evidence.declared_routes,
+            &evidence.retained_pids,
+            &evidence.audit_home,
+            evidence.not_before,
+        ))?))
+    }
+    pub(super) fn prepared_observation_confirmation(
+        &self,
+        head: &session_index::Head,
+    ) -> io::Result<String> {
+        let (plan, _) = self.load()?;
+        let observation = plan
+            .recovery_observation
+            .as_ref()
+            .ok_or_else(|| denied("current recovery observation absent"))?;
+        if observation.source_head != *head {
+            return Err(denied("prepared observation source head changed"));
+        }
+        let original = self.originals.frame(Phase::Original)?.0;
+        if !original
+            .tree
+            .preplan_remainder_matches(&observation.tree, true)
+            || !original.grok.restored_matches(&observation.grok)
+        {
+            return Err(denied(
+                "prepared observation contains changed unowned client content",
+            ));
+        }
+        let pre = self.originals.frame(Phase::PreStop)?.0;
+        for name in [
+            ".opencodex-native-main.claim.sqlite",
+            ".opencodex-native-main.owner.sqlite",
+        ] {
+            let id = observation.tree.stable_identity(name)?;
+            if pre.tree.stable_identity(name)? != id
+                || !original.tree.original_stable_identity_matches(name, &id)
+            {
+                return Err(denied("prepared current observation rebound stable locks"));
+            }
+        }
+        let decision =
+            Self::observation_fingerprint(self.originals, head, &plan.evidence, observation)?;
+        Ok(digest(&encode(&(
+            head,
+            decision,
+            self.originals.data.identity(),
+            self.originals.client.identity(),
+            self.originals.profile.identity(),
+        ))?))
+    }
+    pub(super) fn prepare_observed(
+        originals: &'a Originals,
+        head: &session_index::Head,
+        evidence: Evidence,
+        lease: &crate::infrastructure::official_client_coordination::native::NativeLease,
+    ) -> io::Result<Self> {
+        let observation = Self::observe_current(originals, head)?;
+        observation
+            .tree
+            .archive(&originals.client, &originals.directory)?;
+        observation
+            .grok
+            .archive(&originals.profile, &originals.directory)?;
+        if Capture::read(&originals.client)? != observation.capture
+            || TreeSnapshot::read(&originals.client)? != observation.tree
+            || GrokSnapshot::read(&originals.profile)? != observation.grok
+        {
+            return Err(denied("current recovery observation changed before plan"));
+        }
+        Self::prepare_observation_layout(
+            originals,
+            evidence,
+            true,
+            Some(observation),
+            &|| {
+                lease
+                    .check()
+                    .map_err(|_| denied("current recovery writer lease expired"))
+            },
+            &|_| Ok(()),
+        )
+    }
+    pub(super) fn stopped_tree(&self) -> io::Result<TreeSnapshot> {
+        let (plan, _) = self.load()?;
+        match plan.recovery_observation {
+            Some(observation) => Ok(observation.tree),
+            None => Ok(self.originals.frame(Phase::Stopped)?.0.tree),
+        }
+    }
+    pub(super) fn require_indexed_references(&self, refs: &session::References) -> io::Result<()> {
+        let (plan, _) = self.load()?;
+        if let Some(observation) = plan.recovery_observation {
+            if observation.source_head.references.as_ref() != Some(refs) {
+                return Err(denied("recovery plan rebound source references"));
+            }
+        } else if refs.phases.len() != 3 {
+            return Err(denied("normal plan requires complete historical prefix"));
+        }
+        Ok(())
+    }
+    pub(super) fn require_recovery_source(&self, head: &session_index::Head) -> io::Result<()> {
+        let (plan, _) = self.load()?;
+        if plan
+            .recovery_observation
+            .as_ref()
+            .is_none_or(|o| o.source_head != *head)
+        {
+            return Err(denied(
+                "recovery observation does not bind original interrupted head",
+            ));
+        }
+        Ok(())
+    }
     fn captures(originals: &Originals) -> io::Result<([Capture; 4], [String; 4])> {
         let mut captures = Vec::new();
         let mut hashes = Vec::new();
@@ -798,6 +1078,23 @@ impl<'a> Pending<'a> {
         check: &impl Fn() -> io::Result<()>,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<Self> {
+        Self::prepare_observation_layout(
+            originals,
+            evidence,
+            journal_stages,
+            None,
+            check,
+            checkpoint,
+        )
+    }
+    fn prepare_observation_layout(
+        originals: &'a Originals,
+        evidence: Evidence,
+        journal_stages: bool,
+        recovery_observation: Option<RecoveryObservation>,
+        check: &impl Fn() -> io::Result<()>,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<Self> {
         check()?;
         if journal_stages
             && originals.directory.identity().device != originals.client.identity().device
@@ -806,7 +1103,8 @@ impl<'a> Pending<'a> {
                 "restore staging and client are on different volumes",
             ));
         }
-        let (captures, phases) = Self::captures(originals)?;
+        let (captures, phases) =
+            Self::captures_with_observation(originals, recovery_observation.as_ref())?;
         let ks = kinds(&captures, &evidence)?;
         if Capture::read(&originals.client)? != captures[3] {
             return Err(denied("stopped postimage changed; no new baseline"));
@@ -847,8 +1145,15 @@ impl<'a> Pending<'a> {
         let plan = Plan {
             object_id: id.clone(),
             rearmed: false,
-            schema_version: if journal_stages { 3 } else { 1 },
+            schema_version: if recovery_observation.is_some() {
+                4
+            } else if journal_stages {
+                3
+            } else {
+                1
+            },
             journal_stages,
+            recovery_observation,
             id: id.clone(),
             attempt: originals.attempt.clone(),
             phases,
@@ -874,7 +1179,8 @@ impl<'a> Pending<'a> {
         if plan.object_id != self.object_id || plan.journal_stages != self.journal_stages {
             return Err(denied("restore object lineage changed"));
         }
-        let (captures, hashes) = Self::captures(self.originals)?;
+        let (captures, hashes) =
+            Self::captures_with_observation(self.originals, plan.recovery_observation.as_ref())?;
         if plan.phases != hashes || plan.kinds != kinds(&captures, &plan.evidence)? {
             return Err(denied("original phases or restore decisions changed"));
         }

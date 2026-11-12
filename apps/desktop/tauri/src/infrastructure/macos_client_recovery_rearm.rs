@@ -83,7 +83,11 @@ pub fn prepare(context: &ProcessContext, data: &Path, request: Request) -> AppRe
         Ok(Outcome {
             attempt_id: request.attempt_id,
             revision: next.revision,
-            status: "restore_prepared",
+            status: if next.state == State::RecoveryPrepared {
+                "recovery_prepared"
+            } else {
+                "restore_prepared"
+            },
         })
     })();
     if result.is_err() {

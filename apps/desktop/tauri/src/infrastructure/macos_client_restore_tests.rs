@@ -1231,3 +1231,177 @@ fn new_stage_readback_cannot_adopt_a_same_bytes_replacement_before_plan_binding(
     assert_eq!(fs::read(path).unwrap(), *bytes);
     assert!(f.matches(Phase::Stopped));
 }
+
+#[test]
+fn current_recovery_observation_cannot_manufacture_or_adopt_a_missing_historical_stopped_frame() {
+    let f = Fixture::new();
+    let references = [Phase::Ready, Phase::PreStop]
+        .into_iter()
+        .map(|phase| {
+            (
+                phase,
+                digest(&fs::read(f.originals.directory.path().join(phase.filename())).unwrap()),
+            )
+        })
+        .collect::<Vec<_>>();
+    let originals = Originals::open(
+        &f.originals.data.path,
+        &f.originals.client.path,
+        f.originals.attempt(),
+        f.originals.original_sha256(),
+        &references,
+    )
+    .unwrap();
+    let refs = session::References {
+        attempt: originals.attempt().into(),
+        original_sha256: originals.original_sha256().into(),
+        scope_sha256: "b".repeat(64),
+        phases: references.clone(),
+        live_sha256: Some("c".repeat(64)),
+    };
+    let source = session_index::Head {
+        revision: 5,
+        ticket: uuid::Uuid::new_v4().to_string(),
+        state: session_index::State::StopPrepared,
+        references: Some(refs.clone()),
+        restore_plan: None,
+        completion_sha256: None,
+    };
+    let path = originals.directory.path().join("stopped.json");
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    fs::write(&path, b"unindexed historical bytes must never be adopted").unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+    let fingerprint =
+        Pending::observed_preparation_fingerprint(&originals, &source, &f.evidence).unwrap();
+    assert_eq!(
+        fingerprint,
+        Pending::observed_preparation_fingerprint(&originals, &source, &f.evidence).unwrap()
+    );
+    let current = Capture::read(&originals.client).unwrap();
+    let pending =
+        Pending::prepare_observed_fixture(&originals, &source, f.evidence.clone()).unwrap();
+    pending.require_recovery_source(&source).unwrap();
+    pending.require_indexed_references(&refs).unwrap();
+    let mut wrong = source.clone();
+    wrong.revision += 1;
+    assert!(pending.require_recovery_source(&wrong).is_err());
+    let mut wrong = refs.clone();
+    wrong.phases.push((Phase::Stopped, "d".repeat(64)));
+    assert!(pending.require_indexed_references(&wrong).is_err());
+    assert_eq!(Capture::read(&originals.client).unwrap(), current);
+    assert!(originals.frame(Phase::Stopped).is_err());
+    pending
+        .apply_fixture(Decision::Complete, &|_| Ok(()))
+        .unwrap();
+    let final_capture = Capture::read(&originals.client).unwrap();
+    let original = originals.read(Phase::Original).unwrap();
+    assert!(final_capture
+        .images
+        .iter()
+        .zip(original.images.iter())
+        .all(|(a, b)| original_content(a, b)));
+    assert_eq!(
+        fs::read(&path).unwrap(),
+        b"unindexed historical bytes must never be adopted"
+    );
+    assert!(originals.frame(Phase::Stopped).is_err());
+    let raw = fs::read(
+        originals
+            .directory
+            .path()
+            .join(format!("restore-{}.json", pending.id())),
+    )
+    .unwrap();
+    let value: serde_json::Value = serde_json::from_slice(&raw).unwrap();
+    assert_eq!(value["schemaVersion"], 4);
+    assert_eq!(
+        value["recoveryObservation"]["sourceHead"]["state"],
+        "stop_prepared"
+    );
+    assert_eq!(
+        value["recoveryObservation"]["sourceHead"]["references"]["phases"]
+            .as_array()
+            .unwrap()
+            .len(),
+        2
+    );
+}
+
+#[test]
+fn prepared_current_observation_must_match_the_reviewed_content_not_a_later_valid_subset() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let f = Fixture::at_with(root, |path| {
+        for name in [
+            ".opencodex-native-main.claim.sqlite",
+            ".opencodex-native-main.owner.sqlite",
+        ] {
+            let p = path.parent().unwrap().join(name);
+            fs::write(&p, b"").unwrap();
+            fs::set_permissions(p, fs::Permissions::from_mode(0o600)).unwrap();
+        }
+    });
+    let phases = [Phase::Ready, Phase::PreStop]
+        .into_iter()
+        .map(|p| {
+            (
+                p,
+                digest(&fs::read(f.originals.directory.path().join(p.filename())).unwrap()),
+            )
+        })
+        .collect::<Vec<_>>();
+    let originals = Originals::open(
+        &f.originals.data.path,
+        &f.originals.client.path,
+        f.originals.attempt(),
+        f.originals.original_sha256(),
+        &phases,
+    )
+    .unwrap();
+    let head = session_index::Head {
+        revision: 5,
+        ticket: uuid::Uuid::new_v4().to_string(),
+        state: session_index::State::StopPrepared,
+        references: Some(session::References {
+            attempt: originals.attempt().into(),
+            original_sha256: originals.original_sha256().into(),
+            scope_sha256: "b".repeat(64),
+            phases,
+            live_sha256: Some("c".repeat(64)),
+        }),
+        restore_plan: None,
+        completion_sha256: None,
+    };
+    let decision =
+        Pending::observed_preparation_fingerprint(&originals, &head, &f.evidence).unwrap();
+    let confirmed = digest(
+        &encode(&(
+            &head,
+            decision,
+            originals.data.identity(),
+            originals.client.identity(),
+            originals.profile.identity(),
+        ))
+        .unwrap(),
+    );
+    let first = Pending::prepare_observed_fixture(&originals, &head, f.evidence.clone()).unwrap();
+    assert_eq!(
+        first.prepared_observation_confirmation(&head).unwrap(),
+        confirmed
+    );
+    let original = originals.read(Phase::Original).unwrap();
+    let Image::File { bytes, .. } = &original.images[0] else {
+        panic!("original missing");
+    };
+    fs::write(originals.client.path().join(NAMES[0]), bytes).unwrap();
+    let second = Pending::prepare_observed_fixture(&originals, &head, f.evidence.clone()).unwrap();
+    assert_ne!(
+        second.prepared_observation_confirmation(&head).unwrap(),
+        confirmed,
+        "a later valid content projection must still require a NEW confirmation"
+    );
+    assert_eq!(
+        fs::read(originals.client.path().join(NAMES[0])).unwrap(),
+        *bytes
+    );
+}

@@ -188,6 +188,22 @@ impl Active {
             let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
                 .append_event("stop-proof: original-native-launcher-and-service confirmed code=0");
             mark("native-coordination");
+            #[cfg(test)]
+            if std::env::var_os("OCXD024_INTERRUPT_BEFORE_STOPPED").as_deref()
+                == Some(std::ffi::OsStr::new("1"))
+            {
+                if !self.index.data_root().starts_with("/private/tmp")
+                    || !self.index.data_root().ancestors().any(|p| {
+                        p.file_name().is_some_and(|n| {
+                            n.to_string_lossy()
+                                .starts_with("ocxd024-versioned-lifecycle-")
+                        })
+                    })
+                {
+                    return Err(failure(()));
+                }
+                return Err(AppError::RuntimeManaged{code:"owned_fixture_missing_stopped".into(),detail:"owned interruption before Stopped observation/index, after original pair stopped".into()});
+            }
             with_native_coordination(&coordination, deadline, |lease| {
                 mark("seal-stopped");
                 self.session

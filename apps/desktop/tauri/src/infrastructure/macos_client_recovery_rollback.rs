@@ -18,7 +18,9 @@ fn fail<T>(_: T) -> AppError {
 /// until rollback/replan and confirmation UI have been joined and validated.
 pub fn review(context: &ProcessContext, data: &Path) -> AppResult<Option<Request>> {
     observation::inspect_map(context, data, |head| {
-        let Some(head) = head.filter(|h| h.state == State::RestorePrepared) else {
+        let Some(head) =
+            head.filter(|h| matches!(h.state, State::RestorePrepared | State::RecoveryPrepared))
+        else {
             return Ok(None);
         };
         let refs = head
@@ -57,7 +59,7 @@ pub fn rollback(context: &ProcessContext, data: &Path, request: Request) -> AppR
         let index = Index::open_existing(context, data, &client).map_err(fail)?;
         let head = index.head().map_err(fail)?.ok_or_else(|| fail(()))?;
         let refs = head.references.as_ref().ok_or_else(|| fail(()))?;
-        if head.state != State::RestorePrepared
+        if !matches!(head.state, State::RestorePrepared | State::RecoveryPrepared)
             || head.revision != request.revision
             || refs.attempt != request.attempt_id
         {

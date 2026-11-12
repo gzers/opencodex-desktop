@@ -234,7 +234,9 @@ fn project_history(
                 }
             }
         }
-        if !preview.can_finish_unchanged && head.state == State::Stopped {
+        if !preview.can_finish_unchanged
+            && matches!(head.state, State::Stopped | State::StopPrepared)
+        {
             preview.plan_digest = missing_plan::confirmation(context, data, head)?;
             preview.can_prepare_plan = preview.plan_digest.is_some();
         }

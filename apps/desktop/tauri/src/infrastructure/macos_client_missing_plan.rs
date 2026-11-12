@@ -18,7 +18,7 @@ pub(super) fn confirmation(
     data: &Path,
     head: &Head,
 ) -> io::Result<Option<String>> {
-    if head.state != State::Stopped || head.restore_plan.is_some() {
+    if !matches!(head.state, State::Stopped | State::StopPrepared) || head.restore_plan.is_some() {
         return Ok(None);
     }
     let client = std::fs::canonicalize(context.working_directory.join(".codex"))?;
@@ -34,8 +34,9 @@ pub(super) fn confirmation(
 }
 pub fn review(context: &ProcessContext, data: &Path) -> AppResult<Option<Request>> {
     observation::inspect_map(context, data, |head| {
-        let Some(head) = head.filter(|h| h.state == State::Stopped && h.restore_plan.is_none())
-        else {
+        let Some(head) = head.filter(|h| {
+            matches!(h.state, State::Stopped | State::StopPrepared) && h.restore_plan.is_none()
+        }) else {
             return Ok(None);
         };
         let refs = head
@@ -62,7 +63,7 @@ pub fn prepare(context: &ProcessContext, data: &Path, request: Request) -> AppRe
         let index = Index::open_existing(context, data, &client).map_err(fail)?;
         let head = index.head().map_err(fail)?.ok_or_else(|| fail(()))?;
         let refs = head.references.as_ref().ok_or_else(|| fail(()))?;
-        if head.state != State::Stopped
+        if !matches!(head.state, State::Stopped | State::StopPrepared)
             || head.restore_plan.is_some()
             || head.revision != request.revision
             || refs.attempt != request.attempt_id
@@ -107,7 +108,11 @@ pub fn prepare(context: &ProcessContext, data: &Path, request: Request) -> AppRe
         Ok(Outcome {
             attempt_id: request.attempt_id,
             revision: next.revision,
-            status: "restore_prepared",
+            status: if next.state == State::RecoveryPrepared {
+                "recovery_prepared"
+            } else {
+                "restore_prepared"
+            },
         })
     })();
     if result.is_err() {

@@ -34,7 +34,10 @@ fn prepare_owned_stopped_missing_plan_then_continue() {
         opencodex_home: home,
     };
     let head = session_index::inspect(&context, &data).unwrap().unwrap();
-    if head.state == session_index::State::Stopped {
+    if matches!(
+        head.state,
+        session_index::State::Stopped | session_index::State::StopPrepared
+    ) {
         let request = session_index::missing_plan::review(&context, &data)
             .unwrap()
             .expect("all four stages admitted");
@@ -85,7 +88,14 @@ fn prepare_owned_stopped_missing_plan_then_continue() {
         .unwrap();
         println!("{report}");
         let outcome = result.unwrap();
-        assert_eq!(outcome.status, "restore_prepared");
+        assert_eq!(
+            outcome.status,
+            if head.state == session_index::State::StopPrepared {
+                "recovery_prepared"
+            } else {
+                "restore_prepared"
+            }
+        );
         assert_eq!(outcome.revision, request.revision + 1);
         assert!(elapsed < 10000);
         assert!(paths

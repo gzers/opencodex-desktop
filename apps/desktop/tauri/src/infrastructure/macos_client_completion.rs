@@ -163,8 +163,10 @@ impl ReadbackProof {
         client: &Identity,
     ) -> io::Result<()> {
         time(self.deadline)?;
-        if head.state != session_index::State::RestorePrepared
-            || head.references.as_ref() != Some(&self.references)
+        if !matches!(
+            head.state,
+            session_index::State::RestorePrepared | session_index::State::RecoveryPrepared
+        ) || head.references.as_ref() != Some(&self.references)
             || head.restore_plan.as_ref() != Some(&self.plan)
             || self.data != *data
             || self.client != *client
@@ -212,6 +214,7 @@ pub(super) fn verify_registered(
     session::verify_closed_reference_files(&originals, refs)
         .map_err(|_| denied("closed session scope/live reference changed"))?;
     let pending = restore::Pending::open(&originals, &plan.id, &plan.sha256)?;
+    pending.require_indexed_references(refs)?;
     let receipt_name = pending.readback_name(decision);
     let Image::File {
         bytes, protection, ..
@@ -285,8 +288,10 @@ impl Originals {
         head: &session_index::Head,
         leased: bool,
     ) -> io::Result<(Option<String>, Option<String>)> {
-        if head.state != session_index::State::RestorePrepared
-            && head.state != session_index::State::RestoreRolledBack
+        if !matches!(
+            head.state,
+            session_index::State::RestorePrepared | session_index::State::RecoveryPrepared
+        ) && head.state != session_index::State::RestoreRolledBack
         {
             return Ok((None, None));
         }
@@ -303,7 +308,7 @@ impl Originals {
             return Err(denied("partial plan has unexpected completion evidence"));
         }
         let original = self.frame(Phase::Original)?.0;
-        let stopped = self.frame(Phase::Stopped)?.0;
+        let stopped_tree = pending.stopped_tree()?;
         let codex = TreeSnapshot::read(&self.client)?;
         let grok = GrokSnapshot::read(&self.profile)?;
         let remainder_matches = if pending.stages_in_journal() {
@@ -318,7 +323,7 @@ impl Originals {
         }
         for name in LOCKS {
             let id = codex.stable_identity(name)?;
-            if stopped.tree.stable_identity(name)? != id
+            if stopped_tree.stable_identity(name)? != id
                 || !original.tree.original_stable_identity_matches(name, &id)
             {
                 return Ok((None, None));
@@ -349,7 +354,10 @@ impl Originals {
         &self,
         head: &session_index::Head,
     ) -> io::Result<Option<String>> {
-        if head.state != session_index::State::RestorePrepared {
+        if !matches!(
+            head.state,
+            session_index::State::RestorePrepared | session_index::State::RecoveryPrepared
+        ) {
             return Ok(None);
         }
         let refs = head
@@ -366,15 +374,15 @@ impl Originals {
             return Ok(None);
         }
         let original = self.frame(Phase::Original)?.0;
-        let stopped = self.frame(Phase::Stopped)?.0;
+        let stopped_tree = pending.stopped_tree()?;
         let codex = TreeSnapshot::read(&self.client)?;
         let grok = GrokSnapshot::read(&self.profile)?;
         if !original.tree.restored_matches(&codex, true) || !original.grok.restored_matches(&grok) {
             return Ok(None);
         }
         let stable = [
-            stopped.tree.stable_identity(LOCKS[0])?,
-            stopped.tree.stable_identity(LOCKS[1])?,
+            stopped_tree.stable_identity(LOCKS[0])?,
+            stopped_tree.stable_identity(LOCKS[1])?,
         ];
         for (name, id) in LOCKS.iter().zip(&stable) {
             if codex.stable_identity(name)? != *id
@@ -488,8 +496,9 @@ impl Originals {
             return Err(denied("readback references belong to another original"));
         }
         let original = self.frame(Phase::Original)?.0;
-        let stopped = self.frame(Phase::Stopped)?.0;
         let pending = restore::Pending::open(self, &plan.id, &plan.sha256)?;
+        pending.require_indexed_references(&references)?;
+        let stopped_tree = pending.stopped_tree()?;
         let receipt_name = pending.readback_name(decision);
         let outcome_name = format!("restore-{}-outcome.json", plan.id);
         let outcome = capture_file(&self.directory, &outcome_name, MAX_FRAME)?;
@@ -531,8 +540,8 @@ impl Originals {
             ));
         }
         let stable_locks = [
-            stopped.tree.stable_identity(LOCKS[0])?,
-            stopped.tree.stable_identity(LOCKS[1])?,
+            stopped_tree.stable_identity(LOCKS[0])?,
+            stopped_tree.stable_identity(LOCKS[1])?,
         ];
         for (name, expected) in LOCKS.iter().zip(&stable_locks) {
             if codex.stable_identity(name)? != *expected
