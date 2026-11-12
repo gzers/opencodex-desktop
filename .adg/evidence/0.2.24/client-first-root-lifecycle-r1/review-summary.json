@@ -1,0 +1,22 @@
+{
+  "accepted": false,
+  "staticReviews": [
+    {
+      "agent": "01a1d115-77a3-7592-a968-dbd72fea98ac",
+      "findings": [
+        "restore canonical ordinary client path",
+        "do not mark diagnostic passed without stop_ok"
+      ],
+      "fixed": true,
+      "indexSingleCallCoalescingReviewed": "no lost verification found, no cross-call cache, head re-read remains"
+    },
+    {
+      "agent": "01a1d121-3c1f-7b12-b70d-ba0b1841612f",
+      "finding": "directory end-of-scan omitted ACL/xattrs re-read",
+      "fixed": "second complete retained-fd Protection pass restored; deterministic in-scan xattr test refuses",
+      "reviewRecheck": "P1 closed statically; no native acceptance inferred"
+    }
+  ],
+  "allAgentsClosed": true,
+  "noAgentEditedOrExecutedNative": true
+}
