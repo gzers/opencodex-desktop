@@ -7,7 +7,7 @@ it('observes the current bound session without supplying paths, credentials or a
   const preview: ClientRecoveryPreview = {
     status: 'pending', phase: 'restore_prepared', revision: 6, attemptId: 'original-attempt',
     originalEvidence: 'verified', planEvidence: 'verified', completionEvidence: 'unregistered',
-    phaseCount: 3, canContinue: false, canRollback: false, canFinalize: false, canRearm:false,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: null,
+    phaseCount: 3, canContinue: false, canRollback: false, canFinalize: false, canRearm:false,canPreparePlan:false,planDigest:null,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: null,
   }
   invoke.mockResolvedValue(preview)
   expect(await clientRecoveryApi.preview()).toEqual(preview)
@@ -49,4 +49,10 @@ it('cancels the exact pre-capture reservation without accepting any original-fil
   invoke.mockResolvedValue({attemptId:request.attemptId,revision:2,status:'cancelled_before_capture'})
   await clientRecoveryApi.cancelPreparation(request)
   expect(invoke.mock.calls).toEqual([['client_recovery_cancel_preparation',{request}]])
+})
+it('prepares only the reviewed missing plan without arbitrary paths or replacement content',async()=>{
+  const request={attemptId:'stopped-attempt',revision:6,confirmationDigest:'original-stopped-review'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:7,status:'restore_prepared'})
+  await clientRecoveryApi.preparePlan(request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_prepare_plan',{request}]])
 })

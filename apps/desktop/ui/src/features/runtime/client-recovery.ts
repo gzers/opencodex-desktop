@@ -16,6 +16,8 @@ export interface ClientRecoveryPreview {
   canContinue: boolean
   canRollback: boolean
   canFinalize: boolean
+  canPreparePlan: boolean
+  planDigest: string | null
   canRearm: boolean
   canCancelPreparation: boolean
   preparationDigest: string | null
@@ -27,7 +29,7 @@ export interface ClientRecoveryPreview {
 }
 export interface ClientRecoveryFinalizeRequest { attemptId: string; revision: number; confirmationDigest: string }
 export interface ClientRecoveryFinalizeOutcome { attemptId: string; revision: number; status: 'restored' }
-export type ClientRecoveryAction = 'finalize' | 'continue' | 'rollback' | 'rearm' | 'finishUnchanged' | 'cancelPreparation'
+export type ClientRecoveryAction = 'finalize' | 'continue' | 'rollback' | 'rearm' | 'finishUnchanged' | 'cancelPreparation' | 'preparePlan'
 export interface ClientRecoveryOutcome { attemptId: string; revision: number; status: 'restored' | 'rolled_back' | 'restore_prepared' | 'unchanged' | 'cancelled_before_capture' | 'cancelled_capture' }
 
 // Inspection takes no file paths and never starts recovery implicitly.
@@ -39,5 +41,6 @@ export const clientRecoveryApi = {
   rearm: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_rearm', { request }),
   finishUnchanged: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_finish_unchanged', { request }),
   cancelPreparation: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_cancel_preparation', { request }),
+  preparePlan: (request: ClientRecoveryFinalizeRequest) => invoke<ClientRecoveryOutcome>('client_recovery_prepare_plan', { request }),
   status: () => invoke<StatusSnapshot>('get_status_snapshot'),
 }

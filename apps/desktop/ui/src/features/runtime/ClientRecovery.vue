@@ -9,9 +9,9 @@ const recovery = useClientRecoveryStore(), lifecycle = useLifecycleStore()
 const busy = computed(() => recovery.reading || recovery.executing || recovery.refreshing)
 const phases: Record<ClientRecoveryPhase, string> = { preparing: '正在登记原会话',capture_reserved:'原件捕获已预留', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', unchanged: '原件保持，原会话已结束', cancelled_before_capture: '启动准备已取消',cancelled_capture:'本次捕获已取消并保留', failed: '原会话需要核对' }
 const evidence = (value: ClientRecoveryEvidence) => ({ verified: '已核对', not_recorded: '尚未登记', unregistered: '待确认', unknown: '未核实' })[value]
-const progress = computed(() => ({ finalize:'正在完成恢复收尾…',continue:'正在继续恢复客户端配置…',rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…',finishUnchanged:'正在核对原件并结束原会话…',cancelPreparation:'正在核对并取消启动准备…' })[recovery.action])
+const progress = computed(() => ({ finalize:'正在完成恢复收尾…',continue:'正在继续恢复客户端配置…',rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…',finishUnchanged:'正在核对原件并结束原会话…',cancelPreparation:'正在核对并取消启动准备…',preparePlan:'正在核对并准备恢复计划…' })[recovery.action])
 const restoredOutcome = computed(() => recovery.outcome?.status === 'restored' || recovery.outcome?.status === 'unchanged' || recovery.outcome?.status === 'cancelled_before_capture' || recovery.outcome?.status === 'cancelled_capture')
-const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤销恢复' : recovery.choice === 'finishUnchanged' ? '确认结束会话' : recovery.choice === 'cancelPreparation' ? '确认取消启动准备' : '确认重新准备')
+const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤销恢复' : recovery.choice === 'finishUnchanged' ? '确认结束会话' : recovery.choice === 'cancelPreparation' ? '确认取消启动准备' : recovery.choice==='preparePlan'?'确认准备计划':'确认重新准备')
 </script>
 <template>
   <section class="client-recovery-entry" aria-labelledby="clientRecoveryTitle">
@@ -32,6 +32,11 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
       <p class="client-recovery-lead">重新准备原件恢复？</p>
       <p>核对保留的原件和当前文件，准备新的恢复计划。准备完成后，还需点击“确认继续恢复”。</p>
       <p>此次准备不会更改客户端配置，服务保持停止。</p>
+    </template>
+    <template v-else-if="recovery.choice === 'preparePlan'">
+      <p class="client-recovery-lead">准备原件恢复计划？</p>
+      <p>重新核对原件、停止后的文件和服务停止状态，再准备恢复计划。当前文件保持，原件保留。</p>
+      <p>准备完成后，还需点击“确认继续恢复”。不会自动恢复或启动。</p>
     </template>
     <template v-else-if="recovery.choice === 'cancelPreparation'">
       <p class="client-recovery-lead">取消这次启动准备？</p>
@@ -55,7 +60,11 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
       <p>当前恢复状态尚未核实，服务保持停止。</p>
     </template>
     <template v-else-if="recovery.preview">
-      <template v-if="recovery.canCancelPreparation">
+      <template v-if="recovery.canPreparePlan">
+        <p class="client-recovery-lead">服务已停止，客户端配置尚未恢复。</p>
+        <p>原件和停止后文件已核对，可以准备恢复计划。</p>
+      </template>
+      <template v-else-if="recovery.canCancelPreparation">
         <p v-if="recovery.preview?.phase==='capture_reserved'" class="client-recovery-lead">原件捕获已中断，服务尚未启动。</p>
         <p v-else class="client-recovery-lead">启动准备已中断，尚未开始捕获原件。</p>
         <p>可核对后取消本次准备，保持当前配置。</p>
@@ -102,6 +111,7 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
         <UiButton v-if="recovery.canFinalize" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.apply('finalize')">确认完成收尾</UiButton>
         <UiButton v-else-if="recovery.canContinue" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.apply('continue')">确认继续恢复</UiButton>
         <UiButton v-else-if="recovery.canRearm" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.choose('rearm')">重新准备恢复</UiButton>
+        <UiButton v-else-if="recovery.canPreparePlan" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.choose('preparePlan')">准备恢复计划</UiButton>
         <UiButton v-else-if="recovery.canCancelPreparation" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.choose('cancelPreparation')">取消启动准备</UiButton>
         <UiButton v-else-if="recovery.canFinishUnchanged" variant="primary" :disabled="busy || lifecycle.processActionBusy" @click="recovery.choose('finishUnchanged')">核对并结束会话</UiButton>
         <UiButton v-else-if="!recovery.outcome" :disabled="busy" @click="recovery.inspect()">重新检查</UiButton>

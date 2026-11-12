@@ -9,7 +9,7 @@ import type { StatusSnapshot } from '@/contracts/runtimeStatus'
 const preview = (): ClientRecoveryPreview => ({ status: 'pending', phase: 'restore_prepared', revision: 6,
   attemptId: 'f394bd75-355b-4873-83cc-6818efeb547a', originalEvidence: 'verified', planEvidence: 'verified',
   completionEvidence: 'unregistered', phaseCount: 3, canContinue: false, canRollback: false,
-  canFinalize: true, canRearm:false,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) })
+  canFinalize: true, canRearm:false,canPreparePlan:false,planDigest:null,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) })
 const status = (required = false): StatusSnapshot => ({ source: 'live', matrix: { runtime: 'stopped', connection: 'unconfigured', operation: 'idle' },
   facts: { data_root: '/fixture/desktop', opencodex_home: '/fixture/home', client_recovery: required ? 'required' : 'not_required', health: 'unknown',
     runtime_label: 'bundled', protection: null, reboot_safe: true, service_present: null, shim_present: null, version_drift: null },
@@ -17,6 +17,7 @@ const status = (required = false): StatusSnapshot => ({ source: 'live', matrix: 
 const result = () => ({ attemptId: preview().attemptId!, revision: 7, status: 'restored' as const })
 const early = ():ClientRecoveryPreview=>({...preview(),phase:'captured',revision:2,planEvidence:'not_recorded',completionEvidence:'not_recorded',phaseCount:0,canFinalize:false,confirmationDigest:null,canFinishUnchanged:true,unchangedDigest:'e'.repeat(64)})
 const preparing=():ClientRecoveryPreview=>({...early(),phase:'preparing',revision:1,originalEvidence:'not_recorded',canFinishUnchanged:false,unchangedDigest:null,canCancelPreparation:true,preparationDigest:'f'.repeat(64)})
+const missingPlan=():ClientRecoveryPreview=>({...early(),phase:'stopped',revision:6,phaseCount:3,canFinishUnchanged:false,unchangedDigest:null,canPreparePlan:true,planDigest:'d'.repeat(64)})
 const partial = ():ClientRecoveryPreview=>({...preview(),canFinalize:false,canContinue:true,canRollback:true,completionEvidence:'not_recorded',rollbackDigest:'b'.repeat(64)})
 const rolled = ():ClientRecoveryPreview=>({...preview(),phase:'restore_rolled_back',revision:7,canFinalize:false,canRearm:true,completionEvidence:'verified',confirmationDigest:null,rearmDigest:'c'.repeat(64)})
 function pending<T>() { let resolve!: (v: T) => void; const promise = new Promise<T>(done => { resolve = done }); return { promise, resolve } }
@@ -35,11 +36,40 @@ beforeEach(() => {
   vi.spyOn(clientRecoveryApi,'rearm').mockResolvedValue({...result(),revision:8,status:'restore_prepared'})
   vi.spyOn(clientRecoveryApi,'finishUnchanged').mockResolvedValue({...result(),revision:3,status:'unchanged'})
   vi.spyOn(clientRecoveryApi,'cancelPreparation').mockResolvedValue({...result(),revision:2,status:'cancelled_before_capture'})
+  vi.spyOn(clientRecoveryApi,'preparePlan').mockResolvedValue({...result(),revision:7,status:'restore_prepared'})
   vi.spyOn(clientRecoveryApi, 'status').mockResolvedValue(status())
   const lifecycle = useLifecycleStore(); lifecycle.statusSnapshot = status(true); lifecycle.clientRecoveryRequired = true
 })
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('explicitly prepares a missing plan without restoring targets or automatically continuing',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(missingPlan()).mockResolvedValue({...partial(),revision:7})
+    vi.mocked(clientRecoveryApi.status).mockResolvedValue(status(true))
+    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
+    expect(button('确认继续恢复')).toBeUndefined();expect(await useClientRecoveryStore().apply('preparePlan')).toBe(false)
+    await button('准备恢复计划')!.trigger('click');expect(view.text()).toContain('当前文件保持，原件保留')
+    await button('返回')!.trigger('click');expect(clientRecoveryApi.preparePlan).not.toHaveBeenCalled()
+    await button('准备恢复计划')!.trigger('click');await button('确认准备计划')!.trigger('click');await flushPromises()
+    expect(clientRecoveryApi.preparePlan).toHaveBeenCalledWith({attemptId:missingPlan().attemptId,revision:6,confirmationDigest:'d'.repeat(64)})
+    expect(button('确认继续恢复')).toBeDefined();expect(clientRecoveryApi.continue).not.toHaveBeenCalled();expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    vi.mocked(clientRecoveryApi.continue).mockResolvedValue({...result(),revision:8});vi.mocked(clientRecoveryApi.status).mockResolvedValueOnce(status(true)).mockResolvedValue(status())
+    await button('确认继续恢复')!.trigger('click');await flushPromises();expect(useClientRecoveryStore().ready).toBe(true)
+  })
+  it('retains one missing-plan preparation through close/reopen and only refreshes after completed mutation',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(missingPlan()).mockRejectedValueOnce(new Error('read failed')).mockResolvedValue({...partial(),revision:7})
+    vi.mocked(clientRecoveryApi.status).mockResolvedValue(status(true))
+    const pendingAction=pending<{attemptId:string;revision:number;status:'restore_prepared'}>();vi.mocked(clientRecoveryApi.preparePlan).mockReturnValue(pendingAction.promise)
+    const store=await inspect();store.choose('preparePlan');const work=store.apply('preparePlan');await flushPromises();store.close();store.start();expect(await store.apply('preparePlan')).toBe(false)
+    pendingAction.resolve({attemptId:missingPlan().attemptId!,revision:7,status:'restore_prepared'});expect(await work).toBe(true);expect(store.reconfirmed).toBe(false)
+    store.close();store.start();expect(await store.refresh()).toBe(true);expect(clientRecoveryApi.preparePlan).toHaveBeenCalledTimes(1);expect(clientRecoveryApi.continue).not.toHaveBeenCalled()
+  })
+  it.each([{...missingPlan(),phase:'ready' as const},{...missingPlan(),phaseCount:2},{...missingPlan(),planEvidence:'verified' as const},{...missingPlan(),canFinishUnchanged:true},{...missingPlan(),planDigest:null}])('refuses incomplete/contradictory missing-plan evidence %#',async p=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(p);const store=await inspect();expect(store.canPreparePlan).toBe(false);store.choose('preparePlan');expect(await store.apply('preparePlan')).toBe(false);expect(clientRecoveryApi.preparePlan).not.toHaveBeenCalled()
+  })
+  it('does not accept a restored receipt as successful plan preparation',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(missingPlan());vi.mocked(clientRecoveryApi.preparePlan).mockResolvedValue(result())
+    const store=await inspect();store.choose('preparePlan');expect(await store.apply('preparePlan')).toBe(false);expect(store.preview).toBeNull();expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+  })
   it('cancels only unstarted preparation after explicit review, with a distinct receipt and no restore command',async()=>{
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue(preparing())
     const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
@@ -308,7 +338,7 @@ describe('explicit client recovery interaction', () => {
   })
   it('reopening a completed view inspects the current session instead of retaining an old success', async () => {
     const store = await inspect(); await store.apply(); expect(store.ready).toBe(true)
-    store.close(); vi.mocked(clientRecoveryApi.preview).mockResolvedValue({ ...preview(), revision: 20, canFinalize: false, canRearm:false,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: null })
+    store.close(); vi.mocked(clientRecoveryApi.preview).mockResolvedValue({ ...preview(), revision: 20, canFinalize: false, canRearm:false,canPreparePlan:false,planDigest:null,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: null })
     store.start(); await flushPromises(); expect(store.outcome).toBeNull(); expect(store.preview?.revision).toBe(20)
     expect(store.canFinalize).toBe(false); expect(clientRecoveryApi.finalize).toHaveBeenCalledTimes(1)
   })
