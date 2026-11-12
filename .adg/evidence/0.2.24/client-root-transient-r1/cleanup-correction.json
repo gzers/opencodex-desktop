@@ -1,0 +1,8 @@
+{
+  "accepted": false,
+  "originalRef": "official-diagnostic/cleanup.json",
+  "originalSha256": "a022d811c00fba6a035e4d243c31da8fed6a98b3536f80cddf13b2d3c7508f31",
+  "field": "ownedProfileAndProgramRemoved",
+  "correction": "Diagnostic runner wrote intended cleanup path, but retained-work.json authoritatively recorded the fixture/runtime still present for immutable input reuse. Global N/K removal and global L checks did complete. Do not use that field as proof of whole fixture removal. Final cleanup occurs after evidence archive verification and is recorded separately.",
+  "originalRetainedUnchanged": true
+}

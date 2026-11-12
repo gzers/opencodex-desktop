@@ -1,0 +1,24 @@
+{
+  "accepted": false,
+  "verified": [
+    {
+      "scene": "official-delivery",
+      "rawBytesAndReferenceHashesVerified": true,
+      "exactGuardBoundAfterClaimJournalRelease": true,
+      "state": "root_absent",
+      "terminalReceiptVerified": true,
+      "elapsedMs": 3760,
+      "scope": "actual official Guard/native locks; explicit synthetic lifecycle permit"
+    },
+    {
+      "scene": "official-delivery-late",
+      "rawBytesAndReferenceHashesVerified": true,
+      "exactGuardBoundAfterClaimJournalRelease": true,
+      "state": "root_retirement_prepared",
+      "terminalReceiptVerified": false,
+      "elapsedMs": 2201,
+      "scope": "actual official Guard/native locks; explicit synthetic lifecycle permit"
+    }
+  ],
+  "noProductionStartStopAcceptance": true
+}

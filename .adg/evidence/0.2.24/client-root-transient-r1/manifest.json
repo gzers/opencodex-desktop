@@ -1,0 +1,1877 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "codeCommit": "c576a3b7571b88fe8f3f8675d105769b678ddc4f",
+  "files": [
+    {
+      "path": "cleanup-correction.json",
+      "bytes": 615,
+      "sha256": "a3e84b355f733f5188af6af371b0aad6646af02283d3bc92753baa4f64d7bc9a"
+    },
+    {
+      "path": "cleanup-final.json",
+      "bytes": 713,
+      "sha256": "7caba4133dec58e30f3b781c309de7e36a678a8fa3e11d41faee888351cf9380"
+    },
+    {
+      "path": "corrected_native_runner.py",
+      "bytes": 7191,
+      "sha256": "a1fe6238caa24dec4fea5e811ec9f302483ba2e395681bb8fd44c4404a117271"
+    },
+    {
+      "path": "delivery_late_runner.py",
+      "bytes": 7421,
+      "sha256": "03ce682bc2ace28e5233130bdfe78aaf3963ea620d8de5357e9aa24b0779dfe2"
+    },
+    {
+      "path": "delivery_native_runner.py",
+      "bytes": 7193,
+      "sha256": "e601dc71e29ba3f640a932b4cb7ee8df5627545a65949da5d935e4bf55166a3e"
+    },
+    {
+      "path": "diagnostic-compile.json",
+      "bytes": 92,
+      "sha256": "fd0f707d416ceab1194c027fc4f3b9408e9d24788787d68029e33427599f1c1a"
+    },
+    {
+      "path": "diagnostic-compile.log",
+      "bytes": 292,
+      "sha256": "c1b4cc98450900a71f2a5e0370b61ed5af7b3612b74c22bcd833a7d0dd1fdfb0"
+    },
+    {
+      "path": "diagnostic_native_runner.py",
+      "bytes": 7222,
+      "sha256": "8afbdb758fee5719fa4ce8ee0633aacb2b3ade957569aa68e97a83d5830594fe"
+    },
+    {
+      "path": "failure-review.json",
+      "bytes": 1186,
+      "sha256": "9b8cec83b8292e1ae3d273914cd692f65292827d1234e5e3449f55a8e42cdcec"
+    },
+    {
+      "path": "hypothesis.json",
+      "bytes": 612,
+      "sha256": "f44b6dde1e5221c2bdcdd7949126a3e050f27d3f8c00ee497562573cb28a81a2"
+    },
+    {
+      "path": "late_native_runner.py",
+      "bytes": 7409,
+      "sha256": "0e327175356282707cf8f287a2ed779ed5082241e393eb9dbd469fefc6e8adb1"
+    },
+    {
+      "path": "native_runner.py",
+      "bytes": 6888,
+      "sha256": "bbf12c95c70015dd120d9cfa15b5be19f9482c88a140bff87e899edb06a790ab"
+    },
+    {
+      "path": "official/cleanup.json",
+      "bytes": 970,
+      "sha256": "9bf92fd4139730dff696471e8b16c1c6508b60d9b6bcce336844a7eb0a19da04"
+    },
+    {
+      "path": "official/daily-home.stderr.log",
+      "bytes": 49,
+      "sha256": "9dd9f65fbec3c0209dc1a9c831505f33357e76bce74f4ed8fddaecf270a5d18f"
+    },
+    {
+      "path": "official/daily-home.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official/fixture.sb",
+      "bytes": 2377,
+      "sha256": "4c5edd6d6b9d946d1690fe2619df5212391a6500c266c7eb4c3d97ba9fbc491b"
+    },
+    {
+      "path": "official/global-l-after.json",
+      "bytes": 375,
+      "sha256": "22ee2a7d00ea08e0fc55ed6dc17ababf9e9ab09d2ac8a6a4a93ab73e8cdb6349"
+    },
+    {
+      "path": "official/global-l-before.json",
+      "bytes": 264,
+      "sha256": "64aa97a23c1203464f7f8f631bc7cb2e37df125ca39dcabe40c29fd45f263290"
+    },
+    {
+      "path": "official/hypothesis.json",
+      "bytes": 1842,
+      "sha256": "c0bf6c0de6050426a2bd388f682cb4b1785b6eb643b19c280c91e2660728c176"
+    },
+    {
+      "path": "official/native-summary.json",
+      "bytes": 239,
+      "sha256": "429af03049db650265984b037afcf20081a8c0d332664b82b1d5dd983c42af0b"
+    },
+    {
+      "path": "official/native.stderr.log",
+      "bytes": 518,
+      "sha256": "aca34bcadda104fedf28480e06f02d31148295d75188175f71423505eae2283d"
+    },
+    {
+      "path": "official/native.stdout.log",
+      "bytes": 444,
+      "sha256": "e47c31f2b94ae6b4e432e908a4fd0510ec8733dd06b853f6207aa21f9ece99d4"
+    },
+    {
+      "path": "official/network.stderr.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "official/network.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official/runner-summary.json",
+      "bytes": 1938,
+      "sha256": "beb3a49659f493657d2a262ac0eab4e26e4e9ebc81a82b5ad8119daeb86bbeba"
+    },
+    {
+      "path": "official/running.json",
+      "bytes": 1804,
+      "sha256": "b63f7d2971a05199843dac3d931dbfda54ff7cfe1aa4e1d1d0bfd4d14c80674f"
+    },
+    {
+      "path": "official/source.json",
+      "bytes": 1264,
+      "sha256": "a5b572c83a89fa898de0f36bd7a4db603db242c04a1d96f3be383f5f38b1fd34"
+    },
+    {
+      "path": "official-corrected/cleanup.json",
+      "bytes": 970,
+      "sha256": "34564a57c64360e041db16c0f408559ecb7fcc24505c5230da259af44ca81e95"
+    },
+    {
+      "path": "official-corrected/daily-home.stderr.log",
+      "bytes": 49,
+      "sha256": "9dd9f65fbec3c0209dc1a9c831505f33357e76bce74f4ed8fddaecf270a5d18f"
+    },
+    {
+      "path": "official-corrected/daily-home.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-corrected/fixture.sb",
+      "bytes": 2377,
+      "sha256": "f59fa6a336a1de16421fe9a1a25a1430ceab7f95489b8c7d5fdb78ff86d3e884"
+    },
+    {
+      "path": "official-corrected/global-l-after.json",
+      "bytes": 375,
+      "sha256": "22ee2a7d00ea08e0fc55ed6dc17ababf9e9ab09d2ac8a6a4a93ab73e8cdb6349"
+    },
+    {
+      "path": "official-corrected/global-l-before.json",
+      "bytes": 264,
+      "sha256": "64aa97a23c1203464f7f8f631bc7cb2e37df125ca39dcabe40c29fd45f263290"
+    },
+    {
+      "path": "official-corrected/hypothesis.json",
+      "bytes": 2047,
+      "sha256": "952559a689732a752d485ebfadc59f2593c41e656e646f86df750c9246943b09"
+    },
+    {
+      "path": "official-corrected/native-summary.json",
+      "bytes": 271,
+      "sha256": "0908d6bd09d41f43d2e661fa378127b11d5b4e0d4b7f7408de46a81708c99e1d"
+    },
+    {
+      "path": "official-corrected/native.stderr.log",
+      "bytes": 269,
+      "sha256": "3b703af38d6c78c1ad3288b39780bf4dcabdd5f3e696acef5951e498372e8322"
+    },
+    {
+      "path": "official-corrected/native.stdout.log",
+      "bytes": 548,
+      "sha256": "9e6d02b6d22656adab78210b8de20a2cfffba6984e2f3283367798d774348d49"
+    },
+    {
+      "path": "official-corrected/network.stderr.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "official-corrected/network.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-corrected/root-transient-original-bytes.json.gz",
+      "bytes": 2323039,
+      "sha256": "1eb48b01a8afa7c9c14f27ad89c70e83db7a31b6e3e781da0d6f2c5c17385780"
+    },
+    {
+      "path": "official-corrected/root-transient-references.json",
+      "bytes": 2036,
+      "sha256": "129a9602ead1ee4bf84093ecf4856b740fb297fdc1e3b67929b5b5c9aebb080d"
+    },
+    {
+      "path": "official-corrected/runner-summary.json",
+      "bytes": 2140,
+      "sha256": "5f38175c806b790c2315b6633908c9941bd5a09ef554825eeb729e6f194b0c6f"
+    },
+    {
+      "path": "official-corrected/running.json",
+      "bytes": 2009,
+      "sha256": "df0fb8b259400659797d38870956791880515120a0aca64cf9b99058090af3ae"
+    },
+    {
+      "path": "official-corrected/source.json",
+      "bytes": 1445,
+      "sha256": "2769e83e51fa645aec81ce51bb54f429bbc1185c1bdab2b20815676fa30c2bab"
+    },
+    {
+      "path": "official-delivery/cleanup.json",
+      "bytes": 970,
+      "sha256": "a83b5840c6726607afae7435502e37d6fa9c5257d3b2fb862d442736d27fa558"
+    },
+    {
+      "path": "official-delivery/daily-home.stderr.log",
+      "bytes": 49,
+      "sha256": "9dd9f65fbec3c0209dc1a9c831505f33357e76bce74f4ed8fddaecf270a5d18f"
+    },
+    {
+      "path": "official-delivery/daily-home.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-delivery/fixture.sb",
+      "bytes": 2377,
+      "sha256": "53fd3d34debd6aa96a811958f67c9308ba1bd00e0b729797d6b7a4107b50a2a7"
+    },
+    {
+      "path": "official-delivery/global-l-after.json",
+      "bytes": 375,
+      "sha256": "22ee2a7d00ea08e0fc55ed6dc17ababf9e9ab09d2ac8a6a4a93ab73e8cdb6349"
+    },
+    {
+      "path": "official-delivery/global-l-before.json",
+      "bytes": 264,
+      "sha256": "64aa97a23c1203464f7f8f631bc7cb2e37df125ca39dcabe40c29fd45f263290"
+    },
+    {
+      "path": "official-delivery/hypothesis.json",
+      "bytes": 2047,
+      "sha256": "53ef2450ac9cc893afb33a971187b7994d4b4a766d50b2f231707cfc633fe308"
+    },
+    {
+      "path": "official-delivery/native-summary.json",
+      "bytes": 271,
+      "sha256": "42bafa51ac23a22e1bf97e514e222388ad83e3271de8e829de8c3d25f0db1dff"
+    },
+    {
+      "path": "official-delivery/native.stderr.log",
+      "bytes": 269,
+      "sha256": "3b703af38d6c78c1ad3288b39780bf4dcabdd5f3e696acef5951e498372e8322"
+    },
+    {
+      "path": "official-delivery/native.stdout.log",
+      "bytes": 548,
+      "sha256": "4cb055bbb921ee7cca8a29a7a96512c7caaa7bf0cabac001d3770db71f2925d4"
+    },
+    {
+      "path": "official-delivery/network.stderr.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "official-delivery/network.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-delivery/root-transient-original-bytes.json.gz",
+      "bytes": 2323067,
+      "sha256": "1dcbc58583e431e731e75ad0bfcc4124005cbd3e81dd11f19772e00bf7dba36b"
+    },
+    {
+      "path": "official-delivery/root-transient-references.json",
+      "bytes": 2036,
+      "sha256": "feef986de5f916089527833a219b3d03c66ff4a5d1e79082d8843970aa0a22d7"
+    },
+    {
+      "path": "official-delivery/runner-summary.json",
+      "bytes": 2140,
+      "sha256": "9c3b87e353afe98340283172c99c07b1a8f17fce8ee6fabd5273de4d3c5f6a75"
+    },
+    {
+      "path": "official-delivery/running.json",
+      "bytes": 2009,
+      "sha256": "7b9f34279a7f4797462513859b9c783eeea2bf6d9186df078aa06afcd8855652"
+    },
+    {
+      "path": "official-delivery/source.json",
+      "bytes": 1445,
+      "sha256": "0298b68f27bee8c8bdc6564f832651d50f1b27beb6ccab908be220d80e26543e"
+    },
+    {
+      "path": "official-delivery-late/cleanup.json",
+      "bytes": 970,
+      "sha256": "06faf70aa75ff31f6a1917af7cb3790c2d0a2c1563c3d231e14414fe585d6906"
+    },
+    {
+      "path": "official-delivery-late/daily-home.stderr.log",
+      "bytes": 49,
+      "sha256": "9dd9f65fbec3c0209dc1a9c831505f33357e76bce74f4ed8fddaecf270a5d18f"
+    },
+    {
+      "path": "official-delivery-late/daily-home.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-delivery-late/fixture.sb",
+      "bytes": 2377,
+      "sha256": "72888654ff0c08e7bdfea4ad538e1a3b17e8a17b8bdbea8bf585a182db745e25"
+    },
+    {
+      "path": "official-delivery-late/global-l-after.json",
+      "bytes": 375,
+      "sha256": "22ee2a7d00ea08e0fc55ed6dc17ababf9e9ab09d2ac8a6a4a93ab73e8cdb6349"
+    },
+    {
+      "path": "official-delivery-late/global-l-before.json",
+      "bytes": 264,
+      "sha256": "64aa97a23c1203464f7f8f631bc7cb2e37df125ca39dcabe40c29fd45f263290"
+    },
+    {
+      "path": "official-delivery-late/hypothesis.json",
+      "bytes": 2227,
+      "sha256": "23f3cdb2ba4718a9096e4652a2df201a0f7c28abe4c4a89b41eb2d969ce7f056"
+    },
+    {
+      "path": "official-delivery-late/native-summary.json",
+      "bytes": 270,
+      "sha256": "06acdb24d2168f10aca0d17e1d21b7b38af4bf3d214b91a0f9358221d63d3351"
+    },
+    {
+      "path": "official-delivery-late/native.stderr.log",
+      "bytes": 132,
+      "sha256": "147d2db1fee01fa786730f52bacef7553af030a119c2080b52de877c99ba6807"
+    },
+    {
+      "path": "official-delivery-late/native.stdout.log",
+      "bytes": 547,
+      "sha256": "939919306b85df17b0de33eb720d20757260ca4a3e65d4925c59df3a777d9bc5"
+    },
+    {
+      "path": "official-delivery-late/network.stderr.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "official-delivery-late/network.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-delivery-late/root-transient-original-bytes.json.gz",
+      "bytes": 2323147,
+      "sha256": "de8adc3995b21189a25eacee6b2a030900be045fbc01327d9865ebade5370b92"
+    },
+    {
+      "path": "official-delivery-late/root-transient-references.json",
+      "bytes": 1486,
+      "sha256": "53edf8bc14333370a92bca838312db7ff919e76223f3370ae88da8aba075f291"
+    },
+    {
+      "path": "official-delivery-late/runner-summary.json",
+      "bytes": 2320,
+      "sha256": "d5c02316bd0303e7817b9fad4bd1dca3c15e2ab289b29da7955e9719e006bc4e"
+    },
+    {
+      "path": "official-delivery-late/running.json",
+      "bytes": 2189,
+      "sha256": "080238177da214c7a67e39525bc2ff4405d3ed8403aeab90e23f3a9a2897d8ac"
+    },
+    {
+      "path": "official-delivery-late/source.json",
+      "bytes": 1445,
+      "sha256": "0298b68f27bee8c8bdc6564f832651d50f1b27beb6ccab908be220d80e26543e"
+    },
+    {
+      "path": "official-diagnostic/cleanup.json",
+      "bytes": 970,
+      "sha256": "a022d811c00fba6a035e4d243c31da8fed6a98b3536f80cddf13b2d3c7508f31"
+    },
+    {
+      "path": "official-diagnostic/daily-home.stderr.log",
+      "bytes": 49,
+      "sha256": "9dd9f65fbec3c0209dc1a9c831505f33357e76bce74f4ed8fddaecf270a5d18f"
+    },
+    {
+      "path": "official-diagnostic/daily-home.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-diagnostic/fixture.sb",
+      "bytes": 2377,
+      "sha256": "5c51de4ad5ca239aa9a4d7a1d2292fb7ffe0a1a21cb9545cf68761fe0bc34965"
+    },
+    {
+      "path": "official-diagnostic/global-l-after.json",
+      "bytes": 375,
+      "sha256": "22ee2a7d00ea08e0fc55ed6dc17ababf9e9ab09d2ac8a6a4a93ab73e8cdb6349"
+    },
+    {
+      "path": "official-diagnostic/global-l-before.json",
+      "bytes": 264,
+      "sha256": "64aa97a23c1203464f7f8f631bc7cb2e37df125ca39dcabe40c29fd45f263290"
+    },
+    {
+      "path": "official-diagnostic/hypothesis.json",
+      "bytes": 1842,
+      "sha256": "0e8b206a11ce0bdfabf29a06b991fabb42ab98a0653df3f907cb2860f9886a27"
+    },
+    {
+      "path": "official-diagnostic/native-summary.json",
+      "bytes": 239,
+      "sha256": "713fecd86528577cb3ae6817e83dd78ce163cd6096ec0ccb8fb73cc7e2caef0a"
+    },
+    {
+      "path": "official-diagnostic/native.stderr.log",
+      "bytes": 2301,
+      "sha256": "bb4fbd024123033305fed91befa66cd26a47ba62803f143ea359e77936668978"
+    },
+    {
+      "path": "official-diagnostic/native.stdout.log",
+      "bytes": 444,
+      "sha256": "ef9940e8b320a2e34167b55a703c324aba181e79f7c80f0211fbaacee1289620"
+    },
+    {
+      "path": "official-diagnostic/network.stderr.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "official-diagnostic/network.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-diagnostic/retained-work.json",
+      "bytes": 320,
+      "sha256": "4d9a853aa434caac27a16b3cf48e0092b45ea719715ba0a49d84823e99094c3e"
+    },
+    {
+      "path": "official-diagnostic/root-transient-failure.json",
+      "bytes": 1759,
+      "sha256": "2e6facd4087807ec043949ce35c39dd468a8d91e082ad2fbb093eab1ddce9ad4"
+    },
+    {
+      "path": "official-diagnostic/runner-summary.json",
+      "bytes": 1937,
+      "sha256": "1c42ceaef2a94e0f7f52088f7f2eae3df6f3288a33d52abe9820ffc21006b85b"
+    },
+    {
+      "path": "official-diagnostic/running.json",
+      "bytes": 1804,
+      "sha256": "7a30500522b4d81d224b2bee4c404e98741382b47a31464fa5e3531e842431e6"
+    },
+    {
+      "path": "official-diagnostic/source.json",
+      "bytes": 1264,
+      "sha256": "184f93b7da02678c272c8aad5ce34357cba9d046f278ce1ba26bbdb89dc3467f"
+    },
+    {
+      "path": "official-late/cleanup.json",
+      "bytes": 970,
+      "sha256": "6c399dc183eb0d11b9c4a877c4f8a10dc49f37e2e19827104da9d38199d73c62"
+    },
+    {
+      "path": "official-late/daily-home.stderr.log",
+      "bytes": 49,
+      "sha256": "9dd9f65fbec3c0209dc1a9c831505f33357e76bce74f4ed8fddaecf270a5d18f"
+    },
+    {
+      "path": "official-late/daily-home.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-late/fixture.sb",
+      "bytes": 2377,
+      "sha256": "cc90860ac9d3211aff0558c47b15493f7bacbdd9189426d8faaf94cbe5a9f2c4"
+    },
+    {
+      "path": "official-late/global-l-after.json",
+      "bytes": 375,
+      "sha256": "22ee2a7d00ea08e0fc55ed6dc17ababf9e9ab09d2ac8a6a4a93ab73e8cdb6349"
+    },
+    {
+      "path": "official-late/global-l-before.json",
+      "bytes": 264,
+      "sha256": "64aa97a23c1203464f7f8f631bc7cb2e37df125ca39dcabe40c29fd45f263290"
+    },
+    {
+      "path": "official-late/hypothesis.json",
+      "bytes": 2227,
+      "sha256": "165b1753641455ceeadd4d07bf24da02b0307b09effc356c5d33a9bec69e31e3"
+    },
+    {
+      "path": "official-late/native-summary.json",
+      "bytes": 270,
+      "sha256": "1b269946d316c276ad59ca656ecf726a8f926c85129a81f8a4d7ff5c844eb04f"
+    },
+    {
+      "path": "official-late/native.stderr.log",
+      "bytes": 132,
+      "sha256": "147d2db1fee01fa786730f52bacef7553af030a119c2080b52de877c99ba6807"
+    },
+    {
+      "path": "official-late/native.stdout.log",
+      "bytes": 547,
+      "sha256": "b5818362b487380406ea68311f94e86125b35754fcc45e48125804947547b296"
+    },
+    {
+      "path": "official-late/network.stderr.log",
+      "bytes": 73,
+      "sha256": "3bda65e6a990d8886d5beac7a0d63ca370fb88d41a9cfcd39685406631b1bc8e"
+    },
+    {
+      "path": "official-late/network.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "official-late/root-transient-original-bytes.json.gz",
+      "bytes": 2323108,
+      "sha256": "8aee181cad4d56b40741cb830086c48f80f4f50fa9d703034645e384546c2b2a"
+    },
+    {
+      "path": "official-late/root-transient-references.json",
+      "bytes": 1486,
+      "sha256": "4777c0d964673f5344053b38dd19e5c8c3b6affbac9f2b85a3bfe210e8c22ea4"
+    },
+    {
+      "path": "official-late/runner-summary.json",
+      "bytes": 2318,
+      "sha256": "938f3c0458d27d879862c26d88bf946ad12310b7a7d33b6ebca61c748a6fa339"
+    },
+    {
+      "path": "official-late/running.json",
+      "bytes": 2189,
+      "sha256": "e44ffbf3b57bb41934eb6152559df77ce0589b0aa7699fc95306d71dc9103019"
+    },
+    {
+      "path": "official-late/source.json",
+      "bytes": 1445,
+      "sha256": "2769e83e51fa645aec81ce51bb54f429bbc1185c1bdab2b20815676fa30c2bab"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-originals/37bc5b89-2ab6-49dd-ae1b-44bbdbca0e3a/original.json",
+      "bytes": 1469,
+      "sha256": "3f92e4a650900169a7374540c2bed61d33da49f83eef5ec4ef2d1d1be5c33417"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-originals/37bc5b89-2ab6-49dd-ae1b-44bbdbca0e3a/root-retired-e25d290a-63d8-4d1c-b576-6b5a5718f8fc/.opencodex-native-main.claim.sqlite",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-originals/37bc5b89-2ab6-49dd-ae1b-44bbdbca0e3a/root-retirement-e25d290a-63d8-4d1c-b576-6b5a5718f8fc-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "3c798acbb0e9e5f993225d5ff3ff46d4705f3efc28d5da471467c172a466c280"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-originals/37bc5b89-2ab6-49dd-ae1b-44bbdbca0e3a/root-retirement-e25d290a-63d8-4d1c-b576-6b5a5718f8fc-Retire-readback.json",
+      "bytes": 1008,
+      "sha256": "18e17596d56baf839aced0f33147f3a9ede043f69787ce40f8855baa680b4519"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-originals/37bc5b89-2ab6-49dd-ae1b-44bbdbca0e3a/root-retirement-e25d290a-63d8-4d1c-b576-6b5a5718f8fc.json",
+      "bytes": 2684,
+      "sha256": "5d38b59df6c29d19e2810b3689914d0332f2845201edc7bd2fbcffa38f24edd8"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-originals/37bc5b89-2ab6-49dd-ae1b-44bbdbca0e3a/startup-scope.json",
+      "bytes": 1235,
+      "sha256": "89f627bf4158f82082a62eaa6cea2632a96f06b62c1eaf817cc6b8f4ab69679e"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "ba41db167287c0c4d7890620dae171ce247d5b8883c607c7aefddb1e1f11e096"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "28b19d85e5f4a066ed4ee3b3f3c720d6241863139493d0fdf4f2bc3b1f7fe70c"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 715,
+      "sha256": "fefe52ec5c769abe1bc08d643290c0a8c87bfda3cfe3c4518de28e67283d0779"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "71ce47ed66f00eb3ed9dd71ee3a5d472909488b9f9a732f6e11e48cd485d6144"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "5f88a367487edb3b8701954331c7d745b0d2b005ceebdb7d5f62341866e170b4"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/desktop/manager-state/runtime.json",
+      "bytes": 242,
+      "sha256": "b55b676f6d5c358fa2894f7070fb8b5e78c0b750c9bb7bfcc6ee6894a473b0fd"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery/native-control/35a4fffc-8f02-433d-bd77-8176da47fe0e/release",
+      "bytes": 37,
+      "sha256": "2e03cd4d97f76bc2e225433eeacd205b10491f9548ea2e5b01a9bb527f4974ba"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-originals/a634d99a-d9d7-45bc-a2d2-c9582a2bdc61/original.json",
+      "bytes": 1469,
+      "sha256": "3a2feb8a708a6c5eb289363866813608d0bec6d0d45ebadc54ecf5ca2a6056ba"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-originals/a634d99a-d9d7-45bc-a2d2-c9582a2bdc61/root-retired-bd2895fd-3065-4dee-a9dc-ecbbc4baf145/external",
+      "bytes": 18,
+      "sha256": "69beffbb546f28a9643d1d1db9dcb1bbc013c9346686d3a99269644e9f65fd7c"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-originals/a634d99a-d9d7-45bc-a2d2-c9582a2bdc61/root-retirement-bd2895fd-3065-4dee-a9dc-ecbbc4baf145-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "cb32a44ae47c6ba9286e7e87cf35efa4c62093508040633e007d2975093be7ed"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-originals/a634d99a-d9d7-45bc-a2d2-c9582a2bdc61/root-retirement-bd2895fd-3065-4dee-a9dc-ecbbc4baf145-conflict-3c6fb4cd-965a-4f9f-9727-898e7433d174.json",
+      "bytes": 329,
+      "sha256": "be40966d98cc2217a0b68c0c06a0fea7773987446b78e6b0b4195e4b0b2aafd4"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-originals/a634d99a-d9d7-45bc-a2d2-c9582a2bdc61/root-retirement-bd2895fd-3065-4dee-a9dc-ecbbc4baf145.json",
+      "bytes": 2684,
+      "sha256": "71f0cfa3fec570a1e3442c3c58a5b982c8bab7f4c35434b7aca87ebf7a8c7082"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-originals/a634d99a-d9d7-45bc-a2d2-c9582a2bdc61/startup-scope.json",
+      "bytes": 1235,
+      "sha256": "05bf9375f4ec3c359c088c030dbe555d7b3fc73750d0efcc3d004582d1aa7aae"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "e46032080933aa1f541ae3452afa63de4374a2e5c3d96884360d558f436f5945"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "00bc9e412afe23dd74caa24ef6d4ceb5ebdf1d72406eaaf62cb5656f64c2b381"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 715,
+      "sha256": "3d40445f1d1b8940893719b8bec747e771f3906766247548804a1f7ca15b76fe"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "1359ea264308832b95ce4ed433261ca7c82395c5b25f3ca7375e7188a7d8fb5d"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "768654d998e0dc2c70f44d201af5e9298d369e8e3ae98c4cb87e89f5412793f4"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/desktop/manager-state/runtime.json",
+      "bytes": 242,
+      "sha256": "8af53e23a63e88b7a371bf711044bc09cef82f83e887c98c3baba9a5e3f85d14"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/native-control/4ab435ba-0514-4059-8bd2-8b1664af441d/release",
+      "bytes": 37,
+      "sha256": "3ea848d226df97e4fae8ed344b211e3fd43efbf6f56db3b320170b029cec1f8b"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/profile/retained-original-root/.opencodex-native-main.claim.sqlite",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-native-delivery-projections/official-delivery-late/profile/retained-original-root/config.toml.ocx-write.lock",
+      "bytes": 160,
+      "sha256": "30f262f67e40c8a74dc79cb9f1dfa45de6ecbb6d28de5f70c711930a3aa5d37f"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-originals/1f34739b-195f-42d9-8427-3bfaf337af01/original.json",
+      "bytes": 1469,
+      "sha256": "dc87c8e1c3e5f4247cd0810ac1bcc9968da1b6eb982e20815ce111c4eaf52acd"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-originals/1f34739b-195f-42d9-8427-3bfaf337af01/root-retired-5d4ce2f4-60c7-426c-9977-bc6edab48ccb/.opencodex-native-main.claim.sqlite",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-originals/1f34739b-195f-42d9-8427-3bfaf337af01/root-retirement-5d4ce2f4-60c7-426c-9977-bc6edab48ccb-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "3d3fbbf2b7dfcfb08bf0f3bbaf03f4ab31efa742aa7665c7672e6c34c44138bb"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-originals/1f34739b-195f-42d9-8427-3bfaf337af01/root-retirement-5d4ce2f4-60c7-426c-9977-bc6edab48ccb-Retire-readback.json",
+      "bytes": 1008,
+      "sha256": "6c895b6b4e02a675f15e28b6dfbc3b9e89db26900ac6ab609fd39726f1234249"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-originals/1f34739b-195f-42d9-8427-3bfaf337af01/root-retirement-5d4ce2f4-60c7-426c-9977-bc6edab48ccb.json",
+      "bytes": 2682,
+      "sha256": "cb3f2c391605371c2b7f812b7ff656e7a7bbf8dac567afedbb23784fbcde02aa"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-originals/1f34739b-195f-42d9-8427-3bfaf337af01/startup-scope.json",
+      "bytes": 1235,
+      "sha256": "dbb339abeb364152c68fcc8617f46ff453949d875a63f66a646109d456fb5014"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "c8a395d4d6077d6f8785ea3f10b91668fe4327daab5091019db57eddbeb65133"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "946763e67197217d079a6f68c765e7d38cb99eac6e284268a1b2de75ff806439"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 715,
+      "sha256": "f30b224399acf650a7397a217132f243bc02da28037937ac8ae6d51b38fef91f"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "4447f5be7bfa0709495ebd99a5c4cf3f6ce1fe8bd768fdec81eb28112fb8c89c"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "3f09e7fcf1e2ab24dcd90ffc94f0180f01cb08122be5dd5574d5a393a3e2abfc"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/desktop/manager-state/runtime.json",
+      "bytes": 242,
+      "sha256": "6e71ed72a6d4b8fab58ef632dc8e6ce334735875ac49823bb424d5e2a9574e21"
+    },
+    {
+      "path": "offline-native-projections/official-corrected/native-control/68948307-4c7d-4350-81f6-a9beb066c22c/release",
+      "bytes": 37,
+      "sha256": "111d9fd83e16f63ffec644cb4911eba18249e47eca93a03286c13e11b0c20769"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-originals/6ebed2fc-12d4-4582-98fb-855f96788c68/original.json",
+      "bytes": 1469,
+      "sha256": "f704dba8f6eb8aee59042aec7b00f7de6ae16cbb058bb6a054b024bea39a180d"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-originals/6ebed2fc-12d4-4582-98fb-855f96788c68/root-retired-ac30f602-c37f-439c-9f43-0b906a38bee0/external",
+      "bytes": 18,
+      "sha256": "69beffbb546f28a9643d1d1db9dcb1bbc013c9346686d3a99269644e9f65fd7c"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-originals/6ebed2fc-12d4-4582-98fb-855f96788c68/root-retirement-ac30f602-c37f-439c-9f43-0b906a38bee0-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "ae2ecb1b92911009c1f59c1582fffd50dee1b3f4af57e62a3f3d16004c1a0411"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-originals/6ebed2fc-12d4-4582-98fb-855f96788c68/root-retirement-ac30f602-c37f-439c-9f43-0b906a38bee0-conflict-5dd48133-788b-4ee8-b2eb-fe78261f627e.json",
+      "bytes": 329,
+      "sha256": "31593058cb0bd3c65a964ce6138330437e61e223b7d14ebd3da3f4d6bd78c349"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-originals/6ebed2fc-12d4-4582-98fb-855f96788c68/root-retirement-ac30f602-c37f-439c-9f43-0b906a38bee0.json",
+      "bytes": 2679,
+      "sha256": "09fffb091aa4434b5751be354cce58eb5611e11892e360d9f7643733bf33f905"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-originals/6ebed2fc-12d4-4582-98fb-855f96788c68/startup-scope.json",
+      "bytes": 1235,
+      "sha256": "7e2e8b6e77432c31b5ef115aafe35ccca35edfef83941561c67781ead6f79fd6"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "943804c5271d7fe0a7c3c80c41611e71571295ca1f724fa2c12d161aa9ecdab9"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "f06aa3bbc99057cbe4f7ac8c9836e005e66329db04c1644e801421c5979f071b"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 715,
+      "sha256": "379af8ab489944be92a76b3abda8d8b7a23caf23bf335a97187bdb62d6332d94"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "86eac17a6d755955792248c720b6a717c75bb57acda887dfd7a6366102c15e2e"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "43257f5eeb529fa3225da6955ba18946493424b17be98749cb905f85c04c5c5f"
+    },
+    {
+      "path": "offline-native-projections/official-late/desktop/manager-state/runtime.json",
+      "bytes": 242,
+      "sha256": "cee79c4260c0059485498df6eb43becc07b3dc06a8804f57ee675ccaa4c46742"
+    },
+    {
+      "path": "offline-native-projections/official-late/native-control/7b5d8f07-c249-44e7-826a-daac1556a065/release",
+      "bytes": 37,
+      "sha256": "a942268db4d04305bd6859331fdaf0ab481b6ac852b4fda2292d5442e54875db"
+    },
+    {
+      "path": "offline-native-projections/official-late/profile/retained-original-root/.opencodex-native-main.claim.sqlite",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-native-projections/official-late/profile/retained-original-root/config.toml.ocx-write.lock",
+      "bytes": 160,
+      "sha256": "16e4e656da33471cd15fb785b3a342e8c9e91c693b80c42c1beb50f064306be0"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-originals/900043f2-88cc-42cd-82d9-eba3fa6b452a/original.json",
+      "bytes": 1469,
+      "sha256": "6009f732728b567064465319086698b0546edc2fa1f243157b9bfcb7f44ffad0"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-originals/900043f2-88cc-42cd-82d9-eba3fa6b452a/root-retired-d0c37875-cc27-4636-ace3-99af67c1a18e/config.toml.ocx-write.lock",
+      "bytes": 40,
+      "sha256": "ab7f535c68e73b6f0f515306eaab46ea3f48feafde1782e2f6afc2cf4459b336"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-originals/900043f2-88cc-42cd-82d9-eba3fa6b452a/root-retirement-d0c37875-cc27-4636-ace3-99af67c1a18e-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "83cfd0474c7b2917e08ad30f2b5e9562dc0af326508674ecbb09f1cf5621379b"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-originals/900043f2-88cc-42cd-82d9-eba3fa6b452a/root-retirement-d0c37875-cc27-4636-ace3-99af67c1a18e.json",
+      "bytes": 2073,
+      "sha256": "35dd9836d307e35f8c6e17aed86a8503041b731c84fdd84fc61a1eb547ffd237"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-originals/900043f2-88cc-42cd-82d9-eba3fa6b452a/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "fbfbe1c7f9ace929ea47bbc7dc18952db55629c1f0d9c6942252b98a1bdcb9dd"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "d70ff9a84ced7c7100e1f7c717b49edfa089e0017f51d44c4b714cedf606ba9b"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "880154560a6e01e9b9df3b0feead84f46d8af41250362fb3a12be78c7108babc"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "e6ec77abf5a337e481f3404d93a801bd13927f64d3d01a4ec26e2321be86adbf"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "4537d654e10e9c088b6c803a2d2d737db64bb37b100b3ea9ebf026495d57ff1b"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "b45ad677ba5563206c0743071670f7504685142255b68e35358023a8e893fbe7"
+    },
+    {
+      "path": "offline-storage-delivery-projections/after_native/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "364bf7f69cece8d91bf80ed9f4a3747b2708867373053f2598886b324f5a701b"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-originals/bd0ea5e5-ed4a-4d1b-93f4-9ef82bc7e833/original.json",
+      "bytes": 1469,
+      "sha256": "76167ce6c887736e6506dc714dbd025bfe1a1604b10ea808e660eccb81614a44"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-originals/bd0ea5e5-ed4a-4d1b-93f4-9ef82bc7e833/root-retirement-eb1b7ab3-0939-47e8-91a4-f34549aaa177-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "3bc65b4f1bcb707bda89178caf4b9c6e066a0c3865b9167108c8fac49eb15a1e"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-originals/bd0ea5e5-ed4a-4d1b-93f4-9ef82bc7e833/root-retirement-eb1b7ab3-0939-47e8-91a4-f34549aaa177-Retire-readback.json",
+      "bytes": 1004,
+      "sha256": "b359110f47c869b8101b2e2bb6dcb521db31ba1498d35fb6e45c4bdccbd70dfb"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-originals/bd0ea5e5-ed4a-4d1b-93f4-9ef82bc7e833/root-retirement-eb1b7ab3-0939-47e8-91a4-f34549aaa177.json",
+      "bytes": 2073,
+      "sha256": "ab9e0c0c32222519712650b0a0febd674ab4b3a69b5a2fc144e560da95750e6d"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-originals/bd0ea5e5-ed4a-4d1b-93f4-9ef82bc7e833/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "f155bf60bdf4976db4883735642f418fd65633ad03c2796f045c389564dd0318"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "297cc7af2bb24503b86abe8eb31696307f8f24d6c9d9b224f7d9fb5b0b75b9ba"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "4beddb84854210bc479c1ff5ec575365fc3f05be4d3ed1480cde89f6e76dccce"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "8fc463e68e86dcc740df05e0b1148053105aa4702ce8d3c0c51906cc27396dad"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "afce5d4289e20eadbb1f09257e1c8f9bea3f3212dc5fb97af200e121c6287535"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-delivery-projections/positive/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "9c44fe5b8bb43c28c3a8acdded1272e83b63bf97eeeb9943c3e342c8e6b93959"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-originals/1248378e-4e97-47fb-b48a-8263950c19c7/original.json",
+      "bytes": 1469,
+      "sha256": "c0c6933ec3763a94ce3ec1a35e9d77e6e1b21eaf60c8db7121e7b2794f761310"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-originals/1248378e-4e97-47fb-b48a-8263950c19c7/root-retirement-a6cf9e71-dfae-4c66-9e08-091a50768671-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "ee08a77a712a15db19b6f5688147b11f2478e68582743039cc3d1f1d9346c201"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-originals/1248378e-4e97-47fb-b48a-8263950c19c7/root-retirement-a6cf9e71-dfae-4c66-9e08-091a50768671-Retire-readback.json",
+      "bytes": 1004,
+      "sha256": "8e3652187d351f85d849f3b8a195a349705b3eb1b5b5e57afcb8b2d1f899f05a"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-originals/1248378e-4e97-47fb-b48a-8263950c19c7/root-retirement-a6cf9e71-dfae-4c66-9e08-091a50768671.json",
+      "bytes": 2073,
+      "sha256": "5b6cb5fffaf014e3700cd547046debf0e9d929bb9b22b75b56b6b4951d636903"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-originals/1248378e-4e97-47fb-b48a-8263950c19c7/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "f9db7c3c86c7c00887eb5e31bccd719796c7df6760c6ddd22835d7c4b752a6e7"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "6cc2a72f774609ed00967a9a5622b4bbc561c49fe002af4f00346ad4f5e04256"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "9998839a729f9569a28f2f6539bc1f8e3dbc3d80fedfbe1b0266bda5a55c1235"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "bfa6dd395ccdf4dc450ccbde7d1de2d27da86acd532f69aa4492882bafc6ef38"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "2a731b951ca118f0fdc32d333578a3eb125ef9b19bebdd5b6e89e5bc8a8dcae7"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "97702b455919baa675888c36859e11fe16d68a5a9902a354b199d514fb106389"
+    },
+    {
+      "path": "offline-storage-delivery-projections/readback/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "9c065dda5b02706a8adca7f763cf84f2abd3ac5d7710e90ee95c10f95e22d8e9"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-originals/8a3009b2-b209-4456-b85f-6c8a7a0b8e10/original.json",
+      "bytes": 1469,
+      "sha256": "00873d36a8bd8f03b9e94df2c2ed75effd09c069f57ac8e31b4179d5152b2bf0"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-originals/8a3009b2-b209-4456-b85f-6c8a7a0b8e10/root-retirement-8fb458a4-2cee-4d3e-9dc6-be06770d3173.json",
+      "bytes": 2073,
+      "sha256": "f108c2090f47fbf990a090e7eb1d500e48a8db10e5b30aeb0bc841a604fef962"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-originals/8a3009b2-b209-4456-b85f-6c8a7a0b8e10/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "636a2f9dcfbaf2451c560f4197e73d70a03d9be4a86340acfb7db8931bbef08c"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "da15c926b0615b3a33101c33763c5b74e2114f9286eaf005e47c9425ee9a1979"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "c76d14af2b32d493ccc4d1a1e671177763b4a74aa3343da60edf11dd4a47a44f"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "542623326fef53897f666986babee67b27ec4b75afb22c2d50744aa1deef0966"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "722cda2cecb4fe800f8f8a57488e3fa0013a7806b724b06ba89e6e92fd67127b"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "37a2a2aa80f999dc6edea1ff9beab86adaac425a3b648db927d31e6c0b63d721"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "cd4d2c7d4956ec2c37e3ec815f09c7b2a4e0db21d0262bbc379662f256fb1204"
+    },
+    {
+      "path": "offline-storage-delivery-projections/registered/profile/.codex/config.toml.ocx-write.lock",
+      "bytes": 40,
+      "sha256": "bfd7f7aaa127d7c673b51aecd67c08c7196125918951b8251bb68eae14b96ae2"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-originals/196b53c7-a3a0-4c51-a225-80e4caf5e26e/original.json",
+      "bytes": 1469,
+      "sha256": "1a4e328ef0e3cf73ccd27449279f9ed03a44c9bc09059a44a4dfe6b0130ffac1"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-originals/196b53c7-a3a0-4c51-a225-80e4caf5e26e/root-retirement-7e5df5c9-3e17-4202-85a2-0de64059b96e-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "6909ea38f9fbbee66d41736d58eacdc659e5c408778ef46b5fc226f6dc3f2e4a"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-originals/196b53c7-a3a0-4c51-a225-80e4caf5e26e/root-retirement-7e5df5c9-3e17-4202-85a2-0de64059b96e.json",
+      "bytes": 2073,
+      "sha256": "d95921f0eb7fb9f0873c4a4f4c352295c9864cff7ad1aebc686fa947abc73941"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-originals/196b53c7-a3a0-4c51-a225-80e4caf5e26e/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "cf502cc3668b6528ffb9821687b534656e1abd5846eb66c56a3c252a2cc71a1d"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "c447a8b38b55c2124cb69fbc9ae4b315e561a2c426c6e557d3ea39e3193bd66a"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "df57244ca3510804ab88db7d5f1c3d9194932685ef41514f968078cce8c41a8a"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "ed5feb29ac9b5187e954b0a257ba276980b51bb55bbea7de36f9606a8b820047"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "0b3f3de71cd888f13819e9b16b70bc0780bbc441ebb3b250931ab6b3d0c8ee18"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "edbae1e695292383b8c303112a276eef9b70c326be8bfe63284fe73beed609b8"
+    },
+    {
+      "path": "offline-storage-delivery-projections/released/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "80e2e9366b8b9cf091ce76f3f0e7fe9f1497eda9d8b612e4f0fe277edb9caa83"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-originals/e3880a62-eee2-48d9-8d51-df251e76cece/original.json",
+      "bytes": 1469,
+      "sha256": "598f1d07b0e040cd9b8d3ce6ea9acc3b622e7c5b8266b9644ac9ed42e79c021e"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-originals/e3880a62-eee2-48d9-8d51-df251e76cece/root-retired-a9c3e271-3361-4d7e-87da-cc5cb2e9bf4d/config.toml.ocx-write.lock",
+      "bytes": 40,
+      "sha256": "d29333cd665da168f3038218998fafdf5daaf9f73e8543080a166968f29337e8"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-originals/e3880a62-eee2-48d9-8d51-df251e76cece/root-retirement-a9c3e271-3361-4d7e-87da-cc5cb2e9bf4d-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "8e4d424e2256296564a344dff6c9fdc00af270de8303f1d3fb8ba5618b4150ed"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-originals/e3880a62-eee2-48d9-8d51-df251e76cece/root-retirement-a9c3e271-3361-4d7e-87da-cc5cb2e9bf4d.json",
+      "bytes": 2073,
+      "sha256": "5aec2ddbb90584c2cc8af79bf195c0e880e1bad6900caea0c88a5e31279b1e17"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-originals/e3880a62-eee2-48d9-8d51-df251e76cece/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "6dba10ee6f60069ad8a3d8c7f2acd27fa14b14a9d801d3e08ca52b1ea869944e"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "c6408771bf0d6821c317bf5ea85cf6ba537d12c0e5a8157930fb25b563d16d09"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "2cb77768d28a0052dd253e2ea9ad1b2c7baac69903180b8c903aa7a240f9c724"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "723865e24484804ac1ad69d229bc540fecea0fba8b0ab21bf6946b15d3cc041e"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "c10e9383c62b37cac5a56b8c2e652443ff5ddca94c965c7a73baccedca598247"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "6f35f461a31f97fef19d0f2a97973881e09b4fdaadb247c83b7b601a48447fc7"
+    },
+    {
+      "path": "offline-storage-final-projections/after_native/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "7c009df047a40f5257df499b60cff5cbc00e5fa7e09cfb9597f67cfe51f7d8e1"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-originals/fbfd6a94-55e8-4817-950d-3b3bb1069f22/original.json",
+      "bytes": 1467,
+      "sha256": "ba36e437d731809589746db06de42f4bc7a341f0dcfb9f14cf5c115c059112bc"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-originals/fbfd6a94-55e8-4817-950d-3b3bb1069f22/root-retirement-a71ef025-2c2b-42b2-a289-111fb62c163e-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "baf5e03a9b6068d72f4b42d4bf1561eb9831d6a9633815d49cd4456439796f64"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-originals/fbfd6a94-55e8-4817-950d-3b3bb1069f22/root-retirement-a71ef025-2c2b-42b2-a289-111fb62c163e-Retire-readback.json",
+      "bytes": 1004,
+      "sha256": "76b606617bbc63125bbe4002b2e63dae7bc201532e7265fbc3dc578324160958"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-originals/fbfd6a94-55e8-4817-950d-3b3bb1069f22/root-retirement-a71ef025-2c2b-42b2-a289-111fb62c163e.json",
+      "bytes": 2073,
+      "sha256": "1500be1bed25ac36d9b2bc35fc2b9bd5b77b6073af2274b593e58f3230dde70d"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-originals/fbfd6a94-55e8-4817-950d-3b3bb1069f22/startup-scope.json",
+      "bytes": 1212,
+      "sha256": "6c91e4a5c7bf032ad41c025b42b7b70fe19ef2546577acf59dc582a22d311434"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "013835dd5be7dd4adf9617c9cc38f528c9881b63892930ab46f7e5af139ea96c"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "c5917047fa2a7ebf10d2324c97efaa133d52222878aaac3a04843875b20f90c3"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 705,
+      "sha256": "e8a729f831a44bc720dac45b225f0967c1c477202a0b5dc66209d7bb1b5b60d1"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "f9030c382c07403842c28545ac4111685ae5e9694e1eb84bcfdc4c82a1e3e4f7"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-final-projections/positive/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "60cdc98e77fcb0c494400eee43a0ee8757d6d3d8cedd3db51a5cd2ea8be3def3"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-originals/f93aa7e3-f8e5-468f-90db-6676e1cf25e2/original.json",
+      "bytes": 1469,
+      "sha256": "ff96ab33fe84534b0de7bfc26c028893b5a042dcd7488818502ccabf01d29b40"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-originals/f93aa7e3-f8e5-468f-90db-6676e1cf25e2/root-retirement-185ec496-9b13-453c-93f8-d7500ec68470-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "1c50522de455a92673d69ef688c7b0621636aae0a994426175e547bfc2b3110c"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-originals/f93aa7e3-f8e5-468f-90db-6676e1cf25e2/root-retirement-185ec496-9b13-453c-93f8-d7500ec68470-Retire-readback.json",
+      "bytes": 1004,
+      "sha256": "9b7e41c1a5360853c7d67cbcae54be6f498a6d3f416be7921354166223213229"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-originals/f93aa7e3-f8e5-468f-90db-6676e1cf25e2/root-retirement-185ec496-9b13-453c-93f8-d7500ec68470.json",
+      "bytes": 2073,
+      "sha256": "6dde604a4c445a2526ca798f64e84e84d68fa55ced9681c48f6dd452347532f5"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-originals/f93aa7e3-f8e5-468f-90db-6676e1cf25e2/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "046be161fdc545b893f7e18d772abd1078eab9d2fd5bdf52ed511cf0460aedcb"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "10f8533fe61993249e9ee158466a00b890fa625f5fc7e42086d4dc4fdbd74a32"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "a984b0df419942aeb1a1d28daee831bc13ee579879382151fe44685ee11b8891"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "6b7bcb27e683d168c3595566f46406032eb731dbc96874491714b91b9dc491e0"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "3fa3afc9dab4ca1db6a17c4797856e9dd090415f9cd3b2b951d44f6dff11d652"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "c48b13e08453eb5d0f6290e9940a2989dd13f6f50e0ec47ffb9203afa6960c96"
+    },
+    {
+      "path": "offline-storage-final-projections/readback/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "b3fd61dd4ae954995a360201c9e9b4b8fc466b6d2e9a843a4315c85a497937f0"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-originals/56e75704-1f83-4f58-8079-4bf709e238b0/original.json",
+      "bytes": 1469,
+      "sha256": "f274da2544eb593cb5298fe56a51567ae00311321c10d43c51dd7ddf56636ec5"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-originals/56e75704-1f83-4f58-8079-4bf709e238b0/root-retirement-d0a825af-1816-4f12-b1bc-b17420cc38d6.json",
+      "bytes": 2073,
+      "sha256": "72e729b895257b37b9f03ccb42857ece293ba23596664fba98d2a9f366d48b94"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-originals/56e75704-1f83-4f58-8079-4bf709e238b0/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "30db325463f24d7a456d272ad22f402e7fd0486e3a09254387f501128cc6b4a8"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "acc0409f25c2eb994b309d83d4a6fa0a12b44f9ac37770f15a1672ae6deb4697"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "ebe850ee8147d53f2a4b90a5a4f56031186d3293b821d5c6441599d82a733868"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "f03a61719cc9eb937708ca85d92c6c9a1df165e315f0c8c6ab36655de1d46582"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "bf821192eac307ae8783a1e05a90d5fa6554c25f2a15627761d612b5d737aae0"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "a20e86e95288a7351e109a9e1e7fcb596f3a8995d385b664d4afea1e3e14d413"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "e728ebc8974b5de4612b294c49b3325596e1706e3008cf26b4e581e8e4c84141"
+    },
+    {
+      "path": "offline-storage-final-projections/registered/profile/.codex/config.toml.ocx-write.lock",
+      "bytes": 40,
+      "sha256": "d9124b5ec7f0db9b79808e0c92cde0e6e9b519d2e54cdbe4427382c928585805"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-originals/021354cf-5a9f-4faf-a812-f6cfc2d43d07/original.json",
+      "bytes": 1469,
+      "sha256": "e528faa8c3df2e0a62f9ffea7e0f854a94a7b8367a1dc2464fe5c94b2f02caae"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-originals/021354cf-5a9f-4faf-a812-f6cfc2d43d07/root-retirement-355f3130-8a2f-40d3-ba2c-b62d0dee98df-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "98463d8220a17ce536ff57785730316bb59fca735e61959032ca3d69667306f7"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-originals/021354cf-5a9f-4faf-a812-f6cfc2d43d07/root-retirement-355f3130-8a2f-40d3-ba2c-b62d0dee98df.json",
+      "bytes": 2073,
+      "sha256": "f6a2c96ada670aaced61df9be629ec59260efdea37a53952c5e7705f9f48f452"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-originals/021354cf-5a9f-4faf-a812-f6cfc2d43d07/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "cbc3c85fc352766f7dd8985bce1d4a7bc1d750c6841ed66fb8b5818ea9e94305"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "dbb425b90fad0cce06ee64f5d26cf6782e2aa74e243556975318bd9df9c47fed"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "0bf08eac3e0e947e63880642b6fcb853e38236835117276bf1d2085316042093"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "a373dcfbc9bd493699f541d47c03952f6249901b3ea591e68385570584eb0dd7"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "0a3bdec1f45838525c4977e20861fa5577bc67df4b864cf362404173423d82b1"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-final-projections/released/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "e0afcc257049f19f554aa08261c02d219401d15372b2254299fdaa3d992883af"
+    },
+    {
+      "path": "offline-storage-final-projections/released/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "c845cef4e51aeec334153d894068c5e67609e8035baddda2fd616010f5104907"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-originals/b7b43a80-af3b-428a-92d9-d26315af9be9/original.json",
+      "bytes": 1466,
+      "sha256": "b787ac9ce15ddcb23484cd0c5e935cbb17cc64a96ff10ce69435cc8be8e4d6b7"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-originals/b7b43a80-af3b-428a-92d9-d26315af9be9/root-retired-f8654431-7aa2-47e4-a62d-142cb0400621/config.toml.ocx-write.lock",
+      "bytes": 40,
+      "sha256": "372ecd4657c79b7ccc904dab13aacc8839fe7e0a0938d20910ed1fda12594974"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-originals/b7b43a80-af3b-428a-92d9-d26315af9be9/root-retirement-f8654431-7aa2-47e4-a62d-142cb0400621-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "a723d4f2871ef8ee164637d90c685f29a51c205255248a02a7ed432150053c49"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-originals/b7b43a80-af3b-428a-92d9-d26315af9be9/root-retirement-f8654431-7aa2-47e4-a62d-142cb0400621.json",
+      "bytes": 2072,
+      "sha256": "890bcd244773111cbfd9d03606e4eed7ce0e0889c8a47459c879fd4901685722"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-originals/b7b43a80-af3b-428a-92d9-d26315af9be9/startup-scope.json",
+      "bytes": 1214,
+      "sha256": "d754c10da472199c65acef3275fb4db5a2941c1fa8c425e330b7f3133f73d9c2"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "ea558311acfa395974ac15d054ca59f9e2db57f8293c62feb4f8ca3a2052f81d"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 410,
+      "sha256": "8ef4d4b3545dea26f98ea8e8d2e392c35ef7a8e4ed4720bb8b58a3ef8f9029c6"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "d8f35c6002dade5a72be634f3ee61fbb13ff16790d0bb628e70b93e849b3fee5"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 476,
+      "sha256": "1fb1d647c31c7ebc523ba10f8386451a5d7d11e4d84210108d3777abe78e0231"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-projections/after_native/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "eae3c19b7c4d5008d06f29e45c9f07f1f53472760920eb77d0cad6c3059155e0"
+    },
+    {
+      "path": "offline-storage-projections/after_native/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "a6ac7a103cda7db0a7d4825890a03f227b95d365f7467762902dc873e1d4744e"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-originals/9cd3e77f-27c9-4087-bf01-0b2861d5d2fb/original.json",
+      "bytes": 1469,
+      "sha256": "cc2385f66d2b39a1e908ec4eb7b49079eedde03bbbde5bacee491d20a63b67ef"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-originals/9cd3e77f-27c9-4087-bf01-0b2861d5d2fb/root-retirement-68c873ca-564b-4355-9897-74cacb574eaa-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "4db3ad63c01011aa22f6814faec9744bf6c7af4f6307dfa6e16f457b12b3e8c7"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-originals/9cd3e77f-27c9-4087-bf01-0b2861d5d2fb/root-retirement-68c873ca-564b-4355-9897-74cacb574eaa-Retire-readback.json",
+      "bytes": 1004,
+      "sha256": "7fad3740dc9c14456a80dc65ff4dde56d203fb2e653997c7f78ccaefee2ddd0b"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-originals/9cd3e77f-27c9-4087-bf01-0b2861d5d2fb/root-retirement-68c873ca-564b-4355-9897-74cacb574eaa.json",
+      "bytes": 2073,
+      "sha256": "deb219a6fec3e15f42df6bd24a408ae495cd0921893304a728a0edd6162ec28a"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-originals/9cd3e77f-27c9-4087-bf01-0b2861d5d2fb/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "ae3a05d9b553f2752f118bb3c13c9076f8eb5313cddf08ef77105773ed301327"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "94dcf0ff3894a42d113763fd1e02a32eb4b1aaee36ccab9b97f2cf854cf487ad"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "d881959a21fbecf94f6216d92c6cae979c78c4c4658a07305a0e9d654a07d6d1"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "cdb0e441fd1f37bc6c0b100f97a722b55103c7b48d84d7f330d0fa676afdf3ab"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "3e80c0580f22f92734d0b98d0f86e9a3058046eff9367b34bf201b32fe050fb2"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-projections/positive/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "62781d2c13c9b587591e88f474df5eaf09739e09134e6528f736c83ec9bbcaff"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-originals/6228716a-e6bd-4fcc-926d-0b332d405586/original.json",
+      "bytes": 1469,
+      "sha256": "b23bd6774b9bcdc900f2eacbfccf6c93176de33c35deda13aa59f081b4dcb7e1"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-originals/6228716a-e6bd-4fcc-926d-0b332d405586/root-retirement-e5b8e690-ed39-45a7-92b2-c131733a8b97-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "32aff60ad4e12c22c0ba031437be48243b7bb7aff569f6804fd675205391b66a"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-originals/6228716a-e6bd-4fcc-926d-0b332d405586/root-retirement-e5b8e690-ed39-45a7-92b2-c131733a8b97-Retire-readback.json",
+      "bytes": 1004,
+      "sha256": "72a23b8f7b47ff7ea7daaef8d39ef65d543e2a1f9dc446a40eb7389a4b74942a"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-originals/6228716a-e6bd-4fcc-926d-0b332d405586/root-retirement-e5b8e690-ed39-45a7-92b2-c131733a8b97.json",
+      "bytes": 2073,
+      "sha256": "4b84f0c43224803c1d577a830e8020f5b5776e73a1829f5b24273e3bf01edf2a"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-originals/6228716a-e6bd-4fcc-926d-0b332d405586/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "0e8d951cd2a30c8f0c14cc005d0c99e71c60ed63bfce8442541d3b2d1eadc000"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "7814dab6cbb36e8e6cf20760c74382f4326cd8a0911f869dfcd4560437263c30"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "88cbd1ab79662db58f19512a24eeb53b3aecd84dbde93f32de6cf7b4c5fa3d5b"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "34395c10f855e4c885621a8b2696979d844cc81bbf89adb8ad4a5cfebddb7095"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "2b270ab42ad4a81830587911db6cb188a89fa33f61216fffee6a424a6000a23c"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-projections/readback/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "d85db5d3ce6607397f31d234e4b8c5dec6cb8ee43ec148139b57bf10f1b57000"
+    },
+    {
+      "path": "offline-storage-projections/readback/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "8ccf6c48ea4ebd1f59f789db8e4849cd070b0123bd34fbd7dea363322709a633"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-originals/251d3a27-e057-4aaa-8247-8b8281346dbf/original.json",
+      "bytes": 1469,
+      "sha256": "48f97d80b37ed742e7e49492a95389a527a9a2df1a4860d875b7bbab93c33fbf"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-originals/251d3a27-e057-4aaa-8247-8b8281346dbf/root-retirement-13cd4d57-2b80-4659-850d-6bc1c56cd23b.json",
+      "bytes": 2073,
+      "sha256": "397455f1257bf923998d0863522025ad4d5f30ec578cb2ae6e3e49ca10dc6f22"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-originals/251d3a27-e057-4aaa-8247-8b8281346dbf/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "7ab2ecdeaac53ae336a2a6c9ab28aef776c1c28216845a1415fcc992f0609b9b"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "000b72d1712b28cfe9136ff1212ec07fc2e80e79b585291eb56c73f1f57c762b"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "a1f51597661fc586417a9ccab5bfd85d92843d7440c86b2c54c9444154a194fa"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "5f06e9034a97a5e5cdd2f68f8fc509ab365422553fdc30eac69690c84003bf26"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "2a3d217ab4427fe03987b93fd57aae5547b6ff75fc92ef1a024c69edf30d6dbe"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-projections/registered/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "2628cc52c2c5a47dc402c57f2970f661f5094244d131509dd7c0c2f384b86f37"
+    },
+    {
+      "path": "offline-storage-projections/registered/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "03ebdb88aa6e8a5f2bafe87ac9d4ca586ed8eabd03220be2045fa2c4858f9521"
+    },
+    {
+      "path": "offline-storage-projections/registered/profile/.codex/config.toml.ocx-write.lock",
+      "bytes": 40,
+      "sha256": "c08e06c19d74aa868affd20ac3b571bda6d48971b0a2d0f2be0020fb10b4bd0c"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-originals/cc8b6afd-1e1e-47e0-bdd2-00480078b04c/original.json",
+      "bytes": 1469,
+      "sha256": "951614803381a61490297ccd4bd6dfb3f9164520208efc41c58f2559a9b0f157"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-originals/cc8b6afd-1e1e-47e0-bdd2-00480078b04c/root-retirement-9e172fed-469e-4de4-b759-342e5e96b48f-Retire-intent.json",
+      "bytes": 120,
+      "sha256": "73a28e4d542cc0d5109c698de25685a292b3b02f239c7cc0f5488daeea9a70e8"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-originals/cc8b6afd-1e1e-47e0-bdd2-00480078b04c/root-retirement-9e172fed-469e-4de4-b759-342e5e96b48f.json",
+      "bytes": 2073,
+      "sha256": "e96b35de5ec2a480f6ea7b761cdb30237f30178fff48e3b4c967a6cbe45fdbfd"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-originals/cc8b6afd-1e1e-47e0-bdd2-00480078b04c/startup-scope.json",
+      "bytes": 1215,
+      "sha256": "f37148b52458d6bc3847f882f4e3a82e9887b51b564d9c96de17e14fd88a5acf"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-root-intent.json",
+      "bytes": 145,
+      "sha256": "f79708d41fd1a8afdfd459332571bc74b8ad2345ff292e028a041980200e7df0"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-root-reservation/created.json",
+      "bytes": 411,
+      "sha256": "cfa9ca788f3e41e1ec81957b0a2c1eaff9b12a66e03b82e0a49fa6d57820f722"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-root-reservation/intent.json",
+      "bytes": 707,
+      "sha256": "59f5f41f4e835c53a40a983b484f3f5e17e230f24db509311640d864f8d75b5d"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-root-reservation/published.json",
+      "bytes": 477,
+      "sha256": "b02010476ae5d5490b85808bdf029cc99c55458105b0ff6f7b0cfb491a113971"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-session-action.lock",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "offline-storage-projections/released/desktop/manager-state/client-session-index.sqlite",
+      "bytes": 16384,
+      "sha256": "9f4abcef35169bcd3246665726da12d62caec4e2f4513f2fb20ffe0b95268f8f"
+    },
+    {
+      "path": "offline-storage-projections/released/known-root-move.json",
+      "bytes": 1088,
+      "sha256": "216cff13585ba2f2afdad134fda412bd3f875e92cfe8626eeb40b96d9333a20b"
+    },
+    {
+      "path": "payload-storage.json",
+      "bytes": 2280,
+      "sha256": "5f980a0bc650b2f6c6467e3d4d2d312766cdf9ddce9ccde2cd0889315eadd0b2"
+    },
+    {
+      "path": "prearchive-cleanup-check.json",
+      "bytes": 588,
+      "sha256": "d306dd372d37f7d778739a1af1fefd33740c07414925a3c965abd633ff42714d"
+    },
+    {
+      "path": "readonly-review.json",
+      "bytes": 776,
+      "sha256": "c749cc36b4ce1ff6a6babb9d8bba494cf887f2708621161a9b771a96e4c91ebd"
+    },
+    {
+      "path": "retained-diagnostic-bytes.json",
+      "bytes": 98503,
+      "sha256": "a25873109c33a811285e34785680e21eb51d886caab028050d43adb1e16187bc"
+    },
+    {
+      "path": "root-transient-delivery-tests.json",
+      "bytes": 142,
+      "sha256": "c4a74cb2630453212cb2ca92fe0bb8ad0fa781123f61d13fec445abff56ac9e7"
+    },
+    {
+      "path": "root-transient-delivery-tests.log",
+      "bytes": 514744,
+      "sha256": "39607ac8e6cdf7fe445d3a5774fc1c08190153e7630a60001ea7c84c747815da"
+    },
+    {
+      "path": "root-transient-final-tests.json",
+      "bytes": 142,
+      "sha256": "a8939da356b44d74eda2a21d7b71815d39e97a5e7d16ee75c095c4386ef29054"
+    },
+    {
+      "path": "root-transient-final-tests.log",
+      "bytes": 514636,
+      "sha256": "f6242997125e39c5257818616a361d37c0f26bd574d2e581f3ee6372cc349c27"
+    },
+    {
+      "path": "root-transient-integrated-tests.json",
+      "bytes": 142,
+      "sha256": "379eeb2275c1ff9e1de315afadcc7ac7c13efe7db7fa98d569c32d95bb9e6e8d"
+    },
+    {
+      "path": "root-transient-integrated-tests.log",
+      "bytes": 514472,
+      "sha256": "b5fda89f4833f67f60bb201f9c5320c16e48398a5c24c26daf578f07f40556ef"
+    },
+    {
+      "path": "source-final.json",
+      "bytes": 1945,
+      "sha256": "87e126b9b1510f1302ee35350cb85a302f5796ea91141b45dfc04a1da90f5e72"
+    },
+    {
+      "path": "strict-clippy-delivery.json",
+      "bytes": 114,
+      "sha256": "55975c4e82776a19b0c5e04b8afc281a25850dd20e52f8fd494106bccbde2dcc"
+    },
+    {
+      "path": "strict-clippy-delivery.log",
+      "bytes": 198,
+      "sha256": "b829335583e9f511df2060bd8d34c11ea665ede91d9f1979860144abf9128df3"
+    },
+    {
+      "path": "strict-clippy-final.json",
+      "bytes": 114,
+      "sha256": "4b8b8e8332be6a98fe85385c9b996e11cbac6aea264146432b9af5fb68972a83"
+    },
+    {
+      "path": "strict-clippy-final.log",
+      "bytes": 198,
+      "sha256": "11bbb6661a6c602dee065f0627f1e8a04b508776509ac877e8a1d3aacde480a6"
+    },
+    {
+      "path": "strict-clippy.json",
+      "bytes": 114,
+      "sha256": "c9a247fc9d096bdbf6f5657d0d240e38d829d465c1f881769f2735e9cf95bac3"
+    },
+    {
+      "path": "strict-clippy.log",
+      "bytes": 198,
+      "sha256": "c95f38afa5a18f8513d61c6e4dc6b873f1cb8e79731600cea08dcd54b1ac8e4d"
+    },
+    {
+      "path": "transient-tests.json",
+      "bytes": 140,
+      "sha256": "81db72e96a2e3fc2e581e4af70e8ff72a4624d2f3f40862a6bfd89f2d59b9af7"
+    },
+    {
+      "path": "transient-tests.log",
+      "bytes": 186892,
+      "sha256": "f108c856992e86a5f4e4b6e007d2c9d1639b74c367ab4222c73edce4cd708f0d"
+    },
+    {
+      "path": "verified-delivery.json",
+      "bytes": 252,
+      "sha256": "176622c8690861fa34540404fd5459f9d267d0c8022e8148bdc40a337e52ceca"
+    },
+    {
+      "path": "verified-native-delivery.json",
+      "bytes": 779,
+      "sha256": "3d74f20ee405f8f384df6d657f06030b879a5c3bbb8c2c85afd06456d9261111"
+    },
+    {
+      "path": "verified-native.json",
+      "bytes": 771,
+      "sha256": "9e495f786e9d719ea8d6b9d85a7c95e2390ebd2da91627c1b9b3608b92ba0fb9"
+    },
+    {
+      "path": "verified-storage-delivery.json",
+      "bytes": 1757,
+      "sha256": "3416383376befba311de9cd45a9657fd6b81ba8d99152dbd475c53eb6b1422fd"
+    },
+    {
+      "path": "verified-storage-final.json",
+      "bytes": 1757,
+      "sha256": "3416383376befba311de9cd45a9657fd6b81ba8d99152dbd475c53eb6b1422fd"
+    },
+    {
+      "path": "verified-storage.json",
+      "bytes": 1757,
+      "sha256": "3416383376befba311de9cd45a9657fd6b81ba8d99152dbd475c53eb6b1422fd"
+    },
+    {
+      "path": "verify_all.py",
+      "bytes": 2071,
+      "sha256": "7dad9fd4d16f759c1c80a701f1365b11271f11b56105fed279d070c9d3fea8a6"
+    },
+    {
+      "path": "verify_native.py",
+      "bytes": 4448,
+      "sha256": "a843c02e81be2a98ada77c6d238460283692de89a7664e67520e7d9e9fbb9790"
+    },
+    {
+      "path": "verify_native_delivery.py",
+      "bytes": 4473,
+      "sha256": "3dfc3002e0d0842e1da101db6ba05fc811b982adf19dfea4aee526113034337c"
+    },
+    {
+      "path": "verify_storage.py",
+      "bytes": 3937,
+      "sha256": "3a0ae95266c2fed119ec05b31a2611d3651ccfcff1f7c7088d24992b22805a67"
+    },
+    {
+      "path": "verify_storage_delivery.py",
+      "bytes": 3953,
+      "sha256": "d5e64b724bc17a2dd4ec1d4fc4c82dfe03fae30cd8f555995eedf04ab305a49f"
+    },
+    {
+      "path": "verify_storage_final.py",
+      "bytes": 3944,
+      "sha256": "605fe962ae06a39083e4f723332b8a62d4bc1af8dff1246a8f047189ef8dd458"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "accepted": false,
+  "payloads": [
+    {
+      "originalPath": "official-corrected/root-transient-original-bytes.json",
+      "originalBytes": 6972423,
+      "originalSha256": "d9a4e99db39c5448937890f7b603ab3e5b506981e59c158d0e3922af790b5af7",
+      "storedPath": "official-corrected/root-transient-original-bytes.json.gz",
+      "storedBytes": 2323039,
+      "storedSha256": "1eb48b01a8afa7c9c14f27ad89c70e83db7a31b6e3e781da0d6f2c5c17385780",
+      "losslessRoundTripVerified": true
+    },
+    {
+      "originalPath": "official-late/root-transient-original-bytes.json",
+      "originalBytes": 6972199,
+      "originalSha256": "e893787bf57d54b31ad95f59e95f13bb919fe052d2c0fceaed841181e264e3f0",
+      "storedPath": "official-late/root-transient-original-bytes.json.gz",
+      "storedBytes": 2323108,
+      "storedSha256": "8aee181cad4d56b40741cb830086c48f80f4f50fa9d703034645e384546c2b2a",
+      "losslessRoundTripVerified": true
+    },
+    {
+      "originalPath": "official-delivery/root-transient-original-bytes.json",
+      "originalBytes": 6972429,
+      "originalSha256": "a67f90866951a74287d7c61d53e31b76ad1decdf27e249c3b438d2f68a957c58",
+      "storedPath": "official-delivery/root-transient-original-bytes.json.gz",
+      "storedBytes": 2323067,
+      "storedSha256": "1dcbc58583e431e731e75ad0bfcc4124005cbd3e81dd11f19772e00bf7dba36b",
+      "losslessRoundTripVerified": true
+    },
+    {
+      "originalPath": "official-delivery-late/root-transient-original-bytes.json",
+      "originalBytes": 6972339,
+      "originalSha256": "ddc1cb5be7c606603e404906b151e8dad7869b6f38359388c7cdd78647d9954f",
+      "storedPath": "official-delivery-late/root-transient-original-bytes.json.gz",
+      "storedBytes": 2323147,
+      "storedSha256": "de8adc3995b21189a25eacee6b2a030900be045fbc01327d9865ebade5370b92",
+      "losslessRoundTripVerified": true
+    }
+  ],
+  "derivedCacheCopiesRemoved": [
+    "offline-native-projections/official-corrected/profile/Library/Caches/bun",
+    "offline-native-projections/official-late/profile/Library/Caches/bun",
+    "offline-native-delivery-projections/official-delivery-late/profile/Library/Caches/bun",
+    "offline-native-delivery-projections/official-delivery/profile/Library/Caches/bun"
+  ],
+  "allOriginalPayloadBytesPreserved": true
+}

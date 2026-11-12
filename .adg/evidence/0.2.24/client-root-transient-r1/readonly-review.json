@@ -1,0 +1,9 @@
+{
+  "accepted": false,
+  "agentId": "01a1d0eb-6078-79e0-802f-3e08997c58bc",
+  "scope": "Static read-only review only, no code edits/tests/native processes",
+  "finding": "after_native reanchor could fail before conflict record; isolate inode-negative retained file outside client tree",
+  "resolution": "Identify and create-only record actual moved replacement before successful reanchor; retain normal authority check before compensation, refuse and preserve on unknown. Add after-final-check injection and real Guard/NativeLease late case; inode test retained object outside client tree.",
+  "finalStaticReview": "No additional blocking finding in reviewed diff; later explicit live Original comparison has its own final regression/native evidence.",
+  "agentClosed": true
+}
