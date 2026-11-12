@@ -5,7 +5,7 @@ import { lstatSync, readFileSync, realpathSync, writeSync,openSync,closeSync,fst
 import { join, isAbsolute } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-const schema='ocxd-client-coordination/1';
+const schema='ocxd-client-coordination/2';
 let stage='input', acquired=false, released=false;
 let params;
 const safePath=p=>typeof p==='string'&&isAbsolute(p)&&!/[\x00-\x1f\x7f]/.test(p);
@@ -53,21 +53,22 @@ try {
   if(declaration.name!=='@bitkyc08/opencodex'||declaration.version!=='2.99.0')throw Error('wrong-official-version');
   stage='imports';
   const imp=relative=>import(pathToFileURL(join(p.packageRoot,'src',relative)).href);
-  const [{resolveNativeProfileContext},{withNativeMainExclusiveClaim},{openCodexCoordinatorTransaction},user,{withCatalogWriteSerialization}]=await Promise.all([
-    imp('codex/native-profile-store.ts'),imp('codex/native-main-claim.ts'),imp('codex/transition-state.ts'),imp('codex/user-identity.ts'),imp('codex/catalog-write-serialization.ts')]);
+  const [{resolveNativeProfileContext},{withNativeMainExclusiveClaim},{openCodexCoordinatorTransaction},user,{withCatalogWriteSerialization},{withClientLifecycleSync}]=await Promise.all([
+    imp('codex/native-profile-store.ts'),imp('codex/native-main-claim.ts'),imp('codex/transition-state.ts'),imp('codex/user-identity.ts'),imp('codex/catalog-write-serialization.ts'),imp('client/lifecycle-lock.ts')]);
   stage='context';
   const context=resolveNativeProfileContext();
   if(context.codexHome!==p.codexHome||context.configDir!==p.opencodexHome)throw Error('context-mismatch');
   const uid=user.resolveEffectiveUserIdentity();
   const npath=user.resolveCodexCoordinatorDatabasePath(uid,context.codexHome);
   const kpath=user.resolveCodexCatalogSerializationDatabasePath(uid,context.codexHome);
+  const lpath=join(user.resolveEffectiveUserRuntimeRoot(uid),'client-desktop-lifecycle.sqlite');
   const claim=join(p.codexHome,'.opencodex-native-main.claim.sqlite');
   // Refuse an unsafe existing file before an official primitive might narrow
   // its mode. Never repair an old object's permissions on Desktop's behalf.
-  for(const path of [claim,npath,kpath])for(const suffix of ['','-journal','-wal','-shm'])optionalLock(path+suffix);
+  for(const path of [claim,npath,lpath,kpath])for(const suffix of ['','-journal','-wal','-shm'])optionalLock(path+suffix);
   const expectedHash=createHash('sha256').update(JSON.stringify([p.packageRoot,p.profile,p.codexHome,p.opencodexHome])).digest('hex');
   let locks,owner;
-  const paths=[claim,npath,kpath];
+  const paths=[claim,npath,lpath,kpath];
   stage='claim';
   await withNativeMainExclusiveClaim(context,async()=>{
     // The official constructor initializes a clean first-use database inside
@@ -80,10 +81,12 @@ try {
     stage='native';const n=openCodexCoordinatorTransaction(npath);
     const nativeBefore=n.version();let nativeCommitted=false;
     try {
-      stage='catalog';
-      const result=withCatalogWriteSerialization(context.codexHome,()=>{
+      stage='lifecycle';
+      const result=withClientLifecycleSync(()=>{
+        stage='catalog';
+        return withCatalogWriteSerialization(context.codexHome,()=>{
         acquired=true;stage='held';
-        locks=[claim,npath,kpath].map(identity);
+        locks=paths.map(identity);
         owner=ownerReceipt(context.codexHome);
         const expires=performance.now()+p.holdMs;
         emit({schema,kind:'held',operation:p.operation,pid:process.pid,contextSha256:expectedHash,locks,paths,owner});
@@ -101,9 +104,10 @@ try {
         }
         if(!released)throw Error('hold-deadline');
         n.assertStablePath();
-        if([claim,npath,kpath].map(identity).some((value,i)=>!same(value,locks[i])))throw Error('lock-replaced');
+        if(paths.map(identity).some((value,i)=>!same(value,locks[i])))throw Error('lock-replaced');
         if(ownerReceipt(context.codexHome)!==owner)throw Error('owner-journal-changed');
-      },{intent:'restore',writer:'codex-restore'});
+        },{intent:'restore',writer:'codex-restore'});
+      });
       if(result.kind!=='completed')throw Error('catalog-refused');
       if(freshNative){
         const current=n.version();
@@ -114,7 +118,7 @@ try {
   },{waitMs:0});
   // Emitted only after every official callback's finally has released its lock.
   stage='released';
-  const final=[claim,npath,kpath].map(identity);
+  const final=paths.map(identity);
   if(final.some((value,i)=>!same(value,locks[i])))throw Error('lock-replaced');
   emit({schema,kind:'released',operation:p.operation,pid:process.pid,contextSha256:expectedHash,locks:final,paths,owner});
 }catch {

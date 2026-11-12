@@ -20,6 +20,7 @@ impl Fixture {
         let paths = [
             client.join(".opencodex-native-main.claim.sqlite"),
             root.join("native.sqlite"),
+            root.join("lifecycle.sqlite"),
             root.join("catalog.sqlite"),
         ];
         for path in &paths {
@@ -71,7 +72,7 @@ impl Fixture {
 
 /// A separate real OS process probes SQLite, because another connection in the
 /// same process cannot prove fcntl exclusion against an official writer.
-pub(super) fn external_probe(paths: &[PathBuf; 3], blocked: bool) {
+pub(super) fn external_probe(paths: &[PathBuf; 4], blocked: bool) {
     let output=Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::official_client_coordination::native::tests::external_native_sqlite_probe","--nocapture"]).env("OCXD_NATIVE_SQLITE_PATHS",serde_json::to_string(paths).unwrap()).env("OCXD_NATIVE_SQLITE_BLOCKED",if blocked{"1"}else{"0"}).output().unwrap();
     assert!(
         output.status.success(),
@@ -79,12 +80,54 @@ pub(super) fn external_probe(paths: &[PathBuf; 3], blocked: bool) {
         String::from_utf8_lossy(&output.stderr)
     );
 }
+
+fn official_writer_probe(
+    context: &Context,
+    selected: &program_selection::SelectedProgram,
+    root: &Path,
+    expected: &str,
+) {
+    let script = include_str!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/../../../test/official299-native/catalog-writer-exclusion.mjs"
+    ));
+    let result = Command::new(&selected.paths.bun)
+        .args(["--eval", script, "--"])
+        .arg(selected.paths.package_root.join(PACKAGE_SUBPATH))
+        .arg(&context.opencodex_home)
+        .arg(&context.codex_home)
+        .arg(expected)
+        .env_clear()
+        .env("HOME", &context.user_profile)
+        .env("CODEX_HOME", &context.codex_home)
+        .env("OPENCODEX_HOME", &context.opencodex_home)
+        .env("PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
+        .current_dir(root)
+        .output()
+        .unwrap();
+    fs::write(
+        root.join(format!("official-writers-{expected}.stdout.log")),
+        &result.stdout,
+    )
+    .unwrap();
+    fs::write(
+        root.join(format!("official-writers-{expected}.stderr.log")),
+        &result.stderr,
+    )
+    .unwrap();
+    assert!(
+        result.status.success(),
+        "official writer {expected} probe failed; retained original output"
+    );
+    let value: serde_json::Value = serde_json::from_slice(&result.stdout).unwrap();
+    assert_eq!(value["expected"], expected);
+}
 #[test]
 fn external_native_sqlite_probe() {
     let Some(paths) = std::env::var_os("OCXD_NATIVE_SQLITE_PATHS") else {
         return;
     };
-    let paths: [PathBuf; 3] = serde_json::from_str(paths.to_str().unwrap()).unwrap();
+    let paths: [PathBuf; 4] = serde_json::from_str(paths.to_str().unwrap()).unwrap();
     let blocked = std::env::var("OCXD_NATIVE_SQLITE_BLOCKED").unwrap() == "1";
     for path in &paths {
         assert!(path.is_absolute());
@@ -181,6 +224,45 @@ fn an_existing_competing_writer_refuses_without_retries_or_changed_budget() {
 }
 
 #[test]
+fn lifecycle_writer_contention_and_identity_changes_refuse_without_repair() {
+    for case in ["busy", "mode", "substitution"] {
+        let f = Fixture::new();
+        let path = &f.record.paths[2];
+        let connection = if case == "busy" {
+            let c = rusqlite::Connection::open(path).unwrap();
+            c.execute_batch("BEGIN IMMEDIATE").unwrap();
+            Some(c)
+        } else {
+            if case == "mode" {
+                fs::set_permissions(path, fs::Permissions::from_mode(0o644)).unwrap();
+            } else {
+                let saved = path.with_extension("saved");
+                fs::rename(path, &saved).unwrap();
+                fs::copy(saved, path).unwrap();
+            }
+            None
+        };
+        assert!(acquire(
+            &f.context,
+            &f.record,
+            Instant::now() + Duration::from_secs(2),
+            &|_| Ok(())
+        )
+        .is_err());
+        if case == "mode" {
+            assert_eq!(
+                fs::metadata(path).unwrap().permissions().mode() & 0o777,
+                0o644
+            );
+        }
+        if let Some(c) = connection {
+            c.execute_batch("ROLLBACK").unwrap();
+            c.close().unwrap();
+        }
+    }
+}
+
+#[test]
 fn substituted_lock_and_unsafe_mode_are_refused_without_repair_or_callback() {
     for unsafe_mode in [false, true] {
         let f = Fixture::new();
@@ -231,7 +313,7 @@ fn admitted_journal_fingerprint_cannot_be_rebased_after_helper_release() {
 }
 
 #[test]
-fn ownership_file_change_while_held_is_rejected_without_dropping_the_three_locks() {
+fn ownership_file_change_while_held_is_rejected_without_dropping_the_four_locks() {
     let f = Fixture::new();
     let mut lease = acquire(
         &f.context,
@@ -427,6 +509,13 @@ fn official299_native_handover_holds_through_work_and_preserves_original_ownersh
         "official private coordinator init failed; see retained stderr"
     );
     fs::write(client.join("opencodex-journal.json"), &owner).unwrap();
+    for (name, bytes) in [
+        ("models_cache.json", b"{\"models\":[]}\n".as_slice()),
+        ("opencodex-catalog-audit.jsonl", b"".as_slice()),
+    ] {
+        fs::write(client.join(name), bytes).unwrap();
+        fs::set_permissions(client.join(name), fs::Permissions::from_mode(0o600)).unwrap();
+    }
     let runtime = crate::modules::runtime::RuntimeHandle::initialize_versioned(&data, &program);
     let context = Context {
         runtime,
@@ -457,11 +546,13 @@ fn official299_native_handover_holds_through_work_and_preserves_original_ownersh
                 namespace
                     .join("native-write-locks")
                     .join(format!("{hash}.sqlite")),
+                namespace.join("client-desktop-lifecycle.sqlite"),
                 namespace
                     .join("catalog-write-locks")
                     .join(format!("{hash}.sqlite")),
             ];
             external_probe(&paths, true);
+            official_writer_probe(&context, &selected, &root, "blocked");
             let originals =
                 crate::infrastructure::macos_client_originals::Originals::begin(&data, &client)
                     .map_err(io)?;
@@ -503,6 +594,9 @@ fn official299_native_handover_holds_through_work_and_preserves_original_ownersh
     report["snapshotReadsDidNotReleaseLocks"] = serde_json::json!(true);
     report["nativeConnectionsReleasedBeforeRawFdPins"] = serde_json::json!(true);
     report["originalOwnershipBytesPreserved"] = serde_json::json!(true);
+    official_writer_probe(&context, &selected, &root, "released");
+    report["officialKAndLWriterCallbacksBlockedWhileNativeHeld"] = serde_json::json!(true);
+    report["officialWritersSucceedAfterNativeRelease"] = serde_json::json!(true);
     report["result"] = serde_json::json!("passed");
     write(&report);
     println!("OFFICIAL299_NATIVE_HANDOVER {report}");

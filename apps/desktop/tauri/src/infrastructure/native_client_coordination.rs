@@ -1,6 +1,6 @@
 //! The mutation owner retains the original SQLite locks in THIS process.
 //! Official admission/initialization is first performed unchanged by the
-//! existing helper. A gap during handover grants no authority: all three file
+//! existing helper. A gap during handover grants no authority: all four file
 //! generations and the official-owned journal receipt must match after native
 //! acquisition. Nothing recreates a database or writes a copied schema.
 use super::*;
@@ -52,7 +52,7 @@ impl NativeLease {
         if ownership_receipt(&self.client).map_err(io)? != self.owner {
             return Err(fail("client_native_coordination_owner_changed"));
         }
-        if self.connections.len() != 3
+        if self.connections.len() != 4
             || self
                 .connections
                 .iter()
@@ -154,7 +154,7 @@ fn acquire(
         active: Cell::new(true),
         _not_send_or_sync: PhantomData,
     };
-    // Exact official claim -> N -> K databases and transaction strengths;
+    // Exact official claim -> N -> L -> K databases and transaction strengths;
     // callbacks never run after partial acquisition and no busy wait is added.
     for (i, path) in admission.paths.iter().enumerate() {
         if Instant::now() >= deadline {

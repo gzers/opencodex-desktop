@@ -3,7 +3,7 @@ use serde_json::json;
 use std::os::unix::fs::{DirBuilderExt, MetadataExt, PermissionsExt};
 
 fn message(kind: &str) -> Vec<u8> {
-    serde_json::to_vec(&json!({"schema":SCHEMA,"kind":kind,"operation":"fd510ba0-ec79-47cf-8456-ac2efaa87ce3","pid":42,"contextSha256":"a".repeat(64),"locks":[{"device":"1","inode":"2"},{"device":"1","inode":"3"},{"device":"1","inode":"4"}],"paths":["/private/claim.sqlite","/private/native.sqlite","/private/catalog.sqlite"],"owner":"absent"})).unwrap()
+    serde_json::to_vec(&json!({"schema":SCHEMA,"kind":kind,"operation":"fd510ba0-ec79-47cf-8456-ac2efaa87ce3","pid":42,"contextSha256":"a".repeat(64),"locks":[{"device":"1","inode":"2"},{"device":"1","inode":"3"},{"device":"1","inode":"4"},{"device":"1","inode":"5"}],"paths":["/private/claim.sqlite","/private/native.sqlite","/private/lifecycle.sqlite","/private/catalog.sqlite"],"owner":"absent"})).unwrap()
 }
 
 #[test]
@@ -27,12 +27,27 @@ fn bounded_fixed_coordination_protocol_rejects_unknown_duplicate_and_bad_lock_id
         record(br#"{"schema":"ocxd-client-coordination/1","kind":"held","kind":"released"}"#)
             .is_err()
     );
+    let mut old: serde_json::Value = serde_json::from_slice(&message("held")).unwrap();
+    old["schema"] = json!("ocxd-client-coordination/1");
+    assert!(record(&serde_json::to_vec(&old).unwrap()).is_err());
+    old["schema"] = json!(SCHEMA);
+    old["locks"].as_array_mut().unwrap().remove(2);
+    old["paths"].as_array_mut().unwrap().remove(2);
+    assert!(record(&serde_json::to_vec(&old).unwrap()).is_err());
 }
 
 #[test]
 fn failure_protocol_retains_only_fixed_stages_not_upstream_payloads() {
     for stage in [
-        "input", "imports", "context", "claim", "native", "catalog", "held", "released",
+        "input",
+        "imports",
+        "context",
+        "claim",
+        "native",
+        "lifecycle",
+        "catalog",
+        "held",
+        "released",
     ] {
         let bytes=serde_json::to_vec(&json!({"schema":SCHEMA,"kind":"failed","stage":stage,"acquired":false,"released":false})).unwrap();
         assert!(

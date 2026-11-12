@@ -1,4 +1,4 @@
-//! Bounded, scoped official 2.99 claim -> N -> K coordination. This does not
+//! Bounded, scoped official 2.99 claim -> N -> L -> K coordination. This does not
 //! grant native service ownership or authorize client file compensation.
 //! No official module is patched, copied or substituted with another lock.
 use super::{macos_client_originals::PinnedDirectory, runtime_executable::SharedRuntimeExecutable};
@@ -21,7 +21,7 @@ use std::{
     time::{Duration, Instant},
 };
 const HELPER: &str = include_str!("client_coordination299.mjs");
-const SCHEMA: &str = "ocxd-client-coordination/1";
+const SCHEMA: &str = "ocxd-client-coordination/2";
 const MAX_HOLD: Duration = Duration::from_millis(2000);
 const MAX_RECORD: usize = 2048;
 #[path = "native_client_coordination.rs"]
@@ -70,8 +70,8 @@ struct Record {
     operation: String,
     pid: u32,
     context_sha256: String,
-    locks: [LockIdentity; 3],
-    paths: [PathBuf; 3],
+    locks: [LockIdentity; 4],
+    paths: [PathBuf; 4],
     owner: String,
 }
 fn record(bytes: &[u8]) -> AppResult<Record> {
@@ -93,6 +93,7 @@ fn record(bytes: &[u8]) -> AppResult<Record> {
             Some("context") => "client_coordination_context",
             Some("claim") => "client_coordination_claim",
             Some("native") => "client_coordination_native",
+            Some("lifecycle") => "client_coordination_lifecycle",
             Some("catalog") => "client_coordination_catalog",
             Some("held") => "client_coordination_held",
             Some("released") => "client_coordination_release",
