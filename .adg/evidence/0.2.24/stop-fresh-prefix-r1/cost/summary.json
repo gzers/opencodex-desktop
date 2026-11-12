@@ -1,0 +1,65 @@
+{
+  "accepted": false,
+  "headRevision": 6,
+  "readOnly": true,
+  "rows": [
+    {
+      "ms": 15,
+      "name": "index_observe"
+    },
+    {
+      "ms": 117,
+      "name": "originals_open"
+    },
+    {
+      "ms": 104,
+      "name": "full_prefix",
+      "progress": [
+        {
+          "cumulativeMs": 15,
+          "phase": "original"
+        },
+        {
+          "cumulativeMs": 46,
+          "phase": "ready"
+        },
+        {
+          "cumulativeMs": 79,
+          "phase": "pre_stop"
+        },
+        {
+          "cumulativeMs": 104,
+          "phase": "stopped"
+        }
+      ]
+    },
+    {
+      "ms": 145,
+      "name": "pending_open"
+    },
+    {
+      "ms": 273,
+      "name": "pending_review"
+    },
+    {
+      "ms": 22,
+      "name": "current_full_trees"
+    },
+    {
+      "ms": 202,
+      "name": "session_open"
+    },
+    {
+      "ms": 69,
+      "name": "scope_live"
+    },
+    {
+      "ms": 242,
+      "name": "full_current_owner"
+    },
+    {
+      "ms": 550,
+      "name": "finalization_fingerprint"
+    }
+  ]
+}
