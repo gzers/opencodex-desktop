@@ -521,7 +521,9 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
         preview::{inspect_preview, Evidence as PreviewEvidence, Status},
         Index, State,
     };
-    for originally_absent_config in [false, true] {
+    for first_use_kind in 0..4 {
+        let originally_absent_config = first_use_kind % 2 == 1;
+        let new_grok_backup = first_use_kind >= 2;
         for prefix_count in [3, 2, 1] {
             let recovery_observed = prefix_count < 3;
             let f = Fixture::new();
@@ -545,6 +547,13 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
                 ".opencodex-native-main.owner.sqlite",
             ] {
                 write(name, b"");
+            }
+            let grok = f.context.working_directory.join(".grok");
+            if new_grok_backup {
+                fs::DirBuilder::new().mode(0o700).create(&grok).unwrap();
+                fs::write(grok.join("config.toml"), b"grok='original'\n").unwrap();
+                fs::set_permissions(grok.join("config.toml"), fs::Permissions::from_mode(0o600))
+                    .unwrap();
             }
             let index = Index::open(&f.context, &f.data, &f.client).unwrap();
             let first = index.reserve_start().unwrap();
@@ -571,6 +580,13 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
                 ),
             );
             write(NAMES[2], &event("startup-cache", "cache", "cache"));
+            if new_grok_backup {
+                fs::copy(
+                    grok.join("config.toml"),
+                    grok.join("config.toml.bak-opencodex"),
+                )
+                .unwrap();
+            }
             let ready_sha = session.originals.seal(Phase::Ready).unwrap();
             let live = Live {
                 schema_version: 1,
@@ -782,6 +798,13 @@ fn rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start() {
             assert!(index.close_rolled_back(&rearmed, &proof).is_err());
             let restored = index.close_restored(&rearmed, &proof).unwrap();
             assert_eq!(restored.revision, 9 - offset);
+            if new_grok_backup {
+                assert!(!grok.join("config.toml.bak-opencodex").exists());
+                assert_eq!(
+                    fs::read(grok.join("config.toml")).unwrap(),
+                    b"grok='original'\n"
+                );
+            }
             if originally_absent_config {
                 assert!(!f.client.join("config.toml").exists());
             } else {

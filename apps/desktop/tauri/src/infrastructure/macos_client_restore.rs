@@ -1,5 +1,5 @@
 //! Native reversible publication of the assessed artifacts and, when admitted,
-//! one originally absent first-use Codex config. All targets share the same
+//! originally absent first-use Codex config and Grok backup. All targets share the same
 //! native-object review, conflict preservation and immutable outcome.
 //! Ordinary current-session calls require borrowed original Stop/pair/lease
 //! authority. Content assessment or private journals alone cannot mint it.
@@ -12,8 +12,18 @@ use crate::modules::runtime::client_artifact_policy as policy;
 #[path = "macos_client_empty_config.rs"]
 mod empty_config;
 use empty_config::{EmptyConfig, History as ConfigHistory};
+#[path = "macos_client_grok_backup.rs"]
+mod grok_backup;
+use grok_backup::{GrokBackup, History as GrokHistory};
+struct Histories {
+    config: ConfigHistory,
+    grok: GrokHistory,
+}
+
 fn target_name(i: usize) -> io::Result<&'static str> {
-    if i == 3 {
+    if i == 4 {
+        Ok("config.toml.bak-opencodex")
+    } else if i == 3 {
         Ok("config.toml")
     } else {
         NAMES
@@ -48,6 +58,16 @@ impl<'a> MutationPermit<'a> {
         Self {
             authority: Authority::Explicit(authority),
         }
+    }
+    fn grok_write_guard(
+        &self,
+    ) -> io::Result<crate::infrastructure::official_client_coordination::native::config::Guard<'_>>
+    {
+        match &self.authority {
+            Authority::Current(a) => a.grok_write_guard(),
+            Authority::Explicit(a) => a.grok_write_guard(),
+        }
+        .map_err(|_| denied("official Grok writer exclusion unavailable"))
     }
     fn config_write_guard(
         &self,
@@ -105,6 +125,8 @@ struct Plan {
     recovery_observation: Option<RecoveryObservation>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     empty_config: Option<EmptyConfig>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    grok_backup: Option<GrokBackup>,
     id: String,
     attempt: String,
     phases: Vec<String>,
@@ -113,11 +135,17 @@ struct Plan {
     evidence: Evidence,
 }
 impl Plan {
+    #[cfg(test)]
     fn count(&self) -> usize {
-        3 + usize::from(self.empty_config.is_some())
+        3 + usize::from(self.empty_config.is_some()) + usize::from(self.grok_backup.is_some())
+    }
+    fn indices(&self) -> impl Iterator<Item = usize> {
+        (0..3)
+            .chain(self.empty_config.as_ref().map(|_| 3))
+            .chain(self.grok_backup.as_ref().map(|_| 4))
     }
     fn kind(&self, i: usize) -> Kind {
-        if i == 3 {
+        if i >= 3 {
             Kind::Remove
         } else {
             self.kinds[i]
@@ -510,12 +538,14 @@ fn read_plan_depth(
             plan.schema_version,
             plan.journal_stages,
             plan.recovery_observation.is_some(),
-            plan.empty_config.is_some()
+            plan.empty_config.is_some(),
+            plan.grok_backup.is_some()
         ),
-        (1, false, false, false)
-            | (3, true, false, false)
-            | (4, true, true, false)
-            | (5, true, _, true)
+        (1, false, false, false, false)
+            | (3, true, false, false, false)
+            | (4, true, true, false, false)
+            | (5, true, _, true, false)
+            | (6, true, _, _, true)
     ) || plan.id != id
         || plan.attempt != originals.attempt
     {
@@ -532,6 +562,7 @@ pub struct Pending<'a> {
     object_id: String,
     journal_stages: bool,
     empty_config: bool,
+    grok_root: Option<PinnedDirectory>,
 }
 /// Read-only assessment; this never grants replay authority.
 pub(super) struct RecoveryReview {
@@ -545,9 +576,10 @@ impl<'a> Pending<'a> {
         originals: &Originals,
         evidence: &Evidence,
     ) -> io::Result<String> {
-        let (captures, phases, config) = Self::captures(originals)?;
+        let (captures, phases, history) = Self::captures(originals)?;
         let decisions = kinds(&captures, evidence)?;
-        let empty_config = config.capture(&originals.client)?;
+        let empty_config = history.config.capture(&originals.client)?;
+        let grok_backup = history.grok.capture(&originals.profile)?;
         let current = Capture::read(&originals.client)?;
         if current != captures[3] {
             return Err(denied(
@@ -560,6 +592,7 @@ impl<'a> Pending<'a> {
             phases,
             decisions,
             empty_config,
+            grok_backup,
             current,
             &evidence.declared_routes,
             &evidence.retained_pids,
@@ -646,7 +679,7 @@ impl<'a> Pending<'a> {
                 rename(
                     self.staging(),
                     &stage,
-                    &self.originals.client,
+                    self.target(i)?,
                     target_name(i)?,
                     libc::RENAME_SWAP,
                 )?;
@@ -661,7 +694,7 @@ impl<'a> Pending<'a> {
                 rename(
                     self.staging(),
                     &stage,
-                    &self.originals.client,
+                    self.target(i)?,
                     target_name(i)?,
                     libc::RENAME_EXCL,
                 )?;
@@ -674,7 +707,7 @@ impl<'a> Pending<'a> {
                 rename(
                     self.staging(),
                     &stage,
-                    &self.originals.client,
+                    self.target(i)?,
                     target_name(i)?,
                     libc::RENAME_EXCL,
                 )?;
@@ -760,6 +793,77 @@ impl<'a> Pending<'a> {
     pub fn sha256(&self) -> &str {
         &self.sha256
     }
+    fn grok_root_for(originals: &Originals, plan: &Plan) -> io::Result<Option<PinnedDirectory>> {
+        plan.grok_backup
+            .as_ref()
+            .map(|backup| {
+                originals.profile.recheck()?;
+                let root = PinnedDirectory::open(&originals.profile.path().join(".grok"))?;
+                if root.identity() != &backup.root
+                    || root.identity().device != originals.directory.identity().device
+                {
+                    return Err(denied("backup root changed or cross-volume"));
+                }
+                Ok(root)
+            })
+            .transpose()
+    }
+    fn target(&self, i: usize) -> io::Result<&PinnedDirectory> {
+        if i == 4 {
+            let root = self
+                .grok_root
+                .as_ref()
+                .ok_or_else(|| denied("backup target unavailable"))?;
+            self.originals.profile.recheck()?;
+            root.recheck()?;
+            Ok(root)
+        } else {
+            Ok(&self.originals.client)
+        }
+    }
+    pub(super) fn grok_remainder_matches(
+        &self,
+        original: &GrokSnapshot,
+        current: &GrokSnapshot,
+    ) -> bool {
+        if self.grok_root.is_some() {
+            original.backup_remainder_matches(current)
+        } else {
+            original.restored_matches(current)
+        }
+    }
+    pub(super) fn grok_preplan_matches(
+        originals: &Originals,
+        head: &session_index::Head,
+        original: &GrokSnapshot,
+        current: &GrokSnapshot,
+    ) -> io::Result<bool> {
+        let history = if head.state == session_index::State::Stopped {
+            Self::captures(originals)?.2.grok
+        } else {
+            let missing = head.state == session_index::State::Ready;
+            if !missing && head.state != session_index::State::StopPrepared {
+                return Ok(false);
+            }
+            let frames = originals.frames_through(if missing {
+                Phase::Ready
+            } else {
+                Phase::PreStop
+            })?;
+            GrokHistory::new(
+                &frames[0].0.grok,
+                &frames[1].0.grok,
+                if missing {
+                    None
+                } else {
+                    Some(&frames[2].0.grok)
+                },
+                current,
+            )?
+        };
+        Ok(history.capture(&originals.profile)?.is_some()
+            && original.backup_remainder_matches(current))
+    }
     pub(super) fn object_id(&self) -> &str {
         &self.object_id
     }
@@ -792,7 +896,7 @@ impl<'a> Pending<'a> {
             return Ok(false);
         }
         let config = if head.state == session_index::State::Stopped {
-            Self::captures(originals)?.2
+            Self::captures(originals)?.2.config
         } else {
             let missing_pre = head.state == session_index::State::Ready;
             if !missing_pre && head.state != session_index::State::StopPrepared {
@@ -882,9 +986,10 @@ impl<'a> Pending<'a> {
             originals,
             id: id.into(),
             sha256: sha256.into(),
-            object_id: plan.object_id,
+            object_id: plan.object_id.clone(),
             journal_stages: plan.journal_stages,
             empty_config: plan.empty_config.is_some(),
+            grok_root: Self::grok_root_for(originals, &plan)?,
         };
         result.load()?;
         Ok(result)
@@ -981,7 +1086,7 @@ impl<'a> Pending<'a> {
     fn captures_with_observation(
         originals: &Originals,
         observation: Option<&RecoveryObservation>,
-    ) -> io::Result<([Capture; 4], Vec<String>, ConfigHistory)> {
+    ) -> io::Result<([Capture; 4], Vec<String>, Histories)> {
         let Some(observation) = observation else {
             let (c, h, config) = Self::captures(originals)?;
             return Ok((c, h.to_vec(), config));
@@ -1039,6 +1144,16 @@ impl<'a> Pending<'a> {
             },
             &observation.tree,
         )?;
+        let grok = GrokHistory::new(
+            &frames[0].0.grok,
+            &frames[1].0.grok,
+            if refs.phases.len() == 2 {
+                Some(&frames[2].0.grok)
+            } else {
+                None
+            },
+            &observation.grok,
+        )?;
         observation.tree.verify_archive(&originals.directory)?;
         observation.grok.verify_archive(&originals.directory)?;
         let mut captures = frames
@@ -1058,7 +1173,7 @@ impl<'a> Pending<'a> {
                 .try_into()
                 .map_err(|_| denied("original prefix incomplete"))?,
             hashes,
-            config,
+            Histories { config, grok },
         ))
     }
     pub(super) fn observed_preparation_fingerprint(
@@ -1104,6 +1219,17 @@ impl<'a> Pending<'a> {
             &observation.tree,
         )?;
         let empty_config = config.capture(&originals.client)?;
+        let grok = GrokHistory::new(
+            &frames[0].0.grok,
+            &frames[1].0.grok,
+            if missing_pre {
+                None
+            } else {
+                Some(&frames[2].0.grok)
+            },
+            &observation.grok,
+        )?;
+        let grok_backup = grok.capture(&originals.profile)?;
         let decisions = if missing_pre {
             kinds_current(&c, evidence)?
         } else {
@@ -1114,6 +1240,7 @@ impl<'a> Pending<'a> {
             &frames.iter().map(|(_, b)| digest(b)).collect::<Vec<_>>(),
             decisions,
             empty_config,
+            grok_backup,
             c[3].clone(),
             &evidence.declared_routes,
             &evidence.retained_pids,
@@ -1135,7 +1262,7 @@ impl<'a> Pending<'a> {
         }
         let original = self.originals.frame(Phase::Original)?.0;
         if !self.remainder_matches(&original.tree, &observation.tree, true)
-            || !original.grok.restored_matches(&observation.grok)
+            || !self.grok_remainder_matches(&original.grok, &observation.grok)
         {
             return Err(denied(
                 "prepared observation contains changed unowned client content",
@@ -1233,13 +1360,19 @@ impl<'a> Pending<'a> {
         }
         Ok(())
     }
-    fn captures(originals: &Originals) -> io::Result<([Capture; 4], [String; 4], ConfigHistory)> {
+    fn captures(originals: &Originals) -> io::Result<([Capture; 4], [String; 4], Histories)> {
         let frames = originals.frames_through(Phase::Stopped)?;
         let config = ConfigHistory::new(
             &frames[0].0.tree,
             &frames[1].0.tree,
             Some(&frames[2].0.tree),
             &frames[3].0.tree,
+        )?;
+        let grok = GrokHistory::new(
+            &frames[0].0.grok,
+            &frames[1].0.grok,
+            Some(&frames[2].0.grok),
+            &frames[3].0.grok,
         )?;
         let mut captures = Vec::new();
         let mut hashes = Vec::new();
@@ -1254,7 +1387,7 @@ impl<'a> Pending<'a> {
             hashes
                 .try_into()
                 .map_err(|_| denied("phase digests incomplete"))?,
-            config,
+            Histories { config, grok },
         ))
     }
     #[cfg(test)]
@@ -1297,10 +1430,11 @@ impl<'a> Pending<'a> {
                 "restore staging and client are on different volumes",
             ));
         }
-        let (captures, phases, config) =
+        let (captures, phases, history) =
             Self::captures_with_observation(originals, recovery_observation.as_ref())?;
-        let empty_config = config.capture(&originals.client)?;
-        if empty_config.is_some() && !journal_stages {
+        let empty_config = history.config.capture(&originals.client)?;
+        let grok_backup = history.grok.capture(&originals.profile)?;
+        if (empty_config.is_some() || grok_backup.is_some()) && !journal_stages {
             return Err(denied("empty config requires private journal stages"));
         }
         let ks = if recovery_observation
@@ -1344,7 +1478,8 @@ impl<'a> Pending<'a> {
             checkpoint("staged")?;
         }
         if Capture::read(&originals.client)? != captures[3]
-            || config.capture(&originals.client)? != empty_config
+            || history.config.capture(&originals.client)? != empty_config
+            || history.grok.capture(&originals.profile)? != grok_backup
         {
             return Err(denied("source changed while preparing original stages"));
         }
@@ -1352,7 +1487,9 @@ impl<'a> Pending<'a> {
         let plan = Plan {
             object_id: id.clone(),
             rearmed: false,
-            schema_version: if empty_config.is_some() {
+            schema_version: if grok_backup.is_some() {
+                6
+            } else if empty_config.is_some() {
                 5
             } else if recovery_observation.is_some() {
                 4
@@ -1364,6 +1501,7 @@ impl<'a> Pending<'a> {
             journal_stages,
             recovery_observation,
             empty_config,
+            grok_backup,
             id: id.clone(),
             attempt: originals.attempt.clone(),
             phases,
@@ -1379,6 +1517,7 @@ impl<'a> Pending<'a> {
             object_id: id.clone(),
             journal_stages,
             empty_config: plan.empty_config.is_some(),
+            grok_root: Self::grok_root_for(originals, &plan)?,
             id,
             sha256: digest(&bytes),
         };
@@ -1393,9 +1532,23 @@ impl<'a> Pending<'a> {
         {
             return Err(denied("restore object lineage changed"));
         }
-        let (captures, hashes, config) =
+        let (captures, hashes, history) =
             Self::captures_with_observation(self.originals, plan.recovery_observation.as_ref())?;
-        config.validate(plan.empty_config.as_ref())?;
+        history.config.validate(plan.empty_config.as_ref())?;
+        history.grok.validate(plan.grok_backup.as_ref())?;
+        if self.grok_root.is_some() != plan.grok_backup.is_some() {
+            return Err(denied("backup plan scope changed"));
+        }
+        if let Some(root) = &self.grok_root {
+            root.recheck()?;
+            if plan
+                .grok_backup
+                .as_ref()
+                .is_none_or(|b| root.identity() != &b.root)
+            {
+                return Err(denied("backup root identity changed"));
+            }
+        }
         let current = plan
             .recovery_observation
             .as_ref()
@@ -1418,30 +1571,40 @@ impl<'a> Pending<'a> {
         Ok((plan, captures))
     }
     pub fn apply(&self, decision: Decision, permit: &MutationPermit<'_>) -> io::Result<()> {
-        if self.empty_config {
-            let guard = std::cell::RefCell::new(permit.config_write_guard()?);
+        if self.empty_config || self.grok_root.is_some() {
+            let codex = if self.empty_config {
+                Some(std::cell::RefCell::new(permit.config_write_guard()?))
+            } else {
+                None
+            };
+            let grok = if self.grok_root.is_some() {
+                Some(std::cell::RefCell::new(permit.grok_write_guard()?))
+            } else {
+                None
+            };
             let result = self.apply_checked(
                 decision,
                 &|| {
                     permit.check(self.originals)?;
-                    guard
-                        .borrow_mut()
-                        .check()
-                        .map_err(|_| denied("official config writer exclusion changed"))
+                    for guard in [codex.as_ref(), grok.as_ref()].into_iter().flatten() {
+                        guard.borrow_mut().check().map_err(|_| {
+                            denied("official configuration writer exclusion changed")
+                        })?;
+                    }
+                    Ok(())
                 },
                 &|_| Ok(()),
             );
-            // Even a failed publication must release normally when possible;
-            // the original result remains failed and no lock timeout grants success.
-            let released = guard
-                .into_inner()
-                .finish()
-                .map_err(|_| denied("official config writer release unconfirmed"));
+            let mut released = Ok(());
+            for guard in [grok, codex].into_iter().flatten() {
+                if guard.into_inner().finish().is_err() {
+                    released = Err(denied("official configuration writer release unconfirmed"));
+                }
+            }
             result?;
             released?;
             return Ok(());
         }
-
         #[cfg(test)]
         if std::env::var_os("OCXD024_INTERRUPT_ARTIFACT").as_deref() == Some(OsStr::new("1")) {
             if !self.originals.data.path.starts_with("/private/tmp")
@@ -1510,7 +1673,7 @@ impl<'a> Pending<'a> {
             }
         };
         let mut observed = Vec::new();
-        for i in 0..plan.count() {
+        for i in plan.indices() {
             let pair = self.pair(i)?;
             let archive = self.archive(i)?;
             let after = Self::state_of(&plan, &captures, i, &pair, &archive)?;
@@ -1525,11 +1688,15 @@ impl<'a> Pending<'a> {
                 } else {
                     &captures[3]
                 };
-                let expected_image = if i == 3 {
+                let expected_image = if i >= 3 {
                     if decision == Decision::Complete {
                         &Image::Absent
                     } else {
-                        &plan.empty_config.as_ref().unwrap().stopped
+                        if i == 3 {
+                            &plan.empty_config.as_ref().unwrap().stopped
+                        } else {
+                            &plan.grok_backup.as_ref().unwrap().stopped
+                        }
                     }
                 } else {
                     &expected.images[i]
@@ -1543,14 +1710,14 @@ impl<'a> Pending<'a> {
                     return Err(denied("recovery terminal disagrees with native objects"));
                 }
             }
-            observed.push((pair, archive, after));
+            observed.push((i, pair, archive, after));
         }
         self.load()?;
         if journal("intent")? != intent || journal("outcome")? != terminal_image {
             return Err(denied("recovery journal changed during review"));
         }
-        for (i, (pair, archive, _)) in observed.iter().enumerate() {
-            if self.pair(i)? != *pair || self.archive(i)? != *archive {
+        for (i, pair, archive, _) in &observed {
+            if self.pair(*i)? != *pair || self.archive(*i)? != *archive {
                 return Err(denied("recovery objects changed during review"));
             }
         }
@@ -1577,7 +1744,7 @@ impl<'a> Pending<'a> {
     }
     fn pair(&self, i: usize) -> io::Result<(Image, Image)> {
         Ok((
-            capture_file(&self.originals.client, target_name(i)?, MAX_CONTENT)?,
+            capture_file(self.target(i)?, target_name(i)?, MAX_CONTENT)?,
             capture_file(
                 self.staging(),
                 &format!(".ocxd-restore-{}-{i}", self.object_id),
@@ -1586,12 +1753,14 @@ impl<'a> Pending<'a> {
         ))
     }
     fn expected(plan: &Plan, c: &[Capture; 4], i: usize, after: bool) -> (Image, Image) {
-        let old = if i == 3 {
+        let old = if i == 4 {
+            plan.grok_backup.as_ref().unwrap().stopped.clone()
+        } else if i == 3 {
             plan.empty_config.as_ref().unwrap().stopped.clone()
         } else {
             c[3].images[i].clone()
         };
-        let desired = if i == 3 {
+        let desired = if i >= 3 {
             Image::Absent
         } else {
             stat_image(&c[0].images[i], plan.staged[i].as_ref())
@@ -1666,7 +1835,7 @@ impl<'a> Pending<'a> {
         }
         // Audit the whole batch before first mutation. No partial authorization
         // is created just because one catalog object happens to be eligible.
-        for i in 0..plan.count() {
+        for i in plan.indices() {
             self.state(&plan, &c, i)?;
         }
         let intent = format!("restore-{}-intent.json", self.id);
@@ -1682,7 +1851,7 @@ impl<'a> Pending<'a> {
             _ => return Err(denied("restore intent changed")),
         }
         checkpoint("intent")?;
-        for i in 0..plan.count() {
+        for i in plan.indices() {
             let target_name = target_name(i)?;
             check()?;
             self.load()?;
@@ -1722,12 +1891,12 @@ impl<'a> Pending<'a> {
                     Kind::Swap => rename(
                         self.staging(),
                         &stage,
-                        &self.originals.client,
+                        self.target(i)?,
                         target_name,
                         libc::RENAME_SWAP,
                     )?,
                     Kind::Remove if want => rename(
-                        &self.originals.client,
+                        self.target(i)?,
                         target_name,
                         self.staging(),
                         &stage,
@@ -1736,19 +1905,19 @@ impl<'a> Pending<'a> {
                     Kind::Remove => rename(
                         self.staging(),
                         &stage,
-                        &self.originals.client,
+                        self.target(i)?,
                         target_name,
                         libc::RENAME_EXCL,
                     )?,
                     Kind::Publish if want => rename(
                         self.staging(),
                         &stage,
-                        &self.originals.client,
+                        self.target(i)?,
                         target_name,
                         libc::RENAME_EXCL,
                     )?,
                     Kind::Publish => rename(
-                        &self.originals.client,
+                        self.target(i)?,
                         target_name,
                         self.staging(),
                         &stage,
@@ -1766,7 +1935,7 @@ impl<'a> Pending<'a> {
             checkpoint("step")?;
         }
         check()?;
-        for i in 0..plan.count() {
+        for i in plan.indices() {
             if plan.kind(i) != Kind::Keep
                 && self.state(&plan, &c, i)? != (decision == Decision::Complete)
             {
@@ -1776,7 +1945,7 @@ impl<'a> Pending<'a> {
         // Move obsolete known objects into the protected journal, never delete
         // a guessed pathname. EXDEV leaves the transaction pending; no copy /
         // unsafe unlink fallback is performed for a different filesystem.
-        for i in 0..plan.count() {
+        for i in plan.indices() {
             check()?;
             let (_, staged) = self.pair(i)?;
             if staged != Image::Absent {
@@ -1824,6 +1993,17 @@ impl<'a> Pending<'a> {
             };
             if !original_content(&actual, expected) {
                 return Err(denied("optional config target differs at terminal"));
+            }
+        }
+        if let Some(backup) = &plan.grok_backup {
+            let actual = capture_file(self.target(4)?, target_name(4)?, MAX_CONTENT)?;
+            let expected = if decision == Decision::Complete {
+                &Image::Absent
+            } else {
+                &backup.stopped
+            };
+            if !original_content(&actual, expected) {
+                return Err(denied("backup target differs at terminal"));
             }
         }
         check()?;

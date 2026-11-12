@@ -145,6 +145,13 @@ pub(super) struct ArtifactRestoreAuthority<'a> {
     deadline: Instant,
 }
 impl ArtifactRestoreAuthority<'_> {
+    pub(super) fn grok_write_guard(
+        &self,
+    ) -> AppResult<crate::infrastructure::official_client_coordination::native::config::Guard<'_>>
+    {
+        self.lease.grok_write_guard()
+    }
+
     pub(super) fn config_write_guard(
         &self,
     ) -> AppResult<crate::infrastructure::official_client_coordination::native::config::Guard<'_>>
@@ -187,6 +194,13 @@ pub(super) struct ExplicitRestoreAuthority<'a> {
     deadline: Instant,
 }
 impl ExplicitRestoreAuthority<'_> {
+    pub(super) fn grok_write_guard(
+        &self,
+    ) -> AppResult<crate::infrastructure::official_client_coordination::native::config::Guard<'_>>
+    {
+        self.lease.grok_write_guard()
+    }
+
     pub(super) fn config_write_guard(
         &self,
     ) -> AppResult<crate::infrastructure::official_client_coordination::native::config::Guard<'_>>
@@ -799,9 +813,17 @@ impl StartupSession {
                 leased,
             )
             .map_err(error)?)
-            || !original
-                .grok
-                .restored_matches(&GrokSnapshot::read(&self.originals.profile).map_err(error)?)
+            || {
+                let grok = GrokSnapshot::read(&self.originals.profile).map_err(error)?;
+                !(original.grok.restored_matches(&grok)
+                    || restore::Pending::grok_preplan_matches(
+                        &self.originals,
+                        head,
+                        &original.grok,
+                        &grok,
+                    )
+                    .map_err(error)?)
+            }
         {
             return Ok(None);
         }

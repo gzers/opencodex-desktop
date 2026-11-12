@@ -1828,3 +1828,364 @@ fn first_use_empty_config_plan_cannot_be_downgraded_to_omit_the_fourth_target() 
         b"\n"
     );
 }
+
+fn first_grok_backup_at(
+    root: PathBuf,
+    prefix: usize,
+    codex_new: bool,
+    existing_backup: bool,
+) -> Fixture {
+    let data = root.join("desktop");
+    let client = root.join("codex 中文 space");
+    let grok = root.join(".grok");
+    for p in [&data, &client, &grok] {
+        fs::DirBuilder::new().mode(0o700).create(p).unwrap();
+    }
+    let write = |p: &Path, bytes: &[u8]| {
+        fs::write(p, bytes).unwrap();
+        fs::set_permissions(p, fs::Permissions::from_mode(0o600)).unwrap();
+    };
+    write(&grok.join("config.toml"), b"model='grok-original'\n");
+    write(&grok.join("AGENTS.md"), b"keep original guidance");
+    for n in [
+        ".opencodex-native-main.claim.sqlite",
+        ".opencodex-native-main.owner.sqlite",
+    ] {
+        write(&client.join(n), b"");
+    }
+    if existing_backup {
+        write(
+            &grok.join("config.toml.bak-opencodex"),
+            b"previous independent backup",
+        );
+    }
+    if !codex_new {
+        write(&client.join("config.toml"), b"codex='original'\n");
+    }
+    let originals = Originals::begin_for_profile(&data, &client, &root).unwrap();
+    if !existing_backup {
+        write(
+            &grok.join("config.toml.bak-opencodex"),
+            b"model='grok-original'\n",
+        );
+    }
+    if codex_new {
+        write(&client.join("config.toml"), b"model_provider='opencodex'\n");
+    }
+    originals.seal(Phase::Ready).unwrap();
+    if prefix >= 2 {
+        originals.seal(Phase::PreStop).unwrap();
+    }
+    if codex_new {
+        write(&client.join("config.toml"), b"\n");
+    }
+    if prefix == 3 {
+        originals.seal(Phase::Stopped).unwrap();
+    }
+    Fixture {
+        _temp: None,
+        originals,
+        evidence: Evidence {
+            declared_routes: Some(vec!["channel/model".into()]),
+            retained_pids: vec![100, 101],
+            audit_home: "synthetic-captured-home".into(),
+            not_before: chrono::DateTime::parse_from_rfc3339("2026-11-11T10:00:00Z")
+                .unwrap()
+                .into(),
+            not_after: chrono::DateTime::parse_from_rfc3339("2026-11-11T10:00:02Z")
+                .unwrap()
+                .into(),
+        },
+    }
+}
+fn first_grok_backup(prefix: usize, codex_new: bool, existing: bool) -> Fixture {
+    let temp = tempfile::tempdir().unwrap();
+    let mut f = first_grok_backup_at(
+        temp.path().canonicalize().unwrap(),
+        prefix,
+        codex_new,
+        existing,
+    );
+    f._temp = Some(temp);
+    f
+}
+#[test]
+fn first_grok_backup_and_optional_codex_config_share_reversible_sparse_targets_without_fake_history(
+) {
+    for prefix in [3, 2, 1] {
+        for codex_new in [false, true] {
+            let f = first_grok_backup(prefix, codex_new, false);
+            let source = first_use_source(&f, prefix);
+            let original = f.originals.frame(Phase::Original).unwrap().1;
+            let pending = if prefix == 3 {
+                Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap()
+            } else {
+                Pending::prepare_observed_fixture(&f.originals, &source, f.evidence.clone())
+                    .unwrap()
+            };
+            let (plan, _) = pending.load().unwrap();
+            assert_eq!(plan.schema_version, 6);
+            assert_eq!(plan.count(), 4 + usize::from(codex_new));
+            assert_eq!(
+                plan.indices().collect::<Vec<_>>(),
+                if codex_new {
+                    vec![0, 1, 2, 3, 4]
+                } else {
+                    vec![0, 1, 2, 4]
+                }
+            );
+            let backup = f
+                .originals
+                .profile
+                .path()
+                .join(".grok/config.toml.bak-opencodex");
+            pending
+                .apply_fixture(Decision::Complete, &|_| Ok(()))
+                .unwrap();
+            assert!(!backup.exists());
+            pending
+                .apply_fixture(Decision::Rollback, &|_| Ok(()))
+                .unwrap_err(); // terminal decision never flips in-place
+                               // Separate fixture exercises interruption before common terminal.
+            assert_eq!(
+                pending.review_recovery().unwrap().terminal,
+                Some(Decision::Complete)
+            );
+            assert_eq!(
+                fs::read(
+                    f.originals
+                        .directory
+                        .path()
+                        .join(format!("restore-{}-old-4", pending.object_id()))
+                )
+                .unwrap(),
+                b"model='grok-original'\n"
+            );
+            assert_eq!(f.originals.frame(Phase::Original).unwrap().1, original);
+            assert!(f
+                .originals
+                .frame(Phase::Original)
+                .unwrap()
+                .0
+                .grok
+                .restored_matches(&GrokSnapshot::read(&f.originals.profile).unwrap()));
+            if prefix < 3 {
+                assert!(!f.originals.directory.path().join("stopped.json").exists());
+            }
+            if prefix == 1 {
+                assert!(!f.originals.directory.path().join("pre-stop.json").exists());
+            }
+        }
+    }
+}
+#[test]
+fn first_grok_backup_rollback_rearm_restores_same_object_and_preserves_other_grok_files() {
+    let f = first_grok_backup(3, false, false);
+    let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+    let backup = f
+        .originals
+        .profile
+        .path()
+        .join(".grok/config.toml.bak-opencodex");
+    assert!(pending
+        .apply_fixture(Decision::Complete, &|p| if p == "after_native" {
+            Err(denied("backup interruption"))
+        } else {
+            Ok(())
+        })
+        .is_err());
+    assert!(!backup.exists());
+    pending
+        .apply_fixture(Decision::Rollback, &|_| Ok(()))
+        .unwrap();
+    assert_eq!(fs::read(&backup).unwrap(), b"model='grok-original'\n");
+    let next = pending.rearm_rolled_back().unwrap();
+    next.apply_fixture(Decision::Complete, &|_| Ok(())).unwrap();
+    assert!(!backup.exists());
+    assert_eq!(
+        fs::read(f.originals.profile.path().join(".grok/AGENTS.md")).unwrap(),
+        b"keep original guidance"
+    );
+    assert_eq!(next.object_id(), pending.object_id());
+    assert_eq!(
+        next.review_recovery().unwrap().terminal,
+        Some(Decision::Complete)
+    );
+}
+#[test]
+fn first_grok_backup_refuses_modified_or_replaced_backup_and_keeps_existing_original_backup() {
+    for replacement in [false, true] {
+        let f = first_grok_backup(3, false, false);
+        let root = f.originals.profile.path().join(".grok");
+        let path = root.join("config.toml.bak-opencodex");
+        if replacement {
+            fs::rename(
+                &path,
+                f.originals.profile.path().join("displaced-grok-backup"),
+            )
+            .unwrap();
+            fs::write(&path, b"model='grok-original'\n").unwrap();
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        } else {
+            fs::write(&path, b"outside-user-backup").unwrap();
+        }
+        let bytes = fs::read(&path).unwrap();
+        assert!(Pending::prepare_fixture(&f.originals, f.evidence.clone()).is_err());
+        assert_eq!(fs::read(&path).unwrap(), bytes);
+    }
+    let f = first_grok_backup(3, false, true);
+    let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+    assert!(pending.grok_root.is_none());
+    pending
+        .apply_fixture(Decision::Complete, &|_| Ok(()))
+        .unwrap();
+    assert_eq!(
+        fs::read(
+            f.originals
+                .profile
+                .path()
+                .join(".grok/config.toml.bak-opencodex")
+        )
+        .unwrap(),
+        b"previous independent backup"
+    );
+}
+#[test]
+fn first_grok_backup_native_gap_preserves_a_replacement_in_its_original_grok_path() {
+    let f = first_grok_backup(3, false, false);
+    let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+    let backup = f
+        .originals
+        .profile
+        .path()
+        .join(".grok/config.toml.bak-opencodex");
+    let once = Cell::new(false);
+    assert!(pending
+        .apply_fixture(Decision::Complete, &|p| {
+            if p == "native_gap" && !once.replace(true) {
+                fs::rename(
+                    &backup,
+                    f.originals.profile.path().join("displaced-first-backup"),
+                )?;
+                fs::write(&backup, b"outside-grok-backup")?;
+            }
+            Ok(())
+        })
+        .is_err());
+    assert_eq!(fs::read(&backup).unwrap(), b"outside-grok-backup");
+    assert!(pending.review_recovery().is_err());
+}
+
+#[test]
+fn first_grok_backup_real_crash_reopens_only_the_original_known_objects() {
+    const CHILD: &str = "OCXD024_GROK_BACKUP_CRASH";
+    if let Some(root) = std::env::var_os(CHILD) {
+        let root = PathBuf::from(root);
+        let f = first_grok_backup_at(root.clone(), 3, false, false);
+        let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+        let refs = [Phase::Ready, Phase::PreStop, Phase::Stopped]
+            .into_iter()
+            .map(|p| (p, digest(&f.originals.frame(p).unwrap().1)))
+            .collect::<Vec<_>>();
+        fs::write(root.join("independent-receipt.json"),wire(json!({"attempt":f.originals.attempt(),"original":f.originals.original_sha256(),"phases":refs,"id":pending.id(),"sha256":pending.sha256()}))).unwrap();
+        let wanted = std::env::var("OCXD024_GROK_BACKUP_BOUNDARY").unwrap();
+        pending
+            .apply_fixture(Decision::Complete, &|point| {
+                if point == wanted
+                    && (point != "archive"
+                        || f.originals
+                            .directory
+                            .path()
+                            .join(format!("restore-{}-old-4", pending.object_id()))
+                            .exists())
+                {
+                    std::process::exit(91);
+                }
+                Ok(())
+            })
+            .unwrap();
+        panic!("boundary not reached");
+    }
+    for boundary in ["after_native", "archive_gap", "archive", "terminal"] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let out=std::process::Command::new(std::env::current_exe().unwrap()).args(["--exact","infrastructure::macos_client_originals::restore::tests::first_grok_backup_real_crash_reopens_only_the_original_known_objects","--nocapture"]).env(CHILD,&root).env("OCXD024_GROK_BACKUP_BOUNDARY",boundary).output().unwrap();
+        assert_eq!(
+            out.status.code(),
+            Some(91),
+            "{} {}",
+            String::from_utf8_lossy(&out.stdout),
+            String::from_utf8_lossy(&out.stderr)
+        );
+        let value: serde_json::Value =
+            serde_json::from_slice(&fs::read(root.join("independent-receipt.json")).unwrap())
+                .unwrap();
+        let phases: Vec<(Phase, String)> = serde_json::from_value(value["phases"].clone()).unwrap();
+        let originals = Originals::open(
+            &root.join("desktop"),
+            &root.join("codex 中文 space"),
+            value["attempt"].as_str().unwrap(),
+            value["original"].as_str().unwrap(),
+            &phases,
+        )
+        .unwrap();
+        let pending = Pending::open(
+            &originals,
+            value["id"].as_str().unwrap(),
+            value["sha256"].as_str().unwrap(),
+        )
+        .unwrap();
+        pending
+            .apply_fixture(Decision::Complete, &|_| Ok(()))
+            .unwrap();
+        assert!(!originals
+            .profile
+            .path()
+            .join(".grok/config.toml.bak-opencodex")
+            .exists());
+        assert_eq!(
+            fs::read(originals.client.path().join("config.toml")).unwrap(),
+            b"codex='original'\n"
+        );
+        assert_eq!(
+            pending.review_recovery().unwrap().terminal,
+            Some(Decision::Complete)
+        );
+    }
+}
+
+#[test]
+fn first_grok_backup_root_replacement_or_pre_stop_change_cannot_be_adopted() {
+    let f = first_grok_backup(3, false, false);
+    let pending = Pending::prepare_fixture(&f.originals, f.evidence.clone()).unwrap();
+    let path = f.originals.profile.path().join(".grok");
+    fs::rename(
+        &path,
+        f.originals.profile.path().join("displaced-original-grok"),
+    )
+    .unwrap();
+    fs::DirBuilder::new().mode(0o700).create(&path).unwrap();
+    fs::write(
+        path.join("config.toml.bak-opencodex"),
+        b"model='grok-original'\n",
+    )
+    .unwrap();
+    assert!(pending
+        .apply_fixture(Decision::Complete, &|_| Ok(()))
+        .is_err());
+    assert_eq!(
+        fs::read(path.join("config.toml.bak-opencodex")).unwrap(),
+        b"model='grok-original'\n"
+    );
+    let f = first_grok_backup(1, false, false);
+    let backup = f
+        .originals
+        .profile
+        .path()
+        .join(".grok/config.toml.bak-opencodex");
+    fs::write(&backup, b"external-pre-stop-change").unwrap();
+    f.originals.seal(Phase::PreStop).unwrap();
+    fs::write(&backup, b"model='grok-original'\n").unwrap();
+    f.originals.seal(Phase::Stopped).unwrap();
+    assert!(Pending::prepare_fixture(&f.originals, f.evidence.clone()).is_err());
+}

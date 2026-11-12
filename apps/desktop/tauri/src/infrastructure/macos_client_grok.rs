@@ -41,6 +41,15 @@ fn lookup(profile: &PinnedDirectory) -> io::Result<Option<libc::stat>> {
     Ok(Some(unsafe { out.assume_init() }))
 }
 impl GrokSnapshot {
+    pub(super) fn backup_remainder_matches(&self, current: &Self) -> bool {
+        match (self, current) {
+            (Self::Directory { tree: a }, Self::Directory { tree: b }) => {
+                a.grok_backup_remainder_matches(b)
+            }
+            _ => false,
+        }
+    }
+
     pub(super) fn restored_matches(&self, current: &Self) -> bool {
         match (self, current) {
             (Self::Absent, Self::Absent) => true,

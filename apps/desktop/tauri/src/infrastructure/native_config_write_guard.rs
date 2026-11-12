@@ -17,6 +17,7 @@ struct Event {
 }
 pub struct Guard<'a> {
     native: &'a NativeLease,
+    target: PinnedDirectory,
     child: std::process::Child,
     rx: mpsc::Receiver<AppResult<Event>>,
     reader: Option<thread::JoinHandle<()>>,
@@ -29,7 +30,22 @@ fn guard_error<T>(_: T) -> AppError {
 }
 impl NativeLease {
     pub fn config_write_guard(&self) -> AppResult<Guard<'_>> {
+        self.write_guard(false)
+    }
+    pub fn grok_write_guard(&self) -> AppResult<Guard<'_>> {
+        self.write_guard(true)
+    }
+    fn write_guard(&self, grok: bool) -> AppResult<Guard<'_>> {
         self.check()?;
+        let target_path = if grok {
+            self.profile.path().join(".grok")
+        } else {
+            self.client.path().to_path_buf()
+        };
+        let target_root = PinnedDirectory::open(&target_path).map_err(guard_error)?;
+        if fs::canonicalize(&target_path).map_err(guard_error)? != target_path {
+            return Err(guard_error(()));
+        }
         let root = self
             .runtime
             .managed_installation_root()
@@ -43,7 +59,7 @@ impl NativeLease {
             return Err(guard_error(()));
         }
         let operation = uuid::Uuid::new_v4().to_string();
-        let input = serde_json::json!({"schema":SCHEMA,"operation":operation,"packageRoot":selected.paths.package_root.join(PACKAGE_SUBPATH),"profile":self.profile.path(),"home":self.home.path(),"codex":self.client.path()});
+        let input = serde_json::json!({"schema":SCHEMA,"operation":operation,"packageRoot":selected.paths.package_root.join(PACKAGE_SUBPATH),"profile":self.profile.path(),"home":self.home.path(),"codex":self.client.path(),"target":target_path});
         let mut child = Command::new(&selected.paths.bun)
             .args(["--eval", HELPER, "--", &input.to_string()])
             .env_clear()
@@ -91,6 +107,7 @@ impl NativeLease {
         });
         let mut guard = Guard {
             native: self,
+            target: target_root,
             child,
             rx,
             reader: Some(reader),
@@ -99,7 +116,10 @@ impl NativeLease {
             released: false,
         };
         guard.event("held")?;
-        let image = self.client.config_write_lock_image().map_err(guard_error)?;
+        let image = guard
+            .target
+            .config_write_lock_image()
+            .map_err(guard_error)?;
         let Image::File { bytes, .. } = &image else {
             return Err(guard_error(()));
         };
@@ -138,15 +158,10 @@ impl Guard<'_> {
     }
     pub fn check(&mut self) -> AppResult<()> {
         self.native.check()?;
+        self.target.recheck().map_err(guard_error)?;
         if self.child.try_wait().map_err(guard_error)?.is_some()
             || self.image.as_ref()
-                != Some(
-                    &self
-                        .native
-                        .client
-                        .config_write_lock_image()
-                        .map_err(guard_error)?,
-                )
+                != Some(&self.target.config_write_lock_image().map_err(guard_error)?)
         {
             return Err(guard_error(()));
         }
@@ -174,13 +189,7 @@ impl Guard<'_> {
             }
             thread::sleep(Duration::from_millis(2));
         }
-        if self
-            .native
-            .client
-            .config_write_lock_image()
-            .map_err(guard_error)?
-            != Image::Absent
-        {
+        if self.target.config_write_lock_image().map_err(guard_error)? != Image::Absent {
             return Err(guard_error(()));
         }
         self.native.check()?;
@@ -394,5 +403,102 @@ mod parent_exit_tests {
         )
         .unwrap();
         println!("{report}");
+    }
+}
+
+#[cfg(test)]
+mod grok_tests {
+    use super::*;
+    #[test]
+    #[ignore = "two actual official configuration writer paths on retained owned Profile; no service actions"]
+    fn official_grok_and_codex_writer_guards_are_distinct_and_exclude_their_own_paths() {
+        let root =
+            PathBuf::from(std::env::var_os("OCXD024_GROK_GUARD_ROOT").expect("owned fixture"));
+        assert!(
+            root.is_absolute()
+                && root.canonicalize().unwrap() == root
+                && root.starts_with("/private/tmp")
+                && root
+                    .parent()
+                    .unwrap()
+                    .file_name()
+                    .unwrap()
+                    .to_string_lossy()
+                    .starts_with("ocxd024-versioned-lifecycle-")
+        );
+        let profile = root.join("profile");
+        assert_eq!(
+            std::env::var_os("HOME"),
+            Some(profile.clone().into_os_string())
+        );
+        let data = profile.join(".codex-desktop/desktop");
+        let program = root.join("program 中文 space");
+        let client = profile.join(".codex");
+        let home = profile.join(".codex-desktop/opencodex/home");
+        let grok = profile.join(".grok");
+        assert!(grok.is_dir());
+        let control = root.join("grok-guard-control");
+        crate::infrastructure::platform::create_private_dir_all(&control, 0o700).unwrap();
+        let context = Context {
+            runtime: crate::modules::runtime::RuntimeHandle::initialize_versioned(&data, &program),
+            user_profile: profile.clone(),
+            codex_home: client.clone(),
+            opencodex_home: home.clone(),
+            control_root: control,
+        };
+        let selected = program_selection::read_complete(
+            &program,
+            crate::modules::data_root::layout::Platform::Macos,
+            "darwin-arm64",
+        )
+        .unwrap()
+        .unwrap();
+        let probe = |path: &Path| {
+            let input = serde_json::json!({"package":selected.paths.package_root.join(PACKAGE_SUBPATH),"path":path});
+            let script = r#"import {pathToFileURL} from 'node:url';import {join} from 'node:path';const p=JSON.parse(process.argv.at(-1));const {withConfigWriteLock}=await import(pathToFileURL(join(p.package,'src/codex/config-write-lock.ts')).href);const r=withConfigWriteLock(join(p.path,'config.toml'),()=>true);console.log(JSON.stringify({ok:r.ok,error:r.ok?null:r.error}));"#;
+            let result = Command::new(&selected.paths.bun)
+                .args(["--eval", script, "--", &input.to_string()])
+                .env_clear()
+                .env("HOME", &profile)
+                .env("CODEX_HOME", &client)
+                .env("OPENCODEX_HOME", &home)
+                .env("PATH", "/usr/bin:/bin:/usr/sbin:/sbin")
+                .env("LANG", "C.UTF-8")
+                .output()
+                .unwrap();
+            assert!(result.status.success());
+            serde_json::from_slice::<serde_json::Value>(&result.stdout).unwrap()
+        };
+        let locked = serde_json::json!({"ok":false,"error":"locked"});
+        let unlocked = serde_json::json!({"ok":true,"error":null});
+        let clock = Instant::now();
+        with_native_coordination(&context, clock + Duration::from_secs(10), |native| {
+            let mut g = native.grok_write_guard()?;
+            assert_eq!(probe(&grok), locked);
+            assert_eq!(probe(&client), unlocked);
+            let mut c = native.config_write_guard()?;
+            g.check()?;
+            c.check()?;
+            assert_eq!(probe(&grok), locked);
+            assert_eq!(probe(&client), locked);
+            g.finish()?;
+            assert_eq!(probe(&grok), unlocked);
+            assert_eq!(probe(&client), locked);
+            c.finish()?;
+            assert_eq!(probe(&client), unlocked);
+            Ok(())
+        })
+        .unwrap();
+        for p in [&client, &grok] {
+            assert!(!p.join("config.toml.ocx-write.lock").exists());
+            assert!(!p.join("config.toml.ocx-write.lock.claims").exists());
+        }
+        let proof = serde_json::json!({"accepted":false,"elapsedMs":clock.elapsed().as_millis(),"GrokWriterBlockedOnlyByGrokGuard":true,"CodexWriterBlockedOnlyByCodexGuard":true,"bothIndependentGuardsCanCoexist":true,"eachOfficialWriterAllowedOnlyAfterItsGuardNormalRelease":true,"allLockPathsAndClaimsAbsent":true,"noServiceActions":true});
+        fs::write(
+            root.join("grok-guard-proof.json"),
+            serde_json::to_vec_pretty(&proof).unwrap(),
+        )
+        .unwrap();
+        println!("{proof}");
     }
 }

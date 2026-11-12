@@ -312,7 +312,7 @@ impl Originals {
         let codex = TreeSnapshot::read(&self.client)?;
         let grok = GrokSnapshot::read(&self.profile)?;
         let remainder_matches = pending.remainder_matches(&original.tree, &codex, leased);
-        if !remainder_matches || !original.grok.restored_matches(&grok) {
+        if !remainder_matches || !pending.grok_remainder_matches(&original.grok, &grok) {
             return Ok((None, None));
         }
         for name in LOCKS {
@@ -522,7 +522,13 @@ impl Originals {
                     && pending.remainder_matches(&original.tree, &codex, false)
             }
         };
-        if !tree_matches || !original.grok.restored_matches(&grok) {
+        if !tree_matches
+            || !(if decision == restore::Decision::Rollback {
+                pending.grok_remainder_matches(&original.grok, &grok)
+            } else {
+                original.grok.restored_matches(&grok)
+            })
+        {
             return Err(denied(
                 "full client tree original bytes or protection differ",
             ));

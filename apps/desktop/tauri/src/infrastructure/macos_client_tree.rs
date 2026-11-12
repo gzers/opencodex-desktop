@@ -43,6 +43,12 @@ pub(super) struct RecordedFile {
     sha256: String,
 }
 impl RecordedFile {
+    pub(super) fn same_content(&self, other: &Self) -> bool {
+        self.bytes == other.bytes
+            && self.sha256 == other.sha256
+            && self.protection == other.protection
+    }
+
     pub(super) fn matches(&self, image: &Image) -> bool {
         matches!(image, Image::File { identity, protection, bytes, .. }
             if *identity == self.identity && *protection == self.protection
@@ -376,6 +382,24 @@ fn walk(
     Ok(())
 }
 impl TreeSnapshot {
+    pub(super) fn grok_backup_remainder_matches(&self, current: &Self) -> bool {
+        let without_backup = |tree: &Self| {
+            let mut value = tree.clone();
+            value
+                .entries
+                .retain(|e| e.path() != "config.toml.bak-opencodex");
+            value.total_bytes = value
+                .entries
+                .iter()
+                .map(|e| match e {
+                    Entry::File { bytes, .. } => *bytes,
+                    _ => 0,
+                })
+                .sum();
+            value
+        };
+        without_backup(self).restored_matches(&without_backup(current), false)
+    }
     pub(super) fn recorded_file(&self, path: &str) -> io::Result<Option<RecordedFile>> {
         match self.entries.iter().find(|entry| entry.path() == path) {
             None => Ok(None),
