@@ -66,6 +66,8 @@ pub enum State {
     RestorePrepared,
     RecoveryPrepared,
     RestoreRolledBack,
+    RootRetirementPrepared,
+    RootAbsent,
     Restored,
     Unchanged,
     CancelledBeforeCapture,
@@ -81,6 +83,14 @@ pub struct Head {
     pub references: Option<References>,
     pub restore_plan: Option<RestorePlan>,
     pub completion_sha256: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub root_retirement: Option<RootRetirement>,
+}
+#[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct RootRetirement {
+    pub source_revision: u64,
+    pub plan: RestorePlan,
 }
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -103,6 +113,24 @@ fn valid_hash(value: &str) -> bool {
             .all(|c| c.is_ascii_digit() || (b'a'..=b'f').contains(&c))
 }
 pub(super) fn validate(head: &Head) -> io::Result<()> {
+    let root_phase = matches!(
+        head.state,
+        State::RootRetirementPrepared | State::RootAbsent
+    );
+    if root_phase != head.root_retirement.is_some()
+        || head.root_retirement.as_ref().is_some_and(|r| {
+            r.source_revision == 0
+                || r.source_revision >= head.revision
+                || uuid::Uuid::parse_str(&r.plan.id)
+                    .map(|v| v.to_string() != r.plan.id)
+                    .unwrap_or(true)
+                || !valid_hash(&r.plan.sha256)
+        })
+    {
+        return Err(denied(
+            "root retirement reference does not match current phase",
+        ));
+    }
     if matches!(
         head.state,
         State::RestorePrepared
@@ -110,10 +138,12 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
             | State::Restored
             | State::RestoreRolledBack
     ) != head.restore_plan.is_some()
+        && !root_phase
         || matches!(
             head.state,
             State::Restored
                 | State::RestoreRolledBack
+                | State::RootAbsent
                 | State::Unchanged
                 | State::CancelledBeforeCapture
                 | State::CancelledCapture
@@ -193,6 +223,13 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
         }
         State::Preparing | State::CaptureReserved => {
             return Err(denied("unpublished originals in preparing index"))
+        }
+        State::RootRetirementPrepared | State::RootAbsent => {
+            if refs.phases.is_empty() {
+                Some((0, false))
+            } else {
+                Some((refs.phases.len(), true))
+            }
         }
         State::Failed
         | State::Unchanged
@@ -285,6 +322,14 @@ fn scope(
     data: &PinnedDirectory,
     client: &PinnedDirectory,
 ) -> io::Result<Vec<u8>> {
+    scope_at(context, data, client, client.path())
+}
+fn scope_at(
+    context: &ProcessContext,
+    data: &PinnedDirectory,
+    client: &PinnedDirectory,
+    logical_client: &Path,
+) -> io::Result<Vec<u8>> {
     let profile = PinnedDirectory::open(&context.working_directory)?;
     let home = PinnedDirectory::open(&context.opencodex_home)?;
     encode(&(
@@ -295,7 +340,7 @@ fn scope(
         profile.identity(),
         home.path(),
         home.identity(),
-        client.path(),
+        logical_client,
         client.identity(),
     ))
 }
@@ -314,6 +359,7 @@ pub struct Index {
     data: PinnedDirectory,
     client: PinnedDirectory,
     profile: PathBuf,
+    context_home: PathBuf,
     root_registration: Option<super::root_creation::References>,
     root_created_fd: Option<File>,
     root_creation_deadline: Option<Instant>,
@@ -443,12 +489,37 @@ impl Index {
     ) -> io::Result<Self> {
         let data = PinnedDirectory::open(data_root)?;
         data.private()?;
-        let client = PinnedDirectory::open(client_root)?;
-        if data_root.starts_with(client_root) || client_root.starts_with(data_root) {
+        let physical = match std::fs::symlink_metadata(client_root) {
+            Err(e) if e.kind() == io::ErrorKind::NotFound && root.is_none() => {
+                if client_root != context.working_directory.join(".codex") {
+                    return Err(denied(
+                        "missing client path is not this profile logical root",
+                    ));
+                }
+                observation::physical_root(context, data_root)?
+            }
+            _ => client_root.to_path_buf(),
+        };
+        let client = PinnedDirectory::open(&physical)?;
+        let overlap_path = if physical != client_root {
+            client_root
+        } else {
+            physical.as_path()
+        };
+        if data_root.starts_with(overlap_path) || overlap_path.starts_with(data_root) {
             return Err(denied("session index/client roots overlap"));
         }
-        let base_binding = scope(context, &data, &client)?;
         let manager = data.child_private("manager-state", allow_create)?;
+        let base_binding = if super::root_creation::has_creation_evidence(&manager)? {
+            scope_at(
+                context,
+                &data,
+                &client,
+                &context.working_directory.join(".codex"),
+            )?
+        } else {
+            scope(context, &data, &client)?
+        };
         let transfer = root
             .map(|root| root.into_transfer(&data, &context.working_directory, &client))
             .transpose()?;
@@ -628,6 +699,7 @@ impl Index {
                         references: None,
                         restore_plan: None,
                         completion_sha256: None,
+                        root_retirement: None,
                     };
                     validate(&head)?;
                     let bytes = encode(&head)?;
@@ -650,14 +722,19 @@ impl Index {
                     r.get(0)
                 })
                 .map_err(database_error)?;
-            root_registration = root_binding::verify_binding(
-                &base_binding,
-                &stored,
-                &manager,
+            let current = read_head(&connection)?;
+            let (resolved, registered) = root_binding::resolve(
+                context,
                 &data,
-                &context.working_directory,
-                &client,
+                &manager,
+                &stored,
+                current.as_ref(),
+                &connection,
             )?;
+            if resolved.identity() != client.identity() {
+                return Err(denied("indexed root generation changed during acquisition"));
+            }
+            root_registration = registered;
             if origin
                 .as_ref()
                 .is_some_and(|expected| root_registration.as_ref() != Some(expected))
@@ -699,6 +776,7 @@ impl Index {
             data,
             client,
             profile: context.working_directory.clone(),
+            context_home: context.opencodex_home.clone(),
             root_registration,
             root_created_fd,
             root_creation_deadline: transfer_deadline,
@@ -716,7 +794,9 @@ impl Index {
     }
     fn check(&self) -> io::Result<()> {
         self.data.private()?;
-        self.client.recheck()?;
+        if self.root_registration.is_none() {
+            self.client.recheck()?;
+        }
         if let Some(refs) = &self.root_registration {
             let stored: Vec<u8> = self
                 .connection()?
@@ -728,13 +808,24 @@ impl Index {
                 return Err(denied("registered root binding changed during action"));
             }
             root_binding::verify_initial_event(self.connection()?, refs)?;
-            super::root_creation::verify_indexed(
-                &self.action_parent,
+            let context = ProcessContext {
+                runtime:
+                    crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(),
+                working_directory: self.profile.clone(),
+                opencodex_home: self.context_home.clone(),
+            };
+            let current = read_head(self.connection()?)?;
+            let (resolved, origin) = root_binding::resolve(
+                &context,
                 &self.data,
-                &self.profile,
-                &self.client,
-                refs,
+                &self.action_parent,
+                &stored,
+                current.as_ref(),
+                self.connection()?,
             )?;
+            if resolved.identity() != self.client.identity() || origin.as_ref() != Some(refs) {
+                return Err(denied("indexed current root or origin changed"));
+            }
             if let Some(fd) = &self.root_created_fd {
                 if identity(&stat(fd)?) != *self.client.identity() {
                     return Err(denied("original root creation descriptor changed"));
@@ -794,7 +885,10 @@ impl Index {
         if self.root_registration.is_some() && head.is_none() {
             return Err(denied("registered first root session disappeared"));
         }
-        if let (Some(origin), Some(head)) = (&self.root_registration, head.as_ref()) {
+        if let (Some(origin), Some(head)) = (
+            &self.root_registration,
+            head.as_ref().filter(|h| h.root_retirement.is_none()),
+        ) {
             root_binding::verify_capture(
                 &self.binding,
                 origin,
@@ -887,6 +981,7 @@ impl Index {
             references: None,
             restore_plan: None,
             completion_sha256: None,
+            root_retirement: None,
         };
         self.write(previous.as_ref(), &head)?;
         Ok(head)
@@ -993,6 +1088,7 @@ impl Index {
             references: Some(refs),
             restore_plan: None,
             completion_sha256: None,
+            root_retirement: None,
         };
         if self
             .root_creation_deadline
@@ -1087,6 +1183,7 @@ impl Index {
             references,
             restore_plan: None,
             completion_sha256: None,
+            root_retirement: None,
         };
         self.write(Some(expected), &next)?;
         Ok(next)
@@ -1118,6 +1215,7 @@ impl Index {
                 sha256: sha256.into(),
             }),
             completion_sha256: None,
+            root_retirement: None,
         };
         if matches!(expected.state, State::StopPrepared | State::Ready) {
             let refs = expected
@@ -1138,6 +1236,79 @@ impl Index {
         }
         validate(&next)?;
         self.write(Some(expected), &next)?;
+        Ok(next)
+    }
+    pub fn record_root_retirement(
+        &self,
+        expected: &Head,
+        id: &str,
+        sha256: &str,
+    ) -> io::Result<Head> {
+        self.check()?;
+        if expected.root_retirement.is_some()
+            || !matches!(
+                expected.state,
+                State::Captured | State::Stopped | State::RestorePrepared | State::RecoveryPrepared
+            )
+        {
+            return Err(denied("root movement cannot replace prior decision"));
+        }
+        let originals = self.registered_root_originals(expected)?;
+        let pending = super::root_retirement::Pending::open(&originals, id, sha256)?;
+        pending.require_source(expected)?;
+        pending.inspect_live()?;
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("root plan revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: State::RootRetirementPrepared,
+            references: expected.references.clone(),
+            restore_plan: expected.restore_plan.clone(),
+            completion_sha256: None,
+            root_retirement: Some(RootRetirement {
+                source_revision: expected.revision,
+                plan: RestorePlan {
+                    id: id.into(),
+                    sha256: sha256.into(),
+                },
+            }),
+        };
+        self.write(Some(expected), &next)?;
+        Ok(next)
+    }
+    pub fn close_root_absence(
+        &self,
+        expected: &Head,
+        proof: &super::root_retirement::AuthorizedReadback,
+    ) -> io::Result<Head> {
+        let digest = proof
+            .require(&self.data, &self.profile, expected)?
+            .to_string();
+        self.check()?;
+        let next = Head {
+            revision: expected
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("root close revision overflow"))?,
+            ticket: expected.ticket.clone(),
+            state: State::RootAbsent,
+            references: expected.references.clone(),
+            restore_plan: expected.restore_plan.clone(),
+            completion_sha256: Some(digest),
+            root_retirement: expected.root_retirement.clone(),
+        };
+        self.write(Some(expected), &next)?;
+        if let Err(error) = proof.require(&self.data, &self.profile, expected) {
+            let mut pending = expected.clone();
+            pending.revision = next
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("root timeout demotion revision overflow"))?;
+            self.write(Some(&next), &pending)?;
+            return Err(error);
+        }
         Ok(next)
     }
     pub fn close_restored(
@@ -1175,6 +1346,7 @@ impl Index {
             references: None,
             restore_plan: None,
             completion_sha256: Some(proof.sha256().into()),
+            root_retirement: None,
         };
         validate(&next)?;
         preparation::verify_registered(
@@ -1214,6 +1386,7 @@ impl Index {
             references: expected.references.clone(),
             restore_plan: None,
             completion_sha256: Some(proof.sha256().into()),
+            root_retirement: None,
         };
         validate(&next)?;
         unchanged::verify_registered(self.data.path(), self.client.path(), &self.profile, &next)?;
@@ -1288,6 +1461,7 @@ impl Index {
                 sha256: sha256.into(),
             }),
             completion_sha256: None,
+            root_retirement: None,
         };
         validate(&next)?;
         self.write(Some(expected), &next)?;
@@ -1325,6 +1499,7 @@ impl Index {
             references: expected.references.clone(),
             restore_plan: expected.restore_plan.clone(),
             completion_sha256: Some(proof.sha256().into()),
+            root_retirement: None,
         };
         completion::verify_registered(self.data.path(), self.client.path(), &self.profile, &next)?;
         proof.require_index(expected, self.data.identity(), self.client.identity())?;
@@ -1345,6 +1520,7 @@ impl Index {
                 references: expected.references.clone(),
                 restore_plan: expected.restore_plan.clone(),
                 completion_sha256: None,
+                root_retirement: None,
             };
             self.write(Some(&next), &pending)?;
             return Err(error);
@@ -1358,10 +1534,31 @@ impl Index {
                 && next.state == State::CaptureReserved
                 || expected.is_some_and(|h| h.state == State::CaptureReserved)
                     && next.state == State::Captured
+                || expected.is_some_and(|h| {
+                    matches!(
+                        h.state,
+                        State::Captured
+                            | State::Stopped
+                            | State::RestorePrepared
+                            | State::RecoveryPrepared
+                    )
+                }) && next.state == State::RootRetirementPrepared
+                || expected.is_some_and(|h| h.state == State::RootRetirementPrepared)
+                    && next.state == State::RootAbsent
+                || expected.is_some_and(|h| h.state == State::RootAbsent)
+                    && next.state == State::RootRetirementPrepared
                 || next.state == State::Failed)
         {
             return Err(denied(
                 "first root cannot enter an unintegrated ordinary lifecycle transition",
+            ));
+        }
+        if expected
+            .and_then(|h| h.root_retirement.as_ref())
+            .is_some_and(|r| next.root_retirement.as_ref() != Some(r))
+        {
+            return Err(denied(
+                "independent root retirement references cannot be discarded",
             ));
         }
         self.check()?;

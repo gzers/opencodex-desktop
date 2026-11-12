@@ -26,11 +26,53 @@ pub enum Direction {
 /// maintain them across relocation; test callbacks are explicitly not that.
 pub struct MutationPermit<'a> {
     check: &'a dyn Fn() -> io::Result<()>,
+    deadline: Instant,
 }
 pub struct Pending<'a> {
     originals: &'a Originals,
     id: String,
     sha256: String,
+}
+/// Created only by a current apply() invocation with an unforgeable movement
+/// permit. Disk receipts cannot construct this independent index-closing proof.
+pub struct AuthorizedReadback {
+    readback: Readback,
+    plan_id: String,
+    source: Head,
+    data_identity: Identity,
+    profile_identity: Identity,
+    deadline: Instant,
+}
+impl AuthorizedReadback {
+    pub(super) fn require(
+        &self,
+        data: &PinnedDirectory,
+        profile: &Path,
+        expected: &Head,
+    ) -> io::Result<&str> {
+        time(self.deadline)?;
+        let profile = PinnedDirectory::open(profile)?;
+        let reference = expected
+            .root_retirement
+            .as_ref()
+            .ok_or_else(|| denied("root movement has not been independently registered"))?;
+        if expected.state != session_index::State::RootRetirementPrepared
+            || reference.plan.id != self.plan_id
+            || reference.plan.sha256 != self.readback.plan_sha256
+            || reference.source_revision != self.source.revision
+            || expected.ticket != self.source.ticket
+            || expected.references != self.source.references
+            || expected.restore_plan != self.source.restore_plan
+            || self.readback.direction != Direction::Retire
+            || data.identity() != &self.data_identity
+            || profile.identity() != &self.profile_identity
+        {
+            return Err(denied(
+                "root readback is not bound to this independent movement",
+            ));
+        }
+        Ok(&self.readback.receipt_sha256)
+    }
 }
 pub struct Readback {
     plan_sha256: String,
@@ -395,14 +437,82 @@ impl<'a> Pending<'a> {
         direction: Direction,
         permit: &MutationPermit<'_>,
         deadline: Instant,
-    ) -> io::Result<Readback> {
-        self.apply_checked(
+    ) -> io::Result<AuthorizedReadback> {
+        let deadline = deadline.min(permit.deadline);
+        let readback = self.apply_checked(
             direction,
             &|| {
                 time(deadline)?;
                 (permit.check)()
             },
             &|_| Ok(()),
+        )?;
+        self.authorized_readback(readback, deadline)
+    }
+    fn authorized_readback(
+        &self,
+        readback: Readback,
+        deadline: Instant,
+    ) -> io::Result<AuthorizedReadback> {
+        time(deadline)?;
+        let plan = self.load()?;
+        Ok(AuthorizedReadback {
+            readback,
+            plan_id: self.id.clone(),
+            source: plan.source,
+            data_identity: self.originals.data.identity().clone(),
+            profile_identity: self.originals.profile.identity().clone(),
+            deadline,
+        })
+    }
+    #[cfg(test)]
+    pub(super) fn fixture_apply_for_index(
+        &self,
+        deadline: Instant,
+    ) -> io::Result<AuthorizedReadback> {
+        let readback = self.apply_checked(Direction::Retire, &|| time(deadline), &|_| Ok(()))?;
+        self.authorized_readback(readback, deadline)
+    }
+    pub(super) fn require_source(&self, expected: &Head) -> io::Result<()> {
+        if self.load()?.source != *expected {
+            return Err(denied(
+                "root movement source does not match independent event",
+            ));
+        }
+        Ok(())
+    }
+    pub(super) fn inspect_live(&self) -> io::Result<()> {
+        let plan = self.load()?;
+        self.live_matches(&plan)
+    }
+    pub(super) fn verify_retire_readback(&self, expected_sha256: &str) -> io::Result<()> {
+        let plan = self.load()?;
+        let archive = self.retired_matches(&plan)?;
+        let tree = TreeSnapshot::read(&archive.client)?;
+        let expected = self.receipt_bytes(&plan, Direction::Retire, &tree)?;
+        match capture_file(
+            &self.originals.directory,
+            &format!("root-retirement-{}-Retire-readback.json", self.id),
+            MAX_FRAME,
+        )? {
+            Image::File {
+                bytes, protection, ..
+            } if digest(&bytes) == expected_sha256 && bytes == expected => {
+                require_private(&protection, false)
+            }
+            _ => Err(denied(
+                "independent root absence readback is missing or changed",
+            )),
+        }
+    }
+    fn receipt_bytes(
+        &self,
+        plan: &Plan,
+        direction: Direction,
+        actual_tree: &TreeSnapshot,
+    ) -> io::Result<Vec<u8>> {
+        encode(
+            &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"direction":direction,"sourceHead":plan.source,"originalRootAbsent":true,"logicalClient":self.originals.profile.path().join(".codex"),"archivedSlot":self.slot(),"rootIdentity":actual_tree.root,"executionTreeSha256":digest(&encode(actual_tree)?),"grokSha256":digest(&encode(&plan.grok)?),"currentRootAbsent":direction==Direction::Retire}),
         )
     }
     fn apply_checked(
@@ -535,9 +645,7 @@ impl<'a> Pending<'a> {
                 TreeSnapshot::read(&self.live_view(&plan)?.client)?
             }
         };
-        let receipt = encode(
-            &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"direction":direction,"sourceHead":plan.source,"originalRootAbsent":true,"logicalClient":self.originals.profile.path().join(".codex"),"archivedSlot":self.slot(),"rootIdentity":actual_tree.root,"executionTreeSha256":digest(&encode(&actual_tree)?),"grokSha256":digest(&encode(&plan.grok)?),"currentRootAbsent":direction==Direction::Retire}),
-        )?;
+        let receipt = self.receipt_bytes(&plan, direction, &actual_tree)?;
         checkpoint("before_readback")?;
         check()?;
         match direction {
@@ -569,3 +677,7 @@ impl<'a> Pending<'a> {
 #[cfg(test)]
 #[path = "macos_client_root_retirement_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "macos_client_root_retirement_index_tests.rs"]
+mod index_tests;

@@ -32,7 +32,7 @@ try {
   while (true) { try { if ((await fetch(base)).ok) break } catch {} if (Date.now() > deadline) throw Error('Vite did not start'); await new Promise(resolve => setTimeout(resolve, 100)) }
   const engine = await pickEngine(); report.engine = engine.name; browser = await engine.launch()
   for (const scene of (process.env.AUDIT_RECOVERY_SCENES?.split(',') ?? ['eligible', 'pending', 'unknown', 'active', 'none', 'unsupported', 'error', 'slow', 'refresh-failed'])) {
-    const sizes = ['eligible','continue','rollback','rearm','early','prepare','capture','plan','plan-current','plan-ready'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
+    const sizes = ['eligible','continue','rollback','rearm','early','prepare','capture','plan','plan-current','plan-ready','root-plan','root-absent'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
     for (const [width, height, theme] of sizes) {
       const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
       const errors = []; page.on('pageerror', e => errors.push(e.message))
@@ -247,6 +247,11 @@ try {
         assert.equal(await page.evaluate(() => window.__clientRecoveryFixture.calls.filter(n => n === 'finalize').length), 1)
         record(name, { statusOnlyRetry: true })
       } else {
+        if(scene==='root-plan'||scene==='root-absent'){
+          await page.locator('dialog[open] summary').click()
+          await page.getByText(scene==='root-plan'?'客户端目录恢复待核对':'原目录缺席已核对',{exact:true}).waitFor()
+          assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.some(n=>['finalize','continue','rollback','rearm'].includes(n))),false)
+        }
         if(scene==='rolled-back'){
           await page.getByText('启动前原件仍保留，尚未恢复；服务保持停止。',{exact:true}).waitFor()
           assert.equal(await page.getByRole('button',{name:'确认继续恢复',exact:true}).count(),0)
@@ -391,6 +396,10 @@ try {
       assert.equal(await page.evaluate(() => window.clientRecovery024.snapshot().confirmations), 1)
       assert.equal(await page.evaluate(() => window.clientRecovery024.snapshot().ready), true)
     } else {
+      if(scene==='root-plan'||scene==='root-absent'){
+        await page.locator('#clientRecovery024Body summary').click()
+        await page.locator('#clientRecovery024Body').getByText(scene==='root-plan'?'客户端目录恢复待核对':'原目录缺席已核对',{exact:true}).waitFor()
+      }
       if(scene==='rolled-back'){
         await page.locator('#clientRecovery024Body').getByText('启动前原件仍保留，尚未恢复；服务保持停止。',{exact:true}).waitFor()
         assert.notEqual(await page.locator('#modalConfirm').textContent(),'确认继续恢复')

@@ -1096,3 +1096,47 @@ fn process_exit_during_reserved_capture_retains_partial_objects_without_adopting
         );
     }
 }
+
+#[test]
+fn an_existing_root_index_cannot_claim_root_absence_without_an_independent_origin_binding() {
+    let f = Fixture::new();
+    let index = Index::open(&f.context, &f.data, &f.client).unwrap();
+    let first = index.reserve_start().unwrap();
+    let head = Head {
+        revision: 2,
+        ticket: first.ticket.clone(),
+        state: State::RootRetirementPrepared,
+        references: Some(super::super::session::References {
+            attempt: first.ticket,
+            original_sha256: "a".repeat(64),
+            scope_sha256: "b".repeat(64),
+            phases: vec![],
+            live_sha256: None,
+        }),
+        restore_plan: None,
+        completion_sha256: None,
+        root_retirement: Some(RootRetirement {
+            source_revision: 1,
+            plan: RestorePlan {
+                id: uuid::Uuid::new_v4().to_string(),
+                sha256: "c".repeat(64),
+            },
+        }),
+    };
+    validate(&head).unwrap();
+    let raw = encode(&head).unwrap();
+    index
+        .connection()
+        .unwrap()
+        .execute("INSERT INTO events(revision,document) VALUES(2,?1)", [&raw])
+        .unwrap();
+    index
+        .connection()
+        .unwrap()
+        .execute("UPDATE current_session SET revision=2,document=?1", [&raw])
+        .unwrap();
+    drop(index);
+    assert!(inspect(&f.context, &f.data).is_err());
+    assert!(Index::open_existing(&f.context, &f.data, &f.client).is_err());
+    assert!(f.client.exists());
+}

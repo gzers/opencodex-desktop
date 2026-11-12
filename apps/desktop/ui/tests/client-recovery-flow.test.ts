@@ -42,6 +42,12 @@ beforeEach(() => {
 })
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it.each(['root_retirement_prepared','root_absent'] as const)('keeps %s read-only even if a payload advertises ordinary mutation capabilities',async phase=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preview(),phase,canContinue:true,canFinalize:true,canRollback:true,canRearm:true,canFinishUnchanged:true,canCancelPreparation:true,canPreparePlan:true,planDigest:'d'.repeat(64),unchangedDigest:'e'.repeat(64),preparationDigest:'f'.repeat(64),rollbackDigest:'b'.repeat(64),rearmDigest:'c'.repeat(64)})
+    const store=await inspect();expect(store.canContinue||store.canFinalize||store.canRollback||store.canRearm||store.canFinishUnchanged||store.canCancelPreparation||store.canPreparePlan).toBe(false)
+    expect(await store.apply('finalize')).toBe(false);expect(await store.apply('continue')).toBe(false);expect(clientRecoveryApi.finalize).not.toHaveBeenCalled();expect(clientRecoveryApi.continue).not.toHaveBeenCalled();expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+  })
+
   it.each([{phase:'stop_prepared' as const,revision:5,phaseCount:2},{phase:'ready' as const,revision:4,phaseCount:1}])('uses actual historical prefix $phase for a separate current-state plan and explicit later continuation',async prefix=>{
     const source={...missingPlan(),...prefix}
     vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(source).mockResolvedValue({...partial(),phase:'recovery_prepared',revision:prefix.revision+1,phaseCount:prefix.phaseCount})

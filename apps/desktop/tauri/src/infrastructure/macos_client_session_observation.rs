@@ -3,7 +3,6 @@
 //! otherwise closing an auxiliary fd could release a same-process writer's
 //! POSIX locks. Busy/unsafe/interrupted state is unknown, never an empty index.
 use super::*;
-use std::fs;
 use std::os::unix::fs::FileExt;
 fn no_sidecars(manager: &PinnedDirectory) -> io::Result<()> {
     for suffix in ["-journal", "-wal", "-shm"] {
@@ -149,12 +148,6 @@ pub(super) fn inspect_map_history_root<T>(
     if index_stat.st_size <= 0 || index_stat.st_size as u64 > MAX_INDEX {
         return Err(denied("current index size unknown"));
     }
-    let client_path = fs::canonicalize(context.working_directory.join(".codex"))?;
-    let client = PinnedDirectory::open(&client_path)?;
-    if data_root.starts_with(&client_path) || client_path.starts_with(data_root) {
-        return Err(denied("session roots overlap"));
-    }
-    let binding = scope(context, &data, &client)?;
     // Pins outlive the connection. Never open/close a second index fd after
     // SQLite has acquired a process-associated record lock.
     let pin = CoordinationFilePin::open(&manager.path().join(FILE))?;
@@ -201,33 +194,30 @@ pub(super) fn inspect_map_history_root<T>(
             r.get(0)
         })
         .map_err(database_error)?;
-    let root_registration = root_binding::verify_binding(
-        &binding,
-        &stored,
-        &manager,
-        &data,
-        &context.working_directory,
-        &client,
-    )?;
-    if let Some(refs) = &root_registration {
-        root_binding::verify_initial_event(&connection, refs)?;
-    }
     let result = read_head(&connection)?;
-    if let (Some(origin), Some(head)) = (root_registration.as_ref(), result.as_ref()) {
-        root_binding::verify_capture(
-            &stored,
-            origin,
-            &data,
-            &context.working_directory,
-            &client,
-            head,
-        )?;
+    let (client, root_registration) = root_binding::resolve(
+        context,
+        &data,
+        &manager,
+        &stored,
+        result.as_ref(),
+        &connection,
+    )?;
+    let logical = context.working_directory.join(".codex");
+    let client_path = client.path().to_path_buf();
+    let overlap_path = if root_registration.is_some() {
+        &logical
+    } else {
+        &client_path
+    };
+    if data_root.starts_with(overlap_path) || overlap_path.starts_with(data_root) {
+        return Err(denied("session roots overlap"));
     }
-    if root_registration.is_some() && result.is_none() {
-        return Err(denied(
-            "registered first root session has no Preparing event",
-        ));
-    }
+    let binding = if root_registration.is_some() {
+        scope_at(context, &data, &client, &logical)?
+    } else {
+        scope(context, &data, &client)?
+    };
     let history = if let Some(head) = result.as_ref().filter(|h| {
         matches!(
             h.state,
@@ -290,15 +280,22 @@ pub(super) fn inspect_map_history_root<T>(
     pin.recheck()?;
     no_sidecars(&manager)?;
     rollback_header(&pin)?;
-    root_binding::verify_binding(
-        &binding,
-        &stored,
-        &manager,
+    let (confirmed, _) = root_binding::resolve(
+        context,
         &data,
-        &context.working_directory,
-        &client,
+        &manager,
+        &stored,
+        result.as_ref(),
+        &connection,
     )?;
-    if scope(context, &data, &client)? != binding
+    if confirmed.identity() != client.identity() {
+        return Err(denied("observed root physical generation changed"));
+    }
+    if (if root_registration.is_some() {
+        scope_at(context, &data, &client, &logical)?
+    } else {
+        scope(context, &data, &client)?
+    }) != binding
         || action_pin(&manager, &action_file)? != action_before
     {
         return Err(denied("observation context changed"));
@@ -312,12 +309,42 @@ pub(super) fn inspect_map_history_root<T>(
     data.private()?;
     client.recheck()?;
     pin.recheck()?;
-    if scope(context, &data, &client)? != binding
+    if (if root_registration.is_some() {
+        scope_at(context, &data, &client, &logical)?
+    } else {
+        scope(context, &data, &client)?
+    }) != binding
         || action_pin(&manager, &action_file)? != action_before
     {
         return Err(denied(
             "observation context changed during evidence projection",
         ));
     }
+    if root_registration.is_some() && client.path() != logical {
+        let profile = PinnedDirectory::open(&context.working_directory)?;
+        if entry(&profile, ".codex")?.is_some() {
+            return Err(denied(
+                "client root reappeared during archived evidence projection",
+            ));
+        }
+    }
     Ok(projected)
+}
+
+pub(super) fn physical_root(context: &ProcessContext, data: &Path) -> io::Result<PathBuf> {
+    inspect_map(context, data, |head| {
+        let h = head.ok_or_else(|| denied("missing root has no independent session"))?;
+        let movement = h
+            .root_retirement
+            .as_ref()
+            .ok_or_else(|| denied("missing root lacks registered retirement"))?;
+        let refs = h
+            .references
+            .as_ref()
+            .ok_or_else(|| denied("missing root has no Original references"))?;
+        Ok(data
+            .join("manager-state/client-originals")
+            .join(&refs.attempt)
+            .join(format!("root-retired-{}", movement.plan.id)))
+    })
 }

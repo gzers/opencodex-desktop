@@ -4,21 +4,21 @@ use std::{
     os::unix::fs::{DirBuilderExt, PermissionsExt},
     time::Duration,
 };
-struct Fixture {
+pub(super) struct Fixture {
     _temp: Option<tempfile::TempDir>,
-    originals: Originals,
-    source: Head,
-    context: crate::state::ProcessContext,
-    _index: session_index::Index,
+    pub(super) originals: Originals,
+    pub(super) source: Head,
+    pub(super) context: crate::state::ProcessContext,
+    pub(super) _index: session_index::Index,
 }
 impl Fixture {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let temp = tempfile::tempdir().unwrap();
         let mut value = Self::at(temp.path().canonicalize().unwrap());
         value._temp = Some(temp);
         value
     }
-    fn at(root: PathBuf) -> Self {
+    pub(super) fn at(root: PathBuf) -> Self {
         let data = root.join("desktop");
         let profile = root.join("profile");
         let home = profile.join("home");
@@ -65,7 +65,7 @@ impl Fixture {
             _index: index,
         }
     }
-    fn prepare(&self) -> Pending<'_> {
+    pub(super) fn prepare(&self) -> Pending<'_> {
         Pending::prepare(&self.context, &self.originals, &self.source).unwrap()
     }
 }
@@ -279,7 +279,10 @@ fn whole_root_retirement_checks_authority_before_and_after_move_without_claiming
     pending
         .apply_checked(Direction::Retire, &|| Ok(()), &|_| Ok(()))
         .unwrap();
-    let permit = MutationPermit { check: &|| Ok(()) };
+    let permit = MutationPermit {
+        check: &|| Ok(()),
+        deadline: Instant::now() + Duration::from_secs(10),
+    };
     assert!(pending
         .apply(Direction::Retire, &permit, Instant::now())
         .is_err());
@@ -467,4 +470,23 @@ fn whole_root_retirement_foreign_archive_destination_is_preserved_and_missing_in
             pending.id()
         ))
         .exists());
+}
+
+#[test]
+fn whole_root_retirement_caller_cannot_extend_the_owning_native_permit_deadline() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let permit = MutationPermit {
+        check: &|| Ok(()),
+        deadline: Instant::now(),
+    };
+    assert!(pending
+        .apply(
+            Direction::Retire,
+            &permit,
+            Instant::now() + Duration::from_secs(30)
+        )
+        .is_err());
+    assert!(f.originals.profile.path().join(".codex").exists());
+    assert!(!f.originals.directory.path().join(pending.slot()).exists());
 }

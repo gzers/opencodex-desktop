@@ -22,26 +22,6 @@ pub(super) fn encode_binding(
         }),
     }
 }
-pub(super) fn verify_binding(
-    scope: &[u8],
-    stored: &[u8],
-    manager: &PinnedDirectory,
-    data: &PinnedDirectory,
-    profile: &Path,
-    client: &PinnedDirectory,
-) -> io::Result<Option<root_creation::References>> {
-    if stored == scope {
-        root_creation::require_no_pending_root(manager)?;
-        return Ok(None);
-    }
-    let binding: RootBinding = decode(stored)?;
-    if binding.schema_version != 1 || binding.scope != scope {
-        return Err(denied("session root binding or context differs"));
-    }
-    root_creation::verify_indexed(manager, data, profile, client, &binding.original_root)?;
-    Ok(Some(binding.original_root))
-}
-
 pub(super) fn verify_initial_event(
     connection: &Connection,
     refs: &root_creation::References,
@@ -117,4 +97,146 @@ pub(super) fn verify_capture(
     session::verify_index_scope(&originals, refs, Path::new(home))
         .map_err(|_| denied("registered root Original scope changed"))?;
     Ok(Some(originals))
+}
+
+/// Resolve the physical directory from independent SQLite references AFTER
+/// opening the index. A missing logical root is never treated as no session.
+pub(super) fn resolve(
+    context: &ProcessContext,
+    data: &PinnedDirectory,
+    manager: &PinnedDirectory,
+    stored: &[u8],
+    head: Option<&Head>,
+    connection: &Connection,
+) -> io::Result<(PinnedDirectory, Option<root_creation::References>)> {
+    let logical = context.working_directory.join(".codex");
+    let value = crate::modules::model_config::schema_v2::parse_strict_json_v2(stored)
+        .map_err(|_| denied("root scope binding is not strict JSON"))?;
+    if value.is_array() {
+        if head.is_some_and(|h| h.root_retirement.is_some()) {
+            return Err(denied(
+                "ordinary existing-root binding cannot claim original root absence",
+            ));
+        }
+        root_creation::require_no_pending_root(manager)?;
+        let path = std::fs::canonicalize(&logical)?;
+        let client = PinnedDirectory::open(&path)?;
+        if scope(context, data, &client)? != stored {
+            return Err(denied("ordinary index context changed"));
+        }
+        return Ok((client, None));
+    }
+    let binding: RootBinding = decode(stored)?;
+    if binding.schema_version != 1 {
+        return Err(denied("unknown first root binding schema"));
+    }
+    verify_initial_event(connection, &binding.original_root)?;
+    let head = head.ok_or_else(|| denied("registered root has no current independent session"))?;
+    if let Some(movement) = &head.root_retirement {
+        if !matches!(
+            head.state,
+            State::RootRetirementPrepared | State::RootAbsent
+        ) {
+            return Err(denied("unexpected root movement phase"));
+        }
+        let raw: Vec<u8> = connection
+            .query_row(
+                "SELECT document FROM events WHERE revision=?1",
+                [movement.source_revision],
+                |r| r.get(0),
+            )
+            .map_err(database_error)?;
+        let source: Head = decode(&raw)?;
+        validate(&source)?;
+        if source.revision != movement.source_revision
+            || source.ticket != head.ticket
+            || source.references != head.references
+            || source.restore_plan != head.restore_plan
+            || source.root_retirement.is_some()
+        {
+            return Err(denied("root movement rebases independent original source"));
+        }
+        let archived = observation::entry(
+            &PinnedDirectory::open(&context.working_directory)?,
+            ".codex",
+        )?
+        .is_none();
+        let originals = if archived {
+            super::super::root_retirement::open_archived_originals(
+                data.path(),
+                &context.working_directory,
+                &super::super::root_retirement::ArchiveReferences {
+                    source: source.clone(),
+                    original_root: binding.original_root.clone(),
+                    plan_id: movement.plan.id.clone(),
+                    plan_sha256: movement.plan.sha256.clone(),
+                },
+            )?
+        } else {
+            if head.state == State::RootAbsent {
+                return Err(denied(
+                    "client root reappeared after original absence restoration",
+                ));
+            }
+            let refs = source
+                .references
+                .as_ref()
+                .ok_or_else(|| denied("root movement Original refs absent"))?;
+            Originals::open_profile_origin(
+                data.path(),
+                &logical,
+                &context.working_directory,
+                super::super::OriginalKeys {
+                    attempt: &refs.attempt,
+                    original_sha256: &refs.original_sha256,
+                    expected_phases: &refs.phases,
+                },
+                Some(binding.original_root.clone()),
+            )?
+        };
+        let pending = super::super::root_retirement::Pending::open(
+            &originals,
+            &movement.plan.id,
+            &movement.plan.sha256,
+        )?;
+        pending.require_source(&source)?;
+        if archived {
+            pending.inspect_retired()?;
+        } else {
+            pending.inspect_live()?;
+        }
+        if head.state == State::RootAbsent {
+            pending.verify_retire_readback(
+                head.completion_sha256
+                    .as_deref()
+                    .ok_or_else(|| denied("root absence completion digest missing"))?,
+            )?;
+        }
+        let client = PinnedDirectory::open(originals.client.path())?;
+        if scope_at(context, data, &client, &logical)? != binding.scope {
+            return Err(denied("retired root logical context changed"));
+        }
+        return Ok((client, Some(binding.original_root)));
+    }
+    let path = std::fs::canonicalize(&logical)?;
+    let client = PinnedDirectory::open(&path)?;
+    if scope(context, data, &client)? != binding.scope {
+        return Err(denied("root origin context changed"));
+    }
+    root_creation::verify_indexed(
+        manager,
+        data,
+        &context.working_directory,
+        &client,
+        &binding.original_root,
+    )?;
+    verify_capture(
+        stored,
+        &binding.original_root,
+        data,
+        &context.working_directory,
+        &client,
+        head,
+    )?;
+    Ok((client, Some(binding.original_root)))
 }

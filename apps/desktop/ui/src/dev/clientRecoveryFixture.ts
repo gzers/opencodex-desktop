@@ -2,7 +2,7 @@
 import { clientRecoveryApi, type ClientRecoveryPreview } from '@/features/runtime/client-recovery'
 import { useLifecycleStore } from '@/app/lifecycle/store'
 import type { StatusSnapshot } from '@/contracts/runtimeStatus'
-type Scene = 'plan-ready' | 'plan-ready-slow' | 'plan-ready-error' | 'plan-current' | 'plan-current-slow' | 'plan-current-error' | 'plan' | 'plan-slow' | 'plan-error' | 'capture' | 'capture-slow' | 'capture-error' | 'prepare' | 'prepare-slow' | 'prepare-error' | 'prepare-refresh-failed' | 'early' | 'early-slow' | 'early-error' | 'early-refresh-failed' | 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
+type Scene = 'root-plan' | 'root-absent' | 'plan-ready' | 'plan-ready-slow' | 'plan-ready-error' | 'plan-current' | 'plan-current-slow' | 'plan-current-error' | 'plan' | 'plan-slow' | 'plan-error' | 'capture' | 'capture-slow' | 'capture-error' | 'prepare' | 'prepare-slow' | 'prepare-error' | 'prepare-refresh-failed' | 'early' | 'early-slow' | 'early-error' | 'early-refresh-failed' | 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
 export function installClientRecoveryFixture(initial: string) {
   let scene = initial as Scene, finalized = false, revision = initial.startsWith('rearm') ? 7 : 6
   let phase: 'ready'|'stop_prepared'|'stopped'|'recovery_prepared'|'restore_prepared'|'restore_rolled_back' = initial.startsWith('rearm') ? 'restore_rolled_back' : 'restore_prepared'
@@ -23,6 +23,7 @@ export function installClientRecoveryFixture(initial: string) {
     const value: ClientRecoveryPreview = { status: 'pending', phase, revision,
       attemptId: 'f394bd75-355b-4873-83cc-6818efeb547a', originalEvidence: 'verified', planEvidence: 'verified',
       completionEvidence: 'unregistered', phaseCount: 3, canContinue: false, canRollback: false, canFinalize: true, canRearm:false,canPreparePlan:false,planDigest:null,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) }
+    if(scene==='root-plan'||scene==='root-absent')Object.assign(value,{phase:scene==='root-plan'?'root_retirement_prepared':'root_absent',revision:scene==='root-plan'?4:5,phaseCount:0,canFinalize:false,confirmationDigest:null,completionEvidence:scene==='root-absent'?'verified':'not_recorded'})
     if (scene === 'pending') { value.canFinalize = false; value.confirmationDigest = null; value.completionEvidence = 'not_recorded' }
     if(scene.startsWith('early'))Object.assign(value,{phase:'captured',revision:2,phaseCount:0,planEvidence:'not_recorded',completionEvidence:'not_recorded',canFinalize:false,confirmationDigest:null,canFinishUnchanged:true,unchangedDigest:'e'.repeat(64)})
     if(scene.startsWith('plan')&&phase!=='restore_rolled_back')Object.assign(value,{phase,phaseCount:scene.startsWith('plan-ready')?1:scene.startsWith('plan-current')?2:3})

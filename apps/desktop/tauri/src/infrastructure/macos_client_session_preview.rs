@@ -148,6 +148,19 @@ fn project_history(
         rearm_digest: None,
         confirmation_digest: None,
     };
+    if root_origin.is_some() && head.root_retirement.is_some() {
+        preview.status = Status::Pending;
+        preview.attempt_id = head.references.as_ref().map(|r| r.attempt.clone());
+        preview.original_evidence = Evidence::Verified;
+        preview.plan_evidence = Evidence::Verified;
+        preview.completion_evidence = if head.state == State::RootAbsent {
+            Evidence::Verified
+        } else {
+            Evidence::NotRecorded
+        };
+        preview.phase_count = head.references.as_ref().map_or(0, |r| r.phases.len());
+        return Ok(preview);
+    }
     if matches!(head.state, State::Preparing | State::CaptureReserved) {
         preview.preparation_digest = preparation::confirmation(context, data, head, history)?;
         preview.can_cancel_preparation = preview.preparation_digest.is_some();

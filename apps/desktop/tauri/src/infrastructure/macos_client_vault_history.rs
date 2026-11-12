@@ -237,6 +237,7 @@ mod tests {
             references: None,
             restore_plan: None,
             completion_sha256: None,
+            root_retirement: None,
         }
     }
     fn database() -> Connection {
