@@ -163,6 +163,12 @@ impl Active {
                     .index
                     .record_restore_plan(&self.head, pending.id(), pending.sha256())
                     .map_err(failure)?;
+                mark("restore-three-artifacts");
+                let plan = self.head.restore_plan.as_ref().ok_or_else(|| failure(()))?;
+                self.session
+                    .restore_completed_stop(context, proof, &pair, lease, deadline, plan)?;
+                let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
+                    .append_event("client-stop-recovery: three-artifact-originals restored and readback verified");
                 mark("release-coordination");
                 Ok(())
             })

@@ -132,6 +132,43 @@ pub struct StartupSession {
     profile: PinnedDirectory,
     home: PinnedDirectory,
 }
+/// Borrow-scoped permission for this session's THREE assessed artifacts only.
+/// The official K and L writers remain excluded by the native lease throughout
+/// publication. This is not whole-family quiescence or complete client recovery.
+pub(super) struct ArtifactRestoreAuthority<'a> {
+    session: &'a StartupSession,
+    context: &'a ProcessContext,
+    stop: &'a CompletedLifecycleStop,
+    pair: &'a crate::infrastructure::macos_process_pair::PairExitProof,
+    lease: &'a NativeLease,
+    deadline: Instant,
+}
+impl ArtifactRestoreAuthority<'_> {
+    pub(super) fn check(&self, originals: &Originals) -> AppResult<()> {
+        time(self.deadline)?;
+        if !std::ptr::eq(originals, &self.session.originals) {
+            return Err(error(()));
+        }
+        self.lease
+            .require_context(self.context, &originals.client.path)?;
+        let live = self.session.live(self.context)?;
+        self.pair
+            .require(live.process()?, live.parent()?, self.deadline)?;
+        self.stop.require_original(
+            self.context,
+            &originals.data.path,
+            live.process()?,
+            &live.record_sha256,
+        )?;
+        if capture_file(&self.session.home, "runtime-port.json", 4096).map_err(error)?
+            != Image::Absent
+            || capture_file(&self.session.home, "ocx.pid", 64).map_err(error)? != Image::Absent
+        {
+            return Err(error(()));
+        }
+        time(self.deadline)
+    }
+}
 fn effective_client(context: &ProcessContext) -> AppResult<PathBuf> {
     // The production controlled runner clears CODEX_HOME and supplies the
     // startup user's HOME. On macOS official defaultCodexHome therefore uses
@@ -590,6 +627,43 @@ impl StartupSession {
         )
         .map_err(error)?;
         Ok(())
+    }
+    /// Ordinary current-session compensation only. A pending/crashed session
+    /// cannot manufacture either Stop or pair authority from persisted bytes.
+    pub fn restore_completed_stop(
+        &self,
+        context: &ProcessContext,
+        stop: &CompletedLifecycleStop,
+        pair: &crate::infrastructure::macos_process_pair::PairExitProof,
+        lease: &NativeLease,
+        deadline: Instant,
+        plan: &session_index::RestorePlan,
+    ) -> AppResult<()> {
+        let authority = ArtifactRestoreAuthority {
+            session: self,
+            context,
+            stop,
+            pair,
+            lease,
+            deadline,
+        };
+        authority.check(&self.originals)?;
+        let (root, _) = source(context)?;
+        let owner = SystemServiceOwnerProofProvider::new(root, context.clone())?;
+        if owner.query(context)? != ServiceOwnerProof::Stopped {
+            return Err(error(()));
+        }
+        let pending =
+            restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)?;
+        let permit = restore::MutationPermit::from_authority(authority);
+        pending
+            .apply(restore::Decision::Complete, &permit)
+            .map_err(error)?;
+        permit.check(&self.originals).map_err(error)?;
+        if owner.query(context)? != ServiceOwnerProof::Stopped {
+            return Err(error(()));
+        }
+        time(deadline)
     }
     pub fn open(
         context: &ProcessContext,

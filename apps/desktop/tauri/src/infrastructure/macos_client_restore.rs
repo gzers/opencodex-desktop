@@ -1,13 +1,12 @@
 //! Native reversible file publication, confined to the three admitted artifacts.
-//! This engine is not connected to lifecycle commands. Content assessment and
-//! private journals do not mint the missing service-generation/exit authority.
+//! Ordinary current-session calls require borrowed original Stop/pair/lease
+//! authority. Content assessment or private journals alone cannot mint it.
 //! Descriptor checks followed by rename are not a kernel compare-and-swap on
 //! an expected inode. The lifecycle factory must prove live official writer
-//! exclusion across the mutation, not merely a formerly valid lease. No such
-//! production factory is provided here; tests use explicit synthetic authority.
+//! exclusion across the mutation, not merely a formerly valid lease.
+//! Whole-session success remains separate from this three-file publication.
 use super::*;
 use crate::modules::runtime::client_artifact_policy as policy;
-use std::time::Instant;
 
 unsafe extern "C" {
     fn acl_copy_int(bytes: *const libc::c_void) -> *mut libc::c_void;
@@ -15,14 +14,20 @@ unsafe extern "C" {
     fn acl_set_fd_np(fd: libc::c_int, acl: *mut libc::c_void, kind: libc::c_int) -> libc::c_int;
 }
 
-/// Deliberately no constructor/deserializer/default. The lifecycle owner must
-/// implement a native normal-exit/generation factory before product callers can
-/// obtain this permit. Tests enter the same file engine through a private seam.
-pub struct MutationPermit {
-    attempt: String,
-    client: Identity,
-    data: Identity,
-    deadline: Instant,
+/// No public constructor/deserializer/default and no transferable stored
+/// success boolean. The session owner is the only authority constructor.
+pub struct MutationPermit<'a> {
+    authority: session::ArtifactRestoreAuthority<'a>,
+}
+impl<'a> MutationPermit<'a> {
+    pub(super) fn from_authority(authority: session::ArtifactRestoreAuthority<'a>) -> Self {
+        Self { authority }
+    }
+    pub(super) fn check(&self, originals: &Originals) -> io::Result<()> {
+        self.authority
+            .check(originals)
+            .map_err(|_| denied("current Stop/pair/original/coordination authority changed"))
+    }
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -610,32 +615,8 @@ impl<'a> Pending<'a> {
         }
         Ok((plan, captures))
     }
-    pub fn apply(
-        &self,
-        decision: Decision,
-        permit: &MutationPermit,
-        lease: &crate::infrastructure::official_client_coordination::native::NativeLease,
-    ) -> io::Result<()> {
-        if permit.attempt != self.originals.attempt
-            || permit.client != *self.originals.client.identity()
-            || permit.data != *self.originals.data.identity()
-        {
-            return Err(denied(
-                "native lifecycle permit belongs to another transaction",
-            ));
-        }
-        self.apply_checked(
-            decision,
-            &|| {
-                if Instant::now() >= permit.deadline {
-                    return Err(denied("original lifecycle deadline expired"));
-                }
-                lease
-                    .check()
-                    .map_err(|_| denied("official coordination expired"))
-            },
-            &|_| Ok(()),
-        )
+    pub fn apply(&self, decision: Decision, permit: &MutationPermit<'_>) -> io::Result<()> {
+        self.apply_checked(decision, &|| permit.check(self.originals), &|_| Ok(()))
     }
     fn pair(&self, i: usize) -> io::Result<(Image, Image)> {
         Ok((
