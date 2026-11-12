@@ -9,6 +9,9 @@ struct FakeHost {
     processes: Mutex<BTreeMap<u32, ProcessIdentity>>,
     listener: AtomicBool,
     manager: AtomicBool,
+    blocked_ports: Mutex<Vec<u16>>,
+    queried_ports: Mutex<Vec<u16>>,
+    port_error: AtomicBool,
 }
 impl Host for FakeHost {
     fn owner(&self) -> AppResult<String> {
@@ -20,8 +23,13 @@ impl Host for FakeHost {
     fn processes(&self) -> AppResult<Vec<ProcessIdentity>> {
         Ok(self.processes.lock().unwrap().values().cloned().collect())
     }
-    fn port_clear(&self, _: u16) -> AppResult<bool> {
-        Ok(!self.listener.load(Ordering::SeqCst))
+    fn port_clear(&self, port: u16) -> AppResult<bool> {
+        self.queried_ports.lock().unwrap().push(port);
+        if self.port_error.load(Ordering::SeqCst) {
+            return Err(AppError::NotConfigured);
+        }
+        Ok(!self.listener.load(Ordering::SeqCst)
+            && !self.blocked_ports.lock().unwrap().contains(&port))
     }
     fn manager_absent(&self) -> AppResult<bool> {
         Ok(!self.manager.load(Ordering::SeqCst))
@@ -156,23 +164,40 @@ mod completed_stop_binding {
     use super::*;
     use crate::infrastructure::macos_process_exit::{ExitWatch, Generation, NormalExitProof};
     use std::{
-        io::Write,
+        io::{Read, Write},
         process::{Command, Stdio},
         time::Duration,
     };
 
-    fn normal_exit() -> (Generation, NormalExitProof) {
+    fn normal_exit() -> (
+        Generation,
+        NormalExitProof,
+        crate::infrastructure::macos_tcp_listeners::TcpListeners,
+    ) {
         let mut child = Command::new("/bin/sh")
-            .args(["-c", "read owned_fixture; exit 0"])
+            .args(["-c", "printf R; read owned_fixture; exit 0"])
             .env_clear()
             .env("PATH", "/usr/bin:/bin")
             .stdin(Stdio::piped())
-            .stdout(Stdio::null())
+            .stdout(Stdio::piped())
             .stderr(Stdio::null())
             .spawn()
             .unwrap();
+        let mut ready = [0];
+        child
+            .stdout
+            .as_mut()
+            .unwrap()
+            .read_exact(&mut ready)
+            .unwrap();
+        assert_eq!(&ready, b"R");
         let generation = Generation::observe(child.id()).unwrap();
         let mut watch = ExitWatch::capture(generation).unwrap();
+        let listeners = crate::infrastructure::macos_tcp_listeners::TcpListeners::capture(
+            generation,
+            Instant::now() + Duration::from_secs(2),
+        )
+        .unwrap();
         child
             .stdin
             .take()
@@ -187,7 +212,7 @@ mod completed_stop_binding {
             std::thread::sleep(Duration::from_millis(2));
         };
         assert!(child.wait().unwrap().success());
-        (generation, proof)
+        (generation, proof, listeners)
     }
     #[test]
     fn preexisting_stopped_observation_has_no_fresh_exit_or_compensation_authority() {
@@ -225,17 +250,32 @@ mod completed_stop_binding {
         // certificate and never goes through a restoration permit factory.
         let f = Fixture::new();
         let context = &f.provider.context;
-        let (generation, normal) = normal_exit();
+        let (generation, normal, listeners) = normal_exit();
         let proof = CompletedLifecycleStop {
             deadline: Instant::now() + Duration::from_secs(1),
             context: context.clone(),
             data_root: path_key(f._root.path()),
             record_digest: Some("a".repeat(64)),
             normal_exit: Some(normal),
+            tcp_listeners: Some(listeners),
         };
         proof
             .require_original(context, f._root.path(), generation, &"a".repeat(64))
             .unwrap();
+        let no_listeners = CompletedLifecycleStop {
+            context: context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            normal_exit: proof.normal_exit.clone(),
+            tcp_listeners: None,
+            deadline: proof.deadline,
+        };
+        assert!(
+            no_listeners
+                .require_original(context, f._root.path(), generation, &"a".repeat(64))
+                .is_err(),
+            "exit alone must not replace missing native listener evidence"
+        );
         assert!(proof
             .require_original(
                 context,
@@ -279,13 +319,14 @@ mod completed_stop_binding {
     fn malformed_record_digest_and_a_record_without_native_exit_cannot_authorize_restore() {
         let f = Fixture::new();
         let context = &f.provider.context;
-        let (generation, normal) = normal_exit();
+        let (generation, normal, listeners) = normal_exit();
         let proof = CompletedLifecycleStop {
             deadline: Instant::now() + Duration::from_secs(1),
             context: context.clone(),
             data_root: path_key(f._root.path()),
             record_digest: Some("not-a-runtime-record-sha256".into()),
             normal_exit: Some(normal),
+            tcp_listeners: Some(listeners),
         };
         assert!(proof.require_context(context, f._root.path()).is_err());
         let no_exit = CompletedLifecycleStop {
@@ -294,6 +335,7 @@ mod completed_stop_binding {
             data_root: path_key(f._root.path()),
             record_digest: Some("a".repeat(64)),
             normal_exit: None,
+            tcp_listeners: None,
         };
         assert!(no_exit
             .require_original(context, f._root.path(), generation, &"a".repeat(64))
@@ -302,17 +344,45 @@ mod completed_stop_binding {
     #[test]
     fn completed_stop_reference_never_gets_a_fresh_budget_for_subsequent_work() {
         let f = Fixture::new();
-        let (generation, normal) = normal_exit();
+        let (generation, normal, listeners) = normal_exit();
         let proof = CompletedLifecycleStop {
             deadline: Instant::now(),
             context: f.provider.context.clone(),
             data_root: path_key(f._root.path()),
             record_digest: Some("a".repeat(64)),
             normal_exit: Some(normal),
+            tcp_listeners: Some(listeners),
         };
         assert!(
             matches!(proof.require_original(&f.provider.context,f._root.path(),generation,&"a".repeat(64)),Err(AppError::RuntimeManaged{code,..}) if code=="lifecycle_timeout")
         );
+    }
+    #[test]
+    fn secondary_captured_listener_or_unknown_socket_table_blocks_complete_stop_predicate() {
+        let one = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let two = std::net::TcpListener::bind("[::1]:0").unwrap();
+        let expected = [
+            one.local_addr().unwrap().port(),
+            two.local_addr().unwrap().port(),
+        ];
+        let proof = crate::infrastructure::macos_tcp_listeners::TcpListeners::capture(
+            Generation::observe(std::process::id()).unwrap(),
+            Instant::now() + Duration::from_secs(2),
+        )
+        .unwrap();
+        assert!(expected.iter().all(|port| proof.ports().contains(port)));
+        let secondary = *proof.ports().last().unwrap();
+        let primary = proof.ports()[0];
+        assert_ne!(secondary, primary);
+        let f = Fixture::new();
+        f.host.blocked_ports.lock().unwrap().push(secondary);
+        assert!(!f.provider.captured_tcp_clear(&proof).unwrap());
+        let queries = f.host.queried_ports.lock().unwrap().clone();
+        assert!(queries.contains(&primary) && queries.contains(&secondary));
+        f.host.blocked_ports.lock().unwrap().clear();
+        assert!(f.provider.captured_tcp_clear(&proof).unwrap());
+        f.host.port_error.store(true, Ordering::SeqCst);
+        assert!(f.provider.captured_tcp_clear(&proof).is_err());
     }
 }
 

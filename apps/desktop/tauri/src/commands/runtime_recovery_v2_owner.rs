@@ -108,6 +108,8 @@ pub struct CompletedLifecycleStop {
     deadline: Instant,
     #[cfg(target_os = "macos")]
     normal_exit: Option<crate::infrastructure::macos_process_exit::NormalExitProof>,
+    #[cfg(target_os = "macos")]
+    tcp_listeners: Option<crate::infrastructure::macos_tcp_listeners::TcpListeners>,
 }
 /// An action-time observation only. It grants no file mutation or recovery
 /// completion authority and cannot be reconstructed from an error code.
@@ -164,6 +166,10 @@ impl CompletedLifecycleStop {
                 .normal_exit
                 .as_ref()
                 .is_none_or(|proof| proof.generation() != generation)
+            || self
+                .tcp_listeners
+                .as_ref()
+                .is_none_or(|listeners| listeners.generation() != generation)
         {
             return Err(fail(
                 "client_stop_binding_unknown",
@@ -174,6 +180,18 @@ impl CompletedLifecycleStop {
     }
 }
 impl SystemServiceOwnerProofProvider {
+    #[cfg(target_os = "macos")]
+    fn captured_tcp_clear(
+        &self,
+        listeners: &crate::infrastructure::macos_tcp_listeners::TcpListeners,
+    ) -> AppResult<bool> {
+        for port in listeners.ports() {
+            if !self.host.port_clear(*port)? {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
     /// Removal covers all selected images, including another HOME of this OS
     /// user. Windows shared-install proof must come from its native lifetime
     /// backend; do not turn the current-H observer into an all-SID assertion.
@@ -268,6 +286,8 @@ impl SystemServiceOwnerProofProvider {
                         deadline: proof_deadline,
                         #[cfg(target_os = "macos")]
                         normal_exit: None,
+                        #[cfg(target_os = "macos")]
+                        tcp_listeners: None,
                     });
                 }
                 ServiceOwnerProof::Unknown => {
@@ -287,7 +307,7 @@ impl SystemServiceOwnerProofProvider {
                 ));
             }
             #[cfg(target_os = "macos")]
-            let mut native_exit = {
+            let (mut native_exit, native_listeners) = {
                 use crate::infrastructure::macos_process_exit::{ExitWatch, Generation};
                 let actual = self.host.process(pid)?.ok_or_else(|| {
                     fail(
@@ -312,7 +332,24 @@ impl SystemServiceOwnerProofProvider {
                         .parse()
                         .map_err(|_| fail("lifecycle_exit_identity", "原服务创建时间不可核对"))?,
                 };
-                ExitWatch::capture(expected)?
+                let watch = ExitWatch::capture(expected)?;
+                mark("native-tcp-listeners");
+                let listeners = crate::infrastructure::macos_tcp_listeners::TcpListeners::capture(
+                    expected,
+                    proof_deadline,
+                )?;
+                if !listeners.ports().contains(&record.runtime.port) {
+                    return Err(fail(
+                        "lifecycle_listener_binding",
+                        "运行记录端口尚未证明由该代次服务进程监听，未发送停止请求",
+                    ));
+                }
+                let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
+                    .append_event(&format!(
+                        "stop-proof: native-tcp-listeners captured count={}",
+                        listeners.ports().len()
+                    ));
+                (watch, listeners)
             };
             let wait_budget = remaining()?;
             let verified_stop = tauri::async_runtime::block_on(async {
@@ -390,6 +427,11 @@ impl SystemServiceOwnerProofProvider {
                         && self.host.port_clear(record.runtime.port)?
                     {
                         #[cfg(target_os = "macos")]
+                        if !self.captured_tcp_clear(&native_listeners)? {
+                            std::thread::sleep(Duration::from_millis(10));
+                            continue;
+                        }
+                        #[cfg(target_os = "macos")]
                         let normal_exit = match native_exit.normal_exit(action_deadline)? {
                             Some(proof) => proof,
                             None => {
@@ -400,6 +442,12 @@ impl SystemServiceOwnerProofProvider {
                         #[cfg(target_os = "macos")]
                         let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
                             .append_event("stop-proof: original-native-exit confirmed code=0");
+                        #[cfg(target_os = "macos")]
+                        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
+                            .append_event(&format!(
+                                "stop-proof: captured-tcp-listeners absent count={}",
+                                native_listeners.ports().len()
+                            ));
                         remaining()?;
                         return Ok(CompletedLifecycleStop {
                             context: context.clone(),
@@ -408,6 +456,8 @@ impl SystemServiceOwnerProofProvider {
                             deadline: proof_deadline,
                             #[cfg(target_os = "macos")]
                             normal_exit: Some(normal_exit),
+                            #[cfg(target_os = "macos")]
+                            tcp_listeners: Some(native_listeners),
                         });
                     }
                 }
