@@ -1,0 +1,34 @@
+{
+  "accepted": false,
+  "uniqueAffectedDebugFunctionsPassed": 33,
+  "batches": {
+    "final-image-tests": 10,
+    "selection-regression": 11,
+    "repair-regression": 5,
+    "removal-regression": 7
+  },
+  "releaseNegativeFunctionsPassed": 21,
+  "sameOriginalReleaseCopiedNegativeFunctionsPassed": 21,
+  "strictClippyFinalExitCode": 0,
+  "fmtAndDiffCheckPassed": true,
+  "baselineInventoryUs": 774801,
+  "finalOrderSerialUs": 1970408,
+  "finalOrderParallelUs": 617526,
+  "reverseOrderSerialUs": 694484,
+  "reverseOrderParallelUs": 655807,
+  "allInventoryRowsEqualAndPinnedTreeDigest": true,
+  "benchmarkCacheOrderLimitation": "Do not claim constant3x. Reverse warm order has modest benefit. Worker totals are CPU-time sums, not wall time.",
+  "debugCompleteStopAccepted": false,
+  "firstReleaseFirstRootPass": {
+    "startMs": 5991,
+    "statusMs": 225,
+    "stopMs": 7836
+  },
+  "finalReleaseFirstRootPass": {
+    "startMs": 5979,
+    "statusMs": 224,
+    "stopMs": 7913
+  },
+  "fixedPackageCandidateAcceptance": false,
+  "nextStartOrInterruptedRootRecoveryAccepted": false
+}

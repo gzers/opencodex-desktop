@@ -1,0 +1,47 @@
+{
+  "accepted": false,
+  "command": [
+    "cargo",
+    "test",
+    "--release",
+    "--lib",
+    "--no-run"
+  ],
+  "originalLiveToolSession": 55940,
+  "purpose": "same source diagnostic under shipped Cargo release optimization, not a frozen app/candidate or publication",
+  "cargoReleaseSettings": {
+    "codegenUnits": 1,
+    "lto": true,
+    "optLevel": "s",
+    "strip": true
+  },
+  "criticalChecksDebugConfigReview": "No debug_assertions or debug_assert in stopped/owner/native coordination/image/selection gates; discovery toggles stage timings only. Main Windows subsystem differs outside library test. Preferences debug_assert checks frozen schema sanity, not Stop gates.",
+  "debugStopFailurePreservedSeparately": "native-stop/",
+  "sourceFileHashes": [
+    {
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "sha256": "fdff22ccfe0f2766f0aa124e7a6fe8c534185838bb9eb78bfa5a1030275e0d30"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+      "sha256": "d591ebb6b53909f2de4913a839945a4e8e614e80a0ff8648d856318edf3d4c1f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_parallel_tests.rs",
+      "sha256": "5212c8b4f57b523be63d0f6c249653099c9b490dd11535acf84bc7802144aea6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "sha256": "2b7ee277ab1cc0a858deb8cba193abeea95b466b0fdf4756f3969c8e5bf625b1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "sha256": "2e16109a5d168ea7dbfff36500592eed4be675b335e94c2b749d6bf7965d1948"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_config_write_guard.rs",
+      "sha256": "24f9ad6eecb24fc07d71d8a7907add0f177c3561f9a99aad5ea5d3dc1f0105a4"
+    }
+  ],
+  "sourceBaseCommit": "46952673e21729a88bedd6349560a2edb1967fea"
+}

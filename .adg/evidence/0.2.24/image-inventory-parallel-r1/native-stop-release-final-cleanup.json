@@ -1,0 +1,50 @@
+{
+  "accepted": false,
+  "allOriginalToolHandlesTerminal": true,
+  "ownedProcessesRemaining": [],
+  "tcp": {
+    "framingVerified": true,
+    "primaryPortsAbsent": [
+      65295
+    ],
+    "snapshotSha256": "c98be524f33e173db1699335bf6f7198c193fcfe8e4fd8b58ff7df1731f037d7",
+    "secondaryPorts": "Product captured and confirmed4 absent per round; cleanup independently checks only exported primary ports"
+  },
+  "allNewCoordinatorsExclusivelyReacquiredAndRemoved": [
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/130a5e494b1f2ca7ed72fe4b5caff8e9b8e2867c3be45ff379c56ddaedd2eeb1.sqlite",
+      "device": 16777231,
+      "inode": 444939574,
+      "sha256": "095165fbf8460d50ad40b0220f25a78561edc9288608167b2e60e6f95dbf9007"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/130a5e494b1f2ca7ed72fe4b5caff8e9b8e2867c3be45ff379c56ddaedd2eeb1.sqlite",
+      "device": 16777231,
+      "inode": 444939577,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/a1409b118ad15d2b3574c3adf0086437ac8bc489acedd5d845d1377908657cb2.sqlite",
+      "device": 16777231,
+      "inode": 444940678,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47"
+    }
+  ],
+  "globalLUnchangedAndExclusiveReleased": {
+    "device": 16777231,
+    "inode": 369360155,
+    "mode": 384,
+    "uid": 501,
+    "gid": 0,
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rawFailedBytesCapturedBeforeCleanup": true,
+  "ownedRootsStillRetainedUntilArchiveVerification": [
+    "/private/tmp/ocxd024-versioned-lifecycle-c_4ff7gc"
+  ],
+  "dailyConfigurationChanged": false,
+  "officialRuntimeModified": false,
+  "realBusinessRequests": false,
+  "normalStopAccepted": false
+}

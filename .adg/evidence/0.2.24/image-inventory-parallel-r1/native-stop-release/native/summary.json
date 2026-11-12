@@ -1,0 +1,95 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "grokConfigChangedDuringStart": false,
+  "independentOriginalsReferenced": true,
+  "indexedAfterStop": {
+    "completionSha256": "a2fe98ba700bb26286f44ab0d5f712a7c5458349956f2dbba0e714b1bfa45950",
+    "references": {
+      "attempt": "4ca87864-f3a0-4f14-8df8-23b0895d5664",
+      "liveSha256": "00476fbc7bd83ac18588445f8dec59d680ce93b8228cd42175d7ca29ca4878c9",
+      "originalSha256": "0427ed4fb72174dc3ff4767db7c576937ebb3689f906827e3b575fb95a298444",
+      "phases": [
+        [
+          "ready",
+          "f4236753758797839abd6195d7531b3d0ea309cc7cae2ca05c6ccb03f7b79644"
+        ],
+        [
+          "pre_stop",
+          "dcb844a515ead718fddff6f75f8ff5489d7b2b7d58e39170d91c26ce2a6d958d"
+        ],
+        [
+          "stopped",
+          "01833141601c39158f83ef9a5930ab6131457d7e5d26b2aabd0c7660b4e7a2e3"
+        ]
+      ],
+      "scopeSha256": "d9500a857ab3a1e1bb99e217520a3d610a6097cb2a63374a28ae22ce449dc239"
+    },
+    "restorePlan": {
+      "id": "8e32732a-96bb-4458-89ec-1eb8af140d8a",
+      "sha256": "834a36822ee029934a58925202f89aaa06b74d7e0287d3d038020c4ae8457b20"
+    },
+    "revision": 9,
+    "rootRetirement": {
+      "plan": {
+        "id": "b0baa7ea-7a71-41d4-a8fe-083b833493a8",
+        "sha256": "67f488f95469f8b6762af8bb5a24fa713e7fd2872b5d133012f1e57d76975132"
+      },
+      "sourceRevision": 7
+    },
+    "state": "root_absent",
+    "ticket": "4ca87864-f3a0-4f14-8df8-23b0895d5664"
+  },
+  "indexedReady": true,
+  "initialClientState": "codex-absent",
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "originalAbsentProvenanceAndReadback": true,
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 66820,
+    "port": 61889
+  },
+  "recordAbsent": true,
+  "result": "passed",
+  "rootAbsentTerminal": true,
+  "scope": "diagnostic first-root Start/Stop only; next Start and interrupted root recovery remain unaccepted",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 5991,
+  "status": {
+    "pid": "66820",
+    "port": 61889,
+    "ready": true,
+    "status": "running"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 225,
+  "stop": {
+    "canRestart": false,
+    "canStart": true,
+    "canStop": false,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "stopped",
+    "result": "stopped"
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 7836
+}

@@ -1,0 +1,27 @@
+{
+  "accepted": false,
+  "sourceCommit": "97a3bf93b",
+  "analysisAgent": "01a1d166-af8d-7062-8bb6-1f95dd82d484",
+  "staticReadOnlyNoExecution": true,
+  "firstReleasePassDoesNotProveNextStart": true,
+  "currentConstraints": [
+    "Active::capture missing root currently calls first-only reserve and is refused by retained index/evidence",
+    "root_creation markers/reservation slots create-only and first-only",
+    "RootBinding singleton/initialevent1 tied original generation",
+    "capture custody requires createdfd/deadline/revision1 and origin.id==attempt",
+    "frame/root/phase/retirement references consistently bind same origin.id",
+    "vault history currently closes Restored/Unchanged, not root-absent generations",
+    "RootAbsent status mapping Required disagrees with immediate Stop canStart:true observation; needs same readonly eligibility source"
+  ],
+  "proposedNextDirection": "Keep old archive untouched. New explicit registered root generation and new attempt per later Start, retain id==attempt within each generation, never just loosen reserve_start. Immutable historical source/event+generation link should retain first binding and old evidence.",
+  "implementationOrder": [
+    "separate currentRootAbsent verification from immutable closed-generation archive/Original/frame/completion verification; current scene facts never replace history",
+    "append generation origin/scope/preparingRevision and previousRootAbsent revision/digest atomically to independent index/events; no second ledger or old-format migration",
+    "generation-specific create-only custody slots and root-only new-generation entry require held Index+exact currentRootAbsent, actual missing root, native object/deadline/no-overwrite",
+    "resolve/capture/transition/history by independently registered generation, preserve first event and per-generation id==attempt",
+    "same-source readonly successor eligibility drives status and actual Start, new user directory/symlink/unknown slot/pending refuses",
+    "two complete originalofficial release Start/Status/Stop cycles with distinct root identities/attempts/plans and intact old archive plus interruption/CAS/custody-negative checks"
+  ],
+  "notImplementedOrAccepted": true,
+  "requiresNoPublicationNow": true
+}

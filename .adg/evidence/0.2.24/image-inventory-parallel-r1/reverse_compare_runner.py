@@ -1,0 +1,14 @@
+from pathlib import Path
+import json,subprocess,re,hashlib,shutil,time,os
+b=Path(__file__).resolve().parent;out=b/'reverse-comparison';out.mkdir();before=json.loads((b/'baseline/runner-summary.json').read_text());assert before['exitCode']==0 and not before['ownedProcessesRemaining'];root=Path(before['fixture']);work=Path(before['temporaryRoot']);assert root.is_absolute() and root.parent==work and work.parent==Path('/private/tmp')
+repo=Path('/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes');sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();log=(b/'final-image-tests.log').read_text();m=re.search(r'Running unittests src/lib.rs \(([^)]+)\)',log);assert m;binary=repo/'apps/desktop/tauri'/m.group(1);exe=root/'library-tests-parallel';shutil.copy2(binary,exe);assert sha(exe)==sha(binary)
+env={'PATH':'/usr/bin:/bin:/usr/sbin:/sbin','HOME':str(root/'profile'),'TMPDIR':str(root/'tmp')+'/','LANG':'en_US.UTF-8','OCXD024_IMAGE_SCAN_FIXTURE_ROOT':str(root),'OCXD024_IMAGE_SCAN_COMPARE':'1','OCXD024_IMAGE_SCAN_PARALLEL_FIRST':'1'}
+report={'accepted':False,'temporaryRoot':str(work),'fixture':str(root),'binarySha256':sha(exe),'sourceBase':subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),'sourceFiles':[{'path':p,'sha256':sha(repo/p)} for p in sorted(set(subprocess.check_output(['git','diff','--name-only'],cwd=repo,text=True).splitlines()+subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=repo,text=True).splitlines()))],'hypothesis':'Compare exact original sequential reference against bounded4 fresh complete inventory on same verified official2.99image. Every byte and Entry must be equal; report actual worker metrics, not performance acceptance by assertion.'}
+(out/'hypothesis.json').write_text(json.dumps(report,indent=2));t=time.monotonic()
+with (out/'native.stdout.log').open('wb') as stdout,(out/'native.stderr.log').open('wb') as stderr:
+ p=subprocess.Popen(['/usr/bin/sandbox-exec','-f',str(work/'fixture.sb'),str(exe),'--exact','modules::runtime::program_image::tests::official299_complete_image_inventory_stage_cost','--ignored','--nocapture','--test-threads=1'],cwd=root,env=env,stdout=stdout,stderr=stderr,start_new_session=True);report['pid']=p.pid;(out/'running.json').write_text(json.dumps(report))
+ try:report['exitCode']=p.wait(timeout=120)
+ except subprocess.TimeoutExpired:report['exitCode']=None
+report['elapsedSeconds']=round(time.monotonic()-t,3);report['ownedProcessesRemaining']=[line for line in subprocess.check_output(['ps','-axo','pid=,ppid=,comm='],text=True).splitlines() if str(root) in line]
+if (root/'image-scan-comparison.json').exists():shutil.copy2(root/'image-scan-comparison.json',out/'image-scan-comparison.json')
+(out/'runner-summary.json').write_text(json.dumps(report,indent=2));print(json.dumps(report,indent=2),flush=True)
