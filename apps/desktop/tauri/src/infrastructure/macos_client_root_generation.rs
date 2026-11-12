@@ -37,6 +37,65 @@ impl CreationAuthority<'_> {
     }
 }
 impl Index {
+    pub fn record_successor_root_originals(
+        &self,
+        context: &ProcessContext,
+        expected: &Head,
+        refs: References,
+    ) -> io::Result<Head> {
+        if self
+            .root_registration
+            .as_ref()
+            .is_none_or(|r| r.generation_slot.as_deref() != Some(r.id.as_str()))
+        {
+            return Err(denied(
+                "successor Original registration lacks indexed generation",
+            ));
+        }
+        self.record_root_originals(context, expected, refs)
+    }
+    /// Second-generation capture requires the ORIGINAL live creation fd and
+    /// deadline. A facts-only reopen can resolve Preparing, but cannot mint
+    /// this reservation from the provenance files or an empty pathname.
+    pub fn reserve_successor_root_capture(&self, expected: &Head) -> io::Result<Head> {
+        if self.head()?.as_ref() != Some(expected) {
+            return Err(denied("successor capture source is not current"));
+        }
+        let origin = self
+            .root_registration
+            .as_ref()
+            .ok_or_else(|| denied("successor capture has no registered root"))?;
+        let generation = expected
+            .root_generation
+            .as_ref()
+            .ok_or_else(|| denied("successor capture has no initial generation event"))?;
+        if expected.state != State::Preparing
+            || expected.ticket != origin.id
+            || origin.generation_slot.as_deref() != Some(origin.id.as_str())
+            || generation.preparing_revision != expected.revision
+            || generation.predecessor_revision.checked_add(1) != Some(expected.revision)
+            || self.root_created_fd.is_none()
+            || self
+                .root_creation_deadline
+                .is_none_or(|d| Instant::now() >= d)
+            || !super::super::tree::names(self.client.file())?.is_empty()
+        {
+            return Err(denied(
+                "successor capture lacks live empty-root creation custody",
+            ));
+        }
+        root_binding::verify_initial_event(self.connection()?, origin)?;
+        let next = self.reserve_capture_inner(expected)?;
+        if self
+            .root_creation_deadline
+            .is_none_or(|d| Instant::now() >= d)
+        {
+            return Err(denied(
+                "successor capture reservation expired; references retained",
+            ));
+        }
+        Ok(next)
+    }
     /// A concrete second-generation primitive. First-generation historical
     /// facts are audited before creation; new origin/Preparing are committed
     /// together. No production Start calls this until capture/history rollover
@@ -271,6 +330,9 @@ impl Index {
         Ok((self, next))
     }
 }
+#[cfg(test)]
+#[path = "macos_client_root_successor_capture_tests.rs"]
+mod capture_tests;
 #[cfg(test)]
 #[path = "macos_client_root_generation_tests.rs"]
 mod tests;

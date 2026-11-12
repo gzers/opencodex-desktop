@@ -46,7 +46,11 @@ pub(super) fn verify_initial_event(
 }
 /// Resolve second-generation source only from the atomic Preparing event and
 /// the exact prior close. Never overwrite the original singleton binding.
-fn active_binding(connection: &Connection, stored: &[u8], head: &Head) -> io::Result<Vec<u8>> {
+pub(super) fn active_binding(
+    connection: &Connection,
+    stored: &[u8],
+    head: &Head,
+) -> io::Result<Vec<u8>> {
     let first: RootBinding = decode(stored)?;
     if first.schema_version != 1 || first.original_root.generation_slot.is_some() {
         return Err(denied("initial root binding is not first generation"));
@@ -118,7 +122,56 @@ fn active_binding(connection: &Connection, stored: &[u8], head: &Head) -> io::Re
         .take_while(|h| h.revision <= closed.revision)
         .cloned()
         .collect::<Vec<_>>();
-    vault_history::inspect_root_closures(
+    let current_history = history
+        .iter()
+        .filter(|h| h.revision >= preparing.revision)
+        .collect::<Vec<_>>();
+    for h in &current_history {
+        if h.ticket != preparing.ticket
+            || h.revision != preparing.revision && h.root_generation.is_some()
+            || h.references.as_ref().is_some_and(|r| r.attempt != h.ticket)
+        {
+            return Err(denied("successor events rebound generation source"));
+        }
+    }
+    for pair in current_history.windows(2) {
+        let before = pair[0];
+        let after = pair[1];
+        if !matches!(
+            (before.state, after.state),
+            (State::Preparing, State::CaptureReserved)
+                | (State::CaptureReserved, State::Captured)
+                | (State::Captured, State::Ready)
+                | (State::Ready, State::StopPrepared)
+                | (State::StopPrepared, State::Stopped)
+                | (State::Stopped, State::RestorePrepared)
+                | (
+                    State::Captured | State::Stopped | State::RestorePrepared,
+                    State::RootRetirementPrepared
+                )
+                | (State::RootRetirementPrepared, State::RootAbsent)
+                | (State::RootAbsent, State::RootRetirementPrepared)
+                | (
+                    State::Captured | State::Ready | State::StopPrepared,
+                    State::Failed
+                )
+        ) || before.references.as_ref().is_some_and(|refs| {
+            after.references.as_ref().is_none_or(|next| {
+                next.attempt != refs.attempt
+                    || next.original_sha256 != refs.original_sha256
+                    || next.scope_sha256 != refs.scope_sha256
+                    || !next.phases.starts_with(&refs.phases)
+                    || refs.live_sha256.is_some() && next.live_sha256 != refs.live_sha256
+            })
+        }) || before.root_retirement.is_some() && before.root_retirement != after.root_retirement
+            || before.restore_plan.is_some() && before.restore_plan != after.restore_plan
+        {
+            return Err(denied(
+                "successor phase chain differs from registered lifecycle",
+            ));
+        }
+    }
+    vault_history::inspect_root_closures_with_current(
         &PinnedDirectory::open(Path::new(
             old[1]
                 .as_str()
@@ -131,14 +184,8 @@ fn active_binding(connection: &Connection, stored: &[u8], head: &Head) -> io::Re
         ),
         stored,
         &prefix,
+        head,
     )?;
-    for h in history.iter().filter(|h| h.revision >= preparing.revision) {
-        if h.ticket != preparing.ticket
-            || h.revision != preparing.revision && h.root_generation.is_some()
-        {
-            return Err(denied("successor events rebound generation source"));
-        }
-    }
     Ok(generation.binding.clone())
 }
 fn verify_first_event(connection: &Connection, refs: &root_creation::References) -> io::Result<()> {

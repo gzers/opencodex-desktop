@@ -118,6 +118,17 @@ fn lookup(parent: &File, child: &OsStr) -> io::Result<libc::stat> {
 pub(in crate::infrastructure::macos_client_originals) fn names(
     parent: &File,
 ) -> io::Result<Vec<OsString>> {
+    names_bounded(parent, MAX_ENTRIES)
+}
+/// Aggregate attempt membership only: four frames can retain distinct client
+/// and Grok content objects, plus their bounded metadata. This does not change
+/// any source-tree entry/byte/file budget or admit these names as Originals.
+pub(in crate::infrastructure::macos_client_originals) fn attempt_names(
+    parent: &File,
+) -> io::Result<Vec<OsString>> {
+    names_bounded(parent, 8 * MAX_ENTRIES + 1024)
+}
+fn names_bounded(parent: &File, maximum: usize) -> io::Result<Vec<OsString>> {
     // openat(".") gives readdir an independent cursor for this exact directory;
     // a dup would share the original directory offset across observations.
     let raw = unsafe {
@@ -163,7 +174,7 @@ pub(in crate::infrastructure::macos_client_originals) fn names(
         if raw == b"." || raw == b".." {
             continue;
         }
-        if result.len() >= MAX_ENTRIES {
+        if result.len() >= maximum {
             return Err(denied("client tree entry count over limit"));
         }
         let child = OsString::from_vec(raw);

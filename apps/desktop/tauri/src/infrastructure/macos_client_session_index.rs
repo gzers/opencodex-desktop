@@ -1269,6 +1269,10 @@ impl Index {
             .checked_add(1)
             .ok_or_else(|| denied("capture revision overflow"))?;
         next.state = State::CaptureReserved;
+        // Generation provenance remains only in the immutable initial event.
+        // Later phases resolve that source by ticket; it is not a mutable Head
+        // field that can be carried forward or replaced.
+        next.root_generation = None;
         validate(&next)?;
         self.write(Some(expected), &next)?;
         Ok(next)
@@ -1276,6 +1280,23 @@ impl Index {
     /// Store the first initialized tree only with its separately registered
     /// original-root absence. No ordinary Captured/Ready transition is granted.
     pub fn record_first_root_originals(
+        &self,
+        context: &ProcessContext,
+        expected: &Head,
+        refs: References,
+    ) -> io::Result<Head> {
+        if self
+            .root_registration
+            .as_ref()
+            .is_none_or(|r| r.generation_slot.is_some())
+        {
+            return Err(denied(
+                "first-root Original registration cannot register a successor",
+            ));
+        }
+        self.record_root_originals(context, expected, refs)
+    }
+    fn record_root_originals(
         &self,
         context: &ProcessContext,
         expected: &Head,
@@ -1296,7 +1317,11 @@ impl Index {
             || !refs.phases.is_empty()
             || refs.live_sha256.is_some()
             || scope(context, &self.data, &self.client)?
-                != root_binding::scope_bytes(&self.binding)?
+                != root_binding::scope_bytes(&root_binding::active_binding(
+                    self.connection()?,
+                    &self.binding,
+                    expected,
+                )?)?
         {
             return Err(denied(
                 "root Original references do not match live indexed capture custody",
@@ -1800,7 +1825,34 @@ impl Index {
         }
         Ok(next)
     }
+    fn check_capture_publication(&self, next: &Head) -> io::Result<()> {
+        if self.root_registration.is_some()
+            && matches!(next.state, State::CaptureReserved | State::Captured)
+            && (self.root_created_fd.as_ref().is_none_or(|fd| {
+                stat(fd)
+                    .map(|s| identity(&s) != *self.client.identity())
+                    .unwrap_or(true)
+            }) || self
+                .root_creation_deadline
+                .is_none_or(|d| Instant::now() >= d)
+                || next.state == State::CaptureReserved
+                    && !super::tree::names(self.client.file())?.is_empty())
+        {
+            return Err(denied(
+                "root capture publication lost live creation custody or deadline",
+            ));
+        }
+        Ok(())
+    }
     fn write(&self, expected: Option<&Head>, next: &Head) -> io::Result<()> {
+        self.write_checked(expected, next, &|_| Ok(()))
+    }
+    fn write_checked(
+        &self,
+        expected: Option<&Head>,
+        next: &Head,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<()> {
         validate(next)?;
         if self.root_registration.is_some()
             && !(expected.is_some_and(|h| h.state == State::Preparing)
@@ -1857,6 +1909,7 @@ impl Index {
             if binding != self.binding || self.checked_head()?.as_ref() != expected {
                 return Err(denied("current session changed before reference commit"));
             }
+            self.check_capture_publication(next)?;
             let bytes = encode(next)?;
             c.execute(
                 "INSERT INTO events(revision,document) VALUES(?1,?2)",
@@ -1872,7 +1925,9 @@ impl Index {
                 )
                 .map_err(database_error)?;
             }
+            checkpoint("references_sql_written")?;
             self.check()?;
+            self.check_capture_publication(next)?;
             Ok(())
         })();
         if let Err(error) = run {
@@ -1880,9 +1935,11 @@ impl Index {
             return Err(error);
         }
         c.execute_batch("COMMIT").map_err(database_error)?;
+        checkpoint("references_committed")?;
         if self.head()?.as_ref() != Some(next) {
             return Err(denied("session references commit readback differs"));
         }
+        self.check_capture_publication(next)?;
         Ok(())
     }
 }

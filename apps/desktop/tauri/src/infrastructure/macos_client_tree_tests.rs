@@ -11,6 +11,22 @@ struct Fixture {
     client: PathBuf,
 }
 #[test]
+fn aggregate_attempt_enumeration_keeps_a_separate_finite_budget_and_exact_names() {
+    let f = Fixture::new();
+    fs::write(f.client.join("one"), b"").unwrap();
+    fs::write(f.client.join("two"), b"").unwrap();
+    let pin = f.pin();
+    assert!(names_bounded(pin.file(), 1).is_err());
+    assert_eq!(
+        names_bounded(pin.file(), 2).unwrap(),
+        vec![OsString::from("one"), OsString::from("two")]
+    );
+    assert_eq!(
+        attempt_names(pin.file()).unwrap(),
+        names(pin.file()).unwrap()
+    );
+}
+#[test]
 #[ignore = "explicit retained own native fixture only; no original/session writes or service actions"]
 fn inspect_retained_native_tree_without_rebasing_originals() {
     let path = PathBuf::from(std::env::var_os("OCXD_TREE_RETAINED").expect("explicit owned root"));

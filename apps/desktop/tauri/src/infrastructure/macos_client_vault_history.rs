@@ -70,6 +70,27 @@ pub(super) fn inspect_root_closures(
     binding: &[u8],
     history: &[Head],
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
+    inspect_root_closures_inner(data, profile, binding, history, None)
+}
+/// The caller has already resolved this current generation from its immutable
+/// Preparing event. Its directory is a separate, exactly named projection,
+/// never a historical close or a source of capture authority.
+pub(super) fn inspect_root_closures_with_current(
+    data: &PinnedDirectory,
+    profile: &Path,
+    binding: &[u8],
+    history: &[Head],
+    current: &Head,
+) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
+    inspect_root_closures_inner(data, profile, binding, history, Some(current))
+}
+fn inspect_root_closures_inner(
+    data: &PinnedDirectory,
+    profile: &Path,
+    binding: &[u8],
+    history: &[Head],
+    current: Option<&Head>,
+) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
     let origin = root_binding::original_root(binding)?;
     if history
         .first()
@@ -207,7 +228,53 @@ pub(super) fn inspect_root_closures(
                 .ok_or_else(|| denied("unknown historical root vault name"))
         })
         .collect::<io::Result<Vec<_>>>()?;
-    let expected = latest.keys().cloned().collect::<Vec<_>>();
+    let mut expected = latest.keys().cloned().collect::<Vec<_>>();
+    let active_directory = if let Some(current) = current {
+        if uuid::Uuid::parse_str(&current.ticket)
+            .map(|id| id.to_string() != current.ticket)
+            .unwrap_or(true)
+            || latest.contains_key(&current.ticket)
+            || current
+                .references
+                .as_ref()
+                .is_some_and(|r| r.attempt != current.ticket)
+        {
+            return Err(denied(
+                "current root attempt is not distinct indexed generation",
+            ));
+        }
+        let present = observation::entry(&vault, &current.ticket)?.is_some();
+        if current.state == State::Preparing && present
+            || current.state != State::Preparing
+                && current.state != State::CaptureReserved
+                && (current.references.is_none() || !present)
+        {
+            return Err(denied(
+                "current root vault does not match registered capture phase",
+            ));
+        }
+        if present {
+            let directory = vault.child_private(&current.ticket, false)?;
+            // This directory is NOT a closed original. Only project its
+            // registered membership and pinned access/identity here. Frames,
+            // blobs and scope are admitted separately by verify_capture; a
+            // partial reservation cannot be adopted by the create-only writer.
+            // Client single-tree budgets do not describe an aggregate vault.
+            let info = stat(directory.file())?;
+            let observed = (
+                version(&info),
+                protection(directory.file(), &info)?,
+                super::super::tree::attempt_names(directory.file())?,
+            );
+            expected.push(current.ticket.clone());
+            Some((directory, observed))
+        } else {
+            None
+        }
+    } else {
+        None
+    };
+    expected.sort();
     if actual != expected {
         return Err(denied(
             "root historical vault differs from exact indexed closed attempts",
@@ -217,6 +284,20 @@ pub(super) fn inspect_root_closures(
     // or current file values are promoted into independent history facts.
     for reference in &references {
         super::super::root_retirement::open_closed_history(data.path(), profile, reference)?;
+    }
+    if let Some((directory, observed)) = active_directory {
+        let info = stat(directory.file())?;
+        if (
+            version(&info),
+            protection(directory.file(), &info)?,
+            super::super::tree::attempt_names(directory.file())?,
+        ) != observed
+        {
+            return Err(denied(
+                "current root capture directory changed during history review",
+            ));
+        }
+        directory.private()?;
     }
     if super::super::tree::names(vault.file())? != names {
         return Err(denied("root history vault changed during review"));
