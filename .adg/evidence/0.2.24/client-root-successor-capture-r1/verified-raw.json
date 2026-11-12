@@ -1,0 +1,65 @@
+{
+  "accepted": false,
+  "verified": [
+    {
+      "point": "reserved",
+      "allRawBytesVerified": true,
+      "revision": 7,
+      "independentOriginalRegistered": false,
+      "offlineReplayRemoved": true
+    },
+    {
+      "point": "original-published",
+      "allRawBytesVerified": true,
+      "revision": 7,
+      "independentOriginalRegistered": false,
+      "offlineReplayRemoved": true
+    },
+    {
+      "point": "captured",
+      "allRawBytesVerified": true,
+      "revision": 8,
+      "independentOriginalRegistered": true,
+      "offlineReplayRemoved": true
+    }
+  ],
+  "publicationBoundaryAssertions": [
+    {
+      "accepted": false,
+      "change": "deadline",
+      "committed": false,
+      "originalRetained": true,
+      "point": "references_sql_written",
+      "retainedRevision": 7,
+      "returnedError": true
+    },
+    {
+      "accepted": false,
+      "change": "root-identity",
+      "committed": false,
+      "originalRetained": true,
+      "point": "references_sql_written",
+      "retainedRevision": 7,
+      "returnedError": true
+    },
+    {
+      "accepted": false,
+      "change": "deadline",
+      "committed": true,
+      "originalRetained": true,
+      "point": "references_committed",
+      "retainedRevision": 8,
+      "returnedError": true
+    },
+    {
+      "accepted": false,
+      "change": "root-identity",
+      "committed": true,
+      "originalRetained": true,
+      "point": "references_committed",
+      "retainedRevision": 8,
+      "returnedError": true
+    }
+  ],
+  "scope": "offline raw SQLite/JSON supplement; no OS-service or repeated Start acceptance"
+}
