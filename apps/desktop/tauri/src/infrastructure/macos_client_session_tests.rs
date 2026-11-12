@@ -349,6 +349,75 @@ fn explicit_nonempty_live_selection_is_independent_while_open_discovery_remains_
     );
 }
 #[test]
+fn selection_defaults_static_roster_unions_models_and_retained_but_not_unselected_default() {
+    let mut config = serde_json::json!({"providers":{"Static":{"liveModels":false,"models":["a","b"],"retainModels":["b","vendor/c"],"defaultModel":"not-in-explicit-roster"}}});
+    let expected = Some(vec![
+        "Static/a".into(),
+        "Static/b".into(),
+        "Static/vendor-c".into(),
+    ]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        expected
+    );
+    config["providers"]["Static"]["selectedModels"] = serde_json::json!([]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        expected
+    );
+    config["providers"]["Static"]["selectedModels"] = serde_json::json!(["vendor/c"]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec!["Static/vendor-c".into()])
+    );
+}
+#[test]
+fn selection_defaults_seed_only_static_empty_models_and_preserve_unknown_live_graph() {
+    let mut config = serde_json::json!({"providers":{"Static":{"liveModels":false,"defaultModel":"seed","retainModels":["retained"]}}});
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec!["Static/retained".into(), "Static/seed".into()])
+    );
+    config["providers"]["Static"]["models"] = serde_json::json!([]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        Some(vec!["Static/retained".into(), "Static/seed".into()])
+    );
+    config["providers"]["Static"]["liveModels"] = true.into();
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        None
+    );
+}
+#[test]
+fn selection_defaults_disabled_equivalence_is_scoped_and_does_not_grant_colliding_ids() {
+    let mut config = serde_json::json!({"disabledModels":["Static/vendor/c","native-only"],"providers":{"Static":{"liveModels":false,"models":["a","vendor/c"]},"Other":{"liveModels":false,"models":["vendor/c"]}}});
+    let expected = Some(vec!["Other/vendor-c".into(), "Static/a".into()]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        expected
+    );
+    config["disabledModels"] = serde_json::json!(["Static/vendor-c"]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        expected
+    );
+    config["providers"]["Static"]["models"] = serde_json::json!(["vendor/c", "vendor-c"]);
+    assert_eq!(
+        declaration(&serde_json::to_vec(&config).unwrap()).unwrap(),
+        None
+    );
+    for bad in [
+        serde_json::json!([3]),
+        serde_json::json!(null),
+        serde_json::json!({"Static/a":true}),
+    ] {
+        let mut c = config.clone();
+        c["disabledModels"] = bad;
+        assert_eq!(declaration(&serde_json::to_vec(&c).unwrap()).unwrap(), None);
+    }
+}
+#[test]
 fn audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction() {
     assert_eq!(
         audit_home(Path::new("/private/tmp/fixture/profile/opencodex-home")).unwrap(),

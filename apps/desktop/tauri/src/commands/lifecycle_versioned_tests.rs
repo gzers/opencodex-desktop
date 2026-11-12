@@ -261,6 +261,15 @@ fn official299_versioned_start_status_stop_preserves_native_client() {
         p["selectedModels"] =
             serde_json::json!(["claude-opus-5-5", "gpt-6-sol", "vendor/gemini-3.5-pro"]);
     }
+    if std::env::var_os("OCXD024_STATIC_ALL_GRAPH").as_deref() == Some(std::ffi::OsStr::new("1")) {
+        let p = &mut config["providers"]["native-fixture"];
+        p["liveModels"] = false.into();
+        p["models"] = serde_json::json!(["claude-opus-5-5", "gpt-6-sol"]);
+        p["retainModels"] = serde_json::json!(["gpt-6-sol", "vendor/gemini-3.5-pro"]);
+        p["selectedModels"] = serde_json::json!([]);
+        p["defaultModel"] = "gpt-6-sol".into();
+        config["disabledModels"] = serde_json::json!(["native-fixture/gpt-6-sol"]);
+    }
     atomic_write(
         &h.join("config.json"),
         &serde_json::to_vec(&config).unwrap(),

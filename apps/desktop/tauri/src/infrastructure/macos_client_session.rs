@@ -304,6 +304,29 @@ fn declared_routes(home: &PinnedDirectory) -> AppResult<Option<Vec<String>>> {
     };
     declaration(&bytes)
 }
+fn declared_id_list(value: Option<&serde_json::Value>) -> Option<Vec<&str>> {
+    let Some(value) = value else {
+        return Some(Vec::new());
+    };
+    let rows = value.as_array()?;
+    if rows.len() > 4096 {
+        return None;
+    }
+    rows.iter()
+        .map(|v| {
+            v.as_str()
+                .filter(|s| !s.is_empty() && s.len() <= 1024 && !s.chars().any(char::is_control))
+        })
+        .collect()
+}
+fn declaration_slug_key(slug: &str) -> String {
+    match slug.split_once('/') {
+        Some((provider, id)) if !provider.is_empty() => {
+            format!("{provider}/{}", id.replace('/', "-"))
+        }
+        _ => slug.to_string(),
+    }
+}
 // Independent explicit selection declaration. An unbounded discovery graph
 // stays unresolved; nonempty selectedModels is the official final allowlist.
 // It is never learned from the generated catalog or a discovery response.
@@ -332,7 +355,7 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
     if value.get("fastRows").is_some_and(|v| !v.is_boolean()) {
         return Ok(None);
     }
-    for key in ["combos", "customModels", "disabledModels"] {
+    for key in ["combos", "customModels"] {
         if value.get(key).is_some_and(|v| match v {
             serde_json::Value::Array(a) => !a.is_empty(),
             serde_json::Value::Object(o) => !o.is_empty(),
@@ -341,6 +364,11 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
             return Ok(None);
         }
     }
+    let Some(disabled) = declared_id_list(value.get("disabledModels")) else {
+        return Ok(None);
+    };
+    let disabled: std::collections::BTreeSet<_> =
+        disabled.into_iter().map(declaration_slug_key).collect();
     let mut routes = std::collections::BTreeSet::new();
     for (provider, entry) in providers {
         if !entry.is_object() || entry.get("disabled").is_some_and(|v| !v.is_boolean()) {
@@ -371,22 +399,41 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
         {
             return Ok(None);
         }
-        let Some(models) = entry
-            .get("selectedModels")
-            .and_then(serde_json::Value::as_array)
-        else {
+        let Some(selected) = declared_id_list(entry.get("selectedModels")) else {
             return Ok(None);
         };
-        if models.is_empty() && entry.get("liveModels") != Some(&serde_json::Value::Bool(false)) {
-            return Ok(None);
-        }
-        for model in models {
-            let Some(model) = model
-                .as_str()
-                .filter(|s| !s.is_empty() && s.len() <= 1024 && !s.chars().any(char::is_control))
-            else {
+        let models = if !selected.is_empty() {
+            selected
+        } else {
+            // Empty/omitted selection means ALL models, not an empty allowlist.
+            // Only a static provider supplies a complete independent roster.
+            if entry.get("liveModels") != Some(&serde_json::Value::Bool(false)) {
+                return Ok(None);
+            }
+            let Some(configured) = declared_id_list(entry.get("models")) else {
                 return Ok(None);
             };
+            let Some(retained) = declared_id_list(entry.get("retainModels")) else {
+                return Ok(None);
+            };
+            let mut ids: std::collections::BTreeSet<_> =
+                configured.iter().copied().chain(retained).collect();
+            if configured.is_empty() {
+                if let Some(default) = entry.get("defaultModel") {
+                    let Some(id) = default
+                        .as_str()
+                        .filter(|s| s.len() <= 1024 && !s.chars().any(char::is_control))
+                    else {
+                        return Ok(None);
+                    };
+                    if !id.is_empty() {
+                        ids.insert(id);
+                    }
+                }
+            }
+            ids.into_iter().collect()
+        };
+        for model in models {
             // Original 2.99 providers/slug-codec::routedSlug maps inner slash to
             // hyphen, NOT a blind unencoded provider/model concatenation.
             if !routes.insert(format!("{provider}/{}", model.replace('/', "-")))
@@ -396,7 +443,12 @@ fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> {
             }
         }
     }
-    Ok(Some(routes.into_iter().collect()))
+    Ok(Some(
+        routes
+            .into_iter()
+            .filter(|slug| !disabled.contains(&declaration_slug_key(slug)))
+            .collect(),
+    ))
 }
 fn audit_home(path: &Path) -> AppResult<String> {
     let raw = path.to_str().ok_or_else(|| error(()))?;
