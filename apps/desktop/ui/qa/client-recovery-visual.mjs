@@ -32,7 +32,7 @@ try {
   while (true) { try { if ((await fetch(base)).ok) break } catch {} if (Date.now() > deadline) throw Error('Vite did not start'); await new Promise(resolve => setTimeout(resolve, 100)) }
   const engine = await pickEngine(); report.engine = engine.name; browser = await engine.launch()
   for (const scene of (process.env.AUDIT_RECOVERY_SCENES?.split(',') ?? ['eligible', 'pending', 'unknown', 'active', 'none', 'unsupported', 'error', 'slow', 'refresh-failed'])) {
-    const sizes = ['eligible','continue','rollback','rearm','early','prepare','capture','plan'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
+    const sizes = ['eligible','continue','rollback','rearm','early','prepare','capture','plan','plan-current'].includes(scene) ? [[1180, 760, 'light'], [900, 600, 'dark']] : [[1180, 760, 'light']]
     for (const [width, height, theme] of sizes) {
       const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 1 })
       const errors = []; page.on('pageerror', e => errors.push(e.message))
@@ -43,21 +43,21 @@ try {
       await page.waitForFunction(() => !document.querySelector('dialog[open]')?.textContent.includes('正在核对原会话和恢复记录'))
       const name = scene + '-' + width + '-' + theme
       if(scene.startsWith('plan')){
-        await page.getByText('服务已停止，客户端配置尚未恢复。',{exact:true}).waitFor()
+        await page.getByText(scene.startsWith('plan-current')?'上次停止未完成核对，配置仍待恢复。':'服务已停止，客户端配置尚未恢复。',{exact:true}).waitFor()
         await page.getByRole('button',{name:'准备恢复计划',exact:true}).click()
         await page.getByText('准备完成后，还需点击“确认继续恢复”。不会自动恢复或启动。',{exact:true}).waitFor()
         const size=await geometry(page);await screenshot(page,name+'-review')
-        if(scene==='plan'){
+        if(scene==='plan'||scene==='plan-current'){
           await page.getByRole('button',{name:'返回',exact:true}).click()
           assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='preparePlan').length),0)
           await page.getByRole('button',{name:'准备恢复计划',exact:true}).click()
         }
         await page.getByRole('button',{name:'确认准备计划',exact:true}).click()
-        if(scene==='plan-slow'){
+        if(scene==='plan-slow'||scene==='plan-current-slow'){
           await page.getByText('正在核对并准备恢复计划…',{exact:true}).waitFor()
           await page.getByRole('button',{name:'关闭',exact:true}).last().click();await page.getByRole('button',{name:'查看恢复进度',exact:true}).click()
         }
-        if(scene==='plan-error')await page.getByText('恢复计划尚未确认完成；原件与当前文件保留。',{exact:true}).waitFor()
+        if(scene==='plan-error'||scene==='plan-current-error')await page.getByText('恢复计划尚未确认完成；原件与当前文件保留。',{exact:true}).waitFor()
         else await page.getByRole('button',{name:'确认继续恢复',exact:true}).waitFor()
         assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.state().blocked),true)
         assert.equal(await page.evaluate(()=>window.__clientRecoveryFixture.calls.filter(n=>n==='preparePlan').length),1)
@@ -275,14 +275,14 @@ try {
     if(scene.startsWith('plan')){
       assert.equal(await page.locator('#modalConfirm').textContent(),'准备恢复计划');await page.locator('#modalConfirm').click()
       assert.equal(await page.locator('#modalConfirm').textContent(),'确认准备计划');await screenshot(page,'prototype-'+scene+'-review')
-      if(scene==='plan'){
+      if(scene==='plan'||scene==='plan-current'){
         await page.locator('#modalCancel').click();assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),0);await page.locator('#modalConfirm').click()
       }
       await page.locator('#modalConfirm').click()
-      if(scene==='plan-slow'){
+      if(scene==='plan-slow'||scene==='plan-current-slow'){
         await page.waitForFunction(()=>window.clientRecovery024.snapshot().executing);await page.locator('#modalCancel').click();await page.evaluate(()=>window.clientRecovery024.open())
       }
-      if(scene==='plan-error')await page.getByText('恢复计划尚未确认完成；原件与当前文件保留。',{exact:true}).waitFor()
+      if(scene==='plan-error'||scene==='plan-current-error')await page.getByText('恢复计划尚未确认完成；原件与当前文件保留。',{exact:true}).waitFor()
       else{await page.waitForFunction(()=>!window.clientRecovery024.snapshot().executing&&window.clientRecovery024.snapshot().outcome);assert.equal(await page.locator('#modalConfirm').textContent(),'确认继续恢复')}
       assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().confirmations),1);assert.equal(await page.evaluate(()=>window.clientRecovery024.snapshot().finalized),false)
     }else if(scene.startsWith('prepare')||scene.startsWith('capture')){

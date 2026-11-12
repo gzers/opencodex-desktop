@@ -7,7 +7,7 @@ import { useLifecycleStore } from '@/app/lifecycle/store'
 import type { ClientRecoveryEvidence, ClientRecoveryPhase } from './client-recovery'
 const recovery = useClientRecoveryStore(), lifecycle = useLifecycleStore()
 const busy = computed(() => recovery.reading || recovery.executing || recovery.refreshing)
-const phases: Record<ClientRecoveryPhase, string> = { preparing: '正在登记原会话',capture_reserved:'原件捕获已预留', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', unchanged: '原件保持，原会话已结束', cancelled_before_capture: '启动准备已取消',cancelled_capture:'本次捕获已取消并保留', failed: '原会话需要核对' }
+const phases: Record<ClientRecoveryPhase, string> = { preparing: '正在登记原会话',capture_reserved:'原件捕获已预留', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对',recovery_prepared:'恢复前状态已核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', unchanged: '原件保持，原会话已结束', cancelled_before_capture: '启动准备已取消',cancelled_capture:'本次捕获已取消并保留', failed: '原会话需要核对' }
 const evidence = (value: ClientRecoveryEvidence) => ({ verified: '已核对', not_recorded: '尚未登记', unregistered: '待确认', unknown: '未核实' })[value]
 const progress = computed(() => ({ finalize:'正在完成恢复收尾…',continue:'正在继续恢复客户端配置…',rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…',finishUnchanged:'正在核对原件并结束原会话…',cancelPreparation:'正在核对并取消启动准备…',preparePlan:'正在核对并准备恢复计划…' })[recovery.action])
 const restoredOutcome = computed(() => recovery.outcome?.status === 'restored' || recovery.outcome?.status === 'unchanged' || recovery.outcome?.status === 'cancelled_before_capture' || recovery.outcome?.status === 'cancelled_capture')
@@ -35,7 +35,8 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
     </template>
     <template v-else-if="recovery.choice === 'preparePlan'">
       <p class="client-recovery-lead">准备原件恢复计划？</p>
-      <p>重新核对原件、停止后的文件和服务停止状态，再准备恢复计划。当前文件保持，原件保留。</p>
+      <p v-if="recovery.preview?.phase==='stop_prepared'">确认后核对服务现在已停止，再按当前状态准备恢复计划。原件和上次操作结果保留。</p>
+      <p v-else>重新核对原件、停止后的文件和服务停止状态，再准备恢复计划。当前文件保持，原件保留。</p>
       <p>准备完成后，还需点击“确认继续恢复”。不会自动恢复或启动。</p>
     </template>
     <template v-else-if="recovery.choice === 'cancelPreparation'">
@@ -61,8 +62,9 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
     </template>
     <template v-else-if="recovery.preview">
       <template v-if="recovery.canPreparePlan">
-        <p class="client-recovery-lead">服务已停止，客户端配置尚未恢复。</p>
-        <p>原件和停止后文件已核对，可以准备恢复计划。</p>
+        <p v-if="recovery.preview?.phase==='stop_prepared'" class="client-recovery-lead">上次停止未完成核对，配置仍待恢复。</p>
+        <p v-else class="client-recovery-lead">服务已停止，客户端配置尚未恢复。</p>
+        <p>可以核对当前状态并准备恢复计划，原件保留。</p>
       </template>
       <template v-else-if="recovery.canCancelPreparation">
         <p v-if="recovery.preview?.phase==='capture_reserved'" class="client-recovery-lead">原件捕获已中断，服务尚未启动。</p>

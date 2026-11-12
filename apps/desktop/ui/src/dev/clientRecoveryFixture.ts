@@ -2,11 +2,12 @@
 import { clientRecoveryApi, type ClientRecoveryPreview } from '@/features/runtime/client-recovery'
 import { useLifecycleStore } from '@/app/lifecycle/store'
 import type { StatusSnapshot } from '@/contracts/runtimeStatus'
-type Scene = 'plan' | 'plan-slow' | 'plan-error' | 'capture' | 'capture-slow' | 'capture-error' | 'prepare' | 'prepare-slow' | 'prepare-error' | 'prepare-refresh-failed' | 'early' | 'early-slow' | 'early-error' | 'early-refresh-failed' | 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
+type Scene = 'plan-current' | 'plan-current-slow' | 'plan-current-error' | 'plan' | 'plan-slow' | 'plan-error' | 'capture' | 'capture-slow' | 'capture-error' | 'prepare' | 'prepare-slow' | 'prepare-error' | 'prepare-refresh-failed' | 'early' | 'early-slow' | 'early-error' | 'early-refresh-failed' | 'eligible' | 'continue' | 'continue-slow' | 'continue-error' | 'rollback' | 'rollback-slow' | 'rollback-error' | 'rollback-refresh-failed' | 'rearm' | 'rearm-slow' | 'rearm-error' | 'rolled-back' | 'pending' | 'unknown' | 'active' | 'none' | 'unsupported' | 'error' | 'slow' | 'refresh-failed'
 export function installClientRecoveryFixture(initial: string) {
   let scene = initial as Scene, finalized = false, revision = initial.startsWith('rearm') ? 7 : 6
-  let phase: 'stopped'|'restore_prepared'|'restore_rolled_back' = initial.startsWith('rearm') ? 'restore_rolled_back' : 'restore_prepared'
-  if(initial.startsWith('plan'))phase='stopped'
+  let phase: 'stop_prepared'|'stopped'|'recovery_prepared'|'restore_prepared'|'restore_rolled_back' = initial.startsWith('rearm') ? 'restore_rolled_back' : 'restore_prepared'
+  if(initial.startsWith('plan'))phase=initial.startsWith('plan-current')?'stop_prepared':'stopped'
+  if(initial.startsWith('plan-current'))revision=5
   const calls: string[] = []
   const data = '/fixtures/client-recovery/desktop', home = '/fixtures/client-recovery/home'
   const snapshot = (): StatusSnapshot => ({ source: 'live', matrix: { runtime: 'stopped', connection: 'unconfigured', operation: 'idle' },
@@ -23,11 +24,11 @@ export function installClientRecoveryFixture(initial: string) {
       completionEvidence: 'unregistered', phaseCount: 3, canContinue: false, canRollback: false, canFinalize: true, canRearm:false,canPreparePlan:false,planDigest:null,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: 'a'.repeat(64) }
     if (scene === 'pending') { value.canFinalize = false; value.confirmationDigest = null; value.completionEvidence = 'not_recorded' }
     if(scene.startsWith('early'))Object.assign(value,{phase:'captured',revision:2,phaseCount:0,planEvidence:'not_recorded',completionEvidence:'not_recorded',canFinalize:false,confirmationDigest:null,canFinishUnchanged:true,unchangedDigest:'e'.repeat(64)})
-    if(scene.startsWith('plan')&&phase!=='restore_rolled_back')Object.assign(value,{phase:phase==='stopped'?'stopped':'restore_prepared'})
+    if(scene.startsWith('plan')&&phase!=='restore_rolled_back')Object.assign(value,{phase,phaseCount:scene.startsWith('plan-current')?2:3})
     if(scene.startsWith('prepare'))Object.assign(value,{phase:'preparing',revision:1,phaseCount:0,originalEvidence:'not_recorded',planEvidence:'not_recorded',completionEvidence:'not_recorded',canFinalize:false,confirmationDigest:null,canCancelPreparation:true,preparationDigest:'f'.repeat(64)})
     if(scene.startsWith('capture'))Object.assign(value,{phase:'capture_reserved',revision:2,phaseCount:0,originalEvidence:'not_recorded',planEvidence:'not_recorded',completionEvidence:'not_recorded',canFinalize:false,confirmationDigest:null,canCancelPreparation:true,preparationDigest:'f'.repeat(64)})
     if(scene==='rolled-back'){value.phase='restore_rolled_back';value.canFinalize=false;value.confirmationDigest=null;value.completionEvidence='verified'}
-    if(scene.startsWith('plan'))Object.assign(value,phase==='stopped'?{phase:'stopped',canFinalize:false,confirmationDigest:null,completionEvidence:'not_recorded',planEvidence:'not_recorded',canPreparePlan:true,planDigest:'d'.repeat(64)}:{canContinue:true,canFinalize:false,completionEvidence:'not_recorded',canRollback:true,rollbackDigest:'b'.repeat(64)})
+    if(scene.startsWith('plan'))Object.assign(value,(phase==='stopped'||phase==='stop_prepared')?{phase,canFinalize:false,confirmationDigest:null,completionEvidence:'not_recorded',planEvidence:'not_recorded',canPreparePlan:true,planDigest:'d'.repeat(64)}:{canContinue:true,canFinalize:false,completionEvidence:'not_recorded',canRollback:true,rollbackDigest:'b'.repeat(64)})
     if (scene.startsWith('continue')||scene.startsWith('rollback')||scene.startsWith('rearm')) {value.canContinue=true;value.canRollback=true;value.rollbackDigest='b'.repeat(64);value.canFinalize=false;value.completionEvidence='not_recorded'}
     if(phase==='restore_rolled_back'){value.canContinue=false;value.canRollback=false;value.canFinalize=false;value.canRearm=true;value.confirmationDigest=null;value.rollbackDigest=null;value.rearmDigest='c'.repeat(64);value.completionEvidence='verified'}
     if (scene === 'unknown' || scene === 'unsupported') { value.status = scene; value.phase = null; value.attemptId = null; value.revision = null; value.canFinalize = false; value.confirmationDigest = null }
@@ -61,10 +62,10 @@ export function installClientRecoveryFixture(initial: string) {
     return {attemptId:request.attemptId,revision,status:'restore_prepared'}
   }
   clientRecoveryApi.preparePlan=async request=>{
-    calls.push('preparePlan');await new Promise(resolve=>setTimeout(resolve,scene==='plan-slow'?1200:200))
-    if(scene==='plan-error')throw new Error('恢复计划尚未确认完成；原件与当前文件保留。')
-    phase='restore_prepared';revision=request.revision+1
-    return {attemptId:request.attemptId,revision,status:'restore_prepared'}
+    calls.push('preparePlan');await new Promise(resolve=>setTimeout(resolve,scene.endsWith('-slow')?1200:200))
+    if(scene==='plan-error'||scene==='plan-current-error')throw new Error('恢复计划尚未确认完成；原件与当前文件保留。')
+    phase=scene.startsWith('plan-current')?'recovery_prepared':'restore_prepared';revision=request.revision+1
+    return {attemptId:request.attemptId,revision,status:scene.startsWith('plan-current')?'recovery_prepared':'restore_prepared'}
   }
   clientRecoveryApi.status = async () => {
     calls.push('status')

@@ -21,19 +21,19 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   })
   const canFinalize = computed(() => {
     const p = preview.value
-    return bound.value && p?.phase === 'restore_prepared' && p.canFinalize && !p.canContinue && !p.canRollback && !p.canRearm && !p.canPreparePlan && !p.canFinishUnchanged && !p.canCancelPreparation
-      && (p.completionEvidence === 'not_recorded' || p.completionEvidence === 'unregistered') && hash(p.confirmationDigest)
+    return bound.value && (p?.phase === 'restore_prepared'||p?.phase==='recovery_prepared') && p.canFinalize && !p.canContinue && !p.canRollback && !p.canRearm && !p.canPreparePlan && !p.canFinishUnchanged && !p.canCancelPreparation
+      && (p.completionEvidence === 'not_recorded' || p.completionEvidence === 'unregistered') && hash(p.confirmationDigest) && p.phaseCount===(p.phase==='recovery_prepared'?2:3)
   })
   const canContinue = computed(() => {
     const p = preview.value
-    return bound.value && p?.phase === 'restore_prepared' && p.canContinue && !p.canFinalize && !p.canRearm && !p.canPreparePlan && !p.canFinishUnchanged && !p.canCancelPreparation
-      && p.completionEvidence === 'not_recorded' && hash(p.confirmationDigest)
+    return bound.value && (p?.phase === 'restore_prepared'||p?.phase==='recovery_prepared') && p.canContinue && !p.canFinalize && !p.canRearm && !p.canPreparePlan && !p.canFinishUnchanged && !p.canCancelPreparation
+      && p.completionEvidence === 'not_recorded' && hash(p.confirmationDigest) && p.phaseCount===(p.phase==='recovery_prepared'?2:3)
       && (!p.canRollback || hash(p.rollbackDigest) && p.rollbackDigest !== p.confirmationDigest)
   })
   const canRollback = computed(() => {
     const p = preview.value
-    return bound.value && p?.phase === 'restore_prepared' && p.canRollback && !p.canFinalize && !p.canRearm && !p.canPreparePlan && !p.canFinishUnchanged && !p.canCancelPreparation
-      && p.completionEvidence === 'not_recorded' && hash(p.rollbackDigest)
+    return bound.value && (p?.phase === 'restore_prepared'||p?.phase==='recovery_prepared') && p.canRollback && !p.canFinalize && !p.canRearm && !p.canPreparePlan && !p.canFinishUnchanged && !p.canCancelPreparation
+      && p.completionEvidence === 'not_recorded' && hash(p.rollbackDigest) && p.phaseCount===(p.phase==='recovery_prepared'?2:3)
       && (!p.canContinue || hash(p.confirmationDigest) && p.rollbackDigest !== p.confirmationDigest)
   })
   const canRearm = computed(() => {
@@ -58,8 +58,8 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   })
   const canPreparePlan=computed(()=>{
     const p=preview.value
-    return p?.status==='pending'&&p.phase==='stopped'&&p.canPreparePlan&&p.originalEvidence==='verified'
-      && p.planEvidence==='not_recorded'&&p.completionEvidence==='not_recorded'&&p.phaseCount===3
+    return p?.status==='pending'&&(p.phase==='stopped'||p.phase==='stop_prepared')&&p.canPreparePlan&&p.originalEvidence==='verified'
+      && p.planEvidence==='not_recorded'&&p.completionEvidence==='not_recorded'&&p.phaseCount===(p.phase==='stop_prepared'?2:3)
       && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm&&!p.canFinishUnchanged&&!p.canCancelPreparation
       && !!p.attemptId&&Number.isSafeInteger(p.revision)&&p.revision!>0&&hash(p.planDigest)
   })
@@ -104,7 +104,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       const snapshot = await clientRecoveryApi.status()
       const p = await clientRecoveryApi.preview()
       const current = useLifecycleStore().statusSnapshot
-      const phase = outcome.value.status === 'rolled_back' ? 'restore_rolled_back' : 'restore_prepared'
+      const phase = outcome.value.status === 'rolled_back' ? 'restore_rolled_back' : outcome.value.status==='recovery_prepared'?'recovery_prepared':'restore_prepared'
       const matches = snapshot.source === 'live' && snapshot.matrix.runtime === 'stopped' && snapshot.matrix.operation === 'idle'
         && snapshot.facts.client_recovery === 'required' && snapshot.pid == null && snapshot.port == null
         && !snapshot.can_start && !snapshot.can_stop && !snapshot.can_restart
@@ -134,7 +134,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       if (before.source !== 'live' || !before.facts.data_root || !before.facts.opencodex_home) throw new Error('当前配置位置尚未核对，请重新检查客户端恢复。')
       completionScope = { dataRoot: before.facts.data_root, home: before.facts.opencodex_home }
       const result = await clientRecoveryApi[next](request)
-      const expected = next === 'cancelPreparation' ? (p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : (next === 'rearm' || next === 'preparePlan') ? 'restore_prepared' : 'restored'
+      const expected = next === 'cancelPreparation' ? (p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stop_prepared'?'recovery_prepared':'restore_prepared') : next==='rearm' ? (p.phaseCount===2?'recovery_prepared':'restore_prepared') : 'restored'
       if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + 1) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
       outcome.value = result; preview.value = null; checked.value = false; choice.value = null
       await refresh()

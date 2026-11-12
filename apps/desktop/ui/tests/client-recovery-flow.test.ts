@@ -42,6 +42,26 @@ beforeEach(() => {
 })
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('uses a separate current-state plan when the historical stopped stage is missing, with explicit later continuation',async()=>{
+    const source={...missingPlan(),phase:'stop_prepared' as const,revision:5,phaseCount:2}
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(source).mockResolvedValue({...partial(),phase:'recovery_prepared',revision:6,phaseCount:2})
+    vi.mocked(clientRecoveryApi.preparePlan).mockResolvedValue({...result(),revision:6,status:'recovery_prepared'})
+    vi.mocked(clientRecoveryApi.status).mockResolvedValue(status(true))
+    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
+    expect(view.text()).toContain('上次停止未完成核对');await button('准备恢复计划')!.trigger('click');expect(view.text()).toContain('原件和上次操作结果保留')
+    await button('确认准备计划')!.trigger('click');await flushPromises()
+    expect(clientRecoveryApi.continue).not.toHaveBeenCalled();expect(useLifecycleStore().clientRecoveryRequired).toBe(true);expect(button('确认继续恢复')).toBeDefined()
+    vi.mocked(clientRecoveryApi.continue).mockResolvedValue({...result(),revision:7});vi.mocked(clientRecoveryApi.status).mockResolvedValueOnce(status(true)).mockResolvedValue(status())
+    await button('确认继续恢复')!.trigger('click');await flushPromises();expect(useClientRecoveryStore().ready).toBe(true)
+  })
+  it('requires distinct recovery_prepared receipt and matching two-stage preview, never a fabricated full stage count',async()=>{
+    const p={...missingPlan(),phase:'stop_prepared' as const,revision:5,phaseCount:2}
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(p);vi.mocked(clientRecoveryApi.preparePlan).mockResolvedValue({...result(),revision:6,status:'restore_prepared'})
+    const store=await inspect();store.choose('preparePlan');expect(await store.apply('preparePlan')).toBe(false);expect(store.error).toContain('回执');expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    for (const candidate of [{...partial(),phase:'recovery_prepared' as const,phaseCount:3},{...partial(),phase:'restore_prepared' as const,phaseCount:2}]){
+      vi.mocked(clientRecoveryApi.preview).mockResolvedValue(candidate);store.start();await flushPromises();expect(store.canContinue).toBe(false);expect(store.canRollback).toBe(false);store.close()
+    }
+  })
   it('explicitly prepares a missing plan without restoring targets or automatically continuing',async()=>{
     vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(missingPlan()).mockResolvedValue({...partial(),revision:7})
     vi.mocked(clientRecoveryApi.status).mockResolvedValue(status(true))
