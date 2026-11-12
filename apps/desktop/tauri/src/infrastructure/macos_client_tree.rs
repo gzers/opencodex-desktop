@@ -491,6 +491,38 @@ impl TreeSnapshot {
         };
         filtered(self).restored_matches(&filtered(current), true)
     }
+    /// Exact, fixed-path projection for a current action's separately bound
+    /// writer marker. No prefix, unknown sidecar or other filename is excluded.
+    pub(super) fn without_config_guard(&self, image: &Image) -> io::Result<Self> {
+        const PATH: &str = "config.toml.ocx-write.lock";
+        if !self.valid()
+            || !self.coordination
+            || !self.recorded_file(PATH)?.is_some_and(|f| f.matches(image))
+        {
+            return Err(denied(
+                "temporary writer marker identity or content differs",
+            ));
+        }
+        let mut tree = self.clone();
+        tree.entries.retain(|e| e.path() != PATH);
+        tree.total_bytes = tree
+            .entries
+            .iter()
+            .map(|e| match e {
+                Entry::File { bytes, .. } => *bytes,
+                _ => 0,
+            })
+            .sum();
+        if !tree.valid() {
+            return Err(denied("temporary writer projection is invalid"));
+        }
+        Ok(tree)
+    }
+    pub(super) fn has_config_guard(&self) -> bool {
+        self.entries
+            .iter()
+            .any(|e| e.path() == "config.toml.ocx-write.lock")
+    }
     /// Compare restored content and ALL security attributes, not rename-driven
     /// inode/timestamp changes. Only the two adopted top-level stable lock names
     /// may differ; their native release/identity proof is owned separately.

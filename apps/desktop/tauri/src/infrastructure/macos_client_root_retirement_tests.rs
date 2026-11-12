@@ -69,7 +69,7 @@ impl Fixture {
         Pending::prepare(&self.context, &self.originals, &self.source).unwrap()
     }
 }
-fn storage_evidence(root: &Path) -> Vec<serde_json::Value> {
+pub(super) fn storage_evidence(root: &Path) -> Vec<serde_json::Value> {
     fn walk(root: &Path, path: &Path, out: &mut Vec<serde_json::Value>) {
         for e in fs::read_dir(path).unwrap() {
             let p = e.unwrap().path();

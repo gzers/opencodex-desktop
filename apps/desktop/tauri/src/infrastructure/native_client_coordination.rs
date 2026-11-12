@@ -121,6 +121,13 @@ impl NativeLease {
     pub fn begin_claim_handoff(&self) -> AppResult<()> {
         self.begin_claim_handoff_checked(&|| Ok(()))
     }
+    pub(crate) fn require_claim_handoff(&self) -> AppResult<()> {
+        self.check()?;
+        if self.claim_mode.get() != ClaimMode::Ofd {
+            return Err(fail("client_native_coordination_handoff_not_current"));
+        }
+        Ok(())
+    }
     fn begin_claim_handoff_checked(
         &self,
         checkpoint: &impl Fn() -> AppResult<()>,

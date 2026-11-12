@@ -3,6 +3,7 @@
 //! independent terminal registration are NOT implemented here. Public disk
 //! records or successful readback cannot construct MutationPermit.
 use super::*;
+use crate::infrastructure::official_client_coordination::native::{config::Guard, NativeLease};
 use session_index::{observation::entry, Head};
 use std::time::Instant;
 #[derive(Clone, Serialize, Deserialize)]
@@ -14,6 +15,20 @@ struct Plan {
     origin: root_creation::References,
     execution_tree: TreeSnapshot,
     grok: GrokSnapshot,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    write_guard: Option<Image>,
+}
+impl Plan {
+    fn released_tree(&self) -> io::Result<TreeSnapshot> {
+        match &self.write_guard {
+            Some(image) => self.execution_tree.without_config_guard(image),
+            None => Ok(self.execution_tree.clone()),
+        }
+    }
+    fn matches_tree(&self, tree: &TreeSnapshot) -> io::Result<bool> {
+        Ok(*tree == self.execution_tree
+            || self.write_guard.is_some() && *tree == self.released_tree()?)
+    }
 }
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
@@ -182,6 +197,42 @@ impl<'a> Pending<'a> {
         originals: &'a Originals,
         source: &Head,
     ) -> io::Result<Self> {
+        Self::prepare_with_marker(context, originals, source, None)
+    }
+    pub fn prepare_guarded(
+        context: &crate::state::ProcessContext,
+        originals: &'a Originals,
+        source: &Head,
+        native: &NativeLease,
+        guard: &mut Guard<'_>,
+    ) -> io::Result<Self> {
+        native
+            .require_context(context, originals.client.path())
+            .map_err(|_| denied("root writer context unconfirmed"))?;
+        let image = guard
+            .root_image(native, originals.client.path())
+            .map_err(|_| denied("root writer holder unconfirmed"))?;
+        // Closing the original claim transaction normally removes its journal.
+        // Snapshot only after the current OFD handoff, while N/L/K and the
+        // exact config writer remain held. Never filter a journal from Original.
+        native
+            .begin_claim_handoff()
+            .map_err(|_| denied("root claim handoff unconfirmed"))?;
+        if guard
+            .root_image(native, originals.client.path())
+            .map_err(|_| denied("root writer continuity after handoff unconfirmed"))?
+            != image
+        {
+            return Err(denied("root writer changed during claim handoff"));
+        }
+        Self::prepare_with_marker(context, originals, source, Some(image))
+    }
+    fn prepare_with_marker(
+        context: &crate::state::ProcessContext,
+        originals: &'a Originals,
+        source: &Head,
+        write_guard: Option<Image>,
+    ) -> io::Result<Self> {
         session_index::validate(source)?;
         let origin = originals
             .original_root_absence
@@ -212,7 +263,18 @@ impl<'a> Pending<'a> {
         let original = originals.frame(Phase::Original)?.0;
         let tree = TreeSnapshot::read(&originals.client)?;
         let grok = GrokSnapshot::read(&originals.profile)?;
-        if !original.tree.restored_matches(&tree, true) || !original.grok.restored_matches(&grok) {
+        let released = match &write_guard {
+            Some(image) => {
+                if original.tree.has_config_guard() {
+                    return Err(denied("original user tree already contains writer marker"));
+                }
+                tree.without_config_guard(image)?
+            }
+            None => tree.clone(),
+        };
+        if !original.tree.restored_matches(&released, true)
+            || !original.grok.restored_matches(&grok)
+        {
             return Err(denied(
                 "execution client files are not restored before root retirement",
             ));
@@ -221,12 +283,13 @@ impl<'a> Pending<'a> {
             return Err(denied("root retirement crosses volumes"));
         }
         let plan = Plan {
-            schema_version: 1,
+            schema_version: if write_guard.is_some() { 2 } else { 1 },
             id: uuid::Uuid::new_v4().to_string(),
             source: source.clone(),
             origin: origin.clone(),
             execution_tree: tree,
             grok,
+            write_guard,
         };
         let bytes = encode(&plan)?;
         create(
@@ -289,7 +352,7 @@ impl<'a> Pending<'a> {
         )
         .map_err(|_| denied("invalid root plan fields"))?;
         session_index::validate(&plan.source)?;
-        if plan.schema_version != 1
+        if plan.schema_version != if plan.write_guard.is_some() { 2 } else { 1 }
             || plan.id != self.id
             || Some(&plan.origin) != self.originals.original_root_absence.as_ref()
             || plan.source.references.as_ref().is_none_or(|r| {
@@ -309,6 +372,38 @@ impl<'a> Pending<'a> {
             || plan.execution_tree.root != *self.originals.client.identity()
         {
             return Err(denied("root movement plan belongs to another Original"));
+        }
+        if let Some(image) = &plan.write_guard {
+            let Image::File {
+                bytes, protection, ..
+            } = image
+            else {
+                return Err(denied("root writer marker is not a file"));
+            };
+            if protection.uid != unsafe { libc::geteuid() }
+                || protection.mode != 0o600
+                || protection.acl.is_some()
+                || protection.flags != 0
+                || protection
+                    .xattrs
+                    .iter()
+                    .any(|(k, v)| k != b"com.apple.provenance" || v.len() > 64)
+            {
+                return Err(denied("unsafe temporary writer marker protection"));
+            }
+            let value = parse_strict_json_v2(bytes)
+                .map_err(|_| denied("temporary writer marker is not strict JSON"))?;
+            if bytes.len() > 4096
+                || !value["pid"]
+                    .as_u64()
+                    .is_some_and(|pid| pid > 0 && pid <= i32::MAX as u64)
+                || !value["token"]
+                    .as_str()
+                    .is_some_and(|s| s.len() == 16 && s.bytes().all(|c| c.is_ascii_hexdigit()))
+                || plan.released_tree()?.has_config_guard()
+            {
+                return Err(denied("root writer marker projection is invalid"));
+            }
         }
         Ok(plan)
     }
@@ -365,7 +460,8 @@ impl<'a> Pending<'a> {
         session::verify_index_scope(&archived, refs, Path::new(home))
             .map_err(|_| denied("archived root lost original logical scope"))?;
         let original = archived.frame(Phase::Original)?.0;
-        if !original.tree.restored_matches(&plan.execution_tree, true)
+        if plan.write_guard.is_some() && original.tree.has_config_guard()
+            || !original.tree.restored_matches(&plan.released_tree()?, true)
             || !original.grok.restored_matches(&plan.grok)
         {
             return Err(denied(
@@ -394,8 +490,17 @@ impl<'a> Pending<'a> {
     }
     fn live_matches(&self, plan: &Plan) -> io::Result<()> {
         let live = self.live_view(plan)?;
+        let original = live.frame(Phase::Original)?.0;
+        if plan.write_guard.is_some() && original.tree.has_config_guard()
+            || !original.tree.restored_matches(&plan.released_tree()?, true)
+            || !original.grok.restored_matches(&plan.grok)
+        {
+            return Err(denied(
+                "live execution plan no longer matches independent Original",
+            ));
+        }
         if entry(&self.originals.directory, &self.slot())?.is_some()
-            || TreeSnapshot::read(&live.client)? != plan.execution_tree
+            || !plan.matches_tree(&TreeSnapshot::read(&live.client)?)?
             || GrokSnapshot::read(&live.profile)? != plan.grok
         {
             return Err(denied(
@@ -411,7 +516,7 @@ impl<'a> Pending<'a> {
             ));
         }
         let archived = self.archive_view(plan)?;
-        if TreeSnapshot::read(&archived.client)? != plan.execution_tree
+        if !plan.matches_tree(&TreeSnapshot::read(&archived.client)?)?
             || GrokSnapshot::read(&archived.profile)? != plan.grok
         {
             return Err(denied("retired root contents or protection changed"));
@@ -447,6 +552,91 @@ impl<'a> Pending<'a> {
             },
             &|_| Ok(()),
         )?;
+        self.authorized_readback(readback, deadline)
+    }
+    /// Movement remains gated by the private lifecycle permit. A real Guard
+    /// supplies live continuity and normal release; serialized marker facts
+    /// cannot substitute for it. Only retirement, never revive an old holder.
+    pub fn apply_guarded(
+        &self,
+        permit: &MutationPermit<'_>,
+        native: &NativeLease,
+        guard: Guard<'_>,
+        deadline: Instant,
+    ) -> io::Result<AuthorizedReadback> {
+        self.apply_guarded_checked(permit, native, guard, deadline, &|_| Ok(()))
+    }
+    fn apply_guarded_checked(
+        &self,
+        permit: &MutationPermit<'_>,
+        native: &NativeLease,
+        mut guard: Guard<'_>,
+        deadline: Instant,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<AuthorizedReadback> {
+        let deadline = deadline.min(permit.deadline);
+        time(deadline)?;
+        (permit.check)()?;
+        let plan = self.load()?;
+        let image = guard
+            .root_image(native, self.originals.logical_client().as_path())
+            .map_err(|_| denied("current root writer unconfirmed"))?;
+        if plan.write_guard.as_ref() != Some(&image) {
+            return Err(denied("root writer differs from independently bound plan"));
+        }
+        let target = self.originals.directory.path().join(self.slot());
+        guard
+            .prepare_relocation(&target)
+            .map_err(|_| denied("writer destination unconfirmed"))?;
+        native
+            .require_claim_handoff()
+            .map_err(|_| denied("root claim handoff is not current"))?;
+        let holder = std::cell::RefCell::new(Some(guard));
+        let released = std::cell::Cell::new(false);
+        let readback = self.apply_checked_inner(
+            Direction::Retire,
+            &|| {
+                time(deadline)?;
+                (permit.check)()?;
+                native
+                    .check()
+                    .map_err(|_| denied("root native lease unconfirmed"))?;
+                if let Some(guard) = holder.borrow_mut().as_mut() {
+                    guard
+                        .check()
+                        .map_err(|_| denied("root writer continuity unconfirmed"))?;
+                }
+                time(deadline)
+            },
+            &|phase| {
+                checkpoint(phase)?;
+                if phase == "after_native" {
+                    native
+                        .reanchor_claim(&target)
+                        .map_err(|_| denied("moved native root unconfirmed"))?;
+                    holder
+                        .borrow_mut()
+                        .as_mut()
+                        .ok_or_else(|| denied("root holder missing"))?
+                        .reanchor(&target)
+                        .map_err(|_| denied("moved writer unconfirmed"))?;
+                }
+                if phase == "settle_writer" {
+                    holder
+                        .borrow_mut()
+                        .take()
+                        .ok_or_else(|| denied("root holder missing"))?
+                        .finish()
+                        .map_err(|_| denied("root writer release unconfirmed"))?;
+                    released.set(true);
+                }
+                Ok(())
+            },
+            true,
+        )?;
+        if !released.get() {
+            return Err(denied("root writer release not proven"));
+        }
         self.authorized_readback(readback, deadline)
     }
     fn authorized_readback(
@@ -489,6 +679,9 @@ impl<'a> Pending<'a> {
         let plan = self.load()?;
         let archive = self.retired_matches(&plan)?;
         let tree = TreeSnapshot::read(&archive.client)?;
+        if tree != plan.released_tree()? {
+            return Err(denied("terminal root still contains temporary writer"));
+        }
         let expected = self.receipt_bytes(&plan, Direction::Retire, &tree)?;
         match capture_file(
             &self.originals.directory,
@@ -521,8 +714,20 @@ impl<'a> Pending<'a> {
         check: &impl Fn() -> io::Result<()>,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<Readback> {
+        self.apply_checked_inner(direction, check, checkpoint, false)
+    }
+    fn apply_checked_inner(
+        &self,
+        direction: Direction,
+        check: &impl Fn() -> io::Result<()>,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+        guarded: bool,
+    ) -> io::Result<Readback> {
         check()?;
         let plan = self.load()?;
+        if guarded != plan.write_guard.is_some() || guarded && direction != Direction::Retire {
+            return Err(denied("current writer required for guarded root movement"));
+        }
         let (from, from_name, to, to_name) = match direction {
             Direction::Retire => (
                 &self.originals.profile,
@@ -577,6 +782,7 @@ impl<'a> Pending<'a> {
             check()?;
             let a = name(OsStr::new(&from_name))?;
             let b = name(OsStr::new(&to_name))?;
+            checkpoint("before_rename")?;
             if unsafe {
                 libc::renameatx_np(
                     from.file().as_raw_fd(),
@@ -591,8 +797,6 @@ impl<'a> Pending<'a> {
             }
             from.sync()?;
             to.sync()?;
-            checkpoint("after_native")?;
-            check()?;
             let actual = entry(to, &to_name)?.ok_or_else(|| denied("moved root disappeared"))?;
             if identity(&actual) != plan.execution_tree.root {
                 // We moved a late replacement. Preserve the complete object,
@@ -633,8 +837,17 @@ impl<'a> Pending<'a> {
                 from.sync()?;
                 return Err(denied("outside root returned; movement remains failed"));
             }
+            // Always identify/record a moved replacement BEFORE attempting a
+            // successful root/holder reanchor. If current authority has become
+            // unknown, compensation refuses but the conflict remains recorded.
+            checkpoint("after_native")?;
+            check()?;
         }
         check()?;
+        if guarded {
+            checkpoint("settle_writer")?;
+            check()?;
+        }
         let actual_tree = match direction {
             Direction::Retire => {
                 let archive = self.retired_matches(&plan)?;
@@ -645,6 +858,9 @@ impl<'a> Pending<'a> {
                 TreeSnapshot::read(&self.live_view(&plan)?.client)?
             }
         };
+        if actual_tree != plan.released_tree()? {
+            return Err(denied("temporary writer has not been exactly released"));
+        }
         let receipt = self.receipt_bytes(&plan, direction, &actual_tree)?;
         checkpoint("before_readback")?;
         check()?;
@@ -681,3 +897,6 @@ mod tests;
 #[cfg(test)]
 #[path = "macos_client_root_retirement_index_tests.rs"]
 mod index_tests;
+#[cfg(test)]
+#[path = "macos_client_root_transient_tests.rs"]
+pub(crate) mod transient_tests;

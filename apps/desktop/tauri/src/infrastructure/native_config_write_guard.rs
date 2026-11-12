@@ -148,6 +148,17 @@ impl NativeLease {
     }
 }
 impl Guard<'_> {
+    /// Current live holder facts only; no disk-only constructor returns a Guard.
+    pub(crate) fn root_image(&mut self, native: &NativeLease, root: &Path) -> AppResult<Image> {
+        self.check()?;
+        if !std::ptr::eq(self.native, native)
+            || self.target.path() != root
+            || root != native.client.path()
+        {
+            return Err(guard_error(()));
+        }
+        self.image.clone().ok_or_else(|| guard_error(()))
+    }
     fn event(&self, wanted: &str, target: &Path) -> AppResult<()> {
         let remaining = self
             .native

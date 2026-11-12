@@ -479,6 +479,10 @@ fn official299_native_handover_holds_through_work_and_preserves_original_ownersh
         "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
     );
     program_image::verify(&selected).unwrap();
+    if std::env::var_os("OCXD_NATIVE_ROOT_TRANSIENT").is_some() {
+        crate::infrastructure::macos_client_originals::root_retirement::transient_tests::official_round(&root,&program);
+        return;
+    }
     // A synthetic journal without an initialized official coordinator is
     // intentionally refused as ambiguous prior state. Initialize this NEW
     // private namespace through the actual official constructor/commit before
