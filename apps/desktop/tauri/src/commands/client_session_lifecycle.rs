@@ -121,26 +121,42 @@ impl Active {
     ) -> AppResult<()> {
         let coordination = self.coordination(context)?;
         let phase = std::cell::Cell::new("native-coordination");
+        let started = Instant::now();
+        let timings = std::cell::RefCell::new(Vec::with_capacity(8));
+        let mark = |next: &'static str| {
+            phase.set(next);
+            timings
+                .borrow_mut()
+                .push((next, started.elapsed().as_millis()));
+        };
         let result = with_native_coordination(&coordination, deadline, |lease| {
-            phase.set("seal-stopped");
+            mark("seal-stopped");
             self.session.seal_completed_stop(context, proof, lease)?;
-            phase.set("index-stopped");
+            mark("index-stopped");
             self.head = self
                 .index
                 .advance(&self.head, State::Stopped, Some(self.session.references()?))
                 .map_err(failure)?;
-            phase.set("prepare-plan");
+            mark("prepare-plan");
             let pending = self
                 .session
                 .prepare_restore(context, proof, lease, deadline)?;
-            phase.set("index-plan");
+            mark("index-plan");
             self.head = self
                 .index
                 .record_restore_plan(&self.head, pending.id(), pending.sha256())
                 .map_err(failure)?;
-            phase.set("release-coordination");
+            mark("release-coordination");
             Ok(())
         });
+        // Fixed phase names and monotonic durations only; no paths, source
+        // bytes, process arguments, token or native ownership material.
+        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(self.index.data_root())
+            .append_event(&format!(
+                "client-stop-recovery: measured elapsed_ms={} timings={:?}",
+                started.elapsed().as_millis(),
+                timings.borrow(),
+            ));
         match result {
             Ok(()) => Ok(()),
             Err(error) => {
