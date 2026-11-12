@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 90；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 91；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 94c897bbf（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 0b8b1e74e（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -870,3 +870,14 @@ main94c897bbf新增ClaimGate，使用Darwin F_OFD_SETLK whole-file排他，与�
 证据勘误：上一批root-index的source-final误将应用测试宿主摘要标为库测试binary，原记录不改，新增previous-source-correction记明。旧库摘要未在重建前保存，不能以本批摘要代补；其源码commit/逐文件hash、原测试输出及独立字节投影仍保留。本批按实际执行日志定位库宿主并记录准确摘要。
 
 下一步以OFD原语接真实NativeLease和目录重定位，保留N/L/K、原官方writer与当前正常Stop/launcher/TCP事实；随后接缺根Start/Stop和next Start及明确中断处理，再做原包隔离原生验收。默认生产锁路径/VFS检查未放宽；其它完整剩余范围和固定候选/Windows W2顺序保持，目标active。
+
+
+## 2026-11-13 NativeLease的claim交接与原官方协调验证
+
+main0b8b1e74e增加显式with_native_relocation_coordination，共用原官方准入及来源前后核验；普通入口保持四SQLite事务。预存原OFD pin先于SQLite，handoff仅正常关闭claim，N/L/K持续排他，空档Pending拒绝所有操作。抢占者获得claim导致交接失败也不能当自己的许可；失败清理不冒成功。移动后只允许明确reanchor原directory/claim identity和Protection，logical client仍原路径，新用户根出现拒绝；owner/profile/HOME/期限及仍持有N/L/K原VFS检查保持。详[NativeLease交接合同](0.2.24-contracts/client-native-handoff-r1.md)。
+
+19个常规函数通过（含2个子进程探针入口），官方ignored入口另1项真实通过；原阶段回归保留。实际子进程证明交接空档N/L/K持续忙而lease拒绝、外国claim抢占不放行、移动及额外fd关闭后四锁仍忙、释放后可获取；未知anchor/新用户根/owner/VFS/过期仍拒绝。未修改官方2.99真实准入/K/L写入入口在移动前后均busy且不执行callback，释放并回移后正控成功；原协调动作2054ms<10000ms，全runner69.944s不冒动作预算。fmt/diff-check/strictClippy通过，最终源码/执行库binary与真实原官方轮完全对应。
+
+证据.adg/evidence/0.2.24/client-native-handoff-r1/含假设、源码/binary、完整日志、官方writer输出、global L前后身份/权限/字节及核验脚本。全部child实际wait，精确新N/K各在exclusive重获后删，预存global L保持identity/mode/bytes不变并重获释放，测试Profile/program和重复临时根清理，无日常配置/服务/业务请求/新包或发布。
+
+本批仅协调层，官方config writer holder尚无移动协议，生产root MutationPermit/正常Stop完整证明/独立根关闭/next Start/缺Ready等仍未完。下一步接原holder准确物理路径与token/正常释放，再接真实根恢复许可与原包隔离启停。Windows W1与其它完整IMP范围不缩减，W2仍等固定候选，目标active。

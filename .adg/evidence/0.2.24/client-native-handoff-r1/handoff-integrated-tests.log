@@ -1,0 +1,29 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 28.39s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 20 tests
+test infrastructure::official_client_coordination::native::tests::admitted_journal_fingerprint_cannot_be_rebased_after_helper_release ... ok
+test infrastructure::official_client_coordination::native::tests::an_existing_competing_writer_refuses_without_retries_or_changed_budget ... ok
+test infrastructure::official_client_coordination::native::tests::callback_expiry_does_not_unlock_a_native_mutation_while_its_owner_still_runs ... ok
+test infrastructure::official_client_coordination::native::tests::external_native_sqlite_probe ... ok
+test infrastructure::official_client_coordination::native::tests::lifecycle_writer_contention_and_identity_changes_refuse_without_repair ... ok
+test infrastructure::official_client_coordination::native::tests::native_lease_context_cannot_be_reused_for_another_runtime_profile_home_or_client ... ok
+test infrastructure::official_client_coordination::native::tests::official299_native_handover_holds_through_work_and_preserves_original_ownership ... ignored, explicit pinned official299 bundle and new isolated profile; one native handover round only
+test infrastructure::official_client_coordination::native::tests::ownership_file_change_while_held_is_rejected_without_dropping_the_four_locks ... ok
+test infrastructure::official_client_coordination::native::tests::partial_acquisition_error_or_scope_drop_release_connections_before_raw_pins ... ok
+test infrastructure::official_client_coordination::native::tests::relocation::handoff_foreign_claim_holder ... ok
+test infrastructure::official_client_coordination::native::tests::relocation::relocation_does_not_skip_other_sqlite_vfs_or_owner_checks ... ok
+test infrastructure::official_client_coordination::native::tests::relocation::relocation_expired_lease_keeps_all_coordinators_until_owner_unwinds ... ok
+test infrastructure::official_client_coordination::native::tests::relocation::relocation_failed_handoff_stays_pending_with_n_l_k_excluded_until_cleanup ... ok
+test infrastructure::official_client_coordination::native::tests::relocation::relocation_foreign_claim_contender_does_not_get_reclassified_as_our_handoff ... ok
+test infrastructure::official_client_coordination::native::tests::relocation::relocation_handoff_keeps_n_l_k_held_and_refuses_permission_in_claim_gap ... NATIVE_HANDOFF_EVIDENCE {"accepted":false,"allFourExcludedAfterMove":true,"claimOriginalBytesUnchanged":true,"gapHasNoPermission":true,"nLKContinuouslyExcludedAtGap":true,"noServiceOrWriterAuthority":true,"normalReleaseProbed":true}
+ok
+test infrastructure::official_client_coordination::native::tests::relocation::relocation_is_opt_in_and_partial_acquisition_does_not_release_live_other_locks_early ... ok
+test infrastructure::official_client_coordination::native::tests::relocation::relocation_reappeared_user_root_or_unknown_archive_is_not_adopted ... ok
+test infrastructure::official_client_coordination::native::tests::sqlite_vfs_checks_its_actual_open_inode_instead_of_trusting_a_pathname ... ok
+test infrastructure::official_client_coordination::native::tests::substituted_lock_and_unsafe_mode_are_refused_without_repair_or_callback ... ok
+test infrastructure::official_client_coordination::native::tests::world_writable_owner_receipt_is_not_admitted_or_repaired_by_hashing_it ... ok
+
+test result: ok. 19 passed; 0 failed; 1 ignored; 0 measured; 2476 filtered out; finished in 0.82s
+

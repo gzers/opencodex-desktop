@@ -1,0 +1,27 @@
+{
+  "accepted": false,
+  "commit": "0b8b1e74e17c0a8226d0f06f3f09ed3ea22c4e47",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_claim_gate.rs",
+      "sha256": "2d358ec26a838402b6fc08823317e96fc4cba99bee73f42635af612fd4d1afe2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_client_coordination.rs",
+      "sha256": "b5bd2d57fe757ac62988cd452b5101fc0bcd9843ca1bf7147a2740b7d3462f04"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_client_coordination_tests.rs",
+      "sha256": "c1b1d7512dcdd42dfc981697197d5acf9ec05b51b52fc25dbd60489b4dfb2c67"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_client_relocation_tests.rs",
+      "sha256": "29dc976e2d8e5616dc6ced0c75c05d8b667392cb37da732f82dd871a3985bd22"
+    }
+  ],
+  "actualLibraryTestBinary": "apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97",
+  "actualLibraryTestBinarySha256": "9915ef0f00f9a138021bcbed3d1bc65a9406ef084d74c9ddf79fd16f8fd01d04",
+  "officialRoundBinarySha256": "9915ef0f00f9a138021bcbed3d1bc65a9406ef084d74c9ddf79fd16f8fd01d04",
+  "sourceFilesExactlyMatchOfficialRound": true,
+  "scope": "Final source tests and official round used the same binary and file hashes. Earlier baseline logs are retained as earlier stages, not final-source claims."
+}

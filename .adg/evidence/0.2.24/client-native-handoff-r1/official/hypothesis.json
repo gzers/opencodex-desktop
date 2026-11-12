@@ -1,0 +1,18 @@
+{
+  "accepted": false,
+  "temporaryRoot": "/private/tmp/ocxd024-native-coordination-m0_11g1f",
+  "exactNewCoordinatorFiles": [
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/60f4299370165770a0f4c15fee627d5ffb8e7ad046fbfafed7dbbea8dac2cb97.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/60f4299370165770a0f4c15fee627d5ffb8e7ad046fbfafed7dbbea8dac2cb97.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/60f4299370165770a0f4c15fee627d5ffb8e7ad046fbfafed7dbbea8dac2cb97.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/60f4299370165770a0f4c15fee627d5ffb8e7ad046fbfafed7dbbea8dac2cb97.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/60f4299370165770a0f4c15fee627d5ffb8e7ad046fbfafed7dbbea8dac2cb97.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/60f4299370165770a0f4c15fee627d5ffb8e7ad046fbfafed7dbbea8dac2cb97.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/60f4299370165770a0f4c15fee627d5ffb8e7ad046fbfafed7dbbea8dac2cb97.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/60f4299370165770a0f4c15fee627d5ffb8e7ad046fbfafed7dbbea8dac2cb97.sqlite-shm"
+  ],
+  "preexistingGlobalL": "/private/tmp/opencodex-runtime-v1-501/client-desktop-lifecycle.sqlite",
+  "noServiceOrBusinessRequests": true,
+  "binarySha256": "9915ef0f00f9a138021bcbed3d1bc65a9406ef084d74c9ddf79fd16f8fd01d04",
+  "hypothesis": "Unmodified official299 admission plus opt-in NativeLease claim handoff retains N/L/K and refuses stale old anchor; after exact root reanchor actual official K/L writers remain busy, after normal release become available. No service or config-write-holder relocation authority claimed."
+}
