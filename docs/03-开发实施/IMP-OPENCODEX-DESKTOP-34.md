@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 99；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 100；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 0ac19863e（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -985,3 +985,16 @@ Index借同SQLite/action核有界canonical完整events，所有事件首尾/阶�
 证据.adg/evidence/0.2.24/client-root-closed-history-r1/含30文件manifest约1.32MB、最终6源/真实库binary、日志/静态审查/原base64JSON与独立SQLite引用核验；早期7/8项仅其阶段证据。全部test/agent子进程终止，TempDir清理、unitTMP空、逐字归档后删重复根。未执行官方runtime/服务/全局DB，无日常配置/真实业务/新候选/发布。
 
 下一步仍需newgeneration create-only custody、独立前驱关闭/本代origin/scope/Preparing原子登记及状态/实际Start同源资格，再至少两完整release原包循环和中断/新用户root/CAS/deadline负控。当前未开放RootAbsent→Start，首次release通过不冒第二次，P24-04/05与Windows/NAME/其它原全范围保持未完，目标active。
+
+
+## 2026-11-13 第二代root创建与原子Preparing登记原语
+
+main57ae63019新增Index持有的后继创建：准确首代RootAbsent/当前缺根/完整旧历史后，clone原action open-file-description/flock，create-only第二代槽/candidate/创建fd/原deadline/EXCL发布，rootGeneration（新origin/scope、初Preparing revision、前驱关闭revision/原编码SHA）和Preparing在同一Index事件/currentHead CAS事务中提交。原singleton/binding/旧events/原件/archives不改；Head可选字段仅Preparing序列化，References.generationSlot绑定本代UUID，SQLite仍原3表/userVersion3，无旧版迁移。详[第二代原语合同](0.2.24-contracts/client-root-generation-r1.md)。
+
+提交前实际binding/全部旧闭合archive/候选newscope+provenance+空root+createdfd完整校验，SQL后再校验再COMMIT，提交后再检查；gen槽及generations/manager父目录在DB引用前sync。只读审查发现并修正SQL尾部漏查和父目录sync，fsync顺序不冒物理断电验收。读取按原初binding＋本代Preparing独立来源解析，scope前8上下文相同/clientidentity不同、前驱SHA和旧source/close严格，未知slot/更多未支持generation拒绝。
+
+8新增后继/索引总44/根恢复37/首创建8共89去重函数过，4ignored不计，fmt/diff/strictClippy过。真实exit91五点reservation/rootpublish/eventinsert/headupdate/committed，独立bytes只旧Absent5或完整Preparing6，事务内rollback sidecar保留，磁盘重开不恢复createdfd/capture权；外部真实进程证明同action锁持续。四提交点×两实际变更（newfile/oldarchive）保证precommit两引用回滚，postcommit Preparing保留但Err且外部字节不删。旧binding/vault原字节不变，canonical source/plan/provenance/原件及scope均核验。
+
+证据.adg/evidence/0.2.24/client-root-generation-r1/36文件manifest约2.55MB固定10源/实际库binary、原失败边界、独立SQLite/五现场raw-byte核验与清理；初Path类型错误仅chat原输出，unusedimport严格Clippy失败保留log。全部test/probe/agent句柄终止，TempDir和unitTMP清，逐字归档后删重复临时根；未执行官方服务/runtime/全局DB，无日常配置/真实业务/新候选/发布。
+
+当前只第二代creation+Preparing原语，生产Start未调用；普通capture/reserve/首代capture仍拒绝第二代，第三代及多代history/状态资格未集成，不能声称两次原包启动通过。下一步专用第二代capture/Original/typed阶段链与多代历史reserved边界，再统一readonly资格接Start/状态并跑两完整release原包循环/中断反例；RootAbsent UI/更多循环和Windows/NAME/其它原全范围未完，目标active。

@@ -1,0 +1,47 @@
+{
+  "accepted": false,
+  "verified": [
+    {
+      "point": "generation_reserved",
+      "allRawBytesAndIndependentPredecessorVerified": true,
+      "headState": "root_absent",
+      "revision": 5,
+      "newGenerationAtomicallyPresent": false,
+      "noStartOrRecapturedCustody": true
+    },
+    {
+      "point": "generation_published",
+      "allRawBytesAndIndependentPredecessorVerified": true,
+      "headState": "root_absent",
+      "revision": 5,
+      "newGenerationAtomicallyPresent": false,
+      "noStartOrRecapturedCustody": true
+    },
+    {
+      "point": "generation_event_inserted",
+      "allRawBytesAndIndependentPredecessorVerified": true,
+      "headState": "root_absent",
+      "revision": 5,
+      "newGenerationAtomicallyPresent": false,
+      "noStartOrRecapturedCustody": true
+    },
+    {
+      "point": "generation_head_updated",
+      "allRawBytesAndIndependentPredecessorVerified": true,
+      "headState": "root_absent",
+      "revision": 5,
+      "newGenerationAtomicallyPresent": false,
+      "noStartOrRecapturedCustody": true
+    },
+    {
+      "point": "generation_committed",
+      "allRawBytesAndIndependentPredecessorVerified": true,
+      "headState": "preparing",
+      "revision": 6,
+      "newGenerationAtomicallyPresent": true,
+      "noStartOrRecapturedCustody": true
+    }
+  ],
+  "positivePriorEvidenceByteEqualityAsserted": true,
+  "scope": "offline exact byte supplement to real filesystem/SQLite/process-exit tests; no OS service or repeated Start acceptance"
+}
