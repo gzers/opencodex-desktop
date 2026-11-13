@@ -30,6 +30,138 @@ fn inventory(root: &Path) -> Vec<serde_json::Value> {
     tests::storage_evidence(root)
 }
 #[test]
+fn projected_history_observation_independently_reopens_all_evidence_after_projection() {
+    for case in ["plan", "receipt", "frame", "archive", "namespace"] {
+        let f = Fixture::new();
+        let refs = close(&f);
+        let movement = refs.closed.root_retirement.as_ref().unwrap();
+        let before = inventory(f.originals.data.path());
+        let reached = std::cell::Cell::new(false);
+        let observed = HistoricalObservation::begin(
+            f.originals.data.path(),
+            f.originals.profile.path(),
+            &refs,
+            |data, profile, client| {
+                reached.set(true);
+                assert_eq!(data.identity(), f.originals.data.identity());
+                assert_eq!(profile.identity(), f.originals.profile.identity());
+                assert_eq!(client.identity(), f.originals.client.identity());
+                Ok(())
+            },
+        )
+        .unwrap();
+        assert!(reached.get());
+        assert_eq!(inventory(f.originals.data.path()), before);
+        let path = match case {
+            "plan" => f
+                .originals
+                .directory
+                .path()
+                .join(format!("root-retirement-{}.json", movement.plan.id)),
+            "receipt" => f.originals.directory.path().join(format!(
+                "root-retirement-{}-Retire-readback.json",
+                movement.plan.id
+            )),
+            "frame" => f.originals.directory.path().join("original.json"),
+            "archive" => f
+                .originals
+                .directory
+                .path()
+                .join(format!("root-retired-{}", movement.plan.id)),
+            "namespace" => f
+                .originals
+                .data
+                .path()
+                .join("manager-state/client-root-generations"),
+            _ => unreachable!(),
+        };
+        if case == "archive" {
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o755)).unwrap();
+        } else if case == "namespace" {
+            fs::DirBuilder::new().mode(0o700).create(&path).unwrap();
+            fs::DirBuilder::new()
+                .mode(0o700)
+                .create(path.join(uuid::Uuid::new_v4().to_string()))
+                .unwrap();
+        } else {
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+            fs::write(&path, b"changed between projection passes").unwrap();
+            fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+        }
+        let changed = inventory(f.originals.data.path());
+        assert!(observed.finish().is_err(), "{case}");
+        assert_eq!(inventory(f.originals.data.path()), changed, "{case}");
+    }
+}
+#[test]
+fn projected_history_observation_checks_projection_errors_without_publishing_completion() {
+    let f = Fixture::new();
+    let refs = close(&f);
+    let before = inventory(f.originals.data.path());
+    let result = HistoricalObservation::begin(
+        f.originals.data.path(),
+        f.originals.profile.path(),
+        &refs,
+        |_, _, _| Err(denied("scope projection refused")),
+    );
+    assert!(matches!(result,Err(e) if e.to_string()=="scope projection refused"));
+    assert_eq!(inventory(f.originals.data.path()), before);
+}
+#[test]
+fn projected_history_observations_do_not_accumulate_native_handles_or_change_originals() {
+    const TEST:&str="infrastructure::macos_client_originals::root_retirement::history_tests::projected_history_observations_do_not_accumulate_native_handles_or_change_originals";
+    if std::env::var_os("OCXD024_HISTORY_FD_CHILD").as_deref() != Some(OsStr::new("1")) {
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
+            .args(["--exact", TEST, "--nocapture", "--test-threads=1"])
+            .env("OCXD024_HISTORY_FD_CHILD", "1")
+            .output()
+            .unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+        let text = String::from_utf8(output.stdout).unwrap();
+        assert!(text.contains("HISTORY_FD_BOUNDARY") && text.contains("1 passed; 0 failed"));
+        println!("{text}");
+        return;
+    }
+    fn handles() -> usize {
+        (0..unsafe { libc::getdtablesize() })
+            .filter(|fd| unsafe { libc::fcntl(*fd, libc::F_GETFD) } >= 0)
+            .count()
+    }
+    let f = Fixture::new();
+    let refs = close(&f);
+    let before = inventory(f.originals.data.path());
+    let initial = handles();
+    let mut observations = Vec::new();
+    for _ in 0..32 {
+        observations.push(
+            HistoricalObservation::begin(
+                f.originals.data.path(),
+                f.originals.profile.path(),
+                &refs,
+                |_, _, _| Ok(()),
+            )
+            .unwrap(),
+        );
+        assert!(
+            handles() <= initial + 1,
+            "one retained handle per history would regress the bounded lineage"
+        );
+    }
+    for observation in observations {
+        observation.finish().unwrap();
+    }
+    assert!(handles() <= initial + 1);
+    assert_eq!(inventory(f.originals.data.path()), before);
+    println!(
+        "HISTORY_FD_BOUNDARY {}",
+        serde_json::json!({"accepted":false,"isolatedProcess":true,"incompleteObservations":32,"initialHandles":initial,"finalHandles":handles(),"noOriginalWrites":true})
+    );
+}
+#[test]
 fn closed_plan_observation_retains_exact_start_and_end_authentication_without_cross_call_cache() {
     let f = Fixture::new();
     let refs = close(&f);
@@ -781,6 +913,33 @@ fn closed_root_history_full_frame_live_and_released_marker_chain_stays_independe
     println!(
         "HISTORICAL_PLAN_COMPARISON {}",
         serde_json::json!({"accepted":false,"samples":plans,"scope":"same source/binary/current four-frame fixture; fresh start/end plans and unchanged eight frames; no service acceptance"})
+    );
+    let mut projected = Vec::new();
+    for reference in [true, false, false, true] {
+        let started = Instant::now();
+        let (result, metrics) = observation_metrics::measure(|| {
+            if reference {
+                observation_metrics::history_reference(|| f._index.closed_root_history(&closed))
+            } else {
+                f._index.closed_root_history(&closed)
+            }
+        });
+        assert_eq!(result.unwrap().len(), 1);
+        let metrics = serde_json::to_value(metrics).unwrap();
+        assert_eq!(metrics["frame"]["calls"], if reference { 16 } else { 8 });
+        assert_eq!(
+            metrics["root_provenance"]["calls"],
+            if reference { 20 } else { 10 }
+        );
+        assert_eq!(
+            metrics["retirement_plan_load"]["calls"],
+            if reference { 4 } else { 2 }
+        );
+        projected.push(serde_json::json!({"reference":reference,"elapsedNanos":started.elapsed().as_nanos(),"metrics":metrics}));
+    }
+    println!(
+        "PROJECTED_HISTORY_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":projected,"scope":"same independent held index/fullfourframe history and exact membership projection; two complete passes retained; no service acceptance"})
     );
     f._index.closed_root_history(&closed).unwrap();
     fs::DirBuilder::new()

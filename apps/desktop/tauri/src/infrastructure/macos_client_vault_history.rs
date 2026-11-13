@@ -90,6 +90,19 @@ pub(super) fn inspect_root_closures_pending(
     inspect_root_lineage(data, profile, binding, history, true, Some(transfer)).map(|_| ())
 }
 fn check_historical_scope(originals: &Originals, binding: &[u8]) -> io::Result<()> {
+    check_historical_scope_pins(
+        &originals.data,
+        &originals.profile,
+        &originals.client,
+        binding,
+    )
+}
+fn check_historical_scope_pins(
+    data: &PinnedDirectory,
+    profile: &PinnedDirectory,
+    client: &PinnedDirectory,
+    binding: &[u8],
+) -> io::Result<()> {
     let saved = root_binding::scope_bytes(binding)?;
     let value: serde_json::Value = serde_json::from_slice(&saved)
         .map_err(|_| denied("historical generation scope invalid"))?;
@@ -99,16 +112,10 @@ fn check_historical_scope(originals: &Originals, binding: &[u8]) -> io::Result<(
         .ok_or_else(|| denied("historical generation HOME missing"))?;
     let context = ProcessContext {
         runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(),
-        working_directory: originals.profile.path().into(),
+        working_directory: profile.path().into(),
         opencodex_home: home.into(),
     };
-    if scope_at(
-        &context,
-        &originals.data,
-        &originals.client,
-        &originals.profile.path().join(".codex"),
-    )? != saved
-    {
+    if scope_at(&context, data, client, &profile.path().join(".codex"))? != saved {
         return Err(denied(
             "historical archive differs from its generation scope",
         ));
@@ -124,6 +131,10 @@ fn inspect_root_lineage(
     pending: Option<&super::root_creation::Transfer>,
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
     let mut lineage = root_lineage::parse(binding, history)?;
+    #[cfg(not(test))]
+    let reference_mode = false;
+    #[cfg(test)]
+    let reference_mode = observation_metrics::history_reference_enabled();
     if let Some(transfer) = pending {
         lineage.bind_pending(transfer)?;
     }
@@ -179,11 +190,26 @@ fn inspect_root_lineage(
             closed: closed.clone(),
             original_root: generation.origin.clone(),
         };
-        let archive =
-            super::super::root_retirement::open_closed_history(data.path(), profile, &reference)?;
-        check_historical_scope(&archive, &generation.binding)?;
+        let observation = if reference_mode {
+            let archive = super::super::root_retirement::open_closed_history(
+                data.path(),
+                profile,
+                &reference,
+            )?;
+            check_historical_scope(&archive, &generation.binding)?;
+            None
+        } else {
+            Some(super::super::root_retirement::HistoricalObservation::begin(
+                data.path(),
+                profile,
+                &reference,
+                |data, profile, client| {
+                    check_historical_scope_pins(data, profile, client, &generation.binding)
+                },
+            )?)
+        };
         expected.push(generation.origin.id.clone());
-        references.push((reference, generation.binding.clone()));
+        references.push((reference, generation.binding.clone(), observation));
     }
     let manager = data.child_private("manager-state", false)?;
     if observation::entry(&manager, "client-originals")?.is_none() {
@@ -236,9 +262,12 @@ fn inspect_root_lineage(
             "root vault differs from exact indexed generation attempts",
         ));
     }
-    for (reference, binding) in &references {
-        let archive =
-            super::super::root_retirement::open_closed_history(data.path(), profile, reference)?;
+    for (reference, binding, observation) in &mut references {
+        let archive = if let Some(observation) = observation.take() {
+            observation.finish()?
+        } else {
+            super::super::root_retirement::open_closed_history(data.path(), profile, reference)?
+        };
         check_historical_scope(&archive, binding)?;
     }
     if let Some((directory, observed)) = active_directory {
@@ -262,7 +291,7 @@ fn inspect_root_lineage(
     manager.recheck()?;
     Ok(references
         .into_iter()
-        .map(|(reference, _)| reference)
+        .map(|(reference, _, _)| reference)
         .collect())
 }
 pub(super) fn inspect(

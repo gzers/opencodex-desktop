@@ -208,41 +208,24 @@ pub fn open_closed_history(
 ) -> io::Result<Originals> {
     #[cfg(test)]
     let _metric = observation_metrics::span("closed_history");
-    session_index::validate(&reference.source)?;
-    session_index::validate(&reference.closed)?;
-    let closed = &reference.closed;
-    let source = &reference.source;
-    let movement = closed
-        .root_retirement
-        .as_ref()
-        .ok_or_else(|| denied("historical root closure has no independent movement"))?;
-    let completion = closed
-        .completion_sha256
-        .as_deref()
-        .ok_or_else(|| denied("historical root closure has no independent completion"))?;
-    if closed.state != session_index::State::RootAbsent
-        || source.root_retirement.is_some()
-        || movement.source_revision != source.revision
-        || closed.revision <= source.revision.saturating_add(1)
-        || closed.ticket != source.ticket
-        || closed.references != source.references
-        || closed.restore_plan != source.restore_plan
-        || reference.original_root.id != closed.ticket
-    {
-        return Err(denied("historical root closure rebases independent source"));
-    }
+    validate_closed_reference(reference)?;
     #[cfg(not(test))]
     let reference_mode = false;
     #[cfg(test)]
     let reference_mode = observation_metrics::plan_reference_enabled();
-    let archived_ref = ArchiveReferences {
-        source: source.clone(),
-        original_root: reference.original_root.clone(),
-        plan_id: movement.plan.id.clone(),
-        plan_sha256: movement.plan.sha256.clone(),
-    };
     if !reference_mode {
-        let archive = open_archive_shell(data_root, profile_root, &archived_ref)?;
+        let source = &reference.source;
+        let movement = reference.closed.root_retirement.as_ref().unwrap();
+        let archive = open_archive_shell(
+            data_root,
+            profile_root,
+            &ArchiveReferences {
+                source: source.clone(),
+                original_root: reference.original_root.clone(),
+                plan_id: movement.plan.id.clone(),
+                plan_sha256: movement.plan.sha256.clone(),
+            },
+        )?;
         let (pending, initial) =
             Pending::open_with_plan(&archive, &movement.plan.id, &movement.plan.sha256)?;
         if initial.source != *source {
@@ -250,9 +233,16 @@ pub fn open_closed_history(
                 "root archive source Head differs from independent reference",
             ));
         }
-        pending.verify_historical_close_from_initial(completion, initial, &|_| Ok(()))?;
+        pending.verify_historical_close_from_initial(
+            reference.closed.completion_sha256.as_deref().unwrap(),
+            initial,
+            &|_| Ok(()),
+        )?;
         return Ok(archive);
     }
+    let source = &reference.source;
+    let movement = reference.closed.root_retirement.as_ref().unwrap();
+    let completion = reference.closed.completion_sha256.as_deref().unwrap();
     let archive = open_archive_reference(
         data_root,
         profile_root,
@@ -268,6 +258,136 @@ pub fn open_closed_history(
     pending.verify_historical_close(completion)?;
     Ok(archive)
 }
+fn validate_closed_reference(reference: &ClosedRootReferences) -> io::Result<()> {
+    session_index::validate(&reference.source)?;
+    session_index::validate(&reference.closed)?;
+    let closed = &reference.closed;
+    let source = &reference.source;
+    let movement = closed
+        .root_retirement
+        .as_ref()
+        .ok_or_else(|| denied("historical root closure has no independent movement"))?;
+    let _completion = closed
+        .completion_sha256
+        .as_deref()
+        .ok_or_else(|| denied("historical root closure has no independent completion"))?;
+    if closed.state != session_index::State::RootAbsent
+        || source.root_retirement.is_some()
+        || movement.source_revision != source.revision
+        || closed.revision <= source.revision.saturating_add(1)
+        || closed.ticket != source.ticket
+        || closed.references != source.references
+        || closed.restore_plan != source.restore_plan
+        || reference.original_root.id != closed.ticket
+    {
+        return Err(denied("historical root closure rebases independent source"));
+    }
+    Ok(())
+}
+struct HistoricalPass {
+    archive: Originals,
+    tree: TreeSnapshot,
+    intent: Vec<u8>,
+    receipt: Vec<u8>,
+}
+/// Incomplete readonly observation. Private fields, no Clone/serde and no
+/// accessible Originals until finish independently reads all evidence again.
+pub(super) struct HistoricalObservation {
+    reference: ClosedRootReferences,
+    data: PathBuf,
+    profile: PathBuf,
+    plan_sha256: String,
+    tree_sha256: String,
+    intent: Vec<u8>,
+    receipt: Vec<u8>,
+}
+impl HistoricalObservation {
+    pub(super) fn begin(
+        data: &Path,
+        profile: &Path,
+        reference: &ClosedRootReferences,
+        project: impl FnOnce(&PinnedDirectory, &PinnedDirectory, &PinnedDirectory) -> io::Result<()>,
+    ) -> io::Result<Self> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("historical_begin");
+        validate_closed_reference(reference)?;
+        let movement = reference.closed.root_retirement.as_ref().unwrap();
+        let archive = open_archive_shell(
+            data,
+            profile,
+            &ArchiveReferences {
+                source: reference.source.clone(),
+                original_root: reference.original_root.clone(),
+                plan_id: movement.plan.id.clone(),
+                plan_sha256: movement.plan.sha256.clone(),
+            },
+        )?;
+        let (pending, initial) =
+            Pending::open_with_plan(&archive, &movement.plan.id, &movement.plan.sha256)?;
+        if initial.source != reference.source {
+            return Err(denied(
+                "root archive source Head differs from independent reference",
+            ));
+        }
+        let first = pending.historical_pass(
+            &initial,
+            reference.closed.completion_sha256.as_deref().unwrap(),
+        )?;
+        project(
+            &first.archive.data,
+            &first.archive.profile,
+            &first.archive.client,
+        )?;
+        // Keep only independently authenticated equality digests and tiny
+        // receipts. No generation-wide fd/tree/Plan cache accumulates across
+        // the bounded 512-generation projection. Finish reopens every source.
+        Ok(Self {
+            reference: reference.clone(),
+            data: data.into(),
+            profile: profile.into(),
+            plan_sha256: digest(&encode(&initial)?),
+            tree_sha256: digest(&encode(&first.tree)?),
+            intent: first.intent,
+            receipt: first.receipt,
+        })
+    }
+    pub(super) fn finish(self) -> io::Result<Originals> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("historical_finish");
+        let movement = self.reference.closed.root_retirement.as_ref().unwrap();
+        let archive = open_archive_shell(
+            &self.data,
+            &self.profile,
+            &ArchiveReferences {
+                source: self.reference.source.clone(),
+                original_root: self.reference.original_root.clone(),
+                plan_id: movement.plan.id.clone(),
+                plan_sha256: movement.plan.sha256.clone(),
+            },
+        )?;
+        let (pending, confirmed) =
+            Pending::open_with_plan(&archive, &movement.plan.id, &movement.plan.sha256)?;
+        if confirmed.source != self.reference.source
+            || digest(&encode(&confirmed)?) != self.plan_sha256
+        {
+            return Err(denied("historical root plan changed during observation"));
+        }
+        let current = pending.historical_pass(
+            &confirmed,
+            self.reference.closed.completion_sha256.as_deref().unwrap(),
+        )?;
+        if digest(&encode(&current.tree)?) != self.tree_sha256
+            || current.intent != self.intent
+            || current.receipt != self.receipt
+        {
+            return Err(denied(
+                "historical root archive or records changed during projection",
+            ));
+        }
+        Ok(current.archive)
+    }
+}
+
 fn time(deadline: Instant) -> io::Result<()> {
     if Instant::now() >= deadline {
         Err(denied("root retirement action expired"))
@@ -901,53 +1021,63 @@ impl<'a> Pending<'a> {
         plan: Plan,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<()> {
-        let (archive, _) = self.archive_prefix(&plan)?;
+        let first = self.historical_pass(&plan, expected_sha256)?;
+        checkpoint("historical-readback")?;
+        let confirmed = self.load()?;
+        if encode(&confirmed)? != encode(&plan)? {
+            return Err(denied("historical root plan changed during observation"));
+        }
+        let current = self.historical_pass(&confirmed, expected_sha256)?;
+        if current.tree != first.tree
+            || current.intent != first.intent
+            || current.receipt != first.receipt
+        {
+            return Err(denied("historical root archive changed during observation"));
+        }
+        Ok(())
+    }
+    fn historical_pass(&self, plan: &Plan, expected_sha256: &str) -> io::Result<HistoricalPass> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("historical_full_pass");
+        let (archive, _) = self.archive_prefix(plan)?;
         let tree = TreeSnapshot::read(&archive.client)?;
         if tree != plan.released_tree()? {
             return Err(denied(
                 "closed historical root is not the exact released execution tree",
             ));
         }
-        // Grok evidence is read from immutable phase blobs and the original
-        // plan, never from the next action's user path or model configuration.
         plan.grok.verify_archive(&archive.directory)?;
         let intent = encode(
             &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"direction":Direction::Retire}),
         )?;
-        let intent_name = format!("root-retirement-{}-Retire-intent.json", self.id);
-        let require_record = |filename: &str, expected: &[u8]| -> io::Result<()> {
-            match capture_file(&archive.directory, filename, MAX_FRAME)? {
+        let require_record = |name: &str, expected: &[u8]| -> io::Result<()> {
+            match capture_file(&archive.directory, name, MAX_FRAME)? {
                 Image::File {
                     bytes, protection, ..
                 } if bytes == expected => require_private(&protection, false),
                 _ => Err(denied("closed historical root record missing or changed")),
             }
         };
-        require_record(&intent_name, &intent)?;
-        let receipt = self.receipt_bytes(&plan, Direction::Retire, &tree)?;
+        require_record(
+            &format!("root-retirement-{}-Retire-intent.json", self.id),
+            &intent,
+        )?;
+        let receipt = self.receipt_bytes(plan, Direction::Retire, &tree)?;
         if digest(&receipt) != expected_sha256 {
             return Err(denied(
                 "historical root completion differs from independent digest",
             ));
         }
-        let receipt_name = format!("root-retirement-{}-Retire-readback.json", self.id);
-        require_record(&receipt_name, &receipt)?;
-        checkpoint("historical-readback")?;
-        // Keep this whole observation read-only and reject archive or record
-        // changes that persist during evidence projection, without adopting a
-        // new digest or tying the old close to the next current root.
-        let confirmed = self.load()?;
-        if encode(&confirmed)? != encode(&plan)? {
-            return Err(denied("historical root plan changed during observation"));
-        }
-        let (again, _) = self.archive_prefix(&confirmed)?;
-        if TreeSnapshot::read(&again.client)? != tree {
-            return Err(denied("historical root archive changed during observation"));
-        }
-        confirmed.grok.verify_archive(&again.directory)?;
-        require_record(&intent_name, &intent)?;
-        require_record(&receipt_name, &receipt)?;
-        Ok(())
+        require_record(
+            &format!("root-retirement-{}-Retire-readback.json", self.id),
+            &receipt,
+        )?;
+        Ok(HistoricalPass {
+            archive,
+            tree,
+            intent,
+            receipt,
+        })
     }
     fn receipt_bytes(
         &self,
