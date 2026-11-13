@@ -1,4 +1,4 @@
-; OpenCodeX 0.2.23 Windows I contract. SPDX-License-Identifier: MIT
+; OpenCodeX 0.2.24 Windows I contract (stable template name). SPDX-License-Identifier: MIT
 ; Upstream: Tauri CLI 2.11.4 / tauri-bundler 2.9.4
 ; Source commit: 8909f221d1515955fc843808032bdc5d62209c96
 ; npm gitHead 59585e1aac2d2e3503aa1caececf3568dce51a47 has identical template bytes.
@@ -679,6 +679,12 @@ Section Install
   ; Copy main executable
   File "${MAINBINARYSRCPATH}"
 
+  ; Copy the actual stage_runtime_bundle_024 generated resource mapping:
+  ; runtime-bundle-0.2.24-win32-x64.tar.gz, official-runtime.tgz,
+  ; runtime-bundle.manifest.json and runtime-bundle.manifest.sha256.
+  ; Each source must exist at compile time. No old maintained-package fallback.
+  ; Only bundled files are installer-owned; live runtime/catalog/rollback and
+  ; current-user U/D/H are not enumerated or recursively removed here.
   ; Copy resources
   {{#each resources_dirs}}
     CreateDirectory "$INSTDIR\\{{this}}"
@@ -929,7 +935,7 @@ SectionEnd
 Function RestorePreviousInstallLocation
   ReadRegStr $4 SHCTX "${MANUPRODUCTKEY}" ""
   ; An old default is not an explicit custom choice. Leave the new Programs
-  ; default selected; the PREINSTALL hook removes only the registered 022 app.
+  ; default selected. 024 never invokes a legacy uninstaller from PREINSTALL.
   ${If} $4 != ""
   ${AndIf} $4 != "$LOCALAPPDATA\${PRODUCTNAME}"
     StrCpy $INSTDIR $4

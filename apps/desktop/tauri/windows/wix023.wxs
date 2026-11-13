@@ -1,11 +1,11 @@
 <!--
-OpenCodeX 0.2.23 Windows I contract. SPDX-License-Identifier: MIT
+OpenCodeX 0.2.24 Windows I contract (stable template/component identifiers). SPDX-License-Identifier: MIT
 Upstream: Tauri CLI 2.11.4 / tauri-bundler 2.9.4
 Source commit: 8909f221d1515955fc843808032bdc5d62209c96
 npm gitHead 59585e1aac2d2e3503aa1caececf3568dce51a47 has identical template bytes.
 Source: https://github.com/tauri-apps/tauri/blob/8909f221d1515955fc843808032bdc5d62209c96/crates/tauri-bundler/src/bundle/windows/msi/main.wxs
 Upstream SHA256: e371a01628a06730828f9bd24111feacb8bec53c250ccec4b46df756fe0a0198
-Local changes: per-user limited scope/Programs I; new custom-root key; explicit machine-022 blocker; per-user protocols and fixed 023 payload with HKCU key paths (ICE38/64).
+Local changes: per-user limited scope/Programs I; new custom-root key; explicit machine-022 blocker; per-user protocols and fixed official024 payload with HKCU key paths (ICE38/64).
 No config field supplies this root/scope; PREINSTALL runs after SetOutPath.
 Keep the small delta pinned; the retention pure tests reconstruct this digest.
 
@@ -123,8 +123,8 @@ SOFTWARE.
           <RegistrySearch Id="OCX023Machine022x64" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{C5476FDD-CB86-46AF-A97F-96DD56A32CA0}" Name="DisplayVersion" Type="raw" Win64="yes" />
           <RegistrySearch Id="OCX023Machine022x86" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\{C5476FDD-CB86-46AF-A97F-96DD56A32CA0}" Name="DisplayVersion" Type="raw" Win64="no" />
         </Property>
-        <Condition Message="OCX023_MACHINE022_BLOCK: Uninstall the old manager first (retain configuration), then install the new version. OpenCodeX Desktop 0.2.22 is per-machine; 0.2.23 is per-user. No data is migrated.">Installed OR NOT OCX023_MACHINE022</Condition>
-        <Condition Message="OpenCodeX Desktop 0.2.23 requires a current-user installation.">NOT ALLUSERS</Condition>
+        <Condition Message="OCX023_MACHINE022_BLOCK: Uninstall the old manager first (retain configuration), then install the new version. OpenCodeX Desktop 0.2.22 is per-machine; 0.2.24 is per-user. No data is migrated.">Installed OR NOT OCX023_MACHINE022</Condition>
+        <Condition Message="OpenCodeX Desktop 0.2.24 requires a current-user installation.">NOT ALLUSERS</Condition>
 
         <!-- launch app checkbox -->
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
@@ -221,10 +221,14 @@ SOFTWARE.
                 <File Id="UpdateTaskUninstaller" Source="uninstall-task.ps1" KeyPath="yes" Checksum="yes"/>
             </Component>
             {{/if}}
+            <!-- Stable OCX023 component IDs/GUIDs/registration keys describe
+                 installation identity, not the selected runtime version.
+                 Shared024 stage supplies the real Windows descriptor and pin;
+                 no Mac descriptor or hardcoded archive digest is used here. -->
             <!-- OCX023-PAYLOAD-BEGIN
                  bundler 2.9.4 emits opaque resource XML with directory key paths.
                  ICE38 requires HKCU registry key paths under a user profile.
-                 Enumerate the complete, fixed 023 staging contract instead of
+                 Enumerate the complete, fixed official024 staging contract instead of
                  suppressing MSI validation. SourceDir is the native Windows
                  target/release executable supplied by Tauri's candle command;
                  SourceDir/../../.. resolves to the tauri project. Cross-target
@@ -244,8 +248,8 @@ SOFTWARE.
             </Directory>
             <Directory Id="OCX023RuntimeBundle" Name="runtime-bundle">
                 <Component Id="OCX023RuntimeBundle" Guid="7F3ED10E-ADBA-56E4-B6A1-EFC692135F8C" Win64="$(var.Win64)">
-                    <File Id="OCX023RuntimeArchive" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\runtime-bundle-0.2.23-win32-x64.tar.gz" />
-                    <File Id="OCX023RuntimeSource" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\maintained-runtime.tgz" />
+                    <File Id="OCX023RuntimeArchive" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\runtime-bundle-0.2.24-win32-x64.tar.gz" />
+                    <File Id="OCX023RuntimeSource" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\official-runtime.tgz" />
                     <File Id="OCX023RuntimeManifest" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\runtime-bundle.manifest.json" />
                     <File Id="OCX023RuntimePin" Source="$(var.SourceDir)\..\..\..\resources\runtime-bundle\runtime-bundle.manifest.sha256" />
                     <RegistryValue Root="HKCU" Key="Software\\{{manufacturer}}\\{{product_name}}\023\Components" Name="RuntimeBundle" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
