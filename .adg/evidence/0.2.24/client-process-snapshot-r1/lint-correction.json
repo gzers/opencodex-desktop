@@ -1,0 +1,7 @@
+{
+  "run": "clippy",
+  "exitCode": 101,
+  "reason": "items_after_test_module",
+  "correction": "Move cfgtest private include module to native module end, retain strict Clippy warnings and all assertions.",
+  "nextRun": "clippy-final"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "regression-1",
+    "filter": "commands::runtime_recovery_v2_owner::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-2",
+    "filter": "commands::lifecycle_versioned_tests::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-3",
+    "filter": "infrastructure::macos_process_exit::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-4",
+    "filter": "infrastructure::macos_process_pair::",
+    "exitCode": 0
+  },
+  {
+    "name": "clippy",
+    "exitCode": 101
+  },
+  {
+    "name": "format",
+    "exitCode": 0
+  },
+  {
+    "name": "included-test-format",
+    "exitCode": 0
+  },
+  {
+    "name": "diff-check",
+    "exitCode": 0
+  }
+]

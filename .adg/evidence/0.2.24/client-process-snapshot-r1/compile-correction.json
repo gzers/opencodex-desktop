@@ -1,0 +1,6 @@
+{
+  "run": "snapshot-tests",
+  "exitCode": 101,
+  "reason": "Rust inline native module resolves path attribute from virtual nested module directory; test file exists in parent source directory.",
+  "correction": "Use private cfgtest include with relative source-file path, no public unchecked seam or changed assertions. Preserve original failed compilation log."
+}
