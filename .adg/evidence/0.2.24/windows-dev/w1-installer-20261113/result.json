@@ -1,0 +1,117 @@
+{
+  "date": "2026-11-13",
+  "baseline": "cbc6174de",
+  "docsInput": "61f0f99d8",
+  "codeBranch": "codex/024-windows-native",
+  "installerCommit": "f3b40e71c",
+  "testCommit": "b8f1bba91ab611765f23aad6935c21bb66490577",
+  "executionSource": "installer templates and final verifier sources match committed bytes; stage driver executed before sys.dont_write_bytecode flag, exact original archived separately",
+  "scope": "native resource compilation and directory component facts only",
+  "stagePassed": true,
+  "officialSourceSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "archiveSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+  "descriptorSha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+  "resources": [
+    {
+      "bytes": 19923693,
+      "name": "official-runtime.tgz",
+      "sha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
+    },
+    {
+      "bytes": 274033721,
+      "name": "runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "sha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+    },
+    {
+      "bytes": 2169800,
+      "name": "runtime-bundle.manifest.json",
+      "sha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a"
+    },
+    {
+      "bytes": 66,
+      "name": "runtime-bundle.manifest.sha256",
+      "sha256": "3e1297aec9d85da897f428645650ae23f1de55690156b16c537229456662b4b3"
+    }
+  ],
+  "bundles": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.2.24_x64_en-US.msi",
+      "bytes": 295858176,
+      "sha256": "f1c958ef152edcdf601aa7b1290e14de92f327accc91e3bb8719126c280afe17"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\target\\release\\bundle\\nsis\\OpenCodeX Desktop_0.2.24_x64-setup.exe",
+      "bytes": 302162848,
+      "sha256": "1dfa7ca402acd0879931b8483cda76a19a403cf5f2da8f351225f5757a4d510b"
+    }
+  ],
+  "bundleExit": 0,
+  "msiNativeCostingCells": 2,
+  "nsisNativePathCells": 4,
+  "sourceFiles": [
+    {
+      "sha256": "089b57334044648cee2f1c8c500ab634eefc3910cf009503fbdf469a0063dfc8",
+      "path": "apps/desktop/tauri/windows/installer-hooks.nsh"
+    },
+    {
+      "sha256": "b560d1ce9df5e1665327637cded12835177d6e9ad99bd1302670472fe1e4de9e",
+      "path": "apps/desktop/tauri/windows/nsis023.nsi"
+    },
+    {
+      "sha256": "957e84f4433ef69043640486d027196f19913a03d5d6832b0d015ec411c2c9fc",
+      "path": "apps/desktop/tauri/windows/wix023.wxs"
+    },
+    {
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026",
+      "path": "test/windows024-native/stage-installer.py"
+    },
+    {
+      "sha256": "3ec0122d820c6ea23403d82f5c4bb51a77a8a0115908b6699319962377266591",
+      "path": "test/windows024-native/bundle-installer.py"
+    },
+    {
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988",
+      "path": "test/windows024-native/verify-msi-paths.ps1"
+    },
+    {
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2",
+      "path": "test/windows024-native/verify-nsis-paths.py"
+    }
+  ],
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "session": 2,
+  "firstError": {
+    "scope": "MSI table probe, not product",
+    "attempt": "msi-paths01",
+    "fixed": true,
+    "message": "Cannot index into a null array: COM void return values leaked into table rows"
+  },
+  "otherFailures": [
+    "msi-paths02 misclassified empty runtime-bundle RemoveFolder as data deletion; fixed to exact empty-folder allowlist",
+    "msi-paths03 default-UI COM probe timed out; exact owned process stopped after 126.8s, original-handle exit -1; no installer action executed",
+    "msi-paths04 silent UI plus 30s parent bound exit0",
+    "nsis-paths01 harness quoted /D= path and NSIS ignored switch; fixed last/unquoted switch; nsis-paths02 all four passed"
+  ],
+  "warnings": [
+    "NSIS unused label install_webview2 from test webviewInstallMode=skip"
+  ],
+  "automaticApprovalReview": {
+    "historicalDirectoriesRetained": true,
+    "action": "nonrecursive deletion of four exact historical W0 directories after hash comparison planning",
+    "commandExecuted": false,
+    "result": "rejected",
+    "alternateMechanismUsed": false,
+    "reason": "blocked by policy"
+  },
+  "notDone": [
+    "shared product registration and terminal CLI transaction integration by Mac owner",
+    "PATH disable/uninstall compensation through shared helper",
+    "real product MSI/NSIS install, upgrade, uninstall, retention and fixed candidate W2/two-SID acceptance"
+  ],
+  "productExecutable": false,
+  "productInstalled": false,
+  "officialServiceExecuted": false,
+  "dailyPathWritten": false,
+  "sharedTrackedFilesChanged": false,
+  "released": false
+}

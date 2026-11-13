@@ -1,0 +1,25 @@
+{
+  "changedPaths": [
+    "apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+    "apps/desktop/tauri/windows/installer-hooks.nsh",
+    "apps/desktop/tauri/windows/nsis023.nsi",
+    "apps/desktop/tauri/windows/wix023.wxs",
+    "test/windows024-native/Cargo.toml",
+    "test/windows024-native/bundle-installer.py",
+    "test/windows024-native/fixture.rs",
+    "test/windows024-native/lib.rs",
+    "test/windows024-native/stage-installer.py",
+    "test/windows024-native/tests/process.rs",
+    "test/windows024-native/verify-msi-paths.ps1",
+    "test/windows024-native/verify-nsis-paths.py"
+  ],
+  "head": "b8f1bba91ab611765f23aad6935c21bb66490577",
+  "baseline": "cbc6174de",
+  "trackedStatus": [],
+  "installerEvidenceRawFiles": 52,
+  "disallowedPaths": [],
+  "remoteCode": [
+    "b8f1bba91ab611765f23aad6935c21bb66490577\trefs/heads/codex/024-windows-native"
+  ]
+}

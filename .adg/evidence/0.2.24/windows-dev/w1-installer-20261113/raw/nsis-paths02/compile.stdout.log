@@ -1,0 +1,180 @@
+MakeNSIS v3.11 - Copyright 1999-2025 Contributors
+See the file COPYING for license details.
+Credits can be found in the Users Manual.
+
+Processing config: C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\nsisconf.nsh
+Processing default plugins: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Plugins\x86-unicode\*.dll"
+ + AdvSplash::show
+ + Banner::destroy
+ + Banner::getWindow
+ + Banner::show
+ + BgImage::AddImage
+ + BgImage::AddText
+ + BgImage::Clear
+ + BgImage::Destroy
+ + BgImage::Redraw
+ + BgImage::SetBg
+ + BgImage::SetReturn
+ + BgImage::Sound
+ + Dialer::AttemptConnect
+ + Dialer::AutodialHangup
+ + Dialer::AutodialOnline
+ + Dialer::AutodialUnattended
+ + Dialer::GetConnectedState
+ + InstallOptions::dialog
+ + InstallOptions::initDialog
+ + InstallOptions::make_unicode
+ + InstallOptions::show
+ + LangDLL::LangDialog
+ + Math::Script
+ + NSISdl::download
+ + NSISdl::download_quiet
+ + Splash::show
+ + StartMenu::Init
+ + StartMenu::Select
+ + StartMenu::Show
+ + System::Alloc
+ + System::Call
+ + System::Copy
+ + System::Free
+ + System::Get
+ + System::Int64Op
+ + System::Store
+ + System::StrAlloc
+ + TypeLib::GetLibVersion
+ + TypeLib::Register
+ + TypeLib::UnRegister
+ + UserInfo::GetAccountType
+ + UserInfo::GetName
+ + UserInfo::GetOriginalAccountType
+ + VPatch::GetFileCRC32
+ + VPatch::GetFileMD5
+ + VPatch::vpatchfile
+ + nsDialogs::Create
+ + nsDialogs::CreateControl
+ + nsDialogs::CreateItem
+ + nsDialogs::CreateTimer
+ + nsDialogs::GetUserData
+ + nsDialogs::KillTimer
+ + nsDialogs::OnBack
+ + nsDialogs::OnChange
+ + nsDialogs::OnClick
+ + nsDialogs::OnNotify
+ + nsDialogs::SelectFileDialog
+ + nsDialogs::SelectFolderDialog
+ + nsDialogs::SetRTL
+ + nsDialogs::SetUserData
+ + nsDialogs::Show
+ + nsExec::Exec
+ + nsExec::ExecToLog
+ + nsExec::ExecToStack
+
+!define: "MUI_INSERT_NSISCONF"=""
+
+Changing directory to: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\nsis-paths02"
+
+Processing script file: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\nsis-paths02\path-probe.nsi" (UTF8)
+Unicode: true
+Processing default plugins: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Plugins\x86-unicode\*.dll"
+
+SilentInstall: silent
+!include: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\LogicLib.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\LogicLib.nsh"
+!include: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\FileFunc.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\FileFunc.nsh"
+!include: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\x64.nsh" (UTF8)
+!define: "___X64__NSH___"=""
+!include: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\LogicLib.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\LogicLib.nsh"
+!define: "IsWow64"=""" IsWow64 """
+!define: "RunningX64"=""" RunningX64 """
+!define: "GetNativeMachineArchitecture"="!insertmacro GetNativeMachineArchitecture "
+!define: "IsNativeMachineArchitecture"=""" IsNativeMachineArchitecture "
+!define: "IsNativeIA32"=""" IsNativeMachineArchitecture  332"
+!define: "IsNativeAMD64"=""" IsNativeMachineArchitecture  34404"
+!define: "IsNativeARM64"=""" IsNativeMachineArchitecture  43620"
+!define: "DisableX64FSRedirection"="!insertmacro DisableX64FSRedirection"
+!define: "EnableX64FSRedirection"="!insertmacro EnableX64FSRedirection"
+!include: closed: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\x64.nsh"
+!define: "PRODUCTNAME"="OpenCodeX Desktop"
+!define: "INSTALLMODE"="currentUser"
+!define: "ARCH"="x64"
+!define: "DISPLAYLANGUAGESELECTOR"="false"
+!define: "PLACEHOLDER_INSTALL_DIR"="placeholder\OpenCodeX Desktop"
+Var: "PassiveMode"
+Var: "NoShortcutMode"
+Var: "UpdateMode"
+InstallDir: "placeholder\OpenCodeX Desktop"
+OutFile: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\nsis-paths02\path-probe.exe"
+!define: "MANUPRODUCTKEY"="Software\OpenCodeX.Native024.InstallerPath.113600"
+Function: ".onInit"
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $PassiveMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $NoShortcutMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $UpdateMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: SetContext
+SetShellVarContext: current
+!insertmacro: _If
+!insertmacro: end of _If
+SetRegView: 64
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetContext
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $INSTDIR "$LOCALAPPDATA\Programs\OpenCodeX Desktop" () ()
+Call "RestorePreviousInstallLocation"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Function: "RestorePreviousInstallLocation"
+ReadRegStr $4 SHCTX\Software\OpenCodeX.Native024.InstallerPath.113600\
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+StrCpy $INSTDIR "$4" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Section: ""
+FileOpen: C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\nsis-paths02\resolved.txt as w -> $0
+FileWriteUTF16LE: $INSTDIR->$0
+FileClose: $0
+SetErrorLevel: 0
+SectionEnd
+
+Processed 1 file, writing output (x86-unicode):
+Adding plug-ins initializing function... Done!
+Processing pages... Done!
+Removing unused resources... Done!
+Generating language tables... Done!
+
+Output: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\nsis-paths02\path-probe.exe"
+Install: 0 pages (0 bytes), 1 section (1 required) (2072 bytes), 165 instructions (4620 bytes), 62 strings (2072 bytes), 1 language table (162 bytes).
+
+Using zlib compression.
+
+EXE header size:               38400 / 39936 bytes
+Install code:                   1684 / 9254 bytes
+Install data:                   7096 / 12292 bytes
+CRC (0x41BA8081):                  4 / 4 bytes
+
+Total size:                    47184 / 61486 bytes (76.7%)

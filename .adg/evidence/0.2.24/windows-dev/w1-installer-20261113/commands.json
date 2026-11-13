@@ -1,0 +1,73 @@
+[
+  {
+    "exitCode": 0,
+    "program": "python",
+    "arguments": [
+      "test/windows024-native/stage-installer.py",
+      "--work",
+      "test/windows024-native/target/installer-w1/attempt01"
+    ]
+  },
+  {
+    "exitCode": 0,
+    "program": "python",
+    "arguments": [
+      "test/windows024-native/bundle-installer.py",
+      "--work",
+      "test/windows024-native/target/installer-w1/attempt01",
+      "--tooling",
+      "test/windows024-native/target/installer-w1/tooling",
+      "--node",
+      "C:/Users/15119/.nvmd/bin/node.exe",
+      "--evidence",
+      "test/windows024-native/target/installer-w1/bundle01"
+    ]
+  },
+  {
+    "program": "PowerShell",
+    "script": "test/windows024-native/verify-msi-paths.ps1",
+    "attempts": [
+      {
+        "evidence": "msi-paths01",
+        "reason": "COM void output pollution",
+        "exitCode": 1
+      },
+      {
+        "evidence": "msi-paths02",
+        "reason": "overbroad test classification",
+        "exitCode": 1
+      },
+      {
+        "evidence": "msi-paths03",
+        "reason": "owned probe stopped after timeout",
+        "exitCode": -1
+      },
+      {
+        "evidence": "msi-paths04",
+        "exitCode": 0,
+        "parentTimeoutSeconds": 30
+      }
+    ]
+  },
+  {
+    "program": "python",
+    "script": "test/windows024-native/verify-nsis-paths.py",
+    "arguments": [
+      "--project",
+      "test/windows024-native/target/installer-w1/attempt01/tauri",
+      "--makensis",
+      "C:/Users/15119/AppData/Local/tauri/NSIS/makensis.exe"
+    ],
+    "attempts": [
+      {
+        "evidence": "nsis-paths01",
+        "reason": "incorrect Python quoting of NSIS /D=",
+        "exitCode": 1
+      },
+      {
+        "exitCode": 0,
+        "evidence": "nsis-paths02"
+      }
+    ]
+  }
+]

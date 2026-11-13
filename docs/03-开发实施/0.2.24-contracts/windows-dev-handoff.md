@@ -35,3 +35,37 @@ W0请求的身份/受保护记录/路径、保留原创建句柄/Job集合、正
 Mac可审查净diff main0828a3955..b2e89665d。第一批曾误含编译产物，应接最终净版本树或同时消费779d82015＋12c69e27e，避免单独拾取含target的中间提交；第二批为单独b2e89665d。父infrastructure/mod.rs由Mac按真实公共接口注册，不由Windows猜类型/文件名。推荐共享层持有OwnedRuntime生命周期：输入已核对的绝对exe/cwd/HOME，传最小环境和输出句柄；调用create_suspended→绑定记录/HMAC前提准备→resume；共享官方正常停止后，在同一个总Stop10秒deadline内调用wait_normal_exit、listener_exit_readback及共享恢复核验。错误不降级为对象不存在；强清返回值单独记录。
 
 未完：Mac P24-00/01共享合同、父模块/命令/产品入口接入、真实包/HMAC/ready/共享恢复与实际总30/5/10秒产品链验证、产品持久身份/并发事务/后像归属；W1的Windows CLI/PATH及NSIS/MSI接线等待Mac真实接口提交，尚未实施。W2最终固定集成候选/双SID控制台与RDP/安装更新卸载验收当前未跑。未改IMP/TEAM/共享索引，正式进度由Mac接收后回写，未发布。
+
+## 2026-11-13 W1第一批：Profile/HOME修正
+
+已fetch并合入共同main cbc6174de；消费docs/governance-main 61f0f99d8的TEAM revision5、W1接口r1和W0 finding。代码eb818d601（codex/024-windows-native）已推送。LaunchSpec分别传user_profile/opencodex_home：HOME和USERPROFILE取前者，OPENCODEX_HOME取后者，RootBinding.home/home_id及私有目录pin继续只证明实例H；不对Profile修权限。大小写环境覆盖仍拒绝重复输入。
+
+独立原生宿主process目标7项通过，包含两个不同合成目录的三变量真实子进程读回、参数/挂起窗口、旧SID/PID/FILETIME/HOME反例及受影响进程回归；fmt/clippy exit0。执行为提交前相同源码，SHA256和原始日志位于.adg/evidence/0.2.24/windows-dev/w1-profile-20261113/。Python编辑预检曾因GBK默认解码失败，尚无文件变更；仅工具输出可核，不重造stderr。原生测试无首错。
+
+本轮PID115732测试目录已清理；历史4个W0失败目录保持原事实，未将其记为本轮成功清理。共享接线建议：将ProcessContext.environment_policy.home传user_profile，opencodex_home传独立同名参数；RootBinding.home仍表示实例H。产品调用/完整官方链和W2未执行。下批为PATH原语和安装器资源；不改TEAM/IMP/共享索引，不发布。
+
+## 2026-11-13 W1第二批：当前用户PATH原语
+
+代码4269e4499已推送，新增windows_cli024.rs并由独立宿主path引用；产品父mod/共享事务未改。r1三个公开Rust函数保留原类型、UTF-16原字节及缺失，REG_SZ/EXPAND_SZ以外、奇数字节、非单终止/非法UTF-16和超过256KiB拒绝；当前TokenUser的Global SID互斥验owner/受保护DACL/原句柄，2秒等待、遗弃/未知拒绝；HKCU固定Environment/Path，拒绝线程模拟，expected完整相符后写并读回，不对外部变化做回滚。不用setx/HKLM、无PATH清洗、无新JSON。WM_SETTINGCHANGE/Environment使用1000ms每接收窗口有界调用，非整个桌面统一1000ms；不承诺已启动终端环境更新。
+
+attempt01原生7项通过，clippy首错manual_is_multiple_of及chunks_exact_to_as_chunks，原日志保留。修正后attempt02定向8项、fmt/clippy全exit0：真实类型/字节/缺失还原、错误expected、错误类型/长度/终止/超限、只读句柄拒绝、外部写后变化保持、同SID双进程一成功一冲突、未知/遗弃互斥拒绝、自己窗口通知/失效窗口错误/挂起窗口1014ms失败；日常PATH前后相同且只读，无输出完整PATH。测试子键逐个删除读回，残留清单为空；窗口/句柄/子进程已释放。.adg/evidence/0.2.24/windows-dev/w1-path-20261113/保存两次不可覆盖日志及来源摘要。
+
+最小共享接线：Mac注册windows_cli024并在terminal_cli现有确认/恢复事务中调用read/replace/notify，明确记录写后失败的未知后像；desired=None仅由共享精确撤销允许。当前不是用户终端启用/撤销/卸载整链通过。未改官方2.99/日常配置，不跑r5/W2、不发布。
+
+## 2026-11-13 W1第三批：024 MSI/NSIS资源与目录组件
+
+安装器代码f3b40e71c、独立验证脚本b8f1bba91ab611765f23aad6935c21bb66490577已推送，后者是本次代码分支最终HEAD，包含共同基线cbc6174de及前两批。净diff核对无越出TEAM revision5/W1接口r1写集。WiX映射真实runtime-bundle-0.2.24-win32-x64.tar.gz、official-runtime.tgz及manifest/pin；保留既有组件GUID/注册键作为安装身份，不代表仍供应023。NSIS继续消费同一个实际stage映射；删除PREINSTALL自动调用022卸载器的旧兼容分支，保持默认Programs I/明确自定义I。MSI原有machine022只读阻止条件未扩大；本批无自动迁移、无live runtime递归清理、无新卸载/PATH猜测命令。
+
+由本线真实stage_runtime_bundle_024生成Windows输入；原官方2.99 SHA256仍为b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c。归档274033721字节，SHA256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7；真实Windows descriptor SHA256 42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a。没有复用Mac摘要、执行依赖生命周期或启动官方服务。
+
+固定CLI2.11.4/实际candle-light3.14.1/NSIS原生编译MSI和NSIS均exit0，资源清单/编译日志/生成输入/制品摘要完整保存。打包EXE明确使用本线standalone Rust测试fixture，测试identifier/upgradeCode，不是产品候选；NSIS测试禁WebView下载安装及压缩，出现unused install_webview2 label警告，未记为失败。MSI数据库确认四个024资源且无旧维护包、无ALLUSERS/通配数据删除；静默原生成本解析default/custom两格通过，未执行安装动作、未创建I。NSIS从真实生成脚本逐字提取.onInit/RestorePreviousInstallLocation/SetContext，仅替换测试注册表key，独立原生编译并执行default/custom/remembered/explicit-over-remembered四格通过；目录均未创建，测试key删除读回。
+
+首次MSI表探针把COM void返回混入结果，修正后第二次又把空runtime-bundle RemoveFolder过宽判作数据删除；两次原始错误保留。第三次默认UI COM探针未返回，126.8秒后仅终止匹配命令/原句柄的自有测试进程（exit -1），没有执行Install/杀系统安装服务；第四次静默UI并以父进程30秒限时，exit0。NSIS首轮因Python把含空格/D=整个参数加引号而忽略自定义位置；修为原生要求的最后且不加引号后四格通过。这些是探针失败，不冒充产品故障。最早stage执行源单独保存，最终脚本只补sys.dont_write_bytecode避免导入共享脚本时产生pycache，语法检查通过，未重复昂贵stage。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/w1-installer-20261113/：52份原文件逐字节校验归档，原始descriptor、资源/制品摘要、执行命令、失败/超时原件、最终源文件摘要和净写集核对；.gitattributes禁止原日志换行转换。本批无产品安装/正式W2验收结论。代码eb818d601/4269e4499/f3b40e71c/b8f1bba91可按主题审阅，docs前两批3f371e2e5/13020b3a0，当前docs提交提供第三批证据。
+
+### 本轮清理与明确未完
+
+本轮process fixture目录和PATH/NSIS所有私有测试注册表key已清理，相关测试进程/窗口/Job/句柄已退出或释放；MSI超时探针原句柄退出已记录。不宣称全机无进程。原4个W0目录仍只含已归档空日志/空home；精确非递归清理命令被自动审批以blocked by policy拒绝，命令未执行、无换工具绕过。新生成target/installer-w1的归档后精确清理也被自动审批以同一理由拒绝，仍保留11808文件/2108815151字节；首次stage产生的两份共享脚本pycache亦列为清理未完。cleanup-pending.json给出路径/读回。历史证据不改写，不将“已归档”说成“已删除”。
+
+Mac后继最小接线为注册新增windows_cli024（基线infrastructure/mod.rs已注册windows_official_runtime024，勿重复注册），将ProcessContext两个HOME输入分别传入，并在已有terminal_cli事务内消费三个PATH原语，补真实卸载撤销helper。共享终端启用/禁用/恢复/卸载整链、实际产品安装升级卸载保留及固定候选双SID/W2仍未验；当前只完成被放行的原语/资源组件。未修改IMP/TEAM/共享索引、官方2.99或日常配置；未重跑旧r5、未跑W2全量、未发布。
