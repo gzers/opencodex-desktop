@@ -619,6 +619,12 @@ model_provider = "openai"
         None,
     );
     report["stopElapsedMs"] = serde_json::json!(stopped_at.elapsed().as_millis());
+    // Preserve the exact failed receipt before any gate assertion can unwind.
+    report["stop"] = match &stop {
+        Ok(value) => serde_json::to_value(value).unwrap(),
+        Err(error) => serde_json::json!({"error":error.to_string()}),
+    };
+    write(&report);
     if let Ok(value) = &stop {
         if value.client_recovery_required
             || value
