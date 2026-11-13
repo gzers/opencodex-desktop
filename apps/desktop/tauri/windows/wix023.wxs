@@ -227,6 +227,20 @@ SOFTWARE.
                 <File Id="UpdateTaskUninstaller" Source="uninstall-task.ps1" KeyPath="yes" Checksum="yes"/>
             </Component>
             {{/if}}
+            <!-- Desktop/ocxd/ocx inputs are mandatory installer-owned programs.
+                 Source manifest contains current build hashes, not runtime policy. -->
+            <Component Id="OCX024NativeShim" Guid="A05AA672-B2BD-4300-9F05-294E358BCC9D" Win64="$(var.Win64)">
+                <File Id="OCX024NativeShimFile" Source="$(var.SourceDir)\..\ocx.exe" />
+                <RegistryValue Root="HKCU" Key="Software\{{manufacturer}}\{{product_name}}\023\Components" Name="NativeShim" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
+            </Component>
+            <Component Id="OCX024NativeConsole" Guid="E708AF7B-50BD-42C5-9B43-4BE0F6F8DA02" Win64="$(var.Win64)">
+                <File Id="OCX024NativeConsoleFile" Source="$(var.SourceDir)\..\ocxd.exe" />
+                <RegistryValue Root="HKCU" Key="Software\{{manufacturer}}\{{product_name}}\023\Components" Name="NativeConsole" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
+            </Component>
+            <Component Id="OCX024NativeEntrySource" Guid="28FD4622-8A98-43B6-85CA-560EB243459D" Win64="$(var.Win64)">
+                <File Id="OCX024NativeEntrySourceFile" Source="$(var.SourceDir)\..\..\..\resources\ocx-native-entry.json" />
+                <RegistryValue Root="HKCU" Key="Software\{{manufacturer}}\{{product_name}}\023\Components" Name="NativeEntrySource" Type="string" Value="[INSTALLDIR]" KeyPath="yes" />
+            </Component>
             <!-- Stable OCX023 component IDs/GUIDs/registration keys describe
                  installation identity, not the selected runtime version.
                  Shared024 stage supplies the real Windows descriptor and pin;
@@ -320,6 +334,9 @@ SOFTWARE.
                 Absent="disallow">
 
             <ComponentRef Id="RegistryEntries"/>
+            <ComponentRef Id="OCX024NativeEntrySource"/>
+            <ComponentRef Id="OCX024NativeShim"/>
+            <ComponentRef Id="OCX024NativeConsole"/>
 
             <!-- OCX023-RESOURCE-REFS-BEGIN -->
             <ComponentRef Id="OCX023Documents" />
