@@ -66,8 +66,19 @@ pub(super) fn active_binding(
     stored: &[u8],
     head: &Head,
 ) -> io::Result<(Vec<u8>, root_creation::References)> {
+    active_binding_projected(connection, stored, head, &|_, _, _| Ok(()))
+}
+fn active_binding_projected(
+    connection: &Connection,
+    stored: &[u8],
+    head: &Head,
+    project: RootProjection<'_>,
+) -> io::Result<(Vec<u8>, root_creation::References)> {
     let history = vault_history::read(connection, head)?;
     let lineage = root_lineage::parse(stored, &history)?;
+    // Candidate only: no projected value is accepted until all of the original
+    // complete history/current-root/readback/storage checks finish outside.
+    project(head, &history, &lineage.current().origin)?;
     let scope: serde_json::Value = serde_json::from_slice(&scope_bytes(stored)?)
         .map_err(|_| denied("root lineage context invalid"))?;
     let data = scope
@@ -195,6 +206,29 @@ pub(super) fn resolve_originals(
     Option<root_creation::References>,
     Option<Originals>,
 )> {
+    resolve_originals_projected(
+        context,
+        data,
+        manager,
+        stored,
+        head,
+        connection,
+        &|_, _, _| Ok(()),
+    )
+}
+pub(super) fn resolve_originals_projected(
+    context: &ProcessContext,
+    data: &PinnedDirectory,
+    manager: &PinnedDirectory,
+    stored: &[u8],
+    head: Option<&Head>,
+    connection: &Connection,
+    project: RootProjection<'_>,
+) -> io::Result<(
+    PinnedDirectory,
+    Option<root_creation::References>,
+    Option<Originals>,
+)> {
     let logical = context.working_directory.join(".codex");
     let value = crate::modules::model_config::schema_v2::parse_strict_json_v2(stored)
         .map_err(|_| denied("root scope binding is not strict JSON"))?;
@@ -213,7 +247,7 @@ pub(super) fn resolve_originals(
         return Ok((client, None, None));
     }
     let current = head.ok_or_else(|| denied("registered root has no independent head"))?;
-    let (active, origin) = active_binding(connection, stored, current)?;
+    let (active, origin) = active_binding_projected(connection, stored, current, project)?;
     let stored = active.as_slice();
     let mut binding: RootBinding = decode(stored)?;
     binding.original_root.inherit_namespace(&origin)?;

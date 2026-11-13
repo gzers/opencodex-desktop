@@ -90,7 +90,7 @@ pub(super) fn full_history_fixture() -> (tempfile::TempDir, ProcessContext, Inde
     assert_eq!(result.3.revision, 15);
     result
 }
-fn evidence() -> restore::Evidence {
+pub(super) fn evidence() -> restore::Evidence {
     restore::Evidence {
         declared_routes: Some(vec![]),
         retained_pids: vec![100, 101],

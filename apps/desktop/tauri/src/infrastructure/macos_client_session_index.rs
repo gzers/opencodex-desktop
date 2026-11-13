@@ -129,6 +129,19 @@ pub struct RootRetirementRegistration<'a> {
     index: &'a Index,
     prepared: Head,
 }
+/// Action-local projection, constructed only after this close's full
+/// postcommit readback and original movement proof revalidation succeed.
+/// It is neither serializable nor a permit for a later Start.
+pub struct ClosedRootStartEligibility {
+    can_start: bool,
+}
+impl ClosedRootStartEligibility {
+    pub(crate) fn can_start(&self) -> bool {
+        self.can_start
+    }
+}
+pub(super) type RootProjection<'a> =
+    &'a dyn Fn(&Head, &[Head], &super::root_creation::References) -> io::Result<()>;
 impl RootRetirementRegistration<'_> {
     pub(crate) fn require(&self, source: &Head, plan: &RestorePlan) -> io::Result<()> {
         self.require_index_facts(source, plan)?;
@@ -1005,6 +1018,12 @@ impl Index {
         self.checked_head_originals().map(|v| v.0)
     }
     fn checked_head_originals(&self) -> io::Result<(Option<Head>, Option<Originals>)> {
+        self.checked_head_originals_projected(&|_, _, _| Ok(()))
+    }
+    fn checked_head_originals_projected(
+        &self,
+        project: RootProjection<'_>,
+    ) -> io::Result<(Option<Head>, Option<Originals>)> {
         let mut originals = None;
         let observed_head = read_head(self.connection()?)?;
         self.data.private()?;
@@ -1028,13 +1047,14 @@ impl Index {
                 opencodex_home: self.context_home.clone(),
             };
             let current = &observed_head;
-            let (resolved, origin, observed_originals) = root_binding::resolve_originals(
+            let (resolved, origin, observed_originals) = root_binding::resolve_originals_projected(
                 &context,
                 &self.data,
                 &self.action_parent,
                 &stored,
                 current.as_ref(),
                 self.connection()?,
+                project,
             )?;
             originals = observed_originals;
             if resolved.identity() != self.client.identity() || origin.as_ref() != Some(refs) {
@@ -1731,6 +1751,54 @@ impl Index {
         expected: &Head,
         proof: &super::root_retirement::AuthorizedReadback,
     ) -> io::Result<Head> {
+        self.close_root_absence_projected(expected, proof, &|_, _, _| Ok(()))
+    }
+    pub fn close_root_absence_with_eligibility(
+        &self,
+        expected: &Head,
+        proof: &super::root_retirement::AuthorizedReadback,
+    ) -> io::Result<(Head, ClosedRootStartEligibility)> {
+        self.close_root_absence_with_eligibility_checked(expected, proof, &|| Ok(()))
+    }
+    fn close_root_absence_with_eligibility_checked(
+        &self,
+        expected: &Head,
+        proof: &super::root_retirement::AuthorizedReadback,
+        after_candidate: &impl Fn() -> io::Result<()>,
+    ) -> io::Result<(Head, ClosedRootStartEligibility)> {
+        let candidate = std::cell::Cell::new(None);
+        let context = ProcessContext {
+            runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(
+            ),
+            working_directory: self.profile.clone(),
+            opencodex_home: self.context_home.clone(),
+        };
+        let closed =
+            self.close_root_absence_projected(expected, proof, &|head, history, origin| {
+                if candidate.get().is_some() {
+                    return Err(denied("duplicate close eligibility projection"));
+                }
+                let allowed = generation::successor_eligible_checked(
+                    &context,
+                    self.data.path(),
+                    head,
+                    history,
+                    Some(origin),
+                )?;
+                candidate.set(Some(allowed));
+                after_candidate()
+            })?;
+        let can_start = candidate
+            .get()
+            .ok_or_else(|| denied("close eligibility projection missing"))?;
+        Ok((closed, ClosedRootStartEligibility { can_start }))
+    }
+    fn close_root_absence_projected(
+        &self,
+        expected: &Head,
+        proof: &super::root_retirement::AuthorizedReadback,
+        project: RootProjection<'_>,
+    ) -> io::Result<Head> {
         let digest = proof
             .require(&self.data, &self.profile, expected)?
             .to_string();
@@ -1747,7 +1815,7 @@ impl Index {
             root_retirement: expected.root_retirement.clone(),
             root_generation: None,
         };
-        self.write(Some(expected), &next)?;
+        self.write_checked_projected(Some(expected), &next, &|_| Ok(()), &|_| Ok(()), project)?;
         if let Err(error) = proof.require(&self.data, &self.profile, expected) {
             let mut pending = expected.clone();
             pending.revision = next
@@ -2020,6 +2088,16 @@ impl Index {
         checkpoint: &impl Fn(&str) -> io::Result<()>,
         admit: &impl Fn(Option<&Originals>) -> io::Result<()>,
     ) -> io::Result<()> {
+        self.write_checked_projected(expected, next, checkpoint, admit, &|_, _, _| Ok(()))
+    }
+    fn write_checked_projected(
+        &self,
+        expected: Option<&Head>,
+        next: &Head,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+        admit: &impl Fn(Option<&Originals>) -> io::Result<()>,
+        project: RootProjection<'_>,
+    ) -> io::Result<()> {
         validate(next)?;
         if self.root_registration.is_some()
             && !(expected.is_some_and(|h| h.state == State::Preparing)
@@ -2133,7 +2211,7 @@ impl Index {
         }
         #[cfg(test)]
         let _metric = observation_metrics::span("transaction_postcommit");
-        if self.head()?.as_ref() != Some(next) {
+        if self.checked_head_originals_projected(project)?.0.as_ref() != Some(next) {
             return Err(denied("session references commit readback differs"));
         }
         self.check_capture_publication(next)?;
@@ -2164,3 +2242,6 @@ mod retirement_transaction_tests;
 #[cfg(test)]
 #[path = "macos_client_root_registration_tests.rs"]
 mod root_registration_tests;
+#[cfg(test)]
+#[path = "macos_client_stop_eligibility_tests.rs"]
+mod stop_eligibility_tests;

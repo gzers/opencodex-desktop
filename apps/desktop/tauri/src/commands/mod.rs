@@ -187,6 +187,14 @@ pub fn drain_tray_requests(
     Ok(tray_requests.drain())
 }
 
+#[derive(Default)]
+struct LifecycleObservations {
+    stopped: Option<runtime_recovery_v2_owner::StoppedObservation>,
+    #[cfg(target_os = "macos")]
+    closed_root_start: Option<
+        crate::infrastructure::macos_client_originals::session_index::ClosedRootStartEligibility,
+    >,
+}
 pub fn process_action_with_runner<R>(
     request: ProcessActionRequest,
     runner: &Mutex<R>,
@@ -231,13 +239,13 @@ where
         .ok()
     });
     let started_at = std::time::Instant::now();
-    let mut observed_stop = None;
+    let mut observations = LifecycleObservations::default();
     let outcome = execute_lifecycle_observed(
         runner,
         &command,
         context,
         runtime_log.data_root(),
-        &mut observed_stop,
+        &mut observations,
     );
     let duration_ms = started_at.elapsed().as_millis();
     let failed;
@@ -274,7 +282,14 @@ where
                 );
             }
             failed = matches!(result, crate::modules::process::LifecycleResult::Failed);
-            Ok(ProcessActionResult::from_state(next).with_result(result.clone()))
+            let value = ProcessActionResult::from_state(next).with_result(result.clone());
+            #[cfg(target_os = "macos")]
+            let value = if let Some(eligibility) = observations.closed_root_start.take() {
+                value.with_closed_root_start(eligibility)
+            } else {
+                value
+            };
+            Ok(value)
         }
         Err(error) => {
             failed = true;
@@ -288,7 +303,7 @@ where
                 Err(format!("{}; duration_ms={duration_ms}", error)),
             );
             let mut value = ProcessActionResult::from_state(machine.current());
-            if let Some(observed) = &observed_stop {
+            if let Some(observed) = &observations.stopped {
                 value = value.with_stopped_client_recovery(observed);
             }
             #[cfg(target_os = "macos")]
@@ -379,7 +394,13 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     context: &ProcessContext,
     data_root: &std::path::Path,
 ) -> AppResult<crate::modules::process::LifecycleResult> {
-    execute_lifecycle_observed(runner, command, context, data_root, &mut None)
+    execute_lifecycle_observed(
+        runner,
+        command,
+        context,
+        data_root,
+        &mut LifecycleObservations::default(),
+    )
 }
 fn managed_lifecycle_deadlines(
     action: LifecycleAction,
@@ -399,7 +420,7 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
     command: &crate::modules::process::ProcessCommand,
     context: &ProcessContext,
     data_root: &std::path::Path,
-    _observed_stop: &mut Option<runtime_recovery_v2_owner::StoppedObservation>,
+    _observations: &mut LifecycleObservations,
 ) -> AppResult<crate::modules::process::LifecycleResult> {
     use crate::modules::process::LifecycleResult;
     let action_started = std::time::Instant::now();
@@ -488,7 +509,7 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
                 Ok(active) => active,
                 Err(error) => {
                     let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
-                    *_observed_stop = Some(proof.observation(context, data_root)?);
+                    _observations.stopped = Some(proof.observation(context, data_root)?);
                     return Err(error);
                 }
             };
@@ -506,12 +527,20 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
             );
             if let Err(error) = prepared {
                 let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
-                *_observed_stop = Some(proof.observation(context, data_root)?);
+                _observations.stopped = Some(proof.observation(context, data_root)?);
                 return Err(error);
             }
             let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
-            *_observed_stop = Some(proof.observation(context, data_root)?);
-            active.stopped(context, &proof, stop_deadline)?;
+            _observations.stopped = Some(proof.observation(context, data_root)?);
+            let eligibility = active.stopped(
+                context,
+                &proof,
+                stop_deadline,
+                command.action == LifecycleAction::Stop,
+            )?;
+            if command.action == LifecycleAction::Stop {
+                _observations.closed_root_start = eligibility;
+            }
             if std::time::Instant::now() >= stop_deadline {
                 return Err(AppError::Timeout);
             }

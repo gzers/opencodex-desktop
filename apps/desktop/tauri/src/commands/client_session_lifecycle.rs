@@ -1,12 +1,12 @@
 //! Actual Mac application/CLI/tray action orchestration for current originals.
-//! A completed indexed Stop currently remains pending client compensation.
+//! Completion and later Start eligibility are independent verified outcomes.
 use crate::{
     commands::runtime_recovery_v2_owner::CompletedLifecycleStop,
     errors::{AppError, AppResult},
     infrastructure::{
         macos_client_originals::{
             session::{RootStopRequest, StartupSession},
-            session_index::{Head, Index, State},
+            session_index::{ClosedRootStartEligibility, Head, Index, State},
         },
         official_client_coordination::{
             native::{with_native_coordination, with_native_relocation_coordination, NativeLease},
@@ -227,8 +227,10 @@ impl Active {
         context: &ProcessContext,
         proof: &CompletedLifecycleStop,
         deadline: Instant,
-    ) -> AppResult<()> {
+        project_start: bool,
+    ) -> AppResult<Option<ClosedRootStartEligibility>> {
         let coordination = self.coordination(context)?;
+        let eligibility = std::cell::RefCell::new(None);
         let phase = std::cell::Cell::new("native-coordination");
         let started = Instant::now();
         let timings = std::cell::RefCell::new(Vec::with_capacity(8));
@@ -378,10 +380,19 @@ impl Active {
                         guard,
                     )?;
                     mark("root-close");
-                    self.head = self
-                        .index
-                        .close_root_absence(&self.head, &readback)
-                        .map_err(failure)?;
+                    if project_start {
+                        let (closed, allowed) = self
+                            .index
+                            .close_root_absence_with_eligibility(&self.head, &readback)
+                            .map_err(failure)?;
+                        self.head = closed;
+                        *eligibility.borrow_mut() = Some(allowed);
+                    } else {
+                        self.head = self
+                            .index
+                            .close_root_absence(&self.head, &readback)
+                            .map_err(failure)?;
+                    }
                 } else {
                     let plan = self.head.restore_plan.as_ref().ok_or_else(|| failure(()))?;
                     self.session
@@ -460,7 +471,13 @@ impl Active {
                 timings.borrow(),
             ));
         match result {
-            Ok(()) => Ok(()),
+            Ok(()) => {
+                let value = eligibility.into_inner();
+                if project_start && self.session.original_root_absent() && value.is_none() {
+                    return Err(failure(()));
+                }
+                Ok(value)
+            }
             Err(error) => {
                 let classification = match &error {
                     AppError::RuntimeManaged { code, .. }

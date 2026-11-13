@@ -57,6 +57,24 @@ impl ProcessActionResult {
         self.result = Some(result);
         self
     }
+    #[cfg(target_os = "macos")]
+    pub(crate) fn with_closed_root_start(
+        mut self,
+        eligibility:crate::infrastructure::macos_client_originals::session_index::ClosedRootStartEligibility,
+    ) -> Self {
+        // The completed action stays successful even if the verified index
+        // cannot hold another complete cycle. This is not a Start permit.
+        if self.result == Some(LifecycleResult::Stopped)
+            && self.lifecycle_state == ProcessLifecycleState::Stopped
+            && self.failure.is_none()
+        {
+            self.can_start = eligibility.can_start();
+            self.can_stop = false;
+            self.can_restart = false;
+            self.client_recovery_required = !self.can_start;
+        }
+        self
+    }
     fn stopped_client_recovery(mut self) -> Self {
         self.lifecycle_state = ProcessLifecycleState::Stopped;
         self.result = None;

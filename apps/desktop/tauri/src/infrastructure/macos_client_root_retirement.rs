@@ -59,6 +59,14 @@ pub struct AuthorizedReadback {
     deadline: Instant,
 }
 impl AuthorizedReadback {
+    #[cfg(test)]
+    pub(super) fn fixture_expire(&mut self) {
+        self.deadline = Instant::now();
+    }
+    #[cfg(test)]
+    pub(super) fn fixture_limit_deadline(&mut self, deadline: Instant) {
+        self.deadline = self.deadline.min(deadline);
+    }
     pub(super) fn require(
         &self,
         data: &PinnedDirectory,
