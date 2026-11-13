@@ -1,0 +1,4 @@
+
+thread 'modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_account_terminal_w1c' (109324) panicked at src\modules\runtime\terminal_cli_windows_native_tests.rs:184:10:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "runtime_selection_invalid", detail: "鎵€閫夎繍琛岀▼搴忎笉鍙墽琛? }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

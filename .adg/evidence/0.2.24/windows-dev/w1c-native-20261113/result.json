@@ -1,0 +1,120 @@
+{
+  "date": "2026-11-13",
+  "codeBranch": "codex/024-windows-native",
+  "sourceBaseline": "83b27e9ae7d0919f57298e38f5f52fd887d50650",
+  "docsInput": "6ee2d2103",
+  "teamRevision": 7,
+  "contract": "windows-terminal-transaction-r1",
+  "sourceHead": "e004259feba4a077375db01a79f851470ed0ff74",
+  "commits": [
+    "9671a1511",
+    "e004259fe"
+  ],
+  "executionHead": "7317cc94a1d6b31171d77662def91e0d0071575d plus exact archived W1-C working source; post-run commits preserve tested product bytes",
+  "finalIgnoredTestSource": "out04 source archived verbatim; final source additionally asserts retained argv failure at successful official end and adds the passed isolated PrivateRecord regression",
+  "productBuild": {
+    "privateReaderRegression": {
+      "filtered": 1857,
+      "exitCode": 0,
+      "passed": 1
+    },
+    "testNoRunExit": 0,
+    "toolchain": "rustc1.100.0 x86_64-pc-windows-msvc",
+    "build01Exit": 0,
+    "check02Exit": 0,
+    "build02Exit": 0,
+    "sdk": "10.0.26100.0",
+    "profile": "dev",
+    "msvc": "14.44.35207",
+    "products": [
+      {
+        "name": "opencodex-desktop.exe",
+        "bytes": 74850816,
+        "sha256": "c78c309afabd804516d017cf0766af56af0af195be4c6d2736bfda2d3a23a451"
+      },
+      {
+        "name": "ocxd.exe",
+        "bytes": 4522496,
+        "sha256": "5b0b4f89872d3b1b0947bf5fe7fa989c763cdca3f0fb67185b4e361cb685daf8"
+      }
+    ],
+    "releaseBuild": false
+  },
+  "installer": {
+    "removeFilesSequence": 3500,
+    "msiNativeConditionCellsPassed": 5,
+    "msiSequence": 3499,
+    "nsisActualHookPassed": [
+      "never-enabled",
+      "pending-enable failure retains program/pending",
+      "upgrade keeps registration/path",
+      "normal non-upgrade revokes"
+    ],
+    "finalBundle": "product-bundle02/result.json",
+    "noCandidateAcceptance": true,
+    "fullMsiInstallUninstallExecuted": false,
+    "msiActionType": 1058,
+    "actualMsvcProductBundleExit": 0
+  },
+  "native": {
+    "freshProcessPendingContinueCells": 10,
+    "enableDisableAndIdempotent": true,
+    "powershellMixedArgs": false,
+    "laterPathPreserved": true,
+    "passed": false,
+    "sameSyntheticVersionAndHome": true,
+    "notificationInterruptionPreserved": true,
+    "exactTestAccountPathRestored": true,
+    "officialVersionAndCustomHomeRead": false,
+    "normalHelperExit": 0,
+    "overallExit": 101,
+    "pendingEnableHelperExit": 1,
+    "extraHelperArgsExit": 2,
+    "externalConflictObjects": [
+      "command",
+      "record",
+      "pending",
+      "path"
+    ],
+    "lastAttempt": "out04",
+    "cmdFullArgsStdioExit23": true
+  },
+  "firstErrors": [
+    {
+      "message": "offline cache missing libsqlite3-sys0.35.0; recovered by exact Cargo.lock hash",
+      "scope": "environment"
+    },
+    {
+      "message": "first child denied access under daily profile; retried fresh Public test input",
+      "scope": "account transport"
+    },
+    {
+      "scope": "product shared",
+      "path": "src/modules/runtime/program_selection.rs:459",
+      "message": "validate_executable applied to JS script rejects unchanged official bin/ocx.mjs; outside allowed write set; unresolved"
+    },
+    {
+      "scope": "product Windows transaction",
+      "path": "src/modules/runtime/terminal_cli_windows.rs",
+      "message": "16MiB caller exceeds W0 PrivateRecord1MiB bound; fixed and native regression passed"
+    },
+    {
+      "message": "PowerShell default .cmd mixed special args: | was unexpected at this time; unchanged failed evidence, unresolved",
+      "scope": "shell"
+    }
+  ],
+  "disallowedPaths": [],
+  "officialPackageModified": false,
+  "dailyPathWriteExecuted": false,
+  "realServiceStarted": false,
+  "W2Executed": false,
+  "twoUserMatrixExecuted": false,
+  "published": false,
+  "allW1cAccepted": false,
+  "remaining": [
+    "shared owner must correct interpreter-script admission separately from native executability, then repeat official --version/custom H read",
+    "PowerShell default .cmd mixed special/empty/quoted argv remains unproved; executable shim or explicit platform strategy requires reviewed contract change",
+    "bare ocx discovery in newly opened terminal and full real MSI uninstall lifecycle still unproved",
+    "retained local build/input/generated files cleanup subject to automatic review"
+  ]
+}

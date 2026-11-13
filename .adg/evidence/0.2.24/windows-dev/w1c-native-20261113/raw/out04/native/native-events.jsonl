@@ -1,0 +1,43 @@
+{"event":"identity","facts":{"elevated":false,"profile":"C:\\Users\\ocxw1c6d562f71d","scope":"one isolated account; no W2","session":2,"sid":"S-1-5-21-587408064-856152790-2583328096-1034"}}
+{"event":"helper-pristine","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"hook-never-enabled","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"preview-cancel-and-wrong-confirmation","facts":{"digest":"ad41305922bf6e0e9269e4c5a2cf2a533ace3fe549369191f89f1dd280942c12","noCommandPathRecordWrites":true}}
+{"event":"enable-idempotent","facts":{"h":"\\\\?\\C:\\Users\\ocxw1c6d562f71d\\w1c native\\custom H 雪","schema":2,"script":"C:\\Users\\ocxw1c6d562f71d\\w1c native\\I 空格 & !\\runtime/bin/ocx.cmd","version":"9.0.0"}}
+{"event":"argv-cmd","facts":{"exitCode":23,"stderrBytes":21,"stdoutBytes":553}}
+{"event":"argv-comparison","facts":{"expectedArgs":["plain","arg space","雪","&|<>^!()","literal%text","trailing\\","","quoted\"inside"],"observed":{"args":["plain","arg space","雪","&|<>^!()","literal%text","trailing\\","","quoted\"inside"],"h":"\\\\?\\C:\\Users\\ocxw1c6d562f71d\\w1c native\\custom H 雪","home":"C:\\Users\\ocxw1c6d562f71d","node":"C:\\Users\\ocxw1c6d562f71d\\w1c native\\I 空格 & !\\runtime\\versions\\9.0.0\\dependencies\\node\\node.exe","profile":"C:\\Users\\ocxw1c6d562f71d","script":"C:\\Users\\ocxw1c6d562f71d\\w1c native\\I 空格 & !\\runtime\\versions\\9.0.0\\opencodex\\node_modules\\@bitkyc08\\opencodex\\probe.cmd","stdin":"c3RkaW4gYmluYXJ5IAAgVW5pY29kZSDpm6oNCg=="},"passed":true,"shell":"cmd"}}
+{"event":"argv-powershell","facts":{"exitCode":1,"stderrBytes":32,"stdoutBytes":0}}
+{"event":"argv-comparison","facts":{"expectedArgs":["plain","arg space","雪","&|<>^!()","literal%text","trailing\\","","quoted\"inside"],"observed":null,"passed":false,"shell":"powershell"}}
+{"event":"disable-preserves-later-path","facts":{"laterBytesPreserved":true,"originalType":2}}
+{"event":"resume-Enable-pending","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":288}}
+{"event":"boundary-resumed","facts":{"action":"Enable","boundary":"pending","samePendingSha256":"f50a5d04284d37463eb952b5b32dda6095b864506fdba1fbe09938da437e99dc"}}
+{"event":"resume-Enable-command","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":288}}
+{"event":"boundary-resumed","facts":{"action":"Enable","boundary":"command","samePendingSha256":"f50a5d04284d37463eb952b5b32dda6095b864506fdba1fbe09938da437e99dc"}}
+{"event":"resume-Enable-path","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":288}}
+{"event":"boundary-resumed","facts":{"action":"Enable","boundary":"path","samePendingSha256":"f50a5d04284d37463eb952b5b32dda6095b864506fdba1fbe09938da437e99dc"}}
+{"event":"resume-Enable-record","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":288}}
+{"event":"boundary-resumed","facts":{"action":"Enable","boundary":"record","samePendingSha256":"f50a5d04284d37463eb952b5b32dda6095b864506fdba1fbe09938da437e99dc"}}
+{"event":"resume-Enable-notified","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":288}}
+{"event":"boundary-resumed","facts":{"action":"Enable","boundary":"notified","samePendingSha256":"f50a5d04284d37463eb952b5b32dda6095b864506fdba1fbe09938da437e99dc"}}
+{"event":"resume-Disable-pending","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":289}}
+{"event":"boundary-resumed","facts":{"action":"Disable","boundary":"pending","samePendingSha256":"be99edf85e432e6b8bc9e1d10fb163437cea9b25907d07efd6611e7f3475f853"}}
+{"event":"resume-Disable-command","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":289}}
+{"event":"boundary-resumed","facts":{"action":"Disable","boundary":"command","samePendingSha256":"be99edf85e432e6b8bc9e1d10fb163437cea9b25907d07efd6611e7f3475f853"}}
+{"event":"resume-Disable-path","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":289}}
+{"event":"boundary-resumed","facts":{"action":"Disable","boundary":"path","samePendingSha256":"be99edf85e432e6b8bc9e1d10fb163437cea9b25907d07efd6611e7f3475f853"}}
+{"event":"resume-Disable-record","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":289}}
+{"event":"boundary-resumed","facts":{"action":"Disable","boundary":"record","samePendingSha256":"be99edf85e432e6b8bc9e1d10fb163437cea9b25907d07efd6611e7f3475f853"}}
+{"event":"resume-Disable-notified","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":289}}
+{"event":"boundary-resumed","facts":{"action":"Disable","boundary":"notified","samePendingSha256":"be99edf85e432e6b8bc9e1d10fb163437cea9b25907d07efd6611e7f3475f853"}}
+{"event":"external-conflict-retained","facts":{"object":"command","pendingPreserved":true}}
+{"event":"external-conflict-retained","facts":{"object":"record","pendingPreserved":true}}
+{"event":"external-conflict-retained","facts":{"object":"pending","pendingPreserved":true}}
+{"event":"external-conflict-retained","facts":{"object":"path","pendingPreserved":true}}
+{"event":"helper-pending-enable","facts":{"exitCode":1,"stderrBytes":69,"stdoutBytes":0}}
+{"event":"hook-pending-enable-refused","facts":{"exitCode":1,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"helper-extra-argument","facts":{"exitCode":2,"stderrBytes":59,"stdoutBytes":0}}
+{"event":"hook-upgrade-keeps-terminal","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"helper-normal-revoke","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"hook-normal-revokes-terminal","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"synthetic-phase-complete","facts":{"allOriginalPathBytesRestored":true,"fixtureSelection":{"imageSha256":"263be2ed0afefd5ae6f1cbb018baec7d78f733c2caf47e3b7c8adaff1ce4547a","platform":"win32-x64","schemaVersion":1,"version":"9.0.0"}}}
+{"event":"official-product-blocked","facts":{"error":"managed runtime operation failed: runtime_selection_invalid; 所选运行程序不可执行","passed":false,"scope":"unchanged official bin/ocx.mjs rejected by shared executable-extension admission; outside W1-C write set"}}
+{"event":"component-results","facts":{"argvFailedCells":["argv-powershell"],"officialIntegrated":false,"pathRestored":true,"transactionAndHookPhaseCompleted":true}}

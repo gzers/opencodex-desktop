@@ -1,0 +1,50 @@
+{
+  "automaticApprovalReview": {
+    "action": "recursive deletion of five exact new W1-C generated roots after read-only archive/containment checks",
+    "reason": "blocked by policy",
+    "alternateDeletionUsed": false,
+    "commandExecuted": false,
+    "result": "rejected"
+  },
+  "remainingTestProfiles": 0,
+  "priorRefusals": [
+    "generated windows-schema.json and accidental empty $input/powershell",
+    "historical W1 installer-w1 and four old failure directories remain unchanged"
+  ],
+  "retainedBytes": 26869205653.0,
+  "temporaryDesktopAclsRestored": true,
+  "dailyPathWriteExecuted": false,
+  "retainedTargets": [
+    {
+      "exists": true,
+      "path": "C:/Users/Public/ocxw1c-9c37bcb72f",
+      "files": 816,
+      "bytes": 813782566.0
+    },
+    {
+      "exists": true,
+      "path": "C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/w1c-input",
+      "files": 8,
+      "bytes": 556778379.0
+    },
+    {
+      "exists": true,
+      "path": "C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/w1c-product",
+      "files": 7739,
+      "bytes": 23361487112.0
+    },
+    {
+      "exists": true,
+      "path": "C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/w1c-bundle01",
+      "files": 27,
+      "bytes": 1068573157.0
+    },
+    {
+      "exists": true,
+      "path": "C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/w1c-bundle02",
+      "files": 27,
+      "bytes": 1068584439.0
+    }
+  ],
+  "remainingTestAccounts": 0
+}
