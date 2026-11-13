@@ -1277,6 +1277,18 @@ mod tests;
 #[path = "macos_client_root_closed_history_tests.rs"]
 mod history_tests;
 #[cfg(test)]
+pub(super) fn fixture_captured_generation() -> (
+    tempfile::TempDir,
+    crate::state::ProcessContext,
+    session_index::Index,
+    Head,
+    Originals,
+) {
+    let temp = tempfile::tempdir().unwrap();
+    let f = tests::Fixture::at(temp.path().canonicalize().unwrap());
+    (temp, f.context, f._index, f.source, f.originals)
+}
+#[cfg(test)]
 pub(super) fn fixture_closed_generation() -> (
     tempfile::TempDir,
     crate::state::ProcessContext,

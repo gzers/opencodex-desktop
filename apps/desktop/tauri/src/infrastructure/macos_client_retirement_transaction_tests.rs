@@ -6,7 +6,7 @@ use std::{
     os::unix::fs::{DirBuilderExt, PermissionsExt},
     time::Duration,
 };
-fn fixture() -> (tempfile::TempDir, ProcessContext, Index, Head, Originals) {
+pub(super) fn fixture() -> (tempfile::TempDir, ProcessContext, Index, Head, Originals) {
     let (tmp, context, index, closed) = super::super::root_retirement::fixture_closed_generation();
     let (index, preparing) = index
         .create_successor_root(&context, &closed, Instant::now() + Duration::from_secs(30))

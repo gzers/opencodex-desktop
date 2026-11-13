@@ -1554,20 +1554,19 @@ impl Index {
     /// Reference publication only. This does not authorize applying the plan;
     /// the native service/family proof and mutation permit remain separate.
     pub fn record_restore_plan(&self, expected: &Head, id: &str, sha256: &str) -> io::Result<Head> {
-        if self.root_registration.is_some() {
-            if expected.state != State::Stopped {
-                return Err(denied(
-                    "first-root restoration requires actual Stopped prefix",
-                ));
-            }
-            let originals = self.registered_root_originals(expected)?;
-            let pending = restore::Pending::open(&originals, id, sha256)?;
-            pending.require_indexed_references(
-                expected
-                    .references
-                    .as_ref()
-                    .ok_or_else(|| denied("root restore references missing"))?,
-            )?;
+        self.record_restore_plan_checked(expected, id, sha256, &|_| Ok(()))
+    }
+    fn record_restore_plan_checked(
+        &self,
+        expected: &Head,
+        id: &str,
+        sha256: &str,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<Head> {
+        if self.root_registration.is_some() && expected.state != State::Stopped {
+            return Err(denied(
+                "first-root restoration requires actual Stopped prefix",
+            ));
         }
         if !matches!(
             expected.state,
@@ -1614,7 +1613,21 @@ impl Index {
             pending.require_recovery_source(expected)?;
         }
         validate(&next)?;
-        self.write(Some(expected), &next)?;
+        if self.root_registration.is_some() {
+            self.write_checked_admitted(Some(expected), &next, checkpoint, &|originals| {
+                let originals = originals
+                    .ok_or_else(|| denied("root restore lacks current authenticated Originals"))?;
+                let pending = restore::Pending::open(originals, id, sha256)?;
+                pending.require_indexed_references(
+                    expected
+                        .references
+                        .as_ref()
+                        .ok_or_else(|| denied("root restore references missing"))?,
+                )
+            })?;
+        } else {
+            self.write_checked(Some(expected), &next, checkpoint)?;
+        }
         Ok(next)
     }
     pub fn record_root_retirement(
@@ -2111,6 +2124,9 @@ impl Drop for Index {
 #[path = "macos_client_session_index_tests.rs"]
 mod tests;
 
+#[cfg(test)]
+#[path = "macos_client_restore_registration_tests.rs"]
+mod restore_registration_tests;
 #[cfg(test)]
 #[path = "macos_client_retirement_transaction_tests.rs"]
 mod retirement_transaction_tests;
