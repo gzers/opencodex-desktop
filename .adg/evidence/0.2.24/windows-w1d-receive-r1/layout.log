@@ -1,0 +1,10 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.37s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 3 tests
+test modules::runtime::program_layout::tests::moving_a_mac_app_does_not_move_runtime_or_user_state ... ok
+test modules::runtime::program_layout::tests::version_and_source_inputs_cannot_escape_the_program_directory ... ok
+test modules::runtime::program_layout::tests::windows_uses_actual_custom_installation_without_guessing_default ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2653 filtered out; finished in 0.00s
+
