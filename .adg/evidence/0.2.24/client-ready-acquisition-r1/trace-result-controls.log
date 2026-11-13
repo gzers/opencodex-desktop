@@ -1,0 +1,9 @@
+
+running 1 test
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::stop_step_preserves_expired_deadline_and_independent_refusal_results ... ROOT_STOP_STEP stage=test.expired elapsed_us=4 remaining_before_us=0 remaining_after_us=0 expired_after=true code=timeout
+ROOT_STOP_STEP stage=test.binding elapsed_us=4 remaining_before_us=999988 remaining_after_us=999983 expired_after=false code=client_session_unconfirmed
+ROOT_STOP_STEP stage=test.success elapsed_us=0 remaining_before_us=999945 remaining_after_us=999945 expired_after=false code=ok
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2588 filtered out; finished in 0.00s
+

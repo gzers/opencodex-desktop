@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 108；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 109；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1116,3 +1116,16 @@ main 236ed43dd将vault历史审查原“两次open、各自两套完整读取”
 证据.adg/evidence/0.2.24/client-history-projected-native-r1/保存运行脚本、冻结source/tree15hash、实际binary/完整release构建/4项非原生release命令回归、沙箱loopback正例/外网和日常HOME拒绝、完整stdout/stderr/manager/summary/rawprofile与coordinator原字节、失败核验和清理。只有这一实际新轮，无前置脚本失败或强杀/原轮重跑；官方tgzb920ba02/descriptore0464990/outerbundle5b10c1a8和整树供应保持，不改官方2.99，无日常配置/Shell/安装app或业务WebDAV/模型请求。归档逐字复核后移除本轮ownedProfile/程序包/复制testbinary及重复临时证据目录，工程target保留；无固定候选/发布。新单元与新原生证据分开，未将debug计量当release验收。
 
 新假设被证伪一部分：重复历史优化确实改善Start和Stop，但没有使第二normalStop达标。下一步在现有Stop30/5/10原边界精确测Active::load/preStop/独立phase和restore-artifact admission，区分root-artifacts-held处deadline已耗尽与具体来源/图像/Guard检查拒绝；不能只凭client_session_unconfirmed认定是超时。已观测第二indexStopped累积2358ms、indexPlan2756、rootAdmission4283、rootArtifactsHeld5088，停止前load/preStop也较首轮增长。评估仅在原持锁事务同一次观察内围绕已闭合history保留完整前后验证、减少每层重复；不得skip当前root/provenance/Plan/frame/content/path/Protection/OSproof，不cache跨动作、不加预算或重置Stop。无新定位/假设不开下一native轮。根中断/动作回执容量边界、缺Ready/一般客户端范围/进程集合与刷新/NAME/复杂代理/Windows W1W2/发行README及固定候选等完整目标保持，P24-04/05未关，目标active。
+
+
+## 2026-11-13 Ready取得的连续重复历史去重与Stop拒绝诊断
+
+main 4163514fe新增封闭Index::open_ready_session供实际Active::load：私有open_inner_observed保留setup transaction及COMMIT后完整核验，直接消费后一次Head/Originals进入原scope/live/program/帧验证，去掉连续构造里再index.head和registered_root_originals两份重复fullhistory。返回前核profile/HOME/fullrefs/storage/rawHead；无公开中间Originals/token/callback或跨动作cache。原open/open_existing语义及公开open_indexed的非Ready范围保持，普通canonicalclient仍原逻辑，currentReady/PreStop/typedphase/后续事务与Guard不减。详[Ready取得合同](0.2.24-contracts/client-ready-acquisition-r1.md)。
+
+ReadyAcquisitionError显式Index(io)与Session(AppError)，Active只对Index用原failure，原scope/live错误码透传。新reopen注入点仅origin-none，首根原3交接点/锁断言保持。cfgtest trace记录固定stage/区间微秒/同原deadline剩余预算/expired/code，覆盖入口load/preStop、admission、root-artifact与IO映射前permit/writer原因；不输出detail/path/config/secret，生产无日志，调用顺序/短路/结果/原IO种类文案不变，不增加或重置预算。
+
+95个唯一受影响函数通过：Ready4、其它Session29、index56、命令4、step结果1、writer映射1，8ignore不计；最终strict all-target Clippy/fmt/diff通过。首代/第二代synthetic Ready source构造相同Head/refs，第二代historicalbegin/finish4→2、frame50→26、Protection77774→40442，不能当作实际Ready或Stop耗时保证。COMMIT后oldOriginal/receipt字节400权限、外部进程SQLitebinding/event、namespace变更被末次audit拒绝；假Live/PID不获currentReady，load后帧变化仍拒绝。source/live/program/nonReady拒绝保持。
+
+初编译因Refs无Debug的assert_eq失败，改普通相等断言而非增加Debug；index原套件55pass/1failed来自新增testhook撞首根精确3阶段allowlist，修hook作用域后原测试不变精确通过，Readypostcommit负控也重测。core六源binary主要检查与最终七源binary仅新增writertrace等价/复验分别留证，未把旧日志冒一份最终binary全量。审查发现字节反例权限掩盖已修为写后400。证据.adg/evidence/0.2.24/client-ready-acquisition-r1/绑定两份源/binary及显式delta、假设、失败、复验和清理，归档逐字比对后清本轮自有TempDir/重复目录，工程target保留。无官方服务/全局协调DB、日常配置/Shell/安装app或业务WebDAV/模型请求。
+
+前轮原包第二Stop10736ms/RestorePrepared16仍失败，本批未跑原包，不能宣布预算修复。下一步冻结release来源，用新阶段/remaining/code精确区分root-artifacts-held拒绝与deadline，验证入口load/preStop重复审查去除后的真实效应；保持原30/5/10及Restart30/Stop子预算、原件/归属/未知拒绝，旧失败原目录不覆盖。根中断/动作回执容量、缺Ready/其它客户端图路径/完整进程集合与刷新/NAME/复杂代理/Windows W1W2/发行README与固定候选全范围保持，P24-04/05未关，目标active，发布另依授权。
