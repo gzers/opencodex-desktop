@@ -208,6 +208,71 @@ fn reads_one_complete_image_without_executing_any_program() {
 }
 
 #[test]
+fn interpreted_package_bin_requires_readable_exact_file_not_os_executable_mode() {
+    let mut f = Fixture::new();
+    let script = f
+        .paths
+        .package_root
+        .join(install::PACKAGE_SUBPATH)
+        .join("bin/ocx.mjs");
+    fs::set_permissions(&script, fs::Permissions::from_mode(0o600)).unwrap();
+    f.image.tree_sha256 =
+        super::super::program_image::content_digest(&f.paths.version_root).unwrap();
+    f.publish();
+    assert!(super::super::paths::validate_executable(&script).is_err());
+    assert_eq!(f.read().unwrap().unwrap().script, script);
+    let selected = f.complete().unwrap().unwrap();
+    super::super::program_image::verify(&selected).unwrap();
+    // An interpreter remains an OS executable, with exactly the old gate.
+    fs::set_permissions(&f.paths.node, fs::Permissions::from_mode(0o600)).unwrap();
+    f.image.tree_sha256 =
+        super::super::program_image::content_digest(&f.paths.version_root).unwrap();
+    f.publish();
+    assert!(f.read().is_err());
+    assert!(f.complete().is_err());
+}
+
+#[test]
+fn interpreted_bin_admission_does_not_accept_links_missing_or_substituted_content() {
+    for case in ["symlink", "hardlink", "directory", "absent", "content"] {
+        let mut f = Fixture::new();
+        let script = f
+            .paths
+            .package_root
+            .join(install::PACKAGE_SUBPATH)
+            .join("bin/ocx.mjs");
+        let original = fs::read(&script).unwrap();
+        fs::remove_file(&script).unwrap();
+        match case {
+            "symlink" => {
+                let outside = f.root.join("outside-script");
+                fs::write(&outside, &original).unwrap();
+                std::os::unix::fs::symlink(outside, &script).unwrap();
+            }
+            "hardlink" => {
+                let outside = f.root.join("outside-script");
+                fs::write(&outside, &original).unwrap();
+                fs::hard_link(outside, &script).unwrap();
+            }
+            "directory" => fs::create_dir(&script).unwrap(),
+            "absent" => (),
+            "content" => {
+                fs::write(&script, b"outside changed script").unwrap();
+                f.image.tree_sha256 =
+                    super::super::program_image::content_digest(&f.paths.version_root).unwrap();
+                f.publish();
+            }
+            _ => unreachable!(),
+        }
+        assert!(f.read().is_err(), "{case}");
+        assert!(f.complete().is_err(), "{case}");
+        if case == "content" {
+            assert_eq!(fs::read(script).unwrap(), b"outside changed script");
+        }
+    }
+}
+
+#[test]
 fn missing_selection_never_adopts_existing_flat_runtime() {
     let f = Fixture::new();
     fs::remove_file(f.root.join("runtime/current.json")).unwrap();
