@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 113；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 114；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1179,3 +1179,10 @@ trace确认证据进展：secondloadReady515775us/preStop1861995us均成功；ar
 证据.adg/evidence/0.2.24/client-prefix-native-r1/保留clean source/tree18hash/实际binary/完整releasebuild/4项release非native回归、sandboxloopbackbind正例/外网与日常HOME拒绝、stdout/stderr/manager/summary、两个framechains及新计划rawbytes、进程/coordinator/TCP清理证据，原始失败result不变。只一新native轮，无强杀/重跑/加预算/改官方包；所有临时Profile/program/archivecopy/testbinary逐字归档核验后清理，工程target保留。无日常配置/Shell/安装app/真实业务WebDAV模型或固定候选/发布。只读agent同时盘点后继root中断与成功StopcanStart容量不一致，结论记录remaining-root-scope-audit.json，不是完成声明或新实现。
 
 本假设部分有效：Start/Status和artifact阶段更快，但全Stop仍失败且累计耗时更长，不能以百分比或root进度夸大性能成果。下一步计量record_root_retirement/registration中已验证Original/Plan与beforeSQL/candidate/COMMITreadback/registration之间重复读取，设计封闭事务返回准确registration及已认证facts，保留所有实际边界的完整history/currentroot/provenance/frame/Plan/path/Protection/nativeproof，禁止跨动作cache/skip旧history或重置deadline。须真实反例/计量再开下一原包轮，原30/5/10及Restart30/Stop子预算保持。root中断专用authority/RootRetirementPrepared移动前后继续恢复/RootAbsent重close/成功Stopaction容量门、缺Ready/一般客户端图路径/进程集合和刷新/NAME/代理/WindowsW1W2/发行README与固定候选完整范围保持，P24-04/05未关，目标active。
+
+
+## 2026-11-13 根退役登记复用同事务来源认证
+
+main f10e732aa 将原事务外计划准入移入已有 SQL 事务的完整 source 审计之后、首次 SQL 之前；保留候选与提交后 full audit，随后直接返回当前登记凭据，实际 retire 入口 full require 不变。四个独立同形合成二代 fixture 对照旧／新／新／旧，完整历史观察 5→3、双遍审计 10→6，约 592→370ms。25 项不同受影响测试及严格工程检查通过；零项筛选尝试单独保留并以实际命令模块补验，不算通过。
+
+原包第二 Stop12143ms／RootRetirementPrepared17 的失败不变。本批没有原包新轮或新候选；先定位根计划／退役剩余成本、形成覆盖缺口的新假设，才进行受影响真实轮。事务边界、反例、独立只读审阅、源／测试二进制摘要、证据逐字核验和测试临时根清理见 [client-retirement-transaction-r1](0.2.24-contracts/client-retirement-transaction-r1.md) 及 .adg/evidence/0.2.24/client-retirement-transaction-r1/。根恢复与缺 Ready／一般客户端图路径／完整进程集合与刷新／NAME／复杂代理／Windows W1W2／交付验证与固定候选等本版全范围保持，目标 active，未发布。
