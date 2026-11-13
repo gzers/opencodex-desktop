@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 52.03s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 4 tests
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::root_stop_current_absence_rechecks_secondary_listener_and_refuses_unknown_or_new_owner ... ROOT_STOP_CURRENT_ABSENCE_EVIDENCE {"accepted":false,"kernelCapturedTcpPorts":2,"kernelServiceNormalExit":true,"managerAndRecordReappearanceRefused":true,"ownerChangeRefused":true,"secondaryPortRefused":true,"syntheticReferenceWrapperNotOfficialStop":true,"unknownPortRefused":true}
+ok
+test infrastructure::macos_client_originals::root_retirement::index_tests::root_stop_movement_registration_requires_actual_current_index_and_exact_original_source ... ROOT_STOP_REGISTRATION_EVIDENCE {"accepted":false,"currentRegistrationVerifiedAcrossMove":true,"exactSourceEventRequired":true,"headCopyWithoutActualRegistrationRefused":true,"staleAfterCloseRefused":true,"storageOnlyNoNormalStopPermission":true}
+ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::root_stop_binding_follows_only_original_plan_archive_and_preserves_logical_scope ... ROOT_STOP_BINDING_EVIDENCE {"accepted":false,"logicalScopeUnchanged":true,"sourceAndFramesVerifiedBeforeAndAfterMove":true,"syntheticFramesNoStopPermission":true,"wrongPlanScopeLiveAndNewRootRefused":true}
+ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::root_stop_binding_rejects_modified_historical_frames_scope_and_live_after_move ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2505 filtered out; finished in 5.19s
+

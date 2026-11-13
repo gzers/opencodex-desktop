@@ -1,0 +1,334 @@
+
+running 43 tests
+test blocked_save_uses_fixed_reason_body_and_dedupes_per_reason ... FAILED
+test candidate_partitions_isolate_actions_phases_and_channels_without_reviving_rotated_ids ... FAILED
+test concurrent_scope_creation_keeps_one_identity ... FAILED
+test config_recovery_is_structural_and_queries_cannot_be_repurposed_to_resolve_install ... ok
+test configuration_export_is_user_only_and_does_not_activate_generic_migration ... FAILED
+test configuration_import_is_user_only_and_does_not_activate_generic_migration ... FAILED
+test cooldown_preserves_read_timestamp_and_reopens_only_after_recovery_or_deadline ... FAILED
+test deleted_blocked_save_notification_is_not_revived_by_another_confirmation ... FAILED
+test deleted_snapshot_failure_stays_deleted_after_restart_and_retry ... FAILED
+test embedded_config_rejects_unknown_duplicate_reference_paths_and_planned_activation ... FAILED
+test exact_verified_candidate_success_resolves_after_restart_without_marking_read ... FAILED
+test existing_manual_sync_conflict_stays_registered_without_enabling_future_sync_jobs ... FAILED
+test invalid_job_trigger_scope_and_fact_never_mutate ... FAILED
+test legacy_gate_discards_all_raw_content_and_refuses_unknown_and_planned_without_writes ... FAILED
+test legacy_scope_migration_preserves_old_failures_and_lazily_reuses_exact_candidates ... FAILED
+test lifecycle_command_only_resolves_matching_real_result_with_persisted_scope ... FAILED
+test lifecycle_preference_is_independent_of_environment_risks_and_recovery ... FAILED
+test manager_check_and_pending_restart_never_resolve_install_failure ... FAILED
+test mismatched_legacy_candidate_and_invalid_scope_do_not_hide_existing_failure ... FAILED
+test model_config_migration_rejects_non_risk_facts_and_unrelated_scopes ... FAILED
+test model_config_migration_scope_dedupes_after_persistence_and_restart ... FAILED
+test model_config_migration_startup_risk_delivers_fixed_registered_content ... FAILED
+test model_external_failures_link_to_exact_task_and_only_matching_success_resolves ... FAILED
+test new_terminal_pairs_persist_and_only_exact_verified_success_recovers ... FAILED
+test old_history_without_identity_still_loads_and_is_not_automatically_resolved ... FAILED
+test other_risk_notifications_still_recur_after_deletion ... FAILED
+test pending_unverified_or_wrong_candidate_success_is_rejected_and_deleted_history_is_not_revived ... FAILED
+test persistence_failure_rolls_back_new_notification_and_recovery ... FAILED
+test persistent_scope_reuses_root_candidate_and_rotates_on_real_context_changes ... FAILED
+test policy_save_risk_links_to_its_exact_plan_and_only_verified_commit_or_compensation_resolves ... FAILED
+test protection_reconcile_failure_requires_matching_verified_retry ... FAILED
+test recovery_requires_object_action_phase_channel_and_candidate_and_cannot_clear_other_risks ... FAILED
+test registry_is_closed_and_references_are_consistent ... FAILED
+test same_scope_dedupes_but_different_objects_and_candidates_coexist ... FAILED
+test scope_capacity_refuses_new_partitions_without_evicting_or_corrupting_old_slots ... FAILED
+test scope_rejects_symlinks_without_writing_external_files ... FAILED
+test signal_adapter_rejects_unknown_planned_wrong_owner_trigger_channel_and_fact ... FAILED
+test signal_delivery_and_suppressed_notifications_do_not_create_history_files ... FAILED
+test snapshot_successes_keep_readable_receipts_and_resolve_only_the_same_operation ... FAILED
+test terminal_helper_rejects_queries_progress_planned_and_mismatched_evidence ... FAILED
+test transient_signals_validate_without_scopes_or_notification_writes ... FAILED
+test uninstall_failure_persists_and_only_matching_verified_removal_resolves ... FAILED
+test validated_signal_site_cannot_be_assigned_a_persisted_terminal_fact ... ok
+
+failures:
+
+---- blocked_save_uses_fixed_reason_body_and_dedupes_per_reason stdout ----
+
+thread 'blocked_save_uses_fixed_reason_body_and_dedupes_per_reason' (154244823) panicked at tests/event_registry.rs:453:6:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- candidate_partitions_isolate_actions_phases_and_channels_without_reviving_rotated_ids stdout ----
+
+thread 'candidate_partitions_isolate_actions_phases_and_channels_without_reviving_rotated_ids' (154244824) panicked at tests/event_registry.rs:1197:27:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- concurrent_scope_creation_keeps_one_identity stdout ----
+
+thread '<unnamed>' (154244826) panicked at tests/event_registry.rs:1030:70:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+thread '<unnamed>' (154244827) panicked at tests/event_registry.rs:1030:70:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+thread '<unnamed>' (154244828) panicked at tests/event_registry.rs:1030:70:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+thread '<unnamed>' (154244829) panicked at tests/event_registry.rs:1030:70:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+thread '<unnamed>' (154244830) panicked at tests/event_registry.rs:1030:70:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+thread '<unnamed>' (154244833) panicked at tests/event_registry.rs:1030:70:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+thread '<unnamed>' (154244831) panicked at tests/event_registry.rs:1030:70:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+thread '<unnamed>' (154244832) panicked at tests/event_registry.rs:1030:70:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+thread 'concurrent_scope_creation_keeps_one_identity' (154244825) panicked at tests/event_registry.rs:1034:31:
+called `Result::unwrap()` on an `Err` value: Any { .. }
+
+---- configuration_export_is_user_only_and_does_not_activate_generic_migration stdout ----
+
+thread 'configuration_export_is_user_only_and_does_not_activate_generic_migration' (154244846) panicked at tests/event_registry.rs:1925:44:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- configuration_import_is_user_only_and_does_not_activate_generic_migration stdout ----
+
+thread 'configuration_import_is_user_only_and_does_not_activate_generic_migration' (154244847) panicked at tests/event_registry.rs:1973:44:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- cooldown_preserves_read_timestamp_and_reopens_only_after_recovery_or_deadline stdout ----
+
+thread 'cooldown_preserves_read_timestamp_and_reopens_only_after_recovery_or_deadline' (154244848) panicked at tests/event_registry.rs:726:45:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "validate registered event delivery", detail: "event registry configuration is invalid" }
+
+---- deleted_blocked_save_notification_is_not_revived_by_another_confirmation stdout ----
+
+thread 'deleted_blocked_save_notification_is_not_revived_by_another_confirmation' (154244850) panicked at tests/event_registry.rs:365:6:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- deleted_snapshot_failure_stays_deleted_after_restart_and_retry stdout ----
+
+thread 'deleted_snapshot_failure_stays_deleted_after_restart_and_retry' (154244852) panicked at tests/event_registry.rs:2091:62:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- embedded_config_rejects_unknown_duplicate_reference_paths_and_planned_activation stdout ----
+
+thread 'embedded_config_rejects_unknown_duplicate_reference_paths_and_planned_activation' (154244853) panicked at tests/event_registry.rs:953:14:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- exact_verified_candidate_success_resolves_after_restart_without_marking_read stdout ----
+
+thread 'exact_verified_candidate_success_resolves_after_restart_without_marking_read' (154244858) panicked at tests/event_registry.rs:620:49:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "validate registered event delivery", detail: "event registry configuration is invalid" }
+
+---- existing_manual_sync_conflict_stays_registered_without_enabling_future_sync_jobs stdout ----
+
+thread 'existing_manual_sync_conflict_stays_registered_without_enabling_future_sync_jobs' (154244859) panicked at tests/event_registry.rs:1671:29:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- invalid_job_trigger_scope_and_fact_never_mutate stdout ----
+
+thread 'invalid_job_trigger_scope_and_fact_never_mutate' (154244860) panicked at tests/event_registry.rs:580:5:
+assertion `left == right` failed
+  left: Err(InvalidConfig)
+ right: Err(InvalidJob)
+
+---- legacy_gate_discards_all_raw_content_and_refuses_unknown_and_planned_without_writes stdout ----
+
+thread 'legacy_gate_discards_all_raw_content_and_refuses_unknown_and_planned_without_writes' (154244861) panicked at src/modules/notifications/persistence.rs:48:46:
+validated embedded event registry: InvalidConfig
+
+---- legacy_scope_migration_preserves_old_failures_and_lazily_reuses_exact_candidates stdout ----
+
+thread 'legacy_scope_migration_preserves_old_failures_and_lazily_reuses_exact_candidates' (154244862) panicked at tests/event_registry.rs:1449:6:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- lifecycle_command_only_resolves_matching_real_result_with_persisted_scope stdout ----
+
+thread 'lifecycle_command_only_resolves_matching_real_result_with_persisted_scope' (154244863) panicked at tests/event_registry.rs:1145:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+
+---- lifecycle_preference_is_independent_of_environment_risks_and_recovery stdout ----
+
+thread 'lifecycle_preference_is_independent_of_environment_risks_and_recovery' (154244864) panicked at tests/event_registry.rs:823:56:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- manager_check_and_pending_restart_never_resolve_install_failure stdout ----
+
+thread 'manager_check_and_pending_restart_never_resolve_install_failure' (154244865) panicked at tests/event_registry.rs:1062:43:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- mismatched_legacy_candidate_and_invalid_scope_do_not_hide_existing_failure stdout ----
+
+thread 'mismatched_legacy_candidate_and_invalid_scope_do_not_hide_existing_failure' (154244866) panicked at tests/event_registry.rs:1197:27:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- model_config_migration_rejects_non_risk_facts_and_unrelated_scopes stdout ----
+
+thread 'model_config_migration_rejects_non_risk_facts_and_unrelated_scopes' (154244867) panicked at tests/event_registry.rs:1197:27:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- model_config_migration_scope_dedupes_after_persistence_and_restart stdout ----
+
+thread 'model_config_migration_scope_dedupes_after_persistence_and_restart' (154244868) panicked at tests/event_registry.rs:1197:27:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- model_config_migration_startup_risk_delivers_fixed_registered_content stdout ----
+
+thread 'model_config_migration_startup_risk_delivers_fixed_registered_content' (154244869) panicked at tests/event_registry.rs:88:41:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- model_external_failures_link_to_exact_task_and_only_matching_success_resolves stdout ----
+
+thread 'model_external_failures_link_to_exact_task_and_only_matching_success_resolves' (154244870) panicked at tests/event_registry.rs:319:53:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- new_terminal_pairs_persist_and_only_exact_verified_success_recovers stdout ----
+
+thread 'new_terminal_pairs_persist_and_only_exact_verified_success_recovers' (154244871) panicked at tests/event_registry.rs:1197:27:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- old_history_without_identity_still_loads_and_is_not_automatically_resolved stdout ----
+
+thread 'old_history_without_identity_still_loads_and_is_not_automatically_resolved' (154244872) panicked at tests/event_registry.rs:893:51:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "validate registered event delivery", detail: "event registry configuration is invalid" }
+
+---- other_risk_notifications_still_recur_after_deletion stdout ----
+
+thread 'other_risk_notifications_still_recur_after_deletion' (154244873) panicked at tests/event_registry.rs:410:6:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- pending_unverified_or_wrong_candidate_success_is_rejected_and_deleted_history_is_not_revived stdout ----
+
+thread 'pending_unverified_or_wrong_candidate_success_is_rejected_and_deleted_history_is_not_revived' (154244874) panicked at tests/event_registry.rs:694:46:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- persistence_failure_rolls_back_new_notification_and_recovery stdout ----
+
+thread 'persistence_failure_rolls_back_new_notification_and_recovery' (154244875) panicked at src/modules/notifications/persistence.rs:48:46:
+validated embedded event registry: InvalidConfig
+
+---- persistent_scope_reuses_root_candidate_and_rotates_on_real_context_changes stdout ----
+
+thread 'persistent_scope_reuses_root_candidate_and_rotates_on_real_context_changes' (154244876) panicked at tests/event_registry.rs:974:10:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- policy_save_risk_links_to_its_exact_plan_and_only_verified_commit_or_compensation_resolves stdout ----
+
+thread 'policy_save_risk_links_to_its_exact_plan_and_only_verified_commit_or_compensation_resolves' (154244877) panicked at tests/event_registry.rs:502:53:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- protection_reconcile_failure_requires_matching_verified_retry stdout ----
+
+thread 'protection_reconcile_failure_requires_matching_verified_retry' (154244878) panicked at tests/event_registry.rs:1833:6:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- recovery_requires_object_action_phase_channel_and_candidate_and_cannot_clear_other_risks stdout ----
+
+thread 'recovery_requires_object_action_phase_channel_and_candidate_and_cannot_clear_other_risks' (154244879) panicked at tests/event_registry.rs:650:45:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- registry_is_closed_and_references_are_consistent stdout ----
+
+thread 'registry_is_closed_and_references_are_consistent' (154244880) panicked at tests/event_registry.rs:268:5:
+assertion `left == right` failed
+  left: InvalidConfig
+ right: UnknownEvent
+
+---- same_scope_dedupes_but_different_objects_and_candidates_coexist stdout ----
+
+thread 'same_scope_dedupes_but_different_objects_and_candidates_coexist' (154244881) panicked at tests/event_registry.rs:804:38:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- scope_capacity_refuses_new_partitions_without_evicting_or_corrupting_old_slots stdout ----
+
+thread 'scope_capacity_refuses_new_partitions_without_evicting_or_corrupting_old_slots' (154244882) panicked at tests/event_registry.rs:1574:30:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- scope_rejects_symlinks_without_writing_external_files stdout ----
+
+thread 'scope_rejects_symlinks_without_writing_external_files' (154244883) panicked at tests/event_registry.rs:1046:5:
+assertion `left == right` failed
+  left: Err(InvalidConfig)
+ right: Err(ScopeUnavailable)
+
+---- signal_adapter_rejects_unknown_planned_wrong_owner_trigger_channel_and_fact stdout ----
+
+thread 'signal_adapter_rejects_unknown_planned_wrong_owner_trigger_channel_and_fact' (154244884) panicked at tests/event_registry.rs:1735:5:
+assertion `left == right` failed
+  left: Err(InvalidConfig)
+ right: Err(UnknownEvent)
+
+---- signal_delivery_and_suppressed_notifications_do_not_create_history_files stdout ----
+
+thread 'signal_delivery_and_suppressed_notifications_do_not_create_history_files' (154244885) panicked at tests/event_registry.rs:860:42:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "validate registered event delivery", detail: "event registry configuration is invalid" }
+
+---- snapshot_successes_keep_readable_receipts_and_resolve_only_the_same_operation stdout ----
+
+thread 'snapshot_successes_keep_readable_receipts_and_resolve_only_the_same_operation' (154244886) panicked at tests/event_registry.rs:2029:42:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- terminal_helper_rejects_queries_progress_planned_and_mismatched_evidence stdout ----
+
+thread 'terminal_helper_rejects_queries_progress_planned_and_mismatched_evidence' (154244887) panicked at tests/event_registry.rs:1197:27:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+---- transient_signals_validate_without_scopes_or_notification_writes stdout ----
+
+thread 'transient_signals_validate_without_scopes_or_notification_writes' (154244888) panicked at src/modules/notifications/persistence.rs:48:46:
+validated embedded event registry: InvalidConfig
+
+---- uninstall_failure_persists_and_only_matching_verified_removal_resolves stdout ----
+
+thread 'uninstall_failure_persists_and_only_matching_verified_removal_resolves' (154244889) panicked at tests/event_registry.rs:1833:6:
+called `Result::unwrap()` on an `Err` value: InvalidConfig
+
+
+failures:
+    blocked_save_uses_fixed_reason_body_and_dedupes_per_reason
+    candidate_partitions_isolate_actions_phases_and_channels_without_reviving_rotated_ids
+    concurrent_scope_creation_keeps_one_identity
+    configuration_export_is_user_only_and_does_not_activate_generic_migration
+    configuration_import_is_user_only_and_does_not_activate_generic_migration
+    cooldown_preserves_read_timestamp_and_reopens_only_after_recovery_or_deadline
+    deleted_blocked_save_notification_is_not_revived_by_another_confirmation
+    deleted_snapshot_failure_stays_deleted_after_restart_and_retry
+    embedded_config_rejects_unknown_duplicate_reference_paths_and_planned_activation
+    exact_verified_candidate_success_resolves_after_restart_without_marking_read
+    existing_manual_sync_conflict_stays_registered_without_enabling_future_sync_jobs
+    invalid_job_trigger_scope_and_fact_never_mutate
+    legacy_gate_discards_all_raw_content_and_refuses_unknown_and_planned_without_writes
+    legacy_scope_migration_preserves_old_failures_and_lazily_reuses_exact_candidates
+    lifecycle_command_only_resolves_matching_real_result_with_persisted_scope
+    lifecycle_preference_is_independent_of_environment_risks_and_recovery
+    manager_check_and_pending_restart_never_resolve_install_failure
+    mismatched_legacy_candidate_and_invalid_scope_do_not_hide_existing_failure
+    model_config_migration_rejects_non_risk_facts_and_unrelated_scopes
+    model_config_migration_scope_dedupes_after_persistence_and_restart
+    model_config_migration_startup_risk_delivers_fixed_registered_content
+    model_external_failures_link_to_exact_task_and_only_matching_success_resolves
+    new_terminal_pairs_persist_and_only_exact_verified_success_recovers
+    old_history_without_identity_still_loads_and_is_not_automatically_resolved
+    other_risk_notifications_still_recur_after_deletion
+    pending_unverified_or_wrong_candidate_success_is_rejected_and_deleted_history_is_not_revived
+    persistence_failure_rolls_back_new_notification_and_recovery
+    persistent_scope_reuses_root_candidate_and_rotates_on_real_context_changes
+    policy_save_risk_links_to_its_exact_plan_and_only_verified_commit_or_compensation_resolves
+    protection_reconcile_failure_requires_matching_verified_retry
+    recovery_requires_object_action_phase_channel_and_candidate_and_cannot_clear_other_risks
+    registry_is_closed_and_references_are_consistent
+    same_scope_dedupes_but_different_objects_and_candidates_coexist
+    scope_capacity_refuses_new_partitions_without_evicting_or_corrupting_old_slots
+    scope_rejects_symlinks_without_writing_external_files
+    signal_adapter_rejects_unknown_planned_wrong_owner_trigger_channel_and_fact
+    signal_delivery_and_suppressed_notifications_do_not_create_history_files
+    snapshot_successes_keep_readable_receipts_and_resolve_only_the_same_operation
+    terminal_helper_rejects_queries_progress_planned_and_mismatched_evidence
+    transient_signals_validate_without_scopes_or_notification_writes
+    uninstall_failure_persists_and_only_matching_verified_removal_resolves
+
+test result: FAILED. 2 passed; 41 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s
+

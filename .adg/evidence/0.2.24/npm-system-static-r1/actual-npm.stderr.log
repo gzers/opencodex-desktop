@@ -1,0 +1,16 @@
+
+thread '<unnamed>' (155221282) panicked at src/modules/runtime/npm_proxy_tests.rs:81:46:
+called `Result::unwrap()` on an `Err` value: Os { code: 35, kind: WouldBlock, message: "Resource temporarily unavailable" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'modules::runtime::install::npm_proxy_tests::actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touching_user_config' (155221100) panicked at src/modules/runtime/npm_proxy_tests.rs:133:9:
+npm metadata failure: npm error code ECONNRESET
+npm error syscall read
+npm error errno ECONNRESET
+npm error network request to http://registry.invalid/@bitkyc08%2fopencodex failed, reason: read ECONNRESET
+npm error network This is a problem related to network connectivity.
+npm error network In most cases you are behind a proxy or have bad network settings.
+npm error network
+npm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly.  See: 'npm help config'
+npm error A complete log of this run can be found in: /private/tmp/ocxd024-npm-system-kax5ysqj/fixtures/.tmpMdSRzl/cache/npm/_logs/2026-11-11T19_21_36_013Z-debug-0.log
+

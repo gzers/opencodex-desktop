@@ -1,0 +1,42 @@
+# 0.2.24 恢复执行进程内持有官方SQLite协调锁
+
+revision: 1；2026-11-11。归IMP-34 P24-04，承接official-client-coordination-r1及macos-client-restore-r1；代码mainc6bda959547882fda0e7e81cdcd1c71923130a0e。关闭的是外部helper提前释放本次恢复协调锁的执行窗口；未接生产服务退出许可/Stop，accepted=false、非冻结候选。
+
+## 为什么要改变持锁进程
+
+旧helper持有官方claim/N/K，但最长2秒后自身释放；Rust检查一次借用并不保证耗时native动作仍在锁内。本批不延长原30/5/10预算，不让外部定时器给Rust续租，也不以开始时held回执授权后继长任务。恢复prepare/apply入口改为要求NativeLease，旧helper Lease不能再传入机械恢复接口；服务正常退出/文件归属MutationPermit仍无生产签发器。
+
+native_client_coordination::with_native_coordination先沿原样官方2.99 helper完成官方准入及初始化。helper的held/released同进程/operation/上下文/三件原dev-inode之外，增加官方实际生成的数据库路径与已通过K归属准入的客户端journal不透明摘要。该摘要绑定原journal的dev/inode、uid/gid/mode和原字节SHA；路径固定opencodex-journal.json，1MiB上限/no-follow读取，拒绝不完整/变化，不输出原配置内容。Native侧进一步拒绝owner journal额外写权限/ACL/flags，不修改旧权限。
+
+helper正常释放并退出后，Rust沿它实际返回的原路径按claim→N→K重新打开同一组三件数据库。没有复制schema、没有另建namespace、没有CREATE标志或旧格式接管；helper和Rust之间有窗口，但窗口不提供任何操作权限：取得全部锁后再次核对原文件身份/安全保护和同一官方journal摘要，任何变化或busy立即拒绝，不生成新基线。原claim为BEGIN EXCLUSIVE，N/K为BEGIN IMMEDIATE，busy_timeout=0，无额外重试秒表。
+
+NativeLease实际持有这三个SQLite Connection直到回调停止/栈退出，不能Send/Sync到另一写线程；deadline过期只使check/结果失败，不能由另一个进程提前释放本栈的锁。回调失败保持原失败，释放失败也不通过。正常释放/异常Drop均先逆序rollback/close全部SQLite连接，再释放原生文件FD，避免POSIX“关闭任何同inode fd会解除本进程fcntl锁”的陷阱。
+
+## 原生文件与SQLite自己的描述符
+
+CoordinationFilePin在取得SQLite锁之前打开原普通单链接600/当前uid文件，持有原父目录及原dev/inode/birthtime/保护；父目录写权限或ACL未知、对象权限/链接不安全均拒绝，不修补。持锁检查只用已保留FD的fstat、相对fstatat和ACL/xattr读取，不临时开关另一数据库FD。文件安全元数据和路径代次必须保持。
+
+SQLite自身以READ_WRITE|NO_MUTEX|NOFOLLOW打开，另通过其实际VFS的SQLITE_FCNTL_HAS_MOVED检查真实已打开数据库是否离开原路径；无法提供该证明也拒绝。不能只在路径恢复后看见原inode便推断SQLite连接锁的是原文件。原件快照只读取catalog/cache/audit/journal等其它文件，实际跨进程探针证明这些读取没有意外释放数据库锁。
+
+Native入口把原程序selection/image身份从helper阶段带入，在交接前核对当前选择，最终完整目录必须仍等于该原selected输入。整个操作保留“导入官方模块之前一次完整镜像核验＋全部native工作结束后一次完整镜像核验”。只对私有native交接路径移除中间那次重复全量扫描，选择/目录/文件身份、归属摘要及绝对deadline均保持；公共helper-only入口仍做自己的原全量收尾核验。没有以缓存mtime或减少断言替代完整性核对。
+
+## 验证
+
+14项相关定向检查通过（13项实际反例/协议检查＋1个跨进程探针入口），包括：
+
+- 真实独立进程在原100ms测试deadline已过而Rust回调栈未退出时仍无法取得三把锁，结束后才能取得；没有计过期工作成功。
+- 部分取得锁后失败/正常作用域Drop释放顺序、已有竞争写者立即拒绝无新预算、符号链接/替换inode/644旧mode拒绝且不修补。
+- helper交接后journal出现新事实或持锁中发生变化拒绝，后者拒绝不提前解锁；world-writable journal不会仅因hash可计算而被准入。
+- SQLite自身VFS的已打开inode替换证明拒绝；固定held/released协议/额外/重复/不完整/第三条/超限输出仍拒绝，不输出任意上游错误或密钥。
+
+另外1项原样官方2.99完整资源的Mac真实交接验证通过。固定descriptor e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3、官方tgz b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c；通过实际官方constructor/commit初始化一个全新私有N，再放置合成当前HOME journal；不得把SQLite schema或行手填成通过。Rust生产native入口取得锁后，独立OS进程对三数据库BEGIN IMMEDIATE均busy；在锁内创建/读取真实原件frame，再刻意等待2100ms超过旧helper窗口后仍busy；正常作用域结束后可重获排他。原journal/config/catalog字节保持，无auth或runtime-port生成，没有启动服务/模型/同步。
+
+首轮实际native失败原件完整保留：错误夹具把“已有集成归属journal”放在没有官方协调器的目录中，原官方拒绝native残留状态。独立调用原包构造器复核为CodexCoordinatorLegacyAmbiguousError/nativeResidue，未修改拒绝逻辑或宣称旧目录兼容。修正新夹具前置后复用已完整校验且未改字节的官方程序镜像（不重复70秒供应），交接验证先通过8697ms。后继按上述两端完整性核验去除重复中间全扫描，再以新私有HOME和最终准确源码复验通过6900ms；其中含人为2100ms持锁工作。全部仍是显式10秒协调诊断deadline，不等于真实Stop的10秒总预算通过，也不能用减去sleep的估算冒充产品启停实测。
+
+最终编译/格式/全目标严格Clippy通过，原生与最新定向检查均有准确Git基线＋未提交源逐文件SHA及binary摘要，最终提交后算法字节一致。OS sandbox实证拒绝网络/日常HOME读取，只允许自有profile和其精确HOME摘要对应的N/K数据库/sidecar/采用临时路径，未开放整个账号namespace。没有Windows原生执行或新OS账户宣称。
+
+## 证据、清理和剩余
+
+证据.adg/evidence/0.2.24/native-client-coordination-r1/按首轮拒绝、第二轮成功、最终成功分目录保存；含真实官方拒绝诊断/官方新目录初始化、各轮source/binary摘要、独立探针/原件frame、编译/定向结果及manifest。自有测试/helper进程已空，三组精确新协调数据库分别独立取得/释放排他后清理；夹具profile/程序镜像/复制binary及核对后的重复回执均移除。日常配置/正式安装/官方2.99未修改，未出新.app/DMG，不发版。
+
+本批解决外部helper计时释放与Rust执行栈的生命周期分离，但没有解决macos-client-restore-r1中非合作写者“检查与rename之间”的发布竞争。NativeLease仅是当前官方协调排他证明，不能替代正常服务退出/当前HOME/受保护原件/文件写者归属许可。MutationPermit签发器保持关闭；config/Grok/Agent/全客户端树、当前活跃刷新、缺CODEX_HOME创建/撤销、跨卷归档/原flags及完整预算均未关闭。下一步继续实际发布竞争处理和正常退出代次证明，再将原件/阶段/补偿接入Start/Stop并运行一次受影响完整恢复链。WindowsW0 HOME/Profile/W1/W2、NAME、System代理及发布/候选项保持原范围。

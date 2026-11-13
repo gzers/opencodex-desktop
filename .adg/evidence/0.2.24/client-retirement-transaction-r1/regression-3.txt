@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.25s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 1 test
+test infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_publication_rechecks_custody_and_deadline_after_sql_and_commit ... SUCCESSOR_CAPTURE_PUBLICATION_EVIDENCE {"accepted":false,"change":"deadline","committed":false,"originalRetained":true,"point":"references_sql_written","retainedRevision":7,"returnedError":true}
+SUCCESSOR_CAPTURE_PUBLICATION_EVIDENCE {"accepted":false,"change":"root-identity","committed":false,"originalRetained":true,"point":"references_sql_written","retainedRevision":7,"returnedError":true}
+SUCCESSOR_CAPTURE_PUBLICATION_EVIDENCE {"accepted":false,"change":"deadline","committed":true,"originalRetained":true,"point":"references_committed","retainedRevision":8,"returnedError":true}
+SUCCESSOR_CAPTURE_PUBLICATION_EVIDENCE {"accepted":false,"change":"root-identity","committed":true,"originalRetained":true,"point":"references_committed","retainedRevision":8,"returnedError":true}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2599 filtered out; finished in 27.05s
+

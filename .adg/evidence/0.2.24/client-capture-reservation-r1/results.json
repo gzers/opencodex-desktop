@@ -1,0 +1,34 @@
+{
+  "accepted": false,
+  "scope": "Precommitted capture reservation for NEW captures; exact partial snapshot preserved without admitting unindexed Original refs; product confirmation and explicit next Start/Stop",
+  "backendDistinctCases": 77,
+  "groups": {
+    "index": 27,
+    "session": 26,
+    "originals": 23,
+    "historyParser": 1
+  },
+  "actualExit91CaptureBoundaries": 4,
+  "uiCases": 73,
+  "browserChecks": {
+    "visual-webkit": 10,
+    "visual-chromium": 10
+  },
+  "initialInterruptedStartMs": 2279,
+  "initialState": "capture_reserved",
+  "initialRevision": 2,
+  "cancelMs": 3163,
+  "cancelRevision": 3,
+  "cancelStatus": "cancelled_capture",
+  "noOriginalRefsAdopted": true,
+  "partialFilesExactBytesInodesModesPreserved": 2,
+  "explicitFollowupStartMs": 9441,
+  "explicitFollowupStopMs": 9455,
+  "finalState": "restored",
+  "finalRevision": 11,
+  "completeTreesIndependentlyMatchFinalReceipt": true,
+  "currentOriginalFileChecks": 7,
+  "noBudgetOrAssertionRelaxation": true,
+  "noNewNativeAppOrDMG": true,
+  "remaining": "Existing unbound partial captures without reservation not adopted; changed early clients without restore plan; general client/graph/family, Windows/NAME/Systemproxy/verifier/fixed candidate remain."
+}

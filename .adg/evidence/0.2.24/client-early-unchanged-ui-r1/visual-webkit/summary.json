@@ -1,0 +1,145 @@
+{
+  "accepted": false,
+  "scope": "mock browser UI/prototype only; no native finalization or business operations",
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "early-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "noReplayCommand": true,
+        "oneConfirmation": true
+      }
+    },
+    {
+      "name": "early-900-dark",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 157.75,
+          "bottom": 442.25,
+          "left": 170,
+          "right": 730,
+          "height": 600,
+          "width": 900,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "noReplayCommand": true,
+        "oneConfirmation": true
+      }
+    },
+    {
+      "name": "early-slow-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "noReplayCommand": true,
+        "oneConfirmation": true
+      }
+    },
+    {
+      "name": "early-error-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "noReplayCommand": true,
+        "oneConfirmation": true
+      }
+    },
+    {
+      "name": "early-refresh-failed-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "noReplayCommand": true,
+        "oneConfirmation": true
+      }
+    },
+    {
+      "name": "eligible-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 165.296875,
+          "bottom": 594.703125,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "matchedOutcomeAndScopedStatusUnblocks": true,
+        "keyboardCancelNoMutationAndFocusContained": true
+      }
+    },
+    {
+      "name": "eligible-900-dark",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 85.296875,
+          "bottom": 514.703125,
+          "left": 170,
+          "right": 730,
+          "height": 600,
+          "width": 900,
+          "overflow": 0
+        },
+        "matchedOutcomeAndScopedStatusUnblocks": true,
+        "keyboardCancelNoMutationAndFocusContained": true
+      }
+    },
+    {
+      "name": "prototype-early",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    }
+  ],
+  "result": "failed",
+  "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#modalCancel')\u001b[22m\n\u001b[2m    - locator resolved to <button hidden=\"\" id=\"modalCancel\" class=\"btn ghost\">取消</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui/qa/client-recovery-visual.mjs:233:44",
+  "cleanup": {
+    "browserClosed": true,
+    "ownedViteProcessExited": true
+  }
+}

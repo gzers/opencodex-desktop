@@ -1,0 +1,102 @@
+{
+  "atUtc": "2026-11-09T13:01:28.354857+00:00",
+  "codexVersion": "codex-cli 0.167.0-alpha.3.2",
+  "scriptSha256": "abed85369d6471481263e66847a92cfbdf2aab86e7d67a73616019548afa19d4",
+  "liveInventory": [
+    {
+      "pid": 21580,
+      "ppid": 45617,
+      "listenArgs": [
+        "stdio://"
+      ],
+      "namedUnixSockets": [],
+      "tcpListeners": [],
+      "endpointInspectionComplete": true
+    },
+    {
+      "pid": 43124,
+      "ppid": 36915,
+      "listenArgs": [
+        "stdio://"
+      ],
+      "namedUnixSockets": [],
+      "tcpListeners": [],
+      "endpointInspectionComplete": true
+    },
+    {
+      "pid": 59545,
+      "ppid": 59429,
+      "listenArgs": [
+        "default stdio"
+      ],
+      "namedUnixSockets": [],
+      "tcpListeners": [],
+      "endpointInspectionComplete": true
+    },
+    {
+      "pid": 73788,
+      "ppid": 67236,
+      "listenArgs": [
+        "stdio://"
+      ],
+      "namedUnixSockets": [],
+      "tcpListeners": [],
+      "endpointInspectionComplete": true
+    }
+  ],
+  "checks": [
+    {
+      "id": "two_clients_same_owner_read",
+      "status": "passed",
+      "observed": "Both public proxies read the synthetic thread in one isolated owning server."
+    },
+    {
+      "id": "second_client_controls_same_owner",
+      "status": "passed",
+      "observed": "Client B changes settings; client A next turn actually sends mini/high."
+    },
+    {
+      "id": "management_client_disconnect",
+      "status": "passed",
+      "observed": "Disconnecting B does not end owner or A; next turn still succeeds."
+    }
+  ],
+  "activeAppModified": false,
+  "realModelCalls": 0,
+  "currentAppAttachment": {
+    "status": "unsupported_current_launch",
+    "scope": "Observed app-server processes only; no named public endpoint found. No stdio interception or restart attempted."
+  },
+  "phase": "initialize_b",
+  "isolatedOwner": {
+    "status": "passed",
+    "transport": "unix WebSocket through standard HTTP Upgrade",
+    "localRequests": [
+      {
+        "model": "gpt-5.4",
+        "reasoning": {
+          "effort": "low",
+          "summary": "auto"
+        },
+        "service_tier": null
+      },
+      {
+        "model": "gpt-5.4-mini",
+        "reasoning": {
+          "effort": "high",
+          "summary": "auto"
+        },
+        "service_tier": null
+      },
+      {
+        "model": "gpt-5.4-mini",
+        "reasoning": {
+          "effort": "high",
+          "summary": "auto"
+        },
+        "service_tier": null
+      }
+    ]
+  },
+  "status": "passed"
+}

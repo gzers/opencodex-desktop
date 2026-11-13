@@ -1,0 +1,209 @@
+{
+  "allPhaseReferencesVerified": true,
+  "uniqueObjects": 11,
+  "objects": [
+    {
+      "sha256": "4d96a7e658dd859d2bb884b4ee1e69339fd91f4d7d58383b02282ba09e718754",
+      "bytes": 166,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "original.json",
+          "path": "opencodex-catalog.json"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "7b6e696a8ae7c5d266188425f232011fab147baad0b3cc4d1ebe61fde7316d41",
+      "bytes": 44,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "original.json",
+          "path": "config.toml"
+        },
+        {
+          "phase": "stopped.json",
+          "path": "config.toml"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "7fdff9f42a9c6b84c2cf5f23a35fb06f3c9692c99dded2945778c898a1a9548a",
+      "bytes": 346,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "path": "config.toml"
+        },
+        {
+          "phase": "pre-stop.json",
+          "path": "config.toml"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "9025b04303af43e6d65d354fd6328454e78f77e17dee1b472eee6f3f975bbe3e",
+      "bytes": 512,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "path": ".opencodex-native-main.owner.sqlite-journal"
+        },
+        {
+          "phase": "pre-stop.json",
+          "path": ".opencodex-native-main.owner.sqlite-journal"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "a31ce96d6bbc82e2df21304eabf691290ebaca62cff9b536d2a9c62b8e34c944",
+      "bytes": 1353,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "stopped.json",
+          "path": "opencodex-catalog-audit.jsonl"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "a3a0e9239db1a9707068b99d2f0708785b2a121bd156515c1d9360426df0ccfa",
+      "bytes": 817,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "path": "opencodex-journal.json"
+        },
+        {
+          "phase": "pre-stop.json",
+          "path": "opencodex-journal.json"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "bb039048100a213e1fa37b89c3003f2ed1662ac35b74de6821529e26ae413db1",
+      "bytes": 1015,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "path": "opencodex-catalog-audit.jsonl"
+        },
+        {
+          "phase": "pre-stop.json",
+          "path": "opencodex-catalog-audit.jsonl"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "c456c154628646198f47c77491438f9211bacec62ee8da937933e86cfe50ff63",
+      "bytes": 2437,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "path": "models_cache.json"
+        },
+        {
+          "phase": "ready.json",
+          "path": "opencodex-catalog.json"
+        },
+        {
+          "phase": "pre-stop.json",
+          "path": "models_cache.json"
+        },
+        {
+          "phase": "pre-stop.json",
+          "path": "opencodex-catalog.json"
+        },
+        {
+          "phase": "stopped.json",
+          "path": "models_cache.json"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "c8cdda2058dfad73596cb9baef30bb2a825485859ad54c8d9cf5a10a457b0c8c",
+      "bytes": 19,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "stopped.json",
+          "path": "opencodex-catalog.json"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "e2ce67596d17551225cdbc76e55f3a64d82049662272ac6ab703748c376c6b08",
+      "bytes": 394,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "path": "opencodex.config.toml"
+        },
+        {
+          "phase": "pre-stop.json",
+          "path": "opencodex.config.toml"
+        }
+      ],
+      "storedDigestMatches": true
+    },
+    {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0o400",
+      "uid": 501,
+      "singleLink": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "path": ".opencodex-native-main.owner.sqlite"
+        },
+        {
+          "phase": "pre-stop.json",
+          "path": ".opencodex-native-main.owner.sqlite"
+        },
+        {
+          "phase": "stopped.json",
+          "path": ".opencodex-native-main.owner.sqlite"
+        }
+      ],
+      "storedDigestMatches": true
+    }
+  ],
+  "rawBlobEvidenceScope": "only fixed original synthetic config; generated content not exported"
+}

@@ -1,0 +1,5 @@
+{
+  "hypothesis": "Draft integrated schema2 tree inventory passed20 cases but uses absolute read_dir plus path opens, lacking FD-relative race checks and opening same-process SQLite claim inode. Replace traversal with descriptor-relative enumeration/openat/no-follow, bounded streaming hash and full before/after checks; classify exact official coordination claim as metadata-only, never open its fd. Keep complete ordinary descendant inventory, no arbitrary exclusions. Verify actual parent rename/symlink race and SQLite lock retention. No mutation permit/apply, whole recovery scope remains unfinished.",
+  "accepted": false,
+  "priorFailures": "First20 tests7pass13fail incorrectly rejected directory link count1; next13pass7fail stale internal schema1 comparison. Final20 passed before current FD correction. All raw prior logs copied; some tool syntax/regex errors only conversation output."
+}

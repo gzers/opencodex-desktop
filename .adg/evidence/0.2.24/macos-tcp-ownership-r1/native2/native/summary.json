@@ -1,0 +1,92 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "grokConfigChangedDuringStart": true,
+  "independentOriginalsReferenced": true,
+  "indexedReady": true,
+  "indexedRestorePrepared": true,
+  "indexedRevision": 6,
+  "indexedStopped": false,
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": false,
+    "codex/opencodex-catalog-audit.jsonl": false,
+    "codex/opencodex-catalog.json": false,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "originalGrokConfigBackupAndAgentArchived": true,
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 85335,
+    "port": 54964
+  },
+  "recordAbsent": true,
+  "reopenedRecoveryGate": true,
+  "reopenedSnapshot": {
+    "can_restart": false,
+    "can_start": false,
+    "can_stop": false,
+    "facts": {
+      "client_recovery": "required",
+      "data_root": "/private/tmp/ocxd024-versioned-lifecycle-25al80h9/fixtures/profile/.codex-desktop/desktop",
+      "health": "unknown",
+      "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-25al80h9/fixtures/profile/.codex-desktop/opencodex/home",
+      "protection": "none",
+      "reboot_safe": true,
+      "runtime_label": "bundled",
+      "service_present": null,
+      "shim_present": null,
+      "startup_status": "native",
+      "version_drift": "2.99.0"
+    },
+    "matrix": {
+      "connection": "unconfigured",
+      "operation": "idle",
+      "runtime": "stopped"
+    },
+    "pid": null,
+    "port": null,
+    "source": "live"
+  },
+  "reopenedStatusElapsedMs": 794,
+  "restorePlanMatchesIndependentIndex": true,
+  "result": "failed",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 13958,
+  "status": {
+    "pid": "85335",
+    "port": 54964,
+    "ready": true,
+    "status": "running"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 1138,
+  "stop": {
+    "canRestart": false,
+    "canStart": false,
+    "canStop": false,
+    "clientRecoveryRequired": true,
+    "failure": {
+      "code": "client_original_restore_pending",
+      "message": "服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留"
+    },
+    "lifecycleState": "stopped",
+    "result": null
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 9996,
+  "stoppedRecoveryObservation": true
+}

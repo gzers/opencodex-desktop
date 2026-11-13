@@ -1,0 +1,48 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "nativeClientRestored": {
+    "config.toml": true,
+    "models_cache.json": false,
+    "opencodex-catalog-audit.jsonl": false,
+    "opencodex-catalog.json": false,
+    "opencodex-grok-backup.json": true
+  },
+  "officialVersion": "2.99.0",
+  "pidRecordAbsent": false,
+  "record": {
+    "pid": 23024,
+    "port": 49571
+  },
+  "recordAbsent": false,
+  "result": "failed",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 4449,
+  "status": {
+    "error": "Unreachable"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 0,
+  "stop": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "failure": {
+      "code": "lifecycle_stop_unknown",
+      "message": "官方停止或客户端还原结果未确认；未强制终止或宣称已停止"
+    },
+    "lifecycleState": "running",
+    "result": null
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 2023
+}

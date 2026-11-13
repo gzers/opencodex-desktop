@@ -1,0 +1,17 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: field assignment outside of initializer for an instance created with Default::default()
+   --> src/types/runtime_status.rs:155:17
+    |
+155 |                 facts.client_recovery = recovery;
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+note: consider initializing the variable with `modules::status::RuntimeFacts { client_recovery: recovery, ..Default::default() }` and removing relevant reassignments
+   --> src/types/runtime_status.rs:154:17
+    |
+154 |                 let mut facts = RuntimeFacts::default();
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#field_reassign_with_default
+    = note: `-D clippy::field-reassign-with-default` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::field_reassign_with_default)]`
+
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

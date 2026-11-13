@@ -1,0 +1,26 @@
+
+running 3 tests
+test modules::model_config::feedback::channel_read::tests::admitted_read_persists_numeric_summary_once_without_config_or_credentials_and_reopens ... FAILED
+test modules::model_config::feedback::channel_read::tests::incomplete_or_incoherent_read_receipts_and_cross_event_count_details_are_rejected ... ok
+test modules::model_config::feedback::channel_read::tests::stale_read_has_fixed_failure_notice_retains_prior_summary_and_never_claims_draft_saved ... FAILED
+
+failures:
+
+---- modules::model_config::feedback::channel_read::tests::admitted_read_persists_numeric_summary_once_without_config_or_credentials_and_reopens stdout ----
+
+thread 'modules::model_config::feedback::channel_read::tests::admitted_read_persists_numeric_summary_once_without_config_or_credentials_and_reopens' (154234738) panicked at src/modules/model_config/feedback_channel_read_tests.rs:81:19:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "validate registered event delivery", detail: "event registry configuration is invalid" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- modules::model_config::feedback::channel_read::tests::stale_read_has_fixed_failure_notice_retains_prior_summary_and_never_claims_draft_saved stdout ----
+
+thread 'modules::model_config::feedback::channel_read::tests::stale_read_has_fixed_failure_notice_retains_prior_summary_and_never_claims_draft_saved' (154234808) panicked at src/modules/model_config/feedback_channel_read_tests.rs:112:48:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "validate registered event delivery", detail: "event registry configuration is invalid" }
+
+
+failures:
+    modules::model_config::feedback::channel_read::tests::admitted_read_persists_numeric_summary_once_without_config_or_credentials_and_reopens
+    modules::model_config::feedback::channel_read::tests::stale_read_has_fixed_failure_notice_retains_prior_summary_and_never_claims_draft_saved
+
+test result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 2136 filtered out; finished in 0.46s
+

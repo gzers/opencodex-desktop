@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "code": "a58f03cb903b2f5e57d4889f2b103f94f6bf4b3e",
+  "scope": "0.2.24 engineering version alignment, actual optimized signed Mac app, real single-app DMG and isolated copied app native window",
+  "accepted": false,
+  "frozenCandidate": false,
+  "source": {
+    "baseCommit": "09392b38e09ea919566ccce831dcc95d16e7163b",
+    "versionPatchSha256": "78d11fc8bdedf9bf36523e2266377e0f9c34d346bfa3bc5516622cd601649f96",
+    "sourceFiles": {
+      "apps/desktop/tauri/Cargo.toml": "817571cd5ea4ff69bb0076bf3a8e85b6973b83e0fdf0545b03c037e604a95d33",
+      "apps/desktop/tauri/Cargo.lock": "23f69f7201c3b95ee1580a7c833ca49ba62685cad4147a9183ab339afaee38e2",
+      "apps/desktop/tauri/tauri.conf.json": "772a722e344b8cd74111d52074a41c3069f1a6c7c682b52179c93be91e01b6e8",
+      "apps/desktop/ui/package.json": "07ceb4749f4d3783917ad26a3d16668150c9e05e4ea1bae82288b99eb5d8aebe",
+      "apps/desktop/ui/package-lock.json": "69f109c39d4b8d7b3fda68d194e18ec7e6d38b708bcc29542baf0b43972d3980"
+    },
+    "binarySha256": "fda508bfbe7ac3e6ee71512c827d1aeb07ecdd0e0280295e8d9034afef26ea20",
+    "cliSha256": "be199852f4de1ffb6e0bd5f80574c99ae5b86444648ed306fa154124793cc227",
+    "bundleInfo": {
+      "CFBundleDevelopmentRegion": "English",
+      "CFBundleDisplayName": "OpenCodeX Desktop",
+      "CFBundleExecutable": "opencodex-desktop",
+      "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+      "CFBundleInfoDictionaryVersion": "6.0",
+      "CFBundleName": "OpenCodeX Desktop",
+      "CFBundlePackageType": "APPL",
+      "CFBundleShortVersionString": "0.2.24",
+      "CFBundleVersion": "0.2.24",
+      "CSResourcesFileMapped": true,
+      "LSMinimumSystemVersion": "10.13",
+      "CFBundleIconFile": "icon.icns",
+      "LSRequiresCarbon": true,
+      "NSHighResolutionCapable": true
+    },
+    "frozenCandidate": false,
+    "versionChangeCommit": "a58f03cb903b2f5e57d4889f2b103f94f6bf4b3e",
+    "binaryEmbedsPreVersionCommit": true
+  },
+  "build": {
+    "exitCode": 0,
+    "argv": [
+      "tauri",
+      "build",
+      "--features",
+      "custom-protocol",
+      "--config",
+      "tauri.runtime-bundle.conf.json",
+      "--bundles",
+      "app"
+    ],
+    "elapsedSeconds": 255.155,
+    "networkDependenciesDisabled": true,
+    "appLaunched": false,
+    "frozenCandidate": false
+  },
+  "packaging": {
+    "artifactPath": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/engineering024-single-app/OpenCodeX-Desktop-0.2.24-engineering-arm64.dmg",
+    "artifactSha256": "39782f66a24b158600810c67653388219150ea94c08f710524fb396276e3d60e",
+    "artifactBytes": 277329903,
+    "sourceAppTreeSha256": "ea3ac369e29d1c31e02ee34982ab49100170142d4f7d7c78b9f47dcb6d61382c",
+    "readOnlyMountedVerified": true,
+    "originalOfficialRuntimeSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
+  },
+  "native": {
+    "scope": "same sealed product copied to isolated Applications; native startup only",
+    "app": "/private/tmp/ocxd024-native-copy-87_i46yg/Applications/OpenCodeX Desktop.app",
+    "sourceApp": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+    "accepted": false,
+    "serviceStarted": false,
+    "businessRequests": false,
+    "applicationModified": false,
+    "permissions": {
+      "axTrusted": true,
+      "locked": false,
+      "onConsole": true,
+      "screenCaptureAllowed": true
+    },
+    "pid": 13276,
+    "sandboxDataIdentity": true,
+    "startupSupplySkippedBySandboxContract": true,
+    "binarySha256": "fda508bfbe7ac3e6ee71512c827d1aeb07ecdd0e0280295e8d9034afef26ea20",
+    "windowObserved": true,
+    "snapshotCount": 2,
+    "captureExit": 0,
+    "result": "observed",
+    "ownedProcessExit": -15,
+    "ownedGroupResidues": [],
+    "temporaryRoot": "/private/tmp/ocxd024-native-copy-87_i46yg",
+    "temporaryRootAbsent": true,
+    "sourceBinaryUnchanged": true
+  },
+  "firstFailureRetained": {
+    "result": "unknown path during Tauri setup",
+    "kernelRealpathExeAndResourcesEPERM": true,
+    "sameSignedAppCopiedOutsideDeniedUserHomeStarts": true,
+    "productChangeNeeded": false
+  },
+  "limits": [
+    "not a frozen integration candidate, Windows contribution still outstanding and name scope unresolved",
+    "sandbox identity intentionally skips startup supply; this native run proves window/rendering only, separate prior worker evidence does not make this a full fresh-install chain",
+    "no official service lifecycle, update, model or sync operation executed",
+    "ad-hoc signed app is not Apple notarized; publication remains blocked and unauthorized",
+    "binary records base09392b38e plus exact version-source.patch; do not claim it embeds post-build a58f commit"
+  ],
+  "cleanup": {
+    "ownedAppProcessExited": true,
+    "ownedProcessGroupEmpty": true,
+    "nativeCopiedAppAndDataRootsRemoved": true,
+    "temporaryMountAndPackagingScratchRemoved": true,
+    "engineeringAppAndDmgRetainedAtExplicitBuildOutputs": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "realBusinessRequests": false,
+    "duplicateReceiptRootRemoved": true
+  },
+  "tooling": {
+    "cuaInventoryAttempts": 2,
+    "cuaInventoryResult": "timed out; no screen fact inferred",
+    "fallback": "existing PID/executable-scoped project AX/CG collector, no global events or app-name termination"
+  },
+  "remaining": [
+    "Windows W0 HOME/Profile and W1/W2 integration",
+    "P24-NAME adopted support exit or clarified authorization",
+    "full native lifecycle/client restore and final product installation acceptance",
+    "other HTTP proxy consistency audit",
+    "new official distribution publication verifier and final README/release notes"
+  ]
+}

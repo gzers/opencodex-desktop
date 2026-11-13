@@ -1,0 +1,23 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `release` profile [optimized] target(s) in 6m 11s
+     Running unittests src/lib.rs (target/release/deps/opencodex_desktop_lib-b66c44cd6a6eaaaf)
+
+running 11 tests
+test modules::runtime::program_image::parallel_tests::bounded_image_readers_match_serial_every_row_digest_empty_directory_and_executable_bit ... ok
+test modules::runtime::program_image::parallel_tests::bounded_image_workers_join_and_refuse_panic_or_failure_before_caller_cleanup ... 
+thread 'ocxd-image-read' (157792944) panicked at src/modules/runtime/program_image_parallel_tests.rs:193:21:
+owned worker fault injection
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+ok
+test modules::runtime::program_image::parallel_tests::budgeted_image_reader_keeps_eof_growth_probe_before_any_later_size_restore ... ok
+test modules::runtime::program_image::parallel_tests::delayed_image_jobs_refuse_retargeted_ancestor_before_reading_foreign_payload ... ok
+test modules::runtime::program_image::parallel_tests::finished_image_inventory_refuses_directory_change_during_reader_work_without_partial_success ... ok
+test modules::runtime::program_image::parallel_tests::parallel_image_name_collision_links_and_late_sparse_growth_never_return_an_inventory ... ok
+test modules::runtime::program_image::parallel_tests::shared_image_read_budget_is_reserved_before_hashing_even_with_competing_readers ... ok
+test modules::runtime::program_image::tests::action_time_inventory_detects_noncritical_changes_without_reading_other_directories ... ok
+test modules::runtime::program_image::tests::official299_complete_image_inventory_stage_cost ... ignored, explicit owned official2.99 image read-only cost observation; no service actions
+test modules::runtime::program_image::tests::rejects_sparse_oversize_without_allocating_payload_and_preserves_file ... ok
+test modules::runtime::program_image::tests::seal_excludes_only_root_manifest_and_still_binds_it_through_selection ... ok
+
+test result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 2512 filtered out; finished in 0.09s
+

@@ -1,0 +1,155 @@
+[
+  {
+    "argv": [
+      "/usr/bin/ditto",
+      "--rsrc",
+      "--extattr",
+      "--acl",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/Applications/OpenCodeX Desktop.app"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/codesign",
+      "--verify",
+      "--deep",
+      "--strict",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/Applications/OpenCodeX Desktop.app"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/xcrun",
+      "swiftc",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx021-macos-native.swift",
+      "-o",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/ax"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/xcrun",
+      "swiftc",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/lib/capwin.swift",
+      "-o",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/capwin"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-first-supply-edt4z97j/ax",
+      "status"
+    ],
+    "exitCode": 0,
+    "stdout": "{\"axTrusted\":true,\"locked\":false,\"onConsole\":true,\"screenCaptureAllowed\":true}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/candidate.sb",
+      "/usr/bin/nc",
+      "-v",
+      "-G",
+      "1",
+      "-z",
+      "192.0.2.1",
+      "443"
+    ],
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted\n"
+  },
+  {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/candidate.sb",
+      "/bin/cat",
+      "/Users/ezio/.zshrc"
+    ],
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "cat: /Users/ezio/.zshrc: Operation not permitted\n"
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-first-supply-edt4z97j/ax",
+      "snapshot",
+      "15677",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 3,
+    "stdout": "{\"error\":\"PID\\/executable admission failed\"}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-first-supply-edt4z97j/ax",
+      "snapshot",
+      "15677",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 3,
+    "stdout": "{\"error\":\"PID\\/executable admission failed\"}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-first-supply-edt4z97j/ax",
+      "snapshot",
+      "15677",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 3,
+    "stdout": "{\"error\":\"PID\\/executable admission failed\"}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-first-supply-edt4z97j/ax",
+      "snapshot",
+      "15677",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 3,
+    "stdout": "{\"error\":\"PID\\/executable admission failed\"}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-first-supply-edt4z97j/ax",
+      "snapshot",
+      "15677",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 3,
+    "stdout": "{\"error\":\"PID\\/executable admission failed\"}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-first-supply-edt4z97j/ax",
+      "snapshot",
+      "15677",
+      "/private/tmp/ocxd024-first-supply-edt4z97j/Applications/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 0,
+    "stdout": "{\"active\":false,\"axTrusted\":true,\"executable\":\"\\/private\\/tmp\\/ocxd024-first-supply-edt4z97j\\/Applications\\/OpenCodeX Desktop.app\\/Contents\\/MacOS\\/opencodex-desktop\",\"hidden\":false,\"locked\":false,\"nodes\":[{\"path\":\"\"}],\"pid\":15677,\"windows\":[]}\n",
+    "stderr": ""
+  }
+]

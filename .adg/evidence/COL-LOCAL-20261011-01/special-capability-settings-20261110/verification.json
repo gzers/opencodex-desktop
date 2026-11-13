@@ -1,0 +1,66 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-10T14:47:17.731520+00:00",
+  "branch": "docs/governance-main",
+  "scope": "design=conversations (capabilities alias)",
+  "preview": "http://127.0.0.1:57285/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html?design=conversations&channel=krill-demo&review=special-settings4#models",
+  "sourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.js": "3e35f2584668244dbe0ff2e27c699651d1462c93bacf345f8eceac1d26ffa173",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.css": "8161cd96887a2acbfe585e7d82cd8386f592efdf6f84b7c3190d279650e8b5f2",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.test.cjs": "800cdc03f2644d768b5e5f1c5bb8332c9514aa1356a1bb537c8760899cb64a0b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "5939e633a7333ad466fb85f85144cb4260a4a24dd72020ea56317add581c0012",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "85c3dee08ab5ff2430e2b2b20e03550990dfa676e9474f9a28e77d01fbad99eb",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md": "ad67fba05f773eeccfd6654ba51bfc72e97fd8ff32f9e4ac40f1c03e28024069",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/版本索引.md": "d0982c5fc6be3cdcbcc7d5e2747f358180c0bccc8f354da520825aee9c61833b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型设计记录索引.md": "7fbc6d9a032492cec260b5cfacea3cb13b34ab4da6287a23f45af4b7e5a5da7d",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/渠道接入与特殊能力检测交互方案.md": "a2dcd3e1cc61366338c97c18ef1ac125214b897d7389215ae376e1d2c47430df",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-11-Codex对话策略与渠道能力/01-需求分析/05-原型/README.md": "3ce5aeefce94e73792f632c019675548279a3b16341771492ec711c8dbfdb229"
+  },
+  "node": {
+    "passed": 41,
+    "failed": 0,
+    "newOrUpdatedCapabilityTests": 12,
+    "log": "tests.tap"
+  },
+  "browser": {
+    "passed": 83,
+    "errors": [],
+    "engine": "Headless Chromium",
+    "entry": "HTTP localhost",
+    "softwareSizes": [
+      [
+        1180,
+        760
+      ],
+      [
+        900,
+        600
+      ]
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "externalRequestsBlocked": 0,
+    "log": "browser-checks.json",
+    "reproduction": "reproduce.cjs"
+  },
+  "visualReview": [
+    "900-dark-final.png",
+    "1180-light-request-edit.png",
+    "1180-light-overview.png"
+  ],
+  "sourceReference": {
+    "repository": "krill-lab/superba",
+    "commit": "3ecc0db00f0b536ee070d6cb1c56e01566b3115a",
+    "scope": "Previously reviewed fixed source; site endpoints, profile base URL, response/compact derivation and upstream note paths; not a claim of matching Superba UI."
+  },
+  "setupIssue": "Temporary Python editing helper initially failed when executed directly; its UTF-8 contents compiled and executed successfully via an explicit read_text/compile wrapper. No prototype or browser failure from that helper attempt.",
+  "boundaries": [
+    "In-memory prototype only. No live upstream requests, real credentials, user configuration, production implementation or release.",
+    "Node paths own service prefixes and optional compact override; this remains a candidate contract. Model protocol comes from existing template/model resolution.",
+    "Backend routing, adapter registry, per-version invalidation, complete policy activation, persistence/sync and note write validation remain unfinished.",
+    "Chromium checks do not establish native application or WebKit acceptance."
+  ],
+  "workspace": "Parallel changes retained. before.tar.gz captures this round input resources; no commit or push."
+}

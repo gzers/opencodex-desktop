@@ -1,0 +1,32 @@
+{
+  "accepted": false,
+  "code": "67b2513f449a6fc09106852a6cc3c3abdfecdd11",
+  "relatedFunctionsPassed": 61,
+  "originalFailedFunctionThenSameBinaryRootFix": "1 targeted recheck;19 already-passed not repeated",
+  "actualNativeClientOriginalBytesAllTrue": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "actualThreeArtifactCompensationAndArchive": true,
+  "restorationOutcomePlanBound": true,
+  "sameOriginalStopBudgetMs": 10000,
+  "actualStopElapsedMs": 7473,
+  "startElapsedMs": 8745,
+  "statusElapsedMs": 231,
+  "reopenedMs": 347,
+  "wholeSessionStillRequired": true,
+  "indexState": "restore_prepared",
+  "finalNativeLifecycleExit": 101,
+  "lockReadbackDiagnosticOutsideStopBudgetNotCompletion": true,
+  "fullTreeDiagnosticDifference": [
+    "original claim journal absent after release",
+    "new owner sqlite (within adopted two stable file names)"
+  ],
+  "fullTreeCertificateIntegrated": false,
+  "noNewReleaseAppOrDMG": true
+}

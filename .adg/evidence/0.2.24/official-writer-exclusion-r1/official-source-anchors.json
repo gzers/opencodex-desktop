@@ -1,0 +1,186 @@
+[
+  {
+    "path": "src/codex/catalog-write-serialization.ts",
+    "sha256": "bff42f219f3b179a9bbc7c6032e149fe34617817c7d879e488220652b3bbdf85",
+    "bytes": 12730,
+    "anchors": [
+      {
+        "line": 32,
+        "text": "import { appendCatalogWriteAudit } from \"./catalog/write-audit\";"
+      },
+      {
+        "line": 152,
+        "text": "try { return appendCatalogWriteAudit(canonicalCodexHome, {"
+      },
+      {
+        "line": 172,
+        "text": "* `busy_timeout = 0` with `BEGIN IMMEDIATE` makes contention fail fast and"
+      },
+      {
+        "line": 236,
+        "text": "database.exec(\"PRAGMA busy_timeout = 0; BEGIN IMMEDIATE\");"
+      },
+      {
+        "line": 242,
+        "text": "try { appendCatalogWriteAudit(canonicalCodexHome, {"
+      },
+      {
+        "line": 274,
+        "text": "activePermits.delete(permit as unknown as object);"
+      },
+      {
+        "line": 287,
+        "text": "if (permit) activePermits.delete(permit as unknown as object);"
+      }
+    ]
+  },
+  {
+    "path": "src/codex/internal/catalog-writer.ts",
+    "sha256": "b281ef7cf3743d9c3705a248a770c69f29901d0f278626d259841040d830d7ab",
+    "bytes": 13313,
+    "anchors": [
+      {
+        "line": 19,
+        "text": "assertCatalogWritePermit,"
+      },
+      {
+        "line": 255,
+        "text": "assertCatalogWritePermit(permit, home);"
+      },
+      {
+        "line": 270,
+        "text": "assertCatalogWritePermit(permit, owningCodexHome);"
+      },
+      {
+        "line": 320,
+        "text": "assertCatalogWritePermit(permit, owningCodexHome);"
+      },
+      {
+        "line": 334,
+        "text": "assertCatalogWritePermit(permit, owningCodexHome);"
+      },
+      {
+        "line": 339,
+        "text": "export function replaceCodexModelsCache("
+      },
+      {
+        "line": 345,
+        "text": "assertCatalogWritePermit(permit, owningCodexHome);"
+      }
+    ]
+  },
+  {
+    "path": "src/codex/catalog/write-audit.ts",
+    "sha256": "09cd430d0337b49d4b400d2a256a9a82eaa977bed66749d64f6041ed73a405d9",
+    "bytes": 8130,
+    "anchors": []
+  },
+  {
+    "path": "src/client/connect.ts",
+    "sha256": "5ad425ecf6b5cb33c9ca505d647d50fe0996dddb4a73d89f1d43d92f553cae04",
+    "bytes": 61519,
+    "anchors": [
+      {
+        "line": 18,
+        "text": "withClientLifecycle, withClientLifecycleSync,"
+      },
+      {
+        "line": 169,
+        "text": "else atomicWriteFile(DEFAULT_CATALOG_PATH, snapshot.body);"
+      },
+      {
+        "line": 642,
+        "text": "withClientLifecycleSync(() => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 689,
+        "text": "const initialFiles = withClientLifecycleSync(() => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 722,
+        "text": "writtenCatalogFingerprint = withClientLifecycleSync(() => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 724,
+        "text": "atomicWriteFile(DEFAULT_CATALOG_PATH, catalog.body);"
+      },
+      {
+        "line": 780,
+        "text": "withClientLifecycleSync(() => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 806,
+        "text": "withClientLifecycleSync(() => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 897,
+        "text": "const initial = withClientLifecycleSync(() => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 933,
+        "text": "const next = withClientLifecycleSync(() => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 939,
+        "text": "atomicWriteFile(DEFAULT_CATALOG_PATH, downloaded.body);"
+      },
+      {
+        "line": 984,
+        "text": "appliedRecord = withClientLifecycleSync(() => withClientWrite(() =>"
+      },
+      {
+        "line": 995,
+        "text": "const cacheSynced = withClientLifecycleSync(() => {"
+      },
+      {
+        "line": 1023,
+        "text": "function restorePriorCatalog(connection: OcxClientConnectionConfig): \"removed\" | \"restored\" | \"absent\" | \"changed\" {"
+      },
+      {
+        "line": 1029,
+        "text": "atomicWriteFile(DEFAULT_CATALOG_PATH, Buffer.from(connection.priorCatalog, \"base64\").toString(\"utf8\"));"
+      },
+      {
+        "line": 1095,
+        "text": "const prepared = withClientLifecycleSync(held => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 1139,
+        "text": "return withClientLifecycleSync(held => withConfigMutationLockSync(() => {"
+      },
+      {
+        "line": 1184,
+        "text": "if (restorePriorCatalog(connection) === \"changed\") throw new Error(\"client_catalog_ownership_changed\");"
+      }
+    ]
+  },
+  {
+    "path": "src/client/lifecycle-lock.ts",
+    "sha256": "d4117698a31bb5b06552e046e4643cc5466bc413fb1aeb7c8a3e7d301990c91f",
+    "bytes": 5747,
+    "anchors": [
+      {
+        "line": 63,
+        "text": "? join(resolveEffectiveUserRuntimeRoot(resolveEffectiveUserIdentity()), \"client-desktop-lifecycle.sqlite\")"
+      },
+      {
+        "line": 67,
+        "text": "database.exec(\"PRAGMA locking_mode = NORMAL; PRAGMA busy_timeout = 0; BEGIN IMMEDIATE\");"
+      },
+      {
+        "line": 84,
+        "text": "try { database.exec(\"ROLLBACK\"); }"
+      },
+      {
+        "line": 109,
+        "text": "export function withClientLifecycleSync<T>("
+      }
+    ]
+  },
+  {
+    "path": "src/codex/user-identity.ts",
+    "sha256": "d9a3066dd1af65cbec9ba24062321b4a5c468c49b6801404fa351facf2670394",
+    "bytes": 25308,
+    "anchors": []
+  }
+]

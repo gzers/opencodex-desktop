@@ -1,0 +1,24 @@
+
+running 19 tests
+test modules::status::tests::at_risk_facts_are_filled_from_startup ... ok
+test modules::status::tests::fz07_health_parse_failure_preserves_previous_state ... ok
+test modules::status::tests::fz07_keeps_previous_state_for_unknown_output ... ok
+test modules::status::tests::fz07_maps_the_frozen_eleven_rows ... ok
+test modules::status::tests::fz07_missing_fields_are_degraded_not_invented ... ok
+test modules::status::tests::fz08_background_intervals_are_frozen ... ok
+test modules::status::tests::fz08_backoff_doubles_and_caps_at_sixty_seconds ... ok
+test modules::status::tests::fz08_debounces_the_same_dimension_for_one_second ... ok
+test modules::status::tests::ipc_gate_allows_at_most_two_emissions_per_second ... ok
+test modules::status::tests::newly_resolved_source_invalidates_pre_supply_absence_without_inventing_service_success ... ok
+test modules::status::tests::official_2_50_running_report_overrides_startup_risk ... ok
+test modules::status::tests::official_schema_derives_running_and_not_found ... ok
+test modules::status::tests::official_schema_maps_startup_status_and_facts ... ok
+test modules::status::tests::source_admission_failure_is_unknown_and_bypasses_cached_success ... ok
+test modules::status::tests::source_timeout_is_a_frozen_contract_value ... ok
+test modules::status::tests::stopped_proxy_does_not_keep_stale_running_state ... ok
+test modules::status::tests::timeout_preserves_previous_state_and_increments_backoff ... ok
+test modules::status::tests::transient_failure_preserves_last_state ... ok
+test modules::status::tests::unresolved_source_falls_back_to_not_found ... ok
+
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 2157 filtered out; finished in 0.01s
+

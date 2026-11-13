@@ -1,0 +1,61 @@
+
+running 8 tests
+test modules::runtime::port::tests::auto_port_persists_and_reopens_without_changing_channel_material ... FAILED
+test modules::runtime::port::tests::automatic_start_reallocates_occupied_port_but_fixed_refuses ... FAILED
+test modules::runtime::port::tests::corrupt_or_empty_existing_config_is_not_empty ... ok
+test modules::runtime::port::tests::interrupted_projection_needs_explicit_exact_reconciliation ... FAILED
+test modules::runtime::port::tests::occupied_fixed_port_and_invalid_zero_leave_documents_untouched ... FAILED
+test modules::runtime::port::tests::recovery_refuses_changed_content_and_other_home ... FAILED
+test modules::runtime::port::tests::runtime_sqlite_mutation_and_generation_are_shared_not_an_independent_lock ... FAILED
+test modules::runtime::port::tests::stale_request_cannot_overwrite_channel_edit ... FAILED
+
+failures:
+
+---- modules::runtime::port::tests::auto_port_persists_and_reopens_without_changing_channel_material stdout ----
+
+thread 'modules::runtime::port::tests::auto_port_persists_and_reopens_without_changing_channel_material' (151797159) panicked at src/modules/runtime/port.rs:498:53:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "port_permission", detail: "没有权限监听所选端口" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- modules::runtime::port::tests::automatic_start_reallocates_occupied_port_but_fixed_refuses stdout ----
+
+thread 'modules::runtime::port::tests::automatic_start_reallocates_occupied_port_but_fixed_refuses' (151797161) panicked at src/modules/runtime/port.rs:564:68:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "port_permission", detail: "没有权限监听所选端口" }
+
+---- modules::runtime::port::tests::interrupted_projection_needs_explicit_exact_reconciliation stdout ----
+
+thread 'modules::runtime::port::tests::interrupted_projection_needs_explicit_exact_reconciliation' (151797163) panicked at src/modules/runtime/port.rs:587:68:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "port_permission", detail: "没有权限监听所选端口" }
+
+---- modules::runtime::port::tests::occupied_fixed_port_and_invalid_zero_leave_documents_untouched stdout ----
+
+thread 'modules::runtime::port::tests::occupied_fixed_port_and_invalid_zero_leave_documents_untouched' (151797164) panicked at src/modules/runtime/port.rs:512:68:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- modules::runtime::port::tests::recovery_refuses_changed_content_and_other_home stdout ----
+
+thread 'modules::runtime::port::tests::recovery_refuses_changed_content_and_other_home' (151797165) panicked at src/modules/runtime/port.rs:612:68:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "port_permission", detail: "没有权限监听所选端口" }
+
+---- modules::runtime::port::tests::runtime_sqlite_mutation_and_generation_are_shared_not_an_independent_lock stdout ----
+
+thread 'modules::runtime::port::tests::runtime_sqlite_mutation_and_generation_are_shared_not_an_independent_lock' (151797166) panicked at src/modules/runtime/port.rs:465:59:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "port_permission", detail: "没有权限监听所选端口" }
+
+---- modules::runtime::port::tests::stale_request_cannot_overwrite_channel_edit stdout ----
+
+thread 'modules::runtime::port::tests::stale_request_cannot_overwrite_channel_edit' (151797323) panicked at src/modules/runtime/port.rs:536:68:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "port_permission", detail: "没有权限监听所选端口" }
+
+
+failures:
+    modules::runtime::port::tests::auto_port_persists_and_reopens_without_changing_channel_material
+    modules::runtime::port::tests::automatic_start_reallocates_occupied_port_but_fixed_refuses
+    modules::runtime::port::tests::interrupted_projection_needs_explicit_exact_reconciliation
+    modules::runtime::port::tests::occupied_fixed_port_and_invalid_zero_leave_documents_untouched
+    modules::runtime::port::tests::recovery_refuses_changed_content_and_other_home
+    modules::runtime::port::tests::runtime_sqlite_mutation_and_generation_are_shared_not_an_independent_lock
+    modules::runtime::port::tests::stale_request_cannot_overwrite_channel_edit
+
+test result: FAILED. 1 passed; 7 failed; 0 ignored; 0 measured; 2080 filtered out; finished in 3.19s
+

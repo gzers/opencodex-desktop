@@ -1,0 +1,91 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "grokConfigChangedDuringStart": false,
+  "independentOriginalsReferenced": true,
+  "indexedAfterStop": {
+    "completionSha256": null,
+    "references": {
+      "attempt": "ba60a6eb-72fe-4ca8-ac0e-622ff4cb072e",
+      "liveSha256": "4d050aa154569740d6b521b8889551470faab9be1a268fe7e735fa9e100ffcc4",
+      "originalSha256": "4ccd179e413c0a1b82afbe42c1a29783857fb3f426d4c2ceb549e076745f0ffd",
+      "phases": [
+        [
+          "ready",
+          "24bfe50418c4a68915cc96980d441ab1ed36c454a9abfbea61814048ad96880f"
+        ],
+        [
+          "pre_stop",
+          "734230f1412bded2b518be5c3fd5991624e2cffea92bb496712545a35445f7c0"
+        ],
+        [
+          "stopped",
+          "a4867b3592ee1ab81070d219c3c1f00ea110bfb7a2e2a1cd69951718e9c5cfe2"
+        ]
+      ],
+      "scopeSha256": "3239612b411a2824cd46372e53b6f6ea7e181fc1ff03f06ac19c199b20e4e1c3"
+    },
+    "restorePlan": {
+      "id": "1c4943ed-353e-454c-a877-da1afaa40b25",
+      "sha256": "9939e5e586c9640dc1523f2f2ca547d3d208a3130110d8ba20ec480b5e74d105"
+    },
+    "revision": 7,
+    "state": "restore_prepared",
+    "ticket": "ba60a6eb-72fe-4ca8-ac0e-622ff4cb072e"
+  },
+  "indexedReady": true,
+  "initialClientState": "codex-absent",
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 51610,
+    "port": 52675
+  },
+  "recordAbsent": true,
+  "rootAbsentTerminal": false,
+  "scope": "diagnostic first-root Start/Stop only; next Start and interrupted root recovery remain unaccepted",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 10182,
+  "status": {
+    "pid": "51610",
+    "port": 52675,
+    "ready": true,
+    "status": "running"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 236,
+  "stop": {
+    "canRestart": false,
+    "canStart": false,
+    "canStop": false,
+    "clientRecoveryRequired": true,
+    "failure": {
+      "code": "client_original_restore_pending",
+      "message": "服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留"
+    },
+    "lifecycleState": "stopped",
+    "result": null
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 10278,
+  "stoppedRecoveryObservation": true
+}

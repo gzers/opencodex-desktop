@@ -1,0 +1,4 @@
+{
+  "hypothesis": "Admitted common static proxies include HTTPS via HTTP CONNECT and SOCKS5h, but prior native npm evidence only used plain HTTP. Fixed npm must issue CONNECT for HTTPS, use SOCKS ATYP DOMAIN for registry.invalid, retain strict TLS and reject untrusted CA, with no real registry or OS settings mutation. Test only new transport scenarios; no lifecycle rerun.",
+  "accepted": false
+}

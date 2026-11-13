@@ -1,0 +1,7 @@
+
+running 1 test
+test infrastructure::official_client_coordination::tests::official299_real_coordinator_excludes_other_connections_and_releases_after_failure ... OFFICIAL299_COORDINATION {"accepted":false,"businessRequests":false,"callbackFailurePreservedAndLocksReleased":true,"configAndCatalogPreserved":true,"existingUnsafeLockRefusedWithoutRepair":true,"expiredCallbackCannotReturnSuccess":true,"firstElapsedMs":4705,"foreignHomeOwnershipRefused":true,"officialVersion":"2.99.0","originalsCapturedUnderThreeOfficialLocks":true,"realSqliteOtherConnectionExclusionAndReacquisition":true,"result":"passed","scope":"real official299 coordination only; no service or restoration","stableLockIdentitiesPreserved":true}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2219 filtered out; finished in 94.55s
+

@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0603]: struct `Fixture` is private
+ --> src/infrastructure/macos_client_root_stop_binding_tests.rs:3:19
+  |
+3 | use super::tests::Fixture;
+  |                   ^^^^^^^ private struct
+  |
+note: the struct `Fixture` is defined here
+ --> src/infrastructure/macos_client_session_tests.rs:7:1
+  |
+7 | struct Fixture {
+  | ^^^^^^^^^^^^^^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "code": "2bfca20d1be4ca0e9656bbedfd813d6ae9203a90",
+  "scope": "Single-app DMG packaging, official024 staging workflow, explicit release-source preflight and retired maintenance publication refusal",
+  "accepted": false,
+  "offlineTests": {
+    "packagingAndStageRegression": 19,
+    "newPublicationGate": 1,
+    "yamlParsed": true,
+    "pythonAstParsed": true,
+    "directTestEntry": true
+  },
+  "native": {
+    "exitCode": 0,
+    "fixtureOnly": true,
+    "productApplicationBuilt": false,
+    "productAcceptance": false,
+    "appNeverLaunched": true,
+    "installationPerformed": false,
+    "elapsedSeconds": 23.314,
+    "artifactSha256": "e5866fbe952b98acebef96b12cc68f8fb9e149393f0852763cf93eb894f370b8",
+    "artifactBytes": 267890286,
+    "mountedPayload": [
+      "Applications",
+      "Install.txt",
+      "OpenCodeX Desktop.app"
+    ],
+    "sourceSignedBytesPreserved": true,
+    "officialRuntimeSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "temporaryRoot": "/Users/ezio/Library/Caches/ocxd024-signed-package-fixture-0paovz_p",
+    "temporaryRootAbsent": true,
+    "mountedFixtureResidues": []
+  },
+  "nativeLimit": "Harmless signed synthetic executable plus actual fixed official resources; no product Desktop build, install or launch; packaging transport only",
+  "preflight": {
+    "currentVersionRefusalExpected": true,
+    "actualSourceStill023": true,
+    "targetVersion": "0.2.24"
+  },
+  "publication": {
+    "triggered": false,
+    "tagCreated": false,
+    "newOfficialDistributionVerifierIncomplete": true,
+    "oldMaintenanceContractCannotAccept024": true
+  },
+  "failureEvidence": [
+    "new preflight regex generated with a literal newline caused Python SyntaxError; original failed logs retained, replaced by valid bounded package/version read",
+    "initial diff whitespace notice fixed in separate formatting commit"
+  ],
+  "cleanup": {
+    "nativeFixtureRootRemoved": true,
+    "nativeDmgRemovedAfterEvidence": true,
+    "dailyInstallOrConfigurationTouched": false,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "actual product single-app build and native installed acceptance",
+    "Windows MSI/NSIS024 resources and W0/W1/W2",
+    "new official distribution final publication verifier",
+    "README/version/source bump at freeze",
+    "P24-NAME and complete native lifecycle/integration candidate"
+  ],
+  "testEntryCommit": "09392b38e09ea919566ccce831dcc95d16e7163b"
+}

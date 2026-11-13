@@ -1,0 +1,16 @@
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/environment-gate.test.ts (12 tests | 1 failed) 30ms
+   ❯ environment presentation (10)
+     × actual gate consumes the environment error and keeps only factual existing recheck/installation exits 19ms
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 27 passed (28)
+   Start at  18:41:08
+   Duration  1.11s (transform 59%, environment 29%, import 9%, tests 2%)
+
+  Transform  transforming modules took 2.19s · 59% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

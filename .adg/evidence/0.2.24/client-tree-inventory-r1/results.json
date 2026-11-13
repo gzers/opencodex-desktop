@@ -1,0 +1,44 @@
+{
+  "groups": {
+    "tree": {
+      "exitCode": 101,
+      "resultLines": [
+        "test infrastructure::macos_client_originals::tree::tests::actual_other_process_replaces_an_open_parent_with_an_outside_symlink_and_capture_refuses ... FAILED",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2321 filtered out; finished in 0.00s",
+        "test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 2316 filtered out; finished in 0.12s"
+      ]
+    },
+    "originals": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 2301 filtered out; finished in 1.29s"
+      ]
+    },
+    "restore": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 2302 filtered out; finished in 15.74s"
+      ]
+    },
+    "session": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 2312 filtered out; finished in 0.83s"
+      ]
+    },
+    "index": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2321 filtered out; finished in 0.00s",
+        "test result: ok. 20 passed; 0 failed; 1 ignored; 0 measured; 2301 filtered out; finished in 1.04s"
+      ]
+    },
+    "native-lock": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 2311 filtered out; finished in 0.35s"
+      ]
+    }
+  },
+  "binarySha256": "9cd845f24e2534b9bd66f2e7aa8275cbdd6ae1f0c4c8599048953b65b35d1f05"
+}

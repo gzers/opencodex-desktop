@@ -1,0 +1,6 @@
+{
+  "run": "root-review-compile",
+  "exitCode": 101,
+  "cause": "encode(history) used unsized slice with existing Sized signature",
+  "correction": "Borrow slice reference encode(&history); canonical byte format unchanged, no widened parser or public helper. Original failed compilation log retained."
+}

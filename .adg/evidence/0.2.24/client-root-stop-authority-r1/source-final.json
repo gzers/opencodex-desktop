@@ -1,0 +1,41 @@
+{
+  "accepted": false,
+  "commit": "fed7d21ad2d92eaaffba30e5388a5b9ab8cef5fb",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "sha256": "2e16109a5d168ea7dbfff36500592eed4be675b335e94c2b749d6bf7965d1948"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner_tests.rs",
+      "sha256": "07e76c9db9ee9a552af45e31525acd8acf761aa9fa4031436274913d9cd53cab"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement.rs",
+      "sha256": "e0526123b0b82ecde62b177d9fb6b5e788079b00b0dcc9dd2b4acfb47381f5af"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement_index_tests.rs",
+      "sha256": "1794828d89698df72a9fb2f73360b728e0d62e85c46ac85ee0fc4cc6a48f0368"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_stop_binding_tests.rs",
+      "sha256": "06ef9f644b03b0ed140d080cba5ac356b9f4fbdb415ec9888d0f3cdfa6c3fcd7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "sha256": "057954f2488ed7a41f320ad7697cb83558d7c77e5e813f3b8f64fd255d0c6428"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "04348d8a29cac01ecbc7c9c3ef0a32889b9f9aec25f46097e1015edd7a0762df"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_tests.rs",
+      "sha256": "8bd4272ce64ff6d12ffa661d791cc405a85be2818440d2bbc1ef6225553ec560"
+    }
+  ],
+  "actualLibraryBinaryFromExecutionLog": "apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97",
+  "actualLibraryBinarySha256": "131d71c2414e6451fdcf6361e9f27789cf38a149821944ff3d3c80baef8c5edc",
+  "scope": "Final source binding, real-kernel child listener/exit predicates with an explicitly synthetic outer Stop wrapper, and registration tests; production factory statically integrated but not called by complete official missing-root Start/Stop yet. Earlier test/Clippy failures retained."
+}

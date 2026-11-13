@@ -1,0 +1,23 @@
+{
+  "remainingExactNativeHelperCommands": [],
+  "temporaryFixtures": "Native tests own TempDir RAII; assertion-failure fixture and successful fixtures removed when test stacks unwound. No external coordinator/database created this batch.",
+  "dailyConfigurationChanged": false,
+  "officialRuntimeModified": false,
+  "servicesOrBusinessRequests": false,
+  "newAppDMGBuilt": false,
+  "standaloneProbeBinaryCopied": false,
+  "newReadOnlyTestsIndependentlyRecheckedInOwnedRoot": [
+    {
+      "scope": "preview-owned",
+      "exit": 0,
+      "ownedTemporaryRootEmptyAfterTests": true
+    },
+    {
+      "scope": "projection-lock-owned",
+      "exit": 0,
+      "ownedTemporaryRootEmptyAfterTests": true
+    }
+  ],
+  "ownedFixtureRootRemoved": true,
+  "cleanupCoverage": "Four new diagnosis/lock tests rerun in exact owned TMPDIR solely to verify no fixture residue;49 total checks remain deduplicated. Existing test RAII not attributed exact unrecorded random root names."
+}

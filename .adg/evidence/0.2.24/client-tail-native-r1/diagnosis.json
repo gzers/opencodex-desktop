@@ -1,0 +1,43 @@
+{
+  "accepted": false,
+  "sourceCommit": "0c988fc898fc2c4d495f28945a5479e73ac327d1",
+  "initialStartMs": 7436,
+  "initialSignedStatusMs": 229,
+  "nativeRounds": 1,
+  "stopObservedResult": "aborted in first wait-os-absence with KERN_PROCARGS2 EINVAL; test assertion failed before persisting stop DTO",
+  "indexHead": {
+    "revision": 5,
+    "ticket": "f0aac7e9-bae9-4a9e-8d2f-a831b25836c3",
+    "state": "stop_prepared",
+    "references": {
+      "attempt": "f0aac7e9-bae9-4a9e-8d2f-a831b25836c3",
+      "originalSha256": "079f614fadc94b57993ab92488467efee1a88cfbc2dd1ce00e9efb3dd1eccbca",
+      "scopeSha256": "a4c62b9ce81f7e9c80a5159a25996dfc717bc3501e0a632ce910a72de81e03ee",
+      "phases": [
+        [
+          "ready",
+          "5f66064d597676b9d3659ecaa3144486c797c321d13a9d47b5f3090a00b1f299"
+        ],
+        [
+          "pre_stop",
+          "1aab7248777bbe7f25ab8fe09751646186d2a4fd9ef00f5c4216807e74d5e3fc"
+        ]
+      ],
+      "liveSha256": "dd8759bf183b9a9918640114970146714415da8f2ad9f3effc16f358213501db"
+    },
+    "restorePlan": null,
+    "completionSha256": null
+  },
+  "eventStates": [
+    "preparing",
+    "capture_reserved",
+    "captured",
+    "ready",
+    "stop_prepared"
+  ],
+  "rawProfileFiles": 40,
+  "stopSuccessOrNormalExitNotProven": true,
+  "secondCycleNotExecuted": true,
+  "tailMetricsScope": "two early successful coordination tails in Start only, not normalStop tail",
+  "evidenceLimitation": "Cannot reconstruct missing stopped DTO or per-iteration BSD snapshot from log. EINVAL alone is not proof of process absence. Must retain error for live/unknown, use fresh native identity reread to resolve any future vanished process race."
+}

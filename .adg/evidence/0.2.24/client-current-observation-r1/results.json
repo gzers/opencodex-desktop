@@ -1,0 +1,36 @@
+{
+  "accepted": false,
+  "scope": "Only independently captured Original/Ready/PreStop/Live with missing historical Stopped; new current observation inside source-head-bound plan, historical refs unchanged",
+  "backendDistinctCases": 92,
+  "groups": {
+    "restore": 32,
+    "session": 26,
+    "index": 27,
+    "completion": 7
+  },
+  "uiCases": 84,
+  "browserChecks": {
+    "visual-webkit": 10,
+    "visual-chromium": 10
+  },
+  "initialNative": {
+    "startMs": 8668,
+    "statusMs": 236,
+    "interruptedStopMs": 2063,
+    "state": "stop_prepared",
+    "revision": 5
+  },
+  "prepareCurrentObservationMs": 4099,
+  "preparedState": "recovery_prepared",
+  "preparedRevision": 6,
+  "separateContinueMs": 6600,
+  "finalState": "restored",
+  "finalRevision": 7,
+  "historicalPhaseCountUnchanged": 2,
+  "historicalStoppedNeverCreatedOrAdopted": true,
+  "originalThreeFramesScopeAndLiveBytesUnchanged": true,
+  "fullTreesIndependentlyMatchReceipt": true,
+  "all7ClientOriginalChecksMatch": true,
+  "noBudgetRelaxation": true,
+  "remaining": "Missing Ready or PreStop snapshot, failed initial service publication/refs, general client/route/family/Windows/NAME/Systemproxy/verifier/fixed candidate remain."
+}

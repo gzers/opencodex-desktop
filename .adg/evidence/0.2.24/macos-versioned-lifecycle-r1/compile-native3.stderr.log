@@ -1,0 +1,30 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0277]: the trait bound `(&str, std::path::PathBuf): AsRef<std::path::Path>` is not satisfied
+   --> src/commands/lifecycle_versioned_tests.rs:279:43
+    |
+279 |                 std::fs::read(client.join(name)).ok() == before[*name],
+    |                                      ---- ^^^^ the trait `AsRef<std::path::Path>` is not implemented for `(&str, std::path::PathBuf)`
+    |                                      |
+    |                                      required by a bound introduced by this call
+    |
+    = note: required for `&(&str, std::path::PathBuf)` to implement `AsRef<std::path::Path>`
+note: required by a bound in `std::path::Path::join`
+   --> /rustc/59807616e1fa2540724bfbac14d7976d7e4a3860/library/std/src/path.rs:3010:4
+
+error[E0308]: mismatched types
+   --> src/commands/lifecycle_versioned_tests.rs:279:65
+    |
+279 |                 std::fs::read(client.join(name)).ok() == before[*name],
+    |                                                                 ^^^^^ expected `&_`, found `(&str, PathBuf)`
+    |
+    = note: expected reference `&_`
+                   found tuple `(&str, std::path::PathBuf)`
+help: consider removing deref here
+    |
+279 -                 std::fs::read(client.join(name)).ok() == before[*name],
+279 +                 std::fs::read(client.join(name)).ok() == before[name],
+    |
+
+Some errors have detailed explanations: E0277, E0308.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

@@ -1,0 +1,34 @@
+{
+  "accepted": false,
+  "uniqueAffectedBackendFunctionsPassed": 84,
+  "batches": {
+    "root-index-logical-scope-tests": 6,
+    "index-regression": 27,
+    "root-registration-regression": 6,
+    "root-capture-regression": 9,
+    "session-regression": 26,
+    "retirement-regression": 8,
+    "root-origin-downgrade-refusal": 1,
+    "root-permit-deadline-tests": 1
+  },
+  "frontendPassed": 88,
+  "browserEngines": {
+    "webkit": 6,
+    "chromium": 6
+  },
+  "testsDoNotProveNativeMovementAuthority": true,
+  "failedEvidencePreserved": [
+    "initial-result-review.json",
+    "root-index-tests.log",
+    "strict-clippy.log",
+    "strict-clippy-source-final.log"
+  ],
+  "laterDedicatedTests": [
+    "root-origin-downgrade-refusal",
+    "root-current-proof-tests",
+    "root-permit-deadline-tests"
+  ],
+  "strictClippyFinal": "strict-clippy-delivery.json",
+  "fmtCheckExitCode": 0,
+  "gitDiffCheckExitCode": 0
+}

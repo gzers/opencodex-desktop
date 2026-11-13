@@ -1,0 +1,152 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "completedScope": "own stopped diagnostic admission after UI mapper correction; residual rawPID denial and actual fresh collector stopped+required gate",
+  "red": {
+    "exitCode": 101,
+    "binarySha256": "98fc18c085df6b0563299e268782ed6e56c41d703afb2ad518a29e56e6147203",
+    "baseCommit": "94ed6dc11b92e33345fc0f3fda96bf8f997a6ecc"
+  },
+  "relatedUnitTests": 31,
+  "checks": {
+    "buildExitCode": 0,
+    "clippyExitCode": 0,
+    "fmtExitCode": 0,
+    "relatedUnitTests": 31,
+    "firstPureRedExitCode": 101,
+    "preflightReadError": "Two sed commands used repository-relative paths from tauri subdirectory and printed no-such-file; only tool output retained; fmt executed successfully, no source edits or test rerun caused by this inspection error."
+  },
+  "tests": {
+    "groups": {
+      "admission": {
+        "exitCode": 0,
+        "summary": [
+          "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2322 filtered out; finished in 0.00s"
+        ]
+      },
+      "mapping": {
+        "exitCode": 0,
+        "summary": [
+          "test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 2307 filtered out; finished in 0.01s"
+        ]
+      },
+      "context": {
+        "exitCode": 0,
+        "summary": [
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2323 filtered out; finished in 0.00s"
+        ]
+      },
+      "snapshot": {
+        "exitCode": 0,
+        "summary": [
+          "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2321 filtered out; finished in 0.00s"
+        ]
+      }
+    },
+    "binarySha256": "5c19bccdd11cd4777aa371afa831edf7b0dac60a19b19bfcf3659e34187b84c1"
+  },
+  "native": {
+    "accepted": false,
+    "businessRequests": false,
+    "clientChangedDuringStart": true,
+    "independentOriginalsReferenced": true,
+    "indexedReady": true,
+    "indexedRestorePrepared": true,
+    "indexedRevision": 6,
+    "indexedStopped": false,
+    "nativeClientRestored": {
+      "codex/config.toml": true,
+      "codex/models_cache.json": false,
+      "codex/opencodex-catalog-audit.jsonl": false,
+      "codex/opencodex-catalog.json": false,
+      "grok/config.toml.bak-opencodex": true
+    },
+    "officialVersion": "2.99.0",
+    "pidRecordAbsent": true,
+    "record": {
+      "pid": 80577,
+      "port": 62530
+    },
+    "recordAbsent": true,
+    "reopenedRecoveryGate": true,
+    "reopenedSnapshot": {
+      "can_restart": false,
+      "can_start": false,
+      "can_stop": false,
+      "facts": {
+        "client_recovery": "required",
+        "data_root": "/private/tmp/ocxd024-versioned-lifecycle-wnlnxtey/fixtures/profile/.codex-desktop/desktop",
+        "health": "unknown",
+        "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-wnlnxtey/fixtures/profile/.codex-desktop/opencodex/home",
+        "protection": "none",
+        "reboot_safe": true,
+        "runtime_label": "bundled",
+        "service_present": null,
+        "shim_present": null,
+        "startup_status": "native",
+        "version_drift": "2.99.0"
+      },
+      "matrix": {
+        "connection": "unconfigured",
+        "operation": "idle",
+        "runtime": "stopped"
+      },
+      "pid": null,
+      "port": null,
+      "source": "live"
+    },
+    "reopenedStatusElapsedMs": 782,
+    "restorePlanMatchesIndependentIndex": true,
+    "result": "failed",
+    "serviceStarted": true,
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "clientRecoveryRequired": false,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startBudgetMs": 30000,
+    "startElapsedMs": 15245,
+    "status": {
+      "pid": "80577",
+      "port": 62530,
+      "ready": true,
+      "status": "running"
+    },
+    "statusBudgetMs": 5000,
+    "statusElapsedMs": 1092,
+    "stop": {
+      "canRestart": false,
+      "canStart": false,
+      "canStop": false,
+      "clientRecoveryRequired": true,
+      "failure": {
+        "code": "client_original_restore_pending",
+        "message": "\u670d\u52a1\u5df2\u6b63\u5e38\u505c\u6b62\uff0c\u5ba2\u6237\u7aef\u914d\u7f6e\u539f\u4ef6\u6062\u590d\u5c1a\u672a\u5b8c\u6210\uff1b\u539f\u4f1a\u8bdd\u548c\u73b0\u573a\u5df2\u4fdd\u7559"
+      },
+      "lifecycleState": "stopped",
+      "result": null
+    },
+    "stopBudgetMs": 10000,
+    "stopElapsedMs": 8412,
+    "stoppedRecoveryObservation": true
+  },
+  "diagnosis": "No-record admission improperly relied on mapped HOME from paths.config, intentionally removed earlier, and sanitized mapped PID. Parse field-specific original own HOME/config path, reject raw nonnull PID/running/ready; keep authentication/record/image/timeouts unchanged.",
+  "cleanup": {
+    "ownedProcessesRemaining": [],
+    "primaryPortAbsent": true,
+    "tcpSnapshotFramingValid": true,
+    "exactDatabasesExclusivelyReacquiredReleased": [
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/4a777013081c6277b4f9e84c6b15242ae93b1ccce0b21f0d2ac5c13b4081cc12.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/4a777013081c6277b4f9e84c6b15242ae93b1ccce0b21f0d2ac5c13b4081cc12.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/history-write-locks/5ec5198316f796cdf6554dcf77cad9cb64e8c02b213144da4251c3aed3ab7d91.sqlite"
+    ],
+    "ownProgramProfileIndexStageAndTestRootsRemoved": true,
+    "dailyConfigModified": false,
+    "officialRuntimeModified": false,
+    "realBusinessRequests": false
+  },
+  "remaining": "original full restore/family/writer/Grok/Agent/general graph, earlier revision4 registration failure, Windows/NAME/complex System/release/fixed candidate unchanged. Complete native original assertion remains exit101, no apply or mutation permit."
+}

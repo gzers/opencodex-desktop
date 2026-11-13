@@ -1,0 +1,19 @@
+
+running 2 tests
+test modules::network_defaults::updater_proxy::tests::invalid_manual_proxy_is_rejected_instead_of_silently_using_direct_or_system ... ok
+test modules::network_defaults::updater_proxy::tests::metadata_and_artifact_requests_share_the_saved_bypass_and_actual_manual_route ... FAILED
+
+failures:
+
+---- modules::network_defaults::updater_proxy::tests::metadata_and_artifact_requests_share_the_saved_bypass_and_actual_manual_route stdout ----
+
+thread 'modules::network_defaults::updater_proxy::tests::metadata_and_artifact_requests_share_the_saved_bypass_and_actual_manual_route' (154603691) panicked at /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/reqwest-0.13.5/src/async_impl/client.rs:2501:5:
+No rustls crypto provider is configured. When using the `rustls-no-provider` feature you must install a crypto provider before building a Client. For example: `rustls::crypto::aws_lc_rs::default_provider().install_default().unwrap();` See https://docs.rs/rustls/latest/rustls/#cryptography-providers for details.
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    modules::network_defaults::updater_proxy::tests::metadata_and_artifact_requests_share_the_saved_bypass_and_actual_manual_route
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 2172 filtered out; finished in 0.00s
+

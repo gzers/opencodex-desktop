@@ -1,0 +1,25 @@
+{
+  "baseCommit": "0c988fc898fc2c4d495f28945a5479e73ac327d1",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "bytes": 45740,
+      "sha256": "c941b7b8cbfb3af92bd93d3c8866714cf1bbb58b893e11bc238b92bb952aa786"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "bytes": 90104,
+      "sha256": "64a8b40be95bc0e9aceba90e3d20f8311d0e2c84b6482f3fe92861e9e09c361b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_macos_snapshot_tests.rs",
+      "bytes": 5147,
+      "sha256": "16059080fccce37de928cf72a2354176b79b052e2e5a38f6037d6d8152c67f01"
+    }
+  ],
+  "fixedCandidate": false,
+  "officialServiceRounds": 0,
+  "scope": "Final source snapshot-specific tests rerun after cfgtest include relocation; owner/exit/pair/command functions unchanged from recorded passing regression. Strict Clippy final compiles final sources.",
+  "testBinarySha256": "2b0d6985305ee3adf6f0cb4f6ec8d0826b9483bb0cf851c70ebc1101ccc372de",
+  "sourceCommit": "382cf593fd24e1c957690bfaec7e4f0545ad8e1b"
+}

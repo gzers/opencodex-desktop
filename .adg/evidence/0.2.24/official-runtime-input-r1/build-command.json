@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "python3",
+    "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/.github/scripts/build_desktop_runtime_bundle.py",
+    "--policy",
+    "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/.github/runtime-platforms-024.json",
+    "--platform",
+    "darwin-arm64",
+    "--runtime-archive",
+    "/private/tmp/ocxd024official-f6pcu_nh/opencodex-2.99.0.tgz",
+    "--node-archive",
+    "/private/tmp/ocxd024official-f6pcu_nh/node-v26.8.1-darwin-arm64.tar.gz",
+    "--build-node",
+    "/private/tmp/ocxd024official-f6pcu_nh/host-node/bin/node",
+    "--npm-cli",
+    "/private/tmp/ocxd024official-f6pcu_nh/host-node/lib/node_modules/npm/bin/npm-cli.js",
+    "--cache",
+    "/private/tmp/ocxd024official-f6pcu_nh/npm-cache",
+    "--output",
+    "/private/tmp/ocxd024official-f6pcu_nh/darwin-bundle-r1",
+    "--proxy",
+    "http://127.0.0.1:3060"
+  ],
+  "noLifecycleScripts": true,
+  "noRuntimeExecutionRequested": true,
+  "readOnlyStructureVerifierUsesExplicit024Policy": true
+}

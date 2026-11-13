@@ -1,0 +1,16 @@
+{
+  "reviewer": "Locke",
+  "baseCommit": "5274b7048c7d772bc6620e4ac55d09faaf41512e",
+  "actualDiffReviewed": true,
+  "blockingFindings": [],
+  "invariants": [
+    "Candidate uses current committed RootAbsent canonical history and bound namespace; no token until all original full source/archive/readback/storage/head and final movement proof checks succeed",
+    "Coordination failure prevents RefCell token extraction, errors use independent real StoppedObservation only",
+    "Capacity false preserves Stopped success/no failure; generic fallthrough only ordinary root, requested root missing projection errors",
+    "Restart uses original close, no budget outside action; expired candidate still original pending demotion",
+    "Next Start independently checks fresh state, token nonserializable/private/noClone or public unchecked constructor"
+  ],
+  "reviewerEditedOrExecuted": false,
+  "testResultsSource": "main conversation command logs, reviewer static only",
+  "scope": "No original-service final acceptance inferred from synthetic close/projection tests."
+}

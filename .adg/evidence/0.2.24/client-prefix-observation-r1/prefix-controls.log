@@ -1,0 +1,28 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 35.66s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 7 tests
+test infrastructure::macos_client_originals::root_creation::tests::root_prefix_observation_binds_metadata_to_the_actual_authenticated_read_before_retaining_fd ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_does_not_reuse_authenticated_source_across_calls ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_keeps_every_frame_and_two_fresh_full_source_boundaries ... ROOT_PREFIX_FRESHNESS_METRICS {"accepted":false,"allFourFramesStillVerified":true,"metrics":{"capture_file":{"calls":12,"inclusive_nanos":6113833},"frame":{"calls":4,"inclusive_nanos":27244166},"frames_prefix":{"calls":1,"inclusive_nanos":53402833},"open_at":{"calls":371,"inclusive_nanos":2555545},"pinned_open":{"calls":42,"inclusive_nanos":6209917},"pinned_recheck":{"calls":241,"inclusive_nanos":42040666},"protection":{"calls":4795,"inclusive_nanos":43740305},"provenance_freshness":{"calls":6,"inclusive_nanos":17924708},"root_provenance":{"calls":2,"inclusive_nanos":19731667}},"scope":"synthetic current generation; no service permission"}
+ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_keeps_fresh_namespace_and_ancestor_checks_between_frames ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_rejects_between_frame_provenance_changes_before_later_restore_callback ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_rejects_last_callback_changes_for_single_and_full_prefixes ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_retains_version_identity_and_link_checks_even_for_same_contents ... 
+thread 'infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_retains_version_identity_and_link_checks_even_for_same_contents' (158033018) panicked at src/infrastructure/macos_client_root_originals_tests.rs:216:29:
+assertion `left == right` failed
+  left: -1
+ right: 0
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_retains_version_identity_and_link_checks_even_for_same_contents
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 2574 filtered out; finished in 111.97s
+
+error: test failed, to rerun pass `--lib`

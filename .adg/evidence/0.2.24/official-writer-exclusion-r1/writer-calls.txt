@@ -1,0 +1,45 @@
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/client/connect.ts:22:import { withCatalogWriteSerialization } from "../codex/catalog-write-serialization";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/client/connect.ts:998:    const result = withCatalogWriteSerialization(owningHome, permit => withClientWrite(() =>
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/server/index.ts:36:import { withCatalogWriteSerialization } from "../codex/catalog-write-serialization";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/server/index.ts:286:      const outcome = withCatalogWriteSerialization(startupCodexHome, permit =>
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/convergence.ts:101:import { withCatalogWriteSerialization } from "./catalog-write-serialization";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/convergence.ts:106:  replaceActiveCodexCatalog,
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/convergence.ts:107:  replaceCodexModelsCache,
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/convergence.ts:646:function fixedCommit(state: CandidateState, permit: Parameters<typeof replaceActiveCodexCatalog>[0]): CodexCatalogCommitResult {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/convergence.ts:660:    const catalog = replaceActiveCodexCatalog(permit, state.home, state.catalog);
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/convergence.ts:666:    writes = { ...writes, cache: replaceCodexModelsCache(permit, state.home, state.cache).kind };
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/convergence.ts:683:    const acquired = withCatalogWriteSerialization(state.home, permit => {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog-write-serialization.ts:32:import { appendCatalogWriteAudit } from "./catalog/write-audit";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog-write-serialization.ts:152:  try { return appendCatalogWriteAudit(canonicalCodexHome, {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog-write-serialization.ts:176:export function withCatalogWriteSerialization<T>(
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog-write-serialization.ts:242:      try { appendCatalogWriteAudit(canonicalCodexHome, {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/write-audit.ts:108:export function appendCatalogWriteAudit(
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/internal/catalog-writer.ts:264:export function replaceActiveCodexCatalog(
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/internal/catalog-writer.ts:339:export function replaceCodexModelsCache(
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/remote.ts:5:import { withCatalogWriteSerialization, type CatalogSerializationOutcome, type CatalogWritePermit } from "../catalog-write-serialization";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/remote.ts:6:import { replaceActiveCodexCatalog } from "../internal/catalog-writer";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/remote.ts:215: * `replaceActiveCodexCatalog` is an atomic FILE write; the serialization permit rolls back the
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/remote.ts:228:    replaceActiveCodexCatalog(permit, codexHome, { path: catalogPath, content: previous.toString("utf8") });
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/remote.ts:241:  const outcome = withCatalogWriteSerialization(codexHome, permit => {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/remote.ts:244:    const catalog = replaceActiveCodexCatalog(permit, codexHome, { path: catalogPath, content: fetched.content });
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/inject/restore.ts:9:import { withCatalogWriteSerialization } from "../catalog-write-serialization";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/inject/restore.ts:545:    const restored = withCatalogWriteSerialization(owningCodexHome, permit => guardedRestoreWrite(options, () =>
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/refresh.ts:6:import { withCatalogWriteSerialization, CatalogWritePermitRefusal } from "./catalog-write-serialization";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/refresh.ts:7:import { replaceCodexModelsCache } from "./internal/catalog-writer";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/refresh.ts:41:  const outcome = withCatalogWriteSerialization(owningCodexHome, permit =>
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/refresh.ts:42:    replaceCodexModelsCache(permit, owningCodexHome, {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/retained-sync.ts:67:  withCatalogWriteSerialization,
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/retained-sync.ts:75:  replaceActiveCodexCatalog,
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/retained-sync.ts:76:  replaceCodexModelsCache,
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/retained-sync.ts:603:        replacement = replaceActiveCodexCatalog(permit, owningCodexHome, preparedCatalog);
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/retained-sync.ts:616:    replacement = replaceActiveCodexCatalog(permit, owningCodexHome, preparedCatalog);
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/retained-sync.ts:678:  const committed = withCatalogWriteSerialization(owningCodexHome, permit => {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/retained-sync.ts:797:    return replaceCodexModelsCache(permit, owningCodexHome, preparedCache).kind;
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/retained-sync.ts:813:  const outcome = withCatalogWriteSerialization(
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/restore.ts:8:  withCatalogWriteSerialization,
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/restore.ts:12:import { replaceActiveCodexCatalog } from "../internal/catalog-writer";
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/restore.ts:103:    const replacement = replaceActiveCodexCatalog(permit, owningCodexHome, {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/restore.ts:120:    const replacement = replaceActiveCodexCatalog(permit, owningCodexHome, {
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/codex/catalog/restore.ts:132:  const outcome = withCatalogWriteSerialization(
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/cli/dispatch.ts:435:    const { withCatalogWriteSerialization } = await import("../codex/catalog-write-serialization");
+/private/tmp/ocxd024-writer-cover-b_g199s0/official/src/cli/dispatch.ts:441:    const invalidated = withCatalogWriteSerialization(owningCodexHome, permit =>

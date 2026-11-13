@@ -1,0 +1,29 @@
+[
+  {
+    "name": "bundle-final",
+    "filter": "modules::runtime::bundled::bundled_tests::",
+    "exit": 0,
+    "elapsedSeconds": 4.3242367908824235,
+    "summary": [
+      "test result: ok. 31 passed; 0 failed; 0 ignored; 0 measured; 2018 filtered out; finished in 3.65s"
+    ]
+  },
+  {
+    "name": "selection-final",
+    "filter": "modules::runtime::program_selection::",
+    "exit": 0,
+    "elapsedSeconds": 0.05916554108262062,
+    "summary": [
+      "test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2043 filtered out; finished in 0.04s"
+    ]
+  },
+  {
+    "name": "standard-app-final",
+    "filter": "modules::data_root::layout::tests::mac_standard_app_uses_current_user_program_directory",
+    "exit": 0,
+    "elapsedSeconds": 0.01586799998767674,
+    "summary": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2048 filtered out; finished in 0.00s"
+    ]
+  }
+]

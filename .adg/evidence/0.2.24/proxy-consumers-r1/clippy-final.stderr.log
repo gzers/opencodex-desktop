@@ -1,0 +1,27 @@
+    Checking reqwest v0.13.5
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Checking tauri-plugin-updater v2.13.1
+error: large size difference between variants
+  --> src/modules/network_defaults/updater_proxy.rs:12:1
+   |
+12 | / enum Policy {
+13 | |     Direct,
+   | |     ------ the second-largest variant carries no data at all
+14 | |     System,
+15 | |     Manual(reqwest_updater::Proxy),
+   | |     ------------------------------ the largest variant contains at least 256 bytes
+16 | | }
+   | |_^ the entire enum is at least 256 bytes
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#large_enum_variant
+   = note: `-D clippy::large-enum-variant` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::large_enum_variant)]`
+help: consider boxing the large fields or introducing indirection in some other way to reduce the total size of the enum
+   |
+15 -     Manual(reqwest_updater::Proxy),
+15 +     Manual(Box<reqwest_updater::Proxy>),
+   |
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

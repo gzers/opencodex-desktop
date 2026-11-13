@@ -1,0 +1,332 @@
+{
+  "allReferencedObjectsVerified": true,
+  "uniqueObjects": 15,
+  "objects": [
+    {
+      "sha256": "022ba758644a476a0730e7839a2354f6bf5f849fcf1a605cf9a66ab1efd18ca1",
+      "bytes": 346,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "client": "codex",
+          "path": "config.toml"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "codex",
+          "path": "config.toml"
+        }
+      ]
+    },
+    {
+      "sha256": "19207edd4fa27e74eeaee7af7109e67778fe8e1648779dff07f9f93c167f4e04",
+      "bytes": 8655,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "client": "grok",
+          "path": "config.toml"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "grok",
+          "path": "config.toml"
+        }
+      ]
+    },
+    {
+      "sha256": "4d96a7e658dd859d2bb884b4ee1e69339fd91f4d7d58383b02282ba09e718754",
+      "bytes": 166,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "original.json",
+          "client": "codex",
+          "path": "opencodex-catalog.json"
+        }
+      ]
+    },
+    {
+      "sha256": "564e7ca142ee491902fe7403ec998b79ed08b6f01ada0b06f1735404b603dd37",
+      "bytes": 79,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "original.json",
+          "client": "grok",
+          "path": "config.toml"
+        },
+        {
+          "phase": "stopped.json",
+          "client": "grok",
+          "path": "config.toml"
+        }
+      ]
+    },
+    {
+      "sha256": "61a37e5690f139b8ab6ccd69b48fde523110005b1874eefa7ff55ca6bdacf7ba",
+      "bytes": 1353,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "stopped.json",
+          "client": "codex",
+          "path": "opencodex-catalog-audit.jsonl"
+        }
+      ]
+    },
+    {
+      "sha256": "7b6e696a8ae7c5d266188425f232011fab147baad0b3cc4d1ebe61fde7316d41",
+      "bytes": 44,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "original.json",
+          "client": "codex",
+          "path": "config.toml"
+        },
+        {
+          "phase": "stopped.json",
+          "client": "codex",
+          "path": "config.toml"
+        }
+      ]
+    },
+    {
+      "sha256": "9907242bef719c68c38e5c3632b4ade5d2c03d0b39a86f188b6da916ddfb0f9a",
+      "bytes": 28,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "original.json",
+          "client": "grok",
+          "path": "config.toml.bak-opencodex"
+        },
+        {
+          "phase": "ready.json",
+          "client": "grok",
+          "path": "config.toml.bak-opencodex"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "grok",
+          "path": "config.toml.bak-opencodex"
+        },
+        {
+          "phase": "stopped.json",
+          "client": "grok",
+          "path": "config.toml.bak-opencodex"
+        }
+      ]
+    },
+    {
+      "sha256": "b83c1263089307994f5e958de339b8a3c6cb42823c9b7d03f8096bbca0cfec3b",
+      "bytes": 394,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "client": "codex",
+          "path": "opencodex.config.toml"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "codex",
+          "path": "opencodex.config.toml"
+        }
+      ]
+    },
+    {
+      "sha256": "c3b3dcb33ad214e89024eb2771d53e966582f46b16a33c146ba8503557cebe78",
+      "bytes": 1015,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "client": "codex",
+          "path": "opencodex-catalog-audit.jsonl"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "codex",
+          "path": "opencodex-catalog-audit.jsonl"
+        }
+      ]
+    },
+    {
+      "sha256": "c456c154628646198f47c77491438f9211bacec62ee8da937933e86cfe50ff63",
+      "bytes": 2437,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "client": "codex",
+          "path": "models_cache.json"
+        },
+        {
+          "phase": "ready.json",
+          "client": "codex",
+          "path": "opencodex-catalog.json"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "codex",
+          "path": "models_cache.json"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "codex",
+          "path": "opencodex-catalog.json"
+        },
+        {
+          "phase": "stopped.json",
+          "client": "codex",
+          "path": "models_cache.json"
+        }
+      ]
+    },
+    {
+      "sha256": "c8cdda2058dfad73596cb9baef30bb2a825485859ad54c8d9cf5a10a457b0c8c",
+      "bytes": 19,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "stopped.json",
+          "client": "codex",
+          "path": "opencodex-catalog.json"
+        }
+      ]
+    },
+    {
+      "sha256": "d021a6d4fd8eb3185acc9a8969d49f68c0a617bf55e49f5ac2658b186d9056c8",
+      "bytes": 817,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "client": "codex",
+          "path": "opencodex-journal.json"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "codex",
+          "path": "opencodex-journal.json"
+        }
+      ]
+    },
+    {
+      "sha256": "e0ff08e65c31f14d971bfe95bb7ad75807f02db3511c270dec735c396e0346d1",
+      "bytes": 30,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "original.json",
+          "client": "grok",
+          "path": "agents/AGENTS.md"
+        },
+        {
+          "phase": "ready.json",
+          "client": "grok",
+          "path": "agents/AGENTS.md"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "grok",
+          "path": "agents/AGENTS.md"
+        },
+        {
+          "phase": "stopped.json",
+          "client": "grok",
+          "path": "agents/AGENTS.md"
+        }
+      ]
+    },
+    {
+      "sha256": "e2f8581175114e7baf18e79336caa8d25ea5a385bcf03e8436006cc5ee18a491",
+      "bytes": 512,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "client": "codex",
+          "path": ".opencodex-native-main.owner.sqlite-journal"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "codex",
+          "path": ".opencodex-native-main.owner.sqlite-journal"
+        }
+      ]
+    },
+    {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0400",
+      "uid": 501,
+      "singleLink": true,
+      "verified": true,
+      "references": [
+        {
+          "phase": "ready.json",
+          "client": "codex",
+          "path": ".opencodex-native-main.owner.sqlite"
+        },
+        {
+          "phase": "pre-stop.json",
+          "client": "codex",
+          "path": ".opencodex-native-main.owner.sqlite"
+        },
+        {
+          "phase": "stopped.json",
+          "client": "codex",
+          "path": ".opencodex-native-main.owner.sqlite"
+        }
+      ]
+    }
+  ],
+  "rawContentRetention": "only fixed synthetic original Grok config, prior backup, Agent file; generated objects not dumped"
+}

@@ -1,0 +1,14 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0621]: explicit lifetime required in the type of `refs`
+   --> src/infrastructure/macos_client_root_creation.rs:227:5
+    |
+227 |     inspect_indexed_anchor(manager, data, profile, client, refs, expected_anchor, true)
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ lifetime `'a` required
+    |
+help: add explicit lifetime `'a` to the type of `refs`
+    |
+224 |     refs: &'a macos_client_originals::root_creation::References,
+    |            ++++++++++++++++++++++++++++++++++++++++++
+
+For more information about this error, try `rustc --explain E0621`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

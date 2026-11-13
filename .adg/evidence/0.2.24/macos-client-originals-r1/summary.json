@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "codeCommit": "a19669114fc5e05e60c56cf6bf78df0ad686e5c1",
+  "scope": "Mac descriptor-pinned read-only native client originals plus create-only persistent original/ready/pre-stop/stopped frames; no restore writes/lifecycle integration",
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "sha256": "209e8ce130f3fd8f783e1fd8020fb2c0ed5301e2b3481ac3cacbee757a1fcc68"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+      "sha256": "bde4510fac0c3c65e1cf66f1f308350dc326196ef36fab8bc6a9bb270cc2fd29"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals_tests.rs",
+      "sha256": "92812138ed5625bea0cc312f4b7f585a7f3e5d7c1431920aa42d8dad6bc6a225"
+    }
+  ],
+  "checks": [
+    {
+      "name": "clippy-final",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt-final",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "nativePassed": 18,
+  "realAbruptExit": {
+    "test": "actual_process_exit_preserves_original_and_explicit_phase_identity",
+    "childExitCode": 91,
+    "originalAndExpectedReadyDigestsReopened": true,
+    "phaseFileWithoutIndependentDigestRefused": true
+  },
+  "evidenceBoundaries": [
+    "Actual native18 binary was built from same source algorithm; final test-only permission literal0 was changed to0o000 after Clippy, same numeric value, no native retest. Native-run source hashes retained separately.",
+    "First7 compiler errors retained as explicit classification record, raw compiler stream not captured; later compile/Clippy and native failures retained raw.",
+    "OS adds com.apple.provenance to fresh objects; captured exact in source snapshots, allowed only that bounded OS attribute in journal privacy checks; owner/mode/noACL and unknown attributes refusal retained.",
+    "Mac only; no new OS account or Windows execution.",
+    "Current client root must already exist and be disjoint from data root; missing directory is refused, not automatically assumed empty. Fresh-root lifecycle handling remains to implement.",
+    "No official claim/N/K, native service ownership/exit permit, source generation binding, client CAS mutation, rollback/application journal or automatic crash recovery implemented here. Stored checksums and private JSON alone do not authorize restoration.",
+    "No .app or DMG rebuilt; official2.99/daily config untouched."
+  ],
+  "failuresRetained": [
+    "first compiler7 errors explicit classification only",
+    "E0618 protected frame variable shadowed native protection function, raw compiler error preserved",
+    "first native16:12 failed, OS provenance false privacy reject and numeric ACL identity conversion; all original failures retained",
+    "Clippy non-octal Unix permission literal test0, fixed to0o000 without suppression"
+  ],
+  "cleanup": {
+    "fixtureChildrenBeforeRemoval": [
+      "library-tests",
+      "profile"
+    ],
+    "ownedTestProcessesAbsent": true,
+    "ownBinaryAndFixtureTreeRemoved": true,
+    "officialServiceStarted": false,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "duplicateTemporaryReceiptRootRemoved": true
+  }
+}

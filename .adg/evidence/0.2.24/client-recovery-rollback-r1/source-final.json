@@ -1,0 +1,78 @@
+{
+  "baseCommit": "bc887457fe4db5b107279381a0d85195a6b76e10",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery_tests.rs",
+      "sha256": "7b1e643355145762454ac99304b7943a5c64b600268ce2f4bfc8ab0002c4f6bd"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_completion.rs",
+      "sha256": "dfd69b8aae8a97d89bc40b6e66101c03b75410d9ad3c8ece35e2edcd8c5dc182"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_completion_tests.rs",
+      "sha256": "248bef794f45fefc0d3c77af963bcc7bbea05cca5ae48dd961036d21ec1494c1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_recovery_rearm.rs",
+      "sha256": "d3be4e58f2b1f63406de7da9e905722f9eecea67be04295e44d87f290505867d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_recovery_rollback.rs",
+      "sha256": "79b2984ae000d66f7741ec02f979e12c26fa5277e26179e6338de71133101130"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore.rs",
+      "sha256": "290f5aa821d56af20d70699207ac4891cb5ead2b8fee72bbb4c01c1f05c36c3d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore_tests.rs",
+      "sha256": "365f7e10f331c2bc5ba361eb56d9afc13368fb6428a02c92ef589bba22609865"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "sha256": "1b48a852b816046043696ebe49fd58a107cb9a1a5d060485ecacbc7a2c47fa48"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "66e370b1e623fd78ff4c33aa50aeae677aae45b89d58ea15d3585132728c8cb7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs",
+      "sha256": "c75ceb386087fd8d6bdefd4c29a573175fa2857f029fe51c644d01aafd03f50a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "sha256": "bb15ca576fca5998cc742bf2e7fe8ab280ec3877a73646fa3a8a1d947aa8a7ba"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_tests.rs",
+      "sha256": "d9308454d7834b94fda936f30041987c556f8a12efa200eb2d5636d61bdab1da"
+    },
+    {
+      "path": "apps/desktop/ui/qa/client-recovery-visual.mjs",
+      "sha256": "3c91df7e548222fc1736e0ce3b4e38a998923dcc00a3fcef8336320d2ab08ac8"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/clientRecoveryFixture.ts",
+      "sha256": "5b24860df707c991deeb8323ec0b040a45ea92166c0ffc96749c1036a39dca24"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "sha256": "77c3816826cdafd0913fd100d6387a7083f722773f39a68b7f5741818c631271"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery.ts",
+      "sha256": "1ee26d9321d453de122bb90c7a5b9fd93c65489d2ad1970cc295947236d6342d"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "sha256": "99fe04723bb56becf66a5e40a5c0d01bef657f1686246166c3dde70ba4096045"
+    }
+  ],
+  "nativeOriginalSource": "native/source.json",
+  "nativeRearmSource": "rearm-continue/source.json",
+  "sourceBoundary": "Rollback real run used pre-lineage build; rearm+continue used full lineage source recorded separately; final added read-only status helper changes no product algorithm. No app/DMG/frozen candidate.",
+  "codeCommit": "3de2c637027a22f90e7aa2d4a4f8314a7cf9aac0",
+  "backendCommit": "ea78757ea225c657c8ad76d23fc0825e70f99863"
+}

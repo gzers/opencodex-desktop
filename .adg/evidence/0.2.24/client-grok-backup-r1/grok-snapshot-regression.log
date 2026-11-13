@@ -1,0 +1,11 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 4 tests
+test infrastructure::macos_client_originals::grok::tests::grok_config_backup_and_nested_agent_bytes_are_originals_without_modifying_current_input ... ok
+test infrastructure::macos_client_originals::grok::tests::grok_symlink_unreadable_or_non_directory_never_becomes_empty_and_no_outside_files_change ... ok
+test infrastructure::macos_client_originals::grok::tests::missing_grok_root_is_recorded_and_not_created_while_later_presence_stays_a_distinct_phase ... ok
+test infrastructure::macos_client_originals::grok::tests::original_grok_references_cannot_be_applied_to_another_profile_or_repaired_from_current_files ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2435 filtered out; finished in 0.94s
+

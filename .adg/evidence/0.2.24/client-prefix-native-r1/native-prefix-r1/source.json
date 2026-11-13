@@ -1,0 +1,127 @@
+{
+  "commit": "0f0e85fb37b004c9b895bc754dd54ac993bbaef7",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "sha256": "101a772c93c4d6d00fbb90e7ad616fa7110d94925d998b4234c091d5d780d0af"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_root_cycles_fixture.rs",
+      "sha256": "c273313666a8c60b1c2ea499a36bb3fa49d4953770ce59cad4ee96fafdb28beb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "e68837754d8c2ce18bf8fb27a0cc34c2ed9c1f1603c06025883a0d98959495c2"
+    }
+  ],
+  "binarySha256": "7174d3761349872aeec12585d7448067c69694627080ebc7f31be125e0fafbb3",
+  "compiledSourceReceipt": {
+    "accepted": false,
+    "baseCommit": "0f0e85fb37b004c9b895bc754dd54ac993bbaef7",
+    "gitTree": "014beca9feb7a9d356a77a2effbf10fed9f5bdef",
+    "cleanSource": true,
+    "files": [
+      {
+        "path": "apps/desktop/tauri/Cargo.toml",
+        "sha256": "fdff22ccfe0f2766f0aa124e7a6fe8c534185838bb9eb78bfa5a1030275e0d30"
+      },
+      {
+        "path": "apps/desktop/tauri/src/commands/mod.rs",
+        "sha256": "c037b72e43c8301173aa631853c2672a9bcf73afa63ddb5dab0cd059c763d3a3"
+      },
+      {
+        "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+        "sha256": "101a772c93c4d6d00fbb90e7ad616fa7110d94925d998b4234c091d5d780d0af"
+      },
+      {
+        "path": "apps/desktop/tauri/src/commands/lifecycle_root_cycles_fixture.rs",
+        "sha256": "c273313666a8c60b1c2ea499a36bb3fa49d4953770ce59cad4ee96fafdb28beb"
+      },
+      {
+        "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+        "sha256": "a8ba1abc71f795019761c173e204b2b95d4c180a74d509b6e9c4c0b19c128141"
+      },
+      {
+        "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+        "sha256": "2e16109a5d168ea7dbfff36500592eed4be675b335e94c2b749d6bf7965d1948"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+        "sha256": "b03bd7fccea8c1d585426f84975185bd53bfcea539e01f0f24531e8a2fc78ac3"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+        "sha256": "56dab2742e559e54aed3502613f4adcdd0cc675f16456a4dff3b337458855e77"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+        "sha256": "e68837754d8c2ce18bf8fb27a0cc34c2ed9c1f1603c06025883a0d98959495c2"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs",
+        "sha256": "e7d16127ed4f4adfd7972cd1482837e6598ae891176209f2b1c56dc562e9a4a4"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_lineage.rs",
+        "sha256": "5c27d8c18c84db5008feac5d2b037934dabad18956ad033747a9540f47772c08"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement.rs",
+        "sha256": "580d7632cd362c3805f972161582f9483e865c8e09ef49c7e5469e75b350fb37"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+        "sha256": "c154e6d3ada53868aa847ac9e8bbab9afe792c395596b2848cb4d8490d0c824e"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore.rs",
+        "sha256": "8258429194d926bf1fa0eaae53ba036ec33f5e3025c3cfb12c81f2b54bb78d3d"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/native_config_write_guard.rs",
+        "sha256": "24f9ad6eecb24fc07d71d8a7907add0f177c3561f9a99aad5ea5d3dc1f0105a4"
+      },
+      {
+        "path": "apps/desktop/tauri/src/infrastructure/macos_client_observation_metrics.rs",
+        "sha256": "3ae6eb9daa5500293c14341bb685a35d26a538b980dfbc21f7e23183191fc3de"
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+        "sha256": "d591ebb6b53909f2de4913a839945a4e8e614e80a0ff8648d856318edf3d4c1f"
+      },
+      {
+        "path": "apps/desktop/tauri/src/modules/runtime/program_selection.rs",
+        "sha256": "fbd9ba58cd0c7d95e015bc87a4831bfe63a8083b6ea2071d5e5c3c6427bfedc2"
+      }
+    ],
+    "purpose": "Frozen exact clean childpin plus currentindex sameprefix fix; one release-library build and new original two-cycle diagnosis, not fixed app acceptance.",
+    "binarySha256": "7174d3761349872aeec12585d7448067c69694627080ebc7f31be125e0fafbb3",
+    "binaryPath": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/deps/opencodex_desktop_lib-b66c44cd6a6eaaaf",
+    "releaseBuild": {
+      "command": [
+        "cargo",
+        "test",
+        "--release",
+        "--lib",
+        "--no-run"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 380.571
+    },
+    "scope": "Current final test code plus parent product commit compiled under existing release opt-level=s/LTO. No fixed app or source publication claim."
+  },
+  "resources": [
+    {
+      "source": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/Resources/runtime-bundle/runtime-bundle.manifest.json",
+      "copiedTo": "/private/tmp/ocxd024-versioned-lifecycle-plo9sj9_/fixtures/resources/runtime-bundle.manifest.json",
+      "bytes": 2903688,
+      "sha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3"
+    },
+    {
+      "source": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/Resources/runtime-bundle/runtime-bundle-0.2.24-darwin-arm64.tar.gz",
+      "copiedTo": "/private/tmp/ocxd024-versioned-lifecycle-plo9sj9_/fixtures/resources/runtime-bundle-0.2.24-darwin-arm64.tar.gz",
+      "bytes": 246638059,
+      "sha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f"
+    }
+  ]
+}

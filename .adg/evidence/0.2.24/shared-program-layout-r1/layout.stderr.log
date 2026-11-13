@@ -1,0 +1,10 @@
+
+thread 'modules::data_root::layout::tests::mac_dedicated_custom_and_shared_read_only_folders_remain_valid' (150931151) panicked at src/modules/data_root/layout.rs:432:9:
+assertion failed: Layout::new(&user, &i, Platform::Macos).is_ok()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'modules::data_root::layout::tests::mac_explicit_home_and_personal_applications_are_containers' (150931152) panicked at src/modules/data_root/layout.rs:362:9:
+assertion failed: Layout::new(&user, &install, Platform::Macos).is_ok()
+
+thread 'modules::data_root::layout::tests::mac_runtime_is_separate_from_signed_bundle_and_data' (150931153) panicked at src/modules/data_root/layout.rs:271:63:
+called `Result::unwrap()` on an `Err` value: FileSystem { operation: "resolve version 2 layout", detail: "current-user HOME is required to verify installation root" }

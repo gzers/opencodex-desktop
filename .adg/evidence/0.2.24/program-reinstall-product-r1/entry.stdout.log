@@ -1,0 +1,18 @@
+
+running 1 test
+test modules::runtime::bundled::bundled_tests::versioned_explicit_resupply_checks_original_preview_before_reading_archive_and_preserves_failed_source ... FAILED
+
+failures:
+
+---- modules::runtime::bundled::bundled_tests::versioned_explicit_resupply_checks_original_preview_before_reading_archive_and_preserves_failed_source stdout ----
+
+thread 'modules::runtime::bundled::bundled_tests::versioned_explicit_resupply_checks_original_preview_before_reading_archive_and_preserves_failed_source' (154401473) panicked at src/modules/runtime/bundled_tests.rs:269:73:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "runtime_program_path", detail: "运行包版本需要完整的官方发布版本号" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+
+failures:
+    modules::runtime::bundled::bundled_tests::versioned_explicit_resupply_checks_original_preview_before_reading_archive_and_preserves_failed_source
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2145 filtered out; finished in 0.01s
+

@@ -1,0 +1,27 @@
+{
+  "baseCommit": "4ba715120fd59ddbe3634e501856b436ec928f74",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_client_coordination.rs",
+      "bytes": 17756,
+      "sha256": "d57c27f0db8b6c6109a1fcfa7781ce33da310098c8ab8ed72ddb8584729c5c64"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+      "bytes": 31849,
+      "sha256": "321f938bd65b9dca35b5de545832c5cbaedad58a60282a86355a249c2b145cd3"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_parallel_tests.rs",
+      "bytes": 13274,
+      "sha256": "2e0ecbe20ba01dbcdb94c1fb9dc388a06aeb6b172cc4c60f74144ca4984dffda"
+    }
+  ],
+  "fixedCandidate": false,
+  "officialServiceRounds": 0,
+  "testBinaryPath": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97",
+  "testBinarySha256": "d5677847b7e487bcbcce576cd6465ba7a6aa90261b5344e6482b5ff27bf76c69",
+  "validationScope": "Image tests+official image ABBA binary precedes later test-only coordination tail instrumentation. Final coordination tests and strict Clippy use final three-file sources and current binary. Image algorithm source unchanged.",
+  "sourceCommit": "0c988fc898fc2c4d495f28945a5479e73ac327d1",
+  "performanceCommit": "3701ee39103d377c804ee127479417fdcd6466aa"
+}

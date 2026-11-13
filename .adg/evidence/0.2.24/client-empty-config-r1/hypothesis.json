@@ -1,0 +1,18 @@
+{
+  "accepted": false,
+  "hypothesis": "An originally absent Codex config recorded at Ready and now exactly bound to Stopped/current ASCII-whitespace bytes can be a fourth reversible plan artifact. Original/Ready/PreStop/Stopped source hashes remain unchanged; explicit current observations do not fabricate missing phases. The same native publication engine must return outside raced bytes, preserve archives, support rollback/rearm and process-crash resume. Original10s action budget and native authority remain mandatory.",
+  "tests": [
+    "core exact absence restoration",
+    "refs1/2/3 continuation/rollback/rearm without synthetic history",
+    "new content/protection/identity and missing Ready refusal",
+    "fourth-target native conflict preservation",
+    "real child exit91 after native/archive/terminal boundaries"
+  ],
+  "firstObservedCompileError": {
+    "command": "cargo test --lib first_use_empty_config -- --test-threads=1",
+    "exitCode": 101,
+    "error": "E0277: the trait bound [(Phase, String)]: DeserializeOwned is not satisfied",
+    "location": "macos_client_restore_tests.rs:1715",
+    "correction": "Explicit Vec<(Phase, String)> type for the independently recorded phase references."
+  }
+}

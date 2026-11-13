@@ -1,0 +1,408 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "scope": "descriptor-relative bounded .codex tree phase inventory, not restorable full-client byte archive",
+  "relatedTestsPassed": 88,
+  "relatedProbeBoundary": "native lock group includes external probe entry; nested child harness outputs not added as extra tests;3 retained-native ignored entries remain excluded; one read-only inspector explicitly run for first failed fixture",
+  "results": {
+    "groups": {
+      "tree-fixed": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2324 filtered out; finished in 0.00s",
+          "test result: ok. 8 passed; 0 failed; 1 ignored; 0 measured; 2316 filtered out; finished in 0.12s"
+        ]
+      },
+      "originals-fixed": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 2304 filtered out; finished in 1.26s"
+        ]
+      },
+      "restore-fixed": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 2305 filtered out; finished in 15.38s"
+        ]
+      },
+      "session-fixed": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 2315 filtered out; finished in 0.81s"
+        ]
+      },
+      "index-fixed": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2324 filtered out; finished in 0.00s",
+          "test result: ok. 20 passed; 0 failed; 1 ignored; 0 measured; 2304 filtered out; finished in 1.02s"
+        ]
+      },
+      "native-lock-fixed": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 2314 filtered out; finished in 0.34s"
+        ]
+      }
+    },
+    "binarySha256": "b7a97e5f12f7c82675dba7b5e3c315f7cab661a97e05be9f7de56231dcd15c02",
+    "reason": "Actual first-use empty claim creates transient SQLite journal; exact native coordinator metadata classification changed. Check new empty claim+journal lock retention, all frame/session/restore/index/native consumers on final source, preserve earlier errors."
+  },
+  "checks": {
+    "fmt-close": 0,
+    "clippy-close": 0,
+    "build-close": 0
+  },
+  "nativeRounds": {
+    "native": {
+      "accepted": false,
+      "businessRequests": false,
+      "clientChangedDuringStart": false,
+      "independentOriginalsReferenced": false,
+      "indexedReady": false,
+      "indexedRestorePrepared": false,
+      "indexedRevision": 1,
+      "indexedStopped": false,
+      "nativeClientRestored": {
+        "codex/config.toml": true,
+        "codex/models_cache.json": true,
+        "codex/opencodex-catalog-audit.jsonl": true,
+        "codex/opencodex-catalog.json": true,
+        "grok/config.toml.bak-opencodex": true
+      },
+      "officialVersion": "2.99.0",
+      "pidRecordAbsent": true,
+      "record": null,
+      "recordAbsent": true,
+      "reopenedRecoveryGate": false,
+      "reopenedSnapshot": {
+        "can_restart": false,
+        "can_start": false,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "required",
+          "data_root": "/private/tmp/ocxd024-versioned-lifecycle-_5cxneg8/fixtures/profile/.codex-desktop/desktop",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-_5cxneg8/fixtures/profile/.codex-desktop/opencodex/home",
+          "protection": null,
+          "reboot_safe": null,
+          "runtime_label": null,
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": null,
+          "version_drift": null
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "loading"
+        },
+        "pid": null,
+        "port": null,
+        "source": "live"
+      },
+      "reopenedStatusElapsedMs": 784,
+      "result": "failed",
+      "serviceStarted": false,
+      "start": {
+        "canRestart": false,
+        "canStart": true,
+        "canStop": false,
+        "clientRecoveryRequired": false,
+        "failure": {
+          "code": "lifecycle_unconfirmed",
+          "message": "\u64cd\u4f5c\u672a\u786e\u8ba4\u5b8c\u6210\uff0c\u5df2\u4fdd\u7559\u5f53\u524d\u914d\u7f6e\uff0c\u8bf7\u67e5\u770b\u8bca\u65ad\u65e5\u5fd7\u3002"
+        },
+        "lifecycleState": "starting_failed",
+        "result": null
+      },
+      "startBudgetMs": 30000,
+      "startElapsedMs": 3852,
+      "status": {
+        "error": "Unreachable"
+      },
+      "statusBudgetMs": 5000,
+      "statusElapsedMs": 2383,
+      "stop": {
+        "canRestart": false,
+        "canStart": false,
+        "canStop": false,
+        "clientRecoveryRequired": true,
+        "failure": {
+          "code": "client_original_session_unconfirmed",
+          "message": "\u5ba2\u6237\u7aef\u539f\u4ef6\u4f1a\u8bdd\u672a\u6838\u5bf9\uff0c\u539f\u4ef6\u53ca\u5f53\u524d\u8f93\u5165\u5df2\u4fdd\u7559\uff1b\u8bf7\u68c0\u67e5\u8bca\u65ad\u540e\u5904\u7406\u539f\u4f1a\u8bdd"
+        },
+        "lifecycleState": "stopped",
+        "result": null
+      },
+      "stopBudgetMs": 10000,
+      "stopElapsedMs": 664,
+      "stoppedRecoveryObservation": true
+    },
+    "native2": {
+      "accepted": false,
+      "businessRequests": false,
+      "clientChangedDuringStart": false,
+      "independentOriginalsReferenced": false,
+      "indexedReady": false,
+      "indexedRestorePrepared": false,
+      "indexedRevision": 1,
+      "indexedStopped": false,
+      "nativeClientRestored": {
+        "codex/config.toml": true,
+        "codex/models_cache.json": true,
+        "codex/opencodex-catalog-audit.jsonl": true,
+        "codex/opencodex-catalog.json": true,
+        "grok/config.toml.bak-opencodex": true
+      },
+      "officialVersion": "2.99.0",
+      "pidRecordAbsent": true,
+      "record": null,
+      "recordAbsent": true,
+      "reopenedRecoveryGate": false,
+      "reopenedSnapshot": {
+        "can_restart": false,
+        "can_start": false,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "required",
+          "data_root": "/private/tmp/ocxd024-versioned-lifecycle-atu9whf3/fixtures/profile/.codex-desktop/desktop",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-atu9whf3/fixtures/profile/.codex-desktop/opencodex/home",
+          "protection": null,
+          "reboot_safe": null,
+          "runtime_label": null,
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": null,
+          "version_drift": null
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "loading"
+        },
+        "pid": null,
+        "port": null,
+        "source": "live"
+      },
+      "reopenedStatusElapsedMs": 780,
+      "result": "failed",
+      "serviceStarted": false,
+      "start": {
+        "canRestart": false,
+        "canStart": true,
+        "canStop": false,
+        "clientRecoveryRequired": false,
+        "failure": {
+          "code": "lifecycle_unconfirmed",
+          "message": "\u64cd\u4f5c\u672a\u786e\u8ba4\u5b8c\u6210\uff0c\u5df2\u4fdd\u7559\u5f53\u524d\u914d\u7f6e\uff0c\u8bf7\u67e5\u770b\u8bca\u65ad\u65e5\u5fd7\u3002"
+        },
+        "lifecycleState": "starting_failed",
+        "result": null
+      },
+      "startBudgetMs": 30000,
+      "startElapsedMs": 3122,
+      "status": {
+        "error": "Unreachable"
+      },
+      "statusBudgetMs": 5000,
+      "statusElapsedMs": 802,
+      "stop": {
+        "canRestart": false,
+        "canStart": false,
+        "canStop": false,
+        "clientRecoveryRequired": true,
+        "failure": {
+          "code": "client_original_session_unconfirmed",
+          "message": "\u5ba2\u6237\u7aef\u539f\u4ef6\u4f1a\u8bdd\u672a\u6838\u5bf9\uff0c\u539f\u4ef6\u53ca\u5f53\u524d\u8f93\u5165\u5df2\u4fdd\u7559\uff1b\u8bf7\u68c0\u67e5\u8bca\u65ad\u540e\u5904\u7406\u539f\u4f1a\u8bdd"
+        },
+        "lifecycleState": "stopped",
+        "result": null
+      },
+      "stopBudgetMs": 10000,
+      "stopElapsedMs": 659,
+      "stoppedRecoveryObservation": true
+    },
+    "native3": {
+      "accepted": false,
+      "businessRequests": false,
+      "clientChangedDuringStart": true,
+      "independentOriginalsReferenced": true,
+      "indexedReady": true,
+      "indexedRestorePrepared": true,
+      "indexedRevision": 6,
+      "indexedStopped": false,
+      "nativeClientRestored": {
+        "codex/config.toml": true,
+        "codex/models_cache.json": false,
+        "codex/opencodex-catalog-audit.jsonl": false,
+        "codex/opencodex-catalog.json": false,
+        "grok/config.toml.bak-opencodex": true
+      },
+      "officialVersion": "2.99.0",
+      "pidRecordAbsent": true,
+      "record": {
+        "pid": 77245,
+        "port": 54922
+      },
+      "recordAbsent": true,
+      "reopenedRecoveryGate": false,
+      "reopenedSnapshot": {
+        "can_restart": false,
+        "can_start": false,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "required",
+          "data_root": "/private/tmp/ocxd024-versioned-lifecycle-7jlb1p7f/fixtures/profile/.codex-desktop/desktop",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-7jlb1p7f/fixtures/profile/.codex-desktop/opencodex/home",
+          "protection": null,
+          "reboot_safe": null,
+          "runtime_label": null,
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": null,
+          "version_drift": null
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "loading"
+        },
+        "pid": null,
+        "port": null,
+        "source": "live"
+      },
+      "reopenedStatusElapsedMs": 787,
+      "restorePlanMatchesIndependentIndex": true,
+      "result": "failed",
+      "serviceStarted": true,
+      "start": {
+        "canRestart": true,
+        "canStart": false,
+        "canStop": true,
+        "clientRecoveryRequired": false,
+        "lifecycleState": "running",
+        "result": "started"
+      },
+      "startBudgetMs": 30000,
+      "startElapsedMs": 13918,
+      "status": {
+        "pid": "77245",
+        "port": 54922,
+        "ready": true,
+        "status": "running"
+      },
+      "statusBudgetMs": 5000,
+      "statusElapsedMs": 1087,
+      "stop": {
+        "canRestart": false,
+        "canStart": false,
+        "canStop": false,
+        "clientRecoveryRequired": true,
+        "failure": {
+          "code": "client_original_restore_pending",
+          "message": "\u670d\u52a1\u5df2\u6b63\u5e38\u505c\u6b62\uff0c\u5ba2\u6237\u7aef\u914d\u7f6e\u539f\u4ef6\u6062\u590d\u5c1a\u672a\u5b8c\u6210\uff1b\u539f\u4f1a\u8bdd\u548c\u73b0\u573a\u5df2\u4fdd\u7559"
+        },
+        "lifecycleState": "stopped",
+        "result": null
+      },
+      "stopBudgetMs": 10000,
+      "stopElapsedMs": 8402,
+      "stoppedRecoveryObservation": true
+    }
+  },
+  "frameBindings": {
+    "native": [],
+    "native2": [],
+    "native3": [
+      {
+        "name": "original.json",
+        "sha256": "21f2ad37f7e28352b5967bcfc25357fe192d5fdfecb57662d9a51ddf28d64455",
+        "entries": 4,
+        "ordinaryBytes": 210,
+        "coordinationEntries": [
+          ".opencodex-native-main.claim.sqlite",
+          ".opencodex-native-main.claim.sqlite-journal"
+        ],
+        "configPresent": true
+      },
+      {
+        "name": "ready.json",
+        "sha256": "2a226ae32239214ed67eed7b395b1151caff77a66c2874c710ec028d319cad34",
+        "entries": 10,
+        "ordinaryBytes": 7958,
+        "coordinationEntries": [
+          ".opencodex-native-main.claim.sqlite",
+          ".opencodex-native-main.claim.sqlite-journal"
+        ],
+        "configPresent": true
+      },
+      {
+        "name": "pre-stop.json",
+        "sha256": "5bdc048cc44e4ecccb42df950587aa4fd7c93d607d15d0ce5da0a5241f97702b",
+        "entries": 9,
+        "ordinaryBytes": 7958,
+        "coordinationEntries": [
+          ".opencodex-native-main.claim.sqlite"
+        ],
+        "configPresent": true
+      },
+      {
+        "name": "stopped.json",
+        "sha256": "07e4c20380be15e74d837d11fb67045cb4db5c558cc6a8939f79dbcb04a2223e",
+        "entries": 7,
+        "ordinaryBytes": 3853,
+        "coordinationEntries": [
+          ".opencodex-native-main.claim.sqlite",
+          ".opencodex-native-main.claim.sqlite-journal"
+        ],
+        "configPresent": true
+      }
+    ]
+  },
+  "diagnosis": "Empty claim BEGIN EXCLUSIVE created live journal; first native attempt refused before original/service. Fixed phase-only trace plus separate empty claim reproduction proved prior blanket sidecar refusal; fixed exact coordination metadata3 reached Ready/RestorePrepared original budgets. No failed profile rebasing.",
+  "remainingFailure": "fresh collector returned Required but runtime Loading/unreachable rather than Stopped in all3rounds; final reopened gate false, not counted success. Earlier independent revision4 poststop failure remains separate unresolved.",
+  "limitations": [
+    "bounded16MiB/file128MiB total16384entries64depth; larger/linked/special/unreadable or changing trees refuse, no truncation or silent skip",
+    "claim and3sidecars stat-only and no restore permission, no content/ACL/xattr promise for them",
+    "path names and captured protection/xattrs remain in private frame; no ordinary file contents serialized in tree but no universal metadata secret-redaction claim",
+    "only .codex root tree, no external Grok/Agent roots or missing-root creation; restorable byte set still catalog/cache/audit3",
+    "regular file hashes streaming with before/after comparisons, not atomic filesystem snapshot or full malicious-user exclusion",
+    "MutationPermit/apply unchanged and unopened; full family/listeners/writers, general graph, explicit recovery, Windows/NAME/System/release/fixed candidate remain open"
+  ],
+  "cleanup": {
+    "ownedProcessesRemaining": [],
+    "originalPrimaryPortAbsent": true,
+    "tcpSnapshotFramingValid": true,
+    "exactDatabasesExclusivelyReacquiredReleased": [
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/970d79f5306de8f4f4d7e4978481f4ed3a578a6de2c3d8a19a952fa1af8abcc9.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/970d79f5306de8f4f4d7e4978481f4ed3a578a6de2c3d8a19a952fa1af8abcc9.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/bec6edc30b61f16f2228f44156cc69b5e3c43b845550f73c19ec4c2b653a5221.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/bec6edc30b61f16f2228f44156cc69b5e3c43b845550f73c19ec4c2b653a5221.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/c71d9ab8315aa82942da7c5e23fbe20807b5c30ceac91d61233c4bbee3839241.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c71d9ab8315aa82942da7c5e23fbe20807b5c30ceac91d61233c4bbee3839241.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/history-write-locks/42f9a4285575a7de0d1f75da927a4a94d68060b990035ea86feca610ad8887ba.sqlite"
+    ],
+    "allNativeFixtureRootsRemoved": true,
+    "testBinariesAndFixtureTreesRemoved": true,
+    "duplicateOriginalLogFilesRemoved": [
+      "/private/tmp/ocxd024-tree-capture-build.stderr.log",
+      "/private/tmp/ocxd024-tree-capture-tests3.stderr.log",
+      "/private/tmp/ocxd024-tree-clippy.stderr.log",
+      "/private/tmp/ocxd024-tree-capture-tests2.stdout.log",
+      "/private/tmp/ocxd024-tree-capture-tests.stdout.log",
+      "/private/tmp/ocxd024-tree-build.stderr.log",
+      "/private/tmp/ocxd024-tree-clippy.stdout.log",
+      "/private/tmp/ocxd024-tree-capture-tests3.stdout.log",
+      "/private/tmp/ocxd024-tree-capture-build.stdout.log",
+      "/private/tmp/ocxd024-tree-capture-tests2.stderr.log",
+      "/private/tmp/ocxd024-tree-capture-tests.stderr.log",
+      "/private/tmp/ocxd024-tree-build.stdout.log"
+    ],
+    "dailyConfigChanged": false,
+    "officialRuntimeModified": false,
+    "businessRequests": false
+  }
+}

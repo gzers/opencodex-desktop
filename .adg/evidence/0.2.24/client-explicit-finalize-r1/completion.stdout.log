@@ -1,0 +1,12 @@
+
+running 7 tests
+test infrastructure::macos_client_originals::completion::tests::external_stable_owner_contention_refuses_then_release_succeeds ... ok
+test infrastructure::macos_client_originals::completion::tests::grok_root_absence_and_plain_tree_have_no_stable_lock_exception ... ok
+test infrastructure::macos_client_originals::completion::tests::inspect_owned_completion_receipt_without_rewriting_it ... ignored, explicit retained owned Profile, read-only final receipt/tree evidence only
+test infrastructure::macos_client_originals::completion::tests::full_readback_accepts_atomic_original_replacement_but_no_content_or_protection_change ... ok
+test infrastructure::macos_client_originals::completion::tests::real_stable_pair_requires_both_exclusive_locks_correct_generation_and_budget ... ok
+test infrastructure::macos_client_originals::completion::tests::xattrs_are_not_ignored_by_full_restoration_readback ... ok
+test infrastructure::macos_client_originals::completion::tests::only_exact_adopted_lock_names_are_exempt_no_stage_backup_or_sidecar ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 2373 filtered out; finished in 0.07s
+

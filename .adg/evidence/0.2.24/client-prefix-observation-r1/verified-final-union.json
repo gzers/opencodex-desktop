@@ -1,0 +1,96 @@
+{
+  "accepted": false,
+  "finalImplementation": "ancestor-chain union only; per-frame complete provenance unchanged",
+  "sameBinaryReverseOrder": true,
+  "referenceMs": [
+    90.752708,
+    89.926083
+  ],
+  "ancestorUnionMs": [
+    87.788208,
+    86.302375
+  ],
+  "meanChangePercent": 3.65,
+  "counts": {
+    "fullProvenance": [
+      10,
+      10
+    ],
+    "frames": [
+      8,
+      8
+    ],
+    "captureFile": [
+      64,
+      64
+    ],
+    "pinnedOpen": [
+      56,
+      56
+    ],
+    "protection": [
+      6683,
+      6299
+    ]
+  },
+  "attributeCountReductionPercent": 5.75,
+  "captureComparison": [
+    {
+      "label": "capture-reference",
+      "reference": true,
+      "threeCaptureMs": [
+        2985,
+        3051,
+        2999
+      ],
+      "protectionCalls": 1221825,
+      "fullProvenanceCalls": 1089
+    },
+    {
+      "label": "capture-optimized-before-single",
+      "reference": false,
+      "threeCaptureMs": [
+        4345,
+        4378,
+        4538
+      ],
+      "protectionCalls": 1714212,
+      "fullProvenanceCalls": 1560
+    },
+    {
+      "label": "capture-scoped-final",
+      "reference": false,
+      "threeCaptureMs": [
+        3874,
+        3860,
+        4059
+      ],
+      "protectionCalls": 1478733,
+      "fullProvenanceCalls": 1089
+    },
+    {
+      "label": "union-only-capture",
+      "reference": false,
+      "threeCaptureMs": [
+        3016,
+        3023,
+        3018
+      ],
+      "protectionCalls": 1199505,
+      "fullProvenanceCalls": 1089
+    },
+    {
+      "label": "union-only-capture-reference",
+      "reference": true,
+      "threeCaptureMs": [
+        3103,
+        2954,
+        2966
+      ],
+      "protectionCalls": 1221825,
+      "fullProvenanceCalls": 1089
+    }
+  ],
+  "scopedProvenanceReuseRejected": true,
+  "limits": "Small synthetic debug observation, two measurements per order. No original normalStop or release speed claim; previous secondStop failure remains."
+}

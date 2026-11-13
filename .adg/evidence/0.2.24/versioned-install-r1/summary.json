@@ -1,0 +1,57 @@
+{
+  "codeCommit": "b617717c365ce847a66dea9ee979d3939436e5fb",
+  "synthetic": {
+    "versionedInstall": 4,
+    "existingInstaller": 35,
+    "activation": 5,
+    "selection": 7,
+    "commandConsumers": 9,
+    "totalPassed": 60,
+    "ignoredExplicitOfficialCase": 1,
+    "binarySha256": "e2f42f6a55201dbbefb7bb78ed989f231f54b6b2bada0053023aeb450214fc47"
+  },
+  "official299": {
+    "passed": 1,
+    "actualNpm": true,
+    "registryThenOffline": true,
+    "sameVersionNoop": true,
+    "candidateElapsedMs": 150120,
+    "includingProvisionElapsedMs": 221820,
+    "descriptorPin": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "archiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+    "binarySha256": "37e0be0412e1c114937061c60becc3360e3fda88b9884d69cd5a1375e144fb52",
+    "stopProof": "test fixture injected",
+    "serviceExecuted": false,
+    "network": "explicit localhost:3060 proxy only"
+  },
+  "officialRunScope": "Official test preceded final changes that reject a symlink dependency root, omit staging-only .downloads from candidate copy and add a negative official-file-tamper test. Actual npm, Bun placement, pinned source verification and version-probe paths unchanged; final synthetic suite covers the later changes. Not a native release candidate acceptance.",
+  "format": "passed",
+  "strictClippyLibAndTests": "passed",
+  "verified": [
+    "versioned handles use install_versioned from both installation and official-update commands; no flat-prefix overwrite",
+    "candidate uses current verified Node/npm with version-local dependencies and verified Bun native wrapper placement",
+    "official tarball copied and rechecked; source uses stable relative file:sources specification; installed official package tree equals extracted original",
+    "temporary npm output and file-link normalization are bounded; external links, mismatched version and official package mutation rejected",
+    "configuration protection precedes immutable image publication and activation; stopped evidence required before preparation and during activation",
+    "old program retained, changed candidate/unknown version directory never overwritten",
+    "retry after a pre-activation failure only reuses a full tree identical to the independently rebuilt candidate",
+    "service state change mid-activation retains pending and permits explicit Rust-API rollback",
+    "successful install history committed with current/entry/source mirror, not claimed by a later unrelated write"
+  ],
+  "knownIssuesResolvedDuringWork": [
+    "Subagent audit tool failed authorization before producing findings; main thread performed implementation and tests.",
+    "Actual bun@1.4.4 npm tarball includes a 450-byte error placeholder with sha256 3877c58dda42c0c5ce4f33d21bfde4733c8e6906e8268e136cfdd6ea522df040; checked against sha512-locked tarball. Code now replaces only that known placeholder or accepts identical native bytes, then verifies readback.",
+    "Compiler/shell snippets required an AppResult import and corrected character literal escaping; no successful output was claimed for those attempts."
+  ],
+  "remaining": [
+    "pending activation recovery command/UI and actual versioned lifecycle owner/stop integration",
+    "repair of a changed same-version immutable image needs explicit recovery; ordinary install rejects overwrite",
+    "offline first-install dependency cache absence is an explicit npm error, not permission to use network",
+    "Windows W0 separate HOME/Profile fix, W1 and final W2 candidate remain pending",
+    "native CLI, uninstall, external-version UI, network UI and P24-NAME remain in IMP34"
+  ],
+  "official299Modified": false,
+  "dailyConfigTouched": false,
+  "businessSyncOrModelRequest": false,
+  "temporaryFixturesRemoved": true
+}

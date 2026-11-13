@@ -1,0 +1,65 @@
+{
+  "baseCommit": "287ee0c9d2a2048b83f8db54d945caedf02e29b5",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "bytes": 22872,
+      "sha256": "e3a19750daedaedf1fd6a4a6f2aceab69b0028ec5d2560ae0b6fcc291e41b97c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "bytes": 51505,
+      "sha256": "030aced24958b33ef21e47d2c72f3d27ea5d8f1988f745205c1eae41ac9d0beb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_recovery_finalize.rs",
+      "bytes": 4402,
+      "sha256": "6e05adfb385d796c2360ca23d26aacd4d314789cb31d93b8834cf75195014f77"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement.rs",
+      "bytes": 56459,
+      "sha256": "479572bf4b0ce6d14b255d644087cc6f730cea84bc48b3f15b6993c0154a8702"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "bytes": 88573,
+      "sha256": "ad8fb68d5c98de4f177e0e99e338c6c6f5633f37f725951f5beb4ee1873ed4c4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "bytes": 87917,
+      "sha256": "f140d72f13dcc52fd65f3eb4aa7522082c586c6b95fd2d52ac28e695f281594b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "bytes": 12164,
+      "sha256": "13481c261affeab46fe4cc5e9a15ae9e7431be6bcb24b578b7abde3acff8e62c"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery-store.ts",
+      "bytes": 12123,
+      "sha256": "e85ac90f88e100710eb27bef9a36dceee00ae7d8962cf3592319906d6ab095ab"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "bytes": 42814,
+      "sha256": "bc3179b00c54fe88e3665bbef0b6965099e48f199d9064947045fb70299d4e41"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_retired_completion.rs",
+      "bytes": 15482,
+      "sha256": "fa571977b1c5ea9539c7ae78a2433a3e82bcafa1d48b69740a9f84a063f32fd0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_retired_completion_tests.rs",
+      "bytes": 11878,
+      "sha256": "0841175abbba94f620c22185618dd13fc922c9aaaabf076bbbba5cd6ad6aa541"
+    }
+  ],
+  "fixedCandidate": false,
+  "officialServiceRounds": 0,
+  "scope": "Final compile/checks and explicit native pending. Full originals regression binary precedes test-only after-image-drift hook/snapshot extras; production recovery core check_closed was already included.",
+  "sourceCommit": "cbc6174de17ef658f34d361ee4a6c734bff8460c",
+  "testBinarySha256": "bb85edacda50da52ae0414af31c7487a7d8864d12bb218af664aa88535fe6ec8"
+}

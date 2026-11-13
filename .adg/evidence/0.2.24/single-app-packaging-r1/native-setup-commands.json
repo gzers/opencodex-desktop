@@ -1,0 +1,27 @@
+[
+  {
+    "argv": [
+      "/usr/bin/cc",
+      "/Users/ezio/Library/Caches/ocxd024-signed-package-fixture-0paovz_p/fixture.c",
+      "-o",
+      "/Users/ezio/Library/Caches/ocxd024-signed-package-fixture-0paovz_p/source/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/codesign",
+      "--force",
+      "--deep",
+      "--sign",
+      "-",
+      "--timestamp=none",
+      "/Users/ezio/Library/Caches/ocxd024-signed-package-fixture-0paovz_p/source/OpenCodeX Desktop.app"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": "/Users/ezio/Library/Caches/ocxd024-signed-package-fixture-0paovz_p/source/OpenCodeX Desktop.app: replacing existing signature\n"
+  }
+]

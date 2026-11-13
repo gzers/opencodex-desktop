@@ -1,0 +1,7 @@
+from pathlib import Path
+import json,subprocess,time
+c=json.loads(Path('/private/tmp/ocxd024consumers-active.json').read_text());r=Path(c['root']);e=Path(c['evidence']);env=c['env'];runs=[]
+checks=[('selection','modules::runtime::program_selection::',False),('handle','modules::runtime::tests::',False),('status','modules::status::tests::',False),('bundled','modules::runtime::bundled::bundled_tests::',False),('source-dto','commands::runtime::tests::source_dto_',False),('environment-consumers','commands::discovery::tests::',False),('real-official-supply','real_official299_versioned_supply_reopen_preserves_home_and_source',True),('real-official-environment','real_official299_versioned_environment_is_bound_to_actual_programs',True)]
+for label,filter,ignored in checks:
+ argv=['/usr/bin/sandbox-exec','-f',str(r/'sandbox.sb'),str(r/'test'),filter,'--nocapture','--test-threads=1']+(['--ignored'] if ignored else []);start=time.monotonic();p=subprocess.run(argv,cwd=r,env=env,capture_output=True,text=True,timeout=240 if ignored else 75);(e/(label+'.stdout.log')).write_text(p.stdout);(e/(label+'.stderr.log')).write_text(p.stderr);item={'label':label,'filter':filter,'ignoredExplicitlyEnabled':ignored,'exit':p.returncode,'elapsedSeconds':time.monotonic()-start,'summary':[s for s in p.stdout.splitlines() if 'test result:' in s]};runs.append(item);(e/'runs.json').write_text(json.dumps(runs,indent=2));print(json.dumps(item),flush=True)
+(e/'finished.json').write_text(json.dumps({'allPassed':all(x['exit']==0 for x in runs),'runs':runs},indent=2))

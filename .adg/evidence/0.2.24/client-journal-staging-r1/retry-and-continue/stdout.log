@@ -1,0 +1,8 @@
+
+running 1 test
+test commands::client_recovery::tests::prepare_owned_stopped_missing_plan_then_continue ... {"accepted":false,"currentTargetFilesUnchanged":true,"elapsedMs":4765,"error":null,"noHistoricalExitProofReconstructed":true,"outcome":{"attemptId":"979df727-fba7-40e5-98ce-85079e3a9cc9","revision":7,"status":"restore_prepared"}}
+{"accepted":false,"elapsedMs":6550,"error":null,"outcome":{"attemptId":"979df727-fba7-40e5-98ce-85079e3a9cc9","revision":8,"status":"restored"},"reopened":{"attemptId":"979df727-fba7-40e5-98ce-85079e3a9cc9","canCancelPreparation":false,"canContinue":false,"canFinalize":false,"canFinishUnchanged":false,"canPreparePlan":false,"canRearm":false,"canRollback":false,"completionEvidence":"verified","confirmationDigest":null,"originalEvidence":"verified","phase":"restored","phaseCount":3,"planDigest":null,"planEvidence":"verified","preparationDigest":null,"rearmDigest":null,"revision":8,"rollbackDigest":null,"status":"restored","unchangedDigest":null},"separateExplicitContinue":true}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2416 filtered out; finished in 14.64s
+

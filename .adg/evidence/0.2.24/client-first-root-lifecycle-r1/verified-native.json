@@ -1,0 +1,46 @@
+{
+  "accepted": false,
+  "verifiedFailedRounds": [
+    {
+      "round": "native",
+      "startPassedWithin30s": true,
+      "normalServiceLauncherExitAndFourListenersAbsent": true,
+      "independentState": "restore_prepared",
+      "indexRevision": 7,
+      "allPhaseAndSourceReferencesExact": true,
+      "StopAccepted": false,
+      "stopElapsedMs": 10278
+    },
+    {
+      "round": "diagnostic",
+      "startPassedWithin30s": true,
+      "normalServiceLauncherExitAndFourListenersAbsent": true,
+      "independentState": "restore_prepared",
+      "indexRevision": 7,
+      "allPhaseAndSourceReferencesExact": true,
+      "StopAccepted": false,
+      "stopElapsedMs": 10273
+    },
+    {
+      "round": "coalesced",
+      "startPassedWithin30s": true,
+      "normalServiceLauncherExitAndFourListenersAbsent": true,
+      "independentState": "root_retirement_prepared",
+      "indexRevision": 8,
+      "allPhaseAndSourceReferencesExact": true,
+      "StopAccepted": false,
+      "stopElapsedMs": 11523
+    },
+    {
+      "round": "descriptor",
+      "startPassedWithin30s": true,
+      "normalServiceLauncherExitAndFourListenersAbsent": true,
+      "independentState": "root_retirement_prepared",
+      "indexRevision": 8,
+      "allPhaseAndSourceReferencesExact": true,
+      "StopAccepted": false,
+      "stopElapsedMs": 10338
+    }
+  ],
+  "failureRemains": "Stop10 budget exceeded; final root absent completion not committed; next Start unaccepted"
+}

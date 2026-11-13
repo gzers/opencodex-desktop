@@ -1,0 +1,47 @@
+{
+  "codeCommit": "11bc469b496098a6827ca3db704d67fd789017b4",
+  "strictStyleCommit": "973dbf92b",
+  "rust": {
+    "scope": "modules::model_config::config_file::v2::",
+    "passed": 120,
+    "failed": 0,
+    "networkDenied": true,
+    "writes": "private fixture container plus exact legacy receive-fixture prefix",
+    "temporaryFixturesRemoved": true
+  },
+  "frontend": {
+    "passed": 67,
+    "failed": 0,
+    "files": 8,
+    "typecheck": "passed"
+  },
+  "format": "passed",
+  "clippyLibAndTestsWarningsDenied": "passed",
+  "newBackendCases": 7,
+  "verified": [
+    "review does not write config or draft; confirmation only advances draft",
+    "no template matching in reconcile",
+    "preserves buffered model/channel/key edits; tokens carry IDs only",
+    "independent channel changes, global edits and model-only versus connection-only changes can rebase",
+    "overlapping changes, deleted providers, stale previews and pending transactions refuse without overwrite",
+    "review binds source, root, draft bytes, policy, library, mappings and provider identity registry",
+    "scoped save does not apply another channel credential intent and retains it for later save",
+    "copy provenance preserves original reference and verifies full original provider bytes after unrelated changes"
+  ],
+  "retainedFailures": [
+    "initial Rust sweep: 67 passed, 49 failed; 47 receive fixtures use explicit /tmp parent outside the first sandbox write allowance; no receive transaction ran. Corrected only harness allowance to an exact synthetic fixture prefix, with before/after residual accounting.",
+    "the other two initial Rust failures caught unintended adoption/rewriting of unmanaged providers by scoped save. Fixed by rebasing only already-managed out-of-scope rows; original assertions preserved.",
+    "initial frontend expectation omitted the existing explicit rename intent added by detail Save. Corrected the test to compare the exact pre-review intent list; preserved all intents.",
+    "strict Clippy found too many reconcile arguments plus two pre-existing equivalent runtime style issues; reduced arguments and made the equivalent changes in a separate commit. No lint suppression."
+  ],
+  "remaining": [
+    "true overlapping edits remain refused; no silent winner or automatic overwrite",
+    "native candidate UI and lifecycle integration still pending",
+    "manual/pre-upgrade backups and versioned install/update/uninstall/CLI still pending",
+    "P24-NAME remains a separate local wait",
+    "Windows W0 HOME/Profile integration correction and native final candidate verification not received"
+  ],
+  "official299Modified": false,
+  "dailyConfigTouched": false,
+  "realBusinessSyncOrModelRequests": false
+}

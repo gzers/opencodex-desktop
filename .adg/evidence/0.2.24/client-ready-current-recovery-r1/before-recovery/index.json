@@ -1,0 +1,72 @@
+{
+  "head": {
+    "revision": 4,
+    "ticket": "07be0e6b-b943-496f-b950-d1896a417f4b",
+    "state": "ready",
+    "references": {
+      "attempt": "07be0e6b-b943-496f-b950-d1896a417f4b",
+      "originalSha256": "171b9529b87907a0d2f4874809709558d7cdbb72cec3927a1632d32addec91ae",
+      "scopeSha256": "484ce5623f0be88a4b45325512d17f67e8f79376100dad82107a1c3fb6e260b7",
+      "phases": [
+        [
+          "ready",
+          "c0f8f8fb72eeb674cd9d18def9e4cf8a04dd20d5c9d471eb35e5c3fbce77e021"
+        ]
+      ],
+      "liveSha256": "98453f330e9a02ac04abb7db2e77e1587e420db804090a4c321fec057ed4b9f8"
+    },
+    "restorePlan": null,
+    "completionSha256": null
+  },
+  "events": [
+    {
+      "revision": 1,
+      "ticket": "07be0e6b-b943-496f-b950-d1896a417f4b",
+      "state": "preparing",
+      "references": null,
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 2,
+      "ticket": "07be0e6b-b943-496f-b950-d1896a417f4b",
+      "state": "capture_reserved",
+      "references": null,
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 3,
+      "ticket": "07be0e6b-b943-496f-b950-d1896a417f4b",
+      "state": "captured",
+      "references": {
+        "attempt": "07be0e6b-b943-496f-b950-d1896a417f4b",
+        "originalSha256": "171b9529b87907a0d2f4874809709558d7cdbb72cec3927a1632d32addec91ae",
+        "scopeSha256": "484ce5623f0be88a4b45325512d17f67e8f79376100dad82107a1c3fb6e260b7",
+        "phases": [],
+        "liveSha256": null
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 4,
+      "ticket": "07be0e6b-b943-496f-b950-d1896a417f4b",
+      "state": "ready",
+      "references": {
+        "attempt": "07be0e6b-b943-496f-b950-d1896a417f4b",
+        "originalSha256": "171b9529b87907a0d2f4874809709558d7cdbb72cec3927a1632d32addec91ae",
+        "scopeSha256": "484ce5623f0be88a4b45325512d17f67e8f79376100dad82107a1c3fb6e260b7",
+        "phases": [
+          [
+            "ready",
+            "c0f8f8fb72eeb674cd9d18def9e4cf8a04dd20d5c9d471eb35e5c3fbce77e021"
+          ]
+        ],
+        "liveSha256": "98453f330e9a02ac04abb7db2e77e1587e420db804090a4c321fec057ed4b9f8"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    }
+  ]
+}

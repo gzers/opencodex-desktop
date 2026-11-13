@@ -1,0 +1,16 @@
+
+> opencodex-desktop-ui@0.2.24 test
+> vitest --run tests/overview-motion.test.ts -t 环境未就绪时
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/overview-motion.test.ts (28 tests | 1 failed | 27 skipped) 98ms
+   ❯ overview integrates the motion area (2)
+     × 环境未就绪时：收起三卡与最近事件，展示准备卡 97ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 27 skipped (28)
+   Start at  02:19:47
+   Duration  1.26s (transform 63%, environment 20%, import 8%, tests 8%)
+

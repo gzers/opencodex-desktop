@@ -1,0 +1,40 @@
+{
+  "accepted": false,
+  "scope": "same-boundary duplicate validation elimination; ordinary native single-session sample passes under original budgets, not full version/candidate acceptance",
+  "backendDistinctFunctionalCases": 105,
+  "groups": {
+    "originals": 23,
+    "restore": 24,
+    "session": 26,
+    "index": 25,
+    "completion": 7
+  },
+  "manualReadOnlyCostProbe": 1,
+  "priorFailureMs": 10539,
+  "prefixOnlyRound": {
+    "startMs": 10396,
+    "statusMs": 267,
+    "stopMs": 10296,
+    "result": "failed",
+    "indexRevision": 6,
+    "failureStage": "full-tree-and-lock-release"
+  },
+  "readOnlyDiagnosis": "cost/summary.json",
+  "combinedRound": {
+    "startMs": 10239,
+    "statusMs": 271,
+    "stopMs": 9415,
+    "stopBudgetMs": 10000,
+    "reopenedStatusMs": 1020,
+    "indexRevision": 7,
+    "result": "passed"
+  },
+  "oldFailuresNeverOverwritten": true,
+  "completeTreesIndependentlyMatchSuccessReceipt": true,
+  "bothRoundsOriginalFileChecks": 14,
+  "failedCostProbeCompilePreserved": "cost-build.log",
+  "noNewAppOrDMG": true,
+  "WindowsRemoteCode": "b2e89665d2864ea8e29bbaa91ac7843dff7ac4cb",
+  "WindowsRemoteDocs": "0eef59a0114f9aea6a33d71e2b680192476939c8",
+  "remaining": "Budget margin general paths/candidate proof; incomplete/unindexed captures, changed early clients, general client/graph/family, Windows/NAME/Systemproxy/verifier/fixed candidate remain."
+}

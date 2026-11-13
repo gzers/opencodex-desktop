@@ -1,0 +1,65 @@
+{
+  "independentBeforeStartRoutes": [
+    "native-fixture/gpt-6-sol",
+    "native-fixture/vendor-custom-native"
+  ],
+  "actualReadyRows": [
+    {
+      "slug": "native-fixture/gpt-6-sol",
+      "display_name": "Custom base",
+      "context_window": 196608,
+      "input_modalities": [
+        "text"
+      ],
+      "supported_reasoning_levels": [
+        {
+          "effort": "low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "effort": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        }
+      ],
+      "opencodex_catalog_kind": "custom-model-v1"
+    },
+    {
+      "slug": "native-fixture/vendor-custom-native",
+      "display_name": "Custom added",
+      "context_window": 262144,
+      "input_modalities": [
+        "text"
+      ],
+      "supported_reasoning_levels": [
+        {
+          "effort": "low",
+          "description": "Fast responses with lighter reasoning"
+        },
+        {
+          "effort": "medium",
+          "description": "Balances speed and reasoning depth for everyday tasks"
+        },
+        {
+          "effort": "high",
+          "description": "Greater reasoning depth for complex problems"
+        },
+        {
+          "effort": "xhigh",
+          "description": "Extra high reasoning depth for complex problems"
+        },
+        {
+          "effort": "max",
+          "description": "Maximum reasoning depth for the hardest problems"
+        },
+        {
+          "effort": "ultra",
+          "description": "Maximum reasoning with automatic task delegation"
+        }
+      ],
+      "opencodex_catalog_kind": "custom-model-v1"
+    }
+  ],
+  "metadataOverrideAndNewNativeIDBothPresent": true,
+  "disabledCustomAbsent": true,
+  "exactTwoRouteCoverage": true
+}

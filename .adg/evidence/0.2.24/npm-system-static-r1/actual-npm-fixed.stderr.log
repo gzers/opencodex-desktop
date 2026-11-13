@@ -1,0 +1,24 @@
+
+thread 'modules::runtime::install::npm_proxy_tests::actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touching_user_config' (155225608) panicked at src/modules/runtime/npm_proxy_tests.rs:150:9:
+npm metadata failure: npm error code ECONNREFUSED
+npm error syscall connect
+npm error errno ECONNREFUSED
+npm error FetchError: request to http://127.0.0.1:59249/@bitkyc08%2fopencodex failed, reason: connect ECONNREFUSED 127.0.0.1:9
+npm error     at ClientRequest.<anonymous> (/private/tmp/ocxd024-npm-system-kax5ysqj/fixtures/tools/lib/node_modules/npm/node_modules/minipass-fetch/lib/index.js:130:14)
+npm error     at ClientRequest.emit (node:events:514:20)
+npm error     at emitErrorEvent (node:_http_client:114:11)
+npm error     at _destroy (node:_http_client:1169:9)
+npm error     at onSocketNT (node:_http_client:1190:5)
+npm error     at process.processTicksAndRejections (node:internal/process/task_queues:91:21) {
+npm error   code: 'ECONNREFUSED',
+npm error   errno: 'ECONNREFUSED',
+npm error   syscall: 'connect',
+npm error   address: '127.0.0.1',
+npm error   port: 9,
+npm error   type: 'system'
+npm error }
+npm error
+npm error If you are behind a proxy, please make sure that the 'proxy' config is set properly.  See: 'npm help config'
+npm error A complete log of this run can be found in: /private/tmp/ocxd024-npm-system-kax5ysqj/fixtures/.tmpjMYS7r/cache/npm/_logs/2026-11-11T19_24_34_628Z-debug-0.log
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

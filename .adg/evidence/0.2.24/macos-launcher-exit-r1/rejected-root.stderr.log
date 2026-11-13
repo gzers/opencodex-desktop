@@ -1,0 +1,4 @@
+
+thread 'infrastructure::macos_process_pair::tests::pair_helper' (155827089) panicked at src/infrastructure/macos_process_pair_tests.rs:27:5:
+assertion failed: root.is_absolute() && root.starts_with("/private/tmp")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

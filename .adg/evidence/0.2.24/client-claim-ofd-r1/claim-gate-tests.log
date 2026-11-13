@@ -1,0 +1,18 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.94s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 8 tests
+test infrastructure::macos_client_originals::claim_gate::tests::claim_gate_actual_owner_exit_releases_original_inode_without_cleanup_signal ... CLAIM_GATE_EXIT_EVIDENCE {"accepted":false,"actualWaitExitCode":91,"bytesUnchanged":true,"noCleanupSignal":true,"originalInodeReleased":true}
+ok
+test infrastructure::macos_client_originals::claim_gate::tests::claim_gate_expiry_refuses_without_unlocking_live_owner ... ok
+test infrastructure::macos_client_originals::claim_gate::tests::claim_gate_failed_handoff_keeps_existing_sqlite_connection_locked ... ok
+test infrastructure::macos_client_originals::claim_gate::tests::claim_gate_new_logical_root_is_not_the_retained_archive ... ok
+test infrastructure::macos_client_originals::claim_gate::tests::claim_gate_release_owner_drop_is_reusable_but_cannot_be_double_acquired ... ok
+test infrastructure::macos_client_originals::claim_gate::tests::claim_gate_relocation_keeps_compiled_sqlite_excluded_past_auxiliary_close ... CLAIM_GATE_EVIDENCE {"accepted":false,"auxiliaryCloseDoesNotRelease":true,"bytesUnchanged":true,"compiledSqliteExcludedBeforeAndAfterMove":true,"noProductionMovementAuthority":true,"normalReleaseProbed":true,"sameDirectoryIdentity":true,"sqliteConnectionCloseDoesNotRelease":true}
+ok
+test infrastructure::macos_client_originals::claim_gate::tests::claim_gate_replaced_or_unsafe_objects_refuse_without_repair ... ok
+test infrastructure::macos_client_originals::claim_gate::tests::claim_gate_sqlite_child ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2479 filtered out; finished in 0.16s
+

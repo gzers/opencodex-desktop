@@ -1,0 +1,51 @@
+{
+  "accepted": false,
+  "scope": "offline original-byte supplement only; synthetic marker permissions are not native authority",
+  "verified": [
+    {
+      "scene": "positive",
+      "allBytesAndReferenceHashesVerified": true,
+      "markerExactIdentityAndBytes": true,
+      "originalTreeDoesNotContainMarker": true,
+      "releasedTreeReceiptChecked": true,
+      "independentState": "root_absent",
+      "diskReceiptDoesNotClosePending": false
+    },
+    {
+      "scene": "registered",
+      "allBytesAndReferenceHashesVerified": true,
+      "markerExactIdentityAndBytes": true,
+      "originalTreeDoesNotContainMarker": true,
+      "releasedTreeReceiptChecked": false,
+      "independentState": "root_retirement_prepared",
+      "diskReceiptDoesNotClosePending": true
+    },
+    {
+      "scene": "after_native",
+      "allBytesAndReferenceHashesVerified": true,
+      "markerExactIdentityAndBytes": true,
+      "originalTreeDoesNotContainMarker": true,
+      "releasedTreeReceiptChecked": false,
+      "independentState": "root_retirement_prepared",
+      "diskReceiptDoesNotClosePending": true
+    },
+    {
+      "scene": "released",
+      "allBytesAndReferenceHashesVerified": true,
+      "markerExactIdentityAndBytes": true,
+      "originalTreeDoesNotContainMarker": true,
+      "releasedTreeReceiptChecked": false,
+      "independentState": "root_retirement_prepared",
+      "diskReceiptDoesNotClosePending": true
+    },
+    {
+      "scene": "readback",
+      "allBytesAndReferenceHashesVerified": true,
+      "markerExactIdentityAndBytes": true,
+      "originalTreeDoesNotContainMarker": true,
+      "releasedTreeReceiptChecked": true,
+      "independentState": "root_retirement_prepared",
+      "diskReceiptDoesNotClosePending": true
+    }
+  ]
+}

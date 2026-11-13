@@ -1,0 +1,47 @@
+{
+  "root": "/private/tmp/ocxd024-versioned-lifecycle-_5cxneg8/fixtures/profile/.codex",
+  "entries": [
+    {
+      "name": "root",
+      "uid": 501,
+      "gid": 0,
+      "mode": "0o700",
+      "kind": "directory",
+      "links": 5,
+      "size": 160,
+      "flags": 0
+    },
+    {
+      "name": ".opencodex-native-main.claim.sqlite",
+      "uid": 501,
+      "gid": 0,
+      "mode": "0o600",
+      "kind": "file",
+      "links": 1,
+      "size": 0,
+      "flags": 0
+    },
+    {
+      "name": "config.toml",
+      "uid": 501,
+      "gid": 0,
+      "mode": "0o600",
+      "kind": "file",
+      "links": 1,
+      "size": 44,
+      "flags": 0
+    },
+    {
+      "name": "opencodex-catalog.json",
+      "uid": 501,
+      "gid": 0,
+      "mode": "0o600",
+      "kind": "file",
+      "links": 1,
+      "size": 166,
+      "flags": 0
+    }
+  ],
+  "noContentsRead": true,
+  "source": "separate-process lstat only; not lifecycle authority"
+}

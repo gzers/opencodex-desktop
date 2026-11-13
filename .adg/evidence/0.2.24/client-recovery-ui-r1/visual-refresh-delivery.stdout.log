@@ -1,0 +1,27 @@
+{
+  "accepted": false,
+  "scope": "mock browser UI/prototype only; no native finalization or business operations",
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "refresh-failed-1180-light",
+      "pass": true,
+      "detail": {
+        "statusOnlyRetry": true
+      }
+    },
+    {
+      "name": "prototype-refresh-failed",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    }
+  ],
+  "result": "passed",
+  "cleanup": {
+    "browserClosed": true,
+    "ownedViteProcessExited": true
+  }
+}

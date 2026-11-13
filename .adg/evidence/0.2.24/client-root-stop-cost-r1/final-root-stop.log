@@ -1,0 +1,77 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 4 tests
+test commands::runtime_recovery_v2_owner::tests::completed_stop_binding::root_stop_current_absence_rechecks_secondary_listener_and_refuses_unknown_or_new_owner ... ROOT_STOP_CURRENT_ABSENCE_EVIDENCE {"accepted":false,"kernelCapturedTcpPorts":2,"kernelServiceNormalExit":true,"managerAndRecordReappearanceRefused":true,"ownerChangeRefused":true,"secondaryPortRefused":true,"syntheticReferenceWrapperNotOfficialStop":true,"unknownPortRefused":true}
+ok
+test infrastructure::macos_client_originals::root_retirement::index_tests::root_stop_movement_registration_requires_actual_current_index_and_exact_original_source ... ROOT_STOP_REGISTRATION_EVIDENCE {"accepted":false,"currentRegistrationVerifiedAcrossMove":true,"exactSourceEventRequired":true,"headCopyWithoutActualRegistrationRefused":true,"staleAfterCloseRefused":true,"storageOnlyNoNormalStopPermission":true}
+ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::root_stop_binding_follows_only_original_plan_archive_and_preserves_logical_scope ... ROOT_STOP_COST label=root-source phase=entry segment_us=2004 total_us=2004
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=26527 total_us=28532
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1795 total_us=30327
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=529 total_us=30857
+ROOT_STOP_COST label=root-source phase=program-source segment_us=384 total_us=31241
+ROOT_STOP_COST label=root-source phase=entry segment_us=2037 total_us=2037
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=32501 total_us=34539
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2152 total_us=36692
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=633 total_us=37325
+ROOT_STOP_COST label=root-source phase=program-source segment_us=490 total_us=37815
+ROOT_STOP_COST label=root-source phase=entry segment_us=1221 total_us=1221
+ROOT_STOP_COST label=root-source phase=entry segment_us=2479 total_us=2479
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=31877 total_us=34356
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2032 total_us=36389
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=647 total_us=37036
+ROOT_STOP_COST label=root-source phase=entry segment_us=2441 total_us=2441
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=31526 total_us=33967
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1980 total_us=35948
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=681 total_us=36629
+ROOT_STOP_COST label=root-source phase=entry segment_us=2535 total_us=2535
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=2924 total_us=5459
+ROOT_STOP_BINDING_EVIDENCE {"accepted":false,"logicalScopeUnchanged":true,"sourceAndFramesVerifiedBeforeAndAfterMove":true,"syntheticFramesNoStopPermission":true,"wrongPlanScopeLiveAndNewRootRefused":true}
+ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::root_stop_binding_rejects_modified_historical_frames_scope_and_live_after_move ... ROOT_STOP_COST label=root-source phase=entry segment_us=2005 total_us=2005
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=6282 total_us=8287
+ROOT_STOP_COST label=root-source phase=entry segment_us=2169 total_us=2169
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=27738 total_us=29908
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1879 total_us=31787
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=588 total_us=32375
+ROOT_STOP_COST label=root-source phase=program-source segment_us=422 total_us=32798
+ROOT_STOP_COST label=root-source phase=entry segment_us=2126 total_us=2126
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=11508 total_us=13635
+ROOT_STOP_COST label=root-source phase=entry segment_us=2280 total_us=2280
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=33282 total_us=35563
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1890 total_us=37453
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=629 total_us=38083
+ROOT_STOP_COST label=root-source phase=program-source segment_us=450 total_us=38533
+ROOT_STOP_COST label=root-source phase=entry segment_us=2381 total_us=2381
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=18904 total_us=21286
+ROOT_STOP_COST label=root-source phase=entry segment_us=2491 total_us=2491
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=30730 total_us=33222
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1984 total_us=35206
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=577 total_us=35784
+ROOT_STOP_COST label=root-source phase=program-source segment_us=422 total_us=36206
+ROOT_STOP_COST label=root-source phase=entry segment_us=2350 total_us=2350
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=23186 total_us=25537
+ROOT_STOP_COST label=root-source phase=entry segment_us=2430 total_us=2430
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29337 total_us=31768
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1732 total_us=33501
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=537 total_us=34039
+ROOT_STOP_COST label=root-source phase=program-source segment_us=394 total_us=34434
+ROOT_STOP_COST label=root-source phase=entry segment_us=2181 total_us=2181
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=25797 total_us=27978
+ROOT_STOP_COST label=root-source phase=entry segment_us=2050 total_us=2050
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=30275 total_us=32325
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1964 total_us=34290
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=560 total_us=34850
+ROOT_STOP_COST label=root-source phase=program-source segment_us=475 total_us=35326
+ROOT_STOP_COST label=root-source phase=entry segment_us=2392 total_us=2392
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29851 total_us=32243
+ROOT_STOP_COST label=root-source phase=entry segment_us=2310 total_us=2310
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=31552 total_us=33862
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2052 total_us=35915
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=617 total_us=36532
+ROOT_STOP_COST label=root-source phase=program-source segment_us=427 total_us=36960
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2509 filtered out; finished in 2.43s
+

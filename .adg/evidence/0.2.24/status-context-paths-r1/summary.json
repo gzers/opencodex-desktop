@@ -1,0 +1,74 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "completedScope": "stopped endpoint and explicit manager context-path projection",
+  "checksPassed": 32,
+  "firstRelatedGroupFailure": "one prior test expected paths.config file to be HOME; original failure retained; final exact corrected case passed",
+  "checks": {
+    "fmt": 0,
+    "clippy": 0,
+    "build-final": 0
+  },
+  "groups": {
+    "groups": {
+      "status": {
+        "exitCode": 101,
+        "resultLines": [
+          "test modules::status::tests::official_schema_maps_startup_status_and_facts ... FAILED",
+          "test result: FAILED. 18 passed; 1 failed; 0 ignored; 0 measured; 2287 filtered out; finished in 0.01s"
+        ]
+      },
+      "context": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2303 filtered out; finished in 0.01s"
+        ]
+      },
+      "recovery": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2305 filtered out; finished in 0.01s"
+        ]
+      },
+      "snapshot": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2301 filtered out; finished in 0.00s"
+        ]
+      },
+      "polling": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2303 filtered out; finished in 0.00s"
+        ]
+      },
+      "source": {
+        "exitCode": 0,
+        "resultLines": [
+          "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2305 filtered out; finished in 0.28s"
+        ]
+      }
+    },
+    "binarySha256": "9f277f414b6b939a37a2c0077aead145ecd4ad7268cd7705c283c21c9968c2ee"
+  },
+  "correctedCase": {
+    "exitCode": 0,
+    "binarySha256": "408995fd9beb90c0f6fb89ed1f7a9f4b3a9a276be0e492816ec88f55c109585d",
+    "productionAlgorithmChangedSincePassingGroups": false,
+    "change": "correct original file-as-HOME assertion to unknown; native explicit-context test separately proves correct D/H projection"
+  },
+  "actualSourceCommand": "isolated /bin/sh synthetic status payload using production OfficialStatusSource/collector; not official299 binary",
+  "officialContract": "unchanged original archive source plus retained prior real native snapshot inspected",
+  "cleanup": {
+    "ownedProcessesRemaining": [],
+    "kernelIsolationVerified": {
+      "daily-home": true,
+      "external-network": true
+    },
+    "testBinariesAndPrivateFixturesRemoved": true,
+    "realOfficialLifecycleStarted": false,
+    "realModelOrWebdavRequests": false,
+    "dailyConfigChanged": false
+  },
+  "notCompleted": "actual client restore/full family and remaining IMP34; previous native StopPrepared/revision4 failure remains unclassified, not retried in this batch"
+}

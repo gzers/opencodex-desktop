@@ -1,0 +1,6 @@
+
+thread 'modules::runtime::program_reinstall::tests::real_official_bundle_remove_reinstall_and_read_actual_version_preserves_configuration' (154372631) panicked at src/modules/runtime/program_reinstall_tests.rs:357:5:
+assertion `left == right` failed
+  left: "opencodex 2.99.0"
+ right: "2.99.0"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

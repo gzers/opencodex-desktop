@@ -1,0 +1,41 @@
+{
+  "accepted": false,
+  "sourceCommit": "287ee0c9d2a2048b83f8db54d945caedf02e29b5",
+  "directedNativePassed": true,
+  "actualNativeRounds": 1,
+  "firstCycleMs": {
+    "startElapsedMs": 7160,
+    "statusElapsedMs": 231,
+    "stopElapsedMs": 6016
+  },
+  "secondCycleMs": {
+    "secondStartElapsedMs": 9749,
+    "secondLiveStatusElapsedMs": 785,
+    "secondStopElapsedMs": 9572,
+    "firstStoppedStatusElapsedMs": 961,
+    "secondStoppedStatusElapsedMs": 1840
+  },
+  "firstStopTail": {
+    "accepted": false,
+    "completeSourceUs": 480974,
+    "expiredAfter": false,
+    "leaseCheckUs": 1268,
+    "releaseUs": 455,
+    "remainingAfterUs": 3995076,
+    "remainingBeforeUs": 4477776
+  },
+  "secondStopTail": {
+    "accepted": false,
+    "completeSourceUs": 523049,
+    "expiredAfter": false,
+    "leaseCheckUs": 1140,
+    "releaseUs": 385,
+    "remainingAfterUs": 442132,
+    "remainingBeforeUs": 966707
+  },
+  "currentRootState": "root_absent",
+  "currentRevision": 18,
+  "completeClosedGenerations": 2,
+  "stopActionAndStatusStartEligibilityAgrees": true,
+  "scope": "One fixed clean release-library original299 two-cycle directed diagnostic; no fixed app/MSI/DMG/Windows final, general clients/interruptions/wholeversion acceptance."
+}

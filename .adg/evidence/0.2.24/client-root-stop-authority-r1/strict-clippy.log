@@ -1,0 +1,48 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: this function has too many arguments (8/7)
+   --> src/commands/runtime_recovery_v2_owner.rs:188:5
+    |
+188 | /     pub(crate) fn require_original_absence(
+189 | |         &self,
+190 | |         context: &ProcessContext,
+191 | |         data_root: &Path,
+...   |
+196 | |         owner: &SystemServiceOwnerProofProvider,
+197 | |     ) -> AppResult<()> {
+    | |______________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#too_many_arguments
+    = note: `-D clippy::too-many-arguments` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::too_many_arguments)]`
+
+error: this function has too many arguments (8/7)
+    --> src/infrastructure/macos_client_session.rs:1556:5
+     |
+1556 | /     pub fn prepare_root_completed_stop<'a>(
+1557 | |         &'a self,
+1558 | |         context: &ProcessContext,
+1559 | |         stop: &CompletedLifecycleStop,
+...    |
+1564 | |         deadline: Instant,
+1565 | |     ) -> AppResult<root_retirement::Pending<'a>> {
+     | |________________________________________________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#too_many_arguments
+
+error: this function has too many arguments (9/7)
+    --> src/infrastructure/macos_client_session.rs:1583:5
+     |
+1583 | /     pub fn retire_root_completed_stop(
+1584 | |         &self,
+1585 | |         context: &ProcessContext,
+1586 | |         stop: &CompletedLifecycleStop,
+...    |
+1592 | |         deadline: Instant,
+1593 | |     ) -> AppResult<root_retirement::AuthorizedReadback> {
+     | |_______________________________________________________^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#too_many_arguments
+
+error: could not compile `opencodex-desktop` (lib) due to 3 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 3 previous errors

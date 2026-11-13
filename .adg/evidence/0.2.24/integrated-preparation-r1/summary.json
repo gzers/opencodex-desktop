@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "code": "a1a3e6d5d358bff1f3eb36d0dfb3298754fe6753",
+  "scope": "Real integrated startup preparation stages and explicit attempt-bound retry, dependency/service distinction",
+  "accepted": false,
+  "backend": {
+    "totalRelatedPassed": 47,
+    "composition": {
+      "state": 1,
+      "startup": 3,
+      "request": 1,
+      "supply": 34,
+      "removal": 7,
+      "officialSupplyWorker": 1
+    }
+  },
+  "frontend": {
+    "files": 4,
+    "tests": 28,
+    "typecheck": 0
+  },
+  "checks": {
+    "fmt": 0,
+    "strictClippyAllTargets": 0,
+    "diffCheck": 0
+  },
+  "official": {
+    "version": "2.99.0",
+    "elapsedSeconds": 77.83,
+    "suppliedAndSelectionReadback": true,
+    "configurationPreserved": true,
+    "actualInstallLeaseReleased": true,
+    "serviceStarted": false
+  },
+  "visual": {
+    "sizes": [
+      "1040x760",
+      "580x640"
+    ],
+    "nativeIpc": false,
+    "actualComponent": "IntegratedPreparation",
+    "memoryStagesAndDiscovery": true,
+    "pageErrors": []
+  },
+  "failureEvidence": [
+    "initial retry fixture lacked Desktop bootstrap root; failures retained",
+    "first review added actual lease-release-before-terminal boundary independently; it was not the confirmed fixture root cause",
+    "diagnostic D/log setup corrected fixture; later failure-code assertion incorrectly expected bundle_filesystem though shared safety layer produces the original missing-file error; corrected to actual explicit D/archive/pin/phase prerequisites",
+    "old gate test expected Node-era checking even after unreadable preparation; updated to unknown preparation observation"
+  ],
+  "cleanup": {
+    "fixtureRootsRemoved": true,
+    "uiFixtureAndRunnerRemoved": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "businessOrServiceRequests": false,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "disk/running/history version presentation and external-update reconciliation",
+    "other HTTP consumers proxy/bypass audit",
+    "Windows W0 HOME/Profile and W1/W2",
+    "P24-NAME",
+    "official cleanup, standard single-app/native candidate and final acceptance"
+  ]
+}

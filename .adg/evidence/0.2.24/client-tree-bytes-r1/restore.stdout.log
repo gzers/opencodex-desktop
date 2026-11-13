@@ -1,0 +1,27 @@
+
+running 20 tests
+test infrastructure::macos_client_originals::restore::tests::a_second_object_external_change_refuses_the_whole_batch_before_any_original_publish ... ok
+test infrastructure::macos_client_originals::restore::tests::a_second_writer_in_compensation_gap_keeps_both_payloads_and_no_terminal_result ... ok
+test infrastructure::macos_client_originals::restore::tests::abrupt_exit_after_conflict_receipt_preserves_unknown_bytes_and_cannot_resume_as_success ... SYNTHETIC_CRASH_CONFLICT_RECEIPT {"artifact":0,"planSha256":"7d3d2cf0e37bc129ed82b1c610d5404ff4ddeace80b5b2b7c0137426703fcb93","schemaVersion":1,"stage":{"bytes":[117,110,107,110,111,119,110,32,98,101,102,111,114,101,32,97,98,114,117,112,116,32,99,111,110,102,108,105,99,116,32,101,120,105,116],"change":[1794447289,452091115,1794447289,452816699],"identity":{"birthNanos":658410742,"birthSeconds":1794447288,"device":16777231,"inode":440568546},"protection":{"acl":null,"flags":0,"gid":0,"mode":416,"uid":501,"xattrs":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},"state":"file"},"target":{"bytes":[123,34,109,111,100,101,108,115,34,58,91,123,34,100,105,115,112,108,97,121,95,110,97,109,101,34,58,34,111,114,105,103,105,110,97,108,32,110,97,116,105,118,101,34,44,34,115,108,117,103,34,58,34,110,97,116,105,118,101,45,53,46,52,34,125,93,125],"change":[1794447289,194394541,1794447289,452816741],"identity":{"birthNanos":194323041,"birthSeconds":1794447289,"device":16777231,"inode":440568647},"protection":{"acl":null,"flags":0,"gid":0,"mode":416,"uid":501,"xattrs":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},"state":"file"},"wantedAfter":true}
+ok
+test infrastructure::macos_client_originals::restore::tests::actual_acl_and_opaque_xattrs_are_restored_with_original_content ... ok
+test infrastructure::macos_client_originals::restore::tests::actual_external_process_replacement_in_native_gap_is_returned_and_conflict_is_durable ... SYNTHETIC_RACE_CONFLICT_RECEIPT {"artifact":0,"planSha256":"21dd163cd03c1fe7d21450b7f8c3675c8e40a42de81d8894dfcf92069d785fa0","schemaVersion":1,"stage":{"bytes":[111,116,104,101,114,32,79,83,32,112,114,111,99,101,115,115,32,99,97,116,97,108,111,103],"change":[1794447291,497117934,1794447291,498363311],"identity":{"birthNanos":497070101,"birthSeconds":1794447291,"device":16777231,"inode":440568699},"protection":{"acl":null,"flags":0,"gid":0,"mode":420,"uid":501,"xattrs":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},"state":"file"},"target":{"bytes":[123,34,109,111,100,101,108,115,34,58,91,123,34,100,105,115,112,108,97,121,95,110,97,109,101,34,58,34,111,114,105,103,105,110,97,108,32,110,97,116,105,118,101,34,44,34,115,108,117,103,34,58,34,110,97,116,105,118,101,45,53,46,52,34,125,93,125],"change":[1794447291,225000884,1794447291,498363311],"identity":{"birthNanos":224933634,"birthSeconds":1794447291,"device":16777231,"inode":440568696},"protection":{"acl":null,"flags":0,"gid":0,"mode":416,"uid":501,"xattrs":[[[99,111,109,46,97,112,112,108,101,46,112,114,111,118,101,110,97,110,99,101],[1,2,0,159,26,57,52,122,9,67,78]]]},"state":"file"},"wantedAfter":true}
+ok
+test infrastructure::macos_client_originals::restore::tests::actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_known_generations ... ok
+test infrastructure::macos_client_originals::restore::tests::complete_restores_real_original_bytes_permissions_and_absence_without_discarding_postimages ... ok
+test infrastructure::macos_client_originals::restore::tests::damaged_or_third_party_archived_postimage_blocks_continuation ... ok
+test infrastructure::macos_client_originals::restore::tests::expiration_or_native_authority_loss_never_creates_a_terminal_success ... ok
+test infrastructure::macos_client_originals::restore::tests::external_edit_between_preflight_and_native_step_is_preserved ... ok
+test infrastructure::macos_client_originals::restore::tests::failure_after_native_exchange_can_explicitly_roll_back_to_the_frozen_stopped_images ... ok
+test infrastructure::macos_client_originals::restore::tests::failure_during_archive_retains_known_objects_and_can_continue_the_same_plan ... ok
+test infrastructure::macos_client_originals::restore::tests::independent_plan_digest_and_all_phase_digests_are_required_on_reopen ... ok
+test infrastructure::macos_client_originals::restore::tests::late_archive_source_replacement_is_returned_to_stage_and_never_committed_as_original ... ok
+test infrastructure::macos_client_originals::restore::tests::late_cache_edit_in_remove_gap_is_returned_without_overwriting_a_new_destination ... ok
+test infrastructure::macos_client_originals::restore::tests::late_catalog_replacement_after_final_check_is_preserved_at_original_path_and_refused ... ok
+test infrastructure::macos_client_originals::restore::tests::late_stage_replacement_does_not_reverse_over_an_unknown_published_object ... ok
+test infrastructure::macos_client_originals::restore::tests::partial_archive_can_roll_back_without_learning_new_file_identities ... ok
+test infrastructure::macos_client_originals::restore::tests::same_bytes_replacement_inode_and_stage_symlink_are_not_owned ... ok
+test infrastructure::macos_client_originals::restore::tests::unknown_preexisting_archive_destination_refuses_before_any_target_mutation ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 2311 filtered out; finished in 34.46s
+

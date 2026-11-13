@@ -1,0 +1,10 @@
+
+running 5 tests
+test modules::runtime::install::versioned::tests::candidate_errors_cancel_unknown_service_and_failed_backup_never_switch_current ... ok
+test modules::runtime::install::versioned::tests::real_official299_registry_candidate_uses_actual_npm_then_offline_reopen ... ignored, requires explicit pinned official2.99 bundle and isolated npm registry access
+test modules::runtime::install::versioned::tests::registry_and_offline_update_preserve_old_image_and_config_and_atomically_activate_candidate ... ok
+test modules::runtime::install::versioned::tests::retry_reuses_only_the_full_identical_candidate_after_pre_activation_failure ... ok
+test modules::runtime::install::versioned::tests::service_appearing_during_activation_retains_the_journal_and_allows_explicit_rollback ... ok
+
+test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 2126 filtered out; finished in 0.96s
+

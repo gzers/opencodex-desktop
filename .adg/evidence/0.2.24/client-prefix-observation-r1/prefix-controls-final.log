@@ -1,0 +1,17 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.63s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 8 tests
+test infrastructure::macos_client_originals::root_creation::tests::root_prefix_observation_binds_metadata_to_the_actual_authenticated_read_before_retaining_fd ... ok
+test infrastructure::macos_client_originals::root_creation::tests::root_prefix_observation_rechecks_file_versions_after_reading_security_metadata ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_does_not_reuse_authenticated_source_across_calls ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_keeps_every_frame_and_two_fresh_full_source_boundaries ... ROOT_PREFIX_FRESHNESS_METRICS {"accepted":false,"allFourFramesStillVerified":true,"metrics":{"capture_file":{"calls":12,"inclusive_nanos":6119293},"frame":{"calls":4,"inclusive_nanos":29267084},"frames_prefix":{"calls":1,"inclusive_nanos":56848709},"open_at":{"calls":371,"inclusive_nanos":2554750},"pinned_open":{"calls":42,"inclusive_nanos":6293041},"pinned_recheck":{"calls":253,"inclusive_nanos":45303794},"protection":{"calls":5011,"inclusive_nanos":46946424},"provenance_freshness":{"calls":6,"inclusive_nanos":20664583},"root_provenance":{"calls":2,"inclusive_nanos":20467292}},"scope":"synthetic current generation; no service permission"}
+ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_keeps_fresh_namespace_and_ancestor_checks_between_frames ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_rejects_between_frame_provenance_changes_before_later_restore_callback ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_rejects_last_callback_changes_for_single_and_full_prefixes ... ok
+test infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_retains_version_identity_and_link_checks_even_for_same_contents ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2574 filtered out; finished in 115.23s
+

@@ -1,0 +1,70 @@
+diff --git a/apps/desktop/tauri/Cargo.lock b/apps/desktop/tauri/Cargo.lock
+index b0e4d5ca2..f98c8be91 100644
+--- a/apps/desktop/tauri/Cargo.lock
++++ b/apps/desktop/tauri/Cargo.lock
+@@ -2552,7 +2552,7 @@ checksum = "c08d65885ee38876c4f86fa503fb49d7b507c2b62552df7c70b2fce627e06381"
+ 
+ [[package]]
+ name = "opencodex-desktop"
+-version = "0.2.23"
++version = "0.2.24"
+ dependencies = [
+  "aes-gcm",
+  "argon2",
+diff --git a/apps/desktop/tauri/Cargo.toml b/apps/desktop/tauri/Cargo.toml
+index 9f6965837..ecb515934 100644
+--- a/apps/desktop/tauri/Cargo.toml
++++ b/apps/desktop/tauri/Cargo.toml
+@@ -1,6 +1,6 @@
+ [package]
+ name = "opencodex-desktop"
+-version = "0.2.23"
++version = "0.2.24"
+ description = "OpenCodeX Desktop manager shell"
+ license = "MIT"
+ edition = "2021"
+diff --git a/apps/desktop/tauri/tauri.conf.json b/apps/desktop/tauri/tauri.conf.json
+index 37f15dbd4..b24cfd75a 100644
+--- a/apps/desktop/tauri/tauri.conf.json
++++ b/apps/desktop/tauri/tauri.conf.json
+@@ -1,7 +1,7 @@
+ {
+   "$schema": "https://schema.tauri.app/config/2",
+   "productName": "OpenCodeX Desktop",
+-  "version": "0.2.23",
++  "version": "0.2.24",
+   "identifier": "com.gzers.opencodex.desktop",
+   "build": {
+     "beforeDevCommand": "npm --prefix ui run dev",
+diff --git a/apps/desktop/ui/package-lock.json b/apps/desktop/ui/package-lock.json
+index 2bdb22f53..0c866e6d5 100644
+--- a/apps/desktop/ui/package-lock.json
++++ b/apps/desktop/ui/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "opencodex-desktop-ui",
+-  "version": "0.2.23",
++  "version": "0.2.24",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "opencodex-desktop-ui",
+-      "version": "0.2.23",
++      "version": "0.2.24",
+       "dependencies": {
+         "@tauri-apps/api": "2.12.1",
+         "@tauri-apps/plugin-dialog": "2.8.1",
+diff --git a/apps/desktop/ui/package.json b/apps/desktop/ui/package.json
+index 9f0a14392..7a4f6090e 100644
+--- a/apps/desktop/ui/package.json
++++ b/apps/desktop/ui/package.json
+@@ -1,7 +1,7 @@
+ {
+   "name": "opencodex-desktop-ui",
+   "private": true,
+-  "version": "0.2.23",
++  "version": "0.2.24",
+   "type": "module",
+   "engines": {
+     "node": ">=24"

@@ -1,0 +1,173 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "scope": "Current versioned lifecycle admission and actual official299 Mac lifecycle/client-byte comparison",
+  "nativeLatest": {
+    "accepted": false,
+    "businessRequests": false,
+    "clientChangedDuringStart": true,
+    "nativeClientRestored": {
+      "codex/config.toml": true,
+      "codex/models_cache.json": false,
+      "codex/opencodex-catalog-audit.jsonl": false,
+      "codex/opencodex-catalog.json": false,
+      "grok/config.toml.bak-opencodex": true
+    },
+    "officialVersion": "2.99.0",
+    "pidRecordAbsent": true,
+    "record": {
+      "pid": 23512,
+      "port": 50298
+    },
+    "recordAbsent": true,
+    "result": "failed",
+    "serviceStarted": true,
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startBudgetMs": 30000,
+    "startElapsedMs": 4453,
+    "status": {
+      "pid": "23512",
+      "port": 50298,
+      "ready": true,
+      "status": "running"
+    },
+    "statusBudgetMs": 5000,
+    "statusElapsedMs": 1096,
+    "stop": {
+      "canRestart": false,
+      "canStart": true,
+      "canStop": false,
+      "lifecycleState": "stopped",
+      "result": "stopped"
+    },
+    "stopBudgetMs": 10000,
+    "stopElapsedMs": 2372
+  },
+  "productSemantics": "Replace direct flat resolver with provider full program admission and installation-root equality; original runtime, budgets and assertions unchanged.",
+  "failureClassification": [
+    {
+      "round": "before-fix",
+      "finding": "Product resolves obsolete flat runtime, refusing valid selected image before spawn"
+    },
+    {
+      "round": "native-attempt1",
+      "finding": "Fixture omitted exact native coordination/adoption file permission, original foreground trace shows EPERM"
+    },
+    {
+      "round": "native-attempt2",
+      "finding": "Start passed; status fixture lacked entered Tokio runtime; official Stop failed unlisted history-lock path. Neither marked passed"
+    },
+    {
+      "round": "native-attempt3",
+      "finding": "Start/status/normal Stop within30/5/10s; strict client catalog/cache/audit byte restoration still failed"
+    }
+  ],
+  "fixtureCorrections": [
+    "Create parent before create-only evidence directory",
+    "Actual status worker runtime context",
+    "Exact canonical-home coordination hashes for native/catalog/history locks; no broad namespace writes",
+    "Use actual Grok config.toml.bak-opencodex; prior invented-path comparison is not proof for that object"
+  ],
+  "cleanup": {
+    "ownedProgramImagesAndGroupsAbsent": true,
+    "lsofAcceptedAsAbsenceProof": false,
+    "nativeTcpTable": {
+      "framingValidated": true,
+      "rows": 296,
+      "originalPrimaryPorts": [
+        58860,
+        49228,
+        49571,
+        50298
+      ],
+      "allOriginalPrimaryPortsAbsent": true
+    },
+    "exactNewCoordinatorLocks": [
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/0cf2dc99275420bd85e7f5ef365bce792ea30d43b444cf298f5ec1905321261a.sqlite",
+        "exclusiveSQLiteAcquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/3f1417c72850c16336fb0ad6914293ff7a5ca732960b46f26c2f1cf39d682e83.sqlite",
+        "exclusiveSQLiteAcquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite",
+        "exclusiveSQLiteAcquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite",
+        "exclusiveSQLiteAcquiredAndReleased": true
+      }
+    ],
+    "allExactNewCoordinatorFilesAbsent": true,
+    "allOwnedFixtureRootsAbsent": true,
+    "forcedServiceCleanupUsed": false,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "Desktop native client recovery ledger/compensation",
+    "Windows W0 HOME/Profile, W1/W2 and actual product lifecycle integration",
+    "P24-NAME",
+    "npm System native proxy discovery",
+    "official distribution publish verifier and final fixed candidate"
+  ],
+  "evidenceRedaction": {
+    "file": "cleanup-lsof.stderr.log",
+    "originalSha256": "b64e7eafbccc0071848ff4679e202aaa5787a29af202e12f2065a72a60cb73a9",
+    "reason": "Omitted unrelated mounted-volume path only; incompleteness warning and rejected absence result retained"
+  },
+  "nativeEvidenceLimitations": [
+    "Native3 records per-artifact byte equality and product/runtime logs. Raw before/after bytes for that native3 round were not saved before its own fixture cleanup; prior rounds postimages are retained under their own labels and cannot substitute for native3. Final test now captures only the five explicitly seeded synthetic artifacts before/after for future restoration work; that reporting-only addition was compiled, not another full lifecycle run.",
+    "Actual Grok backup stayed absent; no changed-Grok restoration claim. Agent state, full client tree and new real OS SID were not validated.",
+    "No latest .app or DMG rebuild for this patch yet; prior engineering artifacts remain older sources."
+  ],
+  "codeCommit": "336647e3ef1c031d88375f275ef88b7a7d3f00df",
+  "checks": [
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "lifecycle_versioned_tests",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "regression": {
+    "passed": 2,
+    "ignoredNative": 1,
+    "evidence": "native-attempt2/after-fix.stdout.log",
+    "scope": "Current admission boundary and tampered-source rejection; test-only native reporting changes afterward are compiled/clippy checked, no full lifecycle rerun without changed product hypothesis"
+  }
+}

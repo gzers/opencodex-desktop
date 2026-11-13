@@ -1,0 +1,60 @@
+{
+  "baseCommit": "3de2c637027a22f90e7aa2d4a4f8314a7cf9aac0",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery.rs",
+      "sha256": "6de0f5e384ba25d506a6a1c552a204ab5396c41ea7138072ab4981610b41d89f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery_tests.rs",
+      "sha256": "0537cab710003ef106100ac043b1c945d45f5c5db3005964ef25e74ad689cd5a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_completion.rs",
+      "sha256": "32aa7d6b50ff0980ae6567afa75975883a7fdfbef45d20138da276c2831bdab7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "sha256": "b0ab6c260c4239dc9fb3b1418dc0baabafdfbcf7e9256f73a3794fa3d7332147"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_tests.rs",
+      "sha256": "56d72c63aa7574d8063f3d04a2feef6a0fa83e3870d3003ab20331825e2e1320"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "0e8cdcb78af2980dc8ca46dccb465a6fc655bcaac666dbbee4e21063f0a62be6"
+    },
+    {
+      "path": "apps/desktop/ui/qa/client-recovery-visual.mjs",
+      "sha256": "a915a6e9ab4a47c8bb580f7462106ae66d260d0135a04ddd8712b633d089d91e"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/clientRecoveryFixture.ts",
+      "sha256": "10abe44e6ed5f785a2539e18f1025e3563b6d24dcd3c768aa3a9963ac62bf3ff"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "sha256": "2dae3834f3213b3ce24d60b8d094d376027007d4eedcc197732286022d6212e4"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery-store.ts",
+      "sha256": "7e47cf232cf5a779c02536e49ab090e5265e4c4a28e4e1bf0972fca493c55f9d"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery.ts",
+      "sha256": "fcba79afacbcc8d60978c9ae7c5f2afe7732c0aae3d80f65b199c45a5424ae4d"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-api.test.ts",
+      "sha256": "f193518f98a6025239ae5b4456478f94823f8e0da3f65ef83edf7938b4e57eec"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "sha256": "277df85822a58c6851f27943008c652cde5cc9bbfcdff17a43ba9e2e205c6fff"
+    }
+  ],
+  "scope": "real product command registration/readonly preview and real Vue components, browser uses explicit in-memory fixture; prior native rollback/rearm/continuation executors unchanged",
+  "codeCommit": "522d042e11eeab3ec999bcff9940df4bff6123d6",
+  "backendCommit": "0265292696f823b43b6c12fce3a80ef9faa715a7"
+}

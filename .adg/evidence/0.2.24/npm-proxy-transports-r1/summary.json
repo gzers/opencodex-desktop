@@ -1,0 +1,50 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "completedScope": "real fixed npm HTTP CONNECT HTTPS, SOCKS5h HTTP/HTTPS domain forwarding and strict trust rejection; actual CF dictionary typed parser cases",
+  "uniqueTestFunctions": 3,
+  "actualTransportScenarios": 4,
+  "finalResults": {
+    "groups": {
+      "dictionary": {
+        "exitCode": 0,
+        "elapsedSeconds": 1.098
+      },
+      "transport-final": {
+        "exitCode": 0,
+        "elapsedSeconds": 0.821
+      }
+    },
+    "binarySha256": "1a89d451cceac89960356d9ad2b2f492d850ec514751e42f2491ca2f87305fca",
+    "repeatReason": "Final native parser extraction and stricter TLS negative predicate/code capture changed source since first transport run; final same exact binary covers both new dictionary checks and all4 transport cases. Previous plain HTTP5 scenarios not repeated."
+  },
+  "checks": {
+    "fmt-final": 0,
+    "clippy-final": 0,
+    "build-final": 0
+  },
+  "firstClippyFailure": "test read byte count unused; changed to read_exact, no lint suppression",
+  "cleanup": {
+    "ownedProcessesRemaining": [],
+    "kernelIsolationVerified": {
+      "daily-home": true,
+      "external-network": true
+    },
+    "allTestToolsProfilesCachesCertificatesPrivateKeysAndBinariesRemoved": true,
+    "testPublicCertificatesRetained": {
+      "ca.pem": "d93ae0c06ae5fa69c87fb014c0c53896a387b2010d12cd5430ff5c5e404b8dd4",
+      "server.der": "5f8d8e85de58f10dededef2003e928586ec80ed2321f1ddaa05b231bc198017b"
+    },
+    "systemProxySettingsModified": false,
+    "dailyConfigurationChanged": false,
+    "realRegistryOrModelOrWebdavRequests": false,
+    "realOpenCodexServiceStarted": false
+  },
+  "limitations": [
+    "native routing scenarios consume synthetic static snapshot, not modified OS proxy configuration",
+    "CFDictionary fixtures use real CoreFoundation values but are not system-store mutation",
+    "no Windows native execution or latest full Desktop candidate",
+    "PAC/split protocol/complex bypass and original entire IMP34 lifecycle/recovery/NAME/Windows/release scope remain open"
+  ],
+  "notRun": "No previously passed plain HTTP5 route group or service lifecycle sweep repeated"
+}

@@ -1,0 +1,8 @@
+
+thread 'infrastructure::macos_process_exit::tests::same_uid_nonchild_process_is_observed_without_waitpid_or_reaping_its_launcher' (155830952) panicked at src/infrastructure/macos_process_exit_tests.rs:276:5:
+
+thread 'infrastructure::macos_process_exit::tests::same_uid_nonchild_process_is_observed_without_waitpid_or_reaping_its_launcher' (155830957) panicked at src/infrastructure/macos_process_exit_tests.rs:248:9:
+assertion failed: root.is_absolute() && root.starts_with("/private/tmp")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

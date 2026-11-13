@@ -1,0 +1,26 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+CONFIG_GUARD_TRACE expected=released actual=released phase=release
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+ROOT_STOP_COST label=admission phase=entry segment_us=31356 total_us=31356
+ROOT_STOP_COST label=admission phase=native segment_us=1244 total_us=32601
+ROOT_STOP_COST label=admission phase=absence segment_us=8125 total_us=40726
+ROOT_STOP_COST label=admission phase=entry segment_us=31081 total_us=31081
+ROOT_STOP_COST label=admission phase=native segment_us=1287 total_us=32369
+ROOT_STOP_COST label=admission phase=absence segment_us=8647 total_us=41016
+ROOT_STOP_COST label=admission phase=entry segment_us=31509 total_us=31509
+ROOT_STOP_COST label=admission phase=native segment_us=1321 total_us=32830
+ROOT_STOP_COST label=admission phase=absence segment_us=9298 total_us=42129
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=124597 total_us=124598
+ROOT_STOP_COST label=root-authority phase=native segment_us=1655 total_us=126253
+ROOT_STOP_COST label=root-source phase=entry segment_us=3021 total_us=3021
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=118370 total_us=121391
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=25248 total_us=146640
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=67493 total_us=214134
+ROOT_STOP_COST label=root-source phase=program-source segment_us=544 total_us=214678
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=214722 total_us=340975
+ROOT_STOP_COST label=root-authority phase=absence segment_us=48 total_us=341024
+
+thread 'commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client' (157676075) panicked at src/commands/lifecycle_versioned_tests.rs:666:9:
+first-root Stop must commit exact original absence; preserve report and app log on refusal
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

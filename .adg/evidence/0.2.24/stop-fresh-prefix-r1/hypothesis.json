@@ -1,0 +1,4 @@
+{
+  "accepted": false,
+  "hypothesis": "Originals.open and Pending.captures currently validate four frames via10recursive frame reads per boundary. A fresh sequential4frame prefix should preserve all per-frame source/security/predecessor/archive checks while eliminating duplicate predecessor reads within the same boundary, no cache across mutation. Native Stop should fit original10s including complete file/tree/lock/index restoration; failure remains failure."
+}

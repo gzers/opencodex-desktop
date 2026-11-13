@@ -1,0 +1,51 @@
+{
+  "accepted": false,
+  "actualNativeRounds": 1,
+  "prelaunchFailures": 2,
+  "firstCyclePassedOriginalBudgets": {
+    "startMs": 8199,
+    "statusMs": 224,
+    "normalStopMs": 8782,
+    "stoppedStatusMs": 1880
+  },
+  "secondCycle": {
+    "startMs": 20700,
+    "attestedStatusMs": 2205,
+    "normalStopResult": "failed-timeout",
+    "callElapsedMs": 12878,
+    "productInternalStopElapsedMs": 11821,
+    "independentHead": "restore_prepared",
+    "revision": 16
+  },
+  "facts": [
+    "Both launchers/services actually exited normally and both exported primary listeners are absent; failure remains client restoration pending",
+    "Two origins/Original scope and Ready/PreStop/Stopped digest chains verified offline",
+    "First binding/events/archive unchanged throughout second Start and Stop",
+    "No source tampering, claim adoption, missing provenance or unknown namespace in this round",
+    "Three new exact coordinators raw-archived then exclusive-reacquired/deleted; existing L bytes/identity/protection unchanged"
+  ],
+  "phaseComparison": {
+    "first": {
+      "sealStoppedMs": 760,
+      "indexStoppedMs": 1245,
+      "preparePlanMs": 1245,
+      "indexPlanMs": 1438,
+      "rootAdmissionEntryMs": 1797,
+      "fullRootRecoveryMs": 6459
+    },
+    "second": {
+      "sealStoppedMs": 808,
+      "indexStoppedMs": 2948,
+      "preparePlanMs": 2948,
+      "indexPlanMs": 3341,
+      "rootAdmissionEntryMs": 5612,
+      "failedPhase": "root-stop-admission"
+    }
+  },
+  "nextFalsifiableHypothesis": "The second cycle adds repeated full historical archive/index observations to every current action boundary: Stopped index publication and restore-plan publication each grow around1.6–1.9s, and pre-Stop work also rises. Instrument exactly these existing boundaries and count repeated opens/frames/protection calls in an owned release scene before choosing a bounded per-observation optimization. Preserve complete provenance/content/path/protection checks before/after mutation; no durable digest cache, no timeout reset, no history skip, no rerun without new hypothesis.",
+  "notProven": [
+    "Dominant individual syscall/frame cost within the repeated audit is not measured yet",
+    "Normal second Stop under10s, repeated final readiness/status acceptance, packaged app acceptance and explicit root-interruption recovery remain incomplete"
+  ],
+  "sourceScope": "Test-only extension and cfg(test) accessor, original official2.99 unchanged; no product semantic fix in this commit."
+}

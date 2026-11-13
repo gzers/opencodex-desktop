@@ -1,0 +1,15 @@
+
+running 1 test
+test infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_history_rejects_skipped_phase_rebound_origin_and_erased_reservation ... 
+thread 'infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_history_rejects_skipped_phase_rebound_origin_and_erased_reservation' (158067123) panicked at src/infrastructure/macos_client_root_successor_capture_tests.rs:60:10:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "root capture publication lost live creation custody or deadline" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+FAILED
+
+failures:
+
+failures:
+    infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_history_rejects_skipped_phase_rebound_origin_and_erased_reservation
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2584 filtered out; finished in 25.70s
+

@@ -1,0 +1,22 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/overview-motion.test.ts > overview integrates the motion area > 环境未就绪时：收起三卡与最近事件，展示准备卡
+AssertionError: expected [] to have a length of 3 but got +0
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ tests/overview-motion.test.ts:368:52
+    366|     expect(wrapper.findAll('.mods .mod')).toHaveLength(0)
+    367|     expect(wrapper.find('[data-testid="overview-recent-events"]').exis…
+    368|     expect(wrapper.findAll('.overview-checks li')).toHaveLength(3)
+       |                                                    ^
+    369|   })
+    370| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

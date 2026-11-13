@@ -1,0 +1,4 @@
+{
+  "hypothesis": "The subprocess guard requires /private/tmp but this invocation used default /private/var temp. Repeat only the failing subprocess case in an explicit owned /private/tmp fixture, preserve original failure. New current-prefix tests also use this fixture; assertions unchanged.",
+  "priorFailure": "restore-tests.log"
+}

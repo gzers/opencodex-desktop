@@ -1,0 +1,7 @@
+{
+  "reviewer": "Darwin",
+  "finding": "Initial retired test returned before ordinary after-stop byte capture, so state-only success lacked final sourcebyte evidence.",
+  "correction": "Persist after-retired-finalize and after-retired-duplicate snapshots for all7 source paths and assert each exact Option<bytes> matches before, before intentional postimageGrokdrift refusal stage.",
+  "pendingNativeRun": true,
+  "noHistoricalMissingBytesInvented": true
+}

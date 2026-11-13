@@ -1,0 +1,7 @@
+{
+  "accepted": false,
+  "baseCommit": "0c988fc898fc2c4d495f28945a5479e73ac327d1",
+  "priorNativeFailure": "0c988fc89 firstStop wait-os-absence arguments EINVAL before root recovery; live host currently skips final BSD observation after read error. EINVAL alone proves neither absence nor normal exit.",
+  "hypothesis": "Bracket image/argv reads with native BSD identity even when reads fail. Only explicit native ESRCH absence may return None; PID/UID/birth change refuses, same live generation read errors preserved, same-gen zombie yields typed exiting. Only authenticated normalStop wait loop treats this typed result as Unknown and waits inside original remaining deadline; all normal-exit watch, listener/fullscan/manager/record checks remain. Test synthetic branches and actual child read-then-normal-exit timing deterministically, no production service. Save failure receipt before test assertions.",
+  "scope": "Unit owned temp/child only, no real business or official service, dailyconfig/Shell/installedapp, original299 or deadlines changed. Preserve exact initial failed native40files and cleanup proof; no native retry until change verified."
+}

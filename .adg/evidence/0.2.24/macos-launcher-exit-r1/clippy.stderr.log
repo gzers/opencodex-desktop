@@ -1,0 +1,38 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: spawned process is not `wait()`ed on in all code paths
+  --> src/infrastructure/macos_process_pair_tests.rs:44:21
+   |
+44 |       let mut child = Command::new(std::env::current_exe().unwrap())
+   |  _____________________^
+45 | |         .args(["--exact", HELPER, "--nocapture"])
+46 | |         .env(ROLE, "service")
+47 | |         .stdin(Stdio::null())
+...  |
+50 | |         .spawn()
+51 | |         .unwrap();
+   | |_________________^
+   |
+note: this if expression has a `wait()` call, but it is missing an else block
+  --> src/infrastructure/macos_process_pair_tests.rs:72:9
+   |
+72 | /         if root.join("release-launcher").is_file() {
+73 | |             child.wait().unwrap();
+74 | |             std::process::exit(
+75 | |                 std::env::var("OCXD024_PAIR_LAUNCHER_CODE")
+...  |
+79 | |             );
+80 | |         }
+   | |_________^
+note: `wait()` called here
+  --> src/infrastructure/macos_process_pair_tests.rs:73:13
+   |
+73 |             child.wait().unwrap();
+   |             ^^^^^
+   = help: consider calling `.wait()` in all code paths
+   = note: not doing so might leave behind zombie processes
+   = note: see https://doc.rust-lang.org/stable/std/process/struct.Child.html#warning
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#zombie_processes
+   = note: `-D clippy::zombie-processes` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::zombie_processes)]`
+
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

@@ -1,0 +1,10 @@
+{
+  "accepted": false,
+  "experiment": "shared-prefix context boundary replaces per-frame checks",
+  "disposition": "rejected, not eligible acceptance source",
+  "reason": "mode/ACL/xattr could change after Original and be restored before final fence; old per-frame Ready check refuses",
+  "correctedProduct": "restore every per-frame dynamic context and independent source check; add final full context fence",
+  "negativeControlCorrection": "inject operations now assert success independently, not propagate an io error accepted by outer is_err",
+  "prefixContextNativeUse": "raw fixed tail timing only, never qualify rejected security semantics",
+  "nextExperiment": "coalesce repeated root-close transaction prechecks while retaining full before-reference-mutation, after-write, after-COMMIT and expired-proof rollback/demotion"
+}

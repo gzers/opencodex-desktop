@@ -1,0 +1,13 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.16s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 6 tests
+test infrastructure::macos_client_originals::session_index::root_registration_tests::first_root_registration_atomically_binds_original_absence_and_preparing_without_enabling_ordinary_capture ... ok
+test infrastructure::macos_client_originals::session_index::root_registration_tests::first_root_registration_cannot_be_downgraded_to_an_ordinary_existing_root_binding ... ok
+test infrastructure::macos_client_originals::session_index::root_registration_tests::first_root_registration_never_releases_the_original_action_flock_at_transfer_or_commit ... ok
+test infrastructure::macos_client_originals::session_index::root_registration_tests::first_root_registration_real_crash_never_commits_absence_without_preparing_or_adopts_uncommitted_origin ... ok
+test infrastructure::macos_client_originals::session_index::root_registration_tests::first_root_registration_rejects_changed_context_or_created_object_before_creating_index ... ok
+test infrastructure::macos_client_originals::session_index::root_registration_tests::first_root_registration_requires_original_creation_bytes_and_the_first_event_ticket ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2471 filtered out; finished in 0.87s
+

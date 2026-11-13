@@ -1,0 +1,15 @@
+{
+  "reviewer": "Anscombe",
+  "baseCommit": "f10e732aa3228fd91f4e8509c8bcd7877e06cac8",
+  "actualDiffReviewed": true,
+  "blockingFindings": [],
+  "boundaries": [
+    "Original Identity/Protection retained through final parent prefix, not resampled",
+    "Each child requires full private security before next component open",
+    "Final two full union passes, pure saved leaf private check, then full immediate-parent recheck",
+    "Only three contiguous read-only directory acquisition segments, root provenance/pending and generation namespace unchanged",
+    "No intermediate pin escapes; no content reads or creates before complete admission; only directory fds cloned"
+  ],
+  "limitation": "No claim of identical concurrent refusal traces: transient changes at removed intermediate observation instants may not be observed; final source/path/security expectations and every subsequent content-read admission remain. No evidence proves original Stop10 success.",
+  "reviewerRanTestsOrServices": false
+}

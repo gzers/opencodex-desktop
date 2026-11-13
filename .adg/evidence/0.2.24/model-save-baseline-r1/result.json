@@ -1,0 +1,32 @@
+{
+  "checks": [
+    {
+      "label": "save",
+      "filter": "modules::model_config::config_file::v2::tests::",
+      "exit": 101,
+      "result": [
+        "test result: FAILED. 2 passed; 16 failed; 0 ignored; 0 measured; 2044 filtered out; finished in 1.80s"
+      ]
+    },
+    {
+      "label": "copy",
+      "filter": "config_file_v2_copy_tests",
+      "exit": 0,
+      "result": [
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2062 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "label": "consumer",
+      "filter": "modules::model_config::consumer_v2_tests::",
+      "exit": 0,
+      "result": [
+        "test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 2036 filtered out; finished in 1.96s"
+      ]
+    }
+  ],
+  "binarySha256": "ffa49d1f05eca08f31d55937269b925505c53b9b3dd7ec08744afd10ddaa5f00",
+  "temporaryRootAbsent": true,
+  "networkDenied": true,
+  "dailyConfigAccess": false
+}

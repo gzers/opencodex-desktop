@@ -1,0 +1,8 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-write*)
+(allow file-write* (subpath "/private/tmp/ocxd024-client-restore-gvfak7_j/fixtures"))
+(allow file-write* (literal "/dev/null"))
+(deny file-read* (subpath "/Users/ezio"))
+(deny mach-lookup (global-name "com.apple.securityd"))

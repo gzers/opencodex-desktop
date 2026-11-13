@@ -1,0 +1,28 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 14.54s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-089f843b7e93e877)
+
+thread 'infrastructure::macos_client_originals::tests::actual_process_exit_preserves_original_and_explicit_phase_identity' (155488505) panicked at src/infrastructure/macos_client_originals_tests.rs:497:5:
+assertion `left == right` failed
+  left: Some(101)
+ right: Some(91)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::macos_client_originals::tests::extended_attributes_are_original_bytes_and_changes_invalidate_snapshots' (155488510) panicked at src/infrastructure/macos_client_originals_tests.rs:292:52:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "journal context or snapshot changed" }
+
+thread 'infrastructure::macos_client_originals::tests::interrupted_phase_publication_is_retained_and_never_overwritten_as_empty' (155488512) panicked at src/infrastructure/macos_client_originals_tests.rs:477:5:
+assertion failed: originals.read(Phase::Original).is_ok()
+
+thread 'infrastructure::macos_client_originals::tests::native_acl_is_captured_without_chmod_or_acl_repair' (155488515) panicked at src/infrastructure/macos_client_originals_tests.rs:347:48:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "journal context or snapshot changed" }
+
+thread 'infrastructure::macos_client_originals::tests::native_snapshot_retains_exact_original_bytes_and_metadata_without_source_writes' (155488517) panicked at src/infrastructure/macos_client_originals_tests.rs:50:48:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "journal context or snapshot changed" }
+
+thread 'infrastructure::macos_client_originals::tests::sequential_frames_reopen_only_with_original_and_independently_retained_phase_digests' (155488522) panicked at src/infrastructure/macos_client_originals_tests.rs:128:46:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "journal context or snapshot changed" }
+
+thread 'infrastructure::macos_client_originals::tests::source_changed_between_capture_and_publication_leaves_no_ready_frame' (155488526) panicked at src/infrastructure/macos_client_originals_tests.rs:447:43:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+error: test failed, to rerun pass `--lib`

@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "codeCommit": "604f2763e604b70550c1b3519d9d1893dcaaf6a7",
+  "scope": "Pure bounded content assessment of catalog/cache/audit for future native client compensation; no write authorization or lifecycle integration",
+  "passed": {
+    "policyUnitTests": 17,
+    "retainedWindowsDataReplay": 1
+  },
+  "checks": [
+    {
+      "name": "compile-complete",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "client_artifact_policy",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/mod.rs",
+      "sha256": "b6c2b76427941fbf4926129234f0a2f95a899234c97775efbf6161453353a5ef"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+      "sha256": "b26df2817c082db1c670b39ee0773bf033fad0887c9901a8fdaed9397d8a5f1d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/client_artifact_policy_tests.rs",
+      "sha256": "b515c2455a8814fc3b55132e2dcd69f956dac412e02a6432cb5589414bba862c"
+    }
+  ],
+  "replay": {
+    "input": "windows-replay-input.json",
+    "inputSha256": "202ae2dd4a090e64e51e10e84d93b4c9c7078b182552947fefddd89d19a6ac3d",
+    "sourceProof": "windows-replay-inputs-fixed.json",
+    "manifestAndStageSourcesVerified": 6,
+    "nativeExecutionThisRound": false,
+    "writeAuthorizationGranted": false
+  },
+  "failuresRetained": [
+    "first test-helper lifetime compile failure recorded, raw output unavailable",
+    "E0597 loop buffer lifetime compile failure retained raw",
+    "first replay overescaped expected Windows HOME redaction; product correctly refused Audit; original stdout/stderr preserved, bad replay input overwritten by result file naming error before archiving. Final input and independently verified six source files retain derivation boundary. No claim exact first bad input raw bytes retained."
+  ],
+  "importantLimits": [
+    "Native process ownership, native snapshot protection/identity verification, official claim/N/K locks, protected persistent journal, CAS writes and lifecycle wiring remain required",
+    "Only catalog/cache/audit content assessed; config/Grok/Agent restoration not implemented by this module",
+    "Audit is best-effort diagnostic and not provenance/write authority; altered/compacted/unknown events refuse",
+    "Current frozen route discovery None refuses; complete Some(empty) accepts empty model set",
+    "Current ready-to-prestop changes refuse; ongoing official config/model refresh reconciliation still required by owning transaction",
+    "Existing original cache bytes may be opaque and are never parsed/reformatted if already restored",
+    "No .app/DMG rebuilt; official2.99/daily files untouched"
+  ],
+  "cleanup": {
+    "ownedTestProcessesAbsent": true,
+    "ownBinaryAndFixtureRootRemoved": true,
+    "nativeServiceStarted": false,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "duplicateTemporaryReceiptRootRemoved": true
+  }
+}

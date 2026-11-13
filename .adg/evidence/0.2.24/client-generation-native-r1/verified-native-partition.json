@@ -1,0 +1,51 @@
+{
+  "accepted": false,
+  "samples": [
+    {
+      "totalNanos": 174489209,
+      "exclusiveStageNanos": {
+        "transaction_storage_begin": 640917,
+        "transaction_source": 32172375,
+        "transaction_admission": 27486833,
+        "transaction_sql": 206916,
+        "transaction_candidate": 56763667,
+        "transaction_commit": 376583,
+        "transaction_postcommit": 55648750,
+        "registration_facts": 1171917
+      },
+      "frameChecks": 24,
+      "archiveChecks": 24,
+      "provenanceChecks": 31,
+      "namespaceChecks": 30,
+      "protectionCalls": 19454,
+      "xattrNativeCalls": 33163,
+      "historicalBegin": 0,
+      "historicalFinish": 0,
+      "historicalPasses": 0
+    },
+    {
+      "totalNanos": 599753250,
+      "exclusiveStageNanos": {
+        "transaction_storage_begin": 513416,
+        "transaction_source": 165607625,
+        "transaction_admission": 48532291,
+        "transaction_sql": 174084,
+        "transaction_candidate": 193512209,
+        "transaction_commit": 412791,
+        "transaction_postcommit": 188489333,
+        "registration_facts": 2489875
+      },
+      "frameChecks": 48,
+      "archiveChecks": 48,
+      "provenanceChecks": 61,
+      "namespaceChecks": 60,
+      "protectionCalls": 66648,
+      "xattrNativeCalls": 113979,
+      "historicalBegin": 3,
+      "historicalFinish": 3,
+      "historicalPasses": 6
+    }
+  ],
+  "directedTwoCycleStopBudgetPassed": true,
+  "scope": "Numeric registration subparts only; close/action budget proved separately in original exact two-cycle gate."
+}

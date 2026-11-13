@@ -1,0 +1,4 @@
+
+thread 'infrastructure::macos_process_exit::tests::fork_after_subscription_invalidates_even_a_coalesced_zero_exit' (155131604) panicked at src/infrastructure/macos_process_exit_tests.rs:158:9:
+a real fork must not become exit authority after its event is consumed
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

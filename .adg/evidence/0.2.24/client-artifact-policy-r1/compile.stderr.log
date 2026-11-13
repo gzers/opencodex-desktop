@@ -1,0 +1,25 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0597]: `bytes` does not live long enough
+   --> src/modules/runtime/client_artifact_policy_tests.rs:206:36
+    |
+205 |         let bytes = wire(value);
+    |             ----- binding `bytes` declared here
+206 |         ctx.stopped.catalog = file(&bytes, "external-edit");
+    |                                    ^^^^^^ borrowed value does not live long enough
+207 |         assert_eq!(assess(&ctx), Err(Refusal::Catalog));
+208 |     }
+    |     - `bytes` dropped here while still borrowed
+
+error[E0597]: `bytes` does not live long enough
+   --> src/modules/runtime/client_artifact_policy_tests.rs:229:34
+    |
+228 |         let bytes = wire(candidate);
+    |             ----- binding `bytes` declared here
+229 |         ctx.stopped.cache = file(&bytes, "other-cache");
+    |                                  ^^^^^^ borrowed value does not live long enough
+230 |         assert!(assess(&ctx).is_err());
+231 |     }
+    |     - `bytes` dropped here while still borrowed
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

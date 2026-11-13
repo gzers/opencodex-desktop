@@ -1,0 +1,29 @@
+{
+  "accepted": false,
+  "scope": "native rollback terminal and metadata rearm with independent original restoration; product rollback/rearm confirmation and command registration still pending",
+  "backendDistinctCases": 75,
+  "crashExit91Boundaries": {
+    "ordinary": 11,
+    "rearmed": 11
+  },
+  "uiCases": 28,
+  "browserMockCases": 2,
+  "rollbackElapsedMs": 8130,
+  "rearmElapsedMs": 9557,
+  "separateContinueElapsedMs": 9434,
+  "indexRevisions": [
+    6,
+    7,
+    8,
+    9
+  ],
+  "oldRollbackReceiptUnchanged": true,
+  "fullTreeHashesIndependentlyMatchFinalReceipt": true,
+  "finalOriginalFileChecks": 7,
+  "liveGateRollback": "required, all process actions false",
+  "liveGateFinal": "not_required, start only",
+  "firstCompileFailurePreserved": "terminal-rearm.log",
+  "noServiceRestartForRollbackOrRearm": true,
+  "noNewNativeAppOrDMG": true,
+  "remaining": "Product commands and confirmation UI for rollback/rearm; earlier capture phases/general client/graph/family, Windows, NAME, System proxy, official verifier, fixed candidate remain."
+}

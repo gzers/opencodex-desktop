@@ -1,0 +1,7 @@
+{
+  "findings": "npm-registry-fetch actually uses httpsProxy || proxy across protocols; @npmcli/agent only suffix-matches noproxy, no CIDR/PAC/simple-hostnames. Cannot faithfully map all OS routes to npm environment.",
+  "currentScope": "read native static snapshots and admit only identical HTTP/HTTPS route (or both direct) with representable native bypass; explicitly refuse split/PAC/CIDR/simple-hostname routing, leaving full system proxy feature incomplete. No native OS settings modified.",
+  "retainedFirstFailure": "actual npm Manual proxy/bypass both passed, synthetic System proxy scenario server accepted stream inherited nonblocking; WouldBlock caused ECONNRESET, not shown as product routing failure. New test makes accepted stream blocking, reruns only unpassed system/direct scenarios.",
+  "preflight": "zsh wildcard redirection failed after fmt before Cargo ran; raw tool output only, no independent stderr file; first compile CFArray concrete type mismatch retained in build.stderr.log.",
+  "accepted": false
+}

@@ -1,0 +1,12 @@
+from pathlib import Path
+import json,subprocess,shutil,hashlib,time
+base=Path('/private/tmp/ocxd024-empty-config-d8t6p91e');root=Path(json.loads((base/'native/runner-summary.json').read_text())['temporaryRoot'])/'fixtures';profile=root/'profile';out=base/'guard-parent-exit';out.mkdir()
+code=Path('/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes');binary=code/'apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97';exe=root/'tests-config-guard';shutil.copy2(binary,exe);sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();assert sha(binary)==sha(exe)
+(out/'hypothesis.json').write_text(json.dumps({'accepted':False,'hypothesis':'An actual mutation-parent process exits91 while holding the pipe-bound official config lock. Without normal Rust drops, OS pipe EOF must let its helper release through the official finally, exit and leave no config lock or config. No signals or service actions; exact native locks close with parent.','binarySha256':sha(exe)},indent=2))
+(out/'source.json').write_text(json.dumps({'baseCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=code,text=True).strip(),'binarySha256':sha(exe),'files':[{'path':p,'sha256':sha(code/p)} for p in sorted(set(subprocess.check_output(['git','diff','--name-only'],cwd=code,text=True).splitlines()+subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=code,text=True).splitlines()))]},indent=2))
+env={'PATH':'/usr/bin:/bin:/usr/sbin:/sbin','HOME':str(profile),'CODEX_HOME':str(profile/'.codex'),'TMPDIR':str(root/'tmp')+'/','LANG':'en_US.UTF-8','OCXD024_CONFIG_GUARD_ROOT':str(root)}
+cmd=['/usr/bin/sandbox-exec','-f',str(root.parent/'fixture.sb'),str(exe),'--exact','infrastructure::official_client_coordination::native::config::parent_exit_tests::official_config_guard_parent_death_releases_without_forced_helper_stop','--ignored','--nocapture','--test-threads=1'];start=time.monotonic()
+with (out/'stdout.log').open('wb') as stdout,(out/'stderr.log').open('wb') as stderr:p=subprocess.run(cmd,cwd=root,env=env,stdout=stdout,stderr=stderr,timeout=45)
+(out/'runner-summary.json').write_text(json.dumps({'accepted':False,'exitCode':p.returncode,'elapsedSeconds':round(time.monotonic()-start,3),'binarySha256':sha(exe)},indent=2))
+if (root/'config-guard-parent-exit-proof.json').exists():shutil.copy2(root/'config-guard-parent-exit-proof.json',out/'proof.json')
+shutil.copy2(Path(__file__),out/'guard_runner.py');print('config-guard proof exit',p.returncode,flush=True)

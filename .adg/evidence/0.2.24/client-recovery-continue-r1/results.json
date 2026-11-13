@@ -1,0 +1,49 @@
+{
+  "accepted": false,
+  "scope": "explicit continue of same interrupted3artifact plan; no rollback executor yet",
+  "backendDistinctCases": 69,
+  "uiCases": 27,
+  "nativeOriginal": {
+    "startMs": 8654,
+    "statusMs": 229,
+    "interruptedStopMs": 5662,
+    "indexRevision": 6,
+    "result": "expected retained failure"
+  },
+  "continueFailures": [
+    {
+      "directory": "continue",
+      "elapsedMs": 10195
+    },
+    {
+      "directory": "continue-locked-preview",
+      "elapsedMs": 10272
+    }
+  ],
+  "continueSuccess": {
+    "directory": "continue-boundaries",
+    "elapsedMs": 9528,
+    "indexRevision": 7,
+    "status": "restored"
+  },
+  "noHistoricalNormalExitProofReconstructed": true,
+  "perStepFacts": [
+    "same-process native claim/N/L/K lease",
+    "original process/launcher absence",
+    "original port absence",
+    "runtime record and pid record absence",
+    "service manager absence",
+    "exact artifact native identity/bytes/protection"
+  ],
+  "fullOSEnumeration": "fresh before and after native batch, plus final readback boundaries",
+  "browserChecks": {
+    "visual-chromium": 7,
+    "visual-webkit": 7,
+    "visual-delivery": 3
+  },
+  "fullTreeHashesIndependentlyMatchCompletion": true,
+  "finalOriginalFileChecks": 7,
+  "noNewAppOrDMG": true,
+  "releaseAuthorizedByThisBatch": false,
+  "remaining": "Rollback terminal/execution and initial phases, general client/graph/family scope, Windows contributions, NAME, System proxy, official verifier and fixed candidate remain."
+}

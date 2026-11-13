@@ -1,0 +1,41 @@
+# 原根缺席与初始化执行原件的独立登记
+
+revision: 1；2026-11-13，IMP-34 P24-04，main 4aa0d1ace。承接[目录创建归属](client-root-custody-r1.md)与[同锁根登记](client-root-registration-r1.md)。accepted=false，非冻结候选。此批完成原缺席事实进入原件链与Captured独立登记；生产缺根启动和整根恢复仍未开放。
+
+## 原根Absent与实际执行树分别记录
+
+root-aware捕获只可从Index::register_first_root产生的活体创建custody进入。reserve_first_root_capture要求当前还持原created fd、RootBinding nonce对应Preparing1、执行目录为空、未超原创建deadline；先CAS登记CaptureReserved2，再返回借用Index的CaptureReservation。普通reserve_capture仍拒绝新根，重开Index只有事实引用、不能重建原created fd或重新捕获当前状态。
+
+Originals::begin_reserved_profile从该reservation取得独立originalRootAbsence，不通过读磁盘猜来源。新schema5帧显式包含这一引用，初始化Codex tree只是本次执行前快照，不是“用户原本就有目录”。原根Absent已在独立binding与create-onlyintent链记录；原件frame再绑定同引用，普通schema4没有该字段。两者是本开发版本不同初态的明确数据结构，不是自动迁移或兼容旧版原件。普通begin/open_for_profile发现root创建记录时拒绝，不收养成普通目录原件。
+
+Original初始执行树只允许精确claim与其持锁sidecar的Coordination元数据，不能有config/auth/任意文件、子目录或服务owner。服务尚未启动，先出现owner不是可获准的新基线。其余基本要求沿原TreeSnapshot.valid、uid/权限/保护/sidecar安全检查，绝不把不可读视为缺席。实际claim初始化后capture不读其数据库inode内容，原事务继续保持；单独SQLite EXCLUSIVE+CREATE实际产生journal的用例证明这一初态可捕获。空树亦可用。
+
+每个实际Original/Ready/PreStop/Stopped frame保留同schema5引用和原独立SHA链；已缺历史阶段不补封。每次frame读取均复核外部独立根来源、当前data/profile/root原生identity/Protection、帧捕获与tree的一致性及原归档。删原缺席字段并改为schema4、或换origin字段，哪怕测试故意同时更新调用方给的frame摘要，也不能与索引期待的origin相符，仍拒绝。实际Ready/PreStop树可以含运行期间配置，Original仍只能是初始化基线。
+
+## 独立Captured与只读证据
+
+Index::record_first_root_originals收当前CaptureReserved头及refs，在原创建deadline内保持同action锁，复核原created fd、源nonce、data/profile/HOME/client上下文、Original独立摘要/schema5与根引用、startup-scope独立摘要与根/路径代次，才CAS登记Captured3。refs必须同attempt、无Ready等阶段和无live证明。不能普通advance到Captured或Ready；root模式通用write只准专用预留/专用Captured与Failed，普通取消/完整收尾仍拒绝。
+
+CaptureReservation下显式reopen_root_originals仅限原创建custody仍活且期限内的本次预留，供现有捕获内复验；它不授予执行权限。独立Captured后Index::registered_root_originals只取原Head/RootBinding内引用，不能由caller换SHA或扫描目录。Index.head和只读inspect会验证Captured原件与scope，scope坏/目录换代即拒绝，不把“原件JSON可解析”当真实来源。
+
+预览在同一个只读action锁内接收已核验origin，原件可以显示verified/Captured/Pending，所有普通恢复动作false。它不会再因普通open拒绝而把这份已登记证据当成可丢失，也不会通过“原件未变就结束”掩盖整个根原先Absent。普通complete_readback/rollback明确拒绝这类原件，要求未来whole-root restoration proof；仅实际执行树字节读回相等，不能登记原根已恢复或放开Start。
+
+所有首次捕获阶段checkpoint核对原custody/原deadline，注册提交前后复核时间；如果已提交后才超时，精确Captured引用仍保留并返回未确认，不谎称零写入。过期不影响只读事实查询，但不能继续拿原创建句柄捕获或登记新源。
+
+## 验证与发现的旧限制错误
+
+首root测试0passed/7failed。根因是上一批本想限制普通终态收尾，却把拒绝放到generic Index.write，导致专用CaptureReserved也不能进入。原完整失败日志保留；本批把终态限制放回close_readback，write只允许明确列出的root转移。旧捕获/旧取消/旧完成仍拒绝，未通过删除检查来假放行。首E0061旧测试helper需新的optional origin参数、E0609变量遮蔽，在hypothesis和chat原输出保留说明；不声称另存有原始编译错误日志。
+
+[103文件与manifest](../../../.adg/evidence/0.2.24/client-root-originals-r1/)保存假设、分阶段源码结果与最终binary、失败、四崩溃字节场景和校验。108个去重相关函数：root-originals9、普通originals23、index27（2个显式manual ignored）、root-registration6+deadline1、completion7、tree9、session26通过；fmt/check/all-targets strictClippy通过。最后deadline/预览补强各有定向验证，较早测试不冒称含后加源码。
+
+新用例验证完整四阶段链都保留独立origin、普通入口拒绝、未登记新auth/config及service owner拒绝、frame降级/rebind拒绝、普通whole-tree完成不冒whole-root完成。正确Original+synthetic scope可登记Captured3，同Head引用读回，改scope后Index重开/inspect都拒绝。synthetic scope只验证存储/上下文合同，不能作官方程序准入或真实OS启动证据。
+
+4个真实child exit91在directory_created/codex_archived/grok_archived/original_published边界：父实际wait91，独立索引始终CaptureReserved2/refsnull；最后一项虽有磁盘Original，也不能因重开后“文件完整”收养它。新调用缺原created fd，begin/reopen拒绝且所有记录字节保持；缺阶段不造历史。日志保存合成来源/SQLite字节base64、SHA和长度，离线immutable数据库独立验证RootBinding/Preparing1/CaptureReserved2及refsnull，正例独立验证Original/scope SHA和Captured3。复制字节不冒原目录identity或不可序列化许可。
+
+测试父和child实际完成，TempDir清自有夹具/unitTMP空，归档逐字核验后删重复临时根。无官方运行包/服务或GUI执行，无真实业务/模型/WebDAV请求，无日常HOME/全局协调数据库/系统设置变化；未构建新.app/DMG或发布。原证据和首失败不被后继通过覆盖。
+
+## 未完成的用户路径
+
+Active.capture仍未启用缺根创建，Ready/普通终态也保持拦截。下一步应在真实停止/写者隔离与完整对象保全后，将初始化根移出恢复为原Absent，并让独立索引和只读状态在原根已消失时仍能核对；还需后继新Start、初始化中断的明确处理。不能为了“能启动”把新根留为永久例外，也不能假造RootAbsent读回。
+
+这些生产接线与根恢复证明完成后，才跑新隔离Profile上的原官方2.99缺根Start30/Status5/Stop10和完整根状态读回。缺Ready/一般客户端/路由图/路径/完整进程集合与活跃刷新、旧revision4首错、Windows W1/W2产品贡献、NAME、System复杂代理、官方交付验证/README及固定候选仍归IMP-34原完整范围，目标继续active。

@@ -1,0 +1,9 @@
+2026-11-12T18:51:17.735Z [manager] start: start confirmed
+2026-11-12T18:51:21.418Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-12T18:51:22.395Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-12T18:51:22.400Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-12T18:51:22.534Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-12T18:51:28.402Z [manager] client-artifact-restore: refused phase=post-apply-stopped
+2026-11-12T18:51:28.406Z [manager] client-stop-recovery: measured elapsed_ms=5903 timings=[("original-pair-exit", 0), ("native-coordination", 35), ("seal-stopped", 956), ("index-stopped", 2350), ("prepare-plan", 2350), ("index-plan", 2672), ("restore-three-artifacts", 3759)]
+2026-11-12T18:51:28.409Z [manager] client-stop-recovery: failed phase=restore-three-artifacts code=timeout
+2026-11-12T18:51:28.413Z [manager] stop: failed (request timed out; duration_ms=10044)

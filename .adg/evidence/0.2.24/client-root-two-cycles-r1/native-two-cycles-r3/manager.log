@@ -1,0 +1,17 @@
+2026-11-12T22:49:34.339Z [manager] start: start confirmed
+2026-11-12T22:49:36.173Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-12T22:49:36.978Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-12T22:49:36.982Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-12T22:49:37.076Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-12T22:49:42.897Z [manager] client-stop-recovery: assessed-artifact-originals restored and readback verified
+2026-11-12T22:49:43.515Z [manager] client-stop-recovery: measured elapsed_ms=6459 timings=[("original-pair-exit", 0), ("native-coordination", 24), ("seal-stopped", 760), ("index-stopped", 1245), ("prepare-plan", 1245), ("index-plan", 1438), ("restore-three-artifacts", 1797), ("root-stop-admission", 1797), ("root-artifacts-held", 2490), ("root-plan", 3214), ("root-retire", 3805), ("root-close", 4994), ("release-coordination", 5845), ("root-absence-complete", 6459)]
+2026-11-12T22:49:43.519Z [manager] lifecycle-stop-phase: complete elapsed_ms=8774 budget_ms=10000 action=stop
+2026-11-12T22:49:43.523Z [manager] stop: stop completed
+2026-11-12T22:50:10.175Z [manager] start: start confirmed
+2026-11-12T22:50:18.756Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-12T22:50:19.550Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-12T22:50:19.554Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-12T22:50:20.115Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-12T22:50:25.686Z [manager] client-stop-recovery: measured elapsed_ms=5612 timings=[("original-pair-exit", 0), ("native-coordination", 44), ("seal-stopped", 808), ("index-stopped", 2948), ("prepare-plan", 2948), ("index-plan", 3341), ("restore-three-artifacts", 5612), ("root-stop-admission", 5612)]
+2026-11-12T22:50:25.690Z [manager] client-stop-recovery: failed phase=root-stop-admission code=timeout
+2026-11-12T22:50:25.694Z [manager] stop: failed (request timed out; duration_ms=11821)

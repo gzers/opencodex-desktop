@@ -1,0 +1,34 @@
+{
+  "indexState": "restored",
+  "independentBeforeDiscoveryRoutes": [
+    "native-fixture/claude-opus-5-5",
+    "native-fixture/gpt-6-sol",
+    "native-fixture/vendor-gemini-3.5-pro"
+  ],
+  "actualReadyRows": [
+    {
+      "slug": "native-fixture/claude-opus-5-5",
+      "displayName": "native-fixture/opus"
+    },
+    {
+      "slug": "native-fixture/gpt-6-sol",
+      "displayName": "native-fixture/custom-sol"
+    },
+    {
+      "slug": "native-fixture/vendor-gemini-3.5-pro",
+      "displayName": "native-fixture/g3p"
+    }
+  ],
+  "localDiscovery": {
+    "getModelsRequests": 1,
+    "listenerClosed": true,
+    "observedMethodAndPathOnly": [
+      "GET /v1/models"
+    ],
+    "port": 51320,
+    "syntheticLoopbackOnly": true,
+    "unexpectedOrBusinessRequests": 0
+  },
+  "excludedUnselectedAndStaleModels": true,
+  "refsAndContentChecks": 35
+}

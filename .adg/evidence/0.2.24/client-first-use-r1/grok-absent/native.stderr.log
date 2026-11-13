@@ -1,0 +1,4 @@
+
+thread 'commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client' (157059117) panicked at src/commands/lifecycle_versioned_tests.rs:706:22:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "Grok root was absent in original phase" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

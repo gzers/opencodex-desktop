@@ -1,0 +1,58 @@
+{
+  "accepted": false,
+  "rounds": [
+    {
+      "label": "prefix-context",
+      "accepted": false,
+      "eligibleSource": false,
+      "exitCode": 101,
+      "startMs": 9417,
+      "stopMs": 11027,
+      "rootExists": false,
+      "headState": "root_retirement_prepared",
+      "headRevision": 10,
+      "completionSha256": null,
+      "terminalReceiptOnDisk": true
+    },
+    {
+      "label": "commit-coalesced",
+      "accepted": false,
+      "eligibleSource": true,
+      "exitCode": 101,
+      "startMs": 9544,
+      "stopMs": 10379,
+      "rootExists": false,
+      "headState": "root_retirement_prepared",
+      "headRevision": 8,
+      "completionSha256": null,
+      "terminalReceiptOnDisk": false
+    },
+    {
+      "label": "entry-coalesced",
+      "accepted": false,
+      "eligibleSource": true,
+      "exitCode": 101,
+      "startMs": 7631,
+      "stopMs": 10255,
+      "rootExists": true,
+      "headState": "restore_prepared",
+      "headRevision": 7,
+      "completionSha256": null,
+      "terminalReceiptOnDisk": false
+    },
+    {
+      "label": "original-context",
+      "accepted": false,
+      "eligibleSource": true,
+      "exitCode": 101,
+      "startMs": 7596,
+      "stopMs": 10493,
+      "rootExists": true,
+      "headState": "root_retirement_prepared",
+      "headRevision": 8,
+      "completionSha256": null,
+      "terminalReceiptOnDisk": false
+    }
+  ],
+  "scope": "All four Stop failures retained. Rejected shared-prefix timing cannot qualify product semantics; final source has original per-frame checks."
+}

@@ -1,0 +1,4 @@
+
+thread 'commands::client_recovery::tests::finalize_owned_completed_fixture_with_fresh_admission' (156231436) panicked at src/commands/client_recovery_tests.rs:98:91:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "client_recovery_finalize_refused", detail: "恢复现场或确认已变化，请重新核对；原件与当前文件保留" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,27 @@
+{
+  "baseCommit": "5870c915a18ccd799d90bf282d206d53e0cd15ac",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery_tests.rs",
+      "sha256": "1aa9f510858d8a3ee13860cb609724c45ffcb505760d5d701c3ecde605de9db2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_completion.rs",
+      "sha256": "edd7b80a1ce02e7a8470e6e0c9f262a8482abaa6cc1fa16db751d98595cc1f59"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore.rs",
+      "sha256": "f9dcaf820a614fc415d36685a158b9ab983ad5f4304507e263e64ab79ca58e08"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore_tests.rs",
+      "sha256": "a737b946a24c80e5b48277c699174cabb6ba53e21c0677521fe798033cb56b82"
+    }
+  ],
+  "nativeInitialSource": "native/source.json",
+  "nativeInitialBinarySha256": "a7b4726dab821a0e62f219466dc9ea2322b8a6fbb850b35a2da368b0cac3cc88",
+  "nativeRetrySource": "retry-and-continue/source.json",
+  "nativeRetryBinarySha256": "a33187349b99e2aaa614e5021a846942ca3096757b5ff10fb0af233a8577d5dc",
+  "sourceBoundary": "First native interruption used stage_bytes seam before later FD path pin hardening. Retry+Continue actual binary includes new FD identity checks and command helper assertion. Final source unchanged after native retry; no UI changes or native app built.",
+  "codeCommit": "55bc4430082e8762c7ce5c6ffd7ddf605f94b3e3"
+}

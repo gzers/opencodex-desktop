@@ -1,0 +1,18 @@
+{
+  "groups": {
+    "helper-admission": {
+      "exitCode": 0,
+      "summary": [
+        "test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 2325 filtered out; finished in 0.03s"
+      ]
+    },
+    "native-admission": {
+      "exitCode": 0,
+      "summary": [
+        "test result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 2321 filtered out; finished in 0.31s"
+      ]
+    }
+  },
+  "binarySha256": "f887e6adee74d6cb99f7fb64e80c5477b90ff93ee0ab443bbbdf29a8516e190f",
+  "hypothesis": "Rust expires from spawn while official hold timer begins after imports. Private native metadata-only admission must not borrow mutation authority at all; normal released0 protocol and actual native re-acquisition required; public2s and absolute budget retained. No changes to physical helper script."
+}

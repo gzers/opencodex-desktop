@@ -1,0 +1,81 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0603]: function `entry` is private
+  --> src/infrastructure/macos_client_completion.rs:66:44
+   |
+66 |             if session_index::observation::entry(client, name)?.is_some() {
+   |                                            ^^^^^ private function
+   |
+note: the function `entry` is defined here
+  --> src/infrastructure/macos_client_session_observation.rs:31:1
+   |
+31 | pub(super) fn entry(parent: &PinnedDirectory, child: &str) -> io::Result<Option<libc::stat>> {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `entry` is private
+   --> src/infrastructure/macos_client_completion.rs:119:62
+    |
+119 |         if identity.is_none() && session_index::observation::entry(client, name)?.is_some() {
+    |                                                              ^^^^^ private function
+    |
+note: the function `entry` is defined here
+   --> src/infrastructure/macos_client_session_observation.rs:31:1
+    |
+ 31 | pub(super) fn entry(parent: &PinnedDirectory, child: &str) -> io::Result<Option<libc::stat>> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0603]: function `fixture_readback` is private
+   --> src/infrastructure/macos_client_session_tests.rs:77:28
+    |
+ 77 |         assert!(unchanged::fixture_readback(&session.originals, &captured, deadline).is_err());
+    |                            ^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `fixture_readback` is defined here
+   --> src/infrastructure/macos_client_unchanged.rs:298:1
+    |
+298 | / pub(super) fn fixture_readback(
+299 | |     originals: &Originals,
+300 | |     head: &Head,
+301 | |     deadline: Instant,
+302 | | ) -> io::Result<Proof> {
+303 | |     readback(originals, head, deadline)
+304 | | }
+    | |_^
+
+error[E0603]: function `fixture_readback` is private
+   --> src/infrastructure/macos_client_session_tests.rs:84:28
+    |
+ 84 |         assert!(unchanged::fixture_readback(&session.originals, &captured, deadline).is_err());
+    |                            ^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `fixture_readback` is defined here
+   --> src/infrastructure/macos_client_unchanged.rs:298:1
+    |
+298 | / pub(super) fn fixture_readback(
+299 | |     originals: &Originals,
+300 | |     head: &Head,
+301 | |     deadline: Instant,
+302 | | ) -> io::Result<Proof> {
+303 | |     readback(originals, head, deadline)
+304 | | }
+    | |_^
+
+error[E0603]: function `fixture_readback` is private
+   --> src/infrastructure/macos_client_session_tests.rs:86:32
+    |
+ 86 |         let proof = unchanged::fixture_readback(&session.originals, &captured, deadline).unwrap();
+    |                                ^^^^^^^^^^^^^^^^ private function
+    |
+note: the function `fixture_readback` is defined here
+   --> src/infrastructure/macos_client_unchanged.rs:298:1
+    |
+298 | / pub(super) fn fixture_readback(
+299 | |     originals: &Originals,
+300 | |     head: &Head,
+301 | |     deadline: Instant,
+302 | | ) -> io::Result<Proof> {
+303 | |     readback(originals, head, deadline)
+304 | | }
+    | |_^
+
+For more information about this error, try `rustc --explain E0603`.
+error: could not compile `opencodex-desktop` (lib test) due to 5 previous errors

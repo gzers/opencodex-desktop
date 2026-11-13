@@ -1,0 +1,4 @@
+
+thread 'infrastructure::macos_client_originals::session::tests::official299_real_startup_originals_ready_binding_and_completed_stop_roundtrip' (155051928) panicked at src/infrastructure/macos_client_session_tests.rs:362:11:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "client_coordination_native", detail: "官方客户端协调未确认，原件及当前文件保留；未执行未获准的恢复" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,273 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "frozenCandidate": false,
+  "codeCommit": "d47a431dc9519d4fd0b46e2800f171988c0d5a3e",
+  "scope": "Actual Mac application Stop prepares content-qualified immutable restore plan and independently commits id/hash; no mutation permit constructed or artifact restored",
+  "passed": {
+    "sessionAndIndexRelated": 21,
+    "unchangedRestoreCoreRegressions": 20,
+    "actualMacStageDataReplay": 1,
+    "pureOriginalSchemaAndSlugProbe": 1
+  },
+  "checks": [
+    {
+      "name": "compile-normalization",
+      "argv": [
+        "cargo",
+        "test",
+        "--offline",
+        "--lib",
+        "macos_client_originals",
+        "--no-run"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "clippy-normalization",
+      "argv": [
+        "cargo",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exitCode": 0
+    },
+    {
+      "name": "fmt-normalization",
+      "argv": [
+        "cargo",
+        "fmt",
+        "--check"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "nativeLatest": {
+    "accepted": false,
+    "businessRequests": false,
+    "clientChangedDuringStart": true,
+    "independentOriginalsReferenced": true,
+    "indexedReady": true,
+    "indexedRestorePrepared": true,
+    "indexedRevision": 6,
+    "indexedStopped": false,
+    "nativeClientRestored": {
+      "codex/config.toml": true,
+      "codex/models_cache.json": false,
+      "codex/opencodex-catalog-audit.jsonl": false,
+      "codex/opencodex-catalog.json": false,
+      "grok/config.toml.bak-opencodex": true
+    },
+    "officialVersion": "2.99.0",
+    "pidRecordAbsent": true,
+    "record": {
+      "pid": 53348,
+      "port": 61203
+    },
+    "recordAbsent": true,
+    "restorePlanMatchesIndependentIndex": true,
+    "result": "failed",
+    "serviceStarted": true,
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startBudgetMs": 30000,
+    "startElapsedMs": 13413,
+    "status": {
+      "pid": "53348",
+      "port": 61203,
+      "ready": true,
+      "status": "running"
+    },
+    "statusBudgetMs": 5000,
+    "statusElapsedMs": 1105,
+    "stop": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "failure": {
+        "code": "client_original_restore_pending",
+        "message": "服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留"
+      },
+      "lifecycleState": "running",
+      "result": null
+    },
+    "stopBudgetMs": 10000,
+    "stopElapsedMs": 8491
+  },
+  "verifiedPlanReferences": [
+    {
+      "label": "native2",
+      "id": "b45c1ab3-2eb5-48a1-9487-79114b21c887",
+      "sha256": "7d6cac28b16bf395947228f98dda743e0707a306b41316bbc1235e89469629ff",
+      "originalAttempt": "cd77a1e1-5fef-4c08-9087-26902e35c9fe",
+      "kinds": [
+        "swap",
+        "remove",
+        "remove"
+      ],
+      "originalPhasesMatch": true,
+      "currentIndexRevision": 6,
+      "originalStageByteSha256": "4d96a7e658dd859d2bb884b4ee1e69339fd91f4d7d58383b02282ba09e718754"
+    }
+  ],
+  "independentlyMatchedRecords": [
+    {
+      "round": "native",
+      "file": "original.json",
+      "sha256": "ee3edc1b7d4cfe44819e253cade6562976d7bf61a7d9389f97611ba712d9b5a4",
+      "bytes": 1634,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native",
+      "file": "startup-scope.json",
+      "sha256": "889215bef3ac23b0cc366d9ab2048831b9c9918a68e32f5912ceddf6e89ba6f9",
+      "bytes": 1298,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native",
+      "file": "startup-live.json",
+      "sha256": "6d8831e50110b6b1bfd6987227183b0a5f274e338cc9e87a7444fa79435fe279",
+      "bytes": 367,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native",
+      "file": "ready.json",
+      "sha256": "678be6a620157f578d67ac21d84bf532eb395c6ec7612cd6b4c0c2fbc6058f73",
+      "bytes": 22439,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native",
+      "file": "pre-stop.json",
+      "sha256": "844fb81970d20355ff7786c9f76887a109043060a03814272217e31a2d0fda8f",
+      "bytes": 22442,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native",
+      "file": "stopped.json",
+      "sha256": "f5ec8419d65382010e492a5c7bd2e90ebd3a8f3ad481bd43411c91e0402563c8",
+      "bytes": 15190,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native2",
+      "file": "original.json",
+      "sha256": "f486b76c424662fbbbfaa3f7c65cf9cd739a95ec5851527480dcb8b741015d20",
+      "bytes": 1634,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native2",
+      "file": "startup-scope.json",
+      "sha256": "4606d28f98a9b46e8550cf20e0111fbc294b086212e742790c15eec340b7c85c",
+      "bytes": 1298,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native2",
+      "file": "startup-live.json",
+      "sha256": "d36d0b2362979dac3c7e081e23937e416b816a2e8339deb1b30693b99b7cc2d0",
+      "bytes": 367,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native2",
+      "file": "ready.json",
+      "sha256": "29198c4051dbca7d307453fc82df08f342a33c4cec2fabbca47922837e260f1d",
+      "bytes": 22429,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native2",
+      "file": "pre-stop.json",
+      "sha256": "650b5e7b29b84c9ee62ec14f8c393cce76dd3ffce4c8090fc66c9ea049d48542",
+      "bytes": 22432,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native2",
+      "file": "stopped.json",
+      "sha256": "096e00b14bb7e8281e2562143a22984d7e244efc2414202c5235f3e1087cfa97",
+      "bytes": 15177,
+      "independentIndexMatched": true
+    },
+    {
+      "round": "native2",
+      "file": "restore-b45c1ab3-2eb5-48a1-9487-79114b21c887.json",
+      "sha256": "7d6cac28b16bf395947228f98dda743e0707a306b41316bbc1235e89469629ff",
+      "bytes": 827,
+      "independentIndexMatched": true
+    }
+  ],
+  "failureEvidence": [
+    "Premature singlePID MutationPermit issue/apply path was drafted then removed before commit/test native; complete family/descendant permission still absent. No production constructor added or restoration performed.",
+    "Preliminary compilation/path/module and cargo2filter argument failures only tool output plus classification, raw stderr not captured; document limits.",
+    "First isolated index fixture hardcoded/private/tmp escaped the permitted TMPDIR and was rejected12cases. Final fixture uses task TMPDIR and exact canonical temp-parent/prefix guard rather than weakening native assertions; full21pass retained.",
+    "First actual round Start15598/Status1094/Stop6061ms stopped successfully but no plan produced because omittedfastRows became officialtrue and declaration returnedunknown. Old round retainedStopped with noPlan.",
+    "Original fourstage data-only replay passed current unchangedcontent policy; source hashes independently matched originalindex. Reused replay helper retains Windows name/text but this input is explicitly MAC retainedstage data, not Windows native acceptance.",
+    "Pure originalschema first fixture providers{} without valid defaultProvider rejected as invalid; keptfailed probe. Valid owned synthetic config pureparse confirms omittedfastRows===true, actual routedSlash codec and collision.",
+    "Second actual round reuses complete pinned original image, fresh profile; restores preparation success within original30/5/10 budgets and immutableplan reference reopening. Whole-client original restoration stillfailed101."
+  ],
+  "remaining": [
+    "No actual client mutation/restore factory; MutationPermit retains no constructor/default/deserializer. SinglePIDnormalExit and observedparentGeneration do not prove completeprocessfamily, listenercollection or nativewriteauthority.",
+    "Static independent declaration is preliminary and deliberately refuses dynamic/live/alias/combo/custom/disabled graphs. Literal fastRows boolean normalization is allowed only for independently selected BASE routes; exactReady policy still refuses any undeclaredFast/effort child. General provider graph/alias/Fast support remains required by final version.",
+    "Audit home projection limited to paths with no sensitive/token-like segments and <=256UTF16units; unsupportedpaths refuseplan, full official redaction integration stillpending.",
+    "RestorePrepared keeps session blocked with originalfullfailure, no automaticrecovery/rollback/restart release; schema2 deliberately rejects schema1 without migration. Startup scope/live newrequiredfields are not backfilled for olddeveloperframes.",
+    "Pending plan may stage exact original bytes in sameclientdirectory, fully known attempt, but does not replace/delete known threeartifact targets. Interruption before independently committing plan must remainunconfirmed; no directoryscan to invent permit.",
+    "config/Grok/Agent/fulltree, activeupdates/newdirectories/crossvolume/flags, descendants/listeners, WindowsW0HOME/ProfileW1W2, NAME, Systemproxy, publishverifier/sharedrelease and fixedcandidate remain unfinished.",
+    "No latest.app/DMG rebuilt, noWindows/newSID, noofficial2.99patch/dailyconfig/businessupstream/WebDAV operations."
+  ],
+  "cleanup": {
+    "ownTestHelperAndRuntimeImagesAbsent": true,
+    "nativeTCPFramingValidated": true,
+    "originalPrimaryPortsAbsent": [
+      60680,
+      61203
+    ],
+    "exactNewCoordinatorProof": [
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/b45f27874c1e28f52b2c6d9847ef81eb688b53fb98762c82c85c05de770b1ad6.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/b45f27874c1e28f52b2c6d9847ef81eb688b53fb98762c82c85c05de770b1ad6.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/b47a1dd7931fc825b389da4007b5f52f745e3ce7af5110745edfd2e0993cb6db.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/398818d749608ea6df804e39c240e40ee1e603d4c6b60e2f5ab80fd07d6a9670.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/398818d749608ea6df804e39c240e40ee1e603d4c6b60e2f5ab80fd07d6a9670.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      },
+      {
+        "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/e94d34fe83a8372b43eb4ec916b7b69005b1bc98b049a20c948c019053064af1.sqlite",
+        "exclusiveReacquiredAndReleased": true
+      }
+    ],
+    "exactNewCoordinatorFilesAbsent": true,
+    "dailyConfigurationModified": false,
+    "officialPackageModified": false,
+    "forcedServiceSignalUsed": false,
+    "ownedProgramProfileStagesIndexesAndBinariesRemoved": true,
+    "duplicateReceiptRootRemoved": true
+  }
+}

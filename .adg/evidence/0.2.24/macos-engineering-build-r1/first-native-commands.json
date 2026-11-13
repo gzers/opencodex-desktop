@@ -1,0 +1,74 @@
+[
+  {
+    "argv": [
+      "/usr/bin/xcrun",
+      "swiftc",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx021-macos-native.swift",
+      "-o",
+      "/private/tmp/ocxd024-native-_jswd53v/ax"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/xcrun",
+      "swiftc",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/lib/capwin.swift",
+      "-o",
+      "/private/tmp/ocxd024-native-_jswd53v/capwin"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-native-_jswd53v/ax",
+      "status"
+    ],
+    "exitCode": 0,
+    "stdout": "{\"axTrusted\":true,\"locked\":false,\"onConsole\":true,\"screenCaptureAllowed\":true}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/sandbox-exec",
+      "-f",
+      "/private/tmp/ocxd024-native-_jswd53v/candidate.sb",
+      "/usr/bin/nc",
+      "-v",
+      "-G",
+      "1",
+      "-z",
+      "192.0.2.1",
+      "443"
+    ],
+    "exitCode": 1,
+    "stdout": "",
+    "stderr": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted\n"
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-native-_jswd53v/ax",
+      "snapshot",
+      "13052",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 3,
+    "stdout": "{\"error\":\"PID\\/executable admission failed\"}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-native-_jswd53v/ax",
+      "snapshot",
+      "13052",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 0,
+    "stdout": "{\"active\":false,\"axTrusted\":true,\"executable\":\"\\/Users\\/ezio\\/.codex\\/worktrees\\/ocxd-023-integration\\/ocx-0219-fixes\\/apps\\/desktop\\/tauri\\/target\\/release\\/bundle\\/macos\\/OpenCodeX Desktop.app\\/Contents\\/MacOS\\/opencodex-desktop\",\"hidden\":false,\"locked\":false,\"nodes\":[{\"path\":\"\"}],\"pid\":13052,\"windows\":[]}\n",
+    "stderr": ""
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "baseCommit": "94ed6dc11b92e33345fc0f3fda96bf8f997a6ecc",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "sha256": "3688064cacff3e5c554053647178b24d7a2c6f3c5d97f23b65d7ddebc2762d69"
+    }
+  ],
+  "productionChanges": "field-specific direct path validation and raw running/ready/PID contradiction guards; no changes to authenticated record, before/after absence check, image admission, source timeout, runtime state mapper or file recovery",
+  "committedCode": "70d2a2778dc937dd41402b03c8a0c266fb060ff8",
+  "nativeSourceMatchesFinalCommit": true
+}

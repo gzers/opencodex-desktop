@@ -1,0 +1,425 @@
+
+running 116 tests
+test modules::model_config::config_file::v2::copy_tests::failed_save_keeps_copy_reference_and_pending_replacement_for_exact_retry ... ok
+test modules::model_config::config_file::v2::copy_tests::nonreuse_copy_strips_all_seed_credentials_and_preserves_source_and_unknown_public_bytes ... FAILED
+test modules::model_config::config_file::v2::copy_tests::omitted_copy_key_is_opt_in_false_and_ui_never_supplies_key_material ... ok
+test modules::model_config::config_file::v2::copy_tests::pending_clear_and_nonreuse_replacement_never_borrow_actual_or_pending_credentials ... ok
+test modules::model_config::config_file::v2::copy_tests::pending_replace_reuse_uses_immutable_intent_without_carrying_old_pool_or_private_refs ... ok
+test modules::model_config::config_file::v2::copy_tests::reconcile_keeps_original_copy_reference_when_its_exact_provider_is_unchanged ... ok
+test modules::model_config::config_file::v2::copy_tests::stale_copy_request_and_source_change_do_not_leave_copy_sources_or_draft_effects ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::actual_source_change_after_edit_is_not_silently_discarded_or_cleaned ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::cleanup_failure_leaves_only_attributed_private_tombstone_after_draft_invalidation ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::discard_never_deletes_a_pending_slot_already_referenced_by_saved_channel ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::discard_recovery_then_begin_new_generation_allows_ordinary_edit_and_save ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::explicit_discard_clears_only_the_guarded_draft_and_its_proven_private_material ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::pending_journal_is_rejected_without_recovery_and_newer_generation_is_preserved ... ok
+test modules::model_config::config_file::v2::draft_discard::tests::stale_source_generation_root_library_or_policy_never_discards_or_cleans_anything ... ok
+test modules::model_config::config_file::v2::export::tests::copied_draft_export_reuses_actual_public_seed_without_copying_key_or_saving ... ok
+test modules::model_config::config_file::v2::export::tests::draft_capture_exports_selected_typed_edits_exact_dependencies_and_no_credentials ... ok
+test modules::model_config::config_file::v2::export::tests::draft_export_scope_is_local_explicit_and_saved_capture_still_ignores_bad_draft ... ok
+test modules::model_config::config_file::v2::export::tests::exact_base_baseline_and_pending_guards_never_recover_or_mutate ... ok
+test modules::model_config::config_file::v2::export::tests::new_server_staged_channel_uses_template_protocol_without_saving_or_guessing_adapter ... ok
+test modules::model_config::config_file::v2::export::tests::project_accepts_equivalent_disk_rewrite_without_writing_or_relaxing_real_conflicts ... ok
+test modules::model_config::config_file::v2::export::tests::project_applies_only_explicit_intents_compiles_and_changes_no_business_file ... ok
+test modules::model_config::config_file::v2::export::tests::project_rejects_actual_alias_collisions_and_invalid_aliases_without_writes ... ok
+test modules::model_config::config_file::v2::export::tests::queued_binding_includes_exact_revision_and_invalid_or_stale_queue_never_writes ... ok
+test modules::model_config::config_file::v2::export::tests::queued_model_and_channel_intents_are_captured_without_staging_or_read_rematching ... ok
+test modules::model_config::config_file::v2::export::tests::real_file_transfer_owner_uses_draft_capture_and_roundtrips_v6_without_business_writes ... ok
+test modules::model_config::config_file::v2::export::tests::real_owner_dispatches_owned_queued_intents_without_persisting_draft_or_reading_credentials ... ok
+test modules::model_config::config_file::v2::export::tests::scoped_project_keeps_other_unsaved_channels_in_the_returned_dto_and_on_disk ... ok
+test modules::model_config::config_file::v2::history::tests::accept_retry_repairs_interrupted_private_reply_without_new_draft_generation ... ok
+test modules::model_config::config_file::v2::history::tests::accepted_recovery_cannot_be_rematched_or_mixed_through_other_draft_entrypoints ... ok
+test modules::model_config::config_file::v2::history::tests::affected_history_ignores_source_evidence_churn_and_preserves_unrelated_draft_edits ... ok
+test modules::model_config::config_file::v2::history::tests::changed_source_after_prepare_and_later_draft_edits_refuse_accept_replay ... ok
+test modules::model_config::config_file::v2::history::tests::corrupt_or_missing_exact_source_images_are_never_recovered_or_overwritten ... ok
+test modules::model_config::config_file::v2::history::tests::cross_endpoint_history_never_forwards_current_or_historical_key_to_another_direction ... ok
+test modules::model_config::config_file::v2::history::tests::exact_library_defaults_are_staged_readonly_then_written_in_the_one_save_transaction ... ok
+test modules::model_config::config_file::v2::history::tests::history_exact_dependencies_and_bounded_enumeration_do_not_guess_missing_revisions ... ok
+test modules::model_config::config_file::v2::history::tests::missing_defaults_stale_guard_and_mixed_model_or_key_intents_keep_originals ... ok
+test modules::model_config::config_file::v2::history::tests::real_history_before_side_prepares_accepts_only_draft_then_saves_with_same_transaction ... ok
+test modules::model_config::config_file::v2::history::tests::restoring_before_a_new_channel_uses_the_same_guarded_delete_transform_on_save ... ok
+test modules::model_config::config_file::v2::history::tests::transaction_history_reader_refuses_symlink_roots_and_modified_source_images ... ok
+test modules::model_config::config_file::v2::native_import::tests::backup_failure_and_unfinished_transaction_cannot_overwrite_config ... ok
+test modules::model_config::config_file::v2::native_import::tests::complete_replace_preserves_port_and_mode_and_exact_original_backup ... ok
+test modules::model_config::config_file::v2::native_import::tests::invalid_selection_or_unproved_stopped_service_leaves_config_and_backups_alone ... ok
+test modules::model_config::config_file::v2::native_import::tests::no_change_or_cancel_never_creates_a_backup ... ok
+test modules::model_config::config_file::v2::native_import::tests::reject_conflicting_source_or_target_without_backup_or_overwrite ... ok
+test modules::model_config::config_file::v2::native_import::tests::rollback_preview_cancel_and_identical_bytes_do_not_write ... ok
+test modules::model_config::config_file::v2::native_import::tests::rollback_rejects_backup_with_broadened_permissions ... ok
+test modules::model_config::config_file::v2::native_import::tests::rollback_rejects_other_home_and_stale_preview_on_either_side ... ok
+test modules::model_config::config_file::v2::native_import::tests::rollback_restores_exact_bytes_and_port_and_protects_current_file ... ok
+test modules::model_config::config_file::v2::native_import::tests::source_change_during_last_service_check_cannot_publish_candidate ... ok
+test modules::model_config::config_file::v2::receive::tests::absent_plan_unknown_status_and_wrong_operation_id_have_no_business_effect ... FAILED
+test modules::model_config::config_file::v2::receive::tests::applied_id_still_rejects_different_payload_or_handle ... FAILED
+test modules::model_config::config_file::v2::receive::tests::applied_is_historical_and_same_id_never_overwrites_later_user_changes ... FAILED
+test modules::model_config::config_file::v2::receive::tests::applied_mapping_proof_requires_original_manifest_and_receipt_even_after_later_edits ... FAILED
+test modules::model_config::config_file::v2::receive::tests::apply_requires_explicit_protection_even_when_backup_is_disabled ... FAILED
+test modules::model_config::config_file::v2::receive::tests::backup_failure_has_zero_business_writes_and_cannot_claim_protection ... FAILED
+test modules::model_config::config_file::v2::receive::tests::backup_images_require_actual_protection_and_keep_original_before_after_without_receipt_targets ... FAILED
+test modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application ... FAILED
+test modules::model_config::config_file::v2::receive::tests::draft_created_after_freeze_cannot_be_cleared_by_apply ... FAILED
+test modules::model_config::config_file::v2::receive::tests::draft_existence_is_protected_without_reading_or_clearing_it ... FAILED
+test modules::model_config::config_file::v2::receive::tests::duplicate_endpoint_source_or_target_mapping_is_rejected ... FAILED
+test modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together ... FAILED
+test modules::model_config::config_file::v2::receive::tests::explicit_none_selection_is_materialized_without_enabling_any_model ... FAILED
+test modules::model_config::config_file::v2::receive::tests::external_config_or_each_metadata_edit_after_freeze_is_rejected ... FAILED
+test modules::model_config::config_file::v2::receive::tests::family_fragment_cannot_manufacture_a_new_file_connection ... FAILED
+test modules::model_config::config_file::v2::receive::tests::family_fragment_updates_existing_rules_without_new_connection_or_credentials ... FAILED
+test modules::model_config::config_file::v2::receive::tests::first_device_identity_can_use_the_same_portable_uuid_without_allocation ... FAILED
+test modules::model_config::config_file::v2::receive::tests::first_receive_preserves_explicit_no_secret_auth_mode_and_allows_second_receive ... FAILED
+test modules::model_config::config_file::v2::receive::tests::frozen_image_corruption_and_plan_schema_checksum_fail_closed ... FAILED
+test modules::model_config::config_file::v2::receive::tests::identity_mapping_is_frozen_and_committed_as_the_eighth_transaction_target ... FAILED
+test modules::model_config::config_file::v2::receive::tests::identity_registry_change_after_prepare_is_also_a_cas_conflict ... FAILED
+test modules::model_config::config_file::v2::receive::tests::key_replace_preserves_unselected_pool_slots ... FAILED
+test modules::model_config::config_file::v2::receive::tests::mapping_cannot_drop_or_overwrite_other_endpoint_identities ... FAILED
+test modules::model_config::config_file::v2::receive::tests::mapping_material_changes_invalidate_handle_and_external_mapping_edit_fails_cas ... FAILED
+test modules::model_config::config_file::v2::receive::tests::mapping_preserves_old_pairs_and_backups_existing_identity_metadata ... FAILED
+test modules::model_config::config_file::v2::receive::tests::mapping_write_must_match_current_bindings_operation_and_strict_schema ... FAILED
+test modules::model_config::config_file::v2::receive::tests::namespace_and_credential_direction_errors_leave_originals_untouched ... FAILED
+test modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_freezes_adoption_and_applies_compiler_and_receipt_in_one_transaction ... FAILED
+test modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_rejects_partial_selection_and_invalid_authority_without_business_writes ... FAILED
+test modules::model_config::config_file::v2::receive::tests::namespace_localfile_owner_explicit_injection_cancel_and_reopen_use_original_plan_and_receipt ... FAILED
+test modules::model_config::config_file::v2::receive::tests::new_endpoint_with_selected_key_cannot_carry_old_unselected_header_or_pool_secrets ... FAILED
+test modules::model_config::config_file::v2::receive::tests::no_mapping_change_does_not_touch_existing_identity_metadata ... FAILED
+test modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite ... FAILED
+test modules::model_config::config_file::v2::receive::tests::portable_authorization_is_materialized_into_file_without_system_credentials ... FAILED
+test modules::model_config::config_file::v2::receive::tests::protect_covers_all_existing_images_and_rechecks_backup_bytes ... FAILED
+test modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last ... FAILED
+test modules::model_config::config_file::v2::receive::tests::real_v6_decoder_rejects_unknown_schema_and_missing_exact_dependencies ... FAILED
+test modules::model_config::config_file::v2::receive::tests::receive_new_writes_real_config_library_policy_ledger_mappings_versions_and_atomic_receipt ... FAILED
+test modules::model_config::config_file::v2::receive::tests::receive_storage_keeps_shared_private_creation_authority_for_later_operations ... FAILED
+test modules::model_config::config_file::v2::receive::tests::same_id_payload_scope_target_bindings_or_handle_change_cannot_rebuild ... FAILED
+test modules::model_config::config_file::v2::receive::tests::secrets_are_only_in_private_images_and_actual_files_not_manifests_receipts_or_dtos ... FAILED
+test modules::model_config::config_file::v2::receive::tests::selected_missing_key_or_authorization_fails_before_freezing_business_images ... FAILED
+test modules::model_config::config_file::v2::receive::tests::selected_partial_existing_preserves_unselected_raw_fields_models_credentials_and_order ... FAILED
+test modules::model_config::config_file::v2::receive::tests::status_and_applied_replay_do_not_enter_an_unrelated_pending_save_gate ... FAILED
+test modules::model_config::config_file::v2::receive::tests::unbound_actual_provider_is_not_assigned_a_guessed_identity_or_overwritten ... FAILED
+test modules::model_config::config_file::v2::receive::tests::unselected_owned_keychain_reference_is_not_read_or_copied_to_a_new_group ... FAILED
+test modules::model_config::config_file::v2::receive::tests::unselected_provider_object_remains_exact_after_complete_compiler_validation ... FAILED
+test modules::model_config::config_file::v2::tests::copied_channel_keeps_actual_key_and_unknown_fields_only_on_explicit_save ... ok
+test modules::model_config::config_file::v2::tests::existing_revision_default_and_delete_use_exact_dependencies_without_latest_fallback ... ok
+test modules::model_config::config_file::v2::tests::explicit_delete_removes_only_owned_channel_routes_and_can_keep_other_draft ... FAILED
+test modules::model_config::config_file::v2::tests::explicit_key_only_replace_preserves_other_pool_slots_and_clear_keeps_auth_mode ... ok
+test modules::model_config::config_file::v2::tests::explicit_read_matches_and_repeat_is_idempotent_save_reopen_preserves_source ... ok
+test modules::model_config::config_file::v2::tests::fresh_read_does_not_turn_old_connection_source_into_manual_override ... ok
+test modules::model_config::config_file::v2::tests::key_staging_accepts_only_equivalent_source_and_does_not_rebind_after_key_change ... ok
+test modules::model_config::config_file::v2::tests::library_revision_and_time_commit_together_without_rematching_channel_draft ... ok
+test modules::model_config::config_file::v2::tests::name_is_actual_provider_authority_even_when_display_label_was_already_changed ... ok
+test modules::model_config::config_file::v2::tests::node_measurement_uses_explicit_kind_and_only_acknowledged_node_ids ... ok
+test modules::model_config::config_file::v2::tests::reconcile_rebases_before_manual_scoped_save_without_overwriting_another_channel ... ok
+test modules::model_config::config_file::v2::tests::reconcile_rejects_same_provider_rotation_and_drift_after_review_without_writes ... ok
+test modules::model_config::config_file::v2::tests::save_rechecks_equivalent_disk_changes_and_preserves_latest_runtime_fields ... ok
+test modules::model_config::config_file::v2::tests::save_refuses_actual_conflicts_even_when_displayed_policy_is_unchanged ... ok
+test modules::model_config::config_file::v2::tests::saved_capture_ignores_corrupt_draft_and_never_recovers_pending_business_writes ... ok
+test modules::model_config::config_file::v2::tests::saved_capture_source_identity_is_stable_and_unaffected_by_unsaved_channel_name ... ok
+test modules::model_config::config_file::v2::tests::saved_times_are_bound_to_exact_semantics_and_committed_with_models ... ok
+test modules::model_config::config_file::v2::tests::single_channel_save_keeps_other_staged_work_and_rebases_its_guard ... ok
+test modules::model_config::config_file::v2::tests::staging_new_no_auth_channel_is_draft_only_and_read_preserves_it ... ok
+test modules::model_config::config_file::v2::tests::stale_source_and_duplicate_raw_json_never_modify_saved_or_draft ... ok
+
+failures:
+
+---- modules::model_config::config_file::v2::copy_tests::nonreuse_copy_strips_all_seed_credentials_and_preserves_source_and_unknown_public_bytes stdout ----
+
+thread 'modules::model_config::config_file::v2::copy_tests::nonreuse_copy_strips_all_seed_credentials_and_preserves_source_and_unknown_public_bytes' (151721064) panicked at src/modules/model_config/config_file_v2_copy_tests.rs:141:5:
+assertion `left == right` failed
+  left: Object {"_apiKeyAttempt": Number(1), "adapter": String("openai-chat"), "apiKey": String("$COPY_TEST_SOURCE_KEY"), "apiKeyPool": Array [Object {"id": String("pool"), "key": String("keychain:source/pool")}], "apiKeySelectionRevision": Number(7), "authMode": String("key"), "baseUrl": String("https://source.invalid/v1"), "desktopExecutor": Object {"hidden": Bool(true)}, "disabled": Bool(false), "headers": Object {"Authorization": String("keychain:source/auth")}, "mcpServers": Object {"hidden": Object {"key": String("private")}}, "modelAdapters": Object {"vendor/model": String("openai-chat")}, "models": Array [String("vendor/model")], "name": String("source"), "noReasoningModels": Array [], "proxy": String("https://private.invalid"), "retainModels": Array [String("vendor/model")], "selectedModels": Array [String("vendor/model")], "unknown": Object {"keep": Bool(true)}}
+ right: Object {"_apiKeyAttempt": Number(1), "adapter": String("openai-chat"), "apiKey": String("$COPY_TEST_SOURCE_KEY"), "apiKeyPool": Array [Object {"id": String("pool"), "key": String("keychain:source/pool")}], "apiKeySelectionRevision": Number(7), "authMode": String("key"), "baseUrl": String("https://source.invalid/v1"), "desktopExecutor": Object {"hidden": Bool(true)}, "headers": Object {"Authorization": String("keychain:source/auth")}, "mcpServers": Object {"hidden": Object {"key": String("private")}}, "models": Array [String("vendor/model")], "name": String("source"), "proxy": String("https://private.invalid"), "selectedModels": Array [String("vendor/model")], "unknown": Object {"keep": Bool(true)}}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- modules::model_config::config_file::v2::receive::tests::absent_plan_unknown_status_and_wrong_operation_id_have_no_business_effect stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::absent_plan_unknown_status_and_wrong_operation_id_have_no_business_effect' (151721354) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-6xJ7Ir", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::applied_id_still_rejects_different_payload_or_handle stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::applied_id_still_rejects_different_payload_or_handle' (151721355) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-QNYp9X", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::applied_is_historical_and_same_id_never_overwrites_later_user_changes stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::applied_is_historical_and_same_id_never_overwrites_later_user_changes' (151721356) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-cjoAuM", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::applied_mapping_proof_requires_original_manifest_and_receipt_even_after_later_edits stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::applied_mapping_proof_requires_original_manifest_and_receipt_even_after_later_edits' (151721357) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-TReVpc", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::apply_requires_explicit_protection_even_when_backup_is_disabled stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::apply_requires_explicit_protection_even_when_backup_is_disabled' (151721358) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-eceZ4h", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::backup_failure_has_zero_business_writes_and_cannot_claim_protection stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::backup_failure_has_zero_business_writes_and_cannot_claim_protection' (151721359) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-1oYWwr", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::backup_images_require_actual_protection_and_keep_original_before_after_without_receipt_targets stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::backup_images_require_actual_protection_and_keep_original_before_after_without_receipt_targets' (151721360) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-UhJR53", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application' (151721361) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-FkUl74", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::draft_created_after_freeze_cannot_be_cleared_by_apply stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::draft_created_after_freeze_cannot_be_cleared_by_apply' (151721362) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-K7C3Kp", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::draft_existence_is_protected_without_reading_or_clearing_it stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::draft_existence_is_protected_without_reading_or_clearing_it' (151721363) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-g9zAh5", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::duplicate_endpoint_source_or_target_mapping_is_rejected stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::duplicate_endpoint_source_or_target_mapping_is_rejected' (151721364) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-IeWxeR", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together' (151721365) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-EpCIMX", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::explicit_none_selection_is_materialized_without_enabling_any_model stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::explicit_none_selection_is_materialized_without_enabling_any_model' (151721366) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-6f6WEp", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::external_config_or_each_metadata_edit_after_freeze_is_rejected stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::external_config_or_each_metadata_edit_after_freeze_is_rejected' (151721367) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-eprVZQ", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::family_fragment_cannot_manufacture_a_new_file_connection stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::family_fragment_cannot_manufacture_a_new_file_connection' (151721368) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-s25Al6", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::family_fragment_updates_existing_rules_without_new_connection_or_credentials stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::family_fragment_updates_existing_rules_without_new_connection_or_credentials' (151721369) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-GCSB3c", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::first_device_identity_can_use_the_same_portable_uuid_without_allocation stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::first_device_identity_can_use_the_same_portable_uuid_without_allocation' (151721370) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-OD8gvn", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::first_receive_preserves_explicit_no_secret_auth_mode_and_allows_second_receive stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::first_receive_preserves_explicit_no_secret_auth_mode_and_allows_second_receive' (151721371) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-NhiBTt", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::frozen_image_corruption_and_plan_schema_checksum_fail_closed stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::frozen_image_corruption_and_plan_schema_checksum_fail_closed' (151721372) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-JWEY53", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::identity_mapping_is_frozen_and_committed_as_the_eighth_transaction_target stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::identity_mapping_is_frozen_and_committed_as_the_eighth_transaction_target' (151721373) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-LOE0MD", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::identity_registry_change_after_prepare_is_also_a_cas_conflict stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::identity_registry_change_after_prepare_is_also_a_cas_conflict' (151721374) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-uj2F5t", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::key_replace_preserves_unselected_pool_slots stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::key_replace_preserves_unselected_pool_slots' (151721375) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-WgH6Xf", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::mapping_cannot_drop_or_overwrite_other_endpoint_identities stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::mapping_cannot_drop_or_overwrite_other_endpoint_identities' (151721376) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-GiDxAW", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::mapping_material_changes_invalidate_handle_and_external_mapping_edit_fails_cas stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::mapping_material_changes_invalidate_handle_and_external_mapping_edit_fails_cas' (151721377) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-y6kOLZ", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::mapping_preserves_old_pairs_and_backups_existing_identity_metadata stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::mapping_preserves_old_pairs_and_backups_existing_identity_metadata' (151721378) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-WewIg7", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::mapping_write_must_match_current_bindings_operation_and_strict_schema stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::mapping_write_must_match_current_bindings_operation_and_strict_schema' (151721379) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-GoLYmg", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::namespace_and_credential_direction_errors_leave_originals_untouched stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::namespace_and_credential_direction_errors_leave_originals_untouched' (151721380) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-6hdZ0p", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_freezes_adoption_and_applies_compiler_and_receipt_in_one_transaction stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_freezes_adoption_and_applies_compiler_and_receipt_in_one_transaction' (151721381) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-3svPUF", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_rejects_partial_selection_and_invalid_authority_without_business_writes stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_rejects_partial_selection_and_invalid_authority_without_business_writes' (151721382) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-Tx9rEA", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::namespace_localfile_owner_explicit_injection_cancel_and_reopen_use_original_plan_and_receipt stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::namespace_localfile_owner_explicit_injection_cancel_and_reopen_use_original_plan_and_receipt' (151721383) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-e8jpbC", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::new_endpoint_with_selected_key_cannot_carry_old_unselected_header_or_pool_secrets stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::new_endpoint_with_selected_key_cannot_carry_old_unselected_header_or_pool_secrets' (151721384) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-5UBm0d", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::no_mapping_change_does_not_touch_existing_identity_metadata stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::no_mapping_change_does_not_touch_existing_identity_metadata' (151721385) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-371w2D", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite' (151721386) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-xzaAfS", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::portable_authorization_is_materialized_into_file_without_system_credentials stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::portable_authorization_is_materialized_into_file_without_system_credentials' (151721387) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-HlgLHv", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::protect_covers_all_existing_images_and_rechecks_backup_bytes stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::protect_covers_all_existing_images_and_rechecks_backup_bytes' (151721388) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-rWvDiz", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last' (151721389) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-euB36P", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::real_v6_decoder_rejects_unknown_schema_and_missing_exact_dependencies stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::real_v6_decoder_rejects_unknown_schema_and_missing_exact_dependencies' (151721390) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-5iNPMe", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::receive_new_writes_real_config_library_policy_ledger_mappings_versions_and_atomic_receipt stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::receive_new_writes_real_config_library_policy_ledger_mappings_versions_and_atomic_receipt' (151721391) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-IiFAOf", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::receive_storage_keeps_shared_private_creation_authority_for_later_operations stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::receive_storage_keeps_shared_private_creation_authority_for_later_operations' (151721392) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-Udrz2l", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::same_id_payload_scope_target_bindings_or_handle_change_cannot_rebuild stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::same_id_payload_scope_target_bindings_or_handle_change_cannot_rebuild' (151721393) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-UDgblw", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::secrets_are_only_in_private_images_and_actual_files_not_manifests_receipts_or_dtos stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::secrets_are_only_in_private_images_and_actual_files_not_manifests_receipts_or_dtos' (151721394) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-N516LD", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::selected_missing_key_or_authorization_fails_before_freezing_business_images stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::selected_missing_key_or_authorization_fails_before_freezing_business_images' (151721395) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-Ifwrx3", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::selected_partial_existing_preserves_unselected_raw_fields_models_credentials_and_order stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::selected_partial_existing_preserves_unselected_raw_fields_models_credentials_and_order' (151721396) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-jPXicU", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::status_and_applied_replay_do_not_enter_an_unrelated_pending_save_gate stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::status_and_applied_replay_do_not_enter_an_unrelated_pending_save_gate' (151721397) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-7MED5F", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::unbound_actual_provider_is_not_assigned_a_guessed_identity_or_overwritten stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::unbound_actual_provider_is_not_assigned_a_guessed_identity_or_overwritten' (151721398) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-ckuAIK", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::unselected_owned_keychain_reference_is_not_read_or_copied_to_a_new_group stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::unselected_owned_keychain_reference_is_not_read_or_copied_to_a_new_group' (151721399) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-Ns5W8d", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::receive::tests::unselected_provider_object_remains_exact_after_complete_compiler_validation stdout ----
+
+thread 'modules::model_config::config_file::v2::receive::tests::unselected_provider_object_remains_exact_after_complete_compiler_validation' (151721400) panicked at src/modules/model_config/model_receive_file_v2_tests.rs:27:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: PathError { path: "/tmp/ocxd023-model-receive-file-fixture-uTmqSY", err: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" } } }
+
+---- modules::model_config::config_file::v2::tests::explicit_delete_removes_only_owned_channel_routes_and_can_keep_other_draft stdout ----
+
+thread 'modules::model_config::config_file::v2::tests::explicit_delete_removes_only_owned_channel_routes_and_can_keep_other_draft' (151721415) panicked at src/modules/model_config/config_file_v2_tests.rs:570:5:
+assertion `left == right` failed
+  left: Object {"adapter": String("openai-chat"), "apiKey": String("other-synthetic"), "baseUrl": String("https://other.fixture.invalid"), "disabled": Bool(false), "modelAdapters": Object {"x": String("openai-chat")}, "models": Array [String("x")], "noReasoningModels": Array [], "opaque": Number(9), "retainModels": Array [String("x")], "selectedModels": Array [String("x")]}
+ right: Object {"adapter": String("openai-chat"), "apiKey": String("other-synthetic"), "baseUrl": String("https://other.fixture.invalid"), "models": Array [String("x")], "opaque": Number(9)}
+
+
+failures:
+    modules::model_config::config_file::v2::copy_tests::nonreuse_copy_strips_all_seed_credentials_and_preserves_source_and_unknown_public_bytes
+    modules::model_config::config_file::v2::receive::tests::absent_plan_unknown_status_and_wrong_operation_id_have_no_business_effect
+    modules::model_config::config_file::v2::receive::tests::applied_id_still_rejects_different_payload_or_handle
+    modules::model_config::config_file::v2::receive::tests::applied_is_historical_and_same_id_never_overwrites_later_user_changes
+    modules::model_config::config_file::v2::receive::tests::applied_mapping_proof_requires_original_manifest_and_receipt_even_after_later_edits
+    modules::model_config::config_file::v2::receive::tests::apply_requires_explicit_protection_even_when_backup_is_disabled
+    modules::model_config::config_file::v2::receive::tests::backup_failure_has_zero_business_writes_and_cannot_claim_protection
+    modules::model_config::config_file::v2::receive::tests::backup_images_require_actual_protection_and_keep_original_before_after_without_receipt_targets
+    modules::model_config::config_file::v2::receive::tests::copied_receipt_from_another_root_cannot_claim_local_application
+    modules::model_config::config_file::v2::receive::tests::draft_created_after_freeze_cannot_be_cleared_by_apply
+    modules::model_config::config_file::v2::receive::tests::draft_existence_is_protected_without_reading_or_clearing_it
+    modules::model_config::config_file::v2::receive::tests::duplicate_endpoint_source_or_target_mapping_is_rejected
+    modules::model_config::config_file::v2::receive::tests::eight_target_transaction_recovery_finishes_mapping_and_receipt_together
+    modules::model_config::config_file::v2::receive::tests::explicit_none_selection_is_materialized_without_enabling_any_model
+    modules::model_config::config_file::v2::receive::tests::external_config_or_each_metadata_edit_after_freeze_is_rejected
+    modules::model_config::config_file::v2::receive::tests::family_fragment_cannot_manufacture_a_new_file_connection
+    modules::model_config::config_file::v2::receive::tests::family_fragment_updates_existing_rules_without_new_connection_or_credentials
+    modules::model_config::config_file::v2::receive::tests::first_device_identity_can_use_the_same_portable_uuid_without_allocation
+    modules::model_config::config_file::v2::receive::tests::first_receive_preserves_explicit_no_secret_auth_mode_and_allows_second_receive
+    modules::model_config::config_file::v2::receive::tests::frozen_image_corruption_and_plan_schema_checksum_fail_closed
+    modules::model_config::config_file::v2::receive::tests::identity_mapping_is_frozen_and_committed_as_the_eighth_transaction_target
+    modules::model_config::config_file::v2::receive::tests::identity_registry_change_after_prepare_is_also_a_cas_conflict
+    modules::model_config::config_file::v2::receive::tests::key_replace_preserves_unselected_pool_slots
+    modules::model_config::config_file::v2::receive::tests::mapping_cannot_drop_or_overwrite_other_endpoint_identities
+    modules::model_config::config_file::v2::receive::tests::mapping_material_changes_invalidate_handle_and_external_mapping_edit_fails_cas
+    modules::model_config::config_file::v2::receive::tests::mapping_preserves_old_pairs_and_backups_existing_identity_metadata
+    modules::model_config::config_file::v2::receive::tests::mapping_write_must_match_current_bindings_operation_and_strict_schema
+    modules::model_config::config_file::v2::receive::tests::namespace_and_credential_direction_errors_leave_originals_untouched
+    modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_freezes_adoption_and_applies_compiler_and_receipt_in_one_transaction
+    modules::model_config::config_file::v2::receive::tests::namespace_file_receiver_rejects_partial_selection_and_invalid_authority_without_business_writes
+    modules::model_config::config_file::v2::receive::tests::namespace_localfile_owner_explicit_injection_cancel_and_reopen_use_original_plan_and_receipt
+    modules::model_config::config_file::v2::receive::tests::new_endpoint_with_selected_key_cannot_carry_old_unselected_header_or_pool_secrets
+    modules::model_config::config_file::v2::receive::tests::no_mapping_change_does_not_touch_existing_identity_metadata
+    modules::model_config::config_file::v2::receive::tests::pending_recovery_refuses_unknown_external_target_value_without_overwrite
+    modules::model_config::config_file::v2::receive::tests::portable_authorization_is_materialized_into_file_without_system_credentials
+    modules::model_config::config_file::v2::receive::tests::protect_covers_all_existing_images_and_rechecks_backup_bytes
+    modules::model_config::config_file::v2::receive::tests::real_transaction_pending_resumes_same_frozen_images_and_commits_receipt_last
+    modules::model_config::config_file::v2::receive::tests::real_v6_decoder_rejects_unknown_schema_and_missing_exact_dependencies
+    modules::model_config::config_file::v2::receive::tests::receive_new_writes_real_config_library_policy_ledger_mappings_versions_and_atomic_receipt
+    modules::model_config::config_file::v2::receive::tests::receive_storage_keeps_shared_private_creation_authority_for_later_operations
+    modules::model_config::config_file::v2::receive::tests::same_id_payload_scope_target_bindings_or_handle_change_cannot_rebuild
+    modules::model_config::config_file::v2::receive::tests::secrets_are_only_in_private_images_and_actual_files_not_manifests_receipts_or_dtos
+    modules::model_config::config_file::v2::receive::tests::selected_missing_key_or_authorization_fails_before_freezing_business_images
+    modules::model_config::config_file::v2::receive::tests::selected_partial_existing_preserves_unselected_raw_fields_models_credentials_and_order
+    modules::model_config::config_file::v2::receive::tests::status_and_applied_replay_do_not_enter_an_unrelated_pending_save_gate
+    modules::model_config::config_file::v2::receive::tests::unbound_actual_provider_is_not_assigned_a_guessed_identity_or_overwritten
+    modules::model_config::config_file::v2::receive::tests::unselected_owned_keychain_reference_is_not_read_or_copied_to_a_new_group
+    modules::model_config::config_file::v2::receive::tests::unselected_provider_object_remains_exact_after_complete_compiler_validation
+    modules::model_config::config_file::v2::tests::explicit_delete_removes_only_owned_channel_routes_and_can_keep_other_draft
+
+test result: FAILED. 67 passed; 49 failed; 0 ignored; 0 measured; 1961 filtered out; finished in 24.01s
+

@@ -1,0 +1,33 @@
+   Compiling opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0107]: function takes 0 generic arguments but 1 generic argument was supplied
+   --> src/commands/runtime_builtin.rs:167:33
+    |
+167 |             bundled::versioned::repair::<&dyn Fn() -> AppResult<()>>
+    |                                 ^^^^^^------------------------------ help: remove the unnecessary generics
+    |                                 |
+    |                                 expected 0 generic arguments
+    |
+note: function defined here, with 0 generic parameters
+   --> src/modules/runtime/bundled_versioned.rs:233:8
+    |
+233 | pub fn repair(
+    |        ^^^^^^
+    = note: `impl Trait` cannot be explicitly specified as a generic argument
+
+error[E0107]: function takes 0 generic arguments but 1 generic argument was supplied
+   --> src/commands/runtime_builtin.rs:169:33
+    |
+169 |             bundled::versioned::reinstall::<&dyn Fn() -> AppResult<()>>
+    |                                 ^^^^^^^^^------------------------------ help: remove the unnecessary generics
+    |                                 |
+    |                                 expected 0 generic arguments
+    |
+note: function defined here, with 0 generic parameters
+   --> src/modules/runtime/bundled_versioned.rs:208:8
+    |
+208 | pub fn reinstall(
+    |        ^^^^^^^^^
+    = note: `impl Trait` cannot be explicitly specified as a generic argument
+
+For more information about this error, try `rustc --explain E0107`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

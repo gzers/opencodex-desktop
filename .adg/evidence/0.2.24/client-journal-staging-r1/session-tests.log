@@ -1,0 +1,36 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 29.83s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 28 tests
+test infrastructure::macos_client_originals::session::tests::a_coordinator_client_path_is_not_the_effective_home_of_the_cleared_production_runtime ... ok
+test infrastructure::macos_client_originals::session::tests::audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction ... ok
+test infrastructure::macos_client_originals::session::tests::combo_declaration_rejects_shadowing_missing_targets_nested_or_native_alias_authority ... ok
+test infrastructure::macos_client_originals::session::tests::combo_declaration_uses_canonical_or_public_alias_without_relabeling_target_routes ... ok
+test infrastructure::macos_client_originals::session::tests::custom_declaration_overlays_same_model_and_adds_only_enabled_selected_custom_routes ... ok
+test infrastructure::macos_client_originals::session::tests::custom_declaration_refuses_ambiguous_or_unbound_custom_routes_without_learning_from_catalog ... ok
+test infrastructure::macos_client_originals::session::tests::diagnose_owned_client_readback_cost_without_replaying_files ... ignored, read-only one-shot cost diagnosis on retained owned Stop failure; no service or client mutation
+test infrastructure::macos_client_originals::session::tests::display_alias_flags_never_become_declared_route_ids_and_omitted_flags_are_valid ... ok
+test infrastructure::macos_client_originals::session::tests::early_captured_originals_close_without_replay_and_remain_independently_verified ... ok
+test infrastructure::macos_client_originals::session::tests::explicit_nonempty_live_selection_is_independent_while_open_discovery_remains_unknown ... ok
+test infrastructure::macos_client_originals::session::tests::held_live_observation_revalidates_original_ready_and_archives_without_a_prior_scope_frame_read ... ok
+test infrastructure::macos_client_originals::session::tests::immutable_startup_scope_reopens_only_with_independent_original_and_scope_references ... ok
+test infrastructure::macos_client_originals::session::tests::independent_static_route_declaration_uses_official_slash_encoding_and_refuses_alias_collision ... ok
+test infrastructure::macos_client_originals::session::tests::missing_or_untrusted_runtime_record_cannot_create_a_ready_binding ... ok
+test infrastructure::macos_client_originals::session::tests::official299_real_startup_originals_ready_binding_and_completed_stop_roundtrip ... ignored, explicit pinned official299 resources; new private profile; binding only, whole client restore still expected to fail
+test infrastructure::macos_client_originals::session::tests::persisted_live_reference_is_not_an_endpoint_or_process_authority ... ok
+test infrastructure::macos_client_originals::session::tests::preparing_cancellation_uses_only_indexed_closed_vault_history_and_keeps_it_intact ... ok
+test infrastructure::macos_client_originals::session::tests::ready_generation_fields_and_phase_references_are_bounded_and_typed ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_reads_under_action_lock_without_initializing_or_disclosing_original_bytes ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_rejects_scope_or_original_corruption_and_preserves_every_file ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_validates_bound_frames_scope_plan_and_never_adopts_unregistered_completion ... ok
+test infrastructure::macos_client_originals::session::tests::replaced_home_directory_and_tampered_scope_are_preserved_and_rejected ... ok
+test infrastructure::macos_client_originals::session::tests::rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start ... ok
+test infrastructure::macos_client_originals::session::tests::scope_cannot_move_to_another_home_profile_client_or_program ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_disabled_equivalence_is_scoped_and_does_not_grant_colliding_ids ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_seed_only_static_empty_models_and_preserve_unknown_live_graph ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_static_roster_unions_models_and_retained_but_not_unselected_default ... ok
+test infrastructure::macos_client_originals::session::tests::unchanged_early_readback_preserves_each_original_phase_and_refuses_unbound_preparing ... ok
+
+test result: ok. 26 passed; 0 failed; 2 ignored; 0 measured; 2388 filtered out; finished in 10.58s
+

@@ -1,0 +1,46 @@
+{
+  "accepted": false,
+  "scope": "owned gated child only, syscall observation not product service acceptance",
+  "cases": [
+    {
+      "expectedExit": 0,
+      "registration": {
+        "n": 1,
+        "errno": 0,
+        "flags": 16485,
+        "data": 0
+      },
+      "event": {
+        "n": 1,
+        "errno": 0,
+        "pid": 42382,
+        "filter": -5,
+        "flags": 32885,
+        "fflags": 2214592512,
+        "data": 0,
+        "cookie": 123
+      },
+      "childExit": 0
+    },
+    {
+      "expectedExit": 7,
+      "registration": {
+        "n": 1,
+        "errno": 0,
+        "flags": 16485,
+        "data": 0
+      },
+      "event": {
+        "n": 1,
+        "errno": 0,
+        "pid": 42383,
+        "filter": -5,
+        "flags": 32885,
+        "fflags": 2214592512,
+        "data": 1792,
+        "cookie": 123
+      },
+      "childExit": 7
+    }
+  ]
+}

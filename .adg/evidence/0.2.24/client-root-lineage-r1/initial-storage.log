@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 49.11s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 1 test
+test infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_storage_close_retains_both_archives_and_does_not_grant_third_start ... SUCCESSOR_CAPTURE_CLOSE_EVIDENCE {"accepted":false,"closed":{"completionSha256":"c57beb7b804e49c49c65271c66a176901516e11aed25473e7d694b9d4197fdee","references":{"attempt":"e2c082c6-fc38-4053-bd7f-16e11f32d664","liveSha256":null,"originalSha256":"1e0740d6a54c07aac1faf6464d8b316bf2202705f344a097f519b3ae0ce83b07","phases":[],"scopeSha256":"80767cf10d55f5b07b62a591879ef8dba47569374eafb17b09280db8880d7fa8"},"restorePlan":null,"revision":10,"rootRetirement":{"plan":{"id":"6bdfde5c-d01d-4635-b394-c3480c649928","sha256":"5639a4bf2b2bc0ea94eb1377ab0face1a9e2a9aabca059aa34e4c5322a05d594"},"sourceRevision":8},"state":"root_absent","ticket":"e2c082c6-fc38-4053-bd7f-16e11f32d664"},"oldArchiveUnchanged":true,"scope":"synthetic storage close, not normal service Stop","thirdPreparingRegistered":true,"thirdStartStillRefused":true}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2557 filtered out; finished in 9.64s
+

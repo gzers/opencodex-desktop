@@ -1,0 +1,43 @@
+{
+  "accepted": false,
+  "code": "8fd4bbf4582645dc5791ad6dd1693e2be3ecb18d",
+  "relatedFunctionsPassed": 28,
+  "baselineExplicitSelectionTestFailedAsExpected": true,
+  "firstNativeResult": "failed",
+  "firstNativeIndexRevision": 5,
+  "firstNativeDiscovery": {
+    "getModelsRequests": 0,
+    "listenerClosed": true,
+    "port": 50602,
+    "syntheticLoopbackOnly": true,
+    "unexpectedOrBusinessRequests": 1
+  },
+  "secondNativeStartMs": 6591,
+  "secondNativeStatusMs": 232,
+  "secondNativeStopMs": 8815,
+  "reopenedMs": 1256,
+  "finalIndexRevision": 7,
+  "localDiscovery": {
+    "getModelsRequests": 1,
+    "listenerClosed": true,
+    "observedMethodAndPathOnly": [
+      "GET /v1/models"
+    ],
+    "port": 51320,
+    "syntheticLoopbackOnly": true,
+    "unexpectedOrBusinessRequests": 0
+  },
+  "sevenOriginalPaths": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "native2TestExit": 0,
+  "notOpenDynamicOrGeneralGraphAcceptance": true,
+  "noNewReleaseAppDMG": true,
+  "realExternalBusinessOrModelRequests": false
+}

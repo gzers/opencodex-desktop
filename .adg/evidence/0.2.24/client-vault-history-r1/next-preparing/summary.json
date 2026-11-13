@@ -1,0 +1,22 @@
+{
+  "accepted": false,
+  "canCancelFromIndexedHistory": true,
+  "elapsedMs": 961,
+  "indexRevision": 8,
+  "indexState": "preparing",
+  "noNewServiceStarted": true,
+  "previousRegisteredState": "restored",
+  "previousRevision": 7,
+  "result": {
+    "canRestart": false,
+    "canStart": false,
+    "canStop": false,
+    "clientRecoveryRequired": true,
+    "failure": {
+      "code": "lifecycle_unconfirmed",
+      "message": "操作未确认完成，已保留当前配置，请查看诊断日志。"
+    },
+    "lifecycleState": "starting_failed",
+    "result": null
+  }
+}

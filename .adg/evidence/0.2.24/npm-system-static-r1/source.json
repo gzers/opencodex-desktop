@@ -1,0 +1,49 @@
+{
+  "baseCommit": "f5fc1fef0d98fb5157244dc62ee673a44e9fb153",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/Cargo.lock",
+      "sha256": "fc55652a797ddbcb4e0d72b651c8c1b102e8c34f59e050edf0d521125c0ec4e8"
+    },
+    {
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "sha256": "830f655a14418e6c828633bac4c0a592d64da1314bf128b6e2ad33747158b3a4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/about.rs",
+      "sha256": "4afdc6b5128da35007797c8e0ae6372d0e766d4a70a0ada2b79eb3f1305e3c7c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime.rs",
+      "sha256": "703cc940d8d8ab12cdeef57cadf030c7af3b95b4d617ebd748119f1b7cccd15d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/about/remote.rs",
+      "sha256": "37bb8b93b5325685d3b401dad31bfeced3df323d632c4f674d7ce84db84971ca"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/network_defaults/mod.rs",
+      "sha256": "c84b91522e7f9f0b65600b96c8fea44deff4904b2ce6fcb64dea92a4435c352a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/network_defaults/npm_proxy.rs",
+      "sha256": "9113476aeffb4cabfdc4eb4f993eb2cfc5891a8ac4239d37ba61e36423c69ae5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/install.rs",
+      "sha256": "20cadf5c99a0d009879f0f9e428fe795c3496a0ab23760c0abed6649980f7b3c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/install_versioned.rs",
+      "sha256": "1c76cebce8e7e28df425dbe49ffda9a548c883034f358f3c0a0a2f2bf104459c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/npm_proxy_tests.rs",
+      "sha256": "4621138e16d0b5e37bacf3bc13acb93279f85a7083c9a4e41c51f8203509bbb8"
+    }
+  ],
+  "exactFinalBinarySha256": "87c89692a44f76a9d2b8abdcec5bb915752894bbcfc9a1d6c1f7919a48cd3fc2",
+  "nativeInspectionBinary": "earlier same native reader; final direct-value policy changed; no repeated OS read",
+  "windowsCompile": "exact shared adapter with structural stubs, not Desktop product compile; no Win runtime execution",
+  "committedCode": "52600795246b596af49dad29fd2c41e47ddd2ada"
+}

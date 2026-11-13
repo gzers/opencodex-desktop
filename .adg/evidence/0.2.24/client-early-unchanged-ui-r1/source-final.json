@@ -1,0 +1,56 @@
+{
+  "baseCommit": "97bd68a5386a3b353e80b3bac1abf725bbabc95a",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery.rs",
+      "sha256": "2cb68885f2439c574a9fb844fabeadd882619938038829b2880a4ac969cb5c54"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "sha256": "54cf9156736dab6c603e762750563f8624dd5473c772e6690da5c50432f2f228"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_tests.rs",
+      "sha256": "778f168066e6fc6f6740fe7d8390458840b840c1bc0e26712b5702d6c1e55113"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_unchanged.rs",
+      "sha256": "62407f3967c071eba5bea9ca22a9bf728c488725a450a6b015e387c6b12c5583"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "b1842280a162bb8f7734166a667ecb5dad05db151a0c03c889a2d6a15fbdeb86"
+    },
+    {
+      "path": "apps/desktop/ui/qa/client-recovery-visual.mjs",
+      "sha256": "c193ae9afd2f0d34d3d40fbb96e2613ae9568aac1cffab9e79d767bb4d23689d"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/clientRecoveryFixture.ts",
+      "sha256": "9faab2639c6406751ddbb6a2585dfbef05e7f46e13abab97b1dde2773a9bcfd9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "sha256": "0af581b09e458f45ee28654daae95674c80026a6585c369a43789505acd7170f"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery-store.ts",
+      "sha256": "d8c421f88f428966c9df73956cf659e5b00964beff185847de3f249aba2d7cc9"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery.ts",
+      "sha256": "f281ba898cac01ae27cb118ca2c8f1d1fba86cedb704392259d8adc8c2a55f18"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-api.test.ts",
+      "sha256": "1eb24369e8125bb027afca4aade70e793904dca1179a7953028615e8caba5852"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "sha256": "6918743f3b434f6aacaacb6661f7b480187ee9b76af0a284cc8beadd88726689"
+    }
+  ],
+  "scope": "Real product command registration/preview and Vue UI; browser in-memory only. Previous actual native closure explicitly reused, no current native package built.",
+  "codeCommit": "5b3d9e797f37e5400b8c46f7c833d48ee3f445c7",
+  "backendCommit": "7d6ecdf13b45aad0f6b9f2ddbed3259883a4d500"
+}

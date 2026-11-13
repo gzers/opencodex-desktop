@@ -1,0 +1,4 @@
+
+thread 'commands::lifecycle_versioned_tests::current_versioned_action_reaches_context_runner_without_flat_runtime' (155156110) panicked at src/commands/lifecycle_versioned_tests.rs:102:5:
+Err(RuntimeManaged { code: "port_permission", detail: "没有权限监听所选端口" })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

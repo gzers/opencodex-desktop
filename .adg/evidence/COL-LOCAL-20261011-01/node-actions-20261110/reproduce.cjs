@@ -1,0 +1,32 @@
+const {chromium}=require('/Users/ezio/.npm/_npx/e41f203b7505f1fb/node_modules/playwright-core');
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const root='/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main',out=root+'/.adg/evidence/COL-LOCAL-20261011-01/node-actions-20261110';fs.mkdirSync(out,{recursive:true});
+const url='http://127.0.0.1:57285/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html?design=conversations&channel=krill-demo&review=node-actions3#models';let page,browser;const checks=[],errors=[];
+const check=(id,v)=>{assert.ok(v,id);checks.push(id);};
+(async()=>{browser=await chromium.launch({executablePath:'/Users/ezio/Library/Caches/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+for(const [w,h,theme] of [[1180,760,'light'],[900,600,'dark']]){
+ const tag=w+'-'+theme;page=await browser.newPage({viewport:{width:1600,height:1000}});page.on('pageerror',e=>errors.push(String(e)));
+ await page.route('**/*',r=>{const u=r.request().url();return u.startsWith('http://127.0.0.1:57285/')||u.startsWith('data:')?r.continue():r.abort();});await page.goto(url);await page.waitForFunction(()=>document.querySelector('[data-service-node=backup]'));
+ await page.evaluate(({w,h,theme})=>{setWinSize(w,h);document.documentElement.dataset.theme=theme;},{w,h,theme});
+ await page.locator('[data-mp=channel-section][data-id=nodes]').click();await page.waitForTimeout(400);
+ check(tag+'-no-footer-buttons',await page.locator('.cc-node-actions').count()===0&&await page.locator('#mpChannelSection-nodes [data-cc=open-connection]').count()===0);
+ const row=page.locator('[data-service-node=backup]');check(tag+'-row-order',JSON.stringify(await row.locator('.mp-actions button').allTextContents())===JSON.stringify(['设为当前','测速','特殊能力','删除']));
+ check(tag+'-active-row-order',JSON.stringify(await page.locator('[data-service-node=primary] .mp-actions button').allTextContents())===JSON.stringify(['测速','特殊能力','删除']));
+ check(tag+'-active-delete-protected',await page.locator('[data-service-node=primary] [data-mp=delete-node]').isDisabled());
+ check(tag+'-row-actions-fit',await row.locator('.mp-actions').evaluate(el=>{const r=el.getBoundingClientRect(),p=el.closest('.mp-service-node-row').getBoundingClientRect();return r.right<=p.right+1&&el.scrollWidth<=el.clientWidth+1;}));
+ await page.screenshot({path:out+'/'+tag+'-nodes.png'});
+ const before=await page.evaluate(()=>JSON.stringify(modelPrototype.state().draft));await row.locator('[data-cc=open-features]').click();
+ check(tag+'-clicked-node-selected',await page.locator('[data-cc-target=node]').inputValue()==='backup');
+ check(tag+'-backup-not-borrowing-auth',(await page.locator('[data-cc-dialog-auth]').innerText()).includes('尚未认证'));
+ check(tag+'-opening-no-node-switch',await page.evaluate(()=>modelPrototype.state().draft.providers.find(p=>p.id==='krill-demo').activeNodeId==='primary'));
+ check(tag+'-opening-no-config-mutation',await page.evaluate(b=>JSON.stringify(modelPrototype.state().draft)===b,before));
+ await page.screenshot({path:out+'/'+tag+'-backup-capabilities.png'});await page.keyboard.press('Escape');
+ check(tag+'-focus-back-to-row',await row.locator('[data-cc=open-features]').evaluate(el=>document.activeElement===el));
+ await row.locator('.cc-node-title').click();check(tag+'-name-opens-editor',await page.locator('#mpServiceNodeName').inputValue()==='备用线路');check(tag+'-path-editor-retained',await page.locator('.cc-path-editor').count()===1);await page.keyboard.press('Escape');
+ check(tag+'-cancel-edit-preserves-draft',await page.evaluate(b=>JSON.stringify(modelPrototype.state().draft)===b,before));
+ await row.locator('[data-mp=node-speed-one]').click();await page.waitForTimeout(700);check(tag+'-speed-stays-on-node',await page.evaluate(()=>modelPrototype.state().draft.providers.find(p=>p.id==='krill-demo').activeNodeId==='primary'&&modelPrototype.state().nodeSpeedResults['krill-demo::backup'].status==='success'));
+ await row.locator('[data-mp=use-node]').click();check(tag+'-explicit-switch-works',await page.evaluate(()=>modelPrototype.state().draft.providers.find(p=>p.id==='krill-demo').activeNodeId==='backup'));
+ await page.locator('[data-service-node=primary] [data-cc=open-features]').click();check(tag+'-old-primary-can-inspect-without-switch',await page.locator('[data-cc-target=node]').inputValue()==='primary'&&await page.evaluate(()=>modelPrototype.state().draft.providers.find(p=>p.id==='krill-demo').activeNodeId==='backup'));await page.keyboard.press('Escape');
+ await page.close();}
+ check('no-page-errors',errors.length===0);fs.writeFileSync(out+'/browser-checks.json',JSON.stringify({status:'passed',checks,errors,url},null,2));console.log(JSON.stringify({status:'passed',checks:checks.length,errors:errors.length}));await browser.close();
+})().catch(async e=>{console.error(e);fs.writeFileSync(out+'/failure.json',JSON.stringify({error:String(e),checks,errors},null,2));try{await page.screenshot({path:out+'/failure.png'})}catch{}await browser?.close();process.exit(1)});

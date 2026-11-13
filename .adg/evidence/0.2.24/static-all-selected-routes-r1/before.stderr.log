@@ -1,0 +1,16 @@
+
+thread 'infrastructure::macos_client_originals::session::tests::selection_defaults_disabled_equivalence_is_scoped_and_does_not_grant_colliding_ids' (156043272) panicked at src/infrastructure/macos_client_session_tests.rs:396:5:
+assertion `left == right` failed
+  left: None
+ right: Some(["Other/vendor-c", "Static/a"])
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::macos_client_originals::session::tests::selection_defaults_seed_only_static_empty_models_and_preserve_unknown_live_graph' (156043273) panicked at src/infrastructure/macos_client_session_tests.rs:377:5:
+assertion `left == right` failed
+  left: None
+ right: Some(["Static/retained", "Static/seed"])
+
+thread 'infrastructure::macos_client_originals::session::tests::selection_defaults_static_roster_unions_models_and_retained_but_not_unselected_default' (156043274) panicked at src/infrastructure/macos_client_session_tests.rs:359:5:
+assertion `left == right` failed
+  left: None
+ right: Some(["Static/a", "Static/b", "Static/vendor-c"])

@@ -1,0 +1,78 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-10T14:19:57.724860+00:00",
+  "branch": "docs/governance-main",
+  "scope": "design=conversations (capabilities alias preserved)",
+  "preview": "http://127.0.0.1:57285/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html?design=conversations&channel=krill-demo&review=structure2#models",
+  "sourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.js": "b611ab631bc29a10f9a37ea15474fd55f0268df36fcaa39dde4c7258abe01343",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.css": "08cd68000e11a691adaa6f33c9a1c43bd9d152eed81b25d420d550411f008e99",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.test.cjs": "42f2a4664901518f9c65f9e7cce28f364bf2ce8519b2017a80ff5ac6b17d8f83",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "0996cdb6116d71e368bf9336aa0a4f0094cb28c09dc27f0b793d7007152b9f98",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "d15584948ee853a520db5e96deeab38a120587056beb891e40b6d875b27f1d0b",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md": "b3db131a48a08509c63a50b15ec385502c2982a80732346e70da957e0ab3aa03",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/版本索引.md": "b9151317df4b3752decaec14308dca6dadde73359bb3f8e71f80cc4b436f53e3",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型设计记录索引.md": "ecaebb190589e80d2195971ccd208442b6d8f7f6fa64a620dd01f33ccb74aa07",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/渠道接入与特殊能力检测交互方案.md": "c649070ebe32d2ebc819bef4deb733c2a67f56924549347d050bdeb4ccb8965d",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-11-Codex对话策略与渠道能力/01-需求分析/05-原型/README.md": "9df63e7598a3e2f1bec82b7bb80aa21d0e3ea7514371af0254b9cc623af96aca"
+  },
+  "node": {
+    "passed": 38,
+    "failed": 0,
+    "log": "tests.tap",
+    "newStoreTests": 9
+  },
+  "browser": {
+    "passed": 87,
+    "errors": [],
+    "log": "browser-checks.json",
+    "engine": "Headless Chromium",
+    "softwareSizes": [
+      [
+        1180,
+        760
+      ],
+      [
+        900,
+        600
+      ]
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "entry": "HTTP localhost",
+    "externalRequestsBlocked": 0,
+    "reproduction": "reproduce.cjs"
+  },
+  "visualReview": [
+    "1180-light-credentials.png",
+    "1180-light-nodes.png",
+    "1180-light-paths.png",
+    "1180-light-results.png",
+    "900-dark-features.png"
+  ],
+  "earlierFindings": [
+    {
+      "finding": "An old notes assertion expected model-specific state.",
+      "action": "Updated it for connection-scoped notes; added independent per-model compact results, empty-model and path invalidation assertions.",
+      "originalFailure": "Chat tool output only."
+    },
+    {
+      "finding": "Browser selector resolved both hidden page results and modal results.",
+      "action": "Scoped harness to #ccFeatureResults; retained early browser-failure.json and failure.png."
+    },
+    {
+      "finding": "Results tab opened near bottom of viewport; compact modal clipped top labels after previous scrolling.",
+      "action": "Scroll to model area on tab activation, reset modal body scroll on open, tighten compact rows; visually reviewed and reran."
+    }
+  ],
+  "boundaries": [
+    "Synthetic in-memory prototype only; no real API, credentials, user settings or production code touched.",
+    "Path defaults and overrides are a prototype candidate; real adapter endpoint registry and resolved model protocol integration remain unfinished.",
+    "Existing real-service conclusions were not re-tested or upgraded by mock outcomes.",
+    "Complete policy activation gates, persistence, sync, engine/protocol invalidation, note writes and failover/state migration remain unfinished.",
+    "Chromium checks are not WebKit or native application acceptance."
+  ],
+  "workspace": "Existing parallel changes retained; before.tar.gz contains this round source baseline; no Git commit/push."
+}

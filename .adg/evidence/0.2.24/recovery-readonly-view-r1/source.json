@@ -1,0 +1,128 @@
+{
+  "baseCommit": "532298981c1703755372de16937be69bc09137cb",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "sha256": "415729fdb02bfc70e8f325c942a78ae8bce09372e0f123ede0db5673ea6e49ad"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "sha256": "46d2bc4d99d33c29620b7c6ca97e1ec69b8acddcaa100f55158e401e24df2f63"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/tray.rs",
+      "sha256": "f6023fa6f4333f9384d9b466929a6c0b658cdeca5879f303ad8312b7c99a74e5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "69483b657ab520eca410fb14eadcdd3410976116b4842e6dfdf453976d3fd7eb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index_tests.rs",
+      "sha256": "859aab3d6cbfaef20003e00ed09dd2896a3a67a8a4d97bdc6da4ba49e4f4fe82"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs",
+      "sha256": "42b3aecb89ef5e4c23c77e181960e8f5a452bf1ce377b22873ccb2280a063763"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "sha256": "a4db340bb4d47b08959e848b4da7dce4ae3d2d06dd820e744ae407da3ce9444b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/tray_controller.rs",
+      "sha256": "464b15cc6ae504d682baa10b95445148356daba7e40542f9a62247a06f975d13"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "56d7a5282ba7048cc15d03bfeb251914d760caf3c26d1b92267c34712186e6fd"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/status/client_recovery_gate_tests.rs",
+      "sha256": "87455ca379a53129747250f3f3b9f2ad4d0fac13a8a87f972ce4315425b1455a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/status/mod.rs",
+      "sha256": "4d9fd0015a7bebed3feb4cfe9cb777b5a5e3c992b4ae5303abbb2e2637a125a2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/tray/mod.rs",
+      "sha256": "2e9de9547182078b53518c8b298d09972fb8bf1ffa0d14cfa0458a550a486ed4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/types/runtime_status.rs",
+      "sha256": "16052960b89d6e7da19572d7532c9a2305767144dd31654c6b6e8197bdf05ba3"
+    },
+    {
+      "path": "apps/desktop/ui/src/app/lifecycle/store.ts",
+      "sha256": "d7dc4b0d0b00e28f94cdcd821a913f56133f7960bcee3bc94ff064ab0916e858"
+    },
+    {
+      "path": "apps/desktop/ui/src/contracts/runtimeStatus.ts",
+      "sha256": "a0d98a9f08eb56e9032386496b158b749f9a87ade845ff772e2da98cdb9f6cb5"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/auditHarness.ts",
+      "sha256": "e9535ef52e0b98702dce37f619571a6a9b5f67412b46b13c80fc3e4816706a89"
+    },
+    {
+      "path": "apps/desktop/ui/src/routes/OverviewRoute.vue",
+      "sha256": "adc85002ed3518e933b3351329bda359fc689e07a4a8aed036b57a1ca58d03f0"
+    },
+    {
+      "path": "apps/desktop/ui/tests/app-store.test.ts",
+      "sha256": "df2b3529d6d63451755f589c97928ad4c22faa5161c9f1ee76a6a3285c665099"
+    },
+    {
+      "path": "apps/desktop/ui/tests/global-refresh.test.ts",
+      "sha256": "8db8d4f15c2c980e0626c1bc4a23739b798725eebcd85b2b80320d931a6642b5"
+    },
+    {
+      "path": "apps/desktop/ui/tests/overview-status-announce.test.ts",
+      "sha256": "4289fc2a615fce5b8ebfd163ea394aa6c05fab441ecb5e498bafd82aeeaae957"
+    },
+    {
+      "path": "apps/desktop/ui/tests/panel.test.ts",
+      "sha256": "b4d067ae183056afb867b165a4022ac0686efed00f59459be98cce3211a8cb93"
+    },
+    {
+      "path": "apps/desktop/ui/tests/post10-panel.test.ts",
+      "sha256": "ed64119d66cba7120502bb092f358587273ff7cb31ee86ab6dc021b914f85d83"
+    },
+    {
+      "path": "apps/desktop/ui/tests/process-action.test.ts",
+      "sha256": "891f6a5a75f74ff2c486ea1a806ee7440f31208be9126305ba095fa2f4613f4b"
+    },
+    {
+      "path": "apps/desktop/ui/tests/process-progress-labels.test.ts",
+      "sha256": "2fbbe622dbd326fa7caa16d8de451d9629dbd5fb1f31a23e68b6b70afc54aade"
+    },
+    {
+      "path": "apps/desktop/ui/tests/runtime-port-settings.test.ts",
+      "sha256": "63b769ec485bb39ccc76d0d483ac963200142319691039e6c29af85a03b74e72"
+    },
+    {
+      "path": "apps/desktop/ui/tests/startup-preferences.test.ts",
+      "sha256": "d5e0f26506c217a9aafdac94bc2b36aa4132e2e545dc75d9cee5c501bcc86904"
+    },
+    {
+      "path": "apps/desktop/ui/tests/startup-route.test.ts",
+      "sha256": "e77592a7b6137ea92be0b5f3b42eb9f097b5c4ad5ffe8268c94950d2decd7400"
+    },
+    {
+      "path": "apps/desktop/ui/tests/status-snapshot.test.ts",
+      "sha256": "14a573ece1d5769cd16acf09488bd90b93630a87ac478d752e8688e3c0f1c823"
+    },
+    {
+      "path": "apps/desktop/ui/tests/topbar.test.ts",
+      "sha256": "893adf14df8e205d0587f06f5c2f7f9451298b4e652e30eb811e6251a5cd915a"
+    },
+    {
+      "path": "apps/desktop/ui/tests/window-address.test.ts",
+      "sha256": "f58feaa95f314c7bc1ed40d356b641e0c8f08352fbf995d3abf859eb937f894a"
+    }
+  ],
+  "binarySha256": "59378dcbee278d0a3409ad18954102035d0ff17da44bdc8e350bf714b7694f67",
+  "committedCode": "b92dc31f4d2f63e5439f1e824e3f8609bbbf10f8",
+  "sourceScope": "Final native2 matches all committed30 files; first native and unit source precedes fixed diagnostic logging/accessor only. Index-final covers all final observation/orphan/schema logic; no unit-suite rerun after diagnostic-only addition."
+}

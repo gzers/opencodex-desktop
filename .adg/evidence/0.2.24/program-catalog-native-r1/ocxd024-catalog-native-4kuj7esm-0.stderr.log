@@ -1,0 +1,6 @@
+[fixture diagnostic omitted: contained unrelated process command arguments; not retained as evidence]
+
+thread 'commands::runtime_recovery_v2_owner::tests::actual_current_user_image_scan_detects_a_renamed_owned_program_without_service_mutation' (154134970) panicked at src/commands/runtime_recovery_v2_owner_tests.rs:728:5:
+assertion failed: !matches!(observed,Ok(processes) if
+        !processes.iter().any(|process|process.pid==child.0.id()))
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

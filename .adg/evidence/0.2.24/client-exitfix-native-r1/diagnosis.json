@@ -1,0 +1,66 @@
+{
+  "accepted": false,
+  "sourceCommit": "382cf593fd24e1c957690bfaec7e4f0545ad8e1b",
+  "firstCycleMs": [
+    7937,
+    231,
+    6205
+  ],
+  "secondCycleMs": [
+    10131,
+    847,
+    11428
+  ],
+  "firstStopTail": {
+    "accepted": false,
+    "completeSourceUs": 488578,
+    "expiredAfter": false,
+    "leaseCheckUs": 1400,
+    "releaseUs": 426,
+    "remainingAfterUs": 3805662,
+    "remainingBeforeUs": 4296068
+  },
+  "secondStopTail": "not reached after callback root-close error; do not substitute Start tail",
+  "firstAndSecondStartTails": [
+    {
+      "accepted": false,
+      "completeSourceUs": 577151,
+      "expiredAfter": false,
+      "leaseCheckUs": 868,
+      "releaseUs": 242,
+      "remainingAfterUs": 27857315,
+      "remainingBeforeUs": 28435578
+    },
+    {
+      "accepted": false,
+      "completeSourceUs": 455277,
+      "expiredAfter": false,
+      "leaseCheckUs": 875,
+      "releaseUs": 222,
+      "remainingAfterUs": 22069394,
+      "remainingBeforeUs": 22525770
+    },
+    {
+      "accepted": false,
+      "completeSourceUs": 468458,
+      "expiredAfter": false,
+      "leaseCheckUs": 713,
+      "releaseUs": 233,
+      "remainingAfterUs": 25067253,
+      "remainingBeforeUs": 25536658
+    },
+    {
+      "accepted": false,
+      "completeSourceUs": 460638,
+      "expiredAfter": false,
+      "leaseCheckUs": 851,
+      "releaseUs": 477,
+      "remainingAfterUs": 19873546,
+      "remainingBeforeUs": 20335514
+    }
+  ],
+  "previousProcargsFailureAbsent": true,
+  "currentFailure": "root-close callback failed and next current Head RootRetirementPrepared19, after RootAbsent18 commit; post-close original proof failure causes exact source-preserving pending append in existing code. Full stop budget failed. No detailed raw original proof error recorded.",
+  "next": "Profile close_root_absence complete source/candidate/postcommit/current-generation archive duplication; preserve every transaction boundary, actual root absence/readback facts and deadline demotion. Do not drop final proof, treat late RootAbsent as action success, or rerun unchanged source.",
+  "scope": "One failed original299 two-cycle diagnostic, no publication or fixed app acceptance."
+}

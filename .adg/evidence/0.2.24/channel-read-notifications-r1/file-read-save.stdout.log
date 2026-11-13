@@ -1,0 +1,29 @@
+
+running 24 tests
+test modules::model_config::config_file::v2::tests::copied_channel_keeps_actual_key_and_unknown_fields_only_on_explicit_save ... ok
+test modules::model_config::config_file::v2::tests::existing_revision_default_and_delete_use_exact_dependencies_without_latest_fallback ... ok
+test modules::model_config::config_file::v2::tests::explicit_delete_removes_only_owned_channel_routes_and_can_keep_other_draft ... ok
+test modules::model_config::config_file::v2::tests::explicit_key_only_replace_preserves_other_pool_slots_and_clear_keeps_auth_mode ... ok
+test modules::model_config::config_file::v2::tests::explicit_read_matches_and_repeat_is_idempotent_save_reopen_preserves_source ... ok
+test modules::model_config::config_file::v2::tests::fresh_read_does_not_turn_old_connection_source_into_manual_override ... ok
+test modules::model_config::config_file::v2::tests::key_staging_accepts_only_equivalent_source_and_does_not_rebind_after_key_change ... ok
+test modules::model_config::config_file::v2::tests::library_revision_and_time_commit_together_without_rematching_channel_draft ... ok
+test modules::model_config::config_file::v2::tests::name_is_actual_provider_authority_even_when_display_label_was_already_changed ... ok
+test modules::model_config::config_file::v2::tests::node_measurement_uses_explicit_kind_and_only_acknowledged_node_ids ... ok
+test modules::model_config::config_file::v2::tests::reconcile_binds_exact_metadata_refuses_pending_and_unchanged_is_noop ... ok
+test modules::model_config::config_file::v2::tests::reconcile_model_edit_keeps_external_connection_and_refuses_model_overlap ... ok
+test modules::model_config::config_file::v2::tests::reconcile_rebases_before_manual_scoped_save_without_overwriting_another_channel ... ok
+test modules::model_config::config_file::v2::tests::reconcile_rejects_same_provider_rotation_and_drift_after_review_without_writes ... ok
+test modules::model_config::config_file::v2::tests::reconcile_reports_deleted_provider_without_resurrecting_it_or_mutating_draft ... ok
+test modules::model_config::config_file::v2::tests::save_rechecks_equivalent_disk_changes_and_preserves_latest_runtime_fields ... ok
+test modules::model_config::config_file::v2::tests::save_refuses_actual_conflicts_even_when_displayed_policy_is_unchanged ... ok
+test modules::model_config::config_file::v2::tests::saved_capture_ignores_corrupt_draft_and_never_recovers_pending_business_writes ... ok
+test modules::model_config::config_file::v2::tests::saved_capture_source_identity_is_stable_and_unaffected_by_unsaved_channel_name ... ok
+test modules::model_config::config_file::v2::tests::saved_times_are_bound_to_exact_semantics_and_committed_with_models ... ok
+test modules::model_config::config_file::v2::tests::scoped_save_never_applies_other_channels_staged_credential_edit ... ok
+test modules::model_config::config_file::v2::tests::single_channel_save_keeps_other_staged_work_and_rebases_its_guard ... ok
+test modules::model_config::config_file::v2::tests::staging_new_no_auth_channel_is_draft_only_and_read_preserves_it ... ok
+test modules::model_config::config_file::v2::tests::stale_source_and_duplicate_raw_json_never_modify_saved_or_draft ... ok
+
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 2115 filtered out; finished in 10.47s
+

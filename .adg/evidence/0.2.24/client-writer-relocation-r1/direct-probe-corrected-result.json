@@ -1,0 +1,9 @@
+{
+  "accepted": false,
+  "helperSha256": "a496948e55873316f35914768be8ce27a7f057b2ac6b0bb1a433254b35db8936",
+  "exitCode": 1,
+  "stdout": "{\"schema\":\"ocxd-config-write-guard/2\",\"kind\":\"held\",\"operation\":\"b4e572c2-c293-4cef-9883-7d36c1b66314\",\"pid\":41923,\"targetSha256\":\"ed7e94fa6677073c1211d4e7ce8136633107f65de458a62ae981b6c4d54f3f30\",\"phase\":\"initial-check\"}\n{\"schema\":\"ocxd-config-write-guard/2\",\"kind\":\"failed\",\"operation\":\"b4e572c2-c293-4cef-9883-7d36c1b66314\",\"pid\":41923,\"targetSha256\":\"ed7e94fa6677073c1211d4e7ce8136633107f65de458a62ae981b6c4d54f3f30\",\"phase\":\"command\"}\n",
+  "stderr": "",
+  "rootNlinkAfter": 2,
+  "scope": "direct exact helper phase diagnosis using pinned Bun and unmodified official sources, no NativeLease or service"
+}

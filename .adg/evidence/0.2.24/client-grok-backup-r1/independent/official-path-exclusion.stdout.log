@@ -1,0 +1,7 @@
+
+running 1 test
+test infrastructure::official_client_coordination::native::config::grok_tests::official_grok_and_codex_writer_guards_are_distinct_and_exclude_their_own_paths ... {"CodexWriterBlockedOnlyByCodexGuard":true,"GrokWriterBlockedOnlyByGrokGuard":true,"accepted":false,"allLockPathsAndClaimsAbsent":true,"bothIndependentGuardsCanCoexist":true,"eachOfficialWriterAllowedOnlyAfterItsGuardNormalRelease":true,"elapsedMs":3666,"noServiceActions":true}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2438 filtered out; finished in 4.62s
+

@@ -1,0 +1,7 @@
+
+running 1 test
+test modules::runtime::program_image::tests::official299_complete_image_inventory_stage_cost ... IMAGE_SCAN_COMPARISON {"accepted":false,"entries":15646,"fileCount":13393,"parallelMetrics":{"stages":{"directory-path-admission":[2254,73048246],"entry-inspect-name":[15647,60220388],"file-admission-open":[13393,344027230],"file-read-hash":[13393,273023633],"file-total":[13393,624662742]}},"parallelUs":638489,"rowsExactlyEqual":true,"scope":"same owned exact official image, old sequential reference versus bounded4 current full inventory; no Stop acceptance","serialMetrics":{"stages":{"directory-path-admission":[2254,75583167],"entry-inspect-name":[15647,73277986],"file-admission-open":[13393,265347685],"file-read-hash":[13393,1403813270],"file-total":[13393,1676330839]}},"serialUs":1951022,"treeSha256":"a29dedc203311ca4d6d4005db94b4a10d4fb84409283669e25272f080756b790"}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2521 filtered out; finished in 2.80s
+

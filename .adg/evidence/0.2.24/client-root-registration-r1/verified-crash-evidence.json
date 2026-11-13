@@ -1,0 +1,33 @@
+{
+  "accepted": false,
+  "scope": "Byte projection/offline SQLite supplement; live no-gap/read-only behavior proven by actual child tests, not by copied files",
+  "verified": [
+    {
+      "boundary": "root_lock_transferred",
+      "actualChildExitCode": 91,
+      "registeredPreparing": false,
+      "allByteLengthsAndHashesMatch": true,
+      "originalAbsenceReferenceChainMatches": true,
+      "noOriginalFrame": true
+    },
+    {
+      "boundary": "before_root_index_commit",
+      "actualChildExitCode": 91,
+      "registeredPreparing": false,
+      "allByteLengthsAndHashesMatch": true,
+      "originalAbsenceReferenceChainMatches": true,
+      "noOriginalFrame": true
+    },
+    {
+      "boundary": "root_index_committed",
+      "actualChildExitCode": 91,
+      "registeredPreparing": true,
+      "allByteLengthsAndHashesMatch": true,
+      "originalAbsenceReferenceChainMatches": true,
+      "noOriginalFrame": true,
+      "offlineCommittedBindingAndFirstEventMatch": true,
+      "eventCount": 1,
+      "firstEventTicketMatchesOrigin": true
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "baseCommit": "5b3d9e797f37e5400b8c46f7c833d48ee3f445c7",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery.rs",
+      "sha256": "793a3ac98371a37a70386df6eaff0a936a78112ec986193517c1d365afc6af23"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery_tests.rs",
+      "sha256": "427a934400c382cd622f795145f1bed5c83f7102cbcab538999df1bd3477b412"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "sha256": "00a74cb11702c5736dbef38aa9d96b74c04ff9a2c14d48e26c52f40bf6ecffa4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "sha256": "5500110ef0c51f48fd0f83a7536c660dd0d9845c618c3e472b9dcdc2da885b68"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_prepare_cancel.rs",
+      "sha256": "b60e70f746b3a3a3f9aa31e07a4f1dbc35bb22d2521f32991d05e2ea05082ebb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "11eaed1880c0743002d7a685e5f8c3f971943922b6d620dee1e1d69875aafbf6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index_tests.rs",
+      "sha256": "0e4e804a4ea7087ac6d59d5d890f545aa3c497ce42050d173f4343b87e7d61fb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs",
+      "sha256": "9105efc49fb40ad1dc9374e35719e51cac89dc34cbaa5a23f30f00cf39ad3056"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "sha256": "dd3c981c66842688c208625e1ffd31fcc4c90b760b09ac501de0bcb6e5f7c746"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "sha256": "f192e330ed925223e2d2b86d35494111ff91a6f885d6a40f9ee58ad9e737c339"
+    },
+    {
+      "path": "apps/desktop/tauri/src/lib.rs",
+      "sha256": "e9307692f2a985d096e3316f047d01fa5907bab1f806560686037386c23e3f6a"
+    },
+    {
+      "path": "apps/desktop/ui/qa/client-recovery-visual.mjs",
+      "sha256": "92299041d689976bef712d6a42d626ea33233c9681fc1c2ee2c779559e47cc80"
+    },
+    {
+      "path": "apps/desktop/ui/src/dev/clientRecoveryFixture.ts",
+      "sha256": "e60390df141621259000759d04a12303afbc133389585c539683eabb79528979"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "sha256": "772401b232d64a5f1d8425ba91e49f796a9fd0c166952c982aee47c4f3cc7075"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery-store.ts",
+      "sha256": "c106ef6b7fa9e3520feb2b4dc601f0518d3e3d7bafff10c0276f26d45dc968c3"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery.ts",
+      "sha256": "6af3d8465509127e252ee7bd0825c99fa3ec083f68259d492a1efee2aaef4861"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-api.test.ts",
+      "sha256": "75e558036f92507025b2d3f22a1f1386b48f04ae29b130fa051c3fc63f3bdab4"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "sha256": "e4fc5409dc1ea3d7435fbc2847a3aacbaccd441e1191b8d68cd716c94bb1bb94"
+    }
+  ],
+  "nativeBuild": "build-native.log",
+  "nativeRunSource": "native/source.json",
+  "nativeRunBinary": "c903de780907ced04df63fc0073ed3eb27f14571000a977d4b8c20e3c8ea2760",
+  "sourceBoundary": "Actual native core cancellation tested before adding product command/capability and frontend, but core algorithm unchanged. Current command/preview compiled and tested independently; no native app/GUI-to-IPC candidate run.",
+  "codeCommit": "1524b6a97991e6c3af8f55dded287a9faf5a5f3b",
+  "backendCommit": "2c6cd6e05dcf059949f937b0ab6dd58b23434ec5"
+}

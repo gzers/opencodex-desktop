@@ -1,0 +1,58 @@
+{
+  "accepted": false,
+  "diagnosticPassed": false,
+  "rawOwnedBytesCapturedBeforeCleanup": true,
+  "noOwnedProcessesByExecutableInventory": true,
+  "tcp": {
+    "framingVerified": true,
+    "exportedPrimaryPortsAbsent": [
+      54524
+    ],
+    "snapshotSha256": "b4d000ead201dda343c5ea34f7cff2fcfe482711e87102b4f7e76df49f065305",
+    "secondaryPorts": "Each completed production Stop must prove its entire current listener collection; independent cleanup additionally checks both exported primary ports."
+  },
+  "exactOwnedCoordinatorsExclusivelyReacquiredAndRemoved": [
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/37c6fd179a3d865b2084d9e5243aa9f39dc7805faadd79d44a6fd24a7a2da19b.sqlite",
+      "device": 16777231,
+      "inode": 445734452,
+      "sha256": "96ba27d195f5342524cd20ea8fada4532759b8c0eb9d26949cb1264043539dc4",
+      "bytes": 8192
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/37c6fd179a3d865b2084d9e5243aa9f39dc7805faadd79d44a6fd24a7a2da19b.sqlite",
+      "device": 16777231,
+      "inode": 445734455,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47",
+      "bytes": 4096
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/99fd45c995954141803a87b5129e8d49cfffe3b6a7c3f2ab57e95b035ca69c39.sqlite",
+      "device": 16777231,
+      "inode": 445735563,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47",
+      "bytes": 4096
+    }
+  ],
+  "globalLIdentityProtectionBytesUnchanged": {
+    "device": 16777231,
+    "inode": 369360155,
+    "mode": 384,
+    "uid": 501,
+    "gid": 0,
+    "flags": 0,
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "aclBase64": null,
+    "xattrs": {
+      "Y29tLmFwcGxlLnByb3ZlbmFuY2U=": "AQIAnxo5NHoJQ04="
+    }
+  },
+  "globalLExclusiveReleased": true,
+  "exactDigestAdoptTemporaryResiduals": [],
+  "preexistingGlobalLNeverDeletedRebuiltOrRestored": true,
+  "temporaryRootStillRetainedUntilArchiveVerification": "/private/tmp/ocxd024-versioned-lifecycle-c4pjs_as",
+  "dailyConfigurationChanged": false,
+  "officialRuntimeModified": false,
+  "businessRequests": false
+}

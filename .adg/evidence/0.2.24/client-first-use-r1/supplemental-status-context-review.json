@@ -1,0 +1,11 @@
+{
+  "accepted": false,
+  "case": "catalog-absent",
+  "supplementalReadOnlyHelperResult": "failed",
+  "actualError": "NotFound != Stopped",
+  "cause": "The helper fixes program to its own root/program but this case explicitly reused the verified image from another owned profile. No such program exists under this fourth root.",
+  "notUsedAsAcceptance": true,
+  "correctActualProgramRoot": "/private/tmp/ocxd024-versioned-lifecycle-_xf814_t/fixtures/program \u4e2d\u6587 space",
+  "correctContextEvidence": "catalog-absent/native/summary.json: reopenedRecoveryGate=true; actual reopenedSnapshot stopped/NotRequired, only Start.",
+  "independentContentReadback": "catalog-absent/independent-readback/full-trees.json exit0; no runtime status claim from this file"
+}

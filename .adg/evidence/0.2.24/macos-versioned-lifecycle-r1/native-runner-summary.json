@@ -1,0 +1,35 @@
+{
+  "accepted": false,
+  "hypothesis": "Shared provider admission should now allow real official299 production Start; authenticated status and normal production Stop must honor unchanged30/5/10s and restore original native client bytes. Any missing restoration remains failed.",
+  "locks": [
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/3f1417c72850c16336fb0ad6914293ff7a5ca732960b46f26c2f1cf39d682e83.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/3f1417c72850c16336fb0ad6914293ff7a5ca732960b46f26c2f1cf39d682e83.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/3f1417c72850c16336fb0ad6914293ff7a5ca732960b46f26c2f1cf39d682e83.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/3f1417c72850c16336fb0ad6914293ff7a5ca732960b46f26c2f1cf39d682e83.sqlite-shm"
+  ],
+  "kernelBoundary": "all daily HOME reads and external network/write denied; only own profile, synthetic loopback endpoint and exact catalog coordinator database allowed",
+  "cleanup": {
+    "ownedProcessesAfterNative": [
+      {
+        "pid": 20530,
+        "ppid": 1,
+        "pgid": 20477,
+        "image": "/private/tmp/ocxd024-versioned-lifecycle-ihwdax9o/fixtures/program 中文 space/runtime/versions/2.99.0/dependencies/node/bin/node"
+      },
+      {
+        "pid": 20531,
+        "ppid": 20530,
+        "pgid": 20477,
+        "image": "/private/tmp/ocxd024-versioned-lifecycle-ihwdax9o/fixtures/program 中文 space/runtime/versions/2.99.0/opencodex/node_modules/bun/bin/bun.exe"
+      }
+    ],
+    "forcedCleanupUsed": false,
+    "fixtureRetained": true,
+    "fixtureAbsent": false,
+    "exactNewCoordinatorFilesAbsent": false
+  },
+  "unitExitCode": 0,
+  "testPid": 20477,
+  "nativeExitCode": 101,
+  "elapsedSeconds": 82.89
+}

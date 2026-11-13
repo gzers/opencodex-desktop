@@ -1,0 +1,51 @@
+{
+  "accepted": false,
+  "codeCommits": [
+    "c025dd83d",
+    "d7b4921b8"
+  ],
+  "rounds": [
+    {
+      "round": "baseline",
+      "startMs": 16003,
+      "statusMs": 1106,
+      "stopMs": 10200,
+      "reopenedMs": 799,
+      "revision": 6,
+      "restorePrepared": true,
+      "reopenedGate": true,
+      "completeResult": "failed",
+      "accepted": false
+    },
+    {
+      "round": "optimized",
+      "startMs": 12287,
+      "statusMs": 1232,
+      "stopMs": 9997,
+      "reopenedMs": 865,
+      "revision": 6,
+      "restorePrepared": true,
+      "reopenedGate": true,
+      "completeResult": "failed",
+      "accepted": false
+    },
+    {
+      "round": "release",
+      "startMs": 18962,
+      "statusMs": 2295,
+      "stopMs": 10048,
+      "reopenedMs": 1406,
+      "revision": 5,
+      "restorePrepared": false,
+      "reopenedGate": true,
+      "completeResult": "failed",
+      "accepted": false
+    }
+  ],
+  "passingDebugRelatedTests": 30,
+  "passingReleaseRelatedTests": 30,
+  "normalExitAndCapturedTcpAbsenceAllThree": true,
+  "actualRestoreApplied": false,
+  "budgetResolved": false,
+  "noExtraAttemptWithoutChangedHypothesis": true
+}

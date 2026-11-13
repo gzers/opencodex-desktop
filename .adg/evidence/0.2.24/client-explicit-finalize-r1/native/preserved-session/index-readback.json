@@ -1,0 +1,185 @@
+{
+  "head": {
+    "revision": 7,
+    "ticket": "70ec32f9-3d20-4814-b466-5df118d64a99",
+    "state": "restored",
+    "references": {
+      "attempt": "9f42de8e-4d1c-4b27-8a04-c30df8ad45a2",
+      "originalSha256": "96cb13288b3d95cd2da2fd876212c4f8403f9868d7a095cdfe0694f06d7d4880",
+      "scopeSha256": "918531779de756fd3cc6d4c2d30fd98e9406e197791016ccf474794a54c42a92",
+      "phases": [
+        [
+          "ready",
+          "4bfadc5271e9455fa4cf21ad68f0f464b2c0c0b11c155062f0723ec57c2b1743"
+        ],
+        [
+          "pre_stop",
+          "95c49ad0084d916971b0c45f9b33499998bdf64660016b08f12d296ff64aab54"
+        ],
+        [
+          "stopped",
+          "3a7e52f278d660e8bd46ef62aef4ea801e062005127b411752b5d8cbde1b7271"
+        ]
+      ],
+      "liveSha256": "8629c5360b01aeef4de01943254f0cbe5f007af46097f291484765a3e9de1736"
+    },
+    "restorePlan": {
+      "id": "d5a5cae9-f31e-4f33-808b-e5cb7d22e9e6",
+      "sha256": "f06a9a66bd9d3910509fe85ab6cb2ffdcc3719303a55b4b7d0519a811724ab4e"
+    },
+    "completionSha256": "2e1e6cf930c3ebf2fbb06704958ed8e79083baa746370e619f558be41cfc7de7"
+  },
+  "events": [
+    {
+      "revision": 1,
+      "ticket": "70ec32f9-3d20-4814-b466-5df118d64a99",
+      "state": "preparing",
+      "references": null,
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 2,
+      "ticket": "70ec32f9-3d20-4814-b466-5df118d64a99",
+      "state": "captured",
+      "references": {
+        "attempt": "9f42de8e-4d1c-4b27-8a04-c30df8ad45a2",
+        "originalSha256": "96cb13288b3d95cd2da2fd876212c4f8403f9868d7a095cdfe0694f06d7d4880",
+        "scopeSha256": "918531779de756fd3cc6d4c2d30fd98e9406e197791016ccf474794a54c42a92",
+        "phases": [],
+        "liveSha256": null
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 3,
+      "ticket": "70ec32f9-3d20-4814-b466-5df118d64a99",
+      "state": "ready",
+      "references": {
+        "attempt": "9f42de8e-4d1c-4b27-8a04-c30df8ad45a2",
+        "originalSha256": "96cb13288b3d95cd2da2fd876212c4f8403f9868d7a095cdfe0694f06d7d4880",
+        "scopeSha256": "918531779de756fd3cc6d4c2d30fd98e9406e197791016ccf474794a54c42a92",
+        "phases": [
+          [
+            "ready",
+            "4bfadc5271e9455fa4cf21ad68f0f464b2c0c0b11c155062f0723ec57c2b1743"
+          ]
+        ],
+        "liveSha256": "8629c5360b01aeef4de01943254f0cbe5f007af46097f291484765a3e9de1736"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 4,
+      "ticket": "70ec32f9-3d20-4814-b466-5df118d64a99",
+      "state": "stop_prepared",
+      "references": {
+        "attempt": "9f42de8e-4d1c-4b27-8a04-c30df8ad45a2",
+        "originalSha256": "96cb13288b3d95cd2da2fd876212c4f8403f9868d7a095cdfe0694f06d7d4880",
+        "scopeSha256": "918531779de756fd3cc6d4c2d30fd98e9406e197791016ccf474794a54c42a92",
+        "phases": [
+          [
+            "ready",
+            "4bfadc5271e9455fa4cf21ad68f0f464b2c0c0b11c155062f0723ec57c2b1743"
+          ],
+          [
+            "pre_stop",
+            "95c49ad0084d916971b0c45f9b33499998bdf64660016b08f12d296ff64aab54"
+          ]
+        ],
+        "liveSha256": "8629c5360b01aeef4de01943254f0cbe5f007af46097f291484765a3e9de1736"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 5,
+      "ticket": "70ec32f9-3d20-4814-b466-5df118d64a99",
+      "state": "stopped",
+      "references": {
+        "attempt": "9f42de8e-4d1c-4b27-8a04-c30df8ad45a2",
+        "originalSha256": "96cb13288b3d95cd2da2fd876212c4f8403f9868d7a095cdfe0694f06d7d4880",
+        "scopeSha256": "918531779de756fd3cc6d4c2d30fd98e9406e197791016ccf474794a54c42a92",
+        "phases": [
+          [
+            "ready",
+            "4bfadc5271e9455fa4cf21ad68f0f464b2c0c0b11c155062f0723ec57c2b1743"
+          ],
+          [
+            "pre_stop",
+            "95c49ad0084d916971b0c45f9b33499998bdf64660016b08f12d296ff64aab54"
+          ],
+          [
+            "stopped",
+            "3a7e52f278d660e8bd46ef62aef4ea801e062005127b411752b5d8cbde1b7271"
+          ]
+        ],
+        "liveSha256": "8629c5360b01aeef4de01943254f0cbe5f007af46097f291484765a3e9de1736"
+      },
+      "restorePlan": null,
+      "completionSha256": null
+    },
+    {
+      "revision": 6,
+      "ticket": "70ec32f9-3d20-4814-b466-5df118d64a99",
+      "state": "restore_prepared",
+      "references": {
+        "attempt": "9f42de8e-4d1c-4b27-8a04-c30df8ad45a2",
+        "originalSha256": "96cb13288b3d95cd2da2fd876212c4f8403f9868d7a095cdfe0694f06d7d4880",
+        "scopeSha256": "918531779de756fd3cc6d4c2d30fd98e9406e197791016ccf474794a54c42a92",
+        "phases": [
+          [
+            "ready",
+            "4bfadc5271e9455fa4cf21ad68f0f464b2c0c0b11c155062f0723ec57c2b1743"
+          ],
+          [
+            "pre_stop",
+            "95c49ad0084d916971b0c45f9b33499998bdf64660016b08f12d296ff64aab54"
+          ],
+          [
+            "stopped",
+            "3a7e52f278d660e8bd46ef62aef4ea801e062005127b411752b5d8cbde1b7271"
+          ]
+        ],
+        "liveSha256": "8629c5360b01aeef4de01943254f0cbe5f007af46097f291484765a3e9de1736"
+      },
+      "restorePlan": {
+        "id": "d5a5cae9-f31e-4f33-808b-e5cb7d22e9e6",
+        "sha256": "f06a9a66bd9d3910509fe85ab6cb2ffdcc3719303a55b4b7d0519a811724ab4e"
+      },
+      "completionSha256": null
+    },
+    {
+      "revision": 7,
+      "ticket": "70ec32f9-3d20-4814-b466-5df118d64a99",
+      "state": "restored",
+      "references": {
+        "attempt": "9f42de8e-4d1c-4b27-8a04-c30df8ad45a2",
+        "originalSha256": "96cb13288b3d95cd2da2fd876212c4f8403f9868d7a095cdfe0694f06d7d4880",
+        "scopeSha256": "918531779de756fd3cc6d4c2d30fd98e9406e197791016ccf474794a54c42a92",
+        "phases": [
+          [
+            "ready",
+            "4bfadc5271e9455fa4cf21ad68f0f464b2c0c0b11c155062f0723ec57c2b1743"
+          ],
+          [
+            "pre_stop",
+            "95c49ad0084d916971b0c45f9b33499998bdf64660016b08f12d296ff64aab54"
+          ],
+          [
+            "stopped",
+            "3a7e52f278d660e8bd46ef62aef4ea801e062005127b411752b5d8cbde1b7271"
+          ]
+        ],
+        "liveSha256": "8629c5360b01aeef4de01943254f0cbe5f007af46097f291484765a3e9de1736"
+      },
+      "restorePlan": {
+        "id": "d5a5cae9-f31e-4f33-808b-e5cb7d22e9e6",
+        "sha256": "f06a9a66bd9d3910509fe85ab6cb2ffdcc3719303a55b4b7d0519a811724ab4e"
+      },
+      "completionSha256": "2e1e6cf930c3ebf2fbb06704958ed8e79083baa746370e619f558be41cfc7de7"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "groups": {
+    "policy-publish": {
+      "exitCode": 0,
+      "results": [
+        "test result: ok. 3 passed; 0 failed; 1 ignored; 0 measured; 2306 filtered out; finished in 0.01s"
+      ]
+    },
+    "npm-env-publish": {
+      "exitCode": 0,
+      "results": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 0.01s"
+      ]
+    },
+    "metadata-publish": {
+      "exitCode": 0,
+      "results": [
+        "test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 2303 filtered out; finished in 0.25s"
+      ]
+    },
+    "actual-npm-publish": {
+      "exitCode": 0,
+      "results": [
+        "REAL_NPM_PROXY {\"actualRegistryRequest\":true,\"bypass\":true,\"directPolicy\":false,\"installed\":false,\"nativeOsSettingsMutated\":false,\"savedConfigurationUnchanged\":true,\"systemSnapshotFixture\":false}",
+        "REAL_NPM_PROXY {\"actualRegistryRequest\":true,\"bypass\":false,\"directPolicy\":false,\"installed\":false,\"nativeOsSettingsMutated\":false,\"savedConfigurationUnchanged\":true,\"systemSnapshotFixture\":true}",
+        "REAL_NPM_PROXY {\"actualRegistryRequest\":true,\"bypass\":true,\"directPolicy\":false,\"installed\":false,\"nativeOsSettingsMutated\":false,\"savedConfigurationUnchanged\":true,\"systemSnapshotFixture\":true}",
+        "REAL_NPM_PROXY {\"actualRegistryRequest\":true,\"bypass\":false,\"directPolicy\":true,\"installed\":false,\"nativeOsSettingsMutated\":false,\"savedConfigurationUnchanged\":true,\"systemSnapshotFixture\":false}",
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 0.94s"
+      ]
+    }
+  },
+  "binarySha256": "87c89692a44f76a9d2b8abdcec5bb915752894bbcfc9a1d6c1f7919a48cd3fc2",
+  "hypothesis": "Direct empty values inherited old npmrc proxy; false/null and explicit blank-string bypass must supersede stale npmrc without rewriting it. Repeat affected Manual/System/Direct routes with stale npmrc noproxy as new counterexample; keep former failures."
+}

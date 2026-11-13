@@ -1,0 +1,104 @@
+{
+  "accepted": false,
+  "scope": "mock browser UI/prototype only; no native finalization or business operations",
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "plan-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 228,
+          "bottom": 532,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitPrepareOnly": true,
+        "targetsNotRestoredByPlanAction": true
+      }
+    },
+    {
+      "name": "plan-900-dark",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 148,
+          "bottom": 452,
+          "left": 170,
+          "right": 730,
+          "height": 600,
+          "width": 900,
+          "overflow": 0
+        },
+        "explicitPrepareOnly": true,
+        "targetsNotRestoredByPlanAction": true
+      }
+    },
+    {
+      "name": "plan-slow-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 228,
+          "bottom": 532,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitPrepareOnly": true,
+        "targetsNotRestoredByPlanAction": true
+      }
+    },
+    {
+      "name": "plan-error-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 228,
+          "bottom": 532,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitPrepareOnly": true,
+        "targetsNotRestoredByPlanAction": true
+      }
+    },
+    {
+      "name": "prototype-plan",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-plan-slow",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-plan-error",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    }
+  ],
+  "result": "passed",
+  "cleanup": {
+    "browserClosed": true,
+    "ownedViteProcessExited": true
+  }
+}

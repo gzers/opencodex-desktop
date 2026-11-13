@@ -1,0 +1,15 @@
+
+running 3 tests
+test infrastructure::macos_client_originals::restore::tests::late_archive_source_replacement_is_returned_to_stage_and_never_committed_as_original ... FAILED
+test infrastructure::macos_client_originals::restore::tests::late_cache_edit_in_remove_gap_is_returned_without_overwriting_a_new_destination ... FAILED
+test infrastructure::macos_client_originals::restore::tests::late_catalog_replacement_after_final_check_is_preserved_at_original_path_and_refused ... FAILED
+
+failures:
+
+failures:
+    infrastructure::macos_client_originals::restore::tests::late_archive_source_replacement_is_returned_to_stage_and_never_committed_as_original
+    infrastructure::macos_client_originals::restore::tests::late_cache_edit_in_remove_gap_is_returned_without_overwriting_a_new_destination
+    infrastructure::macos_client_originals::restore::tests::late_catalog_replacement_after_final_check_is_preserved_at_original_path_and_refused
+
+test result: FAILED. 0 passed; 3 failed; 0 ignored; 0 measured; 2244 filtered out; finished in 1.03s
+

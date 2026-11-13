@@ -1,0 +1,232 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/panel-update-progress.test.ts > panel update channel ownership > rejects foreign, duplicate and late progress without fabricated percentages
+AssertionError: expected "vi.fn()" to be called 1 times, but got 0 times
+ ❯ tests/panel-update-progress.test.ts:16:21
+     14|     expect(observe).not.toHaveBeenCalled()
+     15|     send(); send(); send({ operationId: 'foreign', sequence: 2 })
+     16|     expect(observe).toHaveBeenCalledTimes(1)
+       |                     ^
+     17|     expect(observe).toHaveBeenCalledWith({ phase: 'downloading', perce…
+     18|     send({ phase: 'verifying', sequence: 2 })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > retains remote query failure details through close/reopen and clears them after retry
+AssertionError: expected 'OpenCodex 面板实际版本待核实2.50.0官方项目 · @bitk…' to contain 'npm view 以退出码 1'
+
+Expected: "npm view 以退出码 1"
+Received: "OpenCodex 面板实际版本待核实2.50.0官方项目 · @bitkyc08/opencodex实际版本尚未核实，请重新检查。查看详情"
+
+ ❯ tests/update-center.test.ts:85:93
+     83|     expect(updates.officialRemoteError).toBe(true)
+     84|     const wrapper = render(); await flushPromises()
+     85|     expect(new DOMWrapper(document.body).get('[data-testid="official-u…
+       |                                                                                             ^
+     86|     await new DOMWrapper(document.body).get('[data-testid="official-up…
+     87|     const detail = new DOMWrapper(document.body).get('[data-testid="of…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > requires a successful fresh panel backup and retains the confirmed version through that await
+Error: Unable to get [data-testid="install-official-update"] within: <body>
+  <div data-v-app="">
+    <!--teleport start-->
+    <!--teleport end-->
+  </div>
+  <dialog data-v-f2b1bc8e="" data-testid="update-center" class="ui-dialog update-center wide" aria-labelledby="v-0" role="dialog" aria-modal="true" tabindex="-1" open="">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-0">OpenCodex 面板更新详情</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <div data-v-c975c606="" class="update-center-body">
+        <section data-v-a572675c="" data-v-c975c606="" class="runtime-version-facts" aria-label="OpenCodex 实际版本">
+          <div data-v-a572675c="" class="version-head">
+            <h4 data-v-a572675c="">当前版本事实</h4><button data-v-a572675c="" class="btn btn-sm" type="button">
+              <!--v-if--><span class="btn-content">重新核对版本</span>
+            </button>
+          </div>
+          <p data-v-a572675c="" role="alert">实际版本尚未核实，请重新检查。下列信息为上次观察。</p>
+          <p data-v-a572675c="" role="status">实际程序版本尚未核实。</p>
+          <!--v-if-->
+        </section>
+        <section data-v-c975c606="" class="update-object" data-testid="official-update-card">
+          <div data-v-c975c606="" class="update-result-heading"><span data-v-c975c606="">版本升级</span><span data-v-c975c606="" class="tag">实际版本待核实</span></div>
+          <div data-v-c975c606="" class="update-version-hero"><span data-v-c975c606="">2.50.0</span><span data-v-c975c606="" aria-hidden="true">→</span><strong data-v-c975c606="">2.51.0</strong></div>
+          <p data-v-c975c606="" class="update-hint">官方项目 · @bitkyc08/opencodex
+            <!--v-if-->
+          </p>
+          <p data-v-c975c606="" class="update-error update-query-error" role="status" data-testid="official-query-error">实际版本尚未核实，请重新检查。</p>
+          <!--v-if-->
+          <section data-v-80202013="" data-v-c975c606="" class="release-notes" tabindex="-1" aria-busy="false">
+            <div data-v-80202013="" class="release-notes-head">
+              <h4 data-v-80202013="">更新内容</h4>
+              <!--v-if-->
+            </div>
+            <!--v-if-->
+            <p data-v-80202013="">发布者尚未提供本版本更新说明。</p>
+            <!--v-if-->
+            <div data-v-80202013="" class="release-notes-actions">
+              <!--v-if-->
+              <!--v-if-->
+            </div>
+          </section>
+          <!--v-if-->
+          <!--v-if-->
+          <!--v-if-->
+          <!--v-if-->
+        </section>
+      </div>
+    </div>
+    <!---->
+  </dialog>
+</body>
+ ❯ DOMWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/update-center.test.ts:193:41
+    191|     render(); await flushPromises()
+    192|     await new DOMWrapper(document.body).get('[data-testid="official-up…
+    193|     await new DOMWrapper(document.body).get('[data-testid="install-off…
+       |                                         ^
+    194|     expect(apply).not.toHaveBeenCalled()
+    195|     expect(new DOMWrapper(document.body).text()).toContain('备份失败')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > keeps this panel update output visible after failure and reopen, without stale output on backup failure
+Error: Unable to get [data-testid="install-official-update"] within: <body>
+  <div data-v-app="">
+    <!--teleport start-->
+    <!--teleport end-->
+  </div>
+  <dialog data-v-f2b1bc8e="" data-testid="update-center" class="ui-dialog update-center wide" aria-labelledby="v-0" role="dialog" aria-modal="true" tabindex="-1" open="">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-0">OpenCodex 面板更新详情</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <div data-v-c975c606="" class="update-center-body">
+        <section data-v-a572675c="" data-v-c975c606="" class="runtime-version-facts" aria-label="OpenCodex 实际版本">
+          <div data-v-a572675c="" class="version-head">
+            <h4 data-v-a572675c="">当前版本事实</h4><button data-v-a572675c="" class="btn btn-sm" type="button">
+              <!--v-if--><span class="btn-content">重新核对版本</span>
+            </button>
+          </div>
+          <p data-v-a572675c="" role="alert">实际版本尚未核实，请重新检查。下列信息为上次观察。</p>
+          <p data-v-a572675c="" role="status">实际程序版本尚未核实。</p>
+          <!--v-if-->
+        </section>
+        <section data-v-c975c606="" class="update-object" data-testid="official-update-card">
+          <div data-v-c975c606="" class="update-result-heading"><span data-v-c975c606="">版本升级</span><span data-v-c975c606="" class="tag">实际版本待核实</span></div>
+          <div data-v-c975c606="" class="update-version-hero"><span data-v-c975c606="">2.50.0</span><span data-v-c975c606="" aria-hidden="true">→</span><strong data-v-c975c606="">2.51.0</strong></div>
+          <p data-v-c975c606="" class="update-hint">官方项目 · @bitkyc08/opencodex
+            <!--v-if-->
+          </p>
+          <p data-v-c975c606="" class="update-error update-query-error" role="status" data-testid="official-query-error">实际版本尚未核实，请重新检查。</p>
+          <!--v-if-->
+          <section data-v-80202013="" data-v-c975c606="" class="release-notes" tabindex="-1" aria-busy="false">
+            <div data-v-80202013="" class="release-notes-head">
+              <h4 data-v-80202013="">更新内容</h4>
+              <!--v-if-->
+            </div>
+            <!--v-if-->
+            <p data-v-80202013="">发布者尚未提供本版本更新说明。</p>
+            <!--v-if-->
+            <div data-v-80202013="" class="release-notes-actions">
+              <!--v-if-->
+              <!--v-if-->
+            </div>
+          </section>
+          <!--v-if-->
+          <!--v-if-->
+          <!--v-if-->
+          <!--v-if-->
+        </section>
+      </div>
+    </div>
+    <!---->
+  </dialog>
+</body>
+ ❯ DOMWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/update-center.test.ts:227:41
+    225|     })
+    226|     const wrapper = render({ target: 'official' }); await flushPromise…
+    227|     await new DOMWrapper(document.body).get('[data-testid="install-off…
+       |                                         ^
+    228|     expect(new DOMWrapper(document.body).get('pre[aria-label="面板安装输出"]…
+    229|     expect(new DOMWrapper(document.body).text()).toContain('面板更新失败')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/update-center.test.ts > shared production update center > keeps the original version in completed panel progress after the live facts refresh
+Error: Unable to get [data-testid="install-official-update"] within: <body>
+  <div data-v-app="">
+    <!--teleport start-->
+    <!--teleport end-->
+  </div>
+  <dialog data-v-f2b1bc8e="" data-testid="update-center" class="ui-dialog update-center wide" aria-labelledby="v-0" role="dialog" aria-modal="true" tabindex="-1" open="">
+    <header data-v-f2b1bc8e="" class="ui-dialog-header">
+      <h2 data-v-f2b1bc8e="" id="v-0">OpenCodex 面板更新详情</h2>
+      <div data-v-f2b1bc8e="" class="ui-dialog-header-actions"><button data-v-f2b1bc8e="" type="button" class="icon-btn ui-icon-control modal-close" aria-label="关闭" aria-busy="false" title="关闭"><svg data-v-f2b1bc8e="" viewBox="0 0 24 24" aria-hidden="true">
+            <path data-v-f2b1bc8e="" d="m6 6 12 12M18 6 6 18"></path>
+          </svg></button></div>
+    </header>
+    <div data-v-f2b1bc8e="" class="ui-dialog-content">
+      <div data-v-c975c606="" class="update-center-body">
+        <section data-v-a572675c="" data-v-c975c606="" class="runtime-version-facts" aria-label="OpenCodex 实际版本">
+          <div data-v-a572675c="" class="version-head">
+            <h4 data-v-a572675c="">当前版本事实</h4><button data-v-a572675c="" class="btn btn-sm" type="button">
+              <!--v-if--><span class="btn-content">重新核对版本</span>
+            </button>
+          </div>
+          <p data-v-a572675c="" role="alert">实际版本尚未核实，请重新检查。下列信息为上次观察。</p>
+          <p data-v-a572675c="" role="status">实际程序版本尚未核实。</p>
+          <!--v-if-->
+        </section>
+        <section data-v-c975c606="" class="update-object" data-testid="official-update-card">
+          <div data-v-c975c606="" class="update-result-heading"><span data-v-c975c606="">版本升级</span><span data-v-c975c606="" class="tag">实际版本待核实</span></div>
+          <div data-v-c975c606="" class="update-version-hero"><span data-v-c975c606="">2.50.0</span><span data-v-c975c606="" aria-hidden="true">→</span><strong data-v-c975c606="">2.51.0</strong></div>
+          <p data-v-c975c606="" class="update-hint">官方项目 · @bitkyc08/opencodex
+            <!--v-if-->
+          </p>
+          <p data-v-c975c606="" class="update-error update-query-error" role="status" data-testid="official-query-error">实际版本尚未核实，请重新检查。</p>
+          <!--v-if-->
+          <section data-v-80202013="" data-v-c975c606="" class="release-notes" tabindex="-1" aria-busy="false">
+            <div data-v-80202013="" class="release-notes-head">
+              <h4 data-v-80202013="">更新内容</h4>
+              <!--v-if-->
+            </div>
+            <!--v-if-->
+            <p data-v-80202013="">发布者尚未提供本版本更新说明。</p>
+            <!--v-if-->
+            <div data-v-80202013="" class="release-notes-actions">
+              <!--v-if-->
+              <!--v-if-->
+            </div>
+          </section>
+          <!--v-if-->
+          <!--v-if-->
+          <!--v-if-->
+          <!--v-if-->
+        </section>
+      </div>
+    </div>
+    <!---->
+  </dialog>
+</body>
+ ❯ DOMWrapper.get node_modules/@vue/test-utils/dist/vue-test-utils.cjs.js:7324:15
+ ❯ tests/update-center.test.ts:248:41
+    246|     })
+    247|     render({target:'official'});await flushPromises()
+    248|     await new DOMWrapper(document.body).get('[data-testid="install-off…
+       |                                         ^
+    249|     expect(new DOMWrapper(document.body).get('.update-version-hero').t…
+    250|     expect(new DOMWrapper(document.body).get('.update-version-hero').t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+

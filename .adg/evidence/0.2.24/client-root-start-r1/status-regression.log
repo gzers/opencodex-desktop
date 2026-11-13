@@ -1,0 +1,20 @@
+
+running 14 tests
+test infrastructure::status_source::managed_cli_admission_tests::accepts_only_own_stopped_diagnostic_without_endpoint_authority ... ok
+test infrastructure::status_source::managed_cli_admission_tests::raw_pid_aliases_cannot_disappear_behind_stopped_presentation_sanitization ... ok
+test infrastructure::status_source::managed_cli_admission_tests::rejects_missing_foreign_or_contradictory_home_and_residual_pid ... ok
+test infrastructure::status_source::managed_cli_admission_tests::rejects_other_account_live_payload_even_with_own_config_path ... ok
+test infrastructure::status_source::tests::active_managed_mutation_without_record_defers_cli_and_preserves_last_observation ... ok
+test infrastructure::status_source::tests::explicit_desktop_context_projects_real_status_command_without_guessing_config_file_home ... CONTEXT_STATUS_COMMAND_OK stopped=true endpointsAbsent=true explicitDesktopAndHome=true managerWrites=false
+ok
+test infrastructure::status_source::tests::fetches_and_maps_explicit_fixture_output ... ok
+test infrastructure::status_source::tests::invalid_json_maps_to_parse_and_preserves_state ... ok
+test infrastructure::status_source::tests::mutation_gate_does_not_trust_unvalidated_record_or_restrict_unmanaged_diagnostic ... ok
+test infrastructure::status_source::tests::non_executable_file_is_unreachable ... ok
+test infrastructure::status_source::tests::oversized_diagnostic_is_bounded_and_does_not_seed_cache ... ok
+test infrastructure::status_source::tests::steady_probe_avoids_cli_but_identity_restart_expiry_and_environment_refresh_it ... ok
+test infrastructure::status_source::tests::timeout_maps_to_frozen_timeout_and_preserves_state ... ok
+test infrastructure::status_source::tests::timeout_reaps_only_its_diagnostic_group ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 2560 filtered out; finished in 12.06s
+

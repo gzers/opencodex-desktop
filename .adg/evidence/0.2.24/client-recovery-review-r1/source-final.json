@@ -1,0 +1,34 @@
+{
+  "baseCommit": "d14125821be951f2a5d7a4cfe655d53d0511a101",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery_tests.rs",
+      "sha256": "44444aeb15c6fd379293488705a5d2ffbe829e657c073f9ef8e9c4fbb7a6695a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_completion.rs",
+      "sha256": "e1af6a61fc1a5b040bc556f517d40691e1ab11ce51f9f96fcc557962f61bf7f8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_recovery_finalize.rs",
+      "sha256": "dd8de48d2f9ab0bda1135e8b1207fbd097bd3c3219708414dd7b1323d816e1ad"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore.rs",
+      "sha256": "f437c8979a3309a88cf7cd74644382561c9dcd3226568d5c84c48f993858909e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore_tests.rs",
+      "sha256": "d70491089cec3a00473c0b4801aa6f6abb03db2dfa48591a0975d03228d8927e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "sha256": "f5a543fb4e0375864a89c0a237b103dc83140c493ec352b4193fb1b594d2ede9"
+    }
+  ],
+  "binarySha256": "f3bb5640e856716a7ddbaed3a2922b444dd932c242e8c267b229e087b5e98422",
+  "nativeFirstRunSource": "native/source.json",
+  "failedTraceSource": "trace-source.json",
+  "scope": "No native app or DMG generated; native once tests use final source, no new service run after initial interrupted fixture",
+  "codeCommit": "82764eabc56bb70e332a1879ec738ba9d15a86af"
+}

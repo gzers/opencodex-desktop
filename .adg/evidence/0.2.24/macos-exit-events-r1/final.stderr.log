@@ -1,0 +1,11 @@
+
+thread 'infrastructure::macos_process_exit::tests::actual_nonzero_exit_and_signal_never_become_normal_stop' (155132926) panicked at src/infrastructure/macos_process_exit_tests.rs:83:5:
+assertion failed: matches!(wait(&mut watch),Err(AppError::RuntimeManaged{code,..}) if
+    code=="lifecycle_exit_nonzero")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::macos_process_exit::tests::elapsed_budget_never_accepts_a_queued_or_cached_exit_event' (155132932) panicked at src/infrastructure/macos_process_exit_tests.rs:139:5:
+assertion failed: wait(&mut watch).is_ok()
+
+thread 'infrastructure::macos_process_exit::tests::live_exact_generation_requires_a_real_zero_exit_event_not_spawn_or_absence' (155132944) panicked at src/infrastructure/macos_process_exit_tests.rs:65:34:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "lifecycle_exit_image_changed", detail: "未取得原服务进程的正常退出证明，未宣称停止完成；请核对诊断" }

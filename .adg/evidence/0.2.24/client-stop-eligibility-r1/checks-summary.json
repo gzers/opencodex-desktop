@@ -1,0 +1,39 @@
+[
+  {
+    "name": "regression-1",
+    "filter": "infrastructure::macos_client_originals::root_retirement::index_tests::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-2",
+    "filter": "infrastructure::macos_client_originals::session_index::generation::start_tests::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-3",
+    "filter": "infrastructure::macos_client_originals::session_index::retirement_transaction_tests::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-4",
+    "filter": "commands::lifecycle_versioned_tests::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-5",
+    "filter": "types::process_action::",
+    "exitCode": 0
+  },
+  {
+    "name": "clippy",
+    "exitCode": 0
+  },
+  {
+    "name": "format",
+    "exitCode": 0
+  },
+  {
+    "name": "diff-check",
+    "exitCode": 0
+  }
+]

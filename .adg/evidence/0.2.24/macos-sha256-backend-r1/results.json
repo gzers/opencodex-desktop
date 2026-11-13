@@ -1,0 +1,36 @@
+{
+  "accepted": false,
+  "code": "17ac170c4792ecd6ef35aec1f7d821589dac80a6",
+  "rounds": [
+    {
+      "round": "debug",
+      "startMs": 8623,
+      "statusMs": 230,
+      "stopMs": 4775,
+      "reopenedMs": 353,
+      "revision": 6,
+      "restorePrepared": true,
+      "completeResult": "failed",
+      "accepted": false
+    },
+    {
+      "round": "release",
+      "startMs": 5546,
+      "statusMs": 222,
+      "stopMs": 3559,
+      "reopenedMs": 376,
+      "revision": 6,
+      "restorePrepared": true,
+      "completeResult": "failed",
+      "accepted": false
+    }
+  ],
+  "debugRelatedTests": 45,
+  "releaseRelatedTests": 45,
+  "measuredFixtureWithinOriginalBudgets": true,
+  "releaseStopHeadroomMs": 6441,
+  "generalBudgetAcceptance": false,
+  "actualRestoreApplied": false,
+  "previousTimeoutsRetainedAt": "../stop-admission-cost-r1/",
+  "windowsFeatureUnchanged": true
+}

@@ -1,0 +1,288 @@
+ROOT_STOP_ENTRY stage=load-ready elapsed_us=127310 remaining_us=9760484 passed=true
+ROOT_STOP_ENTRY stage=pre-stop elapsed_us=1095210 remaining_us=8665202 passed=true
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+ROOT_STOP_STEP stage=admission.entry-time elapsed_us=0 remaining_before_us=5291745 remaining_after_us=5291745 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.references elapsed_us=0 remaining_before_us=5291712 remaining_after_us=5291712 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.scope elapsed_us=8500 remaining_before_us=5291688 remaining_after_us=5283187 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.live elapsed_us=18641 remaining_before_us=5283139 remaining_after_us=5264497 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=entry segment_us=27302 total_us=27302
+ROOT_STOP_STEP stage=admission.native-context elapsed_us=1193 remaining_before_us=5264426 remaining_after_us=5263232 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.original-pair elapsed_us=0 remaining_before_us=5263198 remaining_after_us=5263198 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=native segment_us=1282 total_us=28584
+ROOT_STOP_STEP stage=admission.stop-absence elapsed_us=8932 remaining_before_us=5263144 remaining_after_us=5254212 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.final-time elapsed_us=0 remaining_before_us=5254152 remaining_after_us=5254152 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=absence segment_us=9034 total_us=37619
+ROOT_STOP_STEP stage=artifacts.admission-before elapsed_us=37636 remaining_before_us=5291746 remaining_after_us=5254109 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifacts.guard-image elapsed_us=2338 remaining_before_us=5254086 remaining_after_us=5251747 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifacts.plan-open elapsed_us=48245 remaining_before_us=5251699 remaining_after_us=5203454 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=5203384 remaining_after_us=5203384 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=26770 remaining_before_us=5202024 remaining_after_us=5175253 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=5174275 remaining_after_us=5174275 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifacts.authority-initial elapsed_us=29155 remaining_before_us=5203398 remaining_after_us=5174243 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=5174218 remaining_after_us=5174218 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=20356 remaining_before_us=5173012 remaining_after_us=5152655 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=5151517 remaining_after_us=5151517 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=5149526 remaining_after_us=5149526 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=19296 remaining_before_us=5148245 remaining_after_us=5128949 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=5128013 remaining_after_us=5128013 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=5078499 remaining_after_us=5078499 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18758 remaining_before_us=5077215 remaining_after_us=5058457 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=5057506 remaining_after_us=5057506 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=5019879 remaining_after_us=5019879 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=20464 remaining_before_us=5018646 remaining_after_us=4998182 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4997232 remaining_after_us=4997232 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4959540 remaining_after_us=4959540 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18593 remaining_before_us=4958353 remaining_after_us=4939759 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4938773 remaining_after_us=4938773 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4901627 remaining_after_us=4901627 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18719 remaining_before_us=4900455 remaining_after_us=4881736 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4880846 remaining_after_us=4880846 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4840630 remaining_after_us=4840630 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=19034 remaining_before_us=4839400 remaining_after_us=4820365 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4819400 remaining_after_us=4819400 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4809032 remaining_after_us=4809032 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18463 remaining_before_us=4807760 remaining_after_us=4789297 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4788301 remaining_after_us=4788301 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4785140 remaining_after_us=4785140 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18362 remaining_before_us=4783998 remaining_after_us=4765635 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4764724 remaining_after_us=4764724 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4761554 remaining_after_us=4761554 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18419 remaining_before_us=4760438 remaining_after_us=4742018 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4741110 remaining_after_us=4741110 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4738611 remaining_after_us=4738611 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18181 remaining_before_us=4737511 remaining_after_us=4719329 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4718396 remaining_after_us=4718396 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4716051 remaining_after_us=4716051 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18448 remaining_before_us=4714939 remaining_after_us=4696491 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4695578 remaining_after_us=4695578 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4693065 remaining_after_us=4693065 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18755 remaining_before_us=4691945 remaining_after_us=4673189 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4672255 remaining_after_us=4672255 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4669644 remaining_after_us=4669644 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18537 remaining_before_us=4668490 remaining_after_us=4649953 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4649052 remaining_after_us=4649052 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4639545 remaining_after_us=4639545 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18834 remaining_before_us=4638331 remaining_after_us=4619497 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4618530 remaining_after_us=4618530 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=4611456 remaining_after_us=4611456 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=18881 remaining_before_us=4610233 remaining_after_us=4591351 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=4590391 remaining_after_us=4590390 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifacts.apply-retaining elapsed_us=585566 remaining_before_us=5174218 remaining_after_us=4588651 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.entry-time elapsed_us=0 remaining_before_us=4588622 remaining_after_us=4588622 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.references elapsed_us=0 remaining_before_us=4588603 remaining_after_us=4588603 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.scope elapsed_us=8230 remaining_before_us=4588584 remaining_after_us=4580353 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.live elapsed_us=19744 remaining_before_us=4580327 remaining_after_us=4560582 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=entry segment_us=28077 total_us=28077
+ROOT_STOP_STEP stage=admission.native-context elapsed_us=1379 remaining_before_us=4560529 remaining_after_us=4559149 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.original-pair elapsed_us=0 remaining_before_us=4559115 remaining_after_us=4559114 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=native segment_us=1466 total_us=29544
+ROOT_STOP_STEP stage=admission.stop-absence elapsed_us=7721 remaining_before_us=4559065 remaining_after_us=4551343 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.final-time elapsed_us=0 remaining_before_us=4551304 remaining_after_us=4551304 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=absence segment_us=7792 total_us=37336
+ROOT_STOP_STEP stage=artifacts.admission-after elapsed_us=37348 remaining_before_us=4588623 remaining_after_us=4551274 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifacts.final-time elapsed_us=0 remaining_before_us=4551257 remaining_after_us=4551257 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.entry-time elapsed_us=0 remaining_before_us=4551238 remaining_after_us=4551238 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.references elapsed_us=1 remaining_before_us=4551221 remaining_after_us=4551220 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.scope elapsed_us=8410 remaining_before_us=4551202 remaining_after_us=4542792 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.live elapsed_us=18456 remaining_before_us=4542764 remaining_after_us=4524308 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=entry segment_us=26968 total_us=26968
+ROOT_STOP_STEP stage=admission.native-context elapsed_us=1111 remaining_before_us=4524254 remaining_after_us=4523143 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.original-pair elapsed_us=0 remaining_before_us=4523124 remaining_after_us=4523124 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=native segment_us=1183 total_us=28152
+ROOT_STOP_STEP stage=admission.stop-absence elapsed_us=7887 remaining_before_us=4523074 remaining_after_us=4515186 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.final-time elapsed_us=0 remaining_before_us=4515149 remaining_after_us=4515149 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=absence segment_us=7954 total_us=36107
+ROOT_STOP_STEP stage=admission.entry-time elapsed_us=0 remaining_before_us=4469411 remaining_after_us=4469411 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.references elapsed_us=0 remaining_before_us=4469368 remaining_after_us=4469367 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.scope elapsed_us=8631 remaining_before_us=4469344 remaining_after_us=4460712 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.live elapsed_us=18848 remaining_before_us=4460677 remaining_after_us=4441828 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=entry segment_us=27627 total_us=27627
+ROOT_STOP_STEP stage=admission.native-context elapsed_us=1299 remaining_before_us=4441771 remaining_after_us=4440472 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.original-pair elapsed_us=0 remaining_before_us=4440440 remaining_after_us=4440439 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=native segment_us=1377 total_us=29005
+ROOT_STOP_STEP stage=admission.stop-absence elapsed_us=8036 remaining_before_us=4440393 remaining_after_us=4432357 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.final-time elapsed_us=0 remaining_before_us=4432318 remaining_after_us=4432318 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=absence segment_us=8107 total_us=37112
+ROOT_STOP_STEP stage=admission.entry-time elapsed_us=0 remaining_before_us=3946883 remaining_after_us=3946883 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.references elapsed_us=0 remaining_before_us=3946837 remaining_after_us=3946837 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.scope elapsed_us=8168 remaining_before_us=3946817 remaining_after_us=3938649 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.live elapsed_us=18524 remaining_before_us=3938608 remaining_after_us=3920083 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=entry segment_us=26839 total_us=26839
+ROOT_STOP_STEP stage=admission.native-context elapsed_us=1192 remaining_before_us=3920030 remaining_after_us=3918837 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.original-pair elapsed_us=0 remaining_before_us=3918814 remaining_after_us=3918813 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=native segment_us=1268 total_us=28107
+ROOT_STOP_STEP stage=admission.stop-absence elapsed_us=16433 remaining_before_us=3918760 remaining_after_us=3902326 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.final-time elapsed_us=0 remaining_before_us=3902281 remaining_after_us=3902281 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=absence segment_us=16515 total_us=44623
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1694 total_us=1694
+ROOT_STOP_COST label=root-authority phase=native segment_us=1541 total_us=3235
+ROOT_STOP_COST label=root-source phase=entry segment_us=2563 total_us=2563
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=42908 total_us=45472
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2202 total_us=47674
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=683 total_us=48358
+ROOT_STOP_COST label=root-source phase=program-source segment_us=395 total_us=48753
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=50540 total_us=53775
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9235 total_us=63010
+CONFIG_GUARD_TRACE expected=prepared actual=prepared phase=prepare
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1809 total_us=1809
+ROOT_STOP_COST label=root-authority phase=native segment_us=1594 total_us=3403
+ROOT_STOP_COST label=root-source phase=entry segment_us=2618 total_us=2618
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=43003 total_us=45622
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2202 total_us=47824
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=666 total_us=48491
+ROOT_STOP_COST label=root-source phase=program-source segment_us=377 total_us=48869
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=50592 total_us=53995
+ROOT_STOP_COST label=root-authority phase=absence segment_us=8893 total_us=62889
+ROOT_STOP_TAIL phase=intent elapsed_us=187779
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1843 total_us=1843
+ROOT_STOP_COST label=root-authority phase=native segment_us=1542 total_us=3386
+ROOT_STOP_COST label=root-source phase=entry segment_us=2634 total_us=2634
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=49126 total_us=51760
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2698 total_us=54458
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=726 total_us=55185
+ROOT_STOP_COST label=root-source phase=program-source segment_us=440 total_us=55625
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=57582 total_us=60968
+ROOT_STOP_COST label=root-authority phase=absence segment_us=10627 total_us=71596
+ROOT_STOP_TAIL phase=native_gap elapsed_us=306943
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1813 total_us=1813
+ROOT_STOP_COST label=root-authority phase=native segment_us=1633 total_us=3447
+ROOT_STOP_COST label=root-source phase=entry segment_us=2926 total_us=2926
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=43627 total_us=46553
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2244 total_us=48798
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=663 total_us=49462
+ROOT_STOP_COST label=root-source phase=program-source segment_us=396 total_us=49858
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=51738 total_us=55186
+ROOT_STOP_COST label=root-authority phase=absence segment_us=8503 total_us=63690
+ROOT_STOP_TAIL phase=before_rename elapsed_us=373549
+ROOT_STOP_TAIL phase=after_native elapsed_us=381263
+CONFIG_GUARD_TRACE expected=relocated actual=relocated phase=relocate
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1826 total_us=1826
+ROOT_STOP_COST label=root-authority phase=native segment_us=2293 total_us=4119
+ROOT_STOP_COST label=root-source phase=entry segment_us=2647 total_us=2647
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=47209 total_us=49856
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2131 total_us=51988
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=659 total_us=52647
+ROOT_STOP_COST label=root-source phase=program-source segment_us=430 total_us=53078
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=54896 total_us=59015
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9518 total_us=68534
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1844 total_us=1844
+ROOT_STOP_COST label=root-authority phase=native segment_us=2482 total_us=4327
+ROOT_STOP_COST label=root-source phase=entry segment_us=2576 total_us=2576
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=46206 total_us=48782
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2205 total_us=50987
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=658 total_us=51645
+ROOT_STOP_COST label=root-source phase=program-source segment_us=383 total_us=52029
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=53814 total_us=58141
+ROOT_STOP_COST label=root-authority phase=absence segment_us=8770 total_us=66911
+ROOT_STOP_TAIL phase=settle_writer elapsed_us=536395
+CONFIG_GUARD_TRACE expected=released actual=released phase=release
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1812 total_us=1812
+ROOT_STOP_COST label=root-authority phase=native segment_us=2426 total_us=4239
+ROOT_STOP_COST label=root-source phase=entry segment_us=2764 total_us=2764
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=47172 total_us=49936
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=3094 total_us=53030
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=867 total_us=53898
+ROOT_STOP_COST label=root-source phase=program-source segment_us=431 total_us=54330
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=56634 total_us=60873
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9005 total_us=69878
+ROOT_STOP_TAIL phase=before_readback elapsed_us=668691
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1941 total_us=1941
+ROOT_STOP_COST label=root-authority phase=native segment_us=2805 total_us=4746
+ROOT_STOP_COST label=root-source phase=entry segment_us=3116 total_us=3116
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=50131 total_us=53247
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=3044 total_us=56291
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=728 total_us=57020
+ROOT_STOP_COST label=root-source phase=program-source segment_us=442 total_us=57463
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=59567 total_us=64313
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9060 total_us=73374
+ROOT_STOP_TAIL phase=readback elapsed_us=798110
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1912 total_us=1912
+ROOT_STOP_COST label=root-authority phase=native segment_us=2490 total_us=4403
+ROOT_STOP_COST label=root-source phase=entry segment_us=2830 total_us=2830
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=49223 total_us=52054
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2816 total_us=54870
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=754 total_us=55625
+ROOT_STOP_COST label=root-source phase=program-source segment_us=440 total_us=56065
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=58056 total_us=62460
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9692 total_us=72152
+ROOT_STOP_TAIL phase=guarded-proof-returned
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1962 total_us=1962
+ROOT_STOP_COST label=root-authority phase=native segment_us=2740 total_us=4702
+ROOT_STOP_COST label=root-source phase=entry segment_us=2803 total_us=2803
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=51039 total_us=53842
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2504 total_us=56346
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=676 total_us=57023
+ROOT_STOP_COST label=root-source phase=program-source segment_us=409 total_us=57432
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=59404 total_us=64106
+ROOT_STOP_COST label=root-authority phase=absence segment_us=9199 total_us=73305
+ROOT_STOP_COST label=root-final-absence phase=entry segment_us=73340 total_us=73340
+ROOT_STOP_COST label=root-final-absence phase=full-os-absence segment_us=22864 total_us=96205
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=1911 total_us=1911
+ROOT_STOP_COST label=root-authority phase=native segment_us=2504 total_us=4415
+ROOT_STOP_COST label=root-source phase=entry segment_us=2794 total_us=2794
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=49009 total_us=51803
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2141 total_us=53945
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=748 total_us=54694
+ROOT_STOP_COST label=root-source phase=program-source segment_us=422 total_us=55116
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=57024 total_us=61439
+ROOT_STOP_COST label=root-authority phase=absence segment_us=8312 total_us=69752
+ROOT_STOP_COST label=root-final-absence phase=post-full-check segment_us=69818 total_us=166024
+ROOT_STOP_TAIL phase=final-absence-confirmed
+ROOT_STOP_ENTRY stage=load-ready elapsed_us=636537 remaining_us=9250374 passed=true
+ROOT_STOP_ENTRY stage=pre-stop elapsed_us=2092753 remaining_us=7157574 passed=true
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+ROOT_STOP_STEP stage=admission.entry-time elapsed_us=0 remaining_before_us=908879 remaining_after_us=908879 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.references elapsed_us=0 remaining_before_us=908843 remaining_after_us=908843 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.scope elapsed_us=21215 remaining_before_us=908816 remaining_after_us=887600 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.live elapsed_us=41444 remaining_before_us=887539 remaining_after_us=846095 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=entry segment_us=62840 total_us=62840
+ROOT_STOP_STEP stage=admission.native-context elapsed_us=1287 remaining_before_us=846020 remaining_after_us=844732 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.original-pair elapsed_us=0 remaining_before_us=844686 remaining_after_us=844685 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=native segment_us=1396 total_us=64237
+ROOT_STOP_STEP stage=admission.stop-absence elapsed_us=8570 remaining_before_us=844624 remaining_after_us=836053 expired_after=false code=ok
+ROOT_STOP_STEP stage=admission.final-time elapsed_us=0 remaining_before_us=835998 remaining_after_us=835998 expired_after=false code=ok
+ROOT_STOP_COST label=admission phase=absence segment_us=8671 total_us=72909
+ROOT_STOP_STEP stage=artifacts.admission-before elapsed_us=72926 remaining_before_us=908879 remaining_after_us=835953 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifacts.guard-image elapsed_us=1678 remaining_before_us=835926 remaining_after_us=834247 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifacts.plan-open elapsed_us=82975 remaining_before_us=834218 remaining_after_us=751242 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=750954 remaining_after_us=750954 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=51624 remaining_before_us=748793 remaining_after_us=697169 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=696222 remaining_after_us=696222 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifacts.authority-initial elapsed_us=54760 remaining_before_us=750954 remaining_after_us=696193 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=696169 remaining_after_us=696169 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=40973 remaining_before_us=694993 remaining_after_us=654019 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=653064 remaining_after_us=653064 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=651424 remaining_after_us=651424 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=40774 remaining_before_us=650291 remaining_after_us=609516 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=608555 remaining_after_us=608555 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=515790 remaining_after_us=515790 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=40835 remaining_before_us=514498 remaining_after_us=473663 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=472711 remaining_after_us=472711 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=393578 remaining_after_us=393578 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=40666 remaining_before_us=392382 remaining_after_us=351716 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=350743 remaining_after_us=350743 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=271324 remaining_after_us=271324 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=45955 remaining_before_us=270116 remaining_after_us=224161 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=223184 remaining_after_us=223184 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=144160 remaining_after_us=144160 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=40745 remaining_before_us=142967 remaining_after_us=102222 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.final-time elapsed_us=0 remaining_before_us=101274 remaining_after_us=101274 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.entry-time elapsed_us=0 remaining_before_us=2889 remaining_after_us=2889 expired_after=false code=ok
+ROOT_STOP_STEP stage=artifact-authority.live elapsed_us=40838 remaining_before_us=1633 remaining_after_us=0 expired_after=true code=ok
+ROOT_STOP_AUTHORITY_REFUSAL code=lifecycle_timeout mapped_to=permission-denied
+ROOT_STOP_STEP stage=artifacts.apply-retaining elapsed_us=735432 remaining_before_us=696169 remaining_after_us=0 expired_after=true code=client_session_unconfirmed
+
+thread 'commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client' (158250215) panicked at src/commands/lifecycle_versioned_tests.rs:746:13:
+two-generation original lifecycle did not satisfy every gate; retain root-cycles.json and app log
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

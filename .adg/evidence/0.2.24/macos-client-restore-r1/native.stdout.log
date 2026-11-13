@@ -1,0 +1,15 @@
+
+running 10 tests
+test infrastructure::macos_client_originals::restore::tests::a_second_object_external_change_refuses_the_whole_batch_before_any_original_publish ... ok
+test infrastructure::macos_client_originals::restore::tests::actual_subprocess_exit_at_every_publication_boundary_preserves_resumable_known_generations ... ok
+test infrastructure::macos_client_originals::restore::tests::complete_restores_real_original_bytes_permissions_and_absence_without_discarding_postimages ... ok
+test infrastructure::macos_client_originals::restore::tests::expiration_or_native_authority_loss_never_creates_a_terminal_success ... ok
+test infrastructure::macos_client_originals::restore::tests::external_edit_between_preflight_and_native_step_is_preserved ... ok
+test infrastructure::macos_client_originals::restore::tests::failure_after_native_exchange_can_explicitly_roll_back_to_the_frozen_stopped_images ... ok
+test infrastructure::macos_client_originals::restore::tests::failure_during_archive_retains_known_objects_and_can_continue_the_same_plan ... ok
+test infrastructure::macos_client_originals::restore::tests::independent_plan_digest_and_all_phase_digests_are_required_on_reopen ... ok
+test infrastructure::macos_client_originals::restore::tests::partial_archive_can_roll_back_without_learning_new_file_identities ... ok
+test infrastructure::macos_client_originals::restore::tests::same_bytes_replacement_inode_and_stage_symlink_are_not_owned ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 2221 filtered out; finished in 8.88s
+

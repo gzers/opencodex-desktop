@@ -1,0 +1,20 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0277]: `macos_client_originals::session::References` doesn't implement `Debug`
+   --> src/infrastructure/macos_client_root_stop_binding_tests.rs:203:9
+    |
+203 | /         assert_eq!(
+204 | |             session.references().unwrap(),
+205 | |             head.references.clone().unwrap()
+206 | |         );
+    | |_________^ the trait `Debug` is not implemented for `macos_client_originals::session::References`
+    |
+    = note: add `#[derive(Debug)]` to `macos_client_originals::session::References` or manually `impl Debug for macos_client_originals::session::References`
+help: consider annotating `macos_client_originals::session::References` with `#[derive(Debug)]`
+   --> src/infrastructure/macos_client_session.rs:185:1
+    |
+185 + #[derive(Debug)]
+186 | pub struct References {
+    |
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

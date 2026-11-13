@@ -1,0 +1,41 @@
+{
+  "accepted": false,
+  "sameBinaryReversedOrder": true,
+  "referenceMs": [
+    180.656042,
+    173.849583
+  ],
+  "currentMs": [
+    90.558667,
+    91.638459
+  ],
+  "meanChangePercent": 48.61,
+  "counts": {
+    "wholeHistoricalPasses": [
+      4,
+      2
+    ],
+    "frames": [
+      16,
+      8
+    ],
+    "fullRootProvenance": [
+      20,
+      10
+    ],
+    "planLoads": [
+      4,
+      2
+    ]
+  },
+  "incompleteObservationResourceTest": {
+    "accepted": false,
+    "finalHandles": 70,
+    "incompleteObservations": 32,
+    "initialHandles": 70,
+    "isolatedProcess": true,
+    "noOriginalWrites": true
+  },
+  "integrityBoundary": "One entire authenticated pass before directory/scope projection, one fresh entire pass after; independently authenticated immutable equality digests, no retained fd/Plan/tree accumulation and no admitted Original before consuming finish.",
+  "limits": "Same synthetic debug-library held-index fixture; previous original secondStop failure remains until a separate new native round."
+}

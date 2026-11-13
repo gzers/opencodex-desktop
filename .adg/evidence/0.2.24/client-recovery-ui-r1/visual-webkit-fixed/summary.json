@@ -1,0 +1,196 @@
+{
+  "accepted": false,
+  "scope": "mock browser UI/prototype only; no native finalization or business operations",
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "eligible-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 165.296875,
+          "bottom": 594.703125,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "matchedOutcomeAndScopedStatusUnblocks": true,
+        "keyboardCancelNoMutationAndFocusContained": true
+      }
+    },
+    {
+      "name": "eligible-900-dark",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 85.296875,
+          "bottom": 514.703125,
+          "left": 170,
+          "right": 730,
+          "height": 600,
+          "width": 900,
+          "overflow": 0
+        },
+        "matchedOutcomeAndScopedStatusUnblocks": true,
+        "keyboardCancelNoMutationAndFocusContained": true
+      }
+    },
+    {
+      "name": "pending-1180-light",
+      "pass": true,
+      "detail": {
+        "noExecutablePartialRecovery": true,
+        "geometry": {
+          "top": 242.75,
+          "bottom": 517.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        }
+      }
+    },
+    {
+      "name": "unknown-1180-light",
+      "pass": true,
+      "detail": {
+        "noExecutablePartialRecovery": true,
+        "geometry": {
+          "top": 254,
+          "bottom": 506,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        }
+      }
+    },
+    {
+      "name": "active-1180-light",
+      "pass": true,
+      "detail": {
+        "noExecutablePartialRecovery": true,
+        "geometry": {
+          "top": 259,
+          "bottom": 501,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        }
+      }
+    },
+    {
+      "name": "none-1180-light",
+      "pass": true,
+      "detail": {
+        "noExecutablePartialRecovery": true,
+        "geometry": {
+          "top": 270.25,
+          "bottom": 489.75,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        }
+      }
+    },
+    {
+      "name": "unsupported-1180-light",
+      "pass": true,
+      "detail": {
+        "noExecutablePartialRecovery": true,
+        "geometry": {
+          "top": 270.25,
+          "bottom": 489.75,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        }
+      }
+    },
+    {
+      "name": "error-1180-light",
+      "pass": true,
+      "detail": {
+        "noExecutablePartialRecovery": true,
+        "geometry": {
+          "top": 270.25,
+          "bottom": 489.75,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        }
+      }
+    },
+    {
+      "name": "slow-1180-light",
+      "pass": true,
+      "detail": {
+        "closedReopenedOneConfirmation": true
+      }
+    },
+    {
+      "name": "refresh-failed-1180-light",
+      "pass": true,
+      "detail": {
+        "statusOnlyRetry": true
+      }
+    },
+    {
+      "name": "prototype-eligible",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-pending",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-unknown",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-slow",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-refresh-failed",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    }
+  ],
+  "result": "passed",
+  "cleanup": {
+    "browserClosed": true,
+    "ownedViteProcessExited": true
+  }
+}

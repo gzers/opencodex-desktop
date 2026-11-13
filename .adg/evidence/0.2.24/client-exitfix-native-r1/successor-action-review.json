@@ -1,0 +1,18 @@
+{
+  "accepted": false,
+  "reviewer": "Pasteur",
+  "sourceCommit": "382cf593fd24e1c957690bfaec7e4f0545ad8e1b",
+  "readOnlyNoExecutionOrEdit": true,
+  "nextImplementation": "Private ClosedRootStartEligibility returned from close_root_absence same-call postcommit full observation. Compute candidate from current RootAbsent history and indexed namespace, continue every existing full history/currentroot/archive/readback/storage/Head boundary and original proof deadline; construct typed value only after complete final verification. Do not call fresh inspect after close outside budget.",
+  "actionPropagation": "Private result channel alongside StoppedObservation; only normal root Stop, not Restart. Preserve successful Stopped result and no failure when verified capacity false; canStart false and recovery required as status. Missing requested proof, unknown or deadline remain failed/unknown with actual stopped observation; never fallback generic true.",
+  "changedFiles": [
+    "macos_client_root_generation.rs",
+    "macos_client_root_binding.rs",
+    "macos_client_session_index.rs",
+    "commands/client_session_lifecycle.rs",
+    "commands/mod.rs",
+    "types/process_action.rs"
+  ],
+  "tests": "Capacity yes/no, unknown and expiry, mutations after candidate still final rejected, Stop/status consistency, no extra full historical audit, preserve ordinary/restart branch and independent nextStart recheck.",
+  "scope": "Suggestion only; source remains frozen for original native lifecycle verification; all main IMP34 scope remains."
+}

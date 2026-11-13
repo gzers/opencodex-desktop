@@ -1,0 +1,18 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 40.40s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 10 tests
+test infrastructure::macos_client_originals::tree::tests::actual_other_process_replaces_an_open_parent_with_an_outside_symlink_and_capture_refuses ... ok
+test infrastructure::macos_client_originals::tree::tests::complete_inventory_keeps_literal_paths_and_empty_directories_and_hashes_without_serialized_contents ... ok
+test infrastructure::macos_client_originals::tree::tests::complete_tree_and_three_artifact_snapshots_must_describe_the_same_bytes_and_identities ... ok
+test infrastructure::macos_client_originals::tree::tests::empty_official_claim_initial_transaction_is_observed_without_reading_its_live_journal ... ok
+test infrastructure::macos_client_originals::tree::tests::inspect_retained_native_tree_without_rebasing_originals ... ignored, explicit retained own native fixture only; no original/session writes or service actions
+test infrastructure::macos_client_originals::tree::tests::inventory_depth_file_size_and_decoded_structure_are_bounded ... ok
+test infrastructure::macos_client_originals::tree::tests::inventory_does_not_release_an_active_same_process_sqlite_claim_lock ... ok
+test infrastructure::macos_client_originals::tree::tests::late_file_modification_and_unreadable_special_or_linked_objects_never_become_absent ... ok
+test infrastructure::macos_client_originals::tree::tests::recovery_remainder_exempts_only_separately_reviewed_exact_plan_objects ... ok
+test infrastructure::macos_client_originals::tree::tests::unreadable_tree_file_and_coordination_sidecar_are_preserved_and_refused ... ok
+
+test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 2375 filtered out; finished in 0.17s
+

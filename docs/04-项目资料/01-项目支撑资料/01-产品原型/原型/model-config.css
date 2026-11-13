@@ -87,16 +87,16 @@
 .mp-label{display:inline-flex;gap:6px;align-items:center;color:var(--muted);font-size:var(--text-label);white-space:nowrap}
 .mp-page input[type=checkbox],.mp-dialog input[type=checkbox]{accent-color:var(--accent);width:14px;height:14px;margin:0;flex:none;cursor:pointer}
 .mp-table{min-width:0}
-.mp-table-head,.mp-model-row{display:grid;grid-template-columns:36px minmax(0,1fr) 62px 182px;align-items:center;gap:var(--space-3);padding:var(--space-3) 0}
+.mp-table-head,.mp-model-row{display:grid;grid-template-columns:36px minmax(140px,1fr) minmax(100px,140px) 62px 182px;align-items:center;gap:var(--space-3);padding:var(--space-3) 0}
 .mp-table-head{color:var(--muted);font-size:var(--text-caption);border-bottom:1px solid var(--border)}
 .mp-model-row{font-size:var(--text-label)}
 .mp-model-item{border-bottom:1px solid var(--border-soft);min-width:0}
 .mp-model-row>.mp-row{gap:var(--space-1);flex-wrap:nowrap}
-.mp-model-identity{display:grid;grid-template-columns:minmax(0,1fr) minmax(90px,140px);align-content:start;align-items:center;gap:var(--space-1) var(--space-2);min-width:0}
+.mp-model-identity{display:grid;grid-template-columns:minmax(0,1fr);align-content:start;align-items:center;gap:var(--space-1) var(--space-2);min-width:0}
 .mp-model-identity>strong{font-weight:550;min-width:0;white-space:normal;overflow-wrap:anywhere;line-height:1.4}
 .mp-model-identity>.mp-model-meta,.mp-model-identity>.mp-alert{grid-column:1/-1;min-width:0}
 .mp-model-identity>.mp-alert:empty{display:none}
-.mp-model-alias{min-width:0;width:100%;box-sizing:border-box;padding:6px 8px;font-size:var(--text-caption)}
+.mp-model-alias-cell{align-self:center;min-width:0;display:flex;align-items:center}.mp-model-alias{min-width:0;width:100%;box-sizing:border-box;padding:6px 8px;font-size:var(--text-caption)}
 .mp-model-alias[aria-invalid="true"]{border-color:var(--red)}
 .mp-model-enabled{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:var(--space-1)}
 .mp-model-enabled>.toggle{width:38px;height:22px;flex:none}
@@ -131,7 +131,7 @@
 .mp-model-meta-line{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;min-width:0}
 .mp-model-meta-line>span{min-width:0;overflow-wrap:anywhere}
 .mp-model-row>div{align-self:center;min-width:0}
-/* 型号 + 别名、勾选 / 拖拽、启停和操作按首行同轴；两行摘要留在下方，拉高行时不把控件推到摘要中线。 */
+/* 型号和摘要为第一列；别名独立成列，按该数据行垂直居中。 */
 .mp-model-row{align-items:start}
 .mp-model-row>.mp-row{align-self:start;align-items:center;min-height:30px}
 .mp-model-enabled{align-self:start}
@@ -302,14 +302,14 @@
 @container(max-width:680px){
  .mp-channel-state{font-size:var(--text-caption)}
  .mp-provider .btn{padding:5px 7px;font-size:var(--text-caption)}
- .mp-table-head,.mp-model-row{grid-template-columns:30px minmax(0,1fr) 52px 172px;gap:var(--space-2)}
+ .mp-table-head,.mp-model-row{grid-template-columns:30px minmax(120px,1fr) 110px 52px 154px;gap:var(--space-2)}
  .mp-model-identity{grid-template-columns:minmax(0,1fr)}
  .mp-model-alias{max-width:220px}
  .mp-model-meta{font-size:var(--text-caption)}
  .mp-channel-head{flex-wrap:wrap}
 }
 @container(max-width:540px){
- .mp-table-head,.mp-model-row{grid-template-columns:30px minmax(0,1fr) 52px}
+ .mp-table-head,.mp-model-row{grid-template-columns:24px minmax(110px,1fr) minmax(90px,110px) 48px}
  .mp-table-head>span:last-child{display:none}
  .mp-model-actions{grid-column:2/-1;justify-content:flex-start;flex-wrap:wrap}
  .mp-model-actions>.mp-mini-pair{display:flex}

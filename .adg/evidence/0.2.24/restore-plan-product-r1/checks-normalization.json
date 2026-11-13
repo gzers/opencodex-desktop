@@ -1,0 +1,36 @@
+[
+  {
+    "name": "compile-normalization",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--lib",
+      "macos_client_originals",
+      "--no-run"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "clippy-normalization",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "fmt-normalization",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "exitCode": 0
+  }
+]

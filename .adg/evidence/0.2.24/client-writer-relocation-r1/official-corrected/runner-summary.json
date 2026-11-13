@@ -1,0 +1,22 @@
+{
+  "accepted": false,
+  "temporaryRoot": "/private/tmp/ocxd024-native-coordination-kvyzk3em",
+  "exactNewCoordinatorFiles": [
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/1bd19764c1aafc2c60015119bd38376ba2763988dc1fd152cfd5181dd1ba3589.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/1bd19764c1aafc2c60015119bd38376ba2763988dc1fd152cfd5181dd1ba3589.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/1bd19764c1aafc2c60015119bd38376ba2763988dc1fd152cfd5181dd1ba3589.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/1bd19764c1aafc2c60015119bd38376ba2763988dc1fd152cfd5181dd1ba3589.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/1bd19764c1aafc2c60015119bd38376ba2763988dc1fd152cfd5181dd1ba3589.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/1bd19764c1aafc2c60015119bd38376ba2763988dc1fd152cfd5181dd1ba3589.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/1bd19764c1aafc2c60015119bd38376ba2763988dc1fd152cfd5181dd1ba3589.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/1bd19764c1aafc2c60015119bd38376ba2763988dc1fd152cfd5181dd1ba3589.sqlite-shm"
+  ],
+  "preexistingGlobalL": "/private/tmp/opencodex-runtime-v1-501/client-desktop-lifecycle.sqlite",
+  "noServiceOrBusinessRequests": true,
+  "binarySha256": "d3743e9ffa3d0a37a9a3cc74f9bf26281e66fce22c07bd4ac51fd5bf2d8f19c1",
+  "hypothesis": "Unmodified official299 config writer holder prepares exact destination before movement, checks same root and lock inode/bytes/token, normally releases after reanchor, and on parent EOF or exit91 cleans only original inode at registered anchors. Same-token replacement and new user roots are preserved. No service or production movement permission.",
+  "pid": 42404,
+  "exitCode": 0,
+  "elapsedSeconds": 90.665,
+  "ownedProcessesRemaining": []
+}

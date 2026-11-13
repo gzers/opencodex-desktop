@@ -1,0 +1,36 @@
+{
+  "accepted": false,
+  "scope": "mock browser UI/prototype only; no native finalization or business operations",
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "rolled-back-1180-light",
+      "pass": true,
+      "detail": {
+        "noExecutablePartialRecovery": true,
+        "geometry": {
+          "top": 242.75,
+          "bottom": 517.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        }
+      }
+    },
+    {
+      "name": "prototype-rolled-back",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    }
+  ],
+  "result": "passed",
+  "cleanup": {
+    "browserClosed": true,
+    "ownedViteProcessExited": true
+  }
+}

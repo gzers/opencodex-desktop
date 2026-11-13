@@ -1,0 +1,57 @@
+{
+  "codeCommit": "063af3a96a4d054bebab1fc3af7d7b1bc8062a12",
+  "ownerCommit": "aff0d9952",
+  "rust": {
+    "commandRecovery": 4,
+    "activation": 6,
+    "versionedInstall": 4,
+    "selection": 7,
+    "owner": 7,
+    "consumers": 2,
+    "totalDistinctPassed": 30,
+    "ignoredExplicitRealPackageAndNativeServiceCases": 2,
+    "binarySha256": "7fa5271be5739e7bc9553a9ab0b6bebbf6769f445bdf64a67cfa5afe00d040cc"
+  },
+  "frontend": {
+    "passed": 90,
+    "files": 6,
+    "typecheck": "passed"
+  },
+  "format": "passed",
+  "strictClippy": "passed",
+  "visual": {
+    "engine": "chromium",
+    "viewports": [
+      "1024x740",
+      "580x480"
+    ],
+    "overflow": false,
+    "pageErrors": 0,
+    "nativeIpcInvoked": false
+  },
+  "verified": [
+    "settings installation entry observes the real pending version transaction without creating a program lock or resuming anything",
+    "confirmation binds I/D/H, exact pending journal and all three current target values, including valid intermediate progress by another writer",
+    "recover accepts only operation ID, digest and decision; IPC paths rejected",
+    "storage/install reservations, update-state refusal, real stopped-provider entry and full current configuration backup precede recovery",
+    "wrong HOME, new target value, unknown service, backup failure and service/config changes preserve pending/original data",
+    "continue and rollback receipts checked against original attempt, decision and target version",
+    "dismiss/remount during apply observes one pending promise; late preview and mismatched result do not grant a confirmation/success",
+    "versioned service owner reads admitted current program paths instead of flat locations; old flat fake paths and changed selection rejected"
+  ],
+  "retainedFailures": [
+    "Initial OS identity/listener check was denied by network-disabled fixture sandbox. Final run allowed only localhost bind/inbound for that existing test, no outbound or real service.",
+    "Initial strict Clippy found four needless references in the read-only Inspector refactor; corrected and reran.",
+    "First visual fixture imported preoptimized Pinia directly and created a second active-store instance; browser reported no active Pinia. Replaced fixture imports with the normal Vite module resolver; product source unchanged; temporary fixture removed."
+  ],
+  "boundaries": [
+    "this is interrupted version-selection recovery, not arbitrary repair of a damaged installed image",
+    "UI uses in-memory IPC fixture in actual shared components; no native app recovery or service startup executed",
+    "owner change covers common path observation, not Windows W0 production lifetime integration",
+    "fixed candidate/UI parity, native CLI/uninstall, same-version repair, version/network UI and P24-NAME still pending"
+  ],
+  "dailyConfigTouched": false,
+  "official299Modified": false,
+  "businessSyncOrModelRequests": false,
+  "fixturesCleaned": true
+}

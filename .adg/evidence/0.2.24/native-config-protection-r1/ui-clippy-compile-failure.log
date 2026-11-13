@@ -1,0 +1,19 @@
+    Checking opencodex-desktop v0.2.23 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0597]: `error.code` does not live long enough
+    --> src/modules/runtime/install.rs:1367:20
+     |
+1358 |     error: crate::modules::model_config::schema_v2::MatchErrorV2,
+     |     ----- binding `error` declared here
+...
+1367 |     recovery_error(&error.code, detail)
+     |     ---------------^^^^^^^^^^^---------
+     |     |              |
+     |     |              borrowed value does not live long enough
+     |     argument requires that `error.code` is borrowed for `'static`
+1368 | }
+     | - `error.code` dropped here while still borrowed
+
+For more information about this error, try `rustc --explain E0597`.
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

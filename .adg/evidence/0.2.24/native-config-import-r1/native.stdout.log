@@ -1,0 +1,17 @@
+
+running 5 tests
+test modules::model_config::config_file::v2::native_import::tests::backup_failure_and_unfinished_transaction_cannot_overwrite_config ... FAILED
+test modules::model_config::config_file::v2::native_import::tests::complete_replace_preserves_port_and_mode_and_exact_original_backup ... FAILED
+test modules::model_config::config_file::v2::native_import::tests::invalid_selection_or_unproved_stopped_service_leaves_config_and_backups_alone ... FAILED
+test modules::model_config::config_file::v2::native_import::tests::no_change_or_cancel_never_creates_a_backup ... ok
+test modules::model_config::config_file::v2::native_import::tests::reject_conflicting_source_or_target_without_backup_or_overwrite ... ok
+
+failures:
+
+failures:
+    modules::model_config::config_file::v2::native_import::tests::backup_failure_and_unfinished_transaction_cannot_overwrite_config
+    modules::model_config::config_file::v2::native_import::tests::complete_replace_preserves_port_and_mode_and_exact_original_backup
+    modules::model_config::config_file::v2::native_import::tests::invalid_selection_or_unproved_stopped_service_leaves_config_and_backups_alone
+
+test result: FAILED. 2 passed; 3 failed; 0 ignored; 0 measured; 2063 filtered out; finished in 0.17s
+

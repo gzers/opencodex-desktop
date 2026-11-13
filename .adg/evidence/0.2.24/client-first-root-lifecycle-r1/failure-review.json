@@ -1,0 +1,45 @@
+{
+  "accepted": false,
+  "nativeFailures": [
+    {
+      "round": "native",
+      "stage": "restore-three-artifacts",
+      "stopMs": 10278,
+      "result": "normal service/launcher0+four captured listeners absent; complete recovery pending"
+    },
+    {
+      "round": "diagnostic",
+      "stage": "post-apply-stopped",
+      "stopMs": 10273,
+      "result": "official release completed, postcheck exceeded original10s"
+    },
+    {
+      "round": "coalesced",
+      "stage": "root-retire",
+      "stopMs": 11523,
+      "result": "exact root plan registered8, action timed out before movement"
+    },
+    {
+      "round": "descriptor",
+      "stage": "root-retire",
+      "stopMs": 10338,
+      "managerDurationMs": 10080,
+      "result": "root plan registered8, root still live and no terminal completion"
+    }
+  ],
+  "testFailures": [
+    {
+      "log": "descriptor-recheck-tests.log",
+      "cause": "mode0777 versus expected complete07777 special bits",
+      "correction": "compare full07777"
+    },
+    {
+      "log": "strict-clippy-final.log",
+      "cause": "nested if in xattr negative-control test",
+      "correction": "equivalent collapsed-if, exact affected test rerun"
+    }
+  ],
+  "allPriorFailuresPreserved": true,
+  "noBudgetOrAssertionRelaxation": true,
+  "nextHypothesisRequired": "Root Stop admission/retirement check still consumes remaining original10s; measure each currently repeated authority/index/frame/native subtree in one directed failure path before changing it. Do not re-run passed Start/unchanged install checks."
+}

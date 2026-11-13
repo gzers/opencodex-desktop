@@ -1,0 +1,4 @@
+
+thread 'commands::client_recovery::tests::continue_owned_interrupted_plan_with_fresh_native_authority' (156275045) panicked at src/commands/client_recovery_tests.rs:84:26:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "client_session_unconfirmed", detail: "启动原件与当前服务的绑定未确认；原件和现场保留，未恢复客户端文件" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

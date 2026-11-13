@@ -1,0 +1,21 @@
+{
+  "accepted": false,
+  "reviewAgent": "01a1d150-ede6-7880-967c-305ddcae74f9",
+  "staticOnly": true,
+  "initialRequiredBoundaries": [
+    "job immediately checks full below-root path before actual file open",
+    "reserve each actual opened length before any read; no aggregate failure after all IO",
+    "always join all started workers on spawn/error/panic; no partial success",
+    "name uniqueness includes files and directories",
+    "original directories including root/empty capture earliest metadata and final inspect/type/identity/mtime"
+  ],
+  "implemented": true,
+  "EOFCorrection": "Restore original extra byte probe; deterministic grow-before-read and planned restore-after-read must fail on extra byte before restore callback. Valid bytes\u22642GiB, corrupt in-flight allowance at most4 probe bytes.",
+  "knownLimits": [
+    "path check/open not atomic; prior TOCTOU not eliminated",
+    "Windows creation+attributes not fileID; only additional check",
+    "ordinary in-place same-size/time-restored mutation is prior non-atomic read boundary, not solved by concurrency"
+  ],
+  "allAgentsClosed": true,
+  "reviewDoesNotCertifyNativeBudget": true
+}

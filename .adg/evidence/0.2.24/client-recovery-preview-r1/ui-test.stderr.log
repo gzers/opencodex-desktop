@@ -1,0 +1,15 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/client-recovery-api.test.ts > does not turn an IPC failure into absent recovery or dispatch a retry/mutation
+Error: observation unavailable
+ ❯ tests/client-recovery-api.test.ts:17:17
+     15| })
+     16| it('does not turn an IPC failure into absent recovery or dispatch a re…
+     17|   const error = new Error('observation unavailable')
+       |                 ^
+     18|   invoke.mockRejectedValue(error)
+     19|   await expect(clientRecoveryApi.preview()).rejects.toBe(error)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

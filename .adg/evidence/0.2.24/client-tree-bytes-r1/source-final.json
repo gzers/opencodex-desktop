@@ -1,0 +1,48 @@
+{
+  "baseCommit": "70d2a2778dc937dd41402b03c8a0c266fb060ff8",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+      "sha256": "bb1d33443626bdf36722300cf92af6b67f2e19aefd145cfd666c899db01a3067"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals_tests.rs",
+      "sha256": "0fcb9cdb5470c6ca472d967f2a37c68fa01e89bcd25a41c942069fd4305018da"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_tree.rs",
+      "sha256": "6e6fc84121543eed78d58b807e859a191e47a86ca0f53da29cb2c6805b7838b7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_tree_archive.rs",
+      "sha256": "dd4ff71a9d63f6865490471a5fc8b093c67afbb8c8bcca99e0f32e97f14ea873"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_tree_archive_tests.rs",
+      "sha256": "965dffd81bcb37aa3b3f63a85905f72732b595955074e95e69667b94fa15da03"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_tree_tests.rs",
+      "sha256": "1d88c58189fea63ad7f0c426be9635c4e150d167d67ef31215e7c9e04e664596"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_client_coordination.rs",
+      "sha256": "9ee02a34e8977d3f008065bc294613519e74a675e23e8c53ca5f575121f88c20"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_client_coordination.rs",
+      "sha256": "8c247e5fc8fe393979f1d074fb2a0d26205c01e1aebf74dd9300cc51f3c350ab"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_client_coordination_tests.rs",
+      "sha256": "0c4c6cd57ece11965642410e25eba60f84099df62424cde94467d24e2778f12a"
+    }
+  ],
+  "native2SourceMatchesFinal": false,
+  "physicalHelperScriptUnchangedSha256": "40e9c2bdcbf0bf179f9d2905c4a01a8e77efd4fb617087e82392b4a0071cf4e3",
+  "stagedScopes": "helper timer/control changes separate from tree byte archive; first round predates metadata clock and retained-blob resync, each source/binary independently recorded",
+  "committedCode": "39fe025d5d9f0e506e7da03bbec46d9aa6527250",
+  "handshakeCommit": "da2fa5939",
+  "native2MatchesFinalExceptDocumentation": true,
+  "documentationOnlyDelta": "Lease doc comment clarifies that admission child liveness is not lock authority; no algorithm/tests/input/binary changed after final native run"
+}

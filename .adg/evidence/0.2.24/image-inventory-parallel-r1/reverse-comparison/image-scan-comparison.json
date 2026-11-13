@@ -1,0 +1,59 @@
+{
+  "accepted": false,
+  "entries": 15646,
+  "fileCount": 13393,
+  "parallelFirst": true,
+  "parallelMetrics": {
+    "stages": {
+      "directory-path-admission": [
+        2254,
+        72284031
+      ],
+      "entry-inspect-name": [
+        15647,
+        62715724
+      ],
+      "file-admission-open": [
+        13393,
+        397898416
+      ],
+      "file-read-hash": [
+        13393,
+        271532835
+      ],
+      "file-total": [
+        13393,
+        676697883
+      ]
+    }
+  },
+  "parallelUs": 655807,
+  "rowsExactlyEqual": true,
+  "scope": "same owned exact official image, old sequential reference versus bounded4 current full inventory; no Stop acceptance",
+  "serialMetrics": {
+    "stages": {
+      "directory-path-admission": [
+        2254,
+        71204786
+      ],
+      "entry-inspect-name": [
+        15647,
+        62636102
+      ],
+      "file-admission-open": [
+        13393,
+        195488792
+      ],
+      "file-read-hash": [
+        13393,
+        257342776
+      ],
+      "file-total": [
+        13393,
+        459283762
+      ]
+    }
+  },
+  "serialUs": 694484,
+  "treeSha256": "a29dedc203311ca4d6d4005db94b4a10d4fb84409283669e25272f080756b790"
+}

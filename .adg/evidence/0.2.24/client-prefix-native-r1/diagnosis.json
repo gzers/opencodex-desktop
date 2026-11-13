@@ -1,0 +1,92 @@
+{
+  "accepted": false,
+  "actualNewNativeRounds": 1,
+  "sourceCommit": "0f0e85fb37b004c9b895bc754dd54ac993bbaef7",
+  "result": "failed-second-normalStop-root-retire-deadline",
+  "observedProgress": {
+    "accepted": false,
+    "sourceCommit": "0f0e85fb37b004c9b895bc754dd54ac993bbaef7",
+    "actualNativeRounds": 1,
+    "firstCycleMs": {
+      "startElapsedMs": 8305,
+      "statusElapsedMs": 236,
+      "stopElapsedMs": 8285
+    },
+    "secondCycleMs": {
+      "secondStartElapsedMs": 13465,
+      "secondLiveStatusElapsedMs": 1220,
+      "secondStopElapsedMs": 12143
+    },
+    "entryLoadAndPreStop": [
+      {
+        "stage": "load-ready",
+        "elapsed_us": "89341",
+        "remaining_us": "9792321",
+        "passed": "true"
+      },
+      {
+        "stage": "pre-stop",
+        "elapsed_us": "1046903",
+        "remaining_us": "8745344",
+        "passed": "true"
+      },
+      {
+        "stage": "load-ready",
+        "elapsed_us": "515775",
+        "remaining_us": "9370791",
+        "passed": "true"
+      },
+      {
+        "stage": "pre-stop",
+        "elapsed_us": "1861995",
+        "remaining_us": "7508744",
+        "passed": "true"
+      }
+    ],
+    "artifactApply": {
+      "stage": "artifacts.apply-retaining",
+      "elapsed_us": "1081034",
+      "remaining_before_us": "1600561",
+      "remaining_after_us": "519527",
+      "expired_after": "false",
+      "code": "ok"
+    },
+    "artifactEndBeforePlan": {
+      "stage": "artifacts.final-time",
+      "elapsed_us": "0",
+      "remaining_before_us": "453634",
+      "remaining_after_us": "453634",
+      "expired_after": "false",
+      "code": "ok"
+    },
+    "rootRetireEntryRefusal": {
+      "stage": "admission.entry-time",
+      "elapsed_us": "0",
+      "remaining_before_us": "0",
+      "remaining_after_us": "0",
+      "expired_after": "true",
+      "code": "timeout"
+    },
+    "registeredState": "root_retirement_prepared",
+    "revision": 17,
+    "productInternalStopMs": 11443,
+    "originalRootMovementNotStarted": true,
+    "scope": "This new round completed artifact restore within original budget but root-plan/index preparation consumed remaining budget; failed result remains. No claim prior untraced phases had this cause."
+  },
+  "previousFailuresUnchanged": [
+    "client-root-two-cycles-r1",
+    "client-history-projected-native-r1",
+    "client-ready-native-r1"
+  ],
+  "verifiedFacts": [
+    "Both original launcher/service generations normalexit0, each4listeners absent",
+    "Oldbinding/first9events/archive unchanged acrosssecondStartandStop",
+    "77rawProfilefiles authenticate twoOriginal/scope/provenance/ReadyPreStopStopped chains plus secondrootretirePlanSHA/source16/schema2",
+    "SecondHead17rootretirementprepared, noMove/Retirereadback/completion invented",
+    "Exact3newcoordinatorfiles rawarchived/fsyncreceipts/exclusiveidentitycheckedremoved, originalLidentity/allProtection/bytes unchanged",
+    "AllPIDbirthgenerations/ownedexecutableinventory terminated, no observationErrors or coordinatorReplacement"
+  ],
+  "hypothesisOutcome": "Childpin/currentprefix reduced repeated Start/status and allowed artifact restore to complete inside deadline. Did not free enough budget for all rootretirement plan/index/registration/move/close; whole normalStop failed. No unchanged rerun.",
+  "nextFalsifiableHypothesis": "record_root_retirement first calls registered_root_originals for source/plan validation, then write performs complete source scan before SQL, complete candidate after SQL, complete readback after commit; registration.require then repeats another full head. Several current frame-prefix reads in these sealed same-action segments merely fetch alreadyvalidatedfacts. Measure exact call-local references at original current-source/SQL/commit boundaries and design a closed Plan-registration transaction that preserves all before/after current/history/path/native/source checks but returns the alreadyverified registration, without storing a source permit across independent actions. Also quantify candidate/postcommit versus highlevelredundantprecheck. No oldhistoryskip/crosscallcache or timeoutreset.",
+  "limits": "No fixedapp or installer or wholeversionacceptance, no official2.99patch/dailyconfig/Shell/installedapp/businessrequest; only one frozenrelease round. Rootinterruption/actioncapacity/otherclient/processgraph/NAME/proxy/Windows/version-candidate work remains."
+}

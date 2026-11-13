@@ -1,0 +1,34 @@
+{
+  "accepted": false,
+  "sourceCommit": "264934c0936a1fab39e00d36c228b4813573b24b",
+  "actualNativeRounds": 1,
+  "firstCycleStartStatusStopMs": [
+    8129,
+    226,
+    7604
+  ],
+  "secondCycleStartStatusStopMs": [
+    12812,
+    1231,
+    11681
+  ],
+  "secondRegistrationTotalMs": 1053.745,
+  "secondExclusiveStageMs": {
+    "transaction_storage_begin": 0.93,
+    "transaction_source": 278.369,
+    "transaction_admission": 84.635,
+    "transaction_sql": 0.217,
+    "transaction_candidate": 338.963,
+    "transaction_commit": 0.315,
+    "transaction_postcommit": 345.65,
+    "registration_facts": 4.645
+  },
+  "secondRegistrationFrameCount": 48,
+  "syntheticLighterFixtureFrameCount": 30,
+  "retainedState": "RootRetirementPrepared17",
+  "rootMoved": false,
+  "rawProfileFilesVerified": 77,
+  "allOwnedTemporaryRootsRemoved": true,
+  "manifestFiles": 47,
+  "manifestBytes": 259458
+}

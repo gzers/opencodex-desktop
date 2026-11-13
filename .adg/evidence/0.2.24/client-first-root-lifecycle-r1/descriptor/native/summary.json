@@ -1,0 +1,98 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "grokConfigChangedDuringStart": false,
+  "independentOriginalsReferenced": true,
+  "indexedAfterStop": {
+    "completionSha256": null,
+    "references": {
+      "attempt": "236f0a1e-e308-49b3-ad7e-547a4f7f6076",
+      "liveSha256": "4be875b1ef8f7403151a390a31f220823bf39e209506a0a243492d607530068e",
+      "originalSha256": "f6199b3ed4c14618d57a62eadeb12c32d1cb94b5fa6e13fe97d8d79d3e103c78",
+      "phases": [
+        [
+          "ready",
+          "e513b22cc121b341ea3ba6a56e7261b98d1cca9ca8f7ac8be0d5e778c1f811ca"
+        ],
+        [
+          "pre_stop",
+          "f8ea2e45edb7cea65a99f0cd0df85d5e15aea3ad68f196f7ec6cd144160ffdd8"
+        ],
+        [
+          "stopped",
+          "3ca06b2126581451f8185c59d270ada02e8997a1082b9dd2e220196ec5c315e0"
+        ]
+      ],
+      "scopeSha256": "ff2beafe686cf32bcfec1835aaabe30aaf7ed84c4917c92f6ac945b6c588c20d"
+    },
+    "restorePlan": {
+      "id": "f883452f-d1d6-44b9-9d15-c7d434fe6eef",
+      "sha256": "9ebef58604171e87a84ea461ee58d4193dc6d15b59b59b13463435b12733fb3c"
+    },
+    "revision": 8,
+    "rootRetirement": {
+      "plan": {
+        "id": "9a2d01a7-4d4f-43d8-9b59-5739a822f297",
+        "sha256": "42babd47d1b295c8fd84db2a304f85c375de8eea21fa1118cb1c6ede87c7bab4"
+      },
+      "sourceRevision": 7
+    },
+    "state": "root_retirement_prepared",
+    "ticket": "236f0a1e-e308-49b3-ad7e-547a4f7f6076"
+  },
+  "indexedReady": true,
+  "initialClientState": "codex-absent",
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 54463,
+    "port": 59832
+  },
+  "recordAbsent": true,
+  "rootAbsentTerminal": false,
+  "scope": "diagnostic first-root Start/Stop only; next Start and interrupted root recovery remain unaccepted",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 7373,
+  "status": {
+    "pid": "54463",
+    "port": 59832,
+    "ready": true,
+    "status": "running"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 234,
+  "stop": {
+    "canRestart": false,
+    "canStart": false,
+    "canStop": false,
+    "clientRecoveryRequired": true,
+    "failure": {
+      "code": "client_original_restore_pending",
+      "message": "服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留"
+    },
+    "lifecycleState": "stopped",
+    "result": null
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 10338,
+  "stoppedRecoveryObservation": true
+}

@@ -1,0 +1,18 @@
+{
+  "accepted": false,
+  "failures": [
+    {
+      "log": "root-stop-tests.log",
+      "kind": "test compilation",
+      "cause": "test fixture had private visibility across sibling test module",
+      "correction": "limit fixture access to pub(super) in tests only"
+    },
+    {
+      "log": "strict-clippy.log",
+      "kind": "too-many-arguments",
+      "correction": "RootStopRequest groups current borrowed inputs; owner context supplies exact provider-bound context, no lint suppression"
+    }
+  ],
+  "earlierPassingLogsAreNotLaterSourceClaims": true,
+  "noAssertionDowngrade": true
+}

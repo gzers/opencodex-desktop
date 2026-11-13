@@ -1,0 +1,44 @@
+{
+  "groups": {
+    "tree-exact": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2322 filtered out; finished in 0.00s",
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2316 filtered out; finished in 0.11s"
+      ]
+    },
+    "originals-exact": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 2302 filtered out; finished in 1.28s"
+      ]
+    },
+    "restore-exact": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 2303 filtered out; finished in 17.26s"
+      ]
+    },
+    "session-exact": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 2313 filtered out; finished in 0.86s"
+      ]
+    },
+    "index-exact": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2322 filtered out; finished in 0.00s",
+        "test result: ok. 20 passed; 0 failed; 1 ignored; 0 measured; 2302 filtered out; finished in 1.04s"
+      ]
+    },
+    "native-lock-exact": {
+      "exitCode": 0,
+      "resultLines": [
+        "test result: ok. 10 passed; 0 failed; 1 ignored; 0 measured; 2312 filtered out; finished in 0.34s"
+      ]
+    }
+  },
+  "binarySha256": "1ec3c2d7cf47d08890623ab941b57114ef608c3b3120fb4532d3f4d1431fde57",
+  "repeatReason": "Add cross-binding between frame artifact bytes/identities and tree hashes and exact reserved coordination entry classification; check changed schema pipeline and its restore/session consumers, original failures retained."
+}

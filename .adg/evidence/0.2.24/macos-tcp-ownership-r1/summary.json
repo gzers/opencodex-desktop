@@ -1,0 +1,255 @@
+{
+  "accepted": false,
+  "frozenCandidate": false,
+  "completedScope": "native same-generation TCP IPv4/6listener ownership and all captured port absence in ordinaryStop; no process-family or mutation permit",
+  "relatedChecksPassed": 18,
+  "results": {
+    "groups": {
+      "listeners": {
+        "exitCode": 0,
+        "summary": [
+          "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2337 filtered out; finished in 0.08s"
+        ]
+      },
+      "binding": {
+        "exitCode": 0,
+        "summary": [
+          "test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2335 filtered out; finished in 0.03s"
+        ]
+      },
+      "exit": {
+        "exitCode": 0,
+        "summary": [
+          "test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 2330 filtered out; finished in 0.14s"
+        ]
+      }
+    },
+    "binarySha256": "edfd86fc60730edbc61eb6e39598ccf4a8bae0a5f65473096d7c70e4c48b2e7c"
+  },
+  "checks": {
+    "fmt-fixed": 0,
+    "clippy-fixed": 0,
+    "build-fixed": 0
+  },
+  "nativeRounds": {
+    "native": {
+      "accepted": false,
+      "businessRequests": false,
+      "clientChangedDuringStart": true,
+      "grokConfigChangedDuringStart": true,
+      "independentOriginalsReferenced": true,
+      "indexedReady": true,
+      "indexedRestorePrepared": true,
+      "indexedRevision": 6,
+      "indexedStopped": false,
+      "nativeClientRestored": {
+        "codex/config.toml": true,
+        "codex/models_cache.json": false,
+        "codex/opencodex-catalog-audit.jsonl": false,
+        "codex/opencodex-catalog.json": false,
+        "grok/agents/AGENTS.md": true,
+        "grok/config.toml": true,
+        "grok/config.toml.bak-opencodex": true
+      },
+      "officialVersion": "2.99.0",
+      "originalGrokConfigBackupAndAgentArchived": true,
+      "pidRecordAbsent": true,
+      "record": {
+        "pid": 85230,
+        "port": 54685
+      },
+      "recordAbsent": true,
+      "reopenedRecoveryGate": true,
+      "reopenedSnapshot": {
+        "can_restart": false,
+        "can_start": false,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "required",
+          "data_root": "/private/tmp/ocxd024-versioned-lifecycle-_479sra5/fixtures/profile/.codex-desktop/desktop",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-_479sra5/fixtures/profile/.codex-desktop/opencodex/home",
+          "protection": "none",
+          "reboot_safe": true,
+          "runtime_label": "bundled",
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": "native",
+          "version_drift": "2.99.0"
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "stopped"
+        },
+        "pid": null,
+        "port": null,
+        "source": "live"
+      },
+      "reopenedStatusElapsedMs": 785,
+      "restorePlanMatchesIndependentIndex": true,
+      "result": "failed",
+      "serviceStarted": true,
+      "start": {
+        "canRestart": true,
+        "canStart": false,
+        "canStop": true,
+        "clientRecoveryRequired": false,
+        "lifecycleState": "running",
+        "result": "started"
+      },
+      "startBudgetMs": 30000,
+      "startElapsedMs": 16210,
+      "status": {
+        "pid": "85230",
+        "port": 54685,
+        "ready": true,
+        "status": "running"
+      },
+      "statusBudgetMs": 5000,
+      "statusElapsedMs": 1137,
+      "stop": {
+        "canRestart": false,
+        "canStart": false,
+        "canStop": false,
+        "clientRecoveryRequired": true,
+        "failure": {
+          "code": "client_original_restore_pending",
+          "message": "\u670d\u52a1\u5df2\u6b63\u5e38\u505c\u6b62\uff0c\u5ba2\u6237\u7aef\u914d\u7f6e\u539f\u4ef6\u6062\u590d\u5c1a\u672a\u5b8c\u6210\uff1b\u539f\u4f1a\u8bdd\u548c\u73b0\u573a\u5df2\u4fdd\u7559"
+        },
+        "lifecycleState": "stopped",
+        "result": null
+      },
+      "stopBudgetMs": 10000,
+      "stopElapsedMs": 9861,
+      "stoppedRecoveryObservation": true
+    },
+    "native2": {
+      "accepted": false,
+      "businessRequests": false,
+      "clientChangedDuringStart": true,
+      "grokConfigChangedDuringStart": true,
+      "independentOriginalsReferenced": true,
+      "indexedReady": true,
+      "indexedRestorePrepared": true,
+      "indexedRevision": 6,
+      "indexedStopped": false,
+      "nativeClientRestored": {
+        "codex/config.toml": true,
+        "codex/models_cache.json": false,
+        "codex/opencodex-catalog-audit.jsonl": false,
+        "codex/opencodex-catalog.json": false,
+        "grok/agents/AGENTS.md": true,
+        "grok/config.toml": true,
+        "grok/config.toml.bak-opencodex": true
+      },
+      "officialVersion": "2.99.0",
+      "originalGrokConfigBackupAndAgentArchived": true,
+      "pidRecordAbsent": true,
+      "record": {
+        "pid": 85335,
+        "port": 54964
+      },
+      "recordAbsent": true,
+      "reopenedRecoveryGate": true,
+      "reopenedSnapshot": {
+        "can_restart": false,
+        "can_start": false,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "required",
+          "data_root": "/private/tmp/ocxd024-versioned-lifecycle-25al80h9/fixtures/profile/.codex-desktop/desktop",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-25al80h9/fixtures/profile/.codex-desktop/opencodex/home",
+          "protection": "none",
+          "reboot_safe": true,
+          "runtime_label": "bundled",
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": "native",
+          "version_drift": "2.99.0"
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "stopped"
+        },
+        "pid": null,
+        "port": null,
+        "source": "live"
+      },
+      "reopenedStatusElapsedMs": 794,
+      "restorePlanMatchesIndependentIndex": true,
+      "result": "failed",
+      "serviceStarted": true,
+      "start": {
+        "canRestart": true,
+        "canStart": false,
+        "canStop": true,
+        "clientRecoveryRequired": false,
+        "lifecycleState": "running",
+        "result": "started"
+      },
+      "startBudgetMs": 30000,
+      "startElapsedMs": 13958,
+      "status": {
+        "pid": "85335",
+        "port": 54964,
+        "ready": true,
+        "status": "running"
+      },
+      "statusBudgetMs": 5000,
+      "statusElapsedMs": 1138,
+      "stop": {
+        "canRestart": false,
+        "canStart": false,
+        "canStop": false,
+        "clientRecoveryRequired": true,
+        "failure": {
+          "code": "client_original_restore_pending",
+          "message": "\u670d\u52a1\u5df2\u6b63\u5e38\u505c\u6b62\uff0c\u5ba2\u6237\u7aef\u914d\u7f6e\u539f\u4ef6\u6062\u590d\u5c1a\u672a\u5b8c\u6210\uff1b\u539f\u4f1a\u8bdd\u548c\u73b0\u573a\u5df2\u4fdd\u7559"
+        },
+        "lifecycleState": "stopped",
+        "result": null
+      },
+      "stopBudgetMs": 10000,
+      "stopElapsedMs": 9996,
+      "stoppedRecoveryObservation": true
+    }
+  },
+  "validProductTrace": {
+    "compiledBinaryMatches18PassingChecks": true,
+    "capturedDistinctTcpPorts": 4,
+    "allCapturedPortsObservedAbsentAtStop": 4,
+    "normalExitCode": 0,
+    "scope": "product trace from code requiring each captured portclear; not separate after-the-fact port-list replay, family certificate or ongoing writer exclusion",
+    "oldRoundExcludedFromThisGate": true
+  },
+  "invalidInitialProductExecution": "inherited hardcoded binary089f predates cc dependency/current tests7a; preserved and not counted. Corrected launcher uses compiled build-record path and expected passing-tests SHA before new profile run.",
+  "firstCompileError": "4synthetic CompletedLifecycleStop initializers lacked new listener field; updated with real live capture or None negative. Positive gate still real normal exit/generation, synthetic outer tuple not a service certificate.",
+  "firstClippyError": "complex return type factored internal alias, no lint disabled",
+  "cleanup": {
+    "ownedProcessesRemaining": [],
+    "bothOriginalPrimaryPortsAbsent": true,
+    "tcpSnapshotFramingValid": true,
+    "exactDatabasesExclusivelyReacquiredReleased": [
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/1c3f460d1a3da56bf85722ccc27106d1543411b92fa566ea1829aea75bc20be5.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/1c3f460d1a3da56bf85722ccc27106d1543411b92fa566ea1829aea75bc20be5.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/history-write-locks/c6699fa0aec38dd284ce0d81fe5d667ac0c109cb8846d6d21e93cee9a0e864f8.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/native-write-locks/57fcb912370dc6f9553fce0bc7bf317497901b1a3720f1918dee76c3355e216a.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/57fcb912370dc6f9553fce0bc7bf317497901b1a3720f1918dee76c3355e216a.sqlite",
+      "/private/tmp/opencodex-runtime-v1-501/history-write-locks/95b7a0bb7e0b68282b6be6e8777b380eb234dc5819d892728ca140782466b399.sqlite"
+    ],
+    "allOwnedProgramProfilesGrokCodexBlobsIndicesStagesTestRootsRemoved": true,
+    "dailyConfigurationChanged": false,
+    "officialRuntimeModified": false,
+    "businessRequests": false
+  },
+  "performanceBoundary": "valid native Stop9996ms out of original10000 leaves almost no margin; component timing passes this run only, no extra budget granted. Full restoration original assertion remains exit101.",
+  "limitations": [
+    "TCP only, not UDP/Unix or descendants/transferred/late sockets",
+    "two stable FD observations not atomic whole-system snapshot or persistent writer exclusion",
+    "exact target SDK C bridge, no guessed offsets; only current Mac platform actual execution",
+    "MutationPermit constructor/apply unchanged/unopened; full family and client scope, Windows/NAME/System/release/fixed candidate remain open"
+  ]
+}

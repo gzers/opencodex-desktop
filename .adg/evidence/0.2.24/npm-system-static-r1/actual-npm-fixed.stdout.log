@@ -1,0 +1,13 @@
+
+running 1 test
+test modules::runtime::install::npm_proxy_tests::actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touching_user_config ... REAL_NPM_PROXY {"actualRegistryRequest":true,"bypass":false,"directPolicy":false,"installed":false,"nativeOsSettingsMutated":false,"savedConfigurationUnchanged":true,"systemSnapshotFixture":true}
+REAL_NPM_PROXY {"actualRegistryRequest":true,"bypass":true,"directPolicy":false,"installed":false,"nativeOsSettingsMutated":false,"savedConfigurationUnchanged":true,"systemSnapshotFixture":true}
+FAILED
+
+failures:
+
+failures:
+    modules::runtime::install::npm_proxy_tests::actual_npm_registry_metadata_uses_manual_proxy_and_saved_bypass_without_touching_user_config
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2309 filtered out; finished in 0.59s
+

@@ -1,0 +1,7 @@
+
+running 1 test
+test commands::client_recovery::tests::finalize_owned_completed_fixture_with_fresh_admission ... {"accepted":false,"elapsedMs":8898,"error":null,"outcome":{"attemptId":"7d578a40-e85c-462b-8066-20e241e3462e","revision":7,"status":"restored"},"reopened":{"attemptId":"7d578a40-e85c-462b-8066-20e241e3462e","canContinue":false,"canFinalize":false,"canRollback":false,"completionEvidence":"verified","confirmationDigest":null,"originalEvidence":"verified","phase":"restored","phaseCount":3,"planEvidence":"verified","revision":7,"status":"restored"},"scope":"single explicit finalize of retained owned pending index; no service actions"}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2382 filtered out; finished in 13.12s
+

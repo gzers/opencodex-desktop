@@ -1,0 +1,16 @@
+
+running 11 tests
+test modules::runtime::program_selection::tests::absent_program_root_is_not_created_or_adopted ... ok
+test modules::runtime::program_selection::tests::complete_admission_matches_selection_and_never_reuses_a_prior_content_check ... ok
+test modules::runtime::program_selection::tests::complete_admission_rejects_links_empty_directories_and_executable_changes ... ok
+test modules::runtime::program_selection::tests::complete_admission_still_binds_current_record_manifest_and_stable_entry ... ok
+test modules::runtime::program_selection::tests::corrupt_or_duplicate_selection_is_unknown_not_uninstalled ... ok
+test modules::runtime::program_selection::tests::every_critical_program_file_and_stable_launcher_are_bound ... ok
+test modules::runtime::program_selection::tests::complete_tree_seal_does_not_replace_any_named_executable_digest ... ok
+test modules::runtime::program_selection::tests::manifest_mismatch_and_other_platform_do_not_select_a_fallback ... ok
+test modules::runtime::program_selection::tests::links_cannot_redirect_the_selection_or_its_runtime_files ... ok
+test modules::runtime::program_selection::tests::missing_selection_never_adopts_existing_flat_runtime ... ok
+test modules::runtime::program_selection::tests::reads_one_complete_image_without_executing_any_program ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 2335 filtered out; finished in 0.10s
+

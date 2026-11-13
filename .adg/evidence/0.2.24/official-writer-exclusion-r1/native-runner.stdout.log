@@ -1,0 +1,22 @@
+{
+  "accepted": false,
+  "temporaryRoot": "/private/tmp/ocxd024-native-coordination-v29pod5s",
+  "exactNewCoordinatorFiles": [
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/de6ecadad1dce5290ca71a4ac0cbd6dd5983a92a52e89ed21d8dcea5af87fe06.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/de6ecadad1dce5290ca71a4ac0cbd6dd5983a92a52e89ed21d8dcea5af87fe06.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/de6ecadad1dce5290ca71a4ac0cbd6dd5983a92a52e89ed21d8dcea5af87fe06.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/de6ecadad1dce5290ca71a4ac0cbd6dd5983a92a52e89ed21d8dcea5af87fe06.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/de6ecadad1dce5290ca71a4ac0cbd6dd5983a92a52e89ed21d8dcea5af87fe06.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/de6ecadad1dce5290ca71a4ac0cbd6dd5983a92a52e89ed21d8dcea5af87fe06.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/de6ecadad1dce5290ca71a4ac0cbd6dd5983a92a52e89ed21d8dcea5af87fe06.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/de6ecadad1dce5290ca71a4ac0cbd6dd5983a92a52e89ed21d8dcea5af87fe06.sqlite-shm"
+  ],
+  "preexistingGlobalL": "/private/tmp/opencodex-runtime-v1-501/client-desktop-lifecycle.sqlite",
+  "noServiceOrBusinessRequests": true,
+  "binarySha256": "21446da0ca008be971d12630fbaf2878ab716104b7d682560d9a35c948f091f8",
+  "hypothesis": "Actual official K mutators and L-protected direct catalog callback must refuse while native owns all4 locks, then succeed after release. Preserve existing user-global L inode/content/mode, never delete it.",
+  "pid": 712,
+  "exitCode": 101,
+  "elapsedSeconds": 71.277,
+  "ownedProcessesRemaining": []
+}

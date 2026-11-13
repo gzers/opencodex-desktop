@@ -1,0 +1,13 @@
+
+running 8 tests
+test infrastructure::macos_client_originals::session_index::tests::a_real_second_process_is_excluded_for_entire_action_and_can_reopen_after_owner_exits ... ok
+test infrastructure::macos_client_originals::session_index::tests::abrupt_process_exit_keeps_captured_references_and_does_not_scan_for_new_ones ... ok
+test infrastructure::macos_client_originals::session_index::tests::directory_generation_or_profile_home_change_refuses_prior_index ... ok
+test infrastructure::macos_client_originals::session_index::tests::existing_action_symlink_and_unknown_index_are_not_adopted_or_repaired ... ok
+test infrastructure::macos_client_originals::session_index::tests::failed_capture_is_not_an_empty_or_safe_new_baseline ... ok
+test infrastructure::macos_client_originals::session_index::tests::index_and_event_document_tampering_cannot_supply_new_current_references ... ok
+test infrastructure::macos_client_originals::session_index::tests::references_are_durable_sequential_and_an_unfinished_session_cannot_be_overwritten ... ok
+test infrastructure::macos_client_originals::session_index::tests::stale_expected_revision_rebase_and_missing_phase_are_rejected_without_changes ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2272 filtered out; finished in 0.27s
+

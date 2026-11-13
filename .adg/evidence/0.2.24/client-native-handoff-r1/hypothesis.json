@@ -1,0 +1,5 @@
+{
+  "accepted": false,
+  "hypothesis": "An opt-in native lease can pre-pin the original claim inode before SQLite acquisition, close only its claim connection normally, acquire OFD without closing prepared pins, retain all N/L/K transactions throughout, and check the same original directory after authorized relocation. Incomplete handoff, contention, stale anchor, changed source/owner or expiry remains refusal; no VFS check is removed from live SQLite connections.",
+  "scope": "Native coordinator integration only; no service/Stop permission or official config-holder relocation claimed"
+}

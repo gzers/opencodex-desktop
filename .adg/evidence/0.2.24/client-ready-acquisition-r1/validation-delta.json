@@ -1,0 +1,10 @@
+{
+  "accepted": false,
+  "completedFullChecksSource": "source-before-final-diagnostics.json",
+  "finalChangesAfterThoseChecks": [
+    "Add diagnostic writer_refusal helper preserving exact old IO PermissionDenied kind/static messages; only cfg(test) emits underlying code, targeted mapping test added",
+    "Restrict new index_acquisition_committed test hook to origin-none reopen so original first-root three-hook contract is unchanged"
+  ],
+  "validationPlan": "Compile exact final seven files, test new writer mapping, rerun exact failed first-root transfer test and Ready postcommit mutation gate; earlier successful Session/index/commands/Ready-result checks are reusable because their product behavior and source is otherwise identical. Final Clippy/fmt required. Do not claim all suite logs used the new final binary.",
+  "failedOriginalEvidence": "ready-controls.log compile (References intentionally non-Debug); index-regression.log first-root hook allowlist; corrected without changing assertion or deadline."
+}

@@ -1,0 +1,27 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0063]: missing field `tcp_listeners` in initializer of `runtime_recovery_v2_owner::CompletedLifecycleStop`
+   --> src/commands/runtime_recovery_v2_owner_tests.rs:229:21
+    |
+229 |         let proof = CompletedLifecycleStop {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ missing `tcp_listeners`
+
+error[E0063]: missing field `tcp_listeners` in initializer of `runtime_recovery_v2_owner::CompletedLifecycleStop`
+   --> src/commands/runtime_recovery_v2_owner_tests.rs:283:21
+    |
+283 |         let proof = CompletedLifecycleStop {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ missing `tcp_listeners`
+
+error[E0063]: missing field `tcp_listeners` in initializer of `runtime_recovery_v2_owner::CompletedLifecycleStop`
+   --> src/commands/runtime_recovery_v2_owner_tests.rs:291:23
+    |
+291 |         let no_exit = CompletedLifecycleStop {
+    |                       ^^^^^^^^^^^^^^^^^^^^^^ missing `tcp_listeners`
+
+error[E0063]: missing field `tcp_listeners` in initializer of `runtime_recovery_v2_owner::CompletedLifecycleStop`
+   --> src/commands/runtime_recovery_v2_owner_tests.rs:306:21
+    |
+306 |         let proof = CompletedLifecycleStop {
+    |                     ^^^^^^^^^^^^^^^^^^^^^^ missing `tcp_listeners`
+
+For more information about this error, try `rustc --explain E0063`.
+error: could not compile `opencodex-desktop` (lib test) due to 4 previous errors

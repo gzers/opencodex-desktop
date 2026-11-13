@@ -1,0 +1,20 @@
+{
+  "accepted": false,
+  "officialRuntimeTgzSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "officialSourceRead": [
+    "package/src/codex/config-write-lock.ts",
+    "package/src/codex/prompt-lock.ts"
+  ],
+  "facts": [
+    "destination() canonicalizes config path to absolute before acquisition",
+    "stillHeld and release use current handle.path and token",
+    "current Desktop helper retains absolute logical path; no relocation protocol exists",
+    "current NativeLease validates original SQLite VFS pathname and pins"
+  ],
+  "notImplemented": [
+    "relocation-aware current native lease",
+    "official writer holder retarget protocol",
+    "production root movement permission"
+  ],
+  "noOfficialSourceChanged": true
+}

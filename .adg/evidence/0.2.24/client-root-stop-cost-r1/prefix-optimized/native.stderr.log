@@ -1,0 +1,30 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+CONFIG_GUARD_TRACE expected=released actual=released phase=release
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+ROOT_STOP_COST label=admission phase=entry segment_us=31554 total_us=31554
+ROOT_STOP_COST label=admission phase=native segment_us=1401 total_us=32956
+ROOT_STOP_COST label=admission phase=absence segment_us=8061 total_us=41017
+ROOT_STOP_COST label=admission phase=entry segment_us=31223 total_us=31223
+ROOT_STOP_COST label=admission phase=native segment_us=1402 total_us=32625
+ROOT_STOP_COST label=admission phase=absence segment_us=8019 total_us=40645
+ROOT_STOP_COST label=admission phase=entry segment_us=31352 total_us=31352
+ROOT_STOP_COST label=admission phase=native segment_us=1335 total_us=32687
+ROOT_STOP_COST label=admission phase=absence segment_us=8388 total_us=41076
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=121012 total_us=121012
+ROOT_STOP_COST label=root-authority phase=native segment_us=1583 total_us=122595
+ROOT_STOP_COST label=root-source phase=entry segment_us=3039 total_us=3039
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=60938 total_us=63978
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=2443 total_us=66421
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=741 total_us=67163
+ROOT_STOP_COST label=root-source phase=program-source segment_us=781 total_us=67944
+ROOT_STOP_COST label=root-authority phase=source-frames segment_us=68016 total_us=190612
+ROOT_STOP_COST label=root-authority phase=absence segment_us=10383 total_us=200995
+CONFIG_GUARD_TRACE expected=prepared actual=prepared phase=prepare
+ROOT_STOP_COST label=root-authority phase=entry segment_us=0 total_us=0
+ROOT_STOP_COST label=root-authority phase=registration segment_us=140360 total_us=140360
+ROOT_STOP_COST label=root-authority phase=native segment_us=90 total_us=140451
+
+thread 'commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client' (157684708) panicked at src/commands/lifecycle_versioned_tests.rs:666:9:
+first-root Stop must commit exact original absence; preserve report and app log on refusal
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

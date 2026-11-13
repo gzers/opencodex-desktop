@@ -1,0 +1,20 @@
+
+> opencodex-desktop-ui@0.2.24 test
+> vitest --run tests/process-action.test.ts tests/runtime-port-settings.test.ts tests/overview-status-announce.test.ts tests/overview-motion.test.ts
+
+
+ RUN  v5.0.0 /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/ui
+
+ ❯ tests/overview-motion.test.ts (28 tests | 1 failed) 203ms
+   ❯ overview integrates the motion area (2)
+     × 环境未就绪时：收起三卡与最近事件，展示准备卡 37ms
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 58 passed (59)
+   Start at  02:18:26
+   Duration  1.52s (transform 47%, environment 30%, tests 14%, import 8%)
+
+  Transform  transforming modules took 2.02s · 47% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

@@ -1,0 +1,40 @@
+{
+  "accepted": false,
+  "verified": [
+    {
+      "round": "native-stop",
+      "sourceAndIndependentByteReferencesExact": true,
+      "state": "root_absent",
+      "revision": 9,
+      "Stop10Passed": false,
+      "startMs": 8877,
+      "statusMs": 228,
+      "stopMs": 10754,
+      "fullVersionAccepted": false
+    },
+    {
+      "round": "native-stop-release",
+      "sourceAndIndependentByteReferencesExact": true,
+      "state": "root_absent",
+      "revision": 9,
+      "Stop10Passed": true,
+      "startMs": 5991,
+      "statusMs": 225,
+      "stopMs": 7836,
+      "fullVersionAccepted": false
+    },
+    {
+      "round": "native-stop-release-final",
+      "sourceAndIndependentByteReferencesExact": true,
+      "state": "root_absent",
+      "revision": 9,
+      "Stop10Passed": true,
+      "startMs": 5979,
+      "statusMs": 224,
+      "stopMs": 7913,
+      "fullVersionAccepted": false
+    }
+  ],
+  "nextStartAndInterruptedRecoveryNotAccepted": true,
+  "debugFailureNotOverwritten": true
+}

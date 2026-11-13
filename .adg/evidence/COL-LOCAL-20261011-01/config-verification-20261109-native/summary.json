@@ -1,0 +1,67 @@
+{
+  "atUtc": "2026-11-09T13:49:32.475304+00:00",
+  "finalEvidence": [
+    "ultrafast-final.json",
+    "context-final.json"
+  ],
+  "finalModelResponses": 4,
+  "allAttemptModelResponses": 6,
+  "allAttemptsReportedUsage": {
+    "input_tokens": 73486,
+    "output_tokens": 151,
+    "total_tokens": 73637
+  },
+  "finalReportedUsage": {
+    "input_tokens": 51452,
+    "output_tokens": 103,
+    "total_tokens": 51555
+  },
+  "nativePATAuthenticationVerified": true,
+  "nativeUltrafastSent": "ultrafast",
+  "upstreamUltrafastReported": "default",
+  "contextEndpoints": [
+    {
+      "path": "/backend-api/codex/alpha/notes/v2/thread_hint",
+      "http": 404,
+      "nativeAuthHeaderPresent": true,
+      "syntheticSessionId": "01a1c091-5e40-7373-95ba-85857742c818"
+    },
+    {
+      "path": "/backend-api/codex/alpha/history/v2/list_windows",
+      "http": 404,
+      "nativeAuthHeaderPresent": true,
+      "syntheticSessionId": "01a1c091-5e40-7373-95ba-85857742c818"
+    },
+    {
+      "path": "/backend-api/codex/alpha/notes/v2/list_files_by_prefix",
+      "http": 404,
+      "nativeAuthHeaderPresent": true,
+      "syntheticSessionId": "01a1c091-5e40-7373-95ba-85857742c818"
+    }
+  ],
+  "contextResult": "Native tools invoked; current new-domain backend returned 404 on three exact native paths. No note writes or private content reads.",
+  "initialFixtureLimitations": [
+    "Reserved built-in provider override rejected",
+    "PAT whoami and workspace discovery initially blocked by capture allowlist",
+    "Native backend origin requires HTTPS",
+    "Capture certificate initially used CA as leaf",
+    "Native authenticated requests use zstd, requiring bounded decompression"
+  ],
+  "invalidAttemptScope": "Pre-final iterations are fixture diagnostics, not backend capability verdicts; two pre-auth model completions excluded from native proof but included in total usage.",
+  "configSha256": "0a0ec45ae79a2960ed39fb45712481a7862f7b87b5dbfbf8e7ba922bbe27da3e",
+  "dailyConfigUnchanged": true,
+  "temporaryRootsRemoved": true,
+  "secretScanPassed": true,
+  "systemTrustChanged": false,
+  "proxy": "http://127.0.0.1:3060",
+  "origin": "https://api.kbsfdxc.net",
+  "tls": "Temporary CA plus leaf trusted only inside owned Codex child; upstream TLS verified independently; no TLS checks disabled.",
+  "outboundBodyChange": "Bounded zstd decompression and max_output_tokens=768 only; original model/effort/service_tier retained.",
+  "validation": {
+    "localLinksChecked": 32,
+    "checklistItems": 15,
+    "secretScanPassed": true,
+    "tempDirectoriesRemoved": true,
+    "configStillUnchanged": true
+  }
+}

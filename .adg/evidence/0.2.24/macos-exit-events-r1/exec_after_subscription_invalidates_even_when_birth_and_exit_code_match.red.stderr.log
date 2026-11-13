@@ -1,0 +1,4 @@
+
+thread 'infrastructure::macos_process_exit::tests::exec_after_subscription_invalidates_even_when_birth_and_exit_code_match' (155131612) panicked at src/infrastructure/macos_process_exit_tests.rs:173:9:
+an exec must not reuse the former image's exit authority
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

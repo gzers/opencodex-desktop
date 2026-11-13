@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-first-supply.py", line 265, in <module>
+    result = run(args)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-first-supply.py", line 91, in run
+    raise ValueError('evidence must not modify any signed app directory')
+ValueError: evidence must not modify any signed app directory

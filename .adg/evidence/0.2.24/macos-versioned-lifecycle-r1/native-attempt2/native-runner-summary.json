@@ -1,0 +1,39 @@
+{
+  "accepted": false,
+  "hypothesis": "Prior failed readiness and restore were caused by denied native-write-locks admission, proved by foreground original-source trace. Allow only new private CODEX_HOME hash database and adoption file, then test same production Start/status/Stop and original native-client bytes, no product assertion changes.",
+  "locks": [
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/c51f9beb020f65e3daed4687b1b5d768908e20319309f58776a6e738e56385ec.sqlite-shm"
+  ],
+  "kernelBoundary": "all daily HOME reads and external network/write denied; only own profile, synthetic loopback endpoint and exact catalog coordinator database allowed",
+  "cleanup": {
+    "ownedProcessesAfterNative": [
+      {
+        "pid": 23023,
+        "ppid": 1,
+        "pgid": 22892,
+        "image": "/private/tmp/ocxd024-versioned-lifecycle-ihwdax9o/fixtures-r2/program 中文 space/runtime/versions/2.99.0/dependencies/node/bin/node"
+      },
+      {
+        "pid": 23024,
+        "ppid": 23023,
+        "pgid": 22892,
+        "image": "/private/tmp/ocxd024-versioned-lifecycle-ihwdax9o/fixtures-r2/program 中文 space/runtime/versions/2.99.0/opencodex/node_modules/bun/bin/bun.exe"
+      }
+    ],
+    "forcedCleanupUsed": false,
+    "fixtureRetained": true,
+    "fixtureAbsent": false,
+    "exactNewCoordinatorFilesAbsent": false
+  },
+  "unitExitCode": 0,
+  "testPid": 22892,
+  "nativeExitCode": 101,
+  "elapsedSeconds": 82.035
+}

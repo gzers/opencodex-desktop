@@ -1,0 +1,26 @@
+    Checking opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: this `if` statement can be collapsed
+  --> src/infrastructure/macos_client_originals_tests.rs:22:13
+   |
+22 | /             if i == ancestor {
+23 | |                 if unsafe {
+24 | |                     libc::fsetxattr(
+25 | |                         pin.chain[i].0.as_raw_fd(),
+...  |
+36 | |             }
+   | |_____________^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#collapsible_if
+   = note: `-D clippy::collapsible-if` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::collapsible_if)]`
+help: collapse nested if block
+   |
+22 ~             if i == ancestor
+23 ~                 && unsafe {
+24 |                     libc::fsetxattr(
+...
+34 |                     return Err(io::Error::last_os_error());
+35 ~                 }
+   |
+
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

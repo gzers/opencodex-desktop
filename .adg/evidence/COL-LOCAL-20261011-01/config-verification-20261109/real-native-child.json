@@ -1,0 +1,31 @@
+{
+  "atUtc": "2026-11-09T13:06:02.599187+00:00",
+  "model": "Krill-1/gpt-6.1-terra",
+  "effort": "low",
+  "syntheticParent": true,
+  "realChildForwarding": true,
+  "actualRealRequests": 0,
+  "credentialsRead": false,
+  "dailyConfigModified": false,
+  "requests": [
+    {
+      "child": false,
+      "model": "Krill-1/gpt-6.1-terra",
+      "effort": "low",
+      "threadId": "01a1c06a-6d1a-7b51-9401-657104076f38",
+      "parentId": null,
+      "instructionMarkerPresent": true
+    }
+  ],
+  "checks": [
+    {
+      "id": "native_spawn_real_krill_child",
+      "status": "inconclusive",
+      "scope": "Native default model and effort reach one real child. Parent planning is a deterministic fixture; child tools disabled for this probe."
+    }
+  ],
+  "scriptSha256": "9732131440fc5ce6a05db49240d4f71a7b279ab561accdb1b0501a117d5d4d29",
+  "spawnToolExposed": false,
+  "toolOutputs": [],
+  "status": "inconclusive"
+}

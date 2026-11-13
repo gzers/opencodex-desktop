@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "verifier": "verify_failed.py",
+  "failure": "offline verifier assumed no Original tree rows; actual native capture contains only the owning claim database and its journal metadata",
+  "correction": "Match existing first_root_execution_baseline semantics: coordination=true,totalBytes=0, every row metadata-only coordination and exact claim DB/SQLite sidecar name. No product assertion, budget or failed service result changed."
+}

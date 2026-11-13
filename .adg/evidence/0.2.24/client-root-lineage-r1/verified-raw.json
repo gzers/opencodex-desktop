@@ -1,0 +1,39 @@
+{
+  "accepted": false,
+  "verified": [
+    {
+      "kind": "four-storage-closes",
+      "generations": 4,
+      "allIndependentProvenanceScopesPlansAndReadbacksVerified": true,
+      "offlineReplayRemoved": true
+    },
+    {
+      "kind": "third-generation-process-exit",
+      "point": "generation_published",
+      "currentRevision": 10,
+      "newGenerationIndependentlyRegistered": false,
+      "twoPriorClosesVerified": true,
+      "observedPendingIsNotAnAuthority": true,
+      "offlineReplayRemoved": true
+    },
+    {
+      "kind": "third-generation-process-exit",
+      "point": "generation_head_updated",
+      "currentRevision": 10,
+      "newGenerationIndependentlyRegistered": false,
+      "twoPriorClosesVerified": true,
+      "observedPendingIsNotAnAuthority": true,
+      "offlineReplayRemoved": true
+    },
+    {
+      "kind": "third-generation-process-exit",
+      "point": "generation_committed",
+      "currentRevision": 11,
+      "newGenerationIndependentlyRegistered": true,
+      "twoPriorClosesVerified": true,
+      "observedPendingIsNotAnAuthority": true,
+      "offlineReplayRemoved": true
+    }
+  ],
+  "scope": "raw SQLite/JSON corroboration of owned real filesystem/process tests; no service Start/normal Stop or power-loss acceptance"
+}

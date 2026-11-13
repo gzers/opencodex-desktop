@@ -1,0 +1,19 @@
+{
+  "accepted": false,
+  "sourceAndBinaryUnchanged": true,
+  "allPreviousSuiteHandlesTerminal": true,
+  "targets": [
+    {
+      "sourceLog": "final-originals.log",
+      "test": "infrastructure::macos_client_originals::root_originals_tests::root_prefix_observation_keeps_fresh_namespace_and_ancestor_checks_between_frames"
+    },
+    {
+      "sourceLog": "final-index.log",
+      "test": "infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_history_rejects_skipped_phase_rebound_origin_and_erased_reservation"
+    },
+    {
+      "sourceLog": "final-index.log",
+      "test": "infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_keeps_source_only_in_initial_event_and_registers_distinct_absence_originals"
+    }
+  ]
+}

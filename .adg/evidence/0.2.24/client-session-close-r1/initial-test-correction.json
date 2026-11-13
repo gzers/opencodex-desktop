@@ -1,0 +1,5 @@
+{
+  "initialIndexTests": "20passed1failed1ignored. New forged-restored label negative used same revision6 and hit unique events key before intended path. Corrected test only to revision7; same product algorithm, one failed function rechecked, original20passes reused.",
+  "subsequentReadOnlyHelper": "Only ignored read-only index inspection added after live run; post-run integrity tests never start service or initialize index. Final product algorithm unchanged.",
+  "expiredCommitSafety": "Close checks original proof deadline before and after commit. If observed expired after durable commit, append pending demotion event (never convert timeout into success); no injected slow-I/O test in this batch."
+}

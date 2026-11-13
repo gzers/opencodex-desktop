@@ -1,0 +1,33 @@
+[
+  {
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--lib",
+      "lifecycle_versioned_tests",
+      "--no-run"
+    ],
+    "exitCode": 0
+  },
+  {
+    "argv": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0
+  },
+  {
+    "argv": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "exitCode": 0
+  }
+]

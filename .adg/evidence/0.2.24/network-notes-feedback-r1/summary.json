@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "code": "d4d091ad0836e032ac60de89d9c8ee31fe6739b9",
+  "networkCommit": "029eaa4ff",
+  "scope": "Independent GitHub/npm network diagnostics; failure classification and exact-version release note cache provenance",
+  "accepted": false,
+  "backend": {
+    "network": 4,
+    "releaseNotes": 21,
+    "total": 25
+  },
+  "frontend": {
+    "files": 5,
+    "tests": 66,
+    "typecheck": 0
+  },
+  "checks": {
+    "fmt": 0,
+    "strictClippyAllTargets": 0,
+    "diffCheck": 0
+  },
+  "requests": {
+    "externalNetwork": false,
+    "realLoopbackHttpProxyAndBypass": true,
+    "businessModelsOrWebdav": false,
+    "dailyConfigurationModified": false
+  },
+  "visual": {
+    "sizes": [
+      "1040x760",
+      "580x640"
+    ],
+    "nativeIpc": false,
+    "actualComponents": [
+      "NetworkProbe",
+      "ReleaseNotes"
+    ],
+    "memoryIpc": true,
+    "pageErrors": []
+  },
+  "failureEvidence": [
+    "initial late-response test did not wait for dynamic IPC import",
+    "test hook accidentally returned mock function and was treated as async cleanup; fixed braces",
+    "first visual fixture malformed quoted newline; runner and explicit error summary retained"
+  ],
+  "cleanup": {
+    "fixtureRootsRemoved": true,
+    "uiFixtureAndRunnerRemoved": true,
+    "duplicateReceiptRootRemoved": true
+  },
+  "remaining": [
+    "integrated environment preparation stages and actual retry",
+    "disk/running/history version presentation and drift",
+    "other HTTP consumers proxy/no-proxy audit",
+    "Windows W0 HOME/Profile correction and W1/W2",
+    "P24-NAME",
+    "standard app/native candidate and final acceptance"
+  ]
+}

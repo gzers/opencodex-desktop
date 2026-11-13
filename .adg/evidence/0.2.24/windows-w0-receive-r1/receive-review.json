@@ -1,0 +1,90 @@
+{
+  "codeSource": "b2e89665d2864ea8e29bbaa91ac7843dff7ac4cb",
+  "docsSource": "0eef59a0114f9aea6a33d71e2b680192476939c8",
+  "commonBase": "0828a3955615df0a2a3e52fb96ab8249f2e04d1b",
+  "netCodeFiles": 13,
+  "evidenceRawFiles": 34,
+  "verifiedBatches": [
+    {
+      "directory": ".adg/evidence/0.2.24/windows-dev/w0-batch01-20261110",
+      "manifestEntriesVerified": 9,
+      "sourceFilesChecked": 9,
+      "nonExecutableLineEndingOnly": [
+        {
+          "path": "test/windows024-native/.gitignore",
+          "difference": "non-executable .gitignore LF blob vs CRLF checkout; both hashes explicitly checked",
+          "gitBlobSha256": "306fd52e74fca6746e12acc750f232de15e71da917756a1270d74c91f5eb7368",
+          "nativeSha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+        }
+      ],
+      "actualSource": "12c69e27e615fc3d27dc3d341a9f66d3e0e72903",
+      "accepted": true,
+      "productIntegrated": false,
+      "testResults": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "directory": ".adg/evidence/0.2.24/windows-dev/w0-batch02-elevated-20261110",
+      "manifestEntriesVerified": 10,
+      "sourceFilesChecked": 13,
+      "nonExecutableLineEndingOnly": [
+        {
+          "path": "test/windows024-native/.gitignore",
+          "difference": "non-executable .gitignore LF blob vs CRLF checkout; both hashes explicitly checked",
+          "gitBlobSha256": "306fd52e74fca6746e12acc750f232de15e71da917756a1270d74c91f5eb7368",
+          "nativeSha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+        }
+      ],
+      "actualSource": "b2e89665d2864ea8e29bbaa91ac7843dff7ac4cb",
+      "accepted": true,
+      "productIntegrated": false,
+      "testResults": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.44s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    },
+    {
+      "directory": ".adg/evidence/0.2.24/windows-dev/w0-batch02-ordinary-20261110",
+      "manifestEntriesVerified": 12,
+      "sourceFilesChecked": 13,
+      "nonExecutableLineEndingOnly": [
+        {
+          "path": "test/windows024-native/.gitignore",
+          "difference": "non-executable .gitignore LF blob vs CRLF checkout; both hashes explicitly checked",
+          "gitBlobSha256": "306fd52e74fca6746e12acc750f232de15e71da917756a1270d74c91f5eb7368",
+          "nativeSha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+        }
+      ],
+      "actualSource": "b2e89665d2864ea8e29bbaa91ac7843dff7ac4cb",
+      "accepted": true,
+      "productIntegrated": false,
+      "testResults": [
+        "test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s",
+        "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.48s",
+        "test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s"
+      ]
+    }
+  ],
+  "historicalInitialIntakeSnapshots": [
+    {
+      "path": ".adg/evidence/0.2.24/windows-dev/w0-batch01-20261110/.gitattributes",
+      "firstSnapshotSha256": "bd9663d71ffce4f030fba3bf7285472e2fab87ce8f71d180d20c14060d0c42a1",
+      "reason": "early remote listing4ca became obsolete while Windows pushed batch02; preserve receiver-owned snapshot before consuming fetched fixed0eef"
+    },
+    {
+      "path": "docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md",
+      "firstSnapshotSha256": "bafb48067697cf77674d8e670f196e6ae9cf5b54e3f98cc1dea35fa5426a72f1",
+      "reason": "early remote listing4ca became obsolete while Windows pushed batch02; preserve receiver-owned snapshot before consuming fetched fixed0eef"
+    }
+  ],
+  "integrationMethod": "final net tree only; no target products or intermediate binary history imported",
+  "productWiringComplete": false,
+  "MacNativeWindowsRerun": false,
+  "fourWindowsFailureDirectoriesRemain": true,
+  "cleanupBoundary": "Windows deletion automatic approval rejected; report retained; Mac does not bypass or assert cleanup"
+}

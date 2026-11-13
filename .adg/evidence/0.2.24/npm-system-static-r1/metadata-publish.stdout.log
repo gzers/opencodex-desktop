@@ -1,0 +1,12 @@
+
+running 7 tests
+test modules::about::remote::tests::combined_metadata_accepts_flat_and_nested_shapes_and_rejects_bad_versions ... ok
+test modules::about::remote::tests::live_remote_query_returns_version_and_integrity ... ignored, hits the npm registry; run explicitly
+test modules::about::remote::tests::metadata_query_uses_managed_cache_and_preserves_user_home ... ok
+test modules::about::remote::tests::npm_path_appends_injected_before_fallback ... ok
+test modules::about::remote::tests::npm_path_includes_npm_dir_and_fallback ... ok
+test modules::about::remote::tests::parses_version_and_integrity_shapes ... ok
+test modules::about::remote::tests::tag_validation_rejects_arbitrary_input ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 2303 filtered out; finished in 0.25s
+

@@ -1,0 +1,82 @@
+[
+  {
+    "label": "selection",
+    "filter": "modules::runtime::program_selection::",
+    "ignoredExplicitlyEnabled": false,
+    "exit": 0,
+    "elapsedSeconds": 1.3237014170736074,
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2050 filtered out; finished in 0.05s"
+    ]
+  },
+  {
+    "label": "handle",
+    "filter": "modules::runtime::tests::",
+    "ignoredExplicitlyEnabled": false,
+    "exit": 0,
+    "elapsedSeconds": 0.15147629217244685,
+    "summary": [
+      "test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 2041 filtered out; finished in 0.13s"
+    ]
+  },
+  {
+    "label": "status",
+    "filter": "modules::status::tests::",
+    "ignoredExplicitlyEnabled": false,
+    "exit": 0,
+    "elapsedSeconds": 0.01932974997907877,
+    "summary": [
+      "test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 2039 filtered out; finished in 0.00s"
+    ]
+  },
+  {
+    "label": "bundled",
+    "filter": "modules::runtime::bundled::bundled_tests::",
+    "ignoredExplicitlyEnabled": false,
+    "exit": 0,
+    "elapsedSeconds": 3.6153535831253976,
+    "summary": [
+      "test result: ok. 33 passed; 0 failed; 1 ignored; 0 measured; 2023 filtered out; finished in 3.60s"
+    ]
+  },
+  {
+    "label": "source-dto",
+    "filter": "commands::runtime::tests::source_dto_",
+    "ignoredExplicitlyEnabled": false,
+    "exit": 0,
+    "elapsedSeconds": 0.025744125014171004,
+    "summary": [
+      "test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2055 filtered out; finished in 0.01s"
+    ]
+  },
+  {
+    "label": "environment-consumers",
+    "filter": "commands::discovery::tests::",
+    "ignoredExplicitlyEnabled": false,
+    "exit": 0,
+    "elapsedSeconds": 1.2695920830592513,
+    "summary": [
+      "test result: ok. 7 passed; 0 failed; 2 ignored; 0 measured; 2048 filtered out; finished in 1.25s"
+    ]
+  },
+  {
+    "label": "real-official-supply",
+    "filter": "real_official299_versioned_supply_reopen_preserves_home_and_source",
+    "ignoredExplicitlyEnabled": true,
+    "exit": 0,
+    "elapsedSeconds": 68.39163404214196,
+    "summary": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2056 filtered out; finished in 68.37s"
+    ]
+  },
+  {
+    "label": "real-official-environment",
+    "filter": "real_official299_versioned_environment_is_bound_to_actual_programs",
+    "ignoredExplicitlyEnabled": true,
+    "exit": 0,
+    "elapsedSeconds": 70.96422112500295,
+    "summary": [
+      "test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2056 filtered out; finished in 70.95s"
+    ]
+  }
+]

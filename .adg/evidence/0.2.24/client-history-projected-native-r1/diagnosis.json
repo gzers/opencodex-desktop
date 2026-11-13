@@ -1,0 +1,58 @@
+{
+  "accepted": false,
+  "sourceCommit": "236ed43dd5ae44b53274f63c9572bdaccc75c8d5",
+  "actualNativeRoundsInThisBatch": 1,
+  "oldFailure": "client-root-two-cycles-r1 remains failed secondStop12878ms/RestorePrepared16; immutable evidence untouched",
+  "firstCycle": {
+    "startMs": 8202,
+    "attestedStatusMs": 227,
+    "normalStopMs": 8749,
+    "stoppedStatusMs": 1375
+  },
+  "secondCycle": {
+    "startMs": 14368,
+    "attestedStatusMs": 1453,
+    "normalStopResult": "failed-client-original-restore-pending",
+    "outerCallMs": 10736,
+    "productInternalMs": 10043,
+    "head": "restore_prepared",
+    "revision": 16,
+    "failurePhase": "root-artifacts-held",
+    "innerCode": "client_session_unconfirmed"
+  },
+  "hypothesisResult": "Historical traversal reduction materially improved repeated Start and preparation, but did NOT bring whole normalStop under10s; retain failed new round, no immediate rerun.",
+  "firstVsSecondClientRecoveryTimings": {
+    "first": {
+      "sealStoppedMs": 818,
+      "indexStoppedMs": 1329,
+      "indexPlanMs": 1530,
+      "rootAdmissionEntryMs": 1878,
+      "rootArtifactsHeldMs": 2610,
+      "completedRecoveryMs": 6352
+    },
+    "second": {
+      "sealStoppedMs": 800,
+      "indexStoppedMs": 2358,
+      "indexPlanMs": 2756,
+      "rootAdmissionEntryMs": 4283,
+      "rootArtifactsHeldMs": 5088,
+      "failedRecoveryMs": 5375
+    }
+  },
+  "verifiedFacts": [
+    "Both original launcher/service pairs normalexit0; both full productlistenercollections4 absent",
+    "Oldbinding/rawfirst9events/wholearchive preserved across secondStart/Stop",
+    "Second Original and Ready/PreStop/Stopped frame chains authenticated, no RootAbsent or completion invented",
+    "PreviousStop failed before rootadmission; newround advanced throughadmission then failed in rootartifacts-held before move",
+    "Newcoordinators exact3 rawarchived/exclusivechecked/removed; globalLidentity/protection/bytes unchanged andexclusive released",
+    "No remaining tracked PID+birth generations or owned executables"
+  ],
+  "nextFalsifiableHypothesis": "Measure second-Stop Active::load/pre_stop/recordStop proof and current root-artifact admission using exact existing source boundary. Index checked-head repeatedly performs full historical audit, currently around1s per boundary on second generation. Evaluate carrying a non-authorizing closed-history before/after observation across the ORIGINAL held action transaction only; never skip current root/provenance/Plan/frame/content/path/protection/native proof. Distinguish genuine integrity refusal from expired bound deadline by diagnostic stage timestamps before choosing a code fix.",
+  "notProven": [
+    "inner client_session_unconfirmed may be expired original deadline or another specific root-image/authority check; do not assert causality without targeted trace",
+    "normal secondStop10 or packaged app/whole version acceptance"
+  ],
+  "boundaries": "One real new native round after source/measurement hypothesis, no rerun, no forcekill/no budget reset/no official2.99 patch; original sandbox network/dailyHOME denial and exact L/N/K/history scope preserved.",
+  "fixedAppCandidate": false,
+  "publication": false
+}

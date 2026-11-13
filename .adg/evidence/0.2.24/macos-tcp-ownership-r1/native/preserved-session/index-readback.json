@@ -1,0 +1,181 @@
+{
+  "head": {
+    "revision": 6,
+    "ticket": "bb89d7e5-d1d5-4545-9153-00c6095da27b",
+    "state": "restore_prepared",
+    "references": {
+      "attempt": "ff81a3ce-440e-4ff8-adef-567da325a834",
+      "originalSha256": "e21494171d36ae94e28ed9466e2bb10e83831aaf2b9a33ae8babe773f7a85ac4",
+      "scopeSha256": "5dc1ef1930fe5d49270c1780963b22f7eefbed29dc21a360217784a3d2066088",
+      "phases": [
+        [
+          "ready",
+          "9db65e902d1e4b1986abe60ee1d487d807d0298646ad141ef429310e9ab1e4e5"
+        ],
+        [
+          "pre_stop",
+          "c6b5619f6824dac409412615948d12201bbf4562a663b32ad6ed10ad606d728a"
+        ],
+        [
+          "stopped",
+          "2070611a3076c499675f1e6595e65f811e8d0be111d24315919024b1b37002e4"
+        ]
+      ],
+      "liveSha256": "373c8fc36fa2eee17444e729215ceec23df46949162d8db11aa024eab78d6a0a"
+    },
+    "restorePlan": {
+      "id": "1b6d41a9-47b2-4a2a-99b5-8910b5c280c3",
+      "sha256": "890f6a5796fbf6f1b2912372555a04c175ea6ac42a9718ced5151fd4eaeaf771"
+    }
+  },
+  "events": [
+    {
+      "revision": 1,
+      "ticket": "bb89d7e5-d1d5-4545-9153-00c6095da27b",
+      "state": "preparing",
+      "references": null,
+      "restorePlan": null
+    },
+    {
+      "revision": 2,
+      "ticket": "bb89d7e5-d1d5-4545-9153-00c6095da27b",
+      "state": "captured",
+      "references": {
+        "attempt": "ff81a3ce-440e-4ff8-adef-567da325a834",
+        "originalSha256": "e21494171d36ae94e28ed9466e2bb10e83831aaf2b9a33ae8babe773f7a85ac4",
+        "scopeSha256": "5dc1ef1930fe5d49270c1780963b22f7eefbed29dc21a360217784a3d2066088",
+        "phases": [],
+        "liveSha256": null
+      },
+      "restorePlan": null
+    },
+    {
+      "revision": 3,
+      "ticket": "bb89d7e5-d1d5-4545-9153-00c6095da27b",
+      "state": "ready",
+      "references": {
+        "attempt": "ff81a3ce-440e-4ff8-adef-567da325a834",
+        "originalSha256": "e21494171d36ae94e28ed9466e2bb10e83831aaf2b9a33ae8babe773f7a85ac4",
+        "scopeSha256": "5dc1ef1930fe5d49270c1780963b22f7eefbed29dc21a360217784a3d2066088",
+        "phases": [
+          [
+            "ready",
+            "9db65e902d1e4b1986abe60ee1d487d807d0298646ad141ef429310e9ab1e4e5"
+          ]
+        ],
+        "liveSha256": "373c8fc36fa2eee17444e729215ceec23df46949162d8db11aa024eab78d6a0a"
+      },
+      "restorePlan": null
+    },
+    {
+      "revision": 4,
+      "ticket": "bb89d7e5-d1d5-4545-9153-00c6095da27b",
+      "state": "stop_prepared",
+      "references": {
+        "attempt": "ff81a3ce-440e-4ff8-adef-567da325a834",
+        "originalSha256": "e21494171d36ae94e28ed9466e2bb10e83831aaf2b9a33ae8babe773f7a85ac4",
+        "scopeSha256": "5dc1ef1930fe5d49270c1780963b22f7eefbed29dc21a360217784a3d2066088",
+        "phases": [
+          [
+            "ready",
+            "9db65e902d1e4b1986abe60ee1d487d807d0298646ad141ef429310e9ab1e4e5"
+          ],
+          [
+            "pre_stop",
+            "c6b5619f6824dac409412615948d12201bbf4562a663b32ad6ed10ad606d728a"
+          ]
+        ],
+        "liveSha256": "373c8fc36fa2eee17444e729215ceec23df46949162d8db11aa024eab78d6a0a"
+      },
+      "restorePlan": null
+    },
+    {
+      "revision": 5,
+      "ticket": "bb89d7e5-d1d5-4545-9153-00c6095da27b",
+      "state": "stopped",
+      "references": {
+        "attempt": "ff81a3ce-440e-4ff8-adef-567da325a834",
+        "originalSha256": "e21494171d36ae94e28ed9466e2bb10e83831aaf2b9a33ae8babe773f7a85ac4",
+        "scopeSha256": "5dc1ef1930fe5d49270c1780963b22f7eefbed29dc21a360217784a3d2066088",
+        "phases": [
+          [
+            "ready",
+            "9db65e902d1e4b1986abe60ee1d487d807d0298646ad141ef429310e9ab1e4e5"
+          ],
+          [
+            "pre_stop",
+            "c6b5619f6824dac409412615948d12201bbf4562a663b32ad6ed10ad606d728a"
+          ],
+          [
+            "stopped",
+            "2070611a3076c499675f1e6595e65f811e8d0be111d24315919024b1b37002e4"
+          ]
+        ],
+        "liveSha256": "373c8fc36fa2eee17444e729215ceec23df46949162d8db11aa024eab78d6a0a"
+      },
+      "restorePlan": null
+    },
+    {
+      "revision": 6,
+      "ticket": "bb89d7e5-d1d5-4545-9153-00c6095da27b",
+      "state": "restore_prepared",
+      "references": {
+        "attempt": "ff81a3ce-440e-4ff8-adef-567da325a834",
+        "originalSha256": "e21494171d36ae94e28ed9466e2bb10e83831aaf2b9a33ae8babe773f7a85ac4",
+        "scopeSha256": "5dc1ef1930fe5d49270c1780963b22f7eefbed29dc21a360217784a3d2066088",
+        "phases": [
+          [
+            "ready",
+            "9db65e902d1e4b1986abe60ee1d487d807d0298646ad141ef429310e9ab1e4e5"
+          ],
+          [
+            "pre_stop",
+            "c6b5619f6824dac409412615948d12201bbf4562a663b32ad6ed10ad606d728a"
+          ],
+          [
+            "stopped",
+            "2070611a3076c499675f1e6595e65f811e8d0be111d24315919024b1b37002e4"
+          ]
+        ],
+        "liveSha256": "373c8fc36fa2eee17444e729215ceec23df46949162d8db11aa024eab78d6a0a"
+      },
+      "restorePlan": {
+        "id": "1b6d41a9-47b2-4a2a-99b5-8910b5c280c3",
+        "sha256": "890f6a5796fbf6f1b2912372555a04c175ea6ac42a9718ced5151fd4eaeaf771"
+      }
+    }
+  ],
+  "binding": [
+    501,
+    "/private/tmp/ocxd024-versioned-lifecycle-_479sra5/fixtures/profile/.codex-desktop/desktop",
+    {
+      "device": 16777231,
+      "inode": 440628033,
+      "birthSeconds": 1794449649,
+      "birthNanos": 514678129
+    },
+    "/private/tmp/ocxd024-versioned-lifecycle-_479sra5/fixtures/profile",
+    {
+      "device": 16777231,
+      "inode": 440628003,
+      "birthSeconds": 1794449648,
+      "birthNanos": 152085996
+    },
+    "/private/tmp/ocxd024-versioned-lifecycle-_479sra5/fixtures/profile/.codex-desktop/opencodex/home",
+    {
+      "device": 16777231,
+      "inode": 440628035,
+      "birthSeconds": 1794449649,
+      "birthNanos": 514770838
+    },
+    "/private/tmp/ocxd024-versioned-lifecycle-_479sra5/fixtures/profile/.codex",
+    {
+      "device": 16777231,
+      "inode": 440628011,
+      "birthSeconds": 1794449648,
+      "birthNanos": 264375550
+    }
+  ],
+  "independentReferencesMatch": true,
+  "stageNativeIdentityMatches": true
+}

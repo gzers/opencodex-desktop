@@ -1,0 +1,21 @@
+{
+  "accepted": false,
+  "elapsedMs": 10630,
+  "error": "managed runtime operation failed: client_recovery_finalize_refused; 恢复现场或确认已变化，请重新核对；原件与当前文件保留",
+  "outcome": null,
+  "reopened": {
+    "attemptId": "7d578a40-e85c-462b-8066-20e241e3462e",
+    "canContinue": false,
+    "canFinalize": true,
+    "canRollback": false,
+    "completionEvidence": "unregistered",
+    "confirmationDigest": "ccf52c4f950545165bed0ffedc92c65973396fc7790d5b8e7251f25c495b5f47",
+    "originalEvidence": "verified",
+    "phase": "restore_prepared",
+    "phaseCount": 3,
+    "planEvidence": "verified",
+    "revision": 6,
+    "status": "pending"
+  },
+  "scope": "single explicit finalize of retained owned pending index; no service actions"
+}

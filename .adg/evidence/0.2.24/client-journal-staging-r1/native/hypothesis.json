@@ -1,0 +1,20 @@
+{
+  "accepted": false,
+  "hypothesis": "Production Stop begins plan preparation, writes stage bytes solely within original private journal, then interrupted before metadata/fsync/final plan/index. Client tree has no stage. A new explicit plan preparation leaves orphan file unchanged, registers a distinct journal-staged plan and separate10s Continue restores originals. No scan/adoption or old failure reclassification.",
+  "temporaryRoot": "/private/tmp/ocxd024-versioned-lifecycle-z807jlfk",
+  "exactNewCoordinatorFiles": [
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/441dddbca3de4a09cd57eea1efd8b2d340f8f6b80a1f784f36eace9a0a448e8a.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/441dddbca3de4a09cd57eea1efd8b2d340f8f6b80a1f784f36eace9a0a448e8a.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/441dddbca3de4a09cd57eea1efd8b2d340f8f6b80a1f784f36eace9a0a448e8a.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/441dddbca3de4a09cd57eea1efd8b2d340f8f6b80a1f784f36eace9a0a448e8a.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/441dddbca3de4a09cd57eea1efd8b2d340f8f6b80a1f784f36eace9a0a448e8a.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/441dddbca3de4a09cd57eea1efd8b2d340f8f6b80a1f784f36eace9a0a448e8a.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/441dddbca3de4a09cd57eea1efd8b2d340f8f6b80a1f784f36eace9a0a448e8a.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/441dddbca3de4a09cd57eea1efd8b2d340f8f6b80a1f784f36eace9a0a448e8a.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/1dc3d004539a726e540e3f610bd9af9a2318014ba0f9668615a6e2d206deafc7.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/1dc3d004539a726e540e3f610bd9af9a2318014ba0f9668615a6e2d206deafc7.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/1dc3d004539a726e540e3f610bd9af9a2318014ba0f9668615a6e2d206deafc7.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/1dc3d004539a726e540e3f610bd9af9a2318014ba0f9668615a6e2d206deafc7.sqlite-shm"
+  ],
+  "noBusinessRequests": true
+}

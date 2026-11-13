@@ -1,0 +1,36 @@
+[
+  {
+    "name": "compile-retained",
+    "argv": [
+      "cargo",
+      "test",
+      "--offline",
+      "--lib",
+      "session_index",
+      "--no-run"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "clippy-retained",
+    "argv": [
+      "cargo",
+      "clippy",
+      "--offline",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "fmt-retained",
+    "argv": [
+      "cargo",
+      "fmt",
+      "--check"
+    ],
+    "exitCode": 0
+  }
+]

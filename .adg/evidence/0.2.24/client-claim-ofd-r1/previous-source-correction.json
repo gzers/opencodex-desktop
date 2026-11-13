@@ -1,0 +1,16 @@
+{
+  "accepted": false,
+  "originalEvidencePath": ".adg/evidence/0.2.24/client-root-index-r1/source-final.json",
+  "originalEvidenceSha256": "26f049c01b63f33ae50bd13e23cc9f3bffcf96429e88d0af3dea7ee732e6c89a",
+  "originalCodeCommit": "7131fdadc7495aa31f4bec46c885f9bd757d5774",
+  "incorrectFieldLabel": "finalCompiledTestBinary",
+  "recordedPath": "apps/desktop/tauri/target/debug/deps/opencodex_desktop-8c45127ef563f082",
+  "recordedDigest": "9230f6f622aec91a6e0199a6433644ee90461bffae7735bba82857372f28ad6a",
+  "finding": "Recorded glob selected application test host, while actual library tests used opencodex_desktop_lib-114f658f3f2e2b97 as shown by preserved execution logs. Original library hash was not independently saved before rebuild; do not substitute current hash.",
+  "stillValidEvidence": [
+    "preserved test execution logs and their passed assertions",
+    "code commit and individual source hashes",
+    "offline bytes and manifest checks"
+  ],
+  "correction": "Retain original evidence immutably; no prior library binary digest claim. Current batch parses actual executed library binary path from the test log and records its own hash."
+}

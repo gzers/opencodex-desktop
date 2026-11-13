@@ -1,0 +1,12 @@
+from pathlib import Path
+import json,subprocess,shutil,hashlib,time
+base=Path('/private/tmp/ocxd024-empty-config-d8t6p91e');root=Path(json.loads((base/'native/runner-summary.json').read_text())['temporaryRoot'])/'fixtures';profile=root/'profile';out=base/'official-config-guard';out.mkdir()
+code=Path('/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes');binary=code/'apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97';exe=root/'tests-config-guard';shutil.copy2(binary,exe);sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();assert sha(binary)==sha(exe)
+(out/'hypothesis.json').write_text(json.dumps({'accepted':False,'hypothesis':'Unchanged official config-write-lock with a pipe-bound live holder excludes an actual other official writer and another holder. After2100ms it must remain held; normal release then permits the official writer and leaves config absent. No2s timer releases a borrowed mutation guard, no service actions.','binarySha256':sha(exe)},indent=2))
+(out/'source.json').write_text(json.dumps({'baseCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=code,text=True).strip(),'binarySha256':sha(exe),'files':[{'path':p,'sha256':sha(code/p)} for p in sorted(set(subprocess.check_output(['git','diff','--name-only'],cwd=code,text=True).splitlines()+subprocess.check_output(['git','ls-files','--others','--exclude-standard'],cwd=code,text=True).splitlines()))]},indent=2))
+env={'PATH':'/usr/bin:/bin:/usr/sbin:/sbin','HOME':str(profile),'CODEX_HOME':str(profile/'.codex'),'TMPDIR':str(root/'tmp')+'/','LANG':'en_US.UTF-8','OCXD024_CONFIG_GUARD_ROOT':str(root)}
+cmd=['/usr/bin/sandbox-exec','-f',str(root.parent/'fixture.sb'),str(exe),'--exact','infrastructure::official_client_coordination::native::config::tests::official_config_guard_retains_live_lock_past_old_helper_timer_and_releases_normally','--ignored','--nocapture','--test-threads=1'];start=time.monotonic()
+with (out/'stdout.log').open('wb') as stdout,(out/'stderr.log').open('wb') as stderr:p=subprocess.run(cmd,cwd=root,env=env,stdout=stdout,stderr=stderr,timeout=45)
+(out/'runner-summary.json').write_text(json.dumps({'accepted':False,'exitCode':p.returncode,'elapsedSeconds':round(time.monotonic()-start,3),'binarySha256':sha(exe)},indent=2))
+if (root/'config-guard-proof.json').exists():shutil.copy2(root/'config-guard-proof.json',out/'proof.json')
+shutil.copy2(Path(__file__),out/'guard_runner.py');print('config-guard proof exit',p.returncode,flush=True)

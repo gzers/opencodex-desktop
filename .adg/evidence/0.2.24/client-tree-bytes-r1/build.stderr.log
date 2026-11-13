@@ -1,0 +1,22 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0382]: use of moved value: `target`
+   --> src/infrastructure/macos_client_tree_archive_tests.rs:110:30
+    |
+ 80 |         let target = f.vault.join(blob_name(&digest(bytes)).unwrap());
+    |             ------   ------------------------------------------------ this reinitialization might get skipped
+    |             |
+    |             move occurs because `target` has type `std::path::PathBuf`, which does not implement the `Copy` trait
+...
+106 |             assert_eq!(fs::read(target).unwrap(), b"{interrupted");
+    |                                 ------ value moved here
+...
+110 |                 fs::metadata(target).unwrap().permissions().mode() & 0o777,
+    |                              ^^^^^^ value used here after move
+    |
+help: consider borrowing `target`
+    |
+106 |             assert_eq!(fs::read(&target).unwrap(), b"{interrupted");
+    |                                 +
+
+For more information about this error, try `rustc --explain E0382`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

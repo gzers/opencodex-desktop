@@ -1,0 +1,7 @@
+{
+  "accepted": false,
+  "baseCommit": "c3f2fc97dd7f323be98b0c6430d920deb167db58",
+  "rejectedProposal": "Root provenance only at first/last frame would miss transient created.json content/protection or namespace corruption restored before last frame, and permit archive reads while source invalid. Do not implement.",
+  "hypothesis": "Preserve every frame provenance, all four source file fresh reads/hash/protection/dynamic context checks, per-frame post-archive namespace and final namespace. Only combine the initial three overlapping metadata-only path admissions in verify_indexed_anchor: same fresh leaf policies first, then two complete union path/fd/security passes before any namespace or source document contents. Keep later dynamic profile/client comparisons. This should reduce metadata syscalls without reducing dynamic provenance checks. Add transient-source-change-before-planned-restore regression, including archive-entry counter proving refusal precedes next frame archive.",
+  "scope": "Owned synthetic fixtures only; no official service, daily config/Shell/app, external business network, deadline or original299 modifications. Preserve failure logs and byte-verify archive before cleanup."
+}

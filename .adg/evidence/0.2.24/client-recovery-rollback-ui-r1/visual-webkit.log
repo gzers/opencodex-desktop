@@ -1,0 +1,323 @@
+{
+  "accepted": false,
+  "scope": "mock browser UI/prototype only; no native finalization or business operations",
+  "engine": "webkit",
+  "checks": [
+    {
+      "name": "rollback-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "rollback-900-dark",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 157.75,
+          "bottom": 442.25,
+          "left": 170,
+          "right": 730,
+          "height": 600,
+          "width": 900,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "rollback-slow-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "rollback-error-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "rollback-refresh-failed-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "rearm-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "rearm-900-dark",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 157.75,
+          "bottom": 442.25,
+          "left": 170,
+          "right": 730,
+          "height": 600,
+          "width": 900,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "rearm-slow-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "rearm-error-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 237.75,
+          "bottom": 522.25,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "explicitReview": true,
+        "oneMutation": true,
+        "gateRetained": true,
+        "noAutomaticContinue": true
+      }
+    },
+    {
+      "name": "continue-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 165.296875,
+          "bottom": 594.703125,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "oneExplicitContinuation": true,
+        "noFinalizeSubstitution": true
+      }
+    },
+    {
+      "name": "continue-900-dark",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 85.296875,
+          "bottom": 514.703125,
+          "left": 170,
+          "right": 730,
+          "height": 600,
+          "width": 900,
+          "overflow": 0
+        },
+        "oneExplicitContinuation": true,
+        "noFinalizeSubstitution": true
+      }
+    },
+    {
+      "name": "eligible-1180-light",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 165.296875,
+          "bottom": 594.703125,
+          "left": 310,
+          "right": 870,
+          "height": 760,
+          "width": 1180,
+          "overflow": 0
+        },
+        "matchedOutcomeAndScopedStatusUnblocks": true,
+        "keyboardCancelNoMutationAndFocusContained": true
+      }
+    },
+    {
+      "name": "eligible-900-dark",
+      "pass": true,
+      "detail": {
+        "geometry": {
+          "top": 85.296875,
+          "bottom": 514.703125,
+          "left": 170,
+          "right": 730,
+          "height": 600,
+          "width": 900,
+          "overflow": 0
+        },
+        "matchedOutcomeAndScopedStatusUnblocks": true,
+        "keyboardCancelNoMutationAndFocusContained": true
+      }
+    },
+    {
+      "name": "prototype-rollback",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-rollback-slow",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-rollback-error",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-rollback-refresh-failed",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-rearm",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-rearm-slow",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-rearm-error",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-continue",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    },
+    {
+      "name": "prototype-eligible",
+      "pass": true,
+      "detail": {
+        "sameUserFlow": true,
+        "memoryOnly": true
+      }
+    }
+  ],
+  "result": "passed",
+  "cleanup": {
+    "browserClosed": true,
+    "ownedViteProcessExited": true
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "accepted": false,
+  "hypothesis": "Unchanged official config-write-lock with a pipe-bound live holder excludes an actual other official writer and another holder. After2100ms it must remain held; normal release then permits the official writer and leaves config absent. No2s timer releases a borrowed mutation guard, no service actions.",
+  "binarySha256": "51a57f8dbf0d3b7398cd257aec2c73da38f72138304fe623baee65860fe7fef5"
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 505,
+    "text": "readonly selectedModelsByProvider: ReadonlyMap<string, ReadonlySet<string>>;"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 553,
+    "text": "selectedModelsByProvider,"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 592,
+    "text": "const selectedModelKeysByProvider = new Map([...selectedModelsByProvider].map(([provider, models]) => ("
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 617,
+    "text": "const selected = selectedModelKeysByProvider.get(provider);"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 847,
+    "text": "const selected = selectedModelKeysByProvider.get(provider);"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 848,
+    "text": "return selected === undefined || selected.has(slugEquivalenceKey(slug));"
+  },
+  {
+    "path": "src/codex/catalog/build-entries.ts",
+    "line": 1076,
+    "text": "selectedModelsByProvider: new Map(),"
+  },
+  {
+    "path": "src/codex/catalog/retained-sync.ts",
+    "line": 485,
+    "text": "const selectedModelsByProvider = new Map<string, ReadonlySet<string>>("
+  },
+  {
+    "path": "src/codex/catalog/retained-sync.ts",
+    "line": 489,
+    "text": "&& provider.selectedModels.length > 0"
+  },
+  {
+    "path": "src/codex/catalog/retained-sync.ts",
+    "line": 534,
+    "text": "selectedModelsByProvider,"
+  }
+]

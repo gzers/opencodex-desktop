@@ -1,0 +1,10 @@
+{
+  "accepted": false,
+  "retainedOriginalCleanupRefs": [
+    "native-stop-release-cleanup.json",
+    "native-stop-release-final-cleanup.json"
+  ],
+  "reason": "Inherited script labels raw capture as post-failed-normal-Stop and prints StopAccepted:false; those are generic capture output scope, NOT test outcomes. Actual release runner exit0 + summary passed governs directed first-root result. No original cleanup output changed.",
+  "configurationCapture": "Exact owned synthetic Codex/Grok/vault/HOME bytes, immutable read-only projection.",
+  "finalCleanupWillOnlyClaimObservedFacts": true
+}

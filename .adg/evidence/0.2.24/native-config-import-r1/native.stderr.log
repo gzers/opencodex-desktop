@@ -1,0 +1,14 @@
+
+thread 'modules::model_config::config_file::v2::native_import::tests::backup_failure_and_unfinished_transaction_cannot_overwrite_config' (151658517) panicked at src/modules/model_config/native_config_import_v2_tests.rs:160:5:
+assertion `left == right` failed
+  left: "model_source_provenance_unknown"
+ right: "native_import_backup_failed"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'modules::model_config::config_file::v2::native_import::tests::complete_replace_preserves_port_and_mode_and_exact_original_backup' (151658518) panicked at src/modules/model_config/native_config_import_v2_tests.rs:72:60:
+called `Result::unwrap()` on an `Err` value: MatchErrorV2 { code: "model_source_provenance_unknown", issues: [MatchIssueV2 { code: "model_source_provenance_unknown", channel_id: None, raw_model_id: None, field_path: None, condition_ids: [], reference: None, message: "模型配置未通过核对", recovery_actions: ["inspect_source", "reestablish_source"] }] }
+
+thread 'modules::model_config::config_file::v2::native_import::tests::invalid_selection_or_unproved_stopped_service_leaves_config_and_backups_alone' (151658520) panicked at src/modules/model_config/native_config_import_v2_tests.rs:132:5:
+assertion `left == right` failed
+  left: "model_source_provenance_unknown"
+ right: "native_import_runtime_not_stopped"

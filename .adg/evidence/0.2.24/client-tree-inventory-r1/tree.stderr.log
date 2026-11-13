@@ -1,0 +1,6 @@
+
+thread 'infrastructure::macos_client_originals::tree::tests::actual_other_process_replaces_an_open_parent_with_an_outside_symlink_and_capture_refuses' (155520865) panicked at src/infrastructure/macos_client_tree_tests.rs:117:5:
+assertion `left == right` failed
+  left: "client tree directory changed during capture"
+ right: "client tree object changed during observation"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

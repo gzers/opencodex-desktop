@@ -1,0 +1,24 @@
+
+running 6 tests
+test infrastructure::macos_client_originals::tree::tests::actual_other_process_replaces_an_open_parent_with_an_outside_symlink_and_capture_refuses ... FAILED
+test infrastructure::macos_client_originals::tree::tests::complete_inventory_keeps_literal_paths_and_empty_directories_and_hashes_without_serialized_contents ... ok
+test infrastructure::macos_client_originals::tree::tests::inventory_depth_file_size_and_decoded_structure_are_bounded ... ok
+test infrastructure::macos_client_originals::tree::tests::inventory_does_not_release_an_active_same_process_sqlite_claim_lock ... 
+running 1 test
+TREE_CLAIM_LOCK_RETAINED
+test infrastructure::macos_client_originals::tree::tests::inventory_does_not_release_an_active_same_process_sqlite_claim_lock ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2321 filtered out; finished in 0.00s
+
+
+ok
+test infrastructure::macos_client_originals::tree::tests::late_file_modification_and_unreadable_special_or_linked_objects_never_become_absent ... ok
+test infrastructure::macos_client_originals::tree::tests::unreadable_tree_file_and_coordination_sidecar_are_preserved_and_refused ... ok
+
+failures:
+
+failures:
+    infrastructure::macos_client_originals::tree::tests::actual_other_process_replaces_an_open_parent_with_an_outside_symlink_and_capture_refuses
+
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 2316 filtered out; finished in 0.12s
+

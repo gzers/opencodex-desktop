@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "sourceBase": "0f0e85fb37b004c9b895bc754dd54ac993bbaef7",
+  "hypothesis": "Root plan registration redundantly performs five full source/history observations. Move original plan admission inside the existing SQL transaction immediately after complete source audit, retain afterSQL and postCOMMIT full audits, return registration only after successful postcommit readback and narrow registered facts. Expected full history observations 5 to 3 with changed plan, old archive, current root content, unknown namespace and late writes still rejected. This unit/storage round cannot certify normal Stop10 or permit root movement.",
+  "scope": "No daily configuration, service, business network, official runtime patches or timeout changes. Synthetic owned unit fixtures only; retain failure logs and evidence, remove owned fixtures after archive checks."
+}

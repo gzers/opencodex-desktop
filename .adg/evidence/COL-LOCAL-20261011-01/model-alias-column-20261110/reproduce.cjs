@@ -1,0 +1,31 @@
+const {chromium}=require('/Users/ezio/.npm/_npx/e41f203b7505f1fb/node_modules/playwright-core'),assert=require('node:assert/strict'),fs=require('node:fs');
+const root='/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main',out=root+'/.adg/evidence/COL-LOCAL-20261011-01/model-alias-column-20261110';fs.mkdirSync(out,{recursive:true});
+const url='http://127.0.0.1:57285/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html?design=conversations&channel=krill-demo&review=alias-column6#models';
+let page,browser;const checks=[],errors=[];const check=(id,v)=>{assert.ok(v,id);checks.push(id);};
+(async()=>{browser=await chromium.launch({executablePath:'/Users/ezio/Library/Caches/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-mac-arm64/chrome-headless-shell'});
+for(const [w,h,theme] of [[1180,760,'light'],[900,600,'dark']]){
+ const tag=w+'-'+theme;page=await browser.newPage({viewport:{width:1600,height:1000}});page.on('pageerror',e=>errors.push(String(e)));await page.route('**/*',r=>{const u=r.request().url();return u.startsWith('http://127.0.0.1:57285/')||u.startsWith('data:')?r.continue():r.abort();});await page.goto(url);await page.waitForFunction(()=>document.querySelector('.mp-model-alias-cell'));
+ await page.evaluate(({w,h,theme})=>{setWinSize(w,h);document.documentElement.dataset.theme=theme;},{w,h,theme});await page.locator('[data-mp=channel-section][data-id=models]').click();await page.waitForTimeout(400);
+ const first=page.locator('#ccModelPanel-list .mp-model-row').first();
+ check(tag+'-dedicated-header',await page.locator('#ccModelPanel-list .mp-model-alias-heading').innerText()==='别名');
+ check(tag+'-dedicated-cell',await first.locator('.mp-model-alias').evaluate(el=>el.parentElement.matches('.mp-model-row > .mp-model-alias-cell')&&!el.closest('.mp-model-identity')));
+ check(tag+'-vertical-centering',await first.evaluate(el=>{const a=el.querySelector('.mp-model-alias').getBoundingClientRect(),n=el.querySelector('.mp-model-identity').getBoundingClientRect();return Math.abs((a.top+a.bottom-n.top-n.bottom)/2)<1.5;}));
+ check(tag+'-column-alignment',await first.evaluate(el=>{const a=el.querySelector('.mp-model-alias-cell').getBoundingClientRect(),h=document.querySelector('#ccModelPanel-list .mp-model-alias-heading').getBoundingClientRect();return Math.abs(a.left-h.left)<1.5&&Math.abs(a.right-h.right)<1.5;}));
+ check(tag+'-no-overflow',await first.evaluate(el=>el.scrollWidth<=el.clientWidth+1));
+ check(tag+'-identity-and-alias-separated',await first.evaluate(el=>{const a=el.querySelector('.mp-model-alias').getBoundingClientRect(),n=el.querySelector('.mp-model-identity').getBoundingClientRect();return n.right<=a.left+1;}));
+ check(tag+'-badges-retained',JSON.stringify(await first.locator('.cc-model-capability').allTextContents())===JSON.stringify(['Fast','Ultrafast']));
+ await first.evaluate(el=>el.scrollIntoView({block:'center'}));await page.waitForTimeout(100);await page.screenshot({path:out+'/'+tag+'.png'});
+ await first.locator('.mp-model-alias').fill('Sol Daily');await first.locator('.mp-model-alias').press('Tab');
+ check(tag+'-alias-validation-retained',await page.evaluate(()=>!modelPrototype.state().draft.providers.find(p=>p.id==='krill-demo').models[0].naming?.alias)&&(await first.locator('[data-model-error]').innerText()).includes('别名仅允许'));
+ check(tag+'-centers-with-error-row-height',await first.evaluate(el=>{const a=el.querySelector('.mp-model-alias').getBoundingClientRect(),n=el.querySelector('.mp-model-identity').getBoundingClientRect();return Math.abs((a.top+a.bottom-n.top-n.bottom)/2)<1.5;}));
+ await first.locator('.mp-model-alias').fill('Sol-Daily');await first.locator('.mp-model-alias').press('Tab');
+ check(tag+'-alias-edits-draft',await page.evaluate(()=>modelPrototype.state().draft.providers.find(p=>p.id==='krill-demo').models[0].naming.alias==='Sol-Daily'));
+ check(tag+'-alias-does-not-change-upstream-id',await page.evaluate(()=>modelPrototype.state().draft.providers.find(p=>p.id==='krill-demo').models[0].id==='gpt-6.1-sol'));
+ await page.locator('#mpPolicySave').click();await page.waitForTimeout(850);check(tag+'-alias-saves',await page.evaluate(()=>modelPrototype.state().saved.providers.find(p=>p.id==='krill-demo').models[0].naming.alias==='Sol-Daily'));
+ await page.locator('[data-mp=edit-provider][data-id=krill-demo]').click();await page.locator('[data-mp=channel-section][data-id=models]').click();check(tag+'-alias-readback',await page.locator('#ccModelPanel-list .mp-model-alias').first().inputValue()==='Sol-Daily');
+ await page.evaluate(()=>conversationPrototype.setScope('models'));await page.waitForTimeout(100);await page.locator('[data-mp=edit-provider][data-id=newapi]').click();await page.locator('[data-mp=channel-section][data-id=models]').click();
+ check(tag+'-ordinary-model-scope-has-alias-column',await page.locator('.mp-model-alias-heading').count()===1&&await page.locator('.mp-model-alias-cell').count()>0);
+ check(tag+'-ordinary-scope-no-capability-badges',await page.locator('.cc-model-capabilities').count()===0);await page.close();
+}
+check('no-page-errors',errors.length===0);fs.writeFileSync(out+'/browser-checks.json',JSON.stringify({status:'passed',checks,errors,url},null,2));console.log(JSON.stringify({status:'passed',checks:checks.length,errors:errors.length}));await browser.close();
+})().catch(async e=>{console.error(e);fs.writeFileSync(out+'/failure.json',JSON.stringify({error:String(e),checks,errors},null,2));try{await page.screenshot({path:out+'/failure.png'})}catch{}await browser?.close();process.exit(1)});

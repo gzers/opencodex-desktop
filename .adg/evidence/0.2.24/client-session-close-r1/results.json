@@ -1,0 +1,80 @@
+{
+  "accepted": false,
+  "scope": "two normal current-format Mac native sessions plus reopened completion integrity, not whole-version/final candidate acceptance",
+  "commit": "00d01df249fbdac6c5317caf8da11f6164352473",
+  "relatedUniqueFunctionsPassed": 36,
+  "independentReadOnlyIntegrityScenarios": 8,
+  "nativeTestExit": 0,
+  "firstSession": {
+    "startElapsedMs": 8842,
+    "statusElapsedMs": 226,
+    "stopElapsedMs": 8646,
+    "reopenedStatusElapsedMs": 1234,
+    "indexedRevision": 7,
+    "indexedRestored": true,
+    "nativeClientRestored": {
+      "codex/config.toml": true,
+      "codex/models_cache.json": true,
+      "codex/opencodex-catalog-audit.jsonl": true,
+      "codex/opencodex-catalog.json": true,
+      "grok/agents/AGENTS.md": true,
+      "grok/config.toml": true,
+      "grok/config.toml.bak-opencodex": true
+    }
+  },
+  "secondSession": {
+    "allOriginalBytesRestored": true,
+    "indexRevision": 14,
+    "newTicket": true,
+    "result": "passed",
+    "start": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "clientRecoveryRequired": false,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "startElapsedMs": 6677,
+    "stop": {
+      "canRestart": false,
+      "canStart": true,
+      "canStop": false,
+      "clientRecoveryRequired": false,
+      "lifecycleState": "stopped",
+      "result": "stopped"
+    },
+    "stopElapsedMs": 9013
+  },
+  "firstReopenedFacts": {
+    "can_restart": false,
+    "can_start": true,
+    "can_stop": false,
+    "facts": {
+      "client_recovery": "not_required",
+      "data_root": "/private/tmp/ocxd024-versioned-lifecycle-_uvdwody/fixtures/profile/.codex-desktop/desktop",
+      "health": "unknown",
+      "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-_uvdwody/fixtures/profile/.codex-desktop/opencodex/home",
+      "protection": "none",
+      "reboot_safe": true,
+      "runtime_label": "bundled",
+      "service_present": null,
+      "shim_present": null,
+      "startup_status": "native",
+      "version_drift": "2.99.0"
+    },
+    "matrix": {
+      "connection": "unconfigured",
+      "operation": "idle",
+      "runtime": "stopped"
+    },
+    "pid": null,
+    "port": null,
+    "source": "live"
+  },
+  "independentSchemaVersion": 3,
+  "all14EventsAndBothOriginalsRetained": true,
+  "noNewReleaseAppDMG": true,
+  "ordinaryRestartCommandNotExecutedInThisBatch": true,
+  "dailyOrOfficialConfigurationChanged": false
+}

@@ -1,0 +1,7 @@
+
+thread 'modules::runtime::bundled::bundled_tests::interrupted_version_activation_remains_unknown_and_never_reports_installed' (150982999) panicked at src/modules/runtime/bundled_tests.rs:85:5:
+assertion failed: f.i.join("runtime/.selection-pending.json").is_file()
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'modules::runtime::bundled::bundled_tests::versioned_supply_verifies_and_selects_one_official_image_without_execution' (150983031) panicked at src/modules/runtime/bundled_tests.rs:29:82:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "bundle_invalid", detail: "维护tgz必须存在，且与runtimeArchiveSha256一致" }

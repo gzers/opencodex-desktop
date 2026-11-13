@@ -1,0 +1,26 @@
+{
+  "accepted": false,
+  "directedTwoCyclesPassed": false,
+  "firstCycle": {
+    "startMs": 8202,
+    "statusMs": 227,
+    "stopMs": 8749,
+    "stoppedStatusMs": 1375
+  },
+  "secondCycle": {
+    "startMs": 14368,
+    "statusMs": 1453,
+    "stopMs": 10736,
+    "stopResult": "failed-client-restore-pending",
+    "retainedState": "restore_prepared",
+    "revision": 16
+  },
+  "firstBindingAndNineEventsUnchanged": true,
+  "twoIndependentOriginalAndThreePhaseChainsVerified": true,
+  "secondRootNotRetiredAndNoCompletionInvented": true,
+  "bothActualLauncherAndServiceNormalExitObserved": true,
+  "globalLUnchangedAndReleased": true,
+  "ownedCoordinatorsRemoved": 3,
+  "offlineReplayRemoved": true,
+  "scope": "new frozen236ed43dd hypothesis round retained as failed; old12878ms round unchanged, no budget relaxation or whole-version acceptance"
+}

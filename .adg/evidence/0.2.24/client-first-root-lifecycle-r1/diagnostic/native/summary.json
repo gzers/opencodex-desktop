@@ -1,0 +1,91 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "grokConfigChangedDuringStart": false,
+  "independentOriginalsReferenced": true,
+  "indexedAfterStop": {
+    "completionSha256": null,
+    "references": {
+      "attempt": "3c3aba8a-ce87-4af4-840c-80061951bc89",
+      "liveSha256": "72b858b6dec1cd617e0c9eb99e7fa87b5dabbcbd67a110e25bd52740b0ff82a6",
+      "originalSha256": "d5fe90ae07d3eb7388d013dfe2ea54ffef40f080969c724455825f7575763d23",
+      "phases": [
+        [
+          "ready",
+          "61bac5c8f170240e064b6a58df654f963c479ed097cfee160cf68838d425cc8a"
+        ],
+        [
+          "pre_stop",
+          "d183bd2b44d72ce5289e80fcd512e39784c0ea9fd8cdac2f4c404d846f0998d5"
+        ],
+        [
+          "stopped",
+          "01b516f6420e56771908f6bfa87d9a55f0367b6979b293ed21c625658fd846e0"
+        ]
+      ],
+      "scopeSha256": "1ec1e7c280e0c4c1eed47b5c533c303fd98eddadde6159921c0984144e3fc5ef"
+    },
+    "restorePlan": {
+      "id": "d674d1e2-fd19-48a8-a4fc-6882874f23a8",
+      "sha256": "af0d9d1a22e88cbfaffb6c754dfbc70b39333aa8d55d66d31fdf9a011d146b30"
+    },
+    "revision": 7,
+    "state": "restore_prepared",
+    "ticket": "3c3aba8a-ce87-4af4-840c-80061951bc89"
+  },
+  "indexedReady": true,
+  "initialClientState": "codex-absent",
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 52355,
+    "port": 54410
+  },
+  "recordAbsent": true,
+  "rootAbsentTerminal": false,
+  "scope": "diagnostic first-root Start/Stop only; next Start and interrupted root recovery remain unaccepted",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 7900,
+  "status": {
+    "pid": "52355",
+    "port": 54410,
+    "ready": true,
+    "status": "running"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 228,
+  "stop": {
+    "canRestart": false,
+    "canStart": false,
+    "canStop": false,
+    "clientRecoveryRequired": true,
+    "failure": {
+      "code": "lifecycle_timeout",
+      "message": "操作未在规定时间内确认完成，请核对服务状态。"
+    },
+    "lifecycleState": "stopped",
+    "result": null
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 10273,
+  "stoppedRecoveryObservation": true
+}

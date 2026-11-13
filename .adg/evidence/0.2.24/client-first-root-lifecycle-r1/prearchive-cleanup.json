@@ -1,0 +1,90 @@
+{
+  "accepted": false,
+  "allOriginalToolHandlesTerminal": true,
+  "ownedProcessesRemaining": [],
+  "tcp": {
+    "framingVerified": true,
+    "primaryPortsAbsent": [
+      52675,
+      54410,
+      55822
+    ],
+    "snapshotSha256": "e36c686ab801ecbdc25fbf94585d3040dd8707e4882797bd4a6feeb1f4b45efa",
+    "secondaryPorts": "Product captured and confirmed4 absent per round; cleanup independently checks only exported primary ports"
+  },
+  "allNewCoordinatorsExclusivelyReacquiredAndRemoved": [
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/289ce6baf325746b87773568d480447a7bb0ce5818c15b024c089c573c173e1e.sqlite",
+      "device": 16777231,
+      "inode": 444805843,
+      "sha256": "eafa0d1c35cd41682acb77f58a1d327f004aa8edb309e415ef1002eb1072db71"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/289ce6baf325746b87773568d480447a7bb0ce5818c15b024c089c573c173e1e.sqlite",
+      "device": 16777231,
+      "inode": 444805846,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/828749ddbbd2c206e1bb708e99fbbd3e90c7e82968b69036248e5732eaab7d39.sqlite",
+      "device": 16777231,
+      "inode": 444806946,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/bd3400c1cf3407ccb910405cdb1bcf4f99d0a1e3bd01f766b338ad637d93ddb0.sqlite",
+      "device": 16777231,
+      "inode": 444810158,
+      "sha256": "5af6d55cead6a6a262943a201ac4d14a4746c049c60709fefa19fd674d8cfd2c"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/bd3400c1cf3407ccb910405cdb1bcf4f99d0a1e3bd01f766b338ad637d93ddb0.sqlite",
+      "device": 16777231,
+      "inode": 444810161,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/5b6db7913107358d0733a09840888b8e6ab35dc973415914b8bdb53960d3f415.sqlite",
+      "device": 16777231,
+      "inode": 444811256,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/6e5923aac86e6c957d36a83c60765dbc5ba617eddcac6af8edbc93f219ce0947.sqlite",
+      "device": 16777231,
+      "inode": 444814511,
+      "sha256": "1714ba7c8fe612bc988b0e4577341223db729442e899bf57dd1c5c28f8899b14"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/6e5923aac86e6c957d36a83c60765dbc5ba617eddcac6af8edbc93f219ce0947.sqlite",
+      "device": 16777231,
+      "inode": 444814514,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47"
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/c13627eb408ad637a2b84c099b1daa3918ccf8c6743acc543d099bf2c1dc55f6.sqlite",
+      "device": 16777231,
+      "inode": 444815608,
+      "sha256": "1ce3eef502d32cab4bfe4451ef344081d77ad13c8a24122394be0996c3d47e47"
+    }
+  ],
+  "globalLUnchangedAndExclusiveReleased": {
+    "device": 16777231,
+    "inode": 369360155,
+    "mode": 384,
+    "uid": 501,
+    "gid": 0,
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rawFailedBytesCapturedBeforeCleanup": true,
+  "ownedRootsStillRetainedUntilArchiveVerification": [
+    "/private/tmp/ocxd024-versioned-lifecycle-ofvb723j",
+    "/private/tmp/ocxd024-versioned-lifecycle-d0l7jgjl",
+    "/private/tmp/ocxd024-versioned-lifecycle-xevkiwsi"
+  ],
+  "dailyConfigurationChanged": false,
+  "officialRuntimeModified": false,
+  "realBusinessRequests": false,
+  "normalStopAccepted": false
+}

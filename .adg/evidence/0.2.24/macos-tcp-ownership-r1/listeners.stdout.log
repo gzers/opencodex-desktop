@@ -1,0 +1,9 @@
+
+running 3 tests
+test infrastructure::macos_tcp_listeners::tests::actual_child_ipv4_ipv6_listeners_are_complete_and_udp_is_not_a_tcp_listener ... NATIVE_TCP_LISTENERS ipv4=true ipv6=true ports=2 udpExcluded=true
+ok
+test infrastructure::macos_tcp_listeners::tests::changed_fd_or_listener_set_between_two_observations_refuses_without_a_fake_partial_result ... ok
+test infrastructure::macos_tcp_listeners::tests::wrong_generation_expired_budget_and_already_exited_process_never_become_a_listener_proof ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2337 filtered out; finished in 0.08s
+

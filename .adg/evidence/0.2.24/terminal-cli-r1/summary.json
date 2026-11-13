@@ -1,0 +1,74 @@
+{
+  "codeCommit": "e9b00583cfe5a84386f13897f5313c210b94f2d4",
+  "synthetic": {
+    "terminal": 9,
+    "selection": 7,
+    "consumers": 2,
+    "totalPassed": 18,
+    "explicitCasesIgnoredInOrdinaryRun": 2,
+    "binarySha256": "931e8f2e7e8192b56ef566cb5c5c809b2bf3babebca0b44b42236472fc6d88f7"
+  },
+  "actualDesktopAndOfficial": {
+    "passed": 2,
+    "managerBinarySha256": "a683b552c12ac2ab89d9b46308110e985250574b4809efd20ceed6d4491859d0",
+    "testBinarySha256": "931e8f2e7e8192b56ef566cb5c5c809b2bf3babebca0b44b42236472fc6d88f7",
+    "descriptorPin": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "sourceArchiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+    "actualNewShells": [
+      "zsh",
+      "bash"
+    ],
+    "customAggregateAndHome": true,
+    "officialVersion": "2.99.0",
+    "readOnlyPort": 41234,
+    "exitStatusFixture": 23,
+    "serviceOrGuiStarted": false
+  },
+  "frontend": {
+    "tests": 41,
+    "files": 5,
+    "typecheck": "passed"
+  },
+  "strictClippyAllTargets": "passed",
+  "format": "passed",
+  "visual": {
+    "engine": "chromium",
+    "viewports": [
+      "1040x760",
+      "580x480"
+    ],
+    "confirmationAndConflictAndDisable": true,
+    "horizontalOverflow": false,
+    "nativeIpcInvoked": false,
+    "afterScreenshot": "Shortened the visible label 用户 PATH 配置 to PATH 配置 after its unwanted line wrap was observed; no layout or behavior changed."
+  },
+  "verified": [
+    "explicit preview/confirmation; no registry/global npm or daily shell writes",
+    "~/.local/bin/ocx delegates to owned runtime/bin/ocx then actual Desktop --ocxd-runtime-cli before GUI initialization",
+    "every dispatch resolves the current actual image and persisted active D/H; inherited OS HOME/USERPROFILE unchanged; OPENCODEX_HOME fixed to the bound current home",
+    "command conflicts in explicit PATH/common system paths refuse; shell-side conflict guard does not prepend over a later user command",
+    "zsh/bash profile edits are exact marked append/remove; original byte content and permissions preserved; post-enable user edits retain separators; originally absent clean profiles removed on disable",
+    "pending journal only replays exact recognized scripts and profile edits; unrecognized scripts/profiles/targets refused; current file drift refuses overwrite",
+    "root binding changes blocked while entry or pending record exists; disable before switching avoids orphaned D/H command",
+    "front-end operation persists across route remount; late preview, mismatched reply or failed operation does not claim success"
+  ],
+  "retainedDevelopmentFailures": [
+    "Clippy rejected one unnecessary owned PathBuf comparison; fixed to compare the existing value.",
+    "Recovery validation helper was initially inserted inside Context impl while called as a free function; compilation refused, moved to the correct module scope.",
+    "Initial format check requested module ordering only; corrected without behavior change.",
+    "Original no-newline shell suffix test exposed need to retain a separator for later user content; expected file updated to preserve separate user commands."
+  ],
+  "boundaries": [
+    "macOS implementation; Windows registration/PATH backend is not implemented and currently returns explicit unavailable",
+    "native check used freshly built debug Desktop at isolated .app-shaped location and unchanged official bundle, not a signed installer/release candidate",
+    "ordinary shell HOME overridden only in isolated fixture processes; no real user dotfiles or daily config touched",
+    "no old-version migration; unsupported shells/ZDOTDIR redirection are explicit refusal, not an automatic fallback",
+    "program uninstall cleanup needs to integrate this owned entry contract; Windows W1 and final candidate gates remain pending",
+    "last production edits after real CLI runs: module declaration ordering and shortening one UI label only"
+  ],
+  "networkDeniedForBackend": true,
+  "official299Modified": false,
+  "dailyConfigTouched": false,
+  "businessSyncOrModelRequest": false,
+  "temporaryRootsCleaned": true
+}

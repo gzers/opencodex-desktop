@@ -1,0 +1,24 @@
+{
+  "accepted": false,
+  "agentId": "01a1d173-61f1-70c1-84d1-ae12df52d4a6",
+  "staticReadOnlyNoNativeOrEdits": true,
+  "firstFindings": [
+    "reference-free unclosed events were skipped by reference-only latest map",
+    "exact independent initialPrepared and closedPredecessor plan must match final closed/source"
+  ],
+  "resolution": [
+    "all history events must belong to current supported origin generation; complete phase sequence, refs/live prefixes and registered decisions checked, lastRootAbsent required",
+    "source+1 and closed-1 are exact Prepared plan references, current complete source event is matched"
+  ],
+  "addedNegativeScope": [
+    "unknown refsNone Preparing/CaptureReserved/Failed, including new ticket",
+    "rewritten middle Prepared hash",
+    "missing provenance/plan/original/intent/receipt",
+    "receipt samebyte access-mode change and mid-projection receipt replacement",
+    "same existing index connection binding/action/event mutation",
+    "full explicitly synthetic Ready/PreStop/Stopped/live+temporarymarker released chain"
+  ],
+  "finalStaticReview": "Both direct findings closed; no new blocker found in current first-generation history fact scope",
+  "agentClosed": true,
+  "doesNotCertifyCompleteNextStart": true
+}

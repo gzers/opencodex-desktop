@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.72s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 5 tests
+test infrastructure::macos_client_originals::restore::tests::first_grok_backup_and_optional_codex_config_share_reversible_sparse_targets_without_fake_history ... ok
+test infrastructure::macos_client_originals::restore::tests::first_grok_backup_native_gap_preserves_a_replacement_in_its_original_grok_path ... ok
+test infrastructure::macos_client_originals::restore::tests::first_grok_backup_real_crash_reopens_only_the_original_known_objects ... ok
+test infrastructure::macos_client_originals::restore::tests::first_grok_backup_refuses_modified_or_replaced_backup_and_keeps_existing_original_backup ... ok
+test infrastructure::macos_client_originals::restore::tests::first_grok_backup_rollback_rearm_restores_same_object_and_preserves_other_grok_files ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2433 filtered out; finished in 19.24s
+

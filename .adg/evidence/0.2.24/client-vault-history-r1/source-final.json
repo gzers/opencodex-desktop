@@ -1,0 +1,62 @@
+{
+  "baseCommit": "1524b6a97991e6c3af8f55dded287a9faf5a5f3b",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_recovery_tests.rs",
+      "sha256": "32a034777aaafe8f1d25d7c21cdca4f5340784e8fe9733a3dc3e2bd2fab2119d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "sha256": "9a8ffc71e88fb7acba2980254d13e916519d7d7c54c3b8a20240cd09f2c459dc"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "sha256": "62d7b6f591dd9c5b25db50fcbdfa3710b1c73c09614928dd44efbdddb396c306"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_prepare_cancel.rs",
+      "sha256": "9b29af77b120552585fd3202036fb8b362c6134f3c075df0d90077b2da3bdb16"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "3186b088d307d001c859529eb67708de02d5871b144423b0f36429747cdc688a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs",
+      "sha256": "01d4288f9ab10ca5c3e6c62e1f12df2b499eedbca20c75b03f5c6319d9609458"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "sha256": "6861236640aeac6a26995a36936f18b195d121c223be4cd6f2be8a46844f6d22"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_tests.rs",
+      "sha256": "68802bdc4c7154f31e929a60b22a31f0808fb7558c813ed6f92dbfcca021b427"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_tree.rs",
+      "sha256": "4e4a1cde30ad9d6191b4df8731fe79578543bcd9e60d774ab920c40222716d64"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+      "sha256": "8c38603dbb8ea77f374cd4bed319d2e4b2d5c8a353f6ddb1eccca110672392a2"
+    },
+    {
+      "path": "apps/desktop/ui/qa/client-recovery-visual.mjs",
+      "sha256": "bffe68b23acce1d8f925425ae6a12b4d82748d173e85c1d4d9f557f66f6e68cf"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "sha256": "d033d2639b10c59b9de1ecf14296b33fdd869362ef1eef95b0364f803723f878"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "sha256": "0a9cd101e57e04fac06222d12cd751ea80b9457eed6d78cef500701ecaac1dc8"
+    }
+  ],
+  "nativeOriginalSource": "native/source.json",
+  "laterNativeBinary": "031a8d3cf6d96c79ed68105cf80052e9c465781dc68dc4fc60d90b5120022953",
+  "sourceBoundary": "Added directed next-Preparing test helper and fixed-phase timing diagnostic after original Stop failure; cancellation and history algorithm stable. Final unused variable removed in test helper; no native rerun for that test-only change.",
+  "codeCommit": "ae3d08c5cc3fbc4e201c2a1ed67c9cddcb4d9171",
+  "backendCommit": "9ba2fc655ed77bd915fcecfd3b9cb6fa98d35ef5"
+}

@@ -1,0 +1,26 @@
+{
+  "accepted": false,
+  "directedTwoCyclesPassed": false,
+  "firstCycle": {
+    "startMs": 8199,
+    "statusMs": 224,
+    "stopMs": 8782,
+    "stoppedStatusMs": 1880
+  },
+  "secondCycle": {
+    "startMs": 20700,
+    "statusMs": 2205,
+    "stopMs": 12878,
+    "stopResult": "failed-timeout",
+    "retainedState": "restore_prepared",
+    "revision": 16
+  },
+  "firstBindingAndNineEventsUnchanged": true,
+  "twoIndependentOriginalAndThreePhaseChainsVerified": true,
+  "secondRootNotRetiredAndNoCompletionInvented": true,
+  "bothActualLauncherAndServiceNormalExitObserved": true,
+  "globalLUnchangedAndReleased": true,
+  "ownedCoordinatorsRemoved": 3,
+  "offlineReplayRemoved": true,
+  "scope": "first exact failing repeated-service round retained; no budget relaxation, no rerun or whole-version acceptance"
+}

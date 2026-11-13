@@ -1,0 +1,7 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+CONFIG_GUARD_TRACE expected=released actual=released phase=release
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+
+thread 'commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client' (157662858) panicked at src/commands/lifecycle_versioned_tests.rs:666:9:
+first-root Stop must commit exact original absence; preserve report and app log on refusal
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

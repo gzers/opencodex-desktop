@@ -1,0 +1,33 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0277]: the trait bound `CFArray<CFType>: ConcreteCFType` is not satisfied
+   --> src/modules/network_defaults/npm_proxy.rs:206:29
+    |
+206 |                 .downcast::<CFArray<CFType>>()
+    |                  --------   ^^^^^^^^^^^^^^^ the trait `ConcreteCFType` is not implemented for `CFArray<CFType>`
+    |                  |
+    |                  required by a bound introduced by this call
+    |
+note: there are multiple different versions of crate `core_foundation` in the dependency graph
+   --> /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/core-foundation-0.9.4/src/lib.rs:26:1
+    |
+ 26 | pub unsafe trait ConcreteCFType: TCFType {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ this is the expected trait
+    |
+   ::: /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/core-foundation-0.10.1/src/lib.rs:20:1
+    |
+ 20 | pub unsafe trait ConcreteCFType: TCFType {}
+    | ---------------------------------------- this is the trait that was imported
+    = help: you can use `cargo tree` to explore your dependency tree
+help: the trait `ConcreteCFType` is implemented for `CFArray`
+   --> /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/core-foundation-0.9.4/src/array.rs:62:1
+    |
+ 62 | unsafe impl ConcreteCFType for CFArray<*const c_void> {}
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+note: required by a bound in `CFType::downcast`
+   --> /Users/ezio/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/core-foundation-0.9.4/src/base.rs:85:24
+    |
+ 85 |     pub fn downcast<T: ConcreteCFType>(&self) -> Option<T> {
+    |                        ^^^^^^^^^^^^^^ required by this bound in `CFType::downcast`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

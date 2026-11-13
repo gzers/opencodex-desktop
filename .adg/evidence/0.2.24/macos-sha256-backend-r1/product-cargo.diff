@@ -1,0 +1,38 @@
+diff --git a/apps/desktop/tauri/Cargo.lock b/apps/desktop/tauri/Cargo.lock
+index 43d94d307..ca17d6de8 100644
+--- a/apps/desktop/tauri/Cargo.lock
++++ b/apps/desktop/tauri/Cargo.lock
+@@ -3734,6 +3734,16 @@ dependencies = [
+  "cfg-if",
+  "cpufeatures 0.2.17",
+  "digest",
++ "sha2-asm",
++]
++
++[[package]]
++name = "sha2-asm"
++version = "0.6.4"
++source = "registry+https://github.com/rust-lang/crates.io-index"
++checksum = "b845214d6175804686b2bd482bcffe96651bb2d1200742b712003504a2dac1ab"
++dependencies = [
++ "cc",
+ ]
+ 
+ [[package]]
+diff --git a/apps/desktop/tauri/Cargo.toml b/apps/desktop/tauri/Cargo.toml
+index 57bfd7ea9..e7742546d 100644
+--- a/apps/desktop/tauri/Cargo.toml
++++ b/apps/desktop/tauri/Cargo.toml
+@@ -71,6 +71,12 @@ objc2 = "0.6"
+ reqwest = { version = "0.12", default-features = false, features = ["json", "macos-system-configuration", "rustls-tls-native-roots"] }
+ keyring = { version = "3", default-features = false, features = ["apple-native"] }
+ 
++# sha2 0.10 otherwise selects the software SHA-256 path on aarch64. Use the
++# upstream CPU-detected backend (with its software fallback); all image bytes
++# and independent digests are still read and checked on every action.
++[target.'cfg(all(target_os = "macos", target_arch = "aarch64"))'.dependencies]
++sha2 = { version = "0.10", features = ["asm"] }
++
+ [target.'cfg(target_os = "windows")'.dependencies]
+ keyring = { version = "3", default-features = false, features = ["windows-native"] }
+ windows = { version = "=0.62.2", features = ["Win32_Foundation", "Win32_System_Com", "Win32_System_Ole", "Win32_System_TaskScheduler", "Win32_System_Variant"] }

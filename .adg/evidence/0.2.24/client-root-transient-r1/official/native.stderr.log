@@ -1,0 +1,5 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+
+thread 'infrastructure::official_client_coordination::native::tests::official299_native_handover_holds_through_work_and_preserves_original_ownership' (157562444) panicked at src/infrastructure/macos_client_root_transient_tests.rs:337:12:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "test_transient_plan", detail: "synthetic transient plan refused" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

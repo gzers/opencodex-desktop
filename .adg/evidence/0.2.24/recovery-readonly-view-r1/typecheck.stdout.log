@@ -1,0 +1,7 @@
+
+> opencodex-desktop-ui@0.2.24 typecheck
+> vue-tsc --noEmit
+
+tests/panel.test.ts(233,9): error TS2783: 'client_recovery' is specified more than once, so this usage will be overwritten.
+tests/post10-panel.test.ts(15,102): error TS2741: Property 'client_recovery' is missing in type '{ health: "healthy"; runtime_label: null; opencodex_home: string; data_root: string; protection: null; reboot_safe: null; service_present: null; shim_present: null; version_drift: null; }' but required in type 'RuntimeFacts'.
+tests/runtime-port-settings.test.ts(8,125): error TS2741: Property 'client_recovery' is missing in type '{ health: "unknown" | "healthy"; runtime_label: null; opencodex_home: string; data_root: string; protection: null; reboot_safe: null; service_present: null; shim_present: null; version_drift: null; }' but required in type 'RuntimeFacts'.

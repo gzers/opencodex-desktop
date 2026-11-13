@@ -1,0 +1,32 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "captureInterruptionExpected": true,
+  "clientChangedDuringStart": false,
+  "grokConfigChangedDuringStart": false,
+  "independentOriginalsReferenced": true,
+  "indexedReady": false,
+  "indexedRevision": 2,
+  "indexedState": "captured",
+  "officialVersion": "2.99.0",
+  "record": null,
+  "result": "failed",
+  "serviceStarted": false,
+  "start": {
+    "canRestart": false,
+    "canStart": true,
+    "canStop": false,
+    "clientRecoveryRequired": false,
+    "failure": {
+      "code": "lifecycle_unconfirmed",
+      "message": "操作未确认完成，已保留当前配置，请查看诊断日志。"
+    },
+    "lifecycleState": "starting_failed",
+    "result": null
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 3283,
+  "statusAndStopSkipped": "directed capture-only fixture; no service generation started",
+  "statusBudgetMs": 5000,
+  "stopBudgetMs": 10000
+}

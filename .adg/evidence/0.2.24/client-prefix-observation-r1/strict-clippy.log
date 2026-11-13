@@ -1,0 +1,17 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: called `unwrap` on `self.original_root_absence` after checking its variant with `is_some`
+    --> src/infrastructure/macos_client_originals.rs:1471:21
+     |
+1459 |         if self.original_root_absence.is_some() {
+     |         --------------------------------------- help: try: `if let Some(<item>) = &self.original_root_absence`
+...
+1471 |                     self.original_root_absence.as_ref().unwrap(),
+     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+     |
+     = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#unnecessary_unwrap
+     = note: `-D clippy::unnecessary-unwrap` implied by `-D warnings`
+     = help: to override `-D warnings` add `#[allow(clippy::unnecessary_unwrap)]`
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

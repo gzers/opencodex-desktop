@@ -1,0 +1,145 @@
+{
+  "accepted": false,
+  "officialArchiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "rowsExactlyEqual": true,
+  "samples": [
+    {
+      "elapsedNanos": 644846416,
+      "entryCount": 15646,
+      "fileCount": 13393,
+      "metrics": {
+        "stages": {
+          "directory-path-admission": [
+            2254,
+            69846944
+          ],
+          "entry-inspect-name": [
+            15647,
+            58830423
+          ],
+          "existing-path-boundary": [
+            17901,
+            774470260
+          ],
+          "file-admission-open": [
+            13393,
+            390350536
+          ],
+          "file-read-hash": [
+            13393,
+            271717417
+          ],
+          "file-total": [
+            13393,
+            669430115
+          ]
+        }
+      },
+      "reference": true
+    },
+    {
+      "elapsedNanos": 522283875,
+      "entryCount": 15646,
+      "fileCount": 13393,
+      "metrics": {
+        "stages": {
+          "directory-path-admission": [
+            2254,
+            42055495
+          ],
+          "entry-inspect-name": [
+            15647,
+            60926380
+          ],
+          "existing-path-boundary": [
+            17901,
+            427365495
+          ],
+          "file-admission-open": [
+            13393,
+            409189183
+          ],
+          "file-read-hash": [
+            13393,
+            271584181
+          ],
+          "file-total": [
+            13393,
+            688191461
+          ]
+        }
+      },
+      "reference": false
+    },
+    {
+      "elapsedNanos": 497956083,
+      "entryCount": 15646,
+      "fileCount": 13393,
+      "metrics": {
+        "stages": {
+          "directory-path-admission": [
+            2254,
+            40521403
+          ],
+          "entry-inspect-name": [
+            15647,
+            59373087
+          ],
+          "existing-path-boundary": [
+            17901,
+            432941081
+          ],
+          "file-admission-open": [
+            13393,
+            344160630
+          ],
+          "file-read-hash": [
+            13393,
+            276854399
+          ],
+          "file-total": [
+            13393,
+            628596462
+          ]
+        }
+      },
+      "reference": false
+    },
+    {
+      "elapsedNanos": 630727458,
+      "entryCount": 15646,
+      "fileCount": 13393,
+      "metrics": {
+        "stages": {
+          "directory-path-admission": [
+            2254,
+            70218771
+          ],
+          "entry-inspect-name": [
+            15647,
+            60078447
+          ],
+          "existing-path-boundary": [
+            17901,
+            785163524
+          ],
+          "file-admission-open": [
+            13393,
+            335689097
+          ],
+          "file-read-hash": [
+            13393,
+            274296869
+          ],
+          "file-total": [
+            13393,
+            617615464
+          ]
+        }
+      },
+      "reference": true
+    }
+  ],
+  "scope": "same original299 complete image, only adjacent metadata lookup removed; no service actions or Stop budget acceptance",
+  "treeSha256": "a29dedc203311ca4d6d4005db94b4a10d4fb84409283669e25272f080756b790"
+}

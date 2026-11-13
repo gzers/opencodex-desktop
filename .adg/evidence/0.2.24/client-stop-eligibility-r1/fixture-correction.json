@@ -1,0 +1,9 @@
+{
+  "run": "eligibility-tests",
+  "exitCode": 101,
+  "passed": 2,
+  "failed": 2,
+  "cause": "Tests attempted separate readonly status while holding the action Index exclusive lock; the native busy refusal was correct.",
+  "correction": "Drop owning Index before independent status/nextStart observation. Eligibility computation remains inside original same held postcommit lock. No product lock/unknown assertions weakened.",
+  "followup": "eligibility-final four tests passed; six-case final test adds postcandidate deadline demotion and later Start independent recheck."
+}

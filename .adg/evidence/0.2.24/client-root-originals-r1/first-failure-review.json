@@ -1,0 +1,9 @@
+{
+  "accepted": false,
+  "preservedFailure": "root-absence-capture-tests.log",
+  "result": "0passed/7failed",
+  "reason": "The earlier batch had placed a root terminal-closure refusal in the generic Index::write, so the new dedicated CaptureReserved transition was denied before any original capture.",
+  "fix": "Move ordinary recovery refusal to close_readback; generic write permits only explicit Preparing\u2192CaptureReserved, dedicated CaptureReserved\u2192Captured and Failed for registered first roots. Public advance/cancellation/completion remain refused.",
+  "assertionsUnchanged": true,
+  "otherFirstErrors": "Original E0061/E0609 compilation failures and an unused-library-method warning are described in hypothesis.json; raw tool output is preserved in chat, not claimed as a separate original log file."
+}

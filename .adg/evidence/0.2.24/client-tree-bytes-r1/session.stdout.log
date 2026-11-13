@@ -1,0 +1,15 @@
+
+running 10 tests
+test infrastructure::macos_client_originals::session::tests::a_coordinator_client_path_is_not_the_effective_home_of_the_cleared_production_runtime ... ok
+test infrastructure::macos_client_originals::session::tests::audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction ... ok
+test infrastructure::macos_client_originals::session::tests::immutable_startup_scope_reopens_only_with_independent_original_and_scope_references ... ok
+test infrastructure::macos_client_originals::session::tests::independent_static_route_declaration_uses_official_slash_encoding_and_refuses_alias_collision ... ok
+test infrastructure::macos_client_originals::session::tests::missing_or_untrusted_runtime_record_cannot_create_a_ready_binding ... ok
+test infrastructure::macos_client_originals::session::tests::official299_real_startup_originals_ready_binding_and_completed_stop_roundtrip ... ignored, explicit pinned official299 resources; new private profile; binding only, whole client restore still expected to fail
+test infrastructure::macos_client_originals::session::tests::persisted_live_reference_is_not_an_endpoint_or_process_authority ... ok
+test infrastructure::macos_client_originals::session::tests::ready_generation_fields_and_phase_references_are_bounded_and_typed ... ok
+test infrastructure::macos_client_originals::session::tests::replaced_home_directory_and_tampered_scope_are_preserved_and_rejected ... ok
+test infrastructure::macos_client_originals::session::tests::scope_cannot_move_to_another_home_profile_client_or_program ... ok
+
+test result: ok. 9 passed; 0 failed; 1 ignored; 0 measured; 2321 filtered out; finished in 0.90s
+

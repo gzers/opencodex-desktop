@@ -1,0 +1,20 @@
+
+running 15 tests
+test commands::update::tests::cancelled_check_releases_only_its_own_generation ... ok
+test commands::update::tests::channel_command_persists_and_refuses_install_races ... ok
+test commands::update::tests::channel_switch_clears_stale_check_result ... ok
+test commands::update::tests::channel_switch_is_idempotent_and_blocked_during_installation ... ok
+test commands::update::tests::frozen_manager_query_has_no_setup_or_network_side_effect ... ok
+test commands::update::tests::install_marks_signature_only_after_plugin_download_and_install ... ok
+test commands::update::tests::late_check_cannot_overwrite_a_new_channel_or_release_its_lock ... ok
+test commands::update::tests::manager_query_commits_channel_cache_deadline_and_terminal_together ... ok
+test commands::update::tests::manager_query_owner_survives_disconnect_and_releases_on_all_terminals ... ok
+test commands::update::tests::manager_query_persistence_failure_never_reports_success_metadata ... ok
+test commands::update::tests::manager_query_retains_the_callers_runtime_for_its_owned_work ... ok
+test commands::update::tests::notes_are_bounded_plaintext_and_candidate_links_are_not_guessed ... ok
+test commands::update::tests::reviewed_candidate_must_match_channel_version_and_idle_state ... ok
+test commands::update::tests::stale_manager_query_cannot_persist_resolve_or_release_new_channel ... ok
+test commands::update::tests::successful_check_clears_stale_failure_and_records_result ... ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 2159 filtered out; finished in 0.14s
+

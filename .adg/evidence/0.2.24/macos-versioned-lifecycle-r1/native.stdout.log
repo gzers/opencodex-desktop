@@ -1,0 +1,12 @@
+
+running 1 test
+test commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client ... OFFICIAL299_NATIVE_LIFECYCLE {"accepted":false,"businessRequests":false,"clientChangedDuringStart":false,"nativeClientRestored":{"config.toml":true,"models_cache.json":false,"opencodex-catalog-audit.jsonl":false,"opencodex-catalog.json":false,"opencodex-grok-backup.json":true},"officialVersion":"2.99.0","pidRecordAbsent":false,"record":{"pid":20531,"port":58860},"recordAbsent":false,"result":"failed","serviceStarted":false,"start":{"canRestart":false,"canStart":true,"canStop":false,"failure":{"code":"lifecycle_readiness_failed","message":"官方服务已报告启动未就绪，可能存在客户端配置或服务归属问题；请查看诊断，未放宽校验。"},"lifecycleState":"starting_failed","result":null},"startBudgetMs":30000,"startElapsedMs":4435,"status":{"error":"Unreachable"},"statusBudgetMs":5000,"statusElapsedMs":0,"stop":{"canRestart":true,"canStart":false,"canStop":true,"failure":{"code":"lifecycle_stop_unknown","message":"官方停止或客户端还原结果未确认；未强制终止或宣称已停止"},"lifecycleState":"running","result":null},"stopBudgetMs":10000,"stopElapsedMs":1703}
+FAILED
+
+failures:
+
+failures:
+    commands::lifecycle_versioned_tests::official299_versioned_start_status_stop_preserves_native_client
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2178 filtered out; finished in 82.86s
+

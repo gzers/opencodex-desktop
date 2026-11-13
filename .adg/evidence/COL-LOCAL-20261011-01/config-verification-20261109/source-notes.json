@@ -1,0 +1,27 @@
+{
+  "atUtc": "2026-11-09T13:10:18.791847+00:00",
+  "tutorialUrl": "https://www.krill-code.com/app/tutorial?channel=Openai+%E5%AE%98%E6%B8%A0&client=codex",
+  "tutorialAsset": "https://www.krill-code.com/assets/TutorialPage-FhOMkkYr.js",
+  "tutorialAssetSha256": "144dfb3cd7178a465b2161fc66d91eba6ae7cc61b4932fffb6049a8b241bba63",
+  "translationAsset": "https://www.krill-code.com/assets/i18n-BMtTxVHQ.js",
+  "translationAssetSha256": "1222ae52bf162ac5e0b2fff0d3eb8f6825679017414e5115c9b702bad0ce501c",
+  "method": "Public page JavaScript assets inspected without executing downloaded code; browser tool timed out and static HTML had no tutorial body.",
+  "selectedChannel": "Openai 官渠",
+  "selectedClient": "codex",
+  "findings": [
+    "Official-channel tutorial selects native openai provider and backend-api URLs with a personal_access_token credential shape.",
+    "Tutorial currently says context_management/history notes is disabled; old enablement snippets are not the current recommendation.",
+    "Fast is priority; Ultrafast is model-dependent.",
+    "Existing Krill-1 route uses OpenCodex openai-responses adapter and codex/v1. It is not the direct native provider tutorial path."
+  ],
+  "officialCodexConfigUrl": "https://learn.chatgpt.com/docs/config-file/config-reference",
+  "officialFieldsCrossChecked": [
+    "model_reasoning_effort",
+    "agents.default_subagent_model",
+    "agents.default_subagent_reasoning_effort",
+    "agents.max_concurrent_threads_per_session"
+  ],
+  "credentialsRead": false,
+  "dailySettingsChanged": false,
+  "tutorialNativeDirectPathTested": false
+}

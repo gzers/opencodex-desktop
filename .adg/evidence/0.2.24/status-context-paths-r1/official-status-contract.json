@@ -1,0 +1,60 @@
+{
+  "archiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "member": "package/src/cli/status.ts",
+  "sourceSha256": "590e20f588c089536b7a50170aba46f664370f148804f86f75447a390b82ec19",
+  "verifiedLines": [
+    {
+      "line": 1100,
+      "text": "      proxy: {"
+    },
+    {
+      "line": 1101,
+      "text": "        running: Boolean(live) || Boolean(pid && health.ok),"
+    },
+    {
+      "line": 1102,
+      "text": "        pid: live?.pid ?? pid,"
+    },
+    {
+      "line": 1103,
+      "text": "        staleProcessState,"
+    },
+    {
+      "line": 1111,
+      "text": "      listen: {"
+    },
+    {
+      "line": 1112,
+      "text": "        port: listen.port,"
+    },
+    {
+      "line": 1113,
+      "text": "        hostname: listen.hostname ?? null,"
+    },
+    {
+      "line": 1114,
+      "text": "        source: listen.source,"
+    },
+    {
+      "line": 1115,
+      "text": "      },"
+    },
+    {
+      "line": 1116,
+      "text": "      paths: {"
+    },
+    {
+      "line": 1117,
+      "text": "        config: getConfigPath(),"
+    },
+    {
+      "line": 1118,
+      "text": "        pid: getPidPath(),"
+    },
+    {
+      "line": 1119,
+      "text": "        runtime: bunRuntime.path,"
+    }
+  ],
+  "meaning": "paths.config is getConfigPath(), listen remains selected/configured; this is unchanged official source inspected inside original archive, no execution or patch"
+}

@@ -1,0 +1,4 @@
+
+thread 'infrastructure::macos_client_originals::session_index::tests::restored_label_and_digest_cannot_forge_a_completed_session_or_new_start' (155956399) panicked at src/infrastructure/macos_client_session_index_tests.rs:571:42:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "current session index unavailable; original state retained" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

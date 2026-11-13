@@ -1,0 +1,17 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: read amount is not handled
+   --> src/modules/runtime/npm_proxy_transport_tests.rs:147:27
+    |
+147 |                     match stream.read(&mut byte) {
+    |                           ^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: use `Read::read_exact` instead, or handle partial reads
+note: the result is consumed here, but the amount of I/O bytes remains unhandled
+   --> src/modules/runtime/npm_proxy_transport_tests.rs:149:25
+    |
+149 |                         Ok(_) => Err(String::from("untrusted TLS unexpectedly accepted")),
+    |                         ^^^^^
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#unused_io_amount
+    = note: `#[deny(clippy::unused_io_amount)]` on by default
+
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

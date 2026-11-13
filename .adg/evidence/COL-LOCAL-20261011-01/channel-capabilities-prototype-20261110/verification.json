@@ -1,0 +1,101 @@
+{
+  "status": "passed",
+  "recordedAt": "2026-11-10T13:49:15.308911+00:00",
+  "branch": "docs/governance-main",
+  "scope": "design=conversations (design=capabilities alias)",
+  "preview": "http://127.0.0.1:57285/docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html?design=conversations&channel=krill-demo#models",
+  "runtime": "Synthetic in-memory prototype only; no credentials, upstream API, production code or user configuration accessed by this prototype validation.",
+  "sourceSha256": {
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.js": "b29765c0d9f6a542e7d6167070b3b77f3e07cef9db892975f89b355b4d3877d4",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.css": "92d6a43f6420f1a1bf95d516df26c5bc0bb9c3832956abb22e8af5d325858fa3",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/channel-capabilities.test.cjs": "01baa8ad6441ec8e877ae7af8d396e09dcb54bc409eb8f8ef7d9f54b1ccda39e",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/model-config.js": "3fc380ee9eb4f2551b54b608e66ad3e3603f48805d43a7a01ab75d48df1b9ae9",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型/index.html": "00bc817a39eff56c6dad44ee086e2e33fe904f1ed7928e2b0620af56f0ff16d5",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/渠道接入与特殊能力检测交互方案.md": "6be7e2e45a0be974d1d12ac632a70f265e831ffdc383e1b545f7b518893df92d",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/README.md": "b9615d58b30829232061e2079bf78d559620e690bbd8c08f9effe24edd9dbd25",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/原型设计记录索引.md": "2d4f490d9c4143124b018b300dbcda86b0f9d672ac0b3f513d609ec87f60679d",
+    "docs/04-项目资料/01-项目支撑资料/01-产品原型/版本索引.md": "ae6ad66f1a77d36f5d6e718824bd66c976e1440227940c6875276261e706b98c",
+    "docs/04-项目资料/03-项目协作资料/01-协作包/2026-10-11-Codex对话策略与渠道能力/01-需求分析/05-原型/README.md": "0493c254d434600639de7bdd629c0f566d7007d51e022f9900487e962df2f6ea"
+  },
+  "node": {
+    "passed": 36,
+    "failed": 0,
+    "log": "tests.tap",
+    "files": [
+      "channel-capabilities.test.cjs",
+      "model-node-picker.test.cjs",
+      "model-current-channel-save.test.cjs",
+      "model-protocol-scope.test.cjs",
+      "model-copy.test.cjs",
+      "prototype-annotation-contract.test.cjs"
+    ]
+  },
+  "browser": {
+    "passed": 63,
+    "errors": [],
+    "log": "browser-checks.json",
+    "engine": "Headless Chromium",
+    "softwareWindowSizes": [
+      [
+        1180,
+        760
+      ],
+      [
+        900,
+        600
+      ]
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "externalRequestsBlocked": 0,
+    "reproduction": "reproduce.cjs"
+  },
+  "httpEntry": {
+    "passed": 6,
+    "errors": [],
+    "log": "http-entry-checks.json",
+    "reducedMotion": "reduce"
+  },
+  "screenshots": [
+    "1180-light-access.png",
+    "1180-light-feature-detection.png",
+    "900-dark-access.png",
+    "900-dark-feature-detection.png",
+    "1180-dark-network.png"
+  ],
+  "visualReview": "Reviewed light capability table and dark compact modal screenshots; final result summary remains above the footer at 900x600.",
+  "earlierFailures": [
+    {
+      "issue": "Initial special fixture prepended to provider array broke existing index-based sync fixture setup; Select enhance also received a null root.",
+      "resolution": "Append fixture without changing existing provider order; guard absent root.",
+      "rawLog": "Retained in chat tool output; no independent full log in this directory."
+    },
+    {
+      "issue": "Existing asynchronous save test observed running instead of written in a combined test run.",
+      "resolution": "Compared HEAD baseline; avoided irrelevant capability refresh outside conversations. Isolated and final 36-test runs passed without weakening assertions.",
+      "rawLog": "Retained in chat tool output; no independent full failing log in this directory."
+    },
+    {
+      "issue": "Browser harness looked for an obsolete save selector.",
+      "resolution": "Corrected harness to current #mpPolicySave.",
+      "retainedEvidence": [
+        "browser-failure.json",
+        "failure.png"
+      ]
+    },
+    {
+      "issue": "Supplemental HTTP harness first failed to parse an escaped regex.",
+      "resolution": "Used explicit URL prefixes; subsequent six checks passed.",
+      "rawLog": "Chat tool output only."
+    }
+  ],
+  "limits": [
+    "Mock scenarios do not establish real Krill service availability or paid API acceptance.",
+    "Policy binding banner shares one source; complete policy activation gates remain unfinished.",
+    "Real adapters, persistence, sync portability, protocol/engine-version invalidation, note writes and failover/state migration remain unfinished.",
+    "Chromium validation is not WebKit or native software acceptance."
+  ],
+  "workspace": "Existing overview, maintenance, sync, documentation and apps changes retained; no commit or push performed."
+}

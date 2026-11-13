@@ -1,0 +1,17 @@
+{
+  "accepted": false,
+  "productionOrderUnchanged": true,
+  "testFlag": "OCXD024_RETIREMENT_COST_PROFILE=1",
+  "testScope": "cfgtest+owned/private/tmp/ocxd024-versioned-lifecycle-* profile only",
+  "output": [
+    "leaseCheckUs",
+    "releaseUs",
+    "completeSourceUs",
+    "remainingBeforeUs",
+    "remainingAfterUs",
+    "expiredAfter"
+  ],
+  "privacy": "numeric durations/booleans only, no paths/config/keys/ownership",
+  "nativeServiceRounds": 0,
+  "finalDeadlineAndCompleteSelectionVerificationRetained": true
+}

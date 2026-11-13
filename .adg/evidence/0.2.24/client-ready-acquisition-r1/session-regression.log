@@ -1,0 +1,100 @@
+
+running 31 tests
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::root_stop_binding_follows_only_original_plan_archive_and_preserves_logical_scope ... ROOT_STOP_COST label=root-source phase=entry segment_us=2159 total_us=2159
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=28886 total_us=31045
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1883 total_us=32928
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=558 total_us=33487
+ROOT_STOP_COST label=root-source phase=program-source segment_us=389 total_us=33877
+ROOT_STOP_COST label=root-source phase=entry segment_us=2131 total_us=2131
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29807 total_us=31939
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1777 total_us=33717
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=579 total_us=34296
+ROOT_STOP_COST label=root-source phase=program-source segment_us=432 total_us=34728
+ROOT_STOP_COST label=root-source phase=entry segment_us=1035 total_us=1035
+ROOT_STOP_COST label=root-source phase=entry segment_us=2096 total_us=2096
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29311 total_us=31408
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1738 total_us=33146
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=555 total_us=33702
+ROOT_STOP_COST label=root-source phase=entry segment_us=2147 total_us=2147
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=30117 total_us=32265
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1849 total_us=34114
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=587 total_us=34702
+ROOT_STOP_COST label=root-source phase=entry segment_us=2504 total_us=2504
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=3658 total_us=6163
+ROOT_STOP_BINDING_EVIDENCE {"accepted":false,"logicalScopeUnchanged":true,"sourceAndFramesVerifiedBeforeAndAfterMove":true,"syntheticFramesNoStopPermission":true,"wrongPlanScopeLiveAndNewRootRefused":true}
+ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::root_stop_binding_rejects_modified_historical_frames_scope_and_live_after_move ... ROOT_STOP_COST label=root-source phase=entry segment_us=2109 total_us=2109
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=6149 total_us=8259
+ROOT_STOP_COST label=root-source phase=entry segment_us=2119 total_us=2119
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29348 total_us=31468
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1796 total_us=33264
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=538 total_us=33802
+ROOT_STOP_COST label=root-source phase=program-source segment_us=427 total_us=34229
+ROOT_STOP_COST label=root-source phase=entry segment_us=2165 total_us=2165
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=11166 total_us=13332
+ROOT_STOP_COST label=root-source phase=entry segment_us=2131 total_us=2131
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=30116 total_us=32247
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1857 total_us=34105
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=579 total_us=34684
+ROOT_STOP_COST label=root-source phase=program-source segment_us=411 total_us=35096
+ROOT_STOP_COST label=root-source phase=entry segment_us=2171 total_us=2171
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=16357 total_us=18529
+ROOT_STOP_COST label=root-source phase=entry segment_us=2143 total_us=2143
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29326 total_us=31469
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1751 total_us=33220
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=531 total_us=33752
+ROOT_STOP_COST label=root-source phase=program-source segment_us=383 total_us=34135
+ROOT_STOP_COST label=root-source phase=entry segment_us=2124 total_us=2124
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=22089 total_us=24214
+ROOT_STOP_COST label=root-source phase=entry segment_us=2161 total_us=2161
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29980 total_us=32142
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1779 total_us=33921
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=541 total_us=34462
+ROOT_STOP_COST label=root-source phase=program-source segment_us=401 total_us=34864
+ROOT_STOP_COST label=root-source phase=entry segment_us=2405 total_us=2405
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=26944 total_us=29350
+ROOT_STOP_COST label=root-source phase=entry segment_us=2151 total_us=2151
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29592 total_us=31744
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1761 total_us=33506
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=528 total_us=34034
+ROOT_STOP_COST label=root-source phase=program-source segment_us=375 total_us=34410
+ROOT_STOP_COST label=root-source phase=entry segment_us=2131 total_us=2131
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=28451 total_us=30583
+ROOT_STOP_COST label=root-source phase=entry segment_us=2129 total_us=2129
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29665 total_us=31795
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1797 total_us=33593
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=536 total_us=34129
+ROOT_STOP_COST label=root-source phase=program-source segment_us=397 total_us=34526
+ok
+test infrastructure::macos_client_originals::session::tests::a_coordinator_client_path_is_not_the_effective_home_of_the_cleared_production_runtime ... ok
+test infrastructure::macos_client_originals::session::tests::audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction ... ok
+test infrastructure::macos_client_originals::session::tests::combo_declaration_rejects_shadowing_missing_targets_nested_or_native_alias_authority ... ok
+test infrastructure::macos_client_originals::session::tests::combo_declaration_uses_canonical_or_public_alias_without_relabeling_target_routes ... ok
+test infrastructure::macos_client_originals::session::tests::custom_declaration_overlays_same_model_and_adds_only_enabled_selected_custom_routes ... ok
+test infrastructure::macos_client_originals::session::tests::custom_declaration_refuses_ambiguous_or_unbound_custom_routes_without_learning_from_catalog ... ok
+test infrastructure::macos_client_originals::session::tests::diagnose_owned_client_readback_cost_without_replaying_files ... ignored, read-only one-shot cost diagnosis on retained owned Stop failure; no service or client mutation
+test infrastructure::macos_client_originals::session::tests::display_alias_flags_never_become_declared_route_ids_and_omitted_flags_are_valid ... ok
+test infrastructure::macos_client_originals::session::tests::early_captured_originals_close_without_replay_and_remain_independently_verified ... ok
+test infrastructure::macos_client_originals::session::tests::explicit_nonempty_live_selection_is_independent_while_open_discovery_remains_unknown ... ok
+test infrastructure::macos_client_originals::session::tests::held_live_observation_revalidates_original_ready_and_archives_without_a_prior_scope_frame_read ... ok
+test infrastructure::macos_client_originals::session::tests::immutable_startup_scope_reopens_only_with_independent_original_and_scope_references ... ok
+test infrastructure::macos_client_originals::session::tests::independent_static_route_declaration_uses_official_slash_encoding_and_refuses_alias_collision ... ok
+test infrastructure::macos_client_originals::session::tests::indexed_ordinary_session_reopen_keeps_verified_canonical_client_path ... ok
+test infrastructure::macos_client_originals::session::tests::missing_or_untrusted_runtime_record_cannot_create_a_ready_binding ... ok
+test infrastructure::macos_client_originals::session::tests::official299_real_startup_originals_ready_binding_and_completed_stop_roundtrip ... ignored, explicit pinned official299 resources; new private profile; binding only, whole client restore still expected to fail
+test infrastructure::macos_client_originals::session::tests::persisted_live_reference_is_not_an_endpoint_or_process_authority ... ok
+test infrastructure::macos_client_originals::session::tests::preparing_cancellation_uses_only_indexed_closed_vault_history_and_keeps_it_intact ... ok
+test infrastructure::macos_client_originals::session::tests::ready_generation_fields_and_phase_references_are_bounded_and_typed ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_reads_under_action_lock_without_initializing_or_disclosing_original_bytes ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_rejects_scope_or_original_corruption_and_preserves_every_file ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_validates_bound_frames_scope_plan_and_never_adopts_unregistered_completion ... ok
+test infrastructure::macos_client_originals::session::tests::replaced_home_directory_and_tampered_scope_are_preserved_and_rejected ... ok
+test infrastructure::macos_client_originals::session::tests::rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start ... ok
+test infrastructure::macos_client_originals::session::tests::scope_cannot_move_to_another_home_profile_client_or_program ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_disabled_equivalence_is_scoped_and_does_not_grant_colliding_ids ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_seed_only_static_empty_models_and_preserve_unknown_live_graph ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_static_roster_unions_models_and_retained_but_not_unselected_default ... ok
+test infrastructure::macos_client_originals::session::tests::unchanged_early_readback_preserves_each_original_phase_and_refuses_unbound_preparing ... ok
+
+test result: ok. 29 passed; 0 failed; 2 ignored; 0 measured; 2558 filtered out; finished in 70.47s
+

@@ -1,0 +1,21 @@
+
+running 16 tests
+test modules::runtime::tests::handle_persists_resolution_and_refreshes_after_install ... ok
+test modules::runtime::tests::handle_restores_explicit_choice_across_restart ... ok
+test modules::runtime::tests::history_is_capped_at_the_frozen_limit ... ok
+test modules::runtime::tests::installed_prefix_comes_from_the_install_record_not_the_default_location ... ok
+test modules::runtime::tests::invalid_explicit_falls_back_instead_of_sticking ... ok
+test modules::runtime::tests::managed_v2_never_uses_legacy_or_explicit_programs ... ok
+test modules::runtime::tests::managed_wins_over_discovered_and_falls_back_when_missing ... ok
+test modules::runtime::tests::nothing_available_is_unresolved ... ok
+test modules::runtime::tests::priority_is_explicit_then_managed_then_discovered ... ok
+test modules::runtime::tests::record_history_keeps_only_terminal_entries_and_caps_length ... ok
+test modules::runtime::tests::resolved_version_follows_the_current_source_path ... ok
+test modules::runtime::tests::set_explicit_ignores_invalid_path_and_keeps_previous_choice ... ok
+test modules::runtime::tests::store_degrades_on_missing_corrupt_and_unknown_version ... ok
+test modules::runtime::tests::store_round_trips_and_creates_restricted_file ... ok
+test modules::runtime::tests::versioned_source_never_uses_flat_or_explicit_fallback ... ok
+test modules::runtime::tests::versioned_source_uses_actual_image_and_preserves_history_on_unknown ... ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 2041 filtered out; finished in 0.13s
+

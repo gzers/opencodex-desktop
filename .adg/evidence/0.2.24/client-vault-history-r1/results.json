@@ -1,0 +1,40 @@
+{
+  "accepted": false,
+  "scope": "Preparing with vault exactly equal to independently closed indexed attempts. Partial/unindexed/orphan captures remain refused.",
+  "backendDistinctCases": 27,
+  "backendGroups": {
+    "index": 25,
+    "historyParser": 1,
+    "historicalFilesystem": 1
+  },
+  "frontendCases": 71,
+  "browserChecks": 3,
+  "ordinaryNative": {
+    "startMs": 9175,
+    "statusMs": 240,
+    "stopMs": 10539,
+    "result": "failed",
+    "indexRevision": 6,
+    "failureStage": "close-session-index",
+    "budgetFailureStillUnresolved": true
+  },
+  "existingExplicitFinalization": {
+    "elapsedMs": 9753,
+    "indexRevision": 7,
+    "originalStopFailureUnchanged": true
+  },
+  "nextDirectedPreparing": {
+    "elapsedMs": 961,
+    "indexRevision": 8,
+    "newServiceStarted": false
+  },
+  "historicalCancellation": {
+    "elapsedMs": 8643,
+    "indexRevision": 9,
+    "result": "cancelled_before_capture"
+  },
+  "independentHistoricalFilesByteInodeModePreserved": 29,
+  "currentClientChecks": 7,
+  "noOriginalAdoptionOrDeletion": true,
+  "remaining": "Original Stop performance failure needs next directed hypothesis; incomplete/unindexed captures and changed early clients, general client/route/family scope, Windows/NAME/Systemproxy/verifier/fixed candidate remain."
+}

@@ -1,0 +1,10 @@
+
+running 5 tests
+test modules::runtime::terminal_cli::tests::bash_profiles_new_terminal_use_same_entry_and_absent_files_are_removed ... ok
+test modules::runtime::terminal_cli::tests::disable_refuses_modified_owned_script_and_can_restore_an_interrupted_enable ... ok
+test modules::runtime::terminal_cli::tests::enable_is_explicit_new_zsh_resolves_command_and_disable_preserves_user_content ... ok
+test modules::runtime::terminal_cli::tests::existing_commands_foreign_paths_and_stale_preview_never_overwrite ... ok
+test modules::runtime::terminal_cli::tests::fresh_profile_cancel_and_repeated_enable_do_not_duplicate_path_block ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2104 filtered out; finished in 1.61s
+

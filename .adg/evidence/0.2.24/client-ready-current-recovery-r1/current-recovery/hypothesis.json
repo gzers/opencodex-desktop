@@ -1,0 +1,5 @@
+{
+  "accepted": false,
+  "hypothesis": "Retain exact failed Stop/Ready refs1. Current explicit plan binds Original+Ready+current observation; no PreStop/Stopped. Separate Continue restores with fresh native absence and writer leases, no new service lifecycle. Status reconciliation of persisted Ready and actual stopped must be Required, not Active, without mutating history. Each mutation keeps10s budget.",
+  "originalIndexSha256": "5cc296077809b42d4890c679d42089edd9a5af35eb7ae8d6cf723b3918b74611"
+}

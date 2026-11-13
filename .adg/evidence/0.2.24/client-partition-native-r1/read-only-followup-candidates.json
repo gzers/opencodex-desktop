@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "frozenCodeUntouched": true,
+  "candidateToEvaluateAfterNativePartition": "protection -> xattrs currently uses size-query then value-read syscalls for both attribute names and each value, even for small com.apple.provenance. If actual partition confirms metadata dominance, evaluate bounded direct-buffer native reads with exact returned length, ERANGE bounded fallback and unchanged duplicate/name/aggregate/error checks. This would keep a fresh complete value per observation rather than cache or skip source checks; it is only a hypothesis, no implementation or validation yet.",
+  "doNotInfer": "Cannot assume syscall savings enough for full Stop10; do not drop ACL/xattr checks, change MAX_SECURITY, treat ERANGE/unreadable as absence, or mutate source during frozen build."
+}

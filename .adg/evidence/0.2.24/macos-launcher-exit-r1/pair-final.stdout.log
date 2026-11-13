@@ -1,0 +1,11 @@
+
+running 6 tests
+test infrastructure::macos_process_pair::tests::either_nonzero_exit_refuses_the_pair_without_partial_success ... ok
+test infrastructure::macos_process_pair::tests::pair_helper ... ok
+test infrastructure::macos_process_pair::tests::launcher_fork_or_exec_is_refused_even_while_service_has_not_exited ... ok
+test infrastructure::macos_process_pair::tests::queued_and_cached_pair_cannot_outlive_the_original_deadline ... ok
+test infrastructure::macos_process_pair::tests::service_exit_alone_never_completes_the_bound_pair ... ok
+test infrastructure::macos_process_pair::tests::unrelated_duplicate_and_wrong_generation_are_refused_before_subscription ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2346 filtered out; finished in 0.09s
+

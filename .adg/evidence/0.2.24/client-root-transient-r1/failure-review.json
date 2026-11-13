@@ -1,0 +1,22 @@
+{
+  "accepted": false,
+  "originalFailure": {
+    "exitCode": 101,
+    "log": "official/native.stderr.log"
+  },
+  "diagnostic": {
+    "exitCode": 101,
+    "log": "official-diagnostic/root-transient-failure.json",
+    "confirmedDifference": ".opencodex-native-main.claim.sqlite-journal (512 bytes)",
+    "originalTreeEmpty": true,
+    "comparisonRefusalWasCorrect": true
+  },
+  "correction": "Keep real config Guard and N/L/K, normally hand off claim SQLite to OFD before taking movement plan. Revalidate same Guard after handoff; no journal projection or retention exception. Apply only checks already-current OFD.",
+  "reviewFindings": [
+    "Moved-object conflict must be recorded before reanchor can refuse; unknown authority still forbids unproven compensation",
+    "Same-inode test now keeps retained marker outside client tree to isolate identity"
+  ],
+  "nextHypothesis": "Exactly handed-off clean tree can bind own config marker and release it through actual official helper before independent close; late replacement is preserved and recorded, never closed.",
+  "originalFailuresNeverOverwritten": true,
+  "retainedRuntimeInputOnly": "official-diagnostic/retained-work.json"
+}
