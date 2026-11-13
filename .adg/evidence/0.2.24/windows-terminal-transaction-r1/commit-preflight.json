@@ -1,0 +1,7 @@
+{
+  "firstAttempt": "git diff --cached --check",
+  "exitCode": 2,
+  "cause": "unaltered original stdout has trailing blank lines / format failure output; documentation helper files had extra final newline",
+  "resolution": "keep all original log bytes; mark only raw logs -text -whitespace; remove extra terminal newline from own helper scripts/document",
+  "productOrTestAssertionChanged": false
+}

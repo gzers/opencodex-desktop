@@ -1,0 +1,11 @@
+Diff in /Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_tests.rs:321:
+     fs::create_dir_all(program.join("runtime/bin")).unwrap();
+     fs::write(program.join("runtime/bin/ocx.cmd"), b"unknown entry").unwrap();
+     assert!(!pristine_installer(&profile, &program).unwrap());
+-    assert_eq!(fs::read(program.join("runtime/bin/ocx.cmd")).unwrap(), b"unknown entry");
++    assert_eq!(
++        fs::read(program.join("runtime/bin/ocx.cmd")).unwrap(),
++        b"unknown entry"
++    );
+ }
+ 

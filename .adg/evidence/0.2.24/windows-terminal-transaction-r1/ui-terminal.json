@@ -1,0 +1,16 @@
+{
+  "command": [
+    "npm",
+    "--prefix",
+    "apps/desktop/ui",
+    "test",
+    "--",
+    "run",
+    "tests/runtime-terminal-cli.test.ts",
+    "tests/settings-uninstall.test.ts"
+  ],
+  "cwd": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes",
+  "exitCode": 0,
+  "elapsedSeconds": 1.866,
+  "windowsNativeExecuted": false
+}
