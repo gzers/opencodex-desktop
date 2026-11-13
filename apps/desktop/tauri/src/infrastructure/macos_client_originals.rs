@@ -548,6 +548,63 @@ impl PinnedDirectory {
         self.recheck()?;
         self.file().sync_all()
     }
+    /// Directory metadata only. No child pin, content or authority escapes;
+    /// the caller fences the exact indexed names around this bounded scan.
+    fn check_private_children(&self, children: &[String]) -> io::Result<()> {
+        self.check_private_children_checked(children, &|_, _| Ok(()))
+    }
+    fn check_private_children_checked(
+        &self,
+        children: &[String],
+        checkpoint: &impl Fn(&str, usize) -> io::Result<()>,
+    ) -> io::Result<()> {
+        if children.len() > 511 {
+            return Err(denied("private child inventory exceeds bound"));
+        }
+        self.private()?;
+        checkpoint("parent-admitted", 0)?;
+        for (i, child) in children.iter().enumerate() {
+            let filename = name(OsStr::new(child))?;
+            let file = open_at(self.file(), OsStr::new(child), true)?;
+            let initial = stat(&file)?;
+            let id = identity(&initial);
+            let security = protection(&file, &initial)?;
+            require_private(&security, true)?;
+            checkpoint("child-opened", i)?;
+            for pass in 0..2 {
+                let mut named = std::mem::MaybeUninit::uninit();
+                if unsafe {
+                    libc::fstatat(
+                        self.file().as_raw_fd(),
+                        filename.as_ptr(),
+                        named.as_mut_ptr(),
+                        libc::AT_SYMLINK_NOFOLLOW,
+                    )
+                } != 0
+                {
+                    return Err(io::Error::last_os_error());
+                }
+                let named = unsafe { named.assume_init() };
+                let held = stat(&file)?;
+                let matches = |s: &libc::stat| {
+                    identity(s) == id
+                        && s.st_mode & libc::S_IFMT == libc::S_IFDIR
+                        && s.st_uid == security.uid
+                        && s.st_gid == security.gid
+                        && s.st_mode & 0o7777 == security.mode
+                        && s.st_flags == security.flags
+                };
+                if !matches(&named) || !matches(&held) || protection(&file, &held)? != security {
+                    return Err(denied("private child identity or protection changed"));
+                }
+                if pass == 0 {
+                    checkpoint("child-first-pass", i)?;
+                }
+            }
+        }
+        checkpoint("children-checked", children.len())?;
+        self.recheck()
+    }
     /// Acquire existing private directories only. No content is read and no
     /// intermediate pin escapes before complete final path/security admission.
     fn descendant_private(&self, children: &[&str]) -> io::Result<Self> {
@@ -1745,6 +1802,9 @@ mod root_originals_tests;
 #[path = "macos_client_descendant_pin_tests.rs"]
 mod descendant_pin_tests;
 
+#[cfg(test)]
+#[path = "macos_client_private_children_tests.rs"]
+mod private_children_tests;
 #[cfg(test)]
 #[path = "macos_client_xattr_read_tests.rs"]
 mod xattr_read_tests;

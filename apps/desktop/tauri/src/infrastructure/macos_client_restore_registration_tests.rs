@@ -482,3 +482,74 @@ fn bounded_xattr_full_history_registration_keeps_48_frame_authentications() {
         serde_json::json!({"accepted":false,"samples":samples,"scope":"complete four-frame first closed history; exact 9/16/17 index shapes and 48 frame checks; synthetic trees, no original runtime or Stop budget success"})
     );
 }
+#[test]
+fn private_children_generation_scan_keeps_all_complete_source_checks() {
+    let mut rows = Vec::new();
+    for reference in [true, false, false, true] {
+        let (_tmp, context, index, stopped, originals) = full_history_fixture();
+        let artifact = restore::Pending::prepare_fixture(&originals, evidence()).unwrap();
+        let source = index
+            .record_restore_plan(&stopped, artifact.id(), artifact.sha256())
+            .unwrap();
+        let pending =
+            super::super::root_retirement::Pending::prepare(&context, &originals, &source).unwrap();
+        let start = Instant::now();
+        let (result, metrics) = observation_metrics::measure(|| {
+            let register =
+                || index.record_root_retirement_registered(&source, pending.id(), pending.sha256());
+            if reference {
+                observation_metrics::generation_directories_reference(register)
+            } else {
+                register()
+            }
+        });
+        let elapsed = start.elapsed().as_nanos();
+        let (head, proof) = result.unwrap();
+        proof.require(&source, proof.plan().unwrap()).unwrap();
+        assert_eq!(index.head().unwrap(), Some(head));
+        let metrics = serde_json::to_value(metrics).unwrap();
+        assert_eq!(metrics["frame"]["calls"], 48);
+        assert_eq!(metrics["frame_archives"]["calls"], 48);
+        assert_eq!(metrics["historical_begin"]["calls"], 3);
+        assert_eq!(metrics["historical_finish"]["calls"], 3);
+        assert_eq!(metrics["historical_full_pass"]["calls"], 6);
+        rows.push(
+            serde_json::json!({"reference":reference,"elapsedNanos":elapsed,"metrics":metrics}),
+        );
+    }
+    for key in [
+        "frame",
+        "frame_archives",
+        "capture_file",
+        "root_provenance",
+        "root_namespace",
+        "historical_begin",
+        "historical_finish",
+        "historical_full_pass",
+    ] {
+        for row in &rows {
+            assert_eq!(
+                row["metrics"][key]["calls"], rows[0]["metrics"][key]["calls"],
+                "{key}"
+            );
+        }
+    }
+    assert!(
+        rows[1]["metrics"]["protection"]["calls"].as_u64().unwrap()
+            < rows[0]["metrics"]["protection"]["calls"].as_u64().unwrap()
+    );
+    for key in ["protection", "xattr_native_call"] {
+        assert_eq!(
+            rows[0]["metrics"][key]["calls"],
+            rows[3]["metrics"][key]["calls"]
+        );
+        assert_eq!(
+            rows[1]["metrics"][key]["calls"],
+            rows[2]["metrics"][key]["calls"]
+        );
+    }
+    println!(
+        "PRIVATE_CHILDREN_FULL_HISTORY_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":rows,"scope":"complete four-frame prior generation and all original48frame/source gates; synthetic namespace metadata only, no official service"})
+    );
+}

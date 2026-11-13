@@ -125,8 +125,16 @@ pub(super) fn verify_generation_slots(
             "root generation namespace differs from independent index",
         ));
     }
-    for id in expected {
-        generations.child_private(id, false)?.private()?;
+    #[cfg(test)]
+    let reference = observation_metrics::generation_directories_reference_enabled();
+    #[cfg(not(test))]
+    let reference = false;
+    if reference {
+        for id in expected {
+            generations.child_private(id, false)?.private()?;
+        }
+    } else {
+        generations.check_private_children(expected)?;
     }
     if tree::names(generations.file())? != names {
         return Err(denied("root generation namespace changed during review"));
