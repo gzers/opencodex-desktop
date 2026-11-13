@@ -1,0 +1,75 @@
+{
+  "accepted": false,
+  "noAdditionalFullAudit": true,
+  "counts": {
+    "first": {
+      "frame": [
+        12,
+        12
+      ],
+      "frame_archives": [
+        12,
+        12
+      ],
+      "historical_begin": [
+        2,
+        2
+      ],
+      "historical_finish": [
+        2,
+        2
+      ],
+      "historical_full_pass": [
+        4,
+        4
+      ],
+      "transaction_source": [
+        1,
+        1
+      ],
+      "transaction_candidate": [
+        1,
+        1
+      ],
+      "transaction_postcommit": [
+        1,
+        1
+      ]
+    },
+    "second": {
+      "frame": [
+        72,
+        72
+      ],
+      "frame_archives": [
+        72,
+        72
+      ],
+      "historical_begin": [
+        5,
+        5
+      ],
+      "historical_finish": [
+        5,
+        5
+      ],
+      "historical_full_pass": [
+        10,
+        10
+      ],
+      "transaction_source": [
+        1,
+        1
+      ],
+      "transaction_candidate": [
+        1,
+        1
+      ],
+      "transaction_postcommit": [
+        1,
+        1
+      ]
+    }
+  },
+  "scope": "first and complete-four-frame-history second generation close; no native action-time acceptance"
+}

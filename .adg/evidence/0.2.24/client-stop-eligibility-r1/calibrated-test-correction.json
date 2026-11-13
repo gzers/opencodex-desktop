@@ -1,0 +1,7 @@
+{
+  "run": "eligibility-two-generations",
+  "exitCode": 101,
+  "cause": "Full-history fixture helper attempted sibling test-module private evidence factory.",
+  "correction": "Change existing cfgtest factory to pub(super), limited to test parent; no public production constructor, runtime code or assertions changed.",
+  "finalRun": "eligibility-all-final with first and full second-generation audit-count comparison plus all six cases"
+}
