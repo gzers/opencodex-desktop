@@ -1,0 +1,173 @@
+       Debug [tauri_cli::helpers::app_paths] Found Tauri project inside C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri on early lookup
+       Debug [tauri_cli::helpers::app_paths] resolving frontend directory from C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\AppData\Local\Temp\.gitignore
+       Debug [globset] built glob set; 0 literals, 3 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::gitignore] opened gitignore file: \\?\C:\Users\15119\.codex\worktrees\024-windows-native\code\.gitignore
+       Debug [globset] glob converted to regex: Glob { glob: "**/.env.*", re: "(?-u)^(?:/?|.*/)\\.env\\.[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true, empty_alternates: false }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('e'), Literal('n'), Literal('v'), Literal('.'), ZeroOrMore]) }
+       Debug [globset] built glob set; 9 literals, 5 basenames, 4 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 1 regexes
+       Debug [ignore::gitignore] opened gitignore file: \\?\C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\.gitignore
+       Debug [globset] built glob set; 1 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target: Ignore(IgnoreMatch(Gitignore(Glob { from: Some("C:\\Users\\15119\\AppData\\Local\\Temp\\.gitignore"), original: "target/", actual: "**/target", is_whitelist: false, is_only_dir: true })))
+        Info [tauri_bundler::bundle] Patching C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\opencodex-desktop.exe with bundle type information: msi
+        Info [tauri_bundler::bundle::windows::msi] Target: x64
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("upgrade_code")], "upgrade_code")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version")], "version")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("allow_downgrades"), value: Context(Bool(true), ["allow_downgrades"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("banner_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("dialog_image_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("license"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("icon_path")], "icon_path")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("homepage"), value: Context(Null, ["homepage"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "unless", params: [PathAndJson { relative_path: Some("license"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("path_component_guid")], "path_component_guid")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_path")], "main_binary_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Array [], ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bundle_id")], "bundle_id")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("merge_modules"), value: Context(Array [], ["merge_modules"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Array [], ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("component_group_refs"), value: Context(Array [], ["component_group_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("component_refs"), value: Context(Array [], ["component_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("feature_group_refs"), value: Context(Array [], ["feature_group_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("feature_refs"), value: Context(Array [], ["feature_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("merge_refs"), value: Context(Array [], ["merge_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("install_webview"), value: Context(Bool(false), ["install_webview"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+     Running [tauri_bundler::bundle::windows::msi] candle for "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\target\\release\\wix\\x64\\main.wxs"
+     Running [tauri_bundler::utils] Command `C:\Users\15119\AppData\Local\tauri\WixTools314\candle.exe  -arch x64 C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs -dSourceDir=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\opencodex-desktop.exe`
+Windows Installer XML Toolset Compiler version 3.14.1.8722
+Copyright (c) .NET Foundation and contributors. All rights reserved.
+
+main.wxs
+     Running [tauri_bundler::bundle::windows::msi] light to produce C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\bundle\msi\OpenCodeX W1D Proof_0.2.24_x64_en-US.msi
+     Running [tauri_bundler::utils] Command `C:\Users\15119\AppData\Local\tauri\WixTools314\light.exe  -ext C:\Users\15119\AppData\Local\tauri\WixTools314\WixUtilExtension.dll -ext C:\Users\15119\AppData\Local\tauri\WixTools314\WixUIExtension.dll -o C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\output.msi -cultures:en-us -loc C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\locale.wxl *.wixobj`
+Windows Installer XML Toolset Linker version 3.14.1.8722
+Copyright (c) .NET Foundation and contributors. All rights reserved.
+
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(68) : warning LGHT1076 : ICE40: REINSTALLMODE is defined in the Property table. This may cause difficulties.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(75) : warning LGHT1076 : ICE61: This product should remove only older versions of itself. No Maximum version was detected for the current product. (WIX_UPGRADE_DETECTED)
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(224) : warning LGHT1076 : ICE90: The shortcut 'UninstallShortcut' has a directory that is a public property (ALL CAPS) and is under user profile directory. This results in a problem if the value of the ALLUSERS property changes in the UI sequence.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(169) : warning LGHT1076 : ICE91: The file 'Path' will be installed to the per user directory 'INSTALLDIR' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(175) : warning LGHT1076 : ICE91: The file 'OCX024NativeShimFile' will be installed to the per user directory 'INSTALLDIR' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(179) : warning LGHT1076 : ICE91: The file 'OCX024NativeConsoleFile' will be installed to the per user directory 'INSTALLDIR' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(183) : warning LGHT1076 : ICE91: The file 'OCX024NativeEntrySourceFile' will be installed to the per user directory 'INSTALLDIR' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(205) : warning LGHT1076 : ICE91: The file 'OCX023License' will be installed to the per user directory 'OCX023Documents' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(206) : warning LGHT1076 : ICE91: The file 'OCX023Notices' will be installed to the per user directory 'OCX023Documents' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(213) : warning LGHT1076 : ICE91: The file 'OCX023RuntimeArchive' will be installed to the per user directory 'OCX023RuntimeBundle' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(214) : warning LGHT1076 : ICE91: The file 'OCX023RuntimeSource' will be installed to the per user directory 'OCX023RuntimeBundle' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(215) : warning LGHT1076 : ICE91: The file 'OCX023RuntimeManifest' will be installed to the per user directory 'OCX023RuntimeBundle' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(216) : warning LGHT1076 : ICE91: The file 'OCX023RuntimePin' will be installed to the per user directory 'OCX023RuntimeBundle' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\wix\x64\main.wxs(224) : warning LGHT1076 : ICE91: The shortcut 'UninstallShortcut' will be installed to the per user directory 'INSTALLDIR' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+        Info [tauri_bundler::bundle] Patching C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\opencodex-desktop.exe with bundle type information: nsis
+        Info [tauri_bundler::bundle::windows::nsis] Target: x64
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("compression")], "compression")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("compression")], "compression")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("signed_plugins_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("installer_hooks"), value: Context(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\windows\\installer-hooks.nsh"), ["installer_hooks"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("installer_hooks")], "installer_hooks")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version")], "version")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version_with_build")], "version_with_build")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("homepage")], "homepage")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("install_mode")], "install_mode")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("license")], "license")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("installer_icon")], "installer_icon")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("sidebar_image")], "sidebar_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("header_image")], "header_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_icon")], "uninstaller_icon")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_header_image")], "uninstaller_header_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_name")], "main_binary_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_path")], "main_binary_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bundle_id")], "bundle_id")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("copyright")], "copyright")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("out_file")], "out_file")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("arch")], "arch")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("additional_plugins_path")], "additional_plugins_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("allow_downgrades")], "allow_downgrades")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("display_language_selector")], "display_language_selector")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("install_webview2_mode")], "install_webview2_mode")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_installer_args")], "webview2_installer_args")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_bootstrapper_path")], "webview2_bootstrapper_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_installer_path")], "webview2_installer_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("minimum_webview2_version")], "minimum_webview2_version")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_sign_cmd")], "uninstaller_sign_cmd")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("estimated_size")], "estimated_size")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("start_menu_folder")], "start_menu_folder")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("languages"), value: Context(Array [String("English")], ["languages"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("language_files"), value: Context(Array [String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\target\\release\\nsis\\x64\\English.nsh")], ["language_files"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources_dirs"), value: Context(Array [String("runtime-bundle"), String("resources")], ["resources_dirs"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources"), value: Context(Object {"C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\LICENSE": Array [String("resources"), String("resources\\LICENSE")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\THIRD-PARTY-NOTICES.txt": Array [String("resources"), String("resources\\THIRD-PARTY-NOTICES.txt")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\official-runtime.tgz": Array [String("runtime-bundle"), String("runtime-bundle\\official-runtime.tgz")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle.manifest.json")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle.manifest.sha256")]}, ["resources"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\LICENSE")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\THIRD-PARTY-NOTICES.txt")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\official-runtime.tgz")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256")) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Object {}, ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources"), value: Context(Object {"C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\LICENSE": Array [String("resources"), String("resources\\LICENSE")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\THIRD-PARTY-NOTICES.txt": Array [String("resources"), String("resources\\THIRD-PARTY-NOTICES.txt")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\official-runtime.tgz": Array [String("runtime-bundle"), String("runtime-bundle\\official-runtime.tgz")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle.manifest.json")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle.manifest.sha256")]}, ["resources"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Object {}, ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources_ancestors"), value: Context(Array [String("resources"), String("runtime-bundle")], ["resources_ancestors"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+     Running [tauri_bundler::bundle::windows::nsis] makensis to produce C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\bundle\nsis\OpenCodeX W1D Proof_0.2.24_x64-setup.exe
+     Running [tauri_bundler::utils] Command `C:\Users\15119\AppData\Local\tauri\NSIS\makensis.exe  -INPUTCHARSET UTF8 -OUTPUTCHARSET UTF8 -V4 C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\nsis\x64\installer.nsi`
+    Finished [tauri_bundler::bundle] 2 bundles at:
+        C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\bundle\msi\OpenCodeX W1D Proof_0.2.24_x64_en-US.msi
+        C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\w1d-bundle01\tauri\target\release\bundle\nsis\OpenCodeX W1D Proof_0.2.24_x64-setup.exe
+

@@ -1,0 +1,57 @@
+{
+  "allAccepted": false,
+  "msiActualInstall": {
+    "out02": "1619 due to MSI forward-slash path interpretation",
+    "out03": "1625 machine DisableMsi=1: Non-assigned apps disabled for non-admin users",
+    "out01": "owned probe ended after invalid property grammar; no log/installation receipt"
+  },
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_layout.rs",
+      "sha256": "11de66fdb0013baff93000d49be3a3af616fca3808966c266ba166428cb2e5c3"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli.rs",
+      "sha256": "88f527f684056cd03c05bfc8fc198ffdbed4a1d8814fc704b065092576883cfe"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows.rs",
+      "sha256": "e06852d4a75948ac8226076244f196e0c6450779d66816c8af21a68759f7e4f6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_native_tests.rs",
+      "sha256": "eaf68965b43df77cf0e8ccec2235e46f411cb4d956b5f07f77fd54a44341207e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_tests.rs",
+      "sha256": "354618702f00c66a6caec6fba22d6d10134ac4ad6385c59ceeddbcfea9dcd56f"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/nsis023.nsi",
+      "sha256": "b718ebbb5688c1bdb4b102a4007f1ec73bf49d082442b19a88d5592ad08523c4"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/wix023.wxs",
+      "sha256": "d692b3621dc4af35b1b7cfb75fcc4bd8367a915bceed30e85a301b5f4370be2b"
+    },
+    {
+      "path": "test/windows024-native/account-w1d.ps1",
+      "sha256": "10d5b3a450fb8b081032f08822c0b63c3b14c5149febd48d7eb51f929fff8a24"
+    },
+    {
+      "path": "test/windows024-native/bundle-installer.py",
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    }
+  ],
+  "checkPassed": true,
+  "testNoRunPassed": true,
+  "baseline": "0d231aebc",
+  "docsInput": "29f0f4dfe",
+  "nativeComponents": "out04 active, independent of MSI installation",
+  "policyChanged": false,
+  "buildPassed": true,
+  "shimUnitPassed": 1,
+  "sourceHead": "6a1902498ce47b382944df77a7ce0478b5322892",
+  "pathUnitPassed": 1,
+  "devMsiNsisCompiled": true
+}

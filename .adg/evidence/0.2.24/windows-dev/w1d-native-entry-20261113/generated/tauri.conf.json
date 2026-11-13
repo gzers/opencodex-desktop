@@ -1,0 +1,35 @@
+{
+  "productName": "OpenCodeX W1D Proof",
+  "version": "0.2.24",
+  "identifier": "com.gzers.opencodex.w1-resource-proof",
+  "bundle": {
+    "active": true,
+    "targets": [
+      "msi",
+      "nsis"
+    ],
+    "icon": [
+      "icons/icon.ico"
+    ],
+    "resources": {
+      "resources/LICENSE": "resources/LICENSE",
+      "resources/THIRD-PARTY-NOTICES.txt": "resources/THIRD-PARTY-NOTICES.txt",
+      "resources/runtime-bundle/": "runtime-bundle/"
+    },
+    "windows": {
+      "webviewInstallMode": {
+        "type": "skip"
+      },
+      "nsis": {
+        "template": "windows/nsis023.nsi",
+        "installerHooks": "windows/installer-hooks.nsh",
+        "installMode": "currentUser",
+        "compression": "none"
+      },
+      "wix": {
+        "template": "windows/wix023.wxs",
+        "upgradeCode": "3a2937cc-120b-4f06-a17a-49bf1d77267d"
+      }
+    }
+  }
+}

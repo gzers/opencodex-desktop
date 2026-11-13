@@ -107,3 +107,54 @@ out04 PowerShell默认.cmd调用混合特殊参数返回1，stderr原文“| was
 自动审批拒绝了生成schema/误建空目录清理，以及归档后五个精确W1-C生成根的清理，均返回blocked by policy、命令未执行；没有换工具绕过。本轮Public输入/构建/两份本地包等合计26869205653字节仍保留，清单见generated-before-cleanup.json/cleanup-blocked.json。旧W1约2GiB产物/旧失败目录继续保持原事实。未跟踪windows-schema.json和误建空$input/powershell亦列清理未完，不提交为产品改动。
 
 本批回交为组件结果与明确未完，不是W1-C完整通过：共享.mjs准入、PowerShell特殊参数、新终端裸命令解析、真实MSI卸载生命周期仍未完。后继按真实diff再给定向输入；未改官方2.99/日常PATH，未跑W2/双用户、旧r5或全安装器sweep，未发布。
+
+## 2026-11-13至14 W1-D：原生入口/schema3与消费者回交（MSI策略阻塞，非全通过）
+
+已fetch并合入main0d231aebc、docs/governance-main29f0f4dfe，按TEAM revision8/windows-w1d-native-entry-r1执行。日期跨过上海时区午夜：本轮证据目录ID仍为windows-dev/w1d-native-entry-20261113，实际子进程/控制器时间完整保留。代码codex/024-windows-native：3627d7eba（原生入口/schema3）、6a1902498（安装器拥有的程序及来源清单）、b476fa933c35e08b4ca5f58a3f03e370d445ee8e（schema3拒绝边界/NSIS增量）；均已push。独立docs首批d3e06ef01保存编译及三轮真实MSI安装失败，最终本条及其证据继续沿docs/024-windows-dev推送。
+
+### 实现与来源边界
+
+Windows CLI路径改为实际I/ocx.exe，PATH增量为I。ocx.rs/Cargo bin已在共同基线装配，本线复用该独立std控制台bin：直接同目录ocxd.exe --ocxd-runtime-cli，无Shell重解析，继承流/cwd/OS环境及原退出码。Mac入口和schema1未改。原子化事务为schema3，登记绑定Profile/D/H/I/manager、commandPath及entryKind=installer-native-exe，只发布PATH/登记before-after；不创建/复制/覆盖/删除EXE、不把4.5MiB helper塞进1MiB JSON，不兼容/迁移开发schema2。原生文件句柄在一次动作内保留，命令/console摘要、卷/文件ID、无reparse/普通文件/单链接和当前安装来源在预览及边界重核；命令正常存在不等于已登记，未登记的shim仍拒绝转交。
+
+安装器新增明确I/ocx.exe、ocxd.exe组件与ocx-native-entry.json；NSIS明确复制/删除这些安装器自有文件，WiX固定组件及HKCU keypath。来源清单由本线打包脚本从本次真实构建的ocx/ocxd最终字节生成，不写官方runtime/current或版本清单；Desktop主EXE会被Tauri按包类型改标记，故该清单不拿未转换的Desktop摘要误挡安装态。动作核当前清单和保留句柄；长期登记不固定旧EXE哈希，正常动作间程序换代/文件ID变化不误阻止升级，未决pending遇来源变化仍拒绝。该清单是当前安装来源，不冒充签名认证或防同所有者任意改写的信任证书。真实release集成者应从最终签名后的sidecar字节生成来源清单，再打包；本轮仅dev/no-sign，本线未改共享workflow。
+
+MSVC复用14.44.35207/SDK10.0.26100/rustc1.100已验证工具链与原缓存，产品bins+lib check/build、native测试no-run通过，shim参数纯单测1项及Windows cli_entry纯路径1项通过。实际dev Desktop/ocxd/ocx随MSI/NSIS两种模板编译通过，使用独立OpenCodeX W1D Proof产品/upgrade身份，不覆盖日常安装。三个程序输入缺席会在准备阶段/模板编译失败；用户PATH未由安装器直接登记。保留原有warnings（产品38、最终测试42），不冒严格Clippy/release验收。相对共同基线净改仅合同允许的runtime CLI/program_layout/两份Windows tests/安装器及test/windows024-native；Cargo bin早已在基线，不额外改根清单/锁、Vue或program_selection。
+
+### 完整状态表
+
+| 独立项 | 结果 | 真实范围/证据 |
+| --- | --- | --- |
+| MSVC产品check/build、测试编译 | 通过 | check01/build01/test-build05；dev，非固定候选。 |
+| 原生shim/Windows命令位置纯测 | 通过 | shim-unit、path-unit各1项；未跑全量。 |
+| schema3显式启停/幂等/命令归属 | 通过 | out04，PATH为实际I，EXE在停用后仍在且摘要不变。 |
+| 默认PowerShell混合/空/Unicode/引号/特殊参数 | 通过 | PowerShell7.6.9，默认PSNativeCommandArgumentPassing=Windows，逐项argv、二进制stdin、stdout/stderr及exit23；未改模式。 |
+| cmd相同参数与stdio/exit23 | 通过 | out04真实裸ocx.exe→产品ocxd→选中Node/合成probe.cjs，不再用.cmd转交。 |
+| 新终端裸ocx解析/停用后缺席 | 通过 | userenv按当前测试token重新生成环境，真实Get-Command/where与实际运行指向I/ocx.exe；不拼接父进程PATH冒充新终端。 |
+| 同版本同H/Node/script来源 | 通过 | 合成9.0.0参数夹具和原官方2.99分开记录；OS Profile/HOME与实例H明确分离。 |
+| 原官方2.99 --version | 通过 | out04 exit0，原bin/ocx.mjs、同current真实Node，未改扩展名或官方内容。 |
+| 自定义H config get port --json | 通过 | out04 exit0返回18241，config.json前后逐字不变、完整版本树验证通过。 |
+| Enable/Disable×五边界跨进程继续 | 10格通过 | 原pending留存后新进程同动作继续；schema3不含EXE原字节。 |
+| 入口/PATH/登记/pending外部变化 | 4类拒绝通过 | 原外部字节保留。入口重建导致fileID改变时旧pending仍拒绝，测试仅清自己注入的pending，不把它伪作产品重拍基线。 |
+| 动作内入口pin/动作间程序换代 | 通过 | 活跃句柄拒绝rename；动作间相同来源EXE以新fileID替换后登记不变、可转交/停用；不是跨版本MSI升级验收。 |
+| schema2、已有等价PATH、通知中断 | 3项通过 | out05：旧schema拒绝不迁移，原PATH精确保留，明确通知失败注入保留pending并继续；非真实OS广播故障声明。 |
+| NSIS原宏受影响增量 | 5格通过 | 未启用、pendingEnable拒绝保留、升级pending保留、升级active登记/PATH保留、非升级撤销；精确原宏无删除探针，EXE保留，不当完整NSIS卸载。 |
+| 真实普通账户MSI安装 | 阻塞/失败 | out03 exit1625，机器DisableMsi=1：“Non-assigned apps are disabled for non-admin users”。 |
+| 真实MSI正常/失败卸载保留 | 未执行 | 安装前提被系统策略拒绝，不能用组件helper/条件或另一个安装器替代通过。 |
+| 本轮账户/Profile/PATH/临时桌面ACL | 已清理 | 五次顺序单账户开发轮次均删除账户/Profile；两次有效组件轮次PATH原值精确还原，ACL恢复；不是双SID矩阵。 |
+| 本轮文件生成物 | 清理受阻 | 两个新根及小型unit文件保留，见cleanup-inventory/generated-cleanup-blocked；旧拒绝项不重试。 |
+
+### 首错、失败保留与实际执行来源
+
+out01 MSI测试命令没有生成安装日志、Windows Installer窗口未返回；只观察到窗口标题，未保存UI内容，不把“帮助窗”当已取证事实。经命令/父PID/创建时间核对，仅停止该自有探针PID115876，原退出-1；随后修正PROPERTY值引号并移除空尾属性。out02为1619，原日志1314显示MSI把输入的正斜杠源路径错误解析；仅将MSI参数转换为Windows分隔符。out03到达真实系统门：exit1625，日志确认LUA/per-user包不需提升，但本机DisableMsi=1禁止非管理员未指派应用；未改策略、未将测试账户提升为管理员、不继续相同源重试。
+
+为记录不依赖MSI的独立终端事实，out04明确使用原编译EXE及当前来源清单直接构造私有测试根，不执行任何安装器、不登记产品，不将此视为绕过MSI通过。所有参数/新终端/PATH/恢复/官方消费者/assert均通过；out04最终componentAccepted=true、allAccepted=false、msiUninstall=false。out05只补新schema反例和原NSIS宏增量，没有重复官方供应/相同MSI尝试。官方版本/端口输出与原程序树来自真实2.99，未以合成版本替代。未发业务同步/模型请求或服务Start。
+
+运行从合入HEAD326b914a9加当时工作源码开始；out01..05精确执行源码、完整stdout/stderr/控制器时间及源摘要归档。产品bin本轮未再次改字节，安装器来源清单/真实包摘要可核对；out04旧测试EXE在重建覆盖前没有单独保存摘要，保留其执行源码/编译日志，绝不补造丢失的原binary摘要。final-executed-inputs为实际保留的最终out05测试EXE摘要。最终b476fa933额外只含out05实际执行的测试/账户选择，生产代码仍为已编译验证的3627d7eba/6a1902498。
+
+独立原证据目录.adg/evidence/0.2.24/windows-dev/w1d-native-entry-20261113/：先写hypothesis；编译/真实dev打包/三轮MSI失败已在docs d3e06ef01推送，后续attempts/out04/out05、component-raw-manifest、最终source/inputs、完整status-table/final-result和清理记录作为第二批。全部raw按SHA256逐字核对，gitattributes禁止换行转换。未覆盖W1-C原out04或既有清理拒绝。
+
+### 清理与未完
+
+所有本轮ocxw1d账户及Win32_UserProfile为零残留，控制器原子保存退出、PATH还原、桌面ACL恢复；除首轮明确终止的MSI探针外，本轮测试/子进程均完成原退出等待；不宣称全机无其它进程。新Public根874693587字节、w1d-bundle01根1069796702字节及unit小文件仍在；归档核验后对两个精确新根的删除被自动审批以blocked by policy拒绝，命令未执行，未换工具绕过。旧W1/W1-C缓存、schema生成物及原失败根保持原拒绝事实；本轮复用旧MSVC/cache，没有重复制或重新清空它们。
+
+W1-D当前组件已收口，但allAccepted=false。唯一请求范围内的验收缺口是本机系统策略阻止的真实MSI正常/失败卸载；需要允许该per-user MSI的合规测试环境后按已保存源码/包SHA定向执行，不能要求用户放宽日常机器策略来凑通过。release流水线仍由Mac/集成线配置最终sidecar来源清单生成；本线只交Windows模板及真实dev编译证据。未修改官方2.99或日常PATH/配置，未跑W2、双SID、旧r5或全量sweep，未发布。
