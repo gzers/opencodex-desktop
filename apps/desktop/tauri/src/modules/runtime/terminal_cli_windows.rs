@@ -4,6 +4,9 @@ use super::terminal_cli_path as policy;
 use super::*;
 use policy::{PathEdit, PathValue};
 const SCHEMA: u32 = 2;
+// W0 PrivateRecord admits at most 1MiB. Bound the entire Windows transaction
+// before publication so a successful write always remains readable/recoverable.
+const PRIVATE_MAX: usize = 1024 * 1024;
 struct Admitted {
     program: program_selection::SelectedProgram,
     console_sha256: String,
@@ -117,7 +120,7 @@ fn private_read(root: &Path, path: &Path) -> AppResult<Option<Vec<u8>>> {
             Err(e) => return Err(io(e)),
             Ok(_) => {}
         }
-        PrivateRecord::open(path, MAX as usize)
+        PrivateRecord::open(path, PRIVATE_MAX)
             .map_err(io)?
             .read()
             .map(Some)
@@ -464,6 +467,14 @@ fn apply_with(
         return Err(fail("终端预览已变化或已有同名命令"));
     }
     let bytes = encode(&t)?;
+    if bytes.len() > PRIVATE_MAX
+        || [&t.command.after, &t.record.after]
+            .into_iter()
+            .flatten()
+            .any(|value| value.len() > PRIVATE_MAX)
+    {
+        return Err(fail("终端事务超过原生私有记录上限，未发布或修改 PATH"));
+    }
     if !p.pending {
         let mut file = platform::create_new_private_file(&c.pending(), 0o600).map_err(io)?;
         file.write_all(&bytes).map_err(io)?;
@@ -595,3 +606,7 @@ pub(super) fn revoke_for_removal(c: &Context, expected: Option<&str>) -> AppResu
 #[cfg(all(test, target_os = "macos", target_arch = "aarch64"))]
 #[path = "terminal_cli_windows_tests.rs"]
 mod tests;
+
+#[cfg(all(test, windows))]
+#[path = "terminal_cli_windows_native_tests.rs"]
+mod native_tests;
