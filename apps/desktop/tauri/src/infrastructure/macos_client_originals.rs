@@ -1408,6 +1408,8 @@ impl Originals {
         Ok(bytes)
     }
     fn verify_root_namespace(&self) -> io::Result<()> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("root_namespace");
         if let Some(origin) = &self.original_root_absence {
             origin.verify_namespace(&self.data.child_private("manager-state", false)?)?;
         }
@@ -1545,6 +1547,8 @@ impl Originals {
                 return Err(denied("first root Original includes unowned client data"));
             }
         }
+        #[cfg(test)]
+        let _archive_metric = observation_metrics::span("frame_archives");
         frame.tree.verify_archive(&self.directory)?;
         frame.grok.verify_archive(&self.directory)?;
         self.verify_root_namespace()?;

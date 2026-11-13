@@ -311,3 +311,53 @@ fn root_restore_registration_candidate_and_postcommit_source_failures_preserve_e
         }
     }
 }
+#[test]
+fn root_metadata_registration_keeps_every_dynamic_source_and_archive_check() {
+    let mut samples = Vec::new();
+    for reference in [true, false, false, true] {
+        let (_temp, _context, index, head, originals) = fixture(true);
+        let pending = restore::Pending::prepare_fixture(&originals, evidence()).unwrap();
+        let start = Instant::now();
+        let (result, metrics) = observation_metrics::measure(|| {
+            let action = || index.record_restore_plan(&head, pending.id(), pending.sha256());
+            if reference {
+                observation_metrics::root_metadata_reference(action)
+            } else {
+                action()
+            }
+        });
+        let prepared = result.unwrap();
+        let elapsed = start.elapsed().as_nanos();
+        assert_eq!(index.head().unwrap(), Some(prepared));
+        samples.push(
+            serde_json::json!({"reference":reference,"elapsedNanos":elapsed,"metrics":metrics}),
+        );
+    }
+    for metric in [
+        "frame",
+        "frame_archives",
+        "capture_file",
+        "root_provenance",
+        "root_namespace",
+        "historical_begin",
+        "historical_finish",
+        "historical_full_pass",
+    ] {
+        let expected = &samples[0]["metrics"][metric]["calls"];
+        assert!(expected.as_u64().unwrap() > 0);
+        for sample in &samples {
+            assert_eq!(&sample["metrics"][metric]["calls"], expected, "{metric}");
+        }
+    }
+    let old = samples[0]["metrics"]["protection"]["calls"]
+        .as_u64()
+        .unwrap();
+    let new = samples[1]["metrics"]["protection"]["calls"]
+        .as_u64()
+        .unwrap();
+    assert!(new < old);
+    println!(
+        "ROOT_METADATA_REGISTRATION {}",
+        serde_json::json!({"accepted":false,"samples":samples,"scope":"synthetic same second generation; no provenance/namespace/frame/archive observations removed; no native service"})
+    );
+}

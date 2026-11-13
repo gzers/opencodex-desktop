@@ -12,6 +12,24 @@ thread_local! {static HISTORY_REFERENCE:std::cell::Cell<bool>=const {std::cell::
 thread_local! {static CHILD_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
 thread_local! {static SCOPE_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
 thread_local! {static DESCENDANT_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+thread_local! {static ROOT_METADATA_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+pub(crate) fn root_metadata_reference_enabled() -> bool {
+    ROOT_METADATA_REFERENCE.with(|v| v.get())
+}
+pub(crate) fn root_metadata_reference<T>(action: impl FnOnce() -> T) -> T {
+    struct Reset;
+    impl Drop for Reset {
+        fn drop(&mut self) {
+            ROOT_METADATA_REFERENCE.with(|v| v.set(false));
+        }
+    }
+    ROOT_METADATA_REFERENCE.with(|v| {
+        assert!(!v.get());
+        v.set(true);
+    });
+    let _reset = Reset;
+    action()
+}
 pub(crate) fn descendant_reference_enabled() -> bool {
     DESCENDANT_REFERENCE.with(|v| v.get())
 }

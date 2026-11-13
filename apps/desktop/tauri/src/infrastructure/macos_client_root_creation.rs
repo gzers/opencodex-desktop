@@ -235,9 +235,7 @@ pub(super) fn verify_indexed_anchor(
         return Err(denied("invalid indexed root references"));
     }
     let profile = PinnedDirectory::open(profile)?;
-    safe_profile(&profile)?;
-    data.private()?;
-    client.private()?;
+    verify_anchor_metadata(&profile, data, client)?;
     verify_generation_slots(manager, &refs.expected_slots())?;
     let vault = if let Some(id) = &refs.generation_slot {
         if id != &refs.id {
@@ -354,6 +352,9 @@ fn absent(profile: &PinnedDirectory) -> io::Result<()> {
 }
 fn safe_profile(profile: &PinnedDirectory) -> io::Result<()> {
     profile.recheck()?;
+    safe_profile_leaf(profile)
+}
+fn safe_profile_leaf(profile: &PinnedDirectory) -> io::Result<()> {
     let s = stat(profile.file())?;
     let p = protection(profile.file(), &s)?;
     if p.uid != unsafe { libc::geteuid() } || p.mode & 0o022 != 0 || p.flags != 0 {
@@ -361,6 +362,37 @@ fn safe_profile(profile: &PinnedDirectory) -> io::Result<()> {
     }
     Ok(())
 }
+/// No record/namespace contents are read before every original leaf policy
+/// and two complete fresh path/fd/security passes have succeeded. The caller
+/// still performs its full per-frame provenance reads and dynamic bindings.
+fn verify_anchor_metadata(
+    profile: &PinnedDirectory,
+    data: &PinnedDirectory,
+    client: &PinnedDirectory,
+) -> io::Result<()> {
+    #[cfg(test)]
+    if observation_metrics::root_metadata_reference_enabled() {
+        safe_profile(profile)?;
+        data.private()?;
+        return client.private();
+    }
+    verify_anchor_metadata_checked(profile, data, client, &|| Ok(()))
+}
+fn verify_anchor_metadata_checked(
+    profile: &PinnedDirectory,
+    data: &PinnedDirectory,
+    client: &PinnedDirectory,
+    checkpoint: &impl Fn() -> io::Result<()>,
+) -> io::Result<()> {
+    safe_profile_leaf(profile)?;
+    require_private(&protection(data.file(), &stat(data.file())?)?, true)?;
+    require_private(&protection(client.file(), &stat(client.file())?)?, true)?;
+    checkpoint()?;
+    PinnedDirectory::recheck_set(&[profile, data, client])
+}
+#[cfg(test)]
+#[path = "macos_client_root_metadata_tests.rs"]
+mod metadata_tests;
 fn require_uninitialized(manager: &PinnedDirectory) -> io::Result<()> {
     for n in [
         "client-session-index.sqlite",
