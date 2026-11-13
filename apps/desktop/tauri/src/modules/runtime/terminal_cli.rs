@@ -22,12 +22,18 @@ const MAX_PROFILE: usize = 256 * 1024;
 const BEGIN: &str = "# >>> OpenCodeX Desktop ocx >>>";
 const END: &str = "# <<< OpenCodeX Desktop ocx <<<";
 const FLAG: &str = "--ocxd-runtime-cli";
-fn fail(detail: &'static str) -> AppError {
+#[cfg(any(windows, test))]
+#[path = "terminal_cli_path.rs"]
+mod terminal_cli_path;
+pub(super) fn fail(detail: &'static str) -> AppError {
     AppError::RuntimeManaged {
         code: "terminal_cli_refused".into(),
         detail: detail.into(),
     }
 }
+#[cfg(any(windows, test))]
+#[path = "terminal_cli_windows.rs"]
+mod terminal_cli_windows;
 fn io(_: std::io::Error) -> AppError {
     fail("终端入口文件操作失败，已有内容保留")
 }
@@ -87,9 +93,15 @@ impl Context {
         Ok(())
     }
     fn command(&self) -> PathBuf {
+        #[cfg(windows)]
+        return self.program_root.join("runtime/bin/ocx.cmd");
+        #[cfg(not(windows))]
         self.user_profile.join(".local/bin/ocx")
     }
     fn bridge(&self) -> PathBuf {
+        #[cfg(windows)]
+        return self.program_root.join("ocxd.exe");
+        #[cfg(not(windows))]
         self.program_root.join("runtime/bin/ocx")
     }
     fn record(&self) -> PathBuf {
@@ -695,9 +707,17 @@ fn plan(
     }
 }
 pub fn preview(c: &Context, action: Action, shell: &str, search: &[PathBuf]) -> AppResult<Preview> {
+    #[cfg(windows)]
+    if cfg!(windows) {
+        return terminal_cli_windows::preview(c, action, search);
+    }
     plan(c, action, shell, search).map(|(_, p)| p)
 }
 pub fn inspect(c: &Context, shell: &str, search: &[PathBuf]) -> AppResult<Preview> {
+    #[cfg(windows)]
+    if cfg!(windows) {
+        return terminal_cli_windows::inspect(c, search);
+    }
     c.validate()?;
     let action = if let Some(t) = pending(c)? {
         t.action
@@ -711,6 +731,10 @@ pub fn inspect(c: &Context, shell: &str, search: &[PathBuf]) -> AppResult<Previe
 /// Read-only owned-terminal part of an uninstall review. No registration is
 /// different from a foreign command at the reserved path; foreign bytes refuse.
 pub fn removal_preview(c: &Context, shell: &str, search: &[PathBuf]) -> AppResult<Option<Preview>> {
+    #[cfg(windows)]
+    if cfg!(windows) {
+        return terminal_cli_windows::removal_preview(c, search);
+    }
     c.validate()?;
     if let Some(t) = pending(c)? {
         if t.action != Action::Disable {
@@ -734,6 +758,10 @@ pub fn revoke_for_removal(
     search: &[PathBuf],
     expected: Option<&str>,
 ) -> AppResult<()> {
+    #[cfg(windows)]
+    if cfg!(windows) {
+        return terminal_cli_windows::revoke_for_removal(c, expected);
+    }
     match removal_preview(c, shell, search)? {
         Some(preview) => {
             if Some(preview.confirmation_digest.as_str()) != expected {
@@ -772,6 +800,10 @@ pub fn apply(
     search: &[PathBuf],
     expected: &str,
 ) -> AppResult<Outcome> {
+    #[cfg(windows)]
+    if cfg!(windows) {
+        return terminal_cli_windows::apply(c, action, search, expected);
+    }
     let lock = c.desktop_root.join("manager-state/terminal-cli");
     safety::check_path(
         &c.desktop_root,
@@ -851,9 +883,48 @@ pub fn dispatch() -> bool {
     }
     true
 }
+/// Separate explicit installer step, before program/data deletion. No GUI/IPC,
+/// no other user's registry, and no completion of an interrupted enable.
+#[cfg(windows)]
+pub fn revoke_from_windows_installer() -> AppResult<()> {
+    let profile = platform::home_dir().ok_or_else(|| fail("当前用户目录不可确认"))?;
+    let executable = std::env::current_exe().map_err(io)?;
+    if executable.file_name().is_none_or(|v| v != "ocxd.exe") {
+        return Err(fail("安装器终端撤销入口未确认"));
+    }
+    let root = executable
+        .parent()
+        .ok_or_else(|| fail("程序根未确认"))?
+        .to_path_buf();
+    if terminal_cli_windows::pristine_installer(&profile, &root)? {
+        return Ok(());
+    }
+    let selected = data_root::startup_v2::selected_config(&profile.join(".codex-desktop/desktop"))?;
+    let c = Context {
+        user_profile: profile,
+        desktop_root: selected.active_data_root.clone(),
+        opencodex_home: data_root::resolve_opencodex_home(&selected),
+        manager_executable: root.join("opencodex-desktop.exe"),
+        program_root: root,
+    };
+    let preview = terminal_cli_windows::removal_preview(&c, &[])?;
+    terminal_cli_windows::revoke_for_removal(
+        &c,
+        preview.as_ref().map(|p| p.confirmation_digest.as_str()),
+    )
+}
 fn forward(args: Vec<OsString>) -> AppResult<()> {
     let profile = platform::home_dir().ok_or_else(|| fail("当前用户目录不可确认"))?;
     let executable = std::env::current_exe().map_err(io)?;
+    #[cfg(windows)]
+    let executable = if executable.file_name().is_some_and(|n| n == "ocxd.exe") {
+        executable
+            .parent()
+            .ok_or_else(|| fail("控制台入口没有程序目录"))?
+            .join("opencodex-desktop.exe")
+    } else {
+        executable
+    };
     let config = data_root::startup_v2::selected_config(&profile.join(".codex-desktop/desktop"))?;
     let (_, platform) = program_layout::host_target()?;
     let c = Context {
@@ -879,6 +950,21 @@ fn forward(args: Vec<OsString>) -> AppResult<()> {
 
 fn forwarding_command(c: &Context, args: Vec<OsString>) -> AppResult<Command> {
     c.validate()?;
+    #[cfg(windows)]
+    if cfg!(windows) {
+        terminal_cli_windows::require_forwarding(c)?;
+        let (target, platform) = program_layout::host_target()?;
+        let selected = program_selection::read(&c.program_root, platform, target)?
+            .ok_or_else(|| fail("当前运行程序未就绪"))?;
+        let mut process = Command::new(&selected.paths.node);
+        process.arg(&selected.script).args(args);
+        process
+            .env("HOME", &c.user_profile)
+            .env("USERPROFILE", &c.user_profile)
+            .env("OPENCODEX_HOME", &c.opencodex_home)
+            .env("OCX_NO_DESKTOP_HANDOFF", "1");
+        return Ok(process);
+    }
     if pending(c)?.is_some() {
         return Err(fail("终端入口操作尚未完成，请在应用中重新核对"));
     }
