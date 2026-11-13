@@ -1,0 +1,8 @@
+{
+  "run": "registration-final",
+  "exitCode": 101,
+  "category": "test compilation only",
+  "cause": "New assert_eq required Debug for intentionally non-Debug RestorePlan DTO.",
+  "correction": "Keep exact equality condition using assert!(left == right); no Debug implementation added and no product behavior or assertion weakened.",
+  "failureEvidencePreserved": true
+}

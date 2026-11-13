@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "baseCommit": "acd9b871ee08722024c1d5b58fcdc13bc3b4f68c",
+  "hypothesis": "Root-aware record_restore_plan performs a complete registered_root_originals audit outside write, then full source/candidate/postcommit audits inside write. Move its existing Pending::open and require_indexed_references into the existing private source admission callback after full source+exact Head comparison and before any SQL, retaining all plan full-load checks and 3 transaction source observations. Expected full history 4 to 3, without losing preSQL invalid plan/source refusal or old archive/frame/namespace transaction failure handling.",
+  "scope": "Synthetic source/transaction tests only, no native Stop authority or service round. Recovery/ordinary branches and actual apply plan reread stay. Candidate/postcommit audit source/index facts, not a permanent proof that plan bytes cannot change later. No daily config/Shell/app, official package change or business network. Preserve failures and clean owned fixture after byte-verified evidence archive."
+}
