@@ -1,0 +1,23 @@
+{
+  "accepted": false,
+  "design": "Move per-file parent checks to fixed4file provenance group before/after; endedfile versions also checked.",
+  "decision": "Do not ship: staticreview identified reduced intermediate parent observation boundaries. Original per-file capture must remain unchanged. Draft was never compiled, committed or used for native service.",
+  "draftFileHashes": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_observation_metrics.rs",
+      "sha256": "2fc860c7af3b22c686d23baf8268c0ac823149d35693127cc9cccfdae98aeb3a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+      "sha256": "de351504782cfd98a58c745b1381503219ea6e28e3144efddda1d3ed2e1f750c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals_tests.rs",
+      "sha256": "9ce2c58f53b2c56ae16b91633c63ee179bd3fd3c3605ba762170b5f137158a9b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_creation.rs",
+      "sha256": "1e93544725f53d5818e353854cb272ef531b71061510da932f119b2567e95f2d"
+    }
+  ]
+}

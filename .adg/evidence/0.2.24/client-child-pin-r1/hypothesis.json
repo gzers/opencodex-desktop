@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "baseCommit": "4163514fe83b9798e3570eafdf211d79d87c365b",
+  "hypothesis": "PinnedDirectory.child_private currently reopens every already-pinned ancestor and does overlapping postchecks. Clone only original parent DIRECTORY handles, open exact child with unchanged openat nofollow/type/owner/security rules, and perform two full parent+child union passes after capture before private assertion. Preserve pre-open parent admission, original per-file capture/provenance/hash/read/prefix checks and all originaldeadlines. This should reduce directory opens/Protection costs with no file-source cache or grouped-parent-boundary changes.",
+  "scope": "Synthetic same-binary original child method reference vs current, FD/parent/childchange/permissions/names and affected index/history/restore contracts before any new native round."
+}

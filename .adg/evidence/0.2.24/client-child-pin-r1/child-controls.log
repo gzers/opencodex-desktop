@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 36.23s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 3 tests
+test infrastructure::macos_client_originals::tests::child_pin_inherits_same_authenticated_parent_and_remains_valid_after_parent_handle_drops ... ok
+test infrastructure::macos_client_originals::tests::child_pin_keeps_existing_unsafe_objects_and_literal_component_rules ... ok
+test infrastructure::macos_client_originals::tests::child_pin_refuses_parent_or_child_changes_at_both_acquisition_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2590 filtered out; finished in 0.03s
+

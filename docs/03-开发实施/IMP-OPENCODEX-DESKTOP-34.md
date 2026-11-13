@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 110；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 111；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1144,3 +1144,14 @@ ReadyAcquisitionError显式Index(io)与Session(AppError)，Active只对Index用�
 证据.adg/evidence/0.2.24/client-ready-native-r1/保留source/tree18hash/实际binary、完整build、loopbackbind正例/外网和日常HOME拒绝、完整stdout/stderr/manager及独立trace核验、rawProfile75文件与新coordinator原字节。全局预存L在最终rwexclusive连接关闭后identity/uid/gid/mode/flags/ACL/xattrs/bytes/SHA及sidecar缺席不变，从未删除/重建/覆盖；准确3新N/K/history在持久rawreceipt/firstseenidentity核对后exclusive取回并清理，digest-adopt残留为空。两个导出primaryports经内核TCP表独立不监听。逐字归档核验后清本轮Profile/程序包/二进制副本和重复临时证据目录，工程target保留；没有日常配置/Shell/安装app/真实业务WebDAV/模型请求或官方2.99修改，无固定候选/发布。
 
 下一步不改渠道或放宽拒绝，针对已确认耗时测量每帧rootprovenance连续3记录+1reference读取重复校验共享parentpin的成本；评估仅调用内封闭批量文件读取，在全组前后完整核parent路径链，每个文件仍完整nofollow/identity/version/type/singlelink/owner/ACL/xattr/bytes/hash/strictJSON及原交叉绑定，不cache跨帧/动作、不减少每帧调用或最终namespace。必须用单/多帧及认证期间parent/file变更反例证伪，若不能减少实际计数且无capture退化就不合入。旧失败保留，无新修复/假设不开原包轮。根中断/动作回执容量边界、缺Ready/一般客户端图路径/完整进程集合与刷新/NAME/复杂代理/Windows W1W2/发行README及固定候选全范围保持，P24-04/05未关，目标active。
+
+
+## 2026-11-13 子目录pin建立去重，文件认证边界保持
+
+main 6ca915392在child_private保留parent.private前验/mkdir/EEXIST，clone既有父DIRECTORYfd及identity/Protection期望，只open_at精确leaf，再完整parent+child union双遍、pureleafprivate，最终原parent.recheck仍位于childsecurity读取之后。复用的是目录handle，不是文件认证或Ready/Stop证明；无辅助SQLiteinodefd。普通capture_file主体与root_creation整文件相对父4163514fe逐字相同，每帧来源/内容/语义/namespace均原样。fixed4file来源分组草案因减少原中间parent采样拒绝边界而撤下，未编译/commit/native，不将其能力计入本批。详[子目录合同](0.2.24-contracts/client-child-pin-r1.md)。
+
+145唯一函数通过：4新child控、fullhistory1、其它pin31、restore45、index56、rollover8，5ignore不计；strictClippy/fmt/diff通过。新FDflags断言先>=0再CLOEXEC；parentdrop后child完整pin有效，acquisition前后parent/child更换/权限/xattr/链接与原最后parenttail变更拒绝，既有unsafefile/link/755不修补。原syscall类型/内容hash/私有/位次/真实exit/恢复负控保持。
+
+同binary同heldindex四帧ref87.98/89.70ms与current83.46/84.36ms，directoryopen68→30、Protection6430→6109，frame8/fullsource10/capture60/plan2不变，小样本均值5.55%仅局部debug观测且含计量/assert开销；不冒通用提速或Stop10通过，不承诺任意外部瞬态ABA采样时点完全相同。证据.adg/evidence/0.2.24/client-child-pin-r1/固定4源/actualdebugbinary，在父4163514fe差异构建并映射本提交；初3例与最终4例边界分开留证。所有test/clippy/fmt/agent句柄终止，归档逐字核验后清本轮临时根/duplicate证据，工程target保留，无官方服务/全局DB/日常配置/Shell/安装app/业务WebDAV模型或候选/发布。
+
+原ready-native-r1第二Stop10729ms/deadline耗尽结论有效。本批小幅收益未验证原包，不盲重跑；继续针对恢复链重复路径/原件/authority校验测量，保持原30/5/10/Restart30及Stop子预算、逐帧完整认证和未知拒绝。根中断/动作回执容量边界、缺Ready/一般客户端图路径/进程集合和刷新/NAME/复杂代理/WindowsW1W2/发行README及固定候选等完整目标保持，P24-04/05未关，目标active。
