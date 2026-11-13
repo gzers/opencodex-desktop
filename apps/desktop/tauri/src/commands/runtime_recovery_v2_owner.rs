@@ -511,7 +511,7 @@ impl SystemServiceOwnerProofProvider {
                     }
                 }
                 #[cfg(not(windows))]
-                if self.query_inner()? == ServiceOwnerProof::Stopped {
+                if self.query_stop_observation()? == ServiceOwnerProof::Stopped {
                     mark("final-os-absence");
                     // Require process generation, configured HOME, socket and
                     // service-manager absence; missing record is insufficient.
@@ -787,6 +787,18 @@ impl SystemServiceOwnerProofProvider {
         ))
         .map_err(|e| io("serialize recovery process identity", e))?;
         Ok(crate::infrastructure::hash::sha256_hex(&bytes))
+    }
+    #[cfg(not(windows))]
+    fn query_stop_observation(&self) -> AppResult<ServiceOwnerProof> {
+        match self.query_inner() {
+            // A confirmed same-generation zombie is not absence or normal
+            // exit. Keep waiting inside the ORIGINAL stop deadline; the final
+            // live process scan, exit watch and listener proofs remain below.
+            Err(AppError::RuntimeManaged { code, .. }) if code == "recovery_process_exiting" => {
+                Ok(ServiceOwnerProof::Unknown)
+            }
+            other => other,
+        }
     }
     fn query_inner(&self) -> AppResult<ServiceOwnerProof> {
         if !self.service_home_valid()? {
@@ -1759,6 +1771,62 @@ mod native {
     fn arguments(pid: u32) -> AppResult<(Vec<String>, Option<PathBuf>)> {
         parse_procargs(&raw_procargs(pid)?)
     }
+    fn same_generation(before: &libc::proc_bsdinfo, after: &libc::proc_bsdinfo) -> bool {
+        (
+            before.pbi_pid,
+            before.pbi_uid,
+            before.pbi_start_tvsec,
+            before.pbi_start_tvusec,
+        ) == (
+            after.pbi_pid,
+            after.pbi_uid,
+            after.pbi_start_tvsec,
+            after.pbi_start_tvusec,
+        )
+    }
+    fn exiting() -> AppError {
+        fail(
+            "recovery_process_exiting",
+            "原进程代次正在退出，尚未取得最终缺席与正常退出证明",
+        )
+    }
+    fn process_snapshot(
+        pid: u32,
+        observe: impl Fn() -> AppResult<Option<libc::proc_bsdinfo>>,
+        read: impl FnOnce() -> AppResult<(PathBuf, Vec<String>, Option<PathBuf>)>,
+    ) -> AppResult<Option<ProcessIdentity>> {
+        let Some(before) = observe()? else {
+            return Ok(None);
+        };
+        if before.pbi_pid != pid {
+            return Err(fail("recovery_process_reused", "进程PID身份不符"));
+        }
+        if before.pbi_status == 5 {
+            return Err(exiting());
+        }
+        let fields = read();
+        // Reobserve even when image/argv fails. EINVAL/ESRCH alone is never
+        // absence; only the native observer's explicit ESRCH may return None.
+        let Some(after) = observe()? else {
+            return Ok(None);
+        };
+        if !same_generation(&before, &after) {
+            return Err(fail("recovery_process_reused", "进程 PID 已复用"));
+        }
+        if after.pbi_status == 5 {
+            return Err(exiting());
+        }
+        let (image, argv, home) = fields?;
+        Ok(Some(ProcessIdentity {
+            pid,
+            owner: before.pbi_uid.to_string(),
+            created: format!("{}:{}", before.pbi_start_tvsec, before.pbi_start_tvusec),
+            image,
+            argv,
+            home,
+            zombie: false,
+        }))
+    }
     // KERN_PROCARGS2 includes the original executable path before argv/environment.
     // Read only that header for classification when the vnode path is gone; the
     // bounded backing buffer is zeroized and never logged or treated as a key.
@@ -1838,28 +1906,15 @@ mod native {
             Ok(unsafe { libc::geteuid() }.to_string())
         }
         fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>> {
-            let Some(info) = bsd(pid)? else {
-                return Ok(None);
-            };
-            let image = image(pid)?;
-            let (argv, home) = arguments(pid)?;
-            let Some(after) = bsd(pid)? else {
-                return Ok(None);
-            };
-            if (info.pbi_uid, info.pbi_start_tvsec, info.pbi_start_tvusec)
-                != (after.pbi_uid, after.pbi_start_tvsec, after.pbi_start_tvusec)
-            {
-                return Err(fail("recovery_process_reused", "进程 PID 已复用"));
-            }
-            Ok(Some(ProcessIdentity {
+            process_snapshot(
                 pid,
-                owner: info.pbi_uid.to_string(),
-                created: format!("{}:{}", info.pbi_start_tvsec, info.pbi_start_tvusec),
-                image,
-                argv,
-                home,
-                zombie: info.pbi_status == 5,
-            }))
+                || bsd(pid),
+                || {
+                    let image = image(pid)?;
+                    let (argv, home) = arguments(pid)?;
+                    Ok((image, argv, home))
+                },
+            )
         }
         fn processes(&self) -> AppResult<Vec<ProcessIdentity>> {
             // PROC_UID_ONLY is the libproc ABI value 4. The kernel filters uid,
@@ -2125,6 +2180,10 @@ mod native {
             }
             Ok(true)
         }
+    }
+    #[cfg(test)]
+    mod snapshot_tests {
+        include!("runtime_recovery_macos_snapshot_tests.rs");
     }
 }
 
