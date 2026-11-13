@@ -35,3 +35,11 @@ W0请求的身份/受保护记录/路径、保留原创建句柄/Job集合、正
 Mac可审查净diff main0828a3955..b2e89665d。第一批曾误含编译产物，应接最终净版本树或同时消费779d82015＋12c69e27e，避免单独拾取含target的中间提交；第二批为单独b2e89665d。父infrastructure/mod.rs由Mac按真实公共接口注册，不由Windows猜类型/文件名。推荐共享层持有OwnedRuntime生命周期：输入已核对的绝对exe/cwd/HOME，传最小环境和输出句柄；调用create_suspended→绑定记录/HMAC前提准备→resume；共享官方正常停止后，在同一个总Stop10秒deadline内调用wait_normal_exit、listener_exit_readback及共享恢复核验。错误不降级为对象不存在；强清返回值单独记录。
 
 未完：Mac P24-00/01共享合同、父模块/命令/产品入口接入、真实包/HMAC/ready/共享恢复与实际总30/5/10秒产品链验证、产品持久身份/并发事务/后像归属；W1的Windows CLI/PATH及NSIS/MSI接线等待Mac真实接口提交，尚未实施。W2最终固定集成候选/双SID控制台与RDP/安装更新卸载验收当前未跑。未改IMP/TEAM/共享索引，正式进度由Mac接收后回写，未发布。
+
+## 2026-11-13 W1第一批：Profile/HOME修正
+
+已fetch并合入共同main cbc6174de；消费docs/governance-main 61f0f99d8的TEAM revision5、W1接口r1和W0 finding。代码eb818d601（codex/024-windows-native）已推送。LaunchSpec分别传user_profile/opencodex_home：HOME和USERPROFILE取前者，OPENCODEX_HOME取后者，RootBinding.home/home_id及私有目录pin继续只证明实例H；不对Profile修权限。大小写环境覆盖仍拒绝重复输入。
+
+独立原生宿主process目标7项通过，包含两个不同合成目录的三变量真实子进程读回、参数/挂起窗口、旧SID/PID/FILETIME/HOME反例及受影响进程回归；fmt/clippy exit0。执行为提交前相同源码，SHA256和原始日志位于.adg/evidence/0.2.24/windows-dev/w1-profile-20261113/。Python编辑预检曾因GBK默认解码失败，尚无文件变更；仅工具输出可核，不重造stderr。原生测试无首错。
+
+本轮PID115732测试目录已清理；历史4个W0失败目录保持原事实，未将其记为本轮成功清理。共享接线建议：将ProcessContext.environment_policy.home传user_profile，opencodex_home传独立同名参数；RootBinding.home仍表示实例H。产品调用/完整官方链和W2未执行。下批为PATH原语和安装器资源；不改TEAM/IMP/共享索引，不发布。
