@@ -68,4 +68,4 @@ attempt01原生7项通过，clippy首错manual_is_multiple_of及chunks_exact_to_
 
 本轮process fixture目录和PATH/NSIS所有私有测试注册表key已清理，相关测试进程/窗口/Job/句柄已退出或释放；MSI超时探针原句柄退出已记录。不宣称全机无进程。原4个W0目录仍只含已归档空日志/空home；精确非递归清理命令被自动审批以blocked by policy拒绝，命令未执行、无换工具绕过。新生成target/installer-w1的归档后精确清理也被自动审批以同一理由拒绝，仍保留11808文件/2108815151字节；首次stage产生的两份共享脚本pycache亦列为清理未完。cleanup-pending.json给出路径/读回。历史证据不改写，不将“已归档”说成“已删除”。
 
-Mac后继最小接线仍为注册Windows平台模块，将ProcessContext两个HOME输入分别传入，并在已有terminal_cli事务内消费三个PATH原语，补真实卸载撤销helper。共享终端启用/禁用/恢复/卸载整链、实际产品安装升级卸载保留及固定候选双SID/W2仍未验；当前只完成被放行的原语/资源组件。未修改IMP/TEAM/共享索引、官方2.99或日常配置；未重跑旧r5、未跑W2全量、未发布。
+Mac后继最小接线为注册新增windows_cli024（基线infrastructure/mod.rs已注册windows_official_runtime024，勿重复注册），将ProcessContext两个HOME输入分别传入，并在已有terminal_cli事务内消费三个PATH原语，补真实卸载撤销helper。共享终端启用/禁用/恢复/卸载整链、实际产品安装升级卸载保留及固定候选双SID/W2仍未验；当前只完成被放行的原语/资源组件。未修改IMP/TEAM/共享索引、官方2.99或日常配置；未重跑旧r5、未跑W2全量、未发布。
