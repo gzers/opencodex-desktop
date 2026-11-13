@@ -6,11 +6,17 @@ use std::{
     time::Instant,
 };
 pub(super) fn fixture(second: bool) -> (tempfile::TempDir, ProcessContext, Index, Head, Originals) {
-    let (temp, context, index, captured, originals) = if second {
+    let captured = if second {
         super::retirement_transaction_tests::fixture()
     } else {
         super::super::root_retirement::fixture_captured_generation()
     };
+    complete_stopped(captured)
+}
+fn complete_stopped(
+    captured: (tempfile::TempDir, ProcessContext, Index, Head, Originals),
+) -> (tempfile::TempDir, ProcessContext, Index, Head, Originals) {
+    let (temp, context, index, captured, originals) = captured;
     let ready = originals.seal(Phase::Ready).unwrap();
     let raw=encode(&serde_json::json!({"schemaVersion":1,"scopeSha256":captured.references.as_ref().unwrap().scope_sha256,"readySha256":ready,"recordSha256":"a".repeat(64),"generation":[42,unsafe{libc::geteuid()},1,1],"parentGeneration":[41,unsafe{libc::geteuid()},1,1],"port":12345})).unwrap();
     super::super::create(&originals.directory, "startup-live.json", &raw).unwrap();
@@ -48,6 +54,41 @@ pub(super) fn fixture(second: bool) -> (tempfile::TempDir, ProcessContext, Index
     }
     assert_eq!(index.head().unwrap(), Some(head.clone()));
     (temp, context, index, head, originals)
+}
+/// Storage fixture with the same complete four-frame prior generation and
+/// nine-event source shape as the original-service test. Synthetic exit and
+/// movement seams grant no production authority or normal Stop success.
+pub(super) fn full_history_fixture() -> (tempfile::TempDir, ProcessContext, Index, Head, Originals)
+{
+    let (temp, context, index, stopped, originals) = fixture(false);
+    let artifacts = restore::Pending::prepare_fixture(&originals, evidence()).unwrap();
+    let restored = index
+        .record_restore_plan(&stopped, artifacts.id(), artifacts.sha256())
+        .unwrap();
+    let pending =
+        super::super::root_retirement::Pending::prepare(&context, &originals, &restored).unwrap();
+    let prepared = index
+        .record_root_retirement(&restored, pending.id(), pending.sha256())
+        .unwrap();
+    let proof = pending
+        .fixture_apply_for_index(Instant::now() + std::time::Duration::from_secs(10))
+        .unwrap();
+    let closed = index.close_root_absence(&prepared, &proof).unwrap();
+    assert_eq!(closed.revision, 9);
+    drop(pending);
+    drop(artifacts);
+    drop(originals);
+    let (index, preparing) = index
+        .create_successor_root(
+            &context,
+            &closed,
+            Instant::now() + std::time::Duration::from_secs(30),
+        )
+        .unwrap();
+    let (head, originals) = generation::fixture_captured_successor(&context, &index, &preparing);
+    let result = complete_stopped((temp, context, index, head, originals));
+    assert_eq!(result.3.revision, 15);
+    result
 }
 fn evidence() -> restore::Evidence {
     restore::Evidence {
@@ -359,5 +400,85 @@ fn root_metadata_registration_keeps_every_dynamic_source_and_archive_check() {
     println!(
         "ROOT_METADATA_REGISTRATION {}",
         serde_json::json!({"accepted":false,"samples":samples,"scope":"synthetic same second generation; no provenance/namespace/frame/archive observations removed; no native service"})
+    );
+}
+#[test]
+fn bounded_xattr_full_history_registration_keeps_48_frame_authentications() {
+    let mut samples = Vec::new();
+    for reference in [true, false, false, true] {
+        let (_temp, context, index, stopped, originals) = full_history_fixture();
+        let old: Vec<u8> = index
+            .connection()
+            .unwrap()
+            .query_row("SELECT document FROM events WHERE revision=9", [], |r| {
+                r.get(0)
+            })
+            .unwrap();
+        let closed: Head = decode(&old).unwrap();
+        assert_eq!(closed.state, State::RootAbsent);
+        assert_eq!(closed.references.as_ref().unwrap().phases.len(), 3);
+        let artifacts = restore::Pending::prepare_fixture(&originals, evidence()).unwrap();
+        let head = index
+            .record_restore_plan(&stopped, artifacts.id(), artifacts.sha256())
+            .unwrap();
+        assert_eq!(head.revision, 16);
+        let pending =
+            super::super::root_retirement::Pending::prepare(&context, &originals, &head).unwrap();
+        let start = Instant::now();
+        let (result, metrics) = observation_metrics::measure(|| {
+            let register =
+                || index.record_root_retirement_registered(&head, pending.id(), pending.sha256());
+            if reference {
+                observation_metrics::xattr_reference(register)
+            } else {
+                register()
+            }
+        });
+        let elapsed = start.elapsed().as_nanos();
+        let (prepared, registration) = result.unwrap();
+        assert_eq!(prepared.revision, 17);
+        registration
+            .require(&head, registration.plan().unwrap())
+            .unwrap();
+        assert_eq!(index.head().unwrap(), Some(prepared));
+        let metrics = serde_json::to_value(metrics).unwrap();
+        assert_eq!(metrics["frame"]["calls"], 48);
+        assert_eq!(metrics["frame_archives"]["calls"], 48);
+        assert_eq!(metrics["historical_begin"]["calls"], 3);
+        assert_eq!(metrics["historical_finish"]["calls"], 3);
+        assert_eq!(metrics["historical_full_pass"]["calls"], 6);
+        samples.push(
+            serde_json::json!({"reference":reference,"elapsedNanos":elapsed,"metrics":metrics}),
+        );
+    }
+    for key in [
+        "frame",
+        "frame_archives",
+        "capture_file",
+        "root_provenance",
+        "root_namespace",
+        "protection",
+        "historical_begin",
+        "historical_finish",
+        "historical_full_pass",
+    ] {
+        for sample in &samples {
+            assert_eq!(
+                sample["metrics"][key]["calls"], samples[0]["metrics"][key]["calls"],
+                "{key}"
+            );
+        }
+    }
+    assert!(
+        samples[1]["metrics"]["xattr_native_call"]["calls"]
+            .as_u64()
+            .unwrap()
+            < samples[0]["metrics"]["xattr_native_call"]["calls"]
+                .as_u64()
+                .unwrap()
+    );
+    println!(
+        "XATTR_FULL_HISTORY_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":samples,"scope":"complete four-frame first closed history; exact 9/16/17 index shapes and 48 frame checks; synthetic trees, no original runtime or Stop budget success"})
     );
 }

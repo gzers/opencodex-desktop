@@ -162,8 +162,110 @@ fn acl(file: &File) -> io::Result<Option<Vec<u8>>> {
     Ok(Some(bytes))
 }
 fn xattrs(file: &File) -> io::Result<BTreeMap<Vec<u8>, Vec<u8>>> {
+    #[cfg(test)]
+    if observation_metrics::xattr_reference_enabled() {
+        return xattrs_sized_reference(file);
+    }
     let fd = file.as_raw_fd();
-    let size = unsafe { libc::flistxattr(fd, std::ptr::null_mut(), 0, 0) };
+    let names = bounded_xattr_read(MAX_SECURITY, |buffer, size| list_xattrs(fd, buffer, size))?;
+    let mut result = BTreeMap::new();
+    let mut total = names.len();
+    if !names.is_empty() && names.last() != Some(&0) {
+        return Err(denied("xattr names truncated"));
+    }
+    for bytes in names.split(|b| *b == 0).filter(|b| !b.is_empty()) {
+        let key = CString::new(bytes).map_err(|_| denied("xattr name invalid"))?;
+        let read = |buffer, size| get_xattr(fd, &key, buffer, size);
+        // ResourceFork is stream-like on HFS/AppleDouble and may return a
+        // successful prefix rather than ERANGE. Keep its original bounded
+        // size/exact-read path, including for forks smaller than the buffer.
+        let value = if bytes == b"com.apple.ResourceFork" {
+            sized_xattr_read(MAX_SECURITY - total, read)?
+        } else {
+            bounded_xattr_read(MAX_SECURITY - total, read)?
+        };
+        total = total
+            .checked_add(value.len())
+            .ok_or_else(|| denied("xattr over limit"))?;
+        if total > MAX_SECURITY {
+            return Err(denied("xattr over limit"));
+        }
+        if result.insert(bytes.to_vec(), value).is_some() {
+            return Err(denied("duplicate xattr"));
+        }
+    }
+    Ok(result)
+}
+fn list_xattrs(fd: libc::c_int, buffer: *mut libc::c_void, size: usize) -> isize {
+    #[cfg(test)]
+    let _metric = observation_metrics::span("xattr_native_call");
+    unsafe { libc::flistxattr(fd, buffer.cast(), size, 0) }
+}
+fn get_xattr(fd: libc::c_int, key: &CString, buffer: *mut libc::c_void, size: usize) -> isize {
+    #[cfg(test)]
+    let _metric = observation_metrics::span("xattr_native_call");
+    unsafe { libc::fgetxattr(fd, key.as_ptr(), buffer, size, 0, 0) }
+}
+/// Whole-value xattrs and attribute lists use bounded direct reads. ERANGE or
+/// a filled buffer require one size/exact-read fallback. Stream-like keys
+/// must use sized_xattr_read directly; a successful prefix is not a value.
+fn bounded_xattr_read(
+    limit: usize,
+    mut read: impl FnMut(*mut libc::c_void, usize) -> isize,
+) -> io::Result<Vec<u8>> {
+    if limit > MAX_SECURITY {
+        return Err(denied("invalid xattr bound"));
+    }
+    let mut small = [0u8; 256];
+    let capacity = small.len().min(limit.max(1));
+    let count = read(small.as_mut_ptr().cast(), capacity);
+    if count >= 0 {
+        let count = count as usize;
+        if count > capacity || count > limit {
+            return Err(denied("invalid xattr read length"));
+        }
+        if count < capacity {
+            return Ok(small[..count].to_vec());
+        }
+    } else {
+        let error = io::Error::last_os_error();
+        if error.raw_os_error() != Some(libc::ERANGE) {
+            return Err(error);
+        }
+    }
+    sized_xattr_read(limit, read)
+}
+fn sized_xattr_read(
+    limit: usize,
+    mut read: impl FnMut(*mut libc::c_void, usize) -> isize,
+) -> io::Result<Vec<u8>> {
+    if limit > MAX_SECURITY {
+        return Err(denied("invalid xattr bound"));
+    }
+    let size = read(std::ptr::null_mut(), 0);
+    if size < 0 {
+        return Err(io::Error::last_os_error());
+    }
+    if size as usize > limit {
+        return Err(denied("xattr over limit"));
+    }
+    // A nonzero buffer keeps a concurrently emptied attribute an actual read,
+    // rather than turning the final call into another zero-size query.
+    let mut value = vec![0u8; (size as usize).max(1)];
+    let count = read(value.as_mut_ptr().cast(), value.len());
+    if count < 0 {
+        return Err(io::Error::last_os_error());
+    }
+    if count != size {
+        return Err(denied("xattr changed"));
+    }
+    value.truncate(size as usize);
+    Ok(value)
+}
+#[cfg(test)]
+fn xattrs_sized_reference(file: &File) -> io::Result<BTreeMap<Vec<u8>, Vec<u8>>> {
+    let fd = file.as_raw_fd();
+    let size = list_xattrs(fd, std::ptr::null_mut(), 0);
     if size < 0 {
         return Err(io::Error::last_os_error());
     }
@@ -171,9 +273,7 @@ fn xattrs(file: &File) -> io::Result<BTreeMap<Vec<u8>, Vec<u8>>> {
         return Err(denied("xattr names over limit"));
     }
     let mut names = vec![0; size as usize];
-    if size > 0
-        && unsafe { libc::flistxattr(fd, names.as_mut_ptr().cast(), names.len(), 0) } != size
-    {
+    if size > 0 && list_xattrs(fd, names.as_mut_ptr().cast(), names.len()) != size {
         return Err(denied("xattr names changed"));
     }
     let mut result = BTreeMap::new();
@@ -183,7 +283,7 @@ fn xattrs(file: &File) -> io::Result<BTreeMap<Vec<u8>, Vec<u8>>> {
     }
     for bytes in names.split(|b| *b == 0).filter(|b| !b.is_empty()) {
         let key = CString::new(bytes).map_err(|_| denied("xattr name invalid"))?;
-        let size = unsafe { libc::fgetxattr(fd, key.as_ptr(), std::ptr::null_mut(), 0, 0, 0) };
+        let size = get_xattr(fd, &key, std::ptr::null_mut(), 0);
         if size < 0 {
             return Err(io::Error::last_os_error());
         }
@@ -194,18 +294,7 @@ fn xattrs(file: &File) -> io::Result<BTreeMap<Vec<u8>, Vec<u8>>> {
             return Err(denied("xattr over limit"));
         }
         let mut value = vec![0; size as usize];
-        if size > 0
-            && unsafe {
-                libc::fgetxattr(
-                    fd,
-                    key.as_ptr(),
-                    value.as_mut_ptr().cast(),
-                    value.len(),
-                    0,
-                    0,
-                )
-            } != size
-        {
+        if size > 0 && get_xattr(fd, &key, value.as_mut_ptr().cast(), value.len()) != size {
             return Err(denied("xattr changed"));
         }
         if result.insert(bytes.to_vec(), value).is_some() {
@@ -1655,3 +1744,7 @@ mod root_originals_tests;
 #[cfg(test)]
 #[path = "macos_client_descendant_pin_tests.rs"]
 mod descendant_pin_tests;
+
+#[cfg(test)]
+#[path = "macos_client_xattr_read_tests.rs"]
+mod xattr_read_tests;
