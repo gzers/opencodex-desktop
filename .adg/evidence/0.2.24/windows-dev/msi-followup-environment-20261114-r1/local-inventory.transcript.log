@@ -1,0 +1,29 @@
+**********************
+PowerShell transcript start
+Start time: 20261114073414
+Username: EZIO-MINI\15119
+RunAs User: EZIO-MINI\15119
+Configuration Name: 
+Machine: EZIO-MINI (Microsoft Windows NT 10.0.26100.0)
+Host Application: C:\Users\15119\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.dll -NoProfile -File C:\Users\15119\.codex\worktrees\official299-windows-evidence\docs-governance\.adg\evidence\0.2.24\windows-dev\msi-followup-environment-20261114-r1\local-inventory.ps1
+Process ID: 105772
+PSVersion: 7.6.9
+PSEdition: Core
+GitCommitId: 7.6.9
+OS: Microsoft Windows 10.0.26100
+Platform: Win32NT
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1, 6.0, 7.0
+PSRemotingProtocolVersion: 2.4
+SerializationVersion: 1.1.0.1
+WSManStackVersion: 3.0
+**********************
+PS>TerminatingError(Get-VM): "The running command stopped because the preference variable "ErrorActionPreference" or common parameter is set to Stop: 你没有完成此任务所需的权限。请与计算机“EZIO-MINI”授权策略的管理员联系。"
+Get-VM: C:\Users\15119\.codex\worktrees\official299-windows-evidence\docs-governance\.adg\evidence\0.2.24\windows-dev\msi-followup-environment-20261114-r1\local-inventory.ps1:21
+Line |
+  21 |   try{Get-VM -ErrorAction Stop|Select-Object Name,State|ConvertTo-Json …
+     |       ~~~~~~~~~~~~~~~~~~~~~~~~
+     | 你没有完成此任务所需的权限。请与计算机“EZIO-MINI”授权策略的管理员联系。
+**********************
+PowerShell transcript end
+End time: 20261114073416
+**********************

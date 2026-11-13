@@ -158,3 +158,25 @@ out01 MSI测试命令没有生成安装日志、Windows Installer窗口未返回
 所有本轮ocxw1d账户及Win32_UserProfile为零残留，控制器原子保存退出、PATH还原、桌面ACL恢复；除首轮明确终止的MSI探针外，本轮测试/子进程均完成原退出等待；不宣称全机无其它进程。新Public根874693587字节、w1d-bundle01根1069796702字节及unit小文件仍在；归档核验后对两个精确新根的删除被自动审批以blocked by policy拒绝，命令未执行，未换工具绕过。旧W1/W1-C缓存、schema生成物及原失败根保持原拒绝事实；本轮复用旧MSVC/cache，没有重复制或重新清空它们。
 
 W1-D当前组件已收口，但allAccepted=false。唯一请求范围内的验收缺口是本机系统策略阻止的真实MSI正常/失败卸载；需要允许该per-user MSI的合规测试环境后按已保存源码/包SHA定向执行，不能要求用户放宽日常机器策略来凑通过。release流水线仍由Mac/集成线配置最终sidecar来源清单生成；本线只交Windows模板及真实dev编译证据。未修改官方2.99或日常PATH/配置，未跑W2、双SID、旧r5或全量sweep，未发布。
+
+## 2026-11-14 MSI唯一补验：无可用隔离环境，回环境事实
+
+已fetch main fd2538e4dae124b7c521b5b84b7ca5b5c6eeef6b、docs/governance-main932c3360c，消费TEAM revision9及windows-w1d-receive-msi-followup-r1。代码线合入主线时仅单元素循环的等价改写冲突，采用指定main内容；最终贡献HEAD f66d9d59f608d13920db58905682ac3c6435860c与main树完全一致并已push。本轮无产品/安装器/测试实现变更、无空提交或重建大包，原未跟踪windows-schema.json及旧清理拒绝事实保留。
+
+| 请求项 | 本轮状态 | 前提/原因 |
+| --- | --- | --- |
+| 真实MSI正常卸载 | 未执行/环境受阻 | 未找到本身允许普通账户per-user MSI的现成隔离Windows测试环境。 |
+| 真实MSI失败保留 | 未执行/环境受阻 | 同一安装前提未满足，没有拿helper/NSIS/条件表或复制文件代替。 |
+| 可复用开发包 | 本体核验一致 | 316784640字节，SHA256 9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282。未复制/修改包。 |
+| 既有终端/官方消费者/恢复 | 不重跑 | 无新独立事实，不执行同源已过组件或重复1625。 |
+| 当前机器策略、账户、PATH | 未修改 | 环境盘点仅读取；无测试账户/VM/安装或卸载进程。 |
+
+真实环境盘点（本机可达范围，不宣称全网无机器）：物理Unika/B760主机，Microsoft Windows Server2025 Datacenter 10.0.26100。普通会话Get-VM先报权限不足，保留原错误；只读提升后Get-VM成功返回0台已注册VM，Get-VMHost给出的宿主路径为D:/Server/Hyper-V/Config及VDisk。未启动/创建/配置VM。Docker已知context为default和desktop-linux，普通访问拒绝，提升后default info明确OSType=linux，不能作为Windows MSI测试环境。WSL --list --verbose原输出为无已安装发行版；当前PowerShell远程会话0、~/.ssh/config不存在，未发现vmrun/VBoxManage/WindowsSandbox命令。没有提供或自动连接其它远程测试机/凭据，未网络扫描、未创建云/CI环境、未安装其它虚拟化软件。
+
+当前策略事实与历史日志分开：本轮只读检查HKLM/HKCU Installer策略键的32/64位视图均缺席，提升后的HKLM结果相同；没有伪称该注册表键当前仍显式为1，也不把“键缺席”当已经允许MSI的实证。上轮真实out03日志的有效DisableMsi=1、exit1625保留为原时点事实。本轮当前主机不是已准备的隔离Windows测试环境，未在该机器上重复安装探测或尝试改变/绕过原系统门；不提升测试用户、不改安装范围或任何机器策略。
+
+证据.adg/evidence/0.2.24/windows-dev/msi-followup-environment-20261114-r1/：先行只读提升盘点脚本、原transcript及Docker/WSL stdout/stderr等10份原文件逐字SHA256核对归档；新local-inventory.ps1独立重读Token/主机/四视图策略/包SHA/账户现状，原输出和JSON分开保留。source-readback记录消费SHA、合入后树相等和真实远端；result.json维持allAccepted=false/environmentReady=false，两项卸载均not-executed，msiExecutions=0、terminalTestsRerun=0、officialReadsRerun=0。不把盘点权限错误计为新MSI产品故障。
+
+清理：本轮没有创建测试账户/Profile/安装登记、未写测试或日常PATH；现有ocxw1d账户/Profile查询为0。只读提升盘点进程已退出，没有本轮测试/MSI/VM进程待清。新Public盘点根C:/Users/Public/ocx-msi-env-20261114-r1共10文件5968字节；证据先归档核验后，对该新根逐文件非递归精确删除被自动审批以blocked by policy拒绝，命令未执行、未换工具绕过，原文件仍在；旧W1/W1-C/W1-D所有清理拒绝项未重试。cleanup-result.json分别记录新小型盘点余留与原历史项。
+
+后继仅需提供现成且允许普通账户per-user MSI的隔离Windows机/VM或受管测试连接，沿合同复用已核包，只做安装前提、pending Enable实际卸载失败保留、继续原Enable后实际卸载成功及D/H/live runtime保留。当前按用户“无可用环境就回环境事实”收口，未修改IMP/TEAM/共享索引，不跑W2/双SID或发布。
