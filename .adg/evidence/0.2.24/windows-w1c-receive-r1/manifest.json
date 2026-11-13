@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "accepted": false,
+  "scope": "W1-C receive and shared script admission; native W1-D entry integration pending",
+  "codeCommit": "0d231aebcc657f917b7e924b5700871115abf492",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 24,
+      "sha256": "45fb6649fd891d590100736ba94acef426f23223920447c41da4a7d7f276217b"
+    },
+    {
+      "path": "checks.py",
+      "bytes": 1094,
+      "sha256": "02b48ee085e86857f25145e4f7dff8e422b8fe3c2f33f8d1d70b4c2926def9f4"
+    },
+    {
+      "path": "cleanup.json",
+      "bytes": 344,
+      "sha256": "efb7ed0ed57955dd7ae7c2da7caedfd2e02fc6816004f93865aca0fc0552346d"
+    },
+    {
+      "path": "clippy.json",
+      "bytes": 259,
+      "sha256": "834dbb758d14c7acfea4e41407e7b0cf4165e68baf007fb48589370dd81f6700"
+    },
+    {
+      "path": "clippy.log",
+      "bytes": 198,
+      "sha256": "37771165680447f78fc4e16d5b0965448575abf93006b4dfd413ceaddefae03f"
+    },
+    {
+      "path": "diff-check.json",
+      "bytes": 135,
+      "sha256": "c4c34e1a98fedbeb6b5149978c5f14b10616c253af2561d66e1ed8188bf82ba0"
+    },
+    {
+      "path": "diff-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "format.json",
+      "bytes": 206,
+      "sha256": "6a1d9cc9e2f6cefc18e5d52f8e2b085664992fa73a524697232a09e5a4ba53e6"
+    },
+    {
+      "path": "format.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "host-checks.json",
+      "bytes": 311,
+      "sha256": "89ffa2b1a676b73ba0f6f80ac3a912446376ea7147dfbd58adec7f6e428653db"
+    },
+    {
+      "path": "host-tested-source.json",
+      "bytes": 781,
+      "sha256": "326a785e12472e8e3cacc503c5c04501b82e21b04c08ed1a84e95e9e0700876d"
+    },
+    {
+      "path": "hypothesis.json",
+      "bytes": 453,
+      "sha256": "508bed943e9fc7fe208cfc40c88d67a3705b680daf73e6d6d4c7a5d55d108636"
+    },
+    {
+      "path": "ingest.json",
+      "bytes": 73829,
+      "sha256": "e154f5b2d18fe61c0bd7174afdfefd8188b789c02da64ce94c391ccecfcbd034"
+    },
+    {
+      "path": "integrated-source.json",
+      "bytes": 891,
+      "sha256": "5a2355981caf9fdc427991e6a158226faffdf1b48951f2a5c572c56ecf423543"
+    },
+    {
+      "path": "native-shim.json",
+      "bytes": 258,
+      "sha256": "ef18daff3043a71d92116a3336a80899810c01b86e9ae6c5466c959551b6551e"
+    },
+    {
+      "path": "native-shim.log",
+      "bytes": 561,
+      "sha256": "de580cd816cc6b4b810d0a857ddcfb97c4f0d48ee2c7b35937caf94ebee989f1"
+    },
+    {
+      "path": "run.py",
+      "bytes": 708,
+      "sha256": "bc1153a31cc794702573b975558097d6fa112679c1682be2411cef1f447b9d92"
+    },
+    {
+      "path": "selection.json",
+      "bytes": 292,
+      "sha256": "ddb9327683f9a9af7c48c535d4dd82c2a0e9245e37c542ba5581c85fccd1f75c"
+    },
+    {
+      "path": "selection.log",
+      "bytes": 1987,
+      "sha256": "373c576d7014e100b5773a586ca805308c9642c8091691c89734f70620fb81c9"
+    },
+    {
+      "path": "shim-msvc-typecheck.json",
+      "bytes": 386,
+      "sha256": "6fd93e42aedf05409347b93511431a374fc9fe9ca732f13c63a771f1815d4d44"
+    },
+    {
+      "path": "shim-msvc-typecheck.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "shim-msvc.rmeta",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "source-bindings.json",
+      "bytes": 3024,
+      "sha256": "e7fae7e26af142f74b65e227b51b1816087c498549e0f8f6bc40aa95acb0b111"
+    },
+    {
+      "path": "terminal.json",
+      "bytes": 286,
+      "sha256": "c056af84c2f116ae01bffca4586664c659f0734136a514fd0049fa93d002e05d"
+    },
+    {
+      "path": "terminal.log",
+      "bytes": 3444,
+      "sha256": "6ab264755aaad0bad7f6e7b709fa5eddb6b35dfe0953d676ee4890283e2d017d"
+    },
+    {
+      "path": "unit-temp-bytes.json.gz",
+      "bytes": 22,
+      "sha256": "64406e753d82e11c6bd63d1d04bb6aa083eefa0a46949bbfce994d556b989f0f"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 505,
+      "sha256": "dfdbcd38571d8c78eddd12b9fed46ca11835219ef9881a1c65b9dfe1710cf56d"
+    },
+    {
+      "path": "verify_all.py",
+      "bytes": 2476,
+      "sha256": "c1388715a35224f2a0c96c8a4656c439d968b8c3bc70fdfbad1a3641b45c6a98"
+    },
+    {
+      "path": "verify_received.py",
+      "bytes": 5720,
+      "sha256": "ff8f6615bd3c74d947f5e3cda2196bb91716f050b91179d054e0024cf7d63732"
+    }
+  ],
+  "fileCount": 29,
+  "totalBytes": 98194
+}
