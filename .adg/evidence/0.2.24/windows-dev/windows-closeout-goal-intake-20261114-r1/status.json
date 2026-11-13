@@ -1,0 +1,54 @@
+{
+  "reusedEvidence": {
+    "componentOriginalCommit": "7d8e5db851de4d5e57fd9fa17d5139dbfc57efef",
+    "environmentOriginalCommit": "24a4a467368bddc55979fd01d969e6cd7f9bbc92",
+    "component": ".adg/evidence/0.2.24/windows-dev/w1d-native-entry-20261113",
+    "newMachineProbePerformed": false,
+    "environment": ".adg/evidence/0.2.24/windows-dev/msi-followup-environment-20261114-r1"
+  },
+  "allAccepted": false,
+  "currentWork": [
+    {
+      "testExecuted": false,
+      "item": "MSI ordinary-user installation prerequisite",
+      "status": "needs-environment"
+    },
+    {
+      "testExecuted": false,
+      "item": "real MSI failed uninstall retains programs/product/PATH/D/H/pending",
+      "status": "blocked-by-installation-prerequisite"
+    },
+    {
+      "testExecuted": false,
+      "item": "real MSI normal uninstall revokes entry and retains live runtime/D/H",
+      "status": "blocked-by-installation-prerequisite"
+    }
+  ],
+  "persistentGoal": "active; needs environment input; do not claim Windows scope complete",
+  "missingInput": [
+    "an already allowed isolated Windows guest with usable connection and ordinary account capability",
+    "or concrete authorization/preparation inputs for a new Hyper-V guest: Windows image source, resource/storage boundary and lifecycle"
+  ],
+  "published": false,
+  "cleanup": {
+    "newTestResidue": "none created",
+    "previousRejectedItems": "retained unchanged; no cleanup retry",
+    "newArtifacts": "only intended Git evidence/handoff files"
+  },
+  "package": {
+    "digestSource": "prior actual Windows package hash, unchanged input not rebuilt or copied this round",
+    "sha256": "9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282",
+    "bytes": 316784640,
+    "newHashClaimed": false
+  },
+  "newSideEffects": {
+    "msiRuns": 0,
+    "accountsCreated": 0,
+    "pathWrites": 0,
+    "newExternalTempFiles": 0,
+    "profilesCreated": 0,
+    "vmRuns": 0,
+    "officialCommands": 0,
+    "productCodeChanges": 0
+  }
+}

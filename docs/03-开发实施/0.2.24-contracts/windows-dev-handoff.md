@@ -180,3 +180,13 @@ W1-D当前组件已收口，但allAccepted=false。唯一请求范围内的验�
 清理：本轮没有创建测试账户/Profile/安装登记、未写测试或日常PATH；现有ocxw1d账户/Profile查询为0。只读提升盘点进程已退出，没有本轮测试/MSI/VM进程待清。新Public盘点根C:/Users/Public/ocx-msi-env-20261114-r1共10文件5968字节；证据先归档核验后，对该新根逐文件非递归精确删除被自动审批以blocked by policy拒绝，命令未执行、未换工具绕过，原文件仍在；旧W1/W1-C/W1-D所有清理拒绝项未重试。cleanup-result.json分别记录新小型盘点余留与原历史项。
 
 后继仅需提供现成且允许普通账户per-user MSI的隔离Windows机/VM或受管测试连接，沿合同复用已核包，只做安装前提、pending Enable实际卸载失败保留、继续原Enable后实际卸载成功及D/H/live runtime保留。当前按用户“无可用环境就回环境事实”收口，未修改IMP/TEAM/共享索引，不跑W2/双SID或发布。
+
+## 2026-11-14 持续目标承接：Windows自主收口，MSI客体输入待补
+
+用户本轮明确改为Windows原对话持续负责排查→修复→定向验证→提交推送，不要求每处失败回Mac；本线接受这一持续授权，目标不因一次贡献回交即标完成。fetch后main仍fd2538e4dae124b7c521b5b84b7ca5b5c6eeef6b，docs主线已到242f46e71，读取IMP-34 revision136、TEAM revision10及MSI-only/环境接收合同。正式IMP/TEAM/共享索引仍由集成线维护，本线不重写。代码HEAD f66d9d59f与main同树，无新增实现；本轮无空代码提交。
+
+本轮先落hypothesis，再一次合并独立项状态；不是重新跑环境盘点。来源windows-closeout-goal-intake-20261114-r1中的source-intake/status引用已核10份原环境raw和既有组件验收，不重复MSI1625、VM清单、已过终端/官方/PATH/NSIS宏。真实MSI失败保留、真实正常卸载两项仍受“实际per-user MSI安装先成功”前提阻塞，均未执行/allAccepted=false。此前有界盘点无现成Windows VM/远程目标；本次用户未提供新的客体/端点/镜像，不凭“目标模式”捏造新环境可用。
+
+当前需要具体可用隔离Windows连接；如由本机新建Hyper-V临时客体，则需先固定可用Windows镜像来源、CPU/内存/磁盘边界和创建/销毁范围，才有可审阅的环境方案。合同要求“若用户决定准备新隔离VM，另明确可用镜像/资源和创建范围后执行”；这不是要求每次Windows代码修复重新授权。不会自行改变日常主机Installer策略、提高测试用户令牌、改成per-machine或用NSIS/复制文件代替真实MSI。
+
+源码f66d9d59f/包SHA9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282（316784640字节）沿原证据复用，本轮未重建/复制/声称重算。新证据仅.adg/evidence/0.2.24/windows-dev/windows-closeout-goal-intake-20261114-r1/，保存待证伪假设、最新合同摘要、三项状态和缺少输入。没有新测试账户/Profile/PATH/VM/MSI进程或外部临时根待清；既有自动审批拒绝及其全部余留按原事实保持，不重试、不绕过。环境到位后自主接续MSI-only用例，范围内实际缺陷批量处理并分批Git回交；共享范围外/需变方案时才提出具体证据。未改官方2.99/日常配置，未跑真实业务同步/模型请求/W2/双SID，未发布，持续目标保持未完成。
