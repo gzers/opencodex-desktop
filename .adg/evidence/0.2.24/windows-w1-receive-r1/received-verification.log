@@ -1,0 +1,110 @@
+{
+  "receivedBytesVerified": true,
+  "ingestedFiles": 82,
+  "installerRawFiles": 52,
+  "contributionSourceFiles": 13,
+  "sourceBindings": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "gitSha256": "8f4ff6780857d8e0329f56574bd4fd1daf6cf3d3633e82bff98271c48cdded60",
+      "executedSha256": "8f4ff6780857d8e0329f56574bd4fd1daf6cf3d3633e82bff98271c48cdded60",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "test/windows024-native/fixture.rs",
+      "gitSha256": "9e3aa2daae085132dbce86cb738f70e214fe8193b3e9a6e3f9a05d0028d0a02f",
+      "executedSha256": "9e3aa2daae085132dbce86cb738f70e214fe8193b3e9a6e3f9a05d0028d0a02f",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "test/windows024-native/tests/process.rs",
+      "gitSha256": "abfd0df77bea8893c543e3e4e374be576c4c89a6a2ab349481326a02fd950ac6",
+      "executedSha256": "abfd0df77bea8893c543e3e4e374be576c4c89a6a2ab349481326a02fd950ac6",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "gitSha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b",
+      "executedSha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "test/windows024-native/Cargo.toml",
+      "gitSha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d",
+      "executedSha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "test/windows024-native/lib.rs",
+      "gitSha256": "beaa37885b3397269929b8fb2b7a71119916ff4b225930bdaaee3d2a61a4ff11",
+      "executedSha256": "beaa37885b3397269929b8fb2b7a71119916ff4b225930bdaaee3d2a61a4ff11",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "apps/desktop/tauri/windows/installer-hooks.nsh",
+      "gitSha256": "b685a205ad40f202082743e36525097b1c707c86ee76a27208f538256cbaaccf",
+      "executedSha256": "089b57334044648cee2f1c8c500ab634eefc3910cf009503fbdf469a0063dfc8",
+      "exact": false,
+      "onlyCRLF": true
+    },
+    {
+      "path": "apps/desktop/tauri/windows/nsis023.nsi",
+      "gitSha256": "827654fe0777c81ee9d2a14ba10bd714c470838af7d1fef145b5a36ae8800155",
+      "executedSha256": "b560d1ce9df5e1665327637cded12835177d6e9ad99bd1302670472fe1e4de9e",
+      "exact": false,
+      "onlyCRLF": true
+    },
+    {
+      "path": "apps/desktop/tauri/windows/wix023.wxs",
+      "gitSha256": "e57afe77d89b176deb1bae1fe464ac01e6e2e155ada77222248174a8d77925db",
+      "executedSha256": "957e84f4433ef69043640486d027196f19913a03d5d6832b0d015ec411c2c9fc",
+      "exact": false,
+      "onlyCRLF": true
+    },
+    {
+      "path": "test/windows024-native/stage-installer.py",
+      "gitSha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026",
+      "executedSha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "test/windows024-native/bundle-installer.py",
+      "gitSha256": "3ec0122d820c6ea23403d82f5c4bb51a77a8a0115908b6699319962377266591",
+      "executedSha256": "3ec0122d820c6ea23403d82f5c4bb51a77a8a0115908b6699319962377266591",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "test/windows024-native/verify-msi-paths.ps1",
+      "gitSha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988",
+      "executedSha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988",
+      "exact": true,
+      "onlyCRLF": false
+    },
+    {
+      "path": "test/windows024-native/verify-nsis-paths.py",
+      "gitSha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2",
+      "executedSha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2",
+      "exact": true,
+      "onlyCRLF": false
+    }
+  ],
+  "nativeResultsReadFromWindowsLogs": {
+    "profile": 7,
+    "path": 8,
+    "msiCosting": 2,
+    "nsisPathFunctions": 4
+  },
+  "windowsExecutedHere": false,
+  "binaryArtifactsAvailableHere": false,
+  "wholeProductAccepted": false,
+  "cleanupComplete": false,
+  "retainedWindowsBuildBytes": 2108815151.0
+}

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "cargo",
+    "check",
+    "--manifest-path",
+    "test/windows024-native/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--all-targets",
+    "--locked",
+    "--offline"
+  ],
+  "cwd": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes",
+  "exitCode": 0,
+  "elapsedSeconds": 1.831,
+  "windowsRuntimeExecutedHere": false
+}

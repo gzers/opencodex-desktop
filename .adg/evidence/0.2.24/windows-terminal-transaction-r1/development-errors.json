@@ -1,0 +1,32 @@
+{
+  "toolOutputOnlyObservations": [
+    {
+      "phase": "initial Rust module registration",
+      "errors": [
+        "E0583 missing explicit sibling module path",
+        "E0432 incorrect nested super import"
+      ],
+      "corrected": true
+    },
+    {
+      "phase": "transaction callback inference",
+      "error": "E0282/E0283 ambiguous Result error type",
+      "corrected": true
+    },
+    {
+      "phase": "initial strict clippy",
+      "error": "cloned_ref_to_slice_refs in isolated test",
+      "corrected": true
+    },
+    {
+      "phase": "Windows cross target full product check",
+      "exitCode": 101,
+      "firstRelevantError": "ring C dependency: assert.h file not found for x86_64-pc-windows-msvc",
+      "productRustBranchReached": false,
+      "correctedHere": false
+    }
+  ],
+  "noFabricatedRawStderr": true,
+  "recordedFormatFailure": "format.log/format.json retained; final format-final exit0",
+  "noRuntimeNativeRoundRetried": true
+}

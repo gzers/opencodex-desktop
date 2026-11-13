@@ -1,0 +1,17 @@
+{
+  "command": [
+    "cargo",
+    "clippy",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--all-targets",
+    "--offline",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "cwd": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes",
+  "exitCode": 0,
+  "elapsedSeconds": 32.491,
+  "windowsNativeExecuted": false
+}
