@@ -340,19 +340,9 @@ impl Active {
                     let pending = self
                         .session
                         .prepare_root_completed_stop(&admission, &mut guard)?;
-                    let prepared = self
+                    let (prepared, registration) = self
                         .index
-                        .record_root_retirement(&source, pending.id(), pending.sha256())
-                        .map_err(failure)?;
-                    let plan = prepared
-                        .root_retirement
-                        .as_ref()
-                        .ok_or_else(|| failure(()))?
-                        .plan
-                        .clone();
-                    let registration = self
-                        .index
-                        .root_retirement_registration(&source, &prepared, &plan)
+                        .record_root_retirement_registered(&source, pending.id(), pending.sha256())
                         .map_err(failure)?;
                     self.head = prepared;
                     mark("root-retire");

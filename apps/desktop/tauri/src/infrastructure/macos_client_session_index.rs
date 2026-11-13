@@ -139,9 +139,11 @@ impl RootRetirementRegistration<'_> {
         }
         self.require_index_facts(source, plan)
     }
-    /// Only RootRetirementAuthority pairs this with a fresh full root/frame
-    /// observation in the same checkpoint and repeats facts afterwards. It
-    /// grants no standalone root permission and keeps no observation cache.
+    /// RootRetirementAuthority pairs this with a fresh full root/frame
+    /// observation in the same checkpoint and repeats facts afterwards. The
+    /// registration factory also uses it immediately after its same-call
+    /// post-COMMIT full audit. Neither use grants standalone root permission
+    /// or keeps an observation cache.
     pub(in crate::infrastructure::macos_client_originals) fn require_index_facts(
         &self,
         source: &Head,
@@ -1621,6 +1623,42 @@ impl Index {
         id: &str,
         sha256: &str,
     ) -> io::Result<Head> {
+        self.record_root_retirement_inner(expected, id, sha256, &|_| Ok(()))
+    }
+    /// The registration is constructed only after the transaction's complete
+    /// candidate and post-COMMIT root/history readback. No separately copied
+    /// Head or an already-stored success flag may mint it.
+    pub fn record_root_retirement_registered<'a>(
+        &'a self,
+        source: &Head,
+        id: &str,
+        sha256: &str,
+    ) -> io::Result<(Head, RootRetirementRegistration<'a>)> {
+        self.record_root_retirement_registered_checked(source, id, sha256, &|_| Ok(()))
+    }
+    fn record_root_retirement_registered_checked<'a>(
+        &'a self,
+        source: &Head,
+        id: &str,
+        sha256: &str,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<(Head, RootRetirementRegistration<'a>)> {
+        let prepared = self.record_root_retirement_inner(source, id, sha256, checkpoint)?;
+        let proof = RootRetirementRegistration {
+            index: self,
+            prepared: prepared.clone(),
+        };
+        let plan = proof.plan()?;
+        proof.require_index_facts(source, plan)?;
+        Ok((prepared, proof))
+    }
+    fn record_root_retirement_inner(
+        &self,
+        expected: &Head,
+        id: &str,
+        sha256: &str,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<Head> {
         if expected.root_retirement.is_some()
             || !matches!(
                 expected.state,
@@ -1629,10 +1667,6 @@ impl Index {
         {
             return Err(denied("root movement cannot replace prior decision"));
         }
-        let originals = self.registered_root_originals(expected)?;
-        let pending = super::root_retirement::Pending::open(&originals, id, sha256)?;
-        pending.require_source(expected)?;
-        pending.inspect_live()?;
         let next = Head {
             revision: expected
                 .revision
@@ -1652,7 +1686,14 @@ impl Index {
             }),
             root_generation: None,
         };
-        self.write(Some(expected), &next)?;
+        self.write_checked_admitted(Some(expected), &next, checkpoint, &|originals| {
+            let originals = originals.ok_or_else(|| {
+                denied("root retirement plan lacks current authenticated Originals")
+            })?;
+            let pending = super::root_retirement::Pending::open(originals, id, sha256)?;
+            pending.require_source(expected)?;
+            pending.inspect_live()
+        })?;
         Ok(next)
     }
     pub fn root_retirement_registration<'a>(
@@ -1950,6 +1991,18 @@ impl Index {
         next: &Head,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<()> {
+        self.write_checked_admitted(expected, next, checkpoint, &|_| Ok(()))
+    }
+    /// Admission consumes the source Originals from the SAME complete source
+    /// audit inside this SQL transaction. It cannot retain the borrowed value
+    /// or bypass the candidate/post-COMMIT full source observations below.
+    fn write_checked_admitted(
+        &self,
+        expected: Option<&Head>,
+        next: &Head,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+        admit: &impl Fn(Option<&Originals>) -> io::Result<()>,
+    ) -> io::Result<()> {
         validate(next)?;
         if self.root_registration.is_some()
             && !(expected.is_some_and(|h| h.state == State::Preparing)
@@ -2003,9 +2056,12 @@ impl Index {
                     r.get(0)
                 })
                 .map_err(database_error)?;
-            if binding != self.binding || self.checked_head()?.as_ref() != expected {
+            let (head, originals) = self.checked_head_originals()?;
+            if binding != self.binding || head.as_ref() != expected {
                 return Err(denied("current session changed before reference commit"));
             }
+            admit(originals.as_ref())?;
+            checkpoint("source_admitted")?;
             self.check_capture_publication(next)?;
             let bytes = encode(next)?;
             c.execute(
@@ -2055,6 +2111,9 @@ impl Drop for Index {
 #[path = "macos_client_session_index_tests.rs"]
 mod tests;
 
+#[cfg(test)]
+#[path = "macos_client_retirement_transaction_tests.rs"]
+mod retirement_transaction_tests;
 #[cfg(test)]
 #[path = "macos_client_root_registration_tests.rs"]
 mod root_registration_tests;

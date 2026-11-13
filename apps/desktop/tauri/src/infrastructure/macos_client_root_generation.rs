@@ -654,6 +654,14 @@ pub fn inspect_client_recovery(
 #[path = "macos_client_root_successor_capture_tests.rs"]
 mod capture_tests;
 #[cfg(test)]
+pub(super) fn fixture_captured_successor(
+    context: &ProcessContext,
+    index: &Index,
+    preparing: &Head,
+) -> (Head, Originals) {
+    capture_tests::captured(context, index, preparing)
+}
+#[cfg(test)]
 #[path = "macos_client_root_rollover_tests.rs"]
 mod rollover_tests;
 #[cfg(test)]
