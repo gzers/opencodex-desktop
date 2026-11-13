@@ -422,14 +422,37 @@ fn with_admission_mode<T>(
     let result = operation(&lease);
     // Check BEFORE releasing; an elapsed callback never turns into success by
     // unlocking, or by completing subsequent image checks after the deadline.
+    #[cfg(test)]
+    let tail_started = Instant::now();
     let valid = lease.check();
+    #[cfg(test)]
+    let checked_at = Instant::now();
     let release = lease.release();
+    #[cfg(test)]
+    let released_at = Instant::now();
     let value = result?;
     valid?;
     release?;
     let (target, platform) = program_layout::host_target()?;
     let selected = program_selection::read_complete(&root, platform, target)?
         .ok_or_else(|| fail("client_native_coordination_source"))?;
+    #[cfg(test)]
+    if std::env::var_os("OCXD024_RETIREMENT_COST_PROFILE").as_deref()
+        == Some(std::ffi::OsStr::new("1"))
+        && context.user_profile.starts_with("/private/tmp")
+        && context.user_profile.ancestors().any(|p| {
+            p.file_name().is_some_and(|n| {
+                n.to_string_lossy()
+                    .starts_with("ocxd024-versioned-lifecycle-")
+            })
+        })
+    {
+        let now = Instant::now();
+        eprintln!(
+            "COORDINATION_TAIL_COST {}",
+            serde_json::json!({"accepted":false,"leaseCheckUs":checked_at.duration_since(tail_started).as_micros(),"releaseUs":released_at.duration_since(checked_at).as_micros(),"completeSourceUs":now.duration_since(released_at).as_micros(),"remainingBeforeUs":deadline.saturating_duration_since(tail_started).as_micros(),"remainingAfterUs":deadline.saturating_duration_since(now).as_micros(),"expiredAfter":now>=deadline})
+        );
+    }
     if selected != *expected
         || context.runtime.executable().as_ref() != Some(&expected.stable_entry)
     {
