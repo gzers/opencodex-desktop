@@ -66,6 +66,32 @@ fn time(deadline: Instant) -> AppResult<()> {
         Ok(())
     }
 }
+/// Diagnostic-only timing/code output; the result, order and original bound
+/// deadline are passed through unchanged. No config, paths or error detail.
+#[inline]
+fn stop_step<T>(
+    deadline: Instant,
+    stage: &'static str,
+    action: impl FnOnce() -> AppResult<T>,
+) -> AppResult<T> {
+    #[cfg(test)]
+    let began = Instant::now();
+    let result = action();
+    #[cfg(test)]
+    {
+        let code = match &result {
+            Ok(_) => "ok",
+            Err(AppError::Timeout) => "timeout",
+            Err(AppError::RuntimeManaged { code, .. }) => code.as_str(),
+            Err(_) => "other-error",
+        };
+        let now = Instant::now();
+        eprintln!("ROOT_STOP_STEP stage={} elapsed_us={} remaining_before_us={} remaining_after_us={} expired_after={} code={}",stage,now.duration_since(began).as_micros(),deadline.saturating_duration_since(began).as_micros(),deadline.saturating_duration_since(now).as_micros(),now>=deadline,code);
+    }
+    #[cfg(not(test))]
+    let _ = (deadline, stage);
+    result
+}
 fn valid_hash(s: &str) -> bool {
     s.len() == 64
         && s.bytes()
@@ -309,35 +335,52 @@ impl RootStopAdmission<'_> {
     fn check_before_plan(&self, session: &StartupSession) -> AppResult<()> {
         #[cfg(test)]
         let cost = StopCostTrace::new("admission");
-        time(self.deadline)?;
+        stop_step(self.deadline, "admission.entry-time", || {
+            time(self.deadline)
+        })?;
         if !std::ptr::eq(session, self.session)
-            || self.head.references.as_ref() != Some(&session.references()?)
-            || session.scope(self.context)? != self.scope
-            || session.live(self.context)? != self.live
+            || self.head.references.as_ref()
+                != Some(&stop_step(self.deadline, "admission.references", || {
+                    session.references()
+                })?)
+            || stop_step(self.deadline, "admission.scope", || {
+                session.scope(self.context)
+            })? != self.scope
+            || stop_step(self.deadline, "admission.live", || {
+                session.live(self.context)
+            })? != self.live
         {
             return Err(error(()));
         }
         #[cfg(test)]
         cost.mark("native");
-        self.lease
-            .require_context(self.context, &session.originals.logical_client())?;
-        self.pair
-            .require(self.live.process()?, self.live.parent()?, self.deadline)?;
+        stop_step(self.deadline, "admission.native-context", || {
+            self.lease
+                .require_context(self.context, &session.originals.logical_client())
+        })?;
+        stop_step(self.deadline, "admission.original-pair", || {
+            self.pair
+                .require(self.live.process()?, self.live.parent()?, self.deadline)
+        })?;
         let owner = SystemServiceOwnerProofProvider::new(
             self.scope.program_root.clone(),
             self.context.clone(),
         )?;
         #[cfg(test)]
         cost.mark("absence");
-        self.stop.require_original_absence(
-            session.originals.data.path(),
-            self.live.process()?,
-            self.live.parent()?,
-            &self.live.record_sha256,
-            self.live.port,
-            &owner,
-        )?;
-        time(self.deadline)
+        stop_step(self.deadline, "admission.stop-absence", || {
+            self.stop.require_original_absence(
+                session.originals.data.path(),
+                self.live.process()?,
+                self.live.parent()?,
+                &self.live.record_sha256,
+                self.live.port,
+                &owner,
+            )
+        })?;
+        stop_step(self.deadline, "admission.final-time", || {
+            time(self.deadline)
+        })
     }
 }
 /// Current normal-Stop authority only. Values are never deserialized and no
@@ -462,13 +505,17 @@ impl ArtifactRestoreAuthority<'_> {
     }
 
     pub(super) fn check(&self, originals: &Originals) -> AppResult<()> {
-        time(self.deadline)?;
+        stop_step(self.deadline, "artifact-authority.entry-time", || {
+            time(self.deadline)
+        })?;
         if !std::ptr::eq(originals, &self.session.originals) {
             return Err(error(()));
         }
         self.lease
             .require_context(self.context, &originals.client.path)?;
-        let live = self.session.live(self.context)?;
+        let live = stop_step(self.deadline, "artifact-authority.live", || {
+            self.session.live(self.context)
+        })?;
         self.pair
             .require(live.process()?, live.parent()?, self.deadline)?;
         self.stop.require_original(
@@ -483,7 +530,9 @@ impl ArtifactRestoreAuthority<'_> {
         {
             return Err(error(()));
         }
-        time(self.deadline)
+        stop_step(self.deadline, "artifact-authority.final-time", || {
+            time(self.deadline)
+        })
     }
 }
 /// A distinct user-confirmed action after interruption. This proves CURRENT
@@ -1624,20 +1673,7 @@ impl StartupSession {
     ) -> AppResult<Self> {
         if index.has_original_root_absence() {
             let originals = index.registered_root_originals(head).map_err(error)?;
-            let refs = head.references.as_ref().ok_or_else(|| error(()))?;
-            let result = Self {
-                originals,
-                scope_sha256: refs.scope_sha256.clone(),
-                live_sha256: refs.live_sha256.clone(),
-                profile: PinnedDirectory::open(&context.working_directory).map_err(error)?,
-                home: PinnedDirectory::open(&context.opencodex_home).map_err(error)?,
-            };
-            if result.live_sha256.is_some() {
-                result.live(context)?;
-            } else {
-                result.scope(context)?;
-            }
-            Ok(result)
+            Self::from_observed_root(context, head, originals)
         } else {
             Self::open(
                 context,
@@ -1646,6 +1682,41 @@ impl StartupSession {
                 head.references.as_ref().ok_or_else(|| error(()))?,
             )
         }
+    }
+    pub(super) fn from_observed_ready_root(
+        context: &ProcessContext,
+        head: &session_index::Head,
+        originals: Originals,
+    ) -> AppResult<Self> {
+        if head.state != session_index::State::Ready || originals.original_root_absence.is_none() {
+            return Err(error(()));
+        }
+        Self::from_observed_root(context, head, originals)
+    }
+    fn from_observed_root(
+        context: &ProcessContext,
+        head: &session_index::Head,
+        originals: Originals,
+    ) -> AppResult<Self> {
+        let refs = head.references.as_ref().ok_or_else(|| error(()))?;
+        if refs.attempt != originals.attempt()
+            || refs.original_sha256 != originals.original_sha256()
+        {
+            return Err(error(()));
+        }
+        let result = Self {
+            originals,
+            scope_sha256: refs.scope_sha256.clone(),
+            live_sha256: refs.live_sha256.clone(),
+            profile: PinnedDirectory::open(&context.working_directory).map_err(error)?,
+            home: PinnedDirectory::open(&context.opencodex_home).map_err(error)?,
+        };
+        if result.live_sha256.is_some() {
+            result.live(context)?;
+        } else {
+            result.scope(context)?;
+        }
+        Ok(result)
     }
     pub fn first_root_ready<'a>(
         &'a mut self,
@@ -2001,15 +2072,20 @@ impl StartupSession {
         admission: &RootStopAdmission<'_>,
         guard: &mut crate::infrastructure::official_client_coordination::native::config::Guard<'_>,
     ) -> AppResult<()> {
-        admission.check_before_plan(self)?;
-        guard.root_image(admission.lease, &self.originals.logical_client())?;
+        stop_step(admission.deadline, "artifacts.admission-before", || {
+            admission.check_before_plan(self)
+        })?;
+        stop_step(admission.deadline, "artifacts.guard-image", || {
+            guard.root_image(admission.lease, &self.originals.logical_client())
+        })?;
         let plan = admission
             .head
             .restore_plan
             .as_ref()
             .ok_or_else(|| error(()))?;
-        let pending =
-            restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)?;
+        let pending = stop_step(admission.deadline, "artifacts.plan-open", || {
+            restore::Pending::open(&self.originals, &plan.id, &plan.sha256).map_err(error)
+        })?;
         let authority = ArtifactRestoreAuthority {
             session: self,
             context: admission.context,
@@ -2018,13 +2094,19 @@ impl StartupSession {
             lease: admission.lease,
             deadline: admission.deadline,
         };
-        authority.check(&self.originals)?;
+        stop_step(admission.deadline, "artifacts.authority-initial", || {
+            authority.check(&self.originals)
+        })?;
         let permit = restore::MutationPermit::from_authority(authority);
-        pending
-            .apply_retaining_codex(&permit, guard)
-            .map_err(error)?;
-        admission.check_before_plan(self)?;
-        time(admission.deadline)
+        stop_step(admission.deadline, "artifacts.apply-retaining", || {
+            pending.apply_retaining_codex(&permit, guard).map_err(error)
+        })?;
+        stop_step(admission.deadline, "artifacts.admission-after", || {
+            admission.check_before_plan(self)
+        })?;
+        stop_step(admission.deadline, "artifacts.final-time", || {
+            time(admission.deadline)
+        })
     }
     pub fn retire_root_completed_stop(
         &self,

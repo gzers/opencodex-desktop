@@ -139,12 +139,10 @@ impl Active {
     }
     pub fn load(context: &ProcessContext, data: &Path) -> AppResult<Self> {
         let client = client(context)?;
-        let index = Index::open(context, data, &client).map_err(failure)?;
-        let head = index.head().map_err(failure)?.ok_or_else(|| failure(()))?;
-        if head.state != State::Ready {
-            return Err(failure(()));
-        }
-        let session = StartupSession::open_indexed(context, &index, &head)?;
+        let (index, head, session) = Index::open_ready_session(context, data, &client).map_err(|error| {
+            use crate::infrastructure::macos_client_originals::session_index::ReadyAcquisitionError;
+            match error {ReadyAcquisitionError::Index(error)=>failure(error),ReadyAcquisitionError::Session(error)=>error}
+        })?;
         Ok(Self {
             index,
             head,

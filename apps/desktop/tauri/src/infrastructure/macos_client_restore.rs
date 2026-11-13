@@ -48,6 +48,25 @@ enum Authority<'a> {
     Current(session::ArtifactRestoreAuthority<'a>),
     Explicit(session::ExplicitRestoreAuthority<'a>),
 }
+#[inline]
+fn writer_refusal(
+    error: crate::errors::AppError,
+    stage: &'static str,
+    message: &'static str,
+) -> io::Error {
+    #[cfg(test)]
+    {
+        let code = match &error {
+            crate::errors::AppError::Timeout => "timeout",
+            crate::errors::AppError::RuntimeManaged { code, .. } => code.as_str(),
+            _ => "other-error",
+        };
+        eprintln!("ROOT_STOP_WRITER_REFUSAL stage={stage} code={code} mapped_to=permission-denied");
+    }
+    #[cfg(not(test))]
+    let _ = (error, stage);
+    denied(message)
+}
 impl<'a> MutationPermit<'a> {
     pub(super) fn from_authority(authority: session::ArtifactRestoreAuthority<'a>) -> Self {
         Self {
@@ -80,11 +99,20 @@ impl<'a> MutationPermit<'a> {
         .map_err(|_| denied("official config write exclusion unavailable"))
     }
     pub(super) fn check(&self, originals: &Originals) -> io::Result<()> {
-        match &self.authority {
+        let checked = match &self.authority {
             Authority::Current(a) => a.check(originals),
             Authority::Explicit(a) => a.check(originals),
+        };
+        #[cfg(test)]
+        if let Err(error) = &checked {
+            let code = match error {
+                crate::errors::AppError::Timeout => "timeout",
+                crate::errors::AppError::RuntimeManaged { code, .. } => code.as_str(),
+                _ => "other-error",
+            };
+            eprintln!("ROOT_STOP_AUTHORITY_REFUSAL code={code} mapped_to=permission-denied");
         }
-        .map_err(|_| denied("current session/original/coordination authority changed"))
+        checked.map_err(|_| denied("current session/original/coordination authority changed"))
     }
 }
 
@@ -1582,7 +1610,7 @@ impl<'a> Pending<'a> {
         permit.check(self.originals)?;
         codex
             .check()
-            .map_err(|_| denied("retained Codex writer unconfirmed"))?;
+            .map_err(|e| writer_refusal(e, "codex-before", "retained Codex writer unconfirmed"))?;
         let grok = if self.grok_root.is_some() {
             Some(std::cell::RefCell::new(permit.grok_write_guard()?))
         } else {
@@ -1593,14 +1621,13 @@ impl<'a> Pending<'a> {
             Decision::Complete,
             &|| {
                 permit.check(self.originals)?;
-                codex
-                    .borrow_mut()
-                    .check()
-                    .map_err(|_| denied("retained Codex writer changed"))?;
+                codex.borrow_mut().check().map_err(|e| {
+                    writer_refusal(e, "codex-current", "retained Codex writer changed")
+                })?;
                 if let Some(grok) = &grok {
                     grok.borrow_mut()
                         .check()
-                        .map_err(|_| denied("Grok writer changed"))?;
+                        .map_err(|e| writer_refusal(e, "grok-current", "Grok writer changed"))?;
                 }
                 Ok(())
             },
@@ -1609,17 +1636,20 @@ impl<'a> Pending<'a> {
         let released = if let Some(grok) = grok {
             grok.into_inner()
                 .finish()
-                .map_err(|_| denied("Grok writer release unconfirmed"))
+                .map_err(|e| writer_refusal(e, "grok-release", "Grok writer release unconfirmed"))
         } else {
             Ok(())
         };
         result?;
         released?;
         permit.check(self.originals)?;
-        let current = codex
-            .borrow_mut()
-            .check()
-            .map_err(|_| denied("retained Codex writer unconfirmed after restore"));
+        let current = codex.borrow_mut().check().map_err(|e| {
+            writer_refusal(
+                e,
+                "codex-after",
+                "retained Codex writer unconfirmed after restore",
+            )
+        });
         current
     }
     pub fn apply(&self, decision: Decision, permit: &MutationPermit<'_>) -> io::Result<()> {

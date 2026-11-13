@@ -1,4 +1,18 @@
 use super::*;
+#[test]
+fn diagnostic_writer_refusal_preserves_original_permission_kind_and_message() {
+    for error in [
+        crate::errors::AppError::Timeout,
+        crate::errors::AppError::RuntimeManaged {
+            code: "client_native_coordination_expired".into(),
+            detail: "never print this detail".into(),
+        },
+    ] {
+        let mapped = writer_refusal(error, "test.guard", "retained Codex writer changed");
+        assert_eq!(mapped.kind(), io::ErrorKind::PermissionDenied);
+        assert_eq!(mapped.to_string(), "retained Codex writer changed");
+    }
+}
 use serde_json::json;
 use std::{
     cell::Cell,

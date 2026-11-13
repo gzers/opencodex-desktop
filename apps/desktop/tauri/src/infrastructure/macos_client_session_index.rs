@@ -16,6 +16,20 @@ mod root_binding;
 pub(super) mod root_lineage;
 const FILE: &str = "client-session-index.sqlite";
 const MAX_INDEX: u64 = 16 * 1024 * 1024;
+type CheckedOriginals = (Option<Head>, Option<Originals>);
+/// Keep the existing distinction: index admission maps to the command's
+/// original-session failure; runtime scope/live errors retain their AppError.
+#[derive(Debug)]
+pub enum ReadyAcquisitionError {
+    Index(io::Error),
+    Session(crate::errors::AppError),
+}
+impl From<io::Error> for ReadyAcquisitionError {
+    fn from(value: io::Error) -> Self {
+        Self::Index(value)
+    }
+}
+type ReadyAcquisition = Result<(Index, Head, session::StartupSession), ReadyAcquisitionError>;
 const TABLES: [(&str, &str); 3] = [
     ("binding", "CREATE TABLE binding(singleton INTEGER PRIMARY KEY CHECK(singleton=1), document BLOB NOT NULL)"),
     ("current_session", "CREATE TABLE current_session(singleton INTEGER PRIMARY KEY CHECK(singleton=1), revision INTEGER NOT NULL CHECK(revision>0), document BLOB NOT NULL)"),
@@ -591,6 +605,82 @@ impl Index {
         root: Option<super::root_creation::PublishedRoot>,
         checkpoint: &dyn Fn(&str) -> io::Result<()>,
     ) -> io::Result<Self> {
+        Self::open_inner_observed(
+            context,
+            data_root,
+            client_root,
+            allow_create,
+            root,
+            checkpoint,
+        )
+        .map(|(index, _)| index)
+    }
+    /// Closed acquisition: both the transaction's source admission and final
+    /// post-commit observation remain complete. The latter's already-read
+    /// Originals are consumed immediately by the Ready-session constructor.
+    pub fn open_ready_session(
+        context: &ProcessContext,
+        data: &Path,
+        client: &Path,
+    ) -> ReadyAcquisition {
+        Self::open_ready_session_checked(context, data, client, &|_| Ok(()))
+    }
+    #[cfg(test)]
+    pub(crate) fn fixture_open_ready_checked(
+        context: &ProcessContext,
+        data: &Path,
+        client: &Path,
+        checkpoint: &dyn Fn(&str) -> io::Result<()>,
+    ) -> ReadyAcquisition {
+        Self::open_ready_session_checked(context, data, client, checkpoint)
+    }
+    fn open_ready_session_checked(
+        context: &ProcessContext,
+        data: &Path,
+        client: &Path,
+        checkpoint: &dyn Fn(&str) -> io::Result<()>,
+    ) -> ReadyAcquisition {
+        let (index, (head, originals)) =
+            Self::open_inner_observed(context, data, client, true, None, checkpoint)?;
+        let head = head
+            .filter(|h| h.state == State::Ready)
+            .ok_or_else(|| denied("current indexed session is not Ready"))?;
+        let session = if index.root_registration.is_some() {
+            session::StartupSession::from_observed_ready_root(
+                context,
+                &head,
+                originals.ok_or_else(|| denied("Ready root originals unavailable"))?,
+            )
+        } else {
+            session::StartupSession::open_indexed(context, &index, &head)
+        }
+        .map_err(ReadyAcquisitionError::Session)?;
+        index.check_storage()?;
+        if context.working_directory != index.profile
+            || context.opencodex_home != index.context_home
+            || Some(
+                session
+                    .references()
+                    .map_err(|_| denied("Ready references unavailable"))?,
+            )
+            .as_ref()
+                != head.references.as_ref()
+        {
+            return Err(denied("Ready session references or acquisition context changed").into());
+        }
+        if read_head(index.connection()?)?.as_ref() != Some(&head) {
+            return Err(denied("Ready source changed during acquisition").into());
+        }
+        Ok((index, head, session))
+    }
+    fn open_inner_observed(
+        context: &ProcessContext,
+        data_root: &Path,
+        client_root: &Path,
+        allow_create: bool,
+        root: Option<super::root_creation::PublishedRoot>,
+        checkpoint: &dyn Fn(&str) -> io::Result<()>,
+    ) -> io::Result<(Self, CheckedOriginals)> {
         let data = PinnedDirectory::open(data_root)?;
         data.private()?;
         let physical = match std::fs::symlink_metadata(client_root) {
@@ -869,6 +959,11 @@ impl Index {
         if origin.is_some() {
             checkpoint("root_index_committed")?;
         }
+        // Existing first-root creation has its own three transfer/commit
+        // checkpoints; the Ready-only observation seam applies to reopen.
+        if origin.is_none() {
+            checkpoint("index_acquisition_committed")?;
+        }
         pin.recheck()?;
         let result = Self {
             connection: Some(connection),
@@ -886,11 +981,11 @@ impl Index {
             root_created_fd,
             root_creation_deadline: transfer_deadline,
         };
-        result.head()?;
+        let observed = result.checked_head_originals()?;
         if transfer_deadline.is_some_and(|d| Instant::now() >= d) {
             return Err(denied("root index registration completed after deadline"));
         }
-        Ok(result)
+        Ok((result, observed))
     }
     fn connection(&self) -> io::Result<&Connection> {
         self.connection

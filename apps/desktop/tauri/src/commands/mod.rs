@@ -472,7 +472,18 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
             // If original references are missing/failed, still run the ordinary
             // authenticated Stop once, then report unresolved client recovery;
             // do not strand a live service or invent replacement originals.
+            #[cfg(test)]
+            let loaded_at = std::time::Instant::now();
             let active = client_session_lifecycle::Active::load(context, data_root);
+            #[cfg(test)]
+            eprintln!(
+                "ROOT_STOP_ENTRY stage=load-ready elapsed_us={} remaining_us={} passed={}",
+                loaded_at.elapsed().as_micros(),
+                stop_deadline
+                    .saturating_duration_since(std::time::Instant::now())
+                    .as_micros(),
+                active.is_ok()
+            );
             let mut active = match active {
                 Ok(active) => active,
                 Err(error) => {
@@ -481,7 +492,19 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
                     return Err(error);
                 }
             };
-            if let Err(error) = active.pre_stop(context, stop_deadline) {
+            #[cfg(test)]
+            let prestop_at = std::time::Instant::now();
+            let prepared = active.pre_stop(context, stop_deadline);
+            #[cfg(test)]
+            eprintln!(
+                "ROOT_STOP_ENTRY stage=pre-stop elapsed_us={} remaining_us={} passed={}",
+                prestop_at.elapsed().as_micros(),
+                stop_deadline
+                    .saturating_duration_since(std::time::Instant::now())
+                    .as_micros(),
+                prepared.is_ok()
+            );
+            if let Err(error) = prepared {
                 let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
                 *_observed_stop = Some(proof.observation(context, data_root)?);
                 return Err(error);
