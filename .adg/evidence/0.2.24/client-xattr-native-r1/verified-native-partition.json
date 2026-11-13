@@ -1,0 +1,48 @@
+{
+  "accepted": false,
+  "samples": [
+    {
+      "totalNanos": 171226083,
+      "partitionNanos": 171203666,
+      "exclusiveStageNanos": {
+        "transaction_storage_begin": 496541,
+        "transaction_source": 30817791,
+        "transaction_admission": 27301042,
+        "transaction_sql": 197708,
+        "transaction_candidate": 55748042,
+        "transaction_commit": 542250,
+        "transaction_postcommit": 55005375,
+        "registration_facts": 1094917
+      },
+      "frameChecks": 24,
+      "archiveChecks": 24,
+      "nativeXattrCalls": 33163,
+      "protectionCalls": 19454,
+      "historicalBegin": 0,
+      "historicalFinish": 0,
+      "historicalFullPasses": 0
+    },
+    {
+      "totalNanos": 657561000,
+      "partitionNanos": 657539543,
+      "exclusiveStageNanos": {
+        "transaction_storage_begin": 513042,
+        "transaction_source": 168821125,
+        "transaction_admission": 54107750,
+        "transaction_sql": 177458,
+        "transaction_candidate": 215681083,
+        "transaction_commit": 552709,
+        "transaction_postcommit": 214749959,
+        "registration_facts": 2936417
+      },
+      "frameChecks": 48,
+      "archiveChecks": 48,
+      "nativeXattrCalls": 127965,
+      "protectionCalls": 74775,
+      "historicalBegin": 3,
+      "historicalFinish": 3,
+      "historicalFullPasses": 6
+    }
+  ],
+  "actionStopBudgetPassed": false
+}

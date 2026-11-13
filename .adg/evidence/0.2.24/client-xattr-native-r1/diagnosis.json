@@ -1,0 +1,12 @@
+{
+  "accepted": false,
+  "sourceCommit": "4ba715120fd59ddbe3634e501856b436ec928f74",
+  "nativeStopPassed": false,
+  "failure": "second lifecycle stop exceeded original10s at release-coordination with client_native_coordination_timeout after RootAbsent18 commit",
+  "actualFirstStopMs": 6366,
+  "actualSecondStopMs": 11345,
+  "actualProductInternalStopMs": 10577,
+  "secondClosedGenerationCount": 2,
+  "recoveryCompletionDoesNotOverrideTimeout": true,
+  "next": "Use preserved exact release-coordination path/log and original shared total deadline to locate remaining release/confirmation observations. No extra timeout, skipped lock release, or post-deadline result as success; no immediate same-source retry."
+}

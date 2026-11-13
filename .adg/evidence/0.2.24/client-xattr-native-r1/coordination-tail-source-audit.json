@@ -1,0 +1,9 @@
+{
+  "accepted": false,
+  "sourceFile": "apps/desktop/tauri/src/infrastructure/native_client_coordination.rs",
+  "function": "with_admission_mode",
+  "evidence": "operation callback returned; RootAbsent18 exists; error is client_native_coordination_timeout, while lease.check deadline error is client_native_coordination_expired; acquisition timeout cannot follow completed callback. Final same-code timeout check follows valid?, release?, full program_selection::read_complete and selected comparison.",
+  "conclusion": "This branch reached final post-release/source-revalidation deadline check; no proof lock release itself failed. Native cleanup independently proves actual exclusive reacquisition and unchanged globalL.",
+  "remaining": "Measure final native lease check/release/program image readback and broader total-budget costs, preserve source bytes/identity verification and original total10s. Do not erase true RootAbsent completion or promote late action to success.",
+  "fullGoal": "Root interrupted recovery, missing Ready, general clients/paths/graph/process/refresh, NAME, complex proxies, W1/W2 and integrated deliverables remain."
+}
