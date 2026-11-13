@@ -17,6 +17,24 @@ mod cost {
         pub(super) stages: std::collections::BTreeMap<&'static str, (u64, u128)>,
     }
     thread_local! {static ACTIVE:RefCell<Option<Metrics>>=const{RefCell::new(None)};}
+    thread_local! {static PATH_REFERENCE:std::cell::Cell<bool>=const{std::cell::Cell::new(false)};}
+    pub(super) fn path_reference_enabled() -> bool {
+        PATH_REFERENCE.with(|v| v.get())
+    }
+    pub(super) fn path_reference<T>(action: impl FnOnce() -> T) -> T {
+        struct Reset;
+        impl Drop for Reset {
+            fn drop(&mut self) {
+                PATH_REFERENCE.with(|v| v.set(false));
+            }
+        }
+        PATH_REFERENCE.with(|v| {
+            assert!(!v.get());
+            v.set(true);
+        });
+        let _reset = Reset;
+        action()
+    }
     pub(super) fn begin() {
         ACTIVE.with(|v| {
             assert!(v.borrow().is_none());
@@ -45,7 +63,12 @@ mod cost {
         results: &'a std::sync::Mutex<Vec<Metrics>>,
     }
     impl<'a> Worker<'a> {
-        pub(super) fn new(enabled: bool, results: &'a std::sync::Mutex<Vec<Metrics>>) -> Self {
+        pub(super) fn new(
+            enabled: bool,
+            results: &'a std::sync::Mutex<Vec<Metrics>>,
+            path_reference: bool,
+        ) -> Self {
+            PATH_REFERENCE.with(|v| v.set(path_reference));
             if enabled {
                 begin();
             }
@@ -54,6 +77,7 @@ mod cost {
     }
     impl Drop for Worker<'_> {
         fn drop(&mut self) {
+            PATH_REFERENCE.with(|v| v.set(false));
             if self.enabled {
                 if let Ok(mut results) = self.results.lock() {
                     results.push(end());
@@ -107,6 +131,30 @@ pub(crate) fn inventory_digest(rows: &BTreeMap<String, Entry>) -> AppResult<Stri
     Ok(hash::sha256_hex(&bytes))
 }
 const MAX_WORKERS: usize = 4;
+/// Inventory requires existing paths only. Each component gets the same native
+/// symlink/reparse/type admission once, before any content read. Do not turn
+/// this into a cached directory grant or use it for create/missing paths.
+fn check_inventory_path(root: &Path, path: &Path) -> AppResult<()> {
+    #[cfg(test)]
+    let _boundary = cost::span("existing-path-boundary");
+    #[cfg(test)]
+    if cost::path_reference_enabled() {
+        return safety::check_path(root, path, false);
+    }
+    if !root.is_absolute() || !safety::inspect(root)?.is_dir() {
+        return Err(fail());
+    }
+    let relative = path.strip_prefix(root).map_err(|_| fail())?;
+    let mut current = root.to_path_buf();
+    for component in relative.components() {
+        if !matches!(component, std::path::Component::Normal(_)) {
+            return Err(fail());
+        }
+        current.push(component);
+        safety::inspect(&current)?;
+    }
+    Ok(())
+}
 struct InventoryDraft {
     rows: BTreeMap<String, Entry>,
     jobs: Vec<(String, std::path::PathBuf)>,
@@ -160,7 +208,7 @@ fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
         }
         #[cfg(test)]
         let directory_cost = cost::span("directory-path-admission");
-        safety::check_path(root, &directory, false)?;
+        check_inventory_path(root, &directory)?;
         let before = safety::inspect(&directory)?;
         if !before.is_dir() {
             return Err(fail());
@@ -235,6 +283,8 @@ fn finish_inventory_checked(
     #[cfg(test)]
     let measure = cost::active();
     #[cfg(test)]
+    let path_reference = cost::path_reference_enabled();
+    #[cfg(test)]
     let worker_metrics = std::sync::Mutex::new(Vec::new());
     let jobs = &draft.jobs;
     let completed = std::thread::scope(|scope| -> AppResult<Vec<(String, Entry)>> {
@@ -259,7 +309,7 @@ fn finish_inventory_checked(
                     }
                     let _unwind = CancelOnUnwind(cancelled);
                     #[cfg(test)]
-                    let _cost = cost::Worker::new(measure, worker_metrics);
+                    let _cost = cost::Worker::new(measure, worker_metrics, path_reference);
                     let mut rows = Vec::new();
                     while !cancelled.load(Ordering::Acquire) {
                         let i = next.fetch_add(1, Ordering::Relaxed);
@@ -267,7 +317,7 @@ fn finish_inventory_checked(
                             break;
                         };
                         let result = checkpoint(path)
-                            .and_then(|()| safety::check_path(root, path, false))
+                            .and_then(|()| check_inventory_path(root, path))
                             .and_then(|()| file_entry_budgeted(path, Some(reserved_bytes)));
                         match result {
                             Ok(entry) => rows.push((name.clone(), entry)),
@@ -337,7 +387,7 @@ fn finish_inventory_checked(
     // Keep the enumeration-end check and also fence all original directory
     // paths/identities/mtimes AFTER the scoped byte readers finish.
     for (directory, before) in &draft.directories {
-        safety::check_path(root, directory, false)?;
+        check_inventory_path(root, directory)?;
         let after = safety::inspect(directory)?;
         if !same_directory(before, &after)? {
             return Err(fail());
@@ -595,6 +645,58 @@ mod tests {
             selected.image.official_archive_sha256,
             "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c"
         );
+        if std::env::var_os("OCXD024_IMAGE_PATH_COMPARE").is_some() {
+            let mut samples = Vec::new();
+            let mut expected = None;
+            for reference in [true, false, false, true] {
+                cost::begin();
+                let start = std::time::Instant::now();
+                let rows = if reference {
+                    cost::path_reference(|| inventory(&selected.paths.version_root))
+                } else {
+                    inventory(&selected.paths.version_root)
+                }
+                .unwrap();
+                let elapsed = start.elapsed().as_nanos();
+                let metrics = cost::end();
+                if let Some(expected) = &expected {
+                    assert_eq!(&rows, expected);
+                } else {
+                    expected = Some(rows.clone());
+                }
+                assert_eq!(inventory_digest(&rows).unwrap(), selected.image.tree_sha256);
+                let files = rows
+                    .values()
+                    .filter(|r| matches!(r, Entry::File { .. }))
+                    .count() as u64;
+                assert_eq!(metrics.stages["file-read-hash"].0, files);
+                samples.push(serde_json::json!({"reference":reference,"elapsedNanos":elapsed,"metrics":metrics,"fileCount":files,"entryCount":rows.len()}));
+            }
+            for key in [
+                "existing-path-boundary",
+                "directory-path-admission",
+                "entry-inspect-name",
+                "file-admission-open",
+                "file-read-hash",
+                "file-total",
+            ] {
+                for sample in &samples {
+                    assert_eq!(
+                        sample["metrics"]["stages"][key][0],
+                        samples[0]["metrics"]["stages"][key][0],
+                        "{key}"
+                    );
+                }
+            }
+            let report = serde_json::json!({"accepted":false,"samples":samples,"rowsExactlyEqual":true,"treeSha256":selected.image.tree_sha256,"officialArchiveSha256":selected.image.official_archive_sha256,"scope":"same original299 complete image, only adjacent metadata lookup removed; no service actions or Stop budget acceptance"});
+            fs::write(
+                root.join("image-path-comparison.json"),
+                serde_json::to_vec_pretty(&report).unwrap(),
+            )
+            .unwrap();
+            println!("OFFICIAL_IMAGE_PATH_COMPARISON {report}");
+            return;
+        }
         if std::env::var_os("OCXD024_IMAGE_SCAN_COMPARE").is_some() {
             let serial_run = || {
                 cost::begin();

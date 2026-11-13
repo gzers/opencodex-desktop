@@ -35,6 +35,115 @@ fn fixture() -> tempfile::TempDir {
     t
 }
 #[test]
+fn image_existing_path_admission_matches_old_all_component_boundaries() {
+    let temp = fixture();
+    let root = temp.path().canonicalize().unwrap();
+    let outside = tempfile::tempdir().unwrap();
+    for path in [
+        root.clone(),
+        root.join("nested"),
+        root.join("nested/file-01"),
+        root.join("missing"),
+        root.join("nested/missing"),
+        root.join("file-00/child"),
+        root.join("../outside"),
+        outside.path().to_path_buf(),
+    ] {
+        assert_eq!(
+            check_inventory_path(&root, &path).is_ok(),
+            safety::check_path(&root, &path, false).is_ok(),
+            "{}",
+            path.display()
+        );
+    }
+    symlink(outside.path(), root.join("redirect")).unwrap();
+    for path in [root.join("redirect"), root.join("redirect/secret")] {
+        assert!(check_inventory_path(&root, &path).is_err());
+        assert!(safety::check_path(&root, &path, false).is_err());
+    }
+    assert!(check_inventory_path(&root.join("file-00"), &root.join("file-00")).is_err());
+    assert!(check_inventory_path(Path::new("relative"), Path::new("relative/file")).is_err());
+    assert!(!root.join("missing").exists());
+}
+#[test]
+fn image_existing_path_full_pipeline_matches_old_inventory_and_keeps_all_reads() {
+    let temp = fixture();
+    let root = temp.path().canonicalize().unwrap();
+    let mut rows = Vec::new();
+    let mut expected = None;
+    for reference in [true, false, false, true] {
+        cost::begin();
+        let start = std::time::Instant::now();
+        let observed = if reference {
+            cost::path_reference(|| inventory(&root))
+        } else {
+            inventory(&root)
+        }
+        .unwrap();
+        let elapsed = start.elapsed().as_nanos();
+        let metrics = cost::end();
+        if let Some(expected) = &expected {
+            assert_eq!(&observed, expected);
+        } else {
+            expected = Some(observed.clone());
+        }
+        let files = observed
+            .values()
+            .filter(|v| matches!(v, Entry::File { .. }))
+            .count() as u64;
+        assert_eq!(metrics.stages["file-read-hash"].0, files);
+        assert_eq!(metrics.stages["file-total"].0, files);
+        rows.push(serde_json::json!({"reference":reference,"elapsedNanos":elapsed,"metrics":metrics,"digest":inventory_digest(&observed).unwrap(),"fileCount":files}));
+    }
+    for key in [
+        "existing-path-boundary",
+        "directory-path-admission",
+        "entry-inspect-name",
+        "file-admission-open",
+        "file-read-hash",
+        "file-total",
+    ] {
+        for row in &rows {
+            assert_eq!(
+                row["metrics"]["stages"][key][0], rows[0]["metrics"]["stages"][key][0],
+                "{key}"
+            );
+        }
+    }
+    println!(
+        "IMAGE_EXISTING_PATH_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":rows,"scope":"same full collect/read/final pipeline and all bytes, only adjacent duplicate metadata query removed; synthetic image, no native Stop acceptance"})
+    );
+}
+#[test]
+fn image_existing_path_reference_and_new_both_refuse_delayed_redirect_before_any_read() {
+    for reference in [true, false] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        fs::create_dir(root.join("sub")).unwrap();
+        fs::write(root.join("sub/payload"), b"owned").unwrap();
+        let draft = collect_inventory(&root).unwrap();
+        let outside = tempfile::tempdir().unwrap();
+        fs::write(outside.path().join("payload"), b"foreign").unwrap();
+        fs::rename(root.join("sub"), root.join("retained")).unwrap();
+        symlink(outside.path(), root.join("sub")).unwrap();
+        cost::begin();
+        let result = if reference {
+            cost::path_reference(|| finish_inventory(&root, draft, 4))
+        } else {
+            finish_inventory(&root, draft, 4)
+        };
+        let measured = cost::end();
+        assert!(result.is_err());
+        assert!(!measured.stages.contains_key("file-total"));
+        assert!(!measured.stages.contains_key("file-read-hash"));
+        assert_eq!(
+            fs::read(outside.path().join("payload")).unwrap(),
+            b"foreign"
+        );
+    }
+}
+#[test]
 fn bounded_image_readers_match_serial_every_row_digest_empty_directory_and_executable_bit() {
     let t = fixture();
     let root = t.path().canonicalize().unwrap();
