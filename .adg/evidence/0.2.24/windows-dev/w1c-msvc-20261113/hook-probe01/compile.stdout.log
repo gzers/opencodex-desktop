@@ -1,0 +1,165 @@
+MakeNSIS v3.11 - Copyright 1999-2025 Contributors
+See the file COPYING for license details.
+Credits can be found in the Users Manual.
+
+Processing config: C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\nsisconf.nsh
+Processing default plugins: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Plugins\x86-unicode\*.dll"
+ + AdvSplash::show
+ + Banner::destroy
+ + Banner::getWindow
+ + Banner::show
+ + BgImage::AddImage
+ + BgImage::AddText
+ + BgImage::Clear
+ + BgImage::Destroy
+ + BgImage::Redraw
+ + BgImage::SetBg
+ + BgImage::SetReturn
+ + BgImage::Sound
+ + Dialer::AttemptConnect
+ + Dialer::AutodialHangup
+ + Dialer::AutodialOnline
+ + Dialer::AutodialUnattended
+ + Dialer::GetConnectedState
+ + InstallOptions::dialog
+ + InstallOptions::initDialog
+ + InstallOptions::make_unicode
+ + InstallOptions::show
+ + LangDLL::LangDialog
+ + Math::Script
+ + NSISdl::download
+ + NSISdl::download_quiet
+ + Splash::show
+ + StartMenu::Init
+ + StartMenu::Select
+ + StartMenu::Show
+ + System::Alloc
+ + System::Call
+ + System::Copy
+ + System::Free
+ + System::Get
+ + System::Int64Op
+ + System::Store
+ + System::StrAlloc
+ + TypeLib::GetLibVersion
+ + TypeLib::Register
+ + TypeLib::UnRegister
+ + UserInfo::GetAccountType
+ + UserInfo::GetName
+ + UserInfo::GetOriginalAccountType
+ + VPatch::GetFileCRC32
+ + VPatch::GetFileMD5
+ + VPatch::vpatchfile
+ + nsDialogs::Create
+ + nsDialogs::CreateControl
+ + nsDialogs::CreateItem
+ + nsDialogs::CreateTimer
+ + nsDialogs::GetUserData
+ + nsDialogs::KillTimer
+ + nsDialogs::OnBack
+ + nsDialogs::OnChange
+ + nsDialogs::OnClick
+ + nsDialogs::OnNotify
+ + nsDialogs::SelectFileDialog
+ + nsDialogs::SelectFolderDialog
+ + nsDialogs::SetRTL
+ + nsDialogs::SetUserData
+ + nsDialogs::Show
+ + nsExec::Exec
+ + nsExec::ExecToLog
+ + nsExec::ExecToStack
+
+!define: "MUI_INSERT_NSISCONF"=""
+
+Changing directory to: "C:\Users\15119\.codex\worktrees\official299-windows-evidence\docs-governance\.adg\evidence\0.2.24\windows-dev\w1c-msvc-20261113\hook-probe01"
+
+Processing script file: "C:\Users\15119\.codex\worktrees\official299-windows-evidence\docs-governance\.adg\evidence\0.2.24\windows-dev\w1c-msvc-20261113\hook-probe01\hook-probe.nsi" (UTF8)
+OutFile: "C:\Users\15119\.codex\worktrees\official299-windows-evidence\docs-governance\.adg\evidence\0.2.24\windows-dev\w1c-msvc-20261113\hook-probe01\hook-probe.exe"
+!include: "C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri\windows\installer-hooks.nsh" (UTF8)
+!include: closed: "C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri\windows\installer-hooks.nsh"
+Unicode: true
+Processing default plugins: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Plugins\x86-unicode\*.dll"
+
+SilentInstall: silent
+Name: "OpenCodeX W1-C preuninstall-only probe"
+InstallDir: "placeholder"
+!include: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\LogicLib.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\LogicLib.nsh"
+!include: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\FileFunc.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\Packages\OpenAI.Codex_2p2nqsd0c76g0\LocalCache\Local\tauri\NSIS\Include\FileFunc.nsh"
+Var: "UpdateMode"
+Var: "DeleteAppDataCheckboxState"
+Function: ".onInit"
+StrCpy $UpdateMode "0" () ()
+StrCpy $DeleteAppDataCheckboxState "0" () ()
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $UpdateMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Section: ""
+!insertmacro: NSIS_HOOK_PREUNINSTALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $DeleteAppDataCheckboxState "0" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+File: "nsExec.dll"->"$PLUGINSDIR\nsExec.dll" [compress] 3675/7168 bytes
+Plugin command: ExecToStack "$INSTDIR\ocxd.exe" --uninstall-terminal-cli --confirm
+Pop: $0
+Pop: $1
+!insertmacro: _If
+!insertmacro: end of _If
+MessageBox: 16: "The current user's terminal entry could not be revoked. The application files and registration were retained."
+SetErrorLevel: 1
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+Plugin command: ExecToStack "$INSTDIR\ocxd.exe" --uninstall-manager-data --confirm
+Pop: $0
+Pop: $1
+!insertmacro: _If
+!insertmacro: end of _If
+MessageBox: 16: "Manager data cleanup could not complete. Close OpenCodeX Desktop and verify its data directories, then try uninstalling again. The application files have been retained."
+SetErrorLevel: 1
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+StrCpy $DeleteAppDataCheckboxState "0" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of NSIS_HOOK_PREUNINSTALL
+FileOpen: $INSTDIR\hook-passed.txt as w -> $0
+FileWrite: hook permitted continuation; no deletion performed->$0
+FileClose: $0
+SetErrorLevel: 0
+SectionEnd
+
+Processed 1 file, writing output (x86-unicode):
+Adding plug-ins initializing function... Done!
+Processing pages... Done!
+Removing unused resources... Done!
+Generating language tables... Done!
+
+Output: "C:\Users\15119\.codex\worktrees\official299-windows-evidence\docs-governance\.adg\evidence\0.2.24\windows-dev\w1c-msvc-20261113\hook-probe01\hook-probe.exe"
+Install: 0 pages (0 bytes), 1 section (1 required) (2072 bytes), 151 instructions (4228 bytes), 57 strings (2310 bytes), 1 language table (162 bytes).
+
+Using zlib compression.
+
+EXE header size:               38400 / 39936 bytes
+Install code:                   1671 / 9100 bytes
+Install data:                   3679 / 7172 bytes
+CRC (0x271CE481):                  4 / 4 bytes
+
+Total size:                    43754 / 56212 bytes (77.8%)

@@ -1,0 +1,22 @@
+{
+  "remote": [
+    "e004259feba4a077375db01a79f851470ed0ff74\trefs/heads/codex/024-windows-native"
+  ],
+  "outsidePaths": [],
+  "codeHead": "e004259feba4a077375db01a79f851470ed0ff74",
+  "changedPaths": [
+    "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows.rs",
+    "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_native_tests.rs",
+    "apps/desktop/tauri/windows/installer-hooks.nsh",
+    "apps/desktop/tauri/windows/wix023.wxs",
+    "test/windows024-native/account-w1c.ps1",
+    "test/windows024-native/bundle-installer.py",
+    "test/windows024-native/cleanup-profiles-w1c.ps1",
+    "test/windows024-native/compile-uninstall-probe.py",
+    "test/windows024-native/msvc-env.ps1",
+    "test/windows024-native/verify-uninstall-msi.ps1"
+  ],
+  "trackedStatus": [
+    "?? apps/desktop/tauri/gen/schemas/windows-schema.json"
+  ]
+}

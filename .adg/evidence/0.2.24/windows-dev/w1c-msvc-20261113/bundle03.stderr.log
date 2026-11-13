@@ -1,0 +1,33 @@
+       Debug [tauri_cli::helpers::app_paths] resolving Tauri directory from C:\Users\15119\.codex\worktrees\024-windows-native\code
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\AppData\Local\Temp\.gitignore
+       Debug [globset] built glob set; 0 literals, 3 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\.codex\worktrees\024-windows-native\code\.gitignore
+       Debug [globset] glob converted to regex: Glob { glob: "**/.env.*", re: "(?-u)^(?:/?|.*/)\\.env\\.[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true, empty_alternates: false }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('e'), Literal('n'), Literal('v'), Literal('.'), ZeroOrMore]) }
+       Debug [globset] built glob set; 9 literals, 5 basenames, 4 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 1 regexes
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\.git: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\.gitattributes: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\.github: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\.gitignore: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri\.gitignore
+       Debug [globset] built glob set; 3 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [tauri_cli::helpers::app_paths] Found Tauri project directory C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri
+       Debug [tauri_cli::helpers::app_paths] resolving frontend directory from C:\Users\15119\.codex\worktrees\024-windows-native\code
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\AppData\Local\Temp\.gitignore
+       Debug [globset] built glob set; 0 literals, 3 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\.codex\worktrees\024-windows-native\code\.gitignore
+       Debug [globset] glob converted to regex: Glob { glob: "**/.env.*", re: "(?-u)^(?:/?|.*/)\\.env\\.[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true, empty_alternates: false }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('e'), Literal('n'), Literal('v'), Literal('.'), ZeroOrMore]) }
+       Debug [globset] built glob set; 9 literals, 5 basenames, 4 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 1 regexes
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\.git: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\.gitattributes: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\.github: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\.gitignore: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri\.gitignore
+       Debug [globset] built glob set; 3 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\ui\.gitignore
+       Debug [globset] built glob set; 0 literals, 3 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\.gitignore
+       Debug [globset] built glob set; 1 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\.gitignore: Ignore(IgnoreMatch(Hidden))
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target: Ignore(IgnoreMatch(Gitignore(Glob { from: Some("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\.gitignore"), original: "/target/", actual: "target", is_whitelist: false, is_only_dir: true })))
+failed to bundle project: can't open main binary C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\release\opencodex-desktop.exe: 系统找不到指定的路径。 (os error 3)
+       Error [tauri_cli_node] failed to bundle project: can't open main binary C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\release\opencodex-desktop.exe: 系统找不到指定的路径。 (os error 3)

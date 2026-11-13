@@ -1,0 +1,38 @@
+{
+  "productName": "OpenCodeX Desktop",
+  "version": "0.2.24",
+  "identifier": "com.gzers.opencodex.w1-resource-proof",
+  "bundle": {
+    "active": true,
+    "targets": [
+      "msi",
+      "nsis"
+    ],
+    "icon": [
+      "icons/icon.ico"
+    ],
+    "resources": {
+      "resources/LICENSE": "resources/LICENSE",
+      "resources/THIRD-PARTY-NOTICES.txt": "resources/THIRD-PARTY-NOTICES.txt",
+      "resources/runtime-bundle/": "runtime-bundle/"
+    },
+    "windows": {
+      "webviewInstallMode": {
+        "type": "skip"
+      },
+      "nsis": {
+        "template": "windows/nsis023.nsi",
+        "installerHooks": "windows/installer-hooks.nsh",
+        "installMode": "currentUser",
+        "compression": "none"
+      },
+      "wix": {
+        "template": "windows/wix023.wxs",
+        "upgradeCode": "77eaf3e9-84df-48e4-b493-a267ab705070"
+      }
+    },
+    "externalBin": [
+      "binaries/ocxd"
+    ]
+  }
+}
