@@ -33,6 +33,8 @@ pub mod webdav_config_v2;
 pub mod app_activity;
 pub mod window_appearance;
 #[cfg(windows)]
+pub mod windows_cli024;
+#[cfg(windows)]
 pub(crate) mod windows_official_runtime024;
 #[cfg(windows)]
 pub(crate) mod windows_private_create;
