@@ -226,6 +226,129 @@ fn ready_acquisition_returns_same_authenticated_head_and_originals_without_repea
     }
 }
 #[test]
+fn indexed_root_scope_consumes_same_authenticated_prefix_without_rereading_ready() {
+    for second in [false, true] {
+        let (f, index, head) = synthetic_ready(second);
+        drop(index);
+        let mut samples = Vec::new();
+        for reference in [true, false, false, true] {
+            let began = Instant::now();
+            let (opened, metrics) = observation_metrics::measure(|| {
+                if reference {
+                    observation_metrics::scope_reference(|| {
+                        session_index::Index::open_existing(&f.context, &f.data, &f.client)
+                    })
+                } else {
+                    session_index::Index::open_existing(&f.context, &f.data, &f.client)
+                }
+            });
+            let index = opened.unwrap();
+            let metrics = serde_json::to_value(metrics).unwrap();
+            let elapsed = began.elapsed().as_nanos();
+            assert_eq!(index.head().unwrap(), Some(head.clone()));
+            drop(index);
+            samples.push(
+                serde_json::json!({"reference":reference,"elapsedNanos":elapsed,"metrics":metrics}),
+            );
+        }
+        let before = &samples[0]["metrics"];
+        let after = &samples[1]["metrics"];
+        assert_eq!(
+            before["frame"]["calls"].as_u64().unwrap() - after["frame"]["calls"].as_u64().unwrap(),
+            4
+        );
+        println!(
+            "INDEX_SCOPE_PREFIX_COMPARISON {}",
+            serde_json::json!({"accepted":false,"secondGeneration":second,"head":head,"samples":samples,"scope":"same full acquisition and same phase/source digests, no runtime Ready authority"})
+        );
+    }
+}
+#[test]
+fn indexed_root_prefix_scope_keeps_authenticated_home_client_ready_and_process_bindings() {
+    for case in ["home", "client", "ready-sha", "generation"] {
+        let (f, index, head) = synthetic_ready(false);
+        let originals = index.registered_root_originals(&head).unwrap();
+        let frames = originals.frames_through(Phase::Ready).unwrap();
+        let mut refs = head.references.unwrap();
+        let (name, field, value) = match case {
+            "home" => ("startup-scope.json", "home", serde_json::json!(f.data)),
+            "client" => (
+                "startup-scope.json",
+                "clientIdentity",
+                serde_json::to_value(originals.data.identity()).unwrap(),
+            ),
+            "ready-sha" => (
+                "startup-live.json",
+                "readySha256",
+                serde_json::json!("f".repeat(64)),
+            ),
+            "generation" => (
+                "startup-live.json",
+                "generation",
+                serde_json::json!([0, 0, 0, 0]),
+            ),
+            _ => unreachable!(),
+        };
+        let path = originals.directory.path().join(name);
+        let mut document: serde_json::Value =
+            serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
+        let original_value = document[field].clone();
+        document[field] = value;
+        let raw = serde_json::to_vec(&document).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        fs::write(&path, &raw).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+        if name == "startup-scope.json" {
+            refs.scope_sha256 = digest(&raw);
+            let live_path = originals.directory.path().join("startup-live.json");
+            let mut live: serde_json::Value =
+                serde_json::from_slice(&fs::read(&live_path).unwrap()).unwrap();
+            live["scopeSha256"] = refs.scope_sha256.clone().into();
+            let live_raw = serde_json::to_vec(&live).unwrap();
+            fs::set_permissions(&live_path, fs::Permissions::from_mode(0o600)).unwrap();
+            fs::write(&live_path, &live_raw).unwrap();
+            fs::set_permissions(&live_path, fs::Permissions::from_mode(0o400)).unwrap();
+            refs.live_sha256 = Some(digest(&live_raw));
+        } else {
+            refs.live_sha256 = Some(digest(&raw));
+        }
+        assert!(
+            verify_index_scope_prefix(&originals, &refs, &f.context.opencodex_home, &frames)
+                .is_err(),
+            "{case}"
+        );
+        assert_eq!(fs::read(path).unwrap(), raw);
+        // Correct ONLY the target field and follow its content-addressed
+        // dependencies. Success demonstrates no other stale reference masks
+        // the HOME/client/Ready/generation semantic assertion above.
+        document[field] = original_value;
+        let repaired = serde_json::to_vec(&document).unwrap();
+        let path = originals.directory.path().join(name);
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+        fs::write(&path, &repaired).unwrap();
+        fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+        if name == "startup-scope.json" {
+            refs.scope_sha256 = digest(&repaired);
+            let p = originals.directory.path().join("startup-live.json");
+            let mut live: serde_json::Value =
+                serde_json::from_slice(&fs::read(&p).unwrap()).unwrap();
+            live["scopeSha256"] = refs.scope_sha256.clone().into();
+            let bytes = serde_json::to_vec(&live).unwrap();
+            fs::set_permissions(&p, fs::Permissions::from_mode(0o600)).unwrap();
+            fs::write(&p, &bytes).unwrap();
+            fs::set_permissions(&p, fs::Permissions::from_mode(0o400)).unwrap();
+            refs.live_sha256 = Some(digest(&bytes));
+        } else {
+            refs.live_sha256 = Some(digest(&repaired));
+        }
+        assert!(
+            verify_index_scope_prefix(&originals, &refs, &f.context.opencodex_home, &frames)
+                .is_ok(),
+            "correcting target field must restore validity: {case}"
+        );
+    }
+}
+#[test]
 fn ready_acquisition_refuses_scope_live_frame_program_and_nonready_changes_without_repair() {
     for case in ["scope", "live", "frame", "program", "nonready"] {
         let (f, index, mut head) = synthetic_ready(false);

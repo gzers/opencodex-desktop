@@ -140,7 +140,7 @@ pub(super) fn verify_capture(
     {
         return Err(denied("first-root capture has unexpected phase evidence"));
     }
-    let originals = Originals::open_profile_origin(
+    let (originals, frames) = Originals::open_profile_origin_prefix(
         data.path(),
         client.path(),
         profile,
@@ -157,8 +157,16 @@ pub(super) fn verify_capture(
         .get(5)
         .and_then(|v| v.as_str())
         .ok_or_else(|| denied("root-bound OpenCodex HOME missing"))?;
-    session::verify_index_scope(&originals, refs, Path::new(home))
-        .map_err(|_| denied("registered root Original scope changed"))?;
+    #[cfg(not(test))]
+    let reference = false;
+    #[cfg(test)]
+    let reference = observation_metrics::scope_reference_enabled();
+    if reference {
+        session::verify_index_scope(&originals, refs, Path::new(home))
+    } else {
+        session::verify_index_scope_prefix(&originals, refs, Path::new(home), &frames)
+    }
+    .map_err(|_| denied("registered root Original scope changed"))?;
     Ok(Some(originals))
 }
 
