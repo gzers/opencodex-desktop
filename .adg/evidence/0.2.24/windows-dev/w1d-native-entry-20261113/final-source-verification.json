@@ -1,0 +1,60 @@
+{
+  "changedPaths": [
+    "apps/desktop/tauri/src/modules/runtime/program_layout.rs",
+    "apps/desktop/tauri/src/modules/runtime/terminal_cli.rs",
+    "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows.rs",
+    "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_native_tests.rs",
+    "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_tests.rs",
+    "apps/desktop/tauri/windows/nsis023.nsi",
+    "apps/desktop/tauri/windows/wix023.wxs",
+    "test/windows024-native/account-w1d.ps1",
+    "test/windows024-native/bundle-installer.py"
+  ],
+  "outsidePaths": [],
+  "status": [
+    "?? apps/desktop/tauri/gen/schemas/windows-schema.json"
+  ],
+  "head": "b476fa933c35e08b4ca5f58a3f03e370d445ee8e",
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_layout.rs",
+      "sha256": "11de66fdb0013baff93000d49be3a3af616fca3808966c266ba166428cb2e5c3"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli.rs",
+      "sha256": "88f527f684056cd03c05bfc8fc198ffdbed4a1d8814fc704b065092576883cfe"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows.rs",
+      "sha256": "e06852d4a75948ac8226076244f196e0c6450779d66816c8af21a68759f7e4f6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_native_tests.rs",
+      "sha256": "1171394c2aa4d0348008326af222ba6dcfd8f3ae35ff02354e9570f4cd3cff34"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_tests.rs",
+      "sha256": "354618702f00c66a6caec6fba22d6d10134ac4ad6385c59ceeddbcfea9dcd56f"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/nsis023.nsi",
+      "sha256": "b718ebbb5688c1bdb4b102a4007f1ec73bf49d082442b19a88d5592ad08523c4"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/wix023.wxs",
+      "sha256": "d692b3621dc4af35b1b7cfb75fcc4bd8367a915bceed30e85a301b5f4370be2b"
+    },
+    {
+      "path": "test/windows024-native/account-w1d.ps1",
+      "sha256": "119ca40c5a39b8bbaac4e8b5acbeb614a13f6cb1d48ca5d3393aa9c60c4abe94"
+    },
+    {
+      "path": "test/windows024-native/bundle-installer.py",
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    }
+  ],
+  "remoteCode": [
+    "b476fa933c35e08b4ca5f58a3f03e370d445ee8e\trefs/heads/codex/024-windows-native"
+  ],
+  "baseline": "0d231aebc"
+}

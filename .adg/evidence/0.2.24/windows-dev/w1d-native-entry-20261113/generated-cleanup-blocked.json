@@ -1,0 +1,45 @@
+{
+  "unitFileBytes": 3881472.0,
+  "testProfilesRemaining": 0,
+  "testAccountsRemaining": 0,
+  "newRootBytes": 1944490289.0,
+  "automaticApprovalReview": {
+    "commandExecuted": false,
+    "action": "remove only two exact new W1-D generated roots after archive/containment checks",
+    "result": "rejected",
+    "reason": "blocked by policy",
+    "alternateDeletionUsed": false
+  },
+  "unitFilesRetained": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-shim-unit.exe",
+      "bytes": 788992
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-shim-unit.pdb",
+      "bytes": 3092480
+    }
+  ],
+  "reusedPriorRoots": [
+    "test/windows024-native/target/w1c-product",
+    ".toolchain/msvc-w1c",
+    "test/windows024-native/target/installer-w1",
+    "C:/Users/Public/ocxw1c-9c37bcb72f/input/powershell"
+  ],
+  "newRootsRetained": [
+    {
+      "exists": true,
+      "path": "C:/Users/Public/ocxw1d-98b5378c87",
+      "bytes": 874693587.0,
+      "files": 164
+    },
+    {
+      "exists": true,
+      "path": "C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/w1d-bundle01",
+      "bytes": 1069796702.0,
+      "files": 29
+    }
+  ],
+  "oldRefusalsNotRetried": true,
+  "noGlobalCleanupClaim": true
+}

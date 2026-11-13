@@ -1,0 +1,119 @@
+[
+  {
+    "status": "passed",
+    "item": "MSVC产品check/build与测试no-run",
+    "evidence": [
+      "check01.stderr.log",
+      "build01.json",
+      "test-build05.json"
+    ]
+  },
+  {
+    "status": "passed",
+    "item": "原生shim参数与Windows纯路径单测",
+    "evidence": [
+      "shim-unit.stdout.log",
+      "path-unit.stdout.log"
+    ],
+    "cases": 2
+  },
+  {
+    "status": "passed",
+    "item": "schema3安装器拥有I/ocx.exe；启停不修改EXE",
+    "evidence": "attempts/out04/native/native-events.jsonl"
+  },
+  {
+    "status": "passed",
+    "item": "默认PowerShell7.6.9 Windows模式混合参数/stdio/exit23",
+    "evidence": [
+      "attempts/out04/native/powershell-version.json",
+      "attempts/out04/native/argv-powershell.stdout"
+    ]
+  },
+  {
+    "status": "passed",
+    "item": "cmd混合参数/stdio/exit23",
+    "evidence": "attempts/out04/native/argv-cmd.stdout"
+  },
+  {
+    "status": "passed",
+    "item": "新Token环境裸ocx解析及停用后缺席",
+    "evidence": [
+      "attempts/out04/native/fresh-bare-discovery.stdout",
+      "attempts/out04/native/disabled-bare-discovery.stdout"
+    ]
+  },
+  {
+    "status": "passed",
+    "item": "同current版本/Node/script/OS Profile及自定义H",
+    "evidence": "attempts/out04/native/native-events.jsonl"
+  },
+  {
+    "status": "passed",
+    "item": "原官方2.99 --version与自定义H config get port --json",
+    "evidence": [
+      "attempts/out04/native/official-version.stdout",
+      "attempts/out04/native/official-home.stdout"
+    ]
+  },
+  {
+    "status": "passed",
+    "item": "原配置字节和官方程序树不变",
+    "evidence": "attempts/out04/terminal_cli_windows_native_tests.rs"
+  },
+  {
+    "status": "passed",
+    "item": "schema3 Enable/Disable五边界新进程恢复",
+    "evidence": "attempts/out04/native/native-events.jsonl",
+    "cases": 10
+  },
+  {
+    "status": "passed",
+    "item": "入口/PATH/登记/pending外部变化拒绝",
+    "evidence": "attempts/out04/native/native-events.jsonl",
+    "cases": 4
+  },
+  {
+    "status": "passed",
+    "item": "schema2拒绝/等价PATH保留/通知注入中断继续",
+    "evidence": "attempts/out05/native/native-events.jsonl",
+    "cases": 3
+  },
+  {
+    "status": "passed-component",
+    "item": "当前入口句柄固定与动作间更换文件ID/升级登记保留",
+    "evidence": "attempts/out04/terminal_cli_windows_native_tests.rs"
+  },
+  {
+    "status": "passed-compile",
+    "item": "MSI/NSIS实际dev程序打包",
+    "evidence": "bundle01/result.json"
+  },
+  {
+    "status": "passed-macro-no-removal",
+    "item": "NSIS原宏：未启用/未完成Enable失败/升级pending与active保留/非升级撤销",
+    "evidence": "attempts/out05/native/native-events.jsonl",
+    "cases": 5
+  },
+  {
+    "status": "blocked-machine-policy",
+    "item": "真实普通账户MSI安装",
+    "exitCode": 1625,
+    "evidence": "attempts/out03/native/msi-install.msi.log"
+  },
+  {
+    "status": "not-executed-install-prerequisite-blocked",
+    "item": "真实MSI非升级正常/失败卸载保留",
+    "evidence": "attempts/out03/native/msi-install.msi.log"
+  },
+  {
+    "status": "clean",
+    "item": "账户/Profile/PATH/临时桌面ACL",
+    "evidence": "account-cleanup-readback.json"
+  },
+  {
+    "status": "blocked-automatic-approval",
+    "item": "本轮生成物清理",
+    "evidence": "generated-cleanup-blocked.json"
+  }
+]

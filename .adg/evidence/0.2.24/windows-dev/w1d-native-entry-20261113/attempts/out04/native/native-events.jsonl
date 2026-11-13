@@ -1,0 +1,33 @@
+{"event":"identity","facts":{"elevated":false,"hypothesis":"native exe, schema3, fresh-shell environment and actual MSI uninstall","profile":"C:\\Users\\ocxw1d7463e4dcb","session":2,"sid":"S-1-5-21-587408064-856152790-2583328096-1038"}}
+{"event":"component-fixture","facts":{"msiInstalled":false,"reason":"real ordinary MSI blocked by machine DisableMsi policy, no policy changed","source":"exact current built binaries and installer source manifest"}}
+{"event":"pristine-helper","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"unregistered-shim","facts":{"exitCode":1,"stderrBytes":160,"stdoutBytes":0}}
+{"event":"schema3-enabled","facts":{"command":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\ocx.exe","kind":"installer-native-exe","pathDirectory":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !","schema":3,"shimUntouched":true}}
+{"event":"argv-cmd","facts":{"exitCode":23,"stderrBytes":21,"stdoutBytes":553}}
+{"event":"argv","facts":{"expected":["plain","arg space","雪","&|<>^!()","literal%text","trailing\\","","quoted\"inside"],"observed":{"args":["plain","arg space","雪","&|<>^!()","literal%text","trailing\\","","quoted\"inside"],"h":"\\\\?\\C:\\Users\\ocxw1d7463e4dcb\\w1d native\\custom H 雪","home":"C:\\Users\\ocxw1d7463e4dcb","node":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\runtime\\versions\\9.0.0\\dependencies\\node\\node.exe","profile":"C:\\Users\\ocxw1d7463e4dcb","script":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\runtime\\versions\\9.0.0\\opencodex\\node_modules\\@bitkyc08\\opencodex\\probe.cjs","stdin":"c3RkaW4gYmluYXJ5IAAgVW5pY29kZSDpm6oNCg=="},"passed":true,"shell":"cmd"}}
+{"event":"argv-powershell","facts":{"exitCode":23,"stderrBytes":21,"stdoutBytes":553}}
+{"event":"argv","facts":{"expected":["plain","arg space","雪","&|<>^!()","literal%text","trailing\\","","quoted\"inside"],"observed":{"args":["plain","arg space","雪","&|<>^!()","literal%text","trailing\\","","quoted\"inside"],"h":"\\\\?\\C:\\Users\\ocxw1d7463e4dcb\\w1d native\\custom H 雪","home":"C:\\Users\\ocxw1d7463e4dcb","node":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\runtime\\versions\\9.0.0\\dependencies\\node\\node.exe","profile":"C:\\Users\\ocxw1d7463e4dcb","script":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\runtime\\versions\\9.0.0\\opencodex\\node_modules\\@bitkyc08\\opencodex\\probe.cjs","stdin":"c3RkaW4gYmluYXJ5IAAgVW5pY29kZSDpm6oNCg=="},"passed":true,"shell":"powershell"}}
+{"event":"fresh-bare-discovery","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":116}}
+{"event":"disabled-bare-discovery","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"resume-Enable-pending","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Enable-command","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Enable-path","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Enable-record","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Enable-notified","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Disable-pending","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Disable-command","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Disable-path","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Disable-record","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"resume-Disable-notified","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":225}}
+{"event":"external-refused","facts":{"bytesRetained":true,"object":"entry"}}
+{"event":"external-refused","facts":{"bytesRetained":true,"object":"path"}}
+{"event":"external-refused","facts":{"bytesRetained":true,"object":"record"}}
+{"event":"external-refused","facts":{"bytesRetained":true,"object":"pending"}}
+{"event":"official-version","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":17}}
+{"event":"official-version","facts":{"current":{"imageSha256":"ab9314d3df4475481736245580b24a4d1a6fa52e8030512d9afc9340b6d6c3b6","platform":"win32-x64","schemaVersion":1,"version":"2.99.0"},"h":"\\\\?\\C:\\Users\\ocxw1d7463e4dcb\\w1d native\\custom H 雪","node":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\runtime/versions\\2.99.0\\dependencies\\node/node.exe","passed":true,"script":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\runtime/versions\\2.99.0\\opencodex\\node_modules/@bitkyc08/opencodex\\bin/ocx.mjs"}}
+{"event":"official-home","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":6}}
+{"event":"official-home","facts":{"current":{"imageSha256":"ab9314d3df4475481736245580b24a4d1a6fa52e8030512d9afc9340b6d6c3b6","platform":"win32-x64","schemaVersion":1,"version":"2.99.0"},"h":"\\\\?\\C:\\Users\\ocxw1d7463e4dcb\\w1d native\\custom H 雪","node":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\runtime/versions\\2.99.0\\dependencies\\node/node.exe","passed":true,"script":"C:\\Users\\ocxw1d7463e4dcb\\w1d native\\I 空格 & !\\runtime/versions\\2.99.0\\opencodex\\node_modules/@bitkyc08/opencodex\\bin/ocx.mjs"}}
+{"event":"official-phase","facts":{"elapsedMs":153537,"failed":[]}}
+{"event":"component-helper-refused","facts":{"exitCode":1,"stderrBytes":69,"stdoutBytes":0}}
+{"event":"component-helper-revoke","facts":{"exitCode":0,"stderrBytes":0,"stdoutBytes":0}}
+{"event":"final","facts":{"allAccepted":false,"componentAccepted":true,"failed":[],"msiBlockedByPolicy":true,"msiFailurePreserved":false,"msiUninstall":false,"noServiceStarted":true,"pathRestored":true,"schema":3,"userDataRetained":true}}

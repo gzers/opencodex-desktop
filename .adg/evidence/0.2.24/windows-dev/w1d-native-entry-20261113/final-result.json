@@ -1,0 +1,65 @@
+{
+  "contract": "windows-w1d-native-entry-r1",
+  "allAccepted": false,
+  "firstError": {
+    "attempt": "out01",
+    "scope": "MSI test invocation",
+    "observed": "no MSI log; Windows Installer window did not return; exact owned PID115876 stopped, exit -1",
+    "fix": "quote PROPERTY value and remove empty trailing property; then normalize MSI path separators"
+  },
+  "msiPolicy": {
+    "policyChanged": false,
+    "DisableMsi": 1,
+    "exitCode": 1625,
+    "reason": "Non-assigned apps are disabled for non-admin users"
+  },
+  "dualSidMatrixExecuted": false,
+  "docsInput": "29f0f4dfe",
+  "dailyConfigurationModified": false,
+  "remaining": [
+    "actual MSI normal/failure uninstall remains unexecuted due machine policy",
+    "fixed release candidate/W2/lifecycle are outside this round",
+    "new generated root/unit file cleanup blocked, old refused roots retained"
+  ],
+  "commits": [
+    "3627d7eba",
+    "6a1902498",
+    "b476fa933"
+  ],
+  "sourceProvenance": {
+    "stableInstalledRecord": "schema3 paths/entryKind/PathEdit, no permanent EXE hash",
+    "scope": "current installer-owned source + retained handles, not a signed authenticity certificate",
+    "artifact": "I/ocx-native-entry.json",
+    "binds": [
+      "ocx.exe",
+      "ocxd.exe"
+    ],
+    "integratorFollowup": "generate stamp from final packaged/signed sidecar bytes before actual release bundling; no workflow changes in this scope"
+  },
+  "teamRevision": 8,
+  "tools": {
+    "nativeArgumentPassing": "Windows",
+    "sdk": "10.0.26100.0",
+    "rustc": "1.100.0 x86_64-pc-windows-msvc",
+    "devOnly": true,
+    "powershell": "7.6.9",
+    "msvc": "14.44.35207"
+  },
+  "W2Executed": false,
+  "actualProductFailures": [],
+  "secondError": {
+    "attempt": "out02",
+    "exitCode": 1619,
+    "reason": "MSI parsed forward slash path as invalid source"
+  },
+  "actualMsiUninstallAccepted": false,
+  "officialModified": false,
+  "roundCompletedLocal": "2026-11-14",
+  "sourceHead": "b476fa933c35e08b4ca5f58a3f03e370d445ee8e",
+  "nativeComponentsAccepted": true,
+  "released": false,
+  "roundStartedLocal": "2026-11-13",
+  "baseline": "0d231aebc",
+  "timezone": "Asia/Shanghai",
+  "codeBranch": "codex/024-windows-native"
+}
