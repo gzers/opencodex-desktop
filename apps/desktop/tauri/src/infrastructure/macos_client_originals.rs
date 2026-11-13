@@ -395,6 +395,16 @@ impl PinnedDirectory {
         require_private(&protection(self.file(), &stat(self.file())?)?, true)
     }
     fn child_private(&self, child: &str, create: bool) -> io::Result<Self> {
+        self.child_private_checked(child, create, &|_| Ok(()))
+    }
+    fn child_private_checked(
+        &self,
+        child: &str,
+        create: bool,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<Self> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("child_private");
         self.private()?;
         let c = name(OsStr::new(child))?;
         if create && unsafe { libc::mkdirat(self.file().as_raw_fd(), c.as_ptr(), 0o700) } != 0 {
@@ -403,9 +413,46 @@ impl PinnedDirectory {
                 return Err(error);
             }
         }
-        let result = Self::open(&self.path.join(child))?;
-        result.private()?;
-        self.recheck()?;
+        checkpoint("parent-admitted")?;
+        #[cfg(not(test))]
+        let reference = false;
+        #[cfg(test)]
+        let reference = observation_metrics::child_reference_enabled();
+        let result = if reference {
+            let result = Self::open(&self.path.join(child))?;
+            result.private()?;
+            self.recheck()?;
+            result
+        } else {
+            // Clone DIRECTORY handles only. Never acquire/close a second fd
+            // for a SQLite inode while its process-associated lock is held.
+            let mut chain = self
+                .chain
+                .iter()
+                .map(|(file, id, p)| Ok((file.try_clone()?, id.clone(), p.clone())))
+                .collect::<io::Result<Vec<_>>>()?;
+            checkpoint("parent-handles-cloned")?;
+            let file = open_at(self.file(), OsStr::new(child), true)?;
+            let info = stat(&file)?;
+            let security = protection(&file, &info)?;
+            chain.push((file, identity(&info), security));
+            checkpoint("child-opened")?;
+            let result = Self {
+                path: self.path.join(child),
+                chain,
+            };
+            // Original parent and new child expectations must agree for all
+            // shared ancestors. Two complete fresh paths/security passes
+            // fence the actual open; private assertion is then pure data.
+            Self::recheck_set(&[self, &result])?;
+            require_private(&result.chain.last().unwrap().2, true)?;
+            checkpoint("child-chain-checked")?;
+            // Keep the original final parent boundary AFTER the child security
+            // read. Cloning avoids reopening ancestors; it does not waive the
+            // owning parent's return-time generation/security observation.
+            self.recheck()?;
+            result
+        };
         Ok(result)
     }
     fn sync(&self) -> io::Result<()> {

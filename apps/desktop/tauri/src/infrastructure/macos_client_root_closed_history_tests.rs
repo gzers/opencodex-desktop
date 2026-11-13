@@ -941,6 +941,26 @@ fn closed_root_history_full_frame_live_and_released_marker_chain_stays_independe
         "PROJECTED_HISTORY_COMPARISON {}",
         serde_json::json!({"accepted":false,"samples":projected,"scope":"same independent held index/fullfourframe history and exact membership projection; two complete passes retained; no service acceptance"})
     );
+    let mut children = Vec::new();
+    for reference in [true, false, false, true] {
+        let started = Instant::now();
+        let (result, metrics) = observation_metrics::measure(|| {
+            if reference {
+                observation_metrics::child_reference(|| f._index.closed_root_history(&closed))
+            } else {
+                f._index.closed_root_history(&closed)
+            }
+        });
+        assert_eq!(result.unwrap().len(), 1);
+        let metrics = serde_json::to_value(metrics).unwrap();
+        assert_eq!(metrics["frame"]["calls"], 8);
+        assert_eq!(metrics["root_provenance"]["calls"], 10);
+        children.push(serde_json::json!({"reference":reference,"elapsedNanos":started.elapsed().as_nanos(),"metrics":metrics}));
+    }
+    println!(
+        "CHILD_PIN_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":children,"scope":"same held index/fullfourframe history; original per-file source checks unchanged, no service acceptance"})
+    );
     f._index.closed_root_history(&closed).unwrap();
     fs::DirBuilder::new()
         .mode(0o700)

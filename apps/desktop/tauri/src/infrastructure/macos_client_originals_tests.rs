@@ -1,5 +1,248 @@
 use super::*;
 #[test]
+fn child_pin_inherits_same_authenticated_parent_and_remains_valid_after_parent_handle_drops() {
+    use std::os::unix::fs::DirBuilderExt;
+    let temp = tempfile::tempdir().unwrap();
+    let path = temp
+        .path()
+        .canonicalize()
+        .unwrap()
+        .join("parent 中文 space");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&path)
+        .unwrap();
+    let parent = PinnedDirectory::open(&path).unwrap();
+    let child = parent.child_private("leaf", true).unwrap();
+    let reference =
+        observation_metrics::child_reference(|| parent.child_private("leaf", false)).unwrap();
+    assert_eq!(child.path(), reference.path());
+    assert!(child.identity() == reference.identity());
+    assert!(
+        protection(child.file(), &stat(child.file()).unwrap()).unwrap()
+            == protection(reference.file(), &stat(reference.file()).unwrap()).unwrap()
+    );
+    assert_eq!(child.chain.len(), parent.chain.len() + 1);
+    for ((a, id, security), (b, oldid, oldsecurity)) in child.chain.iter().zip(&parent.chain) {
+        assert!(id == oldid && security == oldsecurity);
+        assert_ne!(a.as_raw_fd(), b.as_raw_fd());
+        let flags = unsafe { libc::fcntl(a.as_raw_fd(), libc::F_GETFD) };
+        assert!(flags >= 0);
+        assert_ne!(flags & libc::FD_CLOEXEC, 0);
+    }
+    drop(parent);
+    child.private().unwrap();
+    reference.private().unwrap();
+}
+#[test]
+fn child_pin_keeps_original_final_parent_check_after_child_security_was_read() {
+    use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+    for change in ["mode", "rename", "xattr"] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let path = root.join("parent");
+        std::fs::DirBuilder::new()
+            .mode(0o700)
+            .create(&path)
+            .unwrap();
+        let parent = PinnedDirectory::open(&path).unwrap();
+        let reached = std::cell::Cell::new(false);
+        let result = parent.child_private_checked("child", true, &|point| {
+            if point == "child-chain-checked" {
+                reached.set(true);
+                match change {
+                    "mode" => {
+                        std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755))
+                            .unwrap()
+                    }
+                    "rename" => {
+                        std::fs::rename(&path, root.join("retained-parent")).unwrap();
+                        std::fs::DirBuilder::new()
+                            .mode(0o700)
+                            .create(&path)
+                            .unwrap();
+                    }
+                    "xattr" => {
+                        let p = CString::new(path.as_os_str().as_bytes()).unwrap();
+                        let n = CString::new("user.ocxd-child-tail").unwrap();
+                        assert_eq!(
+                            unsafe {
+                                libc::setxattr(
+                                    p.as_ptr(),
+                                    n.as_ptr(),
+                                    b"x".as_ptr().cast(),
+                                    1,
+                                    0,
+                                    0,
+                                )
+                            },
+                            0
+                        );
+                    }
+                    _ => unreachable!(),
+                }
+            }
+            Ok(())
+        });
+        assert!(reached.get());
+        assert!(result.is_err(), "{change}");
+    }
+}
+#[test]
+fn child_pin_refuses_parent_or_child_changes_at_both_acquisition_boundaries() {
+    use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+    for stage in ["parent-admitted", "parent-handles-cloned", "child-opened"] {
+        for case in [
+            "parent-rename",
+            "parent-symlink",
+            "parent-mode",
+            "parent-xattr",
+            "child-replace",
+            "child-mode",
+        ] {
+            let temp = tempfile::tempdir().unwrap();
+            let root = temp.path().canonicalize().unwrap();
+            let parent_path = root.join("parent");
+            std::fs::DirBuilder::new()
+                .mode(0o700)
+                .create(&parent_path)
+                .unwrap();
+            std::fs::DirBuilder::new()
+                .mode(0o700)
+                .create(parent_path.join("child"))
+                .unwrap();
+            let parent = PinnedDirectory::open(&parent_path).unwrap();
+            let reached = std::cell::Cell::new(false);
+            let result = parent.child_private_checked("child", false, &|point| {
+                if point == stage {
+                    reached.set(true);
+                    match case {
+                        "parent-rename" => {
+                            std::fs::rename(&parent_path, root.join("retained-parent")).unwrap();
+                            std::fs::DirBuilder::new()
+                                .mode(0o700)
+                                .create(&parent_path)
+                                .unwrap();
+                            std::fs::DirBuilder::new()
+                                .mode(0o700)
+                                .create(parent_path.join("child"))
+                                .unwrap();
+                        }
+                        "parent-symlink" => {
+                            std::fs::rename(&parent_path, root.join("retained-parent")).unwrap();
+                            std::os::unix::fs::symlink(root.join("retained-parent"), &parent_path)
+                                .unwrap();
+                        }
+                        "parent-mode" => std::fs::set_permissions(
+                            &parent_path,
+                            std::fs::Permissions::from_mode(0o755),
+                        )
+                        .unwrap(),
+                        "parent-xattr" => {
+                            let p = CString::new(parent_path.as_os_str().as_bytes()).unwrap();
+                            let n = CString::new("user.ocxd-child-pin").unwrap();
+                            assert_eq!(
+                                unsafe {
+                                    libc::setxattr(
+                                        p.as_ptr(),
+                                        n.as_ptr(),
+                                        b"x".as_ptr().cast(),
+                                        1,
+                                        0,
+                                        0,
+                                    )
+                                },
+                                0
+                            );
+                        }
+                        "child-replace" => {
+                            // Before the child was observed, an otherwise valid new
+                            // directory is not a stale child pin. Test replacement
+                            // ONLY after that original child fd was captured.
+                            if stage == "child-opened" {
+                                std::fs::rename(
+                                    parent_path.join("child"),
+                                    parent_path.join("retained-child"),
+                                )
+                                .unwrap();
+                                std::fs::DirBuilder::new()
+                                    .mode(0o700)
+                                    .create(parent_path.join("child"))
+                                    .unwrap();
+                            } else {
+                                std::fs::set_permissions(
+                                    parent_path.join("child"),
+                                    std::fs::Permissions::from_mode(0o755),
+                                )
+                                .unwrap();
+                            }
+                        }
+                        "child-mode" => std::fs::set_permissions(
+                            parent_path.join("child"),
+                            std::fs::Permissions::from_mode(0o755),
+                        )
+                        .unwrap(),
+                        _ => unreachable!(),
+                    }
+                }
+                Ok(())
+            });
+            assert!(reached.get());
+            assert!(result.is_err(), "{stage}/{case}");
+        }
+    }
+}
+#[test]
+fn child_pin_keeps_existing_unsafe_objects_and_literal_component_rules() {
+    use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let path = root.join("parent");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&path)
+        .unwrap();
+    let parent = PinnedDirectory::open(&path).unwrap();
+    for bad in [".", "..", "a/b", "/absolute", ""] {
+        assert!(parent.child_private(bad, false).is_err());
+    }
+    let outside = root.join("outside");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&outside)
+        .unwrap();
+    std::fs::write(outside.join("keep"), b"outside bytes").unwrap();
+    std::os::unix::fs::symlink(&outside, path.join("linked")).unwrap();
+    assert!(parent.child_private("linked", true).is_err());
+    assert!(std::fs::symlink_metadata(path.join("linked"))
+        .unwrap()
+        .file_type()
+        .is_symlink());
+    std::fs::write(path.join("file"), b"keep file").unwrap();
+    assert!(parent.child_private("file", true).is_err());
+    assert_eq!(std::fs::read(path.join("file")).unwrap(), b"keep file");
+    std::fs::DirBuilder::new()
+        .mode(0o755)
+        .create(path.join("unsafe"))
+        .unwrap();
+    assert!(parent.child_private("unsafe", true).is_err());
+    assert_eq!(
+        std::fs::metadata(path.join("unsafe"))
+            .unwrap()
+            .permissions()
+            .mode()
+            & 0o777,
+        0o755
+    );
+    assert_eq!(
+        std::fs::read(outside.join("keep")).unwrap(),
+        b"outside bytes"
+    );
+    let literal = parent.child_private("back\\slash", true).unwrap();
+    assert_eq!(literal.path(), path.join("back\\slash"));
+    literal.private().unwrap();
+}
+#[test]
 fn pinned_set_rejects_conflicting_inode_or_protection_in_either_input_order() {
     use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
     for change in ["inode", "mode"] {

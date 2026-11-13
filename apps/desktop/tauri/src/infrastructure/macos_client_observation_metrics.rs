@@ -9,6 +9,24 @@ thread_local! {static ACTIVE:RefCell<Option<BTreeMap<&'static str,Metric>>>=cons
 thread_local! {static REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
 thread_local! {static PLAN_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
 thread_local! {static HISTORY_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+thread_local! {static CHILD_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+pub(crate) fn child_reference_enabled() -> bool {
+    CHILD_REFERENCE.with(|v| v.get())
+}
+pub(crate) fn child_reference<T>(action: impl FnOnce() -> T) -> T {
+    struct Reset;
+    impl Drop for Reset {
+        fn drop(&mut self) {
+            CHILD_REFERENCE.with(|v| v.set(false));
+        }
+    }
+    CHILD_REFERENCE.with(|v| {
+        assert!(!v.get());
+        v.set(true);
+    });
+    let _reset = Reset;
+    action()
+}
 pub(crate) fn history_reference_enabled() -> bool {
     HISTORY_REFERENCE.with(|v| v.get())
 }
