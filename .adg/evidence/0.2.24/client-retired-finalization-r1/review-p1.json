@@ -1,0 +1,10 @@
+{
+  "reviewer": "Darwin",
+  "baseCommit": "287ee0c9d2a2048b83f8db54d945caedf02e29b5",
+  "result": "initial production candidate blocked",
+  "severity": "P1",
+  "finding": "Initial close rechecked current facts before program_image::verify then only deadline after. A root/Grok/OS change during full program image scan could escape.",
+  "correction": "After complete image scan call check_closed: fresh current program selection, exact Head fullaudit, canonicalhistory/lineage and full retired review fingerprint+receipt, OSabsence and two lock exclusive/release, original current recovery deadline. Apply to both first close and exact duplicate retry. Errors remain false/refusal and postcommit pending append.",
+  "reviewerEditedOrExecuted": false,
+  "followup": "actual final diff review pending"
+}
