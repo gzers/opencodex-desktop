@@ -11,6 +11,24 @@ thread_local! {static PLAN_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cel
 thread_local! {static HISTORY_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
 thread_local! {static CHILD_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
 thread_local! {static SCOPE_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+thread_local! {static DESCENDANT_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+pub(crate) fn descendant_reference_enabled() -> bool {
+    DESCENDANT_REFERENCE.with(|v| v.get())
+}
+pub(crate) fn descendant_reference<T>(action: impl FnOnce() -> T) -> T {
+    struct Reset;
+    impl Drop for Reset {
+        fn drop(&mut self) {
+            DESCENDANT_REFERENCE.with(|v| v.set(false));
+        }
+    }
+    DESCENDANT_REFERENCE.with(|v| {
+        assert!(!v.get());
+        v.set(true);
+    });
+    let _reset = Reset;
+    action()
+}
 pub(crate) fn scope_reference_enabled() -> bool {
     SCOPE_REFERENCE.with(|v| v.get())
 }

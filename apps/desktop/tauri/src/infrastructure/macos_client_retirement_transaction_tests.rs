@@ -265,3 +265,47 @@ fn retirement_registration_transaction_keeps_postcommit_failures_and_does_not_mi
         );
     }
 }
+#[test]
+fn retirement_registration_descendant_acquisition_keeps_full_audits_with_lower_directory_cost() {
+    let mut samples = Vec::new();
+    for reference in [true, false, false, true] {
+        let (_tmp, context, index, head, originals) = fixture();
+        let pending =
+            super::super::root_retirement::Pending::prepare(&context, &originals, &head).unwrap();
+        let started = Instant::now();
+        let (result, metrics) = observation_metrics::measure(|| {
+            let register =
+                || index.record_root_retirement_registered(&head, pending.id(), pending.sha256());
+            if reference {
+                observation_metrics::descendant_reference(register)
+            } else {
+                register()
+            }
+        });
+        let elapsed = started.elapsed().as_nanos();
+        let (prepared, registration) = result.unwrap();
+        registration
+            .require(&head, registration.plan().unwrap())
+            .unwrap();
+        assert_eq!(index.head().unwrap(), Some(prepared));
+        let metrics = serde_json::to_value(metrics).unwrap();
+        assert_eq!(metrics["historical_begin"]["calls"], 3);
+        assert_eq!(metrics["historical_full_pass"]["calls"], 6);
+        samples.push(
+            serde_json::json!({"reference":reference,"elapsedNanos":elapsed,"metrics":metrics}),
+        );
+    }
+    let old = samples[0]["metrics"]["protection"]["calls"]
+        .as_u64()
+        .unwrap();
+    let new = samples[1]["metrics"]["protection"]["calls"]
+        .as_u64()
+        .unwrap();
+    assert!(new < old);
+    assert_eq!(samples[2]["metrics"]["protection"]["calls"], new);
+    assert_eq!(samples[3]["metrics"]["protection"]["calls"], old);
+    println!(
+        "RETIREMENT_DESCENDANT_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":samples,"scope":"synthetic second generation; complete source/candidate/postcommit audits retained; no original normalStop acceptance"})
+    );
+}

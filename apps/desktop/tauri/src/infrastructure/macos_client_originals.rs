@@ -459,6 +459,73 @@ impl PinnedDirectory {
         self.recheck()?;
         self.file().sync_all()
     }
+    /// Acquire existing private directories only. No content is read and no
+    /// intermediate pin escapes before complete final path/security admission.
+    fn descendant_private(&self, children: &[&str]) -> io::Result<Self> {
+        #[cfg(test)]
+        if observation_metrics::descendant_reference_enabled() {
+            let mut result = None;
+            for child in children {
+                result = Some(
+                    result
+                        .as_ref()
+                        .unwrap_or(self)
+                        .child_private(child, false)?,
+                );
+            }
+            return result.ok_or_else(|| denied("empty reference descendant"));
+        }
+        self.descendant_private_checked(children, &|_, _| Ok(()))
+    }
+    fn descendant_private_checked(
+        &self,
+        children: &[&str],
+        checkpoint: &impl Fn(&str, usize) -> io::Result<()>,
+    ) -> io::Result<Self> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("descendant_private");
+        if children.is_empty() || children.len() > 8 {
+            return Err(denied("bounded nonempty private descendant required"));
+        }
+        for child in children {
+            name(OsStr::new(child))?;
+        }
+        self.private()?;
+        checkpoint("base-admitted", 0)?;
+        let clone_chain = |chain: &[(File, Identity, Protection)]| {
+            chain
+                .iter()
+                .map(|(file, id, p)| Ok((file.try_clone()?, id.clone(), p.clone())))
+                .collect::<io::Result<Vec<_>>>()
+        };
+        let mut result = Self {
+            path: self.path.clone(),
+            chain: clone_chain(&self.chain)?,
+        };
+        let mut final_parent = None;
+        for (i, child) in children.iter().enumerate() {
+            if i + 1 == children.len() {
+                // Preserve the last child_private's AFTER-leaf parent boundary,
+                // including every intermediate ancestor, not just the base.
+                final_parent = Some(Self {
+                    path: result.path.clone(),
+                    chain: clone_chain(&result.chain)?,
+                });
+            }
+            let file = open_at(result.file(), OsStr::new(child), true)?;
+            let info = stat(&file)?;
+            let security = protection(&file, &info)?;
+            require_private(&security, true)?;
+            result.path.push(child);
+            result.chain.push((file, identity(&info), security));
+            checkpoint("component-pinned", i)?;
+        }
+        Self::recheck_set(&[self, &result])?;
+        require_private(&result.chain.last().unwrap().2, true)?;
+        checkpoint("chain-checked", children.len())?;
+        final_parent.unwrap().recheck()?;
+        Ok(result)
+    }
     /// Fresh union observation, not a cache. Shared ancestors are the same
     /// path/inode/protection expectation; inspect each unique object twice
     /// instead of repeating it for every overlapping root. Conflicting pins
@@ -1261,9 +1328,7 @@ impl Originals {
         } else {
             root_creation::require_no_pending_root(&manager)?;
         }
-        let directory = manager
-            .child_private("client-originals", false)?
-            .child_private(attempt, false)?;
+        let directory = manager.descendant_private(&["client-originals", attempt])?;
         let mut known = [Some(original_sha256.to_owned()), None, None, None];
         for (phase, hash) in expected_phases {
             if *phase == Phase::Original
@@ -1582,3 +1647,7 @@ impl PinnedDirectory {
 #[cfg(test)]
 #[path = "macos_client_root_originals_tests.rs"]
 mod root_originals_tests;
+
+#[cfg(test)]
+#[path = "macos_client_descendant_pin_tests.rs"]
+mod descendant_pin_tests;

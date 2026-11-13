@@ -243,8 +243,7 @@ pub(super) fn verify_indexed_anchor(
         if id != &refs.id {
             return Err(denied("root generation slot differs from origin"));
         }
-        let generations = manager.child_private("client-root-generations", false)?;
-        generations.child_private(id, false)?
+        manager.descendant_private(&["client-root-generations", id])?
     } else {
         manager.child_private("client-root-reservation", false)?
     };

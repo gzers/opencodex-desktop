@@ -166,10 +166,8 @@ fn open_archive_shell(
     let data = PinnedDirectory::open(data_root)?;
     data.private()?;
     let profile = PinnedDirectory::open(profile_root)?;
-    let directory = data
-        .child_private("manager-state", false)?
-        .child_private("client-originals", false)?
-        .child_private(&refs.attempt, false)?;
+    let directory =
+        data.descendant_private(&["manager-state", "client-originals", &refs.attempt])?;
     let slot = format!("root-retired-{}", reference.plan_id);
     let client = PinnedDirectory::open(&directory.path().join(&slot))?;
     let mut known = [Some(refs.original_sha256.clone()), None, None, None];
