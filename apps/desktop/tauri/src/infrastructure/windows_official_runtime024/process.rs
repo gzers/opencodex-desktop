@@ -89,12 +89,14 @@ pub struct ForcedCleanup {
 
 /// Explicit already-admitted inputs. The shared caller selects the executable,
 /// verifies package hashes and supplies a minimal environment. No process/global
-/// user environment is inherited; HOME and OPENCODEX_HOME are pinned here.
+/// user environment is inherited. HOME/USERPROFILE use the OS profile; only
+/// OPENCODEX_HOME is pinned as the private instance directory.
 pub struct LaunchSpec<'a> {
     pub executable: &'a Path,
     pub arguments: &'a [OsString],
     pub working_directory: &'a Path,
-    pub home: &'a Path,
+    pub user_profile: &'a Path,
+    pub opencodex_home: &'a Path,
     pub environment: &'a BTreeMap<OsString, OsString>,
     pub stdout: &'a File,
     pub stderr: &'a File,
@@ -173,7 +175,11 @@ fn quote(arg: &OsStr, out: &mut Vec<u16>) -> io::Result<()> {
     out.push(34);
     Ok(())
 }
-fn environment(input: &BTreeMap<OsString, OsString>, home: &Path) -> io::Result<Vec<u16>> {
+fn environment(
+    input: &BTreeMap<OsString, OsString>,
+    user_profile: &Path,
+    opencodex_home: &Path,
+) -> io::Result<Vec<u16>> {
     let mut pairs = BTreeMap::new();
     for (k, v) in input {
         let key = k
@@ -187,8 +193,12 @@ fn environment(input: &BTreeMap<OsString, OsString>, home: &Path) -> io::Result<
             return Err(denied("case-duplicate environment key"));
         }
     }
-    for name in ["HOME", "OPENCODEX_HOME"] {
-        pairs.insert(name.into(), (name.into(), home.as_os_str().to_owned()));
+    for (name, path) in [
+        ("HOME", user_profile),
+        ("USERPROFILE", user_profile),
+        ("OPENCODEX_HOME", opencodex_home),
+    ] {
+        pairs.insert(name.into(), (name.into(), path.as_os_str().to_owned()));
     }
     let mut out = Vec::new();
     for (_, (k, v)) in pairs {
@@ -273,7 +283,8 @@ impl OwnedRuntime {
                 .ok_or_else(|| denied("program parent required"))?,
         )?;
         let cwd = PinnedDirectory::open(spec.working_directory)?;
-        let home = PinnedDirectory::open_private(spec.home)?;
+        validate(spec.user_profile)?;
+        let home = PinnedDirectory::open_private(spec.opencodex_home)?;
         let current = current_identity()?;
         let exe = OpenOptions::new()
             .read(true)
@@ -321,7 +332,7 @@ impl OwnedRuntime {
         si.lpAttributeList = attrs.raw();
         let app = wide(spec.executable)?;
         let work = wide(spec.working_directory)?;
-        let env = environment(spec.environment, spec.home)?;
+        let env = environment(spec.environment, spec.user_profile, spec.opencodex_home)?;
         let mut cmd = Vec::new();
         quote(spec.executable.as_os_str(), &mut cmd)?;
         for arg in spec.arguments {
@@ -401,7 +412,7 @@ impl OwnedRuntime {
             job,
             binding: RootBinding {
                 process: fact,
-                home: spec.home.into(),
+                home: spec.opencodex_home.into(),
                 home_id: home.identity(),
                 executable_id,
             },

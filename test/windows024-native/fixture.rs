@@ -18,8 +18,9 @@ fn main() {
         "exit" => std::process::exit(args[2].parse().unwrap()),
         "env" => {
             let text = format!(
-                "{}\n{}\n{}",
+                "{}\n{}\n{}\n{}",
                 std::env::var("HOME").unwrap(),
+                std::env::var("USERPROFILE").unwrap(),
                 std::env::var("OPENCODEX_HOME").unwrap(),
                 args[3]
             );
