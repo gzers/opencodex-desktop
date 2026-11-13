@@ -2236,6 +2236,8 @@ mod tests;
 #[cfg(test)]
 #[path = "macos_client_restore_registration_tests.rs"]
 mod restore_registration_tests;
+#[path = "macos_client_retired_completion.rs"]
+pub mod retired_completion;
 #[cfg(test)]
 #[path = "macos_client_retirement_transaction_tests.rs"]
 mod retirement_transaction_tests;

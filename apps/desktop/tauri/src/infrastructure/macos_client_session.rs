@@ -129,6 +129,31 @@ struct Live {
     port: u16,
     parent_generation: [u64; 4],
 }
+/// Archived logical-scope facts, never a retroactive normal exit certificate.
+pub(in crate::infrastructure::macos_client_originals) fn require_retired_completion_absence(
+    context: &ProcessContext,
+    originals: &Originals,
+    refs: &References,
+) -> AppResult<()> {
+    let frames = originals.frames_through(Phase::Stopped).map_err(error)?;
+    verify_index_scope_prefix(originals, refs, &context.opencodex_home, &frames)?;
+    let scope: Scope = parse(&read_private(
+        originals,
+        "startup-scope.json",
+        &refs.scope_sha256,
+    )?)?;
+    let live: Live = parse(&read_private(
+        originals,
+        "startup-live.json",
+        refs.live_sha256.as_deref().ok_or_else(|| error(()))?,
+    )?)?;
+    let (program, selection) = source(context)?;
+    if scope.program_root != program || scope.selection != selection {
+        return Err(error(()));
+    }
+    let owner = SystemServiceOwnerProofProvider::new(program, context.clone())?;
+    owner.require_finalization_absence(context, live.process()?, live.parent()?, live.port)
+}
 impl Live {
     fn parent(&self) -> AppResult<Generation> {
         let [pid, uid, sec, micros] = self.parent_generation;

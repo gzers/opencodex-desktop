@@ -164,6 +164,15 @@ fn project_history(
             Evidence::NotRecorded
         };
         preview.phase_count = head.references.as_ref().map_or(0, |r| r.phases.len());
+        if let Some(origin) = root_origin {
+            if let Some(review) = retired_completion::review(context, data, head, history, origin)?
+            {
+                preview.status = Status::Pending;
+                preview.can_finalize = true;
+                preview.completion_evidence = Evidence::Unregistered;
+                preview.confirmation_digest = Some(review.digest().into());
+            }
+        }
         return Ok(preview);
     }
     if matches!(head.state, State::Preparing | State::CaptureReserved) {

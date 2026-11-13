@@ -102,6 +102,19 @@ pub struct Readback {
     receipt_sha256: String,
     direction: Direction,
 }
+/// Readonly facts only. No receipt read from disk supplies an independent
+/// digest: the expected bytes below are derived from the indexed Plan.
+#[derive(Serialize, PartialEq, Eq)]
+pub(in crate::infrastructure::macos_client_originals) struct RetiredCompletionSnapshot {
+    pub(in crate::infrastructure::macos_client_originals) receipt_sha256: String,
+    pub(in crate::infrastructure::macos_client_originals) stable_locks: [Identity; 2],
+    plan_sha256: String,
+    tree_sha256: String,
+    grok_sha256: String,
+    data: Identity,
+    profile: Identity,
+    client: Identity,
+}
 impl Readback {
     pub fn plan_sha256(&self) -> &str {
         &self.plan_sha256
@@ -410,6 +423,16 @@ fn exact_receipt(vault: &PinnedDirectory, name: &str, bytes: &[u8]) -> io::Resul
             ..
         } if actual == bytes => require_private(&protection, false),
         _ => Err(denied("root movement receipt changed; no replacement")),
+    }
+}
+fn exact_existing_record(vault: &PinnedDirectory, name: &str, expected: &[u8]) -> io::Result<()> {
+    match capture_file(vault, name, MAX_FRAME)? {
+        Image::File {
+            bytes, protection, ..
+        } if bytes == expected => require_private(&protection, false),
+        _ => Err(denied(
+            "retired completion record missing or changed; not recreated",
+        )),
     }
 }
 impl<'a> Pending<'a> {
@@ -1012,6 +1035,81 @@ impl<'a> Pending<'a> {
                 "independent root absence readback is missing or changed",
             )),
         }
+    }
+    pub(in crate::infrastructure::macos_client_originals) fn retired_completion_snapshot(
+        &self,
+        expected_source: &Head,
+    ) -> io::Result<RetiredCompletionSnapshot> {
+        let plan = self.load()?;
+        if plan.source != *expected_source {
+            return Err(denied("retired completion source differs"));
+        }
+        let refs = plan
+            .source
+            .references
+            .as_ref()
+            .ok_or_else(|| denied("retired completion phases missing"))?;
+        if refs.phases.iter().map(|(p, _)| *p).collect::<Vec<_>>()
+            != [Phase::Ready, Phase::PreStop, Phase::Stopped]
+            || refs.live_sha256.is_none()
+        {
+            return Err(denied(
+                "retired completion requires complete original Stop phases",
+            ));
+        }
+        let (archive, frames) = self.checked_retired(&plan)?;
+        let tree = TreeSnapshot::read(&archive.client)?;
+        if tree != plan.released_tree()? {
+            return Err(denied("retired completion writer still present"));
+        }
+        let stopped = &frames
+            .last()
+            .ok_or_else(|| denied("retired completion frames missing"))?
+            .0
+            .tree;
+        let names = [
+            ".opencodex-native-main.claim.sqlite",
+            ".opencodex-native-main.owner.sqlite",
+        ];
+        let locks = [
+            stopped.stable_identity(names[0])?,
+            stopped.stable_identity(names[1])?,
+        ];
+        for (name, id) in names.iter().zip(&locks) {
+            if tree.stable_identity(name)? != *id {
+                return Err(denied("retired completion lock identity changed"));
+            }
+        }
+        let intent = encode(
+            &serde_json::json!({"schemaVersion":1,"planSha256":self.sha256,"direction":Direction::Retire}),
+        )?;
+        exact_existing_record(
+            &archive.directory,
+            &format!("root-retirement-{}-Retire-intent.json", self.id),
+            &intent,
+        )?;
+        let receipt = self.receipt_bytes(&plan, Direction::Retire, &tree)?;
+        exact_existing_record(
+            &archive.directory,
+            &format!("root-retirement-{}-Retire-readback.json", self.id),
+            &receipt,
+        )?;
+        let receipt_sha256 = digest(&receipt);
+        // Keep the original final independent readback observation as well.
+        self.verify_retire_readback(&receipt_sha256)?;
+        if encode(&self.load()?)? != encode(&plan)? {
+            return Err(denied("retired completion plan changed"));
+        }
+        Ok(RetiredCompletionSnapshot {
+            receipt_sha256,
+            stable_locks: locks,
+            plan_sha256: self.sha256.clone(),
+            tree_sha256: digest(&encode(&tree)?),
+            grok_sha256: digest(&encode(&plan.grok)?),
+            data: archive.data.identity().clone(),
+            profile: archive.profile.identity().clone(),
+            client: archive.client.identity().clone(),
+        })
     }
     /// Historical-only exact archive validation. It deliberately never reads
     /// current .codex or current .grok and cannot manufacture fresh permission.

@@ -37,10 +37,19 @@ pub fn finalize(context: &ProcessContext, data: &Path, request: Request) -> AppR
     let started = Instant::now();
     let phase = std::cell::Cell::new("confirm-preview");
     let result = (|| {
-        let deadline = Instant::now() + crate::modules::process::stop_timeout();
+        let deadline = started + crate::modules::process::stop_timeout();
+        let preview = preview::inspect_preview(context, data);
+        if matches!(
+            preview.phase,
+            Some(State::RootRetirementPrepared | State::RootAbsent)
+        ) {
+            // The root-specific action resolves the independently indexed
+            // archive and confirms under its existing action lock.
+            return retired_completion::finalize(context, data, request, deadline);
+        }
         // Refuse a stale/missing index BEFORE the action-time Index::open may
         // initialize any missing storage. Preview is not execution authority.
-        require_review(&preview::inspect_preview(context, data), &request)?;
+        require_review(&preview, &request)?;
         phase.set("open-existing-index");
         let client =
             std::fs::canonicalize(context.working_directory.join(".codex")).map_err(fail)?;

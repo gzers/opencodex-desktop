@@ -15,6 +15,7 @@ const status = (required = false): StatusSnapshot => ({ source: 'live', matrix: 
     runtime_label: 'bundled', protection: null, reboot_safe: true, service_present: null, shim_present: null, version_drift: null },
   pid: null, port: null, can_start: !required, can_stop: false, can_restart: false })
 const result = () => ({ attemptId: preview().attemptId!, revision: 7, status: 'restored' as const })
+const retired = ():ClientRecoveryPreview=>({...preview(),phase:'root_retirement_prepared',revision:19,completionEvidence:'unregistered',phaseCount:3})
 const early = ():ClientRecoveryPreview=>({...preview(),phase:'captured',revision:2,planEvidence:'not_recorded',completionEvidence:'not_recorded',phaseCount:0,canFinalize:false,confirmationDigest:null,canFinishUnchanged:true,unchangedDigest:'e'.repeat(64)})
 const preparing=():ClientRecoveryPreview=>({...early(),phase:'preparing',revision:1,originalEvidence:'not_recorded',canFinishUnchanged:false,unchangedDigest:null,canCancelPreparation:true,preparationDigest:'f'.repeat(64)})
 const missingPlan=():ClientRecoveryPreview=>({...early(),phase:'stopped',revision:6,phaseCount:3,canFinishUnchanged:false,unchangedDigest:null,canPreparePlan:true,planDigest:'d'.repeat(64)})
@@ -40,6 +41,28 @@ beforeEach(() => {
   vi.spyOn(clientRecoveryApi, 'status').mockResolvedValue(status())
   const lifecycle = useLifecycleStore(); lifecycle.statusSnapshot = status(true); lifecycle.clientRecoveryRequired = true
 })
+describe('already retired root finalization',()=>{
+  it('uses the existing explicit finalize confirmation and exact receipt for a retired root',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(retired());
+    vi.mocked(clientRecoveryApi.finalize).mockResolvedValue({...result(),revision:20});
+    const store=await inspect();expect(store.canFinalize).toBe(true);
+    expect(await store.apply('finalize')).toBe(true);
+    expect(clientRecoveryApi.finalize).toHaveBeenCalledWith({attemptId:retired().attemptId,revision:19,confirmationDigest:'a'.repeat(64)});
+    expect(store.outcome?.revision).toBe(20);
+    expect(clientRecoveryApi.continue).not.toHaveBeenCalled();expect(clientRecoveryApi.rollback).not.toHaveBeenCalled();
+  });
+  it.each([
+    {...retired(),completionEvidence:'not_recorded' as const},
+    {...retired(),phaseCount:2},
+    {...retired(),canContinue:true},
+    {...retired(),confirmationDigest:null},
+    {...retired(),phase:'root_absent' as const},
+  ])('refuses incomplete or already-closed root evidence %#',async p=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(p);const store=await inspect();
+    expect(store.canFinalize).toBe(false);expect(await store.apply('finalize')).toBe(false);
+    expect(clientRecoveryApi.finalize).not.toHaveBeenCalled();
+  });
+});
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
   it.each(['root_retirement_prepared','root_absent'] as const)('keeps %s read-only even if a payload advertises ordinary mutation capabilities',async phase=>{

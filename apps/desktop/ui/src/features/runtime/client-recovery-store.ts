@@ -21,8 +21,9 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   })
   const canFinalize = computed(() => {
     const p = preview.value
-    return bound.value && (p?.phase === 'restore_prepared'||p?.phase==='recovery_prepared') && p.canFinalize && !p.canContinue && !p.canRollback && !p.canRearm && !p.canPreparePlan && !p.canFinishUnchanged && !p.canCancelPreparation
+    return bound.value && (p?.phase === 'restore_prepared'||p?.phase==='recovery_prepared'||p?.phase==='root_retirement_prepared') && p.canFinalize && !p.canContinue && !p.canRollback && !p.canRearm && !p.canPreparePlan && !p.canFinishUnchanged && !p.canCancelPreparation
       && (p.completionEvidence === 'not_recorded' || p.completionEvidence === 'unregistered') && hash(p.confirmationDigest) && (p.phase==='recovery_prepared'?[1,2].includes(p.phaseCount):p.phaseCount===3)
+      && (p.phase !== 'root_retirement_prepared' || p.completionEvidence === 'unregistered')
   })
   const canContinue = computed(() => {
     const p = preview.value
