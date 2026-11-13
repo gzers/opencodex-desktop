@@ -69,3 +69,41 @@ attempt01原生7项通过，clippy首错manual_is_multiple_of及chunks_exact_to_
 本轮process fixture目录和PATH/NSIS所有私有测试注册表key已清理，相关测试进程/窗口/Job/句柄已退出或释放；MSI超时探针原句柄退出已记录。不宣称全机无进程。原4个W0目录仍只含已归档空日志/空home；精确非递归清理命令被自动审批以blocked by policy拒绝，命令未执行、无换工具绕过。新生成target/installer-w1的归档后精确清理也被自动审批以同一理由拒绝，仍保留11808文件/2108815151字节；首次stage产生的两份共享脚本pycache亦列为清理未完。cleanup-pending.json给出路径/读回。历史证据不改写，不将“已归档”说成“已删除”。
 
 Mac后继最小接线为注册新增windows_cli024（基线infrastructure/mod.rs已注册windows_official_runtime024，勿重复注册），将ProcessContext两个HOME输入分别传入，并在已有terminal_cli事务内消费三个PATH原语，补真实卸载撤销helper。共享终端启用/禁用/恢复/卸载整链、实际产品安装升级卸载保留及固定候选双SID/W2仍未验；当前只完成被放行的原语/资源组件。未修改IMP/TEAM/共享索引、官方2.99或日常配置；未重跑旧r5、未跑W2全量、未发布。
+
+## 2026-11-13 W1-C：MSVC产品、终端事务与卸载hook回交（未全通过）
+
+已fetch并合入指定main83b27e9ae7d0919f57298e38f5f52fd887d50650和docs/governance-main6ee2d2103；消费TEAM revision7、windows-terminal-transaction-r1。贡献分支codex/024-windows-native两批已推送：9671a1511（终端私有记录1MiB修正/原生测试与隔离账户脚本），e004259feba4a077375db01a79f851470ed0ff74（非升级卸载先撤销终端、安装器探针）。相对main83b27e9ae净写集仅合同指定文件；未改program_selection.rs/paths.rs、共享清单/锁、官方2.99或Vue。Tauri构建生成的共享文件换行触碰已按相同规范化字节还原；未删除的windows-schema.json仍为未跟踪生成物，未提交。
+
+### MSVC产品编译及本批修正
+
+宿主原只有GNU Rust。独立工具目录准备真实MSVC14.44.35207、Windows SDK10.0.26100.0、rustc1.100.0 x86_64-pc-windows-msvc，环境仅当前进程，不改日常PATH/全局工具默认。原Microsoft payload和Rust官方manifest摘要核对；网络停滞/镜像按同一摘要恢复、原始下载日志保留。首轮offline check因缓存缺libsqlite3-sys0.35.0失败，后以未变Cargo.lock摘要133c182a6a2c87864fe97778797e46c7e999672690dc9fa3ee8e241aa4a9c13f补齐。
+
+全产品MSVC cargo check --bins --lib exit0；cargo build --bins --lib（dev）首轮及修正后均exit0，实际Desktop/ocxd.exe已生成，测试目标no-run exit0。未做release签名/发布候选。保留38/39条产品及41条测试warnings原输出，未声称严格Clippy无警告。实际执行HEAD为7317cc94a合入基线加当时工作源码；out04精确源码/输入制品摘要已归档，最终提交保持已测产品内容；最终test另补“不允许argv失败在成功官方路径后被吞掉”的断言及1项PrivateRecord回归，不重跑昂贵旧组件。
+
+首个授权范围内产品错误：terminal_cli_windows把16MiB传给W0 PrivateRecord，而后者只允许1MiB，导致新pending写后无法读回。本批改Windows分支为原生1MiB，并在publication前检查完整序列化事务/文件后像大小，不放宽W0上限或改Mac语义。真实隔离账户修正后可继续；最后单项MSVC原生回归private_reader_matches_w0_bound_without_touching_user_path通过（1 passed，1857 filtered，不运行全量），fmt及新增Python/PowerShell语法检查通过。
+
+### 一个隔离账户每轮的真实执行结果
+
+各失败/修正轮次顺序使用新的ocxw1c*普通账户，严格匹配TokenUser SID、原OS Profile、非提升令牌；不是双用户/双SID验收矩阵。日常账户不写Environment/Path。首轮创建后子进程被日常Profile访问权限拒绝，未执行PATH；后改本轮Public临时输入根，未授予新账户访问日常Profile。原失败不覆盖。
+
+out04通过：实际ocx.cmd→MSVC产品ocxd.exe→同current Node/合成脚本的cmd完整参数（空格/Unicode/引号/&|<>^!()/百分号/尾反斜线/空参数）、二进制stdin、stdout/stderr及exit23；OS HOME/USERPROFILE和自定义实例H正确，选中合成版本9.0.0及Node/script精确位置均读回。合成probe.cmd是明确测试JS载体，不是官方包改名/改写，不拿其成功证明官方2.99。同current与H是合成程序的调用事实；裸ocx命令在新终端的解析仍未单独证明。
+
+真实HKCU PATH启用/幂等/停用与后来条目保留通过；10格Enable/Disable×pending/command/path/record/notified中断，原pending保存后由新原生进程继续同方向，反向拒绝，最终清掉原pending；4类command/record/pending/PATH外部变化拒绝且原字节保留；显式通知中断后原事务保留并可继续。PATH私有before/after及最后精确还原有证据，无输出完整日常PATH。通知失败格是明确测试注入；正常路径真实调用Win32广播，不把注入说成真实OS通知故障。
+
+actual helper通过：从未启用时只读成功且不创建固定anchor；pending Enable返回1且保留pending；额外参数返回2；正常停用返回0并撤销登记/命令/PATH。实际NSIS PREUNINSTALL宏编译成只执行原hook与“允许继续”标记的无删除探针，4格通过：未启用、pending Enable失败保留程序/原pending、升级保留登记/PATH、正常非升级撤销。没有执行完整安装器删除/服务生命周期或业务请求。
+
+### 尚未通过：PowerShell与原包消费者
+
+out04 PowerShell默认.cmd调用混合特殊参数返回1，stderr原文“| was unexpected at this time.”，无stdout；该格仍失败，没有改测试判成通过。早一轮cmd混合引号位置也触发同类解析错误；改为合法cmd引用后cmd完整逐项比较通过，PowerShell仍失败。现有.cmd入口在PowerShell默认native argument passing下的完整特殊参数保真仍须修；若采用native ocx.exe或额外PowerShell入口，应先有明确合同，不能在本批静默改入口/持久Schema。
+
+原包2.99实际供应最终被runtime_selection_invalid“所选运行程序不可执行”拒绝：src/modules/runtime/program_selection.rs:459把script也传给paths::validate_executable；Windows该函数只收exe/com/cmd/bat，因此原官方bin/ocx.mjs被拒绝。该共享文件不在W1-C临时写集，本批未越权修改、未重命名/改写官方脚本、未放宽任意程序准入。建议Mac单写把Node/Bun原生可执行准入与“交给已核验Node的脚本”普通文件/摘要/边界检查区分；共享最小修复后再做官方--version、自定义H config get port --json和裸命令解析。上述两项官方命令当前没有通过，完整W1-C不得标accepted。
+
+### MSI/NSIS接线、证据与清理
+
+非升级NSIS在删除任何程序文件之前无条件调用精确ocxd.exe --uninstall-terminal-cli --confirm，非0终止并保留程序/配置；升级不调用。静默失败MessageBox加/SD避免无界等用户。MSI使用deferred/当前用户impersonation/Return=check的原生类型1058动作，精确引用[INSTALLDIR]ocxd.exe，条件Installed AND REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE，序号3499在RemoveFiles3500之前。实际MSVC产品/helper随新模板编译MSI/NSIS exit0；本地包使用test identifier/upgradeCode、dev产品/禁WebView安装，非release候选。MSI真实数据库核对动作/命令/顺序，原生MsiEvaluateCondition的fresh install/normal uninstall/upgrade/repair/partial removal五格通过。MSI完整卸载执行仍未验，不拿表/条件等同真实删除生命周期通过。
+
+不可覆盖证据：.adg/evidence/0.2.24/windows-dev/w1c-msvc-20261113/（编译/环境/原始失败/安装器真实输出/单项回归）及w1c-native-20261113/（139份原文件及SHA256、out01..04/source/stdout/stderr/10格pending与恢复/失败私有后像/输入制品摘要）。gitattributes禁止换行转换。原始失败Profile私有内容通过backup语义复制归档，未修权限/接管owner；Win32 DeleteProfile返回87后通过精确新SID的Win32_UserProfile删除。最终本轮ocxw1c账户/Profile均零残留、临时桌面ACL还原，所有原测试进程退出，隔离账户PATH最终精确还原；不宣称全机进程清洁。
+
+自动审批拒绝了生成schema/误建空目录清理，以及归档后五个精确W1-C生成根的清理，均返回blocked by policy、命令未执行；没有换工具绕过。本轮Public输入/构建/两份本地包等合计26869205653字节仍保留，清单见generated-before-cleanup.json/cleanup-blocked.json。旧W1约2GiB产物/旧失败目录继续保持原事实。未跟踪windows-schema.json和误建空$input/powershell亦列清理未完，不提交为产品改动。
+
+本批回交为组件结果与明确未完，不是W1-C完整通过：共享.mjs准入、PowerShell特殊参数、新终端裸命令解析、真实MSI卸载生命周期仍未完。后继按真实diff再给定向输入；未改官方2.99/日常PATH，未跑W2/双用户、旧r5或全安装器sweep，未发布。

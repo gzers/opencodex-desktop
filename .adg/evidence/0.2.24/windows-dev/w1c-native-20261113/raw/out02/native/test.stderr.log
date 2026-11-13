@@ -1,0 +1,4 @@
+
+thread 'modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_account_terminal_w1c' (113504) panicked at src\modules\runtime\terminal_cli_windows_native_tests.rs:89:72:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "terminal_cli_refused", detail: "缁堢鍏ュ彛鏂囦欢鎿嶄綔澶辫触锛屽凡鏈夊唴瀹逛繚鐣? }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

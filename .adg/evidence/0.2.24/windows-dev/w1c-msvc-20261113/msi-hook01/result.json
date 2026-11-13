@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "scope": "native MSI action database and condition evaluation only; no installation/uninstall executed",
+  "cells": [
+    {
+      "name": "fresh-install",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "normal-uninstall",
+      "expected": 1,
+      "actual": 1
+    },
+    {
+      "name": "upgrade-removal",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "repair",
+      "expected": 0,
+      "actual": 0
+    },
+    {
+      "name": "partial-feature-removal",
+      "expected": 0,
+      "actual": 0
+    }
+  ],
+  "action": {
+    "type": 1058,
+    "condition": "Installed AND REMOVE=\"ALL\" AND NOT UPGRADINGPRODUCTCODE",
+    "command": "\"[INSTALLDIR]ocxd.exe\" --uninstall-terminal-cli --confirm",
+    "sequence": 3499,
+    "source": "INSTALLDIR",
+    "removeFilesSequence": 3500
+  }
+}

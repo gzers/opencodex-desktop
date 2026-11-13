@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "productExecutable": true,
+  "installed": false,
+  "scope": "actual MSVC dev product/helper template compilation; test bundle identity, not release candidate",
+  "commands": [
+    {
+      "argv": [
+        "C:\\Users\\15119\\.nvmd\\bin\\node.exe",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\tooling\\node_modules\\@tauri-apps\\cli\\tauri.js",
+        "bundle",
+        "--ci",
+        "--no-sign",
+        "--bundles",
+        "msi,nsis",
+        "-vv"
+      ],
+      "cwd": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-bundle01\\tauri",
+      "exitCode": 0
+    }
+  ],
+  "fixtureSha256": "576897ae332e200aea789d7f5d778fb29d6a47766ef19eff583a7851920dd1a6",
+  "stage": {
+    "scope": "actual Windows resource staging only",
+    "passed": true,
+    "officialExecuted": false,
+    "installed": false,
+    "stage": {
+      "resourceDirectory": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle",
+      "descriptorSha256": "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a",
+      "officialSourceSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+      "tauriConfig": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\stage\\tauri.runtime-bundle.conf.json"
+    },
+    "policySha256": "c9f3db8d411f3eb2a778434a9e2362947aac1c8d384a002a6356da23c2ddc6e8"
+  },
+  "outputs": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-bundle01\\tauri\\target\\release\\bundle\\msi\\OpenCodeX Desktop_0.2.24_x64_en-US.msi",
+      "bytes": 316588032,
+      "sha256": "42bbb9456bd52847cb9644c52a0b4b1f7e9e6d4f52fd1bd77239242e418f4957"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-bundle01\\tauri\\target\\release\\bundle\\nsis\\OpenCodeX Desktop_0.2.24_x64-setup.exe",
+      "bytes": 375827762,
+      "sha256": "8b602fd9523fd5882014de565219b8ad5e6d2e2a1535330054e9907aa7169f2c"
+    }
+  ]
+}
