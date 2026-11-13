@@ -1,0 +1,17 @@
+{
+  "command": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--lib",
+    "modules::runtime::terminal_cli::terminal_cli_windows::tests::changed_confirmation_command_record_and_path_are_never_adopted",
+    "--offline",
+    "--",
+    "--exact",
+    "--test-threads=1"
+  ],
+  "exitCode": 0,
+  "seconds": 26.66,
+  "windowsNativeExecutedHere": false
+}

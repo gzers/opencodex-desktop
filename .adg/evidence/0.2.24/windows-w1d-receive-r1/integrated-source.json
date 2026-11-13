@@ -1,0 +1,55 @@
+{
+  "commit": "fd2538e4dae124b7c521b5b84b7ca5b5c6eeef6b",
+  "tree": "b276dd036de49133e9d3f3c47149300cded5b113",
+  "receivedTreeCommit": "a02b244e9",
+  "contribution": "b476fa933c35e08b4ca5f58a3f03e370d445ee8e",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_layout.rs",
+      "bytes": 8683,
+      "sha256": "86317af6942d32d02040b4ffc50f129d64942a285bc1674acbe21af3694abd17"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli.rs",
+      "bytes": 35969,
+      "sha256": "a51c96a9a8d9be9febedff88d04c34b722db3e084256d303092527537475fca5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows.rs",
+      "bytes": 25933,
+      "sha256": "882a252c98dc7f98a7c8630c0f29efb07dc92ec1fcefb25dedc0dd441bbea765"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_native_tests.rs",
+      "bytes": 35100,
+      "sha256": "1171394c2aa4d0348008326af222ba6dcfd8f3ae35ff02354e9570f4cd3cff34"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_tests.rs",
+      "bytes": 12750,
+      "sha256": "354618702f00c66a6caec6fba22d6d10134ac4ad6385c59ceeddbcfea9dcd56f"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/nsis023.nsi",
+      "bytes": 35448,
+      "sha256": "ab63551f2415749bcfa86df404dc36cc36ff15ff28794375842ce0c7a11ed461"
+    },
+    {
+      "path": "apps/desktop/tauri/windows/wix023.wxs",
+      "bytes": 27662,
+      "sha256": "9ebdbfd031b1c32b15d6f87f6b8ce2cc325feeaac25e660c9ae925397bd3b00a"
+    },
+    {
+      "path": "test/windows024-native/account-w1d.ps1",
+      "bytes": 10233,
+      "sha256": "0c3bcfa5078092e0cdad1324229b9944ae454442f140458aab26d37c931f8241"
+    },
+    {
+      "path": "test/windows024-native/bundle-installer.py",
+      "bytes": 7584,
+      "sha256": "848d2b8d0867acd1ca287251d93d981703c9052b300c18e666302d0dda4047a0"
+    }
+  ],
+  "localChange": "equivalent single-element-loop removal only; original failure and exact targeted regression retained",
+  "windowsSourceBytesReadFrom": "final-source-verification.json; original executed source differs only by CRLF in seven files"
+}
