@@ -8,6 +8,36 @@ use std::{
 };
 use tests::Fixture;
 #[test]
+fn terminal_readback_does_not_trust_a_prior_successful_retired_inspection() {
+    let f = Fixture::new();
+    let pending = f.prepare();
+    let prepared = f
+        ._index
+        .record_root_retirement(&f.source, pending.id(), pending.sha256())
+        .unwrap();
+    let proof = pending
+        .fixture_apply_for_index(Instant::now() + Duration::from_secs(10))
+        .unwrap();
+    let closed = f._index.close_root_absence(&prepared, &proof).unwrap();
+    pending.inspect_retired().unwrap();
+    let path = f
+        .originals
+        .directory
+        .path()
+        .join(format!("root-retirement-{}.json", pending.id()));
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    fs::write(&path, b"persistent change after successful inspection").unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+    assert!(pending
+        .verify_retire_readback(closed.completion_sha256.as_deref().unwrap())
+        .is_err());
+    assert_eq!(
+        fs::read(path).unwrap(),
+        b"persistent change after successful inspection"
+    );
+    assert!(!f.context.working_directory.join(".codex").exists());
+}
+#[test]
 fn root_stop_movement_registration_requires_actual_current_index_and_exact_original_source() {
     let f = Fixture::new();
     let pending = f.prepare();
