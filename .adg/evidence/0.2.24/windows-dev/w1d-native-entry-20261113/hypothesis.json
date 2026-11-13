@@ -1,0 +1,16 @@
+{
+  "hypotheses": [
+    "installer-owned ocx.exe preserves default PowerShell argv without shell reparse",
+    "schema3 enable/disable and recovery never create/overwrite/delete ocx.exe",
+    "fresh shells resolve bare ocx from isolated-account PATH to exact I",
+    "unchanged official2.99 version/custom H readonly commands succeed after main script gate correction",
+    "real dev MSI normal uninstall revokes owned PATH before deletion; pending-enable failure retains installed program and state"
+  ],
+  "allAccepted": false,
+  "teamRevision": 8,
+  "W2": false,
+  "plan": "reuse prior verified tools/archive/cache; one sequential ordinary account per attempt; archive all raw failures before cleanup",
+  "docs": "29f0f4dfe",
+  "dailyPathWrite": false,
+  "baseline": "0d231aebc"
+}
