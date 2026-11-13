@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 107；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 108；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -25,7 +25,7 @@ revision: 107；2026-11-13。用户要求本机与Windows可独立开发部分�
 | P24-02 | 共享保存/手动备份/恢复与现有安装事务保护已接；版本化升级接线及候选验收未完 | 本机POST-04保存重核、POST-08原生JSON单层导入/完整备份/回退，复用真实配置事务。 | 保留草稿/密钥意图、有限等价变化不误锁，真实冲突拒绝；导入仅保留本机port和模式，其它按源替换，备份失败零覆盖。 | 后端8例及原型已定；不把Read的模版匹配暗当无副作用刷新。 |
 | P24-03 | Mac终端/通知/网络/内置准备及版本事实/更新前重核已接；Windows/PATH和原生候选未完 | 本机POST-03同版本同HOME CLI核心及Mac入口；POST-05环境阶段/就绪区分、POST-06应用网络/更新说明；已采用UI接线。 | CLI显式启停/冲突不覆盖；内置环境不依赖系统Node；npm/GitHub错误准确；原型一致。 | 03路径/CLI接线依01；网络/UI可先独立推进。 |
 | P24-W1 | 原生PATH/安装器024资源部分已放行；完整共享接线未完 | Windows后端接共享调用合同；Windows当前用户CLI/PATH和自定义安装根/版本目录/卸载平台适配。 | 实际运行版本/HOME/安装根一致；用户级入口/PATH有归属与撤销，安装更新不误删配置或别用户对象。 | W0可先提交；共享mod/入口/版本/工作流由本机接线；不能先猜清单文件名再返工。 |
-| P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置及Grok备份可逆恢复已接；缺根目录归属/同锁登记与原缺席原件捕获已接，整根可逆归档/独立movement登记与缺根只读核验、真实Guard约束的整根读回事务已接，首次缺根生产捕获/阶段与Stop恢复已接，原包release定向首次30/5/10通过且debug超时保留；多代来源/专用捕获/存储滚动及生产nextStart/状态同源接线已接，原包双轮定向第二次Stop10失败已留证，重复启停/动作回执门/根中断/状态UI收口/一般范围/固定候选/缺Ready/Windows未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
+| P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置及Grok备份可逆恢复已接；缺根目录归属/同锁登记与原缺席原件捕获已接，整根可逆归档/独立movement登记与缺根只读核验、真实Guard约束的整根读回事务已接，首次缺根生产捕获/阶段与Stop恢复已接，原包release定向首次30/5/10通过且debug超时保留；多代来源/专用捕获/存储滚动及生产nextStart/状态同源接线已接，原包双轮两次不同源码定向第二Stop仍失败（12878→10736ms）已留证，重复启停/动作回执门/根中断/状态UI收口/一般范围/固定候选/缺Ready/Windows未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
 | P24-NAME | 剩余技术方案未定，局部等待 | 非直接合法运行键名称及多协议派生组名称展示/官方刷新保持；普通合法英文改名已有能力不重复开发。 | 原始模型/认证/能力保持，明确改名可改实际键及引用；正式显示出口、默认客户端/刷新/重启/回退有证据。 | 10组真实保存确认，中文等新增/改名均转内部键；不私改原样2.99、不用combo降能力/双写轮询。只阻塞依赖它的名称改动和整版最终验收。 |
 | P24-05 | Mac真实024工程.app及正常首次供应已验证；旧工程DMG早于最新源码，非冻结候选，Windows/NAME/完整原生未完 | 本机完成共享逻辑/页面/原型对照、Mac真实原包与必要安装/CLI/升级回退；构建并固定Windows集成候选。 | 给精确代码SHA、官方包版本/SHA、安装器SHA、调用合同和一次完整受影响原生验收表。 | 共享页面不重复交Windows；Mac可在Windows开发期间做有用检查。 |
 | P24-W2 | 最后交接，当前不跑 | 用户把本对话生成的最终简短提示词交Windows；针对固定集成候选，一轮采集所有受影响原生项状态/证据。 | 双SID真实桌面并行、受保护生命周期/恢复及原预算、路径/CLI/相关安装更新卸载；失败保留，未知不通过。 | 按最终diff选必需项。不是旧r5第六轮，也不在未集成源码上提前宣称产品通过。 |
@@ -1103,3 +1103,16 @@ main 236ed43dd将vault历史审查原“两次open、各自两套完整读取”
 证据.adg/evidence/0.2.24/client-history-projection-r1/固定4源/实际debug-librarybinary，在父350bc0309加这些差异下构建并映射本提交，不冒嵌入commit已重建。所有unit/clippy/fmt/agent句柄终止，unitTMP空、逐字归档后清本轮unit临时根/重复目录，工程target保留。该suite没有官方服务/全局协调DB、日常配置/Shell/已安装app或业务WebDAV/模型请求，无固定候选/发布。
 
 已按新假设准备独立原包轮：冻结本提交clean tree与15个关键源，原Cargo release opt-level=s/LTO no-run构建完成后绑定实际binary，用全新Profile原30/5/10、相同沙箱/精确coordinator清理，验证两个完整正常循环。当前只在构建，尚无新native结论，前轮第二Stop12878ms/RestorePrepared16仍为有效失败；新结果另按原始证据回写，不改旧失败。根中断/动作回执容量边界、缺Ready/一般客户端图路径/进程集合和刷新/NAME/复杂代理/Windows W1W2/发行README与固定候选等完整目标保持，P24-04/05未关，目标active，发布另依有效授权。
+
+
+## 2026-11-13 投影双遍优化后新原包轮：第二Stop仍失败，旧轮保留
+
+冻结main236ed43dd clean tree及15关键源，在原Cargo release opt-level=s/LTO构建实际librarybinary SHA86d4036f3314457f2eb555e91d4787c8a71144af5c72b737e57c0fddd9ee4b6e。以“重复归档遍历减半应让第二normalStop回到原10秒”新假设启动唯一新native轮，原source/基线/沙箱/准确资源摘要/两cycle全部断言不减。前轮client-root-two-cycles-r1原失败证据不改，新证据独立[原包复验合同](0.2.24-contracts/client-history-projected-native-r1.md)。
+
+首轮Start8202ms、同连接验签Status227ms、完整normalStop8749ms、stoppedStatus1375ms/NotRequired/canStart/Restored均通过。第二轮Start14368ms（前轮20700）、验签Status1453ms（前轮2205）通过；normalStop外层10736ms（前轮12878），产品内部10043ms，返回client_original_restore_pending、Stopped/无Stopped result/clientRecoveryRequired/canStartfalse，仍失败。内部恢复在root-artifacts-held处client_session_unconfirmed：该阶段累计5088ms、结束5375ms，尚未建root-retirement movement；独立Head仍RestorePrepared16，无completion，根留在原逻辑位置。不能把物理服务退出、局部耗时改善或已至Stop误判为通过。
+
+两轮原始launcher/service实际normalexit0，每轮原生4listeners全消失；native runner的PID+birth终态与ownedexecutables均无残留、无observer错误/coordinator替换。旧binding/rawfirst9events/wholearchive在第二Start及Stop后保持，两代provenance/Original/scope/Ready/PreStop/Stopped完整摘要链从74文件raw gzip离线重验；首代原Plan/readback完备，第二代未伪造close。两个primary端口在清理前用内核TCP表独立确认不监听。全局预存L在最终rwexclusive连接后identity/owner/mode/flags/ACL/xattrs/bytes/SHA和sidecar缺席均原样，L从未删除/重建/恢复覆盖；3个准确新N/K/history先持久rawreceipt再独占取回和identity匹配清理，无digest-adopt残留。
+
+证据.adg/evidence/0.2.24/client-history-projected-native-r1/保存运行脚本、冻结source/tree15hash、实际binary/完整release构建/4项非原生release命令回归、沙箱loopback正例/外网和日常HOME拒绝、完整stdout/stderr/manager/summary/rawprofile与coordinator原字节、失败核验和清理。只有这一实际新轮，无前置脚本失败或强杀/原轮重跑；官方tgzb920ba02/descriptore0464990/outerbundle5b10c1a8和整树供应保持，不改官方2.99，无日常配置/Shell/安装app或业务WebDAV/模型请求。归档逐字复核后移除本轮ownedProfile/程序包/复制testbinary及重复临时证据目录，工程target保留；无固定候选/发布。新单元与新原生证据分开，未将debug计量当release验收。
+
+新假设被证伪一部分：重复历史优化确实改善Start和Stop，但没有使第二normalStop达标。下一步在现有Stop30/5/10原边界精确测Active::load/preStop/独立phase和restore-artifact admission，区分root-artifacts-held处deadline已耗尽与具体来源/图像/Guard检查拒绝；不能只凭client_session_unconfirmed认定是超时。已观测第二indexStopped累积2358ms、indexPlan2756、rootAdmission4283、rootArtifactsHeld5088，停止前load/preStop也较首轮增长。评估仅在原持锁事务同一次观察内围绕已闭合history保留完整前后验证、减少每层重复；不得skip当前root/provenance/Plan/frame/content/path/Protection/OSproof，不cache跨动作、不加预算或重置Stop。无新定位/假设不开下一native轮。根中断/动作回执容量边界、缺Ready/一般客户端范围/进程集合与刷新/NAME/复杂代理/Windows W1W2/发行README及固定候选等完整目标保持，P24-04/05未关，目标active。

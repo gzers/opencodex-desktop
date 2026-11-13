@@ -1,0 +1,259 @@
+{
+  "accepted": false,
+  "hypothesis": {
+    "accepted": false,
+    "priorFailure": "client-root-two-cycles-r1: second normalStop12878ms/RestorePrepared16; original evidence retained unchanged",
+    "hypothesis": "A sealed history observation replaces duplicate four full archived passes with the same complete before/after passes surrounding exact vault projection. Measured fullfourframe held-index reference174\u2013181ms/current91\u201392ms with same source integrity; this should bring the second original normalStop under unchanged10s. Run one new exact two-cycle release-library diagnostic after final affected tests and exact clean source build; both cycles must satisfy30/5/10 and oldbinding/events/archive/stoppedstatus gates.",
+    "scope": "No official2.99 patches, no timeout reset/cache across observations, no daily config/business requests, no fixed app/whole-version acceptance or publication. Kernel sandbox and exact coordinator cleanup from prior reviewed runner remain."
+  },
+  "temporaryRoot": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh",
+  "resources": [
+    {
+      "source": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/Resources/runtime-bundle/runtime-bundle.manifest.json",
+      "copiedTo": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/resources/runtime-bundle.manifest.json",
+      "bytes": 2903688,
+      "sha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3"
+    },
+    {
+      "source": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app/Contents/Resources/runtime-bundle/runtime-bundle-0.2.24-darwin-arm64.tar.gz",
+      "copiedTo": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/resources/runtime-bundle-0.2.24-darwin-arm64.tar.gz",
+      "bytes": 246638059,
+      "sha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f"
+    }
+  ],
+  "officialArchiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "binarySha256": "86d4036f3314457f2eb555e91d4787c8a71144af5c72b737e57c0fddd9ee4b6e",
+  "compiledBinarySource": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/deps/opencodex_desktop_lib-b66c44cd6a6eaaaf",
+  "exactNewCoordinatorFiles": [
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite-shm",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/9116b0e4c26501d90b1a093bfc4cf9a09e10064f2cfd5c442fb403e183b9e9b8.sqlite",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/9116b0e4c26501d90b1a093bfc4cf9a09e10064f2cfd5c442fb403e183b9e9b8.sqlite-journal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/9116b0e4c26501d90b1a093bfc4cf9a09e10064f2cfd5c442fb403e183b9e9b8.sqlite-wal",
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/9116b0e4c26501d90b1a093bfc4cf9a09e10064f2cfd5c442fb403e183b9e9b8.sqlite-shm"
+  ],
+  "noBusinessRequests": true,
+  "firstSeenCoordinators": {
+    "/private/tmp/opencodex-runtime-v1-501/native-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite": {
+      "device": 16777231,
+      "inode": 445249844,
+      "mode": 384,
+      "uid": 501,
+      "regular": true,
+      "links": 1
+    },
+    "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/4d1a29b79ad425676ae744df95f14c33fbd50c508653d15adfb63a5eabce8e50.sqlite": {
+      "device": 16777231,
+      "inode": 445249847,
+      "mode": 384,
+      "uid": 501,
+      "regular": true,
+      "links": 1
+    },
+    "/private/tmp/opencodex-runtime-v1-501/history-write-locks/9116b0e4c26501d90b1a093bfc4cf9a09e10064f2cfd5c442fb403e183b9e9b8.sqlite": {
+      "device": 16777231,
+      "inode": 445250949,
+      "mode": 384,
+      "uid": 501,
+      "regular": true,
+      "links": 1
+    }
+  },
+  "trackedProcesses": {
+    "5022:1794534666:968322": {
+      "pid": 5022,
+      "ppid": 4986,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534666,
+      "startUseconds": 968322,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/tests"
+    },
+    "5336:1794534726:345701": {
+      "pid": 5336,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534726,
+      "startUseconds": 345701,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/bun/bun"
+    },
+    "5346:1794534727:886307": {
+      "pid": 5346,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534727,
+      "startUseconds": 886307,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/node/bin/node"
+    },
+    "5351:1794534728:976218": {
+      "pid": 5351,
+      "ppid": 5346,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534728,
+      "startUseconds": 976218,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/opencodex/node_modules/bun/bin/bun.exe"
+    },
+    "5373:1794534732:15202": {
+      "pid": 5373,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534732,
+      "startUseconds": 15202,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/bun/bun"
+    },
+    "5406:1794534737:170564": {
+      "pid": 5406,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534737,
+      "startUseconds": 170564,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/bun/bun"
+    },
+    "5425:1794534739:91583": {
+      "pid": 5425,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534739,
+      "startUseconds": 91583,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/bun/bun"
+    },
+    "5505:1794534745:357683": {
+      "pid": 5505,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534745,
+      "startUseconds": 357683,
+      "pgid": 5505,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/node/bin/node"
+    },
+    "5506:1794534745:396499": {
+      "pid": 5506,
+      "ppid": 5505,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534745,
+      "startUseconds": 396499,
+      "pgid": 5505,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/opencodex/node_modules/bun/bin/bun.exe"
+    },
+    "5568:1794534752:16505": {
+      "pid": 5568,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534752,
+      "startUseconds": 16505,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/bun/bun"
+    },
+    "5589:1794534756:70387": {
+      "pid": 5589,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534756,
+      "startUseconds": 70387,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/node/bin/node"
+    },
+    "5590:1794534756:115189": {
+      "pid": 5590,
+      "ppid": 5589,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534756,
+      "startUseconds": 115189,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/opencodex/node_modules/bun/bin/bun.exe"
+    },
+    "5614:1794534758:922269": {
+      "pid": 5614,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534758,
+      "startUseconds": 922269,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/bun/bun"
+    },
+    "5694:1794534773:642052": {
+      "pid": 5694,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534773,
+      "startUseconds": 642052,
+      "pgid": 5022,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/bun/bun"
+    },
+    "5710:1794534776:485679": {
+      "pid": 5710,
+      "ppid": 5022,
+      "uid": 501,
+      "status": 2,
+      "startSeconds": 1794534776,
+      "startUseconds": 485679,
+      "pgid": 5710,
+      "image": "/private/tmp/ocxd024-versioned-lifecycle-p68_4mwh/fixtures/program \u4e2d\u6587 space/runtime/versions/2.99.0/dependencies/node/bin/node"
+    }
+  },
+  "pid": 5022,
+  "exitCode": 101,
+  "elapsedSeconds": 113.184,
+  "globalLAfter": {
+    "device": 16777231,
+    "inode": 369360155,
+    "mode": 384,
+    "uid": 501,
+    "gid": 0,
+    "flags": 0,
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "aclBase64": null,
+    "xattrs": {
+      "Y29tLmFwcGxlLnByb3ZlbmFuY2U=": "AQIAnxo5NHoJQ04="
+    }
+  },
+  "globalLUnchanged": true,
+  "globalLExclusiveReleased": true,
+  "globalLAfterFinalConnection": {
+    "device": 16777231,
+    "inode": 369360155,
+    "mode": 384,
+    "uid": 501,
+    "gid": 0,
+    "flags": 0,
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "aclBase64": null,
+    "xattrs": {
+      "Y29tLmFwcGxlLnByb3ZlbmFuY2U=": "AQIAnxo5NHoJQ04="
+    }
+  },
+  "globalLSidecarsAbsent": true,
+  "exactOneTestExecuted": false,
+  "twoCycleCompletionMarker": false,
+  "trackedGenerationsAbsent": true,
+  "ownedExecutablesRemaining": [],
+  "diagnosticPassed": false
+}

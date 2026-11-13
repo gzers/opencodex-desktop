@@ -1,0 +1,69 @@
+{
+  "accepted": false,
+  "baseCommit": "236ed43dd5ae44b53274f63c9572bdaccc75c8d5",
+  "gitTree": "d59949ddbee26f055472e0cb336ddeecb23e739d",
+  "cleanSource": true,
+  "files": [
+    {
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "sha256": "fdff22ccfe0f2766f0aa124e7a6fe8c534185838bb9eb78bfa5a1030275e0d30"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "sha256": "101a772c93c4d6d00fbb90e7ad616fa7110d94925d998b4234c091d5d780d0af"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_root_cycles_fixture.rs",
+      "sha256": "c273313666a8c60b1c2ea499a36bb3fa49d4953770ce59cad4ee96fafdb28beb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "sha256": "34a342a414e3546aa512b42606083ca528245dad7b947cdb9d97d25a88736cb0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "sha256": "2e16109a5d168ea7dbfff36500592eed4be675b335e94c2b749d6bf7965d1948"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+      "sha256": "f8ff8baabc8e48df5e2e66d7c111f6721226b05b6d758b707df2d95ca1726ac7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "sha256": "486b01b0b2656fd1708945889024a097e3ffc6d706f54fb6a531881fde23a9e5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "bd71db314cb5a9ed051e47df3dfccdd0582870699770cb65a4edd4054d067a9e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs",
+      "sha256": "3b16c54684cb9181c10da80127fe9d65a376ffbf35d29066955240b0bb121141"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_lineage.rs",
+      "sha256": "5c27d8c18c84db5008feac5d2b037934dabad18956ad033747a9540f47772c08"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement.rs",
+      "sha256": "580d7632cd362c3805f972161582f9483e865c8e09ef49c7e5469e75b350fb37"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+      "sha256": "c154e6d3ada53868aa847ac9e8bbab9afe792c395596b2848cb4d8490d0c824e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_observation_metrics.rs",
+      "sha256": "fa51ddc8ab2bbf8688073c86db8858b35cb7cbede0efe3291bcf55c6dc56b111"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+      "sha256": "d591ebb6b53909f2de4913a839945a4e8e614e80a0ff8648d856318edf3d4c1f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_selection.rs",
+      "sha256": "fbd9ba58cd0c7d95e015bc87a4831bfe63a8083b6ea2071d5e5c3c6427bfedc2"
+    }
+  ],
+  "purpose": "Frozen exact clean product and directedtest source before one release-LTO build and one new native hypothesis round."
+}
