@@ -435,11 +435,9 @@ fn conflicts(
 }
 fn check_current(c: &Context, t: &Transaction, r: &impl Registry) -> AppResult<()> {
     validate_context(c)?;
-    for (root, path, change) in [(&c.desktop_root, c.record(), &t.record)] {
-        let now = private_read(root, &path)?;
-        if now != change.before && now != change.after {
-            return Err(fail("终端文件已被外部修改，原操作保留"));
-        }
+    let now = private_read(&c.desktop_root, &c.record())?;
+    if now != t.record.before && now != t.record.after {
+        return Err(fail("终端文件已被外部修改，原操作保留"));
     }
     let now = r.read()?;
     if now != t.path_before && now != t.path_after {
