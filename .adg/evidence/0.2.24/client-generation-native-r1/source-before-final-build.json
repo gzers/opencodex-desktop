@@ -1,0 +1,148 @@
+{
+  "baseCommit": "287ee0c9d2a2048b83f8db54d945caedf02e29b5",
+  "cleanSource": true,
+  "sourceTree": "7b342315ee91510e8310d9cfbdb0021066839243",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "bytes": 4723,
+      "sha256": "fdff22ccfe0f2766f0aa124e7a6fe8c534185838bb9eb78bfa5a1030275e0d30"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "bytes": 21909,
+      "sha256": "4ab0da2882c04a8d1f6ac19cfc06dc8835a4e2fd1bf82a09b550976512e050b5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_root_cycles_fixture.rs",
+      "bytes": 22347,
+      "sha256": "c273313666a8c60b1c2ea499a36bb3fa49d4953770ce59cad4ee96fafdb28beb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/lifecycle_versioned_tests.rs",
+      "bytes": 45740,
+      "sha256": "c941b7b8cbfb3af92bd93d3c8866714cf1bbb58b893e11bc238b92bb952aa786"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/mod.rs",
+      "bytes": 57312,
+      "sha256": "a82c2ede443a7a177ffbb5558afcf769e29bb2a7c8cfc0b936df4ade02acf157"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_macos_snapshot_tests.rs",
+      "bytes": 5147,
+      "sha256": "16059080fccce37de928cf72a2354176b79b052e2e5a38f6037d6d8152c67f01"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "bytes": 90104,
+      "sha256": "64a8b40be95bc0e9aceba90e3d20f8311d0e2c84b6482f3fe92861e9e09c361b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_observation_metrics.rs",
+      "bytes": 7035,
+      "sha256": "63365a10153a678dbbf33958365ed9e2fe146d191cf1cb86a041fa590acc91a6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_originals.rs",
+      "bytes": 66431,
+      "sha256": "91b01911a3109b0c1b4b037594f51ae9023a949a4f0481fe5d1a320ab642504a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_private_children_tests.rs",
+      "bytes": 5481,
+      "sha256": "72dddae56b1df9e687be3fc0bd2816a73608b2ff5598f64dd7c41cea0b517342"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore.rs",
+      "bytes": 76611,
+      "sha256": "8258429194d926bf1fa0eaae53ba036ec33f5e3025c3cfb12c81f2b54bb78d3d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore_registration_tests.rs",
+      "bytes": 22450,
+      "sha256": "47016993044681414a8ae4dd2f15dbde035a953b57edf6e7a2af5c419ed7ba4b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_retirement_transaction_tests.rs",
+      "bytes": 15548,
+      "sha256": "f5a6943efd3e3a196e90ceaaf5ada514c69c96afbfc3f32fd00018f23f22ae87"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs",
+      "bytes": 13577,
+      "sha256": "25e5a5c6c09014c08bf924c2ff3d7c1957f38402f9c3d8605c64586d0e91d015"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_lineage.rs",
+      "bytes": 8306,
+      "sha256": "5c27d8c18c84db5008feac5d2b037934dabad18956ad033747a9540f47772c08"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_metadata_tests.rs",
+      "bytes": 8092,
+      "sha256": "c4c19e301a5f6a5f212f0b4d95dc8e23dde613e779e16beb37ce32241372fc49"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_retirement.rs",
+      "bytes": 52476,
+      "sha256": "f7685a5bd88e047845ed33b882793e03dd0ad971668defa4882954159363f947"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "bytes": 87516,
+      "sha256": "56dab2742e559e54aed3502613f4adcdd0cc675f16456a4dff3b337458855e77"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "bytes": 87842,
+      "sha256": "84755eab1153a379855acd2a75940f14e4bdc52536a22afdc159b71365bbdb1b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_stop_eligibility_tests.rs",
+      "bytes": 11657,
+      "sha256": "b6e5117f13a73e20e88151e73562d4830e63b7fb24cad8a88037a2686c92f09b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+      "bytes": 19430,
+      "sha256": "c154e6d3ada53868aa847ac9e8bbab9afe792c395596b2848cb4d8490d0c824e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_xattr_read_tests.rs",
+      "bytes": 9749,
+      "sha256": "5003c64e7815a7db7c0bb136e90e15b61e899643738d2b8501b566179e41a4dd"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_client_coordination.rs",
+      "bytes": 18352,
+      "sha256": "b2b6051f26049e57a5fe374d9c5eb5af9c56c326f5782e1514732e332b52e654"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/native_config_write_guard.rs",
+      "bytes": 25934,
+      "sha256": "24f9ad6eecb24fc07d71d8a7907add0f177c3561f9a99aad5ea5d3dc1f0105a4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+      "bytes": 31849,
+      "sha256": "321f938bd65b9dca35b5de545832c5cbaedad58a60282a86355a249c2b145cd3"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_parallel_tests.rs",
+      "bytes": 13274,
+      "sha256": "2e0ecbe20ba01dbcdb94c1fb9dc388a06aeb6b172cc4c60f74144ca4984dffda"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_selection.rs",
+      "bytes": 17407,
+      "sha256": "fbd9ba58cd0c7d95e015bc87a4831bfe63a8083b6ea2071d5e5c3c6427bfedc2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/types/process_action.rs",
+      "bytes": 13954,
+      "sha256": "3898b4d47a5742879f2b243722d50db9735c720320879ac932d0974cc0278133"
+    }
+  ],
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14)"
+}
