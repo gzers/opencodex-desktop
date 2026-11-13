@@ -1,0 +1,15 @@
+{
+  "command": [
+    "rustc",
+    "--edition=2021",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--emit=metadata",
+    "apps/desktop/tauri/src/bin/ocx.rs",
+    "-o",
+    "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.24/windows-w1c-receive-r1/shim-msvc.rmeta"
+  ],
+  "exitCode": 0,
+  "seconds": 0.078,
+  "windowsNativeExecutedHere": false
+}
