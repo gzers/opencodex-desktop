@@ -454,8 +454,16 @@ fn read_image_inner(
     {
         return Err(invalid("实际程序包身份与所选版本不一致"));
     }
-    for path in [&paths.node, &paths.bun, &script] {
+    // Only Node/Bun are passed to the OS as executable images. The package bin
+    // is an argument to the already admitted Node interpreter, so Windows must
+    // not apply the exe/com/cmd/bat extension gate to an unchanged .mjs file.
+    // Keep the script's absolute in-version path, no-link regular-file handle,
+    // size bound and independent manifest digest at this final role boundary.
+    for path in [&paths.node, &paths.bun] {
         super::paths::validate_executable(path).map_err(|_| invalid("所选运行程序不可执行"))?;
+    }
+    if file_digest(program_root, &script)? != image.bin_sha256 {
+        return Err(invalid("所选运行脚本与版本清单不一致"));
     }
     if metadata(program_root, &paths.version_root.join(IMAGE_MANIFEST))? != image_bytes {
         return Err(invalid("校验期间候选版本清单已变化"));
