@@ -14,7 +14,7 @@ pub fn runtime_entry_relative(platform: Platform) -> &'static str {
 }
 pub fn cli_entry_relative(platform: Platform) -> &'static str {
     if platform == Platform::Windows {
-        "runtime/bin/ocx.cmd"
+        "ocx.exe"
     } else {
         "runtime/bin/ocx"
     }
@@ -212,7 +212,7 @@ mod tests {
         .unwrap();
         assert_eq!(p.program_root, custom);
         assert_eq!(p.stable_entry, custom.join("runtime/bin/ocx-runtime.cmd"));
-        assert_eq!(p.cli_entry, custom.join("runtime/bin/ocx.cmd"));
+        assert_eq!(p.cli_entry, custom.join("ocx.exe"));
         assert_eq!(
             p.version("2.99.0").unwrap().node,
             custom.join("runtime/versions/2.99.0/dependencies/node/node.exe")

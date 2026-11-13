@@ -3,29 +3,160 @@
 use super::terminal_cli_path as policy;
 use super::*;
 use policy::{PathEdit, PathValue};
-const SCHEMA: u32 = 2;
+const SCHEMA: u32 = 3;
+const ENTRY_KIND: &str = "installer-native-exe";
+const ENTRY_SOURCE: &str = "ocx-native-entry.json";
 // W0 PrivateRecord admits at most 1MiB. Bound the entire Windows transaction
 // before publication so a successful write always remains readable/recoverable.
 const PRIVATE_MAX: usize = 1024 * 1024;
-struct Admitted {
-    program: program_selection::SelectedProgram,
-    console_sha256: String,
+// Installer-produced provenance is a current-install source, not a persisted
+// runtime image seal. Every action holds its manifest and EXE handles and binds
+// the preview to their current content/file identities. Installed registration
+// deliberately stores no permanent binary hash, allowing normal installer upgrades.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct EntryFacts {
+    manifest_sha256: String,
+    files: std::collections::BTreeMap<String, (u64, u64, String)>,
 }
-impl Admitted {
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct InstallSource {
+    schema_version: u32,
+    package: String,
+    version: String,
+    entry_kind: String,
+    files: std::collections::BTreeMap<String, String>,
+}
+pub(super) struct EntryPin {
+    files: Vec<fs::File>,
+    facts: EntryFacts,
+    #[cfg(windows)]
+    _parent: crate::infrastructure::windows_official_runtime024::PinnedDirectory,
+}
+impl EntryPin {
+    fn open(c: &Context) -> AppResult<Self> {
+        #[cfg(windows)]
+        let parent = crate::infrastructure::windows_official_runtime024::PinnedDirectory::open(
+            &c.program_root,
+        )
+        .map_err(io)?;
+        fn open(c: &Context, name: &str) -> AppResult<fs::File> {
+            let path = c.program_root.join(name);
+            safety::check_path(&c.program_root, &path, false)?;
+            #[cfg(windows)]
+            let file = {
+                use std::os::windows::fs::OpenOptionsExt;
+                fs::OpenOptions::new()
+                    .read(true)
+                    .share_mode(1)
+                    .custom_flags(0x00200000)
+                    .open(&path)
+                    .map_err(io)?
+            };
+            #[cfg(not(windows))]
+            let file = safety::open_file(&path, false)?;
+            safety::require_single_link(&file)?;
+            if file.metadata().map_err(io)?.len() > 128 * 1024 * 1024 {
+                return Err(fail("安装入口超出读取上限"));
+            }
+            Ok(file)
+        }
+        fn bytes(file: &fs::File) -> AppResult<Vec<u8>> {
+            use std::io::{Seek, SeekFrom};
+            let mut f = file;
+            f.seek(SeekFrom::Start(0)).map_err(io)?;
+            let mut b = Vec::new();
+            f.take(128 * 1024 * 1024 + 1)
+                .read_to_end(&mut b)
+                .map_err(io)?;
+            if b.len() > 128 * 1024 * 1024 {
+                return Err(fail("安装入口读取超过上限"));
+            }
+            Ok(b)
+        }
+        let manifest = open(c, ENTRY_SOURCE)?;
+        let raw = bytes(&manifest)?;
+        if raw.len() > 64 * 1024 {
+            return Err(fail("安装入口来源记录过大"));
+        }
+        let source: InstallSource = decode(&raw)?;
+        if source.schema_version != 1
+            || source.package != "opencodex-desktop"
+            || source.version != env!("CARGO_PKG_VERSION")
+            || source.entry_kind != ENTRY_KIND
+            || source.files.len() != 2
+        {
+            return Err(fail("原生入口安装来源未确认"));
+        }
+        let mut files = vec![manifest];
+        let mut facts = std::collections::BTreeMap::new();
+        for name in ["ocx.exe", "ocxd.exe"] {
+            let f = open(c, name)?;
+            let raw = bytes(&f)?;
+            #[cfg(windows)]
+            if raw.len() < 64 || &raw[..2] != b"MZ" {
+                return Err(fail("安装入口不是原生程序"));
+            }
+            let sha = hash::sha256_hex(&raw);
+            if source.files.get(name) != Some(&sha) {
+                return Err(fail("原生入口与当前安装来源不符"));
+            }
+            #[cfg(windows)]
+            let (volume, index) = {
+                use std::os::windows::io::AsRawHandle;
+                use windows_sys::Win32::Storage::FileSystem::{
+                    GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION,
+                };
+                let mut info: BY_HANDLE_FILE_INFORMATION = unsafe { std::mem::zeroed() };
+                if unsafe { GetFileInformationByHandle(f.as_raw_handle(), &mut info) } == 0
+                    || info.nNumberOfLinks != 1
+                    || info.dwFileAttributes & 0x410 != 0
+                {
+                    return Err(fail("原生入口文件身份不明确"));
+                }
+                (
+                    info.dwVolumeSerialNumber as u64,
+                    ((info.nFileIndexHigh as u64) << 32) | info.nFileIndexLow as u64,
+                )
+            };
+            #[cfg(not(windows))]
+            let (volume, index) = (0, 0);
+            facts.insert(name.into(), (volume, index, sha));
+            files.push(f);
+        }
+        Ok(Self {
+            files,
+            facts: EntryFacts {
+                manifest_sha256: hash::sha256_hex(&raw),
+                files: facts,
+            },
+            #[cfg(windows)]
+            _parent: parent,
+        })
+    }
     fn check(&self, c: &Context) -> AppResult<()> {
-        program_selection::verify_current(&c.program_root, &self.program)?;
-        safety::check_path(&c.program_root, &console(c), false)?;
-        let file = safety::open_file(&console(c), false)?;
-        safety::require_single_link(&file)?;
-        if hash::sha256_file(&console(c)).map_err(io)? != self.console_sha256 {
-            return Err(fail("控制台转交程序在操作期间变化"));
+        let _retained = &self.files;
+        if Self::open(c)?.facts != self.facts {
+            return Err(fail("原生入口在本次操作期间变化"));
         }
         Ok(())
     }
 }
-const SCRIPT:&[u8]=b"@echo off\r\nsetlocal DisableDelayedExpansion\r\n\"%~dp0..\\..\\ocxd.exe\" --ocxd-runtime-cli %*\r\nexit /b %errorlevel%\r\n";
+struct Admitted {
+    program: Option<program_selection::SelectedProgram>,
+    entry: EntryPin,
+}
+impl Admitted {
+    fn check(&self, c: &Context) -> AppResult<()> {
+        if let Some(p) = &self.program {
+            program_selection::verify_current(&c.program_root, p)?;
+        }
+        self.entry.check(c)
+    }
+}
 fn command(c: &Context) -> PathBuf {
-    c.program_root.join("runtime/bin/ocx.cmd")
+    c.program_root.join("ocx.exe")
 }
 fn console(c: &Context) -> PathBuf {
     c.program_root.join("ocxd.exe")
@@ -41,15 +172,15 @@ fn directory(c: &Context) -> AppResult<String> {
 /// registry key, lock or default binding. Existing/unknown objects refuse.
 pub(super) fn pristine_installer(profile: &Path, program_root: &Path) -> AppResult<bool> {
     let anchor = profile.join(".codex-desktop/desktop");
-    let command = program_root.join("runtime/bin/ocx.cmd");
+    let legacy = program_root.join("runtime/bin/ocx.cmd");
     safety::check_path(profile, &anchor, true)?;
-    safety::check_path(program_root, &command, true)?;
+    safety::check_path(program_root, &legacy, true)?;
     let absent = |path: &Path| match fs::symlink_metadata(path) {
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(true),
         Err(e) => Err(io(e)),
         Ok(_) => Ok(false),
     };
-    Ok(absent(&anchor)? && absent(&command)?)
+    Ok(absent(&anchor)? && absent(&legacy)?)
 }
 trait Registry {
     fn read(&self) -> AppResult<Option<PathValue>>;
@@ -92,6 +223,8 @@ struct Installed {
     schema_version: u32,
     context: Context,
     path_edit: PathEdit,
+    command_path: PathBuf,
+    entry_kind: String,
 }
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
@@ -105,7 +238,7 @@ struct Transaction {
     schema_version: u32,
     context: Context,
     action: Action,
-    command: Change,
+    entry: EntryFacts,
     path_before: Option<PathValue>,
     path_after: Option<PathValue>,
     record: Change,
@@ -132,7 +265,11 @@ fn private_read(root: &Path, path: &Path) -> AppResult<Option<Vec<u8>>> {
     }
 }
 fn validate_record(c: &Context, v: &Installed) -> AppResult<()> {
-    if v.schema_version != SCHEMA || v.context != *c {
+    if v.schema_version != SCHEMA
+        || v.context != *c
+        || v.command_path != command(c)
+        || v.entry_kind != ENTRY_KIND
+    {
         return Err(fail("Windows 终端登记不属于当前应用与配置目录"));
     }
     policy::validate(&v.path_edit, &directory(c)?)
@@ -167,11 +304,6 @@ fn validate_transaction(c: &Context, t: &Transaction) -> AppResult<()> {
         .transpose()?;
     for r in before.iter().chain(after.iter()) {
         validate_record(c, r)?;
-    }
-    if t.command.before != before.as_ref().map(|_| SCRIPT.to_vec())
-        || t.command.after != (t.action == Action::Enable).then_some(SCRIPT.to_vec())
-    {
-        return Err(fail("终端事务命令文本不是本应用入口"));
     }
     match t.action {
         Action::Enable => {
@@ -303,10 +435,7 @@ fn conflicts(
 }
 fn check_current(c: &Context, t: &Transaction, r: &impl Registry) -> AppResult<()> {
     validate_context(c)?;
-    for (root, path, change) in [
-        (&c.program_root, command(c), &t.command),
-        (&c.desktop_root, c.record(), &t.record),
-    ] {
+    for (root, path, change) in [(&c.desktop_root, c.record(), &t.record)] {
         let now = private_read(root, &path)?;
         if now != change.before && now != change.after {
             return Err(fail("终端文件已被外部修改，原操作保留"));
@@ -325,6 +454,7 @@ fn plan(
     r: &impl Registry,
 ) -> AppResult<(Transaction, Preview, Option<Admitted>)> {
     validate_context(c)?;
+    let entry = EntryPin::open(c)?;
     let current = r.read()?;
     let pending = pending(c)?;
     let is_pending = pending.is_some();
@@ -335,12 +465,6 @@ fn plan(
         t
     } else {
         let old = installed(c)?;
-        let command_before = private_read(&c.program_root, &command(c))?;
-        if old.is_some() && command_before.as_deref() != Some(SCRIPT)
-            || old.is_none() && command_before.is_some()
-        {
-            return Err(fail("终端命令已修改或存在外部文件，未接管"));
-        }
         let (path_after, record_after) = match action {
             Action::Enable => {
                 let edit = match &old {
@@ -358,6 +482,8 @@ fn plan(
                         schema_version: SCHEMA,
                         context: c.clone(),
                         path_edit: edit,
+                        command_path: command(c),
+                        entry_kind: ENTRY_KIND.into(),
                     })?),
                 )
             }
@@ -373,10 +499,7 @@ fn plan(
             schema_version: SCHEMA,
             context: c.clone(),
             action,
-            command: Change {
-                before: command_before,
-                after: (action == Action::Enable).then_some(SCRIPT.to_vec()),
-            },
+            entry: entry.facts.clone(),
             path_before: current.clone(),
             path_after,
             record: Change {
@@ -386,34 +509,35 @@ fn plan(
         }
     };
     validate_transaction(c, &t)?;
+    if t.entry != entry.facts {
+        return Err(fail("原生入口与原事务来源不同，未继续"));
+    }
     check_current(c, &t, r)?;
-    let (mut version, mut selection, mut helper) = (None, None, None);
-    let mut admitted = None;
+    let (mut version, mut selection) = (None, None);
+    let mut admitted = Admitted {
+        program: None,
+        entry,
+    };
     let found = if action == Action::Enable {
-        safety::check_path(&c.program_root, &console(c), false)?;
-        let file = safety::open_file(&console(c), false)?;
-        safety::require_single_link(&file)?;
-        helper = Some(hash::sha256_file(&console(c)).map_err(io)?);
         let (target, platform) = program_layout::host_target()?;
         let selected = program_selection::read_complete(&c.program_root, platform, target)?
             .ok_or_else(|| fail("运行程序尚未就绪"))?;
         version = Some(selected.selection.version.clone());
         selection = Some(selected.selection.clone());
-        admitted = Some(Admitted {
-            program: selected,
-            console_sha256: helper.clone().unwrap(),
-        });
+        admitted.program = Some(selected);
         conflicts(c, &current, search)?
     } else {
         vec![]
     };
-    let observed = (
-        private_read(&c.program_root, &command(c))?,
-        private_read(&c.desktop_root, &c.record())?,
-        r.read()?,
-    );
+    let observed = (private_read(&c.desktop_root, &c.record())?, r.read()?);
     check_current(c, &t, r)?;
-    let digest = hash::sha256_hex(&encode(&(&t, &observed, &found, &selection, &helper))?);
+    let digest = hash::sha256_hex(&encode(&(
+        &t,
+        &observed,
+        &found,
+        &selection,
+        &admitted.entry.facts,
+    ))?);
     let preview = Preview {
         action,
         enabled: t.record.before.is_some(),
@@ -426,7 +550,7 @@ fn plan(
         conflicts: found,
         confirmation_digest: digest,
     };
-    Ok((t, preview, admitted))
+    Ok((t, preview, Some(admitted)))
 }
 fn mutate(c: &Context, root: &Path, path: &Path, change: &Change) -> AppResult<()> {
     let now = private_read(root, path)?;
@@ -468,7 +592,7 @@ fn apply_with(
     }
     let bytes = encode(&t)?;
     if bytes.len() > PRIVATE_MAX
-        || [&t.command.after, &t.record.after]
+        || [&t.record.after]
             .into_iter()
             .flatten()
             .any(|value| value.len() > PRIVATE_MAX)
@@ -505,7 +629,7 @@ fn apply_with(
         point("path")?;
         check()?;
     }
-    mutate(c, &c.program_root, &command(c), &t.command)?;
+    // Installer-owned entry is observed only. Enable/disable never mutates it.
     point("command")?;
     check()?;
     if action == Action::Enable {
@@ -519,14 +643,13 @@ fn apply_with(
     r.notify()?;
     point("notified")?;
     if let Some(source) = &admitted {
-        super::super::program_image::verify(&source.program)?;
+        if let Some(p) = &source.program {
+            super::super::program_image::verify(p)?;
+        }
     }
     point("image-readback")?;
     check()?;
-    if private_read(&c.program_root, &command(c))? != t.command.after
-        || private_read(&c.desktop_root, &c.record())? != t.record.after
-        || r.read()? != t.path_after
-    {
+    if private_read(&c.desktop_root, &c.record())? != t.record.after || r.read()? != t.path_after {
         return Err(fail("终端最终后像变化，原事务保留"));
     }
     fs::remove_file(c.pending()).map_err(io)?;
@@ -559,20 +682,20 @@ fn removal_with(c: &Context, search: &[PathBuf], r: &impl Registry) -> AppResult
     if installed(c)?.is_some() {
         return plan(c, Action::Disable, search, r).map(|(_, p, _)| Some(p));
     }
-    if private_read(&c.program_root, &command(c))?.is_some() {
-        return Err(fail("未登记的终端命令不能在卸载中删除"));
+    // The installer owns the always-present EXE; missing registration means no PATH ownership.
+    if c.program_root.join("runtime/bin/ocx.cmd").exists() {
+        return Err(fail("旧开发终端入口仍存在，请用原版本停用"));
     }
     Ok(None)
 }
-pub(super) fn require_forwarding(c: &Context) -> AppResult<()> {
+pub(super) fn require_forwarding(c: &Context) -> AppResult<EntryPin> {
     validate_context(c)?;
-    if pending(c)?.is_some()
-        || installed(c)?.is_none()
-        || private_read(&c.program_root, &command(c))?.as_deref() != Some(SCRIPT)
-    {
+    let entry = EntryPin::open(c)?;
+    if pending(c)?.is_some() || installed(c)?.is_none() {
         return Err(fail("终端入口尚未完成登记或已变化"));
     }
-    Ok(())
+    entry.check(c)?;
+    Ok(entry)
 }
 #[cfg(windows)]
 pub(super) fn preview(c: &Context, a: Action, s: &[PathBuf]) -> AppResult<Preview> {
