@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 54.26s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 3 tests
+test infrastructure::macos_client_originals::root_retirement::history_tests::projected_history_observation_checks_projection_errors_without_publishing_completion ... ok
+test infrastructure::macos_client_originals::root_retirement::history_tests::projected_history_observation_independently_reopens_all_evidence_after_projection ... ok
+test infrastructure::macos_client_originals::root_retirement::history_tests::projected_history_observations_do_not_accumulate_native_handles_or_change_originals ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2581 filtered out; finished in 7.52s
+

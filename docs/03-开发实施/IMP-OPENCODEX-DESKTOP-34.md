@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 106；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 107；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1088,3 +1088,18 @@ main 350bc0309把单次历史open开始的重复Plan认证从六次收敛为两�
 本轮无失败测试或新原包轮，未触官方runtime/service/全局协调DB、日常配置/Shell/安装app或业务WebDAV/模型请求；所有test/clippy/fmt/agent句柄终止，unitTMP空、归档字节核验后清本轮临时根/重复目录，工程target保留，无候选/发布。Windows远端仍b2e89665d/0eef59a01无新回交，不要求Mac-only批重跑Windows。
 
 下一项继续核上层双history-open与各自内部双archive-prefix的重复覆盖，尝试封闭的本调用观察对象将原before/after归档认证围住同一vault投影，结束时独立重读全部来源/内容/保护和路径；不学习磁盘来源、不cache跨边界，不直接删除结束复核。当前局部改善尚未证明消除原包第二Stop12878ms/RestorePrepared16，旧失败有效、无充分新假设不重跑。根中断/动作回执容量边界、缺Ready/其它客户端图路径/进程集合与刷新/NAME/复杂代理/Windows W1W2/发行README/固定候选等完整范围保持，P24-04/05未关，目标active。
+
+
+## 2026-11-13 目录投影前后历史完整双遍观察
+
+main 236ed43dd将vault历史审查原“两次open、各自两套完整读取”的四套遍历合并为同一投影前后两套。全部generation begin/各代scope→exact vault/current-attempt投影→全部finish/最终scope→currentdir/names/private/manager→外层独立index/Head/events/binding/slots，顺序不变，任一失败整体拒绝。私有不可Clone/serde的HistoricalObservation只存独立ClosedRefs/内存namespace、路径、authPlan/tree摘要及小intent/receipt，不保留Originals/fd/Plan/tree；begin callback仅借用三个scope目录且返回unit，finish消费对象独立重开/完整load/source比对、完整archive/每帧来源/content/root/Protection/Original/tree/Grok/scope/live/intent/readback，最后才返回最终Originals。公开单历史入口仍原完整两遍，current/Stop/移动路径不用新shortcut。详[投影观察合同](0.2.24-contracts/client-history-projection-r1.md)。
+
+初设计的inspect(Originals)会通过其它owned-return方法逸出未完成原件，且逐代保留完整祖先fd会累计；实际实现未采纳该设计。capsule在begin内释放全部句柄/大对象，只保留先前已独立认证的相等摘要，finish不从摘要或磁盘学习来源，SHA只是完整freshauth后的相等比较。32capsules的FD检查由真实独立--exact/单线程子进程完成，初始/最终70，原件零写；避免仓库默认并发干扰测试证明，不新增较低代数限制。
+
+107个唯一受影响函数通过：3新投影/资源例、fullschema2四帧比较1、其它rootretirement39、index56、多代8，5项ignore不计；strict all-target Clippy/fmt/diff通过。投影后Plan/receipt/frame/archive权限/namespace污染拒绝且不修复，scopecallback错误不返对象。多代/真实进程exit/来源/正常恢复间隙原反例保持。初控制日志的非隔离FD计数仅为原时点，最终隔离子进程日志独立保留。
+
+同binary/同独立索引的四帧夹具reference→current→current→reference约180.66/173.85ms与90.56/91.64ms，wholepass4→2、frames16→8、fullrootprovenance20→10、plan4→2，保留一套完整before及一套独立after，小样本均值48.61%变化不直接认定原包Stop通过。每次索引观察创建新capsule，跨调用/动作不cache；不宣称所有generation原子快照或所有外部瞬态ABA可检测，前后持续变化拒绝边界保持。
+
+证据.adg/evidence/0.2.24/client-history-projection-r1/固定4源/实际debug-librarybinary，在父350bc0309加这些差异下构建并映射本提交，不冒嵌入commit已重建。所有unit/clippy/fmt/agent句柄终止，unitTMP空、逐字归档后清本轮unit临时根/重复目录，工程target保留。该suite没有官方服务/全局协调DB、日常配置/Shell/已安装app或业务WebDAV/模型请求，无固定候选/发布。
+
+已按新假设准备独立原包轮：冻结本提交clean tree与15个关键源，原Cargo release opt-level=s/LTO no-run构建完成后绑定实际binary，用全新Profile原30/5/10、相同沙箱/精确coordinator清理，验证两个完整正常循环。当前只在构建，尚无新native结论，前轮第二Stop12878ms/RestorePrepared16仍为有效失败；新结果另按原始证据回写，不改旧失败。根中断/动作回执容量边界、缺Ready/一般客户端图路径/进程集合和刷新/NAME/复杂代理/Windows W1W2/发行README与固定候选等完整目标保持，P24-04/05未关，目标active，发布另依有效授权。
