@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 112；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 113；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1166,3 +1166,16 @@ main 0f0e85fb3在root_binding.verify_capture使用原open_profile_origin_prefix�
 HOME/client/Readyhash/generation语义反例使用正确新文件SHA与400，scope变更同步live.scopeSHA/livefileSHA；拒绝后只改回目标字段并更新必要依赖必须成功，避免其它过期引用假绿。初HOME/client反例的旧live引用由review指出并修，早期通过日志不冒加强后证明；productfiles两个testbuild间逐字同源，仅测试代码加强，最终semantic例和clippy/fmt单独重跑。证据.adg/evidence/0.2.24/client-index-prefix-r1/固定3源、两actualbinary/source身份、counter/对照/显式testdelta与清理；归档核验后清本轮TempDir与重复证据根，工程target留存，无官方服务/全局协调DB/日常配置/Shell/安装app/业务WebDAV模型/固定候选或发布。
 
 原ready-native-r1第二Stop10729ms/原deadline耗尽仍失败。本批合并同次帧证据未跑新原包，不能改判；下一步累计已测去重后冻结release源，按明确新假设验证两个完整原包循环/原30/5/10，若仍超时继续按trace修而非重置预算或省proof。根中断/动作回执容量边界、缺Ready/一般客户端图路径/完整进程集合与刷新/NAME/复杂代理/WindowsW1W2/发行README及固定候选等完整目标不缩减，P24-04/05未关，目标active。
+
+
+## 2026-11-13 子目录/同次prefix累计优化原包轮：原件恢复成功，根计划登记后预算失败
+
+main0f0e85fb3 clean tree/18关键源冻结，原releaseopt-level=s/LTO宿主binary SHA7174d3761349872aeec12585d7448067c69694627080ebc7f31be125e0fafbb3，原官方2.99/descriptor/outerbundle摘要不变。以“childpin减少重复路径打开＋currentRootScope复用同次prefix可释放预算”唯一新实际双轮，首轮Start8305ms/签名Status236ms/normalStop8285ms通过、stoppedStatus1351ms及preview/可再启动通过；第二Start13465ms/签名Status1220ms通过，normalStop12143ms失败（内部11443ms），Stopped/无Stoppedresult/clientRecoveryRequired/canStartfalse，独立RootRetirementPrepared17，无completion。所有旧10729/10736/12878ms失败目录保持，不用更晚的失败位置替代Stop成功。详[累计优化原包轮](0.2.24-contracts/client-prefix-native-r1.md)。
+
+trace确认证据进展：secondloadReady515775us/preStop1861995us均成功；artifactadmission入口余1778855us，apply起始余1600561us耗1081034us且结束余519527us，postadmission/finaltime成功后仍余453634us。随后rootplan准备/独立登记/registration耗尽剩余预算，在root-retire入口admission.entry-time即remaining0/timeout；本轮无authority/writer-refusaltrace。恢复累计rootArtifactsHeld4606ms、rootPlan5931ms、rootRetire7818ms，下一需求是完整根移动/关闭预算仍不足，不是来源损坏或渠道写入失败。RootRetirementPrepared17只表示计划登记，root仍逻辑位置，没有Retire-readback/RootAbsent/completion。
+
+独立raw77Profilefile核验17事件/Head、两代provenance/schema5Original/scope/ReadyPreStopStopped链、首代Plan/readback、第二rootretirePlanSHA/source16/schema2；firstbinding/raw9events/完整旧archive在secondStart/Stop保持。两轮原launcher/service真实normalexit0/各4listeners消失，但这些不替代normalStop。全trackedPIDbirth与ownedexecutable终态无残留，无observererrors/coordinator替换；globalexistingL最终rwexclusive关闭后身份/owner/mode/flags/ACL/xattrs/bytes/SHA及sidecars原样且释放，永不删重建覆盖；exact3新N/K/history先持久rawreceipt/firstseenidentity/exclusive检查再清理，digest-adopt残留空，两个primaryports内核TCP独立无监听。原件分步restore已完成并有新计划，但不自动声称所有后续恢复可用。
+
+证据.adg/evidence/0.2.24/client-prefix-native-r1/保留clean source/tree18hash/实际binary/完整releasebuild/4项release非native回归、sandboxloopbackbind正例/外网与日常HOME拒绝、stdout/stderr/manager/summary、两个framechains及新计划rawbytes、进程/coordinator/TCP清理证据，原始失败result不变。只一新native轮，无强杀/重跑/加预算/改官方包；所有临时Profile/program/archivecopy/testbinary逐字归档核验后清理，工程target保留。无日常配置/Shell/安装app/真实业务WebDAV模型或固定候选/发布。只读agent同时盘点后继root中断与成功StopcanStart容量不一致，结论记录remaining-root-scope-audit.json，不是完成声明或新实现。
+
+本假设部分有效：Start/Status和artifact阶段更快，但全Stop仍失败且累计耗时更长，不能以百分比或root进度夸大性能成果。下一步计量record_root_retirement/registration中已验证Original/Plan与beforeSQL/candidate/COMMITreadback/registration之间重复读取，设计封闭事务返回准确registration及已认证facts，保留所有实际边界的完整history/currentroot/provenance/frame/Plan/path/Protection/nativeproof，禁止跨动作cache/skip旧history或重置deadline。须真实反例/计量再开下一原包轮，原30/5/10及Restart30/Stop子预算保持。root中断专用authority/RootRetirementPrepared移动前后继续恢复/RootAbsent重close/成功Stopaction容量门、缺Ready/一般客户端图路径/进程集合和刷新/NAME/代理/WindowsW1W2/发行README与固定候选完整范围保持，P24-04/05未关，目标active。

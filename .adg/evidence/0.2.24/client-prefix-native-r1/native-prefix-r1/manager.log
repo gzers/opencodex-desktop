@@ -1,0 +1,17 @@
+2026-11-13T03:19:09.200Z [manager] start: start confirmed
+2026-11-13T03:19:10.825Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-13T03:19:11.700Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-13T03:19:11.705Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-13T03:19:11.772Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-13T03:19:17.212Z [manager] client-stop-recovery: assessed-artifact-originals restored and readback verified
+2026-11-13T03:19:17.834Z [manager] client-stop-recovery: measured elapsed_ms=6080 timings=[("original-pair-exit", 0), ("native-coordination", 22), ("seal-stopped", 876), ("index-stopped", 1310), ("prepare-plan", 1310), ("index-plan", 1506), ("restore-three-artifacts", 1771), ("root-stop-admission", 1771), ("root-artifacts-held", 2502), ("root-plan", 3195), ("root-retire", 3714), ("root-close", 4863), ("release-coordination", 5463), ("root-absence-complete", 6080)]
+2026-11-13T03:19:17.838Z [manager] lifecycle-stop-phase: complete elapsed_ms=8278 budget_ms=10000 action=stop
+2026-11-13T03:19:17.842Z [manager] stop: stop completed
+2026-11-13T03:19:35.322Z [manager] start: start confirmed
+2026-11-13T03:19:39.848Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-13T03:19:40.696Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-13T03:19:40.701Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-13T03:19:40.999Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-13T03:19:48.784Z [manager] client-stop-recovery: measured elapsed_ms=7821 timings=[("original-pair-exit", 0), ("native-coordination", 40), ("seal-stopped", 790), ("index-stopped", 2124), ("prepare-plan", 2124), ("index-plan", 2494), ("restore-three-artifacts", 3799), ("root-stop-admission", 3799), ("root-artifacts-held", 4606), ("root-plan", 5931), ("root-retire", 7818)]
+2026-11-13T03:19:48.787Z [manager] client-stop-recovery: failed phase=root-retire code=timeout
+2026-11-13T03:19:48.791Z [manager] stop: failed (request timed out; duration_ms=11443)

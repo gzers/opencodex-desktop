@@ -1,0 +1,26 @@
+{
+  "accepted": false,
+  "directedTwoCyclesPassed": false,
+  "firstCycle": {
+    "startMs": 8305,
+    "statusMs": 236,
+    "stopMs": 8285,
+    "stoppedStatusMs": 1351
+  },
+  "secondCycle": {
+    "startMs": 13465,
+    "statusMs": 1220,
+    "stopMs": 12143,
+    "stopResult": "failed-lifecycle-timeout",
+    "retainedState": "root_retirement_prepared",
+    "revision": 17
+  },
+  "firstBindingAndNineEventsUnchanged": true,
+  "twoIndependentOriginalAndThreePhaseChainsVerified": true,
+  "secondRootRetirementPlanRegisteredButNotMovedOrClosed": true,
+  "bothActualLauncherAndServiceNormalExitObserved": true,
+  "globalLUnchangedAndReleased": true,
+  "ownedCoordinatorsRemoved": 3,
+  "offlineReplayRemoved": true,
+  "scope": "new frozen0f0e85fb3 childpin/prefix hypothesis round retained as failed; all earlier failed rounds unchanged, no budget relaxation or whole-version acceptance"
+}
