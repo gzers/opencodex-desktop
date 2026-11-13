@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 127；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 128；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 33d0a9fca（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 287ee0c9d（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1307,3 +1307,12 @@ main33d0a9fca将成功root Stop的canStart从通用Stopped状态改为本次clos
 六项新测试含4095events容量、候选后8类损坏／error、初始与候选后expiry原pendingdemotion、资格后新用户root仍Start拒绝；首代与完整四帧第二代计量无/有投影均12／72frames，完整第二history5/5/10和三事务source/candidate/postcommit次数相同，无新增fullscan。71项不同受影响测试及严格工程检查通过，actualdiff只读审查无阻断，fixture独占锁busy与testfactory私有编译失败均保留并修test，锁和断言未放宽。证据／8源与binary／临时根逐字归档清理见 [client-stop-eligibility-r1](0.2.24-contracts/client-stop-eligibility-r1.md) 和.adg/evidence/0.2.24/client-stop-eligibility-r1/。
 
 本批实现资格差异，不宣称固定原包／Stop预算通过；无官方服务轮，原第二Stop11428ms／pending19失败保持。根中断／缺Ready／一般图路径和完整进程集合／刷新／NAME／复杂代理／WindowsW1W2／官方交付验证及固定候选完整范围不缩减，目标active，未发布。
+
+
+## 2026-11-13 已索引代次目录的metadata扫描收敛
+
+main287ee0c9d仅合并verify_generation_slots逐child无内容读取阶段的元数据扫描：parent原private前验／完整recheck后验，每child nofollow目录打开与固定初始identity/fullProtection、两轮named/held及ACL/xattr鲜读比较；外层UUID/sort/len511/names前后exact/generationsprivate/managerrecheck保留，之后才读取原来源资料。无childpin/token/内容逸出，不改任何Plan/frame/archive/source或三事务边界／proof／deadline。允许metadata采样时刻变化，明确child自身重复采样也减少，不宣称所有瞬态竞态等价；actualdiff只读补审无阻断。
+
+完整48frame/archive/history3/3/6对照中capture339／source61／namespace60全保持，Protection61744→54373、xattr103631→91157约12%减少。初ABBA519/452/445/528ms与最终641/584/573/682ms全部保留，后者约12.6%局部收益，时间有噪声，不能选快值推断Stop10通过。目录反例含ACL／第二child／empty／limit及parent尾界；完整原件315＋协调29＋命令4共348项不同测试及严格Clippy/fmt/diffcheck通过，产品helper字节与最终test补充执行范围明确。证据／五源和binary／临时逐字归档清理见 [client-generation-directories-r1](0.2.24-contracts/client-generation-directories-r1.md) 与.adg/evidence/0.2.24/client-generation-directories-r1/。
+
+本批无官方服务轮，原第二Stop11428ms／pending19失败保持，后继须完整关闭事务成本与累计原包总预算／资格接线复验，不用局部收益放行。Windows远端仍b2e89665d／0eef59a01无新推送。根中断／缺Ready／一般图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／官方交付验证及固定候选完整范围不缩减，目标active，未发布。
