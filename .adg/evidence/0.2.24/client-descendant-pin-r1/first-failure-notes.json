@@ -1,0 +1,7 @@
+{
+  "accepted": false,
+  "run": "descendant-tests",
+  "failure": "Fixture attempted symlink creation at base.join(empty suffix), retaining trailing separator; symlink syscall returned ENOENT before intended injection.",
+  "correction": "Use base.clone for empty suffix; same mutation matrix and refusal assertions retained.",
+  "productRefusalAssertionRelaxed": false
+}

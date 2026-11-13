@@ -1,0 +1,12 @@
+{
+  "sourceCommit": "acd9b871ee08722024c1d5b58fcdc13bc3b4f68c",
+  "normalStopBudgetStillUnverified": true,
+  "newNativeRoundJustifiedByThisBatchAlone": false,
+  "nextBoundedAudit": {
+    "file": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+    "function": "record_restore_plan",
+    "observation": "Root-aware branch performs registered_root_originals plus plan/reference admission outside write(), before the existing complete in-transaction source/candidate/postcommit observations. Determine whether its plan admission can consume the same in-transaction Originals using existing private write_checked_admitted, while keeping all source/reference and failure boundaries. Measure before deciding a new original-service round."
+  },
+  "rootPhasePublication": "record_first_root_phase already avoids a redundant pre-proof full current Head observation; native proof before and after reference commit must remain. Do not assume an extra removable complete audit here.",
+  "broaderGoal": "Root interruption/Ready/ordinary graph/process/refresh, NAME, complex proxy, W1/W2, package/verifier/fixed candidates remain in IMP34."
+}
