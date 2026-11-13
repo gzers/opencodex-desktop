@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 117；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 118；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1213,3 +1213,12 @@ main 098ae4a15 未采用首末帧替代完整逐帧 provenance：来源内容／
 58 项不同受影响测试及严格工程检查通过，五源文件／测试二进制摘要、旧方案否决、全部压缩原日志和 unit 临时根逐字归档清理见 [client-root-metadata-r1](0.2.24-contracts/client-root-metadata-r1.md) 与 .adg/evidence/0.2.24/client-root-metadata-r1/。同形二代恢复登记中动态 provenance38／namespace37／frame/archive26／完整历史3与双遍6不变，属性读取40322→39334，约2.5%；时间样本重叠，不宣称端到端明显提速。
 
 当前以干净 main 098ae4a15 和21个关键源摘要开始 release 库测试宿主构建，后继累计改动原包双轮诊断须独立保留完整状态和原30/5/10预算，未因已开始构建或单轮通过而放行。原第二Stop12143ms失败保留，本批unit证据无新官方服务轮次。根中断／缺Ready／一般客户端图路径／完整进程集合与刷新／NAME／复杂代理／Windows W1W2／交付验证及固定候选等完整范围保持，目标active，未发布。
+
+
+## 2026-11-13 累计事务／目录／元数据优化原包轮：第二Stop仍超时
+
+干净main098ae4a15、21关键源摘要和实际release库测试二进制1076a7ac…已核对，仅一轮新原包诊断。第一轮Start8405／签名Status233／Stop8638ms通过；第二轮Start13253／签名Status1164通过，完整Stop10888ms失败，产品内部10202ms，独立Head为RootRetirementPrepared17。原件恢复后仍余1024696us，rootplan/index/registration耗尽余量，retire入口拒绝；根未移，无Retire-readback/RootAbsent，不用服务正常退出或较旧轮更快代替成功。
+
+两代原件与三phase完整链、首代binding/raw9events/vault保持，77原文件离线重验；两轮原launcher/service正常exit0、每轮4listeners缺席。三个精确新协调对象留原字节并核身份/exclusive后移除，globalL身份／保护／原字节保持并释放；PID+birth／exe与导出主端口独立缺席，逐字归档后清理自有Profile／程序／exe及临时证据根，工程target与旧失败保留。详见 [client-cumulative-native-r1](0.2.24-contracts/client-cumulative-native-r1.md) 和 .adg/evidence/0.2.24/client-cumulative-native-r1/。
+
+下一步对真实root计划登记及retire/close完整分段测量，保留source/candidate/postcommit、逐帧archive前来源、原生/namespace/原件和10s预算；新依据前不重跑同源失败。根中断／缺Ready／一般客户端图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／官方交付验证和固定候选等原完整范围保持，目标active，未发布。
