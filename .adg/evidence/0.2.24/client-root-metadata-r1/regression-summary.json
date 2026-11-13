@@ -1,0 +1,32 @@
+[
+  {
+    "name": "regression-1",
+    "filter": "infrastructure::macos_client_originals::root_creation::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-2",
+    "filter": "infrastructure::macos_client_originals::root_retirement::history_tests::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-3",
+    "filter": "infrastructure::macos_client_originals::session::root_stop_binding_tests::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-4",
+    "filter": "infrastructure::macos_client_originals::root_originals_tests::",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-5",
+    "filter": "root_restore_registration_",
+    "exitCode": 0
+  },
+  {
+    "name": "regression-6",
+    "filter": "commands::lifecycle_versioned_tests::",
+    "exitCode": 0
+  }
+]
