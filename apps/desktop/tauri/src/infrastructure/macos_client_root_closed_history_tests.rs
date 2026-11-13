@@ -621,7 +621,33 @@ fn closed_root_history_full_frame_live_and_released_marker_chain_stays_independe
         closed: closed.clone(),
         original_root: f.originals.original_root_absence.clone().unwrap(),
     };
-    observe(&f, &known).unwrap();
+    let (observed, metrics) = observation_metrics::measure(|| observe(&f, &known));
+    observed.unwrap();
+    println!(
+        "CLOSED_PREFIX_METRICS {}",
+        serde_json::json!({"accepted":false,"scope":"synthetic full four-frame schema2 closed-history observation, no official runtime","metrics":metrics})
+    );
+    let mut comparison = Vec::new();
+    for reference in [true, false, false, true] {
+        let started = Instant::now();
+        let (observed, metrics) = observation_metrics::measure(|| {
+            if reference {
+                observation_metrics::reference(|| observe(&f, &known))
+            } else {
+                observe(&f, &known)
+            }
+        });
+        let returned = observed.unwrap();
+        assert_eq!(returned.attempt(), known.original_root.id);
+        let metrics = serde_json::to_value(metrics).unwrap();
+        assert_eq!(metrics["frame"]["calls"], 8);
+        assert_eq!(metrics["root_provenance"]["calls"], 10);
+        comparison.push(serde_json::json!({"mode":if reference {"reference"}else{"scoped-union"},"elapsedNanos":started.elapsed().as_nanos(),"metrics":metrics}));
+    }
+    println!(
+        "CLOSED_PREFIX_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":comparison,"scope":"same-fixture same-binary reference/scoped observations in reversed order; no OS service acceptance"})
+    );
     f._index.closed_root_history(&closed).unwrap();
     fs::DirBuilder::new()
         .mode(0o700)

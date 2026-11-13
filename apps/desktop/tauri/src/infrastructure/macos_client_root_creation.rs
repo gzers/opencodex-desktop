@@ -214,6 +214,8 @@ pub(super) fn verify_indexed_anchor(
     refs: &References,
     expected_anchor: &Path,
 ) -> io::Result<()> {
+    #[cfg(test)]
+    let _metric = observation_metrics::span("root_provenance");
     if uuid::Uuid::parse_str(&refs.id)
         .map(|v| v.to_string() != refs.id)
         .unwrap_or(true)

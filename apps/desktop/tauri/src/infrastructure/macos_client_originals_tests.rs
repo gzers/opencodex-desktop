@@ -1,5 +1,130 @@
 use super::*;
 #[test]
+fn pinned_set_rejects_conflicting_inode_or_protection_in_either_input_order() {
+    use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+    for change in ["inode", "mode"] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let path = root.join("source");
+        std::fs::DirBuilder::new()
+            .mode(0o700)
+            .create(&path)
+            .unwrap();
+        let old = PinnedDirectory::open(&path).unwrap();
+        if change == "inode" {
+            std::fs::rename(&path, root.join("retained")).unwrap();
+            std::fs::DirBuilder::new()
+                .mode(0o700)
+                .create(&path)
+                .unwrap();
+        } else {
+            std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o755)).unwrap();
+        }
+        let current = PinnedDirectory::open(&path).unwrap();
+        for pins in [[&old, &current], [&current, &old]] {
+            let error = PinnedDirectory::recheck_set(&pins).unwrap_err();
+            assert_eq!(
+                error.to_string(),
+                "directory union has conflicting source pins"
+            );
+        }
+    }
+}
+#[test]
+fn pinned_set_checks_shared_ancestors_again_after_first_pass_mutation() {
+    use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+    for change in ["mode", "rename", "symlink", "xattr"] {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let parent = root.join("shared");
+        std::fs::DirBuilder::new()
+            .mode(0o700)
+            .create(&parent)
+            .unwrap();
+        for n in ["one", "two"] {
+            std::fs::DirBuilder::new()
+                .mode(0o700)
+                .create(parent.join(n))
+                .unwrap();
+        }
+        let one = PinnedDirectory::open(&parent.join("one")).unwrap();
+        let two = PinnedDirectory::open(&parent.join("two")).unwrap();
+        let touched = std::cell::Cell::new(false);
+        let boundary = parent
+            .components()
+            .filter(|c| matches!(c, Component::Normal(_)))
+            .count();
+        let result = PinnedDirectory::recheck_set_checked(&[&one, &two], &|i| {
+            if i == boundary && !touched.replace(true) {
+                match change {
+                    "mode" => {
+                        std::fs::set_permissions(&parent, std::fs::Permissions::from_mode(0o755))
+                            .unwrap()
+                    }
+                    "rename" => {
+                        std::fs::rename(&parent, root.join("retained-shared")).unwrap();
+                        std::fs::DirBuilder::new()
+                            .mode(0o700)
+                            .create(&parent)
+                            .unwrap();
+                    }
+                    "symlink" => {
+                        std::fs::rename(&parent, root.join("retained-shared")).unwrap();
+                        std::os::unix::fs::symlink(root.join("retained-shared"), &parent).unwrap();
+                    }
+                    "xattr" => {
+                        let p = CString::new(parent.as_os_str().as_bytes()).unwrap();
+                        let name = CString::new("user.ocxd-prefix-union").unwrap();
+                        assert_eq!(
+                            unsafe {
+                                libc::setxattr(
+                                    p.as_ptr(),
+                                    name.as_ptr(),
+                                    b"x".as_ptr().cast(),
+                                    1,
+                                    0,
+                                    0,
+                                )
+                            },
+                            0
+                        );
+                    }
+                    _ => unreachable!(),
+                }
+            }
+            Ok(())
+        });
+        assert!(touched.get());
+        assert!(result.is_err(), "{change}");
+    }
+}
+#[test]
+fn pinned_set_preserves_literal_paths_unique_branches_and_reobserves_every_call() {
+    use std::os::unix::fs::{DirBuilderExt, PermissionsExt};
+    let temp = tempfile::tempdir().unwrap();
+    let parent = temp.path().canonicalize().unwrap().join("中文 space");
+    std::fs::DirBuilder::new()
+        .mode(0o700)
+        .create(&parent)
+        .unwrap();
+    for n in ["back\\slash", "other"] {
+        std::fs::DirBuilder::new()
+            .mode(0o700)
+            .create(parent.join(n))
+            .unwrap();
+    }
+    let root = PinnedDirectory::open(&parent).unwrap();
+    let one = PinnedDirectory::open(&parent.join("back\\slash")).unwrap();
+    let two = PinnedDirectory::open(&parent.join("other")).unwrap();
+    for pins in [[&root, &one, &two, &one], [&two, &one, &root, &root]] {
+        PinnedDirectory::recheck_set(&pins).unwrap();
+    }
+    assert!(PinnedDirectory::open(&parent.join(".")).is_err());
+    assert!(PinnedDirectory::open(Path::new("relative")).is_err());
+    std::fs::set_permissions(two.path(), std::fs::Permissions::from_mode(0o755)).unwrap();
+    assert!(PinnedDirectory::recheck_set(&[&root, &one, &two]).is_err());
+}
+#[test]
 fn pinned_directory_recheck_refuses_xattr_change_after_ancestor_attribute_read() {
     use std::os::unix::fs::DirBuilderExt;
     let tmp = tempfile::tempdir().unwrap();

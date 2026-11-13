@@ -32,6 +32,9 @@ pub mod session;
 #[path = "macos_client_session_index.rs"]
 pub mod session_index;
 
+#[cfg(test)]
+#[path = "macos_client_observation_metrics.rs"]
+pub(crate) mod observation_metrics;
 const MAX_CONTENT: usize = 2 * 1024 * 1024;
 const MAX_SECURITY: usize = 256 * 1024;
 const MAX_FRAME: usize = 32 * 1024 * 1024;
@@ -62,6 +65,8 @@ fn name(value: &OsStr) -> io::Result<CString> {
     CString::new(bytes).map_err(|_| denied("nul component"))
 }
 fn open_at(parent: &File, child: &OsStr, directory: bool) -> io::Result<File> {
+    #[cfg(test)]
+    let _metric = observation_metrics::span("open_at");
     let child = name(child)?;
     let flags = libc::O_RDONLY
         | libc::O_CLOEXEC
@@ -210,6 +215,8 @@ fn xattrs(file: &File) -> io::Result<BTreeMap<Vec<u8>, Vec<u8>>> {
     Ok(result)
 }
 fn protection(file: &File, s: &libc::stat) -> io::Result<Protection> {
+    #[cfg(test)]
+    let _metric = observation_metrics::span("protection");
     Ok(Protection {
         uid: s.st_uid,
         gid: s.st_gid,
@@ -253,6 +260,8 @@ pub struct PinnedDirectory {
 }
 impl PinnedDirectory {
     pub fn open(path: &Path) -> io::Result<Self> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("pinned_open");
         if !path.is_absolute()
             || path
                 .as_os_str()
@@ -300,6 +309,8 @@ impl PinnedDirectory {
         &self.chain.last().unwrap().1
     }
     pub fn recheck(&self) -> io::Result<()> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("pinned_recheck");
         self.recheck_checked(&|_| Ok(()))
     }
     fn recheck_checked(&self, checkpoint: &impl Fn(usize) -> io::Result<()>) -> io::Result<()> {
@@ -400,6 +411,110 @@ impl PinnedDirectory {
     fn sync(&self) -> io::Result<()> {
         self.recheck()?;
         self.file().sync_all()
+    }
+    /// Fresh union observation, not a cache. Shared ancestors are the same
+    /// path/inode/protection expectation; inspect each unique object twice
+    /// instead of repeating it for every overlapping root. Conflicting pins
+    /// are rejected before any evidence can be returned.
+    fn recheck_set(roots: &[&Self]) -> io::Result<()> {
+        Self::recheck_set_checked(roots, &|_| Ok(()))
+    }
+    fn recheck_set_checked(
+        roots: &[&Self],
+        checkpoint: &impl Fn(usize) -> io::Result<()>,
+    ) -> io::Result<()> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("pinned_set");
+        struct Entry<'a> {
+            file: &'a File,
+            parent: libc::c_int,
+            name: CString,
+            id: &'a Identity,
+            security: &'a Protection,
+        }
+        let mut entries = BTreeMap::<PathBuf, Entry<'_>>::new();
+        for root in roots {
+            let components = root
+                .path
+                .components()
+                .filter_map(|c| {
+                    if let Component::Normal(n) = c {
+                        Some(n)
+                    } else {
+                        None
+                    }
+                })
+                .collect::<Vec<_>>();
+            if root.chain.len() != components.len() + 1 {
+                return Err(denied("directory union pin chain differs"));
+            }
+            let mut path = PathBuf::from("/");
+            for (i, (file, id, security)) in root.chain.iter().enumerate() {
+                if i > 0 {
+                    path.push(components[i - 1]);
+                }
+                if let Some(old) = entries.get(&path) {
+                    if old.id != id || old.security != security {
+                        return Err(denied("directory union has conflicting source pins"));
+                    }
+                } else {
+                    entries.insert(
+                        path.clone(),
+                        Entry {
+                            file,
+                            parent: if i == 0 {
+                                libc::AT_FDCWD
+                            } else {
+                                root.chain[i - 1].0.as_raw_fd()
+                            },
+                            name: if i == 0 {
+                                CString::new("/").unwrap()
+                            } else {
+                                name(components[i - 1])?
+                            },
+                            id,
+                            security,
+                        },
+                    );
+                }
+            }
+        }
+        for pass in 0..2 {
+            for (i, entry) in entries.values().enumerate() {
+                let mut named = std::mem::MaybeUninit::uninit();
+                if unsafe {
+                    libc::fstatat(
+                        entry.parent,
+                        entry.name.as_ptr(),
+                        named.as_mut_ptr(),
+                        libc::AT_SYMLINK_NOFOLLOW,
+                    )
+                } != 0
+                {
+                    return Err(io::Error::last_os_error());
+                }
+                let named = unsafe { named.assume_init() };
+                let held = stat(entry.file)?;
+                let matches = |s: &libc::stat| {
+                    identity(s) == *entry.id
+                        && s.st_mode & libc::S_IFMT == libc::S_IFDIR
+                        && s.st_uid == entry.security.uid
+                        && s.st_gid == entry.security.gid
+                        && s.st_mode & 0o7777 == entry.security.mode
+                        && s.st_flags == entry.security.flags
+                };
+                if !matches(&named)
+                    || !matches(&held)
+                    || protection(entry.file, &held)? != *entry.security
+                {
+                    return Err(denied("directory union identity or protection changed"));
+                }
+                if pass == 0 {
+                    checkpoint(i)?;
+                }
+            }
+        }
+        Ok(())
     }
 }
 
@@ -553,6 +668,8 @@ impl Image {
     }
 }
 fn capture_file(root: &PinnedDirectory, child: &str, limit: usize) -> io::Result<Image> {
+    #[cfg(test)]
+    let _metric = observation_metrics::span("capture_file");
     root.recheck()?;
     let file = match open_at(root.file(), OsStr::new(child), false) {
         Ok(file) => file,
@@ -1199,6 +1316,8 @@ impl Originals {
         last: Phase,
         observed: &impl Fn(Phase) -> io::Result<()>,
     ) -> io::Result<Vec<(Frame, Vec<u8>)>> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("frames_prefix");
         let mut result = Vec::new();
         let mut predecessor = None;
         for phase in [
@@ -1223,10 +1342,27 @@ impl Originals {
         phase: Phase,
         predecessor: Option<&str>,
     ) -> io::Result<(Frame, Vec<u8>)> {
-        self.data.private()?;
-        self.profile.recheck()?;
-        self.client.recheck()?;
-        self.directory.private()?;
+        #[cfg(test)]
+        let _metric = observation_metrics::span("frame");
+        #[cfg(not(test))]
+        let reference = false;
+        #[cfg(test)]
+        let reference = observation_metrics::reference_enabled();
+        if reference {
+            self.data.private()?;
+            self.profile.recheck()?;
+            self.client.recheck()?;
+            self.directory.private()?;
+        } else {
+            PinnedDirectory::recheck_set(&[
+                &self.data,
+                &self.profile,
+                &self.client,
+                &self.directory,
+            ])?;
+            require_private(&self.data.chain.last().unwrap().2, true)?;
+            require_private(&self.directory.chain.last().unwrap().2, true)?;
+        }
         let image = capture_file(&self.directory, phase.filename(), MAX_FRAME)?;
         let Image::File {
             protection: saved_protection,

@@ -196,6 +196,8 @@ pub fn open_closed_history(
     profile_root: &Path,
     reference: &ClosedRootReferences,
 ) -> io::Result<Originals> {
+    #[cfg(test)]
+    let _metric = observation_metrics::span("closed_history");
     session_index::validate(&reference.source)?;
     session_index::validate(&reference.closed)?;
     let closed = &reference.closed;
@@ -393,6 +395,8 @@ impl<'a> Pending<'a> {
         format!("root-retired-{}", self.id)
     }
     fn load(&self) -> io::Result<Plan> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("retirement_plan_load");
         self.originals.data.private()?;
         self.originals.profile.recheck()?;
         self.originals.directory.private()?;

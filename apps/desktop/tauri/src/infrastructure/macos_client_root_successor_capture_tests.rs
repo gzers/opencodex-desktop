@@ -44,7 +44,9 @@ pub(super) fn captured(
     index: &Index,
     preparing: &Head,
 ) -> (Head, Originals) {
+    let measured = Instant::now();
     let reserved = index.reserve_successor_root_capture(preparing).unwrap();
+    let reserved_at = measured.elapsed().as_millis();
     assert!(reserved.root_generation.is_none());
     let permit = index.capture_reservation(&reserved).unwrap();
     let originals = Originals::begin_reserved_profile(
@@ -55,10 +57,36 @@ pub(super) fn captured(
     )
     .unwrap();
     let refs = synthetic_scope(&originals, context);
-    let head = index
-        .record_successor_root_originals(context, &reserved, refs)
-        .unwrap();
+    let original_at = measured.elapsed().as_millis();
+    let head = index.record_successor_root_originals(context, &reserved, refs);
+    println!(
+        "SUCCESSOR_CAPTURE_COST {}",
+        serde_json::json!({"accepted":false,"preparingRevision":preparing.revision,"reserveMs":reserved_at,"originalMs":original_at,"totalMs":measured.elapsed().as_millis(),"recorded":head.is_ok()})
+    );
+    let head = head.unwrap();
     (head, originals)
+}
+#[test]
+#[ignore = "explicit same-code reference/optimized deadline diagnosis, no runtime service"]
+fn prefix_reference_replays_failed_successor_capture_with_unchanged_deadline() {
+    let reference = std::env::var_os("OCXD024_PREFIX_REFERENCE_PROBE").as_deref()
+        == Some(std::ffi::OsStr::new("1"));
+    let (result, metrics) = super::super::super::observation_metrics::measure(|| {
+        std::panic::catch_unwind(|| {
+            if reference {
+                super::super::super::observation_metrics::reference(successor_capture_history_rejects_skipped_phase_rebound_origin_and_erased_reservation)
+            } else {
+                successor_capture_history_rejects_skipped_phase_rebound_origin_and_erased_reservation()
+            }
+        })
+    });
+    println!(
+        "CAPTURE_DEADLINE_COMPARISON {}",
+        serde_json::json!({"accepted":false,"reference":reference,"passed":result.is_ok(),"metrics":metrics,"scope":"same fixture/assertions/10s custody; no service"})
+    );
+    if let Err(error) = result {
+        std::panic::resume_unwind(error);
+    }
 }
 fn binding(index: &Index) -> Vec<u8> {
     index
