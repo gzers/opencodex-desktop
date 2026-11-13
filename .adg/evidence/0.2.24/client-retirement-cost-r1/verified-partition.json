@@ -1,0 +1,40 @@
+{
+  "accepted": false,
+  "samples": [
+    {
+      "secondGeneration": false,
+      "totalMs": 176.665,
+      "exclusivePartitionMs": {
+        "registration_facts": 2.136,
+        "transaction_admission": 27.796,
+        "transaction_candidate": 56.205,
+        "transaction_commit": 0.393,
+        "transaction_postcommit": 55.718,
+        "transaction_source": 33.438,
+        "transaction_sql": 0.305,
+        "transaction_storage_begin": 0.64
+      },
+      "nestedLivePrefixMs": 68.992,
+      "nestedTreeGrokMs": 3.185,
+      "unattributedNanos": 33206
+    },
+    {
+      "secondGeneration": true,
+      "totalMs": 538.924,
+      "exclusivePartitionMs": {
+        "registration_facts": 5.564,
+        "transaction_admission": 56.493,
+        "transaction_candidate": 175.556,
+        "transaction_commit": 0.516,
+        "transaction_postcommit": 176.466,
+        "transaction_source": 123.497,
+        "transaction_sql": 0.273,
+        "transaction_storage_begin": 0.526
+      },
+      "nestedLivePrefixMs": 157.157,
+      "nestedTreeGrokMs": 3.038,
+      "unattributedNanos": 32249
+    }
+  ],
+  "noNativeResultInferred": true
+}

@@ -1,0 +1,24 @@
+{
+  "accepted": false,
+  "sourceCommit": "264934c0936a1fab39e00d36c228b4813573b24b",
+  "differentTestsPassed": 9,
+  "firstGenerationSyntheticMs": 176.665,
+  "secondGenerationSyntheticMs": 538.924,
+  "secondExclusiveStageMs": {
+    "transaction_storage_begin": 0.526,
+    "transaction_source": 123.497,
+    "transaction_admission": 56.493,
+    "transaction_sql": 0.273,
+    "transaction_candidate": 175.556,
+    "transaction_commit": 0.516,
+    "transaction_postcommit": 176.466,
+    "registration_facts": 5.564
+  },
+  "partitionCoverageOver99_9Percent": true,
+  "originalFullHistoryObservations": 3,
+  "nativeServiceRounds": 0,
+  "normalStop10NotAccepted": true,
+  "ownedTemporaryRootRemoved": true,
+  "manifestFiles": 23,
+  "manifestBytes": 21149
+}

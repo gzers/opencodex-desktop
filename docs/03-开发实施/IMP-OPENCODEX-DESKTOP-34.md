@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 118；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 119；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1222,3 +1222,12 @@ main 098ae4a15 未采用首末帧替代完整逐帧 provenance：来源内容／
 两代原件与三phase完整链、首代binding/raw9events/vault保持，77原文件离线重验；两轮原launcher/service正常exit0、每轮4listeners缺席。三个精确新协调对象留原字节并核身份/exclusive后移除，globalL身份／保护／原字节保持并释放；PID+birth／exe与导出主端口独立缺席，逐字归档后清理自有Profile／程序／exe及临时证据根，工程target与旧失败保留。详见 [client-cumulative-native-r1](0.2.24-contracts/client-cumulative-native-r1.md) 和 .adg/evidence/0.2.24/client-cumulative-native-r1/。
 
 下一步对真实root计划登记及retire/close完整分段测量，保留source/candidate/postcommit、逐帧archive前来源、原生/namespace/原件和10s预算；新依据前不重跑同源失败。根中断／缺Ready／一般客户端图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／官方交付验证和固定候选等原完整范围保持，目标active，未发布。
+
+
+## 2026-11-13 根退役登记分段：主耗时是完整文件认证，不是SQL
+
+main264934c09仅增加测试计量与隔离原包诊断入口，保留原登记顺序／错误／预算。完整Stopped三phase合成第二代总538.924ms，来源123.497／准入56.493／候选175.556／提交后176.466ms，SQL+COMMIT仅0.789ms；互斥顶层覆盖99.9%以上，嵌套live-prefix157.157与tree/grok3.038ms不重复相加。三次完整历史观察与内容双遍6保持，少帧Captured先行结果不替代最终来源，合成表也不冒称真实运行现场。
+
+9项不同受影响测试及严格工程检查通过，全部日志／五源文件与测试二进制摘要、证据逐字归档和临时根清理见 [client-retirement-cost-r1](0.2.24-contracts/client-retirement-cost-r1.md) 与.adg/evidence/0.2.24/client-retirement-cost-r1/。后继仅cfg(test)、限定owned临时Profile的ROOT_REGISTRATION_COST入口已具备，尚未执行新原包轮；应直接测真实candidate/postcommit/prefix成本证伪判断，不从合成表盲删校验。当前root_binding movement前后完整prefix重复是否能安全收敛仍待审，三事务边界与逐帧来源门槛保持。
+
+原第二Stop10888ms失败不变。根中断／缺Ready／一般客户端图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／官方交付验证与固定候选等原完整范围保持，目标active，未发布。
