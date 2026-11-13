@@ -1,0 +1,70 @@
+{
+  "accepted": false,
+  "sourceCommit": "264934c0936a1fab39e00d36c228b4813573b24b",
+  "actualNativeRounds": 1,
+  "firstCycleMs": {
+    "startElapsedMs": 8129,
+    "statusElapsedMs": 226,
+    "stopElapsedMs": 7604
+  },
+  "secondCycleMs": {
+    "secondStartElapsedMs": 12812,
+    "secondLiveStatusElapsedMs": 1231,
+    "secondStopElapsedMs": 11681
+  },
+  "entryLoadAndPreStop": [
+    {
+      "stage": "load-ready",
+      "elapsed_us": "82845",
+      "remaining_us": "9806915",
+      "passed": "true"
+    },
+    {
+      "stage": "pre-stop",
+      "elapsed_us": "998672",
+      "remaining_us": "8808157",
+      "passed": "true"
+    },
+    {
+      "stage": "load-ready",
+      "elapsed_us": "771864",
+      "remaining_us": "9111540",
+      "passed": "true"
+    },
+    {
+      "stage": "pre-stop",
+      "elapsed_us": "2180255",
+      "remaining_us": "6931232",
+      "passed": "true"
+    }
+  ],
+  "artifactApply": {
+    "stage": "artifacts.apply-retaining",
+    "elapsed_us": "1083645",
+    "remaining_before_us": "1437157",
+    "remaining_after_us": "353511",
+    "expired_after": "false",
+    "code": "ok"
+  },
+  "artifactEndBeforePlan": {
+    "stage": "artifacts.final-time",
+    "elapsed_us": "0",
+    "remaining_before_us": "288171",
+    "remaining_after_us": "288171",
+    "expired_after": "false",
+    "code": "ok"
+  },
+  "rootRetireEntryRefusal": {
+    "stage": "admission.entry-time",
+    "elapsed_us": "0",
+    "remaining_before_us": "0",
+    "remaining_after_us": "0",
+    "expired_after": "true",
+    "code": "timeout"
+  },
+  "registeredState": "root_retirement_prepared",
+  "revision": 17,
+  "productInternalStopMs": 10996,
+  "originalRootMovementNotStarted": true,
+  "scope": "This new round completed artifact restore within original budget but root-plan/index preparation consumed remaining budget; failed result remains. No claim prior untraced phases had this cause."
+}

@@ -1,0 +1,9 @@
+{
+  "accepted": false,
+  "evidence": "verified-native-partition vs client-retirement-cost-r1 stopped-partition",
+  "syntheticSecondRegistrationFrameCount": 30,
+  "nativeSecondRegistrationFrameCount": 48,
+  "reason": "Synthetic fixture_closed_generation constructs a Captured source before retiring first generation; actual first native normal Stop closes with Original/Ready/PreStop/Stopped. Six complete historical passes read 1 vs 4 frames: 6*(4-1)=18 additional frames. Current dynamic checks remain mandatory.",
+  "nextRequired": "Create full four-frame historical closed fixture from same source/state shapes, then benchmark fresh full metadata reads (including bounded direct xattr reads with ERANGE fallback) without dropping source/ACL/xattr/namespace/frame checks. Do not infer native budget from old lighter fixture or delete old failed evidence.",
+  "rootCauseBoundary": "Actual second registration protection metric inclusive868.906ms, total1053.745ms, source+candidate+postcommit962.981ms; nested metrics overlap and must not sum. It establishes work concentration, not an already implemented solution or exact cost per syscall."
+}

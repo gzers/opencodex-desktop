@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "category": "offline verifier extraction only",
+  "firstExtractionFailed": "First generation has no closed historical generation and therefore no historical_full_pass metric key.",
+  "correction": "Represent only absent first-generation historical counters as zero and explicitly assert first zero vs second begin3/finish3/fullpass6. No native rerun, product change, gate relaxation or failure evidence overwritten."
+}

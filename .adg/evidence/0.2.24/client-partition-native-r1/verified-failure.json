@@ -1,0 +1,26 @@
+{
+  "accepted": false,
+  "directedTwoCyclesPassed": false,
+  "firstCycle": {
+    "startMs": 8129,
+    "statusMs": 226,
+    "stopMs": 7604,
+    "stoppedStatusMs": 1322
+  },
+  "secondCycle": {
+    "startMs": 12812,
+    "statusMs": 1231,
+    "stopMs": 11681,
+    "stopResult": "failed-lifecycle-timeout",
+    "retainedState": "root_retirement_prepared",
+    "revision": 17
+  },
+  "firstBindingAndNineEventsUnchanged": true,
+  "twoIndependentOriginalAndThreePhaseChainsVerified": true,
+  "secondRootRetirementPlanRegisteredButNotMovedOrClosed": true,
+  "bothActualLauncherAndServiceNormalExitObserved": true,
+  "globalLUnchangedAndReleased": true,
+  "ownedCoordinatorsRemoved": 3,
+  "offlineReplayRemoved": true,
+  "scope": "new frozen264934c09 instrumentation-only native partition round retained as failed; all earlier failed rounds unchanged, no budget relaxation or whole-version acceptance"
+}

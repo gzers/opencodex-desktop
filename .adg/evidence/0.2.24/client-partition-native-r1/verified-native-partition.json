@@ -1,0 +1,71 @@
+{
+  "accepted": false,
+  "sourceCommit": "264934c0936a1fab39e00d36c228b4813573b24b",
+  "samples": [
+    {
+      "totalNanos": 257786041,
+      "partitionNanos": 257766999,
+      "unattributedNanos": 19042,
+      "exclusiveStageNanos": {
+        "transaction_storage_begin": 723583,
+        "transaction_source": 48156333,
+        "transaction_admission": 41183208,
+        "transaction_sql": 221750,
+        "transaction_candidate": 82238292,
+        "transaction_commit": 499417,
+        "transaction_postcommit": 83121708,
+        "registration_facts": 1622708
+      },
+      "nestedNanos": {
+        "retirement_live_prefix": 108679126,
+        "retirement_live_tree_grok": 3811083,
+        "protection": 212142557,
+        "root_provenance": 101936378,
+        "historical_full_pass": 0
+      },
+      "authenticationCounts": {
+        "frame": 24,
+        "frame_archives": 24,
+        "capture_file": 159,
+        "root_provenance": 31,
+        "root_namespace": 30,
+        "historical_begin": 0,
+        "historical_finish": 0,
+        "historical_full_pass": 0
+      }
+    },
+    {
+      "totalNanos": 1053744708,
+      "partitionNanos": 1053722582,
+      "unattributedNanos": 22126,
+      "exclusiveStageNanos": {
+        "transaction_storage_begin": 929959,
+        "transaction_source": 278368583,
+        "transaction_admission": 84634541,
+        "transaction_sql": 217167,
+        "transaction_candidate": 338962708,
+        "transaction_commit": 315041,
+        "transaction_postcommit": 345650000,
+        "registration_facts": 4644583
+      },
+      "nestedNanos": {
+        "retirement_live_prefix": 236018250,
+        "retirement_live_tree_grok": 3836666,
+        "protection": 868905710,
+        "root_provenance": 544220253,
+        "historical_full_pass": 495298250
+      },
+      "authenticationCounts": {
+        "frame": 48,
+        "frame_archives": 48,
+        "capture_file": 339,
+        "root_provenance": 61,
+        "root_namespace": 60,
+        "historical_begin": 3,
+        "historical_finish": 3,
+        "historical_full_pass": 6
+      }
+    }
+  ],
+  "scope": "Actual native original299 root registration, instrumentation-only round. Nested durations overlap; no second root movement/close due original deadline. First generation has no historical metrics; absent counters represented as zero only."
+}
