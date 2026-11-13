@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "baseCommit": "6ca915392ed1677eae2baf0d5318b3adca160685",
+  "hypothesis": "root_binding.verify_capture discards the full independently authenticated phase prefix, then verify_index_scope rereads Original+Ready for live binding. Consume the exact prefix directly in the already existing verify_index_scope_prefix helper inside the same closed observation; preserve full scope/home/live/generation/Ready digest and all phase/provenance checks, later calls fresh. Same acquisition should remove4 repeated frame reads without altering persisted source facts.",
+  "scope": "First/second syntheticReady acquisitions, correcthash semanticrefusal, existingSession/index contracts; no actual runtime or deadline change"
+}

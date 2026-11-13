@@ -1,0 +1,110 @@
+
+running 36 tests
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::ready_acquisition_does_not_turn_synthetic_live_or_prior_observation_into_current_authority ... ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::ready_acquisition_final_audit_refuses_mutation_after_initial_transaction_admission ... ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::ready_acquisition_refuses_scope_live_frame_program_and_nonready_changes_without_repair ... ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::ready_acquisition_returns_same_authenticated_head_and_originals_without_repeated_historical_scans ... READY_ACQUISITION_COMPARISON {"accepted":false,"head":{"completionSha256":null,"references":{"attempt":"b2ff85ac-576e-4887-a0ab-cc0d204889c0","liveSha256":"f4b720eeac87ec4560b97f51d243df9594820a58c8ea4c80e3d4c9753af09656","originalSha256":"782bbf20d9bf50ac5fa4d0ac359588da639bdd7d9cc92354bd6b56d162435f5a","phases":[["ready","6bbcc9932096823fc6b5977dc72da3975193ac951d75cf047cb1489ecab4b71c"]],"scopeSha256":"6b8a70dddbb1e60cae6ad1542ee8987b7ef36c87705701a024105d2c17458e8a"},"restorePlan":null,"revision":4,"state":"ready","ticket":"b2ff85ac-576e-4887-a0ab-cc0d204889c0"},"optimized":{"capture_file":{"calls":56,"inclusive_nanos":24878790},"child_private":{"calls":41,"inclusive_nanos":21000836},"frame":{"calls":6,"inclusive_nanos":28983459},"frames_prefix":{"calls":3,"inclusive_nanos":30450668},"open_at":{"calls":378,"inclusive_nanos":2889088},"pinned_open":{"calls":35,"inclusive_nanos":3897460},"pinned_recheck":{"calls":244,"inclusive_nanos":39982917},"pinned_set":{"calls":47,"inclusive_nanos":9258958},"protection":{"calls":5426,"inclusive_nanos":49458329},"root_provenance":{"calls":10,"inclusive_nanos":29652750}},"reference":{"capture_file":{"calls":96,"inclusive_nanos":42312461},"child_private":{"calls":73,"inclusive_nanos":37291918},"frame":{"calls":10,"inclusive_nanos":46822957},"frames_prefix":{"calls":5,"inclusive_nanos":49208625},"open_at":{"calls":642,"inclusive_nanos":4904355},"pinned_open":{"calls":59,"inclusive_nanos":6557292},"pinned_recheck":{"calls":425,"inclusive_nanos":69120114},"pinned_set":{"calls":83,"inclusive_nanos":16083663},"protection":{"calls":9472,"inclusive_nanos":85704123},"root_provenance":{"calls":18,"inclusive_nanos":52551877}},"scope":"synthetic scope/live/frame binding only; no authenticated live OS service or Stop permission","secondGeneration":false}
+READY_ACQUISITION_COMPARISON {"accepted":false,"head":{"completionSha256":null,"references":{"attempt":"c9305a2c-450f-43b4-ab14-87297b36c6fa","liveSha256":"e7440e8bb3529dbbb063f6deac3834a8f39b0e9e13c719ca59a0010466d40fd4","originalSha256":"9503d75d994c096dec080e452f562b9fb1689728c29a2e9bbc67102bf9ce9b48","phases":[["ready","f1074302d8af794b85b95412ba99eb43fe2642d20c0cb370bade4cf38c72a5e7"]],"scopeSha256":"a0dce1e23bdb3003326d2fee5ee6906ef3dae4ba0b0b94fe6e8bca5a21644845"},"restorePlan":null,"revision":12,"state":"ready","ticket":"c9305a2c-450f-43b4-ab14-87297b36c6fa"},"optimized":{"capture_file":{"calls":176,"inclusive_nanos":84779160},"child_private":{"calls":311,"inclusive_nanos":177186867},"frame":{"calls":22,"inclusive_nanos":237894665},"frames_prefix":{"calls":7,"inclusive_nanos":254267416},"historical_begin":{"calls":2,"inclusive_nanos":120240916},"historical_finish":{"calls":2,"inclusive_nanos":120209000},"historical_full_pass":{"calls":4,"inclusive_nanos":225891750},"open_at":{"calls":1300,"inclusive_nanos":10854022},"pinned_open":{"calls":95,"inclusive_nanos":11378500},"pinned_recheck":{"calls":1398,"inclusive_nanos":249184937},"pinned_set":{"calls":333,"inclusive_nanos":69393244},"protection":{"calls":32682,"inclusive_nanos":307726069},"retirement_plan_load":{"calls":4,"inclusive_nanos":4564625},"root_provenance":{"calls":30,"inclusive_nanos":214500205}},"reference":{"capture_file":{"calls":336,"inclusive_nanos":160609757},"child_private":{"calls":595,"inclusive_nanos":336800968},"frame":{"calls":42,"inclusive_nanos":447142959},"frames_prefix":{"calls":13,"inclusive_nanos":477448584},"historical_begin":{"calls":4,"inclusive_nanos":239050791},"historical_finish":{"calls":4,"inclusive_nanos":237716707},"historical_full_pass":{"calls":8,"inclusive_nanos":447854334},"open_at":{"calls":2468,"inclusive_nanos":20585213},"pinned_open":{"calls":179,"inclusive_nanos":21515117},"pinned_recheck":{"calls":2673,"inclusive_nanos":473363270},"pinned_set":{"calls":637,"inclusive_nanos":132225924},"protection":{"calls":62500,"inclusive_nanos":584872724},"retirement_plan_load":{"calls":8,"inclusive_nanos":9031918},"root_provenance":{"calls":58,"inclusive_nanos":407213375}},"scope":"synthetic scope/live/frame binding only; no authenticated live OS service or Stop permission","secondGeneration":true}
+ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::root_stop_binding_follows_only_original_plan_archive_and_preserves_logical_scope ... ROOT_STOP_COST label=root-source phase=entry segment_us=2042 total_us=2042
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=27617 total_us=29659
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1810 total_us=31469
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=539 total_us=32008
+ROOT_STOP_COST label=root-source phase=program-source segment_us=388 total_us=32397
+ROOT_STOP_COST label=root-source phase=entry segment_us=2137 total_us=2137
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=27614 total_us=29752
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1785 total_us=31537
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=540 total_us=32078
+ROOT_STOP_COST label=root-source phase=program-source segment_us=432 total_us=32511
+ROOT_STOP_COST label=root-source phase=entry segment_us=1097 total_us=1097
+ROOT_STOP_COST label=root-source phase=entry segment_us=2113 total_us=2113
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=27485 total_us=29599
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1744 total_us=31343
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=608 total_us=31951
+ROOT_STOP_COST label=root-source phase=entry segment_us=2124 total_us=2124
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=27864 total_us=29989
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1766 total_us=31755
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=555 total_us=32311
+ROOT_STOP_COST label=root-source phase=entry segment_us=2146 total_us=2146
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=2657 total_us=4804
+ROOT_STOP_BINDING_EVIDENCE {"accepted":false,"logicalScopeUnchanged":true,"sourceAndFramesVerifiedBeforeAndAfterMove":true,"syntheticFramesNoStopPermission":true,"wrongPlanScopeLiveAndNewRootRefused":true}
+ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::root_stop_binding_rejects_modified_historical_frames_scope_and_live_after_move ... ROOT_STOP_COST label=root-source phase=entry segment_us=2126 total_us=2126
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=5876 total_us=8002
+ROOT_STOP_COST label=root-source phase=entry segment_us=2149 total_us=2149
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=27263 total_us=29412
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1729 total_us=31141
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=541 total_us=31683
+ROOT_STOP_COST label=root-source phase=program-source segment_us=512 total_us=32196
+ROOT_STOP_COST label=root-source phase=entry segment_us=2228 total_us=2228
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=10794 total_us=13023
+ROOT_STOP_COST label=root-source phase=entry segment_us=2134 total_us=2134
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=27931 total_us=30065
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1746 total_us=31812
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=607 total_us=32419
+ROOT_STOP_COST label=root-source phase=program-source segment_us=424 total_us=32844
+ROOT_STOP_COST label=root-source phase=entry segment_us=2121 total_us=2121
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=16578 total_us=18699
+ROOT_STOP_COST label=root-source phase=entry segment_us=2118 total_us=2118
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=27601 total_us=29719
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1888 total_us=31607
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=519 total_us=32127
+ROOT_STOP_COST label=root-source phase=program-source segment_us=371 total_us=32498
+ROOT_STOP_COST label=root-source phase=entry segment_us=2103 total_us=2103
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=20147 total_us=22250
+ROOT_STOP_COST label=root-source phase=entry segment_us=2171 total_us=2171
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=28245 total_us=30416
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1939 total_us=32356
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=555 total_us=32911
+ROOT_STOP_COST label=root-source phase=program-source segment_us=395 total_us=33307
+ROOT_STOP_COST label=root-source phase=entry segment_us=2174 total_us=2174
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=26912 total_us=29086
+ROOT_STOP_COST label=root-source phase=entry segment_us=2186 total_us=2186
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=30301 total_us=32488
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1758 total_us=34247
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=743 total_us=34990
+ROOT_STOP_COST label=root-source phase=program-source segment_us=417 total_us=35408
+ROOT_STOP_COST label=root-source phase=entry segment_us=2264 total_us=2264
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=28098 total_us=30362
+ROOT_STOP_COST label=root-source phase=entry segment_us=2405 total_us=2405
+ROOT_STOP_COST label=root-source phase=open-current-originals segment_us=29696 total_us=32102
+ROOT_STOP_COST label=root-source phase=index-scope segment_us=1824 total_us=33926
+ROOT_STOP_COST label=root-source phase=ready-stopped-frames segment_us=550 total_us=34477
+ROOT_STOP_COST label=root-source phase=program-source segment_us=387 total_us=34864
+ok
+test infrastructure::macos_client_originals::session::root_stop_binding_tests::stop_step_preserves_expired_deadline_and_independent_refusal_results ... ROOT_STOP_STEP stage=test.expired elapsed_us=0 remaining_before_us=0 remaining_after_us=0 expired_after=true code=timeout
+ROOT_STOP_STEP stage=test.binding elapsed_us=1 remaining_before_us=999983 remaining_after_us=999982 expired_after=false code=client_session_unconfirmed
+ROOT_STOP_STEP stage=test.success elapsed_us=0 remaining_before_us=999946 remaining_after_us=999946 expired_after=false code=ok
+ok
+test infrastructure::macos_client_originals::session::tests::a_coordinator_client_path_is_not_the_effective_home_of_the_cleared_production_runtime ... ok
+test infrastructure::macos_client_originals::session::tests::audit_projection_preserves_canonical_private_path_and_refuses_incomplete_secret_redaction ... ok
+test infrastructure::macos_client_originals::session::tests::combo_declaration_rejects_shadowing_missing_targets_nested_or_native_alias_authority ... ok
+test infrastructure::macos_client_originals::session::tests::combo_declaration_uses_canonical_or_public_alias_without_relabeling_target_routes ... ok
+test infrastructure::macos_client_originals::session::tests::custom_declaration_overlays_same_model_and_adds_only_enabled_selected_custom_routes ... ok
+test infrastructure::macos_client_originals::session::tests::custom_declaration_refuses_ambiguous_or_unbound_custom_routes_without_learning_from_catalog ... ok
+test infrastructure::macos_client_originals::session::tests::diagnose_owned_client_readback_cost_without_replaying_files ... ignored, read-only one-shot cost diagnosis on retained owned Stop failure; no service or client mutation
+test infrastructure::macos_client_originals::session::tests::display_alias_flags_never_become_declared_route_ids_and_omitted_flags_are_valid ... ok
+test infrastructure::macos_client_originals::session::tests::early_captured_originals_close_without_replay_and_remain_independently_verified ... ok
+test infrastructure::macos_client_originals::session::tests::explicit_nonempty_live_selection_is_independent_while_open_discovery_remains_unknown ... ok
+test infrastructure::macos_client_originals::session::tests::held_live_observation_revalidates_original_ready_and_archives_without_a_prior_scope_frame_read ... ok
+test infrastructure::macos_client_originals::session::tests::immutable_startup_scope_reopens_only_with_independent_original_and_scope_references ... ok
+test infrastructure::macos_client_originals::session::tests::independent_static_route_declaration_uses_official_slash_encoding_and_refuses_alias_collision ... ok
+test infrastructure::macos_client_originals::session::tests::indexed_ordinary_session_reopen_keeps_verified_canonical_client_path ... ok
+test infrastructure::macos_client_originals::session::tests::missing_or_untrusted_runtime_record_cannot_create_a_ready_binding ... ok
+test infrastructure::macos_client_originals::session::tests::official299_real_startup_originals_ready_binding_and_completed_stop_roundtrip ... ignored, explicit pinned official299 resources; new private profile; binding only, whole client restore still expected to fail
+test infrastructure::macos_client_originals::session::tests::persisted_live_reference_is_not_an_endpoint_or_process_authority ... ok
+test infrastructure::macos_client_originals::session::tests::preparing_cancellation_uses_only_indexed_closed_vault_history_and_keeps_it_intact ... ok
+test infrastructure::macos_client_originals::session::tests::ready_generation_fields_and_phase_references_are_bounded_and_typed ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_reads_under_action_lock_without_initializing_or_disclosing_original_bytes ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_rejects_scope_or_original_corruption_and_preserves_every_file ... ok
+test infrastructure::macos_client_originals::session::tests::recovery_preview_validates_bound_frames_scope_plan_and_never_adopts_unregistered_completion ... ok
+test infrastructure::macos_client_originals::session::tests::replaced_home_directory_and_tampered_scope_are_preserved_and_rejected ... ok
+test infrastructure::macos_client_originals::session::tests::rollback_readback_has_a_distinct_durable_terminal_and_never_grants_start ... ok
+test infrastructure::macos_client_originals::session::tests::scope_cannot_move_to_another_home_profile_client_or_program ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_disabled_equivalence_is_scoped_and_does_not_grant_colliding_ids ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_seed_only_static_empty_models_and_preserve_unknown_live_graph ... ok
+test infrastructure::macos_client_originals::session::tests::selection_defaults_static_roster_unions_models_and_retained_but_not_unselected_default ... ok
+test infrastructure::macos_client_originals::session::tests::unchanged_early_readback_preserves_each_original_phase_and_refuses_unbound_preparing ... ok
+
+test result: ok. 34 passed; 0 failed; 2 ignored; 0 measured; 2560 filtered out; finished in 118.14s
+

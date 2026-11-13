@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 111；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 112；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1155,3 +1155,14 @@ main 6ca915392在child_private保留parent.private前验/mkdir/EEXIST，clone既
 同binary同heldindex四帧ref87.98/89.70ms与current83.46/84.36ms，directoryopen68→30、Protection6430→6109，frame8/fullsource10/capture60/plan2不变，小样本均值5.55%仅局部debug观测且含计量/assert开销；不冒通用提速或Stop10通过，不承诺任意外部瞬态ABA采样时点完全相同。证据.adg/evidence/0.2.24/client-child-pin-r1/固定4源/actualdebugbinary，在父4163514fe差异构建并映射本提交；初3例与最终4例边界分开留证。所有test/clippy/fmt/agent句柄终止，归档逐字核验后清本轮临时根/duplicate证据，工程target保留，无官方服务/全局DB/日常配置/Shell/安装app/业务WebDAV模型或候选/发布。
 
 原ready-native-r1第二Stop10729ms/deadline耗尽结论有效。本批小幅收益未验证原包，不盲重跑；继续针对恢复链重复路径/原件/authority校验测量，保持原30/5/10/Restart30及Stop子预算、逐帧完整认证和未知拒绝。根中断/动作回执容量边界、缺Ready/一般客户端图路径/进程集合和刷新/NAME/复杂代理/WindowsW1W2/发行README及固定候选等完整目标保持，P24-04/05未关，目标active。
+
+
+## 2026-11-13 索引scope消费同次完整认证帧链
+
+main 0f0e85fb3在root_binding.verify_capture使用原open_profile_origin_prefix返回的同次(originals,frames)立即传原verify_index_scope_prefix，避免原opener丢弃完整帧链后又由verify_closed_reference_files重读Original+Ready。frames与Originals来自同一refs/OriginalKeys的独立hash，已验证全部knownphase/source/provenance/root/保护/前驱/内容/archive和namespace，未改refs/known、不跨写或callback、不存跨调用状态；不接受外来任意frames，新增的是caller同源约束内的消费。scope/HOME/live/ReadySHA/process/parent字段校验逐项与原完整路径一致，当前program/签名Ready仍原独立职责。详[scope帧链合同](0.2.24-contracts/client-index-prefix-r1.md)。
+
+98唯一函数通过：prefix筛选8（2新增+6既有根状态）、其它Session34、Index56；7ignore不计，最终语义加强函数去重；strictClippy/fmt/diff通过。同binary实际Index.open_existing ref→current→current→ref，首代frame8→4/约201.85–211.43ms→137.21–143.65ms；第二代frame24→20/413.41–418.73ms→361.67–369.39ms，fullhistorybegin/finish不变。debug合成局部收益不认normalStop通过。TLSreference仅cfgtest无产品env/serde入口，生产走完整同次prefixcaller；不声称去第二读取后所有外部瞬态采样时刻等同。
+
+HOME/client/Readyhash/generation语义反例使用正确新文件SHA与400，scope变更同步live.scopeSHA/livefileSHA；拒绝后只改回目标字段并更新必要依赖必须成功，避免其它过期引用假绿。初HOME/client反例的旧live引用由review指出并修，早期通过日志不冒加强后证明；productfiles两个testbuild间逐字同源，仅测试代码加强，最终semantic例和clippy/fmt单独重跑。证据.adg/evidence/0.2.24/client-index-prefix-r1/固定3源、两actualbinary/source身份、counter/对照/显式testdelta与清理；归档核验后清本轮TempDir与重复证据根，工程target留存，无官方服务/全局协调DB/日常配置/Shell/安装app/业务WebDAV模型/固定候选或发布。
+
+原ready-native-r1第二Stop10729ms/原deadline耗尽仍失败。本批合并同次帧证据未跑新原包，不能改判；下一步累计已测去重后冻结release源，按明确新假设验证两个完整原包循环/原30/5/10，若仍超时继续按trace修而非重置预算或省proof。根中断/动作回执容量边界、缺Ready/一般客户端图路径/完整进程集合与刷新/NAME/复杂代理/WindowsW1W2/发行README及固定候选等完整目标不缩减，P24-04/05未关，目标active。
