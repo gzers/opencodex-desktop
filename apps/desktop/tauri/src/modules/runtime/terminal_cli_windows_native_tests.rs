@@ -735,3 +735,157 @@ fn isolated_account_terminal_w1d() {
     e.event("final",json!({"allAccepted":failed.is_empty()&&!component_only,"componentAccepted":failed.is_empty(),"msiBlockedByPolicy":component_only,"failed":failed,"schema":3,"pathRestored":true,"msiFailurePreserved":!component_only,"msiUninstall":!component_only,"userDataRetained":true,"noServiceStarted":true}));
     assert!(failed.is_empty(), "independent failed cells: {failed:?}");
 }
+
+#[test]
+#[ignore = "one fresh ordinary ocxw1d account; affected schema3 invariants and unchanged NSIS macro only"]
+fn isolated_schema3_invariants_w1d() {
+    let token = current_identity().unwrap();
+    assert_eq!(token.sid, std::env::var("OCXD024_ACCOUNT_SID").unwrap());
+    assert!(!token.elevated);
+    let profile = platform::home_dir().unwrap();
+    assert!(profile
+        .file_name()
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .starts_with("ocxw1d"));
+    let input = PathBuf::from(std::env::var_os("OCXD024_NATIVE_INPUT").unwrap());
+    let e = Evidence(PathBuf::from(
+        std::env::var_os("OCXD024_NATIVE_EVIDENCE").unwrap(),
+    ));
+    let r = ObservedNative::new();
+    let base = profile.join("w1d native");
+    let i = base.join("I 空格 & !");
+    for name in ["opencodex-desktop.exe", "ocxd.exe", "ocx.exe", ENTRY_SOURCE] {
+        copy(&input.join(name), &i.join(name));
+    }
+    let d = base.join("data/desktop");
+    data_root::initialize(&d).unwrap();
+    let h = base.join("custom H 雪");
+    platform::create_private_dir_all(&h, 0o700).unwrap();
+    data_root::set_opencodex_home(&d, data_root::OpenCodexHomeMode::External, Some(&h)).unwrap();
+    data_root::startup_v2::set_location(
+        &profile.join(".codex-desktop/desktop"),
+        d.parent().unwrap(),
+    )
+    .unwrap();
+    let cfg =
+        data_root::startup_v2::selected_config(&profile.join(".codex-desktop/desktop")).unwrap();
+    let c = Context {
+        user_profile: profile,
+        desktop_root: cfg.active_data_root.clone(),
+        opencodex_home: data_root::resolve_opencodex_home(&cfg),
+        program_root: i.clone(),
+        manager_executable: i.join("opencodex-desktop.exe"),
+    };
+    publish_fixture(
+        &c,
+        &input.join("node.exe"),
+        &input.join("native024-fixture.exe"),
+    );
+    let shim = hash::sha256_file(&command(&c)).unwrap();
+    e.save("path-before.private.json", &encode(&r.original).unwrap());
+    let old = Installed {
+        schema_version: 2,
+        context: c.clone(),
+        path_edit: policy::enable(&r.original, &directory(&c).unwrap()).unwrap(),
+        command_path: command(&c),
+        entry_kind: ENTRY_KIND.into(),
+    };
+    let raw = encode(&old).unwrap();
+    create(&c.record(), &raw);
+    assert!(inspect_with(&c, &[], &r).is_err());
+    assert_eq!(fs::read(c.record()).unwrap(), raw);
+    fs::remove_file(c.record()).unwrap();
+    r.restored();
+    e.event(
+        "schema2-refused",
+        json!({"bytesPreserved":true,"migrationExecuted":false}),
+    );
+    let before = Some(PathValue::encode(1, &directory(&c).unwrap()).unwrap());
+    r.owned_external(before.clone());
+    execute(&c, Action::Enable, &r);
+    execute(&c, Action::Disable, &r);
+    assert_eq!(r.read().unwrap(), before);
+    r.owned_external(r.original.clone());
+    e.event(
+        "preexisting-equivalent-path",
+        json!({"preservedExactly":true,"shimRetained":command(&c).exists()}),
+    );
+    r.fail_notify.set(true);
+    let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    assert!(apply_with(
+        &c,
+        Action::Enable,
+        &[],
+        &p.confirmation_digest,
+        &r,
+        &|_| Ok(())
+    )
+    .is_err());
+    let pending_raw = fs::read(c.pending()).unwrap();
+    e.save("notify-pending.private.json", &pending_raw);
+    r.fail_notify.set(false);
+    execute(&c, Action::Enable, &r);
+    execute(&c, Action::Disable, &r);
+    r.restored();
+    e.event(
+        "notification-interruption",
+        json!({"injected":true,"pendingRetained":true,"continued":true}),
+    );
+    let run = |label: &str, upgrade: bool| {
+        let marker = i.join("hook-passed.txt");
+        if marker.exists() {
+            fs::remove_file(&marker).unwrap();
+        }
+        let out = Command::new(input.join("hook-probe.exe"))
+            .raw_arg(format!(
+                "/S {} /D={}",
+                if upgrade { "/UPDATE" } else { "" },
+                i.display()
+            ))
+            .output()
+            .unwrap();
+        save_output(&e, label, &out);
+        out
+    };
+    assert!(run("nsis-never-enabled", false).status.success());
+    let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    assert!(apply_with(
+        &c,
+        Action::Enable,
+        &[],
+        &p.confirmation_digest,
+        &r,
+        &|point| if point == "pending" {
+            Err(fail("explicit NSIS pending enable fixture"))
+        } else {
+            Ok(())
+        }
+    )
+    .is_err());
+    let pending = fs::read(c.pending()).unwrap();
+    assert_eq!(run("nsis-pending-refused", false).status.code(), Some(1));
+    assert!(!i.join("hook-passed.txt").exists());
+    assert_eq!(fs::read(c.pending()).unwrap(), pending);
+    assert_eq!(hash::sha256_file(&command(&c)).unwrap(), shim);
+    assert!(run("nsis-upgrade-preserves-pending", true).status.success());
+    assert_eq!(fs::read(c.pending()).unwrap(), pending);
+    r.restored();
+    execute(&c, Action::Enable, &r);
+    let registered = fs::read(c.record()).unwrap();
+    let path = r.read().unwrap();
+    assert!(run("nsis-upgrade-preserves-active", true).status.success());
+    assert_eq!(fs::read(c.record()).unwrap(), registered);
+    assert_eq!(r.read().unwrap(), path);
+    assert!(run("nsis-normal-revokes", false).status.success());
+    *r.last.borrow_mut() = r.original.clone();
+    r.restored();
+    assert!(!c.record().exists() && !c.pending().exists());
+    assert_eq!(hash::sha256_file(&command(&c)).unwrap(), shim);
+    e.save(
+        "path-after.private.json",
+        &encode(&r.read().unwrap()).unwrap(),
+    );
+    e.event("final-invariants",json!({"componentAccepted":true,"nsisMacroCells":5,"schema":3,"entryUnchanged":true,"pathRestored":true,"actualInstallerRemoval":false,"msiAcceptance":false}));
+}

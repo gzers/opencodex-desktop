@@ -26,7 +26,9 @@ if($Child){
   $env:OCXD024_NATIVE_INPUT=$c.input
   $env:OCXD024_NATIVE_EVIDENCE=$c.evidence
   $report.sid=$id.User.Value;$report.profile=$registered;$report.session=[Diagnostics.Process]::GetCurrentProcess().SessionId
-  & $c.test --exact 'modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_account_terminal_w1d' --ignored --test-threads=1 --nocapture 1> (Join-Path $c.evidence 'test.stdout.log') 2> (Join-Path $c.evidence 'test.stderr.log')
+  $testName=if($c.testName){$c.testName}else{'isolated_account_terminal_w1d'}
+  if($testName -cnotin @('isolated_account_terminal_w1d','isolated_schema3_invariants_w1d')){throw 'exact W1-D ignored test required'}
+  & $c.test --exact ('modules::runtime::terminal_cli::terminal_cli_windows::native_tests::'+$testName) --ignored --test-threads=1 --nocapture 1> (Join-Path $c.evidence 'test.stdout.log') 2> (Join-Path $c.evidence 'test.stderr.log')
   $report.exitCode=$LASTEXITCODE
   $report.passed=$LASTEXITCODE -eq 0
  }catch{$report.firstError=@{message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber};$_|Out-String|Set-Content -LiteralPath (Join-Path $c.evidence 'child-error.log') -Encoding utf8}
@@ -95,7 +97,7 @@ public static class W1cProfile {
  & icacls.exe $evidence /grant ($name+':(OI)(CI)M') 1> (Join-Path $c.output 'evidence-acl.log')
  if($LASTEXITCODE -ne 0){throw 'test evidence ACL failed'}
  $childConfig=Join-Path $c.output 'child-input.json'
- @{sid=$user.SID.Value;profile=$profile;input=$c.input;evidence=$evidence;test=$c.test;componentOnly=[bool]$c.componentOnly}|ConvertTo-Json|Set-Content -LiteralPath $childConfig -Encoding utf8
+ @{sid=$user.SID.Value;profile=$profile;input=$c.input;evidence=$evidence;test=$c.test;componentOnly=[bool]$c.componentOnly;testName=$c.testName}|ConvertTo-Json|Set-Content -LiteralPath $childConfig -Encoding utf8
  $credential=[pscredential]::new(($env:COMPUTERNAME+'\'+$name),$secret)
  $process=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $credential -LoadUserProfile -WorkingDirectory $c.input -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+$PSCommandPath+'"'),'-Config',('"'+$childConfig+'"'),'-Child') -RedirectStandardOutput (Join-Path $c.output 'bootstrap.stdout.log') -RedirectStandardError (Join-Path $c.output 'bootstrap.stderr.log') -PassThru
  $null=$process.Handle;$report.childPid=$process.Id;$report.childCreation=$process.StartTime.ToString('o');Save-Controller
