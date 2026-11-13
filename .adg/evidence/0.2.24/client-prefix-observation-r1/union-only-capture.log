@@ -1,0 +1,10 @@
+
+running 1 test
+test infrastructure::macos_client_originals::session_index::generation::capture_tests::prefix_reference_replays_failed_successor_capture_with_unchanged_deadline ... SUCCESSOR_CAPTURE_COST {"accepted":false,"originalMs":2215,"preparingRevision":6,"recorded":true,"reserveMs":584,"totalMs":3016}
+SUCCESSOR_CAPTURE_COST {"accepted":false,"originalMs":2225,"preparingRevision":6,"recorded":true,"reserveMs":585,"totalMs":3023}
+SUCCESSOR_CAPTURE_COST {"accepted":false,"originalMs":2218,"preparingRevision":6,"recorded":true,"reserveMs":590,"totalMs":3018}
+CAPTURE_DEADLINE_COMPARISON {"accepted":false,"metrics":{"capture_file":{"calls":7980,"inclusive_nanos":3779975811},"closed_history":{"calls":186,"inclusive_nanos":10322744917},"frame":{"calls":471,"inclusive_nanos":4289374541},"frames_prefix":{"calls":471,"inclusive_nanos":5159274376},"open_at":{"calls":118839,"inclusive_nanos":853709981},"pinned_open":{"calls":13527,"inclusive_nanos":1884797525},"pinned_recheck":{"calls":58236,"inclusive_nanos":10449024470},"pinned_set":{"calls":471,"inclusive_nanos":149419338},"protection":{"calls":1199505,"inclusive_nanos":11262259397},"retirement_plan_load":{"calls":1269,"inclusive_nanos":1368585840},"root_provenance":{"calls":1089,"inclusive_nanos":6278329338}},"passed":true,"reference":false,"scope":"same fixture/assertions/10s custody; no service"}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2577 filtered out; finished in 14.81s
+

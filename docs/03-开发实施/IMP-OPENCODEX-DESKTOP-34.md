@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 104；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 105；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1058,3 +1058,18 @@ raw-byte离线核验16条SQLite事件/当前Head、两代provenance/Original/sco
 证据.adg/evidence/0.2.24/client-root-two-cycles-r1/保留所有失败、脚本/实际资源及binary/source身份、受控Profile74文件raw gzip、first-seen新协调文件原字节、完整manager/stderr阶段日志及独立验证。admin-api-token/runtime-port等敏感运行对象不导出raw；合成配置可保留。逐字归档复核后删除本轮三个运行/前置临时目录与边界预检/重复证据目录，工程target保留，无日常配置/Shell/已安装app/真实WebDAV/模型请求或新固定候选/发布。
 
 下一假设已明确：第二代在当前每个操作检查点重复审查首代归档，Stopped独立登记由首轮约485ms增到约2140ms，restore-plan登记约359ms增到约2271ms，pre-Stop段也显著变长；目前只定位到这些边界，尚未逐syscall/frame计量根因。下一批先精确计数同一观察内重复frame/protection/path opens，选择仍完整覆盖实际变更前后来源/内容/保护及目录事实的有界优化；不使用跨动作摘要cache、跳过旧archive或增加/重置deadline，无新假设不开第二轮。根中断/动作回执容量边界、缺Ready/其它客户端图路径/进程集合和刷新/NAME/复杂代理/Windows W1W2/发行和固定候选等整版范围保持，P24-04/05未关，目标active。
+
+
+## 2026-11-13 帧入口祖先链合并：局部改善，原包Stop失败保持
+
+main e782afb6b只将帧入口data/profile/client/vault的重叠祖先按路径合并到调用内唯一集合，整组两遍nofollow pathname/fd身份及完整Protection核验，冲突identity/Protection在聚合阶段拒绝；raw父fd由原pins借用持续持有，无新辅助SQLite inode fd。private判定在fresh全部Protection与原pin相等后执行，profile/client准入不放宽。每帧完整root provenance/namespace、hash/pred/schema/root/Protection/Original/tree/Grok检查原样保留；无source cache、跨调用证明或持久格式变化。详[帧入口计量合同](0.2.24-contracts/client-prefix-observation-r1.md)。
+
+先以cfg(test) thread-local metrics测完整四帧闭合：fullproof10/capture64/pinnedopen56/Protection6683。曾实现局部来源guard/首尾fullproof/namespace pins，但其单帧Original路径让相同串行capture从参考2.99–3.05s增至4.35–4.54s，修单帧后仍3.86–4.06s，独占原10s保管也出现失败；不能归因为并发负载。整套来源复用及其专属测试因此撤下，从未commit或跑官方包，保留原实验/失败/引用与最终撤回事实，不将其12%四帧局部数据包装成最终收益。
+
+最终精简实现同binary/同fixture正反顺序reference90.75/89.93ms、ancestorunion87.79/86.30ms，均八帧，fullproof10/capture64/open56完全相同，Protection6683→6299减少5.75%，小样本均值3.65%变化。最终同binary串行capture约3.02s，reference约2.95–3.10s，来源次数同1089，属性略降；不宣称稳定通用提速或正常Stop通过。test标签沿用scoped-union是历史计量命名，最终没有来源复用。生产reference固定false，无env/serde入口；显式diagnostic env仅cfgtest模块。
+
+最终186个唯一受影响函数通过：history1、目录pin31、首代原件9、索引/捕获56（5项ignore未计）、其余rootretirement36、restore44、rootcreation8、显式ignored对照诊断1；新增3个union负控。strict all-target Clippy/fmt/diff通过。冲突pins两序准确错误证明聚合拒绝；首遍已扫共享祖先后mode/xattr/rename/symlink变化在第二遍拒绝；父子/兄弟/重复及中文空格反斜杠路径和跨调用核验保持。旧源/auth/capture/phase/archive/恢复反例均保留。
+
+证据.adg/evidence/0.2.24/client-prefix-observation-r1/固定最终7源/实际debug-librarybinary，在父2e74359b4加这些差异下构建，映射本提交不冒嵌入commit重建。所有中间编译/fixture/strictClippy与并发/独占失败按原日志留存，最终只计union-only日志；一次singleprobe改来源仍慢的证伪结果导致撤回方案而非修改deadline/断言。源码/binary及证据逐字核验后清理本轮TempDir/重复临时目录，工程target保留。没有官方runtime/service/全局协调DB、日常配置/Shell/已安装app/真实WebDAV或模型请求、新候选/发布。
+
+原官方双轮第二Stop12878ms/RestorePrepared16失败继续有效。本批局部收益很小，不足以确认消除第二Stop瓶颈；下一批继续测同一完整历史观察中重复archive/plan/frame-prefix调用，保留独立来源/字节/权限/path及实际变更前后验证，不跳过旧history或cache跨边界，无新假设不开原包轮。原30/5/10及Restart30/Stop子预算、根中断/动作回执容量边界、缺Ready/一般客户端图路径/进程集合和刷新/NAME/复杂代理/Windows W1W2/发行与固定候选等完整范围保持，P24-04/05未关闭，目标active。

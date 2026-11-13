@@ -1,0 +1,13 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 21.00s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 1 test
+test infrastructure::macos_client_originals::session_index::generation::capture_tests::prefix_reference_replays_failed_successor_capture_with_unchanged_deadline ... SUCCESSOR_CAPTURE_COST {"accepted":false,"originalMs":2846,"preparingRevision":6,"recorded":true,"reserveMs":761,"totalMs":3874}
+SUCCESSOR_CAPTURE_COST {"accepted":false,"originalMs":2829,"preparingRevision":6,"recorded":true,"reserveMs":748,"totalMs":3860}
+SUCCESSOR_CAPTURE_COST {"accepted":false,"originalMs":3016,"preparingRevision":6,"recorded":true,"reserveMs":820,"totalMs":4059}
+CAPTURE_DEADLINE_COMPARISON {"accepted":false,"metrics":{"capture_file":{"calls":7980,"inclusive_nanos":3785459892},"closed_history":{"calls":186,"inclusive_nanos":13582597117},"frame":{"calls":471,"inclusive_nanos":2061099124},"frames_prefix":{"calls":471,"inclusive_nanos":8734927464},"namespace_freshness":{"calls":3297,"inclusive_nanos":2356649083},"open_at":{"calls":130413,"inclusive_nanos":946382719},"pinned_open":{"calls":14667,"inclusive_nanos":2078185772},"pinned_recheck":{"calls":62511,"inclusive_nanos":11215473202},"pinned_set":{"calls":7758,"inclusive_nanos":2434885574},"protection":{"calls":1478733,"inclusive_nanos":14152425114},"provenance_freshness":{"calls":1413,"inclusive_nanos":2232057112},"retirement_plan_load":{"calls":1269,"inclusive_nanos":1364235932},"root_provenance":{"calls":1089,"inclusive_nanos":8365652587}},"passed":true,"reference":false,"scope":"same fixture/assertions/10s custody; no service"}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2586 filtered out; finished in 18.43s
+

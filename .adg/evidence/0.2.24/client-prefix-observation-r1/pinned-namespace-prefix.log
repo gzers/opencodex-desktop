@@ -1,0 +1,42 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0425]: cannot find value `refs` in this scope
+   --> src/infrastructure/macos_client_root_creation.rs:226:60
+    |
+226 |     inspect_indexed_anchor(manager, data, profile, client, refs, expected_anchor, true)
+    |                                                            ^^^^ not found in this scope
+    |
+note: these functions exist but are inaccessible
+   --> src/infrastructure/macos_client_session_index_tests.rs:80:1
+    |
+ 80 | fn refs(n: usize) -> References {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::macos_client_originals::session_index::tests::refs`: not accessible
+    |
+   ::: src/modules/model_config/recovery.rs:121:1
+    |
+121 | fn refs(policy: &Policy) -> Vec<&TemplateRef> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::modules::model_config::recovery::refs`: not accessible
+
+error[E0061]: this function takes 5 arguments but 6 arguments were supplied
+    --> src/infrastructure/macos_client_originals.rs:1228:51
+     |
+1228 |             (Some(manager), Some(origin)) => Some(root_creation::observe_indexed_anchor(
+     |                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+1233 |                 origin,
+     |                 ------ unexpected argument #5 of type `&macos_client_originals::root_creation::References`
+     |
+note: function defined here
+    --> src/infrastructure/macos_client_root_creation.rs:219:15
+     |
+ 219 | pub(super) fn observe_indexed_anchor<'a>(
+     |               ^^^^^^^^^^^^^^^^^^^^^^
+help: remove the extra argument
+     |
+1232 -                 &self.client,
+1233 -                 origin,
+1232 +                 &self.client,
+     |
+
+Some errors have detailed explanations: E0061, E0425.
+For more information about an error, try `rustc --explain E0061`.
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

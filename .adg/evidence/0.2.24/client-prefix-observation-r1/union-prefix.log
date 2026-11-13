@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 25.79s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 1 test
+test infrastructure::macos_client_originals::root_retirement::history_tests::closed_root_history_full_frame_live_and_released_marker_chain_stays_independently_bound ... CLOSED_PREFIX_METRICS {"accepted":false,"metrics":{"capture_file":{"calls":48,"inclusive_nanos":22842253},"closed_history":{"calls":1,"inclusive_nanos":79841709},"frame":{"calls":8,"inclusive_nanos":30790248},"frames_prefix":{"calls":2,"inclusive_nanos":49548584},"namespace_freshness":{"calls":26,"inclusive_nanos":8558624},"open_at":{"calls":418,"inclusive_nanos":3262535},"pinned_open":{"calls":42,"inclusive_nanos":5584751},"pinned_recheck":{"calls":230,"inclusive_nanos":41905956},"pinned_set":{"calls":34,"inclusive_nanos":10952085},"protection":{"calls":5595,"inclusive_nanos":54701959},"provenance_freshness":{"calls":12,"inclusive_nanos":9093209},"retirement_plan_load":{"calls":6,"inclusive_nanos":7273750},"root_provenance":{"calls":6,"inclusive_nanos":21149794}},"scope":"synthetic full four-frame schema2 closed-history observation, no official runtime"}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2581 filtered out; finished in 2.74s
+
