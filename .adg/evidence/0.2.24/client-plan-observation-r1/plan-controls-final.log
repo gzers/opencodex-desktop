@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 17.65s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 3 tests
+test infrastructure::macos_client_originals::root_retirement::history_tests::closed_plan_observation_cannot_return_partial_shell_or_adopt_mismatched_independent_source ... ok
+test infrastructure::macos_client_originals::root_retirement::history_tests::closed_plan_observation_reloads_plan_after_real_readback_checkpoint ... ok
+test infrastructure::macos_client_originals::root_retirement::history_tests::closed_plan_observation_retains_exact_start_and_end_authentication_without_cross_call_cache ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2578 filtered out; finished in 7.42s
+

@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 105；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 106；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1073,3 +1073,18 @@ main e782afb6b只将帧入口data/profile/client/vault的重叠祖先按路径�
 证据.adg/evidence/0.2.24/client-prefix-observation-r1/固定最终7源/实际debug-librarybinary，在父2e74359b4加这些差异下构建，映射本提交不冒嵌入commit重建。所有中间编译/fixture/strictClippy与并发/独占失败按原日志留存，最终只计union-only日志；一次singleprobe改来源仍慢的证伪结果导致撤回方案而非修改deadline/断言。源码/binary及证据逐字核验后清理本轮TempDir/重复临时目录，工程target保留。没有官方runtime/service/全局协调DB、日常配置/Shell/已安装app/真实WebDAV或模型请求、新候选/发布。
 
 原官方双轮第二Stop12878ms/RestorePrepared16失败继续有效。本批局部收益很小，不足以确认消除第二Stop瓶颈；下一批继续测同一完整历史观察中重复archive/plan/frame-prefix调用，保留独立来源/字节/权限/path及实际变更前后验证，不跳过旧history或cache跨边界，无新假设不开原包轮。原30/5/10及Restart30/Stop子预算、根中断/动作回执容量边界、缺Ready/一般客户端图路径/进程集合和刷新/NAME/复杂代理/Windows W1W2/发行与固定候选等完整范围保持，P24-04/05未关闭，目标active。
+
+
+## 2026-11-13 历史只读计划认证收敛，前后完整复核保持
+
+main 350bc0309把单次历史open开始的重复Plan认证从六次收敛为两次：私有open_archive_shell仅pins、不返回已认证历史；同一Pending::open_with_plan仍用原完整load得到本调用ownedPlan，完整initial.source比独立Head后消费；历史checkpoint后仍独立load、Plan相等及第二套archive/tree/Grok/intent/readback完整检查。每帧来源/auth/namespace/hash/pred/root/Protection/Original/scope/live、精确releasedtree与completion均不减；公开Pending::open及current/Stop/移动入口仍原完整认证，不用历史shortcut。namespace继承保留，不经序列化/枚举恢复，无跨观察cache。详[计划观察合同](0.2.24-contracts/client-plan-observation-r1.md)。
+
+原六次load前四次之间无写入或外部callback，去掉重复不删独立before/after边界；上层历史前后各open一次仍保持，故该层12→4而不是整index只load2。测试reference只cfgtest TLS/RAII，生产固定false，无env/serde产品入口。保留前后完整认证及持续变化拒绝，不承诺所有不合作并发瞬时ABA都有相同命中时刻。
+
+最终104个唯一受影响函数通过：3新例、完整schema2/fullframe比较1、其它rootretirement36、index56、多代8，5项ignore不计；strict all-target Clippy/fmt/diff通过。新source负控从早期ticket改动加强为保持身份/Original合法的source-scope/source-revision，并精确断言完整source不符；Plan字节/权限/未封存替换在真实readback checkpoint后拒绝，后续调用重新认证，坏digest/id/completion零改写。replacement-unsealed不冒合法同字节400 Plan文件inode连续性要求。
+
+同binary/full4frame夹具reference→current→current→reference约86.89/86.32ms与81.10/82.19ms，plan6→2、八frame/两prefix/十次fullrootprovenance不变、capture64→60、Protection6299→5927，小样本均值5.73%变化；不宣称通用提速、原包normalStop10通过或固定候选验收。多代/进程exit/rootnativegap原反例均保留。证据.adg/evidence/0.2.24/client-plan-observation-r1/固定3源/实际debug-librarybinary，在父e782afb6b加这些差异下构建并映射本提交，不冒嵌入commit已重建；初test旧source反例日志只作原时点，不替代加强后最终覆盖。
+
+本轮无失败测试或新原包轮，未触官方runtime/service/全局协调DB、日常配置/Shell/安装app或业务WebDAV/模型请求；所有test/clippy/fmt/agent句柄终止，unitTMP空、归档字节核验后清本轮临时根/重复目录，工程target保留，无候选/发布。Windows远端仍b2e89665d/0eef59a01无新回交，不要求Mac-only批重跑Windows。
+
+下一项继续核上层双history-open与各自内部双archive-prefix的重复覆盖，尝试封闭的本调用观察对象将原before/after归档认证围住同一vault投影，结束时独立重读全部来源/内容/保护和路径；不学习磁盘来源、不cache跨边界，不直接删除结束复核。当前局部改善尚未证明消除原包第二Stop12878ms/RestorePrepared16，旧失败有效、无充分新假设不重跑。根中断/动作回执容量边界、缺Ready/其它客户端图路径/进程集合与刷新/NAME/复杂代理/Windows W1W2/发行README/固定候选等完整范围保持，P24-04/05未关，目标active。
