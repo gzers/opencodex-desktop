@@ -24,6 +24,7 @@ impl Fixture {
             NEXT.fetch_add(1, Ordering::Relaxed)
         ));
         fs::create_dir(&root).unwrap();
+        fs::create_dir(root.join("profile 雪")).unwrap();
         let executable = root.join("fixture.exe");
         fs::copy(env!("CARGO_BIN_EXE_native024-fixture"), &executable).unwrap();
         let home = create_private_directory(&root.join("home")).unwrap();
@@ -41,12 +42,16 @@ impl Fixture {
         let mut env = BTreeMap::new();
         env.insert("SystemRoot".into(), std::env::var_os("SystemRoot").unwrap());
         env.insert("PATH".into(), std::env::var_os("PATH").unwrap());
+        env.insert("HOME".into(), "must-be-overridden".into());
+        env.insert("userprofile".into(), "must-be-overridden".into());
+        env.insert("opencodex_home".into(), "must-be-overridden".into());
         Guarded(
             OwnedRuntime::create_suspended(LaunchSpec {
                 executable: &self.executable,
                 arguments: args,
                 working_directory: &self.root,
-                home: self.home.as_ref().unwrap().path(),
+                user_profile: &self.root.join("profile 雪"),
+                opencodex_home: self.home.as_ref().unwrap().path(),
                 environment: &env,
                 stdout: self.out.as_ref().unwrap(),
                 stderr: self.err.as_ref().unwrap(),
@@ -146,8 +151,9 @@ fn home_environment_arguments_and_pre_resume_window() {
     assert_eq!(
         value,
         format!(
-            "{}\n{}\n{}",
-            f.home.as_ref().unwrap().path().display(),
+            "{}\n{}\n{}\n{}",
+            f.root.join("profile 雪").display(),
+            f.root.join("profile 雪").display(),
             f.home.as_ref().unwrap().path().display(),
             text.to_string_lossy()
         )
@@ -310,7 +316,8 @@ fn case_duplicate_environment_is_rejected_without_running_child() {
         executable: &f.executable,
         arguments: &args,
         working_directory: &f.root,
-        home: f.home.as_ref().unwrap().path(),
+        user_profile: &f.root.join("profile 雪"),
+        opencodex_home: f.home.as_ref().unwrap().path(),
         environment: &env,
         stdout: f.out.as_ref().unwrap(),
         stderr: f.err.as_ref().unwrap(),
