@@ -1,0 +1,50 @@
+{
+  "accepted": false,
+  "sourceCommit": "4163514fe83b9798e3570eafdf211d79d87c365b",
+  "actualNativeRoundsInThisBatch": 1,
+  "result": "failed-normal-secondStop",
+  "priorFailures": [
+    "client-root-two-cycles-r1 secondStop12878ms",
+    "client-history-projected-native-r1 secondStop10736ms"
+  ],
+  "firstCycle": {
+    "startElapsedMs": 8839,
+    "statusElapsedMs": 226,
+    "stopElapsedMs": 8608
+  },
+  "secondCycle": {
+    "secondStartElapsedMs": 14110,
+    "secondLiveStatusElapsedMs": 1528,
+    "secondStopElapsedMs": 10729
+  },
+  "provenCause": "Original bound deadline expired during artifact authority live-binding observation; the following original pair/authority check refused. No writer-refusal trace occurred. This does not classify untraced previous rounds.",
+  "errorMapping": {
+    "underlying": "lifecycle_timeout",
+    "intermediateIo": "PermissionDenied",
+    "session": "client_session_unconfirmed",
+    "action": "client_original_restore_pending"
+  },
+  "criticalBudgetFacts": {
+    "secondLoadReadyUs": 636537,
+    "secondPreStopUs": 2092753,
+    "remainingAtArtifactsAdmissionUs": 908879,
+    "remainingAtArtifactsApplyUs": 696169,
+    "applyElapsedUs": 735432,
+    "lastLiveBeforeRemainingUs": 1633,
+    "lastLiveElapsedUs": 40838,
+    "lastLiveAfterRemainingUs": 0
+  },
+  "verifiedFacts": [
+    "Actual original launcher/service pairs normalexit0, each complete4listenercollection absent",
+    "Entry optimization retained full source checks and Ready was attested, but full normalStop still failed",
+    "All second admission/Guardimage/planopen/initialauthority steps succeeded before deadline",
+    "No ROOT_STOP_WRITER_REFUSAL in secondcycle; authority rawlifecycle_timeout observed after originalbudget crossed",
+    "IndependentHeadRestorePrepared16, no movement/completion fabricated; some artifactrestore staging may have begun",
+    "Firstbinding/raw9events/wholearchive unchanged, both schema5Original/scope/3phasechains verified offline",
+    "75ownedProfilefiles/rawcoordinatorbytes archived; exact3newDBs exclusivechecked and removed, originalLattributes/bytes unchanged, alltrackedbirthgenerations gone"
+  ],
+  "nextFalsifiableHypothesis": "Every per-frame root provenance check reads three records plus one reference through capture_file. Each contiguous read repeats full shared parent chains before/after individual files; no mutation or external callback exists between these source reads. Measure a sealed, call-local multi-file read that retains all file nofollow/identity/version/type/singlelink/owner/security/bytes/hash/strictJSON and original crossbindings, plus complete union of authenticated parent chains before and after the entire read. Keep all per-frame invocations and final namespace; never cache across frames/actions. If attributes/rootopens decrease without current/singleOriginal regression, validate malformed/parent-replacement/midread mutations before any new native cycle.",
+  "whyNotRerunNow": "Original deadline exhaustion now confirmed; no further unchanged round needed. Restore normalStop10 is still an unmet requirement, not a warning waived for delivery.",
+  "limits": "Thiscause is proven only for the traced new4163514fe round. Previous untracedrounds remain independently classified. No fixed app/installer/Windows acceptance or publication.",
+  "boundaries": "One actualnewround, noforcekill/retry/timeoutreset/official2.99patch/dailyconfig/Shell/installedapp/businessrequest."
+}

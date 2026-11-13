@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 109；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 110；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 57ae63019（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1129,3 +1129,18 @@ ReadyAcquisitionError显式Index(io)与Session(AppError)，Active只对Index用�
 初编译因Refs无Debug的assert_eq失败，改普通相等断言而非增加Debug；index原套件55pass/1failed来自新增testhook撞首根精确3阶段allowlist，修hook作用域后原测试不变精确通过，Readypostcommit负控也重测。core六源binary主要检查与最终七源binary仅新增writertrace等价/复验分别留证，未把旧日志冒一份最终binary全量。审查发现字节反例权限掩盖已修为写后400。证据.adg/evidence/0.2.24/client-ready-acquisition-r1/绑定两份源/binary及显式delta、假设、失败、复验和清理，归档逐字比对后清本轮自有TempDir/重复目录，工程target保留。无官方服务/全局协调DB、日常配置/Shell/安装app或业务WebDAV/模型请求。
 
 前轮原包第二Stop10736ms/RestorePrepared16仍失败，本批未跑原包，不能宣布预算修复。下一步冻结release来源，用新阶段/remaining/code精确区分root-artifacts-held拒绝与deadline，验证入口load/preStop重复审查去除后的真实效应；保持原30/5/10及Restart30/Stop子预算、原件/归属/未知拒绝，旧失败原目录不覆盖。根中断/动作回执容量、缺Ready/其它客户端图路径/完整进程集合与刷新/NAME/复杂代理/Windows W1W2/发行README与固定候选全范围保持，P24-04/05未关，目标active，发布另依授权。
+
+
+## 2026-11-13 Ready取得优化原包诊断：确认恢复原deadline耗尽
+
+冻结main4163514fe clean tree/18关键源，原release opt-level=s/LTO宿主binary SHA43453c81da3d2ab09e48f5326d303f61b71a1893fc75ecd54601baf32077babd，实际原官方2.99/descriptor/outerbundle固定摘要不变。唯一新双轮诊断：首轮Start8839ms、同连接验签Status226ms、完整normalStop8608ms、stoppedStatus1381ms均通过；第二轮Start14110ms、Status1528ms通过，Stop10729ms仍失败，Stopped/无Stoppedresult/clientRecoveryRequired/canStartfalse/独立RestorePrepared16，无root movement/completion。旧10736/12878ms两轮失败证据均不覆盖。详[本轮原因诊断](0.2.24-contracts/client-ready-native-r1.md)。
+
+新trace闭合了本轮根因：第二cycle loadReady636537us、preStop2092753us成功；进入artifactadmission仍908879us，Guardimage/Planopen/初authority全部在deadline内通过；applyretaining开始余696169us、实际耗735432us。最后一次authority.live开始只余1633us、耗40838us，结束remaining0/expiredtrue，紧随原pair/authority检查返回底层lifecycle_timeout；原PermissionDenied映射再包装为client_session_unconfirmed和动作client_original_restore_pending，未出现writer-refusal trace。因此本轮已确认为原10秒预算耗尽，不是根据总时长猜测来源/Guard损坏；该因果不冒自动追认旧无trace轮次。
+
+两轮原launcher/service实际normalexit0、每轮4listeners全消失；所有trackedPID+birth及ownedexecutables终态无残留，coordinatoridentity稳定、无observationerror。oldbinding/rawfirst9events/旧archive在secondStart及Stop后均原样；两代provenance/Original/scope/Ready/PreStop/Stopped摘要链和首代Plan/readback从75文件rawgzip独立验证，第二代无伪造RootAbsent。局部artifact恢复可能已进入分步归档，不能从RestorePrepared16断言没发生任何artifact变化。原件/半成品均保留证据后仅清理owned fixture。
+
+新增诊断不仅区分表面会话错误，原stage/code/remaining证明deadlinecrossing；cfgtest日志不输出errorDetail/path/config/secret。已有生产判定/原30/5/10及Restart30/Stop子预算未改，不用强制退出替代normalStop证据。4项同release非native命令回归通过，不把ignored目标当第二次通过；runner还要求实际one-test与完成marker，当前exit101/无passmarker保持整轮acceptedfalse。
+
+证据.adg/evidence/0.2.24/client-ready-native-r1/保留source/tree18hash/实际binary、完整build、loopbackbind正例/外网和日常HOME拒绝、完整stdout/stderr/manager及独立trace核验、rawProfile75文件与新coordinator原字节。全局预存L在最终rwexclusive连接关闭后identity/uid/gid/mode/flags/ACL/xattrs/bytes/SHA及sidecar缺席不变，从未删除/重建/覆盖；准确3新N/K/history在持久rawreceipt/firstseenidentity核对后exclusive取回并清理，digest-adopt残留为空。两个导出primaryports经内核TCP表独立不监听。逐字归档核验后清本轮Profile/程序包/二进制副本和重复临时证据目录，工程target保留；没有日常配置/Shell/安装app/真实业务WebDAV/模型请求或官方2.99修改，无固定候选/发布。
+
+下一步不改渠道或放宽拒绝，针对已确认耗时测量每帧rootprovenance连续3记录+1reference读取重复校验共享parentpin的成本；评估仅调用内封闭批量文件读取，在全组前后完整核parent路径链，每个文件仍完整nofollow/identity/version/type/singlelink/owner/ACL/xattr/bytes/hash/strictJSON及原交叉绑定，不cache跨帧/动作、不减少每帧调用或最终namespace。必须用单/多帧及认证期间parent/file变更反例证伪，若不能减少实际计数且无capture退化就不合入。旧失败保留，无新修复/假设不开原包轮。根中断/动作回执容量边界、缺Ready/一般客户端图路径/完整进程集合与刷新/NAME/复杂代理/Windows W1W2/发行README及固定候选全范围保持，P24-04/05未关，目标active。

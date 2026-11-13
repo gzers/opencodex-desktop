@@ -1,0 +1,363 @@
+{
+  "accepted": false,
+  "businessRequests": false,
+  "clientChangedDuringStart": true,
+  "firstAttestedStatusGate": true,
+  "grokConfigChangedDuringStart": false,
+  "independentOriginalsReferenced": true,
+  "indexedAfterStop": {
+    "completionSha256": "cd465748212a038891ad375e229a99435c6b1b7b41c3840202cf7fdf876b1730",
+    "references": {
+      "attempt": "235bd60c-5e90-4ccf-ae72-a7eb0e787a95",
+      "liveSha256": "1b6184c8d6291cdef162f784ab50a9ad0119e304a5519a091745686f68c724f2",
+      "originalSha256": "653443c4c1007f3ba43524a72e64d44848c74d6409d3ba533bef4bfe1d8897ba",
+      "phases": [
+        [
+          "ready",
+          "48e1a2bdb37603d8a40a34ab2fa9453676196a0358209955e904890553dc35e9"
+        ],
+        [
+          "pre_stop",
+          "bb41a78c69ab9088b30c3779022364040af4d701ca7e50ecbb2bd3068bd01033"
+        ],
+        [
+          "stopped",
+          "e353f026e08dab47ebaa59e8088f313ebe0a04435e77115284a2567215908d1e"
+        ]
+      ],
+      "scopeSha256": "84f7a6142b3741b975c47b8ffe13d126d967393d95c99390c77d7e91d0997519"
+    },
+    "restorePlan": {
+      "id": "1cc040f3-3758-4a37-aa2c-42348603e85b",
+      "sha256": "aabf3c8ec323efa2b9b7b60a384720322a107ab0e5c57d95a4ee9f882c0458a8"
+    },
+    "revision": 9,
+    "rootRetirement": {
+      "plan": {
+        "id": "319a8ec6-f3a0-44ac-9ab0-b25e9720d064",
+        "sha256": "230c596de19c49a87d2724184c078b7beabf5707cd519d884241db3a0f4bfa13"
+      },
+      "sourceRevision": 7
+    },
+    "state": "root_absent",
+    "ticket": "235bd60c-5e90-4ccf-ae72-a7eb0e787a95"
+  },
+  "indexedReady": true,
+  "initialClientState": "codex-absent",
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "officialVersion": "2.99.0",
+  "originalAbsentProvenanceAndReadback": true,
+  "pidRecordAbsent": true,
+  "record": {
+    "pid": 12285,
+    "port": 63514
+  },
+  "recordAbsent": true,
+  "result": "failed",
+  "rootAbsentTerminal": true,
+  "rootCycles": {
+    "accepted": false,
+    "businessRequests": false,
+    "closedGenerationCount": null,
+    "distinctRootAttemptPlanAndPid": false,
+    "firstClosed": {
+      "completionSha256": "cd465748212a038891ad375e229a99435c6b1b7b41c3840202cf7fdf876b1730",
+      "references": {
+        "attempt": "235bd60c-5e90-4ccf-ae72-a7eb0e787a95",
+        "liveSha256": "1b6184c8d6291cdef162f784ab50a9ad0119e304a5519a091745686f68c724f2",
+        "originalSha256": "653443c4c1007f3ba43524a72e64d44848c74d6409d3ba533bef4bfe1d8897ba",
+        "phases": [
+          [
+            "ready",
+            "48e1a2bdb37603d8a40a34ab2fa9453676196a0358209955e904890553dc35e9"
+          ],
+          [
+            "pre_stop",
+            "bb41a78c69ab9088b30c3779022364040af4d701ca7e50ecbb2bd3068bd01033"
+          ],
+          [
+            "stopped",
+            "e353f026e08dab47ebaa59e8088f313ebe0a04435e77115284a2567215908d1e"
+          ]
+        ],
+        "scopeSha256": "84f7a6142b3741b975c47b8ffe13d126d967393d95c99390c77d7e91d0997519"
+      },
+      "restorePlan": {
+        "id": "1cc040f3-3758-4a37-aa2c-42348603e85b",
+        "sha256": "aabf3c8ec323efa2b9b7b60a384720322a107ab0e5c57d95a4ee9f882c0458a8"
+      },
+      "revision": 9,
+      "rootRetirement": {
+        "plan": {
+          "id": "319a8ec6-f3a0-44ac-9ab0-b25e9720d064",
+          "sha256": "230c596de19c49a87d2724184c078b7beabf5707cd519d884241db3a0f4bfa13"
+        },
+        "sourceRevision": 7
+      },
+      "state": "root_absent",
+      "ticket": "235bd60c-5e90-4ccf-ae72-a7eb0e787a95"
+    },
+    "firstCycle": {
+      "record": {
+        "pid": 12285,
+        "port": 63514
+      },
+      "startElapsedMs": 8839,
+      "statusElapsedMs": 226,
+      "stopElapsedMs": 8608
+    },
+    "firstPreviewGate": true,
+    "firstReadonlyStateUnchanged": true,
+    "firstRootIdentity": {
+      "birthNanos": 162675849,
+      "birthSeconds": 1794536923,
+      "device": 16777231,
+      "inode": 445306758
+    },
+    "firstStoppedGate": true,
+    "firstStoppedStatus": {
+      "official": {
+        "officialReadiness": null,
+        "opencodexHome": null,
+        "pid": null,
+        "port": null,
+        "ready": null,
+        "status": null,
+        "statusObservation": null
+      },
+      "snapshot": {
+        "can_restart": false,
+        "can_start": true,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "not_required",
+          "data_root": "/private/tmp/ocxd024-versioned-lifecycle-3gl7tnk6/fixtures/profile/.codex-desktop/desktop",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-3gl7tnk6/fixtures/profile/.codex-desktop/opencodex/home",
+          "protection": "none",
+          "reboot_safe": true,
+          "runtime_label": "bundled",
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": "native",
+          "version_drift": "2.99.0"
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "stopped"
+        },
+        "pid": null,
+        "port": null,
+        "source": "live"
+      }
+    },
+    "firstStoppedStatusElapsedMs": 1381,
+    "oldBindingEventsAndVaultUnchanged": true,
+    "oldEvidenceUnchangedDuringSecondStart": true,
+    "passed": false,
+    "recordsAbsent": true,
+    "scope": "two normal official service root lifecycles, not packaged application acceptance",
+    "secondClosed": {
+      "completionSha256": null,
+      "references": {
+        "attempt": "59ca61fe-5b8f-44eb-bf0b-9d16af7d46a1",
+        "liveSha256": "44b489160198f81ca58ca4c2d2250a0039c11641a830695dbfd7f606a82de005",
+        "originalSha256": "a982934371781d031c57225854672140d0ae14986ed3e50b465700b040e55fe2",
+        "phases": [
+          [
+            "ready",
+            "d88dc9cad09919849d65f762be87885a575315cde9884cfe26e971297ec9478b"
+          ],
+          [
+            "pre_stop",
+            "3e66b9edb77831eb4d99495e5d66d138884c87cf7008eab77fe0319ac4c3011e"
+          ],
+          [
+            "stopped",
+            "772c187c1e39b223789600be28099ffa1f9a393966427037e3973835fcbb397e"
+          ]
+        ],
+        "scopeSha256": "6e378426b8f2f1c9bfd4fc4294d3e6a588ee008d29807110f542c994f8048d4a"
+      },
+      "restorePlan": {
+        "id": "8ae3c8ed-537c-403e-9307-9ebf472d1465",
+        "sha256": "77efed86228cdec1700a1ca92494d7d58a1f1e1c4a433f191c746350c675b32f"
+      },
+      "revision": 16,
+      "state": "restore_prepared",
+      "ticket": "59ca61fe-5b8f-44eb-bf0b-9d16af7d46a1"
+    },
+    "secondLiveGate": true,
+    "secondLiveStatus": {
+      "official": {
+        "officialReadiness": "ready",
+        "opencodexHome": "/private/tmp/ocxd024-versioned-lifecycle-3gl7tnk6/fixtures/profile/.codex-desktop/opencodex/home",
+        "pid": "12524",
+        "port": 63514,
+        "ready": true,
+        "status": "running",
+        "statusObservation": "attested-same-connection"
+      },
+      "snapshot": {
+        "can_restart": true,
+        "can_start": false,
+        "can_stop": true,
+        "facts": {
+          "client_recovery": "active",
+          "data_root": "/private/tmp/ocxd024-versioned-lifecycle-3gl7tnk6/fixtures/profile/.codex-desktop/desktop",
+          "health": "healthy",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-3gl7tnk6/fixtures/profile/.codex-desktop/opencodex/home",
+          "protection": null,
+          "reboot_safe": null,
+          "runtime_label": "bundled",
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": null,
+          "version_drift": "2.99.0"
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "running"
+        },
+        "pid": "12524",
+        "port": 63514,
+        "source": "live"
+      }
+    },
+    "secondLiveStatusElapsedMs": 1528,
+    "secondPreviewGate": false,
+    "secondReadonlyStateUnchanged": true,
+    "secondReadyGate": true,
+    "secondReadyIndex": {
+      "completionSha256": null,
+      "references": {
+        "attempt": "59ca61fe-5b8f-44eb-bf0b-9d16af7d46a1",
+        "liveSha256": "44b489160198f81ca58ca4c2d2250a0039c11641a830695dbfd7f606a82de005",
+        "originalSha256": "a982934371781d031c57225854672140d0ae14986ed3e50b465700b040e55fe2",
+        "phases": [
+          [
+            "ready",
+            "d88dc9cad09919849d65f762be87885a575315cde9884cfe26e971297ec9478b"
+          ]
+        ],
+        "scopeSha256": "6e378426b8f2f1c9bfd4fc4294d3e6a588ee008d29807110f542c994f8048d4a"
+      },
+      "restorePlan": null,
+      "revision": 13,
+      "state": "ready",
+      "ticket": "59ca61fe-5b8f-44eb-bf0b-9d16af7d46a1"
+    },
+    "secondRecord": {
+      "pid": 12524,
+      "port": 63514
+    },
+    "secondStart": {
+      "canRestart": true,
+      "canStart": false,
+      "canStop": true,
+      "clientRecoveryRequired": false,
+      "lifecycleState": "running",
+      "result": "started"
+    },
+    "secondStartElapsedMs": 14110,
+    "secondStop": {
+      "canRestart": false,
+      "canStart": false,
+      "canStop": false,
+      "clientRecoveryRequired": true,
+      "failure": {
+        "code": "client_original_restore_pending",
+        "message": "服务已正常停止，客户端配置原件恢复尚未完成；原会话和现场已保留"
+      },
+      "lifecycleState": "stopped",
+      "result": null
+    },
+    "secondStopElapsedMs": 10729,
+    "secondStopGate": false,
+    "secondStoppedGate": false,
+    "secondStoppedStatus": {
+      "official": {
+        "officialReadiness": null,
+        "opencodexHome": null,
+        "pid": null,
+        "port": null,
+        "ready": null,
+        "status": null,
+        "statusObservation": null
+      },
+      "snapshot": {
+        "can_restart": false,
+        "can_start": false,
+        "can_stop": false,
+        "facts": {
+          "client_recovery": "required",
+          "data_root": "/private/tmp/ocxd024-versioned-lifecycle-3gl7tnk6/fixtures/profile/.codex-desktop/desktop",
+          "health": "unknown",
+          "opencodex_home": "/private/tmp/ocxd024-versioned-lifecycle-3gl7tnk6/fixtures/profile/.codex-desktop/opencodex/home",
+          "protection": "none",
+          "reboot_safe": true,
+          "runtime_label": "bundled",
+          "service_present": null,
+          "shim_present": null,
+          "startup_status": "native",
+          "version_drift": "2.99.0"
+        },
+        "matrix": {
+          "connection": "unconfigured",
+          "operation": "idle",
+          "runtime": "stopped"
+        },
+        "pid": null,
+        "port": null,
+        "source": "live"
+      }
+    },
+    "secondStoppedStatusElapsedMs": 1687,
+    "startBudgetMs": 30000,
+    "statusBudgetMs": 5000,
+    "stopBudgetMs": 10000
+  },
+  "scope": "directed two-generation root lifecycle; fixed application candidate and whole version unaccepted",
+  "serviceStarted": true,
+  "start": {
+    "canRestart": true,
+    "canStart": false,
+    "canStop": true,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "running",
+    "result": "started"
+  },
+  "startBudgetMs": 30000,
+  "startElapsedMs": 8839,
+  "status": {
+    "officialReadiness": "ready",
+    "opencodexHome": "/private/tmp/ocxd024-versioned-lifecycle-3gl7tnk6/fixtures/profile/.codex-desktop/opencodex/home",
+    "pid": "12285",
+    "port": 63514,
+    "ready": true,
+    "status": "running",
+    "statusObservation": "attested-same-connection"
+  },
+  "statusBudgetMs": 5000,
+  "statusElapsedMs": 226,
+  "stop": {
+    "canRestart": false,
+    "canStart": true,
+    "canStop": false,
+    "clientRecoveryRequired": false,
+    "lifecycleState": "stopped",
+    "result": "stopped"
+  },
+  "stopBudgetMs": 10000,
+  "stopElapsedMs": 8608
+}

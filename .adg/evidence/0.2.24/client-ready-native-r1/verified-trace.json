@@ -1,0 +1,69 @@
+{
+  "accepted": false,
+  "actualNativeRounds": 1,
+  "sourceCommit": "4163514fe83b9798e3570eafdf211d79d87c365b",
+  "entryLoadAndPreStop": [
+    [
+      {
+        "stage": "load-ready",
+        "elapsed_us": "127310",
+        "remaining_us": "9760484",
+        "passed": "true"
+      },
+      {
+        "stage": "pre-stop",
+        "elapsed_us": "1095210",
+        "remaining_us": "8665202",
+        "passed": "true"
+      }
+    ],
+    [
+      {
+        "stage": "load-ready",
+        "elapsed_us": "636537",
+        "remaining_us": "9250374",
+        "passed": "true"
+      },
+      {
+        "stage": "pre-stop",
+        "elapsed_us": "2092753",
+        "remaining_us": "7157574",
+        "passed": "true"
+      }
+    ]
+  ],
+  "artifactApply": {
+    "stage": "artifacts.apply-retaining",
+    "elapsed_us": "735432",
+    "remaining_before_us": "696169",
+    "remaining_after_us": "0",
+    "expired_after": "true",
+    "code": "client_session_unconfirmed"
+  },
+  "lastLiveCheckCrossingDeadline": {
+    "stage": "artifact-authority.live",
+    "elapsed_us": "40838",
+    "remaining_before_us": "1633",
+    "remaining_after_us": "0",
+    "expired_after": "true",
+    "code": "ok"
+  },
+  "underlyingRefusal": "lifecycle_timeout",
+  "oldMappedIoRefusal": "permission-denied",
+  "outerMappedSessionRefusal": "client_session_unconfirmed",
+  "causeForThisRound": "Original bound deadline expired during artifact authority live-binding observation; the following original pair/authority check refused. No writer-refusal trace occurred. This does not classify untraced previous rounds.",
+  "firstCycleMs": {
+    "startElapsedMs": 8839,
+    "statusElapsedMs": 226,
+    "stopElapsedMs": 8608
+  },
+  "secondCycleMs": {
+    "secondStartElapsedMs": 14110,
+    "secondLiveStatusElapsedMs": 1528,
+    "secondStopElapsedMs": 10729
+  },
+  "retainedState": "restore_prepared",
+  "revision": 16,
+  "noCompletionInvented": true,
+  "scope": "Exact diagnostic cause from this failed release-library round; no timeout reset, successful normalStop or whole-version acceptance"
+}
