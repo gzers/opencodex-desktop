@@ -1,6 +1,7 @@
-"""Compile actual Windows templates/resources with an explicitly marked test EXE.
+"""Compile actual Windows templates/resources with an explicitly marked EXE.
 
-The EXE is the standalone native fixture, not a product or release candidate.
+The default EXE is a fixture; --product-bin-dir uses MSVC development binaries.
+Both use a test bundle identity, never a release candidate.
 No installer is executed. CLI/tool caches and generated project stay under target.
 """
 import argparse
@@ -11,6 +12,7 @@ import shutil
 import subprocess
 import sys
 import traceback
+import os
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -29,6 +31,8 @@ def main():
     parser.add_argument('--tooling', type=Path, required=True)
     parser.add_argument('--node', type=Path, required=True)
     parser.add_argument('--evidence', type=Path, required=True)
+    parser.add_argument('--product-bin-dir', type=Path)
+    parser.add_argument('--stage-source', type=Path)
     args = parser.parse_args()
     work, evidence = args.work.resolve(), args.evidence.resolve()
     if not work.is_relative_to(Path(__file__).resolve().parent / 'target'):
@@ -37,13 +41,26 @@ def main():
     report = {'passed': False, 'productExecutable': False, 'installed': False,
               'scope': 'native template/resource compilation only', 'commands': []}
     try:
+        if args.stage_source:
+            work.mkdir(parents=True, exist_ok=False)
+            source = args.stage_source.resolve()
+            staged = json.loads((source / 'stage-result.json').read_bytes())
+            resources = source / 'tauri/resources/runtime-bundle'
+            descriptor = json.loads((resources / 'runtime-bundle.manifest.json').read_bytes())
+            if digest(resources / 'runtime-bundle.manifest.json') != '42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a' or descriptor['runtimeArchiveSha256'] != 'b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c':
+                raise ValueError('exact prior Windows024 stage required')
+            if digest(resources / descriptor['archiveName']) != descriptor['archiveSha256'] or digest(resources / 'official-runtime.tgz') != descriptor['runtimeArchiveSha256']:
+                raise ValueError('prior staged input bytes changed')
+            shutil.copytree(resources, work / 'tauri/resources/runtime-bundle')
+            (work / 'stage-result.json').write_text(json.dumps(staged, indent=2))
         staged = json.loads((work / 'stage-result.json').read_bytes())
         if not staged['passed']:
             raise ValueError('real Windows024 stage required')
         project = work / 'tauri'
         (project / 'src').mkdir(exist_ok=True)
         (project / 'src/main.rs').write_text('fn main() {}\n')
-        (project / 'Cargo.toml').write_text('[package]\nname="ocxd"\nversion="0.2.24"\nedition="2021"\n[workspace]\n')
+        binary_name = 'opencodex-desktop' if args.product_bin_dir else 'ocxd'
+        (project / 'Cargo.toml').write_text(f'[package]\nname="{binary_name}"\nversion="0.2.24"\nedition="2021"\n[workspace]\n')
         (project / 'windows').mkdir(exist_ok=True)
         for name in ('installer-hooks.nsh', 'nsis023.nsi', 'wix023.wxs'):
             shutil.copy2(ROOT / 'apps/desktop/tauri/windows' / name, project / 'windows' / name)
@@ -51,9 +68,9 @@ def main():
             shutil.copy2(ROOT / 'apps/desktop/tauri/resources' / name, project / 'resources' / name)
         (project / 'icons').mkdir(exist_ok=True)
         shutil.copy2(ROOT / 'apps/desktop/tauri/icons/windows/icon.ico', project / 'icons/icon.ico')
-        executable = project / 'target/release/ocxd.exe'
+        executable = project / f'target/release/{binary_name}.exe'
         executable.parent.mkdir(exist_ok=True, parents=True)
-        fixture = Path(__file__).resolve().parent / 'target/debug/native024-fixture.exe'
+        fixture = args.product_bin_dir.resolve() / 'opencodex-desktop.exe' if args.product_bin_dir else Path(__file__).resolve().parent / 'target/debug/native024-fixture.exe'
         shutil.copy2(fixture, executable)
         config = {
             'productName': 'OpenCodeX Desktop', 'version': '0.2.24',
@@ -65,11 +82,20 @@ def main():
                        'windows': {'webviewInstallMode': {'type': 'skip'},
                                    'nsis': {'template': 'windows/nsis023.nsi', 'installerHooks': 'windows/installer-hooks.nsh', 'installMode': 'currentUser', 'compression': 'none'},
                                    'wix': {'template': 'windows/wix023.wxs', 'upgradeCode': '77eaf3e9-84df-48e4-b493-a267ab705070'}}}}
+        if args.product_bin_dir:
+            (project / 'binaries').mkdir()
+            shutil.copy2(args.product_bin_dir.resolve() / 'ocxd.exe', project / 'binaries/ocxd-x86_64-pc-windows-msvc.exe')
+            config['bundle']['externalBin'] = ['binaries/ocxd']
+            report.update(productExecutable=True, scope='actual MSVC dev product/helper template compilation; test bundle identity, not release candidate')
         (project / 'tauri.conf.json').write_text(json.dumps(config, indent=2))
         cli = args.tooling.resolve() / 'node_modules/@tauri-apps/cli/tauri.js'
         command = [str(args.node.resolve()), str(cli), 'bundle', '--ci', '--no-sign', '--bundles', 'msi,nsis', '-vv']
         with (evidence / 'bundle.stdout.log').open('wb') as out, (evidence / 'bundle.stderr.log').open('wb') as err:
-            result = subprocess.run(command, cwd=project, stdout=out, stderr=err)
+            environment = dict(os.environ)
+            environment.pop('CARGO_TARGET_DIR', None)
+            if args.product_bin_dir:
+                environment['RUSTUP_TOOLCHAIN'] = 'stable-x86_64-pc-windows-msvc'
+            result = subprocess.run(command, cwd=project, env=environment, stdout=out, stderr=err)
         report['commands'].append({'argv': command, 'cwd': str(project), 'exitCode': result.returncode})
         if result.returncode:
             raise RuntimeError('native bundler failed; see original stdout/stderr')

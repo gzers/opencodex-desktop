@@ -80,6 +80,11 @@ SOFTWARE.
 
         <InstallExecuteSequence>
             <RemoveShortcuts>Installed AND NOT UPGRADINGPRODUCTCODE</RemoveShortcuts>
+            <!-- Non-upgrade uninstall revokes this user's terminal entry before
+                 RemoveFiles. Upgrade keeps registration and pending recovery. -->
+            <Custom Action="OCX023RevokeTerminalCli" Before="RemoveFiles">
+                <![CDATA[Installed AND REMOVE="ALL" AND NOT UPGRADINGPRODUCTCODE]]>
+            </Custom>
         </InstallExecuteSequence>
 
         <Media Id="1" Cabinet="app.cab" EmbedCab="yes" />
@@ -130,6 +135,7 @@ SOFTWARE.
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="!(loc.LaunchApp)" />
         <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1"/>
         <CustomAction Id="LaunchApplication" Impersonate="yes" FileKey="Path" ExeCommand="[LAUNCHAPPARGS]" Return="asyncNoWait" />
+        <CustomAction Id="OCX023RevokeTerminalCli" Directory="INSTALLDIR" Execute="deferred" Impersonate="yes" Return="check" ExeCommand="&quot;[INSTALLDIR]ocxd.exe&quot; --uninstall-terminal-cli --confirm" />
 
         <UI>
             <!-- launch app checkbox -->
