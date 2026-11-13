@@ -678,6 +678,11 @@ Section Install
 
   ; Copy main executable
   File "${MAINBINARYSRCPATH}"
+  ; Mandatory native CLI programs/source from the exact adjacent build output.
+  ; No PATH registration is performed during installation.
+  File /a "/oname=ocx.exe" "${MAINBINARYSRCPATH}\..\ocx.exe"
+  File /a "/oname=ocxd.exe" "${MAINBINARYSRCPATH}\..\ocxd.exe"
+  File /a "/oname=ocx-native-entry.json" "${MAINBINARYSRCPATH}\..\..\..\resources\ocx-native-entry.json"
 
   ; Copy the actual stage_runtime_bundle_024 generated resource mapping:
   ; runtime-bundle-0.2.24-win32-x64.tar.gz, official-runtime.tgz,
@@ -697,6 +702,14 @@ Section Install
   {{#each binaries}}
     File /a "/oname={{this}}" "{{no-escape @key}}"
   {{/each}}
+
+  ; Fail closed if the generated mapping omitted a required program/source.
+  IfFileExists "$INSTDIR\ocx.exe" +2 0
+    Abort "Native ocx.exe installation input is missing."
+  IfFileExists "$INSTDIR\ocxd.exe" +2 0
+    Abort "Console ocxd.exe installation input is missing."
+  IfFileExists "$INSTDIR\ocx-native-entry.json" +2 0
+    Abort "Native entry source record is missing."
 
   ; Create file associations
   {{#each file_associations as |association| ~}}
@@ -822,6 +835,9 @@ Section Uninstall
   ; Delete the app directory and its content from disk
   ; Copy main executable
   Delete "$INSTDIR\${MAINBINARYNAME}.exe"
+  Delete "$INSTDIR\ocx.exe"
+  Delete "$INSTDIR\ocxd.exe"
+  Delete "$INSTDIR\ocx-native-entry.json"
 
   ; Delete resources
   {{#each resources}}

@@ -41,6 +41,10 @@ def main():
     report = {'passed': False, 'productExecutable': False, 'installed': False,
               'scope': 'native template/resource compilation only', 'commands': []}
     try:
+        if args.product_bin_dir:
+            for name in ('opencodex-desktop.exe', 'ocxd.exe', 'ocx.exe'):
+                if not (args.product_bin_dir.resolve() / name).is_file():
+                    raise ValueError('missing exact product build input: ' + name)
         if args.stage_source:
             work.mkdir(parents=True, exist_ok=False)
             source = args.stage_source.resolve()
@@ -73,7 +77,7 @@ def main():
         fixture = args.product_bin_dir.resolve() / 'opencodex-desktop.exe' if args.product_bin_dir else Path(__file__).resolve().parent / 'target/debug/native024-fixture.exe'
         shutil.copy2(fixture, executable)
         config = {
-            'productName': 'OpenCodeX Desktop', 'version': '0.2.24',
+            'productName': 'OpenCodeX W1D Proof' if args.product_bin_dir else 'OpenCodeX Desktop', 'version': '0.2.24',
             'identifier': 'com.gzers.opencodex.w1-resource-proof',
             'bundle': {'active': True, 'targets': ['msi', 'nsis'], 'icon': ['icons/icon.ico'],
                        'resources': {'resources/LICENSE': 'resources/LICENSE',
@@ -81,11 +85,14 @@ def main():
                                      'resources/runtime-bundle/': 'runtime-bundle/'},
                        'windows': {'webviewInstallMode': {'type': 'skip'},
                                    'nsis': {'template': 'windows/nsis023.nsi', 'installerHooks': 'windows/installer-hooks.nsh', 'installMode': 'currentUser', 'compression': 'none'},
-                                   'wix': {'template': 'windows/wix023.wxs', 'upgradeCode': '77eaf3e9-84df-48e4-b493-a267ab705070'}}}}
+                                   'wix': {'template': 'windows/wix023.wxs', 'upgradeCode': '3a2937cc-120b-4f06-a17a-49bf1d77267d'}}}}
         if args.product_bin_dir:
-            (project / 'binaries').mkdir()
-            shutil.copy2(args.product_bin_dir.resolve() / 'ocxd.exe', project / 'binaries/ocxd-x86_64-pc-windows-msvc.exe')
-            config['bundle']['externalBin'] = ['binaries/ocxd']
+            for name in ('ocxd.exe','ocx.exe'):
+                shutil.copy2(args.product_bin_dir.resolve()/name, executable.parent/name)
+            provenance={'schemaVersion':1,'package':'opencodex-desktop','version':'0.2.24','entryKind':'installer-native-exe',
+                        'files':{name:digest(args.product_bin_dir.resolve()/name) for name in ('ocxd.exe','ocx.exe')}}
+            (project/'resources/ocx-native-entry.json').write_text(json.dumps(provenance,indent=2)+'\n')
+
             report.update(productExecutable=True, scope='actual MSVC dev product/helper template compilation; test bundle identity, not release candidate')
         (project / 'tauri.conf.json').write_text(json.dumps(config, indent=2))
         cli = args.tooling.resolve() / 'node_modules/@tauri-apps/cli/tauri.js'
