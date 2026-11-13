@@ -1,0 +1,14 @@
+{
+  "reviewer": "Kierkegaard",
+  "actualDiffReviewed": true,
+  "initialP1Resolved": true,
+  "blockingFindings": [],
+  "boundaries": [
+    "ResourceFork always uses size query and exact bounded read, stable prefix truncation removed",
+    "ordinary count<capacity only direct acceptance; filled buffer or ERANGE single sized fallback",
+    "size0 actual nonzero-buffer read; final size differs or any error refuses",
+    "aggregate/name/duplicate rules and ACL/Protection/source/frame/namespace observations retained"
+  ],
+  "limitation": "ResourceFork concurrent growth after size query may still produce old-length prefix as in original sized path; no claim of continuous consistency or identical transient sampling.",
+  "reviewerEditedOrExecuted": false
+}

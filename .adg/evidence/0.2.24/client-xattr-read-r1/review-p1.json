@@ -1,0 +1,14 @@
+{
+  "reviewer": "Kierkegaard",
+  "baseCommit": "264934c0936a1fab39e00d36c228b4813573b24b",
+  "result": "initial proposal blocked",
+  "severity": "P1",
+  "reason": "ResourceFork may return successful prefix via HFS VNOP_READ / AppleDouble rather than ERANGE, making a small-buffer prefix incorrectly look complete.",
+  "sources": [
+    "https://github.com/apple-oss-distributions/hfs/blob/main/core/hfs_xattr.c#L432",
+    "https://github.com/apple-oss-distributions/xnu/blob/main/bsd/vfs/vfs_syscalls.c#L13760"
+  ],
+  "correction": "ResourceFork always retains bounded size-query/exact-read; ordinary filled buffer also requires bounded fallback; add tail/aggregate native and stream-like counterexamples.",
+  "initialNormalUserAttributeTestsNotSufficient": true,
+  "reviewerEditedOrExecuted": false
+}

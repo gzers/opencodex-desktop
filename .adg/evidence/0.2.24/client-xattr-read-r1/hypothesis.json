@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "baseCommit": "264934c0936a1fab39e00d36c228b4813573b24b",
+  "hypothesis": "Native registration spends most time in full fresh Protection observations; xattrs repeatedly perform size-query+value calls for small names and small provenance values. Read names/values directly into a bounded small buffer, accept only whole nonnegative length within capacity, and on ERANGE perform one bounded query plus exact read with no retry-after-change. Retain aggregate MAX_SECURITY, duplicates/NUL/termination/error handling, all ACL/ownership/mode/flags and source/frame/namespace checks. Calibrate performance fixture so first closed historical generation has all four phases; expect actual registration frame count48 instead of old30. Compare native xattr byte equality, API call counts and full calibrated registration under ABBA order before any original-service round.",
+  "scope": "No daily configuration/Shell/installed app, official299 modification, real WebDAV/model requests or timeout changes. Synthetic fixtures and original native xattrs on owned temp files only. Preserve failure evidence and archive-compare before cleanup."
+}

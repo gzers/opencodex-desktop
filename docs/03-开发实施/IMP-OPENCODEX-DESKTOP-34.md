@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 120；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 121；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 264934c09（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 4ba715120（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1240,3 +1240,12 @@ main264934c09仅增加测试计量与隔离原包诊断入口，保留原登记�
 实际第二代登记1053.745ms：来源278.369／准入84.635／候选338.963／提交后345.650ms，SQL+COMMIT仅0.532ms。互斥顶层覆盖99.9%以上，嵌套Protection868.906／liveprefix236.018／历史双遍495.298ms交叉，不能加总；三完整历史观察与内容双遍6保持。原合成Stopped夹具只有30帧，而实际48：首代历史合成从Captured退役仅Original，实际四phase，6遍×3差帧=18。下一步先校准完整四帧历史夹具，再评估不减检查的属性小值有界直接鲜读／ERANGE回退等底层成本；不能继续拿轻夹具预测原包达标。逐帧来源门槛和所有事务边界保持。
 
 原77文件及两代摘要链、首代binding/raw9events/vault保持和第二Plan离线验证；两轮正常exit0/各4listeners缺席，精确新3协调对象留字节并identity/exclusive后清理，globalL原身份／保护／bytes保持释放；测试Profile/程序/exe和临时证据根逐字归档后清理。详见 [client-partition-native-r1](0.2.24-contracts/client-partition-native-r1.md) 与.adg/evidence/0.2.24/client-partition-native-r1/。停止动作canStart容量一致性及WindowsW1W2／根中断／缺Ready／一般图路径与完整进程集合／刷新／NAME／复杂代理／官方交付验证和固定候选等原完整范围保持，目标active，未发布。
+
+
+## 2026-11-13 完整属性有界鲜读与四帧历史校准
+
+main4ba715120实现普通小xattr完整直接鲜读，ERANGE／filledbuffer有界query+exact回退，ResourceFork始终保留原sized路径。初始依赖ERANGE方案被只读审查指出HFS/AppleDouble ResourceFork可成功返回前缀的P1，未提交该方案；修订后native全文／只改尾部／超限反例通过，最终补审无剩余阻断。错误／sizechange／aggregateMAX_SECURITY拒绝，ACL和所有Protection/source/frame/archive/namespace与三事务边界保持，无跨调用缓存或忽略属性。
+
+完整首代四帧历史夹具9events关闭，第二代Stopped15／restore16／retirement17；48frame/archive、source61／namespace60／Protection61744／capture339／历史3/3/6各次数不变。native xattr calls187405→103631，旧／新／新／旧完整登记约767／494／493／775ms，约36%合成局部收益，不当原包预算证明。原轻Captured夹具和旧失败不回填。
+
+原件305／协调27／命令4共336项不同受影响测试及严格工程检查通过，原有忽略保持。全部日志／P1与补审／四源和测试二进制摘要／unit临时根逐字归档清理见 [client-xattr-read-r1](0.2.24-contracts/client-xattr-read-r1.md) 和.adg/evidence/0.2.24/client-xattr-read-r1/。当前固定本提交重建release库宿主，后继唯一新原包双轮必须实测原30/5/10、root移动关闭和清理，未因开始构建或合成改善放行。根中断／缺Ready／一般图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／交付验证及固定候选完整范围保持，目标active，未发布。
