@@ -1,0 +1,42 @@
+{
+  "accepted": false,
+  "samples": [
+    {
+      "totalNanos": 172401792,
+      "exclusiveStageNanos": {
+        "transaction_storage_begin": 511167,
+        "transaction_source": 31140041,
+        "transaction_admission": 27410250,
+        "transaction_sql": 185584,
+        "transaction_candidate": 54840292,
+        "transaction_commit": 459333,
+        "transaction_postcommit": 56721667,
+        "registration_facts": 1110458
+      },
+      "frames": 24,
+      "archiveChecks": 24,
+      "historicalBegin": 0,
+      "historicalFinish": 0,
+      "historicalPasses": 0
+    },
+    {
+      "totalNanos": 721602583,
+      "exclusiveStageNanos": {
+        "transaction_storage_begin": 585958,
+        "transaction_source": 206373167,
+        "transaction_admission": 58153625,
+        "transaction_sql": 183167,
+        "transaction_candidate": 238015875,
+        "transaction_commit": 588750,
+        "transaction_postcommit": 214780209,
+        "registration_facts": 2898709
+      },
+      "frames": 48,
+      "archiveChecks": 48,
+      "historicalBegin": 3,
+      "historicalFinish": 3,
+      "historicalPasses": 6
+    }
+  ],
+  "stopActionPassed": false
+}

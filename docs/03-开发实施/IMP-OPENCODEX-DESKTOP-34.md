@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 124；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 125；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 382cf593f（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -25,7 +25,7 @@ revision: 124；2026-11-13。用户要求本机与Windows可独立开发部分�
 | P24-02 | 共享保存/手动备份/恢复与现有安装事务保护已接；版本化升级接线及候选验收未完 | 本机POST-04保存重核、POST-08原生JSON单层导入/完整备份/回退，复用真实配置事务。 | 保留草稿/密钥意图、有限等价变化不误锁，真实冲突拒绝；导入仅保留本机port和模式，其它按源替换，备份失败零覆盖。 | 后端8例及原型已定；不把Read的模版匹配暗当无副作用刷新。 |
 | P24-03 | Mac终端/通知/网络/内置准备及版本事实/更新前重核已接；Windows/PATH和原生候选未完 | 本机POST-03同版本同HOME CLI核心及Mac入口；POST-05环境阶段/就绪区分、POST-06应用网络/更新说明；已采用UI接线。 | CLI显式启停/冲突不覆盖；内置环境不依赖系统Node；npm/GitHub错误准确；原型一致。 | 03路径/CLI接线依01；网络/UI可先独立推进。 |
 | P24-W1 | 原生PATH/安装器024资源部分已放行；完整共享接线未完 | Windows后端接共享调用合同；Windows当前用户CLI/PATH和自定义安装根/版本目录/卸载平台适配。 | 实际运行版本/HOME/安装根一致；用户级入口/PATH有归属与撤销，安装更新不误删配置或别用户对象。 | W0可先提交；共享mod/入口/版本/工作流由本机接线；不能先猜清单文件名再返工。 |
-| P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置及Grok备份可逆恢复已接；缺根目录归属/同锁登记与原缺席原件捕获已接，整根可逆归档/独立movement登记与缺根只读核验、真实Guard约束的整根读回事务已接，首次缺根生产捕获/阶段与Stop恢复已接，原包release定向首次30/5/10通过且debug超时保留；多代来源/专用捕获/存储滚动及生产nextStart/状态同源接线已接，原包完整属性鲜读后第二根已移动／读回RootAbsent18；完整第二Stop11345ms仍在协调收尾最终deadline失败，旧失败全保留，重复启停/动作回执门/根中断/状态UI收口/一般范围/固定候选/缺Ready/Windows未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
+| P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置及Grok备份可逆恢复已接；缺根目录归属/同锁登记与原缺席原件捕获已接，整根可逆归档/独立movement登记与缺根只读核验、真实Guard约束的整根读回事务已接，首次缺根生产捕获/阶段与Stop恢复已接，原包release定向首次30/5/10通过且debug超时保留；多代来源/专用捕获/存储滚动及生产nextStart/状态同源接线已接，原包新修复轮两服务代次normalexit已证明；第二根已移动／读回并曾RootAbsent18提交，close后原证明复核失败追加pending19，完整第二Stop11428ms失败，旧失败全保留，重复启停/动作回执门/根中断/状态UI收口/一般范围/固定候选/缺Ready/Windows未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
 | P24-NAME | 剩余技术方案未定，局部等待 | 非直接合法运行键名称及多协议派生组名称展示/官方刷新保持；普通合法英文改名已有能力不重复开发。 | 原始模型/认证/能力保持，明确改名可改实际键及引用；正式显示出口、默认客户端/刷新/重启/回退有证据。 | 10组真实保存确认，中文等新增/改名均转内部键；不私改原样2.99、不用combo降能力/双写轮询。只阻塞依赖它的名称改动和整版最终验收。 |
 | P24-05 | Mac真实024工程.app及正常首次供应已验证；旧工程DMG早于最新源码，非冻结候选，Windows/NAME/完整原生未完 | 本机完成共享逻辑/页面/原型对照、Mac真实原包与必要安装/CLI/升级回退；构建并固定Windows集成候选。 | 给精确代码SHA、官方包版本/SHA、安装器SHA、调用合同和一次完整受影响原生验收表。 | 共享页面不重复交Windows；Mac可在Windows开发期间做有用检查。 |
 | P24-W2 | 最后交接，当前不跑 | 用户把本对话生成的最终简短提示词交Windows；针对固定集成候选，一轮采集所有受影响原生项状态/证据。 | 双SID真实桌面并行、受保护生命周期/恢复及原预算、路径/CLI/相关安装更新卸载；失败保留，未知不通过。 | 按最终diff选必需项。不是旧r5第六轮，也不在未集成源码上提前宣称产品通过。 |
@@ -1278,3 +1278,14 @@ main3701ee391合并完整inventory必需现存路径中紧邻的存在性metadat
 main4c2a826aa补Mac进程image/argv失败后始终原生BSD后置复核：仅明确ESRCHNone为缺席；live读错、observer错误、PID/UID/birth变更仍拒绝，同代zombie typed exiting仅Stop在原deadline内保持Unknown等待。原完整scan／manager／record／port/listeners／原ExitWatch exit0与endcheck不变。main382cf593f仅将停止测试DTO先写盘再执行原断言。40项不同相关回归及严格工程检查通过，privatecfgtest模块编译path与lint失败保留并修正、原规则未放宽，actualdiff只读审查无阻断。修复后尚无官方服务轮。
 
 两组证据及限制／源／binary／临时清理见 [client-process-snapshot-r1](0.2.24-contracts/client-process-snapshot-r1.md) 和.adg/evidence/0.2.24/client-tail-native-r1/、client-process-snapshot-r1/。下一步固定新release一轮同时取得原30/5/10与Stoptail段，不能把子进程确定性反例当原包通过。原11345ms收尾超限／RootAbsent18和更早失败均保持。根中断／动作资格／缺Ready／一般图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／官方交付验证及固定候选原全范围不缩减，目标active，未发布。
+
+
+## 2026-11-13 参数复核修复原包轮：两代正常退出，第二close后证明拒绝
+
+干净main382cf593f、25关键源及release库宿主95830240…固定，构建6m42s，唯一新原包轮。第一轮Start7937／Status231／Stop6205ms通过，第二轮Start10131／Status847通过、完整Stop11428ms失败；上轮参数读取EINVAL未再观察，两代服务/launcher都取得normalexit0与各4已捕获listeners缺席。第二根实际移动/readback且RootAbsent18曾提交，随后原post-close证明复核拒绝，原逻辑追加与pending17仅revision不同的pending19；总Stop内部10942ms。当前HeadRootRetirementPrepared19，不用临时18或磁盘事实回填两个历史已关闭通过。未单列原proof拒绝detail，不能仅凭泛型code指定具体内核字段原因。
+
+新增tail输出共5份，仅第3份属于首次Stop：leasecheck1400／release426／完整source488578us，剩余3.806s；第二Stopcallback root-close失败，没有后续tail，不以Start/首次Stop计量替代。第二代登记721.603ms，48frame/archive／历史3/3/6保持，next应针对close事务与同次currentarchive认证的重复取得定位，保留所有source/candidate/postcommit、逐帧门槛、原readback/证明/deadline，不删最后证明或加预算。
+
+79原文件离线核两代完整链与19events，首代binding/raw9events/vault保持，3新协调对象留字节+identity/exclusive清理，globalL原身份/Protection/bytes保持释放；PID+birth/exe与主端口独立缺席，源字节及全部材料逐字归档后清理Profile/program/exe和临时证据根，旧失败和工程target保留。详见 [client-exitfix-native-r1](0.2.24-contracts/client-exitfix-native-r1.md) 与.adg/evidence/0.2.24/client-exitfix-native-r1/。
+
+只读侧审已给动作canStart/status容量资格同次postcommit私有projection方案，尚未实施或验证，不加预算外fullscan、不擦真实Stopped成功。根中断／动作资格／缺Ready／一般图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／官方交付验证及固定候选原完整范围不缩减，目标active，未发布。
