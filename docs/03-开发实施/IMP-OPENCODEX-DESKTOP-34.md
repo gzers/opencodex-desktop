@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 125；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 126；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 382cf593f（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 5274b7048（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1289,3 +1289,12 @@ main4c2a826aa补Mac进程image/argv失败后始终原生BSD后置复核：仅明
 79原文件离线核两代完整链与19events，首代binding/raw9events/vault保持，3新协调对象留字节+identity/exclusive清理，globalL原身份/Protection/bytes保持释放；PID+birth/exe与主端口独立缺席，源字节及全部材料逐字归档后清理Profile/program/exe和临时证据根，旧失败和工程target保留。详见 [client-exitfix-native-r1](0.2.24-contracts/client-exitfix-native-r1.md) 与.adg/evidence/0.2.24/client-exitfix-native-r1/。
 
 只读侧审已给动作canStart/status容量资格同次postcommit私有projection方案，尚未实施或验证，不加预算外fullscan、不擦真实Stopped成功。根中断／动作资格／缺Ready／一般图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／官方交付验证及固定候选原完整范围不缩减，目标active，未发布。
+
+
+## 2026-11-13 保留后置Plan边界，采用租约目录元数据联合核验
+
+实验删除archivedRootAbsent的inspect_retired虽通过两项静态损坏／计量，却不能证明之后Plan重读的时间边界等价，actual审查给出持续Plan损坏起点反例，因此未提交、全部候选source恢复baseline382cf593f，root_binding继续原三次来源观察。新增main5274b7048回归先成功inspect再改坏Plan，后续verifyreadback必须鲜读拒绝并保留篡改。候选hash／原测试日志／否决和临时清理独立留证，不算正式通过。
+
+实际main5027b0ad4只合并NativeLease.check开始时physicalclient/profile/home三组相邻metadata为既有双遍union，saved identity/fullProtection／冲突拒绝保持，后续claim/pins/owner/SQLite/deadline原位。真实四库外进程竞争确认持锁blocked→normalrelease后unblocked，三根×三类变化两mode都拒绝。Protection134→106、xattr214→170，局部收益仅几百微秒，不足以单独开新原包轮。69项不同受影响测试及最终严格Clippy/fmt/diffcheck通过，证据见 [client-lease-directories-r1](0.2.24-contracts/client-lease-directories-r1.md) 及.adg/evidence/0.2.24/client-retired-inspection-rejected-r1/、client-lease-directories-r1/。unitTMP空，全部材料逐字归档后清理两批临时根。
+
+下一步继续等价底层成本和动作canStart/status同源资格接线，不删后置Plan／帧／proof门槛，不为微小局部收益重跑原包。原第二Stop11428ms／pending19失败保持，本批无官方服务轮。根中断／动作资格／缺Ready／一般图路径／完整进程集合与刷新／NAME／复杂代理／WindowsW1W2／官方交付验证与固定候选原完整范围不缩减，目标active，未发布。

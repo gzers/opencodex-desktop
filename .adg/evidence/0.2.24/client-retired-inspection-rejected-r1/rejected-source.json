@@ -1,0 +1,33 @@
+{
+  "baseCommit": "382cf593fd24e1c957690bfaec7e4f0545ad8e1b",
+  "candidateCommitted": false,
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_observation_metrics.rs",
+      "bytes": 6398,
+      "sha256": "0458feeaef4aee48d82081c193ca33dc33489ecb82b2fd00af214b83e42e1c13"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_restore_registration_tests.rs",
+      "bytes": 19583,
+      "sha256": "343a2b466d4d2d0b48d8cfed5eb66633dc2991678001415cc03865274e2dd3ab"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs",
+      "bytes": 13039,
+      "sha256": "b486b9e7d9c3e905573fd1484af67d6f28d5ac11757d74292321e9d97531d5fa"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "bytes": 84639,
+      "sha256": "27d9c0e6417065a28dab6b0cdaf5b663678661cb88099b629c37a0e5997fbfe2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_closed_readback_tests.rs",
+      "bytes": 6146,
+      "sha256": "9dc1acd3b537510e7602316ac2f0a7168a27bdb19f81f7c286005e1f9db693e9"
+    }
+  ],
+  "testOutcome": "two static corruption/count tests passed, not sufficient for changed plan timing boundary",
+  "disposition": "Rejected; product source restored exactly to base before alternate work"
+}

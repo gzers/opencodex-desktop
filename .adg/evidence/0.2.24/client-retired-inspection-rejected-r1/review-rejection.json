@@ -1,0 +1,8 @@
+{
+  "reviewer": "Copernicus",
+  "blockingFinding": "Deleting whole current inspect_retired removes a later fresh Plan read relative to a completed current observation; a Plan corrupted after that observation may be rejected by old next load but not candidate returned result. Stable checks and archive gates subsumed, but dynamic later detection boundary not established equivalent.",
+  "initialTestsDoNotRefuteFinding": true,
+  "required": "Do not land deletion or silently weaken source timing; preserve old plan/frame checks and seek lower-level metadata optimization.",
+  "reviewerEditedOrExecuted": false,
+  "codeRestoredToBase": true
+}
