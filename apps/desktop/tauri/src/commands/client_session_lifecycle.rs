@@ -340,10 +340,36 @@ impl Active {
                     let pending = self
                         .session
                         .prepare_root_completed_stop(&admission, &mut guard)?;
-                    let (prepared, registration) = self
-                        .index
-                        .record_root_retirement_registered(&source, pending.id(), pending.sha256())
-                        .map_err(failure)?;
+                    let register = || {
+                        self.index.record_root_retirement_registered(
+                            &source,
+                            pending.id(),
+                            pending.sha256(),
+                        )
+                    };
+                    #[cfg(test)]
+                    let registered = if std::env::var_os("OCXD024_RETIREMENT_COST_PROFILE")
+                        .as_deref()
+                        == Some(std::ffi::OsStr::new("1"))
+                        && self.index.data_root().starts_with("/private/tmp")
+                        && self.index.data_root().ancestors().any(|p| {
+                            p.file_name().is_some_and(|n| {
+                                n.to_string_lossy()
+                                    .starts_with("ocxd024-versioned-lifecycle-")
+                            })
+                        }) {
+                        let (value, metrics) = crate::infrastructure::macos_client_originals::observation_metrics::measure(register);
+                        eprintln!(
+                            "ROOT_REGISTRATION_COST {}",
+                            serde_json::json!({"accepted":false,"passed":value.is_ok(),"metrics":metrics})
+                        );
+                        value
+                    } else {
+                        register()
+                    };
+                    #[cfg(not(test))]
+                    let registered = register();
+                    let (prepared, registration) = registered.map_err(failure)?;
                     self.head = prepared;
                     mark("root-retire");
                     let readback = self.session.retire_root_completed_stop(

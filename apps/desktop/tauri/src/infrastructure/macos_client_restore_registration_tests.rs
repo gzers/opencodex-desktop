@@ -5,7 +5,7 @@ use std::{
     os::unix::fs::{DirBuilderExt, PermissionsExt},
     time::Instant,
 };
-fn fixture(second: bool) -> (tempfile::TempDir, ProcessContext, Index, Head, Originals) {
+pub(super) fn fixture(second: bool) -> (tempfile::TempDir, ProcessContext, Index, Head, Originals) {
     let (temp, context, index, captured, originals) = if second {
         super::retirement_transaction_tests::fixture()
     } else {

@@ -725,7 +725,11 @@ impl<'a> Pending<'a> {
         )
     }
     fn checked_live(&self, plan: &Plan) -> io::Result<OpenedPrefix> {
-        let (live, frames) = self.live_prefix(plan)?;
+        let (live, frames) = {
+            #[cfg(test)]
+            let _metric = observation_metrics::span("retirement_live_prefix");
+            self.live_prefix(plan)?
+        };
         let original = &frames
             .first()
             .ok_or_else(|| denied("empty Original prefix"))?
@@ -738,10 +742,14 @@ impl<'a> Pending<'a> {
                 "live execution plan no longer matches independent Original",
             ));
         }
-        if entry(&self.originals.directory, &self.slot())?.is_some()
-            || !plan.matches_tree(&TreeSnapshot::read(&live.client)?)?
-            || GrokSnapshot::read(&live.profile)? != plan.grok
-        {
+        let matches = {
+            #[cfg(test)]
+            let _metric = observation_metrics::span("retirement_live_tree_grok");
+            entry(&self.originals.directory, &self.slot())?.is_none()
+                && plan.matches_tree(&TreeSnapshot::read(&live.client)?)?
+                && GrokSnapshot::read(&live.profile)? == plan.grok
+        };
+        if !matches {
             return Err(denied(
                 "live root changed or archive destination already exists",
             ));

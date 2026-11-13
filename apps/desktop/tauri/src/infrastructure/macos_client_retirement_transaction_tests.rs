@@ -309,3 +309,50 @@ fn retirement_registration_descendant_acquisition_keeps_full_audits_with_lower_d
         serde_json::json!({"accepted":false,"samples":samples,"scope":"synthetic second generation; complete source/candidate/postcommit audits retained; no original normalStop acceptance"})
     );
 }
+#[test]
+fn retirement_transaction_cost_partition_keeps_all_three_complete_observations() {
+    let mut samples = Vec::new();
+    for second in [false, true] {
+        let (_tmp, context, index, head, originals) =
+            super::restore_registration_tests::fixture(second);
+        let pending =
+            super::super::root_retirement::Pending::prepare(&context, &originals, &head).unwrap();
+        let (result, metrics) = observation_metrics::measure(|| {
+            index.record_root_retirement_registered(&head, pending.id(), pending.sha256())
+        });
+        let (prepared, registration) = result.unwrap();
+        registration
+            .require(&head, registration.plan().unwrap())
+            .unwrap();
+        assert_eq!(index.head().unwrap(), Some(prepared));
+        let metrics = serde_json::to_value(metrics).unwrap();
+        let total = metrics["registration_total"]["inclusive_nanos"]
+            .as_u64()
+            .unwrap();
+        let mut partition = 0;
+        for key in [
+            "transaction_storage_begin",
+            "transaction_source",
+            "transaction_admission",
+            "transaction_sql",
+            "transaction_candidate",
+            "transaction_commit",
+            "transaction_postcommit",
+            "registration_facts",
+        ] {
+            assert_eq!(metrics[key]["calls"], 1, "{key}");
+            partition += metrics[key]["inclusive_nanos"].as_u64().unwrap();
+        }
+        assert!(partition <= total);
+        if second {
+            assert_eq!(metrics["historical_begin"]["calls"], 3);
+            assert_eq!(metrics["historical_finish"]["calls"], 3);
+            assert_eq!(metrics["historical_full_pass"]["calls"], 6);
+        }
+        samples.push(serde_json::json!({"secondGeneration":second,"totalNanos":total,"partitionNanos":partition,"unattributedNanos":total-partition,"metrics":metrics}));
+    }
+    println!(
+        "RETIREMENT_TRANSACTION_COST {}",
+        serde_json::json!({"accepted":false,"samples":samples,"scope":"source/plan/SQL-only synthetic complete Stopped frames; not normalStop or full native restored execution tree"})
+    );
+}

@@ -1656,7 +1656,11 @@ impl Index {
         sha256: &str,
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<(Head, RootRetirementRegistration<'a>)> {
+        #[cfg(test)]
+        let _metric = observation_metrics::span("registration_total");
         let prepared = self.record_root_retirement_inner(source, id, sha256, checkpoint)?;
+        #[cfg(test)]
+        let _facts = observation_metrics::span("registration_facts");
         let proof = RootRetirementRegistration {
             index: self,
             prepared: prepared.clone(),
@@ -2060,10 +2064,17 @@ impl Index {
         // Before opening the transaction check the actual action/DB pins. The
         // complete root/current-head check below runs inside the transaction
         // immediately before any reference mutation, not twice without writes.
-        self.check_storage()?;
-        let c = self.connection()?;
-        c.execute_batch("BEGIN IMMEDIATE").map_err(database_error)?;
+        let c = {
+            #[cfg(test)]
+            let _metric = observation_metrics::span("transaction_storage_begin");
+            self.check_storage()?;
+            let c = self.connection()?;
+            c.execute_batch("BEGIN IMMEDIATE").map_err(database_error)?;
+            c
+        };
         let run = (|| -> io::Result<()> {
+            #[cfg(test)]
+            let source_metric = observation_metrics::span("transaction_source");
             let binding: Vec<u8> = c
                 .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
                     r.get(0)
@@ -2073,7 +2084,15 @@ impl Index {
             if binding != self.binding || head.as_ref() != expected {
                 return Err(denied("current session changed before reference commit"));
             }
-            admit(originals.as_ref())?;
+            #[cfg(test)]
+            drop(source_metric);
+            {
+                #[cfg(test)]
+                let _metric = observation_metrics::span("transaction_admission");
+                admit(originals.as_ref())?;
+            }
+            #[cfg(test)]
+            let sql_metric = observation_metrics::span("transaction_sql");
             checkpoint("source_admitted")?;
             self.check_capture_publication(next)?;
             let bytes = encode(next)?;
@@ -2092,16 +2111,28 @@ impl Index {
                 .map_err(database_error)?;
             }
             checkpoint("references_sql_written")?;
-            self.check()?;
-            self.check_capture_publication(next)?;
+            #[cfg(test)]
+            drop(sql_metric);
+            {
+                #[cfg(test)]
+                let _metric = observation_metrics::span("transaction_candidate");
+                self.check()?;
+                self.check_capture_publication(next)?;
+            }
             Ok(())
         })();
         if let Err(error) = run {
             let _ = c.execute_batch("ROLLBACK");
             return Err(error);
         }
-        c.execute_batch("COMMIT").map_err(database_error)?;
-        checkpoint("references_committed")?;
+        {
+            #[cfg(test)]
+            let _metric = observation_metrics::span("transaction_commit");
+            c.execute_batch("COMMIT").map_err(database_error)?;
+            checkpoint("references_committed")?;
+        }
+        #[cfg(test)]
+        let _metric = observation_metrics::span("transaction_postcommit");
         if self.head()?.as_ref() != Some(next) {
             return Err(denied("session references commit readback differs"));
         }
