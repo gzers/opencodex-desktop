@@ -85,6 +85,10 @@ fn owned_root_file(name: &std::ffi::OsStr) -> bool {
 }
 fn verify_desktop(root: &Path, fixed: bool, control_only: bool) -> AppResult<()> {
     directory(root)?;
+    // Removing the journal before its external PATH entry has been revoked
+    // would orphan a current-user command. The installer has a separate,
+    // explicit terminal cleanup step; raw data deletion never guesses it.
+    crate::modules::runtime::terminal_cli::ensure_binding_change_allowed(root)?;
     if !control_only && super::validate_structure(root)? != StructureValidation::Valid {
         return Err(failure("only a current v2 directory may be removed"));
     }
@@ -640,5 +644,17 @@ mod tests {
             fs::read(outside.join("opencodex/home/config.json")).unwrap(),
             b"native config"
         );
+    }
+
+    #[test]
+    fn terminal_registration_or_pending_refuses_data_deletion_before_external_revoke() {
+        for name in ["terminal-cli.json", "terminal-cli.pending.json"] {
+            let f = Fixture::new();
+            let target = f.anchor.join("manager-state").join(name);
+            fs::write(&target, b"retained terminal authority").unwrap();
+            assert!(f.plan().is_err());
+            assert_eq!(fs::read(&target).unwrap(), b"retained terminal authority");
+            f.assert_retained();
+        }
     }
 }

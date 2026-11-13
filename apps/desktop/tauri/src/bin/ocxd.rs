@@ -187,7 +187,26 @@ fn installer_cleanup_requested(argv: &[String]) -> Result<bool, ()> {
 }
 
 fn main() -> ExitCode {
+    // Runtime forwarding is independent of manager IPC and runs in this
+    // console subsystem, retaining stdin/stdout/stderr and the official exit.
+    if opencodex_desktop_lib::modules::runtime::terminal_cli::dispatch() {
+        return ExitCode::SUCCESS;
+    }
     let argv: Vec<String> = std::env::args().skip(1).collect();
+    #[cfg(windows)]
+    if argv
+        .first()
+        .is_some_and(|v| v == "--uninstall-terminal-cli")
+    {
+        if argv.len() != 2 || argv[1] != "--confirm" {
+            eprintln!("Terminal cleanup requires explicit installer confirmation.");
+            return ExitCode::from(2);
+        }
+        return match opencodex_desktop_lib::modules::runtime::terminal_cli::revoke_from_windows_installer() {
+            Ok(()) => ExitCode::SUCCESS,
+            Err(_) => { eprintln!("Terminal cleanup was not completed; retain program and registration."); ExitCode::from(1) }
+        };
+    }
     #[cfg(windows)]
     match installer_cleanup_requested(&argv) {
         Err(()) => {

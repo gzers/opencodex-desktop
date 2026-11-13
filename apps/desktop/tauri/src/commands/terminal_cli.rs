@@ -22,7 +22,7 @@ pub(crate) fn input(
     profile: PathBuf,
     home: PathBuf,
 ) -> AppResult<(Context, String, Vec<PathBuf>)> {
-    if !cfg!(target_os = "macos") {
+    if !cfg!(any(target_os = "macos", target_os = "windows")) {
         return Err(fail("当前平台终端注册尚未接入"));
     }
     if !runtime.uses_versioned_programs() {
@@ -36,18 +36,30 @@ pub(crate) fn input(
     if !crate::modules::data_root::runtime_binding_matches(&selected, &data, &home) {
         return Err(fail("配置位置待重启生效，请重启后设置终端入口"));
     }
-    if std::env::var_os("ZDOTDIR").is_some_and(|path| !path.is_empty() && path != profile) {
+    if cfg!(target_os = "macos")
+        && std::env::var_os("ZDOTDIR").is_some_and(|path| !path.is_empty() && path != profile)
+    {
         return Err(fail("当前ZDOTDIR与用户目录不同，请核对Shell配置后再启用"));
     }
-    let shell = std::env::var("SHELL").unwrap_or_else(|_| "/bin/zsh".into());
+    let shell = std::env::var("SHELL").unwrap_or_else(|_| {
+        if cfg!(windows) {
+            "cmd.exe".into()
+        } else {
+            "/bin/zsh".into()
+        }
+    });
     let mut search = std::env::var_os("PATH")
         .as_deref()
         .map(std::env::split_paths)
         .into_iter()
         .flatten()
         .collect::<Vec<_>>();
-    for path in ["/opt/homebrew/bin", "/usr/local/bin", "/usr/bin", "/bin"] {
-        let path = PathBuf::from(path);
+    for path in if cfg!(target_os = "macos") {
+        &["/opt/homebrew/bin", "/usr/local/bin", "/usr/bin", "/bin"][..]
+    } else {
+        &[][..]
+    } {
+        let path = PathBuf::from(*path);
         if !search.contains(&path) {
             search.push(path);
         }
