@@ -30,6 +30,116 @@ fn inventory(root: &Path) -> Vec<serde_json::Value> {
     tests::storage_evidence(root)
 }
 #[test]
+fn closed_plan_observation_retains_exact_start_and_end_authentication_without_cross_call_cache() {
+    let f = Fixture::new();
+    let refs = close(&f);
+    let (result, metrics) = observation_metrics::measure(|| observe(&f, &refs));
+    result.unwrap();
+    assert_eq!(
+        serde_json::to_value(metrics).unwrap()["retirement_plan_load"]["calls"],
+        2
+    );
+    let movement = refs.closed.root_retirement.as_ref().unwrap();
+    let path = f
+        .originals
+        .directory
+        .path()
+        .join(format!("root-retirement-{}.json", movement.plan.id));
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+    fs::write(&path, b"later plan mutation").unwrap();
+    fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+    assert!(observe(&f, &refs).is_err());
+    assert_eq!(fs::read(&path).unwrap(), b"later plan mutation");
+}
+#[test]
+fn closed_plan_observation_cannot_return_partial_shell_or_adopt_mismatched_independent_source() {
+    for case in [
+        "source-scope",
+        "source-revision",
+        "digest",
+        "invalid-id",
+        "receipt",
+    ] {
+        let f = Fixture::new();
+        let mut refs = close(&f);
+        match case {
+            "source-scope" => {
+                refs.source.references.as_mut().unwrap().scope_sha256 = "f".repeat(64);
+                refs.closed.references = refs.source.references.clone();
+            }
+            "source-revision" => {
+                refs.source.revision -= 1;
+                refs.closed
+                    .root_retirement
+                    .as_mut()
+                    .unwrap()
+                    .source_revision = refs.source.revision;
+            }
+            "digest" => refs.closed.root_retirement.as_mut().unwrap().plan.sha256 = "f".repeat(64),
+            "invalid-id" => {
+                refs.closed.root_retirement.as_mut().unwrap().plan.id = "../outside".into()
+            }
+            "receipt" => refs.closed.completion_sha256 = Some("f".repeat(64)),
+            _ => unreachable!(),
+        }
+        let before = inventory(f.originals.data.path());
+        let error = observe(&f, &refs)
+            .err()
+            .expect("mismatched independent source must refuse");
+        if case.starts_with("source-") {
+            assert_eq!(
+                error.to_string(),
+                "root archive source Head differs from independent reference"
+            );
+        }
+        assert_eq!(inventory(f.originals.data.path()), before);
+    }
+}
+#[test]
+fn closed_plan_observation_reloads_plan_after_real_readback_checkpoint() {
+    for case in ["bytes", "permission", "replacement-unsealed"] {
+        let f = Fixture::new();
+        let refs = close(&f);
+        let archive = observe(&f, &refs).unwrap();
+        let movement = refs.closed.root_retirement.as_ref().unwrap();
+        let (pending, initial) =
+            Pending::open_with_plan(&archive, &movement.plan.id, &movement.plan.sha256).unwrap();
+        let path = archive
+            .directory
+            .path()
+            .join(format!("root-retirement-{}.json", movement.plan.id));
+        let reached = std::cell::Cell::new(false);
+        let result = pending.verify_historical_close_from_initial(
+            refs.closed.completion_sha256.as_deref().unwrap(),
+            initial,
+            &|point| {
+                assert_eq!(point, "historical-readback");
+                reached.set(true);
+                match case {
+                    "bytes" => {
+                        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+                        fs::write(&path, b"changed during observation").unwrap();
+                        fs::set_permissions(&path, fs::Permissions::from_mode(0o400)).unwrap();
+                    }
+                    "permission" => {
+                        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap()
+                    }
+                    "replacement-unsealed" => {
+                        let raw = fs::read(&path).unwrap();
+                        fs::rename(&path, archive.directory.path().join("retained-plan")).unwrap();
+                        fs::write(&path, raw).unwrap();
+                        fs::set_permissions(&path, fs::Permissions::from_mode(0o600)).unwrap();
+                    }
+                    _ => unreachable!(),
+                }
+                Ok(())
+            },
+        );
+        assert!(reached.get());
+        assert!(result.is_err(), "{case}");
+    }
+}
+#[test]
 fn closed_root_history_uses_exact_archive_without_following_new_logical_root_or_current_grok() {
     let f = Fixture::new();
     let refs = close(&f);
@@ -647,6 +757,30 @@ fn closed_root_history_full_frame_live_and_released_marker_chain_stays_independe
     println!(
         "CLOSED_PREFIX_COMPARISON {}",
         serde_json::json!({"accepted":false,"samples":comparison,"scope":"same-fixture same-binary reference/scoped observations in reversed order; no OS service acceptance"})
+    );
+    let mut plans = Vec::new();
+    for reference in [true, false, false, true] {
+        let started = Instant::now();
+        let (opened, metrics) = observation_metrics::measure(|| {
+            if reference {
+                observation_metrics::plan_reference(|| observe(&f, &known))
+            } else {
+                observe(&f, &known)
+            }
+        });
+        opened.unwrap();
+        let metrics = serde_json::to_value(metrics).unwrap();
+        assert_eq!(
+            metrics["retirement_plan_load"]["calls"],
+            if reference { 6 } else { 2 }
+        );
+        assert_eq!(metrics["frame"]["calls"], 8);
+        assert_eq!(metrics["root_provenance"]["calls"], 10);
+        plans.push(serde_json::json!({"reference":reference,"elapsedNanos":started.elapsed().as_nanos(),"metrics":metrics}));
+    }
+    println!(
+        "HISTORICAL_PLAN_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":plans,"scope":"same source/binary/current four-frame fixture; fresh start/end plans and unchanged eight frames; no service acceptance"})
     );
     f._index.closed_root_history(&closed).unwrap();
     fs::DirBuilder::new()

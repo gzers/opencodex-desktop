@@ -7,6 +7,24 @@ pub(crate) struct Metric {
 }
 thread_local! {static ACTIVE:RefCell<Option<BTreeMap<&'static str,Metric>>>=const {RefCell::new(None)};}
 thread_local! {static REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+thread_local! {static PLAN_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+pub(crate) fn plan_reference_enabled() -> bool {
+    PLAN_REFERENCE.with(|v| v.get())
+}
+pub(crate) fn plan_reference<T>(action: impl FnOnce() -> T) -> T {
+    struct Reset;
+    impl Drop for Reset {
+        fn drop(&mut self) {
+            PLAN_REFERENCE.with(|v| v.set(false));
+        }
+    }
+    PLAN_REFERENCE.with(|v| {
+        assert!(!v.get());
+        v.set(true);
+    });
+    let _reset = Reset;
+    action()
+}
 pub(crate) fn reference_enabled() -> bool {
     REFERENCE.with(|v| v.get())
 }

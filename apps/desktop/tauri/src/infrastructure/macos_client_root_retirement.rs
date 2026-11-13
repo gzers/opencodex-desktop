@@ -131,6 +131,22 @@ fn open_archive_reference(
     profile_root: &Path,
     reference: &ArchiveReferences,
 ) -> io::Result<Originals> {
+    let archived = open_archive_shell(data_root, profile_root, reference)?;
+    let pending = Pending::open(&archived, &reference.plan_id, &reference.plan_sha256)?;
+    if pending.load()?.source != reference.source {
+        return Err(denied(
+            "root archive source Head differs from independent reference",
+        ));
+    }
+    Ok(archived)
+}
+/// Pins only. This private bootstrap is never returned as admitted evidence:
+/// its owning caller must authenticate the exact independent plan and source.
+fn open_archive_shell(
+    data_root: &Path,
+    profile_root: &Path,
+    reference: &ArchiveReferences,
+) -> io::Result<Originals> {
     session_index::validate(&reference.source)?;
     let refs = reference
         .source
@@ -171,12 +187,6 @@ fn open_archive_reference(
         retired_root_slot: Some(slot),
         known: std::sync::Mutex::new(known),
     };
-    let pending = Pending::open(&archived, &reference.plan_id, &reference.plan_sha256)?;
-    if pending.load()?.source != reference.source {
-        return Err(denied(
-            "root archive source Head differs from independent reference",
-        ));
-    }
     Ok(archived)
 }
 /// Independent index facts identifying a CLOSED historical generation. Mere
@@ -220,6 +230,28 @@ pub fn open_closed_history(
         || reference.original_root.id != closed.ticket
     {
         return Err(denied("historical root closure rebases independent source"));
+    }
+    #[cfg(not(test))]
+    let reference_mode = false;
+    #[cfg(test)]
+    let reference_mode = observation_metrics::plan_reference_enabled();
+    let archived_ref = ArchiveReferences {
+        source: source.clone(),
+        original_root: reference.original_root.clone(),
+        plan_id: movement.plan.id.clone(),
+        plan_sha256: movement.plan.sha256.clone(),
+    };
+    if !reference_mode {
+        let archive = open_archive_shell(data_root, profile_root, &archived_ref)?;
+        let (pending, initial) =
+            Pending::open_with_plan(&archive, &movement.plan.id, &movement.plan.sha256)?;
+        if initial.source != *source {
+            return Err(denied(
+                "root archive source Head differs from independent reference",
+            ));
+        }
+        pending.verify_historical_close_from_initial(completion, initial, &|_| Ok(()))?;
+        return Ok(archive);
     }
     let archive = open_archive_reference(
         data_root,
@@ -377,6 +409,13 @@ impl<'a> Pending<'a> {
         &self.sha256
     }
     pub fn open(originals: &'a Originals, id: &str, sha256: &str) -> io::Result<Self> {
+        Self::open_with_plan(originals, id, sha256).map(|(pending, _)| pending)
+    }
+    fn open_with_plan(
+        originals: &'a Originals,
+        id: &str,
+        sha256: &str,
+    ) -> io::Result<(Self, Plan)> {
         if uuid::Uuid::parse_str(id)
             .map(|v| v.to_string() != id)
             .unwrap_or(true)
@@ -388,8 +427,8 @@ impl<'a> Pending<'a> {
             id: id.into(),
             sha256: sha256.into(),
         };
-        value.load()?;
-        Ok(value)
+        let plan = value.load()?;
+        Ok((value, plan))
     }
     fn slot(&self) -> String {
         format!("root-retired-{}", self.id)
@@ -852,6 +891,16 @@ impl<'a> Pending<'a> {
         checkpoint: &impl Fn(&str) -> io::Result<()>,
     ) -> io::Result<()> {
         let plan = self.load()?;
+        self.verify_historical_close_from_initial(expected_sha256, plan, checkpoint)
+    }
+    /// Only the private authenticated open above supplies this initial Plan.
+    /// It is consumed in this one readonly observation, never retained in Self.
+    fn verify_historical_close_from_initial(
+        &self,
+        expected_sha256: &str,
+        plan: Plan,
+        checkpoint: &impl Fn(&str) -> io::Result<()>,
+    ) -> io::Result<()> {
         let (archive, _) = self.archive_prefix(&plan)?;
         let tree = TreeSnapshot::read(&archive.client)?;
         if tree != plan.released_tree()? {
