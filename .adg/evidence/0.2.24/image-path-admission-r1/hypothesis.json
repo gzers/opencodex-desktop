@@ -1,0 +1,6 @@
+{
+  "accepted": false,
+  "baseCommit": "4ba715120fd59ddbe3634e501856b436ec928f74",
+  "hypothesis": "Coordination final program read_complete still inventories whole image, with no duplicate separate critical hashes. Its existing-only safety::check_path does symlink_metadata then inspect(symlink_metadata) on each named component. A local inventory-only all-component admission can inspect each required component once before content reads, keeping absolute trust root, lexical confinement, no missing paths, nofollow/reparse/special rejection, file single-link/open checks, complete byte hashes, every directory post-worker fence, limits and cancellation/join. Compare all rows and content digest plus reference/native path-inspection counts; test delayed symlink replacement before foreign read and errors. This removes adjacent equivalent metadata calls, not a path component or content admission boundary.",
+  "scope": "Do not modify shared backup safety implementation or Windows-exclusive files. No daily config/Shell/installed app, official299 changes, business requests, cache, skipped hashes or deadline extension. Add final coordinator stage diagnostics without changing order; no original-service round until affected checks and evidence warrant. Preserve evidence/cleanup."
+}

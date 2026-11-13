@@ -1,0 +1,10 @@
+{
+  "reviewer": "Mendel",
+  "baseCommit": "4ba715120fd59ddbe3634e501856b436ec928f74",
+  "actualImageDiffReviewed": true,
+  "blockingFindings": [],
+  "scope": "Two image files only, not later test-only tail instrumentation; static reading, no test/build/service by reviewer",
+  "invariants": "All components inspected before content, read_dir/worker/final positions retained, all file bytes and single-link/hash/budget/workerjoin/directory identity/mtime fences kept. Stable missing/permission/symlink/reparse/special/outside-root cases equivalent.",
+  "concurrency": "Removes first existence-only adjacent metadata sampling, not atomic path binding. Transient observation instants can differ.",
+  "countBoundary": "safety::inspect calls still1+d; native metadata queries inside helper theoretically1+2d->1+d. No measured syscall-count claim."
+}

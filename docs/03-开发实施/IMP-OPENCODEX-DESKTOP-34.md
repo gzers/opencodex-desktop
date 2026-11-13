@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0已接，W1及�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 122；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
+revision: 123；2026-11-13。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 4ba715120（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 0c988fc89（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1260,3 +1260,12 @@ main4ba715120实现普通小xattr完整直接鲜读，ERANGE／filledbuffer有�
 两轮真实normalexit0及每轮4listeners缺席；精确新3协调对象留原字节后核identity/exclusive清理，globalL原身份／保护／bytes保持释放；PID+birth／exe和主端口独立缺席。79原文件及全部材料逐字归档后清理Profile／程序／exe和临时证据根，工程target与旧失败保留。证据及严格失败verifier见 [client-xattr-native-r1](0.2.24-contracts/client-xattr-native-r1.md) 和.adg/evidence/0.2.24/client-xattr-native-r1/。
 
 Windows远端仍b2e89665d／0eef59a01无新推送；根中断与动作资格／缺Ready／一般图路径／完整进程集合和刷新／NAME／复杂代理／WindowsW1W2／官方交付验证及固定候选原完整范围不缩减，目标active，未发布。
+
+
+## 2026-11-13 完整镜像相邻路径查询去重与收尾分段
+
+main3701ee391合并完整inventory必需现存路径中紧邻的存在性metadata查询，保留每个组件inspect、collect／worker读前／final原位置、全部内容hash/singlelink/nofollow/预算/线程join与目录前后身份mtime；不改read_complete或sharedbackup safety。55项不同受影响回归及严格工程检查通过，actual diff只读补审无阻断。少一次相邻采样不保证瞬态调度完全相同，native查询1+2d→1+d仅静态推导，inspect数不变。
+
+官方2.99完整image只读ABBA一轮通过，13393files／15646entries／17901pathboundaries及全部rows和树摘要不变，旧／新／新／旧645／522／498／631ms约20%局部改善，无服务／协调对象。副本和unit临时根在结果逐字核对后清理。后继main0c988fc89仅加cfgtest+ownedProfile协调tail计量：锁末验／release／完整来源重读与deadline前后余量；image-only二进制与后继diagnostic源关联分别保存，不冒称旧binary含新代码。证据见 [image-path-admission-r1](0.2.24-contracts/image-path-admission-r1.md) 及.adg/evidence/0.2.24/image-path-admission-r1/。
+
+本批无新原包服务轮，原第二Stop11345ms／RootAbsent18最终协调deadline失败保持，下一步固定release候选原包双轮+tail段判断实际收益；不能仅局部变快就收口。根中断／动作资格／缺Ready／一般图路径和完整进程集合／刷新／NAME／复杂代理／WindowsW1W2／交付验证及固定候选完整范围不缩减，目标active，未发布。
