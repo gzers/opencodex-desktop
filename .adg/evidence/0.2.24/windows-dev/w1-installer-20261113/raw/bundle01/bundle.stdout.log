@@ -1,0 +1,1658 @@
+MakeNSIS v3.11 - Copyright 1999-2025 Contributors
+See the file COPYING for license details.
+Credits can be found in the Users Manual.
+
+Processing config: C:\Users\15119\AppData\Local\tauri\NSIS\nsisconf.nsh
+Processing default plugins: "C:\Users\15119\AppData\Local\tauri\NSIS\Plugins\x86-unicode\*.dll"
+ + AdvSplash::show
+ + Banner::destroy
+ + Banner::getWindow
+ + Banner::show
+ + BgImage::AddImage
+ + BgImage::AddText
+ + BgImage::Clear
+ + BgImage::Destroy
+ + BgImage::Redraw
+ + BgImage::SetBg
+ + BgImage::SetReturn
+ + BgImage::Sound
+ + Dialer::AttemptConnect
+ + Dialer::AutodialHangup
+ + Dialer::AutodialOnline
+ + Dialer::AutodialUnattended
+ + Dialer::GetConnectedState
+ + InstallOptions::dialog
+ + InstallOptions::initDialog
+ + InstallOptions::make_unicode
+ + InstallOptions::show
+ + LangDLL::LangDialog
+ + Math::Script
+ + NSISdl::download
+ + NSISdl::download_quiet
+ + Splash::show
+ + StartMenu::Init
+ + StartMenu::Select
+ + StartMenu::Show
+ + System::Alloc
+ + System::Call
+ + System::Copy
+ + System::Free
+ + System::Get
+ + System::Int64Op
+ + System::Store
+ + System::StrAlloc
+ + TypeLib::GetLibVersion
+ + TypeLib::Register
+ + TypeLib::UnRegister
+ + UserInfo::GetAccountType
+ + UserInfo::GetName
+ + UserInfo::GetOriginalAccountType
+ + VPatch::GetFileCRC32
+ + VPatch::GetFileMD5
+ + VPatch::vpatchfile
+ + nsDialogs::Create
+ + nsDialogs::CreateControl
+ + nsDialogs::CreateItem
+ + nsDialogs::CreateTimer
+ + nsDialogs::GetUserData
+ + nsDialogs::KillTimer
+ + nsDialogs::OnBack
+ + nsDialogs::OnChange
+ + nsDialogs::OnClick
+ + nsDialogs::OnNotify
+ + nsDialogs::SelectFileDialog
+ + nsDialogs::SelectFolderDialog
+ + nsDialogs::SetRTL
+ + nsDialogs::SetUserData
+ + nsDialogs::Show
+ + nsExec::Exec
+ + nsExec::ExecToLog
+ + nsExec::ExecToStack
+
+!define: "MUI_INSERT_NSISCONF"=""
+
+Changing directory to: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\nsis\x64"
+
+Processing script file: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\nsis\x64\installer.nsi" (UTF8)
+Unicode: true
+Processing default plugins: "C:\Users\15119\AppData\Local\tauri\NSIS\Plugins\x86-unicode\*.dll"
+
+SetCompress: off
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\MUI2.nsh" (UTF8)
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Contrib\Modern UI 2\MUI2.nsh" (UTF8)
+NSIS Modern User Interface version 2.1 - Copyright 2002-2025 Joost Verburg (C:\Users\15119\AppData\Local\tauri\NSIS\Contrib\Modern UI 2\MUI2.nsh:14)
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Contrib\Modern UI 2\MUI2.nsh"
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\MUI2.nsh"
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\FileFunc.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\FileFunc.nsh"
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\x64.nsh" (UTF8)
+!define: "___X64__NSH___"=""
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\LogicLib.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\LogicLib.nsh"
+!define: "IsWow64"=""" IsWow64 """
+!define: "RunningX64"=""" RunningX64 """
+!define: "GetNativeMachineArchitecture"="!insertmacro GetNativeMachineArchitecture "
+!define: "IsNativeMachineArchitecture"=""" IsNativeMachineArchitecture "
+!define: "IsNativeIA32"=""" IsNativeMachineArchitecture  332"
+!define: "IsNativeAMD64"=""" IsNativeMachineArchitecture  34404"
+!define: "IsNativeARM64"=""" IsNativeMachineArchitecture  43620"
+!define: "DisableX64FSRedirection"="!insertmacro DisableX64FSRedirection"
+!define: "EnableX64FSRedirection"="!insertmacro EnableX64FSRedirection"
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\x64.nsh"
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\WordFunc.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\WordFunc.nsh"
+!include: "utils.nsh" (UTF8)
+!define: "MAX_PATH"="260"
+!define: "SLGP_RAWPATH"="0x4"
+!include: closed: "utils.nsh"
+!include: "FileAssociation.nsh" (UTF8)
+!define: "SHCNE_ASSOCCHANGED"="0x08000000"
+!define: "SHCNF_FLUSH"="0x1000"
+!include: closed: "FileAssociation.nsh"
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\Win\COM.nsh" (UTF8)
+!define: "__WIN_COM__INC"="2"
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\Win\COM.nsh"
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\Win\Propkey.nsh" (UTF8)
+!define: "__WIN_PROPKEY__INC"=""
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\Win\Propkey.nsh"
+!include: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\StrFunc.nsh" (UTF8)
+!include: closed: "C:\Users\15119\AppData\Local\tauri\NSIS\Include\StrFunc.nsh"
+!insertmacro: STRFUNC_MAKEFUNC
+!insertmacro: STRFUNC_MAKEFUNC_StrCase
+!insertmacro: STRFUNC_BEGINFUNC
+!define: "StrCase_INCLUDED"=""
+!define: "StrCase"="!insertmacro STRFUNC_CALL_StrCase "" "
+Function: "StrCase"
+!insertmacro: end of STRFUNC_BEGINFUNC
+Exch($1,0)
+Exch(st(1),0)
+Exch($0,0)
+Exch(st(1),0)
+Push: $2
+Push: $3
+Push: $4
+Push: $5
+Push: $6
+Push: $7
+Push: $8
+StrCpy $2 "" () ()
+StrCpy $3 "" () ()
+StrCpy $4 "" () ()
+StrCpy $5 "" () ()
+StrCpy $6 "" () ()
+StrCpy $7 "" () ()
+StrCpy $8 "" () ()
+!insertmacro: _If
+!insertmacro: end of _If
+File: "System.dll"->"$PLUGINSDIR\System.dll" 12288 bytes
+Plugin command: Call User32::CharUpper(t r0 r5)i
+Goto: StrCase_End
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+Plugin command: Call User32::CharLower(t r0 r5)i
+Goto: StrCase_End
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+StrLen $2 "$0"
+!insertmacro: _For
+!insertmacro: end of _For
+IntOp: $4=$3+1
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $6 "$0" () ($3)
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $6 "$0" (1) ()
+!insertmacro: _Else
+!insertmacro: end of _Else
+StrCpy $6 "$6" (1) ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call *(&t1 r7) p .r8
+Plugin command: Call *$8(&i1 .r7)
+Plugin command: Free $8
+Plugin command: Call user32::IsCharAlpha(i r7) i .r8
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call User32::CharUpper(t r6 r6)i
+!insertmacro: _Else
+!insertmacro: end of _Else
+Plugin command: Call User32::CharLower(t r6 r6)i
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Goto: IgnoreLetter
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+!insertmacro: _Or
+!insertmacro: end of _Or
+!insertmacro: _Or
+!insertmacro: end of _Or
+Plugin command: Call User32::CharUpper(t r6 r6)i
+!insertmacro: _Else
+!insertmacro: end of _Else
+Plugin command: Call User32::CharLower(t r6 r6)i
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+Plugin command: Call *(&t1 r6) p .r8
+Plugin command: Call *$8(&i1 .r7)
+Plugin command: Free $8
+Plugin command: Call user32::IsCharUpper(i r7) i .r8
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call User32::CharUpper(t r6 r6)i
+!insertmacro: _Else
+!insertmacro: end of _Else
+Plugin command: Call User32::CharLower(t r6 r6)i
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+StrCpy $7 "$6" () ()
+StrCpy $5 "$5$6" () ()
+!insertmacro: _Loop
+!insertmacro: end of _Loop
+StrCpy $0 "$5" () ()
+Pop: $8
+Pop: $7
+Pop: $6
+Pop: $5
+Pop: $4
+Pop: $3
+Pop: $2
+Pop: $1
+Exch($0,0)
+!insertmacro: STRFUNC_ENDFUNC
+FunctionEnd
+!insertmacro: end of STRFUNC_ENDFUNC
+!insertmacro: end of STRFUNC_MAKEFUNC_StrCase
+!insertmacro: end of STRFUNC_MAKEFUNC
+!insertmacro: STRFUNC_MAKEFUNC
+!insertmacro: STRFUNC_MAKEFUNC_StrLoc
+!insertmacro: STRFUNC_BEGINFUNC
+!define: "StrLoc_INCLUDED"=""
+!define: "StrLoc"="!insertmacro STRFUNC_CALL_StrLoc "" "
+Function: "StrLoc"
+!insertmacro: end of STRFUNC_BEGINFUNC
+Exch($R0,0)
+Exch(st(1),0)
+Exch($R1,0)
+Exch(st(2),0)
+Exch($R2,0)
+Push: $R3
+Push: $R4
+Push: $R5
+Push: $R6
+StrLen $R3 "$R1"
+StrLen $R4 "$R2"
+StrCpy $R5 "0" () ()
+!insertmacro: _Do
+!insertmacro: end of _Do
+StrCpy $R6 "$R2" ($R3) ($R5)
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+IntOp: $R6=$R3+$R5
+IntOp: $R0=$R4-$R6
+!insertmacro: _Else
+!insertmacro: end of _Else
+StrCpy $R0 "$R5" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _Goto
+!insertmacro: end of _Goto
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $R0 "" () ()
+!insertmacro: _Goto
+!insertmacro: end of _Goto
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+IntOp: $R5=$R5+1
+!insertmacro: _Loop
+!insertmacro: end of _Loop
+Pop: $R6
+Pop: $R5
+Pop: $R4
+Pop: $R3
+Pop: $R2
+Exch(st(1),0)
+Pop: $R1
+Exch($R0,0)
+!insertmacro: STRFUNC_ENDFUNC
+FunctionEnd
+!insertmacro: end of STRFUNC_ENDFUNC
+!insertmacro: end of STRFUNC_MAKEFUNC_StrLoc
+!insertmacro: end of STRFUNC_MAKEFUNC
+!include: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\windows\installer-hooks.nsh" (UTF8)
+!include: closed: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\windows\installer-hooks.nsh"
+!define: "WEBVIEW2APPGUID"="{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}"
+!define: "MANUFACTURER"="gzers"
+!define: "PRODUCTNAME"="OpenCodeX Desktop"
+!define: "VERSION"="0.2.24"
+!define: "VERSIONWITHBUILD"="0.2.24.0"
+!define: "HOMEPAGE"=""
+!define: "INSTALLMODE"="currentUser"
+!define: "LICENSE"=""
+!define: "INSTALLERICON"=""
+!define: "SIDEBARIMAGE"=""
+!define: "HEADERIMAGE"=""
+!define: "UNINSTALLERICON"=""
+!define: "UNINSTALLERHEADERIMAGE"=""
+!define: "MAINBINARYNAME"="ocxd"
+!define: "MAINBINARYSRCPATH"="C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\ocxd.exe"
+!define: "BUNDLEID"="com.gzers.opencodex.w1-resource-proof"
+!define: "COPYRIGHT"=""
+!define: "OUTFILE"="nsis-output.exe"
+!define: "ARCH"="x64"
+!define: "ADDITIONALPLUGINSPATH"="C:\Users\15119\AppData\Local\tauri\NSIS\Plugins\x86-unicode\additional"
+!define: "ALLOWDOWNGRADES"="true"
+!define: "DISPLAYLANGUAGESELECTOR"="false"
+!define: "INSTALLWEBVIEW2MODE"=""
+!define: "WEBVIEW2INSTALLERARGS"="/silent"
+!define: "WEBVIEW2BOOTSTRAPPERPATH"=""
+!define: "WEBVIEW2INSTALLERPATH"=""
+!define: "MINIMUMWEBVIEW2VERSION"=""
+!define: "UNINSTKEY"="Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop"
+!define: "MANUKEY"="Software\gzers"
+!define: "MANUPRODUCTKEY"="Software\gzers\OpenCodeX Desktop"
+!define: "UNINSTALLERSIGNCOMMAND"=""
+!define: "ESTIMATEDSIZE"="294761"
+!define: "STARTMENUFOLDER"=""
+Var: "PassiveMode"
+Var: "UpdateMode"
+Var: "NoShortcutMode"
+Var: "WixMode"
+Var: "OldMainBinaryName"
+Name: "OpenCodeX Desktop"
+BrandingText: ""
+OutFile: "nsis-output.exe"
+!define: "PLACEHOLDER_INSTALL_DIR"="placeholder\OpenCodeX Desktop"
+InstallDir: "placeholder\OpenCodeX Desktop"
+VIAddVersionKey: "ProductName" "OpenCodeX Desktop"
+VIAddVersionKey: "FileDescription" "OpenCodeX Desktop"
+VIAddVersionKey: "LegalCopyright" ""
+VIAddVersionKey: "FileVersion" "0.2.24"
+VIAddVersionKey: "ProductVersion" "0.2.24"
+!addplugindir: "C:\Users\15119\AppData\Local\tauri\NSIS\Plugins\x86-unicode\additional"
+ + nsis_tauri_utils::DllMain
+ + nsis_tauri_utils::FindProcess
+ + nsis_tauri_utils::FindProcessCurrentUser
+ + nsis_tauri_utils::KillProcess
+ + nsis_tauri_utils::KillProcessCurrentUser
+ + nsis_tauri_utils::RunAsUser
+ + nsis_tauri_utils::SemverCompare
+ + nsis_tauri_utils::StrReplace
+ + nsis_tauri_utils::memcmp
+ + nsis_tauri_utils::memcpy
+ + nsis_tauri_utils::memset
+!define: "MUI_LANGDLL_REGISTRY_ROOT"="HKCU"
+!define: "MUI_LANGDLL_REGISTRY_KEY"="Software\gzers\OpenCodeX Desktop"
+!define: "MUI_LANGDLL_REGISTRY_VALUENAME"="Installer Language"
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="SkipIfPassive"
+!insertmacro: MUI_PAGE_WELCOME
+!insertmacro: end of MUI_PAGE_WELCOME
+Var: "ReinstallPageCheck"
+Page: custom (creator:PageReinstall) (leave:PageLeaveReinstall)
+Function: "PageReinstall"
+StrCpy $0 "0" () ()
+EnumRegKey $1 HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$0
+StrCmp "$1" "" equal=wix_loop_done, nonequal=
+IntOp: $0=$0+1
+ReadRegStr $R0 HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1\DisplayName
+ReadRegStr $R1 HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1\Publisher
+StrCmp "$R0$R1" "OpenCodeX Desktopgzers" equal=0, nonequal=wix_loop
+ReadRegStr $R0 HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1\UninstallString
+!insertmacro: STRFUNC_CALL_StrCase
+!insertmacro: end of STRFUNC_CALL_StrCase
+!insertmacro: STRFUNC_CALL_StrLoc
+!insertmacro: end of STRFUNC_CALL_StrLoc
+StrCmp "$R0" "0" equal=0, nonequal=wix_loop_done
+StrCpy $WixMode "1" () ()
+StrCpy $R6 "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$1" () ()
+Goto: compare_version
+ReadRegStr $R0 SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\
+ReadRegStr $R1 SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\UninstallString
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+StrCpy $R4 "$(older)" () ()
+!insertmacro: _If
+!insertmacro: end of _If
+ReadRegStr $R0 HKLM\$R6\DisplayVersion
+!insertmacro: _Else
+!insertmacro: end of _Else
+ReadRegStr $R0 SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\DisplayVersion
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+File: "nsis_tauri_utils.dll"->"$PLUGINSDIR\nsis_tauri_utils.dll" 34304 bytes
+Plugin command: SemverCompare 0.2.24 $R0
+Pop: $R0
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $R1 "$(alreadyInstalledLong)" () ()
+StrCpy $R2 "$(addOrReinstall)" () ()
+StrCpy $R3 "$(uninstallApp)" () ()
+!insertmacro: MUI_HEADER_TEXT
+!insertmacro: end of MUI_HEADER_TEXT
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+StrCpy $R1 "$(olderOrUnknownVersionInstalled)" () ()
+StrCpy $R2 "$(uninstallBeforeInstalling)" () ()
+StrCpy $R3 "$(dontUninstall)" () ()
+!insertmacro: MUI_HEADER_TEXT
+!insertmacro: end of MUI_HEADER_TEXT
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+StrCpy $R1 "$(newerVersionInstalled)" () ()
+StrCpy $R2 "$(uninstallBeforeInstalling)" () ()
+StrCpy $R3 "$(dontUninstall)" () ()
+!insertmacro: MUI_HEADER_TEXT
+!insertmacro: end of MUI_HEADER_TEXT
+!insertmacro: _Else
+!insertmacro: end of _Else
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Call "PageLeaveReinstall"
+!insertmacro: _Else
+!insertmacro: end of _Else
+Plugin command: Create 1018
+Pop: $R4
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+Plugin command: CreateControl STATIC 0x40000000|0x10000000|0x04000000|0x00000100 0x00000020 0 0 100% 24u $R1
+Pop: $R1
+Plugin command: CreateControl BUTTON 0x40000000|0x10000000|0x04000000|0x00010000|0x00000000|0x00000C00|0x00000009|0x00002000 0 30u 50u -30u 8u $R2
+Pop: $R2
+!insertmacro: __NSD_OnControlEvent
+Push: $0
+Push: $1
+StrCpy $1 "$R2" () ()
+GetFunctionAddress: $0 PageReinstallUpdateSelection
+Plugin command: OnClick $1 $0
+Pop: $1
+Pop: $0
+!insertmacro: end of __NSD_OnControlEvent
+Plugin command: CreateControl BUTTON 0x40000000|0x10000000|0x04000000|0x00010000|0x00000000|0x00000C00|0x00000009|0x00002000 0 30u 70u -30u 8u $R3
+Pop: $R3
+!insertmacro: __NSD_OnControlEvent
+Push: $0
+Push: $1
+StrCpy $1 "$R3" () ()
+GetFunctionAddress: $0 PageReinstallUpdateSelection
+Plugin command: OnClick $1 $0
+Pop: $1
+Pop: $0
+!insertmacro: end of __NSD_OnControlEvent
+!insertmacro: _If
+!insertmacro: end of _If
+SendMessage:($R2,0x00F1,1,0)
+!insertmacro: _Else
+!insertmacro: end of _Else
+SendMessage:($R3,0x00F1,1,0)
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: __NSD_SetFocus
+Plugin command: Call user32::SetFocus(p$R2)
+!insertmacro: end of __NSD_SetFocus
+Plugin command: Show
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Function: "PageReinstallUpdateSelection"
+!insertmacro: __NSD_GetState
+SendMessage:(->$R1)($R2,0x00F0,0,0)
+!insertmacro: end of __NSD_GetState
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $ReinstallPageCheck "1" () ()
+!insertmacro: _Else
+!insertmacro: end of _Else
+StrCpy $ReinstallPageCheck "2" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Function: "PageLeaveReinstall"
+!insertmacro: __NSD_GetState
+SendMessage:(->$R1)($R2,0x00F0,0,0)
+!insertmacro: end of __NSD_GetState
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_uninstall
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_done
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_done
+!insertmacro: _Else
+!insertmacro: end of _Else
+Goto: reinst_uninstall
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_uninstall
+!insertmacro: _Else
+!insertmacro: end of _Else
+Goto: reinst_done
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _ElseIf
+!insertmacro: end of _ElseIf
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: reinst_uninstall
+!insertmacro: _Else
+!insertmacro: end of _Else
+Goto: reinst_done
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+HideWindow
+ClearErrors: 
+!insertmacro: _If
+!insertmacro: end of _If
+ReadRegStr $R1 HKLM\$R6\UninstallString
+ExecWait: "$R1" (->$0)
+!insertmacro: _Else
+!insertmacro: end of _Else
+ReadRegStr $4 SHCTX\Software\gzers\OpenCodeX Desktop\
+ReadRegStr $R1 SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\UninstallString
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+StrCpy $R1 "$R1 _?=$4" () ()
+ExecWait: "$R1" (->$0)
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+BringToFront
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+MessageBox: 48: "$(unableToUninstall)"
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="SkipIfPassive"
+!insertmacro: MUI_PAGE_DIRECTORY
+!insertmacro: end of MUI_PAGE_DIRECTORY
+Var: "AppStartMenuFolder"
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="Skip"
+!insertmacro: MUI_PAGE_STARTMENU
+!insertmacro: end of MUI_PAGE_STARTMENU
+!insertmacro: MUI_PAGE_INSTFILES
+!insertmacro: end of MUI_PAGE_INSTFILES
+!define: "MUI_FINISHPAGE_NOAUTOCLOSE"=""
+!define: "MUI_FINISHPAGE_SHOWREADME"=""
+!define: "MUI_FINISHPAGE_SHOWREADME_TEXT"="$(createDesktop)"
+!define: "MUI_FINISHPAGE_SHOWREADME_FUNCTION"="CreateOrUpdateDesktopShortcut"
+!define: "MUI_FINISHPAGE_RUN"=""
+!define: "MUI_FINISHPAGE_RUN_FUNCTION"="RunMainBinary"
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="SkipIfPassive"
+!insertmacro: MUI_PAGE_FINISH
+!insertmacro: end of MUI_PAGE_FINISH
+Function: "RunMainBinary"
+Plugin command: RunAsUser $INSTDIR\ocxd.exe 
+FunctionEnd
+Var: "DeleteAppDataCheckbox"
+Var: "DeleteAppDataCheckboxState"
+!define: "WS_EX_LAYOUTRTL"="0x00400000"
+!define: "MUI_PAGE_CUSTOMFUNCTION_SHOW"="un.ConfirmShow"
+Function: "un.ConfirmShow"
+FindWindow: output=$1, class="#32770", text="" hwndparent="$HWNDPARENT" hwndafter=""
+File: "System.dll"->"$PLUGINSDIR\System.dll" 12288 bytes
+Plugin command: Call user32::GetDpiForWindow(p r1) i .r2
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "0 | 0x00400000" () ()
+IntOp: $4=50*$2
+!insertmacro: _Else
+!insertmacro: end of _Else
+StrCpy $3 "0" () ()
+IntOp: $4=0*$2
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+IntOp: $5=100*$2
+IntOp: $6=400*$2
+IntOp: $7=25*$2
+IntOp: $4=$4/96
+IntOp: $5=$5/96
+IntOp: $6=$6/96
+IntOp: $7=$7/96
+Plugin command: Call user32::CreateWindowEx(i r3, w "BUTTON", w "$(deleteAppData)", i 0x40000000|0x10000000|0x04000000|0x00010000|0x00000000|0x00000C00|0x00000003|0x00002000, i r4, i r5, i r6, i r7, p r1, i0, i0, i0) i .s
+Pop: $DeleteAppDataCheckbox
+SendMessage:(->$1)($HWNDPARENT,0x0031,0,0)
+SendMessage:($DeleteAppDataCheckbox,0x0030,$1,1)
+FunctionEnd
+!define: "MUI_PAGE_CUSTOMFUNCTION_LEAVE"="un.ConfirmLeave"
+Function: "un.ConfirmLeave"
+SendMessage:(->$DeleteAppDataCheckboxState)($DeleteAppDataCheckbox,0x00F0,0,0)
+FunctionEnd
+!define: "MUI_PAGE_CUSTOMFUNCTION_PRE"="un.SkipIfPassive"
+!insertmacro: MUI_UNPAGE_CONFIRM
+!insertmacro: end of MUI_UNPAGE_CONFIRM
+!insertmacro: MUI_UNPAGE_INSTFILES
+!insertmacro: end of MUI_UNPAGE_INSTFILES
+!insertmacro: MUI_LANGUAGE
+!insertmacro: end of MUI_LANGUAGE
+!insertmacro: MUI_RESERVEFILE_LANGDLL
+!insertmacro: end of MUI_RESERVEFILE_LANGDLL
+!include: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\nsis\x64\English.nsh" (UTF8)
+LangString: "addOrReinstall" 1033 "Add/Reinstall components"
+LangString: "alreadyInstalled" 1033 "Already Installed"
+LangString: "alreadyInstalledLong" 1033 "OpenCodeX Desktop 0.2.24 is already installed. Select the operation you want to perform and click Next to continue."
+LangString: "appRunning" 1033 "{{product_name}} is running! Please close it first then try again."
+LangString: "appRunningOkKill" 1033 "{{product_name}} is running!
+Click OK to kill it"
+LangString: "chooseMaintenanceOption" 1033 "Choose the maintenance option to perform."
+LangString: "choowHowToInstall" 1033 "Choose how you want to install OpenCodeX Desktop."
+LangString: "createDesktop" 1033 "Create desktop shortcut"
+LangString: "dontUninstall" 1033 "Do not uninstall"
+LangString: "dontUninstallDowngrade" 1033 "Do not uninstall (Downgrading without uninstall is disabled for this installer)"
+LangString: "failedToKillApp" 1033 "Failed to kill {{product_name}}. Please close it first then try again"
+LangString: "installingWebview2" 1033 "Installing WebView2..."
+LangString: "newerVersionInstalled" 1033 "A newer version of OpenCodeX Desktop is already installed! It is not recommended that you install an older version. If you really want to install this older version, it's better to uninstall the current version first. Select the operation you want to perform and click Next to continue."
+LangString: "older" 1033 "older"
+LangString: "olderOrUnknownVersionInstalled" 1033 "An $R4 version of OpenCodeX Desktop is installed on your system. It's recommended that you uninstall the current version before installing. Select the operation you want to perform and click Next to continue."
+LangString: "silentDowngrades" 1033 "Downgrades are disabled for this installer, can't proceed with the silent installer, please use the graphical interface installer instead.
+"
+LangString: "unableToUninstall" 1033 "Unable to uninstall!"
+LangString: "uninstallApp" 1033 "Uninstall OpenCodeX Desktop"
+LangString: "uninstallBeforeInstalling" 1033 "Uninstall before installing"
+LangString: "unknown" 1033 "unknown"
+LangString: "webview2AbortError" 1033 "Failed to install WebView2! The app can't run without it. Try restarting the installer."
+LangString: "webview2DownloadError" 1033 "Error: Downloading WebView2 Failed - $0"
+LangString: "webview2DownloadSuccess" 1033 "WebView2 bootstrapper downloaded successfully"
+LangString: "webview2Downloading" 1033 "Downloading WebView2 bootstrapper..."
+LangString: "webview2InstallError" 1033 "Error: Installing WebView2 failed with exit code $1"
+LangString: "webview2InstallSuccess" 1033 "WebView2 installed successfully"
+LangString: "deleteAppData" 1033 "Delete the application data"
+!include: closed: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\nsis\x64\English.nsh"
+Function: ".onInit"
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $PassiveMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $NoShortcutMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $UpdateMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: SetContext
+SetShellVarContext: current
+!insertmacro: _If
+!insertmacro: end of _If
+SetRegView: 64
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetContext
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $INSTDIR "$LOCALAPPDATA\Programs\OpenCodeX Desktop" () ()
+Call "RestorePreviousInstallLocation"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Section: "EarlyChecks"
+SectionEnd
+Section: "WebView2"
+!insertmacro: _If
+!insertmacro: end of _If
+ReadRegStr $4 HKLM\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\pv
+!insertmacro: _Else
+!insertmacro: end of _Else
+ReadRegStr $4 HKLM\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\pv
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+ReadRegStr $4 HKCU\SOFTWARE\Microsoft\EdgeUpdate\Clients\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}\pv
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+Goto: webview2_done
+DetailPrint: "$(installingWebview2)"
+ExecWait: "$6 /silent /install" (->$1)
+!insertmacro: _If
+!insertmacro: end of _If
+DetailPrint: "$(webview2InstallSuccess)"
+!insertmacro: _Else
+!insertmacro: end of _Else
+DetailPrint: "$(webview2InstallError)"
+Abort: "$(webview2AbortError)"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _Else
+!insertmacro: end of _Else
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+SectionEnd
+Section: "Install"
+SetOutPath: "$INSTDIR"
+!insertmacro: CheckIfAppIsRunning
+!define: "UniqueID"="668.1"
+Plugin command: StrReplace $(appRunning) {{product_name}} OpenCodeX Desktop
+Pop: $R1
+Plugin command: StrReplace $(appRunningOkKill) {{product_name}} OpenCodeX Desktop
+Pop: $R2
+Plugin command: StrReplace $(failedToKillApp) {{product_name}} OpenCodeX Desktop
+Pop: $R3
+Plugin command: FindProcessCurrentUser ocxd.exe
+Pop: $R0
+!insertmacro: _If
+!insertmacro: end of _If
+IfSilent ?kill_668.1:0
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+Plugin command: KillProcessCurrentUser ocxd.exe
+Pop: $R0
+Sleep: 500 ms
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Goto: app_check_done_668.1
+!insertmacro: _Else
+!insertmacro: end of _Else
+IfSilent ?silent_668.1:ui_668.1
+Plugin command: Call kernel32::AttachConsole(i -1)i.r0
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call kernel32::GetStdHandle(i -11)i.r0
+Plugin command: Call kernel32::SetConsoleTextAttribute(i r0, i 0x0004)
+FileWrite: $R1
+->$0
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Abort: ""
+Abort: "$R3"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Abort: "$R1"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!undef: "UniqueID"
+!insertmacro: end of CheckIfAppIsRunning
+File: "ocxd.exe" 5705728 bytes
+CreateDirectory: "$INSTDIR\resources"
+CreateDirectory: "$INSTDIR\runtime-bundle"
+File: "LICENSE"->"resources\LICENSE" 1083 bytes
+File: "THIRD-PARTY-NOTICES.txt"->"resources\THIRD-PARTY-NOTICES.txt" 1483 bytes
+File: "official-runtime.tgz"->"runtime-bundle\official-runtime.tgz" 19923693 bytes
+File: "runtime-bundle-0.2.24-win32-x64.tar.gz"->"runtime-bundle\runtime-bundle-0.2.24-win32-x64.tar.gz" 274033721 bytes
+File: "runtime-bundle.manifest.json"->"runtime-bundle\runtime-bundle.manifest.json" 2169800 bytes
+File: "runtime-bundle.manifest.sha256"->"runtime-bundle\runtime-bundle.manifest.sha256" 66 bytes
+WriteUninstaller: "$INSTDIR\uninstall.exe"
+WriteRegStr: SHCTX\Software\gzers\OpenCodeX Desktop\=$INSTDIR
+ReadRegStr $OldMainBinaryName SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\MainBinaryName
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+Delete: "$INSTDIR\$OldMainBinaryName"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\MainBinaryName=ocxd.exe
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\DisplayName=OpenCodeX Desktop
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\DisplayIcon="$INSTDIR\ocxd.exe"
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\DisplayVersion=0.2.24
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\Publisher=gzers
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\InstallLocation="$INSTDIR"
+WriteRegStr: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\UninstallString="$INSTDIR\uninstall.exe"
+WriteRegDWORD: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\NoModify=1
+WriteRegDWORD: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\NoRepair=1
+!insertmacro: GetSizeCall
+!insertmacro: end of GetSizeCall
+IntOp: $0=$0+294761
+IntFmt: $0->$0 (fmt:0x%08X)
+WriteRegDWORD: SHCTX\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop\EstimatedSize=$0
+!insertmacro: MUI_STARTMENU_WRITE_BEGIN
+!insertmacro: end of MUI_STARTMENU_WRITE_BEGIN
+Call "CreateOrUpdateStartMenuShortcut"
+!insertmacro: MUI_STARTMENU_WRITE_END
+!insertmacro: end of MUI_STARTMENU_WRITE_END
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Call "CreateOrUpdateDesktopShortcut"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+SetAutoClose: true
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+SectionEnd
+Function: ".onInstSuccess"
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+Plugin command: RunAsUser $INSTDIR\ocxd.exe $R0
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Function: "un.onInit"
+!insertmacro: SetContext
+SetShellVarContext: current
+!insertmacro: _If
+!insertmacro: end of _If
+SetRegView: 64
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetContext
+!insertmacro: MUI_UNGETLANGUAGE
+!insertmacro: end of MUI_UNGETLANGUAGE
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $PassiveMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: GetOptionsCall
+!insertmacro: end of GetOptionsCall
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $UpdateMode "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Section: "Uninstall"
+!insertmacro: NSIS_HOOK_PREUNINSTALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $DeleteAppDataCheckboxState "0" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+File: "nsExec.dll"->"$PLUGINSDIR\nsExec.dll" 7168 bytes
+Plugin command: ExecToStack "$INSTDIR\ocxd.exe" --uninstall-manager-data --confirm
+Pop: $0
+Pop: $1
+!insertmacro: _If
+!insertmacro: end of _If
+MessageBox: 16: "Manager data cleanup could not complete. Close OpenCodeX Desktop and verify its data directories, then try uninstalling again. The application files have been retained."
+SetErrorLevel: 1
+Abort: ""
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+StrCpy $DeleteAppDataCheckboxState "0" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of NSIS_HOOK_PREUNINSTALL
+!insertmacro: CheckIfAppIsRunning
+!define: "UniqueID"="799.1"
+File: "nsis_tauri_utils.dll"->"$PLUGINSDIR\nsis_tauri_utils.dll" 34304 bytes
+Plugin command: StrReplace $(appRunning) {{product_name}} OpenCodeX Desktop
+Pop: $R1
+Plugin command: StrReplace $(appRunningOkKill) {{product_name}} OpenCodeX Desktop
+Pop: $R2
+Plugin command: StrReplace $(failedToKillApp) {{product_name}} OpenCodeX Desktop
+Pop: $R3
+Plugin command: FindProcessCurrentUser ocxd.exe
+Pop: $R0
+!insertmacro: _If
+!insertmacro: end of _If
+IfSilent ?kill_799.1:0
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+Plugin command: KillProcessCurrentUser ocxd.exe
+Pop: $R0
+Sleep: 500 ms
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Goto: app_check_done_799.1
+!insertmacro: _Else
+!insertmacro: end of _Else
+IfSilent ?silent_799.1:ui_799.1
+Plugin command: Call kernel32::AttachConsole(i -1)i.r0
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call kernel32::GetStdHandle(i -11)i.r0
+Plugin command: Call kernel32::SetConsoleTextAttribute(i r0, i 0x0004)
+FileWrite: $R1
+->$0
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Abort: ""
+Abort: "$R3"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Abort: "$R1"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!undef: "UniqueID"
+!insertmacro: end of CheckIfAppIsRunning
+Delete: "$INSTDIR\ocxd.exe"
+Delete: "$INSTDIR\resources\LICENSE"
+Delete: "$INSTDIR\resources\THIRD-PARTY-NOTICES.txt"
+Delete: "$INSTDIR\runtime-bundle\official-runtime.tgz"
+Delete: "$INSTDIR\runtime-bundle\runtime-bundle-0.2.24-win32-x64.tar.gz"
+Delete: "$INSTDIR\runtime-bundle\runtime-bundle.manifest.json"
+Delete: "$INSTDIR\runtime-bundle\runtime-bundle.manifest.sha256"
+Delete: "$INSTDIR\uninstall.exe"
+RMDir: /REBOOTOK "$INSTDIR\resources"
+RMDir: /REBOOTOK "$INSTDIR\runtime-bundle"
+RMDir: "$INSTDIR"
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: DeleteAppUserModelId
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{77f10cf0-3db5-4966-b520-b7c54fd35ed6}",i0,i0x1,g"{6332debf-87b5-4670-90c0-5e57b408a49e}",*p.r1)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->10(w)i("com.gzers.opencodex.w1-resource-proof")
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{86c14003-4d6b-4ef3-a7b4-0506663b2e68}",i0,i0x1,g"{12337D35-94C6-48A0-BCE7-6A9C69D4D600}",*p.r1)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->3(w)i("com.gzers.opencodex.w1-resource-proof")i.r0
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of DeleteAppUserModelId
+!insertmacro: MUI_STARTMENU_GETFOLDER
+!insertmacro: end of MUI_STARTMENU_GETFOLDER
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\$AppStartMenuFolder\OpenCodeX Desktop.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: UnpinShortcut
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{a2a9545d-a0c2-42b4-9708-a0b2badd77c8}",i0,i0x1,g"{4CD19ADA-25A5-4A32-B3B7-347BEE5BE36B}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call SHELL32::SHCreateItemFromParsingName(ws, p0, g "{43826d1e-e718-42ee-bc55-a1e261c37bfe}", *p0r1) $SMPROGRAMS\$AppStartMenuFolder\OpenCodeX Desktop.lnk
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(p)i(r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of UnpinShortcut
+Delete: "$SMPROGRAMS\$AppStartMenuFolder\OpenCodeX Desktop.lnk"
+RMDir: "$SMPROGRAMS\$AppStartMenuFolder"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\OpenCodeX Desktop.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: UnpinShortcut
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{a2a9545d-a0c2-42b4-9708-a0b2badd77c8}",i0,i0x1,g"{4CD19ADA-25A5-4A32-B3B7-347BEE5BE36B}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call SHELL32::SHCreateItemFromParsingName(ws, p0, g "{43826d1e-e718-42ee-bc55-a1e261c37bfe}", *p0r1) $SMPROGRAMS\OpenCodeX Desktop.lnk
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(p)i(r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of UnpinShortcut
+Delete: "$SMPROGRAMS\OpenCodeX Desktop.lnk"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$DESKTOP\OpenCodeX Desktop.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: UnpinShortcut
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{a2a9545d-a0c2-42b4-9708-a0b2badd77c8}",i0,i0x1,g"{4CD19ADA-25A5-4A32-B3B7-347BEE5BE36B}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call SHELL32::SHCreateItemFromParsingName(ws, p0, g "{43826d1e-e718-42ee-bc55-a1e261c37bfe}", *p0r1) $DESKTOP\OpenCodeX Desktop.lnk
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(p)i(r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of UnpinShortcut
+Delete: "$DESKTOP\OpenCodeX Desktop.lnk"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+DeleteRegKey: HKCU\Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeX Desktop
+!insertmacro: _If
+!insertmacro: end of _If
+DeleteRegValue: HKCU\Software\Microsoft\Windows\CurrentVersion\Run\OpenCodeX Desktop
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+DeleteRegKey: SHCTX\Software\gzers\OpenCodeX Desktop
+DeleteRegKey: SHCTX\Software\gzers
+DeleteRegValue: HKCU\Software\gzers\OpenCodeX Desktop\Installer Language
+DeleteRegKey: HKCU\Software\gzers\OpenCodeX Desktop
+DeleteRegKey: HKCU\Software\gzers
+SetShellVarContext: current
+RMDir: /r "$APPDATA\com.gzers.opencodex.w1-resource-proof"
+RMDir: /r "$LOCALAPPDATA\com.gzers.opencodex.w1-resource-proof"
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+SetAutoClose: true
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+SectionEnd
+Function: "RestorePreviousInstallLocation"
+ReadRegStr $4 SHCTX\Software\gzers\OpenCodeX Desktop\
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _And
+!insertmacro: end of _And
+StrCpy $INSTDIR "$4" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+FunctionEnd
+Function: "Skip"
+Abort: ""
+FunctionEnd
+Function: "SkipIfPassive"
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+FunctionEnd
+Function: "un.SkipIfPassive"
+!insertmacro: _IfThen
+!insertmacro: end of _IfThen
+FunctionEnd
+Function: "CreateOrUpdateStartMenuShortcut"
+StrCpy $R0 "0" () ()
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\$AppStartMenuFolder\OpenCodeX Desktop.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: SetShortcutTarget
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\$AppStartMenuFolder\OpenCodeX Desktop.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->20(t)i(w "$INSTDIR\ocxd.exe")
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$SMPROGRAMS\$AppStartMenuFolder\OpenCodeX Desktop.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetShortcutTarget
+StrCpy $R0 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\OpenCodeX Desktop.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: SetShortcutTarget
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\OpenCodeX Desktop.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->20(t)i(w "$INSTDIR\ocxd.exe")
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$SMPROGRAMS\OpenCodeX Desktop.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetShortcutTarget
+StrCpy $R0 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+Return
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Return
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+CreateShortcut: "$SMPROGRAMS\OpenCodeX Desktop.lnk"->"$INSTDIR\ocxd.exe"  icon:,0, nwd=0, showmode=0x0, hotkey=0x0, comment=
+!insertmacro: SetLnkAppUserModelId
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$SMPROGRAMS\OpenCodeX Desktop.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99}",.r2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call Oleaut32::SysAllocString(w "com.gzers.opencodex.w1-resource-proof") i.r3
+Plugin command: Call *(&g16,&i4)("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}",5)p.r4
+Plugin command: Call *(&i2,&i6,&i8)(8,,&i4 $3)p.r5
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->6(p,p)i($4,$5)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Call Oleaut32::SysFreeString($3)
+Plugin command: Free $4
+Plugin command: Free $5
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->7()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$SMPROGRAMS\OpenCodeX Desktop.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetLnkAppUserModelId
+FunctionEnd
+Function: "CreateOrUpdateDesktopShortcut"
+!insertmacro: IsShortcutTarget
+StrCpy $3 "0" () ()
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}", .r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$DESKTOP\OpenCodeX Desktop.lnk", 0)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Alloc MAX_PATH
+Pop: $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->3(t,i,p,i)i(.r2, 260, 0, 0x4)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+StrCpy $3 "1" () ()
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Plugin command: Free $2
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+Push: $3
+!insertmacro: end of IsShortcutTarget
+Pop: $0
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: SetShortcutTarget
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$DESKTOP\OpenCodeX Desktop.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->20(t)i(w "$INSTDIR\ocxd.exe")
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$DESKTOP\OpenCodeX Desktop.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetShortcutTarget
+Return
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: _Or
+!insertmacro: end of _Or
+Return
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+CreateShortcut: "$DESKTOP\OpenCodeX Desktop.lnk"->"$INSTDIR\ocxd.exe"  icon:,0, nwd=0, showmode=0x0, hotkey=0x0, comment=
+!insertmacro: SetLnkAppUserModelId
+!insertmacro: ComHlpr_CreateInProcInstance
+Plugin command: Call OLE32::CoCreateInstance(g"{00021401-0000-0000-c000-000000000046}",i0,i0x1,g"{000214f9-0000-0000-c000-000000000046}",*p.r0)i
+!insertmacro: end of ComHlpr_CreateInProcInstance
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{0000010b-0000-0000-C000-000000000046}",.r1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->5(w,i)i("$DESKTOP\OpenCodeX Desktop.lnk", 2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->0(g,*p)i("{886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99}",.r2)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _If
+!insertmacro: end of _If
+Plugin command: Call Oleaut32::SysAllocString(w "com.gzers.opencodex.w1-resource-proof") i.r3
+Plugin command: Call *(&g16,&i4)("{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}",5)p.r4
+Plugin command: Call *(&i2,&i6,&i8)(8,,&i4 $3)p.r5
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->6(p,p)i($4,$5)
+!insertmacro: end of NSISCOMCALL
+Plugin command: Call Oleaut32::SysFreeString($3)
+Plugin command: Free $4
+Plugin command: Free $5
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->7()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $2->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->6(w,i)i("$DESKTOP\OpenCodeX Desktop.lnk",1)
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $1->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: NSISCOMCALL
+Plugin command: Call $0->2()i
+!insertmacro: end of NSISCOMCALL
+!insertmacro: _EndIf
+!insertmacro: end of _EndIf
+!insertmacro: end of SetLnkAppUserModelId
+FunctionEnd
+
+Processed 1 file, writing output (x86-unicode):
+Adding plug-ins initializing function... Done!
+warning 6012: label "install_webview2" not used
+Processing pages... Done!
+Removing unused resources... Done!
+Generating language tables... Done!
+Generating uninstaller... Done!
+
+Output: "C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\nsis\x64\nsis-output.exe"
+Install: 6 pages (384 bytes), 3 sections (6216 bytes), 1853 instructions (51884 bytes), 396 strings (15128 bytes), 1 language table (402 bytes).
+Uninstall: 2 pages (192 bytes), 1 section (2072 bytes), 639 instructions (17892 bytes), 208 strings (8640 bytes), 1 language table (274 bytes).
+Datablock optimizer saved 26498 bytes (~0.0%).
+
+Using zlib compression.
+
+EXE header size:               53760 / 39936 bytes
+Install code:                  74482 / 74478 bytes
+Install data:              301931752 / 301958258 bytes
+Uninstall code+data:          102850 / 102842 bytes
+CRC (0xCC4D85AB):                  4 / 4 bytes
+
+Total size:                302162848 / 302175518 bytes (99.9%)
+
+1 warning:
+  6012: label "install_webview2" not used

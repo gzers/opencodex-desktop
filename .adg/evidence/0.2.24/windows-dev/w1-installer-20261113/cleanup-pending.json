@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-13",
+  "automaticApprovalReview": {
+    "alternateMechanismUsed": false,
+    "result": "rejected",
+    "commandExecuted": false,
+    "action": "recursive removal of this run exact resolved target/installer-w1 after archive and containment checks",
+    "reason": "blocked by policy"
+  },
+  "retainedBuildRoot": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1",
+  "retainedBuildFiles": 11808,
+  "retainedBuildBytes": 2108815151.0,
+  "historicalDirectories": [
+    {
+      "exists": true,
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-68932-0"
+    },
+    {
+      "exists": true,
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-68932-1"
+    },
+    {
+      "exists": true,
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-68932-2"
+    },
+    {
+      "exists": true,
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-68932-3"
+    }
+  ],
+  "testRegistryKeysRemaining": [],
+  "sharedImportBytecode": [
+    {
+      "Name": "build_desktop_runtime_bundle.cpython-312.pyc",
+      "Length": 28629
+    },
+    {
+      "Name": "stage_runtime_bundle_024.cpython-312.pyc",
+      "Length": 7570
+    }
+  ],
+  "bytecodePrevention": "final committed stage runner sets sys.dont_write_bytecode=True; no further shared import cache creation",
+  "testProcesses": "native fixtures observed exited; MSI timeout probe exact original handle exited -1; no official service run or global process cleanup",
+  "cleanupComplete": false,
+  "noClaimOfGlobalMachineCleanup": true
+}

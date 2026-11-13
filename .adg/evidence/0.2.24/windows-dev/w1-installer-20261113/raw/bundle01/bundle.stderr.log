@@ -1,0 +1,908 @@
+       Debug [tauri_cli::helpers::app_paths] Found Tauri project inside C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri on early lookup
+       Debug [tauri_cli::helpers::app_paths] resolving frontend directory from C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri
+       Debug [ignore::gitignore] opened gitignore file: C:\Users\15119\AppData\Local\Temp\.gitignore
+       Debug [globset] built glob set; 0 literals, 3 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::gitignore] opened gitignore file: \\?\C:\Users\15119\.codex\worktrees\024-windows-native\code\.gitignore
+       Debug [globset] glob converted to regex: Glob { glob: "**/.env.*", re: "(?-u)^(?:/?|.*/)\\.env\\.[^/]*$", opts: GlobOptions { case_insensitive: false, literal_separator: true, backslash_escape: true, empty_alternates: false }, tokens: Tokens([RecursivePrefix, Literal('.'), Literal('e'), Literal('n'), Literal('v'), Literal('.'), ZeroOrMore]) }
+       Debug [globset] built glob set; 9 literals, 5 basenames, 4 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 1 regexes
+       Debug [ignore::gitignore] opened gitignore file: \\?\C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\.gitignore
+       Debug [globset] built glob set; 1 literals, 0 basenames, 0 extensions, 0 prefixes, 0 suffixes, 0 required extensions, 0 regexes
+       Debug [ignore::walk] ignoring C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target: Ignore(IgnoreMatch(Gitignore(Glob { from: Some("C:\\Users\\15119\\AppData\\Local\\Temp\\.gitignore"), original: "target/", actual: "**/target", is_whitelist: false, is_only_dir: true })))
+        Info [tauri_bundler::bundle] Patching C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\ocxd.exe with bundle type information: msi
+        Warn [tauri_bundler::bundle] Failed to add bundler type to the binary: __TAURI_BUNDLE_TYPE variable not found in binary. Make sure tauri crate and tauri-cli are up to date. Updater plugin may not be able to update this package. This shouldn't normally happen, please report it to https://github.com/tauri-apps/tauri/issues
+        Info [tauri_bundler::bundle::windows::msi] Verifying wix package
+ Downloading [tauri_bundler::utils::http_utils] https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip
+       Debug [ureq_proto::client] Call<Prepare>
+       Debug [ureq::run] GET https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip
+       Trace [ureq::unversioned::resolver] Resolve: github.com:443
+       Debug [ureq::unversioned::resolver] Resolved: ArrayVec { len: 2, arr: [127.162.6.19:443, [fd00:696e:6974:6578::4a:614]:443] }
+       Trace [ureq::unversioned::transport::socks] SOCKS not configured
+       Trace [ureq::unversioned::transport::tcp] Try connect TcpStream to 127.162.6.19:443
+       Debug [ureq::unversioned::transport::tcp] Connected TcpStream to 127.162.6.19:443
+       Trace [ureq::tls::rustls] Try wrap in TLS
+       Debug [rustls::client::hs] No cached session for DnsName("github.com")
+       Debug [rustls::client::hs] Not resuming any session
+       Trace [rustls::client::hs] Sending ClientHello Message {
+    version: TLSv1_0,
+    payload: Handshake {
+        parsed: HandshakeMessagePayload(
+            ClientHello(
+                ClientHelloPayload {
+                    client_version: TLSv1_2,
+                    random: 15d27caa1dedf11f84444d616e3506266a81d36e2aeb89e651be91bb263e8466,
+                    session_id: 1d13bc5ed5846ff9aa15809f7fc4e5786c7ed2bec9ddfd74a3d7759cb0551e8f,
+                    cipher_suites: [
+                        TLS13_AES_256_GCM_SHA384,
+                        TLS13_AES_128_GCM_SHA256,
+                        TLS13_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_EMPTY_RENEGOTIATION_INFO_SCSV,
+                    ],
+                    compression_methods: [
+                        Null,
+                    ],
+                    extensions: ClientExtensions {
+                        server_name: SingleDnsName(
+                            DnsName(
+                                "github.com",
+                            ),
+                        ),
+                        certificate_status_request: Ocsp(
+                            OcspCertificateStatusRequest {
+                                responder_ids: [],
+                                extensions: ,
+                            },
+                        ),
+                        named_groups: [
+                            X25519,
+                            secp256r1,
+                            secp384r1,
+                        ],
+                        ec_point_formats: SupportedEcPointFormats {
+                            uncompressed: true,
+                        },
+                        signature_schemes: [
+                            ECDSA_NISTP384_SHA384,
+                            ECDSA_NISTP256_SHA256,
+                            ED25519,
+                            RSA_PSS_SHA512,
+                            RSA_PSS_SHA384,
+                            RSA_PSS_SHA256,
+                            RSA_PKCS1_SHA512,
+                            RSA_PKCS1_SHA384,
+                            RSA_PKCS1_SHA256,
+                        ],
+                        extended_master_secret_request: (),
+                        session_ticket: Request,
+                        supported_versions: SupportedProtocolVersions {
+                            tls13: true,
+                            tls12: true,
+                        },
+                        preshared_key_modes: PskKeyExchangeModes {
+                            psk_dhe: true,
+                            psk: false,
+                        },
+                        key_shares: [
+                            KeyShareEntry {
+                                group: X25519,
+                                payload: 7f41998e11b6a0918a0c2eefa57d8319af402f6ff588d8d29dba275d6652060b,
+                            },
+                        ],
+                        order_seed: 52546,
+                        contiguous_extensions: [],
+                        ..
+                    },
+                },
+            ),
+        ),
+        encoded: 010000e4030315d27caa1dedf11f84444d616e3506266a81d36e2aeb89e651be91bb263e8466201d13bc5ed5846ff9aa15809f7fc4e5786c7ed2bec9ddfd74a3d7759cb0551e8f0014130213011303c02cc02bcca9c030c02fcca800ff01000087000b0002010000170000003300260024001d00207f41998e11b6a0918a0c2eefa57d8319af402f6ff588d8d29dba275d6652060b00230000000500050100000000000a00080006001d00170018002b00050403040303000d001400120503040308070806080508040601050104010000000f000d00000a6769746875622e636f6d002d00020101,
+    },
+}
+       Debug [ureq::tls::rustls] Wrapped TLS
+       Debug [ureq_proto::client] Call<SendRequest>
+       Debug [ureq::run] Request { method: GET, uri: https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip, version: HTTP/1.1, headers: {"accept-encoding": "gzip", "user-agent": "tauri-bundler/2.9.4", "accept": "*/*", "host": "github.com"} }
+       Trace [rustls::client::hs] We got ServerHello ServerHelloPayload {
+    legacy_version: TLSv1_2,
+    random: 397fd6ddda42da09c9d77324f105095dcd3e728f98008f261e8d9c4292cdd2d6,
+    session_id: 1d13bc5ed5846ff9aa15809f7fc4e5786c7ed2bec9ddfd74a3d7759cb0551e8f,
+    cipher_suite: TLS13_AES_128_GCM_SHA256,
+    compression_method: Null,
+    extensions: ServerExtensions {
+        key_share: KeyShareEntry {
+            group: X25519,
+            payload: 22d8d5814718695cf82c68af0a229c65b34e63f0059e84c5a85c9827a3c06761,
+        },
+        selected_version: TLSv1_3,
+        unknown_extensions: {},
+        ..
+    },
+}
+       Debug [rustls::client::hs] Using ciphersuite TLS13_AES_128_GCM_SHA256
+       Debug [rustls::client::tls13] Not resuming
+       Trace [rustls::client::client_conn] EarlyData rejected
+       Trace [rustls::conn] Dropping CCS
+       Debug [rustls::client::tls13] TLS1.3 encrypted extensions: ServerExtensions { server_name_ack: (), unknown_extensions: {}, .. }
+       Debug [rustls::client::hs] ALPN protocol is None
+       Trace [rustls::client::tls13] Server cert is CertificateChain([CertificateDer(0x308203f43082039ba00302010202103e1d6026b4b0aea279dca2efbbced82b300a06082a8648ce3d0403023060310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313730350603550403132e5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20434120445620453336301e170d3236313033303030303030305a170d3237303132373233353935395a3015311330110603550403130a6769746875622e636f6d3059301306072a8648ce3d020106082a8648ce3d0301070342000437ca7789c7fafebcec01ff2db501b88e685d5b036db2f04642c10836c399859cae9c5df3ef4ed2e3c7a48823010d20053a06cbaeafe1def4c7f8e00e8a2c2b77a38202803082027c301f0603551d230418301680141799a804c16fe42d70a80a103d03d3e91ab82663301d0603551d0e041604148cb02a1eaeee865d000135b1e58b6923a53e3c71300e0603551d0f0101ff040403020780300c0603551d130101ff0402300030130603551d25040c300a06082b0601050507030130490603551d20044230403034060b2b06010401b231010202073025302306082b06010505070201161768747470733a2f2f7365637469676f2e636f6d2f4350533008060667810c01020130818406082b0601050507010104783076304f06082b060105050730028643687474703a2f2f6372742e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e434144564533362e637274302306082b060105050730018617687474703a2f2f6f6373702e7365637469676f2e636f6d30250603551d11041e301c820a6769746875622e636f6d820e7777772e6769746875622e636f6d3082010c060a2b06010401d6790204020481fd0481fa00f800750046a23967c60db64687c66f3df999947693a6a611208457d555e7e3d0a1d9b646000001a18a2e87200000040300463044022022106dba4e92a764a4c1e510ee086aa8d4139d46767017f254dd7c9a9ac9e532022056fab7c49d0821cc3dac9633fc0e6884dfae0e78d5e344b9e84b8ffe10398131007f00a2810018734e176e1d47e09540f381ba546697cd63a84350716eb8094edaf10d000001a18a2e8826000800000500321ee8f2040300483046022100a91efbc4aed63acb4716bb3296d4253c7a8ee54025683e4450681f57e4b21e780221009375722b55a345970ab68d5a14e9eab72d30ed8016c107c012ea9287b8817de0300a06082a8648ce3d040302034700304402202221550b45b55e5e8d7aeb02b7569d797ae77f9e56cd4dafa3e05527283e8660022005c2b75a6795d3937ceca448a1a215fe1f7b172901382ba5281b024fda9e9a18), CertificateDer(0x3082035f308202e6a003020102021036e059ed888dd57aedd570b6727f9bda300a06082a8648ce3d040303305f310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313630340603550403132d5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20526f6f7420453436301e170d3231303332323030303030305a170d3336303332313233353935395a3060310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313730350603550403132e5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e204341204456204533363059301306072a8648ce3d020106082a8648ce3d0301070342000468a1a76c05270589631c39a7ff2521c5edd32f1298bb2cdcf555e849a08457917bdc585f6bf4a2fd132c9b04c55b747db3b27a269619166bb8768def93f56097a38201813082017d301f0603551d23041830168014d122da4c59f14b5f2638aa9dd6eeeb0dc3fba961301d0603551d0e041604141799a804c16fe42d70a80a103d03d3e91ab82663300e0603551d0f0101ff04040302018630120603551d130101ff040830060101ff020100301d0603551d250416301406082b0601050507030106082b06010505070302301b0603551d200414301230060604551d20003008060667810c01020130540603551d1f044d304b3049a047a0458643687474703a2f2f63726c2e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e526f6f744534362e63726c30818406082b0601050507010104783076304f06082b060105050730028643687474703a2f2f6372742e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e526f6f744534362e703763302306082b060105050730018617687474703a2f2f6f6373702e7365637469676f2e636f6d300a06082a8648ce3d040303036700306402305b0a9c140387ae25faff9a5185a30c224a40cc475141a67300180c88c9f696d1608b4c088c79c6ed2851beac21f4d7a902303dd75cb0313829d78bbb58497691e074bbec1c02b7bf28322c6ba3314f7104908369c9114fddd51c4134829a6036a755), CertificateDer(0x30820346308202cba00302010202101a9eafec6de8e19b5c193141b68d90dd300a06082a8648ce3d040303308188310b3009060355040613025553311330110603550408130a4e6577204a6572736579311430120603550407130b4a65727365792043697479311e301c060355040a131554686520555345525452555354204e6574776f726b312e302c06035504031325555345525472757374204543432043657274696669636174696f6e20417574686f72697479301e170d3231303332323030303030305a170d3338303131383233353935395a305f310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313630340603550403132d5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20526f6f74204534363076301006072a8648ce3d020106052b810400220362000476fa99a96e20edf9d777e3073ba8db3d5f38e8ab55a6564fd648eaec7f2daac3b2c579ec99617f1079c7025af90437f534352b77ce7f208f52a30089ecd5a7a26d5be34b9293a080f50194dcf068071ecdeefe2552b520431c1bfeeb19ce43a3a38201203082011c301f0603551d230418301680143ae10986d4cf19c29676744976dce035c663639a301d0603551d0e04160414d122da4c59f14b5f2638aa9dd6eeeb0dc3fba961300e0603551d0f0101ff040403020186300f0603551d130101ff040530030101ff301d0603551d250416301406082b0601050507030106082b0601050507030230110603551d20040a300830060604551d200030500603551d1f044930473045a043a041863f687474703a2f2f63726c2e7573657274727573742e636f6d2f55534552547275737445434343657274696669636174696f6e417574686f726974792e63726c303506082b0601050507010104293027302506082b060105050730018619687474703a2f2f6f6373702e7573657274727573742e636f6d300a06082a8648ce3d04030303690030660231008c0b2062b7df6f5f66daeb11240def983bbbc2d2dc236e4bfd3caa6a186b99eb5259af28c5b29f8316911c942572e27a023100b0bd90d70ff9b62a8d470390649b3ed840e14088d0c3e3d2166b6c1d4fb4770ed3836925c7fc1897bfc7f007db2ee2d5)])
+       Debug [ureq_proto::client] Call<RecvResponse>
+       Debug [ureq_proto::client] Call<Redirect>
+       Debug [ureq::run] Response { status: 302, version: HTTP/1.1, headers: {"date": "Fri, 13 Nov 2026 11:33:32 GMT", "content-type": "text/html; charset=utf-8", "server": "github.com", "content-length": "0", "location": "https://release-assets.githubusercontent.com/github-production-release-asset/17723789/b537e595-6e71-48d2-b5ff-52ea22de868c?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A16%3A22Z&rscd=attachment%3B+filename%3Dwix314-binaries.zip&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A16%3A06Z&ske=2026-11-13T12%3A16%3A22Z&sks=b&skv=2018-11-09&sig=e32zC9Tgr2gHM4gw0wWr4WWj0nY48ttY%2FOZzvtEIKe8%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU3MTQxMiwibmJmIjoxNzk0NTY5NjEyLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.3pAJ5Mr4z6JFCK3tw5ICPY2Pmr8DS-RNgpVqE4EFC2I&response-content-disposition=attachment%3B%20filename%3Dwix314-binaries.zip&response-content-type=application%2Foctet-stream", "<NOTICE>": "10 HEADERS ARE REDACTED"} }
+       Debug [ureq::pool] Return to pool: PoolKey { scheme: "https", authority: github.com, proxy: None }
+       Debug [ureq_proto::client] Call<Prepare>
+       Debug [ureq::run] Redirect (302 Found): GET https://release-assets.githubusercontent.com/github-production-release-asset/17723789/b537e595-6e71-48d2-b5ff-52ea22de868c?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A16%3A22Z&rscd=attachment%3B+filename%3Dwix314-binaries.zip&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A16%3A06Z&ske=2026-11-13T12%3A16%3A22Z&sks=b&skv=2018-11-09&sig=e32zC9Tgr2gHM4gw0wWr4WWj0nY48ttY%2FOZzvtEIKe8%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU3MTQxMiwibmJmIjoxNzk0NTY5NjEyLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.3pAJ5Mr4z6JFCK3tw5ICPY2Pmr8DS-RNgpVqE4EFC2I&response-content-disposition=attachment%3B%20filename%3Dwix314-binaries.zip&response-content-type=application%2Foctet-stream
+       Debug [ureq::run] GET https://release-assets.githubusercontent.com/github-production-release-asset/17723789/b537e595-6e71-48d2-b5ff-52ea22de868c?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A16%3A22Z&rscd=attachment%3B+filename%3Dwix314-binaries.zip&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A16%3A06Z&ske=2026-11-13T12%3A16%3A22Z&sks=b&skv=2018-11-09&sig=e32zC9Tgr2gHM4gw0wWr4WWj0nY48ttY%2FOZzvtEIKe8%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU3MTQxMiwibmJmIjoxNzk0NTY5NjEyLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.3pAJ5Mr4z6JFCK3tw5ICPY2Pmr8DS-RNgpVqE4EFC2I&response-content-disposition=attachment%3B%20filename%3Dwix314-binaries.zip&response-content-type=application%2Foctet-stream
+       Trace [ureq::unversioned::resolver] Resolve: release-assets.githubusercontent.com:443
+       Debug [ureq::unversioned::resolver] Resolved: ArrayVec { len: 2, arr: [127.162.6.68:443, [fd00:696e:6974:6578::4a:645]:443] }
+       Trace [ureq::unversioned::transport::socks] SOCKS not configured
+       Trace [ureq::unversioned::transport::tcp] Try connect TcpStream to 127.162.6.68:443
+       Debug [ureq::unversioned::transport::tcp] Connected TcpStream to 127.162.6.68:443
+       Trace [ureq::tls::rustls] Try wrap in TLS
+       Debug [rustls::client::hs] No cached session for DnsName("release-assets.githubusercontent.com")
+       Debug [rustls::client::hs] Not resuming any session
+       Trace [rustls::client::hs] Sending ClientHello Message {
+    version: TLSv1_0,
+    payload: Handshake {
+        parsed: HandshakeMessagePayload(
+            ClientHello(
+                ClientHelloPayload {
+                    client_version: TLSv1_2,
+                    random: 4434382d77f2b5807560aad187f355eff48958263e6f7fb8f31dd4d2d40c2e34,
+                    session_id: 94277fe6c09fa5e8a7a700dc2252482a9f04bea0defb7c5f5b45220fa817cb4a,
+                    cipher_suites: [
+                        TLS13_AES_256_GCM_SHA384,
+                        TLS13_AES_128_GCM_SHA256,
+                        TLS13_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_EMPTY_RENEGOTIATION_INFO_SCSV,
+                    ],
+                    compression_methods: [
+                        Null,
+                    ],
+                    extensions: ClientExtensions {
+                        server_name: SingleDnsName(
+                            DnsName(
+                                "release-assets.githubusercontent.com",
+                            ),
+                        ),
+                        certificate_status_request: Ocsp(
+                            OcspCertificateStatusRequest {
+                                responder_ids: [],
+                                extensions: ,
+                            },
+                        ),
+                        named_groups: [
+                            X25519,
+                            secp256r1,
+                            secp384r1,
+                        ],
+                        ec_point_formats: SupportedEcPointFormats {
+                            uncompressed: true,
+                        },
+                        signature_schemes: [
+                            ECDSA_NISTP384_SHA384,
+                            ECDSA_NISTP256_SHA256,
+                            ED25519,
+                            RSA_PSS_SHA512,
+                            RSA_PSS_SHA384,
+                            RSA_PSS_SHA256,
+                            RSA_PKCS1_SHA512,
+                            RSA_PKCS1_SHA384,
+                            RSA_PKCS1_SHA256,
+                        ],
+                        extended_master_secret_request: (),
+                        session_ticket: Request,
+                        supported_versions: SupportedProtocolVersions {
+                            tls13: true,
+                            tls12: true,
+                        },
+                        preshared_key_modes: PskKeyExchangeModes {
+                            psk_dhe: true,
+                            psk: false,
+                        },
+                        key_shares: [
+                            KeyShareEntry {
+                                group: X25519,
+                                payload: 274a6d2d6b145e13c9e844f6390e0f35d0028a29c9dfaa917b6ecdc23dfbd872,
+                            },
+                        ],
+                        order_seed: 20412,
+                        contiguous_extensions: [],
+                        ..
+                    },
+                },
+            ),
+        ),
+        encoded: 010000fe03034434382d77f2b5807560aad187f355eff48958263e6f7fb8f31dd4d2d40c2e342094277fe6c09fa5e8a7a700dc2252482a9f04bea0defb7c5f5b45220fa817cb4a0014130213011303c02cc02bcca9c030c02fcca800ff010000a1000500050100000000002d00020101003300260024001d0020274a6d2d6b145e13c9e844f6390e0f35d0028a29c9dfaa917b6ecdc23dfbd872000b0002010000000029002700002472656c656173652d6173736574732e67697468756275736572636f6e74656e742e636f6d00230000000a00080006001d00170018000d00140012050304030807080608050804060105010401002b0005040304030300170000,
+    },
+}
+       Debug [ureq::tls::rustls] Wrapped TLS
+       Debug [ureq_proto::client] Call<SendRequest>
+       Debug [ureq::run] Request { method: GET, uri: https://release-assets.githubusercontent.com/github-production-release-asset/17723789/b537e595-6e71-48d2-b5ff-52ea22de868c?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A16%3A22Z&rscd=attachment%3B+filename%3Dwix314-binaries.zip&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A16%3A06Z&ske=2026-11-13T12%3A16%3A22Z&sks=b&skv=2018-11-09&sig=e32zC9Tgr2gHM4gw0wWr4WWj0nY48ttY%2FOZzvtEIKe8%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU3MTQxMiwibmJmIjoxNzk0NTY5NjEyLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.3pAJ5Mr4z6JFCK3tw5ICPY2Pmr8DS-RNgpVqE4EFC2I&response-content-disposition=attachment%3B%20filename%3Dwix314-binaries.zip&response-content-type=application%2Foctet-stream, version: HTTP/1.1, headers: {"accept-encoding": "gzip", "user-agent": "tauri-bundler/2.9.4", "accept": "*/*", "host": "release-assets.githubusercontent.com"} }
+       Trace [rustls::client::hs] We got ServerHello ServerHelloPayload {
+    legacy_version: TLSv1_2,
+    random: 241409cf17b8df95ebf38cf821f9209c5acce4e639dc77fbc2efa0f38bc4934c,
+    session_id: 94277fe6c09fa5e8a7a700dc2252482a9f04bea0defb7c5f5b45220fa817cb4a,
+    cipher_suite: TLS13_AES_128_GCM_SHA256,
+    compression_method: Null,
+    extensions: ServerExtensions {
+        key_share: KeyShareEntry {
+            group: X25519,
+            payload: eb34e1f772a044bf93523988a7e5ca84cc0453c0264b19eed37dd632814a2f48,
+        },
+        selected_version: TLSv1_3,
+        unknown_extensions: {},
+        ..
+    },
+}
+       Debug [rustls::client::hs] Using ciphersuite TLS13_AES_128_GCM_SHA256
+       Debug [rustls::client::tls13] Not resuming
+       Trace [rustls::client::client_conn] EarlyData rejected
+       Trace [rustls::conn] Dropping CCS
+       Debug [rustls::client::tls13] TLS1.3 encrypted extensions: ServerExtensions { server_name_ack: (), unknown_extensions: {}, .. }
+       Debug [rustls::client::hs] ALPN protocol is None
+       Trace [rustls::client::tls13] Server cert is CertificateChain([CertificateDer(0x308205473082042fa003020102021206a65e5d3279ba564a4de74eb5d64478dbb8300d06092a864886f70d01010b05003033310b300906035504061302555331163014060355040a130d4c6574277320456e6372797074310c300a06035504031303595231301e170d3236303933303233343434365a170d3236313232393233343434355a30163114301206035504030c0b2a2e6769746875622e696f30820122300d06092a864886f70d01010105000382010f003082010a02820101009e6f7025f788c3acbc4fcc4b6c16e05854e3d9b39d0959937256a19654bd2ede0442664bb5a02f41a665f45b62fa62e898f7b44bb75ccb00c2c870dd50f7b0605517bd793fd2816f339cb29ad5fad1dd044e96d1a2017978746ebdb5d4300028b7bac2f525f20b273405fdc364443db151952dce2ca7072930a835ef6f340d47e30aaf3191820b18927d6195e9a102625089eda8328df68c64372046687d7ad9216b532e31d82a9a167237874aebca635e0894960d4f5971937cc9d49ada48e9228b0b2fd64f19f8130107a77467b87d85a113aa35a4ff3d207d7e025175ead788b6427c05d47af76a1c17764070473ed5d8b3375ae9abd1e14237e3ace653490203010001a38202703082026c300e0603551d0f0101ff0404030205a030130603551d25040c300a06082b06010505070301300c0603551d130101ff04023000301d0603551d0e0416041424bf6f01ed938ed93b51bcccfa38f3a61174deb0301f0603551d230418301680141f2f35be461482cd40b1ae792c5578faf7d468fb303306082b0601050507010104273025302306082b060105050730028617687474703a2f2f7972312e692e6c656e63722e6f72672f306b0603551d1104643062820c2a2e6769746875622e636f6d820b2a2e6769746875622e696f82172a2e67697468756275736572636f6e74656e742e636f6d820a6769746875622e636f6d82096769746875622e696f821567697468756275736572636f6e74656e742e636f6d30130603551d20040c300a3008060667810c010201302e0603551d1f042730253023a021a01f861d687474703a2f2f7972312e632e6c656e63722e6f72672f35372e63726c3082010e060a2b06010401d6790204020481ff0481fc00fa007700c2317e574519a345ee7f38deb29041ebc7c2215a22bf7fd5b5ad769ad90e52cd000001a0f4ea63ab0000040300483046022100c931deb7efb3659ba7e0bb1ee3fae8a8e701539dd130484aa865986de25c8d85022100b86e5f6ddb8b0ba88d8f4540d057f40eed08ed7e44a778428028b7635ca96ce9007f00a2810018734e176e1d47e09540f381ba546697cd63a84350716eb8094edaf10d000001a0f4ea67160008000005001923e6750403004830460221008e30ac6ad69c42b415959e9efd31f28606b11c29062f086277061943d1e19581022100b5a1adce9f4e098d4b37492f4f8e0914e4b942d99c688979807d6867c10913fe300d06092a864886f70d01010b0500038201010034322f68134096634077643dc926bc7e6a5698f12b8890c68dd50d8d5c6a111ff22d000d9c1b16649563540651f2d5322c5c12d762aea8a4dbb17474005c578195909e5a04d3b6484c2e7791f3aa9aff121a61fc0a833b0dcd50618640f3ce9b02be33de6cd79f7ba9b180a638c849c8138d865fc40fb7dc9023f73066d1fac19f0f4e648df1ad0d21e060ee66671c7c391e147572568b3f84d09cf4c7a29bdda597b2dda077f70af1aef155bb8c0cbe45fef1b450f8a824e439bcdc062f5beafa6ccf74419bea3219fffa950d58794d203f4eee9e8700af29776df1ad6134cb6ce520d0c36243df4cbf54e5e05ba1c7feadfe452cf00b367e795d282ad937cc), CertificateDer(0x308204db308202c3a003020102021100a20253f15f2691c05dc1ce13b9bcca4e300d06092a864886f70d01010b0500302e310b3009060355040613025553310d300b060355040a1304495352473110300e06035504031307526f6f74205952301e170d3235303930333030303030305a170d3238303930323233353935395a3033310b300906035504061302555331163014060355040a130d4c6574277320456e6372797074310c300a0603550403130359523130820122300d06092a864886f70d01010105000382010f003082010a0282010100a158bc5f6c42620317bc9c4d3caa7fa05d7750c8263c0041d3b5422cd0eda179adf65b8464d252055d745724f53f3e8b0fc66ad5dda0738dd6365d40751ae3e2c1276b36ce8b3d273e9986069da1ba2e3da19b43218eb074a799022e416cd536d021fa45204130b490f5c5eb1fc77176fe0f009e39b2c18c2faf14484dc1b230b66ba70037d2f90a05d52108b9b5f3624cfa05659dd2d0e957a8b9a6b5d57de6e75601be5be9efc5e3d0e20ac1f4634d0083bd815486f5873ca798a7be5f49844414edb1bdc1c26a55f62a5e06330ba11fc3f5c1f11d0096a22e654e65f0634d79279ac67a5cf59d98c9bb1736922a1a5f6f572419e13243f9df5ad2746e6e330203010001a381ee3081eb300e0603551d0f0101ff04040302018630130603551d25040c300a06082b0601050507030130120603551d130101ff040830060101ff020100301d0603551d0e041604141f2f35be461482cd40b1ae792c5578faf7d468fb301f0603551d23041830168014dee75b60d0226d40287d3f0d01fea4b552b45194303206082b0601050507010104263024302206082b060105050730028616687474703a2f2f79722e692e6c656e63722e6f72672f30130603551d20040c300a3008060667810c01020130270603551d1f0420301e301ca01aa0188616687474703a2f2f79722e632e6c656e63722e6f72672f300d06092a864886f70d01010b05000382020100d3ecef32ade41e283575d4e69a6f9189b4ebf7f4695fb9386ee6a730c46a6d5ff222f3fcdb30073779af6b0f9c012b95b1da5dd2292386be219e12502d03b33a9d9c70aaec746380828d2f75d78848502a116115e25994337bc517bf7aba9f9b4a0989d6ee91ba90c23310e017c33778bbc6ba3e8bd25bb7ce44342ae40b9cac4bb41d2842a9f521d8390aeb86a4cbd0ce4dbd3dadc3fea1eeadcd0420cf52c6e910b89aaaeb7971b18c9140553cc8c04e86ad70e4b6df696351af3d6e92539f23fa589006f613631366b00c4240481364bc26dd45f2045cf7aa3fc4eb2b82f4a46bce008ac5fac6ad65cf567b8c6beb9d77384cc723c594e38936a285c608d492176622ed10c4826b997772ef1859deb374b45096a45d725563b907cd1dac1127a1969642b4409a2c8af4cac1d070dcac44b731a8f323071116eccb9ee03f55171ce31c9996100b482dc91dd2c5f7a720cfccc42dc86b662969bfe443f0939e5227d8a4392540ba358ac609b84537d6e9e652894ad1300949cba67b5cad79395d50c236fff94725a945386418e57b19eb4a910d2a018f210b358aea8aa70210d972395855d59fa8ec370c8397e840cd06002a1daad1571c85f5065d39a5d2c8f274b9e0f6058244060682190f2b01a53f41cd76dd5e4b4d70d95b809cb0f043ca1cb8bfe73c842940cb0fc890995f06ac41f43fbfc2f20c1e0102678a6d3faa), CertificateDer(0x308205f4308203dca003020102021100f24b6d17f9d9ad7cb1c9fea78782699f300d06092a864886f70d01010b0500304f310b300906035504061302555331293027060355040a1320496e7465726e65742053656375726974792052657365617263682047726f7570311530130603550403130c4953524720526f6f74205831301e170d3236303531333030303030305a170d3332303930323233353935395a302e310b3009060355040613025553310d300b060355040a1304495352473110300e06035504031307526f6f7420595230820222300d06092a864886f70d01010105000382020f003082020a0282020100dbc626737bf024c97562f7f9e19fb0b3794eb34126cf951fd8515ea45bc31bbdb06362074043d5f70ec5b494402248335c44d770dbfb90b0d70d2cd04058b2fb883ffea3a05d30f1cb8899b811d4e1a061b490e0ea7323e0c6f121ae4e5704f3bdce092fa4877b2b968eaf978dcce4e260e007a8d6c7c7a7a913243a0888504d24063e38a7d7fc552f60aba18d3fa7a38f659aa9aea52048e4f901422aab106b56539bb153f7105871aef234a3141ce766abdb34f2cc5cc2c5c426f75937eb2415d78eabd61bebf86e3cf18e3780b4e954eea6ab443bcd3b202e4182e59fdd3833e7da2b1f219cb0a9275e59a9a12070d958fbd30c59c0b9caf2f60368f797dfb66ee820657f9d384f75cd898875ac13bd266e56f95b46b0252f1201ea9c0c0639de5c28d843cfb70420a3b2c6d2369654de14dc0437617c09440e562bea911ab6731d9834f906a9ca0bdd9b7741213357db2c78a82dc70b0ae89ebd3f1990f859aeaecc8a2ee035701c504011f3e97361a97ef734e0ec2e4300bc9539e1bf0aa7d100c9f52921c247435203a3fcb67fe619196709cb79aed5422e7572495a54e87d6a1a0dc38133aeb247fc79a85332261b2397b33c998ee5eaed6a5b24435bada7be3e783cbdd8f2387ed1ca4dbabd216847e1864a8775a724422dfa842f95865b63cb6912ba0aac507a3c51b3ac9203472b6ce07aafb87e764458f6ceffc10203010001a381eb3081e8300e0603551d0f0101ff04040302010630130603551d25040c300a06082b06010505070301300f0603551d130101ff040530030101ff301d0603551d0e04160414dee75b60d0226d40287d3f0d01fea4b552b45194301f0603551d2304183016801479b459e67bb6e5e40173800888c81a58f6e99b6e303206082b0601050507010104263024302206082b060105050730028616687474703a2f2f78312e692e6c656e63722e6f72672f30130603551d20040c300a3008060667810c01020130270603551d1f0420301e301ca01aa0188616687474703a2f2f78312e632e6c656e63722e6f72672f300d06092a864886f70d01010b050003820201003cb29488f7928a7e7d96e863260e91c12523da2dbb12dd6f777228c909109801cd5fb0980bd4520bec2d02f5e70f39d7300767e2d03936a7de23f624c90b19ade4215228b456c275d3d8c3125dec55c6aa1507bf417563f155711391599efea61202e2951e1e4fb3ee418b1826c12d4992348073e31fad46cdb2c5441271f468488087eae8b570152523ff61eecb24f1300fd0d61bbdaf5566e101cb8e7f938b8f3e7b0ad93b320407ca767bf8f94726d6a3ae809a21bb42afab5c659680c14426fa3432796755fb686ff5d78e60598a790ca38dc4ab37935a76bc3e2fd0d924b6c0d47a9e36f2e1060aa93f47ef26ad8de84b43e7be0de9e308eee32c2539e38b6503cfd7a5e572d2bfd7ea24cb8342d6156f6a133682a9a14aa1c4f542d1aab8786e4c112688767f1be5919249e0092cc1d796311d94dcdafa771f92f8979353ce2e79c576fc7cfe093a337ef859b2d6157c3c375e3507f465fed20d19f9754f13888aab6231890bd3645219bd64ab7e012fd34f3f6ef344632e1c69f34b784522b4537cac6bcd467d473416cc41b72ba7c9debda7a9296d91ecad8acf43201a0563d5665728cb33bd43322fb2d7e4d1489542944330bc0e322fefbbabd5d9c79af9c014560789104ca1f9ab2a199c3c3b8a2ba1d65203c83171f2bee2f6f2095391d2de6a192e461600e8a531a57d379e80f4181be9d35c1e4be0dcda1a60)])
+       Debug [ureq_proto::client] Call<RecvResponse>
+       Debug [ureq_proto::client] Call<RecvBody>
+       Debug [ureq::run] Response { status: 200, version: HTTP/1.1, headers: {"connection": "keep-alive", "content-length": "41297555", "server": "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0", "date": "Fri, 13 Nov 2026 11:33:33 GMT", "content-type": "application/octet-stream", "<NOTICE>": "18 HEADERS ARE REDACTED"} }
+       Debug [ureq_proto::client] Call<Cleanup>
+       Debug [ureq::pool] Return to pool: PoolKey { scheme: "https", authority: release-assets.githubusercontent.com, proxy: None }
+        Info [tauri_bundler::utils::http_utils] validating hash
+        Info [tauri_bundler::bundle::windows::msi] extracting WIX
+        Info [tauri_bundler::bundle::windows::msi] Target: x64
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("upgrade_code")], "upgrade_code")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version")], "version")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("allow_downgrades"), value: Context(Bool(true), ["allow_downgrades"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("banner_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("dialog_image_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("license"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("icon_path")], "icon_path")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("homepage"), value: Context(Null, ["homepage"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "unless", params: [PathAndJson { relative_path: Some("license"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("path_component_guid")], "path_component_guid")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_path")], "main_binary_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Array [], ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bundle_id")], "bundle_id")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("merge_modules"), value: Context(Array [], ["merge_modules"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Array [], ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("component_group_refs"), value: Context(Array [], ["component_group_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("component_refs"), value: Context(Array [], ["component_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("feature_group_refs"), value: Context(Array [], ["feature_group_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("feature_refs"), value: Context(Array [], ["feature_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("merge_refs"), value: Context(Array [], ["merge_refs"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("install_webview"), value: Context(Bool(false), ["install_webview"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("enable_elevated_update_task"), value: Missing }], hash: {}
+     Running [tauri_bundler::bundle::windows::msi] candle for "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\target\\release\\wix\\x64\\main.wxs"
+     Running [tauri_bundler::utils] Command `C:\Users\15119\AppData\Local\tauri\WixTools314\candle.exe  -arch x64 C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs -dSourceDir=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\ocxd.exe`
+Windows Installer XML Toolset Compiler version 3.14.1.8722
+Copyright (c) .NET Foundation and contributors. All rights reserved.
+
+main.wxs
+     Running [tauri_bundler::bundle::windows::msi] light to produce C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+     Running [tauri_bundler::utils] Command `C:\Users\15119\AppData\Local\tauri\WixTools314\light.exe  -ext C:\Users\15119\AppData\Local\tauri\WixTools314\WixUIExtension.dll -ext C:\Users\15119\AppData\Local\tauri\WixTools314\WixUtilExtension.dll -o C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\output.msi -cultures:en-us -loc C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\locale.wxl *.wixobj`
+Windows Installer XML Toolset Linker version 3.14.1.8722
+Copyright (c) .NET Foundation and contributors. All rights reserved.
+
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(68) : warning LGHT1076 : ICE40: REINSTALLMODE is defined in the Property table. This may cause difficulties.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(75) : warning LGHT1076 : ICE61: This product should remove only older versions of itself. No Maximum version was detected for the current product. (WIX_UPGRADE_DETECTED)
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(204) : warning LGHT1076 : ICE90: The shortcut 'UninstallShortcut' has a directory that is a public property (ALL CAPS) and is under user profile directory. This results in a problem if the value of the ALLUSERS property changes in the UI sequence.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(163) : warning LGHT1076 : ICE91: The file 'Path' will be installed to the per user directory 'INSTALLDIR' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(185) : warning LGHT1076 : ICE91: The file 'OCX023License' will be installed to the per user directory 'OCX023Documents' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(186) : warning LGHT1076 : ICE91: The file 'OCX023Notices' will be installed to the per user directory 'OCX023Documents' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(193) : warning LGHT1076 : ICE91: The file 'OCX023RuntimeArchive' will be installed to the per user directory 'OCX023RuntimeBundle' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(194) : warning LGHT1076 : ICE91: The file 'OCX023RuntimeSource' will be installed to the per user directory 'OCX023RuntimeBundle' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(195) : warning LGHT1076 : ICE91: The file 'OCX023RuntimeManifest' will be installed to the per user directory 'OCX023RuntimeBundle' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(196) : warning LGHT1076 : ICE91: The file 'OCX023RuntimePin' will be installed to the per user directory 'OCX023RuntimeBundle' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\wix\x64\main.wxs(204) : warning LGHT1076 : ICE91: The shortcut 'UninstallShortcut' will be installed to the per user directory 'INSTALLDIR' that doesn't vary based on ALLUSERS value. This file won't be copied to each user's profile even if a per machine installation is desired.
+        Info [tauri_bundler::bundle] Patching C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\ocxd.exe with bundle type information: nsis
+        Warn [tauri_bundler::bundle] Failed to add bundler type to the binary: __TAURI_BUNDLE_TYPE variable not found in binary. Make sure tauri crate and tauri-cli are up to date. Updater plugin may not be able to update this package. This shouldn't normally happen, please report it to https://github.com/tauri-apps/tauri/issues
+        Info [tauri_bundler::bundle::windows::nsis] Verifying NSIS package
+ Downloading [tauri_bundler::utils::http_utils] https://github.com/tauri-apps/binary-releases/releases/download/nsis-3.11/nsis-3.11.zip
+       Debug [ureq_proto::client] Call<Prepare>
+       Debug [ureq::run] GET https://github.com/tauri-apps/binary-releases/releases/download/nsis-3.11/nsis-3.11.zip
+       Trace [ureq::unversioned::resolver] Resolve: github.com:443
+       Debug [ureq::unversioned::resolver] Resolved: ArrayVec { len: 2, arr: [127.162.6.19:443, [fd00:696e:6974:6578::4a:614]:443] }
+       Trace [ureq::unversioned::transport::socks] SOCKS not configured
+       Trace [ureq::unversioned::transport::tcp] Try connect TcpStream to 127.162.6.19:443
+       Debug [ureq::unversioned::transport::tcp] Connected TcpStream to 127.162.6.19:443
+       Trace [ureq::tls::rustls] Try wrap in TLS
+       Debug [rustls::client::hs] No cached session for DnsName("github.com")
+       Debug [rustls::client::hs] Not resuming any session
+       Trace [rustls::client::hs] Sending ClientHello Message {
+    version: TLSv1_0,
+    payload: Handshake {
+        parsed: HandshakeMessagePayload(
+            ClientHello(
+                ClientHelloPayload {
+                    client_version: TLSv1_2,
+                    random: 095a71395853c0c85404347271024505ac5b950a907d5166013e22f518a7c7aa,
+                    session_id: 2f9053c001cb7ab7fcddd401af1d41c2c2ee1bb1dae093fee67cad1550fef440,
+                    cipher_suites: [
+                        TLS13_AES_256_GCM_SHA384,
+                        TLS13_AES_128_GCM_SHA256,
+                        TLS13_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_EMPTY_RENEGOTIATION_INFO_SCSV,
+                    ],
+                    compression_methods: [
+                        Null,
+                    ],
+                    extensions: ClientExtensions {
+                        server_name: SingleDnsName(
+                            DnsName(
+                                "github.com",
+                            ),
+                        ),
+                        certificate_status_request: Ocsp(
+                            OcspCertificateStatusRequest {
+                                responder_ids: [],
+                                extensions: ,
+                            },
+                        ),
+                        named_groups: [
+                            X25519,
+                            secp256r1,
+                            secp384r1,
+                        ],
+                        ec_point_formats: SupportedEcPointFormats {
+                            uncompressed: true,
+                        },
+                        signature_schemes: [
+                            ECDSA_NISTP384_SHA384,
+                            ECDSA_NISTP256_SHA256,
+                            ED25519,
+                            RSA_PSS_SHA512,
+                            RSA_PSS_SHA384,
+                            RSA_PSS_SHA256,
+                            RSA_PKCS1_SHA512,
+                            RSA_PKCS1_SHA384,
+                            RSA_PKCS1_SHA256,
+                        ],
+                        extended_master_secret_request: (),
+                        session_ticket: Request,
+                        supported_versions: SupportedProtocolVersions {
+                            tls13: true,
+                            tls12: true,
+                        },
+                        preshared_key_modes: PskKeyExchangeModes {
+                            psk_dhe: true,
+                            psk: false,
+                        },
+                        key_shares: [
+                            KeyShareEntry {
+                                group: X25519,
+                                payload: 0b2a70f788d6f0d1cd2b0542dc5ebc22796928851c4a7efef401eb123ea12659,
+                            },
+                        ],
+                        order_seed: 63814,
+                        contiguous_extensions: [],
+                        ..
+                    },
+                },
+            ),
+        ),
+        encoded: 010000e40303095a71395853c0c85404347271024505ac5b950a907d5166013e22f518a7c7aa202f9053c001cb7ab7fcddd401af1d41c2c2ee1bb1dae093fee67cad1550fef4400014130213011303c02cc02bcca9c030c02fcca800ff01000087000d00140012050304030807080608050804060105010401001700000000000f000d00000a6769746875622e636f6d000500050100000000002d00020101002b00050403040303000b00020100000a00080006001d0017001800230000003300260024001d00200b2a70f788d6f0d1cd2b0542dc5ebc22796928851c4a7efef401eb123ea12659,
+    },
+}
+       Debug [ureq::tls::rustls] Wrapped TLS
+       Debug [ureq_proto::client] Call<SendRequest>
+       Debug [ureq::run] Request { method: GET, uri: https://github.com/tauri-apps/binary-releases/releases/download/nsis-3.11/nsis-3.11.zip, version: HTTP/1.1, headers: {"accept-encoding": "gzip", "user-agent": "tauri-bundler/2.9.4", "accept": "*/*", "host": "github.com"} }
+       Trace [rustls::client::hs] We got ServerHello ServerHelloPayload {
+    legacy_version: TLSv1_2,
+    random: d58ded4733a0f327230a1f1a0a40bf2e9593b232e8a283b7c6747b692bf0cbe5,
+    session_id: 2f9053c001cb7ab7fcddd401af1d41c2c2ee1bb1dae093fee67cad1550fef440,
+    cipher_suite: TLS13_AES_128_GCM_SHA256,
+    compression_method: Null,
+    extensions: ServerExtensions {
+        key_share: KeyShareEntry {
+            group: X25519,
+            payload: 6c18b3477bc7a7b5691d5b72b092f7851930b7e92fb32befc57c1cd52eeeaf6d,
+        },
+        selected_version: TLSv1_3,
+        unknown_extensions: {},
+        ..
+    },
+}
+       Debug [rustls::client::hs] Using ciphersuite TLS13_AES_128_GCM_SHA256
+       Debug [rustls::client::tls13] Not resuming
+       Trace [rustls::client::client_conn] EarlyData rejected
+       Trace [rustls::conn] Dropping CCS
+       Debug [rustls::client::tls13] TLS1.3 encrypted extensions: ServerExtensions { server_name_ack: (), unknown_extensions: {}, .. }
+       Debug [rustls::client::hs] ALPN protocol is None
+       Trace [rustls::client::tls13] Server cert is CertificateChain([CertificateDer(0x308203f43082039ba00302010202103e1d6026b4b0aea279dca2efbbced82b300a06082a8648ce3d0403023060310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313730350603550403132e5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20434120445620453336301e170d3236313033303030303030305a170d3237303132373233353935395a3015311330110603550403130a6769746875622e636f6d3059301306072a8648ce3d020106082a8648ce3d0301070342000437ca7789c7fafebcec01ff2db501b88e685d5b036db2f04642c10836c399859cae9c5df3ef4ed2e3c7a48823010d20053a06cbaeafe1def4c7f8e00e8a2c2b77a38202803082027c301f0603551d230418301680141799a804c16fe42d70a80a103d03d3e91ab82663301d0603551d0e041604148cb02a1eaeee865d000135b1e58b6923a53e3c71300e0603551d0f0101ff040403020780300c0603551d130101ff0402300030130603551d25040c300a06082b0601050507030130490603551d20044230403034060b2b06010401b231010202073025302306082b06010505070201161768747470733a2f2f7365637469676f2e636f6d2f4350533008060667810c01020130818406082b0601050507010104783076304f06082b060105050730028643687474703a2f2f6372742e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e434144564533362e637274302306082b060105050730018617687474703a2f2f6f6373702e7365637469676f2e636f6d30250603551d11041e301c820a6769746875622e636f6d820e7777772e6769746875622e636f6d3082010c060a2b06010401d6790204020481fd0481fa00f800750046a23967c60db64687c66f3df999947693a6a611208457d555e7e3d0a1d9b646000001a18a2e87200000040300463044022022106dba4e92a764a4c1e510ee086aa8d4139d46767017f254dd7c9a9ac9e532022056fab7c49d0821cc3dac9633fc0e6884dfae0e78d5e344b9e84b8ffe10398131007f00a2810018734e176e1d47e09540f381ba546697cd63a84350716eb8094edaf10d000001a18a2e8826000800000500321ee8f2040300483046022100a91efbc4aed63acb4716bb3296d4253c7a8ee54025683e4450681f57e4b21e780221009375722b55a345970ab68d5a14e9eab72d30ed8016c107c012ea9287b8817de0300a06082a8648ce3d040302034700304402202221550b45b55e5e8d7aeb02b7569d797ae77f9e56cd4dafa3e05527283e8660022005c2b75a6795d3937ceca448a1a215fe1f7b172901382ba5281b024fda9e9a18), CertificateDer(0x3082035f308202e6a003020102021036e059ed888dd57aedd570b6727f9bda300a06082a8648ce3d040303305f310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313630340603550403132d5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20526f6f7420453436301e170d3231303332323030303030305a170d3336303332313233353935395a3060310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313730350603550403132e5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e204341204456204533363059301306072a8648ce3d020106082a8648ce3d0301070342000468a1a76c05270589631c39a7ff2521c5edd32f1298bb2cdcf555e849a08457917bdc585f6bf4a2fd132c9b04c55b747db3b27a269619166bb8768def93f56097a38201813082017d301f0603551d23041830168014d122da4c59f14b5f2638aa9dd6eeeb0dc3fba961301d0603551d0e041604141799a804c16fe42d70a80a103d03d3e91ab82663300e0603551d0f0101ff04040302018630120603551d130101ff040830060101ff020100301d0603551d250416301406082b0601050507030106082b06010505070302301b0603551d200414301230060604551d20003008060667810c01020130540603551d1f044d304b3049a047a0458643687474703a2f2f63726c2e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e526f6f744534362e63726c30818406082b0601050507010104783076304f06082b060105050730028643687474703a2f2f6372742e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e526f6f744534362e703763302306082b060105050730018617687474703a2f2f6f6373702e7365637469676f2e636f6d300a06082a8648ce3d040303036700306402305b0a9c140387ae25faff9a5185a30c224a40cc475141a67300180c88c9f696d1608b4c088c79c6ed2851beac21f4d7a902303dd75cb0313829d78bbb58497691e074bbec1c02b7bf28322c6ba3314f7104908369c9114fddd51c4134829a6036a755), CertificateDer(0x30820346308202cba00302010202101a9eafec6de8e19b5c193141b68d90dd300a06082a8648ce3d040303308188310b3009060355040613025553311330110603550408130a4e6577204a6572736579311430120603550407130b4a65727365792043697479311e301c060355040a131554686520555345525452555354204e6574776f726b312e302c06035504031325555345525472757374204543432043657274696669636174696f6e20417574686f72697479301e170d3231303332323030303030305a170d3338303131383233353935395a305f310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313630340603550403132d5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20526f6f74204534363076301006072a8648ce3d020106052b810400220362000476fa99a96e20edf9d777e3073ba8db3d5f38e8ab55a6564fd648eaec7f2daac3b2c579ec99617f1079c7025af90437f534352b77ce7f208f52a30089ecd5a7a26d5be34b9293a080f50194dcf068071ecdeefe2552b520431c1bfeeb19ce43a3a38201203082011c301f0603551d230418301680143ae10986d4cf19c29676744976dce035c663639a301d0603551d0e04160414d122da4c59f14b5f2638aa9dd6eeeb0dc3fba961300e0603551d0f0101ff040403020186300f0603551d130101ff040530030101ff301d0603551d250416301406082b0601050507030106082b0601050507030230110603551d20040a300830060604551d200030500603551d1f044930473045a043a041863f687474703a2f2f63726c2e7573657274727573742e636f6d2f55534552547275737445434343657274696669636174696f6e417574686f726974792e63726c303506082b0601050507010104293027302506082b060105050730018619687474703a2f2f6f6373702e7573657274727573742e636f6d300a06082a8648ce3d04030303690030660231008c0b2062b7df6f5f66daeb11240def983bbbc2d2dc236e4bfd3caa6a186b99eb5259af28c5b29f8316911c942572e27a023100b0bd90d70ff9b62a8d470390649b3ed840e14088d0c3e3d2166b6c1d4fb4770ed3836925c7fc1897bfc7f007db2ee2d5)])
+       Debug [ureq_proto::client] Call<RecvResponse>
+       Debug [ureq_proto::client] Call<Redirect>
+       Debug [ureq::run] Response { status: 302, version: HTTP/1.1, headers: {"date": "Fri, 13 Nov 2026 11:33:51 GMT", "content-type": "text/html; charset=utf-8", "server": "github.com", "content-length": "0", "location": "https://release-assets.githubusercontent.com/github-production-release-asset/357697736/e34e8d9b-55dd-478c-a42c-e4fdf21f510b?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A18%3A23Z&rscd=attachment%3B+filename%3Dnsis-3.11.zip&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A17%3A47Z&ske=2026-11-13T12%3A18%3A23Z&sks=b&skv=2018-11-09&sig=s2YcY63zSjRhNUpu1PGVt3GSr02SwY5JGDgp2jX8H40%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU2OTkzMSwibmJmIjoxNzk0NTY5NjMxLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.bYlfF2lfHAPlK3Xq-Vcj04lReCA9Y3CLx9a1OvruNNA&response-content-disposition=attachment%3B%20filename%3Dnsis-3.11.zip&response-content-type=application%2Foctet-stream", "<NOTICE>": "10 HEADERS ARE REDACTED"} }
+       Debug [ureq::pool] Return to pool: PoolKey { scheme: "https", authority: github.com, proxy: None }
+       Debug [ureq_proto::client] Call<Prepare>
+       Debug [ureq::run] Redirect (302 Found): GET https://release-assets.githubusercontent.com/github-production-release-asset/357697736/e34e8d9b-55dd-478c-a42c-e4fdf21f510b?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A18%3A23Z&rscd=attachment%3B+filename%3Dnsis-3.11.zip&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A17%3A47Z&ske=2026-11-13T12%3A18%3A23Z&sks=b&skv=2018-11-09&sig=s2YcY63zSjRhNUpu1PGVt3GSr02SwY5JGDgp2jX8H40%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU2OTkzMSwibmJmIjoxNzk0NTY5NjMxLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.bYlfF2lfHAPlK3Xq-Vcj04lReCA9Y3CLx9a1OvruNNA&response-content-disposition=attachment%3B%20filename%3Dnsis-3.11.zip&response-content-type=application%2Foctet-stream
+       Debug [ureq::run] GET https://release-assets.githubusercontent.com/github-production-release-asset/357697736/e34e8d9b-55dd-478c-a42c-e4fdf21f510b?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A18%3A23Z&rscd=attachment%3B+filename%3Dnsis-3.11.zip&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A17%3A47Z&ske=2026-11-13T12%3A18%3A23Z&sks=b&skv=2018-11-09&sig=s2YcY63zSjRhNUpu1PGVt3GSr02SwY5JGDgp2jX8H40%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU2OTkzMSwibmJmIjoxNzk0NTY5NjMxLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.bYlfF2lfHAPlK3Xq-Vcj04lReCA9Y3CLx9a1OvruNNA&response-content-disposition=attachment%3B%20filename%3Dnsis-3.11.zip&response-content-type=application%2Foctet-stream
+       Trace [ureq::unversioned::resolver] Resolve: release-assets.githubusercontent.com:443
+       Debug [ureq::unversioned::resolver] Resolved: ArrayVec { len: 2, arr: [127.162.6.68:443, [fd00:696e:6974:6578::4a:645]:443] }
+       Trace [ureq::unversioned::transport::socks] SOCKS not configured
+       Trace [ureq::unversioned::transport::tcp] Try connect TcpStream to 127.162.6.68:443
+       Debug [ureq::unversioned::transport::tcp] Connected TcpStream to 127.162.6.68:443
+       Trace [ureq::tls::rustls] Try wrap in TLS
+       Debug [rustls::client::hs] No cached session for DnsName("release-assets.githubusercontent.com")
+       Debug [rustls::client::hs] Not resuming any session
+       Trace [rustls::client::hs] Sending ClientHello Message {
+    version: TLSv1_0,
+    payload: Handshake {
+        parsed: HandshakeMessagePayload(
+            ClientHello(
+                ClientHelloPayload {
+                    client_version: TLSv1_2,
+                    random: 5d0d3ca29541099889da2c259789062fde24aed21fb0b8bf842d7ed907fa9a1e,
+                    session_id: 35bbfa5077b49eff121ffdf46423db5a4b6d1a7e32485d0afd96728149bc4285,
+                    cipher_suites: [
+                        TLS13_AES_256_GCM_SHA384,
+                        TLS13_AES_128_GCM_SHA256,
+                        TLS13_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_EMPTY_RENEGOTIATION_INFO_SCSV,
+                    ],
+                    compression_methods: [
+                        Null,
+                    ],
+                    extensions: ClientExtensions {
+                        server_name: SingleDnsName(
+                            DnsName(
+                                "release-assets.githubusercontent.com",
+                            ),
+                        ),
+                        certificate_status_request: Ocsp(
+                            OcspCertificateStatusRequest {
+                                responder_ids: [],
+                                extensions: ,
+                            },
+                        ),
+                        named_groups: [
+                            X25519,
+                            secp256r1,
+                            secp384r1,
+                        ],
+                        ec_point_formats: SupportedEcPointFormats {
+                            uncompressed: true,
+                        },
+                        signature_schemes: [
+                            ECDSA_NISTP384_SHA384,
+                            ECDSA_NISTP256_SHA256,
+                            ED25519,
+                            RSA_PSS_SHA512,
+                            RSA_PSS_SHA384,
+                            RSA_PSS_SHA256,
+                            RSA_PKCS1_SHA512,
+                            RSA_PKCS1_SHA384,
+                            RSA_PKCS1_SHA256,
+                        ],
+                        extended_master_secret_request: (),
+                        session_ticket: Request,
+                        supported_versions: SupportedProtocolVersions {
+                            tls13: true,
+                            tls12: true,
+                        },
+                        preshared_key_modes: PskKeyExchangeModes {
+                            psk_dhe: true,
+                            psk: false,
+                        },
+                        key_shares: [
+                            KeyShareEntry {
+                                group: X25519,
+                                payload: 41ac9d596b8118aaa1ca55c4e7d827252327f492ba17cf1fbae02e32e0cfa065,
+                            },
+                        ],
+                        order_seed: 3228,
+                        contiguous_extensions: [],
+                        ..
+                    },
+                },
+            ),
+        ),
+        encoded: 010000fe03035d0d3ca29541099889da2c259789062fde24aed21fb0b8bf842d7ed907fa9a1e2035bbfa5077b49eff121ffdf46423db5a4b6d1a7e32485d0afd96728149bc42850014130213011303c02cc02bcca9c030c02fcca800ff010000a1002d00020101000d0014001205030403080708060805080406010501040100170000000a00080006001d00170018002b00050403040303000b0002010000050005010000000000000029002700002472656c656173652d6173736574732e67697468756275736572636f6e74656e742e636f6d00230000003300260024001d002041ac9d596b8118aaa1ca55c4e7d827252327f492ba17cf1fbae02e32e0cfa065,
+    },
+}
+       Debug [ureq::tls::rustls] Wrapped TLS
+       Debug [ureq_proto::client] Call<SendRequest>
+       Debug [ureq::run] Request { method: GET, uri: https://release-assets.githubusercontent.com/github-production-release-asset/357697736/e34e8d9b-55dd-478c-a42c-e4fdf21f510b?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A18%3A23Z&rscd=attachment%3B+filename%3Dnsis-3.11.zip&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A17%3A47Z&ske=2026-11-13T12%3A18%3A23Z&sks=b&skv=2018-11-09&sig=s2YcY63zSjRhNUpu1PGVt3GSr02SwY5JGDgp2jX8H40%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU2OTkzMSwibmJmIjoxNzk0NTY5NjMxLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.bYlfF2lfHAPlK3Xq-Vcj04lReCA9Y3CLx9a1OvruNNA&response-content-disposition=attachment%3B%20filename%3Dnsis-3.11.zip&response-content-type=application%2Foctet-stream, version: HTTP/1.1, headers: {"accept-encoding": "gzip", "user-agent": "tauri-bundler/2.9.4", "accept": "*/*", "host": "release-assets.githubusercontent.com"} }
+       Trace [rustls::client::hs] We got ServerHello ServerHelloPayload {
+    legacy_version: TLSv1_2,
+    random: bf81fbebb47e2f4fe97221019738b06654d4905943dac496ba4a9ade5fcb8c4d,
+    session_id: 35bbfa5077b49eff121ffdf46423db5a4b6d1a7e32485d0afd96728149bc4285,
+    cipher_suite: TLS13_AES_128_GCM_SHA256,
+    compression_method: Null,
+    extensions: ServerExtensions {
+        key_share: KeyShareEntry {
+            group: X25519,
+            payload: 40b0869b1f5aba8379637a757627885ded11ee56aefd62d6413b72bb1abb1873,
+        },
+        selected_version: TLSv1_3,
+        unknown_extensions: {},
+        ..
+    },
+}
+       Debug [rustls::client::hs] Using ciphersuite TLS13_AES_128_GCM_SHA256
+       Debug [rustls::client::tls13] Not resuming
+       Trace [rustls::client::client_conn] EarlyData rejected
+       Trace [rustls::conn] Dropping CCS
+       Debug [rustls::client::tls13] TLS1.3 encrypted extensions: ServerExtensions { server_name_ack: (), unknown_extensions: {}, .. }
+       Debug [rustls::client::hs] ALPN protocol is None
+       Trace [rustls::client::tls13] Server cert is CertificateChain([CertificateDer(0x308205473082042fa003020102021206a65e5d3279ba564a4de74eb5d64478dbb8300d06092a864886f70d01010b05003033310b300906035504061302555331163014060355040a130d4c6574277320456e6372797074310c300a06035504031303595231301e170d3236303933303233343434365a170d3236313232393233343434355a30163114301206035504030c0b2a2e6769746875622e696f30820122300d06092a864886f70d01010105000382010f003082010a02820101009e6f7025f788c3acbc4fcc4b6c16e05854e3d9b39d0959937256a19654bd2ede0442664bb5a02f41a665f45b62fa62e898f7b44bb75ccb00c2c870dd50f7b0605517bd793fd2816f339cb29ad5fad1dd044e96d1a2017978746ebdb5d4300028b7bac2f525f20b273405fdc364443db151952dce2ca7072930a835ef6f340d47e30aaf3191820b18927d6195e9a102625089eda8328df68c64372046687d7ad9216b532e31d82a9a167237874aebca635e0894960d4f5971937cc9d49ada48e9228b0b2fd64f19f8130107a77467b87d85a113aa35a4ff3d207d7e025175ead788b6427c05d47af76a1c17764070473ed5d8b3375ae9abd1e14237e3ace653490203010001a38202703082026c300e0603551d0f0101ff0404030205a030130603551d25040c300a06082b06010505070301300c0603551d130101ff04023000301d0603551d0e0416041424bf6f01ed938ed93b51bcccfa38f3a61174deb0301f0603551d230418301680141f2f35be461482cd40b1ae792c5578faf7d468fb303306082b0601050507010104273025302306082b060105050730028617687474703a2f2f7972312e692e6c656e63722e6f72672f306b0603551d1104643062820c2a2e6769746875622e636f6d820b2a2e6769746875622e696f82172a2e67697468756275736572636f6e74656e742e636f6d820a6769746875622e636f6d82096769746875622e696f821567697468756275736572636f6e74656e742e636f6d30130603551d20040c300a3008060667810c010201302e0603551d1f042730253023a021a01f861d687474703a2f2f7972312e632e6c656e63722e6f72672f35372e63726c3082010e060a2b06010401d6790204020481ff0481fc00fa007700c2317e574519a345ee7f38deb29041ebc7c2215a22bf7fd5b5ad769ad90e52cd000001a0f4ea63ab0000040300483046022100c931deb7efb3659ba7e0bb1ee3fae8a8e701539dd130484aa865986de25c8d85022100b86e5f6ddb8b0ba88d8f4540d057f40eed08ed7e44a778428028b7635ca96ce9007f00a2810018734e176e1d47e09540f381ba546697cd63a84350716eb8094edaf10d000001a0f4ea67160008000005001923e6750403004830460221008e30ac6ad69c42b415959e9efd31f28606b11c29062f086277061943d1e19581022100b5a1adce9f4e098d4b37492f4f8e0914e4b942d99c688979807d6867c10913fe300d06092a864886f70d01010b0500038201010034322f68134096634077643dc926bc7e6a5698f12b8890c68dd50d8d5c6a111ff22d000d9c1b16649563540651f2d5322c5c12d762aea8a4dbb17474005c578195909e5a04d3b6484c2e7791f3aa9aff121a61fc0a833b0dcd50618640f3ce9b02be33de6cd79f7ba9b180a638c849c8138d865fc40fb7dc9023f73066d1fac19f0f4e648df1ad0d21e060ee66671c7c391e147572568b3f84d09cf4c7a29bdda597b2dda077f70af1aef155bb8c0cbe45fef1b450f8a824e439bcdc062f5beafa6ccf74419bea3219fffa950d58794d203f4eee9e8700af29776df1ad6134cb6ce520d0c36243df4cbf54e5e05ba1c7feadfe452cf00b367e795d282ad937cc), CertificateDer(0x308204db308202c3a003020102021100a20253f15f2691c05dc1ce13b9bcca4e300d06092a864886f70d01010b0500302e310b3009060355040613025553310d300b060355040a1304495352473110300e06035504031307526f6f74205952301e170d3235303930333030303030305a170d3238303930323233353935395a3033310b300906035504061302555331163014060355040a130d4c6574277320456e6372797074310c300a0603550403130359523130820122300d06092a864886f70d01010105000382010f003082010a0282010100a158bc5f6c42620317bc9c4d3caa7fa05d7750c8263c0041d3b5422cd0eda179adf65b8464d252055d745724f53f3e8b0fc66ad5dda0738dd6365d40751ae3e2c1276b36ce8b3d273e9986069da1ba2e3da19b43218eb074a799022e416cd536d021fa45204130b490f5c5eb1fc77176fe0f009e39b2c18c2faf14484dc1b230b66ba70037d2f90a05d52108b9b5f3624cfa05659dd2d0e957a8b9a6b5d57de6e75601be5be9efc5e3d0e20ac1f4634d0083bd815486f5873ca798a7be5f49844414edb1bdc1c26a55f62a5e06330ba11fc3f5c1f11d0096a22e654e65f0634d79279ac67a5cf59d98c9bb1736922a1a5f6f572419e13243f9df5ad2746e6e330203010001a381ee3081eb300e0603551d0f0101ff04040302018630130603551d25040c300a06082b0601050507030130120603551d130101ff040830060101ff020100301d0603551d0e041604141f2f35be461482cd40b1ae792c5578faf7d468fb301f0603551d23041830168014dee75b60d0226d40287d3f0d01fea4b552b45194303206082b0601050507010104263024302206082b060105050730028616687474703a2f2f79722e692e6c656e63722e6f72672f30130603551d20040c300a3008060667810c01020130270603551d1f0420301e301ca01aa0188616687474703a2f2f79722e632e6c656e63722e6f72672f300d06092a864886f70d01010b05000382020100d3ecef32ade41e283575d4e69a6f9189b4ebf7f4695fb9386ee6a730c46a6d5ff222f3fcdb30073779af6b0f9c012b95b1da5dd2292386be219e12502d03b33a9d9c70aaec746380828d2f75d78848502a116115e25994337bc517bf7aba9f9b4a0989d6ee91ba90c23310e017c33778bbc6ba3e8bd25bb7ce44342ae40b9cac4bb41d2842a9f521d8390aeb86a4cbd0ce4dbd3dadc3fea1eeadcd0420cf52c6e910b89aaaeb7971b18c9140553cc8c04e86ad70e4b6df696351af3d6e92539f23fa589006f613631366b00c4240481364bc26dd45f2045cf7aa3fc4eb2b82f4a46bce008ac5fac6ad65cf567b8c6beb9d77384cc723c594e38936a285c608d492176622ed10c4826b997772ef1859deb374b45096a45d725563b907cd1dac1127a1969642b4409a2c8af4cac1d070dcac44b731a8f323071116eccb9ee03f55171ce31c9996100b482dc91dd2c5f7a720cfccc42dc86b662969bfe443f0939e5227d8a4392540ba358ac609b84537d6e9e652894ad1300949cba67b5cad79395d50c236fff94725a945386418e57b19eb4a910d2a018f210b358aea8aa70210d972395855d59fa8ec370c8397e840cd06002a1daad1571c85f5065d39a5d2c8f274b9e0f6058244060682190f2b01a53f41cd76dd5e4b4d70d95b809cb0f043ca1cb8bfe73c842940cb0fc890995f06ac41f43fbfc2f20c1e0102678a6d3faa), CertificateDer(0x308205f4308203dca003020102021100f24b6d17f9d9ad7cb1c9fea78782699f300d06092a864886f70d01010b0500304f310b300906035504061302555331293027060355040a1320496e7465726e65742053656375726974792052657365617263682047726f7570311530130603550403130c4953524720526f6f74205831301e170d3236303531333030303030305a170d3332303930323233353935395a302e310b3009060355040613025553310d300b060355040a1304495352473110300e06035504031307526f6f7420595230820222300d06092a864886f70d01010105000382020f003082020a0282020100dbc626737bf024c97562f7f9e19fb0b3794eb34126cf951fd8515ea45bc31bbdb06362074043d5f70ec5b494402248335c44d770dbfb90b0d70d2cd04058b2fb883ffea3a05d30f1cb8899b811d4e1a061b490e0ea7323e0c6f121ae4e5704f3bdce092fa4877b2b968eaf978dcce4e260e007a8d6c7c7a7a913243a0888504d24063e38a7d7fc552f60aba18d3fa7a38f659aa9aea52048e4f901422aab106b56539bb153f7105871aef234a3141ce766abdb34f2cc5cc2c5c426f75937eb2415d78eabd61bebf86e3cf18e3780b4e954eea6ab443bcd3b202e4182e59fdd3833e7da2b1f219cb0a9275e59a9a12070d958fbd30c59c0b9caf2f60368f797dfb66ee820657f9d384f75cd898875ac13bd266e56f95b46b0252f1201ea9c0c0639de5c28d843cfb70420a3b2c6d2369654de14dc0437617c09440e562bea911ab6731d9834f906a9ca0bdd9b7741213357db2c78a82dc70b0ae89ebd3f1990f859aeaecc8a2ee035701c504011f3e97361a97ef734e0ec2e4300bc9539e1bf0aa7d100c9f52921c247435203a3fcb67fe619196709cb79aed5422e7572495a54e87d6a1a0dc38133aeb247fc79a85332261b2397b33c998ee5eaed6a5b24435bada7be3e783cbdd8f2387ed1ca4dbabd216847e1864a8775a724422dfa842f95865b63cb6912ba0aac507a3c51b3ac9203472b6ce07aafb87e764458f6ceffc10203010001a381eb3081e8300e0603551d0f0101ff04040302010630130603551d25040c300a06082b06010505070301300f0603551d130101ff040530030101ff301d0603551d0e04160414dee75b60d0226d40287d3f0d01fea4b552b45194301f0603551d2304183016801479b459e67bb6e5e40173800888c81a58f6e99b6e303206082b0601050507010104263024302206082b060105050730028616687474703a2f2f78312e692e6c656e63722e6f72672f30130603551d20040c300a3008060667810c01020130270603551d1f0420301e301ca01aa0188616687474703a2f2f78312e632e6c656e63722e6f72672f300d06092a864886f70d01010b050003820201003cb29488f7928a7e7d96e863260e91c12523da2dbb12dd6f777228c909109801cd5fb0980bd4520bec2d02f5e70f39d7300767e2d03936a7de23f624c90b19ade4215228b456c275d3d8c3125dec55c6aa1507bf417563f155711391599efea61202e2951e1e4fb3ee418b1826c12d4992348073e31fad46cdb2c5441271f468488087eae8b570152523ff61eecb24f1300fd0d61bbdaf5566e101cb8e7f938b8f3e7b0ad93b320407ca767bf8f94726d6a3ae809a21bb42afab5c659680c14426fa3432796755fb686ff5d78e60598a790ca38dc4ab37935a76bc3e2fd0d924b6c0d47a9e36f2e1060aa93f47ef26ad8de84b43e7be0de9e308eee32c2539e38b6503cfd7a5e572d2bfd7ea24cb8342d6156f6a133682a9a14aa1c4f542d1aab8786e4c112688767f1be5919249e0092cc1d796311d94dcdafa771f92f8979353ce2e79c576fc7cfe093a337ef859b2d6157c3c375e3507f465fed20d19f9754f13888aab6231890bd3645219bd64ab7e012fd34f3f6ef344632e1c69f34b784522b4537cac6bcd467d473416cc41b72ba7c9debda7a9296d91ecad8acf43201a0563d5665728cb33bd43322fb2d7e4d1489542944330bc0e322fefbbabd5d9c79af9c014560789104ca1f9ab2a199c3c3b8a2ba1d65203c83171f2bee2f6f2095391d2de6a192e461600e8a531a57d379e80f4181be9d35c1e4be0dcda1a60)])
+       Debug [ureq_proto::client] Call<RecvResponse>
+       Debug [ureq_proto::client] Call<RecvBody>
+       Debug [ureq::run] Response { status: 200, version: HTTP/1.1, headers: {"connection": "keep-alive", "content-length": "2361546", "server": "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0", "date": "Fri, 13 Nov 2026 11:33:52 GMT", "content-type": "application/octet-stream", "<NOTICE>": "18 HEADERS ARE REDACTED"} }
+       Debug [ureq_proto::client] Call<Cleanup>
+       Debug [ureq::pool] Return to pool: PoolKey { scheme: "https", authority: release-assets.githubusercontent.com, proxy: None }
+        Info [tauri_bundler::utils::http_utils] validating hash
+        Info [tauri_bundler::bundle::windows::nsis] extracting NSIS
+ Downloading [tauri_bundler::utils::http_utils] https://github.com/tauri-apps/nsis-tauri-utils/releases/download/nsis_tauri_utils-v0.5.3/nsis_tauri_utils.dll
+       Debug [ureq_proto::client] Call<Prepare>
+       Debug [ureq::run] GET https://github.com/tauri-apps/nsis-tauri-utils/releases/download/nsis_tauri_utils-v0.5.3/nsis_tauri_utils.dll
+       Trace [ureq::unversioned::resolver] Resolve: github.com:443
+       Debug [ureq::unversioned::resolver] Resolved: ArrayVec { len: 2, arr: [127.162.6.19:443, [fd00:696e:6974:6578::4a:614]:443] }
+       Trace [ureq::unversioned::transport::socks] SOCKS not configured
+       Trace [ureq::unversioned::transport::tcp] Try connect TcpStream to 127.162.6.19:443
+       Debug [ureq::unversioned::transport::tcp] Connected TcpStream to 127.162.6.19:443
+       Trace [ureq::tls::rustls] Try wrap in TLS
+       Debug [rustls::client::hs] No cached session for DnsName("github.com")
+       Debug [rustls::client::hs] Not resuming any session
+       Trace [rustls::client::hs] Sending ClientHello Message {
+    version: TLSv1_0,
+    payload: Handshake {
+        parsed: HandshakeMessagePayload(
+            ClientHello(
+                ClientHelloPayload {
+                    client_version: TLSv1_2,
+                    random: 75b1277397b4e034c5d1e628498e69502a9cebfc739b4229418cb41a2898c4f6,
+                    session_id: c26c0b432d6acf649ce388c148abebc67081ae8c397efe1ef5d55a552a928e4d,
+                    cipher_suites: [
+                        TLS13_AES_256_GCM_SHA384,
+                        TLS13_AES_128_GCM_SHA256,
+                        TLS13_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_EMPTY_RENEGOTIATION_INFO_SCSV,
+                    ],
+                    compression_methods: [
+                        Null,
+                    ],
+                    extensions: ClientExtensions {
+                        server_name: SingleDnsName(
+                            DnsName(
+                                "github.com",
+                            ),
+                        ),
+                        certificate_status_request: Ocsp(
+                            OcspCertificateStatusRequest {
+                                responder_ids: [],
+                                extensions: ,
+                            },
+                        ),
+                        named_groups: [
+                            X25519,
+                            secp256r1,
+                            secp384r1,
+                        ],
+                        ec_point_formats: SupportedEcPointFormats {
+                            uncompressed: true,
+                        },
+                        signature_schemes: [
+                            ECDSA_NISTP384_SHA384,
+                            ECDSA_NISTP256_SHA256,
+                            ED25519,
+                            RSA_PSS_SHA512,
+                            RSA_PSS_SHA384,
+                            RSA_PSS_SHA256,
+                            RSA_PKCS1_SHA512,
+                            RSA_PKCS1_SHA384,
+                            RSA_PKCS1_SHA256,
+                        ],
+                        extended_master_secret_request: (),
+                        session_ticket: Request,
+                        supported_versions: SupportedProtocolVersions {
+                            tls13: true,
+                            tls12: true,
+                        },
+                        preshared_key_modes: PskKeyExchangeModes {
+                            psk_dhe: true,
+                            psk: false,
+                        },
+                        key_shares: [
+                            KeyShareEntry {
+                                group: X25519,
+                                payload: 7ecffb54ff9d62f0296d4660ebd165f8d4d9ab03ec22ed5e09548b13c70da90d,
+                            },
+                        ],
+                        order_seed: 5569,
+                        contiguous_extensions: [],
+                        ..
+                    },
+                },
+            ),
+        ),
+        encoded: 010000e4030375b1277397b4e034c5d1e628498e69502a9cebfc739b4229418cb41a2898c4f620c26c0b432d6acf649ce388c148abebc67081ae8c397efe1ef5d55a552a928e4d0014130213011303c02cc02bcca9c030c02fcca800ff01000087002d00020101000b00020100000a00080006001d00170018002b00050403040303000d00140012050304030807080608050804060105010401003300260024001d00207ecffb54ff9d62f0296d4660ebd165f8d4d9ab03ec22ed5e09548b13c70da90d00230000000500050100000000001700000000000f000d00000a6769746875622e636f6d,
+    },
+}
+       Debug [ureq::tls::rustls] Wrapped TLS
+       Debug [ureq_proto::client] Call<SendRequest>
+       Debug [ureq::run] Request { method: GET, uri: https://github.com/tauri-apps/nsis-tauri-utils/releases/download/nsis_tauri_utils-v0.5.3/nsis_tauri_utils.dll, version: HTTP/1.1, headers: {"accept-encoding": "gzip", "user-agent": "tauri-bundler/2.9.4", "accept": "*/*", "host": "github.com"} }
+       Trace [rustls::client::hs] We got ServerHello ServerHelloPayload {
+    legacy_version: TLSv1_2,
+    random: 4b719ed176b62f6bf1c513dbbf6d8cdb20bfca238bf765616e6e23e2e048fe9f,
+    session_id: c26c0b432d6acf649ce388c148abebc67081ae8c397efe1ef5d55a552a928e4d,
+    cipher_suite: TLS13_AES_128_GCM_SHA256,
+    compression_method: Null,
+    extensions: ServerExtensions {
+        key_share: KeyShareEntry {
+            group: X25519,
+            payload: 43d7af1a1bb65509dcce576605144119a34ce2d26f10ee5c8005ba8e7fc86a57,
+        },
+        selected_version: TLSv1_3,
+        unknown_extensions: {},
+        ..
+    },
+}
+       Debug [rustls::client::hs] Using ciphersuite TLS13_AES_128_GCM_SHA256
+       Debug [rustls::client::tls13] Not resuming
+       Trace [rustls::client::client_conn] EarlyData rejected
+       Trace [rustls::conn] Dropping CCS
+       Debug [rustls::client::tls13] TLS1.3 encrypted extensions: ServerExtensions { server_name_ack: (), unknown_extensions: {}, .. }
+       Debug [rustls::client::hs] ALPN protocol is None
+       Trace [rustls::client::tls13] Server cert is CertificateChain([CertificateDer(0x308203f43082039ba00302010202103e1d6026b4b0aea279dca2efbbced82b300a06082a8648ce3d0403023060310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313730350603550403132e5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20434120445620453336301e170d3236313033303030303030305a170d3237303132373233353935395a3015311330110603550403130a6769746875622e636f6d3059301306072a8648ce3d020106082a8648ce3d0301070342000437ca7789c7fafebcec01ff2db501b88e685d5b036db2f04642c10836c399859cae9c5df3ef4ed2e3c7a48823010d20053a06cbaeafe1def4c7f8e00e8a2c2b77a38202803082027c301f0603551d230418301680141799a804c16fe42d70a80a103d03d3e91ab82663301d0603551d0e041604148cb02a1eaeee865d000135b1e58b6923a53e3c71300e0603551d0f0101ff040403020780300c0603551d130101ff0402300030130603551d25040c300a06082b0601050507030130490603551d20044230403034060b2b06010401b231010202073025302306082b06010505070201161768747470733a2f2f7365637469676f2e636f6d2f4350533008060667810c01020130818406082b0601050507010104783076304f06082b060105050730028643687474703a2f2f6372742e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e434144564533362e637274302306082b060105050730018617687474703a2f2f6f6373702e7365637469676f2e636f6d30250603551d11041e301c820a6769746875622e636f6d820e7777772e6769746875622e636f6d3082010c060a2b06010401d6790204020481fd0481fa00f800750046a23967c60db64687c66f3df999947693a6a611208457d555e7e3d0a1d9b646000001a18a2e87200000040300463044022022106dba4e92a764a4c1e510ee086aa8d4139d46767017f254dd7c9a9ac9e532022056fab7c49d0821cc3dac9633fc0e6884dfae0e78d5e344b9e84b8ffe10398131007f00a2810018734e176e1d47e09540f381ba546697cd63a84350716eb8094edaf10d000001a18a2e8826000800000500321ee8f2040300483046022100a91efbc4aed63acb4716bb3296d4253c7a8ee54025683e4450681f57e4b21e780221009375722b55a345970ab68d5a14e9eab72d30ed8016c107c012ea9287b8817de0300a06082a8648ce3d040302034700304402202221550b45b55e5e8d7aeb02b7569d797ae77f9e56cd4dafa3e05527283e8660022005c2b75a6795d3937ceca448a1a215fe1f7b172901382ba5281b024fda9e9a18), CertificateDer(0x3082035f308202e6a003020102021036e059ed888dd57aedd570b6727f9bda300a06082a8648ce3d040303305f310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313630340603550403132d5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20526f6f7420453436301e170d3231303332323030303030305a170d3336303332313233353935395a3060310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313730350603550403132e5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e204341204456204533363059301306072a8648ce3d020106082a8648ce3d0301070342000468a1a76c05270589631c39a7ff2521c5edd32f1298bb2cdcf555e849a08457917bdc585f6bf4a2fd132c9b04c55b747db3b27a269619166bb8768def93f56097a38201813082017d301f0603551d23041830168014d122da4c59f14b5f2638aa9dd6eeeb0dc3fba961301d0603551d0e041604141799a804c16fe42d70a80a103d03d3e91ab82663300e0603551d0f0101ff04040302018630120603551d130101ff040830060101ff020100301d0603551d250416301406082b0601050507030106082b06010505070302301b0603551d200414301230060604551d20003008060667810c01020130540603551d1f044d304b3049a047a0458643687474703a2f2f63726c2e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e526f6f744534362e63726c30818406082b0601050507010104783076304f06082b060105050730028643687474703a2f2f6372742e7365637469676f2e636f6d2f5365637469676f5075626c696353657276657241757468656e7469636174696f6e526f6f744534362e703763302306082b060105050730018617687474703a2f2f6f6373702e7365637469676f2e636f6d300a06082a8648ce3d040303036700306402305b0a9c140387ae25faff9a5185a30c224a40cc475141a67300180c88c9f696d1608b4c088c79c6ed2851beac21f4d7a902303dd75cb0313829d78bbb58497691e074bbec1c02b7bf28322c6ba3314f7104908369c9114fddd51c4134829a6036a755), CertificateDer(0x30820346308202cba00302010202101a9eafec6de8e19b5c193141b68d90dd300a06082a8648ce3d040303308188310b3009060355040613025553311330110603550408130a4e6577204a6572736579311430120603550407130b4a65727365792043697479311e301c060355040a131554686520555345525452555354204e6574776f726b312e302c06035504031325555345525472757374204543432043657274696669636174696f6e20417574686f72697479301e170d3231303332323030303030305a170d3338303131383233353935395a305f310b300906035504061302474231183016060355040a130f5365637469676f204c696d69746564313630340603550403132d5365637469676f205075626c6963205365727665722041757468656e7469636174696f6e20526f6f74204534363076301006072a8648ce3d020106052b810400220362000476fa99a96e20edf9d777e3073ba8db3d5f38e8ab55a6564fd648eaec7f2daac3b2c579ec99617f1079c7025af90437f534352b77ce7f208f52a30089ecd5a7a26d5be34b9293a080f50194dcf068071ecdeefe2552b520431c1bfeeb19ce43a3a38201203082011c301f0603551d230418301680143ae10986d4cf19c29676744976dce035c663639a301d0603551d0e04160414d122da4c59f14b5f2638aa9dd6eeeb0dc3fba961300e0603551d0f0101ff040403020186300f0603551d130101ff040530030101ff301d0603551d250416301406082b0601050507030106082b0601050507030230110603551d20040a300830060604551d200030500603551d1f044930473045a043a041863f687474703a2f2f63726c2e7573657274727573742e636f6d2f55534552547275737445434343657274696669636174696f6e417574686f726974792e63726c303506082b0601050507010104293027302506082b060105050730018619687474703a2f2f6f6373702e7573657274727573742e636f6d300a06082a8648ce3d04030303690030660231008c0b2062b7df6f5f66daeb11240def983bbbc2d2dc236e4bfd3caa6a186b99eb5259af28c5b29f8316911c942572e27a023100b0bd90d70ff9b62a8d470390649b3ed840e14088d0c3e3d2166b6c1d4fb4770ed3836925c7fc1897bfc7f007db2ee2d5)])
+       Debug [ureq_proto::client] Call<RecvResponse>
+       Debug [ureq_proto::client] Call<Redirect>
+       Debug [ureq::run] Response { status: 302, version: HTTP/1.1, headers: {"date": "Fri, 13 Nov 2026 11:33:54 GMT", "content-type": "text/html; charset=utf-8", "server": "github.com", "content-length": "0", "location": "https://release-assets.githubusercontent.com/github-production-release-asset/580520344/bbd0c219-8e7e-4362-a1af-4459926e1887?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A16%3A26Z&rscd=attachment%3B+filename%3Dnsis_tauri_utils.dll&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A16%3A26Z&ske=2026-11-13T12%3A16%3A26Z&sks=b&skv=2018-11-09&sig=lD7YJyOfETV81xdmaj9FnRLYMq4N4MbNC1LHgymC3Us%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU2OTkzNCwibmJmIjoxNzk0NTY5NjM0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.Iif1N2sgP_yeyKfbMaDvjih8ZjRkQr6Oiq-WRchRgTk&response-content-disposition=attachment%3B%20filename%3Dnsis_tauri_utils.dll&response-content-type=application%2Foctet-stream", "<NOTICE>": "10 HEADERS ARE REDACTED"} }
+       Debug [ureq::pool] Return to pool: PoolKey { scheme: "https", authority: github.com, proxy: None }
+       Debug [ureq_proto::client] Call<Prepare>
+       Debug [ureq::run] Redirect (302 Found): GET https://release-assets.githubusercontent.com/github-production-release-asset/580520344/bbd0c219-8e7e-4362-a1af-4459926e1887?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A16%3A26Z&rscd=attachment%3B+filename%3Dnsis_tauri_utils.dll&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A16%3A26Z&ske=2026-11-13T12%3A16%3A26Z&sks=b&skv=2018-11-09&sig=lD7YJyOfETV81xdmaj9FnRLYMq4N4MbNC1LHgymC3Us%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU2OTkzNCwibmJmIjoxNzk0NTY5NjM0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.Iif1N2sgP_yeyKfbMaDvjih8ZjRkQr6Oiq-WRchRgTk&response-content-disposition=attachment%3B%20filename%3Dnsis_tauri_utils.dll&response-content-type=application%2Foctet-stream
+       Debug [ureq::run] GET https://release-assets.githubusercontent.com/github-production-release-asset/580520344/bbd0c219-8e7e-4362-a1af-4459926e1887?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A16%3A26Z&rscd=attachment%3B+filename%3Dnsis_tauri_utils.dll&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A16%3A26Z&ske=2026-11-13T12%3A16%3A26Z&sks=b&skv=2018-11-09&sig=lD7YJyOfETV81xdmaj9FnRLYMq4N4MbNC1LHgymC3Us%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU2OTkzNCwibmJmIjoxNzk0NTY5NjM0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.Iif1N2sgP_yeyKfbMaDvjih8ZjRkQr6Oiq-WRchRgTk&response-content-disposition=attachment%3B%20filename%3Dnsis_tauri_utils.dll&response-content-type=application%2Foctet-stream
+       Trace [ureq::unversioned::resolver] Resolve: release-assets.githubusercontent.com:443
+       Debug [ureq::unversioned::resolver] Resolved: ArrayVec { len: 2, arr: [127.162.6.68:443, [fd00:696e:6974:6578::4a:645]:443] }
+       Trace [ureq::unversioned::transport::socks] SOCKS not configured
+       Trace [ureq::unversioned::transport::tcp] Try connect TcpStream to 127.162.6.68:443
+       Debug [ureq::unversioned::transport::tcp] Connected TcpStream to 127.162.6.68:443
+       Trace [ureq::tls::rustls] Try wrap in TLS
+       Debug [rustls::client::hs] No cached session for DnsName("release-assets.githubusercontent.com")
+       Debug [rustls::client::hs] Not resuming any session
+       Trace [rustls::client::hs] Sending ClientHello Message {
+    version: TLSv1_0,
+    payload: Handshake {
+        parsed: HandshakeMessagePayload(
+            ClientHello(
+                ClientHelloPayload {
+                    client_version: TLSv1_2,
+                    random: 2df95aa31d9882ac77dba2698bbc406e7db5a74c35d2ff30e0be5a7e1b27517f,
+                    session_id: 59dda18c7d9f6958fe617db2619806a2980af7574e78be8ce0d6927323764e34,
+                    cipher_suites: [
+                        TLS13_AES_256_GCM_SHA384,
+                        TLS13_AES_128_GCM_SHA256,
+                        TLS13_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                        TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                        TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+                        TLS_EMPTY_RENEGOTIATION_INFO_SCSV,
+                    ],
+                    compression_methods: [
+                        Null,
+                    ],
+                    extensions: ClientExtensions {
+                        server_name: SingleDnsName(
+                            DnsName(
+                                "release-assets.githubusercontent.com",
+                            ),
+                        ),
+                        certificate_status_request: Ocsp(
+                            OcspCertificateStatusRequest {
+                                responder_ids: [],
+                                extensions: ,
+                            },
+                        ),
+                        named_groups: [
+                            X25519,
+                            secp256r1,
+                            secp384r1,
+                        ],
+                        ec_point_formats: SupportedEcPointFormats {
+                            uncompressed: true,
+                        },
+                        signature_schemes: [
+                            ECDSA_NISTP384_SHA384,
+                            ECDSA_NISTP256_SHA256,
+                            ED25519,
+                            RSA_PSS_SHA512,
+                            RSA_PSS_SHA384,
+                            RSA_PSS_SHA256,
+                            RSA_PKCS1_SHA512,
+                            RSA_PKCS1_SHA384,
+                            RSA_PKCS1_SHA256,
+                        ],
+                        extended_master_secret_request: (),
+                        session_ticket: Request,
+                        supported_versions: SupportedProtocolVersions {
+                            tls13: true,
+                            tls12: true,
+                        },
+                        preshared_key_modes: PskKeyExchangeModes {
+                            psk_dhe: true,
+                            psk: false,
+                        },
+                        key_shares: [
+                            KeyShareEntry {
+                                group: X25519,
+                                payload: e9c5c89ef95cd13d86f166349ca54c2544386c028f2416f1209043cc1ee5701b,
+                            },
+                        ],
+                        order_seed: 12253,
+                        contiguous_extensions: [],
+                        ..
+                    },
+                },
+            ),
+        ),
+        encoded: 010000fe03032df95aa31d9882ac77dba2698bbc406e7db5a74c35d2ff30e0be5a7e1b27517f2059dda18c7d9f6958fe617db2619806a2980af7574e78be8ce0d6927323764e340014130213011303c02cc02bcca9c030c02fcca800ff010000a1000b00020100000500050100000000003300260024001d0020e9c5c89ef95cd13d86f166349ca54c2544386c028f2416f1209043cc1ee5701b00170000002d00020101000a00080006001d00170018002b0005040304030300000029002700002472656c656173652d6173736574732e67697468756275736572636f6e74656e742e636f6d000d0014001205030403080708060805080406010501040100230000,
+    },
+}
+       Debug [ureq::tls::rustls] Wrapped TLS
+       Debug [ureq_proto::client] Call<SendRequest>
+       Debug [ureq::run] Request { method: GET, uri: https://release-assets.githubusercontent.com/github-production-release-asset/580520344/bbd0c219-8e7e-4362-a1af-4459926e1887?sp=r&sv=2018-11-09&sr=b&spr=https&se=2026-11-13T12%3A16%3A26Z&rscd=attachment%3B+filename%3Dnsis_tauri_utils.dll&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2026-11-13T11%3A16%3A26Z&ske=2026-11-13T12%3A16%3A26Z&sks=b&skv=2018-11-09&sig=lD7YJyOfETV81xdmaj9FnRLYMq4N4MbNC1LHgymC3Us%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc5NDU2OTkzNCwibmJmIjoxNzk0NTY5NjM0LCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.Iif1N2sgP_yeyKfbMaDvjih8ZjRkQr6Oiq-WRchRgTk&response-content-disposition=attachment%3B%20filename%3Dnsis_tauri_utils.dll&response-content-type=application%2Foctet-stream, version: HTTP/1.1, headers: {"accept-encoding": "gzip", "user-agent": "tauri-bundler/2.9.4", "accept": "*/*", "host": "release-assets.githubusercontent.com"} }
+       Trace [rustls::client::hs] We got ServerHello ServerHelloPayload {
+    legacy_version: TLSv1_2,
+    random: e9a2e087aa29311db3837992280f982f63a39c8bc65e10f0a9a768da274b8189,
+    session_id: 59dda18c7d9f6958fe617db2619806a2980af7574e78be8ce0d6927323764e34,
+    cipher_suite: TLS13_AES_128_GCM_SHA256,
+    compression_method: Null,
+    extensions: ServerExtensions {
+        key_share: KeyShareEntry {
+            group: X25519,
+            payload: fbecf7f7be5a1eac7b001e6617dbfd16c28499a03c78ae016dc2b027e17f9d34,
+        },
+        selected_version: TLSv1_3,
+        unknown_extensions: {},
+        ..
+    },
+}
+       Debug [rustls::client::hs] Using ciphersuite TLS13_AES_128_GCM_SHA256
+       Debug [rustls::client::tls13] Not resuming
+       Trace [rustls::client::client_conn] EarlyData rejected
+       Trace [rustls::conn] Dropping CCS
+       Debug [rustls::client::tls13] TLS1.3 encrypted extensions: ServerExtensions { server_name_ack: (), unknown_extensions: {}, .. }
+       Debug [rustls::client::hs] ALPN protocol is None
+       Trace [rustls::client::tls13] Server cert is CertificateChain([CertificateDer(0x308205473082042fa003020102021206a65e5d3279ba564a4de74eb5d64478dbb8300d06092a864886f70d01010b05003033310b300906035504061302555331163014060355040a130d4c6574277320456e6372797074310c300a06035504031303595231301e170d3236303933303233343434365a170d3236313232393233343434355a30163114301206035504030c0b2a2e6769746875622e696f30820122300d06092a864886f70d01010105000382010f003082010a02820101009e6f7025f788c3acbc4fcc4b6c16e05854e3d9b39d0959937256a19654bd2ede0442664bb5a02f41a665f45b62fa62e898f7b44bb75ccb00c2c870dd50f7b0605517bd793fd2816f339cb29ad5fad1dd044e96d1a2017978746ebdb5d4300028b7bac2f525f20b273405fdc364443db151952dce2ca7072930a835ef6f340d47e30aaf3191820b18927d6195e9a102625089eda8328df68c64372046687d7ad9216b532e31d82a9a167237874aebca635e0894960d4f5971937cc9d49ada48e9228b0b2fd64f19f8130107a77467b87d85a113aa35a4ff3d207d7e025175ead788b6427c05d47af76a1c17764070473ed5d8b3375ae9abd1e14237e3ace653490203010001a38202703082026c300e0603551d0f0101ff0404030205a030130603551d25040c300a06082b06010505070301300c0603551d130101ff04023000301d0603551d0e0416041424bf6f01ed938ed93b51bcccfa38f3a61174deb0301f0603551d230418301680141f2f35be461482cd40b1ae792c5578faf7d468fb303306082b0601050507010104273025302306082b060105050730028617687474703a2f2f7972312e692e6c656e63722e6f72672f306b0603551d1104643062820c2a2e6769746875622e636f6d820b2a2e6769746875622e696f82172a2e67697468756275736572636f6e74656e742e636f6d820a6769746875622e636f6d82096769746875622e696f821567697468756275736572636f6e74656e742e636f6d30130603551d20040c300a3008060667810c010201302e0603551d1f042730253023a021a01f861d687474703a2f2f7972312e632e6c656e63722e6f72672f35372e63726c3082010e060a2b06010401d6790204020481ff0481fc00fa007700c2317e574519a345ee7f38deb29041ebc7c2215a22bf7fd5b5ad769ad90e52cd000001a0f4ea63ab0000040300483046022100c931deb7efb3659ba7e0bb1ee3fae8a8e701539dd130484aa865986de25c8d85022100b86e5f6ddb8b0ba88d8f4540d057f40eed08ed7e44a778428028b7635ca96ce9007f00a2810018734e176e1d47e09540f381ba546697cd63a84350716eb8094edaf10d000001a0f4ea67160008000005001923e6750403004830460221008e30ac6ad69c42b415959e9efd31f28606b11c29062f086277061943d1e19581022100b5a1adce9f4e098d4b37492f4f8e0914e4b942d99c688979807d6867c10913fe300d06092a864886f70d01010b0500038201010034322f68134096634077643dc926bc7e6a5698f12b8890c68dd50d8d5c6a111ff22d000d9c1b16649563540651f2d5322c5c12d762aea8a4dbb17474005c578195909e5a04d3b6484c2e7791f3aa9aff121a61fc0a833b0dcd50618640f3ce9b02be33de6cd79f7ba9b180a638c849c8138d865fc40fb7dc9023f73066d1fac19f0f4e648df1ad0d21e060ee66671c7c391e147572568b3f84d09cf4c7a29bdda597b2dda077f70af1aef155bb8c0cbe45fef1b450f8a824e439bcdc062f5beafa6ccf74419bea3219fffa950d58794d203f4eee9e8700af29776df1ad6134cb6ce520d0c36243df4cbf54e5e05ba1c7feadfe452cf00b367e795d282ad937cc), CertificateDer(0x308204db308202c3a003020102021100a20253f15f2691c05dc1ce13b9bcca4e300d06092a864886f70d01010b0500302e310b3009060355040613025553310d300b060355040a1304495352473110300e06035504031307526f6f74205952301e170d3235303930333030303030305a170d3238303930323233353935395a3033310b300906035504061302555331163014060355040a130d4c6574277320456e6372797074310c300a0603550403130359523130820122300d06092a864886f70d01010105000382010f003082010a0282010100a158bc5f6c42620317bc9c4d3caa7fa05d7750c8263c0041d3b5422cd0eda179adf65b8464d252055d745724f53f3e8b0fc66ad5dda0738dd6365d40751ae3e2c1276b36ce8b3d273e9986069da1ba2e3da19b43218eb074a799022e416cd536d021fa45204130b490f5c5eb1fc77176fe0f009e39b2c18c2faf14484dc1b230b66ba70037d2f90a05d52108b9b5f3624cfa05659dd2d0e957a8b9a6b5d57de6e75601be5be9efc5e3d0e20ac1f4634d0083bd815486f5873ca798a7be5f49844414edb1bdc1c26a55f62a5e06330ba11fc3f5c1f11d0096a22e654e65f0634d79279ac67a5cf59d98c9bb1736922a1a5f6f572419e13243f9df5ad2746e6e330203010001a381ee3081eb300e0603551d0f0101ff04040302018630130603551d25040c300a06082b0601050507030130120603551d130101ff040830060101ff020100301d0603551d0e041604141f2f35be461482cd40b1ae792c5578faf7d468fb301f0603551d23041830168014dee75b60d0226d40287d3f0d01fea4b552b45194303206082b0601050507010104263024302206082b060105050730028616687474703a2f2f79722e692e6c656e63722e6f72672f30130603551d20040c300a3008060667810c01020130270603551d1f0420301e301ca01aa0188616687474703a2f2f79722e632e6c656e63722e6f72672f300d06092a864886f70d01010b05000382020100d3ecef32ade41e283575d4e69a6f9189b4ebf7f4695fb9386ee6a730c46a6d5ff222f3fcdb30073779af6b0f9c012b95b1da5dd2292386be219e12502d03b33a9d9c70aaec746380828d2f75d78848502a116115e25994337bc517bf7aba9f9b4a0989d6ee91ba90c23310e017c33778bbc6ba3e8bd25bb7ce44342ae40b9cac4bb41d2842a9f521d8390aeb86a4cbd0ce4dbd3dadc3fea1eeadcd0420cf52c6e910b89aaaeb7971b18c9140553cc8c04e86ad70e4b6df696351af3d6e92539f23fa589006f613631366b00c4240481364bc26dd45f2045cf7aa3fc4eb2b82f4a46bce008ac5fac6ad65cf567b8c6beb9d77384cc723c594e38936a285c608d492176622ed10c4826b997772ef1859deb374b45096a45d725563b907cd1dac1127a1969642b4409a2c8af4cac1d070dcac44b731a8f323071116eccb9ee03f55171ce31c9996100b482dc91dd2c5f7a720cfccc42dc86b662969bfe443f0939e5227d8a4392540ba358ac609b84537d6e9e652894ad1300949cba67b5cad79395d50c236fff94725a945386418e57b19eb4a910d2a018f210b358aea8aa70210d972395855d59fa8ec370c8397e840cd06002a1daad1571c85f5065d39a5d2c8f274b9e0f6058244060682190f2b01a53f41cd76dd5e4b4d70d95b809cb0f043ca1cb8bfe73c842940cb0fc890995f06ac41f43fbfc2f20c1e0102678a6d3faa), CertificateDer(0x308205f4308203dca003020102021100f24b6d17f9d9ad7cb1c9fea78782699f300d06092a864886f70d01010b0500304f310b300906035504061302555331293027060355040a1320496e7465726e65742053656375726974792052657365617263682047726f7570311530130603550403130c4953524720526f6f74205831301e170d3236303531333030303030305a170d3332303930323233353935395a302e310b3009060355040613025553310d300b060355040a1304495352473110300e06035504031307526f6f7420595230820222300d06092a864886f70d01010105000382020f003082020a0282020100dbc626737bf024c97562f7f9e19fb0b3794eb34126cf951fd8515ea45bc31bbdb06362074043d5f70ec5b494402248335c44d770dbfb90b0d70d2cd04058b2fb883ffea3a05d30f1cb8899b811d4e1a061b490e0ea7323e0c6f121ae4e5704f3bdce092fa4877b2b968eaf978dcce4e260e007a8d6c7c7a7a913243a0888504d24063e38a7d7fc552f60aba18d3fa7a38f659aa9aea52048e4f901422aab106b56539bb153f7105871aef234a3141ce766abdb34f2cc5cc2c5c426f75937eb2415d78eabd61bebf86e3cf18e3780b4e954eea6ab443bcd3b202e4182e59fdd3833e7da2b1f219cb0a9275e59a9a12070d958fbd30c59c0b9caf2f60368f797dfb66ee820657f9d384f75cd898875ac13bd266e56f95b46b0252f1201ea9c0c0639de5c28d843cfb70420a3b2c6d2369654de14dc0437617c09440e562bea911ab6731d9834f906a9ca0bdd9b7741213357db2c78a82dc70b0ae89ebd3f1990f859aeaecc8a2ee035701c504011f3e97361a97ef734e0ec2e4300bc9539e1bf0aa7d100c9f52921c247435203a3fcb67fe619196709cb79aed5422e7572495a54e87d6a1a0dc38133aeb247fc79a85332261b2397b33c998ee5eaed6a5b24435bada7be3e783cbdd8f2387ed1ca4dbabd216847e1864a8775a724422dfa842f95865b63cb6912ba0aac507a3c51b3ac9203472b6ce07aafb87e764458f6ceffc10203010001a381eb3081e8300e0603551d0f0101ff04040302010630130603551d25040c300a06082b06010505070301300f0603551d130101ff040530030101ff301d0603551d0e04160414dee75b60d0226d40287d3f0d01fea4b552b45194301f0603551d2304183016801479b459e67bb6e5e40173800888c81a58f6e99b6e303206082b0601050507010104263024302206082b060105050730028616687474703a2f2f78312e692e6c656e63722e6f72672f30130603551d20040c300a3008060667810c01020130270603551d1f0420301e301ca01aa0188616687474703a2f2f78312e632e6c656e63722e6f72672f300d06092a864886f70d01010b050003820201003cb29488f7928a7e7d96e863260e91c12523da2dbb12dd6f777228c909109801cd5fb0980bd4520bec2d02f5e70f39d7300767e2d03936a7de23f624c90b19ade4215228b456c275d3d8c3125dec55c6aa1507bf417563f155711391599efea61202e2951e1e4fb3ee418b1826c12d4992348073e31fad46cdb2c5441271f468488087eae8b570152523ff61eecb24f1300fd0d61bbdaf5566e101cb8e7f938b8f3e7b0ad93b320407ca767bf8f94726d6a3ae809a21bb42afab5c659680c14426fa3432796755fb686ff5d78e60598a790ca38dc4ab37935a76bc3e2fd0d924b6c0d47a9e36f2e1060aa93f47ef26ad8de84b43e7be0de9e308eee32c2539e38b6503cfd7a5e572d2bfd7ea24cb8342d6156f6a133682a9a14aa1c4f542d1aab8786e4c112688767f1be5919249e0092cc1d796311d94dcdafa771f92f8979353ce2e79c576fc7cfe093a337ef859b2d6157c3c375e3507f465fed20d19f9754f13888aab6231890bd3645219bd64ab7e012fd34f3f6ef344632e1c69f34b784522b4537cac6bcd467d473416cc41b72ba7c9debda7a9296d91ecad8acf43201a0563d5665728cb33bd43322fb2d7e4d1489542944330bc0e322fefbbabd5d9c79af9c014560789104ca1f9ab2a199c3c3b8a2ba1d65203c83171f2bee2f6f2095391d2de6a192e461600e8a531a57d379e80f4181be9d35c1e4be0dcda1a60)])
+       Debug [ureq_proto::client] Call<RecvResponse>
+       Debug [ureq_proto::client] Call<RecvBody>
+       Debug [ureq::run] Response { status: 200, version: HTTP/1.1, headers: {"connection": "keep-alive", "content-length": "34304", "server": "Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0", "date": "Fri, 13 Nov 2026 11:33:54 GMT", "content-type": "application/octet-stream", "<NOTICE>": "18 HEADERS ARE REDACTED"} }
+       Debug [ureq_proto::client] Call<Cleanup>
+       Debug [ureq::pool] Return to pool: PoolKey { scheme: "https", authority: release-assets.githubusercontent.com, proxy: None }
+        Info [tauri_bundler::utils::http_utils] validating hash
+        Info [tauri_bundler::bundle::windows::nsis] Target: x64
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("compression")], "compression")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("compression")], "compression")))
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("signed_plugins_path"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "if", params: [PathAndJson { relative_path: Some("installer_hooks"), value: Context(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\windows\\installer-hooks.nsh"), ["installer_hooks"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("installer_hooks")], "installer_hooks")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("manufacturer")], "manufacturer")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("product_name")], "product_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version")], "version")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("version_with_build")], "version_with_build")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("homepage")], "homepage")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("install_mode")], "install_mode")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("license")], "license")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("installer_icon")], "installer_icon")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("sidebar_image")], "sidebar_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("header_image")], "header_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_icon")], "uninstaller_icon")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_header_image")], "uninstaller_header_image")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_name")], "main_binary_name")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("main_binary_path")], "main_binary_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("bundle_id")], "bundle_id")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("copyright")], "copyright")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("out_file")], "out_file")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("arch")], "arch")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("additional_plugins_path")], "additional_plugins_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("allow_downgrades")], "allow_downgrades")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("display_language_selector")], "display_language_selector")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("install_webview2_mode")], "install_webview2_mode")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_installer_args")], "webview2_installer_args")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_bootstrapper_path")], "webview2_bootstrapper_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("webview2_installer_path")], "webview2_installer_path")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("minimum_webview2_version")], "minimum_webview2_version")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("uninstaller_sign_cmd")], "uninstaller_sign_cmd")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("estimated_size")], "estimated_size")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("start_menu_folder")], "start_menu_folder")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("languages"), value: Context(Array [String("English")], ["languages"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("language_files"), value: Context(Array [String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\target\\release\\nsis\\x64\\English.nsh")], ["language_files"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources_dirs"), value: Context(Array [String("resources"), String("runtime-bundle")], ["resources_dirs"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources"), value: Context(Object {"C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\LICENSE": Array [String("resources"), String("resources\\LICENSE")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\THIRD-PARTY-NOTICES.txt": Array [String("resources"), String("resources\\THIRD-PARTY-NOTICES.txt")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\official-runtime.tgz": Array [String("runtime-bundle"), String("runtime-bundle\\official-runtime.tgz")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle.manifest.json")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle.manifest.sha256")]}, ["resources"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\LICENSE")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\THIRD-PARTY-NOTICES.txt")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\official-runtime.tgz")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json")) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "no-escape", params: [PathAndJson { relative_path: Some("@key"), value: Derived(String("C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256")) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Object {}, ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources"), value: Context(Object {"C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\LICENSE": Array [String("resources"), String("resources\\LICENSE")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\THIRD-PARTY-NOTICES.txt": Array [String("resources"), String("resources\\THIRD-PARTY-NOTICES.txt")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\official-runtime.tgz": Array [String("runtime-bundle"), String("runtime-bundle\\official-runtime.tgz")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle-0.2.24-win32-x64.tar.gz")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.json": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle.manifest.json")], "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\attempt01\\tauri\\resources\\runtime-bundle\\runtime-bundle.manifest.sha256": Array [String("runtime-bundle"), String("runtime-bundle\\runtime-bundle.manifest.sha256")]}, ["resources"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([Named("1")], "this.[1]")))
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("binaries"), value: Context(Object {}, ["binaries"]) }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("file_associations"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("deep_link_protocols"), value: Missing }], hash: {}
+       Debug [handlebars::render] Rendering helper: "each", params: [PathAndJson { relative_path: Some("resources_ancestors"), value: Context(Array [String("resources"), String("runtime-bundle")], ["resources_ancestors"]) }], hash: {}
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+       Debug [handlebars::render] Rendering value: Path(Relative(([], "this")))
+     Running [tauri_bundler::bundle::windows::nsis] makensis to produce C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\bundle\nsis\OpenCodeX Desktop_0.2.24_x64-setup.exe
+     Running [tauri_bundler::utils] Command `C:\Users\15119\AppData\Local\tauri\NSIS\makensis.exe  -INPUTCHARSET UTF8 -OUTPUTCHARSET UTF8 -V4 C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\nsis\x64\installer.nsi`
+    Finished [tauri_bundler::bundle] 2 bundles at:
+        C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\bundle\msi\OpenCodeX Desktop_0.2.24_x64_en-US.msi
+        C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\target\installer-w1\attempt01\tauri\target\release\bundle\nsis\OpenCodeX Desktop_0.2.24_x64-setup.exe
+

@@ -1,0 +1,7 @@
+Where-Object: C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native\verify-msi-paths.ps1:22
+Line |
+  22 |  … eport.files|Where-Object {($_[2] -split '[|]')[-1] -ceq $name}).Count …
+     |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | Cannot index into a null array.
+
+

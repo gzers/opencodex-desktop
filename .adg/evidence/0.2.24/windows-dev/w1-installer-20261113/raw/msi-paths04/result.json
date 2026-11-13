@@ -1,0 +1,293 @@
+{
+  "scope": "read-only native MSI database and costing; no installation",
+  "passed": true,
+  "installed": false,
+  "cells": [
+    {
+      "expected": "C:\\Users\\15119\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+      "resolved": "C:\\Users\\15119\\AppData\\Local\\Programs\\OpenCodeX Desktop",
+      "actions": [
+        {
+          "result": 1,
+          "action": "CostInitialize"
+        },
+        {
+          "result": 1,
+          "action": "FileCost"
+        },
+        {
+          "result": 1,
+          "action": "CostFinalize"
+        }
+      ],
+      "directoryCreated": false,
+      "mode": "default"
+    },
+    {
+      "expected": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\msi-paths04\\custom 空格\\Desktop",
+      "resolved": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\installer-w1\\msi-paths04\\custom 空格\\Desktop",
+      "actions": [
+        {
+          "result": 1,
+          "action": "CostInitialize"
+        },
+        {
+          "result": 1,
+          "action": "FileCost"
+        },
+        {
+          "result": 1,
+          "action": "CostFinalize"
+        }
+      ],
+      "directoryCreated": false,
+      "mode": "custom"
+    }
+  ],
+  "directories": [
+    [
+      "DesktopFolder",
+      "TARGETDIR",
+      "Desktop"
+    ],
+    [
+      "INSTALLDIR",
+      "OCX023ProgramsFolder",
+      "rhmznbei|OpenCodeX Desktop"
+    ],
+    [
+      "OCX023Documents",
+      "INSTALLDIR",
+      "8szy3xz3|resources"
+    ],
+    [
+      "OCX023RuntimeBundle",
+      "INSTALLDIR",
+      "fhicv23u|runtime-bundle"
+    ],
+    [
+      "ApplicationProgramsFolder",
+      "ProgramMenuFolder",
+      "ex_0dksl|OpenCodeX Desktop"
+    ],
+    [
+      "TARGETDIR",
+      "",
+      "SourceDir"
+    ],
+    [
+      "OCX023ProgramsFolder",
+      "LocalAppDataFolder",
+      "Programs"
+    ],
+    [
+      "LocalAppDataFolder",
+      "TARGETDIR",
+      "."
+    ],
+    [
+      "ProgramMenuFolder",
+      "TARGETDIR",
+      "."
+    ]
+  ],
+  "files": [
+    [
+      "Path",
+      "Path",
+      "ocxd.exe",
+      "5705728"
+    ],
+    [
+      "OCX023License",
+      "OCX023Documents",
+      "LICENSE",
+      "1083"
+    ],
+    [
+      "OCX023Notices",
+      "OCX023Documents",
+      "jge1clcv.txt|THIRD-PARTY-NOTICES.txt",
+      "1483"
+    ],
+    [
+      "OCX023RuntimeArchive",
+      "OCX023RuntimeBundle",
+      "kh0m4ouk.gz|runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "274033721"
+    ],
+    [
+      "OCX023RuntimeSource",
+      "OCX023RuntimeBundle",
+      "xgz46bsu.tgz|official-runtime.tgz",
+      "19923693"
+    ],
+    [
+      "OCX023RuntimeManifest",
+      "OCX023RuntimeBundle",
+      "zy75hcbj.jso|runtime-bundle.manifest.json",
+      "2169800"
+    ],
+    [
+      "OCX023RuntimePin",
+      "OCX023RuntimeBundle",
+      "iqeae2u0.sha|runtime-bundle.manifest.sha256",
+      "66"
+    ]
+  ],
+  "components": [
+    [
+      "ApplicationShortcutDesktop",
+      "DesktopFolder",
+      "regA49F638B26843C58BDE27A4322C2E8E4"
+    ],
+    [
+      "RegistryEntries",
+      "INSTALLDIR",
+      "reg7D6DE2C3AEA13D16E8792B0AE2AA807A"
+    ],
+    [
+      "Path",
+      "INSTALLDIR",
+      "regAC034558D476A4995DAB1A45CDB19347"
+    ],
+    [
+      "OCX023Documents",
+      "OCX023Documents",
+      "regF771F37A59FA47283BC4DCFA8532E592"
+    ],
+    [
+      "OCX023RuntimeBundle",
+      "OCX023RuntimeBundle",
+      "regB0310E123D28A6329B62AA7C25D05684"
+    ],
+    [
+      "CMP_UninstallShortcut",
+      "INSTALLDIR",
+      "reg5FE66DAD0B80D5719819081178C75141"
+    ],
+    [
+      "ApplicationShortcut",
+      "ApplicationProgramsFolder",
+      "reg84CFB6BD6B837AD73CFED6CE85A4F209"
+    ]
+  ],
+  "properties": [
+    [
+      "UpgradeCode",
+      "{77EAF3E9-84DF-48E4-B493-A267AB705070}"
+    ],
+    [
+      "WIXUI_EXITDIALOGOPTIONALCHECKBOX",
+      "1"
+    ],
+    [
+      "WIXUI_INSTALLDIR",
+      "INSTALLDIR"
+    ],
+    [
+      "WixUIRMOption",
+      "UseRM"
+    ],
+    [
+      "ARPNOMODIFY",
+      "1"
+    ],
+    [
+      "ARPNOREPAIR",
+      "yes"
+    ],
+    [
+      "REINSTALLMODE",
+      "amus"
+    ],
+    [
+      "ARPPRODUCTICON",
+      "ProductIcon"
+    ],
+    [
+      "WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT",
+      "Launch OpenCodeX Desktop"
+    ],
+    [
+      "Manufacturer",
+      "gzers"
+    ],
+    [
+      "ProductCode",
+      "{7A855739-78F8-4558-AF6C-61D6F383281D}"
+    ],
+    [
+      "ProductLanguage",
+      "1033"
+    ],
+    [
+      "ProductName",
+      "OpenCodeX Desktop"
+    ],
+    [
+      "ProductVersion",
+      "0.2.24"
+    ],
+    [
+      "DefaultUIFont",
+      "WixUI_Font_Normal"
+    ],
+    [
+      "WixUI_Mode",
+      "InstallDir"
+    ],
+    [
+      "ErrorDialog",
+      "ErrorDlg"
+    ],
+    [
+      "SecureCustomProperties",
+      "ARPNOREPAIR;AUTOLAUNCHAPP;INSTALLDIR;LAUNCHAPPARGS;WIX_UPGRADE_DETECTED"
+    ]
+  ],
+  "removeFiles": [
+    [
+      "DesktopFolder",
+      "ApplicationShortcutDesktop",
+      "",
+      "DesktopFolder",
+      "2"
+    ],
+    [
+      "INSTALLDIR",
+      "CMP_UninstallShortcut",
+      "",
+      "INSTALLDIR",
+      "2"
+    ],
+    [
+      "ApplicationProgramsFolder",
+      "ApplicationShortcut",
+      "",
+      "ApplicationProgramsFolder",
+      "2"
+    ],
+    [
+      "OCX023RemoveDocuments",
+      "OCX023Documents",
+      "",
+      "OCX023Documents",
+      "2"
+    ],
+    [
+      "OCX023RemoveRuntimeBundle",
+      "OCX023RuntimeBundle",
+      "",
+      "OCX023RuntimeBundle",
+      "2"
+    ],
+    [
+      "OCX023RemovePrograms",
+      "CMP_UninstallShortcut",
+      "",
+      "OCX023ProgramsFolder",
+      "2"
+    ]
+  ]
+}
