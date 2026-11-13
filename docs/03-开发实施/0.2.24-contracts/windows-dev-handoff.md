@@ -43,3 +43,11 @@ Mac可审查净diff main0828a3955..b2e89665d。第一批曾误含编译产物，
 独立原生宿主process目标7项通过，包含两个不同合成目录的三变量真实子进程读回、参数/挂起窗口、旧SID/PID/FILETIME/HOME反例及受影响进程回归；fmt/clippy exit0。执行为提交前相同源码，SHA256和原始日志位于.adg/evidence/0.2.24/windows-dev/w1-profile-20261113/。Python编辑预检曾因GBK默认解码失败，尚无文件变更；仅工具输出可核，不重造stderr。原生测试无首错。
 
 本轮PID115732测试目录已清理；历史4个W0失败目录保持原事实，未将其记为本轮成功清理。共享接线建议：将ProcessContext.environment_policy.home传user_profile，opencodex_home传独立同名参数；RootBinding.home仍表示实例H。产品调用/完整官方链和W2未执行。下批为PATH原语和安装器资源；不改TEAM/IMP/共享索引，不发布。
+
+## 2026-11-13 W1第二批：当前用户PATH原语
+
+代码4269e4499已推送，新增windows_cli024.rs并由独立宿主path引用；产品父mod/共享事务未改。r1三个公开Rust函数保留原类型、UTF-16原字节及缺失，REG_SZ/EXPAND_SZ以外、奇数字节、非单终止/非法UTF-16和超过256KiB拒绝；当前TokenUser的Global SID互斥验owner/受保护DACL/原句柄，2秒等待、遗弃/未知拒绝；HKCU固定Environment/Path，拒绝线程模拟，expected完整相符后写并读回，不对外部变化做回滚。不用setx/HKLM、无PATH清洗、无新JSON。WM_SETTINGCHANGE/Environment使用1000ms每接收窗口有界调用，非整个桌面统一1000ms；不承诺已启动终端环境更新。
+
+attempt01原生7项通过，clippy首错manual_is_multiple_of及chunks_exact_to_as_chunks，原日志保留。修正后attempt02定向8项、fmt/clippy全exit0：真实类型/字节/缺失还原、错误expected、错误类型/长度/终止/超限、只读句柄拒绝、外部写后变化保持、同SID双进程一成功一冲突、未知/遗弃互斥拒绝、自己窗口通知/失效窗口错误/挂起窗口1014ms失败；日常PATH前后相同且只读，无输出完整PATH。测试子键逐个删除读回，残留清单为空；窗口/句柄/子进程已释放。.adg/evidence/0.2.24/windows-dev/w1-path-20261113/保存两次不可覆盖日志及来源摘要。
+
+最小共享接线：Mac注册windows_cli024并在terminal_cli现有确认/恢复事务中调用read/replace/notify，明确记录写后失败的未知后像；desired=None仅由共享精确撤销允许。当前不是用户终端启用/撤销/卸载整链通过。未改官方2.99/日常配置，不跑r5/W2、不发布。

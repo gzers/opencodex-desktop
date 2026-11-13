@@ -1,0 +1,62 @@
+{
+  "date": "2026-11-13",
+  "scope": "current TokenUser PATH native primitives only",
+  "baseline": "cbc6174de",
+  "sourceCommit": "4269e44993c135c96eb7e8a9c065d53c4ce56e61",
+  "actualExecution": "attempt02 ran final source bytes before commit",
+  "attempt01": {
+    "firstError": "manual_is_multiple_of at windows_cli024.rs:82, then chunks_exact_to_as_chunks:88",
+    "rawLog": "attempt01/clippy.stderr.log",
+    "nativeTests": 7,
+    "testExit": 0,
+    "clippyExit": 101,
+    "fmtExit": 0
+  },
+  "attempt02": {
+    "hungWindowElapsedMs": 1014,
+    "clippyExit": 0,
+    "testExit": 0,
+    "nativeTests": 8,
+    "fmtExit": 0
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "session": 2,
+  "elevated": false,
+  "commands": [
+    "cargo test --manifest-path test/windows024-native/Cargo.toml --locked --offline --lib windows_cli024:: -- --test-threads=1 --nocapture",
+    "cargo fmt --manifest-path test/windows024-native/Cargo.toml -- --check",
+    "cargo clippy --manifest-path test/windows024-native/Cargo.toml --locked --offline --all-targets -- -D warnings"
+  ],
+  "sourceFiles": [
+    {
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_cli024.rs"
+    },
+    {
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d",
+      "path": "test/windows024-native/Cargo.toml"
+    },
+    {
+      "sha256": "beaa37885b3397269929b8fb2b7a71119916ff4b225930bdaaee3d2a61a4ff11",
+      "path": "test/windows024-native/lib.rs"
+    }
+  ],
+  "cleanup": {
+    "dailyPathComparedBeforeAfter": true,
+    "privateTestKeysRemaining": [],
+    "originalHandlesClosed": true,
+    "privateKeysRestoredToMissing": true,
+    "dailyPathWritten": false,
+    "testWindowsDestroyed": true
+  },
+  "limitations": [
+    "cooperating per-SID mutex only; registry offers no CAS against external writers",
+    "SendMessageTimeout 1000ms per recipient, not a global all-window deadline",
+    "actual private-subkey mutations only; production Environment Path unchanged",
+    "public broadcast uses identical native helper; tests target own windows only"
+  ],
+  "productIntegrated": false,
+  "terminalLifecycleAccepted": false,
+  "W2Executed": false,
+  "released": false
+}

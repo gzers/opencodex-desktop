@@ -1,0 +1,19 @@
+
+running 7 tests
+test windows_cli024::tests::bounded_notification_and_invalid_window_failure ... real WM_SETTINGCHANGE to own window and invalid-window refusal; daily PATH unchanged
+ok
+test windows_cli024::tests::child_replace ... ok
+test windows_cli024::tests::concurrent_same_sid_processes_get_one_expected_conflict ... two actual same-SID processes: one write, one expected conflict
+private fixture key deleted and absence read back
+ok
+test windows_cli024::tests::exact_raw_types_missing_restore_and_wrong_expected ... native REG_EXPAND_SZ/REG_SZ and byte-for-byte expected/absence restore passed; no PATH logged
+private fixture key deleted and absence read back
+ok
+test windows_cli024::tests::malformed_and_oversize_values_refused_without_normalizing ... private fixture key deleted and absence read back
+ok
+test windows_cli024::tests::permission_unknown_and_external_postwrite_change_are_not_success ... private fixture key deleted and absence read back
+ok
+test windows_cli024::tests::unreadable_or_abandoned_mutex_is_unknown ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.04s
+
