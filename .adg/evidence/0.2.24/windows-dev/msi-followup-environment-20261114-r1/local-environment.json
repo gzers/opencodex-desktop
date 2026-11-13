@@ -1,0 +1,76 @@
+{
+  "observedAt": "2026-11-14T07:34:14.6459094+08:00",
+  "scope": "read-only current host capability facts; no MSI execution",
+  "commands": [
+    {
+      "command": "read-only Installer policy registry",
+      "result": {
+        "keyExists": false,
+        "hive": "LocalMachine",
+        "values": {},
+        "view": "Registry64"
+      }
+    },
+    {
+      "command": "read-only Installer policy registry",
+      "result": {
+        "keyExists": false,
+        "hive": "LocalMachine",
+        "values": {},
+        "view": "Registry32"
+      }
+    },
+    {
+      "command": "read-only Installer policy registry",
+      "result": {
+        "keyExists": false,
+        "hive": "CurrentUser",
+        "values": {},
+        "view": "Registry64"
+      }
+    },
+    {
+      "command": "read-only Installer policy registry",
+      "result": {
+        "keyExists": false,
+        "hive": "CurrentUser",
+        "values": {},
+        "view": "Registry32"
+      }
+    }
+  ],
+  "errors": [
+    {
+      "command": "Get-VM non-elevated",
+      "message": "你没有完成此任务所需的权限。请与计算机“EZIO-MINI”授权策略的管理员联系。"
+    }
+  ],
+  "token": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "elevated": false
+  },
+  "os": {
+    "Caption": "Microsoft Windows Server 2025 Datacenter",
+    "Version": "10.0.26100",
+    "BuildNumber": "26100",
+    "OSArchitecture": "64 位"
+  },
+  "sessionCount": 0,
+  "sshConfigExists": false,
+  "vmwareCommand": null,
+  "virtualBoxCommand": null,
+  "windowsSandboxCommand": null,
+  "package": {
+    "path": "C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/w1d-bundle01/tauri/target/release/bundle/msi/OpenCodeX W1D Proof_0.2.24_x64_en-US.msi",
+    "sha256": "9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282",
+    "matchesContract": true,
+    "bytes": 316784640
+  },
+  "accountsRemaining": 0,
+  "profilesRemaining": 0,
+  "policyChanged": false,
+  "accountsCreated": 0,
+  "msiExecutions": 0,
+  "terminalTestsExecuted": 0,
+  "officialTestsExecuted": 0
+}

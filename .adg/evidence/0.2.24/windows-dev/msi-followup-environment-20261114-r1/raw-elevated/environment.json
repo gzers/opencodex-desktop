@@ -1,0 +1,79 @@
+{
+  "at": "2026-11-14T07:33:20.4659167+08:00",
+  "scope": "read-only environment capability inspection, no VM start/create/change, no MSI execution",
+  "commands": [
+    {
+      "command": "read-only Installer machine policy",
+      "result": {
+        "keyExists": false,
+        "values": {},
+        "view": "Registry64"
+      }
+    },
+    {
+      "command": "read-only Installer machine policy",
+      "result": {
+        "keyExists": false,
+        "values": {},
+        "view": "Registry32"
+      }
+    },
+    {
+      "command": "Get-VM",
+      "succeeded": true,
+      "count": 0
+    },
+    {
+      "command": "wsl --list --verbose",
+      "exitCode": -1
+    },
+    {
+      "command": "docker context ls",
+      "exitCode": 0
+    },
+    {
+      "command": "docker --context default info",
+      "exitCode": 0
+    }
+  ],
+  "errors": [],
+  "policyChanged": false,
+  "token": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+    "elevated": true
+  },
+  "os": {
+    "Caption": "Microsoft Windows Server 2025 Datacenter",
+    "Version": "10.0.26100",
+    "BuildNumber": "26100",
+    "OSArchitecture": "64 位"
+  },
+  "services": [
+    {
+      "Name": "sshd",
+      "Status": 1,
+      "StartType": 3
+    },
+    {
+      "Name": "vmcompute",
+      "Status": 4,
+      "StartType": 3
+    },
+    {
+      "Name": "vmms",
+      "Status": 4,
+      "StartType": 2
+    },
+    {
+      "Name": "WinRM",
+      "Status": 4,
+      "StartType": 2
+    }
+  ],
+  "virtualMachines": [],
+  "vmHost": {
+    "VirtualMachinePath": "D:\\Server\\Hyper-V\\Config",
+    "VirtualHardDiskPath": "D:\\Server\\Hyper-V\\VDisk"
+  },
+  "remoteSessions": []
+}

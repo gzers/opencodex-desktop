@@ -1,0 +1,70 @@
+{
+  "scope": "environment capability readback only; no suitable available isolated Windows environment was found in bounded local/tool inventories",
+  "terminalTestsRerun": 0,
+  "contract": "windows-w1d-receive-msi-followup-r1",
+  "installScopeChanged": false,
+  "published": false,
+  "officialReadsRerun": 0,
+  "allAccepted": false,
+  "testFirstError": null,
+  "remaining": "provide an already permitted isolated Windows test machine/VM with ordinary-user per-user MSI allowed; then run only exact package install prerequisite plus the two real uninstall transactions",
+  "policyChanged": false,
+  "environment": {
+    "sshTestTargetConfigExists": false,
+    "os": {
+      "Caption": "Microsoft Windows Server 2025 Datacenter",
+      "Version": "10.0.26100",
+      "BuildNumber": "26100",
+      "OSArchitecture": "64 位"
+    },
+    "dockerContexts": [
+      "default npipe:////./pipe/docker_engine",
+      "desktop-linux npipe:////./pipe/dockerDesktopLinuxEngine"
+    ],
+    "dockerDefaultOsType": "linux",
+    "vmwareCommand": null,
+    "remotePowerShellSessionCount": 0,
+    "previousEffectivePolicy": "previous out03 actual MSI log: DisableMsi=1, 1625; retained as historical observation only",
+    "currentInstallerRegistryReadback": "HKLM and current HKCU policy key absent in both registry views; absence is not a measured successful MSI admission",
+    "currentHostIsolation": "physical Windows Server host, not a disposable prepared test machine",
+    "hyperVRegisteredVMs": [],
+    "virtualBoxCommand": null,
+    "hyperVInventorySucceeded": true,
+    "wsl": "no installed distributions",
+    "sandboxCommand": null,
+    "inventoryLimit": "local registered VM/tool/session inventory only, no network scanning, credentials, external host discovery or provisioning"
+  },
+  "environmentReady": false,
+  "dailyConfigurationModified": false,
+  "msiExecutions": 0,
+  "failedMsiUninstallRetention": {
+    "reason": "same installation/environment prerequisite missing",
+    "status": "not-executed"
+  },
+  "officialModified": false,
+  "requestedDocs": "932c3360c",
+  "teamRevision": 9,
+  "package": {
+    "path": "C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/w1d-bundle01/tauri/target/release/bundle/msi/OpenCodeX W1D Proof_0.2.24_x64_en-US.msi",
+    "sha256": "9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282",
+    "matchesContract": true,
+    "bytes": 316784640
+  },
+  "date": "2026-11-14",
+  "dualSidExecuted": false,
+  "timezone": "Asia/Shanghai",
+  "newAccountsCreated": 0,
+  "firstError": {
+    "result": "access denied",
+    "resolved": "elevated read-only Get-VM succeeded, zero VMs",
+    "phase": "read-only environment inventory",
+    "command": "Get-VM in non-elevated token"
+  },
+  "normalMsiUninstall": {
+    "reason": "allowed ordinary-user per-user MSI isolated environment not available",
+    "status": "not-executed"
+  },
+  "requestedMain": "fd2538e4d",
+  "testTokenElevated": false,
+  "W2Executed": false
+}
