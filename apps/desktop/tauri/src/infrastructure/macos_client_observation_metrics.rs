@@ -14,6 +14,24 @@ thread_local! {static SCOPE_REFERENCE:std::cell::Cell<bool>=const {std::cell::Ce
 thread_local! {static DESCENDANT_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
 thread_local! {static ROOT_METADATA_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
 thread_local! {static XATTR_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+thread_local! {static LEASE_DIRECTORIES_REFERENCE:std::cell::Cell<bool>=const {std::cell::Cell::new(false)};}
+pub(crate) fn lease_directories_reference_enabled() -> bool {
+    LEASE_DIRECTORIES_REFERENCE.with(|v| v.get())
+}
+pub(crate) fn lease_directories_reference<T>(action: impl FnOnce() -> T) -> T {
+    struct Reset;
+    impl Drop for Reset {
+        fn drop(&mut self) {
+            LEASE_DIRECTORIES_REFERENCE.with(|v| v.set(false));
+        }
+    }
+    LEASE_DIRECTORIES_REFERENCE.with(|v| {
+        assert!(!v.get());
+        v.set(true);
+    });
+    let _reset = Reset;
+    action()
+}
 pub(crate) fn xattr_reference_enabled() -> bool {
     XATTR_REFERENCE.with(|v| v.get())
 }

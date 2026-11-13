@@ -63,9 +63,20 @@ impl NativeLease {
         }
         let physical = self.physical_client.borrow();
         let client = physical.as_ref().unwrap_or(&self.client);
-        client.recheck().map_err(io)?;
-        self.profile.recheck().map_err(io)?;
-        self.home.recheck().map_err(io)?;
+        #[cfg(test)]
+        let reference=crate::infrastructure::macos_client_originals::observation_metrics::lease_directories_reference_enabled();
+        #[cfg(not(test))]
+        let reference = false;
+        if reference {
+            client.recheck().map_err(io)?;
+            self.profile.recheck().map_err(io)?;
+            self.home.recheck().map_err(io)?;
+        } else {
+            // Metadata-only admission of all three roots. All saved inode and
+            // complete Protection expectations remain, with two fresh full
+            // path/fd passes before claim, pin or owner receipt observations.
+            PinnedDirectory::recheck_set(&[client, &self.profile, &self.home]).map_err(io)?;
+        }
         let ofd = self.claim_mode.get() == ClaimMode::Ofd;
         if self.claim_mode.get() == ClaimMode::HandoffPending {
             return Err(fail("client_native_coordination_handoff_pending"));

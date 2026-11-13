@@ -72,6 +72,97 @@ impl Fixture {
         }
     }
 }
+#[test]
+fn native_lease_directory_union_keeps_complete_checks_and_all_four_locks() {
+    use crate::infrastructure::macos_client_originals::observation_metrics as metrics;
+    let f = Fixture::new();
+    let mut lease = acquire(
+        &f.context,
+        &f.record,
+        Instant::now() + Duration::from_secs(10),
+        &|_| Ok(()),
+    )
+    .unwrap();
+    let mut rows = Vec::new();
+    for reference in [true, false, false, true] {
+        let start = Instant::now();
+        let (result, counts) = metrics::measure(|| {
+            if reference {
+                metrics::lease_directories_reference(|| lease.check())
+            } else {
+                lease.check()
+            }
+        });
+        result.unwrap();
+        rows.push(serde_json::json!({"reference":reference,"elapsedNanos":start.elapsed().as_nanos(),"metrics":counts}));
+    }
+    let old = rows[0]["metrics"]["protection"]["calls"].as_u64().unwrap();
+    let new = rows[1]["metrics"]["protection"]["calls"].as_u64().unwrap();
+    assert!(new < old);
+    assert_eq!(rows[2]["metrics"]["protection"]["calls"], new);
+    assert_eq!(rows[3]["metrics"]["protection"]["calls"], old);
+    external_probe(&f.record.paths, true);
+    lease.release().unwrap();
+    external_probe(&f.record.paths, false);
+    println!(
+        "NATIVE_LEASE_DIRECTORY_COMPARISON {}",
+        serde_json::json!({"accepted":false,"samples":rows,"fourLocksHeldThenNormallyReleased":true,"scope":"real owned SQLite lease and metadata only; no official service, client mutation or Stop budget acceptance"})
+    );
+}
+#[test]
+fn native_lease_directory_union_preserves_all_root_security_and_replacement_refusals() {
+    use crate::infrastructure::macos_client_originals::observation_metrics as metrics;
+    for root in ["client", "profile", "home"] {
+        for mutation in ["mode", "xattr", "replacement"] {
+            let f = Fixture::new();
+            let mut lease = acquire(
+                &f.context,
+                &f.record,
+                Instant::now() + Duration::from_secs(10),
+                &|_| Ok(()),
+            )
+            .unwrap();
+            let path = match root {
+                "client" => &f.context.codex_home,
+                "profile" => &f.context.user_profile,
+                _ => &f.context.opencodex_home,
+            };
+            match mutation {
+                "mode" => fs::set_permissions(path, fs::Permissions::from_mode(0o755)).unwrap(),
+                "xattr" => {
+                    use std::os::unix::ffi::OsStrExt;
+                    let p = std::ffi::CString::new(path.as_os_str().as_bytes()).unwrap();
+                    let key = c"user.ocxd-lease-dir";
+                    assert_eq!(
+                        unsafe {
+                            libc::setxattr(p.as_ptr(), key.as_ptr(), b"x".as_ptr().cast(), 1, 0, 0)
+                        },
+                        0
+                    );
+                }
+                "replacement" => {
+                    let kept = path.with_file_name(format!(
+                        "retained-{}",
+                        path.file_name().unwrap().to_string_lossy()
+                    ));
+                    fs::rename(path, kept).unwrap();
+                    fs::DirBuilder::new().mode(0o700).create(path).unwrap();
+                }
+                _ => unreachable!(),
+            }
+            assert!(
+                metrics::lease_directories_reference(|| lease.check()).is_err(),
+                "{root}/{mutation}/old"
+            );
+            assert!(lease.check().is_err(), "{root}/{mutation}/new");
+            // Even a refused observation must not silently release the held locks.
+            for connection in &lease.connections {
+                assert!(!connection.is_autocommit());
+            }
+            lease.release().unwrap();
+        }
+    }
+}
 
 /// A separate real OS process probes SQLite, because another connection in the
 /// same process cannot prove fcntl exclusion against an official writer.

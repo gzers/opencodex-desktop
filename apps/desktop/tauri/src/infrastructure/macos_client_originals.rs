@@ -619,7 +619,7 @@ impl PinnedDirectory {
     /// path/inode/protection expectation; inspect each unique object twice
     /// instead of repeating it for every overlapping root. Conflicting pins
     /// are rejected before any evidence can be returned.
-    fn recheck_set(roots: &[&Self]) -> io::Result<()> {
+    pub(crate) fn recheck_set(roots: &[&Self]) -> io::Result<()> {
         Self::recheck_set_checked(roots, &|_| Ok(()))
     }
     fn recheck_set_checked(
