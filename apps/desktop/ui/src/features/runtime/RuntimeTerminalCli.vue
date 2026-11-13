@@ -20,7 +20,7 @@ const apply=()=>{if(!props.disabled)void terminal.apply()}
   <p v-if="busy" role="status">正在核对终端入口…</p>
   <p v-if="result" role="status">{{result}}</p>
   <template v-if="preview">
-   <dl class="terminal-facts"><dt>状态</dt><dd>{{preview.pending?'原操作尚未完成':preview.enabled?'已启用':'未启用'}}</dd><dt>命令位置</dt><dd><code>{{preview.commandPath}}</code></dd><dt>转交入口</dt><dd><code>{{preview.runtimeEntry}}</code></dd><dt v-if="preview.version">版本</dt><dd v-if="preview.version">{{preview.version}}</dd><dt>配置目录</dt><dd><code>{{preview.opencodexHome}}</code></dd><dt>PATH 配置</dt><dd><code v-for="path in preview.profilePaths" :key="path">{{path}}</code></dd></dl>
+   <dl class="terminal-facts"><dt>状态</dt><dd>{{preview.pending?'原操作尚未完成':preview.enabled?'已启用':'未启用'}}</dd><dt>命令位置</dt><dd><code>{{preview.commandPath}}</code></dd><dt>转交入口</dt><dd><code>{{preview.runtimeEntry}}</code></dd><dt v-if="preview.version">版本</dt><dd v-if="preview.version">{{preview.version}}</dd><dt>配置目录</dt><dd><code>{{preview.opencodexHome}}</code></dd><dt>PATH 配置</dt><dd><code v-for="path in preview.profilePaths" :key="path">{{path}}</code><span v-if="!preview.profilePaths.length">当前用户 PATH</span></dd></dl>
    <template v-if="preview.conflicts.length"><p class="model-error" role="alert">已有其它来源的 ocx 命令，未覆盖。请处理原命令后重新核对。</p><ul><li v-for="path in preview.conflicts" :key="path"><code>{{path}}</code></li></ul></template>
    <p v-else-if="!result">{{preview.action==='enable'?'仅更新当前用户的命令入口与必要的 PATH，完成后打开新终端生效。':'仅移除本应用登记的入口和 PATH 配置，其它终端内容保留。'}}</p>
   </template>
