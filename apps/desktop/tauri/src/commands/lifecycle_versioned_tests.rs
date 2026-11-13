@@ -664,6 +664,112 @@ model_provider = "openai"
         )
         .unwrap();
     let after_stop = indexed_after_stop.head().unwrap().unwrap();
+    if std::env::var_os("OCXD024_RETIRED_METADATA_FINALIZE").as_deref()
+        == Some(std::ffi::OsStr::new("1"))
+    {
+        use crate::infrastructure::macos_client_originals::session_index::{self, State};
+        assert_eq!(fresh_clients, "codex-absent");
+        assert!(
+            matches!(&stop,Ok(v) if v.result.is_none()&&v.client_recovery_required&&v.failure.is_some()&&v.lifecycle_state==ProcessLifecycleState::Stopped)
+        );
+        assert_eq!(after_stop.state, State::RootRetirementPrepared);
+        assert!(!client.exists());
+        report["retiredPendingBeforeFinalize"] = serde_json::to_value(&after_stop).unwrap();
+        let previous_events: Vec<serde_json::Value> = {
+            let c = indexed_after_stop.fixture_existing_connection().unwrap();
+            let mut statement = c
+                .prepare("SELECT document FROM events ORDER BY revision")
+                .unwrap();
+            statement
+                .query_map([], |row| row.get::<_, Vec<u8>>(0))
+                .unwrap()
+                .map(|r| serde_json::from_slice(&r.unwrap()).unwrap())
+                .collect()
+        };
+        drop(indexed_after_stop);
+        let preview = session_index::preview::inspect_preview(&context, &data);
+        assert!(preview.can_finalize && !preview.can_continue && !preview.can_rollback);
+        let request = session_index::finalization::Request {
+            attempt_id: preview.attempt_id.clone().unwrap(),
+            revision: preview.revision.unwrap(),
+            confirmation_digest: preview.confirmation_digest.clone().unwrap(),
+        };
+        report["retiredFinalizePreview"] = serde_json::to_value(&preview).unwrap();
+        write(&report);
+        let began = Instant::now();
+        let completed = session_index::finalization::finalize(&context, &data, request.clone());
+        report["retiredFinalizeElapsedMs"] = serde_json::json!(began.elapsed().as_millis());
+        report["retiredFinalizeOutcome"] = match &completed {
+            Ok(v) => serde_json::to_value(v).unwrap(),
+            Err(e) => serde_json::json!({"error":e.to_string()}),
+        };
+        write(&report);
+        let completed = completed.unwrap();
+        assert_eq!(completed.status, "restored");
+        assert_eq!(completed.revision, after_stop.revision + 1);
+        assert!(report["retiredFinalizeElapsedMs"].as_u64().unwrap() < 10000);
+        let index = session_index::Index::open_existing(&context, &data, &client).unwrap();
+        let closed = index.head().unwrap().unwrap();
+        assert_eq!(closed.state, State::RootAbsent);
+        assert_eq!(closed.revision, completed.revision);
+        let current_events: Vec<serde_json::Value> = {
+            let c = index.fixture_existing_connection().unwrap();
+            let mut statement = c
+                .prepare("SELECT document FROM events ORDER BY revision")
+                .unwrap();
+            statement
+                .query_map([], |row| row.get::<_, Vec<u8>>(0))
+                .unwrap()
+                .map(|r| serde_json::from_slice(&r.unwrap()).unwrap())
+                .collect()
+        };
+        assert!(current_events.starts_with(&previous_events));
+        report["retiredClosedAfterFinalize"] = serde_json::to_value(&closed).unwrap();
+        report["retiredFinalizeEvents"] = serde_json::json!(current_events);
+        capture("after-retired-finalize");
+        let final_artifacts: BTreeMap<_, _> = paths
+            .iter()
+            .map(|(name, path)| (*name, std::fs::read(path).ok() == before[*name]))
+            .collect();
+        assert!(final_artifacts.values().all(|v| *v));
+        report["retiredFinalizeOriginalArtifactsRestored"] = serde_json::json!(final_artifacts);
+        drop(index);
+        write(&report);
+        let began = Instant::now();
+        let duplicate =
+            session_index::finalization::finalize(&context, &data, request.clone()).unwrap();
+        assert_eq!(duplicate.revision, completed.revision);
+        assert_eq!(duplicate.status, "restored");
+        assert!(began.elapsed().as_millis() < 10000);
+        report["retiredDuplicateElapsedMs"] = serde_json::json!(began.elapsed().as_millis());
+        report["retiredDuplicateOutcome"] = serde_json::to_value(&duplicate).unwrap();
+        let index = session_index::Index::open_existing(&context, &data, &client).unwrap();
+        assert_eq!(index.head().unwrap(), Some(closed));
+        drop(index);
+        capture("after-retired-duplicate");
+        let duplicate_artifacts: BTreeMap<_, _> = paths
+            .iter()
+            .map(|(name, path)| (*name, std::fs::read(path).ok() == before[*name]))
+            .collect();
+        assert!(duplicate_artifacts.values().all(|v| *v));
+        report["retiredDuplicateOriginalArtifactsRestored"] =
+            serde_json::json!(duplicate_artifacts);
+        std::env::set_var("OCXD024_RETIRED_DRIFT_AFTER_IMAGE", "1");
+        let drift = session_index::finalization::finalize(&context, &data, request);
+        std::env::remove_var("OCXD024_RETIRED_DRIFT_AFTER_IMAGE");
+        report["retiredPostImageDriftRefused"] = drift.is_err().into();
+        assert!(drift.is_err());
+        assert_eq!(
+            std::fs::read(context.working_directory.join(".grok/config.toml")).unwrap(),
+            b"owned-test-drift-after-image=1\n"
+        );
+        assert!(!client.exists() && !h.join("runtime-port.json").exists());
+        report["result"] = "passed".into();
+        report["scope"]="directed explicit retired metadata finalization and exact duplicate retry; original Stop remains failed by deliberate test interruption; not normal two-cycle acceptance".into();
+        write(&report);
+        println!("OFFICIAL299_RETIRED_METADATA_FINALIZE {report}");
+        return;
+    }
     if fresh_clients == "codex-absent" {
         let root_absent = after_stop.state
             == crate::infrastructure::macos_client_originals::session_index::State::RootAbsent;

@@ -380,6 +380,22 @@ impl Active {
                         guard,
                     )?;
                     mark("root-close");
+                    #[cfg(test)]
+                    if std::env::var_os("OCXD024_RETIRED_METADATA_FINALIZE").as_deref()
+                        == Some(std::ffi::OsStr::new("1"))
+                    {
+                        if !self.index.data_root().starts_with("/private/tmp")
+                            || !self.index.data_root().ancestors().any(|p| {
+                                p.file_name().is_some_and(|n| {
+                                    n.to_string_lossy()
+                                        .starts_with("ocxd024-versioned-lifecycle-")
+                                })
+                            })
+                        {
+                            return Err(failure(()));
+                        }
+                        return Err(AppError::RuntimeManaged{code:"owned_retired_close_interrupted".into(),detail:"owned test interruption after actual root movement/readback before metadata close".into()});
+                    }
                     if project_start {
                         let (closed, allowed) = self
                             .index
