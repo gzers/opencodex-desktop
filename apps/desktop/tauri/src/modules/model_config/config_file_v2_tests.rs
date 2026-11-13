@@ -23,6 +23,115 @@ fn begin(root: &Path, home: &Path) -> FileSnapshotV2 {
     let s = snapshot(root, home).unwrap();
     begin_draft(root, home, request(&s)).unwrap()
 }
+
+fn ordinary_enable(s: &FileSnapshotV2) -> SaveRequestV2 {
+    let draft = s.draft.as_ref().unwrap();
+    SaveRequestV2 {
+        expected: draft.base.clone(),
+        edits: vec![],
+        scope_channel_id: None,
+        channel_intents: vec![ChannelIntentV2::SetEnabled {
+            channel_id: draft.policy.channels[0].id.clone(),
+            enabled: false,
+        }],
+    }
+}
+
+#[test]
+fn save_rechecks_equivalent_disk_changes_and_preserves_latest_runtime_fields() {
+    for change in ["format", "discovery", "claude"] {
+        let (_t, root, home) = fixture(raw());
+        let started = begin(&root, &home);
+        assert!(started
+            .draft
+            .as_ref()
+            .unwrap()
+            .observed_config_digest
+            .is_none());
+        let mut external = raw();
+        match change {
+            "discovery" => {
+                external["modelDiscovery"] = json!({"knownModels":{"Krill-1":{"models":["gpt-6-sol"],"updatedAt":"new"}},"recentArrivals":{"Krill-1":["vendor/custom"]}})
+            }
+            "claude" => {
+                external["claudeCode"] = json!({"desktopProfile":{"version":1,"assignments":{},"defaults":{"opus":null,"fable":null,"sonnet":null,"haiku":null},"appliedFingerprint":"new-fp","appliedAt":"new-time"}})
+            }
+            _ => {}
+        }
+        let disk = serde_json::to_vec_pretty(&external).unwrap();
+        std::fs::write(home.join("config.json"), disk).unwrap();
+        let saved = save(&root, &home, ordinary_enable(&started))
+            .unwrap_or_else(|error| panic!("{change}: {error:?}"));
+        assert!(!saved.saved_policy.channels[0].connection.enabled);
+        assert!(saved.draft.is_none());
+        let (next, _) = read_raw(&home).unwrap();
+        assert_eq!(
+            next["providers"]["Krill"]["apiKey"],
+            raw()["providers"]["Krill-1"]["apiKey"]
+        );
+        if change == "discovery" {
+            assert_eq!(
+                next["modelDiscovery"]["knownModels"]["Krill"],
+                external["modelDiscovery"]["knownModels"]["Krill-1"]
+            );
+            assert_eq!(
+                next["modelDiscovery"]["recentArrivals"]["Krill"],
+                external["modelDiscovery"]["recentArrivals"]["Krill-1"]
+            );
+        }
+        assert_eq!(next["claudeCode"], external["claudeCode"]);
+    }
+}
+
+#[test]
+fn save_refuses_actual_conflicts_even_when_displayed_policy_is_unchanged() {
+    for change in [
+        "key",
+        "url",
+        "unknown",
+        "discovery_policy",
+        "claude_assignment",
+        "removed",
+    ] {
+        let (_t, root, home) = fixture(raw());
+        let started = begin(&root, &home);
+        let draft_path = root.join(store_v2::DRAFT_PATH);
+        let draft_bytes = std::fs::read(&draft_path).unwrap();
+        let config_path = home.join("config.json");
+        let mut external = raw();
+        match change {
+            "key" => external["providers"]["Krill-1"]["apiKey"] = json!("new-synthetic-secret"),
+            "url" => {
+                external["providers"]["Krill-1"]["baseUrl"] = json!("https://changed.invalid/v1")
+            }
+            "unknown" => external["unrelated"]["keep"] = json!(false),
+            "discovery_policy" => {
+                external["modelDiscovery"] = json!({"enabled":false,"knownModels":{}})
+            }
+            "claude_assignment" => {
+                external["claudeCode"] = json!({"desktopProfile":{"version":1,"assignments":{"project":"model"},"appliedAt":"new"}})
+            }
+            "removed" => {}
+            _ => unreachable!(),
+        }
+        let disk = (change != "removed").then(|| serde_json::to_vec_pretty(&external).unwrap());
+        if let Some(bytes) = &disk {
+            std::fs::write(&config_path, bytes).unwrap();
+        } else {
+            std::fs::remove_file(&config_path).unwrap();
+        }
+        assert_eq!(
+            save(&root, &home, ordinary_enable(&started))
+                .err()
+                .unwrap()
+                .code,
+            "model_save_stale",
+            "{change}"
+        );
+        assert_eq!(std::fs::read(&config_path).ok(), disk, "{change}");
+        assert_eq!(std::fs::read(&draft_path).unwrap(), draft_bytes, "{change}");
+    }
+}
 #[test]
 fn name_is_actual_provider_authority_even_when_display_label_was_already_changed() {
     let (_t, root, home) = fixture(raw());
@@ -590,6 +699,75 @@ fn explicit_key_only_replace_preserves_other_pool_slots_and_clear_keeps_auth_mod
     assert!(raw["providers"]["Krill"].get("apiKeyPool").is_none());
     assert_eq!(raw["providers"]["Krill"]["authMode"], "key");
 }
+
+#[test]
+fn key_staging_accepts_only_equivalent_source_and_does_not_rebind_after_key_change() {
+    let (_t, root, home) = fixture(raw());
+    let started = begin(&root, &home);
+    let draft = started.draft.as_ref().unwrap();
+    let id = draft.policy.channels[0].id.clone();
+    let vault = FakeDraftCredentials::default();
+    let mut external = raw();
+    external["modelDiscovery"] = json!({"knownModels": {"Krill-1": {"models": ["vendor/custom"]}}});
+    let path = home.join("config.json");
+    let before = serde_json::to_vec_pretty(&external).unwrap();
+    std::fs::write(&path, &before).unwrap();
+    let staged = stage_credential_with_store(
+        &root,
+        &home,
+        StageCredentialV2 {
+            expected: draft.base.clone(),
+            channel_id: id.clone(),
+            action: "replace".into(),
+            value: Some("synthetic-replacement".into()),
+        },
+        &vault,
+    )
+    .unwrap();
+    assert_eq!(std::fs::read(&path).unwrap(), before);
+    assert_ne!(staged.source_digest, draft.base.source_digest);
+    let staged_draft = staged.draft.as_ref().unwrap();
+    assert_eq!(staged_draft.base.source_digest, draft.base.source_digest);
+    assert_eq!(
+        staged_draft.base.draft_generation,
+        draft.base.draft_generation + 1
+    );
+    assert!(!serde_json::to_string(&staged)
+        .unwrap()
+        .contains("synthetic-replacement"));
+    let draft_path = root.join(store_v2::DRAFT_PATH);
+    let saved_draft = std::fs::read(&draft_path).unwrap();
+    external["providers"]["Krill-1"]["apiKey"] = json!("changed-outside");
+    let conflict = serde_json::to_vec(&external).unwrap();
+    std::fs::write(&path, &conflict).unwrap();
+    assert_eq!(
+        stage_credential_with_store(
+            &root,
+            &home,
+            StageCredentialV2 {
+                expected: staged_draft.base.clone(),
+                channel_id: id,
+                action: "clear".into(),
+                value: None
+            },
+            &vault
+        )
+        .err()
+        .unwrap()
+        .code,
+        "model_read_stale"
+    );
+    assert_eq!(
+        save_with_credentials(&root, &home, ordinary_enable(&staged), &vault)
+            .err()
+            .unwrap()
+            .code,
+        "model_save_stale"
+    );
+    assert_eq!(std::fs::read(&path).unwrap(), conflict);
+    assert_eq!(std::fs::read(&draft_path).unwrap(), saved_draft);
+    assert_eq!(vault.0.lock().unwrap().len(), 1);
+}
 #[test]
 fn saved_capture_source_identity_is_stable_and_unaffected_by_unsaved_channel_name() {
     let (_t, root, home) = fixture(raw());
@@ -777,4 +955,417 @@ fn existing_revision_default_and_delete_use_exact_dependencies_without_latest_fa
     )
     .unwrap();
     assert!(!library.templates.iter().any(|t| t.id == id));
+}
+
+fn reconcile_request(s: &FileSnapshotV2, ids: &[&str]) -> reconcile::ReconcileRequest {
+    reconcile::ReconcileRequest {
+        expected: s.draft.as_ref().unwrap().base.clone(),
+        local_channel_ids: ids.iter().map(|s| (*s).into()).collect(),
+        model_only_channel_ids: BTreeSet::new(),
+    }
+}
+
+#[test]
+fn reconcile_rebases_before_manual_scoped_save_without_overwriting_another_channel() {
+    let mut initial = raw();
+    initial["providers"]["Other"] = json!({"name":"Other","adapter":"openai-chat","authMode":"key","baseUrl":"https://old.invalid/v1","apiKey":"fixture-old","models":["m"]});
+    let (_t, root, home) = fixture(initial.clone());
+    let s = begin(&root, &home);
+    let saved = save(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: s.draft.unwrap().base,
+            edits: vec![],
+            channel_intents: vec![],
+            scope_channel_id: None,
+        },
+    )
+    .unwrap();
+    let s = begin_draft(&root, &home, request(&saved)).unwrap();
+    let channel = s
+        .draft
+        .as_ref()
+        .unwrap()
+        .policy
+        .channels
+        .iter()
+        .find(|c| c.label == "Krill")
+        .unwrap()
+        .id
+        .clone();
+    let vault = FakeDraftCredentials::default();
+    let staged = stage_credential_with_store(
+        &root,
+        &home,
+        StageCredentialV2 {
+            expected: s.draft.as_ref().unwrap().base.clone(),
+            channel_id: channel.clone(),
+            action: "replace".into(),
+            value: Some("fixture-staged".into()),
+        },
+        &vault,
+    )
+    .unwrap();
+    let path = home.join("config.json");
+    let mut external = read_raw(&home).unwrap().0;
+    external["providers"]["Other"]["baseUrl"] = json!("https://changed.invalid/v1");
+    external["providers"]["Other"]["apiKey"] = json!("fixture-outside");
+    external["outside"] = json!({"retain":true});
+    let bytes = serde_json::to_vec_pretty(&external).unwrap();
+    std::fs::write(&path, &bytes).unwrap();
+    let req = reconcile_request(&staged, &[&channel]);
+    let old_draft = std::fs::read(root.join(store_v2::DRAFT_PATH)).unwrap();
+    let preview =
+        reconcile::preview(&root, &home, reconcile_request(&staged, &[&channel])).unwrap();
+    assert_eq!(preview.changed_channels, ["Other"]);
+    assert!(preview.conflicts.is_empty());
+    assert_eq!(
+        std::fs::read(root.join(store_v2::DRAFT_PATH)).unwrap(),
+        old_draft
+    );
+    assert!(!serde_json::to_string(&preview)
+        .unwrap()
+        .contains("fixture-outside"));
+    let next = reconcile::apply(&root, &home, req, &preview.review_digest).unwrap();
+    let draft = next.draft.as_ref().unwrap();
+    assert_eq!(
+        draft.credential_edits,
+        staged.draft.as_ref().unwrap().credential_edits
+    );
+    assert!(draft.observed_providers.is_none());
+    assert_eq!(std::fs::read(&path).unwrap(), bytes);
+    save_with_credentials(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: draft.base.clone(),
+            edits: vec![],
+            channel_intents: vec![ChannelIntentV2::SetEnabled {
+                channel_id: channel.clone(),
+                enabled: false,
+            }],
+            scope_channel_id: Some(channel),
+        },
+        &vault,
+    )
+    .unwrap();
+    let actual = read_raw(&home).unwrap().0;
+    assert_eq!(
+        actual["providers"]["Other"]["baseUrl"],
+        external["providers"]["Other"]["baseUrl"]
+    );
+    assert_eq!(
+        actual["providers"]["Other"]["apiKey"],
+        external["providers"]["Other"]["apiKey"]
+    );
+    assert_eq!(actual["providers"]["Krill"]["apiKey"], "fixture-staged");
+    assert_eq!(actual["providers"]["Krill"]["disabled"], true);
+    assert_eq!(actual["outside"], external["outside"]);
+}
+
+#[test]
+fn reconcile_rejects_same_provider_rotation_and_drift_after_review_without_writes() {
+    let (_t, root, home) = fixture(raw());
+    let s = begin(&root, &home);
+    let id = &s.draft.as_ref().unwrap().policy.channels[0].id;
+    let mut external = raw();
+    external["unrelated"] = json!({"outside":true});
+    let path = home.join("config.json");
+    std::fs::write(&path, serde_json::to_vec(&external).unwrap()).unwrap();
+    let preview = reconcile::preview(&root, &home, reconcile_request(&s, &[id])).unwrap();
+    assert!(preview.conflicts.is_empty());
+    external["providers"]["Krill-1"]["apiKey"] = json!("fixture-rotated");
+    let bytes = serde_json::to_vec(&external).unwrap();
+    std::fs::write(&path, &bytes).unwrap();
+    let original_draft = std::fs::read(root.join(store_v2::DRAFT_PATH)).unwrap();
+    assert_eq!(
+        reconcile::apply(
+            &root,
+            &home,
+            reconcile_request(&s, &[id]),
+            &preview.review_digest
+        )
+        .err()
+        .unwrap()
+        .code,
+        "model_reconcile_stale"
+    );
+    let review = reconcile::preview(&root, &home, reconcile_request(&s, &[id])).unwrap();
+    assert_eq!(review.conflicts.len(), 1);
+    assert_eq!(review.conflicts[0].reason, "overlap");
+    assert!(!serde_json::to_string(&review)
+        .unwrap()
+        .contains("fixture-rotated"));
+    assert_eq!(
+        reconcile::apply(
+            &root,
+            &home,
+            reconcile_request(&s, &[id]),
+            &review.review_digest
+        )
+        .err()
+        .unwrap()
+        .code,
+        "model_reconcile_overlap"
+    );
+    assert_eq!(std::fs::read(&path).unwrap(), bytes);
+    assert_eq!(
+        std::fs::read(root.join(store_v2::DRAFT_PATH)).unwrap(),
+        original_draft
+    );
+}
+
+#[test]
+fn reconcile_model_edit_keeps_external_connection_and_refuses_model_overlap() {
+    let mut initial = raw();
+    let provider = initial["providers"]
+        .as_object_mut()
+        .unwrap()
+        .remove("Krill-1")
+        .unwrap();
+    initial["providers"]["Krill"] = provider;
+    initial["defaultProvider"] = json!("Krill");
+    initial["defaultModel"] = json!("Krill/vendor/custom");
+    initial["modelPickerOrder"] = json!(["Krill/gpt-6-sol", "Krill/vendor/custom"]);
+    let (_t, root, home) = fixture(initial.clone());
+    let s = begin(&root, &home);
+    let id = &s.draft.as_ref().unwrap().policy.channels[0].id;
+    let model_only = || reconcile::ReconcileRequest {
+        model_only_channel_ids: [id.clone()].into(),
+        ..reconcile_request(&s, &[id])
+    };
+    let mut external = initial;
+    external["providers"]["Krill"]["baseUrl"] = json!("https://updated.invalid/v1");
+    external["providers"]["Krill"]["apiKey"] = json!("fixture-external");
+    let path = home.join("config.json");
+    let bytes = canonical_bytes(&external).unwrap();
+    std::fs::write(&path, &bytes).unwrap();
+    let preview = reconcile::preview(&root, &home, model_only()).unwrap();
+    assert!(preview.conflicts.is_empty());
+    assert_eq!(preview.changed_channels, ["Krill"]);
+    let mut overlap = external.clone();
+    overlap["providers"]["Krill"]["modelContextWindows"]["vendor/custom"] = json!(8192);
+    std::fs::write(&path, canonical_bytes(&overlap).unwrap()).unwrap();
+    assert_eq!(
+        reconcile::preview(&root, &home, model_only())
+            .unwrap()
+            .conflicts[0]
+            .reason,
+        "overlap"
+    );
+    std::fs::write(&path, &bytes).unwrap();
+    let next = reconcile::apply(&root, &home, model_only(), &preview.review_digest).unwrap();
+    assert_eq!(std::fs::read(&path).unwrap(), bytes);
+    save(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: next.draft.unwrap().base,
+            channel_intents: vec![],
+            scope_channel_id: Some(id.clone()),
+            edits: vec![ModelEditV2::SetOverride {
+                channel_id: id.clone(),
+                raw_model_id: "vendor/custom".into(),
+                field: "contextWindow".into(),
+                value: json!(16384),
+            }],
+        },
+    )
+    .unwrap();
+    let after = read_raw(&home).unwrap().0;
+    assert_eq!(
+        after["providers"]["Krill"]["baseUrl"],
+        external["providers"]["Krill"]["baseUrl"]
+    );
+    assert_eq!(
+        after["providers"]["Krill"]["apiKey"],
+        external["providers"]["Krill"]["apiKey"]
+    );
+    assert_eq!(
+        after["providers"]["Krill"]["modelContextWindows"]["vendor/custom"],
+        16384
+    );
+}
+
+#[test]
+fn reconcile_binds_exact_metadata_refuses_pending_and_unchanged_is_noop() {
+    let (_t, root, home) = fixture(raw());
+    let s = begin(&root, &home);
+    let draft_path = root.join(store_v2::DRAFT_PATH);
+    let original = std::fs::read(&draft_path).unwrap();
+    let preview = reconcile::preview(&root, &home, reconcile_request(&s, &[])).unwrap();
+    assert!(preview.conflicts.is_empty());
+    let next = reconcile::apply(
+        &root,
+        &home,
+        reconcile_request(&s, &[]),
+        &preview.review_digest,
+    )
+    .unwrap();
+    assert_eq!(next.draft.unwrap().base, s.draft.as_ref().unwrap().base);
+    assert_eq!(std::fs::read(&draft_path).unwrap(), original);
+    let mut external = raw();
+    external["outside"] = json!(true);
+    std::fs::write(
+        home.join("config.json"),
+        canonical_bytes(&external).unwrap(),
+    )
+    .unwrap();
+    let preview = reconcile::preview(&root, &home, reconcile_request(&s, &[])).unwrap();
+    let mut tampered: DraftV2 = serde_json::from_slice(&original).unwrap();
+    tampered.policy.channels[0].label = "different writer".into();
+    let tampered_bytes = canonical_bytes(&tampered).unwrap();
+    std::fs::write(&draft_path, &tampered_bytes).unwrap();
+    assert_eq!(
+        reconcile::apply(
+            &root,
+            &home,
+            reconcile_request(&s, &[]),
+            &preview.review_digest
+        )
+        .err()
+        .unwrap()
+        .code,
+        "model_reconcile_stale"
+    );
+    assert_eq!(std::fs::read(&draft_path).unwrap(), tampered_bytes);
+    std::fs::write(&draft_path, &original).unwrap();
+    let pending = root.join("manager-state/saved-file-save-pending.json");
+    std::fs::write(&pending, b"not recovered by review").unwrap();
+    assert_eq!(
+        reconcile::preview(&root, &home, reconcile_request(&s, &[]))
+            .err()
+            .unwrap()
+            .code,
+        "model_transaction_pending"
+    );
+    assert_eq!(std::fs::read(pending).unwrap(), b"not recovered by review");
+    assert_eq!(std::fs::read(&draft_path).unwrap(), original);
+}
+
+#[test]
+fn scoped_save_never_applies_other_channels_staged_credential_edit() {
+    let mut initial = raw();
+    initial["providers"]["Other"] = json!({"name":"Other","adapter":"openai-chat","apiKey":"fixture-original","baseUrl":"https://other.invalid/v1","models":["m"]});
+    let (_t, root, home) = fixture(initial);
+    let s = begin(&root, &home);
+    let s = save(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: s.draft.unwrap().base,
+            edits: vec![],
+            channel_intents: vec![],
+            scope_channel_id: None,
+        },
+    )
+    .unwrap();
+    let s = begin_draft(&root, &home, request(&s)).unwrap();
+    let a = s
+        .draft
+        .as_ref()
+        .unwrap()
+        .policy
+        .channels
+        .iter()
+        .find(|c| c.label == "Krill")
+        .unwrap()
+        .id
+        .clone();
+    let b = s
+        .draft
+        .as_ref()
+        .unwrap()
+        .policy
+        .channels
+        .iter()
+        .find(|c| c.label == "Other")
+        .unwrap()
+        .id
+        .clone();
+    let vault = FakeDraftCredentials::default();
+    let staged = stage_credential_with_store(
+        &root,
+        &home,
+        StageCredentialV2 {
+            expected: s.draft.unwrap().base,
+            channel_id: b.clone(),
+            action: "replace".into(),
+            value: Some("fixture-unsubmitted".into()),
+        },
+        &vault,
+    )
+    .unwrap();
+    let saved = save_with_credentials(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: staged.draft.as_ref().unwrap().base.clone(),
+            edits: vec![],
+            channel_intents: vec![ChannelIntentV2::SetEnabled {
+                channel_id: a.clone(),
+                enabled: false,
+            }],
+            scope_channel_id: Some(a),
+        },
+        &vault,
+    )
+    .unwrap();
+    assert_eq!(
+        read_raw(&home).unwrap().0["providers"]["Other"]["apiKey"],
+        "fixture-original"
+    );
+    assert_eq!(
+        saved.draft.as_ref().unwrap().credential_edits.get(&b),
+        staged.draft.as_ref().unwrap().credential_edits.get(&b)
+    );
+    save_with_credentials(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: saved.draft.unwrap().base,
+            edits: vec![],
+            channel_intents: vec![],
+            scope_channel_id: Some(b),
+        },
+        &vault,
+    )
+    .unwrap();
+    assert_eq!(
+        read_raw(&home).unwrap().0["providers"]["Other"]["apiKey"],
+        "fixture-unsubmitted"
+    );
+}
+
+#[test]
+fn reconcile_reports_deleted_provider_without_resurrecting_it_or_mutating_draft() {
+    let (_t, root, home) = fixture(raw());
+    let s = begin(&root, &home);
+    let before = std::fs::read(root.join(store_v2::DRAFT_PATH)).unwrap();
+    let id = &s.draft.as_ref().unwrap().policy.channels[0].id;
+    let mut external = raw();
+    external["providers"] = json!({});
+    let bytes = canonical_bytes(&external).unwrap();
+    std::fs::write(home.join("config.json"), &bytes).unwrap();
+    let preview = reconcile::preview(&root, &home, reconcile_request(&s, &[id])).unwrap();
+    assert_eq!(preview.conflicts[0].label, "Krill");
+    assert_eq!(preview.conflicts[0].reason, "removed");
+    assert_eq!(
+        reconcile::apply(
+            &root,
+            &home,
+            reconcile_request(&s, &[id]),
+            &preview.review_digest
+        )
+        .err()
+        .unwrap()
+        .code,
+        "model_reconcile_overlap"
+    );
+    assert_eq!(
+        std::fs::read(root.join(store_v2::DRAFT_PATH)).unwrap(),
+        before
+    );
+    assert_eq!(std::fs::read(home.join("config.json")).unwrap(), bytes);
 }

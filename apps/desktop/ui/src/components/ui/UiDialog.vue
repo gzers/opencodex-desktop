@@ -108,12 +108,16 @@ function keydown(event: KeyboardEvent) {
     event.stopPropagation()
     requestClose()
   } else if (event.key === 'Tab') {
-    const list = focusables(), first = list[0], last = list.at(-1)
-    const inside = element.contains(document.activeElement)
-    if (!first || !inside || document.activeElement === element || (event.shiftKey ? document.activeElement === first : document.activeElement === last)) {
-      event.preventDefault()
-      ;(event.shiftKey ? last ?? element : first ?? element).focus()
-    }
+    const list = focusables()
+    const index = list.indexOf(document.activeElement as HTMLElement)
+    // macOS WebKit may omit buttons from native Tab traversal. From a details
+    // summary it can jump to the browser/body despite buttons later in our
+    // dialog. Own each step within the top layer, preserving the same explicit
+    // accessible order and leaving consumed child events alone above.
+    event.preventDefault()
+    const next = index < 0 ? (event.shiftKey ? list.length - 1 : 0)
+      : (index + (event.shiftKey ? -1 : 1) + list.length) % list.length
+    ;(list[next] ?? element).focus()
   }
 }
 function cancel(event: Event) {

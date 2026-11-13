@@ -36,6 +36,10 @@ pub fn collect_timeout() -> Duration {
 pub fn max_backoff() -> Duration {
     crate::modules::runtime_defaults::status_max_backoff()
 }
+#[cfg(test)]
+mod client_recovery_gate_tests;
+#[cfg(test)]
+mod context_paths_tests;
 pub mod polling;
 
 pub fn max_emissions_per_second() -> u32 {
@@ -52,9 +56,41 @@ pub enum HealthState {
     Unknown,
 }
 
-/// 领域模型 §4 的运行事实。
+/// Independent manager recovery gate; it is not an official service status.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum ClientRecoveryState {
+    #[default]
+    NotRequired,
+    Active,
+    Required,
+    Unknown,
+}
+impl ClientRecoveryState {
+    // A durable Ready head describes a prior successful start. It cannot
+    // establish that the service is still running after a later interrupted
+    // Stop. Reconcile only with this collector's observed process state.
+    fn observed_runtime(self, runtime: RuntimeState) -> Self {
+        if self != Self::Active {
+            return self;
+        }
+        match runtime {
+            RuntimeState::Running => Self::Active,
+            RuntimeState::Stopped => Self::Required,
+            _ => Self::Unknown,
+        }
+    }
+    pub fn blocks_start(self) -> bool {
+        self != Self::NotRequired
+    }
+    pub fn blocks_restart(self) -> bool {
+        matches!(self, Self::Required | Self::Unknown)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct RuntimeFacts {
+    pub client_recovery: ClientRecoveryState,
     pub health: HealthState,
     pub runtime_label: Option<String>,
     pub opencodex_home: Option<PathBuf>,
@@ -70,6 +106,7 @@ pub struct RuntimeFacts {
 impl Default for RuntimeFacts {
     fn default() -> Self {
         Self {
+            client_recovery: ClientRecoveryState::NotRequired,
             health: HealthState::Unknown,
             runtime_label: None,
             opencodex_home: None,
@@ -109,6 +146,15 @@ pub enum CollectError {
 
 /// 官方采集器边界。真实实现必须在 5 秒内返回或转换为 Timeout。
 pub trait StatusSource {
+    /// Resolved Desktop launch context, distinct from official config-file
+    /// paths. Payload fields and directory-name guesses cannot supply it.
+    fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
+        None
+    }
+    /// Separate native manager fact. Official JSON cannot mint or clear it.
+    fn client_recovery(&self) -> ClientRecoveryState {
+        ClientRecoveryState::NotRequired
+    }
     fn fetch(&self) -> Result<Value, CollectError>;
     fn fetch_light(&self) -> Result<Value, CollectError> {
         self.fetch()
@@ -121,6 +167,10 @@ pub trait StatusSource {
     /// 而不是沿用上一次「未运行」状态。
     fn resolved(&self) -> bool {
         true
+    }
+    /// Invalid/incomplete admission is not evidence that installation is absent.
+    fn source_unknown(&self) -> bool {
+        false
     }
 }
 
@@ -550,8 +600,19 @@ pub fn map_official_output(
         };
     }
 
-    let port = report.port();
-    let pid = report.pid().or_else(|| report.proxy_pid());
+    let explicit_inactive = matches!(report.string(&["status", "state", "runtime"]),Field::Present(value) if matches!(normalized(&value).as_str(),"stopped"|"stop-confirmed"|"stopped-confirmed"|"not-found"|"not_found"|"notfound"))
+        || matches!(
+            report.nested_boolean(report.nested_object("proxy"), &["running"]),
+            Field::Present(false)
+        );
+    let inactive =
+        explicit_inactive && matches!(runtime, RuntimeState::Stopped | RuntimeState::NotFound);
+    let port = if inactive { None } else { report.port() };
+    let pid = if inactive {
+        None
+    } else {
+        report.pid().or_else(|| report.proxy_pid())
+    };
     let runtime_version = {
         let skew = report.nested_object("versionSkew");
         match report.nested_string(skew, &["cliVersion", "cli_version"]) {
@@ -571,11 +632,10 @@ pub fn map_official_output(
     let version_drift =
         optional_string(report, &["versionDrift", "version_drift"]).or(runtime_version);
     let mut facts = RuntimeFacts {
+        client_recovery: ClientRecoveryState::NotRequired,
         health,
         runtime_label,
-        opencodex_home: report
-            .path(&["opencodexHome", "opencodex_home", "home"])
-            .or_else(|| report.nested_path("paths", &["config"])),
+        opencodex_home: report.path(&["opencodexHome", "opencodex_home", "home"]),
         data_root: report
             .path(&["dataRoot", "data_root"])
             .or_else(|| report.nested_path("paths", &["home", "dataRoot", "data_root"]))
@@ -782,6 +842,16 @@ where
     pub fn record_failure(&mut self) {
         self.failure_count = self.failure_count.saturating_add(1);
     }
+    fn refresh_manager_facts(&mut self) {
+        self.facts.client_recovery = self
+            .source
+            .client_recovery()
+            .observed_runtime(self.matrix.runtime);
+        if let Some((data_root, home)) = self.source.manager_paths() {
+            self.facts.data_root = data_root;
+            self.facts.opencodex_home = Some(home);
+        }
+    }
 
     pub fn refresh(&mut self) -> Result<MappedOfficialStatus, CollectError> {
         self.refresh_at(Instant::now())
@@ -789,21 +859,39 @@ where
 
     /// 使用注入时钟刷新；去抖期内共享上次结果，不额外调用来源。
     pub fn refresh_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
-        if !self.request_allowed(now) && !self.last_was_light && self.source.resolved() {
+        self.refresh_manager_facts();
+        if !self.request_allowed(now)
+            && !self.last_was_light
+            && self.source.resolved()
+            && !self.source.source_unknown()
+        {
             return self
                 .last_result
                 .clone()
-                .unwrap_or(Err(CollectError::Timeout));
+                .unwrap_or(Err(CollectError::Timeout))
+                .map(|mut result| {
+                    result.facts.client_recovery = self.facts.client_recovery;
+                    result.facts.data_root = self.facts.data_root.clone();
+                    result.facts.opencodex_home = self.facts.opencodex_home.clone();
+                    result
+                });
         }
         self.refresh_with(now, false)
     }
 
     pub fn refresh_light_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
-        if !self.request_allowed(now) {
+        self.refresh_manager_facts();
+        if !self.request_allowed(now) && !self.source.source_unknown() {
             return self
                 .last_result
                 .clone()
-                .unwrap_or(Err(CollectError::Timeout));
+                .unwrap_or(Err(CollectError::Timeout))
+                .map(|mut result| {
+                    result.facts.client_recovery = self.facts.client_recovery;
+                    result.facts.data_root = self.facts.data_root.clone();
+                    result.facts.opencodex_home = self.facts.opencodex_home.clone();
+                    result
+                });
         }
         self.refresh_with(now, true)
     }
@@ -815,18 +903,25 @@ where
     ) -> Result<MappedOfficialStatus, CollectError> {
         self.last_request = Some(now);
         self.last_was_light = light;
-        let payload = match if light {
+        let fetched = if light {
             self.source.fetch_light()
         } else {
             self.source.fetch()
-        } {
+        };
+        let client_recovery = self.source.client_recovery();
+        let payload = match fetched {
             Ok(payload) => payload,
             Err(error) => {
                 self.record_failure();
                 // 运行来源未解析（或解析到的入口已不存在）= 未发现安装。这是确定性事实，
                 // 不能沿用上一份「未运行 / 可启动」状态——否则卸载后概览、托盘等仍显示
                 // 可启动（真机反馈）。只有瞬时失败才保留上一份状态（FZ-07 / FZ-08）。
-                if !self.source.resolved() {
+                if self.source.source_unknown() {
+                    self.matrix.runtime = RuntimeState::Unreachable;
+                    self.facts = RuntimeFacts::default();
+                    self.port = None;
+                    self.pid = None;
+                } else if !self.source.resolved() {
                     self.matrix = StatusMatrix {
                         runtime: RuntimeState::NotFound,
                         connection: self.matrix.connection,
@@ -835,18 +930,40 @@ where
                     self.facts = RuntimeFacts::default();
                     self.port = None;
                     self.pid = None;
+                } else if self.matrix.runtime == RuntimeState::NotFound {
+                    // A newly supplied/resolved source disproves the old
+                    // installation-absence fact. A failed service observation
+                    // proves neither stopped nor healthy; don't retain NotFound.
+                    self.matrix.runtime = RuntimeState::Unreachable;
+                    self.facts = RuntimeFacts::default();
+                    self.port = None;
+                    self.pid = None;
+                }
+                self.facts.client_recovery =
+                    client_recovery.observed_runtime(RuntimeState::Unreachable);
+                if let Some((data_root, home)) = self.source.manager_paths() {
+                    self.facts.data_root = data_root;
+                    self.facts.opencodex_home = Some(home);
                 }
                 self.last_result = Some(Err(error));
                 return Err(error);
             }
         };
         let report = OfficialStatusReport::from_value(payload);
-        let mapped = map_official_output(
+        let mut mapped = map_official_output(
             &report,
             Some(self.matrix.runtime),
             self.matrix.connection,
             self.matrix.operation,
         );
+        mapped.facts.client_recovery = client_recovery.observed_runtime(mapped.runtime);
+        if let Some((data_root, home)) = self.source.manager_paths() {
+            mapped.facts.data_root = data_root;
+            mapped.facts.opencodex_home = Some(home);
+            mapped
+                .downgrade_reasons
+                .retain(|reason| *reason != DowngradeReason::MissingDataRoot);
+        }
         self.matrix = StatusMatrix {
             runtime: mapped.runtime,
             connection: mapped.connection,
@@ -1126,10 +1243,9 @@ mod tests {
         assert_eq!(mapped.port, Some(10100));
         assert_eq!(mapped.facts.runtime_label.as_deref(), Some("bundled"));
         assert_eq!(mapped.facts.version_drift.as_deref(), Some("2.50.0"));
-        assert_eq!(
-            mapped.facts.opencodex_home,
-            Some(PathBuf::from("/tmp/opencodex-home/config.json"))
-        );
+        // Official paths.config is a file, not an admissible HOME. The real
+        // Desktop collector supplies its independently resolved context.
+        assert_eq!(mapped.facts.opencodex_home, None);
     }
 
     #[test]
@@ -1304,6 +1420,116 @@ mod tests {
         assert_eq!(collector.facts().health, HealthState::Unknown);
         assert_eq!(collector.port(), None);
         assert_eq!(collector.pid(), None);
+    }
+
+    #[test]
+    fn newly_resolved_source_invalidates_pre_supply_absence_without_inventing_service_success() {
+        use std::cell::Cell;
+        struct Source {
+            resolved: Cell<bool>,
+            error: CollectError,
+            successful: Cell<bool>,
+        }
+        impl StatusSource for Source {
+            fn fetch(&self) -> Result<Value, CollectError> {
+                if self.successful.get() {
+                    Ok(
+                        json!({"status":"stopped","dataRoot":"/fixture","startup":{"protection":"none","rebootSafe":false}}),
+                    )
+                } else {
+                    Err(self.error)
+                }
+            }
+            fn resolved(&self) -> bool {
+                self.resolved.get()
+            }
+        }
+        for error in [
+            CollectError::Timeout,
+            CollectError::Unreachable,
+            CollectError::Parse,
+        ] {
+            for light in [false, true] {
+                let mut collector = StatusCollector::new(Source {
+                    resolved: Cell::new(false),
+                    error,
+                    successful: Cell::new(false),
+                });
+                let now = Instant::now();
+                assert_eq!(collector.refresh_at(now).unwrap_err(), error);
+                assert_eq!(collector.matrix().runtime, RuntimeState::NotFound);
+                collector.source.resolved.set(true);
+                let result = if light {
+                    collector.refresh_light_at(now + Duration::from_secs(2))
+                } else {
+                    collector.refresh_at(now + Duration::from_secs(2))
+                };
+                assert_eq!(result.unwrap_err(), error);
+                assert_eq!(collector.matrix().runtime, RuntimeState::Unreachable);
+                assert_eq!(collector.facts().health, HealthState::Unknown);
+                assert_eq!(collector.port(), None);
+                assert_eq!(collector.pid(), None);
+                collector.source.successful.set(true);
+                collector.refresh_at(now + Duration::from_secs(4)).unwrap();
+                assert_eq!(collector.matrix().runtime, RuntimeState::Stopped);
+                collector.source.successful.set(false);
+                collector.source.resolved.set(false);
+                assert_eq!(
+                    collector
+                        .refresh_at(now + Duration::from_secs(6))
+                        .unwrap_err(),
+                    error
+                );
+                assert_eq!(collector.matrix().runtime, RuntimeState::NotFound);
+            }
+        }
+    }
+
+    #[test]
+    fn source_admission_failure_is_unknown_and_bypasses_cached_success() {
+        use std::cell::Cell;
+        struct Source {
+            unknown: Cell<bool>,
+            calls: Cell<u32>,
+        }
+        impl StatusSource for Source {
+            fn fetch(&self) -> Result<Value, CollectError> {
+                self.calls.set(self.calls.get() + 1);
+                if self.unknown.get() {
+                    return Err(CollectError::Unreachable);
+                }
+                Ok(
+                    json!({"status":"running","ready":true,"health":"healthy","pid":"42","port":12345,"dataRoot":"/fixture","startup":{"protection":"none","rebootSafe":false}}),
+                )
+            }
+            fn resolved(&self) -> bool {
+                !self.unknown.get()
+            }
+            fn source_unknown(&self) -> bool {
+                self.unknown.get()
+            }
+        }
+        for light in [false, true] {
+            let mut collector = StatusCollector::new(Source {
+                unknown: Cell::new(false),
+                calls: Cell::new(0),
+            });
+            let now = Instant::now();
+            collector.refresh_at(now).unwrap();
+            assert_eq!(collector.matrix.runtime, RuntimeState::Running);
+            collector.source.unknown.set(true);
+            let result = if light {
+                collector.refresh_light_at(now + Duration::from_millis(1))
+            } else {
+                collector.refresh_at(now + Duration::from_millis(1))
+            };
+            assert_eq!(result.unwrap_err(), CollectError::Unreachable);
+            assert_eq!(collector.source.calls.get(), 2);
+            assert_eq!(collector.matrix.runtime, RuntimeState::Unreachable);
+            assert_eq!(collector.facts.health, HealthState::Unknown);
+            assert_eq!(collector.port, None);
+            assert_eq!(collector.pid, None);
+        }
     }
 
     /// 瞬时失败（超时）仍保留上一份状态，不因一次抖动就清空事实。

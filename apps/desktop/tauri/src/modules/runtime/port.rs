@@ -16,9 +16,9 @@ use zeroize::Zeroizing;
 const SETTINGS: &str = "manager-state/runtime-port-settings.json";
 const INTENT: &str = "manager-state/runtime-port-save.json";
 
-struct ConfigMutation(rusqlite::Connection);
+pub(crate) struct ConfigMutation(rusqlite::Connection);
 impl ConfigMutation {
-    fn acquire(home: &Path) -> AppResult<Self> {
+    pub(crate) fn acquire(home: &Path) -> AppResult<Self> {
         let path = home.join("config-mutation.sqlite");
         for suffix in ["", "-journal", "-wal", "-shm"] {
             safety::check_path(
@@ -217,6 +217,41 @@ pub fn load(root: &Path, home: &Path) -> AppResult<Snapshot> {
         revision: revision(&bytes, &settings, &intent),
         reconciliation_required: incomplete,
     })
+}
+
+/// Whole-file rollback must be able to replace a missing or malformed config.
+/// The separate settings remain bound and readable, and an unfinished port
+/// transaction still blocks. The revision binds presence as well as exact bytes.
+pub(crate) fn rollback_observation(root: &Path, home: &Path) -> AppResult<(Option<u16>, String)> {
+    let target = home.join("config.json");
+    safety::check_path(home, &target, true)?;
+    let bytes = match std::fs::symlink_metadata(&target) {
+        Ok(_) => Some(Zeroizing::new(safety::read_file(
+            &target,
+            safety::MAX_PAYLOAD_BYTES,
+        )?)),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => None,
+        Err(e) => return Err(safety::fail(e.to_string())),
+    };
+    let settings = read(root, SETTINGS, 4096)?;
+    if let Some(saved) = decode::<Saved>(&settings)? {
+        validate_saved(&saved, home)?;
+    }
+    if !read(root, INTENT, 8192)?.is_empty() {
+        return Err(error(
+            "port_settings_invalid",
+            "端口事务尚未完成，未回退配置",
+        ));
+    }
+    let port = bytes
+        .as_ref()
+        .and_then(|bytes| crate::modules::model_config::schema_v2::parse_strict_json_v2(bytes).ok())
+        .and_then(|raw| raw.get("port").and_then(Value::as_u64))
+        .filter(|port| *port > 0 && *port <= u16::MAX as u64)
+        .map(|port| port as u16);
+    let revision = serde_json::to_vec(&(bytes.as_ref().map(|bytes| hash(bytes)), hash(&settings)))
+        .map_err(|_| error("port_settings_invalid", "配置观察无法核验"))?;
+    Ok((port, hash(&revision)))
 }
 fn checked_listener(mode: Mode, port: Option<u16>) -> AppResult<TcpListener> {
     let port = match mode {

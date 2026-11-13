@@ -36,10 +36,24 @@ pub struct DraftV2 {
     /// None exists only for this unreleased v2 fixture shape, never v1 migration.
     #[serde(default)]
     pub observed_baseline: Option<PolicyV2>,
+    /// Server-side digest of the exact saved JSON except known runtime bookkeeping.
+    /// Absent evidence keeps the raw-byte conflict check mandatory.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observed_config_digest: Option<String>,
+    /// Private provider fingerprints at the observed source; never serialized to IPC.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub observed_providers: Option<BTreeMap<String, ProviderObservationV2>>,
     /// Server-owned intent only. References carry no key material; clear does
     /// not change authMode and cannot be inferred from a missing/null key.
     #[serde(default)]
     pub credential_edits: BTreeMap<String, DraftCredentialEditV2>,
+}
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ProviderObservationV2 {
+    pub row_digest: String,
+    pub name_digest: String,
+    pub non_connection_digest: String,
 }
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 #[serde(
@@ -183,6 +197,25 @@ fn validate_draft(draft: &DraftV2) -> Result<()> {
                 return Err(error("model_source_invalid"));
             }
         }
+    }
+    if draft
+        .observed_config_digest
+        .as_deref()
+        .is_some_and(|value| !valid_digest(value))
+    {
+        return Err(error("model_source_invalid"));
+    }
+    if draft.observed_providers.as_ref().is_some_and(|providers| {
+        providers.len() > 10000
+            || providers.iter().any(|(id, row)| {
+                id.is_empty()
+                    || id.len() > 512
+                    || !valid_digest(&row.row_digest)
+                    || !valid_digest(&row.name_digest)
+                    || !valid_digest(&row.non_connection_digest)
+            })
+    }) {
+        return Err(error("model_source_invalid"));
     }
     Ok(())
 }

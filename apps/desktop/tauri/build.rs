@@ -2,6 +2,13 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 fn main() {
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("macos") {
+        println!("cargo:rerun-if-changed=src/infrastructure/macos_tcp_listener.c");
+        cc::Build::new()
+            .file("src/infrastructure/macos_tcp_listener.c")
+            .warnings_into_errors(true)
+            .compile("ocxd_macos_tcp_listener");
+    }
     track_runtime_bundle();
     track_windows_test_manifest();
     track_frontend_dist();
@@ -202,7 +209,7 @@ fn track_runtime_bundle() {
     if name.contains(['/', '\\']) || !directory.join(name).is_file() {
         panic!("runtime archive missing");
     }
-    if !directory.join("maintained-runtime.tgz").is_file() {
+    if !directory.join("official-runtime.tgz").is_file() {
         panic!("runtime recovery source missing");
     }
     let source_version = manifest["runtimeVersion"]

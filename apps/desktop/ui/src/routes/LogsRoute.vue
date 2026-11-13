@@ -8,6 +8,7 @@ import { useAppController } from '@/composables/useAppController'
 import { useAppStore } from '@/stores/app'
 import { useRouteStore } from '@/stores/routes'
 import { triggerUiSelfCheckFault } from '@/features/diagnostics/selfCheck'
+import ClientRecovery from '@/features/runtime/ClientRecovery.vue'
 
 const routes = useRouteStore()
 const app = useAppStore()
@@ -113,6 +114,7 @@ function openClearReadNotificationsModal() {
         </div>
         <pre class="doctor-out" :class="{ show: controller.doctorShown.value }">{{ controller.doctorReportText.value }}</pre>
         <p class="doctor-hint">写入型修复（<code>--reclaim-response-temps</code>、<code>--recover-zero-byte-coordinator --yes</code>）需要先停止代理并显式确认，本应用只展示只读摘要。</p>
+        <ClientRecovery />
         <!-- 界面异常自检：给出兜底条与恢复动作的可复现入口（原型「界面诊断」同款）。 -->
         <div class="selfcheck">
           <div class="card-head">

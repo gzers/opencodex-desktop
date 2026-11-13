@@ -43,15 +43,15 @@ onMounted(load)
       <UiButton variant="primary" :disabled="busy||!valid||!dirty||saved?.reconciliationRequired" @click="save">{{saving?'正在检查空闲端口…':mode==='auto'?'检查并保存':'保存设置'}}</UiButton>
       <UiButton variant="ghost" :disabled="busy||!dirty" @click="revert">还原修改</UiButton>
       <UiButton v-if="mode==='auto'&&saved?.port" variant="ghost" :disabled="busy||saved.reconciliationRequired" @click="save">重新分配</UiButton>
-      <UiButton v-if="pending" :disabled="busy||dirty||saved?.reconciliationRequired" @click="restartOpen=true">重启并应用</UiButton>
-      <UiButton v-if="!running" :disabled="busy||dirty||!saved?.port||saved.reconciliationRequired||!lifecycle.statusSnapshot?.can_start" @click="action()">启动 OpenCodex</UiButton>
+      <UiButton v-if="pending" :disabled="busy||dirty||saved?.reconciliationRequired||lifecycle.processActionBlocked('restart')" @click="restartOpen=true">重启并应用</UiButton>
+      <UiButton v-if="!running" :disabled="busy||dirty||!saved?.port||saved.reconciliationRequired||!lifecycle.statusSnapshot?.can_start||lifecycle.processActionBlocked('start')" @click="action()">启动 OpenCodex</UiButton>
       <UiButton v-if="saved?.reconciliationRequired" :disabled="busy" @click="reconcile">核对上次保存</UiButton>
       <UiButton v-if="!saved||error" variant="ghost" :disabled="busy" @click="load">刷新设置</UiButton>
     </div>
     <UiDialog :open="restartOpen" title="重启并应用端口设置" @close="restartOpen=false">
       <p>将停止当前用户的 OpenCodex 服务，按已保存的设置重新启动。进行中的请求可能中断。</p>
       <dl class="port-facts"><dt>当前端口</dt><dd>{{actual??'读取中'}}</dd><dt>下次启动</dt><dd>{{saved?.port}}</dd></dl>
-      <template #actions><UiButton variant="ghost" @click="restartOpen=false">取消</UiButton><UiButton @click="action(true)">确认重启</UiButton></template>
+      <template #actions><UiButton variant="ghost" @click="restartOpen=false">取消</UiButton><UiButton :disabled="busy||lifecycle.processActionBlocked('restart')" @click="action(true)">确认重启</UiButton></template>
     </UiDialog>
   </UiCard>
 </template>

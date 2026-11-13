@@ -11,12 +11,12 @@ async fn bounded_http_transport_rejects_oversize_redirect_and_error_instead_of_m
     for (status, body, headers, expected) in [
         ("200 OK", "123456789", "", Err(Error::Size)),
         ("404 Not Found", "", "", Ok(None)),
-        ("500 Internal Server Error", "", "", Err(Error::Network)),
+        ("500 Internal Server Error", "", "", Err(Error::Http(500))),
         (
             "302 Found",
             "",
             "Location: https://evil.example/\r\n",
-            Err(Error::Network),
+            Err(Error::Source),
         ),
         ("200 OK", "{}", "", Ok(Some(b"{}".to_vec()))),
     ] {
@@ -632,4 +632,199 @@ async fn cache_link_escape_does_not_write_external_directory() {
         Err(Error::Cache)
     );
     assert_eq!(std::fs::read_dir(external.path()).unwrap().count(), 0);
+}
+
+#[tokio::test]
+async fn failed_refresh_preserves_only_exact_verified_cached_notes_and_never_relabels_them_fresh() {
+    for error in [
+        Error::Timeout,
+        Error::RateLimited,
+        Error::Http(502),
+        Error::Source,
+        Error::Size,
+    ] {
+        let root = tempfile::tempdir().unwrap();
+        let limits = crate::modules::runtime_defaults::release_notes();
+        let source = Fixture::new(vec![
+            release(
+                "gzers/opencodex-desktop",
+                "0.1.10",
+                json!("previous verified text"),
+            ),
+            Err(error.clone()),
+        ]);
+        let request = |force, now| Request {
+            target: Target::Manager,
+            channel: Channel::Stable,
+            version: "0.1.10",
+            updater_notes: None,
+            force,
+            now,
+        };
+        let first = query(&source, root.path(), request(false, 100), limits)
+            .await
+            .unwrap();
+        assert!(!first.cached);
+        let path = root
+            .path()
+            .join("cache/updates/release-notes/manager-stable.json");
+        let original = std::fs::read(&path).unwrap();
+        let result = query(&source, root.path(), request(true, 101), limits)
+            .await
+            .unwrap();
+        assert!(result.cached);
+        assert_eq!(result.notes_state, NotesState::Ready);
+        assert_eq!(result.notes.as_deref(), Some("previous verified text"));
+        assert_eq!(result.fetched_at, 100);
+        assert_eq!(result.checked_at, 101);
+        assert_eq!(result.failure, Some(Failure::from(&error)));
+        assert_eq!(std::fs::read(path).unwrap(), original);
+        assert_eq!(source.count(), 2);
+    }
+}
+#[tokio::test]
+async fn failure_classification_without_cache_never_exposes_body_or_fabricates_absence() {
+    for error in [
+        Error::Timeout,
+        Error::RateLimited,
+        Error::Http(503),
+        Error::Source,
+        Error::Size,
+    ] {
+        let root = tempfile::tempdir().unwrap();
+        let source = Fixture::new(vec![Err(error.clone())]);
+        let r = query(
+            &source,
+            root.path(),
+            Request {
+                target: Target::Manager,
+                channel: Channel::Stable,
+                version: "0.1.10",
+                updater_notes: None,
+                force: false,
+                now: 100,
+            },
+            crate::modules::runtime_defaults::release_notes(),
+        )
+        .await
+        .unwrap();
+        assert_eq!(r.notes_state, NotesState::Failed);
+        assert_eq!(r.failure, Some(Failure::from(&error)));
+        assert!(r.notes.is_none());
+        assert!(!root.path().join("cache").exists());
+    }
+}
+#[tokio::test]
+async fn current_updater_body_survives_independent_github_failure_with_its_actual_source() {
+    let root = tempfile::tempdir().unwrap();
+    let source = Fixture::new(vec![Err(Error::RateLimited)]);
+    let r = query(
+        &source,
+        root.path(),
+        Request {
+            target: Target::Manager,
+            channel: Channel::Stable,
+            version: "0.1.10",
+            updater_notes: Some("current updater text"),
+            force: true,
+            now: 100,
+        },
+        crate::modules::runtime_defaults::release_notes(),
+    )
+    .await
+    .unwrap();
+    assert_eq!(r.notes_state, NotesState::Ready);
+    assert_eq!(r.notes.as_deref(), Some("current updater text"));
+    assert_eq!(r.notes_source.as_deref(), Some("updater"));
+    assert_eq!(r.failure.unwrap().kind, FailureKind::RateLimited);
+    assert!(!r.cached);
+}
+
+#[tokio::test]
+async fn newer_current_updater_notes_are_not_replaced_by_an_older_same_version_cache_on_failure() {
+    let root = tempfile::tempdir().unwrap();
+    let limits = crate::modules::runtime_defaults::release_notes();
+    let source = Fixture::new(vec![
+        release("gzers/opencodex-desktop", "0.1.10", json!("old cache")),
+        Err(Error::Network),
+    ]);
+    query(
+        &source,
+        root.path(),
+        Request {
+            target: Target::Manager,
+            channel: Channel::Stable,
+            version: "0.1.10",
+            updater_notes: None,
+            force: false,
+            now: 100,
+        },
+        limits,
+    )
+    .await
+    .unwrap();
+    let r = query(
+        &source,
+        root.path(),
+        Request {
+            target: Target::Manager,
+            channel: Channel::Stable,
+            version: "0.1.10",
+            updater_notes: Some("current updater"),
+            force: true,
+            now: 101,
+        },
+        limits,
+    )
+    .await
+    .unwrap();
+    assert!(!r.cached);
+    assert_eq!(r.notes.as_deref(), Some("current updater"));
+    assert_eq!(r.notes_source.as_deref(), Some("updater"));
+    assert_eq!(r.failure.unwrap().kind, FailureKind::Network);
+}
+
+#[tokio::test]
+async fn current_updater_text_does_not_inherit_the_cache_timestamp_when_no_network_is_needed() {
+    let root = tempfile::tempdir().unwrap();
+    let limits = crate::modules::runtime_defaults::release_notes();
+    let source = Fixture::new(vec![release(
+        "gzers/opencodex-desktop",
+        "0.1.10",
+        json!("old cache"),
+    )]);
+    query(
+        &source,
+        root.path(),
+        Request {
+            target: Target::Manager,
+            channel: Channel::Stable,
+            version: "0.1.10",
+            updater_notes: None,
+            force: false,
+            now: 100,
+        },
+        limits,
+    )
+    .await
+    .unwrap();
+    let r = query(
+        &source,
+        root.path(),
+        Request {
+            target: Target::Manager,
+            channel: Channel::Stable,
+            version: "0.1.10",
+            updater_notes: Some("current updater"),
+            force: false,
+            now: 101,
+        },
+        limits,
+    )
+    .await
+    .unwrap();
+    assert!(!r.cached);
+    assert_eq!(r.fetched_at, 101);
+    assert_eq!(r.notes_source.as_deref(), Some("updater"));
+    assert_eq!(source.count(), 1);
 }

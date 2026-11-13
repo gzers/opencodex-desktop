@@ -17,6 +17,27 @@ pub trait RuntimeExecutableProvider: Send + Sync + std::fmt::Debug {
     fn managed_installation_root(&self) -> Option<PathBuf> {
         None
     }
+    /// Cached source-admission failure is uncertainty, not proof of absence.
+    fn source_problem(&self) -> Option<String> {
+        None
+    }
+    /// Full program admission for lifecycle and authenticated observations.
+    /// A versioned provider overrides this instead of guessing a flat prefix.
+    fn managed_program_identity(
+        &self,
+    ) -> crate::errors::AppResult<crate::modules::runtime::install::ManagedRuntimeIdentity> {
+        let root = self
+            .managed_installation_root()
+            .ok_or(crate::errors::AppError::NotConfigured)?;
+        crate::modules::runtime::install::resolve_managed_installation(&root).map_err(Into::into)
+    }
+    /// Path/identity observation after prior admission. May use bounded freshness
+    /// checks; this never replaces action-time full program verification.
+    fn observed_program_identity(
+        &self,
+    ) -> crate::errors::AppResult<crate::modules::runtime::install::ManagedRuntimeIdentity> {
+        self.managed_program_identity()
+    }
 }
 
 /// 命令层与基础设施层共享的只读句柄。

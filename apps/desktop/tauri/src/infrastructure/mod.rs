@@ -7,7 +7,17 @@ pub mod discovery_paths;
 pub mod hash;
 pub mod keychain;
 pub mod locking;
+#[cfg(target_os = "macos")]
+pub mod macos_client_originals;
+#[cfg(target_os = "macos")]
+pub mod macos_process_exit;
+#[cfg(target_os = "macos")]
+pub mod macos_process_pair;
+#[cfg(target_os = "macos")]
+pub mod macos_tcp_listeners;
 pub mod official_cli_source;
+#[cfg(target_os = "macos")]
+pub mod official_client_coordination;
 pub mod official_version_source;
 pub mod platform;
 pub mod process_runner;
@@ -22,6 +32,8 @@ pub mod webdav_config_v2;
 
 pub mod app_activity;
 pub mod window_appearance;
+#[cfg(windows)]
+pub(crate) mod windows_official_runtime024;
 #[cfg(windows)]
 pub(crate) mod windows_private_create;
 #[cfg(all(windows, test))]

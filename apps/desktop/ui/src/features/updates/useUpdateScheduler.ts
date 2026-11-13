@@ -28,7 +28,7 @@ export function useUpdateScheduler() {
     onError: () => {},
   })
   const wake = () => scheduler.wake()
-  const foregroundWake = () => scheduler.wake('foreground')
+  const foregroundWake = () => {if(effects.visible&&effects.foreground&&!roots.switching)void updates.loadVersions();scheduler.wake('foreground')}
   const onlineWake = () => scheduler.wake('online')
   // Entering the overview is a foreground trigger; deadline is reserved for
   // the persisted scheduler wake so the event contract keeps the source visible.

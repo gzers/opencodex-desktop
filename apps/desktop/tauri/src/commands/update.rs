@@ -21,32 +21,15 @@ fn updater_for_status(
         .timeout(crate::modules::network_defaults::request_timeout())
         .endpoints(vec![url])
         .map_err(|_error| AppError::NotConfigured)?;
-    let builder = apply_proxy_policy(
-        builder,
-        crate::modules::preferences::proxy_policy_for_app(app),
-    );
-    builder.build().map_err(|_error| AppError::NotConfigured)
-}
-
-/// 应用自更新请求按用户代理偏好走代理（U-05）。
-///
-/// 沿用已有的三分支策略；不把底层库的系统代理能力固化成平台假设。
-/// - None：显式 .no_proxy()，尊重「无代理」，避免被意外的环境变量带偏；
-/// - Manual：显式注入用户配置的代理，地址无效时不回退到系统代理；
-/// - System：不注入，交给当前 updater/reqwest 的系统代理实现探测。
-fn apply_proxy_policy(
-    builder: tauri_plugin_updater::UpdaterBuilder,
-    policy: crate::modules::preferences::ProxyPolicy,
-) -> tauri_plugin_updater::UpdaterBuilder {
-    use crate::modules::preferences::ProxyPolicy;
-    match policy {
-        ProxyPolicy::None => builder.no_proxy(),
-        ProxyPolicy::System => builder,
-        ProxyPolicy::Manual(url) => match url.parse() {
-            Ok(proxy) => builder.proxy(proxy),
-            Err(_) => builder.no_proxy(),
-        },
-    }
+    let (policy, no_proxy) = crate::modules::preferences::http_options_for_app(app);
+    // Pin the plugin's request hook API. The same closure is used by its
+    // metadata check and signed artifact download; no install/signature bypass.
+    let configure =
+        crate::modules::network_defaults::updater_proxy::ClientPolicy::new(policy, no_proxy)?;
+    builder
+        .configure_client(move |builder| configure.apply(builder))
+        .build()
+        .map_err(|_| AppError::NotConfigured)
 }
 
 use crate::commands::update_schedule;

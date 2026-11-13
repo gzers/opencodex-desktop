@@ -53,6 +53,12 @@ pub enum LifecycleResult {
 
 /// 进程运行器必须可测试；不得从 PATH 搜索命令。
 pub trait ProcessRunner {
+    /// Actual native production runner participates in the Desktop-owned
+    /// client-original session. Deterministic fixtures execute no real client
+    /// changes and keep their explicit fixture contract.
+    fn manages_client_originals(&self) -> bool {
+        false
+    }
     fn execute(&self, command: &ProcessCommand) -> Result<LifecycleResult, AppError>;
     /// Production start confirmation uses the same validated runtime identity as status.
     /// Deterministic runners retain their explicit fixture contract.

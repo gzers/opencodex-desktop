@@ -180,6 +180,7 @@ export const useAppStore = defineStore("app", {
     statusError: () => useLifecycleStore().statusError,
     statusSnapshot: () => useLifecycleStore().statusSnapshot,
     lifecycleState: () => useLifecycleStore().lifecycleState,
+    clientRecoveryRequired: () => useLifecycleStore().clientRecoveryRequired,
     processActionBusy: () => useLifecycleStore().processActionBusy,
     processAction: () => useLifecycleStore().processAction,
     processProgressAction: () => useLifecycleStore().processProgressAction,
@@ -223,6 +224,9 @@ export const useAppStore = defineStore("app", {
     },
     requestProcessAction(action: LifecycleAction) {
       return useLifecycleStore().requestProcessAction(action)
+    },
+    processActionBlocked(action: LifecycleAction) {
+      return useLifecycleStore().processActionBlocked(action)
     },
     // —— 运行来源 / 安装 / 卸载功能切片（features/runtime/store.ts）的委托与根壳编排 ——
     /**
@@ -392,9 +396,9 @@ export const useAppStore = defineStore("app", {
     },
     // —— 更新/升级/恢复功能切片（features/updates/store.ts）的动作委托 ——
     async loadOfficialProject() {
-      await useUpdatesStore().loadProject()
-      // 读版本成功后，后端会把版本回填到**当前来源**（`FZ-48`）；这里再读一次来源，
-      // 卡片「版本」才不会停在「未知」（真机：启动时的版本检查与来源读取是并发的）。
+      await Promise.all([useUpdatesStore().loadProject(),useUpdatesStore().loadVersions()])
+      // Actual disk observation and installer history remain separate. Source
+      // refresh only re-observes admitted current; it does not rewrite history.
       if (!useUpdatesStore().officialProjectError && useUpdatesStore().officialProject?.version) {
         await this.loadRuntimeSource()
       }
@@ -404,14 +408,14 @@ export const useAppStore = defineStore("app", {
       await useUpdatesStore().loadRemoteLatest()
     },
     /** 代跑官方更新（U-04）：确认后解析远端确定版本并复用受控安装；装完刷新来源与版本事实。 */
-    async applyOfficialUpdate(candidateVersion: string) {
+    async applyOfficialUpdate(candidateVersion: string,expectedObservation:string) {
       const updates = useUpdatesStore()
       const runtime = useRuntimeStore()
       if (updates.officialUpdateBusy || runtime.installing) return false
       updates.beginOfficialUpdate()
       runtime.beginInstall()
       try {
-        const outcome = await installOfficialUpdateCommand(candidateVersion, progress => runtime.observeInstallProgress(progress))
+        const outcome = await installOfficialUpdateCommand(candidateVersion,expectedObservation, progress => runtime.observeInstallProgress(progress))
         runtime.setInstallOutcome(outcome)
         await this.loadRuntimeSource()
         if (useRuntimeStore().source?.kind !== 'managed') {

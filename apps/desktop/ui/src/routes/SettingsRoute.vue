@@ -8,6 +8,7 @@ import AppTopbar from '@/components/AppTopbar.vue'
 import StickyTabs from '@/components/layout/StickyTabs.vue'
 import UiCard from '@/components/ui/UiCard.vue'
 import BackupManagement from '@/features/backup/BackupManagement.vue'
+import NativeConfigRollback from '@/features/backup/NativeConfigRollback.vue'
 import UiSelectMenu from '@/components/ui/UiSelectMenu.vue'
 import UiCardHeader from '@/components/ui/UiCardHeader.vue'
 import SettingRow from '@/components/patterns/SettingRow.vue'
@@ -16,11 +17,14 @@ import { useRuntimeStore } from '@/features/runtime/store'
 import { useRouteStore } from '@/stores/routes'
 import UiSegmented from '@/components/ui/UiSegmented.vue'
 import AgentExecutionField from '@/features/models/AgentExecutionField.vue'
-import RuntimeRecoveryEntry from '@/features/runtime/RuntimeRecoveryEntry.vue'
-import RuntimeRecoveryHost from '@/features/runtime/RuntimeRecoveryHost.vue'
+import RuntimeActivationRecovery from '@/features/runtime/RuntimeActivationRecovery.vue'
+import RuntimeTerminalCli from '@/features/runtime/RuntimeTerminalCli.vue'
+import NetworkProbe from '@/features/preferences/NetworkProbe.vue'
+import RuntimeProgramRemoval from '@/features/runtime/RuntimeProgramRemoval.vue'
+import RuntimeProgramReinstall from '@/features/runtime/RuntimeProgramReinstall.vue'
 import RuntimePortSettings from '@/features/runtime/RuntimePortSettings.vue'
 import { settingsSections } from '@/navigation'
-import { checkNetworkProxy, type PreferencesDto } from '@/features/preferences/api'
+import { type PreferencesDto } from '@/features/preferences/api'
 import { getCodexShimStatus, setCodexShim, type CodexShimDto } from '@/features/codex-shim/api'
 import UpdateCenter from '@/features/updates/UpdateCenter.vue'
 import { applyInterfaceScale, clampScale, DEFAULT_INTERFACE_SCALE } from '@/app/appearance/scale'
@@ -521,25 +525,6 @@ function goToNetwork() {
   routes.go('settings', { section: 'general' })
 }
 
-// 网络连通性检查（U-05）：带超时、不改写任何状态；结果如实展示。
-const proxyProbeBusy = ref(false)
-const proxyProbeResult = ref('')
-const proxyProbeOk = ref(false)
-async function runProxyProbe() {
-  if (proxyProbeBusy.value) return
-  proxyProbeBusy.value = true
-  proxyProbeResult.value = ''
-  try {
-    const result = await checkNetworkProxy()
-    proxyProbeOk.value = result.ok
-    proxyProbeResult.value = result.detail
-  } catch {
-    proxyProbeOk.value = false
-    proxyProbeResult.value = '检查失败；未改写任何设置。'
-  } finally {
-    proxyProbeBusy.value = false
-  }
-}
 
 function toggleSelect(key: string) {
   openSelect.value = openSelect.value === key ? '' : key
@@ -678,94 +663,6 @@ function openLocalDocument(documentId: 'license' | 'third-party') {
 // ---- 运行来源 / 托管安装 / 卸载（IMP Track B · B5）----
 function openInstallModal(source: InstallSourceKind) { app.requestInstallModal(source) }
 
-const uninstallOpen = ref(false)
-const uninstallScope = ref<'body' | 'full'>('full')
-const uninstallAck = ref(false)
-const uninstallAutoBackup = ref(true)
-const uninstallCleanData = ref(true)
-const uninstallRunning = ref(false)
-const uninstallDone = ref(false)
-
-const uninstallCanConfirm = computed(() => {
-  if (uninstallRunning.value || app.runtimeUninstallBusy) return false
-  if (app.runtimeUninstallPlan?.removable === false) return false
-  return uninstallAck.value
-})
-
-/** 进行中显示计划步骤；完成后换成后端返回的真实步骤与状态。 */
-const uninstallStepRows = computed(() => {
-  const result = app.runtimeUninstallResult
-  if (result && uninstallDone.value) {
-    return result.steps.map(step => ({
-      name: step.name,
-      detail: step.detail ?? '',
-      cls: step.status === 'ok' ? 'ok' : step.status === 'failed' ? 'failed' : 'skip',
-    }))
-  }
-  const planned = uninstallScope.value === 'full'
-    ? ['停止代理', '生成备份', '执行官方 ocx uninstall', '移除包体与入口', '清空 OPENCODEX_HOME 非官方自有残留', '残留核验']
-    : ['停止代理', '生成备份', '移除包体与入口', '残留核验']
-  return planned.map(name => ({ name, detail: '', cls: 'on' }))
-})
-
-const residueOk = computed(() => {
-  const residue = app.runtimeUninstallResult?.residue ?? []
-  return residue.length > 0 && residue.every(item => item.status === 'cleared')
-})
-
-// 与后端共用核验条件：失败、残留未知和证据缺失均不能显示成功。
-const uninstallFailedSteps = computed(() =>
-  (app.runtimeUninstallResult?.steps ?? []).filter(step => step.status === 'failed').length,
-)
-const uninstallVerified = computed(() => {
-  const steps = app.runtimeUninstallResult?.steps ?? []
-  return residueOk.value && steps.some(step => step.status === 'ok')
-    && steps.every(step => step.status !== 'failed')
-})
-const uninstallPartialFailure = computed(() => uninstallDone.value && !uninstallVerified.value)
-
-function residueLabel(status: string) {
-  if (status === 'cleared') return '已清除'
-  if (status === 'present') return '残留'
-  return '未知（未确认清除）'
-}
-
-function openUninstall() {
-  uninstallOpen.value = true
-  uninstallScope.value = 'full'
-  uninstallAck.value = false
-  uninstallCleanData.value = true
-  uninstallRunning.value = false
-  uninstallDone.value = false
-  const runtime = useRuntimeStore()
-  runtime.uninstallResult = null
-  runtime.uninstallError = ''
-  runtime.uninstallPlan = null
-  // 备份只提醒、不阻断：没检测到可复用备份时默认勾选「卸载前自动生成备份」。
-  uninstallAutoBackup.value = true
-  void app.loadUninstallPlan().then(() => {
-    if (app.runtimeUninstallPlan?.backupId) uninstallAutoBackup.value = false
-  })
-}
-
-function closeUninstall() {
-  if (uninstallRunning.value || app.runtimeUninstallBusy) return
-  uninstallOpen.value = false
-}
-
-async function confirmUninstall() {
-  if (!uninstallCanConfirm.value) return
-  uninstallRunning.value = true
-  const ok = await app.uninstallRuntime({
-    scope: uninstallScope.value,
-    autoBackup: uninstallAutoBackup.value,
-    cleanData: uninstallScope.value === 'full' && uninstallCleanData.value,
-    confirmation: 'confirmed',
-  })
-  uninstallRunning.value = false
-  if (ok) uninstallDone.value = true
-}
-
 watch(() => routes.settingsSection, section => {
   if (section === 'installation') {
     if (!app.runtimeSource) void app.loadRuntimeSource()
@@ -791,7 +688,6 @@ function restoreGeneralDefaults() {
 </script>
 
 <template>
-  <RuntimeRecoveryHost :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" />
   <UpdateCenter ref="updateCenter" v-model:open="updateOpen" :target="updateTarget" />
   <section class="route-section active">
     <AppTopbar />
@@ -830,7 +726,7 @@ function restoreGeneralDefaults() {
           <div v-if="preferences.networkProxyMode === 'manual'" class="setting-row" data-testid="setting-proxy-host"><div><div class="setting-title">主机名与端口</div><div class="setting-desc">例如 127.0.0.1:7890；不接受含空白、@ 或凭据的地址。</div></div><div class="controls"><input class="text-input" type="text" :value="preferences.networkProxyHost" aria-label="代理主机名与端口" placeholder="127.0.0.1:7890" @change="preferences.networkProxyHost = ($event.target as HTMLInputElement).value; saveProxyHost()"></div></div>
           <div v-if="preferences.networkProxyMode === 'manual'" class="setting-row" data-testid="setting-proxy-no-proxy"><div><div class="setting-title">不使用代理的地址</div><div class="setting-desc">逗号分隔的例外，例如 localhost,127.0.0.1,192.168.*。</div></div><div class="controls"><input class="text-input" type="text" :value="preferences.networkNoProxy" aria-label="不使用代理的地址" placeholder="localhost,127.0.0.1" @change="preferences.networkNoProxy = ($event.target as HTMLInputElement).value; saveProxyHost()"></div></div>
           <div class="setting-row"><div><div class="setting-title">应用范围</div><div class="setting-desc">应用自更新、官方版本查询与托管安装共用此代理；TLS 证书校验不可关闭。WebDAV 同步使用其端点自带代理。</div></div><div class="controls"><span class="setting-readonly">本版不含代理鉴权</span></div></div>
-          <div class="setting-row" data-testid="setting-network-probe"><div><div class="setting-title">检查连接</div><div class="setting-desc">{{ proxyProbeResult || '用当前配置对固定地址发一次带超时请求；只回报结果，不改写任何设置。' }}</div></div><div class="controls"><span v-if="proxyProbeResult" class="tag" :class="{ danger: !proxyProbeOk, ok: proxyProbeOk }">{{ proxyProbeOk ? '可用' : '不可用' }}</span><UiButton class="btn ghost" type="button" :disabled="proxyProbeBusy" @click="runProxyProbe()">{{ proxyProbeBusy ? '检查中' : '检查连接' }}</UiButton></div></div>
+          <NetworkProbe :policy-key="JSON.stringify([preferences.networkProxyMode,preferences.networkProxyScheme,preferences.networkProxyHost,preferences.networkNoProxy])" />
         </div>
       </UiCard>
 
@@ -852,7 +748,7 @@ function restoreGeneralDefaults() {
           <dt>包 / 清单 / 来源</dt><dd v-if="dataRoots.paths">{{ dataRoots.paths.program.packageVersion ?? '未记录' }} / {{ dataRoots.paths.program.manifestVersion ?? '未记录' }} / {{ dataRoots.paths.program.sourceVersion ?? '未记录' }}</dd><dd v-else>尚未读取</dd>
           <dt>程序有效性</dt><dd data-testid="program-validity">{{ programValidity }}</dd>
         </dl>
-        </div><div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || runtimeProtection.protectionLoading || !runtimeProtection.protection || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeRecoveryEntry :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
+        </div><div class="runtime-actions"><UiButton class="btn primary" data-testid="runtime-install" :disabled="protectionBlocked || runtimeProtection.protectionLoading || !runtimeProtection.protection || restartPending" @click="openInstallModal('registry')">安装程序</UiButton><RuntimeActivationRecovery :disabled="protectionBlocked||restartPending||runtimeProtection.protectionLoading||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramRemoval :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramReinstall :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><RuntimeProgramReinstall :repair="true" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending||app.runtimeInstalling||app.runtimeUninstallBusy" /><UiButton class="btn ghost" data-testid="paths-refresh" @click="refreshPaths">刷新位置</UiButton></div>
         <div v-if="protectionBlocked || runtimeProtection.protectionLoading || runtimeProtection.protectionFeedback" class="setting-row" data-testid="runtime-protection" :aria-busy="runtimeProtection.protectionLoading || runtimeProtection.protectionRetrying">
           <div>
             <div class="setting-title">面板更新保护核对</div>
@@ -868,7 +764,7 @@ function restoreGeneralDefaults() {
         <div v-if="app.runtimeSource" class="runtime-actions" data-testid="runtime-source-card">
           <UiButton class="btn ghost" type="button" data-testid="runtime-import-offline" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending" @click="openInstallModal('offline')">导入离线包</UiButton>
           <UiButton v-if="app.runtimeSource.kind==='managed'" class="btn ghost" type="button" @click="routes.go('settings',{section:'upgrade'})">更新面板</UiButton>
-          <UiButton v-if="app.runtimeSource.kind!=='unresolved'" class="btn danger" type="button" data-testid="runtime-uninstall" :disabled="protectionBlocked||runtimeProtection.protectionLoading||!runtimeProtection.protection||restartPending" @click="openUninstall">卸载</UiButton>
+
         </div>
         </section>
       </article>
@@ -896,10 +792,12 @@ function restoreGeneralDefaults() {
         <p v-if="dataRoots.error" role="alert">{{ dataRoots.error }}</p>
         </section>
       </article>
+      <RuntimeTerminalCli :disabled="dataRootBindingDisabled||app.runtimeInstalling||app.runtimeUninstallBusy" />
 
     </section>
 
     <section v-else-if="section === 'backup'" class="settings-panel active">
+      <NativeConfigRollback />
       <article class="card"><div class="card-head"><div><h2>数据与备份</h2><p>备份边界基于安装配置里的数据目录。</p></div><UiButton class="btn ghost" @click="routes.go('settings', { section: 'installation' })">打开安装配置</UiButton></div>
         <div class="setting-list">
           <div class="setting-row"><div><div class="setting-title">升级前备份</div><div class="setting-desc">面板更新前必须备份，失败时阻断安装；管理器备份选项在更新详情中确认。</div></div><div class="controls"><span class="tag">面板必需</span></div></div>
@@ -989,7 +887,7 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
         <div class="setting-list">
           <div class="setting-row"><div><div class="setting-title">桌面管理器</div><div class="setting-desc">查看通道版本、更新说明与实时进度；准备就绪后选择重启时机。</div></div><div class="controls"><UiButton class="btn ghost" type="button" @click="openUpdates('manager')">查看管理器更新</UiButton></div></div>
           <div class="setting-row"><div><div class="setting-title">OpenCodex 面板</div><div class="setting-desc">当前 {{ officialVersion }}；升级前必须备份配置。</div></div><div class="controls"><UiButton class="btn ghost" type="button" @click="openUpdates('official')">查看面板更新</UiButton></div></div>
-<div class="setting-row"><div><div class="setting-title">更新通道</div><div class="setting-desc">稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'appUpdateChannel' }"><button class="select-trigger" :aria-expanded="openSelect === 'appUpdateChannel' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="应用更新通道" @click="toggleSelect('appUpdateChannel')"><span class="select-value">{{ preferences.appUpdateChannel === 'beta' ? '测试通道' : '稳定通道' }}</span></button><UiSelectMenu :open="openSelect === 'appUpdateChannel'" @close="openSelect = ''" role="listbox" aria-label="应用更新通道"><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'stable' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'stable' ? 'true' : 'false'" @click="chooseUpdateChannel('stable', '稳定通道')">稳定通道</button><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'beta' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'beta' ? 'true' : 'false'" @click="chooseUpdateChannel('beta', '测试通道')">测试通道</button></UiSelectMenu></div></div></div><div class="setting-row" data-testid="setting-network-shortcut"><div><div class="setting-title">网络连接</div><div class="setting-desc">检查更新失败多为网络问题；可在此跳转配置代理。</div></div><div class="controls"><UiButton class="btn ghost" @click="goToNetwork">配置网络</UiButton></div></div>
+<div class="setting-row"><div><div class="setting-title">更新通道</div><div class="setting-desc">稳定通道或测试通道；检查、安装与自动调度共用同一通道来源。</div></div><div class="controls"><div class="select" :class="{ open: openSelect === 'appUpdateChannel' }"><button class="select-trigger" :aria-expanded="openSelect === 'appUpdateChannel' ? 'true' : 'false'" aria-haspopup="listbox" aria-label="应用更新通道" @click="toggleSelect('appUpdateChannel')"><span class="select-value">{{ preferences.appUpdateChannel === 'beta' ? '测试通道' : '稳定通道' }}</span></button><UiSelectMenu :open="openSelect === 'appUpdateChannel'" @close="openSelect = ''" role="listbox" aria-label="应用更新通道"><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'stable' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'stable' ? 'true' : 'false'" @click="chooseUpdateChannel('stable', '稳定通道')">稳定通道</button><button class="select-option" :class="{ selected: preferences.appUpdateChannel === 'beta' }" type="button" role="option" :aria-selected="preferences.appUpdateChannel === 'beta' ? 'true' : 'false'" @click="chooseUpdateChannel('beta', '测试通道')">测试通道</button></UiSelectMenu></div></div></div><div class="setting-row" data-testid="setting-network-shortcut"><div><div class="setting-title">网络连接</div><div class="setting-desc">检查 GitHub 与 npm 的连接，或调整应用请求代理。</div></div><div class="controls"><UiButton class="btn ghost" @click="goToNetwork">配置网络</UiButton></div></div>
 <div class="setting-row"><div><div class="setting-title">自动检查更新</div><div class="setting-desc">开启后按通道后台检查；关闭后不影响手动检查。</div></div><div class="controls"><UiSwitch label="自动检查更新" :model-value="preferences.appUpdateAutoCheck" @update:model-value="toggleUpdateAutoCheck()" /></div></div>
         </div>
       </article>
@@ -1058,90 +956,6 @@ ocx update</code></pre><p>提供方、路由、模型映射等自身配置不属
     </section>
   </section>
 
-  <UiDialog :open="uninstallOpen" title="卸载 OpenCodex" :busy="uninstallRunning || app.runtimeUninstallBusy" panel-class="wiz wiz-uninstall" data-testid="runtime-uninstall-modal" @close="closeUninstall">
-
-      <template v-if="!uninstallRunning && !uninstallDone">
-        <p class="wiz-hint">按当前运行来源 <code class="local-path">{{ displayPath(app.runtimeUninstallPlan?.sourcePath) || '未解析' }}</code> 卸载；范围越大后果越重。</p>
-        <div class="wiz-choices">
-          <label class="wiz-choice-block" :class="{ on: uninstallScope === 'full' }">
-            <input v-model="uninstallScope" type="radio" value="full" data-testid="uninstall-scope-full">
-            <span><b>完整卸载（推荐）</b><small>先由应用执行官方 <code>ocx uninstall</code> 清理 service / shim / config，再移除包体与入口。</small></span>
-          </label>
-          <label class="wiz-choice-block" :class="{ on: uninstallScope === 'body' }">
-            <input v-model="uninstallScope" type="radio" value="body" data-testid="uninstall-scope-body">
-            <span><b>仅移除包体与入口</b><small>只删包体与入口；<b>不碰</b> service / shim / config / OPENCODEX_HOME。</small></span>
-          </label>
-        </div>
-
-        <p v-if="app.runtimeUninstallPlanLoading" class="wiz-hint">正在读取卸载方案…</p>
-        <p v-else-if="app.runtimeUninstallPlanError" class="wiz-error" data-testid="uninstall-plan-error">{{ app.runtimeUninstallPlanError }}</p>
-        <template v-else-if="app.runtimeUninstallPlan">
-          <p v-if="!app.runtimeUninstallPlan.removable" class="wiz-error" data-testid="uninstall-not-removable">{{ app.runtimeUninstallPlan.reason }}</p>
-
-          <details class="wiz-more" data-testid="uninstall-plan-objects">
-            <summary>将移除的对象：包体 · 入口{{ uninstallScope === 'full' ? ' · 运行态' : '' }}</summary>
-            <ul class="wiz-objects">
-              <li v-for="item in app.runtimeUninstallPlan.removeObjects" :key="item"><code class="local-path">{{ displayPath(item) }}</code></li>
-              <li v-for="item in (uninstallScope === 'full' ? app.runtimeUninstallPlan.runtimeObjects : [])" :key="item"><span class="local-path">{{ displayPath(item) }}</span></li>
-            </ul>
-            <p v-if="app.runtimeUninstallPlan.externalCommand" class="wiz-hint">将执行：<code>{{ app.runtimeUninstallPlan.externalCommand }}</code></p>
-            <p v-if="uninstallScope === 'full' && app.runtimeUninstallPlan.officialCommand" class="wiz-hint">完整卸载将执行：<code>{{ app.runtimeUninstallPlan.officialCommand }}</code></p>
-          </details>
-
-          <p v-if="app.runtimeUninstallPlan.backupId" class="wiz-backup ok" data-testid="uninstall-backup">已检测到可恢复备份 <code>{{ app.runtimeUninstallPlan.backupId }}</code>。</p>
-          <p v-else class="wiz-backup warn" data-testid="uninstall-backup">未检测到可恢复备份；卸载后不可恢复。<b>不阻断卸载</b>，但建议先备份。</p>
-
-          <div class="wiz-opts">
-            <label class="wiz-opt" data-testid="uninstall-auto-backup"><input v-model="uninstallAutoBackup" type="checkbox"> 卸载前自动生成备份</label>
-            <label class="wiz-opt" :class="{ disabled: uninstallScope !== 'full' }" data-testid="uninstall-clean-data"><input v-model="uninstallCleanData" type="checkbox" :disabled="uninstallScope !== 'full'"> 清空 OPENCODEX_HOME 残留{{ uninstallScope === 'full' ? '' : '（仅完整卸载）' }}</label>
-          </div>
-        </template>
-
-
-      </template>
-
-      <template v-else>
-        <div class="wiz-uview">
-          <div class="wiz-uhead">
-            <span
-              class="wiz-spin"
-              :class="{ done: uninstallDone, faulted: uninstallPartialFailure }"
-              aria-hidden="true"
-            >{{ uninstallDone ? (uninstallPartialFailure ? '!' : '✓') : '' }}</span>
-            <b data-testid="uninstall-progress-title">{{ uninstallDone ? (uninstallPartialFailure ? (uninstallFailedSteps > 0 ? `卸载未核验完成：${uninstallFailedSteps} 步失败` : '卸载待核验') : '卸载完成') : '正在卸载 OpenCodex' }}</b>
-            <span class="wiz-umeta">{{ uninstallScope === 'full' ? '完整卸载' : '仅移除包体' }}<template v-if="uninstallDone">{{ uninstallPartialFailure ? (uninstallFailedSteps > 0 ? ` · ${uninstallFailedSteps} 步失败` : ' · 未核验完成') : ' · 100%' }}</template></span>
-          </div>
-          <div class="wiz-ubar" role="progressbar" aria-label="卸载进度"><div class="wiz-ufill" :class="{ done: uninstallDone && !uninstallPartialFailure, faulted: uninstallPartialFailure, run: !uninstallDone }"></div></div>
-          <ul class="wiz-substeps" data-testid="uninstall-steps">
-            <li v-for="row in uninstallStepRows" :key="row.name" :class="row.cls"><span><b>{{ row.name }}</b>{{ row.detail ? ' · ' + row.detail : '' }}</span></li>
-          </ul>
-          <pre v-if="app.runtimeUninstallResult && app.runtimeUninstallResult.officialOutput.length" class="wiz-console wiz-console-fixed" data-testid="uninstall-console">{{ app.runtimeUninstallResult.officialOutput.join('\n') }}</pre>
-        </div>
-        <div v-if="uninstallDone" class="residue-card" data-testid="uninstall-residue">
-          <div class="residue-head"><span class="residue-badge" aria-hidden="true">{{ residueOk ? '✓' : '!' }}</span><b>残留核验</b><small>{{ residueOk ? '0 残留' : ((app.runtimeUninstallResult?.residue ?? []).length ? '有未清除项' : '缺少核验证据') }}</small></div>
-          <ul class="residue-list">
-            <li v-for="item in (app.runtimeUninstallResult?.residue ?? [])" :key="item.path" :class="item.status"><code class="local-path">{{ displayPath(item.path) }}</code><span>{{ residueLabel(item.status) }}</span></li>
-          </ul>
-          <p v-if="app.runtimeUninstallResult?.backupId" class="wiz-hint">备份 <code>{{ app.runtimeUninstallResult.backupId }}</code> · <button class="cli-copy-btn" type="button" @click="copyPath(app.runtimeUninstallResult?.backupDirectory ?? '')"><code class="local-path">{{ displayPath(app.runtimeUninstallResult?.backupDirectory) }}</code></button></p>
-        </div>
-      </template>
-
-      <p v-if="app.runtimeUninstallError" class="wiz-error" data-testid="uninstall-error">{{ app.runtimeUninstallError }}</p>
-
-      <template v-if="!uninstallRunning && !uninstallDone" #actions="{ close }">
-        <div class="uninstall-confirmation">
-        <label class="wiz-ack" :class="{ on: uninstallAck }">
-          <input v-model="uninstallAck" type="checkbox" data-testid="uninstall-ack">
-          <span><b>我已阅读清单并确认继续</b><small>停代理 → 备份{{ uninstallScope === 'full' ? ' → 执行官方 ocx uninstall' : '' }} → 移除包体与入口 → 残留核验（全部由应用代执行）。</small></span>
-        </label>
-        <p v-if="!uninstallAck" class="wiz-ack-hint" data-testid="uninstall-ack-hint">勾选上面这一项，「卸载」才会亮起。</p>
-          <div class="uninstall-actions">
-            <UiButton variant="ghost" type="button" :disabled="app.runtimeUninstallBusy" @click="close">取消</UiButton>
-            <UiButton variant="danger" type="button" data-testid="uninstall-confirm" :disabled="!uninstallCanConfirm" @click="confirmUninstall">卸载</UiButton>
-          </div>
-        </div>
-      </template>
-  </UiDialog>
   <UiDialog v-if="pathDialog" :open="true" :title="pathDialog === 'details' ? '完整路径' : pathDialog === 'initialize' ? '初始化用户目录' : '读取渠道配置说明'" :busy="dataRoots.switching || dataRoots.saving || dataRoots.homeSaving" panel-class="paths-v2-dialog" data-testid="paths-dialog" @close="closePathDialog">
     <div class="paths-v2">
       <p v-if="dataRoots.pathsStale" role="status">上次快照（非最新），请刷新后核对。</p>

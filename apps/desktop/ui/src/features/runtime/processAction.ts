@@ -6,6 +6,7 @@ export interface ProcessActionResult {
   canStart: boolean
   canStop: boolean
   canRestart: boolean
+  clientRecoveryRequired: boolean
   failure?: { code: string; message: string }
 }
 

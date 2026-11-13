@@ -1,6 +1,6 @@
 """Build the complete offline I/runtime tree; never execute dependency lifecycle scripts.
 
-Inputs: checked-in platform/production lock, the pinned names runtime tgz, an
+Inputs: checked-in platform/production lock, the pinned official/runtime tgz, an
 official Node archive, and explicit absolute build-host Node/npm CLI paths.
 Output: one deterministic platform .tar.gz and its external descriptor. The
 Desktop deployment context generates runtime/bin/ocx(.cmd) after extraction.
@@ -232,13 +232,14 @@ def lock_packages(policy, prefix, target):
 
 
 def build(args):
-    policy = json.loads(POLICY.read_bytes())
+    policy_path = Path(getattr(args, 'policy', POLICY)).resolve()
+    policy = json.loads(policy_path.read_bytes())
     target = policy['platforms'][args.platform]
     output = args.output.resolve()
     require(not output.exists(), 'A fresh output directory is required')
     require(args.build_node.is_absolute() and args.build_node.is_file(), 'Absolute build-host Node required')
     require(args.npm_cli.is_absolute() and args.npm_cli.is_file(), 'Absolute build-host npm-cli.js required')
-    require(digest(args.runtime_archive) == policy['runtime']['sha256'], 'Names runtime archive hash mismatch')
+    require(digest(args.runtime_archive) == policy['runtime']['sha256'], 'Pinned runtime archive hash mismatch')
     require(args.cache.is_absolute(), 'Absolute dedicated npm cache required')
     output.mkdir(parents=True)
     work = output/'work'
@@ -328,7 +329,7 @@ def build(args):
     checks.update(unpackedBytes=unpacked, entries=len(entries), reproducibleRepacks=2,
                   archiveSha256=descriptor['archiveSha256'], descriptorSha256=digest(descriptor_path))
     (output/'checks.json').write_bytes(json_bytes(checks))
-    command([args.build_node, ROOT/'test/smoke/runtime023-bundle-check.mjs', '--root', tree,
+    command([args.build_node, ROOT/'test/smoke/runtime023-bundle-check.mjs', '--policy', policy_path, '--root', tree,
              '--descriptor', descriptor_path], work, env, output/'bundle-structure.log')
     checks['structure'] = 'passed-complete-tree-and-relative-symlinks'
     (output/'checks.json').write_bytes(json_bytes(checks))
@@ -336,7 +337,7 @@ def build(args):
         host = ('darwin' if sys.platform == 'darwin' else 'win32' if sys.platform == 'win32' else sys.platform)
         cpu = 'arm64' if host_platform.machine().lower() in ('arm64', 'aarch64') else 'x64'
         require(args.platform == host+'-'+cpu, 'Cannot execute a foreign platform bundle')
-        command([node, ROOT/'test/smoke/runtime023-bundle-check.mjs', '--root', tree,
+        command([node, ROOT/'test/smoke/runtime023-bundle-check.mjs', '--policy', policy_path, '--root', tree,
                  '--descriptor', descriptor_path, '--execute', '--evidence', output/'execution'],
                 work, env, output/'bundle-execution.log')
         checks['execution'] = 'passed-isolated-readonly-cli'
@@ -351,6 +352,7 @@ def build(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--policy', type=Path, default=POLICY, help='Explicit checked-in platform/production lock; defaults to the historical0.2.23 policy')
     parser.add_argument('--platform', choices=('darwin-arm64', 'win32-x64'), required=True)
     parser.add_argument('--runtime-archive', type=Path, required=True)
     parser.add_argument('--node-archive', type=Path)

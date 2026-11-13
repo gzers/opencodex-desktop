@@ -44,6 +44,7 @@ function overviewSnapshot(runtime: RuntimeState, source: StatusSnapshot['source'
   return {
     matrix: { runtime, connection: 'synced', operation: 'idle' },
     facts: {
+      client_recovery: 'not_required',
       health: running ? 'healthy' : runtime === 'unreachable' ? 'unhealthy' : 'unknown',
       runtime_label: running ? 'codex' : null,
       opencodex_home: '/fixtures/opencodex-home',
@@ -362,6 +363,7 @@ export async function installAuditHarness() {
   }
 
   applyScenario(params.get('scenario'), app, notif)
+  if (params.has('client-recovery')) (await import('./clientRecoveryFixture')).installClientRecoveryFixture(params.get('client-recovery') ?? 'eligible')
   window.document.documentElement.dataset.auditHarness = 'installed'
 
   if (params.get('report') === '1') {

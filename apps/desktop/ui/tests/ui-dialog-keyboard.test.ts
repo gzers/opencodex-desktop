@@ -11,6 +11,14 @@ afterEach(()=>{wrappers.splice(0).forEach(w=>w.unmount());document.body.innerHTM
 async function render(busy=false){const w=mount(UiDialog,{props:{open:true,title:'输入窗口',busy},slots:{default:'<input type="search" value="typed query" />'},attachTo:document.body});wrappers.push(w);await flushPromises();return w}
 function escape(target:Element){const e=new KeyboardEvent('keydown',{key:'Escape',bubbles:true,cancelable:true});target.dispatchEvent(e);return e}
 describe('native dialog keyboard ownership',()=>{
+ it('owns every Tab step from summary through buttons even when the native engine would skip buttons',async()=>{
+  const w=mount(UiDialog,{props:{open:true,title:'恢复核对'},slots:{default:'<details open><summary id="restore-summary">详情</summary><p>诊断内容</p></details>',actions:'<button id="restore-cancel">取消</button><button id="restore-confirm">确认</button>'},attachTo:document.body});wrappers.push(w);await flushPromises()
+  const summary=document.querySelector<HTMLElement>('#restore-summary')!,cancel=document.querySelector<HTMLElement>('#restore-cancel')!,confirm=document.querySelector<HTMLElement>('#restore-confirm')!
+  const tab=(target:HTMLElement,shift=false)=>{target.focus();const e=new KeyboardEvent('keydown',{key:'Tab',shiftKey:shift,bubbles:true,cancelable:true});target.dispatchEvent(e);expect(e.defaultPrevented).toBe(true)}
+  tab(summary);expect(document.activeElement).toBe(cancel);tab(cancel);expect(document.activeElement).toBe(confirm)
+  tab(confirm);expect(document.activeElement).toBe(document.querySelector('dialog button[aria-label="关闭"]'))
+  tab(summary,true);expect(document.activeElement).toBe(document.querySelector('dialog button[aria-label="关闭"]'))
+ })
  it('closes from a populated input before native search cancellation can consume Escape',async()=>{const w=await render();const e=escape(document.querySelector('dialog input')!);expect(w.emitted('close')).toHaveLength(1);expect(e.defaultPrevented).toBe(true)})
  it('keeps busy dialogs open and prevents the browser default close',async()=>{const w=await render(true);const e=escape(document.querySelector('dialog input')!);expect(w.emitted('close')).toBeUndefined();expect(e.defaultPrevented).toBe(true)})
  it('respects a child that already consumed Escape',async()=>{const w=await render();const input=document.querySelector('dialog input')!;input.addEventListener('keydown',e=>e.preventDefault(),{once:true});escape(input);expect(w.emitted('close')).toBeUndefined()})

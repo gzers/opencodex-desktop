@@ -70,13 +70,14 @@ pub async fn update_release_details(
                     root,
                     notes,
                     generation,
-                    crate::modules::preferences::proxy_policy_for_app(&prepare_app),
+                    crate::modules::preferences::http_options_for_app(&prepare_app),
                 ))
             })
             .await?;
         let limits = crate::modules::runtime_defaults::release_notes();
-        let source =
-            release_notes::HttpSource::new(policy, limits).map_err(|_| AppError::NotConfigured)?;
+        let source = release_notes::HttpSource::new(policy.0, limits)
+            .map_err(|_| AppError::NotConfigured)?
+            .with_no_proxy(policy.1);
         let details = release_notes::query(
             &source,
             &root,

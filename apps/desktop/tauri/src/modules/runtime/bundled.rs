@@ -30,6 +30,9 @@ const PENDING: &str = ".runtime-bundle-pending.json";
 const FAILURE: &str = ".runtime-bundle-failure.json";
 const OWNER: &str = ".ocxd-bundle-owner.json";
 
+#[path = "bundled_versioned.rs"]
+pub mod versioned;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ProvisionResult {
     Installed { version: String },
@@ -169,7 +172,7 @@ fn absolute(path: &Path) -> AppResult<()> {
     }
     Ok(())
 }
-fn roots(i: &Path, d: &Path) -> AppResult<()> {
+pub(crate) fn roots(i: &Path, d: &Path) -> AppResult<()> {
     absolute(i)?;
     absolute(d)?;
     let a = comparison_path(i)?;
@@ -762,6 +765,9 @@ fn existing(i: &Path) -> AppResult<String> {
         .package_version)
 }
 fn persist(d: &Path, i: &Path, version: &str) -> AppResult<()> {
+    persist_entry(d, &i.join(MANAGED_ENTRY_RELATIVE), version)
+}
+fn persist_entry(d: &Path, entry: &Path, version: &str) -> AppResult<()> {
     absolute(d)?;
     mkdir(d)?;
     let store = RuntimeStore::new(d);
@@ -781,11 +787,7 @@ fn persist(d: &Path, i: &Path, version: &str) -> AppResult<()> {
         RuntimeSourceRecord::default()
     };
     record.source = RuntimeSourceKind::Managed;
-    record.path = Some(
-        i.join(MANAGED_ENTRY_RELATIVE)
-            .to_string_lossy()
-            .into_owned(),
-    );
+    record.path = Some(entry.to_string_lossy().into_owned());
     record.resolved_version = Some(version.into());
     record.resolved_at = Some(now_rfc3339());
     store.save(&record)?;
@@ -1124,7 +1126,7 @@ fn directory_identity(path: &Path) -> AppResult<(u64, u64, u64)> {
         ))
     }
 }
-fn publish(source: &Path, target: &Path) -> AppResult<()> {
+pub(super) fn publish(source: &Path, target: &Path) -> AppResult<()> {
     #[cfg(unix)]
     {
         use std::os::unix::ffi::OsStrExt;
@@ -1158,7 +1160,7 @@ fn publish(source: &Path, target: &Path) -> AppResult<()> {
 
 #[cfg(all(test, unix))]
 #[path = "bundled_tests.rs"]
-mod bundled_tests;
+pub(crate) mod bundled_tests;
 
 #[cfg(all(test, windows))]
 #[path = "bundled_windows_tests.rs"]

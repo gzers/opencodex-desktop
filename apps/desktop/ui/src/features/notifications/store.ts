@@ -15,6 +15,9 @@ import {
 import { aggregateNotifications } from './model'
 import { cleanupNotifications as cleanupNotificationsCommand } from '@/platform/workspace'
 
+// Each store owns its real in-flight refresh, including queued backend writes.
+const refreshes = new WeakMap<object, Promise<void>>()
+
 export const useNotificationsStore = defineStore('notifications', {
   state: () => ({
     // 通知中心面板是否展开（全局通知层消费）。
@@ -24,6 +27,8 @@ export const useNotificationsStore = defineStore('notifications', {
     // 后端写入通知后广播事件，前端据此重拉；加载中收到广播时排队再拉一次，
     // 避免「事件先到、响应是旧的」把新通知丢掉。
     reloadQueued: false,
+    announcing: false,
+    announceQueued: false,
     error: false,
     stopEventStream: null as (() => void) | null,
   }),
@@ -57,34 +62,47 @@ export const useNotificationsStore = defineStore('notifications', {
      * 以免把查询错误伪装成业务通知。
      */
     async announce() {
-      const before = new Set(this.list.map(item => item.id))
-      await this.load()
-      if (this.error) return
-      const fresh = this.list.find(item => !item.read && (!item.resolved||item.kind==='info'&&['transfer_result','sync'].includes(item.action??'')) && !before.has(item.id))
-      if (!fresh) return
-      // 懒加载避免 store 之间的循环依赖（反馈域不依赖通知域）。
-      const { useFeedbackStore } = await import('@/app/feedback/store')
-      useFeedbackStore().showToast(fresh.title + '：' + fresh.detail, fresh.action==='transfer_result'||fresh.action==='sync'?{durationMs:8000,kind:fresh.kind==='info'?undefined:'error',resultId:fresh.action==='transfer_result'?fresh.objectId??undefined:undefined}:undefined)
+      if (this.announcing) { this.announceQueued = true; return }
+      this.announcing = true
+      try {
+        do {
+          this.announceQueued = false
+          const before = new Set(this.list.map(item => item.id))
+          await this.load()
+          if (this.error) continue
+          const fresh = this.list.find(item => !item.read &&
+            (!item.resolved || item.kind === 'info' && ['transfer_result', 'sync', 'models'].includes(item.action ?? '')) &&
+            !before.has(item.id))
+          if (!fresh) continue
+          const { useFeedbackStore } = await import('@/app/feedback/store')
+          const result = ['transfer_result', 'sync', 'models'].includes(fresh.action ?? '')
+          useFeedbackStore().showToast(fresh.title + '：' + fresh.detail, result ? {
+            durationMs: 8000,
+            kind: fresh.kind === 'info' ? undefined : 'error',
+            resultId: fresh.action === 'transfer_result' ? fresh.objectId ?? undefined : undefined,
+          } : undefined)
+        } while (this.announceQueued)
+      } finally { this.announcing = false }
     },
     async load() {
-      if (this.loading) {
+      const running = refreshes.get(this)
+      if (running) {
         this.reloadQueued = true
-        return
+        return running
       }
       this.loading = true
-      try {
-        const result = await listNotifications()
-        this.list = result.items
-        this.error = false
-      } catch {
-        this.error = true
-      } finally {
-        this.loading = false
-        if (this.reloadQueued) {
+      const pending = (async () => {
+        do {
           this.reloadQueued = false
-          void this.load()
-        }
-      }
+          try {
+            this.list = (await listNotifications()).items
+            this.error = false
+          } catch { this.error = true }
+        } while (this.reloadQueued)
+      })()
+      refreshes.set(this, pending)
+      try { await pending }
+      finally { refreshes.delete(this); this.loading = false }
     },
     async markRead(id: string) {
       try {

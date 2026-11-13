@@ -186,6 +186,7 @@ pub fn run() {
             app.manage(crate::state::SharedSandboxBoundary(sandbox_boundary));
             app.manage(crate::state::InstanceState { locks: std::sync::Mutex::new(locks) });
             app.manage(crate::state::SharedDataRoot(data_root.clone()));
+            app.manage(std::sync::Arc::new(crate::commands::runtime_removal::Reviews::default()));
             #[cfg(windows)]
             if let Some(config) = startup_window {
                 tauri::WebviewWindowBuilder::from_config(app, &config)?.build()?;
@@ -272,17 +273,17 @@ pub fn run() {
                 })?;
             let discovery_paths = crate::infrastructure::discovery_paths::paths_for_home(&home);
             app.manage(crate::state::SharedHomeDir(home.clone()));
-            // 运行来源解析层（FZ-48）：显式指定 > 托管安装 > 自动发现候选，不读 PATH。
-            // 发现候选按文档口径给出（受控默认目录 + Homebrew 两个固定前缀），
-            // 逐个做可执行校验，缺失即跳过。
+            // Production runtime uses only the current user program selection.
+            // Discovery/legacy paths never become an executable fallback.
             let platform=if cfg!(windows){crate::modules::data_root::layout::Platform::Windows}else if cfg!(target_os="macos"){crate::modules::data_root::layout::Platform::Macos}else{crate::modules::data_root::layout::Platform::Unix};
             let install_root=if crate::modules::test_sandbox::enabled(){
                 crate::modules::test_sandbox::sandbox_root().ok_or(crate::errors::AppError::NotConfigured)?.join("program")
-            } else {crate::modules::data_root::layout::Layout::installation_root(&executable,platform)?};
-            let runtime=crate::modules::runtime::RuntimeHandle::initialize_managed(&data_root,&install_root);
+            } else {crate::modules::data_root::layout::Layout::installation_root_for_user(&executable,&home,platform)?};
+            let runtime=crate::modules::runtime::RuntimeHandle::initialize_versioned(&data_root,&install_root);
             let runtime_executable: crate::infrastructure::runtime_executable::SharedRuntimeExecutable =
                 runtime.clone();
             app.manage(runtime.clone());
+            app.manage(std::sync::Arc::new(crate::commands::native_config_import::Selections::default()));
             // 托管安装 / 卸载的进行态（取消 + 同一时刻只允许一个写者）。
             let runtime_install = crate::state::SharedRuntimeInstall::new();
             app.manage(runtime_install.clone());
@@ -296,7 +297,7 @@ pub fn run() {
                         runtime.clone(), runtime_install.clone(),
                         move || crate::commands::runtime::broadcast_source_changed(&source_events),
                     ).is_err() {
-                        record_window_event(&data_root, "integrated runtime provisioning not started; installer busy");
+                        record_window_event(&data_root, "integrated runtime provisioning not started; operation or installation state requires review");
                     }
                 }
             }
@@ -327,7 +328,7 @@ pub fn run() {
                 runtime_executable.clone(),
                 home.clone(),
                 status_environment.clone(),
-            ).with_mutation_gate(runtime_install.clone());
+            ).with_mutation_gate(runtime_install.clone()).with_client_recovery_root(active_data_root.clone());
             let collector = std::sync::Arc::new(std::sync::Mutex::new(
                 crate::modules::status::StatusCollector::new(status_source),
             ));
@@ -694,6 +695,35 @@ pub fn run() {
             commands::model_config_v2::model_v2_begin_draft,
             commands::model_config_v2::model_v2_stage_connection,
             commands::model_config_v2::model_v2_file_save,
+            commands::model_config_v2::model_v2_file_reconcile_preview,
+            commands::model_config_v2::model_v2_file_reconcile_apply,
+            commands::native_config_import::model_v2_native_import_select,
+            commands::native_config_import::model_v2_native_import_apply,
+            commands::native_config_import::model_v2_native_rollback_list,
+            commands::native_config_import::model_v2_native_config_backup,
+            commands::runtime_activation::runtime_activation_preview,
+            commands::client_recovery::client_recovery_preview,
+            commands::client_recovery::client_recovery_finalize,
+            commands::client_recovery::client_recovery_continue,
+            commands::client_recovery::client_recovery_rollback,
+            commands::client_recovery::client_recovery_rearm,
+            commands::client_recovery::client_recovery_prepare_plan,
+            commands::client_recovery::client_recovery_finish_unchanged,
+            commands::client_recovery::client_recovery_cancel_preparation,
+            commands::runtime_builtin::runtime_builtin_preview,
+            commands::about::runtime_version_facts,
+            commands::runtime_builtin::runtime_preparation_status,
+            commands::runtime_builtin::runtime_preparation_retry,
+            commands::runtime_builtin::runtime_builtin_repair_preview,
+            commands::runtime_builtin::runtime_builtin_repair,
+            commands::runtime_builtin::runtime_builtin_reinstall,
+            commands::runtime_activation::runtime_activation_recover,
+            commands::runtime_removal::runtime_removal_preview,
+            commands::runtime_removal::runtime_removal_apply,
+            commands::terminal_cli::runtime_terminal_preview,
+            commands::terminal_cli::runtime_terminal_apply,
+            commands::native_config_import::model_v2_native_rollback_select,
+            commands::native_config_import::model_v2_native_rollback_apply,
             commands::model_config_v2::model_v2_file_project,
             commands::model_config_v2::model_v2_file_discard,
             commands::model_config_v2::model_v2_file_history,

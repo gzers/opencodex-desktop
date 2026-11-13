@@ -26,8 +26,8 @@ function render(target: 'official' | 'manager') {
 }
 describe('release detail integration through the shared update center', () => {
   it('loads the exact panel release body without running a version check, backup or install', async () => {
-    mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
-      : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'ready', notes: 'official 2.84.0 release body', notesSource: 'github_release', releaseUrl: 'https://github.com/lidge-jun/opencodex/releases/tag/v2.84.0', fetchedAt: 100, publishedAt: null, cached: false } : null)
+    mocks.invoke.mockImplementation(async (command, args) => command === 'runtime_version_facts'?{disk:{diskVersion:'2.83.0',selectedVersion:'2.83.0',recordedVersion:'2.83.0',recordedAt:null,integrity:'consistent',checkedAt:'2026-11-11T00:00:00Z',confirmationDigest:'original'},running:null,runningState:'no_record'}:command === 'get_update_status' ? managerUpdateStatus.value
+      : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'ready', notes: 'official 2.84.0 release body', notesSource: 'github_release', releaseUrl: 'https://github.com/lidge-jun/opencodex/releases/tag/v2.84.0', fetchedAt: 100, publishedAt: null, cached: false, checkedAt:100, failure:null } : null)
     const w = render('official'); await flushPromises()
     expect(mocks.invoke.mock.calls).toContainEqual(['update_release_details', { target: 'official', channel: 'official', candidateVersion: '2.84.0', force: false }])
     expect(w.text()).toContain('official 2.84.0 release body')
@@ -35,8 +35,8 @@ describe('release detail integration through the shared update center', () => {
     expect(mocks.invoke.mock.calls.some(call => call[0] === 'create_upgrade_backup' || call[0] === 'official_remote_latest')).toBe(false)
   })
   it('never presents a guessed manager page when the matching Release is absent', async () => {
-    mocks.invoke.mockImplementation(async (command, args) => command === 'get_update_status' ? managerUpdateStatus.value
-      : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'unavailable', notes: null, notesSource: null, releaseUrl: null, fetchedAt: 100, publishedAt: null, cached: false } : null)
+    mocks.invoke.mockImplementation(async (command, args) => command === 'runtime_version_facts'?{disk:{diskVersion:'2.83.0',selectedVersion:'2.83.0',recordedVersion:'2.83.0',recordedAt:null,integrity:'consistent',checkedAt:'2026-11-11T00:00:00Z',confirmationDigest:'original'},running:null,runningState:'no_record'}:command === 'get_update_status' ? managerUpdateStatus.value
+      : command === 'update_release_details' ? { target: args.target, channel: args.channel, candidateVersion: args.candidateVersion, notesState: 'unavailable', notes: null, notesSource: null, releaseUrl: null, fetchedAt: 100, publishedAt: null, cached: false, checkedAt:100, failure:null } : null)
     const w=render('manager');await flushPromises()
     expect(w.text()).not.toContain('查看网页详情')
     expect(w.text()).toContain('尚未提供本版本更新说明')
@@ -45,7 +45,7 @@ describe('release detail integration through the shared update center', () => {
   it('notes failure has an independent retry and retains the confirmed manager candidate', async () => {
     let calls=0
     mocks.invoke.mockImplementation(async (command,args) => command==='get_update_status' ? managerUpdateStatus.value
-      : command==='update_release_details' ? { target:args.target,channel:args.channel,candidateVersion:args.candidateVersion,notesState:++calls===1?'failed':'ready',notes:calls===1?null:'recovered notes',notesSource:null,releaseUrl:null,fetchedAt:100,publishedAt:null,cached:false }:null)
+      : command==='update_release_details' ? { target:args.target,channel:args.channel,candidateVersion:args.candidateVersion,notesState:++calls===1?'failed':'ready',notes:calls===1?null:'recovered notes',notesSource:null,releaseUrl:null,fetchedAt:100,publishedAt:null,cached:false,checkedAt:100,failure:null }:null)
     const w=render('manager');await flushPromises()
     const retry=w.findAll('button').find(button=>button.text()==='重试说明');expect(retry).toBeDefined()
     await retry!.trigger('click');await flushPromises()

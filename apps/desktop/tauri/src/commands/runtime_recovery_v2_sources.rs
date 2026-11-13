@@ -15,7 +15,7 @@ use crate::{
 };
 
 const DESCRIPTOR_NAME: &str = "runtime-bundle.manifest.json";
-const ARCHIVE_NAME: &str = "maintained-runtime.tgz";
+const ARCHIVE_NAME: &str = "official-runtime.tgz";
 const MAX_DESCRIPTOR: u64 = 64 * 1024 * 1024;
 
 fn error(code: &str, detail: impl Into<String>) -> AppError {
@@ -111,7 +111,7 @@ impl FixedResourceSourceResolver {
             runtime_source_version,
         })
     }
-    /// build.rs supplies all three pins from release-maintained resources.
+    /// build.rs supplies all three pins from the signed application resources.
     pub fn from_compiled(
         resource_directory: PathBuf,
         offline: SharedOfflineDrop,
@@ -128,7 +128,7 @@ impl FixedResourceSourceResolver {
         let expected = self.descriptor_sha256.as_deref().ok_or_else(|| {
             error(
                 "recovery_resource_pin_missing",
-                "当前构建未带签名应用固化的恢复资源描述 pin；请使用附带维护恢复包的 Desktop 构建",
+                "当前构建未带应用固化的恢复资源描述 pin；请使用附带官方恢复包的 Desktop 构建",
             )
         })?;
         let descriptor_path = self.resource_directory.join(DESCRIPTOR_NAME);
@@ -158,13 +158,13 @@ impl FixedResourceSourceResolver {
         let source_sha256 = self.runtime_source_sha256.as_deref().ok_or_else(|| {
             error(
                 "recovery_source_pin_missing",
-                "当前构建未固化维护恢复包摘要",
+                "当前构建未固化官方恢复包摘要",
             )
         })?;
         let source_version = self.runtime_source_version.as_deref().ok_or_else(|| {
             error(
                 "recovery_source_pin_missing",
-                "当前构建未固化维护恢复包版本",
+                "当前构建未固化官方恢复包版本",
             )
         })?;
         if !source_sha256.eq_ignore_ascii_case(&descriptor.runtime_archive_sha256) {

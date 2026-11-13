@@ -785,6 +785,9 @@ impl ControlledProcessRunner {
 }
 
 impl ProcessRunner for ControlledProcessRunner {
+    fn manages_client_originals(&self) -> bool {
+        cfg!(target_os = "macos")
+    }
     fn execute_in_context(
         &self,
         command: &ProcessCommand,

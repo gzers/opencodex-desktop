@@ -41,6 +41,7 @@ export interface StatusMatrix {
 }
 
 export interface RuntimeFacts {
+  client_recovery: 'not_required' | 'active' | 'required' | 'unknown'
   health: HealthState
   runtime_label: string | null
   opencodex_home: string | null

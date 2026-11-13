@@ -62,4 +62,37 @@ mod tests {
             sha256_hex(b"controlled fixture")
         );
     }
+
+    #[test]
+    fn streaming_sha256_matches_independent_large_input_vector() {
+        // Python hashlib SHA-256 of exactly 256 MiB of ASCII 'a'. This exercises
+        // the same chunked Digest interface as full program-image admission.
+        let chunk = [b'a'; 64 * 1024];
+        let mut hash = Sha256::new();
+        for _ in 0..4096 {
+            hash.update(chunk);
+        }
+        assert_eq!(
+            hex_lower(&hash.finalize()),
+            "b4a0226ee3f9b159ac06a86332dca0d90a04adef7f88934aa2a75be2a011d504"
+        );
+    }
+
+    #[test]
+    fn hmac_sha256_matches_rfc4231_and_refuses_changed_authentication() {
+        use hmac::{Hmac, Mac};
+        let mut mac = <Hmac<Sha256> as Mac>::new_from_slice(&[0x0b; 20]).unwrap();
+        mac.update(b"Hi There");
+        let bytes = mac.clone().finalize().into_bytes();
+        assert_eq!(
+            hex_lower(&bytes),
+            "b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7"
+        );
+        mac.clone().verify_slice(&bytes).unwrap();
+        let mut changed = bytes;
+        changed[0] ^= 1;
+        assert!(mac.clone().verify_slice(&changed).is_err());
+        mac.update(b"changed payload");
+        assert!(mac.verify_slice(&bytes).is_err());
+    }
 }

@@ -210,6 +210,7 @@ export async function installRuntime(request: RuntimeInstallRequest): Promise<Ru
 /** 代跑官方更新（U-04）：后端先解析远端确定版本，再复用受控安装；前端需先显式确认。 */
 export async function installOfficialUpdate(
   candidateVersion: string,
+  expectedObservation:string,
   observe?: (progress: RuntimeInstallProgress) => void,
 ): Promise<RuntimeInstallOutcomeDto> {
   const { Channel } = await import('@tauri-apps/api/core')
@@ -227,7 +228,7 @@ export async function installOfficialUpdate(
     observe?.({ phase: progress.phase, percent: 0, line: progress.line })
   }
   try {
-    return await invoke<RuntimeInstallOutcomeDto>('install_official_update', { candidateVersion, onProgress })
+    return await invoke<RuntimeInstallOutcomeDto>('install_official_update', { candidateVersion, expectedObservation, onProgress })
   } finally { active = false }
 }
 

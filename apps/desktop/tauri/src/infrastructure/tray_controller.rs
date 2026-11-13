@@ -230,6 +230,7 @@ pub fn tray_state_from_snapshot(
     data_root: std::path::PathBuf,
 ) -> TrayState {
     TrayState {
+        client_recovery: snapshot.facts.client_recovery,
         runtime: snapshot.matrix.runtime,
         health: snapshot.facts.health,
         port: snapshot.port,

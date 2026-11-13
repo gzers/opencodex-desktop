@@ -1,0 +1,58 @@
+import { beforeEach, expect, it, vi } from 'vitest'
+import { clientRecoveryApi, type ClientRecoveryPreview } from '@/features/runtime/client-recovery'
+const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }))
+vi.mock('@tauri-apps/api/core', () => ({ invoke }))
+beforeEach(() => { invoke.mockReset() })
+it('observes the current bound session without supplying paths, credentials or a recovery decision', async () => {
+  const preview: ClientRecoveryPreview = {
+    status: 'pending', phase: 'restore_prepared', revision: 6, attemptId: 'original-attempt',
+    originalEvidence: 'verified', planEvidence: 'verified', completionEvidence: 'unregistered',
+    phaseCount: 3, canContinue: false, canRollback: false, canFinalize: false, canRearm:false,canPreparePlan:false,planDigest:null,canFinishUnchanged:false,canCancelPreparation:false,preparationDigest:null,unchangedDigest:null,rollbackDigest:null,rearmDigest:null, confirmationDigest: null,
+  }
+  invoke.mockResolvedValue(preview)
+  expect(await clientRecoveryApi.preview()).toEqual(preview)
+  expect(invoke.mock.calls).toEqual([['client_recovery_preview']])
+})
+it('finalizes only the explicitly reviewed original attempt, revision and digest', async () => {
+  const request = { attemptId: 'original-attempt', revision: 6, confirmationDigest: 'reviewed-fingerprint' }
+  const outcome = { attemptId: request.attemptId, revision: 7, status: 'restored' }
+  invoke.mockResolvedValue(outcome)
+  expect(await clientRecoveryApi.finalize(request)).toEqual(outcome)
+  expect(invoke.mock.calls).toEqual([['client_recovery_finalize', { request }]])
+})
+it('does not turn an IPC failure into absent recovery or dispatch a retry/mutation', async () => {
+  const error = new Error('observation unavailable')
+  invoke.mockRejectedValue(error)
+  await expect(clientRecoveryApi.preview()).rejects.toBe(error)
+  expect(invoke).toHaveBeenCalledTimes(1)
+})
+it('continues only a reviewed attempt using the dedicated path-free command',async()=>{
+  const request={attemptId:'original-attempt',revision:6,confirmationDigest:'reviewed-fingerprint'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:7,status:'restored'})
+  await clientRecoveryApi.continue(request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_continue',{request}]])
+})
+it.each(['rollback','rearm'] as const)('dispatches %s only with the reviewed attempt/revision/direction digest',async action=>{
+  const request={attemptId:'original-attempt',revision:7,confirmationDigest:action+'-reviewed-digest'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:8,status:action==='rollback'?'rolled_back':'restore_prepared'})
+  await clientRecoveryApi[action](request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_'+action,{request}]])
+})
+it('ends only the confirmed unchanged early session with no client content or path parameters',async()=>{
+  const request={attemptId:'original-attempt',revision:2,confirmationDigest:'original-tree-digest'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:3,status:'unchanged'})
+  await clientRecoveryApi.finishUnchanged(request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_finish_unchanged',{request}]])
+})
+it('cancels the exact pre-capture reservation without accepting any original-file parameters',async()=>{
+  const request={attemptId:'reservation-ticket',revision:1,confirmationDigest:'current-observation-digest'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:2,status:'cancelled_before_capture'})
+  await clientRecoveryApi.cancelPreparation(request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_cancel_preparation',{request}]])
+})
+it('prepares only the reviewed missing plan without arbitrary paths or replacement content',async()=>{
+  const request={attemptId:'stopped-attempt',revision:6,confirmationDigest:'original-stopped-review'}
+  invoke.mockResolvedValue({attemptId:request.attemptId,revision:7,status:'restore_prepared'})
+  await clientRecoveryApi.preparePlan(request)
+  expect(invoke.mock.calls).toEqual([['client_recovery_prepare_plan',{request}]])
+})

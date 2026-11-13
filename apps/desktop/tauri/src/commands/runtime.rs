@@ -92,6 +92,15 @@ fn fixed_executables(root: &Path) -> AppResult<(PathBuf, PathBuf)> {
 pub fn managed_executables(
     handle: &RuntimeHandle,
 ) -> AppResult<(Option<PathBuf>, Option<PathBuf>)> {
+    if handle.uses_versioned_programs() {
+        let selected = handle
+            .selected_program()?
+            .ok_or_else(|| AppError::RuntimeManaged {
+                code: "managed_dependency_missing".into(),
+                detail: "集成运行程序尚未准备完成".into(),
+            })?;
+        return Ok((Some(selected.paths.node), Some(selected.paths.npm)));
+    }
     if !handle.resolver_managed_only() {
         return Ok(discovered_executables());
     }
@@ -165,12 +174,18 @@ pub(crate) fn broadcast_source_changed(app: &tauri::AppHandle) {
     );
 }
 
-fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
+fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> AppResult<RuntimeSourceDto> {
     let resolution = handle.current();
     let record = handle.store().load();
+    let selected = handle.selected_program()?;
     // 卸载与「重装同版本」按**安装记录登记的**前缀定位（`FZ-51`）：
     // `FZ-47` 允许自定义前缀，那时前缀不再是数据根的默认位置。
-    let managed_prefix = if handle.resolver_managed_only() {
+    let managed_prefix = if handle.uses_versioned_programs() {
+        selected
+            .as_ref()
+            .map(|p| p.paths.package_root.clone())
+            .unwrap_or_else(|| handle.installation_root().join("runtime/versions"))
+    } else if handle.resolver_managed_only() {
         handle
             .installation_root()
             .join(crate::modules::runtime::MANAGED_PREFIX_RELATIVE)
@@ -178,7 +193,7 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
         record.installed_prefix(data_root)
     };
     let managed_entry = handle.managed_entry().to_path_buf();
-    RuntimeSourceDto {
+    Ok(RuntimeSourceDto {
         kind: resolution.kind,
         inside_data_root: resolution
             .path
@@ -189,7 +204,11 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
             .path
             .as_ref()
             .map(|path| path.to_string_lossy().into_owned()),
-        version: record.resolved_version.clone(),
+        version: if handle.uses_versioned_programs() {
+            selected.as_ref().map(|p| p.selection.version.clone())
+        } else {
+            record.resolved_version.clone()
+        },
         resolved_at: record.resolved_at.clone(),
         managed_entry: matches!(resolution.kind, RuntimeSourceKind::Managed)
             .then(|| managed_entry.to_string_lossy().into_owned()),
@@ -199,7 +218,7 @@ fn source_dto(handle: &RuntimeHandle, data_root: &Path) -> RuntimeSourceDto {
             .explicit_path()
             .map(|path| path.to_string_lossy().into_owned()),
         history: record.history,
-    }
+    })
 }
 
 /// 代理进程是否在运行；运行中的来源切换要提示「需重启」（`FZ-48`）。
@@ -217,11 +236,17 @@ fn proxy_is_running(collector: &SharedStatusCollector) -> bool {
 }
 
 #[tauri::command]
-pub fn runtime_source(
+pub async fn runtime_source(
     handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
     data_root: tauri::State<'_, SharedDataRoot>,
 ) -> AppResult<RuntimeSourceDto> {
-    Ok(source_dto(handle.inner(), &data_root.0))
+    let handle = handle.inner().clone();
+    let root = data_root.0.clone();
+    crate::commands::run_blocking("read actual runtime source", move || {
+        handle.observe_current();
+        source_dto(&handle, &root)
+    })
+    .await
 }
 
 #[tauri::command]
@@ -336,7 +361,7 @@ async fn change_runtime_source(
         }
         handle.set_explicit(candidate);
         broadcast_source_changed(&app);
-        Ok(source_dto(&handle, &data_root))
+        source_dto(&handle, &data_root)
     })
     .await
 }
@@ -500,6 +525,7 @@ pub async fn install_runtime(
             data_root_path: data_root.0.clone(),
             home_path: home.0.clone(),
             collector: collector.inner().clone(),
+            expected_version_observation: None,
         },
         install.inner(),
         false,
@@ -513,6 +539,7 @@ struct RuntimeInstallContext {
     data_root_path: PathBuf,
     home_path: PathBuf,
     collector: SharedStatusCollector,
+    expected_version_observation: Option<String>,
 }
 
 /// 受控安装核心（供 install_runtime 与代跑官方更新共用）；不直接接触 Tauri State。
@@ -530,12 +557,31 @@ async fn install_managed_runtime(
         data_root_path,
         home_path,
         collector,
+        expected_version_observation,
     } = context;
     let source_kind = request.source_kind().ok_or(AppError::RuntimeManaged {
         code: "bad_source".to_string(),
         detail: "安装源必须是 registry 或 offline".to_string(),
     })?;
-    let prefix = if handle.resolver_managed_only() {
+    let prefix = if handle.uses_versioned_programs() {
+        handle.observe_current();
+        let selected = handle
+            .selected_program()?
+            .ok_or_else(|| AppError::RuntimeManaged {
+                code: "managed_dependency_missing".into(),
+                detail: "集成运行程序尚未准备完成，请先恢复内置资源".into(),
+            })?;
+        if request
+            .prefix_path()
+            .is_some_and(|p| p != selected.paths.package_root)
+        {
+            return Err(AppError::RuntimeManaged {
+                code: "invalid_install_root".into(),
+                detail: "运行包位置由当前版本选择确定，请刷新安装配置".into(),
+            });
+        }
+        selected.paths.package_root
+    } else if handle.resolver_managed_only() {
         let expected = handle.installation_root().join("runtime/opencodex");
         if request.prefix_path().is_some_and(|p| p != expected) {
             return Err(AppError::RuntimeManaged {
@@ -553,19 +599,19 @@ async fn install_managed_runtime(
         .version
         .clone()
         .unwrap_or_else(|| default_version().to_string());
-    // 网络代理（U-05）：本次安装未显式指定代理时，继承用户网络偏好里的手动 HTTP 代理。
-    let proxy = request.proxy().or_else(
-        || match crate::modules::preferences::proxy_policy_for_app(&app) {
-            crate::modules::preferences::ProxyPolicy::Manual(url) => {
-                let (scheme, host) = url.split_once("://")?;
-                let scheme = crate::modules::runtime::install::ProxyScheme::parse(scheme)?;
-                Some(crate::modules::runtime::install::ProxyConfig::new(
-                    scheme, host,
-                ))
-            }
-            _ => None,
-        },
-    );
+    // Explicit installation credentials remain in the request; saved native
+    // routing is captured inside the admitted blocking worker.
+    let (proxy_policy, no_proxy) = crate::modules::preferences::http_options_for_app(&app);
+    let proxy = request.proxy();
+    let npm_policy = if proxy.is_some()
+        || matches!(
+            source_kind,
+            crate::modules::runtime::install::InstallSourceKind::Offline
+        ) {
+        crate::modules::preferences::ProxyPolicy::None
+    } else {
+        proxy_policy
+    };
     let source = match source_kind {
         crate::modules::runtime::install::InstallSourceKind::Registry => InstallSource::Registry {
             version: requested_version.clone(),
@@ -631,6 +677,30 @@ async fn install_managed_runtime(
             candidate.to_string().as_bytes(),
         );
         let result: AppResult<_> = (|| {
+            if handle_ref.uses_versioned_programs() {
+                crate::modules::runtime::protection::ensure_binding_ready(&data_root_path)?;
+                if let Some(digest)=&expected_version_observation {crate::modules::runtime::version_facts::require_confirmation(handle_ref.installation_root(),&data_root_path,digest)?;}
+
+                let (target,platform)=crate::modules::runtime::program_layout::host_target()?;
+                let selected=crate::modules::runtime::program_selection::read(handle_ref.installation_root(),platform,target)?.ok_or(AppError::NotConfigured)?;
+                let npm=crate::modules::runtime::install::SystemNpmRunner::new(Some(home_path.clone()),data_root_path.join("cache/npm")).with_network(npm_policy.clone(),no_proxy.clone())?;
+                let probe=crate::modules::runtime::install::RealVersionProbe::default();
+                let mut installer=RuntimeInstaller::new(&data_root_path,&npm,Some(home_path.clone()),&sink,&probe,node_path.clone());
+                installer.cancel=mutation.cancel.clone();
+                installer.config_backup=Some(crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest {
+                    home:worker_app.state::<SharedProcessContext>().opencodex_home.clone(),
+                    program_source:Some(crate::commands::native_config_import::program_source(&selected)),
+                });
+                use crate::commands::runtime_recovery_v2::{ServiceOwnerProof,ServiceOwnerProofProvider};
+                let context=worker_app.state::<SharedProcessContext>().inner().clone();
+                let owner=crate::commands::runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(handle_ref.installation_root().into(),context.clone())?;
+                let outcome=installer.install_versioned(handle_ref.installation_root(),&selected,&install_request,||{
+                    if cfg!(target_os="macos") {return owner.require_program_unused(&context);}
+                    if owner.query(&context)?==ServiceOwnerProof::Stopped {Ok(())} else {Err(AppError::NotConfigured)}
+                })?;
+                handle_ref.observe_current();
+                return Ok((outcome.installation,false));
+            }
             // Reconcile before creating another protection backup or replacing the prefix.
             {
                 let guard = crate::modules::backup::manager::acquire_preferences_transaction(&data_root_path)?;
@@ -656,7 +726,7 @@ async fn install_managed_runtime(
             let npm = crate::modules::runtime::install::SystemNpmRunner::new(
                 Some(home_path.clone()),
                 data_root_path.join("cache/npm"),
-            );
+            ).with_network(npm_policy.clone(),no_proxy.clone())?;
             let probe = crate::modules::runtime::install::RealVersionProbe::default();
             let mut installer = RuntimeInstaller::new(
                 &data_root_path,
@@ -670,6 +740,14 @@ async fn install_managed_runtime(
                 .then(|| handle_ref.installation_root().to_path_buf());
             installer.cancel = mutation.cancel.clone();
             installer.attempt_id = receipt.as_ref().map(|r| r.attempt_id());
+            {
+                // Reinstalling through the installation dialog must not bypass
+                // the same current-HOME protection used by official updates.
+                let home = worker_app.state::<SharedProcessContext>().opencodex_home.clone();
+                let program_source = handle_ref.selected_program().ok().flatten().as_ref()
+                    .map(crate::commands::native_config_import::program_source);
+                installer.config_backup = Some(crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest { home, program_source });
+            }
             match installer.install(&install_request) {
                 Ok(outcome) => {
                     handle_ref.refresh();
@@ -756,6 +834,7 @@ pub fn cancel_runtime_install(install: tauri::State<'_, SharedRuntimeInstall>) -
 #[tauri::command]
 pub async fn install_official_update(
     candidate_version: String,
+    expected_observation: String,
     on_progress: tauri::ipc::Channel<PanelUpdateProgress>,
     app: tauri::AppHandle,
     handle: tauri::State<'_, std::sync::Arc<RuntimeHandle>>,
@@ -764,6 +843,22 @@ pub async fn install_official_update(
     collector: tauri::State<'_, SharedStatusCollector>,
     install: tauri::State<'_, SharedRuntimeInstall>,
 ) -> AppResult<RuntimeInstallOutcomeDto> {
+    let current_handle = handle.inner().clone();
+    let current_data = data_root.0.clone();
+    let expected = expected_observation.clone();
+    super::run_readonly(
+        "recheck reviewed runtime version before update",
+        move || {
+            crate::modules::runtime::version_facts::require_confirmation(
+                current_handle.installation_root(),
+                &current_data,
+                &expected,
+            )?;
+            current_handle.observe_current();
+            Ok(())
+        },
+    )
+    .await?;
     // 1. 只读远端查询：与官方版本卡片（U-03）共用同一来源与代理策略，解析出确定版本。
     let query_handle = handle.inner().clone();
     let environment =
@@ -797,6 +892,7 @@ pub async fn install_official_update(
             data_root_path: data_root.0.clone(),
             home_path: home.0.clone(),
             collector: collector.inner().clone(),
+            expected_version_observation: Some(expected_observation),
         },
         install.inner(),
         true,
@@ -1143,7 +1239,7 @@ mod tests {
         let root = tempfile::tempdir().expect("temp");
         let data_root = root.path().join("data-root");
         let handle = handle_for(&data_root);
-        let dto = source_dto(&handle, &data_root);
+        let dto = source_dto(&handle, &data_root).unwrap();
         assert_eq!(dto.kind, RuntimeSourceKind::Unresolved);
         assert_eq!(dto.path, None);
         assert!(!dto.inside_data_root);
@@ -1169,13 +1265,37 @@ mod tests {
         std::fs::set_permissions(&entry, std::fs::Permissions::from_mode(0o755)).expect("chmod");
 
         let handle = handle_for(&data_root);
-        let dto = source_dto(&handle, &data_root);
+        let dto = source_dto(&handle, &data_root).unwrap();
         assert_eq!(dto.kind, RuntimeSourceKind::Managed);
         assert!(dto.inside_data_root);
         assert_eq!(
             dto.managed_entry.as_deref(),
             Some(entry.to_string_lossy().as_ref())
         );
+    }
+
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn source_dto_uses_selected_disk_version_and_keeps_invalid_history_untouched() {
+        let f = crate::modules::runtime::program_selection::tests::Fixture::new();
+        let t = tempfile::tempdir().unwrap();
+        let data = t.path().canonicalize().unwrap().join("desktop");
+        let store = crate::modules::runtime::RuntimeStore::new(&data);
+        std::fs::create_dir_all(store.path().parent().unwrap()).unwrap();
+        std::fs::write(store.path(), b"{invalid historical metadata").unwrap();
+        let before = std::fs::read(store.path()).unwrap();
+        let h = RuntimeHandle::initialize_versioned(&data, &f.root);
+        let dto = source_dto(&h, &data).unwrap();
+        assert_eq!(dto.version.as_deref(), Some("2.99.0"));
+        assert_eq!(dto.managed_prefix, f.paths.package_root.to_string_lossy());
+        assert!(dto
+            .managed_entry
+            .unwrap()
+            .ends_with("runtime/bin/ocx-runtime"));
+        assert_eq!(std::fs::read(store.path()).unwrap(), before);
+        std::fs::write(f.root.join("runtime/current.json"), b"{").unwrap();
+        assert!(source_dto(&h, &data).is_err());
+        assert_eq!(std::fs::read(store.path()).unwrap(), before);
     }
 
     #[test]

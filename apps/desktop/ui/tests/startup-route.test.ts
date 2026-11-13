@@ -15,7 +15,8 @@ function snapshot(
   const port = options.port === undefined ? (runtime === 'running' ? 7317 : null) : options.port
   return {
     matrix: { runtime, connection: 'unconfigured', operation: 'idle' },
-    facts: { health: options.health ?? (runtime === 'running' ? 'healthy' : 'unknown') },
+    facts: {
+      client_recovery: 'not_required', health: options.health ?? (runtime === 'running' ? 'healthy' : 'unknown') },
     port,
     source: 'live',
   } as unknown as StatusSnapshot

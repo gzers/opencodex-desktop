@@ -3,6 +3,61 @@ mod unix {
     use super::super::*;
     use serde_json::json;
     use std::os::unix::fs::PermissionsExt;
+
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    #[tokio::test(flavor = "multi_thread")]
+    #[ignore = "explicit official299 bundle; only isolated --version executions"]
+    async fn real_official299_versioned_environment_is_bound_to_actual_programs() {
+        let archive =
+            PathBuf::from(std::env::var_os("OCXD_TEST_BUNDLE_ARCHIVE").expect("explicit archive"));
+        let descriptor = PathBuf::from(
+            std::env::var_os("OCXD_TEST_BUNDLE_DESCRIPTOR").expect("explicit descriptor"),
+        );
+        let pin = std::env::var("OCXD_TEST_BUNDLE_PIN").expect("explicit trusted pin");
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let program = root.join("program relocated 中文");
+        let data = root.join("data/desktop");
+        runtime::bundled::versioned::provision(
+            &program,
+            &data,
+            &archive,
+            &std::fs::read(descriptor).unwrap(),
+            &pin,
+        )
+        .unwrap();
+        let handle = RuntimeHandle::initialize_versioned(&data, &program);
+        let before = std::fs::read(handle.store().path()).unwrap();
+        let observed = checked_managed(handle.clone()).await.unwrap();
+        let probe_home = root.join("empty probe home");
+        std::fs::create_dir(&probe_home).unwrap();
+        let started = std::time::Instant::now();
+        let report = probe_paths_traced(
+            &observed.paths,
+            Some(&observed.script),
+            &probe_home,
+            Duration::from_secs(10),
+            None,
+        )
+        .await;
+        assert_eq!(report.gate, EnvironmentGate::Ready);
+        assert_eq!(report.node.version.as_deref(), Some("26.8.1"));
+        assert_eq!(report.npm.version.as_deref(), Some("11.19.0"));
+        assert_eq!(report.ocx.version.as_deref(), Some("2.99.0"));
+        assert_eq!(
+            observed.identity.prefix,
+            program.join("runtime/versions/2.99.0/opencodex")
+        );
+        assert!(observed.paths.ocx.ends_with("runtime/bin/ocx-runtime"));
+        assert!(observed == checked_managed(handle.clone()).await.unwrap());
+        assert!(!probe_home.join("config.json").exists());
+        assert!(!probe_home.join("runtime-port.json").exists());
+        assert_eq!(before, std::fs::read(handle.store().path()).unwrap());
+        println!(
+            "OFFICIAL299_REAL_ENV {}",
+            serde_json::json!({"report":report,"elapsedMs":started.elapsed().as_millis(),"sameSelectionBeforeAfter":true,"systemPathNotUsed":true,"serverNotStarted":true})
+        );
+    }
     struct Fixture {
         _temp: tempfile::TempDir,
         i: PathBuf,

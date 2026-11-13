@@ -131,7 +131,7 @@ fn snapshot_value(
 /// applied marker) through its own mutation lock. Those fields are never shown
 /// or edited by the manager, so a rewrite that touches only them must not make
 /// the next save report an external edit.
-fn manager_view_digest(value: &Value) -> String {
+pub(super) fn manager_view_digest(value: &Value) -> String {
     let mut view = value.clone();
     if let Some(root) = view.as_object_mut() {
         let discovery_empty = root

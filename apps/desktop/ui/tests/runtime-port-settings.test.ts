@@ -5,7 +5,7 @@ import RuntimePortSettings from '@/features/runtime/RuntimePortSettings.vue'
 import {useLifecycleStore} from '@/app/lifecycle/store'
 import {installNativeDialogStub} from './helpers/nativeDialog'
 import type {StatusSnapshot} from '@/contracts/runtimeStatus'
-function snapshot(runtime:'running'|'stopped'):StatusSnapshot{return {matrix:{runtime,connection:'synced',operation:'idle'},facts:{health:runtime==='running'?'healthy':'unknown',runtime_label:null,opencodex_home:'/fixtures/H',data_root:'/fixtures/D',protection:null,reboot_safe:null,service_present:null,shim_present:null,version_drift:null},port:runtime==='running'?55581:null,pid:runtime==='running'?'123':null,can_start:runtime==='stopped',can_stop:runtime==='running',can_restart:runtime==='running',source:'fixture'}}
+function snapshot(runtime:'running'|'stopped'):StatusSnapshot{return {matrix:{runtime,connection:'synced',operation:'idle'},facts:{client_recovery:'not_required',health:runtime==='running'?'healthy':'unknown',runtime_label:null,opencodex_home:'/fixtures/H',data_root:'/fixtures/D',protection:null,reboot_safe:null,service_present:null,shim_present:null,version_drift:null},port:runtime==='running'?55581:null,pid:runtime==='running'?'123':null,can_start:runtime==='stopped',can_stop:runtime==='running',can_restart:runtime==='running',source:'fixture'}}
 const {invoke}=vi.hoisted(()=>({invoke:vi.fn()}))
 vi.mock('@tauri-apps/api/core',()=>({invoke}))
 vi.mock('@tauri-apps/api/event',()=>({listen:async()=>()=>{}}))

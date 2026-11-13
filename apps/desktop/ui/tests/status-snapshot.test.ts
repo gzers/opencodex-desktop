@@ -8,6 +8,7 @@ function snapshot(overrides: Partial<StatusSnapshot> = {}): StatusSnapshot {
   return {
     matrix: { runtime: 'stopped', connection: 'unconfigured', operation: 'idle' },
     facts: {
+      client_recovery: 'not_required',
       health: 'unknown',
       runtime_label: null,
       opencodex_home: null,

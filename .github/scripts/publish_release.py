@@ -100,6 +100,8 @@ def validate_manifest(manifest, release, tag, repo):
 
 def verify_artifacts(repo, tag, manifest, release):
     """Verify the actual uploaded bytes with the public key embedded in the tag."""
+    if version(tag) >= (0, 2, 24):
+        raise PublishError("Official runtime distribution verification for 0.2.24 is not complete; refusing publication instead of applying the retired maintained-runtime contract")
     print(f"Reading tagged updater public key for {tag}", flush=True)
     config_response = json.loads(gh("api", f"repos/{repo}/contents/apps/desktop/tauri/tauri.conf.json?ref={tag}"))
     config = json.loads(base64.b64decode(config_response["content"]))

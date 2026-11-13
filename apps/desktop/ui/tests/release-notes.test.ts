@@ -13,7 +13,7 @@ let wrappers: VueWrapper[] = []
 function details(overrides: Partial<ReleaseDetails> = {}): ReleaseDetails {
   return { target: 'official', channel: 'official', candidateVersion: '2.84.0', notesState: 'ready',
     notes: '真实版本发布说明', notesSource: 'github_release', releaseUrl: 'https://github.com/lidge-jun/opencodex/releases/tag/v2.84.0',
-    fetchedAt: 100, publishedAt: '2026-10-14T00:00:00Z', cached: false, ...overrides }
+    fetchedAt: 100, publishedAt: '2026-10-14T00:00:00Z', cached: false, checkedAt:100, failure:null, ...overrides }
 }
 function render(props = {}) {
   const wrapper = mount(ReleaseNotes, { props: { target: 'official', channel: 'official', version: '2.84.0', ...props }, global: { plugins: [createPinia()] }, attachTo: document.body })
@@ -121,4 +121,8 @@ describe('exact candidate release notes', () => {
     expect(mocks.invoke).toHaveBeenCalledTimes(2)
     finish(details()); await Promise.all([a, b])
   })
+})
+it('labels exact cached notes and failed refresh independently',async()=>{
+ mocks.invoke.mockResolvedValueOnce(details({cached:true,failure:{kind:'rate_limited',httpStatus:429},checkedAt:101}))
+ const w=render();await flushPromises();expect(w.get('pre').text()).toContain('真实版本发布说明');expect(w.get('[data-testid="notes-cache-provenance"]').text()).toContain('2.84.0');expect(w.text()).toContain('限流');expect(w.text()).toContain('HTTP 429');expect(w.findAll('button').map(b=>b.text())).toContain('重试说明');expect(w.findAll('button').map(b=>b.text())).toContain('网络设置')
 })

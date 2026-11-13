@@ -1,17 +1,341 @@
 use super::*;
+use crate::modules::runtime::RuntimeHandle;
 use serde_json::{json, Value};
 use std::os::unix::fs::PermissionsExt;
 
 const VERSION: &str = "2.97.0-desktop023.names.1";
 const PACKAGE: &str = "runtime/opencodex/node_modules/@bitkyc08/opencodex";
-struct Fixture {
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+pub(crate) fn versioned_fixture() -> Fixture {
+    let mut f = Fixture::new();
+    f.descriptor["runtimeVersion"] = json!("2.99.0");
+    let package = f
+        .rows
+        .iter_mut()
+        .find(|(row, _)| row["path"] == format!("{PACKAGE}/package.json"))
+        .unwrap();
+    let mut value: Value = serde_json::from_slice(&package.1).unwrap();
+    value["version"] = json!("2.99.0");
+    package.1 = serde_json::to_vec(&value).unwrap();
+    package.0["bytes"] = json!(package.1.len());
+    package.0["sha256"] = json!(hash::sha256_hex(&package.1));
+    let source = f
+        .rows
+        .iter_mut()
+        .find(|(row, _)| {
+            row["path"]
+                .as_str()
+                .is_some_and(|p| p.starts_with("runtime/opencodex/sources/"))
+        })
+        .unwrap();
+    source.0["path"] = json!("runtime/opencodex/sources/opencodex-2.99.0.tgz");
+    let mut launcher = f
+        .rows
+        .iter()
+        .find(|(row, _)| row["path"] == "runtime/bun/bun")
+        .unwrap()
+        .clone();
+    launcher.0["path"] = json!("runtime/opencodex/node_modules/bun/bin/bun.exe");
+    f.rows.push(launcher);
+    f.repack();
+    f
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_supply_verifies_and_selects_one_official_image_without_execution() {
+    let f = versioned_fixture();
+    let (descriptor, pin) = f.bytes();
+    let result = versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap();
+    assert_eq!(
+        result,
+        ProvisionResult::Installed {
+            version: "2.99.0".into()
+        }
+    );
+    let selected = crate::modules::runtime::program_selection::read(
+        &f.i,
+        crate::modules::data_root::layout::Platform::Macos,
+        "darwin-arm64",
+    )
+    .unwrap()
+    .unwrap();
+    assert_eq!(selected.selection.version, "2.99.0");
+    crate::modules::runtime::program_image::verify(&selected).unwrap();
+    let catalog = crate::modules::runtime::program_catalog::inspect(&f.i).unwrap();
+    assert_eq!(
+        catalog.selections,
+        std::slice::from_ref(&selected.selection)
+    );
+    assert!(selected
+        .paths
+        .version_root
+        .ends_with("runtime/versions/2.99.0"));
+    assert!(selected.paths.npm.is_file());
+    for name in ["npm", "npx"] {
+        let path = selected
+            .paths
+            .version_root
+            .join("dependencies/node/bin")
+            .join(name);
+        if path.exists() {
+            assert!(fs::symlink_metadata(path).unwrap().is_file());
+        }
+    }
+    assert!(!f.i.join("runtime/opencodex").exists());
+    assert!(!f.i.join("runtime/.selection-pending.json").exists());
+    let snapshot = tree_snapshot(&f.i);
+    assert_eq!(
+        versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap(),
+        ProvisionResult::AlreadyInstalled {
+            version: "2.99.0".into()
+        }
+    );
+    assert_eq!(snapshot, tree_snapshot(&f.i));
+}
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn versioned_existing_image_needs_no_program_write_access_or_bundle_archive() {
+    let f = versioned_fixture();
+    let (descriptor, pin) = f.bytes();
+    versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap();
+    let snapshot = tree_snapshot(&f.i);
+    let lock = f.i.join(".runtime-program.lock");
+    fs::set_permissions(&lock, fs::Permissions::from_mode(0o0)).unwrap();
+    fs::set_permissions(&f.i, fs::Permissions::from_mode(0o500)).unwrap();
+    let other = f.root.join("user-b/desktop");
+    let result = versioned::provision(
+        &f.i,
+        &other,
+        &f.root.join("missing-bundle"),
+        b"not needed",
+        "not needed",
+    );
+    fs::set_permissions(&f.i, fs::Permissions::from_mode(0o700)).unwrap();
+    fs::set_permissions(&lock, fs::Permissions::from_mode(0o600)).unwrap();
+    assert_eq!(
+        result.unwrap(),
+        ProvisionResult::AlreadyInstalled {
+            version: "2.99.0".into()
+        }
+    );
+    assert_eq!(snapshot, tree_snapshot(&f.i));
+    assert_eq!(
+        RuntimeStore::new(&other).load().resolved_version.as_deref(),
+        Some("2.99.0")
+    );
+}
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+#[ignore = "requires explicit official2.99 complete platform bundle"]
+fn real_official299_versioned_supply_reopen_preserves_home_and_source() {
+    let archive =
+        PathBuf::from(std::env::var_os("OCXD_TEST_BUNDLE_ARCHIVE").expect("explicit archive"));
+    let descriptor = PathBuf::from(
+        std::env::var_os("OCXD_TEST_BUNDLE_DESCRIPTOR").expect("explicit descriptor"),
+    );
+    let pin = std::env::var("OCXD_TEST_BUNDLE_PIN").expect("explicit trusted pin");
+    assert!(archive.is_absolute() && descriptor.is_absolute());
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let program = root.join("program 中文 with spaces");
+    let data = root.join("data/desktop");
+    let home = root.join("data/opencodex/home");
+    fs::create_dir_all(&home).unwrap();
+    let config = b"{\"port\":55581,\"providers\":{},\"untouched\":true}";
+    fs::write(home.join("config.json"), config).unwrap();
+    let bytes = fs::read(&descriptor).unwrap();
+    let started = std::time::Instant::now();
+    let supplied = versioned::provision(&program, &data, &archive, &bytes, &pin).unwrap();
+    let handle = RuntimeHandle::initialize_versioned(&data, &program);
+    assert_eq!(handle.kind(), RuntimeSourceKind::Managed);
+    let selected = handle.selected_program().unwrap().unwrap();
+    crate::modules::runtime::program_image::verify(&selected).unwrap();
+    let catalog = crate::modules::runtime::program_catalog::inspect(&program).unwrap();
+    assert_eq!(
+        catalog.selections,
+        std::slice::from_ref(&selected.selection)
+    );
+    assert_eq!(selected.selection.version, "2.99.0");
+    let (node, npm) = crate::commands::runtime::managed_executables(&handle).unwrap();
+    assert_eq!(node, Some(selected.paths.node.clone()));
+    assert_eq!(npm, Some(selected.paths.npm.clone()));
+    let identity = crate::infrastructure::runtime_executable::RuntimeExecutableProvider::managed_program_identity(handle.as_ref()).unwrap();
+    assert_eq!(identity.package_version, "2.99.0");
+    assert_eq!(identity.prefix, selected.paths.package_root);
+    let reopened = RuntimeHandle::initialize_versioned(&data, &program);
+    assert_eq!(reopened.selected_program().unwrap().unwrap(), selected);
+    assert!(matches!(
+        versioned::provision(&program, &data, &root.join("absent"), b"unused", "unused").unwrap(),
+        ProvisionResult::AlreadyInstalled { .. }
+    ));
+    assert_eq!(fs::read(home.join("config.json")).unwrap(), config);
+    assert!(!program.join("runtime/bin/ocx").exists());
+    println!(
+        "OFFICIAL299_REAL_SUPPLY {}",
+        json!({"version":"2.99.0","result":format!("{supplied:?}"),"elapsedMs":started.elapsed().as_millis(),"programRoot":program,"identityPrefix":identity.prefix,"node":selected.paths.node,"npm":selected.paths.npm,"homeBytesPreserved":true,"reopenSelectionEqual":true,"legacyCliNotExposed":true,"actualProcessExecuted":false})
+    );
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_supply_only_creates_new_paths_without_adopting_unrelated_programs() {
+    let f = versioned_fixture();
+    fs::create_dir_all(f.i.join("runtime/opencodex")).unwrap();
+    fs::write(
+        f.i.join("runtime/opencodex/sentinel"),
+        b"foreign installation",
+    )
+    .unwrap();
+    let (descriptor, pin) = f.bytes();
+    assert_eq!(
+        versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap(),
+        ProvisionResult::Installed {
+            version: "2.99.0".into()
+        }
+    );
+    assert_eq!(
+        fs::read(f.i.join("runtime/opencodex/sentinel")).unwrap(),
+        b"foreign installation"
+    );
+    assert!(f.i.join("runtime/current.json").is_file());
+    assert!(!f.i.join("runtime/bin/ocx").exists());
+    assert!(f.i.join("runtime/bin/ocx-runtime").is_file());
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_reserved_target_collision_preserves_unknown_content() {
+    let f = versioned_fixture();
+    fs::create_dir_all(f.i.join("runtime/versions/2.99.0")).unwrap();
+    let sentinel = f.i.join("runtime/versions/2.99.0/unknown");
+    fs::write(&sentinel, b"must not overwrite").unwrap();
+    let (descriptor, pin) = f.bytes();
+    assert!(versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).is_err());
+    assert_eq!(fs::read(sentinel).unwrap(), b"must not overwrite");
+    assert!(!f.i.join("runtime/current.json").exists());
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn interrupted_version_activation_remains_unknown_and_never_reports_installed() {
+    let f = versioned_fixture();
+    let (descriptor, pin) = f.bytes();
+    assert!(versioned::provision_inner(&f.i, &f.d, &f.archive, &descriptor, &pin, true).is_err());
+    assert!(f.i.join("runtime/.selection-pending.json").is_file());
+    assert!(!f.i.join("runtime/current.json").exists());
+    assert!(crate::modules::runtime::program_selection::read(
+        &f.i,
+        crate::modules::data_root::layout::Platform::Macos,
+        "darwin-arm64"
+    )
+    .is_err());
+    let snapshot = tree_snapshot(&f.i);
+    assert!(versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).is_err());
+    assert_eq!(snapshot, tree_snapshot(&f.i));
+    assert!(!RuntimeStore::new(&f.d).path().exists());
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn invalid_versioned_archive_cannot_publish_a_current_selection() {
+    let f = versioned_fixture();
+    let (descriptor, pin) = f.bytes();
+    fs::write(&f.archive, b"changed archive").unwrap();
+    assert!(versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).is_err());
+    assert!(!f.i.join("runtime/current.json").exists());
+    assert!(!f.i.join("runtime/versions/2.99.0").exists());
+    assert!(!RuntimeStore::new(&f.d).path().exists());
+}
+pub(crate) struct Fixture {
     _temp: tempfile::TempDir,
     root: PathBuf,
-    i: PathBuf,
-    d: PathBuf,
-    archive: PathBuf,
+    pub(crate) i: PathBuf,
+    pub(crate) d: PathBuf,
+    pub(crate) archive: PathBuf,
     rows: Vec<(Value, Vec<u8>)>,
     descriptor: Value,
+}
+
+#[test]
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn versioned_explicit_resupply_checks_original_preview_before_reading_archive_and_preserves_failed_source(
+) {
+    for invalid in ["preview", "archive", "none"] {
+        let f = versioned_fixture();
+        let (descriptor, pin) = f.bytes();
+        versioned::provision(&f.i, &f.d, &f.archive, &descriptor, &pin).unwrap();
+        let h = f.root.join("opencodex-home");
+        fs::create_dir(&h).unwrap();
+        let config = br#"{"port":41234,"providers":{}}"#;
+        fs::write(h.join("config.json"), config).unwrap();
+        let removal = super::super::program_removal::prepare_registered(&f.i, &f.d, &h).unwrap();
+        removal
+            .execute(
+                &removal.preview().unwrap().confirmation_digest,
+                || Ok(()),
+                || Ok(()),
+            )
+            .unwrap();
+        let review =
+            super::super::program_reinstall::review(&f.i, &f.d, &h, &pin, "2.99.0").unwrap();
+        if invalid == "archive" {
+            fs::write(&f.archive, b"truncated resource").unwrap();
+        }
+        let archive = if invalid == "preview" {
+            f.root.join("does-not-exist")
+        } else {
+            f.archive.clone()
+        };
+        let result = versioned::reinstall(
+            &f.i,
+            &f.d,
+            versioned::ReinstallRequest {
+                home: &h,
+                confirmation_digest: if invalid == "preview" {
+                    "not-reviewed"
+                } else {
+                    &review.confirmation_digest
+                },
+            },
+            &archive,
+            &descriptor,
+            &pin,
+            || Ok(()),
+        );
+        if invalid == "none" {
+            assert!(
+                matches!(result.unwrap(),ProvisionResult::Installed{version} if version=="2.99.0")
+            );
+            assert_eq!(
+                super::super::program_catalog::inspect(&f.i)
+                    .unwrap()
+                    .selections
+                    .len(),
+                1
+            );
+        } else {
+            let error = result.err().unwrap().to_string();
+            if invalid == "preview" {
+                assert!(error.contains("预览已过期"), "{error}");
+            }
+            assert!(super::super::program_removal::intentionally_removed(&f.i, &f.d).unwrap());
+            assert!(!f
+                .i
+                .join("runtime")
+                .join(super::super::program_reinstall::PENDING)
+                .exists());
+            assert!(fs::read_dir(&f.i).unwrap().all(|p| !p
+                .unwrap()
+                .file_name()
+                .to_string_lossy()
+                .starts_with(".runtime-version-stage-")));
+        }
+        assert_eq!(fs::read(h.join("config.json")).unwrap(), config);
+    }
 }
 impl Fixture {
     fn new() -> Self {
@@ -120,7 +444,7 @@ impl Fixture {
         self.descriptor["archiveBytes"] = json!(fs::metadata(&self.archive).unwrap().len());
         self.descriptor["archiveSha256"] = json!(hash::sha256_file(&self.archive).unwrap());
     }
-    fn bytes(&self) -> (Vec<u8>, String) {
+    pub(crate) fn bytes(&self) -> (Vec<u8>, String) {
         let bytes = serde_json::to_vec(&self.descriptor).unwrap();
         let digest = hash::sha256_hex(&bytes);
         (bytes, digest)

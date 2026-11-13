@@ -11,18 +11,12 @@ on:
         description: '已存在的 tag（如 v0.1.0）'
         required: true
         type: string
-      runtime_only:
-        description: '仅为已构建且完成原包补验的草稿补交维护运行包，不重新构建桌面包'
-        required: false
-        default: false
-        type: boolean
 
 permissions:
   contents: write
 
 jobs:
   release:
-    if: github.event_name != 'workflow_dispatch' || !inputs.runtime_only
     strategy:
       fail-fast: false
       matrix:
@@ -48,6 +42,12 @@ jobs:
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
 
+      - name: Verify exact 0.2.24 release source before assembly
+        shell: bash
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: python3 .github/scripts/verify_release_inputs_024.py --tag "$RELEASE_TAG"
+
       - uses: actions/setup-node@v5
         with:
           # Bundle resolution must use the same Node/npm pair as the pinned closure.
@@ -64,8 +64,21 @@ jobs:
           node_bin="$(node -p 'process.execPath')"
           npm_cli="$(node -e 'const p=require("node:path"),fs=require("node:fs");const n=process.execPath;const paths=[p.join(p.dirname(n),"node_modules/npm/bin/npm-cli.js"),p.join(p.dirname(n),"../lib/node_modules/npm/bin/npm-cli.js")];const hit=paths.find(v=>fs.existsSync(v));if(!hit)process.exit(1);process.stdout.write(p.resolve(hit))')"
           if [ "$RUNNER_OS" = Windows ]; then platform=win32-x64; else platform=darwin-arm64; fi
-          python3 .github/scripts/stage_runtime_bundle_023.py --platform "$platform" --build-node "$node_bin" --npm-cli "$npm_cli" --output test/out/runtime-stage
+          mkdir -p test/out
+          python3 .github/scripts/stage_runtime_bundle_024.py --platform "$platform" --build-node "$node_bin" --npm-cli "$npm_cli" --output test/out/runtime-stage > test/out/runtime-stage-result.json
+          cat test/out/runtime-stage-result.json
           echo "OCXD_REQUIRE_RUNTIME_BUNDLE=1" >> "$GITHUB_ENV"
+
+      - name: Preserve official runtime distribution identity
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-official-runtime-${{ matrix.platform }}
+          path: |
+            test/out/runtime-stage-result.json
+            apps/desktop/tauri/resources/runtime-bundle/runtime-bundle.manifest.json
+            apps/desktop/tauri/resources/runtime-bundle/runtime-bundle.manifest.sha256
+          if-no-files-found: warn
 
       - name: Install exact packaging CLI for bounded tool-download retries
         shell: bash
@@ -104,7 +117,7 @@ jobs:
             echo "---"
             echo ""
             echo "### 安装"
-            echo '- macOS（Apple Silicon）：下载 .dmg，将其中整个“OpenCodeX Desktop”文件夹复制到 ~/Applications，再打开文件夹中的应用；请勿只复制 .app 或从磁盘映像运行。'
+            echo '- macOS（Apple Silicon）：下载 .dmg，将 OpenCodeX Desktop.app 拖入 Applications，也可复制到 ~/Applications；推出磁盘映像后再打开应用。'
             echo "- Windows（x64）：下载 \`*-setup.exe\`（NSIS）安装包。"
             echo "- 均为未签名测试包：macOS 首次打开如被 Gatekeeper 拦截，右键 →「打开」；Windows SmartScreen 可能提示，选择「仍要运行」。"
             echo "CHANGELOG_EOF"
@@ -151,7 +164,7 @@ jobs:
           codesign -dvv "$app" 2>&1
           test -s "$app/Contents/Resources/resources/LICENSE"
           test -s "$app/Contents/Resources/resources/THIRD-PARTY-NOTICES.txt"
-      - name: Package verified macOS app in its independent user installation folder
+      - name: Package verified standalone macOS application
         if: runner.os == 'macOS'
         shell: bash
         env:
@@ -163,9 +176,9 @@ jobs:
           images=(apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg)
           test "${#images[@]}" -eq 1
           test -f "${images[0]}"
-          mkdir -p test/out/macos023-package
-          output="test/out/macos023-package/$(basename "${images[0]}")"
-          python3 .github/scripts/package_macos_023.py --app "$app" --output "$output" --metadata test/out/macos023-package/package-evidence.json --expected-version 0.2.23 --input-kind release-input
+          mkdir -p test/out/macos024-package
+          output="test/out/macos024-package/$(basename "${images[0]}")"
+          python3 .github/scripts/package_macos_024.py --app "$app" --output "$output" --metadata test/out/macos024-package/package-evidence.json --expected-version "${RELEASE_TAG#v}" --input-kind release-input
           # The sealed .app/updater bytes stay unchanged; replace only the DMG.
           cp "$output" "${images[0]}"
           gh release upload "$RELEASE_TAG" "$output" --repo "$GITHUB_REPOSITORY" --clobber
@@ -173,7 +186,7 @@ jobs:
         if: always() && runner.os == 'macOS'
         with:
           name: release-macos-installation-layout-evidence
-          path: test/out/macos023-package/package-evidence.json
+          path: test/out/macos024-package/package-evidence.json
           if-no-files-found: ignore
 
       # Keep the release private until its actual installer bytes pass the existing
@@ -205,48 +218,3 @@ jobs:
           name: release-windows-installer-evidence
           path: test/out/release-windows-installer
           if-no-files-found: warn
-
-  maintained-runtime:
-    needs: release
-    if: always() && (needs.release.result == 'success' || (github.event_name == 'workflow_dispatch' && inputs.runtime_only))
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-      - name: Reproduce maintained base, names and lifecycle runtime
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PYRUNTIME'
-          import hashlib,pathlib,urllib.request
-          p=pathlib.Path("test/out/base-runtime.tgz");p.parent.mkdir(parents=True,exist_ok=True)
-          with urllib.request.urlopen("https://github.com/gzers/opencodex-desktop/releases/download/v0.2.22/opencodex-2.97.0-post021.ownerquery.2.tgz",timeout=60) as r: data=r.read(32*1024*1024+1)
-          assert len(data)<=32*1024*1024 and hashlib.sha256(data).hexdigest()=="bba03ba0cf02c7bcd1895f63c670cb4a2f4b5272657145e45701b20d5e0f1957"
-          p.write_bytes(data)
-          PYRUNTIME
-          python3 .github/scripts/build_runtime_lifecycle_023.py test/out/maintained-runtime --archive test/out/base-runtime.tgz
-      - name: Install pinned signing CLI
-        run: npm install --global @tauri-apps/cli@2.11.4
-      - name: Sign and attach maintained runtime to the same draft release
-        env:
-          GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
-        run: |
-          set -euo pipefail
-          tauri signer sign test/out/maintained-runtime/*.tgz
-          gh release upload "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
-            test/out/maintained-runtime/*.tgz test/out/maintained-runtime/*.sig \
-            test/out/maintained-runtime/maintained-runtime.json \
-            test/out/maintained-runtime/maintained-runtime.sha256
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: maintained-runtime-build-evidence
-          path: test/out/maintained-runtime
-          if-no-files-found: error

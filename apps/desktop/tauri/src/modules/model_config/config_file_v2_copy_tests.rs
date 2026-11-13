@@ -308,3 +308,57 @@ fn stale_copy_request_and_source_change_do_not_leave_copy_sources_or_draft_effec
         before
     );
 }
+
+#[test]
+fn reconcile_keeps_original_copy_reference_when_its_exact_provider_is_unchanged() {
+    let mut f = Fixture::new();
+    let created = f.copy(true);
+    let draft = created.draft.unwrap();
+    let copy = draft
+        .policy
+        .channels
+        .iter()
+        .find(|c| c.label == "copy")
+        .unwrap();
+    let origin = copy.connection.imported_config.clone();
+    let path = f.h.join("config.json");
+    let mut external = read_raw(&f.h).unwrap().0;
+    external["outside"] = json!({"changed":true});
+    std::fs::write(&path, canonical_bytes(&external).unwrap()).unwrap();
+    let request = || reconcile::ReconcileRequest {
+        expected: draft.base.clone(),
+        local_channel_ids: BTreeSet::new(),
+        model_only_channel_ids: BTreeSet::new(),
+    };
+    let preview = reconcile::preview(&f.d, &f.h, request()).unwrap();
+    assert!(preview.conflicts.is_empty());
+    let next = reconcile::apply(&f.d, &f.h, request(), &preview.review_digest)
+        .unwrap()
+        .draft
+        .unwrap();
+    let copy_after = next
+        .policy
+        .channels
+        .iter()
+        .find(|c| c.id == copy.id)
+        .unwrap();
+    assert_eq!(copy_after.connection.imported_config, origin);
+    assert!(
+        verified_copy_source(&f.d, &external, copy_after, &next.base.source_digest)
+            .unwrap()
+            .is_some()
+    );
+    external["providers"]["source"]["baseUrl"] = json!("https://changed.invalid/v1");
+    std::fs::write(&path, canonical_bytes(&external).unwrap()).unwrap();
+    let conflict = reconcile::preview(
+        &f.d,
+        &f.h,
+        reconcile::ReconcileRequest {
+            expected: next.base,
+            local_channel_ids: BTreeSet::new(),
+            model_only_channel_ids: BTreeSet::new(),
+        },
+    )
+    .unwrap();
+    assert!(conflict.conflicts.iter().any(|c| c.reason == "bound_copy"));
+}

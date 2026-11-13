@@ -29,6 +29,7 @@ Object.defineProperty(window, 'matchMedia', {
 const snapshot: StatusSnapshot = {
   matrix: { runtime: 'running', connection: 'synced', operation: 'idle' },
   facts: {
+    client_recovery: 'not_required',
     health: 'healthy',
     runtime_label: null,
     opencodex_home: null,

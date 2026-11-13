@@ -4,6 +4,8 @@
 //! 解析为类型化访问器。用户偏好只决定「用不用代理、用哪个代理」，超时、重试、UA 与 TLS
 //! 约束等安全行为固定在此，不随用户配置放宽。
 
+pub mod npm_proxy;
+pub(crate) mod updater_proxy;
 use std::sync::OnceLock;
 use std::time::Duration;
 
@@ -68,6 +70,30 @@ pub fn tls_verify() -> bool {
 /// 是否允许使用代理：安全策略开关。
 pub fn proxy_allowed() -> bool {
     defaults().allow_proxy
+}
+
+/// Apply an already captured preference snapshot. Explicit direct/manual modes
+/// never inherit ambient proxy variables; TLS verification and redirect refusal
+/// remain fixed, independent of the user's address/bypass preferences.
+pub fn http_client(
+    policy: crate::modules::preferences::ProxyPolicy,
+    no_proxy: &str,
+    total: Duration,
+) -> Result<reqwest::Client, reqwest::Error> {
+    use crate::modules::preferences::ProxyPolicy;
+    let builder = reqwest::Client::builder()
+        .user_agent(user_agent())
+        .connect_timeout(connect_timeout())
+        .timeout(total)
+        .redirect(reqwest::redirect::Policy::none());
+    let builder = match policy {
+        ProxyPolicy::None => builder.no_proxy(),
+        ProxyPolicy::System => builder,
+        ProxyPolicy::Manual(url) => builder
+            .no_proxy()
+            .proxy(reqwest::Proxy::all(url)?.no_proxy(reqwest::NoProxy::from_string(no_proxy))),
+    };
+    builder.build()
 }
 
 #[cfg(test)]

@@ -8,6 +8,7 @@ import {
   type OfficialProjectDto,
   type OfficialRemoteLatestDto,
 } from '@/features/about/api'
+import {runtimeVersionFacts,type RuntimeVersionFacts} from './versionFacts'
 import { hasNewerVersion } from './version'
 import { remoteQueryErrorText } from './errors'
 import { createRestoreBackup, createUpgradeBackup, getRestoreRiskSummary } from './upgrade'
@@ -15,6 +16,10 @@ import type { RestoreRiskSummary, UpgradeBackupResult } from './upgrade'
 
 export const useUpdatesStore = defineStore('updates', {
   state: () => ({
+    versionFacts:null as RuntimeVersionFacts|null,
+    versionFactsLoading:false,
+    versionFactsError:'',
+    versionFactsGeneration:0,
     officialProject: null as OfficialProjectDto | null,
     officialProjectError: false,
     officialProjectLoading: false,
@@ -39,6 +44,12 @@ export const useUpdatesStore = defineStore('updates', {
     appUpdateError: '',
   }),
   actions: {
+    async loadVersions(){
+      const own=++this.versionFactsGeneration;this.versionFactsLoading=true;this.versionFactsError=''
+      try{const value=await runtimeVersionFacts();if(own===this.versionFactsGeneration)this.versionFacts=value;return own===this.versionFactsGeneration}
+      catch{if(own===this.versionFactsGeneration)this.versionFactsError='实际版本尚未核实，请重新检查。';return false}
+      finally{if(own===this.versionFactsGeneration)this.versionFactsLoading=false}
+    },
     async loadProject() {
       if (this.officialProjectLoading) return
       this.officialProjectLoading = true
@@ -69,7 +80,8 @@ export const useUpdatesStore = defineStore('updates', {
     },
     /** 本地版本 vs 远端最新：true/false 表示是否可更新，null 表示无法比较（而不是「已最新」）。 */
     officialUpdateAvailable(): boolean | null {
-      const local = this.officialProject?.version ?? null
+      if(this.versionFactsError||this.versionFactsLoading||this.versionFacts?.disk.integrity!=='consistent')return null
+      const local = this.versionFacts.disk.diskVersion
       const remote = this.officialRemote?.version ?? null
       return hasNewerVersion(local, remote)
     },

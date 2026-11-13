@@ -18,6 +18,7 @@ function backendResult(state: string, result: 'started' | 'stopped' = 'started')
     canStart: state === 'stopped',
     canStop: state === 'running',
     canRestart: state === 'running',
+    clientRecoveryRequired: false,
   }
 }
 
@@ -25,6 +26,7 @@ function snapshot(runtime: StatusSnapshot['matrix']['runtime'], pid = '39421'): 
   return {
     matrix: { runtime, connection: 'synced', operation: 'idle' },
     facts: {
+      client_recovery: 'not_required',
       health: runtime === 'running' ? 'healthy' : 'unknown',
       runtime_label: null,
       opencodex_home: '/fixtures/opencodex-home',
@@ -97,6 +99,67 @@ describe('process action integration', () => {
     expect(app.processActionBusy).toBe(false)
   })
 
+  it('keeps a verified stopped recovery failure distinct from start failure and blocks new launches', async () => {
+    const pending = { ...backendResult('stopped'), result: null, canStart: false,
+      clientRecoveryRequired: true, failure: { code: 'client_original_restore_pending', message: '服务已停止，客户端配置待恢复' } }
+    invoke.mockImplementation((command: string) => Promise.resolve(command === 'process_action' ? pending : snapshot('stopped')))
+    const app = useAppStore(), lifecycle = useLifecycleStore()
+    await app.requestProcessAction('restart')
+    await vi.waitFor(() => expect(app.statusSnapshot?.matrix.runtime).toBe('stopped'))
+    expect(app.lifecycleState).toBe('stopped')
+    expect(app.clientRecoveryRequired).toBe(true)
+    expect(lifecycle.lastStartFailed).toBe(false)
+    expect(app.processProgressCompleted).toBe(false)
+    expect(app.processProgressError).toContain('待恢复')
+    for (const action of ['start', 'restart', 'stop'] as const) {
+      expect(app.processActionBlocked(action)).toBe(true)
+      await expect(app.requestProcessAction(action)).resolves.toBeUndefined()
+    }
+    expect(invoke.mock.calls.filter(([name]) => name === 'process_action')).toHaveLength(1)
+    // A late ordinary stopped observation is not client-file restoration.
+    app.setStatusSnapshot(snapshot('stopped'))
+    expect(app.clientRecoveryRequired).toBe(true)
+  })
+
+  it('retains recovery blocking across an unconfirmed stop while allowing a freshly observed live service to stop', async () => {
+    const app = useAppStore(), lifecycle = useLifecycleStore()
+    lifecycle.clientRecoveryRequired = true
+    app.setStatusSnapshot(snapshot('running'))
+    expect(app.processActionBlocked('stop')).toBe(false)
+    expect(app.processActionBlocked('restart')).toBe(true)
+    invoke.mockImplementation((command: string) => Promise.resolve(command === 'process_action'
+      ? { ...backendResult('running'), result: null, failure: { code: 'lifecycle_timeout', message: '停止未确认' } }
+      : snapshot('running')))
+    await app.requestProcessAction('stop')
+    expect(app.clientRecoveryRequired).toBe(true)
+    expect(app.processProgressCompleted).toBe(false)
+    expect(app.processProgressError).toBe('停止未确认')
+  })
+
+  it('reconstructs recovery gates in a fresh UI instance without a previous action receipt', async () => {
+    const app=useAppStore(), state=snapshot('stopped')
+    state.facts.client_recovery='required'
+    expect(app.clientRecoveryRequired).toBe(false)
+    app.setStatusSnapshot(state)
+    expect(app.clientRecoveryRequired).toBe(true)
+    for(const action of ['start','restart','stop'] as const) await expect(app.requestProcessAction(action)).resolves.toBeUndefined()
+    expect(invoke.mock.calls.filter(([name])=>name==='process_action')).toHaveLength(0)
+    app.setStatusSnapshot(snapshot('stopped'))
+    expect(app.clientRecoveryRequired).toBe(true)
+  })
+
+  it('blocks unknown recovery without claiming it is a proven restore failure or that the service stopped', async () => {
+    const app=useAppStore(), state=snapshot('running')
+    state.facts.client_recovery='unknown'
+    app.setStatusSnapshot(state)
+    expect(app.clientRecoveryRequired).toBe(false)
+    expect(app.statusSnapshot?.matrix.runtime).toBe('running')
+    expect(app.processActionBlocked('stop')).toBe(false)
+    await expect(app.requestProcessAction('start')).resolves.toBeUndefined()
+    await expect(app.requestProcessAction('restart')).resolves.toBeUndefined()
+    expect(invoke.mock.calls.filter(([name])=>name==='process_action')).toHaveLength(0)
+  })
+
   it('closes progress immediately when backend preserves observation without a result', async () => {
     const app = useAppStore()
     invoke.mockResolvedValue({
@@ -149,6 +212,7 @@ describe('process action integration', () => {
     const projected = statusScenario(base, {
       matrix: { runtime: 'running', connection: 'synced', operation: 'idle' },
       facts: {
+        client_recovery: 'not_required',
         health: 'healthy',
         runtime_label: 'Running',
         opencodex_home: '/tmp/fixture/opencodex-home',
@@ -244,6 +308,7 @@ describe('process action integration', () => {
     const projected = statusScenario(runtimeScenarios.at_risk, {
       matrix: { runtime: 'at_risk', connection: 'disconnected', operation: 'idle' },
       facts: {
+        client_recovery: 'not_required',
         health: 'unknown',
         runtime_label: null,
         opencodex_home: null,
@@ -268,6 +333,7 @@ describe('process action integration', () => {
     const projected = statusScenario(runtimeScenarios.at_risk, {
       matrix: { runtime: 'at_risk', connection: 'disconnected', operation: 'idle' },
       facts: {
+        client_recovery: 'not_required',
         health: 'healthy',
         runtime_label: null,
         opencodex_home: null,
@@ -288,6 +354,7 @@ describe('process action integration', () => {
     const stopped = statusScenario(runtimeScenarios.stopped, {
       matrix: { runtime: 'stopped', connection: 'disconnected', operation: 'idle' },
       facts: {
+        client_recovery: 'not_required',
         health: 'unknown',
         runtime_label: null,
         opencodex_home: null,

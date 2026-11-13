@@ -452,6 +452,16 @@ pub fn proxy_policy_for_app<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Pro
         .unwrap_or(ProxyPolicy::None)
 }
 
+/// One immutable snapshot for HTTP operations; subprocesses retain their own
+/// environment projection. Reading this never changes saved proxy preferences.
+pub fn http_options_for_app<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> (ProxyPolicy, String) {
+    use tauri::Manager;
+    app.try_state::<crate::state::SharedDataRoot>()
+        .and_then(|root| PreferencesStore::new(&root.0).load().ok())
+        .map(|value| (proxy_policy(&value), value.network_no_proxy))
+        .unwrap_or((ProxyPolicy::None, String::new()))
+}
+
 pub struct PreferencesStore {
     data_root: PathBuf,
 }

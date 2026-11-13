@@ -80,6 +80,9 @@ trait Host: Send + Sync {
     fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>>;
     /// Enumerate this user's runtime-shaped executables with OS argv/environment.
     fn processes(&self) -> AppResult<Vec<ProcessIdentity>>;
+    fn program_processes(&self, _root: &Path) -> AppResult<Vec<ProcessIdentity>> {
+        self.processes()
+    }
     /// Whole-OS listening TCP table (IPv4 + IPv6), not a connection refusal.
     fn port_clear(&self, port: u16) -> AppResult<bool>;
     /// Read-only query of the official per-user service namespaces.
@@ -94,7 +97,229 @@ pub struct SystemServiceOwnerProofProvider {
     guard: RecoveryStopGuard,
     last_record: Mutex<Option<Record>>,
 }
+
+/// Issued only by the complete ordinary Stop path. A preexisting Stopped
+/// observation carries NO newly verified process exit and must never authorize
+/// compensation of an unrelated startup snapshot.
+pub struct CompletedLifecycleStop {
+    context: ProcessContext,
+    data_root: PathBuf,
+    record_digest: Option<String>,
+    deadline: Instant,
+    #[cfg(target_os = "macos")]
+    normal_exit: Option<crate::infrastructure::macos_process_exit::NormalExitProof>,
+    #[cfg(target_os = "macos")]
+    tcp_listeners: Option<crate::infrastructure::macos_tcp_listeners::TcpListeners>,
+}
+/// An action-time observation only. It grants no file mutation or recovery
+/// completion authority and cannot be reconstructed from an error code.
+pub(crate) struct StoppedObservation {
+    _private: (),
+}
+impl CompletedLifecycleStop {
+    #[cfg(target_os = "macos")]
+    pub(crate) fn bound_deadline(&self, candidate: Instant) -> Instant {
+        self.deadline.min(candidate)
+    }
+    #[cfg(target_os = "macos")]
+    pub(crate) fn observation(
+        &self,
+        context: &ProcessContext,
+        data_root: &Path,
+    ) -> AppResult<StoppedObservation> {
+        self.require_context(context, data_root)?;
+        Ok(StoppedObservation { _private: () })
+    }
+    fn require_context(&self, context: &ProcessContext, data_root: &Path) -> AppResult<()> {
+        if Instant::now() >= self.deadline {
+            return Err(fail(
+                "lifecycle_timeout",
+                "原停止预算已过，未将旧停止证明用于后继恢复",
+            ));
+        }
+        if path_key(data_root) != self.data_root
+            || !Arc::ptr_eq(&context.runtime, &self.context.runtime)
+            || path_key(&context.opencodex_home) != path_key(&self.context.opencodex_home)
+            || path_key(&context.working_directory) != path_key(&self.context.working_directory)
+            || self.record_digest.as_ref().is_some_and(|digest| {
+                digest.len() != 64
+                    || !digest
+                        .bytes()
+                        .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+            })
+        {
+            return Err(fail(
+                "client_stop_binding_unknown",
+                "停止证明的上下文或原记录无法核对，未恢复客户端文件",
+            ));
+        }
+        Ok(())
+    }
+    #[cfg(target_os = "macos")]
+    pub(crate) fn require_original(
+        &self,
+        context: &ProcessContext,
+        data_root: &Path,
+        generation: crate::infrastructure::macos_process_exit::Generation,
+        record_digest: &str,
+    ) -> AppResult<()> {
+        self.require_context(context, data_root)?;
+        if path_key(data_root) != self.data_root
+            || self.record_digest.as_deref() != Some(record_digest)
+            || self
+                .normal_exit
+                .as_ref()
+                .is_none_or(|proof| proof.generation() != generation)
+            || self
+                .tcp_listeners
+                .as_ref()
+                .is_none_or(|listeners| listeners.generation() != generation)
+        {
+            return Err(fail(
+                "client_stop_binding_unknown",
+                "正常停止证明不属于该次启动、HOME或原记录，未恢复客户端文件",
+            ));
+        }
+        Ok(())
+    }
+    /// Recheck the complete captured TCP set during this SAME normal Stop
+    /// action, not just the advertised primary port or a past stopped label.
+    #[cfg(target_os = "macos")]
+    pub(crate) fn require_original_absence(
+        &self,
+        data_root: &Path,
+        service: crate::infrastructure::macos_process_exit::Generation,
+        launcher: crate::infrastructure::macos_process_exit::Generation,
+        record_digest: &str,
+        port: u16,
+        owner: &SystemServiceOwnerProofProvider,
+    ) -> AppResult<()> {
+        self.require_original(&owner.context, data_root, service, record_digest)?;
+        owner.require_excluded_recovery_absence(&owner.context, service, launcher, port)?;
+        let listeners = self.tcp_listeners.as_ref().ok_or_else(|| {
+            fail(
+                "client_stop_binding_unknown",
+                "原停止监听集合缺失，未恢复客户端目录",
+            )
+        })?;
+        if !owner.captured_tcp_clear(listeners)? {
+            return Err(fail(
+                "client_stop_listener_reappeared",
+                "原服务监听端口重新被占用，目录恢复未获准",
+            ));
+        }
+        self.require_original(&owner.context, data_root, service, record_digest)
+    }
+}
 impl SystemServiceOwnerProofProvider {
+    /// Per-publication checks INSIDE an already owned official native writer
+    /// lease. The session factory requires full OS Stopped before issuing the
+    /// borrow-scoped permit and again after publication. Do not replace that
+    /// admission with this narrower record/process/endpoint recheck.
+    #[cfg(target_os = "macos")]
+    pub(crate) fn require_excluded_recovery_absence(
+        &self,
+        context: &ProcessContext,
+        service: crate::infrastructure::macos_process_exit::Generation,
+        launcher: crate::infrastructure::macos_process_exit::Generation,
+        port: u16,
+    ) -> AppResult<()> {
+        self.same_context(context)?;
+        if port == 0
+            || service.pid == launcher.pid
+            || service.uid != launcher.uid
+            || service.uid.to_string() != self.owner
+            || !self.service_home_valid()?
+            || self.record()?.is_some()
+            || self.read("ocx.pid", 64)?.is_some()
+            || self.host.process(service.pid)?.is_some()
+            || self.host.process(launcher.pid)?.is_some()
+            || !self.host.port_clear(port)?
+            || !self.host.manager_absent()?
+            || self.record()?.is_some()
+            || self.read("ocx.pid", 64)?.is_some()
+        {
+            return Err(fail(
+                "client_recovery_service_unconfirmed",
+                "原会话进程或监听尚未确认缺席，恢复未完成",
+            ));
+        }
+        Ok(())
+    }
+    #[cfg(target_os = "macos")]
+    pub(crate) fn require_finalization_absence(
+        &self,
+        context: &ProcessContext,
+        service: crate::infrastructure::macos_process_exit::Generation,
+        launcher: crate::infrastructure::macos_process_exit::Generation,
+        port: u16,
+    ) -> AppResult<()> {
+        self.same_context(context)?;
+        if port == 0
+            || service.pid == launcher.pid
+            || service.uid != launcher.uid
+            || service.uid.to_string() != self.owner
+            || self.query_inner()? != ServiceOwnerProof::Stopped
+            || self.host.process(service.pid)?.is_some()
+            || self.host.process(launcher.pid)?.is_some()
+            || !self.host.port_clear(port)?
+            || self.query_inner()? != ServiceOwnerProof::Stopped
+        {
+            return Err(fail(
+                "client_recovery_service_unconfirmed",
+                "原会话服务、启动进程或监听尚未确认缺席，未完成恢复收尾",
+            ));
+        }
+        Ok(())
+    }
+    #[cfg(target_os = "macos")]
+    fn captured_tcp_clear(
+        &self,
+        listeners: &crate::infrastructure::macos_tcp_listeners::TcpListeners,
+    ) -> AppResult<bool> {
+        for port in listeners.ports() {
+            if !self.host.port_clear(*port)? {
+                return Ok(false);
+            }
+        }
+        Ok(true)
+    }
+    /// Removal covers all selected images, including another HOME of this OS
+    /// user. Windows shared-install proof must come from its native lifetime
+    /// backend; do not turn the current-H observer into an all-SID assertion.
+    pub(crate) fn require_program_unused(&self, context: &ProcessContext) -> AppResult<()> {
+        self.same_context(context)?;
+        if !cfg!(target_os = "macos") {
+            return Err(fail(
+                "removal_platform_proof_unavailable",
+                "当前平台的完整程序占用证明尚未接入，未卸载",
+            ));
+        }
+        if self.query_inner()? != ServiceOwnerProof::Stopped {
+            return Err(fail(
+                "removal_service_unconfirmed",
+                "当前OpenCodex服务尚未确认停止，未卸载",
+            ));
+        }
+        let root = path_key(&self.installation_root.join("runtime"));
+        for process in self.host.program_processes(&root)? {
+            if process.zombie {
+                continue;
+            }
+            let using = path_key(&process.image).starts_with(&root)
+                || process.argv.iter().skip(1).any(|arg| {
+                    let path = Path::new(arg);
+                    path.is_absolute() && path_key(path).starts_with(&root)
+                });
+            if using {
+                return Err(fail(
+                    "removal_program_in_use",
+                    "当前用户的其它进程仍使用本安装目录，未卸载",
+                ));
+            }
+        }
+        Ok(())
+    }
     /// Ordinary lifecycle stop retains the official connected-client teardown.
     /// Unlike an installation handover it never writes a deferral receipt.
     pub(crate) fn stop_lifecycle(
@@ -103,9 +328,26 @@ impl SystemServiceOwnerProofProvider {
         action_deadline: Instant,
         data_root: &Path,
     ) -> AppResult<()> {
+        let proof = self.stop_lifecycle_verified(context, action_deadline, data_root)?;
+        proof.require_context(context, data_root)?;
+        // Exercise the same exact binding check on the existing product path;
+        // this does not claim an absent record had a current process exit.
+        #[cfg(target_os = "macos")]
+        if let (Some(exit), Some(digest)) = (&proof.normal_exit, &proof.record_digest) {
+            proof.require_original(context, data_root, exit.generation(), digest)?;
+        }
+        Ok(())
+    }
+    pub(crate) fn stop_lifecycle_verified(
+        &self,
+        context: &ProcessContext,
+        action_deadline: Instant,
+        data_root: &Path,
+    ) -> AppResult<CompletedLifecycleStop> {
         let started = Instant::now();
         let budget = crate::modules::process::stop_timeout()
             .min(action_deadline.saturating_duration_since(started));
+        let proof_deadline = started + budget;
         let phase = std::cell::Cell::new("context");
         let timings = std::cell::RefCell::new(Vec::with_capacity(16));
         let mark = |next: &'static str| {
@@ -129,7 +371,16 @@ impl SystemServiceOwnerProofProvider {
                 ServiceOwnerProof::Owned { identity, pid } => (identity, pid),
                 ServiceOwnerProof::Stopped => {
                     remaining()?;
-                    return Ok(());
+                    return Ok(CompletedLifecycleStop {
+                        context: context.clone(),
+                        data_root: path_key(data_root),
+                        record_digest: None,
+                        deadline: proof_deadline,
+                        #[cfg(target_os = "macos")]
+                        normal_exit: None,
+                        #[cfg(target_os = "macos")]
+                        tcp_listeners: None,
+                    });
                 }
                 ServiceOwnerProof::Unknown => {
                     return Err(fail(
@@ -147,6 +398,51 @@ impl SystemServiceOwnerProofProvider {
                     "服务由官方服务管理器托管，未绕过其停止及还原流程",
                 ));
             }
+            #[cfg(target_os = "macos")]
+            let (mut native_exit, native_listeners) = {
+                use crate::infrastructure::macos_process_exit::{ExitWatch, Generation};
+                let actual = self.host.process(pid)?.ok_or_else(|| {
+                    fail(
+                        "lifecycle_exit_identity",
+                        "原服务进程已无法订阅，未发送停止请求",
+                    )
+                })?;
+                let (seconds, micros) = actual
+                    .created
+                    .split_once(':')
+                    .ok_or_else(|| fail("lifecycle_exit_identity", "原服务进程代次不可核对"))?;
+                let expected = Generation {
+                    pid,
+                    uid: actual
+                        .owner
+                        .parse()
+                        .map_err(|_| fail("lifecycle_exit_identity", "原服务用户不可核对"))?,
+                    start_seconds: seconds
+                        .parse()
+                        .map_err(|_| fail("lifecycle_exit_identity", "原服务创建时间不可核对"))?,
+                    start_micros: micros
+                        .parse()
+                        .map_err(|_| fail("lifecycle_exit_identity", "原服务创建时间不可核对"))?,
+                };
+                let watch = ExitWatch::capture(expected)?;
+                mark("native-tcp-listeners");
+                let listeners = crate::infrastructure::macos_tcp_listeners::TcpListeners::capture(
+                    expected,
+                    proof_deadline,
+                )?;
+                if !listeners.ports().contains(&record.runtime.port) {
+                    return Err(fail(
+                        "lifecycle_listener_binding",
+                        "运行记录端口尚未证明由该代次服务进程监听，未发送停止请求",
+                    ));
+                }
+                let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
+                    .append_event(&format!(
+                        "stop-proof: native-tcp-listeners captured count={}",
+                        listeners.ports().len()
+                    ));
+                (watch, listeners)
+            };
             let wait_budget = remaining()?;
             let verified_stop = tauri::async_runtime::block_on(async {
                 tokio::time::timeout(wait_budget, async {
@@ -205,20 +501,56 @@ impl SystemServiceOwnerProofProvider {
                         {
                             remaining()?;
                             mark("final-os-absence");
-                            return Ok(());
+                            return Ok(CompletedLifecycleStop {
+                                context: context.clone(),
+                                data_root: path_key(data_root),
+                                record_digest: Some(record.digest.clone()),
+                                deadline: proof_deadline,
+                            });
                         }
                     }
                 }
                 #[cfg(not(windows))]
-                if self.query_inner()? == ServiceOwnerProof::Stopped {
+                if self.query_stop_observation()? == ServiceOwnerProof::Stopped {
                     mark("final-os-absence");
                     // Require process generation, configured HOME, socket and
                     // service-manager absence; missing record is insufficient.
                     if self.host.process(pid)?.is_none()
                         && self.host.port_clear(record.runtime.port)?
                     {
+                        #[cfg(target_os = "macos")]
+                        if !self.captured_tcp_clear(&native_listeners)? {
+                            std::thread::sleep(Duration::from_millis(10));
+                            continue;
+                        }
+                        #[cfg(target_os = "macos")]
+                        let normal_exit = match native_exit.normal_exit(action_deadline)? {
+                            Some(proof) => proof,
+                            None => {
+                                std::thread::sleep(Duration::from_millis(10));
+                                continue;
+                            }
+                        };
+                        #[cfg(target_os = "macos")]
+                        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
+                            .append_event("stop-proof: original-native-exit confirmed code=0");
+                        #[cfg(target_os = "macos")]
+                        let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root)
+                            .append_event(&format!(
+                                "stop-proof: captured-tcp-listeners absent count={}",
+                                native_listeners.ports().len()
+                            ));
                         remaining()?;
-                        return Ok(());
+                        return Ok(CompletedLifecycleStop {
+                            context: context.clone(),
+                            data_root: path_key(data_root),
+                            record_digest: Some(record.digest.clone()),
+                            deadline: proof_deadline,
+                            #[cfg(target_os = "macos")]
+                            normal_exit: Some(normal_exit),
+                            #[cfg(target_os = "macos")]
+                            tcp_listeners: Some(native_listeners),
+                        });
                     }
                 }
                 std::thread::sleep(Duration::from_millis(50));
@@ -362,14 +694,59 @@ impl SystemServiceOwnerProofProvider {
             return false;
         }
         let image = path_key(&process.image);
-        let prefix = self.installation_root.join("runtime/opencodex");
-        let node =
-            crate::modules::runtime::install::managed_dependency_paths(&self.installation_root).0;
-        let bun = self.installation_root.join(if cfg!(windows) {
-            "runtime/bun/bun.exe"
+        let (prefix, node, bun) = if let Some(root) =
+            self.context.runtime.managed_installation_root()
+        {
+            if path_key(&root) != self.installation_root {
+                return false;
+            }
+            let Ok(program) = self.context.runtime.observed_program_identity() else {
+                return false;
+            };
+            if path_key(&program.installation_root) != self.installation_root {
+                return false;
+            }
+            if program.prefix == root.join("runtime/opencodex") {
+                (
+                    program.prefix,
+                    program.node,
+                    root.join(if cfg!(windows) {
+                        "runtime/bun/bun.exe"
+                    } else {
+                        "runtime/bun/bun"
+                    }),
+                )
+            } else {
+                let Ok((_, platform)) = crate::modules::runtime::program_layout::host_target()
+                else {
+                    return false;
+                };
+                let Ok(paths) = crate::modules::runtime::program_layout::RuntimeVersionPaths::new(
+                    &root.join("runtime/versions"),
+                    &program.package_version,
+                    platform,
+                ) else {
+                    return false;
+                };
+                if program.prefix != paths.package_root || program.node != paths.node {
+                    return false;
+                }
+                (paths.package_root, paths.node, paths.bun)
+            }
         } else {
-            "runtime/bun/bun"
-        });
+            // Explicit non-versioned providers used by the existing isolated
+            // fixture/recovery contract retain their own fixed installation.
+            (
+                self.installation_root.join("runtime/opencodex"),
+                crate::modules::runtime::install::managed_dependency_paths(&self.installation_root)
+                    .0,
+                self.installation_root.join(if cfg!(windows) {
+                    "runtime/bun/bun.exe"
+                } else {
+                    "runtime/bun/bun"
+                }),
+            )
+        };
         let package_bun = prefix.join("node_modules/bun/bin/bun.exe");
         let native_bun = image.starts_with(prefix.join("node_modules/@oven"))
             && matches!(
@@ -410,6 +787,18 @@ impl SystemServiceOwnerProofProvider {
         ))
         .map_err(|e| io("serialize recovery process identity", e))?;
         Ok(crate::infrastructure::hash::sha256_hex(&bytes))
+    }
+    #[cfg(not(windows))]
+    fn query_stop_observation(&self) -> AppResult<ServiceOwnerProof> {
+        match self.query_inner() {
+            // A confirmed same-generation zombie is not absence or normal
+            // exit. Keep waiting inside the ORIGINAL stop deadline; the final
+            // live process scan, exit watch and listener proofs remain below.
+            Err(AppError::RuntimeManaged { code, .. }) if code == "recovery_process_exiting" => {
+                Ok(ServiceOwnerProof::Unknown)
+            }
+            other => other,
+        }
     }
     fn query_inner(&self) -> AppResult<ServiceOwnerProof> {
         if !self.service_home_valid()? {
@@ -1353,7 +1742,7 @@ mod native {
         buffer.truncate(buffer.iter().position(|b| *b == 0).unwrap_or(n as usize));
         Ok(PathBuf::from(std::ffi::OsString::from_vec(buffer)))
     }
-    fn arguments(pid: u32) -> AppResult<(Vec<String>, Option<PathBuf>)> {
+    fn raw_procargs(pid: u32) -> AppResult<Zeroizing<Vec<u8>>> {
         let mut mib = [libc::CTL_KERN, libc::KERN_PROCARGS2, pid as i32];
         let mut bytes = Zeroizing::new(vec![0u8; 1024 * 1024]);
         let mut size = bytes.len();
@@ -1373,7 +1762,99 @@ mod native {
                 std::io::Error::last_os_error(),
             ));
         }
-        parse_procargs(&bytes[..size])
+        if size > bytes.len() {
+            return Err(fail("removal_process_framing", "内核进程路径记录超过上限"));
+        }
+        bytes.truncate(size);
+        Ok(bytes)
+    }
+    fn arguments(pid: u32) -> AppResult<(Vec<String>, Option<PathBuf>)> {
+        parse_procargs(&raw_procargs(pid)?)
+    }
+    fn same_generation(before: &libc::proc_bsdinfo, after: &libc::proc_bsdinfo) -> bool {
+        (
+            before.pbi_pid,
+            before.pbi_uid,
+            before.pbi_start_tvsec,
+            before.pbi_start_tvusec,
+        ) == (
+            after.pbi_pid,
+            after.pbi_uid,
+            after.pbi_start_tvsec,
+            after.pbi_start_tvusec,
+        )
+    }
+    fn exiting() -> AppError {
+        fail(
+            "recovery_process_exiting",
+            "原进程代次正在退出，尚未取得最终缺席与正常退出证明",
+        )
+    }
+    fn process_snapshot(
+        pid: u32,
+        observe: impl Fn() -> AppResult<Option<libc::proc_bsdinfo>>,
+        read: impl FnOnce() -> AppResult<(PathBuf, Vec<String>, Option<PathBuf>)>,
+    ) -> AppResult<Option<ProcessIdentity>> {
+        let Some(before) = observe()? else {
+            return Ok(None);
+        };
+        if before.pbi_pid != pid {
+            return Err(fail("recovery_process_reused", "进程PID身份不符"));
+        }
+        if before.pbi_status == 5 {
+            return Err(exiting());
+        }
+        let fields = read();
+        // Reobserve even when image/argv fails. EINVAL/ESRCH alone is never
+        // absence; only the native observer's explicit ESRCH may return None.
+        let Some(after) = observe()? else {
+            return Ok(None);
+        };
+        if !same_generation(&before, &after) {
+            return Err(fail("recovery_process_reused", "进程 PID 已复用"));
+        }
+        if after.pbi_status == 5 {
+            return Err(exiting());
+        }
+        let (image, argv, home) = fields?;
+        Ok(Some(ProcessIdentity {
+            pid,
+            owner: before.pbi_uid.to_string(),
+            created: format!("{}:{}", before.pbi_start_tvsec, before.pbi_start_tvusec),
+            image,
+            argv,
+            home,
+            zombie: false,
+        }))
+    }
+    // KERN_PROCARGS2 includes the original executable path before argv/environment.
+    // Read only that header for classification when the vnode path is gone; the
+    // bounded backing buffer is zeroized and never logged or treated as a key.
+    pub(super) fn kernel_exec_path(pid: u32) -> AppResult<PathBuf> {
+        exec_path_from_procargs(&raw_procargs(pid)?)
+    }
+    pub(super) fn exec_path_from_procargs(bytes: &[u8]) -> AppResult<PathBuf> {
+        use std::os::unix::ffi::OsStringExt;
+        if bytes.len() < 6 {
+            return Err(fail("removal_process_framing", "内核执行路径记录无效"));
+        }
+        let argc = i32::from_ne_bytes(bytes[..4].try_into().unwrap());
+        if !(1..=16384).contains(&argc) {
+            return Err(fail("removal_process_framing", "内核执行路径参数个数无效"));
+        }
+        let end = bytes[4..]
+            .iter()
+            .position(|b| *b == 0)
+            .filter(|n| *n > 0 && *n <= 4096)
+            .ok_or_else(|| fail("removal_process_framing", "内核执行路径边界无效"))?;
+        let path = PathBuf::from(std::ffi::OsString::from_vec(bytes[4..4 + end].to_vec()));
+        if !crate::modules::runtime::program_layout::clean_absolute(&path) {
+            return Err(fail(
+                "removal_process_framing",
+                "内核执行路径不是明确的绝对路径",
+            ));
+        }
+        Ok(path)
     }
     pub(super) fn parse_procargs(bytes: &[u8]) -> AppResult<(Vec<String>, Option<PathBuf>)> {
         if bytes.len() < 5 {
@@ -1425,28 +1906,15 @@ mod native {
             Ok(unsafe { libc::geteuid() }.to_string())
         }
         fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>> {
-            let Some(info) = bsd(pid)? else {
-                return Ok(None);
-            };
-            let image = image(pid)?;
-            let (argv, home) = arguments(pid)?;
-            let Some(after) = bsd(pid)? else {
-                return Ok(None);
-            };
-            if (info.pbi_uid, info.pbi_start_tvsec, info.pbi_start_tvusec)
-                != (after.pbi_uid, after.pbi_start_tvsec, after.pbi_start_tvusec)
-            {
-                return Err(fail("recovery_process_reused", "进程 PID 已复用"));
-            }
-            Ok(Some(ProcessIdentity {
+            process_snapshot(
                 pid,
-                owner: info.pbi_uid.to_string(),
-                created: format!("{}:{}", info.pbi_start_tvsec, info.pbi_start_tvusec),
-                image,
-                argv,
-                home,
-                zombie: info.pbi_status == 5,
-            }))
+                || bsd(pid),
+                || {
+                    let image = image(pid)?;
+                    let (argv, home) = arguments(pid)?;
+                    Ok((image, argv, home))
+                },
+            )
         }
         fn processes(&self) -> AppResult<Vec<ProcessIdentity>> {
             // PROC_UID_ONLY is the libproc ABI value 4. The kernel filters uid,
@@ -1486,6 +1954,116 @@ mod native {
                 }
                 if let Some(process) = self.process(*pid as u32)? {
                     result.push(process);
+                }
+            }
+            Ok(result)
+        }
+        fn program_processes(&self, root: &Path) -> AppResult<Vec<ProcessIdentity>> {
+            let mut pids = vec![0i32; 65536];
+            // The kernel restricts this enumeration to the current UID. Image
+            // inspection comes before name filtering, so a renamed process in
+            // this runtime directory cannot disappear from the removal proof.
+            let count = unsafe {
+                libc::proc_listpids(
+                    4,
+                    libc::geteuid(),
+                    pids.as_mut_ptr().cast(),
+                    (pids.len() * 4) as i32,
+                )
+            };
+            if count <= 0 || count as usize >= pids.len() * 4 {
+                return Err(fail(
+                    "removal_process_list",
+                    "当前用户程序占用列表无法完整读取",
+                ));
+            }
+            let mut result = vec![];
+            for pid in &pids[..count as usize / 4] {
+                if *pid <= 0 {
+                    continue;
+                }
+                let Some(info) = bsd(*pid as u32)? else {
+                    continue;
+                };
+                if info.pbi_status == 5 {
+                    continue;
+                }
+                let mut observed = None;
+                for attempt in 0..3 {
+                    match image(*pid as u32) {
+                        Ok(path) => {
+                            observed = Some(path);
+                            break;
+                        }
+                        Err(error) => {
+                            let Some(after) = bsd(*pid as u32)? else {
+                                break;
+                            };
+                            if after.pbi_status == 5 {
+                                break;
+                            }
+                            if (after.pbi_uid, after.pbi_start_tvsec, after.pbi_start_tvusec)
+                                != (info.pbi_uid, info.pbi_start_tvsec, info.pbi_start_tvusec)
+                            {
+                                return Err(fail(
+                                    "removal_process_reused",
+                                    "核对程序占用期间PID代次发生变化",
+                                ));
+                            }
+                            if let Ok(path) = kernel_exec_path(*pid as u32) {
+                                observed = Some(path);
+                                break;
+                            }
+                            if attempt == 2 {
+                                return Err(error);
+                            }
+                            std::thread::sleep(Duration::from_millis(5));
+                        }
+                    }
+                }
+                let Some(executable) = observed else {
+                    continue;
+                };
+                let Some(after) = bsd(*pid as u32)? else {
+                    continue;
+                };
+                if after.pbi_status == 5 {
+                    continue;
+                }
+                if (after.pbi_uid, after.pbi_start_tvsec, after.pbi_start_tvusec)
+                    != (info.pbi_uid, info.pbi_start_tvsec, info.pbi_start_tvusec)
+                {
+                    return Err(fail(
+                        "removal_process_reused",
+                        "读取程序路径期间PID代次发生变化",
+                    ));
+                }
+                let relevant = path_key(&executable).starts_with(root)
+                    || matches!(
+                        executable.file_name().and_then(|n| n.to_str()),
+                        Some("node" | "bun" | "bun.exe" | "ocx" | "opencodex")
+                    );
+                if relevant {
+                    match self.process(*pid as u32) {
+                        Ok(Some(process)) => {
+                            if process.owner != info.pbi_uid.to_string()
+                                || process.created
+                                    != format!("{}:{}", info.pbi_start_tvsec, info.pbi_start_tvusec)
+                            {
+                                return Err(fail(
+                                    "removal_process_reused",
+                                    "读取程序参数期间PID代次发生变化",
+                                ));
+                            }
+                            result.push(process)
+                        }
+                        Ok(None) => (),
+                        Err(error) => {
+                            if bsd(*pid as u32)?.is_some_and(|info| info.pbi_status != 5) {
+                                return Err(error);
+                            }
+                        }
+                    }
                 }
             }
             Ok(result)
@@ -1602,6 +2180,10 @@ mod native {
             }
             Ok(true)
         }
+    }
+    #[cfg(test)]
+    mod snapshot_tests {
+        include!("runtime_recovery_macos_snapshot_tests.rs");
     }
 }
 

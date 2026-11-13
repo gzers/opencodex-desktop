@@ -412,6 +412,9 @@ pub struct InstallRequest {
     pub node_path: Option<PathBuf>,
 }
 
+#[path = "install_versioned.rs"]
+pub mod versioned;
+
 /// 一次成功安装的事实。
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct InstallOutcome {
@@ -608,6 +611,9 @@ pub struct NpmOutcome {
 
 /// npm 调用边界；测试用假实现替换，生产用 [`SystemNpmRunner`]。
 pub trait NpmRunner: Send + Sync {
+    fn configured_proxy(&self) -> bool {
+        false
+    }
     fn pack(
         &self,
         request: &NpmPackRequest,
@@ -804,11 +810,39 @@ pub struct SystemNpmRunner {
     /// 真实用户 HOME；缓存目录独立指定，不通过替换 HOME 重定向。
     pub home: Option<PathBuf>,
     cache: PathBuf,
+    network: crate::modules::network_defaults::npm_proxy::Snapshot,
 }
 
 impl SystemNpmRunner {
     pub fn new(home: Option<PathBuf>, cache: PathBuf) -> Self {
-        Self { home, cache }
+        Self {
+            home,
+            cache,
+            network: Default::default(),
+        }
+    }
+
+    /// Captured at the command boundary; never inherits the process's proxy
+    /// environment or writes npm/global/user configuration.
+    pub fn with_no_proxy(mut self, no_proxy: String) -> Self {
+        self.network = self.network.with_bypass(no_proxy);
+        self
+    }
+    pub fn with_network(
+        self,
+        policy: crate::modules::preferences::ProxyPolicy,
+        bypass: String,
+    ) -> crate::errors::AppResult<Self> {
+        Ok(self.with_network_snapshot(
+            crate::modules::network_defaults::npm_proxy::Snapshot::capture(policy, bypass)?,
+        ))
+    }
+    pub(crate) fn with_network_snapshot(
+        mut self,
+        snapshot: crate::modules::network_defaults::npm_proxy::Snapshot,
+    ) -> Self {
+        self.network = snapshot;
+        self
     }
 
     fn log_directory(&self) -> PathBuf {
@@ -847,6 +881,7 @@ impl SystemNpmRunner {
         command.env("LANG", "C.UTF-8");
         command.env("LC_ALL", "C.UTF-8");
         command.env("npm_config_update_notifier", "false");
+        self.network.apply(&mut command);
         command.env("npm_config_fund", "false");
         command.env("npm_config_audit", "false");
         command.env("npm_config_progress", "false");
@@ -873,6 +908,8 @@ impl SystemNpmRunner {
                 vec![
                     std::ffi::OsString::from("--proxy"),
                     std::ffi::OsString::from(proxy.url_without_credential()),
+                    std::ffi::OsString::from("--https-proxy"),
+                    std::ffi::OsString::from(proxy.url_without_credential()),
                 ],
                 None,
             ));
@@ -891,6 +928,9 @@ impl SystemNpmRunner {
 }
 
 impl NpmRunner for SystemNpmRunner {
+    fn configured_proxy(&self) -> bool {
+        self.network.configured_proxy()
+    }
     fn pack(
         &self,
         request: &NpmPackRequest,
@@ -909,6 +949,16 @@ impl NpmRunner for SystemNpmRunner {
         let spec = format!("{OFFICIAL_PACKAGE}@{}", request.version);
 
         let mut command = self.base_command(&request.npm_path, request.node_dir.as_deref());
+        if request.proxy.is_some() {
+            for key in [
+                "npm_config_proxy",
+                "npm_config_https_proxy",
+                "HTTP_PROXY",
+                "HTTPS_PROXY",
+            ] {
+                command.env_remove(key);
+            }
+        }
         command
             .current_dir(dunce::simplified(&request.work_dir))
             .arg("pack")
@@ -959,7 +1009,15 @@ impl NpmRunner for SystemNpmRunner {
             None => (Vec::new(), None),
         };
         let masker = masker_for(request.proxy.as_ref());
-        let spec = if Path::new(&request.version).is_absolute() {
+        let local_spec = request
+            .version
+            .strip_prefix("file:sources/")
+            .filter(|name| {
+                !name.is_empty() && !name.contains(['/', '\\', ':']) && name.ends_with(".tgz")
+            });
+        let spec = if local_spec.is_some() {
+            std::ffi::OsString::from(&request.version)
+        } else if Path::new(&request.version).is_absolute() {
             // A validated local tarball is an npm source in its own right.
             // Prefixing it with the registry package name produces an invalid
             // extended Windows path and fails with ENOENT.
@@ -971,6 +1029,16 @@ impl NpmRunner for SystemNpmRunner {
         };
 
         let mut command = self.base_command(&request.npm_path, request.node_dir.as_deref());
+        if request.proxy.is_some() {
+            for key in [
+                "npm_config_proxy",
+                "npm_config_https_proxy",
+                "HTTP_PROXY",
+                "HTTPS_PROXY",
+            ] {
+                command.env_remove(key);
+            }
+        }
         command
             .current_dir(dunce::simplified(&request.prefix))
             .arg("install")
@@ -1354,11 +1422,35 @@ struct Filled {
 }
 
 /// 托管安装执行器。所有平台交互都经注入的边界，便于隔离测试。
+fn config_protection_error(
+    error: crate::modules::model_config::schema_v2::MatchErrorV2,
+) -> InstallError {
+    let (code, detail) = match error.code.as_str() {
+        "native_config_backup_stale" => (
+            "native_config_backup_stale",
+            "配置在更新期间发生变化，本次更新未完成；原件与保护备份保留",
+        ),
+        "model_transaction_pending" => (
+            "model_transaction_pending",
+            "另一个配置事务尚未完成，未继续更新运行程序",
+        ),
+        _ => (
+            "native_config_backup_failed",
+            "当前 HOME 的完整配置备份未能核验，未继续更新运行程序",
+        ),
+    };
+    recovery_error(code, detail)
+}
+
 pub struct RuntimeInstaller<'a> {
     /// Unique protected update attempt. Unprotected installs have no receipt.
     pub attempt_id: Option<String>,
     pub data_root: &'a Path,
     pub installation_root: Option<PathBuf>,
+    /// Required config protection immediately before the admitted program swap.
+    pub config_backup: Option<
+        crate::modules::model_config::config_file::v2::native_import::backups::UpgradeRequest,
+    >,
     pub npm: &'a dyn NpmRunner,
     /// 用于写路径校验的符号链接检查范围（通常是用户主目录）。
     pub home: Option<PathBuf>,
@@ -1382,6 +1474,7 @@ impl<'a> RuntimeInstaller<'a> {
         Self {
             data_root,
             installation_root: None,
+            config_backup: None,
             attempt_id: None,
             npm,
             home,
@@ -1553,9 +1646,11 @@ impl<'a> RuntimeInstaller<'a> {
         })?;
 
         let filled = match &request.source {
-            InstallSource::Offline { archive } => self.fill_offline(request, &temp, archive)?,
+            InstallSource::Offline { archive } => {
+                self.fill_offline(request, &temp, archive, false)?
+            }
             InstallSource::Registry { version, proxy } => {
-                self.fill_registry(request, &temp, version, proxy.as_ref())?
+                self.fill_registry(request, &temp, version, proxy.as_ref(), false)?
             }
         };
         self.check_cancel()?;
@@ -1625,7 +1720,8 @@ impl<'a> RuntimeInstaller<'a> {
             proxy_used: matches!(
                 &request.source,
                 InstallSource::Registry { proxy: Some(_), .. }
-            ),
+            ) || matches!(&request.source, InstallSource::Registry { .. })
+                && self.npm.configured_proxy(),
         };
         if self.installation_root.is_some()
             || source_record.source != super::RuntimeSourceKind::Explicit
@@ -1657,6 +1753,10 @@ impl<'a> RuntimeInstaller<'a> {
             }
             operation.verify_metadata_backup(self)?;
         }
+        let config_protection = self.config_backup.as_ref().map(|request| {
+            crate::modules::model_config::config_file::v2::native_import::backups::protect_upgrade(self.data_root, request)
+                .map_err(config_protection_error)
+        }).transpose()?;
         let retired = recovery.map(|op| op.preview.retained_prefix.as_path());
         let mut replacement = atomic_replace_prefix_retaining(&temp, &prefix, retired)?;
         let activation = (|| {
@@ -1729,6 +1829,9 @@ impl<'a> RuntimeInstaller<'a> {
                     detail: "运行来源记录已被外部修改，未覆盖".into(),
                 });
             }
+            if let Some(config) = &config_protection {
+                config.verify().map_err(config_protection_error)?;
+            }
             atomic_write(&record_path, &record_bytes, 0o600).map_err(InstallError::from)?;
             record_written = true;
             if std::fs::read(&record_path).ok().as_deref() != Some(record_bytes.as_slice()) {
@@ -1790,11 +1893,25 @@ impl<'a> RuntimeInstaller<'a> {
         request: &InstallRequest,
         temp: &Path,
         archive: &Path,
+        versioned: bool,
     ) -> Result<Filled, InstallError> {
         self.emit(InstallPhase::Validating, 8, None);
         // 先做 `FZ-49` 校验：读遍每一条，越界 / 链接 / 超限一律整体拒绝，
         // **在任何展开动作之前**就把不合格的归档挡掉。
         let inspection = archive::inspect(archive, None)?;
+        let pinned = if versioned {
+            Some(self::versioned::pin_archive(temp, archive)?)
+        } else {
+            None
+        };
+        let archive = pinned
+            .as_ref()
+            .map(|(path, _, _)| path.as_path())
+            .unwrap_or(archive);
+        let spec = pinned
+            .as_ref()
+            .map(|(_, spec, _)| spec.clone())
+            .unwrap_or_else(|| archive.to_string_lossy().into_owned());
         self.check_cancel()?;
         self.emit(
             InstallPhase::Extracting,
@@ -1823,7 +1940,7 @@ impl<'a> RuntimeInstaller<'a> {
                 node_dir: node_dir.clone(),
                 prefix: temp.to_path_buf(),
                 // 本地归档路径即安装源；`--offline` 保证只用缓存。
-                version: archive.to_string_lossy().into_owned(),
+                version: spec.clone(),
                 proxy: None,
                 scripts_enabled: false,
                 offline: true,
@@ -1831,6 +1948,9 @@ impl<'a> RuntimeInstaller<'a> {
         )?;
         self.check_cancel()?;
 
+        if versioned {
+            self::versioned::materialize_bun(temp)?;
+        }
         let mut scripts_enabled = false;
         if let Err(error) = verify_package(temp, Some(&inspection.version), self.probe, self.node())
         {
@@ -1849,7 +1969,7 @@ impl<'a> RuntimeInstaller<'a> {
                     npm_path: npm_path.clone(),
                     node_dir,
                     prefix: temp.to_path_buf(),
-                    version: archive.to_string_lossy().into_owned(),
+                    version: spec.clone(),
                     proxy: None,
                     scripts_enabled: true,
                     offline: true,
@@ -1860,6 +1980,10 @@ impl<'a> RuntimeInstaller<'a> {
             self.check_cancel()?;
         }
 
+        if let Some((path, _, sha)) = &pinned {
+            self::versioned::materialize_bun(temp)?;
+            self::versioned::verify_source_after_install(temp, path, sha)?;
+        }
         Ok(Filled {
             tarball_sha256: inspection.sha256,
             scripts_enabled,
@@ -1874,6 +1998,7 @@ impl<'a> RuntimeInstaller<'a> {
         temp: &Path,
         version: &str,
         proxy: Option<&ProxyConfig>,
+        versioned: bool,
     ) -> Result<Filled, InstallError> {
         let npm_path = request.npm_path.clone().ok_or(InstallError::NpmMissing)?;
         if let Some(proxy) = proxy {
@@ -1900,6 +2025,16 @@ impl<'a> RuntimeInstaller<'a> {
 
         // 下载物同样过一遍 `FZ-49` 校验：包名、版本与入口都以此为准。
         let inspection = archive::inspect(&tarball, None)?;
+        let pinned = if versioned {
+            Some(self::versioned::pin_archive(temp, &tarball)?)
+        } else {
+            None
+        };
+        let tarball = pinned.as_ref().map(|(path, _, _)| path).unwrap_or(&tarball);
+        let spec = pinned
+            .as_ref()
+            .map(|(_, spec, _)| spec.clone())
+            .unwrap_or_else(|| tarball.to_string_lossy().into_owned());
 
         self.emit(InstallPhase::Installing, 45, None);
         self.install_with_retry(
@@ -1908,7 +2043,7 @@ impl<'a> RuntimeInstaller<'a> {
                 npm_path: npm_path.clone(),
                 node_dir: node_dir.clone(),
                 prefix: temp.to_path_buf(),
-                version: tarball.to_string_lossy().into_owned(),
+                version: spec.clone(),
                 proxy: proxy.cloned(),
                 scripts_enabled: false,
                 offline: false,
@@ -1916,6 +2051,9 @@ impl<'a> RuntimeInstaller<'a> {
         )?;
         self.check_cancel()?;
 
+        if versioned {
+            self::versioned::materialize_bun(temp)?;
+        }
         let mut scripts_enabled = false;
         if let Err(error) = verify_package(temp, Some(&inspection.version), self.probe, self.node())
         {
@@ -1935,7 +2073,7 @@ impl<'a> RuntimeInstaller<'a> {
                     npm_path: npm_path.clone(),
                     node_dir,
                     prefix: temp.to_path_buf(),
-                    version: tarball.to_string_lossy().into_owned(),
+                    version: spec.clone(),
                     proxy: proxy.cloned(),
                     scripts_enabled: true,
                     offline: false,
@@ -1946,6 +2084,10 @@ impl<'a> RuntimeInstaller<'a> {
             self.check_cancel()?;
         }
 
+        if let Some((path, _, sha)) = &pinned {
+            self::versioned::materialize_bun(temp)?;
+            self::versioned::verify_source_after_install(temp, path, sha)?;
+        }
         Ok(Filled {
             tarball_sha256: inspection.sha256,
             scripts_enabled,
@@ -2850,6 +2992,8 @@ mod tests {
             args,
             vec![
                 std::ffi::OsString::from("--proxy"),
+                std::ffi::OsString::from("http://host:8080"),
+                std::ffi::OsString::from("--https-proxy"),
                 std::ffi::OsString::from("http://host:8080"),
             ]
         );
@@ -3788,6 +3932,112 @@ mod tests {
         std::fs::write(path, b"#!/bin/sh\nexit 0\n").expect("write fixture");
         std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).expect("chmod");
     }
+    struct ConfigDriftProbe {
+        prefix: PathBuf,
+        config: PathBuf,
+        drift: bool,
+    }
+    impl VersionProbe for ConfigDriftProbe {
+        fn probe(&self, _node: Option<&Path>, script: &Path) -> Option<String> {
+            if self.drift && script.starts_with(&self.prefix) {
+                std::fs::write(&self.config, b"external write ignores configuration locks")
+                    .unwrap();
+            }
+            Some("0.3.1".into())
+        }
+    }
+
+    #[test]
+    fn native_config_protection_is_required_before_program_swap_and_rechecked_before_source_commit()
+    {
+        use crate::modules::model_config::config_file::v2::native_import;
+        for case in ["ok", "backup-blocked", "drift"] {
+            let root = tempfile::tempdir().unwrap();
+            let base = root.path().canonicalize().unwrap();
+            let data = base.join("desktop");
+            let home = base.join("home");
+            std::fs::create_dir_all(data.join("manager-state")).unwrap();
+            std::fs::create_dir(&home).unwrap();
+            let prefix = prefix_of(&data);
+            let archive = official_package(&base, "0.3.0");
+            let npm = FakeNpm::new(archive.clone());
+            let npm_path = base.join("npm");
+            write_executable(&npm_path);
+            let sink = RecordingProgressSink::default();
+            let probe = FixedVersionProbe {
+                version: Some("0.3.0".into()),
+            };
+            installer(&data, &npm, &sink, Some(base.clone()), &probe)
+                .install(&offline_request(prefix.clone(), archive, npm_path.clone()))
+                .unwrap();
+            let old_record = std::fs::read(super::super::RuntimeStore::new(&data).path()).unwrap();
+            let old_package =
+                std::fs::read(prefix.join(PACKAGE_SUBPATH).join("package.json")).unwrap();
+            let original = br#"{ "port":41234, "providers":{}, "apiKey":"fixture-only" }"#;
+            let config = home.join("config.json");
+            std::fs::write(&config, original).unwrap();
+            if case == "backup-blocked" {
+                std::fs::write(data.join("backups"), b"foreign backup obstacle").unwrap();
+            }
+            let archive = official_package(&base, "0.3.1");
+            let npm = FakeNpm::new(archive.clone());
+            let probe = ConfigDriftProbe {
+                prefix: prefix.clone(),
+                config: config.clone(),
+                drift: case == "drift",
+            };
+            let mut next = installer(&data, &npm, &sink, Some(base.clone()), &probe);
+            next.config_backup = Some(native_import::backups::UpgradeRequest {
+                home: home.clone(),
+                program_source: None,
+            });
+            let result = next.install(&offline_request(prefix.clone(), archive, npm_path));
+            if case == "ok" {
+                assert!(result.is_ok());
+                assert_eq!(std::fs::read(&config).unwrap(), original);
+            } else {
+                let error = result.unwrap_err();
+                assert_eq!(
+                    error.code(),
+                    if case == "drift" {
+                        "native_config_backup_stale"
+                    } else {
+                        "native_config_backup_failed"
+                    }
+                );
+                assert!(error.message().contains(if case == "drift" {
+                    "配置在更新期间发生变化"
+                } else {
+                    "完整配置备份未能核验"
+                }));
+                assert_eq!(
+                    std::fs::read(super::super::RuntimeStore::new(&data).path()).unwrap(),
+                    old_record
+                );
+                assert_eq!(
+                    std::fs::read(prefix.join(PACKAGE_SUBPATH).join("package.json")).unwrap(),
+                    old_package
+                );
+                if case == "backup-blocked" {
+                    assert_eq!(std::fs::read(&config).unwrap(), original);
+                } else {
+                    assert_eq!(
+                        std::fs::read(&config).unwrap(),
+                        b"external write ignores configuration locks"
+                    );
+                }
+            }
+            if case != "backup-blocked" {
+                let records = crate::modules::backup::safety::scan(&data.join("backups")).unwrap();
+                assert_eq!(records.len(), 1);
+                assert_eq!(
+                    std::fs::read(records[0].directory.join("config.json")).unwrap(),
+                    original
+                );
+                assert_eq!(native_import::list_backups(&data, &home).unwrap().len(), 1);
+            }
+        }
+    }
 }
 
 #[cfg(test)]
@@ -4662,3 +4912,10 @@ pub fn validate_managed_installation(root: &Path, node: Option<&Path>) -> Result
 #[cfg(all(test, windows))]
 #[path = "install_windows_path_tests.rs"]
 mod windows_path_tests;
+
+#[cfg(all(test, unix))]
+#[path = "npm_proxy_tests.rs"]
+mod npm_proxy_tests;
+#[cfg(all(test, unix))]
+#[path = "npm_proxy_transport_tests.rs"]
+mod npm_proxy_transport_tests;

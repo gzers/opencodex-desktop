@@ -9,10 +9,19 @@ struct FakeHost {
     processes: Mutex<BTreeMap<u32, ProcessIdentity>>,
     listener: AtomicBool,
     manager: AtomicBool,
+    blocked_ports: Mutex<Vec<u16>>,
+    queried_ports: Mutex<Vec<u16>>,
+    port_error: AtomicBool,
+    owner_override: Mutex<Option<String>>,
 }
 impl Host for FakeHost {
     fn owner(&self) -> AppResult<String> {
-        Ok("fixture-user".into())
+        Ok(self
+            .owner_override
+            .lock()
+            .unwrap()
+            .clone()
+            .unwrap_or_else(|| "fixture-user".into()))
     }
     fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>> {
         Ok(self.processes.lock().unwrap().get(&pid).cloned())
@@ -20,8 +29,13 @@ impl Host for FakeHost {
     fn processes(&self) -> AppResult<Vec<ProcessIdentity>> {
         Ok(self.processes.lock().unwrap().values().cloned().collect())
     }
-    fn port_clear(&self, _: u16) -> AppResult<bool> {
-        Ok(!self.listener.load(Ordering::SeqCst))
+    fn port_clear(&self, port: u16) -> AppResult<bool> {
+        self.queried_ports.lock().unwrap().push(port);
+        if self.port_error.load(Ordering::SeqCst) {
+            return Err(AppError::NotConfigured);
+        }
+        Ok(!self.listener.load(Ordering::SeqCst)
+            && !self.blocked_ports.lock().unwrap().contains(&port))
     }
     fn manager_absent(&self) -> AppResult<bool> {
         Ok(!self.manager.load(Ordering::SeqCst))
@@ -103,6 +117,78 @@ impl Fixture {
     }
 }
 
+#[cfg(target_os = "macos")]
+#[test]
+fn excluded_recovery_step_refuses_any_record_process_endpoint_manager_or_context_change() {
+    struct CurrentUserHost(Arc<FakeHost>);
+    impl Host for CurrentUserHost {
+        fn owner(&self) -> AppResult<String> {
+            Ok(unsafe { libc::geteuid() }.to_string())
+        }
+        fn process(&self, pid: u32) -> AppResult<Option<ProcessIdentity>> {
+            self.0.process(pid)
+        }
+        fn processes(&self) -> AppResult<Vec<ProcessIdentity>> {
+            panic!("per-step check must not claim full batch enumeration")
+        }
+        fn port_clear(&self, port: u16) -> AppResult<bool> {
+            self.0.port_clear(port)
+        }
+        fn manager_absent(&self) -> AppResult<bool> {
+            self.0.manager_absent()
+        }
+    }
+    for mode in [
+        "clear",
+        "record",
+        "pid",
+        "process",
+        "launcher",
+        "port",
+        "manager",
+        "unknown-port",
+        "context",
+        "identity",
+    ] {
+        let mut f = Fixture::new();
+        f.provider.owner = unsafe { libc::geteuid() }.to_string();
+        f.provider.host = Arc::new(CurrentUserHost(f.host.clone()));
+        let service = crate::infrastructure::macos_process_exit::Generation {
+            pid: 4242,
+            uid: unsafe { libc::geteuid() },
+            start_seconds: 1,
+            start_micros: 1,
+        };
+        let launcher = crate::infrastructure::macos_process_exit::Generation {
+            pid: 4241,
+            ..service
+        };
+        let mut context = f.provider.context.clone();
+        let mut port = 19555;
+        match mode {
+            "record" => f.record(4242),
+            "pid" => std::fs::write(context.opencodex_home.join("ocx.pid"), b"4242").unwrap(),
+            "process" | "launcher" => {
+                let pid = if mode == "process" { 4242 } else { 4241 };
+                f.host.processes.lock().unwrap().insert(pid, f.process(pid));
+            }
+            "port" => f.host.listener.store(true, Ordering::SeqCst),
+            "manager" => f.host.manager.store(true, Ordering::SeqCst),
+            "unknown-port" => f.host.port_error.store(true, Ordering::SeqCst),
+            "context" => context.opencodex_home = context.opencodex_home.join("other"),
+            "identity" => port = 0,
+            _ => {}
+        }
+        assert_eq!(
+            f.provider
+                .require_excluded_recovery_absence(&context, service, launcher, port)
+                .is_ok(),
+            mode == "clear",
+            "{mode}"
+        );
+    }
+}
+
 #[test]
 fn positive_absence_requires_runtime_scan_endpoint_and_service_evidence() {
     let f = Fixture::new();
@@ -149,6 +235,335 @@ fn positive_absence_requires_runtime_scan_endpoint_and_service_evidence() {
         ServiceOwnerProof::Unknown,
         "residual pid without an endpoint is not Stopped"
     );
+}
+
+#[cfg(target_os = "macos")]
+mod completed_stop_binding {
+    use super::*;
+    use crate::infrastructure::macos_process_exit::{ExitWatch, Generation, NormalExitProof};
+    use std::{
+        io::{Read, Write},
+        process::{Command, Stdio},
+        time::Duration,
+    };
+    #[test]
+    fn captured_listener_exit_child() {
+        let Some(marker) = std::env::var_os("OCXD_ROOT_STOP_LISTENER_MARKER") else {
+            return;
+        };
+        let one = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let two = std::net::TcpListener::bind("[::1]:0").unwrap();
+        std::fs::write(
+            marker,
+            serde_json::to_vec(&[
+                one.local_addr().unwrap().port(),
+                two.local_addr().unwrap().port(),
+            ])
+            .unwrap(),
+        )
+        .unwrap();
+        let mut byte = [0u8; 1];
+        std::io::stdin().read_exact(&mut byte).unwrap();
+        assert_eq!(byte, [1]);
+        drop((one, two));
+    }
+    #[test]
+    fn root_stop_current_absence_rechecks_secondary_listener_and_refuses_unknown_or_new_owner() {
+        let mut f = Fixture::new();
+        let owner = unsafe { libc::geteuid() }.to_string();
+        *f.host.owner_override.lock().unwrap() = Some(owner.clone());
+        f.provider.owner = owner;
+        let marker = f._root.path().join("owned-listener-ports.json");
+        let mut child=Command::new(std::env::current_exe().unwrap()).args(["--exact","commands::runtime_recovery_v2_owner::tests::completed_stop_binding::captured_listener_exit_child","--nocapture","--test-threads=1"]).env("OCXD_ROOT_STOP_LISTENER_MARKER",&marker).stdin(Stdio::piped()).stdout(Stdio::null()).stderr(Stdio::piped()).spawn().unwrap();
+        let until = Instant::now() + Duration::from_secs(10);
+        while !marker.exists() {
+            assert!(child.try_wait().unwrap().is_none());
+            assert!(Instant::now() < until);
+            std::thread::sleep(Duration::from_millis(2));
+        }
+        let ports: Vec<u16> = serde_json::from_slice(&std::fs::read(marker).unwrap()).unwrap();
+        let service = Generation::observe(child.id()).unwrap();
+        let mut watch = ExitWatch::capture(service).unwrap();
+        let listeners =
+            crate::infrastructure::macos_tcp_listeners::TcpListeners::capture(service, until)
+                .unwrap();
+        assert!(ports.iter().all(|p| listeners.ports().contains(p)));
+        child.stdin.take().unwrap().write_all(&[1]).unwrap();
+        let normal = loop {
+            if let Some(proof) = watch.normal_exit(until).unwrap() {
+                break proof;
+            }
+            std::thread::sleep(Duration::from_millis(2));
+        };
+        assert!(child.wait_with_output().unwrap().status.success());
+        let (launcher, _, _) = normal_exit();
+        // This wrapper is an explicit reference-predicate fixture; it does NOT
+        // enter the production root permission factory or certify an official
+        // runtime. Exit and listeners above are actual kernel evidence.
+        let proof = CompletedLifecycleStop {
+            context: f.provider.context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            deadline: until,
+            normal_exit: Some(normal),
+            tcp_listeners: Some(listeners),
+        };
+        let require = || {
+            proof.require_original_absence(
+                f._root.path(),
+                service,
+                launcher,
+                &"a".repeat(64),
+                ports[0],
+                &f.provider,
+            )
+        };
+        require().unwrap();
+        f.host.blocked_ports.lock().unwrap().push(ports[1]);
+        assert!(
+            matches!(require(),Err(AppError::RuntimeManaged{code,..}) if code=="client_stop_listener_reappeared")
+        );
+        assert!(f.host.queried_ports.lock().unwrap().contains(&ports[1]));
+        f.host.blocked_ports.lock().unwrap().clear();
+        f.host.port_error.store(true, Ordering::SeqCst);
+        assert!(require().is_err());
+        f.host.port_error.store(false, Ordering::SeqCst);
+        f.host.manager.store(true, Ordering::SeqCst);
+        assert!(require().is_err());
+        f.host.manager.store(false, Ordering::SeqCst);
+        std::fs::write(f.provider.context.opencodex_home.join("ocx.pid"), b"99999").unwrap();
+        assert!(require().is_err());
+        std::fs::remove_file(f.provider.context.opencodex_home.join("ocx.pid")).unwrap();
+        require().unwrap();
+        *f.host.owner_override.lock().unwrap() = Some("outside-owner".into());
+        assert!(require().is_err());
+        println!(
+            "ROOT_STOP_CURRENT_ABSENCE_EVIDENCE {}",
+            serde_json::json!({"accepted":false,"kernelServiceNormalExit":true,"kernelCapturedTcpPorts":ports.len(),"secondaryPortRefused":true,"unknownPortRefused":true,"managerAndRecordReappearanceRefused":true,"ownerChangeRefused":true,"syntheticReferenceWrapperNotOfficialStop":true})
+        );
+    }
+
+    fn normal_exit() -> (
+        Generation,
+        NormalExitProof,
+        crate::infrastructure::macos_tcp_listeners::TcpListeners,
+    ) {
+        let mut child = Command::new("/bin/sh")
+            .args(["-c", "printf R; read owned_fixture; exit 0"])
+            .env_clear()
+            .env("PATH", "/usr/bin:/bin")
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::null())
+            .spawn()
+            .unwrap();
+        let mut ready = [0];
+        child
+            .stdout
+            .as_mut()
+            .unwrap()
+            .read_exact(&mut ready)
+            .unwrap();
+        assert_eq!(&ready, b"R");
+        let generation = Generation::observe(child.id()).unwrap();
+        let mut watch = ExitWatch::capture(generation).unwrap();
+        let listeners = crate::infrastructure::macos_tcp_listeners::TcpListeners::capture(
+            generation,
+            Instant::now() + Duration::from_secs(2),
+        )
+        .unwrap();
+        child
+            .stdin
+            .take()
+            .unwrap()
+            .write_all(b"continue\n")
+            .unwrap();
+        let deadline = Instant::now() + Duration::from_secs(2);
+        let proof = loop {
+            if let Some(proof) = watch.normal_exit(deadline).unwrap() {
+                break proof;
+            }
+            std::thread::sleep(Duration::from_millis(2));
+        };
+        assert!(child.wait().unwrap().success());
+        (generation, proof, listeners)
+    }
+    #[test]
+    fn preexisting_stopped_observation_has_no_fresh_exit_or_compensation_authority() {
+        let f = Fixture::new();
+        let result = f
+            .provider
+            .stop_lifecycle_verified(
+                &f.provider.context,
+                Instant::now() + Duration::from_secs(1),
+                f._root.path(),
+            )
+            .unwrap();
+        result
+            .require_context(&f.provider.context, f._root.path())
+            .unwrap();
+        assert!(result.record_digest.is_none() && result.normal_exit.is_none());
+        assert!(result
+            .require_original(
+                &f.provider.context,
+                f._root.path(),
+                Generation {
+                    pid: 42,
+                    uid: unsafe { libc::geteuid() },
+                    start_seconds: 1,
+                    start_micros: 1
+                },
+                &"a".repeat(64)
+            )
+            .is_err());
+    }
+    #[test]
+    fn fixed_internal_reference_check_binds_runtime_handle_profile_home_digest_and_generation() {
+        // Test only the reference comparison with a real kernel child-exit
+        // proof. The synthetic outer struct here is NOT a service-owned Stop
+        // certificate and never goes through a restoration permit factory.
+        let f = Fixture::new();
+        let context = &f.provider.context;
+        let (generation, normal, listeners) = normal_exit();
+        let proof = CompletedLifecycleStop {
+            deadline: Instant::now() + Duration::from_secs(1),
+            context: context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            normal_exit: Some(normal),
+            tcp_listeners: Some(listeners),
+        };
+        proof
+            .require_original(context, f._root.path(), generation, &"a".repeat(64))
+            .unwrap();
+        let no_listeners = CompletedLifecycleStop {
+            context: context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            normal_exit: proof.normal_exit.clone(),
+            tcp_listeners: None,
+            deadline: proof.deadline,
+        };
+        assert!(
+            no_listeners
+                .require_original(context, f._root.path(), generation, &"a".repeat(64))
+                .is_err(),
+            "exit alone must not replace missing native listener evidence"
+        );
+        assert!(proof
+            .require_original(
+                context,
+                &f._root.path().join("another-desktop-data-root"),
+                generation,
+                &"a".repeat(64)
+            )
+            .is_err());
+        assert!(proof
+            .require_original(context, f._root.path(), generation, &"b".repeat(64))
+            .is_err());
+        assert!(proof
+            .require_original(
+                context,
+                f._root.path(),
+                Generation {
+                    start_seconds: generation.start_seconds + 1,
+                    ..generation
+                },
+                &"a".repeat(64)
+            )
+            .is_err());
+        let mut other = context.clone();
+        other.working_directory = f._root.path().join("another-profile");
+        assert!(proof
+            .require_original(&other, f._root.path(), generation, &"a".repeat(64))
+            .is_err());
+        let mut other = context.clone();
+        other.opencodex_home = f._root.path().join("another-home");
+        assert!(proof
+            .require_original(&other, f._root.path(), generation, &"a".repeat(64))
+            .is_err());
+        let mut other = context.clone();
+        other.runtime =
+            crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
+        assert!(proof
+            .require_original(&other, f._root.path(), generation, &"a".repeat(64))
+            .is_err());
+    }
+    #[test]
+    fn malformed_record_digest_and_a_record_without_native_exit_cannot_authorize_restore() {
+        let f = Fixture::new();
+        let context = &f.provider.context;
+        let (generation, normal, listeners) = normal_exit();
+        let proof = CompletedLifecycleStop {
+            deadline: Instant::now() + Duration::from_secs(1),
+            context: context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("not-a-runtime-record-sha256".into()),
+            normal_exit: Some(normal),
+            tcp_listeners: Some(listeners),
+        };
+        assert!(proof.require_context(context, f._root.path()).is_err());
+        let no_exit = CompletedLifecycleStop {
+            deadline: Instant::now() + Duration::from_secs(1),
+            context: context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            normal_exit: None,
+            tcp_listeners: None,
+        };
+        assert!(no_exit
+            .require_original(context, f._root.path(), generation, &"a".repeat(64))
+            .is_err());
+    }
+    #[test]
+    fn completed_stop_reference_never_gets_a_fresh_budget_for_subsequent_work() {
+        let f = Fixture::new();
+        let (generation, normal, listeners) = normal_exit();
+        let proof = CompletedLifecycleStop {
+            deadline: Instant::now(),
+            context: f.provider.context.clone(),
+            data_root: path_key(f._root.path()),
+            record_digest: Some("a".repeat(64)),
+            normal_exit: Some(normal),
+            tcp_listeners: Some(listeners),
+        };
+        assert_eq!(
+            proof.bound_deadline(Instant::now() + Duration::from_secs(35)),
+            proof.deadline
+        );
+        let earlier = proof.deadline - Duration::from_millis(1);
+        assert_eq!(proof.bound_deadline(earlier), earlier);
+        assert!(
+            matches!(proof.require_original(&f.provider.context,f._root.path(),generation,&"a".repeat(64)),Err(AppError::RuntimeManaged{code,..}) if code=="lifecycle_timeout")
+        );
+    }
+    #[test]
+    fn secondary_captured_listener_or_unknown_socket_table_blocks_complete_stop_predicate() {
+        let one = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let two = std::net::TcpListener::bind("[::1]:0").unwrap();
+        let expected = [
+            one.local_addr().unwrap().port(),
+            two.local_addr().unwrap().port(),
+        ];
+        let proof = crate::infrastructure::macos_tcp_listeners::TcpListeners::capture(
+            Generation::observe(std::process::id()).unwrap(),
+            Instant::now() + Duration::from_secs(2),
+        )
+        .unwrap();
+        assert!(expected.iter().all(|port| proof.ports().contains(port)));
+        let secondary = *proof.ports().last().unwrap();
+        let primary = proof.ports()[0];
+        assert_ne!(secondary, primary);
+        let f = Fixture::new();
+        f.host.blocked_ports.lock().unwrap().push(secondary);
+        assert!(!f.provider.captured_tcp_clear(&proof).unwrap());
+        let queries = f.host.queried_ports.lock().unwrap().clone();
+        assert!(queries.contains(&primary) && queries.contains(&secondary));
+        f.host.blocked_ports.lock().unwrap().clear();
+        assert!(f.provider.captured_tcp_clear(&proof).unwrap());
+        f.host.port_error.store(true, Ordering::SeqCst);
+        assert!(f.provider.captured_tcp_clear(&proof).is_err());
+    }
 }
 
 #[test]
@@ -591,5 +1006,186 @@ setTimeout(()=>process.exit(77),45000).unref();
         let mut file = std::fs::File::create(&log).unwrap();
         writeln!(file, "dedicated synthetic Node/H only; actual OS user/creation/image/argv/environment + Management HMAC attestation; stale identity sent no stop; explicit 409 kept process and cleaned own unaccepted receipt; accepted handover self-stopped and reaped; old TCP port absent; OS runtime scan proved Stopped; config/keys exact; one durable replacement-owned handover retained").unwrap();
         eprintln!("recovery OS owner evidence: {}", log.display());
+    }
+}
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn versioned_service_owner_uses_selected_image_and_rejects_flat_paths_or_selection_drift() {
+    use crate::modules::runtime::{
+        program_selection::tests::Fixture as ProgramFixture, RuntimeHandle,
+    };
+    let program = ProgramFixture::new();
+    let mut f = Fixture::new();
+    let data = f._root.path().join("desktop");
+    std::fs::create_dir(&data).unwrap();
+    let runtime = RuntimeHandle::initialize_versioned(&data, &program.root);
+    let selected = runtime.selected_program().unwrap().unwrap();
+    f.provider.installation_root = program.root.clone();
+    f.provider.context.runtime = runtime;
+    f.record(4242);
+    let mut process = f.process(4242);
+    process.image = selected.paths.node.clone();
+    process.argv[1] = selected.script.to_string_lossy().into_owned();
+    f.host
+        .processes
+        .lock()
+        .unwrap()
+        .insert(4242, process.clone());
+    assert!(matches!(
+        f.query(),
+        ServiceOwnerProof::Owned { pid: 4242, .. }
+    ));
+    let mut flat = process.clone();
+    flat.image = program.root.join("runtime/node/bin/node");
+    f.host.processes.lock().unwrap().insert(4242, flat);
+    assert_eq!(f.query(), ServiceOwnerProof::Unknown);
+    process.image = selected
+        .paths
+        .package_root
+        .join("node_modules/bun/bin/bun.exe");
+    process.argv[1] = selected
+        .paths
+        .package_root
+        .join("node_modules/@bitkyc08/opencodex/src/cli/index.ts")
+        .to_string_lossy()
+        .into_owned();
+    f.host.processes.lock().unwrap().insert(4242, process);
+    assert!(matches!(
+        f.query(),
+        ServiceOwnerProof::Owned { pid: 4242, .. }
+    ));
+    std::fs::write(
+        program.root.join("runtime/current.json"),
+        b"outside selected image",
+    )
+    .unwrap();
+    assert_eq!(f.query(), ServiceOwnerProof::Unknown);
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn removal_proof_rejects_another_home_using_this_program_and_preserves_unrelated_processes() {
+    let f = Fixture::new();
+    assert!(f
+        .provider
+        .require_program_unused(&f.provider.context)
+        .is_ok());
+    let mut process = f.process(4242);
+    process.home = Some(f.provider.context.working_directory.join("other-home"));
+    f.host
+        .processes
+        .lock()
+        .unwrap()
+        .insert(4242, process.clone());
+    assert_eq!(
+        f.query(),
+        ServiceOwnerProof::Stopped,
+        "current HOME absence alone was insufficient"
+    );
+    assert!(f
+        .provider
+        .require_program_unused(&f.provider.context)
+        .is_err());
+    process.image = PathBuf::from("/fixture/unrelated/node");
+    process.argv = vec!["node".into(), "/fixture/unrelated/tool.js".into()];
+    f.host.processes.lock().unwrap().insert(4242, process);
+    f.provider
+        .require_program_unused(&f.provider.context)
+        .unwrap();
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn actual_current_user_image_scan_detects_a_renamed_owned_program_without_service_mutation() {
+    let t = tempfile::tempdir().unwrap();
+    let root = t.path().canonicalize().unwrap();
+    let i = root.join("I");
+    let h = root.join("H");
+    std::fs::create_dir_all(i.join("runtime/versions/test")).unwrap();
+    std::fs::create_dir(&h).unwrap();
+    let image = i.join("runtime/versions/test/renamed-helper");
+    std::fs::copy("/bin/sleep", &image).unwrap();
+    // The copied system binary's original signature is not valid at this test
+    // inode. Ad-hoc signing affects this isolated fixture only, no release keys.
+    let signed = std::process::Command::new("/usr/bin/codesign")
+        .args(["--force", "--sign", "-"])
+        .arg(&image)
+        .output()
+        .unwrap();
+    assert!(
+        signed.status.success(),
+        "{}",
+        String::from_utf8_lossy(&signed.stderr)
+    );
+
+    struct Child(std::process::Child);
+    impl Drop for Child {
+        fn drop(&mut self) {
+            let _ = self.0.kill();
+            let _ = self.0.wait();
+        }
+    }
+    let mut child = Child(
+        std::process::Command::new(&image)
+            .arg("30")
+            .spawn()
+            .unwrap(),
+    );
+    let host = PlatformHost;
+    let processes = host
+        .program_processes(&path_key(&i.join("runtime")))
+        .unwrap();
+    assert!(
+        processes
+            .iter()
+            .any(|process| process.pid == child.0.id()
+                && path_key(&process.image) == path_key(&image))
+    );
+    std::thread::sleep(Duration::from_millis(100));
+    let before_unlink = child.0.try_wait().unwrap();
+    assert!(
+        before_unlink.is_none(),
+        "owned process must be running before unlink: {before_unlink:?}"
+    );
+    // A live, exclusively test-owned executable may lose its disk path. That
+    // must preserve a positive in-use observation or refuse proof, never absence.
+    std::fs::remove_file(&image).unwrap();
+    let observed = host.program_processes(&path_key(&i.join("runtime")));
+    assert!(
+        child.0.try_wait().unwrap().is_none(),
+        "unlinked signed fixture must remain live during absence check"
+    );
+    assert!(
+        !matches!(observed,Ok(processes) if !processes.iter().any(|process|process.pid==child.0.id()))
+    );
+    drop(child);
+    let processes = host
+        .program_processes(&path_key(&i.join("runtime")))
+        .unwrap();
+    assert!(!processes
+        .iter()
+        .any(|process| path_key(&process.image) == path_key(&image)));
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+fn removal_kernel_path_decoder_uses_exec_header_not_caller_argv_or_environment() {
+    let mut bytes = 2i32.to_ne_bytes().to_vec();
+    bytes.extend_from_slice(b"/fixture/runtime/versions/2.99.0/dependencies/node/bin/node\0\0unrelated-spoofed-argv0\0/other/tool.js\0OPENCODEX_HOME=/other/home\0");
+    assert_eq!(
+        native::exec_path_from_procargs(&bytes).unwrap(),
+        PathBuf::from("/fixture/runtime/versions/2.99.0/dependencies/node/bin/node")
+    );
+    for payload in [
+        b"".as_slice(),
+        b"node\0caller-argv",
+        b"/absolute-with-no-terminator",
+        b"/absolute/../escape\0",
+        b"/with\ncontrol\0",
+    ] {
+        let mut frame = 1i32.to_ne_bytes().to_vec();
+        frame.extend_from_slice(payload);
+        assert!(native::exec_path_from_procargs(&frame).is_err());
     }
 }

@@ -26,6 +26,7 @@ pub struct OfficialStatusSource {
     environment: crate::modules::process::EnvironmentPolicy,
     cache: Mutex<Option<CachedStatus>>,
     mutation: Option<crate::state::SharedRuntimeInstall>,
+    client_recovery_root: Option<PathBuf>,
 }
 #[derive(Debug, Clone)]
 struct CachedStatus {
@@ -48,6 +49,7 @@ impl OfficialStatusSource {
             environment,
             cache: Mutex::new(None),
             mutation: None,
+            client_recovery_root: None,
         }
     }
 
@@ -56,6 +58,10 @@ impl OfficialStatusSource {
     /// CLI that competes with boot or keeps an own-H process alive during stop.
     pub fn with_mutation_gate(mut self, mutation: crate::state::SharedRuntimeInstall) -> Self {
         self.mutation = Some(mutation);
+        self
+    }
+    pub fn with_client_recovery_root(mut self, root: PathBuf) -> Self {
+        self.client_recovery_root = Some(root);
         self
     }
     fn mutation_in_progress(&self) -> bool {
@@ -102,6 +108,9 @@ impl OfficialStatusSource {
 
     async fn fetch_inner(&self) -> Result<serde_json::Value, CollectError> {
         let started = Instant::now();
+        if self.runtime.source_problem().is_some() {
+            return Err(CollectError::Unreachable);
+        }
         let executable = self.runtime.executable();
         let validate = || -> Result<(), CollectError> {
             if !self.working_directory.is_dir() {
@@ -296,46 +305,81 @@ fn admit_managed_cli_without_record(
         ConnectionState::Unconfigured,
         OperationState::Idle,
     );
-    let own = |path: &std::path::Path| {
-        let key = |p: &std::path::Path| {
-            #[cfg(windows)]
-            {
-                p.to_string_lossy()
-                    .replace('\\', "/")
-                    .trim_start_matches("//?/")
-                    .to_lowercase()
-            }
-            #[cfg(not(windows))]
-            {
-                p.to_string_lossy().into_owned()
-            }
-        };
-        path.is_absolute()
-            && (key(path) == key(home) || key(path) == key(&home.join("config.json")))
+    let key = |p: &std::path::Path| {
+        #[cfg(windows)]
+        {
+            p.to_string_lossy()
+                .replace('\\', "/")
+                .trim_start_matches("//?/")
+                .to_lowercase()
+        }
+        #[cfg(not(windows))]
+        {
+            p.to_string_lossy().into_owned()
+        }
     };
-    if mapped.runtime != RuntimeState::Stopped
-        || mapped.pid.is_some()
-        || payload["proxy"]["running"] == true
-        || payload["ready"] == true
-        || !mapped.facts.opencodex_home.as_deref().is_some_and(own)
-    {
+    let path_matches = |value: &serde_json::Value, expected: &std::path::Path| {
+        let raw = value.as_str().or_else(|| value.get("path")?.as_str());
+        raw.is_some_and(|raw| {
+            let actual = std::path::Path::new(raw);
+            actual.is_absolute() && key(actual) == key(expected)
+        })
+    };
+    // The UI mapper deliberately removes stale endpoint facts for Stopped and
+    // no longer mislabels paths.config as HOME. Admission must inspect ORIGINAL
+    // fields: a sanitized presentation cannot establish absence or identity.
+    if !home.is_absolute() || mapped.runtime != RuntimeState::Stopped {
         return Err(CollectError::Unreachable);
     }
-    // Contradictory aliases cannot be hidden behind the mapper's first choice.
-    for value in [
-        payload.get("opencodexHome"),
-        payload.get("opencodex_home"),
-        payload.get("home"),
-        payload.get("paths").and_then(|p| p.get("config")),
+    for flag in [
+        payload.get("ready"),
+        payload.get("isReady"),
+        payload.get("proxy").and_then(|p| p.get("running")),
     ]
     .into_iter()
     .flatten()
     {
-        let path = value.as_str().or_else(|| value.get("path")?.as_str());
-        if !path.is_some_and(|p| own(std::path::Path::new(p))) {
+        if flag.as_bool() != Some(false) {
             return Err(CollectError::Unreachable);
         }
     }
+    for pid in [
+        payload.get("pid"),
+        payload.get("processId"),
+        payload.get("process_id"),
+        payload.get("proxy").and_then(|p| p.get("pid")),
+    ]
+    .into_iter()
+    .flatten()
+    {
+        if !pid.is_null() {
+            return Err(CollectError::Unreachable);
+        }
+    }
+    let mut own_identity = false;
+    for value in [
+        payload.get("opencodexHome"),
+        payload.get("opencodex_home"),
+        payload.get("home"),
+    ]
+    .into_iter()
+    .flatten()
+    {
+        if !path_matches(value, home) {
+            return Err(CollectError::Unreachable);
+        }
+        own_identity = true;
+    }
+    if let Some(value) = payload.get("paths").and_then(|p| p.get("config")) {
+        if !path_matches(value, &home.join("config.json")) {
+            return Err(CollectError::Unreachable);
+        }
+        own_identity = true;
+    }
+    if !own_identity {
+        return Err(CollectError::Unreachable);
+    }
+
     Ok(())
 }
 
@@ -380,6 +424,33 @@ async fn probe_local(port: u16) -> Result<(serde_json::Value, serde_json::Value)
 }
 
 impl StatusSource for OfficialStatusSource {
+    fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
+        self.client_recovery_root
+            .as_ref()
+            .map(|data| (data.clone(), self.environment.opencodex_home.clone()))
+    }
+    fn client_recovery(&self) -> crate::modules::status::ClientRecoveryState {
+        use crate::modules::status::ClientRecoveryState as State;
+        if self.runtime.managed_installation_root().is_none() {
+            return State::NotRequired;
+        }
+        if self.client_recovery_root.is_none() {
+            return State::Unknown;
+        }
+        #[cfg(target_os = "macos")]
+        if let Some(data) = &self.client_recovery_root {
+            let context = crate::state::ProcessContext {
+                runtime: self.runtime.clone(),
+                working_directory: self.working_directory.clone(),
+                opencodex_home: self.environment.opencodex_home.clone(),
+            };
+            return crate::infrastructure::macos_client_originals::session_index::generation::inspect_client_recovery(&context, data)
+                .unwrap_or(State::Unknown);
+        }
+        // No native backend/input means unknown, including unsupported managed
+        // platforms. Do not substitute an absent JSON field or a guessed path.
+        State::Unknown
+    }
     fn fetch_light(&self) -> Result<serde_json::Value, CollectError> {
         tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
         tokio::task::block_in_place(|| {
@@ -402,6 +473,9 @@ impl StatusSource for OfficialStatusSource {
     fn resolved(&self) -> bool {
         self.runtime.executable().is_some_and(|path| path.is_file())
     }
+    fn source_unknown(&self) -> bool {
+        self.runtime.source_problem().is_some()
+    }
 }
 
 #[cfg(all(test, unix))]
@@ -410,6 +484,31 @@ mod tests {
     use crate::modules::process::{EnvironmentPolicy, LifecycleAction, ProcessCommand};
     use std::os::unix::fs::PermissionsExt;
     use std::path::Path;
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn explicit_desktop_context_projects_real_status_command_without_guessing_config_file_home(
+    ) {
+        let temp = tempfile::tempdir().unwrap();
+        let root = temp.path().canonicalize().unwrap();
+        let data = root.join("desktop");
+        let home = root.join("official-home");
+        std::fs::create_dir(&data).unwrap();
+        std::fs::create_dir(&home).unwrap();
+        let mut source=script_source(&root,"#!/bin/sh\nprintf '%s\n' '{\"schemaVersion\":1,\"proxy\":{\"running\":false,\"pid\":1234},\"listen\":{\"port\":54109},\"paths\":{\"config\":\"/payload/config.json\"},\"startup\":{\"status\":\"native\",\"protection\":\"none\",\"rebootSafe\":true}}'\n");
+        source.set_environment(home.clone());
+        let source = source.with_client_recovery_root(data.clone());
+        let mut collector = crate::modules::status::StatusCollector::new(source);
+        let value = collector.refresh().unwrap();
+        assert_eq!(value.runtime, crate::types::status::RuntimeState::Stopped);
+        assert_eq!((value.port, value.pid), (None, None));
+        assert_eq!(value.facts.data_root, data);
+        assert_eq!(value.facts.opencodex_home, Some(home));
+        assert_eq!(
+            std::fs::read_dir(&data).unwrap().count(),
+            0,
+            "status projection does not write manager files"
+        );
+        println!("CONTEXT_STATUS_COMMAND_OK stopped=true endpointsAbsent=true explicitDesktopAndHome=true managerWrites=false");
+    }
 
     fn command_fixture(root: &Path) -> ProcessCommand {
         let executable = root.join("ocx");
@@ -796,14 +895,13 @@ mod managed_cli_admission_tests {
     fn accepts_only_own_stopped_diagnostic_without_endpoint_authority() {
         let root = tempfile::tempdir().unwrap();
         let home = root.path().join("own H");
-        for reported in [&home, &home.join("config.json")] {
-            assert_eq!(
-                admit_managed_cli_without_record(
-                    &json!({"status":"stopped","paths":{"config":reported},"proxy":{"running":false}}),
-                    &home
-                ),
-                Ok(())
-            );
+        for payload in [
+            json!({"status":"stopped","opencodexHome":home,"proxy":{"running":false}}),
+            json!({"status":"stopped","paths":{"config":home.join("config.json")},"proxy":{"running":false,"pid":null}}),
+            json!({"schemaVersion":1,"paths":{"config":home.join("config.json")},"proxy":{"running":false,"pid":null},"listen":{"port":54109}}),
+            json!({"status":"stopped","opencodexHome":{"path":home},"paths":{"config":{"path":home.join("config.json")}}}),
+        ] {
+            assert_eq!(admit_managed_cli_without_record(&payload, &home), Ok(()));
         }
     }
 
@@ -835,11 +933,53 @@ mod managed_cli_admission_tests {
             json!({"status":"stopped","opencodexHome":home,"paths":{"config":root.path().join("peer H/config.json")}}),
             json!({"status":"stopped","opencodexHome":home,"pid":"40612"}),
             json!({"status":"stopped","opencodexHome":home,"ready":true}),
+            json!({"status":"stopped","paths":{"config":home}}),
+            json!({"status":"stopped","opencodexHome":home.join("config.json")}),
+            json!({"status":"stopped","paths":{"config":home.join("config.json")},"home":null}),
+            json!({"status":"stopped","paths":{"config":home.join("config.json")},"isReady":true}),
+            json!({"status":"stopped","paths":{"config":home.join("config.json")},"proxy":{"running":"false"}}),
         ] {
             assert_eq!(
                 admit_managed_cli_without_record(&value, &home),
                 Err(CollectError::Unreachable)
             );
+        }
+    }
+
+    #[test]
+    fn raw_pid_aliases_cannot_disappear_behind_stopped_presentation_sanitization() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("own H");
+        for alias in ["pid", "processId", "process_id", "proxy.pid"] {
+            for id in [
+                json!(40612),
+                json!("40612"),
+                json!(0),
+                json!(""),
+                json!(false),
+            ] {
+                let mut value = json!({"status":"stopped","paths":{"config":home.join("config.json")},"proxy":{"running":false,"pid":null}});
+                if alias == "proxy.pid" {
+                    value["proxy"]["pid"] = id;
+                } else {
+                    value[alias] = id;
+                }
+                let mapped = crate::modules::status::map_official_output(
+                    &crate::modules::status::OfficialStatusReport::from_value(value.clone()),
+                    None,
+                    crate::types::status::ConnectionState::Unconfigured,
+                    crate::types::status::OperationState::Idle,
+                );
+                assert!(
+                    mapped.pid.is_none(),
+                    "presentation intentionally hides stopped PID"
+                );
+                assert_eq!(
+                    admit_managed_cli_without_record(&value, &home),
+                    Err(CollectError::Unreachable),
+                    "{alias}"
+                );
+            }
         }
     }
 }

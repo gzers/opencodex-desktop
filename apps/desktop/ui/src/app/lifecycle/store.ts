@@ -54,6 +54,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
     statusSnapshot: null as StatusSnapshot | null,
     stopStatusEventStream: null as (() => void) | null,
     lifecycleState: "stopped" as ProcessLifecycleState,
+    clientRecoveryRequired: false,
     lastStartFailed: false,
     processActionBusy: false,
     processAction: null as LifecycleAction | null,
@@ -75,8 +76,39 @@ export const useLifecycleStore = defineStore("lifecycle", {
     processAutoDismissTimer: null as number | null,
   }),
   actions: {
+    // A matching explicit response owns this transition. A late ordinary
+    // snapshot must still never discharge the independent recovery latch.
+    acceptFinalizedClientRecovery(scope: { dataRoot: string; home: string }, snapshot: StatusSnapshot) {
+      const current = this.statusSnapshot?.facts
+      if (current && (current.data_root !== scope.dataRoot || current.opencodex_home !== scope.home)
+        || snapshot.source !== 'live' || snapshot.facts.data_root !== scope.dataRoot
+        || snapshot.facts.opencodex_home !== scope.home || snapshot.facts.client_recovery !== 'not_required'
+        || snapshot.matrix.runtime !== 'stopped' || snapshot.pid !== null || snapshot.port !== null
+        || !snapshot.can_start || snapshot.can_stop || snapshot.can_restart || this.processActionBusy) return false
+      this.setStatusSnapshot(snapshot)
+      this.clientRecoveryRequired = false; this.lastStartFailed = false; this.statusError = false
+      this.lifecycleState = 'stopped'; this.runtimeState = 'stopped'
+      return true
+    },
+    processActionBlocked(action: LifecycleAction) {
+      const recovery = this.statusSnapshot?.facts.client_recovery
+      if (recovery && recovery !== 'not_required') {
+        if (action === 'start' || action === 'restart' && recovery !== 'active') return true
+      }
+      if (!this.clientRecoveryRequired) return false
+      // A later real running observation may still require an ordinary Stop.
+      // It cannot discharge the independent original-file recovery obligation.
+      return action !== 'stop' || this.statusSnapshot?.can_stop !== true
+    },
     // 状态快照只在真实观测到运行状态迁移时登记一条事件，不臆测结论。
     setStatusSnapshot(snapshot: StatusSnapshot | null) {
+      const recovery = snapshot?.facts.client_recovery
+      if (recovery === 'required' || recovery === 'active' && snapshot?.matrix.runtime === 'stopped') {
+        this.clientRecoveryRequired = true
+        this.lastStartFailed = false
+      }
+      // A late/stale no-session snapshot cannot discharge an action receipt.
+      // Explicit completed recovery/action results own that transition.
       if (snapshot?.matrix.runtime === 'running') this.lastStartFailed=false
       if (snapshot?.matrix.runtime === 'stopped' && this.lastStartFailed) {
         snapshot={...snapshot,matrix:{...snapshot.matrix,runtime:'starting_failed'}}
@@ -224,7 +256,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
       if (this.processProgressAction) this.processProgressOpen = true
     },
     async requestProcessAction(action: LifecycleAction) {
-      if (this.processActionBusy) return undefined
+      if (this.processActionBusy || this.processActionBlocked(action)) return undefined
       this.processActionBusy = true
       this.processAction = action
       this.processProgressAction = action
@@ -261,7 +293,10 @@ export const useLifecycleStore = defineStore("lifecycle", {
       try {
         const result = await runProcessAction(action)
         this.lifecycleState = result.lifecycleState
-        if (result.failure && action !== 'stop') this.lastStartFailed=true
+        if (result.clientRecoveryRequired) this.clientRecoveryRequired = true
+        else if (result.result === 'started' || result.result === 'stopped') this.clientRecoveryRequired = false
+        if (this.clientRecoveryRequired) this.lastStartFailed=false
+        else if (result.failure && action !== 'stop') this.lastStartFailed=true
         if (result.result==='started') this.lastStartFailed=false
         if (
           result.result === null ||

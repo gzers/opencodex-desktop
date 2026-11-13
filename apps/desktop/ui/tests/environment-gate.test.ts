@@ -40,7 +40,7 @@ describe('environment presentation', () => {
   it('actual gate consumes the environment error and keeps only factual existing recheck/installation exits',async()=>{
     const env=useEnvironmentStore();env.report=null;env.error='集成运行程序检查未就绪，可稍后重新检查或查看安装状态。'
     const recheck=vi.fn(),w=mount(EnvironmentGate,{props:{onRecheck:recheck}})
-    try{expect(w.get('h2').text()).toBe('集成运行程序检查未就绪');expect(w.findAll('.overview-check-value').map(c=>c.text())).toEqual(['未声明','未声明','未声明']);expect(w.findAll('button').map(b=>b.text())).toEqual(['重新检查','完整指引 ›']);expect(w.find('.env-command').exists()).toBe(false);await w.findAll('button').find(b=>b.text()==='重新检查')!.trigger('click');expect(recheck).toHaveBeenCalledOnce();env.loading=true;await w.vm.$nextTick();expect(w.get('h2').text()).toBe('检查启动条件')}finally{w.unmount()}
+    try{expect(w.get('h2').text()).toBe('集成运行程序检查未就绪');expect(w.findAll('.overview-check-value').map(c=>c.text())).toEqual(['未声明','未声明','未声明']);expect(w.findAll('button').map(b=>b.text())).toEqual(['重新检查','完整指引 ›']);expect(w.find('.env-command').exists()).toBe(false);await w.findAll('button').find(b=>b.text()==='重新检查')!.trigger('click');expect(recheck).toHaveBeenCalledOnce();env.loading=true;await w.vm.$nextTick();expect(w.get('h2').text()).toBe('核对内置程序状态');expect(w.text()).toContain('准备状态暂不可读取');expect(w.text()).not.toContain('缺少 Node.js')}finally{w.unmount()}
   })
 
   it('maps all five backend gates without inventing values', () => {

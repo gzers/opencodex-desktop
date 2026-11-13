@@ -4,6 +4,9 @@ use crate::modules::notifications::registry::{
 };
 use serde::Serialize;
 use std::{path::Path, sync::OnceLock};
+#[path = "feedback_channel_read.rs"]
+mod channel_read;
+pub(crate) use channel_read::channel_read_terminal;
 static APP: OnceLock<tauri::AppHandle> = OnceLock::new();
 pub fn configure(app: tauri::AppHandle) {
     let _ = APP.set(app);

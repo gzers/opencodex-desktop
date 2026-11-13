@@ -3,6 +3,9 @@
 pub mod about;
 pub mod backup;
 pub mod cleanup;
+pub mod client_recovery;
+#[cfg(target_os = "macos")]
+mod client_session_lifecycle;
 pub mod codex_shim;
 pub mod config_file_transfer_v2;
 pub mod config_sync_v2;
@@ -17,6 +20,7 @@ pub mod migration;
 pub mod model_config;
 pub mod model_config_v2;
 pub mod model_transfer;
+pub mod native_config_import;
 pub mod network;
 pub mod notifications;
 pub mod panel;
@@ -24,18 +28,26 @@ pub mod preferences;
 pub mod release_details;
 pub mod retired_files;
 pub mod runtime;
+pub mod runtime_activation;
+pub mod runtime_builtin;
 pub mod runtime_port;
 pub mod runtime_recovery_v2;
 pub mod runtime_recovery_v2_owner;
 pub mod runtime_recovery_v2_sources;
+pub mod runtime_removal;
 pub mod scope_backup_v2;
 pub mod sync;
+pub mod terminal_cli;
 pub mod tray;
 pub mod update;
 pub mod update_schedule;
 pub mod upgrade;
 pub mod window;
 pub mod workspace;
+
+#[cfg(all(test, target_os = "macos", target_arch = "aarch64"))]
+#[path = "lifecycle_versioned_tests.rs"]
+mod lifecycle_versioned_tests;
 
 use crate::errors::{AppError, AppResult};
 use crate::modules::notifications::Notification;
@@ -175,6 +187,14 @@ pub fn drain_tray_requests(
     Ok(tray_requests.drain())
 }
 
+#[derive(Default)]
+struct LifecycleObservations {
+    stopped: Option<runtime_recovery_v2_owner::StoppedObservation>,
+    #[cfg(target_os = "macos")]
+    closed_root_start: Option<
+        crate::infrastructure::macos_client_originals::session_index::ClosedRootStartEligibility,
+    >,
+}
 pub fn process_action_with_runner<R>(
     request: ProcessActionRequest,
     runner: &Mutex<R>,
@@ -219,7 +239,14 @@ where
         .ok()
     });
     let started_at = std::time::Instant::now();
-    let outcome = execute_lifecycle(runner, &command, context, runtime_log.data_root());
+    let mut observations = LifecycleObservations::default();
+    let outcome = execute_lifecycle_observed(
+        runner,
+        &command,
+        context,
+        runtime_log.data_root(),
+        &mut observations,
+    );
     let duration_ms = started_at.elapsed().as_millis();
     let failed;
     let result = match &outcome {
@@ -255,7 +282,14 @@ where
                 );
             }
             failed = matches!(result, crate::modules::process::LifecycleResult::Failed);
-            Ok(ProcessActionResult::from_state(next).with_result(result.clone()))
+            let value = ProcessActionResult::from_state(next).with_result(result.clone());
+            #[cfg(target_os = "macos")]
+            let value = if let Some(eligibility) = observations.closed_root_start.take() {
+                value.with_closed_root_start(eligibility)
+            } else {
+                value
+            };
+            Ok(value)
         }
         Err(error) => {
             failed = true;
@@ -268,7 +302,20 @@ where
                 action_log_label(request.action),
                 Err(format!("{}; duration_ms={duration_ms}", error)),
             );
-            Ok(ProcessActionResult::from_state(machine.current()).with_failure(error))
+            let mut value = ProcessActionResult::from_state(machine.current());
+            if let Some(observed) = &observations.stopped {
+                value = value.with_stopped_client_recovery(observed);
+            }
+            #[cfg(target_os = "macos")]
+            if runner.manages_client_originals()
+                && context.runtime.managed_installation_root().is_some()
+            {
+                let unresolved=crate::infrastructure::macos_client_originals::session_index::unresolved_after_failure(context,runtime_log.data_root());
+                if unresolved {
+                    value = value.with_unresolved_client_recovery();
+                }
+            }
+            Ok(value.with_failure(error))
         }
     };
     let verified_success = matches!(
@@ -340,26 +387,53 @@ where
     result
 }
 
+#[cfg(test)]
 fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     runner: &R,
     command: &crate::modules::process::ProcessCommand,
     context: &ProcessContext,
     data_root: &std::path::Path,
 ) -> AppResult<crate::modules::process::LifecycleResult> {
-    use crate::modules::process::{restart_limit, runner_start_timeout, LifecycleResult};
-    let deadline = std::time::Instant::now()
-        + if command.action == LifecycleAction::Stop {
-            crate::modules::process::stop_timeout()
-        } else if command.action == LifecycleAction::Restart {
-            restart_limit()
-        } else {
-            runner_start_timeout()
+    execute_lifecycle_observed(
+        runner,
+        command,
+        context,
+        data_root,
+        &mut LifecycleObservations::default(),
+    )
+}
+fn managed_lifecycle_deadlines(
+    action: LifecycleAction,
+    started: std::time::Instant,
+) -> (std::time::Instant, std::time::Instant) {
+    use crate::modules::process::{restart_limit, runner_start_timeout, stop_timeout};
+    let outer = started
+        + match action {
+            LifecycleAction::Stop => stop_timeout(),
+            LifecycleAction::Restart => restart_limit(),
+            LifecycleAction::Start => runner_start_timeout(),
         };
+    (outer, outer.min(started + stop_timeout()))
+}
+fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
+    runner: &R,
+    command: &crate::modules::process::ProcessCommand,
+    context: &ProcessContext,
+    data_root: &std::path::Path,
+    _observations: &mut LifecycleObservations,
+) -> AppResult<crate::modules::process::LifecycleResult> {
+    use crate::modules::process::LifecycleResult;
+    let action_started = std::time::Instant::now();
+    let (deadline, stop_deadline) = managed_lifecycle_deadlines(command.action, action_started);
     let Some(root) = context.runtime.managed_installation_root() else {
         return runner.execute(command);
     };
-    let identity = crate::modules::runtime::install::resolve_managed_installation(&root)?;
-    if context.executable()? != identity.entry {
+    // Lifecycle, status and version observation share the admitted provider.
+    // Reconstructing the old flat prefix rejects a valid versioned selection
+    // before the official process can start. This remains full action-time
+    // admission, not the provider's cheaper observation/cache path.
+    let identity = context.runtime.managed_program_identity()?;
+    if identity.installation_root != root || context.executable()? != identity.entry {
         return Err(AppError::NotConfigured);
     }
     if command.action == LifecycleAction::Start {
@@ -387,6 +461,12 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
                         && owner.query(context)? == proof
                         && matches!(observed,Ok(Some(ref value)) if value["ready"]==true && value["status"]=="running")
                     {
+                        #[cfg(target_os = "macos")]
+                        if runner.manages_client_originals() && identity.package_version == "2.99.0"
+                        {
+                            client_session_lifecycle::Active::load(context, data_root)?
+                                .verify_ready(context, deadline)?;
+                        }
                         if std::time::Instant::now() >= deadline {
                             return Err(AppError::Timeout);
                         }
@@ -408,13 +488,98 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
     ) {
         let owner =
             runtime_recovery_v2_owner::SystemServiceOwnerProofProvider::new(root, context.clone())?;
-        owner.stop_lifecycle(context, deadline, data_root)?;
+        #[cfg(target_os = "macos")]
+        if runner.manages_client_originals() && identity.package_version == "2.99.0" {
+            // If original references are missing/failed, still run the ordinary
+            // authenticated Stop once, then report unresolved client recovery;
+            // do not strand a live service or invent replacement originals.
+            #[cfg(test)]
+            let loaded_at = std::time::Instant::now();
+            let active = client_session_lifecycle::Active::load(context, data_root);
+            #[cfg(test)]
+            eprintln!(
+                "ROOT_STOP_ENTRY stage=load-ready elapsed_us={} remaining_us={} passed={}",
+                loaded_at.elapsed().as_micros(),
+                stop_deadline
+                    .saturating_duration_since(std::time::Instant::now())
+                    .as_micros(),
+                active.is_ok()
+            );
+            let mut active = match active {
+                Ok(active) => active,
+                Err(error) => {
+                    let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
+                    _observations.stopped = Some(proof.observation(context, data_root)?);
+                    return Err(error);
+                }
+            };
+            #[cfg(test)]
+            let prestop_at = std::time::Instant::now();
+            let prepared = active.pre_stop(context, stop_deadline);
+            #[cfg(test)]
+            eprintln!(
+                "ROOT_STOP_ENTRY stage=pre-stop elapsed_us={} remaining_us={} passed={}",
+                prestop_at.elapsed().as_micros(),
+                stop_deadline
+                    .saturating_duration_since(std::time::Instant::now())
+                    .as_micros(),
+                prepared.is_ok()
+            );
+            if let Err(error) = prepared {
+                let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
+                _observations.stopped = Some(proof.observation(context, data_root)?);
+                return Err(error);
+            }
+            let proof = owner.stop_lifecycle_verified(context, stop_deadline, data_root)?;
+            _observations.stopped = Some(proof.observation(context, data_root)?);
+            let eligibility = active.stopped(
+                context,
+                &proof,
+                stop_deadline,
+                command.action == LifecycleAction::Stop,
+            )?;
+            if command.action == LifecycleAction::Stop {
+                _observations.closed_root_start = eligibility;
+            }
+            if std::time::Instant::now() >= stop_deadline {
+                return Err(AppError::Timeout);
+            }
+            let _ = crate::infrastructure::runtime_log::RuntimeLog::new(data_root).append_event(
+                &format!(
+                    "lifecycle-stop-phase: complete elapsed_ms={} budget_ms=10000 action={}",
+                    action_started.elapsed().as_millis(),
+                    if command.action == LifecycleAction::Restart {
+                        "restart"
+                    } else {
+                        "stop"
+                    }
+                ),
+            );
+            if command.action == LifecycleAction::Stop {
+                return Ok(LifecycleResult::Stopped);
+            }
+        }
+        #[cfg(not(target_os = "macos"))]
+        owner.stop_lifecycle(context, stop_deadline, data_root)?;
+        #[cfg(target_os = "macos")]
+        if !runner.manages_client_originals() || identity.package_version != "2.99.0" {
+            owner.stop_lifecycle(context, stop_deadline, data_root)?;
+        }
         if command.action == LifecycleAction::Stop {
             return Ok(LifecycleResult::Stopped);
         }
     }
     let mut start = command.clone();
     start.action = LifecycleAction::Start;
+    #[cfg(target_os = "macos")]
+    let mut client_session =
+        if runner.manages_client_originals() && identity.package_version == "2.99.0" {
+            Some(client_session_lifecycle::Active::capture(
+                context, data_root, deadline,
+            )?)
+        } else {
+            None
+        };
     for attempt in 0..3 {
         let saved =
             crate::modules::runtime::port::prepare_start(data_root, &context.opencodex_home)?;
@@ -426,7 +591,15 @@ fn execute_lifecycle<R: ProcessRunner + ?Sized>(
                     && saved.mode == crate::modules::runtime::port::Mode::Auto
                     && attempt < 2
                     && std::time::Instant::now() < deadline => {}
-            _ => return result,
+            _ => {
+                #[cfg(target_os = "macos")]
+                if matches!(result, Ok(LifecycleResult::Started)) {
+                    if let Some(session) = &mut client_session {
+                        session.ready(context, deadline)?;
+                    }
+                }
+                return result;
+            }
         }
     }
     Err(AppError::Timeout)

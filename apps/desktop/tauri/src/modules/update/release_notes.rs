@@ -41,13 +41,53 @@ pub struct Details {
     pub published_at: Option<String>,
     pub fetched_at: i64,
     pub cached: bool,
+    pub failure: Option<Failure>,
+    pub checked_at: i64,
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Error {
     Source,
     Network,
+    Timeout,
+    RateLimited,
+    Http(u16),
     Size,
     Cache,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum FailureKind {
+    Network,
+    Timeout,
+    RateLimited,
+    HttpError,
+    IdentityMismatch,
+    TooLarge,
+    Cache,
+}
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Failure {
+    pub kind: FailureKind,
+    pub http_status: Option<u16>,
+}
+impl From<&Error> for Failure {
+    fn from(e: &Error) -> Self {
+        let (kind, status) = match e {
+            Error::Network => (FailureKind::Network, None),
+            Error::Timeout => (FailureKind::Timeout, None),
+            Error::RateLimited => (FailureKind::RateLimited, None),
+            Error::Http(s) => (FailureKind::HttpError, Some(*s)),
+            Error::Source => (FailureKind::IdentityMismatch, None),
+            Error::Size => (FailureKind::TooLarge, None),
+            Error::Cache => (FailureKind::Cache, None),
+        };
+        Self {
+            kind,
+            http_status: status,
+        }
+    }
 }
 
 #[async_trait]
@@ -60,6 +100,7 @@ pub struct HttpSource {
     client: tokio::sync::OnceCell<reqwest::Client>,
     policy: crate::modules::preferences::ProxyPolicy,
     total_seconds: u64,
+    no_proxy: String,
     max_bytes: u64,
 }
 impl HttpSource {
@@ -74,40 +115,41 @@ impl HttpSource {
             client: tokio::sync::OnceCell::new(),
             policy,
             total_seconds: limits.total_seconds,
+            no_proxy: String::new(),
             max_bytes: limits.response_max_bytes,
         })
+    }
+    pub fn with_no_proxy(mut self, no_proxy: String) -> Self {
+        self.no_proxy = no_proxy;
+        self
     }
     async fn client(&self) -> Result<&reqwest::Client, Error> {
         self.client
             .get_or_try_init(|| async {
                 let policy = self.policy.clone();
                 let total_seconds = self.total_seconds;
+                let no_proxy = self.no_proxy.clone();
                 // Proxy/certificate discovery is not needed for offline cache hits,
                 // and must not block the async executor on an actual cache miss.
-                tokio::task::spawn_blocking(move || Self::build_client(policy, total_seconds))
-                    .await
-                    .map_err(|_| Error::Network)?
+                tokio::task::spawn_blocking(move || {
+                    Self::build_client(policy, &no_proxy, total_seconds)
+                })
+                .await
+                .map_err(|_| Error::Network)?
             })
             .await
     }
     fn build_client(
         policy: crate::modules::preferences::ProxyPolicy,
+        no_proxy: &str,
         total_seconds: u64,
     ) -> Result<reqwest::Client, Error> {
-        use crate::modules::preferences::ProxyPolicy;
-        let builder = reqwest::Client::builder()
-            .user_agent(crate::modules::network_defaults::user_agent())
-            .connect_timeout(crate::modules::network_defaults::connect_timeout())
-            .timeout(Duration::from_secs(total_seconds))
-            .redirect(reqwest::redirect::Policy::none());
-        let builder = match policy {
-            ProxyPolicy::None => builder.no_proxy(),
-            ProxyPolicy::System => builder,
-            ProxyPolicy::Manual(url) => {
-                builder.proxy(reqwest::Proxy::all(url).map_err(|_| Error::Source)?)
-            }
-        };
-        builder.build().map_err(|_| Error::Network)
+        crate::modules::network_defaults::http_client(
+            policy,
+            no_proxy,
+            Duration::from_secs(total_seconds),
+        )
+        .map_err(|_| Error::Network)
     }
 }
 #[async_trait]
@@ -120,13 +162,32 @@ impl Source for HttpSource {
             .header("Accept", "application/json")
             .send()
             .await
-            .map_err(|_| Error::Network)?;
+            .map_err(|e| {
+                if e.is_timeout() {
+                    Error::Timeout
+                } else {
+                    Error::Network
+                }
+            })?;
         if response.status() == reqwest::StatusCode::NOT_FOUND {
             return Ok(None);
         }
-        if !response.status().is_success() {
-            return Err(Error::Network);
+        if response.status() == reqwest::StatusCode::TOO_MANY_REQUESTS
+            || response.status() == reqwest::StatusCode::FORBIDDEN
+                && response
+                    .headers()
+                    .get("x-ratelimit-remaining")
+                    .is_some_and(|v| v == "0")
+        {
+            return Err(Error::RateLimited);
         }
+        if response.status().is_redirection() {
+            return Err(Error::Source);
+        }
+        if !response.status().is_success() {
+            return Err(Error::Http(response.status().as_u16()));
+        }
+
         if response
             .content_length()
             .is_some_and(|n| n > self.max_bytes)
@@ -134,7 +195,13 @@ impl Source for HttpSource {
             return Err(Error::Size);
         }
         let mut bytes = Vec::new();
-        while let Some(chunk) = response.chunk().await.map_err(|_| Error::Network)? {
+        while let Some(chunk) = response.chunk().await.map_err(|e| {
+            if e.is_timeout() {
+                Error::Timeout
+            } else {
+                Error::Network
+            }
+        })? {
             if bytes.len() as u64 + chunk.len() as u64 > self.max_bytes {
                 return Err(Error::Size);
             }
@@ -248,7 +315,7 @@ fn cached(
     } else {
         limits.missing_cache_seconds
     };
-    if cache.schema != 1
+    if cache.schema != 2
         || cache.repository != repo
         || d.target != request.target
         || d.channel != request.channel
@@ -256,6 +323,9 @@ fn cached(
         || d.fetched_at < 0
         || d.fetched_at > request.fetched_at
         || request.fetched_at - d.fetched_at >= ttl
+        || d.failure.is_some()
+        || d.checked_at < d.fetched_at
+        || d.checked_at > request.checked_at
         || d.notes_state == NotesState::Failed
         || !consistent_notes(d)
         || d.notes
@@ -352,30 +422,32 @@ pub async fn query<S: Source + ?Sized>(
         published_at: None,
         fetched_at: now,
         cached: false,
+        failure: None,
+        checked_at: now,
     };
+    let cache_root = root.to_path_buf();
+    let cache_repo = repo.clone();
+    let cache_request = details.clone();
+    let cache_limits = limits.clone();
+    let previous = tokio::task::spawn_blocking(move || {
+        cached(
+            &cache_root,
+            name,
+            &cache_repo,
+            &cache_request,
+            &cache_limits,
+        )
+    })
+    .await
+    .map_err(|_| Error::Cache)?;
     if !force {
-        let cache_root = root.to_path_buf();
-        let cache_repo = repo.clone();
-        let cache_request = details.clone();
-        let cache_limits = limits.clone();
-        let hit = tokio::task::spawn_blocking(move || {
-            cached(
-                &cache_root,
-                name,
-                &cache_repo,
-                &cache_request,
-                &cache_limits,
-            )
-        })
-        .await
-        .map_err(|_| Error::Cache)?;
-        if let Some(mut hit) = hit {
-            // Prefer the current updater's body to a previous fallback for this candidate.
+        if let Some(mut hit) = previous.clone() {
             if details.notes.is_some() {
-                hit.notes = details.notes;
-                hit.notes_source = details.notes_source;
-                hit.notes_state = NotesState::Ready;
+                details.release_url = hit.release_url;
+                details.published_at = hit.published_at;
+                return Ok(details);
             }
+            hit.checked_at = now;
             return Ok(hit);
         }
     }
@@ -392,14 +464,34 @@ pub async fn query<S: Source + ?Sized>(
         }
     })
     .await
-    .unwrap_or(Err(Error::Network));
-    if result.is_err() {
-        details.notes_state = NotesState::Failed;
+    .unwrap_or(Err(Error::Timeout));
+    if let Err(error) = result {
+        let failure = Some(Failure::from(&error));
+        if details.notes_source.as_deref() == Some("updater") {
+            details.failure = failure;
+            details.release_url = None;
+            details.published_at = None;
+            return Ok(details);
+        }
+        if let Some(mut prior) = previous.filter(|d| d.notes_state == NotesState::Ready) {
+            // Source identity/oversize errors never cause old text to be presented
+            // as newly verified. This remains an explicitly labelled old cache.
+            prior.failure = failure;
+            prior.checked_at = now;
+            return Ok(prior);
+        }
+        details.failure = failure;
+        if details.notes_source.as_deref() != Some("updater") {
+            details.notes = None;
+            details.notes_source = None;
+            details.notes_state = NotesState::Failed;
+        }
         details.release_url = None;
+        details.published_at = None;
         return Ok(details);
     }
     let cache = Cache {
-        schema: 1,
+        schema: 2,
         repository: repo.clone(),
         details: details.clone(),
     };
