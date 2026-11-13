@@ -50,7 +50,27 @@ fn fixture() -> (super::super::tests::Fixture, Memory) {
     let f = super::super::tests::Fixture::new();
     fs::write(console(&f.c), b"owned console fixture, never executed").unwrap();
     fs::set_permissions(console(&f.c), fs::Permissions::from_mode(0o600)).unwrap();
+    fs::write(command(&f.c), b"native entry fixture, never executed").unwrap();
+    write_source(&f.c);
     (f, Memory::new())
+}
+fn write_source(c: &Context) {
+    let source = InstallSource {
+        schema_version: 1,
+        package: "opencodex-desktop".into(),
+        version: env!("CARGO_PKG_VERSION").into(),
+        entry_kind: ENTRY_KIND.into(),
+        files: ["ocx.exe", "ocxd.exe"]
+            .into_iter()
+            .map(|n| {
+                (
+                    n.into(),
+                    hash::sha256_file(&c.program_root.join(n)).unwrap(),
+                )
+            })
+            .collect(),
+    };
+    fs::write(c.program_root.join(ENTRY_SOURCE), encode(&source).unwrap()).unwrap();
 }
 fn execute(c: &Context, action: Action, r: &Memory) {
     let p = plan(c, action, &[], r).unwrap().1;
@@ -63,9 +83,12 @@ fn windows_policy_transaction_enables_disables_and_keeps_unrelated_files() {
     fs::write(&unrelated, b"keep").unwrap();
     let p = inspect_with(&f.c, &[], &r).unwrap();
     assert!(!p.enabled && !p.pending);
-    assert!(!command(&f.c).exists());
+    assert!(command(&f.c).exists());
     execute(&f.c, Action::Enable, &r);
-    assert_eq!(fs::read(command(&f.c)).unwrap(), SCRIPT);
+    assert_eq!(
+        fs::read(command(&f.c)).unwrap(),
+        b"native entry fixture, never executed"
+    );
     require_forwarding(&f.c).unwrap();
     assert!(installed(&f.c).unwrap().is_some());
     assert_eq!(r.writes.get(), 1);
@@ -74,7 +97,7 @@ fn windows_policy_transaction_enables_disables_and_keeps_unrelated_files() {
     assert_eq!(removal.action, Action::Disable);
     execute(&f.c, Action::Disable, &r);
     assert_eq!(r.read().unwrap(), None);
-    assert!(!command(&f.c).exists() && !f.c.record().exists() && !f.c.pending().exists());
+    assert!(command(&f.c).exists() && !f.c.record().exists() && !f.c.pending().exists());
     assert_eq!(fs::read(unrelated).unwrap(), b"keep");
     assert!(removal_with(&f.c, &[], &r).unwrap().is_none());
 }
@@ -112,7 +135,7 @@ fn every_published_boundary_resumes_same_action_without_new_baseline() {
             })
             .unwrap();
             assert!(!f.c.pending().exists());
-            assert_eq!(command(&f.c).exists(), action == Action::Enable);
+            assert!(command(&f.c).exists());
             assert_eq!(f.c.record().exists(), action == Action::Enable);
         }
     }

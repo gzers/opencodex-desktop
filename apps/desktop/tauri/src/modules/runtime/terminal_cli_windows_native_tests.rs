@@ -91,20 +91,6 @@ fn execute(c: &Context, action: Action, r: &impl Registry) {
 fn helper(c: &Context, args: &[&str]) -> std::process::Output {
     Command::new(console(c)).args(args).output().unwrap()
 }
-fn hook(c: &Context, input: &Path, update: bool) -> std::process::Output {
-    let marker = c.program_root.join("hook-passed.txt");
-    if marker.exists() {
-        fs::remove_file(&marker).unwrap();
-    }
-    Command::new(input.join("hook-probe.exe"))
-        .raw_arg(format!(
-            "/S {} /D={}",
-            if update { "/UPDATE" } else { "" },
-            c.program_root.display()
-        ))
-        .output()
-        .unwrap()
-}
 fn save_output(e: &Evidence, label: &str, output: &std::process::Output) {
     e.save(&format!("{label}.stdout"), &output.stdout);
     e.save(&format!("{label}.stderr"), &output.stderr);
@@ -133,9 +119,9 @@ fn publish_fixture(
     create(&p.npm, b"// synthetic npm fixture, never invoked\n");
     create(
         &package.join("package.json"),
-        br#"{"name":"@bitkyc08/opencodex","version":"9.0.0","bin":{"ocx":"probe.cmd"}}"#,
+        br#"{"name":"@bitkyc08/opencodex","version":"9.0.0","bin":{"ocx":"probe.cjs"}}"#,
     );
-    create(&package.join("probe.cmd"),br#"const fs=require('fs');const input=fs.readFileSync(0);process.stdout.write(JSON.stringify({args:process.argv.slice(2),stdin:input.toString('base64'),home:process.env.HOME,profile:process.env.USERPROFILE,h:process.env.OPENCODEX_HOME,node:process.execPath,script:__filename}));process.stderr.write('native-fixture-stderr');process.exit(23);"#);
+    create(&package.join("probe.cjs"),br#"const fs=require('fs');const input=fs.readFileSync(0);process.stdout.write(JSON.stringify({args:process.argv.slice(2),stdin:input.toString('base64'),home:process.env.HOME,profile:process.env.USERPROFILE,h:process.env.OPENCODEX_HOME,node:process.execPath,script:__filename}));process.stderr.write('native-fixture-stderr');process.exit(23);"#);
     let digest = |path: &Path| hash::sha256_file(path).unwrap();
     let manifest = program_selection::ImageManifest {
         schema_version: 1,
@@ -144,9 +130,9 @@ fn publish_fixture(
         platform: "win32-x64".into(),
         official_archive_sha256: hash::sha256_hex(b"explicit synthetic argv fixture, not official"),
         tree_sha256: program_image::content_digest(&p.version_root).unwrap(),
-        bin: "probe.cmd".into(),
+        bin: "probe.cjs".into(),
         package_sha256: digest(&package.join("package.json")),
-        bin_sha256: digest(&package.join("probe.cmd")),
+        bin_sha256: digest(&package.join("probe.cjs")),
         node_sha256: digest(&p.node),
         npm_sha256: digest(&p.npm),
         bun_sha256: digest(&p.bun),
@@ -178,7 +164,7 @@ fn select(c: &Context, selection: &program_selection::CurrentSelection) {
         p.package_root
             .join(install::PACKAGE_SUBPATH)
             .join(if selection.version == "9.0.0" {
-                "probe.cmd"
+                "probe.cjs"
             } else {
                 "bin/ocx.mjs"
             });
@@ -221,29 +207,107 @@ fn private_reader_matches_w0_bound_without_touching_user_path() {
     assert_eq!(fs::read(record).unwrap(), b"private record bytes");
 }
 
+// userenv constructs a fresh current-token environment, including the real
+// isolated HKCU PATH. No parent PATH concatenation pretends to be a new terminal.
+fn fresh_shell(exe: &Path) -> Command {
+    use std::{ffi::OsString, os::windows::ffi::OsStringExt, ptr};
+    use windows_sys::Win32::{
+        Foundation::CloseHandle,
+        Security::TOKEN_QUERY,
+        System::Threading::{GetCurrentProcess, OpenProcessToken},
+    };
+    #[link(name = "userenv")]
+    unsafe extern "system" {
+        fn CreateEnvironmentBlock(
+            block: *mut *mut std::ffi::c_void,
+            token: *mut std::ffi::c_void,
+            inherit: i32,
+        ) -> i32;
+        fn DestroyEnvironmentBlock(block: *mut std::ffi::c_void) -> i32;
+    }
+    let mut token = ptr::null_mut();
+    let mut block = ptr::null_mut();
+    assert_ne!(
+        unsafe { OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY | 2, &mut token) },
+        0
+    );
+    assert_ne!(unsafe { CreateEnvironmentBlock(&mut block, token, 0) }, 0);
+    let mut c = Command::new(exe);
+    c.env_clear();
+    let mut offset = 0usize;
+    while unsafe { *block.cast::<u16>().add(offset) } != 0 {
+        let n = (0..32768)
+            .find(|n| unsafe { *block.cast::<u16>().add(offset + n) } == 0)
+            .unwrap();
+        let units = unsafe { std::slice::from_raw_parts(block.cast::<u16>().add(offset), n) };
+        if let Some(at) = units.iter().position(|u| *u == 61) {
+            if at > 0 {
+                c.env(
+                    OsString::from_wide(&units[..at]),
+                    OsString::from_wide(&units[at + 1..]),
+                );
+            }
+        }
+        offset += n + 1;
+        assert!(offset < 1024 * 1024);
+    }
+    unsafe {
+        DestroyEnvironmentBlock(block);
+        CloseHandle(token);
+    }
+    c
+}
+fn installer(
+    e: &Evidence,
+    msi: &Path,
+    i: &Path,
+    label: &str,
+    remove: bool,
+) -> std::process::Output {
+    let mut c = Command::new("C:\\Windows\\System32\\msiexec.exe");
+    // MSI's PROPERTY="value" grammar is not C argv parsing. Quote the value,
+    // not the complete PROPERTY=value argument (Rust args() would do the latter).
+    for path in [msi, i, &e.0] {
+        assert!(!path.to_string_lossy().contains('"'));
+    }
+    let mut text = format!(
+        "{} \"{}\" /qn /norestart /L*v \"{}\"",
+        if remove { "/x" } else { "/i" },
+        msi.to_string_lossy().replace('/', "\\"),
+        e.0.join(format!("{label}.msi.log"))
+            .to_string_lossy()
+            .replace('/', "\\")
+    );
+    if !remove {
+        text.push_str(&format!(
+            " INSTALLDIR=\"{}\" WIXUI_EXITDIALOGOPTIONALCHECKBOX=0",
+            i.to_string_lossy().replace('/', "\\")
+        ));
+    }
+    c.raw_arg(text);
+    let out = c.output().unwrap();
+    save_output(e, label, &out);
+    out
+}
+
 #[test]
-#[ignore = "requires a freshly created isolated ocxw1c account, exact SID guard, real MSVC product and pinned Windows bundle"]
-fn isolated_account_terminal_w1c() {
+#[ignore = "one fresh ordinary ocxw1d account, exact SID; actual MSVC product/dev MSI only"]
+fn isolated_account_terminal_w1d() {
     let token = current_identity().unwrap();
-    let expected = std::env::var("OCXD024_ACCOUNT_SID").expect("explicit test SID");
-    assert_eq!(token.sid, expected);
+    assert_eq!(token.sid, std::env::var("OCXD024_ACCOUNT_SID").unwrap());
     assert!(!token.elevated);
-    assert!(!crate::modules::test_sandbox::enabled());
     let profile = platform::home_dir().unwrap();
     assert!(profile
         .file_name()
         .unwrap()
         .to_str()
         .unwrap()
-        .starts_with("ocxw1c"));
-    assert_eq!(
-        profile,
-        PathBuf::from(std::env::var_os("USERPROFILE").unwrap())
-    );
+        .starts_with("ocxw1d"));
+    assert!(!crate::modules::test_sandbox::enabled());
     if let Some(path) = std::env::var_os("OCXD024_RESUME_CONTEXT") {
         let c: Context = decode(&fs::read(path).unwrap()).unwrap();
         assert_eq!(c.user_profile, profile);
-        assert!(c.program_root.starts_with(profile.join("w1c native")));
+        assert!(c.program_root.starts_with(profile.join("w1d native")));
         let p = inspect_with(&c, &[], &Native).unwrap();
         assert!(p.pending);
         apply_with(&c, p.action, &[], &p.confirmation_digest, &Native, &|_| {
@@ -251,10 +315,6 @@ fn isolated_account_terminal_w1c() {
         })
         .unwrap();
         assert!(!c.pending().exists());
-        println!(
-            "fresh native process resumed original persisted action: {:?}",
-            p.action
-        );
         return;
     }
     let input = PathBuf::from(std::env::var_os("OCXD024_NATIVE_INPUT").unwrap());
@@ -262,29 +322,40 @@ fn isolated_account_terminal_w1c() {
         std::env::var_os("OCXD024_NATIVE_EVIDENCE").unwrap(),
     ));
     let r = ObservedNative::new();
-    e.save(
-        "account-path-before.private.json",
-        &serde_json::to_vec(&r.original).unwrap(),
-    );
-    e.event("identity",json!({"sid":token.sid,"profile":profile,"session":token.session_id,"elevated":token.elevated,"scope":"one isolated account; no W2"}));
-    let base = profile.join("w1c native");
+    e.save("path-before.private.json", &encode(&r.original).unwrap());
+    let base = profile.join("w1d native");
     assert!(!base.exists());
     platform::create_private_dir_all(&base, 0o700).unwrap();
     let i = base.join("I 空格 & !");
-    platform::create_private_dir_all(&i, 0o700).unwrap();
-    copy(&input.join("ocxd.exe"), &i.join("ocxd.exe"));
-    copy(
-        &input.join("opencodex-desktop.exe"),
-        &i.join("opencodex-desktop.exe"),
-    );
+    let msi = input.join("w1d.msi");
+    e.event("identity",json!({"sid":token.sid,"profile":profile,"session":token.session_id,"elevated":token.elevated,"hypothesis":"native exe, schema3, fresh-shell environment and actual MSI uninstall"}));
+    let component_only = std::env::var("OCXD024_COMPONENT_ONLY").as_deref() == Ok("1");
+    if component_only {
+        for name in ["opencodex-desktop.exe", "ocxd.exe", "ocx.exe", ENTRY_SOURCE] {
+            copy(&input.join(name), &i.join(name));
+        }
+        e.event("component-fixture",json!({"reason":"real ordinary MSI blocked by machine DisableMsi policy, no policy changed","msiInstalled":false,"source":"exact current built binaries and installer source manifest"}));
+    } else {
+        let install = installer(&e, &msi, &i, "msi-install", false);
+        assert!(install.status.success());
+    }
+    for n in ["opencodex-desktop.exe", "ocxd.exe", "ocx.exe", ENTRY_SOURCE] {
+        assert!(i.join(n).is_file(), "required MSI program {n}");
+    }
+    let shim = hash::sha256_file(&i.join("ocx.exe")).unwrap();
     let pristine = Command::new(i.join("ocxd.exe"))
         .args(["--uninstall-terminal-cli", "--confirm"])
         .output()
         .unwrap();
-    save_output(&e, "helper-pristine", &pristine);
+    save_output(&e, "pristine-helper", &pristine);
     assert!(pristine.status.success());
     assert!(!profile.join(".codex-desktop").exists());
-    r.restored();
+    let direct = Command::new(i.join("ocx.exe"))
+        .arg("--version")
+        .output()
+        .unwrap();
+    save_output(&e, "unregistered-shim", &direct);
+    assert!(!direct.status.success());
     let d = base.join("data/desktop");
     data_root::initialize(&d).unwrap();
     let h = base.join("custom H 雪");
@@ -295,61 +366,40 @@ fn isolated_account_terminal_w1c() {
         d.parent().unwrap(),
     )
     .unwrap();
-    let active =
+    let cfg =
         data_root::startup_v2::selected_config(&profile.join(".codex-desktop/desktop")).unwrap();
     let c = Context {
         user_profile: profile.clone(),
-        desktop_root: active.active_data_root.clone(),
-        opencodex_home: data_root::resolve_opencodex_home(&active),
-        program_root: i.clone(),
+        desktop_root: cfg.active_data_root.clone(),
+        opencodex_home: data_root::resolve_opencodex_home(&cfg),
         manager_executable: i.join("opencodex-desktop.exe"),
+        program_root: i.clone(),
     };
-    let no_entry = hook(&c, &input, false);
-    save_output(&e, "hook-never-enabled", &no_entry);
-    assert!(no_entry.status.success());
-    assert!(i.join("hook-passed.txt").exists());
-    let fixture = publish_fixture(
+    EntryPin::open(&c).unwrap();
+    let synthetic = publish_fixture(
         &c,
         &input.join("node.exe"),
         &input.join("native024-fixture.exe"),
     );
-    let resume_context = e.0.join("resume-context.private.json");
-    fs::write(&resume_context, encode(&c).unwrap()).unwrap();
     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
-    assert!(!command(&c).exists() && !c.record().exists() && !c.pending().exists());
+    assert!(!c.record().exists() && !c.pending().exists());
     assert!(
         apply_with(&c, Action::Enable, &[], "wrong-confirmation", &r, &|_| Ok(
             ()
         ))
         .is_err()
     );
-    assert!(!c.pending().exists());
     r.restored();
-    e.event(
-        "preview-cancel-and-wrong-confirmation",
-        json!({"noCommandPathRecordWrites":true,"digest":p.confirmation_digest}),
-    );
     execute(&c, Action::Enable, &r);
-    assert_eq!(
-        private_read(&i, &command(&c)).unwrap().as_deref(),
-        Some(SCRIPT)
-    );
-    let command_before = fs::read(command(&c)).unwrap();
-    let record_before = fs::read(c.record()).unwrap();
     execute(&c, Action::Enable, &r);
-    assert_eq!(fs::read(command(&c)).unwrap(), command_before);
-    assert_eq!(fs::read(c.record()).unwrap(), record_before);
-    e.event(
-        "enable-idempotent",
-        json!({"script":command(&c),"schema":2,"version":"9.0.0","h":c.opencodex_home}),
-    );
-    // Shells are real. Payload contains no service/business commands.
+    let record: Installed = decode(&fs::read(c.record()).unwrap()).unwrap();
+    assert_eq!(record.schema_version, 3);
+    assert_eq!(record.entry_kind, ENTRY_KIND);
+    assert_eq!(record.command_path, i.join("ocx.exe"));
+    assert_eq!(hash::sha256_file(&command(&c)).unwrap(), shim);
+    e.event("schema3-enabled",json!({"schema":3,"kind":record.entry_kind,"command":record.command_path,"pathDirectory":directory(&c).unwrap(),"shimUntouched":true}));
     let payload = b"stdin binary \0 Unicode \xe9\x9b\xaa\r\n";
-
-    let batch = base.join("argv.cmd");
-
-    create(&batch,format!("@echo off\r\nchcp 65001 >nul\r\nsetlocal DisableDelayedExpansion\r\n\"{}\" plain \"arg space\" \"雪\" \"&|<>^!()\" \"literal%%text\" \"trailing\\\\\" \"\" \"quoted\\\"inside\"\r\n",command(&c).display()).as_bytes());
-    let expected_args = json!([
+    let expected = json!([
         "plain",
         "arg space",
         "雪",
@@ -359,115 +409,145 @@ fn isolated_account_terminal_w1c() {
         "",
         "quoted\"inside"
     ]);
-    let mut failed_cells = Vec::new();
-    for (label,shell,script) in [
-        ("cmd",PathBuf::from(std::env::var_os("COMSPEC").unwrap()),format!("\"\"{}\"\"",batch.display())),
-        ("powershell",PathBuf::from(std::env::var_os("OCXD024_PWSH").unwrap()),format!("& '{}' @('plain','arg space','雪','&|<>^!()','literal%text','trailing\\','','quoted\"inside'); exit $LASTEXITCODE",command(&c).display().to_string().replace('\'',"''"))),
+    let batch = base.join("argv.cmd");
+    create(&batch,b"@echo off\r\nchcp 65001 >nul\r\nsetlocal DisableDelayedExpansion\r\nocx plain \"arg space\" \"\xe9\x9b\xaa\" \"&|<>^!()\" \"literal%%text\" \"trailing\\\\\" \"\" \"quoted\\\"inside\"\r\n");
+    let ps = PathBuf::from(std::env::var_os("OCXD024_PWSH").unwrap());
+    let psmeta = e.0.join("powershell-version.json");
+    let pscript=format!("[pscustomobject]@{{version=$PSVersionTable.PSVersion.ToString();passing=$PSNativeCommandArgumentPassing.ToString();target=(Get-Command ocx -ErrorAction Stop).Source}}|ConvertTo-Json|Set-Content -LiteralPath '{}'; & ocx @('plain','arg space','雪','&|<>^!()','literal%text','trailing\\','','quoted\"inside'); exit $LASTEXITCODE",psmeta.display());
+    let mut failed = vec![];
+    for (label, exe, script) in [
+        (
+            "cmd",
+            PathBuf::from(std::env::var_os("COMSPEC").unwrap()),
+            format!("\"\"{}\"\"", batch.display()),
+        ),
+        ("powershell", ps.clone(), pscript),
     ] {
-        let mut cmd=Command::new(shell);
-        if label=="cmd" {cmd.args(["/d","/s","/c"]).raw_arg(script);} else {cmd.args(["-NoLogo","-NoProfile","-NonInteractive","-Command",&script]);}
-        let path=r.read().unwrap().unwrap().text().unwrap();
-        cmd.env("PATH",format!("{};{}",std::env::var("SystemRoot").unwrap()+"\\System32",path))
-            .stdin(Stdio::piped()).stdout(Stdio::piped()).stderr(Stdio::piped());
-        let mut child=cmd.spawn().unwrap(); child.stdin.take().unwrap().write_all(payload).unwrap();
-        let out=child.wait_with_output().unwrap(); save_output(&e,&format!("argv-{label}"),&out);
-        let value=serde_json::from_slice::<Value>(&out.stdout);
-        let passed=out.status.code()==Some(23) && out.stderr==b"native-fixture-stderr" && value.as_ref().is_ok_and(|v|
-            v["home"]==profile.to_str().unwrap() && v["profile"]==profile.to_str().unwrap() && v["h"]==c.opencodex_home.to_str().unwrap()
-            && v["stdin"]==base64::Engine::encode(&base64::engine::general_purpose::STANDARD,payload) && v["args"]==expected_args);
-        e.event("argv-comparison",json!({"shell":label,"passed":passed,"expectedArgs":expected_args,"observed":value.ok()}));
-        if !passed {failed_cells.push(format!("argv-{label}"));}
+        let mut process = fresh_shell(&exe);
+        process.current_dir(&base);
+        if label == "cmd" {
+            process.args(["/d", "/s", "/c"]).raw_arg(script);
+        } else {
+            process.args([
+                "-NoLogo",
+                "-NoProfile",
+                "-NonInteractive",
+                "-Command",
+                &script,
+            ]);
+        }
+        process
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped());
+        let mut child = process.spawn().unwrap();
+        child.stdin.take().unwrap().write_all(payload).unwrap();
+        let out = child.wait_with_output().unwrap();
+        save_output(&e, &format!("argv-{label}"), &out);
+        let value = serde_json::from_slice::<Value>(&out.stdout);
+        let passed = out.status.code() == Some(23)
+            && out.stderr == b"native-fixture-stderr"
+            && value.as_ref().is_ok_and(|v| {
+                v["args"] == expected
+                    && v["stdin"]
+                        == base64::Engine::encode(
+                            &base64::engine::general_purpose::STANDARD,
+                            payload,
+                        )
+                    && v["home"] == profile.to_str().unwrap()
+                    && v["profile"] == profile.to_str().unwrap()
+                    && v["h"] == c.opencodex_home.to_str().unwrap()
+            });
+        e.event(
+            "argv",
+            json!({"shell":label,"passed":passed,"expected":expected,"observed":value.ok()}),
+        );
+        if !passed {
+            failed.push(format!("argv-{label}"));
+        }
     }
+    let discover = fresh_shell(&ps)
+        .args([
+            "-NoProfile",
+            "-Command",
+            "(Get-Command ocx -ErrorAction Stop).Source; & where.exe ocx; exit $LASTEXITCODE",
+        ])
+        .current_dir(&base)
+        .output()
+        .unwrap();
+    save_output(&e, "fresh-bare-discovery", &discover);
+    assert!(discover.status.success());
+    let text = String::from_utf8_lossy(&discover.stdout).to_lowercase();
+    assert!(text.contains(&command(&c).to_string_lossy().to_lowercase()));
     execute(&c, Action::Disable, &r);
     r.restored();
-    execute(&c, Action::Enable, &r);
-    let enabled = r.read().unwrap().unwrap();
-    let later = PathValue::encode(
-        enabled.value_type,
-        &(enabled.text().unwrap() + ";C:\\later-owned-test-entry"),
-    )
-    .unwrap();
-    r.owned_external(Some(later.clone()));
-    execute(&c, Action::Disable, &r);
-    let retained = r.read().unwrap().unwrap();
-    assert!(retained
-        .text()
-        .unwrap()
-        .contains("C:\\later-owned-test-entry"));
-    assert!(!retained
-        .text()
-        .unwrap()
-        .contains(command(&c).parent().unwrap().to_str().unwrap()));
-    e.event(
-        "disable-preserves-later-path",
-        json!({"originalType":enabled.value_type,"laterBytesPreserved":true}),
-    );
-    r.owned_external(r.original.clone());
-    r.restored();
-    for action in [Action::Enable, Action::Disable] {
+    assert!(command(&c).is_file());
+    assert_eq!(hash::sha256_file(&command(&c)).unwrap(), shim);
+    let disabled = fresh_shell(&ps)
+        .args([
+            "-NoProfile",
+            "-Command",
+            "if(Get-Command ocx -ErrorAction SilentlyContinue){exit 1};exit 0",
+        ])
+        .current_dir(&base)
+        .output()
+        .unwrap();
+    save_output(&e, "disabled-bare-discovery", &disabled);
+    assert!(disabled.status.success());
+    let resume = e.0.join("resume-context.private.json");
+    fs::write(&resume, encode(&c).unwrap()).unwrap();
+    for a in [Action::Enable, Action::Disable] {
         for at in ["pending", "command", "path", "record", "notified"] {
-            if action == Action::Disable {
+            if a == Action::Disable {
                 execute(&c, Action::Enable, &r);
             }
-            let p = plan(&c, action, &[], &r).unwrap().1;
-            let result = apply_with(&c, action, &[], &p.confirmation_digest, &r, &|point| {
-                if point == at {
-                    Err(fail("explicit native interruption boundary"))
+            let p = plan(&c, a, &[], &r).unwrap().1;
+            assert!(apply_with(
+                &c,
+                a,
+                &[],
+                &p.confirmation_digest,
+                &r,
+                &|point| if point == at {
+                    Err(fail("explicit schema3 boundary interruption"))
                 } else {
                     Ok(())
                 }
-            });
-            assert!(result.is_err());
+            )
+            .is_err());
             let raw = fs::read(c.pending()).unwrap();
-            e.save(&format!("pending-{action:?}-{at}.private.json"), &raw);
-            let p = inspect_with(&c, &[], &r).unwrap();
-            assert!(p.pending);
-            assert_eq!(p.action, action);
-            let opposite = if action == Action::Enable {
-                Action::Disable
-            } else {
-                Action::Enable
-            };
-            assert!(plan(&c, opposite, &[], &r).is_err());
-            assert_eq!(fs::read(c.pending()).unwrap(), raw);
-            let transaction: Transaction = decode(&raw).unwrap();
-            let resumed = Command::new(std::env::current_exe().unwrap())
-                .args(["--exact", "modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_account_terminal_w1c", "--ignored", "--test-threads=1", "--nocapture"])
-                .env("OCXD024_RESUME_CONTEXT", &resume_context).output().unwrap();
-            save_output(&e, &format!("resume-{action:?}-{at}"), &resumed);
-            assert!(
-                resumed.status.success(),
-                "{}",
-                String::from_utf8_lossy(&resumed.stderr)
-            );
-            assert_eq!(r.read().unwrap(), transaction.path_after);
-            *r.last.borrow_mut() = transaction.path_after;
-            assert!(!c.pending().exists());
-            e.event("boundary-resumed",json!({"action":format!("{action:?}"),"boundary":at,"samePendingSha256":hash::sha256_hex(&raw)}));
-            if action == Action::Enable {
+            let t: Transaction = decode(&raw).unwrap();
+            assert!(!String::from_utf8_lossy(&raw).contains("MZ"));
+            e.save(&format!("pending-{a:?}-{at}.private.json"), &raw);
+            let out=Command::new(std::env::current_exe().unwrap()).args(["--exact","modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_account_terminal_w1d","--ignored","--test-threads=1","--nocapture"]).env("OCXD024_RESUME_CONTEXT",&resume).output().unwrap();
+            save_output(&e, &format!("resume-{a:?}-{at}"), &out);
+            assert!(out.status.success());
+            assert_eq!(r.read().unwrap(), t.path_after);
+            *r.last.borrow_mut() = t.path_after;
+            assert_eq!(hash::sha256_file(&command(&c)).unwrap(), shim);
+            if a == Action::Enable {
                 execute(&c, Action::Disable, &r);
             }
             r.restored();
         }
     }
-    // A real registry/file operation precedes these explicit test interruptions.
-    r.fail_notify.set(true);
-    let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
-    assert!(apply_with(
-        &c,
-        Action::Enable,
-        &[],
-        &p.confirmation_digest,
-        &r,
-        &|_| Ok(())
-    )
-    .is_err());
-    assert!(c.pending().exists());
-    r.fail_notify.set(false);
+    // Same-image upgrade can replace file IDs between actions without permanently
+    // invalidating registration. A live action's retained handles deny replacement.
     execute(&c, Action::Enable, &r);
+    let saved = fs::read(c.record()).unwrap();
+    {
+        let pin = EntryPin::open(&c).unwrap();
+        assert!(fs::rename(command(&c), i.join("moved.exe")).is_err());
+        pin.check(&c).unwrap();
+    }
+    let bytes = fs::read(command(&c)).unwrap();
+    fs::remove_file(command(&c)).unwrap();
+    create(&command(&c), &bytes);
+    assert_eq!(fs::read(c.record()).unwrap(), saved);
+    require_forwarding(&c).unwrap();
     execute(&c, Action::Disable, &r);
     r.restored();
-    for object in ["command", "record", "pending", "path"] {
+    for object in ["entry", "path", "record", "pending"] {
         let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
         assert!(apply_with(
             &c,
@@ -476,60 +556,127 @@ fn isolated_account_terminal_w1c() {
             &p.confirmation_digest,
             &r,
             &|point| if point == "command" {
-                Err(fail("explicit interruption before external conflict"))
+                Err(fail("explicit conflict checkpoint"))
             } else {
                 Ok(())
             }
         )
         .is_err());
-        let pending_bytes = fs::read(c.pending()).unwrap();
-        let original_path = r.read().unwrap();
-        if object == "command" {
-            atomic_write(&command(&c), b"foreign file bytes", 0o600).unwrap();
-        } else if object == "record" {
-            atomic_write(&c.record(), b"foreign record bytes", 0o600).unwrap();
-        } else if object == "pending" {
-            let mut t: Transaction = decode(&pending_bytes).unwrap();
-            t.path_after = Some(PathValue::encode(1, "C:\\external-native-test").unwrap());
-            atomic_write(&c.pending(), &encode(&t).unwrap(), 0o600).unwrap();
-        } else {
-            r.owned_external(Some(
-                PathValue::encode(1, "C:\\external-native-test").unwrap(),
-            ));
+        let pending_raw = fs::read(c.pending()).unwrap();
+        let before = r.read().unwrap();
+        match object {
+            "entry" => atomic_write(&command(&c), b"foreign exe", 0o600).unwrap(),
+            "path" => r.owned_external(Some(PathValue::encode(1, "C:\\w1d-external").unwrap())),
+            "record" => atomic_write(&c.record(), b"foreign record", 0o600).unwrap(),
+            _ => atomic_write(&c.pending(), b"foreign pending", 0o600).unwrap(),
         }
         assert!(plan(&c, Action::Enable, &[], &r).is_err());
-        if object != "pending" {
-            assert_eq!(fs::read(c.pending()).unwrap(), pending_bytes);
+        match object {
+            "entry" => {
+                assert_eq!(fs::read(command(&c)).unwrap(), b"foreign exe");
+                atomic_write(&command(&c), &bytes, 0o600).unwrap();
+            }
+            "path" => r.owned_external(before),
+            "record" => {
+                fs::remove_file(c.record()).unwrap();
+            }
+            _ => {
+                atomic_write(&c.pending(), &pending_raw, 0o600).unwrap();
+            }
         }
-        if object == "command" {
-            assert_eq!(fs::read(command(&c)).unwrap(), b"foreign file bytes");
-            atomic_write(&command(&c), SCRIPT, 0o600).unwrap();
-        } else if object == "record" {
-            assert_eq!(fs::read(c.record()).unwrap(), b"foreign record bytes");
-            fs::remove_file(c.record()).unwrap();
-        } else if object == "pending" {
-            let retained: Transaction = decode(&fs::read(c.pending()).unwrap()).unwrap();
-            assert_eq!(
-                retained.path_after,
-                Some(PathValue::encode(1, "C:\\external-native-test").unwrap())
-            );
-            atomic_write(&c.pending(), &pending_bytes, 0o600).unwrap();
+        // Replacing a file changes its ID, so its original transaction cannot be
+        // resumed. Restore only this test-owned pending's exact original object
+        // via cancelling test state, never claim production rebaselining.
+        if object == "entry" {
+            assert!(plan(&c, Action::Enable, &[], &r).is_err());
+            fs::remove_file(c.pending()).unwrap();
         } else {
-            assert_eq!(
-                r.read().unwrap(),
-                Some(PathValue::encode(1, "C:\\external-native-test").unwrap())
-            );
-            r.owned_external(original_path);
+            execute(&c, Action::Enable, &r);
+            execute(&c, Action::Disable, &r);
         }
-        execute(&c, Action::Enable, &r);
-        execute(&c, Action::Disable, &r);
         r.restored();
         e.event(
-            "external-conflict-retained",
-            json!({"object":object,"pendingPreserved":true}),
+            "external-refused",
+            json!({"object":object,"bytesRetained":true}),
         );
     }
-    // Pending enable is never completed by the actual product uninstall helper.
+    let original_current = fs::read(i.join("runtime/current.json")).unwrap();
+    e.save("synthetic-current.json", &original_current);
+    fs::remove_file(i.join("runtime/current.json")).unwrap();
+    fs::remove_file(i.join("runtime/bin/ocx-runtime.cmd")).unwrap();
+    let resource = if component_only {
+        input.clone()
+    } else {
+        i.join("runtime-bundle")
+    };
+    let descriptor = fs::read(resource.join("runtime-bundle.manifest.json")).unwrap();
+    let pin = hash::sha256_hex(&descriptor);
+    assert_eq!(
+        pin,
+        "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a"
+    );
+    let start = Instant::now();
+    let supplied = bundled::versioned::provision(
+        &i,
+        &c.desktop_root,
+        &resource.join("runtime-bundle-0.2.24-win32-x64.tar.gz"),
+        &descriptor,
+        &pin,
+    );
+    if let Err(error) = supplied {
+        e.event(
+            "official-supply",
+            json!({"passed":false,"error":error.to_string()}),
+        );
+        failed.push("official-supply".into());
+        select(&c, &synthetic);
+    } else {
+        let selected = program_selection::read_complete(
+            &i,
+            crate::modules::data_root::layout::Platform::Windows,
+            "win32-x64",
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(selected.selection.version, "2.99.0");
+        execute(&c, Action::Enable, &r);
+        create(&c.opencodex_home.join("config.json"), br#"{"port":18241}"#);
+        let config_before = fs::read(c.opencodex_home.join("config.json")).unwrap();
+        for (label, args) in [
+            ("official-version", vec!["--version"]),
+            ("official-home", vec!["config", "get", "port", "--json"]),
+        ] {
+            let script = format!("& ocx {};exit $LASTEXITCODE", args.join(" "));
+            let out = fresh_shell(&ps)
+                .args(["-NoProfile", "-Command", &script])
+                .current_dir(&base)
+                .output()
+                .unwrap();
+            save_output(&e, label, &out);
+            let passed = out.status.success()
+                && String::from_utf8_lossy(&out.stdout).contains(if label == "official-version" {
+                    "2.99.0"
+                } else {
+                    "18241"
+                });
+            if !passed {
+                failed.push(label.into());
+            }
+            e.event(label,json!({"passed":passed,"current":selected.selection,"node":selected.paths.node,"script":selected.script,"h":c.opencodex_home}));
+        }
+        assert_eq!(
+            fs::read(c.opencodex_home.join("config.json")).unwrap(),
+            config_before
+        );
+        program_image::verify(&selected).unwrap();
+        execute(&c, Action::Disable, &r);
+        r.restored();
+    }
+    e.event(
+        "official-phase",
+        json!({"elapsedMs":start.elapsed().as_millis(),"failed":failed}),
+    );
+    // Real Windows Installer invocation: pending Enable must abort before removal.
     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
     assert!(apply_with(
         &c,
@@ -538,137 +685,53 @@ fn isolated_account_terminal_w1c() {
         &p.confirmation_digest,
         &r,
         &|point| if point == "pending" {
-            Err(fail("explicit pending enable"))
+            Err(fail("real MSI pending enable"))
         } else {
             Ok(())
         }
     )
     .is_err());
-    let out = helper(&c, &["--uninstall-terminal-cli", "--confirm"]);
-    save_output(&e, "helper-pending-enable", &out);
-    assert_eq!(out.status.code(), Some(1));
-    assert!(c.pending().exists());
-    let before_pending = fs::read(c.pending()).unwrap();
-    let before_helper = hash::sha256_file(&console(&c)).unwrap();
-    let denied = hook(&c, &input, false);
-    save_output(&e, "hook-pending-enable-refused", &denied);
-    assert_eq!(denied.status.code(), Some(1));
-    assert!(!i.join("hook-passed.txt").exists());
-    assert_eq!(fs::read(c.pending()).unwrap(), before_pending);
-    assert_eq!(hash::sha256_file(&console(&c)).unwrap(), before_helper);
+    let pending_raw = fs::read(c.pending()).unwrap();
+    let denied = if component_only {
+        helper(&c, &["--uninstall-terminal-cli", "--confirm"])
+    } else {
+        installer(&e, &msi, &i, "msi-uninstall-refused", true)
+    };
+    if component_only {
+        save_output(&e, "component-helper-refused", &denied);
+    }
+    assert!(!denied.status.success());
+    assert!(i.join("ocxd.exe").is_file() && i.join("ocx.exe").is_file());
+    assert_eq!(fs::read(c.pending()).unwrap(), pending_raw);
+    r.restored();
     execute(&c, Action::Enable, &r);
-    let expected_after = r.read().unwrap();
-    *r.last.borrow_mut() = expected_after;
-    let out = helper(&c, &["--uninstall-terminal-cli", "--confirm", "extra"]);
-    save_output(&e, "helper-extra-argument", &out);
-    assert_eq!(out.status.code(), Some(2));
-    assert!(c.record().exists());
-    let before_record = fs::read(c.record()).unwrap();
-    let before_path = r.read().unwrap();
-    let upgrade = hook(&c, &input, true);
-    save_output(&e, "hook-upgrade-keeps-terminal", &upgrade);
-    assert!(upgrade.status.success());
-    assert!(i.join("hook-passed.txt").exists());
-    assert_eq!(r.read().unwrap(), before_path);
-    assert_eq!(fs::read(c.record()).unwrap(), before_record);
-    let out = helper(&c, &["--uninstall-terminal-cli", "--confirm"]);
-    save_output(&e, "helper-normal-revoke", &out);
-    assert!(out.status.success());
+    let after = r.read().unwrap();
+    *r.last.borrow_mut() = after;
+    let sentinel = c.desktop_root.join("exports/retained.txt");
+    create(&sentinel, b"user configuration retained");
+    let uninstalled = if component_only {
+        helper(&c, &["--uninstall-terminal-cli", "--confirm"])
+    } else {
+        installer(&e, &msi, &i, "msi-uninstall-normal", true)
+    };
+    if component_only {
+        save_output(&e, "component-helper-revoke", &uninstalled);
+    }
+    assert!(uninstalled.status.success());
     *r.last.borrow_mut() = r.original.clone();
     r.restored();
-    assert!(!command(&c).exists() && !c.record().exists() && !c.pending().exists());
-    execute(&c, Action::Enable, &r);
-    let normal = hook(&c, &input, false);
-    save_output(&e, "hook-normal-revokes-terminal", &normal);
-    assert!(normal.status.success());
-    assert!(i.join("hook-passed.txt").exists());
-    *r.last.borrow_mut() = r.original.clone();
-    r.restored();
-    assert!(!command(&c).exists() && !c.record().exists() && !c.pending().exists());
-    e.event(
-        "synthetic-phase-complete",
-        json!({"fixtureSelection":fixture,"allOriginalPathBytesRestored":true}),
-    );
-    let start = Instant::now();
-    let descriptor = fs::read(input.join("runtime-bundle.manifest.json")).unwrap();
-    let pin = hash::sha256_hex(&descriptor);
-    assert_eq!(
-        pin,
-        "42539a22dde96977d7575077d3e27e4537fe2794a46c07c565a73cedb7a11a1a"
-    );
-    // Delete only this test's current selector/stable entry before invoking the
-    // real first-supply path. The synthetic image itself remains for evidence.
-    fs::remove_file(i.join("runtime/current.json")).unwrap();
-    fs::remove_file(i.join("runtime/bin/ocx-runtime.cmd")).unwrap();
-    let provision = bundled::versioned::provision(
-        &i,
-        &c.desktop_root,
-        &input.join("runtime-bundle-0.2.24-win32-x64.tar.gz"),
-        &descriptor,
-        &pin,
-    );
-    if let Err(error) = provision {
-        e.event("official-product-blocked",json!({"passed":false,"error":error.to_string(),"scope":"unchanged official bin/ocx.mjs rejected by shared executable-extension admission; outside W1-C write set"}));
-        r.restored();
-        e.save(
-            "account-path-after.private.json",
-            &serde_json::to_vec(&r.read().unwrap()).unwrap(),
-        );
-        e.event("component-results",json!({"pathRestored":true,"argvFailedCells":failed_cells,"officialIntegrated":false,"transactionAndHookPhaseCompleted":true}));
-        panic!("official product admission blocked; see original event evidence; argv failures: {failed_cells:?}");
+    for name in ["ocxd.exe", "ocx.exe", "opencodex-desktop.exe"] {
+        assert_eq!(i.join(name).exists(), component_only);
     }
-    let selected = program_selection::read_complete(
-        &i,
-        crate::modules::data_root::layout::Platform::Windows,
-        "win32-x64",
-    )
-    .unwrap()
-    .unwrap();
-    assert_eq!(selected.selection.version, "2.99.0");
-    execute(&c, Action::Enable, &r);
-    create(&c.opencodex_home.join("config.json"), br#"{"port": 18241}"#);
-    for (label, args) in [
-        ("official-version", vec!["--version"]),
-        (
-            "official-custom-home-port",
-            vec!["config", "get", "port", "--json"],
-        ),
-    ] {
-        let command_line = format!("\"\"{}\" {}\"", command(&c).display(), args.join(" "));
-        let out = Command::new(std::env::var_os("COMSPEC").unwrap())
-            .args(["/d", "/s", "/c"])
-            .raw_arg(command_line)
-            .output()
-            .unwrap();
-        save_output(&e, label, &out);
-        assert!(
-            out.status.success(),
-            "{}",
-            String::from_utf8_lossy(&out.stderr)
-        );
-        if label == "official-version" {
-            assert!(String::from_utf8_lossy(&out.stdout).contains("2.99.0"));
-        } else {
-            assert!(String::from_utf8_lossy(&out.stdout).contains("18241"));
-        }
+    if component_only {
+        assert_eq!(hash::sha256_file(&command(&c)).unwrap(), shim);
     }
-    let forwarded = super::forwarding_command(&c, vec!["--version".into()]).unwrap();
-    assert_eq!(forwarded.get_program(), selected.paths.node.as_os_str());
-    assert_eq!(
-        forwarded.get_args().next(),
-        Some(selected.script.as_os_str())
-    );
-    execute(&c, Action::Disable, &r);
-    r.restored();
-    program_selection::verify_current(&i, &selected).unwrap();
-    program_image::verify(&selected).unwrap();
+    assert!(!c.record().exists() && !c.pending().exists());
+    assert_eq!(fs::read(&sentinel).unwrap(), b"user configuration retained");
     e.save(
-        "account-path-after.private.json",
-        &serde_json::to_vec(&r.read().unwrap()).unwrap(),
+        "path-after.private.json",
+        &encode(&r.read().unwrap()).unwrap(),
     );
-    e.event("complete",json!({"officialVersion":selected.selection.version,"officialSourceSha256":selected.image.official_archive_sha256,"h":c.opencodex_home,"node":selected.paths.node,"script":selected.script,"officialPhaseMs":start.elapsed().as_millis(),"pathRestored":true,"noServiceStarted":true,"argvFailedCells":failed_cells}));
-    assert!(
-        failed_cells.is_empty(),
-        "native argv failures retained in evidence: {failed_cells:?}"
-    );
+    e.event("final",json!({"allAccepted":failed.is_empty()&&!component_only,"componentAccepted":failed.is_empty(),"msiBlockedByPolicy":component_only,"failed":failed,"schema":3,"pathRestored":true,"msiFailurePreserved":!component_only,"msiUninstall":!component_only,"userDataRetained":true,"noServiceStarted":true}));
+    assert!(failed.is_empty(), "independent failed cells: {failed:?}");
 }

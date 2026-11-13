@@ -94,7 +94,7 @@ impl Context {
     }
     fn command(&self) -> PathBuf {
         #[cfg(windows)]
-        return self.program_root.join("runtime/bin/ocx.cmd");
+        return self.program_root.join("ocx.exe");
         #[cfg(not(windows))]
         self.user_profile.join(".local/bin/ocx")
     }
@@ -935,6 +935,8 @@ fn forward(args: Vec<OsString>) -> AppResult<()> {
             .program_root,
         manager_executable: executable,
     };
+    #[cfg(windows)]
+    let _entry = terminal_cli_windows::require_forwarding(&c)?;
     let mut process = forwarding_command(&c, args)?;
     #[cfg(unix)]
     {
