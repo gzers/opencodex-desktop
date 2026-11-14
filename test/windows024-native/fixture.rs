@@ -16,6 +16,28 @@ fn main() {
     let args: Vec<_> = std::env::args().collect();
     match args[1].as_str() {
         "exit" => std::process::exit(args[2].parse().unwrap()),
+        "wl2-queries" => {
+            let system =
+                std::path::PathBuf::from(std::env::var_os("SystemRoot").unwrap()).join("System32");
+            let mut outcomes = Vec::new();
+            for (exe, argv) in [
+                ("sc.exe", vec!["query", "opencodex-proxy-native"]),
+                (
+                    "schtasks.exe",
+                    vec!["/query", "/tn", "opencodex-proxy", "/xml"],
+                ),
+            ] {
+                let mut child = std::process::Command::new(system.join(exe))
+                    .args(argv)
+                    .spawn()
+                    .unwrap();
+                let pid = child.id();
+                let raw = child.wait().unwrap().code().unwrap();
+                outcomes.push(format!("{pid} {exe} {raw}"));
+            }
+            fs::write(&args[2], outcomes.join("\n")).unwrap();
+            wait(Path::new(&args[3]));
+        }
         "burst" => {
             for _ in 0..24 {
                 let status = std::process::Command::new(std::env::current_exe().unwrap())

@@ -104,8 +104,11 @@ pub struct LaunchSpec<'a> {
     pub stderr: &'a File,
 }
 
+#[path = "command.rs"]
+mod command;
 #[path = "process_monitor.rs"]
 mod monitor;
+pub use command::CommandEvidence;
 fn image_identity(file: &File, path: &Path) -> io::Result<FileIdentity> {
     #[link(name = "kernel32")]
     unsafe extern "system" {
@@ -332,6 +335,7 @@ pub struct OwnedRuntime {
     _cwd: PinnedDirectory,
     _executable: File,
     members: HashMap<u32, (OwnedHandle, ProcessIdentity)>,
+    commands: HashMap<u32, Result<CommandEvidence, String>>,
     resumed: bool,
 }
 impl OwnedRuntime {
@@ -483,8 +487,38 @@ impl OwnedRuntime {
             _cwd: cwd,
             _executable: exe,
             members: HashMap::new(),
+            commands: HashMap::new(),
             resumed: false,
         })
+    }
+    /// Facts only from a captured original member. Its parent must match a
+    /// generation independently retained in the original Job handle history.
+    pub fn captured_command(&mut self, pid: u32) -> io::Result<&CommandEvidence> {
+        self.monitor.drain(&mut self.members, &mut self.commands)?;
+        let child = &self
+            .members
+            .get(&pid)
+            .ok_or_else(|| denied("no retained original child"))?
+            .1;
+        let evidence = self
+            .commands
+            .get(&pid)
+            .ok_or_else(|| denied("native command capture missing"))?
+            .as_ref()
+            .map_err(|e| io::Error::other(format!("native command unavailable: {e}")))?;
+        let parent = if evidence.parent.pid == self.binding.process.pid {
+            &self.binding.process
+        } else {
+            &self
+                .members
+                .get(&evidence.parent.pid)
+                .ok_or_else(|| denied("native parent handle history missing"))?
+                .1
+        };
+        if parent != &evidence.parent || parent.creation_filetime > child.creation_filetime {
+            return Err(denied("native parent generation differs from retained Job"));
+        }
+        Ok(evidence)
     }
     pub fn binding(&self) -> &RootBinding {
         &self.binding
@@ -596,7 +630,7 @@ impl OwnedRuntime {
             .collect()
     }
     pub fn family_state(&mut self) -> io::Result<FamilyState> {
-        self.monitor.drain(&mut self.members)?;
+        self.monitor.drain(&mut self.members, &mut self.commands)?;
         let ids = self.member_ids()?;
         let mut active = Vec::new();
         for id in ids {
@@ -660,7 +694,7 @@ impl OwnedRuntime {
                 "owned Job changed across bounded snapshot",
             ));
         }
-        self.monitor.drain(&mut self.members)?;
+        self.monitor.drain(&mut self.members, &mut self.commands)?;
         if self.resumed && accounting.TotalProcesses as usize != self.members.len() + 1 {
             return Err(io::Error::new(
                 io::ErrorKind::WouldBlock,
