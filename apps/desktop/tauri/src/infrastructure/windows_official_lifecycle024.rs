@@ -280,12 +280,7 @@ impl Owner {
         {
             return Err(unknown(()));
         }
-        for name in ["runtime-port.json", "opencodex.pid"] {
-            match fs::symlink_metadata(self.home.join(name)) {
-                Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
-                _ => return Err(unknown(())),
-            }
-        }
+        teardown_records_absent(&self.home)?;
         self.source(deadline)?;
         if !self.native.family_state().map_err(unknown)?.complete_exit() {
             return Err(unknown(()));
@@ -296,6 +291,17 @@ impl Owner {
         // it cannot mint LifecycleResult::Stopped or permit successor Start.
         Err(recovery_required())
     }
+}
+fn teardown_records_absent(home: &Path) -> AppResult<()> {
+    // Fixed official desktop-supervision.mjs uses H/ocx.pid. A missing legacy
+    // spelling cannot prove the actual runtime PID record has been retired.
+    for name in ["runtime-port.json", "ocx.pid"] {
+        match fs::symlink_metadata(home.join(name)) {
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+            _ => return Err(unknown(())),
+        }
+    }
+    Ok(())
 }
 fn recovery_required() -> AppError {
     fail("windows024_client_restore_required","本次官方服务及保留Job已正常退出；Windows客户端原件持久恢复及supervisor缺席接口尚未确认，未宣告完整停止或继续启动")
@@ -543,7 +549,7 @@ pub(crate) async fn status(
                 .original_listeners
                 .as_ref()
                 .is_none_or(|s| native::listener_exit_readback(s).map_or(true, |r| !r.is_empty()))
-            || !matches!(fs::symlink_metadata(home.join("runtime-port.json")),Err(e) if e.kind()==std::io::ErrorKind::NotFound)
+            || teardown_records_absent(home).is_err()
         {
             return Err(CollectError::Unreachable);
         }
