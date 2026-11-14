@@ -98,6 +98,15 @@ fn main() {
             let _ = &mut child;
             std::process::exit(0);
         }
+        "family-image" => {
+            let mut child = std::process::Command::new(&args[2])
+                .args(["child", &args[3], &args[4]])
+                .spawn()
+                .unwrap();
+            assert!(child.wait().unwrap().success());
+            fs::write(&args[5], b"original child exited").unwrap();
+            wait(Path::new(&args[6]));
+        }
         _ => panic!("explicit test mode required"),
     }
 }

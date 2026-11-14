@@ -85,18 +85,18 @@ pub struct TokenIdentity {
 }
 
 pub(super) fn process_identity(process: HANDLE) -> io::Result<TokenIdentity> {
+    let token = retain_process_token(process)?;
+    token_identity(token.as_raw_handle())
+}
+pub(super) fn retain_process_token(process: HANDLE) -> io::Result<OwnedHandle> {
     let mut raw = ptr::null_mut();
     check(unsafe { OpenProcessToken(process, TOKEN_QUERY, &mut raw) })?;
-    let token = unsafe { OwnedHandle::from_raw_handle(raw) };
+    Ok(unsafe { OwnedHandle::from_raw_handle(raw) })
+}
+pub(super) fn token_identity(raw: HANDLE) -> io::Result<TokenIdentity> {
     let mut required = 0;
     unsafe {
-        GetTokenInformation(
-            token.as_raw_handle(),
-            TokenUser,
-            ptr::null_mut(),
-            0,
-            &mut required,
-        );
+        GetTokenInformation(raw, TokenUser, ptr::null_mut(), 0, &mut required);
     }
     if required < size_of::<TOKEN_USER>() as u32 || required > 65536 {
         return Err(denied("invalid TokenUser size"));
@@ -105,7 +105,7 @@ pub(super) fn process_identity(process: HANDLE) -> io::Result<TokenIdentity> {
     let mut storage = vec![0usize; (required as usize).div_ceil(size_of::<usize>())];
     check(unsafe {
         GetTokenInformation(
-            token.as_raw_handle(),
+            raw,
             TokenUser,
             storage.as_mut_ptr().cast(),
             required,

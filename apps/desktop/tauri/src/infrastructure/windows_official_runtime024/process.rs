@@ -1,7 +1,8 @@
 use super::{
     paths::{identity, validate, wide},
     security::{
-        check, current_identity, denied, process_identity, verify_private_job, PrivateDescriptor,
+        check, current_identity, denied, process_identity, retain_process_token, token_identity,
+        verify_private_job, PrivateDescriptor,
     },
     FileIdentity, PinnedDirectory, TokenIdentity,
 };
@@ -201,6 +202,73 @@ pub(super) fn state(h: HANDLE) -> io::Result<ProcessState> {
         _ => Err(io::Error::last_os_error()),
     }
 }
+/// Native objects captured while the original generation is still alive.
+/// Terminated processes need not support image-name/token reopening. These
+/// private retained objects are never constructed from persisted identity data.
+pub(super) struct RetainedSource {
+    image: File,
+    token: OwnedHandle,
+    parent: PinnedDirectory,
+}
+impl RetainedSource {
+    pub(super) fn capture(process: HANDLE, original: &ProcessIdentity) -> io::Result<Self> {
+        if state(process)? != ProcessState::Running {
+            return Err(denied("source objects not captured before original exit"));
+        }
+        let parent = PinnedDirectory::open(
+            original
+                .executable
+                .parent()
+                .ok_or_else(|| denied("original source parent absent"))?,
+        )?;
+        let image = OpenOptions::new()
+            .read(true)
+            .share_mode(1)
+            .custom_flags(0x00200000)
+            .open(&original.executable)?;
+        let token = retain_process_token(process)?;
+        let retained = Self {
+            image,
+            token,
+            parent,
+        };
+        retained.verify(process, original)?;
+        if state(process)? != ProcessState::Running {
+            return Err(denied("original exited before source handles sealed"));
+        }
+        Ok(retained)
+    }
+    fn verify(&self, process: HANDLE, original: &ProcessIdentity) -> io::Result<ProcessState> {
+        let state = state(process)?;
+        let (mut created, mut exited, mut kernel, mut user) = (
+            FILETIME::default(),
+            FILETIME::default(),
+            FILETIME::default(),
+            FILETIME::default(),
+        );
+        check(unsafe {
+            GetProcessTimes(process, &mut created, &mut exited, &mut kernel, &mut user)
+        })?;
+        if unsafe { GetProcessId(process) } != original.pid
+            || (((created.dwHighDateTime as u64) << 32) | created.dwLowDateTime as u64)
+                != original.creation_filetime
+            || token_identity(self.token.as_raw_handle())? != original.token
+            || image_identity(&self.image, &original.executable)? != original.executable_id
+        {
+            return Err(denied(
+                "original retained process/token/image object changed",
+            ));
+        }
+        self.parent.recheck()?;
+        // A live process still needs fresh native facts. A terminal handle
+        // proves the original generation and raw exit, not a successful new
+        // image-name/token query on an already terminated process.
+        if state == ProcessState::Running && observe(process)? != *original {
+            return Err(denied("live original process identity changed"));
+        }
+        Ok(state)
+    }
+}
 fn duplicate(file: &File) -> io::Result<OwnedHandle> {
     let mut h = ptr::null_mut();
     check(unsafe {
@@ -333,13 +401,16 @@ pub struct OwnedRuntime {
     thread: Option<OwnedHandle>,
     job: OwnedHandle,
     binding: RootBinding,
+    root_source: RetainedSource,
     home: PinnedDirectory,
     _program_parent: PinnedDirectory,
     _cwd: PinnedDirectory,
     _executable: File,
     members: HashMap<u32, (OwnedHandle, ProcessIdentity)>,
     commands: HashMap<u32, Result<CommandEvidence, String>>,
+    sources: HashMap<u32, RetainedSource>,
     resumed: bool,
+    forced_cleanup_requested: bool,
 }
 impl OwnedRuntime {
     pub fn create_suspended(spec: LaunchSpec<'_>) -> io::Result<Self> {
@@ -460,9 +531,10 @@ impl OwnedRuntime {
                 return Err(denied("process absent from owned Job before resume"));
             }
             home.recheck()?;
-            Ok(fact)
+            let source = RetainedSource::capture(process.as_raw_handle(), &fact)?;
+            Ok((fact, source))
         })();
-        let fact = match admission {
+        let (fact, root_source) = match admission {
             Ok(f) => f,
             Err(e) => {
                 check(unsafe { TerminateProcess(process.as_raw_handle(), 241) })?;
@@ -477,6 +549,7 @@ impl OwnedRuntime {
         Ok(Self {
             process,
             monitor,
+            root_source,
             thread: Some(thread),
             job,
             binding: RootBinding {
@@ -491,13 +564,16 @@ impl OwnedRuntime {
             _executable: exe,
             members: HashMap::new(),
             commands: HashMap::new(),
+            sources: HashMap::new(),
             resumed: false,
+            forced_cleanup_requested: false,
         })
     }
     /// Facts only from a captured original member. Its parent must match a
     /// generation independently retained in the original Job handle history.
     pub fn captured_command(&mut self, pid: u32) -> io::Result<&CommandEvidence> {
-        self.monitor.drain(&mut self.members, &mut self.commands)?;
+        self.monitor
+            .drain(&mut self.members, &mut self.commands, &mut self.sources)?;
         let child = &self
             .members
             .get(&pid)
@@ -525,6 +601,67 @@ impl OwnedRuntime {
     }
     pub fn binding(&self) -> &RootBinding {
         &self.binding
+    }
+    /// Monotonic history, including a failed cleanup request or a request made
+    /// after the Job emptied. An eventual raw zero cannot erase that action.
+    pub fn forced_cleanup_requested(&self) -> bool {
+        self.forced_cleanup_requested
+    }
+    /// Verify a previously retained original generation, including after exit.
+    /// This is independent of active-service admission: it cannot make an
+    /// exited process live, construct a role, or adopt a PID from caller data.
+    pub fn verify_retained_image(
+        &mut self,
+        expected: &ProcessIdentity,
+        image: &Path,
+    ) -> io::Result<ProcessState> {
+        let family = self.family_state()?;
+        let (handle, original, source) = if expected == &self.binding.process {
+            (
+                self.process.as_raw_handle(),
+                &self.binding.process,
+                &self.root_source,
+            )
+        } else {
+            let (h, original) = self
+                .members
+                .get(&expected.pid)
+                .ok_or_else(|| denied("original retained generation absent"))?;
+            if !family.retained_members.iter().any(|(id, _)| id == original) {
+                return Err(denied("retained generation not in complete Job history"));
+            }
+            (
+                h.as_raw_handle(),
+                original,
+                self.sources
+                    .get(&expected.pid)
+                    .ok_or_else(|| denied("original source object handles missing"))?,
+            )
+        };
+        if original != expected {
+            return Err(denied(
+                "retained original generation or image identity changed",
+            ));
+        }
+        let parent = PinnedDirectory::open(
+            image
+                .parent()
+                .ok_or_else(|| denied("source image parent absent"))?,
+        )?;
+        let file = OpenOptions::new()
+            .read(true)
+            .share_mode(1)
+            .custom_flags(0x00200000)
+            .open(image)?;
+        if image_identity(&file, image)? != original.executable_id {
+            return Err(denied(
+                "source image is not the retained original file object",
+            ));
+        }
+        parent.recheck()?;
+        let observed = source.verify(handle, original)?;
+        self.verify_binding(&self.binding)?;
+        Ok(observed)
     }
     /// Re-observe only a member of this original Job, using its retained handle.
     /// An arbitrary PID or equal path spelling does not authorize adoption.
@@ -576,9 +713,8 @@ impl OwnedRuntime {
             ));
         }
         self.home.recheck()?;
-        if observe(self.process.as_raw_handle())? != self.binding.process {
-            return Err(denied("original process facts changed"));
-        }
+        self.root_source
+            .verify(self.process.as_raw_handle(), &self.binding.process)?;
         Ok(())
     }
     pub fn resume(&mut self) -> io::Result<()> {
@@ -633,7 +769,8 @@ impl OwnedRuntime {
             .collect()
     }
     pub fn family_state(&mut self) -> io::Result<FamilyState> {
-        self.monitor.drain(&mut self.members, &mut self.commands)?;
+        self.monitor
+            .drain(&mut self.members, &mut self.commands, &mut self.sources)?;
         let ids = self.member_ids()?;
         let mut active = Vec::new();
         for id in ids {
@@ -677,6 +814,8 @@ impl OwnedRuntime {
                 {
                     return Err(denied("owned descendant identity differs"));
                 }
+                let source = RetainedSource::capture(raw, &fact)?;
+                self.sources.insert(id, source);
                 self.members.insert(id, (h, fact));
             }
             active.push(self.members[&id].1.clone());
@@ -697,7 +836,8 @@ impl OwnedRuntime {
                 "owned Job changed across bounded snapshot",
             ));
         }
-        self.monitor.drain(&mut self.members, &mut self.commands)?;
+        self.monitor
+            .drain(&mut self.members, &mut self.commands, &mut self.sources)?;
         if self.resumed && accounting.TotalProcesses as usize != self.members.len() + 1 {
             return Err(io::Error::new(
                 io::ErrorKind::WouldBlock,
@@ -747,6 +887,7 @@ impl OwnedRuntime {
     /// Explicit failure cleanup for the exclusively retained owned Job. Its return
     /// type cannot be mistaken for a successful normal stop by this module.
     pub fn force_owned_cleanup(&mut self, deadline: Instant) -> io::Result<ForcedCleanup> {
+        self.forced_cleanup_requested = true;
         check(unsafe { TerminateJobObject(self.job.as_raw_handle(), 242) })?;
         // Failure cleanup may follow an incomplete completion-port capture.
         // Exact original Job empty is sufficient to clean its test identity,

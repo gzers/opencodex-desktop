@@ -5,6 +5,7 @@ type CapturedMember = (
     OwnedHandle,
     ProcessIdentity,
     Result<CommandEvidence, String>,
+    RetainedSource,
 );
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -155,7 +156,8 @@ impl Monitor {
                     {
                         return Err(denied("Job new-member identity differs"));
                     }
-                    Ok((handle, identity, command))
+                    let source = RetainedSource::capture(raw, &identity)?;
+                    Ok((handle, identity, command, source))
                 })();
                 if tx.send(captured).is_err() {
                     break;
@@ -170,16 +172,24 @@ impl Monitor {
         &mut self,
         members: &mut HashMap<u32, (OwnedHandle, ProcessIdentity)>,
         commands: &mut HashMap<u32, Result<CommandEvidence, String>>,
+        sources: &mut HashMap<u32, RetainedSource>,
     ) -> io::Result<()> {
         while let Ok(item) = self.receiver.try_recv() {
             match item {
-                Ok((h, f, command)) => {
+                Ok((h, f, command, source)) => {
                     if let Some((_, old)) = members.get(&f.pid) {
                         if old != &f {
                             self.fault = Some("PID generation differs".into())
+                        } else {
+                            // A bounded family snapshot can retain the same
+                            // original handle first. Keep its authority, but do
+                            // not discard later original command/source capture.
+                            commands.entry(f.pid).or_insert(command);
+                            sources.entry(f.pid).or_insert(source);
                         }
                     } else {
                         commands.insert(f.pid, command);
+                        sources.insert(f.pid, source);
                         members.insert(f.pid, (h, f));
                     }
                 }

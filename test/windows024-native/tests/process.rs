@@ -153,6 +153,13 @@ impl Drop for Fixture {
         self.home.take();
         self.out.take();
         self.err.take();
+        if std::thread::panicking() {
+            eprintln!(
+                "failed fixture retained for evidence: {}",
+                self.root.display()
+            );
+            return;
+        }
         if let Err(e) = fs::remove_dir_all(&self.root) {
             if std::thread::panicking() {
                 eprintln!("separate fixture cleanup failed: {e}");
@@ -184,6 +191,107 @@ fn wait_file(path: &Path) {
         assert!(Instant::now() < end, "test marker missing");
         std::thread::sleep(Duration::from_millis(5));
     }
+}
+#[test]
+fn wl2_next_d_retained_exited_identity_rejects_replacement_and_foreign_generation() {
+    let f = Fixture::new();
+    let child_image = f.root.join("separate-child.exe");
+    fs::copy(&f.executable, &child_image).unwrap();
+    let ready = f.root.join("child-ready");
+    let release = f.root.join("child-release");
+    let done = f.root.join("child-exited");
+    let root_release = f.root.join("root-release");
+    let mut r = f.launch(&[
+        "family-image".into(),
+        child_image.as_os_str().into(),
+        ready.as_os_str().into(),
+        release.as_os_str().into(),
+        done.as_os_str().into(),
+        root_release.as_os_str().into(),
+    ]);
+    r.0.resume().unwrap();
+    wait_file(&ready);
+    let family = r.0.family_state().unwrap();
+    let child = family
+        .retained_members
+        .iter()
+        .find(|(p, _)| p.executable == child_image)
+        .unwrap()
+        .0
+        .clone();
+    let command = r.0.captured_command(child.pid).unwrap().clone();
+    assert_eq!(command.parent, r.0.binding().process);
+    assert_eq!(
+        r.0.verify_retained_image(&child, &child_image).unwrap(),
+        ProcessState::Running
+    );
+    fs::write(&release, b"normal child release").unwrap();
+    wait_file(&done);
+    assert_eq!(
+        r.0.verify_retained_image(&child, &child_image).unwrap(),
+        ProcessState::Exited { code: 0 }
+    );
+    assert!(
+        r.0.verify_member_image(child.pid, &child_image).is_err(),
+        "live service admission must remain active-only"
+    );
+    for kind in 0..4 {
+        let mut wrong = child.clone();
+        match kind {
+            0 => wrong.creation_filetime += 1,
+            1 => wrong.token.sid.push_str("-foreign"),
+            2 => wrong.executable_id.index ^= 1,
+            _ => wrong.pid = std::process::id(),
+        }
+        assert!(r.0.verify_retained_image(&wrong, &child_image).is_err());
+    }
+    let other = f.root.join("byte-identical-other.exe");
+    fs::copy(&child_image, &other).unwrap();
+    assert!(r.0.verify_retained_image(&child, &other).is_err());
+    // The original image is now retained before exit, so replacement must be
+    // prevented as well as an equal-byte alias with a different fileID refused.
+    let old_image = f.root.join("original-child-image.exe");
+    assert!(fs::rename(&child_image, &old_image).is_err());
+    assert!(fs::OpenOptions::new()
+        .write(true)
+        .open(&child_image)
+        .is_err());
+    assert_eq!(
+        r.0.verify_retained_image(&child, &child_image).unwrap(),
+        ProcessState::Exited { code: 0 }
+    );
+    fs::write(&root_release, b"normal root release").unwrap();
+    let end =
+        r.0.wait_normal_exit(Instant::now() + Duration::from_secs(3))
+            .unwrap();
+    assert!(end.complete_exit());
+    assert!(!r.0.forced_cleanup_requested());
+    let root = r.0.binding().process.clone();
+    assert_eq!(
+        r.0.verify_retained_image(&root, &f.executable).unwrap(),
+        ProcessState::Exited { code: 0 }
+    );
+    println!("retained post-exit root={root:?}; child={child:?}; foreign generation/identical-byte new fileID refused; no official role issued");
+}
+#[test]
+fn wl2_next_d_forced_request_remains_veto_even_after_original_zero_exit() {
+    let f = Fixture::new();
+    let mut r = f.launch(&["exit".into(), "0".into()]);
+    assert!(!r.0.forced_cleanup_requested());
+    r.0.resume().unwrap();
+    let before =
+        r.0.wait_normal_exit(Instant::now() + Duration::from_secs(3))
+            .unwrap();
+    assert_eq!(before.root, ProcessState::Exited { code: 0 });
+    // Explicit test fault on this exact already-empty synthetic Job. A no-op
+    // force request must still prevent a later "never forced" normal proof.
+    let cleanup =
+        r.0.force_owned_cleanup(Instant::now() + Duration::from_secs(3))
+            .unwrap();
+    assert!(cleanup.forced && cleanup.final_state.complete_exit());
+    assert!(r.0.forced_cleanup_requested());
+    assert_eq!(r.0.root_state().unwrap(), ProcessState::Exited { code: 0 });
+    println!("exact empty fixture Job forced-request recorded; original raw0 retained; normal eligibility veto=true");
 }
 #[test]
 fn wl2_retained_command_parent_and_raw_query_exits() {
