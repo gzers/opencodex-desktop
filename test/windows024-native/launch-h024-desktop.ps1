@@ -1,7 +1,7 @@
 param([Parameter(Mandatory)][string]$Root)
 $ErrorActionPreference='Stop'
-$expected='C:/Users/Public/ocx-h024-desktop-20261114-r1'
-if([IO.Path]::GetFullPath($Root) -cne [IO.Path]::GetFullPath($expected)){throw 'exact prepared desktop test root required'}
+$expected=@('C:/Users/Public/ocx-h024-desktop-20261114-r1','C:/Users/Public/ocx-h024-repaired-20261115-r1')|ForEach-Object {[IO.Path]::GetFullPath($_)}
+if([IO.Path]::GetFullPath($Root) -cnotin $expected){throw 'exact prepared desktop test root required'}
 $out=Join-Path $Root 'out01'
 if(Test-Path -LiteralPath (Join-Path $out 'launch-result.json')){throw 'immutable round already finished; no same-condition rerun'}
 $id=[Security.Principal.WindowsIdentity]::GetCurrent()
@@ -36,33 +36,10 @@ try{
  }finally{$stdout.Dispose();$stderr.Dispose();$process.Dispose()}
 }catch{$result.firstError=@{message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber};$_|Out-String|Set-Content -LiteralPath (Join-Path $out 'launcher-error.log') -Encoding utf8}
 finally{
- # A failed observer may leave only its empty diagnostic host. Request exact
- # same-SID empty-host recovery once; no PID kill, task/service or Job fallback.
- if(!$result.hComponentPassed -and (Test-Path -LiteralPath (Join-Path $out 'task-location.json'))){
-  try{
-   $location=Get-Content -LiteralPath (Join-Path $out 'task-location.json') -Raw|ConvertFrom-Json
-   $base=[IO.Path]::GetFullPath($location.base)
-   if([IO.Path]::GetDirectoryName($base) -cne $env:USERPROFILE -or [IO.Path]::GetFileName($base) -notmatch '^ocx024-h-[0-9a-f-]{36}$'){throw 'exact original task base required for empty-host recovery'}
-   $finished=Join-Path $base 'D/manager-finish.json'
-   if(!(Test-Path -LiteralPath $finished)){
-    $env:OCXD024_H_BASE=$base;$env:OCXD024_H_MODE='finish'
-    & (Join-Path $base 'I/opencodex-desktop.exe') --exact infrastructure::windows_owner_host024::desktop_tests::isolated_h024_manager --ignored --test-threads=1 --nocapture 1> (Join-Path $out 'failure-empty-recovery.stdout.log') 2> (Join-Path $out 'failure-empty-recovery.stderr.log')
-    $result.emptyRecoveryRawExit=$LASTEXITCODE
-   }
-   $data=Join-Path $base 'D'
-   $archive=Join-Path $out 'failed-task-data'
-   [void][IO.Directory]::CreateDirectory($archive)
-   $rows=@()
-   foreach($f in Get-ChildItem -LiteralPath $data -File -Force){
-    if($f.Attributes -band [IO.FileAttributes]::ReparsePoint -or $f.Length -gt 1048576){throw 'bounded original failure archive refused'}
-    $target=Join-Path $archive $f.Name;[IO.File]::Copy($f.FullName,$target,$false)
-    $a=(Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256).Hash
-    if((Get-FileHash -LiteralPath $target -Algorithm SHA256).Hash -cne $a){throw 'original failure archive mismatch'}
-    $rows+=@{name=$f.Name;bytes=$f.Length;sha256=$a.ToLowerInvariant()}
-   }
-   $rows|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $out 'failed-task-data-manifest.json') -Encoding utf8
-   $result.failureTaskDataArchived=$true;$result.taskBaseRetained=$true
-  }catch{$result.failureArchiveError=$_.Exception.Message;$result.taskBaseRetained=$true}
- }
+ # Preserve the exact original case. The repaired desktop sequence exports
+ # every independent task file under the same SID, with compatible read sharing.
+ # Recovery is explicit and separately receipted; no inline native-stderr shell
+ # redirection or unreported fallback can replace its original result.
+ $result.taskBaseRetained=$true
  $result|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $out 'launch-result.json') -Encoding utf8
 }
