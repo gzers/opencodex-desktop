@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 138；2026-11-14。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 139；2026-11-14。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main 12746c005cb2621d2f1f44d12c0af501613fef1a（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前开发检查点main dbf974097d067e75c4de68f9fc681af8ab447b09（非冻结候选），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -24,7 +24,7 @@ revision: 138；2026-11-14。用户要求本机与Windows可独立开发部分�
 | P24-01 | Mac保留配置的卸载/重装及原登记同版本修复已接；其它来源/跨平台原生与整包验收未完 | 本机实现POST-01/02程序/配置分离、Mac标准单.app、用户可写供应、安装/更新/回退同一来源；POST-07磁盘/运行/历史版本分开识别。 | 默认与自定义根、只读资源、来源漂移、校验失败保全；清单/切换/保护单一来源。 | 依P24-00；Windows W0并行，不等完整UI或名称路线。 |
 | P24-02 | 共享保存/手动备份/恢复与现有安装事务保护已接；版本化升级接线及候选验收未完 | 本机POST-04保存重核、POST-08原生JSON单层导入/完整备份/回退，复用真实配置事务。 | 保留草稿/密钥意图、有限等价变化不误锁，真实冲突拒绝；导入仅保留本机port和模式，其它按源替换，备份失败零覆盖。 | 后端8例及原型已定；不把Read的模版匹配暗当无副作用刷新。 |
 | P24-03 | Mac相关消费者已接；Windows终端共享PATH事务/控制台转交及卸载helper已接，W1-C原生/候选未验 | 本机POST-03同版本同HOME CLI核心及Mac入口；POST-05环境阶段/就绪区分、POST-06应用网络/更新说明；已采用UI接线。 | CLI显式启停/冲突不覆盖；内置环境不依赖系统Node；npm/GitHub错误准确；原型一致。 | main83b27e9ae终端21/数据卸载13/console2及前端11项隔离通过；Windows SDK缺失未编译到产品分支，MSI/NSIS hook及真实终端交W1-C。 |
-| P24-W1 | W-L1生产Start/Status定向已接，完整Stop/原件恢复/跨管理器连续性未通过；四边界r2已冻结待Windows实现，普通MSI/清理未完 | Windows后端接共享调用合同；Windows当前用户CLI/PATH和自定义安装根/版本目录/卸载平台适配。 | 实际运行版本/HOME/安装根一致；用户级入口/PATH有归属与撤销，安装更新不误删配置或别用户对象。 | 管理员MSI原两项通过不变。3a9b71f7c/13ea948b2净差已接，main12746c005提供四trait，TEAMr12/W-L2写集生效；接口不冒原生能力通过，完整Stop/普通MSI/cleanup/allAccepted仍false，固定候选前不W2。 |
+| P24-W1 | W-L1生产Start/Status定向已接，完整Stop/原件恢复/跨管理器连续性未通过；四边界r2/W-L2原语部分已接，完整SD/无外层Job前提r3已明确，生产适配及普通MSI/清理未完 | Windows后端接共享调用合同；Windows当前用户CLI/PATH和自定义安装根/版本目录/卸载平台适配。 | 实际运行版本/HOME/安装根一致；用户级入口/PATH有归属与撤销，安装更新不误删配置或别用户对象。 | 管理员MSI原两项通过不变。35e7336fc/70ebd2a67原语净差已接，maindbf974097明确完整SD查询mask及noJob启动前提，TEAMr13/r3依赖生效；原语不冒原生生产能力通过，完整Stop/普通MSI/cleanup/allAccepted仍false，固定候选前不W2。 |
 | P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置及Grok备份可逆恢复已接；缺根目录归属/同锁登记与原缺席原件捕获已接，整根可逆归档/独立movement登记与缺根只读核验、真实Guard约束的整根读回事务已接，首次缺根生产捕获/阶段与Stop恢复已接，原包release定向首次30/5/10通过且debug超时保留；多代来源/专用捕获/存储滚动及生产nextStart/状态同源接线已接，main287ee0c9d固定release库宿主正常原包两代30/5/10已定向通过（Stop6016/9572ms、RootAbsent9/18、两closed）；动作后继资格与status同源通过，旧超时/pending19失败全保留，重复启停/根未移中断与创建取消/状态UI收口/一般范围/固定候选/缺Ready/Windows未完；根已退休完整读回的显式metadata收尾及重复确认已过本批原包专用验；动作回执后继资格已接同次完整认证，固定候选原包验收未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
 | P24-NAME | 剩余技术方案未定，局部等待 | 非直接合法运行键名称及多协议派生组名称展示/官方刷新保持；普通合法英文改名已有能力不重复开发。 | 原始模型/认证/能力保持，明确改名可改实际键及引用；正式显示出口、默认客户端/刷新/重启/回退有证据。 | 10组真实保存确认，中文等新增/改名均转内部键；不私改原样2.99、不用combo降能力/双写轮询。只阻塞依赖它的名称改动和整版最终验收。 |
 | P24-05 | Mac真实024工程.app及正常首次供应已验证；旧工程DMG早于最新源码，非冻结候选，Windows/NAME/完整原生未完 | 本机完成共享逻辑/页面/原型对照、Mac真实原包与必要安装/CLI/升级回退；构建并固定Windows集成候选。 | 给精确代码SHA、官方包版本/SHA、安装器SHA、调用合同和一次完整受影响原生验收表。 | 共享页面不重复交Windows；Mac可在Windows开发期间做有用检查。 |
@@ -1411,3 +1411,16 @@ revision138接收贡献3a9b71f7c/证据13ea948b2。7笔代码净树相同集成�
 已消费shared-minimum-request.json：原件同卷原对象保管与不可覆盖代次、原创建者ocxd owner-host和SID私有fresh IPC、官方精确SCM/任务命名空间原生只读缺席、源/argv/父代次/原Job绑定的诊断角色四边界冻结。新角色合同单独说明产品语义：诊断非零保持raw，只有准确只读查询来源及独立native缺席均证明后才可作为CompletedDiagnostic；服务/root/未知角色/丢历史/force等仍否决，不改10秒或把exit1当不存在，不追溯放行旧失败。具体原语/反例先过再接生产；四trait无默认成功实现，Windows消费者原Required/Unknown保持到真实证明。
 
 本机4项LaunchPlan/预算、12项验签传输测试通过，fmt/严格Clippy通过，仅共享主机检查；未在Mac冒做Windows实机。Windows接TEAMr12写集后可连续开发/定向核验及时推送，不再每个局部失败回Mac。普通MSI仍未验；本轮5账户移除、原Job最终空，5 Profile3,211,038,283字节、Public319,071,336字节与旧SID1040等清理未完。首个Profile部分删除及自动审批删除拒绝保留，不绕过。NAME、其它Mac/最终候选等整版原范围未缩减，当前不W2/双SID/发布。
+
+
+## 2026-11-14 W-L2原语接收与普通令牌/启动环境澄清
+
+revision139接收35e7336fcc64bcf3cab26ca8fa9688daba95a1f0/70ebd2a6728fbd352407950185dfcbd290e4c105。三笔按净差集成至301cb7e43，tree同贡献；371payload/2,715,343字节匹配，17项最终Git/工作字节及三组各26份实际Rust编译输入逐项复核。回执与离线重放见[接收证据](../../.adg/evidence/0.2.24/windows-wl2-receive-r3/receive-result.json)，[当前执行合同r3](0.2.24-contracts/windows-lifecycle-prerequisites-r3.md)增量承接r2，不重定四trait签名。main dbf974097d067e75c4de68f9fc681af8ab447b09另对齐两文件rustfmt，声明完整SD常量/环境约束；不是四适配已实现。
+
+已接6项lib原语、1项真实短命query/parent/argv捕获及ocx.pid残留反例；raw1060/1和fixture无官方来源Unknown不变。最终MSVC debug bins0/160990ms仅贡献主机事实，14warnings与E0061首错保留。O/H/S模块仍cfg(test)，没有custody/私有broker/完整角色和source-bound Absent生产组合；productionExecuted/allAccepted=false。新隔离普通SID1046/elevatedfalse读取完整SD请求ACCESS_SYSTEM_SECURITY时原1314，只有owner/group/DACL部分读回未变；外层Job=true但寿命未知。原语进展不能抹掉这两项或用W-L1旧Start成功填新链空白。
+
+普通用户范围正式明确：完整SD仍含audit SACL、label/attributes/CAP/trust/filter及OS返回控制信息，不缩DACL；句柄READ_CONTROL|ACCESS_SYSTEM_SECURITY=0x01020000，GetSecurityInfo(SE_FILE_OBJECT,BACKUP_SECURITY_INFORMATION=0x10000)。不可读/未请求/不支持/覆盖未知不是Absent，在首次原件变更前拒绝capture；pending后失败保留Required/custody，无Closed或后继。当前没有已确认满足完整SD的普通令牌环境，不能提升/启用特权/模拟服务或改策略凑通过；这类普通账户完整恢复生产Start可用性仍受阻，未来若缩范围需另行采用产品合同。本轮没有作该弱化。
+
+broker验证入口确定为既有隔离普通交互登录的桌面Shell，bootstrap及挂起broker原句柄均须原生no-outer-Job，保持同SID/Profile/session/原创建句柄；GUI退出/新manager认证前后继续观测原broker存活且source/H/FILETIME一致。不以Explorer名称/DETACHED_PROCESS或单层Job无KILL推断，也不breakaway/改策略。该环境是已选待实证，不冒当前主机已就绪；Windows无桌面入口时只阻H实测，O1314也只阻依赖其完整正例/真实生产，不阻独立H/S/D适配开发。每轮有新假设才跑，不再重复同一普通前提失败。
+
+本轮Windows账户1046移除，Profile登记移除但目录不可读/数量字节未知，Public26文件92,915,595字节仍在；早先87调用/删除后现场限制、自动审批拒绝及所有旧Profile/Public未完照存。后继归档失败须保留尚可访问的原账户/Profile，不能先删除再重建fixture冒原件。日常配置/PATH/策略未改，普通MSI未验。TEAMr13继续r2单写集并消费r3，固定候选前不W2/双SID，不发布。其它本版整版范围及NAME均保留。

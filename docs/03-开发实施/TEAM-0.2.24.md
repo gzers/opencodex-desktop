@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 12；2026-11-14。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前W-L1已回交，四项共享边界已冻结，Windows按文末W-L2/r2写集连续实现，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 13；2026-11-14。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前W-L2原语已回交，SD/环境前提r3已明确，Windows按文末W-L2/r2写集及r3依赖连续实现，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -130,3 +130,14 @@ Windows单写合同内原native后端/生命周期文件；新增windows_client_
 先四边界原语/反例与MSVC正式编译，再单SID生产owner-host/原件捕获、完整Stop和后继、GUI更替；原预算/未知拒绝、原官方包、失败保留和准确清理不变。角色精确证明与独立native缺席前，非零查询不能被当作通过；不做名称或退出码白名单。既有CLI/MSI非受影响不重跑；新broker改变的生产调用须在新source验证。固定候选前不W2/双SID/全量安装器，不发布。
 
 > fetch main12746c005cb2621d2f1f44d12c0af501613fef1a及本次docs/governance-main，按TEAM revision12/windows-lifecycle-shared-r2执行W-L2：实现原件同卷保管恢复、原创建者ocxd owner-host、精确supervisor原生缺席与源绑定诊断角色，先原语反例再单SID生产启停/后继/管理器更替。保留30/5/10预算、raw退出码和未知拒绝，只写r2允许集；范围内持续开发定向验证及时分别push代码与新原证据，回完整状态/首错/摘要/清理。不改官方或日常配置，不W2/双SID，不发布。
+
+
+## 2026-11-14 W-L2原语接收后，r3为当前前提合同
+
+共同代码main dbf974097d067e75c4de68f9fc681af8ab447b09，证据35e7336fc/70ebd2a67已接；进度/缺口只归IMP-34 revision139。新[普通令牌SD与broker环境r3](0.2.24-contracts/windows-lifecycle-prerequisites-r3.md)澄清两个最小请求，r2四trait签名、逐文件Windows单写集/官方输入摘要不变。Mac交接后暂停本写集至Git回交；不把r3误作四适配已完成。
+
+Windows在现有允许集持续完成具体O/H/S/D及生产接线；O完整SD要求不缩为部分可读投影，1314/5/覆盖未知在原件变更前拒绝，旧pending保持Required。现普通token不具完整SACL读取能力，不改token/机器策略。H从既有普通交互桌面启动并原生核bootstrap和挂起broker无外层Job；原broker必须经manager更替实测同代持续存活。无桌面入口或SD正例时只阻对应依赖，不因一个前提卡住独立H/S/D开发，不反复跑相同失败账户/控制器。
+
+r2允许集继续，新增共享常量为精确API合同而非证据能力；Windows如需调整其使用先给最小平台依据，不能私降范围/改预算/增加特权。每轮有可证伪假设，一次采全独立项，批量修复；及时分别push代码/新原证据。Profile先实际归档核验再移除；旧自动审批拒绝不重试/绕过。固定候选前不W2/双SID/全量安装器，不发布。
+
+> fetch maindbf974097及本次docs/governance-main，按TEAMr13/windows-lifecycle-prerequisites-r3增量承接r2。实现四项具体适配；完整SD不可读则原件变更前拒绝，保持普通token/日常策略；broker仅从原生确认无外层Job的普通交互桌面启动，补原manager退出后同broker存活/接管。O受阻不阻独立H/S/D开发，别重复相同1314/带Job控制器轮次。只写r2允许集，保持原预算/未知拒绝，分别推代码和完整新证据/首错/清理，不W2/双SID、不发布。
