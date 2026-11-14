@@ -39,3 +39,15 @@
 该场景配置使用相同 input/output/test 路径，改为 `testName=isolated_msi_uninstall_administrator`、`testAdministrator=true`、`authorizedLocalAdministratorMsi=true`、`msiOnly=true`、`componentOnly=false`，expectedGuestComputer填写本机实际名字。提升控制器执行 `invoke-msi-local-admin.ps1 -Config <绝对路径> -ExpectedComputer <本机名>`。
 
 控制器创建一个新管理员账户，使用带该账户登录凭据的临时计划任务以 Highest 启动测试并核实际 SID、提升令牌和 Profile；凭据不落盘、不输出。任务限制20分钟；完成后删除任务，只有产品登记明确缺席才删除测试账户/Profile。日常用户/机器 PATH 前后仅保存摘要核对，不覆盖外部变化。管理员场景无须修改交互桌面ACL；原输入ACL恢复。失败日志和未清项保持可追溯。
+
+## 离线接收复核
+
+`verify-msi-evidence.py` 固定核对贡献代码 `1c6a0881c` 与证据 `b0e7c6d6a` 的 Git 对象。它逐份核验134个证据文件、执行源与最终源码摘要、真实MSI脚本顺序/退出码、原SID继续及前后像，同时保留首次失败、普通用户未验和清理未完。接收者先fetch两个贡献分支，然后在代码工作树运行：
+
+```powershell
+python test/windows024-native/verify-msi-evidence.py --code-repo . --docs-repo <文档工作树绝对路径> --self-test
+```
+
+本机可额外传 `--package <原MSI路径>`、`--test-executable <out02测试EXE路径>`，重新核本体摘要；省略时输出明确仅复核归档的摘要记录，不能声称已重算远端大包。`--self-test` 在内存中验证原字节损坏、先删文件、保留内容变化、pending残留、丢失原失败、令牌变化、清理失败被隐藏、冒报全通过和路径逃逸等反例；不创建测试身份或临时目录。
+
+该脚本只读本地Git对象和可选二进制，不fetch、不执行安装器、不修改PATH/账户/Profile或策略。exit0表示归档证明内部一致且与固定Git源相符；输出仍为 `ordinaryUserAcceptance=false`、`cleanupComplete=false`、`allAccepted=false`，不能作为集成接收回执、当前机器清理成功或整版验收通过。
