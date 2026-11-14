@@ -3,6 +3,9 @@
 //! mandatory before any production operation can be dispatched.
 use serde::{Deserialize, Serialize};
 mod continuity;
+#[cfg(test)]
+mod desktop_tests;
+pub mod empty_host;
 use std::{
     io,
     time::{Duration, Instant},

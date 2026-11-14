@@ -54,8 +54,8 @@ pub(crate) mod attested_status;
 mod windows_client_originals024;
 #[cfg(windows)]
 pub(crate) mod windows_official_lifecycle024;
-#[cfg(all(windows, test))]
-mod windows_owner_host024;
+#[cfg(windows)]
+pub mod windows_owner_host024;
 #[cfg(windows)]
 mod windows_supervisor024;
 #[cfg(windows)]

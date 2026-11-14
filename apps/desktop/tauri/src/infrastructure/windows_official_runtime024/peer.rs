@@ -54,6 +54,12 @@ impl RetainedPeer {
     pub fn identity(&self) -> &ProcessIdentity {
         &self.identity
     }
+    pub fn exited(&self) -> io::Result<bool> {
+        Ok(matches!(
+            process::state(self.handle.as_raw_handle())?,
+            super::ProcessState::Exited { .. }
+        ))
+    }
     pub fn verify(&self) -> io::Result<()> {
         if process::observe(self.handle.as_raw_handle())? != self.identity
             || process::state(self.handle.as_raw_handle())? != super::ProcessState::Running

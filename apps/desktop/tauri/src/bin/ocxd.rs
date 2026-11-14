@@ -14,6 +14,22 @@ use std::os::unix::net::UnixStream;
 use std::path::PathBuf;
 use std::process::ExitCode;
 use zeroize::Zeroize;
+#[cfg(windows)]
+mod windows_owner024 {
+    pub fn dispatch(argv: &[String]) -> Option<std::process::ExitCode> {
+        if argv.first().map(String::as_str) != Some("--internal-runtime-owner024") {
+            return None;
+        }
+        if argv.len() != 1 {
+            eprintln!("Internal owner requires an exact one-time inherited bootstrap.");
+            return Some(std::process::ExitCode::from(2));
+        }
+        Some(match opencodex_desktop_lib::infrastructure::windows_owner_host024::empty_host::run_from_inherited_bootstrap(){
+        Ok(())=>std::process::ExitCode::SUCCESS,
+        Err(e)=>{eprintln!("Internal owner unconfirmed; no lifecycle success: raw={:?}; {e}",e.raw_os_error());std::process::ExitCode::from(1)},
+    })
+    }
+}
 
 #[cfg(unix)]
 use opencodex_desktop_lib::modules::ipc::CLI_SOCKET_RELATIVE_PATH;
@@ -193,6 +209,10 @@ fn main() -> ExitCode {
         return ExitCode::SUCCESS;
     }
     let argv: Vec<String> = std::env::args().skip(1).collect();
+    #[cfg(windows)]
+    if let Some(result) = windows_owner024::dispatch(&argv) {
+        return result;
+    }
     #[cfg(windows)]
     if argv
         .first()

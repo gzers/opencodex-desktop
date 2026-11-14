@@ -27,6 +27,7 @@ unsafe extern "system" {
         sa: *const windows_sys::Win32::Security::SECURITY_ATTRIBUTES,
     ) -> HANDLE;
     fn ConnectNamedPipe(pipe: HANDLE, overlapped: *mut OVERLAPPED) -> i32;
+    fn DisconnectNamedPipe(pipe: HANDLE) -> i32;
     fn GetNamedPipeClientProcessId(pipe: HANDLE, pid: *mut u32) -> i32;
     fn GetNamedPipeServerProcessId(pipe: HANDLE, pid: *mut u32) -> i32;
     fn ReadFile(
@@ -113,6 +114,12 @@ impl PrivatePipe {
     }
     pub fn name(&self) -> &str {
         &self.name
+    }
+    pub fn disconnect(&self) -> io::Result<()> {
+        if !self.server {
+            return Err(denied("only original server may disconnect"));
+        }
+        check(unsafe { DisconnectNamedPipe(self.handle.as_raw_handle()) })
     }
     pub fn connect_local(name: &str) -> io::Result<Self> {
         use std::os::windows::{fs::OpenOptionsExt, io::IntoRawHandle};

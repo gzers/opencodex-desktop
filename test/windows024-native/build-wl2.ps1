@@ -9,6 +9,7 @@ $cargo="$toolchain/rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/cargo.exe
 $arguments=@('build','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--bins','-j','1')
 if($Mode -eq 'test'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'r3'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_r3_','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'h-desktop'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_h_','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'native'){
  $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
  $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','wl2_','--','--test-threads=1','--nocapture')
