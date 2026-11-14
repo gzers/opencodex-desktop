@@ -1,0 +1,39 @@
+{
+  "source": "12746c005cb2621d2f1f44d12c0af501613fef1a",
+  "host": "aarch64-apple-darwin",
+  "record": "Observed tool-command results summarized; no Windows execution on this host",
+  "checks": [
+    {
+      "command": "cargo fmt --all -- --check",
+      "exitCode": 0
+    },
+    {
+      "command": "cargo test --locked --lib official_lifecycle024 -- --test-threads=1",
+      "exitCode": 0,
+      "passed": 4,
+      "failed": 0,
+      "testSeconds": 0.29
+    },
+    {
+      "command": "cargo test --locked --lib infrastructure::attested_status::tests -- --test-threads=1",
+      "exitCode": 0,
+      "passed": 12,
+      "failed": 0,
+      "testSeconds": 2.62
+    },
+    {
+      "command": "cargo clippy --locked --lib --tests -- -D warnings",
+      "exitCode": 0,
+      "buildSeconds": 28.32
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "limits": [
+    "Shared declarations compile on Mac; native Windows branches require MSVC build and native directed execution",
+    "Four trait implementations not supplied by this interface commit",
+    "No ordinary MSI / W2 / dual SID / publication acceptance"
+  ]
+}
