@@ -122,8 +122,11 @@ async fn server(mode: &'static str) -> (Fixture, JoinHandle<()>) {
                 return;
             }
             let mut body = json!({"status":if index==1{"ready"}else{"ok"},"service":"opencodex","version":VERSION,"pid":42,"port":r.port,"uptime":10.0+index as f64});
+            if mode.starts_with("official024") {
+                body["version"] = "2.99.0".into();
+            }
             let mut status = 200;
-            if mode == "pending" && index == 1 {
+            if ["pending", "official024-pending"].contains(&mode) && index == 1 {
                 status = 503;
                 body["status"] = "pending".into();
             }
@@ -417,6 +420,8 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
         "slow-stop",
         "witness-refused",
         "duplicate-lifetime-proof",
+        "retained-first-refused",
+        "retained-before-post-refused",
     ] {
         let listener = TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
             .await
@@ -515,15 +520,29 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
             let _ = record_bytes;
         });
         let progress = std::cell::RefCell::new(Vec::new());
+        let retained_calls = std::cell::Cell::new(0);
         let observed = tokio::time::timeout(
             std::time::Duration::from_secs(2),
-            stop_official_with_witness(
+            stop_official_with_checks(
                 runtime,
                 f.home.clone(),
                 42,
                 |phase| progress.borrow_mut().push(phase),
                 |_, _, _, _, _| {
                     if mode == "witness-refused" {
+                        Err(CollectError::Unreachable)
+                    } else {
+                        Ok(())
+                    }
+                },
+                |record, bytes| {
+                    assert_eq!(record.pid, 42);
+                    assert_eq!(bytes, f.bytes);
+                    let call = retained_calls.get() + 1;
+                    retained_calls.set(call);
+                    if mode == "retained-first-refused"
+                        || mode == "retained-before-post-refused" && call == 2
+                    {
                         Err(CollectError::Unreachable)
                     } else {
                         Ok(())
@@ -551,11 +570,24 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
         task.await.unwrap();
         let requests = requests.lock().unwrap();
         assert_eq!(outcome.is_ok(), mode == "valid", "{mode}");
-        if ["forged", "witness-refused", "duplicate-lifetime-proof"].contains(&mode) {
+        if [
+            "forged",
+            "witness-refused",
+            "duplicate-lifetime-proof",
+            "retained-first-refused",
+        ]
+        .contains(&mode)
+        {
             assert_eq!(requests.len(), 1);
             assert!(!requests[0].1, "no token before identity proof");
         }
-        if ["record-changed", "capability-pid"].contains(&mode) {
+        if [
+            "record-changed",
+            "capability-pid",
+            "retained-before-post-refused",
+        ]
+        .contains(&mode)
+        {
             assert!(!requests.iter().any(|r| r.0.starts_with("POST")));
         }
         if [
@@ -564,6 +596,8 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
             "capability-pid",
             "witness-refused",
             "duplicate-lifetime-proof",
+            "retained-first-refused",
+            "retained-before-post-refused",
         ]
         .contains(&mode)
         {
@@ -576,6 +610,7 @@ async fn stop_uses_one_attested_connection_and_requires_official_client_teardown
                 && !phase.contains(&f.record.attestation_secret)));
 
         if mode == "valid" {
+            assert_eq!(retained_calls.get(), 2);
             assert!(progress.borrow().contains(&"stop-post-response"));
             assert_eq!(requests.len(), 4);
             assert_eq!(requests[3].0, "POST /api/stop HTTP/1.1");
@@ -647,6 +682,227 @@ async fn independent_version_observation_accepts_old_attested_process_without_ad
     assert_eq!(result.port, f.record.port);
     server.await.unwrap();
     assert_eq!(record(&f.home).unwrap().1, f.bytes);
+}
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn public_official024_stop_keeps_native_checks_and_does_not_require_maintenance_fields() {
+    use super::official024::{request_stop_official024, RetainedService};
+    struct Owner {
+        calls: usize,
+        refuse: usize,
+        digest: String,
+        record_path: PathBuf,
+    }
+    impl RetainedService for Owner {
+        fn verify_live(&mut self, pid: u32, port: u16, digest: &str) -> Result<(), CollectError> {
+            self.calls += 1;
+            assert_eq!(pid, 42);
+            assert_ne!(port, 0);
+            assert_eq!(digest, self.digest);
+            if self.refuse == 3 && self.calls == 2 {
+                std::fs::write(&self.record_path, b"outside record during native check").unwrap();
+            }
+            if self.calls == self.refuse {
+                Err(CollectError::Unreachable)
+            } else {
+                Ok(())
+            }
+        }
+    }
+    for refuse in [0, 1, 2, 3] {
+        let program = crate::modules::runtime::terminal_cli::tests::Fixture::new();
+        let runtime: SharedRuntimeExecutable =
+            crate::modules::runtime::RuntimeHandle::initialize_versioned(
+                &program.c.desktop_root,
+                &program.c.program_root,
+            );
+        let listener = TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, 0))
+            .await
+            .unwrap();
+        let f = Fixture::new(listener.local_addr().unwrap().port());
+        crate::infrastructure::atomic_write::atomic_write(
+            &f.home.join("admin-api-token"),
+            format!("ocx_admin_{}", "x".repeat(43)).as_bytes(),
+            0o600,
+        )
+        .unwrap();
+        let record = f.record.clone();
+        let requests = std::sync::Arc::new(std::sync::Mutex::new(vec![]));
+        let captured = requests.clone();
+        let server = tokio::spawn(async move {
+            let (stream, _) = listener.accept().await.unwrap();
+            let mut io = BufReader::new(stream);
+            for i in 0..4 {
+                let mut request = String::new();
+                loop {
+                    let mut line = String::new();
+                    if io.read_line(&mut line).await.unwrap_or(0) == 0 {
+                        return;
+                    }
+                    request.push_str(&line);
+                    if line == "\r\n" {
+                        break;
+                    }
+                }
+                captured.lock().unwrap().push((
+                    request.lines().next().unwrap().to_string(),
+                    request.contains("Authorization: Bearer"),
+                ));
+                let mut proof = String::new();
+                let value = if i == 0 || i == 2 {
+                    let challenge = request
+                        .lines()
+                        .find_map(|l| l.strip_prefix("x-opencodex-attestation-challenge: "))
+                        .unwrap();
+                    let mut mac =
+                        Hmac::<Sha256>::new_from_slice(record.attestation_secret.as_bytes())
+                            .unwrap();
+                    mac.update(
+                        format!(
+                            "opencodex-local-management-v1\n{challenge}\n{}\n{}",
+                            record.pid, record.port
+                        )
+                        .as_bytes(),
+                    );
+                    proof = format!(
+                        "x-opencodex-attestation-proof: {}\r\n",
+                        URL_SAFE_NO_PAD.encode(mac.finalize().into_bytes())
+                    );
+                    json!({"service":"opencodex","status":"ok","pid":42,"port":record.port,"version":"2.99.0"})
+                } else if i == 1 {
+                    json!({"schema":"ocx-stop-capabilities/1","connectedClientOwnership":true,"pid":42})
+                } else {
+                    json!({"success":true,"sharedTeardown":"performed"})
+                };
+                let raw = serde_json::to_vec(&value).unwrap();
+                let header=format!("HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: keep-alive\r\n{proof}\r\n",raw.len());
+                if io.get_mut().write_all(header.as_bytes()).await.is_err() {
+                    return;
+                }
+                if io.get_mut().write_all(&raw).await.is_err() {
+                    return;
+                }
+                io.get_mut().flush().await.unwrap();
+            }
+        });
+        let mut owner = Owner {
+            calls: 0,
+            refuse,
+            digest: crate::infrastructure::hash::sha256_hex(&f.bytes),
+            record_path: f.home.join("runtime-port.json"),
+        };
+        let result = request_stop_official024(
+            runtime,
+            f.home.clone(),
+            42,
+            std::time::Instant::now() + std::time::Duration::from_secs(5),
+            &mut owner,
+            |_| {},
+        )
+        .await;
+        if refuse == 0 {
+            let reply = result.unwrap();
+            assert_eq!(reply.pid(), 42);
+            assert_eq!(reply.port(), f.record.port);
+            assert_eq!(reply.record_sha256(), owner.digest);
+            assert_eq!(owner.calls, 2);
+        } else {
+            assert!(result.is_err());
+            assert_eq!(owner.calls, refuse.min(2));
+            if refuse == 3 {
+                assert_eq!(
+                    std::fs::read(&owner.record_path).unwrap(),
+                    b"outside record during native check"
+                );
+            }
+        }
+        server.await.unwrap();
+        let sent = requests.lock().unwrap();
+        assert_eq!(
+            sent.len(),
+            match refuse {
+                0 => 4,
+                1 => 1,
+                _ => 3,
+            }
+        );
+        assert_eq!(sent.iter().any(|r| r.0.starts_with("POST")), refuse == 0);
+        if refuse == 1 {
+            assert!(!sent[0].1);
+        }
+    }
+}
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+async fn typed_official024_observation_is_fresh_and_does_not_turn_pending_into_ready() {
+    use super::official024::observe_official024;
+    use std::time::{Duration, Instant};
+    for mode in ["official024", "official024-pending"] {
+        let program = crate::modules::runtime::terminal_cli::tests::Fixture::new();
+        let runtime: SharedRuntimeExecutable =
+            crate::modules::runtime::RuntimeHandle::initialize_versioned(
+                &program.c.desktop_root,
+                &program.c.program_root,
+            );
+        let (f, task) = server(mode).await;
+        let observation = observe_official024(
+            runtime.clone(),
+            f.home.clone(),
+            Instant::now() + Duration::from_secs(5),
+        )
+        .await
+        .unwrap();
+        assert_eq!(observation.pid(), 42);
+        assert_eq!(observation.port(), f.record.port);
+        assert_eq!(observation.ready(), mode == "official024");
+        assert_eq!(observation.version(), "2.99.0");
+        assert_eq!(
+            observation.record_sha256(),
+            crate::infrastructure::hash::sha256_hex(&f.bytes)
+        );
+        observation.check_current(&runtime, &f.home).unwrap();
+        let other: SharedRuntimeExecutable =
+            crate::modules::runtime::RuntimeHandle::initialize_versioned(
+                &program.c.desktop_root,
+                &program.c.program_root,
+            );
+        assert!(observation.check_current(&other, &f.home).is_err());
+        assert!(observation
+            .check_current(&runtime, &program.c.opencodex_home)
+            .is_err());
+        std::fs::write(f.home.join("runtime-port.json"), b"outside").unwrap();
+        assert!(observation.check_current(&runtime, &f.home).is_err());
+        task.await.unwrap();
+    }
+}
+#[tokio::test]
+async fn official024_expired_parent_deadline_never_connects_or_calls_native_owner() {
+    struct Refuse;
+    impl super::official024::RetainedService for Refuse {
+        fn verify_live(&mut self, _: u32, _: u16, _: &str) -> Result<(), CollectError> {
+            panic!("expired action cannot reach native owner")
+        }
+    }
+    let runtime = crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
+    let deadline = std::time::Instant::now();
+    assert!(matches!(
+        super::official024::request_stop_official024(
+            runtime.clone(),
+            PathBuf::from("/unread"),
+            42,
+            deadline,
+            &mut Refuse,
+            |_| {}
+        )
+        .await,
+        Err(CollectError::Timeout)
+    ));
+    assert!(matches!(
+        super::official024::observe_official024(runtime, PathBuf::from("/unread"), deadline).await,
+        Err(CollectError::Timeout)
+    ));
 }
 #[tokio::test]
 async fn independent_version_read_refuses_wrong_proof_and_missing_record_is_only_no_record() {

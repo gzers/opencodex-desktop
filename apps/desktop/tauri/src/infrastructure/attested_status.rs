@@ -19,6 +19,8 @@ use tokio::{
     net::TcpStream,
 };
 const MAX_BODY: usize = 64 * 1024;
+#[path = "official_runtime024_transport.rs"]
+pub mod official024;
 #[derive(Clone, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 struct Record {
@@ -254,6 +256,16 @@ async fn stop_official_with_witness<T>(
     phase: impl Fn(&'static str),
     capture: impl FnOnce(&Path, &Path, &Record, &str, Option<&str>) -> Result<T, CollectError>,
 ) -> Result<T, CollectError> {
+    stop_official_with_checks(runtime, home, pid, phase, capture, |_, _| Ok(())).await
+}
+async fn stop_official_with_checks<T>(
+    runtime: SharedRuntimeExecutable,
+    home: PathBuf,
+    pid: u32,
+    phase: impl Fn(&'static str),
+    capture: impl FnOnce(&Path, &Path, &Record, &str, Option<&str>) -> Result<T, CollectError>,
+    mut retained_check: impl FnMut(&Record, &[u8]) -> Result<(), CollectError>,
+) -> Result<T, CollectError> {
     phase("stop-runtime-activation");
     let root = runtime
         .managed_installation_root()
@@ -278,6 +290,7 @@ async fn stop_official_with_witness<T>(
     phase("stop-first-attestation");
     let (_, challenge, proof) =
         health_proof(&mut session, &expected, &identity.package_version).await?;
+    retained_check(&expected, &bytes)?;
     phase("stop-lifetime-witness");
     let witness = capture(&root, &home, &expected, &challenge, proof.as_deref())?;
     phase("stop-private-token");
@@ -314,6 +327,7 @@ async fn stop_official_with_witness<T>(
     {
         return Err(CollectError::Unreachable);
     }
+    retained_check(&expected, &bytes)?;
     phase("stop-post-client-restore");
     let stopped = session
         .request("POST", "/api/stop", None, Some(token))
