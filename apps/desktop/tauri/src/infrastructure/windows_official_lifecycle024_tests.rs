@@ -226,6 +226,17 @@ fn isolated_production_lifecycle_wl1() {
         result
     };
     let started = run(LifecycleAction::Start);
+    if let Ok(entry) = slot(&runtime, &home, false) {
+        if let Ok(mut locked) = entry.owner.try_lock() {
+            if let Some(owner) = locked.as_mut() {
+                let state = owner.native.family_state();
+                event(
+                    "post-start-native-diagnostic",
+                    json!({"stage":owner.stage,"snapshot":state.as_ref().ok().map(|s|json!({"total":s.total_processes,"active":s.active_processes,"retained":s.retained_members.len()})),"error":state.err().map(|e|e.to_string())}),
+                );
+            }
+        }
+    }
     event("clients-ready-or-failure", snapshot());
     let started_ok = started
         .as_ref()
