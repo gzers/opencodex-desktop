@@ -1,0 +1,96 @@
+{
+  "round": "out04",
+  "profile": "release",
+  "source": "source05.json",
+  "startElapsedMs": 30190,
+  "postStartNativeSnapshot": {
+    "error": null,
+    "snapshot": {
+      "active": 3,
+      "retained": 285,
+      "total": 286
+    },
+    "stage": "typed-health-ready"
+  },
+  "fullOriginalJobHistoryRetained": true,
+  "total": 286,
+  "retained": 285,
+  "images": {
+    "icacls.exe": 126,
+    "conhost.exe": 142,
+    "sc.exe": 3,
+    "schtasks.exe": 6,
+    "powershell.exe": 6,
+    "bun.exe": 1,
+    "reg.exe": 1
+  },
+  "nonzeroMembers": [
+    {
+      "filetime": 134391218799104681,
+      "image": "C:\\Windows\\System32\\sc.exe",
+      "pid": 86096,
+      "state": "Exited { code: 1060 }"
+    },
+    {
+      "filetime": 134391218787434537,
+      "image": "C:\\Windows\\System32\\schtasks.exe",
+      "pid": 31020,
+      "state": "Exited { code: 1 }"
+    },
+    {
+      "filetime": 134391218787168256,
+      "image": "C:\\Windows\\System32\\sc.exe",
+      "pid": 96364,
+      "state": "Exited { code: 1060 }"
+    },
+    {
+      "filetime": 134391218799293666,
+      "image": "C:\\Windows\\System32\\schtasks.exe",
+      "pid": 46664,
+      "state": "Exited { code: 1 }"
+    },
+    {
+      "filetime": 134391218778094635,
+      "image": "C:\\Windows\\System32\\schtasks.exe",
+      "pid": 112444,
+      "state": "Exited { code: 1 }"
+    },
+    {
+      "filetime": 134391218777848501,
+      "image": "C:\\Windows\\System32\\sc.exe",
+      "pid": 118092,
+      "state": "Exited { code: 1060 }"
+    }
+  ],
+  "statuses": [
+    {
+      "elapsedMs": 613,
+      "result": {
+        "protection": "retained-owner-unconfirmed",
+        "ready": false,
+        "rebootSafe": false,
+        "status": "unknown"
+      }
+    },
+    {
+      "elapsedMs": 641,
+      "result": {
+        "protection": "retained-owner-unconfirmed",
+        "ready": false,
+        "rebootSafe": false,
+        "status": "unknown"
+      }
+    },
+    {
+      "elapsedMs": 625,
+      "result": {
+        "protection": "retained-owner-unconfirmed",
+        "ready": false,
+        "rebootSafe": false,
+        "status": "unknown"
+      }
+    }
+  ],
+  "fullStop": false,
+  "allAccepted": false
+}

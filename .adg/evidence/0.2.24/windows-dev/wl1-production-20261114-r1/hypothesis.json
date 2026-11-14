@@ -1,0 +1,21 @@
+{
+  "MSIAndCliRerun": false,
+  "main": "35f41ecc0e700a3a77d121cc2dccf7258c327bc1",
+  "teamRevision": 11,
+  "planned": [
+    "MSVC product compile",
+    "affected ownership/budget negative tests",
+    "fixed official archive and descriptor hash readback",
+    "one isolated ordinary Profile actual production command Start/Status/Stop/Restart observations with independent client snapshots",
+    "retain failures/owners; exact new cleanup only"
+  ],
+  "contract": "windows-production-lifecycle-interface-r1",
+  "docs": "832df5a85c9da241568fc94d0048aaaa2f92b094",
+  "at": "2026-11-14T16:19:28.7680302+08:00",
+  "hypotheses": [
+    "Production command routes Windows official2.99 to one shared in-process retained owner; no PID adoption or old lifetime fallback",
+    "LaunchPlan admitted Node is created suspended and assigned to original Job before resume; typed readiness must match that Job/Bun identity/listener within original30s",
+    "typed Stop checks native owner at both HMAC send boundaries; retained normal exit and endpoint/record absence alone cannot authorize client recovery or manager-restart continuity"
+  ],
+  "allAccepted": false
+}

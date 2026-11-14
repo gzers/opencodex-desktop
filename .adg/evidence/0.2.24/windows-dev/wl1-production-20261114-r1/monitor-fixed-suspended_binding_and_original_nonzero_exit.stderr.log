@@ -1,0 +1,429 @@
+   Compiling windows024-native-proof v0.1.0 (C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native)
+error: unknown start of token: \
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:114:82
+    |
+114 |     let key=|p:&Path|p.to_string_lossy().trim_start_matches("\\?\").replace('/',"\").to_lowercase();
+    |                                                                                  ^
+
+error: prefix `kind` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:121:152
+    |
+121 | ...urn Err(denied("system console image has unknown file kind"))}
+    |                                                          ^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+121 |     if unsafe{GetFileType(file.as_raw_handle())}!=FILE_TYPE_DISK||i.dwFileAttributes&0x410!=0{return Err(denied("system console image has unknown file kind "))}
+    |                                                                                                                                                            +
+
+error: prefix `path` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:139:61
+    |
+139 |             .map_err(|_| denied("invalid process executable path"))?,
+    |                                                             ^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+139 |             .map_err(|_| denied("invalid process executable path "))?,
+    |                                                                 +
+
+error: prefix `argument` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:184:32
+    |
+184 |         return Err(denied("nul argument"));
+    |                                ^^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+184 |         return Err(denied("nul argument "));
+    |                                        +
+
+error: prefix `Unicode` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:214:60
+    |
+214 |             .ok_or_else(|| denied("environment key must be Unicode"))?;
+    |                                                            ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+214 |             .ok_or_else(|| denied("environment key must be Unicode "))?;
+    |                                                                   +
+
+error: prefix `pair` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:216:52
+    |
+216 |             return Err(denied("invalid environment pair"));
+    |                                                    ^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+216 |             return Err(denied("invalid environment pair "));
+    |                                                        +
+
+error: prefix `key` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:220:59
+    |
+220 |             return Err(denied("case-duplicate environment key"));
+    |                                                           ^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+220 |             return Err(denied("case-duplicate environment key "));
+    |                                                              +
+
+error: prefix `bound` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:239:48
+    |
+239 |         return Err(denied("environment exceeds bound"));
+    |                                                ^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+239 |         return Err(denied("environment exceeds bound "));
+    |                                                     +
+
+error: prefix `unavailable` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:254:52
+    |
+254 |             return Err(denied("attribute list size unavailable"));
+    |                                                    ^^^^^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+254 |             return Err(denied("attribute list size unavailable "));
+    |                                                               +
+
+error: prefix `required` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:311:55
+    |
+311 |                 .ok_or_else(|| denied("program parent required"))?,
+    |                                                       ^^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+311 |                 .ok_or_else(|| denied("program parent required "))?,
+    |                                                               +
+
+error: prefix `permitted` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:343:53
+    |
+343 |             return Err(denied("Job breakaway is not permitted"));
+    |                                                     ^^^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+343 |             return Err(denied("Job breakaway is not permitted "));
+    |                                                              +
+
+error: prefix `bound` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:373:53
+    |
+373 |             return Err(denied("command line exceeds bound"));
+    |                                                     ^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+373 |             return Err(denied("command line exceeds bound "));
+    |                                                          +
+
+error: prefix `differs` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:401:67
+    |
+401 |                 return Err(denied("new suspended process identity differs"));
+    |                                                                   ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+401 |                 return Err(denied("new suspended process identity differs "));
+    |                                                                          +
+
+error: prefix `executable` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:410:65
+    |
+410 |                     "original process image differs from pinned executable",
+    |                                                                 ^^^^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+410 |                     "original process image differs from pinned executable ",
+    |                                                                           +
+
+error: prefix `resume` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:421:73
+    |
+421 |                 return Err(denied("process absent from owned Job before resume"));
+    |                                                                         ^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+421 |                 return Err(denied("process absent from owned Job before resume "));
+    |                                                                               +
+
+error: prefix `unknown` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:432:73
+    |
+432 |                         "suspended admission failed and cleanup exit is unknown",
+    |                                                                         ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+432 |                         "suspended admission failed and cleanup exit is unknown ",
+    |                                                                                +
+
+error: prefix `Job` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:472:72
+    |
+472 |             .ok_or_else(|| denied("service absent from original active Job"))?;
+    |                                                                        ^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+472 |             .ok_or_else(|| denied("service absent from original active Job "))?;
+    |                                                                           +
+
+error: prefix `absent` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:478:54
+    |
+478 |                 .ok_or_else(|| denied("member handle absent"))?
+    |                                                      ^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+478 |                 .ok_or_else(|| denied("member handle absent "))?
+    |                                                            +
+
+error: prefix `changed` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:483:59
+    |
+483 |             return Err(denied("retained member generation changed"));
+    |                                                           ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+483 |             return Err(denied("retained member generation changed "));
+    |                                                                  +
+
+error: prefix `source` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:493:75
+    |
+493 |             return Err(denied("retained member image differs from current source"));
+    |                                                                           ^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+493 |             return Err(denied("retained member image differs from current source "));
+    |                                                                                 +
+
+error: prefix `differs` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:504:65
+    |
+504 |                 "runtime generation, HOME, SID or image binding differs",
+    |                                                                 ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+504 |                 "runtime generation, HOME, SID or image binding differs ",
+    |                                                                        +
+
+error: prefix `changed` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:509:55
+    |
+509 |             return Err(denied("original process facts changed"));
+    |                                                       ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+509 |             return Err(denied("original process facts changed "));
+    |                                                              +
+
+error: prefix `resumed` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:515:52
+    |
+515 |             return Err(denied("runtime was already resumed"));
+    |                                                    ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+515 |             return Err(denied("runtime was already resumed "));
+    |                                                           +
+
+error: prefix `thread` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:522:52
+    |
+522 |             .ok_or_else(|| denied("missing primary thread"))?;
+    |                                                    ^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+522 |             .ok_or_else(|| denied("missing primary thread "))?;
+    |                                                          +
+
+error: prefix `count` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:528:62
+    |
+528 |                 denied("unexpected primary-thread suspension count")
+    |                                                              ^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+528 |                 denied("unexpected primary-thread suspension count ")
+    |                                                                   +
+
+error: prefix `list` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:557:60
+    |
+557 |             return Err(denied("incomplete owned Job member list"));
+    |                                                            ^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+557 |             return Err(denied("incomplete owned Job member list "));
+    |                                                                +
+
+error: prefix `PID` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:561:72
+    |
+561 |             .map(|&n| u32::try_from(n).map_err(|_| denied("invalid Job PID")))
+    |                                                                        ^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+561 |             .map(|&n| u32::try_from(n).map_err(|_| denied("invalid Job PID ")))
+    |                                                                           +
+
+error: prefix `set` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:575:75
+    |
+575 |                     return Err(denied("PID reuse observed in owned member set"));
+    |                                                                           ^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+575 |                     return Err(denied("PID reuse observed in owned member set "));
+    |                                                                              +
+
+error: prefix `Job` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:594:75
+    |
+594 |                         "listed PID generation no longer belongs to owned Job",
+    |                                                                           ^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+594 |                         "listed PID generation no longer belongs to owned Job ",
+    |                                                                              +
+
+error: prefix `differs` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:601:66
+    |
+601 |                     return Err(denied("owned descendant identity differs"));
+    |                                                                  ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+601 |                     return Err(denied("owned descendant identity differs "));
+    |                                                                         +
+
+error: prefix `snapshot` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:620:51
+    |
+620 |                 "owned Job changed across bounded snapshot",
+    |                                                   ^^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+620 |                 "owned Job changed across bounded snapshot ",
+    |                                                           +
+
+error: prefix `accounting` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:627:79
+    |
+627 |                 "Job completion history has not reconciled with total process accounting",
+    |                                                                               ^^^^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+627 |                 "Job completion history has not reconciled with total process accounting ",
+    |                                                                                         +
+
+error: prefix `elapsed` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:649:52
+    |
+649 |                     "original observation deadline elapsed",
+    |                                                    ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+649 |                     "original observation deadline elapsed ",
+    |                                                           +
+
+error: prefix `exited` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:662:70
+    |
+662 |                     "original process or owned Job is not completely exited",
+    |                                                                      ^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+662 |                     "original process or owned Job is not completely exited ",
+    |                                                                            +
+
+error: prefix `elapsed` is unknown
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:678:122
+    |
+678 |             if Instant::now()>=deadline{return Err(io::Error::new(io::ErrorKind::TimedOut,"forced owned cleanup deadline elapsed"))}
+    |                                                                                                                          ^^^^^^^ unknown prefix
+    |
+    = note: prefixed identifiers and literals are reserved since Rust 2021
+help: consider inserting whitespace here
+    |
+678 |             if Instant::now()>=deadline{return Err(io::Error::new(io::ErrorKind::TimedOut,"forced owned cleanup deadline elapsed "))}
+    |                                                                                                                                 +
+
+error[E0765]: unterminated double quote string
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process.rs:678:129
+    |
+678 |               if Instant::now()>=deadline{return Err(io::Error::new(io::ErrorKind::TimedOut,"forced owned cleanup deadline elapsed"))}
+    |  _________________________________________________________________________________________________________________________________^
+679 | |             let mut accounting=JOBOBJECT_BASIC_ACCOUNTING_INFORMATION::default();
+680 | |             check(unsafe{QueryInformationJobObject(self.job.as_raw_handle(),JobObjectBasicAccountingInformation,(&mut accounting as ...
+681 | |             let root=self.root_state()?;
+...   |
+689 | | }
+    | |__^
+
+For more information about this error, try `rustc --explain E0765`.
+error: could not compile `windows024-native-proof` (lib) due to 36 previous errors

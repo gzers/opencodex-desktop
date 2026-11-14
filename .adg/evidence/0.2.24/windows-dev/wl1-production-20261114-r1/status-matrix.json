@@ -1,0 +1,115 @@
+{
+  "allAccepted": false,
+  "rows": [
+    {
+      "item": "MSVC产品bins",
+      "status": "passed",
+      "evidence": "product-build06.json; final post-result guard source07; debug, not release candidate"
+    },
+    {
+      "item": "MSVC release测试目标",
+      "status": "passed",
+      "evidence": "release-test-build05.json; original optimized settings; source06/native execution commit360183c59"
+    },
+    {
+      "item": "实际生产Start",
+      "status": "passed",
+      "evidence": "out05 24965ms; actual public command/runner -> original suspended Job -> typed ready/native binding"
+    },
+    {
+      "item": "高频Status",
+      "status": "passed",
+      "evidence": "out05 848/855/849ms; same pid64904/port56328; current2.99, native retained Job plus typedHTTP"
+    },
+    {
+      "item": "PID/port/record反例",
+      "status": "passed",
+      "evidence": "3 rejected in actual ready owner; native-binding-negatives"
+    },
+    {
+      "item": "原生监控受影响用例",
+      "status": "passed",
+      "evidence": "5 targeted tests; original generation/nonzero, root-only refusal, IPv4/IPv6, short-lived member history, System32 helper"
+    },
+    {
+      "item": "动作预算/无owner拒绝/路径等价",
+      "status": "passed",
+      "evidence": "2 release owner tests; no adoption; Restart deadline30 / stop sub10 unchanged"
+    },
+    {
+      "item": "动作回执权限增量",
+      "status": "passed",
+      "evidence": "action-gate.json; confirmed Started keeps Stop; recovery never grants Start/Restart; post-result projection only"
+    },
+    {
+      "item": "真实普通Stop",
+      "status": "failed",
+      "evidence": "out05 10005ms unresolved; no success claim. Typed response alone not a normal-exit proof"
+    },
+    {
+      "item": "最后Job清空",
+      "status": "observed-after-failure",
+      "evidence": "all334 original generations accounted, active0, no final-round force; not proof of all-zero exit or original10s success"
+    },
+    {
+      "item": "受控成员全0退出",
+      "status": "failed",
+      "evidence": "retained exact System32/sc.exe1060 and schtasks.exe1; no exit rewriting"
+    },
+    {
+      "item": "客户端字节与权限恢复",
+      "status": "incomplete",
+      "evidence": "config.toml30 bytes restored but fileID/security changed; other declared synthetic originals retain bytes/IDs/security; no durable Windows original authority"
+    },
+    {
+      "item": "Restart",
+      "status": "refused",
+      "evidence": "461ms; no successor Start after incomplete Stop/recovery"
+    },
+    {
+      "item": "第二Start",
+      "status": "refused",
+      "evidence": "240ms; old retained owner/recovery not discarded"
+    },
+    {
+      "item": "Auto端口冲突重选",
+      "status": "not-executed",
+      "evidence": "initial port::prepare_start reused; failed old owner/client recovery cannot authorize retry/reselection until shared aborted-generation closure exists"
+    },
+    {
+      "item": "取消/更新/H切换",
+      "status": "partly-wired-not-accepted",
+      "evidence": "cancel hook and source/old owner guards present; real cancellation/update/switch matrix not executed"
+    },
+    {
+      "item": "管理器重启连续性",
+      "status": "incomplete",
+      "evidence": "original creator is process-local; no privileged rebuild from record/PID; private cross-process protocol not authorized"
+    },
+    {
+      "item": "Supervisor缺席",
+      "status": "incomplete",
+      "evidence": "typed API lacks absence authority; raw sc/schtasks nonzero is not a minted absence proof"
+    },
+    {
+      "item": "普通用户MSI",
+      "status": "unchanged-not-accepted",
+      "evidence": "original1625 remains, current ordinary lifecycle tests do not install MSI"
+    },
+    {
+      "item": "旧CLI/MSI/NSIS",
+      "status": "reused",
+      "evidence": "unaffected previous proof and integrated receive; no repeats"
+    },
+    {
+      "item": "本轮身份/现场清理",
+      "status": "partial",
+      "evidence": "5 sequential ordinary accounts removed after exact own Job proof; failed Profile directories retained; original counts/permissions recorded"
+    },
+    {
+      "item": "W2/双SID/发布",
+      "status": "not-executed",
+      "evidence": "candidate not frozen; no parallel dual-SID or publication"
+    }
+  ]
+}

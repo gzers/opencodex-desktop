@@ -1,0 +1,7 @@
+{
+  "source": "source03.json",
+  "profile": "release opt-level=s lto=true codegen-units=1; Cargo test harness panic behavior distinct from product abort",
+  "command": "cargo test --release --locked --offline --manifest-path apps/desktop/tauri/Cargo.toml --target x86_64-pc-windows-msvc --lib --no-run -j 1",
+  "exitCode": -1,
+  "elapsedMs": 94427
+}

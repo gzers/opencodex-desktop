@@ -1,0 +1,246 @@
+{
+  "scope": "specific shared design requirements; not a second persistent implementation or request to widen safety budgets",
+  "sourceFacts": [
+    {
+      "path": "apps/desktop/tauri/src/commands/client_session_lifecycle.rs",
+      "sha256": "e3a19750daedaedf1fd6a4a6f2aceab69b0028ec5d2560ae0b6fcc291e41b97c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/mod.rs",
+      "sha256": "a82c2ede443a7a177ffbb5558afcf769e29bb2a7c8cfc0b936df4ade02acf157"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_runtime024_transport.rs",
+      "sha256": "70c31ef6e12909778cb1f07abf71f2174dc22b65bed011a6fa3ae829663196ac"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/official_lifecycle024.rs",
+      "sha256": "b912f07bbd66d27d3b71c6614ab5bfd6978c7f4ab57180c7e78c8189dd2294b4"
+    }
+  ],
+  "needs": [
+    {
+      "id": "windows-client-originals",
+      "required": "A shared typed capture/ready/pre-stop/stopped/restore-readback contract for Windows current SID, original file handle ID/security descriptor/absence and original two-lock exception; durable ownership of original generations and restart eligibility bound to D/H/I/current digest",
+      "missing": "Existing commands/client_session_lifecycle is cfg macOS and consumes macos_client_originals; no Windows typed durable original state or authority supplied by r1",
+      "proposedBoundary": [
+        "capture(context, data, ActionWindow)->OriginalSession",
+        "record_ready(session, typedObservation, retainedGeneration)->ReadySession",
+        "pre_stop(ReadySession, nativeGeneration, stop_deadline)->PreparedRestore",
+        "complete_stop(PreparedRestore, NativeNormalExit, officialTeardown, readback)->ClosedEligibility"
+      ],
+      "negativeCases": [
+        "root absent before start",
+        "same bytes with replaced file ID/ACL",
+        "external modification of backup/ref",
+        "interrupted before/after official teardown",
+        "old generation or unknown lock owner"
+      ],
+      "currentBehavior": "native observed exit remains distinct; client recovery Required; Restart/secondStart refused",
+      "additionalDependentGap": "Auto-port conflict retries and successor Start require a typed closed/aborted-original generation before retry; current action does not discard a failed owner or reselect while recovery is unknown."
+    },
+    {
+      "id": "manager-owner-continuity",
+      "required": "Designate a long-lived native owner host and private SID-bound IPC/handle duplication protocol tied to manager process FILETIME, runtime source/H generation, noninheritable ownership and bounded live challenge; out-of-process owner remains original creator",
+      "missing": "Current public lib GUI and IPC runners share process-local static authority only; bin/ocxd plus new cross-process protocol not in W-L1 write set",
+      "minimumRules": [
+        "never rebuild native rights from pid/json",
+        "no kill-on-drop",
+        "manager restart with no original owner remains Unknown",
+        "private handoff rejects stale manager FILETIME/SID/source/H",
+        "owner survives GUI/runner drop until explicit normal stop/owned failure cleanup"
+      ],
+      "currentBehavior": "process-local owners retained; after manager process exit no fresh owner can adopt existing service"
+    },
+    {
+      "id": "supervisor-absence",
+      "required": "A typed current-user official-supervisor absence observation bound to exact I/H/current and original deadline; explicit own namespaces, no process-name/global scan and no service-manager writes",
+      "missing": "StopAccepted carries official pid/port/digest only; no own manager-namespace absence fact; native Job accounting cannot mint external supervisor absence",
+      "currentBehavior": "even native full exit cannot yield complete Stopped/Restart eligibility"
+    }
+  ],
+  "allAccepted": false,
+  "newObservedEvidence": [
+    {
+      "round": "out02",
+      "stage": "job-member-image",
+      "originalJobTotalProcesses": 286,
+      "activeProcesses": 3,
+      "activeImages": [
+        "official package Bun",
+        "Win32 System32 conhost"
+      ],
+      "consequence": "polling-only history cannot prove every original member normal exit; completion monitor added but missed/unreadable events must still refuse"
+    },
+    {
+      "round": "out02",
+      "file": ".codex/config.toml",
+      "beforeBytes": 30,
+      "afterBytes": 238,
+      "originalFileId": 844424931333870,
+      "afterFileId": 281474977914443,
+      "securityDescriptorChanged": true,
+      "consequence": "native service exit cannot invent original client file recovery; durable reference/ACL/identity restore contract required"
+    }
+  ],
+  "ownerRetentionRulesAdded": [
+    "same-install-root provider/H change cannot create a new owner while prior owner retained",
+    "client recovery remains Unknown/Required; owner presence is not original-capture authority",
+    "Windows system-owner query path refuses official024 or unknown source before old process scans/maintenance Stop"
+  ],
+  "observedWholeJobExitSemantics": {
+    "evidence": "release04-independent-audit.json",
+    "nonzeroMembers": [
+      {
+        "filetime": 134391218799104681,
+        "image": "C:\\Windows\\System32\\sc.exe",
+        "pid": 86096,
+        "state": "Exited { code: 1060 }"
+      },
+      {
+        "filetime": 134391218787434537,
+        "image": "C:\\Windows\\System32\\schtasks.exe",
+        "pid": 31020,
+        "state": "Exited { code: 1 }"
+      },
+      {
+        "filetime": 134391218787168256,
+        "image": "C:\\Windows\\System32\\sc.exe",
+        "pid": 96364,
+        "state": "Exited { code: 1060 }"
+      },
+      {
+        "filetime": 134391218799293666,
+        "image": "C:\\Windows\\System32\\schtasks.exe",
+        "pid": 46664,
+        "state": "Exited { code: 1 }"
+      },
+      {
+        "filetime": 134391218778094635,
+        "image": "C:\\Windows\\System32\\schtasks.exe",
+        "pid": 112444,
+        "state": "Exited { code: 1 }"
+      },
+      {
+        "filetime": 134391218777848501,
+        "image": "C:\\Windows\\System32\\sc.exe",
+        "pid": 118092,
+        "state": "Exited { code: 1060 }"
+      }
+    ],
+    "originalContract": "nonzero controlled member exit refuses ordinary success; unchanged",
+    "minimumNeed": "If native complete normal exit is intended to classify officially owned diagnostic subprocesses separately from service/root, freeze a typed source-bound process-role and exit semantics contract. Windows currently preserves raw nonzero1060 and cannot reinterpret it as code0 or supervisor-absence authority.",
+    "notImplemented": "No exit allowlist or process-role journal invented; no official package changes"
+  },
+  "finalObservedEvidence": {
+    "startMs": 24965,
+    "statusMs": [
+      848,
+      855,
+      849
+    ],
+    "stopUnconfirmedMs": 10005,
+    "originalJobTotal": 334,
+    "retainedDescendants": 333,
+    "finalJobEmpty": true,
+    "forcedCleanupInFinalRound": false,
+    "clientReadback": {
+      "scope": "declared original synthetic files only; additional generated files separately in original snapshot",
+      "files": [
+        {
+          "path": "C:\\Users\\ocxw1d127b9b5b4\\.codex\\auth.json",
+          "afterPresent": true,
+          "bytesRetained": true,
+          "fileIdRetained": true,
+          "securityRetained": true,
+          "beforeBytes": 2,
+          "afterBytes": 2
+        },
+        {
+          "path": "C:\\Users\\ocxw1d127b9b5b4\\.codex\\config.toml",
+          "afterPresent": true,
+          "bytesRetained": true,
+          "fileIdRetained": false,
+          "securityRetained": false,
+          "beforeBytes": 30,
+          "afterBytes": 30
+        },
+        {
+          "path": "C:\\Users\\ocxw1d127b9b5b4\\.grok\\settings.json",
+          "afterPresent": true,
+          "bytesRetained": true,
+          "fileIdRetained": true,
+          "securityRetained": true,
+          "beforeBytes": 2,
+          "afterBytes": 2
+        }
+      ],
+      "additionalFiles": [
+        "C:\\Users\\ocxw1d127b9b5b4\\.codex\\.opencodex-native-main.claim.sqlite",
+        "C:\\Users\\ocxw1d127b9b5b4\\.codex\\.opencodex-native-main.owner.sqlite",
+        "C:\\Users\\ocxw1d127b9b5b4\\.codex\\.opencodex-native-main.owner.sqlite-journal",
+        "C:\\Users\\ocxw1d127b9b5b4\\.grok\\config.toml"
+      ],
+      "durableOriginalAuthority": false,
+      "completeRestoration": false
+    },
+    "nonzeroMembers": [
+      {
+        "filetime": 134391228296852342,
+        "image": "C:\\Windows\\System32\\sc.exe",
+        "pid": 113584,
+        "state": "Exited { code: 1060 }"
+      },
+      {
+        "filetime": 134391228306132050,
+        "image": "C:\\Windows\\System32\\sc.exe",
+        "pid": 44280,
+        "state": "Exited { code: 1060 }"
+      },
+      {
+        "filetime": 134391228318658210,
+        "image": "C:\\Windows\\System32\\schtasks.exe",
+        "pid": 75848,
+        "state": "Exited { code: 1 }"
+      },
+      {
+        "filetime": 134391228297119025,
+        "image": "C:\\Windows\\System32\\schtasks.exe",
+        "pid": 117136,
+        "state": "Exited { code: 1 }"
+      },
+      {
+        "filetime": 134391228505421148,
+        "image": "C:\\Windows\\System32\\schtasks.exe",
+        "pid": 44092,
+        "state": "Exited { code: 1 }"
+      },
+      {
+        "filetime": 134391228306355587,
+        "image": "C:\\Windows\\System32\\schtasks.exe",
+        "pid": 51036,
+        "state": "Exited { code: 1 }"
+      },
+      {
+        "filetime": 134391228318429455,
+        "image": "C:\\Windows\\System32\\sc.exe",
+        "pid": 118084,
+        "state": "Exited { code: 1060 }"
+      },
+      {
+        "filetime": 134391228512647270,
+        "image": "C:\\Windows\\System32\\schtasks.exe",
+        "pid": 117568,
+        "state": "Exited { code: 1 }"
+      },
+      {
+        "filetime": 134391228519927011,
+        "image": "C:\\Windows\\System32\\sc.exe",
+        "pid": 64336,
+        "state": "Exited { code: 1060 }"
+      }
+    ],
+    "actualProofSource": "360183c59/source06; only action capability projection changed afterwards"
+  },
+  "remainingAcceptance": "Start/Status positive proof is real. Complete Stop and normal/restart eligibility remain unproven; original deadlines/unknown/nonzero refusal unchanged."
+}

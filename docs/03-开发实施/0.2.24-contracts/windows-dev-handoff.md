@@ -230,3 +230,19 @@ W1-D当前组件已收口，但allAccepted=false。唯一请求范围内的验�
 当前贡献净差仅10份许可Windows测试文件，产品源和安装器未变。只读src核对新windows_official_runtime024::OwnedRuntime/create_suspended/wait_normal_exit等仍无生产调用点；现attested_status::stop_official使用record.desktop_lifetime的签名Binding/Witness。这些共享消费者/持久与来源语义属于集成线，不能在MSI-only合同下直接替换。具体后继依赖：先接收e2560f904/ad3dcce02/1c6a0881c/0f1dc195e及原b0e7c6d6a证据，保留普通用户/清理未完；再给Windows024生产生命周期接口、精确写集、代码/包身份和30/5/10秒受影响表。主线和候选未变前不提前W2/双SID，不猜新Schema、不改共享消费者/官方2.99/日常配置/策略，不运行同步/模型请求、不发布。
 
 本轮新增运行时测试/MSI/账户/Profile/任务/真实PATH写入/外部临时根均0；仅源码、说明和证据作为交付留存。全部历史自动审批拒绝未重试、未换机制绕过。Windows继续负责本范围，后继实际生产接线等待集成接口/候选，不用重复已过用例制造进展。
+
+## 2026-11-14 W-L1生产接线：真实Start/Status通过，完整Stop与恢复仍未通过
+
+已fetch并合入main35f41ecc0e700a3a77d121cc2dccf7258c327bc1/docs832df5a85c9da241568fc94d0048aaaa2f92b094，消费TEAMr11/IMP34r137/windows-production-lifecycle-interface-r1。按假设连续处理本机范围缺陷，无需每个小修回Mac。代码独立分支最终3a9b71f7c20a404e136652e584c8f29de5efb226已推，新增/改动净17份均在W-L1写集；未改官方包/旧lifetime/根依赖/workflow/Vue或日常配置、机器策略，MSI/CLI旧通过未重跑。
+
+批次：219ad3e94生产命令/runner/status接原创建Job拥有者；9d97584da完成端口保留新成员代次及恢复后继拒绝；f88db116e精确账户清理；af334cba1区分系统辅助映像只读观察与包文件准入并处理退出快照竞态；360183c59核Windows路径分隔符等价；72b9f74d6修正确认Started仍保留显式Stop，恢复未知时Start/Restart仍禁；3a9b71f7c只更新native内部说明。所有实现仍为进程内owner，跨管理器持久接管未实现，不伪造journal/IPC。
+
+最终真实原包动作使用360183c59/source06 release优化目标（原opt-level=s/lto/codegen1，测试harness panic单列）：out05 Start24965ms确认Started；Status848/855/849ms，同PID64904/port56328/官方2.99、原创建句柄/Job/监听与typed HMAC/ready；错PID/port/record摘要3类拒绝通过。原Job创建总334与保留后代333闭合，最后active0，无最后一轮强清。普通Stop10005ms未在原10秒完成证明，保留sc1060/schtasks1等非零原退出，不跳过或改写；Restart461ms/第二Start240ms均拒绝后继。config.toml原字节30已回，但fileID/security未回；auth.json与.grok/settings原字节/ID/security保持，额外官方文件/锁逐项保留。completeStop/clientRestoration/managerContinuity/allAccepted均false。
+
+post-result回执补丁72b9f74d6仅两份命令投影源码，原生/HTTP/来源/预算逐字不变，action-gate定向exit0后复用out05，不重复原包；最终source07下全产品MSVC bins build06 exit0。最终原包测试EXE44592640字节，SHA256 b293c6041e74d89b24aa1468746d8a422f7901f037b46dcbf1597e9238a3fcd3；Desktop debug75384832字节，SHA25640dfbfb3bc629e98fd67ec5dc00df7b9fd710f0ddae342935c987b47ec669b56；ocxd/ocx精确SHA及其它轮次见product-artifacts06/test-artifact*。这些不是签名release候选，未运行W2/双SID或发布。
+
+原始失败全部保留：debug out01 Start30218ms、out02 Start30205ms，release out03 Start30028ms、out04 Start30190ms，分别有源/EXE/输出/后像；首批错误是包内Bun与系统conhost/System32辅助映像、历史漏采和路径拼写不能等同当前来源。受影响原生5项最终定向通过；2项release owner/预算定向通过；真实Ready owner3个反例拒绝通过。产品bins首报E0786/Win321455页面文件太小，保留exit101，仅串行-j1重试通过，不改主机页面文件/策略。两次旧源release构建明确按PID/创建时间取消，非观测超时重启；原编译/format错误和失败强清分开记账，未放宽任何动作预算或原判定。
+
+不可覆盖证据 .adg/evidence/0.2.24/windows-dev/wl1-production-20261114-r1/ 含先置假设、各轮执行源/原输出、制品SHA/工具链/tree、22项完整状态表、独立读回审计、原件权限变化、准确退出码、清理原件及shared-minimum-request.json。具体最小共享需求：Windows typed客户端原件capture/ready/pre-stop/stopped/恢复许可和后继资格；长寿命原创建者/原句柄的SID私有IPC/manager FILETIME交接（bin/ocxd及新协议不在本轮自动写集）；精确H/I/current supervisor缺席证明；原Job内官方诊断子进程的来源绑定typed角色/退出语义（当前保持非零拒绝，未加豁免表）。Auto冲突重选和更新/H切换后继亦需失败代次关闭/原件恢复许可，不能丢旧owner换源继续。真实取消/更新/跨管理器恢复尚未验，不能从组件绿灯外推。
+
+清理：5轮顺序普通账户SID1041..1045全部删除，5份原Job最终清空；前4轮有独立测试失败强清，最后out05未强清；输入ACL/临时桌面ACL还原，W-L1不写注册表PATH。5个失败Profile目录保留58877文件3211038283字节，第1轮旧控制器尝试DeleteProfile使原生登记已移除、部分内容未逐字归档，只保留当时摘要/后像及残留树；第2..5轮Loaded=false且原目录保持。新Public129文件319071336字节归档核验后精确删除被自动审批blocked by policy拒绝，未执行/未重试/未换机制绕过。旧SID1040及全部历史拒绝保持；复用构建缓存/原资源保留。普通用户MSI未验不因本轮普通生命周期测试变通过，无真实业务同步/模型请求，未发布。

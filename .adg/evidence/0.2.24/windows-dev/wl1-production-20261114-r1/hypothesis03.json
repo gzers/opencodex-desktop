@@ -1,0 +1,14 @@
+{
+  "changes": [
+    "capture retained member handles via original Job completion port",
+    "record executable volume/file identity per original process",
+    "accept only exact System32 conhost from GetSystemDirectoryW in active Job",
+    "keep accounting equality and unknown refusal"
+  ],
+  "next": "directed compile and fixed release-profile real run only if source compiles",
+  "observed": "out02 Start timeout30s at job-member-image; original Job active3 includes conhost and package Bun; totalProcesses286 means polling missed history",
+  "noOfficialChanges": true,
+  "at": "2026-11-14T16:45:22.5293954+08:00",
+  "hypothesis": "Original Job completion-port capture before resume can retain short-lived descendant generations, with total accounting mismatch or inaccessible members remaining refusal; exact Win32 System32 conhost is allowed only after file-identity check",
+  "noBudgetRelaxation": true
+}

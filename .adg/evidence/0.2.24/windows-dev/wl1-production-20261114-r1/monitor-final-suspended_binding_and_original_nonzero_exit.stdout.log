@@ -1,0 +1,8 @@
+
+running 1 test
+test suspended_binding_and_original_nonzero_exit ... native root binding before resume: RootBinding { process: ProcessIdentity { pid: 113768, creation_filetime: 134391197704646776, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: false, elevation_type: 3 }, executable: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-27172-0\\fixture.exe", executable_id: FileIdentity { volume: 247287385, index: 4503599628454253 } }, home: "C:\\Users\\15119\\AppData\\Local\\Temp\\ocxd024-process-27172-0\\home", home_id: FileIdentity { volume: 247287385, index: 5629499535337569 }, executable_id: FileIdentity { volume: 247287385, index: 4503599628454253 } }
+original exit through retained handles: FamilyState { root: Exited { code: 7 }, total_processes: 2, active_processes: 0, active_members: [], retained_members: [(ProcessIdentity { pid: 44392, creation_filetime: 134391197704728602, token: TokenIdentity { sid: "S-1-5-21-587408064-856152790-2583328096-1001", session_id: 2, elevated: false, elevation_type: 3 }, executable: "C:\\Windows\\System32\\conhost.exe", executable_id: FileIdentity { volume: 247287385, index: 6755399441781361 } }, Exited { code: 0 })] }
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.04s
+
