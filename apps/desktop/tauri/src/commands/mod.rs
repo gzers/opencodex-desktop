@@ -291,7 +291,7 @@ where
                     &context.runtime,
                     &context.opencodex_home,
                 ) {
-                value.with_unresolved_client_recovery()
+                windows_lifecycle024::retained_result(value, result)
             } else {
                 value
             };
