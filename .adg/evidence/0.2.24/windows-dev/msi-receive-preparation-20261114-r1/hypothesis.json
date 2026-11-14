@@ -1,0 +1,28 @@
+{
+  "allAccepted": false,
+  "at": "2026-11-14T15:22:22.8456289+08:00",
+  "inputs": {
+    "evidence": "b0e7c6d6a8757b301cbcd47c5ed7082ad86e30ae",
+    "code": "1c6a0881c29ad014ed1644b9a57f8b2441e27df0",
+    "teamRevision": 10,
+    "docs": "242f46e71e79501e11610c9a7aa7d6d7bc2e9fd8",
+    "impRevision": 136,
+    "main": "fd2538e4dae124b7c521b5b84b7ca5b5c6eeef6b"
+  },
+  "planned": [
+    "read-only raw manifest and source blob checks",
+    "real MSI script scheduling/execution/exit order and before-after consistency",
+    "explicit separate transaction and cleanup results",
+    "negative offline evidence counterexamples without runtime/account/MSI writes"
+  ],
+  "hypothesis": "The pushed local administrator MSI proof can be independently verified from immutable raw Git evidence and exact code blobs, allowing integration receive without rerunning the installer or treating cleanup/ordinary-user gaps as passed",
+  "independentStates": {
+    "administratorTransactions": "reuse passed",
+    "profile": "exact SID1040 still Loaded=true",
+    "W2": "candidate not frozen; forbidden",
+    "publicDeletion": "prior blocked by policy; no retry",
+    "ordinaryUser": "still not accepted",
+    "integrationReceive": "no new main/docs acceptance"
+  },
+  "runtimeExecution": false
+}

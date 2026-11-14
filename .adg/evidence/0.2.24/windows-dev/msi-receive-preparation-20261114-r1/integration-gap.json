@@ -1,0 +1,51 @@
+{
+  "main": "fd2538e4dae124b7c521b5b84b7ca5b5c6eeef6b",
+  "contribution": "0f1dc195ed2e39bbbeffd23eff05f97a78905c57",
+  "changedFiles": [
+    "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_native_tests.rs",
+    "test/windows024-native/account-w1d.ps1",
+    "test/windows024-native/cleanup-msi-local-admin.ps1",
+    "test/windows024-native/diagnose-msi-profile-lock.ps1",
+    "test/windows024-native/invoke-msi-local-admin.ps1",
+    "test/windows024-native/invoke-msi-only.ps1",
+    "test/windows024-native/launch-msi-local-admin.ps1",
+    "test/windows024-native/msi-only.md",
+    "test/windows024-native/query-package-msi.ps1",
+    "test/windows024-native/verify-msi-evidence.py"
+  ],
+  "productionOutsideMsiTestFileChanged": false,
+  "sourceFacts": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "symbols": [
+        "OwnedRuntime",
+        "create_suspended",
+        "wait_normal_exit"
+      ],
+      "observation": "Defined by Windows024 native backend; current src references remain inside its own infrastructure module; no production call site found",
+      "gitSha256": "8f4ff6780857d8e0329f56574bd4fd1daf6cf3d3633e82bff98271c48cdded60"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/attested_status.rs",
+      "symbols": [
+        "stop_official",
+        "record.desktop_lifetime",
+        "binding.verify_proof",
+        "Witness::live"
+      ],
+      "observation": "Existing Windows stop witness still depends on signed runtime_lifetime binding; not sufficient to claim Windows024 backend production integration",
+      "gitSha256": "12480d722ea825e13762920f6b1bce69d68f95891927b507a35399930929ca18"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/runtime_lifetime.rs",
+      "symbols": [
+        "Binding",
+        "ocxd-runtime-lifetime/1"
+      ],
+      "observation": "Existing shared binding and consumer; TEAM assigns this file outside current MSI-only Windows write set",
+      "gitSha256": "d582dcf5846ed6eae6e5263c306904938dc71359001b0523a6103d3b4d67d030"
+    }
+  ],
+  "nextDependency": "Integration owner must receive test-only contributions and provide exact production lifetime interface/write set and candidate identity before Windows wiring or W2; do not invent persistent schema or edit shared consumers now",
+  "runtimeExecuted": false
+}

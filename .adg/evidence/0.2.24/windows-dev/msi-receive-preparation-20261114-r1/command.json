@@ -1,0 +1,18 @@
+{
+  "executable": "python",
+  "runtimeExecuted": false,
+  "exitCode": 0,
+  "args": [
+    "test/windows024-native/verify-msi-evidence.py",
+    "--docs-repo",
+    "C:/Users/15119/.codex/worktrees/official299-windows-evidence/docs-governance",
+    "--code-repo",
+    ".",
+    "--self-test",
+    "--package",
+    "test/windows024-native/target/w1d-bundle01/tauri/target/release/bundle/msi/OpenCodeX W1D Proof_0.2.24_x64_en-US.msi",
+    "--test-executable",
+    "test/windows024-native/target/w1c-product/x86_64-pc-windows-msvc/debug/deps/opencodex_desktop_lib-75e8f4b92f415339.exe"
+  ],
+  "workdir": "C:/Users/15119/.codex/worktrees/024-windows-native/code"
+}

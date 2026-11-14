@@ -218,3 +218,15 @@ W1-D当前组件已收口，但allAccepted=false。唯一请求范围内的验�
 清理：唯一新账户SID尾1040、两临时任务、MSI登记均移除；输入ACL还原，管理员路径未改交互桌面ACL，新SID PATH原字节恢复，daily user与machine PATH摘要前后相同。首版DeleteProfile把PowerShell null转成空串报87，C#真正NULL修复后原生报共享冲突32；Profile仍Loaded=true，Restart Manager精确两个hive只读定位System PID4与Registry PID328，不杀共享系统进程、不强制卸载hive/重启服务或机器。Profile残留85文件118556840字节。
 
 新Public根83文件184522112字节，归档/逐字核验后精确递归删除被自动审批blocked by policy拒绝，命令未执行，未重试或换机制绕过。该根及Profile如实列未清；历史所有清理拒绝不重试。管理员两项事务已通过，cleanupComplete=false、ordinaryUserAcceptance=false、allAccepted=false。后继需安全释放精确Profile占用及允许清自有新根；普通用户与IMP34其它Windows生命周期/固定候选/最终验收缺口保持，不宣布整版收口或发布。
+
+## 2026-11-14 后续目标重启：离线接收准备与Windows生产接口缺口
+
+用户清除旧目标后要求继续后续并开启目标模式，已创建新的active目标。fetch mainfd2538e4d/docs242f46e71未变，TEAMr10/IMP34r136尚未接收管理员MSI贡献或冻结下一候选。先保存假设、一次核对独立项，未重跑已过组件/相同MSI/全环境盘点，旧拒绝不重试。
+
+新增test/windows024-native/verify-msi-evidence.py及msi-only说明，代码0f1dc195ed2e39bbbeffd23eff05f97a78905c57已推。离线固定核1c6a0881c代码/b0e7c6d6a原证据Git对象：134份证据、133份payload681196字节、执行源/最终源摘要、真实MSI调度与实际脚本顺序/exit、同SID继续及独立前后像全部通过；9个内存反例拒绝（原字节损坏、先删文件、保留内容漂移、pending残留、丢失首错、令牌变化、隐瞒清理失败、冒报全通过、路径逃逸）。实际MSI/测试EXE本体SHA/大小只读重算与原记录一致，不重建/复制/执行大包。
+
+新证据 .adg/evidence/0.2.24/windows-dev/msi-receive-preparation-20261114-r1/ 含假设、实际命令/原stdout/stderr、source SHA、完整状态表及integration-gap.json。exit0只表示固定原证明一致：管理员事务passed，ordinaryUserAcceptance=false/cleanupComplete=false/allAccepted=false；不是集成接收、当前机器清理或整版通过。原Profile SID1040仍Loaded=true，原锁System/Registry及error32证据复用，原Public根仍在；没有新删除/卸载hive/杀共享进程。原Profile/Public字节数沿原时点清单，不伪称重新测量。
+
+当前贡献净差仅10份许可Windows测试文件，产品源和安装器未变。只读src核对新windows_official_runtime024::OwnedRuntime/create_suspended/wait_normal_exit等仍无生产调用点；现attested_status::stop_official使用record.desktop_lifetime的签名Binding/Witness。这些共享消费者/持久与来源语义属于集成线，不能在MSI-only合同下直接替换。具体后继依赖：先接收e2560f904/ad3dcce02/1c6a0881c/0f1dc195e及原b0e7c6d6a证据，保留普通用户/清理未完；再给Windows024生产生命周期接口、精确写集、代码/包身份和30/5/10秒受影响表。主线和候选未变前不提前W2/双SID，不猜新Schema、不改共享消费者/官方2.99/日常配置/策略，不运行同步/模型请求、不发布。
+
+本轮新增运行时测试/MSI/账户/Profile/任务/真实PATH写入/外部临时根均0；仅源码、说明和证据作为交付留存。全部历史自动审批拒绝未重试、未换机制绕过。Windows继续负责本范围，后继实际生产接线等待集成接口/候选，不用重复已过用例制造进展。
