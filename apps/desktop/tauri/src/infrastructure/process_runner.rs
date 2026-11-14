@@ -785,6 +785,10 @@ impl ControlledProcessRunner {
 }
 
 impl ProcessRunner for ControlledProcessRunner {
+    #[cfg(windows)]
+    fn uses_windows_official024_owner(&self) -> bool {
+        true
+    }
     fn manages_client_originals(&self) -> bool {
         cfg!(target_os = "macos")
     }
@@ -796,6 +800,17 @@ impl ProcessRunner for ControlledProcessRunner {
     ) -> Result<LifecycleResult, AppError> {
         if runtime.managed_installation_root().is_none() {
             return self.execute(command);
+        }
+        #[cfg(windows)]
+        if runtime.managed_program_identity()?.package_version == "2.99.0" {
+            let window = crate::modules::runtime::official_lifecycle024::ActionWindow::begin(
+                command.action,
+                Instant::now(),
+                deadline,
+            )?;
+            return super::windows_official_lifecycle024::execute(
+                runtime, command, &self.home, window,
+            );
         }
         std::thread::scope(|scope| {
             scope
@@ -835,6 +850,8 @@ impl ProcessRunner for ControlledProcessRunner {
     }
 
     fn cancel_pending(&self) -> Result<(), AppError> {
+        #[cfg(windows)]
+        super::windows_official_lifecycle024::cancel_profile(&self.home);
         if let Some(running) = self.take_running() {
             running.cancel.cancel();
         }

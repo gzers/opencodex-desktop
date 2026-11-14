@@ -65,6 +65,7 @@ pub struct RootBinding {
 #[derive(Clone, Debug)]
 pub struct FamilyState {
     pub root: ProcessState,
+    pub total_processes: u32,
     pub active_processes: u32,
     pub active_members: Vec<ProcessIdentity>,
     pub retained_members: Vec<(ProcessIdentity, ProcessState)>,
@@ -427,6 +428,44 @@ impl OwnedRuntime {
     pub fn binding(&self) -> &RootBinding {
         &self.binding
     }
+    /// Re-observe only a member of this original Job, using its retained handle.
+    /// An arbitrary PID or equal path spelling does not authorize adoption.
+    pub fn verify_member_image(
+        &mut self,
+        pid: u32,
+        expected: &Path,
+    ) -> io::Result<ProcessIdentity> {
+        let family = self.family_state()?;
+        let original = family
+            .active_members
+            .iter()
+            .find(|p| p.pid == pid)
+            .ok_or_else(|| denied("service absent from original active Job"))?;
+        let raw = if pid == self.binding.process.pid {
+            self.process.as_raw_handle()
+        } else {
+            self.members
+                .get(&pid)
+                .ok_or_else(|| denied("member handle absent"))?
+                .0
+                .as_raw_handle()
+        };
+        if state(raw)? != ProcessState::Running || observe(raw)? != *original {
+            return Err(denied("retained member generation changed"));
+        }
+        let open = |path: &Path| {
+            OpenOptions::new()
+                .read(true)
+                .share_mode(1)
+                .custom_flags(0x00200000)
+                .open(path)
+        };
+        if identity(&open(&original.executable)?, false)? != identity(&open(expected)?, false)? {
+            return Err(denied("retained member image differs from current source"));
+        }
+        self.verify_binding(&self.binding)?;
+        Ok(original.clone())
+    }
     pub fn root_state(&self) -> io::Result<ProcessState> {
         state(self.process.as_raw_handle())
     }
@@ -557,6 +596,7 @@ impl OwnedRuntime {
             .collect::<io::Result<_>>()?;
         Ok(FamilyState {
             root: self.root_state()?,
+            total_processes: accounting.TotalProcesses,
             active_processes: accounting.ActiveProcesses,
             active_members: active,
             retained_members: retained,

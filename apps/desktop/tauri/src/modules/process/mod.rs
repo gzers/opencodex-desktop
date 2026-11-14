@@ -53,6 +53,10 @@ pub enum LifecycleResult {
 
 /// 进程运行器必须可测试；不得从 PATH 搜索命令。
 pub trait ProcessRunner {
+    #[cfg(windows)]
+    fn uses_windows_official024_owner(&self) -> bool {
+        false
+    }
     /// Actual native production runner participates in the Desktop-owned
     /// client-original session. Deterministic fixtures execute no real client
     /// changes and keep their explicit fixture contract.
