@@ -1,5 +1,19 @@
 use super::*;
 use crate::modules::process::ProcessRunner;
+#[test]
+fn wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback() {
+    let root = tempfile::tempdir().unwrap();
+    assert!(teardown_records_absent(root.path()).is_ok());
+    assert!(!root.path().join("opencodex.pid").exists());
+    fs::write(root.path().join("ocx.pid"), b"12345").unwrap();
+    assert!(teardown_records_absent(root.path()).is_err());
+    fs::remove_file(root.path().join("ocx.pid")).unwrap();
+    fs::create_dir(root.path().join("ocx.pid")).unwrap();
+    assert!(teardown_records_absent(root.path()).is_err());
+    fs::remove_dir(root.path().join("ocx.pid")).unwrap();
+    fs::write(root.path().join("runtime-port.json"), b"{}").unwrap();
+    assert!(teardown_records_absent(root.path()).is_err());
+}
 struct TestFailureGuard {
     runtime: SharedRuntimeExecutable,
     home: PathBuf,
