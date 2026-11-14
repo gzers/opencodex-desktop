@@ -1,0 +1,8 @@
+{
+  "firstError": "product01 E0601 Cargo auto-discovers src/bin/windows_owner024.rs as a binary without main",
+  "fix": "inline Windows-only dispatcher in ocxd.rs; remove only own new uncommitted helper. No Cargo manifest/workflow/public CLI change.",
+  "previousFailurePreserved": "product01/result.json stderr.log and actual helper bytes in executed-source",
+  "libraryImpact": "no library Rust changes since build01; reuse exact library test EXE/source, do not repeat bootstrap predicate test",
+  "next": "MSVC allbins product02, then prepare exact artifacts for real desktop launch; no official runtime or old ordinarySD loop",
+  "allAccepted": false
+}

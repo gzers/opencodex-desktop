@@ -268,3 +268,12 @@ post-result回执补丁72b9f74d6仅两份命令投影源码，原生/HTTP/来源
 旧普通SD1314复用未重跑，本轮新r3mask/backup查询没有新token正例；不把旧0x81020000错误冒作新mask实测。用户提出Administrator后又指定marenben候选；只读确认marenben启用SID1003且未列直接本地管理员成员，盘点无交互会话；runtime token/session/noJob未证实，等待用户登录，不降ordinary门、不索取密码、不改该现有账户日常Profile。下一步仍Windows独立推进，不重新要求Mac冻结已明接口。
 
 本轮账户/Profile/官方服务/broker/新Public/task/MSI创建0，合成native test进程exit0、phase临时根RAII清理；无force、策略/ACL/registry PATH写。旧Profile/Public/schema/普通MSI缺口和自动审批拒绝保持不重试，不W2/双SID、不发布。
+
+
+## 2026-11-14 marenben桌面H准备检查点（尚待用户启动）
+
+用户已交互登录marenben/SID尾1003，会话7只读盘点Active；未冒原nativeToken/noJob已通过。代码f93651d9f42b933c660558e49c22a6d8ceff1b85、tree61547f78188fa3ee9744751ff10c9f2c8bbe448c已推送：实际ocxd精确内部emptyhost分派、私有bootstrap、原创建句柄observer与明确标注的库testEXE fixturemanager（非真实GUI）、同连接旧请求拒绝与空宿主显式退出。O1314不重跑，官方Owner/服务/custody不创建，allAccepted/productionExecuted=false。
+
+MSVC product01 E0601/101首失败保留，Cargo将新增helper识别独立bin；分派内联ocxd.rs后product02全部bins0/65200ms，库bootstrap纯反例1项通过。首helper未进当时sourceglob/hash缺口如实声明，最终库35份非binRust及产品36份Rust与最终源一致。完整新准备证据.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-20261114-r1/，prelaunch-report/status/result保留“等待用户桌面启动”事实，不把组件或同名fixture升级真实GUI/生产通过。
+
+已准备并给用户从marenben桌面普通运行C:/Users/Public/ocx-h024-desktop-20261114-r1/launch-h024-desktop.cmd；Public输入两EXE已核摘要，ACL只改本次新根。准备快照out01为空；无新账户/Profile/官方进程或已运行broker。新输入根为待执行保留；历史清理拒绝不重试，不W2/双SID、不发布。后继实际结果另行追加，不覆盖此准备记录。
