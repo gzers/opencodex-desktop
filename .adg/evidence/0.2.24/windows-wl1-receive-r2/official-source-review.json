@@ -1,0 +1,124 @@
+{
+  "packageVersion": "2.99.0",
+  "tgzSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "files": [
+    {
+      "path": "src/service/state.ts",
+      "bytes": 44412,
+      "sha256": "514d98b7cd0d688db48467a31978aedf4d9040b43a5db000f19f29e7b316d79d",
+      "reviewedLineRanges": [
+        [
+          39,
+          42
+        ],
+        [
+          160,
+          176
+        ]
+      ]
+    },
+    {
+      "path": "src/lib/winsw.ts",
+      "bytes": 19685,
+      "sha256": "e71fa285ae983bc5ce55adf9b2d437a33b5fc942f84b2bb8aa194d804cd245e0",
+      "reviewedLineRanges": [
+        [
+          34,
+          47
+        ],
+        [
+          241,
+          284
+        ]
+      ]
+    },
+    {
+      "path": "src/service-manager-probe.ts",
+      "bytes": 53610,
+      "sha256": "00b98601cbf400244a3802f03078a74c70459ce9eea58679283cff5cd88a3b12",
+      "reviewedLineRanges": [
+        [
+          535,
+          545
+        ],
+        [
+          791,
+          880
+        ],
+        [
+          930,
+          990
+        ],
+        [
+          1140,
+          1185
+        ]
+      ]
+    },
+    {
+      "path": "src/service/windows-guarded-manager.ts",
+      "bytes": 25717,
+      "sha256": "04d0498217a31ba4791183f79ff2ba17ba5c2301484fb70ff113f14b6e6927dd",
+      "reviewedLineRanges": [
+        [
+          320,
+          335
+        ],
+        [
+          535,
+          550
+        ]
+      ]
+    },
+    {
+      "path": "src/service/health-sentinel-windows.ts",
+      "bytes": 4185,
+      "sha256": "a312da3eef2e45bd337181971f726074fc56916be7f345ddd9e76236d8717e6e",
+      "reviewedLineRanges": [
+        [
+          1,
+          17
+        ]
+      ]
+    },
+    {
+      "path": "src/service/desktop-startup.ts",
+      "bytes": 24525,
+      "sha256": "ae931f167a76fc86564b3c0aa25bf2012c3c00874d49b1c07d70e8ed640bd14a",
+      "reviewedLineRanges": [
+        [
+          382,
+          405
+        ]
+      ]
+    },
+    {
+      "path": "src/service/desktop-supervision.mjs",
+      "bytes": 16477,
+      "sha256": "acfb4ec098bf65b9fe109a310e4dff79595dd7ec5f4c580ff74181bd524f2438",
+      "reviewedLineRanges": [
+        [
+          15,
+          23
+        ]
+      ]
+    }
+  ],
+  "facts": {
+    "taskName": "opencodex-proxy",
+    "scmService": "opencodex-proxy-native",
+    "scmNamespace": "machine; read-only exact-name query, foreign or inaccessible is not absent",
+    "schedulerExitOne": "ambiguous: not found or access denied; not an absence proof",
+    "wrapperArtifacts": [
+      "opencodex-service-task.xml",
+      "opencodex-service.cmd",
+      "opencodex-service-launcher.vbs",
+      "winsw/opencodex-proxy-native.xml",
+      "winsw/opencodex-proxy-native.exe"
+    ],
+    "desktopStartup": "Windows source does not define a separate Run-key namespace here; evidence uses bound native parent/supervision chain",
+    "nativeReadbackPolicy": "Do not copy official walkWinswChain unknown-to-absent fallback when both staged assets are absent",
+    "pidFile": "H/ocx.pid; W-L1 checks opencodex.pid, W-L2 must correct plus negative test"
+  },
+  "registryUrl": "https://registry.npmjs.org/@bitkyc08/opencodex/-/opencodex-2.99.0.tgz"
+}
