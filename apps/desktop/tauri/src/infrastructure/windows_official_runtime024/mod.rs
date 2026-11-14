@@ -16,7 +16,7 @@ pub use listeners::{
 };
 pub use paths::{create_private_directory, FileIdentity, PinnedDirectory, PrivateRecord};
 pub use process::{
-    CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity, ProcessState,
-    RootBinding,
+    CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+    ProcessState, RootBinding,
 };
 pub use security::{current_identity, TokenIdentity};
