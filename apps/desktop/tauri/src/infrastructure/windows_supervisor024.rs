@@ -173,3 +173,169 @@ pub(crate) fn staged(home: &Path) -> Vec<(&'static str, Namespace)> {
 #[cfg(test)]
 #[path = "windows_supervisor024_tests.rs"]
 mod tests;
+
+use super::windows_official_lifecycle024::Owner;
+use crate::{
+    errors::{AppError, AppResult},
+    modules::runtime::windows_lifecycle024_contract::{NativeSession, SupervisorAbsence},
+};
+fn unconfirmed(detail: impl Into<String>) -> AppError {
+    AppError::RuntimeManaged {
+        code: "windows024_supervisor_unknown".into(),
+        detail: detail.into(),
+    }
+}
+/// Nonserializable, non-Clone proof. A query response/receipt cannot construct it.
+pub(crate) struct Absent {
+    scope: String,
+    deadline: Instant,
+    observed: Instant,
+    native: NativeQueries,
+}
+impl Absent {
+    pub(crate) fn check(&self, owner: &mut Owner, deadline: Instant) -> AppResult<()> {
+        owner.check_current(deadline)?;
+        if self.deadline != deadline
+            || Instant::now() >= deadline
+            || self.observed >= deadline
+            || self.scope != owner.scope()?
+            || !queries_absent(&self.native)
+        {
+            return Err(unconfirmed("缺席证明不属于原动作/原创建代次"));
+        }
+        Ok(())
+    }
+}
+fn queries_absent(q: &NativeQueries) -> bool {
+    matches!(q.scm, Namespace::Absent { raw_code: 1060 })
+        && matches!(
+            q.scheduler,
+            Namespace::Absent {
+                raw_code: 0x80070002
+            }
+        )
+}
+#[cfg(test)]
+mod r3_tests {
+    use super::*;
+    #[test]
+    fn wl2_r3_typed_absence_requires_both_exact_native_namespaces() {
+        let sc = Namespace::Absent { raw_code: 1060 };
+        let task = Namespace::Absent {
+            raw_code: 0x80070002,
+        };
+        assert!(queries_absent(&NativeQueries {
+            scm: sc,
+            scheduler: task
+        }));
+        for (a, b) in [
+            (
+                Namespace::Absent { raw_code: 1 },
+                Namespace::Absent {
+                    raw_code: 0x80070002,
+                },
+            ),
+            (
+                Namespace::Absent { raw_code: 1060 },
+                Namespace::Absent { raw_code: 1 },
+            ),
+            (
+                Namespace::Present,
+                Namespace::Absent {
+                    raw_code: 0x80070002,
+                },
+            ),
+            (
+                Namespace::Absent { raw_code: 1060 },
+                Namespace::Unknown {
+                    stage: "exact-GetTask",
+                    raw_code: 0x80070005,
+                },
+            ),
+            (
+                Namespace::Unknown {
+                    stage: "exact-OpenService",
+                    raw_code: 1072,
+                },
+                Namespace::Absent {
+                    raw_code: 0x80070002,
+                },
+            ),
+        ] {
+            assert!(!queries_absent(&NativeQueries {
+                scm: a,
+                scheduler: b
+            }));
+        }
+        // This classification alone cannot construct Absent; only the Owner
+        // adapter checks source/Job/staged/phase and original inherited deadline.
+    }
+}
+pub(crate) struct WindowsSupervisor;
+impl SupervisorAbsence for WindowsSupervisor {
+    type Owner = Owner;
+    type Absent = Absent;
+    fn observe_absent(&mut self, owner: &mut Owner, stop_deadline: Instant) -> AppResult<Absent> {
+        owner.check_current(stop_deadline)?;
+        let scope = owner.scope()?;
+        let facts = query(stop_deadline).map_err(|e| {
+            unconfirmed(format!(
+                "原生缺席查询未确认 raw={:?}; {e}",
+                e.raw_os_error()
+            ))
+        })?;
+        if !queries_absent(&facts) {
+            return Err(unconfirmed(format!("注册存在或不可读；保留原码 {facts:?}")));
+        }
+        for (name, state) in staged(owner.home_path()) {
+            if !matches!(state, Namespace::Absent { .. }) {
+                return Err(unconfirmed(format!(
+                    "准确H监督制品未缺席 {name}: {state:?}"
+                )));
+            }
+        }
+        // The official state relates runtime/current Profile/H. A present or
+        // unreadable declaration needs full relation validation, not omission.
+        // This adapter conservatively refuses it; no foreign registration write.
+        match std::fs::symlink_metadata(owner.home_path().join("service-state.json")) {
+            Err(e) if e.kind() == io::ErrorKind::NotFound => {}
+            _ => {
+                return Err(unconfirmed(
+                    "原service-state声明仍存在/不可读；未假定无监督",
+                ))
+            }
+        }
+        let family = owner
+            .original_native()
+            .family_state()
+            .map_err(|e| unconfirmed(e.to_string()))?;
+        if !family.complete_exit()
+            || family.total_processes as usize != family.retained_members.len() + 1
+        {
+            return Err(unconfirmed("原监督wrapper/后代未完整退出记账"));
+        }
+        owner.check_current(stop_deadline)?;
+        if scope != owner.scope()? {
+            return Err(unconfirmed("查询期间来源或原代次改变"));
+        }
+        Ok(Absent {
+            scope,
+            deadline: stop_deadline,
+            observed: Instant::now(),
+            native: facts,
+        })
+    }
+    fn recheck_absent(
+        &mut self,
+        owner: &mut Owner,
+        observed: &Absent,
+        stop_deadline: Instant,
+    ) -> AppResult<()> {
+        observed.check(owner, stop_deadline)?;
+        let fresh = self.observe_absent(owner, stop_deadline)?;
+        if fresh.scope != observed.scope {
+            return Err(unconfirmed("最终恢复边界缺席来源改变"));
+        }
+        observed.check(owner, stop_deadline)
+    }
+}

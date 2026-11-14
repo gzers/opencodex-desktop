@@ -56,8 +56,10 @@ mod windows_client_originals024;
 pub(crate) mod windows_official_lifecycle024;
 #[cfg(all(windows, test))]
 mod windows_owner_host024;
-#[cfg(all(windows, test))]
+#[cfg(windows)]
 mod windows_supervisor024;
+#[cfg(windows)]
+mod windows_diagnostic_roles024;
 
 #[cfg(windows)]
 pub(crate) mod windows_task_scheduler;
