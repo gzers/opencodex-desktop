@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+error: no rules expected `.`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:730:90
+    |
+730 |         "ownedProgramsAbsent":["opencodex-desktop.exe","ocxd.exe","ocx.exe",ENTRY_SOURCE].iter().all(|name|!i.join(name).exists()),
+    |                                                                                          ^ no rules expected this token in macro call
+    |
+    = note: while trying to match end of macro
+
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

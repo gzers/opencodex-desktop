@@ -1,0 +1,57 @@
+{
+  "at": "2026-11-14T15:09:46.1880711+08:00",
+  "scope": "read-only exact newly-created test SID profile unload diagnosis",
+  "events": [
+    {
+      "id": 67,
+      "log": "Microsoft-Windows-User Profile Service/Operational",
+      "message": "登录类型: RDS \r\n本地配置文件位置: C:\\Users\\ocxw1d1d3a825b8 \r\n配置文件类型: Regular",
+      "xml": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-User Profiles Service' Guid='{89b1e9f0-5aff-44a6-9b44-0a07a7ce5845}'/><EventID>67</EventID><Version>0</Version><Level>4</Level><Task>0</Task><Opcode>0</Opcode><Keywords>0x4000000000000000</Keywords><TimeCreated SystemTime='2026-11-14T07:01:07.5500064Z'/><EventRecordID>9846</EventRecordID><Correlation/><Execution ProcessID='2424' ThreadID='98580'/><Channel>Microsoft-Windows-User Profile Service/Operational</Channel><Computer>EZIO-Mini</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='LogonType'>RDS</Data><Data Name='LocalPath'>C:\\Users\\ocxw1d1d3a825b8</Data><Data Name='ProfileType'>Regular</Data></EventData></Event>",
+      "at": "2026-11-14T15:01:07.5500064+08:00"
+    },
+    {
+      "id": 5,
+      "log": "Microsoft-Windows-User Profile Service/Operational",
+      "message": "在 HKU\\S-1-5-21-587408064-856152790-2583328096-1040_Classes 上加载了注册表文件 C:\\Users\\ocxw1d1d3a825b8\\AppData\\Local\\Microsoft\\Windows\\\\UsrClass.dat。",
+      "xml": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-User Profiles Service' Guid='{89b1e9f0-5aff-44a6-9b44-0a07a7ce5845}'/><EventID>5</EventID><Version>0</Version><Level>4</Level><Task>0</Task><Opcode>0</Opcode><Keywords>0x4000000000000000</Keywords><TimeCreated SystemTime='2026-11-14T07:01:07.5467285Z'/><EventRecordID>9845</EventRecordID><Correlation/><Execution ProcessID='2424' ThreadID='98580'/><Channel>Microsoft-Windows-User Profile Service/Operational</Channel><Computer>EZIO-Mini</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='File'>C:\\Users\\ocxw1d1d3a825b8\\AppData\\Local\\Microsoft\\Windows\\\\UsrClass.dat</Data><Data Name='Key'>S-1-5-21-587408064-856152790-2583328096-1040_Classes</Data></EventData></Event>",
+      "at": "2026-11-14T15:01:07.5467285+08:00"
+    },
+    {
+      "id": 5,
+      "log": "Microsoft-Windows-User Profile Service/Operational",
+      "message": "在 HKU\\S-1-5-21-587408064-856152790-2583328096-1040 上加载了注册表文件 C:\\Users\\ocxw1d1d3a825b8\\ntuser.dat。",
+      "xml": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-User Profiles Service' Guid='{89b1e9f0-5aff-44a6-9b44-0a07a7ce5845}'/><EventID>5</EventID><Version>0</Version><Level>4</Level><Task>0</Task><Opcode>0</Opcode><Keywords>0x4000000000000000</Keywords><TimeCreated SystemTime='2026-11-14T07:01:07.5365461Z'/><EventRecordID>9844</EventRecordID><Correlation/><Execution ProcessID='2424' ThreadID='98580'/><Channel>Microsoft-Windows-User Profile Service/Operational</Channel><Computer>EZIO-Mini</Computer><Security UserID='S-1-5-18'/></System><EventData><Data Name='File'>C:\\Users\\ocxw1d1d3a825b8\\ntuser.dat</Data><Data Name='Key'>S-1-5-21-587408064-856152790-2583328096-1040</Data></EventData></Event>",
+      "at": "2026-11-14T15:01:07.5365461+08:00"
+    },
+    {
+      "id": 5,
+      "log": "Microsoft-Windows-User Profile Service/Operational",
+      "message": "在 HKU\\S-1-5-21-587408064-856152790-2583328096-1040_Classes 上加载了注册表文件 C:\\Users\\ocxw1d1d3a825b8\\AppData\\Local\\Microsoft\\Windows\\\\UsrClass.dat。",
+      "xml": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-User Profiles Service' Guid='{89b1e9f0-5aff-44a6-9b44-0a07a7ce5845}'/><EventID>5</EventID><Version>0</Version><Level>4</Level><Task>0</Task><Opcode>0</Opcode><Keywords>0x4000000000000000</Keywords><TimeCreated SystemTime='2026-11-14T07:01:05.1304628Z'/><EventRecordID>9843</EventRecordID><Correlation/><Execution ProcessID='2424' ThreadID='58848'/><Channel>Microsoft-Windows-User Profile Service/Operational</Channel><Computer>EZIO-Mini</Computer><Security UserID='S-1-5-21-587408064-856152790-2583328096-1001'/></System><EventData><Data Name='File'>C:\\Users\\ocxw1d1d3a825b8\\AppData\\Local\\Microsoft\\Windows\\\\UsrClass.dat</Data><Data Name='Key'>S-1-5-21-587408064-856152790-2583328096-1040_Classes</Data></EventData></Event>",
+      "at": "2026-11-14T15:01:05.1304628+08:00"
+    },
+    {
+      "id": 5,
+      "log": "Microsoft-Windows-User Profile Service/Operational",
+      "message": "在 HKU\\S-1-5-21-587408064-856152790-2583328096-1040 上加载了注册表文件 C:\\Users\\ocxw1d1d3a825b8\\ntuser.dat。",
+      "xml": "<Event xmlns='http://schemas.microsoft.com/win/2004/08/events/event'><System><Provider Name='Microsoft-Windows-User Profiles Service' Guid='{89b1e9f0-5aff-44a6-9b44-0a07a7ce5845}'/><EventID>5</EventID><Version>0</Version><Level>4</Level><Task>0</Task><Opcode>0</Opcode><Keywords>0x4000000000000000</Keywords><TimeCreated SystemTime='2026-11-14T07:01:05.0781424Z'/><EventRecordID>9842</EventRecordID><Correlation/><Execution ProcessID='2424' ThreadID='58848'/><Channel>Microsoft-Windows-User Profile Service/Operational</Channel><Computer>EZIO-Mini</Computer><Security UserID='S-1-5-21-587408064-856152790-2583328096-1001'/></System><EventData><Data Name='File'>C:\\Users\\ocxw1d1d3a825b8\\ntuser.dat</Data><Data Name='Key'>S-1-5-21-587408064-856152790-2583328096-1040</Data></EventData></Event>",
+      "at": "2026-11-14T15:01:05.0781424+08:00"
+    }
+  ],
+  "errors": [],
+  "profileRegistration": {
+    "ProfileImagePath": "C:\\Users\\ocxw1d1d3a825b8",
+    "State": 256,
+    "Flags": 0,
+    "RefCount": null
+  },
+  "userHiveMounted": false,
+  "classesHiveMounted": false,
+  "profile": {
+    "SID": "S-1-5-21-587408064-856152790-2583328096-1040",
+    "LocalPath": "C:\\Users\\ocxw1d1d3a825b8",
+    "Loaded": true,
+    "Special": false,
+    "Status": 0
+  }
+}

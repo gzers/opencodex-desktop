@@ -1,0 +1,32 @@
+{
+  "proofVerified": true,
+  "evidenceCommit": "b0e7c6d6a8757b301cbcd47c5ed7082ad86e30ae",
+  "sourceCommit": "1c6a0881c29ad014ed1644b9a57f8b2441e27df0",
+  "rawFileCount": 134,
+  "payloadBytes": 681196,
+  "administratorTransactionsPassed": true,
+  "ordinaryUserAcceptance": false,
+  "cleanupComplete": false,
+  "allAccepted": false,
+  "runtimeExecuted": false,
+  "binaryClaims": "recorded hashes; optional --package/--test-executable needed to verify local bodies",
+  "negativeEvidenceRejected": [
+    "raw-byte-corruption",
+    "delete-before-helper-refusal",
+    "retention-drift",
+    "pending-still-present",
+    "lost-original-failure",
+    "different-token",
+    "cleanup-failure-hidden",
+    "false-full-acceptance",
+    "manifest-path-escape"
+  ],
+  "packageBodyVerified": {
+    "bytes": 316784640,
+    "sha256": "9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282"
+  },
+  "testBodyVerified": {
+    "bytes": 92022784,
+    "sha256": "1dcba506281e02bdbf3714779294f32752b5ff6251198bb2ede14ad5eba09622"
+  }
+}

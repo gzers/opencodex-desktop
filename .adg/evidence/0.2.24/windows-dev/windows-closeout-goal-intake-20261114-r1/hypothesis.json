@@ -1,0 +1,15 @@
+{
+  "doNotRepeat": [
+    "same physical-host VM/policy inventory",
+    "same1625installation",
+    "passed PowerShell/official reads/PATH10/NSIS macros",
+    "unfrozen W2 or dual-SID"
+  ],
+  "result": "not tested; no new guest/endpoint/image/resource authorization supplied since prior bounded inventory",
+  "falsification": "installation must actually succeed in that guest, then exact pending Enable uninstall must fail before RemoveFiles and subsequent normal uninstall must revoke registration/PATH while retaining D/H/live runtime",
+  "authority": "latest user persistent Windows goal; no further per-fix roundtrip required inside assigned Windows write set",
+  "kind": "goal-intake-and-known-environment-prerequisite",
+  "allAccepted": false,
+  "at": "2026-11-14T07:54:52.8002273+08:00",
+  "hypothesis": "An accessible isolated Windows guest already permitting ordinary-user per-user MSI enables the two real uninstall transactions without changing the daily host, user token or package scope"
+}

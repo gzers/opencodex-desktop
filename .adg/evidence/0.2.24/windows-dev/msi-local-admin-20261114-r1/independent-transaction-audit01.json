@@ -1,0 +1,18 @@
+{
+  "originalRuntimeTest": "failed assertion on scheduling text; failure retained",
+  "realInstallExit": 0,
+  "realUninstallExit": 1603,
+  "helperExitFromMsiLog": 1,
+  "perUserContextQuery": 0,
+  "perMachineContextQuery": 1605,
+  "beforeAfterEqual": true,
+  "actualFileRemovalBeforeHelperFailure": false,
+  "schedulingAndExecutionOffsets": [
+    27973,
+    28212,
+    44376,
+    45002
+  ],
+  "correctedSemanticGate": "helper fails in execution script before any actual RemoveFiles or FileRemove; both scheduling and execution order required",
+  "ordinaryUserAcceptance": false
+}

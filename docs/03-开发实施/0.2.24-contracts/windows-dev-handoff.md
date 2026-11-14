@@ -180,3 +180,53 @@ W1-D当前组件已收口，但allAccepted=false。唯一请求范围内的验�
 清理：本轮没有创建测试账户/Profile/安装登记、未写测试或日常PATH；现有ocxw1d账户/Profile查询为0。只读提升盘点进程已退出，没有本轮测试/MSI/VM进程待清。新Public盘点根C:/Users/Public/ocx-msi-env-20261114-r1共10文件5968字节；证据先归档核验后，对该新根逐文件非递归精确删除被自动审批以blocked by policy拒绝，命令未执行、未换工具绕过，原文件仍在；旧W1/W1-C/W1-D所有清理拒绝项未重试。cleanup-result.json分别记录新小型盘点余留与原历史项。
 
 后继仅需提供现成且允许普通账户per-user MSI的隔离Windows机/VM或受管测试连接，沿合同复用已核包，只做安装前提、pending Enable实际卸载失败保留、继续原Enable后实际卸载成功及D/H/live runtime保留。当前按用户“无可用环境就回环境事实”收口，未修改IMP/TEAM/共享索引，不跑W2/双SID或发布。
+
+## 2026-11-14 持续目标承接：Windows自主收口，MSI客体输入待补
+
+用户本轮明确改为Windows原对话持续负责排查→修复→定向验证→提交推送，不要求每处失败回Mac；本线接受这一持续授权，目标不因一次贡献回交即标完成。fetch后main仍fd2538e4dae124b7c521b5b84b7ca5b5c6eeef6b，docs主线已到242f46e71，读取IMP-34 revision136、TEAM revision10及MSI-only/环境接收合同。正式IMP/TEAM/共享索引仍由集成线维护，本线不重写。代码HEAD f66d9d59f与main同树，无新增实现；本轮无空代码提交。
+
+本轮先落hypothesis，再一次合并独立项状态；不是重新跑环境盘点。来源windows-closeout-goal-intake-20261114-r1中的source-intake/status引用已核10份原环境raw和既有组件验收，不重复MSI1625、VM清单、已过终端/官方/PATH/NSIS宏。真实MSI失败保留、真实正常卸载两项仍受“实际per-user MSI安装先成功”前提阻塞，均未执行/allAccepted=false。此前有界盘点无现成Windows VM/远程目标；本次用户未提供新的客体/端点/镜像，不凭“目标模式”捏造新环境可用。
+
+当前需要具体可用隔离Windows连接；如由本机新建Hyper-V临时客体，则需先固定可用Windows镜像来源、CPU/内存/磁盘边界和创建/销毁范围，才有可审阅的环境方案。合同要求“若用户决定准备新隔离VM，另明确可用镜像/资源和创建范围后执行”；这不是要求每次Windows代码修复重新授权。不会自行改变日常主机Installer策略、提高测试用户令牌、改成per-machine或用NSIS/复制文件代替真实MSI。
+
+源码f66d9d59f/包SHA9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282（316784640字节）沿原证据复用，本轮未重建/复制/声称重算。新证据仅.adg/evidence/0.2.24/windows-dev/windows-closeout-goal-intake-20261114-r1/，保存待证伪假设、最新合同摘要、三项状态和缺少输入。没有新测试账户/Profile/PATH/VM/MSI进程或外部临时根待清；既有自动审批拒绝及其全部余留按原事实保持，不重试、不绕过。环境到位后自主接续MSI-only用例，范围内实际缺陷批量处理并分批Git回交；共享范围外/需变方案时才提出具体证据。未改官方2.99/日常配置，未跑真实业务同步/模型请求/W2/双SID，未发布，持续目标保持未完成。
+
+## 2026-11-14 MSI专项入口准备（编译通过，真实两项仍待环境）
+
+持续目标本轮在 TEAM revision10 / IMP-34 revision136 与两个 MSI 合同范围内，先留假设再完成独立 ignored `isolated_msi_uninstall_only`、只读包核验、环境保护控制器及账户登记未决保留。代码 e2560f9047e453157bcc71948904fbf199a0540a 已推 codex/024-windows-native，仅5份允许测试文件，未改产品逻辑/安装器/共享层。
+
+最终 MSVC lib no-run exit0（42 warnings原样），精确 ignored --list 发现1项 exit0；三脚本解析0错误，日常主机在配置读取/建账户前拒绝，原 MSI 摘要/大小/Product表身份核验通过。测试EXE为91992576字节，SHA256 712a6e8e5bfbb607433b3b17bce77c05523f678058dba755cba679bdd447e65c；原MSI316784640字节，SHA256 9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282。两个哈希不等同冻结候选或真实事务通过。
+
+证据位于 .adg/evidence/0.2.24/windows-dev/msi-only-preparation-20261114-r1/，含两次编译原输出、精确发现输出、包/主机保护、实际执行源与Git blob分立摘要、完整状态表和清理事实。源码核验命令一度因内联Python换行转义SyntaxError停止，改用chr(10)后5份源核验通过，工具首错单列，未覆盖旧失败。
+
+真实MSI安装前提、pending失败保留、正常卸载均not-executed、environmentReady=false、allAccepted=false。尚缺允许普通用户per-user MSI的隔离Windows机/VM连接，或具体镜像、可用资源及创建/销毁范围；依环境接收合同，未获此输入不自行建VM或更改日常机器策略/测试令牌/安装范围。没有重复环境枚举/1625尝试，也没有重跑已过终端/官方/PATH/NSIS组件。既有W1-D证据复用。
+
+本轮新增测试账户/Profile/VM/MSI事务/真实PATH写入均0；源码和证据留作交付，复用构建缓存及原MSI留存。历史自动审批拒绝的大根/旧失败目录/schema/空目录/Public盘点根沿原未清事实，不重试或换工具绕过。未改官方2.99/日常配置，未跑业务同步/模型请求/W2/双SID，未发布。Windows持续目标未完成，仅环境阻塞后继真实两项。
+
+## 2026-11-14 本机多用户临时管理员真实MSI补测（两项事务通过，清理及普通用户未完）
+
+用户本轮明确授权替换环境方案：本机新建专用临时管理员账户及真实Profile，实际提升令牌验证原开发MSI的失败保留/正常卸载。该授权优先于旧合同对本次场景的另机/普通令牌限制，管理员场景独立记账，不替代普通用户验收、不把旧1625擦除。共同mainfd2538e4d/docs242f46e71未变，TEAMr10/IMP34r136及原MSI-only合同其余断言/超时/未知拒绝保持。新目标文字保存goal-revision.json；宿主create_goal因旧目标未完成拒绝覆盖，update_goal仅支持状态，未虚标完成。
+
+代码两笔已推codex/024-windows-native：ad3dcce02c3ae89bbe14c4cf32103010918d24c7（管理员入口/同SID继续/实际执行顺序判读），1c6a0881c29ad014ed1644b9a57f8b2441e27df0（测试Profile删除C#原生NULL修复及精确hive锁只读诊断）。仅原允许Windows测试文件/脚本，产品逻辑、安装器模板、官方包、日常配置与机器策略未改。
+
+原独立开发MSI316784640字节，SHA256 9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282：out01真实安装exit0，per-user unmanaged查询0/machine1605；pending Enable真实/x exit1603，cleanup helper实际exit1，程序卷/文件ID/摘要、MSI登记、PATH、pending/config/D/H哨兵及selection前后相同。原测试首错将Doing action的调度文字误当执行删除，完整失败留存；复核实际脚本在helper失败前无RemoveFiles/FileRemove，修正测试同时保留调度与执行顺序两门。out02原SID原pending逐字重核并显式继续Enable，无重装；真实/x exit0，产品登记-1，程序/终端登记/pending移除，PATH还原，D/H/config/live runtime保留。独立审计再核两份原MSI日志/前后像。
+
+最终MSVC测试编译build03 exit0，42warnings保持；build02 JSON宏语法错误/exit101保留，修括号后通过。真实执行测试EXE92022784字节，SHA256 1dcba506281e02bdbf3714779294f32752b5ff6251198bb2ede14ad5eba09622。首轮EXE摘要另存，原MSI不重建；精确源码/脚本和Git blob分立保存，不把后继脚本修正冒充out02使用的字节。
+
+不可覆盖证据 .adg/evidence/0.2.24/windows-dev/msi-local-admin-20261114-r1/：假设、用户授权/目标修订、三次编译含失败、两次原始事务输出、独立前后像审计、null绑定反例、Profile服务事件/Restart Manager、完整状态表/摘要清单/清理拒绝。PowerShell/cmd/裸ocx/官方2.99/H读取/PATH恢复/schema3/NSIS既有通过复用，未重跑；无模型/业务同步/W2/双SID/发布。
+
+清理：唯一新账户SID尾1040、两临时任务、MSI登记均移除；输入ACL还原，管理员路径未改交互桌面ACL，新SID PATH原字节恢复，daily user与machine PATH摘要前后相同。首版DeleteProfile把PowerShell null转成空串报87，C#真正NULL修复后原生报共享冲突32；Profile仍Loaded=true，Restart Manager精确两个hive只读定位System PID4与Registry PID328，不杀共享系统进程、不强制卸载hive/重启服务或机器。Profile残留85文件118556840字节。
+
+新Public根83文件184522112字节，归档/逐字核验后精确递归删除被自动审批blocked by policy拒绝，命令未执行，未重试或换机制绕过。该根及Profile如实列未清；历史所有清理拒绝不重试。管理员两项事务已通过，cleanupComplete=false、ordinaryUserAcceptance=false、allAccepted=false。后继需安全释放精确Profile占用及允许清自有新根；普通用户与IMP34其它Windows生命周期/固定候选/最终验收缺口保持，不宣布整版收口或发布。
+
+## 2026-11-14 后续目标重启：离线接收准备与Windows生产接口缺口
+
+用户清除旧目标后要求继续后续并开启目标模式，已创建新的active目标。fetch mainfd2538e4d/docs242f46e71未变，TEAMr10/IMP34r136尚未接收管理员MSI贡献或冻结下一候选。先保存假设、一次核对独立项，未重跑已过组件/相同MSI/全环境盘点，旧拒绝不重试。
+
+新增test/windows024-native/verify-msi-evidence.py及msi-only说明，代码0f1dc195ed2e39bbbeffd23eff05f97a78905c57已推。离线固定核1c6a0881c代码/b0e7c6d6a原证据Git对象：134份证据、133份payload681196字节、执行源/最终源摘要、真实MSI调度与实际脚本顺序/exit、同SID继续及独立前后像全部通过；9个内存反例拒绝（原字节损坏、先删文件、保留内容漂移、pending残留、丢失首错、令牌变化、隐瞒清理失败、冒报全通过、路径逃逸）。实际MSI/测试EXE本体SHA/大小只读重算与原记录一致，不重建/复制/执行大包。
+
+新证据 .adg/evidence/0.2.24/windows-dev/msi-receive-preparation-20261114-r1/ 含假设、实际命令/原stdout/stderr、source SHA、完整状态表及integration-gap.json。exit0只表示固定原证明一致：管理员事务passed，ordinaryUserAcceptance=false/cleanupComplete=false/allAccepted=false；不是集成接收、当前机器清理或整版通过。原Profile SID1040仍Loaded=true，原锁System/Registry及error32证据复用，原Public根仍在；没有新删除/卸载hive/杀共享进程。原Profile/Public字节数沿原时点清单，不伪称重新测量。
+
+当前贡献净差仅10份许可Windows测试文件，产品源和安装器未变。只读src核对新windows_official_runtime024::OwnedRuntime/create_suspended/wait_normal_exit等仍无生产调用点；现attested_status::stop_official使用record.desktop_lifetime的签名Binding/Witness。这些共享消费者/持久与来源语义属于集成线，不能在MSI-only合同下直接替换。具体后继依赖：先接收e2560f904/ad3dcce02/1c6a0881c/0f1dc195e及原b0e7c6d6a证据，保留普通用户/清理未完；再给Windows024生产生命周期接口、精确写集、代码/包身份和30/5/10秒受影响表。主线和候选未变前不提前W2/双SID，不猜新Schema、不改共享消费者/官方2.99/日常配置/策略，不运行同步/模型请求、不发布。
+
+本轮新增运行时测试/MSI/账户/Profile/任务/真实PATH写入/外部临时根均0；仅源码、说明和证据作为交付留存。全部历史自动审批拒绝未重试、未换机制绕过。Windows继续负责本范围，后继实际生产接线等待集成接口/候选，不用重复已过用例制造进展。

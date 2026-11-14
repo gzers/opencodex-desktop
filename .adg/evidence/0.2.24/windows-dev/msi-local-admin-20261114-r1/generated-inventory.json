@@ -1,0 +1,507 @@
+{
+  "root": "C:\\Users\\Public\\ocx-msi-admin-20261114-r1",
+  "files": [
+    {
+      "relative": "account-w1d.ps1",
+      "bytes": 17504,
+      "sha256": "23aea3cbad4c4fc1d3c66b3033eaf1dce671927c716ff2ebb5180836e2f01e2b",
+      "evidence": "executed02/account-w1d.ps1"
+    },
+    {
+      "relative": "administrator-msi-tests.exe",
+      "bytes": 91996160,
+      "sha256": "78a7cc5189a308ece465cbea0ac81032c4b80fc126e61ec9be1665a2c3e96192",
+      "evidence": "binary SHA/bytes recorded; executable retained in reused build cache for final version; not committed to Git"
+    },
+    {
+      "relative": "administrator-msi-tests02.exe",
+      "bytes": 92022784,
+      "sha256": "1dcba506281e02bdbf3714779294f32752b5ff6251198bb2ede14ad5eba09622",
+      "evidence": "binary SHA/bytes recorded; executable retained in reused build cache for final version; not committed to Git"
+    },
+    {
+      "relative": "cleanup-msi-local-admin.ps1",
+      "bytes": 3531,
+      "sha256": "fd347e68a7bd9d6dfee0cefcbfddbb7bc3b4e531e8a1787283ce4709ab0cb89d",
+      "evidence": "public-extra/cleanup-msi-local-admin.ps1"
+    },
+    {
+      "relative": "cleanup-msi-local-admin05.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451",
+      "evidence": "cleanup-msi-local-admin05.ps1"
+    },
+    {
+      "relative": "cleanup03-launch.json",
+      "bytes": 141,
+      "sha256": "24d3bad99885f73d33024aa48c4db60adf29826dd066dd9142946824a364b09e",
+      "evidence": "cleanup03-launch.json"
+    },
+    {
+      "relative": "cleanup03.json",
+      "bytes": 688,
+      "sha256": "d5c319b121ee258572f56ba98210b52f6ee39bfd6695dd8c72a486e7378a494d",
+      "evidence": "cleanup03.json"
+    },
+    {
+      "relative": "cleanup05-launch.json",
+      "bytes": 150,
+      "sha256": "7f2c19858df8bd05021e8f1b8358f61de0a03f5991aec96fc2d2196688b3e09c",
+      "evidence": "cleanup05-launch.json"
+    },
+    {
+      "relative": "cleanup05.json",
+      "bytes": 747,
+      "sha256": "5e061f6ab56daa11531aece59f0daaedad4ff25d1a924e03d7bb9834d8864da5",
+      "evidence": "cleanup05.json"
+    },
+    {
+      "relative": "config01.json",
+      "bytes": 433,
+      "sha256": "1659f61bc3b29e688d2075c4ceeb69f5aacfe52c63c0cfba3682b1f806a20e6d",
+      "evidence": "executed01/config01.json"
+    },
+    {
+      "relative": "config02.json",
+      "bytes": 614,
+      "sha256": "7d1a2be4f2a23fd54c49568ce7c150626fd7e47127e06767c729a2572aa562d7",
+      "evidence": "executed02/config02.json"
+    },
+    {
+      "relative": "diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6",
+      "evidence": "diagnose-msi-profile-lock.ps1"
+    },
+    {
+      "relative": "invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f",
+      "evidence": "executed01/invoke-msi-local-admin.ps1"
+    },
+    {
+      "relative": "launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7",
+      "evidence": "executed01/launch-msi-local-admin.ps1"
+    },
+    {
+      "relative": "out01/account-controller.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out01/account-controller.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out01/child-input.json",
+      "bytes": 613,
+      "sha256": "b3950698df602923ac9378ae65c39a15292931fda8603ebd64e75389eecabebf",
+      "evidence": "attempts/out01/child-input.json"
+    },
+    {
+      "relative": "out01/controller-policy.json",
+      "bytes": 307,
+      "sha256": "91c76459e88883e6b30fc0101264642a8204eb4758cda0a5d99146e62850f393",
+      "evidence": "attempts/out01/controller-policy.json"
+    },
+    {
+      "relative": "out01/controller.json",
+      "bytes": 753,
+      "sha256": "205aff2d1257ea9d1e1b3943fb4183d65cca75d9fd0faf4c64f286e02c8fa11a",
+      "evidence": "attempts/out01/controller.json"
+    },
+    {
+      "relative": "out01/daily-path-after.json",
+      "bytes": 222,
+      "sha256": "e59b3137efc36aef657230eb7847f3b861fcc6eeae7128b3c3e61f84d186ca8a",
+      "evidence": "attempts/out01/daily-path-after.json"
+    },
+    {
+      "relative": "out01/daily-path-before.json",
+      "bytes": 222,
+      "sha256": "e59b3137efc36aef657230eb7847f3b861fcc6eeae7128b3c3e61f84d186ca8a",
+      "evidence": "attempts/out01/daily-path-after.json"
+    },
+    {
+      "relative": "out01/daily-path-result.json",
+      "bytes": 147,
+      "sha256": "c9efa6f60fb62a29df6116600bd5c51dd4458240ad01428ac561c19efb6b2f49",
+      "evidence": "attempts/out01/daily-path-result.json"
+    },
+    {
+      "relative": "out01/evidence-acl.log",
+      "bytes": 112,
+      "sha256": "55d791ce6a1c0f877f7fd3a67b49a9e67e3fd9f026b50bc2ee742f0ddb5c623b",
+      "evidence": "attempts/out01/evidence-acl.log"
+    },
+    {
+      "relative": "out01/input-acl.log",
+      "bytes": 97,
+      "sha256": "68e897f5b2d0e6fc0c4faff98498488098d401f323a751f6a502bc79315dc7d8",
+      "evidence": "attempts/out01/input-acl.log"
+    },
+    {
+      "relative": "out01/launch-result.json",
+      "bytes": 151,
+      "sha256": "6c498d7fc0e3edde9e2d3e2050e768b9820a274d7ad6d2d1876621b107c6535f",
+      "evidence": "attempts/out01/launch-result.json"
+    },
+    {
+      "relative": "out01/launch.json",
+      "bytes": 182,
+      "sha256": "d460a2b18c55ccf69f1f1241f7e92a5f1feb59607dd626b9dd4b8dec729b937b",
+      "evidence": "attempts/out01/launch.json"
+    },
+    {
+      "relative": "out01/native/child-result.json",
+      "bytes": 302,
+      "sha256": "7df68041274e3322f3f06faed26fc543d6ed6f28dd636d4da12ad1050497c4a5",
+      "evidence": "attempts/out01/native/child-result.json"
+    },
+    {
+      "relative": "out01/native/failed-after.private.json",
+      "bytes": 1452,
+      "sha256": "2d9b04be1c457f3fc340ad972740902b3c5c8a939c6a0e19c98b6d139fc3ab97",
+      "evidence": "attempts/out01/native/failed-after.private.json"
+    },
+    {
+      "relative": "out01/native/failed-before.private.json",
+      "bytes": 1452,
+      "sha256": "2d9b04be1c457f3fc340ad972740902b3c5c8a939c6a0e19c98b6d139fc3ab97",
+      "evidence": "attempts/out01/native/failed-after.private.json"
+    },
+    {
+      "relative": "out01/native/msi-final-registration.json",
+      "bytes": 99,
+      "sha256": "0621f0744e1dd7588a8c42c60ed778636c76457aba574a39a07fcf1dbc5fa3a0",
+      "evidence": "attempts/out01/native/msi-final-registration.json"
+    },
+    {
+      "relative": "out01/native/msi-only-install.msi.log",
+      "bytes": 127988,
+      "sha256": "50aa467e63f15188f76422290856bb1766dd93372124b1d970ced02068e25e65",
+      "evidence": "attempts/out01/native/msi-only-install.msi.log"
+    },
+    {
+      "relative": "out01/native/msi-only-install.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out01/native/msi-only-install.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out01/native/msi-only-uninstall-refused.msi.log",
+      "bytes": 168086,
+      "sha256": "6add70b150fb4cff4cc3d2cb4dee20f8396edfb5c431c5b73663eaab607894d7",
+      "evidence": "attempts/out01/native/msi-only-uninstall-refused.msi.log"
+    },
+    {
+      "relative": "out01/native/msi-only-uninstall-refused.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out01/native/msi-only-uninstall-refused.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out01/native/native-events.jsonl",
+      "bytes": 584,
+      "sha256": "71f364fb8aba72bb0a2ce59e0f885cdb6565ff00f1c2632d719a6522b41bb662",
+      "evidence": "attempts/out01/native/native-events.jsonl"
+    },
+    {
+      "relative": "out01/native/path-before.private.json",
+      "bytes": 300,
+      "sha256": "7e35c80325f0f05dae8d63f7499d9b3d4b4cb6e6c6623e4da4573fefe50a46b4",
+      "evidence": "attempts/out01/native/path-before.private.json"
+    },
+    {
+      "relative": "out01/native/pending-before.private.json",
+      "bytes": 6130,
+      "sha256": "e3103ba866bab3e12182817c8b24457764967f35eef8b940ed7e7a83eacf3d3c",
+      "evidence": "attempts/out01/native/pending-before.private.json"
+    },
+    {
+      "relative": "out01/native/profile-state.private.json",
+      "bytes": 10754,
+      "sha256": "5b14e7778241f72411efc52b202352bf3e6b83ea2d6ec02b049123f64efb8f83",
+      "evidence": "attempts/out01/native/profile-state.private.json"
+    },
+    {
+      "relative": "out01/native/test-token-policy.json",
+      "bytes": 465,
+      "sha256": "97ccce68bf21a52848d4ff7aed12de57096d1b87f5933c2702c505c7e8f76a1e",
+      "evidence": "attempts/out01/native/test-token-policy.json"
+    },
+    {
+      "relative": "out01/native/test.stderr.log",
+      "bytes": 369,
+      "sha256": "d489178ed3cad924df56072ca65ebfaf5582179d982914992bb4911b355975b6",
+      "evidence": "attempts/out01/native/test.stderr.log"
+    },
+    {
+      "relative": "out01/native/test.stdout.log",
+      "bytes": 372,
+      "sha256": "0fe14c0056db6d46debe5466248baefb872dc23dd7292257061f9a089f234cf9",
+      "evidence": "attempts/out01/native/test.stdout.log"
+    },
+    {
+      "relative": "out01/package-facts.json",
+      "bytes": 399,
+      "sha256": "a98e1aa9f00b88d9921593bac558ca295606a58758387ec8767f3284b1f79cf5",
+      "evidence": "attempts/out01/package-facts.json"
+    },
+    {
+      "relative": "out01/wrapper.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out01/wrapper.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out02/account-controller.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out02/account-controller.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out02/child-input.json",
+      "bytes": 699,
+      "sha256": "2f9ac3215389cf5c630617303cfda622d238cd0f294bffcb0449f7f0b1b99276",
+      "evidence": "attempts/out02/child-input.json"
+    },
+    {
+      "relative": "out02/controller-policy.json",
+      "bytes": 307,
+      "sha256": "a3ff57f38c0712859e9348687a5aec10199da00c641eb977aa67c921c08708b8",
+      "evidence": "attempts/out02/controller-policy.json"
+    },
+    {
+      "relative": "out02/controller.json",
+      "bytes": 734,
+      "sha256": "86348844b1511fe75386aa8b5f12a32a8d1a1b939ae7f2e4928bed5860a3a136",
+      "evidence": "attempts/out02/controller.json"
+    },
+    {
+      "relative": "out02/daily-path-after.json",
+      "bytes": 222,
+      "sha256": "f5541745f6357088ce90933b22b50bda117329d226d35d64b60788ec0759931f",
+      "evidence": "attempts/out02/daily-path-after.json"
+    },
+    {
+      "relative": "out02/daily-path-before.json",
+      "bytes": 222,
+      "sha256": "f5541745f6357088ce90933b22b50bda117329d226d35d64b60788ec0759931f",
+      "evidence": "attempts/out02/daily-path-after.json"
+    },
+    {
+      "relative": "out02/daily-path-result.json",
+      "bytes": 147,
+      "sha256": "7dc79a877e99cd5754209a821794eddef15fb3cd6b896ce139405f5624e8113b",
+      "evidence": "attempts/out02/daily-path-result.json"
+    },
+    {
+      "relative": "out02/evidence-acl.log",
+      "bytes": 112,
+      "sha256": "17968ccc2a4aaaff0cfd9fc371be8eb462a8af5f6a4c3882f3ddb5824112ace0",
+      "evidence": "attempts/out02/evidence-acl.log"
+    },
+    {
+      "relative": "out02/input-acl.log",
+      "bytes": 97,
+      "sha256": "68e897f5b2d0e6fc0c4faff98498488098d401f323a751f6a502bc79315dc7d8",
+      "evidence": "attempts/out01/input-acl.log"
+    },
+    {
+      "relative": "out02/launch-result.json",
+      "bytes": 151,
+      "sha256": "763febe3c6510635d6c659bc592de3435ca6c92a8d9c9d1b23a3aa8d2d97149a",
+      "evidence": "attempts/out02/launch-result.json"
+    },
+    {
+      "relative": "out02/launch.json",
+      "bytes": 183,
+      "sha256": "ad55f12fbf586f6db51f327a371ddf24436dcb988bef590af932173ca0dc21da",
+      "evidence": "attempts/out02/launch.json"
+    },
+    {
+      "relative": "out02/native/active-path.private.json",
+      "bytes": 541,
+      "sha256": "028596a75d4ebdaaf6e4371b7063734e68884a0e8703c299840bfc0bfefc283e",
+      "evidence": "attempts/out02/native/active-path.private.json"
+    },
+    {
+      "relative": "out02/native/active-registration.private.json",
+      "bytes": 1398,
+      "sha256": "b084456d4aaaab028b7b7c5a088c9fb4dafa319b5068432ad4c74b8b2e4507c6",
+      "evidence": "attempts/out02/native/active-registration.private.json"
+    },
+    {
+      "relative": "out02/native/child-result.json",
+      "bytes": 299,
+      "sha256": "3c6def441ecb15caa9e13576afa5dcafe836071be6cb0cae1e4401170852b079",
+      "evidence": "attempts/out02/native/child-result.json"
+    },
+    {
+      "relative": "out02/native/msi-final-registration.json",
+      "bytes": 99,
+      "sha256": "d8469175452b25388b539ce057bdcfebc0e69d48cb273cecb68feffb59b95706",
+      "evidence": "attempts/out02/native/msi-final-registration.json"
+    },
+    {
+      "relative": "out02/native/msi-only-uninstall-normal.msi.log",
+      "bytes": 120842,
+      "sha256": "5e6de091518fbf05f48235ca651cb6fff0a18ec031e8c2064ca68688939a957a",
+      "evidence": "attempts/out02/native/msi-only-uninstall-normal.msi.log"
+    },
+    {
+      "relative": "out02/native/msi-only-uninstall-normal.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out02/native/msi-only-uninstall-normal.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out02/native/native-events.jsonl",
+      "bytes": 644,
+      "sha256": "fa460aa8fb646171df18bd01f9409511eecd9bc350794b46a4ae3f4545c4bae6",
+      "evidence": "attempts/out02/native/native-events.jsonl"
+    },
+    {
+      "relative": "out02/native/normal-after.private.json",
+      "bytes": 815,
+      "sha256": "54f017159d89eb43d2b36040030dcea696b35b210a23ab6580507decd9ebd226",
+      "evidence": "attempts/out02/native/normal-after.private.json"
+    },
+    {
+      "relative": "out02/native/path-after.private.json",
+      "bytes": 300,
+      "sha256": "7e35c80325f0f05dae8d63f7499d9b3d4b4cb6e6c6623e4da4573fefe50a46b4",
+      "evidence": "attempts/out01/native/path-before.private.json"
+    },
+    {
+      "relative": "out02/native/profile-state.private.json",
+      "bytes": 2358,
+      "sha256": "608ac7a85a7b19eb4823792a4015325179cafdabb214346131a44587f7ea9b7e",
+      "evidence": "attempts/out02/native/profile-state.private.json"
+    },
+    {
+      "relative": "out02/native/test-token-policy.json",
+      "bytes": 465,
+      "sha256": "2878b1a2b3dc0b99357cbbf8e281ea9a4dfbe1be2ae2b7632515d14a95d94dcf",
+      "evidence": "attempts/out02/native/test-token-policy.json"
+    },
+    {
+      "relative": "out02/native/test.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out02/native/test.stdout.log",
+      "bytes": 232,
+      "sha256": "46f9f3b86fd2f8eff81763b17346e81cf777e9789444554042e95cf76c520c4d",
+      "evidence": "attempts/out02/native/test.stdout.log"
+    },
+    {
+      "relative": "out02/package-facts.json",
+      "bytes": 399,
+      "sha256": "b47d550bc81bbbbe3a798046ad1dc32a879af7ea927d1181219a6ff4be4f1ac6",
+      "evidence": "attempts/out02/package-facts.json"
+    },
+    {
+      "relative": "out02/wrapper.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "out02/wrapper.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence": "build01.stdout.log"
+    },
+    {
+      "relative": "profile-diagnosis04.json",
+      "bytes": 6157,
+      "sha256": "bfdcca6a1108d034b50d51ba6e879cc7f12d65cb99f590ebdb6660f13b94d565",
+      "evidence": "profile-diagnosis04.json"
+    },
+    {
+      "relative": "profile-diagnosis04.ps1",
+      "bytes": 1564,
+      "sha256": "57807518f4cde1504cbd9262d703771951f06a6c3585091b8595b3cfa227b839",
+      "evidence": "profile-diagnosis04.ps1"
+    },
+    {
+      "relative": "profile-inventory07.json",
+      "bytes": 191,
+      "sha256": "62b0c3b9e2b60b479c8bc11768b7c7786e47fffb1856fc93aec160792b03045b",
+      "evidence": "profile-inventory07.json"
+    },
+    {
+      "relative": "profile-inventory07.log",
+      "bytes": 2096,
+      "sha256": "89b6eec2dddf6a0296fa6eb76e7c4e8e2089ee4ece276668da9f20fbbb3d8ecc",
+      "evidence": "profile-inventory07.log"
+    },
+    {
+      "relative": "profile-inventory07.ps1",
+      "bytes": 705,
+      "sha256": "60cd46f0587b90fbf98a51727e22ab109924ecf3978f90ed00a6d9a5172e2ec5",
+      "evidence": "profile-inventory07.ps1"
+    },
+    {
+      "relative": "profile-lock06-launch.json",
+      "bytes": 146,
+      "sha256": "f2e533dd4356ea3c4e31923f756723b80c03a87517f336a5b34b107c6687d50c",
+      "evidence": "profile-lock06-launch.json"
+    },
+    {
+      "relative": "profile-lock06.json",
+      "bytes": 1316,
+      "sha256": "654badea93cf5692797c09a9fc1b0d9c1c6d1b65158489b100908b458f31e5ae",
+      "evidence": "profile-lock06.json"
+    },
+    {
+      "relative": "query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538",
+      "evidence": "executed01/query-package-msi.ps1"
+    }
+  ],
+  "fileCount": 83,
+  "totalBytes": 184522112,
+  "rawEvidencePreserved": true,
+  "binaryFiles": 2
+}

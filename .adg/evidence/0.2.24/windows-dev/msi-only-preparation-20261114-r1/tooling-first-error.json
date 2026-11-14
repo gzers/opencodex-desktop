@@ -1,0 +1,10 @@
+{
+  "reason": "newline escape in inline Python command became a literal line break",
+  "corrected": "chr(10); verified all 5 source hashes and Git blobs",
+  "diagnostic": "SyntaxError: unterminated string literal (detected at line 10)",
+  "source": "exec_command reported stderr; original command did not redirect stderr to disk",
+  "exitCode": 1,
+  "runtimeTestsExecuted": 0,
+  "productSourceChangedForCorrection": false,
+  "stage": "source manifest verification before commit"
+}

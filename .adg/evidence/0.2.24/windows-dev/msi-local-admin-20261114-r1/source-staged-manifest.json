@@ -1,0 +1,54 @@
+{
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/terminal_cli_windows_native_tests.rs",
+      "bytes": 53759,
+      "sha256": "93ee2bb5fde8c52f4ef235f3d6c049d149b41abb0020d8308bff449f8c74763f",
+      "gitBlob": "ef1360eb1719825338719406a0307bf580a59c67",
+      "worktreeSha256": "93ee2bb5fde8c52f4ef235f3d6c049d149b41abb0020d8308bff449f8c74763f",
+      "sameBytes": true
+    },
+    {
+      "path": "test/windows024-native/account-w1d.ps1",
+      "bytes": 17473,
+      "sha256": "bfc043bbd8ebb9c024820a1a05013fc2ed20c785a74a45c2296d2ceb85cc89d9",
+      "gitBlob": "cf862aa3457cedbf1705fd0e82cf6c9d60be94e3",
+      "worktreeSha256": "2a373de794a18c4384cd356343f0aa2f407041fc8a78d6930f5d924a88af220f",
+      "sameBytes": false
+    },
+    {
+      "path": "test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 3531,
+      "sha256": "fd347e68a7bd9d6dfee0cefcbfddbb7bc3b4e531e8a1787283ce4709ab0cb89d",
+      "gitBlob": "b1052c724d1f78b0e96ccb90e1f1ebdccf97e8a1",
+      "worktreeSha256": "fd347e68a7bd9d6dfee0cefcbfddbb7bc3b4e531e8a1787283ce4709ab0cb89d",
+      "sameBytes": true
+    },
+    {
+      "path": "test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f",
+      "gitBlob": "c972964b7cc7fc79472aaae1008c0904b955d39b",
+      "worktreeSha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f",
+      "sameBytes": true
+    },
+    {
+      "path": "test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7",
+      "gitBlob": "eefe69898f8f7481d1ab98ec3d322fbb28b040aa",
+      "worktreeSha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7",
+      "sameBytes": true
+    },
+    {
+      "path": "test/windows024-native/msi-only.md",
+      "bytes": 4300,
+      "sha256": "2a2e61950a5ec25faed66243753aeae72865db5ee2974cd48505104b0efac195",
+      "gitBlob": "3217da95aab7bde32b2fddaf61a9207aa9abcf32",
+      "worktreeSha256": "2a2e61950a5ec25faed66243753aeae72865db5ee2974cd48505104b0efac195",
+      "sameBytes": true
+    }
+  ],
+  "postRuntimeControllerChange": "Retain account when native Profile cleanup incomplete; parse checked; no repeat MSI required",
+  "executionSource": "source-manifest02.json"
+}
