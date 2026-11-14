@@ -48,6 +48,9 @@ impl WindowsOwnerHost {
         deadline: Instant,
     ) -> AppResult<Self> {
         owner.check_current(deadline)?;
+        if !current_images(owner.installation_path(), broker_image, &manager_image) {
+            return Err(refused("broker/manager镜像不在准确受控I"));
+        }
         let broker = RetainedPeer::current().map_err(|e| refused(e.to_string()))?;
         let token = &broker.identity().token;
         if token.elevated || token.elevation_type == 2 {
@@ -106,6 +109,22 @@ impl WindowsOwnerHost {
 }
 fn hash_hex(bytes: &[u8]) -> String {
     bytes.iter().map(|n| format!("{n:02x}")).collect()
+}
+fn current_images(
+    root: &std::path::Path,
+    broker: &std::path::Path,
+    manager: &std::path::Path,
+) -> bool {
+    let spelling = |p: &std::path::Path| {
+        dunce::simplified(p)
+            .to_string_lossy()
+            .replace('/', "\\")
+            .to_ascii_lowercase()
+    };
+    spelling(broker) == spelling(&root.join("ocxd.exe"))
+        && [root.join("opencodex-desktop.exe"), root.join("ocxd.exe")]
+            .iter()
+            .any(|p| spelling(manager) == spelling(p))
 }
 fn consume_replay_keys(
     used: &mut BTreeSet<String>,
@@ -256,6 +275,35 @@ impl OwnerContinuity for WindowsOwnerHost {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn wl2_r3_peer_images_must_be_in_exact_current_installation() {
+        let root = std::path::Path::new("C:/controlled/I");
+        assert!(current_images(
+            root,
+            &root.join("ocxd.exe"),
+            &root.join("opencodex-desktop.exe")
+        ));
+        assert!(current_images(
+            root,
+            &root.join("ocxd.exe"),
+            &root.join("ocxd.exe")
+        ));
+        assert!(!current_images(
+            root,
+            std::path::Path::new("C:/other/ocxd.exe"),
+            &root.join("ocxd.exe")
+        ));
+        assert!(!current_images(
+            root,
+            &root.join("ocxd.exe"),
+            std::path::Path::new("C:/other/opencodex-desktop.exe")
+        ));
+        assert!(!current_images(
+            root,
+            &root.join("ocxd.exe"),
+            &root.join("arbitrary.exe")
+        ));
+    }
     #[test]
     fn wl2_r3_nonce_action_and_request_replay_tables_never_evict_old_authority() {
         let json = serde_json::json!({"schema":1,"requestId":"00000000-0000-4000-8000-000000000001","instanceId":"00000000-0000-4000-8000-000000000002","managerGeneration":"1","challenge":"0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef","operation":"restart","budget":{"actionId":"00000000-0000-4000-8000-000000000003","startedQpc":"1000","deadlineQpc":"31000","stopDeadlineQpc":"11000","qpcFrequency":"1000"}});
