@@ -1,0 +1,25 @@
+{
+  "passed": false,
+  "at": "2026-11-14T15:11:12.7315261+08:00",
+  "scope": "exact retained administrator test SID; native Profile service only",
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1040",
+  "profile": "C:\\Users\\ocxw1d1d3a825b8",
+  "msiState": -1,
+  "taskAbsent": true,
+  "profiles": [
+    {
+      "SID": "S-1-5-21-587408064-856152790-2583328096-1040",
+      "LocalPath": "C:\\Users\\ocxw1d1d3a825b8",
+      "Loaded": true,
+      "Special": false,
+      "Status": 0
+    }
+  ],
+  "remainingOwnedProcesses": [],
+  "nativeDeleteResult": false,
+  "nativeDeleteError": 32,
+  "firstError": {
+    "message": "native Profile service refused deletion; no force unload or filesystem fallback",
+    "line": 40
+  }
+}

@@ -1,0 +1,328 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+warning: unused imports: `ListenerFamily`, `Listener`, `OwnedListeners`, `listener_exit_readback`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:15:5
+   |
+15 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |     ^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `create_private_directory`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:17:17
+   |
+17 | pub use paths::{create_private_directory, FileIdentity, PinnedDirectory, PrivateRecord};
+   |                 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup`, `LaunchSpec`, `ProcessState`, and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:19:18
+   |
+19 |     FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity, ProcessState,
+   |                  ^^^^^^^^^^^^^  ^^^^^^^^^^                                 ^^^^^^^^^^^^
+20 |     RootBinding,
+   |     ^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:506:14
+    |
+506 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+506 -             .fetch_update(
+506 +             .try_update(
+    |
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `execute_lifecycle` is never used
+   --> src\commands\mod.rs:391:4
+    |
+391 | fn execute_lifecycle<R: ProcessRunner + ?Sized>(
+    |    ^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: enum `ListenerFamily` is never used
+  --> src\infrastructure\windows_official_runtime024\listeners.rs:19:10
+   |
+19 | pub enum ListenerFamily {
+   |          ^^^^^^^^^^^^^^
+
+warning: struct `Listener` is never constructed
+  --> src\infrastructure\windows_official_runtime024\listeners.rs:24:12
+   |
+24 | pub struct Listener {
+   |            ^^^^^^^^
+
+warning: struct `OwnedListeners` is never constructed
+  --> src\infrastructure\windows_official_runtime024\listeners.rs:32:12
+   |
+32 | pub struct OwnedListeners {
+   |            ^^^^^^^^^^^^^^
+
+warning: function `word` is never used
+  --> src\infrastructure\windows_official_runtime024\listeners.rs:36:4
+   |
+36 | fn word(b: &[u8], n: usize) -> u32 {
+   |    ^^^^
+
+warning: function `tcp_listeners` is never used
+  --> src\infrastructure\windows_official_runtime024\listeners.rs:41:8
+   |
+41 | pub fn tcp_listeners() -> io::Result<Vec<Listener>> {
+   |        ^^^^^^^^^^^^^
+
+warning: method `listeners` is never used
+   --> src\infrastructure\windows_official_runtime024\listeners.rs:130:12
+    |
+127 | impl OwnedRuntime {
+    | ----------------- method in this implementation
+...
+130 |     pub fn listeners(&mut self) -> io::Result<OwnedListeners> {
+    |            ^^^^^^^^^
+
+warning: function `listener_exit_readback` is never used
+   --> src\infrastructure\windows_official_runtime024\listeners.rs:166:8
+    |
+166 | pub fn listener_exit_readback(original: &OwnedListeners) -> io::Result<Vec<Listener>> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `GetExtendedTcpTable` is never used
+ --> src\infrastructure\windows_official_runtime024\listeners.rs:9:8
+  |
+9 |     fn GetExtendedTcpTable(
+  |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `wide` is never used
+  --> src\infrastructure\windows_official_runtime024\paths.rs:73:15
+   |
+73 | pub(super) fn wide(path: &Path) -> io::Result<Vec<u16>> {
+   |               ^^^^
+
+warning: field `path` is never read
+   --> src\infrastructure\windows_official_runtime024\paths.rs:102:5
+    |
+101 | pub struct PinnedDirectory {
+    |            --------------- field in this struct
+102 |     path: PathBuf,
+    |     ^^^^
+
+warning: methods `identity` and `path` are never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:132:12
+    |
+107 | impl PinnedDirectory {
+    | -------------------- methods in this implementation
+...
+132 |     pub fn identity(&self) -> FileIdentity {
+    |            ^^^^^^^^
+...
+135 |     pub fn path(&self) -> &Path {
+    |            ^^^^
+
+warning: function `create_private_directory` is never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:151:8
+    |
+151 | pub fn create_private_directory(path: &Path) -> io::Result<PinnedDirectory> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `create` and `identity` are never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:174:12
+    |
+173 | impl PrivateRecord {
+    | ------------------ associated items in this implementation
+174 |     pub fn create(path: &Path, bytes: &[u8], max: usize) -> io::Result<Self> {
+    |            ^^^^^^
+...
+246 |     pub fn identity(&self) -> FileIdentity {
+    |            ^^^^^^^^
+
+warning: struct `ProcessIdentity` is never constructed
+  --> src\infrastructure\windows_official_runtime024\process.rs:47:12
+   |
+47 | pub struct ProcessIdentity {
+   |            ^^^^^^^^^^^^^^^
+
+warning: enum `ProcessState` is never used
+  --> src\infrastructure\windows_official_runtime024\process.rs:54:10
+   |
+54 | pub enum ProcessState {
+   |          ^^^^^^^^^^^^
+
+warning: struct `RootBinding` is never constructed
+  --> src\infrastructure\windows_official_runtime024\process.rs:59:12
+   |
+59 | pub struct RootBinding {
+   |            ^^^^^^^^^^^
+
+warning: struct `FamilyState` is never constructed
+  --> src\infrastructure\windows_official_runtime024\process.rs:66:12
+   |
+66 | pub struct FamilyState {
+   |            ^^^^^^^^^^^
+
+warning: method `complete_exit` is never used
+  --> src\infrastructure\windows_official_runtime024\process.rs:73:12
+   |
+72 | impl FamilyState {
+   | ---------------- method in this implementation
+73 |     pub fn complete_exit(&self) -> bool {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `ForcedCleanup` is never constructed
+  --> src\infrastructure\windows_official_runtime024\process.rs:85:12
+   |
+85 | pub struct ForcedCleanup {
+   |            ^^^^^^^^^^^^^
+
+warning: struct `LaunchSpec` is never constructed
+  --> src\infrastructure\windows_official_runtime024\process.rs:94:12
+   |
+94 | pub struct LaunchSpec<'a> {
+   |            ^^^^^^^^^^
+
+warning: function `observe` is never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:105:4
+    |
+105 | fn observe(h: HANDLE) -> io::Result<ProcessIdentity> {
+    |    ^^^^^^^
+
+warning: function `state` is never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:128:4
+    |
+128 | fn state(h: HANDLE) -> io::Result<ProcessState> {
+    |    ^^^^^
+
+warning: function `duplicate` is never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:139:4
+    |
+139 | fn duplicate(file: &File) -> io::Result<OwnedHandle> {
+    |    ^^^^^^^^^
+
+warning: function `quote` is never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:154:4
+    |
+154 | fn quote(arg: &OsStr, out: &mut Vec<u16>) -> io::Result<()> {
+    |    ^^^^^
+
+warning: function `environment` is never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:178:4
+    |
+178 | fn environment(
+    |    ^^^^^^^^^^^
+
+warning: struct `Attributes` is never constructed
+   --> src\infrastructure\windows_official_runtime024\process.rs:216:8
+    |
+216 | struct Attributes {
+    |        ^^^^^^^^^^
+
+warning: associated items `new` and `raw` are never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:221:8
+    |
+220 | impl Attributes {
+    | --------------- associated items in this implementation
+221 |     fn new(handles: &[HANDLE]) -> io::Result<Self> {
+    |        ^^^
+...
+248 |     fn raw(&mut self) -> *mut std::ffi::c_void {
+    |        ^^^
+
+warning: struct `OwnedRuntime` is never constructed
+   --> src\infrastructure\windows_official_runtime024\process.rs:265:12
+    |
+265 | pub struct OwnedRuntime {
+    |            ^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:278:12
+    |
+277 | impl OwnedRuntime {
+    | ----------------- associated items in this implementation
+278 |     pub fn create_suspended(spec: LaunchSpec<'_>) -> io::Result<Self> {
+    |            ^^^^^^^^^^^^^^^^
+...
+427 |     pub fn binding(&self) -> &RootBinding {
+    |            ^^^^^^^
+...
+430 |     pub fn root_state(&self) -> io::Result<ProcessState> {
+    |            ^^^^^^^^^^
+...
+433 |     pub fn verify_binding(&self, expected: &RootBinding) -> io::Result<()> {
+    |            ^^^^^^^^^^^^^^
+...
+445 |     pub fn resume(&mut self) -> io::Result<()> {
+    |            ^^^^^^
+...
+466 |     fn member_ids(&self) -> io::Result<Vec<u32>> {
+    |        ^^^^^^^^^^
+...
+495 |     pub fn family_state(&mut self) -> io::Result<FamilyState> {
+    |            ^^^^^^^^^^^^
+...
+566 |     pub fn wait_normal_exit(&mut self, deadline: Instant) -> io::Result<FamilyState> {
+    |            ^^^^^^^^^^^^^^^^
+...
+594 |     pub fn force_owned_cleanup(&mut self, deadline: Instant) -> io::Result<ForcedCleanup> {
+    |            ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `PrivateDescriptor` is never constructed
+   --> src\infrastructure\windows_official_runtime024\security.rs:156:19
+    |
+156 | pub(super) struct PrivateDescriptor(Local);
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: associated items `new` and `attributes` are never used
+   --> src\infrastructure\windows_official_runtime024\security.rs:158:12
+    |
+157 | impl PrivateDescriptor {
+    | ---------------------- associated items in this implementation
+158 |     pub fn new(sid: &str, directory: bool) -> io::Result<Self> {
+    |            ^^^
+...
+182 |     pub fn attributes(&self) -> SECURITY_ATTRIBUTES {
+    |            ^^^^^^^^^^
+
+warning: function `verify_private_job` is never used
+   --> src\infrastructure\windows_official_runtime024\security.rs:196:15
+    |
+196 | pub(super) fn verify_private_job(handle: HANDLE, sid: &str) -> io::Result<()> {
+    |               ^^^^^^^^^^^^^^^^^^
+
+warning: function `ConvertStringSecurityDescriptorToSecurityDescriptorW` is never used
+  --> src\infrastructure\windows_official_runtime024\security.rs:21:8
+   |
+21 |     fn ConvertStringSecurityDescriptorToSecurityDescriptorW(
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inventory_serial` is never used
+   --> src\modules\runtime\program_image.rs:402:4
+    |
+402 | fn inventory_serial(root: &Path) -> AppResult<BTreeMap<String, Entry>> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `path_reference` is never used
+  --> src\modules\runtime\program_image.rs:24:19
+   |
+24 |     pub(super) fn path_reference<T>(action: impl FnOnce() -> T) -> T {
+   |                   ^^^^^^^^^^^^^^
+
+warning: method `interrupt_fixture` is never used
+   --> src\modules\runtime\program_removal.rs:502:19
+    |
+500 | impl Prepared {
+    | ------------- method in this implementation
+501 |     #[cfg(test)]
+502 |     pub(crate) fn interrupt_fixture(
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: `opencodex-desktop` (lib test) generated 42 warnings (run `cargo fix --lib -p opencodex-desktop --tests` to apply 5 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 59.55s
+  Executable unittests src\lib.rs (test\windows024-native\target\w1c-product\x86_64-pc-windows-msvc\debug\deps\opencodex_desktop_lib-75e8f4b92f415339.exe)

@@ -1,0 +1,20 @@
+{
+  "docs": "242f46e71e79501e11610c9a7aa7d6d7bc2e9fd8",
+  "hypothesis": "A fresh local administrator account with a real private Profile can install the unchanged per-user dev MSI without policy edits, then prove pending Enable refusal before RemoveFiles and normal uninstall after explicit continuation",
+  "environmentAccepted": false,
+  "main": "fd2538e4dae124b7c521b5b84b7ca5b5c6eeef6b",
+  "scope": "administrator MSI transactions only; not ordinary-user acceptance",
+  "plannedIndependentChecks": [
+    "compile targeted MSVC product tests",
+    "exact administrator ignored test discovery",
+    "actual elevated dedicated SID and OS Profile",
+    "per-user MSI context and package identity",
+    "real failed uninstall retention",
+    "real normal uninstall and D/H/live runtime retention",
+    "task/account/Profile/ACL/PATH cleanup"
+  ],
+  "authorization": "User explicitly accepted local multi-user dedicated administrator scenario; supersedes prior separate guest and ordinary-token-only requirement for this supplementary scenario",
+  "baseCode": "e2560f9047e453157bcc71948904fbf199a0540a",
+  "allAccepted": false,
+  "at": "2026-11-14T14:55:40.5227432+08:00"
+}

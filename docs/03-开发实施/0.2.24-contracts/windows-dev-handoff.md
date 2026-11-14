@@ -202,3 +202,19 @@ W1-D当前组件已收口，但allAccepted=false。唯一请求范围内的验�
 真实MSI安装前提、pending失败保留、正常卸载均not-executed、environmentReady=false、allAccepted=false。尚缺允许普通用户per-user MSI的隔离Windows机/VM连接，或具体镜像、可用资源及创建/销毁范围；依环境接收合同，未获此输入不自行建VM或更改日常机器策略/测试令牌/安装范围。没有重复环境枚举/1625尝试，也没有重跑已过终端/官方/PATH/NSIS组件。既有W1-D证据复用。
 
 本轮新增测试账户/Profile/VM/MSI事务/真实PATH写入均0；源码和证据留作交付，复用构建缓存及原MSI留存。历史自动审批拒绝的大根/旧失败目录/schema/空目录/Public盘点根沿原未清事实，不重试或换工具绕过。未改官方2.99/日常配置，未跑业务同步/模型请求/W2/双SID，未发布。Windows持续目标未完成，仅环境阻塞后继真实两项。
+
+## 2026-11-14 本机多用户临时管理员真实MSI补测（两项事务通过，清理及普通用户未完）
+
+用户本轮明确授权替换环境方案：本机新建专用临时管理员账户及真实Profile，实际提升令牌验证原开发MSI的失败保留/正常卸载。该授权优先于旧合同对本次场景的另机/普通令牌限制，管理员场景独立记账，不替代普通用户验收、不把旧1625擦除。共同mainfd2538e4d/docs242f46e71未变，TEAMr10/IMP34r136及原MSI-only合同其余断言/超时/未知拒绝保持。新目标文字保存goal-revision.json；宿主create_goal因旧目标未完成拒绝覆盖，update_goal仅支持状态，未虚标完成。
+
+代码两笔已推codex/024-windows-native：ad3dcce02c3ae89bbe14c4cf32103010918d24c7（管理员入口/同SID继续/实际执行顺序判读），1c6a0881c29ad014ed1644b9a57f8b2441e27df0（测试Profile删除C#原生NULL修复及精确hive锁只读诊断）。仅原允许Windows测试文件/脚本，产品逻辑、安装器模板、官方包、日常配置与机器策略未改。
+
+原独立开发MSI316784640字节，SHA256 9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282：out01真实安装exit0，per-user unmanaged查询0/machine1605；pending Enable真实/x exit1603，cleanup helper实际exit1，程序卷/文件ID/摘要、MSI登记、PATH、pending/config/D/H哨兵及selection前后相同。原测试首错将Doing action的调度文字误当执行删除，完整失败留存；复核实际脚本在helper失败前无RemoveFiles/FileRemove，修正测试同时保留调度与执行顺序两门。out02原SID原pending逐字重核并显式继续Enable，无重装；真实/x exit0，产品登记-1，程序/终端登记/pending移除，PATH还原，D/H/config/live runtime保留。独立审计再核两份原MSI日志/前后像。
+
+最终MSVC测试编译build03 exit0，42warnings保持；build02 JSON宏语法错误/exit101保留，修括号后通过。真实执行测试EXE92022784字节，SHA256 1dcba506281e02bdbf3714779294f32752b5ff6251198bb2ede14ad5eba09622。首轮EXE摘要另存，原MSI不重建；精确源码/脚本和Git blob分立保存，不把后继脚本修正冒充out02使用的字节。
+
+不可覆盖证据 .adg/evidence/0.2.24/windows-dev/msi-local-admin-20261114-r1/：假设、用户授权/目标修订、三次编译含失败、两次原始事务输出、独立前后像审计、null绑定反例、Profile服务事件/Restart Manager、完整状态表/摘要清单/清理拒绝。PowerShell/cmd/裸ocx/官方2.99/H读取/PATH恢复/schema3/NSIS既有通过复用，未重跑；无模型/业务同步/W2/双SID/发布。
+
+清理：唯一新账户SID尾1040、两临时任务、MSI登记均移除；输入ACL还原，管理员路径未改交互桌面ACL，新SID PATH原字节恢复，daily user与machine PATH摘要前后相同。首版DeleteProfile把PowerShell null转成空串报87，C#真正NULL修复后原生报共享冲突32；Profile仍Loaded=true，Restart Manager精确两个hive只读定位System PID4与Registry PID328，不杀共享系统进程、不强制卸载hive/重启服务或机器。Profile残留85文件118556840字节。
+
+新Public根83文件184522112字节，归档/逐字核验后精确递归删除被自动审批blocked by policy拒绝，命令未执行，未重试或换机制绕过。该根及Profile如实列未清；历史所有清理拒绝不重试。管理员两项事务已通过，cleanupComplete=false、ordinaryUserAcceptance=false、allAccepted=false。后继需安全释放精确Profile占用及允许清自有新根；普通用户与IMP34其它Windows生命周期/固定候选/最终验收缺口保持，不宣布整版收口或发布。

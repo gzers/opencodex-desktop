@@ -1,0 +1,51 @@
+{
+  "scope": "read-only Restart Manager query for two exact owned Profile hive files; no RmShutdown/RmRestart",
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1040",
+  "profile": "C:\\Users\\ocxw1d1d3a825b8",
+  "files": [
+    "C:\\Users\\ocxw1d1d3a825b8\\NTUSER.DAT",
+    "C:\\Users\\ocxw1d1d3a825b8\\AppData\\Local\\Microsoft\\Windows\\UsrClass.dat"
+  ],
+  "native": {
+    "result": 0,
+    "rebootReasons": 3,
+    "count": 2,
+    "owners": [
+      {
+        "Process": {
+          "Pid": 4,
+          "Started": {
+            "dwLowDateTime": 1279669683,
+            "dwHighDateTime": 31283284
+          }
+        },
+        "App": "System",
+        "Service": "",
+        "Type": 1000,
+        "Status": 1,
+        "Session": 0,
+        "Restartable": false
+      },
+      {
+        "Process": {
+          "Pid": 328,
+          "Started": {
+            "dwLowDateTime": 1246350641,
+            "dwHighDateTime": 31283284
+          }
+        },
+        "App": "Registry",
+        "Service": "",
+        "Type": 1000,
+        "Status": 1,
+        "Session": 0,
+        "Restartable": false
+      }
+    ]
+  },
+  "profileService": {
+    "SID": "S-1-5-21-587408064-856152790-2583328096-1040",
+    "Loaded": true,
+    "LocalPath": "C:\\Users\\ocxw1d1d3a825b8"
+  }
+}

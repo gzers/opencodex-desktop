@@ -1,0 +1,4 @@
+
+thread 'modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_msi_uninstall_administrator' (111716) panicked at src\modules\runtime\terminal_cli_windows_native_tests.rs:590:5:
+assertion failed: !refused_log[..action_failure].contains("Doing action: RemoveFiles")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

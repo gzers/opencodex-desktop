@@ -1,0 +1,61 @@
+{
+  "codePushVerified": true,
+  "goalPrompt": "goal-revision.json; host cannot replace unfinished goal text, actual work follows new user authorization",
+  "main": "fd2538e4dae124b7c521b5b84b7ca5b5c6eeef6b",
+  "msi": {
+    "perUserUnmanagedQuery": 0,
+    "sha256": "9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282",
+    "failedUninstallExit": 1603,
+    "helperExit": 1,
+    "finalProductState": -1,
+    "normalUninstallExit": 0,
+    "actualInstallExit": 0,
+    "bytes": 316784640,
+    "perMachineQuery": 1605
+  },
+  "sourceHead": "1c6a0881c29ad014ed1644b9a57f8b2441e27df0",
+  "ordinaryUserAcceptance": false,
+  "cleanup": {
+    "profileRemoved": false,
+    "processQueryScope": "named session0 candidates only, not all machine processes",
+    "noBypass": true,
+    "profileFiles": 85,
+    "accountRemoved": true,
+    "ownedProcessQueryNoMatches": true,
+    "taskRemoved": true,
+    "profile": "C:/Users/ocxw1d1d3a825b8",
+    "nativeError": 32,
+    "msiRegistrationRemoved": true,
+    "profileBytes": 118556840,
+    "deletionAutoReviewRejected": true,
+    "testPathRestored": true,
+    "profileSid": "S-1-5-21-587408064-856152790-2583328096-1040",
+    "dailyUserAndMachinePathUnchanged": true,
+    "generatedRootBytes": 184522112,
+    "desktopAclNotModified": true,
+    "generatedRootRemoved": false,
+    "lockOwners": [
+      "System PID4",
+      "Registry PID328"
+    ],
+    "generatedRootFiles": 83,
+    "inputAclRestored": true
+  },
+  "firstRuntimeError": "out01 scheduling text incorrectly treated as actual RemoveFiles execution; raw failure kept, gate corrected and same-SID resumed",
+  "published": false,
+  "otherFailures": [
+    "build02 JSON macro syntax compile101 preserved, fixed build03 passed",
+    "DeleteProfile PowerShell null marshalled as empty string, error87; C# native NULL fixed, subsequent native error32 from real system hive lock"
+  ],
+  "allAccepted": false,
+  "administratorTransactionsPassed": true,
+  "remaining": [
+    "ordinary-user per-user MSI acceptance unchanged",
+    "test Profile locked by shared system processes; no force unload/service restart/reboot authorized",
+    "new Public root deletion auto-review rejected",
+    "other IMP34 Windows production lifecycle/frozen candidate/W2/final assembly remain outside current MSI-only scope"
+  ],
+  "docsBaseline": "242f46e71e79501e11610c9a7aa7d6d7bc2e9fd8",
+  "firstCode": "ad3dcce02c3ae89bbe14c4cf32103010918d24c7",
+  "scenario": "local disposable elevated administrator; user-authorized supplementary scenario"
+}
