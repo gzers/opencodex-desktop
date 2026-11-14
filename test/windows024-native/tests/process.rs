@@ -98,6 +98,61 @@ fn wait_file(path: &Path) {
     }
 }
 #[test]
+fn wl2_retained_command_parent_and_raw_query_exits() {
+    let f = Fixture::new();
+    let done = f.root.join("query-result");
+    let release = f.root.join("query-release");
+    let mut runtime = f.launch(&[
+        "wl2-queries".into(),
+        done.as_os_str().into(),
+        release.as_os_str().into(),
+    ]);
+    let root_pid = runtime.0.binding().process.pid;
+    runtime.0.resume().unwrap();
+    wait_file(&done);
+    let outcomes = fs::read_to_string(&done).unwrap();
+    // This independent fixture is not the official source/call-site. Even a
+    // perfectly captured query here must not receive a production role proof.
+    let mut captured = 0;
+    for row in outcomes.lines() {
+        let pid: u32 = row.split_whitespace().next().unwrap().parse().unwrap();
+        match runtime.0.captured_command(pid) {
+            Ok(c) => {
+                assert_eq!(c.parent.pid, root_pid);
+                assert!(!c.raw_command_line.is_empty());
+                assert!(c.argv.len() >= 3);
+                println!("original query native argv parent={} FILETIME={} argv={:?} rawOutcome={row}; role=Unknown(no official source)", c.parent.pid, c.parent.creation_filetime, c.argv);
+                captured += 1;
+            }
+            Err(e) => println!("original query role=Unknown rawOutcome={row} captureFailure={e}"),
+        }
+    }
+    assert!(runtime.0.captured_command(std::process::id()).is_err());
+    fs::write(&release, b"normal fixture release").unwrap();
+    let final_state = runtime
+        .0
+        .wait_normal_exit(Instant::now() + Duration::from_secs(3))
+        .unwrap();
+    assert!(final_state.complete_exit());
+    for row in outcomes.lines() {
+        let fields: Vec<_> = row.split_whitespace().collect();
+        let pid: u32 = fields[0].parse().unwrap();
+        let expected: u32 = fields[2].parse().unwrap();
+        let actual = final_state
+            .retained_members
+            .iter()
+            .find(|(p, _)| p.pid == pid)
+            .unwrap()
+            .1;
+        assert_eq!(actual, ProcessState::Exited { code: expected });
+    }
+    println!("captured={captured}/2; no diagnostic normal-exit exception issued");
+    assert_eq!(
+        captured, 2,
+        "short-lived argv capture must be proven before production roles"
+    );
+}
+#[test]
 fn short_lived_job_history_is_retained_or_explicitly_unknown_never_invented() {
     let f = Fixture::new();
     let completed = f.root.join("burst-complete");

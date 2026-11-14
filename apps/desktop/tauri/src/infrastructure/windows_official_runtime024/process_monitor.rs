@@ -1,6 +1,11 @@
 //! Capture new original-Job members before resume. Completion messages alone
 //! never prove exit: retain handles and reconcile total accounting or refuse.
 use super::*;
+type CapturedMember = (
+    OwnedHandle,
+    ProcessIdentity,
+    Result<CommandEvidence, String>,
+);
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     mpsc, Arc,
@@ -20,8 +25,8 @@ pub(super) struct Monitor {
     job: Option<OwnedHandle>,
     stop: Arc<AtomicBool>,
     worker: Option<std::thread::JoinHandle<()>>,
-    receiver: mpsc::Receiver<io::Result<(OwnedHandle, ProcessIdentity)>>,
-    sender: Option<mpsc::Sender<io::Result<(OwnedHandle, ProcessIdentity)>>>,
+    receiver: mpsc::Receiver<io::Result<CapturedMember>>,
+    sender: Option<mpsc::Sender<io::Result<CapturedMember>>>,
     fault: Option<String>,
 }
 impl Monitor {
@@ -142,13 +147,15 @@ impl Monitor {
                     if member == 0 {
                         return Err(denied("new member is no longer in original Job"));
                     }
+                    let command = command::capture(raw, job.as_raw_handle(), &root.token.sid)
+                        .map_err(|e| e.to_string());
                     let identity = observe(raw)?;
                     if identity.token.sid != root.token.sid
                         || identity.creation_filetime < root.creation_filetime
                     {
                         return Err(denied("Job new-member identity differs"));
                     }
-                    Ok((handle, identity))
+                    Ok((handle, identity, command))
                 })();
                 if tx.send(captured).is_err() {
                     break;
@@ -162,15 +169,17 @@ impl Monitor {
     pub(super) fn drain(
         &mut self,
         members: &mut HashMap<u32, (OwnedHandle, ProcessIdentity)>,
+        commands: &mut HashMap<u32, Result<CommandEvidence, String>>,
     ) -> io::Result<()> {
         while let Ok(item) = self.receiver.try_recv() {
             match item {
-                Ok((h, f)) => {
+                Ok((h, f, command)) => {
                     if let Some((_, old)) = members.get(&f.pid) {
                         if old != &f {
                             self.fault = Some("PID generation differs".into())
                         }
                     } else {
+                        commands.insert(f.pid, command);
                         members.insert(f.pid, (h, f));
                     }
                 }
