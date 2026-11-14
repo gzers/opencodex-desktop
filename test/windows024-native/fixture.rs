@@ -16,6 +16,28 @@ fn main() {
     let args: Vec<_> = std::env::args().collect();
     match args[1].as_str() {
         "exit" => std::process::exit(args[2].parse().unwrap()),
+        "burst" => {
+            for _ in 0..24 {
+                let status = std::process::Command::new(std::env::current_exe().unwrap())
+                    .args(["exit", "0"])
+                    .status()
+                    .unwrap();
+                assert!(status.success());
+            }
+            fs::write(&args[2], b"burst-complete").unwrap();
+            wait(Path::new(&args[3]));
+        }
+        "system-child" => {
+            let command = std::path::PathBuf::from(std::env::var_os("SystemRoot").unwrap())
+                .join("System32/cmd.exe");
+            let mut child = std::process::Command::new(command)
+                .args(["/d", "/c", "exit", "0"])
+                .spawn()
+                .unwrap();
+            fs::write(&args[2], b"system-child-complete").unwrap();
+            assert!(child.wait().unwrap().success());
+            wait(Path::new(&args[3]));
+        }
         "env" => {
             let text = format!(
                 "{}\n{}\n{}\n{}",

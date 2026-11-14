@@ -98,6 +98,83 @@ fn wait_file(path: &Path) {
     }
 }
 #[test]
+fn short_lived_job_history_is_retained_or_explicitly_unknown_never_invented() {
+    let f = Fixture::new();
+    let completed = f.root.join("burst-complete");
+    let release = f.root.join("release");
+    let mut runtime = f.launch(&[
+        "burst".into(),
+        completed.as_os_str().into(),
+        release.as_os_str().into(),
+    ]);
+    runtime.0.resume().unwrap();
+    wait_file(&completed);
+    let observed = runtime.0.family_state();
+    match &observed {
+        Ok(s) => {
+            println!(
+                "burst history retained: total={} retained={} active={}",
+                s.total_processes,
+                s.retained_members.len(),
+                s.active_processes
+            );
+            assert_eq!(s.total_processes as usize, s.retained_members.len() + 1);
+            assert!(!s.complete_exit());
+        }
+        Err(e) => println!(
+            "burst history remains explicitly unknown: kind={:?} error={}",
+            e.kind(),
+            e
+        ),
+    }
+    fs::write(&release, b"explicit normal fixture release").unwrap();
+    if observed.is_ok() {
+        match runtime
+            .0
+            .wait_normal_exit(Instant::now() + Duration::from_secs(3))
+        {
+            Ok(s) => {
+                assert_eq!(s.total_processes as usize, s.retained_members.len() + 1);
+                assert!(s.complete_exit());
+                println!("all retained burst members normally exited");
+            }
+            Err(e) => println!("burst final history unknown, no normal proof: {}", e),
+        }
+    }
+}
+#[test]
+fn system_helper_job_history_requires_observed_original_image_and_exit() {
+    let f = Fixture::new();
+    let done = f.root.join("done");
+    let release = f.root.join("release");
+    let mut runtime = f.launch(&[
+        "system-child".into(),
+        done.as_os_str().into(),
+        release.as_os_str().into(),
+    ]);
+    runtime.0.resume().unwrap();
+    wait_file(&done);
+    let observed = runtime.0.family_state();
+    match &observed {
+        Ok(s) => println!(
+            "system helper retained: total={} retained={}",
+            s.total_processes,
+            s.retained_members.len()
+        ),
+        Err(e) => println!("system helper proof refused: {}", e),
+    }
+    fs::write(release, b"normal root release").unwrap();
+    let final_state = runtime
+        .0
+        .wait_normal_exit(Instant::now() + Duration::from_secs(3))
+        .unwrap();
+    assert!(final_state.complete_exit());
+    assert_eq!(
+        final_state.total_processes as usize,
+        final_state.retained_members.len() + 1
+    );
+}
+#[test]
 fn suspended_binding_and_original_nonzero_exit() {
     let f = Fixture::new();
     let mut r = f.launch(&["exit".into(), "7".into()]);

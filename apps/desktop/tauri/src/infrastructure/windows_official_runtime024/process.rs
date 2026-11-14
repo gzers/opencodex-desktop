@@ -119,8 +119,7 @@ fn image_identity(file: &File, path: &Path) -> io::Result<FileIdentity> {
     let system = PathBuf::from(
         String::from_utf16(&buffer[..n as usize])
             .map_err(|_| denied("invalid Windows system path"))?,
-    )
-    .join("conhost.exe");
+    );
     let key = |p: &Path| {
         let raw = p
             .to_string_lossy()
@@ -128,11 +127,17 @@ fn image_identity(file: &File, path: &Path) -> io::Result<FileIdentity> {
         let prefix: String = [92u8, 92, 63, 92].into_iter().map(char::from).collect();
         raw.strip_prefix(&prefix).unwrap_or(&raw).to_lowercase()
     };
-    if key(path) != key(&system) {
+    if !key(path).starts_with(&(key(&system) + &char::from(92).to_string())) {
         return identity(file, false);
     }
-    // Windows component-store hardlinks are expected only for this exact native
-    // System32 console image. Runtime/package images keep single-link refusal.
+    // Observation only: original Job descendants may run Windows component-store
+    // helpers. Their system-directory file identity may have hardlinks. This
+    // does not admit them as the official service or relax package-image pins.
+    let parent = PinnedDirectory::open(
+        path.parent()
+            .ok_or_else(|| denied("system image parent absent"))?,
+    )?;
+    parent.recheck()?;
     use windows_sys::Win32::Storage::FileSystem::{
         GetFileInformationByHandle, GetFileType, BY_HANDLE_FILE_INFORMATION, FILE_TYPE_DISK,
     };
@@ -601,7 +606,13 @@ impl OwnedRuntime {
             }
             if let Some((h, _)) = self.members.get(&id) {
                 if matches!(state(h.as_raw_handle())?, ProcessState::Exited { .. }) {
-                    return Err(denied("PID reuse observed in owned member set"));
+                    // An exit can occur after the bounded active PID list was
+                    // read. Never replace/adopt a handle for the same PID; retry
+                    // inside the original deadline until accounting reconciles.
+                    return Err(io::Error::new(
+                        io::ErrorKind::WouldBlock,
+                        "Job active list contains an already retained exited generation",
+                    ));
                 }
             }
             if !self.members.contains_key(&id) {
