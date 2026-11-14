@@ -109,6 +109,9 @@ mod command;
 #[path = "process_monitor.rs"]
 mod monitor;
 pub use command::CommandEvidence;
+#[path = "host_process.rs"]
+mod host_process;
+pub use host_process::SuspendedOwnerHost;
 fn image_identity(file: &File, path: &Path) -> io::Result<FileIdentity> {
     #[link(name = "kernel32")]
     unsafe extern "system" {
@@ -156,7 +159,7 @@ fn image_identity(file: &File, path: &Path) -> io::Result<FileIdentity> {
         index: ((i.nFileIndexHigh as u64) << 32) | i.nFileIndexLow as u64,
     })
 }
-fn observe(h: HANDLE) -> io::Result<ProcessIdentity> {
+pub(super) fn observe(h: HANDLE) -> io::Result<ProcessIdentity> {
     let mut c = FILETIME::default();
     let mut e = FILETIME::default();
     let mut k = FILETIME::default();
@@ -187,7 +190,7 @@ fn observe(h: HANDLE) -> io::Result<ProcessIdentity> {
         executable_id,
     })
 }
-fn state(h: HANDLE) -> io::Result<ProcessState> {
+pub(super) fn state(h: HANDLE) -> io::Result<ProcessState> {
     match unsafe { WaitForSingleObject(h, 0) } {
         WAIT_TIMEOUT => Ok(ProcessState::Running),
         WAIT_OBJECT_0 => {

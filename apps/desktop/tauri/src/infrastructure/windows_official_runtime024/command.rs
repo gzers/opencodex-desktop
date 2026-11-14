@@ -4,6 +4,7 @@ use super::*;
 
 #[derive(Clone, Debug)]
 pub struct CommandEvidence {
+    pub captured_at: Instant,
     pub raw_command_line: String,
     pub argv: Vec<String>,
     pub parent: ProcessIdentity,
@@ -31,6 +32,7 @@ fn nt_error(status: i32) -> io::Error {
     ))
 }
 pub(super) fn capture(process: HANDLE, job: HANDLE, sid: &str) -> io::Result<CommandEvidence> {
+    let captured_at = Instant::now();
     if !matches!(state(process)?, ProcessState::Running) {
         return Err(denied("child exited before native argv capture"));
     }
@@ -146,6 +148,7 @@ pub(super) fn capture(process: HANDLE, job: HANDLE, sid: &str) -> io::Result<Com
         ));
     }
     Ok(CommandEvidence {
+        captured_at,
         raw_command_line,
         argv,
         parent,

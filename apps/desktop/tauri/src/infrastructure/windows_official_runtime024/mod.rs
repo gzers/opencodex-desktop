@@ -8,13 +8,18 @@
 
 mod listeners;
 mod paths;
+mod peer;
+mod pipe;
 mod process;
 mod security;
+pub use peer::RetainedPeer;
+pub use pipe::PrivatePipe;
 
 pub use listeners::{
     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
 };
 pub use paths::{create_private_directory, FileIdentity, PinnedDirectory, PrivateRecord};
+pub use process::SuspendedOwnerHost;
 pub use process::{
     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
     ProcessState, RootBinding,

@@ -8,6 +8,54 @@ use std::{
     time::{Duration, Instant},
 };
 use windows024_native_proof::backend::*;
+#[test]
+fn wl2_r3_native_private_pipe_keeps_actual_peer_and_one_local_instance() {
+    let instance = "0".repeat(64);
+    let server = PrivatePipe::create(&instance).unwrap();
+    assert!(PrivatePipe::create(&instance).is_err());
+    let name = server.name().to_owned();
+    let deadline = Instant::now() + Duration::from_secs(3);
+    let client = std::thread::spawn(move || {
+        let client = PrivatePipe::connect_local(&name).unwrap();
+        let actual = client.peer().unwrap();
+        actual.verify().unwrap();
+        assert_eq!(actual.identity().pid, std::process::id());
+        client
+            .write_frame(b"synthetic-single-request", deadline)
+            .unwrap();
+        let answer = client.read_frame(deadline).unwrap();
+        assert_eq!(&answer[4..], b"fresh-native-peer-response");
+    });
+    let peer = server.accept(deadline).unwrap();
+    assert_eq!(peer.identity().pid, std::process::id());
+    assert_eq!(peer.identity().token, current_identity().unwrap());
+    peer.verify().unwrap();
+    peer.verify_image(&std::env::current_exe().unwrap())
+        .unwrap();
+    let frame = server.read_frame(deadline).unwrap();
+    assert_eq!(&frame[4..], b"synthetic-single-request");
+    server
+        .write_frame(b"fresh-native-peer-response", deadline)
+        .unwrap();
+    client.join().unwrap();
+    println!("same-SID private native pipe peer pid={} FILETIME={} session={}; original Job not transferred; no manager/production proof",peer.identity().pid,peer.identity().creation_filetime,peer.identity().token.session_id);
+}
+#[test]
+fn wl2_r3_private_pipe_bounds_and_original_deadline_are_enforced() {
+    assert!(PrivatePipe::create("bad-instance").is_err());
+    assert!(PrivatePipe::connect_local("remote-or-untrusted").is_err());
+    let server = PrivatePipe::create(&"1".repeat(64)).unwrap();
+    assert!(server
+        .write_frame(&vec![0u8; 65537], Instant::now() + Duration::from_secs(1))
+        .is_err());
+    assert!(server.accept(Instant::now()).is_err());
+    let begin = Instant::now();
+    assert!(server.accept(begin + Duration::from_millis(30)).is_err());
+    assert!(
+        begin.elapsed() < Duration::from_secs(1),
+        "native cancel wait exceeded bounded test guard"
+    );
+}
 static NEXT: AtomicU64 = AtomicU64::new(0);
 struct Fixture {
     root: PathBuf,
