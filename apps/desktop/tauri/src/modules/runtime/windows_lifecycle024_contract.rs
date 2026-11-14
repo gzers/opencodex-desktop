@@ -14,6 +14,20 @@ pub const OFFICIAL_PACKAGE_SHA256: &str =
 pub const OFFICIAL_TASK: &str = "opencodex-proxy";
 pub const OFFICIAL_SCM_SERVICE: &str = "opencodex-proxy-native";
 
+/// Query-only rights: READ_CONTROL | ACCESS_SYSTEM_SECURITY. Generic read/data
+/// access is a separate content-capture need, never a substitute for SACL rights.
+/// Do not enable a privilege, elevate, impersonate or repair an original ACL to
+/// obtain these rights. A standard token may legitimately be unable to open it.
+pub const FULL_DESCRIPTOR_QUERY_ACCESS: u32 = 0x0102_0000;
+/// BACKUP_SECURITY_INFORMATION asks the OS for all parts of its descriptor.
+/// The nine named projections (0x1ff) alone do not justify "complete" coverage.
+/// Use the pinned file handle with GetSecurityInfo(SE_FILE_OBJECT); unsupported,
+/// denied, omitted or unverified portions refuse capture, not an O/G/D fallback.
+pub const FULL_DESCRIPTOR_SECURITY_INFORMATION: u32 = 0x0001_0000;
+/// An independent diagnostic projection only; it cannot authorize custody,
+/// restoration or ClosedEligibility even when its read succeeds unchanged.
+pub const OWNER_GROUP_DACL_DIAGNOSTIC_INFORMATION: u32 = 0x0000_0007;
+
 /// Original process generation, never a PID-only capability. The native adapter
 /// must independently observe token SID and creation time from a retained handle.
 #[derive(Debug, Eq, PartialEq)]
@@ -52,6 +66,9 @@ pub trait NativeSession {
 /// Durable originals, including original absence, same-volume object custody,
 /// security descriptor and file identity. All associated values are opaque,
 /// non-Clone/non-serde in the adapter; no default implementation grants recovery.
+/// Full descriptor includes audit SACL and all OS-returned policy ACEs/control.
+/// Unreadable is not absent. Partial observation never authorizes the first
+/// client mutation, and a later read failure preserves pending custody/Required.
 pub trait ClientOriginals {
     type Owner: NativeSession;
     type OriginalSession;
@@ -106,6 +123,11 @@ pub trait ClientOriginals {
 /// The out-of-process host is the original creator, not a later PID adopter.
 /// Private SID pipe + OS client PID/FILETIME + bounded fresh challenge precede
 /// any manager attach. Serialized rendezvous data grants no ownership rights.
+/// Current ordinary-user acceptance requires an existing interactive logon and
+/// native IsProcessInJob(current,NULL)==FALSE on bootstrap and the suspended
+/// original broker. DETACHED_PROCESS is not Job escape/lifetime evidence.
+/// Check before assigning the broker's own no-kill-on-close child Job; later
+/// manager replacement must retain the same original broker process handle.
 pub trait OwnerContinuity {
     type Owner: NativeSession;
     type ManagerConnection;
