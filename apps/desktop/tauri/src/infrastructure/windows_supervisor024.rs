@@ -297,14 +297,11 @@ impl SupervisorAbsence for WindowsSupervisor {
         // The official state relates runtime/current Profile/H. A present or
         // unreadable declaration needs full relation validation, not omission.
         // This adapter conservatively refuses it; no foreign registration write.
-        match std::fs::symlink_metadata(owner.home_path().join("service-state.json")) {
-            Err(e) if e.kind() == io::ErrorKind::NotFound => {}
-            _ => {
-                return Err(unconfirmed(
-                    "原service-state声明仍存在/不可读；未假定无监督",
-                ))
-            }
-        }
+        require_state_absent(&owner.home_path().join("service-state.json"))?;
+        // Official state.ts/serviceStatePaths includes the same Profile's
+        // default mirror even with a custom H. It is an independent namespace,
+        // not evidence that may be discarded because H's own record is absent.
+        require_state_absent(&owner.profile_path().join(".opencodex/service-state.json"))?;
         let family = owner
             .original_native()
             .family_state()
@@ -337,5 +334,57 @@ impl SupervisorAbsence for WindowsSupervisor {
             return Err(unconfirmed("最终恢复边界缺席来源改变"));
         }
         observed.check(owner, stop_deadline)
+    }
+}
+fn require_state_absent(path: &Path) -> AppResult<()> {
+    let mut pinned = None;
+    for ancestor in path.ancestors().skip(1) {
+        match std::fs::symlink_metadata(ancestor) {
+            Err(e) if e.kind() == io::ErrorKind::NotFound => continue,
+            Err(e) => {
+                return Err(unconfirmed(format!(
+                    "state父路径不可读 raw={:?}; {e}",
+                    e.raw_os_error()
+                )))
+            }
+            Ok(_) => {
+                pinned = Some(
+                    super::windows_official_runtime024::PinnedDirectory::open(ancestor)
+                        .map_err(|e| unconfirmed(e.to_string()))?,
+                );
+                break;
+            }
+        }
+    }
+    let pin = pinned.ok_or_else(|| unconfirmed("state缺席父路径未确认"))?;
+    match std::fs::symlink_metadata(path) {
+        Err(e) if e.kind() == io::ErrorKind::NotFound => {}
+        _ => {
+            return Err(unconfirmed(
+                "原service-state或默认镜像仍存在/不可读；保留Unknown",
+            ))
+        }
+    }
+    pin.recheck().map_err(|e| unconfirmed(e.to_string()))
+}
+#[cfg(test)]
+mod mirror_tests {
+    use super::*;
+    #[test]
+    fn wl2_r3_default_state_mirror_is_independent_of_custom_home_absence() {
+        let root = tempfile::tempdir().unwrap();
+        let home = root.path().join("custom-H");
+        let profile = root.path().join("Profile");
+        std::fs::create_dir(&home).unwrap();
+        std::fs::create_dir(&profile).unwrap();
+        let original = profile.join(".opencodex");
+        std::fs::create_dir(&original).unwrap();
+        let mirror = original.join("service-state.json");
+        std::fs::write(&mirror, b"synthetic foreign/stale declaration").unwrap();
+        assert!(require_state_absent(&home.join("service-state.json")).is_ok());
+        assert!(require_state_absent(&mirror).is_err());
+        std::fs::remove_file(&mirror).unwrap();
+        std::fs::create_dir(&mirror).unwrap();
+        assert!(require_state_absent(&mirror).is_err());
     }
 }
