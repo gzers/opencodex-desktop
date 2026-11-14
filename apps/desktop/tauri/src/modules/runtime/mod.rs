@@ -27,6 +27,7 @@ pub(crate) mod startup_bundle;
 pub mod terminal_cli;
 pub mod uninstall;
 pub mod version_facts;
+pub mod windows_lifecycle024_contract;
 
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
