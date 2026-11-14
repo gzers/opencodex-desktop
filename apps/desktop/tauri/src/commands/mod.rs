@@ -285,6 +285,16 @@ where
             }
             failed = matches!(result, crate::modules::process::LifecycleResult::Failed);
             let value = ProcessActionResult::from_state(next).with_result(result.clone());
+            #[cfg(windows)]
+            let value = if runner.uses_windows_official024_owner()
+                && crate::infrastructure::windows_official_lifecycle024::retains_owner(
+                    &context.runtime,
+                    &context.opencodex_home,
+                ) {
+                value.with_unresolved_client_recovery()
+            } else {
+                value
+            };
             #[cfg(target_os = "macos")]
             let value = if let Some(eligibility) = observations.closed_root_start.take() {
                 value.with_closed_root_start(eligibility)
@@ -310,7 +320,10 @@ where
             }
             #[cfg(windows)]
             if runner.uses_windows_official024_owner()
-                && context.runtime.managed_installation_root().is_some()
+                && crate::infrastructure::windows_official_lifecycle024::retains_owner(
+                    &context.runtime,
+                    &context.opencodex_home,
+                )
             {
                 value = value.with_unresolved_client_recovery();
             }

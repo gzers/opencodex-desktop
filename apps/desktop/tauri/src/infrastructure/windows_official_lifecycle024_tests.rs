@@ -1,5 +1,36 @@
 use super::*;
 use crate::modules::process::ProcessRunner;
+struct TestFailureGuard {
+    runtime: SharedRuntimeExecutable,
+    home: PathBuf,
+    evidence: PathBuf,
+    sid: String,
+}
+impl Drop for TestFailureGuard {
+    fn drop(&mut self) {
+        let marker = self.evidence.join("wl1-final-owner.json");
+        if marker.exists() {
+            return;
+        }
+        let mut clean = false;
+        let mut forced = false;
+        if let Ok(entry) = slot(&self.runtime, &self.home, false) {
+            if let Ok(mut locked) = entry.owner.try_lock() {
+                if let Some(owner) = locked.as_mut() {
+                    clean = owner.native.family_state().is_ok_and(|f| f.complete_exit());
+                    if !clean {
+                        forced = true;
+                        clean = owner
+                            .native
+                            .force_owned_cleanup(Instant::now() + Duration::from_secs(5))
+                            .is_ok_and(|f| f.final_state.complete_exit());
+                    }
+                }
+            }
+        }
+        let _=fs::write(marker,serde_json::to_vec(&serde_json::json!({"sid":self.sid,"safeToRemoveTestIdentity":clean,"panicCleanup":true,"forced":forced,"ordinaryStopSuccess":false,"allAccepted":false})).unwrap());
+    }
+}
 fn client_snapshot(profile: &Path) -> serde_json::Value {
     use std::os::windows::{fs::MetadataExt, io::AsRawHandle};
     use windows_sys::Win32::{
@@ -148,6 +179,12 @@ fn isolated_production_lifecycle_wl1() {
     )
     .unwrap();
     let runtime: SharedRuntimeExecutable = RuntimeHandle::initialize_versioned(&data, &root);
+    let _failure_guard = TestFailureGuard {
+        runtime: runtime.clone(),
+        home: home.clone(),
+        evidence: evidence.clone(),
+        sid: token.sid.clone(),
+    };
     let context = crate::state::ProcessContext {
         runtime: runtime.clone(),
         working_directory: profile.clone(),

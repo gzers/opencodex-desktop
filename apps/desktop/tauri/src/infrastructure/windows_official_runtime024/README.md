@@ -1,6 +1,7 @@
-# Windows official runtime backend (W0)
+# Windows official runtime backend (W0 / W-L1)
 
-This module is intentionally not registered by the product's parent mod.rs yet.
+The product registers this module and the W-L1 Windows lifecycle adapter consumes
+its original creation handles, private anonymous Job and listener observations.
 The standalone test/windows024-native Cargo host imports this exact source with
 the path attribute. It compiles real Windows APIs without Tauri or a copied module.
 These are process-local Rust types; they are not frozen IPC or persistent formats.
@@ -43,9 +44,20 @@ refuses success if another process has claimed a former listening endpoint; it
 never stops that replacement. A snapshot is not a continuous listener monitor,
 and unseen historical descendants are not assigned invented exit codes.
 
+W-L1 associates a completion port before the suspended root is assigned to its
+Job and starts the capture worker before resume. New-member handles retain their
+FILETIME/SID/image file identity. Notifications are not guaranteed exit evidence:
+any inaccessible member, generation mismatch or difference between total process
+accounting and retained history keeps the result unknown. Only the exact console
+image under the Win32-reported System32 directory allows Windows component-store
+hardlinks; admitted runtime/package images retain their single-link requirement.
+
 The backend consumes only existing product windows-sys features (0.61 API family)
 and std. IP Helper/ACL SDK functions unavailable through the existing feature set
 use local typed extern bindings. Root Cargo manifests, shared types, old Windows
-modules and parent registration are not changed. No official HMAC/ready producer,
-old lifetime marker replacement, restoration transaction, shared state machine or
-30/5/10-second acceptance claim is implemented here. Those depend on Mac wiring.
+modules and dependency features are not changed. The separate production adapter
+consumes shared typed HMAC/ready/Stop and LaunchPlan/ActionWindow interfaces; this
+backend never adds an official marker, persistence format or restoration journal.
+Client-original recovery, supervisor absence and cross-manager owner continuity
+remain distinct requirements; a native Job empty or forced test cleanup cannot
+mint normal Stop, Restart eligibility or complete 30/5/10-second acceptance.
