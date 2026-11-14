@@ -1,0 +1,7 @@
+{
+  "newEvidence": "export01 stopped on broker.stderr.log ReadAllBytes sharing violation; first3 private facts succeeded and hashesverified",
+  "changedRead": "FileAccess.Read, FileShare.ReadWrite|Delete, fixedbounded snapshot length; no original handle or ACL modified. Eachfile errors recorded independently, continue all independent files.",
+  "rendezvousSuspicion": "PrivateRecord::create currently retains a writable handle; PrivateRecord::open requests shareRead only, so read cannot coexist. Test this native counterexample; no service or loop retry.",
+  "output": "same-sid-export02.json, oldexportimmutable",
+  "allAccepted": false
+}

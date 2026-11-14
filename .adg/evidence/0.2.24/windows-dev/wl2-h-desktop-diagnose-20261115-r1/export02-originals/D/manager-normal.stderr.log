@@ -1,0 +1,5 @@
+
+thread 'infrastructure::windows_owner_host024::desktop_tests::isolated_h024_manager' (93676) panicked at src\infrastructure\windows_owner_host024\desktop_tests.rs:303:6:
+called `Result::unwrap()` on an `Err` value: Os { code: 32, kind: Uncategorized, message: "另一个程序正在使用此文件，进程无法访问。" }
+stack backtrace:
+note: Some details are omitted, run with `RUST_BACKTRACE=full` for a verbose backtrace.

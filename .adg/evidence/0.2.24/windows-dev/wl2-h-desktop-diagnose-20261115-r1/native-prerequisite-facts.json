@@ -1,0 +1,34 @@
+{
+  "evidence": "exported-originals/public/bootstrap-admission.json and suspended-original.json, hashes verified against actual sameSID export01",
+  "sameSIDExportComplete": false,
+  "bootstrap": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session": 7,
+    "pid": 116552,
+    "filetime": "134391474143480828",
+    "elevated": false,
+    "elevationType": 1,
+    "noJob": true
+  },
+  "suspendedBroker": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session": 7,
+    "pid": 748,
+    "filetime": "134391474259863429",
+    "elevated": false,
+    "elevationType": 1,
+    "beforeResumeNoJob": true,
+    "bootstrapStillNoJob": true,
+    "originalCreationHandleRetainedByObserverAtCapture": true
+  },
+  "notGranted": [
+    "full manager continuity",
+    "final native source family",
+    "actualGUI",
+    "O positive or ClosedEligibility",
+    "normal officialStop",
+    "PID adoption rights from this JSON"
+  ],
+  "managerRawTrace": "not exported yet; export01 stopped on first active log sharing conflict",
+  "allAccepted": false
+}

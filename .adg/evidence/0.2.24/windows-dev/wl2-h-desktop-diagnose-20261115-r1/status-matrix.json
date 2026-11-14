@@ -1,0 +1,115 @@
+{
+  "source": "ab87ad1261f927bf77a1c757342989105a40ad0a",
+  "allAccepted": false,
+  "productionExecuted": false,
+  "items": [
+    {
+      "id": "original-desktop-failure",
+      "implementation": "unchanged preserved",
+      "test": "observer101",
+      "detail": "original f93651d code,00:30:14+08, manager-normal outputmissing, no originalpass promoted"
+    },
+    {
+      "id": "sameSID-export01",
+      "implementation": "rawverified-partial",
+      "test": "3files + firstsharingfailure",
+      "detail": "partial bytes preserved, completefalse; first live logsharing read failed; no ACL alteration"
+    },
+    {
+      "id": "sameSID-export02",
+      "implementation": "rawverified-complete",
+      "test": "10files;0errors;stablelengths",
+      "detail": "originalBase/SID/session match; allBase64/length/SHA independentlyverified; originalsource/content encoding retained"
+    },
+    {
+      "id": "actual-bootstrap",
+      "implementation": "nativeprerequisite",
+      "test": "ordinary/noJob true",
+      "detail": "SID1003/session7/elevationType1/pid116552/FILETIME134391474143480828"
+    },
+    {
+      "id": "actual-suspended-broker",
+      "implementation": "nativeprerequisite",
+      "test": "noJob true beforeResume",
+      "detail": "sameSIDsession/elevationType1/pid748/FILETIME134391474259863429; originalcreationhandle retained at snapshot"
+    },
+    {
+      "id": "actual-manager-firsterror",
+      "implementation": "failurepreserved",
+      "test": "rawWin3232",
+      "detail": "oldmanagertrace unwrap atdesktop_tests303, oldhostevents onlyhost-created; source and nativecounterexample locate locator openconflict, no authobserved"
+    },
+    {
+      "id": "record-share-reproduction",
+      "implementation": "newnativecounterexample",
+      "test": "passed",
+      "detail": "oldcreator readwrite share1 vs secondread share1 returns32 without anyotheruser/policyassumption"
+    },
+    {
+      "id": "record-publication-fix",
+      "implementation": "implemented",
+      "test": "newnativepositive/refusalpassed",
+      "detail": "close writer afterflush, reopenoriginalid/privateSD/bytes readonlydenywrite/delete; pinnedparent spans transition; all mutation attempts stilldenied"
+    },
+    {
+      "id": "locator-snapshot",
+      "implementation": "dataonly implemented",
+      "test": "newnativecounterexamplepassed",
+      "detail": "readonly share3 snapshot tolerates liveoldwriter, repeatedboundedbytes/id/privateACL read; returnsbytes, no PrivateRecord/Owner authority; livepeer auth required"
+    },
+    {
+      "id": "original-record-regression",
+      "implementation": "unaffectedassertions retained",
+      "test": "1passed",
+      "detail": "identity/content/pins/write/rename/overwrite refusals stillpass"
+    },
+    {
+      "id": "pending-phase-regression",
+      "implementation": "same phase semantics",
+      "test": "2passed",
+      "detail": "create-only/privatehandles/prefix/replay/gap/digest/refusal, noClosed authority fromrecord"
+    },
+    {
+      "id": "bootstrap-regression",
+      "implementation": "unchanged publicmode",
+      "test": "1passed",
+      "detail": "strictboundedframe/version/duplicates/truncation/tail/UTF8 no weakenedmask/deadline"
+    },
+    {
+      "id": "MSVC-product",
+      "implementation": "finalRustcompiled",
+      "test": "exit0/143952ms",
+      "detail": "debug only; warnings preserved; no releasecandidate orClippy claim"
+    },
+    {
+      "id": "old-emptyhost-recovery",
+      "implementation": "newprepared restricted script",
+      "test": "FrameworkCSharpcompile/reflection and PSparse passed",
+      "detail": "exact oldfixtureimage + sameSIDsession/freshnativeauth; lookup-only locatorcopies; original observerhandle waslost onpanic, so new witness is readonlyobservation not Owner. Same witness FILETIME/SID/image/noJob/exitwait only, no killrights"
+    },
+    {
+      "id": "repaired-desktop",
+      "implementation": "newPublicroot prepared",
+      "test": "pending user launch",
+      "detail": "runs originalemptyrecovery once then newHcase; autologexport onboth outcomes; noofficialservice oractualGUI; no samefailedretest withoutsourcefix"
+    },
+    {
+      "id": "O/fullproduction",
+      "implementation": "existingblocked",
+      "test": "not-run/not-repeated",
+      "detail": "ordinaryfullSD gap persists; ClientOriginals custodyCAS/restore plus completefamily/realGUI/production Stop stillnotclosed"
+    },
+    {
+      "id": "cleanup",
+      "implementation": "failedscenesretained",
+      "test": "no delete or force",
+      "detail": "oldemptyhost maylive; newPublicinputsintentionallypending; currentmarenbenexistingaccount notdeleted/dailyconfiguntouched; no oldblockeddeletion retry"
+    },
+    {
+      "id": "constraints",
+      "implementation": "maintained",
+      "test": "noW2/dualSID/release",
+      "detail": "no newaccount/tokenadjust/policy/realbusiness/modelsync; firstfailureandoldpublic unchanged"
+    }
+  ]
+}
