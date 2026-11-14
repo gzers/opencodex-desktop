@@ -1,0 +1,6 @@
+
+thread 'infrastructure::windows_official_lifecycle024::tests::isolated_wl2_native_boundaries' (117316) panicked at src\infrastructure\windows_official_lifecycle024_tests.rs:73:5:
+assertion `left == right` failed: W-L2 complete original security prerequisite failed; no capture/official mutation/production allowed
+  left: Bool(false)
+ right: true
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

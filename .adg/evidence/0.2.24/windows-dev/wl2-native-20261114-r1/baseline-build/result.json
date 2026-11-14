@@ -1,0 +1,18 @@
+{
+  "arguments": [
+    "build",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--bins",
+    "-j",
+    "1"
+  ],
+  "accepted": false,
+  "elapsedMs": 221062,
+  "exitCode": 0,
+  "profile": "debug"
+}
