@@ -1,0 +1,77 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: trait `RetainedService` is never used
+ --> src/infrastructure/official_runtime024_transport.rs:8:11
+  |
+8 | pub trait RetainedService {
+  |           ^^^^^^^^^^^^^^^
+  |
+  = note: `-D dead-code` implied by `-D warnings`
+  = help: to override `-D warnings` add `#[expect(dead_code)]` or `#[allow(dead_code)]`
+
+error: struct `ServiceObservation` is never constructed
+  --> src/infrastructure/official_runtime024_transport.rs:14:12
+   |
+14 | pub struct ServiceObservation {
+   |            ^^^^^^^^^^^^^^^^^^
+
+error: methods `pid`, `port`, `ready`, `version`, `record_sha256`, and `check_current` are never used
+  --> src/infrastructure/official_runtime024_transport.rs:25:12
+   |
+24 | impl ServiceObservation {
+   | ----------------------- methods in this implementation
+25 |     pub fn pid(&self) -> u32 {
+   |            ^^^
+...
+28 |     pub fn port(&self) -> u16 {
+   |            ^^^^
+...
+31 |     pub fn ready(&self) -> bool {
+   |            ^^^^^
+...
+34 |     pub fn version(&self) -> &str {
+   |            ^^^^^^^
+...
+37 |     pub fn record_sha256(&self) -> &str {
+   |            ^^^^^^^^^^^^^
+...
+40 |     pub fn check_current(
+   |            ^^^^^^^^^^^^^
+
+error: function `observe_official024` is never used
+  --> src/infrastructure/official_runtime024_transport.rs:67:14
+   |
+67 | pub async fn observe_official024(
+   |              ^^^^^^^^^^^^^^^^^^^
+
+error: struct `StopAccepted` is never constructed
+   --> src/infrastructure/official_runtime024_transport.rs:103:12
+    |
+103 | pub struct StopAccepted {
+    |            ^^^^^^^^^^^^
+
+error: methods `pid`, `port`, and `record_sha256` are never used
+   --> src/infrastructure/official_runtime024_transport.rs:109:12
+    |
+108 | impl StopAccepted {
+    | ----------------- methods in this implementation
+109 |     pub fn pid(&self) -> u32 {
+    |            ^^^
+...
+112 |     pub fn port(&self) -> u16 {
+    |            ^^^^
+...
+115 |     pub fn record_sha256(&self) -> &str {
+    |            ^^^^^^^^^^^^^
+
+error: function `request_stop_official024` is never used
+   --> src/infrastructure/official_runtime024_transport.rs:123:14
+    |
+123 | pub async fn request_stop_official024(
+    |              ^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: could not compile `opencodex-desktop` (lib) due to 7 previous errors
+warning: build failed, waiting for other jobs to finish...

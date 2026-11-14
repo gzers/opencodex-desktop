@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 10；2026-11-14。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；W1-D组件已回交并接入，当前只需补允许普通用户per-user MSI环境的真实卸载，不重复已过终端组件。实际状态归IMP-34，补验写集见文末，Mac按交接约定停止。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 11；2026-11-14。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前生产生命周期接口已准备，Windows按文末W-L1写集连续接线，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -12,6 +12,7 @@ revision: 10；2026-11-14。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-D
 | Windows W1-C，临时单写至Git回交 | 上述原生/安装器写集，以及明确共享CLI文件src/modules/runtime/terminal_cli.rs、terminal_cli_windows.rs、terminal_cli_path.rs、src/bin/ocxd.rs、src/commands/terminal_cli.rs；可新增terminal_cli_windows_native_tests.rs。 | 仅本批Windows编译/控制台转交/中断修复，完整边界见下文合同；Mac本批停止，不并行改这些文件；不改Mac语义、其它共享状态机或Vue。 |
 | Windows W1-D，临时单写至下一次Git回交 | 原W1-C CLI/原生/安装器/test写集、两份terminal_cli_windows_*tests.rs、新bin/ocx.rs；program_layout.rs仅Windows cli_entry与纯路径测试；Cargo.toml仅native ocx bin装配。 | 具体合同windows-w1d-native-entry-r1，安装器拥有I/ocx.exe、登记schema3，不做旧开发记录兼容；program_selection已由Mac修，不放宽准入，不改Vue/其它状态机/工作流。 |
 | Windows MSI唯一补验，按文末 | 可新增/改terminal_cli_windows_native_tests.rs的独立MSI-only用例、test/windows024-native/**；三个安装器文件仅实际日志证明缺陷时修。 | 已过组件不重跑；先确认允许per-user MSI的隔离环境，不改当前机器策略，不提升测试用户、不改安装范围；共享产品若有新缺陷先回证据。 |
+| Windows W-L1生产生命周期，当前生效 | 新windows_official_lifecycle024.rs/同名tests、既有windows_official_runtime024/**和test/windows024-native/**；共享消费者的Windows条件分支/注册按windows-production-lifecycle-interface-r1逐文件允许表。 | 同合同固定接口/预算/验签，不改Mac、原官方包、恢复持久协议或旧维护lifetime；跨管理器原句柄连续性无法落实时保持Unknown并给最小新接口需求。Mac暂停此写集，Windows范围内持续开发验证推送。 |
 | Windows证据贡献 | docs/分支仅.adg/evidence/0.2.24/windows-dev/<不可覆盖轮次>/**与docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md；最终验收另用windows-final-handoff.md和windows-final/<轮次>。 | 不改IMP/TEAM/README/共享索引；本对话接收后回写。路径创建时按真实结果，没有预填accepted。 |
 
 每个文件同时只有一位写者。未分配旧文件默认只读，包括windows_private_create.rs、windows_query_job.rs、runtime_lifetime.rs；可在新模块复用现有接口，若必须改旧接口，回交具体原因/补丁，由本机接或明确转交单文件。不要因为文件名含windows就接管整条路径。
@@ -109,3 +110,13 @@ W1-C已收到e004259fe/25b323801；完整事实只归IMP-34与[接收/修复/W1-
 Windows已按revision9“无环境回事实”交代码f66d9d59f/文档24a4a4673；代码树与mainfd2538e4d一致，无新实现可接。实际接收事实见[MSI环境盘点接收](0.2.24-contracts/msi-environment-receive-20261114-r1.md)，正式状态归IMP-34。没有可用现成隔离Windows环境，真实MSI两项仍未执行。当前四视图Installer策略键缺席与旧out03有效DisableMsi=1失败分时点保留，不能互相替代。
 
 当前不要再复制上段提示词启动相同环境盘点/安装重试。先由用户提供可用隔离测试机/VM或明确创建环境的范围，Windows才恢复原MSI-only合同。没有新环境/授权时不创建VM、不改日常主机策略、不提升测试用户或改安装范围，不重复已过终端/官方消费者。Mac保留原单写责任与整个IMP未完范围，当前不新派Windows任务或宣称MSI接受。
+
+## 2026-11-14 管理员MSI接收与W-L1生产接口放行
+
+用户已在Windows原对话另行授权本机专用临时管理员场景，已按0f1dc195e/c84fc4a99接收；[接收复核](0.2.24-contracts/windows-admin-msi-receive-r1.md)区分管理员两项真实通过、普通用户未验和Profile/Public清理未完，不把当前例外追溯成旧普通场景通过。上文MSI-only/环境限制保留其原时点；当前无需再跑已过管理员MSI。
+
+本次共同源 **main35f41ecc0e700a3a77d121cc2dccf7258c327bc1**，正式共享消费者接口/逐文件临时写集/原包输入SHA及受影响定向表见[Windows生产生命周期接口r1](0.2.24-contracts/windows-production-lifecycle-interface-r1.md)。modules::runtime::official_lifecycle024已可编译消费，产品Windows尚未切换；Windows自主把原创建句柄/Job接到实际Start/Status/Stop/Restart，沿同一30/5/10/Restart30及Stop子10预算，不再依赖原版没有的desktop_lifetime。实际原包/产品调用证据才算生产接线通过，native组件/HTTP返回/launchPlan均不能当正常退出或客户端恢复证明。
+
+用户最新协作方式为Windows范围内持续排查→批量修复→定向验证→及时推送，非必要不回Mac；此合同内小修无需逐次请示。共享范围之外、新恢复/跨进程持久协议、改变既定方案或缺环境/授权时，带具体证据和最小方案回交；不得为效率放宽未知/超时/恢复/全进程要求。Mac在上述写集发布后停止并行写，直至Git回交；文档/其它Mac独立范围不归Windows接管。固定候选前不W2/双SID、不发布。
+
+> fetch main35f41ecc0及本次docs/governance-main，按TEAM revision11/windows-production-lifecycle-interface-r1连续执行W-L1。消费真实LaunchPlan/ActionWindow/typed验签与保留owner Stop接口，把Win32原句柄/Job接生产Start/Status/Stop/Restart；用固定官方2.99和隔离普通Profile验证原预算/归属/端口/正常退出及失败保留，逐项回完整状态。仅改合同写集，小批及时Git推送；已过MSI/CLI不重跑，不改官方/日常配置，不跑W2/双SID，不发布。缺持久协议/范围外接口再交具体最小需求。
