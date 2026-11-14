@@ -291,3 +291,20 @@ MSVC product01 E0601/101首失败保留，Cargo将新增helper识别独立bin；
 修复最终代码ab87ad1261f927bf77a1c757342989105a40ad0a：10d5f7a76发布前封存为原只读denywrite/delete记录，复核ID/权限/bytes；locator快照仅定位data不mint权限。3native新反例+1原record+2phase+1bootstrap通过，MSVC debug bins0/143952ms，原warning保留；最后5组各36份Rust与最终源匹配。3bcbc修只读导出，ab87准备原空宿主fresh认证受限退出＋新修复H串行入口及自动导出。完整证据.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-diagnose-20261115-r1/，report/status/result及preparedscope明确后继尚未执行。
 
 原旧creator句柄在observer退出后已丢失，不从JSON重建Owner。原emptyhost显式退出只通过其认可的原fixturemanager/freshnativepeer；新private locator副本是字节一致发现data不是原对象/新授权journal，原source/ACL/record不改；新query/synchronize witness只观察原FILETIME/SID/session/image/noJob并等待认证退出，不按PID强杀/接管官方。当前仍等待用户marenben桌面C:/Users/Public/ocx-h024-repaired-20261115-r1/repair-h024-desktop.cmd；旧场景和新输入保留，cleanup/allAccepted=false。原SD不重跑，官方启动0、actualGUI=false，不W2/双SID发布。
+
+
+## 2026-11-15 H真实桌面修复轮通过与已完成目录清理（整组仍未收口）
+
+本轮fetch main dbf974097d067e75c4de68f9fc681af8ab447b09 / docs a6d9184b851521194477ddfeecd988f40d513e5b未变，TEAM13/IMP139/r3继续。诊断证据e81cd0dd7先独立推送：577份payload4,516,182字节及每份index原字节核验、离线replay0，初始失败/采集partial及后继准备状态不追溯改写。
+
+实际修复H执行源ab87ad1261f927bf77a1c757342989105a40ad0a，清理源d31616d7d026054880794cacec17113c5c4c1645均已推codex/024-windows-native。marenben普通session7从真实桌面运行修复入口：旧emptyhost PID748/FILETIME134391474259863429以exact旧manager fresh认证显式退出，readonly witness等待同对象、manager0/host0，不是原丢失creator句柄恢复或官方Owner接管。旧日志退出前原件已归档，host自身追加认证/重放拒绝/显式退出事件；原ACL/安装镜像不改。
+
+新observer raw0，原broker PID22216/FILETIME134391493883001324、SID1003/session7/elevatedfalse/elevationType1；bootstrap及挂起broker beforeResume均noJobtrue，原创建句柄全程保留。fixturemanager正常退出gen1/raw0、仅原fixturemanager故障终止gen2/raw1、新manager gen3/raw0后，同一broker原native身份仍活/noJobtrue；gen4空宿主显式退出，四代同连接replay各拒绝。新broker原句柄观察到退出，但raw exit code未独立采集，不能冒填0。actualGUI=false、officialOwnerCreated=false、productionExecuted=false、allAccepted=false。
+
+新不可覆盖结果证据.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-result-20261115-r1/：原oldrecovery导出10项/新同SID导出25项，所有Base64/长度/SHA逐字一致、completetrue/0errors/stablelengths；26项完整status-matrix、report/result、实际源码/制品摘要、清理回执和离线verify_evidence.py。校验器首轮旧receipt SID层级KeyError/1保留replay-attempt01；按真实结构修后离线0，原始回执未改。最终36份Rust逐字匹配product输入，实际Public两EXE/清理两脚本也逐字核对。
+
+MSVC debug bins0/143952ms；3newnative+1record+2phase+1bootstrap通过，原62warnings及首manager32/observer101全部留存。ocxd 5,398,528字节/SHA256 87232b26c722012ed2fd225394a5cb5f4687851d6f8b53060cbe1a9dcca850f8；H库测试EXE93,421,568字节/SHA256 b8a4b8140571a93b2e30911c1d1ff7910515421d0a424f5c81c4349d209b9d75。Desktop/ocx及其它精确摘要在source-and-artifacts.json；非签名release/固定候选。
+
+用户原普通桌面一次清理完成：新成功base128429…的19文件98,827,930字节及lookup副本baseb989…的3文件1,834字节，全清单先核归档再删，两处合计22文件98,829,764字节，回执complete=true。首次失败13ae…不删除，现有marenben账号/Profile保留；Public输入/原始输出与构建缓存留存，无force/日常PATH配置策略写入，无旧拒绝路径重试。overallCleanupComplete=false，历史Profile/Public/schema/普通MSI验收未完保持。
+
+下一步仍Windows范围：O完整同卷custody/currentref CAS/恢复/Closed、H真实GUI与官方Owner生产路由、S完整source/owner/stage proof、D完整family/requiredservice与新Stop组合尚未完成；四trait已冻结，不冒称缺共享声明。生产正例独立受普通令牌完整SD含SACL前提阻止：r3禁止改验收令牌/策略/覆盖；没有新环境不重跑相同1314，也不能从本次空H组件通过外推整组。若要求该普通环境可用，需另行明确安全覆盖产品方案；本轮保持完整范围拒绝。无官方2.99/真实业务同步/模型请求，无W2/双SID/发布。

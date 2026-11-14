@@ -1,0 +1,42 @@
+{
+  "exports": [
+    {
+      "export": "original-empty-host-recovery.json",
+      "sha256": "8d96b02a3b382fb34391700887e6ea93a2ea0c077f0c31117fd85b955476206a",
+      "items": 10,
+      "allPayloadsLengthAndShaVerified": true
+    },
+    {
+      "export": "final-same-sid-export.json",
+      "sha256": "bbf5d8edff60b6bc23080117ad25fa2d5f29ccbd59692b12e8eb084ca416b4e7",
+      "items": 25,
+      "allPayloadsLengthAndShaVerified": true
+    }
+  ],
+  "sameSID": "S-1-5-21-587408064-856152790-2583328096-1003",
+  "session": 7,
+  "finalComplete": true,
+  "allStableLengths": true,
+  "originalOldHostExit0": true,
+  "newBrokerCreationIdentity": {
+    "creationFiletime": "134391493883001324",
+    "elevated": false,
+    "elevationType": 1,
+    "fileId": "844424931380260",
+    "image": "C:\\Users\\marenben\\ocx024-h-128429f2-cfe8-4e01-b585-3f015675da13\\I\\ocxd.exe",
+    "pid": 22216,
+    "session": 7,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+    "volume": 247287385
+  },
+  "managerGenerations": [
+    1,
+    2,
+    3
+  ],
+  "allThreeAfterSnapshotsMatchOriginalCreationIdentity": true,
+  "HEmptyHostComponentAccepted": true,
+  "allAccepted": false,
+  "actualGUI": false,
+  "officialOwnerCreated": false
+}

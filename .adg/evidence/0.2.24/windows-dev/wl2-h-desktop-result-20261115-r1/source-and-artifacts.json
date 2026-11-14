@@ -1,0 +1,52 @@
+{
+  "implementationSource": "ab87ad1261f927bf77a1c757342989105a40ad0a",
+  "implementationTree": "b897a36c2bc69708009ba4c92ff4ec001482b0e7",
+  "cleanupSource": "d31616d7d026054880794cacec17113c5c4c1645",
+  "cleanupTree": "25ecc727e19138686a14ca111beb3be2a5904a40",
+  "main": "dbf974097d067e75c4de68f9fc681af8ab447b09",
+  "docsGovernanceMain": "a6d9184b851521194477ddfeecd988f40d513e5b",
+  "contract": "TEAM revision13 / IMP-34 revision139 / windows-lifecycle-prerequisites-r3, inheriting r2",
+  "profile": "MSVC debug/test, not signed release or frozen candidate",
+  "productArtifacts": [
+    {
+      "name": "opencodex-desktop.exe",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 75435520,
+      "sha256": "cbabbabb3e9898b520e52fb67f66333ccc67acbe7ff8e569b71e4bae20b84510",
+      "source": "product01/source-manifest.json; finalRust matches",
+      "profile": "debug/MSVC; not release"
+    },
+    {
+      "name": "ocxd.exe",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "87232b26c722012ed2fd225394a5cb5f4687851d6f8b53060cbe1a9dcca850f8",
+      "source": "product01/source-manifest.json; finalRust matches",
+      "profile": "debug/MSVC; not release"
+    },
+    {
+      "name": "ocx.exe",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "7c7b3d5123358cbfd17976e23dee84f81ed18356d41181e64a2cabe9c34bfbf8",
+      "source": "product01/source-manifest.json; finalRust matches",
+      "profile": "debug/MSVC; not release"
+    }
+  ],
+  "executedHArtifacts": [
+    {
+      "name": "ocxd.exe",
+      "source": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "87232b26c722012ed2fd225394a5cb5f4687851d6f8b53060cbe1a9dcca850f8"
+    },
+    {
+      "name": "h-desktop-tests.exe",
+      "source": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\75e8f4b92f415339\\out\\opencodex_desktop_lib-75e8f4b92f415339.exe",
+      "bytes": 93421568,
+      "sha256": "b8a4b8140571a93b2e30911c1d1ff7910515421d0a424f5c81c4349d209b9d75"
+    }
+  ],
+  "sourceProvenance": "Five captured build/test runs each contain the same 36 final Rust files. Later task scripts are separately captured. No post-cleanup script change is claimed as compiled Rust input.",
+  "allAccepted": false
+}
