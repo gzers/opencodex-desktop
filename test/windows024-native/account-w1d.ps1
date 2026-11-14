@@ -43,9 +43,14 @@ if($Child){
    if(@($policyRows|Where-Object {$_.values -and (($null -ne $_.values.DisableMSI -and $_.values.DisableMSI -ne 0 -and !($adminScenario -and $_.values.DisableMSI -eq 1)) -or $_.values.AlwaysInstallElevated -eq 1 -or $_.values.DisableUserInstalls -eq 1)}).Count){throw 'test-token policy incompatible; no MSI run'}
   }
   $report.sid=$id.User.Value;$report.profile=$registered;$report.session=[Diagnostics.Process]::GetCurrentProcess().SessionId;$report.elevated=$elevated
+  if($c.testName -ceq 'isolated_wl2_native_boundaries'){
+   $report.scope='one fresh ordinary account; W-L2 independent prerequisites only; no official launch'
+   & (Join-Path ([Environment]::SystemDirectory) 'whoami.exe') /priv 1> (Join-Path $c.evidence 'token-privileges.stdout.log') 2> (Join-Path $c.evidence 'token-privileges.stderr.log')
+   $report.privilegeQueryExit=$LASTEXITCODE
+  }
   $testName=if($c.testName){$c.testName}else{'isolated_account_terminal_w1d'}
-  if($testName -cnotin @('isolated_account_terminal_w1d','isolated_schema3_invariants_w1d','isolated_msi_uninstall_only','isolated_msi_uninstall_administrator','isolated_production_lifecycle_wl1')){throw 'exact Windows ignored test required'}
-  $fullName=if($testName -ceq 'isolated_production_lifecycle_wl1'){'infrastructure::windows_official_lifecycle024::tests::'+$testName}else{'modules::runtime::terminal_cli::terminal_cli_windows::native_tests::'+$testName}
+  if($testName -cnotin @('isolated_account_terminal_w1d','isolated_schema3_invariants_w1d','isolated_msi_uninstall_only','isolated_msi_uninstall_administrator','isolated_production_lifecycle_wl1','isolated_wl2_native_boundaries')){throw 'exact Windows ignored test required'}
+  $fullName=if($testName -cin @('isolated_production_lifecycle_wl1','isolated_wl2_native_boundaries')){'infrastructure::windows_official_lifecycle024::tests::'+$testName}else{'modules::runtime::terminal_cli::terminal_cli_windows::native_tests::'+$testName}
   & $c.test --exact $fullName --ignored --test-threads=1 --nocapture 1> (Join-Path $c.evidence 'test.stdout.log') 2> (Join-Path $c.evidence 'test.stderr.log')
   $report.exitCode=$LASTEXITCODE
   $report.passed=$LASTEXITCODE -eq 0
@@ -54,7 +59,7 @@ if($Child){
   if($registered -and [IO.Path]::GetFileName($registered) -like 'ocxw1d*'){
    try{
     $files=@();$total=0L
-    foreach($relative in @('.codex-desktop/desktop','w1d native/data/desktop','w1d native/custom H 雪','w1d native/I 空格 & !/runtime/bin','wl1 native/data/desktop','wl1 native/custom H 雪','wl1 native/I 空格 & !/runtime/bin')){
+    foreach($relative in @('.codex-desktop/desktop','w1d native/data/desktop','w1d native/custom H 雪','w1d native/I 空格 & !/runtime/bin','wl1 native/data/desktop','wl1 native/custom H 雪','wl1 native/I 空格 & !/runtime/bin','wl2-prerequisites')){
      $stateRoot=Join-Path $registered $relative
      if(Test-Path -LiteralPath $stateRoot){
       foreach($file in Get-ChildItem -LiteralPath $stateRoot -File -Recurse -Force){
@@ -62,7 +67,7 @@ if($Child){
        if($file.Length -gt 16777216 -or ($total+$file.Length) -gt 33554432 -or $files.Count -gt 512){throw 'bounded private state archive limit'}
        $bytes=[IO.File]::ReadAllBytes($file.FullName);$total+=$bytes.Length
        $row=@{relative=[IO.Path]::GetRelativePath($registered,$file.FullName);bytes=$bytes.Length;sha256=[Convert]::ToHexString([Security.Cryptography.SHA256]::HashData($bytes)).ToLowerInvariant()}
-       if($c.testName -cne 'isolated_production_lifecycle_wl1'){$row.base64=[Convert]::ToBase64String($bytes)}
+       if($c.testName -cnotin @('isolated_production_lifecycle_wl1','isolated_wl2_native_boundaries')){$row.base64=[Convert]::ToBase64String($bytes)}
        $files+=$row
       }
      }
@@ -187,7 +192,7 @@ finally{
      if(!$allowIdentityRemoval){$report.cleanupError='MSI product is still registered or unknown; account/Profile retained for native recovery'}
     }
    }
-   if($c.testName -ceq 'isolated_production_lifecycle_wl1'){
+   if($c.testName -cin @('isolated_production_lifecycle_wl1','isolated_wl2_native_boundaries')){
     $statePath=Join-Path (Join-Path $c.output 'native') 'wl1-final-owner.json'
     if($process){
      if(!(Test-Path -LiteralPath $statePath)){$allowIdentityRemoval=$false;$report.cleanupError='W-L1 owner outcome unknown; retain exact test account/Profile'}else{
@@ -214,7 +219,7 @@ finally{
      }
     }
    }
-   if(($c.msiOnly -or $c.testName -ceq 'isolated_production_lifecycle_wl1') -and !$report.profileRemoved){
+   if(($c.msiOnly -or $c.testName -cin @('isolated_production_lifecycle_wl1','isolated_wl2_native_boundaries')) -and !$report.profileRemoved){
     $report.cleanupError='Profile remains loaded or native deletion failed; retain account for exact-SID recovery'
    }else{
     Remove-LocalUser -SID $user.SID -ErrorAction Stop
@@ -224,7 +229,7 @@ finally{
   }catch{$report.cleanupError=$_.Exception.Message}
  }
  if($secret){$secret.Dispose()}
- if(($c.msiOnly -or $c.testName -ceq 'isolated_production_lifecycle_wl1') -and (!$report.accountRemoved -or !$report.profileRemoved -or !$report.desktopAclRestored -or $report.cleanupError)){$report.passed=$false}
+ if(($c.msiOnly -or $c.testName -cin @('isolated_production_lifecycle_wl1','isolated_wl2_native_boundaries')) -and (!$report.accountRemoved -or !$report.profileRemoved -or !$report.desktopAclRestored -or $report.cleanupError)){$report.passed=$false}
  Save-Controller
 }
 if(!$report.passed){exit 1}

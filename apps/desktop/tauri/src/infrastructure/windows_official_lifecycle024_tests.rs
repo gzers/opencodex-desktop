@@ -14,6 +14,102 @@ fn wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback() {
     fs::write(root.path().join("runtime-port.json"), b"{}").unwrap();
     assert!(teardown_records_absent(root.path()).is_err());
 }
+#[test]
+#[ignore = "one isolated ordinary account; W-L2 independent prerequisites, no official launch"]
+fn isolated_wl2_native_boundaries() {
+    use super::super::{windows_client_originals024, windows_owner_host024, windows_supervisor024};
+    let token = native::current_identity().unwrap();
+    assert!(!token.elevated);
+    assert_eq!(token.sid, std::env::var("OCXD024_ACCOUNT_SID").unwrap());
+    let profile = platform::home_dir().unwrap();
+    assert!(profile
+        .file_name()
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .starts_with("ocxw1d"));
+    let evidence = PathBuf::from(std::env::var_os("OCXD024_NATIVE_EVIDENCE").unwrap());
+    let root = profile.join("wl2-prerequisites");
+    assert!(!root.exists());
+    platform::create_private_dir_all(&root, 0o700).unwrap();
+    let original = root.join("synthetic-original");
+    fs::write(&original, b"synthetic original; no credentials").unwrap();
+    let before = client_native_identity(&original);
+    let security = match windows_client_originals024::InspectedOriginal::open(&original, false) {
+        Ok(o) => match o.recheck() {
+            Ok(()) => serde_json::json!({"completeSecurityReadable":true}),
+            Err(e) => {
+                serde_json::json!({"completeSecurityReadable":false,"stage":"recheck-complete-descriptor","rawWin32":e.raw_os_error(),"error":e.to_string()})
+            }
+        },
+        Err(e) => {
+            serde_json::json!({"completeSecurityReadable":false,"stage":"Open-original-READ_CONTROL-ACCESS_SYSTEM_SECURITY","rawWin32":e.raw_os_error(),"error":e.to_string()})
+        }
+    };
+    let after = client_native_identity(&original);
+    let deadline = Instant::now() + Duration::from_secs(5);
+    let namespaces = match windows_supervisor024::query(deadline) {
+        Ok(facts) => serde_json::to_value(facts).unwrap(),
+        Err(e) => serde_json::json!({"error":e.to_string(),"rawWin32":e.raw_os_error()}),
+    };
+    let staged = windows_supervisor024::staged(&root);
+    let outer = match windows_owner_host024::outer_job_precondition() {
+        Ok(()) => {
+            serde_json::json!({"outerJobSafe":true,"evidence":"IsProcessInJob current NULL == FALSE"})
+        }
+        Err(e) => {
+            serde_json::json!({"outerJobSafe":false,"error":e.to_string(),"rawWin32":e.raw_os_error()})
+        }
+    };
+    let qpc = windows_owner_host024::qpc().unwrap();
+    let result = serde_json::json!({"sid":token.sid,"elevated":token.elevated,"profile":profile,"security":security,"originalBefore":before,"originalAfter":after,"originalUnchanged":before==after,"nativeNamespaces":namespaces,"exactStaged":staged,"ownerOuterJob":outer,"qpc":{"counter":qpc.0.to_string(),"frequency":qpc.1.to_string()},"productionExecuted":false,"accepted":false,"safeToRemoveTestIdentity":true,"ordinaryMsiAcceptance":false});
+    fs::write(
+        evidence.join("wl2-independent-prerequisites.json"),
+        serde_json::to_vec_pretty(&result).unwrap(),
+    )
+    .unwrap();
+    fs::write(evidence.join("wl1-final-owner.json"), serde_json::to_vec_pretty(&serde_json::json!({"sid":token.sid,"safeToRemoveTestIdentity":true,"jobCreated":false,"forced":false,"allAccepted":false})).unwrap()).unwrap();
+    assert_eq!(before, after, "prerequisite refusal mutated original");
+    assert_eq!(security["completeSecurityReadable"], true, "W-L2 complete original security prerequisite failed; no capture/official mutation/production allowed");
+    assert_eq!(
+        outer["outerJobSafe"], true,
+        "original owner continuity outer Job prerequisite unknown"
+    );
+}
+fn client_native_identity(path: &Path) -> serde_json::Value {
+    use std::os::windows::io::AsRawHandle;
+    use windows_sys::Win32::{
+        Security::GetKernelObjectSecurity,
+        Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
+    };
+    let f = OpenOptions::new()
+        .access_mode(0x80020000)
+        .share_mode(7)
+        .open(path)
+        .unwrap();
+    let mut i: BY_HANDLE_FILE_INFORMATION = unsafe { std::mem::zeroed() };
+    assert_ne!(
+        unsafe { GetFileInformationByHandle(f.as_raw_handle(), &mut i) },
+        0
+    );
+    let mut needed = 0;
+    unsafe { GetKernelObjectSecurity(f.as_raw_handle(), 7, std::ptr::null_mut(), 0, &mut needed) };
+    assert!((20..=262144).contains(&needed));
+    let mut partial = vec![0u8; needed as usize];
+    assert_ne!(
+        unsafe {
+            GetKernelObjectSecurity(
+                f.as_raw_handle(),
+                7,
+                partial.as_mut_ptr().cast(),
+                needed,
+                &mut needed,
+            )
+        },
+        0
+    );
+    serde_json::json!({"bytesSha256":hash::sha256_file(path).unwrap(),"volume":i.dwVolumeSerialNumber,"fileId":(((i.nFileIndexHigh as u64)<<32)|i.nFileIndexLow as u64).to_string(),"ownerGroupDaclSha256":hash::sha256_hex(&partial),"completeSecurityProven":false})
+}
 struct TestFailureGuard {
     runtime: SharedRuntimeExecutable,
     home: PathBuf,
