@@ -1,0 +1,270 @@
+{
+  "receiveVerified": true,
+  "allAccepted": false,
+  "productionExecuted": false,
+  "code": "35e7336fcc64bcf3cab26ca8fa9688daba95a1f0",
+  "docs": "70ebd2a6728fbd352407950185dfcbd290e4c105",
+  "payloadFiles": 371,
+  "payloadBytes": 2715343,
+  "netTreeMatches": true,
+  "executedRustInputs": [
+    {
+      "stage": "primitive-build02",
+      "rustFilesVerified": 26
+    },
+    {
+      "stage": "native-build02",
+      "rustFilesVerified": 26
+    },
+    {
+      "stage": "product-build03",
+      "rustFilesVerified": 26
+    }
+  ],
+  "sourceLineEndings": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "conversion": "git-LF / captured-CRLF"
+    },
+    {
+      "path": "test/windows024-native/account-w1d.ps1",
+      "conversion": "git-LF / captured-CRLF"
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "conversion": "git-LF / captured-CRLF"
+    },
+    {
+      "path": "test/windows024-native/cleanup-wl2-prerequisites.ps1",
+      "conversion": "git-LF / captured-CRLF"
+    },
+    {
+      "path": "test/windows024-native/launch-wl2.ps1",
+      "conversion": "git-LF / captured-CRLF"
+    }
+  ],
+  "statusRows": [
+    {
+      "id": "baseline-fetch",
+      "state": "passed",
+      "evidence": "baseline.json",
+      "detail": "main12746c005/docs34474df17 merged without reset; TEAMr12/IMP138/shared-r2 consumed"
+    },
+    {
+      "id": "fixed-official-inputs",
+      "state": "passed",
+      "evidence": "fixed-inputs.json",
+      "detail": "bundle, descriptor and inner tgz digests independently recomputed; no original bytes modified"
+    },
+    {
+      "id": "MSVC-baseline-bins",
+      "state": "passed",
+      "evidence": "baseline-build/result.json",
+      "detail": "exit0 221062ms; debug official product bins, not release candidate"
+    },
+    {
+      "id": "MSVC-final-bins",
+      "state": "passed",
+      "evidence": "product-build03/result.json",
+      "detail": "exit0 160990ms; actual final Rust bytes match final source; 14 warnings retained"
+    },
+    {
+      "id": "compile01-E0061",
+      "state": "failed-fixed",
+      "evidence": "primitive-build01/stderr.log; native-build01/stderr.log",
+      "detail": "monitor drain second argument missing; both first raw101 failures retained, corrected once before build02"
+    },
+    {
+      "id": "MSVC-library-primitives",
+      "state": "passed",
+      "evidence": "primitive-build02/stdout.log",
+      "detail": "6 passed, one isolated prerequisite test initially ignored; 1866 unrelated tests filtered"
+    },
+    {
+      "id": "D-native-query-capture",
+      "state": "passed-prerequisite-only",
+      "evidence": "native-build02/stdout.log",
+      "detail": "2/2 real short-lived original-Job query argv and parent PID/FILETIME retained; raw sc1060/schtasks1 remain unchanged; no official source authority"
+    },
+    {
+      "id": "D-unknown-source-no-normal-exit-exception",
+      "state": "passed-refusal-only",
+      "evidence": "native-build02/stdout.log",
+      "detail": "synthetic launcher cannot mint official role; unrelated controller PID command evidence refused"
+    },
+    {
+      "id": "D-official-source-role-trait",
+      "state": "not-implemented",
+      "evidence": "report.md",
+      "detail": "DiagnosticRoles/ProvenRole/NormalExit and negative target/delete/fake-parent matrix not completed; no whitelist/default successful implementation"
+    },
+    {
+      "id": "pid-ocx-residual-negative",
+      "state": "passed",
+      "evidence": "primitive-build02/stdout.log",
+      "detail": "legacy opencodex.pid absent while ocx.pid present refuses; directory same-name and runtime record residual refuse; same helper used Stop and stopped readback"
+    },
+    {
+      "id": "O-partial-read-is-not-complete",
+      "state": "passed-refusal-only",
+      "evidence": "primitive-build02/stdout.log",
+      "detail": "native1314 remains error; no owner/group/DACL fallback or original mutation"
+    },
+    {
+      "id": "O-isolated-complete-security",
+      "state": "blocked-environment-contract",
+      "evidence": "public-raw/out01/native/wl2-independent-prerequisites.json",
+      "detail": "ordinary SID1046/elevatedfalse ACCESS_SYSTEM_SECURITY open raw1314; SeSecurityPrivilege absent; no capture or official launch"
+    },
+    {
+      "id": "O-original-readback",
+      "state": "passed-unchanged-prerequisite-only",
+      "evidence": "public-raw/out01/native/wl2-independent-prerequisites.json",
+      "detail": "synthetic34bytes same fileID281474977958307/volume247287385 and partial SD digest; complete SD never claimed"
+    },
+    {
+      "id": "O-same-volume-custody-journal-restore",
+      "state": "not-implemented-blocked",
+      "evidence": "shared-minimum-request.json",
+      "detail": "no windows-client-originals-v1 journal/custody/phase/current reference or recovery proof created"
+    },
+    {
+      "id": "O-existing-absent-cross-volume-lock-interruption-matrix",
+      "state": "blocked-not-run",
+      "evidence": "status-matrix.json",
+      "detail": "all original custody cases remain unverified; prerequisite blocked, not marked passed"
+    },
+    {
+      "id": "H-strict-frame-negatives",
+      "state": "passed-prerequisite-only",
+      "evidence": "primitive-build02/stdout.log",
+      "detail": "strict typed frame schema/duplicate keys/unknown op and fields/NUL/UTF8/truncated/oversize/trailing/numeric-shape refusal"
+    },
+    {
+      "id": "H-QPC-original-budget",
+      "state": "passed-prerequisite-only",
+      "evidence": "primitive-build02/stdout.log",
+      "detail": "same QPC frequency; original30/5/10 and Restart stop-sub10; wrong frequency/future/expired/overflow rejected; no IPC authentication claim"
+    },
+    {
+      "id": "H-isolated-outer-Job",
+      "state": "blocked-environment-observation",
+      "evidence": "public-raw/out01/native/wl2-independent-prerequisites.json",
+      "detail": "IsProcessInJob(current,NULL) true; outer lifecycle not proven. No KILL flag inferred, no breakaway or policy bypass"
+    },
+    {
+      "id": "H-private-pipe-native-peer-replay-manager-generation",
+      "state": "not-implemented-blocked",
+      "evidence": "report.md",
+      "detail": "codec is not authenticated connection; private SID pipe/fresh peer process authentication/replay tables and atomic manager transfer not built"
+    },
+    {
+      "id": "H-ocxd-owner-host-production",
+      "state": "not-implemented-blocked",
+      "evidence": "report.md",
+      "detail": "no --internal-runtime-owner024 dispatch; ocxd/GUI integration unchanged; original process-local owner still used"
+    },
+    {
+      "id": "S-native-exact-SCM",
+      "state": "passed-prerequisite-only",
+      "evidence": "public-raw/out01/native/wl2-independent-prerequisites.json",
+      "detail": "local manager CONNECT success; exact machine-level opencodex-proxy-native OpenService query raw1060; no native owner/source-bound Absent capability"
+    },
+    {
+      "id": "S-native-exact-Scheduler",
+      "state": "passed-prerequisite-only",
+      "evidence": "public-raw/out01/native/wl2-independent-prerequisites.json",
+      "detail": "fresh COM local connect/root GetTask exact opencodex-proxy raw0x80070002; no enumeration/control/delete"
+    },
+    {
+      "id": "S-error-code-negatives",
+      "state": "passed-refusal-only",
+      "evidence": "primitive-build02/stdout.log",
+      "detail": "access denied/pending-delete/error1/timeout and other HRESULT never classified absent; injected code classification tests only, no host registration created"
+    },
+    {
+      "id": "S-staged-independent",
+      "state": "passed-prerequisite-only",
+      "evidence": "primitive-build02/stdout.log; public-raw/out01/native/wl2-independent-prerequisites.json",
+      "detail": "present synthetic staged cmd remains Present even when registrations absent; ordinary synthetic home exact five targets separately observed; not production H"
+    },
+    {
+      "id": "S-SupervisorAbsence-trait-source-stage-recheck",
+      "state": "not-implemented-blocked",
+      "evidence": "report.md",
+      "detail": "no source/host generation-bound Absent minted; service-state/full H/parent-wrapper/post-stop recheck unverified"
+    },
+    {
+      "id": "P-single-SID-Start-Status-Stop",
+      "state": "blocked-not-run",
+      "evidence": "public-raw/out01/native/wl2-independent-prerequisites.json",
+      "detail": "productionExecutedfalse; no official launcher/HTTP/listener/retained product Job started after prerequisite failures"
+    },
+    {
+      "id": "P-restoration-Restart-second-Start",
+      "state": "blocked-not-run",
+      "evidence": "status-matrix.json",
+      "detail": "ClosedEligibility not minted; no successor or Auto retry; cannot combine old W-L1 positive proof into new owner-host acceptance"
+    },
+    {
+      "id": "P-manager-handoff",
+      "state": "blocked-not-run",
+      "evidence": "status-matrix.json",
+      "detail": "broker not implemented; GUI exit/new manager/fake pipe/source/H/SID/replay/stale generation matrix not run"
+    },
+    {
+      "id": "P-cancel-update-H-switch-auto-conflict",
+      "state": "blocked-not-run",
+      "evidence": "status-matrix.json",
+      "detail": "no recovery qualification, no real source switches or successor actions"
+    },
+    {
+      "id": "ordinary-prerequisite-test-result",
+      "state": "failed-expected-gate",
+      "evidence": "public-raw/out01/native/test.stderr.log",
+      "detail": "ignored test explicitly run under one fresh ordinary SID; raw test101/controller1; all independent facts written before first assertion on completeSecurityReadable"
+    },
+    {
+      "id": "daily-PATH-input-desktop-ACL",
+      "state": "passed",
+      "evidence": "public-raw/out01/daily-path-result.json; public-raw/out01/controller.json",
+      "detail": "PATH hashes unchanged; input and temporary desktop ACL restored; no daily configuration or official package writes"
+    },
+    {
+      "id": "cleanup-new-account",
+      "state": "passed",
+      "evidence": "cleanup-account-profile02.json",
+      "detail": "SID1046 account removed; no official Job created/forced cleanup, no new task or MSI registration"
+    },
+    {
+      "id": "cleanup-new-Profile",
+      "state": "partial",
+      "evidence": "cleanup-account-profile.json; cleanup-account-profile02.json; profile-residual.json",
+      "detail": "first native call87 fixed actual NULL wrapper; second success0 removed Profile registration, exact directory remains inaccessible; count/bytes unknown, no full Profile preservation claim"
+    },
+    {
+      "id": "cleanup-new-Public",
+      "state": "blocked-automatic-review",
+      "evidence": "public-delete-rejected.json; public-residual.json",
+      "detail": "26files92915595bytes remain; exact recursive deletion rejected before execution; no retry or alternate mechanism"
+    },
+    {
+      "id": "historical-MSI-CLI-cleanup",
+      "state": "reused-unchanged-unfinished",
+      "evidence": "report.md",
+      "detail": "old passed CLI/admin MSI not rerun; ordinary MSI and old failed Profile/Public/schema cleanup gaps remain; no old rejection retry"
+    },
+    {
+      "id": "W2-dualSID-release-business",
+      "state": "not-run",
+      "evidence": "report.md",
+      "detail": "no W2/dualSID/frozen candidate/publish/model or business sync requests; one new ordinary test account only"
+    }
+  ],
+  "limits": [
+    "Offline replay only, no new Windows execution",
+    "O/H/S are cfg(test) prerequisites, not concrete production trait implementations",
+    "Partial SD read and fixture query roles are not native restore/exit authority",
+    "Current ordinary complete descriptor and outer-Job continuity unresolved; cleanup partial"
+  ]
+}

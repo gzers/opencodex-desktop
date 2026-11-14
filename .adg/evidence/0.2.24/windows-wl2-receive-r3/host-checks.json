@@ -1,0 +1,46 @@
+{
+  "source": "dbf974097d067e75c4de68f9fc681af8ab447b09",
+  "host": "aarch64-apple-darwin",
+  "record": "Observed command-result summary; not reconstructed raw logs",
+  "checks": [
+    {
+      "command": "cargo fmt --all -- --check",
+      "initialExit": 1,
+      "reason": "Contribution module ordering/re-export wrapping in two files",
+      "correction": "09be23220 pure rustfmt",
+      "finalExit": 0
+    },
+    {
+      "command": "cargo clippy --locked --lib --tests -- -D warnings",
+      "exit": 0,
+      "seconds": 17.25,
+      "source": "final formatted tree"
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    },
+    {
+      "command": "python3 .adg/evidence/0.2.24/windows-wl2-receive-r3/verify_receive.py",
+      "exit": 0,
+      "scope": "371 payload hashes, net tree, three sets of 26 actual Rust inputs and 36 result rows"
+    }
+  ],
+  "nativeExecutionOnMac": false,
+  "behaviorTestsAdded": false,
+  "limits": [
+    "Only native Windows contributor tests provide MSVC/raw OS facts",
+    "No new runnable four-trait production adapters",
+    "No new acceptance of SD or broker environment"
+  ],
+  "closeoutHelper": {
+    "firstExit": 1,
+    "stage": "finally after successful docs commit and index reset",
+    "error": "NameError: name 'pathlib' is not defined",
+    "effect": "Only temporary isolated-index cleanup failed; docs commit and owned-path reset already completed",
+    "correction": "Removed exact owned temporary index files and verified no matching residue",
+    "removedTemporaryIndexes": [
+      "/private/tmp/ocxd024-docs-r3-ke3eyp9m"
+    ]
+  }
+}
