@@ -25,9 +25,21 @@ if($Child){
   $env:OCXD024_PWSH=(Join-Path $PSHOME 'pwsh.exe')
   $env:OCXD024_NATIVE_INPUT=$c.input
   $env:OCXD024_NATIVE_EVIDENCE=$c.evidence
+  $env:OCXD024_MSI_ONLY_GUEST=if($c.msiOnly){'1'}else{$null}
+  $env:OCXD024_MSI_GUEST_NAME=if($c.msiOnly){$c.expectedGuestComputer}else{$null}
+  if($c.msiOnly){
+   $policyRows=@()
+   foreach($hive in @('HKLM:','HKCU:')){
+    $path=$hive+'/SOFTWARE/Policies/Microsoft/Windows/Installer'
+    $value=if(Test-Path -LiteralPath $path){Get-ItemProperty -LiteralPath $path|Select-Object DisableMSI,AlwaysInstallElevated,DisableUserInstalls}else{$null}
+    $policyRows+=@{path=$path;exists=Test-Path -LiteralPath $path;values=$value;tokenSid=$id.User.Value;absenceDoesNotProvePermission=$true}
+   }
+   $policyRows|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $c.evidence 'ordinary-token-policy.json') -Encoding utf8
+   if(@($policyRows|Where-Object {$_.values -and (($null -ne $_.values.DisableMSI -and $_.values.DisableMSI -ne 0) -or $_.values.AlwaysInstallElevated -eq 1 -or $_.values.DisableUserInstalls -eq 1)}).Count){throw 'ordinary-token guest policy incompatible; no MSI run'}
+  }
   $report.sid=$id.User.Value;$report.profile=$registered;$report.session=[Diagnostics.Process]::GetCurrentProcess().SessionId
   $testName=if($c.testName){$c.testName}else{'isolated_account_terminal_w1d'}
-  if($testName -cnotin @('isolated_account_terminal_w1d','isolated_schema3_invariants_w1d')){throw 'exact W1-D ignored test required'}
+  if($testName -cnotin @('isolated_account_terminal_w1d','isolated_schema3_invariants_w1d','isolated_msi_uninstall_only')){throw 'exact Windows ignored test required'}
   & $c.test --exact ('modules::runtime::terminal_cli::terminal_cli_windows::native_tests::'+$testName) --ignored --test-threads=1 --nocapture 1> (Join-Path $c.evidence 'test.stdout.log') 2> (Join-Path $c.evidence 'test.stderr.log')
   $report.exitCode=$LASTEXITCODE
   $report.passed=$LASTEXITCODE -eq 0
@@ -58,6 +70,9 @@ if($Child){
 $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
 if(!([Security.Principal.WindowsPrincipal]::new($identity)).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)){throw 'controller requires elevation solely for one disposable account/Profile'}
 if(!(Test-Path -LiteralPath $c.input -PathType Container) -or (Test-Path -LiteralPath (Join-Path $c.output 'controller.json'))){throw 'fresh explicit controller output and existing input required'}
+if($c.msiOnly){
+ if($env:COMPUTERNAME -ieq 'EZIO-MINI' -or $c.expectedGuestComputer -ine $env:COMPUTERNAME -or !$c.preparedPerUserMsiGuest -or $c.componentOnly -or $c.testName -cne 'isolated_msi_uninstall_only'){throw 'explicit separate prepared MSI guest required before account creation'}
+}
 $report=[ordered]@{passed=$false;scope='one isolated account; no W2/two-user acceptance';created=$false;accountRemoved=$false;profileRemoved=$false;at=[datetime]::UtcNow.ToString('o')}
 $user=$null;$profile=$null;$process=$null;$desktop=$null;$secret=$null
 function Save-Controller {$report|ConvertTo-Json -Depth 10|Set-Content -LiteralPath (Join-Path $c.output 'controller.json') -Encoding utf8}
@@ -97,7 +112,7 @@ public static class W1cProfile {
  & icacls.exe $evidence /grant ($name+':(OI)(CI)M') 1> (Join-Path $c.output 'evidence-acl.log')
  if($LASTEXITCODE -ne 0){throw 'test evidence ACL failed'}
  $childConfig=Join-Path $c.output 'child-input.json'
- @{sid=$user.SID.Value;profile=$profile;input=$c.input;evidence=$evidence;test=$c.test;componentOnly=[bool]$c.componentOnly;testName=$c.testName}|ConvertTo-Json|Set-Content -LiteralPath $childConfig -Encoding utf8
+ @{sid=$user.SID.Value;profile=$profile;input=$c.input;evidence=$evidence;test=$c.test;componentOnly=[bool]$c.componentOnly;testName=$c.testName;msiOnly=[bool]$c.msiOnly;expectedGuestComputer=$c.expectedGuestComputer}|ConvertTo-Json|Set-Content -LiteralPath $childConfig -Encoding utf8
  $credential=[pscredential]::new(($env:COMPUTERNAME+'\'+$name),$secret)
  $process=Start-Process -FilePath (Join-Path $PSHOME 'pwsh.exe') -Credential $credential -LoadUserProfile -WorkingDirectory $c.input -WindowStyle Hidden -ArgumentList @('-NoLogo','-NoProfile','-NonInteractive','-File',('"'+$PSCommandPath+'"'),'-Config',('"'+$childConfig+'"'),'-Child') -RedirectStandardOutput (Join-Path $c.output 'bootstrap.stdout.log') -RedirectStandardError (Join-Path $c.output 'bootstrap.stderr.log') -PassThru
  $null=$process.Handle;$report.childPid=$process.Id;$report.childCreation=$process.StartTime.ToString('o');Save-Controller
@@ -111,6 +126,16 @@ finally{
  if($desktop){try{$desktop.Dispose();$report.desktopAclRestored=$true}catch{$report.desktopRestoreError=$_.Exception.Message}}
  if($user){
   try{
+   $allowIdentityRemoval=$true
+   if($c.msiOnly){
+    $statePath=Join-Path (Join-Path $c.output 'native') 'msi-final-registration.json'
+    if(!$process){$report.msiNeverStarted='child process was not created; identity cleanup allowed'}elseif(!(Test-Path -LiteralPath $statePath)){$allowIdentityRemoval=$false;$report.cleanupError='MSI registration outcome unknown; account/Profile retained'}else{
+     $last=Get-Content -LiteralPath $statePath -Raw|ConvertFrom-Json
+     $allowIdentityRemoval=$last.productCode -ceq '{67CF3D62-492D-4359-AAFE-8BE6FB17E647}' -and $last.state -eq -1 -and $last.safeToRemoveTestIdentity
+     if(!$allowIdentityRemoval){$report.cleanupError='MSI product is still registered or unknown; account/Profile retained for native recovery'}
+    }
+   }
+   if($allowIdentityRemoval){
    if($profile -and [IO.Path]::GetFileName($profile) -ceq $user.Name){
     # Native profile deletion targets only the exact newly created SID; evidence
     # remains in the external output. Unknown/loaded profile failures stay visible.
@@ -128,9 +153,11 @@ finally{
    }
    Remove-LocalUser -SID $user.SID -ErrorAction Stop
    $report.accountRemoved=$null -eq (Get-LocalUser -SID $user.SID -ErrorAction SilentlyContinue)
+   }
   }catch{$report.cleanupError=$_.Exception.Message}
  }
  if($secret){$secret.Dispose()}
+ if($c.msiOnly -and (!$report.accountRemoved -or !$report.profileRemoved -or !$report.desktopAclRestored -or $report.cleanupError)){$report.passed=$false}
  Save-Controller
 }
 if(!$report.passed){exit 1}
