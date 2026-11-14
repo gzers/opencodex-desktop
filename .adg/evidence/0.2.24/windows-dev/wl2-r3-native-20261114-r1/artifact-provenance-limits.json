@@ -1,0 +1,7 @@
+{
+  "scope": "earlier diagnostic checkpoints, not final delivery",
+  "firstLibraryBuild": "phase architecture added while build01 was running; the first checkpoint was not fully frozen throughout compilation. Its raw result is retained as diagnostic only, not a precise final-source artifact proof.",
+  "earlierExecutables": "build01/build02/native01/native02 executables were superseded by subsequent builds without individually preserved EXE hash receipts; do not invent their hashes or promote them to final artifacts.",
+  "actualFinal": "build03/native03/product02 captured and froze final Rust inputs; all34 files per run compare equal to final Git/working bytes; final exact EXE bytes/hashes captured in artifacts.json",
+  "accepted": false
+}

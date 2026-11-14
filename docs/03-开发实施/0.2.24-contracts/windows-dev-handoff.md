@@ -257,3 +257,14 @@ post-result回执补丁72b9f74d6仅两份命令投影源码，原生/HTTP/来源
 完整36项表、源码/EXE/固定输入SHA、E0061首轮修复、原语/隔离原始trace、清理与最小环境/SD范围需求在.adg/evidence/0.2.24/windows-dev/wl2-native-20261114-r1/，优先读report.md/status-matrix.json/shared-minimum-request.json/result.json。Rust与实际编译输入26份逐字节对齐，控制脚本实际副本独立归档。
 
 新账户已移除、无官方Job/force/task/MSI；临时ACL恢复、日常PATH摘要同。Profile先87空串错误，真实NULL调用后native0/登记消失但目录access denied残留，数量字节未知，不能称完整Profile保留。Public26文件92915595字节自动审批blocked by policy拒绝，命令未执行/未重试。旧Profile/Public/schema等拒绝与普通MSI未验保持。未改官方2.99/日常策略配置，不跑旧组件/W2/双SID，不发布。
+
+
+## 2026-11-14 W-L2/r3 Windows独立适配增量（未收口）
+
+消费main dbf974097d067e75c4de68f9fc681af8ab447b09、docs a6d9184b851521194477ddfeecd988f40d513e5b、TEAM13/IMP139/r3；代码最终3d028e82d731ceb2d307b0a954a93db467ca3f39、tree 70e0beb3ab9073008e76d51b3346b7bb377ac77e。8笔实现/修复及承接合并均已及时push，未改四trait签名/预算/官方/日常配置。完整证据新轮次.adg/evidence/0.2.24/windows-dev/wl2-r3-native-20261114-r1/，优先report.md、37项status-matrix.json、implementation-status.json、artifacts.json与next-windows-work.json。
+
+真实native私有pipe/peer/挂起broker普通noJob组件、O准确完整SD读取与生产前拒绝门、pending前缀架构、OwnerContinuity认证/重放组合、S原owner缺席/最终重查、D固定查询/父参数/阶段/source候选均有代码；最终lib8项/native4项通过、MSVC debug bins0/137535ms，原始warning/各源码阶段保留。build03/native03/product02各34份Rust原字节与最终源匹配。绝不将这些当生产四边界通过：ClientOriginals完整custody/current-ref/恢复未实现；H仍测试装配、ocxd长驻/rendezvous/GUI路由未接；D全family分类与新Stop组合未闭合，source-bound实机proof未生成。allAccepted=false、productionExecuted=false。
+
+旧普通SD1314复用未重跑，本轮新r3mask/backup查询没有新token正例；不把旧0x81020000错误冒作新mask实测。用户提出Administrator后又指定marenben候选；只读确认marenben启用SID1003且未列直接本地管理员成员，盘点无交互会话；runtime token/session/noJob未证实，等待用户登录，不降ordinary门、不索取密码、不改该现有账户日常Profile。下一步仍Windows独立推进，不重新要求Mac冻结已明接口。
+
+本轮账户/Profile/官方服务/broker/新Public/task/MSI创建0，合成native test进程exit0、phase临时根RAII清理；无force、策略/ACL/registry PATH写。旧Profile/Public/schema/普通MSI缺口和自动审批拒绝保持不重试，不W2/双SID、不发布。

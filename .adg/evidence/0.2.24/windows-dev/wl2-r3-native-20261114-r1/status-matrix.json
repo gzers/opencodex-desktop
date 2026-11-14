@@ -1,0 +1,266 @@
+{
+  "source": "3d028e82d731ceb2d307b0a954a93db467ca3f39",
+  "allAccepted": false,
+  "productionExecuted": false,
+  "items": [
+    {
+      "id": "baseline-r3",
+      "implementation": "merged",
+      "test": "verified",
+      "evidence": "baseline.json",
+      "detail": "main dbf974097/docs a6d9184b8, TEAM13/IMP139/r3; r2 four signatures unchanged; two format/reorder conflicts resolved with incoming formatting"
+    },
+    {
+      "id": "O-exact-security-API",
+      "implementation": "implemented",
+      "test": "compiled-and-pure-tests-passed",
+      "evidence": "windows_client_originals024/mod.rs; build03/stdout.log",
+      "detail": "READ_CONTROL|ACCESS_SYSTEM_SECURITY0x01020000; GetSecurityInfo SE_FILE_OBJECT BACKUP0x10000; complete structure/length/control/self-relative bytes, exact API/raw-code preservation; no fallback or privilege change"
+    },
+    {
+      "id": "O-old-ordinary1314",
+      "implementation": "unchanged-prerequisite-gap",
+      "test": "reused-not-rerun",
+      "evidence": "../wl2-native-20261114-r1/public-raw/out01/native/wl2-independent-prerequisites.json",
+      "detail": "old real SID1046 open with0x81020000 raw1314, SeSecurityPrivilege absent; new r3 masks NOT actually queried on a new ordinary token, so no claim of new-mask real1314 result"
+    },
+    {
+      "id": "O-before-client-mutation-gate",
+      "implementation": "wired-in-production",
+      "test": "compile-only",
+      "evidence": "windows_official_lifecycle024.rs; product02/result.json",
+      "detail": "new Start must pass read-only complete original preflight AND durable capture gate before native official construction; no real public Start called in this round"
+    },
+    {
+      "id": "O-phase-prefix",
+      "implementation": "architecture-implemented",
+      "test": "2-new-tests-passed",
+      "evidence": "build03/stdout.log; windows_client_originals024/phase.rs",
+      "detail": "canonical schema and create-only private records/held native handles; all phase prefixes discover pending, gaps/duplicates/schema/digest/sequence/binding drift rejected; textualClosed never creates native proof"
+    },
+    {
+      "id": "O-custody-and-current-ref-CAS",
+      "implementation": "NOT-implemented",
+      "test": "not-run",
+      "evidence": "implementation-status.json",
+      "detail": "no actual original move/working copies/content tree/ADS/durable current ref CAS/restoration; ClientOriginals trait NOT implemented; require_durable_capture remains unconditional refusal"
+    },
+    {
+      "id": "O-full-native-positive",
+      "implementation": "blocked",
+      "test": "not-run",
+      "evidence": "implementation-status.json",
+      "detail": "no proven permitted full-SD ordinary environment; no new accounts or same prerequisite loop"
+    },
+    {
+      "id": "H-private-native-pipe",
+      "implementation": "implemented-native-component",
+      "test": "4-tests-passed",
+      "evidence": "native03/stdout.log",
+      "detail": "protected currentSID/System ACL, local only, firstinstance, noninheritable handles and actual OS client/server PID + retained FILETIME/token/image; tests same-process peers, not actual managers"
+    },
+    {
+      "id": "H-suspended-original-host",
+      "implementation": "implemented-native-component",
+      "test": "compiled-not-executed",
+      "evidence": "windows_official_runtime024/host_process.rs",
+      "detail": "creator noJob/ordinary; exact ocxd internal mode; private inherited bootstrappipe allowlist; originalprocess/thread noJob/token/currentimage beforeResume; no BREAKAWAY or Job adoption"
+    },
+    {
+      "id": "H-OwnerContinuity-trait",
+      "implementation": "implemented-in-cfg-test",
+      "test": "compiled-not-live-authenticated",
+      "evidence": "windows_owner_host024/continuity.rs",
+      "detail": "original Owner retained; native pipe and peer challenge/SID/session/fileID/currentI checks; attached proof private and non-Clone/serde; oldgeneration rejected; no real new manager attached"
+    },
+    {
+      "id": "H-replay-and-budget",
+      "implementation": "implemented",
+      "test": "pure-tests-passed",
+      "evidence": "build03/stdout.log",
+      "detail": "request/action/256-bit nonce retained without eviction; one action per attachedproof; original QPC start/frequency/deadline and RestartStop-subwindow; sampleInstant precedes QPC to avoid extension"
+    },
+    {
+      "id": "H-exact-installation",
+      "implementation": "implemented",
+      "test": "pure-negative-tests-passed",
+      "evidence": "build03/stdout.log",
+      "detail": "broker must I/ocxd.exe and manager I/opencodex-desktop.exe or I/ocxd.exe; arbitrary/current-other-I images rejected"
+    },
+    {
+      "id": "H-delayed-native-cancel",
+      "implementation": "implemented",
+      "test": "silent-peer/accept-timeout-tests-passed",
+      "evidence": "native03/stdout.log",
+      "detail": "caller returns by inherited deadline; worker owns only pipe/event/OVERLAPPED/buffers through native cancellation, no owner/job or late authority; no deadline reset"
+    },
+    {
+      "id": "H-trailing-frame",
+      "implementation": "implemented",
+      "test": "queued-extra-frame-test-passed",
+      "evidence": "native03/stdout.log",
+      "detail": "already queued trailing bytes/frames refused before auth. Future arriving bytes never authorize a second action on consumed attached proof; no crossmanager live test"
+    },
+    {
+      "id": "H-long-lived-ocxd-dispatch-and-rendezvous",
+      "implementation": "NOT-implemented",
+      "test": "not-run",
+      "evidence": "implementation-status.json",
+      "detail": "ocxd internal daemon/bootstrap/rendezvous and production GUI/IPC routing not wired; trait object does not by itself instantiate real broker"
+    },
+    {
+      "id": "H-real-desktop-marenben",
+      "implementation": "environment-unready-at-inventory",
+      "test": "read-only-inventory-only",
+      "evidence": "marenben-session-inventory01.json",
+      "detail": "existing enabled SID1003, not found in direct local Administrators membership, no listed interactive session. This is NOT proof of runtime token or noJob; login requested from user; no account/profile mutation"
+    },
+    {
+      "id": "H-Administrator",
+      "implementation": "not-substituted-for-ordinary",
+      "test": "not-rerun",
+      "evidence": "marenben-session-inventory01.json",
+      "detail": "user proposed Administrator as alternative; existing session1 may control environment preparation but no ordinary/elevated gate weakened or dailyprofile/config used"
+    },
+    {
+      "id": "H-real-manager-replacement",
+      "implementation": "not-wired/not-ready",
+      "test": "not-run",
+      "evidence": "implementation-status.json",
+      "detail": "no original broker creation handle/live samegeneration/noJob/native challenge replacement or oldmanager forced-exit test; cannot claim noJob from Explorer name or mere new process"
+    },
+    {
+      "id": "S-SupervisorAbsence-trait",
+      "implementation": "implemented-and-registered-Windows",
+      "test": "compiled/namespace-classifier-tests-passed",
+      "evidence": "windows_supervisor024.rs; build03/stdout.log",
+      "detail": "private Absent binds original Owner scope and exact inherited stop deadline; native exact SCM/Scheduler, H staged targets/state/mirror, original family complete; final fresh requery, no serialized proof import"
+    },
+    {
+      "id": "S-Profile-default-state-mirror",
+      "implementation": "implemented",
+      "test": "new-negative-test-passed",
+      "evidence": "build03/stdout.log; official-source/src/service/state.ts",
+      "detail": "sameProfile .opencodex/service-state.json independently checked even customH. Missing customH state cannot override present mirror; same-name dir also rejected; no state/config content read from daily/marenben profile"
+    },
+    {
+      "id": "S-present-or-unreadable-state",
+      "implementation": "conservative-Unknown",
+      "test": "compiled/pure-and-synthetic-tests",
+      "evidence": "windows_supervisor024.rs",
+      "detail": "existing state declaration relation parsing still not implemented, so any present/unreadable record refuses Absent; not silently excluded"
+    },
+    {
+      "id": "S-live-source-bound-absence",
+      "implementation": "NOT-validated",
+      "test": "not-run",
+      "evidence": "implementation-status.json",
+      "detail": "no new exact native SCM/Scheduler queries after r3; old independent namespace facts reused, not minted as source-bound proof"
+    },
+    {
+      "id": "D-DiagnosticRoles-trait",
+      "implementation": "implemented-query-candidate-adapter",
+      "test": "compiled/syntax-counterexamples-passed",
+      "evidence": "windows_diagnostic_roles024.rs; build03/stdout.log",
+      "detail": "requires original member handle/generation/parent argv capture time/phase, exact System32 image/target/syntax, current archive and pinned officialcallsite hash, admitted parent Bun CLI; rawexit unchanged"
+    },
+    {
+      "id": "D-actual-query-capture-time",
+      "implementation": "implemented",
+      "test": "compiled",
+      "evidence": "windows_official_runtime024/command.rs",
+      "detail": "new monotonic captured_at bound by actual native capture; original parent must be retained and captured no later than query; fixture never gains official source authority"
+    },
+    {
+      "id": "D-wrong-target-mutating-command",
+      "implementation": "implemented",
+      "test": "new-negative-tests-passed",
+      "evidence": "build03/stdout.log",
+      "detail": "foreign target, delete, extra shell tokens, barefilename, qc, /query missingxml and alteredpath rejected; no new grammar from observed source alone"
+    },
+    {
+      "id": "D-full-family-role-accounting",
+      "implementation": "incomplete-conservative-refusal",
+      "test": "not-live-validated",
+      "evidence": "implementation-status.json",
+      "detail": "non-query service/otherRequired classification incomplete; nativehistory/unknown/unreadable/stillrunning/requirednonzero remain veto; current productionStop strictall-zero still in force"
+    },
+    {
+      "id": "D-pinned-source-readonly",
+      "implementation": "read-only-reviewed",
+      "test": "hash-verified",
+      "evidence": "official-source-manifest.json; fixed-inputs.json",
+      "detail": "exact fixedtgz source retrieved read-only from originalbundle, no official edits. winsw.ts contains qc beyond frozen query grammar; no actual qc child observed here and grammar NOT expanded"
+    },
+    {
+      "id": "P-real-official-Start-Status-Stop",
+      "implementation": "blocked/dependent",
+      "test": "not-run",
+      "evidence": "result.json",
+      "detail": "no service/launcher/broker/account created; Opositive/Hdesktop/hostdispatch/fulladapters allrequired; no oldW-L1 positive replay as newpass"
+    },
+    {
+      "id": "P-restore-Restart-secondStart-Auto",
+      "implementation": "blocked/dependent",
+      "test": "not-run",
+      "evidence": "result.json",
+      "detail": "no OriginalSession/ReadySession/PreparedRestore/ClosedEligibility; no successor or budget extension"
+    },
+    {
+      "id": "MSVC-first-checkpoint",
+      "implementation": "passed-with-warnings",
+      "test": "exit0",
+      "evidence": "build01/result.json; build01/stderr.log",
+      "detail": "two tests beforephase/replay additions; clashing GetSecurityInfo ACL-pointer signature warning retained and fixed in build02; no suppressed lint"
+    },
+    {
+      "id": "MSVC-final-library",
+      "implementation": "passed-with-warnings",
+      "test": "8-new-tests-exit0",
+      "evidence": "build03/result.json; build03/stdout.log",
+      "detail": "54 warnings retained (mostly unwired types/legacy warnings); no strictClippy pass claimed; 1872 unrelated tests filtered"
+    },
+    {
+      "id": "MSVC-final-native",
+      "implementation": "passed",
+      "test": "4-native-tests-exit0",
+      "evidence": "native03/result.json; native03/stdout.log",
+      "detail": "sameSource actual pipepeer/currentprocess, firstinstance, silentpeer, oversized/trailingframes; not W2/twoSID/GUIacceptance"
+    },
+    {
+      "id": "MSVC-product-before-review",
+      "implementation": "passed-with-warnings",
+      "test": "exit0/141896ms",
+      "evidence": "product01/result.json; product01/artifacts.json",
+      "detail": "actualdebugbins; earlier than finalerror/mirror/current-I/boundedIO review fixes, not promoted to final sourceartifact"
+    },
+    {
+      "id": "MSVC-final-product",
+      "implementation": "passed-with-warnings",
+      "test": "exit0/137535ms",
+      "evidence": "product02/result.json",
+      "detail": "final debug products compiled from final Rust bytes; 71 warnings retained, no strictClippy or release pass claimed"
+    },
+    {
+      "id": "cleanup-this-round",
+      "implementation": "completed-for-executed-native-fixtures",
+      "test": "testprocess-exit0",
+      "evidence": "cleanup.json",
+      "detail": "no new account/Profile/Publicroot/service/broker/task/MSI; synthetic phase tempfiles normal RAII and testprocess exit0; buildtargets retained"
+    },
+    {
+      "id": "cleanup-historical",
+      "implementation": "unchanged-unfinished",
+      "test": "not-retried",
+      "evidence": "cleanup.json",
+      "detail": "all old failed Profiles/Public/schema cleanup and ordinaryMSI gaps unchanged; old automatic rejection never retried/bypassed"
+    },
+    {
+      "id": "constraints",
+      "implementation": "maintained",
+      "test": "not-run",
+      "evidence": "result.json",
+      "detail": "noW2/dualSID/release/policy or token adjustment/dailyconfig write/business sync/model request; Administrator/marenben not used for business changes"
+    }
+  ]
+}
