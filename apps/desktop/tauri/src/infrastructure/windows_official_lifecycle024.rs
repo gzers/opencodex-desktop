@@ -79,7 +79,7 @@ struct Slot {
     owner: Mutex<Option<Owner>>,
     cancel: AtomicBool,
 }
-struct Owner {
+pub(crate) struct Owner {
     runtime: SharedRuntimeExecutable,
     selected: program_selection::SelectedProgram,
     root: PathBuf,
@@ -90,6 +90,11 @@ struct Owner {
     original_listeners: Option<OwnedListeners>,
     stopped: bool,
     stage: &'static str,
+    session: uuid::Uuid,
+    data: PathBuf,
+    scope_pins: Vec<native::PinnedDirectory>,
+    created_at: Instant,
+    stop_started: Option<Instant>,
     _outputs: [File; 2],
     _pins: Vec<File>,
 }
@@ -127,8 +132,40 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
     Ok(slot)
 }
 impl Owner {
+    pub(crate) fn scope(&self) -> AppResult<String> {
+        use serde_json::json;
+        let b = self.native.binding();
+        let ids: Vec<_> = self.scope_pins.iter().map(|p| json!({"path":p.path(),"volume":p.identity().volume,"id":p.identity().index.to_string()})).collect();
+        let bytes = serde_json::to_vec(&json!({"session":self.session.to_string(),"sid":b.process.token.sid,"profile":self.profile,"D":self.data,"H":self.home,"I":self.root,"directories":ids,"source":self.selected.selection.image_sha256,"rootPid":b.process.pid,"rootFiletime":b.process.creation_filetime.to_string()})).map_err(unknown)?;
+        Ok(hash::sha256_hex(&bytes))
+    }
+    pub(crate) fn home_path(&self) -> &Path {
+        &self.home
+    }
+    pub(crate) fn selected_program(&self) -> &program_selection::SelectedProgram {
+        &self.selected
+    }
+    pub(crate) fn original_native(&mut self) -> &mut OwnedRuntime {
+        &mut self.native
+    }
+    pub(crate) fn command_phase(&self, when: Instant) -> AppResult<&'static str> {
+        if when < self.created_at || when > Instant::now() {
+            return Err(unknown(()));
+        }
+        Ok(if self.stop_started.is_some_and(|s| when >= s) {
+            "stop"
+        } else {
+            "start"
+        })
+    }
     fn source(&self, deadline: Instant) -> AppResult<()> {
         budget(deadline)?;
+        if native::current_identity().map_err(unknown)? != self.native.binding().process.token {
+            return Err(unknown(()));
+        }
+        for pin in &self.scope_pins {
+            pin.recheck().map_err(unknown)?;
+        }
         if self.runtime.managed_installation_root().as_ref() != Some(&self.root)
             || self.runtime.executable().as_ref() != Some(&self.selected.stable_entry)
         {
@@ -226,6 +263,7 @@ impl Owner {
     }
     async fn stop(&mut self, deadline: Instant) -> AppResult<()> {
         self.source(deadline)?;
+        self.stop_started.get_or_insert_with(Instant::now);
         if self.stopped {
             return Err(recovery_required());
         }
@@ -290,6 +328,11 @@ impl Owner {
         // authority is supplied by r1. Native success is separately retained;
         // it cannot mint LifecycleResult::Stopped or permit successor Start.
         Err(recovery_required())
+    }
+}
+impl crate::modules::runtime::windows_lifecycle024_contract::NativeSession for Owner {
+    fn check_current(&mut self, deadline: Instant) -> AppResult<()> {
+        self.source(deadline)
     }
 }
 fn teardown_records_absent(home: &Path) -> AppResult<()> {
@@ -411,6 +454,22 @@ async fn execute_async(
     .map(|p| OpenOptions::new().read(true).share_mode(1).open(p))
     .collect::<std::io::Result<Vec<_>>>()
     .map_err(unknown)?;
+    // Original capture must precede the first official mutation. This read-only
+    // gate refuses complete-SD failures with their original API/code. The
+    // still-unfinished durable custody adapter cannot be bypassed on success.
+    super::windows_client_originals024::preflight(plan.user_profile(),window.deadline()).map_err(|e| {
+        fail("windows024_originals_security_unconfirmed", &format!("原件完整安全捕获前拒绝；class={:?}; api=Open/GetSecurityInfo(BACKUP); raw={:?}; {e}", super::windows_client_originals024::classify_error(e.raw_os_error()),e.raw_os_error()))
+    })?;
+    super::windows_client_originals024::require_durable_capture()?;
+    let scope_pins = [
+        data,
+        plan.user_profile(),
+        plan.opencodex_home(),
+        plan.program_root(),
+    ]
+    .into_iter()
+    .map(|p| native::PinnedDirectory::open(p).map_err(unknown))
+    .collect::<AppResult<Vec<_>>>()?;
     let native = OwnedRuntime::create_suspended(LaunchSpec {
         executable: plan.executable(),
         arguments: plan.arguments(),
@@ -433,6 +492,11 @@ async fn execute_async(
         original_listeners: None,
         stopped: false,
         stage: "created-suspended",
+        session: uuid::Uuid::new_v4(),
+        data: data.into(),
+        scope_pins,
+        created_at: Instant::now(),
+        stop_started: None,
         _outputs: outputs,
         _pins: pins,
     });

@@ -50,7 +50,7 @@ pub(crate) mod windows_startup_root;
 pub(crate) mod windows_tray_icon;
 
 pub(crate) mod attested_status;
-#[cfg(all(windows, test))]
+#[cfg(windows)]
 mod windows_client_originals024;
 #[cfg(windows)]
 pub(crate) mod windows_official_lifecycle024;

@@ -1,14 +1,22 @@
 //! Native prerequisites for same-object custody. A readable DACL alone is not
 //! a complete original security descriptor. No mutation or recovery capability
 //! is issued when the full descriptor cannot be read by the original token.
+use crate::modules::runtime::windows_lifecycle024_contract::{
+    FULL_DESCRIPTOR_QUERY_ACCESS, FULL_DESCRIPTOR_SECURITY_INFORMATION,
+};
 use std::{
     fs::{File, OpenOptions},
     io,
     os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
     path::Path,
 };
+mod phase;
 use windows_sys::Win32::{
-    Security::GetKernelObjectSecurity,
+    Foundation::LocalFree,
+    Security::{
+        GetSecurityDescriptorControl, GetSecurityDescriptorLength, IsValidSecurityDescriptor,
+        MakeSelfRelativeSD,
+    },
     Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
 };
 
@@ -18,8 +26,17 @@ fn denied(reason: &'static str) -> io::Error {
 
 // READ_CONTROL cannot authorize SACL observation. Do not enable privileges,
 // fall back to owner/group/DACL, or turn an unreadable SACL into an absent SACL.
-const COMPLETE_SECURITY: u32 = 0x0000_01ff;
-const READ_AND_SECURITY: u32 = 0x8002_0000 | 0x0100_0000;
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum SecurityFailure {
+    Unreadable,
+    CoverageUnknown,
+}
+pub(crate) fn classify_error(code: Option<i32>) -> SecurityFailure {
+    match code {
+        Some(5 | 1314) => SecurityFailure::Unreadable,
+        _ => SecurityFailure::CoverageUnknown,
+    }
+}
 
 /// Original handle + original native descriptor. Private, non-Clone, non-serde;
 /// hashes of this object are audit facts, never a deserializable recovery proof.
@@ -32,7 +49,7 @@ pub(crate) struct InspectedOriginal {
 impl InspectedOriginal {
     pub(crate) fn open(path: &Path, directory: bool) -> io::Result<Self> {
         let file = OpenOptions::new()
-            .access_mode(READ_AND_SECURITY)
+            .access_mode(FULL_DESCRIPTOR_QUERY_ACCESS)
             .share_mode(1)
             .custom_flags(0x0020_0000 | if directory { 0x0200_0000 } else { 0 })
             .open(path)?;
@@ -69,62 +86,149 @@ impl InspectedOriginal {
     }
 }
 fn descriptor(file: &File) -> io::Result<Vec<u8>> {
-    let mut needed = 0;
-    let first = unsafe {
-        GetKernelObjectSecurity(
+    #[link(name = "advapi32")]
+    unsafe extern "system" {
+        fn GetSecurityInfo(
+            handle: *mut std::ffi::c_void,
+            kind: i32,
+            requested: u32,
+            owner: *mut *mut std::ffi::c_void,
+            group: *mut *mut std::ffi::c_void,
+            dacl: *mut *mut windows_sys::Win32::Security::ACL,
+            sacl: *mut *mut windows_sys::Win32::Security::ACL,
+            descriptor: *mut *mut std::ffi::c_void,
+        ) -> u32;
+    }
+    let mut raw = std::ptr::null_mut();
+    let code = unsafe {
+        GetSecurityInfo(
             file.as_raw_handle(),
-            COMPLETE_SECURITY,
+            1,
+            FULL_DESCRIPTOR_SECURITY_INFORMATION,
             std::ptr::null_mut(),
-            0,
-            &mut needed,
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+            std::ptr::null_mut(),
+            &mut raw,
         )
     };
-    let error = io::Error::last_os_error();
-    if first != 0 || error.raw_os_error() != Some(122) {
-        return Err(error);
+    if code != 0 {
+        return Err(io::Error::from_raw_os_error(code as i32));
     }
-    if !(20..=262144).contains(&needed) {
-        return Err(denied("complete descriptor exceeds original bound"));
+    if raw.is_null() {
+        return Err(denied("complete query returned no descriptor"));
     }
-    let mut bytes = vec![0u8; needed as usize];
-    if unsafe {
-        GetKernelObjectSecurity(
-            file.as_raw_handle(),
-            COMPLETE_SECURITY,
-            bytes.as_mut_ptr().cast(),
-            needed,
-            &mut needed,
-        )
-    } == 0
-    {
+    struct Local(*mut std::ffi::c_void);
+    impl Drop for Local {
+        fn drop(&mut self) {
+            unsafe {
+                LocalFree(self.0);
+            }
+        }
+    }
+    let _allocated = Local(raw);
+    if unsafe { IsValidSecurityDescriptor(raw) } == 0 {
+        return Err(denied("invalid complete descriptor"));
+    }
+    let length = unsafe { GetSecurityDescriptorLength(raw) };
+    if !(20..=262144).contains(&length) {
+        return Err(denied("complete descriptor length bound"));
+    }
+    let (mut control, mut revision) = (0u16, 0u32);
+    if unsafe { GetSecurityDescriptorControl(raw, &mut control, &mut revision) } == 0 {
         return Err(io::Error::last_os_error());
     }
-    if needed as usize != bytes.len() {
-        return Err(denied("complete descriptor changed while reading"));
+    if revision != 1 {
+        return Err(denied("unknown descriptor revision"));
     }
-    Ok(bytes)
+    if control & 0x8000 != 0 {
+        // Self-relative output preserves every OS-returned ACE/control byte,
+        // including unrecognized extension ACEs; never reorder/filter them.
+        return Ok(
+            unsafe { std::slice::from_raw_parts(raw.cast::<u8>(), length as usize) }.to_vec(),
+        );
+    }
+    let mut required = 0;
+    let ok = unsafe { MakeSelfRelativeSD(raw, std::ptr::null_mut(), &mut required) };
+    if ok != 0
+        || io::Error::last_os_error().raw_os_error() != Some(122)
+        || !(20..=262144).contains(&required)
+    {
+        return Err(denied("absolute descriptor conversion coverage unknown"));
+    }
+    let mut relative = vec![0u8; required as usize];
+    if unsafe { MakeSelfRelativeSD(raw, relative.as_mut_ptr().cast(), &mut required) } == 0 {
+        return Err(io::Error::last_os_error());
+    }
+    if relative.len() != required as usize
+        || unsafe { IsValidSecurityDescriptor(relative.as_ptr().cast_mut().cast()) } == 0
+    {
+        return Err(denied("relative descriptor drift"));
+    }
+    Ok(relative)
+}
+
+/// Read-only full-tree admission. Complete SD failure happens before the first
+/// client mutation, output/custody creation or official process construction.
+pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> io::Result<()> {
+    let profile_pin = super::windows_official_runtime024::PinnedDirectory::open(profile)?;
+    let mut queue = vec![profile.join(".codex"), profile.join(".grok")];
+    let mut count = 0;
+    while let Some(path) = queue.pop() {
+        if std::time::Instant::now() >= deadline {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        count += 1;
+        if count > 512 {
+            return Err(denied("original tree exceeds bound"));
+        }
+        match std::fs::symlink_metadata(&path) {
+            Err(e) if e.kind() == io::ErrorKind::NotFound => {
+                // Absence still requires full security/identity of its original
+                // parent. Do not treat an absent root as permission to mutate.
+                InspectedOriginal::open(
+                    path.parent().ok_or_else(|| denied("parent absent"))?,
+                    true,
+                )?
+                .recheck()?;
+            }
+            Err(e) => return Err(e),
+            Ok(m) => {
+                let inspected = InspectedOriginal::open(&path, m.is_dir())?;
+                inspected.recheck()?;
+                if m.is_dir() {
+                    for child in std::fs::read_dir(&path)? {
+                        queue.push(child?.path());
+                    }
+                }
+                inspected.recheck()?;
+            }
+        }
+    }
+    profile_pin.recheck()
+}
+pub(crate) fn require_durable_capture() -> crate::errors::AppResult<()> {
+    Err(crate::errors::AppError::RuntimeManaged {
+        code: "windows024_originals_custody_required".into(),
+        detail: "完整安全前提读回后仍需同卷原件持久保管；未创建官方进程或宣告捕获成功".into(),
+    })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     #[test]
-    fn wl2_complete_descriptor_never_falls_back_or_mutates() {
-        let dir = tempfile::tempdir().unwrap();
-        let p = dir.path().join("synthetic-original");
-        std::fs::write(&p, b"synthetic, no credentials").unwrap();
-        let before = std::fs::read(&p).unwrap();
-        match InspectedOriginal::open(&p, false) {
-            Ok(original) => original.recheck().unwrap(),
-            Err(e) => {
-                // This is prerequisite refusal, not a successful custody test.
-                println!(
-                    "complete-security prerequisite rejected: raw={:?} error={e}",
-                    e.raw_os_error()
-                );
-                assert!(matches!(e.raw_os_error(), Some(5 | 1314)));
-            }
+    fn wl2_r3_complete_query_masks_and_error_classification() {
+        assert_eq!(FULL_DESCRIPTOR_QUERY_ACCESS, 0x01020000);
+        assert_eq!(FULL_DESCRIPTOR_SECURITY_INFORMATION, 0x10000);
+        for code in [5, 1314] {
+            assert_eq!(classify_error(Some(code)), SecurityFailure::Unreadable);
         }
-        assert_eq!(std::fs::read(&p).unwrap(), before);
+        for code in [0, 50, 87, 122, 1338, 1460] {
+            assert_eq!(classify_error(Some(code)), SecurityFailure::CoverageUnknown);
+        }
+        assert_eq!(classify_error(None), SecurityFailure::CoverageUnknown);
+        // The known ordinary-token1314 is reused. No live full-SD request is
+        // repeated without a new environment; only new pure classification is tested.
     }
 }
