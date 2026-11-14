@@ -48,9 +48,15 @@ W-L1 associates a completion port before the suspended root is assigned to its
 Job and starts the capture worker before resume. New-member handles retain their
 FILETIME/SID/image file identity. Notifications are not guaranteed exit evidence:
 any inaccessible member, generation mismatch or difference between total process
-accounting and retained history keeps the result unknown. Only the exact console
-image under the Win32-reported System32 directory allows Windows component-store
-hardlinks; admitted runtime/package images retain their single-link requirement.
+accounting and retained history keeps the result unknown. Read-only image
+observation of original-Job helpers under the Win32-reported System32 directory
+allows Windows component-store hardlinks after parent-path/type and file-identity
+checks. This grants no official service/source admission: active service must be
+the exact current Bun, and package-image pins retain their single-link rule.
+An exited retained generation still listed by an earlier active snapshot is
+retried inside the original deadline; its handle is never replaced by a new PID.
+Observed sc/schtasks helper nonzero exits remain raw failures under the current
+whole-Job normal-exit contract; this module does not invent a diagnostic allowlist.
 
 The backend consumes only existing product windows-sys features (0.61 API family)
 and std. IP Helper/ACL SDK functions unavailable through the existing feature set
