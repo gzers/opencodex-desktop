@@ -277,3 +277,8 @@ post-result回执补丁72b9f74d6仅两份命令投影源码，原生/HTTP/来源
 MSVC product01 E0601/101首失败保留，Cargo将新增helper识别独立bin；分派内联ocxd.rs后product02全部bins0/65200ms，库bootstrap纯反例1项通过。首helper未进当时sourceglob/hash缺口如实声明，最终库35份非binRust及产品36份Rust与最终源一致。完整新准备证据.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-20261114-r1/，prelaunch-report/status/result保留“等待用户桌面启动”事实，不把组件或同名fixture升级真实GUI/生产通过。
 
 已准备并给用户从marenben桌面普通运行C:/Users/Public/ocx-h024-desktop-20261114-r1/launch-h024-desktop.cmd；Public输入两EXE已核摘要，ACL只改本次新根。准备快照out01为空；无新账户/Profile/官方进程或已运行broker。新输入根为待执行保留；历史清理拒绝不重试，不W2/双SID、不发布。后继实际结果另行追加，不覆盖此准备记录。
+
+
+## 2026-11-15 H桌面首运行失败（原同SID证据待采集）
+
+用户已从marenben/session7桌面运行f93651d9f。00:30:14~31 observer原101，wait_file等待原taskD/manager-normal.json缺席超时，尚未manager交接通过。bootstrap/suspended/task-location三份private原报告及D对当前控制账户accessdenied，不能凭存在签nativeToken/noJob通过；空host清理未知，未按PID重建/强杀。新增同SID只读导出入口代码183557801b5279ac057f2e7468829a8360733179，用户需原marenben桌面collect-h024-desktop.cmd导出准确任务日志，不重跑/改ACL/删账号Profile。初始可读失败/盘点和限制在.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-run-20261115-r1/，当前allAccepted=false，后续原日志和新修复另增轮次。原SD1314不重跑，官方启动0、不W2/双SID发布。

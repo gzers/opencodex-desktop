@@ -1,0 +1,54 @@
+{
+  "items": [
+    {
+      "name": "bootstrap-admission.json",
+      "readable": false,
+      "reason": "private original owner ACL; not changed"
+    },
+    {
+      "name": "failure-empty-recovery.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readable": true
+    },
+    {
+      "name": "failure-empty-recovery.stdout.log",
+      "bytes": 38,
+      "sha256": "352cce30c2d58f2d55ba4d270fbcf2cb22a3afcef11dee08e7c33f5ca3904bc1",
+      "readable": true
+    },
+    {
+      "name": "launch-result.json",
+      "bytes": 476,
+      "sha256": "a422343c29e921525c60433818a9018ff515f1bcb67198417e4b0435036d6dcf",
+      "readable": true
+    },
+    {
+      "name": "suspended-original.json",
+      "readable": false,
+      "reason": "private original owner ACL; not changed"
+    },
+    {
+      "name": "task-location.json",
+      "readable": false,
+      "reason": "private original owner ACL; not changed"
+    },
+    {
+      "name": "test.stderr.log",
+      "bytes": 393,
+      "sha256": "8fa294fc45cb78f860535a0e17b01a2065d7f52abdd67338c96f2619874b12a6",
+      "readable": true
+    },
+    {
+      "name": "test.stdout.log",
+      "bytes": 316,
+      "sha256": "90639d03c95e9158d81f7e9ae6dae13d96b9b476f79342537432089e171aff18",
+      "readable": true
+    }
+  ],
+  "firstFailure": "test101 wait for manager-normal.json at00:30:31 +08",
+  "nativePrivateFacts": "unreadable until same SID exports",
+  "emptyHostMayStillRun": true,
+  "noRetryOfTest": true,
+  "allAccepted": false
+}

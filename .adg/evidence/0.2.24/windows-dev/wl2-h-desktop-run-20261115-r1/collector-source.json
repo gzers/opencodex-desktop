@@ -1,0 +1,15 @@
+{
+  "files": [
+    {
+      "name": "collect-h024-desktop.ps1",
+      "sha256": "a210b4ce7697f83eca928e7ac915d6e7b86c06d7230a7d5b034867ea436433cf"
+    },
+    {
+      "name": "collect-h024-desktop.cmd",
+      "sha256": "2e7dbc52b6f6bc2a7d349c2a61dbf571878292e4c01ea2859213239db70421bf"
+    }
+  ],
+  "scope": "original sameSID reads only exact synthetic D and three private original task reports; no daily credentials/ACL changes/restart/kill",
+  "reason": "prior controller cannot read private JSON/D; archive must occur while original account can read",
+  "allAccepted": false
+}
