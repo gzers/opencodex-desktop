@@ -43,6 +43,8 @@ pub mod update;
 pub mod update_schedule;
 pub mod upgrade;
 pub mod window;
+#[cfg(windows)]
+pub(crate) mod windows_lifecycle024;
 pub mod workspace;
 
 #[cfg(all(test, target_os = "macos", target_arch = "aarch64"))]
@@ -306,6 +308,12 @@ where
             if let Some(observed) = &observations.stopped {
                 value = value.with_stopped_client_recovery(observed);
             }
+            #[cfg(windows)]
+            if runner.uses_windows_official024_owner()
+                && context.runtime.managed_installation_root().is_some()
+            {
+                value = value.with_unresolved_client_recovery();
+            }
             #[cfg(target_os = "macos")]
             if runner.manages_client_originals()
                 && context.runtime.managed_installation_root().is_some()
@@ -435,6 +443,23 @@ fn execute_lifecycle_observed<R: ProcessRunner + ?Sized>(
     let identity = context.runtime.managed_program_identity()?;
     if identity.installation_root != root || context.executable()? != identity.entry {
         return Err(AppError::NotConfigured);
+    }
+    #[cfg(windows)]
+    if runner.uses_windows_official024_owner() && identity.package_version == "2.99.0" {
+        let window = crate::modules::runtime::official_lifecycle024::ActionWindow::begin(
+            command.action,
+            action_started,
+            deadline,
+        )?;
+        let result = windows_lifecycle024::execute(command, context, data_root, window);
+        if crate::infrastructure::windows_official_lifecycle024::native_stopped(
+            &context.runtime,
+            &context.opencodex_home,
+        ) {
+            _observations.stopped =
+                Some(runtime_recovery_v2_owner::StoppedObservation::windows_retained_native());
+        }
+        return result;
     }
     if command.action == LifecycleAction::Start {
         match std::fs::symlink_metadata(context.opencodex_home.join("runtime-port.json")) {

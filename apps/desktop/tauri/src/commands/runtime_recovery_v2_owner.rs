@@ -116,6 +116,14 @@ pub struct CompletedLifecycleStop {
 pub(crate) struct StoppedObservation {
     _private: (),
 }
+#[cfg(windows)]
+impl StoppedObservation {
+    /// Only the retained native owner path calls this after normal exit.
+    /// It exposes Stopped + recovery Required, never file mutation authority.
+    pub(crate) fn windows_retained_native() -> Self {
+        Self { _private: () }
+    }
+}
 impl CompletedLifecycleStop {
     #[cfg(target_os = "macos")]
     pub(crate) fn bound_deadline(&self, candidate: Instant) -> Instant {

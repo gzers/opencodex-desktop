@@ -108,6 +108,22 @@ impl OfficialStatusSource {
 
     async fn fetch_inner(&self) -> Result<serde_json::Value, CollectError> {
         let started = Instant::now();
+        #[cfg(windows)]
+        if self.runtime.managed_installation_root().is_some() {
+            match self.runtime.managed_program_identity() {
+                Ok(identity) if identity.package_version == "2.99.0" => {
+                    return Ok(super::windows_official_lifecycle024::status(
+                        &self.runtime,
+                        &self.environment.opencodex_home,
+                        started + status_collect_timeout(),
+                    )
+                    .await
+                    .unwrap_or_else(|_| super::windows_official_lifecycle024::unknown_status()));
+                }
+                Err(_) => return Ok(super::windows_official_lifecycle024::unknown_status()),
+                _ => {}
+            }
+        }
         if self.runtime.source_problem().is_some() {
             return Err(CollectError::Unreachable);
         }
@@ -216,6 +232,10 @@ impl OfficialStatusSource {
     }
 
     async fn light_inner(&self) -> Result<serde_json::Value, CollectError> {
+        #[cfg(windows)]
+        if self.runtime.managed_installation_root().is_some() {
+            return self.fetch_inner().await;
+        }
         if self.runtime.managed_installation_root().is_some() {
             return self.fetch_inner().await;
         }
@@ -431,6 +451,13 @@ impl StatusSource for OfficialStatusSource {
     }
     fn client_recovery(&self) -> crate::modules::status::ClientRecoveryState {
         use crate::modules::status::ClientRecoveryState as State;
+        #[cfg(windows)]
+        if self.runtime.managed_installation_root().is_some() {
+            return super::windows_official_lifecycle024::recovery_state(
+                &self.runtime,
+                &self.environment.opencodex_home,
+            );
+        }
         if self.runtime.managed_installation_root().is_none() {
             return State::NotRequired;
         }
