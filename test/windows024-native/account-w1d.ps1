@@ -111,6 +111,7 @@ using System.Runtime.InteropServices;
 public static class W1cProfile {
  [DllImport("userenv.dll",CharSet=CharSet.Unicode,ExactSpelling=true)] public static extern int CreateProfile(string sid,string name,StringBuilder path,uint size);
  [DllImport("userenv.dll",CharSet=CharSet.Unicode,SetLastError=true)] public static extern bool DeleteProfileW(string sid,string path,string computer);
+ public static bool DeleteProfileForSid(string sid) { return DeleteProfileW(sid,null,null); }
 }
 '@
  if(!$c.resumeController){
@@ -187,7 +188,7 @@ finally{
    if($profile -and [IO.Path]::GetFileName($profile) -ceq $user.Name){
     # Native profile deletion targets only the exact newly created SID; evidence
     # remains in the external output. Unknown/loaded profile failures stay visible.
-    $deleted=[W1cProfile]::DeleteProfileW($user.SID.Value,$null,$null)
+    $deleted=[W1cProfile]::DeleteProfileForSid($user.SID.Value)
     $report.profileDeleteApi=$deleted;$report.profileDeleteWin32=[Runtime.InteropServices.Marshal]::GetLastWin32Error()
     $report.profileRemoved=!(Test-Path -LiteralPath $profile)
     if(!$report.profileRemoved){

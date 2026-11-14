@@ -25,8 +25,19 @@ try{
  $r.remainingOwnedProcesses=$owned
  if($owned.Count){throw 'test SID still owns processes; retain Profile, no force termination'}
  if($profiles.Count -eq 1){
-  if($profiles[0].Special -or [IO.Path]::GetFullPath($profiles[0].LocalPath) -ine $full -or $profiles[0].Loaded){throw 'exact Profile is still loaded or unknown; no force unload or filesystem fallback'}
-  $profiles[0]|Remove-CimInstance -ErrorAction Stop
+  if($profiles[0].Special -or [IO.Path]::GetFullPath($profiles[0].LocalPath) -ine $full){throw 'unknown Profile identity'}
+  # The native service decides atomically whether deletion is permitted. Passing
+  # PowerShell $null to a string parameter becomes empty text, not native NULL.
+  Add-Type -TypeDefinition @'
+using System.Runtime.InteropServices;
+public static class OcxMsiProfileCleanup {
+ [DllImport("userenv.dll",CharSet=CharSet.Unicode,SetLastError=true)] private static extern bool DeleteProfileW(string sid,string path,string computer);
+ public static bool DeleteSid(string sid) { return DeleteProfileW(sid,null,null); }
+}
+'@
+  $r.nativeDeleteResult=[OcxMsiProfileCleanup]::DeleteSid($c.sid)
+  $r.nativeDeleteError=[Runtime.InteropServices.Marshal]::GetLastWin32Error()
+  if(!$r.nativeDeleteResult){throw 'native Profile service refused deletion; no force unload or filesystem fallback'}
  }elseif($profiles.Count -ne 0){throw 'ambiguous native Profile registration'}
  $r.profileRemoved=!(Test-Path -LiteralPath $full) -and @(Get-CimInstance Win32_UserProfile -Filter ("SID='"+$c.sid+"'")).Count -eq 0
  if(!$r.profileRemoved){throw 'native Profile cleanup incomplete; directory retained'}
