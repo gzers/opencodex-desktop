@@ -94,6 +94,15 @@ fn client_snapshot(profile: &Path) -> serde_json::Value {
 
 #[test]
 fn expired_window_and_missing_owner_cannot_start_or_adopt() {
+    let windows_spelling = "C:/exact/profile/runtime/bin".replace('/', &char::from(92).to_string());
+    assert!(same(
+        Path::new("C:/exact/profile/runtime/bin"),
+        Path::new(&windows_spelling)
+    ));
+    assert!(!same(
+        Path::new("C:/other/profile/runtime/bin"),
+        Path::new(&windows_spelling)
+    ));
     let now = Instant::now();
     assert!(shared::ActionWindow::begin(LifecycleAction::Start, now, now).is_err());
     let r = crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();

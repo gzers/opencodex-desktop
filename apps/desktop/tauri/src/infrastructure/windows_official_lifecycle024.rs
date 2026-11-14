@@ -45,7 +45,12 @@ fn budget(deadline: Instant) -> AppResult<()> {
 fn same(a: &Path, b: &Path) -> bool {
     dunce::simplified(a)
         .to_string_lossy()
-        .eq_ignore_ascii_case(&dunce::simplified(b).to_string_lossy())
+        .replace('/', &char::from(92).to_string())
+        .eq_ignore_ascii_case(
+            &dunce::simplified(b)
+                .to_string_lossy()
+                .replace('/', &char::from(92).to_string()),
+        )
 }
 fn system_console() -> AppResult<PathBuf> {
     #[link(name = "kernel32")]
