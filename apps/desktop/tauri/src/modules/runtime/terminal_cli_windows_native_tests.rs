@@ -293,6 +293,14 @@ fn installer(
 #[link(name = "msi")]
 unsafe extern "system" {
     fn MsiQueryProductStateW(product: *const u16) -> i32;
+    fn MsiGetProductInfoExW(
+        product: *const u16,
+        sid: *const u16,
+        context: u32,
+        property: *const u16,
+        value: *mut u16,
+        length: *mut u32,
+    ) -> u32;
 }
 
 struct MsiRegistration<'a> {
@@ -303,6 +311,21 @@ impl MsiRegistration<'_> {
     fn state(&self) -> i32 {
         let product: Vec<u16> = self.product.encode_utf16().chain(Some(0)).collect();
         unsafe { MsiQueryProductStateW(product.as_ptr()) }
+    }
+    fn context_query(&self, context: u32) -> u32 {
+        let product: Vec<u16> = self.product.encode_utf16().chain(Some(0)).collect();
+        let property: Vec<u16> = "LocalPackage".encode_utf16().chain(Some(0)).collect();
+        let mut length = 0;
+        unsafe {
+            MsiGetProductInfoExW(
+                product.as_ptr(),
+                std::ptr::null(),
+                context,
+                property.as_ptr(),
+                std::ptr::null_mut(),
+                &mut length,
+            )
+        }
     }
 }
 impl Drop for MsiRegistration<'_> {
@@ -366,18 +389,49 @@ fn msi_log(e: &Evidence, label: &str) -> String {
     }
 }
 
+fn assert_msi_cleanup_refused_before_files(log: &str) {
+    // Doing action is script generation for this deferred action. Require both
+    // scheduling order and actual script failure before any RemoveFiles/FileRemove.
+    let scheduled = log.find("Doing action: OCX023RevokeTerminalCli").unwrap();
+    assert!(scheduled < log.find("Doing action: RemoveFiles").unwrap());
+    let executed = log
+        .find("Executing op: CustomActionSchedule(Action=OCX023RevokeTerminalCli,")
+        .unwrap();
+    let failed = executed
+        + log[executed..]
+            .find("CustomAction OCX023RevokeTerminalCli returned actual error code 1")
+            .unwrap();
+    assert!(!log[..failed].contains("Executing op: ActionStart(Name=RemoveFiles,"));
+    assert!(!log[..failed].contains("Executing op: FileRemove("));
+    assert!(log[failed..].contains("Return value 3"));
+}
+
 #[test]
 #[ignore = "MSI-only; requires an explicitly prepared separate guest and one fresh ordinary account"]
 fn isolated_msi_uninstall_only() {
+    msi_uninstall_only(false);
+}
+
+#[test]
+#[ignore = "explicit local disposable administrator scenario; not ordinary-user acceptance"]
+fn isolated_msi_uninstall_administrator() {
+    msi_uninstall_only(true);
+}
+
+fn msi_uninstall_only(administrator: bool) {
     // No component-only fallback. A prepared guest acknowledgement and actual
     // MSI install success are prerequisites, not inferred from registry absence.
-    assert_eq!(std::env::var("OCXD024_MSI_ONLY_GUEST").as_deref(), Ok("1"));
     let machine = std::env::var("COMPUTERNAME").unwrap();
-    assert_ne!(
-        machine.to_uppercase(),
-        "EZIO-MINI",
-        "daily host is excluded"
-    );
+    if administrator {
+        assert_eq!(std::env::var("OCXD024_MSI_LOCAL_ADMIN").as_deref(), Ok("1"));
+    } else {
+        assert_eq!(std::env::var("OCXD024_MSI_ONLY_GUEST").as_deref(), Ok("1"));
+        assert_ne!(
+            machine.to_uppercase(),
+            "EZIO-MINI",
+            "daily host is excluded"
+        );
+    }
     assert_eq!(
         machine.to_uppercase(),
         std::env::var("OCXD024_MSI_GUEST_NAME")
@@ -386,7 +440,10 @@ fn isolated_msi_uninstall_only() {
     );
     let token = current_identity().unwrap();
     assert_eq!(token.sid, std::env::var("OCXD024_ACCOUNT_SID").unwrap());
-    assert!(!token.elevated);
+    assert_eq!(
+        token.elevated, administrator,
+        "exact authorized test token required"
+    );
     assert!(!crate::modules::test_sandbox::enabled());
     let profile = platform::home_dir().unwrap();
     assert!(profile
@@ -412,6 +469,46 @@ fn isolated_msi_uninstall_only() {
         product,
         evidence: &e,
     };
+    if administrator {
+        if let Some(prior) = std::env::var_os("OCXD024_MSI_RESUME_EVIDENCE") {
+            let prior = Evidence(PathBuf::from(prior));
+            let pending = fs::read(prior.0.join("pending-before.private.json")).unwrap();
+            let value: Value = decode(&pending).unwrap();
+            let c: Context = serde_json::from_value(value["context"].clone()).unwrap();
+            assert_eq!(c.user_profile, profile);
+            assert_eq!(c.program_root, profile.join("w1d native/I 空格 & !"));
+            assert_eq!(registration.state(), 5);
+            assert_eq!(registration.context_query(2), 0);
+            assert_eq!(registration.context_query(4), 1605);
+            EntryPin::open(&c).unwrap();
+            assert_eq!(fs::read(c.pending()).unwrap(), pending);
+            let before: Value =
+                decode(&fs::read(prior.0.join("failed-before.private.json")).unwrap()).unwrap();
+            let after: Value =
+                decode(&fs::read(prior.0.join("failed-after.private.json")).unwrap()).unwrap();
+            assert_eq!(before, after);
+            assert_eq!(msi_program_snapshot(&c), after["programs"]);
+            let config_before = fs::read(data_root::runtime_config_path(&c.desktop_root)).unwrap();
+            assert_eq!(
+                hash::sha256_hex(&config_before),
+                after["configSha256"].as_str().unwrap()
+            );
+            assert_eq!(
+                hash::sha256_file(&c.desktop_root.join("exports/msi-only-retain.txt")).unwrap(),
+                after["dataSentinelSha256"].as_str().unwrap()
+            );
+            assert_eq!(
+                hash::sha256_file(&c.opencodex_home.join("msi-only-retain.txt")).unwrap(),
+                after["homeSentinelSha256"].as_str().unwrap()
+            );
+            let r = ObservedNative::new();
+            assert_eq!(serde_json::to_value(&r.original).unwrap(), after["path"]);
+            assert_msi_cleanup_refused_before_files(&msi_log(&prior, "msi-only-uninstall-refused"));
+            e.event("resumed-original-msi-refusal", json!({"priorEvidence":prior.0,"sameSid":token.sid,"elevated":true,"programIdentityAndBytesRetained":true,"pendingBytesRetained":true,"beforeRemoveFiles":true}));
+            complete_msi_uninstall(&c, &r, &e, &registration, &msi, &config_before);
+            return;
+        }
+    }
     assert_eq!(
         registration.state(),
         -1,
@@ -419,7 +516,7 @@ fn isolated_msi_uninstall_only() {
     );
     let r = ObservedNative::new();
     e.save("path-before.private.json", &encode(&r.original).unwrap());
-    e.event("hypothesis",json!({"scope":"only actual MSI transactions; no terminal/official rerun", "machine":machine,"sid":token.sid,"session":token.session_id,"elevated":false,"product":product}));
+    e.event("hypothesis",json!({"scope":"only actual MSI transactions; no terminal/official rerun", "machine":machine,"sid":token.sid,"session":token.session_id,"elevated":token.elevated,"administratorScenario":administrator,"ordinaryUserAcceptance":!administrator,"product":product}));
     let base = profile.join("w1d native");
     assert!(!base.exists());
     platform::create_private_dir_all(&base, 0o700).unwrap();
@@ -433,6 +530,21 @@ fn isolated_msi_uninstall_only() {
         registration.state(),
         5,
         "MSI current-user registration absent"
+    );
+    // Elevation must not silently turn this package into a machine install.
+    let per_user = registration.context_query(2);
+    let per_machine = registration.context_query(4);
+    e.event(
+        "installed-context",
+        json!({"perUserUnmanagedQuery":per_user,"perMachineQuery":per_machine}),
+    );
+    assert!(
+        per_user == 0 || per_user == 234,
+        "per-user MSI context required"
+    );
+    assert_eq!(
+        per_machine, 1605,
+        "machine installation is outside this scenario"
     );
     let d = base.join("data/desktop");
     data_root::initialize(&d).unwrap();
@@ -525,29 +637,43 @@ fn isolated_msi_uninstall_only() {
     assert!(!c.record().exists());
     program_image::verify(&selected).unwrap();
     let refused_log = msi_log(&e, "msi-only-uninstall-refused");
-    let action_start = refused_log
-        .find("Doing action: OCX023RevokeTerminalCli")
-        .expect("actual cleanup custom action missing");
-    let action_failure = refused_log[action_start..]
-        .find("Return value 3")
-        .expect("actual cleanup custom action failure missing")
-        + action_start;
-    assert!(!refused_log[..action_failure].contains("Doing action: RemoveFiles"));
-    assert!(refused_log.contains("OCX023RevokeTerminalCli"));
+    assert_msi_cleanup_refused_before_files(&refused_log);
     assert_eq!(failed_after, failed_before);
     e.event("failed-uninstall-retained", json!({"exitCode":refused.status.code(),"programIdentityAndBytesRetained":true,
         "pendingBytesRetained":true,"productState":5,"beforeRemoveFiles":true,"pathUnchanged":true,"liveRuntimeRetained":true}));
+    complete_msi_uninstall(&c, &r, &e, &registration, &msi, &config_before);
+}
+
+fn complete_msi_uninstall(
+    c: &Context,
+    r: &ObservedNative,
+    e: &Evidence,
+    registration: &MsiRegistration<'_>,
+    msi: &Path,
+    config_before: &[u8],
+) {
+    let i = &c.program_root;
+    let config = data_root::runtime_config_path(&c.desktop_root);
+    let sentinel = c.desktop_root.join("exports/msi-only-retain.txt");
+    let home_sentinel = c.opencodex_home.join("msi-only-retain.txt");
+    let selected = program_selection::read_complete(
+        i,
+        crate::modules::data_root::layout::Platform::Windows,
+        "win32-x64",
+    )
+    .unwrap()
+    .unwrap();
     // Continue the original Enable with a new explicit preview; do not rewrite
     // its before/after or use a new action to compensate the refused uninstall.
-    let resume = inspect_with(&c, &[], &r).unwrap();
+    let resume = inspect_with(c, &[], r).unwrap();
     assert!(resume.pending);
     assert_eq!(resume.action, Action::Enable);
     apply_with(
-        &c,
+        c,
         resume.action,
         &[],
         &resume.confirmation_digest,
-        &r,
+        r,
         &|_| Ok(()),
     )
     .unwrap();
@@ -557,7 +683,7 @@ fn isolated_msi_uninstall_only() {
         "active-path.private.json",
         &encode(&r.read().unwrap()).unwrap(),
     );
-    let removed = installer(&e, &msi, &i, "msi-only-uninstall-normal", true);
+    let removed = installer(e, msi, i, "msi-only-uninstall-normal", true);
     // Preserve the observed original PATH on success before any further assert,
     // so a later unrelated failure cannot make cleanup treat it as an outsider.
     if removed.status.success() && r.read().unwrap() == r.original {
@@ -583,13 +709,29 @@ fn isolated_msi_uninstall_only() {
         b"explicit test H bytes, no official command"
     );
     program_image::verify(&selected).unwrap();
-    let normal_log = msi_log(&e, "msi-only-uninstall-normal");
+    let normal_log = msi_log(e, "msi-only-uninstall-normal");
     assert!(
         normal_log
             .find("Doing action: OCX023RevokeTerminalCli")
             .unwrap()
             < normal_log.find("Doing action: RemoveFiles").unwrap()
     );
+    assert!(
+        normal_log
+            .find("Executing op: CustomActionSchedule(Action=OCX023RevokeTerminalCli,")
+            .unwrap()
+            < normal_log
+                .find("Executing op: ActionStart(Name=RemoveFiles,")
+                .unwrap()
+    );
+    e.save("normal-after.private.json", &serde_json::to_vec(&json!({
+        "productState":registration.state(),"path":r.read().unwrap(),
+        "terminalRecordAbsent":!c.record().exists(),"pendingAbsent":!c.pending().exists(),
+        "ownedProgramsAbsent":(["opencodex-desktop.exe","ocxd.exe","ocx.exe",ENTRY_SOURCE].iter().all(|name|!i.join(name).exists())),
+        "configSha256":hash::sha256_file(&config).unwrap(),
+        "dataSentinelSha256":hash::sha256_file(&sentinel).unwrap(),
+        "homeSentinelSha256":hash::sha256_file(&home_sentinel).unwrap(),"selection":selected.selection
+    })).unwrap());
     e.save(
         "path-after.private.json",
         &encode(&r.read().unwrap()).unwrap(),
