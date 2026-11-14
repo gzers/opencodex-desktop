@@ -171,6 +171,48 @@ pub struct PrivateRecord {
     max: usize,
 }
 impl PrivateRecord {
+    /// A locator is untrusted data, never a private immutable record or native
+    /// proof. Read-only snapshot sharing may coexist with an original creator's
+    /// writer; exact live peer/SID/FILETIME/image checks must grant any rights.
+    /// This is used only for bounded empty-host rendezvous diagnostics/recovery.
+    pub fn locator_snapshot(path: &Path, max: usize) -> io::Result<Vec<u8>> {
+        if max == 0 || max > 65536 {
+            return Err(denied("locator snapshot bound"));
+        }
+        let parent = PinnedDirectory::open_private(
+            path.parent()
+                .ok_or_else(|| denied("locator parent absent"))?,
+        )?;
+        validate(path)?;
+        let sid = current_identity()?.sid;
+        let mut f = OpenOptions::new()
+            .access_mode(0x80020000)
+            .share_mode(FILE_SHARE_READ | FILE_SHARE_WRITE)
+            .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT)
+            .open(path)?;
+        let id = identity(&f, false)?;
+        verify_private(f.as_raw_handle(), &sid, true)?;
+        let mut read = || -> io::Result<Vec<u8>> {
+            if f.metadata()?.len() > max as u64 {
+                return Err(denied("locator too large"));
+            }
+            f.seek(SeekFrom::Start(0))?;
+            let mut bytes = vec![];
+            (&mut f).take(max as u64 + 1).read_to_end(&mut bytes)?;
+            if bytes.len() > max {
+                return Err(denied("locator exceeds bound"));
+            }
+            Ok(bytes)
+        };
+        let before = read()?;
+        let after = read()?;
+        if before != after || identity(&f, false)? != id {
+            return Err(denied("locator snapshot changed"));
+        }
+        verify_private(f.as_raw_handle(), &sid, true)?;
+        parent.recheck()?;
+        Ok(before)
+    }
     pub fn create(path: &Path, bytes: &[u8], max: usize) -> io::Result<Self> {
         if max == 0 || max > 1024 * 1024 || bytes.len() > max {
             return Err(io::Error::new(
@@ -207,13 +249,20 @@ impl PrivateRecord {
         verify_private(raw, &sid, true)?;
         file.write_all(bytes)?;
         file.sync_all()?;
-        Ok(Self {
-            file,
-            _parent: parent,
-            id,
-            sid,
-            max,
-        })
+        // A retained CREATE_NEW writer prevents a second deny-write reader:
+        // Windows checks both handles' desired access against both share masks.
+        // Seal publication by closing this writable description, reopening the
+        // exact original object read-only/deny-write/deny-delete, and rechecking
+        // its identity, private security and bytes before returning any record.
+        // The pinned parent remains held across the transition. Replacement,
+        // changed bytes or sharing conflict refuses publication, never repairs.
+        drop(file);
+        let mut sealed = Self::open(path, max)?;
+        if sealed.id != id || sealed.sid != sid || sealed.read()? != bytes {
+            return Err(denied("private record sealing identity or bytes changed"));
+        }
+        parent.recheck()?;
+        Ok(sealed)
     }
     pub fn open(path: &Path, max: usize) -> io::Result<Self> {
         if max == 0 || max > 1024 * 1024 {

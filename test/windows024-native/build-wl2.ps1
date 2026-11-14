@@ -10,6 +10,11 @@ $arguments=@('build','--locked','--offline','--manifest-path','apps/desktop/taur
 if($Mode -eq 'test'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'r3'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_r3_','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'h-desktop'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_h_','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'record-phase'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::phase::tests','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'native-record'){
+ $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
+ $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','private_record_pins_bytes_and_generation','--','--exact','tests::private_record_pins_bytes_and_generation','--test-threads=1','--nocapture')
+}
 if($Mode -eq 'native'){
  $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
  $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','wl2_','--','--test-threads=1','--nocapture')
@@ -17,6 +22,10 @@ if($Mode -eq 'native'){
 if($Mode -eq 'native-r3'){
  $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
  $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','wl2_r3_','--','--test-threads=1','--nocapture')
+}
+if($Mode -eq 'native-h'){
+ $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
+ $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','wl2_h_','--','--test-threads=1','--nocapture')
 }
 $head=git rev-parse HEAD
 $diff=git diff --binary

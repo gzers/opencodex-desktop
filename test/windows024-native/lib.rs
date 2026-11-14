@@ -59,6 +59,96 @@ mod tests {
         drop(dir);
     }
     #[test]
+    fn wl2_h_published_record_allows_independent_readers_while_denies_mutations() {
+        let f = Fixture::new();
+        let dir = create_private_directory(&f.0.join("private")).unwrap();
+        let p = dir.path().join("rendezvous");
+        let mut creator =
+            PrivateRecord::create(&p, b"nonsecret locator bound by native peer", 128).unwrap();
+        let mut reader = PrivateRecord::open(&p, 128).expect(
+            "a manager must read the live published locator without relaxing immutable sharing",
+        );
+        assert_eq!(creator.identity(), reader.identity());
+        assert_eq!(creator.read().unwrap(), reader.read().unwrap());
+        assert!(fs::write(&p, b"bad replacement").is_err());
+        assert!(fs::rename(&p, dir.path().join("other")).is_err());
+        assert!(fs::remove_file(&p).is_err());
+        drop(creator);
+        assert!(fs::write(&p, b"still forbidden while independent reader retained").is_err());
+        assert_eq!(
+            reader.read().unwrap(),
+            b"nonsecret locator bound by native peer"
+        );
+        drop(reader);
+        drop(dir);
+    }
+    #[test]
+    fn wl2_h_original_writer_share_mode_reproduces_native_conflict() {
+        use std::os::windows::fs::OpenOptionsExt;
+        let f = Fixture::new();
+        let p = f.0.join("unsealed-fixture");
+        let writer = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .share_mode(1)
+            .open(&p)
+            .unwrap();
+        let failure = std::fs::OpenOptions::new()
+            .read(true)
+            .share_mode(1)
+            .open(&p)
+            .unwrap_err();
+        assert_eq!(failure.raw_os_error(), Some(32));
+        // Diagnostic collection is read-only and may acknowledge the existing
+        // writer. This is not how immutable PrivateRecord is sealed/published.
+        let diagnostic = std::fs::OpenOptions::new()
+            .read(true)
+            .share_mode(3)
+            .open(&p)
+            .unwrap();
+        drop(diagnostic);
+        drop(writer);
+    }
+    #[test]
+    fn wl2_h_locator_snapshot_is_data_not_mutation_or_native_authority() {
+        let f = Fixture::new();
+        let dir = create_private_directory(&f.0.join("private")).unwrap();
+        let p = dir.path().join("locator");
+        let original = PrivateRecord::create(&p, b"nonsecret candidate address", 128).unwrap();
+        assert_eq!(
+            PrivateRecord::locator_snapshot(&p, 128).unwrap(),
+            b"nonsecret candidate address"
+        );
+        assert!(fs::write(&p, b"cannot mutate").is_err());
+        assert!(PrivateRecord::locator_snapshot(&p, 1).is_err());
+        assert!(PrivateRecord::locator_snapshot(&p, 65537).is_err());
+        // Snapshot only returns bytes, not PrivateRecord/RetainedPeer/Owner.
+        drop(original);
+        use std::os::windows::fs::OpenOptionsExt;
+        let old_creator = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .share_mode(1)
+            .open(&p)
+            .unwrap();
+        assert_eq!(
+            PrivateRecord::open(&p, 128).err().unwrap().raw_os_error(),
+            Some(32)
+        );
+        assert_eq!(
+            PrivateRecord::locator_snapshot(&p, 128).unwrap(),
+            b"nonsecret candidate address"
+        );
+        assert!(std::fs::OpenOptions::new()
+            .write(true)
+            .share_mode(3)
+            .open(&p)
+            .is_err());
+        drop(old_creator);
+        drop(dir);
+    }
+    #[test]
     fn linked_or_broad_objects_are_refused_without_repair() {
         let f = Fixture::new();
         let broad = f.0.join("broad");

@@ -346,8 +346,8 @@ pub fn manager_probe(
     let started = Instant::now();
     let (start, freq) = qpc()?;
     let deadline = started + Duration::from_secs(5);
-    let mut locator = PrivateRecord::open(&data.join("rendezvous.json"), 65536)?;
-    let r: Rendezvous = serde_json::from_slice(&locator.read()?).map_err(io::Error::other)?;
+    let locator = PrivateRecord::locator_snapshot(&data.join("rendezvous.json"), 65536)?;
+    let r: Rendezvous = serde_json::from_slice(&locator).map_err(io::Error::other)?;
     if r.schema != "windows-owner-rendezvous-v1"
         || r.broker_pid != original.pid
         || r.broker_filetime != original.creation_filetime.to_string()
