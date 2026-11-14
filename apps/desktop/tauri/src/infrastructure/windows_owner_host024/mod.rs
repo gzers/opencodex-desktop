@@ -2,6 +2,7 @@
 //! grants no ownership; native peer authentication and the four proofs remain
 //! mandatory before any production operation can be dispatched.
 use serde::{Deserialize, Serialize};
+mod continuity;
 use std::{
     io,
     time::{Duration, Instant},
@@ -39,6 +40,7 @@ struct WireBudget {
 }
 #[derive(Debug)]
 pub(crate) struct ValidatedDeadline {
+    started: Instant,
     deadline: Instant,
     stop_deadline: Instant,
     action_id: uuid::Uuid,
@@ -173,6 +175,14 @@ impl Request {
             ))
         };
         Ok(ValidatedDeadline {
+            started: instant
+                .checked_sub(Duration::from_nanos(
+                    u64::try_from(
+                        ((now_qpc - start) as u128 * 1_000_000_000).div_ceil(frequency as u128),
+                    )
+                    .map_err(|_| invalid("QPC original start overflow"))?,
+                ))
+                .ok_or_else(|| invalid("original Instant start overflow"))?,
             deadline: instant
                 .checked_add(remaining(end)?)
                 .ok_or_else(|| invalid("Instant overflow"))?,
