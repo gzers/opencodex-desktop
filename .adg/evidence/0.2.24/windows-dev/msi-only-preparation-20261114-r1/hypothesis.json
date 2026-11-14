@@ -1,0 +1,12 @@
+{
+  "runtimeExecution": false,
+  "environmentPrecondition": "still missing; awaiting isolated guest connection or image/resource scope",
+  "at": "2026-11-14T07:55:55.4083225+08:00",
+  "hypothesis": "An independent ignored MSI-only test can prepare the exact two native uninstall observations without executing passed terminal/official tests or installing on the daily host",
+  "allAccepted": false,
+  "plannedVerification": [
+    "compile MSVC product test target with no-run",
+    "verify exact ignored test discovery only",
+    "parse environment-gated controller and package query scripts"
+  ]
+}

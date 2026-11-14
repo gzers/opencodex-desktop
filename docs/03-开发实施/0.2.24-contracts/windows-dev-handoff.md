@@ -190,3 +190,15 @@ W1-D当前组件已收口，但allAccepted=false。唯一请求范围内的验�
 当前需要具体可用隔离Windows连接；如由本机新建Hyper-V临时客体，则需先固定可用Windows镜像来源、CPU/内存/磁盘边界和创建/销毁范围，才有可审阅的环境方案。合同要求“若用户决定准备新隔离VM，另明确可用镜像/资源和创建范围后执行”；这不是要求每次Windows代码修复重新授权。不会自行改变日常主机Installer策略、提高测试用户令牌、改成per-machine或用NSIS/复制文件代替真实MSI。
 
 源码f66d9d59f/包SHA9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282（316784640字节）沿原证据复用，本轮未重建/复制/声称重算。新证据仅.adg/evidence/0.2.24/windows-dev/windows-closeout-goal-intake-20261114-r1/，保存待证伪假设、最新合同摘要、三项状态和缺少输入。没有新测试账户/Profile/PATH/VM/MSI进程或外部临时根待清；既有自动审批拒绝及其全部余留按原事实保持，不重试、不绕过。环境到位后自主接续MSI-only用例，范围内实际缺陷批量处理并分批Git回交；共享范围外/需变方案时才提出具体证据。未改官方2.99/日常配置，未跑真实业务同步/模型请求/W2/双SID，未发布，持续目标保持未完成。
+
+## 2026-11-14 MSI专项入口准备（编译通过，真实两项仍待环境）
+
+持续目标本轮在 TEAM revision10 / IMP-34 revision136 与两个 MSI 合同范围内，先留假设再完成独立 ignored `isolated_msi_uninstall_only`、只读包核验、环境保护控制器及账户登记未决保留。代码 e2560f9047e453157bcc71948904fbf199a0540a 已推 codex/024-windows-native，仅5份允许测试文件，未改产品逻辑/安装器/共享层。
+
+最终 MSVC lib no-run exit0（42 warnings原样），精确 ignored --list 发现1项 exit0；三脚本解析0错误，日常主机在配置读取/建账户前拒绝，原 MSI 摘要/大小/Product表身份核验通过。测试EXE为91992576字节，SHA256 712a6e8e5bfbb607433b3b17bce77c05523f678058dba755cba679bdd447e65c；原MSI316784640字节，SHA256 9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282。两个哈希不等同冻结候选或真实事务通过。
+
+证据位于 .adg/evidence/0.2.24/windows-dev/msi-only-preparation-20261114-r1/，含两次编译原输出、精确发现输出、包/主机保护、实际执行源与Git blob分立摘要、完整状态表和清理事实。源码核验命令一度因内联Python换行转义SyntaxError停止，改用chr(10)后5份源核验通过，工具首错单列，未覆盖旧失败。
+
+真实MSI安装前提、pending失败保留、正常卸载均not-executed、environmentReady=false、allAccepted=false。尚缺允许普通用户per-user MSI的隔离Windows机/VM连接，或具体镜像、可用资源及创建/销毁范围；依环境接收合同，未获此输入不自行建VM或更改日常机器策略/测试令牌/安装范围。没有重复环境枚举/1625尝试，也没有重跑已过终端/官方/PATH/NSIS组件。既有W1-D证据复用。
+
+本轮新增测试账户/Profile/VM/MSI事务/真实PATH写入均0；源码和证据留作交付，复用构建缓存及原MSI留存。历史自动审批拒绝的大根/旧失败目录/schema/空目录/Public盘点根沿原未清事实，不重试或换工具绕过。未改官方2.99/日常配置，未跑业务同步/模型请求/W2/双SID，未发布。Windows持续目标未完成，仅环境阻塞后继真实两项。

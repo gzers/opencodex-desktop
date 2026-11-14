@@ -1,0 +1,54 @@
+{
+  "sourceHead": "e2560f9047e453157bcc71948904fbf199a0540a",
+  "build": {
+    "command": "cargo test --locked --offline --manifest-path apps/desktop/tauri/Cargo.toml --target x86_64-pc-windows-msvc --lib --no-run -j 6",
+    "elapsedMs": 222604,
+    "testExecuted": false,
+    "exitCode": 0
+  },
+  "discovery": {
+    "exitCode": 0,
+    "command": [
+      "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\deps\\opencodex_desktop_lib-75e8f4b92f415339.exe",
+      "--exact",
+      "modules::runtime::terminal_cli::terminal_cli_windows::native_tests::isolated_msi_uninstall_only",
+      "--ignored",
+      "--list"
+    ],
+    "exactIgnoredTestFound": true,
+    "runtimeExecution": false
+  },
+  "codePush": "verified HEAD equals origin/codex/024-windows-native",
+  "package": {
+    "allUsersPresent": false,
+    "productName": "OpenCodeX W1D Proof",
+    "sha256": "9a2af03c31f35e1c87bcfe2c839a01142ca50cad8b58d1c79450a05381755282",
+    "scope": "read-only original MSI Product table; no installation",
+    "productCode": "{67CF3D62-492D-4359-AAFE-8BE6FB17E647}",
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1d-bundle01\\tauri\\target\\release\\bundle\\msi\\OpenCodeX W1D Proof_0.2.24_x64_en-US.msi",
+    "version": "0.2.24",
+    "bytes": 316784640
+  },
+  "allAccepted": false,
+  "firstError": "tooling verification SyntaxError corrected; no new runtime failure; historical MSI1625 retained",
+  "cleanup": {
+    "newAccount": 0,
+    "newMsiExecutions": 0,
+    "newPathWrites": 0,
+    "newProfile": 0,
+    "newVm": 0,
+    "reusedBuildCacheRetained": true,
+    "historicalApprovalRejectedDeletionNotRetried": true
+  },
+  "normalUninstall": "not-executed",
+  "actualMsiInstall": "not-executed",
+  "testArtifact": {
+    "sourceManifest": "source-worktree-manifest.json",
+    "kind": "MSVC dev lib test executable; compile/list only, not release candidate",
+    "bytes": 91992576,
+    "sha256": "712a6e8e5bfbb607433b3b17bce77c05523f678058dba755cba679bdd447e65c",
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\deps\\opencodex_desktop_lib-75e8f4b92f415339.exe"
+  },
+  "environmentReady": false,
+  "failedUninstall": "not-executed"
+}
