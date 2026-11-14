@@ -1,0 +1,41 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+warning: fields `pid`, `port`, and `record_sha256` are never read
+   --> src/infrastructure/official_runtime024_transport.rs:104:5
+    |
+103 | pub struct StopAccepted {
+    |            ------------ fields in this struct
+104 |     pid: u32,
+    |     ^^^
+105 |     port: u16,
+    |     ^^^^
+106 |     record_sha256: String,
+    |     ^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `pid`, `port`, and `record_sha256` are never used
+   --> src/infrastructure/official_runtime024_transport.rs:109:12
+    |
+108 | impl StopAccepted {
+    | ----------------- methods in this implementation
+109 |     pub fn pid(&self) -> u32 {
+    |            ^^^
+...
+112 |     pub fn port(&self) -> u16 {
+    |            ^^^^
+...
+115 |     pub fn record_sha256(&self) -> &str {
+    |            ^^^^^^^^^^^^^
+
+warning: `opencodex-desktop` (lib test) generated 2 warnings
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1m 00s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+running 4 tests
+test modules::runtime::official_lifecycle024::tests::full_plan_rechecks_ordinary_files_not_only_selection ... ok
+test modules::runtime::official_lifecycle024::tests::inherited_start_stop_restart_deadlines_never_reset ... ok
+test modules::runtime::official_lifecycle024::tests::plan_refuses_context_or_source_drift_and_expired_budget ... ok
+test modules::runtime::official_lifecycle024::tests::plan_uses_exact_node_mjs_profile_and_distinct_home_without_shell ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2658 filtered out; finished in 0.25s
+
