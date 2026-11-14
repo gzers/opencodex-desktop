@@ -352,6 +352,17 @@ impl SystemServiceOwnerProofProvider {
         action_deadline: Instant,
         data_root: &Path,
     ) -> AppResult<CompletedLifecycleStop> {
+        #[cfg(windows)]
+        if context
+            .runtime
+            .managed_program_identity()
+            .map_or(true, |i| i.package_version == "2.99.0")
+        {
+            return Err(fail(
+                "windows024_owner_unknown",
+                "官方024停止须使用原创建句柄拥有者；未回退旧lifetime或全机进程扫描",
+            ));
+        }
         let started = Instant::now();
         let budget = crate::modules::process::stop_timeout()
             .min(action_deadline.saturating_duration_since(started));
@@ -1067,10 +1078,29 @@ impl SystemServiceOwnerProofProvider {
 impl ServiceOwnerProofProvider for SystemServiceOwnerProofProvider {
     fn query(&self, context: &ProcessContext) -> AppResult<ServiceOwnerProof> {
         self.same_context(context)?;
+        #[cfg(windows)]
+        if context
+            .runtime
+            .managed_program_identity()
+            .map_or(true, |i| i.package_version == "2.99.0")
+        {
+            return Ok(ServiceOwnerProof::Unknown);
+        }
         self.query_inner()
     }
     fn stop_owned(&self, context: &ProcessContext, identity: &str, pid: u32) -> AppResult<()> {
         self.same_context(context)?;
+        #[cfg(windows)]
+        if context
+            .runtime
+            .managed_program_identity()
+            .map_or(true, |i| i.package_version == "2.99.0")
+        {
+            return Err(fail(
+                "windows024_owner_unknown",
+                "无原保留句柄的恢复动作保持Unknown，未调用旧停止协议",
+            ));
+        }
         self.stop_inner(identity, pid)
     }
 }

@@ -49,6 +49,7 @@ pub struct ProcessIdentity {
     pub creation_filetime: u64,
     pub token: TokenIdentity,
     pub executable: PathBuf,
+    pub executable_id: FileIdentity,
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum ProcessState {
@@ -103,6 +104,50 @@ pub struct LaunchSpec<'a> {
     pub stderr: &'a File,
 }
 
+#[path = "process_monitor.rs"]
+mod monitor;
+fn image_identity(file: &File, path: &Path) -> io::Result<FileIdentity> {
+    #[link(name = "kernel32")]
+    unsafe extern "system" {
+        fn GetSystemDirectoryW(buffer: *mut u16, size: u32) -> u32;
+    }
+    let mut buffer = vec![0u16; 32768];
+    let n = unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) };
+    if n == 0 || n as usize >= buffer.len() {
+        return Err(io::Error::last_os_error());
+    }
+    let system = PathBuf::from(
+        String::from_utf16(&buffer[..n as usize])
+            .map_err(|_| denied("invalid Windows system path"))?,
+    )
+    .join("conhost.exe");
+    let key = |p: &Path| {
+        let raw = p
+            .to_string_lossy()
+            .replace(char::from(47), &char::from(92).to_string());
+        let prefix: String = [92u8, 92, 63, 92].into_iter().map(char::from).collect();
+        raw.strip_prefix(&prefix).unwrap_or(&raw).to_lowercase()
+    };
+    if key(path) != key(&system) {
+        return identity(file, false);
+    }
+    // Windows component-store hardlinks are expected only for this exact native
+    // System32 console image. Runtime/package images keep single-link refusal.
+    use windows_sys::Win32::Storage::FileSystem::{
+        GetFileInformationByHandle, GetFileType, BY_HANDLE_FILE_INFORMATION, FILE_TYPE_DISK,
+    };
+    let mut i: BY_HANDLE_FILE_INFORMATION = unsafe { std::mem::zeroed() };
+    check(unsafe { GetFileInformationByHandle(file.as_raw_handle(), &mut i) })?;
+    if unsafe { GetFileType(file.as_raw_handle()) } != FILE_TYPE_DISK
+        || i.dwFileAttributes & 0x410 != 0
+    {
+        return Err(denied("system console image has unknown file kind"));
+    }
+    Ok(FileIdentity {
+        volume: i.dwVolumeSerialNumber,
+        index: ((i.nFileIndexHigh as u64) << 32) | i.nFileIndexLow as u64,
+    })
+}
 fn observe(h: HANDLE) -> io::Result<ProcessIdentity> {
     let mut c = FILETIME::default();
     let mut e = FILETIME::default();
@@ -116,14 +161,22 @@ fn observe(h: HANDLE) -> io::Result<ProcessIdentity> {
     let mut b = vec![0u16; 32768];
     let mut n = b.len() as u32;
     check(unsafe { QueryFullProcessImageNameW(h, 0, b.as_mut_ptr(), &mut n) })?;
+    let executable = PathBuf::from(
+        String::from_utf16(&b[..n as usize])
+            .map_err(|_| denied("invalid process executable path"))?,
+    );
+    let image = OpenOptions::new()
+        .read(true)
+        .share_mode(1)
+        .custom_flags(0x00200000)
+        .open(&executable)?;
+    let executable_id = image_identity(&image, &executable)?;
     Ok(ProcessIdentity {
         pid,
         creation_filetime: ((c.dwHighDateTime as u64) << 32) | c.dwLowDateTime as u64,
         token: process_identity(h)?,
-        executable: PathBuf::from(
-            String::from_utf16(&b[..n as usize])
-                .map_err(|_| denied("invalid process executable path"))?,
-        ),
+        executable,
+        executable_id,
     })
 }
 fn state(h: HANDLE) -> io::Result<ProcessState> {
@@ -264,6 +317,7 @@ impl Drop for Attributes {
 /// force-stops a running service. Callers must retain this owner through normal
 /// Stop observation or explicitly request separately reported owned cleanup.
 pub struct OwnedRuntime {
+    monitor: monitor::Monitor,
     process: OwnedHandle,
     thread: Option<OwnedHandle>,
     job: OwnedHandle,
@@ -301,6 +355,7 @@ impl OwnedRuntime {
         }
         let job = unsafe { OwnedHandle::from_raw_handle(raw) };
         verify_private_job(raw, &current.sid)?;
+        let monitor = monitor::Monitor::new(&job)?;
         let mut limits = JOBOBJECT_EXTENDED_LIMIT_INFORMATION::default();
         check(unsafe {
             QueryInformationJobObject(
@@ -409,6 +464,7 @@ impl OwnedRuntime {
         };
         Ok(Self {
             process,
+            monitor,
             thread: Some(thread),
             job,
             binding: RootBinding {
@@ -460,7 +516,9 @@ impl OwnedRuntime {
                 .custom_flags(0x00200000)
                 .open(path)
         };
-        if identity(&open(&original.executable)?, false)? != identity(&open(expected)?, false)? {
+        if image_identity(&open(&original.executable)?, &original.executable)?
+            != image_identity(&open(expected)?, expected)?
+        {
             return Err(denied("retained member image differs from current source"));
         }
         self.verify_binding(&self.binding)?;
@@ -486,6 +544,7 @@ impl OwnedRuntime {
             return Err(denied("runtime was already resumed"));
         }
         self.verify_binding(&self.binding)?;
+        self.monitor.start(self.binding.process.clone())?;
         let h = self
             .thread
             .as_ref()
@@ -532,6 +591,7 @@ impl OwnedRuntime {
             .collect()
     }
     pub fn family_state(&mut self) -> io::Result<FamilyState> {
+        self.monitor.drain(&mut self.members)?;
         let ids = self.member_ids()?;
         let mut active = Vec::new();
         for id in ids {
@@ -589,6 +649,13 @@ impl OwnedRuntime {
                 "owned Job changed across bounded snapshot",
             ));
         }
+        self.monitor.drain(&mut self.members)?;
+        if self.resumed && accounting.TotalProcesses as usize != self.members.len() + 1 {
+            return Err(io::Error::new(
+                io::ErrorKind::WouldBlock,
+                "Job completion history has not reconciled with total process accounting",
+            ));
+        }
         let retained = self
             .members
             .values()
@@ -633,9 +700,53 @@ impl OwnedRuntime {
     /// type cannot be mistaken for a successful normal stop by this module.
     pub fn force_owned_cleanup(&mut self, deadline: Instant) -> io::Result<ForcedCleanup> {
         check(unsafe { TerminateJobObject(self.job.as_raw_handle(), 242) })?;
-        Ok(ForcedCleanup {
-            forced: true,
-            final_state: self.wait_normal_exit(deadline)?,
-        })
+        // Failure cleanup may follow an incomplete completion-port capture.
+        // Exact original Job empty is sufficient to clean its test identity,
+        // never to assert historical normal exit or produce a Stop proof.
+        loop {
+            if Instant::now() >= deadline {
+                return Err(io::Error::new(
+                    io::ErrorKind::TimedOut,
+                    "forced owned cleanup deadline elapsed",
+                ));
+            }
+            let mut accounting = JOBOBJECT_BASIC_ACCOUNTING_INFORMATION::default();
+            check(unsafe {
+                QueryInformationJobObject(
+                    self.job.as_raw_handle(),
+                    JobObjectBasicAccountingInformation,
+                    (&mut accounting as *mut JOBOBJECT_BASIC_ACCOUNTING_INFORMATION).cast(),
+                    size_of::<JOBOBJECT_BASIC_ACCOUNTING_INFORMATION>() as u32,
+                    ptr::null_mut(),
+                )
+            })?;
+            let root = self.root_state()?;
+            let retained = self
+                .members
+                .values()
+                .map(|(h, f)| Ok((f.clone(), state(h.as_raw_handle())?)))
+                .collect::<io::Result<Vec<_>>>()?;
+            if accounting.ActiveProcesses == 0
+                && self.member_ids()?.is_empty()
+                && matches!(root, ProcessState::Exited { .. })
+                && retained
+                    .iter()
+                    .all(|(_, s)| matches!(s, ProcessState::Exited { .. }))
+            {
+                return Ok(ForcedCleanup {
+                    forced: true,
+                    final_state: FamilyState {
+                        root,
+                        total_processes: accounting.TotalProcesses,
+                        active_processes: 0,
+                        active_members: vec![],
+                        retained_members: retained,
+                    },
+                });
+            }
+            std::thread::sleep(
+                Duration::from_millis(5).min(deadline.saturating_duration_since(Instant::now())),
+            );
+        }
     }
 }

@@ -47,12 +47,28 @@ fn same(a: &Path, b: &Path) -> bool {
         .to_string_lossy()
         .eq_ignore_ascii_case(&dunce::simplified(b).to_string_lossy())
 }
+fn system_console() -> AppResult<PathBuf> {
+    #[link(name = "kernel32")]
+    unsafe extern "system" {
+        fn GetSystemDirectoryW(buffer: *mut u16, size: u32) -> u32;
+    }
+    let mut buffer = vec![0u16; 32768];
+    let n = unsafe { GetSystemDirectoryW(buffer.as_mut_ptr(), buffer.len() as u32) };
+    if n == 0 || n as usize >= buffer.len() {
+        return Err(unknown(()));
+    }
+    Ok(
+        PathBuf::from(String::from_utf16(&buffer[..n as usize]).map_err(unknown)?)
+            .join("conhost.exe"),
+    )
+}
 
 // Shared by GUI, IPC runner and status. A short registry lock never spans I/O.
 // Owners deliberately remain retained even after a failed action or runner Drop.
 static OWNERS: OnceLock<Mutex<Vec<Arc<Slot>>>> = OnceLock::new();
 struct Slot {
     runtime: SharedRuntimeExecutable,
+    root: PathBuf,
     home: PathBuf,
     profile: PathBuf,
     owner: Mutex<Option<Owner>>,
@@ -73,6 +89,9 @@ struct Owner {
     _pins: Vec<File>,
 }
 fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResult<Arc<Slot>> {
+    let root = runtime
+        .managed_installation_root()
+        .ok_or_else(|| unknown(()))?;
     let mut registry = OWNERS
         .get_or_init(Default::default)
         .lock()
@@ -86,8 +105,14 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
     if !create {
         return Err(unknown(()));
     }
+    // A refreshed provider/H must not strand a previous process-local owner.
+    // Stop/client-recovery continuity is unresolved even after native exit.
+    if registry.iter().any(|s| same(&s.root, &root)) {
+        return Err(unknown(()));
+    }
     let slot = Arc::new(Slot {
         runtime: runtime.clone(),
+        root,
         home: home.into(),
         profile: platform::home_dir().ok_or_else(|| unknown(()))?,
         owner: Mutex::new(None),
@@ -149,12 +174,15 @@ impl Owner {
         }
         for member in &listeners.family.active_members {
             self.stage = "job-member-image";
+            let console = system_console()?;
             let image = if same(&member.executable, &self.selected.paths.node) {
                 &self.selected.paths.node
             } else if same(&member.executable, &self.selected.paths.bun) {
                 &self.selected.paths.bun
             } else if same(&member.executable, &bundled_bun) {
                 &bundled_bun
+            } else if same(&member.executable, &console) {
+                &console
             } else {
                 return Err(unknown(()));
             };
@@ -449,6 +477,15 @@ pub(crate) fn cancel_profile(profile: &Path) {
         }
     }
 }
+pub(crate) fn retains_owner(runtime: &SharedRuntimeExecutable, home: &Path) -> bool {
+    OWNERS.get().is_some_and(|r| {
+        r.lock().map_or(true, |owners| {
+            owners
+                .iter()
+                .any(|s| Arc::ptr_eq(&s.runtime, runtime) && same(&s.home, home))
+        })
+    })
+}
 pub(crate) fn native_stopped(runtime: &SharedRuntimeExecutable, home: &Path) -> bool {
     slot(runtime, home, false).ok().is_some_and(|s| {
         s.owner
@@ -466,7 +503,7 @@ pub(crate) fn recovery_state(
         Ok(s) => match s.owner.try_lock() {
             Ok(o) => match o.as_ref() {
                 Some(o) if o.stopped => R::Required,
-                Some(_) => R::Active,
+                Some(_) => R::Unknown,
                 None => R::Unknown,
             },
             Err(_) => R::Unknown,
