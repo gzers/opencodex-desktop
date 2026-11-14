@@ -1,0 +1,11 @@
+   Compiling windows-link v0.2.1
+   Compiling windows-sys v0.61.2
+   Compiling windows024-native-proof v0.1.0 (C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.12s
+     Running tests\process.rs (test\windows024-native\target\x86_64-pc-windows-msvc\debug\deps\process-2c297f3908be30b2.exe)
+
+thread 'suspended_binding_and_original_nonzero_exit' (74828) panicked at tests\process.rs:123:14:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "Job completion member capture is incomplete" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test-only separate forced cleanup after incomplete case
+error: test failed, to rerun pass `--test process`

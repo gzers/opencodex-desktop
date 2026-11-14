@@ -1,0 +1,14 @@
+   Compiling windows024-native-proof v0.1.0 (C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native)
+error[E0716]: temporary value dropped while borrowed
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\process_monitor.rs:181:25
+    |
+181 |             Err(denied(&format!("Job completion member capture is incomplete: {reason}")))
+    |                 --------^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^-
+    |                 |       |
+    |                 |       creates a temporary value which is freed while still in use
+    |                 argument requires that borrow lasts for `'static`
+182 |         } else {
+    |         - temporary value is freed at the end of this statement
+
+For more information about this error, try `rustc --explain E0716`.
+error: could not compile `windows024-native-proof` (lib) due to 1 previous error

@@ -1,0 +1,7 @@
+{
+  "command": "cargo test --release --locked --offline --manifest-path apps/desktop/tauri/Cargo.toml --target x86_64-pc-windows-msvc --lib --no-run -j 4",
+  "elapsedMs": 249054,
+  "sourceCommit": "219ad3e94bef547a91307fee00f37e72ae09f656",
+  "profile": "release opt-level=s lto=true codegen-units=1; Cargo test harness panic behavior separate from product abort",
+  "exitCode": -1
+}

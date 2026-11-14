@@ -1,0 +1,91 @@
+{
+  "purpose": "post-return result projection only; explicit Stop remains available after confirmed Started; all native/source/HMAC/deadline code byte-identical to release source06",
+  "reusedOfficialRun": "out05 release source06 SHA360183c59",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/mod.rs",
+      "bytes": 58852,
+      "sha256": "01d246f02662ab8aaa0426ab646a7b8a0b412e379ae742f4263b78b67e165f36"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/runtime_recovery_v2_owner.rs",
+      "bytes": 91380,
+      "sha256": "c58117a18bf075d9f50d55a37a4f9e28ac0a6d784c16c000918cefb7ff492f93"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/windows_lifecycle024.rs",
+      "bytes": 2716,
+      "sha256": "b2c95a256e2420ceb7364eea3a716a070e670205bf6d89deae233b5e113f798d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1635,
+      "sha256": "a7315296f634166fd8df0938f52fe9cf7ef0214be6d58bf0f6d278f8961a438e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/process_runner.rs",
+      "bytes": 45755,
+      "sha256": "73a47fc95426a1d00f93c358974fd1a27f94418f136ceecbe1db47069a89ef20"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "bytes": 43198,
+      "sha256": "6edbfea8f23fb44ea2508b94f43796c1b3855381f83675ccbbe3090eafdfca95"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 19521,
+      "sha256": "e468fda9624fc0f3d37e8c2f99b8ab484973dd2313445150b86ae0359b232f84"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 14610,
+      "sha256": "832e4f7d6bfe5484b0339cc57a4d5fbdea82e6a87570a33e66a4f7f5d7268f59"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4342,
+      "sha256": "bfe05c99020b78fedbf5f9986c5d567807c271ba4256b4e1f60bcbba0396e7f0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 28386,
+      "sha256": "dab5f7933b4eadf288af61560e3cdd2a91d17973c8d7d73e483d5c528799d73c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 7318,
+      "sha256": "79e10d77e477cb01545aa32f99beda957bad1124c962ff5cb0e70d105a3df00f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/process/mod.rs",
+      "bytes": 15856,
+      "sha256": "3fe61b6845e9a884369079078759b8c4f0625734a61b12edd74190239a2c7d5c"
+    },
+    {
+      "path": "test/windows024-native/account-w1d.ps1",
+      "bytes": 19077,
+      "sha256": "fd23464fcdfc33a391ec2fb1e4505717741c03b61ea6cbfcc37ecd88f9b03299"
+    },
+    {
+      "path": "test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "test/windows024-native/fixture.rs",
+      "bytes": 2792,
+      "sha256": "ae22b1fcc02d27d465011e8797a0d12f03ba4312d09b9759503451c632d5ff5e"
+    },
+    {
+      "path": "test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "test/windows024-native/tests/process.rs",
+      "bytes": 13636,
+      "sha256": "bf4e6af48fb2a661b213c79d70e2d8970c33cb087125b827f4e9452b64cb1b72"
+    }
+  ]
+}

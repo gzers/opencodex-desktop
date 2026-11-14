@@ -1,0 +1,8 @@
+{
+  "stage": "rustfmt before release-test-build05",
+  "error": "bare CR not allowed in raw string",
+  "correction": "construct Windows separator with char::from(92), no embedded path escapes",
+  "cause": "inline test path backslash escapes were transformed by orchestration string; format stopped before compile",
+  "runtimeExecuted": false,
+  "source": "tool output diagnostic, not a captured runtime log"
+}

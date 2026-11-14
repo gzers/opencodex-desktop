@@ -1,0 +1,9 @@
+   Compiling windows024-native-proof v0.1.0 (C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.12s
+     Running tests\process.rs (test\windows024-native\target\x86_64-pc-windows-msvc\debug\deps\process-2c297f3908be30b2.exe)
+
+thread 'system_helper_job_history_requires_observed_original_image_and_exit' (108792) panicked at tests\process.rs:153:87:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "PID reuse observed in owned member set" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test-only separate forced cleanup after incomplete case
+error: test failed, to rerun pass `--test process`

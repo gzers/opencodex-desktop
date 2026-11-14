@@ -1,0 +1,7 @@
+{
+  "profile": "repository release opt-level=s lto=true codegen-units=1; harness panic distinct",
+  "exitCode": 0,
+  "command": "cargo test --release --locked --offline --manifest-path apps/desktop/tauri/Cargo.toml --target x86_64-pc-windows-msvc --lib --no-run -j 1",
+  "source": "source05.json",
+  "elapsedMs": 588882
+}

@@ -1,0 +1,8 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.01s
+     Running tests\process.rs (test\windows024-native\target\x86_64-pc-windows-msvc\debug\deps\process-2c297f3908be30b2.exe)
+
+thread 'real_ipv4_ipv6_listeners_bind_to_original_job_generation' (7308) panicked at tests\process.rs:226:36:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "Job completion member capture is incomplete" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test-only separate forced cleanup after incomplete case
+error: test failed, to rerun pass `--test process`
