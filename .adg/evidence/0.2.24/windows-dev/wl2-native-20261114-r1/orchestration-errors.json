@@ -1,0 +1,28 @@
+{
+  "notes": [
+    {
+      "stage": "initial build environment path",
+      "error": "msvc-env.ps1 Get-ChildItem could not find .toolchain/msvc-w1c/VC/Tools/MSVC",
+      "correction": "actual Tools root .toolchain/msvc-w1c/msvc; original command did not start cargo",
+      "firstRecord": "baseline-env-error.txt; that note contained a spacing typo in corrected root"
+    },
+    {
+      "stage": "source edit orchestration",
+      "error": "Python SyntaxError: unterminated string literal",
+      "nativeCodeExecuted": false,
+      "correction": "apply_patch used before build01"
+    },
+    {
+      "stage": "selective staging orchestration",
+      "error": "UnicodeDecodeError gbk reading Git UTF-8",
+      "indexChangedByFailedCommand": false,
+      "correction": "explicit UTF-8 decode before successful staging"
+    },
+    {
+      "stage": "Profile cleanup01",
+      "error": "DeleteProfileW raw87; PowerShell managed null converted to empty string",
+      "correction": "C# wrapper passes real NULL; cleanup02 raw0, registration removed but exact directory remains"
+    }
+  ],
+  "accepted": false
+}

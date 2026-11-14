@@ -1,0 +1,24 @@
+{
+  "scope": "specific current environment/contract blockers; no demand to refreeze the four existing trait signatures",
+  "currentSource": "35e7336fcc64bcf3cab26ca8fa9688daba95a1f0",
+  "ordinarySid": "S-1-5-21-587408064-856152790-2583328096-1046",
+  "needs": [
+    {
+      "id": "complete-security-readable-by-original-ordinary-token",
+      "observed": "ACCESS_SYSTEM_SECURITY plus READ_CONTROL open failed Win32 1314; SeSecurityPrivilege absent; ordinary can independently read owner/group/DACL",
+      "requested": "Provide a prepared isolated ordinary environment already able to read the complete descriptor required by r2, without changing this host policy or elevating acceptance token. If r2 means a narrower explicitly defined readable security scope, integration must freeze exact SECURITY_INFORMATION/access masks and reject semantics for unreadable SACL/label/attribute/trust components; Windows must not silently downgrade to DACL-only or claim complete SD.",
+      "currentMasks": {
+        "access": "0x81020000",
+        "securityInformation": "0x000001ff"
+      },
+      "notClaimed": "No blanket claim about all Windows ordinary accounts; only this tested original token and attempted access."
+    },
+    {
+      "id": "original-owner-outer-job-continuity",
+      "observed": "ordinary probe in an outer Job, lifecycle unproven; no native KILL_ON_CLOSE flag assertion made",
+      "requested": "Provide an ordinary launch context with no inherited outer Job, or original native enclosing Job ownership/lifetime evidence sufficient to prove manager replacement cannot kill the original broker/family. No BREAKAWAY or host-policy workaround authorized."
+    }
+  ],
+  "remainingImplementation": "After prerequisites resolved, implement all four Windows adapters and private original broker, then rerun affected targeted source-bound tests; current probes are not those implementations.",
+  "accepted": false
+}

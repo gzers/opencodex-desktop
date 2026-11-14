@@ -1,0 +1,1863 @@
+{
+  "schema": 1,
+  "scope": "all final round payloads except this manifest; initial pre-stage manifest preserved separately",
+  "payloadFiles": 371,
+  "payloadBytes": 2715343,
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    {
+      "path": "baseline-build/artifacts.json",
+      "bytes": 873,
+      "sha256": "5fc7102388ba2fa44d822dd40a134e6ea16a158006da64050d6401f7f662c46a"
+    },
+    {
+      "path": "baseline-build/result.json",
+      "bytes": 310,
+      "sha256": "ffd36b8adb921ef9690f78419c7070255e78ceb2255280b5e946751c8caff74a"
+    },
+    {
+      "path": "baseline-build/source.json",
+      "bytes": 395,
+      "sha256": "23fc4372abd13aa4a33f520180b762d1961c37a9554b8c2093babdc824322133"
+    },
+    {
+      "path": "baseline-build/stderr.log",
+      "bytes": 4562,
+      "sha256": "e5d01061b699b1f2e6ce187f6c13cc22a0d996d6555d90569a4599e40835d372"
+    },
+    {
+      "path": "baseline-build/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "baseline-env-error.txt",
+      "bytes": 235,
+      "sha256": "2e391ad76e347b5e862f2f00f4e42e0f9e49e4d9613c7590b67c0eabb4a51f9d"
+    },
+    {
+      "path": "baseline.json",
+      "bytes": 332,
+      "sha256": "c712082f10461259d675f61489678d6ddf84027552fb1f30ce52ba9db8991342"
+    },
+    {
+      "path": "cleanup-account-profile.json",
+      "bytes": 815,
+      "sha256": "30825801be3a16060b638edece70d3802621daf41fd3a23ab0305ad5177196d1"
+    },
+    {
+      "path": "cleanup-account-profile02.json",
+      "bytes": 660,
+      "sha256": "e6d575c93a64e1f4036d19d6c5ec7e57764e139c7b7a0e7b33c452348b6f8a68"
+    },
+    {
+      "path": "cleanup-launch.json",
+      "bytes": 175,
+      "sha256": "bf1748a916f2609b72d8f57cc373b070cedb7147f481f841d6edce44e45c7c21"
+    },
+    {
+      "path": "cleanup02-hypothesis.json",
+      "bytes": 359,
+      "sha256": "4b2dc9a446dc0d051fdcaa20159c908a28184a7f089b34a0ea2611bae0af522f"
+    },
+    {
+      "path": "cleanup02-launch.json",
+      "bytes": 74,
+      "sha256": "d36000e82b5510acc2751f80d565ffbe986c2e7796e976fd5719d3a3dda4cbf3"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1809,
+      "sha256": "9c1fa529e5e26f3c2e78cdab5dac7d60a246577ea4cf07cf1ee36c6a096f8b48"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 4712,
+      "sha256": "1e2baa0d79dd3017e2adb3e1a9b8a19b3edd0342a835afe50f7ec73212cfd346"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 19686,
+      "sha256": "3b1e7e102734946493bc7ce4c9523c96d085526f8ea4ce33015ea0fdb7d6d2e6"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 20251,
+      "sha256": "01e1d8c104de1ff4fb9830f4a5ceedee68de2eec4b8d99cfc3678382ba9266f3"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5133,
+      "sha256": "f42f28bed60b9fbfc2e91dd1664433638b62d4dd40d60e511f3c8858d62d7a90"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 878,
+      "sha256": "e5ba44beaa172c0cbcb53d9a8be7729456a48174d7ebd3a478969e6d4eba247f"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 29844,
+      "sha256": "7d7fcf42ce6884d0a07ecc16ff6046cc0e67a159654b66dd3e689012ac8f5d88"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 7680,
+      "sha256": "4c0918ea886657c33d10ca1aca9f6974451bf95151d18c94988e5b4a1bc57532"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 9686,
+      "sha256": "2e30a62e08ef13cfacccd6e197f1e171d13bdc024c6dbf18e856e090453067d1"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 5978,
+      "sha256": "3dbfd6c256a4de78b71159c3ba5a9513195b4e4ec10ea915541528a193b58152"
+    },
+    {
+      "path": "final-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 1391,
+      "sha256": "6f0dcae92860867af2c22070deef6364043ed1ee83faf84a4becb3340d646059"
+    },
+    {
+      "path": "final-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19709,
+      "sha256": "11e6068834e085ef780127d87636aedbbb3054cbe75c4f1b77356055618768e5"
+    },
+    {
+      "path": "final-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 2629,
+      "sha256": "f18317ab7d5b82f1c7b2fc5e1a3350cdc86f92cec501ded88f54f4c69125676a"
+    },
+    {
+      "path": "final-source/test/windows024-native/cleanup-wl2-prerequisites.ps1",
+      "bytes": 4650,
+      "sha256": "cd9c950ab37fc3dd96580c89b74df2259657b88d10627269d33183d54fb916b7"
+    },
+    {
+      "path": "final-source/test/windows024-native/fixture.rs",
+      "bytes": 3707,
+      "sha256": "076594b6503a32426e530f9f81e38e0d24f35a3394fb43ab096aa97c3f020239"
+    },
+    {
+      "path": "final-source/test/windows024-native/launch-wl2.ps1",
+      "bytes": 2368,
+      "sha256": "0a655f0c70f50bdbb3005ab813715ff5c6bcde5682897cc781cd51a7337cf046"
+    },
+    {
+      "path": "final-source/test/windows024-native/tests/process.rs",
+      "bytes": 15935,
+      "sha256": "0ae1c09987088b79bcaab64855eace85bff4afe4e19b11b08328a5483e01067c"
+    },
+    {
+      "path": "final-source-manifest.json",
+      "bytes": 6908,
+      "sha256": "beb2f63e1295ea7e708caa3281ec43a84fef16a362c2ef7966c603beda113757"
+    },
+    {
+      "path": "fixed-inputs.json",
+      "bytes": 591,
+      "sha256": "ae7ba408f159121c0301d01f2e4ec4e082abbb5164ba7a144f05b245f0cb5462"
+    },
+    {
+      "path": "git-stage-check-summary.json",
+      "bytes": 525,
+      "sha256": "6282de47c8c3c1c13216331a653111c78c271d94d139d1573c71c74be55a2e30"
+    },
+    {
+      "path": "hypotheses01.json",
+      "bytes": 1013,
+      "sha256": "806e34cfb699d131af7c7b8412d2f0723984563dcc2e9f9c54cef21c3bb55bf9"
+    },
+    {
+      "path": "isolated-artifact01.json",
+      "bytes": 618,
+      "sha256": "46236f31606a5cc7482b274e4bc0e3be9527fefc57f5686f711cf1af8bff713f"
+    },
+    {
+      "path": "manifest01-before-toolchain.json",
+      "bytes": 78220,
+      "sha256": "12455f6003e09faffe4e6b7a7893e3a9fec02a46efffd1e007efe8020521aa0c"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1809,
+      "sha256": "9c1fa529e5e26f3c2e78cdab5dac7d60a246577ea4cf07cf1ee36c6a096f8b48"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "bytes": 26235,
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 4712,
+      "sha256": "1e2baa0d79dd3017e2adb3e1a9b8a19b3edd0342a835afe50f7ec73212cfd346"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 19686,
+      "sha256": "3b1e7e102734946493bc7ce4c9523c96d085526f8ea4ce33015ea0fdb7d6d2e6"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 20251,
+      "sha256": "01e1d8c104de1ff4fb9830f4a5ceedee68de2eec4b8d99cfc3678382ba9266f3"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5133,
+      "sha256": "f42f28bed60b9fbfc2e91dd1664433638b62d4dd40d60e511f3c8858d62d7a90"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6286,
+      "sha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 878,
+      "sha256": "e5ba44beaa172c0cbcb53d9a8be7729456a48174d7ebd3a478969e6d4eba247f"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 9253,
+      "sha256": "c7125bcc87e8710f2b7a6098208f1889319f80ad6de4cd888c366e68a1cade74"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 29824,
+      "sha256": "1a471d2fc35921239cebaeaaadcb66d42b51ee29ae2f70330828dd31d1591023"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 7680,
+      "sha256": "4c0918ea886657c33d10ca1aca9f6974451bf95151d18c94988e5b4a1bc57532"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4814,
+      "sha256": "da748e6976cdb9efa1c64245686c13fa3f18684aa9ef7e4ac1ee37e3f72f662a"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9436,
+      "sha256": "3f8a36e9647889b9ebd29b60b96c201ec379faa2c32c25204b9087444c57e0ca"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 9686,
+      "sha256": "2e30a62e08ef13cfacccd6e197f1e171d13bdc024c6dbf18e856e090453067d1"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "bytes": 63894,
+      "sha256": "125434701c99f7e735b0eece6f6d9288cc1f3a5436bd94ade97b2dc7a0dcbd32"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "bytes": 14982,
+      "sha256": "753329dc7236e420bbd70df7e1da14a8a8977e093cd3801aefed69a4194ee4ee"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 17555,
+      "sha256": "6bd34bd267db93634383ee2927db4c84c08cd28a7f5e3be8fac232f51db23c5e"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3074,
+      "sha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 7398,
+      "sha256": "b16adcf426b00cfa360a4da0b2887c3bc41a2f5e8575fe6d4d6bcb48ea9009ce"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 3825,
+      "sha256": "53cb45b92b17b5fc3c026fcfffed46cc10785e487881779d0fbd7f6b9a1585f5"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 5978,
+      "sha256": "3dbfd6c256a4de78b71159c3ba5a9513195b4e4ec10ea915541528a193b58152"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 1391,
+      "sha256": "6f0dcae92860867af2c22070deef6364043ed1ee83faf84a4becb3340d646059"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+      "bytes": 4543,
+      "sha256": "a76564eb786fff9ed5ed94eb29448c55bf8d928b1ef213197742fe298dc1e3f4"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2804,
+      "sha256": "d9cbb6a609fbc7b0fa8ffa5f9d191440abc7e374fa9fccf00cbfd52516962782"
+    },
+    {
+      "path": "native-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+      "bytes": 19915,
+      "sha256": "4513ebd3e8d6bcd2b08557b4aaf5a27d6b5d231f811026e96da848f23244d0d6"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/.gitignore",
+      "bytes": 10,
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/account-w1c.ps1",
+      "bytes": 9912,
+      "sha256": "2c85460147b5faae0dbccb546f024929be08001a4d4c2ee01002e5a2ff860a2e"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19077,
+      "sha256": "fd23464fcdfc33a391ec2fb1e4505717741c03b61ea6cbfcc37ecd88f9b03299"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 2629,
+      "sha256": "f18317ab7d5b82f1c7b2fc5e1a3350cdc86f92cec501ded88f54f4c69125676a"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/bundle-installer.py",
+      "bytes": 7706,
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/Cargo.lock",
+      "bytes": 630,
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/Cargo.toml",
+      "bytes": 593,
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/cleanup-profiles-w1c.ps1",
+      "bytes": 3615,
+      "sha256": "290c1a71e748873fcaf5d9f2efea8538ab8d4778d2a16d62dadd0dc7f262fe89"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/compile-uninstall-probe.py",
+      "bytes": 2184,
+      "sha256": "c897c6afb58e56abe9321e63b7f9b24566bb7ab04608694feace03122045ad29"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/fixture.rs",
+      "bytes": 3707,
+      "sha256": "076594b6503a32426e530f9f81e38e0d24f35a3394fb43ab096aa97c3f020239"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/invoke-msi-only.ps1",
+      "bytes": 1979,
+      "sha256": "ad149ff6018d2315d89eb1b1c1edea9a9ccad025e78899e828a22d407abe467b"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/lib.rs",
+      "bytes": 3647,
+      "sha256": "beaa37885b3397269929b8fb2b7a71119916ff4b225930bdaaee3d2a61a4ff11"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/msi-only.md",
+      "bytes": 5641,
+      "sha256": "4c23ac4328a382f19c5b0c1e1d0370909bcce419304d923aa4c6a0b845ecd15e"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/msvc-env.ps1",
+      "bytes": 1913,
+      "sha256": "389c087a4acf88aea21982a0a9610f9887464c24a9835470568192bfa46755bc"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/record-checks.ps1",
+      "bytes": 2823,
+      "sha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/stage-installer.py",
+      "bytes": 2600,
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/tests/process.rs",
+      "bytes": 15935,
+      "sha256": "0ae1c09987088b79bcaab64855eace85bff4afe4e19b11b08328a5483e01067c"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/verify-msi-evidence.py",
+      "bytes": 13587,
+      "sha256": "64a978c83cb050aa2306842734de60c016c48f0c650b6913971b8468cc3d5376"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/verify-msi-paths.ps1",
+      "bytes": 4416,
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/verify-nsis-paths.py",
+      "bytes": 6192,
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2"
+    },
+    {
+      "path": "native-build01/executed-source/test/windows024-native/verify-uninstall-msi.ps1",
+      "bytes": 4157,
+      "sha256": "6ef87e6df003d5aaadeec866278222c939ac6e7659329cda5faf500b30f8f30b"
+    },
+    {
+      "path": "native-build01/result.json",
+      "bytes": 367,
+      "sha256": "7079ee2c08ae2827ce786669b3f516459eeefc6bd1da05b3b837df56089d45b4"
+    },
+    {
+      "path": "native-build01/source-manifest.json",
+      "bytes": 9709,
+      "sha256": "316fce51eeff5e905c0358af0dd0c05f95f946cf6c5c89dce2f03ae4ee857006"
+    },
+    {
+      "path": "native-build01/source.json",
+      "bytes": 24042,
+      "sha256": "4ca664615ca5a34f354220e1d86b8dc581a56080db8de50430ed6a6111e2b2b2"
+    },
+    {
+      "path": "native-build01/stderr.log",
+      "bytes": 1494,
+      "sha256": "4e1a73671257ae3334e7a2a6ef9bf2e4aa020a57798d0357817d7bb99f21fdc5"
+    },
+    {
+      "path": "native-build01/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1809,
+      "sha256": "9c1fa529e5e26f3c2e78cdab5dac7d60a246577ea4cf07cf1ee36c6a096f8b48"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "bytes": 26235,
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 4712,
+      "sha256": "1e2baa0d79dd3017e2adb3e1a9b8a19b3edd0342a835afe50f7ec73212cfd346"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 19686,
+      "sha256": "3b1e7e102734946493bc7ce4c9523c96d085526f8ea4ce33015ea0fdb7d6d2e6"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 20251,
+      "sha256": "01e1d8c104de1ff4fb9830f4a5ceedee68de2eec4b8d99cfc3678382ba9266f3"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5133,
+      "sha256": "f42f28bed60b9fbfc2e91dd1664433638b62d4dd40d60e511f3c8858d62d7a90"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6286,
+      "sha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 878,
+      "sha256": "e5ba44beaa172c0cbcb53d9a8be7729456a48174d7ebd3a478969e6d4eba247f"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 9253,
+      "sha256": "c7125bcc87e8710f2b7a6098208f1889319f80ad6de4cd888c366e68a1cade74"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 29844,
+      "sha256": "7d7fcf42ce6884d0a07ecc16ff6046cc0e67a159654b66dd3e689012ac8f5d88"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 7680,
+      "sha256": "4c0918ea886657c33d10ca1aca9f6974451bf95151d18c94988e5b4a1bc57532"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4814,
+      "sha256": "da748e6976cdb9efa1c64245686c13fa3f18684aa9ef7e4ac1ee37e3f72f662a"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9436,
+      "sha256": "3f8a36e9647889b9ebd29b60b96c201ec379faa2c32c25204b9087444c57e0ca"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 9686,
+      "sha256": "2e30a62e08ef13cfacccd6e197f1e171d13bdc024c6dbf18e856e090453067d1"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "bytes": 63894,
+      "sha256": "125434701c99f7e735b0eece6f6d9288cc1f3a5436bd94ade97b2dc7a0dcbd32"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "bytes": 14982,
+      "sha256": "753329dc7236e420bbd70df7e1da14a8a8977e093cd3801aefed69a4194ee4ee"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 17555,
+      "sha256": "6bd34bd267db93634383ee2927db4c84c08cd28a7f5e3be8fac232f51db23c5e"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3074,
+      "sha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 7398,
+      "sha256": "b16adcf426b00cfa360a4da0b2887c3bc41a2f5e8575fe6d4d6bcb48ea9009ce"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 3825,
+      "sha256": "53cb45b92b17b5fc3c026fcfffed46cc10785e487881779d0fbd7f6b9a1585f5"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 5978,
+      "sha256": "3dbfd6c256a4de78b71159c3ba5a9513195b4e4ec10ea915541528a193b58152"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 1391,
+      "sha256": "6f0dcae92860867af2c22070deef6364043ed1ee83faf84a4becb3340d646059"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+      "bytes": 4543,
+      "sha256": "a76564eb786fff9ed5ed94eb29448c55bf8d928b1ef213197742fe298dc1e3f4"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2804,
+      "sha256": "d9cbb6a609fbc7b0fa8ffa5f9d191440abc7e374fa9fccf00cbfd52516962782"
+    },
+    {
+      "path": "native-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+      "bytes": 19915,
+      "sha256": "4513ebd3e8d6bcd2b08557b4aaf5a27d6b5d231f811026e96da848f23244d0d6"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/.gitignore",
+      "bytes": 10,
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/account-w1c.ps1",
+      "bytes": 9912,
+      "sha256": "2c85460147b5faae0dbccb546f024929be08001a4d4c2ee01002e5a2ff860a2e"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19313,
+      "sha256": "fb8a1e5dd30701c4e0b1acfe2ef9a513b4c8bf5b4082f4e900b2bb7f7a43b496"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 2629,
+      "sha256": "f18317ab7d5b82f1c7b2fc5e1a3350cdc86f92cec501ded88f54f4c69125676a"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/bundle-installer.py",
+      "bytes": 7706,
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/Cargo.lock",
+      "bytes": 630,
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/Cargo.toml",
+      "bytes": 593,
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/cleanup-profiles-w1c.ps1",
+      "bytes": 3615,
+      "sha256": "290c1a71e748873fcaf5d9f2efea8538ab8d4778d2a16d62dadd0dc7f262fe89"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/compile-uninstall-probe.py",
+      "bytes": 2184,
+      "sha256": "c897c6afb58e56abe9321e63b7f9b24566bb7ab04608694feace03122045ad29"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/fixture.rs",
+      "bytes": 3707,
+      "sha256": "076594b6503a32426e530f9f81e38e0d24f35a3394fb43ab096aa97c3f020239"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/invoke-msi-only.ps1",
+      "bytes": 1979,
+      "sha256": "ad149ff6018d2315d89eb1b1c1edea9a9ccad025e78899e828a22d407abe467b"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/launch-wl2.ps1",
+      "bytes": 2368,
+      "sha256": "0a655f0c70f50bdbb3005ab813715ff5c6bcde5682897cc781cd51a7337cf046"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/lib.rs",
+      "bytes": 3647,
+      "sha256": "beaa37885b3397269929b8fb2b7a71119916ff4b225930bdaaee3d2a61a4ff11"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/msi-only.md",
+      "bytes": 5641,
+      "sha256": "4c23ac4328a382f19c5b0c1e1d0370909bcce419304d923aa4c6a0b845ecd15e"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/msvc-env.ps1",
+      "bytes": 1913,
+      "sha256": "389c087a4acf88aea21982a0a9610f9887464c24a9835470568192bfa46755bc"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/record-checks.ps1",
+      "bytes": 2823,
+      "sha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/stage-installer.py",
+      "bytes": 2600,
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/tests/process.rs",
+      "bytes": 15935,
+      "sha256": "0ae1c09987088b79bcaab64855eace85bff4afe4e19b11b08328a5483e01067c"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/verify-msi-evidence.py",
+      "bytes": 13587,
+      "sha256": "64a978c83cb050aa2306842734de60c016c48f0c650b6913971b8468cc3d5376"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/verify-msi-paths.ps1",
+      "bytes": 4416,
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/verify-nsis-paths.py",
+      "bytes": 6192,
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2"
+    },
+    {
+      "path": "native-build02/executed-source/test/windows024-native/verify-uninstall-msi.ps1",
+      "bytes": 4157,
+      "sha256": "6ef87e6df003d5aaadeec866278222c939ac6e7659329cda5faf500b30f8f30b"
+    },
+    {
+      "path": "native-build02/result.json",
+      "bytes": 365,
+      "sha256": "2abcee385f840dd1eba7dda28df73ce6d3625b0d46556754d0564c05dd8c748a"
+    },
+    {
+      "path": "native-build02/source-manifest.json",
+      "bytes": 9876,
+      "sha256": "ac6e84741018e0045b9e37e78361c08fba63090d994e11c4350c803ea75d32ff"
+    },
+    {
+      "path": "native-build02/source.json",
+      "bytes": 30038,
+      "sha256": "ae26bab5b5888c80ee4069e3bc9364962874348155d1fbdc9a0fad96a22e8477"
+    },
+    {
+      "path": "native-build02/stderr.log",
+      "bytes": 791,
+      "sha256": "8393ad64d15cbdaa6fc0724f119cf6006e38583f32475048addec9d732249bc2"
+    },
+    {
+      "path": "native-build02/stdout.log",
+      "bytes": 885,
+      "sha256": "5c3810af74e904dad44e9b5ac9347cc5b75fcecdddb517076b900bf5741dfe31"
+    },
+    {
+      "path": "orchestration-errors.json",
+      "bytes": 1130,
+      "sha256": "6dcddcb6d328fb592cf23e43cbf2b270cd9ac842c837b74a7d14d8b93a36d3e0"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1809,
+      "sha256": "9c1fa529e5e26f3c2e78cdab5dac7d60a246577ea4cf07cf1ee36c6a096f8b48"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "bytes": 26235,
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 4712,
+      "sha256": "1e2baa0d79dd3017e2adb3e1a9b8a19b3edd0342a835afe50f7ec73212cfd346"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 19686,
+      "sha256": "3b1e7e102734946493bc7ce4c9523c96d085526f8ea4ce33015ea0fdb7d6d2e6"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 20251,
+      "sha256": "01e1d8c104de1ff4fb9830f4a5ceedee68de2eec4b8d99cfc3678382ba9266f3"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5133,
+      "sha256": "f42f28bed60b9fbfc2e91dd1664433638b62d4dd40d60e511f3c8858d62d7a90"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6286,
+      "sha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 878,
+      "sha256": "e5ba44beaa172c0cbcb53d9a8be7729456a48174d7ebd3a478969e6d4eba247f"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 9253,
+      "sha256": "c7125bcc87e8710f2b7a6098208f1889319f80ad6de4cd888c366e68a1cade74"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 29824,
+      "sha256": "1a471d2fc35921239cebaeaaadcb66d42b51ee29ae2f70330828dd31d1591023"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 7680,
+      "sha256": "4c0918ea886657c33d10ca1aca9f6974451bf95151d18c94988e5b4a1bc57532"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4814,
+      "sha256": "da748e6976cdb9efa1c64245686c13fa3f18684aa9ef7e4ac1ee37e3f72f662a"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9436,
+      "sha256": "3f8a36e9647889b9ebd29b60b96c201ec379faa2c32c25204b9087444c57e0ca"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 9686,
+      "sha256": "2e30a62e08ef13cfacccd6e197f1e171d13bdc024c6dbf18e856e090453067d1"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "bytes": 63894,
+      "sha256": "125434701c99f7e735b0eece6f6d9288cc1f3a5436bd94ade97b2dc7a0dcbd32"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "bytes": 14982,
+      "sha256": "753329dc7236e420bbd70df7e1da14a8a8977e093cd3801aefed69a4194ee4ee"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 17555,
+      "sha256": "6bd34bd267db93634383ee2927db4c84c08cd28a7f5e3be8fac232f51db23c5e"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3074,
+      "sha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 7398,
+      "sha256": "b16adcf426b00cfa360a4da0b2887c3bc41a2f5e8575fe6d4d6bcb48ea9009ce"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 3825,
+      "sha256": "53cb45b92b17b5fc3c026fcfffed46cc10785e487881779d0fbd7f6b9a1585f5"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 5978,
+      "sha256": "3dbfd6c256a4de78b71159c3ba5a9513195b4e4ec10ea915541528a193b58152"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 1391,
+      "sha256": "6f0dcae92860867af2c22070deef6364043ed1ee83faf84a4becb3340d646059"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+      "bytes": 4543,
+      "sha256": "a76564eb786fff9ed5ed94eb29448c55bf8d928b1ef213197742fe298dc1e3f4"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2804,
+      "sha256": "d9cbb6a609fbc7b0fa8ffa5f9d191440abc7e374fa9fccf00cbfd52516962782"
+    },
+    {
+      "path": "primitive-build01/executed-source/apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+      "bytes": 19915,
+      "sha256": "4513ebd3e8d6bcd2b08557b4aaf5a27d6b5d231f811026e96da848f23244d0d6"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/.gitignore",
+      "bytes": 10,
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/account-w1c.ps1",
+      "bytes": 9912,
+      "sha256": "2c85460147b5faae0dbccb546f024929be08001a4d4c2ee01002e5a2ff860a2e"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19077,
+      "sha256": "fd23464fcdfc33a391ec2fb1e4505717741c03b61ea6cbfcc37ecd88f9b03299"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 2629,
+      "sha256": "f18317ab7d5b82f1c7b2fc5e1a3350cdc86f92cec501ded88f54f4c69125676a"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/bundle-installer.py",
+      "bytes": 7706,
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/Cargo.lock",
+      "bytes": 630,
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/Cargo.toml",
+      "bytes": 593,
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/cleanup-profiles-w1c.ps1",
+      "bytes": 3615,
+      "sha256": "290c1a71e748873fcaf5d9f2efea8538ab8d4778d2a16d62dadd0dc7f262fe89"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/compile-uninstall-probe.py",
+      "bytes": 2184,
+      "sha256": "c897c6afb58e56abe9321e63b7f9b24566bb7ab04608694feace03122045ad29"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/fixture.rs",
+      "bytes": 3707,
+      "sha256": "076594b6503a32426e530f9f81e38e0d24f35a3394fb43ab096aa97c3f020239"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/invoke-msi-only.ps1",
+      "bytes": 1979,
+      "sha256": "ad149ff6018d2315d89eb1b1c1edea9a9ccad025e78899e828a22d407abe467b"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/lib.rs",
+      "bytes": 3647,
+      "sha256": "beaa37885b3397269929b8fb2b7a71119916ff4b225930bdaaee3d2a61a4ff11"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/msi-only.md",
+      "bytes": 5641,
+      "sha256": "4c23ac4328a382f19c5b0c1e1d0370909bcce419304d923aa4c6a0b845ecd15e"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/msvc-env.ps1",
+      "bytes": 1913,
+      "sha256": "389c087a4acf88aea21982a0a9610f9887464c24a9835470568192bfa46755bc"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/record-checks.ps1",
+      "bytes": 2823,
+      "sha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/stage-installer.py",
+      "bytes": 2600,
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/tests/process.rs",
+      "bytes": 15935,
+      "sha256": "0ae1c09987088b79bcaab64855eace85bff4afe4e19b11b08328a5483e01067c"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/verify-msi-evidence.py",
+      "bytes": 13587,
+      "sha256": "64a978c83cb050aa2306842734de60c016c48f0c650b6913971b8468cc3d5376"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/verify-msi-paths.ps1",
+      "bytes": 4416,
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/verify-nsis-paths.py",
+      "bytes": 6192,
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2"
+    },
+    {
+      "path": "primitive-build01/executed-source/test/windows024-native/verify-uninstall-msi.ps1",
+      "bytes": 4157,
+      "sha256": "6ef87e6df003d5aaadeec866278222c939ac6e7659329cda5faf500b30f8f30b"
+    },
+    {
+      "path": "primitive-build01/result.json",
+      "bytes": 378,
+      "sha256": "a94072bb8e0b15cc2c56579d3aa20c5e0fd7d825ad7b09f295e4391b97b5b17c"
+    },
+    {
+      "path": "primitive-build01/source-manifest.json",
+      "bytes": 9709,
+      "sha256": "4048b1b2c50991921a2838565e5e4be9033e75643a283f4dd5b6652cf958ede0"
+    },
+    {
+      "path": "primitive-build01/source.json",
+      "bytes": 24052,
+      "sha256": "dc86383b7ee21e62dede97c627b44eda4776ff0a67cd04e99bb7dbdb829428fb"
+    },
+    {
+      "path": "primitive-build01/stderr.log",
+      "bytes": 3262,
+      "sha256": "c458dde58bf5f75871422cde2f9377688c28415ce5311b3246a9ed9fb941dab1"
+    },
+    {
+      "path": "primitive-build01/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1809,
+      "sha256": "9c1fa529e5e26f3c2e78cdab5dac7d60a246577ea4cf07cf1ee36c6a096f8b48"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "bytes": 26235,
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 4712,
+      "sha256": "1e2baa0d79dd3017e2adb3e1a9b8a19b3edd0342a835afe50f7ec73212cfd346"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 19686,
+      "sha256": "3b1e7e102734946493bc7ce4c9523c96d085526f8ea4ce33015ea0fdb7d6d2e6"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 20251,
+      "sha256": "01e1d8c104de1ff4fb9830f4a5ceedee68de2eec4b8d99cfc3678382ba9266f3"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5133,
+      "sha256": "f42f28bed60b9fbfc2e91dd1664433638b62d4dd40d60e511f3c8858d62d7a90"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6286,
+      "sha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 878,
+      "sha256": "e5ba44beaa172c0cbcb53d9a8be7729456a48174d7ebd3a478969e6d4eba247f"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 9253,
+      "sha256": "c7125bcc87e8710f2b7a6098208f1889319f80ad6de4cd888c366e68a1cade74"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 29844,
+      "sha256": "7d7fcf42ce6884d0a07ecc16ff6046cc0e67a159654b66dd3e689012ac8f5d88"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 7680,
+      "sha256": "4c0918ea886657c33d10ca1aca9f6974451bf95151d18c94988e5b4a1bc57532"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4814,
+      "sha256": "da748e6976cdb9efa1c64245686c13fa3f18684aa9ef7e4ac1ee37e3f72f662a"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9436,
+      "sha256": "3f8a36e9647889b9ebd29b60b96c201ec379faa2c32c25204b9087444c57e0ca"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 9686,
+      "sha256": "2e30a62e08ef13cfacccd6e197f1e171d13bdc024c6dbf18e856e090453067d1"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "bytes": 63894,
+      "sha256": "125434701c99f7e735b0eece6f6d9288cc1f3a5436bd94ade97b2dc7a0dcbd32"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "bytes": 14982,
+      "sha256": "753329dc7236e420bbd70df7e1da14a8a8977e093cd3801aefed69a4194ee4ee"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 17555,
+      "sha256": "6bd34bd267db93634383ee2927db4c84c08cd28a7f5e3be8fac232f51db23c5e"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3074,
+      "sha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 7398,
+      "sha256": "b16adcf426b00cfa360a4da0b2887c3bc41a2f5e8575fe6d4d6bcb48ea9009ce"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 3825,
+      "sha256": "53cb45b92b17b5fc3c026fcfffed46cc10785e487881779d0fbd7f6b9a1585f5"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 5978,
+      "sha256": "3dbfd6c256a4de78b71159c3ba5a9513195b4e4ec10ea915541528a193b58152"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 1391,
+      "sha256": "6f0dcae92860867af2c22070deef6364043ed1ee83faf84a4becb3340d646059"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+      "bytes": 4543,
+      "sha256": "a76564eb786fff9ed5ed94eb29448c55bf8d928b1ef213197742fe298dc1e3f4"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2804,
+      "sha256": "d9cbb6a609fbc7b0fa8ffa5f9d191440abc7e374fa9fccf00cbfd52516962782"
+    },
+    {
+      "path": "primitive-build02/executed-source/apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+      "bytes": 19915,
+      "sha256": "4513ebd3e8d6bcd2b08557b4aaf5a27d6b5d231f811026e96da848f23244d0d6"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/.gitignore",
+      "bytes": 10,
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/account-w1c.ps1",
+      "bytes": 9912,
+      "sha256": "2c85460147b5faae0dbccb546f024929be08001a4d4c2ee01002e5a2ff860a2e"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19313,
+      "sha256": "fb8a1e5dd30701c4e0b1acfe2ef9a513b4c8bf5b4082f4e900b2bb7f7a43b496"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 2629,
+      "sha256": "f18317ab7d5b82f1c7b2fc5e1a3350cdc86f92cec501ded88f54f4c69125676a"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/bundle-installer.py",
+      "bytes": 7706,
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/Cargo.lock",
+      "bytes": 630,
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/Cargo.toml",
+      "bytes": 593,
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/cleanup-profiles-w1c.ps1",
+      "bytes": 3615,
+      "sha256": "290c1a71e748873fcaf5d9f2efea8538ab8d4778d2a16d62dadd0dc7f262fe89"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/compile-uninstall-probe.py",
+      "bytes": 2184,
+      "sha256": "c897c6afb58e56abe9321e63b7f9b24566bb7ab04608694feace03122045ad29"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/fixture.rs",
+      "bytes": 3707,
+      "sha256": "076594b6503a32426e530f9f81e38e0d24f35a3394fb43ab096aa97c3f020239"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/invoke-msi-only.ps1",
+      "bytes": 1979,
+      "sha256": "ad149ff6018d2315d89eb1b1c1edea9a9ccad025e78899e828a22d407abe467b"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/launch-wl2.ps1",
+      "bytes": 2368,
+      "sha256": "0a655f0c70f50bdbb3005ab813715ff5c6bcde5682897cc781cd51a7337cf046"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/lib.rs",
+      "bytes": 3647,
+      "sha256": "beaa37885b3397269929b8fb2b7a71119916ff4b225930bdaaee3d2a61a4ff11"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/msi-only.md",
+      "bytes": 5641,
+      "sha256": "4c23ac4328a382f19c5b0c1e1d0370909bcce419304d923aa4c6a0b845ecd15e"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/msvc-env.ps1",
+      "bytes": 1913,
+      "sha256": "389c087a4acf88aea21982a0a9610f9887464c24a9835470568192bfa46755bc"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/record-checks.ps1",
+      "bytes": 2823,
+      "sha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/stage-installer.py",
+      "bytes": 2600,
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/tests/process.rs",
+      "bytes": 15935,
+      "sha256": "0ae1c09987088b79bcaab64855eace85bff4afe4e19b11b08328a5483e01067c"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/verify-msi-evidence.py",
+      "bytes": 13587,
+      "sha256": "64a978c83cb050aa2306842734de60c016c48f0c650b6913971b8468cc3d5376"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/verify-msi-paths.ps1",
+      "bytes": 4416,
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/verify-nsis-paths.py",
+      "bytes": 6192,
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2"
+    },
+    {
+      "path": "primitive-build02/executed-source/test/windows024-native/verify-uninstall-msi.ps1",
+      "bytes": 4157,
+      "sha256": "6ef87e6df003d5aaadeec866278222c939ac6e7659329cda5faf500b30f8f30b"
+    },
+    {
+      "path": "primitive-build02/result.json",
+      "bytes": 377,
+      "sha256": "f9cef9644ddc395fb1c342920dc18fbbf8b753f1885fced34e4a535af14f2ea0"
+    },
+    {
+      "path": "primitive-build02/source-manifest.json",
+      "bytes": 9876,
+      "sha256": "27a86b26b0552f4a849f9811ac59f5300f5e6f3fc7a2d364c96cd81b0cfec175"
+    },
+    {
+      "path": "primitive-build02/source.json",
+      "bytes": 30048,
+      "sha256": "6ba56277f5d60d980d1475df3e4d06e39da949b164e2bf22b6505423d0db334b"
+    },
+    {
+      "path": "primitive-build02/stderr.log",
+      "bytes": 6107,
+      "sha256": "19680cccbf2b59d8af65ad24b9fdbe78d820fc20ca763d6212cf5c6e0dff4e3f"
+    },
+    {
+      "path": "primitive-build02/stdout.log",
+      "bytes": 1222,
+      "sha256": "dbdb5d6dd4d6092c1e1e368447b9a9513bd46d8433346f4996f8db62e3bd27dd"
+    },
+    {
+      "path": "product-build03/artifacts.json",
+      "bytes": 1404,
+      "sha256": "f9a314f72aa890420da609ead26882e4358ace4983c49e0fef37bf74d8a9c4e0"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1809,
+      "sha256": "9c1fa529e5e26f3c2e78cdab5dac7d60a246577ea4cf07cf1ee36c6a096f8b48"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "bytes": 26235,
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 4712,
+      "sha256": "1e2baa0d79dd3017e2adb3e1a9b8a19b3edd0342a835afe50f7ec73212cfd346"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 19686,
+      "sha256": "3b1e7e102734946493bc7ce4c9523c96d085526f8ea4ce33015ea0fdb7d6d2e6"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 20251,
+      "sha256": "01e1d8c104de1ff4fb9830f4a5ceedee68de2eec4b8d99cfc3678382ba9266f3"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5133,
+      "sha256": "f42f28bed60b9fbfc2e91dd1664433638b62d4dd40d60e511f3c8858d62d7a90"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6286,
+      "sha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 878,
+      "sha256": "e5ba44beaa172c0cbcb53d9a8be7729456a48174d7ebd3a478969e6d4eba247f"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 9253,
+      "sha256": "c7125bcc87e8710f2b7a6098208f1889319f80ad6de4cd888c366e68a1cade74"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 29844,
+      "sha256": "7d7fcf42ce6884d0a07ecc16ff6046cc0e67a159654b66dd3e689012ac8f5d88"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 7680,
+      "sha256": "4c0918ea886657c33d10ca1aca9f6974451bf95151d18c94988e5b4a1bc57532"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4814,
+      "sha256": "da748e6976cdb9efa1c64245686c13fa3f18684aa9ef7e4ac1ee37e3f72f662a"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9436,
+      "sha256": "3f8a36e9647889b9ebd29b60b96c201ec379faa2c32c25204b9087444c57e0ca"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 9686,
+      "sha256": "2e30a62e08ef13cfacccd6e197f1e171d13bdc024c6dbf18e856e090453067d1"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "bytes": 63894,
+      "sha256": "125434701c99f7e735b0eece6f6d9288cc1f3a5436bd94ade97b2dc7a0dcbd32"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "bytes": 14982,
+      "sha256": "753329dc7236e420bbd70df7e1da14a8a8977e093cd3801aefed69a4194ee4ee"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 17555,
+      "sha256": "6bd34bd267db93634383ee2927db4c84c08cd28a7f5e3be8fac232f51db23c5e"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3074,
+      "sha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 7398,
+      "sha256": "b16adcf426b00cfa360a4da0b2887c3bc41a2f5e8575fe6d4d6bcb48ea9009ce"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 3825,
+      "sha256": "53cb45b92b17b5fc3c026fcfffed46cc10785e487881779d0fbd7f6b9a1585f5"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 5978,
+      "sha256": "3dbfd6c256a4de78b71159c3ba5a9513195b4e4ec10ea915541528a193b58152"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 1391,
+      "sha256": "6f0dcae92860867af2c22070deef6364043ed1ee83faf84a4becb3340d646059"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+      "bytes": 4543,
+      "sha256": "a76564eb786fff9ed5ed94eb29448c55bf8d928b1ef213197742fe298dc1e3f4"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2804,
+      "sha256": "d9cbb6a609fbc7b0fa8ffa5f9d191440abc7e374fa9fccf00cbfd52516962782"
+    },
+    {
+      "path": "product-build03/executed-source/apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+      "bytes": 19915,
+      "sha256": "4513ebd3e8d6bcd2b08557b4aaf5a27d6b5d231f811026e96da848f23244d0d6"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/.gitignore",
+      "bytes": 10,
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/account-w1c.ps1",
+      "bytes": 9912,
+      "sha256": "2c85460147b5faae0dbccb546f024929be08001a4d4c2ee01002e5a2ff860a2e"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19709,
+      "sha256": "11e6068834e085ef780127d87636aedbbb3054cbe75c4f1b77356055618768e5"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 2629,
+      "sha256": "f18317ab7d5b82f1c7b2fc5e1a3350cdc86f92cec501ded88f54f4c69125676a"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/bundle-installer.py",
+      "bytes": 7706,
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/Cargo.lock",
+      "bytes": 630,
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/Cargo.toml",
+      "bytes": 593,
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/cleanup-profiles-w1c.ps1",
+      "bytes": 3615,
+      "sha256": "290c1a71e748873fcaf5d9f2efea8538ab8d4778d2a16d62dadd0dc7f262fe89"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/cleanup-wl2-prerequisites.ps1",
+      "bytes": 4521,
+      "sha256": "71ecc43e087cb48bde8c1ec8d66dbeb2799165308ff3fd43c130aa1349fcaf5c"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/compile-uninstall-probe.py",
+      "bytes": 2184,
+      "sha256": "c897c6afb58e56abe9321e63b7f9b24566bb7ab04608694feace03122045ad29"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/fixture.rs",
+      "bytes": 3707,
+      "sha256": "076594b6503a32426e530f9f81e38e0d24f35a3394fb43ab096aa97c3f020239"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/invoke-msi-only.ps1",
+      "bytes": 1979,
+      "sha256": "ad149ff6018d2315d89eb1b1c1edea9a9ccad025e78899e828a22d407abe467b"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/launch-wl2.ps1",
+      "bytes": 2368,
+      "sha256": "0a655f0c70f50bdbb3005ab813715ff5c6bcde5682897cc781cd51a7337cf046"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/lib.rs",
+      "bytes": 3647,
+      "sha256": "beaa37885b3397269929b8fb2b7a71119916ff4b225930bdaaee3d2a61a4ff11"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/msi-only.md",
+      "bytes": 5641,
+      "sha256": "4c23ac4328a382f19c5b0c1e1d0370909bcce419304d923aa4c6a0b845ecd15e"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/msvc-env.ps1",
+      "bytes": 1913,
+      "sha256": "389c087a4acf88aea21982a0a9610f9887464c24a9835470568192bfa46755bc"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/record-checks.ps1",
+      "bytes": 2823,
+      "sha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/stage-installer.py",
+      "bytes": 2600,
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/tests/process.rs",
+      "bytes": 15935,
+      "sha256": "0ae1c09987088b79bcaab64855eace85bff4afe4e19b11b08328a5483e01067c"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/verify-msi-evidence.py",
+      "bytes": 13587,
+      "sha256": "64a978c83cb050aa2306842734de60c016c48f0c650b6913971b8468cc3d5376"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/verify-msi-paths.ps1",
+      "bytes": 4416,
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/verify-nsis-paths.py",
+      "bytes": 6192,
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2"
+    },
+    {
+      "path": "product-build03/executed-source/test/windows024-native/verify-uninstall-msi.ps1",
+      "bytes": 4157,
+      "sha256": "6ef87e6df003d5aaadeec866278222c939ac6e7659329cda5faf500b30f8f30b"
+    },
+    {
+      "path": "product-build03/result.json",
+      "bytes": 310,
+      "sha256": "4ff9b67e6283f0178a10a385cdb16f3238f5be3753222cc53305f5ef26d84759"
+    },
+    {
+      "path": "product-build03/source-manifest.json",
+      "bytes": 10058,
+      "sha256": "fd5656378198b5d6664de560a1458dd2be1c9e0ef6dc8be869ae1767e0f7ee69"
+    },
+    {
+      "path": "product-build03/source.json",
+      "bytes": 14082,
+      "sha256": "81c9eaa34dd3d322752c01debe13b254e81c2153608a52e63064604409d0268c"
+    },
+    {
+      "path": "product-build03/stderr.log",
+      "bytes": 5334,
+      "sha256": "4776d633fdecdc46f318893a07052c7a034be96a63608c0eeed19dfc742dd9e3"
+    },
+    {
+      "path": "product-build03/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "profile-residual.json",
+      "bytes": 416,
+      "sha256": "dba8346f92c247ddf38d1c310633bdc41a459aea0fa0af3897a9b0d0b3baa5e8"
+    },
+    {
+      "path": "public-archive-manifest.json",
+      "bytes": 5297,
+      "sha256": "d5c2e746e9f979702d40f34700759420886589d991a2d56cfdb27a00db3e77b3"
+    },
+    {
+      "path": "public-delete-rejected.json",
+      "bytes": 474,
+      "sha256": "52b198233bf5691842779ac10edbdd1fca3886c054eb316220a5269134db9a16"
+    },
+    {
+      "path": "public-raw/account-w1d.ps1",
+      "bytes": 19709,
+      "sha256": "11e6068834e085ef780127d87636aedbbb3054cbe75c4f1b77356055618768e5"
+    },
+    {
+      "path": "public-raw/config01.json",
+      "bytes": 421,
+      "sha256": "576749cf7ab941d60ffa131a9297e976fcc694da7c5f597c852bb4a9fa8ee7d1"
+    },
+    {
+      "path": "public-raw/desktop-source.ps1",
+      "bytes": 14788,
+      "sha256": "67a03112abef8b3659ba4154f8d16b92053e1163a2ea6e27010ce1fbbab798ce"
+    },
+    {
+      "path": "public-raw/launch-wl2.ps1",
+      "bytes": 2368,
+      "sha256": "0a655f0c70f50bdbb3005ab813715ff5c6bcde5682897cc781cd51a7337cf046"
+    },
+    {
+      "path": "public-raw/out01/bootstrap.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "public-raw/out01/bootstrap.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "public-raw/out01/child-input.json",
+      "bytes": 627,
+      "sha256": "11ac74176a04cfb5f24af4f59b597d5693bfafaa9af13a3ba811d17440e1079b"
+    },
+    {
+      "path": "public-raw/out01/controller.json",
+      "bytes": 657,
+      "sha256": "19feef36e721204b90b5684a24a73409aed9a88ef7653bad01e576c1c4878a2e"
+    },
+    {
+      "path": "public-raw/out01/controller.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "public-raw/out01/controller.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "public-raw/out01/daily-path-after.json",
+      "bytes": 222,
+      "sha256": "8f0fa26178406e48228f0766663a2d784c1371101219baf27f6bca16d0810b1d"
+    },
+    {
+      "path": "public-raw/out01/daily-path-before.json",
+      "bytes": 222,
+      "sha256": "8f0fa26178406e48228f0766663a2d784c1371101219baf27f6bca16d0810b1d"
+    },
+    {
+      "path": "public-raw/out01/daily-path-result.json",
+      "bytes": 89,
+      "sha256": "9970155064d917da196296814653d6dd599b22763d0c624ec3e2f032dba4b6de"
+    },
+    {
+      "path": "public-raw/out01/evidence-acl.log",
+      "bytes": 106,
+      "sha256": "fb633b34e025da13ae73161cc7fd793d8c3d6d945ef23bbc2ae04d5c776c3086"
+    },
+    {
+      "path": "public-raw/out01/input-acl.log",
+      "bytes": 99,
+      "sha256": "be94b183eb22884f519fa3df1df3a02a1fc741667351c2d0ea576afd1e90f8e9"
+    },
+    {
+      "path": "public-raw/out01/launch-result.json",
+      "bytes": 178,
+      "sha256": "ccb6caa6c3274b855e29c268be084cb20339e1737d359819773cffbda2cccc82"
+    },
+    {
+      "path": "public-raw/out01/launch.json",
+      "bytes": 140,
+      "sha256": "f03519558b31babfcf79f8b5ad3ac3c7bbc5403739b2ad723fe6d4a2d83f4db1"
+    },
+    {
+      "path": "public-raw/out01/native/child-result.json",
+      "bytes": 346,
+      "sha256": "a7ec494b101e8d6cf0521e39f75768f76d0a5c2556443d756eef59eb9ba5ad9d"
+    },
+    {
+      "path": "public-raw/out01/native/profile-state.private.json",
+      "bytes": 174,
+      "sha256": "3d4437440944aca4a5eb6a57ffcc057b92479d6f902fdf2efec58f7fe2136f90"
+    },
+    {
+      "path": "public-raw/out01/native/test.stderr.log",
+      "bytes": 432,
+      "sha256": "3d8b8173e94dbc1eff7b6ed518e13dee0428256f83c0b68fa9dce95cbe42924a"
+    },
+    {
+      "path": "public-raw/out01/native/test.stdout.log",
+      "bytes": 331,
+      "sha256": "64a5d96662d8242319295fc61ecff03e841b748269a77dedaf42dc871b7e21bb"
+    },
+    {
+      "path": "public-raw/out01/native/token-privileges.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "public-raw/out01/native/token-privileges.stdout.log",
+      "bytes": 250,
+      "sha256": "0bc9c4135217e1430a30e91fa51efd71915f6df7b45f74b747a8778b782e88ac"
+    },
+    {
+      "path": "public-raw/out01/native/wl1-final-owner.json",
+      "bytes": 161,
+      "sha256": "f28a983102879acd4de473fb477599b79866e6cd16c44e28e77d8f11f5d5b97d"
+    },
+    {
+      "path": "public-raw/out01/native/wl2-independent-prerequisites.json",
+      "bytes": 2083,
+      "sha256": "0591935756d4f43785abdf161b7f32f6582138849b407817b7f905674098981c"
+    },
+    {
+      "path": "public-residual.json",
+      "bytes": 4516,
+      "sha256": "77ca4c68655d83f358b129b30a81633c400cf3eb9375bd1ed9703149766badec"
+    },
+    {
+      "path": "report.md",
+      "bytes": 14194,
+      "sha256": "2f0f79e5a40f7cbf14dc1ede707097155f18fd4e878492027fec5c37ca0e8a2a"
+    },
+    {
+      "path": "result.json",
+      "bytes": 768,
+      "sha256": "b2a60884d0b7795acd71b53e4eec55c07a15c56c6ed0ac93c67f7eeeb27f6deb"
+    },
+    {
+      "path": "shared-minimum-request.json",
+      "bytes": 1948,
+      "sha256": "5c5b6f899d18ca4a176c5a1d905f8336a34fe29e9b906b7cbfdd96459067d171"
+    },
+    {
+      "path": "status-matrix.json",
+      "bytes": 10519,
+      "sha256": "5c8d66193ae3d525fe890ce986c518dc663bd3e9a532f6bc83f6d458001d6896"
+    },
+    {
+      "path": "synthetic-archive-scope.json",
+      "bytes": 558,
+      "sha256": "991376efcd0b09564ffd3dd756d5f1c5fa38ba1ef1d2acfe0f01b1d779875f99"
+    },
+    {
+      "path": "synthetic-original.reconstructed.bin",
+      "bytes": 34,
+      "sha256": "bb69a37ccee89cb0b9db6e27f2c4afb6dbb6de85148de0541d4c03e3575e9641"
+    },
+    {
+      "path": "token-privileges-encoding.json",
+      "bytes": 289,
+      "sha256": "5dad74a2489503ee684b359707ad2fcf5504b883170310a347707029f4e74457"
+    },
+    {
+      "path": "token-privileges.decoded.txt",
+      "bytes": 288,
+      "sha256": "5eaeaf792422fc56f35ddd247f07426fe0b7579ac9c0ae7b62aff00f08115ff4"
+    },
+    {
+      "path": "toolchain.json",
+      "bytes": 1244,
+      "sha256": "a0e64012ccccee9d8370f10166915914f2ce7687219aa258f8b4bfe11ad0acd3"
+    },
+    {
+      "path": "verify-evidence.py",
+      "bytes": 3640,
+      "sha256": "aac481f4c69a16dacf8b3cdfadae2595210df1da3199b9d3a8fb03ec6c69704e"
+    }
+  ]
+}

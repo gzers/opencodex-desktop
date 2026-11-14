@@ -246,3 +246,14 @@ post-result回执补丁72b9f74d6仅两份命令投影源码，原生/HTTP/来源
 不可覆盖证据 .adg/evidence/0.2.24/windows-dev/wl1-production-20261114-r1/ 含先置假设、各轮执行源/原输出、制品SHA/工具链/tree、22项完整状态表、独立读回审计、原件权限变化、准确退出码、清理原件及shared-minimum-request.json。具体最小共享需求：Windows typed客户端原件capture/ready/pre-stop/stopped/恢复许可和后继资格；长寿命原创建者/原句柄的SID私有IPC/manager FILETIME交接（bin/ocxd及新协议不在本轮自动写集）；精确H/I/current supervisor缺席证明；原Job内官方诊断子进程的来源绑定typed角色/退出语义（当前保持非零拒绝，未加豁免表）。Auto冲突重选和更新/H切换后继亦需失败代次关闭/原件恢复许可，不能丢旧owner换源继续。真实取消/更新/跨管理器恢复尚未验，不能从组件绿灯外推。
 
 清理：5轮顺序普通账户SID1041..1045全部删除，5份原Job最终清空；前4轮有独立测试失败强清，最后out05未强清；输入ACL/临时桌面ACL还原，W-L1不写注册表PATH。5个失败Profile目录保留58877文件3211038283字节，第1轮旧控制器尝试DeleteProfile使原生登记已移除、部分内容未逐字归档，只保留当时摘要/后像及残留树；第2..5轮Loaded=false且原目录保持。新Public129文件319071336字节归档核验后精确删除被自动审批blocked by policy拒绝，未执行/未重试/未换机制绕过。旧SID1040及全部历史拒绝保持；复用构建缓存/原资源保留。普通用户MSI未验不因本轮普通生命周期测试变通过，无真实业务同步/模型请求，未发布。
+
+
+## 2026-11-14 W-L2原语/环境检查点（未完成生产四边界）
+
+消费main 12746c005cb2621d2f1f44d12c0af501613fef1a、docs 34474df17bd4ee9c809e94640f8bab3b6b16754e、TEAMr12/IMP138/shared-r2，代码分批推送bb8d3d66b1fbfacb317d89b82b820e1e248bbb7f, 2e1f0932b37bcc64bab2488950e1c1c130725d2a, 35e7336fcc64bcf3cab26ca8fa9688daba95a1f0；最终tree 73f7ba8b084f9eb5fa1a91ec734d1997223fcc23。当前accepted=false、productionExecuted=false，回交原因是普通原令牌完整SD读取1314/无SeSecurityPrivilege，以及外层Job寿命未知。不是共享四trait又缺声明，也不是四项原生实现已完成。
+
+本轮修H/ocx.pid残留拒绝并用于Stop/stopped读回，原Job新增真实短命argv/父代次采集。MSVC原基线bins0、最终bins0（160990ms）；lib6项通过、native1项通过；查询raw1060/1保留，fixture无官方call-site保持Unknown。隔离普通SID1046完整SD断言原始101/controller1，所有独立事实先落盘；四项具体trait/custody/broker/private pipe认证/官方source-role/生产单SID启停恢复和管理器交接仍未完成，未空跑生产。
+
+完整36项表、源码/EXE/固定输入SHA、E0061首轮修复、原语/隔离原始trace、清理与最小环境/SD范围需求在.adg/evidence/0.2.24/windows-dev/wl2-native-20261114-r1/，优先读report.md/status-matrix.json/shared-minimum-request.json/result.json。Rust与实际编译输入26份逐字节对齐，控制脚本实际副本独立归档。
+
+新账户已移除、无官方Job/force/task/MSI；临时ACL恢复、日常PATH摘要同。Profile先87空串错误，真实NULL调用后native0/登记消失但目录access denied残留，数量字节未知，不能称完整Profile保留。Public26文件92915595字节自动审批blocked by policy拒绝，命令未执行/未重试。旧Profile/Public/schema等拒绝与普通MSI未验保持。未改官方2.99/日常策略配置，不跑旧组件/W2/双SID，不发布。

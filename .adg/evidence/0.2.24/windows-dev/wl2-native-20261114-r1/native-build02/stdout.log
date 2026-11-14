@@ -1,0 +1,19 @@
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 12 filtered out; finished in 0.00s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+running 1 test
+test wl2_retained_command_parent_and_raw_query_exits ... original query native argv parent=85916 FILETIME=134391262668208454 argv=["C:\\WINDOWS\\System32\\sc.exe", "query", "opencodex-proxy-native"] rawOutcome=111308 sc.exe 1060; role=Unknown(no official source)
+original query native argv parent=85916 FILETIME=134391262668208454 argv=["C:\\WINDOWS\\System32\\schtasks.exe", "/query", "/tn", "opencodex-proxy", "/xml"] rawOutcome=54744 schtasks.exe 1; role=Unknown(no official source)
+captured=2/2; no diagnostic normal-exit exception issued
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 9 filtered out; finished in 0.07s
+

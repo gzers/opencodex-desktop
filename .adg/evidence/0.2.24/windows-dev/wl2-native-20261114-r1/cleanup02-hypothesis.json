@@ -1,0 +1,7 @@
+{
+  "scope": "same exact SID and native API; no alternate cleanup or approval bypass",
+  "rawWin32": 87,
+  "firstReceipt": "cleanup-account-profile.json",
+  "cause": "PowerShell null bound to managed string empty; corrected C# wrapper supplies actual native NULL",
+  "sourceSha256": "cd9c950ab37fc3dd96580c89b74df2259657b88d10627269d33183d54fb916b7"
+}

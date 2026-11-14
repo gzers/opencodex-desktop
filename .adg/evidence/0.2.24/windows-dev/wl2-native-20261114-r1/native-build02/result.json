@@ -1,0 +1,21 @@
+{
+  "accepted": false,
+  "elapsedMs": 6865,
+  "exitCode": 0,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "-j",
+    "1",
+    "wl2_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "profile": "debug"
+}

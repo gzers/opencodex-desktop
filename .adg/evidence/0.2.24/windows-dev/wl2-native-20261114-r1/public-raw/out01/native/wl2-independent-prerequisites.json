@@ -1,0 +1,86 @@
+{
+  "accepted": false,
+  "elevated": false,
+  "exactStaged": [
+    [
+      "opencodex-service-task.xml",
+      {
+        "raw_code": 2,
+        "state": "Absent"
+      }
+    ],
+    [
+      "opencodex-service.cmd",
+      {
+        "raw_code": 2,
+        "state": "Absent"
+      }
+    ],
+    [
+      "opencodex-service-launcher.vbs",
+      {
+        "raw_code": 2,
+        "state": "Absent"
+      }
+    ],
+    [
+      "winsw/opencodex-proxy-native.xml",
+      {
+        "raw_code": 3,
+        "state": "Absent"
+      }
+    ],
+    [
+      "winsw/opencodex-proxy-native.exe",
+      {
+        "raw_code": 3,
+        "state": "Absent"
+      }
+    ]
+  ],
+  "nativeNamespaces": {
+    "scheduler": {
+      "raw_code": 2147942402,
+      "state": "Absent"
+    },
+    "scm": {
+      "raw_code": 1060,
+      "state": "Absent"
+    }
+  },
+  "ordinaryMsiAcceptance": false,
+  "originalAfter": {
+    "bytesSha256": "bb69a37ccee89cb0b9db6e27f2c4afb6dbb6de85148de0541d4c03e3575e9641",
+    "completeSecurityProven": false,
+    "fileId": "281474977958307",
+    "ownerGroupDaclSha256": "c8b9d3db664406528ca72e7a6f19ec7c61c7aad54963f0b6746325f40ac99322",
+    "volume": 247287385
+  },
+  "originalBefore": {
+    "bytesSha256": "bb69a37ccee89cb0b9db6e27f2c4afb6dbb6de85148de0541d4c03e3575e9641",
+    "completeSecurityProven": false,
+    "fileId": "281474977958307",
+    "ownerGroupDaclSha256": "c8b9d3db664406528ca72e7a6f19ec7c61c7aad54963f0b6746325f40ac99322",
+    "volume": 247287385
+  },
+  "originalUnchanged": true,
+  "ownerOuterJob": {
+    "error": "inherited outer Job continuity not proven",
+    "outerJobSafe": false,
+    "rawWin32": null
+  },
+  "productionExecuted": false,
+  "profile": "C:\\Users\\ocxw1d6802b2e1c",
+  "qpc": {
+    "counter": "30581000994009",
+    "frequency": "10000000"
+  },
+  "safeToRemoveTestIdentity": true,
+  "security": {
+    "completeSecurityReadable": false,
+    "error": "客户端没有所需的特权。 (os error 1314)",
+    "rawWin32": 1314,
+    "stage": "Open-original-READ_CONTROL-ACCESS_SYSTEM_SECURITY"
+  },
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1046"
+}

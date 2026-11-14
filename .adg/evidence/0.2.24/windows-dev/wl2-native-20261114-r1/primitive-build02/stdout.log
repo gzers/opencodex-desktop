@@ -1,0 +1,14 @@
+
+running 7 tests
+test infrastructure::windows_client_originals024::tests::wl2_complete_descriptor_never_falls_back_or_mutates ... complete-security prerequisite rejected: raw=Some(1314) error=客户端没有所需的特权。 (os error 1314)
+ok
+test infrastructure::windows_official_lifecycle024::tests::isolated_wl2_native_boundaries ... ignored, one isolated ordinary account; W-L2 independent prerequisites, no official launch
+test infrastructure::windows_official_lifecycle024::tests::wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback ... ok
+test infrastructure::windows_owner_host024::tests::wl2_qpc_preserves_original_restart_stop_subwindow ... ok
+test infrastructure::windows_owner_host024::tests::wl2_strict_frames_reject_duplicate_truncated_and_unknown ... ok
+test infrastructure::windows_supervisor024::tests::wl2_staged_and_native_namespaces_are_independent ... native namespaces (observations only): {"scm":{"state":"Absent","raw_code":1060},"scheduler":{"state":"Absent","raw_code":2147942402}}
+ok
+test infrastructure::windows_supervisor024::tests::wl2_supervisor_errors_never_become_absence ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 1866 filtered out; finished in 0.02s
+
