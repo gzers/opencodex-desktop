@@ -139,6 +139,12 @@ impl Owner {
         let bytes = serde_json::to_vec(&json!({"session":self.session.to_string(),"sid":b.process.token.sid,"profile":self.profile,"D":self.data,"H":self.home,"I":self.root,"directories":ids,"source":self.selected.selection.image_sha256,"rootPid":b.process.pid,"rootFiletime":b.process.creation_filetime.to_string()})).map_err(unknown)?;
         Ok(hash::sha256_hex(&bytes))
     }
+    pub(crate) fn profile_path(&self) -> &Path {
+        &self.profile
+    }
+    pub(crate) fn installation_path(&self) -> &Path {
+        &self.root
+    }
     pub(crate) fn home_path(&self) -> &Path {
         &self.home
     }
@@ -457,9 +463,19 @@ async fn execute_async(
     // Original capture must precede the first official mutation. This read-only
     // gate refuses complete-SD failures with their original API/code. The
     // still-unfinished durable custody adapter cannot be bypassed on success.
-    super::windows_client_originals024::preflight(plan.user_profile(),window.deadline()).map_err(|e| {
-        fail("windows024_originals_security_unconfirmed", &format!("原件完整安全捕获前拒绝；class={:?}; api=Open/GetSecurityInfo(BACKUP); raw={:?}; {e}", super::windows_client_originals024::classify_error(e.raw_os_error()),e.raw_os_error()))
-    })?;
+    super::windows_client_originals024::preflight(plan.user_profile(), window.deadline()).map_err(
+        |e| {
+            fail(
+                "windows024_originals_security_unconfirmed",
+                &format!(
+                    "原件完整安全捕获前拒绝；class={:?}; api={}; raw={:?}; {e}",
+                    super::windows_client_originals024::classify_error(e.raw_os_error()),
+                    e.api(),
+                    e.raw_os_error()
+                ),
+            )
+        },
+    )?;
     super::windows_client_originals024::require_durable_capture()?;
     let scope_pins = [
         data,

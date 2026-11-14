@@ -20,8 +20,44 @@ use windows_sys::Win32::{
     Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
 };
 
-fn denied(reason: &'static str) -> io::Error {
-    io::Error::new(io::ErrorKind::PermissionDenied, reason)
+#[derive(Debug)]
+pub(crate) struct CaptureError {
+    api: &'static str,
+    cause: io::Error,
+}
+impl CaptureError {
+    fn new(api: &'static str, cause: io::Error) -> Self {
+        Self { api, cause }
+    }
+    pub(crate) fn api(&self) -> &'static str {
+        self.api
+    }
+    pub(crate) fn raw_os_error(&self) -> Option<i32> {
+        self.cause.raw_os_error()
+    }
+}
+impl std::fmt::Display for CaptureError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "api={} raw={:?}: {}",
+            self.api,
+            self.raw_os_error(),
+            self.cause
+        )
+    }
+}
+impl std::error::Error for CaptureError {}
+impl From<io::Error> for CaptureError {
+    fn from(e: io::Error) -> Self {
+        Self::new("native-original-path-observation", e)
+    }
+}
+fn denied(reason: &'static str) -> CaptureError {
+    CaptureError::new(
+        "complete-descriptor-validation",
+        io::Error::new(io::ErrorKind::PermissionDenied, reason),
+    )
 }
 
 // READ_CONTROL cannot authorize SACL observation. Do not enable privileges,
@@ -47,15 +83,19 @@ pub(crate) struct InspectedOriginal {
     security: Vec<u8>,
 }
 impl InspectedOriginal {
-    pub(crate) fn open(path: &Path, directory: bool) -> io::Result<Self> {
+    pub(crate) fn open(path: &Path, directory: bool) -> Result<Self, CaptureError> {
         let file = OpenOptions::new()
             .access_mode(FULL_DESCRIPTOR_QUERY_ACCESS)
             .share_mode(1)
             .custom_flags(0x0020_0000 | if directory { 0x0200_0000 } else { 0 })
-            .open(path)?;
+            .open(path)
+            .map_err(|e| CaptureError::new("CreateFileW(FULL_DESCRIPTOR_QUERY_ACCESS)", e))?;
         let mut info: BY_HANDLE_FILE_INFORMATION = unsafe { std::mem::zeroed() };
         if unsafe { GetFileInformationByHandle(file.as_raw_handle(), &mut info) } == 0 {
-            return Err(io::Error::last_os_error());
+            return Err(CaptureError::new(
+                "GetFileInformationByHandle",
+                io::Error::last_os_error(),
+            ));
         }
         if info.dwFileAttributes & 0x400 != 0
             || (info.dwFileAttributes & 0x10 != 0) != directory
@@ -71,10 +111,13 @@ impl InspectedOriginal {
             security,
         })
     }
-    pub(crate) fn recheck(&self) -> io::Result<()> {
+    pub(crate) fn recheck(&self) -> Result<(), CaptureError> {
         let mut info: BY_HANDLE_FILE_INFORMATION = unsafe { std::mem::zeroed() };
         if unsafe { GetFileInformationByHandle(self.file.as_raw_handle(), &mut info) } == 0 {
-            return Err(io::Error::last_os_error());
+            return Err(CaptureError::new(
+                "GetFileInformationByHandle",
+                io::Error::last_os_error(),
+            ));
         }
         if info.dwVolumeSerialNumber != self.volume
             || ((info.nFileIndexHigh as u64) << 32) | info.nFileIndexLow as u64 != self.id
@@ -85,7 +128,7 @@ impl InspectedOriginal {
         Ok(())
     }
 }
-fn descriptor(file: &File) -> io::Result<Vec<u8>> {
+fn descriptor(file: &File) -> Result<Vec<u8>, CaptureError> {
     #[link(name = "advapi32")]
     unsafe extern "system" {
         fn GetSecurityInfo(
@@ -113,7 +156,10 @@ fn descriptor(file: &File) -> io::Result<Vec<u8>> {
         )
     };
     if code != 0 {
-        return Err(io::Error::from_raw_os_error(code as i32));
+        return Err(CaptureError::new(
+            "GetSecurityInfo(SE_FILE_OBJECT,BACKUP_SECURITY_INFORMATION)",
+            io::Error::from_raw_os_error(code as i32),
+        ));
     }
     if raw.is_null() {
         return Err(denied("complete query returned no descriptor"));
@@ -136,7 +182,10 @@ fn descriptor(file: &File) -> io::Result<Vec<u8>> {
     }
     let (mut control, mut revision) = (0u16, 0u32);
     if unsafe { GetSecurityDescriptorControl(raw, &mut control, &mut revision) } == 0 {
-        return Err(io::Error::last_os_error());
+        return Err(CaptureError::new(
+            "GetSecurityDescriptorControl",
+            io::Error::last_os_error(),
+        ));
     }
     if revision != 1 {
         return Err(denied("unknown descriptor revision"));
@@ -158,7 +207,10 @@ fn descriptor(file: &File) -> io::Result<Vec<u8>> {
     }
     let mut relative = vec![0u8; required as usize];
     if unsafe { MakeSelfRelativeSD(raw, relative.as_mut_ptr().cast(), &mut required) } == 0 {
-        return Err(io::Error::last_os_error());
+        return Err(CaptureError::new(
+            "MakeSelfRelativeSD",
+            io::Error::last_os_error(),
+        ));
     }
     if relative.len() != required as usize
         || unsafe { IsValidSecurityDescriptor(relative.as_ptr().cast_mut().cast()) } == 0
@@ -169,14 +221,17 @@ fn descriptor(file: &File) -> io::Result<Vec<u8>> {
 }
 
 /// Read-only full-tree admission. Complete SD failure happens before the first
-/// client mutation, output/custody creation or official process construction.
-pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> io::Result<()> {
+/// client mutation or custody creation or official process construction.
+pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> Result<(), CaptureError> {
     let profile_pin = super::windows_official_runtime024::PinnedDirectory::open(profile)?;
     let mut queue = vec![profile.join(".codex"), profile.join(".grok")];
     let mut count = 0;
     while let Some(path) = queue.pop() {
         if std::time::Instant::now() >= deadline {
-            return Err(io::ErrorKind::TimedOut.into());
+            return Err(CaptureError::new(
+                "original-preflight-deadline",
+                io::ErrorKind::TimedOut.into(),
+            ));
         }
         count += 1;
         if count > 512 {
@@ -192,7 +247,7 @@ pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> io::Res
                 )?
                 .recheck()?;
             }
-            Err(e) => return Err(e),
+            Err(e) => return Err(CaptureError::new("symlink_metadata(original)", e)),
             Ok(m) => {
                 let inspected = InspectedOriginal::open(&path, m.is_dir())?;
                 inspected.recheck()?;
@@ -205,7 +260,7 @@ pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> io::Res
             }
         }
     }
-    profile_pin.recheck()
+    profile_pin.recheck().map_err(CaptureError::from)
 }
 pub(crate) fn require_durable_capture() -> crate::errors::AppResult<()> {
     Err(crate::errors::AppError::RuntimeManaged {
@@ -228,6 +283,18 @@ mod tests {
             assert_eq!(classify_error(Some(code)), SecurityFailure::CoverageUnknown);
         }
         assert_eq!(classify_error(None), SecurityFailure::CoverageUnknown);
+        let wrapped = CaptureError::new(
+            "CreateFileW(FULL_DESCRIPTOR_QUERY_ACCESS)",
+            io::Error::from_raw_os_error(1314),
+        );
+        assert_eq!(wrapped.api(), "CreateFileW(FULL_DESCRIPTOR_QUERY_ACCESS)");
+        assert_eq!(wrapped.raw_os_error(), Some(1314));
+        let query = CaptureError::new(
+            "GetSecurityInfo(SE_FILE_OBJECT,BACKUP_SECURITY_INFORMATION)",
+            io::Error::from_raw_os_error(5),
+        );
+        assert_eq!(query.raw_os_error(), Some(5));
+        assert!(query.to_string().contains("GetSecurityInfo"));
         // The known ordinary-token1314 is reused. No live full-SD request is
         // repeated without a new environment; only new pure classification is tested.
     }
