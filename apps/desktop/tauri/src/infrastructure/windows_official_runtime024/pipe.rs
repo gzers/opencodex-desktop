@@ -57,9 +57,17 @@ unsafe extern "system" {
     ) -> i32;
     fn CancelIoEx(file: HANDLE, overlapped: *const OVERLAPPED) -> i32;
     fn WaitForSingleObject(handle: HANDLE, millis: u32) -> u32;
+    fn PeekNamedPipe(
+        pipe: HANDLE,
+        buffer: *mut u8,
+        size: u32,
+        read: *mut u32,
+        available: *mut u32,
+        left: *mut u32,
+    ) -> i32;
 }
 pub struct PrivatePipe {
-    handle: OwnedHandle,
+    handle: std::sync::Arc<OwnedHandle>,
     server: bool,
     name: String,
 }
@@ -95,7 +103,7 @@ impl PrivatePipe {
         if raw == INVALID_HANDLE_VALUE {
             return Err(io::Error::last_os_error());
         }
-        let handle = unsafe { OwnedHandle::from_raw_handle(raw) };
+        let handle = std::sync::Arc::new(unsafe { OwnedHandle::from_raw_handle(raw) });
         verify_private(raw, &sid, true)?;
         Ok(Self {
             handle,
@@ -108,12 +116,7 @@ impl PrivatePipe {
     }
     pub fn connect_local(name: &str) -> io::Result<Self> {
         use std::os::windows::{fs::OpenOptionsExt, io::IntoRawHandle};
-        let prefix = [char::from(92), char::from(92), '.', char::from(92)]
-            .iter()
-            .collect::<String>()
-            + "pipe"
-            + &char::from(92).to_string()
-            + "ocxd-owner024-";
+        let prefix = format!("{s}{s}.{s}pipe{s}ocxd-owner024-", s = char::from(92));
         if !name.starts_with(&prefix) || name.len() > 256 {
             return Err(denied("not local owner pipe"));
         }
@@ -123,22 +126,64 @@ impl PrivatePipe {
             .custom_flags(0x40000000 | 0x100000)
             .open(name)?;
         Ok(Self {
-            handle: unsafe { OwnedHandle::from_raw_handle(file.into_raw_handle()) },
+            handle: std::sync::Arc::new(unsafe {
+                OwnedHandle::from_raw_handle(file.into_raw_handle())
+            }),
             server: false,
             name: name.into(),
         })
+    }
+    /// A late kernel cancellation owns its private handle/event/buffers in the
+    /// worker. The caller returns at the original deadline, and late results
+    /// cannot enter an Owner operation or extend an action's budget.
+    fn bounded<T: Send + 'static>(
+        &self,
+        deadline: Instant,
+        operation: impl FnOnce(HANDLE) -> io::Result<T> + Send + 'static,
+    ) -> io::Result<T> {
+        if Instant::now() >= deadline {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        let (tx, rx) = std::sync::mpsc::sync_channel(1);
+        let handle = self.handle.clone();
+        std::thread::Builder::new()
+            .name("owner024-private-io".into())
+            .spawn(move || {
+                let result = if Instant::now() >= deadline {
+                    Err(io::ErrorKind::TimedOut.into())
+                } else {
+                    operation(handle.as_raw_handle())
+                };
+                let _ = tx.send(result);
+            })?;
+        let value = rx
+            .recv_timeout(deadline.saturating_duration_since(Instant::now()))
+            .map_err(|e| match e {
+                std::sync::mpsc::RecvTimeoutError::Timeout => {
+                    io::Error::from(io::ErrorKind::TimedOut)
+                }
+                std::sync::mpsc::RecvTimeoutError::Disconnected => {
+                    io::Error::other("private IO worker disconnected")
+                }
+            })??;
+        if Instant::now() >= deadline {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        Ok(value)
     }
     pub fn accept(&self, deadline: Instant) -> io::Result<RetainedPeer> {
         if !self.server {
             return Err(denied("client cannot accept"));
         }
-        self.overlapped(deadline, |ov| {
-            let ok = unsafe { ConnectNamedPipe(self.handle.as_raw_handle(), ov) };
-            if ok == 0 && io::Error::last_os_error().raw_os_error() == Some(535) {
-                Ok(Some(0))
-            } else {
-                pending(ok)
-            }
+        self.bounded(deadline, move |h| {
+            overlapped(h, deadline, |ov| {
+                let ok = unsafe { ConnectNamedPipe(h, ov) };
+                if ok == 0 && io::Error::last_os_error().raw_os_error() == Some(535) {
+                    Ok(Some(0))
+                } else {
+                    pending(ok)
+                }
+            })
         })?;
         self.peer()
     }
@@ -156,75 +201,34 @@ impl PrivatePipe {
         }
         RetainedPeer::from_native_pid(pid)
     }
-    fn overlapped(
-        &self,
-        deadline: Instant,
-        operation: impl FnOnce(*mut OVERLAPPED) -> io::Result<Option<u32>>,
-    ) -> io::Result<u32> {
-        if Instant::now() >= deadline {
-            return Err(io::ErrorKind::TimedOut.into());
-        }
-        let event = unsafe { CreateEventW(ptr::null(), 1, 0, ptr::null()) };
-        if event.is_null() {
-            return Err(io::Error::last_os_error());
-        }
-        let _event = unsafe { OwnedHandle::from_raw_handle(event) };
-        let mut ov = OVERLAPPED::default();
-        ov.hEvent = event;
-        if let Some(n) = operation(&mut ov)? {
-            return if Instant::now() < deadline {
-                Ok(n)
-            } else {
-                Err(io::ErrorKind::TimedOut.into())
-            };
-        }
-        let millis = deadline
-            .saturating_duration_since(Instant::now())
-            .as_millis()
-            .min(u32::MAX as u128 - 1) as u32;
-        let wait = unsafe { WaitForSingleObject(event, millis) };
-        let mut n = 0;
-        if wait != 0 {
-            unsafe {
-                CancelIoEx(self.handle.as_raw_handle(), &ov);
-                GetOverlappedResult(self.handle.as_raw_handle(), &mut ov, &mut n, 1);
-            }
-            return Err(if wait == 258 {
-                io::ErrorKind::TimedOut.into()
-            } else {
-                io::Error::last_os_error()
-            });
-        }
-        check(unsafe { GetOverlappedResult(self.handle.as_raw_handle(), &mut ov, &mut n, 0) })?;
-        if Instant::now() >= deadline {
-            return Err(io::ErrorKind::TimedOut.into());
-        }
-        Ok(n)
-    }
     fn read_exact(&self, buffer: &mut [u8], deadline: Instant) -> io::Result<()> {
         let mut done = 0;
+        let mut chunks = 0;
         while done < buffer.len() {
-            let n = self.overlapped(deadline, |ov| {
-                let mut n = 0;
-                let ok = unsafe {
-                    ReadFile(
-                        self.handle.as_raw_handle(),
-                        buffer[done..].as_mut_ptr(),
-                        (buffer.len() - done) as u32,
-                        &mut n,
-                        ov,
-                    )
-                };
-                if ok != 0 {
-                    Ok(Some(n))
-                } else {
-                    pending(ok)
-                }
-            })? as usize;
-            if n == 0 {
-                return Err(io::ErrorKind::UnexpectedEof.into());
+            chunks += 1;
+            if chunks > 256 {
+                return Err(denied("fragment count bound"));
             }
-            done += n;
+            let size = buffer.len() - done;
+            let chunk = self.bounded(deadline, move |h| {
+                let mut data = vec![0u8; size];
+                let read = overlapped(h, deadline, |ov| {
+                    let mut n = 0;
+                    let ok = unsafe { ReadFile(h, data.as_mut_ptr(), size as u32, &mut n, ov) };
+                    if ok != 0 {
+                        Ok(Some(n))
+                    } else {
+                        pending(ok)
+                    }
+                })? as usize;
+                if read == 0 || read > data.len() {
+                    return Err(io::ErrorKind::UnexpectedEof.into());
+                }
+                data.truncate(read);
+                Ok(data)
+            })?;
+            buffer[done..done + chunk.len()].copy_from_slice(&chunk);
+            done += chunk.len();
         }
         Ok(())
     }
@@ -238,6 +242,23 @@ impl PrivatePipe {
         let mut frame = vec![0u8; n + 4];
         frame[..4].copy_from_slice(&length);
         self.read_exact(&mut frame[4..], deadline)?;
+        self.bounded(deadline, |h| {
+            let mut available = 0;
+            check(unsafe {
+                PeekNamedPipe(
+                    h,
+                    ptr::null_mut(),
+                    0,
+                    ptr::null_mut(),
+                    &mut available,
+                    ptr::null_mut(),
+                )
+            })?;
+            if available != 0 {
+                return Err(denied("trailing private pipe frame/bytes"));
+            }
+            Ok(())
+        })?;
         Ok(frame)
     }
     pub fn write_frame(&self, payload: &[u8], deadline: Instant) -> io::Result<()> {
@@ -246,32 +267,80 @@ impl PrivatePipe {
         }
         let mut b = (payload.len() as u32).to_le_bytes().to_vec();
         b.extend_from_slice(payload);
-        let mut done = 0;
-        while done < b.len() {
-            let n = self.overlapped(deadline, |ov| {
-                let mut n = 0;
-                let ok = unsafe {
-                    WriteFile(
-                        self.handle.as_raw_handle(),
-                        b[done..].as_ptr(),
-                        (b.len() - done) as u32,
-                        &mut n,
-                        ov,
-                    )
-                };
-                if ok != 0 {
-                    Ok(Some(n))
-                } else {
-                    pending(ok)
+        self.bounded(deadline, move |h| {
+            let mut done = 0;
+            let mut chunks = 0;
+            while done < b.len() {
+                chunks += 1;
+                if chunks > 256 {
+                    return Err(denied("write fragmentation bound"));
                 }
-            })? as usize;
-            if n == 0 {
-                return Err(io::ErrorKind::WriteZero.into());
+                let n = overlapped(h, deadline, |ov| {
+                    let mut n = 0;
+                    let ok = unsafe {
+                        WriteFile(h, b[done..].as_ptr(), (b.len() - done) as u32, &mut n, ov)
+                    };
+                    if ok != 0 {
+                        Ok(Some(n))
+                    } else {
+                        pending(ok)
+                    }
+                })? as usize;
+                if n == 0 || n > b.len() - done {
+                    return Err(io::ErrorKind::WriteZero.into());
+                }
+                done += n;
             }
-            done += n;
-        }
-        Ok(())
+            Ok(())
+        })
     }
+}
+fn overlapped(
+    handle: HANDLE,
+    deadline: Instant,
+    operation: impl FnOnce(*mut OVERLAPPED) -> io::Result<Option<u32>>,
+) -> io::Result<u32> {
+    if Instant::now() >= deadline {
+        return Err(io::ErrorKind::TimedOut.into());
+    }
+    let event = unsafe { CreateEventW(ptr::null(), 1, 0, ptr::null()) };
+    if event.is_null() {
+        return Err(io::Error::last_os_error());
+    }
+    let _event = unsafe { OwnedHandle::from_raw_handle(event) };
+    let mut ov = OVERLAPPED::default();
+    ov.hEvent = event;
+    if let Some(n) = operation(&mut ov)? {
+        return if Instant::now() < deadline {
+            Ok(n)
+        } else {
+            Err(io::ErrorKind::TimedOut.into())
+        };
+    }
+    let millis = deadline
+        .saturating_duration_since(Instant::now())
+        .as_millis()
+        .min(u32::MAX as u128 - 1) as u32;
+    let wait = unsafe { WaitForSingleObject(event, millis) };
+    let mut n = 0;
+    if wait != 0 {
+        // Only this worker waits for cancellation completion; its original
+        // event/OVERLAPPED/buffer remain valid. No owner/Job lives on this worker.
+        unsafe {
+            CancelIoEx(handle, &ov);
+            GetOverlappedResult(handle, &mut ov, &mut n, 1);
+        }
+        return Err(if wait == 258 {
+            io::ErrorKind::TimedOut.into()
+        } else {
+            io::Error::last_os_error()
+        });
+    }
+    check(unsafe { GetOverlappedResult(handle, &mut ov, &mut n, 0) })?;
+    if Instant::now() >= deadline {
+        return Err(io::ErrorKind::TimedOut.into());
+    }
+    Ok(n)
 }
 fn pending(ok: i32) -> io::Result<Option<u32>> {
     if ok != 0 {

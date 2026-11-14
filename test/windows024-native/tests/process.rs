@@ -56,6 +56,46 @@ fn wl2_r3_private_pipe_bounds_and_original_deadline_are_enforced() {
         "native cancel wait exceeded bounded test guard"
     );
 }
+#[test]
+fn wl2_r3_private_pipe_queued_trailer_cannot_be_another_request() {
+    let server = PrivatePipe::create(&"2".repeat(64)).unwrap();
+    let name = server.name().to_owned();
+    let deadline = Instant::now() + Duration::from_secs(3);
+    let (sent, received) = std::sync::mpsc::sync_channel(1);
+    let (release, wait) = std::sync::mpsc::sync_channel(1);
+    let child = std::thread::spawn(move || {
+        let client = PrivatePipe::connect_local(&name).unwrap();
+        client.write_frame(b"first-frame", deadline).unwrap();
+        client.write_frame(b"second-frame", deadline).unwrap();
+        sent.send(()).unwrap();
+        wait.recv_timeout(Duration::from_secs(3)).unwrap();
+    });
+    server.accept(deadline).unwrap();
+    received.recv_timeout(Duration::from_secs(3)).unwrap();
+    assert!(server.read_frame(deadline).is_err());
+    release.send(()).unwrap();
+    child.join().unwrap();
+}
+#[test]
+fn wl2_r3_connected_but_silent_peer_cannot_extend_original_read_deadline() {
+    let server = PrivatePipe::create(&"3".repeat(64)).unwrap();
+    let name = server.name().to_owned();
+    let (release, wait) = std::sync::mpsc::sync_channel(1);
+    let child = std::thread::spawn(move || {
+        let _client = PrivatePipe::connect_local(&name).unwrap();
+        wait.recv_timeout(Duration::from_secs(3)).unwrap();
+    });
+    server
+        .accept(Instant::now() + Duration::from_secs(3))
+        .unwrap();
+    let start = Instant::now();
+    assert!(server
+        .read_frame(start + Duration::from_millis(30))
+        .is_err());
+    assert!(start.elapsed() < Duration::from_secs(1));
+    release.send(()).unwrap();
+    child.join().unwrap();
+}
 static NEXT: AtomicU64 = AtomicU64::new(0);
 struct Fixture {
     root: PathBuf,
