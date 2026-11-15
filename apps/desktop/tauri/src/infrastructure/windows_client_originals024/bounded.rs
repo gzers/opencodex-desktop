@@ -321,6 +321,15 @@ impl SnapshotData {
     pub(super) fn matches_id(&self, volume: u32, id: &str) -> bool {
         self.volume == volume && self.file_id == id
     }
+    /// Content-policy equality only. Native generation is a separate field;
+    /// covered security includes all8 projections and exact r4 exclusions.
+    pub(super) fn content_policy_protection(&self) -> io::Result<String> {
+        self.validate()?;
+        let raw=serde_json::to_vec(&(&self.scope_id,&self.security_policy_digest,&self.projections,
+            &self.audit_sacl_assurance,self.full_security_proven))
+            .map_err(|_|invalid("content security projection encoding"))?;
+        Ok(hash::sha256_hex(&raw))
+    }
 }
 fn same_covered_component(a: &Projection, b: &Projection) -> bool {
     if a.mask <= 4 {

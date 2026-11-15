@@ -108,6 +108,73 @@ fn private_child(parent: &PinnedDirectory, name: &str) -> io::Result<PinnedDirec
     }
 }
 impl TreeCaptureV2 {
+    /// Content-only assessment on actual original/archived/current snapshots.
+    /// Does not replace the unchanged-working veto, advance phase or restore.
+    pub(super) fn assess_artifacts(
+        &mut self,
+        routes: &[String],
+        pids: &[u32],
+        audit_home: &str,
+        not_before: chrono::DateTime<chrono::Utc>,
+        not_after: chrono::DateTime<chrono::Utc>,
+        end: Instant,
+    ) -> io::Result<crate::modules::runtime::client_artifact_policy::Assessment> {
+        let result =
+            self.assess_artifacts_inner(routes, pids, audit_home, not_before, not_after, end);
+        if result.is_err() {
+            self.failed = true;
+        }
+        result
+    }
+    fn assess_artifacts_inner(
+        &mut self,
+        routes: &[String],
+        pids: &[u32],
+        audit_home: &str,
+        not_before: chrono::DateTime<chrono::Utc>,
+        not_after: chrono::DateTime<chrono::Utc>,
+        end: Instant,
+    ) -> io::Result<crate::modules::runtime::client_artifact_policy::Assessment> {
+        use crate::modules::runtime::client_artifact_policy::{self as policy, Observations};
+        self.recheck(end)?;
+        let root = self.manifest.binding.paths()[0].join(".codex");
+        self.trees[0].verify_non_artifact_working(end)?;
+        self.trees[1].verify_working(end)?;
+        let original = self.trees[0].original_artifact_frame(end)?;
+        let ready = self
+            .working_archives
+            .iter_mut()
+            .find(|(p, _)| *p == Phase::Ready)
+            .ok_or_else(invalid)?
+            .1
+            .artifact_frame(end)?;
+        let prestop = self
+            .working_archives
+            .iter_mut()
+            .find(|(p, _)| *p == Phase::PreparedRestore)
+            .ok_or_else(invalid)?
+            .1
+            .artifact_frame(end)?;
+        let current = self.trees[0].current_artifact_frame(end)?;
+        for frame in [&original, &ready, &prestop, &current] {
+            frame.require_root(&root)?;
+        }
+        let result = policy::assess(&Observations {
+            before: original.stage(),
+            ready: ready.stage(),
+            pre_stop: prestop.stage(),
+            stopped: current.stage(),
+            declared_routes: Some(routes),
+            retained_pids: pids,
+            audit_home,
+            audit_not_before: not_before,
+            audit_not_after: not_after,
+        })
+        .map_err(|_| invalid())?;
+        self.recheck(end)?;
+        before(end)?;
+        Ok(result)
+    }
     pub(super) fn capture(binding: Binding, end: Instant) -> io::Result<Self> {
         Self::capture_with_history(binding, &mut [], end)
     }

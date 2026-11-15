@@ -20,6 +20,8 @@ use std::{
     time::Instant,
 };
 mod locks;
+mod artifacts;
+pub(super) use artifacts::ArtifactFrame;
 mod working;
 pub(super) use working::{SnapshotPhase, WorkingArchive, WorkingReference};
 #[derive(PartialEq, Eq)]

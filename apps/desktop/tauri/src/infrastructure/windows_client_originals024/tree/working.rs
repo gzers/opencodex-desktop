@@ -149,6 +149,11 @@ pub(super) struct WorkingImage {
     parent_security: SnapshotData,
     entries: Vec<Entry>,
 }
+impl WorkingImage {
+    pub(super) fn artifact_frame(&self) -> io::Result<super::ArtifactFrame> {
+        super::ArtifactFrame::from_entries(&self.path, &self.entries)
+    }
+}
 impl RootTree {
     fn observe_restored_original(&mut self, end: Instant) -> io::Result<WorkingImage> {
         self.verify_restored(end)?;
@@ -356,6 +361,13 @@ pub(crate) struct WorkingArchive {
     fail_after_first_part: bool,
 }
 impl WorkingArchive {
+    /// Rechecked sealed archive data, never live client permission. Generation
+    /// comes from its captured original working entries, not archive-copy IDs.
+    pub(crate) fn artifact_frame(&mut self, end: Instant) -> io::Result<super::ArtifactFrame> {
+        self.recheck(end)?;
+        let image = &self.roots.first().ok_or_else(invalid)?.image;
+        super::ArtifactFrame::from_entries(&image.path, &image.entries)
+    }
     pub(crate) fn create(
         custody: &PinnedDirectory,
         phase: SnapshotPhase,
