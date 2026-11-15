@@ -336,16 +336,7 @@ impl Owner {
         }
         self.stage = "native-normal-exit";
         let final_state = self.native.wait_normal_exit(deadline).map_err(unknown)?;
-        if !final_state.complete_exit()
-            || final_state.total_processes as usize != final_state.retained_members.len() + 1
-            || !matches!(final_state.root, ProcessState::Exited { code: 0 })
-            || final_state
-                .retained_members
-                .iter()
-                .any(|(_, s)| !matches!(s, ProcessState::Exited { code: 0 }))
-        {
-            return Err(unknown(()));
-        }
+        require_accounted_exit(&final_state)?;
         if !native::listener_exit_readback(
             self.original_listeners
                 .as_ref()
@@ -359,18 +350,42 @@ impl Owner {
         teardown_records_absent(&self.home)?;
         self.source(deadline)?;
         let mut supervisor = WindowsSupervisor;
-        let absent = supervisor.observe_absent(self, deadline).map_err(unknown)?;
+        let absent = supervisor.observe_absent(self, deadline)?;
         let mut diagnostics = WindowsDiagnostics;
-        let normal = diagnostics
-            .complete_family(self, &absent, deadline)
-            .map_err(unknown)?;
-        normal.check(self, deadline).map_err(unknown)?;
+        let normal = diagnostics.complete_family(self, &absent, deadline)?;
+        normal.check(self, deadline)?;
+        supervisor.recheck_absent(self, &absent, deadline)?;
+        require_accounted_exit(&self.native.family_state().map_err(unknown)?)?;
+        if !native::listener_exit_readback(
+            self.original_listeners
+                .as_ref()
+                .ok_or_else(|| unknown(()))?,
+        )
+        .map_err(unknown)?
+        .is_empty()
+        {
+            return Err(unknown(()));
+        }
+        teardown_records_absent(&self.home)?;
+        self.source(deadline)?;
         self.stopped = true;
         // No Windows durable original capture/restore or supervisor observation
         // authority is supplied by r1. Native success is separately retained;
         // it cannot mint LifecycleResult::Stopped or permit successor Start.
         Err(recovery_required())
     }
+}
+/// Admission to role verification only. Child exits retain their raw values;
+/// only WindowsDiagnostics with independent native supervisor proof can accept
+/// exact registration queries. This check never creates NormalExit or Stopped.
+fn require_accounted_exit(family: &native::FamilyState) -> AppResult<()> {
+    if !family.complete_exit()
+        || family.total_processes as usize != family.retained_members.len() + 1
+        || !matches!(family.root, ProcessState::Exited { code: 0 })
+    {
+        return Err(unknown(()));
+    }
+    Ok(())
 }
 impl crate::modules::runtime::windows_lifecycle024_contract::NativeSession for Owner {
     fn check_current(&mut self, deadline: Instant) -> AppResult<()> {

@@ -1,6 +1,61 @@
 use super::*;
 use crate::modules::process::ProcessRunner;
 #[test]
+fn wl2_sd_accounting_preserves_child_raw_exit_for_mandatory_role_proof() {
+    let child = native::ProcessIdentity {
+        pid: 4242,
+        creation_filetime: 123,
+        token: native::TokenIdentity {
+            sid: "S-1-5-21-1-2-3-1000".into(),
+            session_id: 7,
+            elevated: false,
+            elevation_type: 1,
+        },
+        executable: PathBuf::from("C:/synthetic/sc.exe"),
+        executable_id: native::FileIdentity {
+            volume: 1,
+            index: 3,
+        },
+    };
+    for raw in [0, 1, 5, 1060, u32::MAX] {
+        let family = native::FamilyState {
+            root: ProcessState::Exited { code: 0 },
+            total_processes: 2,
+            active_processes: 0,
+            active_members: Vec::new(),
+            retained_members: vec![(child.clone(), ProcessState::Exited { code: raw })],
+        };
+        require_accounted_exit(&family).unwrap();
+        assert_eq!(
+            family.retained_members[0].1,
+            ProcessState::Exited { code: raw }
+        );
+        // This precheck grants no role, NormalExit or lifecycle result. Even
+        // raw0 must still pass the source/argv/parent/native-absence proof.
+    }
+    let mut incomplete = native::FamilyState {
+        root: ProcessState::Exited { code: 0 },
+        total_processes: 2,
+        active_processes: 0,
+        active_members: Vec::new(),
+        retained_members: Vec::new(),
+    };
+    assert!(require_accounted_exit(&incomplete).is_err());
+    incomplete
+        .retained_members
+        .push((child.clone(), ProcessState::Running));
+    assert!(require_accounted_exit(&incomplete).is_err());
+    incomplete.retained_members[0].1 = ProcessState::Exited { code: 0 };
+    incomplete.root = ProcessState::Exited { code: 5 };
+    assert!(require_accounted_exit(&incomplete).is_err());
+    incomplete.root = ProcessState::Exited { code: 0 };
+    incomplete.active_processes = 1;
+    assert!(require_accounted_exit(&incomplete).is_err());
+    incomplete.active_processes = 0;
+    incomplete.active_members.push(child);
+    assert!(require_accounted_exit(&incomplete).is_err());
+}
+#[test]
 fn wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback() {
     let root = tempfile::tempdir().unwrap();
     assert!(teardown_records_absent(root.path()).is_ok());
