@@ -211,6 +211,49 @@ fn exact_query(argv: &[String], image: &Path, system: &Path) -> Option<ChildRole
         None
     }
 }
+fn exact_sentinel(argv: &[String], image: &Path, parent_image: &Path, package: &Path) -> bool {
+    // The unchanged installed (not compiled standalone) package dispatches this
+    // exact TS entry. Neither __health-sentinel on an arbitrary executable nor
+    // another script containing this filename can identify this child.
+    argv.len() == 2
+        && Path::new(&argv[0]) == image
+        && image == parent_image
+        && Path::new(&argv[1]) == package.join("src/service/health-sentinel-main.ts")
+}
+fn sentinel_source(owner: &mut Owner, child: &ProcessIdentity, deadline: Instant) -> AppResult<()> {
+    let command = owner
+        .original_native()
+        .captured_command(child.pid)
+        .map_err(|e| refuse(e.to_string()))?
+        .clone();
+    let original_service = owner
+        .confirmed_service_generation()?
+        .ok_or_else(|| refuse("sentinel缺少原typedReady/pre-stop Service证明"))?;
+    if command.parent != original_service || owner.command_phase(command.captured_at)? != "start" {
+        return Err(refuse("sentinel父代次/原启动阶段不匹配"));
+    }
+    let parent_command = bun_source(owner, &original_service, deadline)?;
+    let package = owner.selected_program().paths.package_root.clone();
+    if parent_command.captured_at > command.captured_at
+        || !exact_sentinel(
+            &command.argv,
+            &child.executable,
+            &original_service.executable,
+            &package,
+        )
+    {
+        return Err(refuse("sentinel实际入口/父镜像/捕获顺序不匹配"));
+    }
+    // Identity is checked on each retained original object. Equal names,
+    // equal bytes at another fileID, synthetic argv or a source-only fixture
+    // cannot issue a role or make its raw exit irrelevant.
+    owner
+        .original_native()
+        .verify_retained_image(child, &original_service.executable)
+        .map_err(|e| refuse(e.to_string()))?;
+    call_site(owner, &ChildRole::OtherRequired)?;
+    owner.check_current(deadline)
+}
 fn system_dir() -> AppResult<PathBuf> {
     #[link(name = "kernel32")]
     unsafe extern "system" {
@@ -247,6 +290,40 @@ fn call_site(owner: &Owner, role: &ChildRole) -> AppResult<String> {
             "src/cli/index.ts",
             "8d176afa6d6a5aa65c4e6b2e964401fadbfeb9b11b14386c503a321aecc17206",
         ),
+        ChildRole::OtherRequired => {
+            let sources = [
+                (
+                    "src/service/health-sentinel-launch.ts",
+                    "0f2b70693cb06039b53e83aa6e08ad644fe36d62052b911f8653a67575112de3",
+                ),
+                (
+                    "src/service/health-sentinel-main.ts",
+                    "408d8bc501115132caec7190cd78fbeca64f1105f9184e518f6da1b8621477f0",
+                ),
+                (
+                    "src/service/health-sentinel-windows.ts",
+                    "a312da3eef2e45bd337181971f726074fc56916be7f345ddd9e76236d8717e6e",
+                ),
+                (
+                    "src/cli/index.ts",
+                    "8d176afa6d6a5aa65c4e6b2e964401fadbfeb9b11b14386c503a321aecc17206",
+                ),
+            ];
+            let mut seal = Vec::new();
+            for (relative, expected) in sources {
+                if hash::sha256_file(&selected.paths.package_root.join(relative))
+                    .map_err(|e| refuse(e.to_string()))?
+                    != expected
+                {
+                    return Err(refuse("sentinel原入口/启动/原生父句柄源码改变"));
+                }
+                seal.extend_from_slice(relative.as_bytes());
+                seal.push(0);
+                seal.extend_from_slice(expected.as_bytes());
+                seal.push(0);
+            }
+            return Ok(hash::sha256_hex(&seal));
+        }
         _ => return Err(refuse("没有固定角色调用点")),
     };
     let actual = hash::sha256_file(&selected.paths.package_root.join(relative))
@@ -303,6 +380,14 @@ impl DiagnosticRoles for WindowsDiagnostics {
                 return Err(refuse("查询捕获早于原父代次参数"));
             }
             query
+        } else if exact_sentinel(
+            &command.argv,
+            &native.executable,
+            &command.parent.executable,
+            &owner.selected_program().paths.package_root,
+        ) {
+            sentinel_source(owner, &native, deadline)?;
+            ChildRole::OtherRequired
         } else {
             let original_command = bun_source(owner, &native, deadline)?;
             if original_command.argv != command.argv || original_command.parent != command.parent {
@@ -312,7 +397,8 @@ impl DiagnosticRoles for WindowsDiagnostics {
             // obtained only after the typed Ready/current verification. Any
             // other directly proven original Node->Bun start wrapper remains
             // Launcher and still requires raw0. Unknown helpers are not granted
-            // OtherRequired merely because they share this Job or exit0.
+            // OtherRequired merely because they share this Job or exit0. Only
+            // the separately source/parent-bound sentinel above has that role.
             match owner.confirmed_service_generation()? {
                 Some(service) if service == native => ChildRole::Service,
                 Some(_) => return Err(refuse("已确认Service与原直接Bun代次冲突")),
@@ -401,6 +487,43 @@ mod tests {
     use super::*;
     fn a(v: &[&str]) -> Vec<String> {
         v.iter().map(|s| s.to_string()).collect()
+    }
+    #[test]
+    fn wl2_helper_sentinel_exact_entry_is_required_and_never_diagnostic() {
+        let package = Path::new("C:/task/I/package");
+        let bun = package.join("node_modules/bun/bin/bun.exe");
+        let entry = package.join("src/service/health-sentinel-main.ts");
+        let good = a(&[bun.to_str().unwrap(), entry.to_str().unwrap()]);
+        assert!(exact_sentinel(&good, &bun, &bun, package));
+        assert!(!exact_sentinel(
+            &good,
+            &bun,
+            Path::new("C:/foreign/bun.exe"),
+            package
+        ));
+        for bad in [
+            a(&[bun.to_str().unwrap(), "__health-sentinel"]),
+            a(&[bun.to_str().unwrap(), "C:/foreign/health-sentinel-main.ts"]),
+            a(&[bun.to_str().unwrap(), "--eval", entry.to_str().unwrap()]),
+            a(&[bun.to_str().unwrap(), entry.to_str().unwrap(), "start"]),
+            a(&["C:/foreign/bun.exe", entry.to_str().unwrap()]),
+        ] {
+            assert!(!exact_sentinel(&bad, &bun, &bun, package));
+        }
+        assert!(role_exit_allowed(
+            &ChildRole::OtherRequired,
+            &ChildExit::Exited(0)
+        ));
+        for code in [1, 5, 242, 1060, u32::MAX] {
+            assert!(!role_exit_allowed(
+                &ChildRole::OtherRequired,
+                &ChildExit::Exited(code)
+            ));
+        }
+        assert!(exact_query(&good, &bun, Path::new("C:/Windows/System32")).is_none());
+        // This pure shape predicate grants no role. Production additionally
+        // requires original Ready service parent, start phase and four fixed
+        // script hashes, all checked only from the retained original Owner.
     }
     #[test]
     fn wl2_next_d_raw_outcomes_cannot_erase_required_failure_or_unknown() {
