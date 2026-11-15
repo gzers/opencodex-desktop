@@ -1,0 +1,92 @@
+{
+  "head": "f93651d9f42b933c660558e49c22a6d8ceff1b85",
+  "tree": "61547f78188fa3ee9744751ff10c9f2c8bbe448c",
+  "base": "3d028e82d731ceb2d307b0a954a93db467ca3f39",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 14423,
+      "sha256": "651fcdc03e8617559d392248f5b143123d967693d632c4bc2d4797164535568d",
+      "gitBlob": "a591e69cb0b6960ae590f54c0ceb1ea6103ebb0e",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1831,
+      "sha256": "bad73ec12a40164af515e030fddade7fabe0c15a65b4a8c1127388daa438eab9",
+      "gitBlob": "0962dd50ef9d9a6f28a89014b38129183971c6ed",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/peer.rs",
+      "bytes": 3364,
+      "sha256": "9c20f1d1d60461e3555d7bcce4ad1d34b89fdf7026f1905f8c072e46120cb803",
+      "gitBlob": "6b6276cc2b2b181560e3442309999a0b87f74aad",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/pipe.rs",
+      "bytes": 12300,
+      "sha256": "91d7dd4606429b2514279897feaba25fd91d25825baf636141f63fe88e15898f",
+      "gitBlob": "491b4e26191d7eb0fa9d29ea9e19b26b4dafdebd",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/desktop_tests.rs",
+      "bytes": 12961,
+      "sha256": "b69fba540f6ad1366431cbe0ec7d1af586fbccda3b002bdff8b6c572f2934b0f",
+      "gitBlob": "70650180a4393ef37c6519c66fca2e3661b5049d",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 19725,
+      "sha256": "694578b1804f2d11826084f005e05e2eba7d4ae3daaf3063b02a1521814bd645",
+      "gitBlob": "8996771efb52cc99a640a3c0b53365dde06e2fc1",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 10181,
+      "sha256": "e65945c700c0b4be37656683e3907e70c2a52650a608352c75c2b5f060c36cb1",
+      "gitBlob": "da6d2ef6c69e9186378c845c99b1d6527e49e992",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "bytes": 3464,
+      "sha256": "a195ed3b2c8b94eb18f1061ad06ec9916157be77ea261cdb1f635746f2eb594d",
+      "gitBlob": "2c43853e4e55c60dee1c283ac644db1deb42a091",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/launch-h024-desktop.cmd",
+      "bytes": 319,
+      "sha256": "0fd1c7fe46e01cc5b20948fc80e24b630aa3a18a223b9ad06623cb23c030812b",
+      "gitBlob": "383687eaf0f1c7f5f21ee32b10c93c1bdf9c38da",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/launch-h024-desktop.ps1",
+      "bytes": 5377,
+      "sha256": "69a882a8f422e41b36f187715d619bb41e4296d70cca8153760c54d64c387ff4",
+      "gitBlob": "16e632115e1fc02c59961e97ea76005e966fc97b",
+      "gitNewlineEquivalent": true
+    }
+  ],
+  "comparisons": [
+    {
+      "run": "build01",
+      "rustFilesCompared": 35,
+      "matchesFinalRawRust": true,
+      "scope": "library compilation excludes bin sources; ocxd-only dispatch fix happened afterwards"
+    },
+    {
+      "run": "product02",
+      "rustFilesCompared": 36,
+      "matchesFinalRawRust": true,
+      "scope": "final all-bins source"
+    }
+  ],
+  "oldUntrackedSchemaRetained": true
+}

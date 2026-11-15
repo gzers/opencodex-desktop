@@ -1,0 +1,11 @@
+
+running 2 tests
+test tests::wl2_move_same_original_handle_roundtrip_and_no_overwrite ... native no-overwrite error raw=Some(183)
+native restore occupied error raw=Some(183)
+same native file object restored: volume=247287385 fileID=2814749768353200; fullSD/custody journal/Closed not issued
+ok
+test tests::wl2_move_streams_links_unknown_paths_and_expired_window_refuse ... native ADS/hardlink/invalid target/expired-window refused before rename; no privileges or fullSD query
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.01s
+

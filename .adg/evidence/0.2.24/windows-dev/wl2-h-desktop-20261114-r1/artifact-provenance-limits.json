@@ -1,0 +1,7 @@
+{
+  "firstFailedProduct": "product01 E0601 rawtrace retained. Source snapshot includes tracked bin/ocxd.rs but DOES NOT include then-untracked bin/windows_owner024.rs because build script source glob did not cover it. No original hash was captured; do not claim full exact first-failed-product source closure.",
+  "earlierHypothesisCorrection": "hypotheses02.json assumed helper rawbytes were in executed-source; actual inspection shows they were absent. The E0601 rawlog and inline-fix diff establish cause, not a missing byte-for-byte helper receipt.",
+  "final": "product02 final actual Rust matches final source; build01 library actual non-bin Rust matches final source. No library rebuild needed for bin-only fix.",
+  "scripts": "final PS1/cmd prepared after compiles; actual copied desktop scripts/manifest archived separately, not represented as compile inputs",
+  "accepted": false
+}

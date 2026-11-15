@@ -1,0 +1,552 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+warning: unused import: `pipe::PrivatePipe`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:16:9
+   |
+16 | pub use pipe::PrivatePipe;
+   |         ^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:19:29
+   |
+19 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused import: `process::SuspendedOwnerHost`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:9
+   |
+22 | pub use process::SuspendedOwnerHost;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `CommandEvidence`, `ForcedCleanup`, and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:24:5
+   |
+24 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |     ^^^^^^^^^^^^^^^               ^^^^^^^^^^^^^
+25 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+
+warning: unused import: `create_private_directory`
+ --> src\infrastructure\windows_client_originals024\phase.rs:5:35
+  |
+5 |     windows_official_runtime024::{create_private_directory, PinnedDirectory, PrivateRecord},
+  |                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:506:14
+    |
+506 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+506 -             .fetch_update(
+506 +             .try_update(
+    |
+
+warning: field `path` is never read
+   --> src\infrastructure\windows_official_runtime024\paths.rs:102:5
+    |
+101 | pub struct PinnedDirectory {
+    |            --------------- field in this struct
+102 |     path: PathBuf,
+    |     ^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: method `path` is never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:135:12
+    |
+107 | impl PinnedDirectory {
+    | -------------------- method in this implementation
+...
+135 |     pub fn path(&self) -> &Path {
+    |            ^^^^
+
+warning: function `create_private_directory` is never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:151:8
+    |
+151 | pub fn create_private_directory(path: &Path) -> io::Result<PinnedDirectory> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `create` and `identity` are never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:174:12
+    |
+173 | impl PrivateRecord {
+    | ------------------ associated items in this implementation
+174 |     pub fn create(path: &Path, bytes: &[u8], max: usize) -> io::Result<Self> {
+    |            ^^^^^^
+...
+246 |     pub fn identity(&self) -> FileIdentity {
+    |            ^^^^^^^^
+
+warning: struct `RetainedPeer` is never constructed
+  --> src\infrastructure\windows_official_runtime024\peer.rs:21:12
+   |
+21 | pub struct RetainedPeer {
+   |            ^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+  --> src\infrastructure\windows_official_runtime024\peer.rs:26:19
+   |
+25 | impl RetainedPeer {
+   | ----------------- associated items in this implementation
+26 |     pub(super) fn from_original_handle(handle: OwnedHandle) -> io::Result<Self> {
+   |                   ^^^^^^^^^^^^^^^^^^^^
+...
+33 |     pub fn current() -> io::Result<Self> {
+   |            ^^^^^^^
+...
+36 |     pub(super) fn from_native_pid(pid: u32) -> io::Result<Self> {
+   |                   ^^^^^^^^^^^^^^^
+...
+54 |     pub fn identity(&self) -> &ProcessIdentity {
+   |            ^^^^^^^^
+...
+57 |     pub fn verify(&self) -> io::Result<()> {
+   |            ^^^^^^
+...
+67 |     pub fn verify_image(&self, image: &Path) -> io::Result<()> {
+   |            ^^^^^^^^^^^^
+...
+78 |     pub fn no_outer_job(&self) -> io::Result<()> {
+   |            ^^^^^^^^^^^^
+
+warning: trait `NativeOpen` is never used
+  --> src\infrastructure\windows_official_runtime024\peer.rs:90:7
+   |
+90 | trait NativeOpen {
+   |       ^^^^^^^^^^
+
+warning: struct `PrivatePipe` is never constructed
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:69:12
+   |
+69 | pub struct PrivatePipe {
+   |            ^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_official_runtime024\pipe.rs:75:12
+    |
+ 74 | impl PrivatePipe {
+    | ---------------- associated items in this implementation
+ 75 |     pub fn create(instance: &str) -> io::Result<Self> {
+    |            ^^^^^^
+...
+114 |     pub fn name(&self) -> &str {
+    |            ^^^^
+...
+117 |     pub fn connect_local(name: &str) -> io::Result<Self> {
+    |            ^^^^^^^^^^^^^
+...
+139 |     fn bounded<T: Send + 'static>(
+    |        ^^^^^^^
+...
+174 |     pub fn accept(&self, deadline: Instant) -> io::Result<RetainedPeer> {
+    |            ^^^^^^
+...
+190 |     pub fn peer(&self) -> io::Result<RetainedPeer> {
+    |            ^^^^
+...
+204 |     fn read_exact(&self, buffer: &mut [u8], deadline: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^
+...
+235 |     pub fn read_frame(&self, deadline: Instant) -> io::Result<Vec<u8>> {
+    |            ^^^^^^^^^^
+...
+264 |     pub fn write_frame(&self, payload: &[u8], deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^^^^^^
+
+warning: function `overlapped` is never used
+   --> src\infrastructure\windows_official_runtime024\pipe.rs:298:4
+    |
+298 | fn overlapped(
+    |    ^^^^^^^^^^
+
+warning: function `pending` is never used
+   --> src\infrastructure\windows_official_runtime024\pipe.rs:345:4
+    |
+345 | fn pending(ok: i32) -> io::Result<Option<u32>> {
+    |    ^^^^^^^
+
+warning: function `CreateNamedPipeW` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:19:8
+   |
+19 |     fn CreateNamedPipeW(
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `ConnectNamedPipe` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:29:8
+   |
+29 |     fn ConnectNamedPipe(pipe: HANDLE, overlapped: *mut OVERLAPPED) -> i32;
+   |        ^^^^^^^^^^^^^^^^
+
+warning: function `GetNamedPipeClientProcessId` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:30:8
+   |
+30 |     fn GetNamedPipeClientProcessId(pipe: HANDLE, pid: *mut u32) -> i32;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `GetNamedPipeServerProcessId` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:31:8
+   |
+31 |     fn GetNamedPipeServerProcessId(pipe: HANDLE, pid: *mut u32) -> i32;
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `ReadFile` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:32:8
+   |
+32 |     fn ReadFile(
+   |        ^^^^^^^^
+
+warning: function `WriteFile` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:39:8
+   |
+39 |     fn WriteFile(
+   |        ^^^^^^^^^
+
+warning: function `CreateEventW` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:46:8
+   |
+46 |     fn CreateEventW(
+   |        ^^^^^^^^^^^^
+
+warning: function `GetOverlappedResult` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:52:8
+   |
+52 |     fn GetOverlappedResult(
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `CancelIoEx` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:58:8
+   |
+58 |     fn CancelIoEx(file: HANDLE, overlapped: *const OVERLAPPED) -> i32;
+   |        ^^^^^^^^^^
+
+warning: function `WaitForSingleObject` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:59:8
+   |
+59 |     fn WaitForSingleObject(handle: HANDLE, millis: u32) -> u32;
+   |        ^^^^^^^^^^^^^^^^^^^
+
+warning: function `PeekNamedPipe` is never used
+  --> src\infrastructure\windows_official_runtime024\pipe.rs:60:8
+   |
+60 |     fn PeekNamedPipe(
+   |        ^^^^^^^^^^^^^
+
+warning: struct `ForcedCleanup` is never constructed
+  --> src\infrastructure\windows_official_runtime024\process.rs:87:12
+   |
+87 | pub struct ForcedCleanup {
+   |            ^^^^^^^^^^^^^
+
+warning: methods `captured_command` and `force_owned_cleanup` are never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:499:12
+    |
+344 | impl OwnedRuntime {
+    | ----------------- methods in this implementation
+...
+499 |     pub fn captured_command(&mut self, pid: u32) -> io::Result<&CommandEvidence> {
+    |            ^^^^^^^^^^^^^^^^
+...
+749 |     pub fn force_owned_cleanup(&mut self, deadline: Instant) -> io::Result<ForcedCleanup> {
+    |            ^^^^^^^^^^^^^^^^^^^
+
+warning: fields `captured_at`, `raw_command_line`, `argv`, and `parent` are never read
+  --> src\infrastructure\windows_official_runtime024\command.rs:7:9
+   |
+ 6 | pub struct CommandEvidence {
+   |            --------------- fields in this struct
+ 7 |     pub captured_at: Instant,
+   |         ^^^^^^^^^^^
+ 8 |     pub raw_command_line: String,
+   |         ^^^^^^^^^^^^^^^^
+ 9 |     pub argv: Vec<String>,
+   |         ^^^^
+10 |     pub parent: ProcessIdentity,
+   |         ^^^^^^
+   |
+   = note: `CommandEvidence` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: struct `SuspendedOwnerHost` is never constructed
+ --> src\infrastructure\windows_official_runtime024\host_process.rs:4:12
+  |
+4 | pub struct SuspendedOwnerHost {
+  |            ^^^^^^^^^^^^^^^^^^
+
+warning: associated items `create`, `original_peer`, and `resume` are never used
+   --> src\infrastructure\windows_official_runtime024\host_process.rs:12:12
+    |
+ 11 | impl SuspendedOwnerHost {
+    | ----------------------- associated items in this implementation
+ 12 |     pub fn create(spec: LaunchSpec<'_>, bootstrap: &File) -> io::Result<Self> {
+    |            ^^^^^^
+...
+127 |     pub fn original_peer(&self) -> &super::super::RetainedPeer {
+    |            ^^^^^^^^^^^^^
+...
+130 |     pub fn resume(&mut self) -> io::Result<()> {
+    |            ^^^^^^
+
+warning: enum `Phase` is never used
+  --> src\infrastructure\windows_client_originals024\phase.rs:11:6
+   |
+11 | enum Phase {
+   |      ^^^^^
+
+warning: struct `Record` is never constructed
+  --> src\infrastructure\windows_client_originals024\phase.rs:22:8
+   |
+22 | struct Record {
+   |        ^^^^^^
+
+warning: struct `PendingOnly` is never constructed
+  --> src\infrastructure\windows_client_originals024\phase.rs:32:19
+   |
+32 | pub(super) struct PendingOnly {
+   |                   ^^^^^^^^^^^
+
+warning: function `invalid` is never used
+  --> src\infrastructure\windows_client_originals024\phase.rs:37:4
+   |
+37 | fn invalid() -> io::Error {
+   |    ^^^^^^^
+
+warning: function `digest` is never used
+  --> src\infrastructure\windows_client_originals024\phase.rs:43:4
+   |
+43 | fn digest(s: &str) -> bool {
+   |    ^^^^^^
+
+warning: function `next` is never used
+  --> src\infrastructure\windows_client_originals024\phase.rs:48:4
+   |
+48 | fn next(a: &Phase, b: &Phase) -> bool {
+   |    ^^^^
+
+warning: function `check_prefix` is never used
+  --> src\infrastructure\windows_client_originals024\phase.rs:58:4
+   |
+58 | fn check_prefix(bytes: &[Vec<u8>]) -> io::Result<bool> {
+   |    ^^^^^^^^^^^^
+
+warning: function `read_pending` is never used
+   --> src\infrastructure\windows_client_originals024\phase.rs:102:15
+    |
+102 | pub(super) fn read_pending(session_dir: &Path) -> io::Result<PendingOnly> {
+    |               ^^^^^^^^^^^^
+
+warning: fields `session`, `data`, and `created_at` are never read
+  --> src\infrastructure\windows_official_lifecycle024.rs:93:5
+   |
+82 | pub(crate) struct Owner {
+   |                   ----- fields in this struct
+...
+93 |     session: uuid::Uuid,
+   |     ^^^^^^^
+94 |     data: PathBuf,
+   |     ^^^^
+95 |     scope_pins: Vec<native::PinnedDirectory>,
+96 |     created_at: Instant,
+   |     ^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:135:19
+    |
+134 | impl Owner {
+    | ---------- methods in this implementation
+135 |     pub(crate) fn scope(&self) -> AppResult<String> {
+    |                   ^^^^^
+...
+142 |     pub(crate) fn profile_path(&self) -> &Path {
+    |                   ^^^^^^^^^^^^
+...
+145 |     pub(crate) fn installation_path(&self) -> &Path {
+    |                   ^^^^^^^^^^^^^^^^^
+...
+148 |     pub(crate) fn home_path(&self) -> &Path {
+    |                   ^^^^^^^^^
+...
+151 |     pub(crate) fn selected_program(&self) -> &program_selection::SelectedProgram {
+    |                   ^^^^^^^^^^^^^^^^
+...
+154 |     pub(crate) fn original_native(&mut self) -> &mut OwnedRuntime {
+    |                   ^^^^^^^^^^^^^^^
+...
+157 |     pub(crate) fn command_phase(&self, when: Instant) -> AppResult<&'static str> {
+    |                   ^^^^^^^^^^^^^
+
+warning: function `cancel` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:559:15
+    |
+559 | pub(crate) fn cancel(runtime: &SharedRuntimeExecutable, home: &Path) {
+    |               ^^^^^^
+
+warning: enum `Namespace` is never used
+  --> src\infrastructure\windows_supervisor024.rs:19:17
+   |
+19 | pub(crate) enum Namespace {
+   |                 ^^^^^^^^^
+
+warning: struct `NativeQueries` is never constructed
+  --> src\infrastructure\windows_supervisor024.rs:25:19
+   |
+25 | pub(crate) struct NativeQueries {
+   |                   ^^^^^^^^^^^^^
+
+warning: function `exact_not_found` is never used
+  --> src\infrastructure\windows_supervisor024.rs:29:4
+   |
+29 | fn exact_not_found(stage: &'static str, code: u32, expected: u32) -> Namespace {
+   |    ^^^^^^^^^^^^^^^
+
+warning: function `scm` is never used
+  --> src\infrastructure\windows_supervisor024.rs:39:4
+   |
+39 | fn scm() -> Namespace {
+   |    ^^^
+
+warning: function `scheduler` is never used
+  --> src\infrastructure\windows_supervisor024.rs:81:4
+   |
+81 | fn scheduler() -> Namespace {
+   |    ^^^^^^^^^
+
+warning: function `query` is never used
+   --> src\infrastructure\windows_supervisor024.rs:118:15
+    |
+118 | pub(crate) fn query(deadline: Instant) -> io::Result<NativeQueries> {
+    |               ^^^^^
+
+warning: function `staged` is never used
+   --> src\infrastructure\windows_supervisor024.rs:146:15
+    |
+146 | pub(crate) fn staged(home: &Path) -> Vec<(&'static str, Namespace)> {
+    |               ^^^^^^
+
+warning: function `unconfirmed` is never used
+   --> src\infrastructure\windows_supervisor024.rs:182:4
+    |
+182 | fn unconfirmed(detail: impl Into<String>) -> AppError {
+    |    ^^^^^^^^^^^
+
+warning: struct `Absent` is never constructed
+   --> src\infrastructure\windows_supervisor024.rs:189:19
+    |
+189 | pub(crate) struct Absent {
+    |                   ^^^^^^
+
+warning: method `check` is never used
+   --> src\infrastructure\windows_supervisor024.rs:196:19
+    |
+195 | impl Absent {
+    | ----------- method in this implementation
+196 |     pub(crate) fn check(&self, owner: &mut Owner, deadline: Instant) -> AppResult<()> {
+    |                   ^^^^^
+
+warning: function `queries_absent` is never used
+   --> src\infrastructure\windows_supervisor024.rs:209:4
+    |
+209 | fn queries_absent(q: &NativeQueries) -> bool {
+    |    ^^^^^^^^^^^^^^
+
+warning: struct `WindowsSupervisor` is never constructed
+   --> src\infrastructure\windows_supervisor024.rs:274:19
+    |
+274 | pub(crate) struct WindowsSupervisor;
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: function `require_state_absent` is never used
+   --> src\infrastructure\windows_supervisor024.rs:339:4
+    |
+339 | fn require_state_absent(path: &Path) -> AppResult<()> {
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `OpenSCManagerW` is never used
+  --> src\infrastructure\windows_supervisor024.rs:43:12
+   |
+43 |         fn OpenSCManagerW(machine: *const u16, database: *const u16, access: u32) -> *mut c_void;
+   |            ^^^^^^^^^^^^^^
+
+warning: function `OpenServiceW` is never used
+  --> src\infrastructure\windows_supervisor024.rs:44:12
+   |
+44 |         fn OpenServiceW(manager: *mut c_void, name: *const u16, access: u32) -> *mut c_void;
+   |            ^^^^^^^^^^^^
+
+warning: function `CloseServiceHandle` is never used
+  --> src\infrastructure\windows_supervisor024.rs:45:12
+   |
+45 |         fn CloseServiceHandle(handle: *mut c_void) -> i32;
+   |            ^^^^^^^^^^^^^^^^^^
+
+warning: function `refuse` is never used
+  --> src\infrastructure\windows_diagnostic_roles024.rs:20:4
+   |
+20 | fn refuse(detail: impl Into<String>) -> AppError {
+   |    ^^^^^^
+
+warning: struct `RetainedChild` is never constructed
+  --> src\infrastructure\windows_diagnostic_roles024.rs:28:19
+   |
+28 | pub(crate) struct RetainedChild {
+   |                   ^^^^^^^^^^^^^
+
+warning: struct `ProvenRole` is never constructed
+  --> src\infrastructure\windows_diagnostic_roles024.rs:31:19
+   |
+31 | pub(crate) struct ProvenRole {
+   |                   ^^^^^^^^^^
+
+warning: struct `NormalExit` is never constructed
+  --> src\infrastructure\windows_diagnostic_roles024.rs:41:19
+   |
+41 | pub(crate) struct NormalExit {
+   |                   ^^^^^^^^^^
+
+warning: method `check` is never used
+  --> src\infrastructure\windows_diagnostic_roles024.rs:47:19
+   |
+46 | impl NormalExit {
+   | --------------- method in this implementation
+47 |     pub(crate) fn check(&self, owner: &mut Owner, deadline: Instant) -> AppResult<()> {
+   |                   ^^^^^
+
+warning: function `exact_query` is never used
+  --> src\infrastructure\windows_diagnostic_roles024.rs:62:4
+   |
+62 | fn exact_query(argv: &[String], image: &Path, system: &Path) -> Option<ChildRole> {
+   |    ^^^^^^^^^^^
+
+warning: function `system_dir` is never used
+  --> src\infrastructure\windows_diagnostic_roles024.rs:83:4
+   |
+83 | fn system_dir() -> AppResult<PathBuf> {
+   |    ^^^^^^^^^^
+
+warning: function `call_site` is never used
+  --> src\infrastructure\windows_diagnostic_roles024.rs:97:4
+   |
+97 | fn call_site(owner: &Owner, role: &ChildRole) -> AppResult<String> {
+   |    ^^^^^^^^^
+
+warning: struct `WindowsDiagnostics` is never constructed
+   --> src\infrastructure\windows_diagnostic_roles024.rs:120:19
+    |
+120 | pub(crate) struct WindowsDiagnostics;
+    |                   ^^^^^^^^^^^^^^^^^^
+
+warning: function `GetSystemDirectoryW` is never used
+  --> src\infrastructure\windows_diagnostic_roles024.rs:86:12
+   |
+86 |         fn GetSystemDirectoryW(buffer: *mut u16, size: u32) -> u32;
+   |            ^^^^^^^^^^^^^^^^^^^
+
+warning: linker stdout:    Creating library C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\debug\build\opencodex-desktop/a8051efa5956a8be\out\opencodex_desktop_lib.dll.lib and object C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\debug\build\opencodex-desktop/a8051efa5956a8be\out\opencodex_desktop_lib.dll.exp
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `opencodex-desktop` (lib) generated 71 warnings (run `cargo fix --lib -p opencodex-desktop` to apply 6 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 2m 17s

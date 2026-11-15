@@ -1,0 +1,13 @@
+{
+  "inPlaceCAS": "Full handle exclusivity serializes same-object writes; pointer remains fail-closed on malformed/partial content. It does not promise power-loss atomicity. Valid decoded pointer is locator data and never a native restore permission.",
+  "directoryBinding": "Reference opening and advancing must check exact native session directory ID against the original PendingOnly snapshot, not accept a sameSID same-content prefix from a different directory.",
+  "productionErrorRequirement": "Create/open/advance failures retain API/raw errors where available; full GetSecurityInfo failure string includes exact API/raw, no old1314 real call. No automatic retry/restoration/zeroing or fallback.",
+  "nextNegatives": [
+    "foreign session/phase tip refusal after recomputing content digest",
+    "strict duplicate/unknown current pointer rejects on reopen",
+    "current file ID remains exact throughout create->advance->reopen",
+    "production CurrentReference uses Full only, PartialDiagnostic cfg(test) only"
+  ],
+  "sourceFreeze": "No Rust input changed while library01 is running.",
+  "allAccepted": false
+}

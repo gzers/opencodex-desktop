@@ -1,0 +1,22 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--lib",
+    "-j",
+    "1",
+    "windows_supervisor024::",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "accepted": false,
+  "elapsedMs": 32554,
+  "profile": "debug"
+}

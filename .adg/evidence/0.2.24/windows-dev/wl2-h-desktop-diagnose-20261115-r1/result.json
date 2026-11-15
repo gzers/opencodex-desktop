@@ -1,0 +1,33 @@
+{
+  "source": "ab87ad1261f927bf77a1c757342989105a40ad0a",
+  "allAccepted": false,
+  "productionExecuted": false,
+  "originalDesktopRawExit": 101,
+  "originalBootstrapNoJob": true,
+  "originalSuspendedBrokerNoJob": true,
+  "ordinarySID": "S-1-5-21-587408064-856152790-2583328096-1003",
+  "session": 7,
+  "originalHandoffPassed": false,
+  "sameSIDExport01Complete": false,
+  "sameSIDExport02Complete": true,
+  "sameSIDOriginalFilesVerified": 10,
+  "firstManagerRawError": 32,
+  "rootCause": "live writablePrivateRecord creator blocks independent deny-write manager read; accessor/source+native32 reproduction; no actualmanagerauth in oldhostevents",
+  "fix": "seal create beforepublishing; independent immutable reader; boundedlocator byteSnapshot has no nativeauthority",
+  "directNativeTestsPassed": 3,
+  "affectedExistingRecordTestPassed": 1,
+  "affectedPhaseTestsPassed": 2,
+  "bootstrapTestsPassed": 1,
+  "MSVCFinal": {
+    "exitCode": 0,
+    "elapsedMs": 143952,
+    "profile": "debug"
+  },
+  "repairedDesktopExecution": "prepared but not run at checkpoint",
+  "originalEmptyHostCleanup": "pending original sameSID explicit recovery; no force or PIDauthority",
+  "knownOrdinarySDRetests": 0,
+  "W2": false,
+  "dualSID": false,
+  "published": false,
+  "cleanupComplete": false
+}

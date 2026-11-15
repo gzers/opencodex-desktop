@@ -1,0 +1,27 @@
+{
+  "profile": "MSVC debug/test",
+  "artifacts": [
+    {
+      "name": "native-process-test",
+      "path": "test/windows024-native/target/wl2-primitives/x86_64-pc-windows-msvc/debug/build/windows024-native-proof/2c297f3908be30b2/out/process-2c297f3908be30b2.exe",
+      "bytes": 1750528,
+      "sha256": "2a6751834f20810b8b327332ea4335be68c5132ed51f817f382db7ebe2856805",
+      "scope": "native01/query01"
+    },
+    {
+      "name": "native-fixture",
+      "path": "test/windows024-native/target/wl2-primitives/x86_64-pc-windows-msvc/debug/native024-fixture.exe",
+      "bytes": 335360,
+      "sha256": "4fe9f6c5e2328b7b6319863b8f7241ee3303cc6081e13505a7f40f34cb47ae74",
+      "scope": "native01/query01 synthetic fixture"
+    },
+    {
+      "name": "library01-intermediate",
+      "path": "test/windows024-native/target/w1c-product/x86_64-pc-windows-msvc/debug/build/opencodex-desktop/75e8f4b92f415339/out/opencodex_desktop_lib-75e8f4b92f415339.exe",
+      "bytes": 93475840,
+      "sha256": "49ddaf1a46bd9d778cbbc6af58149459ccd1e33e57c79cc95ab5bfa62f3a5ead",
+      "scope": "library01; before Ready-history error propagation fix; do not claim final source"
+    }
+  ],
+  "allAccepted": false
+}

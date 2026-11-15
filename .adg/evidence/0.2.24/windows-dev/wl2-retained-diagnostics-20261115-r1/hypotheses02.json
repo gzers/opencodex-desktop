@@ -1,0 +1,6 @@
+{
+  "originalFailure": "native01 101: child after exit generic observe fails raw31; force-veto case passed; native failed fixture exact bytes archived before any tree cleanup",
+  "newHypothesis": "QueryFullProcessImageName/OpenProcessToken via a terminated process cannot be assumed available. Retain native image and token objects while live; after exit verify original process handle PID/FILETIME, pinned original image fileID, native token object, original history. Live-service admission stays running-only. No JSON/PID reconstruction or error-to-pass fallback.",
+  "verification": "same immutable positive/refusal assertions; full original fileID comparison and image pins now also prevent replacement before recheck. Original31/101 remains immutable; native02 will be separate after implementation change.",
+  "allAccepted": false
+}

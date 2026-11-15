@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "C:\Users\15119\.codex\worktrees\official299-windows-evidence\docs-governance\.adg\evidence\0.2.24\windows-dev\wl2-h-desktop-result-20261115-r1\verify_evidence.py", line 57, in <module>
+    old = export("public-readable-raw/original-empty-host-recovery.json", "old-recovery-originals", True, 10)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\15119\.codex\worktrees\official299-windows-evidence\docs-governance\.adg\evidence\0.2.24\windows-dev\wl2-h-desktop-result-20261115-r1\verify_evidence.py", line 38, in export
+    assert data["sid"] == "S-1-5-21-587408064-856152790-2583328096-1003"
+           ~~~~^^^^^^^
+KeyError: 'sid'

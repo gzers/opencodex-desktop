@@ -1,0 +1,24 @@
+{
+  "accepted": false,
+  "elapsedMs": 115,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--lib",
+    "-j",
+    "1",
+    "private_record_pins_bytes_and_generation",
+    "--",
+    "--exact",
+    "tests::private_record_pins_bytes_and_generation",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "profile": "debug"
+}

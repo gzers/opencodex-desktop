@@ -1,0 +1,47 @@
+{
+  "runs": [
+    {
+      "run": "native01",
+      "capturedRustFiles": 36,
+      "changedRustFilesAfterCapture": [
+        "apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs"
+      ],
+      "nativeCompileScopeFiles": 15,
+      "nativeCompileScopeByteIdentical": true,
+      "all36RustFinalByteIdentical": false
+    },
+    {
+      "run": "query01",
+      "capturedRustFiles": 36,
+      "changedRustFilesAfterCapture": [
+        "apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs"
+      ],
+      "nativeCompileScopeFiles": 15,
+      "nativeCompileScopeByteIdentical": true,
+      "all36RustFinalByteIdentical": false
+    },
+    {
+      "run": "library01",
+      "capturedRustFiles": 36,
+      "changedRustFilesAfterCapture": [
+        "apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs"
+      ],
+      "nativeCompileScopeFiles": 15,
+      "nativeCompileScopeByteIdentical": true,
+      "all36RustFinalByteIdentical": false
+    },
+    {
+      "run": "product01",
+      "capturedRustFiles": 36,
+      "changedRustFilesAfterCapture": [],
+      "nativeCompileScopeFiles": 15,
+      "nativeCompileScopeByteIdentical": true,
+      "all36RustFinalByteIdentical": true
+    }
+  ],
+  "allAccepted": false,
+  "reuse": "library01 pure grammar/test functions are exactly unchanged; Ready-generation error propagation outside that scope only covered by final product compilation, not a production positive"
+}

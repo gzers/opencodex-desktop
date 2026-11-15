@@ -257,3 +257,148 @@ post-result回执补丁72b9f74d6仅两份命令投影源码，原生/HTTP/来源
 完整36项表、源码/EXE/固定输入SHA、E0061首轮修复、原语/隔离原始trace、清理与最小环境/SD范围需求在.adg/evidence/0.2.24/windows-dev/wl2-native-20261114-r1/，优先读report.md/status-matrix.json/shared-minimum-request.json/result.json。Rust与实际编译输入26份逐字节对齐，控制脚本实际副本独立归档。
 
 新账户已移除、无官方Job/force/task/MSI；临时ACL恢复、日常PATH摘要同。Profile先87空串错误，真实NULL调用后native0/登记消失但目录access denied残留，数量字节未知，不能称完整Profile保留。Public26文件92915595字节自动审批blocked by policy拒绝，命令未执行/未重试。旧Profile/Public/schema等拒绝与普通MSI未验保持。未改官方2.99/日常策略配置，不跑旧组件/W2/双SID，不发布。
+
+
+## 2026-11-14 W-L2/r3 Windows独立适配增量（未收口）
+
+消费main dbf974097d067e75c4de68f9fc681af8ab447b09、docs a6d9184b851521194477ddfeecd988f40d513e5b、TEAM13/IMP139/r3；代码最终3d028e82d731ceb2d307b0a954a93db467ca3f39、tree 70e0beb3ab9073008e76d51b3346b7bb377ac77e。8笔实现/修复及承接合并均已及时push，未改四trait签名/预算/官方/日常配置。完整证据新轮次.adg/evidence/0.2.24/windows-dev/wl2-r3-native-20261114-r1/，优先report.md、37项status-matrix.json、implementation-status.json、artifacts.json与next-windows-work.json。
+
+真实native私有pipe/peer/挂起broker普通noJob组件、O准确完整SD读取与生产前拒绝门、pending前缀架构、OwnerContinuity认证/重放组合、S原owner缺席/最终重查、D固定查询/父参数/阶段/source候选均有代码；最终lib8项/native4项通过、MSVC debug bins0/137535ms，原始warning/各源码阶段保留。build03/native03/product02各34份Rust原字节与最终源匹配。绝不将这些当生产四边界通过：ClientOriginals完整custody/current-ref/恢复未实现；H仍测试装配、ocxd长驻/rendezvous/GUI路由未接；D全family分类与新Stop组合未闭合，source-bound实机proof未生成。allAccepted=false、productionExecuted=false。
+
+旧普通SD1314复用未重跑，本轮新r3mask/backup查询没有新token正例；不把旧0x81020000错误冒作新mask实测。用户提出Administrator后又指定marenben候选；只读确认marenben启用SID1003且未列直接本地管理员成员，盘点无交互会话；runtime token/session/noJob未证实，等待用户登录，不降ordinary门、不索取密码、不改该现有账户日常Profile。下一步仍Windows独立推进，不重新要求Mac冻结已明接口。
+
+本轮账户/Profile/官方服务/broker/新Public/task/MSI创建0，合成native test进程exit0、phase临时根RAII清理；无force、策略/ACL/registry PATH写。旧Profile/Public/schema/普通MSI缺口和自动审批拒绝保持不重试，不W2/双SID、不发布。
+
+
+## 2026-11-14 marenben桌面H准备检查点（尚待用户启动）
+
+用户已交互登录marenben/SID尾1003，会话7只读盘点Active；未冒原nativeToken/noJob已通过。代码f93651d9f42b933c660558e49c22a6d8ceff1b85、tree61547f78188fa3ee9744751ff10c9f2c8bbe448c已推送：实际ocxd精确内部emptyhost分派、私有bootstrap、原创建句柄observer与明确标注的库testEXE fixturemanager（非真实GUI）、同连接旧请求拒绝与空宿主显式退出。O1314不重跑，官方Owner/服务/custody不创建，allAccepted/productionExecuted=false。
+
+MSVC product01 E0601/101首失败保留，Cargo将新增helper识别独立bin；分派内联ocxd.rs后product02全部bins0/65200ms，库bootstrap纯反例1项通过。首helper未进当时sourceglob/hash缺口如实声明，最终库35份非binRust及产品36份Rust与最终源一致。完整新准备证据.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-20261114-r1/，prelaunch-report/status/result保留“等待用户桌面启动”事实，不把组件或同名fixture升级真实GUI/生产通过。
+
+已准备并给用户从marenben桌面普通运行C:/Users/Public/ocx-h024-desktop-20261114-r1/launch-h024-desktop.cmd；Public输入两EXE已核摘要，ACL只改本次新根。准备快照out01为空；无新账户/Profile/官方进程或已运行broker。新输入根为待执行保留；历史清理拒绝不重试，不W2/双SID、不发布。后继实际结果另行追加，不覆盖此准备记录。
+
+
+## 2026-11-15 H桌面首运行失败（原同SID证据待采集）
+
+用户已从marenben/session7桌面运行f93651d9f。00:30:14~31 observer原101，wait_file等待原taskD/manager-normal.json缺席超时，尚未manager交接通过。bootstrap/suspended/task-location三份private原报告及D对当前控制账户accessdenied，不能凭存在签nativeToken/noJob通过；空host清理未知，未按PID重建/强杀。新增同SID只读导出入口代码183557801b5279ac057f2e7468829a8360733179，用户需原marenben桌面collect-h024-desktop.cmd导出准确任务日志，不重跑/改ACL/删账号Profile。初始可读失败/盘点和限制在.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-run-20261115-r1/，当前allAccepted=false，后续原日志和新修复另增轮次。原SD1314不重跑，官方启动0、不W2/双SID发布。
+
+
+## 2026-11-15 H原日志已取齐、共享修复与后继准备
+
+原f93651d桌面case失败101保留；export01读取活日志sharing失败只取3份，修collector后export02 complete=true/10项SHA全部核验。原报告真实确认SID1003/session7/elevationType1的bootstrap与挂起broker都noJobtrue，原managerstderr code32，hostevents仅hostcreated无认证。由原trace/入口顺序与原生32反例定位rendezvous并行读共享缺陷，不能把前提正例升为交接通过。
+
+修复最终代码ab87ad1261f927bf77a1c757342989105a40ad0a：10d5f7a76发布前封存为原只读denywrite/delete记录，复核ID/权限/bytes；locator快照仅定位data不mint权限。3native新反例+1原record+2phase+1bootstrap通过，MSVC debug bins0/143952ms，原warning保留；最后5组各36份Rust与最终源匹配。3bcbc修只读导出，ab87准备原空宿主fresh认证受限退出＋新修复H串行入口及自动导出。完整证据.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-diagnose-20261115-r1/，report/status/result及preparedscope明确后继尚未执行。
+
+原旧creator句柄在observer退出后已丢失，不从JSON重建Owner。原emptyhost显式退出只通过其认可的原fixturemanager/freshnativepeer；新private locator副本是字节一致发现data不是原对象/新授权journal，原source/ACL/record不改；新query/synchronize witness只观察原FILETIME/SID/session/image/noJob并等待认证退出，不按PID强杀/接管官方。当前仍等待用户marenben桌面C:/Users/Public/ocx-h024-repaired-20261115-r1/repair-h024-desktop.cmd；旧场景和新输入保留，cleanup/allAccepted=false。原SD不重跑，官方启动0、actualGUI=false，不W2/双SID发布。
+
+
+## 2026-11-15 H真实桌面修复轮通过与已完成目录清理（整组仍未收口）
+
+本轮fetch main dbf974097d067e75c4de68f9fc681af8ab447b09 / docs a6d9184b851521194477ddfeecd988f40d513e5b未变，TEAM13/IMP139/r3继续。诊断证据e81cd0dd7先独立推送：577份payload4,516,182字节及每份index原字节核验、离线replay0，初始失败/采集partial及后继准备状态不追溯改写。
+
+实际修复H执行源ab87ad1261f927bf77a1c757342989105a40ad0a，清理源d31616d7d026054880794cacec17113c5c4c1645均已推codex/024-windows-native。marenben普通session7从真实桌面运行修复入口：旧emptyhost PID748/FILETIME134391474259863429以exact旧manager fresh认证显式退出，readonly witness等待同对象、manager0/host0，不是原丢失creator句柄恢复或官方Owner接管。旧日志退出前原件已归档，host自身追加认证/重放拒绝/显式退出事件；原ACL/安装镜像不改。
+
+新observer raw0，原broker PID22216/FILETIME134391493883001324、SID1003/session7/elevatedfalse/elevationType1；bootstrap及挂起broker beforeResume均noJobtrue，原创建句柄全程保留。fixturemanager正常退出gen1/raw0、仅原fixturemanager故障终止gen2/raw1、新manager gen3/raw0后，同一broker原native身份仍活/noJobtrue；gen4空宿主显式退出，四代同连接replay各拒绝。新broker原句柄观察到退出，但raw exit code未独立采集，不能冒填0。actualGUI=false、officialOwnerCreated=false、productionExecuted=false、allAccepted=false。
+
+新不可覆盖结果证据.adg/evidence/0.2.24/windows-dev/wl2-h-desktop-result-20261115-r1/：原oldrecovery导出10项/新同SID导出25项，所有Base64/长度/SHA逐字一致、completetrue/0errors/stablelengths；26项完整status-matrix、report/result、实际源码/制品摘要、清理回执和离线verify_evidence.py。校验器首轮旧receipt SID层级KeyError/1保留replay-attempt01；按真实结构修后离线0，原始回执未改。最终36份Rust逐字匹配product输入，实际Public两EXE/清理两脚本也逐字核对。
+
+MSVC debug bins0/143952ms；3newnative+1record+2phase+1bootstrap通过，原62warnings及首manager32/observer101全部留存。ocxd 5,398,528字节/SHA256 87232b26c722012ed2fd225394a5cb5f4687851d6f8b53060cbe1a9dcca850f8；H库测试EXE93,421,568字节/SHA256 b8a4b8140571a93b2e30911c1d1ff7910515421d0a424f5c81c4349d209b9d75。Desktop/ocx及其它精确摘要在source-and-artifacts.json；非签名release/固定候选。
+
+用户原普通桌面一次清理完成：新成功base128429…的19文件98,827,930字节及lookup副本baseb989…的3文件1,834字节，全清单先核归档再删，两处合计22文件98,829,764字节，回执complete=true。首次失败13ae…不删除，现有marenben账号/Profile保留；Public输入/原始输出与构建缓存留存，无force/日常PATH配置策略写入，无旧拒绝路径重试。overallCleanupComplete=false，历史Profile/Public/schema/普通MSI验收未完保持。
+
+下一步仍Windows范围：O完整同卷custody/currentref CAS/恢复/Closed、H真实GUI与官方Owner生产路由、S完整source/owner/stage proof、D完整family/requiredservice与新Stop组合尚未完成；四trait已冻结，不冒称缺共享声明。生产正例独立受普通令牌完整SD含SACL前提阻止：r3禁止改验收令牌/策略/覆盖；没有新环境不重跑相同1314，也不能从本次空H组件通过外推整组。若要求该普通环境可用，需另行明确安全覆盖产品方案；本轮保持完整范围拒绝。无官方2.99/真实业务同步/模型请求，无W2/双SID/发布。
+
+
+## 2026-11-15 W-L2保留原生对象与S/D增量（生产仍未收口）
+
+fetch main dbf974097d067e75c4de68f9fc681af8ab447b09 / docs a6d9184b851521194477ddfeecd988f40d513e5b未变，TEAM13/IMP139/r3承接r2。先落hypotheses01，一次收独立项，首错和修正各轮原件不覆盖；未重复普通SD1314、已过桌面H/CLI/MSI。
+
+代码4笔已推codex/024-windows-native：4562217649da1c822f07affc9caf279558f78665保留活窗口原镜像/token/父pin及monotonic force历史；1007ad5f774133973d36be506de71d383e4317ad改D退出后用原保留对象复核、完整raw/角色/代次唯一性及scope/deadline；7f68125d7db9cbadfdd91c3b0f987172a64184d5修S嵌套父链reparse伪缺席并保持父/叶原码；eb8d7e949f42e6bd80178e4242d721f648634066分离定向入口。净9许可Windows/test文件，不改共享trait/原预算/官方/日常配置，旧untracked schema保留。
+
+原D complete_family全退出后却用active-only检查会必拒；native01第一版postexit通用observe仍raw31/101，特定内部API未instrument不能编造。修为原活窗口保留原native process/token/image对象，终态读同一process PID/FILETIME/raw及同一token/image ID，活准入仍fresh/active-only。原31及失败exacttree归档保留；normalproof不允许forced历史被raw0清掉，不从JSON/PID接管。
+
+native02两项、query01短命原argv/parent/raw1060/1一项、library04新D/S五项、supervisor01受影响七项均通过（其中3新S重叠），12不同用例/15成功执行。fixture缺官方source仍Unknown；两次junction命令准备syntax失败与E0599编译失败/library01..03逐轮原source/stdout/stderr/result保留。最终复用仓库已有systemPowerShell New-Item Junction＋环境值传参，真实junction创建0，嵌套缺叶均Unknown；父pin2/3/5/32不转leafAbsent且raw保留。D精确父argv语法仍有限，完整Service/OtherRequired/family角色尚未完成，不能以pure exitmatrix当生产资格。
+
+MSVC debug bins product01 exit0/179337ms/69原warnings。query01/library04/supervisor01/product01每组36Rust与最终源逐字一致；native02独立后端/宿主/Cargo15输入匹配，但快照另两S文件随后改变，明确非全36匹配。实际编译head456221764+dirtydiff完整保留，不冒最终Git SHA重编。Desktop75456512字节/SHA256 b5f3782a1aa0dfe071c1f021d829ff2efdbac2050cbb6ec11e8b61a8e93a1410；ocxd5398528/SHA256 5f058007a91f3e6a5c1c6f75d7d7d388bf1f0a0533d67a431cc8e6f26b4a52a6；ocx306176/SHA256 be27db2cb26ee7c1ac25460f323dd32c3051ce3f014d6d0a4b94d57ca5469310。非签名release/冻结候选。
+
+新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-retained-diagnostics-20261115-r1/：23项状态表、原假设/各轮执行源及rawtrace、failedfixture7文件原件、最终source/Gitblob、制品/来源限制、官方固定外/内SHA只读复核及五源文件、cleanup拒绝与verify_evidence.py；离线replay0只表示归档自洽，不是生产通过。
+
+清理：native01原失败后仅其exact synthetic Job guard显式force，native02另一个反例只对已空exactJob请求force，分开记账不补正常退出。成功synthetic roots/测试junction按原断言清理，无新账号/Profile/Public/官方进程。失败树C:/Users/15119/AppData/Local/Temp/ocxd024-process-18124-1的7文件670767字节逐字归档核验后，exact Remove-Item自动审批blocked by policy，命令未执行，不重试/替换机制，原树保留。历史Profile/Public/schema/普通MSI缺口保持，overallCleanupComplete=false。
+
+O完整custody/current-ref CAS/恢复/Closed、H真实GUI/原Owner生产接线、S完整实机proof、D全family仍未完成；普通完整SD含SACL正例环境未满足，生产Start继续拒绝。allAccepted=false、productionExecuted=false、actualGUI=false；无官方2.99/日常PATH配置策略写，无真实业务同步/模型请求，不W2/双SID/发布。
+
+
+## 2026-11-15 W-L2原根实际argv与Node→Bun/Service来源（增量，仍非生产通过）
+
+承接eb8d7e949/88d747a3d继续TEAM13/IMP139/r3。先记hypotheses01，再只读固定官方内tgz b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c八份源：真实bin/ocx.mjs在101/103/1557/1614行定义CLI路径、43字符base64url内部proof、Node到Bun转交。旧len3保守语法不支持真实官方路径，本轮按准确来源补实现，不以进程名/exit授权。
+
+代码三笔已推codex/024-windows-native：66c3a3e97d83488110e72bb1e34a10879ded5ea9在原CREATE_SUSPENDED句柄上resume前读实际argv，沿原有界原生解析并保留时点；a7025bb89fb7f730eee23da2e9bfedd9e3b80b11绑定原Node→Bun父代次/镜像fileID/currentsource/port及query动作捕获阶段，Service必须为typedReady后原prestop监听代次；75c0f7562f4d60fd0fbb704dc08dcf0cd3d47785新增定向入口。净6许可文件；不改共享trait/HMAC/预算/官方/日常配置。
+
+proof参数只验准确语法形状，不另做HMAC、不将参数当许可证；原native父链/准确固定bin和CLI源码/Job历史/current是另行必需条件。原Bun startargv不会在Stop改成stop，查询phase从原Owner捕获时点绑定。已知Service若缺prestop原监听/身份冲突直接Err，不能吞未知改Launcher；只有service状态确实未建立是None。OtherRequired及sentinel/console/priority完整helper来源仍Unknown，sc qc等未扩为诊断；Service/Launcher非零仍否决。
+
+native01挂起原根argv/quote/Unicode/退出后原像1项、query01实际query argv/parent/raw1060/1保留1项、library01精确官方参数语法与漂移拒绝1项通过。fixture没有官方source仍Unknown。library01后根据hypotheses02修Ready未知不得降级，最终pure grammar与test片段逐字相同，reused-pure-scope明确只复用纯检查；最终Ready运行体未生产验。未重复未受影响S/H/CLI/MSI/SD旧前提。
+
+最终MSVC debug全部bins exit0/156419ms，72原warnings保持。product01实际eb8d7e949+dirtydiff，各36Rust与最终源逐字一致；native/query实际15编译输入匹配，另两份D/Owner捕获源码后继修正，不冒全36匹配；中间库测试EXE与原nativeEXE摘要在替换前准确记录。Desktop75459072字节/SHA256 a885081683e23764eb824436dd4e78d8661b7335b829a2d9dc94b2cb40191587；ocxd5398528/SHA256 c7010fa17aeea92483bf38abb2963c271454a8ecc5d2fa4a62c0bdbd7fc6b812；ocx306176/SHA256 258bee19a51f09065bc2ead8074be80e5efb7beb735593a12967657c0d1e35f7。非release/签名冻结候选。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-d-family-source-20261115-r1/：假设/八源原字节及SHA、4组执行源/rawstdout/stderr/result、最终source/Gitblob/制品、scope复用边界、16项完整表、report及verify_evidence.py；离线replay0不等于生产角色正例。
+
+本轮新synthetic roots正常退出/原Fixture清理断言过，新force/account/Profile/Public/官方进程/日常PATH写均0；工程cache/制品证据留存。上一批7文件670767字节失败树和历史Profile/Public/schema自动审批拒绝均不重试/不替换机制，overallCleanupComplete=false。O完整custody/currentrefCAS/restore/Closed、H真实GUI原Owner生产路由、OtherRequired全family、S/D完整实机proof及普通完整SD/SACL环境仍未完成；生产Start拒绝，allAccepted/productionExecuted/actualGUI=false。无真实模型/业务同步/W2/双SID/发布。
+
+
+## 2026-11-15 W-L2 sentinel必需角色与O阶段严格绑定（增量，仍未收口）
+
+fetch main dbf974097d067e75c4de68f9fc681af8ab447b09 / docs a6d9184b851521194477ddfeecd988f40d513e5b未变，TEAM13/IMP139/r3承接r2。先hypotheses01，固定官方外/内SHA再读六源；windows-process-priority.ts用node:os直接setPriority无新helper进程，未创造PowerShell豁免。
+
+代码080b80c41cacc490587a1881c4fe98f52314d786已推：OtherRequired仅准确installed sentinel [原Bun,准确health-sentinel-main.ts]，要求原typedReady/prestop Service父代次、Node→Bun原native链、start捕获阶段、同原镜像fileID和launch/main/windows/CLI四源SHA，完整programImage前后复核。非零仍否决NormalExit；其它conhost/helper未知保持。source说明sentinel只于managed-service而非普通foreground/desktop运行，本轮未开启/启动该功能，纯语法不是生产sentinel正例。
+
+O独立检查发现旧phase只要binding.is_object即可。cf03db58036780f8d02aaaa5bfd52654ee4bbab5已推：新增typed deny_unknown_fields绑定SID/Profile/D/H/I路径+volume/fileID/source-currentSHA/ownerPID/FILETIME，规范SID/正整数/非nil规范sessionUUID、根/原件范围重叠和目录同对象拒绝。read_pending逻辑SID同当前TokenUser、sessionId同准确目录叶名；Nested duplicate/unknown/missing全部拒绝；重复/尾随分隔符别名另按先置native-path-review增量拒绝。底层新validate_local_path只有语法无I/O，不是原生身份/权限。文本Closed仍PendingOnly，无OriginalSession/ClosedEligibility/current-ref或custody能力，没移任何client原件、没回退默认空状态。
+
+helper角色suite4项通过；O originals01中间4项通过，别名增量后的originals02最终4项通过。8个不同用例/12成功执行，本轮firstError=null；native捕获/实际恢复/真实角色未验。最终clean cf03源MSVC debug bins0/128147ms/85warnings原样，actualsourcehead准确/dirtydiff空；originals02/product01每组37Rust对最终字节一致，helper自身文件与早期suite一致，但早期36Rust的4源后继O变化/缺newbinding不冒全36一致。三份库EXE实际时点hash分立保存。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-helper-provenance-20261115-r1/：先置假设/原源六SHA、四组原执行source/stdout/stderr/result、最终source/Gitblob/制品、15项完整状态表/report/result、限制/清理与离线verify_evidence.py。离线replay0不等于生产通过。Desktop75458560/SHA25640a65cf0cefb57e053e7ca1c4b6b007a9557103a8bd45dba8ff50beeabfc00eb；ocxd5398528/SHA25620dbf3e6760cdd0d51e60214e8f356408ed78b33b90cc44a731ffe0755c886c4；ocx306176/SHA256adb2684b17e60bfa39fdccbabc345a892d246cda635d24ab5d88c813e35ff682。非签名release/冻结候选。
+
+净6许可Windows文件，无共享trait/Cargo/安装器/Mac/旧lifetime改动；untracked旧schema保留。仅任务synthetic records/TempDir，成功guard清理，无新失败目录/account/Profile/Public/官方进程/force/日常配置或PATH策略写。旧7文件670767字节失败树及历史Profile/Public/schema自动审批拒绝保持，不重试不换机制；cache/制品/证据有意留，overallCleanupComplete=false。
+
+O完整同卷custody/current-ref CAS/恢复/Closed、H真实GUI原Owner生产路由、D其它完整helper family和S/D实机矩阵未完；普通MSI未验与完整SD/SACL普通令牌环境缺口保持，不重复同前提1314/外Job失败、不提升或缩范围凑过。allAccepted/productionExecuted/actualGUI=false；生产Start继续拒绝。无真实模型/业务同步/W2/双SID/发布。
+
+
+## 2026-11-15 W-L2单文件原对象句柄同卷移动（底层机制，非完整恢复）
+
+承接cf03db580/b8264f733，沿TEAM13/IMP139/r3/r2继续原允许native/test写集。先hypotheses01写入原句柄/不覆盖/同卷/保管门限定，再native01两项通过；hypotheses02针对已确认C/D不同卷追加native02单项；同原父目录不可当custody迁移的后继复核补guard/native03四项通过。后继same-parent说明在native03之后落盘，未倒签先置假设。4不同native用例/7成功执行，原生/编译firstError=null。
+
+代码d82e8493c9ce97ffa4c2f8097ddec2212d2a27b0与8958a59b80c95501ba2a0920cad3f4f228975573已分批push：file_move.rs保留DELETE-capable原文件句柄/父pin/准确卷fileID/有界2MiB原字节，拒reparse/多硬链/额外ADS或未知stream查询；精确currentSID私有目标目录同卷且不同原父对象。SetFileInformationByHandle/FileRenameInfo ReplaceIfExists=false对原句柄改名，native成功立即更新已知location/目标pin，再后验。错误/超时/Drop不自动copy/delete/覆盖/回滚原件；restore只回原路径同原对象，外部占用保留Unknown。native额外reader只为读回兼容原DELETE句柄，不给予原件外部写/删分享。
+
+实际same-volume往返卷/fileID及字节读回同一，准确目标占用和原路径外部编辑占用均raw183且两侧内容保持；测试仅显式清理自身哨兵后继续原handle恢复。C247287385与D3089487301实际跨卷target-parent在rename前拒绝，source不删不copy/targetleaf不建；原父目录samepath/不同leaf亦拒，不能把No-op当custody阶段。ADS/硬链/非法name/过期窗口拒绝。没有完整SD/安全同一性或真实custody正例，未动日常client。
+
+该对象只为单文件native机制，无OriginalSession/Closed资格；完整SD+持久move意图/current-refCAS、目录/整根custody/工作副本/全量恢复和生产调用点均未实现，production capture/Start为0，原r3 gate不改。普通token1314不重跑，不提升/改旧ACL或策略，不把当前READ_CONTROL字段冒完整SACL。没有共享trait/Cargo/features/release/Mac/安装器改动，净4许可文件。
+
+最终clean8958a59b8 MSVC debug全部bins0/69640ms/93warnings原样；native03/product01每组38Rust逐字对最终，native01/02旧guard/test输入不冒final。native01和final03实际EXE SHA分立；native02 EXE被后继覆盖前未独立记hash，明确缺口不套用final值。Desktop75458560/SHA2560f84dc04d7af715abe9eef3415e26e1ec72beb056e569bc124f28352a2330ce6；ocxd5398528/SHA256db4a9b85d163ac659a51cf8a04cc837e9e16d12ebc5820a31edc4a813e5badf1；ocx306176/SHA25624a8a5941ceaeaab283c7816e9341e4ae7c8311b61217fbf943917cb4f37136c。非签名release/冻结候选。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-original-move-20261115-r1/含前置假设/原native四组source/raw/stdout/stderr/result、API参考/本地签名限制、finalsource/Gitblob/制品、14项完整表/清理限制/report/result与verify_evidence.py。API URL仅参考无下载正文hash声明；原生结果直接证明当前操作。离线首轮PS1查Rust-only map KeyError/1保留replay-attempt01；修对actualcaptured源比较后replay0，原native断言/结果不改。
+
+成功7个C任务fixture根和2个准确新D空cache根由原guard收尾，D仅remove_dir新空leaf不递归父根；无失败树/newaccount/Profile/Public/force/官方进程/日常PATH配置策略写。原7文件670767字节失败树及历史Profile/Public/schema自动审批拒绝不重试/不换机制；cache/制品/证据留用，overallCleanupComplete=false。O完整恢复、H真实GUI、S/D全production/family、普通SD/SACL及MSI验收缺口保持；allAccepted/productionExecuted/actualGUI=false，不W2/双SID/业务同步/模型请求/发布。
+
+
+## 2026-11-15 W-L2阶段先刷盘与同对象current引用CAS（机制增量）
+
+用户要求持续工作至需其参与，fetch main dbf974097d067e75c4de68f9fc681af8ab447b09 / docs a6d9184b851521194477ddfeecd988f40d513e5b未变，TEAM13/IMP139/r3承接r2。先hypotheses01，library01七项通过；review01/hypotheses02先记原scope/create顺序及初始安全观察，library02最终八项通过。8不同用例/15成功执行，本轮无失败测试/编译，firstError=null。
+
+3a123fe979bbefba32c00272829318e09b9b5bfa与c47953ccfe4c66a976285eacffd691e3a3b0c01b已推codex/024-windows-native，净4许可O/test文件。新CurrentReference(Reference<Full>)生产类型私有且固定FULL access/BACKUP完整SD；cfgtest PartialDiagnostic只观察O/G/D，不能转换生产Full/OriginalSession/Closed。真实CAS机制测试明确partialDiagnosticOnly，fullSD没有新实测，原1314不重跑，生产Start仍拒绝。
+
+current.json经PrivateRecord原私有对象/read-byte/fileID检查，原readpin仍持有时观察初始security；独占读写重开同fileID/bytes/descriptor才返回引用。每次advance核原id/security/准确bytes/父pin/原deadline，Tip只接受同原native session目录/同SID/session/binding/manifest且sequence+1/prevdigest的实际privatephaseprefix；旧prefix/foreign/重复/未知均拒绝。share0第二writer/delete/rename拒绝实测。引用只是定位data，没有从序列化恢复native权限。
+
+PendingOnly append下一phase先复读原记录/原目录及完整prefix，validate/create-only/sync/readback后，CurrentReference才CAS。后半失败额外phase保留，旧prefix不得再次append；pointer写第一字节前poison，write/setlen/sync/后验/deadline任何失败都保留Unknown/Required，无自动rollback/清空/catchup/新窗口。真实partialwrite测试保留原阶段并拒reopen，文本Closed仍仅PendingOnly。机制不承诺断电原子提交，不声称实际原件move意图/全量custody/恢复已完成。
+
+最终clean c479源MSVC debug全部bins0/156748ms/107warnings原样；library02/product01每组39Rust与最终逐字一致，library01 phase/reference后来变化不能冒final；两份库EXE实际时点摘要分立。Desktop75458560/SHA256d136dce96df103f5bec219b5275689bc4a85c383848b8a1980e3fd12cd807eb1；ocxd5398528/SHA256cc6d7e66c4f0ad6906f43d30d0516043217cbb55c8cb7fdd6ec06475e48520db；ocx306176/SHA256cf0c1a39371e9e5f7bd4c0f7a514d9b6106574835f70c05eafa87517de4ce5b8。非release预算/签名冻结候选，test原cfgFFI/unusedwarning完整保留，无strictClippy/安全审计通过声明。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-current-reference-20261115-r1/：先置假设/3组原命令执行源/stdout/stderr/result、最终source/Gitblob/制品、13项状态表/限制/report/result、typedguard/中断范围及verify_evidence.py，离线replay0只表示字节与声明自洽。mac-decision-handoff.md及environment-decision-request.json给准确后继协调输入。
+
+新syntheticrecords/TempDir成功guard收尾，无失败临时树/newaccount/Profile/Public/force/官方进程/日常PATH配置策略写；缓存/EXE/证据留用，旧7文件670767字节失败树及全部历史Profile/Public/schema自动审批拒绝不重试/不换机制，overallCleanupComplete=false。
+
+仍未完成真实原件manifest/capture、同卷目录整树custody/工作副本、actualmove意图/current-ref协议接原对象、恢复/Closed，H真实GUI原Owner路由、S/D全productionmatrix及普通MSI验收。当前用户已被问及提供满足完整SD/SACL的不提升不改策略普通隔离环境，或交Mac集成owner评估安全覆盖合同；尚未答复，elapsed不是approval，Windows没授权缩full范围/拿partial当完整。其余未完仍归Windows实现，不冒缺共享trait。allAccepted/productionExecuted/actualGUI=false，无业务同步/模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 用户选择Mac评估安全覆盖合同
+
+用户明确选择“交 Mac 评估安全覆盖合同”。决定及可复制提示词保存在.adg/evidence/0.2.24/windows-dev/wl2-sd-contract-decision-20261115-r1/。仅授权集成线评估并给明确后继合同，不授权Windows当前降低fullSD/SACL范围、改策略/token/ACL或以部分诊断测试补签。代码c47953ccf/原证据ebeb2d692不变，生产Start继续拒绝；O整树custody/真实移动引用协议/恢复/Closed、H真实GUI/S-D组合和普通MSI/历史清理未完保持。按既有Git协作由用户转交现有Mac对话，没有自动跨对话发送消息，无新增运行时测试/环境/清理操作，不W2/双SID/发布。

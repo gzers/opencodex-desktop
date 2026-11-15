@@ -1,0 +1,66 @@
+{
+  "source": "3d028e82d731ceb2d307b0a954a93db467ca3f39",
+  "allAccepted": false,
+  "productionExecuted": false,
+  "items": [
+    {
+      "boundary": "NativeSession",
+      "file": "windows_official_lifecycle024.rs",
+      "implementation": "Owner implements check_current with original runtime/current, native root token, pinned Profile/D/H/I identities and session digest; scope remains original-creation memory authority",
+      "validation": "compiled; not newly instantiated by official Start in this round"
+    },
+    {
+      "boundary": "ClientOriginals",
+      "files": [
+        "windows_client_originals024/mod.rs",
+        "windows_client_originals024/phase.rs"
+      ],
+      "implementation": "exact full-SD inspection and production preflight refusal wired; pending prefix parser/held-record architecture only. ClientOriginals trait NOT implemented; require_durable_capture always refuses until actual same-volume custody/current-ref CAS/restore implemented",
+      "fullPositive": false,
+      "missing": [
+        "ClientOriginals associated proof flow",
+        "same-volume original move/work copies and complete tree manifest/ADS",
+        "current reference CAS with full security",
+        "finite locks and restore/readback/ClosedEligibility"
+      ]
+    },
+    {
+      "boundary": "OwnerContinuity",
+      "files": [
+        "windows_owner_host024/continuity.rs",
+        "windows_official_runtime024/host_process.rs",
+        "windows_official_runtime024/peer.rs",
+        "windows_official_runtime024/pipe.rs"
+      ],
+      "implementation": "trait exists and compiles in cfg(test); actual private pipe, retained peers, suspended host noJob and fresh auth/replay/generation composition; original Owner retained inside host struct",
+      "productionRegistered": false,
+      "missing": [
+        "ocxd --internal-runtime-owner024 dispatcher/long-lived loop",
+        "rendezvous/bootstrap integration",
+        "GUI/IPC production routing",
+        "real ordinary desktop bootstrap and same original broker cross-manager test"
+      ]
+    },
+    {
+      "boundary": "SupervisorAbsence",
+      "file": "windows_supervisor024.rs",
+      "implementation": "trait exists and compiles under Windows; private Absent binds actual original Owner scope and same action deadline, exact SCM/Scheduler and H artifacts, default Profile mirror, original family, final fresh requery",
+      "productionStopInvokesIt": false,
+      "limitations": [
+        "present service-state conservatively Unknown; relation semantics not treated as absence",
+        "no actual source-bound Absent constructed in this round"
+      ]
+    },
+    {
+      "boundary": "DiagnosticRoles",
+      "file": "windows_diagnostic_roles024.rs",
+      "implementation": "trait exists and compiles under Windows; exact query targets/argv/system image, original member/parent capture with phase, source archive and call-site hashes, actual parent CLI/current Bun; raw exits preserved",
+      "productionStopInvokesIt": false,
+      "limitations": [
+        "full launcher/service/OtherRequired family classifier not complete; non-query descendants remain Unknown",
+        "no real source-bound ProvenRole/NormalExit issued in this round",
+        "old production strict all-zero gate remains"
+      ]
+    }
+  ]
+}

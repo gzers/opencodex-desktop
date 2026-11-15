@@ -1,0 +1,29 @@
+{
+  "executables": [
+    {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\msvc-w1c\\msvc\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\cl.exe",
+      "fileVersion": "19.44.35230.0",
+      "sha256": "e87e78b3ef6580b75aebda843f8a22e874612d9f766344046551399f898eb226"
+    },
+    {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\msvc-w1c\\msvc\\VC\\Tools\\MSVC\\14.44.35207\\bin\\Hostx64\\x64\\link.exe",
+      "fileVersion": "14.44.35230.0",
+      "sha256": "49a5df25c3182a22684375b1d62a025016deffccea247894fe5ca2c85610c6a6"
+    }
+  ],
+  "sdkDirectory": "10.0.26100.0",
+  "target": "x86_64-pc-windows-msvc",
+  "cargoArguments": "--locked --offline -j 1",
+  "scope": "all this round MSVC builds same explicit msvc-env roots; inventory read only, no toolchain installation/policy changes",
+  "releaseBuilt": false,
+  "rustc": [
+    "rustc 1.100.0 (0ef1bc386 2026-11-09)",
+    "binary: rustc",
+    "commit-hash: 0ef1bc386059596dada8fb65b50425aab2ea637a",
+    "commit-date: 2026-11-09",
+    "host: x86_64-pc-windows-msvc",
+    "release: 1.100.0",
+    "LLVM version: 23.1.5"
+  ],
+  "vcDirectory": "14.44.35207"
+}

@@ -1,0 +1,15 @@
+{
+  "newReviewBeforeNextEdit": [
+    "A pointer create must check its original prefix directory before creating current.json, not merely when reopening it.",
+    "Before exclusive reopen, retain an initial security observation while the private original reader still denies write/delete. Then exclusive reopen compares fileID/bytes/full descriptor to that initial observation before publishing a CAS object.",
+    "Create-only next-phase writes must be validated against an exact native prefix before flushing. If the pointer CAS fails afterward, the extra immutable phase must remain and current cannot silently catch up or default away the gap."
+  ],
+  "plannedTests": [
+    "foreign session/directory prefix refuses without new current file",
+    "Ready append flushes immutable phase before pointer advance",
+    "injected partial-write current refuses reopen and retains old/new phases",
+    "unknown/duplicate current pointer fields refuse"
+  ],
+  "sourceFreeze": "library01 has not been modified while its original build is live. These hypotheses are for the next distinct source round.",
+  "allAccepted": false
+}

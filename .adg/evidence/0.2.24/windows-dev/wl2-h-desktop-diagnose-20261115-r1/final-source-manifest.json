@@ -1,0 +1,110 @@
+{
+  "source": "ab87ad1261f927bf77a1c757342989105a40ad0a",
+  "base": "183557801b5279ac057f2e7468829a8360733179",
+  "tree": "b897a36c2bc69708009ba4c92ff4ec001482b0e7",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 11773,
+      "sha256": "7c72923fcf5f318d56373680666cef65798af505e73350b07eae0f345684becd",
+      "gitBlob": "dab4e8168fd3ca3162714dd9392e9557a5d331f9",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 19725,
+      "sha256": "fbb383daf63136e026dc68b9d8b739766ad746b403fc8c667125579f0f133e60",
+      "gitBlob": "4e7c94bd5c6b1e8337bbd62751c7d0cda8162ce6",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "bytes": 4399,
+      "sha256": "b86cc2dfa92664ff9d54dad974f63a7dcb77f2b9c704cd7cfc661a73e5ff93de",
+      "gitBlob": "8ff23a028455fa8788165c1bc4ec0c0e530bdccf",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/collect-h024-desktop.ps1",
+      "bytes": 3565,
+      "sha256": "b44684c5d008ef2d2370b05c793686800b602e86ef34510bc11c3db80018063b",
+      "gitBlob": "13204db5e765a115bdc96f540beca5313ba96ce8",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/export-h024-task.ps1",
+      "bytes": 3165,
+      "sha256": "7b9147b208c5315a5c2c622fa1e4e76884862543112660f561de980fd17e480e",
+      "gitBlob": "57737dc3033fd5243c4d10b9e81a15cbd892e35b",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/launch-h024-desktop.ps1",
+      "bytes": 3751,
+      "sha256": "7627c3d54eeb976c715b7c462b305c5c4bf71ca5e6a6f3f0404b42d90b581ac4",
+      "gitBlob": "9dcd95b69bfec19ceac26673fcb699748fdfca0a",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/lib.rs",
+      "bytes": 7204,
+      "sha256": "cd218b4c59ee1bfe8755c858761c77251186c1cde6d8e618c8e2526d494d366c",
+      "gitBlob": "3f089c9e4cbaeb5a018e7617e3ad97eff416f519",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/recover-h024-empty-original.ps1",
+      "bytes": 11917,
+      "sha256": "cc222bbbdbc2d9dd5578fd138cd39503eced722335f7543d012e6d1d000ef4f0",
+      "gitBlob": "7036ce658d9903be99be931b21e7cfbd253bff5c",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/repair-h024-desktop.cmd",
+      "bytes": 295,
+      "sha256": "8abc7331a963b5a57873c844b0928206b4b1a1c17d9360a7d2242e2d9950f20b",
+      "gitBlob": "882dccbfda7c4469876dd6130fa6ecef15722270",
+      "gitNewlineEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/repair-h024-desktop.ps1",
+      "bytes": 1110,
+      "sha256": "416fb60922ad0ee6d6e43327ad02d4fcbb4dc3a2fd14fe3880339c9838a7dc81",
+      "gitBlob": "e0f45c3e946607ae7b6eebd6e6ad047571e73f03",
+      "gitNewlineEquivalent": true
+    }
+  ],
+  "executionComparisons": [
+    {
+      "run": "native02",
+      "rustFilesCompared": 36,
+      "finalRustByteIdentical": true,
+      "afterCompileScriptChanges": "task launcher/collector/recovery scripts individually captured in prepared-public, not claimed as compiledRust inputs"
+    },
+    {
+      "run": "library02",
+      "rustFilesCompared": 36,
+      "finalRustByteIdentical": true,
+      "afterCompileScriptChanges": "task launcher/collector/recovery scripts individually captured in prepared-public, not claimed as compiledRust inputs"
+    },
+    {
+      "run": "phase01",
+      "rustFilesCompared": 36,
+      "finalRustByteIdentical": true,
+      "afterCompileScriptChanges": "task launcher/collector/recovery scripts individually captured in prepared-public, not claimed as compiledRust inputs"
+    },
+    {
+      "run": "record01",
+      "rustFilesCompared": 36,
+      "finalRustByteIdentical": true,
+      "afterCompileScriptChanges": "task launcher/collector/recovery scripts individually captured in prepared-public, not claimed as compiledRust inputs"
+    },
+    {
+      "run": "product01",
+      "rustFilesCompared": 36,
+      "finalRustByteIdentical": true,
+      "afterCompileScriptChanges": "task launcher/collector/recovery scripts individually captured in prepared-public, not claimed as compiledRust inputs"
+    }
+  ],
+  "preexistingUntrackedSchemaPreserved": true
+}

@@ -1,0 +1,9 @@
+{
+  "sameParentReview": "After native02, static review added exact native original-parent identity refusal and a native no-op counterexample. This explanatory review note is recorded after native03, not a pre-execution hypothesis; hypotheses01/02 remain immutable.",
+  "native03Reason": "Runtime guard changed, so all4 affected cases were checked in one final suite; earlier successful runs not rewritten. No failures in this round.",
+  "native02ArtifactGap": "native02 EXE overwritten by later native03 before separate native02 hash capture; it is not assigned native03 hash. Exact raw source/results preserved. native01 and finalnative03 hashes separately captured.",
+  "mechanismOnly": "File-only bounded content/native ID and streams checks; no complete SD read/capture or modification, no persistent move intent/current-ref/CAS, no working-copy/directory custody/tree restoration, no OriginalSession/ClosedEligibility. Production gate unchanged.",
+  "renameState": "Original process-local file handle, original parent and private target retained; native success updates last-known location before fallible verification. Error never triggers copying, forced restoration, target deletion or replacement. Drop does not restore/delete original.",
+  "safetyScope": "Only fresh synthetic task objects; no old rejected path, account/Profile, daily original/client data, official runtime or model/business request touched.",
+  "allAccepted": false
+}

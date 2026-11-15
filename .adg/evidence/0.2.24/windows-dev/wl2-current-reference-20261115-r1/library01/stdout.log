@@ -1,0 +1,14 @@
+
+running 7 tests
+test infrastructure::windows_client_originals024::phase::tests::wl2_originals_binding_requires_every_identity_field_and_disjoint_scope ... ok
+test infrastructure::windows_client_originals024::phase::tests::wl2_originals_nested_duplicates_unknowns_and_wrong_session_directory_refuse ... ok
+test infrastructure::windows_client_originals024::phase::tests::wl2_r3_every_phase_prefix_remains_pending_no_native_closed_authority ... ok
+test infrastructure::windows_client_originals024::phase::tests::wl2_r3_phase_gaps_replays_unknown_schema_and_rollback_refuse ... ok
+test infrastructure::windows_client_originals024::reference::tests::wl2_reference_interrupted_write_retains_phase_records_and_refuses_reopen ... partial current write: phase preserved, reference Unknown/Required; no reconstructed permission; fullSD not queried
+ok
+test infrastructure::windows_client_originals024::reference::tests::wl2_reference_same_object_exclusive_cas_and_stale_prefix_refuse ... same current-reference fileID retained, stale pointer/exclusive writer refused; securityCoverage=partialDiagnosticOnly; Closed=false
+ok
+test infrastructure::windows_client_originals024::tests::wl2_r3_complete_query_masks_and_error_classification ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 1886 filtered out; finished in 0.09s
+

@@ -1,0 +1,18 @@
+{
+  "library01": {
+    "rawExit": 0,
+    "testsPassed": 7,
+    "scope": "initial actual exclusive-pointer and partial-write mechanism +affected O tests"
+  },
+  "library02": {
+    "rawExit": 0,
+    "testsPassed": 8,
+    "scope": "final phaseappend +pointer/scope/error mechanism and affected O tests"
+  },
+  "uniqueTests": 8,
+  "successfulTestInvocations": 15,
+  "securityWarning": "CAS native tests explicitly query O/G/D only through cfg(test) PartialDiagnostic. This is partial diagnostic data, not full security or original custody proof. Full production adapter is only compiled, never executed here.",
+  "sourceWarnings": "All raw rust warnings retained, including unused new adapter methods and cfgtest foreign declaration warning. No strictClippy/release/static-security audit acceptance is claimed.",
+  "productionRuntimeCoverage": "No official Start, full descriptor query, native original capture/custody/restore or successor eligibility test occurred.",
+  "allAccepted": false
+}
