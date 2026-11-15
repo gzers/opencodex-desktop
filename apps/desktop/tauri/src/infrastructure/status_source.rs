@@ -107,7 +107,15 @@ impl OfficialStatusSource {
     }
 
     async fn fetch_inner(&self) -> Result<serde_json::Value, CollectError> {
+        self.fetch_inner_at(Instant::now() + status_collect_timeout())
+            .await
+    }
+
+    async fn fetch_inner_at(&self, deadline: Instant) -> Result<serde_json::Value, CollectError> {
         let started = Instant::now();
+        if started >= deadline {
+            return Err(CollectError::Timeout);
+        }
         #[cfg(windows)]
         if self.runtime.managed_installation_root().is_some() {
             match self.runtime.managed_program_identity() {
@@ -115,7 +123,7 @@ impl OfficialStatusSource {
                     return Ok(super::windows_official_lifecycle024::status(
                         &self.runtime,
                         &self.environment.opencodex_home,
-                        started + status_collect_timeout(),
+                        deadline,
                     )
                     .await
                     .unwrap_or_else(|_| super::windows_official_lifecycle024::unknown_status()));
@@ -170,8 +178,8 @@ impl OfficialStatusSource {
         if self.mutation_in_progress() {
             return Err(CollectError::Unreachable);
         }
-        let budget = status_collect_timeout()
-            .checked_sub(started.elapsed())
+        let budget = deadline
+            .checked_duration_since(Instant::now())
             .ok_or(CollectError::Timeout)?;
         let mut command = self.command(&executable);
         #[cfg(unix)]
@@ -444,6 +452,52 @@ async fn probe_local(port: u16) -> Result<(serde_json::Value, serde_json::Value)
 }
 
 impl StatusSource for OfficialStatusSource {
+    fn requires_fresh_sample(&self) -> bool {
+        // Treat unknown managed sources conservatively as well. Version/source
+        // admission stays inside the already-started sample window.
+        cfg!(windows) && self.runtime.managed_installation_root().is_some()
+    }
+    fn fetch_at(&self, deadline: Instant) -> Result<serde_json::Value, CollectError> {
+        #[cfg(windows)]
+        if self.runtime.managed_installation_root().is_some() {
+            if Instant::now() >= deadline {
+                return Err(CollectError::Timeout);
+            }
+            tokio::runtime::Handle::try_current().map_err(|_| CollectError::Unreachable)?;
+            return tokio::task::block_in_place(|| {
+                tokio::runtime::Handle::current().block_on(async {
+                    tokio::time::timeout_at(
+                        tokio::time::Instant::from_std(deadline),
+                        self.fetch_inner_at(deadline),
+                    )
+                    .await
+                    .map_err(|_| CollectError::Timeout)?
+                })
+            });
+        }
+        let _ = deadline;
+        self.fetch()
+    }
+    fn fetch_light_at(&self, deadline: Instant) -> Result<serde_json::Value, CollectError> {
+        #[cfg(windows)]
+        if self.runtime.managed_installation_root().is_some() {
+            return self.fetch_at(deadline);
+        }
+        let _ = deadline;
+        self.fetch_light()
+    }
+    fn client_recovery_at(&self, deadline: Instant) -> crate::modules::status::ClientRecoveryState {
+        #[cfg(windows)]
+        if self.runtime.managed_installation_root().is_some() {
+            return super::windows_official_lifecycle024::recovery_state_at(
+                &self.runtime,
+                &self.environment.opencodex_home,
+                deadline,
+            );
+        }
+        let _ = deadline;
+        self.client_recovery()
+    }
     fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
         self.client_recovery_root
             .as_ref()
