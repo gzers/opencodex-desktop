@@ -12,6 +12,7 @@ use std::{
 };
 mod binding;
 mod bounded;
+mod coordination;
 mod phase;
 mod reference;
 mod tree;

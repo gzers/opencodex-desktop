@@ -30,3 +30,8 @@ pub use process::{
     ProcessState, RootBinding,
 };
 pub use security::{current_identity, TokenIdentity};
+/// Read-only private TokenUser/SYSTEM check on this exact retained file handle.
+pub(crate) fn verify_private_file(file: &std::fs::File) -> std::io::Result<()> {
+    use std::os::windows::io::AsRawHandle;
+    security::verify_private(file.as_raw_handle(), &current_identity()?.sid, true)
+}

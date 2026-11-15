@@ -66,6 +66,7 @@ if($Mode -eq 'r4-tree-v2'){$arguments=@('test','--locked','--offline','--manifes
 if($Mode -eq 'r4-history-dispatch'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_client_originals024::tree::','windows_client_originals024::v2::','windows_official_lifecycle024::','windows_supervisor024::','windows_diagnostic_roles024::','--test-threads=1','--nocapture')}
 $diff=git diff --binary
 if($Mode -eq 'r5-routes-status'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','--','client_route_declaration::','modules::status::','status_source::','windows_client_originals024::v2::routes::','wl2_r5_','--test-threads=1','--nocapture')}
+if($Mode -eq 'r5-coordination'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','windows_client_originals024::coordination::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'original-reference'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'original-move'){
  $env:OCX024_MOVE_OTHER_PARENT=$toolchain
