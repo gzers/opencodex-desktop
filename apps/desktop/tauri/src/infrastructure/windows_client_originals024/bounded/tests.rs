@@ -135,3 +135,109 @@ fn wl2_r4_native_all_projection_queries_and_ordinary_token() {
         Err(e) => panic!("r4native capture requiredUnknown: {e}"),
     }
 }
+
+#[test]
+fn wl2_r4_mixed_policy_aces_do_not_expand_sacl_global_assurance() {
+    let absent = project(&empty_sd(), 32).unwrap();
+    let mut combined = empty_sd();
+    combined[2..4].copy_from_slice(&0x8010u16.to_le_bytes());
+    combined[12..16].copy_from_slice(&20u32.to_le_bytes());
+    // A native-layout mandatory label ACE with S-1-16-4096, mask NO_WRITE_UP.
+    let mut ace = vec![17, 0, 20, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 16];
+    ace.extend_from_slice(&4096u32.to_le_bytes());
+    combined.extend_from_slice(&[2, 0, 28, 0, 1, 0, 0, 0]);
+    combined.extend_from_slice(&ace);
+    let resource = project(&combined, 32).unwrap();
+    assert!(same_covered_component(&resource, &absent));
+    let label = project(&combined, 16).unwrap();
+    assert_eq!(label.aces.len(), 1);
+    label.validate().unwrap();
+    assert!(!same_covered_component(
+        &label,
+        &project(&empty_sd(), 16).unwrap()
+    ));
+    let mut changed = combined.clone();
+    *changed.last_mut().unwrap() = 1;
+    assert!(!same_covered_component(
+        &label,
+        &project(&changed, 16).unwrap()
+    ));
+}
+#[test]
+fn wl2_r4_native_explicit_low_integrity_fixture_is_read_and_policy_bound() {
+    use std::os::windows::{ffi::OsStrExt, io::FromRawHandle};
+    #[link(name = "advapi32")]
+    unsafe extern "system" {
+        fn ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            text: *const u16,
+            revision: u32,
+            sd: *mut *mut std::ffi::c_void,
+            size: *mut u32,
+        ) -> i32;
+    }
+    let token = current_identity().unwrap();
+    assert!(!token.elevated);
+    let temp = tempfile::tempdir().unwrap();
+    let path = temp.path().join("new-low-label-only");
+    let sddl = format!(
+        "O:{}D:P(A;;FA;;;{})(A;;FA;;;SY)S:(ML;;NW;;;LW)",
+        token.sid, token.sid
+    );
+    let text: Vec<u16> = sddl.encode_utf16().chain(Some(0)).collect();
+    let mut sd = std::ptr::null_mut();
+    assert_ne!(
+        unsafe {
+            ConvertStringSecurityDescriptorToSecurityDescriptorW(
+                text.as_ptr(),
+                1,
+                &mut sd,
+                std::ptr::null_mut(),
+            )
+        },
+        0
+    );
+    struct Local(*mut std::ffi::c_void);
+    impl Drop for Local {
+        fn drop(&mut self) {
+            unsafe {
+                LocalFree(self.0);
+            }
+        }
+    }
+    let _sd = Local(sd);
+    let sa = windows_sys::Win32::Security::SECURITY_ATTRIBUTES {
+        nLength: std::mem::size_of::<windows_sys::Win32::Security::SECURITY_ATTRIBUTES>() as u32,
+        lpSecurityDescriptor: sd,
+        bInheritHandle: 0,
+    };
+    let name: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
+    let h = unsafe {
+        windows_sys::Win32::Storage::FileSystem::CreateFileW(
+            name.as_ptr(),
+            0x20000,
+            1,
+            &sa,
+            1,
+            0x200000,
+            std::ptr::null_mut(),
+        )
+    };
+    assert_ne!(
+        h,
+        windows_sys::Win32::Foundation::INVALID_HANDLE_VALUE,
+        "new task fixture creation native={:?}",
+        io::Error::last_os_error()
+    );
+    drop(unsafe { File::from_raw_handle(h) });
+    let deadline = Instant::now() + std::time::Duration::from_secs(5);
+    let captured = BoundedAccessV1::capture(&path, false, deadline).unwrap();
+    let label = captured.projections.iter().find(|p| p.mask == 16).unwrap();
+    assert!(
+        !label.aces.is_empty(),
+        "explicit label fixture must provide nonempty native positive"
+    );
+    captured.recheck(deadline).unwrap();
+    captured.snapshot_data().unwrap().validate().unwrap();
+    println!("r4native explicit file-label positive: {} ; resource/CAP/trust/filter populated positives remain unverified",captured.diagnostic());
+    drop(captured);
+}

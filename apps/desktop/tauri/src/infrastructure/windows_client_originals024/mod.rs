@@ -14,6 +14,7 @@ mod binding;
 mod bounded;
 mod phase;
 mod reference;
+mod v2;
 use windows_sys::Win32::{
     Foundation::LocalFree,
     Security::{

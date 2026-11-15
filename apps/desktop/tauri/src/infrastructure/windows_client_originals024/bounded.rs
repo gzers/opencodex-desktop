@@ -214,6 +214,128 @@ pub(super) struct Projection {
     acl_revision: Option<u8>,
     aces: Vec<Vec<u8>>,
 }
+impl Projection {
+    fn validate(&self) -> io::Result<()> {
+        if !REQUIRED.contains(&self.mask) || self.revision != 1 {
+            return Err(invalid("snapshot projection mask/revision"));
+        }
+        if self.mask == 1 || self.mask == 2 {
+            if self.control & !if self.mask == 1 { 1 } else { 2 } != 0
+                || self.acl_revision.is_some()
+                || !self.aces.is_empty()
+            {
+                return Err(invalid("SID projection fields"));
+            }
+            match (&self.sid, self.state.as_str()) {
+                (None, "absent") => {}
+                (Some(b), "present") if sid_bytes(b, 0)? == *b => {}
+                _ => return Err(invalid("SID projection state")),
+            }
+        } else {
+            if self.sid.is_some() || self.control & !if self.mask == 4 { 0x150c } else { 0 } != 0 {
+                return Err(invalid("ACL projection control"));
+            }
+            match self.state.as_str() {
+                "absent" | "null" if self.acl_revision.is_none() && self.aces.is_empty() => {}
+                "empty" | "present" if self.acl_revision.is_some_and(|r| [2, 4].contains(&r)) => {
+                    if (self.state == "empty") != self.aces.is_empty() {
+                        return Err(invalid("ACE state mismatch"));
+                    }
+                    let length = 8 + self.aces.iter().map(Vec::len).sum::<usize>();
+                    if length > 65535 || self.aces.len() > 4096 {
+                        return Err(invalid("ACL content bound"));
+                    }
+                    let mut b = vec![self.acl_revision.unwrap(), 0];
+                    b.extend_from_slice(&(length as u16).to_le_bytes());
+                    b.extend_from_slice(&(self.aces.len() as u16).to_le_bytes());
+                    b.extend_from_slice(&[0, 0]);
+                    for ace in &self.aces {
+                        if ace.len() < 8 || u16at(ace, 2)? as usize != ace.len() {
+                            return Err(invalid("ACE exact stored size"));
+                        }
+                        b.extend_from_slice(ace);
+                    }
+                    if acl(&b, 0, self.mask)?.1 != self.aces {
+                        return Err(invalid("stored ACE projection mismatch"));
+                    }
+                }
+                _ => return Err(invalid("ACL projection state")),
+            }
+        }
+        Ok(())
+    }
+}
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct ProjectionRecord {
+    requested_mask: u32,
+    native_status: u32,
+    structure: Projection,
+    structure_digest: String,
+}
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct SnapshotData {
+    scope_id: String,
+    security_policy_digest: String,
+    volume: u32,
+    file_id: String,
+    projections: Vec<ProjectionRecord>,
+    audit_sacl_assurance: String,
+    full_security_proven: bool,
+}
+impl SnapshotData {
+    pub(super) fn validate(&self) -> io::Result<()> {
+        if self.scope_id != BOUNDED_SECURITY_SCOPE
+            || self.security_policy_digest != Policy::fixed().digest()?
+            || self
+                .file_id
+                .parse::<u64>()
+                .ok()
+                .is_none_or(|id| id == 0 || id.to_string() != self.file_id)
+            || self.audit_sacl_assurance != "excluded-unknown"
+            || self.full_security_proven
+            || self.projections.len() != 8
+        {
+            return Err(invalid("v2 bounded snapshot fields"));
+        }
+        for (entry, mask) in self.projections.iter().zip(REQUIRED) {
+            if entry.requested_mask != mask
+                || entry.structure.mask != mask
+                || entry.native_status != 0
+            {
+                return Err(invalid("v2 required projection/status"));
+            }
+            entry.structure.validate()?;
+            if entry.structure_digest
+                != hash::sha256_hex(
+                    &serde_json::to_vec(&entry.structure)
+                        .map_err(|_| invalid("projection serialize"))?,
+                )
+            {
+                return Err(invalid("v2 projection digest"));
+            }
+        }
+        Ok(())
+    }
+    pub(super) fn matches_id(&self, volume: u32, id: &str) -> bool {
+        self.volume == volume && self.file_id == id
+    }
+}
+fn same_covered_component(a: &Projection, b: &Projection) -> bool {
+    if a.mask <= 4 {
+        return a == b;
+    }
+    // Per-projection state is retained from the individual query. The combined
+    // descriptor's global SACL present/null/protection/revision is NOT evidence
+    // for a different component. Compare only that component's actual ACEs.
+    a.mask == b.mask
+        && a.revision == b.revision
+        && a.control == b.control
+        && a.sid == b.sid
+        && a.aces == b.aces
+        && (a.aces.is_empty() || a.acl_revision == b.acl_revision)
+}
 fn u16at(b: &[u8], p: usize) -> io::Result<u16> {
     Ok(u16::from_le_bytes(
         b.get(p..p + 2)
@@ -393,7 +515,7 @@ fn projections(file: &File, deadline: Instant) -> Result<Vec<Projection>, QueryE
     for (mask, expected) in REQUIRED.into_iter().zip(&out) {
         let actual =
             project(&combined, mask).map_err(|e| err("bounded-combined-structure", mask, e))?;
-        if &actual != expected {
+        if !same_covered_component(&actual, expected) {
             return Err(err(
                 "bounded-individual-combined-drift",
                 mask,
@@ -405,6 +527,33 @@ fn projections(file: &File, deadline: Instant) -> Result<Vec<Projection>, QueryE
     Ok(out)
 }
 impl BoundedAccessV1 {
+    pub(super) fn snapshot_data(&self) -> io::Result<SnapshotData> {
+        let projections = self
+            .projections
+            .iter()
+            .map(|p| {
+                let bytes = serde_json::to_vec(p).map_err(|_| invalid("projection serialize"))?;
+                Ok(ProjectionRecord {
+                    requested_mask: p.mask,
+                    native_status: 0,
+                    structure: serde_json::from_slice(&bytes)
+                        .map_err(|_| invalid("projection serialize"))?,
+                    structure_digest: hash::sha256_hex(&bytes),
+                })
+            })
+            .collect::<io::Result<Vec<_>>>()?;
+        let data = SnapshotData {
+            scope_id: BOUNDED_SECURITY_SCOPE.into(),
+            security_policy_digest: self.policy_digest.clone(),
+            volume: self.id.volume,
+            file_id: self.id.index.to_string(),
+            projections,
+            audit_sacl_assurance: "excluded-unknown".into(),
+            full_security_proven: false,
+        };
+        data.validate()?;
+        Ok(data)
+    }
     pub(super) fn capture(
         path: &Path,
         directory: bool,
@@ -441,6 +590,14 @@ impl BoundedAccessV1 {
             .open(path)
             .map_err(|e| err("CreateFileW(READ_CONTROL)", BOUNDED_SECURITY_INFORMATION, e))?;
         let id = native_id(&file).map_err(|e| err("GetFileInformationByHandle", 0, e))?;
+        if file
+            .metadata()
+            .map_err(|e| err("original-kind", 0, e))?
+            .is_dir()
+            != directory
+        {
+            return Err(err("original-kind", 0, invalid("file/directory differs")));
+        }
         let found = projections(&file, deadline)?;
         if projections(&file, deadline)? != found
             || native_id(&file).map_err(|e| err("identity-recheck", 0, e))? != id
