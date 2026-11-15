@@ -28,6 +28,16 @@ if($Mode -eq 'native-h'){
  $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','wl2_h_','--','--test-threads=1','--nocapture')
 }
 $head=git rev-parse HEAD
+if($Mode -eq 'sd-next'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_next_','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'sd-next-native'){
+ $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
+ $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','wl2_next_','--','--test-threads=1','--nocapture')
+}
+if($Mode -eq 'sd-query-history'){
+ $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
+ $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--test','process','-j','1','wl2_retained_command_parent_and_raw_query_exits','--','--exact','--test-threads=1','--nocapture')
+}
+if($Mode -eq 'sd-supervisor'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_supervisor024::','--','--test-threads=1','--nocapture')}
 $diff=git diff --binary
 @{head=$head;diff=$diff;arguments=$arguments;rustc=(& $env:RUSTC --version);time=[datetime]::Now.ToString('o')}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath "$Evidence/source.json" -Encoding utf8
 $files=@(git ls-files --cached --others --exclude-standard -- 'apps/desktop/tauri/src/infrastructure/windows*' 'apps/desktop/tauri/src/infrastructure/mod.rs' 'test/windows024-native' 'apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs' 'apps/desktop/tauri/src/bin/ocxd.rs')
