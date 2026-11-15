@@ -1,0 +1,166 @@
+{
+  "time": "2026-11-15T22:30:06.805556+08:00",
+  "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+  "sourceTree": "f669be64f862007a8b148bd2bfc99e1f71c5e528",
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "baselineMain": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+  "baselineDocs": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77505024,
+      "sha256": "c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927",
+      "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+      "sourceTree": "f669be64f862007a8b148bd2bfc99e1f71c5e528",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "b80dd57317c91700aee4c77de1023f53b6da0f2c38e6760006db4b6abf8d3a67",
+      "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+      "sourceTree": "f669be64f862007a8b148bd2bfc99e1f71c5e528",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "430e193f62cc68f96e945e381758d9c761379831cbd2fe5c5990226b770712d8",
+      "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+      "sourceTree": "f669be64f862007a8b148bd2bfc99e1f71c5e528",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    }
+  ],
+  "desktop": {
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session": 7,
+    "elevated": false,
+    "scope": "actual product GUI and empty broker continuity only; no official Owner or production lifecycle",
+    "allAccepted": false,
+    "observerPid": 114108,
+    "observerCreation": "2026-11-15T22:26:42.3889848+08:00",
+    "rawTestExit": 0,
+    "actualGUIComponentPassed": true,
+    "taskBaseRetained": true
+  },
+  "modes": [
+    {
+      "mode": "normal",
+      "managerRawExit": 0,
+      "generation": 1,
+      "originalBrokerMatched": true,
+      "nativeWindowVerifiedByObserver": true
+    },
+    {
+      "mode": "hold",
+      "managerRawExit": 1,
+      "generation": 2,
+      "originalBrokerMatched": true,
+      "nativeWindowVerifiedByObserver": true
+    },
+    {
+      "mode": "after-failure",
+      "managerRawExit": 0,
+      "generation": 3,
+      "originalBrokerMatched": true,
+      "nativeWindowVerifiedByObserver": true
+    },
+    {
+      "mode": "finish",
+      "managerRawExit": 0,
+      "generation": 4,
+      "originalBrokerMatched": true,
+      "nativeWindowVerifiedByObserver": true
+    }
+  ],
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "mandatory exact ordered predecessor references bind old session/private directory/current IDs, canonical/current/manifest/context/policy digests and D volume. Older missing-field records refuse; text/serde only locates pending data."
+    },
+    {
+      "id": "O1",
+      "result": "native-storage/component-pass",
+      "fact": "three synthetic native generations capture fresh user originals independently while old exact history remains unchanged; current original bytes restored each cycle. Full official side-effect assessment/live native coordination still incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "missing/sparse/reversed known histories, foreign namespace, source mismatch, native old archive drift and drift before next first move refuse with retained scenes. Complete actual official interruption/Closed matrix still unverified."
+    },
+    {
+      "id": "H",
+      "result": "actual-GUI-empty-broker-component-pass",
+      "fact": "Real main GUI/native HWND/pageFinished under ordinary marenben session7 passed across normal exit, exact Child-only forced GUI, fresh authentication and explicit empty-host exit; original broker31484/FILETIME134392264041593579/imageID562949954696391 preserved across manager generations1..4 with original creation handle. No official Owner/Job/H-S-D production proof; broker raw exit unrecorded=null."
+    },
+    {
+      "id": "S/D",
+      "result": "native-close-readback-wiring/component-pass",
+      "fact": "Current Closed tag now authorizes only fresh source/old-history/raw-family/listener/record/supervisor/tree rechecks. Actual production native factory and Stop/Restart combinations remain unexecuted."
+    },
+    {
+      "id": "P",
+      "result": "public-refused/stop-restart-wiring",
+      "fact": "Stop returns Stopped only after typed Closed and full current native readback plus original-window completion; Repeat Stop/status recheck retained originals. Restart preserves original outer30/sub10 and exact launch input, no new ActionWindow. Public durable gate unchanged; live official side effects/coordination and production acceptance incomplete."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    }
+  ],
+  "sameSidExportComplete": true,
+  "exportedFiles": 32,
+  "firstError": null,
+  "originalFailedRunPreserved": "../wl2-real-gui-run-20261115-r1/",
+  "brokerRawExit": null,
+  "actualGUIComponentPassed": true,
+  "officialOwnerCreated": false,
+  "productionExecuted": false,
+  "startOpen": false,
+  "allAccepted": false,
+  "cleanup": {
+    "originalTaskBase": "C:\\Users\\marenben\\ocx024-h-1fa5e23f-12c9-4289-84f3-bcc901642b35",
+    "originalTaskSceneRetained": true,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "dailyPathConfigPolicyChanged": false,
+    "nativeMetadataCloned": false,
+    "deletionAttempted": false,
+    "historicalRejectedDeletionRetried": false,
+    "overallCleanupComplete": false,
+    "oldFailedEmptyBrokerExitUnconfirmed": true
+  },
+  "remaining": [
+    "Shared pure route declaration parser extraction: ../wl2-working-snapshots-20261115-r1/shared-minimum-request.json",
+    "Shared single native Status sample deadline: ../wl2-stop-restart-results-20261115-r1/shared-status-deadline-request-r2.json",
+    "Full official side effects/live native coordination/actual Closed and H-S-D production combinations",
+    "Ordinary MSI acceptance, populated CAP/trust environment and all historical cleanup gaps"
+  ],
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

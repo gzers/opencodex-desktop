@@ -1,0 +1,12 @@
+{
+  "time": "2026-11-15T14:22:51.555093+08:00",
+  "before": {
+    "run": "after02",
+    "rawExit": 101,
+    "executedTests": 0,
+    "error": "E0308"
+  },
+  "change": "Existing absence-retirement test reads ID from actual retained retirement root handle instead of reopening the former PathBuf. Original work_id equality, exact absence and second-working refusal assertions retained.",
+  "expected": "same affected tree/v2 suite compiles and passes with original native assertions",
+  "accepted": false
+}

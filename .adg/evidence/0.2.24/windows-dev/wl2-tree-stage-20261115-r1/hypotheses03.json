@@ -1,0 +1,11 @@
+{
+  "time": "2026-11-15T12:59:08.950860+08:00",
+  "baseline": "6a24b3685 with10 tree-v2 tests/native5 passed",
+  "hypotheses": [
+    "A cfg(test)-only failure injected immediately after a real partial write+sync in BoundedCurrentV2::advance leaves the same current fileID poisoned and the already-created next phase intact.",
+    "No retry, rollback, phase removal or completion/catch-up can use that old prefix; decoding/opening the partial pointer is Required/unknown and never Closed.",
+    "The default production write path and absolute deadline stay unchanged; this test does not fabricate an OS permission failure or any OriginalSession authority."
+  ],
+  "scope": "two actual bounded-v2 current tests only; unaffected tree and projection tests reused",
+  "accepted": false
+}

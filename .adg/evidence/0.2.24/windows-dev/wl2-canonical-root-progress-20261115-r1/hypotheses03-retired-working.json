@@ -1,0 +1,12 @@
+{
+  "time": "2026-11-15T14:16:57.010380+08:00",
+  "hypotheses": [
+    "RootTree currently stores only retired_work PathBuf after renaming the working tree. Once working=None, later verify_restored/recheck no longer validates the full retired working generation. An unknown new file there can escape the required full-tree readback despite originals being restored.",
+    "Retain the exact original working directory handle after same-volume retirement together with its complete native expected ID/content/8projection/enumeration image; recheck it through every later original/readback boundary. This does not prevent untrusted interval writes, but observed drift must refuse rather than be forgotten.",
+    "Create actual synthetic regression for post-restore retired-tree external edit at primitive RootTree and canonical capture recheck boundaries; keep original bytes/ID/restoration and last canonical Aborted/current untouched. No fixture may issue native Closed eligibility.",
+    "Keep old original handles/custody/intents and retired handle on any failure. No deletion, SetSecurityInfo, extra journal or broader lock exception. Working snapshots remain initial-only until declared official side-effect/Ready/PreStop support is implemented.",
+    "Run baseline and affected tree/v2 tests after current compiler is terminal. All old errors/rawexits retained; GUI input 0c immutable, no desktop execution by controller."
+  ],
+  "scope": "same allowed originals tree.rs/v2 capture tests/native build selectors",
+  "accepted": false
+}

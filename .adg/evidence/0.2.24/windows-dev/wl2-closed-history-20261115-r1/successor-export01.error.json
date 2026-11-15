@@ -1,0 +1,8 @@
+{
+  "scope": "evidence-only source read command; no code/test/native mutation",
+  "rawExit": 1,
+  "error": "UnicodeDecodeError: 'gbk' codec can't decode byte 0xa4 in position 1301",
+  "cause": "Python Path.read_text used host default encoding on UTF8 Rust source",
+  "correction": "explicit UTF8 source reads",
+  "partialSuccessorRecordWritten": false
+}

@@ -1,0 +1,19 @@
+{
+  "time": "2026-11-15T12:44:19.699499+08:00",
+  "sourceHead": "5601df969b7c25b771f91d700f55485e03f24a2e",
+  "scope": "Windows v2 internal phase progress only; no shared trait/constant change, no second journal, no runtime launch/Closed authority",
+  "hypotheses": [
+    "Canonical v2 phase records can bind a finite per-root Intent/Completed operation chain before/after move, workcopy and abort restoration, with create-only sync/readback preceding the same exclusive-current CAS.",
+    "Missing/mismatched/duplicated/out-of-order operations, an operation outstanding across a phase transition, orphan phase, stale pointer or failed CAS refuse and preserve pending; serial records never mint native authority.",
+    "A native failure after an intention or between restoring two roots leaves a parseable exact pending prefix and original objects in custody; no rollback/catch-up/automatic deletion or new deadline.",
+    "The required treeRecord field explicitly refuses earlier component-v2 records that lack it; no migration or compatibility fallback. Full-v1 and PartialDiagnostic are unchanged.",
+    "Targeted parser/reference/capture tests cover changed source; existing bounded8/native projection positives and unrelated S/D tests are reused."
+  ],
+  "independentState": {
+    "H": "marenben session7 Disc, user input still pending",
+    "B2": "CAP/trust populated fixtures unavailable from ordinary CREATE_NEW1314/5; no repeat",
+    "P": "require_durable_capture still refuses",
+    "cleanup": "all previous deletion rejections unchanged/not retried"
+  },
+  "accepted": false
+}

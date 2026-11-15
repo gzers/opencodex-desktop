@@ -1,0 +1,17 @@
+{
+  "time": "2026-11-15T12:31:32.447569+08:00",
+  "hypotheses": [
+    "New task-private synthetic files can be created with resource/CAP/trust/filter or conditional DACL supplied at CREATE_NEW under the existing ordinary token. The OS may refuse creation or omit unsupported projections; either result remains unverified, not an absent positive.",
+    "All independent fixture attempts and required-access/query/ACE-count raw outcomes are collected once. No SetSecurityInfo, privileges, impersonation, policy edits, Full/SACL query, official runtime or original client mutation is permitted.",
+    "Successful populated fixture capture is only feasibility evidence; Rust bounded same/change/custody validation still required."
+  ],
+  "references": [
+    "https://learn.microsoft.com/en-us/windows/win32/secauthz/ace-strings",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-system_resource_attribute_ace",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-claim_security_attribute_relative_v1",
+    "https://winprotocoldoc.z19.web.core.windows.net/MS-DTYP/%5BMS-DTYP%5D-140515.pdf"
+  ],
+  "privateFixtureBase": "test/windows024-native/target/r4-private-scenes/populated-probe01",
+  "sourceScope": "test/windows024-native only",
+  "accepted": false
+}

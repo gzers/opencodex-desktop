@@ -1,0 +1,12 @@
+{
+  "time": "2026-11-15T13:07:29.764827+08:00",
+  "sourceFrozenUntil": "locks02 terminal (same live tool handle70586); this file is planning, not executed source",
+  "hypotheses": [
+    "Lock query failures must preserve native SQLite ErrorCode/extended_code as a typed source, not only its human-readable string. Test held second lock returns SQLITE_BUSY extended5, never a successful release.",
+    "Apply exact stable-lock proof before returning a new root capture as well as before publishing restore Completed; any busy/unknown sidecar should therefore refuse before custody creation/move.",
+    "Native SQLite pin and readback operations must not change original database bytes/IDs/8projections; two-lock capture/whole-tree restore tests exercise the affected path.",
+    "Because the changed root capture is used by all r4 tests, run the bounded/current/tree suite once after admission change; preserve every expected negative scene and all failures."
+  ],
+  "ordinaryTokenOrPolicyChanges": false,
+  "budgetChanged": false
+}

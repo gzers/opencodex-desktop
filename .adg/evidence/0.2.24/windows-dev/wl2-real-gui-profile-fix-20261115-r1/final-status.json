@@ -1,0 +1,194 @@
+{
+  "time": "2026-11-15T22:18:35.936152+08:00",
+  "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+  "sourceTree": "f669be64f862007a8b148bd2bfc99e1f71c5e528",
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "baselineMain": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+  "baselineDocs": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+  "codeCommits": [
+    "03d8d4d69db40480fb200944896824c52572fbbd",
+    "6e312f02270f247d2f440ec369385e523a4a8043"
+  ],
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77505024,
+      "sha256": "c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927",
+      "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+      "sourceTree": "f669be64f862007a8b148bd2bfc99e1f71c5e528",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "b80dd57317c91700aee4c77de1023f53b6da0f2c38e6760006db4b6abf8d3a67",
+      "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+      "sourceTree": "f669be64f862007a8b148bd2bfc99e1f71c5e528",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "430e193f62cc68f96e945e381758d9c761379831cbd2fe5c5990226b770712d8",
+      "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+      "sourceTree": "f669be64f862007a8b148bd2bfc99e1f71c5e528",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    }
+  ],
+  "runs": {
+    "library01": {
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "windows_owner_host024::",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "accepted": false,
+      "exitCode": 0,
+      "elapsedMs": 220268,
+      "profile": "debug"
+    },
+    "product01": {
+      "elapsedMs": 101991,
+      "accepted": false,
+      "exitCode": 0,
+      "arguments": [
+        "build",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--bins",
+        "-j",
+        "1"
+      ],
+      "profile": "debug"
+    }
+  },
+  "testSummary": {
+    "passed": 7,
+    "failed": 0,
+    "ignored": 4,
+    "oneIgnoredHelperExecutedByParent": true
+  },
+  "firstError": {
+    "command": "powershell.exe -NoLogo -NoProfile -File prepare-fixed-desktop.ps1 -ExpectedHead 6e312f022 (Code/Evidence exact paths as script)",
+    "rawExit": 1,
+    "firstError": "committed source changed",
+    "line": 14,
+    "expectedArgument": "6e312f022",
+    "actualHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+    "reason": "caller supplied short SHA to an intentionally strict full-head comparison",
+    "beforeAnyTaskRootCreation": true,
+    "sourceAssertionsAltered": false,
+    "correction": "supply the verified full SHA; no guard relaxation",
+    "accepted": false
+  },
+  "originalGuiFailure": "../wl2-real-gui-run-20261115-r1/",
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "mandatory exact ordered predecessor references bind old session/private directory/current IDs, canonical/current/manifest/context/policy digests and D volume. Older missing-field records refuse; text/serde only locates pending data."
+    },
+    {
+      "id": "O1",
+      "result": "native-storage/component-pass",
+      "fact": "three synthetic native generations capture fresh user originals independently while old exact history remains unchanged; current original bytes restored each cycle. Full official side-effect assessment/live native coordination still incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "missing/sparse/reversed known histories, foreign namespace, source mismatch, native old archive drift and drift before next first move refuse with retained scenes. Complete actual official interruption/Closed matrix still unverified."
+    },
+    {
+      "id": "H",
+      "result": "profile-fix-built/awaiting-desktop",
+      "fact": "Windows probe now uses original Token Profile while application home remains sandbox/home. Native child counterexample passes with spoofed USERPROFILE. New fixed exact artifacts/launcher prepared; no real desktop result yet. Original0c failure retained."
+    },
+    {
+      "id": "S/D",
+      "result": "native-close-readback-wiring/component-pass",
+      "fact": "Current Closed tag now authorizes only fresh source/old-history/raw-family/listener/record/supervisor/tree rechecks. Actual production native factory and Stop/Restart combinations remain unexecuted."
+    },
+    {
+      "id": "P",
+      "result": "public-refused/stop-restart-wiring",
+      "fact": "Stop returns Stopped only after typed Closed and full current native readback plus original-window completion; Repeat Stop/status recheck retained originals. Restart preserves original outer30/sub10 and exact launch input, no new ActionWindow. Public durable gate unchanged; live official side effects/coordination and production acceptance incomplete."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    }
+  ],
+  "preparedEntry": "C:\\Users\\Public\\ocx-h024-actual-gui-fixed-20261115-r1\\launch-h024-actual-gui.cmd",
+  "desktopExecuted": null,
+  "desktopResultReceived": false,
+  "actualGUIObserved": false,
+  "officialOwnerCreated": false,
+  "productionExecuted": false,
+  "startOpen": false,
+  "allAccepted": false,
+  "cleanup": {
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicTaskRoots": 1,
+    "oldFailureRootChanged": false,
+    "failedOriginalEmptyBrokerExitUnconfirmed": true,
+    "forensicOriginalsRetained": true,
+    "nativeMetadataCloned": false,
+    "deletionAttempted": false,
+    "historicalRejectedDeletionRetried": false,
+    "forcedBrokerCleanup": false,
+    "dailyPathConfigPolicyChanged": false,
+    "overallCleanupComplete": false
+  },
+  "remaining": [
+    "Shared pure route declaration parser extraction: ../wl2-working-snapshots-20261115-r1/shared-minimum-request.json",
+    "Shared single native Status sample deadline: ../wl2-stop-restart-results-20261115-r1/shared-status-deadline-request-r2.json",
+    "Full official side effects/live native coordination/actual Closed and H-S-D production combinations",
+    "Ordinary MSI acceptance, populated CAP/trust environment and all historical cleanup gaps"
+  ],
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

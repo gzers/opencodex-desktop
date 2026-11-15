@@ -1,0 +1,14 @@
+{
+  "input": "../wl2-real-gui-profile-fix-20261115-r1/prepared-input-manifest.json",
+  "sourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+  "hypothesesInheritedBeforeDesktop": "../wl2-real-gui-profile-fix-20261115-r1/hypotheses01.json",
+  "receiveChecks": [
+    "Each same-SID exported task log must match exact decoded length and SHA256; no private source ACL is changed.",
+    "Ordinary original SID1003/session7, noJob bootstrap and suspended original broker, actual main native visible HWND/page Finished and normal setup must hold.",
+    "Four fresh manager generations must monotonically progress while exact original broker native PID/FILETIME/token/image fileID remains identical and creation handle retained; old connections refuse replay.",
+    "Normal GUI exits remain raw0; original Child-only fault is raw1 and is not rewritten to0. Empty broker exit is observed explicitly, but no recorded raw broker exit can be invented.",
+    "Actual GUI/empty broker component success must not grant official Owner, lifecycle, original Closed or production Start permission."
+  ],
+  "note": "This records receive predicates only; actual pre-run hypotheses remain in immutable predecessor preparation evidence.",
+  "allAccepted": false
+}

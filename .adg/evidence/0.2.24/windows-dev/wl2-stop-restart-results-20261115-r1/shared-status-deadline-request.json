@@ -1,0 +1,30 @@
+{
+  "time": "2026-11-15T16:10:55.499848+08:00",
+  "sourceHead": "f95e895293e88564248526b4286f32197ed51048",
+  "blockingArea": "clear Windows client_recovery to NotRequired in a complete same-window shared status sample; independent Windows Stop/Restart wiring can continue",
+  "facts": [
+    "StatusSource::client_recovery() has no deadline argument; shared StatusCollector::refresh_manager_facts calls it before source.fetch and refresh_with calls it after fetch (also before debounce return)",
+    "Windows old recovery_state intentionally reports Required/Unknown and cannot perform budgeted full native Closed readback without an original action deadline",
+    "A new now+5s within client_recovery would extend total Status collection and a cached stopped/Closed boolean is not current native authority"
+  ],
+  "requestedMinimalChange": {
+    "api": "add explicit original status observation deadline/context for client-recovery sampling, e.g. client_recovery_at(deadline: Instant) with fixture-compatible default",
+    "callSites": [
+      "modules/status/mod.rs StatusCollector refresh/refresh_light/debounce/refresh_with",
+      "StatusSource default extension and Windows OfficialStatusSource consumer"
+    ],
+    "semantics": [
+      "one original5s shared across fetch and recovery facts, no nested replacement window",
+      "unknown/expiry stays Unknown/Required, no cached grant",
+      "do not change Mac native proof/HTTP/HMAC/port/current/source or public UI commands",
+      "native Windows receiver recovery_state_at(runtime,home,deadline) provided in this round; pure receiver is not an authorization proof"
+    ]
+  },
+  "unchanged": [
+    "four native traits",
+    "original30/5/10/Restart30Stop10",
+    "shared source selection",
+    "official2.99"
+  ],
+  "allAccepted": false
+}

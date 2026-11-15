@@ -1,0 +1,16 @@
+{
+  "time": "2026-11-15T14:15:25.160068+08:00",
+  "before": {
+    "run": "before01",
+    "rawExit": 101,
+    "passed": 0,
+    "failed": 2,
+    "sceneRetained": true
+  },
+  "changes": [
+    "remove seen=false bypass; require both working roots on Ready/PreparedRestore/OfficialTeardown entry and both original restorations on Restored/Closed",
+    "data-only fixtures now use legal Captured->Aborted; keep real partialwrite/sync and native CAS assertions unchanged"
+  ],
+  "expected": "all impacted v2 tests pass; premature Ready no new phase/current mutation; pure complete history is still PendingOnly",
+  "accepted": false
+}

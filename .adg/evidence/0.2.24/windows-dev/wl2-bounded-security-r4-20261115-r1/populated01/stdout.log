@@ -1,0 +1,13 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::bounded::tests::wl2_r4_native_populated_components_preserve_and_detect_condition_resource_filter_changes ... native populated conditional-dacl/Alpha: mask=0x4 ACE9 present, individual/combined/repeated fixed8 capture stable, digest=03e21af666704ad3118c3b84992524b36d9985eb23242b3d74823a3db3dbc034; audit=excluded-unknown fullSecurityProven=false
+native populated conditional-dacl/Beta: mask=0x4 ACE9 present, individual/combined/repeated fixed8 capture stable, digest=435662ac044eac32bff8554c493a4323ef858c5b0a54a839fd11b9c65644ba14; audit=excluded-unknown fullSecurityProven=false
+native populated resource/Alpha: mask=0x20 ACE18 present, individual/combined/repeated fixed8 capture stable, digest=8f714e64a0afed650dc514981f31a028f89e0ab46ef74377e785839a404b5af2; audit=excluded-unknown fullSecurityProven=false
+native populated resource/Beta: mask=0x20 ACE18 present, individual/combined/repeated fixed8 capture stable, digest=95ea178cf4ddf2e42a6c98716ba7135101c9a43b8a2dc47096c1f4cf946a6556; audit=excluded-unknown fullSecurityProven=false
+native populated filter/Alpha: mask=0x100 ACE21 present, individual/combined/repeated fixed8 capture stable, digest=479b9a8ebb0ef312106215fe28d1079bc46089095a2ad2b0053824df3c762d55; audit=excluded-unknown fullSecurityProven=false
+native populated filter/Beta: mask=0x100 ACE21 present, individual/combined/repeated fixed8 capture stable, digest=d1a4efda10788ef5346528f86f636ae5e4dd47612d5511b0db1782cd6428117e; audit=excluded-unknown fullSecurityProven=false
+native populated component comparisons passed; CAP CREATE_NEW1314/trust CREATE_NEW5 remain unverified, production Closed=false
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1909 filtered out; finished in 0.02s
+

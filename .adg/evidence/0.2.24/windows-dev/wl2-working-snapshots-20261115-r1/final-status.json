@@ -1,0 +1,474 @@
+{
+  "time": "2026-11-15T15:05:40.827670+08:00",
+  "sourceHead": "57904c6bce37f4ba37338285409fa6f9551b40da",
+  "sourceTree": "42a6e55ee39a9a95bec74407b73ad3bf7b800b79",
+  "codeCommits": [
+    "be3de6dfd",
+    "57904c6bce37f4ba37338285409fa6f9551b40da"
+  ],
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "runs": {
+    "library01": {
+      "rawExit": 0,
+      "elapsedMs": 208515,
+      "passed": 27,
+      "failed": 0,
+      "accepted": false
+    },
+    "library02": {
+      "rawExit": 0,
+      "elapsedMs": 129620,
+      "passed": 28,
+      "failed": 0,
+      "accepted": false
+    },
+    "library03": {
+      "rawExit": 0,
+      "elapsedMs": 117522,
+      "passed": 29,
+      "failed": 0,
+      "accepted": false
+    },
+    "product01": {
+      "rawExit": 0,
+      "elapsedMs": 202967,
+      "passed": null,
+      "failed": null,
+      "accepted": false
+    }
+  },
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77319680,
+      "sha256": "204a087ba13afe69693592f240e967e759a8440db3cd85715a68985fdb05b1fc",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "57904c6bce37f4ba37338285409fa6f9551b40da",
+      "sourceTree": "42a6e55ee39a9a95bec74407b73ad3bf7b800b79"
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "013e9827111d92eac3542e24e8ad3649ef27c8b059cdca49e68ac74bc2b79322",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "57904c6bce37f4ba37338285409fa6f9551b40da",
+      "sourceTree": "42a6e55ee39a9a95bec74407b73ad3bf7b800b79"
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "0d8b042156e97b4f8d0f043d4f159882b0b4fe383bda25c5ba01139325087f9b",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "57904c6bce37f4ba37338285409fa6f9551b40da",
+      "sourceTree": "42a6e55ee39a9a95bec74407b73ad3bf7b800b79"
+    }
+  ],
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "mandatory nondefault workingRecord; phase/session/binding/policy/custody volume and distinct archive object IDs strict; old missing field refuses, no Full/partial conversion. Decoding data never constructs native archive or permission."
+    },
+    {
+      "id": "O1",
+      "result": "partial-progress",
+      "fact": "actual Ready/PreStop working bytes privately sealed on original volume and referenced by canonical v2 current; full8/native archive/source checks and exact2MiB part test. Unknown source changes still refuse after preservation; complete declared side effects and active coordinator handling not implemented."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "native first part interruption and Ready archive then actual current one-byte write+sync fault retain original custody/archive/prefix and poison. Complete production restore/Closed/successor interruption matrix still missing."
+    },
+    {
+      "id": "H",
+      "result": "prepared/awaiting-user-desktop",
+      "fact": "immutable prepared0c actual GUI/empty broker input not replaced; no new desktop execution verified, output file names recorded separately. Full official Owner continuity remains incomplete."
+    },
+    {
+      "id": "S/D",
+      "result": "wiring-reused/production-unverified",
+      "fact": "typed Stop wiring unchanged; no new real official family/source/Stop combination execution."
+    },
+    {
+      "id": "P",
+      "result": "refused",
+      "fact": "public require_durable_capture gate and successor refusal unchanged. Working snapshots are not full official-side-effect assessment/Closed/historical successor qualification. No real official service launched."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    }
+  ],
+  "firstError": null,
+  "guiOutputFiles": [],
+  "sharedMinimumRequest": "shared-minimum-request.json",
+  "cleanup": {
+    "newPrivateArchivedSceneCount": 39,
+    "newPrivateArchivedFiles": 431,
+    "newPrivateArchivedBytes": 31617713,
+    "scenes": [
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpccvpaA",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-0.zip",
+        "archiveSha256": "0ac50747312e9c27850028d9a9213b7719161dd70b7e2d93997a8ff1808ebdbe",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpWIarVe",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-1.zip",
+        "archiveSha256": "9db24f18d70b9e38db0c02b22c9eddc0746f244bf85d7134a7710c8f474b53f4",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp60MtBr",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-2.zip",
+        "archiveSha256": "56afb001abe097b85bfb278468357cd942642f7a8dd7a88aa1c3779509a12349",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpgXf0EH",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-3.zip",
+        "archiveSha256": "2d8a78e933535d34a68c008148cb3a813346517126c6df78d106e709697a4a24",
+        "files": 4,
+        "bytes": 5921,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpcZl3u7",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-4.zip",
+        "archiveSha256": "b2643e787f3f25416746612a2b88f76ef0c3e0d341ba7555907d16c9444b9891",
+        "files": 5,
+        "bytes": 19827,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpA5UssB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-5.zip",
+        "archiveSha256": "c7e236f156c7bc12f2eccd92bb7422216804e795e89f9171e56122171edb62cf",
+        "files": 6,
+        "bytes": 21165,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpGnltf2",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-6.zip",
+        "archiveSha256": "11da8963afa18012f757b4cbd91fe1ef18e1700d7efd6028beaa3a6169fe6f7a",
+        "files": 20,
+        "bytes": 42114,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp3K9oxG",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-7.zip",
+        "archiveSha256": "619d86ebd69e6aaecf86d8b7c0a280bfbd9114db73ba93de272d2ba10e036bbc",
+        "files": 19,
+        "bytes": 35759,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpuKVNS2",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-8.zip",
+        "archiveSha256": "eab5c47cc991ae818b3f13581b19f5c01b08f140e8dc79110e14ef9e66dd7e4f",
+        "files": 18,
+        "bytes": 56953,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpf6kdFZ",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-9.zip",
+        "archiveSha256": "9602fd58fe46908630092547af7ba86d625a7714112dd4de295c4e2e9da7099b",
+        "files": 27,
+        "bytes": 8484470,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpcBWU1k",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-10.zip",
+        "archiveSha256": "9b271426e42924c0790d5bd6d736e6ee74503ae224ea5df0d57125b13bbb23ae",
+        "files": 16,
+        "bytes": 42908,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpvdIRak",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library01-11.zip",
+        "archiveSha256": "1da83a161c504e499bf7175d5d011d3e511cc5042f7bd87e14cfc5568875184d",
+        "files": 4,
+        "bytes": 9735,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpuvWl2N",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-0.zip",
+        "archiveSha256": "7164ad29ca0c3b6c61d87f3fe4c912fd594cac6e41a67d5981b193c9204caf49",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpHypTmA",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-1.zip",
+        "archiveSha256": "10a4e3ba3f5c002c2daa0438bd475ed501c0f3418d0cd8b6c908be1df3d8629b",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEg4196",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-2.zip",
+        "archiveSha256": "4cd4a24af3d77790a4fa23f5c0a32d8d0004029bf5037fd4bd3eeef3b98d470b",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpA9owXw",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-3.zip",
+        "archiveSha256": "3ee80543d3ce91924f67e9adbcfd7e1c8fdae277483a552469f43fffb2e02f3c",
+        "files": 4,
+        "bytes": 5921,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp59uu8B",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-4.zip",
+        "archiveSha256": "18b9b4e0b003a65a5a904d0f887dea5e27df5d3a46b533078bc114424e868e65",
+        "files": 5,
+        "bytes": 19830,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp44BXhB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-5.zip",
+        "archiveSha256": "fd27341ff107a0bfb36823d0a3f77ac8d2cef829fda8a95662137e229d16b405",
+        "files": 6,
+        "bytes": 21144,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpcYIAQP",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-6.zip",
+        "archiveSha256": "05eec9ffb3f29e6480346c918f988a40a129d3b83223d6b52a98345e929b624f",
+        "files": 20,
+        "bytes": 42117,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpCLbpf2",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-7.zip",
+        "archiveSha256": "670b773bd44d65b138f1ed0bf396756592af49b68e44452803fe1751256648aa",
+        "files": 19,
+        "bytes": 35759,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpcBDLY0",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-8.zip",
+        "archiveSha256": "8f772c8a1690eee66426cf23c6a1ec9591cdceb475da2afe8c62b63aa6f9c901",
+        "files": 18,
+        "bytes": 56953,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEjwI3j",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-9.zip",
+        "archiveSha256": "16067766d0fa72dccf2d74510dfb0c6ad524ee35a3001cf08b6673e53f8dfddb",
+        "files": 17,
+        "bytes": 56392,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpF2GjHr",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-10.zip",
+        "archiveSha256": "21c3cfc2cd02f8f83729c8672e0691a6159bacd4e6679f9b552775757f9a4ce4",
+        "files": 27,
+        "bytes": 8484470,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpJM8OVO",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-11.zip",
+        "archiveSha256": "fa6eda39a6c6702bfc3ddc08cc4d9dd1763870c8838a71b3a61667934f9f965b",
+        "files": 16,
+        "bytes": 42908,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpBtuxrN",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library02-12.zip",
+        "archiveSha256": "af3431bde5ad2d0f4c0c041de8dc043289061b239aa844db74ae08fbffb867af",
+        "files": 4,
+        "bytes": 9735,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpqgy74t",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-0.zip",
+        "archiveSha256": "016521eebfea9c3955cbc8b7cbe1314dcd2f0a3a49d6c1532d002e8d8486b99d",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpi2vjVR",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-1.zip",
+        "archiveSha256": "0bd797a4edf82a19faf8fcfe3feeb958e5bad2e3609963d880297535685a9964",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpMXDdt4",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-2.zip",
+        "archiveSha256": "3135e98ba365ff96ff5e3a5fe442951829a630d4862fb83200d67dadc5de7063",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpyDrlDS",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-3.zip",
+        "archiveSha256": "c70ef1947b541ef402b525ee1143cd386c3640fd2c228c10258dc1abd63c383d",
+        "files": 4,
+        "bytes": 5918,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpxPmN2k",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-4.zip",
+        "archiveSha256": "22387a06a9f8ae1a63ebe3857eeb7a8bf6919c5c89f98433afcc5e056adee91d",
+        "files": 5,
+        "bytes": 19827,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmps9ldZ0",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-5.zip",
+        "archiveSha256": "69d7b0df6e2431d46cc5d8977a969dc487ecf5cad095ab0a420d1d88714d4d5d",
+        "files": 6,
+        "bytes": 21144,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEDr9WR",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-6.zip",
+        "archiveSha256": "64a87950ce8ade97a989deb242b86c92ad8877fa1852e55b58d3189bd4b56c1b",
+        "files": 20,
+        "bytes": 42129,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpr5EyHb",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-7.zip",
+        "archiveSha256": "ed951e08a3aca164f91abbf0eec16340647de586228be70440b4e83af081628d",
+        "files": 19,
+        "bytes": 35759,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpuQ6iNQ",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-8.zip",
+        "archiveSha256": "73b830797271a5936211207126b26553ae34a1105a151cbc145231bee671b5b9",
+        "files": 18,
+        "bytes": 56953,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpO24Yz8",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-9.zip",
+        "archiveSha256": "ae63d6b700da0e10e8e570fcc53bcd22f6cba5d9a40acf7c263373c78c49f4a9",
+        "files": 16,
+        "bytes": 5277195,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpiDtEfB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-10.zip",
+        "archiveSha256": "ecfae6e5a64366a30b1b70bfc2194c1643127952c6301471bb6a86a7a88a5c9f",
+        "files": 17,
+        "bytes": 56392,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmppa6X45",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-11.zip",
+        "archiveSha256": "c07d46d462f2222f7ec7535defa0e7bd3c7c87746ba3b2e864d30fe5d7f8bc95",
+        "files": 27,
+        "bytes": 8484470,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9fGgKU",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-12.zip",
+        "archiveSha256": "f5d6f163cb1e15e756e7fb24a75a255b67b271812bd99b41492434c34fdcb205",
+        "files": 16,
+        "bytes": 42908,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpIuVmKo",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\working-snapshots-library03-13.zip",
+        "archiveSha256": "73f49a5c65dfd097edda05dd9b6286d4a6a0cd200d3fe23a4dbd560b0e396542",
+        "files": 4,
+        "bytes": 9735,
+        "removed": false
+      }
+    ],
+    "nativeMetadataCloned": false,
+    "originalsRetained": true,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicTaskRoots": 0,
+    "newGUIProcesses": 0,
+    "officialProcesses": 0,
+    "forcedCleanup": false,
+    "dailyPathConfigPolicyChanged": false,
+    "historicalRejectedDeletionRetried": false,
+    "overallCleanupComplete": false
+  },
+  "limits": [
+    "Snapshots and locators are data-only; no official/native permission is reconstructed by decode",
+    "Actual typed owner/source/Ready admission stays separate; current unknown/changed working-generation veto remains",
+    "Live two-lock/native coordination and complete declared official-side-effect eligibility remain unfinished; unreadable/busy refuses",
+    "Independent route parser only exists private in cfgmacos source; minimal cross-platform pure extraction requested, no shared file edited",
+    "Native successor history/root-handle release and full actual GUI/official Owner/S-D production combination still incomplete",
+    "Archived ZIP contains byte copies, not cloned NTFS identity/security; original scenes retained",
+    "Debug artifacts are not release-budget/frozen-candidate acceptance"
+  ],
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "startOpen": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

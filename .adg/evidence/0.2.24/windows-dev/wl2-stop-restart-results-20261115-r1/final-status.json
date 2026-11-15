@@ -1,0 +1,372 @@
+{
+  "time": "2026-11-15T22:04:50.143442+08:00",
+  "sourceHead": "03d8d4d69db40480fb200944896824c52572fbbd",
+  "sourceTree": "415e91b2f59d78b09b8ffac27f96b48e2ddd47fa",
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "baselineMain": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+  "baselineDocs": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+  "previousCode": "f95e895293e88564248526b4286f32197ed51048",
+  "codeCommits": [
+    "03d8d4d69db40480fb200944896824c52572fbbd"
+  ],
+  "runs": {
+    "library01": {
+      "rawExit": 101,
+      "elapsedMs": 14918,
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "testsExecuted": 0,
+      "accepted": false
+    },
+    "library02": {
+      "rawExit": 0,
+      "elapsedMs": 145503,
+      "passed": 57,
+      "failed": 0,
+      "ignored": 2,
+      "testsExecuted": 57,
+      "accepted": false
+    },
+    "product01": {
+      "rawExit": 0,
+      "elapsedMs": 127592,
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "testsExecuted": null,
+      "accepted": false
+    }
+  },
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77501440,
+      "sha256": "8ee60aeef785f7bcc96766360677c083346badecab80b27e47acf2029e31de79",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "03d8d4d69db40480fb200944896824c52572fbbd",
+      "sourceTree": "415e91b2f59d78b09b8ffac27f96b48e2ddd47fa"
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "e481d9afc2a01c257eb4a517624cbb0a89e610d6f3817839f7380d09a659fba6",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "03d8d4d69db40480fb200944896824c52572fbbd",
+      "sourceTree": "415e91b2f59d78b09b8ffac27f96b48e2ddd47fa"
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "afe6e29355c1935030d79aef351137b00d8d115bb9a1643e2f741db8d2340113",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "03d8d4d69db40480fb200944896824c52572fbbd",
+      "sourceTree": "415e91b2f59d78b09b8ffac27f96b48e2ddd47fa"
+    }
+  ],
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "mandatory exact ordered predecessor references bind old session/private directory/current IDs, canonical/current/manifest/context/policy digests and D volume. Older missing-field records refuse; text/serde only locates pending data."
+    },
+    {
+      "id": "O1",
+      "result": "native-storage/component-pass",
+      "fact": "three synthetic native generations capture fresh user originals independently while old exact history remains unchanged; current original bytes restored each cycle. Full official side-effect assessment/live native coordination still incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "missing/sparse/reversed known histories, foreign namespace, source mismatch, native old archive drift and drift before next first move refuse with retained scenes. Complete actual official interruption/Closed matrix still unverified."
+    },
+    {
+      "id": "H",
+      "result": "actual-desktop-failed/retained",
+      "fact": "User ran immutable0c actual product GUI observer under marenben ordinary SID1003/session7. Observer raw101: gui-normal.json absent; real GUI admission refused. Same-SID export complete. Separate GUI follow-up retains and diagnoses this failure; no full H acceptance."
+    },
+    {
+      "id": "S/D",
+      "result": "native-close-readback-wiring/component-pass",
+      "fact": "Current Closed tag now authorizes only fresh source/old-history/raw-family/listener/record/supervisor/tree rechecks. Actual production native factory and Stop/Restart combinations remain unexecuted."
+    },
+    {
+      "id": "P",
+      "result": "public-refused/stop-restart-wiring",
+      "fact": "Stop returns Stopped only after typed Closed and full current native readback plus original-window completion; Repeat Stop/status recheck retained originals. Restart preserves original outer30/sub10 and exact launch input, no new ActionWindow. Public durable gate unchanged; live official side effects/coordination and production acceptance incomplete."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    }
+  ],
+  "firstError": {
+    "run": "library01",
+    "rawExit": 101,
+    "testsExecuted": 0,
+    "code": "E0308",
+    "file": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+    "line": 55,
+    "cause": "ProcessCommand::new expects three PathBuf values; test supplied &str",
+    "fix": "explicit .into() conversions; original assertions unchanged",
+    "newExecutableProduced": false
+  },
+  "sharedMinimumRequests": [
+    "shared-status-deadline-request-r2.json",
+    "../wl2-working-snapshots-20261115-r1/shared-minimum-request.json"
+  ],
+  "guiOutputFiles": [
+    "bootstrap-admission.json",
+    "launch-intent.json",
+    "launch-result.json",
+    "same-sid-export01.json",
+    "suspended-original.json",
+    "task-location.json",
+    "test.stderr.log",
+    "test.stdout.log"
+  ],
+  "cleanup": {
+    "newPrivateArchivedSceneCount": 23,
+    "newPrivateArchivedFiles": 505,
+    "newPrivateArchivedBytes": 15377349,
+    "scenes": [
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpTwrx2r",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-0.zip",
+        "archiveSha256": "e61e002413212efadbaffd9341b5a9fececfc36784515829b640f5fce2f2d6be",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpx5JfMP",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-1.zip",
+        "archiveSha256": "10e2240a2c362e1600edc3903c8c5c4b7d61ec603897ff73ab9cf5d733d3a55b",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp16zwUs",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-2.zip",
+        "archiveSha256": "c3efd5aee3938b4e39be6b4311fe9de0dca76a7af492384516f0fd0f9212fd9c",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpveB8JJ",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-3.zip",
+        "archiveSha256": "35fccb5b1cc87487136e9985bd92bb78bcb0a124b842f7cd0137531a51c9538f",
+        "files": 4,
+        "bytes": 5918,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpK1EoV3",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-4.zip",
+        "archiveSha256": "34fa7a7dc00d2588fd21e9e6c89789ef7e11212c584677e94522b9edf12419fa",
+        "files": 32,
+        "bytes": 118600,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpsItyVU",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-5.zip",
+        "archiveSha256": "d571a5bfaf6a2317d6d40d7598f765cf6426d1451d435129b6234daef98223b5",
+        "files": 28,
+        "bytes": 93191,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpkDcISr",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-6.zip",
+        "archiveSha256": "484fd14fd2c78c7c8922c943f0f445102cb0042187a5f89c67e98992f4e9a8c4",
+        "files": 32,
+        "bytes": 118528,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpxjesX5",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-7.zip",
+        "archiveSha256": "5a354c69c63783ca4665716b44ede448fb015f66408eb7c7f99a6f82b3ecf68c",
+        "files": 31,
+        "bytes": 117961,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp2Jt9rt",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-8.zip",
+        "archiveSha256": "d32c0c28ed6fcd2bd1d70a5bc06a662a0ef5f9f0b8c4a01fa6b6026ed33092c1",
+        "files": 32,
+        "bytes": 118527,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpqm5643",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-9.zip",
+        "archiveSha256": "56b4a08ebcb515b1f894924e58d43126731ed2a7629463179f2a51b66e1751d6",
+        "files": 5,
+        "bytes": 19884,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpB3LYXo",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-10.zip",
+        "archiveSha256": "eaeb26a73ee165e9b09fb28d1c9741230d2d1cc6b6692ccba1da380c28a78bdb",
+        "files": 6,
+        "bytes": 21235,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpHxe7Ir",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-11.zip",
+        "archiveSha256": "225a599ca79bef0f484b924bc3980ab952509b00b3c13bd84e7e78aa02a32fd2",
+        "files": 20,
+        "bytes": 42443,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp6eB7lh",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-12.zip",
+        "archiveSha256": "b2496b111d7fe4905a2ca004b20ff204b5e4f5be08b76289dfc29216948ddc3f",
+        "files": 19,
+        "bytes": 36114,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmppwqWgd",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-13.zip",
+        "archiveSha256": "3693f51e743c35706d0b1e23161032e7f97ca6b794c516d59b6fcb33570710d7",
+        "files": 32,
+        "bytes": 118517,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpnxZHn3",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-14.zip",
+        "archiveSha256": "4b5f9cab6fd9ca668e8c59ead0c2c1d9c694b6084d5b6b17db119f24e5e46693",
+        "files": 35,
+        "bytes": 137602,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmprTkYqL",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-15.zip",
+        "archiveSha256": "e8c96af5f93c5386e7aa53aa174f7fe9381d0f4315ae9bd2b7dc8614ed6c4dcb",
+        "files": 32,
+        "bytes": 118531,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpM70ay3",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-16.zip",
+        "archiveSha256": "f1ccd4630ed0cce16b02095a78161205a5cdc8ed13443cd9133854643141ba99",
+        "files": 91,
+        "bytes": 357366,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpNYLXaS",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-17.zip",
+        "archiveSha256": "4cea0501bcfb5769c0343926da13b4d354894bc2d508f91c7f31d50bf62c8892",
+        "files": 18,
+        "bytes": 57254,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmplQRoTt",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-18.zip",
+        "archiveSha256": "fb7df81262495088ffdb504eee1691d9ba906721c447c10276342502a4987e7e",
+        "files": 16,
+        "bytes": 5277430,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpocqpgo",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-19.zip",
+        "archiveSha256": "241cc077787020d7c13e397d06a40671682e8e8e1aaee4e0de34f4866afaead4",
+        "files": 17,
+        "bytes": 56693,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpiioL81",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-20.zip",
+        "archiveSha256": "88c2934c4951e9170b17d0840e76096cfb96b0ebe97d1bc334d125595bb6b237",
+        "files": 27,
+        "bytes": 8484837,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpW3MP0x",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-21.zip",
+        "archiveSha256": "18f39accb7af2c458609936ff882434787aedc4184b62115aadbab5bc1243b15",
+        "files": 16,
+        "bytes": 43185,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpTpHkd7",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\stop-restart-results-library02-22.zip",
+        "archiveSha256": "a858e6480ad683344c110cf8a213a247aa02cff2426bf4b4a334f1857b4fdcf1",
+        "files": 4,
+        "bytes": 9799,
+        "removed": false
+      }
+    ],
+    "nativeMetadataCloned": false,
+    "originalsRetained": true,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicTaskRoots": 0,
+    "newGUIProcesses": 0,
+    "officialProcesses": 0,
+    "forcedCleanup": false,
+    "dailyPathConfigPolicyChanged": false,
+    "deletionAttempted": false,
+    "historicalRejectedDeletionRetried": false,
+    "overallCleanupComplete": false
+  },
+  "limits": [
+    "57 passes are component/storage/private-time tests, not real native StopReceipt factory or official production acceptance",
+    "Explicit recovery_state_at consumes an original deadline but is not called by the shared StatusSource yet; old no-deadline interface remains conservative",
+    "Full official side effects/live NativeLease coordination need the requested shared pure route declaration parser; no duplicate Windows parser or shared edits",
+    "Restart private time fixture tests timely Stop at9 still historically valid at12; it does not simulate a real Stop or expired complete outer ActionWindow",
+    "Actual0c GUI inputs remain immutable; real desktop run failed admission/raw101 and is retained for separate GUI follow-up; full official Owner/broker/H-S-D production proofs incomplete",
+    "CAP/trust populated prerequisites and ordinary MSI/historic cleanup unchanged; rejected cleanup never retried",
+    "ZIP copies preserve file bytes only, not NTFS identity/security; forensic originals retained",
+    "Debug products are not release-budget or frozen-candidate acceptance"
+  ],
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "startOpen": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false,
+  "guiFailureEvidence": "../wl2-real-gui-run-20261115-r1/"
+}

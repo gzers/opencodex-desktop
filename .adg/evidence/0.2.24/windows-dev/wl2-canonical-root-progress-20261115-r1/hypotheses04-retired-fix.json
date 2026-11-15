@@ -1,0 +1,17 @@
+{
+  "time": "2026-11-15T14:21:39.534033+08:00",
+  "baseline": {
+    "run": "retired-before01",
+    "rawExit": 101,
+    "passed": 0,
+    "failed": 2,
+    "privateScenes": 2
+  },
+  "changes": [
+    "RetiredWorking retains actual directory handle, private parent native pin and complete original working entries after successful same-volume rename",
+    "repeat full native image/ID/bytes/eight-projections/enumeration and parent recheck at each original/readback boundary; any retired check failure poisons",
+    "new handle installed before later fallible checks; no additional journal, deletion, source copy or SetSecurityInfo"
+  ],
+  "expected": "all affected tree and v2 tests pass including exact existing/absent originals, interruptions, lock release, current partialwrite, root progress and retired drift; no production eligibility",
+  "accepted": false
+}

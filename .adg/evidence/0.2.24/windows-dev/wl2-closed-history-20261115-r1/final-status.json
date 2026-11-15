@@ -1,0 +1,636 @@
+{
+  "time": "2026-11-15T15:36:53.076196+08:00",
+  "sourceHead": "754814dc14903868e73223a1a8862c9b33b14e51",
+  "sourceTree": "226fc0476e3a8b451c009b3a316da87cd5c8134e",
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "baselineMain": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+  "baselineDocs": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+  "previousCode": "57904c6bce37f4ba37338285409fa6f9551b40da",
+  "runs": {
+    "library01": {
+      "rawExit": 101,
+      "elapsedMs": 143693,
+      "passed": 29,
+      "failed": 3,
+      "ignored": 0,
+      "accepted": false
+    },
+    "library02": {
+      "rawExit": 0,
+      "elapsedMs": 128842,
+      "passed": 48,
+      "failed": 0,
+      "ignored": 2,
+      "accepted": false
+    },
+    "library03": {
+      "rawExit": 0,
+      "elapsedMs": 121671,
+      "passed": 49,
+      "failed": 0,
+      "ignored": 2,
+      "accepted": false
+    },
+    "product01": {
+      "rawExit": 0,
+      "elapsedMs": 132797,
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "accepted": false
+    }
+  },
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77356544,
+      "sha256": "fcd4fdc9231e2d1d41d85a1cf2dc8ec46b438020e98ae1058ab7fcfa18446f6e",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "754814dc14903868e73223a1a8862c9b33b14e51",
+      "sourceTree": "226fc0476e3a8b451c009b3a316da87cd5c8134e"
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "e8220bc793989c3a155c14fd1d60afc3ef68fcf7bf1541529242011526d8445c",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "754814dc14903868e73223a1a8862c9b33b14e51",
+      "sourceTree": "226fc0476e3a8b451c009b3a316da87cd5c8134e"
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "72f2fc3e2f53f98f29029831b2e1b1a0df5f511f15488bd2ff0573bf9de97e85",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "754814dc14903868e73223a1a8862c9b33b14e51",
+      "sourceTree": "226fc0476e3a8b451c009b3a316da87cd5c8134e"
+    }
+  ],
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "required canonical historyRecord binds OriginalHistory/session/context/policy/native archive refs at Closed; old missing fields refuse. Text Closed remains PendingOnly without actual native proofs/current."
+    },
+    {
+      "id": "O1",
+      "result": "partial-progress",
+      "fact": "restored original bytes/absence/IDs/eight projections sealed in private same-volume historical data before canonical Closed; original DELETE handles released afterwards. Retained history independently rechecks archives/retired objects without following later live client roots. Full declared side effects/native coordination still incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "native partial-history data, partial current, premature release, archive drift and unknown top-level custody retain/refuse. Exact custody child membership and recheck poison added. Complete production interruption/successor/Closed matrix not executed."
+    },
+    {
+      "id": "H",
+      "result": "prepared/awaiting-user-desktop",
+      "fact": "immutable prepared0c actual GUI/empty broker input not replaced; no new desktop execution verified, output file names recorded separately. Full official Owner continuity remains incomplete."
+    },
+    {
+      "id": "S/D",
+      "result": "typed-history-wiring/component-pass",
+      "fact": "NormalExit retained with original immutable Stop deadline and checked completion time in nonserde/nonClone ClosedExitHistory; later raw Job/role/exit/source readback uses new action window without extending old Stop. 2 real production tests ignored; no actual typed-history factory/official combined acceptance executed."
+    },
+    {
+      "id": "P",
+      "result": "refused",
+      "fact": "history-set transfer/exact namespace registration/new successor capture and broker/GUI production dispatch still missing; public durable gate and authorize_successor refusal retained."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    }
+  ],
+  "guiOutputFiles": [],
+  "firstError": {
+    "run": "library01",
+    "rawExit": 101,
+    "passed": 29,
+    "failed": 3,
+    "firstRawWin32": 32,
+    "stage": "seal_closed_originals: observe_restored_original reopened root while original DELETE-capable owner retained",
+    "downstream": "partial-current fixture then read missing archive raw3; it had failed before injected current fault, not proof of that injection",
+    "fixed": "read original tree through actual retained root handle; unchanged share flags; assert injected current error text",
+    "preserved": true
+  },
+  "cleanup": {
+    "newPrivateArchivedSceneCount": 54,
+    "newPrivateArchivedFiles": 839,
+    "newPrivateArchivedBytes": 43529262,
+    "scenes": [
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpBqECrn",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-0.zip",
+        "archiveSha256": "88864e0b172debe051a6db7740fd64d7af308190080712c3a05f739ddf457daa",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpp1ORib",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-1.zip",
+        "archiveSha256": "336ba6a86ff632740d58bcbd11be692f60829c59f5feeb13717f844b15ab99a3",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpTUTNBB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-2.zip",
+        "archiveSha256": "1640f0123657b9a73a7a288f50c51463e6a9447ca95aa1275dfb6fb29cf315e8",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmppDA8QM",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-3.zip",
+        "archiveSha256": "82b78e6d4e895cd22c8c4161473e83d7f97bfb1241907c7533df708345645ef0",
+        "files": 4,
+        "bytes": 5918,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmprBKW2C",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-4.zip",
+        "archiveSha256": "14e8d47ce92768c6a9fa8624b1a36f31e2f09cae9d85d58841d684f8e99da206",
+        "files": 27,
+        "bytes": 93195,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmphTUkIH",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-5.zip",
+        "archiveSha256": "63f7a2531bc8a6fc34706662d789e9daf118f274030e2e4e672b85782d99834c",
+        "files": 27,
+        "bytes": 93145,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmppZbEil",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-6.zip",
+        "archiveSha256": "1c158235f5bdf7a9901740c4282ea1cbcb30aba6d90d51bcd42251afbdebf31f",
+        "files": 27,
+        "bytes": 93143,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpu4HjzF",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-7.zip",
+        "archiveSha256": "95b2784960d890155e009d954feeabf6ebd3d2423547f9b57504c8f8344dd7b7",
+        "files": 5,
+        "bytes": 19866,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpK3C8Wc",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-8.zip",
+        "archiveSha256": "0b72480896ec1bf3f7dcf1e500a20cb497af3e4caa027e67cff65eeb1b36bc00",
+        "files": 6,
+        "bytes": 21217,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmptvY5R4",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-9.zip",
+        "archiveSha256": "df2450204a749bb3e35acda01b07a93a743ba5791db4c44ead7dd116617c4fce",
+        "files": 20,
+        "bytes": 42430,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpovrTrj",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-10.zip",
+        "archiveSha256": "ed60466725023c08c3c8b8c0b37fe1556a79fcdc507bc9f18585d5d4d13fbbc3",
+        "files": 19,
+        "bytes": 36096,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp1nu9L1",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-11.zip",
+        "archiveSha256": "aee49596e5b6c9deca80728717ccb4304d003cc28a1bebbf53bffd6d258d0033",
+        "files": 18,
+        "bytes": 57236,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp4THCOl",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-12.zip",
+        "archiveSha256": "d8f24c2e16241909af3db51e4355d7a1058953dc9c5ce5758ffda1671c66c159",
+        "files": 16,
+        "bytes": 5277412,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpk5tMq3",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-13.zip",
+        "archiveSha256": "6c2377703716ca2a1ea1dc77492e4fd1a47875db35a5befde2bd8537e277fbc4",
+        "files": 17,
+        "bytes": 56675,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpCRNE1i",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-14.zip",
+        "archiveSha256": "8bfe107cc93a5b243552516c6bb64c6afe4173a3901c13a1b7c24594b4ddbd61",
+        "files": 27,
+        "bytes": 8484819,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9rvraa",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-15.zip",
+        "archiveSha256": "d62818bc204ce44b80a4c875e7f10401d28b9e104bff8c8c2a3537be899ab53d",
+        "files": 16,
+        "bytes": 43167,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9sMsai",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library01-16.zip",
+        "archiveSha256": "d3ab26be9a06e57f22c5e26cca6eb2fe25837189a9404ad4219c81890bc03061",
+        "files": 4,
+        "bytes": 9781,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpkIk8NZ",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-0.zip",
+        "archiveSha256": "021cb06f1eba653571bd8b5d837f1c4b7445f9a6e8b12b2a3d0d0ac18a78e1b4",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpoKGXl0",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-1.zip",
+        "archiveSha256": "6ea113acdd879a326aa8738324b05863318dea135ce1bf571936c471e142af7e",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpVCOjuy",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-2.zip",
+        "archiveSha256": "1114974879ed0191e5ed970e2ee74d067d7e006f12acde3be8a1dcf9f791b510",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp8DuLki",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-3.zip",
+        "archiveSha256": "5120f120923b58fb22d3c15ee2680f4528cca8a09a6955606027db4ac7a8488d",
+        "files": 4,
+        "bytes": 5921,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpmk6prP",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-4.zip",
+        "archiveSha256": "e0512b22533bc687c470aa26ac423563695ddb3ae6dbb096fd2886bdec430627",
+        "files": 32,
+        "bytes": 118580,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpyLtUK4",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-5.zip",
+        "archiveSha256": "6d874e358a0be62f430cab7c8374341e0d1a89de27d9c34a29ef1e8f7b8e4416",
+        "files": 28,
+        "bytes": 93174,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp1fI41E",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-6.zip",
+        "archiveSha256": "2a4b4001530581a0690bffe5bdd6a7431084c848716f638d884970ad9b3efabb",
+        "files": 32,
+        "bytes": 118506,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpKVBFlI",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-7.zip",
+        "archiveSha256": "1abe83ab9f66d7dc389e7e67a1f222233a765c8d0749215cec50111028fce910",
+        "files": 31,
+        "bytes": 117943,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpJpRM4T",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-8.zip",
+        "archiveSha256": "62c39fac134141e80062402a2fed7d57111cba556cca4452f0298d02950626ab",
+        "files": 5,
+        "bytes": 19866,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpfLKwNc",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-9.zip",
+        "archiveSha256": "92af0a9a10641f963bbeac3ad7b2fdbd927b57d8e73bea898924773887beb3af",
+        "files": 6,
+        "bytes": 21217,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpmphG3H",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-10.zip",
+        "archiveSha256": "47c42aff43ab845f70cc50f00cbb3a08ab5f07ed2e3bd7458ac002db208982f6",
+        "files": 20,
+        "bytes": 42425,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQb600W",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-11.zip",
+        "archiveSha256": "cc7d006d8b89fdca48079e38ae277119cf1d301b9b46be3c9c6e05c97e18559f",
+        "files": 19,
+        "bytes": 36096,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFYWNVh",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-12.zip",
+        "archiveSha256": "04da89f280b4732338c32ca8cdf86b0c4cf458dd25134d5bd04fd765a480cb25",
+        "files": 18,
+        "bytes": 57236,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpMMEmFW",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-13.zip",
+        "archiveSha256": "bfc2c4d278e7c034fbf734539b43132e5426cbd348ed83c2137cecebeca5bcbd",
+        "files": 16,
+        "bytes": 5277412,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9ZVAuz",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-14.zip",
+        "archiveSha256": "f79a82e11ff5d7bb68afc3e349ed931a868cada1ab9dc4341c1372042db42df2",
+        "files": 17,
+        "bytes": 56675,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpKXybyg",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-15.zip",
+        "archiveSha256": "afec66f4bea5116f36f18fe1d35fbf235c36a63f8047374cd9b7ac5840f50254",
+        "files": 27,
+        "bytes": 8484819,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmptbbFe6",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-16.zip",
+        "archiveSha256": "7bea11d497716b0d19fb967d7247633b797ef223a844ab131eb99054dad937c5",
+        "files": 16,
+        "bytes": 43167,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpS3Gni0",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library02-17.zip",
+        "archiveSha256": "b9bb6ab058ac0d74adf6ee6a69556bf2fb37c7f80435449091468836cee0dc97",
+        "files": 4,
+        "bytes": 9781,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpPeS0pI",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-0.zip",
+        "archiveSha256": "68306726e8200fa6b9a02d2a2f50273ad5f6756fe737bfa2d35f35ccc0980878",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp8eVDng",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-1.zip",
+        "archiveSha256": "f4d56765d29ff853b5936abb58ae2f8473a742214a8a3ea83f3bc5959973c220",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmptQo7UR",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-2.zip",
+        "archiveSha256": "ac1cf3eab2e2f31fa037f9b8fd3323159802413ebe7a959edf3416c68c35e916",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpvv6gba",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-3.zip",
+        "archiveSha256": "15197bd26cfa74c380c0dab1814e3084e1e8e37b77216202967e9888e22d7ce8",
+        "files": 4,
+        "bytes": 5916,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpXMgqU8",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-4.zip",
+        "archiveSha256": "5a14d087ca82180d2edbf95f3a553a8a0bf1df47df46951bbee621e3ee0133b2",
+        "files": 32,
+        "bytes": 118549,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp8bQoHM",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-5.zip",
+        "archiveSha256": "8d3a30f8cfc5598e8fedde3109cf4533480cf35eaf59542d0f8225c6a4bea49d",
+        "files": 28,
+        "bytes": 93151,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpN3C2VK",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-6.zip",
+        "archiveSha256": "7857dbe000135e1461ccf19ca267c89701c81f418254b787833336331141065a",
+        "files": 32,
+        "bytes": 118487,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpSkvmwj",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-7.zip",
+        "archiveSha256": "82bd4cb003bc22ed82f6baec13041024656b2b6d8c869dbcfc66d6f9b702109b",
+        "files": 31,
+        "bytes": 117945,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmppORHQ8",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-8.zip",
+        "archiveSha256": "b8f1bf8fbafdad68929bfc1deec02486e412a323fdbb4c3749558a3a8021ce60",
+        "files": 32,
+        "bytes": 118490,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpDR2ipO",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-9.zip",
+        "archiveSha256": "5bba675348bdc344d509ffa7f6db1160556f4f28cf914f9d809202789ada9560",
+        "files": 5,
+        "bytes": 19863,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpfarMeM",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-10.zip",
+        "archiveSha256": "cf619e841eb41f5e57e3296b0cc5ab611dd166ab096a6a0f199c9571d13882b7",
+        "files": 6,
+        "bytes": 21213,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp2nyjGu",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-11.zip",
+        "archiveSha256": "81abe42ab3b19f483ef661b7b5c6ed0bcd9e0d799b6e5714d0054b9aecccac68",
+        "files": 20,
+        "bytes": 42411,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpbIP5NW",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-12.zip",
+        "archiveSha256": "b5b9afefe27e36f39f17077237fb9d1eab771af029dc7af3878be875de746d23",
+        "files": 19,
+        "bytes": 36081,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpSKnBIp",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-13.zip",
+        "archiveSha256": "b05cc1b6ed0db63e480d4d4b140c29c0e322c866974b54af99af236d662dc678",
+        "files": 18,
+        "bytes": 57225,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpGvIA8Q",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-14.zip",
+        "archiveSha256": "fefb5433602764963c1f54c4a89b33b8578a4e985cfc1f3b6124dbfdb6183d28",
+        "files": 16,
+        "bytes": 5277402,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpy3SoaO",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-15.zip",
+        "archiveSha256": "6b8a1084626e49b266d5423278cb3b5e6d18686847128d858a20e72460d3c910",
+        "files": 17,
+        "bytes": 56664,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp81g9dl",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-16.zip",
+        "archiveSha256": "9ad14cd9ca7eb2766ae587e5a79290cfb1852f2a91c59da5ff930d477ea119b0",
+        "files": 27,
+        "bytes": 8484807,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpmmP0Iq",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-17.zip",
+        "archiveSha256": "139d40e52962b4598c47d785ceb31725d4ffe0e34fdf7b0ddffc9960fc7b0eb2",
+        "files": 16,
+        "bytes": 43157,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpnvZgH2",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\closed-history-library03-18.zip",
+        "archiveSha256": "783cd6c17cc576ea2b2d2cb2b2cd60aa535be247df23a5c81102528ba76ef6d4",
+        "files": 4,
+        "bytes": 9781,
+        "removed": false
+      }
+    ],
+    "nativeMetadataCloned": false,
+    "originalsRetained": true,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicTaskRoots": 0,
+    "newGUIProcesses": 0,
+    "officialProcesses": 0,
+    "forcedCleanup": false,
+    "dailyPathConfigPolicyChanged": false,
+    "positiveSceneCleanupRejected": {
+      "time": "2026-11-15T15:35:53.822078+08:00",
+      "action": "archive/live-byte precheck and exact Remove-Item of two fresh successful own synthetic scenes in one PowerShell command",
+      "tool": "exec_command",
+      "rejectedBeforeProcessCreation": true,
+      "automaticApprovalReason": "blocked by policy",
+      "prechecksExecuted": false,
+      "deletionExecuted": false,
+      "alternateMethodRetried": false,
+      "results": [
+        {
+          "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp1fI41E",
+          "run": "library02",
+          "stillExists": true,
+          "removed": false,
+          "archivePreviouslyVerified": true
+        },
+        {
+          "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpN3C2VK",
+          "run": "library03",
+          "stillExists": true,
+          "removed": false,
+          "archivePreviouslyVerified": true
+        }
+      ],
+      "historicalRejectedDeletionRetried": false,
+      "overallCleanupComplete": false
+    },
+    "historicalRejectedDeletionRetried": false,
+    "overallCleanupComplete": false
+  },
+  "limits": [
+    "Native storage Closed fixtures never issue actual official ClosedEligibility or successor permission",
+    "Historical archives are copies of old bytes plus original identity/security observations; archive fileID is not original fileID",
+    "Live original/working tree readback remains mandatory through close; only later retained historical reads ignore new live client contents",
+    "ClosedExitHistory factory/wiring compiled, but no new real official Owner/NormalExit/Stop production execution",
+    "Shared pure route parser extraction requested in previous working-snapshots round; complete side-effect/native lease implementation still missing",
+    "Known closed history-set transfer, new generation registration/capture/Owner dispatch and actual GUI/H-S-D acceptance remain incomplete",
+    "Immutable 0c prepared GUI inputs are not overwritten by these new products; no desktop output verified",
+    "Populated CAP/trust CREATE_NEW1314/5 conditions unchanged and not retried; historical cleanup/ordinary MSI gaps unchanged",
+    "Debug build is not release-budget/frozen-candidate or publication acceptance"
+  ],
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "startOpen": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

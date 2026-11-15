@@ -1,0 +1,7 @@
+{
+  "nextImplementation": "A separate fixed BoundedCurrentV2 must use v2policyDigest-bound tip and real bounded8+combined security snapshot on original exclusive native current object. It must never turn oldCurrentReferenceFull/PartialDiagnostic into v2.",
+  "readerLockConcern": "PendingV2 may keep immutablemanifest/phase handles, but its current locator reader must close after snapshot before exclusive CAS. Object identity/security/bytes are rechecked independently on exclusive reopen; reading pending never grants action rights.",
+  "referenceSequence": "Flush create-only nextv2phase then CASsameobject under oldexpectedbytes/nativeid/security; orphanphase remainsRequired. No native custody moves or restart before fulltreeproof.",
+  "sourceFreeze": "Changes planned only after library03 terminal state.",
+  "allAccepted": false
+}

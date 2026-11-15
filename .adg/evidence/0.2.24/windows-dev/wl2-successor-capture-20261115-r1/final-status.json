@@ -1,0 +1,723 @@
+{
+  "time": "2026-11-15T16:04:48.224726+08:00",
+  "sourceHead": "f95e895293e88564248526b4286f32197ed51048",
+  "sourceTree": "6105be8e95d990cc92dd062ed5e116c27e7d4c75",
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "baselineMain": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+  "baselineDocs": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+  "previousCode": "754814dc14903868e73223a1a8862c9b33b14e51",
+  "codeCommits": [
+    "e9cbd80fc4872f4bb9d3897b3a0466fd7cabaee2",
+    "f95e895293e88564248526b4286f32197ed51048"
+  ],
+  "runs": {
+    "library01": {
+      "rawExit": 0,
+      "elapsedMs": 232881,
+      "passed": 38,
+      "failed": 0,
+      "ignored": 0,
+      "accepted": false
+    },
+    "library02": {
+      "rawExit": 0,
+      "elapsedMs": 160755,
+      "passed": 54,
+      "failed": 0,
+      "ignored": 2,
+      "accepted": false
+    },
+    "native01": {
+      "rawExit": 0,
+      "elapsedMs": 2527,
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "accepted": false
+    },
+    "library03": {
+      "rawExit": 0,
+      "elapsedMs": 134514,
+      "passed": 54,
+      "failed": 0,
+      "ignored": 2,
+      "accepted": false
+    },
+    "product01": {
+      "rawExit": 0,
+      "elapsedMs": 209050,
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "accepted": false
+    }
+  },
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77487104,
+      "sha256": "8a0f75e71a8fd44a093ca4190bf6ecd66f3cd5305665183ba3f99f4b2b4dcaad",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "f95e895293e88564248526b4286f32197ed51048",
+      "sourceTree": "6105be8e95d990cc92dd062ed5e116c27e7d4c75"
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "e2b4910837b4003fec3d8b8f61c831f03a083bd7689ee2b42c1e7bac424cffb9",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "f95e895293e88564248526b4286f32197ed51048",
+      "sourceTree": "6105be8e95d990cc92dd062ed5e116c27e7d4c75"
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "457cc30ac4bb414a4a0fe24b48ec7e1494e1b4a314facc19684cc30480300d76",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "f95e895293e88564248526b4286f32197ed51048",
+      "sourceTree": "6105be8e95d990cc92dd062ed5e116c27e7d4c75"
+    }
+  ],
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "mandatory exact ordered predecessor references bind old session/private directory/current IDs, canonical/current/manifest/context/policy digests and D volume. Older missing-field records refuse; text/serde only locates pending data."
+    },
+    {
+      "id": "O1",
+      "result": "native-storage/component-pass",
+      "fact": "three synthetic native generations capture fresh user originals independently while old exact history remains unchanged; current original bytes restored each cycle. Full official side-effect assessment/live native coordination still incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "missing/sparse/reversed known histories, foreign namespace, source mismatch, native old archive drift and drift before next first move refuse with retained scenes. Complete actual official interruption/Closed matrix still unverified."
+    },
+    {
+      "id": "H",
+      "result": "prepared/awaiting-user-desktop",
+      "fact": "old immutable0c actual product GUI/empty-broker entry not replaced; no new desktop result verified. Full production broker/actual GUI native Owner continuity missing."
+    },
+    {
+      "id": "S/D",
+      "result": "typed-multigeneration-wiring/component-pass",
+      "fact": "retained completed old NormalExit and supervisor absence facts keep original deadlines; post-Resume old history checks fresh exact registration/raw old native family without falsely requiring new H runtime files absent. Actual factory/old Owner replacement not production-executed."
+    },
+    {
+      "id": "P",
+      "result": "public-refused/internal-wiring-progress",
+      "fact": "one consumed ClosedEligibility now creates exact memory action/context/predecessor ticket; new Owner keeps all old original Owners/process/Job/source objects, rechecks complete native set around root changes and before Resume. Public durable gate still refuses; outward Stop/Restart success, full side effects/coordination and real production acceptance not finished."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    }
+  ],
+  "firstError": null,
+  "guiOutputFiles": [],
+  "cleanup": {
+    "newPrivateArchivedSceneCount": 68,
+    "newPrivateArchivedFiles": 1480,
+    "newPrivateArchivedBytes": 45993813,
+    "scenes": [
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpYK9KXv",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-0.zip",
+        "archiveSha256": "e3c9ba97652af682d9313d8ad3cbd86eed68ff274ccb0ba96cdbb71dcfc3c4ed",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp2rDahV",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-1.zip",
+        "archiveSha256": "9b36cd4f78878e93af0c54be1d4a9c572eec5ebddef885fd7ac36a92c54b3250",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpLAy8Je",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-2.zip",
+        "archiveSha256": "33d21f68b9e530cad5e15876339186f9fc7ebc6848f2ded9c7c31d1d0ecae632",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7wy71s",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-3.zip",
+        "archiveSha256": "32e662815babb6805ba165995ac1e7e618a199eda1b4da7075b9feb1c67410d4",
+        "files": 4,
+        "bytes": 5916,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpkaecn3",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-4.zip",
+        "archiveSha256": "ae7e713b75c8cec3a8d9d012d227fe92a6ef9d58ed4793806f26207cab6a2b4f",
+        "files": 32,
+        "bytes": 118566,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpfWaqFF",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-5.zip",
+        "archiveSha256": "fdb621101e96ccf9aa3f0a00184d89de2162d124620320f24d51c110fc1583a9",
+        "files": 28,
+        "bytes": 93169,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpiB2RzV",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-6.zip",
+        "archiveSha256": "218c51a71b20c8bb28455d36a8fb0efccc3fff620d3fa5ce9a4acfc28090af9b",
+        "files": 32,
+        "bytes": 118505,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpka0LFr",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-7.zip",
+        "archiveSha256": "9fed648239911caa804a8c35016885376be8350916d485d69bb25d6ef24e2cc3",
+        "files": 31,
+        "bytes": 117946,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpd2YLmx",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-8.zip",
+        "archiveSha256": "0672c141d72e00b6ee4a5ff2a9b2f0ee22a5511bf1bc50d8db039362cfff6fcd",
+        "files": 32,
+        "bytes": 118508,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpWdlxPN",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-9.zip",
+        "archiveSha256": "bc9b0488221d8a15bb4425c6bb73751019269329d8f1a77b0e67249e2c2cd588",
+        "files": 5,
+        "bytes": 19881,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpZyKl3y",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-10.zip",
+        "archiveSha256": "94c97e0b372f57168dc553df267fea146e39206840fd0fe82c9c456d8432e451",
+        "files": 6,
+        "bytes": 21231,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpcJ4F3W",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-11.zip",
+        "archiveSha256": "bd7232f8560e8ad7b4c572676d5a5b394d612d9be459cf30a0f0f83faf24b191",
+        "files": 20,
+        "bytes": 42429,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpjBa2a9",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-12.zip",
+        "archiveSha256": "69669de7eb90470d14a755297e2a431bdc96d3bf74ca1817ae77343b8397446a",
+        "files": 19,
+        "bytes": 36099,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQDeZf9",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-13.zip",
+        "archiveSha256": "90b49dd5f1fa3bce7399aa3fc427b1a89fe8b472d159d8ab0f6f1e5465885814",
+        "files": 32,
+        "bytes": 118498,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpITUcPF",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-14.zip",
+        "archiveSha256": "aa92c900c9e69b4fac28406beb29080bc13dd241058de7ef51474b86ffa9288b",
+        "files": 32,
+        "bytes": 118512,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpqDN4kp",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-15.zip",
+        "archiveSha256": "6212ff137c2fa1e5643afd85fcb3e889df6f2507751a41da48c0f3fbf2705e5d",
+        "files": 91,
+        "bytes": 357303,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp5M9s3S",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-16.zip",
+        "archiveSha256": "908aef9db366c56d584c9a8834549dbb2bcb3a96e0fdc6aa2c963dcd57b53a1d",
+        "files": 18,
+        "bytes": 57243,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpRwLwCP",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-17.zip",
+        "archiveSha256": "e09d2ff3f590edaf8bc057476ddecacc4b5b56d2f7af0db7d4c42d4ecd8503ca",
+        "files": 16,
+        "bytes": 5277420,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpPHFv6X",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-18.zip",
+        "archiveSha256": "26ca488e419ff911531ad91c7d9ef19308283e2b39512dccdfc8f8a93ea5bcb7",
+        "files": 17,
+        "bytes": 56682,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQQIic6",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-19.zip",
+        "archiveSha256": "2469a1f2f6c2e5c078dbd952e003c21a5e6db2df46d344dc21e6be5ffee15ab4",
+        "files": 27,
+        "bytes": 8484825,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpj77ymR",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-20.zip",
+        "archiveSha256": "569bfaa41b91bca6f4fbdc55272723bd572fcb7afb5ae5aa49dde854e7c23e78",
+        "files": 16,
+        "bytes": 43175,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQiNBya",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library01-21.zip",
+        "archiveSha256": "1eb4ae57f5798bddb3f9dcc46871256a478e31b375911bd1f8d16a5557d4442d",
+        "files": 4,
+        "bytes": 9799,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpSgdSGt",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-0.zip",
+        "archiveSha256": "15d1ae597a3abb873dba08da246e8a713302dce9cfc8fc9cb57f1bf1b84d9391",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmppisBKB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-1.zip",
+        "archiveSha256": "5fb172fa10c0d7cb9320ef2097acc2bf51ba25e41dfa0111932933d3aa80de14",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpJNSZM5",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-2.zip",
+        "archiveSha256": "b4634aa10dcc7a5501e028a23c15fb8c9369c2ff14963b7f7eb0aa7422eade1d",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpHPbFBf",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-3.zip",
+        "archiveSha256": "1b38e6677d4b190ec65b2ce6ee4de4c93d4573940a92bcd1f35a6a5a84e42de6",
+        "files": 4,
+        "bytes": 5921,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpRCt8iF",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-4.zip",
+        "archiveSha256": "2f5c1673bff11519cffd56d7448bb50b422b2d871519f613d84965471043ec3e",
+        "files": 32,
+        "bytes": 118593,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpgA5Pam",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-5.zip",
+        "archiveSha256": "d73b9b29c5ff2ab566f237ebfde9cf5245cd9895d1ccbb1666c7cd956bbeb9c1",
+        "files": 28,
+        "bytes": 93171,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp6maVD8",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-6.zip",
+        "archiveSha256": "72c5120b4a2bbad6e18aefa959e37a7d9861a7272a9374e5793774bf3ee01e27",
+        "files": 32,
+        "bytes": 118505,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpm7NFFj",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-7.zip",
+        "archiveSha256": "7084a7792fc47ab9d226795d7994443bb0303108ea74359b98247f1c196c9229",
+        "files": 31,
+        "bytes": 117942,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpIDM4uV",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-8.zip",
+        "archiveSha256": "fd7185960d873cf65e19b4aa7350a4886126b950ec0dba36ee67f9abf1829287",
+        "files": 32,
+        "bytes": 118508,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmptQTu5e",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-9.zip",
+        "archiveSha256": "67081efdf2a0bad371d0e3b013e744f10fc5bae2b8e69eb93d6aab7e9e44974a",
+        "files": 5,
+        "bytes": 19881,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmppJ08kP",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-10.zip",
+        "archiveSha256": "03625c68093b9fb9bf7f8a80e83920a50ad77aff9a3f7ba4abaa0fb484ac7a6c",
+        "files": 6,
+        "bytes": 21231,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpS4Lu4t",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-11.zip",
+        "archiveSha256": "df07639ac950dcccd932add72d1b01500ab1190fc2ce4df6b0375c2cedaa09ef",
+        "files": 20,
+        "bytes": 42429,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpNRZFEL",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-12.zip",
+        "archiveSha256": "ef1569791527af17afbef6bb6855c01b478cb8ed7501f33dffe25b80ba2360e1",
+        "files": 19,
+        "bytes": 36099,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpfJqFQ1",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-13.zip",
+        "archiveSha256": "a8a82a159ad67e8e94a91c2a93afc244fea7e5539489e3e436b171ef3eb55374",
+        "files": 32,
+        "bytes": 118498,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpCZrHvA",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-14.zip",
+        "archiveSha256": "126624158239fcaeffb9909c83f0ec505661274e0a4c5026da84f4890e097980",
+        "files": 35,
+        "bytes": 137581,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpy8tDl8",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-15.zip",
+        "archiveSha256": "c140feae8d3b035184f064538a4163ae2a3161277b6b4362aec508b874d61355",
+        "files": 32,
+        "bytes": 118512,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpOJ7e3r",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-16.zip",
+        "archiveSha256": "43e0add8ae0d26e1ff907fefe60ac3a11a60d3823ba3b471dae301cef4934308",
+        "files": 91,
+        "bytes": 357303,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpXgajop",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-17.zip",
+        "archiveSha256": "fe18ceb459e6776802df3bc117378bb770a67e6b604005b5722f5556b7cb44d2",
+        "files": 18,
+        "bytes": 57243,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpDmgTaq",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-18.zip",
+        "archiveSha256": "78f82b4cf19b1759f5230f29503f9a9b9709a9d5e38d42d2914e7ffac4664d41",
+        "files": 16,
+        "bytes": 5277420,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpi8uQu1",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-19.zip",
+        "archiveSha256": "9f66058801cd686c86cbe18ec7c9e1baf2ae81cbd18d559850446a3215bd0de1",
+        "files": 17,
+        "bytes": 56682,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpJQMzZP",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-20.zip",
+        "archiveSha256": "90b54c277572e986c57921fd7da73cc57524075be8e51b60f19b22cb26fe4b15",
+        "files": 27,
+        "bytes": 8484825,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpjGMN9J",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-21.zip",
+        "archiveSha256": "130e2dc8b78c29d27265d3c1b75bfdc339868d9672e34d0d30ed7d3cbd9dcf96",
+        "files": 16,
+        "bytes": 43175,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpAg32wT",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library02-22.zip",
+        "archiveSha256": "7530c78e8a1b7197caaaf3ff6dc28c0f3162fba1cb3877f391557c1feecc749f",
+        "files": 4,
+        "bytes": 9799,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpnKan7A",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-0.zip",
+        "archiveSha256": "62069d52b7bcd182aa4d5b284e5a9f25e34fbe1f5c74456e64adab3392de2e8f",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpkiADmy",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-1.zip",
+        "archiveSha256": "a7644a93489605ccc75bce5f79ab4a306cae2c2040de1b7251729472709dd458",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpwRWVbn",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-2.zip",
+        "archiveSha256": "26cf427cd4d6d643cbf964f3bd806c31fb14aa5fbdfddb12181188b166f476a4",
+        "files": 4,
+        "bytes": 7292,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpt6CFsa",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-3.zip",
+        "archiveSha256": "bfa1d430b3f75687da11230c0c6eb440cae569d6f210154edc1ce9b80db2d73a",
+        "files": 4,
+        "bytes": 5916,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpO3Rcqw",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-4.zip",
+        "archiveSha256": "2297a92a8c94b082c3070991832ba69229fb9af2b12b35a13892dfdf6dfefada",
+        "files": 32,
+        "bytes": 118581,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpohfliW",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-5.zip",
+        "archiveSha256": "d466a4fb12267955bc4ec20854c72c791a1b7974bdea2514c60988917c1fd2ee",
+        "files": 28,
+        "bytes": 93187,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmphhG9We",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-6.zip",
+        "archiveSha256": "1fae22c1c0469b35aad9e849c725ada1b1fda893dde432de8036e3d91b1479e6",
+        "files": 32,
+        "bytes": 118528,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpetsrZo",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-7.zip",
+        "archiveSha256": "713681ec0f49cc8c7812f45f81c75a9917d524c363bb573eec0fefa5a0dc5761",
+        "files": 31,
+        "bytes": 117961,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp1TBJDg",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-8.zip",
+        "archiveSha256": "7ea57068644ab9426edac8762ee10dab697f4ce1740e48174f59d1d997a7135a",
+        "files": 32,
+        "bytes": 118527,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFziLwI",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-9.zip",
+        "archiveSha256": "19481c06c401cde6b618a3d6dfe0fb80c0860e4c3c43b148217398f6e954b79b",
+        "files": 5,
+        "bytes": 19884,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpzmIcZ0",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-10.zip",
+        "archiveSha256": "7dcc34df7bf913fc763044a0219f006cdef44aa1cd7f84816ea91b47f36ff02a",
+        "files": 6,
+        "bytes": 21235,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpDyZLGB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-11.zip",
+        "archiveSha256": "51882d8684798de54a96f8c333a57842f9caaa3c5d3ebabed3bf6a8e37a4f2ba",
+        "files": 20,
+        "bytes": 42443,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9P8lgC",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-12.zip",
+        "archiveSha256": "a6b3d9728d9336373c5871d68e5821aeeb82a458f8f53e76f5e1d3ba5075e55a",
+        "files": 19,
+        "bytes": 36114,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpaPppQe",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-13.zip",
+        "archiveSha256": "440e11edb9a17f968877dd4eda1f6ec45492da9e833f9db9596985b3072191a3",
+        "files": 32,
+        "bytes": 118517,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpGrwRKz",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-14.zip",
+        "archiveSha256": "2bc8090ed7ea4bae6f8914bf40c90700084c0bae4f7705ed46323dd46d036b5f",
+        "files": 35,
+        "bytes": 137602,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpGglRwb",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-15.zip",
+        "archiveSha256": "7bbb48921ba19ff675e4ed715c9ddb8f39feb61db109c93bdefd6b410c7f9aa1",
+        "files": 32,
+        "bytes": 118531,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpWy9SZc",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-16.zip",
+        "archiveSha256": "7602066fff1b151b81c5f292ea787775b011141aa47d31d40189a8b767004312",
+        "files": 91,
+        "bytes": 357360,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp5uJTzB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-17.zip",
+        "archiveSha256": "4a3981577070f18d43c1e35440c7c06db9f564aad2da6c0d6f35b505133eb995",
+        "files": 18,
+        "bytes": 57254,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp2juFml",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-18.zip",
+        "archiveSha256": "3f08c21e59c2994151784b25d4d6134ac35eb52accbcb64b69f41a0880747518",
+        "files": 16,
+        "bytes": 5277430,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpCLva3f",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-19.zip",
+        "archiveSha256": "4ed322d55acb7bbf5abdc169b31f67d149294129aca7f7ee632b898b2f5e05f9",
+        "files": 17,
+        "bytes": 56693,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpNkGNZO",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-20.zip",
+        "archiveSha256": "6ce1e7b89528d91cb16e65fc249d3789a03c4aec44909edba1067aab6c221472",
+        "files": 27,
+        "bytes": 8484837,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpdaPZ4b",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-21.zip",
+        "archiveSha256": "35c81c408b1e1a5c56bfcdb8d17418bcea9fc6d47c87d068f3602ac0dd8f9877",
+        "files": 16,
+        "bytes": 43185,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpGZVaVf",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\successor-capture-library03-22.zip",
+        "archiveSha256": "92b525d5592e16a85e64c623406a8aad9ea52cd8a4d958f16951a59c33164e2c",
+        "files": 4,
+        "bytes": 9799,
+        "removed": false
+      }
+    ],
+    "nativeMetadataCloned": false,
+    "originalsRetained": true,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicTaskRoots": 0,
+    "newGUIProcesses": 0,
+    "officialProcesses": 0,
+    "forcedCleanup": false,
+    "dailyPathConfigPolicyChanged": false,
+    "deletionAttempted": false,
+    "historicalRejectedDeletionRetried": false,
+    "overallCleanupComplete": false
+  },
+  "limits": [
+    "Three native generations use synthetic storage close only; no official ClosedEligibility, real service Stop or final-budget success is inferred",
+    "Successor ticket, old Owner vector and ClosedAbsentHistory actual typed factory paths are compile/wiring only; no new official production execution",
+    "Prospective pure ticket counterexample test mentioned in hypotheses04 was not added/executed; see review-boundaries.json",
+    "Public durable gate remains; outward Stop and Restart still return recovery refusal, not complete production behavior",
+    "Full declared official side effects/active native coordination pending, including prior shared pure route-declaration extraction request",
+    "Existing0c actual GUI inputs remain immutable and task desktop output unverified; full official broker GUI route still missing",
+    "CAP/trust populated prerequisites, ordinary MSI and all historic cleanup rejections unchanged; none retried",
+    "ZIP copies byte contents only, not native NTFS identity/security; all forensic scenes remain",
+    "Debug bins are not release-budget/frozen-candidate or publication acceptance"
+  ],
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "startOpen": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

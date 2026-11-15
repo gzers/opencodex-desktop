@@ -1,0 +1,12 @@
+   Compiling windows024-native-proof v0.1.0 (C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native)
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `windows024-native-proof` (lib test) generated 1 warning (run `cargo fix --lib -p windows024-native-proof --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.48s
+     Running unittests lib.rs (test\windows024-native/target/wl2-primitives\x86_64-pc-windows-msvc\debug\build\windows024-native-proof/8e0610507c3b6564\out\windows024_native_proof-8e0610507c3b6564.exe)

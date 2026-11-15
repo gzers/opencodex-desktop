@@ -1,0 +1,39 @@
+
+running 12 tests
+test infrastructure::windows_client_originals024::bounded::tests::wl2_r4_mixed_policy_aces_do_not_expand_sacl_global_assurance ... ok
+test infrastructure::windows_client_originals024::bounded::tests::wl2_r4_native_all_projection_queries_and_ordinary_token ... r4native mask=0x1 access=0x20000 raw0 states=[(1, "present", 0)] sdHash=597d2cf97b73273d986c8ae5406ec628997a93bd8d0b37df16084d2d4dbd8423 fullSecurityProven=false audit=excluded-unknown
+r4native mask=0x2 access=0x20000 raw0 states=[(2, "present", 0)] sdHash=0920ab7a4f495de138d37fe7a6648c2487a75dafd41065f531848e5ad370c0f3 fullSecurityProven=false audit=excluded-unknown
+r4native mask=0x4 access=0x20000 raw0 states=[(4, "present", 8)] sdHash=0c1477d4dda0019928af7c33b1d31501202759b36099eeffdd9f9be3e8921166 fullSecurityProven=false audit=excluded-unknown
+r4native mask=0x10 access=0x20000 raw0 states=[(16, "absent", 0)] sdHash=ac078af74e2c2a415e27de71981014fad5e30e106b1ca055c95da822e7c9c025 fullSecurityProven=false audit=excluded-unknown
+r4native mask=0x20 access=0x20000 raw0 states=[(32, "absent", 0)] sdHash=ac078af74e2c2a415e27de71981014fad5e30e106b1ca055c95da822e7c9c025 fullSecurityProven=false audit=excluded-unknown
+r4native mask=0x40 access=0x20000 raw0 states=[(64, "absent", 0)] sdHash=ac078af74e2c2a415e27de71981014fad5e30e106b1ca055c95da822e7c9c025 fullSecurityProven=false audit=excluded-unknown
+r4native mask=0x80 access=0x20000 raw0 states=[(128, "absent", 0)] sdHash=ac078af74e2c2a415e27de71981014fad5e30e106b1ca055c95da822e7c9c025 fullSecurityProven=false audit=excluded-unknown
+r4native mask=0x100 access=0x20000 raw0 states=[(256, "absent", 0)] sdHash=ac078af74e2c2a415e27de71981014fad5e30e106b1ca055c95da822e7c9c025 fullSecurityProven=false audit=excluded-unknown
+r4native mask=0x1f7 access=0x20000 raw0 states=[(1, "present", 0), (2, "present", 0), (4, "present", 8), (16, "absent", 0), (32, "absent", 0), (64, "absent", 0), (128, "absent", 0), (256, "absent", 0)] sdHash=83272c60a6b047f84c339a4ed2750308ae5f11981cd4afe31c8b640b3d7a58f2 fullSecurityProven=false audit=excluded-unknown
+r4native ordinaryToken sid=S-1-5-21-587408064-856152790-2583328096-1001 session=2 elevated=false {"auditSaclAssurance":"excluded-unknown","coveredStatus":"verified","fullSecurityProven":false,"projections":[{"nativeStatus":0,"requestedMask":1,"state":"present","structureSha256":"439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"},{"nativeStatus":0,"requestedMask":2,"state":"present","structureSha256":"ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"},{"nativeStatus":0,"requestedMask":4,"state":"present","structureSha256":"d21a8dc39757cb7d3d9673740911cee2a2167c157a83e386e6b19a51e338f458"},{"nativeStatus":0,"requestedMask":16,"state":"absent","structureSha256":"532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"},{"nativeStatus":0,"requestedMask":32,"state":"absent","structureSha256":"7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"},{"nativeStatus":0,"requestedMask":64,"state":"absent","structureSha256":"1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"},{"nativeStatus":0,"requestedMask":128,"state":"absent","structureSha256":"56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"},{"nativeStatus":0,"requestedMask":256,"state":"absent","structureSha256":"6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"}],"securityPolicyDigest":"688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07","securityScopeId":"windows-bounded-access-v1"}
+ok
+test infrastructure::windows_client_originals024::bounded::tests::wl2_r4_native_explicit_low_integrity_fixture_is_read_and_policy_bound ... r4native explicit file-label positive: {"auditSaclAssurance":"excluded-unknown","coveredStatus":"verified","fullSecurityProven":false,"projections":[{"nativeStatus":0,"requestedMask":1,"state":"present","structureSha256":"439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"},{"nativeStatus":0,"requestedMask":2,"state":"present","structureSha256":"ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"},{"nativeStatus":0,"requestedMask":4,"state":"present","structureSha256":"41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"},{"nativeStatus":0,"requestedMask":16,"state":"present","structureSha256":"b0313b33a41a55ebe005aea4b2288287acc76dfdaf3d1120438bf784e1eef2f3"},{"nativeStatus":0,"requestedMask":32,"state":"empty","structureSha256":"e0f05903b72ca3b1c846d7498413923583f6027d4707d71e98861c5aa6736be0"},{"nativeStatus":0,"requestedMask":64,"state":"empty","structureSha256":"924b639335d0fbfb4a62919105ad87508d0a7b525393f1eafa05d0f58bc93faa"},{"nativeStatus":0,"requestedMask":128,"state":"empty","structureSha256":"5560e9662ac85445c00c44eea0e30c7261a901d485b9110f23699f900a223b93"},{"nativeStatus":0,"requestedMask":256,"state":"empty","structureSha256":"c5c582d2012f9bbe4fa4f1298ff1ca7a0424a59e9b19784f9a9460118a006c83"}],"securityPolicyDigest":"688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07","securityScopeId":"windows-bounded-access-v1"} ; resource/CAP/trust/filter populated positives remain unverified
+ok
+test infrastructure::windows_client_originals024::bounded::tests::wl2_r4_policy_is_fixed_no_full_or_partial_conversion ... ok
+test infrastructure::windows_client_originals024::bounded::tests::wl2_r4_projection_structures_refuse_unknown_bounds_and_compare_only_covered_control ... ok
+test infrastructure::windows_client_originals024::tree::tests::wl2_r4_native_absent_roots_workcopy_retirement_returns_to_absence ... native original absence restored for .codex; exact working ID retired, no deletion or Closed eligibility
+native original absence restored for .grok; exact working ID retired, no deletion or Closed eligibility
+ok
+test infrastructure::windows_client_originals024::tree::tests::wl2_r4_native_tree_absence_and_external_edit_keep_originals_required ... native whole-tree external unknown generation refused; exact original custody and external edit retained for external archival; Closed=false
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpzyZqe4
+ok
+test infrastructure::windows_client_originals024::tree::tests::wl2_r4_native_whole_tree_custody_workcopy_restore_same_ids_and8projections ... tree-stage capture existing Codex
+tree-stage flush intention +move
+tree-stage working copy
+tree-stage exact original restore
+native whole-tree existing root restored bytes+all descendant IDs+8projections {"ClosedEligibility":false,"auditSaclAssurance":"excluded-unknown","currentLocation":"C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpVm9qDd\\Profile\\.codex","fullSecurityProven":false,"nodes":4,"originalAbsent":false,"poisoned":false,"scopeId":"windows-bounded-access-v1"}; original objects not copied; production Closed=false
+ok
+test infrastructure::windows_client_originals024::v2::current::tests::wl2_r4_native_v2_reference_uses_real_bounded_snapshot_and_same_object_cas ... v2 bounded current native CAS: all8+combined security, policyDigest688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07, samefileID2251799814005596, no Full/Partial conversion; synthetic manifest only, OriginalSession/Closed not issued
+ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_native_private_records_remain_pending_and_current_mismatch_is_not_authority ... v2 native-private records: policy-bound pending only; missing/stale current keeps Required; no Full/partial conversion or Closed eligibility
+ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_phase_current_policy_digest_replay_and_unknown_fields_refuse ... ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_policy_digest_scope_schema_and_all8_projection_set_reject_downgrade ... ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 1894 filtered out; finished in 0.21s
+

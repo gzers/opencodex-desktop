@@ -1,0 +1,47 @@
+{
+  "head": "7130ab83f98b7c0d9f908e9f3f756dc1c713f04c",
+  "tree": "2ada1b20d4994d553f5f5f335a74f9cb490db2a3",
+  "result": {
+    "exitCode": 0,
+    "profile": "debug",
+    "arguments": [
+      "build",
+      "--locked",
+      "--offline",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--target",
+      "x86_64-pc-windows-msvc",
+      "--bins",
+      "-j",
+      "1"
+    ],
+    "elapsedMs": 179460,
+    "accepted": false
+  },
+  "warnings": [
+    "121"
+  ],
+  "artifacts": [
+    {
+      "name": "opencodex-desktop.exe",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 75784192,
+      "sha256": "00a881a111254aa7a920bad51e589553a8cd8b560b90eb62a9b7b89ac33f3ee5"
+    },
+    {
+      "name": "ocxd.exe",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "22636ba3cc1a422b7b93d75abeaad92e8488f31914757cda57478a4a67c62327"
+    },
+    {
+      "name": "ocx.exe",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "b5b1fca2e7d13c479d09e6874d5c2a7bba9a4ab5bde9d06bd0771281b17459e3"
+    }
+  ],
+  "releaseCandidate": false,
+  "accepted": false
+}

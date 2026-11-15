@@ -1,0 +1,335 @@
+{
+  "time": "2026-11-15T14:28:29.923817+08:00",
+  "sourceHead": "40203e193122395c1cef05b24b10643f42ebfd73",
+  "sourceTree": "e61a902dfab26eafc030d6bba2a640965da00bf6",
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "codeCommits": [
+    "2b2e3a9c0",
+    "40203e193122395c1cef05b24b10643f42ebfd73"
+  ],
+  "runs": {
+    "before01": {
+      "rawExit": 101,
+      "elapsedMs": 136692,
+      "passed": 0,
+      "failed": 2,
+      "ignored": 0,
+      "accepted": false
+    },
+    "after01": {
+      "rawExit": 0,
+      "elapsedMs": 91080,
+      "passed": 15,
+      "failed": 0,
+      "ignored": 0,
+      "accepted": false
+    },
+    "retired-before01": {
+      "rawExit": 101,
+      "elapsedMs": 108741,
+      "passed": 0,
+      "failed": 2,
+      "ignored": 0,
+      "accepted": false
+    },
+    "after02": {
+      "rawExit": 101,
+      "elapsedMs": 15866,
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "accepted": false
+    },
+    "after03": {
+      "rawExit": 0,
+      "elapsedMs": 136710,
+      "passed": 23,
+      "failed": 0,
+      "ignored": 0,
+      "accepted": false
+    },
+    "product01": {
+      "rawExit": 0,
+      "elapsedMs": 117606,
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "accepted": false
+    }
+  },
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77124096,
+      "sha256": "2488b2838d825ce9ac767df72d067ed3bde5e1942e9f40730bb879eb93e83a77",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "40203e193122395c1cef05b24b10643f42ebfd73",
+      "sourceTree": "e61a902dfab26eafc030d6bba2a640965da00bf6"
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "3ebd15d0c0252cc675823dba642811455d7793911f36199c217c4748fffa57d9",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "40203e193122395c1cef05b24b10643f42ebfd73",
+      "sourceTree": "e61a902dfab26eafc030d6bba2a640965da00bf6"
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "2c5a5f1040086f35b6bceac464c700378a58602a888d3531415f48c148ebe6b5",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ],
+      "sourceHead": "40203e193122395c1cef05b24b10643f42ebfd73",
+      "sourceTree": "e61a902dfab26eafc030d6bba2a640965da00bf6"
+    }
+  ],
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "canonical v2 requires both recorded working roots before Ready/PreparedRestore/OfficialTeardown and both restorations before Restored/Closed, including zero-step prefixes. Text remains PendingOnly."
+    },
+    {
+      "id": "O1",
+      "result": "partial-progress",
+      "fact": "actual retired working root handle/private parent/full image remain retained and rechecked after original restoration; observed retired drift poisons. Official declared side-effect/Ready/PreStop snapshots remain incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "two baseline regressions reproduce premature Ready, two reproduce forgotten retired drift; 23 affected tree/v2 tests pass after fixes. Complete production interruption/Closed/successor matrix missing."
+    },
+    {
+      "id": "H",
+      "result": "prepared/awaiting-user-desktop",
+      "fact": "immutable 0c618cdfd actual-GUI/empty-broker input entry prepared earlier. Observed output names recorded separately; no real official Owner or production GUI acceptance. Controller does not inject into marenben desktop."
+    },
+    {
+      "id": "S/D",
+      "result": "wiring-reused/production-unverified",
+      "fact": "typed Stop wiring unchanged; no new real official family/source/Stop combination execution."
+    },
+    {
+      "id": "P",
+      "result": "refused",
+      "fact": "public require_durable_capture still refuses; outward Stop recovery refusal and authorize_successor refusal retained; native history release/new capture and public production acceptance not complete"
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    }
+  ],
+  "guiOutputFiles": [],
+  "firstError": {
+    "run": "before01",
+    "rawExit": 101,
+    "passed": 0,
+    "failed": 2,
+    "rawWin32": null,
+    "detail": "regressions reproduced unperformed-roots pure/native Ready acceptance; native phase2 written but only PendingOnly data, no production proof",
+    "preserved": true,
+    "fixed": true
+  },
+  "otherFailures": [
+    {
+      "run": "retired-before01",
+      "rawExit": 101,
+      "passed": 0,
+      "failed": 2,
+      "detail": "retired working drift omitted from subsequent native readback; original restored, extra node retained",
+      "fixed": true
+    },
+    {
+      "run": "after02",
+      "rawExit": 101,
+      "executedTests": 0,
+      "detail": "E0308 old test expected PathBuf; adapted original work-ID assertion to retained root handle",
+      "staleExecutableNotAttributed": true,
+      "fixed": true
+    }
+  ],
+  "cleanup": {
+    "newPrivateArchivedSceneCount": 16,
+    "newPrivateArchivedFiles": 129,
+    "newPrivateArchivedBytes": 311020,
+    "scenes": [
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmprcKcPJ",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-before01-0.zip",
+        "archiveSha256": "fdba97fe4ed1537e4813a7a2f355dc48cf436b2c0216bf603980fcb85f808c95",
+        "files": 5,
+        "bytes": 19758,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpvygdce",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after01-0.zip",
+        "archiveSha256": "1f6f3d09e61b5d3c07e9d4f34e8239955428349da8939973f2354959ca589be0",
+        "files": 5,
+        "bytes": 19807,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpDlcAsh",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after01-1.zip",
+        "archiveSha256": "cd60b631749f49601cff913ed5657413227cadf46471530b867b15ce08615232",
+        "files": 6,
+        "bytes": 21075,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpqvSeal",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after01-2.zip",
+        "archiveSha256": "51ed9175b78f78ded5495c10f7e362a126d681b35f2f44b246ebc3312c74ba20",
+        "files": 20,
+        "bytes": 41813,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpOCG4Iw",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after01-3.zip",
+        "archiveSha256": "1c12acc2201c453f04199d7b75295460dcc8f12e40a997e674f4c0c6ae7b551e",
+        "files": 4,
+        "bytes": 9689,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9OidHK",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-retired-before01-0.zip",
+        "archiveSha256": "1c2f5143881cffdd616ed0c7cd5d39ec2a29dc708224cf302aef7fdb9bfdabe3",
+        "files": 4,
+        "bytes": 5922,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpa5tA2H",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-retired-before01-1.zip",
+        "archiveSha256": "1547c09f22e7e80b1f705127af1e650172df5c74b75ac5f3d84fdb28d9613839",
+        "files": 19,
+        "bytes": 35506,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpPbgwVU",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-0.zip",
+        "archiveSha256": "51f71b4182f2e562c3c426d653f39153b066f766039f8690a5d90c1aaa0e5263",
+        "files": 1,
+        "bytes": 26,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp1a3PaD",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-1.zip",
+        "archiveSha256": "f6dbc95db78a5db4e6c4ba4faf7618a6fb04778fc6eb9a18cc1c8304d0170304",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpnZa93v",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-2.zip",
+        "archiveSha256": "925c6fb29de66e27939111895f84e80f0d8f4bfceef720881272aeae3ec7eade",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpfERUp5",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-3.zip",
+        "archiveSha256": "37be2af55cd4422d6cf18c8a990b019f12dab26a6c9c937b1a9af3e768e73ed5",
+        "files": 4,
+        "bytes": 5921,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpwoySIa",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-4.zip",
+        "archiveSha256": "08c9daab3d69c3edc9a850bedd4c5ed9efb3b9a0993f026612c89578d74359ed",
+        "files": 5,
+        "bytes": 19781,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpilzguQ",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-5.zip",
+        "archiveSha256": "c5105ace71595fcd9696239d4c5fa232246f350d16a20e546402939495322dbb",
+        "files": 6,
+        "bytes": 21075,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpHgho8W",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-6.zip",
+        "archiveSha256": "a6ae37c22823295e7e5b19a9510932ac00206edbec70a5e7c6d3c77e613d54da",
+        "files": 20,
+        "bytes": 41813,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpLKcEYp",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-7.zip",
+        "archiveSha256": "af2bd5c2c31d2fe8fde455800582a121519e594d6dac9a0f6b17f591111a348e",
+        "files": 19,
+        "bytes": 35437,
+        "removed": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpkEueJt",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\canonical-progress-after03-8.zip",
+        "archiveSha256": "0465bb4157d4c39db8a052407d08b89442af46233b39be086163b7dae4c7be00",
+        "files": 4,
+        "bytes": 9689,
+        "removed": false
+      }
+    ],
+    "nativeMetadataCloned": false,
+    "originalsRetained": true,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicTaskRoots": 0,
+    "GUIProcesses": 0,
+    "officialProcesses": 0,
+    "forcedCleanup": false,
+    "dailyPathConfigPolicyChanged": false,
+    "historicalRejectedDeletionRetried": false,
+    "overallCleanupComplete": false
+  },
+  "limits": [
+    "Snapshot reads do not prove absence of all possible untrusted interval writes",
+    "Complete synthetic stage chains remain locator data; no native ClosedEligibility is minted by parsing",
+    "Readiness/client side-effect support and qualified successor native history/root-handle release remain unfinished",
+    "GUI prepared source 0c remains immutable; current binaries are separate and not copied over those inputs",
+    "Populated CAP/trust CREATE_NEW1314/5 prerequisites unchanged and not retried",
+    "Debug artifacts are not release-budget or frozen-candidate acceptance"
+  ],
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "startOpen": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

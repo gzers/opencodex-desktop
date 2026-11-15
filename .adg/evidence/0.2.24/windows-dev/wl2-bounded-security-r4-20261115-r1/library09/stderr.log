@@ -1,0 +1,139 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+error[E0603]: trait import `DiagnosticRoles` is private
+   --> src\infrastructure\windows_official_lifecycle024.rs:7:35
+    |
+  7 |     windows_diagnostic_roles024::{DiagnosticRoles, WindowsDiagnostics},
+    |                                   ^^^^^^^^^^^^^^^ private trait import
+    |
+note: the trait import `DiagnosticRoles` is defined here...
+   --> src\infrastructure\windows_diagnostic_roles024.rs:12:31
+    |
+ 12 |         ChildExit, ChildRole, DiagnosticRoles, NativeSession, SupervisorAbsence,
+    |                               ^^^^^^^^^^^^^^^
+note: ...and refers to the trait `DiagnosticRoles` which is defined here
+   --> src\modules\runtime\windows_lifecycle024_contract.rs:198:1
+    |
+198 | pub trait DiagnosticRoles {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^ you could import this directly
+
+error[E0603]: trait import `SupervisorAbsence` is private
+   --> src\infrastructure\windows_official_lifecycle024.rs:8:29
+    |
+  8 |     windows_supervisor024::{SupervisorAbsence, WindowsSupervisor},
+    |                             ^^^^^^^^^^^^^^^^^ private trait import
+    |
+note: the trait import `SupervisorAbsence` is defined here...
+   --> src\infrastructure\windows_supervisor024.rs:218:70
+    |
+218 |     modules::runtime::windows_lifecycle024_contract::{NativeSession, SupervisorAbsence},
+    |                                                                      ^^^^^^^^^^^^^^^^^
+note: ...and refers to the trait `SupervisorAbsence` which is defined here
+   --> src\modules\runtime\windows_lifecycle024_contract.rs:177:1
+    |
+177 | pub trait SupervisorAbsence {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^ you could import this directly
+
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:29:35
+   |
+29 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |                                   ^^^^^^^^^^^^^
+30 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused import: `OpenOptions`
+  --> src\infrastructure\windows_owner_host024\desktop_tests.rs:12:22
+   |
+12 |     fs::{self, File, OpenOptions},
+   |                      ^^^^^^^^^^^
+
+error[E0599]: no method named `observe_absent` found for struct `WindowsSupervisor` in the current scope
+   --> src\infrastructure\windows_official_lifecycle024.rs:362:33
+    |
+362 |         let absent = supervisor.observe_absent(self, deadline).map_err(unknown)?;
+    |                                 ^^^^^^^^^^^^^^ method not found in `WindowsSupervisor`
+    |
+   ::: src\modules\runtime\windows_lifecycle024_contract.rs:181:8
+    |
+181 |     fn observe_absent(
+    |        -------------- the method is available for `WindowsSupervisor` here
+    |
+   ::: src\infrastructure\windows_supervisor024.rs:312:1
+    |
+312 | pub(crate) struct WindowsSupervisor;
+    | ----------------------------------- method `observe_absent` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `SupervisorAbsence` which provides `observe_absent` is implemented but not in scope; perhaps you want to import it
+    |
+  3 + use crate::modules::runtime::windows_lifecycle024_contract::SupervisorAbsence;
+    |
+
+error[E0599]: no method named `complete_family` found for struct `WindowsDiagnostics` in the current scope
+   --> src\infrastructure\windows_official_lifecycle024.rs:365:14
+    |
+364 |         let normal = diagnostics
+365 |             .complete_family(self, &absent, deadline)
+    |              ^^^^^^^^^^^^^^^ method not found in `WindowsDiagnostics`
+    |
+   ::: src\modules\runtime\windows_lifecycle024_contract.rs:214:8
+    |
+214 |     fn complete_family(
+    |        --------------- the method is available for `WindowsDiagnostics` here
+    |
+   ::: src\infrastructure\windows_diagnostic_roles024.rs:336:1
+    |
+336 | pub(crate) struct WindowsDiagnostics;
+    | ------------------------------------ method `complete_family` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: trait `DiagnosticRoles` which provides `complete_family` is implemented but not in scope; perhaps you want to import it
+    |
+  3 + use crate::modules::runtime::windows_lifecycle024_contract::DiagnosticRoles;
+    |
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:506:14
+    |
+506 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+506 -             .fetch_update(
+506 +             .try_update(
+    |
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0599, E0603.
+For more information about an error, try `rustc --explain E0599`.
+warning: `opencodex-desktop` (lib test) generated 7 warnings
+error: could not compile `opencodex-desktop` (lib test) due to 4 previous errors; 7 warnings emitted

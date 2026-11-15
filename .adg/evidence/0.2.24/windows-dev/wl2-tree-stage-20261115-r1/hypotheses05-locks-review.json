@@ -1,0 +1,17 @@
+{
+  "time": "2026-11-15T13:05:19.547382+08:00",
+  "locks01": {
+    "exitCode": 101,
+    "tests": 0,
+    "firstError": "E0282 null_mut pointee type for SQLite native HANDLE output; explicit HANDLE required"
+  },
+  "staticReview": [
+    "PinnedDirectory::open(root) would reopen an original root already held DELETE-capable without FILE_SHARE_DELETE; that is a sharing conflict by construction. No runtime raw32 is claimed: compilation failed first.",
+    "Use original retained root handle directly for root ID/8projection checks and pin only its parent; do not relax original root sharing or synthesize a replacement handle."
+  ],
+  "hypotheses": [
+    "Explicit HANDLE output and borrowing original root removes compile error/anticipated self-conflict; exact SQLite-opened file handle ID/security still mandatory.",
+    "All positive and negative lock cases run as one independent targeted batch; no source changes while compilation active."
+  ],
+  "budgetChanged": false
+}

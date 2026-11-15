@@ -1,0 +1,36 @@
+{
+  "time": "2026-11-15T14:38:44.194382+08:00",
+  "sourceHead": "40203e193122395c1cef05b24b10643f42ebfd73",
+  "blockingArea": "complete declared official side-effect content assessment, not native file capture or all other Windows implementation",
+  "facts": [
+    "declaration(bytes)->AppResult<Option<Vec<String>>> and helpers exist only as private funcs in infrastructure/macos_client_session.rs:825-1105 and that module uses Unix/macOS types",
+    "modules/runtime/client_artifact_policy.rs Observations requires declared_routes independently obtained before startup; None is unresolved and must refuse, Some(empty) is a complete empty set",
+    "official_lifecycle024::LaunchPlan has no declared-routes field; no existing cross-platform public route declaration function found in current source"
+  ],
+  "requestedMinimalChange": {
+    "proposedFile": "modules/runtime/client_route_declaration.rs",
+    "api": "pub fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> (equivalent pure data API acceptable)",
+    "action": "extract existing exact route parser plus pure helpers/tests from macos_client_session; Mac consumer reuses it, Windows reads its already native-pinned H/config.json then calls it",
+    "preserve": [
+      "strict duplicate/unknown-format handling and limits",
+      "selected/static/dynamic roster unknown semantics",
+      "provider slash codec/collisions",
+      "display aliases do not become routes",
+      "customModels/combos/disabledModels/fastRows existing assertions",
+      "no filesystem/network/model/native proof or mutation authority in this parser"
+    ]
+  },
+  "unchanged": [
+    "four native traits",
+    "HMAC/LaunchPlan/source selection semantics",
+    "budgets",
+    "official2.99 package",
+    "Windows native capture/closure requirements"
+  ],
+  "windowsWillContinue": [
+    "same-volume working snapshots and canonical phase references",
+    "native retained history and exact root release",
+    "actual GUI and broker wiring within authorized Windows files"
+  ],
+  "allAccepted": false
+}

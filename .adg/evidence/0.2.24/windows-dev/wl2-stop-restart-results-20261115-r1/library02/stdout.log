@@ -1,0 +1,131 @@
+
+running 59 tests
+test infrastructure::windows_client_originals024::tree::locks::tests::wl2_r4_stable_locks_absence_does_not_create_or_adopt_new_lock ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpTwrx2r
+ok
+test infrastructure::windows_client_originals024::tree::locks::tests::wl2_r4_stable_locks_busy_and_unknown_journal_refuse_and_keep_scene ... native original second stable lock held: rawWin32=33 Os { code: 33, kind: Uncategorized, message: "另一个程序已锁定文件的一部分，进程无法访问。" }; no forced unlock or success
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpx5JfMP
+ok
+test infrastructure::windows_client_originals024::tree::locks::tests::wl2_r4_stable_locks_exact_native_sqlite_pair_releases_without_mutation ... native two exact stable SQLite files restored same IDs/bytes/8projections; actual READ-only native handles, both fail-immediate exclusive protocol ranges acquired/released, real SQLite contention refused; no journal or Closed authority
+ok
+test infrastructure::windows_client_originals024::tree::tests::wl2_r4_native_absent_roots_workcopy_retirement_returns_to_absence ... native original absence restored for .codex; exact working ID retired, no deletion or Closed eligibility
+native original absence restored for .grok; exact working ID retired, no deletion or Closed eligibility
+ok
+test infrastructure::windows_client_originals024::tree::tests::wl2_r4_native_tree_absence_and_external_edit_keep_originals_required ... native whole-tree external unknown generation refused; exact original custody and external edit retained for external archival; Closed=false
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp16zwUs
+ok
+test infrastructure::windows_client_originals024::tree::tests::wl2_r4_native_whole_tree_custody_workcopy_restore_same_ids_and8projections ... tree-stage capture existing Codex
+tree-stage flush intention +move
+tree-stage working copy
+tree-stage exact original restore
+native whole-tree existing root restored bytes+all descendant IDs+8projections {"ClosedEligibility":false,"auditSaclAssurance":"excluded-unknown","currentLocation":"C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpXtLbqE\\Profile\\.codex","fullSecurityProven":false,"nodes":4,"originalAbsent":false,"poisoned":false,"scopeId":"windows-bounded-access-v1"}; original objects not copied; production Closed=false
+ok
+test infrastructure::windows_client_originals024::tree::tests::wl2_r4_retired_working_external_edit_vetoes_restored_readback ... retired working unknown node refuses restored readback and poisons retained tree; exact original restored, foreign scene retained, no Closed/native lifecycle eligibility
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpveB8JJ
+ok
+test infrastructure::windows_client_originals024::v2::adapter::tests::wl2_originals_current_pin_retains_actual_record_and_refuses_foreign_selection ... actual source-current record bytes/ID/8projections pinned, mutation/rename/foreign selection/expired deadline refused; synthetic selection only, not production Source/Owner/Closed proof
+ok
+test infrastructure::windows_client_originals024::v2::adapter::tests::wl2_originals_current_pin_unknown_schema_and_hardlink_never_admit_source ... unknown source field and multiple native links refused; no adapter/native phase tag issued
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_closed_history_drift_refuses_after_root_release ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpK1EoV3
+released-root historical archive unknown file causes native refusal, not automatic history adoption/deletion; exact scene retained, no successor proof
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_closed_history_first_part_failure_retains_native_roots ... native original-history first sealed part fault retains partial private bytes and exact restored root handles, canonical Restored17/current unchanged, no Closed or release/catch-up
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpsItyVU
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_closed_history_is_independent_of_later_live_clients ... native storage Closed history preserves exact old original bytes/absence; actual old DELETE roots released only after archive/current, fresh native capture works, later live clients do not become historical baseline; no official ClosedEligibility/successor permit
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpkDcISr
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_closed_history_partial_current_never_releases_originals ... original-history+Closed phase18 then actual partial current fault preserves old native root handles/archive, no release or catch-up; text Closed is locator-only without matching current/typed native closure
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpxjesX5
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_closed_history_unknown_custody_child_keeps_required ... exact native custody membership rejects an unknown top-level child after root release, poisons the native capture and preserves text Closed only as pending data; no deletion or successor permission
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp2Jt9rt
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_native_intent_without_native_move_cannot_publish_completed ... native first move not executed: Completed refused, original unchanged, canonical Intent/current retained, no retry or Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpqm5643
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_native_interrupted_tree_capture_is_pending_and_never_text_closed ... native actual first-root interruption preserves original custody and canonical v2 pending, no reopen restoration authority or Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpB3LYXo
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_native_manifest_and_exclusive_v2_intent_precede_both_root_moves ... native v2 actual tree manifest/current and each Intent/Completed before/after move/workcopy/abort-restore; both roots restored IDs/content/8projections; single canonical journal only; pending Aborted not Closed; production source admission unproven
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_native_second_restore_conflict_keeps_exact_mixed_state_and_intent ... native first root restored, second foreign edit retained, original Grok in custody, exact restore Intent pending; no rollback/catch-up/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpHxe7Ir
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_retired_working_drift_keeps_canonical_aborted_reference ... retired working drift refuses native canonical recheck; original restored but exact Aborted/current prefix unchanged, conflict retained, no successor or Closed proof
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp6eB7lh
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_successor_missing_history_or_foreign_namespace_never_adopts ... missing actual native history or unknown exact namespace child refuses new capture before original moves; text Closed is not adopted, foreign record and old original history retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmppwqWgd
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_successor_old_history_drift_before_first_move_preserves_new_original ... old native history drift after successor capture blocks first root move, poisons both native stores, leaves new originals/phase1/current and foreign old scene intact; no permission or catch-up
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpnxZHn3
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_successor_source_change_or_old_archive_drift_blocks_new_capture ... different source binding and old archive native drift refuse successor before any new generation/root mutation; old poisoned native history preserved, no catch-up
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmprTkYqL
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_successor_three_native_generations_keep_exact_predecessors ... three actual native-storage generations create independent original manifests/current/custody and ordered predecessor refs, keep original histories unchanged after new user bytes, preserve exact live original each cycle; storage fixture only, no official ClosedEligibility/Start budget or Owner adoption
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpM70ay3
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_unperformed_native_root_moves_refuse_ready_before_phase_write ... native premature Ready refused before extra phase/current mutation, original root unchanged, canonical Captured/current remains pending; no retry or production proof
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_working_archive_extra_file_refuses_native_phase_readback ... native archive extra-file drift poisons retained archive and refuses further PreStop; locator can still identify pending Ready data but cannot issue native authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpNYLXaS
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_working_first_part_failure_keeps_original_and_canonical_prefix ... actual first1MiB sealed/synced working part then injected failure: partial private data/original custody retained, canonical Captured/current unchanged, poisoned driver refuses retry, no Ready/metadata completion/catch-up
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmplQRoTt
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_working_partial_current_keeps_archive_without_ready_authority ... actual Ready snapshot followed by current one-byte write+sync injected failure: phase10/archive/original custody retained, current corrupt and pending-only locator available; no Ready permit/retry/catch-up
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpocqpgo
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_working_ready_and_pre_stop_archive_real_bytes_and_original_limit ... actual Ready and PreStop immutable private snapshots bound to canonical current; exact2MiB file preserved in two1MiB parts, seal denies rewrite; synthetic source only, no official Owner/ReadySession/Closed proof
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpiioL81
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_working_unknown_edit_archives_actual_bytes_without_adoption ... actual unknown bytes copied privately but never adopted as allowed official changes; canonical Captured/current unchanged, original custody and failure preserved, no catch-up or permission
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpW3MP0x
+ok
+test infrastructure::windows_client_originals024::v2::current::tests::wl2_r4_native_v2_partial_current_write_preserves_phase_and_poison ... actual bounded-v2 partial current write+sync injected failure: same fileID, phase2 retained, poisoned retry/open refused, no catch-up/rollback/Closed; synthetic manifest only
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpTpHkd7
+ok
+test infrastructure::windows_client_originals024::v2::current::tests::wl2_r4_native_v2_reference_uses_real_bounded_snapshot_and_same_object_cas ... v2 bounded current native CAS: all8+combined security, policyDigest688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07, samefileID281474977985507, no Full/Partial conversion; synthetic manifest only, OriginalSession/Closed not issued
+ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_predecessor_schema_rejects_missing_duplicate_context_or_noncanonical_reference ... predecessor refs are required strict data bound to same context/policy/D volume, no duplicates/self/unknown fields; syntactically valid data remains pending, not a retained native history
+ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_tree_progress_abort_restore_is_pending_data_not_closed_permission ... ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_tree_progress_refuses_gap_duplicate_wrong_root_and_unfinished_phase ... ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_unperformed_roots_cannot_cross_ready_or_closed_in_v2_records ... canonical two-root history required before Ready/Restored; full synthetic Closed prefix remains data-only, no production eligibility
+ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_native_private_records_remain_pending_and_current_mismatch_is_not_authority ... v2 native-private records: policy-bound pending only; missing/stale current keeps Required; no Full/partial conversion or Closed eligibility
+ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_phase_current_policy_digest_replay_and_unknown_fields_refuse ... ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_policy_digest_scope_schema_and_all8_projection_set_reject_downgrade ... ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_working_reference_missing_wrong_phase_and_cross_session_refuse ... working snapshot locator is mandatory and fixed to phase/session/binding/policy/root set; pure data remains PendingOnly, no native archive or phase permit reconstructed
+ok
+test infrastructure::windows_diagnostic_roles024::tests::wl2_family_original_node_bun_grammar_is_bound_not_merely_containing_phase ... ok
+test infrastructure::windows_diagnostic_roles024::tests::wl2_helper_sentinel_exact_entry_is_required_and_never_diagnostic ... ok
+test infrastructure::windows_diagnostic_roles024::tests::wl2_next_d_raw_outcomes_cannot_erase_required_failure_or_unknown ... ok
+test infrastructure::windows_diagnostic_roles024::tests::wl2_r3_roles_exact_query_only_not_name_or_exit_allowlist ... ok
+test infrastructure::windows_official_lifecycle024::tests::expired_window_and_missing_owner_cannot_start_or_adopt ... ok
+test infrastructure::windows_official_lifecycle024::tests::isolated_production_lifecycle_wl1 ... ignored, one fresh ordinary ocxw1d Profile; fixed official2.99, no MSI/CLI or upstream request
+test infrastructure::windows_official_lifecycle024::tests::isolated_wl2_native_boundaries ... ignored, one isolated ordinary account; W-L2 independent prerequisites, no official launch
+test infrastructure::windows_official_lifecycle024::tests::restart_inherits_original_stop_subwindow_and_production_runner_opts_in ... ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_actual_ocx_pid_blocks_both_teardown_and_stopped_readback ... ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_closed_status_without_original_owner_or_deadline_stays_unknown ... closed-status receiver requires original retained Owner and deadline; missing or expired context never clears recovery, no text/boolean adoption
+ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_restart_stop_receipt_keeps_original_outer_window_and_input ... Restart dispatch preserves exact original30/Stop10 window and all launch inputs; timely synthetic Stop at9 remains data-valid at12, new Start has only original remaining18; no process or native permission issued
+ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_restart_wrong_late_or_expired_stop_receipt_never_returns_launch_input ... late/wrong-window Stop receipt, expired recording and action mixing refuse successor input; Stop returns no launch input; private time fixtures never mint native ClosedEligibility
+ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_sd_accounting_preserves_child_raw_exit_for_mandatory_role_proof ... ok
+test infrastructure::windows_supervisor024::mirror_tests::wl2_r3_default_state_mirror_is_independent_of_custom_home_absence ... ok
+test infrastructure::windows_supervisor024::r3_tests::wl2_r3_typed_absence_requires_both_exact_native_namespaces ... ok
+test infrastructure::windows_supervisor024::tests::wl2_next_s_missing_leaf_below_regular_file_parent_is_unknown ... ok
+test infrastructure::windows_supervisor024::tests::wl2_next_s_missing_nested_staged_leaf_below_junction_is_unknown ... task junction rawExit=Some(0); stdout=; stderr=
+ok
+test infrastructure::windows_supervisor024::tests::wl2_next_s_parent_notfound_and_access_denied_keep_raw_unknown ... ok
+test infrastructure::windows_supervisor024::tests::wl2_staged_and_native_namespaces_are_independent ... native namespaces (observations only): {"scm":{"state":"Absent","raw_code":1060},"scheduler":{"state":"Absent","raw_code":2147942402}}
+ok
+test infrastructure::windows_supervisor024::tests::wl2_supervisor_errors_never_become_absence ... ok
+
+test result: ok. 57 passed; 0 failed; 2 ignored; 0 measured; 1886 filtered out; finished in 21.24s
+

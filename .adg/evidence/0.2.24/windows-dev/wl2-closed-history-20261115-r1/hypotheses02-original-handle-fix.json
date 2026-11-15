@@ -1,0 +1,21 @@
+{
+  "time": "2026-11-15T15:28:51.135494+08:00",
+  "baseline": {
+    "run": "library01",
+    "rawExit": 101,
+    "passed": 29,
+    "failed": 3,
+    "firstRawWin32": 32,
+    "stage": "seal original history reopened restored root while original DELETE-capable owner was retained",
+    "evidence": "3failed scenes retained; later missing archive raw3 was downstream, not injected current failure"
+  },
+  "changes": [
+    "seal restored originals through original retained root handle; do not relax share flags or reopen root authority",
+    "assert actual partialwrite injected fault text rather than accepting unrelated precondition failure",
+    "required canonical historyRecord missing/None/workingPhase/wrong session counterexamples",
+    "native original history firstpart interruption and premature-release negative cases",
+    "retain NormalExit plus original Stop deadline/completion in nonserde/nonClone ClosedExitHistory; later successor recheck reads original handles/raw Job history under new action window without changing old Stop deadline; public successor still refused until history set/newcapture wired"
+  ],
+  "expected": "impacted tree/v2/lifecycle/S-D tests pass, original failures/logs retained; actual official production combination not executed",
+  "accepted": false
+}

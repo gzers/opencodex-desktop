@@ -1,0 +1,17 @@
+{
+  "time": "2026-11-15T15:58:10.230390+08:00",
+  "previous": {
+    "run": "library02",
+    "rawExit": 0,
+    "passed": 54,
+    "ignored": 2
+  },
+  "changes": [
+    "Add adapter-wide monotonic failed state for history/namespace check failures even between generations when activeStore=None; removal of foreign conflict cannot cause automatic retry from an old ticket",
+    "Add exact Owner before-Resume call with Original tag/source/current roots and full old histories plus native creator-not-resumed rechecks, within the same inherited ActionWindow",
+    "No new success by default; guard only refuses or verifies existing native original types. Keep public production gate unchanged and unknowns/raw exits.",
+    "Test successor ticket pure consuming admission via original ActionWindow boundaries only; no fixture can manufacture ClosedEligibility or native Owner proof"
+  ],
+  "expected": "same impacted suite remains passed, native creator regression reused (pure monotonic accessor unchanged)",
+  "accepted": false
+}

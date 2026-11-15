@@ -1,0 +1,339 @@
+{
+  "privilegesOrPolicyChanged": false,
+  "base": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\populated-probe01",
+  "accepted": false,
+  "session": 2,
+  "elevated": false,
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "scope": "new-fixture-creation-and-query-feasibility-only",
+  "trials": [
+    {
+      "Name": "conditional-dacl",
+      "Path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\populated-probe01\\conditional-dacl.synthetic",
+      "Stage": "CreatedAndQueried",
+      "RawStatus": 0,
+      "Created": true,
+      "TargetMask": 4,
+      "TargetAce": 9,
+      "Queries": [
+        {
+          "Mask": 1,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 2,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 4,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [
+            {
+              "Type": 0,
+              "Flags": 0,
+              "Bytes": 36,
+              "Sha256": "e4c9ef32a97881eb736010368f9b132efe19be93ad6479f7b7eac790bba61e98"
+            },
+            {
+              "Type": 9,
+              "Flags": 0,
+              "Bytes": 64,
+              "Sha256": "f90b7541cda777240ce2929a9a630a9fec269bc3a8365fb48d53a3daca3ff582"
+            }
+          ],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 16,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 32,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 64,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 128,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 256,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 503,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        }
+      ]
+    },
+    {
+      "Name": "resource-attribute",
+      "Path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\populated-probe01\\resource-attribute.synthetic",
+      "Stage": "CreatedAndQueried",
+      "RawStatus": 0,
+      "Created": true,
+      "TargetMask": 32,
+      "TargetAce": 18,
+      "Queries": [
+        {
+          "Mask": 1,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 2,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 4,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [
+            {
+              "Type": 0,
+              "Flags": 0,
+              "Bytes": 36,
+              "Sha256": "e4c9ef32a97881eb736010368f9b132efe19be93ad6479f7b7eac790bba61e98"
+            }
+          ],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 16,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 32,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [
+            {
+              "Type": 18,
+              "Flags": 0,
+              "Bytes": 72,
+              "Sha256": "54453d861cd69bfff74f8179656908f8a9413d5057778f40c591ff0d38f887cb"
+            }
+          ],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 64,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 128,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 256,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 503,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [
+            {
+              "Type": 18,
+              "Flags": 0,
+              "Bytes": 72,
+              "Sha256": "54453d861cd69bfff74f8179656908f8a9413d5057778f40c591ff0d38f887cb"
+            }
+          ],
+          "AclPointerPresent": true,
+          "StructureError": null
+        }
+      ]
+    },
+    {
+      "Name": "scoped-policy",
+      "Path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\populated-probe01\\scoped-policy.synthetic",
+      "Stage": "CreateFileW-CREATE_NEW-READ_CONTROL",
+      "RawStatus": 1314,
+      "Created": false,
+      "TargetMask": 64,
+      "TargetAce": 19,
+      "Queries": []
+    },
+    {
+      "Name": "process-trust",
+      "Path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\populated-probe01\\process-trust.synthetic",
+      "Stage": "CreateFileW-CREATE_NEW-READ_CONTROL",
+      "RawStatus": 5,
+      "Created": false,
+      "TargetMask": 128,
+      "TargetAce": 20,
+      "Queries": []
+    },
+    {
+      "Name": "access-filter",
+      "Path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\populated-probe01\\access-filter.synthetic",
+      "Stage": "CreatedAndQueried",
+      "RawStatus": 0,
+      "Created": true,
+      "TargetMask": 256,
+      "TargetAce": 21,
+      "Queries": [
+        {
+          "Mask": 1,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 2,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": false,
+          "StructureError": null
+        },
+        {
+          "Mask": 4,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [
+            {
+              "Type": 0,
+              "Flags": 0,
+              "Bytes": 36,
+              "Sha256": "e4c9ef32a97881eb736010368f9b132efe19be93ad6479f7b7eac790bba61e98"
+            }
+          ],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 16,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 32,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 64,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 128,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 256,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [
+            {
+              "Type": 21,
+              "Flags": 0,
+              "Bytes": 64,
+              "Sha256": "91ba0c7d0e5f5485db957dc8300a3b9af049306cc289ebc291ae8ce3ae542e1d"
+            }
+          ],
+          "AclPointerPresent": true,
+          "StructureError": null
+        },
+        {
+          "Mask": 503,
+          "RequiredAccess": 131072,
+          "RawStatus": 0,
+          "Aces": [
+            {
+              "Type": 21,
+              "Flags": 0,
+              "Bytes": 64,
+              "Sha256": "91ba0c7d0e5f5485db957dc8300a3b9af049306cc289ebc291ae8ce3ae542e1d"
+            }
+          ],
+          "AclPointerPresent": true,
+          "StructureError": null
+        }
+      ]
+    }
+  ],
+  "os": "10.0.26100.0",
+  "productionExecuted": false,
+  "time": "2026-11-15T12:33:10.8145342+08:00",
+  "fullSaclRequested": false
+}

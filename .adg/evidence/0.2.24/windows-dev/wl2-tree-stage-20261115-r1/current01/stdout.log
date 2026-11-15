@@ -1,0 +1,10 @@
+
+running 2 tests
+test infrastructure::windows_client_originals024::v2::current::tests::wl2_r4_native_v2_partial_current_write_preserves_phase_and_poison ... actual bounded-v2 partial current write+sync injected failure: same fileID, phase2 retained, poisoned retry/open refused, no catch-up/rollback/Closed; synthetic manifest only
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpNdaAir
+ok
+test infrastructure::windows_client_originals024::v2::current::tests::wl2_r4_native_v2_reference_uses_real_bounded_snapshot_and_same_object_cas ... v2 bounded current native CAS: all8+combined security, policyDigest688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07, samefileID1970324838226068, no Full/Partial conversion; synthetic manifest only, OriginalSession/Closed not issued
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 1913 filtered out; finished in 0.08s
+

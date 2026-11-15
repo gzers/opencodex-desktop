@@ -1,0 +1,13 @@
+{
+  "command": "powershell.exe -NoLogo -NoProfile -File prepare-fixed-desktop.ps1 -ExpectedHead 6e312f022 (Code/Evidence exact paths as script)",
+  "rawExit": 1,
+  "firstError": "committed source changed",
+  "line": 14,
+  "expectedArgument": "6e312f022",
+  "actualHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+  "reason": "caller supplied short SHA to an intentionally strict full-head comparison",
+  "beforeAnyTaskRootCreation": true,
+  "sourceAssertionsAltered": false,
+  "correction": "supply the verified full SHA; no guard relaxation",
+  "accepted": false
+}

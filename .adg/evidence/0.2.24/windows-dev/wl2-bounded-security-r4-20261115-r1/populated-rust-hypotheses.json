@@ -1,0 +1,16 @@
+{
+  "time": "2026-11-15T12:34:33.279557+08:00",
+  "newObservedInputs": {
+    "conditionalDacl": "ACE9 present native query0",
+    "resource": "ACE18 present native query0",
+    "accessFilter": "ACE21 present native query0",
+    "CAP": "CREATE_NEW failed1314; no privilege retry",
+    "trust": "CREATE_NEW failed5; no permission repair"
+  },
+  "hypotheses": [
+    "BoundedAccessV1 captures actual nonempty ACE9/18/21 content identically on repeated original-handle queries and individual/combined all8.",
+    "Separate CREATE_NEW Alpha/Beta fixtures change the exact covered component while preserving the original snapshots; no setters or conversion allowed.",
+    "All6 fresh synthetic fixtures auto-clean only after successful test; unexpected panic preserves private fixture root."
+  ],
+  "wholeB2Accepted": false
+}

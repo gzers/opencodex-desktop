@@ -1,0 +1,70 @@
+﻿{
+    "scriptTransforms":  [
+                             {
+                                 "name":  "launch-h024-actual-gui.cmd",
+                                 "source":  "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\launch-h024-actual-gui.cmd",
+                                 "sourceSha256":  "fd8de7923f7af52a9ea82be83fc44008459fe1ca84218388ca581df0928b3798",
+                                 "transformation":  "replace exact old task root only; all commands/guards/budgets unchanged"
+                             },
+                             {
+                                 "name":  "launch-h024-actual-gui.ps1",
+                                 "source":  "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\launch-h024-actual-gui.ps1",
+                                 "sourceSha256":  "854bce2717ee31d0792f33c69e21c846ebe25b473f9a0634d703767473beb834",
+                                 "transformation":  "replace exact old task root only; all commands/guards/budgets unchanged"
+                             },
+                             {
+                                 "name":  "collect-h024-actual-gui.ps1",
+                                 "source":  "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\collect-h024-actual-gui.ps1",
+                                 "sourceSha256":  "babf14452702e9bde23a95410eff94a02da3f1360d14911b55e34ac9b83eff2e",
+                                 "transformation":  "replace exact old task root only; all commands/guards/budgets unchanged"
+                             }
+                         ],
+    "outSddl":  "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;OICI;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1003)(A;OICIID;FA;;;SY)(A;OICIID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICIID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)",
+    "oldTaskRootChanged":  false,
+    "files":  [
+                  {
+                      "path":  "collect-h024-actual-gui.ps1",
+                      "sha256":  "5910e308d321c1bb4f65ebba0cd57e061fd9bec6c4f601a310ef8d1432685204",
+                      "bytes":  3236
+                  },
+                  {
+                      "path":  "input-manifest.json",
+                      "sha256":  "9da723dae8f73756a04377efb6d8668a600e953f83193b4820260a363dbcedf9",
+                      "bytes":  953
+                  },
+                  {
+                      "path":  "launch-h024-actual-gui.cmd",
+                      "sha256":  "fd8de7923f7af52a9ea82be83fc44008459fe1ca84218388ca581df0928b3798",
+                      "bytes":  187
+                  },
+                  {
+                      "path":  "launch-h024-actual-gui.ps1",
+                      "sha256":  "9a05720626890b6359a4bca5fc8823c96e1d98533581ac00f2596b9f4ffc1482",
+                      "bytes":  4189
+                  },
+                  {
+                      "path":  "input\\h-gui-tests.exe",
+                      "sha256":  "881b6e4359cffab7a65c9db1a8cf049164ed36f6899a35c182cdba9cc9a8cd51",
+                      "bytes":  95719424
+                  },
+                  {
+                      "path":  "input\\ocxd.exe",
+                      "sha256":  "b80dd57317c91700aee4c77de1023f53b6da0f2c38e6760006db4b6abf8d3a67",
+                      "bytes":  5398528
+                  },
+                  {
+                      "path":  "input\\opencodex-desktop.exe",
+                      "sha256":  "c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927",
+                      "bytes":  77505024
+                  }
+              ],
+    "runsStarted":  0,
+    "inputHashesVerified":  true,
+    "parseErrors":  0,
+    "rootSddl":  "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:P(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)",
+    "sourceHead":  "6e312f02270f247d2f440ec369385e523a4a8043",
+    "launchEntry":  "C:\\Users\\Public\\ocx-h024-actual-gui-fixed-20261115-r1\\launch-h024-actual-gui.cmd",
+    "dailyPolicyChanged":  false,
+    "root":  "C:\\Users\\Public\\ocx-h024-actual-gui-fixed-20261115-r1",
+    "accepted":  false
+}

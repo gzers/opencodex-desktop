@@ -1,0 +1,14 @@
+{
+  "time": "2026-11-15T14:11:59.382880+08:00",
+  "sourceHead": "0c618cdfde4da37da0ca90e1b0913d7d81f63a29",
+  "hypotheses": [
+    "Current TreeProgress seen=false permits Captured->Ready and later Restored/Closed syntactic chains without root steps. These are PendingOnly, not native permissions, but canonical v2 must still reject incomplete root histories.",
+    "Every Ready/PreparedRestore/OfficialTeardown entry requires both roots completed MoveToCustody/CreateWorkingCopy; every Restored/Closed entry requires both completed RestoreOriginal. Aborted may preserve initial or mixed progress without creating Closed.",
+    "Validate both pure prefix and actual same-object current append path. A rejected premature native Ready append must leave phase1/current original and no root move; poisoned in-memory capture is retained without retry/catch-up.",
+    "Existing CAS partialwrite regression remains a real write+sync fault, moved to valid Captured->Aborted fixture transition rather than relaxing phase validation. No original assertion, timeout or unknown refusal is weakened.",
+    "Keep prepared GUI inputs and their 0c source/hashes immutable; current desktop out is empty. New code is independent backend progress gating, not a rerun of empty GUI fixture or official lifecycle."
+  ],
+  "scope": "allowed originals v2/progress/capture/current tests and native test build selectors only",
+  "budgets": "unchanged30/5/10/Restart30inclStop10",
+  "allAccepted": false
+}
