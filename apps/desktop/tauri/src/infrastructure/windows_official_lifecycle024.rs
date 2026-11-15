@@ -522,6 +522,26 @@ pub(crate) fn recovery_state(
         Err(_) => R::Unknown,
     }
 }
+/// Main has not integrated the Windows Closed implementation yet. This bridge
+/// only preserves Required/Unknown; it cannot grant recovery completion. When
+/// consuming the shared status API on the Windows branch, retain its existing
+/// native recovery_state_at implementation that rechecks Closed by this deadline.
+pub(crate) fn recovery_state_at(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    deadline: Instant,
+) -> crate::modules::status::ClientRecoveryState {
+    use crate::modules::status::ClientRecoveryState as R;
+    if Instant::now() >= deadline {
+        return R::Unknown;
+    }
+    let value = recovery_state(runtime, home);
+    if Instant::now() >= deadline {
+        R::Unknown
+    } else {
+        value
+    }
+}
 pub(crate) fn unknown_status() -> serde_json::Value {
     serde_json::json!({"status":"unknown","ready":false,"protection":"retained-owner-unconfirmed","rebootSafe":false})
 }

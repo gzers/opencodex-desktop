@@ -41,6 +41,8 @@ mod client_recovery_gate_tests;
 #[cfg(test)]
 mod context_paths_tests;
 pub mod polling;
+#[cfg(test)]
+mod sample_deadline_tests;
 
 pub fn max_emissions_per_second() -> u32 {
     crate::modules::runtime_defaults::status_max_events_per_second()
@@ -146,6 +148,20 @@ pub enum CollectError {
 
 /// 官方采集器边界。真实实现必须在 5 秒内返回或转换为 Timeout。
 pub trait StatusSource {
+    /// Native lifecycle/recovery sources need one fresh observation window even
+    /// during debounce. Defaults preserve legacy fixtures and Mac proof behavior.
+    fn requires_fresh_sample(&self) -> bool {
+        false
+    }
+    fn fetch_at(&self, _deadline: Instant) -> Result<Value, CollectError> {
+        self.fetch()
+    }
+    fn fetch_light_at(&self, _deadline: Instant) -> Result<Value, CollectError> {
+        self.fetch_light()
+    }
+    fn client_recovery_at(&self, _deadline: Instant) -> ClientRecoveryState {
+        self.client_recovery()
+    }
     /// Resolved Desktop launch context, distinct from official config-file
     /// paths. Payload fields and directory-name guesses cannot supply it.
     fn manager_paths(&self) -> Option<(PathBuf, PathBuf)> {
@@ -857,8 +873,13 @@ where
         self.refresh_at(Instant::now())
     }
 
-    /// 使用注入时钟刷新；去抖期内共享上次结果，不额外调用来源。
+    /// 注入时钟只用于去抖；声明原生实时采样的来源使用真实时钟及全新有界读回。
     pub fn refresh_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
+        // Native admission clock is never the injected debounce timestamp.
+        let deadline = Instant::now() + collect_timeout();
+        if self.source.requires_fresh_sample() {
+            return self.refresh_with_deadline(now, false, Some(deadline));
+        }
         self.refresh_manager_facts();
         if !self.request_allowed(now)
             && !self.last_was_light
@@ -880,6 +901,10 @@ where
     }
 
     pub fn refresh_light_at(&mut self, now: Instant) -> Result<MappedOfficialStatus, CollectError> {
+        let deadline = Instant::now() + collect_timeout();
+        if self.source.requires_fresh_sample() {
+            return self.refresh_with_deadline(now, true, Some(deadline));
+        }
         self.refresh_manager_facts();
         if !self.request_allowed(now) && !self.source.source_unknown() {
             return self
@@ -901,14 +926,46 @@ where
         now: Instant,
         light: bool,
     ) -> Result<MappedOfficialStatus, CollectError> {
+        self.refresh_with_deadline(now, light, None)
+    }
+
+    fn refresh_with_deadline(
+        &mut self,
+        now: Instant,
+        light: bool,
+        deadline: Option<Instant>,
+    ) -> Result<MappedOfficialStatus, CollectError> {
         self.last_request = Some(now);
         self.last_was_light = light;
-        let fetched = if light {
+        let expired = || deadline.is_some_and(|end| Instant::now() >= end);
+        let fetched = if expired() {
+            Err(CollectError::Timeout)
+        } else if let Some(end) = deadline {
+            if light {
+                self.source.fetch_light_at(end)
+            } else {
+                self.source.fetch_at(end)
+            }
+        } else if light {
             self.source.fetch_light()
         } else {
             self.source.fetch()
         };
-        let client_recovery = self.source.client_recovery();
+        let client_recovery = if expired() {
+            ClientRecoveryState::Unknown
+        } else if let Some(end) = deadline {
+            self.source.client_recovery_at(end)
+        } else {
+            self.source.client_recovery()
+        };
+        // A late success or failed payload cannot clear a prior recovery gate.
+        let (fetched, client_recovery) = if expired() {
+            (Err(CollectError::Timeout), ClientRecoveryState::Unknown)
+        } else if deadline.is_some() && fetched.is_err() {
+            (fetched, ClientRecoveryState::Unknown)
+        } else {
+            (fetched, client_recovery)
+        };
         let payload = match fetched {
             Ok(payload) => payload,
             Err(error) => {
@@ -957,12 +1014,33 @@ where
             self.matrix.operation,
         );
         mapped.facts.client_recovery = client_recovery.observed_runtime(mapped.runtime);
+        if deadline.is_some()
+            && mapped.downgrade_reasons.iter().any(|reason| {
+                matches!(
+                    reason,
+                    DowngradeReason::UnknownStatus
+                        | DowngradeReason::InvalidStatus
+                        | DowngradeReason::InvalidHealth
+                        | DowngradeReason::InvalidReady
+                )
+            })
+        {
+            // A payload fallback cannot be combined with a later successful
+            // recovery read to make old stopped state a new Start permission.
+            mapped.facts.client_recovery = ClientRecoveryState::Unknown;
+        }
         if let Some((data_root, home)) = self.source.manager_paths() {
             mapped.facts.data_root = data_root;
             mapped.facts.opencodex_home = Some(home);
             mapped
                 .downgrade_reasons
                 .retain(|reason| *reason != DowngradeReason::MissingDataRoot);
+        }
+        if expired() {
+            self.facts.client_recovery = ClientRecoveryState::Unknown;
+            self.record_failure();
+            self.last_result = Some(Err(CollectError::Timeout));
+            return Err(CollectError::Timeout);
         }
         self.matrix = StatusMatrix {
             runtime: mapped.runtime,
