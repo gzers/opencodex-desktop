@@ -307,7 +307,7 @@ mod tests {
         let original_id = current.id;
         current.fail_after_partial_write = true;
         assert!(current
-            .append_pending(&pending, Phase::Ready, end())
+            .append_pending(&pending, Phase::Aborted, end())
             .is_err());
         assert!(current.poisoned);
         assert_eq!(identity(&current.file).unwrap(), original_id);
@@ -317,7 +317,7 @@ mod tests {
         let latest = read_pending_impl(directory.path(), false).unwrap();
         assert_eq!(latest.tip.sequence, 2);
         assert!(current
-            .append_pending(&pending, Phase::Ready, end())
+            .append_pending(&pending, Phase::Aborted, end())
             .is_err());
         assert!(current
             .append_tree_record(
@@ -366,22 +366,22 @@ mod tests {
         assert!(BoundedCurrentV2::open(&initial, end()).is_err());
         assert!(std::fs::write(pin.path().join("current.json"), b"tamper").is_err());
         assert!(current.advance(&initial, end()).is_err());
-        let ready = current
-            .append_pending(&initial, Phase::Ready, end())
+        let aborted = current
+            .append_pending(&initial, Phase::Aborted, end())
             .unwrap();
         assert_eq!(current.id, id);
         assert!(current
-            .append_pending(&initial, Phase::Ready, end())
+            .append_pending(&initial, Phase::Aborted, end())
             .is_err());
         drop(current);
         let latest = read_pending(pin.path()).unwrap();
         assert!(latest.current_matches);
-        let reopened = BoundedCurrentV2::open(&ready, end()).unwrap();
+        let reopened = BoundedCurrentV2::open(&aborted, end()).unwrap();
         assert_eq!(reopened.id, id);
         println!("v2 bounded current native CAS: all8+combined security, policyDigest{}, samefileID{}, no Full/Partial conversion; synthetic manifest only, OriginalSession/Closed not issued",reopened.tip.security_policy_digest,id.index);
         drop(reopened);
         drop(latest);
-        drop(ready);
+        drop(aborted);
         drop(initial);
         drop(first);
         drop(manifest);

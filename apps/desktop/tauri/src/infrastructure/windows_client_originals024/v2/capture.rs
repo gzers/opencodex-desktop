@@ -365,6 +365,31 @@ mod tests {
         .unwrap()
     }
     #[test]
+    fn wl2_r4_unperformed_native_root_moves_refuse_ready_before_phase_write() {
+        let temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        let directory = captured.pending.directory.path().to_path_buf();
+        let current_before = std::fs::read(directory.join("phase-00000001.json")).unwrap();
+        let original = captured.pins[0].path().join(".codex/config.toml");
+        assert!(
+            captured.advance_phase(Phase::Ready, end()).is_err(),
+            "native append must not publish Ready without recorded working roots"
+        );
+        assert!(captured.failed);
+        assert!(original.exists());
+        assert!(!captured.custody.path().join(".codex").exists());
+        assert!(!directory.join("phase-00000002.json").exists());
+        assert_eq!(
+            std::fs::read(directory.join("phase-00000001.json")).unwrap(),
+            current_before
+        );
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert_eq!(pending.tip.sequence, 1);
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        println!("native premature Ready refused before extra phase/current mutation, original root unchanged, canonical Captured/current remains pending; no retry or production proof");
+    }
+    #[test]
     fn wl2_r4_native_manifest_and_exclusive_v2_intent_precede_both_root_moves() {
         let temp = Fixture::new();
         let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();

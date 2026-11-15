@@ -47,17 +47,17 @@ pub(super) enum TreeRecord {
 pub(super) struct TreeProgress {
     states: [u8; 2],
     unfinished: Option<(TreeRoot, TreeAction)>,
-    seen: bool,
 }
 impl TreeProgress {
     pub(super) fn observe(&mut self, phase: Phase, record: TreeRecord) -> io::Result<()> {
         match record {
             TreeRecord::None => {
                 if self.unfinished.is_some()
-                    || self.seen && phase == Phase::Ready && self.states != [2, 2]
-                    || self.seen
-                        && matches!(phase, Phase::Restored | Phase::Closed)
-                        && self.states != [3, 3]
+                    || matches!(
+                        phase,
+                        Phase::Ready | Phase::PreparedRestore | Phase::OfficialTeardown
+                    ) && self.states != [2, 2]
+                    || matches!(phase, Phase::Restored | Phase::Closed) && self.states != [3, 3]
                 {
                     return Err(invalid());
                 }
@@ -79,7 +79,6 @@ impl TreeProgress {
                     return Err(invalid());
                 }
                 self.unfinished = Some((root, action));
-                self.seen = true;
             }
             TreeRecord::Completed { root, action } => {
                 if self.unfinished != Some((root, action)) {

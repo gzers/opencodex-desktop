@@ -60,6 +60,7 @@ if($Mode -eq 'sd-stop'){$arguments=@('test','--locked','--offline','--manifest-p
 if($Mode -eq 'actual-gui-lib'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','windows_owner_host024::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'actual-gui-build'){$arguments=@('build','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--bins','-j','1')}
 if($Mode -eq 'actual-gui-observer-build'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','--no-run','-j','1')}
+if($Mode -eq 'r4-root-progress'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_r4_unperformed','--','--test-threads=1','--nocapture')}
 $diff=git diff --binary
 if($Mode -eq 'original-reference'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'original-move'){

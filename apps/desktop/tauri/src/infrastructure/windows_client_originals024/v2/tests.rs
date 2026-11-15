@@ -14,6 +14,55 @@ fn progress_prefix(steps: &[(Phase, TreeRecord)]) -> (Vec<u8>, Vec<Vec<u8>>) {
     (manifest, records)
 }
 #[test]
+fn wl2_r4_unperformed_roots_cannot_cross_ready_or_closed_in_v2_records() {
+    let sid = current_identity().unwrap().sid;
+    let (manifest, records) = progress_prefix(&[(Phase::Ready, TreeRecord::None)]);
+    assert!(
+        check_prefix(&manifest, &records, &sid).is_err(),
+        "pure Ready text without either actual recorded root step must refuse"
+    );
+    let mut steps = Vec::new();
+    for root in [TreeRoot::Codex, TreeRoot::Grok] {
+        for action in [TreeAction::MoveToCustody, TreeAction::CreateWorkingCopy] {
+            steps.push((Phase::Captured, TreeRecord::Intent { root, action }));
+            steps.push((Phase::Captured, TreeRecord::Completed { root, action }));
+        }
+    }
+    steps.extend(
+        [
+            Phase::Ready,
+            Phase::PreparedRestore,
+            Phase::OfficialTeardown,
+        ]
+        .map(|phase| (phase, TreeRecord::None)),
+    );
+    let mut premature = steps.clone();
+    premature.push((Phase::Restored, TreeRecord::None));
+    let (manifest, records) = progress_prefix(&premature);
+    assert!(check_prefix(&manifest, &records, &sid).is_err());
+    for root in [TreeRoot::Codex, TreeRoot::Grok] {
+        let action = TreeAction::RestoreOriginal;
+        steps.push((Phase::OfficialTeardown, TreeRecord::Intent { root, action }));
+        steps.push((
+            Phase::OfficialTeardown,
+            TreeRecord::Completed { root, action },
+        ));
+        if root == TreeRoot::Codex {
+            let mut partial = steps.clone();
+            partial.push((Phase::Restored, TreeRecord::None));
+            let (manifest, records) = progress_prefix(&partial);
+            assert!(check_prefix(&manifest, &records, &sid).is_err());
+        }
+    }
+    steps.extend([Phase::Restored, Phase::Closed].map(|phase| (phase, TreeRecord::None)));
+    let (manifest, records) = progress_prefix(&steps);
+    let tip = check_prefix(&manifest, &records, &sid).unwrap();
+    assert!(tip.terminal_record_only);
+    // Even a complete syntactic chain is pending locator data, not retained
+    // native process/root custody or an adapter ClosedEligibility.
+    println!("canonical two-root history required before Ready/Restored; full synthetic Closed prefix remains data-only, no production eligibility");
+}
+#[test]
 fn wl2_r4_tree_progress_refuses_gap_duplicate_wrong_root_and_unfinished_phase() {
     use TreeAction::{CreateWorkingCopy, MoveToCustody, RestoreOriginal};
     use TreeRoot::{Codex, Grok};
@@ -110,7 +159,9 @@ pub(super) fn bundle(m: serde_json::Value) -> (Vec<u8>, Vec<Vec<u8>>, Vec<u8>) {
     let manifest = serde_json::to_vec(&m).unwrap();
     let parsed: Manifest = json(&manifest, 1024 * 1024).unwrap();
     let mut phases: Vec<Vec<u8>> = Vec::new();
-    for (i, p) in [Phase::Captured, Phase::Ready].into_iter().enumerate() {
+    // Data-only fixtures have no native root work. A legal Aborted prefix can
+    // exercise schemas/CAS without inventing a Ready history.
+    for (i, p) in [Phase::Captured, Phase::Aborted].into_iter().enumerate() {
         let binding: Binding = serde_json::from_value(m["binding"].clone()).unwrap();
         let s = Stage {
             schema: ORIGINALS_RECORD_SCHEMA_V2.into(),
