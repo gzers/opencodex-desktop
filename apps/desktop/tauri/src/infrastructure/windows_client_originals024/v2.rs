@@ -56,6 +56,13 @@ struct Node {
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
+struct Custody {
+    path: String,
+    identity: Identity,
+    security_projection_snapshot: SnapshotData,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
 struct Manifest {
     schema: String,
     document_kind: String,
@@ -63,6 +70,7 @@ struct Manifest {
     binding: Binding,
     security_policy: Policy,
     security_policy_digest: String,
+    custody: Custody,
     nodes: Vec<Node>,
 }
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
@@ -142,6 +150,24 @@ fn check_manifest(m: &Manifest, sid: &str) -> io::Result<()> {
     if m.security_policy.digest()? != m.security_policy_digest {
         return Err(invalid());
     }
+    let profile = m.binding.paths()[0];
+    let custody = Path::new(&m.custody.path);
+    crate::infrastructure::windows_official_runtime024::validate_local_path(custody)?;
+    let (profile_volume, profile_id) = m.binding.profile_identity();
+    if custody.parent() != Some(profile)
+        || custody.file_name().and_then(|s| s.to_str())
+            != Some(&format!(".ocxd024-originals-{}", m.session_id))
+        || !m.custody.identity.valid()
+        || m.custody.identity.volume != profile_volume
+        || m.custody.identity.file_id == profile_id
+        || !m
+            .custody
+            .security_projection_snapshot
+            .matches_id(m.custody.identity.volume, &m.custody.identity.file_id)
+    {
+        return Err(invalid());
+    }
+    m.custody.security_projection_snapshot.validate()?;
     let mut names = BTreeSet::new();
     let mut keys = BTreeSet::new();
     for n in &m.nodes {
@@ -157,6 +183,12 @@ fn check_manifest(m: &Manifest, sid: &str) -> io::Result<()> {
             return Err(invalid());
         }
         n.parent_security_projection_snapshot.validate()?;
+        if !n.relative.contains('/')
+            && (n.parent_identity.volume != profile_volume
+                || n.parent_identity.file_id != profile_id)
+        {
+            return Err(invalid());
+        }
         if !n
             .parent_security_projection_snapshot
             .matches_id(n.parent_identity.volume, &n.parent_identity.file_id)
@@ -221,6 +253,8 @@ fn check_manifest(m: &Manifest, sid: &str) -> io::Result<()> {
             if p.kind != Kind::Directory
                 || !p.children.iter().any(|s| s == leaf)
                 || p.identity.as_ref() != Some(&n.parent_identity)
+                || p.security_projection_snapshot.as_ref()
+                    != Some(&n.parent_security_projection_snapshot)
             {
                 return Err(invalid());
             }
@@ -230,6 +264,19 @@ fn check_manifest(m: &Manifest, sid: &str) -> io::Result<()> {
                 return Err(invalid());
             }
         }
+    }
+    let codex = m
+        .nodes
+        .iter()
+        .find(|n| n.relative == ".codex")
+        .ok_or_else(invalid)?;
+    let grok = m
+        .nodes
+        .iter()
+        .find(|n| n.relative == ".grok")
+        .ok_or_else(invalid)?;
+    if codex.parent_security_projection_snapshot != grok.parent_security_projection_snapshot {
+        return Err(invalid());
     }
     Ok(())
 }
@@ -320,6 +367,8 @@ fn current_for(t: &Tip) -> Current {
 /// cast/constructor to v1 Full, PartialDiagnostic, OriginalSession or Closed.
 mod current;
 pub(super) use current::BoundedCurrentV2;
+mod capture;
+pub(super) use capture::MoveIntent;
 pub(super) struct PendingV2 {
     directory: PinnedDirectory,
     records: Vec<PrivateRecord>,

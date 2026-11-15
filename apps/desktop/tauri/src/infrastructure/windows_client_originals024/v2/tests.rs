@@ -10,9 +10,11 @@ fn snapshot(id: &str) -> serde_json::Value {
 }
 pub(super) fn manifest_value() -> serde_json::Value {
     let sid = current_identity().unwrap().sid;
-    serde_json::json!({"schema":"windows-client-originals-v2","documentKind":"manifest","sessionId":uuid::Uuid::new_v4().to_string(),
+    let session_id = uuid::Uuid::new_v4().to_string();
+    serde_json::json!({"schema":"windows-client-originals-v2","documentKind":"manifest","sessionId":session_id,
         "binding":{"sid":sid,"profile":{"path":"C:/fixture/Profile","volume":1,"fileId":"1"},"data":{"path":"D:/fixture/D","volume":2,"fileId":"2"},"home":{"path":"C:/fixture/H","volume":1,"fileId":"3"},"installation":{"path":"C:/fixture/I","volume":1,"fileId":"4"},"sourceDigest":"a".repeat(64),"currentDigest":"b".repeat(64),"owner":{"pid":1234,"creationFiletime":"123456789"}},
         "securityPolicy":Policy::fixed(),"securityPolicyDigest":Policy::fixed().digest().unwrap(),
+        "custody":{"path":format!("C:/fixture/Profile/.ocxd024-originals-{session_id}"),"identity":{"volume":1,"fileId":"5"},"securityProjectionSnapshot":snapshot("5")},
         "nodes":([".codex",".grok"].map(|relative|serde_json::json!({"relative":relative,"kind":"Absent","identity":null,"parentIdentity":{"volume":1,"fileId":"1"},"securityProjectionSnapshot":null,"parentSecurityProjectionSnapshot":snapshot("1"),"length":null,"contentDigest":null,"children":[],"custodyIdentity":null})))})
 }
 pub(super) fn bundle(m: serde_json::Value) -> (Vec<u8>, Vec<Vec<u8>>, Vec<u8>) {

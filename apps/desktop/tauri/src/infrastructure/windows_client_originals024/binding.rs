@@ -87,6 +87,67 @@ impl DirectoryBinding {
     }
 }
 impl Binding {
+    /// Identity data captured from actual retained objects. Digest strings still
+    /// require admission by the production source owner; this is not that proof.
+    pub(super) fn from_native(
+        peer: &crate::infrastructure::windows_official_runtime024::RetainedPeer,
+        pins: &[crate::infrastructure::windows_official_runtime024::PinnedDirectory; 4],
+        source_digest: String,
+        current_digest: String,
+    ) -> io::Result<Self> {
+        peer.verify()?;
+        let token = &peer.identity().token;
+        if token.elevated || token.elevation_type == 2 {
+            return Err(invalid());
+        }
+        let directory = |pin: &crate::infrastructure::windows_official_runtime024::PinnedDirectory| -> io::Result<DirectoryBinding> {
+            pin.recheck()?;
+            Ok(DirectoryBinding{path:pin.path().to_str().ok_or_else(invalid)?.into(),volume:pin.identity().volume,file_id:pin.identity().index.to_string()})
+        };
+        let out = Self {
+            sid: token.sid.clone(),
+            profile: directory(&pins[0])?,
+            data: directory(&pins[1])?,
+            home: directory(&pins[2])?,
+            installation: directory(&pins[3])?,
+            source_digest,
+            current_digest,
+            owner: OwnerBinding {
+                pid: peer.identity().pid,
+                creation_filetime: peer.identity().creation_filetime.to_string(),
+            },
+        };
+        out.validate(Some(&token.sid))?;
+        Ok(out)
+    }
+    pub(super) fn paths(&self) -> [&Path; 4] {
+        [
+            &self.profile.path,
+            &self.data.path,
+            &self.home.path,
+            &self.installation.path,
+        ]
+        .map(Path::new)
+    }
+    pub(super) fn profile_identity(&self) -> (u32, &str) {
+        (self.profile.volume, &self.profile.file_id)
+    }
+    pub(super) fn check_native(
+        &self,
+        peer: &crate::infrastructure::windows_official_runtime024::RetainedPeer,
+        pins: &[crate::infrastructure::windows_official_runtime024::PinnedDirectory; 4],
+    ) -> io::Result<()> {
+        let observed = Self::from_native(
+            peer,
+            pins,
+            self.source_digest.clone(),
+            self.current_digest.clone(),
+        )?;
+        if observed != *self {
+            return Err(invalid());
+        }
+        Ok(())
+    }
     pub(super) fn validate(&self, expected_sid: Option<&str>) -> io::Result<()> {
         if !sid(&self.sid)
             || expected_sid.is_some_and(|expected| self.sid != expected)

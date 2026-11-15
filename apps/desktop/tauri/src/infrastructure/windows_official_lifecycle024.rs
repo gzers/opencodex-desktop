@@ -489,17 +489,14 @@ async fn execute_async(
     .collect::<std::io::Result<Vec<_>>>()
     .map_err(unknown)?;
     // Original capture must precede the first official mutation. This read-only
-    // gate refuses complete-SD failures with their original API/code. The
+    // gate uses the fixed r4 scope for NEW sessions, never a Full fallback. The
     // still-unfinished durable custody adapter cannot be bypassed on success.
-    super::windows_client_originals024::preflight(plan.user_profile(), window.deadline()).map_err(
+    super::windows_client_originals024::preflight_bounded(plan.user_profile(), window.deadline()).map_err(
         |e| {
             fail(
                 "windows024_originals_security_unconfirmed",
                 &format!(
-                    "原件完整安全捕获前拒绝；class={:?}; api={}; raw={:?}; {e}",
-                    super::windows_client_originals024::classify_error(e.raw_os_error()),
-                    e.api(),
-                    e.raw_os_error()
+                    "原件声明访问安全捕获前拒绝；scope=windows-bounded-access-v1; audit=excluded-unknown; fullSecurityProven=false; {e}"
                 ),
             )
         },

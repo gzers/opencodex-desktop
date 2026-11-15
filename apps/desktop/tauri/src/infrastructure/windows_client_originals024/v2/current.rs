@@ -137,6 +137,19 @@ impl BoundedCurrentV2 {
         self.parent.recheck()?;
         deadline(end)
     }
+    pub(super) fn verify_pending(&mut self, pending: &PendingV2, end: Instant) -> io::Result<()> {
+        self.check(end)?;
+        if pending.directory.identity() != self.parent.identity()
+            || current_for(&pending.tip) != self.tip
+        {
+            return Err(invalid());
+        }
+        let fresh = read_pending_impl(self.parent.path(), false)?;
+        if current_for(&fresh.tip) != self.tip {
+            return Err(invalid());
+        }
+        deadline(end)
+    }
     fn advance(&mut self, pending: &PendingV2, end: Instant) -> io::Result<()> {
         self.check(end)?;
         if pending.directory.identity() != self.parent.identity() {

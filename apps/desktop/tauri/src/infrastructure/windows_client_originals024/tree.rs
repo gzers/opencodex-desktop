@@ -275,6 +275,42 @@ impl RootTree {
         }
         Ok(())
     }
+    /// Serializable observations only. The retained tree remains the authority;
+    /// these values cannot reconstruct it or authorize restoration.
+    pub(super) fn manifest_nodes(&mut self, end: Instant) -> io::Result<Vec<serde_json::Value>> {
+        self.check_original(end)?;
+        let root = self
+            .original
+            .file_name()
+            .and_then(|s| s.to_str())
+            .ok_or_else(invalid)?;
+        let parent = serde_json::json!({"volume":self.parent.identity().volume,"fileId":self.parent.identity().index.to_string()});
+        if self.root.is_none() {
+            return Ok(vec![
+                serde_json::json!({"relative":root,"kind":"Absent","identity":null,"parentIdentity":parent,"securityProjectionSnapshot":null,"parentSecurityProjectionSnapshot":self.parent_security,"length":null,"contentDigest":null,"children":[],"custodyIdentity":null}),
+            ]);
+        }
+        self.entries.iter().map(|entry| {
+            let (parent_id, parent_security) = if entry.relative.is_empty() {
+                (parent.clone(), &self.parent_security)
+            } else {
+                let relative = entry.relative.rsplit_once('/').map_or("", |(p, _)| p);
+                let p = self.entries.iter().find(|e|e.relative==relative && e.directory).ok_or_else(invalid)?;
+                (serde_json::json!({"volume":p.id.volume,"fileId":p.id.index.to_string()}), &p.security)
+            };
+            let identity = serde_json::json!({"volume":entry.id.volume,"fileId":entry.id.index.to_string()});
+            Ok(serde_json::json!({"relative":if entry.relative.is_empty(){root.to_string()}else{format!("{root}/{}",entry.relative)},"kind":if entry.directory{"Directory"}else{"File"},"identity":identity,"parentIdentity":parent_id,"securityProjectionSnapshot":entry.security,"parentSecurityProjectionSnapshot":parent_security,"length":if entry.directory{None}else{Some(entry.bytes.len())},"contentDigest":if entry.directory{None}else{Some(hash::sha256_hex(&entry.bytes))},"children":entry.children,"custodyIdentity":identity}))
+        }).collect()
+    }
+    pub(super) fn move_from_manifest(
+        &mut self,
+        intent: &mut super::v2::MoveIntent<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        let nodes = self.manifest_nodes(end)?;
+        let custody = intent.authorize(&self.original, &nodes, end)?;
+        self.move_exact(&custody, end)
+    }
     /// Write the bounded native root/descendant image and exact target intention
     /// privately BEFORE moving. Data in this record is not restoration authority.
     pub(super) fn move_to_custody(
@@ -303,7 +339,26 @@ impl RootTree {
         if record.read()? != bytes {
             return Err(invalid());
         }
+        self.move_exact(custody, end)?;
+        drop(record);
+        Ok(())
+    }
+    fn move_exact(&mut self, custody: &Path, end: Instant) -> io::Result<()> {
         self.check_original(end)?;
+        if self.custody.is_some()
+            || self.retired_work.is_some()
+            || custody.parent() != Some(self.parent.path())
+        {
+            return Err(invalid());
+        }
+        let pin = PinnedDirectory::open_private(custody)?;
+        if pin.identity().volume != self.parent.identity().volume
+            || pin.identity() == self.parent.identity()
+        {
+            return Err(invalid());
+        }
+        let target = custody.join(self.original.file_name().ok_or_else(invalid)?);
+        require_absent(&target)?;
         check(end)?;
         self.poisoned = true;
         if let Some(root) = &self.root {
@@ -320,7 +375,6 @@ impl RootTree {
         }
         check(end)?;
         self.poisoned = false;
-        drop(record);
         Ok(())
     }
     pub(super) fn create_working_copy(&mut self, end: Instant) -> io::Result<()> {
@@ -376,7 +430,13 @@ impl RootTree {
             if image(&self.original, &mut working, end)? != *expected {
                 return Err(invalid());
             }
-            let retired = custody.path().join("retired-working-root");
+            let retired = custody.path().join(format!(
+                "retired-working-{}",
+                self.original
+                    .file_name()
+                    .and_then(|s| s.to_str())
+                    .ok_or_else(invalid)?
+            ));
             self.poisoned = true;
             rename_original_handle(&working, &retired)?;
             self.retired_work = Some(retired);
@@ -410,17 +470,17 @@ fn require_absent(path: &Path) -> io::Result<()> {
     }
 }
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::*;
-    struct Fixture(Option<tempfile::TempDir>);
+    pub(crate) struct Fixture(Option<tempfile::TempDir>);
     impl Fixture {
-        fn new() -> Self {
+        pub(crate) fn new() -> Self {
             Self(Some(tempfile::tempdir().unwrap()))
         }
-        fn path(&self) -> &Path {
+        pub(crate) fn path(&self) -> &Path {
             self.0.as_ref().unwrap().path()
         }
-        fn retain(&mut self) {
+        pub(crate) fn retain(&mut self) {
             let path = self.0.take().unwrap().keep();
             println!("r4-retained-synthetic-fixture={}", path.display());
         }

@@ -270,8 +270,20 @@ pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> Result<
 pub(crate) fn require_durable_capture() -> crate::errors::AppResult<()> {
     Err(crate::errors::AppError::RuntimeManaged {
         code: "windows024_originals_custody_required".into(),
-        detail: "完整安全前提读回后仍需同卷原件持久保管；未创建官方进程或宣告捕获成功".into(),
+        detail: "有界访问安全r4仍需完成v2整树持久保管、恢复/Closed与H/S/D生产组合；未创建官方进程或宣告捕获成功".into(),
     })
+}
+/// Fixed NEW-session scope only. The old Full preflight above retains its exact
+/// meaning for old transactions and is never converted after a read failure.
+pub(crate) fn preflight_bounded(profile: &Path, deadline: std::time::Instant) -> io::Result<()> {
+    let mut roots = [
+        tree::RootTree::capture(&profile.join(".codex"), deadline)?,
+        tree::RootTree::capture(&profile.join(".grok"), deadline)?,
+    ];
+    for root in &mut roots {
+        root.manifest_nodes(deadline)?;
+    }
+    Ok(())
 }
 
 #[cfg(test)]
