@@ -53,11 +53,68 @@ impl NormalExit {
             .original_native()
             .family_state()
             .map_err(|e| refuse(e.to_string()))?;
-        if !family.complete_exit() || family.total_processes as usize != self.raw.len() {
+        if owner.original_native().forced_cleanup_requested()
+            || !family.complete_exit()
+            || family.total_processes as usize != self.raw.len()
+            || family.total_processes as usize != family.retained_members.len() + 1
+        {
             return Err(refuse("原退出证明后Job历史/活动代次改变"));
         }
+        let root = &owner.original_native().binding().process;
+        let mut seen = std::collections::HashSet::new();
+        for (pid, created, role, exit) in &self.raw {
+            if !seen.insert((*pid, *created)) || !role_exit_allowed(role, exit) {
+                return Err(refuse("退出证明重复代次/角色或原始退出码不成立"));
+            }
+            let state = if (*pid, *created) == (root.pid, root.creation_filetime) {
+                if role != &ChildRole::Launcher {
+                    return Err(refuse("原launcher角色改变"));
+                }
+                family.root
+            } else {
+                family
+                    .retained_members
+                    .iter()
+                    .find(|(id, _)| (id.pid, id.creation_filetime) == (*pid, *created))
+                    .ok_or_else(|| refuse("原始退出代次缺失"))?
+                    .1
+            };
+            if raw_exit(state) != *exit {
+                return Err(refuse("原始退出码读回改变"));
+            }
+        }
+        owner.check_current(deadline)?;
         Ok(())
     }
+}
+fn raw_exit(state: ProcessState) -> ChildExit {
+    match state {
+        ProcessState::Exited { code } => ChildExit::Exited(code),
+        ProcessState::Running => ChildExit::StillRunning,
+    }
+}
+fn role_exit_allowed(role: &ChildRole, exit: &ChildExit) -> bool {
+    matches!(
+        (role, exit),
+        (
+            ChildRole::ScmRegistrationQuery | ChildRole::SchedulerRegistrationQuery,
+            ChildExit::Exited(_)
+        ) | (
+            ChildRole::Launcher | ChildRole::Service | ChildRole::OtherRequired,
+            ChildExit::Exited(0)
+        )
+    )
+}
+fn exact_parent(argv: &[String], image: &Path, cli: &Path, phase: &str) -> bool {
+    // No substring/"any argument" admission: another script, eval, reordered
+    // phase, flags or extra arguments remain unknown until source-bound grammar
+    // for that precise invocation is implemented. This does not classify Bun
+    // or a required helper merely by name.
+    argv.len() == 3
+        && Path::new(&argv[0]) == image
+        && Path::new(&argv[1]) == cli
+        && argv[2] == phase
+        && ["start", "stop"].contains(&phase)
 }
 fn exact_query(argv: &[String], image: &Path, system: &Path) -> Option<ChildRole> {
     let same = |a: &Path, b: &Path| {
@@ -151,10 +208,13 @@ impl DiagnosticRoles for WindowsDiagnostics {
         let system = system_dir()?;
         let role = exact_query(&command.argv, &native.executable, &system)
             .ok_or_else(|| refuse("非准确只读查询语法/目标/镜像"))?;
-        owner
+        let verified_state = owner
             .original_native()
-            .verify_member_image(native.pid, &native.executable)
+            .verify_retained_image(&native, &native.executable)
             .map_err(|e| refuse(e.to_string()))?;
+        if verified_state != state {
+            return Err(refuse("子进程退出状态在分类窗口改变"));
+        }
         let source_sha = call_site(owner, &role)?;
         // The original parent command and phase must be captured before child
         // exit and retained independently. A bare admitted Bun name is not enough.
@@ -174,21 +234,20 @@ impl DiagnosticRoles for WindowsDiagnostics {
         let other_bun = owner.selected_program().paths.bun.clone();
         if owner
             .original_native()
-            .verify_member_image(command.parent.pid, &bun)
+            .verify_retained_image(&command.parent, &bun)
             .is_err()
         {
             owner
                 .original_native()
-                .verify_member_image(command.parent.pid, &other_bun)
+                .verify_retained_image(&command.parent, &other_bun)
                 .map_err(|e| refuse(e.to_string()))?;
         }
-        if !parent_command.argv.iter().any(|a| Path::new(a) == cli)
-            || parent_command
-                .argv
-                .iter()
-                .any(|a| ["-e", "--eval", "-p", "--print"].contains(&a.as_str()))
-            || !parent_command.argv.iter().any(|a| a == phase)
-            || parent_command.captured_at > command.captured_at
+        if !exact_parent(
+            &parent_command.argv,
+            &command.parent.executable,
+            &cli,
+            phase,
+        ) || parent_command.captured_at > command.captured_at
         {
             return Err(refuse("原父进程没有准确官方cli入口/启动阶段证明"));
         }
@@ -200,10 +259,7 @@ impl DiagnosticRoles for WindowsDiagnostics {
             return Err(refuse("查询源码读回漂移"));
         }
         owner.check_current(deadline)?;
-        let exit = match state {
-            ProcessState::Exited { code } => ChildExit::Exited(code),
-            ProcessState::Running => ChildExit::StillRunning,
-        };
+        let exit = raw_exit(state);
         Ok(ProvenRole {
             scope,
             child: native,
@@ -229,7 +285,8 @@ impl DiagnosticRoles for WindowsDiagnostics {
             .original_native()
             .family_state()
             .map_err(|e| refuse(e.to_string()))?;
-        if !family.complete_exit()
+        if owner.original_native().forced_cleanup_requested()
+            || !family.complete_exit()
             || family.total_processes as usize != family.retained_members.len() + 1
             || family.root != (ProcessState::Exited { code: 0 })
         {
@@ -243,20 +300,12 @@ impl DiagnosticRoles for WindowsDiagnostics {
         )];
         for (identity, state) in family.retained_members {
             let proven = self.classify(owner, &RetainedChild { identity }, deadline)?;
-            let exit = match state {
-                ProcessState::Exited { code } => ChildExit::Exited(code),
-                ProcessState::Running => ChildExit::StillRunning,
-            };
-            match (&proven.role, &exit) {
-                (
-                    ChildRole::ScmRegistrationQuery | ChildRole::SchedulerRegistrationQuery,
-                    ChildExit::Exited(_),
-                ) => {}
-                (
-                    ChildRole::Launcher | ChildRole::Service | ChildRole::OtherRequired,
-                    ChildExit::Exited(0),
-                ) => {}
-                _ => return Err(refuse("required非零/Unknown/仍活/不可读否决NormalExit")),
+            let exit = raw_exit(state);
+            if proven.scope != scope
+                || proven.exit != exit
+                || !role_exit_allowed(&proven.role, &exit)
+            {
+                return Err(refuse("required非零/Unknown/仍活/不可读否决NormalExit"));
             }
             raw.push((
                 proven.child.pid,
@@ -267,11 +316,13 @@ impl DiagnosticRoles for WindowsDiagnostics {
         }
         WindowsSupervisor.recheck_absent(owner, supervisor, deadline)?;
         owner.check_current(deadline)?;
-        Ok(NormalExit {
+        let proof = NormalExit {
             scope,
             deadline,
             raw,
-        })
+        };
+        proof.check(owner, deadline)?;
+        Ok(proof)
     }
 }
 
@@ -280,6 +331,88 @@ mod tests {
     use super::*;
     fn a(v: &[&str]) -> Vec<String> {
         v.iter().map(|s| s.to_string()).collect()
+    }
+    #[test]
+    fn wl2_next_d_raw_outcomes_cannot_erase_required_failure_or_unknown() {
+        for role in [
+            ChildRole::Launcher,
+            ChildRole::Service,
+            ChildRole::OtherRequired,
+        ] {
+            assert!(role_exit_allowed(&role, &ChildExit::Exited(0)));
+            for code in [1, 5, 242, 1060, u32::MAX] {
+                assert!(!role_exit_allowed(&role, &ChildExit::Exited(code)));
+            }
+            assert!(!role_exit_allowed(&role, &ChildExit::StillRunning));
+            assert!(!role_exit_allowed(&role, &ChildExit::Unreadable));
+        }
+        for role in [
+            ChildRole::ScmRegistrationQuery,
+            ChildRole::SchedulerRegistrationQuery,
+        ] {
+            for code in [0, 1, 5, 1060, u32::MAX] {
+                let original = raw_exit(ProcessState::Exited { code });
+                assert_eq!(original, ChildExit::Exited(code));
+                assert!(role_exit_allowed(&role, &original));
+            }
+            assert!(!role_exit_allowed(&role, &ChildExit::StillRunning));
+            assert!(!role_exit_allowed(&role, &ChildExit::Unreadable));
+        }
+        for exit in [
+            ChildExit::Exited(0),
+            ChildExit::Exited(1),
+            ChildExit::StillRunning,
+            ChildExit::Unreadable,
+        ] {
+            assert!(!role_exit_allowed(&ChildRole::Unknown, &exit));
+        }
+        // This exit rule issues neither ProvenRole nor NormalExit. Exact native
+        // argv/parent/source and independent pre/post Absent remain mandatory.
+    }
+    #[test]
+    fn wl2_next_d_parent_requires_exact_grammar_not_substring_or_flags() {
+        let image = Path::new("C:/task/I/bun.exe");
+        let cli = Path::new("C:/task/I/package/src/cli/index.ts");
+        let good = a(&[image.to_str().unwrap(), cli.to_str().unwrap(), "start"]);
+        assert!(exact_parent(&good, image, cli, "start"));
+        for bad in [
+            a(&[
+                image.to_str().unwrap(),
+                "C:/foreign/script.ts",
+                cli.to_str().unwrap(),
+                "start",
+            ]),
+            a(&[
+                image.to_str().unwrap(),
+                "--eval",
+                cli.to_str().unwrap(),
+                "start",
+            ]),
+            a(&[
+                image.to_str().unwrap(),
+                cli.to_str().unwrap(),
+                "stop",
+                "start",
+            ]),
+            a(&[image.to_str().unwrap(), "start", cli.to_str().unwrap()]),
+            a(&[
+                image.to_str().unwrap(),
+                cli.to_str().unwrap(),
+                "start",
+                "--port",
+                "0",
+            ]),
+            a(&["C:/foreign/bun.exe", cli.to_str().unwrap(), "start"]),
+        ] {
+            assert!(!exact_parent(&bad, image, cli, "start"));
+        }
+        assert!(!exact_parent(&good, image, cli, "stop"));
+        assert!(!exact_parent(
+            &a(&[image.to_str().unwrap(), cli.to_str().unwrap(), "eval"]),
+            image,
+            cli,
+            "eval"
+        ));
     }
     #[test]
     fn wl2_r3_roles_exact_query_only_not_name_or_exit_allowlist() {
