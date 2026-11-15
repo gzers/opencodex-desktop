@@ -212,7 +212,14 @@ impl BoundedCurrentV2 {
         phase: Phase,
         end: Instant,
     ) -> io::Result<PendingV2> {
-        self.append_record(pending, phase, TreeRecord::None, WorkingRecord::None, end)
+        self.append_record(
+            pending,
+            phase,
+            TreeRecord::None,
+            WorkingRecord::None,
+            WorkingRecord::None,
+            end,
+        )
     }
     pub(super) fn append_working_phase(
         &mut self,
@@ -226,6 +233,7 @@ impl BoundedCurrentV2 {
             phase,
             TreeRecord::None,
             WorkingRecord::Snapshot(reference),
+            WorkingRecord::None,
             end,
         )
     }
@@ -238,7 +246,29 @@ impl BoundedCurrentV2 {
         if record == TreeRecord::None {
             return Err(invalid());
         }
-        self.append_record(pending, pending.tip.phase, record, WorkingRecord::None, end)
+        self.append_record(
+            pending,
+            pending.tip.phase,
+            record,
+            WorkingRecord::None,
+            WorkingRecord::None,
+            end,
+        )
+    }
+    pub(super) fn append_closed_history(
+        &mut self,
+        pending: &PendingV2,
+        reference: WorkingReference,
+        end: Instant,
+    ) -> io::Result<PendingV2> {
+        self.append_record(
+            pending,
+            Phase::Closed,
+            TreeRecord::None,
+            WorkingRecord::None,
+            WorkingRecord::Snapshot(reference),
+            end,
+        )
     }
     fn append_record(
         &mut self,
@@ -246,6 +276,7 @@ impl BoundedCurrentV2 {
         phase: Phase,
         tree_record: TreeRecord,
         working_record: WorkingRecord,
+        history_record: WorkingRecord,
         end: Instant,
     ) -> io::Result<PendingV2> {
         self.check(end)?;
@@ -271,6 +302,7 @@ impl BoundedCurrentV2 {
             phase,
             tree_record,
             working_record,
+            history_record,
             originals_manifest_digest: self.tip.originals_manifest_digest.clone(),
             security_policy_digest: self.tip.security_policy_digest.clone(),
         };

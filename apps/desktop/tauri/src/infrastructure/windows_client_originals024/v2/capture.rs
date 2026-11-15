@@ -89,8 +89,12 @@ pub(super) struct TreeCaptureV2 {
     pending: PendingV2,
     current: BoundedCurrentV2,
     working_archives: Vec<(Phase, WorkingArchive)>,
+    original_history: Option<WorkingArchive>,
+    original_handles_released: bool,
     #[cfg(test)]
     fail_working_after_first_part: bool,
+    #[cfg(test)]
+    fail_history_after_first_part: bool,
     failed: bool,
 }
 fn private_child(parent: &PinnedDirectory, name: &str) -> io::Result<PinnedDirectory> {
@@ -182,6 +186,7 @@ impl TreeCaptureV2 {
             phase: Phase::Captured,
             tree_record: TreeRecord::None,
             working_record: WorkingRecord::None,
+            history_record: WorkingRecord::None,
             originals_manifest_digest: hash::sha256_hex(&raw),
             security_policy_digest: manifest.security_policy_digest.clone(),
         };
@@ -205,14 +210,25 @@ impl TreeCaptureV2 {
             pending,
             current,
             working_archives: Vec::new(),
+            original_history: None,
+            original_handles_released: false,
             #[cfg(test)]
             fail_working_after_first_part: false,
+            #[cfg(test)]
+            fail_history_after_first_part: false,
             failed: false,
         };
         out.recheck(end)?;
         Ok(out)
     }
     pub(super) fn recheck(&mut self, end: Instant) -> io::Result<()> {
+        let result = self.recheck_inner(end);
+        if result.is_err() {
+            self.failed = true;
+        }
+        result
+    }
+    fn recheck_inner(&mut self, end: Instant) -> io::Result<()> {
         before(end)?;
         if self.failed {
             return Err(invalid());
@@ -223,8 +239,18 @@ impl TreeCaptureV2 {
         if stamp(self.custody.path(), end)? != self.manifest.custody.security_projection_snapshot {
             return Err(invalid());
         }
-        for tree in &mut self.trees {
-            tree.manifest_nodes(end)?;
+        if self.original_handles_released {
+            if self.pending.tip.phase != Phase::Closed {
+                return Err(invalid());
+            }
+            self.original_history
+                .as_mut()
+                .ok_or_else(invalid)?
+                .check_original_history(&mut self.trees, end)?;
+        } else {
+            for tree in &mut self.trees {
+                tree.manifest_nodes(end)?;
+            }
         }
         for (phase, archive) in &mut self.working_archives {
             let reference = archive.reference(end)?;
@@ -241,6 +267,44 @@ impl TreeCaptureV2 {
                 WorkingRecord::Snapshot(expected) if expected == reference => {}
                 _ => return Err(invalid()),
             }
+        }
+        if let Some(archive) = &mut self.original_history {
+            let reference = archive.reference(end)?;
+            let stage: Stage = json(self.pending.phase_raw.last().ok_or_else(invalid)?, 65536)?;
+            match stage.history_record {
+                WorkingRecord::Snapshot(expected)
+                    if stage.phase == Phase::Closed && expected == reference => {}
+                _ => return Err(invalid()),
+            }
+        }
+        let mut expected = Vec::new();
+        for tree in &self.trees {
+            expected.extend(tree.retained_custody_names(self.custody.path())?);
+        }
+        for (phase, _) in &self.working_archives {
+            expected.push(
+                match phase {
+                    Phase::Ready => "ready",
+                    Phase::PreparedRestore => "pre-stop",
+                    _ => return Err(invalid()),
+                }
+                .into(),
+            );
+        }
+        if self.original_history.is_some() {
+            expected.push("original-history".into());
+        }
+        expected.sort();
+        if expected.windows(2).any(|pair| pair[0] == pair[1]) {
+            return Err(invalid());
+        }
+        let mut observed = std::fs::read_dir(self.custody.path())?
+            .take(17)
+            .map(|row| row.and_then(|row| row.file_name().into_string().map_err(|_| invalid())))
+            .collect::<io::Result<Vec<_>>>()?;
+        observed.sort();
+        if observed != expected {
+            return Err(invalid());
         }
         before(end)
     }
@@ -335,6 +399,62 @@ impl TreeCaptureV2 {
         self.recheck(end)?;
         self.failed = true;
         self.pending = self.current.append_pending(&self.pending, phase, end)?;
+        self.failed = false;
+        if let Err(error) = self.recheck(end) {
+            self.failed = true;
+            return Err(error);
+        }
+        Ok(())
+    }
+    /// Native storage part of the typed close driver; no process proof is
+    /// generated here. Partial data, phase or current failure preserves state.
+    pub(super) fn seal_closed_originals(&mut self, end: Instant) -> io::Result<()> {
+        self.recheck(end)?;
+        if self.pending.tip.phase != Phase::Restored || self.original_history.is_some() {
+            return Err(invalid());
+        }
+        self.failed = true;
+        let binding = hash::sha256_hex(&self.binding_bytes()?);
+        self.original_history = Some(WorkingArchive::create(
+            &self.custody,
+            SnapshotPhase::OriginalHistory,
+            &self.manifest.session_id,
+            &binding,
+            &self.manifest.security_policy_digest,
+            end,
+        )?);
+        let archive = self.original_history.as_mut().unwrap();
+        #[cfg(test)]
+        if self.fail_history_after_first_part {
+            archive.inject_first_part_failure();
+        }
+        archive.capture(&mut self.trees, end)?;
+        archive.matches_live(&mut self.trees, end)?;
+        let reference = archive.reference(end)?;
+        self.pending = self
+            .current
+            .append_closed_history(&self.pending, reference, end)?;
+        self.failed = false;
+        if let Err(error) = self.recheck(end) {
+            self.failed = true;
+            return Err(error);
+        }
+        Ok(())
+    }
+    pub(super) fn release_closed_original_handles(&mut self, end: Instant) -> io::Result<()> {
+        self.recheck(end)?;
+        if self.pending.tip.phase != Phase::Closed || self.original_handles_released {
+            return Err(invalid());
+        }
+        self.original_history
+            .as_mut()
+            .ok_or_else(invalid)?
+            .matches_live(&mut self.trees, end)?;
+        self.failed = true;
+        for tree in &mut self.trees {
+            tree.release_closed_original_handle(end)?;
+        }
+        self.original_handles_released = true;
         self.failed = false;
         if let Err(error) = self.recheck(end) {
             self.failed = true;
@@ -438,6 +558,207 @@ mod tests {
             hash::sha256_hex(b"synthetic current"),
         )
         .unwrap()
+    }
+    #[test]
+    fn wl2_r4_closed_history_unknown_custody_child_keeps_required() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        captured.create_working_trees(end()).unwrap();
+        captured.record_working_phase(Phase::Ready, end()).unwrap();
+        captured
+            .record_working_phase(Phase::PreparedRestore, end())
+            .unwrap();
+        captured
+            .advance_phase(Phase::OfficialTeardown, end())
+            .unwrap();
+        captured.restore_after_teardown(end()).unwrap();
+        captured.seal_closed_originals(end()).unwrap();
+        captured.release_closed_original_handles(end()).unwrap();
+        let foreign = captured.custody.path().join("foreign.new");
+        std::fs::write(&foreign, b"unknown direct custody child").unwrap();
+        assert!(captured.recheck(end()).is_err());
+        assert!(captured.failed);
+        assert!(captured.recheck(end()).is_err());
+        assert!(foreign.exists());
+        let directory = captured.pending.directory.path().to_path_buf();
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert!(pending.current_matches && pending.terminal_record_only);
+        drop(pending);
+        println!("exact native custody membership rejects an unknown top-level child after root release, poisons the native capture and preserves text Closed only as pending data; no deletion or successor permission");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_closed_history_is_independent_of_later_live_clients() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        let profile = captured.pins[0].path().to_path_buf();
+        captured.create_working_trees(end()).unwrap();
+        captured.record_working_phase(Phase::Ready, end()).unwrap();
+        captured
+            .record_working_phase(Phase::PreparedRestore, end())
+            .unwrap();
+        captured
+            .advance_phase(Phase::OfficialTeardown, end())
+            .unwrap();
+        captured.restore_after_teardown(end()).unwrap();
+        assert!(captured.release_closed_original_handles(end()).is_err());
+        assert!(!captured.original_handles_released);
+        captured.seal_closed_originals(end()).unwrap();
+        // This is a native STORAGE fixture, not an adapter ClosedEligibility;
+        // it has never supplied actual official typed exit/Owner/source proofs.
+        assert!(RootTree::capture(&profile.join(".codex"), end()).is_err());
+        captured.release_closed_original_handles(end()).unwrap();
+        assert!(captured.original_handles_released);
+        let current_file = profile.join(".codex/config.toml");
+        std::fs::write(&current_file, b"new user generation after stored close").unwrap();
+        std::fs::create_dir(profile.join(".grok")).unwrap();
+        std::fs::write(profile.join(".grok/settings.json"), b"new user grok").unwrap();
+        let mut fresh = RootTree::capture(&profile.join(".codex"), end()).unwrap();
+        fresh.manifest_nodes(end()).unwrap();
+        drop(fresh);
+        captured.recheck(end()).unwrap();
+        let archive = captured
+            .custody
+            .path()
+            .join("original-history/.codex/data-0001-0000.bin");
+        assert_eq!(
+            std::fs::read(&archive).unwrap(),
+            b"synthetic nonsecret config"
+        );
+        let absent: serde_json::Value = serde_json::from_slice(
+            &std::fs::read(
+                captured
+                    .custody
+                    .path()
+                    .join("original-history/.grok/snapshot.json"),
+            )
+            .unwrap(),
+        )
+        .unwrap();
+        assert_eq!(absent["sourceAbsent"], true);
+        assert_eq!(absent["nodes"].as_array().unwrap().len(), 0);
+        assert!(std::fs::write(&archive, b"tamper").is_err());
+        assert!(captured.release_closed_original_handles(end()).is_err());
+        let directory = captured.pending.directory.path().to_path_buf();
+        assert_eq!(captured.pending.tip.sequence, 18);
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert!(pending.current_matches && pending.terminal_record_only);
+        drop(pending);
+        assert_eq!(
+            std::fs::read(&current_file).unwrap(),
+            b"new user generation after stored close"
+        );
+        println!("native storage Closed history preserves exact old original bytes/absence; actual old DELETE roots released only after archive/current, fresh native capture works, later live clients do not become historical baseline; no official ClosedEligibility/successor permit");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_closed_history_drift_refuses_after_root_release() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        captured.create_working_trees(end()).unwrap();
+        captured.record_working_phase(Phase::Ready, end()).unwrap();
+        captured
+            .record_working_phase(Phase::PreparedRestore, end())
+            .unwrap();
+        captured
+            .advance_phase(Phase::OfficialTeardown, end())
+            .unwrap();
+        captured.restore_after_teardown(end()).unwrap();
+        captured.seal_closed_originals(end()).unwrap();
+        captured.release_closed_original_handles(end()).unwrap();
+        let foreign = captured
+            .custody
+            .path()
+            .join("original-history/.grok/foreign.new");
+        std::fs::write(&foreign, b"unknown stored-history drift").unwrap();
+        assert!(captured.recheck(end()).is_err());
+        assert!(captured.recheck(end()).is_err());
+        assert!(foreign.exists());
+        drop(captured);
+        temp.retain();
+        println!("released-root historical archive unknown file causes native refusal, not automatic history adoption/deletion; exact scene retained, no successor proof");
+    }
+    #[test]
+    fn wl2_r4_closed_history_first_part_failure_retains_native_roots() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        captured.create_working_trees(end()).unwrap();
+        captured.record_working_phase(Phase::Ready, end()).unwrap();
+        captured
+            .record_working_phase(Phase::PreparedRestore, end())
+            .unwrap();
+        captured
+            .advance_phase(Phase::OfficialTeardown, end())
+            .unwrap();
+        captured.restore_after_teardown(end()).unwrap();
+        captured.fail_history_after_first_part = true;
+        let error = captured.seal_closed_originals(end()).unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("injected after actual first sealed"));
+        assert!(captured.failed && !captured.original_handles_released);
+        let history = captured.custody.path().join("original-history/.codex");
+        assert_eq!(
+            std::fs::read(history.join("data-0001-0000.bin")).unwrap(),
+            b"synthetic nonsecret config"
+        );
+        assert!(!history.join("snapshot.json").exists());
+        assert!(RootTree::capture(&captured.pins[0].path().join(".codex"), end()).is_err());
+        assert!(captured.release_closed_original_handles(end()).is_err());
+        let directory = captured.pending.directory.path().to_path_buf();
+        assert!(!directory.join("phase-00000018.json").exists());
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert_eq!(pending.tip.sequence, 17);
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        drop(pending);
+        println!("native original-history first sealed part fault retains partial private bytes and exact restored root handles, canonical Restored17/current unchanged, no Closed or release/catch-up");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_closed_history_partial_current_never_releases_originals() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        captured.create_working_trees(end()).unwrap();
+        captured.record_working_phase(Phase::Ready, end()).unwrap();
+        captured
+            .record_working_phase(Phase::PreparedRestore, end())
+            .unwrap();
+        captured
+            .advance_phase(Phase::OfficialTeardown, end())
+            .unwrap();
+        captured.restore_after_teardown(end()).unwrap();
+        captured.current.inject_partial_write_failure();
+        let error = captured.seal_closed_originals(end()).unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("injected after real partial current write and sync"));
+        assert!(captured.failed);
+        assert!(!captured.original_handles_released);
+        let profile = captured.pins[0].path().to_path_buf();
+        assert!(RootTree::capture(&profile.join(".codex"), end()).is_err());
+        let archive = captured
+            .custody
+            .path()
+            .join("original-history/.codex/data-0001-0000.bin");
+        assert_eq!(
+            std::fs::read(archive).unwrap(),
+            b"synthetic nonsecret config"
+        );
+        assert!(captured.release_closed_original_handles(end()).is_err());
+        let directory = captured.pending.directory.path().to_path_buf();
+        assert!(directory.join("phase-00000018.json").exists());
+        assert!(!directory.join("phase-00000019.json").exists());
+        drop(captured);
+        assert_eq!(std::fs::read(directory.join("current.json")).unwrap(), b"{");
+        assert!(read_pending(&directory).is_err());
+        let pending = read_pending_impl(&directory, false).unwrap();
+        assert!(pending.terminal_record_only && !pending.current_matches);
+        drop(pending);
+        println!("original-history+Closed phase18 then actual partial current fault preserves old native root handles/archive, no release or catch-up; text Closed is locator-only without matching current/typed native closure");
+        temp.retain();
     }
     #[test]
     fn wl2_r4_working_first_part_failure_keeps_original_and_canonical_prefix() {

@@ -63,6 +63,7 @@ if($Mode -eq 'actual-gui-observer-build'){$arguments=@('test','--locked','--offl
 if($Mode -eq 'r4-root-progress'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_r4_unperformed','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'r4-retired'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_r4_retired','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'r4-tree-v2'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_client_originals024::tree::','windows_client_originals024::v2::','--test-threads=1','--nocapture')}
+if($Mode -eq 'r4-history-dispatch'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_client_originals024::tree::','windows_client_originals024::v2::','windows_official_lifecycle024::','windows_supervisor024::','windows_diagnostic_roles024::','--test-threads=1','--nocapture')}
 $diff=git diff --binary
 if($Mode -eq 'original-reference'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'original-move'){

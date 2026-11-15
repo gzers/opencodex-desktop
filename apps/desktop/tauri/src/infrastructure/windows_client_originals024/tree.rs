@@ -52,6 +52,7 @@ pub(super) struct RootTree {
     custody: Option<PinnedDirectory>,
     working: Option<Vec<Entry>>,
     retired_work: Option<RetiredWorking>,
+    original_handle_released: bool,
     poisoned: bool,
 }
 fn check(end: Instant) -> io::Result<()> {
@@ -263,6 +264,7 @@ impl RootTree {
             custody: None,
             working: None,
             retired_work: None,
+            original_handle_released: false,
             poisoned: false,
         };
         captured.verify_stable_release(end)?;
@@ -272,7 +274,10 @@ impl RootTree {
     fn check_original(&mut self, end: Instant) -> io::Result<()> {
         check(end)?;
         self.parent.recheck()?;
-        if self.poisoned || parent_stamp(self.parent.path(), end)? != self.parent_security {
+        if self.poisoned
+            || self.original_handle_released
+            || parent_stamp(self.parent.path(), end)? != self.parent_security
+        {
             return Err(invalid());
         }
         match &mut self.root {
@@ -489,6 +494,28 @@ impl RootTree {
         self.check_original(end)?;
         check(end)
     }
+    /// Only the retained complete native close driver may call this AFTER its
+    /// original-history archive has been sealed and linked by canonical Closed.
+    pub(super) fn release_closed_original_handle(&mut self, end: Instant) -> io::Result<()> {
+        self.verify_restored(end)?;
+        self.original_handle_released = true;
+        drop(self.root.take());
+        self.check_closed_retention(end)
+    }
+    fn check_closed_retention(&mut self, end: Instant) -> io::Result<()> {
+        check(end)?;
+        self.parent.recheck()?;
+        if self.poisoned
+            || self.custody.is_some()
+            || self.working.is_some()
+            || self.location != self.original
+            || parent_stamp(self.parent.path(), end)? != self.parent_security
+        {
+            return Err(invalid());
+        }
+        // Never query the later live client root as an old-history baseline.
+        self.verify_retired(end)
+    }
     fn verify_stable_release(&self, end: Instant) -> io::Result<()> {
         if self.original.file_name().and_then(|s| s.to_str()) == Some(".codex")
             && self.root.is_some()
@@ -549,6 +576,35 @@ impl RootTree {
     }
     pub(super) fn diagnostic(&self) -> serde_json::Value {
         serde_json::json!({"scopeId":"windows-bounded-access-v1","originalAbsent":self.root.is_none(),"nodes":self.entries.len(),"currentLocation":self.location,"poisoned":self.poisoned,"auditSaclAssurance":"excluded-unknown","fullSecurityProven":false,"ClosedEligibility":false})
+    }
+    pub(super) fn retained_custody_names(&self, custody: &Path) -> io::Result<Vec<String>> {
+        let mut result = Vec::new();
+        if self.location != self.original {
+            if self.location.parent() != Some(custody) {
+                return Err(invalid());
+            }
+            result.push(
+                self.location
+                    .file_name()
+                    .and_then(|s| s.to_str())
+                    .ok_or_else(invalid)?
+                    .into(),
+            );
+        }
+        if let Some(retired) = &self.retired_work {
+            if retired.path.parent() != Some(custody) {
+                return Err(invalid());
+            }
+            result.push(
+                retired
+                    .path
+                    .file_name()
+                    .and_then(|s| s.to_str())
+                    .ok_or_else(invalid)?
+                    .into(),
+            );
+        }
+        Ok(result)
     }
 }
 fn require_absent(path: &Path) -> io::Result<()> {

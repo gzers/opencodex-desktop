@@ -43,11 +43,49 @@ pub(crate) struct NormalExit {
     deadline: Instant,
     raw: Vec<(u32, u64, ChildRole, ChildExit)>,
 }
+/// A successfully checked old Stop fact retained in the original broker. The
+/// original Stop deadline is immutable. A later user action reobserves the old
+/// original handles/history under its own budget, never extends the old Stop.
+pub(crate) struct ClosedExitHistory {
+    proof: NormalExit,
+    completed_at: Instant,
+}
+impl ClosedExitHistory {
+    pub(crate) fn check(&self, owner: &mut Owner, new_deadline: Instant) -> AppResult<()> {
+        owner.check_current(new_deadline)?;
+        if self.completed_at >= self.proof.deadline {
+            return Err(refuse("原Stop窗口内闭合历史缺席"));
+        }
+        self.proof.check_raw_history(owner, new_deadline)
+    }
+}
 impl NormalExit {
     pub(crate) fn check(&self, owner: &mut Owner, deadline: Instant) -> AppResult<()> {
         owner.check_current(deadline)?;
         if self.scope != owner.scope()? || self.deadline != deadline || self.raw.is_empty() {
             return Err(refuse("退出证明不是当前原动作/代次"));
+        }
+        self.check_raw_history(owner, deadline)
+    }
+    pub(crate) fn into_closed_history(
+        self,
+        owner: &mut Owner,
+        deadline: Instant,
+    ) -> AppResult<ClosedExitHistory> {
+        self.check(owner, deadline)?;
+        let completed_at = Instant::now();
+        if completed_at >= deadline {
+            return Err(refuse("原Stop截止已过；不得补签历史"));
+        }
+        Ok(ClosedExitHistory {
+            proof: self,
+            completed_at,
+        })
+    }
+    fn check_raw_history(&self, owner: &mut Owner, deadline: Instant) -> AppResult<()> {
+        owner.check_current(deadline)?;
+        if self.scope != owner.scope()? || self.raw.is_empty() {
+            return Err(refuse("保留退出历史原代次不匹配"));
         }
         let family = owner
             .original_native()

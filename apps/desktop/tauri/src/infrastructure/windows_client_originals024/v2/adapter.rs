@@ -7,7 +7,7 @@ use super::*;
 use crate::{
     errors::{AppError, AppResult},
     infrastructure::{
-        windows_diagnostic_roles024::NormalExit,
+        windows_diagnostic_roles024::{ClosedExitHistory, NormalExit},
         windows_official_lifecycle024::Owner,
         windows_official_runtime024::RetainedPeer,
         windows_supervisor024::{Absent, WindowsSupervisor},
@@ -203,6 +203,7 @@ struct Store {
     state: State,
     ready: Option<(u32, u16, String)>,
     stop_deadline: Option<Instant>,
+    closed_exit: Option<ClosedExitHistory>,
     failed: bool,
 }
 // These tags locate retained native state in THIS adapter only. No public
@@ -302,6 +303,7 @@ impl ClientOriginals for WindowsOriginals {
             state: State::Original,
             ready: None,
             stop_deadline: None,
+            closed_exit: None,
             failed: true,
         });
         let store = self.store.as_mut().unwrap();
@@ -395,14 +397,20 @@ impl ClientOriginals for WindowsOriginals {
         WindowsSupervisor.recheck_absent(owner, &supervisor, end)?;
         owner.originals_check_stopped_records(end)?;
         store.source.check(owner, end)?;
+        store.tree.seal_closed_originals(end).map_err(refused)?;
+        native_exit.check(owner, end)?;
+        WindowsSupervisor.recheck_absent(owner, &supervisor, end)?;
+        owner.originals_check_stopped_records(end)?;
+        store.source.check(owner, end)?;
         store
             .tree
-            .advance_phase(Phase::Closed, end)
+            .release_closed_original_handles(end)
             .map_err(refused)?;
         native_exit.check(owner, end)?;
         WindowsSupervisor.recheck_absent(owner, &supervisor, end)?;
         owner.originals_check_stopped_records(end)?;
         store.source.check(owner, end)?;
+        store.closed_exit = Some(native_exit.into_closed_history(owner, end)?);
         store.state = State::Closed;
         store.failed = false;
         Ok(ClosedEligibility {
@@ -418,17 +426,22 @@ impl ClientOriginals for WindowsOriginals {
         window.remaining()?;
         let end = window.deadline();
         let store = self.begin(&closed.session, State::Closed, owner, end)?;
+        store
+            .closed_exit
+            .as_ref()
+            .ok_or_else(|| refused("原Stop窗口内完成的退出历史缺席"))?
+            .check(owner, end)?;
         // The new action does not reuse a previous Stop proof/deadline.
         let absent = WindowsSupervisor.observe_absent(owner, end)?;
         WindowsSupervisor.recheck_absent(owner, &absent, end)?;
         owner.originals_check_stopped_records(end)?;
         store.tree.recheck(end).map_err(refused)?;
         store.source.check(owner, end)?;
-        // A fresh capture still needs native closed-history transfer and exact
-        // old-root handle release. Do not grant a permission that the retained
-        // old generation and strict pending reader cannot yet consume.
+        // Original history is now sealed and DELETE roots released, but a new
+        // generation still needs qualified history-set transfer and exact
+        // namespace registration. This is not a reusable successor permission.
         Err(refused(
-            "后继原生历史移交/旧根句柄释放/新代次capture尚未完成；保持拒绝",
+            "后继完整历史集合移交/命名空间登记/新代次capture尚未完成；保持拒绝",
         ))
     }
 }

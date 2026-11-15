@@ -9,12 +9,17 @@ fn progress_prefix(steps: &[(Phase, TreeRecord)]) -> (Vec<u8>, Vec<Vec<u8>>) {
         stage.previous_record_id = Some(format!("phase-{:08}.json", stage.sequence - 1));
         stage.phase = *phase;
         stage.tree_record = *tree_record;
-        stage.working_record = working_record_for(
+        let record = working_record_for(
             *phase,
             &stage.binding,
             &stage.session_id,
             &stage.security_policy_digest,
         );
+        if *phase == Phase::Closed {
+            stage.history_record = record;
+        } else {
+            stage.working_record = record;
+        }
         records.push(serde_json::to_vec(&stage).unwrap());
     }
     (manifest, records)
@@ -122,6 +127,29 @@ fn wl2_r4_unperformed_roots_cannot_cross_ready_or_closed_in_v2_records() {
     let (manifest, records) = progress_prefix(&steps);
     let tip = check_prefix(&manifest, &records, &sid).unwrap();
     assert!(tip.terminal_record_only);
+    for change in ["missing", "none", "working-phase", "session"] {
+        let mut wrong = records.clone();
+        let mut value: serde_json::Value = serde_json::from_slice(wrong.last().unwrap()).unwrap();
+        match change {
+            "missing" => {
+                value.as_object_mut().unwrap().remove("historyRecord");
+            }
+            "none" => value["historyRecord"] = serde_json::json!("None"),
+            "working-phase" => {
+                value["historyRecord"]["Snapshot"]["phase"] = serde_json::json!("Ready")
+            }
+            "session" => {
+                value["historyRecord"]["Snapshot"]["sessionId"] =
+                    serde_json::json!(uuid::Uuid::new_v4().to_string())
+            }
+            _ => unreachable!(),
+        }
+        *wrong.last_mut().unwrap() = serde_json::to_vec(&value).unwrap();
+        assert!(
+            check_prefix(&manifest, &wrong, &sid).is_err(),
+            "closed-history {change}"
+        );
+    }
     // Even a complete syntactic chain is pending locator data, not retained
     // native process/root custody or an adapter ClosedEligibility.
     println!("canonical two-root history required before Ready/Restored; full synthetic Closed prefix remains data-only, no production eligibility");
@@ -219,6 +247,7 @@ fn working_record_for(
     let phase = match phase {
         Phase::Ready => SnapshotPhase::Ready,
         Phase::PreparedRestore => SnapshotPhase::PreStop,
+        Phase::Closed => SnapshotPhase::OriginalHistory,
         _ => return WorkingRecord::None,
     };
     let object = |id: &str| serde_json::json!({"volume":1,"fileId":id,"security":snapshot(id)});
@@ -263,6 +292,7 @@ pub(super) fn bundle(m: serde_json::Value) -> (Vec<u8>, Vec<Vec<u8>>, Vec<u8>) {
             phase: p,
             tree_record: TreeRecord::None,
             working_record: WorkingRecord::None,
+            history_record: WorkingRecord::None,
             originals_manifest_digest: hash::sha256_hex(&manifest),
             security_policy_digest: parsed.security_policy_digest.clone(),
         };

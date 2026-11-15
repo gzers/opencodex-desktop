@@ -98,6 +98,7 @@ struct Stage {
     phase: Phase,
     tree_record: TreeRecord,
     working_record: WorkingRecord,
+    history_record: WorkingRecord,
     originals_manifest_digest: String,
     security_policy_digest: String,
 }
@@ -368,6 +369,24 @@ fn check_prefix(manifest: &[u8], records: &[Vec<u8>], sid: &str) -> io::Result<T
             }
             (WorkingRecord::None, phase)
                 if !matches!(phase, Phase::Ready | Phase::PreparedRestore) => {}
+            _ => return Err(invalid()),
+        }
+        match (&stage.history_record, stage.phase) {
+            (WorkingRecord::Snapshot(reference), Phase::Closed)
+                if stage.tree_record == TreeRecord::None =>
+            {
+                reference.validate(
+                    SnapshotPhase::OriginalHistory,
+                    &m.session_id,
+                    &binding_digest,
+                    &m.security_policy_digest,
+                    crate::infrastructure::windows_official_runtime024::FileIdentity {
+                        volume: m.custody.identity.volume,
+                        index: m.custody.identity.file_id.parse().map_err(|_| invalid())?,
+                    },
+                )?;
+            }
+            (WorkingRecord::None, phase) if phase != Phase::Closed => {}
             _ => return Err(invalid()),
         }
         match &previous {

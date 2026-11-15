@@ -11,12 +11,14 @@ const PART: usize = 1024 * 1024;
 pub(crate) enum SnapshotPhase {
     Ready,
     PreStop,
+    OriginalHistory,
 }
 impl SnapshotPhase {
     pub(super) fn leaf(self) -> &'static str {
         match self {
             Self::Ready => "ready",
             Self::PreStop => "pre-stop",
+            Self::OriginalHistory => "original-history",
         }
     }
 }
@@ -148,6 +150,32 @@ pub(super) struct WorkingImage {
     entries: Vec<Entry>,
 }
 impl RootTree {
+    fn observe_restored_original(&mut self, end: Instant) -> io::Result<WorkingImage> {
+        self.verify_restored(end)?;
+        let entries = if let Some(file) = self.root.as_mut() {
+            // Use the original retained DELETE-capable root description. A new
+            // deny-delete reader would conflict with that actual owner; sharing
+            // is never relaxed merely to make history capture pass.
+            let observed = image(&self.original, file, end)?;
+            if observed != self.entries {
+                return Err(invalid());
+            }
+            observed
+        } else {
+            require_absent(&self.original)?;
+            Vec::new()
+        };
+        self.verify_restored(end)?;
+        Ok(WorkingImage {
+            path: self.original.clone(),
+            parent: self.parent.identity(),
+            parent_security: self.parent_security_data(end)?,
+            entries,
+        })
+    }
+    fn parent_security_data(&self, end: Instant) -> io::Result<SnapshotData> {
+        parent_stamp(self.parent.path(), end)
+    }
     pub(super) fn observe_working(&mut self, end: Instant) -> io::Result<WorkingImage> {
         self.check_original(end)?;
         if self.custody.is_none() || self.working.is_none() || self.retired_work.is_some() {
@@ -253,7 +281,7 @@ impl StoredRoot {
         let metadata = serde_json::json!({"schema":SCHEMA,"phase":phase,"sessionId":session,
             "bindingDigest":binding,"securityPolicyDigest":policy,"sourceRoot":self.image.path,
             "sourceParent":{"volume":self.image.parent.volume,"fileId":self.image.parent.index.to_string(),"securityProjectionSnapshot":self.image.parent_security},
-            "nodes":nodes,"auditSaclAssurance":"excluded-unknown","fullSecurityProven":false});
+            "sourceAbsent":self.image.entries.is_empty(),"nodes":nodes,"auditSaclAssurance":"excluded-unknown","fullSecurityProven":false});
         let raw = serde_json::to_vec(&metadata).map_err(|_| invalid())?;
         let path = self.directory.path().join("snapshot.json");
         check(end)?;
@@ -369,7 +397,11 @@ impl WorkingArchive {
             return Err(invalid());
         }
         for (tree, name) in trees.iter_mut().zip([".codex", ".grok"]) {
-            let image = tree.observe_working(end)?;
+            let image = if self.phase == SnapshotPhase::OriginalHistory {
+                tree.observe_restored_original(end)?
+            } else {
+                tree.observe_working(end)?
+            };
             if image.path.file_name().and_then(|s| s.to_str()) != Some(name) {
                 return Err(invalid());
             }
@@ -412,7 +444,41 @@ impl WorkingArchive {
     ) -> io::Result<()> {
         self.recheck(end)?;
         for (tree, root) in trees.iter_mut().zip(&self.roots) {
-            tree.matches_image(&root.image, end)?;
+            if self.phase == SnapshotPhase::OriginalHistory {
+                tree.verify_restored(end)?;
+                Self::original_matches_image(tree, &root.image)?;
+            } else {
+                tree.matches_image(&root.image, end)?;
+            }
+        }
+        check(end)
+    }
+    fn original_matches_image(tree: &RootTree, source: &WorkingImage) -> io::Result<()> {
+        if tree.original != source.path
+            || tree.parent.identity() != source.parent
+            || tree.parent_security != source.parent_security
+            || tree.entries != source.entries
+            || !tree.original_handle_released && tree.root.is_none() != source.entries.is_empty()
+        {
+            return Err(invalid());
+        }
+        Ok(())
+    }
+    /// Native archive/readback only, deliberately independent of future live
+    /// client paths. Historical data is still tied to the retained original
+    /// capture entries and cannot construct a new original root or permission.
+    pub(crate) fn check_original_history(
+        &mut self,
+        trees: &mut [RootTree; 2],
+        end: Instant,
+    ) -> io::Result<()> {
+        if self.phase != SnapshotPhase::OriginalHistory {
+            return Err(invalid());
+        }
+        self.recheck(end)?;
+        for (tree, root) in trees.iter_mut().zip(&self.roots) {
+            tree.check_closed_retention(end)?;
+            Self::original_matches_image(tree, &root.image)?;
         }
         check(end)
     }
