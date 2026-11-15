@@ -472,3 +472,14 @@ retired-before01再两项真实证伪恢复后退休工作树被忘记（101/0�
 shared-minimum-request.json给集成线最小范围外接口：独立路由declaration(bytes)及完整helpers现只在cfgmacos私有macos_client_session，LaunchPlan不带路由。请求提取既有纯解析器/断言至跨平台runtime模块供两端同用，保留None未知/空完整集合、selected/static/dynamic/custom/combos/disabled/display别名/slash冲突/strictJSON，不让数据API授native许可，不动四trait/HMAC/预算。Windows不擅写共享文件/不从生成catalog倒推补签，其余原生协调/后继/GUI独立工作仍归Windows，未冒全部受阻。
 
 39个保留scene/431文件31617713字节私有ZIP内容核验/原场景留，非NTFS元数据克隆；无新账户/Profile/Public/GUI/官方/force/日常配置策略写。旧删除拒绝不重试，overallCleanupComplete=false。0c真实GUI准备输入未覆盖、out仍空；原件完整官方副作用/NativeLease/后继历史释放/Closed/实际GUI官方Owner与S-D组合、普通MSI历史清理未完。CAP/trust非空1314/5不重跑，固定8范围审计excluded/fullSecurityProven=false，Start拒绝保持，无业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 r4原件闭合历史与旧根句柄释放（后继尚未接通）
+
+代码754814dc14903868e73223a1a8862c9b33b14e51已推，tree226fc0476e3a8b451c009b3a316da87cd5c8134e。实际ClientOriginals在恢复完整读回后、原Stop窗口内封存原卷OriginalHistory原件字节/原ID/8投影/缺席，canonical v2必需historyRecord绑定准确上下文/原生归档及摘要，发布Closed后重验才释放旧原根DELETE句柄；旧缺字段/Full/partial不转换。释放后历史只读原私有数据/退休工作树及保留上下文，不跟随新用户Codex/Grok当旧baseline，归档副本ID不冒原件ID。NormalExit保留到非serde/nonClone ClosedExitHistory含原截止/窗口内完成时间，新动作重验旧Job/raw角色退出历史不重写旧Stop窗口。完整生产typed工厂未实跑，fixturetextClosed不能签资格。
+
+新证据.adg/evidence/0.2.24/windows-dev/wl2-closed-history-20261115-r1/含先置假设、三库测试与产品的完整原source/log/result/EXE、失败现场清单/首错、全部矩阵/清理及verify。library01原101/29过3败，seal历史重新open与旧DELETE根分享冲突raw32，后续raw3为未完成封存；改直接原root句柄不放分享，真实partialcurrent注入另验准确错误。library02四十八过2忽略；补custody顶层精确集合及recheck错误poison后library03四十九过2忽略，未忽略项当生产通过。前期失败原件/scene留。最终clean754 custom-protocol MSVC debug bins0/132797ms/lib68warnings，97份执行输入/53份最终测试Rust对源。Desktop77356544/SHA256fcd4fdc9231e2d1d41d85a1cf2dc8ec46b438020e98ae1058ab7fcfa18446f6e；ocxd5398528/SHA256e8220bc793989c3a155c14fd1d60afc3ef68fcf7bf1541529242011526d8445c；ocx306176/SHA25672f2fc3e2f53f98f29029831b2e1b1a0df5f511f15488bd2ff0573bf9de97e85，非release预算/冻结候选。
+
+54个scene/839文件43529262字节私有ZIP内容核验/原scene留，非NTFS元数据克隆。两处新成功自有正例.tmp1fI41E/.tmpN3C2VK（64文件236993字节）拟执行核对后准确清理，整条exec在启动前被自动审批blocked by policy拒绝，额外逐项核对/删除没有执行，只读确认两根在；原归档核验已完成。记录cleanup-positive-scenes-rejected，不换工具/脚本重试两根或旧拒绝，overallCleanupComplete=false。无新账户/Profile/Public/GUI/官方/force/日常配置策略写。
+
+successor-remaining.json记录仍缺已知闭合历史集合/前驱登记/newcapture/Slot多Owner原权威保管与dispatch；capture仍拒非空D/windows，authorize_successor仍拒，不删旧记录凑新代。前轮跨平台纯路由解析器最小共享请求仍待，官方完整副作用/NativeLease/后继/GUI官方Owner/S-D生产组合及普通MSI历史清理仍未完。0cGUI准备输入未覆盖、out空，待原marenben桌面执行；固定8范围excluded/fullSecurityProven=false及原30/5/10/Restart30Stop子10保持，Start拒绝，无业务模型请求/W2/双SID/发布。

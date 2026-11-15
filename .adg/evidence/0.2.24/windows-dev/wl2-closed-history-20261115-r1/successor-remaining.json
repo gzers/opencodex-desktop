@@ -1,0 +1,44 @@
+{
+  "time": "2026-11-15T15:37:28.024417+08:00",
+  "sourceHead": "754814dc14903868e73223a1a8862c9b33b14e51",
+  "facts": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/capture.rs",
+      "lines": [
+        138
+      ],
+      "observed": "read_dir(windows.path())"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/adapter.rs",
+      "lines": [
+        444
+      ],
+      "observed": "后继完整历史集合移交"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "lines": [
+        596,
+        816
+      ],
+      "observed": "if owner.stopped"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "lines": [
+        670
+      ],
+      "observed": "require_durable_capture()?"
+    }
+  ],
+  "remaining": [
+    "capture currently requires exact empty D/official024/windows; cannot consume retained known closed set",
+    "no persistent per-generation predecessor/history-set references registered in new manifest; do not accept arbitrary textClosed dirs or scan/adopt",
+    "authorize_successor rechecks retained old typed/native history but intentionally refuses before any usable next capture permission",
+    "process-local Slot still retains single Owner; must retain each original old Owner/process/Job/source/history when new generation is installed, without drop/adoption",
+    "new source/H/SID/window and whole registered history must be checked before new capture/Resume; original30/5/10/Restart30inclStop10 remains",
+    "full declared-side-effect/NativeLease and actual GUI official broker/S-D combined acceptance remain incomplete; public gate unchanged"
+  ],
+  "allAccepted": false
+}
