@@ -1,4 +1,4 @@
-//! W-L2 native boundaries for unchanged official 2.99.0.
+//! W-L2 native boundaries for unchanged official 2.99.0 (r4 coverage decision).
 //!
 //! These are implementation contracts, not a new source of native authority.
 //! Associated proof types must retain their original native objects. No proof
@@ -8,7 +8,7 @@ use super::official_lifecycle024::{ActionWindow, ServiceObservation, StopAccepte
 use crate::errors::AppResult;
 use std::time::Instant;
 
-pub const CONTRACT_VERSION: u32 = 1;
+pub const CONTRACT_VERSION: u32 = 2;
 pub const OFFICIAL_PACKAGE_SHA256: &str =
     "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c";
 pub const OFFICIAL_TASK: &str = "opencodex-proxy";
@@ -27,6 +27,26 @@ pub const FULL_DESCRIPTOR_SECURITY_INFORMATION: u32 = 0x0001_0000;
 /// An independent diagnostic projection only; it cannot authorize custody,
 /// restoration or ClosedEligibility even when its read succeeds unchanged.
 pub const OWNER_GROUP_DACL_DIAGNOSTIC_INFORMATION: u32 = 0x0000_0007;
+
+/// Explicit new-session policy, never selected as fallback after a full-SACL
+/// read fails. No native adapter is switched by these declarations. Until the
+/// new native capture/tree/custody/restore proofs exist, production still refuses.
+pub const BOUNDED_SECURITY_SCOPE: &str = "windows-bounded-access-v1";
+pub const BOUNDED_SECURITY_QUERY_ACCESS: u32 = 0x0002_0000; // READ_CONTROL
+/// O/G/D + label + resource attributes + CAP scope + trust label + access filter.
+/// Every projection must be queried separately and as the combined set. Check
+/// QuerySecurityAccessMask and supported OS semantics; required unreadable or
+/// unsupported projection refuses. Neither SACL(8) nor BACKUP(0x10000) is queried.
+pub const BOUNDED_SECURITY_INFORMATION: u32 = 0x0000_01f7;
+pub const BOUNDED_POLICY_PROJECTIONS: [u32; 5] = [0x10, 0x20, 0x40, 0x80, 0x100];
+pub const ORIGINALS_RECORD_SCHEMA_V2: &str = "windows-client-originals-v2";
+pub const CURRENT_REFERENCE_SCHEMA_V2: &str = "windows-client-current-v2";
+/// This is an assurance scope, not a descriptor-preservation certificate. Native
+/// code must retain the original object and independently read back each included
+/// projection. Excluded audit-SACL/control and future extensions remain unknown;
+/// they are never asserted absent, equal or fully restored, even on the same ID.
+/// Old full-v1 and diagnostic partial records cannot mint this scope's eligibility.
+pub const BOUNDED_SECURITY_EXCLUDED_ASSURANCE: &str = "audit-sacl-and-unrequested-security-unknown";
 
 /// Original process generation, never a PID-only capability. The native adapter
 /// must independently observe token SID and creation time from a retained handle.
@@ -66,9 +86,12 @@ pub trait NativeSession {
 /// Durable originals, including original absence, same-volume object custody,
 /// security descriptor and file identity. All associated values are opaque,
 /// non-Clone/non-serde in the adapter; no default implementation grants recovery.
-/// Full descriptor includes audit SACL and all OS-returned policy ACEs/control.
-/// Unreadable is not absent. Partial observation never authorizes the first
-/// client mutation, and a later read failure preserves pending custody/Required.
+/// r4 explicitly permits BOUNDED_SECURITY_SCOPE for NEW v2 sessions. Complete
+/// included projections + native custody and final restoration are still required;
+/// an old diagnostic O/G/D read cannot authorize any mutation. Full-v1 records
+/// keep their full-descriptor requirements and are never converted/downgraded.
+/// Unreadable included information is not absent. A later read failure preserves
+/// pending custody/Required, and bounded Closed never claims full-SACL restoration.
 pub trait ClientOriginals {
     type Owner: NativeSession;
     type OriginalSession;
