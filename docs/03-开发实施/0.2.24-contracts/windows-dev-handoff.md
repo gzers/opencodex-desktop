@@ -417,3 +417,16 @@ Stop实际Windows调用点已接typedSupervisor/NormalExit，完整记账与root
 不可覆盖轮次.adg/evidence/0.2.24/windows-dev/wl2-bounded-security-r4-20261115-r1/保留全部原source/stdout/stderr/result，初始及后继状态分时点、首错、制品/源码manifest、清理与verify_delivery/payload-inventory。后继事实归successor-status/report，不覆盖早先final-status/report快照。lib06负例当时成功TempDir guard清理缺私有归档的局限明列；lib07加失败现场保留/私有归档后删除被automaticapproval blocked by policy拒绝，4文件7290字节继续留；lib08/10另4保留scene归档核验16文件51405字节，3个probe新文件也留，六个Rust正例成功guard清理。ZIP仅字节归档不克隆NTFS身份/安全，原私有对象在场。所有旧失败树/Profile/Public/schema删除拒绝不重试不绕过，overallCleanupComplete=false；普通MSI缺口继续，不W2/双SID/真实业务同步/模型请求/发布。
 
 marenben session7最后核Disc；已请用户恢复交互桌面，未重跑旧空H用例。CAP/trust非空组件正例还需能供现普通token读取的专用合成对象/环境，不给token加权限。本轮交付是范围内增量；软件未完成项继续Windows，不以环境缺口替代其它实现责任。
+
+
+## 2026-11-15 r4整树持久阶段与只读两锁（仍未Closed）
+
+沿TEAM14/IMP140/security-coverage-r4原写集持续开发，承接5601df969/7961253ff。新增代码17560e2da/6a24b3685/5d90fb2f5/7130ab83f，最终7130ab83f98b7c0d9f908e9f3f756dc1c713f04c。原件每根move/workcopy/abort-restore的Intent/Completed进同一canonical v2 phase，刷盘读回后current排他CAS；错序/错根/缺treeRecord/未完成步骤跨phase拒绝，Full-v1/partial/前期component-v2不转换迁移。实际未move拒Completed、单根中断、第一根还回第二根外改留seq13恢复意图、真实current部分write+sync注入后poison/phase2保留/旧prefix拒绝均新证据；不签OriginalSession/Closed。
+
+library01首raw101/9pass1fail，第二Grok move边界rawWin32123/seq6意图保持；原FileRenameInfo名字恰好填满存储的NUL问题经显式零WCHAR修正，FileNameLength/原handle/不覆盖/同卷/预算不变；native01五项及library02十项过。current01两项过。两锁初编译locks01 E0282/101/tests0保留；初版SQLite打开机制locks02三过/library03二十三过但可能触发hotjournal恢复，生产使用前废弃。最终READ-only native句柄LockFileEx同时持两处准确rollback协议范围，真实SQLite双向竞争拒绝，rawWin3233不改，原bytes/ID/8投影与journal/wal/shm前后核；捕获前及恢复Completed前均消费。final library04二十三项过，没有生产SQLite open或修ACL/提权。局部source review等价于复核范围，不当整树安全审计。
+
+最终clean7130ab83f MSVC debug全部bins0/179460毫秒/121warnings，89份执行源与工作字节及Gitblob行尾等价，library04全部捕获输入对最终。制品归新轮product01-artifacts.json；Desktop75784192/SHA25600a881a111254aa7a920bad51e589553a8cd8b560b90eb62a9b7b89ac33f3ee5；ocxd5398528/SHA25622636ba3cc1a422b7b93d75abeaad92e8488f31914757cda57478a4a67c62327；ocx306176/SHA256b5b1fca2e7d13c479d09e6874d5c2a7bba9a4ab5bde9d06bd0771281b17459e3。不是release预算/冻结候选/发布。
+
+新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-tree-stage-20261115-r1/含每轮先置hypotheses、全部原source/stdout/stderr/result、失败/中断现场私有归档清单、source/制品SHA、完整状态/report与离线verify/payload。失败及预期负例共23个自有合成原场景私有zip与现场内容核对，147文件414769字节；zip不克隆NTFS身份/安全，原件/pending保持；首次导出漏inline panic标记后补全时间和限制明确，不冒回溯已归档。成功guard清理自身正例，无新account/Profile/Public/官方进程/日常PATH配置策略写。旧删除拒绝全部不重试不绕过（包括.tmpzyZqe4），overallCleanupComplete=false，既有untracked schema保持。
+
+B2的CAP/trust非空前提1314/5不重跑；完整ClientOriginals/实际Ready/PreStop受控副作用/全中断恢复/Closed/后继、H真GUI和真实S-D组合仍未完，Start原durable gate拒绝，allAccepted/productionExecuted/actualGUI=false。marenben桌面答复待，旧空H/Full1314不重跑；这些软件未完继续Windows，不假称新共享接口缺失。未W2/双SID/业务同步/模型请求/发布。

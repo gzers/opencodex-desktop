@@ -1,0 +1,28 @@
+{
+  "time": "2026-11-15T12:57:31.551346+08:00",
+  "library01": {
+    "rawExit": 101,
+    "passed": 9,
+    "failed": 1,
+    "firstNativeError": 123,
+    "phase": "Grok MoveToCustody Intent seq6; original Grok unmoved"
+  },
+  "native01": {
+    "rawExit": 0,
+    "passed": 5,
+    "alignedNameRoundtrip": true,
+    "preservedIdentity": true
+  },
+  "library02": {
+    "rawExit": 0,
+    "passed": 10,
+    "observedTerminalAt": "2026-11-15T12:59:08.950860+08:00"
+  },
+  "allAccepted": false,
+  "productionExecuted": false,
+  "startRefused": true,
+  "H": "marenben input still pending; no empty-host replay",
+  "B2": "CAP/trust nonempty prerequisites unchanged; no privilege retry",
+  "cleanup": "three library01 original scenes archived/kept22files73621bytes; no deletion attempted",
+  "note": "Updated after polling terminal result; earlier field described the last pending observation, not proof of continued liveness."
+}

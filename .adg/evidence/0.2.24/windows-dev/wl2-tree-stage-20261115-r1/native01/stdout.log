@@ -1,0 +1,20 @@
+
+running 5 tests
+test tests::wl2_move_cross_volume_parent_refuses_without_copy_or_deleting_source ... actual cross-volume refused before rename: sourceVolume=247287385 targetVolume=3089487301 originalLocationKept=true copyFallback=false
+ok
+test tests::wl2_move_filename_storage_alignment_does_not_change_native_rename ... native rename storage leaf=x exactAllocationWithoutTerminator=false originalID=1125899908089729 bytes preserved; no replace/copy/delete
+native rename storage leaf=xx exactAllocationWithoutTerminator=false originalID=1125899908089729 bytes preserved; no replace/copy/delete
+native rename storage leaf=xxx exactAllocationWithoutTerminator=false originalID=1125899908089729 bytes preserved; no replace/copy/delete
+native rename storage leaf=xxxx exactAllocationWithoutTerminator=true originalID=1125899908089729 bytes preserved; no replace/copy/delete
+ok
+test tests::wl2_move_original_parent_alias_cannot_be_a_custody_transition ... same original native parent cannot mark a custody transition; file remains original
+ok
+test tests::wl2_move_same_original_handle_roundtrip_and_no_overwrite ... native no-overwrite error raw=Some(183)
+native restore occupied error raw=Some(183)
+same native file object restored: volume=247287385 fileID=1688849861514903; fullSD/custody journal/Closed not issued
+ok
+test tests::wl2_move_streams_links_unknown_paths_and_expired_window_refuse ... native ADS/hardlink/invalid target/expired-window refused before rename; no privileges or fullSD query
+ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 15 filtered out; finished in 0.04s
+

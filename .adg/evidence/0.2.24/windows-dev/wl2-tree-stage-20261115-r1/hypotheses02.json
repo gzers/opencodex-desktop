@@ -1,0 +1,34 @@
+{
+  "time": "2026-11-15T12:53:55.769139+08:00",
+  "observedFirstError": {
+    "run": "library01",
+    "rawExit": 101,
+    "passed": 9,
+    "failed": 1,
+    "API": "SetFileInformationByHandle/FileRenameInfo suspected from root-move boundary",
+    "rawWin32": 123,
+    "scene": "C:/Users/15119/AppData/Local/Temp/.tmpGvNMQ5",
+    "lastRecord": "phase-00000006: Grok MoveToCustody Intent",
+    "fact": "first Codex custody/workcopy completed, original Grok not moved; intended second-restore conflict not reached"
+  },
+  "hypotheses": [
+    "The FILE_RENAME_INFO FileName buffer for Grok has offset20+228bytes=248 aligned exactly to sizeof usize, so allocation supplies no trailing NUL. Codex at250bytes has zero padding; add explicit zeroed WCHAR storage while FileNameLength remains name bytes.",
+    "Preserve all native rights, same-handle rename, same-volume/no-replace checks and unknown refusal; no ACL/policy/token repair or retry on old scene. A fresh fixture proves or refutes this implementation hypothesis."
+  ],
+  "references": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_rename_info",
+      "readVia": "web.run",
+      "observation": "FileNameLength says a terminator is not required; FileName member describes a NUL-terminated wide string. Explicit termination avoids dependence on allocation padding; OS proof still required."
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileinformationbyhandle",
+      "readVia": "web.run",
+      "observation": "buffer length describes supplied buffer, raw GetLastError preserved"
+    }
+  ],
+  "failureSceneArchivedAndKept": true,
+  "budgetChanged": false,
+  "failureSceneArchiveVerifiedAt": "2026-11-15T12:54:20.721945+08:00",
+  "archiveCorrection": "All three scenes now verified; first two-scene export missed inline panic marker and was corrected before source fix."
+}

@@ -1,0 +1,18 @@
+{
+  "time": "2026-11-15T13:02:16.392961+08:00",
+  "sourceHead": "5d90fb2f5",
+  "scope": "only the two exact stable SQLite coordination files; no new generalized exception or allowance for journals/wal/cache",
+  "hypotheses": [
+    "After an exact original Codex tree is restored, both known stable files if present can acquire zero-timeout BEGIN EXCLUSIVE concurrently and ROLLBACK/close in the original inherited deadline without changing bytes/IDs/8projections.",
+    "SQLITE_FCNTL_WIN32_GET_HANDLE obtains the exact SQLite-opened native HANDLE; compare its fileID/security with retained original records and separate no-delete security pins. Do not assume POSIX SQLITE_FCNTL_HAS_MOVED on Windows.",
+    "Busy/corrupt/missing/replaced locks or journal/wal/shm residuals refuse; absent original locks are not created. Extra files stay within ordinary whole-tree unknown refusal.",
+    "A release observation is internal mechanism only, not NativeNormalExit/SupervisorAbsent/Closed or evidence of future global lock absence."
+  ],
+  "primaryLocalSource": {
+    "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\cargo\\registry\\src\\index.crates.io-1949cf8c6b5b557f\\libsqlite3-sys-0.35.0\\sqlite3\\sqlite3.c",
+    "sha256": "c9a0b6829b81d5f1b78392181f09744c818117a725667411d517b98149fcd3be",
+    "lines": "1410-1414 document native handle opcode;51005-51010 winFileControl returns pFile->h; only unixFileControl has HAS_MOVED"
+  },
+  "noTokenOrPolicyMutation": true,
+  "accepted": false
+}

@@ -1,0 +1,25 @@
+{
+  "time": "2026-11-15T13:13:42.226755+08:00",
+  "review": "SQLite hot-journal recovery can write before a read; initial pre/post sidecar checks cannot prevent an interleaving journal. No observed original change in synthetic runs is claimed as a general no-write guarantee. Replace production SQLite open with native READ-only file HANDLE locking the documented Windows protocol range.",
+  "hypotheses": [
+    "READ_CONTROL+GENERIC_READ handles plus exclusive fail-immediate LockFileEx over PENDING_BYTE0x40000000/RESERVED_BYTE+1/SHARED_FIRST+2/SHARED_SIZE510 acquire all rollback-lock ranges on each of the exact two original objects simultaneously.",
+    "A real SQLite reader/writer conflicts with that native range (Win32 raw33); a SQLite transaction while native guard held gets SQLiteBusy, proving actual interoperability. No production SQLite open/recovery or data-write/delete API remains.",
+    "Lock bytes beyond EOF do not change file content/length; raw native unlock failure or unknown journal/wal/shm/altered original refuses. Recheck all IDs/bytes/8projections before and after within same deadline.",
+    "This remains rollback-mode finite coordination scope only; mmap/malicious raw writers/unsupported WAL or filesystem are not certified absent. Whole-tree equality and unknown refusal stay mandatory."
+  ],
+  "references": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfileex",
+      "readVia": "web.run",
+      "facts": "GENERIC_READ or WRITE handle; exclusive/fail-immediate; beyondEOF allowed; mmap not blocked"
+    },
+    {
+      "url": "https://www.sqlite.org/lockingv3.html",
+      "readVia": "web.run",
+      "facts": "hot journal recovery may modify database; rollback-mode lock protocol only; Windows uses native file locks"
+    }
+  ],
+  "localSQLiteCode": "winLock50647-50810; SHARED_FIRST16100/SHARED_SIZE16101",
+  "policyOrTokenChanged": false,
+  "budgetChanged": false
+}

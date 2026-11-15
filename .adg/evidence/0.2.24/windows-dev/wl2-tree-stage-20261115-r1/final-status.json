@@ -1,0 +1,328 @@
+{
+  "time": "2026-11-15T13:18:27.012460+08:00",
+  "sourceHead": "7130ab83f98b7c0d9f908e9f3f756dc1c713f04c",
+  "sourceTree": "2ada1b20d4994d553f5f5f335a74f9cb490db2a3",
+  "baseline": {
+    "main": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+    "docs": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+    "previousCode": "5601df969b7c25b771f91d700f55485e03f24a2e",
+    "previousDocs": "7961253ffbc2d18771f90efbe87ec7b7ceca8767"
+  },
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary controller queries unchanged; no isolated production acceptance claim"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "label/conditionalDacl/resource/filter native populated positives reused; CAP/trust CREATE_NEW1314/5 prerequisites unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "strict required treeRecord schema and per-root finite progress; phase/policy/manifest/current chain same object; old component v2 without field refuses, Full-v1/partial unchanged"
+    },
+    {
+      "id": "O1",
+      "result": "partial-progress",
+      "fact": "each root move/workcopy/abort-restore records Intent before native operation and Completed after exact native state; original stable two-lock native release checked before capture and restored completion; production original-session/Ready/PreStop/Closed still missing"
+    },
+    {
+      "id": "O2",
+      "result": "partial-progress",
+      "fact": "intent without move refused completion; first root interrupted pending; first restored/second conflict pending seq13; actual samecurrent partialwrite+sync poison preserves phase2; complete production interruption matrix still missing"
+    },
+    {
+      "id": "H",
+      "result": "pending-user/environment",
+      "fact": "marenben session7 previously Disc, prior question still pending; empty-host not repeated; actualGUI false"
+    },
+    {
+      "id": "S/D",
+      "result": "production-wiring/reused",
+      "fact": "previous typed Stop source/supervisor/family/readback source unchanged; no actual new official runtime combined execution"
+    },
+    {
+      "id": "P",
+      "result": "refused",
+      "fact": "require_durable_capture still refuses; no OriginalSession/NativeNormalExit/SupervisorAbsent/Closed proof issued by this tree component, no Start/Stopped/successor acceptance"
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI and historical cleanup gaps remain"
+    }
+  ],
+  "firstError": {
+    "run": "library01",
+    "rawExit": 101,
+    "passed": 9,
+    "failed": 1,
+    "rawWin32": 123,
+    "stage": "second root Grok MoveToCustody seq6 intent; native origin inferred from boundary and affected buffer path; no API wrapper mislabeled as directly traced",
+    "scene": "C:/Users/15119/AppData/Local/Temp/.tmpGvNMQ5",
+    "fixed": "explicit zeroed WCHAR after FILE_RENAME_INFO name; exact aligned leaf native roundtrip passes, new tree test passes"
+  },
+  "otherFailure": {
+    "run": "locks01",
+    "rawExit": 101,
+    "executedTests": 0,
+    "error": "E0282 unspecified native HANDLE output pointer; corrected explicit HANDLE. Anticipated root self-sharing conflict fixed from static review before runtime, not claimed raw32."
+  },
+  "supersededMechanism": "locks02/library03 used actual SQLite opens and typed extendedBusy5; passed synthetic no-mutation tests but rejected for final production due possible hot-journal recovery. library04 final implementation uses only READ-only handles plus native LockFileEx/UnlockFileEx; SQLite connections cfg(test) only, rawWin3233 interop tested.",
+  "cleanup": {
+    "newPrivateArchivedSceneCount": 23,
+    "newPrivateArchivedFiles": 147,
+    "newPrivateArchivedBytes": 414769,
+    "scenes": [
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpNdaAir",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-current01.zip",
+        "sha256": "0fd4e20397acd115765010ad556eaa9652a7dec67b28356d2718b277907381a4",
+        "files": 4,
+        "bytes": 9687,
+        "removed": false,
+        "privateRecord": "current01-private-scene.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpqu6BTI",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library01-0.zip",
+        "sha256": "3e491e11a8a186c32b4a44425d9dd5346ecc6d65076f0512c1e8127308f42031",
+        "files": 5,
+        "bytes": 19797,
+        "removed": false,
+        "privateRecord": "library01-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpRRx55R",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library01-1.zip",
+        "sha256": "c9e1fde8cd930a22d57e3213956e062b7ba29d91f8389cc7bbba0fe160f89622",
+        "files": 6,
+        "bytes": 21092,
+        "removed": false,
+        "privateRecord": "library01-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpGvNMQ5",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library01-failure.zip",
+        "sha256": "db56fdf8f0cc72792c986ca12236d6811ef7dd85c02cf5d6d1417a6de42095d8",
+        "files": 11,
+        "bytes": 32732,
+        "removed": false,
+        "privateRecord": "library01-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpb0C9xk",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library02-0.zip",
+        "sha256": "d85d73a716b0ffc7a7887143e34c4253af2b6c9e0c0b99416ef8e48d9d360737",
+        "files": 5,
+        "bytes": 19817,
+        "removed": false,
+        "privateRecord": "library02-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpU9g1bQ",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library02-1.zip",
+        "sha256": "f0688a1c0b8dcfbda0803c9c85656117c50c1646630bc77eabbcadeb60690f94",
+        "files": 6,
+        "bytes": 21075,
+        "removed": false,
+        "privateRecord": "library02-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpepAWxB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library02-2.zip",
+        "sha256": "9303b18a7a9ae07a57089a917613c1d4771ff3be27e30fd06d45b0f3086070d8",
+        "files": 20,
+        "bytes": 41818,
+        "removed": false,
+        "privateRecord": "library02-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpMpb38J",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library03-0.zip",
+        "sha256": "6e83fc9a21556c5d00173c9a66f066d872163620ba86b66ce9eb0030da1d67b2",
+        "files": 1,
+        "bytes": 26,
+        "removed": false,
+        "privateRecord": "library03-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpHvElbA",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library03-1.zip",
+        "sha256": "691781dcacb756add0c928171462372a660febbe5a0371f953be9f828e6b6da8",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false,
+        "privateRecord": "library03-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp5lLoCB",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library03-2.zip",
+        "sha256": "e3400e3ae28c47358277419b41489ba1526f775b5f0d9197889c559d54e4ec41",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false,
+        "privateRecord": "library03-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpvIzHGI",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library03-3.zip",
+        "sha256": "f48559f98802329a4e957ca8def61a80b9e22336f5e045ecabef737baba498e1",
+        "files": 5,
+        "bytes": 19777,
+        "removed": false,
+        "privateRecord": "library03-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpM5pSDF",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library03-4.zip",
+        "sha256": "033aa90a07ae25a80300d30f62c1f23c00a8997089da25479491a4c5d0d5d3bf",
+        "files": 6,
+        "bytes": 21079,
+        "removed": false,
+        "privateRecord": "library03-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpNhPrfv",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library03-5.zip",
+        "sha256": "50099354b9f7094a7a2373e004122bc7869d27b3810a77fdf4c086a5752f8bad",
+        "files": 20,
+        "bytes": 41841,
+        "removed": false,
+        "privateRecord": "library03-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpxfZG4j",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library03-6.zip",
+        "sha256": "feb67c48afcd2dfc802285eef9e71e7515c0557845bee267c8251e561e8512a8",
+        "files": 4,
+        "bytes": 9687,
+        "removed": false,
+        "privateRecord": "library03-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpDdFw5Y",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library04-0.zip",
+        "sha256": "24363b6bb16c55ebd1ebfed5abb890e470cb227b33bf130d78a956b128f9685f",
+        "files": 1,
+        "bytes": 26,
+        "removed": false,
+        "privateRecord": "library04-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpxt1ixb",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library04-1.zip",
+        "sha256": "b258f817713a088d343e1aef205ab726a9bb61185b59b127e764253a8cce3fd7",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false,
+        "privateRecord": "library04-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQW9wM0",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library04-2.zip",
+        "sha256": "28cee3c2a9dca3e3c3ed81d02b660250727a18367239a46ce30ff3fb73bc20c0",
+        "files": 4,
+        "bytes": 7290,
+        "removed": false,
+        "privateRecord": "library04-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpC6OvR4",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library04-3.zip",
+        "sha256": "7f37e96e357c6df6426a48b3dc7fb96ff1884a3a0ceef060f1c8efed57f77046",
+        "files": 5,
+        "bytes": 19797,
+        "removed": false,
+        "privateRecord": "library04-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpSbz4Rw",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library04-4.zip",
+        "sha256": "9ebb3adbb805073e09d249eb9efeeccf754b455f445fb4dda8cc13913844b748",
+        "files": 6,
+        "bytes": 21080,
+        "removed": false,
+        "privateRecord": "library04-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp1byc5e",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library04-5.zip",
+        "sha256": "7974c901cf9a16db336a7800ebd1d1ea8d206e96d1eae8e3349ec420c0f495d0",
+        "files": 20,
+        "bytes": 41891,
+        "removed": false,
+        "privateRecord": "library04-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp8hBJfv",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-library04-6.zip",
+        "sha256": "e323102f036bdfabb70e8f7f84863791d28efc6da0462f19990a6b220b609382",
+        "files": 4,
+        "bytes": 9687,
+        "removed": false,
+        "privateRecord": "library04-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpdKE6KM",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-locks02-0.zip",
+        "sha256": "0fda27cc0b4679d415cad4b7203e8f08b9ecdcfb420cdf6cc2dc4ba6a62741f7",
+        "files": 1,
+        "bytes": 26,
+        "removed": false,
+        "privateRecord": "locks02-private-scenes.json"
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpyrcuZr",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\tree-stage-locks02-1.zip",
+        "sha256": "7e5b6a792f3e4f3edc9973efec32becc67986bfc5903642677234237d25fdef0",
+        "files": 3,
+        "bytes": 16418,
+        "removed": false,
+        "privateRecord": "locks02-private-scenes.json"
+      }
+    ],
+    "newDeletionAttempted": false,
+    "historicalRejectedDeletionRetried": false,
+    "nativeMetadataClonedByZip": false,
+    "originalScenesKept": "intent/partialpointer/lock/externaledit synthetic forensic scenes; raw original objects intentionally retained pending evidence disposition, not declared cleaned",
+    "successfulFixtures": "success guards clean exact self-owned successful fixtures; all unexpected panic guards preserve scene",
+    "accountsCreated": false,
+    "dailyProfilePathPolicyOrOfficialChanged": false,
+    "overallCleanupComplete": false
+  },
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "startOpen": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false,
+  "productionBuild": {
+    "exitCode": 0,
+    "profile": "debug",
+    "arguments": [
+      "build",
+      "--locked",
+      "--offline",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--target",
+      "x86_64-pc-windows-msvc",
+      "--bins",
+      "-j",
+      "1"
+    ],
+    "elapsedMs": 179460,
+    "accepted": false
+  },
+  "productionBuildWarnings": [
+    "121"
+  ],
+  "sourceCount": 89,
+  "artifactRecord": "product01-artifacts.json"
+}

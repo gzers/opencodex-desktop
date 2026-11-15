@@ -1,0 +1,24 @@
+
+running 10 tests
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_native_intent_without_native_move_cannot_publish_completed ... native first move not executed: Completed refused, original unchanged, canonical Intent/current retained, no retry or Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpb0C9xk
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_native_interrupted_tree_capture_is_pending_and_never_text_closed ... native actual first-root interruption preserves original custody and canonical v2 pending, no reopen restoration authority or Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpU9g1bQ
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_native_manifest_and_exclusive_v2_intent_precede_both_root_moves ... native v2 actual tree manifest/current and each Intent/Completed before/after move/workcopy/abort-restore; both roots restored IDs/content/8projections; single canonical journal only; pending Aborted not Closed; production source admission unproven
+ok
+test infrastructure::windows_client_originals024::v2::capture::tests::wl2_r4_native_second_restore_conflict_keeps_exact_mixed_state_and_intent ... native first root restored, second foreign edit retained, original Grok in custody, exact restore Intent pending; no rollback/catch-up/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpepAWxB
+ok
+test infrastructure::windows_client_originals024::v2::current::tests::wl2_r4_native_v2_reference_uses_real_bounded_snapshot_and_same_object_cas ... v2 bounded current native CAS: all8+combined security, policyDigest688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07, samefileID562949954675184, no Full/Partial conversion; synthetic manifest only, OriginalSession/Closed not issued
+ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_tree_progress_abort_restore_is_pending_data_not_closed_permission ... ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_tree_progress_refuses_gap_duplicate_wrong_root_and_unfinished_phase ... ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_native_private_records_remain_pending_and_current_mismatch_is_not_authority ... v2 native-private records: policy-bound pending only; missing/stale current keeps Required; no Full/partial conversion or Closed eligibility
+ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_phase_current_policy_digest_replay_and_unknown_fields_refuse ... ok
+test infrastructure::windows_client_originals024::v2::tests::wl2_r4_v2_policy_digest_scope_schema_and_all8_projection_set_reject_downgrade ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 1904 filtered out; finished in 1.50s
+

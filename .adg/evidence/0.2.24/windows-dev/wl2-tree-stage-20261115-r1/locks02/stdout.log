@@ -1,0 +1,12 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::tree::locks::tests::wl2_r4_stable_locks_absence_does_not_create_or_adopt_new_lock ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpdKE6KM
+ok
+test infrastructure::windows_client_originals024::tree::locks::tests::wl2_r4_stable_locks_busy_and_unknown_journal_refuse_and_keep_scene ... native original second stable lock held: stable SQLite release: database is locked; no forced unlock or success
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpyrcuZr
+ok
+test infrastructure::windows_client_originals024::tree::locks::tests::wl2_r4_stable_locks_exact_native_sqlite_pair_releases_without_mutation ... native two exact stable SQLite files restored same IDs/bytes/8projections; actual Win32 VFS handles, both zero-timeout exclusive locks acquired/released; no journal or Closed authority
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 1915 filtered out; finished in 0.16s
+
