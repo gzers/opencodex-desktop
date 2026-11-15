@@ -1,0 +1,214 @@
+{
+  "receiveVerified": true,
+  "allAccepted": false,
+  "codeContribution": "c47953ccfe4c66a976285eacffd691e3a3b0c01b",
+  "docsContribution": "fe1a54f6e299b96a6542c5b87ae384643bb9d163",
+  "importedNetFiles": 3601,
+  "manifests": [
+    {
+      "root": "wl2-current-reference-20261115-r1",
+      "payloads": 273,
+      "bytes": 2302157
+    },
+    {
+      "root": "wl2-d-family-source-20261115-r1",
+      "payloads": 351,
+      "bytes": 3264469
+    },
+    {
+      "root": "wl2-h-desktop-20261114-r1",
+      "payloads": 241,
+      "bytes": 1953787
+    },
+    {
+      "root": "wl2-h-desktop-diagnose-20261115-r1",
+      "payloads": 577,
+      "bytes": 4516182
+    },
+    {
+      "root": "wl2-h-desktop-result-20261115-r1",
+      "payloads": 81,
+      "bytes": 130248
+    },
+    {
+      "root": "wl2-h-desktop-run-20261115-r1",
+      "payloads": 12,
+      "bytes": 10254
+    },
+    {
+      "root": "wl2-helper-provenance-20261115-r1",
+      "payloads": 355,
+      "bytes": 3082434
+    },
+    {
+      "root": "wl2-original-move-20261115-r1",
+      "payloads": 353,
+      "bytes": 2887508
+    },
+    {
+      "root": "wl2-r3-native-20261114-r1",
+      "payloads": 580,
+      "bytes": 5033756
+    },
+    {
+      "root": "wl2-retained-diagnostics-20261115-r1",
+      "payloads": 763,
+      "bytes": 7244864
+    },
+    {
+      "root": "wl2-sd-contract-decision-20261115-r1",
+      "payloads": 3,
+      "bytes": 1955
+    }
+  ],
+  "totalPayloadFiles": 3589,
+  "totalPayloadBytes": 30427614,
+  "latestSourceFilesVerified": 4,
+  "latestExecutionInputs": [
+    {
+      "stage": "library02",
+      "matchedRustFiles": 39
+    },
+    {
+      "stage": "product01",
+      "matchedRustFiles": 39
+    }
+  ],
+  "latestResult": {
+    "source": "c47953ccfe4c66a976285eacffd691e3a3b0c01b",
+    "allAccepted": false,
+    "productionExecuted": false,
+    "actualGUI": false,
+    "officialOwnerCreated": false,
+    "OriginalSessionIssued": false,
+    "ClosedEligibilityIssued": false,
+    "uniquePassedTests": 8,
+    "successfulTestInvocations": 15,
+    "tests": {
+      "library01Intermediate": 7,
+      "library02Final": 8
+    },
+    "firstError": null,
+    "MSVCProduct": {
+      "exitCode": 0,
+      "elapsedMs": 156748,
+      "warnings": 107,
+      "profile": "debug",
+      "dirtyDiffEmpty": true
+    },
+    "fullSecurityProductionPositive": false,
+    "partialDiagnosticCASMechanismOnly": true,
+    "fullSDRetests": 0,
+    "officialStarts": 0,
+    "implemented": [
+      "create-only next pending phase validated/synced/readback before current CAS",
+      "same native current file object/exclusive writer/full-security production guard and expected exactbytes check",
+      "stale/foreign/native-directory/duplicate/unknown pointer refusal",
+      "interrupted partialwrite preserves original phases; poisonedUnknown reference not reconstructed"
+    ],
+    "notImplemented": [
+      "complete original capture manifest/security/content",
+      "full durable pre-move intent/custody/current-ref protocol wired to actual original objects",
+      "directory/tree working-copy capture and complete restore/Closed",
+      "actualGUI/original Owner production path",
+      "full S/D production proof matrix"
+    ],
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicRoots": 0,
+    "forcedActions": 0,
+    "dailyConfigPATHWrites": 0,
+    "newSyntheticCleanup": "successful task private records/TempDirs guards completed",
+    "overallCleanupComplete": false,
+    "rejectedCleanupRetried": false,
+    "userParticipation": "Await qualifying unchanged ordinary fullSD environment or integration-owner decision about safety-coverage contract. No elapsed-time approval assumed; independent unfinished implementation still listed.",
+    "W2": false,
+    "dualSID": false,
+    "published": false
+  },
+  "HComponentResult": {
+    "codeSource": "d31616d7d026054880794cacec17113c5c4c1645",
+    "actualHImplementationSource": "ab87ad1261f927bf77a1c757342989105a40ad0a",
+    "allAccepted": false,
+    "productionExecuted": false,
+    "actualGUI": false,
+    "officialOwnerCreated": false,
+    "HEmptyHostComponentPassed": true,
+    "repairedObserverRawExit": 0,
+    "originalFailureRawExit": 101,
+    "firstManagerRawWin32Error": 32,
+    "oldEmptyRecovery": {
+      "forced": false,
+      "managerRawExit": 0,
+      "hostRawExit": 0,
+      "nativeWaitConfirmed": true,
+      "nativeOwnerAdopted": false
+    },
+    "newEmptyHost": {
+      "pid": 22216,
+      "creationFiletime": "134391493883001324",
+      "originalCreationHandleRetained": true,
+      "managerGenerations": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "bootstrapNoJob": true,
+      "suspendedBeforeResumeNoJob": true,
+      "sameOriginalAcrossManagers": true,
+      "explicitExitObserved": true,
+      "rawHostExitCode": null
+    },
+    "ordinarySID": "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session": 7,
+    "exportsComplete": true,
+    "completedTaskCleanup": {
+      "complete": true,
+      "roots": 2,
+      "files": 22,
+      "bytes": 98829764,
+      "failedBaseRetained": true,
+      "accountOrProfileDeleted": false
+    },
+    "overallCleanupComplete": false,
+    "W2": false,
+    "dualSID": false,
+    "published": false,
+    "ordinarySDRetests": 0,
+    "remaining": [
+      "O full native custody/current-ref CAS/restore/Closed",
+      "ordinary full-SD positive environment",
+      "H actual GUI and official Owner production integration",
+      "S full source-bound proof matrix",
+      "D complete family roles and production Stop combination",
+      "ordinary MSI acceptance and historical cleanup"
+    ]
+  },
+  "latestDecisionRequest": {
+    "currentContract": "TEAM13/IMP139/windows-lifecycle-prerequisites-r3 inheriting r2",
+    "currentScope": "Complete SD including SACL/OS policy ACEs; FULL_DESCRIPTOR_QUERY_ACCESS0x01020000 + GetSecurityInfo BACKUP_SECURITY_INFORMATION0x10000",
+    "knownEvidence": "Earlier unchanged ordinary token refused full capture1314, no SeSecurityPrivilege; new same-token request not repeated. Ordinary real noJob emptyhost was separately proven and does not repair O.",
+    "requiredForProduction": "An unchanged ordinary token/environment that actually satisfies complete SD read scope, or an explicitly authorized product contract decision supplied by integration owner. No administrator shortcut, privilege adjustment,policy/ACL repair or silent0x7 fallback.",
+    "userParticipation": "User asked to coordinate either Mac contract evaluation or supply qualifying isolated ordinary environment. Awaiting answer; elapsed time is not approval.",
+    "noCurrentAuthorizationToWeaken": true,
+    "currentProductionStart": "refused",
+    "independentImplementationStillIncomplete": [
+      "full original capture/custody/tree/restore/Closed",
+      "actual GUI/original Owner route",
+      "S/D full family/source proof matrix"
+    ],
+    "allAccepted": false
+  },
+  "sharedMinimumRequestFiles": [
+    ".adg/evidence/0.2.24/windows-dev/wl1-production-20261114-r1/shared-minimum-request.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-native-20261114-r1/shared-minimum-request.json"
+  ],
+  "limits": [
+    "Hash/source receipt and selected fact checks only; not a complete audit of 5573 changed Windows lines",
+    "Contribution fetched and preserved on Windows branch; not merged wholesale to main by this safety-contract decision",
+    "Partial diagnostic/CAS/file-move proofs are not complete original-tree recovery or ClosedEligibility",
+    "Existing shared-minimum requests are historical; newest minimum request is environment-decision-request.json",
+    "No native Windows or actual GUI execution on Mac"
+  ]
+}
