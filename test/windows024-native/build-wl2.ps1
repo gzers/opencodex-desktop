@@ -65,6 +65,7 @@ if($Mode -eq 'r4-retired'){$arguments=@('test','--locked','--offline','--manifes
 if($Mode -eq 'r4-tree-v2'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_client_originals024::tree::','windows_client_originals024::v2::','--test-threads=1','--nocapture')}
 if($Mode -eq 'r4-history-dispatch'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_client_originals024::tree::','windows_client_originals024::v2::','windows_official_lifecycle024::','windows_supervisor024::','windows_diagnostic_roles024::','--test-threads=1','--nocapture')}
 $diff=git diff --binary
+if($Mode -eq 'r5-routes-status'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','--','client_route_declaration::','modules::status::','status_source::','windows_client_originals024::v2::routes::','wl2_r5_','--test-threads=1','--nocapture')}
 if($Mode -eq 'original-reference'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'original-move'){
  $env:OCX024_MOVE_OTHER_PARENT=$toolchain
@@ -78,6 +79,7 @@ if($Mode -eq 'original-move-cross-volume'){
 }
 @{head=$head;diff=$diff;arguments=$arguments;rustc=(& $env:RUSTC --version);time=[datetime]::Now.ToString('o')}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath "$Evidence/source.json" -Encoding utf8
 $files=@(git ls-files --cached --others --exclude-standard -- 'apps/desktop/tauri/src/infrastructure/windows*' 'apps/desktop/tauri/src/infrastructure/mod.rs' 'test/windows024-native' 'apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs' 'apps/desktop/tauri/src/bin/ocxd.rs' 'apps/desktop/tauri/src/lib.rs')
+$files+=@(git ls-files -- 'apps/desktop/tauri/src/infrastructure/status_source.rs' 'apps/desktop/tauri/src/modules/status/**' 'apps/desktop/tauri/src/modules/runtime/client_route_declaration*.rs' 'apps/desktop/tauri/src/modules/runtime/client_artifact_policy*.rs' 'apps/desktop/tauri/src/modules/runtime/mod.rs')
 $manifest=@()
 foreach($relative in $files){
  $item=Get-Item -LiteralPath $relative

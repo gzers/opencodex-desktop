@@ -17,6 +17,9 @@ use crate::modules::status::{CollectError, StatusSource};
 pub fn status_collect_timeout() -> Duration {
     crate::modules::status::collect_timeout()
 }
+#[cfg(all(test, windows))]
+#[path = "windows_status_sample024_tests.rs"]
+mod windows_sample_tests;
 
 /// 显式路径官方状态来源。
 #[derive(Debug)]
@@ -27,6 +30,8 @@ pub struct OfficialStatusSource {
     cache: Mutex<Option<CachedStatus>>,
     mutation: Option<crate::state::SharedRuntimeInstall>,
     client_recovery_root: Option<PathBuf>,
+    #[cfg(windows)]
+    native_sample: Mutex<Option<super::windows_official_lifecycle024::StatusReceipt>>,
 }
 #[derive(Debug, Clone)]
 struct CachedStatus {
@@ -50,6 +55,8 @@ impl OfficialStatusSource {
             cache: Mutex::new(None),
             mutation: None,
             client_recovery_root: None,
+            #[cfg(windows)]
+            native_sample: Mutex::new(None),
         }
     }
 
@@ -118,15 +125,28 @@ impl OfficialStatusSource {
         }
         #[cfg(windows)]
         if self.runtime.managed_installation_root().is_some() {
+            self.native_sample
+                .try_lock()
+                .map_err(|_| CollectError::Unreachable)?
+                .take();
             match self.runtime.managed_program_identity() {
                 Ok(identity) if identity.package_version == "2.99.0" => {
-                    return Ok(super::windows_official_lifecycle024::status(
+                    return match super::windows_official_lifecycle024::status_sample(
                         &self.runtime,
                         &self.environment.opencodex_home,
                         deadline,
                     )
                     .await
-                    .unwrap_or_else(|_| super::windows_official_lifecycle024::unknown_status()));
+                    {
+                        Ok((payload, receipt)) => {
+                            *self
+                                .native_sample
+                                .try_lock()
+                                .map_err(|_| CollectError::Unreachable)? = Some(receipt);
+                            Ok(payload)
+                        }
+                        Err(_) => Ok(super::windows_official_lifecycle024::unknown_status()),
+                    };
                 }
                 Err(_) => return Ok(super::windows_official_lifecycle024::unknown_status()),
                 _ => {}
@@ -489,10 +509,19 @@ impl StatusSource for OfficialStatusSource {
     fn client_recovery_at(&self, deadline: Instant) -> crate::modules::status::ClientRecoveryState {
         #[cfg(windows)]
         if self.runtime.managed_installation_root().is_some() {
-            return super::windows_official_lifecycle024::recovery_state_at(
+            use crate::modules::status::ClientRecoveryState;
+            let Ok(mut sample) = self.native_sample.try_lock() else {
+                return ClientRecoveryState::Unknown;
+            };
+            let Some(receipt) = sample.take() else {
+                return ClientRecoveryState::Unknown;
+            };
+            drop(sample);
+            return super::windows_official_lifecycle024::recovery_for_sample(
                 &self.runtime,
                 &self.environment.opencodex_home,
                 deadline,
+                receipt,
             );
         }
         let _ = deadline;

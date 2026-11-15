@@ -166,7 +166,7 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
         .ok_or_else(|| unknown(()))?;
     let mut registry = OWNERS
         .get_or_init(Default::default)
-        .lock()
+        .try_lock()
         .map_err(unknown)?;
     if let Some(slot) = registry
         .iter()
@@ -983,29 +983,111 @@ pub(crate) fn recovery_state_at(
 pub(crate) fn unknown_status() -> serde_json::Value {
     serde_json::json!({"status":"unknown","ready":false,"protection":"retained-owner-unconfirmed","rebootSafe":false})
 }
+/// Binds two observations to the SAME retained native Owner. This is not a
+/// Closed proof and cannot be decoded/cloned or used in another sample.
+pub(crate) struct StatusReceipt {
+    entry: Arc<Slot>,
+    session: uuid::Uuid,
+    scope: String,
+    stopped: bool,
+    deadline: Instant,
+}
+impl std::fmt::Debug for StatusReceipt {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("StatusReceipt")
+            .field("session", &self.session)
+            .finish_non_exhaustive()
+    }
+}
+pub(crate) fn recovery_for_sample(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    deadline: Instant,
+    receipt: StatusReceipt,
+) -> crate::modules::status::ClientRecoveryState {
+    use crate::modules::status::ClientRecoveryState as R;
+    if budget(deadline).is_err() || deadline != receipt.deadline {
+        return R::Unknown;
+    }
+    let Ok(entry) = slot(runtime, home, false) else {
+        return R::Unknown;
+    };
+    if !Arc::ptr_eq(&entry, &receipt.entry) {
+        return R::Unknown;
+    }
+    let Ok(mut guard) = entry.owner.try_lock() else {
+        return R::Unknown;
+    };
+    let Some(owner) = guard.as_mut() else {
+        return R::Unknown;
+    };
+    if owner.session != receipt.session
+        || owner.stopped != receipt.stopped
+        || owner.scope().ok().as_deref() != Some(receipt.scope.as_str())
+    {
+        return R::Unknown;
+    }
+    // Same original Closed/complete native check as recovery_state_at, while
+    // retaining the SAME lock used to compare this sample's original Owner.
+    let result = if owner.originals_is_stopped() {
+        if owner.check_completed_stop(deadline).is_ok() {
+            R::NotRequired
+        } else {
+            R::Required
+        }
+    } else if owner.original_phase.is_none() {
+        R::Required
+    } else {
+        R::Unknown
+    };
+    if budget(deadline).is_err() {
+        R::Unknown
+    } else {
+        result
+    }
+}
 pub(crate) async fn status(
     runtime: &SharedRuntimeExecutable,
     home: &Path,
     deadline: Instant,
 ) -> Result<serde_json::Value, CollectError> {
+    status_sample(runtime, home, deadline)
+        .await
+        .map(|(payload, _)| payload)
+}
+pub(crate) async fn status_sample(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    deadline: Instant,
+) -> Result<(serde_json::Value, StatusReceipt), CollectError> {
+    budget(deadline).map_err(|_| CollectError::Timeout)?;
     let entry = slot(runtime, home, false).map_err(|_| CollectError::Unreachable)?;
     let mut guard = entry
         .owner
         .try_lock()
         .map_err(|_| CollectError::Unreachable)?;
     let owner = guard.as_mut().ok_or(CollectError::Unreachable)?;
-    if owner.stopped {
+    let payload = if owner.stopped {
         owner
             .check_completed_stop(deadline)
             .map_err(|_| CollectError::Unreachable)?;
-        return Ok(
-            serde_json::json!({"status":"stopped","ready":false,"protection":"retained-job-client-closed","rebootSafe":false}),
-        );
-    }
-    owner
-        .observe(deadline)
-        .await
-        .map_err(|_| CollectError::Unreachable)
+        serde_json::json!({"status":"stopped","ready":false,"protection":"retained-job-client-closed","rebootSafe":false})
+    } else {
+        owner
+            .observe(deadline)
+            .await
+            .map_err(|_| CollectError::Unreachable)?
+    };
+    let scope = owner.scope().map_err(|_| CollectError::Unreachable)?;
+    budget(deadline).map_err(|_| CollectError::Timeout)?;
+    let receipt = StatusReceipt {
+        entry: entry.clone(),
+        session: owner.session,
+        scope,
+        stopped: owner.stopped,
+        deadline,
+    };
+    Ok((payload, receipt))
 }
 #[cfg(test)]
 #[path = "windows_official_lifecycle024_tests.rs"]
