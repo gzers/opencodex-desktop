@@ -1,0 +1,17 @@
+{
+  "time": "2026-11-15T14:52:27.367604+08:00",
+  "previous": {
+    "run": "library01",
+    "rawExit": 0,
+    "passed": 27,
+    "privateScenes": 12
+  },
+  "changes": [
+    "working locator explicitly requires original custody volume and unique native object IDs across custody/frame directories/metadata",
+    "archive dirs/data parts/metadata repeat native no-ADS checks; captured security policy and original bytes limits unchanged",
+    "recheck original deadline after metadata serialization before creating its sealed record",
+    "new real Ready archive->phase10->current one-byte write+sync fault preserves archive/source and poison without Ready authority; old partialwrite assertions remain"
+  ],
+  "expected": "28 impacted tree/v2 tests pass including strengthened pure scope counterexamples and new native working-reference publication interruption; no real official/GUI acceptance",
+  "accepted": false
+}

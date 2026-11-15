@@ -461,3 +461,14 @@ retired-before01再两项真实证伪恢复后退休工作树被忘记（101/0�
 新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-canonical-root-progress-20261115-r1/含各轮先置hypotheses、6组原source/stdout/stderr/result、4份真实执行EXE摘要、失败/中断场景私有清单、完整status/report/源码制品及离线verify。最终clean40203e193 custom-protocol MSVC debug bins0/117606ms/lib68warnings；96份执行输入对最终字节/Gitblob行尾等价，after03的52份Rust也对最终。Desktop77124096/SHA2562488b2838d825ce9ac767df72d067ed3bde5e1942e9f40730bb879eb93e83a77；ocxd5398528/SHA2563ebd15d0c0252cc675823dba642811455d7793911f36199c217c4748fffa57d9；ocx306176/SHA2562c5a5f1040086f35b6bceac464c700378a58602a888d3531415f48c148ebe6b5，非release预算/冻结候选。16场景129文件311020字节私有ZIP内容核验/原场景留，非NTFS元数据克隆；正例guard清自身对象。无新账户/Profile/Public/GUI/官方/force/日常PATH配置策略改，旧删除拒绝不重试，overallCleanupComplete=false。
 
 真实GUI准备的0c输入未覆盖，out01观察仍空，待marenben原桌面执行。当前增量不替代官方声明副作用/持久Ready和PreStop/后继历史释放/GUI原官方Owner与S-D生产组合；普通MSI与历史清理仍未完，B2非空CAP/trust1314/5无新前提不重跑。原预算/Unknown、审计excluded-unknown/fullSecurityProven=false与Start拒绝保持，无业务模型请求/W2/双SID/发布。完整目标未收口，继续Windows独立实现。
+
+
+## 2026-11-15 r4原卷Ready/PreStop工作快照与最小共享请求
+
+代码be3de6dfd/57904c6bce37f4ba37338285409fa6f9551b40da已推，tree42a6e55ee39a9a95bec74407b73ad3bf7b800b79。允许Windows originals写集内增加原卷私有Ready/PreStop全工作数据封存，1MiB分块保留原2MiB/32MiB/512边界；sync/seal读回、原生ID/8投影/无ADS/目录集合核对，canonical v2新必需workingRecord仅引用，数据不进D、不建第二journal。引用绑定phase/session/binding/policy/原custody卷及唯一对象ID，旧缺字段/未知不转换。真实Owner调用点接入，但未知编辑保全后继续拒绝，不把快照当允许变化/NativeLease或Ready/Closed许可；活跃协调文件/官方完整副作用仍未支持，生产门不放开。
+
+新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-working-snapshots-20261115-r1/含先置hypotheses、3次实际测试source/log/result/EXE摘要、最终源码制品、完整矩阵/清理/原始故障及verify。library01/02/03依次27/28/29过，全部raw0，首错无非预期失败；新2MiB两分块、未知源保全不推进、归档外改poison、真正current一字节write+sync、首1MiB封存后故障保留partial/seq9反例均有原生组件证据，不签官方资格。最终clean579 custom-protocol MSVC debug bins0/202967ms/lib68warnings；97份执行输入对最终，library03的53份Rust一致。Desktop77319680/SHA256204a087ba13afe69693592f240e967e759a8440db3cd85715a68985fdb05b1fc；ocxd5398528/SHA256013e9827111d92eac3542e24e8ad3649ef27c8b059cdca49e68ac74bc2b79322；ocx306176/SHA2560d8b042156e97b4f8d0f043d4f159882b0b4fe383bda25c5ba01139325087f9b；非release预算/冻结候选。
+
+shared-minimum-request.json给集成线最小范围外接口：独立路由declaration(bytes)及完整helpers现只在cfgmacos私有macos_client_session，LaunchPlan不带路由。请求提取既有纯解析器/断言至跨平台runtime模块供两端同用，保留None未知/空完整集合、selected/static/dynamic/custom/combos/disabled/display别名/slash冲突/strictJSON，不让数据API授native许可，不动四trait/HMAC/预算。Windows不擅写共享文件/不从生成catalog倒推补签，其余原生协调/后继/GUI独立工作仍归Windows，未冒全部受阻。
+
+39个保留scene/431文件31617713字节私有ZIP内容核验/原场景留，非NTFS元数据克隆；无新账户/Profile/Public/GUI/官方/force/日常配置策略写。旧删除拒绝不重试，overallCleanupComplete=false。0c真实GUI准备输入未覆盖、out仍空；原件完整官方副作用/NativeLease/后继历史释放/Closed/实际GUI官方Owner与S-D组合、普通MSI历史清理未完。CAP/trust非空1314/5不重跑，固定8范围审计excluded/fullSecurityProven=false，Start拒绝保持，无业务模型请求/W2/双SID/发布。

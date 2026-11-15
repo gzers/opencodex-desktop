@@ -1,0 +1,13 @@
+{
+  "time": "2026-11-15T14:57:23.860923+08:00",
+  "previous": {
+    "run": "library02",
+    "rawExit": 0,
+    "passed": 28,
+    "sourceCommit": "be3de6dfd"
+  },
+  "hypothesis": "A cfgtest-only fault after the first actual sealed/synced1MiB working data part propagates through the real record_working_phase driver, keeping original source handles/custody, partial archive and last Captured/current prefix with poison. No Ready record, metadata completion, retry or catch-up.",
+  "scope": "failure-only cfgtest fields/checkpoint plus one native regression; default production path unchanged",
+  "expected": "29 affected tree/v2 tests pass with no timeout/assertion weakening",
+  "accepted": false
+}
