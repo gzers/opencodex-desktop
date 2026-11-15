@@ -56,6 +56,8 @@ pub(crate) struct BoundedCurrentV2 {
     raw: Vec<u8>,
     tip: Current,
     poisoned: bool,
+    #[cfg(test)]
+    fail_after_partial_write: bool,
 }
 impl BoundedCurrentV2 {
     pub(super) fn create(pending: &PendingV2, end: Instant) -> io::Result<Self> {
@@ -123,6 +125,8 @@ impl BoundedCurrentV2 {
             raw,
             tip,
             poisoned: false,
+            #[cfg(test)]
+            fail_after_partial_write: false,
         })
     }
     fn check(&mut self, end: Instant) -> io::Result<()> {
@@ -171,6 +175,17 @@ impl BoundedCurrentV2 {
         }
         self.poisoned = true;
         self.file.seek(SeekFrom::Start(0))?;
+        #[cfg(test)]
+        if self.fail_after_partial_write {
+            // Real write+sync to the actual exclusive current object, then an
+            // injected I/O fault. The flag is unavailable in production.
+            self.file.write_all(&raw[..1])?;
+            self.file.set_len(1)?;
+            self.file.sync_all()?;
+            return Err(io::Error::other(
+                "injected after real partial current write and sync",
+            ));
+        }
         self.file.write_all(&raw)?;
         self.file.set_len(raw.len() as u64)?;
         self.file.sync_all()?;
@@ -262,6 +277,74 @@ mod tests {
     use super::*;
     fn end() -> Instant {
         Instant::now() + std::time::Duration::from_secs(5)
+    }
+    #[test]
+    fn wl2_r4_native_v2_partial_current_write_preserves_phase_and_poison() {
+        use super::super::super::tree::tests::Fixture;
+        let mut fixture = Fixture::new();
+        let (manifest, records, _) =
+            super::super::tests::bundle(super::super::tests::manifest_value());
+        let m: Manifest = json(&manifest, 1024 * 1024).unwrap();
+        let directory =
+            crate::infrastructure::windows_official_runtime024::create_private_directory(
+                &fixture.path().join(&m.session_id),
+            )
+            .unwrap();
+        let manifest_handle = PrivateRecord::create(
+            &directory.path().join("manifest.json"),
+            &manifest,
+            1024 * 1024,
+        )
+        .unwrap();
+        let first = PrivateRecord::create(
+            &directory.path().join("phase-00000001.json"),
+            &records[0],
+            65536,
+        )
+        .unwrap();
+        let pending = read_pending(directory.path()).unwrap();
+        let mut current = BoundedCurrentV2::create(&pending, end()).unwrap();
+        let original_id = current.id;
+        current.fail_after_partial_write = true;
+        assert!(current
+            .append_pending(&pending, Phase::Ready, end())
+            .is_err());
+        assert!(current.poisoned);
+        assert_eq!(identity(&current.file).unwrap(), original_id);
+        assert_eq!(bytes(&mut current.file).unwrap(), b"{");
+        let phase_path = directory.path().join("phase-00000002.json");
+        let phase_before = std::fs::read(&phase_path).unwrap();
+        let latest = read_pending_impl(directory.path(), false).unwrap();
+        assert_eq!(latest.tip.sequence, 2);
+        assert!(current
+            .append_pending(&pending, Phase::Ready, end())
+            .is_err());
+        assert!(current
+            .append_tree_record(
+                &latest,
+                TreeRecord::Intent {
+                    root: TreeRoot::Codex,
+                    action: TreeAction::MoveToCustody
+                },
+                end()
+            )
+            .is_err());
+        drop(current);
+        assert!(read_pending(directory.path()).is_err());
+        assert!(BoundedCurrentV2::open(&latest, end()).is_err());
+        assert_eq!(std::fs::read(&phase_path).unwrap(), phase_before);
+        assert_eq!(
+            std::fs::read(directory.path().join("current.json")).unwrap(),
+            b"{"
+        );
+        assert!(!directory.path().join("phase-00000003.json").exists());
+        println!("actual bounded-v2 partial current write+sync injected failure: same fileID, phase2 retained, poisoned retry/open refused, no catch-up/rollback/Closed; synthetic manifest only");
+        drop(latest);
+        drop(pending);
+        drop(first);
+        drop(manifest_handle);
+        drop(directory);
+        fixture.retain();
     }
     #[test]
     fn wl2_r4_native_v2_reference_uses_real_bounded_snapshot_and_same_object_cas() {
