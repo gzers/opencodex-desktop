@@ -25,6 +25,60 @@ fn progress_prefix(steps: &[(Phase, TreeRecord)]) -> (Vec<u8>, Vec<Vec<u8>>) {
     (manifest, records)
 }
 #[test]
+fn wl2_r4_predecessor_schema_rejects_missing_duplicate_context_or_noncanonical_reference() {
+    let original = manifest_value();
+    let sid = current_identity().unwrap().sid;
+    let mut missing = original.clone();
+    missing.as_object_mut().unwrap().remove("predecessors");
+    assert!(serde_json::from_value::<Manifest>(missing).is_err());
+    let manifest: Manifest = serde_json::from_value(original.clone()).unwrap();
+    let reference = serde_json::json!({"sessionId":uuid::Uuid::new_v4().to_string(),
+        "directory":{"volume":2,"fileId":"20"},"current":{"volume":2,"fileId":"21"},"closedSequence":18,
+        "phaseDigest":"a".repeat(64),"manifestDigest":"b".repeat(64),"currentDigest":"c".repeat(64),
+        "bindingDigest":hash::sha256_hex(&serde_json::to_vec(&manifest.binding).unwrap()),"securityPolicyDigest":manifest.security_policy_digest});
+    let mut valid = original.clone();
+    valid["predecessors"] = serde_json::json!([reference.clone()]);
+    check_manifest(&serde_json::from_value(valid.clone()).unwrap(), &sid).unwrap();
+    for change in [
+        "self",
+        "duplicate",
+        "context",
+        "policy",
+        "volume",
+        "id",
+        "digest",
+        "unknown",
+    ] {
+        let mut wrong = valid.clone();
+        match change {
+            "self" => wrong["predecessors"][0]["sessionId"] = original["sessionId"].clone(),
+            "duplicate" => {
+                wrong["predecessors"] = serde_json::json!([reference.clone(), reference.clone()])
+            }
+            "context" => {
+                wrong["predecessors"][0]["bindingDigest"] = serde_json::json!("f".repeat(64))
+            }
+            "policy" => {
+                wrong["predecessors"][0]["securityPolicyDigest"] = serde_json::json!("f".repeat(64))
+            }
+            "volume" => {
+                wrong["predecessors"][0]["directory"]["volume"] = serde_json::json!(1);
+                wrong["predecessors"][0]["current"]["volume"] = serde_json::json!(1);
+            }
+            "id" => wrong["predecessors"][0]["current"]["fileId"] = serde_json::json!("020"),
+            "digest" => {
+                wrong["predecessors"][0]["currentDigest"] = serde_json::json!("A".repeat(64))
+            }
+            "unknown" => wrong["predecessors"][0]["nativeAuthority"] = serde_json::json!(true),
+            _ => unreachable!(),
+        }
+        let rejected = serde_json::from_value::<Manifest>(wrong)
+            .map_or(true, |parsed| check_manifest(&parsed, &sid).is_err());
+        assert!(rejected, "{change}");
+    }
+    println!("predecessor refs are required strict data bound to same context/policy/D volume, no duplicates/self/unknown fields; syntactically valid data remains pending, not a retained native history");
+}
+#[test]
 fn wl2_r4_working_reference_missing_wrong_phase_and_cross_session_refuse() {
     let mut steps = Vec::new();
     for root in [TreeRoot::Codex, TreeRoot::Grok] {
@@ -266,7 +320,7 @@ pub(super) fn manifest_value() -> serde_json::Value {
     serde_json::json!({"schema":"windows-client-originals-v2","documentKind":"manifest","sessionId":session_id,
         "binding":{"sid":sid,"profile":{"path":"C:/fixture/Profile","volume":1,"fileId":"1"},"data":{"path":"D:/fixture/D","volume":2,"fileId":"2"},"home":{"path":"C:/fixture/H","volume":1,"fileId":"3"},"installation":{"path":"C:/fixture/I","volume":1,"fileId":"4"},"sourceDigest":"a".repeat(64),"currentDigest":"b".repeat(64),"owner":{"pid":1234,"creationFiletime":"123456789"}},
         "securityPolicy":Policy::fixed(),"securityPolicyDigest":Policy::fixed().digest().unwrap(),
-        "custody":{"path":format!("C:/fixture/Profile/.ocxd024-originals-{session_id}"),"identity":{"volume":1,"fileId":"5"},"securityProjectionSnapshot":snapshot("5")},
+        "custody":{"path":format!("C:/fixture/Profile/.ocxd024-originals-{session_id}"),"identity":{"volume":1,"fileId":"5"},"securityProjectionSnapshot":snapshot("5")},"predecessors":[],
         "nodes":([".codex",".grok"].map(|relative|serde_json::json!({"relative":relative,"kind":"Absent","identity":null,"parentIdentity":{"volume":1,"fileId":"1"},"securityProjectionSnapshot":null,"parentSecurityProjectionSnapshot":snapshot("1"),"length":null,"contentDigest":null,"children":[],"custodyIdentity":null})))})
 }
 pub(super) fn bundle(m: serde_json::Value) -> (Vec<u8>, Vec<Vec<u8>>, Vec<u8>) {

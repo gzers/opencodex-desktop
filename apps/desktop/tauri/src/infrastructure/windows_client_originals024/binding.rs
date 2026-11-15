@@ -132,6 +132,9 @@ impl Binding {
     pub(super) fn profile_identity(&self) -> (u32, &str) {
         (self.profile.volume, &self.profile.file_id)
     }
+    pub(super) fn data_identity(&self) -> (u32, &str) {
+        (self.data.volume, &self.data.file_id)
+    }
     pub(super) fn check_native(
         &self,
         peer: &crate::infrastructure::windows_official_runtime024::RetainedPeer,

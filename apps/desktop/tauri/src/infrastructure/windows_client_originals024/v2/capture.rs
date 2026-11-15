@@ -6,6 +6,7 @@ use super::super::{bounded::native_stamp, tree::RootTree};
 use super::*;
 use crate::infrastructure::windows_official_runtime024::{create_private_directory, RetainedPeer};
 use std::{path::PathBuf, time::Instant};
+mod history;
 
 fn before(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {
@@ -108,6 +109,13 @@ fn private_child(parent: &PinnedDirectory, name: &str) -> io::Result<PinnedDirec
 }
 impl TreeCaptureV2 {
     pub(super) fn capture(binding: Binding, end: Instant) -> io::Result<Self> {
+        Self::capture_with_history(binding, &mut [], end)
+    }
+    pub(super) fn capture_with_history(
+        binding: Binding,
+        histories: &mut [&mut Self],
+        end: Instant,
+    ) -> io::Result<Self> {
         before(end)?;
         binding.validate(Some(&current_identity()?.sid))?;
         let paths = binding.paths();
@@ -119,6 +127,9 @@ impl TreeCaptureV2 {
         ];
         let peer = RetainedPeer::current()?;
         binding.check_native(&peer, &pins)?;
+        let official = private_child(&pins[1], "official024")?;
+        let windows = private_child(&official, "windows")?;
+        let predecessors = Self::native_history_set(&binding, histories, &windows, None, end)?;
         // Inspect BOTH roots in the original state before creating custody or
         // any manifest. Failure cannot have moved either original root.
         let mut trees = [
@@ -130,13 +141,6 @@ impl TreeCaptureV2 {
             for node in tree.manifest_nodes(end)? {
                 nodes.push(serde_json::from_value(node).map_err(|_| invalid())?);
             }
-        }
-        let official = private_child(&pins[1], "official024")?;
-        let windows = private_child(&official, "windows")?;
-        // Existing/unknown records forbid a new generation. No scan/adoption,
-        // deletion, migration or inference from a text Closed is performed.
-        if std::fs::read_dir(windows.path())?.next().is_some() {
-            return Err(invalid());
         }
         let session_id = uuid::Uuid::new_v4().to_string();
         let custody =
@@ -159,6 +163,7 @@ impl TreeCaptureV2 {
             security_policy: policy,
             custody: custody_data,
             nodes,
+            predecessors,
         };
         check_manifest(&manifest, &current_identity()?.sid)?;
         let raw = serde_json::to_vec(&manifest).map_err(|_| invalid())?;
@@ -166,6 +171,16 @@ impl TreeCaptureV2 {
             return Err(invalid());
         }
         let directory = create_private_directory(&windows.path().join(&session_id))?;
+        if Self::native_history_set(
+            &manifest.binding,
+            histories,
+            &windows,
+            Some(&directory),
+            end,
+        )? != manifest.predecessors
+        {
+            return Err(invalid());
+        }
         before(end)?;
         let mut record =
             PrivateRecord::create(&directory.path().join("manifest.json"), &raw, 1024 * 1024)?;
@@ -219,6 +234,16 @@ impl TreeCaptureV2 {
             failed: false,
         };
         out.recheck(end)?;
+        if Self::native_history_set(
+            &out.manifest.binding,
+            histories,
+            &windows,
+            Some(&out.pending.directory),
+            end,
+        )? != out.manifest.predecessors
+        {
+            return Err(invalid());
+        }
         Ok(out)
     }
     pub(super) fn recheck(&mut self, end: Instant) -> io::Result<()> {
@@ -540,6 +565,163 @@ mod tests {
     use super::*;
     fn end() -> Instant {
         Instant::now() + std::time::Duration::from_secs(10)
+    }
+    fn close_storage(captured: &mut TreeCaptureV2, deadline: Instant) {
+        captured.create_working_trees(deadline).unwrap();
+        captured
+            .record_working_phase(Phase::Ready, deadline)
+            .unwrap();
+        captured
+            .record_working_phase(Phase::PreparedRestore, deadline)
+            .unwrap();
+        captured
+            .advance_phase(Phase::OfficialTeardown, deadline)
+            .unwrap();
+        captured.restore_after_teardown(deadline).unwrap();
+        captured.seal_closed_originals(deadline).unwrap();
+        captured.release_closed_original_handles(deadline).unwrap();
+    }
+    #[test]
+    fn wl2_r4_successor_three_native_generations_keep_exact_predecessors() {
+        let mut temp = Fixture::new();
+        let binding = setup(&temp);
+        let binding_raw = serde_json::to_vec(&binding).unwrap();
+        let profile = binding.paths()[0].to_path_buf();
+        let data = binding.paths()[1].to_path_buf();
+        let mut first = TreeCaptureV2::capture(binding, end()).unwrap();
+        close_storage(&mut first, end());
+        let mut histories = vec![first];
+        let mut manifests = vec![histories[0].pending.manifest_raw.clone()];
+        for generation in 2..=3 {
+            std::fs::write(
+                profile.join(".codex/config.toml"),
+                format!("synthetic user original generation{generation}"),
+            )
+            .unwrap();
+            let binding: Binding = serde_json::from_slice(&binding_raw).unwrap();
+            let mut previous = histories.iter_mut().collect::<Vec<_>>();
+            let mut current =
+                TreeCaptureV2::capture_with_history(binding, &mut previous, end()).unwrap();
+            assert_eq!(current.manifest.predecessors.len(), generation - 1);
+            current.recheck_with_history(&mut previous, end()).unwrap();
+            close_storage(&mut current, end());
+            current.recheck_with_history(&mut previous, end()).unwrap();
+            assert_eq!(
+                std::fs::read(profile.join(".codex/config.toml")).unwrap(),
+                format!("synthetic user original generation{generation}").as_bytes()
+            );
+            drop(previous);
+            for (old, expected) in histories.iter().zip(&manifests) {
+                assert_eq!(&old.pending.manifest_raw, expected);
+            }
+            manifests.push(current.pending.manifest_raw.clone());
+            histories.push(current);
+        }
+        assert_eq!(
+            std::fs::read_dir(data.join("official024/windows"))
+                .unwrap()
+                .count(),
+            3
+        );
+        let binding: Binding = serde_json::from_slice(&binding_raw).unwrap();
+        let windows = PinnedDirectory::open_private(&data.join("official024/windows")).unwrap();
+        let refs = TreeCaptureV2::native_history_set(
+            &binding,
+            &mut histories.iter_mut().collect::<Vec<_>>(),
+            &windows,
+            None,
+            end(),
+        )
+        .unwrap();
+        assert_eq!(refs.len(), 3);
+        assert_eq!(
+            std::fs::read(
+                histories[0]
+                    .custody
+                    .path()
+                    .join("original-history/.codex/data-0001-0000.bin")
+            )
+            .unwrap(),
+            b"synthetic nonsecret config"
+        );
+        drop(histories);
+        drop(windows);
+        println!("three actual native-storage generations create independent original manifests/current/custody and ordered predecessor refs, keep original histories unchanged after new user bytes, preserve exact live original each cycle; storage fixture only, no official ClosedEligibility/Start budget or Owner adoption");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_successor_missing_history_or_foreign_namespace_never_adopts() {
+        let mut temp = Fixture::new();
+        let binding = setup(&temp);
+        let raw = serde_json::to_vec(&binding).unwrap();
+        let profile = binding.paths()[0].to_path_buf();
+        let data = binding.paths()[1].to_path_buf();
+        let mut old = TreeCaptureV2::capture(binding, end()).unwrap();
+        close_storage(&mut old, end());
+        assert!(TreeCaptureV2::capture(serde_json::from_slice(&raw).unwrap(), end()).is_err());
+        let unknown = data.join("official024/windows/foreign.json");
+        std::fs::write(&unknown, b"{\"phase\":\"Closed\"}").unwrap();
+        assert!(TreeCaptureV2::capture_with_history(
+            serde_json::from_slice(&raw).unwrap(),
+            &mut [&mut old],
+            end()
+        )
+        .is_err());
+        assert_eq!(
+            std::fs::read(profile.join(".codex/config.toml")).unwrap(),
+            b"synthetic nonsecret config"
+        );
+        assert_eq!(
+            std::fs::read_dir(data.join("official024/windows"))
+                .unwrap()
+                .count(),
+            2
+        );
+        assert!(unknown.exists());
+        drop(old);
+        println!("missing actual native history or unknown exact namespace child refuses new capture before original moves; text Closed is not adopted, foreign record and old original history retained");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_successor_source_change_or_old_archive_drift_blocks_new_capture() {
+        let mut temp = Fixture::new();
+        let binding = setup(&temp);
+        let raw = serde_json::to_vec(&binding).unwrap();
+        let profile = binding.paths()[0].to_path_buf();
+        let data = binding.paths()[1].to_path_buf();
+        let mut old = TreeCaptureV2::capture(binding, end()).unwrap();
+        close_storage(&mut old, end());
+        let mut changed: serde_json::Value = serde_json::from_slice(&raw).unwrap();
+        changed["sourceDigest"] = serde_json::json!("f".repeat(64));
+        assert!(TreeCaptureV2::capture_with_history(
+            serde_json::from_value(changed).unwrap(),
+            &mut [&mut old],
+            end()
+        )
+        .is_err());
+        let foreign = old.custody.path().join("foreign.new");
+        std::fs::write(&foreign, b"unknown historical custody drift").unwrap();
+        assert!(TreeCaptureV2::capture_with_history(
+            serde_json::from_slice(&raw).unwrap(),
+            &mut [&mut old],
+            end()
+        )
+        .is_err());
+        assert!(old.failed);
+        assert_eq!(
+            std::fs::read_dir(data.join("official024/windows"))
+                .unwrap()
+                .count(),
+            1
+        );
+        assert_eq!(
+            std::fs::read(profile.join(".codex/config.toml")).unwrap(),
+            b"synthetic nonsecret config"
+        );
+        assert!(foreign.exists());
+        drop(old);
+        println!("different source binding and old archive native drift refuse successor before any new generation/root mutation; old poisoned native history preserved, no catch-up");
+        temp.retain();
     }
     fn setup(temp: &Fixture) -> Binding {
         let pins = ["Profile", "D", "H", "I"]

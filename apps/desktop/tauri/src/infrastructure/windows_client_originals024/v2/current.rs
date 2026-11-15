@@ -60,6 +60,14 @@ pub(crate) struct BoundedCurrentV2 {
     fail_after_partial_write: bool,
 }
 impl BoundedCurrentV2 {
+    pub(super) fn native_identity_digest(
+        &mut self,
+        pending: &PendingV2,
+        end: Instant,
+    ) -> io::Result<(FileIdentity, String)> {
+        self.verify_pending(pending, end)?;
+        Ok((self.id, hash::sha256_hex(&self.raw)))
+    }
     #[cfg(test)]
     pub(super) fn inject_partial_write_failure(&mut self) {
         self.fail_after_partial_write = true;

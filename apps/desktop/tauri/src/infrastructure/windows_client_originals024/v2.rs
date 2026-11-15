@@ -21,7 +21,9 @@ use std::{
     io,
     path::{Component, Path},
 };
-#[derive(Serialize, Deserialize, PartialEq, Eq)]
+mod history;
+use history::{check_predecessors, ClosedReference};
+#[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 struct Identity {
     volume: u32,
@@ -73,6 +75,7 @@ struct Manifest {
     security_policy_digest: String,
     custody: Custody,
     nodes: Vec<Node>,
+    predecessors: Vec<ClosedReference>,
 }
 #[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
@@ -157,6 +160,12 @@ fn check_manifest(m: &Manifest, sid: &str) -> io::Result<()> {
     }
     m.binding.validate(Some(sid))?;
     m.security_policy.validate()?;
+    check_predecessors(
+        &m.predecessors,
+        &m.session_id,
+        &m.binding,
+        &m.security_policy_digest,
+    )?;
     if m.security_policy.digest()? != m.security_policy_digest {
         return Err(invalid());
     }
