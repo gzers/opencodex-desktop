@@ -1,0 +1,6 @@
+{
+  "finding": "Typed record paths may still contain repeated separator aliases because shared local syntax validation intentionally permits ordinary Win32 separator equivalence. Data-only overlap keys must use canonical separators/components to avoid accepting different spelling of a control/client root.",
+  "next": "After originals01 completes, reject noncanonical repeated/trailing separator spellings in persisted binding only; native local path validator semantics unchanged. Add exact overlap-alias counterexample. Other strict checks retain original assertions.",
+  "sourceFreeze": "No active compiled Rust input changed during originals01.",
+  "allAccepted": false
+}

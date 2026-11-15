@@ -1,0 +1,44 @@
+{
+  "runs": [
+    {
+      "run": "library01",
+      "capturedRustFiles": 36,
+      "changedCapturedRustFiles": [
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/phase.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs"
+      ],
+      "allCapturedRustFinalByteIdentical": false,
+      "newBindingFileCaptured": false
+    },
+    {
+      "run": "originals01",
+      "capturedRustFiles": 37,
+      "changedCapturedRustFiles": [
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/binding.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/phase.rs"
+      ],
+      "allCapturedRustFinalByteIdentical": false,
+      "newBindingFileCaptured": true
+    },
+    {
+      "run": "originals02",
+      "capturedRustFiles": 37,
+      "changedCapturedRustFiles": [],
+      "allCapturedRustFinalByteIdentical": true,
+      "newBindingFileCaptured": true
+    },
+    {
+      "run": "product01",
+      "capturedRustFiles": 37,
+      "changedCapturedRustFiles": [],
+      "allCapturedRustFinalByteIdentical": true,
+      "newBindingFileCaptured": true
+    }
+  ],
+  "helperAdapterFileByteIdenticalToLibrary01": true,
+  "helperAdapterSHA256": "a695bc3df80f0e0a644c875f3e749ceebd4cb5e4a9c5d9491052763047d8384b",
+  "limits": "library01 preceded O changes; originals01 preceded canonical path alias strengthening. Do not claim either all captured Rust equals final. originals02 and product01 each capture37 final Rust files.",
+  "allAccepted": false
+}

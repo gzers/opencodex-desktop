@@ -344,3 +344,20 @@ native01挂起原根argv/quote/Unicode/退出后原像1项、query01实际query 
 不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-d-family-source-20261115-r1/：假设/八源原字节及SHA、4组执行源/rawstdout/stderr/result、最终source/Gitblob/制品、scope复用边界、16项完整表、report及verify_evidence.py；离线replay0不等于生产角色正例。
 
 本轮新synthetic roots正常退出/原Fixture清理断言过，新force/account/Profile/Public/官方进程/日常PATH写均0；工程cache/制品证据留存。上一批7文件670767字节失败树和历史Profile/Public/schema自动审批拒绝均不重试/不替换机制，overallCleanupComplete=false。O完整custody/currentrefCAS/restore/Closed、H真实GUI原Owner生产路由、OtherRequired全family、S/D完整实机proof及普通完整SD/SACL环境仍未完成；生产Start拒绝，allAccepted/productionExecuted/actualGUI=false。无真实模型/业务同步/W2/双SID/发布。
+
+
+## 2026-11-15 W-L2 sentinel必需角色与O阶段严格绑定（增量，仍未收口）
+
+fetch main dbf974097d067e75c4de68f9fc681af8ab447b09 / docs a6d9184b851521194477ddfeecd988f40d513e5b未变，TEAM13/IMP139/r3承接r2。先hypotheses01，固定官方外/内SHA再读六源；windows-process-priority.ts用node:os直接setPriority无新helper进程，未创造PowerShell豁免。
+
+代码080b80c41cacc490587a1881c4fe98f52314d786已推：OtherRequired仅准确installed sentinel [原Bun,准确health-sentinel-main.ts]，要求原typedReady/prestop Service父代次、Node→Bun原native链、start捕获阶段、同原镜像fileID和launch/main/windows/CLI四源SHA，完整programImage前后复核。非零仍否决NormalExit；其它conhost/helper未知保持。source说明sentinel只于managed-service而非普通foreground/desktop运行，本轮未开启/启动该功能，纯语法不是生产sentinel正例。
+
+O独立检查发现旧phase只要binding.is_object即可。cf03db58036780f8d02aaaa5bfd52654ee4bbab5已推：新增typed deny_unknown_fields绑定SID/Profile/D/H/I路径+volume/fileID/source-currentSHA/ownerPID/FILETIME，规范SID/正整数/非nil规范sessionUUID、根/原件范围重叠和目录同对象拒绝。read_pending逻辑SID同当前TokenUser、sessionId同准确目录叶名；Nested duplicate/unknown/missing全部拒绝；重复/尾随分隔符别名另按先置native-path-review增量拒绝。底层新validate_local_path只有语法无I/O，不是原生身份/权限。文本Closed仍PendingOnly，无OriginalSession/ClosedEligibility/current-ref或custody能力，没移任何client原件、没回退默认空状态。
+
+helper角色suite4项通过；O originals01中间4项通过，别名增量后的originals02最终4项通过。8个不同用例/12成功执行，本轮firstError=null；native捕获/实际恢复/真实角色未验。最终clean cf03源MSVC debug bins0/128147ms/85warnings原样，actualsourcehead准确/dirtydiff空；originals02/product01每组37Rust对最终字节一致，helper自身文件与早期suite一致，但早期36Rust的4源后继O变化/缺newbinding不冒全36一致。三份库EXE实际时点hash分立保存。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-helper-provenance-20261115-r1/：先置假设/原源六SHA、四组原执行source/stdout/stderr/result、最终source/Gitblob/制品、15项完整状态表/report/result、限制/清理与离线verify_evidence.py。离线replay0不等于生产通过。Desktop75458560/SHA25640a65cf0cefb57e053e7ca1c4b6b007a9557103a8bd45dba8ff50beeabfc00eb；ocxd5398528/SHA25620dbf3e6760cdd0d51e60214e8f356408ed78b33b90cc44a731ffe0755c886c4；ocx306176/SHA256adb2684b17e60bfa39fdccbabc345a892d246cda635d24ab5d88c813e35ff682。非签名release/冻结候选。
+
+净6许可Windows文件，无共享trait/Cargo/安装器/Mac/旧lifetime改动；untracked旧schema保留。仅任务synthetic records/TempDir，成功guard清理，无新失败目录/account/Profile/Public/官方进程/force/日常配置或PATH策略写。旧7文件670767字节失败树及历史Profile/Public/schema自动审批拒绝保持，不重试不换机制；cache/制品/证据有意留，overallCleanupComplete=false。
+
+O完整同卷custody/current-ref CAS/恢复/Closed、H真实GUI原Owner生产路由、D其它完整helper family和S/D实机矩阵未完；普通MSI未验与完整SD/SACL普通令牌环境缺口保持，不重复同前提1314/外Job失败、不提升或缩范围凑过。allAccepted/productionExecuted/actualGUI=false；生产Start继续拒绝。无真实模型/业务同步/W2/双SID/发布。

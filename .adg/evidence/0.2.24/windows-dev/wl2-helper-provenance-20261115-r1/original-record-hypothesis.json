@@ -1,0 +1,7 @@
+{
+  "finding": "O phase decoder currently accepts any JSON object as binding. Even an empty object can look like a syntactically closed chain if digests match. It still grants no native authority, but does not meet r2 fixed identity fields/unknown refusal.",
+  "proposed": "Typed deny_unknown_fields binding with SID, exact Profile/D/H/I path+native directory IDs, source/current digests and original owner PID/FILETIME. Validate decimal integer canonicality, native path syntax, roots overlap, session UUID and initial digest. Records remain pending-only, not NativeSession/OriginalSession/ClosedEligibility; no native originals or SD operation performed.",
+  "checks": "Empty/missing/duplicate/unknown binding fields, wrong owner identity data, aliases/reserved path/same object/root overlap, truncated/empty phase record and chain drift refuse. Data-only cross-volume bindings allowed; never a custody positive.",
+  "sourceFreeze": "No changes to Rust until helper library01 completes.",
+  "allAccepted": false
+}
