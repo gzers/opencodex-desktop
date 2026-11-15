@@ -206,6 +206,20 @@ struct Store {
     closed_exit: Option<ClosedExitHistory>,
     closed_supervisor: Option<ClosedAbsentHistory>,
     failed: bool,
+    routes: Option<super::routes::RoutePin>,
+}
+impl Store {
+    fn check_source(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+        self.source.check(owner, end)?;
+        if self.state != State::Closed {
+            self.routes
+                .as_mut()
+                .ok_or_else(|| refused("本代独立路由原件缺席"))?
+                .declared(owner.home_path(), end)
+                .map_err(refused)?;
+        }
+        before(end).map_err(refused)
+    }
 }
 // These tags locate retained native state in THIS adapter only. No public
 // fields/serde/Clone or constructor exists; a record cannot create a tag.
@@ -264,7 +278,7 @@ impl WindowsOriginals {
                 return Err(refused("原闭合tag/Store代次或阶段不成立"));
             }
             store.failed = true;
-            store.source.check(owner, end)?;
+            store.check_source(owner, end)?;
             store
                 .closed_exit
                 .as_ref()
@@ -279,7 +293,7 @@ impl WindowsOriginals {
             WindowsSupervisor.recheck_absent(owner, &absent, end)?;
             owner.originals_check_stopped_records(end)?;
             store.tree.recheck(end).map_err(refused)?;
-            store.source.check(owner, end)?;
+            store.check_source(owner, end)?;
             store.failed = false;
             Ok(())
         })();
@@ -308,7 +322,7 @@ impl WindowsOriginals {
                 if store.failed || store.state != State::Closed || !old.originals_is_stopped() {
                     return Err(refused("旧Owner/原件没有准确原闭合资格"));
                 }
-                store.source.check(old, end)?;
+                store.check_source(old, end)?;
                 store
                     .closed_exit
                     .as_ref()
@@ -325,7 +339,7 @@ impl WindowsOriginals {
                     old.originals_check_stopped_records(end)?;
                 }
                 store.tree.recheck(end).map_err(refused)?;
-                store.source.check(old, end)?;
+                store.check_source(old, end)?;
             }
             let mut histories = self
                 .closed
@@ -368,7 +382,7 @@ impl WindowsOriginals {
             }
             store.failed = true;
             owner.originals_require_unresumed(end)?;
-            store.source.check(owner, end)?;
+            store.check_source(owner, end)?;
             store.tree.verify_working_unchanged(end).map_err(refused)?;
             owner.originals_require_unresumed(end)?;
             store.failed = false;
@@ -395,7 +409,7 @@ impl WindowsOriginals {
             return Err(refused("原生Ready阶段未知"));
         }
         store.failed = true;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         owner.originals_check_ready(ready, end)?;
         if store.ready.as_ref() != Some(&(ready.pid(), ready.port(), ready.record_sha256().into()))
         {
@@ -421,7 +435,7 @@ impl WindowsOriginals {
             return Err(refused("旧tag/错误阶段/未知或poisoned session"));
         }
         store.failed = true;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         store.tree.recheck(end).map_err(refused)?;
         Ok((store, &mut self.closed))
     }
@@ -454,6 +468,7 @@ impl ClientOriginals for WindowsOriginals {
             )
         };
         let (source, binding) = Source::capture(owner, end)?;
+        let routes = super::routes::RoutePin::capture(owner.home_path(), end).map_err(refused)?;
         if let Some(ticket) = successor {
             if ticket.deadline != end
                 || ticket.stop_deadline != window.stop_deadline()
@@ -489,6 +504,7 @@ impl ClientOriginals for WindowsOriginals {
             closed_exit: None,
             closed_supervisor: None,
             failed: true,
+            routes: Some(routes),
         });
         let store = self.store.as_mut().unwrap();
         let mut histories = self
@@ -501,7 +517,7 @@ impl ClientOriginals for WindowsOriginals {
             .create_working_trees_with_history(&mut histories, end)
             .map_err(refused)?;
         owner.originals_require_unresumed(end)?;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         store.failed = false;
         drop(histories);
         self.recheck_closed(owner, end)?;
@@ -523,7 +539,7 @@ impl ClientOriginals for WindowsOriginals {
             .tree
             .record_working_phase(Phase::Ready, end)
             .map_err(refused)?;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         store.ready = Some((ready.pid(), ready.port(), ready.record_sha256().into()));
         store.state = State::Ready;
         store.failed = false;
@@ -553,7 +569,7 @@ impl ClientOriginals for WindowsOriginals {
             .tree
             .advance_phase(Phase::OfficialTeardown, end)
             .map_err(refused)?;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         store.stop_deadline = Some(end);
         store.state = State::Prepared;
         store.failed = false;
@@ -599,12 +615,12 @@ impl ClientOriginals for WindowsOriginals {
         native_exit.check(owner, end)?;
         WindowsSupervisor.recheck_absent(owner, &supervisor, end)?;
         owner.originals_check_stopped_records(end)?;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         store.tree.seal_closed_originals(end).map_err(refused)?;
         native_exit.check(owner, end)?;
         WindowsSupervisor.recheck_absent(owner, &supervisor, end)?;
         owner.originals_check_stopped_records(end)?;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         store
             .tree
             .release_closed_original_handles(end)
@@ -612,10 +628,13 @@ impl ClientOriginals for WindowsOriginals {
         native_exit.check(owner, end)?;
         WindowsSupervisor.recheck_absent(owner, &supervisor, end)?;
         owner.originals_check_stopped_records(end)?;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         store.closed_exit = Some(native_exit.into_closed_history(owner, end)?);
         store.closed_supervisor = Some(supervisor.into_closed_history(owner, end)?);
         store.state = State::Closed;
+        // Closed history no longer constrains a future session's config. Each
+        // successor obtains a new native pin and independent declaration.
+        store.routes = None;
         store.failed = false;
         drop(histories);
         self.recheck_closed(owner, end)?;
@@ -650,7 +669,7 @@ impl ClientOriginals for WindowsOriginals {
         WindowsSupervisor.recheck_absent(owner, &absent, end)?;
         owner.originals_check_stopped_records(end)?;
         store.tree.recheck(end).map_err(refused)?;
-        store.source.check(owner, end)?;
+        store.check_source(owner, end)?;
         let ticket = SuccessorTicket {
             deadline: end,
             stop_deadline: window.stop_deadline(),

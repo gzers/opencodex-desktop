@@ -93,7 +93,7 @@ fn id(file: &File, dir: bool) -> io::Result<FileIdentity> {
         index: ((i.nFileIndexHigh as u64) << 32) | i.nFileIndexLow as u64,
     })
 }
-fn streams(path: &Path, dir: bool) -> io::Result<()> {
+pub(super) fn streams(path: &Path, dir: bool) -> io::Result<()> {
     use std::os::windows::ffi::OsStrExt;
     use windows_sys::Win32::{
         Foundation::INVALID_HANDLE_VALUE,
