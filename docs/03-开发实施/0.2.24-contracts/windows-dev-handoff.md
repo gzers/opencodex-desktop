@@ -430,3 +430,14 @@ library01首raw101/9pass1fail，第二Grok move边界rawWin32123/seq6意图保�
 新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-tree-stage-20261115-r1/含每轮先置hypotheses、全部原source/stdout/stderr/result、失败/中断现场私有归档清单、source/制品SHA、完整状态/report与离线verify/payload。失败及预期负例共23个自有合成原场景私有zip与现场内容核对，147文件414769字节；zip不克隆NTFS身份/安全，原件/pending保持；首次导出漏inline panic标记后补全时间和限制明确，不冒回溯已归档。成功guard清理自身正例，无新account/Profile/Public/官方进程/日常PATH配置策略写。旧删除拒绝全部不重试不绕过（包括.tmpzyZqe4），overallCleanupComplete=false，既有untracked schema保持。
 
 B2的CAP/trust非空前提1314/5不重跑；完整ClientOriginals/实际Ready/PreStop受控副作用/全中断恢复/Closed/后继、H真GUI和真实S-D组合仍未完，Start原durable gate拒绝，allAccepted/productionExecuted/actualGUI=false。marenben桌面答复待，旧空H/Full1314不重跑；这些软件未完继续Windows，不假称新共享接口缺失。未W2/双SID/业务同步/模型请求/发布。
+
+
+## 2026-11-15 r4实际原件适配与Owner接线（生产门保持拒绝）
+
+沿TEAM14/IMP140/r4承接7130ab83f/a5b5d9884，分批推46f9b6526与c30168689876e9577b04c7fe1b63a8a795923359（tree8de36584ffa28970e866e12465aee5894b080a37）。原创建者未Resume状态/原thread/Job历史守卫加入；实际ClientOriginals固定noJob普通broker、SID/Profile/D/H/I/owner/原current和官方包来源，Store在首次根变更前安装，tag消费失败仍保管。Owner在Resume前capture，typedReady/preStop/真实NormalExit+Absent+StopAccepted进入原生恢复/Closed路径；当前仍未生产执行，不能以编译或文本签资格。
+
+工作树未变检查是未完成官方声明副作用支持时的拒绝门，Ready/PreStop持久工作快照仍缺。后继历史移交/旧根DELETE句柄释放/新代次capture未实现，authorize_successor和公共Start durable gate及Stop恢复拒绝保持。原预算、rawexit、Unknown和固定8投影不变；审计SACL及未请求扩展excluded-unknown，fullSecurityProven=false，Full/Partial不转换。原CAP/trust非空1314/5不重跑、不提权。
+
+新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-production-originals-20261115-r1/含5次原命令/执行源/log/result、假设、源码制品/归档清单及完整final-status/report/offlineverify。library01=13过/native01=1过/library02=2过/dispatch01=28过2忽略，均raw0，首错null；library02制品在独立hash前被dispatch覆盖，缺失如实标注。最终clean c30168689 MSVC debug bins0/179254ms/lib68warnings。Desktop76486144/SHA25677894c4a20951d320308332eb10403a0abcc32afccf36e24038530231b000afc；ocxd5398528/SHA2563a2d8c92aab278d0c7067938c539da3ca213e74c1bdaeb4a0c933569a86b0ef1；ocx306176/SHA256139ad1b29d8aabe1800655950110da4f99c1bbe9ac8b2902a7f78df1594024a3。不是release预算/冻结候选。
+
+8处私有保留scene共70文件184854字节已ZIP字节核验，非NTFS元数据克隆，原现场留。无新账户/Profile/Public/官方/force/日常配置策略改；旧删除拒绝不重试不绕过，overallCleanupComplete=false。marenben最新确认桌面登录，实核session7 Active，真实GUI入口待准备；旧fixturemanager不重跑不当actualGUI。完整官方工作副作用/后继/恢复闭环、真实GUI/官方owner及S-D组合、普通MSI和历史清理仍未完。allAccepted/productionExecuted/actualGUI=false；继续Windows范围开发，不W2/双SID/业务同步/模型请求/发布。

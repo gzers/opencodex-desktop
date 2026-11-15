@@ -1,0 +1,209 @@
+{
+  "time": "2026-11-15T13:51:07.042477+08:00",
+  "sourceHead": "c30168689876e9577b04c7fe1b63a8a795923359",
+  "sourceTree": "8de36584ffa28970e866e12465aee5894b080a37",
+  "baseline": {
+    "main": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+    "docs": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+    "previousCode": "7130ab83f98b7c0d9f908e9f3f756dc1c713f04c",
+    "previousDocs": "a5b5d988427c1a04006d5b65741a03886c460e36"
+  },
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "runs": {
+    "library01": {
+      "rawExit": 0,
+      "elapsedMs": 155167,
+      "passed": 13,
+      "ignored": 0,
+      "warningLines": 49,
+      "productionAcceptance": false
+    },
+    "native01": {
+      "rawExit": 0,
+      "elapsedMs": 3601,
+      "passed": 1,
+      "ignored": 0,
+      "warningLines": 2,
+      "productionAcceptance": false
+    },
+    "library02": {
+      "rawExit": 0,
+      "elapsedMs": 88322,
+      "passed": 2,
+      "ignored": 0,
+      "warningLines": 49,
+      "productionAcceptance": false
+    },
+    "dispatch01": {
+      "rawExit": 0,
+      "elapsedMs": 114783,
+      "passed": 28,
+      "ignored": 2,
+      "warningLines": 35,
+      "productionAcceptance": false
+    },
+    "product01": {
+      "rawExit": 0,
+      "elapsedMs": 179254,
+      "passed": null,
+      "ignored": null,
+      "warningLines": 69,
+      "productionAcceptance": false
+    }
+  },
+  "firstError": null,
+  "missingArtifactHash": {
+    "run": "library02",
+    "reason": "test executable was overwritten by dispatch01 before separate hashing; no substituted hash"
+  },
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "strict v2/policy/current/progress tests passed; current source record schema/bytes/fileID/security/selection pin negative cases added"
+    },
+    {
+      "id": "O1",
+      "result": "partial-implementation",
+      "fact": "actual ClientOriginals adapter/Store installed before native moves, opaque nonclone/nonserde tags consumed by Owner; current unchanged-working veto does not implement declared official side effects"
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "prior native interruption/current poison tests reused and impacted v2 rerun; full production interruption matrix and qualified successor history transfer missing"
+    },
+    {
+      "id": "H",
+      "result": "environment-ready/implementation-pending",
+      "fact": "user confirmed marenben logged in; query reports session7 Active. No new actual GUI execution; previous fixture manager/empty host is not actual GUI or official owner"
+    },
+    {
+      "id": "S/D",
+      "result": "wired/component-pass",
+      "fact": "typed Ready/PreStop/NormalExit/Absent/StopAccepted connected to adapter; 28 pass/2 ignored is not real official combined Stop"
+    },
+    {
+      "id": "P",
+      "result": "refused",
+      "fact": "public require_durable_capture still refuses; outward Stop recovery refusal and authorize_successor refusal retained; native history release/new capture and public production acceptance not complete"
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    }
+  ],
+  "cleanup": {
+    "newPrivateArchivedSceneCount": 8,
+    "newPrivateArchivedFiles": 70,
+    "newPrivateArchivedBytes": 184854,
+    "scenes": [
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpB4JuCl",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\production-originals-library01-0.zip",
+        "archiveSha256": "3a2028320ffef01e5436fadb4f9c0b8063f1eeceb2f970c072cd8ce68c9dd401",
+        "files": 5,
+        "bytes": 19811,
+        "removed": false,
+        "nativeMetadataCloned": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpVXzNMA",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\production-originals-library01-1.zip",
+        "archiveSha256": "ded104d1e2a3c400c7f82d7f3a43cbe26c5b9f6f84506532305fb943102ae0eb",
+        "files": 6,
+        "bytes": 21107,
+        "removed": false,
+        "nativeMetadataCloned": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpM5ldTE",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\production-originals-library01-2.zip",
+        "archiveSha256": "80fad29348192a1cc50ebf7ab7da27c1b699e230c3fddda7d734c5b8a2f51c7e",
+        "files": 20,
+        "bytes": 41863,
+        "removed": false,
+        "nativeMetadataCloned": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpCG3jli",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\production-originals-library01-3.zip",
+        "archiveSha256": "9952951c4d4fa926e5ff38f7e167489f3b9524800be19ca1b625dd7bf77e0f2d",
+        "files": 4,
+        "bytes": 9687,
+        "removed": false,
+        "nativeMetadataCloned": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEK72iq",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\production-originals-dispatch01-0.zip",
+        "archiveSha256": "6f394ae74d12e71e01b0fbce0ce57f2e1103ecc70382485382db1c70f6e0e678",
+        "files": 5,
+        "bytes": 19797,
+        "removed": false,
+        "nativeMetadataCloned": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp3sOVVS",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\production-originals-dispatch01-1.zip",
+        "archiveSha256": "70f99fd31b173bb15c4ab9ab0ed9ad13db91e972aea25e984a4712bed4150298",
+        "files": 6,
+        "bytes": 21087,
+        "removed": false,
+        "nativeMetadataCloned": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpxtrUAm",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\production-originals-dispatch01-2.zip",
+        "archiveSha256": "10737d375e1ae48573b9343ec59e4747442615358bd20a72452bd33377622016",
+        "files": 20,
+        "bytes": 41815,
+        "removed": false,
+        "nativeMetadataCloned": false
+      },
+      {
+        "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpKZywri",
+        "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\production-originals-dispatch01-3.zip",
+        "archiveSha256": "345b93359b989e61567e7da1e276d188297041d8c5c1781c82e9e6ab2adaa3b4",
+        "files": 4,
+        "bytes": 9687,
+        "removed": false,
+        "nativeMetadataCloned": false
+      }
+    ],
+    "originalsRetained": true,
+    "nativeMetadataCloned": false,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicEntries": 0,
+    "officialProcesses": 0,
+    "forcedCleanup": false,
+    "dailyPathConfigPolicyChanged": false,
+    "historicalRejectedDeletionRetried": false,
+    "overallCleanupComplete": false
+  },
+  "limits": [
+    "Creator guard is owned monotonic Resume state, not suspend-count proof against external untrusted APIs",
+    "Ready/PreStop equality is an intentional veto while official side-effect validation is unfinished",
+    "Store survives phase-tag-consuming errors; record decoding cannot issue native tags",
+    "No real official Source/Owner/Closed/H/S-D production execution",
+    "debug bins are not release-budget validation or frozen candidate"
+  ],
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "startOpen": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

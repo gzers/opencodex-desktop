@@ -1,0 +1,24 @@
+{
+  "exitCode": 0,
+  "profile": "debug",
+  "elapsedMs": 3601,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--test",
+    "process",
+    "-j",
+    "1",
+    "wl2_originals_capture_guard_requires_original_creator_before_resume",
+    "--",
+    "--exact",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "accepted": false
+}
