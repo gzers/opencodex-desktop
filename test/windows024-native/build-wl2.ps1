@@ -45,6 +45,7 @@ if($Mode -eq 'family-native'){
  $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--test','process','-j','1','wl2_family_','--','--test-threads=1','--nocapture')
 }
 $diff=git diff --binary
+if($Mode -eq 'original-reference'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'original-move'){
  $env:OCX024_MOVE_OTHER_PARENT=$toolchain
  $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
