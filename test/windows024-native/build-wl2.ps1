@@ -45,6 +45,16 @@ if($Mode -eq 'family-native'){
  $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--test','process','-j','1','wl2_family_','--','--test-threads=1','--nocapture')
 }
 $diff=git diff --binary
+if($Mode -eq 'original-move'){
+ $env:OCX024_MOVE_OTHER_PARENT=$toolchain
+ $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
+ $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_move_','--','--test-threads=1','--nocapture')
+}
+if($Mode -eq 'original-move-cross-volume'){
+ $env:OCX024_MOVE_OTHER_PARENT=$toolchain
+ $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
+ $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_move_cross_volume_parent_refuses_without_copy_or_deleting_source','--','--exact','tests::wl2_move_cross_volume_parent_refuses_without_copy_or_deleting_source','--test-threads=1','--nocapture')
+}
 @{head=$head;diff=$diff;arguments=$arguments;rustc=(& $env:RUSTC --version);time=[datetime]::Now.ToString('o')}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath "$Evidence/source.json" -Encoding utf8
 $files=@(git ls-files --cached --others --exclude-standard -- 'apps/desktop/tauri/src/infrastructure/windows*' 'apps/desktop/tauri/src/infrastructure/mod.rs' 'test/windows024-native' 'apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs' 'apps/desktop/tauri/src/bin/ocxd.rs')
 $manifest=@()

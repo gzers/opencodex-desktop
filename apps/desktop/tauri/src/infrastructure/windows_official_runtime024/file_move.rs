@@ -167,6 +167,11 @@ impl RetainedFileMove {
         let destination = target.join(name);
         validate(&destination)?;
         let parent = PinnedDirectory::open_private(target)?;
+        if parent.identity() == self.original_parent.identity() {
+            return Err(denied(
+                "custody target is the original parent object; same-path no-op refused",
+            ));
+        }
         if parent.identity().volume != self.original_id.volume {
             return Err(denied(
                 "cross-volume original movement refused; no copy/delete fallback",

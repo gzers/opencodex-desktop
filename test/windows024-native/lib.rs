@@ -28,8 +28,177 @@ mod tests {
     }
     impl Drop for Fixture {
         fn drop(&mut self) {
+            if std::thread::panicking() {
+                eprintln!(
+                    "failed native fixture retained for evidence: {}",
+                    self.0.display()
+                );
+                return;
+            }
             fs::remove_dir_all(&self.0).expect("remove exact new test directory");
         }
+    }
+    #[test]
+    fn wl2_move_same_original_handle_roundtrip_and_no_overwrite() {
+        let f = Fixture::new();
+        let target = f.0.join("custody");
+        let pin = create_private_directory(&target).unwrap();
+        let source = f.0.join("original");
+        fs::write(&source, b"synthetic original secret-free").unwrap();
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        let mut original = RetainedFileMove::open(&source, deadline).unwrap();
+        let id = original.identity();
+        fs::write(target.join("held"), b"foreign destination sentinel").unwrap();
+        let conflict = original.move_into(&target, "held", deadline).unwrap_err();
+        println!(
+            "native no-overwrite error raw={:?}",
+            conflict.raw_os_error()
+        );
+        assert_eq!(original.location(), source);
+        assert_eq!(
+            fs::read(target.join("held")).unwrap(),
+            b"foreign destination sentinel"
+        );
+        fs::remove_file(target.join("held")).unwrap();
+        original.move_into(&target, "held", deadline).unwrap();
+        assert!(!source.exists());
+        assert_eq!(original.identity(), id);
+        assert_eq!(original.location(), target.join("held"));
+        original.verify(deadline).unwrap();
+        assert!(original.move_into(&target, "second", deadline).is_err());
+        fs::write(&source, b"external edit must survive").unwrap();
+        let occupied = original.restore(deadline).unwrap_err();
+        println!(
+            "native restore occupied error raw={:?}",
+            occupied.raw_os_error()
+        );
+        assert_eq!(fs::read(&source).unwrap(), b"external edit must survive");
+        assert_eq!(original.location(), target.join("held"));
+        original.verify(deadline).unwrap();
+        fs::remove_file(&source).unwrap();
+        original.restore(deadline).unwrap();
+        assert_eq!(original.identity(), id);
+        assert_eq!(original.location(), source);
+        assert_eq!(
+            fs::read(&source).unwrap(),
+            b"synthetic original secret-free"
+        );
+        assert!(!target.join("held").exists());
+        assert!(original.restore(deadline).is_err());
+        println!("same native file object restored: volume={} fileID={}; fullSD/custody journal/Closed not issued",id.volume,id.index);
+        drop(original);
+        drop(pin);
+    }
+    #[test]
+    fn wl2_move_streams_links_unknown_paths_and_expired_window_refuse() {
+        let f = Fixture::new();
+        let source = f.0.join("original");
+        fs::write(&source, b"synthetic").unwrap();
+        let until = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        assert!(RetainedFileMove::open(&source, std::time::Instant::now()).is_err());
+        let linked = f.0.join("hardlink");
+        fs::hard_link(&source, &linked).unwrap();
+        assert!(RetainedFileMove::open(&source, until).is_err());
+        fs::remove_file(&linked).unwrap();
+        let ads = std::path::PathBuf::from(format!("{}:task-stream", source.display()));
+        fs::write(&ads, b"synthetic alternate stream").unwrap();
+        assert!(RetainedFileMove::open(&source, until).is_err());
+        fs::remove_file(&ads).unwrap();
+        let mut original = RetainedFileMove::open(&source, until).unwrap();
+        let target = f.0.join("private");
+        let pin = create_private_directory(&target).unwrap();
+        for name in [
+            "../escape",
+            "nested/path",
+            "nested\\path",
+            ".",
+            "..",
+            "name:stream",
+            "CON",
+            "tail.",
+        ] {
+            assert!(
+                original.move_into(&target, name, until).is_err(),
+                "bad name {name}"
+            );
+        }
+        assert!(original
+            .move_into(&target, "held", std::time::Instant::now())
+            .is_err());
+        assert_eq!(original.location(), source);
+        assert!(source.exists());
+        println!("native ADS/hardlink/invalid target/expired-window refused before rename; no privileges or fullSD query");
+        drop(original);
+        drop(pin);
+    }
+    #[test]
+    fn wl2_move_cross_volume_parent_refuses_without_copy_or_deleting_source() {
+        let f = Fixture::new();
+        let source = f.0.join("original");
+        fs::write(&source, b"synthetic cross-volume original").unwrap();
+        let base = std::env::var_os("OCX024_MOVE_OTHER_PARENT")
+            .expect("explicit task cache on another volume required");
+        let target = PathBuf::from(base).join(format!(
+            "ocx024-move-other-{}-{}",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::Relaxed)
+        ));
+        struct OtherRoot(PathBuf);
+        impl Drop for OtherRoot {
+            fn drop(&mut self) {
+                if std::thread::panicking() {
+                    eprintln!(
+                        "failed exact cross-volume fixture retained: {}",
+                        self.0.display()
+                    );
+                    return;
+                }
+                fs::remove_dir(&self.0).expect("remove exact empty new cross-volume fixture only");
+            }
+        }
+        let other = OtherRoot(target.clone());
+        let target_pin = create_private_directory(&target).unwrap();
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        let mut original = RetainedFileMove::open(&source, deadline).unwrap();
+        assert_ne!(
+            target_pin.identity().volume,
+            original.identity().volume,
+            "actual cross-volume precondition must be proven"
+        );
+        let err = original.move_into(&target, "held", deadline).unwrap_err();
+        assert!(err.to_string().contains("cross-volume"));
+        assert_eq!(original.location(), source);
+        original.verify(deadline).unwrap();
+        assert_eq!(
+            fs::read(&source).unwrap(),
+            b"synthetic cross-volume original"
+        );
+        assert!(!target.join("held").exists());
+        println!("actual cross-volume refused before rename: sourceVolume={} targetVolume={} originalLocationKept=true copyFallback=false",original.identity().volume,target_pin.identity().volume);
+        drop(original);
+        drop(target_pin);
+        drop(other);
+    }
+    #[test]
+    fn wl2_move_original_parent_alias_cannot_be_a_custody_transition() {
+        let f = Fixture::new();
+        let path = f.0.join("private-origin");
+        let parent = create_private_directory(&path).unwrap();
+        let source = path.join("original");
+        fs::write(&source, b"synthetic no-op refusal").unwrap();
+        let end = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        let mut original = RetainedFileMove::open(&source, end).unwrap();
+        let error = original.move_into(&path, "original", end).unwrap_err();
+        assert!(error.to_string().contains("original parent object"));
+        assert!(original.move_into(&path, "different-name", end).is_err());
+        assert_eq!(original.location(), source);
+        original.verify(end).unwrap();
+        assert!(!path.join("different-name").exists());
+        println!(
+            "same original native parent cannot mark a custody transition; file remains original"
+        );
+        drop(original);
+        drop(parent);
     }
     #[test]
     fn real_token_user_is_observed() {
