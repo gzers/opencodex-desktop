@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 14；2026-11-15。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前W-L2最新原语/空H组件已回交，Mac已采用新代次安全覆盖r4；Windows按r2/r3写集及r4增量继续，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 15；2026-11-15。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r4增量及真实GUI空broker组件已回交，Mac补共享Route与同采样5秒r5；Windows沿r4范围/r5接口继续，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -152,3 +152,14 @@ Windows继续r2/r3逐文件独占写集，允许新BoundedAccessV1 native读取/
 H普通桌面空组件的noJob/原creator/manager更替证据可复用；actualGUI仍需真接线，不重新要求用户跑同一空宿主。新mask/新schema有新假设才定向核验，O新范围正例不由旧partial补签；已过无影响CLI/MSI不重跑。Profile失败现场保留/清理原规则，所有删除拒绝不绕过。固定候选前不W2/双SID，不发布。
 
 > fetch main2ebdd3ae0423903e9e713108a09a165ac36ead37及本次docs/governance-main，在c479上承接TEAMr14/IMP140/windows-security-coverage-r4。实现固定有界8投影与新v2原件/引用，所含不可读未知拒绝；审计SACL范围外不作恢复证明，旧Full/partial不转换。继续整树custody/恢复/Closed、真实GUI与S/D生产组合，完成前保持Start拒绝。只写r4承接的允许集，保留原预算/普通token/日常策略/失败证据，定向批量核验及时分别push，回完整状态/首错/实际source及EXE摘要/清理；不W2/双SID、不发布。
+
+
+## 2026-11-15 当前入口：共享Route与同采样5秒r5
+
+实施状态只归IMP141；本次[接口r5](0.2.24-contracts/windows-shared-routes-status-r5.md)提供main358e7fc4717787616f049f3bdc1cfe02f6d353f9，在Windows0549a660ee3f77ea243e798ec55b01f52545e492或其干净后继合入。代码含8e2699a91纯declaration提取及358e7fc47同窗口状态接口；不整合万行未完Windows实现、不把GUI空broker过当生产通过。
+
+r2/r3/r4 Windows单写集保持，新增明确消费共享client_route_declaration::declaration、StatusSource::_at/deadline方法及status_source.rs Windows分支定向接线权限，原共享算法/Mac/HMAC/预算不另改。合并预演仅windows_official_lifecycle024.rs冲突：该main差异只是保守桥接；保留Windows完整文件/原生recovery_state_at，不用main桥接替换，不做全仓ours/theirs。Mac后续暂停Windows写集至Git回交。
+
+先MSVC/共享纯例及真实同窗receiver，再原配置pin→declaration→完整官方副作用/NativeLease与H-S-D生产闭环，前提未齐公共Start仍拒绝。真实GUI空宿主通过证据复用，不重复旧fixture或未变化CLI/MSI；CAP/trust非空、普通MSI/历史清理保持未完。窗口期限、rawexit/未知拒绝、r4排除和v2不变，原有新假设/一次完整表/批量修复/失败现场规则继续，固定候选前不W2/双SID、不发布。
+
+> fetch main358e7fc4717787616f049f3bdc1cfe02f6d353f9及本次docs/governance-main，按TEAM15/IMP141/windows-shared-routes-status-r5在0549后继合入。唯一native冲突保留Windows完整recovery_state_at；消费共享纯route及fetch/light/recovery同一个原5秒deadline。继续官方副作用/NativeLease和H-S-D原包闭环，前提不齐Start仍拒绝。沿允许集连续开发批量定向核验及时分别push完整状态/首错/source与EXE/清理，不重跑旧GUI空组件，不W2/双SID、不发布。

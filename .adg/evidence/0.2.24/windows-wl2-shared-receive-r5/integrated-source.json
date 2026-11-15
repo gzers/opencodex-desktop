@@ -1,0 +1,67 @@
+{
+  "main": "358e7fc4717787616f049f3bdc1cfe02f6d353f9",
+  "windows": "0549a660ee3f77ea243e798ec55b01f52545e492",
+  "docsContribution": "a7baa88e1c86b616977184fa08125b4856d9231b",
+  "windowsProductSource": "6e312f02270f247d2f440ec369385e523a4a8043",
+  "windowsContributionMerged": false,
+  "commits": [
+    "8e2699a91",
+    "358e7fc47"
+  ],
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session.rs",
+      "bytes": 77929,
+      "sha256": "7acc7dae3f465a7303da55fa19a3acd32bb8443c39042f331e17ec43cd39776c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_tests.rs",
+      "bytes": 60736,
+      "sha256": "a37878f2924baf0be1240c93ee18f170a945d3e7ae95b489eb095daf0efbf612"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "bytes": 45345,
+      "sha256": "0cc923014473df22b8f480a19c98f08383f9a6f9d1552297c96eda5a3f89c7d3"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 20433,
+      "sha256": "7e3e1122ae77aa05ced193e9d3d830c1939efdfd2833a0c1e33a9b85d1157163"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/client_route_declaration.rs",
+      "bytes": 11465,
+      "sha256": "7f6ac854752ef9e891c46cefb737919f6961ebcccc623d85fffe77c6db0c138f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/client_route_declaration_tests.rs",
+      "bytes": 12329,
+      "sha256": "f199d30d54087cb3100dd2bab751c41aec48ad73f49aa50ff3714e312183e8e9"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/mod.rs",
+      "bytes": 46653,
+      "sha256": "3ccd663bdbb63a8475ad24ea56cefab615a518307b5e8cb250307e094dba5fa6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/status/mod.rs",
+      "bytes": 61573,
+      "sha256": "fc8d3dfb2997f6679e22d151a2b8035b5c1f12594cb124ff22ae9c053d943e40"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/status/sample_deadline_tests.rs",
+      "bytes": 5416,
+      "sha256": "320d97e0e5a9f4e2e71665b460c99d75bfe2e8b9bb87ba09328183044710b5d2"
+    }
+  ],
+  "mergePreview": {
+    "command": "git merge-tree --write-tree main 0549a660e",
+    "exit": 1,
+    "conflicts": [
+      "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs"
+    ],
+    "resolution": "Keep Windows full native file/recovery_state_at; main diff only adds a conservative bridge; merge shared source and collector normally",
+    "workingTreeNotMerged": true
+  }
+}

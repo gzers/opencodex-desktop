@@ -1,0 +1,333 @@
+{
+  "receiveVerified": true,
+  "allAccepted": false,
+  "productionExecuted": false,
+  "code": "0549a660ee3f77ea243e798ec55b01f52545e492",
+  "docs": "a7baa88e1c86b616977184fa08125b4856d9231b",
+  "netFiles": 5873,
+  "manifests": [
+    {
+      "round": "wl2-bounded-security-r4-20261115-r1",
+      "payloads": 1561,
+      "bytes": 14321789
+    },
+    {
+      "round": "wl2-canonical-root-progress-20261115-r1",
+      "payloads": 630,
+      "bytes": 6279778
+    },
+    {
+      "round": "wl2-closed-history-20261115-r1",
+      "payloads": 430,
+      "bytes": 4819179
+    },
+    {
+      "round": "wl2-production-originals-20261115-r1",
+      "payloads": 490,
+      "bytes": 4728784
+    },
+    {
+      "round": "wl2-real-gui-cleanup-receive-20261115-r1",
+      "payloads": 17,
+      "bytes": 53295
+    },
+    {
+      "round": "wl2-real-gui-fixed-run-20261115-r1",
+      "payloads": 40,
+      "bytes": 104982
+    },
+    {
+      "round": "wl2-real-gui-preparation-20261115-r1",
+      "payloads": 233,
+      "bytes": 2576194
+    },
+    {
+      "round": "wl2-real-gui-profile-fix-20261115-r1",
+      "payloads": 231,
+      "bytes": 2366177
+    },
+    {
+      "round": "wl2-real-gui-run-20261115-r1",
+      "payloads": 24,
+      "bytes": 31543
+    },
+    {
+      "round": "wl2-real-gui-success-cleanup-20261115-r1",
+      "payloads": 29,
+      "bytes": 86148
+    },
+    {
+      "round": "wl2-stop-restart-results-20261115-r1",
+      "payloads": 329,
+      "bytes": 3659149
+    },
+    {
+      "round": "wl2-successor-capture-20261115-r1",
+      "payloads": 542,
+      "bytes": 6216146
+    },
+    {
+      "round": "wl2-tree-stage-20261115-r1",
+      "payloads": 872,
+      "bytes": 8191992
+    },
+    {
+      "round": "wl2-working-snapshots-20261115-r1",
+      "payloads": 426,
+      "bytes": 4508222
+    }
+  ],
+  "payloadFiles": 5854,
+  "payloadBytes": 57943378,
+  "outsidePayloadLists": [
+    ".adg/evidence/0.2.24/windows-dev/wl2-bounded-security-r4-20261115-r1/delivery-replay.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-bounded-security-r4-20261115-r1/git-payload-check.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-bounded-security-r4-20261115-r1/payload-inventory.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-canonical-root-progress-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-closed-history-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-production-originals-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-real-gui-cleanup-receive-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-real-gui-fixed-run-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-real-gui-preparation-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-real-gui-profile-fix-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-real-gui-run-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-real-gui-success-cleanup-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-stop-restart-results-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-successor-capture-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-tree-stage-20261115-r1/payload-manifest.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-tree-stage-20261115-r1/replay.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-tree-stage-20261115-r1/staged-byte-check.json",
+    ".adg/evidence/0.2.24/windows-dev/wl2-working-snapshots-20261115-r1/payload-manifest.json",
+    "docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md"
+  ],
+  "sourceChecks": [
+    {
+      "source": "6e312f02270f247d2f440ec369385e523a4a8043",
+      "files": 55,
+      "gitLFToExecutionCRLF": [
+        "apps/desktop/tauri/src/infrastructure/mod.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+        "apps/desktop/tauri/src/lib.rs",
+        "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs"
+      ]
+    },
+    {
+      "source": "6e312f02270f247d2f440ec369385e523a4a8043",
+      "files": 99,
+      "gitLFToExecutionCRLF": [
+        "apps/desktop/tauri/src/infrastructure/mod.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+        "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+        "apps/desktop/tauri/src/lib.rs",
+        "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+        "test/windows024-native/.gitignore",
+        "test/windows024-native/account-w1d.ps1",
+        "test/windows024-native/build-wl2.ps1",
+        "test/windows024-native/bundle-installer.py",
+        "test/windows024-native/cleanup-wl2-prerequisites.ps1",
+        "test/windows024-native/collect-h024-desktop.ps1",
+        "test/windows024-native/launch-h024-desktop.ps1",
+        "test/windows024-native/launch-wl2.ps1"
+      ]
+    },
+    {
+      "source": "0549a660ee3f77ea243e798ec55b01f52545e492",
+      "files": 2,
+      "gitLFToExecutionCRLF": []
+    }
+  ],
+  "actualGUIComponent": {
+    "result": {
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+      "session": 7,
+      "elevated": false,
+      "scope": "actual product GUI and empty broker continuity only; no official Owner or production lifecycle",
+      "allAccepted": false,
+      "observerPid": 114108,
+      "observerCreation": "2026-11-15T22:26:42.3889848+08:00",
+      "rawTestExit": 0,
+      "actualGUIComponentPassed": true,
+      "taskBaseRetained": true
+    },
+    "exportSha256": "d8c5c527a957992ca08e7dda782da59c79148bfb92820b2882ad0a8892d7c085",
+    "exportedFiles": 32,
+    "sameSidExportComplete": true,
+    "actualGUIComponentPassed": true,
+    "modes": [
+      {
+        "mode": "normal",
+        "managerRawExit": 0,
+        "generation": 1,
+        "originalBrokerMatched": true,
+        "nativeWindowVerifiedByObserver": true
+      },
+      {
+        "mode": "hold",
+        "managerRawExit": 1,
+        "generation": 2,
+        "originalBrokerMatched": true,
+        "nativeWindowVerifiedByObserver": true
+      },
+      {
+        "mode": "after-failure",
+        "managerRawExit": 0,
+        "generation": 3,
+        "originalBrokerMatched": true,
+        "nativeWindowVerifiedByObserver": true
+      },
+      {
+        "mode": "finish",
+        "managerRawExit": 0,
+        "generation": 4,
+        "originalBrokerMatched": true,
+        "nativeWindowVerifiedByObserver": true
+      }
+    ],
+    "originalTaskBase": "C:\\Users\\marenben\\ocx024-h-1fa5e23f-12c9-4289-84f3-bcc901642b35",
+    "originalTaskSceneRetained": true,
+    "brokerRawExit": null,
+    "nativeMetadataCloned": false,
+    "deletionAttempted": false,
+    "officialOwnerCreated": false,
+    "productionExecuted": false,
+    "allAccepted": false
+  },
+  "cleanup": {
+    "time": "2026-11-15T22:49:59.840869+08:00",
+    "sourceHead": "0549a660ee3f77ea243e798ec55b01f52545e492",
+    "productSourceHead": "6e312f02270f247d2f440ec369385e523a4a8043",
+    "inputBytesMatchPrepared": true,
+    "intentSha256": "b71651a1d19300c823f4430cca3927a948036be281d51717435d8560f4b56b4c",
+    "receiptSha256": "632102fd9e3db4485d060e2e72a9ad8d2c6ba8c641dca7336941c93ad2a480a1",
+    "successfulTaskSameSidCleanupPassed": true,
+    "removedProfileChild": {
+      "path": "C:\\Users\\marenben\\ocx024-h-1fa5e23f-12c9-4289-84f3-bcc901642b35",
+      "files": 685,
+      "directories": 291,
+      "bytes": 119851895
+    },
+    "archivedPublic": {
+      "path": "C:\\Users\\Public\\ocx-h024-actual-gui-fixed-20261115-r1",
+      "files": 20,
+      "directories": 2,
+      "bytes": 178669957,
+      "retained": true
+    },
+    "archiveDirectory": "C:\\Users\\marenben\\ocx024-gui-archive-36ed4617-000c-4efa-9975-49f9e1b29654",
+    "archiveZipHashes": [
+      "5cd6ec4362e8d057b3bf01f0ae0e48956e303f15bff2705a45ab35dd68633200",
+      "5da2e4d3838b922d1ad601eed039f469abac93f293f41b61f0a165e0230383a7"
+    ],
+    "privateManifestSha256": "54b0e65d9a0427924add27d0d2fa88310ad69ce43805947a1ce39678d2bf9276",
+    "verifiedUnderOriginalSid": true,
+    "privateArchivesIndependentlyReadByController": false,
+    "nativeMetadataCloned": false,
+    "oldFailedBrokerExitUnconfirmed": true,
+    "historicalRejectedDeletionRetried": false,
+    "accountProfileOrDailyPolicyChanged": false,
+    "overallCleanupComplete": false,
+    "firstError": null,
+    "productionExecuted": false,
+    "officialOwnerCreated": false,
+    "startOpen": false,
+    "allAccepted": false
+  },
+  "sharedRequests": [
+    {
+      "time": "2026-11-15T14:38:44.194382+08:00",
+      "sourceHead": "40203e193122395c1cef05b24b10643f42ebfd73",
+      "blockingArea": "complete declared official side-effect content assessment, not native file capture or all other Windows implementation",
+      "facts": [
+        "declaration(bytes)->AppResult<Option<Vec<String>>> and helpers exist only as private funcs in infrastructure/macos_client_session.rs:825-1105 and that module uses Unix/macOS types",
+        "modules/runtime/client_artifact_policy.rs Observations requires declared_routes independently obtained before startup; None is unresolved and must refuse, Some(empty) is a complete empty set",
+        "official_lifecycle024::LaunchPlan has no declared-routes field; no existing cross-platform public route declaration function found in current source"
+      ],
+      "requestedMinimalChange": {
+        "proposedFile": "modules/runtime/client_route_declaration.rs",
+        "api": "pub fn declaration(bytes: &[u8]) -> AppResult<Option<Vec<String>>> (equivalent pure data API acceptable)",
+        "action": "extract existing exact route parser plus pure helpers/tests from macos_client_session; Mac consumer reuses it, Windows reads its already native-pinned H/config.json then calls it",
+        "preserve": [
+          "strict duplicate/unknown-format handling and limits",
+          "selected/static/dynamic roster unknown semantics",
+          "provider slash codec/collisions",
+          "display aliases do not become routes",
+          "customModels/combos/disabledModels/fastRows existing assertions",
+          "no filesystem/network/model/native proof or mutation authority in this parser"
+        ]
+      },
+      "unchanged": [
+        "four native traits",
+        "HMAC/LaunchPlan/source selection semantics",
+        "budgets",
+        "official2.99 package",
+        "Windows native capture/closure requirements"
+      ],
+      "windowsWillContinue": [
+        "same-volume working snapshots and canonical phase references",
+        "native retained history and exact root release",
+        "actual GUI and broker wiring within authorized Windows files"
+      ],
+      "allAccepted": false
+    },
+    {
+      "time": "2026-11-15T16:14:51.505310+08:00",
+      "sourceHead": "f95e895293e88564248526b4286f32197ed51048",
+      "blockingArea": "clear Windows client_recovery to NotRequired in a complete same-window shared status sample; independent Windows Stop/Restart wiring can continue",
+      "facts": [
+        "StatusSource::client_recovery() has no deadline argument; shared StatusCollector::refresh_manager_facts calls it before source.fetch and refresh_with calls it after fetch (also before debounce return)",
+        "Windows old recovery_state intentionally reports Required/Unknown and cannot perform budgeted full native Closed readback without an original action deadline",
+        "A new now+5s within client_recovery would extend total Status collection and a cached stopped/Closed boolean is not current native authority",
+        "OfficialStatusSource::fetch_inner currently begins its own started=Instant::now then passes started+status_collect_timeout to Windows status; supplying only client_recovery_at cannot by itself enforce a single combined5s sample",
+        "StatusCollector uses injected now for debounce bookkeeping; native action start must be the actual monotonic sampling start, not a future/injected scheduling timestamp or a post-fetch replacement deadline"
+      ],
+      "requestedMinimalChange": {
+        "api": "provide one original native status sampling context/deadline to fetch/fetch_light AND client-recovery, e.g. fixture-compatible fetch_at(deadline), fetch_light_at(deadline), client_recovery_at(deadline) defaults or an equivalent single-sample boundary",
+        "callSites": [
+          "modules/status/mod.rs StatusSource optional/default methods and StatusCollector sample/debounce/recovery calls",
+          "infrastructure/status_source.rs only Windows2.99 branch forwards the same provided deadline to native status/recovery; avoid its existing per-fetch replacement started+5",
+          "Windows native receivers status(runtime,H,deadline) and recovery_state_at(runtime,H,deadline) already consume explicit deadlines"
+        ],
+        "semantics": [
+          "one original5s shared across fetch and recovery facts, no nested replacement window",
+          "unknown/expiry stays Unknown/Required, no cached grant",
+          "do not change Mac native proof/HTTP/HMAC/port/current/source or public UI commands",
+          "native Windows receiver recovery_state_at(runtime,home,deadline) provided in this round; pure receiver is not an authorization proof",
+          "native deadline is computed once at true sample/action admission before any recovery/native IO, all later operations use remaining time",
+          "debounce must not turn an earlier native Closed/status result into current recovery authority; require bounded current verification or Unknown",
+          "shared/Mac input, native proof factories and public UI contracts unchanged; minimum fixture-compatible extension, no new behavior-by-default grant"
+        ]
+      },
+      "unchanged": [
+        "four native traits",
+        "original30/5/10/Restart30Stop10",
+        "shared source selection",
+        "official2.99"
+      ],
+      "allAccepted": false,
+      "supersedes": "shared-status-deadline-request.json (retained as original initial hypothesis input)"
+    }
+  ],
+  "limits": [
+    "Source/hash/selected result receipt, not a full native code audit or new execution",
+    "Latest 0549 only changes archive tests; product/source still 6e312",
+    "Actual GUI plus empty broker is not official Owner/Job lifecycle acceptance",
+    "NativeLease/full official side effects/CAP-trust populated positives and full production combinations remain incomplete",
+    "Production gate remains refused; contribution not merged wholesale to main"
+  ]
+}
