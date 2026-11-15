@@ -1,0 +1,23 @@
+{
+  "baseCode": "c47953ccfe4c66a976285eacffd691e3a3b0c01b",
+  "main": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+  "mergedCode": "4ec7d562bcd1394f5cd565872248a9f13241416f",
+  "docsMain": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+  "mergedDocs": "0ade60a687634c9268b3dfa22b9a6f4f54f6b4ab",
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4 inheriting r2/r3 unchanged invariants",
+  "hypotheses": [
+    "Every fixed projection1,2,4,16,32,64,128,256 and combined503 must receive actual QuerySecurityAccessMask READ_CONTROL exactly. Zero or extra right refuses; collect all independent masks once, never fallback tofull/partial.",
+    "New BoundedAccessV1 native snapshots compare valid SID/ACL/ACE bytes and only projection-defined control; full auditSACL/control/future fields remain ExcludedUnknown and fullSecurityProvenfalse.",
+    "V2 policy set/order/digest must bind manifest/phase/reference and cannot accept any Full-v1/PartialDiagnostic/oldschema conversion. Pure decoding never native capture rights.",
+    "Production Start remains refused until full new treecustody/restore/Closed and H/S/D proof combination actually ready."
+  ],
+  "checks": [
+    "all8native access requirements and combined/OS/token once",
+    "native individual+combined SD queries with raw outcomes even if prerequisite fails",
+    "strict v2 policy/schema/digest pure negatives",
+    "MSVC final product build"
+  ],
+  "fullSDRetests": 0,
+  "productionExecuted": false,
+  "allAccepted": false
+}

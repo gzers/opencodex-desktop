@@ -1,0 +1,14 @@
+{
+  "time": "2026-11-15T12:06:44.753863+08:00",
+  "hypotheses": [
+    "Native tree data, all parent snapshots and both original roots can enter a strict v2 manifest before mutation; canonical durable record is the sole move-intention source.",
+    "Every root custody path/ID/security is bound to the manifest and a current CAS observation before its native move; extra journals cannot grant authority.",
+    "A decoded Closed remains pending; this native capture component issues no production restore/exit/supervisor/Closed capability.",
+    "Old Full preflight must not be used to admit NEW r4 sessions; fixed bounded preflight still ends at an explicit production custody refusal."
+  ],
+  "prior": {
+    "library07Passed": 12,
+    "sourceHead": "8e5201d3f"
+  },
+  "budgetChanged": false
+}

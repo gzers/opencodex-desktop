@@ -1,0 +1,22 @@
+{
+  "exitCode": 101,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r4_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "accepted": false,
+  "elapsedMs": 10049,
+  "profile": "debug"
+}

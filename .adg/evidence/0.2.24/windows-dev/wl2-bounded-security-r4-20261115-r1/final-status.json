@@ -1,0 +1,123 @@
+{
+  "time": "2026-11-15T12:17:39.632267+08:00",
+  "codeHead": "42e73081163d29df7977a12a84ffdc8fc0254072",
+  "docsBase": "84ec482eef7afe87d85ea5c911daebc6b8189cfa",
+  "mainBase": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+  "contract": "TEAM14/IMP140/windows-security-coverage-r4",
+  "status": [
+    {
+      "id": "B1",
+      "result": "component-pass",
+      "detail": "All 8 individual masks plus 0x1f7 actual queries with exact READ_CONTROL 0x20000; ordinary controller token only; isolated marenben GUI acceptance not repeated."
+    },
+    {
+      "id": "B2",
+      "result": "partial",
+      "detail": "Nonempty Low integrity label native positive; resource/CAP/trust/filter populated positives and conditional semantic fixtures remain unverified."
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "detail": "Strict v2 manifest/phase/current policy digest, all8 set, unknown/old/partial rejection, same-object CAS; no Full/Partial conversion."
+    },
+    {
+      "id": "O1",
+      "result": "component-pass-mechanism",
+      "detail": "Existing Codex tree and absent Codex/Grok roots custody/workcopy/restore preserve IDs, bytes and bounded projections; canonical v2 tree manifest path tested; stable-lock release and full production adapter remain."
+    },
+    {
+      "id": "O2",
+      "result": "partial",
+      "detail": "External edit/new generation refusal, poison and interruption pending retained; full production interrupt matrix remains."
+    },
+    {
+      "id": "H",
+      "result": "blocked",
+      "detail": "Prior empty-host/noJob component evidence reusable; actualGUI false and marenben session 7 is disconnected."
+    },
+    {
+      "id": "S",
+      "result": "partial",
+      "detail": "Exact SCM/Task Scheduler native query primitives exist; production owner/supervisor completion combination not wired."
+    },
+    {
+      "id": "D",
+      "result": "partial",
+      "detail": "Role/raw-exit primitives exist; complete production family evidence remains."
+    },
+    {
+      "id": "P",
+      "result": "refused",
+      "detail": "Start still calls the durable-capture refusal gate; no official service launched."
+    },
+    {
+      "id": "MSI",
+      "result": "reused",
+      "detail": "Historical MSI/CLI evidence reused; no rerun in this r4 scope."
+    }
+  ],
+  "tests": {
+    "library01": {
+      "exitCode": 0,
+      "passed": 3
+    },
+    "library02": {
+      "exitCode": 101,
+      "passed": 0,
+      "firstError": "json! array .map expression"
+    },
+    "library03": {
+      "exitCode": 0,
+      "passed": 8
+    },
+    "library04": {
+      "exitCode": 101,
+      "passed": 0,
+      "firstError": "E0365 nested visibility re-export"
+    },
+    "library05": {
+      "exitCode": 0,
+      "passed": 9
+    },
+    "library06": {
+      "exitCode": 0,
+      "passed": 11
+    },
+    "library07": {
+      "exitCode": 0,
+      "passed": 12
+    },
+    "library08": {
+      "exitCode": 0,
+      "passed": 14
+    },
+    "product01": {
+      "exitCode": 0,
+      "profile": "debug",
+      "bins": true,
+      "warnings": 154
+    }
+  },
+  "firstError": "library02 raw exit 101 with zero tests: json! array .map expression missing parentheses; later library04 raw 101/E0365 zero tests. Both raw source/stdout/stderr/result remain preserved.",
+  "cleanup": {
+    "library07ArchiveVerified": true,
+    "library07ArchiveFiles": 4,
+    "library07ArchiveBytes": 7290,
+    "library07Scene": "C:/Users/15119/AppData/Local/Temp/.tmpzyZqe4",
+    "library07SceneRemoved": false,
+    "library07Removal": "automatic approval blocked by policy; no alternate mechanism or retry",
+    "historicalRejectedCleanup": "unchanged and not retried",
+    "dailyPolicyOrPathChanged": false,
+    "officialProcessStarted": false,
+    "overallCleanupComplete": false
+  },
+  "gates": {
+    "allAccepted": false,
+    "productionExecuted": false,
+    "actualGUI": false,
+    "startOpen": false,
+    "W2": false,
+    "dualSID": false,
+    "published": false
+  }
+}

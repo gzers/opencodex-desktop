@@ -1,0 +1,19 @@
+{
+  "plannedNewModules": [
+    "v2.rs strict fixed policy/digest manifest-phase-reference pending decoder",
+    "bounded.rs native snapshots exact8 projection and combined consistency"
+  ],
+  "format": "Each v2manifest/phase/current requires securityPolicyDigest. manifestsecurityPolicy exactlyfixed8 in givenorder; v1/currentFull/PartialDiagnostic never inferred or converted. Unknown/duplicates/mask mismatch/excluded guarantee expansion refuses.",
+  "nodes": "Every persisted securityProjectionSnapshot records exactmask/status/revision/control/state/valid canonical SIDorACLACE structure+digest, original nativefileID and scope. Native snapshots private field object generates its stored data; serde reconstructs only pending observations, no proof.",
+  "control": "Onlyowner/groupdefault and DACL present/defaulted/protected/autoinherit bits compared. SACL-wide protection and audit ACE assurance explicitlyexcluded-unknown; do not preserve or compare absolute pointer/padding.",
+  "negativeMatrix": [
+    "drop projection/reorder/duplicate",
+    "wrong scope/mask/policydigest across layers",
+    "old Fullv1/partial type data",
+    "nativeStatus failed/Unknown",
+    "bad SID/ACE bounds/unknownACE",
+    "phase gap/replay/poison/current mismatch"
+  ],
+  "sourceFreeze": "library01 active Rust inputs remain unchanged while compiling; v2 implementation follows its terminal result.",
+  "allAccepted": false
+}

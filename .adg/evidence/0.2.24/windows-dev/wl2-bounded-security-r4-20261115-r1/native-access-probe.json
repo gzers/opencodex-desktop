@@ -1,0 +1,56 @@
+{
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1001",
+  "rows": [
+    {
+      "exactReadControl": true,
+      "requestedMask": 1,
+      "actualDesiredAccess": 131072
+    },
+    {
+      "exactReadControl": true,
+      "requestedMask": 2,
+      "actualDesiredAccess": 131072
+    },
+    {
+      "exactReadControl": true,
+      "requestedMask": 4,
+      "actualDesiredAccess": 131072
+    },
+    {
+      "exactReadControl": true,
+      "requestedMask": 16,
+      "actualDesiredAccess": 131072
+    },
+    {
+      "exactReadControl": true,
+      "requestedMask": 32,
+      "actualDesiredAccess": 131072
+    },
+    {
+      "exactReadControl": true,
+      "requestedMask": 64,
+      "actualDesiredAccess": 131072
+    },
+    {
+      "exactReadControl": true,
+      "requestedMask": 128,
+      "actualDesiredAccess": 131072
+    },
+    {
+      "exactReadControl": true,
+      "requestedMask": 256,
+      "actualDesiredAccess": 131072
+    },
+    {
+      "exactReadControl": true,
+      "requestedMask": 503,
+      "actualDesiredAccess": 131072
+    }
+  ],
+  "productionExecuted": false,
+  "observed": "2026-11-15T11:37:24.2337667+08:00",
+  "os": "Microsoft Windows NT 10.0.26100.0",
+  "api": "QuerySecurityAccessMask",
+  "fullSecurityProven": false,
+  "allAccessRequirementsPassed": true
+}
