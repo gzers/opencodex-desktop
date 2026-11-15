@@ -1,0 +1,18 @@
+{
+  "base": "cf03db58036780f8d02aaaa5bfd52654ee4bbab5",
+  "contract": "TEAM13/IMP139/r3/r2",
+  "hypotheses": [
+    "Rename via the original DELETE-capable file handle with FILE_RENAME_INFO.ReplaceIfExists=false should preserve native volume/fileID across same-volume custody and restore, while existing target or source alias refuses rather than copies/overwrites.",
+    "Original parent chain and task-private target parent must remain pinned, source file is single-link/non-reparse with only unnamed data stream; bytes and original handle identity are rechecked before and after each move. Native error/timeout does not erase the retained location.",
+    "This is a generic low-level single-file mechanism only. Full SD, durable pre-move intent/current-ref CAS, directory/root custody, recovery and ClosedEligibility remain independent and unimplemented. No production capture/Start call is enabled."
+  ],
+  "independentChecks": [
+    "native same-object file roundtrip",
+    "destination occupied preserves both sides; explicit continue after task removes its own sentinel",
+    "ADS/multilink/reparse/ambiguouspath/deadline refusal",
+    "MSVC product compile"
+  ],
+  "fullSDRetests": 0,
+  "productionExecuted": false,
+  "allAccepted": false
+}

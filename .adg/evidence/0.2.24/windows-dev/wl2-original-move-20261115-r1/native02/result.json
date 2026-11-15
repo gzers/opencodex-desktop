@@ -1,0 +1,24 @@
+{
+  "exitCode": 0,
+  "elapsedMs": 1032,
+  "accepted": false,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_move_cross_volume_parent_refuses_without_copy_or_deleting_source",
+    "--",
+    "--exact",
+    "tests::wl2_move_cross_volume_parent_refuses_without_copy_or_deleting_source",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "profile": "debug"
+}

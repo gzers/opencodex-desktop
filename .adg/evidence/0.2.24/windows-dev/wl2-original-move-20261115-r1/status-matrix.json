@@ -1,0 +1,90 @@
+{
+  "allAccepted": false,
+  "productionExecuted": false,
+  "items": [
+    {
+      "id": "single-file-original-handle",
+      "implementation": "implemented",
+      "test": "native03 positive roundtrip passed",
+      "detail": "Native volume/fileID and bounded bytes verified through same original handle; no copy/rebuild."
+    },
+    {
+      "id": "destination-occupied",
+      "implementation": "atomic no-replace",
+      "test": "native183 preserved; both sides unchanged",
+      "detail": "Error retains original handle/location; no target deletion or overwrite."
+    },
+    {
+      "id": "restore-external-edit",
+      "implementation": "same original object; no replace",
+      "test": "native183 preserved; external edit survives",
+      "detail": "Explicit test removes only its own synthetic conflict then restores original; product has no automatic deletion."
+    },
+    {
+      "id": "ADS-hardlinks",
+      "implementation": "refuse incomplete object",
+      "test": "native stream+multilink negatives passed",
+      "detail": "Only exact unnamed DATA stream; stream-query errors refuse, never Unknown-to-absent."
+    },
+    {
+      "id": "invalid-name-and-deadline",
+      "implementation": "bounded original inherited window",
+      "test": "native negatives passed",
+      "detail": "No extra budget or implicit recovery; native success updates location before post-check failure."
+    },
+    {
+      "id": "cross-volume",
+      "implementation": "native target parent volume checked",
+      "test": "C247287385 vs D3089487301 refused",
+      "detail": "No source deletion or copy fallback, target leaf absent; two new exact D test roots removed by guards."
+    },
+    {
+      "id": "same-parent-no-op",
+      "implementation": "native parent identity checked",
+      "test": "native no-op/same-parent counterexample passed",
+      "detail": "Cannot call same original directory a custody transition, even a new leaf spelling."
+    },
+    {
+      "id": "MSVC-product",
+      "implementation": "clean final38Rust compiled",
+      "test": "exit0/69640ms;93warnings retained",
+      "detail": "Final clean source debug bins; no release timing/signed candidate claim."
+    },
+    {
+      "id": "full-original-adapter",
+      "implementation": "incomplete",
+      "test": "not run",
+      "detail": "Single-file mechanism only; no completeSD, intent/current-refCAS, directory/tree custody/work copies/restore/Closed."
+    },
+    {
+      "id": "H-real-GUI",
+      "implementation": "incomplete",
+      "test": "prior empty-host evidence reused",
+      "detail": "No official Owner/GUI integration acceptance."
+    },
+    {
+      "id": "S-D-production",
+      "implementation": "partial",
+      "test": "previous evidence reused",
+      "detail": "Full source-bound production/required family matrix not closed."
+    },
+    {
+      "id": "ordinary-fullSD-MSI",
+      "implementation": "not accepted",
+      "test": "no repeat",
+      "detail": "Ordinary SD environment missing; administrator MSI does not close ordinary MSI."
+    },
+    {
+      "id": "cleanup",
+      "implementation": "synthetic objects only",
+      "test": "all native success guards passed",
+      "detail": "No new account/Profile/Public/force; old rejected tree/Profile/Public/schema untouched; cache/evidence retained."
+    },
+    {
+      "id": "constraints",
+      "implementation": "maintained",
+      "test": "noW2/dualSID/publish",
+      "detail": "No official/daily config/PATH/policy changes; no real model/business sync."
+    }
+  ]
+}

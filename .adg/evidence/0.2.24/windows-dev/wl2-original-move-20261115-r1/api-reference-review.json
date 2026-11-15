@@ -1,0 +1,16 @@
+{
+  "primarySources": [
+    "https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileinformationbyhandle",
+    "https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-file_rename_info"
+  ],
+  "facts": [
+    "FileRenameInfo requires DELETE-capable original handle",
+    "ReplaceIfExists false refuses existing target",
+    "Rename stays on same volume; copy/delete fallback not implemented"
+  ],
+  "localSignature": "Pinned windows-sys0.61.2 FILE_RENAME_INFO and SetFileInformationByHandle reviewed, no dependency/feature upgrade",
+  "observed": "2026-11-15",
+  "allAccepted": false,
+  "webReferenceTextArchived": false,
+  "referenceLimit": "Official API URLs are references only; no fetched page text is archived in this round. Pinned windows-sys signature and actual native test outcomes provide the recorded direct evidence; no quote/download-digest claim."
+}

@@ -361,3 +361,20 @@ helper角色suite4项通过；O originals01中间4项通过，别名增量后的
 净6许可Windows文件，无共享trait/Cargo/安装器/Mac/旧lifetime改动；untracked旧schema保留。仅任务synthetic records/TempDir，成功guard清理，无新失败目录/account/Profile/Public/官方进程/force/日常配置或PATH策略写。旧7文件670767字节失败树及历史Profile/Public/schema自动审批拒绝保持，不重试不换机制；cache/制品/证据有意留，overallCleanupComplete=false。
 
 O完整同卷custody/current-ref CAS/恢复/Closed、H真实GUI原Owner生产路由、D其它完整helper family和S/D实机矩阵未完；普通MSI未验与完整SD/SACL普通令牌环境缺口保持，不重复同前提1314/外Job失败、不提升或缩范围凑过。allAccepted/productionExecuted/actualGUI=false；生产Start继续拒绝。无真实模型/业务同步/W2/双SID/发布。
+
+
+## 2026-11-15 W-L2单文件原对象句柄同卷移动（底层机制，非完整恢复）
+
+承接cf03db580/b8264f733，沿TEAM13/IMP139/r3/r2继续原允许native/test写集。先hypotheses01写入原句柄/不覆盖/同卷/保管门限定，再native01两项通过；hypotheses02针对已确认C/D不同卷追加native02单项；同原父目录不可当custody迁移的后继复核补guard/native03四项通过。后继same-parent说明在native03之后落盘，未倒签先置假设。4不同native用例/7成功执行，原生/编译firstError=null。
+
+代码d82e8493c9ce97ffa4c2f8097ddec2212d2a27b0与8958a59b80c95501ba2a0920cad3f4f228975573已分批push：file_move.rs保留DELETE-capable原文件句柄/父pin/准确卷fileID/有界2MiB原字节，拒reparse/多硬链/额外ADS或未知stream查询；精确currentSID私有目标目录同卷且不同原父对象。SetFileInformationByHandle/FileRenameInfo ReplaceIfExists=false对原句柄改名，native成功立即更新已知location/目标pin，再后验。错误/超时/Drop不自动copy/delete/覆盖/回滚原件；restore只回原路径同原对象，外部占用保留Unknown。native额外reader只为读回兼容原DELETE句柄，不给予原件外部写/删分享。
+
+实际same-volume往返卷/fileID及字节读回同一，准确目标占用和原路径外部编辑占用均raw183且两侧内容保持；测试仅显式清理自身哨兵后继续原handle恢复。C247287385与D3089487301实际跨卷target-parent在rename前拒绝，source不删不copy/targetleaf不建；原父目录samepath/不同leaf亦拒，不能把No-op当custody阶段。ADS/硬链/非法name/过期窗口拒绝。没有完整SD/安全同一性或真实custody正例，未动日常client。
+
+该对象只为单文件native机制，无OriginalSession/Closed资格；完整SD+持久move意图/current-refCAS、目录/整根custody/工作副本/全量恢复和生产调用点均未实现，production capture/Start为0，原r3 gate不改。普通token1314不重跑，不提升/改旧ACL或策略，不把当前READ_CONTROL字段冒完整SACL。没有共享trait/Cargo/features/release/Mac/安装器改动，净4许可文件。
+
+最终clean8958a59b8 MSVC debug全部bins0/69640ms/93warnings原样；native03/product01每组38Rust逐字对最终，native01/02旧guard/test输入不冒final。native01和final03实际EXE SHA分立；native02 EXE被后继覆盖前未独立记hash，明确缺口不套用final值。Desktop75458560/SHA2560f84dc04d7af715abe9eef3415e26e1ec72beb056e569bc124f28352a2330ce6；ocxd5398528/SHA256db4a9b85d163ac659a51cf8a04cc837e9e16d12ebc5820a31edc4a813e5badf1；ocx306176/SHA25624a8a5941ceaeaab283c7816e9341e4ae7c8311b61217fbf943917cb4f37136c。非签名release/冻结候选。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-original-move-20261115-r1/含前置假设/原native四组source/raw/stdout/stderr/result、API参考/本地签名限制、finalsource/Gitblob/制品、14项完整表/清理限制/report/result与verify_evidence.py。API URL仅参考无下载正文hash声明；原生结果直接证明当前操作。离线首轮PS1查Rust-only map KeyError/1保留replay-attempt01；修对actualcaptured源比较后replay0，原native断言/结果不改。
+
+成功7个C任务fixture根和2个准确新D空cache根由原guard收尾，D仅remove_dir新空leaf不递归父根；无失败树/newaccount/Profile/Public/force/官方进程/日常PATH配置策略写。原7文件670767字节失败树及历史Profile/Public/schema自动审批拒绝不重试/不换机制；cache/制品/证据留用，overallCleanupComplete=false。O完整恢复、H真实GUI、S/D全production/family、普通SD/SACL及MSI验收缺口保持；allAccepted/productionExecuted/actualGUI=false，不W2/双SID/业务同步/模型请求/发布。
