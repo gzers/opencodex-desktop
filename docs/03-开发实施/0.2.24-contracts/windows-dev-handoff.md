@@ -505,3 +505,12 @@ successor-remaining.json记录仍缺已知闭合历史集合/前驱登记/newcap
 范围外精确请求见该轮shared-status-deadline-request-r2.json：同一次真实native状态采样原5秒须同时传fetch/fetch_light/recovery/debounce，现fetch自起5秒且client_recovery无期限，仅补recovery_at仍扩预算。Windows显式期限接收器已给，旧共享调用保守Required/Unknown；不擅改共享。前轮纯route declaration解析器提取请求仍有效，完整官方副作用/NativeLease未完，实际StopReceipt/ClosedEligibility生产组合未实跑。
 
 用户后续在marenben原普通桌面运行不可变0c实际GUI入口：SID1003/session7/elevated=false、bootstrap与挂起原broker noJob；observer79512/raw101/0过1败，首错D/gui-normal.json缺席，GUI先admission refused/rawNone。14份sameSID导出complete真且逐字摘要核对，证据归wl2-real-gui-run-20261115-r1；原scene与broker40588/FILETIME134392249926679744保留，退出未确认，不填0、不按PID杀。静态明确Windows gui_probe把sandbox home错当Token Profile，后继Windows范围修，不改共享platform或削弱sandbox/路径/超时。H/S-D完整生产、普通MSI、CAP/trust非空前提和历史清理未验；allAccepted/productionExecuted/actualGUI/startOpen=false。不官方/日常策略修改、无业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 r4真实GUI令牌Profile修复
+
+源码6e312f02270f247d2f440ec369385e523a4a8043已推，treef669be64f862007a8b148bd2bfc99e1f71c5e528。只改Windows gui_probe，既有shared platform不改；使用原Token Profile验证任务根、sandbox home继续隔离，保留所有原来源/令牌/窗口/5秒断言并逐项输出准入失败。子进程反例开启sandbox且伪造USERPROFILE，实际原Profile仍独立；定向7过4忽略/raw0（helper由父测试执行），220268ms；最终clean custom-protocol MSVC debug全部bins0/101991ms/lib69warnings，99产品输入/55Rust对最终、前端32文件不变。原0c失败证据已于121f1739a推送；新原始source/log/result/制品/准备脚本/完整矩阵归wl2-real-gui-profile-fix-20261115-r1。
+
+新入口尚待marenben原普通桌面执行，未取得结果，不计通过。 新入口C:\Users\Public\ocx-h024-actual-gui-fixed-20261115-r1\launch-h024-actual-gui.cmd。
+
+Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927；ocxd5398528/b80dd57317c91700aee4c77de1023f53b6da0f2c38e6760006db4b6abf8d3a67；ocx306176/430e193f62cc68f96e945e381758d9c761379831cbd2fe5c5990226b770712d8。prepare01短SHA调用被原严格检查先拒绝，prepare02完整SHA通过，未创建旧场景替换或放宽守门。新Public根1、无账户/Profile/日常策略变更、无删除/旧拒绝重试，旧失败broker40588退出仍未知，overallCleanupComplete=false。共享纯route声明提取和Status同采样原5秒接口最小请求未解决；完整官方副作用/NativeLease/H-S-D生产、普通MSI及CAP/trust环境/历史清理未完。Start拒绝，不官方/日常配置修改、无业务模型请求/W2/双SID/发布。

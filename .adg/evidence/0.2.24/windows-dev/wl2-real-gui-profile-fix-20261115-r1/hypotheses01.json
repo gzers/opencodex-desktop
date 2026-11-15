@@ -1,0 +1,13 @@
+{
+  "sourceHead": "03d8d4d69db40480fb200944896824c52572fbbd",
+  "priorFailure": "../wl2-real-gui-run-20261115-r1/receive-result.json",
+  "hypotheses": [
+    "Actual GUI admission fails before pipe IO because platform::home_dir returns sandboxRoot/home under enabled sandbox; it cannot be used as real token Profile for task-base.parent comparison.",
+    "The existing Windows current_user_profile TokenUser/GetUserProfileDirectoryW receiver supplies real Profile independently of sandbox and USERPROFILE environment. Use it only in the Windows GUI probe, retain all sandbox, native token, exact source, main URL, window and 5s assertions.",
+    "A child test with sandbox enabled and deliberately different USERPROFILE must observe platform home as sandbox/home while the probe's profile remains the original native Profile. No desktop, policy, source ACL or official process is needed for this counterexample.",
+    "Report every independently evaluated failed admission predicate to stderr without following an unadmitted path, so any next desktop failure is diagnosable from one same-SID export. No fallback or permission grant from diagnostics.",
+    "Original failed0c scene and its empty broker remain retained. Do not retry the original immutable launcher, replace its pinned manager image, force-kill/adopt the old process or erase its failure. New desktop run uses a new task root and exact fixed inputs."
+  ],
+  "allAccepted": false,
+  "scope": "Windows owner-host GUI probe, native directed tests and own task launcher only"
+}
