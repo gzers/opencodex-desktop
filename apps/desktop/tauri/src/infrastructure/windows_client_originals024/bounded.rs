@@ -526,6 +526,55 @@ fn projections(file: &File, deadline: Instant) -> Result<Vec<Projection>, QueryE
     time(deadline)?;
     Ok(out)
 }
+/// Native observations from the caller's exact retained file handle. The
+/// returned serde data grants no permission; a consumer must retain that handle
+/// and independently requery at every boundary. Never called on old Full data.
+pub(super) fn native_stamp(file: &File, deadline: Instant) -> Result<SnapshotData, QueryError> {
+    time(deadline)?;
+    let token = current_identity().map_err(|e| err("TokenUser", 0, e))?;
+    if token.elevated {
+        return Err(err("TokenElevation", 0, invalid("ordinary token required")));
+    }
+    let id = native_id(file).map_err(|e| err("GetFileInformationByHandle", 0, e))?;
+    let a = projections(file, deadline)?;
+    if a != projections(file, deadline)?
+        || native_id(file).map_err(|e| err("identity-recheck", 0, e))? != id
+    {
+        return Err(err(
+            "bounded-stamp-drift",
+            0,
+            invalid("retained object changed"),
+        ));
+    }
+    let projections = a
+        .into_iter()
+        .map(|structure| {
+            let structure_digest = hash::sha256_hex(
+                &serde_json::to_vec(&structure)
+                    .map_err(|_| err("stamp-serialize", 0, invalid("projection")))?,
+            );
+            Ok(ProjectionRecord {
+                requested_mask: structure.mask,
+                native_status: 0,
+                structure,
+                structure_digest,
+            })
+        })
+        .collect::<Result<Vec<_>, QueryError>>()?;
+    let data = SnapshotData {
+        scope_id: BOUNDED_SECURITY_SCOPE.into(),
+        security_policy_digest: Policy::fixed()
+            .digest()
+            .map_err(|e| err("policyDigest", 0, e))?,
+        volume: id.volume,
+        file_id: id.index.to_string(),
+        projections,
+        audit_sacl_assurance: "excluded-unknown".into(),
+        full_security_proven: false,
+    };
+    data.validate().map_err(|e| err("stamp-structure", 0, e))?;
+    Ok(data)
+}
 impl BoundedAccessV1 {
     pub(super) fn snapshot_data(&self) -> io::Result<SnapshotData> {
         let projections = self

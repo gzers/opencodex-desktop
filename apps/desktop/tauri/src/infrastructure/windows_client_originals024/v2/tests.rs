@@ -8,14 +8,14 @@ fn snapshot(id: &str) -> serde_json::Value {
     }).collect::<Vec<_>>();
     serde_json::json!({"scopeId":"windows-bounded-access-v1","securityPolicyDigest":Policy::fixed().digest().unwrap(),"volume":1,"fileId":id,"projections":entries,"auditSaclAssurance":"excluded-unknown","fullSecurityProven":false})
 }
-fn manifest_value() -> serde_json::Value {
+pub(super) fn manifest_value() -> serde_json::Value {
     let sid = current_identity().unwrap().sid;
     serde_json::json!({"schema":"windows-client-originals-v2","documentKind":"manifest","sessionId":uuid::Uuid::new_v4().to_string(),
         "binding":{"sid":sid,"profile":{"path":"C:/fixture/Profile","volume":1,"fileId":"1"},"data":{"path":"D:/fixture/D","volume":2,"fileId":"2"},"home":{"path":"C:/fixture/H","volume":1,"fileId":"3"},"installation":{"path":"C:/fixture/I","volume":1,"fileId":"4"},"sourceDigest":"a".repeat(64),"currentDigest":"b".repeat(64),"owner":{"pid":1234,"creationFiletime":"123456789"}},
         "securityPolicy":Policy::fixed(),"securityPolicyDigest":Policy::fixed().digest().unwrap(),
         "nodes":([".codex",".grok"].map(|relative|serde_json::json!({"relative":relative,"kind":"Absent","identity":null,"parentIdentity":{"volume":1,"fileId":"1"},"securityProjectionSnapshot":null,"parentSecurityProjectionSnapshot":snapshot("1"),"length":null,"contentDigest":null,"children":[],"custodyIdentity":null})))})
 }
-fn bundle(m: serde_json::Value) -> (Vec<u8>, Vec<Vec<u8>>, Vec<u8>) {
+pub(super) fn bundle(m: serde_json::Value) -> (Vec<u8>, Vec<Vec<u8>>, Vec<u8>) {
     let manifest = serde_json::to_vec(&m).unwrap();
     let parsed: Manifest = json(&manifest, 1024 * 1024).unwrap();
     let mut phases: Vec<Vec<u8>> = Vec::new();

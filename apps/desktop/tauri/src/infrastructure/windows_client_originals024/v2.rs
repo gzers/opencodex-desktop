@@ -318,13 +318,19 @@ fn current_for(t: &Tip) -> Current {
 }
 /// Only native private record handles and pending data. There is deliberately no
 /// cast/constructor to v1 Full, PartialDiagnostic, OriginalSession or Closed.
+mod current;
+pub(super) use current::BoundedCurrentV2;
 pub(super) struct PendingV2 {
     directory: PinnedDirectory,
     records: Vec<PrivateRecord>,
+    tip: Tip,
     pub(super) terminal_record_only: bool,
     pub(super) current_matches: bool,
 }
 pub(super) fn read_pending(directory: &Path) -> io::Result<PendingV2> {
+    read_pending_impl(directory, true)
+}
+fn read_pending_impl(directory: &Path, check_current: bool) -> io::Result<PendingV2> {
     let pin = PinnedDirectory::open_private(directory)?;
     let mut names = std::fs::read_dir(directory)?
         .map(|e| e.map(|x| x.file_name()))
@@ -366,11 +372,11 @@ pub(super) fn read_pending(directory: &Path) -> io::Result<PendingV2> {
     if expected != names {
         return Err(invalid());
     }
-    let matches = if has_current {
+    let matches = if has_current && check_current {
         let mut current = PrivateRecord::open(&directory.join("current.json"), 4096)?;
         let value: Current = json(&current.read()?, 4096)?;
         let good = value == current_for(&tip);
-        records.push(current);
+        drop(current);
         good
     } else {
         false
@@ -381,6 +387,7 @@ pub(super) fn read_pending(directory: &Path) -> io::Result<PendingV2> {
         directory: pin,
         records,
         terminal_record_only: tip.terminal_record_only,
+        tip,
         current_matches: matches,
     })
 }
