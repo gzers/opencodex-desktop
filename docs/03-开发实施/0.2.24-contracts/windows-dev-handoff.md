@@ -564,3 +564,14 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 证据wl2-r5-artifact-observations-20261116-r1包含首编E0616/E0624/raw101/tests0/无新EXE原件；WorkingImage私有字段改为自身只读view，RootTree仅originals内部可见。随后24过1旧数据回放忽略/raw0（4native sealed/current＋20共享pure），None/错routes、PreStop漂移/归档foreign/config未知/产物同名目录等拒绝；合成pids/time/binding不签官方身份。最终clean custom-protocol debug bins0/162986ms，118产品输入/72Rust对最终，三制品见product01-artifacts。6scene/53文件132595字节私有内容ZIP核验原件留；偶发自有placeholder创建后精确移除在tool-edit-record，不动旧拒绝。无账户/Profile/Public/GUI/官方日常策略改，overallCleanupComplete=false。
 
 尚需官方初始化、原NativeLease/claim根移动交接、canonical停止快照/typed恢复Closed和原包H-S-D生产；Stopped目前只是native数据view。旧broker/Public8拒读、普通MSI/CAP-trust/历史清理保持，已有route/sample/Bun/真GUI空宿主复用不重跑，不业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-16 claim与根移动原生阻塞及最小后继决定
+
+源码3e19075846dfea81ba8392bb60a3d3031afbf116/tree0f89de855699082084baa7b3290caad5e98419f9，原DLL/route/status/artifact前轮证据持续。metadata-only父根原FD/ID/8投影/private读回已解决与RootTree DELETE句柄共存，真实目录移动也可保留该元数据句柄；N/L/K不改。真实claim文件打开则rootrename raw5，即使readonly/shareDelete且无SQLite锁：library07完整5格baseline/meta成功，file/both/lease失败5，diag raw0非后三格成功。微软原API目录内无openfile条件记录primary-reference-review。失败前缀中library01夹具多余rootpin32、library02实际parentpin32、library04夹具journalprivate、library05/06真正rename5均保留分列，未追溯放行。原shareDelete实验无效已撤回strict。
+
+新不可覆盖证据wl2-r5-claim-relocation-20261116-r1含8轮原输入/log/result/EXE、完整矩阵与scene清单、最后源码制品、claim-handoff-decision-request.json。最终library08为10过2忽略，namespacechild实际由父测试执行；continuous-open-claim根移动正例明确blocked/ignored且原断言未改，实际raw5失败保留，不计接受。最终MSVCcustom-protocol debug bins0/77327ms，118产品输入/72Rust对源，三制品见product01-artifacts。30scene/155文件观察/1217258字节ZIP内容核验原现场留，非NTFS元数据克隆，无控制器删/旧拒绝重试，overallCleanupComplete=false。
+
+需要明确Windows claim交接计划。claim-only-writer-source已核原tgz中main-account.ts:463/394凭据写入及claim helper，不能把N/L/K当claim自动替代，未执行凭据/网络请求。优先评估保持原root/两稳定锁原位与claim连续排他、其它节点同卷custody的新canonical节点意图/恢复规则；若选typed Pending空窗必须另证claim-only writer排他，不能仅保留N/L/K便放行。两方案均未实施，不自动drop/reopen/force/POSIX/copy-delete，不开Start。
+
+共享route/同采样5秒已消费，完整NativeLease根交接/初始化/ownerreceipt、canonical stopped/typed restore、broker原Owner与原包H-S-D/Closed采样正例仍待，旧broker/Public8拒读/B2CAP-trust/普通MSI/历史清理保持。无官方日常配置/业务模型请求/W2/双SID/发布；本轮仅在具体方案变化处回交。

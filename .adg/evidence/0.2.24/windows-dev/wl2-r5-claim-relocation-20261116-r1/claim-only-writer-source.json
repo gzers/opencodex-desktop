@@ -1,0 +1,44 @@
+{
+  "files": [
+    {
+      "path": "codex/main-account.ts",
+      "bytes": 39553,
+      "sha256": "8f4f8d3ebc23d1359d91359dddd121383d5b1a1988276443d0f01f068515f717",
+      "expandedEqualsFixedOfficialTgz": true
+    },
+    {
+      "path": "codex/native-main-claim.ts",
+      "bytes": 7745,
+      "sha256": "f68443d088f08ef8b84e663939d83d8010157a7a6377eb85142e5c09f8247931",
+      "expandedEqualsFixedOfficialTgz": true
+    },
+    {
+      "path": "config/atomic-write.ts",
+      "bytes": 24476,
+      "sha256": "150894eb3383228f80fe0ee4ffb386c1b6aebfef432654027d74b74dd7f2ffb0",
+      "expandedEqualsFixedOfficialTgz": true
+    }
+  ],
+  "officialTgzSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "officialModified": false,
+  "officialExecuted": false,
+  "callChain": [
+    {
+      "file": "codex/main-account.ts",
+      "line": 463,
+      "observation": "reauth commit enters withNativeMainExclusiveClaim, checks traffic/snapshot then calls persistNativeMainReauthTokens"
+    },
+    {
+      "file": "codex/main-account.ts",
+      "line": 394,
+      "observation": "persistNativeMainReauthTokens calls atomicWriteFile(expected.path, new credential JSON) with unchanged-snapshot beforeRename guards, no N/L/K acquisition in this function"
+    },
+    {
+      "file": "codex/native-main-claim.ts",
+      "line": 167,
+      "observation": "exclusive helper opens claim SQLite, BEGIN EXCLUSIVE, invokes operation and finally releases; it does not itself acquire N/L/K"
+    }
+  ],
+  "inference": "Holding N/L/K alone is not an established replacement for claim exclusion: an actual official credential-write path uses claim. Any claim-unheld interval requires independent source/ownership proof or a different custody design; do not implement simple gap on assumption.",
+  "dynamicCredentialWriteExecuted": false
+}

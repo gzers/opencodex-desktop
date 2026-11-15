@@ -1,0 +1,7 @@
+{
+  "library01":{"rawExit":101,"passed":0,"failed":1,"rawWin32":32,"line":235},
+  "actualFirstFailure":"Fixture kept create_private_directory's generic read/deny-delete .codex pin while requesting RootTree DELETE handle; RootTree capture failed before NativeLease acquisition",
+  "fix":"Drop only fixture's redundant directory pin after creating its private claim file and before RootTree capture. Preserve RootTree original DELETE authority. Then run identical intended lease-coexistence assertion to isolate actual component conflict.",
+  "note":"First failure does not yet prove the NativeLease parent conflict; preserve original scene/EXE/log and distinguish fixture from production cause",
+  "accepted":false
+}

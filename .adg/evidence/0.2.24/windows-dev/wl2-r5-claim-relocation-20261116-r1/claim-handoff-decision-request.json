@@ -1,0 +1,41 @@
+{
+  "contract":"TEAM15/IMP141/r5",
+  "classification":"Windows claim/root relocation plan decision; no new shared API assumed",
+  "facts":{
+    "baselineRootMove":true,
+    "metadataOnlyRootMove":true,
+    "readOnlyClaimFileShareDeleteRootMove":false,
+    "readOnlyClaimFilePlusMetadataRootMove":false,
+    "nativeClaimLeaseRootMove":false,
+    "failedNativeMoveRawWin32":5,
+    "evidence":"library07/stdout.log, predecessor actual failures library05/library06; scenes retained",
+    "noAutomaticAlternativeMoveDeleteOrPolicyChange":true
+  },
+  "requestedDecision":{
+    "question":"Choose a Windows custody/claim plan that also covers the actual claim-only credential writer. A claim-unheld interval with only N/L/K held is NOT established safe.",
+    "preferredPlanToEvaluate":"Retain the exact original client root directory and two stable lock files in place under actual claim exclusion; move other original nodes to same-volume private custody and provide controlled working nodes. Explicitly define canonical node intents/progress/identity restoration before implementation, with no old record migration.",
+    "sourceCounterexample":"claim-only-writer-source.json: main-account.ts:463 reauth -> exclusive claim -> persistNativeMainReauthTokens:394 -> atomicWriteFile; those bodies/helper do not acquire N/L/K. Source-only observation, no credential write executed.",
+    "pendingIntervalProposalStatus":"Conditional alternative only, missing sufficient exclusion proof; sequence below is requirements, not an authorized or recommended grant.",
+    "proposedMinimumSequence":[
+      "Check original Owner/source/H/current/native phase/whole tree/8 projections and exact claim identity under original full lease within original action deadline; publish existing canonical move intent and CAS before first move.",
+      "Enter private typed ClaimRelocationPending: no Ready/restore/Stopped/Closed/Start/Restart or general NativeLease callback permission. Release and close only this lease's claim file handle/ranges; original N/L/K objects/ranges and RootTree original DELETE handle stay retained.",
+      "Move only the exact original root via retained RootTree and canonical intent; verify original full tree IDs/bytes/8 projections at actual custody target. Any collision/read failure/drift leaves Required/pending and retained scene, no compensating overwrite or forced retry.",
+      "Reopen/reacquire the exact original claim at custody only from borrowed actual RootTree native facts, comparing original fileID/content/8 projections and exact private parent; no JSON/PID/path-only adoption. Recheck N/L/K/source/owner/phase, then acquire the exact initial working claim before any resumed permission.",
+      "Declare the claim-unheld interval honestly. Prove all relevant official writers cannot mutate originals through claim alone or else select another explicit custody design. Do not infer claim exclusion from N/L/K or hashes without this source/behavior proof.",
+      "Only after complete source/ownership/side-effect/exit/phase integration and original budgets may the production gate open. Interrupted interval remains pending/Required, never serialized as successful native authority."
+    ],
+    "mustKeep":["same-volume original objects, no copy/delete identity substitute", "original30/5/10/Restart30Stop10", "no native permission in gap", "unknown refusal/failed scene retention", "r4 fixed8/excluded audit semantics", "single canonical journal/current CAS", "ordinary original token and current policy"],
+    "alternativeIfClaimMustStayContinuouslyHeld":"Explicitly redesign custody so the open claim's directory is not renamed (for example controlled node-level custody with original directory identity retained). This needs a reviewed plan/progress schema, not an undocumented fallback.",
+    "notRequested":["privilege/elevation/impersonation", "new timeout or release flag bypass", "POSIX rename fallback", "closing unrelated handles", "official package modification", "W2/dualSID/release"]
+  },
+  "currentBehavior":{
+    "publicStartRefused":true,
+    "workingUnchangedVetoRetained":true,
+    "claimFileSharingRestoredToOriginalStrict":true,
+    "metadataObservationCoexistenceFixRetained":true,
+    "continuousOpenClaimPositiveTest":"original assertions preserved as explicitly blocked ignored case, not counted passed; original failed executions retained",
+    "automaticClaimHandoffImplemented":false
+  },
+  "independentRemaining":["official first-use initialization and owner receipt", "typed side-effect restoration and canonical stopped observation", "production broker/official Owner/H-S-D and original package loop", "actual Closed/concurrent Owner sampling positive proofs", "ordinary MSI/B2 CAP-trust and historical cleanup"],
+  "allAccepted":false
+}

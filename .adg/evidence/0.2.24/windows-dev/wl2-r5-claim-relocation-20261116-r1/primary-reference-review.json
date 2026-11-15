@@ -1,0 +1,9 @@
+{
+  "retrievedDate":"2026-11-16 Asia/Shanghai",
+  "source":"Microsoft FileRenameInformation (ntifs.h) documentation",
+  "url":"https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/ns-ntifs-_file_rename_information",
+  "shortExcerpt":"No files in the directory can be open.",
+  "scope":"Primary reference corroborating tested directory rename restriction; not a native execution certificate or approval to use POSIX semantics/force/release gap",
+  "testedEvidence":"library07 five independent cases: baseline and metadata-only move, open claim file and full lease return raw5 even share-delete experiment",
+  "accepted":false
+}

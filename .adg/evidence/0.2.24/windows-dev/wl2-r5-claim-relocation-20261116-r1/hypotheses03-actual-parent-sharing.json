@@ -1,0 +1,6 @@
+{
+  "library02":{"rawExit":101,"passed":0,"failed":1,"rawWin32":32,"line":248},
+  "fact":"After dropping only the redundant fixture directory pin, RootTree original DELETE handle is captured successfully. NativeLease acquire still fails32, isolating generic parent READ_DATA/deny-delete handle incompatibility.",
+  "fix":"Only claim-parent metadata observation uses READ_CONTROL|FILE_READ_ATTRIBUTES, share READ|WRITE|DELETE, retains original directory handle ID/8projections/private SID and external ancestor; exact path/object readbacks remain mandatory. N/L/K strict parent sharing remains unchanged. Claim file share remains unchanged until an actual root rename test proves whether it requires another specific adaptation.",
+  "accepted":false
+}
