@@ -327,3 +327,20 @@ MSVC debug bins product01 exit0/179337ms/69原warnings。query01/library04/super
 清理：native01原失败后仅其exact synthetic Job guard显式force，native02另一个反例只对已空exactJob请求force，分开记账不补正常退出。成功synthetic roots/测试junction按原断言清理，无新账号/Profile/Public/官方进程。失败树C:/Users/15119/AppData/Local/Temp/ocxd024-process-18124-1的7文件670767字节逐字归档核验后，exact Remove-Item自动审批blocked by policy，命令未执行，不重试/替换机制，原树保留。历史Profile/Public/schema/普通MSI缺口保持，overallCleanupComplete=false。
 
 O完整custody/current-ref CAS/恢复/Closed、H真实GUI/原Owner生产接线、S完整实机proof、D全family仍未完成；普通完整SD含SACL正例环境未满足，生产Start继续拒绝。allAccepted=false、productionExecuted=false、actualGUI=false；无官方2.99/日常PATH配置策略写，无真实业务同步/模型请求，不W2/双SID/发布。
+
+
+## 2026-11-15 W-L2原根实际argv与Node→Bun/Service来源（增量，仍非生产通过）
+
+承接eb8d7e949/88d747a3d继续TEAM13/IMP139/r3。先记hypotheses01，再只读固定官方内tgz b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c八份源：真实bin/ocx.mjs在101/103/1557/1614行定义CLI路径、43字符base64url内部proof、Node到Bun转交。旧len3保守语法不支持真实官方路径，本轮按准确来源补实现，不以进程名/exit授权。
+
+代码三笔已推codex/024-windows-native：66c3a3e97d83488110e72bb1e34a10879ded5ea9在原CREATE_SUSPENDED句柄上resume前读实际argv，沿原有界原生解析并保留时点；a7025bb89fb7f730eee23da2e9bfedd9e3b80b11绑定原Node→Bun父代次/镜像fileID/currentsource/port及query动作捕获阶段，Service必须为typedReady后原prestop监听代次；75c0f7562f4d60fd0fbb704dc08dcf0cd3d47785新增定向入口。净6许可文件；不改共享trait/HMAC/预算/官方/日常配置。
+
+proof参数只验准确语法形状，不另做HMAC、不将参数当许可证；原native父链/准确固定bin和CLI源码/Job历史/current是另行必需条件。原Bun startargv不会在Stop改成stop，查询phase从原Owner捕获时点绑定。已知Service若缺prestop原监听/身份冲突直接Err，不能吞未知改Launcher；只有service状态确实未建立是None。OtherRequired及sentinel/console/priority完整helper来源仍Unknown，sc qc等未扩为诊断；Service/Launcher非零仍否决。
+
+native01挂起原根argv/quote/Unicode/退出后原像1项、query01实际query argv/parent/raw1060/1保留1项、library01精确官方参数语法与漂移拒绝1项通过。fixture没有官方source仍Unknown。library01后根据hypotheses02修Ready未知不得降级，最终pure grammar与test片段逐字相同，reused-pure-scope明确只复用纯检查；最终Ready运行体未生产验。未重复未受影响S/H/CLI/MSI/SD旧前提。
+
+最终MSVC debug全部bins exit0/156419ms，72原warnings保持。product01实际eb8d7e949+dirtydiff，各36Rust与最终源逐字一致；native/query实际15编译输入匹配，另两份D/Owner捕获源码后继修正，不冒全36匹配；中间库测试EXE与原nativeEXE摘要在替换前准确记录。Desktop75459072字节/SHA256 a885081683e23764eb824436dd4e78d8661b7335b829a2d9dc94b2cb40191587；ocxd5398528/SHA256 c7010fa17aeea92483bf38abb2963c271454a8ecc5d2fa4a62c0bdbd7fc6b812；ocx306176/SHA256 258bee19a51f09065bc2ead8074be80e5efb7beb735593a12967657c0d1e35f7。非release/签名冻结候选。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-d-family-source-20261115-r1/：假设/八源原字节及SHA、4组执行源/rawstdout/stderr/result、最终source/Gitblob/制品、scope复用边界、16项完整表、report及verify_evidence.py；离线replay0不等于生产角色正例。
+
+本轮新synthetic roots正常退出/原Fixture清理断言过，新force/account/Profile/Public/官方进程/日常PATH写均0；工程cache/制品证据留存。上一批7文件670767字节失败树和历史Profile/Public/schema自动审批拒绝均不重试/不替换机制，overallCleanupComplete=false。O完整custody/currentrefCAS/restore/Closed、H真实GUI原Owner生产路由、OtherRequired全family、S/D完整实机proof及普通完整SD/SACL环境仍未完成；生产Start拒绝，allAccepted/productionExecuted/actualGUI=false。无真实模型/业务同步/W2/双SID/发布。

@@ -1,0 +1,5 @@
+{
+  "review": "While library01 compiles, review found that is_ok_and on confirmed_service_generation would erase missing/invalid pre-stop listener evidence into Launcher. Any unknown Ready generation must veto rather than fallback.",
+  "plannedFix": "Return explicit Option only for truly absent service state. For known service, missing/contradictory listener evidence is Err and must propagate. A different already-confirmed service generation also refuses the direct original Bun role. No Rust input changed during active library01.",
+  "allAccepted": false
+}

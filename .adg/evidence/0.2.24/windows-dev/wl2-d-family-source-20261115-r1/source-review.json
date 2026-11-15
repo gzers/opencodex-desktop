@@ -1,0 +1,20 @@
+{
+  "launcher": {
+    "path": "bin/ocx.mjs",
+    "lines": [
+      101,
+      103,
+      1557,
+      1614
+    ],
+    "observedGrammar": "Bun cliPath + one internal43-char base64url launch-proof argument + original Node process.argv.slice(2), excluding caller-injected proof-prefix arguments",
+    "authority": "Proof shape alone is not authenticated; retained original rootNode/process/image/actualargv -> actual Bun native parent chain plus fixed current script sources mandatory. No new HMAC verifier introduced."
+  },
+  "publicPlan": "Shared LaunchPlan currently starts exact Node bin/ocx.mjs start --port canonicalu16. Native original root argv captured suspended, not re-created from IPC inputs.",
+  "phase": "Original Bun argv stays start even if it later creates a query while stopping. Child launch phase derives from the original owners capture timestamps; it must not require changing the original parent argv to stop.",
+  "service": "Only same native generation in the original pre-stop listener set, obtained after typed Ready/current validation, is Service. Other directly proven Node->Bun launcher descendants remain Launcher/raw0. No arbitrary OtherRequired constructor added.",
+  "remainingHelpers": "Full source/argv/call-site proofs for sentinel,OS console/priority/other helpers still require implementation/actual source-bound history; unknown helpers remain veto including raw0.",
+  "readonlyCommandContract": "SCM query and Scheduler exact query remain the only diagnostic grammars; fixed source also contains sc qc but no acceptance expansion is made without required concrete argv/stage evidence and contract increment.",
+  "secrets": "Internal launch-proof value is retained only as existing private native command data; no value copied to this source review, new logs, IPC reply or persisted authority.",
+  "allAccepted": false
+}
