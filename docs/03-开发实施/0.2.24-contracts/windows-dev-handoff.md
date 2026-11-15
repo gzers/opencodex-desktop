@@ -537,3 +537,12 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 私有归档根ocx024-gui-archive-36ed4617-000c-4efa-9975-49f9e1b29654，Profile ZIP SHA5cd6ec4362e8d057b3bf01f0ae0e48956e303f15bff2705a45ab35dd68633200，Public ZIP SHA5da2e4d3838b922d1ad601eed039f469abac93f293f41b61f0a165e0230383a7，manifest SHA54b0e65d9a0427924add27d0d2fa88310ad69ce43805947a1ce39678d2bf9276；控制器不能读该私有归档，核验依据为原SID脚本回执，不冒独立复读或NTFS克隆。控制器首次路径转义损坏观察已明确排除并保留，修正绝对路径只读结果单列。cleanup入口rawexit未采集仍null，不补0。
 
 清理本身无error；本轮控制器首个实质缺口为Public8文件读拒绝，整体清理false。旧失败broker40588/失败树、账户/Profile根、历史自动审批拒绝均保留未重试。共享route纯解析器/Status同采样原5秒接口最小请求及完整副作用/NativeLease/H-S-D生产、普通MSI/CAP-trust环境仍待完成。公共Start拒绝，无官方/日常策略修改、业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-16 r5共享路由与原5秒同代采样
+
+已fetch合入main358e7fc47/docs676cec18a；代码merge76c4f7185唯一lifecycle冲突按合同保留完整Windows原文件/recovery_state_at。分批a6ea0c1ce/bc64e6f1001e8533e4ab845d24ce89edff9cdf86，tree19aa5deda9baffa02f63ab5d40bb658bd66dd66f，实际RoutePin固定H/config原生ID/8投影/内容并消费共享declaration，活跃source边界重验、Closed放pin/后继新声明，None/Err不转空，不借此允许副作用。状态同deadline外再用一次性私有内存回执固定原Slot/session/scope/stopped，recovery在原Owner锁内比较并全量Closed读回，未知/锁忙/过期不清恢复；原完整receiver保留，不重开5秒。
+
+新原证据wl2-r5-integration-20261115-r1含合并原冲突及摘要、4组原源/log/result、库EXE与产品SHA、真实缺Owner WindowsSource trace、官方9源来自固定bundle/tgz和SQLite参考。library01/02均54过0忽略/raw0（route11/status33/source4/native6），首错null；初轮成功反例stdout误称retained后纠正，实际Fixture清理无保留路径，原日志留。最终clean custom-protocol MSVC debug bins0/208243ms，最终114产品输入及68Rust对最终，前端32文件不变。完整状态/制品见final-status/product02-artifacts，不当release预算或真Closed正例。
+
+完整官方副作用/NativeLease及原包H-S-D生产仍未完，Start拒绝；已过trueGUI空broker/MSI-CLI/原件无影响项复用不重跑。无新账户/Profile/Public/GUI/官方，历史失败broker40588/现场/Public20文件8拒读和普通MSI/CAP-trust/旧拒绝清理未关，overallCleanupComplete=false，不改日常/官方，不业务模型请求/W2/双SID/发布。
