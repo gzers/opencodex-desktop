@@ -605,6 +605,12 @@ pub fn run() {
             });
             Ok(())
         })
+        .on_page_load(|webview, payload| {
+            #[cfg(windows)]
+            crate::infrastructure::windows_owner_host024::gui_probe::page_loaded(webview, payload);
+            #[cfg(not(windows))]
+            let _ = (webview, payload);
+        })
         .on_menu_event(|app, event| {
             use crate::modules::tray::*;
             let action = crate::infrastructure::tray_controller::native_menu_action(event.id().as_ref())

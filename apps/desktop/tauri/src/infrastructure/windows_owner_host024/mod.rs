@@ -5,7 +5,10 @@ use serde::{Deserialize, Serialize};
 mod continuity;
 #[cfg(test)]
 mod desktop_tests;
+#[cfg(test)]
+mod actual_gui_tests;
 pub mod empty_host;
+pub(crate) mod gui_probe;
 use std::{
     io,
     time::{Duration, Instant},

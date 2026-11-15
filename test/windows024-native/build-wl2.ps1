@@ -57,6 +57,9 @@ if($Mode -eq 'originals-creator'){
  $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--test','process','-j','1','wl2_originals_capture_guard_requires_original_creator_before_resume','--','--exact','--test-threads=1','--nocapture')
 }
 if($Mode -eq 'sd-stop'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_official_lifecycle024::','windows_supervisor024::','windows_diagnostic_roles024::','--test-threads=1','--nocapture')}
+if($Mode -eq 'actual-gui-lib'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','windows_owner_host024::','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'actual-gui-build'){$arguments=@('build','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--bins','-j','1')}
+if($Mode -eq 'actual-gui-observer-build'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','--no-run','-j','1')}
 $diff=git diff --binary
 if($Mode -eq 'original-reference'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'original-move'){
@@ -70,7 +73,7 @@ if($Mode -eq 'original-move-cross-volume'){
  $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_move_cross_volume_parent_refuses_without_copy_or_deleting_source','--','--exact','tests::wl2_move_cross_volume_parent_refuses_without_copy_or_deleting_source','--test-threads=1','--nocapture')
 }
 @{head=$head;diff=$diff;arguments=$arguments;rustc=(& $env:RUSTC --version);time=[datetime]::Now.ToString('o')}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath "$Evidence/source.json" -Encoding utf8
-$files=@(git ls-files --cached --others --exclude-standard -- 'apps/desktop/tauri/src/infrastructure/windows*' 'apps/desktop/tauri/src/infrastructure/mod.rs' 'test/windows024-native' 'apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs' 'apps/desktop/tauri/src/bin/ocxd.rs')
+$files=@(git ls-files --cached --others --exclude-standard -- 'apps/desktop/tauri/src/infrastructure/windows*' 'apps/desktop/tauri/src/infrastructure/mod.rs' 'test/windows024-native' 'apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs' 'apps/desktop/tauri/src/bin/ocxd.rs' 'apps/desktop/tauri/src/lib.rs')
 $manifest=@()
 foreach($relative in $files){
  $item=Get-Item -LiteralPath $relative

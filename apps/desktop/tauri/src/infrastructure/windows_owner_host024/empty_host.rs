@@ -335,9 +335,9 @@ fn event(out: &mut std::fs::File, name: &str, facts: serde_json::Value) -> io::R
     writeln!(out, "{}", serde_json::json!({"event":name,"facts":facts}))?;
     out.sync_all()
 }
-/// Synthetic manager helper consumes the exact public request codec and checks
-/// the original server handle against the independently held creation identity.
-/// It is a native component fixture, never a replacement for actual GUI proof.
+/// Restricted empty-broker transport consumes the exact public request codec
+/// and compares the native server with the independently held creation identity.
+/// Callers must separately prove actual GUI/official Owner; this grants neither.
 pub fn manager_probe(
     data: &Path,
     original: &super::super::windows_official_runtime024::ProcessIdentity,

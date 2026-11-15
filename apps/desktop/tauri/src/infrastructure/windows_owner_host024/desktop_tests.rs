@@ -16,7 +16,7 @@ use std::{
     process::{Child, Command, Stdio},
 };
 
-fn facts(p: &ProcessIdentity) -> serde_json::Value {
+pub(super) fn facts(p: &ProcessIdentity) -> serde_json::Value {
     serde_json::json!({"pid":p.pid,"creationFiletime":p.creation_filetime.to_string(),"sid":p.token.sid,"session":p.token.session_id,"elevated":p.token.elevated,"elevationType":p.token.elevation_type,"image":p.executable,"volume":p.executable_id.volume,"fileId":p.executable_id.index.to_string()})
 }
 fn parse_facts(v: &serde_json::Value) -> ProcessIdentity {
@@ -36,7 +36,7 @@ fn parse_facts(v: &serde_json::Value) -> ProcessIdentity {
         },
     }
 }
-fn wait_file(p: &Path, deadline: Instant) {
+pub(super) fn wait_file(p: &Path, deadline: Instant) {
     while !p.exists() {
         assert!(
             Instant::now() < deadline,
@@ -46,7 +46,7 @@ fn wait_file(p: &Path, deadline: Instant) {
         std::thread::sleep(Duration::from_millis(10));
     }
 }
-fn wait_exit(child: &mut Child, deadline: Instant) -> std::process::ExitStatus {
+pub(super) fn wait_exit(child: &mut Child, deadline: Instant) -> std::process::ExitStatus {
     loop {
         if let Some(status) = child.try_wait().unwrap() {
             return status;
@@ -55,7 +55,7 @@ fn wait_exit(child: &mut Child, deadline: Instant) -> std::process::ExitStatus {
         std::thread::sleep(Duration::from_millis(10));
     }
 }
-fn write_json(p: &Path, v: &serde_json::Value) {
+pub(super) fn write_json(p: &Path, v: &serde_json::Value) {
     let mut f = platform::create_new_private_file(p, 0o600).unwrap();
     serde_json::to_writer_pretty(&mut f, v).unwrap();
     f.sync_all().unwrap();
