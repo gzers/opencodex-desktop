@@ -154,6 +154,34 @@ impl Owner {
     pub(crate) fn original_native(&mut self) -> &mut OwnedRuntime {
         &mut self.native
     }
+    /// A generation observed in the original pre-stop listener set after the
+    /// typed Ready/current checks. A PID supplied by the caller cannot create it.
+    pub(crate) fn confirmed_service_generation(
+        &self,
+    ) -> AppResult<Option<native::ProcessIdentity>> {
+        let Some((pid, port, _)) = self.service.as_ref() else {
+            return Ok(None);
+        };
+        let listeners = self
+            .original_listeners
+            .as_ref()
+            .ok_or_else(|| unknown(()))?;
+        if !listeners
+            .listeners
+            .iter()
+            .any(|(l, _)| l.pid == *pid && l.port == *port && l.address.is_loopback())
+        {
+            return Err(unknown(()));
+        }
+        listeners
+            .family
+            .active_members
+            .iter()
+            .find(|p| p.pid == *pid)
+            .cloned()
+            .map(Some)
+            .ok_or_else(|| unknown(()))
+    }
     pub(crate) fn command_phase(&self, when: Instant) -> AppResult<&'static str> {
         if when < self.created_at || when > Instant::now() {
             return Err(unknown(()));

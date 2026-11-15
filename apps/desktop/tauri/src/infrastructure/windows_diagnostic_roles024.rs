@@ -1,4 +1,4 @@
-//! Strict source-bound query roles. No public/serde constructor for either the
+//! Source-bound original launcher/service/query roles. No public/serde constructor for the
 //! role or NormalExit. Raw process outcomes never become zero in this adapter.
 use super::{
     windows_official_lifecycle024::Owner,
@@ -105,16 +105,90 @@ fn role_exit_allowed(role: &ChildRole, exit: &ChildExit) -> bool {
         )
     )
 }
-fn exact_parent(argv: &[String], image: &Path, cli: &Path, phase: &str) -> bool {
-    // No substring/"any argument" admission: another script, eval, reordered
-    // phase, flags or extra arguments remain unknown until source-bound grammar
-    // for that precise invocation is implemented. This does not classify Bun
-    // or a required helper merely by name.
-    argv.len() == 3
+fn exact_root(argv: &[String], image: &Path, script: &Path) -> bool {
+    argv.len() == 5
+        && Path::new(&argv[0]) == image
+        && Path::new(&argv[1]) == script
+        && argv[2] == "start"
+        && argv[3] == "--port"
+        && argv[4]
+            .parse::<u16>()
+            .is_ok_and(|port| port.to_string() == argv[4])
+}
+fn exact_bun_chain(argv: &[String], image: &Path, cli: &Path, root: &[String]) -> bool {
+    // Shape validation only, never validation of the official launch capability.
+    // Authority additionally requires the retained original Node parent, exact
+    // current script/source objects, native Job history and original phase.
+    let proof = argv
+        .get(2)
+        .and_then(|v| v.strip_prefix("--ocx-internal-launch-proof="));
+    argv.len() == 6
+        && root.len() == 5
         && Path::new(&argv[0]) == image
         && Path::new(&argv[1]) == cli
-        && argv[2] == phase
-        && ["start", "stop"].contains(&phase)
+        && argv[3..] == root[2..]
+        && proof.is_some_and(|v| {
+            v.len() == 43
+                && v.bytes()
+                    .all(|b| b.is_ascii_alphanumeric() || b == b'-' || b == b'_')
+        })
+}
+fn root_source(owner: &mut Owner, deadline: Instant) -> AppResult<()> {
+    owner.check_current(deadline)?;
+    let root = owner.original_native().binding().process.clone();
+    let args = owner.original_native().original_arguments().clone();
+    let node = owner.selected_program().paths.node.clone();
+    let script = owner.selected_program().script.clone();
+    if !exact_root(&args.argv, &node, &script) {
+        return Err(refuse("原Node实际参数不是准确StartPlan"));
+    }
+    owner
+        .original_native()
+        .verify_retained_image(&root, &node)
+        .map_err(|e| refuse(e.to_string()))?;
+    if call_site(owner, &ChildRole::Launcher)? != owner.selected_program().image.bin_sha256 {
+        return Err(refuse("原Node启动脚本不是固定官方来源"));
+    }
+    Ok(())
+}
+fn bun_source(
+    owner: &mut Owner,
+    process: &ProcessIdentity,
+    deadline: Instant,
+) -> AppResult<super::windows_official_runtime024::CommandEvidence> {
+    root_source(owner, deadline)?;
+    let command = owner
+        .original_native()
+        .captured_command(process.pid)
+        .map_err(|e| refuse(e.to_string()))?
+        .clone();
+    let root = owner.original_native().binding().process.clone();
+    let args = owner.original_native().original_arguments().clone();
+    if command.parent != root || args.captured_at > command.captured_at {
+        return Err(refuse("Bun父代次不是原Node创建者或捕获阶段倒置"));
+    }
+    let selected = owner.selected_program();
+    let cli = selected.paths.package_root.join("src/cli/index.ts");
+    let bun = selected
+        .paths
+        .package_root
+        .join("node_modules/bun/bin/bun.exe");
+    let other_bun = selected.paths.bun.clone();
+    if !exact_bun_chain(&command.argv, &process.executable, &cli, &args.argv) {
+        return Err(refuse("Bun实际参数未逐项绑定原Node入口/port"));
+    }
+    if owner
+        .original_native()
+        .verify_retained_image(process, &bun)
+        .is_err()
+    {
+        owner
+            .original_native()
+            .verify_retained_image(process, &other_bun)
+            .map_err(|e| refuse(e.to_string()))?;
+    }
+    owner.check_current(deadline)?;
+    Ok(command)
 }
 fn exact_query(argv: &[String], image: &Path, system: &Path) -> Option<ChildRole> {
     let same = |a: &Path, b: &Path| {
@@ -165,7 +239,15 @@ fn call_site(owner: &Owner, role: &ChildRole) -> AppResult<String> {
             "src/service/windows-guarded-manager.ts",
             "04d0498217a31ba4791183f79ff2ba17ba5c2301484fb70ff113f14b6e6927dd",
         ),
-        _ => return Err(refuse("没有固定诊断调用点")),
+        ChildRole::Launcher => (
+            "bin/ocx.mjs",
+            "21b88153740ec422033b39caaa7735ba2c166dbf5d436c732ae3c5e01275cc7f",
+        ),
+        ChildRole::Service => (
+            "src/cli/index.ts",
+            "8d176afa6d6a5aa65c4e6b2e964401fadbfeb9b11b14386c503a321aecc17206",
+        ),
+        _ => return Err(refuse("没有固定角色调用点")),
     };
     let actual = hash::sha256_file(&selected.paths.package_root.join(relative))
         .map_err(|e| refuse(e.to_string()))?;
@@ -205,58 +287,45 @@ impl DiagnosticRoles for WindowsDiagnostics {
             .captured_command(native.pid)
             .map_err(|e| refuse(e.to_string()))?
             .clone();
-        let system = system_dir()?;
-        let role = exact_query(&command.argv, &native.executable, &system)
-            .ok_or_else(|| refuse("非准确只读查询语法/目标/镜像"))?;
+        let phase = owner.command_phase(command.captured_at)?;
         let verified_state = owner
             .original_native()
             .verify_retained_image(&native, &native.executable)
             .map_err(|e| refuse(e.to_string()))?;
         if verified_state != state {
-            return Err(refuse("子进程退出状态在分类窗口改变"));
+            return Err(refuse("原子代次退出状态在分类窗口改变"));
         }
+        let role = if let Some(query) =
+            exact_query(&command.argv, &native.executable, &system_dir()?)
+        {
+            let parent = bun_source(owner, &command.parent, deadline)?;
+            if parent.captured_at > command.captured_at {
+                return Err(refuse("查询捕获早于原父代次参数"));
+            }
+            query
+        } else {
+            let original_command = bun_source(owner, &native, deadline)?;
+            if original_command.argv != command.argv || original_command.parent != command.parent {
+                return Err(refuse("原Bun命令历史读回改变"));
+            }
+            // Service is bound to the original pre-stop listener generation,
+            // obtained only after the typed Ready/current verification. Any
+            // other directly proven original Node->Bun start wrapper remains
+            // Launcher and still requires raw0. Unknown helpers are not granted
+            // OtherRequired merely because they share this Job or exit0.
+            match owner.confirmed_service_generation()? {
+                Some(service) if service == native => ChildRole::Service,
+                Some(_) => return Err(refuse("已确认Service与原直接Bun代次冲突")),
+                None => ChildRole::Launcher,
+            }
+        };
         let source_sha = call_site(owner, &role)?;
-        // The original parent command and phase must be captured before child
-        // exit and retained independently. A bare admitted Bun name is not enough.
-        let parent_command = owner
-            .original_native()
-            .captured_command(command.parent.pid)
-            .map_err(|e| refuse(format!("调用点父参数缺失：{e}")))?
-            .clone();
-        let package = owner.selected_program().paths.package_root.clone();
-        let cli = package.join("src/cli/index.ts");
-        let phase = owner.command_phase(command.captured_at)?;
-        let bun = owner
-            .selected_program()
-            .paths
-            .package_root
-            .join("node_modules/bun/bin/bun.exe");
-        let other_bun = owner.selected_program().paths.bun.clone();
-        if owner
-            .original_native()
-            .verify_retained_image(&command.parent, &bun)
-            .is_err()
-        {
-            owner
-                .original_native()
-                .verify_retained_image(&command.parent, &other_bun)
-                .map_err(|e| refuse(e.to_string()))?;
-        }
-        if !exact_parent(
-            &parent_command.argv,
-            &command.parent.executable,
-            &cli,
-            phase,
-        ) || parent_command.captured_at > command.captured_at
-        {
-            return Err(refuse("原父进程没有准确官方cli入口/启动阶段证明"));
-        }
         // Recheck the full admitted immutable program and pinned call-site at
         // this boundary. The source is fixed; no alternate script/eval/target
         // may create a diagnostic role. These facts are never accepted from IPC.
         crate::modules::runtime::program_image::verify(owner.selected_program())?;
         if source_sha != call_site(owner, &role)? {
-            return Err(refuse("查询源码读回漂移"));
+            return Err(refuse("角色源码读回漂移"));
         }
         owner.check_current(deadline)?;
         let exit = raw_exit(state);
@@ -280,6 +349,7 @@ impl DiagnosticRoles for WindowsDiagnostics {
         supervisor.check(owner, deadline)?;
         WindowsSupervisor.recheck_absent(owner, supervisor, deadline)?;
         let scope = owner.scope()?;
+        root_source(owner, deadline)?;
         let root = owner.original_native().binding().process.clone();
         let family = owner
             .original_native()
@@ -370,49 +440,53 @@ mod tests {
         // argv/parent/source and independent pre/post Absent remain mandatory.
     }
     #[test]
-    fn wl2_next_d_parent_requires_exact_grammar_not_substring_or_flags() {
-        let image = Path::new("C:/task/I/bun.exe");
+    fn wl2_family_original_node_bun_grammar_is_bound_not_merely_containing_phase() {
+        let node = Path::new("C:/task/I/node.exe");
+        let bin = Path::new("C:/task/I/package/bin/ocx.mjs");
+        let bun = Path::new("C:/task/I/bun.exe");
         let cli = Path::new("C:/task/I/package/src/cli/index.ts");
-        let good = a(&[image.to_str().unwrap(), cli.to_str().unwrap(), "start"]);
-        assert!(exact_parent(&good, image, cli, "start"));
-        for bad in [
-            a(&[
-                image.to_str().unwrap(),
-                "C:/foreign/script.ts",
-                cli.to_str().unwrap(),
-                "start",
-            ]),
-            a(&[
-                image.to_str().unwrap(),
-                "--eval",
-                cli.to_str().unwrap(),
-                "start",
-            ]),
-            a(&[
-                image.to_str().unwrap(),
-                cli.to_str().unwrap(),
-                "stop",
-                "start",
-            ]),
-            a(&[image.to_str().unwrap(), "start", cli.to_str().unwrap()]),
-            a(&[
-                image.to_str().unwrap(),
-                cli.to_str().unwrap(),
-                "start",
-                "--port",
-                "0",
-            ]),
-            a(&["C:/foreign/bun.exe", cli.to_str().unwrap(), "start"]),
-        ] {
-            assert!(!exact_parent(&bad, image, cli, "start"));
+        let root = a(&[
+            node.to_str().unwrap(),
+            bin.to_str().unwrap(),
+            "start",
+            "--port",
+            "0",
+        ]);
+        let proof = format!("--ocx-internal-launch-proof={}", "A".repeat(43));
+        let good = a(&[
+            bun.to_str().unwrap(),
+            cli.to_str().unwrap(),
+            &proof,
+            "start",
+            "--port",
+            "0",
+        ]);
+        assert!(exact_root(&root, node, bin));
+        assert!(exact_bun_chain(&good, bun, cli, &root));
+        for port in ["+0", "00", "65536", "-1", "1e3"] {
+            let mut bad = root.clone();
+            bad[4] = port.into();
+            assert!(!exact_root(&bad, node, bin));
         }
-        assert!(!exact_parent(&good, image, cli, "stop"));
-        assert!(!exact_parent(
-            &a(&[image.to_str().unwrap(), cli.to_str().unwrap(), "eval"]),
-            image,
-            cli,
-            "eval"
-        ));
+        for index in 0..good.len() {
+            let mut bad = good.clone();
+            bad[index] = "foreign".into();
+            assert!(
+                !exact_bun_chain(&bad, bun, cli, &root),
+                "changed arg {index}"
+            );
+        }
+        let mut missing = good.clone();
+        missing.remove(2);
+        assert!(!exact_bun_chain(&missing, bun, cli, &root));
+        let mut extra = good.clone();
+        extra.push("--eval".into());
+        assert!(!exact_bun_chain(&extra, bun, cli, &root));
+        let mut other_root = root.clone();
+        other_root[4] = "10100".into();
+        assert!(!exact_bun_chain(&good, bun, cli, &other_root));
+        // These pure predicates cannot construct any native/source/role proof;
+        // the synthetic capability above is not accepted as real authentication.
     }
     #[test]
     fn wl2_r3_roles_exact_query_only_not_name_or_exit_allowlist() {
