@@ -18,7 +18,9 @@ pub use pipe::PrivatePipe;
 pub use listeners::{
     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
 };
-pub use paths::{create_private_directory, FileIdentity, PinnedDirectory, PrivateRecord};
+pub use paths::{
+    create_private_directory, validate_local_path, FileIdentity, PinnedDirectory, PrivateRecord,
+};
 pub use process::SuspendedOwnerHost;
 pub use process::{
     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,

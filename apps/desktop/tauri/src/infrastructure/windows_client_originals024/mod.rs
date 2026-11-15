@@ -10,6 +10,7 @@ use std::{
     os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
     path::Path,
 };
+mod binding;
 mod phase;
 use windows_sys::Win32::{
     Foundation::LocalFree,

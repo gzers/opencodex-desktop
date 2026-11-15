@@ -70,6 +70,11 @@ pub(super) fn validate(path: &Path) -> io::Result<()> {
     }
     Ok(())
 }
+/// Syntax only, without opening or observing any object. Success is never a
+/// directory identity, private security, absence or restoration capability.
+pub fn validate_local_path(path: &Path) -> io::Result<()> {
+    validate(path)
+}
 pub(super) fn wide(path: &Path) -> io::Result<Vec<u16>> {
     validate(path)?;
     let mut units: Vec<u16> = path
