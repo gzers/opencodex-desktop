@@ -19,6 +19,7 @@ use std::{
     path::{Path, PathBuf},
     time::Instant,
 };
+mod locks;
 #[derive(PartialEq, Eq)]
 struct Entry {
     relative: String,
@@ -242,7 +243,7 @@ impl RootTree {
         if root.is_none() && std::fs::symlink_metadata(path).is_ok() {
             return Err(invalid());
         }
-        Ok(Self {
+        let mut captured = Self {
             parent,
             parent_security,
             root,
@@ -253,7 +254,10 @@ impl RootTree {
             working: None,
             retired_work: None,
             poisoned: false,
-        })
+        };
+        captured.verify_stable_release(end)?;
+        captured.check_original(end)?;
+        Ok(captured)
     }
     fn check_original(&mut self, end: Instant) -> io::Result<()> {
         check(end)?;
@@ -450,6 +454,21 @@ impl RootTree {
         self.check_original(end)?;
         if self.custody.is_some() || self.working.is_some() || self.location != self.original {
             return Err(invalid());
+        }
+        self.verify_stable_release(end)?;
+        self.check_original(end)?;
+        check(end)
+    }
+    fn verify_stable_release(&self, end: Instant) -> io::Result<()> {
+        if self.original.file_name().and_then(|s| s.to_str()) == Some(".codex")
+            && self.root.is_some()
+        {
+            locks::prove(
+                &self.original,
+                self.root.as_ref().ok_or_else(invalid)?,
+                &self.entries,
+                end,
+            )?;
         }
         check(end)
     }
