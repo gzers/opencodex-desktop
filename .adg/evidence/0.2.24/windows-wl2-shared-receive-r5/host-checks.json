@@ -1,0 +1,57 @@
+{
+  "source": "358e7fc4717787616f049f3bdc1cfe02f6d353f9",
+  "host": "aarch64-apple-darwin",
+  "record": "Observed tool results summarized; raw logs not reconstructed",
+  "firstFailure": {
+    "command": "cargo fmt/test client_route_declaration",
+    "exit": 101,
+    "error": "E0753 import placed before inner module documentation",
+    "fix": "move import below module documentation",
+    "nativeOrBusinessEffects": false
+  },
+  "checks": [
+    {
+      "command": "cargo test --locked --lib client_route_declaration -- --test-threads=1",
+      "passed": 11,
+      "failed": 0,
+      "seconds": 0.06
+    },
+    {
+      "command": "cargo test --locked --lib modules::status:: -- --test-threads=1",
+      "passed": 33,
+      "failed": 0,
+      "seconds": 0.07
+    },
+    {
+      "command": "cargo test --locked --lib infrastructure::status_source::tests -- --test-threads=1",
+      "passed": 10,
+      "failed": 0,
+      "seconds": 11.98
+    },
+    {
+      "command": "cargo test --locked --lib infrastructure::macos_client_originals::session::tests:: -- --test-threads=1",
+      "passed": 17,
+      "failed": 0,
+      "ignored": 2,
+      "seconds": 61.03
+    },
+    {
+      "command": "cargo clippy --locked --lib --tests -- -D warnings",
+      "exit": 0,
+      "seconds": 22.26
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "exit": 0
+    }
+  ],
+  "parserEquivalence": "Original pure parser and 10 tests text-equivalent ignoring whitespace, public visibility and relocated original 2MiB input bound",
+  "nativeWindowsExecuted": false,
+  "actualGUIOfficialOwnerAccepted": false,
+  "productionStartOpened": false,
+  "fixtureCleanup": "synthetic existing TempDir/fixture guards; no daily config, Windows accounts/Profile, official model calls or business sync"
+}
