@@ -1,0 +1,13 @@
+{
+  "contract": "TEAM15/IMP141/r5 with r4 fixed security/unknown semantics",
+  "predecessor": "../wl2-r5-integration-20261115-r1/",
+  "hypotheses": [
+    "Exact Windows rollback SQLite OS locks can exclude writers without opening SQLite in production, creating/initializing a database, executing recovery or rewriting official file bytes. claim uses full exclusive pending/reserved/shared512; N/L/K use SQLite compatible shared510 plus reserved1, acquired in claim-N-L-K order with no waiting.",
+    "Every original lock file must already exist, be a single-link regular noADS/nonreparse private TokenUser/SYSTEM object with all8 projections, exact native ID and unchanged bytes. DELETE-mode/empty SQLite only; WAL/journal/shm or unknown header refuse before any acquisition authority. Path and original handle must agree after acquisition and before release.",
+    "The scoped Windows NativeLease holds actual original File handles and byte ranges, never a boolean/JSON or helper-held lock receipt. Private nonClone/nonserde, no permission after release/expiry; partial acquire releases own kernel ranges and retains source files unchanged, with no force cleanup.",
+    "Production paths derive only from original TokenUser/Profile, effective known-folder LocalAppData with official DEFAULT_PATH flag and canonical original CODEX_HOME. Exact source-derived claim and N/L/K names remain distinct; no injected HOME/LOCALAPPDATA creates a different namespace.",
+    "Directed tests first use only self-owned private synthetic DELETE-mode SQLite files and a real rusqlite competitor. Prove native lease blocks another BEGIN IMMEDIATE/EXCLUSIVE, allows compatible readers on N/L/K, preserves bytes/IDs/security after release, refuses busy/sidecar/unknown header/expiry/links. This is not official Bun/first-use/native Owner or whole-tree move proof.",
+    "Do not wire this component as a production mutation permit until official admission/initialization, owner receipt, path handoff/reanchor around same-volume root moves and source lifecycle boundaries are complete. Start remains refused and existing unchanged-working veto is retained."
+  ],
+  "accepted": false
+}

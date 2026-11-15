@@ -546,3 +546,12 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 新原证据wl2-r5-integration-20261115-r1含合并原冲突及摘要、4组原源/log/result、库EXE与产品SHA、真实缺Owner WindowsSource trace、官方9源来自固定bundle/tgz和SQLite参考。library01/02均54过0忽略/raw0（route11/status33/source4/native6），首错null；初轮成功反例stdout误称retained后纠正，实际Fixture清理无保留路径，原日志留。最终clean custom-protocol MSVC debug bins0/208243ms，最终114产品输入及68Rust对最终，前端32文件不变。完整状态/制品见final-status/product02-artifacts，不当release预算或真Closed正例。
 
 完整官方副作用/NativeLease及原包H-S-D生产仍未完，Start拒绝；已过trueGUI空broker/MSI-CLI/原件无影响项复用不重跑。无新账户/Profile/Public/GUI/官方，历史失败broker40588/现场/Public20文件8拒读和普通MSI/CAP-trust/旧拒绝清理未关，overallCleanupComplete=false，不改日常/官方，不业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-16 Windows NativeLease原始锁与Bun SQLite组件
+
+源码b8ab9b321af3563896b83bd02b087e82ae84d648/tree431e67fd8b4b2d282c06d9d8c557ddea00266385，Windows originals原语保留原4文件/父pin/TokenUser/ID/8投影及kernel ranges，claimEXCLUSIVE、N/L/Kshared+reserved依原次序fail-immediate，生产不SQLiteopen/recover/init/schemawrite。实际Owner/原KnownFolder DEFAULT_PATH/SID namespace构造已编译，fake HOME/USERPROFILE/LOCALAPPDATA独立子进程不能换namespace；尚未接official admission/owner receipt/whole-root handoff或副作用生产许可，Start和working unchanged拒绝保持。
+
+证据wl2-r5-native-coordination-20261116-r1含4组源/log/result/原EXE摘要、首错和现场、最终制品/矩阵。首轮59过1败/raw101，coordination_tests:71正例错误重算now+10被原no-extension正确拒绝，改同一原deadline不降断言；后60过/7过1helper忽略/8过1helper忽略均raw0，窄选末两轮不重复54纯例。真rusqlite与固定bundle Bun SQLite竞争证明held拒绝/释放后成功，同4fileID/8投影/bytes不变；Bun8个单独合成库helperheld4次raw73/busy真、released4次raw0，不导入官方服务/不当官方生产测试。未知sidecar/WAL/header/ADS/硬链/占用/缺席/错期/原始字节漂移全部拒绝，失败poison锁持有到scoped release，留原冲突。expiry fixture的实际覆盖局限在report明列。
+
+最终clean custom-protocol MSVC debug bins0/141575ms，116产品输入/70Rust对最终，三制品SHA见product01-artifacts。39场景/168文件观察/1278108字节私有内容归档含已知合成ADS分列，原scene留、非NTFS身份安全克隆。无账户/Profile/Public/GUI/日常策略改、无控制器删除/旧拒绝重试，overallCleanupComplete=false；原GUI空组件复用，不W2/双SID/发布，完整副作用/初始化/NativeLease交接/原包H-S-D闭环仍未验。
