@@ -441,3 +441,12 @@ B2的CAP/trust非空前提1314/5不重跑；完整ClientOriginals/实际Ready/Pr
 新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-production-originals-20261115-r1/含5次原命令/执行源/log/result、假设、源码制品/归档清单及完整final-status/report/offlineverify。library01=13过/native01=1过/library02=2过/dispatch01=28过2忽略，均raw0，首错null；library02制品在独立hash前被dispatch覆盖，缺失如实标注。最终clean c30168689 MSVC debug bins0/179254ms/lib68warnings。Desktop76486144/SHA25677894c4a20951d320308332eb10403a0abcc32afccf36e24038530231b000afc；ocxd5398528/SHA2563a2d8c92aab278d0c7067938c539da3ca213e74c1bdaeb4a0c933569a86b0ef1；ocx306176/SHA256139ad1b29d8aabe1800655950110da4f99c1bbe9ac8b2902a7f78df1594024a3。不是release预算/冻结候选。
 
 8处私有保留scene共70文件184854字节已ZIP字节核验，非NTFS元数据克隆，原现场留。无新账户/Profile/Public/官方/force/日常配置策略改；旧删除拒绝不重试不绕过，overallCleanupComplete=false。marenben最新确认桌面登录，实核session7 Active，真实GUI入口待准备；旧fixturemanager不重跑不当actualGUI。完整官方工作副作用/后继/恢复闭环、真实GUI/官方owner及S-D组合、普通MSI和历史清理仍未完。allAccepted/productionExecuted/actualGUI=false；继续Windows范围开发，不W2/双SID/业务同步/模型请求/发布。
+
+
+## 2026-11-15 r4真实GUI入口已准备（待原桌面执行）
+
+新增代码0c618cdfde4da37da0ca90e1b0913d7d81f63a29/tree e6c6832e3f02d58c924c3b0409d4575161bb86b6已推。允许的Windows内部注册从实际产品主窗口及正常setup/pageFinished核隔离/原token/native可见窗口后认证空broker，独立观察者持原创建handle，逐次正常GUI退出/原GUI故障/新GUI代次与重放拒绝；空broker仍非官方Owner，不能拿此代生产H/S-D闭环。当前仅准备，actualGUIExecuted=false；旧fixturemanager用例未重跑。原件副作用/后继/官方GUI路由/生产组合及普通MSI历史清理未完，Start拒绝保持。
+
+新不可覆盖轮次.adg/evidence/0.2.24/windows-dev/wl2-real-gui-preparation-20261115-r1/保存先置假设、隔离工具/前端源输出ZIP、全部原log/result/执行源与最终source/artifacts/完整状态和离线verify。Node24固定包SHA匹配仅target目录，不改日常Node/PATH；npmci/vue-tsc/vite原0，当前Vue源未改。lib6过3忽略/raw0/251577ms，observer实际c301+记录工作diff，52份Rust字节等于最终0c提交，不改写build来源。最终clean0c custom-protocol产品bins0/224425ms/lib68warnings，96份输入对最终。Desktop77121024/SHA256b440af3bd6b348e3de80d159cffebc05b05fa86ecb376c62c1b4a69c75d3866a，ocxd5398528/SHA25645d54e076b2571cbae10e16f0f0fda83e34233348085f65a0e0b938c2f2f5cc2，ocx306176/SHA256594e3d4044823acf49543dcd7b6c171e3b1d8c07deb129327692353a4b3b9ee8；非release预算/冻结候选。首错null。
+
+marenben已确认登录并实核session7 Active。精确新C:/Users/Public/ocx-h024-actual-gui-20261115-r1/launch-h024-actual-gui.cmd与三输入hash核对齐；新自有任务根ACL限controller/SYSTEM和marenben、out另Modify，未改现有日常ACL/策略/令牌。须从其普通桌面Shell启动满足noJob，控制器不代跑。自动同SID逐项日志导出，未运行/未清准备输入，无新账户/Profile/官方/业务模型请求；历史拒绝删除不重试，overallCleanupComplete=false，不W2/双SID/发布。
