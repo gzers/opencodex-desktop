@@ -1,0 +1,37 @@
+{
+  "time": "2026-11-15T16:14:51.505310+08:00",
+  "sourceHead": "f95e895293e88564248526b4286f32197ed51048",
+  "blockingArea": "clear Windows client_recovery to NotRequired in a complete same-window shared status sample; independent Windows Stop/Restart wiring can continue",
+  "facts": [
+    "StatusSource::client_recovery() has no deadline argument; shared StatusCollector::refresh_manager_facts calls it before source.fetch and refresh_with calls it after fetch (also before debounce return)",
+    "Windows old recovery_state intentionally reports Required/Unknown and cannot perform budgeted full native Closed readback without an original action deadline",
+    "A new now+5s within client_recovery would extend total Status collection and a cached stopped/Closed boolean is not current native authority",
+    "OfficialStatusSource::fetch_inner currently begins its own started=Instant::now then passes started+status_collect_timeout to Windows status; supplying only client_recovery_at cannot by itself enforce a single combined5s sample",
+    "StatusCollector uses injected now for debounce bookkeeping; native action start must be the actual monotonic sampling start, not a future/injected scheduling timestamp or a post-fetch replacement deadline"
+  ],
+  "requestedMinimalChange": {
+    "api": "provide one original native status sampling context/deadline to fetch/fetch_light AND client-recovery, e.g. fixture-compatible fetch_at(deadline), fetch_light_at(deadline), client_recovery_at(deadline) defaults or an equivalent single-sample boundary",
+    "callSites": [
+      "modules/status/mod.rs StatusSource optional/default methods and StatusCollector sample/debounce/recovery calls",
+      "infrastructure/status_source.rs only Windows2.99 branch forwards the same provided deadline to native status/recovery; avoid its existing per-fetch replacement started+5",
+      "Windows native receivers status(runtime,H,deadline) and recovery_state_at(runtime,H,deadline) already consume explicit deadlines"
+    ],
+    "semantics": [
+      "one original5s shared across fetch and recovery facts, no nested replacement window",
+      "unknown/expiry stays Unknown/Required, no cached grant",
+      "do not change Mac native proof/HTTP/HMAC/port/current/source or public UI commands",
+      "native Windows receiver recovery_state_at(runtime,home,deadline) provided in this round; pure receiver is not an authorization proof",
+      "native deadline is computed once at true sample/action admission before any recovery/native IO, all later operations use remaining time",
+      "debounce must not turn an earlier native Closed/status result into current recovery authority; require bounded current verification or Unknown",
+      "shared/Mac input, native proof factories and public UI contracts unchanged; minimum fixture-compatible extension, no new behavior-by-default grant"
+    ]
+  },
+  "unchanged": [
+    "four native traits",
+    "original30/5/10/Restart30Stop10",
+    "shared source selection",
+    "official2.99"
+  ],
+  "allAccepted": false,
+  "supersedes": "shared-status-deadline-request.json (retained as original initial hypothesis input)"
+}

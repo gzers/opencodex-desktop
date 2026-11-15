@@ -496,3 +496,12 @@ successor-remaining.json记录仍缺已知闭合历史集合/前驱登记/newcap
 68scene/1480文件45993813字节私有ZIP内容核验/原scene留，不克隆NTFS身份安全；无新account/Profile/Public/GUI/官方/force/日常配置策略写、无新删除尝试。此前全部删除拒绝含.tmp1fI41E/.tmpN3C2VK不重试，overallCleanupComplete=false。普通MSI、CAP/trust非空1314/5前提和历史清理缺口不关。原固定8审计excluded/fullSecurityProven=false、预算30/5/10/Restart30Stop子10与raw/Unknown不变。
 
 后续仍需共享纯路由解析器提取（前轮最小请求）、完整官方副作用/NativeLease、对外完整Stop与同窗口Restart接线和真实原包/原GUI broker/H-S-D生产验证；0cGUI准备输入未覆盖、out仍空。当前内部接线不等于真实ClosedEligibility/Owner更替或最终目标，allAccepted/productionExecuted/actualGUI=false，Start门拒绝，不业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 r4停止结果与真实GUI首次运行
+
+代码03d8d4d69db40480fb200944896824c52572fbbd已推，tree415e91b2f59d78b09b8ffac27f96b48e2ddd47fa。Stop完整typed Closed/当前native读回后才Stopped，Repeat Stop/status借原Closed重验，Restart沿原outer30/Stop子10和全部输入；公共require_durable_capture继续拒绝。library01首错E0308/raw101/tests0/无新EXE，测试仅补PathBuf显式.into；library02为57过2忽略/raw0。最终clean MSVC custom-protocol debug bins raw0/127592ms/lib69warnings，99产品输入及55测试Rust对最终。Desktop77501440/SHA2568ee60aeef785f7bcc96766360677c083346badecab80b27e47acf2029e31de79；ocxd5398528/e481d9afc2a01c257eb4a517624cbb0a89e610d6f3817839f7380d09a659fba6；ocx306176/afe6e29355c1935030d79aef351137b00d8d115bb9a1643e2f741db8d2340113。23scene/505文件15377349字节私有内容归档，原件保留，未删除/未重试任何旧拒绝，overallCleanupComplete=false。完整原始source/log/result/摘要/矩阵及离线校验归wl2-stop-restart-results-20261115-r1。
+
+范围外精确请求见该轮shared-status-deadline-request-r2.json：同一次真实native状态采样原5秒须同时传fetch/fetch_light/recovery/debounce，现fetch自起5秒且client_recovery无期限，仅补recovery_at仍扩预算。Windows显式期限接收器已给，旧共享调用保守Required/Unknown；不擅改共享。前轮纯route declaration解析器提取请求仍有效，完整官方副作用/NativeLease未完，实际StopReceipt/ClosedEligibility生产组合未实跑。
+
+用户后续在marenben原普通桌面运行不可变0c实际GUI入口：SID1003/session7/elevated=false、bootstrap与挂起原broker noJob；observer79512/raw101/0过1败，首错D/gui-normal.json缺席，GUI先admission refused/rawNone。14份sameSID导出complete真且逐字摘要核对，证据归wl2-real-gui-run-20261115-r1；原scene与broker40588/FILETIME134392249926679744保留，退出未确认，不填0、不按PID杀。静态明确Windows gui_probe把sandbox home错当Token Profile，后继Windows范围修，不改共享platform或削弱sandbox/路径/超时。H/S-D完整生产、普通MSI、CAP/trust非空前提和历史清理未验；allAccepted/productionExecuted/actualGUI/startOpen=false。不官方/日常策略修改、无业务模型请求/W2/双SID/发布。
