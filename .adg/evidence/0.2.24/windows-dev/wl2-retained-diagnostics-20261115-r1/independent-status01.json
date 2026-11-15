@@ -1,0 +1,30 @@
+{
+  "allAccepted": false,
+  "native01": {
+    "rawExit": 101,
+    "passed": 1,
+    "failed": 1,
+    "firstError": "post-exit generic observation Win32 31 at process.rs test line231; individual internal API not instrumented",
+    "sceneArchived": true
+  },
+  "library01": {
+    "rawExit": 101,
+    "passed": 3,
+    "failed": 1,
+    "error": "junction creation test command syntax error before namespace proof"
+  },
+  "native02": {
+    "rawExit": 0,
+    "passed": 2,
+    "changedHypothesis": "retained original process/token/image objects captured while alive; force history monotonic"
+  },
+  "library02": {
+    "rawExit": 101,
+    "executedTests": 0,
+    "error": "E0599 raw_arg requires Windows CommandExt import"
+  },
+  "product": {
+    "state": "pending final source"
+  },
+  "knownSDAndHPrerequisiteRetests": 0
+}

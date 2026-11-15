@@ -1,0 +1,24 @@
+{
+  "exitCode": 0,
+  "profile": "debug",
+  "elapsedMs": 267,
+  "accepted": false,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--test",
+    "process",
+    "-j",
+    "1",
+    "wl2_retained_command_parent_and_raw_query_exits",
+    "--",
+    "--exact",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

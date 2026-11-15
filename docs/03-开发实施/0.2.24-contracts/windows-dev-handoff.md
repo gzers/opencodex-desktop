@@ -308,3 +308,22 @@ MSVC debug bins0/143952ms；3newnative+1record+2phase+1bootstrap通过，原62wa
 用户原普通桌面一次清理完成：新成功base128429…的19文件98,827,930字节及lookup副本baseb989…的3文件1,834字节，全清单先核归档再删，两处合计22文件98,829,764字节，回执complete=true。首次失败13ae…不删除，现有marenben账号/Profile保留；Public输入/原始输出与构建缓存留存，无force/日常PATH配置策略写入，无旧拒绝路径重试。overallCleanupComplete=false，历史Profile/Public/schema/普通MSI验收未完保持。
 
 下一步仍Windows范围：O完整同卷custody/currentref CAS/恢复/Closed、H真实GUI与官方Owner生产路由、S完整source/owner/stage proof、D完整family/requiredservice与新Stop组合尚未完成；四trait已冻结，不冒称缺共享声明。生产正例独立受普通令牌完整SD含SACL前提阻止：r3禁止改验收令牌/策略/覆盖；没有新环境不重跑相同1314，也不能从本次空H组件通过外推整组。若要求该普通环境可用，需另行明确安全覆盖产品方案；本轮保持完整范围拒绝。无官方2.99/真实业务同步/模型请求，无W2/双SID/发布。
+
+
+## 2026-11-15 W-L2保留原生对象与S/D增量（生产仍未收口）
+
+fetch main dbf974097d067e75c4de68f9fc681af8ab447b09 / docs a6d9184b851521194477ddfeecd988f40d513e5b未变，TEAM13/IMP139/r3承接r2。先落hypotheses01，一次收独立项，首错和修正各轮原件不覆盖；未重复普通SD1314、已过桌面H/CLI/MSI。
+
+代码4笔已推codex/024-windows-native：4562217649da1c822f07affc9caf279558f78665保留活窗口原镜像/token/父pin及monotonic force历史；1007ad5f774133973d36be506de71d383e4317ad改D退出后用原保留对象复核、完整raw/角色/代次唯一性及scope/deadline；7f68125d7db9cbadfdd91c3b0f987172a64184d5修S嵌套父链reparse伪缺席并保持父/叶原码；eb8d7e949f42e6bd80178e4242d721f648634066分离定向入口。净9许可Windows/test文件，不改共享trait/原预算/官方/日常配置，旧untracked schema保留。
+
+原D complete_family全退出后却用active-only检查会必拒；native01第一版postexit通用observe仍raw31/101，特定内部API未instrument不能编造。修为原活窗口保留原native process/token/image对象，终态读同一process PID/FILETIME/raw及同一token/image ID，活准入仍fresh/active-only。原31及失败exacttree归档保留；normalproof不允许forced历史被raw0清掉，不从JSON/PID接管。
+
+native02两项、query01短命原argv/parent/raw1060/1一项、library04新D/S五项、supervisor01受影响七项均通过（其中3新S重叠），12不同用例/15成功执行。fixture缺官方source仍Unknown；两次junction命令准备syntax失败与E0599编译失败/library01..03逐轮原source/stdout/stderr/result保留。最终复用仓库已有systemPowerShell New-Item Junction＋环境值传参，真实junction创建0，嵌套缺叶均Unknown；父pin2/3/5/32不转leafAbsent且raw保留。D精确父argv语法仍有限，完整Service/OtherRequired/family角色尚未完成，不能以pure exitmatrix当生产资格。
+
+MSVC debug bins product01 exit0/179337ms/69原warnings。query01/library04/supervisor01/product01每组36Rust与最终源逐字一致；native02独立后端/宿主/Cargo15输入匹配，但快照另两S文件随后改变，明确非全36匹配。实际编译head456221764+dirtydiff完整保留，不冒最终Git SHA重编。Desktop75456512字节/SHA256 b5f3782a1aa0dfe071c1f021d829ff2efdbac2050cbb6ec11e8b61a8e93a1410；ocxd5398528/SHA256 5f058007a91f3e6a5c1c6f75d7d7d388bf1f0a0533d67a431cc8e6f26b4a52a6；ocx306176/SHA256 be27db2cb26ee7c1ac25460f323dd32c3051ce3f014d6d0a4b94d57ca5469310。非签名release/冻结候选。
+
+新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-retained-diagnostics-20261115-r1/：23项状态表、原假设/各轮执行源及rawtrace、failedfixture7文件原件、最终source/Gitblob、制品/来源限制、官方固定外/内SHA只读复核及五源文件、cleanup拒绝与verify_evidence.py；离线replay0只表示归档自洽，不是生产通过。
+
+清理：native01原失败后仅其exact synthetic Job guard显式force，native02另一个反例只对已空exactJob请求force，分开记账不补正常退出。成功synthetic roots/测试junction按原断言清理，无新账号/Profile/Public/官方进程。失败树C:/Users/15119/AppData/Local/Temp/ocxd024-process-18124-1的7文件670767字节逐字归档核验后，exact Remove-Item自动审批blocked by policy，命令未执行，不重试/替换机制，原树保留。历史Profile/Public/schema/普通MSI缺口保持，overallCleanupComplete=false。
+
+O完整custody/current-ref CAS/恢复/Closed、H真实GUI/原Owner生产接线、S完整实机proof、D全family仍未完成；普通完整SD含SACL正例环境未满足，生产Start继续拒绝。allAccepted=false、productionExecuted=false、actualGUI=false；无官方2.99/日常PATH配置策略写，无真实业务同步/模型请求，不W2/双SID/发布。

@@ -1,0 +1,144 @@
+{
+  "allAccepted": false,
+  "productionExecuted": false,
+  "items": [
+    {
+      "id": "original-exited-source",
+      "implementation": "fixed",
+      "test": "native02 passed",
+      "detail": "Retain original image/token/parent objects while live; verify original process handle PID/FILETIME and same native objects after exit; live admission still active-only."
+    },
+    {
+      "id": "foreign-generation-and-image",
+      "implementation": "native refusal",
+      "test": "native02 passed",
+      "detail": "Wrong PID/FILETIME/SID/fileID and equal-byte different object refused; rename/write of retained image denied."
+    },
+    {
+      "id": "force-history",
+      "implementation": "monotonic veto",
+      "test": "native02 passed",
+      "detail": "Explicit force request recorded even already empty raw0 Job; no erasure by eventual zero exit."
+    },
+    {
+      "id": "original-query-history",
+      "implementation": "retained native facts",
+      "test": "query01 1 passed",
+      "detail": "Exact sc/schtasks argv,parent and raw1060/1 retained. Fixture has no official source => Unknown role."
+    },
+    {
+      "id": "D-post-exit-classification",
+      "implementation": "fixed to retained source verifier",
+      "test": "native primitive + product compilation",
+      "detail": "No post-exit process/token reopen assumption; never from PID/JSON."
+    },
+    {
+      "id": "D-normal-exit-check",
+      "implementation": "strengthened",
+      "test": "pure exit matrix passed",
+      "detail": "Same scope/deadline/full original history/raw exits/no duplicates/no force; still no production NormalExit positive."
+    },
+    {
+      "id": "D-parent-grammar",
+      "implementation": "exact bounded subset",
+      "test": "2 pure D tests passed",
+      "detail": "Only exact [image,officialCLI,phase] supported; valid expanded official argv and required/service family remain incomplete; flags/eval/another script refused."
+    },
+    {
+      "id": "S-staged-parent",
+      "implementation": "non-reparse parent chain pinned",
+      "test": "native junction counterexample passed",
+      "detail": "Missing nested leaf below junction/file remains Unknown; exact regular missing leaf Absent."
+    },
+    {
+      "id": "S-error-preservation",
+      "implementation": "separate parent/leaf failure",
+      "test": "raw2/3/5/32 counterexamples passed",
+      "detail": "Parent error never leaf absence; exact native raw code preserved."
+    },
+    {
+      "id": "S-existing-regressions",
+      "implementation": "same source/namespace gates",
+      "test": "7 tests passed",
+      "detail": "Includes3 new S cases +4 affected existing cases; exact SCM1060/scheduler0x80070002 observed independently."
+    },
+    {
+      "id": "MSVC-product",
+      "implementation": "final Rust compiled",
+      "test": "exit0 /179337ms",
+      "detail": "MSVC debug bins,69 raw warnings retained; no release budget/signed candidate claim."
+    },
+    {
+      "id": "original-failure-evidence",
+      "implementation": "retained",
+      "test": "native01 101/raw31; library01/02/03 101",
+      "detail": "Original31 internal API not instrumented; no invented exact API. Library setup/trait errors separately retained."
+    },
+    {
+      "id": "failed-native-fixture-cleanup",
+      "implementation": "archive verified",
+      "test": "deletion blocked by automatic review",
+      "detail": "Exact7files670767bytes archived; command not executed, no retry/alternate API; root retained."
+    },
+    {
+      "id": "successful-task-cleanup",
+      "implementation": "RAII exact synthetic roots",
+      "test": "native02/query01 passed",
+      "detail": "No new users/Profile/Public/runtime services; successful fixture cleanup asserts; test-only explicit emptyJob force separately declared."
+    },
+    {
+      "id": "O-ClientOriginals",
+      "implementation": "incomplete",
+      "test": "not run/reused ordinary fullSD gap",
+      "detail": "Same-volume custody/current-ref CAS/complete restore/Closed remains incomplete; no capture capability issued."
+    },
+    {
+      "id": "H-empty-host",
+      "implementation": "previous component pass reused",
+      "test": "not repeated",
+      "detail": "actualGUIfalse, officialOwnerfalse; prior real ordinary session/noJob facts preserved."
+    },
+    {
+      "id": "H-production-owner-GUI",
+      "implementation": "incomplete",
+      "test": "not run",
+      "detail": "Original Owner routing, actual GUI and official service integration not accepted."
+    },
+    {
+      "id": "S-full-production",
+      "implementation": "partial",
+      "test": "not accepted",
+      "detail": "Owner/source proof types exist; full production positive matrix not exercised."
+    },
+    {
+      "id": "D-full-family",
+      "implementation": "incomplete",
+      "test": "not accepted",
+      "detail": "Service/OtherRequired/launcher descendant role constructors not implemented; unknown roles continue veto."
+    },
+    {
+      "id": "P-production-budget",
+      "implementation": "refused",
+      "test": "not run",
+      "detail": "No official Start until O/fullSD +four production boundaries; original30/5/10 and Restart30/Stop10 unchanged."
+    },
+    {
+      "id": "ordinary-MSI",
+      "implementation": "not accepted",
+      "test": "unchanged evidence reused",
+      "detail": "Administrator MSI pass not ordinary-user acceptance."
+    },
+    {
+      "id": "historical-cleanup",
+      "implementation": "incomplete",
+      "test": "unchanged",
+      "detail": "Old Profiles/Public/schema rejected cleanup paths not retried."
+    },
+    {
+      "id": "constraints",
+      "implementation": "maintained",
+      "test": "noW2/dualSID/publish",
+      "detail": "Official2.99 and daily config/PATH/policy unchanged; no real model/business sync."
+    }
+  ]
+}

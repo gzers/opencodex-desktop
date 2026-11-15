@@ -1,0 +1,14 @@
+
+running 4 tests
+test infrastructure::windows_diagnostic_roles024::tests::wl2_next_d_parent_requires_exact_grammar_not_substring_or_flags ... ok
+test infrastructure::windows_diagnostic_roles024::tests::wl2_next_d_raw_outcomes_cannot_erase_required_failure_or_unknown ... ok
+test infrastructure::windows_supervisor024::tests::wl2_next_s_missing_leaf_below_regular_file_parent_is_unknown ... ok
+test infrastructure::windows_supervisor024::tests::wl2_next_s_missing_nested_staged_leaf_below_junction_is_unknown ... FAILED
+
+failures:
+
+failures:
+    infrastructure::windows_supervisor024::tests::wl2_next_s_missing_nested_staged_leaf_below_junction_is_unknown
+
+test result: FAILED. 3 passed; 1 failed; 0 ignored; 0 measured; 1883 filtered out; finished in 0.04s
+

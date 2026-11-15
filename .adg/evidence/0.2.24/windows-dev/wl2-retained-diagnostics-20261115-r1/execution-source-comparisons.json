@@ -1,0 +1,53 @@
+{
+  "runs": [
+    {
+      "run": "native02",
+      "capturedRustFiles": 36,
+      "capturedRustFilesChangedSinceRun": [
+        "apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs"
+      ],
+      "standaloneNativeCompileScopeFiles": 15,
+      "standaloneNativeCompileScopeByteIdentical": true,
+      "fullRustByteIdentical": false,
+      "scopeNote": "native02 only compiles actual standalone backend+host; unrelated S adapter/test edits retained explicitly, not claimed as captured final Rust"
+    },
+    {
+      "run": "query01",
+      "capturedRustFiles": 36,
+      "capturedRustFilesChangedSinceRun": [],
+      "standaloneNativeCompileScopeFiles": 15,
+      "standaloneNativeCompileScopeByteIdentical": true,
+      "fullRustByteIdentical": true,
+      "scopeNote": "all captured Rust files match current source"
+    },
+    {
+      "run": "library04",
+      "capturedRustFiles": 36,
+      "capturedRustFilesChangedSinceRun": [],
+      "standaloneNativeCompileScopeFiles": 15,
+      "standaloneNativeCompileScopeByteIdentical": true,
+      "fullRustByteIdentical": true,
+      "scopeNote": "all captured Rust files match current source"
+    },
+    {
+      "run": "supervisor01",
+      "capturedRustFiles": 36,
+      "capturedRustFilesChangedSinceRun": [],
+      "standaloneNativeCompileScopeFiles": 15,
+      "standaloneNativeCompileScopeByteIdentical": true,
+      "fullRustByteIdentical": true,
+      "scopeNote": "all captured Rust files match current source"
+    },
+    {
+      "run": "product01",
+      "capturedRustFiles": 36,
+      "capturedRustFilesChangedSinceRun": [],
+      "standaloneNativeCompileScopeFiles": 15,
+      "standaloneNativeCompileScopeByteIdentical": true,
+      "fullRustByteIdentical": true,
+      "scopeNote": "all captured Rust files match current source"
+    }
+  ],
+  "allAccepted": false
+}
