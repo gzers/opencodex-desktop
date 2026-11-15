@@ -204,7 +204,7 @@ impl TreeCaptureV2 {
         out.recheck(end)?;
         Ok(out)
     }
-    fn recheck(&mut self, end: Instant) -> io::Result<()> {
+    pub(super) fn recheck(&mut self, end: Instant) -> io::Result<()> {
         before(end)?;
         if self.failed {
             return Err(invalid());
@@ -300,6 +300,42 @@ impl TreeCaptureV2 {
         self.begin_tree(index, TreeAction::RestoreOriginal, end)?;
         self.trees[index].restore_original(end)?;
         self.complete_tree(index, TreeAction::RestoreOriginal, end)
+    }
+    pub(super) fn session_id(&self) -> &str {
+        &self.manifest.session_id
+    }
+    pub(super) fn binding_bytes(&self) -> io::Result<Vec<u8>> {
+        serde_json::to_vec(&self.manifest.binding).map_err(|_| invalid())
+    }
+    pub(super) fn advance_phase(&mut self, phase: Phase, end: Instant) -> io::Result<()> {
+        self.recheck(end)?;
+        self.failed = true;
+        self.pending = self.current.append_pending(&self.pending, phase, end)?;
+        self.failed = false;
+        if let Err(error) = self.recheck(end) {
+            self.failed = true;
+            return Err(error);
+        }
+        Ok(())
+    }
+    /// Conservative admission until declared official changes are implemented:
+    /// never absorb a new generation/content merely because the service is Ready.
+    pub(super) fn verify_working_unchanged(&mut self, end: Instant) -> io::Result<()> {
+        self.recheck(end)?;
+        for tree in &mut self.trees {
+            tree.verify_working(end)?;
+        }
+        before(end)
+    }
+    pub(super) fn restore_after_teardown(&mut self, end: Instant) -> io::Result<()> {
+        self.recheck(end)?;
+        if self.pending.tip.phase != Phase::OfficialTeardown {
+            return Err(invalid());
+        }
+        for index in 0..self.trees.len() {
+            self.restore_root(index, end)?;
+        }
+        self.advance_phase(Phase::Restored, end)
     }
 }
 

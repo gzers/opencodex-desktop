@@ -49,6 +49,13 @@ if($Mode -eq 'r4-populated'){$arguments=@('test','--locked','--offline','--manif
 if($Mode -eq 'r4-progress'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::v2::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'r4-current'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::v2::current::','--','--test-threads=1','--nocapture')}
 if($Mode -eq 'r4-locks'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','wl2_r4_stable_locks_','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'originals-adapter'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::v2::','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'originals-record-pin'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::v2::adapter::tests::','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'originals-dispatch'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_client_originals024::v2::','windows_official_lifecycle024::','windows_supervisor024::','windows_diagnostic_roles024::','--test-threads=1','--nocapture')}
+if($Mode -eq 'originals-creator'){
+ $env:CARGO_TARGET_DIR="$PSScriptRoot/target/wl2-primitives"
+ $arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/Cargo.toml','--target','x86_64-pc-windows-msvc','--test','process','-j','1','wl2_originals_capture_guard_requires_original_creator_before_resume','--','--exact','--test-threads=1','--nocapture')
+}
 if($Mode -eq 'sd-stop'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','--','windows_official_lifecycle024::','windows_supervisor024::','windows_diagnostic_roles024::','--test-threads=1','--nocapture')}
 $diff=git diff --binary
 if($Mode -eq 'original-reference'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--lib','-j','1','windows_client_originals024::','--','--test-threads=1','--nocapture')}

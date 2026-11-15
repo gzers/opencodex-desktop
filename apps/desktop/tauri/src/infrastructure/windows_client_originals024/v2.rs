@@ -385,6 +385,8 @@ mod current;
 pub(super) use current::BoundedCurrentV2;
 mod capture;
 pub(super) use capture::MoveIntent;
+mod adapter;
+pub(crate) use adapter::{LivePhase, WindowsOriginals};
 pub(super) struct PendingV2 {
     directory: PinnedDirectory,
     records: Vec<PrivateRecord>,

@@ -1,12 +1,15 @@
 //! Process-local production authority for unchanged official2.99. No adoption,
 //! durable recovery journal or manager-restart handle transfer is invented here.
+use super::windows_client_originals024::{LivePhase, WindowsOriginals};
 use super::windows_official_runtime024::{
     self as native, LaunchSpec, OwnedListeners, OwnedRuntime, ProcessState,
 };
 use super::{
     windows_diagnostic_roles024::WindowsDiagnostics, windows_supervisor024::WindowsSupervisor,
 };
-use crate::modules::runtime::windows_lifecycle024_contract::{DiagnosticRoles, SupervisorAbsence};
+use crate::modules::runtime::windows_lifecycle024_contract::{
+    ClientOriginals, DiagnosticRoles, SupervisorAbsence,
+};
 use crate::{
     errors::{AppError, AppResult},
     infrastructure::{hash, platform, runtime_executable::SharedRuntimeExecutable},
@@ -99,6 +102,8 @@ pub(crate) struct Owner {
     scope_pins: Vec<native::PinnedDirectory>,
     created_at: Instant,
     stop_started: Option<Instant>,
+    originals: Arc<Mutex<WindowsOriginals>>,
+    original_phase: Option<LivePhase>,
     _outputs: [File; 2],
     _pins: Vec<File>,
 }
@@ -136,6 +141,22 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
     Ok(slot)
 }
 impl Owner {
+    fn with_originals<T>(
+        &mut self,
+        operation: impl FnOnce(&mut WindowsOriginals, &mut Owner) -> AppResult<T>,
+    ) -> AppResult<T> {
+        let retained = self.originals.clone();
+        let mut originals = retained.try_lock().map_err(unknown)?;
+        operation(&mut originals, self)
+    }
+    fn capture_originals(&mut self, window: &shared::ActionWindow) -> AppResult<()> {
+        if self.original_phase.is_some() {
+            return Err(recovery_required());
+        }
+        let original = self.with_originals(|originals, owner| originals.capture(owner, window))?;
+        self.original_phase = Some(LivePhase::Original(original));
+        Ok(())
+    }
     pub(crate) fn scope(&self) -> AppResult<String> {
         use serde_json::json;
         let b = self.native.binding();
@@ -151,6 +172,88 @@ impl Owner {
     }
     pub(crate) fn home_path(&self) -> &Path {
         &self.home
+    }
+    pub(crate) fn data_path(&self) -> &Path {
+        &self.data
+    }
+    pub(crate) fn originals_require_unresumed(&mut self, deadline: Instant) -> AppResult<()> {
+        self.source(deadline)?;
+        if self.stage != "created-suspended"
+            || self.service.is_some()
+            || self.stopped
+            || self.stop_started.is_some()
+        {
+            return Err(unknown(()));
+        }
+        self.native
+            .require_creator_not_resumed(deadline)
+            .map_err(|error| {
+                fail(
+                    "windows024_originals_creator_unconfirmed",
+                    &format!("original creator raw={:?}; {error}", error.raw_os_error()),
+                )
+            })
+    }
+    pub(crate) fn originals_check_ready(
+        &mut self,
+        ready: &shared::ServiceObservation,
+        deadline: Instant,
+    ) -> AppResult<()> {
+        budget(deadline)?;
+        if !ready.ready() || ready.version() != "2.99.0" {
+            return Err(unknown(()));
+        }
+        ready
+            .check_current(&self.runtime, &self.home)
+            .map_err(unknown)?;
+        self.live(ready.pid(), ready.port(), ready.record_sha256(), deadline)?;
+        ready
+            .check_current(&self.runtime, &self.home)
+            .map_err(unknown)?;
+        budget(deadline)
+    }
+    pub(crate) fn originals_check_live_record(
+        &mut self,
+        pid: u32,
+        port: u16,
+        digest: &str,
+        deadline: Instant,
+    ) -> AppResult<()> {
+        use std::io::Read;
+        if self.service.as_ref() != Some(&(pid, port, digest.to_string())) {
+            return Err(unknown(()));
+        }
+        self.live(pid, port, digest, deadline)?;
+        let mut record = OpenOptions::new()
+            .read(true)
+            .share_mode(1)
+            .custom_flags(0x200000)
+            .open(self.home.join("runtime-port.json"))
+            .map_err(unknown)?;
+        let mut bytes = Vec::new();
+        (&mut record)
+            .take(65537)
+            .read_to_end(&mut bytes)
+            .map_err(unknown)?;
+        if bytes.is_empty() || bytes.len() > 65536 || hash::sha256_hex(&bytes) != digest {
+            return Err(unknown(()));
+        }
+        self.source(deadline)
+    }
+    pub(crate) fn originals_check_stopped_records(&self, deadline: Instant) -> AppResult<()> {
+        self.source(deadline)?;
+        if !native::listener_exit_readback(
+            self.original_listeners
+                .as_ref()
+                .ok_or_else(|| unknown(()))?,
+        )
+        .map_err(unknown)?
+        .is_empty()
+        {
+            return Err(unknown(()));
+        }
+        teardown_records_absent(&self.home)?;
+        budget(deadline)
     }
     pub(crate) fn selected_program(&self) -> &program_selection::SelectedProgram {
         &self.selected
@@ -274,6 +377,12 @@ impl Owner {
         self.source(deadline)
     }
     async fn observe(&mut self, deadline: Instant) -> AppResult<serde_json::Value> {
+        if !matches!(
+            self.original_phase,
+            Some(LivePhase::Original(_) | LivePhase::Ready(_))
+        ) {
+            return Err(recovery_required());
+        }
         self.stage = "observation-source";
         self.source(deadline)?;
         self.stage = "typed-health-ready";
@@ -293,6 +402,24 @@ impl Owner {
         observed
             .check_current(&self.runtime, &self.home)
             .map_err(unknown)?;
+        match self.original_phase.take() {
+            Some(LivePhase::Original(original)) => {
+                let ready = self.with_originals(|originals, owner| {
+                    originals.record_ready(original, owner, &observed, deadline)
+                })?;
+                self.original_phase = Some(LivePhase::Ready(ready));
+            }
+            Some(LivePhase::Ready(ready)) => {
+                self.original_phase = Some(LivePhase::Ready(ready));
+                self.with_originals(|originals, owner| {
+                    originals.check_ready(owner, &observed, deadline)
+                })?;
+            }
+            phase => {
+                self.original_phase = phase;
+                return Err(recovery_required());
+            }
+        }
         budget(deadline)?;
         self.stage = "ready-current";
         Ok(
@@ -309,6 +436,12 @@ impl Owner {
         program_image::verify(&self.selected)?;
         self.source(deadline)?;
         self.original_listeners = Some(self.native.listeners().map_err(unknown)?);
+        let Some(LivePhase::Ready(ready)) = self.original_phase.take() else {
+            return Err(recovery_required());
+        };
+        let prepared =
+            self.with_originals(|originals, owner| originals.pre_stop(ready, owner, deadline))?;
+        self.original_phase = Some(LivePhase::Prepared(prepared));
         let runtime = self.runtime.clone();
         let home = self.home.clone();
         let pid = self.service.as_ref().ok_or_else(|| unknown(()))?.0;
@@ -368,6 +501,13 @@ impl Owner {
         }
         teardown_records_absent(&self.home)?;
         self.source(deadline)?;
+        let Some(LivePhase::Prepared(prepared)) = self.original_phase.take() else {
+            return Err(recovery_required());
+        };
+        let closed = self.with_originals(|originals, owner| {
+            originals.complete_stop(prepared, owner, normal, absent, &accepted, deadline)
+        })?;
+        self.original_phase = Some(LivePhase::Closed(closed));
         self.stopped = true;
         // No Windows durable original capture/restore or supervisor observation
         // authority is supplied by r1. Native success is separately retained;
@@ -404,7 +544,10 @@ fn teardown_records_absent(home: &Path) -> AppResult<()> {
     Ok(())
 }
 fn recovery_required() -> AppError {
-    fail("windows024_client_restore_required","本次官方服务及保留Job已正常退出；Windows客户端原件持久恢复及supervisor缺席接口尚未确认，未宣告完整停止或继续启动")
+    fail(
+        "windows024_client_restore_required",
+        "原件、owner、阶段或正常退出证明尚未全部确认；保留原生现场，未宣告完整停止或后继启动",
+    )
 }
 struct LiveBoundary<'a> {
     owner: &'a mut Owner,
@@ -561,10 +704,13 @@ async fn execute_async(
         scope_pins,
         created_at: Instant::now(),
         stop_started: None,
+        originals: Arc::new(Mutex::new(WindowsOriginals::default())),
+        original_phase: None,
         _outputs: outputs,
         _pins: pins,
     });
     let owner = guard.as_mut().unwrap();
+    owner.capture_originals(&window)?;
     plan.check_current(runtime)?;
     if entry.cancel.load(Ordering::SeqCst) {
         return Err(fail(
@@ -596,6 +742,9 @@ async fn execute_async(
         }
         if owner.observe(window.deadline()).await.is_ok() {
             return Ok(LifecycleResult::Started);
+        }
+        if owner.original_phase.is_none() {
+            return Err(recovery_required());
         }
         tokio::time::sleep(
             Duration::from_millis(20)
@@ -641,7 +790,7 @@ pub(crate) fn recovery_state(
     match slot(runtime, home, false) {
         Ok(s) => match s.owner.try_lock() {
             Ok(o) => match o.as_ref() {
-                Some(o) if o.stopped => R::Required,
+                Some(o) if o.stopped || o.original_phase.is_none() => R::Required,
                 Some(_) => R::Unknown,
                 None => R::Unknown,
             },

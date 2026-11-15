@@ -16,6 +16,7 @@ mod phase;
 mod reference;
 mod tree;
 mod v2;
+pub(crate) use v2::{LivePhase, WindowsOriginals};
 use windows_sys::Win32::{
     Foundation::LocalFree,
     Security::{
