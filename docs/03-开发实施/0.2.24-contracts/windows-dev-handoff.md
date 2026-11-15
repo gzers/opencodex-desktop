@@ -397,3 +397,8 @@ PendingOnly append下一phase先复读原记录/原目录及完整prefix，valid
 新syntheticrecords/TempDir成功guard收尾，无失败临时树/newaccount/Profile/Public/force/官方进程/日常PATH配置策略写；缓存/EXE/证据留用，旧7文件670767字节失败树及全部历史Profile/Public/schema自动审批拒绝不重试/不换机制，overallCleanupComplete=false。
 
 仍未完成真实原件manifest/capture、同卷目录整树custody/工作副本、actualmove意图/current-ref协议接原对象、恢复/Closed，H真实GUI原Owner路由、S/D全productionmatrix及普通MSI验收。当前用户已被问及提供满足完整SD/SACL的不提升不改策略普通隔离环境，或交Mac集成owner评估安全覆盖合同；尚未答复，elapsed不是approval，Windows没授权缩full范围/拿partial当完整。其余未完仍归Windows实现，不冒缺共享trait。allAccepted/productionExecuted/actualGUI=false，无业务同步/模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 用户选择Mac评估安全覆盖合同
+
+用户明确选择“交 Mac 评估安全覆盖合同”。决定及可复制提示词保存在.adg/evidence/0.2.24/windows-dev/wl2-sd-contract-decision-20261115-r1/。仅授权集成线评估并给明确后继合同，不授权Windows当前降低fullSD/SACL范围、改策略/token/ACL或以部分诊断测试补签。代码c47953ccf/原证据ebeb2d692不变，生产Start继续拒绝；O整树custody/真实移动引用协议/恢复/Closed、H真实GUI/S-D组合和普通MSI/历史清理未完保持。按既有Git协作由用户转交现有Mac对话，没有自动跨对话发送消息，无新增运行时测试/环境/清理操作，不W2/双SID/发布。
