@@ -712,6 +712,35 @@ impl OwnedRuntime {
     pub fn root_state(&self) -> io::Result<ProcessState> {
         state(self.process.as_raw_handle())
     }
+    /// Creator-side admission before original-client capture. This monotonic
+    /// state is never decoded from JSON or reconstructed from a PID. It does
+    /// not assert an untrusted peer has never called a thread API externally.
+    pub fn require_creator_not_resumed(&mut self, deadline: Instant) -> io::Result<()> {
+        if Instant::now() >= deadline {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        if self.resumed || self.thread.is_none() || self.forced_cleanup_requested {
+            return Err(denied(
+                "original creator already resumed/forced or lost primary thread",
+            ));
+        }
+        self.verify_binding(&self.binding)?;
+        let family = self.family_state()?;
+        if family.root != ProcessState::Running
+            || family.total_processes != 1
+            || family.active_processes != 1
+            || family.active_members != [self.binding.process.clone()]
+            || !family.retained_members.is_empty()
+        {
+            return Err(denied(
+                "pre-capture original Job has unexpected process history",
+            ));
+        }
+        if Instant::now() >= deadline {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        Ok(())
+    }
     pub fn verify_binding(&self, expected: &RootBinding) -> io::Result<()> {
         if expected != &self.binding {
             return Err(denied(

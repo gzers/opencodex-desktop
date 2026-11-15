@@ -170,6 +170,27 @@ impl Drop for Fixture {
     }
 }
 struct Guarded(OwnedRuntime);
+#[test]
+fn wl2_originals_capture_guard_requires_original_creator_before_resume() {
+    let fixture = Fixture::new();
+    let mut runtime = fixture.launch(&["exit".into(), "0".into()]);
+    let original = runtime.0.binding().clone();
+    let end = Instant::now() + Duration::from_secs(10);
+    runtime.0.require_creator_not_resumed(end).unwrap();
+    assert!(runtime
+        .0
+        .require_creator_not_resumed(Instant::now())
+        .is_err());
+    assert_eq!(runtime.0.binding(), &original);
+    runtime.0.resume().unwrap();
+    assert!(runtime.0.require_creator_not_resumed(end).is_err());
+    let ended = runtime.0.wait_normal_exit(end).unwrap();
+    assert!(ended.complete_exit());
+    assert_eq!(ended.root, ProcessState::Exited { code: 0 });
+    assert!(!runtime.0.forced_cleanup_requested());
+    assert!(runtime.0.require_creator_not_resumed(end).is_err());
+    println!("original retained synthetic creator admitted before own Resume only; expired/resumed/exited generation refused, same original binding, rawexit0 and no forced cleanup; not official/broker acceptance");
+}
 impl Drop for Guarded {
     fn drop(&mut self) {
         if !self
