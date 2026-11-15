@@ -104,6 +104,9 @@ pub(crate) struct Owner {
     stop_started: Option<Instant>,
     originals: Arc<Mutex<WindowsOriginals>>,
     original_phase: Option<LivePhase>,
+    // Every previous ORIGINAL creator/runtime/source remains retained; this is
+    // a flat vector, never reconstructed from a PID or serialized Closed text.
+    previous: Vec<Owner>,
     _outputs: [File; 2],
     _pins: Vec<File>,
 }
@@ -141,6 +144,21 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
     Ok(slot)
 }
 impl Owner {
+    pub(crate) fn originals_previous_owners(&mut self) -> &mut [Owner] {
+        &mut self.previous
+    }
+    pub(crate) fn originals_is_stopped(&self) -> bool {
+        self.stopped && self.stop_started.is_some()
+    }
+    pub(crate) fn originals_creator_has_resumed(&self) -> bool {
+        self.native.creator_has_resumed()
+    }
+    fn authorize_originals_successor(&mut self, window: &shared::ActionWindow) -> AppResult<()> {
+        let Some(LivePhase::Closed(closed)) = self.original_phase.take() else {
+            return Err(recovery_required());
+        };
+        self.with_originals(|originals, owner| originals.authorize_successor(closed, owner, window))
+    }
     fn with_originals<T>(
         &mut self,
         operation: impl FnOnce(&mut WindowsOriginals, &mut Owner) -> AppResult<T>,
@@ -156,6 +174,12 @@ impl Owner {
         let original = self.with_originals(|originals, owner| originals.capture(owner, window))?;
         self.original_phase = Some(LivePhase::Original(original));
         Ok(())
+    }
+    fn originals_before_resume(&mut self, deadline: Instant) -> AppResult<()> {
+        if !matches!(self.original_phase, Some(LivePhase::Original(_))) {
+            return Err(recovery_required());
+        }
+        self.with_originals(|originals, owner| originals.before_resume(owner, deadline))
     }
     pub(crate) fn scope(&self) -> AppResult<String> {
         use serde_json::json;
@@ -591,22 +615,24 @@ async fn execute_async(
         if !same(&owner.profile, &command.working_directory) {
             return Err(unknown(()));
         }
-        return match command.action {
-            LifecycleAction::Start => {
-                if owner.stopped {
-                    Err(recovery_required())
-                } else {
-                    owner
-                        .observe(window.deadline())
-                        .await
-                        .map(|_| LifecycleResult::Started)
+        if command.action != LifecycleAction::Start || !owner.stopped {
+            return match command.action {
+                LifecycleAction::Start => {
+                    if owner.stopped {
+                        Err(recovery_required())
+                    } else {
+                        owner
+                            .observe(window.deadline())
+                            .await
+                            .map(|_| LifecycleResult::Started)
+                    }
                 }
-            }
-            LifecycleAction::Stop | LifecycleAction::Restart => {
-                owner.stop(window.stop_deadline()).await?;
-                Err(recovery_required())
-            }
-        };
+                LifecycleAction::Stop | LifecycleAction::Restart => {
+                    owner.stop(window.stop_deadline()).await?;
+                    Err(recovery_required())
+                }
+            };
+        }
     }
     if command.action != LifecycleAction::Start {
         return Err(unknown(()));
@@ -668,6 +694,15 @@ async fn execute_async(
         },
     )?;
     super::windows_client_originals024::require_durable_capture()?;
+    // This remains BELOW the unchanged public production gate. Qualification
+    // consumes the one original Closed tag only after actual new source/plan
+    // admission. Failure retains the old Owner and all old native stores.
+    let inherited_originals = if let Some(old) = guard.as_mut() {
+        old.authorize_originals_successor(&window)?;
+        Some(old.originals.clone())
+    } else {
+        None
+    };
     let scope_pins = [
         data,
         plan.user_profile(),
@@ -688,6 +723,11 @@ async fn execute_async(
         stderr: &outputs[1],
     })
     .map_err(unknown)?;
+    let mut previous = Vec::new();
+    if let Some(mut old) = guard.take() {
+        previous.append(&mut old.previous);
+        previous.push(old);
+    }
     *guard = Some(Owner {
         runtime: runtime.clone(),
         selected,
@@ -704,8 +744,10 @@ async fn execute_async(
         scope_pins,
         created_at: Instant::now(),
         stop_started: None,
-        originals: Arc::new(Mutex::new(WindowsOriginals::default())),
+        originals: inherited_originals
+            .unwrap_or_else(|| Arc::new(Mutex::new(WindowsOriginals::default()))),
         original_phase: None,
+        previous,
         _outputs: outputs,
         _pins: pins,
     });
@@ -718,6 +760,8 @@ async fn execute_async(
             "取消后保留原创建句柄与Job，未推断退出",
         ));
     }
+    owner.originals_before_resume(window.deadline())?;
+    plan.check_current(runtime)?;
     owner.native.resume().map_err(unknown)?;
     loop {
         if Instant::now() >= window.deadline() {

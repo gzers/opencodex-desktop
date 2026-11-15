@@ -10,7 +10,7 @@ use crate::{
         windows_diagnostic_roles024::{ClosedExitHistory, NormalExit},
         windows_official_lifecycle024::Owner,
         windows_official_runtime024::RetainedPeer,
-        windows_supervisor024::{Absent, WindowsSupervisor},
+        windows_supervisor024::{Absent, ClosedAbsentHistory, WindowsSupervisor},
     },
     modules::runtime::{
         official_lifecycle024::{ActionWindow, ServiceObservation, StopAccepted},
@@ -204,6 +204,7 @@ struct Store {
     ready: Option<(u32, u16, String)>,
     stop_deadline: Option<Instant>,
     closed_exit: Option<ClosedExitHistory>,
+    closed_supervisor: Option<ClosedAbsentHistory>,
     failed: bool,
 }
 // These tags locate retained native state in THIS adapter only. No public
@@ -229,14 +230,117 @@ pub(crate) enum LivePhase {
 #[derive(Default)]
 pub(crate) struct WindowsOriginals {
     store: Option<Store>,
+    closed: Vec<Store>,
+    successor: Option<SuccessorTicket>,
+    failed: bool,
+}
+// Memory-only, one consumed original ClosedEligibility and exact ActionWindow.
+// Matching strings never create this ticket or the retained native histories.
+struct SuccessorTicket {
+    deadline: Instant,
+    stop_deadline: Instant,
+    binding: Vec<u8>,
+    previous_session: String,
 }
 impl WindowsOriginals {
+    fn recheck_closed(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+        if self.failed {
+            return Err(refused("原件历史adapter已poison；不得自动重试"));
+        }
+        let result = (|| {
+            before(end).map_err(refused)?;
+            let before_start = self
+                .store
+                .as_ref()
+                .is_none_or(|store| store.state == State::Closed)
+                || !owner.originals_creator_has_resumed();
+            let previous = owner.originals_previous_owners();
+            if previous.len() != self.closed.len() {
+                return Err(refused("原生历史Owner集合与原件集合不匹配"));
+            }
+            for (store, old) in self.closed.iter_mut().zip(previous) {
+                if store.failed || store.state != State::Closed || !old.originals_is_stopped() {
+                    return Err(refused("旧Owner/原件没有准确原闭合资格"));
+                }
+                store.source.check(old, end)?;
+                store
+                    .closed_exit
+                    .as_ref()
+                    .ok_or_else(|| refused("旧原始退出历史缺席"))?
+                    .check(old, end)?;
+                store
+                    .closed_supervisor
+                    .as_ref()
+                    .ok_or_else(|| refused("旧监督缺席历史缺席"))?
+                    .check(old, end)?;
+                if before_start {
+                    let absent = WindowsSupervisor.observe_absent(old, end)?;
+                    WindowsSupervisor.recheck_absent(old, &absent, end)?;
+                    old.originals_check_stopped_records(end)?;
+                }
+                store.tree.recheck(end).map_err(refused)?;
+                store.source.check(old, end)?;
+            }
+            let mut histories = self
+                .closed
+                .iter_mut()
+                .map(|store| &mut store.tree)
+                .collect::<Vec<_>>();
+            if let Some(current) = &mut self.store {
+                if current.failed {
+                    return Err(refused("当前原件Store已poison"));
+                }
+                current
+                    .tree
+                    .recheck_with_history(&mut histories, end)
+                    .map_err(refused)?;
+            } else if let Some(last) = histories.last() {
+                let raw = last.binding_bytes().map_err(refused)?;
+                let binding: Binding = serde_json::from_slice(&raw).map_err(refused)?;
+                let windows =
+                    PinnedDirectory::open_private(&binding.paths()[1].join("official024/windows"))
+                        .map_err(refused)?;
+                TreeCaptureV2::native_history_set(&binding, &mut histories, &windows, None, end)
+                    .map_err(refused)?;
+            }
+            before(end).map_err(refused)
+        })();
+        if result.is_err() {
+            self.failed = true;
+            if let Some(store) = &mut self.store {
+                store.failed = true;
+            }
+        }
+        result
+    }
+    pub(crate) fn before_resume(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+        self.recheck_closed(owner, end)?;
+        let result = (|| {
+            let store = self.store.as_mut().ok_or_else(|| refused("原始捕获缺席"))?;
+            if store.failed || store.state != State::Original {
+                return Err(refused("不是未Resume原捕获阶段"));
+            }
+            store.failed = true;
+            owner.originals_require_unresumed(end)?;
+            store.source.check(owner, end)?;
+            store.tree.verify_working_unchanged(end).map_err(refused)?;
+            owner.originals_require_unresumed(end)?;
+            store.failed = false;
+            Ok(())
+        })();
+        if result.is_err() {
+            self.failed = true;
+            return result;
+        }
+        self.recheck_closed(owner, end)
+    }
     pub(crate) fn check_ready(
         &mut self,
         owner: &mut Owner,
         ready: &ServiceObservation,
         end: Instant,
     ) -> AppResult<()> {
+        self.recheck_closed(owner, end)?;
         let store = self
             .store
             .as_mut()
@@ -253,7 +357,7 @@ impl WindowsOriginals {
         }
         store.tree.verify_working_unchanged(end).map_err(refused)?;
         store.failed = false;
-        Ok(())
+        self.recheck_closed(owner, end)
     }
     fn begin(
         &mut self,
@@ -261,7 +365,8 @@ impl WindowsOriginals {
         state: State,
         owner: &mut Owner,
         end: Instant,
-    ) -> AppResult<&mut Store> {
+    ) -> AppResult<(&mut Store, &mut [Store])> {
+        self.recheck_closed(owner, end)?;
         let store = self
             .store
             .as_mut()
@@ -272,7 +377,7 @@ impl WindowsOriginals {
         store.failed = true;
         store.source.check(owner, end)?;
         store.tree.recheck(end).map_err(refused)?;
-        Ok(store)
+        Ok((store, &mut self.closed))
     }
 }
 impl ClientOriginals for WindowsOriginals {
@@ -289,8 +394,40 @@ impl ClientOriginals for WindowsOriginals {
             return Err(refused("已有原生session；不得替换/自动追赶"));
         }
         let end = window.deadline();
+        self.recheck_closed(owner, end)?;
+        let successor = if self.closed.is_empty() {
+            if self.successor.is_some() {
+                return Err(refused("首代出现后继ticket"));
+            }
+            None
+        } else {
+            Some(
+                self.successor
+                    .take()
+                    .ok_or_else(|| refused("已消费或缺席后继动作ticket"))?,
+            )
+        };
         let (source, binding) = Source::capture(owner, end)?;
-        let tree = TreeCaptureV2::capture(binding, end).map_err(refused)?;
+        if let Some(ticket) = successor {
+            if ticket.deadline != end
+                || ticket.stop_deadline != window.stop_deadline()
+                || ticket.binding != source.binding_raw
+                || self
+                    .closed
+                    .last()
+                    .is_none_or(|old| old.tree.session_id() != ticket.previous_session)
+            {
+                return Err(refused("后继ticket不是本次原动作/上下文/前驱"));
+            }
+        }
+        let mut histories = self
+            .closed
+            .iter_mut()
+            .map(|old| &mut old.tree)
+            .collect::<Vec<_>>();
+        let tree =
+            TreeCaptureV2::capture_with_history(binding, &mut histories, end).map_err(refused)?;
+        drop(histories);
         if tree.binding_bytes().map_err(refused)? != source.binding_raw {
             return Err(refused("capture/current不是原source绑定"));
         }
@@ -304,13 +441,24 @@ impl ClientOriginals for WindowsOriginals {
             ready: None,
             stop_deadline: None,
             closed_exit: None,
+            closed_supervisor: None,
             failed: true,
         });
         let store = self.store.as_mut().unwrap();
-        store.tree.create_working_trees(end).map_err(refused)?;
+        let mut histories = self
+            .closed
+            .iter_mut()
+            .map(|old| &mut old.tree)
+            .collect::<Vec<_>>();
+        store
+            .tree
+            .create_working_trees_with_history(&mut histories, end)
+            .map_err(refused)?;
         owner.originals_require_unresumed(end)?;
         store.source.check(owner, end)?;
         store.failed = false;
+        drop(histories);
+        self.recheck_closed(owner, end)?;
         Ok(OriginalSession { session })
     }
     fn record_ready(
@@ -320,7 +468,7 @@ impl ClientOriginals for WindowsOriginals {
         ready: &ServiceObservation,
         end: Instant,
     ) -> AppResult<ReadySession> {
-        let store = self.begin(&original.session, State::Original, owner, end)?;
+        let (store, _) = self.begin(&original.session, State::Original, owner, end)?;
         owner.originals_check_ready(ready, end)?;
         // Actual working bytes are archived before the unchanged-generation
         // veto inside record_working_phase. Unknown edits remain a refusal,
@@ -333,6 +481,7 @@ impl ClientOriginals for WindowsOriginals {
         store.ready = Some((ready.pid(), ready.port(), ready.record_sha256().into()));
         store.state = State::Ready;
         store.failed = false;
+        self.recheck_closed(owner, end)?;
         Ok(ReadySession {
             session: original.session,
         })
@@ -343,7 +492,7 @@ impl ClientOriginals for WindowsOriginals {
         owner: &mut Owner,
         end: Instant,
     ) -> AppResult<PreparedRestore> {
-        let store = self.begin(&ready.session, State::Ready, owner, end)?;
+        let (store, _) = self.begin(&ready.session, State::Ready, owner, end)?;
         let (pid, port, digest) = store
             .ready
             .as_ref()
@@ -362,6 +511,7 @@ impl ClientOriginals for WindowsOriginals {
         store.stop_deadline = Some(end);
         store.state = State::Prepared;
         store.failed = false;
+        self.recheck_closed(owner, end)?;
         Ok(PreparedRestore {
             session: ready.session,
         })
@@ -375,7 +525,7 @@ impl ClientOriginals for WindowsOriginals {
         official: &StopAccepted,
         end: Instant,
     ) -> AppResult<ClosedEligibility> {
-        let store = self.begin(&prepared.session, State::Prepared, owner, end)?;
+        let (store, previous) = self.begin(&prepared.session, State::Prepared, owner, end)?;
         if store.stop_deadline != Some(end)
             || store.ready.as_ref()
                 != Some(&(
@@ -390,7 +540,14 @@ impl ClientOriginals for WindowsOriginals {
         WindowsSupervisor.recheck_absent(owner, &supervisor, end)?;
         owner.originals_check_stopped_records(end)?;
         store.tree.verify_working_unchanged(end).map_err(refused)?;
-        store.tree.restore_after_teardown(end).map_err(refused)?;
+        let mut histories = previous
+            .iter_mut()
+            .map(|old| &mut old.tree)
+            .collect::<Vec<_>>();
+        store
+            .tree
+            .restore_after_teardown_with_history(&mut histories, end)
+            .map_err(refused)?;
         // Native predicates are reobserved AFTER restoration, inside the same
         // absolute Stop window. Phase text alone is never a predicate.
         native_exit.check(owner, end)?;
@@ -411,8 +568,11 @@ impl ClientOriginals for WindowsOriginals {
         owner.originals_check_stopped_records(end)?;
         store.source.check(owner, end)?;
         store.closed_exit = Some(native_exit.into_closed_history(owner, end)?);
+        store.closed_supervisor = Some(supervisor.into_closed_history(owner, end)?);
         store.state = State::Closed;
         store.failed = false;
+        drop(histories);
+        self.recheck_closed(owner, end)?;
         Ok(ClosedEligibility {
             session: prepared.session,
         })
@@ -425,11 +585,19 @@ impl ClientOriginals for WindowsOriginals {
     ) -> AppResult<()> {
         window.remaining()?;
         let end = window.deadline();
-        let store = self.begin(&closed.session, State::Closed, owner, end)?;
+        if self.successor.is_some() || self.closed.len() >= 512 {
+            return Err(refused("后继ticket重复或原历史集合预算耗尽"));
+        }
+        let (store, _) = self.begin(&closed.session, State::Closed, owner, end)?;
         store
             .closed_exit
             .as_ref()
             .ok_or_else(|| refused("原Stop窗口内完成的退出历史缺席"))?
+            .check(owner, end)?;
+        store
+            .closed_supervisor
+            .as_ref()
+            .ok_or_else(|| refused("原监督缺席历史缺席"))?
             .check(owner, end)?;
         // The new action does not reuse a previous Stop proof/deadline.
         let absent = WindowsSupervisor.observe_absent(owner, end)?;
@@ -437,12 +605,20 @@ impl ClientOriginals for WindowsOriginals {
         owner.originals_check_stopped_records(end)?;
         store.tree.recheck(end).map_err(refused)?;
         store.source.check(owner, end)?;
-        // Original history is now sealed and DELETE roots released, but a new
-        // generation still needs qualified history-set transfer and exact
-        // namespace registration. This is not a reusable successor permission.
-        Err(refused(
-            "后继完整历史集合移交/命名空间登记/新代次capture尚未完成；保持拒绝",
-        ))
+        let ticket = SuccessorTicket {
+            deadline: end,
+            stop_deadline: window.stop_deadline(),
+            binding: store.source.binding_raw.clone(),
+            previous_session: store.tree.session_id().into(),
+        };
+        store.failed = false;
+        self.closed.push(
+            self.store
+                .take()
+                .ok_or_else(|| refused("原生闭合Store缺席"))?,
+        );
+        self.successor = Some(ticket);
+        Ok(())
     }
 }
 

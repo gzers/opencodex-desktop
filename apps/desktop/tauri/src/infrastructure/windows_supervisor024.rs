@@ -230,7 +230,58 @@ pub(crate) struct Absent {
     observed: Instant,
     native: NativeQueries,
 }
+/// Retained old completed-Stop fact, never a current H absence claim after a
+/// later native generation starts. Old completion deadline stays immutable.
+pub(crate) struct ClosedAbsentHistory {
+    original: Absent,
+    completed_at: Instant,
+}
+impl ClosedAbsentHistory {
+    pub(crate) fn check(&self, owner: &mut Owner, new_deadline: Instant) -> AppResult<()> {
+        owner.check_current(new_deadline)?;
+        if self.completed_at >= self.original.deadline
+            || self.original.observed >= self.completed_at
+            || self.original.scope != owner.scope()?
+            || !queries_absent(&self.original.native)
+        {
+            return Err(unconfirmed("原Stop内监督缺席历史不成立"));
+        }
+        // Current machine registration is independent of H's newer runtime
+        // records. Fresh Unknown/present is still a veto with its raw code.
+        let fresh = query(new_deadline).map_err(|e| {
+            unconfirmed(format!("历史监督注册重查 raw={:?}; {e}", e.raw_os_error()))
+        })?;
+        if !queries_absent(&fresh) {
+            return Err(unconfirmed(format!("历史监督注册存在或未知 {fresh:?}")));
+        }
+        let family = owner
+            .original_native()
+            .family_state()
+            .map_err(|e| unconfirmed(e.to_string()))?;
+        if !family.complete_exit()
+            || family.total_processes as usize != family.retained_members.len() + 1
+        {
+            return Err(unconfirmed("原历史监督家族代次未完整退出"));
+        }
+        owner.check_current(new_deadline)
+    }
+}
 impl Absent {
+    pub(crate) fn into_closed_history(
+        self,
+        owner: &mut Owner,
+        deadline: Instant,
+    ) -> AppResult<ClosedAbsentHistory> {
+        WindowsSupervisor.recheck_absent(owner, &self, deadline)?;
+        let completed_at = Instant::now();
+        if completed_at >= deadline {
+            return Err(unconfirmed("原监督缺席闭合窗口已过"));
+        }
+        Ok(ClosedAbsentHistory {
+            original: self,
+            completed_at,
+        })
+    }
     pub(crate) fn check(&self, owner: &mut Owner, deadline: Instant) -> AppResult<()> {
         owner.check_current(deadline)?;
         if self.deadline != deadline

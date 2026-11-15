@@ -2,6 +2,39 @@
 use super::*;
 use crate::infrastructure::windows_client_originals024::v2::history::MAX_HISTORY;
 impl TreeCaptureV2 {
+    pub(in crate::infrastructure::windows_client_originals024::v2) fn create_working_trees_with_history(
+        &mut self,
+        histories: &mut [&mut Self],
+        end: Instant,
+    ) -> io::Result<()> {
+        for index in 0..self.trees.len() {
+            self.recheck_with_history(histories, end)?;
+            self.move_root(index, end)?;
+            self.recheck_with_history(histories, end)?;
+            self.begin_tree(index, TreeAction::CreateWorkingCopy, end)?;
+            self.trees[index].create_working_copy(end)?;
+            self.complete_tree(index, TreeAction::CreateWorkingCopy, end)?;
+            self.recheck_with_history(histories, end)?;
+        }
+        Ok(())
+    }
+    pub(in crate::infrastructure::windows_client_originals024::v2) fn restore_after_teardown_with_history(
+        &mut self,
+        histories: &mut [&mut Self],
+        end: Instant,
+    ) -> io::Result<()> {
+        self.recheck_with_history(histories, end)?;
+        if self.pending.tip.phase != Phase::OfficialTeardown {
+            return Err(invalid());
+        }
+        for index in 0..self.trees.len() {
+            self.recheck_with_history(histories, end)?;
+            self.restore_root(index, end)?;
+            self.recheck_with_history(histories, end)?;
+        }
+        self.advance_phase(Phase::Restored, end)?;
+        self.recheck_with_history(histories, end)
+    }
     fn closed_reference(&mut self, end: Instant) -> io::Result<ClosedReference> {
         self.recheck(end)?;
         if self.pending.tip.phase != Phase::Closed

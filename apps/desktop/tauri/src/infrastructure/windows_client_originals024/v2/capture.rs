@@ -581,6 +581,31 @@ mod tests {
         captured.seal_closed_originals(deadline).unwrap();
         captured.release_closed_original_handles(deadline).unwrap();
     }
+    fn close_storage_with_history(
+        captured: &mut TreeCaptureV2,
+        previous: &mut [&mut TreeCaptureV2],
+        deadline: Instant,
+    ) {
+        captured
+            .create_working_trees_with_history(previous, deadline)
+            .unwrap();
+        captured
+            .record_working_phase(Phase::Ready, deadline)
+            .unwrap();
+        captured.recheck_with_history(previous, deadline).unwrap();
+        captured
+            .record_working_phase(Phase::PreparedRestore, deadline)
+            .unwrap();
+        captured
+            .advance_phase(Phase::OfficialTeardown, deadline)
+            .unwrap();
+        captured
+            .restore_after_teardown_with_history(previous, deadline)
+            .unwrap();
+        captured.seal_closed_originals(deadline).unwrap();
+        captured.release_closed_original_handles(deadline).unwrap();
+        captured.recheck_with_history(previous, deadline).unwrap();
+    }
     #[test]
     fn wl2_r4_successor_three_native_generations_keep_exact_predecessors() {
         let mut temp = Fixture::new();
@@ -604,7 +629,7 @@ mod tests {
                 TreeCaptureV2::capture_with_history(binding, &mut previous, end()).unwrap();
             assert_eq!(current.manifest.predecessors.len(), generation - 1);
             current.recheck_with_history(&mut previous, end()).unwrap();
-            close_storage(&mut current, end());
+            close_storage_with_history(&mut current, &mut previous, end());
             current.recheck_with_history(&mut previous, end()).unwrap();
             assert_eq!(
                 std::fs::read(profile.join(".codex/config.toml")).unwrap(),
@@ -625,6 +650,22 @@ mod tests {
         );
         let binding: Binding = serde_json::from_slice(&binding_raw).unwrap();
         let windows = PinnedDirectory::open_private(&data.join("official024/windows")).unwrap();
+        let mut reversed = histories.iter_mut().rev().collect::<Vec<_>>();
+        assert!(
+            TreeCaptureV2::native_history_set(&binding, &mut reversed, &windows, None, end())
+                .is_err()
+        );
+        drop(reversed);
+        let mut sparse = histories
+            .iter_mut()
+            .enumerate()
+            .filter_map(|(i, value)| (i != 1).then_some(value))
+            .collect::<Vec<_>>();
+        assert!(
+            TreeCaptureV2::native_history_set(&binding, &mut sparse, &windows, None, end())
+                .is_err()
+        );
+        drop(sparse);
         let refs = TreeCaptureV2::native_history_set(
             &binding,
             &mut histories.iter_mut().collect::<Vec<_>>(),
@@ -647,6 +688,47 @@ mod tests {
         drop(histories);
         drop(windows);
         println!("three actual native-storage generations create independent original manifests/current/custody and ordered predecessor refs, keep original histories unchanged after new user bytes, preserve exact live original each cycle; storage fixture only, no official ClosedEligibility/Start budget or Owner adoption");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_successor_old_history_drift_before_first_move_preserves_new_original() {
+        let mut temp = Fixture::new();
+        let binding = setup(&temp);
+        let raw = serde_json::to_vec(&binding).unwrap();
+        let profile = binding.paths()[0].to_path_buf();
+        let mut old = TreeCaptureV2::capture(binding, end()).unwrap();
+        close_storage(&mut old, end());
+        std::fs::write(
+            profile.join(".codex/config.toml"),
+            b"fresh synthetic new original",
+        )
+        .unwrap();
+        let mut current = TreeCaptureV2::capture_with_history(
+            serde_json::from_slice(&raw).unwrap(),
+            &mut [&mut old],
+            end(),
+        )
+        .unwrap();
+        let foreign = old.custody.path().join("foreign.new");
+        std::fs::write(&foreign, b"old native history changed after new capture").unwrap();
+        assert!(current
+            .create_working_trees_with_history(&mut [&mut old], end())
+            .is_err());
+        assert!(current.failed && old.failed);
+        assert!(!current.custody.path().join(".codex").exists());
+        assert_eq!(
+            std::fs::read(profile.join(".codex/config.toml")).unwrap(),
+            b"fresh synthetic new original"
+        );
+        let directory = current.pending.directory.path().to_path_buf();
+        assert!(!directory.join("phase-00000002.json").exists());
+        drop(current);
+        drop(old);
+        let pending = read_pending(&directory).unwrap();
+        assert_eq!(pending.tip.sequence, 1);
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        drop(pending);
+        println!("old native history drift after successor capture blocks first root move, poisons both native stores, leaves new originals/phase1/current and foreign old scene intact; no permission or catch-up");
         temp.retain();
     }
     #[test]

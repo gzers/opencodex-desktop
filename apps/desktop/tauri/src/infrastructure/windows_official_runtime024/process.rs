@@ -712,6 +712,11 @@ impl OwnedRuntime {
     pub fn root_state(&self) -> io::Result<ProcessState> {
         state(self.process.as_raw_handle())
     }
+    /// Monotonic creator-side dispatch state only, not native ownership or a
+    /// suspend-count proof. Admission still consumes original native checks.
+    pub fn creator_has_resumed(&self) -> bool {
+        self.resumed
+    }
     /// Creator-side admission before original-client capture. This monotonic
     /// state is never decoded from JSON or reconstructed from a PID. It does
     /// not assert an untrusted peer has never called a thread API externally.
