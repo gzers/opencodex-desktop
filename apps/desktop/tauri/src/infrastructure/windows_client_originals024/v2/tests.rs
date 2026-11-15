@@ -1,4 +1,93 @@
 use super::*;
+fn progress_prefix(steps: &[(Phase, TreeRecord)]) -> (Vec<u8>, Vec<Vec<u8>>) {
+    let (manifest, old, _) = bundle(manifest_value());
+    let mut records = vec![old[0].clone()];
+    for (phase, tree_record) in steps {
+        let mut stage: Stage = json(&old[0], 65536).unwrap();
+        stage.sequence = records.len() as u32 + 1;
+        stage.previous_digest = hash::sha256_hex(records.last().unwrap());
+        stage.previous_record_id = Some(format!("phase-{:08}.json", stage.sequence - 1));
+        stage.phase = *phase;
+        stage.tree_record = *tree_record;
+        records.push(serde_json::to_vec(&stage).unwrap());
+    }
+    (manifest, records)
+}
+#[test]
+fn wl2_r4_tree_progress_refuses_gap_duplicate_wrong_root_and_unfinished_phase() {
+    use TreeAction::{CreateWorkingCopy, MoveToCustody, RestoreOriginal};
+    use TreeRoot::{Codex, Grok};
+    let intent = |root, action| TreeRecord::Intent { root, action };
+    let done = |root, action| TreeRecord::Completed { root, action };
+    let c = Phase::Captured;
+    let invalid_prefixes = vec![
+        vec![(c, done(Codex, MoveToCustody))],
+        vec![(c, intent(Codex, CreateWorkingCopy))],
+        vec![
+            (c, intent(Codex, MoveToCustody)),
+            (c, done(Grok, MoveToCustody)),
+        ],
+        vec![
+            (c, intent(Codex, MoveToCustody)),
+            (c, intent(Grok, MoveToCustody)),
+        ],
+        vec![
+            (c, intent(Codex, MoveToCustody)),
+            (c, done(Codex, MoveToCustody)),
+            (c, intent(Codex, MoveToCustody)),
+        ],
+        vec![
+            (c, intent(Codex, MoveToCustody)),
+            (Phase::Ready, TreeRecord::None),
+        ],
+        vec![
+            (c, intent(Codex, MoveToCustody)),
+            (c, done(Codex, MoveToCustody)),
+            (Phase::Ready, TreeRecord::None),
+        ],
+        vec![(c, intent(Codex, RestoreOriginal))],
+    ];
+    for steps in invalid_prefixes {
+        let (manifest, records) = progress_prefix(&steps);
+        assert!(
+            check_prefix(&manifest, &records, &current_identity().unwrap().sid).is_err(),
+            "invalid progress {steps:?}"
+        );
+    }
+    let (manifest, partial) = progress_prefix(&[(c, intent(Codex, MoveToCustody))]);
+    let tip = check_prefix(&manifest, &partial, &current_identity().unwrap().sid).unwrap();
+    assert_eq!(tip.tree_record, intent(Codex, MoveToCustody));
+    assert!(!tip.terminal_record_only);
+    let mut old: serde_json::Value = serde_json::from_slice(&partial[0]).unwrap();
+    old.as_object_mut().unwrap().remove("treeRecord");
+    assert!(json::<Stage>(&serde_json::to_vec(&old).unwrap(), 65536).is_err());
+    old["treeRecord"] =
+        serde_json::json!({"Intent":{"root":"Codex","action":"CopyOriginalAcrossVolumes"}});
+    assert!(json::<Stage>(&serde_json::to_vec(&old).unwrap(), 65536).is_err());
+}
+#[test]
+fn wl2_r4_tree_progress_abort_restore_is_pending_data_not_closed_permission() {
+    let mut steps = Vec::new();
+    for root in [TreeRoot::Codex, TreeRoot::Grok] {
+        for action in [TreeAction::MoveToCustody, TreeAction::CreateWorkingCopy] {
+            steps.push((Phase::Captured, TreeRecord::Intent { root, action }));
+            steps.push((Phase::Captured, TreeRecord::Completed { root, action }));
+        }
+    }
+    steps.push((Phase::Aborted, TreeRecord::None));
+    for root in [TreeRoot::Codex, TreeRoot::Grok] {
+        let action = TreeAction::RestoreOriginal;
+        steps.push((Phase::Aborted, TreeRecord::Intent { root, action }));
+        steps.push((Phase::Aborted, TreeRecord::Completed { root, action }));
+    }
+    let (manifest, records) = progress_prefix(&steps);
+    let tip = check_prefix(&manifest, &records, &current_identity().unwrap().sid).unwrap();
+    assert_eq!(tip.sequence, 14);
+    assert!(tip.phase == Phase::Aborted && !tip.terminal_record_only);
+    steps.push((Phase::Closed, TreeRecord::None));
+    let (manifest, records) = progress_prefix(&steps);
+    assert!(check_prefix(&manifest, &records, &current_identity().unwrap().sid).is_err());
+}
 fn snapshot(id: &str) -> serde_json::Value {
     let entries=super::super::bounded::REQUIRED.into_iter().map(|mask|{
         let structure=serde_json::json!({"mask":mask,"revision":1,"control":0,"state":"absent","sid":null,"aclRevision":null,"aces":[]});
@@ -36,6 +125,7 @@ pub(super) fn bundle(m: serde_json::Value) -> (Vec<u8>, Vec<Vec<u8>>, Vec<u8>) {
             },
             binding,
             phase: p,
+            tree_record: TreeRecord::None,
             originals_manifest_digest: hash::sha256_hex(&manifest),
             security_policy_digest: parsed.security_policy_digest.clone(),
         };

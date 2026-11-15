@@ -421,6 +421,38 @@ impl RootTree {
         self.poisoned = false;
         Ok(())
     }
+    pub(super) fn verify_moved(&mut self, end: Instant) -> io::Result<()> {
+        self.check_original(end)?;
+        let custody = self.custody.as_ref().ok_or_else(invalid)?;
+        custody.recheck()?;
+        if self.working.is_some()
+            || self.root.is_some()
+                && self.location
+                    != custody
+                        .path()
+                        .join(self.original.file_name().ok_or_else(invalid)?)
+        {
+            return Err(invalid());
+        }
+        require_absent(&self.original)
+    }
+    pub(super) fn verify_working(&mut self, end: Instant) -> io::Result<()> {
+        self.check_original(end)?;
+        self.custody.as_ref().ok_or_else(invalid)?.recheck()?;
+        let expected = self.working.as_ref().ok_or_else(invalid)?;
+        let mut working = open(&self.original, true, true)?;
+        if image(&self.original, &mut working, end)? != *expected {
+            return Err(invalid());
+        }
+        check(end)
+    }
+    pub(super) fn verify_restored(&mut self, end: Instant) -> io::Result<()> {
+        self.check_original(end)?;
+        if self.custody.is_some() || self.working.is_some() || self.location != self.original {
+            return Err(invalid());
+        }
+        check(end)
+    }
     pub(super) fn restore_original(&mut self, end: Instant) -> io::Result<()> {
         self.check_original(end)?;
         let custody = self.custody.as_ref().ok_or_else(invalid)?;

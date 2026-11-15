@@ -193,6 +193,26 @@ impl BoundedCurrentV2 {
         phase: Phase,
         end: Instant,
     ) -> io::Result<PendingV2> {
+        self.append_record(pending, phase, TreeRecord::None, end)
+    }
+    pub(super) fn append_tree_record(
+        &mut self,
+        pending: &PendingV2,
+        record: TreeRecord,
+        end: Instant,
+    ) -> io::Result<PendingV2> {
+        if record == TreeRecord::None {
+            return Err(invalid());
+        }
+        self.append_record(pending, pending.tip.phase, record, end)
+    }
+    fn append_record(
+        &mut self,
+        pending: &PendingV2,
+        phase: Phase,
+        tree_record: TreeRecord,
+        end: Instant,
+    ) -> io::Result<PendingV2> {
         self.check(end)?;
         if pending.directory.identity() != self.parent.identity()
             || current_for(&pending.tip) != self.tip
@@ -203,19 +223,8 @@ impl BoundedCurrentV2 {
         if current_for(&fresh.tip) != self.tip {
             return Err(invalid());
         }
-        let manifest: Manifest = json(
-            &std::fs::read(self.parent.path().join("manifest.json"))?,
-            1024 * 1024,
-        )?;
-        let last_path = self
-            .parent
-            .path()
-            .join(format!("phase-{:08}.json", self.tip.sequence));
-        let mut last_record = PrivateRecord::open(&last_path, 65536)?;
-        let last: Stage = json(&last_record.read()?, 65536)?;
-        if !transition(&last.phase, &phase) {
-            return Err(invalid());
-        }
+        let manifest: Manifest = json(&fresh.manifest_raw, 1024 * 1024)?;
+        let last: Stage = json(fresh.phase_raw.last().ok_or_else(invalid)?, 65536)?;
         let stage = Stage {
             schema: ORIGINALS_RECORD_SCHEMA_V2.into(),
             document_kind: "phase".into(),
@@ -225,10 +234,14 @@ impl BoundedCurrentV2 {
             previous_record_id: Some(format!("phase-{:08}.json", last.sequence)),
             binding: manifest.binding,
             phase,
+            tree_record,
             originals_manifest_digest: self.tip.originals_manifest_digest.clone(),
             security_policy_digest: self.tip.security_policy_digest.clone(),
         };
         let raw = serde_json::to_vec(&stage).map_err(|_| invalid())?;
+        let mut prefix = fresh.phase_raw.clone();
+        prefix.push(raw.clone());
+        check_prefix(&fresh.manifest_raw, &prefix, &current_identity()?.sid)?;
         deadline(end)?;
         let record = PrivateRecord::create(
             &self

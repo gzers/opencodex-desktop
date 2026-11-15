@@ -52,6 +52,10 @@ impl MoveIntent<'_> {
             .file_name()
             .and_then(|s| s.to_str())
             .ok_or_else(invalid)?;
+        if !matches!(self.pending.tip.tree_record,TreeRecord::Intent{root:record_root,action:TreeAction::MoveToCustody} if record_root.leaf()==root)
+        {
+            return Err(invalid());
+        }
         if ![".codex", ".grok"].contains(&root)
             || original.parent() != Some(self.manifest.binding.paths()[0])
         {
@@ -172,6 +176,7 @@ impl TreeCaptureV2 {
             )
             .map_err(|_| invalid())?,
             phase: Phase::Captured,
+            tree_record: TreeRecord::None,
             originals_manifest_digest: hash::sha256_hex(&raw),
             security_policy_digest: manifest.security_policy_digest.clone(),
         };
@@ -217,6 +222,7 @@ impl TreeCaptureV2 {
     }
     fn move_root(&mut self, index: usize, end: Instant) -> io::Result<()> {
         self.recheck(end)?;
+        self.begin_tree(index, TreeAction::MoveToCustody, end)?;
         let tree = self.trees.get_mut(index).ok_or_else(invalid)?;
         let mut intent = MoveIntent {
             pending: &self.pending,
@@ -224,30 +230,76 @@ impl TreeCaptureV2 {
             custody: &self.custody,
             manifest: &self.manifest,
         };
-        self.failed = true;
         tree.move_from_manifest(&mut intent, end)?;
+        self.complete_tree(index, TreeAction::MoveToCustody, end)
+    }
+    fn begin_tree(&mut self, index: usize, action: TreeAction, end: Instant) -> io::Result<()> {
+        self.recheck(end)?;
+        let root = TreeRoot::from_index(index)?;
+        self.failed = true;
+        self.pending = self.current.append_tree_record(
+            &self.pending,
+            TreeRecord::Intent { root, action },
+            end,
+        )?;
+        Ok(())
+    }
+    fn complete_tree(&mut self, index: usize, action: TreeAction, end: Instant) -> io::Result<()> {
+        before(end)?;
+        self.manifest.binding.check_native(&self.peer, &self.pins)?;
+        let root = TreeRoot::from_index(index)?;
+        // Original tree ID/bytes/projections must remain true before the record
+        // may describe a completed operation. Any write/postcheck failure keeps
+        // this capture poisoned and its last durable intention in place.
+        let tree = self.trees.get_mut(index).ok_or_else(invalid)?;
+        match action {
+            TreeAction::MoveToCustody => tree.verify_moved(end)?,
+            TreeAction::CreateWorkingCopy => tree.verify_working(end)?,
+            TreeAction::RestoreOriginal => tree.verify_restored(end)?,
+        }
+        self.pending = self.current.append_tree_record(
+            &self.pending,
+            TreeRecord::Completed { root, action },
+            end,
+        )?;
         self.failed = false;
+        if let Err(error) = self.recheck(end) {
+            self.failed = true;
+            return Err(error);
+        }
         Ok(())
     }
     pub(super) fn create_working_trees(&mut self, end: Instant) -> io::Result<()> {
         for index in 0..self.trees.len() {
             self.move_root(index, end)?;
-            self.failed = true;
+            self.begin_tree(index, TreeAction::CreateWorkingCopy, end)?;
             self.trees[index].create_working_copy(end)?;
-            self.failed = false;
+            self.complete_tree(index, TreeAction::CreateWorkingCopy, end)?;
         }
         self.recheck(end)
     }
     /// Component restoration only: no official process can be created through
-    /// this component, and no Restored/Closed record or eligibility is emitted.
+    /// this component. Aborted remains recovery-required; no Restored/Closed
+    /// record or eligibility is emitted for this nonproduction mechanism.
     pub(super) fn restore_exact(&mut self, end: Instant) -> io::Result<()> {
         self.recheck(end)?;
-        self.failed = true;
-        for tree in &mut self.trees {
-            tree.restore_original(end)?;
+        if self.pending.tip.phase != Phase::Captured {
+            return Err(invalid());
         }
+        self.failed = true;
+        self.pending = self
+            .current
+            .append_pending(&self.pending, Phase::Aborted, end)?;
         self.failed = false;
+        for index in 0..self.trees.len() {
+            self.restore_root(index, end)?;
+        }
         self.recheck(end)
+    }
+    fn restore_root(&mut self, index: usize, end: Instant) -> io::Result<()> {
+        self.begin_tree(index, TreeAction::RestoreOriginal, end)?;
+        self.trees[index].restore_original(end)?;
+        self.complete_tree(index, TreeAction::RestoreOriginal, end)
     }
 }
 
@@ -292,8 +344,9 @@ mod tests {
         drop(captured);
         let pending = read_pending(&path).unwrap();
         assert!(pending.current_matches && !pending.terminal_record_only);
-        assert_eq!(pending.tip.sequence, 1);
-        println!("native v2 actual tree manifest/current before move, both roots restored IDs/content/8projections; single canonical journal only; pending Captured not Closed; production source admission unproven");
+        assert_eq!(pending.tip.sequence, 14);
+        assert!(pending.tip.phase == Phase::Aborted);
+        println!("native v2 actual tree manifest/current and each Intent/Completed before/after move/workcopy/abort-restore; both roots restored IDs/content/8projections; single canonical journal only; pending Aborted not Closed; production source admission unproven");
     }
     #[test]
     fn wl2_r4_native_interrupted_tree_capture_is_pending_and_never_text_closed() {
@@ -307,10 +360,84 @@ mod tests {
         drop(captured); // deliberately interrupted; Drop never restores/deletes
         let pending = read_pending(&path).unwrap();
         assert!(pending.current_matches && !pending.terminal_record_only);
-        assert_eq!(pending.tip.sequence, 1);
+        assert_eq!(pending.tip.sequence, 3);
         drop(pending);
         assert!(custody.join(".codex/config.toml").exists());
         println!("native actual first-root interruption preserves original custody and canonical v2 pending, no reopen restoration authority or Closed");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_native_intent_without_native_move_cannot_publish_completed() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        let path = captured.pending.directory.path().to_path_buf();
+        let original = captured.pins[0].path().join(".codex/config.toml");
+        captured
+            .begin_tree(0, TreeAction::MoveToCustody, end())
+            .unwrap();
+        assert!(captured
+            .complete_tree(0, TreeAction::MoveToCustody, end())
+            .is_err());
+        assert!(captured.create_working_trees(end()).is_err());
+        assert!(original.exists());
+        drop(captured);
+        let pending = read_pending(&path).unwrap();
+        assert_eq!(pending.tip.sequence, 2);
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        assert_eq!(
+            pending.tip.tree_record,
+            TreeRecord::Intent {
+                root: TreeRoot::Codex,
+                action: TreeAction::MoveToCustody
+            }
+        );
+        drop(pending);
+        println!("native first move not executed: Completed refused, original unchanged, canonical Intent/current retained, no retry or Closed");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_native_second_restore_conflict_keeps_exact_mixed_state_and_intent() {
+        let mut temp = Fixture::new();
+        let binding = setup(&temp);
+        let profile = binding.paths()[0];
+        std::fs::create_dir(profile.join(".grok")).unwrap();
+        std::fs::write(
+            profile.join(".grok/settings.json"),
+            b"synthetic original Grok",
+        )
+        .unwrap();
+        let mut captured = TreeCaptureV2::capture(binding, end()).unwrap();
+        let path = captured.pending.directory.path().to_path_buf();
+        captured.create_working_trees(end()).unwrap();
+        captured.pending = captured
+            .current
+            .append_pending(&captured.pending, Phase::Aborted, end())
+            .unwrap();
+        captured.restore_root(0, end()).unwrap();
+        let foreign = captured.pins[0].path().join(".grok/foreign.new");
+        std::fs::write(&foreign, b"external synthetic conflict").unwrap();
+        assert!(captured.restore_root(1, end()).is_err());
+        assert!(captured.failed);
+        assert_eq!(
+            std::fs::read(&foreign).unwrap(),
+            b"external synthetic conflict"
+        );
+        assert!(captured.pins[0].path().join(".codex/config.toml").exists());
+        assert!(captured.custody.path().join(".grok/settings.json").exists());
+        assert!(captured.restore_exact(end()).is_err());
+        drop(captured);
+        let pending = read_pending(&path).unwrap();
+        assert_eq!(pending.tip.sequence, 13);
+        assert_eq!(
+            pending.tip.tree_record,
+            TreeRecord::Intent {
+                root: TreeRoot::Grok,
+                action: TreeAction::RestoreOriginal
+            }
+        );
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        drop(pending);
+        println!("native first root restored, second foreign edit retained, original Grok in custody, exact restore Intent pending; no rollback/catch-up/Closed");
         temp.retain();
     }
 }

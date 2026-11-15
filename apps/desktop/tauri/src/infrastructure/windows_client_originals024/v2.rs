@@ -73,7 +73,7 @@ struct Manifest {
     custody: Custody,
     nodes: Vec<Node>,
 }
-#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 enum Phase {
     Captured,
@@ -95,6 +95,7 @@ struct Stage {
     previous_record_id: Option<String>,
     binding: Binding,
     phase: Phase,
+    tree_record: TreeRecord,
     originals_manifest_digest: String,
     security_policy_digest: String,
 }
@@ -299,7 +300,11 @@ struct Tip {
     manifest_digest: String,
     policy_digest: String,
     terminal_record_only: bool,
+    phase: Phase,
+    tree_record: TreeRecord,
 }
+mod progress;
+use progress::{TreeAction, TreeProgress, TreeRecord, TreeRoot};
 fn check_prefix(manifest: &[u8], records: &[Vec<u8>], sid: &str) -> io::Result<Tip> {
     let m: Manifest = json(manifest, 1024 * 1024)?;
     check_manifest(&m, sid)?;
@@ -310,6 +315,7 @@ fn check_prefix(manifest: &[u8], records: &[Vec<u8>], sid: &str) -> io::Result<T
     let binding_digest = hash::sha256_hex(&serde_json::to_vec(&m.binding).map_err(|_| invalid())?);
     let mut previous: Option<Stage> = None;
     let mut last = String::new();
+    let mut progress = TreeProgress::default();
     for (i, raw) in records.iter().enumerate() {
         let stage: Stage = json(raw, 65536)?;
         if stage.schema != ORIGINALS_RECORD_SCHEMA_V2
@@ -324,18 +330,26 @@ fn check_prefix(manifest: &[u8], records: &[Vec<u8>], sid: &str) -> io::Result<T
             return Err(invalid());
         }
         match &previous {
-            None if stage.phase != Phase::Captured || stage.previous_record_id.is_some() => {
+            None if stage.phase != Phase::Captured
+                || stage.previous_record_id.is_some()
+                || stage.tree_record != TreeRecord::None =>
+            {
                 return Err(invalid())
             }
             Some(p)
                 if stage.previous_record_id.as_deref()
                     != Some(&format!("phase-{:08}.json", p.sequence))
-                    || !transition(&p.phase, &stage.phase) =>
+                    || if stage.tree_record == TreeRecord::None {
+                        !transition(&p.phase, &stage.phase)
+                    } else {
+                        p.phase != stage.phase
+                    } =>
             {
                 return Err(invalid())
             }
             _ => {}
         }
+        progress.observe(stage.phase, stage.tree_record)?;
         last = hash::sha256_hex(raw);
         previous = Some(stage);
     }
@@ -349,6 +363,8 @@ fn check_prefix(manifest: &[u8], records: &[Vec<u8>], sid: &str) -> io::Result<T
         manifest_digest,
         policy_digest: m.security_policy_digest,
         terminal_record_only: tail.phase == Phase::Closed,
+        phase: tail.phase,
+        tree_record: tail.tree_record,
     })
 }
 fn current_for(t: &Tip) -> Current {
@@ -373,6 +389,8 @@ pub(super) struct PendingV2 {
     directory: PinnedDirectory,
     records: Vec<PrivateRecord>,
     tip: Tip,
+    manifest_raw: Vec<u8>,
+    phase_raw: Vec<Vec<u8>>,
     pub(super) terminal_record_only: bool,
     pub(super) current_matches: bool,
 }
@@ -437,6 +455,8 @@ fn read_pending_impl(directory: &Path, check_current: bool) -> io::Result<Pendin
         records,
         terminal_record_only: tip.terminal_record_only,
         tip,
+        manifest_raw: mbytes,
+        phase_raw: raw,
         current_matches: matches,
     })
 }
