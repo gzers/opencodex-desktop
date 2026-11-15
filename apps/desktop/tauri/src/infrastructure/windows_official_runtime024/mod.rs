@@ -6,6 +6,8 @@
 //! Failed Win32 observations remain errors; absence is never inferred from them.
 #![cfg(windows)]
 
+mod file_move;
+pub use file_move::RetainedFileMove;
 mod listeners;
 mod paths;
 mod peer;
