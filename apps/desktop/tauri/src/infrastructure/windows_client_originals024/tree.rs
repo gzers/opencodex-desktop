@@ -20,6 +20,8 @@ use std::{
     time::Instant,
 };
 mod locks;
+mod working;
+pub(super) use working::{SnapshotPhase, WorkingArchive, WorkingReference};
 #[derive(PartialEq, Eq)]
 struct Entry {
     relative: String,

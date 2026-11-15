@@ -320,12 +320,12 @@ impl ClientOriginals for WindowsOriginals {
     ) -> AppResult<ReadySession> {
         let store = self.begin(&original.session, State::Original, owner, end)?;
         owner.originals_check_ready(ready, end)?;
-        // Do not grant authority to unknown official/external client changes.
-        // Declared side-effect validation is a remaining production requirement.
-        store.tree.verify_working_unchanged(end).map_err(refused)?;
+        // Actual working bytes are archived before the unchanged-generation
+        // veto inside record_working_phase. Unknown edits remain a refusal,
+        // not a new adopted baseline or declared-side-effect implementation.
         store
             .tree
-            .advance_phase(Phase::Ready, end)
+            .record_working_phase(Phase::Ready, end)
             .map_err(refused)?;
         store.source.check(owner, end)?;
         store.ready = Some((ready.pid(), ready.port(), ready.record_sha256().into()));
@@ -347,10 +347,9 @@ impl ClientOriginals for WindowsOriginals {
             .as_ref()
             .ok_or_else(|| refused("原typed Ready缺席"))?;
         owner.originals_check_live_record(*pid, *port, digest, end)?;
-        store.tree.verify_working_unchanged(end).map_err(refused)?;
         store
             .tree
-            .advance_phase(Phase::PreparedRestore, end)
+            .record_working_phase(Phase::PreparedRestore, end)
             .map_err(refused)?;
         // OfficialTeardown is an intention, persisted before the actual POST.
         store

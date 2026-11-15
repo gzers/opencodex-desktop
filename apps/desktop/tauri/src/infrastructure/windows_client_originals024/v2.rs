@@ -1,5 +1,6 @@
 //! New r4 format only. Deserialization locates pending work, never creates
 //! BoundedAccessV1/native custody or any ClosedEligibility. v1 is not migrated.
+use super::tree::{SnapshotPhase, WorkingReference};
 use super::{
     binding::Binding,
     bounded::{Policy, SnapshotData},
@@ -96,8 +97,15 @@ struct Stage {
     binding: Binding,
     phase: Phase,
     tree_record: TreeRecord,
+    working_record: WorkingRecord,
     originals_manifest_digest: String,
     security_policy_digest: String,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+enum WorkingRecord {
+    None,
+    Snapshot(WorkingReference),
 }
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -328,6 +336,39 @@ fn check_prefix(manifest: &[u8], records: &[Vec<u8>], sid: &str) -> io::Result<T
             || stage.security_policy_digest != m.security_policy_digest
         {
             return Err(invalid());
+        }
+        match (&stage.working_record, stage.phase) {
+            (WorkingRecord::Snapshot(reference), Phase::Ready)
+                if stage.tree_record == TreeRecord::None =>
+            {
+                reference.validate(
+                    SnapshotPhase::Ready,
+                    &m.session_id,
+                    &binding_digest,
+                    &m.security_policy_digest,
+                    crate::infrastructure::windows_official_runtime024::FileIdentity {
+                        volume: m.custody.identity.volume,
+                        index: m.custody.identity.file_id.parse().map_err(|_| invalid())?,
+                    },
+                )?;
+            }
+            (WorkingRecord::Snapshot(reference), Phase::PreparedRestore)
+                if stage.tree_record == TreeRecord::None =>
+            {
+                reference.validate(
+                    SnapshotPhase::PreStop,
+                    &m.session_id,
+                    &binding_digest,
+                    &m.security_policy_digest,
+                    crate::infrastructure::windows_official_runtime024::FileIdentity {
+                        volume: m.custody.identity.volume,
+                        index: m.custody.identity.file_id.parse().map_err(|_| invalid())?,
+                    },
+                )?;
+            }
+            (WorkingRecord::None, phase)
+                if !matches!(phase, Phase::Ready | Phase::PreparedRestore) => {}
+            _ => return Err(invalid()),
         }
         match &previous {
             None if stage.phase != Phase::Captured

@@ -60,6 +60,10 @@ pub(crate) struct BoundedCurrentV2 {
     fail_after_partial_write: bool,
 }
 impl BoundedCurrentV2 {
+    #[cfg(test)]
+    pub(super) fn inject_partial_write_failure(&mut self) {
+        self.fail_after_partial_write = true;
+    }
     pub(super) fn create(pending: &PendingV2, end: Instant) -> io::Result<Self> {
         deadline(end)?;
         if pending.tip.sequence != 1 {
@@ -208,7 +212,22 @@ impl BoundedCurrentV2 {
         phase: Phase,
         end: Instant,
     ) -> io::Result<PendingV2> {
-        self.append_record(pending, phase, TreeRecord::None, end)
+        self.append_record(pending, phase, TreeRecord::None, WorkingRecord::None, end)
+    }
+    pub(super) fn append_working_phase(
+        &mut self,
+        pending: &PendingV2,
+        phase: Phase,
+        reference: WorkingReference,
+        end: Instant,
+    ) -> io::Result<PendingV2> {
+        self.append_record(
+            pending,
+            phase,
+            TreeRecord::None,
+            WorkingRecord::Snapshot(reference),
+            end,
+        )
     }
     pub(super) fn append_tree_record(
         &mut self,
@@ -219,13 +238,14 @@ impl BoundedCurrentV2 {
         if record == TreeRecord::None {
             return Err(invalid());
         }
-        self.append_record(pending, pending.tip.phase, record, end)
+        self.append_record(pending, pending.tip.phase, record, WorkingRecord::None, end)
     }
     fn append_record(
         &mut self,
         pending: &PendingV2,
         phase: Phase,
         tree_record: TreeRecord,
+        working_record: WorkingRecord,
         end: Instant,
     ) -> io::Result<PendingV2> {
         self.check(end)?;
@@ -250,6 +270,7 @@ impl BoundedCurrentV2 {
             binding: manifest.binding,
             phase,
             tree_record,
+            working_record,
             originals_manifest_digest: self.tip.originals_manifest_digest.clone(),
             security_policy_digest: self.tip.security_policy_digest.clone(),
         };

@@ -9,9 +9,73 @@ fn progress_prefix(steps: &[(Phase, TreeRecord)]) -> (Vec<u8>, Vec<Vec<u8>>) {
         stage.previous_record_id = Some(format!("phase-{:08}.json", stage.sequence - 1));
         stage.phase = *phase;
         stage.tree_record = *tree_record;
+        stage.working_record = working_record_for(
+            *phase,
+            &stage.binding,
+            &stage.session_id,
+            &stage.security_policy_digest,
+        );
         records.push(serde_json::to_vec(&stage).unwrap());
     }
     (manifest, records)
+}
+#[test]
+fn wl2_r4_working_reference_missing_wrong_phase_and_cross_session_refuse() {
+    let mut steps = Vec::new();
+    for root in [TreeRoot::Codex, TreeRoot::Grok] {
+        for action in [TreeAction::MoveToCustody, TreeAction::CreateWorkingCopy] {
+            steps.push((Phase::Captured, TreeRecord::Intent { root, action }));
+            steps.push((Phase::Captured, TreeRecord::Completed { root, action }));
+        }
+    }
+    steps.push((Phase::Ready, TreeRecord::None));
+    let (manifest, records) = progress_prefix(&steps);
+    let sid = current_identity().unwrap().sid;
+    assert!(check_prefix(&manifest, &records, &sid).is_ok());
+    for change in [
+        "missing", "none", "phase", "session", "digest", "root", "volume", "alias",
+    ] {
+        let mut wrong = records.clone();
+        let mut value: serde_json::Value = serde_json::from_slice(wrong.last().unwrap()).unwrap();
+        match change {
+            "missing" => {
+                value.as_object_mut().unwrap().remove("workingRecord");
+            }
+            "none" => value["workingRecord"] = serde_json::json!("None"),
+            "phase" => value["workingRecord"]["Snapshot"]["phase"] = serde_json::json!("PreStop"),
+            "session" => {
+                value["workingRecord"]["Snapshot"]["sessionId"] =
+                    serde_json::json!(uuid::Uuid::new_v4().to_string())
+            }
+            "digest" => {
+                value["workingRecord"]["Snapshot"]["bindingDigest"] =
+                    serde_json::json!("f".repeat(64))
+            }
+            "root" => {
+                value["workingRecord"]["Snapshot"]["roots"][0]["root"] =
+                    serde_json::json!(".foreign")
+            }
+            "volume" => {
+                let reference = &mut value["workingRecord"]["Snapshot"];
+                reference["directory"]["volume"] = serde_json::json!(2);
+                reference["directory"]["security"]["volume"] = serde_json::json!(2);
+                for root in reference["roots"].as_array_mut().unwrap() {
+                    for field in ["directory", "metadata"] {
+                        root[field]["volume"] = serde_json::json!(2);
+                        root[field]["security"]["volume"] = serde_json::json!(2);
+                    }
+                }
+            }
+            "alias" => {
+                value["workingRecord"]["Snapshot"]["roots"][0]["metadata"] =
+                    value["workingRecord"]["Snapshot"]["roots"][1]["directory"].clone();
+            }
+            _ => unreachable!(),
+        }
+        *wrong.last_mut().unwrap() = serde_json::to_vec(&value).unwrap();
+        assert!(check_prefix(&manifest, &wrong, &sid).is_err(), "{change}");
+    }
+    println!("working snapshot locator is mandatory and fixed to phase/session/binding/policy/root set; pure data remains PendingOnly, no native archive or phase permit reconstructed");
 }
 #[test]
 fn wl2_r4_unperformed_roots_cannot_cross_ready_or_closed_in_v2_records() {
@@ -146,6 +210,27 @@ fn snapshot(id: &str) -> serde_json::Value {
     }).collect::<Vec<_>>();
     serde_json::json!({"scopeId":"windows-bounded-access-v1","securityPolicyDigest":Policy::fixed().digest().unwrap(),"volume":1,"fileId":id,"projections":entries,"auditSaclAssurance":"excluded-unknown","fullSecurityProven":false})
 }
+fn working_record_for(
+    phase: Phase,
+    binding: &Binding,
+    session: &str,
+    policy: &str,
+) -> WorkingRecord {
+    let phase = match phase {
+        Phase::Ready => SnapshotPhase::Ready,
+        Phase::PreparedRestore => SnapshotPhase::PreStop,
+        _ => return WorkingRecord::None,
+    };
+    let object = |id: &str| serde_json::json!({"volume":1,"fileId":id,"security":snapshot(id)});
+    let value = serde_json::json!({"schema":"windows-client-working-snapshot-v2","phase":phase,
+        "sessionId":session,"bindingDigest":hash::sha256_hex(&serde_json::to_vec(binding).unwrap()),
+        "securityPolicyDigest":policy,"directory":object("6"),
+        "roots":[{"root":".codex","directory":object("7"),"metadata":object("8"),"metadataSha256":"a".repeat(64)},
+        {"root":".grok","directory":object("9"),"metadata":object("10"),"metadataSha256":"b".repeat(64)}]});
+    // Synthetic locator data only. This cannot construct a WorkingArchive or
+    // a native RootTree/ReadySession from the recorded ids and hashes.
+    WorkingRecord::Snapshot(serde_json::from_value(value).unwrap())
+}
 pub(super) fn manifest_value() -> serde_json::Value {
     let sid = current_identity().unwrap().sid;
     let session_id = uuid::Uuid::new_v4().to_string();
@@ -177,6 +262,7 @@ pub(super) fn bundle(m: serde_json::Value) -> (Vec<u8>, Vec<Vec<u8>>, Vec<u8>) {
             binding,
             phase: p,
             tree_record: TreeRecord::None,
+            working_record: WorkingRecord::None,
             originals_manifest_digest: hash::sha256_hex(&manifest),
             security_policy_digest: parsed.security_policy_digest.clone(),
         };

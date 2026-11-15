@@ -1,6 +1,7 @@
 //! Native whole-tree records and same-volume move intentions in the one v2
 //! journal. This component cannot launch official processes or issue a Closed
 //! eligibility. Production source admission and native exit proofs remain gates.
+use super::super::tree::WorkingArchive;
 use super::super::{bounded::native_stamp, tree::RootTree};
 use super::*;
 use crate::infrastructure::windows_official_runtime024::{create_private_directory, RetainedPeer};
@@ -87,6 +88,7 @@ pub(super) struct TreeCaptureV2 {
     manifest: Manifest,
     pending: PendingV2,
     current: BoundedCurrentV2,
+    working_archives: Vec<(Phase, WorkingArchive)>,
     failed: bool,
 }
 fn private_child(parent: &PinnedDirectory, name: &str) -> io::Result<PinnedDirectory> {
@@ -177,6 +179,7 @@ impl TreeCaptureV2 {
             .map_err(|_| invalid())?,
             phase: Phase::Captured,
             tree_record: TreeRecord::None,
+            working_record: WorkingRecord::None,
             originals_manifest_digest: hash::sha256_hex(&raw),
             security_policy_digest: manifest.security_policy_digest.clone(),
         };
@@ -199,6 +202,7 @@ impl TreeCaptureV2 {
             manifest,
             pending,
             current,
+            working_archives: Vec::new(),
             failed: false,
         };
         out.recheck(end)?;
@@ -217,6 +221,22 @@ impl TreeCaptureV2 {
         }
         for tree in &mut self.trees {
             tree.manifest_nodes(end)?;
+        }
+        for (phase, archive) in &mut self.working_archives {
+            let reference = archive.reference(end)?;
+            let observed = self
+                .pending
+                .phase_raw
+                .iter()
+                .map(|raw| json::<Stage>(raw, 65536))
+                .collect::<io::Result<Vec<_>>>()?
+                .into_iter()
+                .find(|stage| stage.phase == *phase && stage.tree_record == TreeRecord::None)
+                .ok_or_else(invalid)?;
+            match observed.working_record {
+                WorkingRecord::Snapshot(expected) if expected == reference => {}
+                _ => return Err(invalid()),
+            }
         }
         before(end)
     }
@@ -318,6 +338,53 @@ impl TreeCaptureV2 {
         }
         Ok(())
     }
+    /// Observe and durably copy the ACTUAL working generation. This does not
+    /// absorb it as an allowed official mutation. Unknown content keeps the
+    /// archive and original canonical prefix, but never returns a phase tag.
+    pub(super) fn record_working_phase(&mut self, phase: Phase, end: Instant) -> io::Result<()> {
+        self.recheck(end)?;
+        let expected = match (self.pending.tip.phase, phase) {
+            (Phase::Captured, Phase::Ready) => SnapshotPhase::Ready,
+            (Phase::Ready, Phase::PreparedRestore) => SnapshotPhase::PreStop,
+            _ => return Err(invalid()),
+        };
+        if self
+            .working_archives
+            .iter()
+            .any(|(existing, _)| *existing == phase)
+        {
+            return Err(invalid());
+        }
+        self.failed = true;
+        let binding = hash::sha256_hex(&self.binding_bytes()?);
+        let archive = WorkingArchive::create(
+            &self.custody,
+            expected,
+            &self.manifest.session_id,
+            &binding,
+            &self.manifest.security_policy_digest,
+            end,
+        )?;
+        self.working_archives.push((phase, archive));
+        let archive = &mut self.working_archives.last_mut().unwrap().1;
+        archive.capture(&mut self.trees, end)?;
+        // Full declared-side-effect assessment remains a separate requirement.
+        // Do not turn the newly archived bytes into an adopted working baseline.
+        for tree in &mut self.trees {
+            tree.verify_working(end)?;
+        }
+        archive.matches_live(&mut self.trees, end)?;
+        let reference = archive.reference(end)?;
+        self.pending = self
+            .current
+            .append_working_phase(&self.pending, phase, reference, end)?;
+        self.failed = false;
+        if let Err(error) = self.recheck(end) {
+            self.failed = true;
+            return Err(error);
+        }
+        Ok(())
+    }
     /// Conservative admission until declared official changes are implemented:
     /// never absorb a new generation/content merely because the service is Ready.
     pub(super) fn verify_working_unchanged(&mut self, end: Instant) -> io::Result<()> {
@@ -363,6 +430,135 @@ mod tests {
             hash::sha256_hex(b"synthetic current"),
         )
         .unwrap()
+    }
+    #[test]
+    fn wl2_r4_working_partial_current_keeps_archive_without_ready_authority() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        captured.create_working_trees(end()).unwrap();
+        captured.current.inject_partial_write_failure();
+        assert!(captured.record_working_phase(Phase::Ready, end()).is_err());
+        assert!(captured.failed);
+        let directory = captured.pending.directory.path().to_path_buf();
+        let phase = std::fs::read(directory.join("phase-00000010.json")).unwrap();
+        let stage: Stage = json(&phase, 65536).unwrap();
+        assert!(matches!(stage.working_record, WorkingRecord::Snapshot(_)));
+        assert_eq!(
+            std::fs::read(
+                captured
+                    .custody
+                    .path()
+                    .join("ready/.codex/data-0001-0000.bin")
+            )
+            .unwrap(),
+            b"synthetic nonsecret config"
+        );
+        assert!(captured.record_working_phase(Phase::Ready, end()).is_err());
+        assert!(!directory.join("phase-00000011.json").exists());
+        drop(captured);
+        assert_eq!(std::fs::read(directory.join("current.json")).unwrap(), b"{");
+        assert!(read_pending(&directory).is_err());
+        let located = read_pending_impl(&directory, false).unwrap();
+        assert_eq!(located.tip.sequence, 10);
+        assert!(!located.current_matches && !located.terminal_record_only);
+        drop(located);
+        println!("actual Ready snapshot followed by current one-byte write+sync injected failure: phase10/archive/original custody retained, current corrupt and pending-only locator available; no Ready permit/retry/catch-up");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_working_ready_and_pre_stop_archive_real_bytes_and_original_limit() {
+        let mut temp = Fixture::new();
+        let binding = setup(&temp);
+        let profile = binding.paths()[0].to_path_buf();
+        let payload = vec![0x5a; 2 * 1024 * 1024];
+        std::fs::write(profile.join(".codex/blob.bin"), &payload).unwrap();
+        let deadline = end();
+        let mut captured = TreeCaptureV2::capture(binding, deadline).unwrap();
+        captured.create_working_trees(deadline).unwrap();
+        captured
+            .record_working_phase(Phase::Ready, deadline)
+            .unwrap();
+        captured
+            .record_working_phase(Phase::PreparedRestore, deadline)
+            .unwrap();
+        captured.recheck(deadline).unwrap();
+        for stage in ["ready", "pre-stop"] {
+            let root = captured.custody.path().join(stage).join(".codex");
+            for part in 0..2 {
+                let path = root.join(format!("data-0001-{part:04}.bin"));
+                assert_eq!(
+                    std::fs::read(&path).unwrap(),
+                    payload[part * 1024 * 1024..(part + 1) * 1024 * 1024]
+                );
+                assert!(std::fs::write(&path, b"tamper").is_err());
+            }
+            assert!(root.join("snapshot.json").is_file());
+        }
+        let directory = captured.pending.directory.path().to_path_buf();
+        assert_eq!(captured.pending.tip.sequence, 11);
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        assert!(pending.tip.phase == Phase::PreparedRestore);
+        drop(pending);
+        println!("actual Ready and PreStop immutable private snapshots bound to canonical current; exact2MiB file preserved in two1MiB parts, seal denies rewrite; synthetic source only, no official Owner/ReadySession/Closed proof");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_working_unknown_edit_archives_actual_bytes_without_adoption() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        captured.create_working_trees(end()).unwrap();
+        let work = captured.pins[0].path().join(".codex/config.toml");
+        std::fs::write(&work, b"synthetic unknown external edit").unwrap();
+        assert!(captured.record_working_phase(Phase::Ready, end()).is_err());
+        assert!(captured.failed);
+        let actual = captured
+            .custody
+            .path()
+            .join("ready/.codex/data-0001-0000.bin");
+        assert_eq!(
+            std::fs::read(actual).unwrap(),
+            b"synthetic unknown external edit"
+        );
+        assert_eq!(
+            std::fs::read(captured.custody.path().join(".codex/config.toml")).unwrap(),
+            b"synthetic nonsecret config"
+        );
+        assert_eq!(captured.pending.tip.sequence, 9);
+        assert!(captured.pending.tip.phase == Phase::Captured);
+        let directory = captured.pending.directory.path().to_path_buf();
+        assert!(!directory.join("phase-00000010.json").exists());
+        assert!(captured.record_working_phase(Phase::Ready, end()).is_err());
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        drop(pending);
+        println!("actual unknown bytes copied privately but never adopted as allowed official changes; canonical Captured/current unchanged, original custody and failure preserved, no catch-up or permission");
+        temp.retain();
+    }
+    #[test]
+    fn wl2_r4_working_archive_extra_file_refuses_native_phase_readback() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        captured.create_working_trees(end()).unwrap();
+        captured.record_working_phase(Phase::Ready, end()).unwrap();
+        let foreign = captured.custody.path().join("ready/.grok/foreign.new");
+        std::fs::write(&foreign, b"synthetic archive drift").unwrap();
+        assert!(captured.recheck(end()).is_err());
+        assert!(captured.working_archives[0].1.reference(end()).is_err());
+        assert!(captured
+            .record_working_phase(Phase::PreparedRestore, end())
+            .is_err());
+        let directory = captured.pending.directory.path().to_path_buf();
+        assert!(!directory.join("phase-00000011.json").exists());
+        assert!(foreign.exists());
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        drop(pending);
+        println!("native archive extra-file drift poisons retained archive and refuses further PreStop; locator can still identify pending Ready data but cannot issue native authority");
+        temp.retain();
     }
     #[test]
     fn wl2_r4_retired_working_drift_keeps_canonical_aborted_reference() {
