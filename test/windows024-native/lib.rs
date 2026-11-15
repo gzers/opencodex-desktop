@@ -39,6 +39,44 @@ mod tests {
         }
     }
     #[test]
+    fn wl2_move_filename_storage_alignment_does_not_change_native_rename() {
+        use std::{
+            mem::{offset_of, size_of},
+            os::windows::ffi::OsStrExt,
+            time::{Duration, Instant},
+        };
+        use windows_sys::Win32::Storage::FileSystem::FILE_RENAME_INFO;
+        let fixture = Fixture::new();
+        let source = fixture.0.join("original.data");
+        fs::write(&source, b"synthetic exact original rename terminator").unwrap();
+        let target = create_private_directory(&fixture.0.join("custody")).unwrap();
+        let deadline = Instant::now() + Duration::from_secs(10);
+        let mut original = RetainedFileMove::open(&source, deadline).unwrap();
+        let identity = original.identity();
+        let mut aligned = false;
+        for leaf in ["x", "xx", "xxx", "xxxx"] {
+            let path = target.path().join(leaf);
+            let native_bytes = path.as_os_str().encode_wide().count() * 2;
+            let exact =
+                (offset_of!(FILE_RENAME_INFO, FileName) + native_bytes) % size_of::<usize>() == 0;
+            aligned |= exact;
+            original.move_into(target.path(), leaf, deadline).unwrap();
+            assert_eq!(original.identity(), identity);
+            original.verify(deadline).unwrap();
+            original.restore(deadline).unwrap();
+            assert_eq!(original.identity(), identity);
+            println!("native rename storage leaf={leaf} exactAllocationWithoutTerminator={exact} originalID={} bytes preserved; no replace/copy/delete",identity.index);
+        }
+        assert!(
+            aligned,
+            "four consecutive WCHAR lengths must include exact usize allocation"
+        );
+        assert_eq!(
+            fs::read(&source).unwrap(),
+            b"synthetic exact original rename terminator"
+        );
+    }
+    #[test]
     fn wl2_move_same_original_handle_roundtrip_and_no_overwrite() {
         let f = Fixture::new();
         let target = f.0.join("custody");

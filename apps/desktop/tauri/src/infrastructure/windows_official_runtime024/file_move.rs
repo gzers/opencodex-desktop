@@ -207,13 +207,21 @@ impl RetainedFileMove {
 pub(crate) fn rename_handle(file: &File, path: &Path) -> io::Result<()> {
     validate(path)?;
     let name: Vec<u16> = path.as_os_str().encode_wide().collect();
-    let offset = offset_of!(FILE_RENAME_INFO, FileName);
-    let length = offset
-        .checked_add(name.len() * 2)
-        .ok_or_else(|| denied("rename size overflow"))?;
     if name.is_empty() || name.contains(&0) || name.len() > 32760 {
         return Err(denied("rename path bound"));
     }
+    let offset = offset_of!(FILE_RENAME_INFO, FileName);
+    let name_bytes = name
+        .len()
+        .checked_mul(2)
+        .ok_or_else(|| denied("rename size overflow"))?;
+    let length = offset
+        .checked_add(name_bytes)
+        // Keep FileNameLength at name bytes, and supply explicit zeroed WCHAR
+        // storage after FileName. Never depend on usize allocation padding for
+        // termination: some valid lengths fill that allocation exactly.
+        .and_then(|length| length.checked_add(2))
+        .ok_or_else(|| denied("rename size overflow"))?;
     let mut storage = vec![
         0usize;
         length
@@ -224,7 +232,7 @@ pub(crate) fn rename_handle(file: &File, path: &Path) -> io::Result<()> {
     unsafe {
         (*info).Anonymous.ReplaceIfExists = false;
         (*info).RootDirectory = std::ptr::null_mut();
-        (*info).FileNameLength = (name.len() * 2) as u32;
+        (*info).FileNameLength = name_bytes as u32;
         std::ptr::copy_nonoverlapping(
             name.as_ptr(),
             storage.as_mut_ptr().cast::<u8>().add(offset).cast(),
