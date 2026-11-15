@@ -89,6 +89,8 @@ pub(super) struct TreeCaptureV2 {
     pending: PendingV2,
     current: BoundedCurrentV2,
     working_archives: Vec<(Phase, WorkingArchive)>,
+    #[cfg(test)]
+    fail_working_after_first_part: bool,
     failed: bool,
 }
 fn private_child(parent: &PinnedDirectory, name: &str) -> io::Result<PinnedDirectory> {
@@ -203,6 +205,8 @@ impl TreeCaptureV2 {
             pending,
             current,
             working_archives: Vec::new(),
+            #[cfg(test)]
+            fail_working_after_first_part: false,
             failed: false,
         };
         out.recheck(end)?;
@@ -367,6 +371,10 @@ impl TreeCaptureV2 {
         )?;
         self.working_archives.push((phase, archive));
         let archive = &mut self.working_archives.last_mut().unwrap().1;
+        #[cfg(test)]
+        if self.fail_working_after_first_part {
+            archive.inject_first_part_failure();
+        }
         archive.capture(&mut self.trees, end)?;
         // Full declared-side-effect assessment remains a separate requirement.
         // Do not turn the newly archived bytes into an adopted working baseline.
@@ -430,6 +438,52 @@ mod tests {
             hash::sha256_hex(b"synthetic current"),
         )
         .unwrap()
+    }
+    #[test]
+    fn wl2_r4_working_first_part_failure_keeps_original_and_canonical_prefix() {
+        let mut temp = Fixture::new();
+        let binding = setup(&temp);
+        let profile = binding.paths()[0].to_path_buf();
+        let payload = vec![0x42; 2 * 1024 * 1024];
+        std::fs::write(profile.join(".codex/blob.bin"), &payload).unwrap();
+        let deadline = end();
+        let mut captured = TreeCaptureV2::capture(binding, deadline).unwrap();
+        captured.create_working_trees(deadline).unwrap();
+        captured.fail_working_after_first_part = true;
+        let error = captured
+            .record_working_phase(Phase::Ready, deadline)
+            .unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("injected after actual first sealed"));
+        assert!(captured.failed);
+        let partial = captured
+            .custody
+            .path()
+            .join("ready/.codex/data-0001-0000.bin");
+        assert_eq!(std::fs::read(&partial).unwrap(), payload[..1024 * 1024]);
+        assert!(!partial
+            .parent()
+            .unwrap()
+            .join("data-0001-0001.bin")
+            .exists());
+        assert!(!partial.parent().unwrap().join("snapshot.json").exists());
+        assert_eq!(
+            std::fs::read(captured.custody.path().join(".codex/blob.bin")).unwrap(),
+            payload
+        );
+        let directory = captured.pending.directory.path().to_path_buf();
+        assert!(!directory.join("phase-00000010.json").exists());
+        assert!(captured
+            .record_working_phase(Phase::Ready, deadline)
+            .is_err());
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert_eq!(pending.tip.sequence, 9);
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        drop(pending);
+        println!("actual first1MiB sealed/synced working part then injected failure: partial private data/original custody retained, canonical Captured/current unchanged, poisoned driver refuses retry, no Ready/metadata completion/catch-up");
+        temp.retain();
     }
     #[test]
     fn wl2_r4_working_partial_current_keeps_archive_without_ready_authority() {

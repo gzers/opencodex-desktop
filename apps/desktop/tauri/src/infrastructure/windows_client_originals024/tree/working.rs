@@ -196,6 +196,8 @@ struct StoredRoot {
     chunks: Vec<Chunk>,
     metadata: Option<(PrivateRecord, BoundedAccessV1, Vec<u8>)>,
     failed: bool,
+    #[cfg(test)]
+    fail_after_first_part: bool,
 }
 impl StoredRoot {
     fn write(
@@ -227,6 +229,12 @@ impl StoredRoot {
                     record,
                     security,
                 });
+                #[cfg(test)]
+                if self.fail_after_first_part {
+                    return Err(io::Error::other(
+                        "injected after actual first sealed working data part",
+                    ));
+                }
             }
         }
         let mut nodes = Vec::new();
@@ -316,6 +324,8 @@ pub(crate) struct WorkingArchive {
     policy: String,
     roots: Vec<StoredRoot>,
     failed: bool,
+    #[cfg(test)]
+    fail_after_first_part: bool,
 }
 impl WorkingArchive {
     pub(crate) fn create(
@@ -350,6 +360,8 @@ impl WorkingArchive {
             policy: policy.into(),
             roots: Vec::new(),
             failed: true,
+            #[cfg(test)]
+            fail_after_first_part: false,
         })
     }
     pub(crate) fn capture(&mut self, trees: &mut [RootTree; 2], end: Instant) -> io::Result<()> {
@@ -371,6 +383,8 @@ impl WorkingArchive {
                 chunks: Vec::new(),
                 metadata: None,
                 failed: true,
+                #[cfg(test)]
+                fail_after_first_part: self.fail_after_first_part,
             });
             self.roots.last_mut().unwrap().write(
                 self.phase,
@@ -386,6 +400,10 @@ impl WorkingArchive {
             return Err(error);
         }
         self.matches_live(trees, end)
+    }
+    #[cfg(test)]
+    pub(crate) fn inject_first_part_failure(&mut self) {
+        self.fail_after_first_part = true;
     }
     pub(crate) fn matches_live(
         &mut self,
