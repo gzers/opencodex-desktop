@@ -555,3 +555,12 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 证据wl2-r5-native-coordination-20261116-r1含4组源/log/result/原EXE摘要、首错和现场、最终制品/矩阵。首轮59过1败/raw101，coordination_tests:71正例错误重算now+10被原no-extension正确拒绝，改同一原deadline不降断言；后60过/7过1helper忽略/8过1helper忽略均raw0，窄选末两轮不重复54纯例。真rusqlite与固定bundle Bun SQLite竞争证明held拒绝/释放后成功，同4fileID/8投影/bytes不变；Bun8个单独合成库helperheld4次raw73/busy真、released4次raw0，不导入官方服务/不当官方生产测试。未知sidecar/WAL/header/ADS/硬链/占用/缺席/错期/原始字节漂移全部拒绝，失败poison锁持有到scoped release，留原冲突。expiry fixture的实际覆盖局限在report明列。
 
 最终clean custom-protocol MSVC debug bins0/141575ms，116产品输入/70Rust对最终，三制品SHA见product01-artifacts。39场景/168文件观察/1278108字节私有内容归档含已知合成ADS分列，原scene留、非NTFS身份安全克隆。无账户/Profile/Public/GUI/日常策略改、无控制器删除/旧拒绝重试，overallCleanupComplete=false；原GUI空组件复用，不W2/双SID/发布，完整副作用/初始化/NativeLease交接/原包H-S-D闭环仍未验。
+
+
+## 2026-11-16 原生封存快照接共享副作用内容视图
+
+源码0242a22c8891244fb90a05b7e787d971371f96b2/tree8f0c6053d0403b3dd3382aac095ba484235146a0，Windows originals的原custody、同卷Ready/PreStop封存和fresh native current提取固定三产物frame；工作文件原ID单列，8投影/scope/excluded安全键不混归档复制ID。其余全部节点/config/凭据/目录子集严格不变，额外项或目录冒产物叶拒绝poison。V2只读assess入口接原policy，不推进phase/写文件或安装新baseline；完整调用native工厂未实跑，旧working unchanged和Start拒绝仍在，不能把content eligible当NativeLease/Closed。
+
+证据wl2-r5-artifact-observations-20261116-r1包含首编E0616/E0624/raw101/tests0/无新EXE原件；WorkingImage私有字段改为自身只读view，RootTree仅originals内部可见。随后24过1旧数据回放忽略/raw0（4native sealed/current＋20共享pure），None/错routes、PreStop漂移/归档foreign/config未知/产物同名目录等拒绝；合成pids/time/binding不签官方身份。最终clean custom-protocol debug bins0/162986ms，118产品输入/72Rust对最终，三制品见product01-artifacts。6scene/53文件132595字节私有内容ZIP核验原件留；偶发自有placeholder创建后精确移除在tool-edit-record，不动旧拒绝。无账户/Profile/Public/GUI/官方日常策略改，overallCleanupComplete=false。
+
+尚需官方初始化、原NativeLease/claim根移动交接、canonical停止快照/typed恢复Closed和原包H-S-D生产；Stopped目前只是native数据view。旧broker/Public8拒读、普通MSI/CAP-trust/历史清理保持，已有route/sample/Bun/真GUI空宿主复用不重跑，不业务模型请求/W2/双SID/发布。

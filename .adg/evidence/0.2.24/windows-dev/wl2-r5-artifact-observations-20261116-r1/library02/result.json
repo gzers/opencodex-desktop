@@ -1,0 +1,25 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "--",
+    "windows_client_originals024::tree::artifacts::",
+    "client_artifact_policy::",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "elapsedMs": 201258,
+  "profile": "debug",
+  "exitCode": 0,
+  "accepted": false
+}

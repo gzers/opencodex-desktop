@@ -1,0 +1,7 @@
+{
+  "library01":{"rawExit":101,"executedTests":0,"errors":["E0616 private WorkingImage fields","E0624 artifact methods visible only within tree module"]},
+  "fix":"Keep WorkingImage fields private; add its own read-only data-frame method. Scope RootTree observation methods only to windows_client_originals024 so the sibling v2 adapter can consume them. No public constructor or native permit is exposed.",
+  "newExecutableProduced":false,
+  "nativeAssertionsChanged":false,
+  "accepted":false
+}
