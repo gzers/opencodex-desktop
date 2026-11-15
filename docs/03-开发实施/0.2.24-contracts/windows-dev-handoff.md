@@ -528,3 +528,12 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 代码0549a660ee3f77ea243e798ec55b01f52545e492已推，只加test原始同SID一次性归档入口，产品源/三制品仍6e312f022、不重编译/重测GUI。入口C:/Users/Public/ocx-h024-gui-archive-20261115-r1/archive-h024-fixed-success.cmd已备，实际桌面结果待接收另立不可覆盖证据。先同SID私有全ZIP归档成功Profile树及Public输入日志，验证全部字节/目录集合，再仅删除成功Profile子树1fa5e23f；Public留待控制器结果核验后清，失败现场/broker40588/账户/Profile根/旧拒绝目标不动，不强杀或改权限。
 
 证据wl2-real-gui-success-cleanup-20261115-r1含前置假设、首原语raw1(Hashtable bytes/Measure-Object适配错误)原源日志、修后raw0正例完整ZIP往返及内容/额外空目录拒绝、2小场景7文件清单，最终所有执行函数AST摘要一致，准备raw0/解析0/源摘要同Git blob。当前是准备快照，未称已执行归档或删除；overallCleanupComplete=false，旧拒绝不重试。产品H实际GUI空broker组件已于2a53076e1回交，非官方Owner/Job生产验收，Start继续拒绝。共享纯route声明/Status同采样原5秒最小接口仍待集成；完整副作用/NativeLease/H-S-D生产及普通MSI/CAP-trust环境/历史清理未完，无官方日常配置/业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 成功GUI任务同SID归档清理接收
+
+执行源码0549a660ee3f77ea243e798ec55b01f52545e492，产品源仍6e312f022，未重编译/重复测试。marenben SID1003/session7回执complete=true，脚本和plan逐字等于准备源；成功Profile子树1fa5e23f的685文件/291目录/119851895字节已在同SID私有ZIP核验后删除，控制器准确路径ObjectNotFound。Public成功输入日志20文件/2目录/178669957字节也已同SIDZIP核验但源保留；控制器12可读匹配/8PermissionDenied，未进一步删除/修ACL。原始回执、执行输入、路径事实和完整矩阵归wl2-real-gui-cleanup-receive-20261115-r1。
+
+私有归档根ocx024-gui-archive-36ed4617-000c-4efa-9975-49f9e1b29654，Profile ZIP SHA5cd6ec4362e8d057b3bf01f0ae0e48956e303f15bff2705a45ab35dd68633200，Public ZIP SHA5da2e4d3838b922d1ad601eed039f469abac93f293f41b61f0a165e0230383a7，manifest SHA54b0e65d9a0427924add27d0d2fa88310ad69ce43805947a1ce39678d2bf9276；控制器不能读该私有归档，核验依据为原SID脚本回执，不冒独立复读或NTFS克隆。控制器首次路径转义损坏观察已明确排除并保留，修正绝对路径只读结果单列。cleanup入口rawexit未采集仍null，不补0。
+
+清理本身无error；本轮控制器首个实质缺口为Public8文件读拒绝，整体清理false。旧失败broker40588/失败树、账户/Profile根、历史自动审批拒绝均保留未重试。共享route纯解析器/Status同采样原5秒接口最小请求及完整副作用/NativeLease/H-S-D生产、普通MSI/CAP-trust环境仍待完成。公共Start拒绝，无官方/日常策略修改、业务模型请求/W2/双SID/发布。

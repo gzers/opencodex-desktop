@@ -1,0 +1,8 @@
+{
+  "file": "path-observations.json",
+  "usableAsAbsenceEvidence": false,
+  "cause": "Tool-call JavaScript string escaping removed backslashes before PowerShell; recorded values C:Users... are not the intended absolute paths",
+  "mutationAttempted": false,
+  "correction": "Use explicit forward-slash absolute paths and write a separate corrected observation; preserve original invalid output",
+  "accepted": false
+}

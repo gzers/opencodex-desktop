@@ -1,0 +1,12 @@
+{
+  "preExecutionHypotheses": "../wl2-real-gui-success-cleanup-20261115-r1/hypotheses01.json",
+  "codeHead": "0549a660ee3f77ea243e798ec55b01f52545e492",
+  "receiveChecks": [
+    "The executed sameSID script and plan must equal committed/prepared bytes; the receipt must bind SID1003/session7 and only the fixed successful Profile child plus fixed Public input/log tree.",
+    "Both source ZIPs must report independent full byte/entry-set verification before any deletion; only the successful Profile child may report removed. Archive manifests/ZIPs remain in newly private sameSID/SYSTEM directory.",
+    "Controller directory-not-found is independent from access-denied: neither private archive existence nor Profile-child removal may be fabricated from Test-Path false.",
+    "Public cleanup additionally needs fresh current byte verification of its complete expected20 files and2 directories. Any unreadable source is retained, without ACL repair, fallback or forced deletion.",
+    "Overall cleanup stays incomplete for original failure broker/scenes, older automatic cleanup refusals, account/Profile and ordinary MSI gaps; sameSID successful task receipt is not a production/native Closed proof."
+  ],
+  "accepted": false
+}

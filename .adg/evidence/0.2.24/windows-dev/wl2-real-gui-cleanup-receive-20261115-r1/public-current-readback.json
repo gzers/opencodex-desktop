@@ -1,0 +1,167 @@
+{
+  "files": [
+    {
+      "path": "collect-h024-actual-gui.ps1",
+      "expected": true,
+      "bytes": 3236,
+      "sha256": "5910e308d321c1bb4f65ebba0cd57e061fd9bec6c4f601a310ef8d1432685204",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "input-manifest.json",
+      "expected": true,
+      "bytes": 953,
+      "sha256": "9da723dae8f73756a04377efb6d8668a600e953f83193b4820260a363dbcedf9",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "launch-h024-actual-gui.cmd",
+      "expected": true,
+      "bytes": 187,
+      "sha256": "fd8de7923f7af52a9ea82be83fc44008459fe1ca84218388ca581df0928b3798",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "launch-h024-actual-gui.ps1",
+      "expected": true,
+      "bytes": 4189,
+      "sha256": "9a05720626890b6359a4bca5fc8823c96e1d98533581ac00f2596b9f4ffc1482",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "input/h-gui-tests.exe",
+      "expected": true,
+      "bytes": 95719424,
+      "sha256": "881b6e4359cffab7a65c9db1a8cf049164ed36f6899a35c182cdba9cc9a8cd51",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "input/ocxd.exe",
+      "expected": true,
+      "bytes": 5398528,
+      "sha256": "b80dd57317c91700aee4c77de1023f53b6da0f2c38e6760006db4b6abf8d3a67",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "input/opencodex-desktop.exe",
+      "expected": true,
+      "bytes": 77505024,
+      "sha256": "c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "out01/after-after-failure.json",
+      "expected": true,
+      "readable": false,
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\Public\\\\ocx-h024-actual-gui-fixed-20261115-r1\\\\out01\\\\after-after-failure.json'",
+      "winerror": null
+    },
+    {
+      "path": "out01/after-finish.json",
+      "expected": true,
+      "readable": false,
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\Public\\\\ocx-h024-actual-gui-fixed-20261115-r1\\\\out01\\\\after-finish.json'",
+      "winerror": null
+    },
+    {
+      "path": "out01/after-hold.json",
+      "expected": true,
+      "readable": false,
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\Public\\\\ocx-h024-actual-gui-fixed-20261115-r1\\\\out01\\\\after-hold.json'",
+      "winerror": null
+    },
+    {
+      "path": "out01/after-normal.json",
+      "expected": true,
+      "readable": false,
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\Public\\\\ocx-h024-actual-gui-fixed-20261115-r1\\\\out01\\\\after-normal.json'",
+      "winerror": null
+    },
+    {
+      "path": "out01/bootstrap-admission.json",
+      "expected": true,
+      "readable": false,
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\Public\\\\ocx-h024-actual-gui-fixed-20261115-r1\\\\out01\\\\bootstrap-admission.json'",
+      "winerror": null
+    },
+    {
+      "path": "out01/launch-intent.json",
+      "expected": true,
+      "bytes": 163,
+      "sha256": "36b7c3f8e29f1d3b85e3246be4bdeb24f8e58b9990a4ac89aa572abf0e278919",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "out01/launch-result.json",
+      "expected": true,
+      "bytes": 443,
+      "sha256": "b68fe6604dba493e0e5d728164b2f00874d2c4d9a012b580b9ed56fed6b009b7",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "out01/result.json",
+      "expected": true,
+      "readable": false,
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\Public\\\\ocx-h024-actual-gui-fixed-20261115-r1\\\\out01\\\\result.json'",
+      "winerror": null
+    },
+    {
+      "path": "out01/same-sid-export01.json",
+      "expected": true,
+      "bytes": 32471,
+      "sha256": "d8c5c527a957992ca08e7dda782da59c79148bfb92820b2882ad0a8892d7c085",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "out01/suspended-original.json",
+      "expected": true,
+      "readable": false,
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\Public\\\\ocx-h024-actual-gui-fixed-20261115-r1\\\\out01\\\\suspended-original.json'",
+      "winerror": null
+    },
+    {
+      "path": "out01/task-location.json",
+      "expected": true,
+      "readable": false,
+      "error": "[Errno 13] Permission denied: 'C:\\\\Users\\\\Public\\\\ocx-h024-actual-gui-fixed-20261115-r1\\\\out01\\\\task-location.json'",
+      "winerror": null
+    },
+    {
+      "path": "out01/test.stderr.log",
+      "expected": true,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "readable": true,
+      "matches": true
+    },
+    {
+      "path": "out01/test.stdout.log",
+      "expected": true,
+      "bytes": 213,
+      "sha256": "a36780e50e445614fd5d9264ff87b4fcec0113384769a360732ba3dcf2d0c846",
+      "readable": true,
+      "matches": true
+    }
+  ],
+  "directories": [
+    "input",
+    "out01"
+  ],
+  "enumerationErrors": [],
+  "expectedFiles": 20,
+  "allCurrentBytesVerified": false,
+  "deletionAttempted": false,
+  "aclChanged": false,
+  "retained": true,
+  "reason": "Fresh controller byte verification incomplete; preserve source without ACL repair, deletion or fallback"
+}
