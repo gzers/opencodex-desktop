@@ -483,3 +483,16 @@ shared-minimum-request.json给集成线最小范围外接口：独立路由decla
 54个scene/839文件43529262字节私有ZIP内容核验/原scene留，非NTFS元数据克隆。两处新成功自有正例.tmp1fI41E/.tmpN3C2VK（64文件236993字节）拟执行核对后准确清理，整条exec在启动前被自动审批blocked by policy拒绝，额外逐项核对/删除没有执行，只读确认两根在；原归档核验已完成。记录cleanup-positive-scenes-rejected，不换工具/脚本重试两根或旧拒绝，overallCleanupComplete=false。无新账户/Profile/Public/GUI/官方/force/日常配置策略写。
 
 successor-remaining.json记录仍缺已知闭合历史集合/前驱登记/newcapture/Slot多Owner原权威保管与dispatch；capture仍拒非空D/windows，authorize_successor仍拒，不删旧记录凑新代。前轮跨平台纯路由解析器最小共享请求仍待，官方完整副作用/NativeLease/后继/GUI官方Owner/S-D生产组合及普通MSI历史清理仍未完。0cGUI准备输入未覆盖、out空，待原marenben桌面执行；固定8范围excluded/fullSecurityProven=false及原30/5/10/Restart30Stop子10保持，Start拒绝，无业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 r4后继原件集合与多代原Owner保管（仍无生产成功）
+
+代码分批推e9cbd80fc/f95e895293e88564248526b4286f32197ed51048，最终tree6105be8e95d990cc92dd062ed5e116c27e7d4c75。native后继capture只消费准确顺序的原保留闭合树，manifest新必需predecessors绑定旧session/私有directory-current原ID及canonical/current/manifest/context/policy摘要，每代前驱等于准确旧prefix，D/windows子集合精准核对；缺/乱序/稀疏/extra/串source/旧归档漂移拒绝，不扫描textClosed收养/删原件/迁移旧格式。三代合成native存储循环独立捕获新用户原件/恢复本代字节/旧历史原文不变，另旧历史在新capture后漂移导致首次move前poison双方、新原件不动，均组件证明，不签官方资格。
+
+实际adapter消费一次原ClosedEligibility到原窗口/上下文/前驱内存ticket，新Owner持所有旧Owner/process/Job/source/历史并重用同adapter，原根move/workcopy/restore和阶段前后核全历史，Resume前紧邻再验Original/tag/native未Resume/source与工作树。历史集合检查失败使adapter整体poison，代间无activeStore也不自动追赶。原公开Start durable gate保持，接线在其后，尚未真正执行该许可/多Owner替换路径；JSON/fixture不能重建许可。ClosedAbsentHistory保存原Stop内完成Absent/原截止，Resume前仍完整旧H/端点/记录缺席，Resume后只重验旧事实/准确注册/原家族，不能把旧H缺席错误套新代；当前Stop完整H/默认镜像/端点/ocx.pid等断言不减。
+
+新不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-successor-capture-20261115-r1/含先置hypotheses、5组原source/log/result、4份实际测试EXE摘要、原私有清单、完整矩阵/限制/cleanup及verify。library01三十八过/library02与最终library03五十四过2忽略/native01一过均raw0，首错null；两个ignored仍实际生产未验。hypotheses04的纯ticket反例未实施，不冒direct proof工厂测试，review-boundaries明列。最终cleanf95 custom-protocol MSVC debug bins0/209050ms/lib68warnings，99份产品输入/55份最终测试Rust及native两份受影响process对源。Desktop77487104/SHA2568a0f75e71a8fd44a093ca4190bf6ecd66f3cd5305665183ba3f99f4b2b4dcaad；ocxd5398528/SHA256e2b4910837b4003fec3d8b8f61c831f03a083bd7689ee2b42c1e7bac424cffb9；ocx306176/SHA256457cc30ac4bb414a4a0fe24b48ec7e1494e1b4a314facc19684cc30480300d76，非release预算/冻结候选。
+
+68scene/1480文件45993813字节私有ZIP内容核验/原scene留，不克隆NTFS身份安全；无新account/Profile/Public/GUI/官方/force/日常配置策略写、无新删除尝试。此前全部删除拒绝含.tmp1fI41E/.tmpN3C2VK不重试，overallCleanupComplete=false。普通MSI、CAP/trust非空1314/5前提和历史清理缺口不关。原固定8审计excluded/fullSecurityProven=false、预算30/5/10/Restart30Stop子10与raw/Unknown不变。
+
+后续仍需共享纯路由解析器提取（前轮最小请求）、完整官方副作用/NativeLease、对外完整Stop与同窗口Restart接线和真实原包/原GUI broker/H-S-D生产验证；0cGUI准备输入未覆盖、out仍空。当前内部接线不等于真实ClosedEligibility/Owner更替或最终目标，allAccepted/productionExecuted/actualGUI=false，Start门拒绝，不业务模型请求/W2/双SID/发布。
