@@ -243,6 +243,52 @@ struct SuccessorTicket {
     previous_session: String,
 }
 impl WindowsOriginals {
+    /// Borrow the original Closed tag; no boolean/serialized status may request
+    /// a successful close. This is a fresh native observation in THIS window.
+    pub(crate) fn check_closed(
+        &mut self,
+        closed: &ClosedEligibility,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> AppResult<()> {
+        self.recheck_closed(owner, end)?;
+        let result = (|| {
+            let store = self
+                .store
+                .as_mut()
+                .ok_or_else(|| refused("原闭合Store缺席"))?;
+            if store.failed
+                || store.state != State::Closed
+                || store.tree.session_id() != closed.session
+            {
+                return Err(refused("原闭合tag/Store代次或阶段不成立"));
+            }
+            store.failed = true;
+            store.source.check(owner, end)?;
+            store
+                .closed_exit
+                .as_ref()
+                .ok_or_else(|| refused("原退出历史缺席"))?
+                .check(owner, end)?;
+            store
+                .closed_supervisor
+                .as_ref()
+                .ok_or_else(|| refused("原监督缺席历史缺席"))?
+                .check(owner, end)?;
+            let absent = WindowsSupervisor.observe_absent(owner, end)?;
+            WindowsSupervisor.recheck_absent(owner, &absent, end)?;
+            owner.originals_check_stopped_records(end)?;
+            store.tree.recheck(end).map_err(refused)?;
+            store.source.check(owner, end)?;
+            store.failed = false;
+            Ok(())
+        })();
+        if result.is_err() {
+            self.failed = true;
+            return result;
+        }
+        self.recheck_closed(owner, end)
+    }
     fn recheck_closed(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
         if self.failed {
             return Err(refused("原件历史adapter已poison；不得自动重试"));

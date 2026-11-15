@@ -1,6 +1,126 @@
 use super::*;
 use crate::modules::process::ProcessRunner;
 #[test]
+fn wl2_restart_stop_receipt_keeps_original_outer_window_and_input() {
+    let temp = tempfile::tempdir().unwrap();
+    let executable = temp.path().join("ocx.exe");
+    fs::write(&executable, b"nonexecuted synthetic source").unwrap();
+    let home = temp.path().join("Profile");
+    let official = temp.path().join("H");
+    fs::create_dir(&home).unwrap();
+    fs::create_dir(&official).unwrap();
+    let mut command = ProcessCommand::new(LifecycleAction::Restart, executable, home, official);
+    command.requested_port = Some(54109);
+    command.environment.http_proxy = Some("http://127.0.0.1:43117".into());
+    let now = Instant::now();
+    let started = now - Duration::from_secs(12);
+    let window = shared::ActionWindow::begin(
+        LifecycleAction::Restart,
+        started,
+        now + Duration::from_secs(45),
+    )
+    .unwrap();
+    assert!(window.stop_deadline() < now);
+    let stop_time = started + Duration::from_secs(9);
+    let receipt = StopReceipt {
+        completion: StopCompletion {
+            completed_at: stop_time,
+            original_deadline: window.stop_deadline(),
+        },
+    };
+    let input = after_stop_input(&command, &window, receipt)
+        .unwrap()
+        .unwrap();
+    assert_eq!(input.action, LifecycleAction::Start);
+    assert_eq!(input.executable, command.executable);
+    assert_eq!(input.working_directory, command.working_directory);
+    assert_eq!(input.environment, command.environment);
+    assert_eq!(input.requested_port, command.requested_port);
+    assert_eq!(window.deadline(), started + Duration::from_secs(30));
+    assert_eq!(window.stop_deadline(), started + Duration::from_secs(10));
+    assert!(window.deadline() < now + Duration::from_secs(19));
+    // This is a private time/input fixture, NOT a native StopReceipt factory or
+    // official Stop proof. It only verifies the actual dispatch helper never
+    // rejects a historically timely Stop merely because its subwindow has now
+    // passed, nor replaces the remaining outer budget/port/environment.
+    assert_eq!(command.action, LifecycleAction::Restart);
+    println!("Restart dispatch preserves exact original30/Stop10 window and all launch inputs; timely synthetic Stop at9 remains data-valid at12, new Start has only original remaining18; no process or native permission issued");
+}
+#[test]
+fn wl2_restart_wrong_late_or_expired_stop_receipt_never_returns_launch_input() {
+    let now = Instant::now();
+    let window =
+        shared::ActionWindow::begin(LifecycleAction::Restart, now, now + Duration::from_secs(30))
+            .unwrap();
+    let command = ProcessCommand::new(
+        LifecycleAction::Restart,
+        "C:/fixture/ocx.exe".into(),
+        "C:/fixture/Profile".into(),
+        "C:/fixture/H".into(),
+    );
+    for (completed, deadline) in [
+        (window.stop_deadline(), window.stop_deadline()),
+        (
+            window.stop_deadline() + Duration::from_millis(1),
+            window.stop_deadline(),
+        ),
+        (now, window.deadline()),
+    ] {
+        let receipt = StopReceipt {
+            completion: StopCompletion {
+                completed_at: completed,
+                original_deadline: deadline,
+            },
+        };
+        assert!(after_stop_input(&command, &window, receipt).is_err());
+    }
+    assert!(StopCompletion::record(now).is_err());
+    let mut stop = command.clone();
+    stop.action = LifecycleAction::Stop;
+    let stop_window =
+        shared::ActionWindow::begin(LifecycleAction::Stop, now, now + Duration::from_secs(45))
+            .unwrap();
+    let receipt = StopReceipt {
+        completion: StopCompletion {
+            completed_at: now,
+            original_deadline: stop_window.stop_deadline(),
+        },
+    };
+    assert!(after_stop_input(&stop, &stop_window, receipt)
+        .unwrap()
+        .is_none());
+    let mut start = command;
+    start.action = LifecycleAction::Start;
+    let receipt = StopReceipt {
+        completion: StopCompletion {
+            completed_at: now,
+            original_deadline: window.stop_deadline(),
+        },
+    };
+    assert!(after_stop_input(&start, &window, receipt).is_err());
+    println!("late/wrong-window Stop receipt, expired recording and action mixing refuse successor input; Stop returns no launch input; private time fixtures never mint native ClosedEligibility");
+}
+#[test]
+fn wl2_closed_status_without_original_owner_or_deadline_stays_unknown() {
+    let r = crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved();
+    let home = Path::new("C:/unowned-exact-H");
+    let now = Instant::now();
+    assert_eq!(
+        recovery_state_at(&r, home, now),
+        crate::modules::status::ClientRecoveryState::Unknown
+    );
+    assert_eq!(
+        recovery_state_at(&r, home, now + Duration::from_secs(5)),
+        crate::modules::status::ClientRecoveryState::Unknown
+    );
+    assert_eq!(
+        recovery_state(&r, home),
+        crate::modules::status::ClientRecoveryState::Unknown
+    );
+    assert!(!native_stopped(&r, home));
+    println!("closed-status receiver requires original retained Owner and deadline; missing or expired context never clears recovery, no text/boolean adoption");
+}
+#[test]
 fn wl2_sd_accounting_preserves_child_raw_exit_for_mandatory_role_proof() {
     let child = native::ProcessIdentity {
         pid: 4242,

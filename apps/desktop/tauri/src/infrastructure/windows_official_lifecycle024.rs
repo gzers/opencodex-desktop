@@ -86,6 +86,55 @@ struct Slot {
     owner: Mutex<Option<Owner>>,
     cancel: AtomicBool,
 }
+/// Data about completion time only, not native close authority. Only Owner's
+/// native typed close/readback path records it; a later observation must still
+/// borrow the original Closed tag and revalidate every retained native object.
+struct StopCompletion {
+    completed_at: Instant,
+    original_deadline: Instant,
+}
+impl StopCompletion {
+    fn record(deadline: Instant) -> AppResult<Self> {
+        budget(deadline)?;
+        let completed_at = Instant::now();
+        if completed_at >= deadline {
+            return Err(AppError::Timeout);
+        }
+        Ok(Self {
+            completed_at,
+            original_deadline: deadline,
+        })
+    }
+    fn original_window_valid(&self) -> bool {
+        self.completed_at < self.original_deadline
+    }
+}
+/// One native Stop readback in a particular action's stop subwindow. Private,
+/// nonserde/nonClone; never reconstructed from the public LifecycleResult.
+struct StopReceipt {
+    completion: StopCompletion,
+}
+fn after_stop_input(
+    command: &ProcessCommand,
+    window: &shared::ActionWindow,
+    receipt: StopReceipt,
+) -> AppResult<Option<ProcessCommand>> {
+    window.remaining()?;
+    if !receipt.completion.original_window_valid()
+        || receipt.completion.original_deadline != window.stop_deadline()
+    {
+        return Err(recovery_required());
+    }
+    match command.action {
+        LifecycleAction::Stop => Ok(None),
+        LifecycleAction::Restart => {
+            let mut start = command.clone();
+            start.action = LifecycleAction::Start;
+            Ok(Some(start))
+        }
+        LifecycleAction::Start => Err(recovery_required()),
+    }
+}
 pub(crate) struct Owner {
     runtime: SharedRuntimeExecutable,
     selected: program_selection::SelectedProgram,
@@ -96,6 +145,7 @@ pub(crate) struct Owner {
     service: Option<(u32, u16, String)>,
     original_listeners: Option<OwnedListeners>,
     stopped: bool,
+    stop_completion: Option<StopCompletion>,
     stage: &'static str,
     session: uuid::Uuid,
     data: PathBuf,
@@ -148,16 +198,57 @@ impl Owner {
         &mut self.previous
     }
     pub(crate) fn originals_is_stopped(&self) -> bool {
-        self.stopped && self.stop_started.is_some()
+        self.stopped
+            && self.stop_started.is_some()
+            && self
+                .stop_completion
+                .as_ref()
+                .is_some_and(StopCompletion::original_window_valid)
     }
     pub(crate) fn originals_creator_has_resumed(&self) -> bool {
         self.native.creator_has_resumed()
     }
     fn authorize_originals_successor(&mut self, window: &shared::ActionWindow) -> AppResult<()> {
+        self.check_completed_stop(window.deadline())?;
         let Some(LivePhase::Closed(closed)) = self.original_phase.take() else {
             return Err(recovery_required());
         };
         self.with_originals(|originals, owner| originals.authorize_successor(closed, owner, window))
+    }
+    fn check_closed_native(&mut self, deadline: Instant) -> AppResult<()> {
+        let phase = self.original_phase.take().ok_or_else(recovery_required)?;
+        let result = match &phase {
+            LivePhase::Closed(closed) => self
+                .with_originals(|originals, owner| originals.check_closed(closed, owner, deadline)),
+            _ => Err(recovery_required()),
+        };
+        self.original_phase = Some(phase);
+        result
+    }
+    fn check_completed_stop(&mut self, deadline: Instant) -> AppResult<()> {
+        budget(deadline)?;
+        if !self.originals_is_stopped() {
+            return Err(recovery_required());
+        }
+        self.check_closed_native(deadline)?;
+        budget(deadline)
+    }
+    fn check_action_scope(
+        &self,
+        runtime: &SharedRuntimeExecutable,
+        command: &ProcessCommand,
+        data: &Path,
+    ) -> AppResult<()> {
+        if !Arc::ptr_eq(&self.runtime, runtime)
+            || !same(&self.profile, &command.working_directory)
+            || !same(&self.home, &command.environment.opencodex_home)
+            || !same(&self.data, data)
+            || command.environment.home.as_deref() != Some(self.profile.as_os_str())
+            || command.executable != self.selected.stable_entry
+        {
+            return Err(unknown(()));
+        }
+        Ok(())
     }
     fn with_originals<T>(
         &mut self,
@@ -450,11 +541,14 @@ impl Owner {
             serde_json::json!({"status":"running","ready":true,"pid":observed.pid(),"port":observed.port(),"version":observed.version(),"protection":"retained-job","rebootSafe":false}),
         )
     }
-    async fn stop(&mut self, deadline: Instant) -> AppResult<()> {
+    async fn stop(&mut self, deadline: Instant) -> AppResult<StopReceipt> {
         self.source(deadline)?;
         self.stop_started.get_or_insert_with(Instant::now);
         if self.stopped {
-            return Err(recovery_required());
+            self.check_completed_stop(deadline)?;
+            return Ok(StopReceipt {
+                completion: StopCompletion::record(deadline)?,
+            });
         }
         self.observe(deadline).await?;
         program_image::verify(&self.selected)?;
@@ -532,11 +626,15 @@ impl Owner {
             originals.complete_stop(prepared, owner, normal, absent, &accepted, deadline)
         })?;
         self.original_phase = Some(LivePhase::Closed(closed));
+        self.check_closed_native(deadline)?;
+        let completion = StopCompletion::record(deadline)?;
+        let receipt = StopReceipt {
+            completion: StopCompletion::record(deadline)?,
+        };
+        self.stop_completion = Some(completion);
         self.stopped = true;
-        // No Windows durable original capture/restore or supervisor observation
-        // authority is supplied by r1. Native success is separately retained;
-        // it cannot mint LifecycleResult::Stopped or permit successor Start.
-        Err(recovery_required())
+        self.stage = "closed-current";
+        Ok(receipt)
     }
 }
 /// Admission to role verification only. Child exits retain their raw values;
@@ -611,32 +709,40 @@ async fn execute_async(
     )?;
     let mut guard = entry.owner.try_lock().map_err(unknown)?;
     entry.cancel.store(false, Ordering::SeqCst);
+    let mut restart_input = None;
     if let Some(owner) = guard.as_mut() {
-        if !same(&owner.profile, &command.working_directory) {
-            return Err(unknown(()));
-        }
-        if command.action != LifecycleAction::Start || !owner.stopped {
-            return match command.action {
-                LifecycleAction::Start => {
-                    if owner.stopped {
-                        Err(recovery_required())
-                    } else {
-                        owner
-                            .observe(window.deadline())
-                            .await
-                            .map(|_| LifecycleResult::Started)
-                    }
+        owner.check_action_scope(runtime, command, data)?;
+        match command.action {
+            LifecycleAction::Start => {
+                if owner.stopped {
+                    owner.check_completed_stop(window.deadline())?;
+                } else {
+                    return owner
+                        .observe(window.deadline())
+                        .await
+                        .map(|_| LifecycleResult::Started);
                 }
-                LifecycleAction::Stop | LifecycleAction::Restart => {
-                    owner.stop(window.stop_deadline()).await?;
-                    Err(recovery_required())
+            }
+            LifecycleAction::Stop | LifecycleAction::Restart => {
+                let receipt = owner.stop(window.stop_deadline()).await?;
+                restart_input = after_stop_input(command, &window, receipt)?;
+                if restart_input.is_none() {
+                    return Ok(LifecycleResult::Stopped);
                 }
-            };
+            }
         }
     }
+    let command = restart_input.as_ref().unwrap_or(command);
     if command.action != LifecycleAction::Start {
         return Err(unknown(()));
     }
+    if entry.cancel.load(Ordering::SeqCst) {
+        return Err(fail(
+            "windows024_cancelled_retained",
+            "动作已取消；保留原Owner与闭合历史，未派生新启动",
+        ));
+    }
+    window.remaining()?;
     // Existing record is uncertainty, never permission to create/adopt by PID.
     if !matches!(fs::symlink_metadata(command.environment.opencodex_home.join("runtime-port.json")),Err(e) if e.kind()==std::io::ErrorKind::NotFound)
     {
@@ -738,6 +844,7 @@ async fn execute_async(
         service: None,
         original_listeners: None,
         stopped: false,
+        stop_completion: None,
         stage: "created-suspended",
         session: uuid::Uuid::new_v4(),
         data: data.into(),
@@ -843,6 +950,36 @@ pub(crate) fn recovery_state(
         Err(_) => R::Unknown,
     }
 }
+/// Explicit original observation deadline for a future/shared status caller.
+/// The legacy no-deadline trait remains conservative; do not invent a new5s
+/// window here or infer NotRequired from a cached stopped boolean.
+pub(crate) fn recovery_state_at(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    deadline: Instant,
+) -> crate::modules::status::ClientRecoveryState {
+    use crate::modules::status::ClientRecoveryState as R;
+    if budget(deadline).is_err() {
+        return R::Unknown;
+    }
+    match slot(runtime, home, false) {
+        Ok(entry) => match entry.owner.try_lock() {
+            Ok(mut guard) => match guard.as_mut() {
+                Some(owner) if owner.originals_is_stopped() => {
+                    if owner.check_completed_stop(deadline).is_ok() {
+                        R::NotRequired
+                    } else {
+                        R::Required
+                    }
+                }
+                Some(owner) if owner.original_phase.is_none() => R::Required,
+                _ => R::Unknown,
+            },
+            Err(_) => R::Unknown,
+        },
+        Err(_) => R::Unknown,
+    }
+}
 pub(crate) fn unknown_status() -> serde_json::Value {
     serde_json::json!({"status":"unknown","ready":false,"protection":"retained-owner-unconfirmed","rebootSafe":false})
 }
@@ -859,23 +996,10 @@ pub(crate) async fn status(
     let owner = guard.as_mut().ok_or(CollectError::Unreachable)?;
     if owner.stopped {
         owner
-            .source(deadline)
+            .check_completed_stop(deadline)
             .map_err(|_| CollectError::Unreachable)?;
-        if !owner
-            .native
-            .family_state()
-            .map_err(|_| CollectError::Unreachable)?
-            .complete_exit()
-            || owner
-                .original_listeners
-                .as_ref()
-                .is_none_or(|s| native::listener_exit_readback(s).map_or(true, |r| !r.is_empty()))
-            || teardown_records_absent(home).is_err()
-        {
-            return Err(CollectError::Unreachable);
-        }
         return Ok(
-            serde_json::json!({"status":"stopped","ready":false,"protection":"retained-job-client-recovery-required","rebootSafe":false}),
+            serde_json::json!({"status":"stopped","ready":false,"protection":"retained-job-client-closed","rebootSafe":false}),
         );
     }
     owner
