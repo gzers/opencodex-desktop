@@ -1,0 +1,21 @@
+{
+  "base": "8958a59b80c95501ba2a0920cad3f4f228975573",
+  "main": "dbf974097d067e75c4de68f9fc681af8ab447b09",
+  "docs": "a6d9184b851521194477ddfeecd988f40d513e5b",
+  "contract": "TEAM13/IMP139/r3/r2",
+  "hypotheses": [
+    "An exclusive native read/write handle on current.json can serialize pointer CAS on the same file object, checking exact ID/fullSecurity/rawDigest rather than replacing a possibly raced pathname.",
+    "The only valid pointer tip comes from actual private phase-prefix records. Each advance must be one sequence, linked to the prior digest, sameSID/session/binding/manifest; stale or mixed pointers refuse.",
+    "Write/sync/interruption failures poison the retained pointer, preserve phase records and return Unknown, never grant OriginalSession/Closed or retry another action silently.",
+    "Full production security guard always requests r3 FULL access and BACKUP_SECURITY_INFORMATION. Native tests use an explicitly distinct test-only partial O/G/D guard, never a production Full guard or original permission. Known1314 is not re-executed."
+  ],
+  "independentChecks": [
+    "real exclusive handle/fileID/private pointer CAS",
+    "stale digest,foreign sequence/session/extra fields/ref tamper",
+    "interrupted partial write keeps Required and immutable phase records",
+    "partial vs full guard type separation; MSVC product compile"
+  ],
+  "productionExecuted": false,
+  "fullSDRetests": 0,
+  "allAccepted": false
+}

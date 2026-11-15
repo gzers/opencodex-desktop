@@ -1,0 +1,19 @@
+{
+  "CAS": "Exclusive same-object read/write handle. Verify initialprivate object fileID/raw then initial full security snapshot while private reader held, exclusive reopen all equal; compare expected descriptor/raw each advance, sync file and readback. This does not claim transactional power-loss atomicity or cross-process native authority from pointer contents.",
+  "fullVsPartial": "CurrentReference private field Reference<Full> and Full API always requests FULL_DESCRIPTOR_QUERY_ACCESS/BACKUP query. PartialDiagnostic compiled only cfg(test) and cannot construct CurrentReference or satisfy native original trait proof types.",
+  "phaseOrdering": "Next immutable phase validated and create-only PrivateRecord synced before pointer advance. Extra phase on later failure remains discoverable; stale writer old snapshot cannot append again or default to empty. Pointer mismatch remains recoveryRequired.",
+  "notDone": [
+    "complete original manifest/security/content capture",
+    "pre-first-original-move intent/current-ref protocol wired to actual custody",
+    "directory/whole-tree custody and working copies",
+    "real restore/ClosedEligibility/successor proof",
+    "fullSD positive environment",
+    "actualGUI/original Owner production combination"
+  ],
+  "cleanup": "Synthetic task records only; no accounts/Profile/Public roots or official runtime. Previous rejected exact cleanup paths untouched; build cache/EXE/evidence retained.",
+  "allAccepted": false,
+  "productionExecuted": false,
+  "fullSDRetests": 0,
+  "actualGUI": false,
+  "overallCleanupComplete": false
+}

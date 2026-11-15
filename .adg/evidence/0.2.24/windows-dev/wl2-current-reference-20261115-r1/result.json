@@ -1,0 +1,52 @@
+{
+  "source": "c47953ccfe4c66a976285eacffd691e3a3b0c01b",
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "officialOwnerCreated": false,
+  "OriginalSessionIssued": false,
+  "ClosedEligibilityIssued": false,
+  "uniquePassedTests": 8,
+  "successfulTestInvocations": 15,
+  "tests": {
+    "library01Intermediate": 7,
+    "library02Final": 8
+  },
+  "firstError": null,
+  "MSVCProduct": {
+    "exitCode": 0,
+    "elapsedMs": 156748,
+    "warnings": 107,
+    "profile": "debug",
+    "dirtyDiffEmpty": true
+  },
+  "fullSecurityProductionPositive": false,
+  "partialDiagnosticCASMechanismOnly": true,
+  "fullSDRetests": 0,
+  "officialStarts": 0,
+  "implemented": [
+    "create-only next pending phase validated/synced/readback before current CAS",
+    "same native current file object/exclusive writer/full-security production guard and expected exactbytes check",
+    "stale/foreign/native-directory/duplicate/unknown pointer refusal",
+    "interrupted partialwrite preserves original phases; poisonedUnknown reference not reconstructed"
+  ],
+  "notImplemented": [
+    "complete original capture manifest/security/content",
+    "full durable pre-move intent/custody/current-ref protocol wired to actual original objects",
+    "directory/tree working-copy capture and complete restore/Closed",
+    "actualGUI/original Owner production path",
+    "full S/D production proof matrix"
+  ],
+  "newAccounts": 0,
+  "newProfiles": 0,
+  "newPublicRoots": 0,
+  "forcedActions": 0,
+  "dailyConfigPATHWrites": 0,
+  "newSyntheticCleanup": "successful task private records/TempDirs guards completed",
+  "overallCleanupComplete": false,
+  "rejectedCleanupRetried": false,
+  "userParticipation": "Await qualifying unchanged ordinary fullSD environment or integration-owner decision about safety-coverage contract. No elapsed-time approval assumed; independent unfinished implementation still listed.",
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

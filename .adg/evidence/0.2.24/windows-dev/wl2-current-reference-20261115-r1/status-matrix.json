@@ -1,0 +1,84 @@
+{
+  "allAccepted": false,
+  "productionExecuted": false,
+  "items": [
+    {
+      "id": "phase-tip",
+      "implementation": "derived from original private phase prefix",
+      "test": "library01 existing checks passed",
+      "detail": "Typed binding/session/currentSID plus exact sequence/prevdigest/manifest; never native proof."
+    },
+    {
+      "id": "reference-current-object",
+      "implementation": "same native ID exclusive RW CAS",
+      "test": "library01 native mechanism positive passed",
+      "detail": "No path replace, foreign writer/delete refuses; exact expected bytes compare stronger than digest alone."
+    },
+    {
+      "id": "production-security",
+      "implementation": "Reference<Full> only",
+      "test": "Full adapter compiled only; test-only partial mechanism passed",
+      "detail": "Full access/BACKUP fixed; no live fullSD query; incompatible PartialDiagnostic cfgtest cannot create production wrapper."
+    },
+    {
+      "id": "phase-before-reference",
+      "implementation": "validated create-only append/sync thenCAS",
+      "test": "library02 passed; actual create-only phase flush/readback before advance",
+      "detail": "Extra phase on later reference failure remains and stale oldprefix cannot append again."
+    },
+    {
+      "id": "foreign-scope",
+      "implementation": "native session-directory ID checked",
+      "test": "library02 native session-directory mismatch refused; no current created",
+      "detail": "Wrong directory/session rejected before new current file creation."
+    },
+    {
+      "id": "pointer-integrity",
+      "implementation": "strict duplicate/unknown-tip fields",
+      "test": "library02 duplicate/unknown/foreign-session/stale cases passed",
+      "detail": "Expected Tip must match exact private phase prefix; never reconstruct permission."
+    },
+    {
+      "id": "write-interruption",
+      "implementation": "poisoned reference, phases retained",
+      "test": "library02 actual partialwrite test passed",
+      "detail": "Private immutable phase preserved; reference Unknown/Required; no default/catch-up or native recovery rights."
+    },
+    {
+      "id": "MSVC-product",
+      "implementation": "clean final39Rust compiled",
+      "test": "exit0/156748ms;107warnings retained",
+      "detail": "Debug build only; not release budget, signed candidate or W2."
+    },
+    {
+      "id": "native-original-capture",
+      "implementation": "incomplete",
+      "test": "not run",
+      "detail": "No original manifest/custody/workcopy/completeSD/restore/Closed wiring yet."
+    },
+    {
+      "id": "H-S-D-production",
+      "implementation": "partial/incomplete",
+      "test": "prior evidence reused",
+      "detail": "ActualGUI/originalOwner/full family/sourcebound production matrix not accepted."
+    },
+    {
+      "id": "ordinary-fullSD-MSI",
+      "implementation": "environment/acceptance incomplete",
+      "test": "no known1314 repeat",
+      "detail": "No privilege/ACL/policy changes; administrator MSI not ordinary acceptance."
+    },
+    {
+      "id": "cleanup",
+      "implementation": "synthetic task records only",
+      "test": "successguards sofar",
+      "detail": "No newaccount/Profile/Public/force; prior exact rejected trees/history untouched; cache/evidence retained."
+    },
+    {
+      "id": "constraints",
+      "implementation": "maintained",
+      "test": "noW2/dualSID/publish",
+      "detail": "No real model/business sync/dailyconfig/PATH/official changes; original budgets preserved."
+    }
+  ]
+}

@@ -378,3 +378,22 @@ O完整同卷custody/current-ref CAS/恢复/Closed、H真实GUI原Owner生产路
 不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-original-move-20261115-r1/含前置假设/原native四组source/raw/stdout/stderr/result、API参考/本地签名限制、finalsource/Gitblob/制品、14项完整表/清理限制/report/result与verify_evidence.py。API URL仅参考无下载正文hash声明；原生结果直接证明当前操作。离线首轮PS1查Rust-only map KeyError/1保留replay-attempt01；修对actualcaptured源比较后replay0，原native断言/结果不改。
 
 成功7个C任务fixture根和2个准确新D空cache根由原guard收尾，D仅remove_dir新空leaf不递归父根；无失败树/newaccount/Profile/Public/force/官方进程/日常PATH配置策略写。原7文件670767字节失败树及历史Profile/Public/schema自动审批拒绝不重试/不换机制；cache/制品/证据留用，overallCleanupComplete=false。O完整恢复、H真实GUI、S/D全production/family、普通SD/SACL及MSI验收缺口保持；allAccepted/productionExecuted/actualGUI=false，不W2/双SID/业务同步/模型请求/发布。
+
+
+## 2026-11-15 W-L2阶段先刷盘与同对象current引用CAS（机制增量）
+
+用户要求持续工作至需其参与，fetch main dbf974097d067e75c4de68f9fc681af8ab447b09 / docs a6d9184b851521194477ddfeecd988f40d513e5b未变，TEAM13/IMP139/r3承接r2。先hypotheses01，library01七项通过；review01/hypotheses02先记原scope/create顺序及初始安全观察，library02最终八项通过。8不同用例/15成功执行，本轮无失败测试/编译，firstError=null。
+
+3a123fe979bbefba32c00272829318e09b9b5bfa与c47953ccfe4c66a976285eacffd691e3a3b0c01b已推codex/024-windows-native，净4许可O/test文件。新CurrentReference(Reference<Full>)生产类型私有且固定FULL access/BACKUP完整SD；cfgtest PartialDiagnostic只观察O/G/D，不能转换生产Full/OriginalSession/Closed。真实CAS机制测试明确partialDiagnosticOnly，fullSD没有新实测，原1314不重跑，生产Start仍拒绝。
+
+current.json经PrivateRecord原私有对象/read-byte/fileID检查，原readpin仍持有时观察初始security；独占读写重开同fileID/bytes/descriptor才返回引用。每次advance核原id/security/准确bytes/父pin/原deadline，Tip只接受同原native session目录/同SID/session/binding/manifest且sequence+1/prevdigest的实际privatephaseprefix；旧prefix/foreign/重复/未知均拒绝。share0第二writer/delete/rename拒绝实测。引用只是定位data，没有从序列化恢复native权限。
+
+PendingOnly append下一phase先复读原记录/原目录及完整prefix，validate/create-only/sync/readback后，CurrentReference才CAS。后半失败额外phase保留，旧prefix不得再次append；pointer写第一字节前poison，write/setlen/sync/后验/deadline任何失败都保留Unknown/Required，无自动rollback/清空/catchup/新窗口。真实partialwrite测试保留原阶段并拒reopen，文本Closed仍仅PendingOnly。机制不承诺断电原子提交，不声称实际原件move意图/全量custody/恢复已完成。
+
+最终clean c479源MSVC debug全部bins0/156748ms/107warnings原样；library02/product01每组39Rust与最终逐字一致，library01 phase/reference后来变化不能冒final；两份库EXE实际时点摘要分立。Desktop75458560/SHA256d136dce96df103f5bec219b5275689bc4a85c383848b8a1980e3fd12cd807eb1；ocxd5398528/SHA256cc6d7e66c4f0ad6906f43d30d0516043217cbb55c8cb7fdd6ec06475e48520db；ocx306176/SHA256cf0c1a39371e9e5f7bd4c0f7a514d9b6106574835f70c05eafa87517de4ce5b8。非release预算/签名冻结候选，test原cfgFFI/unusedwarning完整保留，无strictClippy/安全审计通过声明。
+
+不可覆盖证据.adg/evidence/0.2.24/windows-dev/wl2-current-reference-20261115-r1/：先置假设/3组原命令执行源/stdout/stderr/result、最终source/Gitblob/制品、13项状态表/限制/report/result、typedguard/中断范围及verify_evidence.py，离线replay0只表示字节与声明自洽。mac-decision-handoff.md及environment-decision-request.json给准确后继协调输入。
+
+新syntheticrecords/TempDir成功guard收尾，无失败临时树/newaccount/Profile/Public/force/官方进程/日常PATH配置策略写；缓存/EXE/证据留用，旧7文件670767字节失败树及全部历史Profile/Public/schema自动审批拒绝不重试/不换机制，overallCleanupComplete=false。
+
+仍未完成真实原件manifest/capture、同卷目录整树custody/工作副本、actualmove意图/current-ref协议接原对象、恢复/Closed，H真实GUI原Owner路由、S/D全productionmatrix及普通MSI验收。当前用户已被问及提供满足完整SD/SACL的不提升不改策略普通隔离环境，或交Mac集成owner评估安全覆盖合同；尚未答复，elapsed不是approval，Windows没授权缩full范围/拿partial当完整。其余未完仍归Windows实现，不冒缺共享trait。allAccepted/productionExecuted/actualGUI=false，无业务同步/模型请求/W2/双SID/发布。
