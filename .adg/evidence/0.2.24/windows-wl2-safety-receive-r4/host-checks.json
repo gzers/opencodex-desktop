@@ -1,0 +1,47 @@
+{
+  "code": "2ebdd3ae0423903e9e713108a09a165ac36ead37",
+  "host": "aarch64-apple-darwin",
+  "record": "Observed command-result summary; no raw-log reconstruction",
+  "checks": [
+    {
+      "command": "cargo fmt --all -- --check",
+      "exit": 0
+    },
+    {
+      "command": "cargo clippy --locked --lib --tests -- -D warnings",
+      "exit": 0,
+      "seconds": 28.01
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    },
+    {
+      "command": "python3 .adg/evidence/0.2.24/windows-wl2-safety-receive-r4/verify_receive.py",
+      "exit": 0,
+      "payloads": 3589,
+      "bytes": 30427614,
+      "latestExecutedRustInputsPerStage": 39,
+      "stages": [
+        "library02",
+        "product01"
+      ]
+    }
+  ],
+  "noNewBehaviorTests": "New code only declares policy constants and interface assurance; native behavior/proofs not changed. Required native/persistence/production assertions belong to r4 acceptance table.",
+  "windowsNativeExecutionOnMac": false,
+  "ordinaryEightProjectionPositive": false,
+  "fullSecurityProven": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false,
+  "docsReceiveHelper": {
+    "firstExit": 1,
+    "stage": "after successful import commit, before resetting owned paths in shared index",
+    "error": "TypeError: Popen input unsupported by subprocess.check_call",
+    "fix": "Used subprocess.run(input=...,check=True) for exact NUL-separated owned path reset",
+    "evidenceCommit": "b0af58cdb",
+    "temporaryIsolatedIndex": "finally removed",
+    "userPrototypeStagedPaths": "preserved; owned paths only reset"
+  }
+}

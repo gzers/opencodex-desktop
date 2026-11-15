@@ -1,5 +1,7 @@
 # W-L1接收与W-L2四项共享边界 r2
 
+2026-11-15后继：四trait及Windows写集继续由r3/[当前r4](windows-security-coverage-r4.md)增量承接；新原件代次采用r4有界访问安全与v2持久格式，本文full-SD/原schema-v1条款保留历史及旧未决范围，不作为新代次自动选择依据。
+
 revision: 2；2026-11-14。归IMP-34 P24-W1/04；当前执行写集取代r1，历史结果不改写。共享代码输入：12746c005cb2621d2f1f44d12c0af501613fef1a。模块 modules::runtime::windows_lifecycle024_contract 是可编译的接口声明，四个trait没有默认成功实现；不是四项原生能力已经实现。现有Windows生产消费者的Required/Unknown继续生效，直到实际适配及定向证据闭合。Windows接令后在下面写集内连续开发、批量修复、定向核验、及时push，无须逐处回Mac。
 
 ## 本次接收与事实边界

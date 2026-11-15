@@ -1,0 +1,59 @@
+{
+  "refs": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-information",
+      "retrievedDate": "2026-11-15",
+      "htmlBytes": 56393,
+      "htmlSha256": "02fa64e3803f8ecab652a6ed602c241b4a055a1c9480771a88ae9801620a2c24",
+      "excerpts": [
+        "d QuerySecurityAccessMask functions. Value/rights required to query/set Meaning ATTRIBUTE_SECURITY_INFORMATION Right required to query: READ_CONTROL Right required to set: WRITE_DAC The resource properties of the object being referenced. The resource properties are stored in SYSTEM_RESOURCE_ATTRIBUTE_ACE types in the SACL of the security descriptor. Windows Server 2008 R2, Windows 7, Windows Server 2008, Windows Vista, Windows Server 2003 and Windows XP: This bit flag is not available. BACKUP_SECURITY_INFORMATION Right required to query: READ_CONTROL and ACCESS_SYSTEM_SECURITY Right required to set: WRITE_DAC and WRITE_OWNER and ACCESS_SYSTEM_SECURITY All parts of the security descriptor. This is useful for backup and restore software that needs to preserve the entire security descriptor. Windows Server 2008 R2, Windows 7, Windows Server 2008, Windows Vista, Windows Server 2003 and Windows XP: This bit flag is not av",
+        "dows Vista, Windows Server 2003 and Windows XP: This bit flag is not available. BACKUP_SECURITY_INFORMATION Right required to query: READ_CONTROL and ACCESS_SYSTEM_SECURITY Right required to set: WRITE_DAC and WRITE_OWNER and ACCESS_SYSTEM_SECURITY All parts of the security descriptor. This is useful for backup and restore software that needs to preserve the entire security descriptor. Windows Server 2008 R2, Windows 7, Windows Server 2008, Windows Vista, Windows Server 2003 and Windows XP: This bit flag is not available. DACL_SECURITY_INFORMATION Right required to query: READ_CONTROL Right required to set: WRITE_DAC The DACL of the object is being referenced. GROUP_SECURITY_INFORMATION Right required to query: READ_CONTROL Right required to set: WRITE_OWNER The primary group identifier of the object is being referenced. LABEL_SECURITY_INFORMATION Right required to query: READ_CONTROL Right required to set: WRITE_OWN",
+        "et: WRITE_OWNER The primary group identifier of the object is being referenced. LABEL_SECURITY_INFORMATION Right required to query: READ_CONTROL Right required to set: WRITE_OWNER The mandatory integrity label is being referenced. The mandatory integrity label is an ACE in the SACL of the object. Windows Server 2003 and Windows XP: This bit flag is not available. OWNER_SECURITY_INFORMATION Right required to query: READ_CONTROL Right required to set: WRITE_OWNER The owner identifier of the object is being referenced. PROTECTED_DACL_SECURITY_INFORMATION Right required to query: Not available Right required to set: WRITE_DAC The DACL cannot inherit access control entries (ACEs). PROTECTED_SACL_SECURITY_INFORMATION Right required to query: Not available Right required to set: ACCESS_SYSTEM_SECURITY The SACL cannot inherit ACEs. SACL_SECURITY_INFORMATION Right required to query: ACCESS_SYSTEM_SECURITY Right required to se",
+        "set: WRITE_DAC The DACL cannot inherit access control entries (ACEs). PROTECTED_SACL_SECURITY_INFORMATION Right required to query: Not available Right required to set: ACCESS_SYSTEM_SECURITY The SACL cannot inherit ACEs. SACL_SECURITY_INFORMATION Right required to query: ACCESS_SYSTEM_SECURITY Right required to set: ACCESS_SYSTEM_SECURITY The SACL of the object is being referenced. SCOPE_SECURITY_INFORMATION Right required to query: READ_CONTROL Right required to set: ACCESS_SYSTEM_SECURITY The Central Access Policy (CAP) identifier applicable on the object that is being referenced. Each CAP identifier is stored in a SYSTEM_SCOPED_POLICY_ID_ACE type in the SACL of the SD. Windows Server 2008 R2, Windows 7, Windows Server 2008, Windows Vista, Windows Server 2003 and Windows XP: This bit flag is not available. UNPROTECTED_DACL_SECURITY_INFORMATION Right required to query: Not available Right required to set: WRITE_DAC ",
+        "ired to set: ACCESS_SYSTEM_SECURITY The SACL of the object is being referenced. SCOPE_SECURITY_INFORMATION Right required to query: READ_CONTROL Right required to set: ACCESS_SYSTEM_SECURITY The Central Access Policy (CAP) identifier applicable on the object that is being referenced. Each CAP identifier is stored in a SYSTEM_SCOPED_POLICY_ID_ACE type in the SACL of the SD. Windows Server 2008 R2, Windows 7, Windows Server 2008, Windows Vista, Windows Server 2003 and Windows XP: This bit flag is not available. UNPROTECTED_DACL_SECURITY_INFORMATION Right required to query: Not available Right required to set: WRITE_DAC The DACL inherits ACEs from the parent object. UNPROTECTED_SACL_SECURITY_INFORMATION Right required to query: Not available Right required to set: ACCESS_SYSTEM_SECURITY The SACL inherits ACEs from the parent object. Requirements Requirement Value Minimum supported client Windows XP [desktop apps only] M"
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "retrievedDate": "2026-11-15",
+      "htmlBytes": 60680,
+      "htmlSha256": "d143f91ced409d46bd0b359eade815f5652a70ef13c7ec47fb16813202220a22",
+      "excerpts": [
+        "s rights The valid access rights for files and directories include the DELETE , READ_CONTROL , WRITE_DAC , WRITE_OWNER , and SYNCHRONIZE standard access rights . The table in File Access Rights Constants lists the access rights that are specific to files and directories. Although the SYNCHRONIZE access right is defined within the standard access rights list as the right to specify a file handle in one of the wait functions, when using asynchronous file I/O operations you should wait on the event handle contained in a properly configured OVERLAPPED structure rather than using the file handle with the SYNCHRONIZE access right for synchronization. The following are the generic access rights for files and directories: Generic access right Mapped access rights Generic meaning FILE_GENERIC_EXECUTE FILE_EXECUTE FILE_READ_ATTRIBUTES STANDARD_RIGHTS_EXECUTE SYNCHRONIZE Execute access FILE_GENERIC_READ FILE_READ_ATTRIBUTES FIL",
+        " application must have access to the system-level access control settings , the ACCESS_SYSTEM_SECURITY flag must be specified in the dwDesiredAccess parameter value passed to CreateFile . Backup applications call BackupRead to read the files and directories specified for the restore operation, and BackupWrite to write them. Related content Standard access rights Feedback Was this page helpful? Yes No No Need help with this topic? Want to try using Ask Learn to clarify or guide you through this topic? Ask Learn Ask Learn Suggest a fix? Additional resources Last updated on 2025-07-09 "
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-querysecurityaccessmask",
+      "retrievedDate": "2026-11-15",
+      "htmlBytes": 51547,
+      "htmlSha256": "8fb4e1f26738f4b3de40ccf095145487872272335686a4a46a93254ac9ceec1d",
+      "excerpts": [
+        "marize this article for me In this article The QuerySecurityAccessMask function creates an access mask that represents the access permissions necessary to query the specified object security information. Syntax VOID QuerySecurityAccessMask( [in] SECURITY_INFORMATION SecurityInformation, [out] LPDWORD DesiredAccess ); Parameters [in] SecurityInformation A SECURITY_INFORMATION structure that specifies the security information to be queried. [out] DesiredAccess A pointer to the access mask that this function creates. Return value None Requirements Requirement Value Minimum supported client Windows Vista [desktop apps only] Minimum supported server Windows Server 2008 [desktop apps only] Target Platform Windows Header securitybaseapi.h (include WinBase.h) Library Advapi32.lib DLL Advapi32.dll See also SetSecurityAccessMask Feedback Was this page helpful? Yes No No Need help with this topic? Want to try using Ask Learn to"
+      ]
+    }
+  ],
+  "decision": "Adopt explicit bounded access-security policy for new v2 original sessions; not full-SACL assurance",
+  "scopeId": "windows-bounded-access-v1",
+  "accessMask": "0x00020000",
+  "includedMask": "0x000001f7",
+  "requiredProjections": [
+    "0x1",
+    "0x2",
+    "0x4",
+    "0x10",
+    "0x20",
+    "0x40",
+    "0x80",
+    "0x100"
+  ],
+  "auditSacl": "excluded_unknown; never asserted absent/equal/restored",
+  "limitations": [
+    "Documentation confirms READ_CONTROL for O/G/D, label, attribute and scope; trust/access-filter actual masks/support must be proven against target Windows API/SDK",
+    "No native Windows proof of all eight projections on ordinary token yet",
+    "Same native file identity does not prove excluded metadata unchanged",
+    "No automatic failure fallback from Full; no old pending downgrade",
+    "Production remains refused until real native tree/custody/restore/Closed and H/S/D complete"
+  ],
+  "fullRangeOrdinaryEnvironment": "No qualifying ordinary full-SACL environment proven; special preexisting enabled security privilege is not default ordinary baseline; no policy/token changes authorized"
+}
