@@ -12,6 +12,7 @@ use std::{
 };
 mod binding;
 mod phase;
+mod reference;
 use windows_sys::Win32::{
     Foundation::LocalFree,
     Security::{

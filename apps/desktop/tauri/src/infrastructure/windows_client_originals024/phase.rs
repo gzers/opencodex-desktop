@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use std::{io, path::Path};
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
-enum Phase {
+pub(super) enum Phase {
     Captured,
     Ready,
     PreparedRestore,
@@ -34,6 +34,78 @@ pub(super) struct PendingOnly {
     _directory: PinnedDirectory,
     _records: Vec<PrivateRecord>,
     pub(super) terminal_record_observed: bool,
+    pub(super) tip: super::reference::Tip,
+}
+impl PendingOnly {
+    /// Persist a validated next locator phase, never a native restore permit.
+    /// Create-only + sync precedes pointer CAS. Any failed publication leaves
+    /// the extra phase discoverable and cannot silently reuse this old prefix.
+    pub(super) fn append_pending(
+        &mut self,
+        phase: Phase,
+        deadline: std::time::Instant,
+    ) -> io::Result<Self> {
+        if std::time::Instant::now() >= deadline {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        self._directory.recheck()?;
+        let fresh = read_pending(self._directory.path())?;
+        fresh.check_directory(&self._directory)?;
+        if fresh.tip != self.tip {
+            return Err(invalid());
+        }
+        let mut records = self
+            ._records
+            .iter_mut()
+            .map(PrivateRecord::read)
+            .collect::<io::Result<Vec<_>>>()?;
+        let last_bytes = records.last().ok_or_else(invalid)?;
+        let last: Record = serde_json::from_slice(last_bytes).map_err(|_| invalid())?;
+        if !next(&last.phase, &phase) {
+            return Err(invalid());
+        }
+        let sequence = last.sequence.checked_add(1).ok_or_else(invalid)?;
+        let value = Record {
+            schema: last.schema,
+            session_id: last.session_id,
+            sequence,
+            previous_digest: hash::sha256_hex(last_bytes),
+            binding: last.binding,
+            phase,
+            originals_manifest_digest: last.originals_manifest_digest,
+            previous_record_id: Some(format!("phase-{:08}.json", last.sequence)),
+        };
+        let bytes = serde_json::to_vec(&value).map_err(|_| invalid())?;
+        records.push(bytes.clone());
+        let sid = crate::infrastructure::windows_official_runtime024::current_identity()?.sid;
+        check_prefix_for_sid(&records, Some(&sid))?;
+        if std::time::Instant::now() >= deadline {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        let record = PrivateRecord::create(
+            &self
+                ._directory
+                .path()
+                .join(format!("phase-{sequence:08}.json")),
+            &bytes,
+            65536,
+        )?;
+        // No deletion/rollback if readback or the caller's pointer update fails.
+        let result = read_pending(self._directory.path());
+        drop(record);
+        if std::time::Instant::now() >= deadline {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        result
+    }
+    pub(super) fn check_directory(&self, directory: &PinnedDirectory) -> io::Result<()> {
+        self._directory.recheck()?;
+        directory.recheck()?;
+        if self._directory.identity() != directory.identity() {
+            return Err(invalid());
+        }
+        Ok(())
+    }
 }
 pub(super) fn invalid() -> io::Error {
     io::Error::new(
@@ -110,6 +182,7 @@ pub(super) fn read_pending(session_dir: &Path) -> io::Result<PendingOnly> {
     let mut names = std::fs::read_dir(session_dir)?
         .map(|e| e.map(|e| e.file_name()))
         .collect::<io::Result<Vec<_>>>()?;
+    names.retain(|name| name != "current.json");
     names.sort();
     if names.is_empty() || names.len() > 512 {
         return Err(invalid());
@@ -131,15 +204,26 @@ pub(super) fn read_pending(session_dir: &Path) -> io::Result<PendingOnly> {
         return Err(invalid());
     }
     dir.recheck()?;
+    let last: Record =
+        serde_json::from_slice(records.last().ok_or_else(invalid)?).map_err(|_| invalid())?;
+    let tip = super::reference::Tip::from_prefix(
+        first.session_id,
+        last.sequence,
+        hash::sha256_hex(records.last().unwrap()),
+        last.previous_digest,
+        hash::sha256_hex(&serde_json::to_vec(&last.binding).map_err(|_| invalid())?),
+        last.originals_manifest_digest,
+    );
     Ok(PendingOnly {
         _directory: dir,
         _records: handles,
         terminal_record_observed: closed,
+        tip,
     })
 }
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::*;
     fn synthetic_binding() -> Binding {
         // Synthetic declared paths/IDs only; no native identity is reconstructed.
@@ -176,6 +260,9 @@ mod tests {
             result.push(serde_json::to_vec(&r).unwrap());
         }
         result
+    }
+    pub(crate) fn reference_chain() -> Vec<Vec<u8>> {
+        chain(&[Phase::Captured, Phase::Ready])
     }
     #[test]
     fn wl2_r3_every_phase_prefix_remains_pending_no_native_closed_authority() {
