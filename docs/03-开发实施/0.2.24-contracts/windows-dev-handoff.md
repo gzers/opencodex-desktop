@@ -402,3 +402,18 @@ PendingOnly append下一phase先复读原记录/原目录及完整prefix，valid
 ## 2026-11-15 用户选择Mac评估安全覆盖合同
 
 用户明确选择“交 Mac 评估安全覆盖合同”。决定及可复制提示词保存在.adg/evidence/0.2.24/windows-dev/wl2-sd-contract-decision-20261115-r1/。仅授权集成线评估并给明确后继合同，不授权Windows当前降低fullSD/SACL范围、改策略/token/ACL或以部分诊断测试补签。代码c47953ccf/原证据ebeb2d692不变，生产Start继续拒绝；O整树custody/真实移动引用协议/恢复/Closed、H真实GUI/S-D组合和普通MSI/历史清理未完保持。按既有Git协作由用户转交现有Mac对话，没有自动跨对话发送消息，无新增运行时测试/环境/清理操作，不W2/双SID/发布。
+
+
+## 2026-11-15 r4有界安全与后继S/D接线（未生产收口）
+
+精确合入main2ebdd3ae0与docs84ec482ee后承接c479，TEAM14/IMP140/windows-security-coverage-r4。代码分批推6b9ff52b9/ea9ac6208/47ffbec21/8e5201d3f/42e730811，以及后继cd0221aa1/892fbcafd/5601df969；最新5601df969b7c25b771f91d700f55485e03f24a2e。允许Windows/test净写集，无共享trait/官方/安装器/Mac/日常策略修改，untracked既有windows-schema.json保留。
+
+固定8投影各+combined原生READ_CONTROL、严格v2 policyDigest及manifest/phase/current同对象CAS、原存在/缺席全树同卷原对象保管/工作副本/精确ID字节投影恢复机制与canonical记录/单根中断pending均有新定向组件证据；旧Full/PartialDiagnostic不转换。审计SACL/整体SACL控制及未请求扩展excluded-unknown，fullSecurityProven=false。原label非空正例外新增条件DACL/resource/filter的6个Alpha/Beta对象capture/重复/combined/变化检测通过；CAP与trust的CREATE_NEW分别1314/5，无提升/修ACL/同前提重试，不冒非空B2通过。
+
+Stop实际Windows调用点已接typedSupervisor/NormalExit，完整记账与root0保持，raw子退出由角色/原生缺席证明决定，Unknown/required非零仍拒绝；末端再核source/监督/端点/准确runtime-port与ocx.pid。受影响sdstop02共15passed/2ignored，populated01一项6对象过；library09 E0603/raw101/tests0保留，修正import后library10过；library09/10未先写新hypothesis的流程缺口如实回执不倒签。旧library02/04失败源/log也保持。并未真实启动原官方，Start durable gate仍拒绝，完整ClientOriginals/两锁/全中断恢复/Closed、actualGUI与真实S-D组合均未完，productionExecuted/allAccepted/actualGUI=false。
+
+最终product04 clean5601df969 MSVC debug全部bins0/53936ms，87份执行源逐字匹配工作源且与Gitblob行尾等价；制品摘要归product04-artifacts.json。Desktop75765248/SHA2562ae9fedc138598ac4fb197f38d524904a0950e8fe69f9d115260c49d9e22ab02；ocxd5398528/SHA256e929c4f8e21264817f52ca8c7d3fd090bc84747e83b357b55d0735e8250e0d9f；ocx306176/SHA256e0aac1a956c90a05a84a92a1198a034356ef102be67ef75b1861cc51dee725e6。不是release预算/冻结候选/发布。
+
+不可覆盖轮次.adg/evidence/0.2.24/windows-dev/wl2-bounded-security-r4-20261115-r1/保留全部原source/stdout/stderr/result，初始及后继状态分时点、首错、制品/源码manifest、清理与verify_delivery/payload-inventory。后继事实归successor-status/report，不覆盖早先final-status/report快照。lib06负例当时成功TempDir guard清理缺私有归档的局限明列；lib07加失败现场保留/私有归档后删除被automaticapproval blocked by policy拒绝，4文件7290字节继续留；lib08/10另4保留scene归档核验16文件51405字节，3个probe新文件也留，六个Rust正例成功guard清理。ZIP仅字节归档不克隆NTFS身份/安全，原私有对象在场。所有旧失败树/Profile/Public/schema删除拒绝不重试不绕过，overallCleanupComplete=false；普通MSI缺口继续，不W2/双SID/真实业务同步/模型请求/发布。
+
+marenben session7最后核Disc；已请用户恢复交互桌面，未重跑旧空H用例。CAP/trust非空组件正例还需能供现普通token读取的专用合成对象/环境，不给token加权限。本轮交付是范围内增量；软件未完成项继续Windows，不以环境缺口替代其它实现责任。

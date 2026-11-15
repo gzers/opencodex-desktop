@@ -1,0 +1,83 @@
+{
+  "time": "2026-11-15T12:38:32.879741+08:00",
+  "codeHead": "5601df969b7c25b771f91d700f55485e03f24a2e",
+  "codeTree": "29a9edbb94d5b39e042df0094eb3a61886a6e92f",
+  "B1": "controller ordinary 8+combined component queries pass; isolated ordinary acceptance pending",
+  "B2": "native label, conditional DACL, resource and access-filter nonempty/same/changed positive components pass; populated CAP/trust not validated (CREATE_NEW1314/5) and deeper arbitrary structure fixtures remain",
+  "B3": "strict v2 + CAS mechanisms passed, unchanged by S/D batch",
+  "O1": "existing/absent whole-tree native mechanisms and v2 manifest/current passed; complete production ClientOriginals/stable locks remain",
+  "O2": "single-root interrupted and external-edit pending retained; complete teardown/restore interruption matrix remains",
+  "H": "actualGUI=false; marenben session7 last observed Disc; empty host fixture evidence reused only",
+  "S": "production Stop now consumes WindowsSupervisor typed proof and rechecks final source/namespace; actual production combined execution pending",
+  "D": "production Stop now consumes WindowsDiagnostics normal-family proof; raw child codes no longer discarded by blanket zero prefilter; Unknown/required nonzero still veto; actual combined execution pending",
+  "P": "Start remains require_durable_capture refusal; Stopped/successor not issued",
+  "firstErrorThisBatch": {
+    "run": "library09",
+    "rawExit": 101,
+    "tests": 0,
+    "error": "E0603 imports of DiagnosticRoles/SupervisorAbsence through private implementation imports; fixed to shared trait declarations; library10 then passed14"
+  },
+  "nativePopulatedFailures": [
+    {
+      "fixture": "CAP",
+      "api": "CreateFileW-CREATE_NEW-READ_CONTROL",
+      "raw": 1314
+    },
+    {
+      "fixture": "trust",
+      "api": "CreateFileW-CREATE_NEW-READ_CONTROL",
+      "raw": 5
+    }
+  ],
+  "cleanup": {
+    "priorScenesRemain": true,
+    "oldDeletionRejectionsRetried": false,
+    "newPrivateArchivesVerified": 4,
+    "newArchivedFiles": 16,
+    "newArchivedBytes": 51405,
+    "newSceneDirectories": [
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpZpcxv4",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp8wo5xX",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpShlu8y",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpYrYbqa"
+    ],
+    "newProbeScene": "test/windows024-native/target/r4-private-scenes/populated-probe01",
+    "newProbeFiles": 3,
+    "newProbeArchiveVerified": true,
+    "probeFileBytes": 0,
+    "sixRustPositiveFixtures": "success guard cleanup",
+    "productionPolicyOrDailyPathChanged": false,
+    "overallCleanupComplete": false
+  },
+  "limitations": [
+    "library09/10 were not preceded by a new written hypothesis; retrospective review recorded without backdating",
+    "Library10 repeated r4 fixtures; subsequent sdstop selection targeted only changed S/D/lifecycle tests",
+    "Private ZIP is byte-content archive, not an NTFS security/identity clone; original native scenes remain. Public records only hashes.",
+    "msvc debug is not release-budget or frozen-candidate acceptance"
+  ],
+  "allAccepted": false,
+  "productionExecuted": false,
+  "actualGUI": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false,
+  "artifacts": "product04-artifacts.json",
+  "productionBuild": {
+    "elapsedMs": 53936,
+    "accepted": false,
+    "profile": "debug",
+    "exitCode": 0,
+    "arguments": [
+      "build",
+      "--locked",
+      "--offline",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--target",
+      "x86_64-pc-windows-msvc",
+      "--bins",
+      "-j",
+      "1"
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "head": "cd0221aa1529fcabafef738fa72659be1fcdf9f6",
+  "sourceRun": "product02",
+  "result": {
+    "accepted": false,
+    "elapsedMs": 111905,
+    "profile": "debug",
+    "exitCode": 0,
+    "arguments": [
+      "build",
+      "--locked",
+      "--offline",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--target",
+      "x86_64-pc-windows-msvc",
+      "--bins",
+      "-j",
+      "1"
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 75759616,
+      "sha256": "3c597a52cba17226a2608cff75db0067ce407ff423c4df682ec76cdefd00da8d",
+      "kind": "product02"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "7596d2be01bc74493c4a6bd668d31e7e405236f3a619aa447549c66f34324578",
+      "kind": "product02"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "ec3b9bacbaff4e2e896608afa01338f6226900e863b79dc6958d11e681cfe6aa",
+      "kind": "product02"
+    },
+    {
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\75e8f4b92f415339\\out\\opencodex_desktop_lib-75e8f4b92f415339.exe",
+      "bytes": 94708736,
+      "sha256": "e45c0fb9426d37792804960460b6248834f2e5f9a18cae9a7ce456020b05db2f",
+      "kind": "library10"
+    }
+  ]
+}
