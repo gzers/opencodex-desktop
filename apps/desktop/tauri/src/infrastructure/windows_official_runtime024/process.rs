@@ -109,7 +109,7 @@ pub struct LaunchSpec<'a> {
 mod command;
 #[path = "process_monitor.rs"]
 mod monitor;
-pub use command::CommandEvidence;
+pub use command::{CommandEvidence, NativeArguments};
 #[path = "host_process.rs"]
 mod host_process;
 pub use host_process::SuspendedOwnerHost;
@@ -402,6 +402,7 @@ pub struct OwnedRuntime {
     job: OwnedHandle,
     binding: RootBinding,
     root_source: RetainedSource,
+    root_arguments: NativeArguments,
     home: PinnedDirectory,
     _program_parent: PinnedDirectory,
     _cwd: PinnedDirectory,
@@ -532,9 +533,10 @@ impl OwnedRuntime {
             }
             home.recheck()?;
             let source = RetainedSource::capture(process.as_raw_handle(), &fact)?;
-            Ok((fact, source))
+            let arguments = command::arguments(process.as_raw_handle())?;
+            Ok((fact, source, arguments))
         })();
-        let (fact, root_source) = match admission {
+        let (fact, root_source, root_arguments) = match admission {
             Ok(f) => f,
             Err(e) => {
                 check(unsafe { TerminateProcess(process.as_raw_handle(), 241) })?;
@@ -550,6 +552,7 @@ impl OwnedRuntime {
             process,
             monitor,
             root_source,
+            root_arguments,
             thread: Some(thread),
             job,
             binding: RootBinding {
@@ -598,6 +601,9 @@ impl OwnedRuntime {
             return Err(denied("native parent generation differs from retained Job"));
         }
         Ok(evidence)
+    }
+    pub fn original_arguments(&self) -> &NativeArguments {
+        &self.root_arguments
     }
     pub fn binding(&self) -> &RootBinding {
         &self.binding

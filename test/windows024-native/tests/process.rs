@@ -349,6 +349,30 @@ fn wl2_retained_command_parent_and_raw_query_exits() {
     );
 }
 #[test]
+fn wl2_family_root_arguments_are_native_original_before_resume() {
+    let f = Fixture::new();
+    let output = f.root.join("native-root-arguments.txt");
+    let literal = "synthetic spaces \"quoted\" 雪 trailing\\";
+    let mut r = f.launch(&["env".into(), output.as_os_str().into(), literal.into()]);
+    let original = r.0.original_arguments().clone();
+    assert!(!output.exists());
+    assert_eq!(original.argv.len(), 4);
+    assert_eq!(Path::new(&original.argv[0]), f.executable);
+    assert_eq!(original.argv[1], "env");
+    assert_eq!(Path::new(&original.argv[2]), output);
+    assert_eq!(original.argv[3], literal);
+    assert!(!original.raw_command_line.is_empty());
+    r.0.resume().unwrap();
+    let state =
+        r.0.wait_normal_exit(Instant::now() + Duration::from_secs(3))
+            .unwrap();
+    assert_eq!(state.root, ProcessState::Exited { code: 0 });
+    assert_eq!(r.0.original_arguments().argv, original.argv);
+    assert_eq!(r.0.original_arguments().captured_at, original.captured_at);
+    assert!(!r.0.forced_cleanup_requested());
+    println!("native original root argument capture before resume and after exit preserved; data only, no official role");
+}
+#[test]
 fn short_lived_job_history_is_retained_or_explicitly_unknown_never_invented() {
     let f = Fixture::new();
     let completed = f.root.join("burst-complete");

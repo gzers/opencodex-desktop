@@ -9,6 +9,14 @@ pub struct CommandEvidence {
     pub argv: Vec<String>,
     pub parent: ProcessIdentity,
 }
+/// Native argument observations only. They cannot authorize an action, and
+/// the original owner never reconstructs a launch from serialized argv data.
+#[derive(Clone, Debug)]
+pub struct NativeArguments {
+    pub captured_at: Instant,
+    pub raw_command_line: String,
+    pub argv: Vec<String>,
+}
 #[link(name = "ntdll")]
 unsafe extern "system" {
     fn NtQueryInformationProcess(
@@ -31,7 +39,7 @@ fn nt_error(status: i32) -> io::Error {
         unsafe { RtlNtStatusToDosError(status) }
     ))
 }
-pub(super) fn capture(process: HANDLE, job: HANDLE, sid: &str) -> io::Result<CommandEvidence> {
+pub(super) fn arguments(process: HANDLE) -> io::Result<NativeArguments> {
     let captured_at = Instant::now();
     if !matches!(state(process)?, ProcessState::Running) {
         return Err(denied("child exited before native argv capture"));
@@ -109,6 +117,22 @@ pub(super) fn capture(process: HANDLE, job: HANDLE, sid: &str) -> io::Result<Com
                 .map_err(|_| denied("invalid native argv"))?,
         );
     }
+    if state(process)? != ProcessState::Running {
+        return Err(denied("process exited during native argument capture"));
+    }
+    Ok(NativeArguments {
+        captured_at,
+        raw_command_line,
+        argv,
+    })
+}
+pub(super) fn capture(process: HANDLE, job: HANDLE, sid: &str) -> io::Result<CommandEvidence> {
+    let NativeArguments {
+        captured_at,
+        raw_command_line,
+        argv,
+    } = arguments(process)?;
+    let mut needed = 0;
     // PROCESS_BASIC_INFORMATION: six pointer-sized slots on the pinned x64
     // target, final slot is InheritedFromUniqueProcessId. No global PID scan.
     let mut basic = [0usize; 6];
