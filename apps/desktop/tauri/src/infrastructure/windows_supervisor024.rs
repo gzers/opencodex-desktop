@@ -155,19 +155,57 @@ pub(crate) fn staged(home: &Path) -> Vec<(&'static str, Namespace)> {
     .map(|name| {
         (
             name,
-            match std::fs::symlink_metadata(home.join(name)) {
-                Err(e) if e.kind() == io::ErrorKind::NotFound => Namespace::Absent {
-                    raw_code: e.raw_os_error().unwrap_or(2) as u32,
-                },
-                Err(e) => Namespace::Unknown {
-                    stage: "exact-staged-artifact",
-                    raw_code: e.raw_os_error().unwrap_or(-1) as u32,
-                },
-                Ok(_) => Namespace::Present,
-            },
+            path_namespace(pinned_path_observation(&home.join(name))),
         )
     })
     .collect()
+}
+
+/// Observe the exact leaf only while its nearest existing parent and every
+/// ancestor are pinned as non-reparse directories. A missing leaf reached via
+/// a junction is not evidence that the declared H namespace is absent.
+struct PathObservationError {
+    leaf: bool,
+    cause: io::Error,
+}
+fn path_namespace(result: Result<std::fs::Metadata, PathObservationError>) -> Namespace {
+    match result {
+        Err(e) if e.leaf && e.cause.kind() == io::ErrorKind::NotFound => Namespace::Absent {
+            raw_code: e.cause.raw_os_error().unwrap_or(2) as u32,
+        },
+        Err(e) => Namespace::Unknown {
+            stage: if e.leaf {
+                "exact-staged-leaf"
+            } else {
+                "exact-staged-parent-pin"
+            },
+            raw_code: e.cause.raw_os_error().unwrap_or(-1) as u32,
+        },
+        Ok(_) => Namespace::Present,
+    }
+}
+fn pinned_path_observation(path: &Path) -> Result<std::fs::Metadata, PathObservationError> {
+    let parent_error = |cause| PathObservationError { leaf: false, cause };
+    let mut parent = None;
+    for ancestor in path.ancestors().skip(1) {
+        match std::fs::symlink_metadata(ancestor) {
+            Err(e) if e.kind() == io::ErrorKind::NotFound => continue,
+            Err(e) => return Err(parent_error(e)),
+            Ok(_) => {
+                parent = Some(
+                    super::windows_official_runtime024::PinnedDirectory::open(ancestor)
+                        .map_err(parent_error)?,
+                );
+                break;
+            }
+        }
+    }
+    let parent =
+        parent.ok_or_else(|| parent_error(io::Error::other("absence parent unavailable")))?;
+    let observed =
+        std::fs::symlink_metadata(path).map_err(|cause| PathObservationError { leaf: true, cause });
+    parent.recheck().map_err(parent_error)?;
+    observed
 }
 
 #[cfg(test)]
@@ -337,35 +375,16 @@ impl SupervisorAbsence for WindowsSupervisor {
     }
 }
 fn require_state_absent(path: &Path) -> AppResult<()> {
-    let mut pinned = None;
-    for ancestor in path.ancestors().skip(1) {
-        match std::fs::symlink_metadata(ancestor) {
-            Err(e) if e.kind() == io::ErrorKind::NotFound => continue,
-            Err(e) => {
-                return Err(unconfirmed(format!(
-                    "state父路径不可读 raw={:?}; {e}",
-                    e.raw_os_error()
-                )))
-            }
-            Ok(_) => {
-                pinned = Some(
-                    super::windows_official_runtime024::PinnedDirectory::open(ancestor)
-                        .map_err(|e| unconfirmed(e.to_string()))?,
-                );
-                break;
-            }
-        }
+    match pinned_path_observation(path) {
+        Err(e) if e.leaf && e.cause.kind() == io::ErrorKind::NotFound => Ok(()),
+        Err(e) => Err(unconfirmed(format!(
+            "原service-state缺席路径未确认 parentFailure={}; raw={:?}; {}",
+            !e.leaf,
+            e.cause.raw_os_error(),
+            e.cause
+        ))),
+        Ok(_) => Err(unconfirmed("原service-state或默认镜像仍存在；保留Unknown")),
     }
-    let pin = pinned.ok_or_else(|| unconfirmed("state缺席父路径未确认"))?;
-    match std::fs::symlink_metadata(path) {
-        Err(e) if e.kind() == io::ErrorKind::NotFound => {}
-        _ => {
-            return Err(unconfirmed(
-                "原service-state或默认镜像仍存在/不可读；保留Unknown",
-            ))
-        }
-    }
-    pin.recheck().map_err(|e| unconfirmed(e.to_string()))
 }
 #[cfg(test)]
 mod mirror_tests {
