@@ -1,5 +1,115 @@
 use super::*;
 #[test]
+fn wl2_r4_native_populated_components_preserve_and_detect_condition_resource_filter_changes() {
+    use super::super::tree::tests::Fixture;
+    use std::os::windows::{ffi::OsStrExt, io::FromRawHandle};
+    #[link(name = "advapi32")]
+    unsafe extern "system" {
+        fn ConvertStringSecurityDescriptorToSecurityDescriptorW(
+            text: *const u16,
+            revision: u32,
+            descriptor: *mut *mut std::ffi::c_void,
+            size: *mut u32,
+        ) -> i32;
+    }
+    let fixture = Fixture::new();
+    let sid = current_identity().unwrap().sid;
+    let end = Instant::now() + std::time::Duration::from_secs(10);
+    for (name, mask, kind) in [
+        ("conditional-dacl", 4, 9),
+        ("resource", 32, 18),
+        ("filter", 256, 21),
+    ] {
+        let mut components = Vec::new();
+        for value in ["Alpha", "Beta"] {
+            let prefix = format!("O:{sid}D:P(A;;FA;;;{sid})");
+            let suffix = match mask {
+                4 => format!(r#"(XA;;FR;;;WD;(@Resource.Project == "{value}"))"#),
+                32 => format!(r#"S:(RA;;;;;WD;("Project",TS,0x0,"{value}"))"#),
+                256 => format!(r#"S:(FL;;FR;;;WD;(@Resource.Project == "{value}"))"#),
+                _ => unreachable!(),
+            };
+            let text: Vec<u16> = (prefix + &suffix).encode_utf16().chain(Some(0)).collect();
+            let mut raw = std::ptr::null_mut();
+            assert_ne!(
+                unsafe {
+                    ConvertStringSecurityDescriptorToSecurityDescriptorW(
+                        text.as_ptr(),
+                        1,
+                        &mut raw,
+                        std::ptr::null_mut(),
+                    )
+                },
+                0,
+                "new synthetic SDDL {name} raw={:?}",
+                io::Error::last_os_error()
+            );
+            struct Local(*mut std::ffi::c_void);
+            impl Drop for Local {
+                fn drop(&mut self) {
+                    unsafe {
+                        LocalFree(self.0);
+                    }
+                }
+            }
+            let descriptor = Local(raw);
+            let sa = windows_sys::Win32::Security::SECURITY_ATTRIBUTES {
+                nLength: std::mem::size_of::<windows_sys::Win32::Security::SECURITY_ATTRIBUTES>()
+                    as u32,
+                lpSecurityDescriptor: descriptor.0,
+                bInheritHandle: 0,
+            };
+            let path = fixture.path().join(format!("{name}-{value}.synthetic"));
+            let native: Vec<u16> = path.as_os_str().encode_wide().chain(Some(0)).collect();
+            let handle = unsafe {
+                windows_sys::Win32::Storage::FileSystem::CreateFileW(
+                    native.as_ptr(),
+                    0x20000,
+                    1,
+                    &sa,
+                    1,
+                    0x200000,
+                    std::ptr::null_mut(),
+                )
+            };
+            assert_ne!(
+                handle,
+                windows_sys::Win32::Foundation::INVALID_HANDLE_VALUE,
+                "new synthetic create {name} raw={:?}",
+                io::Error::last_os_error()
+            );
+            let handle = unsafe { File::from_raw_handle(handle) };
+            let independent = project(&query(&handle, mask).unwrap(), mask).unwrap();
+            assert!(
+                independent.aces.iter().any(|ace| ace[0] == kind),
+                "native nonempty projection {name}"
+            );
+            independent.validate().unwrap();
+            let combined = project(&query(&handle, 0x1f7).unwrap(), mask).unwrap();
+            assert!(same_covered_component(&independent, &combined));
+            let proof = BoundedAccessV1::capture(&path, false, end).unwrap();
+            proof.recheck(end).unwrap();
+            let snapshot = proof.snapshot_data().unwrap();
+            let stored = &snapshot
+                .projections
+                .iter()
+                .find(|p| p.requested_mask == mask)
+                .unwrap()
+                .structure;
+            assert!(same_covered_component(stored, &independent));
+            let second = native_stamp(&handle, end).unwrap();
+            assert!(snapshot == second);
+            println!("native populated {name}/{value}: mask=0x{mask:x} ACE{kind} present, individual/combined/repeated fixed8 capture stable, digest={}; audit=excluded-unknown fullSecurityProven=false",hash::sha256_hex(&serde_json::to_vec(&independent).unwrap()));
+            components.push(independent);
+        }
+        assert!(
+            !same_covered_component(&components[0], &components[1]),
+            "changed synthetic value must change covered {name}"
+        );
+    }
+    println!("native populated component comparisons passed; CAP CREATE_NEW1314/trust CREATE_NEW5 remain unverified, production Closed=false");
+}
+#[test]
 fn wl2_r4_policy_is_fixed_no_full_or_partial_conversion() {
     let fixed = Policy::fixed();
     assert_eq!(REQUIRED, [1, 2, 4, 16, 32, 64, 128, 256]);
