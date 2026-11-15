@@ -1,0 +1,6 @@
+Measure-Object : The property "bytes" cannot be found in the input for any objects.
+At line:33 char:194
++ ... tory}).Count;bytes=($Rows|Measure-Object -Property bytes -Sum).Sum;ve ...
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Measure-Object], PSArgumentException
+    + FullyQualifiedErrorId : GenericMeasurePropertyNotFound,Microsoft.PowerShell.Commands.MeasureObjectCommand

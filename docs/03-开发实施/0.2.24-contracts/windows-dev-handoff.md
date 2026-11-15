@@ -521,3 +521,10 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 用户在marenben原普通桌面运行修复6e312f022准确输入，observer114108/raw0/1过0败/5.78秒。32份sameSID导出逐字长度/SHA256核验，原始回执/日志/完整矩阵在wl2-real-gui-fixed-run-20261115-r1。四轮实际main原生visible HWND/pageFinished/normal setup分别managerGeneration1..4；normal/after-failure/finish原退出0，hold仅原创建Child GUI故障终止raw1保留。broker31484/FILETIME134392264041593579/原imageID562949954696391始终同原创建对象/句柄，noJob与fresh认证/旧连接拒绝成立；finish明确空host退出经原Wait观察，但broker原exitcode未采集仍null，不补填0。实际GUI空broker组件过，不是official Owner/Job或H-S-D生产验收，frontendDomAssertion=false，Start仍拒绝。
 
 无新编译/不重跑既过项，源码/制品与前轮6e312准确一致。首次0c失败与broker40588保留且退出仍未知；新成功Profile子树和Public制品根待同SID全目录归档后清理，当前只是日志归档，不称全部清理或NTFS克隆。无账户/Profile/PATH/日常策略改、无删除或旧拒绝重试，overallCleanupComplete=false。共享纯route声明/Status统一原5秒最小接口、完整官方副作用/NativeLease/原包S-D生产及普通MSI/CAP-trust环境/历史清理未完，无官方/业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 真实GUI成功树完整归档清理准备
+
+代码0549a660ee3f77ea243e798ec55b01f52545e492已推，只加test原始同SID一次性归档入口，产品源/三制品仍6e312f022、不重编译/重测GUI。入口C:/Users/Public/ocx-h024-gui-archive-20261115-r1/archive-h024-fixed-success.cmd已备，实际桌面结果待接收另立不可覆盖证据。先同SID私有全ZIP归档成功Profile树及Public输入日志，验证全部字节/目录集合，再仅删除成功Profile子树1fa5e23f；Public留待控制器结果核验后清，失败现场/broker40588/账户/Profile根/旧拒绝目标不动，不强杀或改权限。
+
+证据wl2-real-gui-success-cleanup-20261115-r1含前置假设、首原语raw1(Hashtable bytes/Measure-Object适配错误)原源日志、修后raw0正例完整ZIP往返及内容/额外空目录拒绝、2小场景7文件清单，最终所有执行函数AST摘要一致，准备raw0/解析0/源摘要同Git blob。当前是准备快照，未称已执行归档或删除；overallCleanupComplete=false，旧拒绝不重试。产品H实际GUI空broker组件已于2a53076e1回交，非官方Owner/Job生产验收，Start继续拒绝。共享纯route声明/Status同采样原5秒最小接口仍待集成；完整副作用/NativeLease/H-S-D生产及普通MSI/CAP-trust环境/历史清理未完，无官方日常配置/业务模型请求/W2/双SID/发布。

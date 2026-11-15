@@ -1,0 +1,11 @@
+{
+  "firstError": "PowerShell5 Measure-Object -Property bytes does not resolve hashtable key values",
+  "run": "archive-primitives01",
+  "rawExit": 1,
+  "desktopStarted": false,
+  "deletionAttempted": false,
+  "originalFixtureRetained": true,
+  "fix": "Project each hashtable byte value as Int64, then Measure-Object -Sum; do not relax source/ZIP hashes or directory-set assertions",
+  "expected": "Archive positive native stream roundtrip succeeds; changed source bytes and additional empty directory continue to refuse before any cleanup",
+  "accepted": false
+}
