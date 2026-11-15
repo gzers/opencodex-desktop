@@ -514,3 +514,10 @@ successor-remaining.json记录仍缺已知闭合历史集合/前驱登记/newcap
 新入口尚待marenben原普通桌面执行，未取得结果，不计通过。 新入口C:\Users\Public\ocx-h024-actual-gui-fixed-20261115-r1\launch-h024-actual-gui.cmd。
 
 Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927；ocxd5398528/b80dd57317c91700aee4c77de1023f53b6da0f2c38e6760006db4b6abf8d3a67；ocx306176/430e193f62cc68f96e945e381758d9c761379831cbd2fe5c5990226b770712d8。prepare01短SHA调用被原严格检查先拒绝，prepare02完整SHA通过，未创建旧场景替换或放宽守门。新Public根1、无账户/Profile/日常策略变更、无删除/旧拒绝重试，旧失败broker40588退出仍未知，overallCleanupComplete=false。共享纯route声明提取和Status同采样原5秒接口最小请求未解决；完整官方副作用/NativeLease/H-S-D生产、普通MSI及CAP/trust环境/历史清理未完。Start拒绝，不官方/日常配置修改、无业务模型请求/W2/双SID/发布。
+
+
+## 2026-11-15 r4修复版真实GUI桌面结果
+
+用户在marenben原普通桌面运行修复6e312f022准确输入，observer114108/raw0/1过0败/5.78秒。32份sameSID导出逐字长度/SHA256核验，原始回执/日志/完整矩阵在wl2-real-gui-fixed-run-20261115-r1。四轮实际main原生visible HWND/pageFinished/normal setup分别managerGeneration1..4；normal/after-failure/finish原退出0，hold仅原创建Child GUI故障终止raw1保留。broker31484/FILETIME134392264041593579/原imageID562949954696391始终同原创建对象/句柄，noJob与fresh认证/旧连接拒绝成立；finish明确空host退出经原Wait观察，但broker原exitcode未采集仍null，不补填0。实际GUI空broker组件过，不是official Owner/Job或H-S-D生产验收，frontendDomAssertion=false，Start仍拒绝。
+
+无新编译/不重跑既过项，源码/制品与前轮6e312准确一致。首次0c失败与broker40588保留且退出仍未知；新成功Profile子树和Public制品根待同SID全目录归档后清理，当前只是日志归档，不称全部清理或NTFS克隆。无账户/Profile/PATH/日常策略改、无删除或旧拒绝重试，overallCleanupComplete=false。共享纯route声明/Status统一原5秒最小接口、完整官方副作用/NativeLease/原包S-D生产及普通MSI/CAP-trust环境/历史清理未完，无官方/业务模型请求/W2/双SID/发布。
