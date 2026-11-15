@@ -117,17 +117,103 @@ fn no_sidecars(path: &Path) -> io::Result<()> {
 }
 struct LockFile {
     file: File,
-    parent: PinnedDirectory,
+    parent: ParentPin,
     path: PathBuf,
     id: FileIdentity,
     security: SnapshotData,
     raw: Vec<u8>,
 }
-impl LockFile {
+enum ParentPin {
+    Strict(PinnedDirectory),
+    Claim(ClaimParent),
+}
+impl ParentPin {
+    fn check(&self, end: Instant) -> io::Result<()> {
+        match self {
+            Self::Strict(pin) => pin.recheck(),
+            Self::Claim(pin) => pin.check(end),
+        }
+    }
+}
+/// Metadata-only original root observation; RootTree owns DELETE and movement.
+/// An external parent pin still prevents ancestor substitution. This handle
+/// cannot enumerate/mutate/rename and contains no persisted path authority.
+struct ClaimParent {
+    path: PathBuf,
+    file: File,
+    ancestor: PinnedDirectory,
+    id: FileIdentity,
+    security: SnapshotData,
+}
+impl ClaimParent {
+    fn open(path: &Path) -> io::Result<File> {
+        native::validate_local_path(path)?;
+        OpenOptions::new()
+            .access_mode(0x20080)
+            .share_mode(1 | 2 | 4)
+            .custom_flags(0x2200000)
+            .open(path)
+    }
+    fn identity(file: &File) -> io::Result<FileIdentity> {
+        let mut data: BY_HANDLE_FILE_INFORMATION = unsafe { std::mem::zeroed() };
+        if unsafe { GetFileInformationByHandle(file.as_raw_handle(), &mut data) } == 0 {
+            return Err(io::Error::last_os_error());
+        }
+        if data.dwFileAttributes & 0x400 != 0 || data.dwFileAttributes & 0x10 == 0 {
+            return Err(refused());
+        }
+        Ok(FileIdentity {
+            volume: data.dwVolumeSerialNumber,
+            index: ((data.nFileIndexHigh as u64) << 32) | data.nFileIndexLow as u64,
+        })
+    }
     fn capture(path: &Path, end: Instant) -> io::Result<Self> {
         before(end)?;
+        let ancestor = PinnedDirectory::open(path.parent().ok_or_else(refused)?)?;
+        let file = Self::open(path)?;
+        native::verify_private_directory(&file)?;
+        let id = Self::identity(&file)?;
+        let security = native_stamp(&file, end).map_err(io_error)?;
+        let out = Self {
+            path: path.into(),
+            file,
+            ancestor,
+            id,
+            security,
+        };
+        out.check(end)?;
+        Ok(out)
+    }
+    fn check(&self, end: Instant) -> io::Result<()> {
+        before(end)?;
+        self.ancestor.recheck()?;
+        let current = Self::open(&self.path)?;
+        native::verify_private_directory(&self.file)?;
+        native::verify_private_directory(&current)?;
+        if Self::identity(&self.file)? != self.id
+            || Self::identity(&current)? != self.id
+            || native_stamp(&self.file, end).map_err(io_error)? != self.security
+            || native_stamp(&current, end).map_err(io_error)? != self.security
+        {
+            return Err(refused());
+        }
+        self.ancestor.recheck()?;
+        before(end)
+    }
+}
+impl LockFile {
+    fn capture(path: &Path, end: Instant, claim: bool) -> io::Result<Self> {
+        before(end)?;
         no_sidecars(path)?;
-        let parent = PinnedDirectory::open_private(path.parent().ok_or_else(refused)?)?;
+        let directory = path.parent().ok_or_else(refused)?;
+        let parent = if claim {
+            ParentPin::Claim(ClaimParent::capture(directory, end)?)
+        } else {
+            ParentPin::Strict(PinnedDirectory::open_private(directory)?)
+        };
+        // The share-delete experiment did not permit actual directory rename.
+        // Preserve the original strict file sharing; claim handoff remains an
+        // explicit unresolved plan, never an automatic close/reopen fallback.
         let mut file = open(path)?;
         native::verify_private_file(&file)?;
         tree::streams(path, false)?;
@@ -147,7 +233,7 @@ impl LockFile {
     }
     fn check(&mut self, end: Instant) -> io::Result<()> {
         before(end)?;
-        self.parent.recheck()?;
+        self.parent.check(end)?;
         no_sidecars(&self.path)?;
         native::verify_private_file(&self.file)?;
         let current = open(&self.path)?;
@@ -303,7 +389,7 @@ impl NativeLease {
             _not_send: PhantomData,
         };
         for (i, path) in paths.iter().enumerate() {
-            let pin = LockFile::capture(path, end)?;
+            let pin = LockFile::capture(path, end, i == 0)?;
             lease.held.push(Held::acquire(pin, i == 0, end)?);
             for held in &mut lease.held {
                 held.pin.check(end)?;

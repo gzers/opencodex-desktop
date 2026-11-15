@@ -224,6 +224,80 @@ fn wl2_r5_coordination_namespace_uses_original_knownfolder_sid_not_environment()
         .contains("namespace native TokenUser knownfolder independent"));
 }
 #[test]
+fn wl2_r5_coordination_root_original_delete_handle_and_claim_lease_must_coexist() {
+    use super::super::tree::RootTree;
+    let mut f = Fixture::new();
+    let paths = prepare(&f);
+    let codex = create_private_directory(&f.path().join(".codex")).unwrap();
+    let claim = codex.path().join(".opencodex-native-main.claim.sqlite");
+    drop(PrivateRecord::create(&claim, &std::fs::read(&paths[0]).unwrap(), 1024 * 1024).unwrap());
+    let paths = [claim, paths[1].clone(), paths[2].clone(), paths[3].clone()];
+    let codex_path = codex.path().to_path_buf();
+    drop(codex);
+    let original = RootTree::capture(&codex_path, end()).unwrap();
+    let deadline = end();
+    let result = NativeLease::acquire_paths(&paths, deadline);
+    if let Err(error) = &result {
+        println!(
+            "r5 root original DELETE handle + claim lease coexist rawWin32={:?} {error}",
+            error.raw_os_error()
+        );
+    }
+    // Retain before asserting so every native failure scene remains readable.
+    f.retain();
+    let lease=result.expect("native original root handle and claim lease must coexist without changing bytes/ACL or dropping custody authority");
+    lease.release(deadline).unwrap();
+    drop(original);
+    println!("r5 original DELETE-capable root and scoped claim/N/L/K lease coexist with unchanged source objects; no move, init or restore permission");
+}
+#[test]
+#[ignore = "explicitly blocked continuous-open-claim root rename; actual raw5 in library05/06, requires a reviewed handoff plan; assertions retained, not acceptance"]
+fn wl2_r5_coordination_root_rename_preserves_original_claim_kernel_lock() {
+    use super::super::tree::RootTree;
+    let mut f = Fixture::new();
+    let paths = prepare(&f);
+    let codex = create_private_directory(&f.path().join(".codex")).unwrap();
+    let claim = codex.path().join(".opencodex-native-main.claim.sqlite");
+    drop(PrivateRecord::create(&claim, &std::fs::read(&paths[0]).unwrap(), 1024 * 1024).unwrap());
+    let codex_path = codex.path().to_path_buf();
+    drop(codex);
+    let paths = [claim, paths[1].clone(), paths[2].clone(), paths[3].clone()];
+    let mut original = RootTree::capture(&codex_path, end()).unwrap();
+    let custody = create_private_directory(&f.path().join("custody")).unwrap();
+    let journal = create_private_directory(&f.path().join("journal")).unwrap();
+    let intent = journal.path().join("root-intent.json");
+    let deadline = end();
+    let lease = NativeLease::acquire_paths(&paths, deadline).unwrap();
+    let moved = original.move_to_custody(custody.path(), &intent, deadline);
+    if let Err(error) = &moved {
+        println!(
+            "r5 actual root move with original claim ranges held rawWin32={:?} {error}",
+            error.raw_os_error()
+        );
+    }
+    f.retain();
+    moved.expect("same original root move must retain claim kernel lock and source bytes without force/drop-owner");
+    // Old path is no longer authority. Observe the original actual locked file
+    // through its retained description; do not silently re-adopt the new path.
+    let target = custody
+        .path()
+        .join(".codex/.opencodex-native-main.claim.sqlite");
+    assert_eq!(
+        file_id(&lease.held[0].pin.file).unwrap(),
+        file_id(&open(&target).unwrap()).unwrap()
+    );
+    let contender = competitor(&target);
+    busy(contender.execute_batch("BEGIN IMMEDIATE"));
+    contender.close().unwrap();
+    for held in &lease.held[1..] {
+        let contender = competitor(&held.pin.path);
+        busy(contender.execute_batch("BEGIN IMMEDIATE"));
+        contender.close().unwrap();
+    }
+    drop(lease);
+    println!("r5 actual root moved with original claim and N/L/K ranges held; original native claim ID fixed and competitors busy; no path reanchor/restore or Closed permission inferred");
+}
+#[test]
 fn wl2_r5_coordination_fixed_bundle_bun_sqlite_interoperates_without_official_imports() {
     use std::os::windows::process::CommandExt;
     use std::{
@@ -309,6 +383,69 @@ fn wl2_r5_coordination_fixed_bundle_bun_sqlite_interoperates_without_official_im
         assert!(out.contains("\"completed\":true"));
     }
     assert!(originals(&paths) == initial);
+}
+#[test]
+fn wl2_r5_coordination_root_sharing_matrix_observes_exact_native_rename_barriers() {
+    use super::super::tree::RootTree;
+    for kind in 0..5 {
+        let mut f = Fixture::new();
+        let source = prepare(&f);
+        let codex = create_private_directory(&f.path().join(".codex")).unwrap();
+        let root = codex.path().to_path_buf();
+        let claim = root.join(".opencodex-native-main.claim.sqlite");
+        drop(
+            PrivateRecord::create(&claim, &std::fs::read(&source[0]).unwrap(), 1024 * 1024)
+                .unwrap(),
+        );
+        drop(codex);
+        let paths = [
+            claim.clone(),
+            source[1].clone(),
+            source[2].clone(),
+            source[3].clone(),
+        ];
+        let mut original = RootTree::capture(&root, end()).unwrap();
+        let custody = create_private_directory(&f.path().join("custody")).unwrap();
+        let journal = create_private_directory(&f.path().join("journal")).unwrap();
+        let parent_hold = if matches!(kind, 1 | 3) {
+            Some(ClaimParent::capture(&root, end()).unwrap())
+        } else {
+            None
+        };
+        let file_hold = if matches!(kind, 2 | 3) {
+            Some(
+                OpenOptions::new()
+                    .read(true)
+                    .share_mode(1 | 2 | 4)
+                    .open(&claim)
+                    .unwrap(),
+            )
+        } else {
+            None
+        };
+        let lease_hold = if kind == 4 {
+            Some(NativeLease::acquire_paths(&paths, end()).unwrap())
+        } else {
+            None
+        };
+        let original_bytes = std::fs::read(&claim).unwrap();
+        let outcome =
+            original.move_to_custody(custody.path(), &journal.path().join("intent.json"), end());
+        let target = custody
+            .path()
+            .join(".codex/.opencodex-native-main.claim.sqlite");
+        let observed = if outcome.is_ok() { &target } else { &claim };
+        assert_eq!(std::fs::read(observed).unwrap(), original_bytes);
+        println!("r5 root-sharing-matrix case={kind} (0baseline,1metadata,2file,3both,4lease) moved={} rawWin32={:?} diagnosticOnly=true error={:?}",outcome.is_ok(),outcome.as_ref().err().and_then(|e|e.raw_os_error()),outcome.as_ref().err());
+        if kind == 0 {
+            outcome.expect("baseline root rename must pass with no unrelated open handles");
+        }
+        drop(lease_hold);
+        drop(file_hold);
+        drop(parent_hold);
+        drop(original);
+        f.retain();
+    }
 }
 #[test]
 #[ignore = "private no-I/O namespace child, executed only by its parent case"]
