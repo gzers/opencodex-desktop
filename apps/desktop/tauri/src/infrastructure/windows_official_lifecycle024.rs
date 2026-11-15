@@ -3,6 +3,10 @@
 use super::windows_official_runtime024::{
     self as native, LaunchSpec, OwnedListeners, OwnedRuntime, ProcessState,
 };
+use super::{
+    windows_diagnostic_roles024::WindowsDiagnostics, windows_supervisor024::WindowsSupervisor,
+};
+use crate::modules::runtime::windows_lifecycle024_contract::{DiagnosticRoles, SupervisorAbsence};
 use crate::{
     errors::{AppError, AppResult},
     infrastructure::{hash, platform, runtime_executable::SharedRuntimeExecutable},
@@ -354,9 +358,13 @@ impl Owner {
         }
         teardown_records_absent(&self.home)?;
         self.source(deadline)?;
-        if !self.native.family_state().map_err(unknown)?.complete_exit() {
-            return Err(unknown(()));
-        }
+        let mut supervisor = WindowsSupervisor;
+        let absent = supervisor.observe_absent(self, deadline).map_err(unknown)?;
+        let mut diagnostics = WindowsDiagnostics;
+        let normal = diagnostics
+            .complete_family(self, &absent, deadline)
+            .map_err(unknown)?;
+        normal.check(self, deadline).map_err(unknown)?;
         self.stopped = true;
         // No Windows durable original capture/restore or supervisor observation
         // authority is supplied by r1. Native success is separately retained;
