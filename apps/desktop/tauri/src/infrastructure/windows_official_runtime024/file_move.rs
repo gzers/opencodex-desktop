@@ -204,7 +204,7 @@ impl RetainedFileMove {
         Ok(())
     }
 }
-fn rename_handle(file: &File, path: &Path) -> io::Result<()> {
+pub(crate) fn rename_handle(file: &File, path: &Path) -> io::Result<()> {
     validate(path)?;
     let name: Vec<u16> = path.as_os_str().encode_wide().collect();
     let offset = offset_of!(FILE_RENAME_INFO, FileName);

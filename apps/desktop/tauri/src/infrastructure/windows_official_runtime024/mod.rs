@@ -7,6 +7,7 @@
 #![cfg(windows)]
 
 mod file_move;
+pub(crate) use file_move::rename_handle as rename_original_handle;
 pub use file_move::RetainedFileMove;
 mod listeners;
 mod paths;
