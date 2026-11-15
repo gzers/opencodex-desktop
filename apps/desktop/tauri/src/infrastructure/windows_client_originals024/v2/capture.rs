@@ -365,6 +365,33 @@ mod tests {
         .unwrap()
     }
     #[test]
+    fn wl2_r4_retired_working_drift_keeps_canonical_aborted_reference() {
+        let mut temp = Fixture::new();
+        let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
+        let directory = captured.pending.directory.path().to_path_buf();
+        captured.create_working_trees(end()).unwrap();
+        captured.restore_exact(end()).unwrap();
+        let foreign = captured
+            .custody
+            .path()
+            .join("retired-working-.codex/foreign.new");
+        std::fs::write(&foreign, b"synthetic retired-tree external drift").unwrap();
+        assert!(
+            captured.recheck(end()).is_err(),
+            "canonical readback must not forget the retired working tree"
+        );
+        assert_eq!(captured.pending.tip.sequence, 14);
+        assert!(captured.pending.tip.phase == Phase::Aborted);
+        assert!(foreign.exists());
+        drop(captured);
+        let pending = read_pending(&directory).unwrap();
+        assert!(pending.current_matches && !pending.terminal_record_only);
+        assert_eq!(pending.tip.sequence, 14);
+        drop(pending);
+        println!("retired working drift refuses native canonical recheck; original restored but exact Aborted/current prefix unchanged, conflict retained, no successor or Closed proof");
+        temp.retain();
+    }
+    #[test]
     fn wl2_r4_unperformed_native_root_moves_refuse_ready_before_phase_write() {
         let temp = Fixture::new();
         let mut captured = TreeCaptureV2::capture(setup(&temp), end()).unwrap();
