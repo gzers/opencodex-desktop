@@ -11,6 +11,7 @@ use std::{
     path::Path,
 };
 mod binding;
+mod bounded;
 mod phase;
 mod reference;
 use windows_sys::Win32::{
