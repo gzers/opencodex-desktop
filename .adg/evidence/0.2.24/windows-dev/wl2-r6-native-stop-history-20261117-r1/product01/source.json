@@ -1,0 +1,20 @@
+{
+  "arguments": [
+    "build",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--bins",
+    "-j",
+    "1"
+  ],
+  "diff": null,
+  "head": "a653a51acea51dbba5b4e6b4a2488f8b53f09ce4",
+  "time": "2026-11-17T07:32:51.7529715+08:00",
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)"
+}

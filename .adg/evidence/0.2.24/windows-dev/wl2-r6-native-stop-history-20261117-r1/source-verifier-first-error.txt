@@ -1,0 +1,3 @@
+Recorder error, not source/build/test failure: check_source.py omitted explicit encoding for new Rust source read.
+Windows Python default gbk rejected UTF-8 Chinese content: UnicodeDecodeError gbk codec cannot decode byte 0xad in position2422.
+Correct recorder to explicit utf-8-sig. No product source was changed for this correction.
