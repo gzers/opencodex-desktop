@@ -645,3 +645,10 @@ v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Clos
 源码 512ff5de258cd209efac6b6018c26537114855c5/treee4fc5aed492a7db3334966174f28ce4cbd44ae63；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-snapshot-series-20261116-r1/。精确sealed序号/双根actual link后Resume intent/current→原生observer历史保管→verified，多次Observation独立目录，旧action scope保持、原件/初始work基线不换。三个实际独立native frame/archive接原client_artifact_policy内容DATA，合成routes/PID/audit明确；实际中间编辑ChangedSinceReady拒绝。首library01两过两败/raw101，旧release比较初始work导致已登记变化拒绝，补精确最近archive的临时完整native release view并保持原基线，原失败/前缀保留。受影响回归/EXE/完整表/清理见report/final-status，产品debug MSVCbins0/250388ms。
 
 生产Stopped内容selector只编译未实跑，actualSource/正式阶段、源声明非产物/动态nodes/恢复Closed/history/后继/实际Owner H-S-D仍待；原缺席退根blocked且Start无条件拒绝。不旧raw5/空GUI/W2/双SID/发布。
+
+
+## 2026-11-16 TEAM16/r6 CaptureSlot可写与原Ready调用链
+
+源码 f842e9b8d8abb0dde70c81ccd51a01579a725213/tree1f38618bfd755037b52410c45352e4730ff2f1c6；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-capture-ready-20261116-r1/。修实际capture prepare后sealed句柄遗漏Open，改canonicalOpen→Source/unresumed复验→显式release，before_v3_resume原Owner窗完整initial work复核，typedReady实际工厂双根观察/归档/link/Ready/Resume/release调用链已编译未调用。三新native组件测试通过，准确同debugEXE13受影响回归通过，本轮无非预期首错。产品MSVCdebug bins0/190846ms，原始源/EXE/完整表/0删除且全部pending留存见report/final-status。
+
+生产dispatcher/Start拒绝未动，actualSource/Ready正例未实跑；Store Stop/原policy+动态nodes/退休还原/Closed/history/后继/实际Owner H-S-D及原缺席安全退根仍待。不W2/双SID/发布，不旧raw5/空GUI/1314重跑。
