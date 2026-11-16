@@ -23,6 +23,16 @@ fn current_variant(
     end: Instant,
     atomic: bool,
 ) {
+    current_variant_with_absent(trees, journal, lease, end, atomic, false)
+}
+fn current_variant_with_absent(
+    trees: &mut [AnchoredTree; 2],
+    journal: &mut Journal,
+    lease: &mut Option<NativeLease>,
+    end: Instant,
+    atomic: bool,
+    absent: bool,
+) {
     let root = trees[0].root.clone();
     let mut claim = lease.as_mut().unwrap().anchored_claim(&root, end).unwrap();
     let files = trees
@@ -75,10 +85,57 @@ fn current_variant(
         );
         std::fs::rename(&path, root.join("opencodex-catalog.json")).unwrap();
     }
+    if absent {
+        // Exact newly-created synthetic WORK only. Original artifact remains
+        // under its original custody handle; historical denied cleanup untouched.
+        std::fs::remove_file(root.join("models_cache.json")).unwrap();
+    }
     reacquire_for_observation(trees, journal, lease, None, end).unwrap();
     let mut claim = lease.as_mut().unwrap().anchored_claim(&root, end).unwrap();
     observe_trees(trees, journal, &mut claim, end).unwrap();
     super::super::snapshots::link_observation(trees, journal, &mut claim, false, end).unwrap();
+}
+#[test]
+fn wl2_r6_recovery_native_complete_frozen_plan_validates_and_absent_current_is_explicit() {
+    let (mut f, _data, _paths, held, mut trees, mut journal, end) = setup_artifacts();
+    let mut lease = Some(held);
+    current_variant_with_absent(&mut trees, &mut journal, &mut lease, end, true, true);
+    let root = trees[0].root.clone();
+    let mut claim = lease.as_mut().unwrap().anchored_claim(&root, end).unwrap();
+    let plans = [
+        trees[0].capture_retirement(&mut claim, end).unwrap(),
+        trees[1].capture_retirement(&mut claim, end).unwrap(),
+    ];
+    assert_eq!(plans[0]["absentCurrent"].as_array().unwrap().len(), 1);
+    assert_eq!(
+        plans[0]["absentCurrent"][0]["relative"],
+        "models_cache.json"
+    );
+    journal
+        .inspect_recovery_observation_for_test(plans.clone(), &mut claim, end)
+        .unwrap();
+    let mut missing = plans.clone();
+    missing[0]["absentCurrent"] = serde_json::json!([]);
+    assert!(journal
+        .inspect_recovery_observation_for_test(missing, &mut claim, end)
+        .is_err());
+    let mut absent = plans.clone();
+    absent[0]["absentCurrent"][0]["originalFileId"] = "999".into();
+    assert!(journal
+        .inspect_recovery_observation_for_test(absent, &mut claim, end)
+        .is_err());
+    let mut target = plans.clone();
+    target[0]["retirements"][0]["targetParentId"] = "999".into();
+    assert!(journal
+        .inspect_recovery_observation_for_test(target, &mut claim, end)
+        .is_err());
+    println!("r6-recovery-native-plans={}", serde_json::json!(plans));
+    println!("r6 recovery complete DATA validated against actual retained both-tree frozen frames and immutable native archives, ordinary work/original/current replacement distinct; absent current original artifact explicit and malformed absence/target refused; Observation component only, not actual Stopped or content-policy authority; no native recovery mutation");
+    drop(claim);
+    lease.take().unwrap().release(end).unwrap();
+    drop(journal);
+    drop(trees);
+    f.retain();
 }
 #[test]
 fn wl2_r6_retirement_existing_artifacts_changed_and_atomically_replaced_work_restore_original_objects(

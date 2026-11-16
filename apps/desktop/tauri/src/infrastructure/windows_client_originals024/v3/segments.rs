@@ -46,6 +46,7 @@ pub(super) enum ChainEntry {
     Work(super::observations::WorkEvent),
     Snapshot(super::snapshots::SnapshotEvent),
     Action(super::actions::ActionEvent),
+    Recovery(super::recovery::RecoveryEvent),
 }
 impl Progress {
     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
@@ -55,9 +56,15 @@ impl Progress {
             ChainEntry::Work(e) => self.apply_work(plan, e),
             ChainEntry::Snapshot(e) => self.apply_snapshot(plan, e),
             ChainEntry::Action(e) => self.apply_action(plan, e),
+            ChainEntry::Recovery(e) => self.apply_recovery(plan, e),
         }
     }
     pub(super) fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {
+        // Recovery release needs a final whole-tree native/release witness.
+        // Until joined, neither data completeness nor the old release path is sufficient.
+        if self.recovery.is_some() {
+            return Err(invalid());
+        }
         use crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3;
         if e.schema != ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "lease-event"

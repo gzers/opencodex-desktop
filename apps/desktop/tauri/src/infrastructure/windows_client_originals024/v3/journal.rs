@@ -188,6 +188,7 @@ struct Current {
     ready_generation: Option<(u32, u16, String)>,
     action_pending: Option<(String, super::actions::ActionKind)>,
     action_kind: super::actions::ActionKind,
+    recovery: Option<super::recovery::RecoverySummary>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -274,6 +275,29 @@ impl ObservationSeriesContext {
     }
 }
 impl Journal {
+    #[cfg(test)]
+    pub(in super::super) fn inspect_recovery_observation_for_test(
+        &mut self,
+        roots: [serde_json::Value; 2],
+        claim: &mut super::super::coordination::AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.check(end)?;
+        claim.check(&self.pins[0].path().join(".codex"), end)?;
+        if claim.epoch() != self.progress.epoch
+            || claim.key() != self.progress.claim
+            || self.progress.lease_state != LeaseState::Active
+        {
+            return Err(invalid());
+        }
+        super::recovery::RecoveryPlan::from_native_data(roots)?.validate_for_purpose(
+            &self.manifest.storage_plan,
+            &self.progress,
+            super::snapshots::SnapshotPurpose::Observation,
+        )?;
+        claim.check(&self.pins[0].path().join(".codex"), end)?;
+        self.check(end)
+    }
     pub(in super::super) fn observation_series_context(
         &mut self,
         prior: [u32; 2],
@@ -503,6 +527,7 @@ impl Journal {
             ready_generation: None,
             action_pending: None,
             action_kind: super::actions::ActionKind::Start,
+            recovery: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -614,6 +639,7 @@ impl Journal {
             || tip.ready_generation != self.progress.ready_generation
             || tip.action_pending != self.progress.action_pending
             || tip.action_kind != self.progress.action_kind
+            || tip.recovery != self.progress.recovery_summary()?
         {
             return Err(invalid());
         }
@@ -711,6 +737,7 @@ impl Journal {
             ready_generation: next.ready_generation.clone(),
             action_pending: next.action_pending.clone(),
             action_kind: next.action_kind,
+            recovery: next.recovery_summary()?,
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

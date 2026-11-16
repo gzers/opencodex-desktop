@@ -24,6 +24,7 @@ mod capture;
 pub(super) use capture::CaptureSlot;
 pub(super) mod journal;
 mod observations;
+mod recovery;
 mod segments;
 mod snapshots;
 pub(super) use journal::Journal;
@@ -324,6 +325,7 @@ pub(super) struct Progress {
     action_pending: Option<(String, actions::ActionKind)>,
     action_kind: actions::ActionKind,
     seen_actions: BTreeSet<String>,
+    recovery: Option<recovery::RecoveryProgress>,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -383,9 +385,13 @@ impl Progress {
             action_pending: None,
             action_kind: actions::ActionKind::Start,
             seen_actions: BTreeSet::from([deadline.to_string()]),
+            recovery: None,
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {
+        if self.recovery.is_some() {
+            return Err(invalid());
+        }
         if self.lease_state!=segments::LeaseState::Active || self.work_mode!=observations::WorkMode::Sealed || self.snapshot_pending.is_some() || self.action_pending.is_some() || e.schema
             != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "node-event"

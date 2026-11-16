@@ -66,6 +66,11 @@ impl AnchoredTree {
                 let entry=&frame.nodes[item.frame_index].entry;
                 serde_json::json!({"relative":entry.relative,"currentVolume":entry.id.volume,"currentFileId":entry.id.index.to_string(),"target":item.target,"targetParentId":self.custody.identity().index.to_string(),"sourceParentId":self.nodes.iter().find(|n|n.kind==Kind::Directory&&Path::new(&entry.relative).parent()==Some(Path::new(&n.original.relative))).map(|n|n.original.id.index.to_string()),"originalFileId":self.nodes.iter().find(|n|n.kind==Kind::File&&n.original.relative==entry.relative).map(|n|n.original.id.index.to_string()),"originalAbsent":!self.nodes.iter().any(|n|n.original.relative==entry.relative),"bytes":entry.bytes.len(),"sha256":hash::sha256_hex(&entry.bytes),"security":entry.security})
             }).collect::<Vec<_>>());
+            plan["absentCurrent"] = serde_json::json!(self.nodes.iter()
+                .filter(|n| n.kind == Kind::File && !frame.nodes.iter().any(|f| f.entry.relative == n.original.relative))
+                .map(|n| serde_json::json!({"relative":n.original.relative,"originalFileId":n.original.id.index.to_string(),
+                    "parentId":self.nodes.iter().find(|p|p.kind==Kind::Directory&&Path::new(&n.original.relative).parent()==Some(Path::new(&p.original.relative)))
+                        .map(|p|p.original.id.index.to_string())})).collect::<Vec<_>>());
             self.retirement = Some(NativeRetirement {
                 frame,
                 items,

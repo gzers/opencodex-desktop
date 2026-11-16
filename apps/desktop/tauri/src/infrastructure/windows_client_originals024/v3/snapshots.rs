@@ -90,6 +90,12 @@ pub(super) struct SnapshotEvent {
     pub(super) binding_digest: String,
 }
 impl SnapshotReference {
+    pub(super) fn object_ids(&self) -> [(u32, String); 2] {
+        [
+            (self.volume, self.file_id.clone()),
+            (self.volume, self.metadata_id.clone()),
+        ]
+    }
     pub(super) fn context_metadata(&self) -> io::Result<serde_json::Value> {
         serde_json::to_value(&self.context).map_err(|_| invalid())
     }
@@ -158,6 +164,9 @@ impl Progress {
         plan: &StoragePlan,
         e: &SnapshotEvent,
     ) -> io::Result<()> {
+        if self.recovery.is_some() {
+            return Err(invalid());
+        }
         if e.schema
             != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "snapshot-phase-event"

@@ -39,6 +39,9 @@ pub(super) struct ActionEvent {
 }
 impl Progress {
     pub(super) fn apply_action(&mut self, plan: &StoragePlan, e: &ActionEvent) -> io::Result<()> {
+        if self.recovery.is_some() {
+            return Err(invalid());
+        }
         if e.schema
             != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "original-action-event"
