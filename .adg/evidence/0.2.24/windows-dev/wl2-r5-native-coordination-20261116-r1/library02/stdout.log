@@ -1,0 +1,94 @@
+
+running 60 tests
+test infrastructure::status_source::managed_cli_admission_tests::accepts_only_own_stopped_diagnostic_without_endpoint_authority ... ok
+test infrastructure::status_source::managed_cli_admission_tests::raw_pid_aliases_cannot_disappear_behind_stopped_presentation_sanitization ... ok
+test infrastructure::status_source::managed_cli_admission_tests::rejects_missing_foreign_or_contradictory_home_and_residual_pid ... ok
+test infrastructure::status_source::managed_cli_admission_tests::rejects_other_account_live_payload_even_with_own_config_path ... ok
+test infrastructure::status_source::windows_sample_tests::wl2_r5_native_receiver_unknown_source_and_wrong_home_refuse_without_creation ... ok
+test infrastructure::status_source::windows_sample_tests::wl2_r5_real_windows_source_expired_or_late_admission_cannot_mint_receipt ... r5-native-source expired no-IO; delayed branch admission cannot grant late Closed or a new5s receipt; synthetic source/no real Owner
+ok
+test infrastructure::status_source::windows_sample_tests::wl2_r5_real_windows_source_full_light_same_deadline_no_owner_stays_unknown ... r5-native-source stage=fetch elapsedUs=39 deadlineFromTraceStartUs=5000021 original5=true owner=missing recovery=Unknown
+r5-native-source stage=recovery elapsedUs=123 deadlineFromTraceStartUs=5000021 original5=true owner=missing recovery=Unknown
+r5-native-source stage=light elapsedUs=209 deadlineFromTraceStartUs=5000208 original5=true owner=missing recovery=Unknown
+r5-native-source stage=recovery elapsedUs=217 deadlineFromTraceStartUs=5000208 original5=true owner=missing recovery=Unknown
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_busy_each_role_unwinds_only_owned_partial_locks ... r5 coordination heldRole=0 rawWin32=Some(33) partial callback not admitted, original foreign SQLite transaction untouched
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpCN9vFA
+r5 coordination heldRole=1 rawWin32=Some(33) partial callback not admitted, original foreign SQLite transaction untouched
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpFY7wv8
+r5 coordination heldRole=2 rawWin32=Some(33) partial callback not admitted, original foreign SQLite transaction untouched
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpzIyQp7
+r5 coordination heldRole=3 rawWin32=Some(33) partial callback not admitted, original foreign SQLite transaction untouched
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpo9u9W3
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_expiry_keeps_locks_until_scope_release_and_never_succeeds ... r5 expired private lease cannot authorize callback; actual locks survive until stack release, own locks released despite Timeout, no timer grant or rawexit rewrite
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_missing_files_and_duplicate_names_never_create_locks ... r5 missing namespace and duplicate role paths refuse with no mkdir/create/init or namespace fallback
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_namespace_uses_original_knownfolder_sid_not_environment ... ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_original_ranges_exclude_real_sqlite_writer_without_data_writes ... r5 Windows native claim EXCLUSIVE and N/L/K shared+reserved ranges exclude actual SQLite writers; N/L/K readers coexist, claim reader refuses; release same4 IDs/8projections/bytes, no production DB open/schema/official process
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_sidecar_header_ads_and_multiple_link_refuse ... r5 coordination rejected variant=0 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpJjXWUW
+r5 coordination rejected variant=1 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpzmfLhb
+r5 coordination rejected variant=2 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpZMfGKv
+r5 coordination rejected variant=3 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp7bYvOe
+r5 coordination rejected variant=4 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpxUUE8Y
+ok
+test infrastructure::windows_client_originals024::v2::routes::tests::wl2_r5_native_config_declares_routes_and_excludes_write_replace_wrong_home ... native config ID/8 projections/read bytes fixed; exact independent route, write/replace/wrong-H/expired refusal; no official or Closed
+ok
+test infrastructure::windows_client_originals024::v2::routes::tests::wl2_r5_native_config_hardlink_and_ads_refuse ... native config multiple links and alternate stream refuse; successful rejection fixtures use scoped cleanup
+ok
+test infrastructure::windows_client_originals024::v2::routes::tests::wl2_r5_native_config_unknown_duplicate_missing_and_oversize_refuse ... native missing/strict duplicate/dynamic unknown/2MiB overflow refuse; independently explicit empty is distinct
+ok
+test modules::runtime::client_route_declaration::tests::combo_declaration_rejects_shadowing_missing_targets_nested_or_native_alias_authority ... ok
+test modules::runtime::client_route_declaration::tests::combo_declaration_uses_canonical_or_public_alias_without_relabeling_target_routes ... ok
+test modules::runtime::client_route_declaration::tests::config_byte_boundary_preserves_native_read_limit ... ok
+test modules::runtime::client_route_declaration::tests::custom_declaration_overlays_same_model_and_adds_only_enabled_selected_custom_routes ... ok
+test modules::runtime::client_route_declaration::tests::custom_declaration_refuses_ambiguous_or_unbound_custom_routes_without_learning_from_catalog ... ok
+test modules::runtime::client_route_declaration::tests::display_alias_flags_never_become_declared_route_ids_and_omitted_flags_are_valid ... ok
+test modules::runtime::client_route_declaration::tests::explicit_nonempty_live_selection_is_independent_while_open_discovery_remains_unknown ... ok
+test modules::runtime::client_route_declaration::tests::independent_static_route_declaration_uses_official_slash_encoding_and_refuses_alias_collision ... ok
+test modules::runtime::client_route_declaration::tests::selection_defaults_disabled_equivalence_is_scoped_and_does_not_grant_colliding_ids ... ok
+test modules::runtime::client_route_declaration::tests::selection_defaults_seed_only_static_empty_models_and_preserve_unknown_live_graph ... ok
+test modules::runtime::client_route_declaration::tests::selection_defaults_static_roster_unions_models_and_retained_but_not_unselected_default ... ok
+test modules::status::client_recovery_gate_tests::fresh_native_recovery_is_not_cached_with_the_official_process_payload_or_cleared_by_failure ... ok
+test modules::status::client_recovery_gate_tests::historical_ready_never_claims_active_after_observed_stop_or_failed_observation ... ok
+test modules::status::context_paths_tests::desktop_context_owns_paths_on_success_debounce_and_source_failure_without_changing_runtime_admission ... ok
+test modules::status::context_paths_tests::official_config_file_and_selected_port_are_not_a_home_or_live_listener_after_stop ... ok
+test modules::status::context_paths_tests::unknown_state_fallback_does_not_invent_new_endpoint_absence ... ok
+test modules::status::polling::tests::background_interval_uses_frozen_thirty_seconds ... ok
+test modules::status::polling::tests::deadline_wait_and_failure_backoff_are_applied_once ... ok
+test modules::status::polling::tests::refreshes_once_within_debounce_and_gates_emissions ... ok
+test modules::status::sample_deadline_tests::expired_sample_never_calls_io_or_uses_prior_recovery_permission ... ok
+test modules::status::sample_deadline_tests::failed_process_sample_cannot_combine_with_recovery_success ... ok
+test modules::status::sample_deadline_tests::late_fetch_never_starts_a_fresh_recovery_window ... ok
+test modules::status::sample_deadline_tests::late_recovery_cannot_clear_gate_and_receives_fetch_deadline ... ok
+test modules::status::sample_deadline_tests::native_sample_uses_real_clock_and_one_deadline_even_inside_debounce ... ok
+test modules::status::sample_deadline_tests::unknown_payload_never_reuses_prior_stopped_as_new_start_permission ... ok
+test modules::status::tests::at_risk_facts_are_filled_from_startup ... ok
+test modules::status::tests::fz07_health_parse_failure_preserves_previous_state ... ok
+test modules::status::tests::fz07_keeps_previous_state_for_unknown_output ... ok
+test modules::status::tests::fz07_maps_the_frozen_eleven_rows ... ok
+test modules::status::tests::fz07_missing_fields_are_degraded_not_invented ... ok
+test modules::status::tests::fz08_background_intervals_are_frozen ... ok
+test modules::status::tests::fz08_backoff_doubles_and_caps_at_sixty_seconds ... ok
+test modules::status::tests::fz08_debounces_the_same_dimension_for_one_second ... ok
+test modules::status::tests::ipc_gate_allows_at_most_two_emissions_per_second ... ok
+test modules::status::tests::newly_resolved_source_invalidates_pre_supply_absence_without_inventing_service_success ... ok
+test modules::status::tests::official_2_50_running_report_overrides_startup_risk ... ok
+test modules::status::tests::official_schema_derives_running_and_not_found ... ok
+test modules::status::tests::official_schema_maps_startup_status_and_facts ... ok
+test modules::status::tests::source_admission_failure_is_unknown_and_bypasses_cached_success ... ok
+test modules::status::tests::source_timeout_is_a_frozen_contract_value ... ok
+test modules::status::tests::stopped_proxy_does_not_keep_stale_running_state ... ok
+test modules::status::tests::timeout_preserves_previous_state_and_increments_backoff ... ok
+test modules::status::tests::transient_failure_preserves_last_state ... ok
+test modules::status::tests::unresolved_source_falls_back_to_not_found ... ok
+
+test result: ok. 60 passed; 0 failed; 0 ignored; 0 measured; 1917 filtered out; finished in 0.86s
+

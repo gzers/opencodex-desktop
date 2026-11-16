@@ -1,0 +1,16 @@
+
+running 2 tests
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_root_original_delete_handle_and_claim_lease_must_coexist ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpOnMQhF
+r5 original DELETE-capable root and scoped claim/N/L/K lease coexist with unchanged source objects; no move, init or restore permission
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_root_rename_preserves_original_claim_kernel_lock ... r5 actual root move with original claim ranges held rawWin32=Some(5) 拒绝访问。 (os error 5)
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpOQO5nb
+FAILED
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_root_rename_preserves_original_claim_kernel_lock
+
+test result: FAILED. 1 passed; 1 failed; 0 ignored; 0 measured; 1983 filtered out; finished in 0.17s
+

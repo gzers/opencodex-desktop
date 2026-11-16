@@ -1,0 +1,13 @@
+{
+  "scope":"Windows same-object claim root relocation only; no mutation/Closed permit",
+  "metadataParent": {
+    "access":"READ_CONTROL|FILE_READ_ATTRIBUTES=0x20080, no directory FILE_READ_DATA",
+    "share":"READ|WRITE|DELETE, only for retained metadata observation needed to coexist with original DELETE root",
+    "invariants":["original native directory ID and8 security projections", "nonreparse local path", "pinned external ancestor remains", "fresh path handle and retained metadata handle agree", "sameToken/private file checks unchanged"],
+    "reason":"Windows special directory DELETE sharing requires removing read-data access from the observational directory handle; the actual RootTree remains the sole root-move authority"
+  },
+  "claimFile":"READ_CONTROL|GENERIC_READ retained; sharing DELETE for controlled original parent rename only is paired with exact path/handle fileID/8projection/content readback, no permission to adopt a replacement",
+  "rootView":"borrowed original RootTree, no public constructor from path/ID; distinguishes actual original custody from verified initial working generation, verifies exact claim entry native identity",
+  "handoff":"reanchor same original locked claim to actual custody path while N/L/K remain held, then capture/lock exact new initial working claim before retaining old claim as retired authority; both claims must be rechecked before/after. Interruption/unknown poisons, own kernel locks unwind only.",
+  "limits":["No SQLite create/init/recover", "No old ACL repair", "Not atomic against arbitrary hostile raw writes", "Original byte/tree verification and Source/phase/exit proof remain separate", "No production allowance before complete integration"]
+}

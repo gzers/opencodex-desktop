@@ -1,0 +1,7 @@
+{
+  "library02": {"rawExit":0,"passed":60,"failed":0,"elapsedMs":103493},
+  "hypothesis": "SQLite range locks only coordinate compliant SQLite users, not arbitrary writes to other offsets. A real raw file writer must cause full content recheck failure, poison future operations and preserve changed bytes while only own kernel ranges unwind. No global write-exclusion claim.",
+  "testSelection": "new narrow r5-coordination selector reuses prior route/status evidence, tests7 native cases plus original private child helper ignored by the top-level test runner but actually invoked by its parent",
+  "productionScope": "component only, no service/official process or mutation permit",
+  "accepted": false
+}

@@ -1,0 +1,6 @@
+{
+  "library04":{"rawExit":101,"passed":1,"failed":1},
+  "actualFirstMoveFailure":"Before rename, intent publication correctly refuses the generic TempDir parent because PrivateRecord requires a protected private root. This is a test setup failure, not yet evidence of claim file deny-delete blocking rename.",
+  "fix":"Create a new test-owned private journal directory and publish intent there. Do not change any old ACL, sharing, root/byte/security assertion or production move path. Retain original failed scene and rerun real move.",
+  "accepted":false
+}

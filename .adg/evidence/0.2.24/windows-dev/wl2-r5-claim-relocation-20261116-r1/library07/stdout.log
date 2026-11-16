@@ -1,0 +1,16 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_root_sharing_matrix_observes_exact_native_rename_barriers ... r5 root-sharing-matrix case=0 (0baseline,1metadata,2file,3both,4lease) moved=true rawWin32=None diagnosticOnly=true error=None
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpy2UtgZ
+r5 root-sharing-matrix case=1 (0baseline,1metadata,2file,3both,4lease) moved=true rawWin32=None diagnosticOnly=true error=None
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpgDiPVJ
+r5 root-sharing-matrix case=2 (0baseline,1metadata,2file,3both,4lease) moved=false rawWin32=Some(5) diagnosticOnly=true error=Some(Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" })
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpIMo8Dw
+r5 root-sharing-matrix case=3 (0baseline,1metadata,2file,3both,4lease) moved=false rawWin32=Some(5) diagnosticOnly=true error=Some(Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" })
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpzEFcuw
+r5 root-sharing-matrix case=4 (0baseline,1metadata,2file,3both,4lease) moved=false rawWin32=Some(5) diagnosticOnly=true error=Some(Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" })
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpS2RDFV
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 1985 filtered out; finished in 0.40s
+

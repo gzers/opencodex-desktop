@@ -1,0 +1,7 @@
+{
+  "library06":{"rawExit":101,"passed":1,"failed":1,"renameRawWin32":5},
+  "fact":"Share-delete on the retained claim file did not permit root rename; reject the earlier assumption that share-delete alone solves it. No automatic alternative delete/move operation or force fallback was attempted.",
+  "hypothesis":"A five-case diagnostic matrix will independently isolate no extra handle, metadata parent only, file handle only, both handles and real NativeLease. Baseline must move with complete source checks; every other actual raw result is retained as diagnostic evidence, never converted to successful production closure.",
+  "scope":"one own synthetic root per independent case, private intent; sources and originals retained; no production gate opened",
+  "accepted":false
+}

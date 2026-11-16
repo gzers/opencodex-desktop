@@ -1,0 +1,68 @@
+
+running 12 tests
+test infrastructure::windows_client_originals024::coordination::tests::isolated_namespace_child ... ignored, private no-I/O namespace child, executed only by its parent case
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_busy_each_role_unwinds_only_owned_partial_locks ... r5 coordination heldRole=0 rawWin32=Some(33) partial callback not admitted, original foreign SQLite transaction untouched
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpeLfBIw
+r5 coordination heldRole=1 rawWin32=Some(33) partial callback not admitted, original foreign SQLite transaction untouched
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpOwk6sN
+r5 coordination heldRole=2 rawWin32=Some(33) partial callback not admitted, original foreign SQLite transaction untouched
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp5Dbatr
+r5 coordination heldRole=3 rawWin32=Some(33) partial callback not admitted, original foreign SQLite transaction untouched
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpluoNLM
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_expiry_keeps_locks_until_scope_release_and_never_succeeds ... r5 expired private lease cannot authorize callback; actual locks survive until stack release, own locks released despite Timeout, no timer grant or rawexit rewrite
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_fixed_bundle_bun_sqlite_interoperates_without_official_imports ... r5 fixed-bundle Bun role=0 nativeHeld=true raw=Some(73) stdout={"completed":false,"busy":true,"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r5 fixed-bundle Bun role=1 nativeHeld=true raw=Some(73) stdout={"completed":false,"busy":true,"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r5 fixed-bundle Bun role=2 nativeHeld=true raw=Some(73) stdout={"completed":false,"busy":true,"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r5 fixed-bundle Bun role=3 nativeHeld=true raw=Some(73) stdout={"completed":false,"busy":true,"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r5 fixed-bundle Bun role=0 nativeHeld=false raw=Some(0) stdout={"completed":true}
+ stderr=
+r5 fixed-bundle Bun role=1 nativeHeld=false raw=Some(0) stdout={"completed":true}
+ stderr=
+r5 fixed-bundle Bun role=2 nativeHeld=false raw=Some(0) stdout={"completed":true}
+ stderr=
+r5 fixed-bundle Bun role=3 nativeHeld=false raw=Some(0) stdout={"completed":true}
+ stderr=
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_missing_files_and_duplicate_names_never_create_locks ... r5 missing namespace and duplicate role paths refuse with no mkdir/create/init or namespace fallback
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_namespace_uses_original_knownfolder_sid_not_environment ... ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_original_ranges_exclude_real_sqlite_writer_without_data_writes ... r5 Windows native claim EXCLUSIVE and N/L/K shared+reserved ranges exclude actual SQLite writers; N/L/K readers coexist, claim reader refuses; release same4 IDs/8projections/bytes, no production DB open/schema/official process
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_raw_data_drift_poisons_lease_without_overwriting_conflict ... r5 raw byte writer bypasses SQLite coordination ranges but native generation/content recheck poisons lease; conflict preserved, no overwrite/compensation or false success; own kernel ranges unwind
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpzpkGBm
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_root_original_delete_handle_and_claim_lease_must_coexist ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpbRWGKc
+r5 original DELETE-capable root and scoped claim/N/L/K lease coexist with unchanged source objects; no move, init or restore permission
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_root_rename_preserves_original_claim_kernel_lock ... ignored, explicitly blocked continuous-open-claim root rename; actual raw5 in library05/06, requires a reviewed handoff plan; assertions retained, not acceptance
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_root_sharing_matrix_observes_exact_native_rename_barriers ... r5 root-sharing-matrix case=0 (0baseline,1metadata,2file,3both,4lease) moved=true rawWin32=None diagnosticOnly=true error=None
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp6kPv5O
+r5 root-sharing-matrix case=1 (0baseline,1metadata,2file,3both,4lease) moved=true rawWin32=None diagnosticOnly=true error=None
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpvzypVm
+r5 root-sharing-matrix case=2 (0baseline,1metadata,2file,3both,4lease) moved=false rawWin32=Some(5) diagnosticOnly=true error=Some(Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" })
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpt2jqlV
+r5 root-sharing-matrix case=3 (0baseline,1metadata,2file,3both,4lease) moved=false rawWin32=Some(5) diagnosticOnly=true error=Some(Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" })
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmprOt3Bz
+r5 root-sharing-matrix case=4 (0baseline,1metadata,2file,3both,4lease) moved=false rawWin32=Some(5) diagnosticOnly=true error=Some(Os { code: 5, kind: PermissionDenied, message: "拒绝访问。" })
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0ddcEv
+ok
+test infrastructure::windows_client_originals024::coordination::tests::wl2_r5_coordination_sidecar_header_ads_and_multiple_link_refuse ... r5 coordination rejected variant=0 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp4vkcv8
+r5 coordination rejected variant=1 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpRtF3kJ
+r5 coordination rejected variant=2 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0TTL5f
+r5 coordination rejected variant=3 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpjOPGUs
+r5 coordination rejected variant=4 without repair, delete or fallback; original bytes retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpVh6lCk
+ok
+
+test result: ok. 10 passed; 0 failed; 2 ignored; 0 measured; 1974 filtered out; finished in 1.90s
+

@@ -1,0 +1,8 @@
+{
+  "library01": {"rawExit":101,"passed":59,"failed":1},
+  "firstError": {"file":"coordination_tests.rs","line":71,"message":"original Windows coordination context/file/rollback lock unconfirmed","stage":"positive lease recheck after competitor"},
+  "cause": "The positive test repeatedly passed a freshly computed end()=now+10 instead of the originally captured lease deadline. Production correctly refused this extension.",
+  "fix": "Bind one original deadline in the positive test and use it unchanged for acquire/check/release. Keep the no-extension production assertion and competitor/byte/ID/8projection assertions.",
+  "extraReview": "Any failed lease/context recheck must poison further callbacks until own kernel locks unwind; add explicit post-refusal recheck test. Retain actual locks on failure/expiry until scoped release, never claim failed operation succeeded.",
+  "accepted": false
+}
