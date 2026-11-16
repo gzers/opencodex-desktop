@@ -708,3 +708,11 @@ library01 MSVCdebug v3/关闭原语回归raw0/27过。首library02优化轮raw10
 产品custom-protocol MSVCdebug bins raw0/186570ms；172产品输入和126最终testRust逐份核工作源/Git行尾等价；三制品SHA/完整继承状态/首错归report/final-status。104新场景完整私有ZIP核验，6完成纯数据scene核fresh准确路径/全部文件hash/目录membership后清理；98失败/pending与35个D根保留，3272份canonical/快照/history原字节另归raw-scene-records。ZIP非NTFS元数据/身份克隆，历史拒绝删除不重试，overallCleanupComplete=false。
 
 后继仍需完整inventory角色/数量严格准入、actual Source/Owner/typedStop/原process与supervisor完成history、原截止内私有close完成receipt和跨动作history/typedClosed/Status5/后继/manager-H-S-D；当前history读回只在原fixture窗口，组件事实不等于生产许可。原contentpolicy资格必须在current frame转移前按原route/PID/audit窗接合，非artifact/动态目录未知拒绝；原缺席安全初始化/退根、普通MSI/CAP-trust/历史Profile/Public/失败broker清理保持。Start无条件拒绝，不旧raw5/空GUI/相同1314/W2/双SID/发布/官方或日常配置改变。
+
+## 2026-11-16 TEAM16/r6 后继前flight：HTTPS传输失败，仅本地证据待推
+
+上一已成功推送源码d20103fee084a3e63f728bf7c6664af65405e456/证据7d0d567e19b7b3cbc799dcd85ec3a43ad4fca0f4保持。本轮先fetch，原Schannel两次握手失败，单命令OpenSSL后端且保留证书验证仍TLS unexpected EOF；GitHub connector对main/治理main两个独立查询均backend-api/ps/mcp传输失败，没有分支数据。未确认远端最新；缓存fac8573e5/578230717不能冒称本轮最新。未关闭TLS验证或更改代理/DNS/机器策略/日常配置，未发后续新push。证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-network-preflight-20261116-r1/ 只在本地提交待推，不能称远端接收。
+
+一次批量只读核8项Git本地状态，源码净树仅原先untracked schema，三制品实际SHA/字节与上一轮完全一致，未新编译/测试/清理或重试旧删除拒绝。首组合shell继续读取而返回0不等于fetch0，git内部退出码未采集；后两次guarded shell返回1，connector isError，真实工具转录/限制全部单列。跨动作只读审计确认原journal截止与native close时点receipt仍需区分：未来完成对象必须涵盖原Stop截止前的actual closes、canonical结果/current与最终后验，新Status5仅用新窗读历史，不改旧mutation end。具体源码/行号及实现顺序归readonly-gap-audit.json，代码尚未改。
+
+当前缺可用且保留证书验证的HTTPS远端传输，先不在缓存合同上新增源码。恢复后必须先fetch并消费真实最新TEAM/IMP/合同，再继续关闭receipt、只读history/生产资格/typedClosed及独立推送。目标未完成，首次环境阻塞回交而非擅自暂停/关闭；Start拒绝、所有原未完/失败/清理缺口保持，不W2/双SID/发布。

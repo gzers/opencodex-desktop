@@ -1,0 +1,13 @@
+{
+  "contract":"TEAM16/IMP142/r6; newest remote contract currently unconfirmed",
+  "baselineSource":"d20103fee084a3e63f728bf7c6664af65405e456",
+  "baselineEvidence":"7d0d567e19b7b3cbc799dcd85ec3a43ad4fca0f4",
+  "hypotheses":[
+    {"id":"Transport","falsifiable":"Fetch failure may be limited to one TLS backend. A single process-local alternate TLS backend with certificate validation still enabled can distinguish that from a failure observed on both backends; no persistent config or insecure TLS option is permitted."},
+    {"id":"IndependentConnector","falsifiable":"An available read-only GitHub connector may independently confirm current main/governance refs without local Git transport. If connector transport also fails, neither cached refs nor old accepted evidence may be relabelled latest."},
+    {"id":"LocalCustody","falsifiable":"Current source/docs branches and product artifacts remain at the last pushed source/evidence, with no source changes beyond the preexisting generated untracked schema. Independently collect exact source/tree/status/artifact hashes and local governance input refs without rerunning passed native tests."}
+  ],
+  "sourceMutationAuthorizedAfterSuccessfulLatestInputCheckOnly":true,
+  "publicStartOpen":false,
+  "noPolicyOrDailyConfigurationChanges":true
+}

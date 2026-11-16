@@ -1,0 +1,168 @@
+{
+  "time": "2026-11-16T18:32:53.466558+08:00",
+  "observations": {
+    "source-head": {
+      "command": [
+        "git",
+        "-C",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code",
+        "rev-parse",
+        "HEAD"
+      ],
+      "rawExit": 0,
+      "stdoutSha256": "6203fcb1018db06b476fcb7f913930f3f89c906d3a654f5743f84a09c9d82e5e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "d20103fee084a3e63f728bf7c6664af65405e456"
+    },
+    "source-tree": {
+      "command": [
+        "git",
+        "-C",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "rawExit": 0,
+      "stdoutSha256": "99cef17621ef954c962f61e00f08d3e0753826f4e994895ee4036db726fe08e5",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "5e54b88a8cca03f9c00adf0630d2025deffa61c2"
+    },
+    "source-status": {
+      "command": [
+        "git",
+        "-C",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "rawExit": 0,
+      "stdoutSha256": "f333d9b16efe75121eb349aa18033bbbb1627079fe4f8b934296992eac940a8c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "?? apps/desktop/tauri/gen/schemas/windows-schema.json"
+    },
+    "source-main-cached": {
+      "command": [
+        "git",
+        "-C",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code",
+        "rev-parse",
+        "origin/main"
+      ],
+      "rawExit": 0,
+      "stdoutSha256": "962b7659b0d996168eddec072dc97b4d728810687d2dc671bc7fd6011240e4e8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "fac8573e55441fe514919c63c7f1d65181ff3577"
+    },
+    "governance-main-cached": {
+      "command": [
+        "git",
+        "-C",
+        "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code",
+        "rev-parse",
+        "origin/docs/governance-main"
+      ],
+      "rawExit": 0,
+      "stdoutSha256": "f4bdb040a566f195b33997c777338d54c9f7e26ac379c33bf3e901269db0e440",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "5782307174f0d1b011b5415c6c1e8d60414e6b36"
+    },
+    "docs-head-before-local-evidence": {
+      "command": [
+        "git",
+        "-C",
+        "C:\\Users\\15119\\.codex\\worktrees\\official299-windows-evidence\\docs-governance",
+        "rev-parse",
+        "HEAD"
+      ],
+      "rawExit": 0,
+      "stdoutSha256": "381bf491198839cdf63fcb1b5da7b61e8f951afff97b01c42bf2552d3285f122",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "7d0d567e19b7b3cbc799dcd85ec3a43ad4fca0f4"
+    },
+    "docs-tree-before-local-evidence": {
+      "command": [
+        "git",
+        "-C",
+        "C:\\Users\\15119\\.codex\\worktrees\\official299-windows-evidence\\docs-governance",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "rawExit": 0,
+      "stdoutSha256": "d9cb416c3fd2a0f82ebaccbe66c321c185196d518af38381162a4ba2531735bc",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "bd98e2c181d74f93fe833974b36dab5f31c18079"
+    },
+    "docs-status-before-local-evidence": {
+      "command": [
+        "git",
+        "-C",
+        "C:\\Users\\15119\\.codex\\worktrees\\official299-windows-evidence\\docs-governance",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "rawExit": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": ""
+    }
+  },
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77764608,
+      "sha256": "a3a9a299d1bcb8675c2d8c999054ad75c3a37d3721688796395c60fc3b0e62fb",
+      "sourceHead": "d20103fee084a3e63f728bf7c6664af65405e456",
+      "sourceTree": "5e54b88a8cca03f9c00adf0630d2025deffa61c2",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "24ad73ac53209f283b319726db9775588878e6ec7b6cd2cc751ab4f00f3b57e7",
+      "sourceHead": "d20103fee084a3e63f728bf7c6664af65405e456",
+      "sourceTree": "5e54b88a8cca03f9c00adf0630d2025deffa61c2",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "32bcd967a94e7f9e8c321ad693dc66c4e80e3ac8b6815f2b168f7a501870e274",
+      "sourceHead": "d20103fee084a3e63f728bf7c6664af65405e456",
+      "sourceTree": "5e54b88a8cca03f9c00adf0630d2025deffa61c2",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    }
+  ],
+  "localContractFiles": [
+    {
+      "path": "docs/03-开发实施/TEAM-0.2.24.md",
+      "bytes": 30952,
+      "sha256": "a416a9dadec36160c8bd6d17b59c0530958d28a2315451551cdea45c1f5e8963",
+      "localOnly": true
+    },
+    {
+      "path": "docs/03-开发实施/0.2.24-contracts/windows-claim-anchored-custody-r6.md",
+      "bytes": 18310,
+      "sha256": "49296079bf5a4725219c6f7d90ba98594ee9c54b0290133684e88c8554294439",
+      "localOnly": true
+    }
+  ],
+  "remoteFreshnessConfirmed": false,
+  "sourceModified": false,
+  "testsRerun": false,
+  "oldCleanupAttempted": false,
+  "privateNativeReceiptOrClosedMinted": false
+}

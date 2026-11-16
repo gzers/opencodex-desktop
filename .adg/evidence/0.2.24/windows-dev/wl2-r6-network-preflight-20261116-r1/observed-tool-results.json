@@ -1,0 +1,20 @@
+{
+  "provenance":"transcription of actual tool returns from this turn; not fabricated subprocess stdout/stderr files; connector nested error text summarized",
+  "date":"2026-11-16 Asia/Shanghai",
+  "attempts":[
+    {"id":"git01","command":"git fetch origin main docs/governance-main","result":"fatal: unable to access 'https://github.com/gzers/opencodex-desktop.git/': schannel: failed to receive handshake, SSL/TLS connection failed","toolCommandExitCode":0,"gitExitCodeCaptured":false,"exitCaveat":"The combined first read command continued with status/reads; overall shell exit0 does not mean fetch succeeded."},
+    {"id":"git02","command":"git fetch origin main docs/governance-main; if($LASTEXITCODE -ne 0){throw 'ordinary fetch retry failed; preserve TLS failure'}","result":"fatal: unable to access 'https://github.com/gzers/opencodex-desktop.git/': schannel: failed to receive handshake, SSL/TLS connection failed","toolCommandExitCode":1,"gitExitCodeCaptured":false},
+    {"id":"git03","command":"git -c http.sslBackend=openssl fetch origin main docs/governance-main; if($LASTEXITCODE -ne 0){throw 'secure temporary TLS backend fetch failed'}","result":"fatal: unable to access 'https://github.com/gzers/opencodex-desktop.git/': TLS connect error: error:0A000126:SSL routines::unexpected eof while reading","toolCommandExitCode":1,"gitExitCodeCaptured":false,"certificateVerificationDisabled":false,"persistentConfigWritten":false},
+    {"id":"connector-main","tool":"mcp__codex_apps__github_search_branches","arguments":{"owner":"gzers","repo_name":"opencodex-desktop","query":"main","page_size":30},"isError":true,"result":"Transport send error; Client error: HTTP request failed: http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)","branchDataReturned":false},
+    {"id":"connector-governance","tool":"mcp__codex_apps__github_search_branches","arguments":{"owner":"gzers","repo_name":"opencodex-desktop","query":"docs/governance-main","page_size":10},"isError":true,"result":"Transport send error; Client error: HTTP request failed: http/request failed: error sending request for url (https://chatgpt.com/backend-api/ps/mcp)","branchDataReturned":false}
+  ],
+  "lastLocallyCachedMain":"fac8573e55441fe514919c63c7f1d65181ff3577",
+  "lastLocallyCachedGovernanceMain":"5782307174f0d1b011b5415c6c1e8d60414e6b36",
+  "theseRefsConfirmedLatestThisTurn":false,
+  "remoteFailureRootCauseKnown":false,
+  "insecureTlsUsed":false,
+  "pushAttemptedAfterFailedFetch":false,
+  "oldNativeTestsRepeated":false,
+  "oldRejectedCleanupRetried":false,
+  "recordingDriverCorrection":"First JavaScript apply_patch wrapper had unescaped template backticks in tool-name text and produced SyntaxError before any file write; rerendered as summarized nested error text. No network/test rerun for this edit."
+}

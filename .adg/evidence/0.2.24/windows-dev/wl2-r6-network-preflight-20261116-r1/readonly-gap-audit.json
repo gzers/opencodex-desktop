@@ -1,0 +1,22 @@
+{
+  "sourceSha":"d20103fee084a3e63f728bf7c6664af65405e456",
+  "sourceReadThisTurn":true,
+  "cachedContractOnly":true,
+  "findings":[
+    {"id":"FreshReadNotYetPermitted","path":"apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs","line":596,"fact":"check_inner rejects end beyond authorized original action end, then before(authorized_end) rejects expiry. Current full journal checks cannot be called under a later Status5 window without a distinct retained historical qualification. Do not turn this gate into a generic end setter."},
+    {"id":"OnlyOriginalWindowComponent","path":"apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs","line":11,"fact":"component_check_handoff_history_for_test is cfg(test) and calls original check(end). Its success does not prove expired-original-window history or production Status/Closed."},
+    {"id":"NativeCloseTimeNotTransactionCompletion","path":"apps/desktop/tauri/src/infrastructure/windows_client_originals024/handle_release.rs","line":178,"fact":"NativeHandleBatch stores actual completed_at after all native closes, but not after canonical result/current and final full postconditions. A retained transaction-completion receipt must be created only after all of those succeed within original end, bound to exact current ID/tip/history/owner scope and original deadline."},
+    {"id":"CorrectHistorySeparationToPreserve","path":"apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement/handoff.rs","line":221,"fact":"check_history reads retained immutable archives and retired objects/custody membership, without adopting later live client config bytes as old original content. Preserve exact IDs/all8/bytes/children and unknown/poison behavior when introducing fresh read-only history."},
+    {"id":"InventoryRoleCompletenessStillOpen","path":"apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/handles.rs","line":225,"fact":"Current data validation admits tree/lease key prefixes and checks complete original/history-source rows. It does not yet freeze exact complete stopped-anchor/work/lease ancestor and bound roles as a production permit. Parsed counts/rows cannot close handles or mint Closed."}
+  ],
+  "implementationAfterTransportRecovers":[
+    "First fetch and consume actual latest TEAM/IMP/handoff; rebase only within exact Windows write set if inputs changed.",
+    "Introduce private nonserde timely transaction-completion receipt after actual close/result/current/full postconditions; original deadline immutable, no File/lease reacquire authority.",
+    "Factor existing full journal-native comparisons into a common readback with explicit historical entry requiring that exact receipt, original retained token/peer/current identity/tip/history binding and fresh caller window. Keep all mutation/append paths on original cutoff.",
+    "Test timely completion followed by original expiry and fresh Status5 readback, late/partial/missing/poison refusal, native archive drift/foreign membership and later live config separation; preserve all previous assertions and no textClosed authority.",
+    "Join actual Source/Owner/typed Stop/normal exit/supervisor/original process history and exact production inventory before Closed or Start admission."
+  ],
+  "actualImplementationThisTurn":false,
+  "publicStartOpen":false,
+  "overallGoalComplete":false
+}
