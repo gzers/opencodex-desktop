@@ -20,6 +20,7 @@ use std::{
 mod driver;
 mod leases;
 mod observations;
+mod snapshots;
 fn before(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {
         Err(io::ErrorKind::TimedOut.into())
@@ -147,6 +148,9 @@ struct Current {
     work_mode: super::observations::WorkMode,
     work_frames: Option<[String; 2]>,
     observed_frames: Option<[String; 2]>,
+    snapshot_pending: Option<(super::snapshots::SnapshotPurpose, u32)>,
+    snapshot_links: std::collections::BTreeMap<super::snapshots::SnapshotPurpose, [String; 2]>,
+    lifecycle: super::snapshots::LifecyclePhase,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -181,13 +185,18 @@ pub(in super::super) struct ObservationContext {
     manifest: String,
     deadline_scope: String,
     frames: [String; 2],
+    purpose: super::snapshots::SnapshotPurpose,
+    observation_sequence: u32,
 }
 impl ObservationContext {
     pub(in super::super) fn session(&self) -> &str {
         &self.session
     }
     pub(in super::super) fn metadata(&self) -> serde_json::Value {
-        serde_json::json!({"sessionId":self.session,"storagePlanDigest":self.plan,"bindingDigest":self.binding,"manifestDigest":self.manifest,"deadlineScope":self.deadline_scope,"frameDigests":self.frames})
+        serde_json::json!({"sessionId":self.session,"storagePlanDigest":self.plan,"bindingDigest":self.binding,"manifestDigest":self.manifest,"deadlineScope":self.deadline_scope,"frameDigests":self.frames,"purpose":self.purpose,"observationSequence":self.observation_sequence})
+    }
+    pub(in super::super) fn purpose_leaf(&self) -> &'static str {
+        self.purpose.leaf()
     }
     pub(in super::super) fn matches(&self, root: &Path, frame: &str) -> bool {
         let index = match root.file_name().and_then(|n| n.to_str()) {
@@ -220,6 +229,8 @@ impl Journal {
             manifest: self.progress.manifest.clone(),
             deadline_scope: self.progress.deadline.clone(),
             frames: self.progress.observed_frames.clone().ok_or_else(invalid)?,
+            purpose: super::snapshots::SnapshotPurpose::Observation,
+            observation_sequence: self.progress.sequence,
         })
     }
     /// Exact native source/Owner ActionWindow context only. This factory stays
@@ -357,6 +368,9 @@ impl Journal {
             work_mode: super::observations::WorkMode::Sealed,
             work_frames: None,
             observed_frames: None,
+            snapshot_pending: None,
+            snapshot_links: std::collections::BTreeMap::new(),
+            lifecycle: super::snapshots::LifecyclePhase::Preparing,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -453,6 +467,9 @@ impl Journal {
             || tip.work_mode != self.progress.work_mode
             || tip.work_frames != self.progress.work_frames
             || tip.observed_frames != self.progress.observed_frames
+            || tip.snapshot_pending != self.progress.snapshot_pending
+            || tip.snapshot_links != self.progress.snapshot_links
+            || tip.lifecycle != self.progress.lifecycle
         {
             return Err(invalid());
         }
@@ -542,6 +559,9 @@ impl Journal {
             work_mode: next.work_mode,
             work_frames: next.work_frames.clone(),
             observed_frames: next.observed_frames.clone(),
+            snapshot_pending: next.snapshot_pending,
+            snapshot_links: next.snapshot_links.clone(),
+            lifecycle: next.lifecycle,
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

@@ -26,6 +26,7 @@ mod artifacts;
 mod locks;
 pub(super) use artifacts::ArtifactFrame;
 mod working;
+pub(super) use anchored::observation::SnapshotWitness;
 pub(super) use working::{SnapshotPhase, WorkingArchive, WorkingReference};
 #[derive(PartialEq, Eq)]
 struct Entry {

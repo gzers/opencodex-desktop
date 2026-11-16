@@ -44,6 +44,7 @@ pub(super) enum ChainEntry {
     Node(Event),
     Lease(LeaseEvent),
     Work(super::observations::WorkEvent),
+    Snapshot(super::snapshots::SnapshotEvent),
 }
 impl Progress {
     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
@@ -51,6 +52,7 @@ impl Progress {
             ChainEntry::Node(n) => self.apply(plan, n),
             ChainEntry::Lease(e) => self.apply_lease(plan, e),
             ChainEntry::Work(e) => self.apply_work(plan, e),
+            ChainEntry::Snapshot(e) => self.apply_snapshot(plan, e),
         }
     }
     fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {
@@ -77,6 +79,7 @@ impl Progress {
                 .as_ref()
                 .is_some_and(|s| *s != e.objects_digest)
             || self.pending.is_some()
+            || self.snapshot_pending.is_some()
         {
             return Err(invalid());
         }

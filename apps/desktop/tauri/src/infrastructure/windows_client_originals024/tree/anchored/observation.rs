@@ -3,6 +3,8 @@
 use super::*;
 use std::os::windows::io::{AsRawHandle, FromRawHandle};
 mod archive;
+mod snapshots;
+pub(in crate::infrastructure::windows_client_originals024) use snapshots::SnapshotWitness;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum WorkMode {
     Sealed,
@@ -62,6 +64,17 @@ pub(super) struct WorkFrame {
     nodes: Vec<FrameNode>,
     archive: Option<archive::FrameArchive>,
     archive_failed: bool,
+}
+/// Immutable byte/history objects retained after current working handles are
+/// handed back. Recheck archive objects, never compare a later live client tree
+/// against a previous frame to mint a current-generation permission.
+pub(super) struct RetainedSnapshot {
+    archive: archive::FrameArchive,
+}
+impl RetainedSnapshot {
+    pub(super) fn check(&mut self, end: Instant) -> io::Result<()> {
+        self.archive.check(end)
+    }
 }
 fn frame_kind(root: &Path, relative: &str, directory: bool) -> Kind {
     if directory {
@@ -211,7 +224,10 @@ impl AnchoredTree {
         if frame.metadata() != expected {
             return Err(invalid());
         }
-        let frame = self.observed.take().ok_or_else(invalid)?;
+        let mut frame = self.observed.take().ok_or_else(invalid)?;
+        if let Some(archive) = frame.archive.take() {
+            self.snapshot_history.push(RetainedSnapshot { archive });
+        }
         for observed in frame.nodes {
             let n = self
                 .nodes
@@ -231,6 +247,9 @@ impl AnchoredTree {
             return Err(invalid());
         }
         self.parent.recheck()?;
+        for snapshot in &mut self.snapshot_history {
+            snapshot.check(end)?;
+        }
         self.custody.recheck()?;
         if parent_stamp(self.parent.path(), end)? != self.parent_security
             || parent_stamp(self.custody.path(), end)? != self.custody_security

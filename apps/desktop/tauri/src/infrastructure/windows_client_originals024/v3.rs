@@ -22,6 +22,8 @@ use std::{
 pub(super) mod journal;
 mod observations;
 mod segments;
+mod snapshots;
+use snapshots::SnapshotPurpose;
 pub(super) use journal::Journal;
 #[derive(Clone, Copy, Debug, Serialize)]
 pub(super) enum FileAction {
@@ -310,6 +312,9 @@ pub(super) struct Progress {
     work_mode: observations::WorkMode,
     work_frames: Option<[String; 2]>,
     observed_frames: Option<[String; 2]>,
+    snapshot_pending: Option<(SnapshotPurpose, u32)>,
+    snapshot_links: BTreeMap<SnapshotPurpose, [String; 2]>,
+    lifecycle: snapshots::LifecyclePhase,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -360,10 +365,13 @@ impl Progress {
             work_mode: observations::WorkMode::Sealed,
             work_frames: None,
             observed_frames: None,
+            snapshot_pending: None,
+            snapshot_links: BTreeMap::new(),
+            lifecycle: snapshots::LifecyclePhase::Preparing,
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {
-        if self.lease_state!=segments::LeaseState::Active || self.work_mode!=observations::WorkMode::Sealed || e.schema
+        if self.lease_state!=segments::LeaseState::Active || self.work_mode!=observations::WorkMode::Sealed || self.snapshot_pending.is_some() || e.schema
             != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "node-event"
             || e.storage_strategy != ANCHORED_STORAGE_STRATEGY

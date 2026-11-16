@@ -60,6 +60,7 @@ impl Progress {
             || e.deadline_scope != self.deadline
             || self.lease_state != segments::LeaseState::Active
             || self.pending.is_some()
+            || self.snapshot_pending.is_some()
             || e.frame_digests
                 .as_ref()
                 .is_some_and(|a| a.iter().any(|s| !digest(s)))

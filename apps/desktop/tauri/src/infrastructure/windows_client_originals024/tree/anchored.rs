@@ -6,7 +6,7 @@ use super::*;
 use crate::infrastructure::windows_official_runtime024 as native;
 use crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_CODEX_STABLE_FILES;
 use std::io::{Seek, SeekFrom, Write};
-mod observation;
+pub(super) mod observation;
 mod segments;
 use observation::WorkMode;
 
@@ -45,6 +45,7 @@ pub(in super::super) struct AnchoredTree {
     poisoned: bool,
     work_mode: WorkMode,
     observed: Option<observation::WorkFrame>,
+    snapshot_history: Vec<observation::RetainedSnapshot>,
     #[cfg(test)]
     create_fault: u8,
 }
@@ -330,6 +331,7 @@ impl AnchoredTree {
             poisoned: false,
             work_mode: WorkMode::Sealed,
             observed: None,
+            snapshot_history: Vec::new(),
             #[cfg(test)]
             create_fault: 0,
         };
@@ -409,6 +411,9 @@ impl AnchoredTree {
         }
         check(end)?;
         self.parent.recheck()?;
+        for snapshot in &mut self.snapshot_history {
+            snapshot.check(end)?;
+        }
         self.custody.recheck()?;
         if parent_stamp(self.parent.path(), end)? != self.parent_security
             || parent_stamp(self.custody.path(), end)? != self.custody_security

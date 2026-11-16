@@ -48,8 +48,9 @@ impl FrameArchive {
             return Err(invalid());
         }
         let name = format!(
-            ".ocxd024-observed-{}-{}",
+            ".ocxd024-observed-{}-{}-{}",
             context.session(),
+            context.purpose_leaf(),
             Path::new(root)
                 .file_name()
                 .and_then(|s| s.to_str())
