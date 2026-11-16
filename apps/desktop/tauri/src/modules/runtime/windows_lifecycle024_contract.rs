@@ -8,7 +8,7 @@ use super::official_lifecycle024::{ActionWindow, ServiceObservation, StopAccepte
 use crate::errors::AppResult;
 use std::time::Instant;
 
-pub const CONTRACT_VERSION: u32 = 2;
+pub const CONTRACT_VERSION: u32 = 3;
 pub const OFFICIAL_PACKAGE_SHA256: &str =
     "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c";
 pub const OFFICIAL_TASK: &str = "opencodex-proxy";
@@ -41,6 +41,20 @@ pub const BOUNDED_SECURITY_INFORMATION: u32 = 0x0000_01f7;
 pub const BOUNDED_POLICY_PROJECTIONS: [u32; 5] = [0x10, 0x20, 0x40, 0x80, 0x100];
 pub const ORIGINALS_RECORD_SCHEMA_V2: &str = "windows-client-originals-v2";
 pub const CURRENT_REFERENCE_SCHEMA_V2: &str = "windows-client-current-v2";
+/// r6 storage layout for NEW sessions only. Existing directories stay at their
+/// original paths/IDs; ordinary files enter same-volume per-node custody. This
+/// permits claim exclusion throughout each critical mutation without renaming
+/// a directory containing the still-open claim. It is not a runtime capability.
+pub const ANCHORED_STORAGE_STRATEGY: &str = "windows-anchored-directories-v1";
+pub const ANCHORED_ORIGINALS_SCHEMA_V3: &str = "windows-client-originals-v3";
+pub const ANCHORED_CURRENT_SCHEMA_V3: &str = "windows-client-current-v3";
+/// Exact existing Codex coordinators, never a Grok/general SQLite exception.
+/// Journals/WAL/SHM and absent-root retirement are not exempted by these names.
+/// Existence, original identity, scoped security and release remain native facts.
+pub const ANCHORED_CODEX_STABLE_FILES: [&str; 2] = [
+    ".opencodex-native-main.claim.sqlite",
+    ".opencodex-native-main.owner.sqlite",
+];
 /// This is an assurance scope, not a descriptor-preservation certificate. Native
 /// code must retain the original object and independently read back each included
 /// projection. Excluded audit-SACL/control and future extensions remain unknown;
@@ -86,7 +100,9 @@ pub trait NativeSession {
 /// Durable originals, including original absence, same-volume object custody,
 /// security descriptor and file identity. All associated values are opaque,
 /// non-Clone/non-serde in the adapter; no default implementation grants recovery.
-/// r4 explicitly permits BOUNDED_SECURITY_SCOPE for NEW v2 sessions. Complete
+/// r4 permits BOUNDED_SECURITY_SCOPE for NEW v2 sessions; r6 carries the same
+/// assurance into new v3 anchored-storage sessions without converting old ones.
+/// Complete
 /// included projections + native custody and final restoration are still required;
 /// an old diagnostic O/G/D read cannot authorize any mutation. Full-v1 records
 /// keep their full-descriptor requirements and are never converted/downgraded.
