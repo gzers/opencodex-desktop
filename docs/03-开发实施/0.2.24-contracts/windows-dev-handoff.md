@@ -716,3 +716,7 @@ library01 MSVCdebug v3/关闭原语回归raw0/27过。首library02优化轮raw10
 一次批量只读核8项Git本地状态，源码净树仅原先untracked schema，三制品实际SHA/字节与上一轮完全一致，未新编译/测试/清理或重试旧删除拒绝。首组合shell继续读取而返回0不等于fetch0，git内部退出码未采集；后两次guarded shell返回1，connector isError，真实工具转录/限制全部单列。跨动作只读审计确认原journal截止与native close时点receipt仍需区分：未来完成对象必须涵盖原Stop截止前的actual closes、canonical结果/current与最终后验，新Status5仅用新窗读历史，不改旧mutation end。具体源码/行号及实现顺序归readonly-gap-audit.json，代码尚未改。
 
 当前缺可用且保留证书验证的HTTPS远端传输，先不在缓存合同上新增源码。恢复后必须先fetch并消费真实最新TEAM/IMP/合同，再继续关闭receipt、只读history/生产资格/typedClosed及独立推送。目标未完成，首次环境阻塞回交而非擅自暂停/关闭；Start拒绝、所有原未完/失败/清理缺口保持，不W2/双SID/发布。
+
+## 2026-11-16 18:36 HTTPS复核恢复，继续r6
+
+本目标下次续轮仅原配置一次fetch成功，git原退出码0/1247ms；远端main仍fac8573e55441fe514919c63c7f1d65181ff3577、治理main仍5782307174f0d1b011b5415c6c1e8d60414e6b36，已实际读TEAM16/IMP142/r6并核原blob摘要，无新合同变更。证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-network-recheck-20261116-r2/，上轮efd8bfcd3失败仍保留原时点，不能追溯改成功。未改TLS验证/日常网络配置/机器策略，网络根因不推断。复核前源码d20103fee净树仅原schema，未新测试/编译/清理。解除该传输前提阻塞，补推本地两轮证据后继续原窗口完成receipt/新窗口只读历史与生产资格，不标goal完成，不W2/双SID/发布，Start拒绝。
