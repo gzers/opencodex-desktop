@@ -181,9 +181,14 @@ fn run(fault: u8) {
             94 => (original_end - Duration::from_secs(5), original_end),
             _ => (when, end),
         };
-        assert!(journal
-            .component_completed_history_at_for_test(read_when, read_end)
-            .is_err());
+        if fault == 96 {
+            assert!(journal.completed_stop_history_at(read_when,read_end).is_err(),
+                "timely original handle close receipt alone is not an actual final typed Stop completion");
+        } else {
+            assert!(journal
+                .component_completed_history_at_for_test(read_when, read_end)
+                .is_err());
+        }
         let after = journal.component_handle_trace_for_test().unwrap();
         if fault == 95 {
             assert_eq!(after["currentActualBytes"], 1);
@@ -207,6 +212,10 @@ fn run(fault: u8) {
 #[test]
 fn wl2_r6_completed_history_native_original_expiry_allows_fresh_read_but_never_append() {
     run(0);
+}
+#[test]
+fn wl2_r6_completed_history_native_original_close_alone_cannot_sign_final_stop() {
+    run(96);
 }
 #[test]
 fn wl2_r6_completed_history_native_missing_partial_late_unknown_close_never_mint_receipt() {

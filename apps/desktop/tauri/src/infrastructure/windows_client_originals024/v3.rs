@@ -21,6 +21,7 @@ use std::{
 };
 mod actions;
 mod capture;
+mod closed;
 pub(super) use capture::CaptureSlot;
 pub(super) mod batches;
 mod handle_rows;
@@ -342,9 +343,11 @@ pub(super) struct Progress {
     recovery: Option<recovery::RecoveryProgress>,
     history: Option<history::HistoryProgress>,
     handle_progress: Option<handles::HandleSummary>,
+    handle_close: Option<(u32, String)>,
     batch: Option<batches::BatchProgress>,
     seen_batches: BTreeSet<String>,
     content: Option<qualification::ContentSummary>,
+    closed: Option<closed::ClosedSummary>,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -409,9 +412,11 @@ impl Progress {
             recovery: None,
             history: None,
             handle_progress: None,
+            handle_close: None,
             batch: None,
             seen_batches: BTreeSet::new(),
             content: None,
+            closed: None,
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {

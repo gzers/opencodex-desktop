@@ -25,6 +25,10 @@ struct CaptureStore {
     stop_deadline: Option<Instant>,
     content_start: super::super::content::StartContentScope,
     restored_history: bool,
+    closed_exit: Option<crate::infrastructure::windows_diagnostic_roles024::ClosedExitHistory>,
+    closed_absent: Option<crate::infrastructure::windows_supervisor024::ClosedAbsentHistory>,
+    stopped_content: Option<super::super::content::StoppedContentScope>,
+    stop_completed: bool,
 }
 #[derive(Default)]
 pub(in crate::infrastructure::windows_client_originals024) struct CaptureSlot {
@@ -131,6 +135,10 @@ impl CaptureStore {
                     stop_deadline: None,
                     content_start,
                     restored_history: false,
+                    closed_exit: None,
+                    closed_absent: None,
+                    stopped_content: None,
+                    stop_completed: false,
                 },
                 lease,
             )),
@@ -152,16 +160,94 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    /// Read only under the caller's SAME Status sample; old mutation cutoff
+    /// stays immutable. This is internal history verification, not a status
+    /// boolean/serialized Closed factory or successor authorization.
+    pub(in crate::infrastructure::windows_client_originals024) fn completed_stop_at(
+        &mut self,
+        owner: &mut Owner,
+        when: Instant,
+        end: Instant,
+    ) -> AppResult<()> {
+        let result = (|| {
+            if self.failed
+                || when > Instant::now()
+                || when >= end
+                || end.duration_since(when) > std::time::Duration::from_secs(5)
+            {
+                return Err(refused("原Status同次5秒窗口未知"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原v3Store缺席"))?;
+            if store.failed || !store.stop_completed || !store.restored_history {
+                return Err(refused("原Stop未完成"));
+            }
+            store.failed = true;
+            store
+                .content_start
+                .check_completed_history(
+                    store
+                        .stopped_content
+                        .as_ref()
+                        .ok_or_else(|| refused("原内容scope缺席"))?,
+                    &mut store.source,
+                    owner,
+                    end,
+                )
+                .map_err(refused)?;
+            store
+                .closed_exit
+                .as_ref()
+                .ok_or_else(|| refused("原退出history缺席"))?
+                .check(owner, end)?;
+            store
+                .closed_absent
+                .as_ref()
+                .ok_or_else(|| refused("原监督history缺席"))?
+                .check(owner, end)?;
+            store
+                .core
+                .journal()
+                .completed_stop_history_at(when, end)
+                .map_err(refused)?;
+            store.source.check(owner, end)?;
+            store
+                .closed_exit
+                .as_ref()
+                .ok_or_else(|| refused("原退出history缺席"))?
+                .check(owner, end)?;
+            store
+                .closed_absent
+                .as_ref()
+                .ok_or_else(|| refused("原监督history缺席"))?
+                .check(owner, end)?;
+            if Instant::now() >= end {
+                return Err(AppError::Timeout);
+            }
+            store.failed = false;
+            Ok(())
+        })();
+        if result.is_err() {
+            self.failed = true;
+            if let Some(store) = &mut self.retained {
+                store.failed = true;
+                store.core.poison();
+            }
+        }
+        result
+    }
     /// Actual internal restore/history lane only. This does NOT return a
     /// ClosedEligibility or ordinary Stop success: the core retains/transfers
-    /// originals before explicit close, but process/supervisor completion
-    /// history, complete production inventory qualification and adapter remain
-    /// pending. No public production acceptance follows this internal call.
+    /// originals before explicit close, and retains each actual timely exit/
+    /// supervisor history before final canonical closure/seal. Adapter, actual
+    /// production execution and public acceptance remain pending.
     pub(in crate::infrastructure::windows_client_originals024) fn restore_stopped_existing(
         &mut self,
         owner: &mut Owner,
-        normal: &crate::infrastructure::windows_diagnostic_roles024::NormalExit,
-        absent: &crate::infrastructure::windows_supervisor024::Absent,
+        normal: crate::infrastructure::windows_diagnostic_roles024::NormalExit,
+        absent: crate::infrastructure::windows_supervisor024::Absent,
         official: &crate::modules::runtime::official_lifecycle024::StopAccepted,
         end: Instant,
     ) -> AppResult<()> {
@@ -176,6 +262,10 @@ impl CaptureSlot {
                 .ok_or_else(|| refused("原v3 Store缺席"))?;
             if store.failed
                 || store.restored_history
+                || store.closed_exit.is_some()
+                || store.closed_absent.is_some()
+                || store.stopped_content.is_some()
+                || store.stop_completed
                 || store.stop_deadline != Some(end)
                 || store.ready.as_ref()
                     != Some(&(
@@ -189,30 +279,30 @@ impl CaptureSlot {
             store.failed = true;
             let content = store
                 .content_start
-                .stopped(&mut store.source, owner, normal, &mut store.routes, end)
+                .stopped(&mut store.source, owner, &normal, &mut store.routes, end)
                 .map_err(refused)?;
             store
                 .core
                 .observe_original_stopped(
                     &mut store.source,
                     owner,
-                    normal,
-                    absent,
+                    &normal,
+                    &absent,
                     official,
                     &mut lease,
                     end,
                 )
                 .map_err(refused)?;
             content
-                .check(&mut store.source, owner, normal, &mut store.routes, end)
+                .check(&mut store.source, owner, &normal, &mut store.routes, end)
                 .map_err(refused)?;
             store
                 .core
                 .restore_original_stopped(
                     &mut store.source,
                     owner,
-                    normal,
-                    absent,
+                    &normal,
+                    &absent,
                     official,
                     &mut store.routes,
                     &content,
@@ -222,12 +312,56 @@ impl CaptureSlot {
                 .map_err(refused)?;
             store.check_source(owner, end)?;
             content
-                .check(&mut store.source, owner, normal, &mut store.routes, end)
+                .check(&mut store.source, owner, &normal, &mut store.routes, end)
                 .map_err(refused)?;
             if lease.is_some() {
                 return Err(refused("原恢复段lease未显式释放"));
             }
             store.restored_history = true;
+            // Preserve every successful original completion before the next
+            // fallible operation. No partial history is discarded or retried.
+            store.closed_exit = Some(normal.into_closed_history(owner, end)?);
+            store.closed_absent = Some(absent.into_closed_history(owner, end)?);
+            store.stopped_content = Some(content);
+            let mut guard = super::journal::CompletedStopGuard::bind(
+                &mut store.source,
+                owner,
+                store
+                    .closed_exit
+                    .as_ref()
+                    .ok_or_else(|| refused("原Stop退出history缺席"))?,
+                store
+                    .closed_absent
+                    .as_ref()
+                    .ok_or_else(|| refused("原Stop监督history缺席"))?,
+                official,
+                &mut store.routes,
+                &mut store.content_start,
+                store
+                    .stopped_content
+                    .as_ref()
+                    .ok_or_else(|| refused("原内容scope缺席"))?,
+                store.core.journal(),
+                end,
+            )
+            .map_err(refused)?;
+            store
+                .core
+                .journal()
+                .complete_original_stop_history(&mut guard, end)
+                .map_err(refused)?;
+            store.check_source(owner, end)?;
+            store
+                .closed_exit
+                .as_ref()
+                .ok_or_else(|| refused("原退出history缺席"))?
+                .check(owner, end)?;
+            store
+                .closed_absent
+                .as_ref()
+                .ok_or_else(|| refused("原监督history缺席"))?
+                .check(owner, end)?;
+            store.stop_completed = true;
             store.failed = false;
             Ok(())
         })();

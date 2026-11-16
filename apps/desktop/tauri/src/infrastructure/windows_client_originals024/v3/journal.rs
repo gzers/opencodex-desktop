@@ -19,7 +19,9 @@ use std::{
 };
 mod actions;
 mod batches;
+mod closed_stop;
 mod completed;
+pub(in crate::infrastructure::windows_client_originals024) use closed_stop::CompletedStopGuard;
 mod driver;
 mod handles;
 mod history;
@@ -205,6 +207,7 @@ struct Current {
     handles: Option<super::handles::HandleSummary>,
     batch: Option<super::batches::BatchSummary>,
     content: Option<super::qualification::ContentSummary>,
+    closed: Option<super::closed::ClosedSummary>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -234,6 +237,7 @@ pub(in super::super) struct Journal {
     close_inventory: Option<super::super::handle_release::ExpectedHandleInventory>,
     retired_lease_histories: Vec<super::super::coordination::RetiredLeaseHistory>,
     close_completion: Option<completed::CompletedOriginals>,
+    stop_completion: Option<completed::CompletedStop>,
     native_batches: Vec<batches::RetainedNativeBatch>,
     #[cfg(test)]
     fault: u8,
@@ -553,6 +557,7 @@ impl Journal {
             handles: None,
             batch: None,
             content: None,
+            closed: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -598,6 +603,7 @@ impl Journal {
             close_inventory: None,
             retired_lease_histories: Vec::new(),
             close_completion: None,
+            stop_completion: None,
             native_batches: Vec::new(),
             #[cfg(test)]
             fault: 0,
@@ -687,6 +693,7 @@ impl Journal {
             || tip.handles != self.progress.handle_progress
             || tip.batch != self.progress.batch_summary()
             || tip.content != self.progress.content
+            || tip.closed != self.progress.closed
         {
             return Err(invalid());
         }
@@ -798,6 +805,7 @@ impl Journal {
                 .transpose()?,
             batch: next.batch_summary(),
             content: next.content.clone(),
+            closed: next.closed.clone(),
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

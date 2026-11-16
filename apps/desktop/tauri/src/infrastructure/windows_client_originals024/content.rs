@@ -171,6 +171,75 @@ pub(super) struct StartContentScope {
     pins: Vec<AuditSourcePin>,
 }
 impl StartContentScope {
+    pub(super) fn check_completed_history(
+        &mut self,
+        scope: &StoppedContentScope,
+        source: &mut Source,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> io::Result<()> {
+        before(end)?;
+        source.check(owner, end).map_err(ioe)?;
+        if !self.action.same_original_owner(&scope.action)
+            || self.root != scope.root
+            || self.profile != scope.profile
+            || self.home != scope.home
+            || self.not_before != scope.not_before
+            || self.audit_home != scope.audit_home
+            || owner.profile_path() != scope.profile
+            || owner.home_path() != scope.home
+            || owner.original_native().binding().process != scope.root
+            || scope.not_before > scope.not_after
+            || scope.not_after > Utc::now()
+            || hash::sha256_hex(&serde_json::to_vec(&scope.routes).map_err(|_| invalid())?)
+                != self.routes_digest
+        {
+            return Err(invalid());
+        }
+        for pin in &mut self.pins {
+            pin.check(end)?;
+        }
+        before(end)
+    }
+    pub(super) fn check_completed_stop(
+        &mut self,
+        scope: &StoppedContentScope,
+        source: &mut Source,
+        owner: &mut Owner,
+        exit: &crate::infrastructure::windows_diagnostic_roles024::ClosedExitHistory,
+        routes: &mut RoutePin,
+        end: Instant,
+    ) -> io::Result<()> {
+        before(end)?;
+        if !self.action.same_original_owner(&scope.action)
+            || self.root != scope.root
+            || self.profile != scope.profile
+            || self.home != scope.home
+            || self.not_before != scope.not_before
+            || self.audit_home != scope.audit_home
+            || hash::sha256_hex(&serde_json::to_vec(&scope.routes).map_err(|_| invalid())?)
+                != self.routes_digest
+        {
+            return Err(invalid());
+        }
+        for pin in &mut self.pins {
+            pin.check(end)?;
+        }
+        scope.action.check(owner, end).map_err(ioe)?;
+        source.check(owner, end).map_err(ioe)?;
+        if scope.action.deadline() != end
+            || owner.profile_path() != scope.profile
+            || owner.home_path() != scope.home
+            || owner.original_native().binding().process != scope.root
+            || scope.not_before > scope.not_after
+            || scope.not_after > Utc::now()
+            || exit.original_stop_processes(owner, end).map_err(ioe)? != scope.processes
+            || routes.declared(owner.home_path(), end)? != scope.routes.as_slice()
+        {
+            return Err(invalid());
+        }
+        before(end)
+    }
     pub(super) fn capture(
         source: &mut Source,
         owner: &mut Owner,

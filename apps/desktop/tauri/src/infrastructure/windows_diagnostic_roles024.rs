@@ -51,6 +51,16 @@ pub(crate) struct ClosedExitHistory {
     completed_at: Instant,
 }
 impl ClosedExitHistory {
+    /// Original action only: expose the actual retained generation set while
+    /// sealing this same Stop, never under a renewed historical read deadline.
+    pub(crate) fn original_stop_processes(
+        &self,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> AppResult<Vec<ProcessIdentity>> {
+        self.check(owner, end)?;
+        self.proof.original_content_processes(owner, end)
+    }
     pub(crate) fn check(&self, owner: &mut Owner, new_deadline: Instant) -> AppResult<()> {
         owner.check_current(new_deadline)?;
         if self.completed_at >= self.proof.deadline {

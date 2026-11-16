@@ -266,6 +266,9 @@ impl Progress {
         }
         self.sequence = e.sequence;
         self.tip = hash::sha256_hex(&encoded(e)?);
+        if e.operation == HandleOperation::OriginalHandlesReleasedVerified {
+            self.handle_close = Some((e.sequence, self.tip.clone()));
+        }
         self.event_ids.insert(e.event_id.clone());
         Ok(())
     }
