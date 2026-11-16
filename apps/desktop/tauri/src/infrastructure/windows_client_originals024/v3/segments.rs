@@ -45,6 +45,7 @@ pub(super) enum ChainEntry {
     Lease(LeaseEvent),
     Work(super::observations::WorkEvent),
     Snapshot(super::snapshots::SnapshotEvent),
+    Action(super::actions::ActionEvent),
 }
 impl Progress {
     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
@@ -53,9 +54,10 @@ impl Progress {
             ChainEntry::Lease(e) => self.apply_lease(plan, e),
             ChainEntry::Work(e) => self.apply_work(plan, e),
             ChainEntry::Snapshot(e) => self.apply_snapshot(plan, e),
+            ChainEntry::Action(e) => self.apply_action(plan, e),
         }
     }
-    fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {
+    pub(super) fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {
         use crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3;
         if e.schema != ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "lease-event"
@@ -80,6 +82,7 @@ impl Progress {
                 .is_some_and(|s| *s != e.objects_digest)
             || self.pending.is_some()
             || self.snapshot_pending.is_some()
+            || self.action_pending.is_some()
         {
             return Err(invalid());
         }

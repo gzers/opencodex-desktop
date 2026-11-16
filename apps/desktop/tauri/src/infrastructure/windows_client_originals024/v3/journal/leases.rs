@@ -144,7 +144,11 @@ impl Journal {
                 return Err(invalid());
             }
             let receipt = self.released_lease.as_mut().ok_or_else(invalid)?;
-            receipt.check(end)?;
+            if self.progress.action_kind == super::super::actions::ActionKind::Start {
+                receipt.check(end)?;
+            } else {
+                receipt.readback_history(end)?;
+            }
             let facts: LeaseFacts =
                 serde_json::from_slice(&encoded(receipt.facts())?).map_err(io_error)?;
             let e = self.lease_event(LeaseOperation::LeaseAcquirePrepared, &facts, None)?;
@@ -165,10 +169,20 @@ impl Journal {
             if self.progress.lease_state != LeaseState::AcquirePrepared {
                 return Err(invalid());
             }
-            self.released_lease
-                .as_mut()
-                .ok_or_else(invalid)?
-                .reacquire(owner, end)
+            if self.progress.action_kind == super::super::actions::ActionKind::Start {
+                self.released_lease
+                    .as_mut()
+                    .ok_or_else(invalid)?
+                    .reacquire(owner, end)
+            } else {
+                let actual = owner.ok_or_else(invalid)?;
+                let action = self.source_action.as_ref().ok_or_else(invalid)?;
+                action.check(actual, end).map_err(io_error)?;
+                self.released_lease
+                    .as_mut()
+                    .ok_or_else(invalid)?
+                    .reacquire_for_action(action, actual, end)
+            }
         })();
         if result.is_err() {
             self.poisoned = true;
@@ -191,7 +205,7 @@ impl Journal {
             self.released_lease
                 .as_mut()
                 .ok_or_else(invalid)?
-                .check(end)?;
+                .readback_history(end)?;
             #[cfg(test)]
             {
                 if self.fault == 10 {

@@ -8,6 +8,14 @@ pub(in crate::infrastructure::windows_client_originals024) struct SnapshotWitnes
     frames: [&'a mut WorkFrame; 2],
 }
 impl SnapshotWitness<'_> {
+    pub(in crate::infrastructure::windows_client_originals024) fn reborrow(
+        &mut self,
+    ) -> SnapshotWitness<'_> {
+        let (first, second) = self.frames.split_at_mut(1);
+        SnapshotWitness {
+            frames: [&mut *first[0], &mut *second[0]],
+        }
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn references(
         &mut self,
         end: Instant,

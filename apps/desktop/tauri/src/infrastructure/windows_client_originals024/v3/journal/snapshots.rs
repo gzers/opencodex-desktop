@@ -5,7 +5,233 @@ use super::super::snapshots::{
 use super::*;
 use crate::infrastructure::windows_official_lifecycle024::{OriginalActionKind, Owner};
 use crate::modules::runtime::official_lifecycle024::ServiceObservation;
+use crate::{
+    infrastructure::{
+        windows_diagnostic_roles024::NormalExit,
+        windows_supervisor024::{Absent, WindowsSupervisor},
+    },
+    modules::runtime::{
+        official_lifecycle024::StopAccepted, windows_lifecycle024_contract::SupervisorAbsence,
+    },
+};
 impl Journal {
+    fn stop_source(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.check_source_owner(owner, end)?;
+        source.check(owner, end).map_err(io::Error::other)?;
+        if source.binding_raw != encoded(&self.manifest.binding)?
+            || !matches!(
+                self.source_action.as_ref().ok_or_else(invalid)?.kind(),
+                OriginalActionKind::Stop | OriginalActionKind::Restart
+            )
+        {
+            return Err(invalid());
+        }
+        Ok(())
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn begin_pre_stop_snapshot_link(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        ready: &ServiceObservation,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<ObservationContext> {
+        let result = (|| {
+            self.stop_source(source, owner, end)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            if self.progress.lifecycle != LifecyclePhase::Ready
+                || self.progress.ready_generation
+                    != Some((ready.pid(), ready.port(), ready.record_sha256().into()))
+            {
+                return Err(invalid());
+            }
+            let context = self.begin_snapshot(SnapshotPurpose::PreStop, claim, end)?;
+            self.stop_source(source, owner, end)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            Ok(context)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    fn snapshot_refs(
+        mut witness: SnapshotWitness<'_>,
+        end: Instant,
+    ) -> io::Result<([SnapshotReference; 2], u32)> {
+        let refs = witness
+            .references(end)?
+            .into_iter()
+            .map(SnapshotReference::from_native_data)
+            .collect::<io::Result<Vec<_>>>()?;
+        let sequence = refs.first().ok_or_else(invalid)?.observation_sequence();
+        Ok((refs.try_into().map_err(|_| invalid())?, sequence))
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn record_pre_stop_phase(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        ready: &ServiceObservation,
+        mut witness: SnapshotWitness<'_>,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            self.stop_source(source, owner, end)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            self.snapshot_claim(claim, end)?;
+            let (refs, sequence) = Self::snapshot_refs(witness.reborrow(), end)?;
+            let e = self.snapshot_event(
+                SnapshotOperation::PreStopVerified,
+                SnapshotPurpose::PreStop,
+                sequence,
+                Some(refs),
+                Some((ready.pid(), ready.port(), ready.record_sha256().into())),
+            )?;
+            self.append_entry_inner(ChainEntry::Snapshot(e), end)?;
+            witness.references(end)?;
+            self.stop_source(source, owner, end)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            self.snapshot_claim(claim, end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn record_teardown_prepared(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        ready: &ServiceObservation,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            self.stop_source(source, owner, end)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            self.snapshot_claim(claim, end)?;
+            let e = self.snapshot_event(
+                SnapshotOperation::TeardownPrepared,
+                SnapshotPurpose::PreStop,
+                self.progress.sequence,
+                None,
+                Some((ready.pid(), ready.port(), ready.record_sha256().into())),
+            )?;
+            self.append_entry_inner(ChainEntry::Snapshot(e), end)?;
+            self.stop_source(source, owner, end)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            self.snapshot_claim(claim, end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    fn stopped_source(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        normal: &NormalExit,
+        absent: &Absent,
+        official: &StopAccepted,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.stop_source(source, owner, end)?;
+        if self.progress.ready_generation
+            != Some((
+                official.pid(),
+                official.port(),
+                official.record_sha256().into(),
+            ))
+        {
+            return Err(invalid());
+        }
+        normal.check(owner, end).map_err(io::Error::other)?;
+        WindowsSupervisor
+            .recheck_absent(owner, absent, end)
+            .map_err(io::Error::other)?;
+        owner
+            .originals_check_stopped_records(end)
+            .map_err(io::Error::other)
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn begin_stopped_snapshot_link(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        normal: &NormalExit,
+        absent: &Absent,
+        official: &StopAccepted,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<ObservationContext> {
+        let result = (|| {
+            self.stopped_source(source, owner, normal, absent, official, end)?;
+            if self.progress.lifecycle != LifecyclePhase::TeardownPrepared {
+                return Err(invalid());
+            }
+            let context = self.begin_snapshot(SnapshotPurpose::Stopped, claim, end)?;
+            self.stopped_source(source, owner, normal, absent, official, end)?;
+            Ok(context)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn record_stopped_phase(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        normal: &NormalExit,
+        absent: &Absent,
+        official: &StopAccepted,
+        mut witness: SnapshotWitness<'_>,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            self.stopped_source(source, owner, normal, absent, official, end)?;
+            self.snapshot_claim(claim, end)?;
+            let (refs, sequence) = Self::snapshot_refs(witness.reborrow(), end)?;
+            let e = self.snapshot_event(
+                SnapshotOperation::StoppedVerified,
+                SnapshotPurpose::Stopped,
+                sequence,
+                Some(refs),
+                Some((
+                    official.pid(),
+                    official.port(),
+                    official.record_sha256().into(),
+                )),
+            )?;
+            self.append_entry_inner(ChainEntry::Snapshot(e), end)?;
+            witness.references(end)?;
+            self.stopped_source(source, owner, normal, absent, official, end)?;
+            self.snapshot_claim(claim, end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
     fn snapshot_claim(&mut self, claim: &mut AnchoredClaim<'_>, end: Instant) -> io::Result<()> {
         self.check(end)?;
         claim.check(&self.pins[0].path().join(".codex"), end)?;

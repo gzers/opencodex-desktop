@@ -3,7 +3,9 @@ use super::super::{
     tests::{event, plan, progress},
 };
 use super::*;
-fn observed(p: &StoragePlan) -> Progress {
+pub(in crate::infrastructure::windows_client_originals024::v3) fn observed(
+    p: &StoragePlan,
+) -> Progress {
     let mut g = progress(p);
     for n in p.roots.iter().flat_map(|r| &r.nodes) {
         if n.kind != Kind::CustodiedFile {
@@ -62,7 +64,7 @@ fn observed(p: &StoragePlan) -> Progress {
     assert_eq!(g.work_mode, WorkMode::Observed);
     g
 }
-fn refs(
+pub(in crate::infrastructure::windows_client_originals024::v3) fn refs(
     p: &StoragePlan,
     g: &Progress,
     purpose: SnapshotPurpose,
@@ -113,7 +115,7 @@ fn refs(
         }
     })
 }
-fn snapshot_event(
+pub(in crate::infrastructure::windows_client_originals024::v3) fn snapshot_event(
     g: &Progress,
     operation: SnapshotOperation,
     purpose: SnapshotPurpose,

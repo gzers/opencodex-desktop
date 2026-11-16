@@ -13,6 +13,7 @@ pub(in super::super) struct ReleasedLease {
     facts: LeaseFacts,
     poisoned: bool,
     reacquired: bool,
+    completed_at: Instant,
 }
 impl NativeLease {
     fn facts_inner(&self) -> io::Result<LeaseFacts> {
@@ -66,6 +67,7 @@ impl NativeLease {
             facts,
             poisoned: false,
             reacquired: false,
+            completed_at: Instant::now(),
         };
         released.check(end)?;
         Ok(released)
@@ -83,11 +85,27 @@ impl ReleasedLease {
     }
     pub(in super::super) fn check(&mut self, end: Instant) -> io::Result<()> {
         let result = (|| {
-            if self.poisoned || self.original.active || end > self.original.deadline {
+            if end > self.original.deadline {
+                return Err(refused());
+            }
+            before(self.original.deadline)?;
+            self.readback_history(end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    /// Native historical DATA only. A new deadline here is for fresh reads,
+    /// never reacquisition or mutation. Only a timely explicit unlock creates
+    /// this object; Drop/JSON cannot supply the completed original window.
+    pub(in super::super) fn readback_history(&mut self, end: Instant) -> io::Result<()> {
+        let result = (|| {
+            if self.poisoned || self.original.active || self.completed_at >= self.original.deadline
+            {
                 return Err(refused());
             }
             before(end)?;
-            before(self.original.deadline)?;
             if native::current_identity()? != self.original.token {
                 return Err(refused());
             }
@@ -106,6 +124,50 @@ impl ReleasedLease {
                 return Err(refused());
             }
             before(end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    pub(in super::super) fn reacquire_for_action(
+        &mut self,
+        action: &crate::infrastructure::windows_official_lifecycle024::NativeAction,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> io::Result<NativeLease> {
+        let result = (|| {
+            use crate::infrastructure::windows_official_lifecycle024::OriginalActionKind;
+            action.check(owner, end).map_err(io_error)?;
+            if !matches!(
+                action.kind(),
+                OriginalActionKind::Stop | OriginalActionKind::Restart
+            ) || action.deadline() != end
+                || self.reacquired
+            {
+                return Err(refused());
+            }
+            self.readback_history(end)?;
+            let bound = self.original.bound.as_ref().ok_or_else(refused)?;
+            if owner.scope().map_err(io_error)? != bound.scope
+                || owner.profile_path() != bound.profile.path()
+                || owner.home_path() != bound.home.path()
+            {
+                return Err(refused());
+            }
+            let mut new = NativeLease::acquire_existing(owner, end)?;
+            new.check_owner(owner, end)?;
+            let facts = new.facts_inner()?;
+            if facts.epoch == self.facts.epoch
+                || facts.claim_key != self.facts.claim_key
+                || facts.objects_digest != self.facts.objects_digest
+            {
+                return Err(refused());
+            }
+            action.check(owner, end).map_err(io_error)?;
+            self.readback_history(end)?;
+            self.reacquired = true;
+            Ok(new)
         })();
         if result.is_err() {
             self.poisoned = true;
@@ -171,5 +233,40 @@ impl ReleasedLease {
         self.check(end)?;
         self.reacquired = true;
         Ok(new)
+    }
+}
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::infrastructure::windows_client_originals024::tree::tests::Fixture;
+    use native::{create_private_directory, PrivateRecord};
+    #[test]
+    fn wl2_r6_release_history_fresh_read_after_original_expiry_does_not_reauthorize_lease() {
+        let mut f = Fixture::new();
+        let pin = create_private_directory(&f.path().join("synthetic-locks")).unwrap();
+        let paths: [PathBuf; 4] = std::array::from_fn(|i| pin.path().join(format!("{i}.sqlite")));
+        for p in &paths {
+            drop(PrivateRecord::create(p, b"", 16).unwrap());
+        }
+        let original_end = Instant::now() + std::time::Duration::from_secs(1);
+        let lease = NativeLease::acquire_paths(&paths, original_end).unwrap();
+        let mut receipt = lease.release_with_receipt(original_end).unwrap();
+        let original = receipt.facts.objects_digest.clone();
+        std::thread::sleep(
+            original_end.saturating_duration_since(Instant::now())
+                + std::time::Duration::from_millis(1),
+        );
+        let fresh_read_end = Instant::now() + std::time::Duration::from_secs(1);
+        receipt.readback_history(fresh_read_end).unwrap();
+        assert_eq!(receipt.facts.objects_digest, original);
+        assert!(receipt.completed_at < receipt.original.deadline);
+        assert!(
+            receipt.reacquire(None, fresh_read_end).is_err(),
+            "read-only history after original expiry must not mint a new lease"
+        );
+        println!("r6 timely original explicit release retained4 native IDs/all8/bytes; fresh1s history read after actual original1s expiry succeeds as DATA only; original reacquire remains rejected, no generic deadline extension or new NativeAction created");
+        drop(receipt);
+        drop(pin);
+        f.retain();
     }
 }

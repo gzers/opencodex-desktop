@@ -122,6 +122,9 @@ fn install_stop_origin(
     Ok(())
 }
 impl NativeAction {
+    pub(crate) fn same_original_owner(&self, other: &Self) -> bool {
+        self.owner == other.owner && self.scope == other.scope && self.token == other.token
+    }
     pub(crate) fn check(&self, owner: &mut Owner, end: Instant) -> AppResult<()> {
         if self.end != end
             || self.owner != owner.session

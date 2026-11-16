@@ -24,6 +24,9 @@ impl SnapshotPurpose {
 pub(super) enum LifecyclePhase {
     Preparing,
     Ready,
+    PreStop,
+    TeardownPrepared,
+    Stopped,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -58,6 +61,9 @@ pub(super) enum SnapshotOperation {
     SnapshotLinkIntent,
     SnapshotLinkedVerified,
     ReadyVerified,
+    PreStopVerified,
+    TeardownPrepared,
+    StoppedVerified,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -162,6 +168,7 @@ impl Progress {
             || self.lease_state != segments::LeaseState::Active
             || self.work_mode != observations::WorkMode::Observed
             || self.pending.is_some()
+            || self.action_pending.is_some()
             || self.observed_frames.as_ref() != Some(&e.frame_digests)
             || e.frame_digests.iter().any(|d| !digest(d))
         {
@@ -187,9 +194,15 @@ impl Progress {
                     }
                     SnapshotPurpose::PreStop => {
                         !self.snapshot_links.contains_key(&SnapshotPurpose::Ready)
+                            || self.lifecycle != LifecyclePhase::Ready
+                            || !matches!(
+                                self.action_kind,
+                                actions::ActionKind::Stop | actions::ActionKind::Restart
+                            )
                     }
                     SnapshotPurpose::Stopped => {
                         !self.snapshot_links.contains_key(&SnapshotPurpose::PreStop)
+                            || self.lifecycle != LifecyclePhase::TeardownPrepared
                     }
                 } {
                     return Err(invalid());
@@ -239,11 +252,42 @@ impl Progress {
                 ]);
                 next_pending = None;
             }
-            SnapshotOperation::ReadyVerified => {
-                if self.lifecycle != LifecyclePhase::Preparing
-                    || self.snapshot_pending.is_some()
-                    || e.purpose != SnapshotPurpose::Ready
-                {
+            SnapshotOperation::ReadyVerified
+            | SnapshotOperation::PreStopVerified
+            | SnapshotOperation::StoppedVerified => {
+                let next = match e.operation {
+                    SnapshotOperation::ReadyVerified
+                        if self.lifecycle == LifecyclePhase::Preparing
+                            && e.purpose == SnapshotPurpose::Ready
+                            && self.action_kind == actions::ActionKind::Start =>
+                    {
+                        LifecyclePhase::Ready
+                    }
+                    SnapshotOperation::PreStopVerified
+                        if self.lifecycle == LifecyclePhase::Ready
+                            && e.purpose == SnapshotPurpose::PreStop
+                            && matches!(
+                                self.action_kind,
+                                actions::ActionKind::Stop | actions::ActionKind::Restart
+                            )
+                            && self.ready_generation == e.ready =>
+                    {
+                        LifecyclePhase::PreStop
+                    }
+                    SnapshotOperation::StoppedVerified
+                        if self.lifecycle == LifecyclePhase::TeardownPrepared
+                            && e.purpose == SnapshotPurpose::Stopped
+                            && matches!(
+                                self.action_kind,
+                                actions::ActionKind::Stop | actions::ActionKind::Restart
+                            )
+                            && self.ready_generation == e.ready =>
+                    {
+                        LifecyclePhase::Stopped
+                    }
+                    _ => return Err(invalid()),
+                };
+                if self.snapshot_pending.is_some() {
                     return Err(invalid());
                 }
                 let refs = e.references.as_ref().ok_or_else(invalid)?;
@@ -269,7 +313,18 @@ impl Progress {
                 {
                     return Err(invalid());
                 }
-                next_phase = LifecyclePhase::Ready;
+                next_phase = next;
+            }
+            SnapshotOperation::TeardownPrepared => {
+                if self.lifecycle != LifecyclePhase::PreStop
+                    || e.purpose != SnapshotPurpose::PreStop
+                    || e.references.is_some()
+                    || e.ready != self.ready_generation
+                    || self.snapshot_pending.is_some()
+                {
+                    return Err(invalid());
+                }
+                next_phase = LifecyclePhase::TeardownPrepared;
             }
         }
         self.tip = hash::sha256_hex(&encoded(e)?);
@@ -277,6 +332,9 @@ impl Progress {
         self.event_ids.insert(e.event_id.clone());
         self.snapshot_pending = next_pending;
         self.lifecycle = next_phase;
+        if e.operation == SnapshotOperation::ReadyVerified {
+            self.ready_generation = e.ready.clone();
+        }
         if let Some(hashes) = links {
             self.snapshot_links.insert(e.purpose, hashes);
         }
@@ -285,4 +343,4 @@ impl Progress {
 }
 #[cfg(test)]
 #[path = "snapshot_data_tests.rs"]
-mod tests;
+pub(super) mod tests;

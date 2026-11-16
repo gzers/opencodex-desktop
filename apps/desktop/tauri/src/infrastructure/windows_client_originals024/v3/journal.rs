@@ -17,6 +17,7 @@ use std::{
     path::PathBuf,
     time::Instant,
 };
+mod actions;
 mod driver;
 mod leases;
 mod observations;
@@ -151,6 +152,9 @@ struct Current {
     snapshot_pending: Option<(super::snapshots::SnapshotPurpose, u32)>,
     snapshot_links: std::collections::BTreeMap<super::snapshots::SnapshotPurpose, [String; 2]>,
     lifecycle: super::snapshots::LifecyclePhase,
+    ready_generation: Option<(u32, u16, String)>,
+    action_pending: Option<(String, super::actions::ActionKind)>,
+    action_kind: super::actions::ActionKind,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -173,6 +177,9 @@ pub(in super::super) struct Journal {
     released_lease: Option<super::super::coordination::ReleasedLease>,
     previous_releases: Vec<super::super::coordination::ReleasedLease>,
     source_action: Option<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
+    pending_source_action:
+        Option<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
+    old_source_actions: Vec<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
     #[cfg(test)]
     fault: u8,
 }
@@ -371,6 +378,9 @@ impl Journal {
             snapshot_pending: None,
             snapshot_links: std::collections::BTreeMap::new(),
             lifecycle: super::snapshots::LifecyclePhase::Preparing,
+            ready_generation: None,
+            action_pending: None,
+            action_kind: super::actions::ActionKind::Start,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -410,6 +420,8 @@ impl Journal {
             released_lease: None,
             previous_releases: Vec::new(),
             source_action: None,
+            pending_source_action: None,
+            old_source_actions: Vec::new(),
             #[cfg(test)]
             fault: 0,
         };
@@ -417,18 +429,23 @@ impl Journal {
         Ok(out)
     }
     fn check_inner(&mut self, end: Instant) -> io::Result<()> {
-        if self.poisoned || end > self.deadline {
+        let authorized_end = self
+            .pending_source_action
+            .as_ref()
+            .map(|a| a.deadline())
+            .unwrap_or(self.deadline);
+        if self.poisoned || end > authorized_end {
             return Err(invalid());
         }
         before(end)?;
-        before(self.deadline)?;
+        before(authorized_end)?;
         if native::current_identity()? != self.token {
             return Err(invalid());
         }
         self.directory.recheck()?;
         self.manifest.binding.check_native(&self.peer, &self.pins)?;
         for release in &mut self.previous_releases {
-            release.check(end)?;
+            release.readback_history(end)?;
         }
         if directory_security(&self.directory, end)? != self.directory_security {
             return Err(invalid());
@@ -470,6 +487,9 @@ impl Journal {
             || tip.snapshot_pending != self.progress.snapshot_pending
             || tip.snapshot_links != self.progress.snapshot_links
             || tip.lifecycle != self.progress.lifecycle
+            || tip.ready_generation != self.progress.ready_generation
+            || tip.action_pending != self.progress.action_pending
+            || tip.action_kind != self.progress.action_kind
         {
             return Err(invalid());
         }
@@ -562,6 +582,9 @@ impl Journal {
             snapshot_pending: next.snapshot_pending,
             snapshot_links: next.snapshot_links.clone(),
             lifecycle: next.lifecycle,
+            ready_generation: next.ready_generation.clone(),
+            action_pending: next.action_pending.clone(),
+            action_kind: next.action_kind,
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw
