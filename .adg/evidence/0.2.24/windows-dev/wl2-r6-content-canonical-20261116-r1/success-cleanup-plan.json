@@ -1,0 +1,48 @@
+[
+  {
+    "run": "library01",
+    "test": "wl2_r6_production_content_exact_source_pin_denies_write_replace_and_wrong_hash",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFktr11",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-content-canonical-library01-0.zip",
+    "archiveSha256": "c05a2197acd947e18d2c458a6dd3754ecf4f6e3770a1cee6611ea2433a7dbbf5",
+    "files": [
+      {
+        "path": "synthetic-source-pin/replacement.ts",
+        "bytes": 44,
+        "sha256": "c6a8717840079aee9c2abc92552615b244dd7600090fa9f64596e13ec14a32fd"
+      },
+      {
+        "path": "synthetic-source-pin/source.ts",
+        "bytes": 44,
+        "sha256": "c6a8717840079aee9c2abc92552615b244dd7600090fa9f64596e13ec14a32fd"
+      }
+    ],
+    "directories": [
+      "synthetic-source-pin"
+    ],
+    "removed": false
+  },
+  {
+    "run": "library01",
+    "test": "wl2_r6_production_content_fixed_bun_original_audit_source_projection_and_pin_rechecks",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmptGFSDp",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-content-canonical-library01-1.zip",
+    "archiveSha256": "d24b00a5af7280a49bcab3d9d1e786f65750e06d762522975f223dd4b7f831e9",
+    "files": [
+      {
+        "path": "fixed-audit-projection/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "fixed-audit-projection/stdout.log",
+        "bytes": 579,
+        "sha256": "2dec5813593eb61ad9fbf1a1b076854cecf375790f05de8721166633fac70766"
+      }
+    ],
+    "directories": [
+      "fixed-audit-projection"
+    ],
+    "removed": false
+  }
+]

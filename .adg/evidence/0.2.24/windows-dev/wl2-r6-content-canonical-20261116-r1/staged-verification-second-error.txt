@@ -1,0 +1,4 @@
+Tool invocation failure; actual source/test results unaffected.
+PowerShell/native Python invocation omitted the empty revision argument, so sys.argv[2] raised IndexError: list index out of range.
+Explicit git index stage :0 yields :0:path and was first confirmed as blob, then verified all2301 index blobs original-byte-equal.
+This record and the previous correct seal are included in the final expanded seal; final original-byte verification is run again with explicit :0.

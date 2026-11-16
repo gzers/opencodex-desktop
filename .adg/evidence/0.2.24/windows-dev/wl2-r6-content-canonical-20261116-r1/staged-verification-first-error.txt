@@ -1,0 +1,4 @@
+Tool invocation failure, not source/test/production failure.
+verify_git_payload.py was invoked with revision argument colon; its formatter adds the colon, yielding ::.adg/... and git cat-file missing.
+AssertionError: [b'::.adg/evidence/0.2.24/windows-dev/wl2-r6-content-canonical-20261116-r1/.gitattributes', b'missing']
+Correction: pass empty revision string for index syntax :path. Preserve initial correct payload seal as payload-manifest-initial.json; new seal includes this record and the old seal.
