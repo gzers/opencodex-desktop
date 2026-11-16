@@ -2,7 +2,89 @@
 //! Original and initial-work baselines never change. Immutable snapshot objects
 //! and exact historical work observers remain retained across official writes.
 use super::*;
+use crate::infrastructure::windows_client_originals024::content::StoppedContentScope;
 use crate::infrastructure::windows_client_originals024::v3::Journal;
+pub(in crate::infrastructure::windows_client_originals024) struct NativeContentAssessment {
+    scope_digest: String,
+    series_digest: String,
+    assessment: crate::modules::runtime::client_artifact_policy::Assessment,
+    deadline: Instant,
+}
+fn series_digest(
+    context:&crate::infrastructure::windows_client_originals024::v3::journal::ObservationSeriesContext,
+) -> io::Result<String> {
+    let values = serde_json::json!({"sequences":context.sequences(),"bindings":[context.binding(0)?,context.binding(1)?,context.binding(2)?],
+        "frames":[[context.frame(0,0)?,context.frame(0,1)?],[context.frame(1,0)?,context.frame(1,1)?],[context.frame(2,0)?,context.frame(2,1)?]]});
+    Ok(hash::sha256_hex(
+        &serde_json::to_vec(&values).map_err(|_| invalid())?,
+    ))
+}
+impl NativeContentAssessment {
+    pub(in crate::infrastructure::windows_client_originals024) fn matches(
+        &self,
+        scope: &StoppedContentScope,
+        context:&crate::infrastructure::windows_client_originals024::v3::journal::ObservationSeriesContext,
+        end: Instant,
+    ) -> io::Result<()> {
+        check(end)?;
+        if self.deadline != end
+            || scope.deadline() != end
+            || self.scope_digest != scope.digest()?
+            || self.series_digest != series_digest(context)?
+        {
+            return Err(invalid());
+        }
+        use crate::modules::runtime::client_artifact_policy::{Action, Artifact};
+        for ((artifact, action), expected) in self.assessment.0.iter().zip([
+            Artifact::Catalog,
+            Artifact::ModelsCache,
+            Artifact::CatalogAudit,
+        ]) {
+            if *artifact != expected
+                || !matches!(action, Action::AlreadyOriginal | Action::RestoreOriginal)
+            {
+                return Err(invalid());
+            }
+        }
+        Ok(())
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn data(&self) -> serde_json::Value {
+        serde_json::json!({"scopeDigest":self.scope_digest,"seriesDigest":self.series_digest,
+            "assessment":format!("{:?}",self.assessment),"nativeAuthority":false,"typedClosed":false})
+    }
+}
+pub(in crate::infrastructure::windows_client_originals024) fn assess_native_stopped_series(
+    trees: &mut [AnchoredTree; 2],
+    context:&crate::infrastructure::windows_client_originals024::v3::journal::ObservationSeriesContext,
+    scope: &StoppedContentScope,
+    claim: &mut AnchoredClaim<'_>,
+    end: Instant,
+) -> io::Result<NativeContentAssessment> {
+    if scope.deadline() != end {
+        return Err(invalid());
+    }
+    let pids = scope.pids();
+    let (from, to) = scope.interval();
+    let assessment = assess_tree_series(
+        trees,
+        context,
+        Some(scope.routes()),
+        &pids,
+        scope.audit_home(),
+        from,
+        to,
+        claim,
+        end,
+    )?;
+    let out = NativeContentAssessment {
+        scope_digest: scope.digest()?,
+        series_digest: series_digest(context)?,
+        assessment,
+        deadline: end,
+    };
+    out.matches(scope, context, end)?;
+    Ok(out)
+}
 impl AnchoredTree {
     pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn verify_release_boundary(
         &mut self,

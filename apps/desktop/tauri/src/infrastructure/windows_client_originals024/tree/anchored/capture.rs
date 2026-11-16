@@ -52,12 +52,97 @@ pub(in crate::infrastructure::windows_client_originals024) struct CapturedTrees 
     ready: bool,
     prepared_stop: Option<PreparedStop>,
     stopped_observed: bool,
+    content_assessment: Option<super::observation::NativeContentAssessment>,
+    restored_history: bool,
     failed: bool,
 }
 impl CapturedTrees {
+    pub(in crate::infrastructure::windows_client_originals024) fn restore_original_stopped(
+        &mut self,
+        source: &mut crate::infrastructure::windows_client_originals024::source::Source,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        normal: &crate::infrastructure::windows_diagnostic_roles024::NormalExit,
+        absent: &crate::infrastructure::windows_supervisor024::Absent,
+        official: &crate::modules::runtime::official_lifecycle024::StopAccepted,
+        routes: &mut crate::infrastructure::windows_client_originals024::v2::routes::RoutePin,
+        content: &crate::infrastructure::windows_client_originals024::content::StoppedContentScope,
+        lease: &mut Option<NativeLease>,
+        end: Instant,
+    ) -> io::Result<()> {
+        use crate::infrastructure::windows_client_originals024::v3::journal::ProductionStop;
+        let result = (|| {
+            if self.failed
+                || !self.stopped_observed
+                || self.restored_history
+                || self.content_assessment.is_some()
+            {
+                return Err(invalid());
+            }
+            self.prepared_stop.as_ref().ok_or_else(invalid)?.check(
+                official.pid(),
+                official.port(),
+                official.record_sha256(),
+                end,
+            )?;
+            let root = self.trees[0].parent.path().join(".codex");
+            let mut claim = lease
+                .as_mut()
+                .ok_or_else(invalid)?
+                .anchored_claim(&root, end)?;
+            let mut guard = ProductionStop::bind(
+                &mut self.journal,
+                source,
+                owner,
+                normal,
+                absent,
+                official,
+                routes,
+                content,
+                &mut claim,
+                end,
+            )?;
+            guard.check(&mut self.journal, end)?;
+            let assessment = super::observation::series::assess_native_stopped_series(
+                &mut self.trees,
+                guard.observations(),
+                content,
+                &mut claim,
+                end,
+            )?;
+            guard.check(&mut self.journal, end)?;
+            assessment.matches(content, guard.observations(), end)?;
+            // Install native-qualified content DATA BEFORE transferring the
+            // current frozen frame. Failure never launders absent/missing frames.
+            self.content_assessment = Some(assessment);
+            for tree in &mut self.trees {
+                tree.capture_retirement(&mut claim, end)?;
+            }
+            let witness =
+                super::observation::retirement::recovery_witness(&mut self.trees, &mut claim, end)?;
+            drop(claim);
+            self.journal.restore_qualified_stopped(
+                &mut guard,
+                self.content_assessment.as_ref().ok_or_else(invalid)?,
+                witness,
+                lease,
+                end,
+            )?;
+            guard.check(&mut self.journal, end)?;
+            if lease.is_some() {
+                return Err(invalid());
+            }
+            self.restored_history = true;
+            Ok(())
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
     /// Native planning DATA only. Current and original handles remain stored;
     /// no new retirement step is called here or authorized from the returned
     /// plan. Canonical per-row progress + exact typed recovery scope still next.
+    #[cfg(test)]
     pub(in crate::infrastructure::windows_client_originals024) fn inspect_original_retirement(
         &mut self,
         source: &mut crate::infrastructure::windows_client_originals024::source::Source,
@@ -416,6 +501,8 @@ impl CapturedTrees {
             ready: false,
             prepared_stop: None,
             stopped_observed: false,
+            content_assessment: None,
+            restored_history: false,
             failed: false,
         }
     }

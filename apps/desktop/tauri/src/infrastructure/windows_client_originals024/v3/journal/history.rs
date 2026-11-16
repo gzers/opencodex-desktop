@@ -56,7 +56,7 @@ impl Journal {
         // their own full BOTH-tree before/after and append checks BEFORE/AFTER.
         self.check(end)
     }
-    fn seal_original_history(
+    pub(super) fn seal_original_history(
         &mut self,
         mut witness: RecoveryWitness<'_>,
         end: Instant,

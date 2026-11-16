@@ -82,7 +82,7 @@ impl Journal {
         // retained plan. Durable writes retain their full before/after check.
         before(end)
     }
-    fn prepare_native_recovery(
+    pub(super) fn prepare_native_recovery(
         &mut self,
         mut witness: RecoveryWitness<'_>,
         claim: &mut AnchoredClaim<'_>,

@@ -35,6 +35,9 @@ fn refused(reason: impl std::fmt::Display) -> AppError {
         detail: format!("原件持久恢复未确认；保留原代次/记录/句柄：{reason}"),
     }
 }
+pub(super) fn content_error(reason: impl std::fmt::Display) -> AppError {
+    refused(reason)
+}
 fn before(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {
         Err(io::ErrorKind::TimedOut.into())

@@ -23,6 +23,8 @@ struct CaptureStore {
     failed: bool,
     ready: Option<(u32, u16, String)>,
     stop_deadline: Option<Instant>,
+    content_start: super::super::content::StartContentScope,
+    restored_history: bool,
 }
 #[derive(Default)]
 pub(in crate::infrastructure::windows_client_originals024) struct CaptureSlot {
@@ -64,6 +66,13 @@ impl CaptureStore {
         let end = window.deadline();
         let (mut source, _) = Source::capture(owner, end)?;
         let routes = RoutePin::capture(owner.home_path(), end).map_err(refused)?;
+        let mut routes = routes;
+        let content_start = super::super::content::StartContentScope::capture(
+            &mut source,
+            owner,
+            &mut routes,
+            end,
+        )?;
         let context = source.journal_context(owner, OriginalActionKind::Start, end)?;
         let (data, profile) = (
             PinnedDirectory::open_private(owner.data_path()).map_err(refused)?,
@@ -120,6 +129,8 @@ impl CaptureStore {
                     failed: true,
                     ready: None,
                     stop_deadline: None,
+                    content_start,
+                    restored_history: false,
                 },
                 lease,
             )),
@@ -141,6 +152,95 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    /// Actual internal restore/history lane only. This does NOT return a
+    /// ClosedEligibility or ordinary Stop success: original-handle ownership,
+    /// process/supervisor completion history and final adapter remain pending.
+    pub(in crate::infrastructure::windows_client_originals024) fn restore_stopped_existing(
+        &mut self,
+        owner: &mut Owner,
+        normal: &crate::infrastructure::windows_diagnostic_roles024::NormalExit,
+        absent: &crate::infrastructure::windows_supervisor024::Absent,
+        official: &crate::modules::runtime::official_lifecycle024::StopAccepted,
+        end: Instant,
+    ) -> AppResult<()> {
+        let mut lease = None;
+        let result = (|| {
+            if self.failed {
+                return Err(refused("原v3 slot已poison"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原v3 Store缺席"))?;
+            if store.failed
+                || store.restored_history
+                || store.stop_deadline != Some(end)
+                || store.ready.as_ref()
+                    != Some(&(
+                        official.pid(),
+                        official.port(),
+                        official.record_sha256().into(),
+                    ))
+            {
+                return Err(refused("原Stop/context代次未知"));
+            }
+            store.failed = true;
+            let content = store
+                .content_start
+                .stopped(&mut store.source, owner, normal, &mut store.routes, end)
+                .map_err(refused)?;
+            store
+                .core
+                .observe_original_stopped(
+                    &mut store.source,
+                    owner,
+                    normal,
+                    absent,
+                    official,
+                    &mut lease,
+                    end,
+                )
+                .map_err(refused)?;
+            content
+                .check(&mut store.source, owner, normal, &mut store.routes, end)
+                .map_err(refused)?;
+            store
+                .core
+                .restore_original_stopped(
+                    &mut store.source,
+                    owner,
+                    normal,
+                    absent,
+                    official,
+                    &mut store.routes,
+                    &content,
+                    &mut lease,
+                    end,
+                )
+                .map_err(refused)?;
+            store.check_source(owner, end)?;
+            content
+                .check(&mut store.source, owner, normal, &mut store.routes, end)
+                .map_err(refused)?;
+            if lease.is_some() {
+                return Err(refused("原恢复段lease未显式释放"));
+            }
+            store.restored_history = true;
+            store.failed = false;
+            Ok(())
+        })();
+        if result.is_err() {
+            if let Some(held) = lease.take() {
+                let _ = held.release(end);
+            }
+            self.failed = true;
+            if let Some(store) = &mut self.retained {
+                store.failed = true;
+                store.core.poison();
+            }
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn prepare_stop_existing(
         &mut self,
         owner: &mut Owner,

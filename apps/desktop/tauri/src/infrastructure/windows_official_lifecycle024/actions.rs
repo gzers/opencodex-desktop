@@ -62,6 +62,17 @@ pub(crate) struct NativeAction {
     token: native::TokenIdentity,
 }
 impl Owner {
+    pub(crate) fn original_stop_action(&mut self, end: Instant) -> AppResult<NativeAction> {
+        let kind = self
+            .stop_action
+            .as_ref()
+            .ok_or_else(recovery_required)?
+            .kind;
+        if !matches!(kind, OriginalActionKind::Stop | OriginalActionKind::Restart) {
+            return Err(recovery_required());
+        }
+        self.original_action(kind, end)
+    }
     pub(super) fn bind_stop_action(
         &mut self,
         kind: LifecycleAction,

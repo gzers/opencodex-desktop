@@ -33,6 +33,13 @@ pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn bo
     RecoveryWitness { trees }
 }
 impl RecoveryWitness<'_> {
+    pub(in crate::infrastructure::windows_client_originals024) fn reborrow(
+        &mut self,
+    ) -> RecoveryWitness<'_> {
+        RecoveryWitness {
+            trees: &mut *self.trees,
+        }
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn execute_batch_node(
         &mut self,
         node: &str,

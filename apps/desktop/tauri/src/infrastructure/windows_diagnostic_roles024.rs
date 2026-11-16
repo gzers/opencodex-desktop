@@ -60,6 +60,42 @@ impl ClosedExitHistory {
     }
 }
 impl NormalExit {
+    /// Actual retained generations from the original successfully checked Job
+    /// history. PIDs are only content observations; they never qualify a path,
+    /// caller process or reconstructed Owner. Reject ambiguous reused PIDs.
+    pub(crate) fn original_content_processes(
+        &self,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> AppResult<Vec<ProcessIdentity>> {
+        self.check(owner, end)?;
+        let root = owner.original_native().binding().process.clone();
+        let family = owner
+            .original_native()
+            .family_state()
+            .map_err(|e| refuse(e.to_string()))?;
+        if !family.complete_exit()
+            || family.total_processes as usize != self.raw.len()
+            || family.total_processes as usize != family.retained_members.len() + 1
+        {
+            return Err(refuse("原内容审计进程集合不完整"));
+        }
+        let mut processes = vec![root];
+        processes.extend(family.retained_members.into_iter().map(|(p, _)| p));
+        processes.sort_by_key(|p| (p.pid, p.creation_filetime));
+        if processes.windows(2).any(|p| p[0].pid == p[1].pid)
+            || processes.iter().any(|p| {
+                !self
+                    .raw
+                    .iter()
+                    .any(|(pid, time, _, _)| *pid == p.pid && *time == p.creation_filetime)
+            })
+        {
+            return Err(refuse("原审计PID/创建代次歧义"));
+        }
+        self.check(owner, end)?;
+        Ok(processes)
+    }
     pub(crate) fn check(&self, owner: &mut Owner, deadline: Instant) -> AppResult<()> {
         owner.check_current(deadline)?;
         if self.scope != owner.scope()? || self.deadline != deadline || self.raw.is_empty() {

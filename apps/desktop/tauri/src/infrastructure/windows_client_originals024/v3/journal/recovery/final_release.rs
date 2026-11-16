@@ -46,7 +46,7 @@ impl Journal {
         witness.restored(claim, end)?;
         self.recovery_native_check(witness, claim, end)
     }
-    fn release_native_recovery(
+    pub(in crate::infrastructure::windows_client_originals024::v3::journal) fn release_native_recovery(
         &mut self,
         mut witness: RecoveryWitness<'_>,
         lease: &mut Option<NativeLease>,

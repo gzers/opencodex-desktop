@@ -7,6 +7,7 @@ pub(super) mod retirement;
 pub(in crate::infrastructure::windows_client_originals024) use retirement::OriginalHandleHandoff;
 pub(in crate::infrastructure::windows_client_originals024) use retirement::RecoveryWitness;
 pub(super) mod series;
+pub(in crate::infrastructure::windows_client_originals024) use series::NativeContentAssessment;
 pub(super) mod snapshots;
 pub(in crate::infrastructure::windows_client_originals024) use snapshots::{
     SnapshotLinkObservation, SnapshotWitness,

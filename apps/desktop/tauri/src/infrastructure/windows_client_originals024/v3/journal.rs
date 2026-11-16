@@ -25,6 +25,8 @@ mod handles;
 mod history;
 mod leases;
 mod observations;
+mod production;
+pub(in crate::infrastructure::windows_client_originals024) use production::ProductionStop;
 mod recovery;
 pub(in super::super) use history::HistoryContext;
 mod snapshots;

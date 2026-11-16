@@ -262,7 +262,7 @@ impl Journal {
         }
         result
     }
-    fn stopped_source(
+    pub(super) fn stopped_source(
         &mut self,
         source: &mut Source,
         owner: &mut Owner,

@@ -274,7 +274,7 @@ impl Journal {
         }
         result
     }
-    fn recover_native_batch(
+    pub(super) fn recover_native_batch(
         &mut self,
         mut witness: RecoveryWitness<'_>,
         retire: bool,
