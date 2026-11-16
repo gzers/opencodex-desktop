@@ -1,0 +1,8 @@
+{
+  "trigger":"library03 raw101/4pass2fail: preserved-close prefixes80/81/82 and history-membership86 now pass, but another fault scene and full scene hit original10s before their actual handle-close point",
+  "finding":"Native recovery driver repeats complete two-tree readback immediately after durable node intent and immediately after witness native move; the typed native witness itself verifies complete both trees immediately before and after the actual move, and raw native primitive independently verifies its affected tree. These adjacent orchestrator traversals repeat predicates without intervening client mutation.",
+  "change":"Assign actual native move before/after tree proofs to existing witness.retire/restore, keep whole-plan checks before node intent and after durable result, and keep exact journal/current/claim/deadline checks at the intent->move and move->result boundaries. Do not remove or change any raw native identity/security/content/children/retirement or witness comparison implementation.",
+  "preserve":["whole-plan/native/source context before each step and after result", "durable node intent/current before mutation", "complete BOTH-tree before and after actual move", "same actual claim/NLK and original cutoff", "immutable result/current only after actual native full readback", "fault40..43 exact existing prefix semantics and unchanged assertions"],
+  "falsification":"run affected original native recovery prefix tests and new exact-handle scopes with original optimized profile and10s; keep both earlier failures",
+  "publicStartOpen":false
+}

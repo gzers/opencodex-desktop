@@ -1,0 +1,10 @@
+{
+  "purpose":"official primary API reference URLs consulted through web tool before implementation; tool produced no extractable source text in this session, so paraphrases below are implementation assumptions separately validated by actual native tests, not a quoted-document proof",
+  "webFetchExtractableText":false,
+  "sources":[
+    {"publisher":"Microsoft Learn","url":"https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle","accessDate":"2026-11-16","paraphrase":"CloseHandle consumes a valid open handle on nonzero return. Zero is failure with GetLastError; invalid/pseudo handles may raise debugger exceptions. Each owned handle must be closed once, not tested later using a potentially reused numeric value."},
+    {"publisher":"Microsoft Learn","url":"https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-sethandleinformation","accessDate":"2026-11-16","paraphrase":"A test may set HANDLE_FLAG_PROTECT_FROM_CLOSE on its own exact handle to make CloseHandle decline to close it. This is process-local handle state, not a token/ACL/machine-policy change. Do not clear the flag or retry after the intentional failure."}
+  ],
+  "ownedFilesOnly":true,
+  "noAuthorityFromHandleNumbersOrSerializedData":true
+}

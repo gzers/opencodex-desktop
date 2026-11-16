@@ -1,0 +1,7 @@
+{
+  "trigger":"library02 optimized raw101/3pass2fail: complete close passed; fault group exhausted original10s before handoff in original-history setup, membership group entered handoff after history but exhausted original10s before inventory detach",
+  "hypothesis":"New handoff preparation layers redundantly check the same complete tree before borrowing references, recheck the same reference wrapper, and scan original paths once immediately after Rust ownership moves then again after durable intent before any native close. Transfer ownership itself does not mutate client filesystem. Preserve full native history/reference before-after barriers and all original live/retired/archive postconditions, assign them once to the operation that changes permission or actual state, not multiple adjacent wrappers.",
+  "alsoRequired":"join actual native history references to exact canonical linked hashes before production; add this match during same new handoff preparation rather than leaving it as data-only pending",
+  "preserved":["original10s cutoff/no reset", "actual native all8/ID/bytes/children/retired/custody/archive predicates", "all original handles retained before validation and durable intent", "immutable history and exact final lease receipt", "native before/after original-frame/archive-copy checks", "full post-close original readback", "poison/no retry/no catch-up"],
+  "scope":"new handoff/history orchestration only; no shared budget/old native safety predicate edits"
+}

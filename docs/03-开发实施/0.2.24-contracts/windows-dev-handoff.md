@@ -698,3 +698,13 @@ library01初版debug v3回归raw0/24过。首实际非预期失败library02优�
 106本轮场景私有ZIP完整核验后，14完成纯数据scene核fresh准确路径/全部文件hash/目录membership后清理；92失败/pending保留，所有历史删除拒绝不重试，ZIP非NTFS身份/安全克隆。工作快照/canonical/原件history原字节另归raw-scene-records；MSVC产品编译及三制品SHA/完整继承状态/首错/清理归report/final-status。后继继续原件/custody/history handle生命周期、实际原process/supervisor完成history及typedClosed，current转移前实际Source/routes/PID/audit原窗与原shared contentpolicy资格，生产接线/Status5/后继/Owner-H-S-D；原缺席安全初始化/退根、普通MSI/CAP-trust及历史清理保持未完。Start无条件拒绝，无旧raw5/空GUI/相同1314/W2/双SID/发布/官方或日常配置改变。
 
 上述“保管原件句柄”指测试交易内的实际保留；测试scope结束按Drop关闭自己的句柄，不是canonical原件句柄释放/typedClosed证明。所有失败文件系统现场与原日志继续保留，不从其JSON或ZIP重建native权限。
+
+## 2026-11-16 TEAM16/r6 准确原件句柄显式关闭与历史交接
+
+源码d20103fee084a3e63f728bf7c6664af65405e456；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-handle-handoff-20261116-r1/。新保留对象先接管准确原树，原件/原history源副本/Stopped anchor/initial与历史work observer、全部4个原释放lease的File/ancestor/bound对象转入准确close inventory；私有归档与retired对象继续单独保管。实际原history引用与原canonical链接精确比较后，同一不可变链/current先写完整关闭意图，再只对实际File所有权各一次CloseHandle；原路径/ID/all8/bytes/children和归档/retired后验后才写结果/current。完整场景187实际句柄全部ConfirmClosed，成功后合成新配置可写且旧history独立读取，不采用后来live字节作旧原件。失败分别保留Held/ConfirmedClosed/Unknown，不从数值重建File或重试/清protect；测试scope/进程退出关闭残留不是canonical关闭证明。生产仍private仅cfg(test)，无typedClosed签字。
+
+library01 MSVCdebug v3/关闭原语回归raw0/27过。首library02优化轮raw101/3过2败，后继library03 raw101/4过2败，均保留原10秒窗口内的上游/准备阶段超时；前轮完整关闭已过、后轮80/81/82和86已过，均不改失败通过。交接层相邻重复扫描及恢复orchestration重复BOTH-tree检查分配到实际操作边界，原primitive/witness所有ID/all8/内容/children比较、同actual claim/NLK、故障40..43位置/断言和原10秒截止保持；完整计划仍beforeIntent/afterResult，native move由witness完整双树before/after、raw方法affected-tree before/after，journal/claim在intent→move→result各界检查。最终library04原优化参数raw0/10过，新关闭8场景（完整1/关闭或current负例6/历史外改拒绝1）及受影响恢复完整1＋11中断实际trace离线核验。实际protected own-handle保留1 Unknown、186 Held且不清标志/重试，real partial current=1字节。编辑/取证分组scene/JSON大小写/输出名碰撞工具错误各单列，原始日志未改。
+
+产品custom-protocol MSVCdebug bins raw0/186570ms；172产品输入和126最终testRust逐份核工作源/Git行尾等价；三制品SHA/完整继承状态/首错归report/final-status。104新场景完整私有ZIP核验，6完成纯数据scene核fresh准确路径/全部文件hash/目录membership后清理；98失败/pending与35个D根保留，3272份canonical/快照/history原字节另归raw-scene-records。ZIP非NTFS元数据/身份克隆，历史拒绝删除不重试，overallCleanupComplete=false。
+
+后继仍需完整inventory角色/数量严格准入、actual Source/Owner/typedStop/原process与supervisor完成history、原截止内私有close完成receipt和跨动作history/typedClosed/Status5/后继/manager-H-S-D；当前history读回只在原fixture窗口，组件事实不等于生产许可。原contentpolicy资格必须在current frame转移前按原route/PID/audit窗接合，非artifact/动态目录未知拒绝；原缺席安全初始化/退根、普通MSI/CAP-trust/历史Profile/Public/失败broker清理保持。Start无条件拒绝，不旧raw5/空GUI/相同1314/W2/双SID/发布/官方或日常配置改变。
