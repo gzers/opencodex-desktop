@@ -29,6 +29,8 @@ use std::{
     },
     time::{Duration, Instant},
 };
+mod actions;
+pub(crate) use actions::{NativeAction, OriginalActionKind};
 
 fn fail(code: &str, detail: &str) -> AppError {
     AppError::RuntimeManaged {
@@ -136,6 +138,8 @@ fn after_stop_input(
     }
 }
 pub(crate) struct Owner {
+    start_action: actions::ActionOrigin,
+    stop_action: Option<actions::ActionOrigin>,
     runtime: SharedRuntimeExecutable,
     selected: program_selection::SelectedProgram,
     root: PathBuf,
@@ -724,6 +728,9 @@ async fn execute_async(
                 }
             }
             LifecycleAction::Stop | LifecycleAction::Restart => {
+                if !owner.stopped {
+                    owner.bind_stop_action(command.action, &window)?;
+                }
                 let receipt = owner.stop(window.stop_deadline()).await?;
                 restart_input = after_stop_input(command, &window, receipt)?;
                 if restart_input.is_none() {
@@ -818,6 +825,7 @@ async fn execute_async(
     .into_iter()
     .map(|p| native::PinnedDirectory::open(p).map_err(unknown))
     .collect::<AppResult<Vec<_>>>()?;
+    let start_action = actions::ActionOrigin::admit(OriginalActionKind::Start, &window)?;
     let native = OwnedRuntime::create_suspended(LaunchSpec {
         executable: plan.executable(),
         arguments: plan.arguments(),
@@ -835,6 +843,8 @@ async fn execute_async(
         previous.push(old);
     }
     *guard = Some(Owner {
+        start_action,
+        stop_action: None,
         runtime: runtime.clone(),
         selected,
         root,

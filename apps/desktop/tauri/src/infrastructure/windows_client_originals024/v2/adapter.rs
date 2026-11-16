@@ -1,7 +1,9 @@
 //! Production ClientOriginals adapter. Native state stays in this adapter when
 //! consumed phase tags fail; JSON/phase text never recreates this state. Public
 //! Start remains separately refused until the complete integration is validated.
-use super::super::bounded::{native_stamp, BoundedAccessV1};
+#[cfg(test)]
+use super::super::source::CurrentPin;
+use super::super::source::Source;
 use super::capture::TreeCaptureV2;
 use super::*;
 use crate::{
@@ -9,24 +11,14 @@ use crate::{
     infrastructure::{
         windows_diagnostic_roles024::{ClosedExitHistory, NormalExit},
         windows_official_lifecycle024::Owner,
-        windows_official_runtime024::RetainedPeer,
         windows_supervisor024::{Absent, ClosedAbsentHistory, WindowsSupervisor},
     },
     modules::runtime::{
         official_lifecycle024::{ActionWindow, ServiceObservation, StopAccepted},
-        program_image,
-        program_selection::{self, CurrentSelection},
-        windows_lifecycle024_contract::{
-            ClientOriginals, NativeSession, SupervisorAbsence, OFFICIAL_PACKAGE_SHA256,
-        },
+        windows_lifecycle024_contract::{ClientOriginals, SupervisorAbsence},
     },
 };
-use std::{
-    fs::{File, OpenOptions},
-    io::{Read, Seek, SeekFrom},
-    os::windows::fs::OpenOptionsExt,
-    time::Instant,
-};
+use std::time::Instant;
 fn refused(reason: impl std::fmt::Display) -> AppError {
     AppError::RuntimeManaged {
         code: "windows024_originals_required".into(),
@@ -38,156 +30,6 @@ fn before(end: Instant) -> io::Result<()> {
         Err(io::ErrorKind::TimedOut.into())
     } else {
         Ok(())
-    }
-}
-struct CurrentPin {
-    file: File,
-    security: BoundedAccessV1,
-    raw: Vec<u8>,
-}
-impl CurrentPin {
-    fn bytes(file: &mut File) -> io::Result<Vec<u8>> {
-        file.seek(SeekFrom::Start(0))?;
-        let mut raw = Vec::new();
-        file.take(65537).read_to_end(&mut raw)?;
-        if raw.is_empty() || raw.len() > 65536 {
-            return Err(invalid());
-        }
-        Ok(raw)
-    }
-    fn capture(path: &Path, expected: &CurrentSelection, end: Instant) -> io::Result<Self> {
-        before(end)?;
-        if expected.schema_version != 1
-            || expected.version != "2.99.0"
-            || expected.platform != "win32-x64"
-            || !digest(&expected.image_sha256)
-        {
-            return Err(invalid());
-        }
-        let security = BoundedAccessV1::capture(path, false, end).map_err(io::Error::other)?;
-        let mut file = OpenOptions::new()
-            .access_mode(0x80020000)
-            .share_mode(1)
-            .custom_flags(0x200000)
-            .open(path)?;
-        let raw = Self::bytes(&mut file)?;
-        let observed: CurrentSelection = serde_json::from_slice(&raw).map_err(|_| invalid())?;
-        if observed != *expected
-            || native_stamp(&file, end).map_err(io::Error::other)? != security.snapshot_data()?
-        {
-            return Err(invalid());
-        }
-        let mut out = Self {
-            file,
-            security,
-            raw,
-        };
-        out.check(end)?;
-        Ok(out)
-    }
-    fn check(&mut self, end: Instant) -> io::Result<()> {
-        before(end)?;
-        self.security.recheck(end).map_err(io::Error::other)?;
-        if Self::bytes(&mut self.file)? != self.raw
-            || native_stamp(&self.file, end).map_err(io::Error::other)?
-                != self.security.snapshot_data()?
-        {
-            return Err(invalid());
-        }
-        before(end)
-    }
-}
-struct Source {
-    broker: RetainedPeer,
-    pins: [PinnedDirectory; 4],
-    current: CurrentPin,
-    owner_scope: String,
-    binding_raw: Vec<u8>,
-    image_digest: String,
-}
-impl Source {
-    fn capture(owner: &mut Owner, end: Instant) -> AppResult<(Self, Binding)> {
-        owner.originals_require_unresumed(end)?;
-        let broker = RetainedPeer::current().map_err(refused)?;
-        broker.no_outer_job().map_err(refused)?;
-        broker
-            .verify_image(&owner.installation_path().join("ocxd.exe"))
-            .map_err(refused)?;
-        let token = &broker.identity().token;
-        if token.elevated
-            || token.elevation_type == 2
-            || token != &owner.original_native().binding().process.token
-        {
-            return Err(refused("原普通broker与原launcher令牌不匹配"));
-        }
-        let selected = owner.selected_program();
-        if selected.selection.version != "2.99.0"
-            || selected.selection.platform != "win32-x64"
-            || selected.image.official_archive_sha256 != OFFICIAL_PACKAGE_SHA256
-        {
-            return Err(refused("固定官方2.99来源不匹配"));
-        }
-        program_image::verify(selected)?;
-        let current = CurrentPin::capture(
-            &owner.installation_path().join("runtime/current.json"),
-            &selected.selection,
-            end,
-        )
-        .map_err(refused)?;
-        let image_digest = selected.selection.image_sha256.clone();
-        let pins = [
-            PinnedDirectory::open(owner.profile_path()).map_err(refused)?,
-            PinnedDirectory::open_private(owner.data_path()).map_err(refused)?,
-            PinnedDirectory::open(owner.home_path()).map_err(refused)?,
-            PinnedDirectory::open(owner.installation_path()).map_err(refused)?,
-        ];
-        let binding = Binding::from_native(
-            &broker,
-            &pins,
-            image_digest.clone(),
-            hash::sha256_hex(&current.raw),
-        )
-        .map_err(refused)?;
-        let binding_raw = serde_json::to_vec(&binding).map_err(refused)?;
-        let owner_scope = owner.scope()?;
-        let mut out = Self {
-            broker,
-            pins,
-            current,
-            owner_scope,
-            binding_raw,
-            image_digest,
-        };
-        out.check(owner, end)?;
-        Ok((out, binding))
-    }
-    fn check(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
-        owner.check_current(end)?;
-        self.broker.no_outer_job().map_err(refused)?;
-        self.broker
-            .verify_image(&owner.installation_path().join("ocxd.exe"))
-            .map_err(refused)?;
-        let selected = owner.selected_program();
-        if selected.selection.image_sha256 != self.image_digest
-            || selected.image.official_archive_sha256 != OFFICIAL_PACKAGE_SHA256
-            || owner.scope()? != self.owner_scope
-        {
-            return Err(refused("原owner/source代次变化"));
-        }
-        program_selection::verify_current(owner.installation_path(), selected)?;
-        program_image::verify(selected)?;
-        self.current.check(end).map_err(refused)?;
-        let binding = Binding::from_native(
-            &self.broker,
-            &self.pins,
-            self.image_digest.clone(),
-            hash::sha256_hex(&self.current.raw),
-        )
-        .map_err(refused)?;
-        if serde_json::to_vec(&binding).map_err(refused)? != self.binding_raw {
-            return Err(refused("原SID/Profile/D/H/I/current绑定变化"));
-        }
-        owner.check_current(end)
     }
 }
 #[derive(PartialEq, Eq)]
@@ -692,6 +534,7 @@ mod tests {
     use super::super::super::tree::tests::Fixture;
     use super::*;
     use crate::infrastructure::windows_official_runtime024::create_private_directory;
+    use crate::modules::runtime::program_selection::CurrentSelection;
     fn end() -> Instant {
         Instant::now() + std::time::Duration::from_secs(10)
     }

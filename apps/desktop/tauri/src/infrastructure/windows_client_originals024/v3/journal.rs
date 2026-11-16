@@ -164,10 +164,72 @@ pub(in super::super) struct Journal {
     poisoned: bool,
     released_lease: Option<super::super::coordination::ReleasedLease>,
     previous_releases: Vec<super::super::coordination::ReleasedLease>,
+    source_action: Option<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
     #[cfg(test)]
     fault: u8,
 }
 impl Journal {
+    /// Exact native source/Owner ActionWindow context only. This factory stays
+    /// below the unchanged public Start gate until complete v3 adapter/Closed.
+    pub(in super::super) fn create_from_source(
+        directory: PinnedDirectory,
+        context: super::super::source::NativeJournalContext,
+        plan: StoragePlan,
+        claim: &mut super::super::coordination::AnchoredClaim<'_>,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        end: Instant,
+    ) -> io::Result<Self> {
+        let (pins, peer, binding, action) = context.into_parts();
+        action.check(owner, end).map_err(io::Error::other)?;
+        if action.deadline() != end {
+            return Err(invalid());
+        }
+        let root = pins[0].path().join(".codex");
+        claim.check(&root, end)?;
+        let epoch = claim.epoch().to_string();
+        let key = claim.key();
+        let scope = action.scope_id();
+        let mut out = Self::create(
+            directory, pins, peer, binding, plan, &epoch, &key, &scope, end,
+        )?;
+        out.source_action = Some(action);
+        if let Err(e) = out.check_source_owner(owner, end) {
+            out.poisoned = true;
+            return Err(e);
+        }
+        claim.check(&root, end)?;
+        Ok(out)
+    }
+    pub(in super::super) fn check_source_owner(
+        &mut self,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            self.check(end)?;
+            let action = self.source_action.as_ref().ok_or_else(invalid)?;
+            if action.scope_id() != self.progress.deadline || action.deadline() != end {
+                return Err(invalid());
+            }
+            action.check(owner, end).map_err(io::Error::other)?;
+            self.manifest.binding.validate(Some(&self.token.sid))?;
+            if self.manifest.binding.paths()
+                != [
+                    owner.profile_path(),
+                    owner.data_path(),
+                    owner.home_path(),
+                    owner.installation_path(),
+                ]
+            {
+                return Err(invalid());
+            }
+            self.check(end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
     pub(in super::super) fn create(
         directory: PinnedDirectory,
         pins: [PinnedDirectory; 4],
@@ -277,6 +339,7 @@ impl Journal {
             poisoned: false,
             released_lease: None,
             previous_releases: Vec::new(),
+            source_action: None,
             #[cfg(test)]
             fault: 0,
         };
