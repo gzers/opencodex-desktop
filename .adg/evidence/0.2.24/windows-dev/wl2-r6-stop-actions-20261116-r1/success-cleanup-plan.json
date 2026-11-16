@@ -1,0 +1,656 @@
+[
+  {
+    "run": "library02",
+    "test": "wl2_r6_release_history_fresh_read_after_original_expiry_does_not_reauthorize_lease",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpprXWUb",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library02-0.zip",
+    "archiveSha256": "8ef5d156f334b40d25b761378d4cf0109777ac3fd050e486bd2545dfcb44d8a1",
+    "files": [
+      {
+        "path": "synthetic-locks/0.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "synthetic-locks/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "synthetic-locks/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "synthetic-locks/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "directories": [
+      "synthetic-locks"
+    ]
+  },
+  {
+    "run": "library02",
+    "test": "wl2_r6_stop_action_data_exact_ready_context_order_no_replay_or_deadline_laundering",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpgx896h",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library02-1.zip",
+    "archiveSha256": "8c8764eb2305c5c24a4df6663b336564e19b6cfee7093323d9c6a90f5e0401a6",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library02",
+    "test": "wl2_r6_stop_phase_data_exact_prestop_teardown_stopped_and_ready_generation",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpagjS4B",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library02-2.zip",
+    "archiveSha256": "8c8764eb2305c5c24a4df6663b336564e19b6cfee7093323d9c6a90f5e0401a6",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_release_history_fresh_read_after_original_expiry_does_not_reauthorize_lease",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpjb3o8H",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-0.zip",
+    "archiveSha256": "ada56cdc8e22158a92d48599fb6a2f46ba6a802642c82c99e3d3fa00ba23233e",
+    "files": [
+      {
+        "path": "synthetic-locks/0.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "synthetic-locks/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "synthetic-locks/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "synthetic-locks/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "directories": [
+      "synthetic-locks"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_stop_action_data_exact_ready_context_order_no_replay_or_deadline_laundering",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpqKF0Mo",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-49.zip",
+    "archiveSha256": "ead30a3fef7a9edb0fdde03162bd78094020e159ec990875914881663d18e3c9",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_stop_phase_data_exact_prestop_teardown_stopped_and_ready_generation",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpaGsJ6k",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-50.zip",
+    "archiveSha256": "ead30a3fef7a9edb0fdde03162bd78094020e159ec990875914881663d18e3c9",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_work_observation_data_rejects_incomplete_context_skip_changed_reaccept_and_text_permission",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQQ7s03",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-61.zip",
+    "archiveSha256": "ead30a3fef7a9edb0fdde03162bd78094020e159ec990875914881663d18e3c9",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_lease_data_same_chain_rejects_bad_state_epoch_scope_digest_and_node_escape",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp0IQSmO",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-62.zip",
+    "archiveSha256": "ead30a3fef7a9edb0fdde03162bd78094020e159ec990875914881663d18e3c9",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_snapshot_data_strict_both_roots_context_and_reference_rejects_text_native_authority",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpNPIQag",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-63.zip",
+    "archiveSha256": "ead30a3fef7a9edb0fdde03162bd78094020e159ec990875914881663d18e3c9",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_v3_every_node_requires_full_order_and_anchors_require_release",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpXiDhZC",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-64.zip",
+    "archiveSha256": "ead30a3fef7a9edb0fdde03162bd78094020e159ec990875914881663d18e3c9",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_v3_full_native_plan_rejects_missing_duplicate_extra_anchor_wrong_parent_and_unknown_fields",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpC7Leeh",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-65.zip",
+    "archiveSha256": "ead30a3fef7a9edb0fdde03162bd78094020e159ec990875914881663d18e3c9",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  },
+  {
+    "run": "library03",
+    "test": "wl2_r6_v3_node_events_reject_skip_reverse_context_drift_cross_node_and_text_closed",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpb8nZoJ",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-stop-actions-library03-66.zip",
+    "archiveSha256": "ead30a3fef7a9edb0fdde03162bd78094020e159ec990875914881663d18e3c9",
+    "files": [
+      {
+        "path": "coordination/1.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/2.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "coordination/3.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "Profile/.codex/config.toml",
+        "bytes": 25,
+        "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+      },
+      {
+        "path": "Profile/.codex/nested/auth.json",
+        "bytes": 30,
+        "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+      },
+      {
+        "path": "Profile/.grok/settings.json",
+        "bytes": 14,
+        "sha256": "89ed2d92cbd2a7dda36290ee5db0e1c3e15cc89df87f04bce62d648e9294c60f"
+      }
+    ],
+    "directories": [
+      "coordination",
+      "Profile",
+      "Profile/.codex",
+      "Profile/.codex/empty",
+      "Profile/.codex/nested",
+      "Profile/.grok",
+      "Profile/custody",
+      "Profile/grok-custody"
+    ]
+  }
+]

@@ -624,3 +624,10 @@ v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Clos
 源码 d0a31c2ded5639cec59a6a1580829302060e166e/treed379abefbc0eaa74e67b237d83065a5461077dd3；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-snapshot-links-20261116-r1/。snapshot intent/current先写，真实两WorkFrame/archive借用Witness核ID/all8/字节后完成link；严绑purpose/观察序号/两根/source上下文，不接受文本。39事件原件恢复与显式release正例仍Preparing，不签Ready/Closed；archive history在还原工作句柄后保留。首library01 E0365/raw101无新EXE，移除无必要导出后原生/数据/受影响回归通过如report。产品debug MSVC bins0/187403ms；EXE摘要/完整表/失败及清理归final-status/report。
 
 生产typedReady snapshot工厂编译未实跑，PreStop/Stopped/跨动作桥/原policy/动态节点/Stop/Closed/后继/实际H-S-D仍待；v2生产入口/Start拒绝保持，原缺席退根blocked单列。不W2/双SID/发布，不重复旧raw5/空GUI。
+
+
+## 2026-11-16 TEAM16/r6 原Owner Stop动作及阶段接线
+
+源码 229bcb934e986b2a5a5e302b3a796884e8cb985c/tree8a1c2572ce02b7949fce7b06c32c1a423800d019；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-stop-actions-20261116-r1/。canonical新StopAction intent/current/result绑定实际Owner/Source/typedReady新原窗；旧release completed_at历史鲜读不延长原lease；PreStop/teardown/Stopped工厂保持实际NormalExit/Absent/StopAccepted/source/记录/端点与双根引用断言。新生产factory编译未实跑，非v3入口切换或native Stop正例。首library01 E0603/raw101无新EXE，修test helper到v3可见，library02三项通过（真实lease原1秒到期后历史读不grant重取＋两状态数据反例），受影响回归见report；产品MSVCdebug bins raw0/201797ms。原始源码/EXE/完整表/首错/清理归final-status/report。
+
+实际v3 Store、全phase snapshots/原policy/动态工作节点/Stop恢复/Closed/history/后继/原Owner H-S-D仍待；原缺席退根blocked单列且Start无条件拒绝。不旧raw5/空GUI/W2/双SID/发布。

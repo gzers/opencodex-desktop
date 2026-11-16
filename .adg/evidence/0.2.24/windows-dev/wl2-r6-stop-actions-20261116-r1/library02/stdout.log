@@ -1,0 +1,14 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::coordination::segments::tests::wl2_r6_release_history_fresh_read_after_original_expiry_does_not_reauthorize_lease ... r6 timely original explicit release retained4 native IDs/all8/bytes; fresh1s history read after actual original1s expiry succeeds as DATA only; original reacquire remains rejected, no generic deadline extension or new NativeAction created
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpprXWUb
+ok
+test infrastructure::windows_client_originals024::v3::actions::tests::wl2_r6_stop_action_data_exact_ready_context_order_no_replay_or_deadline_laundering ... r6 new-action DATA preserves Ready generation and old scope until verified binding, rejects13 context drifts/unknown deadline/replay/skip and lease during pending; accepts no actual NativeAction, remains data only
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpgx896h
+ok
+test infrastructure::windows_client_originals024::v3::actions::tests::wl2_r6_stop_phase_data_exact_prestop_teardown_stopped_and_ready_generation ... r6 PreStop/teardown/Stopped phase DATA keeps exact Ready generation/ref chains and rejects generation drift, no Closed eligibility or actual Stop proof is minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpagjS4B
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2024 filtered out; finished in 1.36s
+
