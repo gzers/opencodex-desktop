@@ -1,0 +1,10 @@
+{
+  "operation":"verify_git_payload.py round :0",
+  "rawExit":1,
+  "firstMismatch":"cleanup-counts.json",
+  "error":"AssertionError: cleanup-counts.json; staged original bytes differ",
+  "cause":"round .gitattributes * -text was missing before first git add, inherited automatic line-ending conversion changed staged blobs",
+  "originalPayloadRewritten":false,
+  "correction":"add exact round .gitattributes, renormalize only current new round, then verify every staged original blob with git cat-file --batch",
+  "beforeCorrectionManifest":"payload-manifest-before-raw-staging.json"
+}

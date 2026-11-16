@@ -1,0 +1,70 @@
+{
+  "source": "worktree frozen during test run",
+  "moduleSha256": "6d7ad89e8fc331add9285db6bc5b0a05dbc29dc31e6c39bde39a661af234c084",
+  "methods": [
+    {
+      "method": "retire_current_file",
+      "private": true,
+      "actualCallers": [
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 181
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 238
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 301
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 344
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 349
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 375
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 443
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 447
+        }
+      ],
+      "productionCallers": []
+    },
+    {
+      "method": "restore_original_file",
+      "private": true,
+      "actualCallers": [
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 190
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 250
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 309
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_tests.rs",
+          "line": 389
+        }
+      ],
+      "productionCallers": []
+    }
+  ],
+  "publicDurableGateUnconditionallyRefuses": true,
+  "meaning": "raw synthetic native tests prove mechanism; no production recovery authority or new canonical node-record execution integrated"
+}

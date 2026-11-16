@@ -1,0 +1,506 @@
+//! Complete stopped-generation recovery DATA, in the existing phase chain.
+//! Neither deserialization nor replay creates a native mutation capability.
+use super::snapshots::{LifecyclePhase, SnapshotReference};
+use super::*;
+
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+struct CurrentNode {
+    relative: String,
+    directory: bool,
+    volume: u32,
+    file_id: String,
+    security: SnapshotData,
+    bytes: usize,
+    sha256: String,
+    children: Vec<String>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+struct CurrentTree {
+    root: String,
+    parent_volume: u32,
+    parent_id: String,
+    parent_security: SnapshotData,
+    nodes: Vec<CurrentNode>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+struct Retirement {
+    relative: String,
+    current_volume: u32,
+    current_file_id: String,
+    target: String,
+    target_parent_id: String,
+    source_parent_id: String,
+    original_file_id: Option<String>,
+    original_absent: bool,
+    bytes: usize,
+    sha256: String,
+    security: SnapshotData,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct RecoveryRoot {
+    schema: String,
+    storage_strategy: String,
+    original_tree: Root,
+    current_tree: CurrentTree,
+    current_snapshot: SnapshotReference,
+    runtime_authority: bool,
+    retirements: Vec<Retirement>,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct RecoveryPlan {
+    roots: [RecoveryRoot; 2],
+}
+fn key(root: &str, relative: &str) -> String {
+    hash::sha256_hex(format!("{root}/{relative}").as_bytes())
+}
+fn same<A: Serialize, B: Serialize>(a: &A, b: &B) -> io::Result<bool> {
+    // Native frame digests use serde_json::Value's canonical key ordering.
+    Ok(serde_json::to_value(a).map_err(|_| invalid())?
+        == serde_json::to_value(b).map_err(|_| invalid())?)
+}
+impl RecoveryPlan {
+    pub(super) fn from_native_data(roots: [serde_json::Value; 2]) -> io::Result<Self> {
+        serde_json::from_value(serde_json::json!({"roots":roots})).map_err(|_| invalid())
+    }
+    pub(super) fn digest(&self) -> io::Result<String> {
+        Ok(hash::sha256_hex(&encoded(self)?))
+    }
+    fn retirement_keys(&self) -> BTreeMap<String, u8> {
+        self.roots
+            .iter()
+            .flat_map(|r| {
+                r.retirements
+                    .iter()
+                    .map(|n| (key(&r.original_tree.nodes[0].root_id, &n.relative), 0))
+            })
+            .collect()
+    }
+    fn restore_keys(&self) -> BTreeMap<String, u8> {
+        self.roots
+            .iter()
+            .flat_map(|r| {
+                r.original_tree
+                    .nodes
+                    .iter()
+                    .filter(|n| n.kind == Kind::CustodiedFile)
+                    .map(|n| (n.node_id.clone(), 0))
+            })
+            .collect()
+    }
+    pub(super) fn validate(&self, plan: &StoragePlan, g: &Progress) -> io::Result<()> {
+        let frames = g.observed_frames.as_ref().ok_or_else(invalid)?;
+        let mut identities = BTreeSet::new();
+        for root in &plan.roots {
+            identities.insert((root.custody_volume, root.custody_id.clone()));
+            for n in &root.nodes {
+                identities.insert((n.volume, n.file_id.clone()));
+            }
+        }
+        let mut snapshot_hashes = Vec::new();
+        let mut total_nodes = 0usize;
+        let mut total_bytes = 0usize;
+        for (index, r) in self.roots.iter().enumerate() {
+            let original = &plan.roots[index];
+            let leaf = &original.nodes[0].root_id;
+            let frame = &r.current_tree;
+            if r.schema != "windows-anchored-native-retirement-data-v3"
+                || r.storage_strategy != ANCHORED_STORAGE_STRATEGY
+                || r.runtime_authority
+                || !same(&r.original_tree, original)?
+                || frame.root != original.root
+                || frame.parent_volume != original.nodes[0].volume
+                || frame.parent_id != original.nodes[0].parent_id
+                || !frame
+                    .parent_security
+                    .matches_id(frame.parent_volume, &frame.parent_id)
+                || frame.nodes.is_empty()
+                || frame.nodes[0].relative != ""
+                || !frame.nodes[0].directory
+                || frame
+                    .nodes
+                    .windows(2)
+                    .any(|n| n[0].relative >= n[1].relative)
+            {
+                return Err(invalid());
+            }
+            frame.parent_security.validate()?;
+            if self.roots.iter().any(|other| {
+                !same(&other.current_tree.parent_security, &frame.parent_security).unwrap_or(false)
+            }) {
+                return Err(invalid());
+            }
+            let value = serde_json::to_value(frame).map_err(|_| invalid())?;
+            if hash::sha256_hex(&encoded(&value)?) != frames[index] {
+                return Err(invalid());
+            }
+            r.current_snapshot.validate(
+                plan,
+                index,
+                g,
+                SnapshotPurpose::Stopped,
+                g.observed_sequence,
+                frames,
+            )?;
+            // Archive objects may never alias an original, custody or another archive.
+            for id in r.current_snapshot.object_ids() {
+                if !identities.insert(id) {
+                    return Err(invalid());
+                }
+            }
+            snapshot_hashes.push(hash::sha256_hex(&encoded(&r.current_snapshot)?));
+            let mut paths = BTreeMap::new();
+            let mut case_paths = BTreeSet::new();
+            let mut ordinary = Vec::new();
+            for n in &frame.nodes {
+                total_nodes += 1;
+                total_bytes = total_bytes.checked_add(n.bytes).ok_or_else(invalid)?;
+                if total_nodes > 512
+                    || total_bytes > 32 * 1024 * 1024
+                    || n.bytes > 2 * 1024 * 1024
+                    || !n.relative.is_empty() && !relative(&n.relative)
+                    || !case_paths.insert(n.relative.to_lowercase())
+                    || !decimal(&n.file_id)
+                    || n.volume != frame.parent_volume
+                    || !n.security.matches_id(n.volume, &n.file_id)
+                    || !digest(&n.sha256)
+                {
+                    return Err(invalid());
+                }
+                n.security.validate()?;
+                let old = original.nodes.iter().find(|old| old.relative == n.relative);
+                let anchor = old.is_some_and(|old| old.kind != Kind::CustodiedFile);
+                if anchor {
+                    let old = old.unwrap();
+                    if n.directory != (old.kind == Kind::DirectoryAnchor)
+                        || n.file_id != old.file_id
+                        || n.security != old.security
+                        || n.bytes != old.length
+                        || n.sha256 != old.content_digest
+                        || !n.directory && n.children != old.children
+                    {
+                        return Err(invalid());
+                    }
+                } else {
+                    // Only already-observed exact three artifact leaves may be new.
+                    // This is a data scope bound, never a content policy exception.
+                    if n.directory
+                        || old.is_none()
+                            && !(leaf == ".codex"
+                                && [
+                                    "opencodex-catalog.json",
+                                    "models_cache.json",
+                                    "opencodex-catalog-audit.jsonl",
+                                ]
+                                .contains(&n.relative.as_str()))
+                        || !n.children.is_empty()
+                        || !identities.insert((n.volume, n.file_id.clone()))
+                    {
+                        return Err(invalid());
+                    }
+                    ordinary.push(n);
+                }
+                paths.insert(n.relative.as_str(), n);
+            }
+            // No dropped original node, even one whose content might be allowed to change.
+            if original
+                .nodes
+                .iter()
+                .any(|n| !paths.contains_key(n.relative.as_str()))
+                || ordinary.len() != r.retirements.len()
+            {
+                return Err(invalid());
+            }
+            for n in &frame.nodes {
+                if !n.relative.is_empty() {
+                    let parent = Path::new(&n.relative)
+                        .parent()
+                        .and_then(|p| p.to_str())
+                        .and_then(|p| paths.get(p))
+                        .ok_or_else(invalid)?;
+                    if !parent.directory {
+                        return Err(invalid());
+                    }
+                }
+                if n.directory {
+                    let children = frame
+                        .nodes
+                        .iter()
+                        .filter(|c| {
+                            !c.relative.is_empty()
+                                && Path::new(&c.relative).parent() == Some(Path::new(&n.relative))
+                        })
+                        .map(|c| {
+                            Path::new(&c.relative)
+                                .file_name()
+                                .unwrap()
+                                .to_str()
+                                .unwrap()
+                                .to_string()
+                        })
+                        .collect::<Vec<_>>();
+                    if n.children != children || n.bytes != 0 || n.sha256 != hash::sha256_hex(b"") {
+                        return Err(invalid());
+                    }
+                }
+            }
+            for (n, row) in ordinary.iter().zip(&r.retirements) {
+                let old = original.nodes.iter().find(|old| old.relative == n.relative);
+                let parent = Path::new(&n.relative)
+                    .parent()
+                    .and_then(|p| p.to_str())
+                    .and_then(|p| paths.get(p))
+                    .ok_or_else(invalid)?;
+                let target = Path::new(&original.custody).join(format!(
+                    "retired-current-{}-{}",
+                    key(leaf, &n.relative),
+                    n.file_id
+                ));
+                if row.relative != n.relative
+                    || row.current_volume != n.volume
+                    || row.current_file_id != n.file_id
+                    || Path::new(&row.target) != target
+                    || row.target_parent_id != original.custody_id
+                    || row.source_parent_id != parent.file_id
+                    || row.original_file_id.as_ref() != old.map(|n| &n.file_id)
+                    || row.original_absent != old.is_none()
+                    || row.bytes != n.bytes
+                    || row.sha256 != n.sha256
+                    || row.security != n.security
+                {
+                    return Err(invalid());
+                }
+                validate_local_path(Path::new(&row.target))?;
+            }
+        }
+        if g.snapshot_links
+            .get(&SnapshotPurpose::Stopped)
+            .map(|x| x.as_slice())
+            != Some(snapshot_hashes.as_slice())
+        {
+            return Err(invalid());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) enum RecoveryOperation {
+    RecoveryPlanIntent,
+    RecoveryPlanVerified,
+    WorkRetireIntent,
+    WorkRetiredVerified,
+    OriginalRestoreIntent,
+    OriginalRestoredVerified,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct RecoveryEvent {
+    pub(super) schema: String,
+    pub(super) document_kind: String,
+    pub(super) storage_strategy: String,
+    pub(super) event_id: String,
+    pub(super) sequence: u32,
+    pub(super) session_id: String,
+    pub(super) operation: RecoveryOperation,
+    pub(super) plan: Option<RecoveryPlan>,
+    pub(super) recovery_plan_digest: String,
+    pub(super) node_id: Option<String>,
+    pub(super) node_digest: Option<String>,
+    pub(super) lease_epoch: String,
+    pub(super) claim_key: String,
+    pub(super) deadline_scope: String,
+    pub(super) previous_event_digest: String,
+    pub(super) storage_plan_digest: String,
+    pub(super) security_policy_digest: String,
+    pub(super) manifest_digest: String,
+    pub(super) binding_digest: String,
+}
+#[derive(Serialize)]
+pub(super) struct RecoveryProgress {
+    plan: RecoveryPlan,
+    verified: bool,
+    retired: BTreeMap<String, u8>,
+    restored: BTreeMap<String, u8>,
+    pending: Option<(RecoveryOperation, String)>,
+}
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct RecoverySummary {
+    plan_digest: String,
+    progress_digest: String,
+    plan_verified: bool,
+    retired_count: usize,
+    restored_count: usize,
+    pending: Option<(RecoveryOperation, String)>,
+}
+impl Progress {
+    pub(super) fn recovery_summary(&self) -> io::Result<Option<RecoverySummary>> {
+        self.recovery
+            .as_ref()
+            .map(|r| {
+                Ok(RecoverySummary {
+                    plan_digest: r.plan.digest()?,
+                    progress_digest: hash::sha256_hex(&encoded(r)?),
+                    plan_verified: r.verified,
+                    retired_count: r.retired.values().filter(|s| **s == 2).count(),
+                    restored_count: r.restored.values().filter(|s| **s == 2).count(),
+                    pending: r.pending.clone(),
+                })
+            })
+            .transpose()
+    }
+    pub(super) fn apply_recovery(
+        &mut self,
+        plan: &StoragePlan,
+        e: &RecoveryEvent,
+    ) -> io::Result<()> {
+        use RecoveryOperation::*;
+        if e.schema
+            != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
+            || e.document_kind != "stopped-recovery-event"
+            || e.storage_strategy != ANCHORED_STORAGE_STRATEGY
+            || e.sequence != self.sequence.checked_add(1).ok_or_else(invalid)?
+            || e.session_id != self.session
+            || !uuid(&e.event_id)
+            || self.event_ids.contains(&e.event_id)
+            || e.previous_event_digest != self.tip
+            || e.storage_plan_digest != self.plan
+            || plan.digest()? != self.plan
+            || e.security_policy_digest != Policy::fixed().digest()?
+            || e.manifest_digest != self.manifest
+            || e.binding_digest != self.binding
+            || e.lease_epoch != self.epoch
+            || e.claim_key != self.claim
+            || e.deadline_scope != self.deadline
+            || !digest(&e.recovery_plan_digest)
+            || self.lease_state != segments::LeaseState::Active
+            || self.work_mode != observations::WorkMode::Observed
+            || self.lifecycle != LifecyclePhase::Stopped
+            || self.pending.is_some()
+            || self.snapshot_pending.is_some()
+            || self.action_pending.is_some()
+            || !matches!(
+                self.action_kind,
+                actions::ActionKind::Stop | actions::ActionKind::Restart
+            )
+        {
+            return Err(invalid());
+        }
+        let bytes = encoded(e)?;
+        if e.operation == RecoveryPlanIntent {
+            let p = e.plan.as_ref().ok_or_else(invalid)?;
+            if self.recovery.is_some()
+                || e.node_id.is_some()
+                || e.node_digest.is_some()
+                || e.recovery_plan_digest != p.digest()?
+                || !plan.roots.iter().flat_map(|r| &r.nodes).all(|n| {
+                    self.nodes[&n.node_id].0 == if n.kind == Kind::CustodiedFile { 4 } else { 1 }
+                })
+            {
+                return Err(invalid());
+            }
+            p.validate(plan, self)?;
+            // Independent owned DATA copy; no native objects or authority are reconstructed.
+            let copy: RecoveryPlan = serde_json::from_slice(&encoded(p)?).map_err(|_| invalid())?;
+            self.recovery = Some(RecoveryProgress {
+                retired: copy.retirement_keys(),
+                restored: copy.restore_keys(),
+                plan: copy,
+                verified: false,
+                pending: None,
+            });
+        } else {
+            let r = self.recovery.as_mut().ok_or_else(invalid)?;
+            if e.plan.is_some() || e.recovery_plan_digest != r.plan.digest()? {
+                return Err(invalid());
+            }
+            if e.operation == RecoveryPlanVerified {
+                if r.verified
+                    || r.pending.is_some()
+                    || e.node_id.is_some()
+                    || e.node_digest.is_some()
+                {
+                    return Err(invalid());
+                }
+                r.verified = true;
+            } else {
+                let id = e.node_id.as_ref().ok_or_else(invalid)?;
+                if !r.verified {
+                    return Err(invalid());
+                }
+                let (map, intent, result, expected) = match e.operation {
+                    WorkRetireIntent | WorkRetiredVerified => {
+                        let row = r
+                            .plan
+                            .roots
+                            .iter()
+                            .flat_map(|r| r.retirements.iter().map(move |n| (r, n)))
+                            .find(|(root, n)| {
+                                key(&root.original_tree.nodes[0].root_id, &n.relative) == *id
+                            })
+                            .ok_or_else(invalid)?;
+                        (
+                            &mut r.retired,
+                            WorkRetireIntent,
+                            WorkRetiredVerified,
+                            hash::sha256_hex(&encoded(row.1)?),
+                        )
+                    }
+                    OriginalRestoreIntent | OriginalRestoredVerified => {
+                        if r.retired.values().any(|s| *s != 2) {
+                            return Err(invalid());
+                        }
+                        let node = plan
+                            .roots
+                            .iter()
+                            .flat_map(|r| &r.nodes)
+                            .find(|n| n.node_id == *id && n.kind == Kind::CustodiedFile)
+                            .ok_or_else(invalid)?;
+                        (
+                            &mut r.restored,
+                            OriginalRestoreIntent,
+                            OriginalRestoredVerified,
+                            hash::sha256_hex(&encoded(node)?),
+                        )
+                    }
+                    _ => return Err(invalid()),
+                };
+                if e.node_digest.as_ref() != Some(&expected) {
+                    return Err(invalid());
+                }
+                let state = map.get_mut(id).ok_or_else(invalid)?;
+                if e.operation == intent {
+                    if *state != 0 || r.pending.is_some() {
+                        return Err(invalid());
+                    }
+                    *state = 1;
+                    r.pending = Some((intent, id.clone()));
+                } else if e.operation == result {
+                    if *state != 1 || r.pending.as_ref() != Some(&(intent, id.clone())) {
+                        return Err(invalid());
+                    }
+                    *state = 2;
+                    r.pending = None;
+                    if result == OriginalRestoredVerified {
+                        self.nodes.get_mut(id).ok_or_else(invalid)?.0 = 8;
+                    }
+                } else {
+                    return Err(invalid());
+                }
+            }
+        }
+        self.sequence = e.sequence;
+        self.tip = hash::sha256_hex(&bytes);
+        self.event_ids.insert(e.event_id.clone());
+        Ok(())
+    }
+}
+#[cfg(test)]
+#[path = "recovery_data_tests.rs"]
+mod tests;
