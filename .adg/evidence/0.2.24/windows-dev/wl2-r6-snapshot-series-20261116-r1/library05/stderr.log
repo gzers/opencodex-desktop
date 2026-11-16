@@ -1,0 +1,516 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:29:35
+   |
+29 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |                                   ^^^^^^^^^^^^^
+30 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused import: `OpenOptions`
+  --> src\infrastructure\windows_owner_host024\desktop_tests.rs:12:22
+   |
+12 |     fs::{self, File, OpenOptions},
+   |                      ^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:506:14
+    |
+506 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+506 -             .fetch_update(
+506 +             .try_update(
+    |
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `execute_lifecycle` is never used
+   --> src\commands\mod.rs:412:4
+    |
+412 | fn execute_lifecycle<R: ProcessRunner + ?Sized>(
+    |    ^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `LIMIT` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:24:7
+   |
+24 | const LIMIT: usize = 2 * 1024 * 1024;
+   |       ^^^^^
+
+warning: function `before` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:25:4
+   |
+25 | fn before(deadline: Instant) -> io::Result<()> {
+   |    ^^^^^^
+
+warning: function `unnamed_stream_only` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:32:4
+   |
+32 | fn unnamed_stream_only(path: &Path) -> io::Result<()> {
+   |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `bytes` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:74:4
+   |
+74 | fn bytes(file: &mut File) -> io::Result<Vec<u8>> {
+   |    ^^^^^
+
+warning: struct `RetainedFileMove` is never constructed
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:89:12
+   |
+89 | pub struct RetainedFileMove {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: associated items `open`, `identity`, `location`, `verify`, `move_into`, and `restore` are never used
+   --> src\infrastructure\windows_official_runtime024\file_move.rs:99:12
+    |
+ 98 | impl RetainedFileMove {
+    | --------------------- associated items in this implementation
+ 99 |     pub fn open(path: &Path, deadline: Instant) -> io::Result<Self> {
+    |            ^^^^
+...
+129 |     pub fn identity(&self) -> FileIdentity {
+    |            ^^^^^^^^
+...
+132 |     pub fn location(&self) -> &Path {
+    |            ^^^^^^^^
+...
+135 |     pub fn verify(&mut self, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^
+...
+159 |     pub fn move_into(&mut self, target: &Path, name: &str, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^^^^
+...
+188 |     pub fn restore(&mut self, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^^
+
+warning: field `forced` is never read
+  --> src\infrastructure\windows_official_runtime024\process.rs:89:9
+   |
+88 | pub struct ForcedCleanup {
+   |            ------------- field in this struct
+89 |     pub forced: bool,
+   |         ^^^^^^
+   |
+   = note: `ForcedCleanup` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: field `raw_command_line` is never read
+ --> src\infrastructure\windows_official_runtime024\command.rs:8:9
+  |
+6 | pub struct CommandEvidence {
+  |            --------------- field in this struct
+7 |     pub captured_at: Instant,
+8 |     pub raw_command_line: String,
+  |         ^^^^^^^^^^^^^^^^
+  |
+  = note: `CommandEvidence` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: function `preflight` is never used
+   --> src\infrastructure\windows_client_originals024\mod.rs:234:15
+    |
+234 | pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> Result<(), CaptureError> {
+    |               ^^^^^^^^^
+
+warning: struct `Full` is never constructed
+  --> src\infrastructure\windows_client_originals024\reference.rs:59:8
+   |
+59 | struct Full;
+   |        ^^^^
+
+warning: struct `CurrentReference` is never constructed
+  --> src\infrastructure\windows_client_originals024\reference.rs:69:19
+   |
+69 | pub(super) struct CurrentReference(Reference<Full>);
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: associated items `append_pending_phase`, `create`, `open`, and `advance` are never used
+   --> src\infrastructure\windows_client_originals024\reference.rs:71:19
+    |
+ 70 | impl CurrentReference {
+    | --------------------- associated items in this implementation
+ 71 |     pub(super) fn append_pending_phase(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+ 86 |     pub(super) fn create(
+    |                   ^^^^^^
+...
+ 98 |     pub(super) fn open(
+    |                   ^^^^
+...
+105 |     pub(super) fn advance(&mut self, prefix: &PendingOnly, deadline: Instant) -> io::Result<()> {
+    |                   ^^^^^^^
+
+warning: struct `NativeJournalContext` is never constructed
+   --> src\infrastructure\windows_client_originals024\source.rs:116:19
+    |
+116 | pub(super) struct NativeJournalContext {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: method `into_parts` is never used
+   --> src\infrastructure\windows_client_originals024\source.rs:123:19
+    |
+122 | impl NativeJournalContext {
+    | ------------------------- method in this implementation
+123 |     pub(super) fn into_parts(self) -> ([PinnedDirectory; 4], RetainedPeer, Binding, NativeAction) {
+    |                   ^^^^^^^^^^
+
+warning: method `journal_context` is never used
+   --> src\infrastructure\windows_client_originals024\source.rs:128:19
+    |
+127 | impl Source {
+    | ----------- method in this implementation
+128 |     pub(super) fn journal_context(
+    |                   ^^^^^^^^^^^^^^^
+
+warning: method `journal` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:122:67
+    |
+ 14 | impl CapturedTrees {
+    | ------------------ method in this implementation
+...
+122 |     pub(in crate::infrastructure::windows_client_originals024) fn journal(
+    |                                                                   ^^^^^^^
+
+warning: method `reborrow` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\snapshots.rs:30:67
+   |
+21 | impl SnapshotWitness<'_> {
+   | ------------------------ method in this implementation
+...
+30 |     pub(in crate::infrastructure::windows_client_originals024) fn reborrow(
+   |                                                                   ^^^^^^^^
+
+warning: field `records` is never read
+   --> src\infrastructure\windows_client_originals024\v2.rs:462:5
+    |
+460 | pub(super) struct PendingV2 {
+    |                   --------- field in this struct
+461 |     directory: PinnedDirectory,
+462 |     records: Vec<PrivateRecord>,
+    |     ^^^^^^^
+
+warning: methods `assess_artifacts` and `assess_artifacts_inner` are never used
+   --> src\infrastructure\windows_client_originals024\v2\capture.rs:113:19
+    |
+110 | impl TreeCaptureV2 {
+    | ------------------ methods in this implementation
+...
+113 |     pub(super) fn assess_artifacts(
+    |                   ^^^^^^^^^^^^^^^^
+...
+129 |     fn assess_artifacts_inner(
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `binding_data` is never used
+   --> src\infrastructure\windows_client_originals024\v2\capture\history.rs:155:71
+    |
+  4 | impl TreeCaptureV2 {
+    | ------------------ method in this implementation
+...
+155 |     pub(in crate::infrastructure::windows_client_originals024::v2) fn binding_data(
+    |                                                                       ^^^^^^^^^^^^
+
+warning: method `prepare_v3_capture` is never used
+   --> src\infrastructure\windows_client_originals024\v2\adapter.rs:105:19
+    |
+102 | impl WindowsOriginals {
+    | --------------------- method in this implementation
+...
+105 |     pub(crate) fn prepare_v3_capture(
+    |                   ^^^^^^^^^^^^^^^^^^
+
+warning: fields `source`, `routes`, `core`, and `failed` are never read
+  --> src\infrastructure\windows_client_originals024\v3\capture.rs:20:5
+   |
+19 | struct CaptureStore {
+   |        ------------ fields in this struct
+20 |     source: Source,
+   |     ^^^^^^
+21 |     routes: RoutePin,
+   |     ^^^^^^
+22 |     core: CapturedTrees,
+   |     ^^^^
+23 |     failed: bool,
+   |     ^^^^^^
+
+warning: function `refused` is never used
+  --> src\infrastructure\windows_client_originals024\v3\capture.rs:30:4
+   |
+30 | fn refused(error: impl std::fmt::Display) -> AppError {
+   |    ^^^^^^^
+
+warning: function `private_child` is never used
+  --> src\infrastructure\windows_client_originals024\v3\capture.rs:36:4
+   |
+36 | fn private_child(parent: &PinnedDirectory, name: &str) -> io::Result<PinnedDirectory> {
+   |    ^^^^^^^^^^^^^
+
+warning: associated items `capture_held` and `check_source` are never used
+   --> src\infrastructure\windows_client_originals024\v3\capture.rs:60:8
+    |
+ 59 | impl CaptureStore {
+    | ----------------- associated items in this implementation
+ 60 |     fn capture_held(owner: &mut Owner, window: &ActionWindow) -> AppResult<(Self, NativeLease)> {
+    |        ^^^^^^^^^^^^
+...
+128 |     fn check_source(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+    |        ^^^^^^^^^^^^
+
+warning: method `capture_existing` is never used
+   --> src\infrastructure\windows_client_originals024\v3\capture.rs:145:67
+    |
+139 | impl CaptureSlot {
+    | ---------------- method in this implementation
+...
+145 |     pub(in crate::infrastructure::windows_client_originals024) fn capture_existing(
+    |                                                                   ^^^^^^^^^^^^^^^^
+
+warning: field `old_source_actions` is never read
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:215:5
+    |
+194 | pub(in super::super) struct Journal {
+    |                             ------- field in this struct
+...
+215 |     old_source_actions: Vec<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
+    |     ^^^^^^^^^^^^^^^^^^
+
+warning: associated items `create_from_source` and `check_source_owner` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:363:29
+    |
+276 | impl Journal {
+    | ------------ associated items in this implementation
+...
+363 |     pub(in super::super) fn create_from_source(
+    |                             ^^^^^^^^^^^^^^^^^^
+...
+395 |     pub(in super::super) fn check_source_owner(
+    |                             ^^^^^^^^^^^^^^^^^^
+
+warning: methods `action_event` and `bind_original_stop_action` are never used
+  --> src\infrastructure\windows_client_originals024\v3\journal\actions.rs:13:8
+   |
+12 | impl Journal {
+   | ------------ methods in this implementation
+13 |     fn action_event(
+   |        ^^^^^^^^^^^^
+...
+41 |     pub(in crate::infrastructure::windows_client_originals024) fn bind_original_stop_action(
+   |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\snapshots.rs:20:67
+    |
+ 17 | impl Journal {
+    | ------------ associated items in this implementation
+...
+ 20 |     pub(in crate::infrastructure::windows_client_originals024) fn stopped_content_observations(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 72 |     fn stop_source(
+    |        ^^^^^^^^^^^
+...
+ 90 |     pub(in crate::infrastructure::windows_client_originals024) fn begin_pre_stop_snapshot_link(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+121 |     fn snapshot_refs(
+    |        ^^^^^^^^^^^^^
+...
+133 |     pub(in crate::infrastructure::windows_client_originals024) fn record_pre_stop_phase(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+169 |     pub(in crate::infrastructure::windows_client_originals024) fn record_teardown_prepared(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+202 |     fn stopped_source(
+    |        ^^^^^^^^^^^^^^
+...
+229 |     pub(in crate::infrastructure::windows_client_originals024) fn begin_stopped_snapshot_link(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+253 |     pub(in crate::infrastructure::windows_client_originals024) fn record_stopped_phase(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^
+...
+421 |     fn ready_source(
+    |        ^^^^^^^^^^^^
+...
+439 |     pub(in crate::infrastructure::windows_client_originals024) fn begin_ready_snapshot_link(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+458 |     pub(in crate::infrastructure::windows_client_originals024) fn record_ready_phase(
+    |                                                                   ^^^^^^^^^^^^^^^^^^
+
+warning: function `cancel` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:917:15
+    |
+917 | pub(crate) fn cancel(runtime: &SharedRuntimeExecutable, home: &Path) {
+    |               ^^^^^^
+
+warning: function `status` is never used
+    --> src\infrastructure\windows_official_lifecycle024.rs:1059:21
+     |
+1059 | pub(crate) async fn status(
+     |                     ^^^^^^
+
+warning: method `original_action` is never used
+  --> src\infrastructure\windows_official_lifecycle024\actions.rs:83:19
+   |
+64 | impl Owner {
+   | ---------- method in this implementation
+...
+83 |     pub(crate) fn original_action(
+   |                   ^^^^^^^^^^^^^^^
+
+warning: methods `same_original_owner` and `scope_id` are never used
+   --> src\infrastructure\windows_official_lifecycle024\actions.rs:125:19
+    |
+124 | impl NativeAction {
+    | ----------------- methods in this implementation
+125 |     pub(crate) fn same_original_owner(&self, other: &Self) -> bool {
+    |                   ^^^^^^^^^^^^^^^^^^^
+...
+154 |     pub(crate) fn scope_id(&self) -> String {
+    |                   ^^^^^^^^
+
+warning: struct `ManagerConnection` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:19:19
+   |
+19 | pub(crate) struct ManagerConnection {
+   |                   ^^^^^^^^^^^^^^^^^
+
+warning: struct `AttachedManager` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:26:19
+   |
+26 | pub(crate) struct AttachedManager {
+   |                   ^^^^^^^^^^^^^^^
+
+warning: struct `WindowsOwnerHost` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:33:19
+   |
+33 | pub(crate) struct WindowsOwnerHost {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: associated items `new` and `challenge` are never used
+  --> src\infrastructure\windows_owner_host024\continuity.rs:44:19
+   |
+41 | impl WindowsOwnerHost {
+   | --------------------- associated items in this implementation
+...
+44 |     pub(crate) fn new(
+   |                   ^^^
+...
+72 |     pub(crate) fn challenge(
+   |                   ^^^^^^^^^
+
+warning: function `hash_hex` is never used
+   --> src\infrastructure\windows_owner_host024\continuity.rs:110:4
+    |
+110 | fn hash_hex(bytes: &[u8]) -> String {
+    |    ^^^^^^^^
+
+warning: method `action_window` is never used
+   --> src\infrastructure\windows_owner_host024\continuity.rs:152:19
+    |
+151 | impl AttachedManager {
+    | -------------------- method in this implementation
+152 |     pub(crate) fn action_window(
+    |                   ^^^^^^^^^^^^^
+
+warning: fields `argv`, `parent`, `source_sha`, and `phase` are never read
+  --> src\infrastructure\windows_diagnostic_roles024.rs:36:5
+   |
+31 | pub(crate) struct ProvenRole {
+   |                   ---------- fields in this struct
+...
+36 |     argv: Vec<String>,
+   |     ^^^^
+37 |     parent: ProcessIdentity,
+   |     ^^^^^^
+38 |     source_sha: String,
+   |     ^^^^^^^^^^
+39 |     phase: &'static str,
+   |     ^^^^^
+
+warning: function `inventory_serial` is never used
+   --> src\modules\runtime\program_image.rs:402:4
+    |
+402 | fn inventory_serial(root: &Path) -> AppResult<BTreeMap<String, Entry>> {
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `path_reference` is never used
+  --> src\modules\runtime\program_image.rs:24:19
+   |
+24 |     pub(super) fn path_reference<T>(action: impl FnOnce() -> T) -> T {
+   |                   ^^^^^^^^^^^^^^
+
+warning: method `interrupt_fixture` is never used
+   --> src\modules\runtime\program_removal.rs:502:19
+    |
+500 | impl Prepared {
+    | ------------- method in this implementation
+501 |     #[cfg(test)]
+502 |     pub(crate) fn interrupt_fixture(
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: `GetSecurityInfo` redeclared with a different signature
+   --> src\infrastructure\windows_client_originals024\reference.rs:285:17
+    |
+285 | /                 fn GetSecurityInfo(
+286 | |                     h: *mut std::ffi::c_void,
+287 | |                     kind: i32,
+288 | |                     mask: u32,
+...   |
+293 | |                     out: *mut *mut std::ffi::c_void,
+294 | |                 ) -> u32;
+    | |_________________________^ this signature doesn't match the previous declaration
+    |
+   ::: src\infrastructure\windows_cli024.rs:43:5
+    |
+ 43 | /     fn GetSecurityInfo(
+ 44 | |         handle: HANDLE,
+ 45 | |         kind: i32,
+ 46 | |         requested: u32,
+...   |
+ 51 | |         descriptor: *mut *mut c_void,
+ 52 | |     ) -> u32;
+    | |_____________- `GetSecurityInfo` previously declared here
+    |
+    = note: expected `unsafe extern "system" fn(*mut c_void, i32, u32, *mut *mut c_void, *mut *mut c_void, *mut *mut ACL, *mut *mut ACL, *mut *mut c_void) -> u32`
+               found `unsafe extern "system" fn(*mut c_void, i32, u32, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void) -> u32`
+    = note: `#[warn(clashing_extern_declarations)]` on by default
+
+warning: `opencodex-desktop` (lib test) generated 53 warnings (run `cargo fix --lib -p opencodex-desktop --tests` to apply 7 suggestions)
+error: could not compile `opencodex-desktop` (lib test); 53 warnings emitted
+
+Caused by:
+  process didn't exit successfully: `D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/rustc.exe --crate-name opencodex_desktop_lib --edition=2021 src\lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat,unused-externs-silent --emit=dep-info,link -C opt-level=s -C lto -C codegen-units=1 --test --cfg "feature=\"custom-protocol\"" --cfg "feature=\"default\"" --check-cfg cfg(docsrs,test) --check-cfg "cfg(feature, values(\"custom-protocol\", \"default\", \"integration-test\"))" -C metadata=06afe736356a4487 -C extra-filename=-18f15ef6709910e6 --out-dir C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\opencodex-desktop/18f15ef6709910e6\out --target x86_64-pc-windows-msvc -C linker=D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\msvc-w1c\msvc\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\link.exe -C strip=symbols -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\displaydoc/160c4a785c4120f0\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\futures-macro/4330bfca6542b6a8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\phf_macros/d427dd4c099d2a9c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\schemars_derive/03922a741d8413c6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\serde_derive/1fb0615985cc261f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\serde_repr/7645484f4904b58d\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\serde_with_macros/52a7e93687aab299\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\serialize-to-javascript-impl/3ffa28c8c36a50d2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\tauri-macros/5950823fbe7bc38e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\thiserror-impl/d97d3a342d441374\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\time-macros/256cba938441a4fa\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\tokio-macros/eeb3e848c5dac3b3\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\webview2-com-macros/6a4a890aaf43850b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\windows-implement/cb1427893b9dbb20\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\windows-interface/fc5ad37271cde121\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\yoke-derive/0fb727c850dc0ad7\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\zerofrom-derive/f5b9ae09ce327bf6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\zerovec-derive/be7122f007cf2e4f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\adler2/35fbfcea7eef67cb\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\aead/c847b44d365b5875\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\aes/d48d2d1312b524a4\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\aho-corasick/a194154ac3a85697\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\alloc-no-stdlib/d62b71b4d9808e6a\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\alloc-stdlib/89cc9719f8588829\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\anyhow/da62312eeb1aac46\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\atomic-waker/9bfdc1d8616e439b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\axum-core/046a94a2c96b9ad8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\base64/0520139484ca8be6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\base64/10448ded952eea1b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\base64ct/60672a925a0ed122\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\bitflags/6153f968c2a85d7a\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\bitflags/8f4fa33ccddfd49c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\blake2/4a490190cdb90c4f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\block-buffer/f0476e7a1f732306\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\brotli-decompressor/30a37481433695dd\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\brotli/5bdbf198a8169f2b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\bytemuck/94ec194a1d5a6bb1\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\byteorder-lite/aadb8de6afe4768a\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\byteorder/f1bd439a507fc745\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\bytes/ef38497fa78e28e3\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\cfb/33a4084aced8c43d\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\cfg-if/fc30a92abb9bef7c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\cipher/63066b320abab05e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\cookie/32bf361372b709dc\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\cpufeatures/3b306476c55b1c3a\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\crc32fast/29c79cedfdc8929c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\crossbeam-channel/0d359f8ed0fe387e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\crossbeam-utils/d115b4a2d8ca7c38\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\crypto-common/1a21afbe7f5aeefb\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\ctor/21af091ddac44d3d\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\ctr/ab30dfc69ae447f7\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\deranged/2d621f408faada58\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\digest/b93be51a9da3c0f5\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\dirs-sys/10796172299c79ec\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\dirs/9f413f9b2a4dcf79\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\dpi/c44b57bc6e822e48\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\dunce/c313288802169ddf\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\dyn-clone/ff2ac813240916f7\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\equivalent/8a04abc040784569\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\erased-serde/517c88f0f91e44f0\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\fallible-iterator/1331f8b850b668c9\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\fallible-streaming-iterator/d946df21eac9a0e6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\fastrand/db25b84a6647d1a4\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\fdeflate/f50169ba03f3dc2e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\filetime/31afb2717b607c8b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\flate2/3f6ca00ce158fe4f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\fnv/12920a30888ad5f2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\foldhash/89a87a36f6619a3b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\form_urlencoded/edffd5b708ecefad\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\futures-channel/5eee413628447187\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\futures-core/49d4c71f178a58cd\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\futures-sink/841e851686aa61d3\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\futures-task/b1933557b694190b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\futures-util/032a3cc22f49e956\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\generic-array/1efc77b94142e17c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\getrandom/84edecb097623dda\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\getrandom/958c8b612c15a9e3\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\getrandom/9dfc3a0549489482\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\ghash/4810649a6a5beb3f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\glob/1c71a82a06e33cc1\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\hashbrown/660db6a36f2ab795\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\hashbrown/c344eb718d6fcdc8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\hashlink/a59d4eae7fbaf2a1\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\heck/3663f66d9fc46bb3\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\http-body-util/3cb970ad14a1cc08\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\http-body/d7995277a6a098cc\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\http/fda55170310d45c5\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\httparse/6fd19c8409c322d8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\httpdate/4d76edb8e4b8ca4c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\hyper-rustls/6f42411e57f48ab2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\hyper-util/37dfd0b6bdf2eec5\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\hyper/a03aabea49897907\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\icu_collections/efc88bd5f13c5f4c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\icu_locale_core/e319a4bbe92b94b7\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\icu_normalizer/2033f14eaa9f9bba\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\icu_normalizer_data/deaed496be0f2620\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\icu_properties/d9b96c40490b6a0c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\icu_properties_data/e1fb39329394ba42\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\icu_provider/33be4ec4171b9987\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\idna/73d8187a87579202\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\idna_adapter/e73c3a6b7c8ebde1\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\image/451a8a1fe9f447c8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\indexmap/a016c1db641309ab\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\infer/3e3ec725ae6b3cb5\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\inout/f1bcdb244f944dc7\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\ipnet/b1ef0386e9b2c0ed\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\itoa/27c60721975787d5\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\json-patch/bee1bbf482337f87\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\jsonptr/12df29ed9fcad3cd\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\keyboard-types/3e371146cc1415af\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\libc/c4c8f31845501278\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\libsqlite3-sys/7f65634f3574381e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\litemap/3a3008dffbabd6d8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\lock_api/e30a623a7d66db36\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\log/b83e1686ed04ec95\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\matchit/897f92303421d915\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\memchr/8c0a7c304292968b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\mime/f0036e8430e4f7c2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\minisign-verify/a5989bf52dec271b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\miniz_oxide/4b019dbeb458ad9b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\miniz_oxide/e41007afc3e6a34f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\mio/aa209dc7b4362d09\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\moxcms/9f8a8a9bd50427d2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\muda/dc705d8e7d13713f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\num-conv/43732da14c1d87c2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\num-traits/9acbf53a07751ebd\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\once_cell/eb5603f2923c35e0\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\opaque-debug/4064189c9cc82400\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\option-ext/1686f03c3feed437\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\parking_lot/bfa870f84f211cdf\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\parking_lot_core/6451c17d1c6c1e96\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\password-hash/0bad4fb3829533fe\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\percent-encoding/81d9d8e4d160af65\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\phf/2d4d5b7509d9ddfb\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\phf_shared/bde8f579c90b114e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\pin-project-lite/5c49013042a73d90\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\plist/e0e3c817fb097cd4\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\png/d01f1178b12af237\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\polyval/f8e88a29a1b1f1f5\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\potential_utf/f0da8f64036037ae\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\powerfmt/c12a353200c9c6ee\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\ppv-lite86/a440e0cd05b43ea5\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\pxfm/1e78a9fc0b1fb455\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\quick-xml/b2f98ab44307c1c7\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rand_chacha/da4b61ab2335057e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rand_core/0f0411d654396fad\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rand_core/7ed7eba2f58091ee\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\raw-window-handle/6282b10707fa182c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\regex-automata/7a67effaa3d03897\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\regex-syntax/cd3ed136973a8af7\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\regex/2644d0f90358dd50\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\reqwest/34e41af832292e94\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rfd/eae28125fd9c33ec\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\ring/bf85aaa98cd0f277\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rustls-native-certs/cde58e6b56f93097\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rustls-pki-types/46d8fa34e6f79926\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rustls-platform-verifier/1f562426d4220122\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rustls-webpki/7a6197c26349707c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rustls/0cdd2af0562809c9\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\ryu/2af2f8ea6276c00e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\same-file/cdc9cd99765147a8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\schannel/f1ca4ae11e7cdae4\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\scopeguard/0a4839e558b31e1d\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\semver/f51929b8e84a9cd0\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde-untagged/3290b39015664056\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde/ece0901b42c2afbb\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde_core/3fe39da7891d95a8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde_json/55daed886567af0f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde_path_to_error/c1f4e0579d93ecc9\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde_spanned/1632fae1e51a0b89\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde_urlencoded/3b374c3ea38cbb22\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde_with/f3acf65dbd62ee10\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serialize-to-javascript/cf36970e0e4f37af\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\simd-adler32/e32ee8226b728c1c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\siphasher/2e0bd7367a288031\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\slab/4825348ee4894dfb\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\smallvec/29fb782026156200\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\socket2/6a8d906974f88692\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\softbuffer/3bc9c1052aeafae2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\stable_deref_trait/8d7babce9682762f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\subtle/069f1a9b21d26daf\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\sync_wrapper/895e60f55f0bfbe2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tao/bbcdf9661c31cb07\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri-plugin-fs/590e492b971ce086\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri-runtime-wry/c09df36ee9a4ff09\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri-runtime/3fdddfc62e7b7af3\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri-utils/a7c4f7392bf89fd6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri/4f4484fc6edfdc08\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tempfile/b9011ef893232e75\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\thiserror/d1c3910bcbc07149\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\time-core/d342ba1c3a8ecf05\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\time/f287ea1d657064e6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tinystr/b5d9410d835649e4\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tokio-rustls/966548064f0bad07\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tokio-util/f822e3c08b712236\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tokio/7574a7f97f1e7e62\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\toml/f0d0ff16f0dbf6c6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\toml_datetime/2ab1c5b62a275e7d\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\toml_datetime/f719b481a91f8bc3\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\toml_parser/3bb93b4ecbf3c1c2\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\toml_writer/9a1ea3df24acdb4e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tower-http/abdf9807cda67a66\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tower-layer/d1f1b8dab22ed11a\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tower-service/9825ab99c158fd6c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tower/0a1f7f1e0496665c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tracing-core/0cbba6073c22e34b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tracing/5065526ba326ef91\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tray-icon/ae45d0f45d05071b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\try-lock/19142942ea23e99e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\typeid/4a8744806900fad6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\typenum/e45742c2f0fd0176\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\unicode-segmentation/b808b5dbb34b311d\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\universal-hash/2a0f53644b7ef0c1\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\unsafe-libyaml/c2285b21afdf7008\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\untrusted/0f51d20f9dec31af\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\url/a279253e86c26b4f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\urlpattern/579ea6ae912a19d5\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\utf8_iter/6b17a4008311195f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\uuid/c33f31c832d86977\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\walkdir/42e29ec957f65555\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\want/eb3939cdd5169b57\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\web-time/c58cd2b90bb8c633\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\webview2-com-sys/33507136e410837f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\webview2-com/b59fa4712ac34bb7\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\winapi-util/e0ac9d847f6db6ba\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\window-vibrancy/df132c98bf467392\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-collections/52341105119f2521\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-core/92e8ea5986956ca8\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-future/9e5bf6ac5cbd0f4a\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-link/f7c10ea1fb89fc89\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-numerics/bc1ee03cb7677e8b\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-registry/e9bf21ecaf7ce9cf\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-result/5e2d77ad03a3bc30\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-strings/6835ad5b4be9f389\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-sys/63ccf67d2e99e546\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-sys/92cbbba6fc60ff72\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-targets/88aba099ec837500\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-threading/e9fd0af7c1183289\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-version/ecd2238b07237729\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows/3f134946fdf6de91\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows_x86_64_msvc/9b5d83221a5a0b6f\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\winnow/a6ea1cd6e85966fd\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\winnow/d93268c848a75e7e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\writeable/95181b0bd214e951\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\wry/9e44f274ad837888\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\yoke/8ddb4ab01567737d\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zerocopy/e5ebc414aa3b0e6c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zerofrom/9836a17d0c2a7293\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zeroize/032d02f27f26c78e\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zerotrie/f24427b665875ac6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zerovec/a71a7b6c64315c4c\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zip/c31f2d4796f3c6c1\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zlib-rs/73cac8d1d2419d62\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zmij/83a12832983f98d6\out -L dependency=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\opencodex-desktop/18f15ef6709910e6\out --extern aes_gcm=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\aes-gcm/a27e049e001ed550\out\libaes_gcm-a27e049e001ed550.rlib --extern argon2=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\argon2/bf1f22170b5fa321\out\libargon2-bf1f22170b5fa321.rlib --extern async_trait=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\release\build\async-trait/38b4f4c077aa2ae7\out\async_trait-38b4f4c077aa2ae7.dll --extern axum=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\axum/314de19cd33cd90e\out\libaxum-314de19cd33cd90e.rlib --extern base64=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\base64/10448ded952eea1b\out\libbase64-10448ded952eea1b.rlib --extern chrono=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\chrono/069929b62b40665c\out\libchrono-069929b62b40665c.rlib --extern dirs=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\dirs/7fa4a5161b3c16d0\out\libdirs-7fa4a5161b3c16d0.rlib --extern dunce=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\dunce/c313288802169ddf\out\libdunce-c313288802169ddf.rlib --extern flate2=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\flate2/3f6ca00ce158fe4f\out\libflate2-3f6ca00ce158fe4f.rlib --extern hmac=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\hmac/5edf6db1e5b9e457\out\libhmac-5edf6db1e5b9e457.rlib --extern http=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\http/fda55170310d45c5\out\libhttp-fda55170310d45c5.rlib --extern keyring=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\keyring/c6ed80a7f7c09205\out\libkeyring-c6ed80a7f7c09205.rlib --extern libc=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\libc/c4c8f31845501278\out\liblibc-c4c8f31845501278.rlib --extern percent_encoding=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\percent-encoding/81d9d8e4d160af65\out\libpercent_encoding-81d9d8e4d160af65.rlib --extern png=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\png/e2816f116fde410f\out\libpng-e2816f116fde410f.rlib --extern quick_xml=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\quick-xml/b2f98ab44307c1c7\out\libquick_xml-b2f98ab44307c1c7.rlib --extern rand=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rand/abe9d76bb47bc0b7\out\librand-abe9d76bb47bc0b7.rlib --extern regex=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\regex/2644d0f90358dd50\out\libregex-2644d0f90358dd50.rlib --extern reqwest=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\reqwest/f26d9566952a6531\out\libreqwest-f26d9566952a6531.rlib --extern reqwest_updater=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\reqwest/34e41af832292e94\out\libreqwest-34e41af832292e94.rlib --extern rusqlite=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rusqlite/f0851c7120cc59f6\out\librusqlite-f0851c7120cc59f6.rlib --extern rustls=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\rustls/0cdd2af0562809c9\out\librustls-0cdd2af0562809c9.rlib --extern schemars=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\schemars/1c9e915015b57ed9\out\libschemars-1c9e915015b57ed9.rlib --extern serde=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde/ece0901b42c2afbb\out\libserde-ece0901b42c2afbb.rlib --extern serde_json=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde_json/55daed886567af0f\out\libserde_json-55daed886567af0f.rlib --extern serde_yaml=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\serde_yaml/158c41be1f0a207a\out\libserde_yaml-158c41be1f0a207a.rlib --extern sha2=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\sha2/0e8512e58ff9948f\out\libsha2-0e8512e58ff9948f.rlib --extern tar=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tar/7e8dea044158255e\out\libtar-7e8dea044158255e.rlib --extern tauri=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri/4f4484fc6edfdc08\out\libtauri-4f4484fc6edfdc08.rlib --extern tauri_plugin_dialog=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri-plugin-dialog/52174cd653431ded\out\libtauri_plugin_dialog-52174cd653431ded.rlib --extern tauri_plugin_process=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri-plugin-process/d91c8dec3ea4b83f\out\libtauri_plugin_process-d91c8dec3ea4b83f.rlib --extern tauri_plugin_updater=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tauri-plugin-updater/402c00fbce310987\out\libtauri_plugin_updater-402c00fbce310987.rlib --extern tempfile=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tempfile/b9011ef893232e75\out\libtempfile-b9011ef893232e75.rlib --extern thiserror=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\thiserror/d1c3910bcbc07149\out\libthiserror-d1c3910bcbc07149.rlib --extern tokio=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tokio/7574a7f97f1e7e62\out\libtokio-7574a7f97f1e7e62.rlib --extern toml=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\toml/3016ea3cade03e0d\out\libtoml-3016ea3cade03e0d.rlib --extern tower_http=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\tower-http/abdf9807cda67a66\out\libtower_http-abdf9807cda67a66.rlib --extern uuid=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\uuid/c33f31c832d86977\out\libuuid-c33f31c832d86977.rlib --extern windows=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows/3f134946fdf6de91\out\libwindows-3f134946fdf6de91.rlib --extern windows_sys=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\windows-sys/92cbbba6fc60ff72\out\libwindows_sys-92cbbba6fc60ff72.rlib --extern zeroize=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zeroize/032d02f27f26c78e\out\libzeroize-032d02f27f26c78e.rlib --extern zip=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\zip/c31f2d4796f3c6c1\out\libzip-c31f2d4796f3c6c1.rlib --force-warn=unused_crate_dependencies -L native=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\opencodex-desktop/c19b4de9c198d486\out -L native=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\ring/64a3fef22561f460\out -L native=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\libsqlite3-sys/79e70a2a8924f201\out -L native=C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\release\build\webview2-com-sys/a5faa75a19716238\out\x64 -L native=D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\cargo\registry\src\index.crates.io-1949cf8c6b5b557f\windows_x86_64_msvc-0.53.1\lib -C link-arg=/MANIFEST:EMBED -C "link-arg=/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'" -C link-arg=/NODEFAULTLIB:libvcruntimed.lib -C link-arg=/NODEFAULTLIB:vcruntime.lib -C link-arg=/NODEFAULTLIB:vcruntimed.lib -C link-arg=/NODEFAULTLIB:libcmtd.lib -C link-arg=/NODEFAULTLIB:msvcrt.lib -C link-arg=/NODEFAULTLIB:msvcrtd.lib -C link-arg=/NODEFAULTLIB:libucrt.lib -C link-arg=/NODEFAULTLIB:libucrtd.lib -C link-arg=/DEFAULTLIB:libcmt.lib -C link-arg=/DEFAULTLIB:libvcruntime.lib -C link-arg=/DEFAULTLIB:ucrt.lib --cfg desktop --check-cfg cfg(desktop) --check-cfg cfg(mobile) --check-cfg cfg(dev)` (exit code: 0xffffffff)

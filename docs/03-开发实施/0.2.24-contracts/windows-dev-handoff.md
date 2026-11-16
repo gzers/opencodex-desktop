@@ -638,3 +638,10 @@ v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Clos
 源码 eee0ad1a49442f6369373d34bf22ea610f1b1af4/tree741d26814a4b122944c15c7de5bf07bf3faec8c7；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-store-retention-20261116-r1/。显式release读回后准确原LockFile/pins移入无活range/NativeLease的历史集合，自动Send；活lease非Send标记/check/release方法体保持，无unsafeSend。实际核心入槽序0先于原件move，18工作准备/20显式释放，历史+原件树/journal真实worker往返通过，0/1原件移位失败前缀保留；新production CaptureSlot已注册、Source/route/原Owner全核并先入槽再动，旧pending/textClosed和v2 fallback拒绝。新生产factory未实跑、原dispatcher未切换，非整组通过。5新定向及受影响回归见report，本轮无非预期首错。产品debug MSVC bins0/226557ms，原始EXE/完整表/清理归final-status/report。
 
 后续v3完整阶段/全快照series/原policy与动态节点恢复/Closed/history/后继/实际普通Owner-H-S-D待；原缺席退根blocked且Start无条件拒绝，不W2/双SID/发布，不重复旧raw5/空GUI。
+
+
+## 2026-11-16 TEAM16/r6 多观察快照与原policy
+
+源码 512ff5de258cd209efac6b6018c26537114855c5/treee4fc5aed492a7db3334966174f28ce4cbd44ae63；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-snapshot-series-20261116-r1/。精确sealed序号/双根actual link后Resume intent/current→原生observer历史保管→verified，多次Observation独立目录，旧action scope保持、原件/初始work基线不换。三个实际独立native frame/archive接原client_artifact_policy内容DATA，合成routes/PID/audit明确；实际中间编辑ChangedSinceReady拒绝。首library01两过两败/raw101，旧release比较初始work导致已登记变化拒绝，补精确最近archive的临时完整native release view并保持原基线，原失败/前缀保留。受影响回归/EXE/完整表/清理见report/final-status，产品debug MSVCbins0/250388ms。
+
+生产Stopped内容selector只编译未实跑，actualSource/正式阶段、源声明非产物/动态nodes/恢复Closed/history/后继/实际Owner H-S-D仍待；原缺席退根blocked且Start无条件拒绝。不旧raw5/空GUI/W2/双SID/发布。

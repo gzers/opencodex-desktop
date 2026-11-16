@@ -1,0 +1,45 @@
+
+running 6 tests
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody ... r6-native-series context={"bindingDigest":"534002fcb114fd611ca4e0d703c4c649f44f18ec69bb7c618f82090546c31f9d","deadlineScope":"b32865d9-9f55-438a-9344-a5dcd1462d71","frameDigests":["daa06934e191d85025048c17c8bab22029a46010f156e4a61337e5c31face90d","c82a8d8c14484549eaea756af79c9a48e5b811dadbf74e462c970170f920e50b"],"manifestDigest":"2a6e2bee199df00e8a2e383aea7be062f5cdcaad016cce56bfe23ba5514322d9","observationSequence":38,"purpose":"Observation","sessionId":"6272e4bf-39db-4fdd-a20d-d7c20fc940c9","storagePlanDigest":"391230c15b12652dde6b907b18795a86c507d33d957fa95f1c654c9f29f8f11a"} sequences=[38, 48, 58] changeMiddle=true restoreCandidate=false foreignGrok=false policy=Err(Custom { kind: Other, error: "original shared artifact policy: ChangedSinceReady" }) remainingMs=928; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpr2mENh
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-48352824-3a19-433b-bfb0-e9eb8af9a0e5
+ok
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_joint_native_barrier_refuses_grok_unknown_even_when_codex_policy_would_pass ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-533a3e2a-9edf-4dda-b6f4-f3f796e6cc63
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpKSMHrj
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_native_archive_policy_restore_candidate_never_changes_original_baseline ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-2113d959-f70d-488f-b283-3b6b1d4b4611
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpLvnIWe
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_resume_native_or_result_failure_keeps_exact_linked_snapshot_prefix ... r6-series-resume-fault=24 histories=[0, 0] nativeModes=[Observed, Observed] canonical=Resuming error=injected after durable resume intent/current before exact work observer handoff; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpoWFcCx
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-93a3bae0-2872-4d07-abc6-3444b222e210
+r6-series-resume-fault=25 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after native work generation reopened before resume result; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpmmyjL8
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-676322f4-395d-40f0-a9a5-4b8ae1a2f304
+r6-series-resume-fault=26 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after immutable event sync/readback before current CAS; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpUCBTo8
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-6b00ac59-275f-4fae-9b1f-aab7b0063404
+r6-series-resume-fault=27 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected real partial current write/sync; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpVIR6yM
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-5b280111-e8ef-4d12-810b-9a0009c26812
+ok
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-5d7f4250-b5ea-41de-b3d3-51a1d5e32f97
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpU4X5Yy
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_unlinked_or_invalid_old_archive_refuses_reopen_without_adoption ... r6-series-refusal linked=false; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpvYua9g
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-a30ce045-7c35-4d8a-9db0-ab6eca9d7a4a
+r6-series-refusal linked=true; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpe9nM8c
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-d79339b3-f1c8-4661-9439-a4e7da7ea782
+ok
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_joint_native_barrier_refuses_grok_unknown_even_when_codex_policy_would_pass
+    infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_native_archive_policy_restore_candidate_never_changes_original_baseline
+    infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen
+
+test result: FAILED. 3 passed; 3 failed; 0 ignored; 0 measured; 2033 filtered out; finished in 91.94s
+

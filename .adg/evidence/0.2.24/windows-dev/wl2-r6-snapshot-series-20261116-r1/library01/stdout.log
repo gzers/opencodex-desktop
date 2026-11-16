@@ -1,0 +1,37 @@
+
+running 4 tests
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-8f311b8c-b3c9-4035-a8b8-093d66ecc572
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpsYnB9H
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_resume_native_or_result_failure_keeps_exact_linked_snapshot_prefix ... r6-series-resume-fault=24 histories=[0, 0] nativeModes=[Observed, Observed] canonical=Resuming error=injected after durable resume intent/current before exact work observer handoff; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmptZnz9H
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-8ee4fc44-fb26-4e78-bb41-9d1d24f4d14a
+r6-series-resume-fault=25 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after native work generation reopened before resume result; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp9B52zT
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-77aa3e5e-25a1-4e6b-9a2d-304c4ffeac81
+r6-series-resume-fault=26 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after immutable event sync/readback before current CAS; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpdxQhZO
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-e51eb641-c6f0-4c4c-9fd2-c3c2db7c1c0d
+r6-series-resume-fault=27 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected real partial current write/sync; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpb9h32e
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-8df7e8ac-b4e5-422a-983c-a33c275b9dbb
+ok
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-a9411598-39c4-472d-ad72-baeaff131045
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmprUFOJU
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_unlinked_or_invalid_old_archive_refuses_reopen_without_adoption ... r6-series-refusal linked=false; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpcmH5CT
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-6096f554-8b86-491b-bf3c-c0252acf1617
+r6-series-refusal linked=true; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpM4uYcq
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-5721060c-7422-4835-bab2-9ad693a843dd
+ok
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody
+    infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 2033 filtered out; finished in 35.80s
+

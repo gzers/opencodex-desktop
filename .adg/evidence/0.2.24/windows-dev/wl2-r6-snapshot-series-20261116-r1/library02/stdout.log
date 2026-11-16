@@ -1,0 +1,33 @@
+
+running 4 tests
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody ... r6-native-series context={"bindingDigest":"b3740a11e092585e98c8edc83f17db0f4fdfb65b1ed8496e3afa1a9c7f7b6761","deadlineScope":"d2626ed3-7625-4683-bbda-41bdf0dd247f","frameDigests":["6fb2ef5865b95fd51a6377fbf4568335c218a5b25fe6304b4993b97e5842544b","24cd9321954fbd88a28e46eba4632f2446c1f6ec4198a01c19e454a0bddf89c1"],"manifestDigest":"d54176f130ec89282d414388573dbca28e16d6e0abaacf9a6a64425697be659c","observationSequence":38,"purpose":"Observation","sessionId":"fc642e5c-232d-4f75-a858-d9c0c99ac671","storagePlanDigest":"5c7ad127cb5d1741d1c1a8d5dba9b676750109d58ea18629e94738e9852900c5"} sequences=[38, 48, 58] policy=Err(Custom { kind: Other, error: "original shared artifact policy: ChangedSinceReady" }) remainingMs=466; actual separate frames and same-volume immutable archives, old work generations persist; two matching routed content frames and actual final original content accepted by unchanged shared policy as DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmppczTKy
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-91009aa3-5327-42c4-a8a3-5dfa69703817
+ok
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_resume_native_or_result_failure_keeps_exact_linked_snapshot_prefix ... r6-series-resume-fault=24 histories=[0, 0] nativeModes=[Observed, Observed] canonical=Resuming error=injected after durable resume intent/current before exact work observer handoff; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0mXhIK
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-b3940feb-7999-48b4-a022-28954775fc28
+r6-series-resume-fault=25 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after native work generation reopened before resume result; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpS9KSqB
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-5b5028c2-d849-4274-80bc-4809071a1296
+r6-series-resume-fault=26 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after immutable event sync/readback before current CAS; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmphQ45ER
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-ac9eb9f7-0d85-49e2-b05c-83f53e5c57cf
+r6-series-resume-fault=27 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected real partial current write/sync; exact work descriptors/archive objects/original custody retained, no reentry or auto-result
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpYKxQAn
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-8447e7cc-52c0-4fd5-92ce-3bc4bc7fb599
+ok
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen ... r6-native-series context={"bindingDigest":"c25939cf5a83fd9d566452d2bfabcdcdae776633ef8e0ae0b1e093a837327552","deadlineScope":"40dc5ba0-233e-431a-9f50-634420c71678","frameDigests":["9697f4a75f6814ab42f4126e24f4bde30927fea5ae9d0f80cc20e67bd20c3a72","716d0d700826be29baad9a7c137fa50f4aee8009b669fbd03ff6ac8da63ba25a"],"manifestDigest":"afa5b6759f25fc7adef7d2e4b87ce7883c4d85b160a0089efab2df5aa4e53d3e","observationSequence":38,"purpose":"Observation","sessionId":"e4cc2c05-5866-4c3f-978b-784eaa03a3a7","storagePlanDigest":"7c3946490f67a6887ba715d9217ae9b3eb3bbd4e96d99066554d3feee5fceb88"} sequences=[38, 48, 58] policy=Ok(Assessment([(Catalog, AlreadyOriginal), (ModelsCache, AlreadyOriginal), (CatalogAudit, AlreadyOriginal)])) remainingMs=1116; actual separate frames and same-volume immutable archives, old work generations persist; two matching routed content frames and actual final original content accepted by unchanged shared policy as DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0bseC6
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-e6c43fad-db5a-4b9b-961a-d8461cb76927
+ok
+test infrastructure::windows_client_originals024::tree::anchored::observation::series::tests::wl2_r6_series_unlinked_or_invalid_old_archive_refuses_reopen_without_adoption ... r6-series-refusal linked=false; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp8fUpEG
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-45a75beb-0aaf-4fa3-85dc-1443a12b6382
+r6-series-refusal linked=true; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpvreAIY
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-a91b950d-a6a9-40b9-bbfd-509d025cb0f8
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2033 filtered out; finished in 42.36s
+

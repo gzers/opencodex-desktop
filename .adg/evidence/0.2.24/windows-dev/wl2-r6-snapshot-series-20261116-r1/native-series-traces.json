@@ -1,0 +1,1118 @@
+[
+  {
+    "run": "library01",
+    "trace": "r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\\r6-driver-8f311b8c-b3c9-4035-a8b8-093d66ecc572"
+  },
+  {
+    "run": "library01",
+    "trace": "r6_series_resume_native_or_result_failure_keeps_exact_linked_snapshot_prefix ... r6-series-resume-fault=24 histories=[0, 0] nativeModes=[Observed, Observed] canonical=Resuming error=injected after durable resume intent/current before exact work observer handoff; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-driver-8ee4fc44-fb26-4e78-bb41-9d1d24f4d14a"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-series-resume-fault=25 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after native work generation reopened before resume result; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-driver-77aa3e5e-25a1-4e6b-9a2d-304c4ffeac81"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-series-resume-fault=26 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after immutable event sync/readback before current CAS; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-driver-e51eb641-c6f0-4c4c-9fd2-c3c2db7c1c0d"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-series-resume-fault=27 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected real partial current write/sync; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-driver-8df7e8ac-b4e5-422a-983c-a33c275b9dbb"
+  },
+  {
+    "run": "library01",
+    "trace": "r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\\r6-driver-a9411598-39c4-472d-ad72-baeaff131045"
+  },
+  {
+    "run": "library01",
+    "trace": "r6_series_unlinked_or_invalid_old_archive_refuses_reopen_without_adoption ... r6-series-refusal linked=false; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-driver-6096f554-8b86-491b-bf3c-c0252acf1617"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-series-refusal linked=true; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-driver-5721060c-7422-4835-bab2-9ad693a843dd"
+  },
+  {
+    "run": "library01",
+    "trace": "r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody"
+  },
+  {
+    "run": "library01",
+    "trace": "r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen"
+  },
+  {
+    "run": "library02",
+    "trace": "r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody ... r6-native-series context={\"bindingDigest\":\"b3740a11e092585e98c8edc83f17db0f4fdfb65b1ed8496e3afa1a9c7f7b6761\",\"deadlineScope\":\"d2626ed3-7625-4683-bbda-41bdf0dd247f\",\"frameDigests\":[\"6fb2ef5865b95fd51a6377fbf4568335c218a5b25fe6304b4993b97e5842544b\",\"24cd9321954fbd88a28e46eba4632f2446c1f6ec4198a01c19e454a0bddf89c1\"],\"manifestDigest\":\"d54176f130ec89282d414388573dbca28e16d6e0abaacf9a6a64425697be659c\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"fc642e5c-232d-4f75-a858-d9c0c99ac671\",\"storagePlanDigest\":\"5c7ad127cb5d1741d1c1a8d5dba9b676750109d58ea18629e94738e9852900c5\"} sequences=[38, 48, 58] policy=Err(Custom { kind: Other, error: \"original shared artifact policy: ChangedSinceReady\" }) remainingMs=466; actual separate frames and same-volume immutable archives, old work generations persist; two matching routed content frames and actual final original content accepted by unchanged shared policy as DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-driver-91009aa3-5327-42c4-a8a3-5dfa69703817"
+  },
+  {
+    "run": "library02",
+    "trace": "r6_series_resume_native_or_result_failure_keeps_exact_linked_snapshot_prefix ... r6-series-resume-fault=24 histories=[0, 0] nativeModes=[Observed, Observed] canonical=Resuming error=injected after durable resume intent/current before exact work observer handoff; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-driver-b3940feb-7999-48b4-a022-28954775fc28"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-series-resume-fault=25 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after native work generation reopened before resume result; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-driver-5b5028c2-d849-4274-80bc-4809071a1296"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-series-resume-fault=26 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after immutable event sync/readback before current CAS; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-driver-ac9eb9f7-0d85-49e2-b05c-83f53e5c57cf"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-series-resume-fault=27 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected real partial current write/sync; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-driver-8447e7cc-52c0-4fd5-92ce-3bc4bc7fb599"
+  },
+  {
+    "run": "library02",
+    "trace": "r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen ... r6-native-series context={\"bindingDigest\":\"c25939cf5a83fd9d566452d2bfabcdcdae776633ef8e0ae0b1e093a837327552\",\"deadlineScope\":\"40dc5ba0-233e-431a-9f50-634420c71678\",\"frameDigests\":[\"9697f4a75f6814ab42f4126e24f4bde30927fea5ae9d0f80cc20e67bd20c3a72\",\"716d0d700826be29baad9a7c137fa50f4aee8009b669fbd03ff6ac8da63ba25a\"],\"manifestDigest\":\"afa5b6759f25fc7adef7d2e4b87ce7883c4d85b160a0089efab2df5aa4e53d3e\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"e4cc2c05-5866-4c3f-978b-784eaa03a3a7\",\"storagePlanDigest\":\"7c3946490f67a6887ba715d9217ae9b3eb3bbd4e96d99066554d3feee5fceb88\"} sequences=[38, 48, 58] policy=Ok(Assessment([(Catalog, AlreadyOriginal), (ModelsCache, AlreadyOriginal), (CatalogAudit, AlreadyOriginal)])) remainingMs=1116; actual separate frames and same-volume immutable archives, old work generations persist; two matching routed content frames and actual final original content accepted by unchanged shared policy as DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-driver-e6c43fad-db5a-4b9b-961a-d8461cb76927"
+  },
+  {
+    "run": "library02",
+    "trace": "r6_series_unlinked_or_invalid_old_archive_refuses_reopen_without_adoption ... r6-series-refusal linked=false; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-driver-45a75beb-0aaf-4fa3-85dc-1443a12b6382"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-series-refusal linked=true; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-driver-a91b950d-a6a9-40b9-bbfd-509d025cb0f8"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody ... r6-native-series context={\"bindingDigest\":\"534002fcb114fd611ca4e0d703c4c649f44f18ec69bb7c618f82090546c31f9d\",\"deadlineScope\":\"b32865d9-9f55-438a-9344-a5dcd1462d71\",\"frameDigests\":[\"daa06934e191d85025048c17c8bab22029a46010f156e4a61337e5c31face90d\",\"c82a8d8c14484549eaea756af79c9a48e5b811dadbf74e462c970170f920e50b\"],\"manifestDigest\":\"2a6e2bee199df00e8a2e383aea7be062f5cdcaad016cce56bfe23ba5514322d9\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"6272e4bf-39db-4fdd-a20d-d7c20fc940c9\",\"storagePlanDigest\":\"391230c15b12652dde6b907b18795a86c507d33d957fa95f1c654c9f29f8f11a\"} sequences=[38, 48, 58] changeMiddle=true restoreCandidate=false foreignGrok=false policy=Err(Custom { kind: Other, error: \"original shared artifact policy: ChangedSinceReady\" }) remainingMs=928; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-driver-48352824-3a19-433b-bfb0-e9eb8af9a0e5"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_joint_native_barrier_refuses_grok_unknown_even_when_codex_policy_would_pass ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\\r6-driver-533a3e2a-9edf-4dda-b6f4-f3f796e6cc63"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_native_archive_policy_restore_candidate_never_changes_original_baseline ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\\r6-driver-2113d959-f70d-488f-b283-3b6b1d4b4611"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_resume_native_or_result_failure_keeps_exact_linked_snapshot_prefix ... r6-series-resume-fault=24 histories=[0, 0] nativeModes=[Observed, Observed] canonical=Resuming error=injected after durable resume intent/current before exact work observer handoff; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-driver-93a3bae0-2872-4d07-abc6-3444b222e210"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-series-resume-fault=25 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after native work generation reopened before resume result; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-driver-676322f4-395d-40f0-a9a5-4b8ae1a2f304"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-series-resume-fault=26 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after immutable event sync/readback before current CAS; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-driver-6b00ac59-275f-4fae-9b1f-aab7b0063404"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-series-resume-fault=27 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected real partial current write/sync; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-driver-5b280111-e8ef-4d12-810b-9a0009c26812"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\\r6-driver-5d7f4250-b5ea-41de-b3d3-51a1d5e32f97"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_unlinked_or_invalid_old_archive_refuses_reopen_without_adoption ... r6-series-refusal linked=false; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-driver-a30ce045-7c35-4d8a-9db0-ab6eca9d7a4a"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-series-refusal linked=true; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-driver-d79339b3-f1c8-4661-9439-a4e7da7ea782"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_joint_native_barrier_refuses_grok_unknown_even_when_codex_policy_would_pass"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_native_archive_policy_restore_candidate_never_changes_original_baseline"
+  },
+  {
+    "run": "library03",
+    "trace": "r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen"
+  },
+  {
+    "run": "library04",
+    "trace": "r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody ... r6-series-timing stage=captured changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=9828 journal=(6, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=initial-working-open changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=8784 journal=(32, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=initial-lease-released changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=8710 journal=(34, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=first-snapshot-linked changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=8356 journal=(40, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=first-resume-verified changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=8223 journal=(42, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=second-snapshot-linked changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=7701 journal=(50, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=second-resume-verified changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=7538 journal=(52, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=third-snapshot-linked changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=6848 journal=(60, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=content-data-classified changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=6817 journal=(60, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-native-series context={\"bindingDigest\":\"0112f19c6be2c164af52846453d7241ac62779dac1bdccf951b6cc804502d5fb\",\"deadlineScope\":\"96be20af-8716-480b-86a8-745a023b45f6\",\"frameDigests\":[\"32c3bcfb46d7f1bf168f4faa3777bfdbd423f7fba2094ca7320ec314706f4340\",\"0415d7c227ca4dbd078d2cdf750eacd6e524d5673060dcc115f3ff30a9352786\"],\"manifestDigest\":\"74ff235d74044e80046e5c34d337b4696d9d9a5fc93b8f5258abbbcdbd7db6af\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"a54c679c-e6f7-4fa7-ab44-ae0a2c5f5fec\",\"storagePlanDigest\":\"9b7eace35c0fa433c32ddf1d41d0bf52b55870a77f37cbf20b1a61978897b7f9\"} sequences=[38, 48, 58] changeMiddle=true restoreCandidate=false foreignGrok=false policy=Err(Custom { kind: Other, error: \"original shared artifact policy: ChangedSinceReady\" }) remainingMs=6798; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-b1d324e6-ac79-4d16-b819-009fc27a54d1"
+  },
+  {
+    "run": "library04",
+    "trace": "r6_series_joint_native_barrier_refuses_grok_unknown_even_when_codex_policy_would_pass ... r6-series-timing stage=captured changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=9831 journal=(6, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=initial-working-open changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=8848 journal=(32, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=initial-lease-released changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=8769 journal=(34, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=first-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=8406 journal=(40, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=first-resume-verified changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=8255 journal=(42, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=second-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=7720 journal=(50, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=second-resume-verified changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=7554 journal=(52, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=third-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=6903 journal=(60, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=content-data-classified changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=6888 journal=(60, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-native-series context={\"bindingDigest\":\"6ee2927deaacff7397e31873c3f30577502cff023363b62440565f22d097fac6\",\"deadlineScope\":\"72864538-f338-428b-8488-bd7776c83308\",\"frameDigests\":[\"debf4d38163c8aae7f2340cdefa8e033d8f8687444336c318303669a5b44f8f2\",\"964b29721f37fdcb801f86d37babb18e6eb08cab6fa34d64c83b36b871fb3d89\"],\"manifestDigest\":\"d8a5b47e17418b845bba0d60c98670bbb34164c1466b7b63c5c98b0cc9d17a84\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"4cc7d69d-d6bc-4275-9788-610cd05f9516\",\"storagePlanDigest\":\"fb8c00237d083951c2f3e82895be5d9f40235dc23d3be749cf88fa76a288fefa\"} sequences=[38, 48, 58] changeMiddle=false restoreCandidate=false foreignGrok=true policy=Err(Custom { kind: InvalidData, error: \"original phase chain unknown; preserve pending custody/Required\" }) remainingMs=6871; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-4dba122e-46d7-4183-a379-c8633318012c"
+  },
+  {
+    "run": "library04",
+    "trace": "r6_series_native_archive_policy_restore_candidate_never_changes_original_baseline ... r6-series-timing stage=captured changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=9819 journal=(6, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=initial-working-open changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=8727 journal=(32, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=initial-lease-released changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=8656 journal=(34, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=first-snapshot-linked changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=8198 journal=(40, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=first-resume-verified changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=7876 journal=(42, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=second-snapshot-linked changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=6535 journal=(50, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=second-resume-verified changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=5981 journal=(52, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=third-snapshot-linked changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=4503 journal=(60, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=content-data-classified changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=4431 journal=(60, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-native-series context={\"bindingDigest\":\"405db7c936aac891680ef39e125ca576194076807d4934831e7f8e0407e2ffb3\",\"deadlineScope\":\"27924638-dcd0-4330-9765-e09662b76e38\",\"frameDigests\":[\"28173de651157d9bf9ce8b27f488cb5819c044e45ae49bca1ef85f492108a445\",\"268a643d3661091deefd2038b89e64d2eb67c00320c0a33ce93e65b17f767ca6\"],\"manifestDigest\":\"eac039916ede2b623c2f0f1484c0f6a962f9873b489aa75e7894a7c091086669\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"2e1c2940-5e76-4964-b4f2-2a51db21d98a\",\"storagePlanDigest\":\"6151d769fe0220b0fc6f894a1834061d42de01c56590bcbef1c79c7bcc64d533\"} sequences=[38, 48, 58] changeMiddle=false restoreCandidate=true foreignGrok=false policy=Ok(Assessment([(Catalog, RestoreOriginal), (ModelsCache, AlreadyOriginal), (CatalogAudit, AlreadyOriginal)])) remainingMs=4397; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-f99f422d-a355-4388-9a8c-a1c13f2e6217"
+  },
+  {
+    "run": "library04",
+    "trace": "r6_series_resume_native_or_result_failure_keeps_exact_linked_snapshot_prefix ... r6-series-resume-fault=24 histories=[0, 0] nativeModes=[Observed, Observed] canonical=Resuming error=injected after durable resume intent/current before exact work observer handoff; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-474e5019-60db-4348-9b94-95f7d5b81ff6"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-resume-fault=25 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after native work generation reopened before resume result; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-6cc608fa-603e-473d-a7e6-0139338875b8"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-resume-fault=26 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after immutable event sync/readback before current CAS; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-9f3831a1-4f9c-409b-af95-f2ef1c94a8f7"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-resume-fault=27 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected real partial current write/sync; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-4d36c6d3-6397-4726-9a42-55f39ba9645f"
+  },
+  {
+    "run": "library04",
+    "trace": "r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen ... r6-series-timing stage=captured changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=9628 journal=(6, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=initial-working-open changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=7205 journal=(32, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=initial-lease-released changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=7034 journal=(34, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=first-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=6122 journal=(40, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=first-resume-verified changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=5765 journal=(42, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=second-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=4366 journal=(50, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=second-resume-verified changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=3969 journal=(52, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=third-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=2149 journal=(60, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-timing stage=content-data-classified changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=2061 journal=(60, false)"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-native-series context={\"bindingDigest\":\"0c0d26ee51db32e389507283089e6e01b7e717f0ec8975fe42a97031cb323768\",\"deadlineScope\":\"900b636f-7eed-489e-8231-f89c9ba42e9a\",\"frameDigests\":[\"603517b59316dfe8d3f03de9fa2b4151ba11f1746feacbef1f431195f42ea9f7\",\"57674a9cbfc7bc4d07e8b05d49c6b2f3b045a95123bb9b817bddf2aba93bed88\"],\"manifestDigest\":\"669a0a9a3a2416352a4f36ca2b0a052fb42cc41583fb3e6cfeff1d41691feb7c\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"c04d79de-260f-4938-9102-28dbc2a90862\",\"storagePlanDigest\":\"2d71a2caebe050809d63495241d3c2430ca59628fe77b7dba5922cc3f84f4705\"} sequences=[38, 48, 58] changeMiddle=false restoreCandidate=false foreignGrok=false policy=Ok(Assessment([(Catalog, AlreadyOriginal), (ModelsCache, AlreadyOriginal), (CatalogAudit, AlreadyOriginal)])) remainingMs=2023; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-a080893b-d3bf-427a-b947-7fc87f81508f"
+  },
+  {
+    "run": "library04",
+    "trace": "r6_series_unlinked_or_invalid_old_archive_refuses_reopen_without_adoption ... r6-series-refusal linked=false; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-2ec7702a-ad1a-4a7b-8a4d-16b483ce7950"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-series-refusal linked=true; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-driver-c2d818ce-f25a-4d13-a99c-4f7cd08b0339"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_release_history_fresh_read_after_original_expiry_does_not_reauthorize_lease ... r6 timely original explicit release retained4 native IDs/all8/bytes; fresh1s history read after actual original1s expiry succeeds as DATA only; original reacquire remains rejected, no generic deadline extension or new NativeAction created"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_release_objects_move_exact_original_pins_without_active_ranges_or_reopen ... r6 explicit unlock moves exact original4 LockFile+parent pins, same serialized facts before/after; worker readback and return under same ordinary Token, fresh local lease needs actual acquisition and single-use epoch, no handle clone/reopen/unsafeSend or active NativeLease transfer"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_capture_faults_keep_installed_original_tree_and_exact_native_prefix_without_retry ... r6 capture-installed-fault=1 movedOriginals=0 exact native parents/handles/journal retained before error=injected after immutable event sync/readback before current CAS; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-681c4239-0b7c-433e-a3d9-ff72c7cb02b2"
+  },
+  {
+    "run": "library06",
+    "trace": "r6 capture-installed-fault=2 movedOriginals=0 exact native parents/handles/journal retained before error=injected real partial current write/sync; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-6f9cbba4-325d-4b77-985d-79038e9591b4"
+  },
+  {
+    "run": "library06",
+    "trace": "r6 capture-installed-fault=3 movedOriginals=1 exact native parents/handles/journal retained before error=injected after actual native mutation before result publication; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-aac285bd-5244-4789-9950-8690cf824cfe"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_capture_installed_core_precedes_native_moves_and_released_store_survives_thread_handoff ... r6 retained native core installed at seq0 before first mutation;18 exact anchor/file events prepare all3 work files, explicit20 release; only released historical file/pin objects+full original trees+same journal move across worker and back; no live lease/ranges or production Source/Ready/Closed granted"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-32ef2cfd-0d02-4c60-bc54-778b1c19306f"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_series_actual_between_observations_change_remains_policy_refusal_and_preserves_custody ... r6-series-timing stage=captured changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=9769 journal=(6, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=initial-working-open changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=8669 journal=(32, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=initial-lease-released changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=8598 journal=(34, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=first-snapshot-linked changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=8245 journal=(40, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=first-resume-verified changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=8107 journal=(42, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=second-snapshot-linked changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=7548 journal=(50, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=second-resume-verified changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=7394 journal=(52, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=third-snapshot-linked changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=6706 journal=(60, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=content-data-classified changeMiddle=true restoreCandidate=false foreignGrok=false remainingMs=6674 journal=(60, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-native-series context={\"bindingDigest\":\"ea8497f907c9f0a8e4081eb5127a414804eb109c0625ec53215b60d70ddec1b3\",\"deadlineScope\":\"5871f63f-0b36-4a82-a4e8-bc52e2d60da2\",\"frameDigests\":[\"c83718bde4a0d7d1ff7a5b9bb701ff5729a9f5158ff33582d38d0e2ba7b79bdc\",\"de434619398f3b55e3191af4d22c13d507deaf2d9082f9103b84abcbf63449d0\"],\"manifestDigest\":\"3e9a24a407c7780eaab7b0f51d75e2c1904c30b2a0a7e546d8ac166bcd6ec8e8\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"518735d6-70aa-46cb-931c-400f11aeb336\",\"storagePlanDigest\":\"0f7dfc65a8deab4a3dd0f8c983b0a4f838e9b117b68f92c5e68521715ac7bda9\"} sequences=[38, 48, 58] changeMiddle=true restoreCandidate=false foreignGrok=false policy=Err(Custom { kind: Other, error: \"original shared artifact policy: ChangedSinceReady\" }) remainingMs=6658; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-786761ec-c489-4893-967c-e95e88cb4a69"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_series_joint_native_barrier_refuses_grok_unknown_even_when_codex_policy_would_pass ... r6-series-timing stage=captured changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=9829 journal=(6, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=initial-working-open changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=8789 journal=(32, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=initial-lease-released changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=8702 journal=(34, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=first-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=8342 journal=(40, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=first-resume-verified changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=8195 journal=(42, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=second-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=7542 journal=(50, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=second-resume-verified changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=7183 journal=(52, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=third-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=5669 journal=(60, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=content-data-classified changeMiddle=false restoreCandidate=false foreignGrok=true remainingMs=5634 journal=(60, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-native-series context={\"bindingDigest\":\"fb8dabc67c6917ff17b4d5cc33b56758ef3d012105d0e095884103bfd0c201e2\",\"deadlineScope\":\"c3e4bd1a-1be9-4aa7-bbf7-0b8c8fcbe104\",\"frameDigests\":[\"8e6e59f5fea4f6bd889495a94c330911c07636c3e2f0289e808e2428039b5528\",\"95c8ef3f4220af91694f7b8cb25755dea469fb16013eb66ec340566ec1db5651\"],\"manifestDigest\":\"153560843f0e7929b22a880bab0eb328c55e5a0c223c827d51192b9337cc6ddd\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"36ae91c4-ab57-416e-9ade-b15dc2bfaca5\",\"storagePlanDigest\":\"31ce813e9c1d15ca379b4331b5fcc369e5999753f48c30075fe27c6f1015d854\"} sequences=[38, 48, 58] changeMiddle=false restoreCandidate=false foreignGrok=true policy=Err(Custom { kind: InvalidData, error: \"original phase chain unknown; preserve pending custody/Required\" }) remainingMs=5600; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-acf44d3f-4feb-463f-99cb-a81d4b08d645"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_series_native_archive_policy_restore_candidate_never_changes_original_baseline ... r6-series-timing stage=captured changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=9636 journal=(6, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=initial-working-open changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=7361 journal=(32, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=initial-lease-released changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=7189 journal=(34, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=first-snapshot-linked changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=6410 journal=(40, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=first-resume-verified changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=6080 journal=(42, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=second-snapshot-linked changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=4805 journal=(50, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=second-resume-verified changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=4430 journal=(52, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=third-snapshot-linked changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=2845 journal=(60, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=content-data-classified changeMiddle=false restoreCandidate=true foreignGrok=false remainingMs=2761 journal=(60, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-native-series context={\"bindingDigest\":\"81aa83575374d2334207f11357079a05f485d588e60546d93dc213e03ac2f40b\",\"deadlineScope\":\"9dc00cab-d85a-42a7-b91e-0bb1a0f86ae2\",\"frameDigests\":[\"1e1b379985c1785a3ddd96bd55a0e3af4e5629341d946d27a7df0564d80fa3dd\",\"0a6ce6e2540d3fdc4d73e0f99497a7068ce1b813bd5e3d2a45e12f1142cbf5c1\"],\"manifestDigest\":\"ad95a723df22b7bb951a78d06d54a201ee63c875d51d3001d18208af2f1b54b2\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"ebce43aa-b430-438f-b8da-ee82f6c01ebd\",\"storagePlanDigest\":\"41750c60851cb215439dfd7fe98b00950ba4052b075aea901ab141c9e6d14ba6\"} sequences=[38, 48, 58] changeMiddle=false restoreCandidate=true foreignGrok=false policy=Ok(Assessment([(Catalog, RestoreOriginal), (ModelsCache, AlreadyOriginal), (CatalogAudit, AlreadyOriginal)])) remainingMs=2722; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-9a56b132-6a80-496b-9f78-22c53aaf9b9d"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_series_resume_native_or_result_failure_keeps_exact_linked_snapshot_prefix ... r6-series-resume-fault=24 histories=[0, 0] nativeModes=[Observed, Observed] canonical=Resuming error=injected after durable resume intent/current before exact work observer handoff; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-877ba896-7b3a-4f65-a81d-ecea25bdff56"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-resume-fault=25 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after native work generation reopened before resume result; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-0d7ea013-14e4-4ffc-9814-8d54aa72cbf9"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-resume-fault=26 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected after immutable event sync/readback before current CAS; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-87340370-fab5-4de7-800a-e4cc6ad4c1ee"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-resume-fault=27 histories=[1, 1] nativeModes=[Open, Open] canonical=Resuming error=injected real partial current write/sync; exact work descriptors/archive objects/original custody retained, no reentry or auto-result"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-24cd7e34-be9b-4656-9f49-28d0ec4cb5ce"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_series_three_native_observations_shared_policy_and_original_baseline_survive_reopen ... r6-series-timing stage=captured changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=9680 journal=(6, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=initial-working-open changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=7609 journal=(32, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=initial-lease-released changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=7456 journal=(34, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=first-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=6693 journal=(40, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=first-resume-verified changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=6376 journal=(42, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=second-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=5167 journal=(50, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=second-resume-verified changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=4765 journal=(52, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=third-snapshot-linked changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=3284 journal=(60, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-timing stage=content-data-classified changeMiddle=false restoreCandidate=false foreignGrok=false remainingMs=3211 journal=(60, false)"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-native-series context={\"bindingDigest\":\"36579e85829d81a06051917e7176fd21d17127096b715d2369847a545b6418b5\",\"deadlineScope\":\"34ad40f5-9de4-4edc-b4b8-6532c9e4d84b\",\"frameDigests\":[\"87adc8c8ff110f247a14bcc3e3bc8b515e65a726ed2af55a2064b1d915760761\",\"0eca8de8688c481afe988296787c053668b0e9e2aa3483f83e49f3dd7661d144\"],\"manifestDigest\":\"6b965deb1223a9d2dba90337635ef00e629addddd8c406d324b942e006ffaf53\",\"observationSequence\":38,\"purpose\":\"Observation\",\"sessionId\":\"2a33351e-cdcd-4e02-a77d-eb489fee1567\",\"storagePlanDigest\":\"914ebc6e0f80efae887ad8cd3b18a0b7b6cafb8b347b9921b5edd49ce00be4c4\"} sequences=[38, 48, 58] changeMiddle=false restoreCandidate=false foreignGrok=false policy=Ok(Assessment([(Catalog, AlreadyOriginal), (ModelsCache, AlreadyOriginal), (CatalogAudit, AlreadyOriginal)])) remainingMs=3175; actual separate whole-tree frames and same-volume immutable archives, old work generations persist; unchanged shared policy returns DATA only; PID/routes/audit are explicit synthetic inputs, not actual Source/Ready/NormalExit, no restore/Closed authority"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-482ea19b-11ec-4c9b-9ad6-2c00dff900f6"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_series_unlinked_or_invalid_old_archive_refuses_reopen_without_adoption ... r6-series-refusal linked=false; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-ecb83ed8-ed0b-4fcd-8545-9cd17a18ef81"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-series-refusal linked=true; missing two-root native link or unknown retained archive child never yields reopen permission; actual immutable/original objects preserved"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-2607bb6b-dbe9-4a27-ba7b-4f3f4b5b469d"
+  },
+  {
+    "run": "library06",
+    "trace": "r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-snapshot-links canonical intent precedes both actual archive writes; exact references linked, current link digest retains immutable histories after native source handles return; full original tree restored+explicit lease release, lifecycle still Preparing, never native Ready/Closed"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-e6b8ed7e-0284-4afd-8755-ddb64adaec35"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_snapshot_links_duplicate_purpose_and_unknown_archive_refuse_without_new_authority ... r6-snapshot-unknown-or-duplicate foreign=false exact existing snapshot retained; no new link/Ready/Closed from strings"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-8a273aee-a126-4c24-8fdb-9d1a803b74cb"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-snapshot-unknown-or-duplicate foreign=true exact existing snapshot retained; no new link/Ready/Closed from strings"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-f3d211a9-32dd-4ab9-bd76-acd2d0454d84"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_snapshot_links_durable_intent_archive_result_and_partial_current_faults_keep_pending ... r6-snapshot-link-fault=17 archives=0 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after durable snapshot intent/current, before snapshot creation; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-c8203220-18fa-4cc6-9858-19666a6805f0"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-snapshot-link-fault=18 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after BOTH native snapshot archives before link result; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-f974d7c8-56c1-4ef9-a9fc-1707a6fc9e92"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-snapshot-link-fault=19 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after immutable event sync/readback before current CAS; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-eb914526-6425-49c7-9ca7-56071befc088"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-snapshot-link-fault=20 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected real partial current write/sync; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-43c90616-2044-4c5e-b4df-b95d1c65b253"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_snapshot_links_partial_archive_and_missing_second_root_never_publish_completion ... r4-retained-synthetic-fixture=C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpr6MktT"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-3a5df12c-1192-4eb9-8bbc-673007eace3d"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-snapshot-link-missing-second error=original phase chain unknown; preserve pending custody/Required"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-9338373f-8cc9-4473-b8d7-38102a10d07f"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_work_observation_ads_hardlink_and_artifact_directory_refuse ... r6-work-special-refusal case=0 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-9a6bcf1a-e2c2-4145-bd84-91d6087cd8a0"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-special-refusal case=1 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-3f802b25-3fb2-4222-b714-93bb3a3fd25c"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-special-refusal case=2 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-d08594e0-3161-48c8-83df-43eaf86e2132"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_work_observation_atomic_generation_and_large_snapshot_parts_keep_exact_native_data ... r6-work-atomic-observation oldFileId=281474978014408 newFileId=281474978014410 archive=C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpljoNl9\\Profile\\.ocxd024-observed-50af3890-73e3-4dd2-b67b-273ebfa008e7-observation-000038-codex exact1280KiB/2parts reconstructed; old observer retained, current data frozen; deliberately invalid cache bytes not content-policy acceptance; unknown archive empty child refuses"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-3a0f6c3e-b52d-4cf1-87e3-ad933ad752ad"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-c797577e-c108-48b8-9964-f0ecaa901ec3"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_work_observation_intent_native_result_and_partial_current_faults_refuse ... r6-work-open-fault=13 nativeModes=[Sealed, Sealed] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-0e29f970-6f77-4e8d-9a88-9ecfa6354dcb"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-open-fault=14 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-2a16d0b1-c03c-401f-8f47-5160503a8c99"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-open-fault=15 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-cac41272-e0be-43e3-8e09-42ddbdd4f848"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-open-fault=16 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-5cff479e-a0db-44e7-9687-0462bdef297d"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_work_observation_original_handles_allow_writes_then_exact_unchanged_restore ... r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-observation unchanged generation: native observer permits actual writes only after canonical open/release; full frozen frames deny subsequent writes; exact unchanged whole-tree proof re-enables canonical native retirement/restore; original custody+anchors/all8 intact, no production Ready/Closed"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-83436b67-2e87-42d4-add8-bde113a76778"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_work_observation_partial_archive_keeps_native_frame_and_real_chunk_then_refuses ... r6-work-partial-native-archive error=injected after actual nonempty immutable observation chunk sync/readback; actual firstchunk retained with exact private original ID/security; frozen frame remains, no SnapshotReference/Ready or unchanged acceptance"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-9fca0b53-59bc-4bd4-a007-ae61d7efcc0f"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_work_observation_unknown_node_empty_dir_and_nonartifact_edit_refuse ... r6-work-observation unknown case=0 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"nested\"])"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-a40716c1-0a5a-47ff-be89-00e8a3ad53c8"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-observation unknown case=1 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign-empty\", \"nested\"])"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-39b23e9e-fcff-42cb-9cd7-94f5a4565fb2"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-observation unknown case=2 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign.txt\", \"nested\"])"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-46b45b5f-fe99-49c8-b078-193663aab1c9"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_lease_segments_actual_busy_claim_refuses_without_release_retry_or_deadline_reset ... r6-busy-admission before-reacquire remainingMs=8737 codexChildren=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"nested\"])"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-busy-tree-observation root=0 result=Ok(())"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-busy-tree-observation root=1 result=Ok(())"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-busy-admission after-reacquire remainingMs=8661 kind=Uncategorized raw=Some(33) error=另一个程序已锁定文件的一部分，进程无法访问。 (os error 33) progress=(21, true) state=AcquirePrepared"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-real-busy raw=Some(33) foreign claim transaction untouched; native acquire failure leaves canonical pending, no release-retry after foreign unlock, no renewed deadline"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-fa6bf90f-315e-42ca-a520-86f56d52acd1"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_lease_segments_drop_without_receipt_partial_tree_and_deadline_extension_refuse ... r6-segment-refusal case=0 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-1457d002-3418-4ac0-8240-be33a9ef29ca"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-refusal case=1 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-8001cb1a-bc4d-4186-b4ea-77efb3ecde66"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-refusal case=2 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-c6bc7604-edeb-4aae-a4c8-74731b20da96"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_lease_segments_explicit_release_same_window_reacquire_and_restore ... r6 fixed-Bun claim-only held=true raw=Some(73) stdout={\"code\":\"SQLITE_BUSY\",\"errno\":5}"
+  },
+  {
+    "run": "library06",
+    "trace": "r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired"
+  },
+  {
+    "run": "library06",
+    "trace": "r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-success original same deadline, all4 exact object/security/content digest, old epoch=0c06dc9f-fd71-4ac3-8eef-23d02f037ce0;36 same-chain node+lease events, explicit native receipts retained, full trees restored+stable proof. No official writable interval/new action or Ready/Closed authority."
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-a67922fc-1146-4218-ab01-902a9f699770"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_lease_segments_foreign_coordination_bytes_and_foreign_empty_dir_refuse_reacquire ... r6-segment-foreign=0 preserve original custody/foreign object, actual reacquire not admitted, no delete or repair"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-1f6ef066-8300-424d-995f-4690881dd664"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-foreign=1 preserve original custody/foreign object, actual reacquire not admitted, no delete or repair"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-f270ec6c-fe12-4fd3-88b6-3e9d9568c4c5"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_lease_segments_native_release_and_acquire_result_failures_preserve_pending ... r6-segment-fault=7 explicitlyReleased=true pending=ReleasePrepared error=injected after explicit native release, before release-result event"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-d7f7f553-3237-4642-8757-27ce5e9e1785"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-fault=8 explicitlyReleased=true pending=ReleasePrepared error=injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-6adb8942-d154-4760-92d2-77c36b22bcc1"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-fault=9 explicitlyReleased=true pending=ReleasePrepared error=injected real partial current write/sync"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-8f531077-6def-492d-88b3-46d5e87b6965"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-fault=10 actualNewLeaseHeld=true pending=AcquirePrepared error=injected after new native lease, before acquire-result event"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-df834623-ec23-4af1-9be4-51274c85ec9c"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-fault=11 actualNewLeaseHeld=true pending=AcquirePrepared error=injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-fdb42463-f10a-4c4d-af98-c60d2287fff3"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-fault=12 actualNewLeaseHeld=true pending=AcquirePrepared error=injected real partial current write/sync"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-2b954e20-3a02-4d51-a990-e17290498162"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_lease_segments_prepared_write_failure_keeps_original_locks ... r6-segment-prepare-fault=1 no native unlock before durable prepared/current; own failure cleanup explicit, not success"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-9e179d7c-ca2c-461f-ab25-2b3c2f415c05"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-segment-prepare-fault=2 no native unlock before durable prepared/current; own failure cleanup explicit, not success"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-driver-a88e8648-481b-473f-b012-c25320b0bf63"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_stop_action_data_exact_ready_context_order_no_replay_or_deadline_laundering ... r6 new-action DATA preserves Ready generation and old scope until verified binding, rejects13 context drifts/unknown deadline/replay/skip and lease during pending; accepts no actual NativeAction, remains data only"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_stop_phase_data_exact_prestop_teardown_stopped_and_ready_generation ... r6 PreStop/teardown/Stopped phase DATA keeps exact Ready generation/ref chains and rejects generation drift, no Closed eligibility or actual Stop proof is minted"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_capture_namespace_old_v2_or_text_closed_never_grants_fresh_capture ... r6 actual private old namespace and textClosed refuse fresh v3 before custody/mutation; no conversion/adoption or overwrite"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_capture_retained_store_types_are_send_without_active_lease_or_unsafe_send ... r6 compiler proves actual CaptureSlot/Source/route/fulltrees/journal/released-original-object set Send; live NativeLease remains stack-only marker unchanged, no unsafe impl Send or fake native factory"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_capture_canonical_data_namespace_binds_native_session_leaf_and_rejects_other_descendants ... r6 actual native D/official024/windows/canonicalUUID journal uses same UUID in immutable manifest/current; wrong descendant/nonUUID refuse, direct D/session remains component-only, actual Source create factory still requires production namespace and original Owner"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-v3-8351d525-bcea-46bf-87eb-03ca1993a97d"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_v3_native_journal_event_or_partial_current_failure_poison_without_catchup ... r6 durable injected fault=1: injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-v3-04c0a59b-7851-4102-b2eb-da9cb0147aa0"
+  },
+  {
+    "run": "library06",
+    "trace": "r6 durable injected fault=2: injected real partial current write/sync"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-v3-890b0630-a8c8-4010-bbbf-6bc5735ef256"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_v3_native_journal_manifest_event_current_and_other_writer_refusal ... r6 native manifest/event immutable sync/readback and current same-ID CAS pass; actual D separate volume; second current writer raw32. This is data journal only, original tree not mutated, no recovery capability."
+  },
+  {
+    "run": "library06",
+    "trace": "r6-v3-f3b7e949-aac5-4c00-9e15-b36b24cfa30b"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_v3_native_journal_unknown_node_and_late_deadline_poison ... r4-retained-synthetic-fixture=C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp4bF4YH"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-v3-ea13301b-dbb3-41bf-8303-a9c5ae35415a"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-v3-c0340c3e-a128-4bb2-82f2-bcd696dd1680"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_work_observation_data_rejects_incomplete_context_skip_changed_reaccept_and_text_permission ... r6 work interval same-chain data refuses incomplete tree,11 context drifts, skip/text authority/native operations while open and release before open result; observed digest persists and cannot be laundered as unchanged"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_lease_data_same_chain_rejects_bad_state_epoch_scope_digest_and_node_escape ... r6 same-chain lease data rejects13 context drifts, skip/order/old epoch/object digest and node mutation while prepared/released; data transition never constructs release receipt/native authority"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_snapshot_data_strict_both_roots_context_and_reference_rejects_text_native_authority ... r6 snapshot reference DATA cases reject skip,11 context+6 ref drifts, wrong roots/sequence/missing second/unknown fields/text authority; valid locator links remain data and do not construct actual SnapshotWitness/NativeAction/Ready"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_v3_every_node_requires_full_order_and_anchors_require_release ... r6 v3 complete DATA requires all8 ordered events per file plus every anchor snapshot/release; no native Restored or Closed is minted"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_v3_full_native_plan_rejects_missing_duplicate_extra_anchor_wrong_parent_and_unknown_fields ... r6 full native-derived v3 plan data validates two complete trees/actual IDs/all8/parent and same-volume custody;10 malformed plans plus duplicate fields refuse; parsing never admits native authority"
+  },
+  {
+    "run": "library06",
+    "trace": "r6_v3_node_events_reject_skip_reverse_context_drift_cross_node_and_text_closed ... r6 v3 pending blocks cross-node, skip/reverse/replay/context/claim/deadline/expected digest drift and text Closed; data has no native resume factory"
+  }
+]
