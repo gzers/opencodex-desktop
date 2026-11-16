@@ -20,6 +20,34 @@ fn series_digest(
     ))
 }
 impl NativeContentAssessment {
+    pub(in crate::infrastructure::windows_client_originals024) fn qualification_data(
+        &self,
+        context: &crate::infrastructure::windows_client_originals024::v3::journal::ObservationSeriesContext,
+    ) -> io::Result<serde_json::Value> {
+        use crate::modules::runtime::client_artifact_policy::{Action, Artifact};
+        if self.series_digest != series_digest(context)? {
+            return Err(invalid());
+        }
+        let mut actions = Vec::new();
+        for ((artifact, action), expected) in self.assessment.0.iter().zip([
+            Artifact::Catalog,
+            Artifact::ModelsCache,
+            Artifact::CatalogAudit,
+        ]) {
+            if *artifact != expected {
+                return Err(invalid());
+            }
+            actions.push(match action {
+                Action::AlreadyOriginal => "AlreadyOriginal",
+                Action::RestoreOriginal => "RestoreOriginal",
+            });
+        }
+        Ok(
+            serde_json::json!({"scopeDigest":self.scope_digest,"seriesDigest":self.series_digest,
+            "sequences":context.sequences(),"bindings":[context.binding(0)?,context.binding(1)?,context.binding(2)?],
+            "frames":[[context.frame(0,0)?,context.frame(0,1)?],[context.frame(1,0)?,context.frame(1,1)?],[context.frame(2,0)?,context.frame(2,1)?]],"actions":actions}),
+        )
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn matches(
         &self,
         scope: &StoppedContentScope,

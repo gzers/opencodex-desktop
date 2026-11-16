@@ -349,7 +349,11 @@ impl Journal {
         }
         result
     }
-    fn snapshot_claim(&mut self, claim: &mut AnchoredClaim<'_>, end: Instant) -> io::Result<()> {
+    pub(super) fn snapshot_claim(
+        &mut self,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
         self.check(end)?;
         claim.check(&self.pins[0].path().join(".codex"), end)?;
         if self.progress.lease_state != LeaseState::Active

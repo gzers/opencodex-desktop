@@ -204,6 +204,7 @@ struct Current {
     history: Option<super::history::HistorySummary>,
     handles: Option<super::handles::HandleSummary>,
     batch: Option<super::batches::BatchSummary>,
+    content: Option<super::qualification::ContentSummary>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -550,6 +551,7 @@ impl Journal {
             history: None,
             handles: None,
             batch: None,
+            content: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -682,6 +684,7 @@ impl Journal {
             || tip.history != self.progress.history_summary()?
             || tip.handles != self.progress.handle_progress
             || tip.batch != self.progress.batch_summary()
+            || tip.content != self.progress.content
         {
             return Err(invalid());
         }
@@ -792,6 +795,7 @@ impl Journal {
                 .map(|h| serde_json::from_slice(&encoded(h)?).map_err(|_| invalid()))
                 .transpose()?,
             batch: next.batch_summary(),
+            content: next.content.clone(),
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

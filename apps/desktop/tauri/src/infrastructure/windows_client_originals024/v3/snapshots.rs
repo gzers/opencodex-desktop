@@ -158,6 +158,11 @@ impl SnapshotReference {
         Ok(())
     }
 }
+impl SnapshotContext {
+    pub(super) fn deadline_scope(&self) -> &str {
+        &self.deadline_scope
+    }
+}
 impl Progress {
     pub(super) fn apply_snapshot(
         &mut self,
@@ -363,6 +368,14 @@ impl Progress {
             self.ready_generation = e.ready.clone();
         }
         if let Some(hashes) = links {
+            let context = e.references.as_ref().ok_or_else(invalid)?[0].context_metadata()?;
+            self.snapshot_stages.insert(
+                e.purpose,
+                (
+                    e.observation_sequence,
+                    hash::sha256_hex(&encoded(&context)?),
+                ),
+            );
             for r in e.references.as_ref().ok_or_else(invalid)? {
                 self.snapshot_objects.extend(r.object_ids());
             }

@@ -27,6 +27,7 @@ mod handles;
 mod history;
 pub(super) mod journal;
 mod observations;
+mod qualification;
 mod recovery;
 mod segments;
 mod snapshots;
@@ -328,6 +329,7 @@ pub(super) struct Progress {
     observed_frames: Option<[String; 2]>,
     snapshot_pending: Option<(SnapshotPurpose, u32)>,
     snapshot_links: BTreeMap<SnapshotPurpose, [String; 2]>,
+    snapshot_stages: BTreeMap<SnapshotPurpose, (u32, String)>,
     snapshot_objects: BTreeSet<(u32, String)>,
     observed_sequence: u32,
     linked_frames: BTreeMap<u32, [String; 2]>,
@@ -341,6 +343,7 @@ pub(super) struct Progress {
     handle_progress: Option<handles::HandleSummary>,
     batch: Option<batches::BatchProgress>,
     seen_batches: BTreeSet<String>,
+    content: Option<qualification::ContentSummary>,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -393,6 +396,7 @@ impl Progress {
             observed_frames: None,
             snapshot_pending: None,
             snapshot_links: BTreeMap::new(),
+            snapshot_stages: BTreeMap::new(),
             snapshot_objects: BTreeSet::new(),
             observed_sequence: 0,
             linked_frames: BTreeMap::new(),
@@ -406,6 +410,7 @@ impl Progress {
             handle_progress: None,
             batch: None,
             seen_batches: BTreeSet::new(),
+            content: None,
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {

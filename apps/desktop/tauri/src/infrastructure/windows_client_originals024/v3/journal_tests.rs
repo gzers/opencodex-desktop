@@ -2,6 +2,44 @@ use super::*;
 use crate::infrastructure::windows_official_runtime024::create_private_directory;
 use std::time::Duration;
 struct CrossData(PathBuf);
+#[test]
+fn wl2_r6_content_chain_bounded_current_retains_all_original_summary_fields() {
+    let (mut f, _data, journal) = setup();
+    let mut v: serde_json::Value = serde_json::from_slice(&journal.current_raw).unwrap();
+    let h = "f".repeat(64);
+    for name in ["workFrames", "observedFrames"] {
+        v[name] = serde_json::json!([h, h]);
+    }
+    v["leaseObjectsDigest"] = h.clone().into();
+    v["sequence"] = 4096.into();
+    v["observedSequence"] = 4.into();
+    v["readyGeneration"] = serde_json::json!([u32::MAX, u16::MAX, h]);
+    v["actionKind"] = "Restart".into();
+    v["lifecycle"] = "Stopped".into();
+    v["linkedFrames"] = serde_json::json!({"1":[h,h],"2":[h,h],"3":[h,h],"4":[h,h]});
+    v["snapshotLinks"] =
+        serde_json::json!({"Observation":[h,h],"Ready":[h,h],"PreStop":[h,h],"Stopped":[h,h]});
+    v["recovery"] = serde_json::json!({"planDigest":h,"progressDigest":h,"planVerified":true,
+        "retiredCount":512,"restoredCount":512,"pending":null,"wholeTree":2,"anchorReleasedCount":512});
+    v["history"] =
+        serde_json::json!({"contextDigest":h,"intentSequence":4095,"linkedReferences":[h,h]});
+    v["handles"] = serde_json::json!({"inventoryDigest":h,"count":65536,"released":true});
+    v["content"] = serde_json::json!({"digest":h,"verified":true});
+    let typed: Current = serde_json::from_value(v).unwrap();
+    let raw = encoded(&typed).unwrap();
+    println!(
+        "r6 original current full four-stage/recovery/history/handles/content summary bytes={}",
+        raw.len()
+    );
+    assert!(
+        raw.len() <= 4096,
+        "new content qualification must preserve original current bound"
+    );
+    let parsed: Current = serde_json::from_slice(&raw).unwrap();
+    assert!(parsed == typed);
+    drop(journal);
+    f.retain();
+}
 impl Drop for CrossData {
     fn drop(&mut self) {
         println!("r4-retained-synthetic-fixture={}", self.0.display());

@@ -50,9 +50,25 @@ pub(super) enum ChainEntry {
     History(super::history::HistoryEvent),
     Handles(super::handles::HandleEvent),
     Batch(super::batches::BatchEvent),
+    Content(super::qualification::ContentEvent),
 }
 impl Progress {
     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
+        if let Some(content) = &self.content {
+            if (!content.verified && !matches!(e, ChainEntry::Content(_)))
+                || (content.verified
+                    && matches!(
+                        e,
+                        ChainEntry::Node(_)
+                            | ChainEntry::Work(_)
+                            | ChainEntry::Snapshot(_)
+                            | ChainEntry::Action(_)
+                            | ChainEntry::Content(_)
+                    ))
+            {
+                return Err(invalid());
+            }
+        }
         if self.batch.is_some() && !matches!(e, ChainEntry::Batch(_)) {
             return Err(invalid());
         }
@@ -69,6 +85,7 @@ impl Progress {
             ChainEntry::History(e) => self.apply_history(plan, e),
             ChainEntry::Handles(e) => self.apply_handles(plan, e),
             ChainEntry::Batch(e) => self.apply_batch(plan, e),
+            ChainEntry::Content(e) => self.apply_content(plan, e),
         }
     }
     pub(super) fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {

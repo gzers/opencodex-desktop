@@ -114,6 +114,25 @@ impl CapturedTrees {
             // Install native-qualified content DATA BEFORE transferring the
             // current frozen frame. Failure never launders absent/missing frames.
             self.content_assessment = Some(assessment);
+            self.journal.record_stopped_content(
+                &mut guard,
+                self.content_assessment.as_ref().ok_or_else(invalid)?,
+                false,
+                &mut claim,
+                end,
+            )?;
+            // Re-read the full original/custody/history/current BOTH-tree
+            // barrier under the very same live claim, scope and original end.
+            // A second assessment must encode exactly the first intent data.
+            let fresh = super::observation::series::assess_native_stopped_series(
+                &mut self.trees,
+                guard.observations(),
+                content,
+                &mut claim,
+                end,
+            )?;
+            self.journal
+                .record_stopped_content(&mut guard, &fresh, true, &mut claim, end)?;
             for tree in &mut self.trees {
                 tree.capture_retirement(&mut claim, end)?;
             }

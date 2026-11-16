@@ -81,6 +81,78 @@ impl<'a> ProductionStop<'a> {
     }
 }
 impl Journal {
+    /// The intent/result both require the same ACTUAL typed guard and private
+    /// native assessment. The caller re-runs the complete BOTH-tree barrier
+    /// between these records, before transferring any frozen current handle.
+    pub(in crate::infrastructure::windows_client_originals024) fn record_stopped_content(
+        &mut self,
+        guard: &mut ProductionStop<'_>,
+        assessment: &NativeContentAssessment,
+        verified: bool,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        use super::super::qualification::{ContentData, ContentEvent, ContentOperation};
+        let result = (|| {
+            guard.check(self, end)?;
+            assessment.matches(guard.content, &guard.observations, end)?;
+            self.snapshot_claim(claim, end)?;
+            let content: ContentData =
+                serde_json::from_value(assessment.qualification_data(&guard.observations)?)
+                    .map_err(|_| invalid())?;
+            let e = ContentEvent {
+                schema: ANCHORED_ORIGINALS_SCHEMA_V3.into(),
+                document_kind: "content-qualification-event".into(),
+                storage_strategy: ANCHORED_STORAGE_STRATEGY.into(),
+                event_id: uuid::Uuid::new_v4().to_string(),
+                sequence: self.progress.sequence.checked_add(1).ok_or_else(invalid)?,
+                session_id: self.progress.session.clone(),
+                operation: if verified {
+                    ContentOperation::ContentQualifiedVerified
+                } else {
+                    ContentOperation::ContentQualificationIntent
+                },
+                content,
+                lease_epoch: self.progress.epoch.clone(),
+                claim_key: self.progress.claim.clone(),
+                deadline_scope: self.progress.deadline.clone(),
+                previous_event_digest: self.progress.tip.clone(),
+                storage_plan_digest: self.progress.plan.clone(),
+                security_policy_digest: Policy::fixed().digest()?,
+                manifest_digest: self.progress.manifest.clone(),
+                binding_digest: self.progress.binding.clone(),
+            };
+            self.append_entry_inner(ChainEntry::Content(e), end)?;
+            guard.check(self, end)?;
+            assessment.matches(guard.content, &guard.observations, end)?;
+            self.snapshot_claim(claim, end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    fn check_stopped_content(
+        &mut self,
+        guard: &mut ProductionStop<'_>,
+        assessment: &NativeContentAssessment,
+        end: Instant,
+    ) -> io::Result<()> {
+        guard.check(self, end)?;
+        assessment.matches(guard.content, &guard.observations, end)?;
+        let value = assessment.qualification_data(&guard.observations)?;
+        let content: super::super::qualification::ContentData =
+            serde_json::from_value(value).map_err(|_| invalid())?;
+        if self.progress.content.as_ref()
+            != Some(&super::super::qualification::ContentSummary {
+                digest: content.digest()?,
+                verified: true,
+            })
+        {
+            return Err(invalid());
+        }
+        self.check(end)
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn restore_qualified_stopped(
         &mut self,
         guard: &mut ProductionStop<'_>,
@@ -90,8 +162,7 @@ impl Journal {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
-            guard.check(self, end)?;
-            assessment.matches(guard.content, &guard.observations, end)?;
+            self.check_stopped_content(guard, assessment, end)?;
             let root = self.pins[0].path().join(".codex");
             let mut claim = lease
                 .as_mut()
@@ -100,8 +171,7 @@ impl Journal {
             self.prepare_native_recovery(witness.reborrow(), &mut claim, end)?;
             guard.check(self, end)?;
             for retire in [true, false] {
-                guard.check(self, end)?;
-                assessment.matches(guard.content, &guard.observations, end)?;
+                self.check_stopped_content(guard, assessment, end)?;
                 self.recover_native_batch(witness.reborrow(), retire, &mut claim, end)?;
                 guard.check(self, end)?;
             }
@@ -112,7 +182,7 @@ impl Journal {
             guard.check(self, end)?;
             self.seal_original_history(witness.reborrow(), end)?;
             guard.check(self, end)?;
-            assessment.matches(guard.content, &guard.observations, end)?;
+            self.check_stopped_content(guard, assessment, end)?;
             self.check(end)
         })();
         if result.is_err() {
