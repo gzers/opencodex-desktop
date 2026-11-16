@@ -1,0 +1,8 @@
+{
+ "trigger":"library06 optimized raw101/41pass2fail; full batch32scenes and6 missing/partial/late-receipt negatives pass, positive cross-original-window and grouped drift cases still exhaust original10s at history/close",
+ "hypothesis":"Every append independently replays the entire canonical history, but decodes identical already-owned immutable record bytes through an untagged9-variant serde union every time. Retain the exact validated typed event alongside the raw bytes when locally creating that immutable record. Native disk checks must still compare exact original file ID/all8/raw bytes/membership on every read. Replay all original DATA rules from the retained immutable typed value; skip only repeated pure-data decoding, never native verification or progression validation.",
+ "requiredBinding":"Typed value and raw bytes originate from the same encoded(event) call before create; retain native record and that exact typed event immediately after actual publication before current IO. No public setter/mutable access, native object reconstruction or parser authority. Raw manifest is not a phase; no old file loading/adoption changes.",
+ "preserved":["complete Record::check and Current native security/identity/content/membership code unchanged", "same independent Progress replay and exact event validation before new durable write", "all native tree/archive/claim/NLK predicates", "immutable result/current gap retained before fallible IO", "original10s/5s/1MiB/512/4KiB bounds/unknown refusal"],
+ "falsification":"unit exact encoded typed value equals immutable raw, current/record-other-writer/unknown drift and full native scope under original deadline; all previous failures kept",
+ "publicStartOpen":false
+}

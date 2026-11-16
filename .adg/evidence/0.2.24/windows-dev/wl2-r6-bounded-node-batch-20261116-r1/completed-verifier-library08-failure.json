@@ -1,0 +1,10 @@
+{
+ "operation":"check-completed-native-traces.py library08",
+ "rawExit":1,
+ "error":"AssertionError: case84 actual current bytes were3081, not requested1byte partial current",
+ "fact":"Actual test assertion only required close failure and missing completion receipt. Upstream original10s timeout could satisfy that generic negative before reaching the intended injected fault. Offline verifier correctly refused to count it as case84 native coverage.",
+ "correction":"Strengthen source tests to require exact native closed/held/unknown prefix and intended fault error plus1bytecurrent/immutable-result gap, excluding upstream timeouts; preserve verifier and original library08 raw bytes",
+ "oldRunAccepted":false,
+ "testAssertionsWeakened":false,
+ "sameSourceRerunClaimedFix":false
+}

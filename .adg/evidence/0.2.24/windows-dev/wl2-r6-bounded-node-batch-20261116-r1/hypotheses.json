@@ -1,0 +1,16 @@
+{
+ "sourceBase":"d20103fee084a3e63f728bf7c6664af65405e456",
+ "priorLocalCandidateTree":"958c0deb01aa56c43dda74c68cbca05c31b96884",
+ "priorEvidence":"ac622c2d8aae4cdcb5b2e8dfd400a49fec50fdcb",
+ "fetchedMain":"fac8573e55441fe514919c63c7f1d65181ff3577",
+ "fetchedGovernanceMain":"5782307174f0d1b011b5415c6c1e8d60414e6b36",
+ "contract":"TEAM16/IMP142/r6 explicitly permits bounded atomic node events in one phase",
+ "hypotheses":[
+  {"id":"Sequence","falsifiable":"One batch envelope advances exactly ONE canonical physical phase/current sequence. Its complete ordered row vector carries explicit ordinal, exact existing node/recovery event fields and phase parent digest; each row uses that phase sequence/parent. Nonrecursive rows replay through unchanged existing node/recovery validators on a private DATA projection, never constructs native authority. Invalid member leaves entire Progress unchanged."},
+  {"id":"DurableBeforeNative","falsifiable":"A complete same-operation batch intent/current is durable before first actual native move/create. Actual exact-handle steps still run in order under same original claim/NLK and original cutoff, with full BOTH-tree and raw affected-tree predicates. Results can advance only exact verified ordered prefix, never unperformed nodes, skipped result or caller count."},
+  {"id":"Pending","falsifiable":"Canonical pending batch and full plan locate all intended targets. Interrupting after0..N actual steps preserves live original/work/retired/native-handle prefix; canonical data remains pending unless actual verified prefix result is durably committed. Any failure poisons and never catches up from text. Lease/work/snapshot/action/old node bypass refused while batch pending."},
+  {"id":"Cost","falsifiable":"Fewer immutable node-record files reduce complete-chain native journal validation cost without deleting any all8/identity/content/children/claim/stable proof assertions or increasing budgets. Original10s existing-root complete recovery/history/close/new-window scope must pass, otherwise retain candidate and failures."}
+ ],
+ "bounds":{"maxRows":512,"maxSerializedRecordBytes":1048576,"maxCanonicalCurrentBytes":4096},
+ "publicStartOpen":false,"originalAbsentCodexRoot":"blocked/not attempted","noW2DualSidOrPublication":true
+}

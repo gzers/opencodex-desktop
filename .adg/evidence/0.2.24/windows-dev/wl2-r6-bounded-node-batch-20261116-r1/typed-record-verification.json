@@ -1,0 +1,20 @@
+{
+  "nativeRecordCheckBodyByteIdentical": true,
+  "fullNativeJournalCurrentCheckBodyByteIdentical": true,
+  "originalDeadlineGateUnchanged": true,
+  "fullIndependentProgressReplayBeforeNewWrite": true,
+  "encodedRawAndOwnedTypedEventSameLocalValue": true,
+  "immutableRecordRetainedBeforeFallibleCurrent": true,
+  "noPublicOrMutableTypedRecordSetter": true,
+  "actualAssignments": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs",
+      "line": 747,
+      "text": "record.entry = Some(event);"
+    }
+  ],
+  "recordCheckSourceSha256": "155184793084e0b3bdd1ab44ad5cd6449f8de88a806a71ae7e798cdf70d343f5",
+  "fullJournalNativeBodySha256": "2ef99cf28971cfba7867bd221715f3b40575ffcfb55180b24f491c237a035525",
+  "skipsRepeatedDataDecodeOnly": true,
+  "nativeFactCached": false
+}

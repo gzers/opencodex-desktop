@@ -1,0 +1,9 @@
+[codex/024-windows-native c259886cf] feat(windows): 批量登记准确节点并验证原窗完成历史
+ 31 files changed, 2650 insertions(+), 50 deletions(-)
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/batches.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_batch_tests.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_completed_tests.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/batch_data_tests.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/batches.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/batches.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs

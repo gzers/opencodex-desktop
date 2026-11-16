@@ -1,0 +1,242 @@
+use super::super::tests::{event, plan, progress};
+use super::*;
+fn rows(
+    p: &StoragePlan,
+    g: &Progress,
+    kind: BatchKind,
+    completion: bool,
+    start: usize,
+    count: usize,
+) -> Vec<BatchRow> {
+    let nodes = g.batch_expected_nodes(p, kind).unwrap();
+    nodes
+        .into_iter()
+        .enumerate()
+        .skip(start)
+        .take(count)
+        .map(|(ordinal, (_, id))| {
+            let n = p
+                .roots
+                .iter()
+                .flat_map(|r| &r.nodes)
+                .find(|n| n.node_id == id)
+                .unwrap();
+            let (intent, result) = kind.ordinary().unwrap();
+            BatchRow {
+                ordinal,
+                event: RowEvent::Original(event(
+                    p,
+                    g,
+                    n,
+                    if completion { result } else { intent },
+                    &(u64::MAX - 10000 - ordinal as u64).to_string(),
+                )),
+            }
+        })
+        .collect()
+}
+fn anchors(p: &StoragePlan, g: &mut Progress) {
+    let members = rows(p, g, BatchKind::AnchorSnapshot, true, 0, 512);
+    let phase = g
+        .batch_event(
+            BatchKind::AnchorSnapshot,
+            BatchOperation::AnchorsVerified,
+            members,
+        )
+        .unwrap();
+    g.apply_entry(p, &segments::ChainEntry::Batch(phase))
+        .unwrap();
+}
+#[test]
+fn wl2_r6_batch_data_one_phase_complete_intents_ordered_result_prefix_and_old_bypass_refuse() {
+    let (mut f, p, _, _) = plan();
+    let mut g = progress(&p);
+    anchors(&p, &mut g);
+    assert_eq!(g.sequence, 1);
+    let count = g
+        .batch_expected_nodes(&p, BatchKind::OriginalMove)
+        .unwrap()
+        .len();
+    assert!(count >= 2);
+    let members = rows(&p, &g, BatchKind::OriginalMove, false, 0, count);
+    let phase = g
+        .batch_event(BatchKind::OriginalMove, BatchOperation::Intent, members)
+        .unwrap();
+    g.apply_batch(&p, &phase).unwrap();
+    assert_eq!(g.sequence, 2);
+    assert!(g.batch_summary().is_some());
+    assert!(!g.complete_files(&p));
+    let n = p
+        .roots
+        .iter()
+        .flat_map(|r| &r.nodes)
+        .find(|n| n.kind == Kind::CustodiedFile)
+        .unwrap();
+    assert!(g
+        .apply(&p, &event(&p, &g, n, Operation::NodeMovedVerified, "999"))
+        .is_err());
+    let pending = g.batch_summary().unwrap();
+    assert_eq!(pending.prefix, 0);
+    let first = rows(&p, &g, BatchKind::OriginalMove, true, 0, 1);
+    let phase = g
+        .batch_event(
+            BatchKind::OriginalMove,
+            BatchOperation::PrefixVerified,
+            first,
+        )
+        .unwrap();
+    g.apply_batch(&p, &phase).unwrap();
+    assert_eq!(g.sequence, 3);
+    assert_eq!(g.batch_summary().unwrap().prefix, 1);
+    let mut skip = rows(&p, &g, BatchKind::OriginalMove, true, 1, count - 1);
+    skip[0].ordinal = 0;
+    let phase = g
+        .batch_event(
+            BatchKind::OriginalMove,
+            BatchOperation::PrefixVerified,
+            skip,
+        )
+        .unwrap();
+    let old = encoded(&g).unwrap();
+    assert!(g.apply_batch(&p, &phase).is_err());
+    assert_eq!(encoded(&g).unwrap(), old);
+    let remaining = rows(&p, &g, BatchKind::OriginalMove, true, 1, count - 1);
+    let phase = g
+        .batch_event(
+            BatchKind::OriginalMove,
+            BatchOperation::PrefixVerified,
+            remaining,
+        )
+        .unwrap();
+    g.apply_batch(&p, &phase).unwrap();
+    assert_eq!(g.sequence, 4);
+    assert!(g.batch.is_none());
+    for n in p
+        .roots
+        .iter()
+        .flat_map(|r| &r.nodes)
+        .filter(|n| n.kind == Kind::CustodiedFile)
+    {
+        assert_eq!(g.nodes[&n.node_id].0, 2);
+    }
+    let members = rows(&p, &g, BatchKind::WorkCreate, false, 0, count);
+    let phase = g
+        .batch_event(BatchKind::WorkCreate, BatchOperation::Intent, members)
+        .unwrap();
+    g.apply_batch(&p, &phase).unwrap();
+    let members = rows(&p, &g, BatchKind::WorkCreate, true, 0, count);
+    let phase = g
+        .batch_event(
+            BatchKind::WorkCreate,
+            BatchOperation::PrefixVerified,
+            members,
+        )
+        .unwrap();
+    g.apply_batch(&p, &phase).unwrap();
+    assert_eq!(g.sequence, 6);
+    assert!(g.batch.is_none());
+    for n in p
+        .roots
+        .iter()
+        .flat_map(|r| &r.nodes)
+        .filter(|n| n.kind == Kind::CustodiedFile)
+    {
+        assert_eq!(g.nodes[&n.node_id].0, 4);
+    }
+    println!("r6 bounded batch DATA exactly one sequence per envelope, complete anchor/original/work rows, strict ordered prefix and pending blocks old node path; pure projection uses unchanged validators, no native authority");
+    f.retain();
+}
+#[test]
+fn wl2_r6_batch_data_complete_plan_context_ordinal_event_drift_duplicate_and_nested_rows_refuse_atomically(
+) {
+    let (mut f, p, _, _) = plan();
+    let mut g = progress(&p);
+    anchors(&p, &mut g);
+    let members = rows(&p, &g, BatchKind::OriginalMove, false, 0, 512);
+    let phase = g
+        .batch_event(BatchKind::OriginalMove, BatchOperation::Intent, members)
+        .unwrap();
+    let good = serde_json::to_value(&phase).unwrap();
+    let original = encoded(&g).unwrap();
+    let mut cases = Vec::new();
+    for field in [
+        "sequence",
+        "sessionId",
+        "previousEventDigest",
+        "batchId",
+        "planDigest",
+        "leaseEpoch",
+        "claimKey",
+        "deadlineScope",
+        "manifestDigest",
+        "bindingDigest",
+        "storagePlanDigest",
+        "securityPolicyDigest",
+        "eventId",
+        "count",
+        "prefix",
+    ] {
+        let mut bad = good.clone();
+        bad[field] = if matches!(field, "sequence" | "count" | "prefix") {
+            9999.into()
+        } else {
+            "foreign".into()
+        };
+        cases.push(bad);
+    }
+    for pointer in [
+        "/rows/0/ordinal",
+        "/rows/0/event/nodeId",
+        "/rows/0/event/rootId",
+        "/rows/0/event/previousEventDigest",
+        "/rows/0/event/sequence",
+        "/rows/0/event/claimKey",
+    ] {
+        let mut bad = good.clone();
+        *bad.pointer_mut(pointer).unwrap() =
+            if pointer.ends_with("ordinal") || pointer.ends_with("sequence") {
+                9999.into()
+            } else {
+                "foreign".into()
+            };
+        cases.push(bad);
+    }
+    let mut bad = good.clone();
+    bad["rows"].as_array_mut().unwrap().pop();
+    cases.push(bad);
+    let mut bad = good.clone();
+    bad["rows"].as_array_mut().unwrap().swap(0, 1);
+    cases.push(bad);
+    let mut bad = good.clone();
+    bad["rows"][1]["event"]["eventId"] = bad["rows"][0]["event"]["eventId"].clone();
+    cases.push(bad);
+    let mut bad = good.clone();
+    bad["rows"][0]["event"] = good.clone();
+    cases.push(bad);
+    let mut bad = good.clone();
+    bad["Closed"] = true.into();
+    cases.push(bad);
+    for (i, value) in cases.into_iter().enumerate() {
+        let refused = serde_json::from_value::<BatchEvent>(value)
+            .map(|e| g.apply_batch(&p, &e).is_err())
+            .unwrap_or(true);
+        assert!(refused, "malformed {i}");
+        assert_eq!(
+            encoded(&g).unwrap(),
+            original,
+            "phase validation must be atomic {i}"
+        );
+    }
+    // Recompute batch digest for a structurally self-consistent wrong late row;
+    // original single-node native ID/security/parent validator must still reject.
+    let mut late: BatchEvent = serde_json::from_value(good).unwrap();
+    let RowEvent::Original(last) = &mut late.rows.last_mut().unwrap().event else {
+        panic!()
+    };
+    last.parent_id = "999".into();
+    late.plan_digest = hash::sha256_hex(&encoded(&late.rows).unwrap());
+    assert!(g.apply_batch(&p, &late).is_err());
+    assert_eq!(encoded(&g).unwrap(), original);
+    println!("r6 bounded batch DATA full plan/context/row ordinal/node-root/duplicate/nesting/late-row native parent drift all reject atomically, including recomputed plan digest; no skip or textClosed");
+    f.retain();
+}

@@ -1,0 +1,37 @@
+{
+  "appendFullNativeChecksBeforeAndAfterWrite": true,
+  "historyBoundaryOwnsReceiptAndOneFullJournalRead": true,
+  "nativeWitnessBothTreeBarriersPreserved": true,
+  "closeFullOriginalBeforeAndAfterActualCloseAndAfterResult": true,
+  "completionOnlyAfterFinalPostconditions": true,
+  "negativeMustReachExactNativePrefix": true,
+  "unchangedRawAndBatchNativeImplementations": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement.rs",
+      "sha256": "60e6c96c253def65a9e6c9e769b0e2eea2b30dd530a1af8a877a1a57acc535c6",
+      "identicalToPriorNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement/witness.rs",
+      "sha256": "41d9959349919ca264683fdbd7b9ed55621f81b1c91276a8ace855d226608f88",
+      "identicalToPriorNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/batches.rs",
+      "sha256": "bd40c1d00d3916e70d67c730ab9f31c124496cf034a2ddb94606870c1d397d89",
+      "identicalToPriorNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/batches.rs",
+      "sha256": "3c69068628119aef950dd191f047630969702cf375a629071e2cc80def9ef7f7",
+      "identicalToPriorNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery/final_release.rs",
+      "sha256": "a91dcdc6cc6ac0a8587f0114cbb896f6b9af26356b9becaff12d52446a2a4440",
+      "identicalToPriorNativeRun": true
+    }
+  ],
+  "originalBudgetsChanged": false,
+  "assertionsRelaxed": false
+}

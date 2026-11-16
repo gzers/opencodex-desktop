@@ -1,0 +1,71 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+error[E0603]: enum `BatchKind` is private
+ --> src\infrastructure\windows_client_originals024\tree\anchored\batches.rs:3:70
+  |
+3 | use crate::infrastructure::windows_client_originals024::v3::batches::BatchKind;
+  |                                                                      ^^^^^^^^^ private enum
+  |
+note: the enum `BatchKind` is defined here
+ --> src\infrastructure\windows_client_originals024\v3\batches.rs:8:1
+  |
+8 | pub(super) enum BatchKind {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:29:35
+   |
+29 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |                                   ^^^^^^^^^^^^^
+30 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused import: `OpenOptions`
+  --> src\infrastructure\windows_owner_host024\desktop_tests.rs:12:22
+   |
+12 |     fs::{self, File, OpenOptions},
+   |                      ^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:506:14
+    |
+506 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+506 -             .fetch_update(
+506 +             .try_update(
+    |
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0603`.
+warning: `opencodex-desktop` (lib test) generated 7 warnings
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error; 7 warnings emitted

@@ -1,0 +1,3129 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused import: `process::SuspendedOwnerHost`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:27:9
+   |
+27 | pub use process::SuspendedOwnerHost;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:29:35
+   |
+29 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |                                   ^^^^^^^^^^^^^
+30 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+
+warning: unused import: `create_private_directory`
+ --> src\infrastructure\windows_client_originals024\phase.rs:6:35
+  |
+6 |     windows_official_runtime024::{create_private_directory, PinnedDirectory, PrivateRecord},
+  |                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused import: `FileAction`
+ --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:5:10
+  |
+5 |     v3::{FileAction, Journal},
+  |          ^^^^^^^^^^
+
+warning: unused import: `witness::recovery_witness`
+ --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:9:80
+  |
+9 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::recovery_witness;
+  |                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `witness::released_history_witness`
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:10:80
+   |
+10 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::released_history_witness;
+   |                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `AnchoredTree` and `OriginalHandleHandoff`
+ --> src\infrastructure\windows_client_originals024\v3\journal\handles.rs:5:12
+  |
+5 |     tree::{AnchoredTree, OriginalHandleHandoff},
+  |            ^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:506:14
+    |
+506 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+506 -             .fetch_update(
+506 +             .try_update(
+    |
+
+warning: unused variable: `index`
+   --> src\infrastructure\windows_client_originals024\handle_release.rs:139:18
+    |
+139 |             for (index, item) in self.items.iter_mut().enumerate() {
+    |                  ^^^^^ help: if this is intentional, prefix it with an underscore: `_index`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `fault`
+   --> src\infrastructure\windows_client_originals024\handle_release.rs:135:40
+    |
+135 |     pub(super) fn close_all(&mut self, fault: u8, end: Instant) -> io::Result<()> {
+    |                                        ^^^^^ help: if this is intentional, prefix it with an underscore: `_fault`
+
+warning: unused variable: `ordinal`
+   --> src\infrastructure\windows_client_originals024\v3\journal\batches.rs:202:22
+    |
+202 |                 for (ordinal, (root, node)) in expected_nodes.iter().enumerate() {
+    |                      ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_ordinal`
+
+warning: unused variable: `ordinal`
+   --> src\infrastructure\windows_client_originals024\v3\journal\batches.rs:335:18
+    |
+335 |             for (ordinal, (root, node)) in nodes.iter().enumerate() {
+    |                  ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_ordinal`
+
+warning: function `verify_private_file` is never used
+  --> src\infrastructure\windows_official_runtime024\mod.rs:34:15
+   |
+34 | pub(crate) fn verify_private_file(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `verify_private_directory` is never used
+  --> src\infrastructure\windows_official_runtime024\mod.rs:38:15
+   |
+38 | pub(crate) fn verify_private_directory(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_originals_work_file` is never used
+  --> src\infrastructure\windows_official_runtime024\mod.rs:45:15
+   |
+45 | pub(crate) fn create_private_originals_work_file(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `LIMIT` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:24:7
+   |
+24 | const LIMIT: usize = 2 * 1024 * 1024;
+   |       ^^^^^
+
+warning: function `before` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:25:4
+   |
+25 | fn before(deadline: Instant) -> io::Result<()> {
+   |    ^^^^^^
+
+warning: function `unnamed_stream_only` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:32:4
+   |
+32 | fn unnamed_stream_only(path: &Path) -> io::Result<()> {
+   |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `bytes` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:74:4
+   |
+74 | fn bytes(file: &mut File) -> io::Result<Vec<u8>> {
+   |    ^^^^^
+
+warning: struct `RetainedFileMove` is never constructed
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:89:12
+   |
+89 | pub struct RetainedFileMove {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: associated items `open`, `identity`, `location`, `verify`, `move_into`, and `restore` are never used
+   --> src\infrastructure\windows_official_runtime024\file_move.rs:99:12
+    |
+ 98 | impl RetainedFileMove {
+    | --------------------- associated items in this implementation
+ 99 |     pub fn open(path: &Path, deadline: Instant) -> io::Result<Self> {
+    |            ^^^^
+...
+129 |     pub fn identity(&self) -> FileIdentity {
+    |            ^^^^^^^^
+...
+132 |     pub fn location(&self) -> &Path {
+    |            ^^^^^^^^
+...
+135 |     pub fn verify(&mut self, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^
+...
+159 |     pub fn move_into(&mut self, target: &Path, name: &str, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^^^^
+...
+188 |     pub fn restore(&mut self, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^^
+
+warning: method `into_owned_files` is never used
+   --> src\infrastructure\windows_official_runtime024\paths.rs:116:19
+    |
+112 | impl PinnedDirectory {
+    | -------------------- method in this implementation
+...
+116 |     pub(crate) fn into_owned_files(self) -> Vec<File> {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: associated items `from_original_handle` and `exited` are never used
+  --> src\infrastructure\windows_official_runtime024\peer.rs:26:19
+   |
+25 | impl RetainedPeer {
+   | ----------------- associated items in this implementation
+26 |     pub(super) fn from_original_handle(handle: OwnedHandle) -> io::Result<Self> {
+   |                   ^^^^^^^^^^^^^^^^^^^^
+...
+57 |     pub fn exited(&self) -> io::Result<bool> {
+   |            ^^^^^^
+
+warning: struct `ForcedCleanup` is never constructed
+  --> src\infrastructure\windows_official_runtime024\process.rs:88:12
+   |
+88 | pub struct ForcedCleanup {
+   |            ^^^^^^^^^^^^^
+
+warning: method `force_owned_cleanup` is never used
+   --> src\infrastructure\windows_official_runtime024\process.rs:929:12
+    |
+416 | impl OwnedRuntime {
+    | ----------------- method in this implementation
+...
+929 |     pub fn force_owned_cleanup(&mut self, deadline: Instant) -> io::Result<ForcedCleanup> {
+    |            ^^^^^^^^^^^^^^^^^^^
+
+warning: field `raw_command_line` is never read
+ --> src\infrastructure\windows_official_runtime024\command.rs:8:9
+  |
+6 | pub struct CommandEvidence {
+  |            --------------- field in this struct
+7 |     pub captured_at: Instant,
+8 |     pub raw_command_line: String,
+  |         ^^^^^^^^^^^^^^^^
+  |
+  = note: `CommandEvidence` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: struct `SuspendedOwnerHost` is never constructed
+ --> src\infrastructure\windows_official_runtime024\host_process.rs:4:12
+  |
+4 | pub struct SuspendedOwnerHost {
+  |            ^^^^^^^^^^^^^^^^^^
+
+warning: associated items `create`, `original_peer`, and `resume` are never used
+   --> src\infrastructure\windows_official_runtime024\host_process.rs:12:12
+    |
+ 11 | impl SuspendedOwnerHost {
+    | ----------------------- associated items in this implementation
+ 12 |     pub fn create(spec: LaunchSpec<'_>, bootstrap: &File) -> io::Result<Self> {
+    |            ^^^^^^
+...
+127 |     pub fn original_peer(&self) -> &super::super::RetainedPeer {
+    |            ^^^^^^^^^^^^^
+...
+130 |     pub fn resume(&mut self) -> io::Result<()> {
+    |            ^^^^^^
+
+warning: struct `CaptureError` is never constructed
+  --> src\infrastructure\windows_client_originals024\mod.rs:34:19
+   |
+34 | pub(crate) struct CaptureError {
+   |                   ^^^^^^^^^^^^
+
+warning: associated items `new`, `api`, and `raw_os_error` are never used
+  --> src\infrastructure\windows_client_originals024\mod.rs:39:8
+   |
+38 | impl CaptureError {
+   | ----------------- associated items in this implementation
+39 |     fn new(api: &'static str, cause: io::Error) -> Self {
+   |        ^^^
+...
+42 |     pub(crate) fn api(&self) -> &'static str {
+   |                   ^^^
+...
+45 |     pub(crate) fn raw_os_error(&self) -> Option<i32> {
+   |                   ^^^^^^^^^^^^
+
+warning: function `denied` is never used
+  --> src\infrastructure\windows_client_originals024\mod.rs:66:4
+   |
+66 | fn denied(reason: &'static str) -> CaptureError {
+   |    ^^^^^^
+
+warning: enum `SecurityFailure` is never used
+  --> src\infrastructure\windows_client_originals024\mod.rs:76:17
+   |
+76 | pub(crate) enum SecurityFailure {
+   |                 ^^^^^^^^^^^^^^^
+
+warning: function `classify_error` is never used
+  --> src\infrastructure\windows_client_originals024\mod.rs:80:15
+   |
+80 | pub(crate) fn classify_error(code: Option<i32>) -> SecurityFailure {
+   |               ^^^^^^^^^^^^^^
+
+warning: struct `InspectedOriginal` is never constructed
+  --> src\infrastructure\windows_client_originals024\mod.rs:89:19
+   |
+89 | pub(crate) struct InspectedOriginal {
+   |                   ^^^^^^^^^^^^^^^^^
+
+warning: associated items `open` and `recheck` are never used
+   --> src\infrastructure\windows_client_originals024\mod.rs:96:19
+    |
+ 95 | impl InspectedOriginal {
+    | ---------------------- associated items in this implementation
+ 96 |     pub(crate) fn open(path: &Path, directory: bool) -> Result<Self, CaptureError> {
+    |                   ^^^^
+...
+124 |     pub(crate) fn recheck(&self) -> Result<(), CaptureError> {
+    |                   ^^^^^^^
+
+warning: function `descriptor` is never used
+   --> src\infrastructure\windows_client_originals024\mod.rs:141:4
+    |
+141 | fn descriptor(file: &File) -> Result<Vec<u8>, CaptureError> {
+    |    ^^^^^^^^^^
+
+warning: function `preflight` is never used
+   --> src\infrastructure\windows_client_originals024\mod.rs:235:15
+    |
+235 | pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> Result<(), CaptureError> {
+    |               ^^^^^^^^^
+
+warning: function `GetSecurityInfo` is never used
+   --> src\infrastructure\windows_client_originals024\mod.rs:144:12
+    |
+144 |         fn GetSecurityInfo(
+    |            ^^^^^^^^^^^^^^^
+
+warning: method `content_policy_protection` is never used
+   --> src\infrastructure\windows_client_originals024\bounded.rs:326:19
+    |
+287 | impl SnapshotData {
+    | ----------------- method in this implementation
+...
+326 |     pub(super) fn content_policy_protection(&self) -> io::Result<String> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `diagnostic` is never used
+   --> src\infrastructure\windows_client_originals024\bounded.rs:695:19
+    |
+587 | impl BoundedAccessV1 {
+    | -------------------- method in this implementation
+...
+695 |     pub(super) fn diagnostic(&self) -> serde_json::Value {
+    |                   ^^^^^^^^^^
+
+warning: constant `BASE` is never used
+  --> src\infrastructure\windows_client_originals024\coordination.rs:44:7
+   |
+44 | const BASE: u32 = 0x40000000;
+   |       ^^^^
+
+warning: constant `MAX` is never used
+  --> src\infrastructure\windows_client_originals024\coordination.rs:45:7
+   |
+45 | const MAX: u64 = 2 * 1024 * 1024;
+   |       ^^^
+
+warning: function `refused` is never used
+  --> src\infrastructure\windows_client_originals024\coordination.rs:46:4
+   |
+46 | fn refused() -> io::Error {
+   |    ^^^^^^^
+
+warning: function `before` is never used
+  --> src\infrastructure\windows_client_originals024\coordination.rs:52:4
+   |
+52 | fn before(end: Instant) -> io::Result<()> {
+   |    ^^^^^^
+
+warning: function `io_error` is never used
+  --> src\infrastructure\windows_client_originals024\coordination.rs:59:4
+   |
+59 | fn io_error(e: impl std::fmt::Display) -> io::Error {
+   |    ^^^^^^^^
+
+warning: function `file_id` is never used
+  --> src\infrastructure\windows_client_originals024\coordination.rs:62:4
+   |
+62 | fn file_id(file: &File) -> io::Result<FileIdentity> {
+   |    ^^^^^^^
+
+warning: function `open` is never used
+  --> src\infrastructure\windows_client_originals024\coordination.rs:77:4
+   |
+77 | fn open(path: &Path) -> io::Result<File> {
+   |    ^^^^
+
+warning: function `snapshot` is never used
+  --> src\infrastructure\windows_client_originals024\coordination.rs:87:4
+   |
+87 | fn snapshot(file: &mut File, end: Instant) -> io::Result<Vec<u8>> {
+   |    ^^^^^^^^
+
+warning: function `validate_stable_bytes` is never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:103:15
+    |
+103 | pub(super) fn validate_stable_bytes(raw: &[u8]) -> io::Result<()> {
+    |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `no_sidecars` is never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:118:4
+    |
+118 | fn no_sidecars(path: &Path) -> io::Result<()> {
+    |    ^^^^^^^^^^^
+
+warning: fields `file`, `parent`, `path`, `id`, `security`, and `raw` are never read
+   --> src\infrastructure\windows_client_originals024\coordination.rs:129:5
+    |
+128 | struct LockFile {
+    |        -------- fields in this struct
+129 |     file: File,
+    |     ^^^^
+130 |     parent: ParentPin,
+    |     ^^^^^^
+131 |     path: PathBuf,
+    |     ^^^^
+132 |     id: FileIdentity,
+    |     ^^
+133 |     security: SnapshotData,
+    |     ^^^^^^^^
+134 |     raw: Vec<u8>,
+    |     ^^^
+
+warning: variants `Strict` and `Claim` are never constructed
+   --> src\infrastructure\windows_client_originals024\coordination.rs:137:5
+    |
+136 | enum ParentPin {
+    |      --------- variants in this enum
+137 |     Strict(PinnedDirectory),
+    |     ^^^^^^
+138 |     Claim(ClaimParent),
+    |     ^^^^^
+
+warning: method `check` is never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:141:8
+    |
+140 | impl ParentPin {
+    | -------------- method in this implementation
+141 |     fn check(&self, end: Instant) -> io::Result<()> {
+    |        ^^^^^
+
+warning: fields `path`, `file`, `ancestor`, `id`, and `security` are never read
+   --> src\infrastructure\windows_client_originals024\coordination.rs:152:5
+    |
+151 | struct ClaimParent {
+    |        ----------- fields in this struct
+152 |     path: PathBuf,
+    |     ^^^^
+153 |     file: File,
+    |     ^^^^
+154 |     ancestor: PinnedDirectory,
+    |     ^^^^^^^^
+155 |     id: FileIdentity,
+    |     ^^
+156 |     security: SnapshotData,
+    |     ^^^^^^^^
+
+warning: associated items `open`, `identity`, `capture`, and `check` are never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:159:8
+    |
+158 | impl ClaimParent {
+    | ---------------- associated items in this implementation
+159 |     fn open(path: &Path) -> io::Result<File> {
+    |        ^^^^
+...
+167 |     fn identity(file: &File) -> io::Result<FileIdentity> {
+    |        ^^^^^^^^
+...
+180 |     fn capture(path: &Path, end: Instant) -> io::Result<Self> {
+    |        ^^^^^^^
+...
+197 |     fn check(&self, end: Instant) -> io::Result<()> {
+    |        ^^^^^
+
+warning: associated items `capture` and `check` are never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:215:8
+    |
+214 | impl LockFile {
+    | ------------- associated items in this implementation
+215 |     fn capture(path: &Path, end: Instant, claim: bool) -> io::Result<Self> {
+    |        ^^^^^^^
+...
+244 |     fn check(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^
+
+warning: struct `Range` is never constructed
+   --> src\infrastructure\windows_client_originals024\coordination.rs:262:8
+    |
+262 | struct Range {
+    |        ^^^^^
+
+warning: struct `Held` is never constructed
+   --> src\infrastructure\windows_client_originals024\coordination.rs:267:8
+    |
+267 | struct Held {
+    |        ^^^^
+
+warning: associated items `range`, `unlock`, `release`, and `acquire` are never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:272:8
+    |
+271 | impl Held {
+    | --------- associated items in this implementation
+272 |     fn range(&mut self, offset: u32, length: u32, exclusive: bool) -> io::Result<()> {
+    |        ^^^^^
+...
+301 |     fn unlock(&mut self, offset: u32) -> io::Result<()> {
+    |        ^^^^^^
+...
+323 |     fn release(&mut self) -> io::Result<()> {
+    |        ^^^^^^^
+...
+338 |     fn acquire(pin: LockFile, claim: bool, end: Instant) -> io::Result<Self> {
+    |        ^^^^^^^
+
+warning: fields `scope`, `profile`, `home`, and `client` are never read
+   --> src\infrastructure\windows_client_originals024\coordination.rs:370:5
+    |
+369 | struct Bound {
+    |        ----- fields in this struct
+370 |     scope: String,
+    |     ^^^^^
+371 |     profile: PinnedDirectory,
+    |     ^^^^^^^
+372 |     home: PinnedDirectory,
+    |     ^^^^
+373 |     client: PinnedDirectory,
+    |     ^^^^^^
+
+warning: struct `NativeLease` is never constructed
+   --> src\infrastructure\windows_client_originals024\coordination.rs:377:19
+    |
+377 | pub(super) struct NativeLease {
+    |                   ^^^^^^^^^^^
+
+warning: struct `AnchoredClaim` is never constructed
+   --> src\infrastructure\windows_client_originals024\coordination.rs:388:19
+    |
+388 | pub(super) struct AnchoredClaim<'a> {
+    |                   ^^^^^^^^^^^^^
+
+warning: methods `check`, `epoch`, and `key` are never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:395:19
+    |
+394 | impl AnchoredClaim<'_> {
+    | ---------------------- methods in this implementation
+395 |     pub(super) fn check(&mut self, root: &Path, end: Instant) -> io::Result<()> {
+    |                   ^^^^^
+...
+413 |     pub(super) fn epoch(&self) -> &str {
+    |                   ^^^^^
+...
+416 |     pub(super) fn key(&self) -> String {
+    |                   ^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:433:19
+    |
+428 | impl NativeLease {
+    | ---------------- associated items in this implementation
+...
+433 |     pub(super) fn anchored_claim(
+    |                   ^^^^^^^^^^^^^^
+...
+455 |     fn acquire_paths(paths: &[PathBuf; 4], end: Instant) -> io::Result<Self> {
+    |        ^^^^^^^^^^^^^
+...
+489 |     pub(super) fn acquire_existing(owner: &mut Owner, end: Instant) -> io::Result<Self> {
+    |                   ^^^^^^^^^^^^^^^^
+...
+525 |     pub(super) fn check(&mut self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^
+...
+532 |     fn check_inner(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^
+...
+551 |     pub(super) fn check_owner(&mut self, owner: &mut Owner, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^^^^^
+...
+558 |     fn check_owner_inner(&mut self, owner: &mut Owner, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^^^^^
+...
+570 |     pub(super) fn release(mut self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^
+
+warning: function `official_runtime_root` is never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:591:4
+    |
+591 | fn official_runtime_root(token: &TokenIdentity) -> io::Result<PathBuf> {
+    |    ^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `SHGetKnownFolderPath` is never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:602:12
+    |
+602 |         fn SHGetKnownFolderPath(
+    |            ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `CoTaskMemFree` is never used
+   --> src\infrastructure\windows_client_originals024\coordination.rs:611:12
+    |
+611 |         fn CoTaskMemFree(value: *const std::ffi::c_void);
+    |            ^^^^^^^^^^^^^
+
+warning: fields `original`, `facts`, `poisoned`, `reacquired`, and `completed_at` are never read
+  --> src\infrastructure\windows_client_originals024\coordination\segments.rs:12:5
+   |
+11 | pub(in super::super) struct ReleasedLease {
+   |                             ------------- fields in this struct
+12 |     original: ReleasedObjects,
+   |     ^^^^^^^^
+13 |     facts: LeaseFacts,
+   |     ^^^^^
+14 |     poisoned: bool,
+   |     ^^^^^^^^
+15 |     reacquired: bool,
+   |     ^^^^^^^^^^
+16 |     completed_at: Instant,
+   |     ^^^^^^^^^^^^
+
+warning: fields `files`, `token`, `deadline`, `bound`, and `epoch` are never read
+  --> src\infrastructure\windows_client_originals024\coordination\segments.rs:19:5
+   |
+18 | struct ReleasedObjects {
+   |        --------------- fields in this struct
+19 |     files: Vec<LockFile>,
+   |     ^^^^^
+20 |     token: TokenIdentity,
+   |     ^^^^^
+21 |     deadline: Instant,
+   |     ^^^^^^^^
+22 |     bound: Option<Bound>,
+   |     ^^^^^
+23 |     epoch: String,
+   |     ^^^^^
+
+warning: fields `facts`, `token`, `completed_at`, and `original_deadline` are never read
+  --> src\infrastructure\windows_client_originals024\coordination\segments.rs:28:5
+   |
+27 | pub(in super::super) struct RetiredLeaseHistory {
+   |                             ------------------- fields in this struct
+28 |     facts: LeaseFacts,
+   |     ^^^^^
+29 |     token: TokenIdentity,
+   |     ^^^^^
+30 |     completed_at: Instant,
+   |     ^^^^^^^^^^^^
+31 |     original_deadline: Instant,
+   |     ^^^^^^^^^^^^^^^^^
+
+warning: methods `check` and `data` are never used
+  --> src\infrastructure\windows_client_originals024\coordination\segments.rs:34:29
+   |
+33 | impl RetiredLeaseHistory {
+   | ------------------------ methods in this implementation
+34 |     pub(in super::super) fn check(&self, end: Instant) -> io::Result<()> {
+   |                             ^^^^^
+...
+42 |     pub(in super::super) fn data(&self) -> serde_json::Value {
+   |                             ^^^^
+
+warning: method `transfer_original_files` is never used
+  --> src\infrastructure\windows_client_originals024\coordination\segments.rs:49:29
+   |
+46 | impl ReleasedLease {
+   | ------------------ method in this implementation
+...
+49 |     pub(in super::super) fn transfer_original_files(
+   |                             ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `facts_from_files` is never used
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:125:4
+    |
+125 | fn facts_from_files(
+    |    ^^^^^^^^^^^^^^^^
+
+warning: method `facts_inner` is never used
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:148:8
+    |
+147 | impl ReleasedObjects {
+    | -------------------- method in this implementation
+148 |     fn facts_inner(&self) -> io::Result<LeaseFacts> {
+    |        ^^^^^^^^^^^
+
+warning: methods `facts_inner` and `release_with_receipt` are never used
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:158:8
+    |
+157 | impl NativeLease {
+    | ---------------- methods in this implementation
+158 |     fn facts_inner(&self) -> io::Result<LeaseFacts> {
+    |        ^^^^^^^^^^^
+...
+166 |     pub(in super::super) fn release_with_receipt(
+    |                             ^^^^^^^^^^^^^^^^^^^^
+
+warning: method `facts` is never used
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:217:29
+    |
+216 | impl AnchoredClaim<'_> {
+    | ---------------------- method in this implementation
+217 |     pub(in super::super) fn facts(&mut self, root: &Path, end: Instant) -> io::Result<LeaseFacts> {
+    |                             ^^^^^
+
+warning: methods `facts`, `check`, `readback_history`, `reacquire_for_action`, `reacquire`, and `reacquire_inner` are never used
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:223:29
+    |
+222 | impl ReleasedLease {
+    | ------------------ methods in this implementation
+223 |     pub(in super::super) fn facts(&self) -> &LeaseFacts {
+    |                             ^^^^^
+...
+226 |     pub(in super::super) fn check(&mut self, end: Instant) -> io::Result<()> {
+    |                             ^^^^^
+...
+242 |     pub(in super::super) fn readback_history(&mut self, end: Instant) -> io::Result<()> {
+    |                             ^^^^^^^^^^^^^^^^
+...
+269 |     pub(in super::super) fn reacquire_for_action(
+    |                             ^^^^^^^^^^^^^^^^^^^^
+...
+316 |     pub(in super::super) fn reacquire(
+    |                             ^^^^^^^^^
+...
+327 |     fn reacquire_inner(
+    |        ^^^^^^^^^^^^^^^
+
+warning: variants `Held`, `ConfirmedClosed`, and `Unknown` are never constructed
+  --> src\infrastructure\windows_client_originals024\handle_release.rs:23:5
+   |
+22 | enum OwnedState {
+   |      ---------- variants in this enum
+23 |     Held(File),
+   |     ^^^^
+24 |     ConfirmedClosed,
+   |     ^^^^^^^^^^^^^^^
+25 |     Unknown {
+   |     ^^^^^^^
+
+warning: fields `row` and `state` are never read
+  --> src\infrastructure\windows_client_originals024\handle_release.rs:31:5
+   |
+30 | struct Item {
+   |        ---- fields in this struct
+31 |     row: HandleRow,
+   |     ^^^
+32 |     state: OwnedState,
+   |     ^^^^^
+
+warning: fields `items`, `poisoned`, `started`, `completed_at`, and `deadline` are never read
+  --> src\infrastructure\windows_client_originals024\handle_release.rs:35:5
+   |
+34 | pub(super) struct NativeHandleBatch {
+   |                   ----------------- fields in this struct
+35 |     items: Vec<Item>,
+   |     ^^^^^
+36 |     poisoned: bool,
+   |     ^^^^^^^^
+37 |     started: bool,
+   |     ^^^^^^^
+38 |     completed_at: Option<Instant>,
+   |     ^^^^^^^^^^^^
+39 |     deadline: Instant,
+   |     ^^^^^^^^
+
+warning: function `before` is never used
+  --> src\infrastructure\windows_client_originals024\handle_release.rs:41:4
+   |
+41 | fn before(end: Instant) -> io::Result<()> {
+   |    ^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\handle_release.rs:49:19
+    |
+ 48 | impl NativeHandleBatch {
+    | ---------------------- associated items in this implementation
+ 49 |     pub(super) fn new(end: Instant) -> Self {
+    |                   ^^^
+...
+ 58 |     pub(super) fn retain(
+    |                   ^^^^^^
+...
+ 80 |     pub(super) fn retain_observed(
+    |                   ^^^^^^^^^^^^^^^
+...
+102 |     pub(super) fn invalidate(&mut self) {
+    |                   ^^^^^^^^^^
+...
+105 |     pub(super) fn inventory(&self) -> io::Result<serde_json::Value> {
+    |                   ^^^^^^^^^
+...
+113 |     pub(super) fn check_held(&self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^^^^
+...
+135 |     pub(super) fn close_all(&mut self, fault: u8, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^^^
+...
+186 |     pub(super) fn completed(&self) -> bool {
+    |                   ^^^^^^^^^
+...
+195 |     pub(super) fn trace(&self) -> serde_json::Value {
+    |                   ^^^^^
+
+warning: function `identity` is never used
+   --> src\infrastructure\windows_client_originals024\handle_release.rs:220:4
+    |
+220 | fn identity(file: &File, directory: bool, historical_work: bool) -> io::Result<FileIdentity> {
+    |    ^^^^^^^^
+
+warning: enum `Phase` is never used
+  --> src\infrastructure\windows_client_originals024\phase.rs:12:17
+   |
+12 | pub(super) enum Phase {
+   |                 ^^^^^
+
+warning: struct `Record` is never constructed
+  --> src\infrastructure\windows_client_originals024\phase.rs:23:8
+   |
+23 | struct Record {
+   |        ^^^^^^
+
+warning: struct `PendingOnly` is never constructed
+  --> src\infrastructure\windows_client_originals024\phase.rs:33:19
+   |
+33 | pub(super) struct PendingOnly {
+   |                   ^^^^^^^^^^^
+
+warning: methods `append_pending` and `check_directory` are never used
+   --> src\infrastructure\windows_client_originals024\phase.rs:43:19
+    |
+ 39 | impl PendingOnly {
+    | ---------------- methods in this implementation
+...
+ 43 |     pub(super) fn append_pending(
+    |                   ^^^^^^^^^^^^^^
+...
+101 |     pub(super) fn check_directory(&self, directory: &PinnedDirectory) -> io::Result<()> {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: function `next` is never used
+   --> src\infrastructure\windows_client_originals024\phase.rs:121:4
+    |
+121 | fn next(a: &Phase, b: &Phase) -> bool {
+    |    ^^^^
+
+warning: function `check_prefix` is never used
+   --> src\infrastructure\windows_client_originals024\phase.rs:131:4
+    |
+131 | fn check_prefix(bytes: &[Vec<u8>]) -> io::Result<bool> {
+    |    ^^^^^^^^^^^^
+
+warning: function `check_prefix_for_sid` is never used
+   --> src\infrastructure\windows_client_originals024\phase.rs:134:4
+    |
+134 | fn check_prefix_for_sid(bytes: &[Vec<u8>], expected_sid: Option<&str>) -> io::Result<bool> {
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `read_pending` is never used
+   --> src\infrastructure\windows_client_originals024\phase.rs:180:15
+    |
+180 | pub(super) fn read_pending(session_dir: &Path) -> io::Result<PendingOnly> {
+    |               ^^^^^^^^^^^^
+
+warning: constant `MAX` is never used
+  --> src\infrastructure\windows_client_originals024\reference.rs:23:7
+   |
+23 | const MAX: usize = 4096;
+   |       ^^^
+
+warning: struct `Tip` is never constructed
+  --> src\infrastructure\windows_client_originals024\reference.rs:26:19
+   |
+26 | pub(super) struct Tip {
+   |                   ^^^
+
+warning: associated function `from_prefix` is never used
+  --> src\infrastructure\windows_client_originals024\reference.rs:36:19
+   |
+35 | impl Tip {
+   | -------- associated function in this implementation
+36 |     pub(super) fn from_prefix(
+   |                   ^^^^^^^^^^^
+
+warning: trait `Security` is never used
+  --> src\infrastructure\windows_client_originals024\reference.rs:55:7
+   |
+55 | trait Security {
+   |       ^^^^^^^^
+
+warning: struct `Full` is never constructed
+  --> src\infrastructure\windows_client_originals024\reference.rs:59:8
+   |
+59 | struct Full;
+   |        ^^^^
+
+warning: struct `CurrentReference` is never constructed
+  --> src\infrastructure\windows_client_originals024\reference.rs:69:19
+   |
+69 | pub(super) struct CurrentReference(Reference<Full>);
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: associated items `append_pending_phase`, `create`, `open`, and `advance` are never used
+   --> src\infrastructure\windows_client_originals024\reference.rs:71:19
+    |
+ 70 | impl CurrentReference {
+    | --------------------- associated items in this implementation
+ 71 |     pub(super) fn append_pending_phase(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+ 86 |     pub(super) fn create(
+    |                   ^^^^^^
+...
+ 98 |     pub(super) fn open(
+    |                   ^^^^
+...
+105 |     pub(super) fn advance(&mut self, prefix: &PendingOnly, deadline: Instant) -> io::Result<()> {
+    |                   ^^^^^^^
+
+warning: struct `Reference` is never constructed
+   --> src\infrastructure\windows_client_originals024\reference.rs:109:8
+    |
+109 | struct Reference<G: Security> {
+    |        ^^^^^^^^^
+
+warning: function `check_time` is never used
+   --> src\infrastructure\windows_client_originals024\reference.rs:119:4
+    |
+119 | fn check_time(deadline: Instant) -> io::Result<()> {
+    |    ^^^^^^^^^^
+
+warning: function `identity` is never used
+   --> src\infrastructure\windows_client_originals024\reference.rs:126:4
+    |
+126 | fn identity(file: &File) -> io::Result<FileIdentity> {
+    |    ^^^^^^^^
+
+warning: function `read` is never used
+   --> src\infrastructure\windows_client_originals024\reference.rs:139:4
+    |
+139 | fn read(file: &mut File) -> io::Result<Vec<u8>> {
+    |    ^^^^
+
+warning: associated items `create`, `open`, `check`, and `advance` are never used
+   --> src\infrastructure\windows_client_originals024\reference.rs:152:8
+    |
+151 | impl<G: Security> Reference<G> {
+    | ------------------------------ associated items in this implementation
+152 |     fn create(directory: &Path, prefix: &PendingOnly, deadline: Instant) -> io::Result<Self> {
+    |        ^^^^^^
+...
+169 |     fn open(directory: &Path, prefix: &PendingOnly, deadline: Instant) -> io::Result<Self> {
+    |        ^^^^
+...
+224 |     fn check(&mut self, deadline: Instant) -> io::Result<()> {
+    |        ^^^^^
+...
+236 |     fn advance(&mut self, prefix: &PendingOnly, deadline: Instant) -> io::Result<()> {
+    |        ^^^^^^^
+
+warning: struct `NativeJournalContext` is never constructed
+   --> src\infrastructure\windows_client_originals024\source.rs:116:19
+    |
+116 | pub(super) struct NativeJournalContext {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: method `into_parts` is never used
+   --> src\infrastructure\windows_client_originals024\source.rs:123:19
+    |
+122 | impl NativeJournalContext {
+    | ------------------------- method in this implementation
+123 |     pub(super) fn into_parts(self) -> ([PinnedDirectory; 4], RetainedPeer, Binding, NativeAction) {
+    |                   ^^^^^^^^^^
+
+warning: method `journal_context` is never used
+   --> src\infrastructure\windows_client_originals024\source.rs:128:19
+    |
+127 | impl Source {
+    | ----------- method in this implementation
+128 |     pub(super) fn journal_context(
+    |                   ^^^^^^^^^^^^^^^
+
+warning: methods `move_to_custody` and `diagnostic` are never used
+   --> src\infrastructure\windows_client_originals024\tree.rs:365:19
+    |
+237 | impl RootTree {
+    | ------------- methods in this implementation
+...
+365 |     pub(super) fn move_to_custody(
+    |                   ^^^^^^^^^^^^^^^
+...
+587 |     pub(super) fn diagnostic(&self) -> serde_json::Value {
+    |                   ^^^^^^^^^^
+
+warning: variants `Directory`, `Coordinator`, and `File` are never constructed
+  --> src\infrastructure\windows_client_originals024\tree\anchored.rs:17:5
+   |
+16 | enum Kind {
+   |      ---- variants in this enum
+17 |     Directory,
+   |     ^^^^^^^^^
+18 |     Coordinator,
+   |     ^^^^^^^^^^^
+19 |     File,
+   |     ^^^^
+   |
+   = note: `Kind` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: variants `Original`, `Moved`, `Working`, `Retired`, and `Restored` are never constructed
+  --> src\infrastructure\windows_client_originals024\tree\anchored.rs:23:5
+   |
+22 | enum State {
+   |      ----- variants in this enum
+23 |     Original,
+   |     ^^^^^^^^
+24 |     Moved,
+   |     ^^^^^
+25 |     Working,
+   |     ^^^^^^^
+26 |     Retired,
+   |     ^^^^^^^
+27 |     Restored,
+   |     ^^^^^^^^
+   |
+   = note: `State` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: multiple fields are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored.rs:30:5
+   |
+29 | struct Node {
+   |        ---- fields in this struct
+30 |     original: Entry,
+   |     ^^^^^^^^
+31 |     file: File,
+   |     ^^^^
+32 |     kind: Kind,
+   |     ^^^^
+33 |     state: State,
+   |     ^^^^^
+34 |     work: Option<(File, Entry)>,
+   |     ^^^^
+35 |     pending_work: Option<File>,
+   |     ^^^^^^^^^^^^
+36 |     work_open: bool,
+   |     ^^^^^^^^^
+
+warning: multiple fields are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored.rs:41:5
+   |
+40 | pub(in super::super) struct AnchoredTree {
+   |                             ------------ fields in this struct
+41 |     parent: PinnedDirectory,
+   |     ^^^^^^
+42 |     parent_security: SnapshotData,
+   |     ^^^^^^^^^^^^^^^
+43 |     root: PathBuf,
+   |     ^^^^
+44 |     custody: PinnedDirectory,
+   |     ^^^^^^^
+45 |     custody_security: SnapshotData,
+   |     ^^^^^^^^^^^^^^^^
+46 |     nodes: Vec<Node>,
+   |     ^^^^^
+47 |     poisoned: bool,
+   |     ^^^^^^^^
+48 |     work_mode: WorkMode,
+   |     ^^^^^^^^^
+49 |     observed: Option<observation::WorkFrame>,
+   |     ^^^^^^^^
+50 |     release_view: Option<observation::WorkFrame>,
+   |     ^^^^^^^^^^^^
+51 |     snapshot_history: Vec<observation::RetainedSnapshot>,
+   |     ^^^^^^^^^^^^^^^^
+52 |     retirement: Option<observation::retirement::NativeRetirement>,
+   |     ^^^^^^^^^^
+53 |     original_history: Option<observation::WorkFrame>,
+   |     ^^^^^^^^^^^^^^^^
+
+warning: function `open_node` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored.rs:57:4
+   |
+57 | fn open_node(path: &Path, kind: Kind, observe: bool) -> io::Result<File> {
+   |    ^^^^^^^^^
+
+warning: function `stamp` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored.rs:91:4
+   |
+91 | fn stamp(
+   |    ^^^^^
+
+warning: function `collect` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored.rs:131:4
+    |
+131 | fn collect(
+    |    ^^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored.rs:197:8
+    |
+196 | impl AnchoredTree {
+    | ----------------- associated items in this implementation
+197 |     fn node_security(
+    |        ^^^^^^^^^^^^^
+...
+225 |     fn journal_snapshot_anchors(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+250 |     fn journal_step(
+    |        ^^^^^^^^^^^^
+...
+290 |     pub(in super::super) fn capture(
+    |                             ^^^^^^^
+...
+349 |     fn key(&self, i: usize) -> String {
+    |        ^^^
+...
+359 |     fn original_location(&self, i: usize) -> PathBuf {
+    |        ^^^^^^^^^^^^^^^^^
+...
+369 |     fn work_location(&self, i: usize) -> PathBuf {
+    |        ^^^^^^^^^^^^^
+...
+376 |     fn expected_children(&self, dir: &str) -> Vec<String> {
+    |        ^^^^^^^^^^^^^^^^^
+...
+391 |     pub(in super::super) fn verify(
+    |                             ^^^^^^
+...
+403 |     fn verify_inner(
+    |        ^^^^^^^^^^^^
+...
+416 |     fn verify_image(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^
+...
+486 |     fn verify_after_release(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+522 |     fn step(
+    |        ^^^^
+...
+614 |     pub(in super::super) fn plan(&self) -> serde_json::Value {
+    |                             ^^^^
+
+warning: fields `root`, `node`, `id`, and `security` are never read
+ --> src\infrastructure\windows_client_originals024\tree\anchored\batches.rs:5:5
+  |
+4 | pub(in crate::infrastructure::windows_client_originals024) struct VerifiedBatchValue {
+  |                                                                   ------------------ fields in this struct
+5 |     root: String,
+  |     ^^^^
+6 |     node: String,
+  |     ^^^^
+7 |     id: String,
+  |     ^^
+8 |     security: SnapshotData,
+  |     ^^^^^^^^
+
+warning: associated items `observed`, `node`, `root`, `parts`, and `data` are never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\batches.rs:11:83
+   |
+10 | impl VerifiedBatchValue {
+   | ----------------------- associated items in this implementation
+11 |     pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn observed(
+   |                                                                                   ^^^^^^^^
+...
+24 |     pub(in crate::infrastructure::windows_client_originals024) fn node(&self) -> &str {
+   |                                                                   ^^^^
+...
+27 |     pub(in crate::infrastructure::windows_client_originals024) fn root(&self) -> &str {
+   |                                                                   ^^^^
+...
+30 |     pub(in crate::infrastructure::windows_client_originals024) fn parts(
+   |                                                                   ^^^^^
+...
+39 |     pub(in crate::infrastructure::windows_client_originals024) fn data(&self) -> serde_json::Value {
+   |                                                                   ^^^^
+
+warning: struct `InitialBatchWitness` is never constructed
+  --> src\infrastructure\windows_client_originals024\tree\anchored\batches.rs:43:67
+   |
+43 | pub(in crate::infrastructure::windows_client_originals024) struct InitialBatchWitness<'a> {
+   |                                                                   ^^^^^^^^^^^^^^^^^^^
+
+warning: function `initial_batch_witness` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\batches.rs:46:79
+   |
+46 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn initial_batch_witness<
+   |                                                                               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `check`, `plans`, `anchors`, `execute`, and `poison` are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\batches.rs:58:67
+    |
+ 57 | impl InitialBatchWitness<'_> {
+    | ---------------------------- methods in this implementation
+ 58 |     pub(in crate::infrastructure::windows_client_originals024) fn check(
+    |                                                                   ^^^^^
+...
+ 86 |     pub(in crate::infrastructure::windows_client_originals024) fn plans(
+    |                                                                   ^^^^^
+...
+ 94 |     pub(in crate::infrastructure::windows_client_originals024) fn anchors(
+    |                                                                   ^^^^^^^
+...
+129 |     pub(in crate::infrastructure::windows_client_originals024) fn execute(
+    |                                                                   ^^^^^^^
+...
+175 |     pub(in crate::infrastructure::windows_client_originals024) fn poison(&mut self) {
+    |                                                                   ^^^^^^
+
+warning: fields `pid`, `port`, `record`, and `deadline` are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:11:5
+   |
+10 | struct PreparedStop {
+   |        ------------ fields in this struct
+11 |     pid: u32,
+   |     ^^^
+12 |     port: u16,
+   |     ^^^^
+13 |     record: String,
+   |     ^^^^^^
+14 |     deadline: Instant,
+   |     ^^^^^^^^
+
+warning: associated items `admit` and `check` are never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:17:8
+   |
+16 | impl PreparedStop {
+   | ----------------- associated items in this implementation
+17 |     fn admit(
+   |        ^^^^^
+...
+40 |     fn check(&self, pid: u32, port: u16, record: &str, end: Instant) -> io::Result<()> {
+   |        ^^^^^
+
+warning: multiple fields are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:48:5
+   |
+47 | pub(in crate::infrastructure::windows_client_originals024) struct CapturedTrees {
+   |                                                                   ------------- fields in this struct
+48 |     trees: [AnchoredTree; 2],
+   |     ^^^^^
+49 |     journal: Journal,
+   |     ^^^^^^^
+50 |     prepared: bool,
+   |     ^^^^^^^^
+51 |     opened: bool,
+   |     ^^^^^^
+52 |     ready: bool,
+   |     ^^^^^
+53 |     prepared_stop: Option<PreparedStop>,
+   |     ^^^^^^^^^^^^^
+54 |     stopped_observed: bool,
+   |     ^^^^^^^^^^^^^^^^
+55 |     failed: bool,
+   |     ^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:61:67
+    |
+ 57 | impl CapturedTrees {
+    | ------------------ associated items in this implementation
+...
+ 61 |     pub(in crate::infrastructure::windows_client_originals024) fn inspect_original_retirement(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+119 |     pub(in crate::infrastructure::windows_client_originals024) fn prepare_original_stop(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+204 |     pub(in crate::infrastructure::windows_client_originals024) fn observe_original_stopped(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+281 |     pub(in crate::infrastructure::windows_client_originals024) fn open_prepared_working(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+303 |     pub(in crate::infrastructure::windows_client_originals024) fn verify_original_pre_resume(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+342 |     pub(in crate::infrastructure::windows_client_originals024) fn record_original_ready(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+407 |     pub(in crate::infrastructure::windows_client_originals024) fn retain(
+    |                                                                   ^^^^^^
+...
+422 |     pub(in crate::infrastructure::windows_client_originals024) fn prepare_working_batched(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+...
+493 |     pub(in crate::infrastructure::windows_client_originals024) fn check_working(
+    |                                                                   ^^^^^^^^^^^^^
+...
+521 |     pub(in crate::infrastructure::windows_client_originals024) fn release_prepared(
+    |                                                                   ^^^^^^^^^^^^^^^^
+...
+538 |     pub(in crate::infrastructure::windows_client_originals024) fn poison(&mut self) {
+    |                                                                   ^^^^^^
+...
+545 |     pub(in crate::infrastructure::windows_client_originals024) fn journal(
+    |                                                                   ^^^^^^^
+
+warning: variants `Sealed`, `Opening`, `Open`, `Observing`, and `Observed` are never constructed
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:16:5
+   |
+15 | pub(super) enum WorkMode {
+   |                 -------- variants in this enum
+16 |     Sealed,
+   |     ^^^^^^
+17 |     Opening,
+   |     ^^^^^^^
+18 |     Open,
+   |     ^^^^
+19 |     Observing,
+   |     ^^^^^^^^^
+20 |     Observed,
+   |     ^^^^^^^^
+   |
+   = note: `WorkMode` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: function `reopen` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:22:15
+   |
+22 | pub(super) fn reopen(file: &File, access: u32, share: u32) -> io::Result<File> {
+   |               ^^^^^^
+
+warning: function `retained_work_identity` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:41:4
+   |
+41 | fn retained_work_identity(file: &File, expected: FileIdentity) -> io::Result<FileIdentity> {
+   |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `file` and `entry` are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:63:5
+   |
+62 | struct FrameNode {
+   |        --------- fields in this struct
+63 |     file: File,
+   |     ^^^^
+64 |     entry: Entry,
+   |     ^^^^^
+
+warning: multiple fields are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:67:5
+   |
+66 | pub(super) struct WorkFrame {
+   |                   --------- fields in this struct
+67 |     root: PathBuf,
+   |     ^^^^
+68 |     parent: FileIdentity,
+   |     ^^^^^^
+69 |     parent_security: SnapshotData,
+   |     ^^^^^^^^^^^^^^^
+70 |     nodes: Vec<FrameNode>,
+   |     ^^^^^
+71 |     archive: Option<archive::FrameArchive>,
+   |     ^^^^^^^
+72 |     archive_failed: bool,
+   |     ^^^^^^^^^^^^^^
+73 |     pending_history_directory: Option<PinnedDirectory>,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `archive` and `work_objects` are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:79:5
+   |
+78 | pub(super) struct RetainedSnapshot {
+   |                   ---------------- fields in this struct
+79 |     archive: archive::FrameArchive,
+   |     ^^^^^^^
+80 |     work_objects: Vec<(File, FileIdentity)>,
+   |     ^^^^^^^^^^^^
+
+warning: method `check` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:83:19
+   |
+82 | impl RetainedSnapshot {
+   | --------------------- method in this implementation
+83 |     pub(super) fn check(&mut self, end: Instant) -> io::Result<()> {
+   |                   ^^^^^
+
+warning: function `frame_kind` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:90:4
+   |
+90 | fn frame_kind(root: &Path, relative: &str, directory: bool) -> Kind {
+   |    ^^^^^^^^^^
+
+warning: function `collect` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:101:4
+    |
+101 | fn collect(
+    |    ^^^^^^^
+
+warning: associated items `empty`, `capture`, `check`, `metadata`, and `artifact_frame` are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:135:8
+    |
+134 | impl WorkFrame {
+    | -------------- associated items in this implementation
+135 |     fn empty(tree: &AnchoredTree, end: Instant) -> io::Result<Self> {
+    |        ^^^^^
+...
+146 |     fn capture(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^
+...
+155 |     pub(super) fn check(&mut self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^
+...
+181 |     pub(super) fn metadata(&self) -> serde_json::Value {
+    |                   ^^^^^^^^
+...
+184 |     pub(super) fn artifact_frame(&self) -> io::Result<super::super::ArtifactFrame> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: methods `baseline_work_metadata`, `accept_unchanged_work`, `verify_custody_anchors`, `open_work_generation`, and `observe_work_generation` are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:208:8
+    |
+207 | impl AnchoredTree {
+    | ----------------- methods in this implementation
+208 |     fn baseline_work_metadata(&self) -> io::Result<serde_json::Value> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+222 |     fn accept_unchanged_work(
+    |        ^^^^^^^^^^^^^^^^^^^^^
+...
+260 |     fn verify_custody_anchors(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+303 |     fn open_work_generation(
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+351 |     fn observe_work_generation(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `frame_digest` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:449:4
+    |
+449 | fn frame_digest(value: &serde_json::Value) -> io::Result<String> {
+    |    ^^^^^^^^^^^^
+
+warning: function `open_trees` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:454:15
+    |
+454 | pub(super) fn open_trees(
+    |               ^^^^^^^^^^
+
+warning: function `observe_trees` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:488:15
+    |
+488 | pub(super) fn observe_trees(
+    |               ^^^^^^^^^^^^^
+
+warning: function `accept_unchanged_trees` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:514:15
+    |
+514 | pub(super) fn accept_unchanged_trees(
+    |               ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `reacquire_for_observation` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:549:15
+    |
+549 | pub(super) fn reacquire_for_observation(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `ReOpenFile` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation.rs:25:12
+   |
+25 |         fn ReOpenFile(
+   |            ^^^^^^^^^^
+
+warning: constant `PART` is never used
+ --> src\infrastructure\windows_client_originals024\tree\anchored\observation\archive.rs:7:7
+  |
+7 | const PART: usize = 1024 * 1024;
+  |       ^^^^
+
+warning: fields `name`, `file`, `security`, and `bytes` are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\archive.rs:9:5
+   |
+ 8 | struct Part {
+   |        ---- fields in this struct
+ 9 |     name: String,
+   |     ^^^^
+10 |     file: PrivateRecord,
+   |     ^^^^
+11 |     security: Option<SnapshotData>,
+   |     ^^^^^^^^
+12 |     bytes: Vec<u8>,
+   |     ^^^^^
+
+warning: multiple fields are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\archive.rs:15:5
+   |
+14 | pub(super) struct FrameArchive {
+   |                   ------------ fields in this struct
+15 |     kind: ArchiveKind,
+   |     ^^^^
+16 |     directory: PinnedDirectory,
+   |     ^^^^^^^^^
+17 |     security: SnapshotData,
+   |     ^^^^^^^^
+18 |     source: serde_json::Value,
+   |     ^^^^^^
+19 |     context: serde_json::Value,
+   |     ^^^^^^^
+20 |     parts: Vec<Part>,
+   |     ^^^^^
+21 |     metadata: Option<Part>,
+   |     ^^^^^^^^
+22 |     complete: bool,
+   |     ^^^^^^^^
+
+warning: variants `Observation` and `OriginalHistory` are never constructed
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\archive.rs:25:5
+   |
+24 | enum ArchiveKind {
+   |      ----------- variants in this enum
+25 |     Observation,
+   |     ^^^^^^^^^^^
+26 |     OriginalHistory,
+   |     ^^^^^^^^^^^^^^^
+
+warning: methods `document` and `reference` are never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\archive.rs:29:8
+   |
+28 | impl ArchiveKind {
+   | ---------------- methods in this implementation
+29 |     fn document(&self) -> &'static str {
+   |        ^^^^^^^^
+...
+35 |     fn reference(&self) -> &'static str {
+   |        ^^^^^^^^^
+
+warning: function `native_record_security` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\archive.rs:42:4
+   |
+42 | fn native_record_security(path: &Path, end: Instant) -> io::Result<SnapshotData> {
+   |    ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\archive.rs:52:19
+    |
+ 51 | impl FrameArchive {
+    | ----------------- associated items in this implementation
+ 52 |     pub(super) fn matches_metadata(
+    |                   ^^^^^^^^^^^^^^^^
+...
+ 63 |     pub(super) fn observation_sequence(&self) -> io::Result<u32> {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+ 69 |     pub(super) fn matches_series_context(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+...
+ 93 |     pub(super) fn artifact_data(&self) -> io::Result<super::super::super::ArtifactFrame> {
+    |                   ^^^^^^^^^^^^^
+...
+163 |     fn begin(
+    |        ^^^^^
+...
+207 |     fn create_part(directory: &PinnedDirectory, name: String, bytes: Vec<u8>) -> io::Result<Part> {
+    |        ^^^^^^^^^^^
+...
+216 |     fn seal(&mut self, frame: &WorkFrame, fail_after_part: bool, end: Instant) -> io::Result<()> {
+    |        ^^^^
+...
+272 |     pub(super) fn check(&mut self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^
+...
+279 |     fn check_inner(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^
+...
+311 |     pub(super) fn reference(&mut self, end: Instant) -> io::Result<serde_json::Value> {
+    |                   ^^^^^^^^^
+
+warning: methods `archive_original_history` and `archive` are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\archive.rs:326:83
+    |
+325 | impl WorkFrame {
+    | -------------- methods in this implementation
+326 |     pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn archive_original_history(
+    |                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+391 |     pub(super) fn archive(
+    |                   ^^^^^^^
+
+warning: fields `frame_index`, `retired`, and `target` are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:13:5
+   |
+12 | struct Item {
+   |        ---- fields in this struct
+13 |     frame_index: usize,
+   |     ^^^^^^^^^^^
+14 |     retired: bool,
+   |     ^^^^^^^
+15 |     target: PathBuf,
+   |     ^^^^^^
+
+warning: fields `frame`, `items`, and `plan` are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:18:5
+   |
+17 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) struct NativeRetirement {
+   |                                                                                   ---------------- fields in this struct
+18 |     frame: WorkFrame,
+   |     ^^^^^
+19 |     items: Vec<Item>,
+   |     ^^^^^
+20 |     plan: serde_json::Value,
+   |     ^^^^
+
+warning: function `ordinary` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:22:4
+   |
+22 | fn ordinary(tree: &AnchoredTree, entry: &Entry) -> bool {
+   |    ^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:28:83
+    |
+ 27 | impl AnchoredTree {
+    | ----------------- methods in this implementation
+ 28 |     pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn capture_retirement(
+    |                                                                                   ^^^^^^^^^^^^^^^^^^
+...
+ 94 |     fn verify_retirement_prefix(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+110 |     fn check_retirement_objects(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+242 |     fn readback_retirement_after_release(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+289 |     fn retire_current_file(
+    |        ^^^^^^^^^^^^^^^^^^^
+...
+317 |     fn restore_original_file(
+    |        ^^^^^^^^^^^^^^^^^^^^^
+...
+355 |     fn verify_retirement_restored(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `file`, `entry`, and `path` are never read
+ --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\handoff.rs:6:5
+  |
+5 | struct Retired {
+  |        ------- fields in this struct
+6 |     file: File,
+  |     ^^^^
+7 |     entry: Entry,
+  |     ^^^^^
+8 |     path: PathBuf,
+  |     ^^^^
+
+warning: multiple fields are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\handoff.rs:11:5
+   |
+10 | struct RootHistory {
+   |        ----------- fields in this struct
+11 |     parent: PinnedDirectory,
+   |     ^^^^^^
+12 |     parent_security: SnapshotData,
+   |     ^^^^^^^^^^^^^^^
+13 |     custody: PinnedDirectory,
+   |     ^^^^^^^
+14 |     custody_security: SnapshotData,
+   |     ^^^^^^^^^^^^^^^^
+15 |     root: PathBuf,
+   |     ^^^^
+16 |     original: Vec<Entry>,
+   |     ^^^^^^^^
+17 |     archives: Vec<super::super::archive::FrameArchive>,
+   |     ^^^^^^^^
+18 |     retired: Vec<Retired>,
+   |     ^^^^^^^
+
+warning: fields `pending`, `roots`, `handles`, and `poisoned` are never read
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\handoff.rs:21:5
+   |
+20 | pub(in crate::infrastructure::windows_client_originals024) struct OriginalHandleHandoff {
+   |                                                                   --------------------- fields in this struct
+21 |     pending: Option<[AnchoredTree; 2]>,
+   |     ^^^^^^^
+22 |     roots: Vec<RootHistory>,
+   |     ^^^^^
+23 |     pub(in crate::infrastructure::windows_client_originals024) handles: NativeHandleBatch,
+   |                                                                ^^^^^^^
+24 |     poisoned: bool,
+   |     ^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\handoff.rs:27:67
+    |
+ 26 | impl OriginalHandleHandoff {
+    | -------------------------- associated items in this implementation
+ 27 |     pub(in crate::infrastructure::windows_client_originals024) fn retain(
+    |                                                                   ^^^^^^
+...
+ 38 |     pub(in crate::infrastructure::windows_client_originals024) fn detach(
+    |                                                                   ^^^^^^
+...
+188 |     pub(in crate::infrastructure::windows_client_originals024) fn pending_history_references(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+194 |     pub(in crate::infrastructure::windows_client_originals024) fn check_originals(
+    |                                                                   ^^^^^^^^^^^^^^^
+...
+221 |     pub(in crate::infrastructure::windows_client_originals024) fn check_history(
+    |                                                                   ^^^^^^^^^^^^^
+...
+259 |     pub(in crate::infrastructure::windows_client_originals024) fn poison(&mut self) {
+    |                                                                   ^^^^^^
+...
+263 |     pub(in crate::infrastructure::windows_client_originals024) fn trace(
+    |                                                                   ^^^^^
+
+warning: struct `RecoveryWitness` is never constructed
+ --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\witness.rs:6:67
+  |
+6 | pub(in crate::infrastructure::windows_client_originals024) struct RecoveryWitness<'a> {
+  |                                                                   ^^^^^^^^^^^^^^^
+
+warning: function `recovery_witness` is never used
+ --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\witness.rs:9:79
+  |
+9 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn recovery_witness<
+  |                                                                               ^^^^^^^^^^^^^^^^
+
+warning: function `released_history_witness` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\witness.rs:20:79
+   |
+20 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn released_history_witness(
+   |                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `borrow_history` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\witness.rs:30:79
+   |
+30 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn borrow_history(
+   |                                                                               ^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\witness.rs:36:67
+    |
+ 35 | impl RecoveryWitness<'_> {
+    | ------------------------ methods in this implementation
+ 36 |     pub(in crate::infrastructure::windows_client_originals024) fn execute_batch_node(
+    |                                                                   ^^^^^^^^^^^^^^^^^^
+...
+105 |     pub(in crate::infrastructure::windows_client_originals024) fn released_anchors(
+    |                                                                   ^^^^^^^^^^^^^^^^
+...
+135 |     pub(in crate::infrastructure::windows_client_originals024) fn check(
+    |                                                                   ^^^^^
+...
+161 |     pub(in crate::infrastructure::windows_client_originals024) fn plans(
+    |                                                                   ^^^^^
+...
+182 |     pub(in crate::infrastructure::windows_client_originals024) fn retire(
+    |                                                                   ^^^^^^
+...
+219 |     pub(in crate::infrastructure::windows_client_originals024) fn restore(
+    |                                                                   ^^^^^^^
+...
+268 |     pub(in crate::infrastructure::windows_client_originals024) fn restored(
+    |                                                                   ^^^^^^^^
+...
+285 |     pub(in crate::infrastructure::windows_client_originals024) fn poison(&mut self) {
+    |                                                                   ^^^^^^
+...
+307 |     pub(in crate::infrastructure::windows_client_originals024) fn post_release(
+    |                                                                   ^^^^^^^^^^^^
+
+warning: methods `original_history_frame` and `write_original_history` are never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\history.rs:6:83
+   |
+ 5 | impl AnchoredTree {
+   | ----------------- methods in this implementation
+ 6 |     pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn original_history_frame(
+   |                                                                                   ^^^^^^^^^^^^^^^^^^^^^^
+...
+40 |     pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn write_original_history(
+   |                                                                                   ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `original_frames`, `archive_originals`, and `history_references` are never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement\history.rs:58:67
+   |
+57 | impl RecoveryWitness<'_> {
+   | ------------------------ methods in this implementation
+58 |     pub(in crate::infrastructure::windows_client_originals024) fn original_frames(
+   |                                                                   ^^^^^^^^^^^^^^^
+...
+70 |     pub(in crate::infrastructure::windows_client_originals024) fn archive_originals(
+   |                                                                   ^^^^^^^^^^^^^^^^^
+...
+93 |     pub(in crate::infrastructure::windows_client_originals024) fn history_references(
+   |                                                                   ^^^^^^^^^^^^^^^^^^
+
+warning: methods `verify_release_boundary`, `finish_release_boundary`, `archive_for_sequence`, `original_artifacts`, `classify_observation_data`, and `resume_linked_generation` are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\series.rs:7:83
+    |
+  6 | impl AnchoredTree {
+    | ----------------- methods in this implementation
+  7 |     pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn verify_release_boundary(
+    |                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 37 |     pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn finish_release_boundary(
+    |                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 45 |     fn archive_for_sequence(
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+ 81 |     fn original_artifacts(&self) -> io::Result<super::super::super::ArtifactFrame> {
+    |        ^^^^^^^^^^^^^^^^^^
+...
+101 |     fn classify_observation_data(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+143 |     fn resume_linked_generation(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `assess_tree_series` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\series.rs:198:63
+    |
+198 | pub(in crate::infrastructure::windows_client_originals024) fn assess_tree_series(
+    |                                                               ^^^^^^^^^^^^^^^^^^
+
+warning: function `resume_trees` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\series.rs:258:79
+    |
+258 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn resume_trees(
+    |                                                                               ^^^^^^^^^^^^
+
+warning: struct `SnapshotWitness` is never constructed
+ --> src\infrastructure\windows_client_originals024\tree\anchored\observation\snapshots.rs:7:67
+  |
+7 | pub(in crate::infrastructure::windows_client_originals024) struct SnapshotWitness<'a> {
+  |                                                                   ^^^^^^^^^^^^^^^
+
+warning: struct `SnapshotLinkObservation` is never constructed
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\snapshots.rs:11:67
+   |
+11 | pub(in crate::infrastructure::windows_client_originals024) struct SnapshotLinkObservation {
+   |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `into_values` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\snapshots.rs:15:67
+   |
+14 | impl SnapshotLinkObservation {
+   | ---------------------------- method in this implementation
+15 |     pub(in crate::infrastructure::windows_client_originals024) fn into_values(
+   |                                                                   ^^^^^^^^^^^
+
+warning: methods `link_observation`, `reborrow`, and `references` are never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\snapshots.rs:22:67
+   |
+21 | impl SnapshotWitness<'_> {
+   | ------------------------ methods in this implementation
+22 |     pub(in crate::infrastructure::windows_client_originals024) fn link_observation(
+   |                                                                   ^^^^^^^^^^^^^^^^
+...
+30 |     pub(in crate::infrastructure::windows_client_originals024) fn reborrow(
+   |                                                                   ^^^^^^^^
+...
+38 |     pub(in crate::infrastructure::windows_client_originals024) fn references(
+   |                                                                   ^^^^^^^^^^
+
+warning: function `witness` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\snapshots.rs:53:79
+   |
+53 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn witness(
+   |                                                                               ^^^^^^^
+
+warning: function `create_snapshots` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\snapshots.rs:72:79
+   |
+72 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn create_snapshots(
+   |                                                                               ^^^^^^^^^^^^^^^^
+
+warning: function `link_observation` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\snapshots.rs:99:15
+   |
+99 | pub(super) fn link_observation(
+   |               ^^^^^^^^^^^^^^^^
+
+warning: function `release_trees` is never used
+ --> src\infrastructure\windows_client_originals024\tree\anchored\segments.rs:5:15
+  |
+5 | pub(super) fn release_trees(
+  |               ^^^^^^^^^^^^^
+
+warning: function `reacquire_trees` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\segments.rs:47:15
+   |
+47 | pub(super) fn reacquire_trees(
+   |               ^^^^^^^^^^^^^^^
+
+warning: constant `NAMES` is never used
+ --> src\infrastructure\windows_client_originals024\tree\artifacts.rs:5:7
+  |
+5 | const NAMES: [&str; 3] = [
+  |       ^^^^^
+
+warning: enum `Row` is never used
+  --> src\infrastructure\windows_client_originals024\tree\artifacts.rs:10:6
+   |
+10 | enum Row {
+   |      ^^^
+
+warning: function `row` is never used
+  --> src\infrastructure\windows_client_originals024\tree\artifacts.rs:18:4
+   |
+18 | fn row(r: &Row) -> Snapshot<'_> {
+   |    ^^^
+
+warning: struct `ArtifactFrame` is never constructed
+  --> src\infrastructure\windows_client_originals024\tree\artifacts.rs:32:19
+   |
+32 | pub(crate) struct ArtifactFrame {
+   |                   ^^^^^^^^^^^^^
+
+warning: associated items `from_entries`, `require_root`, and `stage` are never used
+  --> src\infrastructure\windows_client_originals024\tree\artifacts.rs:37:19
+   |
+36 | impl ArtifactFrame {
+   | ------------------ associated items in this implementation
+37 |     pub(super) fn from_entries(path: &Path, entries: &[Entry]) -> io::Result<Self> {
+   |                   ^^^^^^^^^^^^
+...
+62 |     pub(crate) fn require_root(&self, root: &Path) -> io::Result<()> {
+   |                   ^^^^^^^^^^^^
+...
+69 |     pub(crate) fn stage(&self) -> Stage<'_> {
+   |                   ^^^^^
+
+warning: methods `original_artifact_frame`, `current_artifact_frame`, and `verify_non_artifact_working` are never used
+  --> src\infrastructure\windows_client_originals024\tree\artifacts.rs:78:67
+   |
+77 | impl RootTree {
+   | ------------- methods in this implementation
+78 |     pub(in crate::infrastructure::windows_client_originals024) fn original_artifact_frame(
+   |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+...
+85 |     pub(in crate::infrastructure::windows_client_originals024) fn current_artifact_frame(
+   |                                                                   ^^^^^^^^^^^^^^^^^^^^^^
+...
+94 |     pub(in crate::infrastructure::windows_client_originals024) fn verify_non_artifact_working(
+   |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `artifact_frame` is never used
+   --> src\infrastructure\windows_client_originals024\tree\working.rs:153:19
+    |
+152 | impl WorkingImage {
+    | ----------------- method in this implementation
+153 |     pub(super) fn artifact_frame(&self) -> io::Result<super::ArtifactFrame> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: method `artifact_frame` is never used
+   --> src\infrastructure\windows_client_originals024\tree\working.rs:366:19
+    |
+363 | impl WorkingArchive {
+    | ------------------- method in this implementation
+...
+366 |     pub(crate) fn artifact_frame(&mut self, end: Instant) -> io::Result<super::ArtifactFrame> {
+    |                   ^^^^^^^^^^^^^^
+
+warning: fields `records`, `terminal_record_only`, and `current_matches` are never read
+   --> src\infrastructure\windows_client_originals024\v2.rs:462:5
+    |
+460 | pub(super) struct PendingV2 {
+    |                   --------- fields in this struct
+461 |     directory: PinnedDirectory,
+462 |     records: Vec<PrivateRecord>,
+    |     ^^^^^^^
+...
+466 |     pub(super) terminal_record_only: bool,
+    |                ^^^^^^^^^^^^^^^^^^^^
+467 |     pub(super) current_matches: bool,
+    |                ^^^^^^^^^^^^^^^
+
+warning: associated items `assess_artifacts`, `assess_artifacts_inner`, `capture`, `create_working_trees`, `restore_exact`, and `restore_after_teardown` are never used
+   --> src\infrastructure\windows_client_originals024\v2\capture.rs:113:19
+    |
+110 | impl TreeCaptureV2 {
+    | ------------------ associated items in this implementation
+...
+113 |     pub(super) fn assess_artifacts(
+    |                   ^^^^^^^^^^^^^^^^
+...
+129 |     fn assess_artifacts_inner(
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+178 |     pub(super) fn capture(binding: Binding, end: Instant) -> io::Result<Self> {
+    |                   ^^^^^^^
+...
+452 |     pub(super) fn create_working_trees(&mut self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+464 |     pub(super) fn restore_exact(&mut self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^^^^^^^
+...
+617 |     pub(super) fn restore_after_teardown(&mut self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `binding_data` is never used
+   --> src\infrastructure\windows_client_originals024\v2\capture\history.rs:155:71
+    |
+  4 | impl TreeCaptureV2 {
+    | ------------------ method in this implementation
+...
+155 |     pub(in crate::infrastructure::windows_client_originals024::v2) fn binding_data(
+    |                                                                       ^^^^^^^^^^^^
+
+warning: methods `prepare_v3_stop`, `before_v3_resume`, `record_v3_ready`, and `prepare_v3_capture` are never used
+   --> src\infrastructure\windows_client_originals024\v2\adapter.rs:103:19
+    |
+102 | impl WindowsOriginals {
+    | --------------------- methods in this implementation
+103 |     pub(crate) fn prepare_v3_stop(
+    |                   ^^^^^^^^^^^^^^^
+...
+120 |     pub(crate) fn before_v3_resume(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+    |                   ^^^^^^^^^^^^^^^^
+...
+130 |     pub(crate) fn record_v3_ready(
+    |                   ^^^^^^^^^^^^^^^
+...
+147 |     pub(crate) fn prepare_v3_capture(
+    |                   ^^^^^^^^^^^^^^^^^^
+
+warning: enum `FileAction` is never used
+  --> src\infrastructure\windows_client_originals024\v3.rs:36:17
+   |
+36 | pub(super) enum FileAction {
+   |                 ^^^^^^^^^^
+
+warning: field `data_digest` is never read
+  --> src\infrastructure\windows_client_originals024\v3.rs:84:5
+   |
+80 | pub(super) struct StoragePlan {
+   |                   ----------- field in this struct
+...
+84 |     data_digest: std::sync::OnceLock<String>,
+   |     ^^^^^^^^^^^
+
+warning: function `decimal` is never used
+  --> src\infrastructure\windows_client_originals024\v3.rs:86:4
+   |
+86 | fn decimal(s: &str) -> bool {
+   |    ^^^^^^^
+
+warning: function `relative` is never used
+  --> src\infrastructure\windows_client_originals024\v3.rs:89:4
+   |
+89 | fn relative(s: &str) -> bool {
+   |    ^^^^^^^^
+
+warning: associated items `from_native_data`, `digest`, and `validate` are never used
+   --> src\infrastructure\windows_client_originals024\v3.rs:104:19
+    |
+103 | impl StoragePlan {
+    | ---------------- associated items in this implementation
+104 |     pub(super) fn from_native_data(
+    |                   ^^^^^^^^^^^^^^^^
+...
+122 |     pub(super) fn digest(&self) -> io::Result<String> {
+    |                   ^^^^^^
+...
+130 |     pub(super) fn validate(&self, profile: &Path, parent: FileIdentity) -> io::Result<()> {
+    |                   ^^^^^^^^
+
+warning: function `uuid` is never used
+   --> src\infrastructure\windows_client_originals024\v3.rs:345:4
+    |
+345 | fn uuid(s: &str) -> bool {
+    |    ^^^^
+
+warning: function `encoded` is never used
+   --> src\infrastructure\windows_client_originals024\v3.rs:348:4
+    |
+348 | fn encoded<T: Serialize>(v: &T) -> io::Result<Vec<u8>> {
+    |    ^^^^^^^
+
+warning: associated items `new`, `apply`, and `complete_files` are never used
+   --> src\infrastructure\windows_client_originals024\v3.rs:352:19
+    |
+351 | impl Progress {
+    | ------------- associated items in this implementation
+352 |     pub(super) fn new(
+    |                   ^^^
+...
+411 |     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {
+    |                   ^^^^^
+...
+598 |     pub(super) fn complete_files(&self, plan: &StoragePlan) -> bool {
+    |                   ^^^^^^^^^^^^^^
+
+warning: method `apply_action` is never used
+  --> src\infrastructure\windows_client_originals024\v3\actions.rs:41:19
+   |
+40 | impl Progress {
+   | ------------- method in this implementation
+41 |     pub(super) fn apply_action(&mut self, plan: &StoragePlan, e: &ActionEvent) -> io::Result<()> {
+   |                   ^^^^^^^^^^^^
+
+warning: fields `source`, `routes`, `core`, `failed`, `ready`, and `stop_deadline` are never read
+  --> src\infrastructure\windows_client_originals024\v3\capture.rs:20:5
+   |
+19 | struct CaptureStore {
+   |        ------------ fields in this struct
+20 |     source: Source,
+   |     ^^^^^^
+21 |     routes: RoutePin,
+   |     ^^^^^^
+22 |     core: CapturedTrees,
+   |     ^^^^
+23 |     failed: bool,
+   |     ^^^^^^
+24 |     ready: Option<(u32, u16, String)>,
+   |     ^^^^^
+25 |     stop_deadline: Option<Instant>,
+   |     ^^^^^^^^^^^^^
+
+warning: function `refused` is never used
+  --> src\infrastructure\windows_client_originals024\v3\capture.rs:32:4
+   |
+32 | fn refused(error: impl std::fmt::Display) -> AppError {
+   |    ^^^^^^^
+
+warning: function `private_child` is never used
+  --> src\infrastructure\windows_client_originals024\v3\capture.rs:38:4
+   |
+38 | fn private_child(parent: &PinnedDirectory, name: &str) -> io::Result<PinnedDirectory> {
+   |    ^^^^^^^^^^^^^
+
+warning: function `require_fresh_namespace` is never used
+  --> src\infrastructure\windows_client_originals024\v3\capture.rs:50:4
+   |
+50 | fn require_fresh_namespace(windows: &PinnedDirectory) -> io::Result<()> {
+   |    ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: associated items `capture_held` and `check_source` are never used
+   --> src\infrastructure\windows_client_originals024\v3\capture.rs:62:8
+    |
+ 61 | impl CaptureStore {
+    | ----------------- associated items in this implementation
+ 62 |     fn capture_held(owner: &mut Owner, window: &ActionWindow) -> AppResult<(Self, NativeLease)> {
+    |        ^^^^^^^^^^^^
+...
+132 |     fn check_source(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+    |        ^^^^^^^^^^^^
+
+warning: methods `prepare_stop_existing`, `before_resume_existing`, `record_ready_existing`, and `capture_existing` are never used
+   --> src\infrastructure\windows_client_originals024\v3\capture.rs:144:67
+    |
+143 | impl CaptureSlot {
+    | ---------------- methods in this implementation
+144 |     pub(in crate::infrastructure::windows_client_originals024) fn prepare_stop_existing(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+202 |     pub(in crate::infrastructure::windows_client_originals024) fn before_resume_existing(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^
+...
+243 |     pub(in crate::infrastructure::windows_client_originals024) fn record_ready_existing(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+291 |     pub(in crate::infrastructure::windows_client_originals024) fn capture_existing(
+    |                                                                   ^^^^^^^^^^^^^^^^
+
+warning: struct `BatchSummary` is never constructed
+  --> src\infrastructure\windows_client_originals024\v3\batches.rs:71:19
+   |
+71 | pub(super) struct BatchSummary {
+   |                   ^^^^^^^^^^^^
+
+warning: methods `ordinary`, `recovery`, and `anchor` are never used
+   --> src\infrastructure\windows_client_originals024\v3\batches.rs:79:8
+    |
+ 78 | impl BatchKind {
+    | -------------- methods in this implementation
+ 79 |     fn ordinary(self) -> Option<(Operation, Operation)> {
+    |        ^^^^^^^^
+...
+ 87 |     fn recovery(self) -> Option<(RecoveryOperation, RecoveryOperation)> {
+    |        ^^^^^^^^
+...
+104 |     pub(super) fn anchor(self) -> bool {
+    |                   ^^^^^^
+
+warning: methods `node`, `id`, and `matches_phase` are never used
+   --> src\infrastructure\windows_client_originals024\v3\batches.rs:109:8
+    |
+108 | impl RowEvent {
+    | ------------- methods in this implementation
+109 |     fn node(&self) -> io::Result<(&str, &str)> {
+    |        ^^^^
+...
+118 |     fn id(&self) -> &str {
+    |        ^^
+...
+124 |     fn matches_phase(&self, g: &Progress, e: &BatchEvent) -> bool {
+    |        ^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_client_originals024\v3\batches.rs:146:19
+    |
+145 | impl Progress {
+    | ------------- methods in this implementation
+146 |     pub(super) fn initial_anchor_rows_needed(&self, plan: &StoragePlan) -> io::Result<bool> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+165 |     pub(super) fn uses_node_batches(&self) -> bool {
+    |                   ^^^^^^^^^^^^^^^^^
+...
+168 |     fn data_projection(&self) -> io::Result<Self> {
+    |        ^^^^^^^^^^^^^^^
+...
+171 |     pub(super) fn batch_expected_nodes(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+190 |     pub(super) fn batch_summary(&self) -> Option<BatchSummary> {
+    |                   ^^^^^^^^^^^^^
+...
+199 |     pub(super) fn batch_intent_rows(&self) -> io::Result<serde_json::Value> {
+    |                   ^^^^^^^^^^^^^^^^^
+...
+202 |     pub(super) fn batch_event(
+    |                   ^^^^^^^^^^^
+...
+254 |     fn apply_batch_row(
+    |        ^^^^^^^^^^^^^^^
+...
+328 |     pub(super) fn apply_batch(&mut self, plan: &StoragePlan, e: &BatchEvent) -> io::Result<()> {
+    |                   ^^^^^^^^^^^
+
+warning: methods `handle_event` and `apply_handles` are never used
+   --> src\infrastructure\windows_client_originals024\v3\handles.rs:164:19
+    |
+163 | impl Progress {
+    | ------------- methods in this implementation
+164 |     pub(super) fn handle_event(
+    |                   ^^^^^^^^^^^^
+...
+201 |     pub(super) fn apply_handles(&mut self, plan: &StoragePlan, e: &HandleEvent) -> io::Result<()> {
+    |                   ^^^^^^^^^^^^^
+
+warning: struct `HistorySummary` is never constructed
+  --> src\infrastructure\windows_client_originals024\v3\history.rs:63:19
+   |
+63 | pub(super) struct HistorySummary {
+   |                   ^^^^^^^^^^^^^^
+
+warning: associated items `from_native_data` and `validate` are never used
+  --> src\infrastructure\windows_client_originals024\v3\history.rs:69:19
+   |
+68 | impl HistoryReference {
+   | --------------------- associated items in this implementation
+69 |     pub(super) fn from_native_data(value: serde_json::Value) -> io::Result<Self> {
+   |                   ^^^^^^^^^^^^^^^^
+...
+72 |     fn validate(
+   |        ^^^^^^^^
+
+warning: methods `verify_original_history_references`, `history_linked`, `history_context`, `history_summary`, `history_event`, and `apply_history` are never used
+   --> src\infrastructure\windows_client_originals024\v3\history.rs:111:19
+    |
+110 | impl Progress {
+    | ------------- methods in this implementation
+111 |     pub(super) fn verify_original_history_references(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+128 |     pub(super) fn history_linked(&self) -> bool {
+    |                   ^^^^^^^^^^^^^^
+...
+133 |     pub(super) fn history_context(&self, plan: &StoragePlan) -> io::Result<HistoryContextData> {
+    |                   ^^^^^^^^^^^^^^^
+...
+165 |     pub(super) fn history_summary(&self) -> io::Result<Option<HistorySummary>> {
+    |                   ^^^^^^^^^^^^^^^
+...
+177 |     pub(super) fn history_event(
+    |                   ^^^^^^^^^^^^^
+...
+198 |     pub(super) fn apply_history(&mut self, plan: &StoragePlan, e: &HistoryEvent) -> io::Result<()> {
+    |                   ^^^^^^^^^^^^^
+
+warning: function `before` is never used
+  --> src\infrastructure\windows_client_originals024\v3\journal.rs:31:4
+   |
+31 | fn before(end: Instant) -> io::Result<()> {
+   |    ^^^^^^
+
+warning: function `identity` is never used
+  --> src\infrastructure\windows_client_originals024\v3\journal.rs:38:4
+   |
+38 | fn identity(file: &File) -> io::Result<FileIdentity> {
+   |    ^^^^^^^^
+
+warning: function `observe` is never used
+  --> src\infrastructure\windows_client_originals024\v3\journal.rs:54:4
+   |
+54 | fn observe(path: &Path) -> io::Result<File> {
+   |    ^^^^^^^
+
+warning: function `security` is never used
+  --> src\infrastructure\windows_client_originals024\v3\journal.rs:61:4
+   |
+61 | fn security(file: &File, end: Instant) -> io::Result<SnapshotData> {
+   |    ^^^^^^^^
+
+warning: function `directory_security` is never used
+  --> src\infrastructure\windows_client_originals024\v3\journal.rs:64:4
+   |
+64 | fn directory_security(pin: &PinnedDirectory, end: Instant) -> io::Result<SnapshotData> {
+   |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `session_namespace` is never used
+  --> src\infrastructure\windows_client_originals024\v3\journal.rs:73:4
+   |
+73 | fn session_namespace(
+   |    ^^^^^^^^^^^^^^^^^
+
+warning: function `contents` is never used
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:104:4
+    |
+104 | fn contents(file: &mut File) -> io::Result<Vec<u8>> {
+    |    ^^^^^^^^
+
+warning: fields `file`, `path`, `raw`, `security`, and `entry` are never read
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:114:5
+    |
+113 | struct Record {
+    |        ------ fields in this struct
+114 |     file: PrivateRecord,
+    |     ^^^^
+115 |     path: PathBuf,
+    |     ^^^^
+116 |     raw: Vec<u8>,
+    |     ^^^
+117 |     security: SnapshotData,
+    |     ^^^^^^^^
+...
+120 |     entry: Option<ChainEntry>,
+    |     ^^^^^
+
+warning: associated items `create` and `check` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:123:8
+    |
+122 | impl Record {
+    | ----------- associated items in this implementation
+123 |     fn create(path: &Path, raw: Vec<u8>, end: Instant) -> io::Result<Self> {
+    |        ^^^^^^
+...
+143 |     fn check(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^
+
+warning: struct `Current` is never constructed
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:174:8
+    |
+174 | struct Current {
+    |        ^^^^^^^
+
+warning: multiple fields are never read
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:209:5
+    |
+208 | pub(in super::super) struct Journal {
+    |                             ------- fields in this struct
+209 |     directory: PinnedDirectory,
+    |     ^^^^^^^^^
+210 |     directory_security: SnapshotData,
+    |     ^^^^^^^^^^^^^^^^^^
+211 |     pins: [PinnedDirectory; 4],
+    |     ^^^^
+212 |     peer: RetainedPeer,
+    |     ^^^^
+213 |     token: TokenIdentity,
+    |     ^^^^^
+214 |     manifest: Manifest,
+    |     ^^^^^^^^
+215 |     manifest_record: Record,
+    |     ^^^^^^^^^^^^^^^
+216 |     events: Vec<Record>,
+    |     ^^^^^^
+217 |     progress: Progress,
+    |     ^^^^^^^^
+218 |     current: File,
+    |     ^^^^^^^
+219 |     current_id: FileIdentity,
+    |     ^^^^^^^^^^
+220 |     current_security: SnapshotData,
+    |     ^^^^^^^^^^^^^^^^
+221 |     current_raw: Vec<u8>,
+    |     ^^^^^^^^^^^
+222 |     deadline: Instant,
+    |     ^^^^^^^^
+223 |     poisoned: bool,
+    |     ^^^^^^^^
+224 |     released_lease: Option<super::super::coordination::ReleasedLease>,
+    |     ^^^^^^^^^^^^^^
+225 |     previous_releases: Vec<super::super::coordination::ReleasedLease>,
+    |     ^^^^^^^^^^^^^^^^^
+226 |     source_action: Option<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
+    |     ^^^^^^^^^^^^^
+227 |     pending_source_action:
+    |     ^^^^^^^^^^^^^^^^^^^^^
+228 |         Option<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
+229 |     old_source_actions: Vec<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
+    |     ^^^^^^^^^^^^^^^^^^
+230 |     original_handoff: Option<super::super::tree::OriginalHandleHandoff>,
+    |     ^^^^^^^^^^^^^^^^
+231 |     retired_lease_histories: Vec<super::super::coordination::RetiredLeaseHistory>,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^
+232 |     close_completion: Option<completed::CompletedOriginals>,
+    |     ^^^^^^^^^^^^^^^^
+233 |     native_batches: Vec<batches::RetainedNativeBatch>,
+    |     ^^^^^^^^^^^^^^
+
+warning: struct `ObservationContext` is never constructed
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:239:29
+    |
+239 | pub(in super::super) struct ObservationContext {
+    |                             ^^^^^^^^^^^^^^^^^^
+
+warning: methods `session`, `metadata`, `purpose_leaf`, and `matches` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:250:29
+    |
+249 | impl ObservationContext {
+    | ----------------------- methods in this implementation
+250 |     pub(in super::super) fn session(&self) -> &str {
+    |                             ^^^^^^^
+...
+253 |     pub(in super::super) fn metadata(&self) -> serde_json::Value {
+    |                             ^^^^^^^^
+...
+256 |     pub(in super::super) fn purpose_leaf(&self) -> String {
+    |                             ^^^^^^^^^^^^
+...
+263 |     pub(in super::super) fn matches(&self, root: &Path, frame: &str) -> bool {
+    |                             ^^^^^^^
+
+warning: struct `ObservationSeriesContext` is never constructed
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:274:29
+    |
+274 | pub(in super::super) struct ObservationSeriesContext {
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `binding`, `sequences`, and `frame` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:280:29
+    |
+279 | impl ObservationSeriesContext {
+    | ----------------------------- methods in this implementation
+280 |     pub(in super::super) fn binding(&self, stage: usize) -> io::Result<&serde_json::Value> {
+    |                             ^^^^^^^
+...
+283 |     pub(in super::super) fn sequences(&self) -> [u32; 3] {
+    |                             ^^^^^^^^^
+...
+286 |     pub(in super::super) fn frame(&self, stage: usize, root: usize) -> io::Result<&str> {
+    |                             ^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:318:29
+    |
+294 | impl Journal {
+    | ------------ associated items in this implementation
+...
+318 |     pub(in super::super) fn observation_series_context(
+    |                             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+377 |     pub(in super::super) fn observation_context(
+    |                             ^^^^^^^^^^^^^^^^^^^
+...
+404 |     pub(in super::super) fn create_from_source(
+    |                             ^^^^^^^^^^^^^^^^^^
+...
+436 |     pub(in super::super) fn check_source_owner(
+    |                             ^^^^^^^^^^^^^^^^^^
+...
+466 |     pub(in super::super) fn create(
+    |                             ^^^^^^
+...
+602 |     fn check_inner(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^
+...
+618 |     fn check_records(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^
+...
+698 |     pub(in super::super) fn check(&mut self, end: Instant) -> io::Result<()> {
+    |                             ^^^^^
+...
+705 |     pub(in super::super) fn append(&mut self, event: Event, end: Instant) -> io::Result<()> {
+    |                             ^^^^^^
+...
+712 |     fn append_inner(&mut self, event: Event, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^
+...
+715 |     fn append_entry_inner(&mut self, event: ChainEntry, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: methods `action_event` and `bind_original_stop_action` are never used
+  --> src\infrastructure\windows_client_originals024\v3\journal\actions.rs:33:8
+   |
+12 | impl Journal {
+   | ------------ methods in this implementation
+...
+33 |     fn action_event(
+   |        ^^^^^^^^^^^^
+...
+61 |     pub(in crate::infrastructure::windows_client_originals024) fn bind_original_stop_action(
+   |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `id`, `kind`, `values`, and `committed` are never read
+  --> src\infrastructure\windows_client_originals024\v3\journal\batches.rs:12:5
+   |
+11 | pub(super) struct RetainedNativeBatch {
+   |                   ------------------- fields in this struct
+12 |     id: String,
+   |     ^^
+13 |     kind: BatchKind,
+   |     ^^^^
+14 |     values: Vec<VerifiedBatchValue>,
+   |     ^^^^^^
+15 |     committed: bool,
+   |     ^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\batches.rs:18:8
+    |
+ 17 | impl Journal {
+    | ------------ methods in this implementation
+ 18 |     fn batch_claim(&mut self, claim: &mut AnchoredClaim<'_>, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^
+...
+ 32 |     fn batch_original_event(
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+ 72 |     fn expected_original_identity(&self, node: &str) -> io::Result<(String, SnapshotData)> {
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 87 |     fn retain_batch(&mut self, id: String, kind: BatchKind) -> io::Result<usize> {
+    |        ^^^^^^^^^^^^
+...
+100 |     pub(in crate::infrastructure::windows_client_originals024) fn prepare_initial_batches(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^
+...
+277 |     fn recover_native_batch(
+    |        ^^^^^^^^^^^^^^^^^^^^
+...
+409 |     pub(super) fn publish_released_anchor_batch(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `completed_at`, `original_end`, `current_id`, and `state_digest` are never read
+ --> src\infrastructure\windows_client_originals024\v3\journal\completed.rs:6:5
+  |
+5 | pub(super) struct CompletedOriginals {
+  |                   ------------------ fields in this struct
+6 |     completed_at: Instant,
+  |     ^^^^^^^^^^^^
+7 |     original_end: Instant,
+  |     ^^^^^^^^^^^^
+8 |     current_id: FileIdentity,
+  |     ^^^^^^^^^^
+9 |     state_digest: String,
+  |     ^^^^^^^^^^^^
+
+warning: function `state_digest` is never used
+  --> src\infrastructure\windows_client_originals024\v3\journal\completed.rs:11:4
+   |
+11 | fn state_digest(journal: &Journal) -> io::Result<String> {
+   |    ^^^^^^^^^^^^
+
+warning: associated items `capture`, `matches`, and `data` are never used
+  --> src\infrastructure\windows_client_originals024\v3\journal\completed.rs:29:80
+   |
+28 | impl CompletedOriginals {
+   | ----------------------- associated items in this implementation
+29 |     pub(in crate::infrastructure::windows_client_originals024::v3::journal) fn capture(
+   |                                                                                ^^^^^^^
+...
+70 |     fn matches(&self, journal: &Journal) -> io::Result<()> {
+   |        ^^^^^^^
+...
+93 |     fn data(&self) -> serde_json::Value {
+   |        ^^^^
+
+warning: method `completed_history_at` is never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\completed.rs:100:8
+    |
+ 99 | impl Journal {
+    | ------------ method in this implementation
+100 |     fn completed_history_at(&mut self, when: Instant, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `check_tree`, `event`, `snapshot_anchor`, `execute_node`, and `execute_inner` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\driver.rs:6:8
+    |
+  5 | impl Journal {
+    | ------------ methods in this implementation
+  6 |     fn check_tree(
+    |        ^^^^^^^^^^
+...
+ 32 |     pub(super) fn event(
+    |                   ^^^^^
+...
+107 |     pub(in crate::infrastructure::windows_client_originals024) fn snapshot_anchor(
+    |                                                                   ^^^^^^^^^^^^^^^
+...
+137 |     pub(in crate::infrastructure::windows_client_originals024) fn execute_node<F>(
+    |                                                                   ^^^^^^^^^^^^
+...
+156 |     fn execute_inner<F>(
+    |        ^^^^^^^^^^^^^
+
+warning: method `close_original_handles` is never used
+  --> src\infrastructure\windows_client_originals024\v3\journal\handles.rs:42:8
+   |
+ 9 | impl Journal {
+   | ------------ method in this implementation
+...
+42 |     fn close_original_handles(&mut self, end: Instant) -> io::Result<()> {
+   |        ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `HistoryContext` is never constructed
+ --> src\infrastructure\windows_client_originals024\v3\journal\history.rs:7:67
+  |
+7 | pub(in crate::infrastructure::windows_client_originals024) struct HistoryContext {
+  |                                                                   ^^^^^^^^^^^^^^
+
+warning: methods `session`, `metadata`, and `matches` are never used
+  --> src\infrastructure\windows_client_originals024\v3\journal\history.rs:12:67
+   |
+11 | impl HistoryContext {
+   | ------------------- methods in this implementation
+12 |     pub(in crate::infrastructure::windows_client_originals024) fn session(&self) -> &str {
+   |                                                                   ^^^^^^^
+...
+15 |     pub(in crate::infrastructure::windows_client_originals024) fn metadata(
+   |                                                                   ^^^^^^^^
+...
+21 |     pub(in crate::infrastructure::windows_client_originals024) fn matches(
+   |                                                                   ^^^^^^^
+
+warning: methods `original_history_boundary` and `seal_original_history` are never used
+  --> src\infrastructure\windows_client_originals024\v3\journal\history.rs:40:8
+   |
+39 | impl Journal {
+   | ------------ methods in this implementation
+40 |     fn original_history_boundary(&mut self, end: Instant) -> io::Result<()> {
+   |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+59 |     fn seal_original_history(
+   |        ^^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\leases.rs:7:67
+    |
+  6 | impl Journal {
+    | ------------ methods in this implementation
+  7 |     pub(in crate::infrastructure::windows_client_originals024) fn poison_segment(&mut self) {
+    |                                                                   ^^^^^^^^^^^^^^
+...
+ 10 |     pub(super) fn lease_event(
+    |                   ^^^^^^^^^^^
+...
+ 43 |     pub(super) fn append_lease(&mut self, e: LeaseEvent, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^^^^^^
+...
+ 50 |     fn check_plans(&mut self, plans: &[serde_json::Value; 2], end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^
+...
+ 65 |     pub(in crate::infrastructure::windows_client_originals024) fn prepare_lease_release(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+ 92 |     pub(in crate::infrastructure::windows_client_originals024) fn retain_lease_release(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^
+...
+103 |     pub(in crate::infrastructure::windows_client_originals024) fn finish_lease_release(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^
+...
+142 |     pub(in crate::infrastructure::windows_client_originals024) fn prepare_lease_acquire(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+168 |     pub(in crate::infrastructure::windows_client_originals024) fn acquire_prepared_lease(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^
+...
+198 |     pub(in crate::infrastructure::windows_client_originals024) fn finish_lease_acquire(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: function `io_error` is never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\leases.rs:253:4
+    |
+253 | fn io_error(e: impl std::fmt::Display) -> io::Error {
+    |    ^^^^^^^^
+
+warning: methods `resume_linked_work`, `check_work_claim`, `work_event`, `work_transition`, and `unchanged_work` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\observations.rs:5:67
+    |
+  4 | impl Journal {
+    | ------------ methods in this implementation
+  5 |     pub(in crate::infrastructure::windows_client_originals024) fn resume_linked_work<F>(
+    |                                                                   ^^^^^^^^^^^^^^^^^^
+...
+ 83 |     fn check_work_claim(
+    |        ^^^^^^^^^^^^^^^^
+...
+110 |     fn work_event(&self, op: WorkOperation, digests: Option<[String; 2]>) -> io::Result<WorkEvent> {
+    |        ^^^^^^^^^^
+...
+130 |     pub(in crate::infrastructure::windows_client_originals024) fn work_transition<F>(
+    |                                                                   ^^^^^^^^^^^^^^^
+...
+188 |     pub(in crate::infrastructure::windows_client_originals024) fn unchanged_work<F>(
+    |                                                                   ^^^^^^^^^^^^^^
+
+warning: methods `recovery_journal_claim`, `recovery_native_check`, `prepare_native_recovery`, and `execute_native_recovery` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\recovery.rs:9:8
+    |
+  8 | impl Journal {
+    | ------------ methods in this implementation
+  9 |     fn recovery_journal_claim(
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+ 51 |     pub(super) fn recovery_native_check(
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+ 85 |     fn prepare_native_recovery(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^
+...
+119 |     fn execute_native_recovery(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `seal_native_recovery_tree`, `release_native_recovery`, and `final_release_postconditions` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\recovery\final_release.rs:7:8
+    |
+  6 | impl Journal {
+    | ------------ methods in this implementation
+  7 |     fn seal_native_recovery_tree(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+ 49 |     fn release_native_recovery(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^
+...
+154 |     fn final_release_postconditions(
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\snapshots.rs:83:67
+    |
+ 17 | impl Journal {
+    | ------------ associated items in this implementation
+...
+ 83 |     pub(in crate::infrastructure::windows_client_originals024) fn stopped_content_observations(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+135 |     fn stop_source(
+    |        ^^^^^^^^^^^
+...
+153 |     pub(in crate::infrastructure::windows_client_originals024) fn begin_pre_stop_snapshot_link(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+184 |     fn snapshot_refs(
+    |        ^^^^^^^^^^^^^
+...
+196 |     pub(in crate::infrastructure::windows_client_originals024) fn record_pre_stop_phase(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^
+...
+232 |     pub(in crate::infrastructure::windows_client_originals024) fn record_teardown_prepared(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+...
+265 |     fn stopped_source(
+    |        ^^^^^^^^^^^^^^
+...
+292 |     pub(in crate::infrastructure::windows_client_originals024) fn begin_stopped_snapshot_link(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+316 |     pub(in crate::infrastructure::windows_client_originals024) fn record_stopped_phase(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^
+...
+352 |     fn snapshot_claim(&mut self, claim: &mut AnchoredClaim<'_>, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^^^
+...
+363 |     fn snapshot_event(
+    |        ^^^^^^^^^^^^^^
+...
+394 |     fn begin_snapshot(
+    |        ^^^^^^^^^^^^^^
+...
+428 |     pub(in crate::infrastructure::windows_client_originals024) fn begin_observation_snapshot_link(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+439 |     pub(in crate::infrastructure::windows_client_originals024) fn finish_snapshot_link(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^
+...
+484 |     fn ready_source(
+    |        ^^^^^^^^^^^^
+...
+502 |     pub(in crate::infrastructure::windows_client_originals024) fn begin_ready_snapshot_link(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+521 |     pub(in crate::infrastructure::windows_client_originals024) fn record_ready_phase(
+    |                                                                   ^^^^^^^^^^^^^^^^^^
+
+warning: method `apply_work` is never used
+  --> src\infrastructure\windows_client_originals024\v3\observations.rs:46:19
+   |
+45 | impl Progress {
+   | ------------- method in this implementation
+46 |     pub(super) fn apply_work(&mut self, plan: &StoragePlan, e: &WorkEvent) -> io::Result<()> {
+   |                   ^^^^^^^^^^
+
+warning: field `data_digest` is never read
+  --> src\infrastructure\windows_client_originals024\v3\recovery.rs:66:5
+   |
+63 | pub(super) struct RecoveryPlan {
+   |                   ------------ field in this struct
+...
+66 |     data_digest: std::sync::OnceLock<String>,
+   |     ^^^^^^^^^^^
+
+warning: function `key` is never used
+  --> src\infrastructure\windows_client_originals024\v3\recovery.rs:68:4
+   |
+68 | fn key(root: &str, relative: &str) -> String {
+   |    ^^^
+
+warning: function `artifact` is never used
+  --> src\infrastructure\windows_client_originals024\v3\recovery.rs:71:4
+   |
+71 | fn artifact(root: &str, relative: &str) -> bool {
+   |    ^^^^^^^^
+
+warning: function `same` is never used
+  --> src\infrastructure\windows_client_originals024\v3\recovery.rs:80:4
+   |
+80 | fn same<A: Serialize, B: Serialize>(a: &A, b: &B) -> io::Result<bool> {
+   |    ^^^^
+
+warning: multiple associated items are never used
+   --> src\infrastructure\windows_client_originals024\v3\recovery.rs:86:8
+    |
+ 85 | impl RecoveryPlan {
+    | ----------------- associated items in this implementation
+ 86 |     fn node_root(&self, id: &str) -> io::Result<String> {
+    |        ^^^^^^^^^
+...
+102 |     fn anchor_release(&self, id: &str) -> io::Result<(String, RecoveryMove)> {
+    |        ^^^^^^^^^^^^^^
+...
+128 |     fn movement(&self, id: &str, retire: bool) -> io::Result<(String, RecoveryMove)> {
+    |        ^^^^^^^^
+...
+183 |     pub(super) fn from_native_data(roots: [serde_json::Value; 2]) -> io::Result<Self> {
+    |                   ^^^^^^^^^^^^^^^^
+...
+186 |     pub(super) fn digest(&self) -> io::Result<String> {
+    |                   ^^^^^^
+...
+194 |     fn retirement_keys(&self) -> BTreeMap<String, u8> {
+    |        ^^^^^^^^^^^^^^^
+...
+204 |     fn restore_keys(&self) -> BTreeMap<String, u8> {
+    |        ^^^^^^^^^^^^
+...
+216 |     pub(super) fn validate(&self, plan: &StoragePlan, g: &Progress) -> io::Result<()> {
+    |                   ^^^^^^^^
+...
+219 |     pub(super) fn validate_for_purpose(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `RecoverySummary` is never constructed
+   --> src\infrastructure\windows_client_originals024\v3\recovery.rs:494:19
+    |
+494 | pub(super) struct RecoverySummary {
+    |                   ^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_client_originals024\v3\recovery.rs:505:19
+    |
+504 | impl Progress {
+    | ------------- methods in this implementation
+505 |     pub(super) fn verify_batch_native_value(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+546 |     pub(super) fn batch_recovery_nodes(&self, retire: bool) -> io::Result<Vec<(String, String)>> {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+572 |     pub(super) fn clear_batch_projection_pending(&mut self) {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+578 |     pub(super) fn set_batch_recovery_pending(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+586 |     pub(super) fn recovery_reserved_identities(&self) -> io::Result<BTreeSet<(u32, String)>> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+621 |     pub(super) fn original_history_frames(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^
+...
+638 |     pub(super) fn retirement_history_digest(&self) -> io::Result<String> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+641 |     pub(super) fn recovery_event(
+    |                   ^^^^^^^^^^^^^^
+...
+698 |     pub(super) fn recovery_summary(&self) -> io::Result<Option<RecoverySummary>> {
+    |                   ^^^^^^^^^^^^^^^^
+...
+731 |     pub(super) fn apply_recovery(
+    |                   ^^^^^^^^^^^^^^
+...
+958 |     pub(super) fn recovery_tree_ready_for_release(&self, plan: &StoragePlan) -> bool {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `apply_entry` and `apply_lease` are never used
+  --> src\infrastructure\windows_client_originals024\v3\segments.rs:55:19
+   |
+54 | impl Progress {
+   | ------------- methods in this implementation
+55 |     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
+   |                   ^^^^^^^^^^^
+...
+74 |     pub(super) fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {
+   |                   ^^^^^^^^^^^
+
+warning: method `leaf` is never used
+  --> src\infrastructure\windows_client_originals024\v3\snapshots.rs:13:19
+   |
+12 | impl SnapshotPurpose {
+   | -------------------- method in this implementation
+13 |     pub(super) fn leaf(self) -> &'static str {
+   |                   ^^^^
+
+warning: associated items `object_ids`, `context_metadata`, `purpose`, `observation_sequence`, `from_native_data`, and `validate` are never used
+   --> src\infrastructure\windows_client_originals024\v3\snapshots.rs:93:19
+    |
+ 92 | impl SnapshotReference {
+    | ---------------------- associated items in this implementation
+ 93 |     pub(super) fn object_ids(&self) -> [(u32, String); 2] {
+    |                   ^^^^^^^^^^
+...
+ 99 |     pub(super) fn context_metadata(&self) -> io::Result<serde_json::Value> {
+    |                   ^^^^^^^^^^^^^^^^
+...
+102 |     pub(super) fn purpose(&self) -> SnapshotPurpose {
+    |                   ^^^^^^^
+...
+105 |     pub(super) fn observation_sequence(&self) -> u32 {
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+108 |     pub(super) fn from_native_data(value: serde_json::Value) -> io::Result<Self> {
+    |                   ^^^^^^^^^^^^^^^^
+...
+111 |     pub(super) fn validate(
+    |                   ^^^^^^^^
+
+warning: method `apply_snapshot` is never used
+   --> src\infrastructure\windows_client_originals024\v3\snapshots.rs:162:19
+    |
+161 | impl Progress {
+    | ------------- method in this implementation
+162 |     pub(super) fn apply_snapshot(
+    |                   ^^^^^^^^^^^^^^
+
+warning: field `start_action` is never read
+   --> src\infrastructure\windows_official_lifecycle024.rs:141:5
+    |
+140 | pub(crate) struct Owner {
+    |                   ----- field in this struct
+141 |     start_action: actions::ActionOrigin,
+    |     ^^^^^^^^^^^^
+
+warning: function `cancel` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:917:15
+    |
+917 | pub(crate) fn cancel(runtime: &SharedRuntimeExecutable, home: &Path) {
+    |               ^^^^^^
+
+warning: function `recovery_state_at` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:966:15
+    |
+966 | pub(crate) fn recovery_state_at(
+    |               ^^^^^^^^^^^^^^^^^
+
+warning: function `status` is never used
+    --> src\infrastructure\windows_official_lifecycle024.rs:1059:21
+     |
+1059 | pub(crate) async fn status(
+     |                     ^^^^^^
+
+warning: field `id` is never read
+  --> src\infrastructure\windows_official_lifecycle024\actions.rs:12:5
+   |
+11 | pub(super) struct ActionOrigin {
+   |                   ------------ field in this struct
+12 |     id: uuid::Uuid,
+   |     ^^
+
+warning: multiple fields are never read
+  --> src\infrastructure\windows_official_lifecycle024\actions.rs:55:5
+   |
+54 | pub(crate) struct NativeAction {
+   |                   ------------ fields in this struct
+55 |     scope: String,
+   |     ^^^^^
+56 |     owner: uuid::Uuid,
+   |     ^^^^^
+57 |     origin: uuid::Uuid,
+   |     ^^^^^^
+58 |     kind: OriginalActionKind,
+   |     ^^^^
+59 |     end: Instant,
+   |     ^^^
+60 |     outer_end: Instant,
+   |     ^^^^^^^^^
+61 |     stop_end: Instant,
+   |     ^^^^^^^^
+62 |     token: native::TokenIdentity,
+   |     ^^^^^
+
+warning: method `original_action` is never used
+  --> src\infrastructure\windows_official_lifecycle024\actions.rs:83:19
+   |
+64 | impl Owner {
+   | ---------- method in this implementation
+...
+83 |     pub(crate) fn original_action(
+   |                   ^^^^^^^^^^^^^^^
+
+warning: methods `same_original_owner`, `check`, `deadline`, `scope_id`, and `kind` are never used
+   --> src\infrastructure\windows_official_lifecycle024\actions.rs:125:19
+    |
+124 | impl NativeAction {
+    | ----------------- methods in this implementation
+125 |     pub(crate) fn same_original_owner(&self, other: &Self) -> bool {
+    |                   ^^^^^^^^^^^^^^^^^^^
+...
+128 |     pub(crate) fn check(&self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+    |                   ^^^^^
+...
+151 |     pub(crate) fn deadline(&self) -> Instant {
+    |                   ^^^^^^^^
+...
+154 |     pub(crate) fn scope_id(&self) -> String {
+    |                   ^^^^^^^^
+...
+157 |     pub(crate) fn kind(&self) -> OriginalActionKind {
+    |                   ^^^^
+
+warning: fields `started`, `stop_deadline`, and `action_id` are never read
+  --> src\infrastructure\windows_owner_host024\mod.rs:49:5
+   |
+48 | pub(crate) struct ValidatedDeadline {
+   |                   ----------------- fields in this struct
+49 |     started: Instant,
+   |     ^^^^^^^
+50 |     deadline: Instant,
+51 |     stop_deadline: Instant,
+   |     ^^^^^^^^^^^^^
+52 |     action_id: uuid::Uuid,
+   |     ^^^^^^^^^
+   |
+   = note: `ValidatedDeadline` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: function `outer_job_precondition` is never used
+  --> src\infrastructure\windows_owner_host024\mod.rs:84:15
+   |
+84 | pub(crate) fn outer_job_precondition() -> io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `refused` is never used
+  --> src\infrastructure\windows_owner_host024\continuity.rs:13:4
+   |
+13 | fn refused(detail: impl Into<String>) -> AppError {
+   |    ^^^^^^^
+
+warning: struct `ManagerConnection` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:19:19
+   |
+19 | pub(crate) struct ManagerConnection {
+   |                   ^^^^^^^^^^^^^^^^^
+
+warning: struct `AttachedManager` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:26:19
+   |
+26 | pub(crate) struct AttachedManager {
+   |                   ^^^^^^^^^^^^^^^
+
+warning: struct `WindowsOwnerHost` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:33:19
+   |
+33 | pub(crate) struct WindowsOwnerHost {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: associated items `new` and `challenge` are never used
+  --> src\infrastructure\windows_owner_host024\continuity.rs:44:19
+   |
+41 | impl WindowsOwnerHost {
+   | --------------------- associated items in this implementation
+...
+44 |     pub(crate) fn new(
+   |                   ^^^
+...
+72 |     pub(crate) fn challenge(
+   |                   ^^^^^^^^^
+
+warning: function `hash_hex` is never used
+   --> src\infrastructure\windows_owner_host024\continuity.rs:110:4
+    |
+110 | fn hash_hex(bytes: &[u8]) -> String {
+    |    ^^^^^^^^
+
+warning: function `current_images` is never used
+   --> src\infrastructure\windows_owner_host024\continuity.rs:113:4
+    |
+113 | fn current_images(
+    |    ^^^^^^^^^^^^^^
+
+warning: function `consume_replay_keys` is never used
+   --> src\infrastructure\windows_owner_host024\continuity.rs:129:4
+    |
+129 | fn consume_replay_keys(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: method `action_window` is never used
+   --> src\infrastructure\windows_owner_host024\continuity.rs:152:19
+    |
+151 | impl AttachedManager {
+    | -------------------- method in this implementation
+152 |     pub(crate) fn action_window(
+    |                   ^^^^^^^^^^^^^
+
+warning: fields `argv`, `parent`, `source_sha`, and `phase` are never read
+  --> src\infrastructure\windows_diagnostic_roles024.rs:36:5
+   |
+31 | pub(crate) struct ProvenRole {
+   |                   ---------- fields in this struct
+...
+36 |     argv: Vec<String>,
+   |     ^^^^
+37 |     parent: ProcessIdentity,
+   |     ^^^^^^
+38 |     source_sha: String,
+   |     ^^^^^^^^^^
+39 |     phase: &'static str,
+   |     ^^^^^
+
+warning: linker stdout:    Creating library C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\debug\build\opencodex-desktop/81c1023f307cfebf\out\opencodex_desktop_lib.dll.lib and object C:\Users\15119\.codex\worktrees\024-windows-native\code\test\windows024-native/target/w1c-product\x86_64-pc-windows-msvc\debug\build\opencodex-desktop/81c1023f307cfebf\out\opencodex_desktop_lib.dll.exp
+  |
+  = note: `#[warn(linker_messages)]` on by default
+
+warning: `opencodex-desktop` (lib) generated 281 warnings (run `cargo fix --lib -p opencodex-desktop` to apply 15 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3m 17s

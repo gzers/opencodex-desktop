@@ -1,0 +1,61 @@
+{
+  "planFieldsPrivate": true,
+  "cacheNeverSerializedOrSuppliedByPersistedInput": true,
+  "noMutablePlanSetter": true,
+  "digestIsPureDataOnly": true,
+  "mutableSummaryBindsPlanDigestAndAllNodePendingAnchorStates": true,
+  "oldNativeImplementationsAndComparisons": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+      "sha256": "f51a648daea0bb827f339519162ff72543ddf8d637a55b97999e5f0d8e83b326",
+      "byteEqualToPriorFailedNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/batches.rs",
+      "sha256": "bd40c1d00d3916e70d67c730ab9f31c124496cf034a2ddb94606870c1d397d89",
+      "byteEqualToPriorFailedNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement.rs",
+      "sha256": "60e6c96c253def65a9e6c9e769b0e2eea2b30dd530a1af8a877a1a57acc535c6",
+      "byteEqualToPriorFailedNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement/witness.rs",
+      "sha256": "41d9959349919ca264683fdbd7b9ed55621f81b1c91276a8ace855d226608f88",
+      "byteEqualToPriorFailedNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/batches.rs",
+      "sha256": "3c69068628119aef950dd191f047630969702cf375a629071e2cc80def9ef7f7",
+      "byteEqualToPriorFailedNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery/final_release.rs",
+      "sha256": "a91dcdc6cc6ac0a8587f0114cbb896f6b9af26356b9becaff12d52446a2a4440",
+      "byteEqualToPriorFailedNativeRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs",
+      "sha256": "adb0d32be4a3005ce5a793b7971b68c658f6f93a6a151c9e1b40695e04e137e0",
+      "byteEqualToPriorFailedNativeRun": true
+    }
+  ],
+  "observedDigestCacheCode": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/batch_data_tests.rs",
+      "text": "assert!(restored.data_digest.get().is_none());"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/recovery.rs",
+      "text": "if let Some(digest) = self.data_digest.get() {"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/recovery.rs",
+      "text": "let _ = self.data_digest.set(digest.clone());"
+    }
+  ],
+  "actualDataCounterexamplesPassed": true,
+  "originalDeadlineChanged": false,
+  "unknownRefusalChanged": false
+}

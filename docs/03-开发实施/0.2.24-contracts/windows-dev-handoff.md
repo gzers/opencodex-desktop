@@ -730,3 +730,17 @@ library01 MSVCdebug v3回归raw0/27过；library02原优化profile新scope raw10
 诊断profile02子CPU136859.375ms/145657ms墙钟（94%单核，kernel95609.375ms），1369872 readOps/21488996 otherOps；全机采样忙约10.8%/20逻辑CPU。没有全机忙或外部I/O等待的充分依据，不向用户要放宽预算/改日常策略。后继按r6已允许的单phase有界原子节点事件批处理减少记录数/重复full-chain native成本，仍完整intent-before-native/result-after-readback/准确中断前缀/原claim/NLK/all8/未知拒绝；实现计划next-bounded-batch-plan.md，不重新请Mac决定existing-root布局或要求范围外接口。
 
 本地候选产品MSVCdebug bins raw0/195617ms，174产品输入/128最终testRust逐份核candidate tree/工作源及行尾等价；其制品未对应新源commit/未接受，和上次已推制品摘要分开。184场景完整私有ZIP核验，6完成纯数据scene核fresh准确路径/全文件hash/目录membership后清理，178失败/pending保留；4119份canonical/快照/history原字节另存。ZIP非NTFS身份安全克隆，历史拒绝清理不重试。仅本轮文档/证据提交推送，未通过源码仍在本地工作区，正常Git index未改。Start拒绝、原生产/原缺席/普通MSI/CAP-trust/历史清理全未完，goal继续active，不W2/双SID/发布。
+
+## 2026-11-16 r6 有界批节点记录及原预算组件通过
+
+源码c259886cf5723409a1c77d41d1f9b42196bd6b61/tree9413be943fefab8c3129a91c04dceef37885353f，已按31个精确Windows允许文件提交推送；承接d20103fee与上段本地候选958c0deb，不改主线共享trait/预算/官方/日常配置。证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-bounded-node-batch-20261116-r1/。fetch实际main fac8573e5/治理578230717，TEAM16/IMP142/r6不变。
+
+按原合同已允许的单phase有界节点事件，非递归批封套仍同一manifest/current/不可覆盖phase链，每批仅一个物理sequence，row显式连续ordinal且原event.sequence/previousDigest绑定该phase；eventId/node/root/原nativeID/all8/parent/from-to/前后状态摘要/claim/epoch/原action scope均保留。完整有序意图计划先刷phase/current，再逐准确原handle执行，native witness每步完整BOTH-tree before/after、原语affected-tree比较不变；只由实际保管readback的VerifiedBatchValue登记结果，不能从计数或JSON构造。结果可逐准确连续prefix持久化，pending禁止旧node/lease/work/snapshot/action/history/handles绕过。每row用原单node/recovery校验器验证，在非native DATA投影全部通过才原子提交Progress；晚行错误不泄漏部分进度。1MiB/512/4KiB及未知拒绝不变，旧失败不转换或catch-up。
+
+原budget瓶颈继续按证据修复：不可变计划DATA摘要仅非序列化OnceLock复用，新解析从空cache重新算，changed DATA/hash不同且注入dataDigest拒绝；current状态摘要绑定planDigest及全部mutable/pending/anchor状态。不可变native记录保管同encoded(event)的私有typed值，磁盘ID/all8/raw/ADS/membership每次仍完整读回，append独立原Progress重放全部规则，只跳重复解码；无public/mutable setter或旧文件采用。新history/close相邻重复journal读回按实际IO边界归属，append写前/写后全比较、关闭前/后/结果后三次原路径后验及native archive BOTH-tree屏障保持，验证脚本逐字核原比较体。未加预算、修改profile、删断言或缓存native事实。
+
+首library02 E0603/raw101为BatchKind内部可见性，无新EXE/未运行native，精确导出修复。data/library01/03/05/07分别raw0/29/30/31/32过。优化library04 raw101/39过3败、library06 raw101/41过2败、library08 raw101/43过1败均按原10秒现场保留；其中离线checker正确拒绝case84未到actual1字节current，source负例已加强exact-prefix/error/partial-current条件，上游超时绝不计预期负例通过。最终library09仓库原优化参数raw0/44过0败，运行168.13s（每独立场景继承原截止，测试组总时长不冒动作时长）。实际32批场景为完整1＋初始14＋恢复17，含所有0..N前缀、immutable/current gap/actual1bytecurrent及durable-prefix1后中断；跨原窗13场景全部达到所需点，及时完成后真实过原窗新5秒读取过、过期append原门拒绝；6缺失/部分/unknown/迟到receipt和6漂移/foreign/窗口/current破坏均拒绝，无typedClosed。完整交易物理phase原88→新56，sequence含义不改，实际前后trace核对。不追溯改变ac622c2d8或本轮旧失败结论。
+
+712本轮scene完整私有ZIP核验，28完成纯数据scene核fresh准确路径/全部文件hash/目录membership清理，684失败/pending及254个D根保留；历史拒绝删除不重试，ZIP非NTFS身份/安全克隆。MSVC产品编译、三制品SHA、最终源/Git/blob核对、完整继承表/首错/所有raw日志归report/final-status。产品公开Start仍无条件拒绝，CaptureSlot initial prepare批lane只编译接入；actual Source/routes/PID/audit原窗/sharedpolicy必须在current转移前准入，actual Owner/NormalExit/Supervisor/StopAccepted/current/listener/完整inventory/生产Status5/typedClosed/后继/普通desktop H-S-D仍未验。原first-use/ownerreceipt/原缺席Codex安全退根、普通MSI/CAP-trust/历史清理保持未完，不W2/双SID/发布。
+
+本批最终MSVC custom-protocol debug bins raw0/197729ms；179产品输入与133最终testRust逐份对c259886cf/工作字节，明确CRLF等价，无手改/暂存preexisting schema。10077份canonical/快照/history原字节另归raw-scene-records；最终batch物理scene32与completed-history13均由准确不可变/current/实际后像离线核验。库源码编译/原生结果所有九轮及工具级核验错误完整保留；最后44过0败不追溯改早先失败。原副本ZIP不替代NTFS或native资格，allAccepted/productionExecuted/typedClosedQualified仍false。
