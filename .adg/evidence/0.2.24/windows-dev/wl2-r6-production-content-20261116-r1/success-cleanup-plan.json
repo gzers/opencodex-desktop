@@ -1,0 +1,71 @@
+[
+  {
+    "run": "library03",
+    "test": "wl2_r6_production_content_fixed_bun_original_audit_source_projection_and_pin_rechecks",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmplU8qLY",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-production-content-library03-0.zip",
+    "archiveSha256": "6ee9fbbea3ec823b5eaa89b1837d805f02a008962cc124890e89fd9e2db57ca2",
+    "files": [
+      {
+        "path": "fixed-audit-projection/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "fixed-audit-projection/stdout.log",
+        "bytes": 579,
+        "sha256": "2dec5813593eb61ad9fbf1a1b076854cecf375790f05de8721166633fac70766"
+      }
+    ],
+    "directories": [
+      "fixed-audit-projection"
+    ],
+    "removed": false
+  },
+  {
+    "run": "library04",
+    "test": "wl2_r6_production_content_exact_source_pin_denies_write_replace_and_wrong_hash",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpRzEZdP",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-production-content-library04-0.zip",
+    "archiveSha256": "391f6e888e066aa7427cad04c486989d80aef9435788635ff3904b9225a33ad8",
+    "files": [
+      {
+        "path": "synthetic-source-pin/replacement.ts",
+        "bytes": 44,
+        "sha256": "c6a8717840079aee9c2abc92552615b244dd7600090fa9f64596e13ec14a32fd"
+      },
+      {
+        "path": "synthetic-source-pin/source.ts",
+        "bytes": 44,
+        "sha256": "c6a8717840079aee9c2abc92552615b244dd7600090fa9f64596e13ec14a32fd"
+      }
+    ],
+    "directories": [
+      "synthetic-source-pin"
+    ],
+    "removed": false
+  },
+  {
+    "run": "library04",
+    "test": "wl2_r6_production_content_fixed_bun_original_audit_source_projection_and_pin_rechecks",
+    "source": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpyOeDAS",
+    "archive": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\r4-private-scenes\\r6-production-content-library04-1.zip",
+    "archiveSha256": "dcd39f3533e5693e1139d4334dc7a3091984a5315157d5d11b642b4fe21cef77",
+    "files": [
+      {
+        "path": "fixed-audit-projection/stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "fixed-audit-projection/stdout.log",
+        "bytes": 579,
+        "sha256": "2dec5813593eb61ad9fbf1a1b076854cecf375790f05de8721166633fac70766"
+      }
+    ],
+    "directories": [
+      "fixed-audit-projection"
+    ],
+    "removed": false
+  }
+]

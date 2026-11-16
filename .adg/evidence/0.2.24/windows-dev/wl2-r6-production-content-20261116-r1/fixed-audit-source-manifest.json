@@ -1,0 +1,89 @@
+{
+  "bundle": "C:\\Users\\Public\\ocxw1d-98b5378c87\\input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+  "bundleSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+  "officialArchiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "files": [
+    {
+      "path": "src/lib/redact.ts",
+      "originalArchiveMember": "package/src/lib/redact.ts",
+      "bytes": 19641,
+      "sha256": "1f2804c159d0cbf670d701d83422ed0c9d0adfc9125691aa4d408dba4d847ffa",
+      "exactBundleAndExtractedBytes": true,
+      "evidence": "fixed-official-source/src/lib/redact.ts",
+      "sourceLocations": [
+        {
+          "line": 382,
+          "text": "const USER_HOME_PATH_PATTERNS: Array<[RegExp, string]> = ["
+        },
+        {
+          "line": 391,
+          "text": "const SENSITIVE_SEGMENT_PATTERN = /(^|[\\\\/])([^\\\\/]*(?:secret|password|passwd|token|api[-_]?key|apikey|credential|email)[^\\\\/]*)(?=[\\\\/]|$)/gi;"
+        },
+        {
+          "line": 399,
+          "text": "export function redactUserPath(path: string): string {"
+        },
+        {
+          "line": 401,
+          "text": "  for (const [pattern, replacement] of USER_HOME_PATH_PATTERNS) {"
+        },
+        {
+          "line": 404,
+          "text": "  masked = masked.replace(SENSITIVE_SEGMENT_PATTERN, (_m, sep: string) => `${sep}[REDACTED]`);"
+        }
+      ]
+    },
+    {
+      "path": "src/lib/redact-folding.ts",
+      "originalArchiveMember": "package/src/lib/redact-folding.ts",
+      "bytes": 9339,
+      "sha256": "7bcd5a96fc97523df2f60e5f547aeb2e392c95c8802020bee973c6b775c9b85f",
+      "exactBundleAndExtractedBytes": true,
+      "evidence": "fixed-official-source/src/lib/redact-folding.ts",
+      "sourceLocations": []
+    },
+    {
+      "path": "src/codex/catalog/write-audit.ts",
+      "originalArchiveMember": "package/src/codex/catalog/write-audit.ts",
+      "bytes": 8130,
+      "sha256": "09cd430d0337b49d4b400d2a256a9a82eaa977bed66749d64f6041ed73a405d9",
+      "exactBundleAndExtractedBytes": true,
+      "evidence": "fixed-official-source/src/codex/catalog/write-audit.ts",
+      "sourceLocations": [
+        {
+          "line": 6,
+          "text": "import { redactUserPath } from \"../../lib/redact\";"
+        },
+        {
+          "line": 14,
+          "text": "const MAX_HOME_CHARACTERS = 256;"
+        },
+        {
+          "line": 33,
+          "text": "    at: new Date().toISOString(), pid: process.pid, ppid: process.ppid,"
+        },
+        {
+          "line": 35,
+          "text": "    opencodexHome: redactUserPath(event.opencodexHome).slice(0, MAX_HOME_CHARACTERS),"
+        }
+      ]
+    },
+    {
+      "path": "src/codex/catalog/write-audit-contract.ts",
+      "originalArchiveMember": "package/src/codex/catalog/write-audit-contract.ts",
+      "bytes": 927,
+      "sha256": "0b7ec87dfe50ab6d300c489b18d9c1a59c732939c92c085d46b4902117ec0ccd",
+      "exactBundleAndExtractedBytes": true,
+      "evidence": "fixed-official-source/src/codex/catalog/write-audit-contract.ts",
+      "sourceLocations": [
+        {
+          "line": 20,
+          "text": "  readonly opencodexHome: string;"
+        }
+      ]
+    }
+  ],
+  "officialFilesModified": false,
+  "officialServiceOrModelRequests": false,
+  "sourceReadOnly": true
+}

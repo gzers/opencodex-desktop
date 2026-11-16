@@ -1,0 +1,56 @@
+{
+  "sourceBase": "c259886cf",
+  "proofs": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+      "allOriginalFunctionsUnchanged": true,
+      "addedFactoryOnly": true,
+      "sourceSha256": "b3c4793827ec387017f6d1c745d6a0b414ca8df04b0d4dde82a83a0fe1f4fa19"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "allOriginalActionWindowAndNativeActionFunctionsUnchanged": true,
+      "addedOwnerStopSelectorOnly": true,
+      "sourceSha256": "f569aaf25a69254fd31012dd42adca0f4c0dd2c3190c5b5836ed5a1c952bec3d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/batches.rs",
+      "allOriginalNativeAndCanonicalBodiesUnchanged": true,
+      "onlyAncestorModuleVisibilityChanged": true,
+      "sourceSha256": "92797cef344f2e3611d94af94fcfef2a5e653b2c24197f4d6b88e68fc4784183"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery.rs",
+      "allOriginalNativeAndCanonicalBodiesUnchanged": true,
+      "onlyAncestorModuleVisibilityChanged": true,
+      "sourceSha256": "131426ea024cd97c25d8fe605d37cf69c75ea69c5fb736e5afbebfaac9d69580"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/history.rs",
+      "allOriginalNativeAndCanonicalBodiesUnchanged": true,
+      "onlyAncestorModuleVisibilityChanged": true,
+      "sourceSha256": "1363577ee154183eeaa8d13943492efd081aecdb3c20e345c62f7252483a4384"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/snapshots.rs",
+      "allOriginalNativeAndCanonicalBodiesUnchanged": true,
+      "onlyAncestorModuleVisibilityChanged": true,
+      "sourceSha256": "3004754c8910148c8625abb8ddf5aaaada5e9f86707a264751d56f43a2b65feb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery/final_release.rs",
+      "allOriginalNativeAndCanonicalBodiesUnchanged": true,
+      "onlyAncestorModuleVisibilityChanged": true,
+      "sourceSha256": "f20f94605c8e91368fce2629168674472305af14a20e3eff70c6a56dd97386f0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/series.rs",
+      "completeExistingBothTreeBarrierAndSharedPolicyCallByteIdentical": true,
+      "privateNativeQualifiedWrapperAdded": true,
+      "sourceSha256": "c0093dbb6a5689b9289d95b09f15c86e830326874a2ba1d61a59cd0e7ed42221"
+    }
+  ],
+  "oldUnassessedProductionPreviewRemovedByCfgTest": true,
+  "sharedAlgorithmsAndBudgetsModified": false,
+  "actualProductionFactoriesExecuted": false
+}
