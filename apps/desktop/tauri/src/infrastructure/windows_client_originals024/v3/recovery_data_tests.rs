@@ -258,6 +258,7 @@ fn event(
         },
         recovery_plan_digest: plan.digest().unwrap(),
         node_id: id,
+        root_id: node.map(|id| plan.node_root(id).unwrap()),
         node_digest,
         movement: node.map(|id| {
             if op == RecoveryOperation::ReleaseVerified {
@@ -583,6 +584,73 @@ fn release_event(g: &Progress, operation: segments::LeaseOperation) -> segments:
         manifest_digest: g.manifest.clone(),
         binding_digest: g.binding.clone(),
     }
+}
+pub(in crate::infrastructure::windows_client_originals024::v3) fn released(
+    p: &StoragePlan,
+) -> Progress {
+    use segments::LeaseOperation::*;
+    use RecoveryOperation::*;
+    let (mut g, r) = completed_nodes(p);
+    for op in [WholeTreeRestoreIntent, WholeTreeRestoredVerified] {
+        g.apply_recovery(p, &event(&g, op, &r, None)).unwrap();
+    }
+    g.apply_lease(p, &release_event(&g, LeaseReleasePrepared))
+        .unwrap();
+    for n in p
+        .roots
+        .iter()
+        .flat_map(|r| &r.nodes)
+        .filter(|n| n.kind != Kind::CustodiedFile)
+    {
+        g.apply_recovery(p, &event(&g, ReleaseVerified, &r, Some(&n.node_id)))
+            .unwrap();
+    }
+    g.apply_lease(p, &release_event(&g, LeaseReleasedVerified))
+        .unwrap();
+    g
+}
+#[test]
+fn wl2_r6_history_root_locator_exact_current_original_anchor_and_aggregate_scope_refuse() {
+    use RecoveryOperation::*;
+    let (mut f, p, _, _) = plan();
+    let (mut g, data) = stopped(&p);
+    let r = decode(&data);
+    let mut aggregate = event(&g, RecoveryPlanIntent, &r, None);
+    aggregate.root_id = Some(".codex".into());
+    assert!(g.apply_recovery(&p, &aggregate).is_err());
+    g.apply_recovery(&p, &event(&g, RecoveryPlanIntent, &r, None))
+        .unwrap();
+    g.apply_recovery(&p, &event(&g, RecoveryPlanVerified, &r, None))
+        .unwrap();
+    let id = r.retirement_keys().into_keys().next().unwrap();
+    let good = event(&g, WorkRetireIntent, &r, Some(&id));
+    assert!(matches!(good.root_id.as_deref(), Some(".codex" | ".grok")));
+    for root in [
+        None,
+        Some("foreign".into()),
+        Some(
+            if good.root_id.as_deref() == Some(".codex") {
+                ".grok"
+            } else {
+                ".codex"
+            }
+            .into(),
+        ),
+    ] {
+        let mut bad = event(&g, WorkRetireIntent, &r, Some(&id));
+        bad.root_id = root;
+        assert!(g.apply_recovery(&p, &bad).is_err());
+    }
+    let mut old = serde_json::to_value(&good).unwrap();
+    old.as_object_mut().unwrap().remove("rootId");
+    let old: RecoveryEvent = serde_json::from_value(old).unwrap();
+    assert!(g.apply_recovery(&p, &old).is_err());
+    let duplicate = String::from_utf8(encoded(&good).unwrap())
+        .unwrap()
+        .replacen("\"rootId\":", "\"rootId\":null,\"rootId\":", 1);
+    assert!(serde_json::from_str::<segments::ChainEntry>(&duplicate).is_err());
+    println!("r6 history explicit recovery rootId binds exact node/current/original/anchor root; missing/wrong/cross-root/aggregate/duplicate roots refuse without old-record conversion");
+    f.retain();
 }
 #[test]
 fn wl2_r6_final_release_data_requires_full_tree_result_and_exact_release_pair_no_reacquire_or_text_closed(

@@ -2,7 +2,7 @@ use super::super::super::tests::{compete, driver::setup};
 use super::chain_tests::{keys, positions, prepare};
 use super::*;
 use crate::infrastructure::windows_client_originals024::{coordination::NativeLease, v3::Journal};
-fn restore(
+pub(super) fn restore(
     trees: &mut [AnchoredTree; 2],
     journal: &mut Journal,
     lease: &mut Option<NativeLease>,

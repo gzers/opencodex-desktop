@@ -49,6 +49,7 @@ pub(in super::super) struct AnchoredTree {
     release_view: Option<observation::WorkFrame>,
     snapshot_history: Vec<observation::RetainedSnapshot>,
     retirement: Option<observation::retirement::NativeRetirement>,
+    original_history: Option<observation::WorkFrame>,
     #[cfg(test)]
     create_fault: u8,
 }
@@ -337,6 +338,7 @@ impl AnchoredTree {
             release_view: None,
             snapshot_history: Vec::new(),
             retirement: None,
+            original_history: None,
             #[cfg(test)]
             create_fault: 0,
         };

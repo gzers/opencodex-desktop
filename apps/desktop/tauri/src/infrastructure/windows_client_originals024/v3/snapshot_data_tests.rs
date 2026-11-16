@@ -73,8 +73,17 @@ pub(in crate::infrastructure::windows_client_originals024::v3) fn refs(
     std::array::from_fn(|i| {
         let root = &p.roots[i];
         let original = &root.nodes[0].security;
-        let directory_id = (u64::MAX - 100 - i as u64 * 2).to_string();
-        let metadata_id = (u64::MAX - 101 - i as u64 * 2).to_string();
+        // Separate native objects for every actual phase/archive; previously
+        // these synthetic locators falsely reused IDs across distinct stages.
+        let phase = match purpose {
+            SnapshotPurpose::Observation => 0,
+            SnapshotPurpose::Ready => 1,
+            SnapshotPurpose::PreStop => 2,
+            SnapshotPurpose::Stopped => 3,
+        };
+        let archive_offset = u64::from(sequence) * 32 + phase * 4;
+        let directory_id = (u64::MAX - 100 - archive_offset - i as u64 * 2).to_string();
+        let metadata_id = (u64::MAX - 101 - archive_offset - i as u64 * 2).to_string();
         let security = |id: &str| {
             let mut v = serde_json::to_value(original).unwrap();
             v["fileId"] = id.into();
@@ -244,5 +253,51 @@ fn wl2_r6_snapshot_data_strict_both_roots_context_and_reference_rejects_text_nat
     assert_eq!(g.snapshot_links.len(), 1);
     assert_eq!(g.lifecycle, LifecyclePhase::Preparing);
     println!("r6 snapshot reference DATA cases reject skip,11 context+6 ref drifts, wrong roots/sequence/missing second/unknown fields/text authority; valid locator links remain data and do not construct actual SnapshotWitness/NativeAction/Ready");
+    f.retain();
+}
+#[test]
+fn wl2_r6_history_snapshot_archive_ids_cannot_alias_previously_linked_native_objects() {
+    let (mut f, p, _, _) = plan();
+    let mut g = observed(&p);
+    let sequence = g.observed_sequence;
+    let ready = refs(&p, &g, SnapshotPurpose::Ready, sequence);
+    let later = refs(&p, &g, SnapshotPurpose::Stopped, sequence);
+    assert_ne!(
+        ready[0].object_ids(),
+        later[0].object_ids(),
+        "independent phases require independent object IDs"
+    );
+    for id in ready[0].object_ids() {
+        g.snapshot_objects.insert(id);
+    }
+    g.apply_snapshot(
+        &p,
+        &snapshot_event(
+            &g,
+            SnapshotOperation::SnapshotLinkIntent,
+            SnapshotPurpose::Ready,
+            sequence,
+            None,
+        ),
+    )
+    .unwrap();
+    let tip = g.tip.clone();
+    let pending = g.snapshot_pending;
+    assert!(g
+        .apply_snapshot(
+            &p,
+            &snapshot_event(
+                &g,
+                SnapshotOperation::SnapshotLinkedVerified,
+                SnapshotPurpose::Ready,
+                sequence,
+                Some(ready)
+            )
+        )
+        .is_err());
+    assert_eq!(g.tip, tip);
+    assert_eq!(g.snapshot_pending, pending);
+    assert!(!g.snapshot_links.contains_key(&SnapshotPurpose::Ready));
+    println!("r6 history snapshot DATA reusing any previously linked native archive/metadata ID refuses; synthetic phase references now carry independent IDs without changing original assertions or native qualification");
     f.retain();
 }

@@ -2,6 +2,7 @@
 //! machine or a factory for restoration permissions. Canonical phase linkage
 //! and production Source/Stop authority remain separate.
 use super::*;
+use crate::infrastructure::windows_client_originals024::v3::journal::HistoryContext;
 use crate::infrastructure::windows_client_originals024::v3::journal::ObservationContext;
 const PART: usize = 1024 * 1024;
 struct Part {
@@ -11,6 +12,7 @@ struct Part {
     bytes: Vec<u8>,
 }
 pub(super) struct FrameArchive {
+    kind: ArchiveKind,
     directory: PinnedDirectory,
     security: SnapshotData,
     source: serde_json::Value,
@@ -18,6 +20,24 @@ pub(super) struct FrameArchive {
     parts: Vec<Part>,
     metadata: Option<Part>,
     complete: bool,
+}
+enum ArchiveKind {
+    Observation,
+    OriginalHistory,
+}
+impl ArchiveKind {
+    fn document(&self) -> &'static str {
+        match self {
+            Self::Observation => "windows-anchored-work-observation-v3",
+            Self::OriginalHistory => "windows-anchored-original-history-v3",
+        }
+    }
+    fn reference(&self) -> &'static str {
+        match self {
+            Self::Observation => "windows-anchored-work-observation-reference-v3",
+            Self::OriginalHistory => "windows-anchored-original-history-reference-v3",
+        }
+    }
 }
 fn native_record_security(path: &Path, end: Instant) -> io::Result<SnapshotData> {
     let file = OpenOptions::new()
@@ -174,6 +194,7 @@ impl FrameArchive {
         }
         let security = parent_stamp(directory.path(), end)?;
         Ok(Self {
+            kind: ArchiveKind::Observation,
             directory,
             security,
             source,
@@ -229,7 +250,7 @@ impl FrameArchive {
                 }
             }
         }
-        let metadata = serde_json::json!({"schema":"windows-anchored-work-observation-v3","context":self.context,"source":self.source,"parts":parts,"runtimeAuthority":false,"auditSaclAssurance":"excluded-unknown","fullSecurityProven":false});
+        let metadata = serde_json::json!({"schema":self.kind.document(),"context":self.context,"source":self.source,"parts":parts,"runtimeAuthority":false,"auditSaclAssurance":"excluded-unknown","fullSecurityProven":false});
         let bytes = serde_json::to_vec(&metadata).map_err(|_| invalid())?;
         self.metadata = Some(Self::create_part(
             &self.directory,
@@ -290,12 +311,83 @@ impl FrameArchive {
     pub(super) fn reference(&mut self, end: Instant) -> io::Result<serde_json::Value> {
         self.check(end)?;
         let metadata = self.metadata.as_ref().ok_or_else(invalid)?;
-        Ok(
-            serde_json::json!({"schema":"windows-anchored-work-observation-reference-v3","directory":self.directory.path(),"volume":self.directory.identity().volume,"fileId":self.directory.identity().index.to_string(),"security":self.security,"metadataId":metadata.file.identity().index.to_string(),"metadataSecurity":metadata.security,"metadataSha256":hash::sha256_hex(&metadata.bytes),"frameDigest":frame_digest(&self.source)?,"context":self.context,"runtimeAuthority":false}),
-        )
+        let mut value = serde_json::json!({"schema":self.kind.reference(),"directory":self.directory.path(),"volume":self.directory.identity().volume,"fileId":self.directory.identity().index.to_string(),"security":self.security,"metadataId":metadata.file.identity().index.to_string(),"metadataSecurity":metadata.security,"metadataSha256":hash::sha256_hex(&metadata.bytes),"frameDigest":frame_digest(&self.source)?,"context":self.context,"runtimeAuthority":false});
+        if matches!(self.kind, ArchiveKind::OriginalHistory) {
+            value["rootId"] = Path::new(self.source["root"].as_str().ok_or_else(invalid)?)
+                .file_name()
+                .and_then(|n| n.to_str())
+                .ok_or_else(invalid)?
+                .into();
+        }
+        Ok(value)
     }
 }
 impl WorkFrame {
+    pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn archive_original_history(
+        &mut self,
+        parent: &Path,
+        context: &HistoryContext,
+        fault: u8,
+        end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        self.check(end)?;
+        if self.archive.is_some() || self.archive_failed {
+            return Err(invalid());
+        }
+        let parent = PinnedDirectory::open(parent)?;
+        let source = self.metadata();
+        context.matches(&self.root, &frame_digest(&source)?)?;
+        if self.root.parent() != Some(parent.path())
+            || parent.identity() != self.parent
+            || parent_stamp(parent.path(), end)? != self.parent_security
+        {
+            return Err(invalid());
+        }
+        let leaf = self
+            .root
+            .file_name()
+            .and_then(|n| n.to_str())
+            .ok_or_else(invalid)?
+            .trim_start_matches('.');
+        let directory = create_private_directory(
+            &parent
+                .path()
+                .join(format!(".ocxd024-history-{}-{leaf}", context.session())),
+        )?;
+        self.pending_history_directory = Some(directory);
+        #[cfg(test)]
+        if fault == 77 {
+            self.archive_failed = true;
+            return Err(io::Error::other("injected after actual history directory creation/retention before directory security readback"));
+        }
+        let directory = self
+            .pending_history_directory
+            .as_ref()
+            .ok_or_else(invalid)?;
+        if directory.identity().volume != parent.identity().volume {
+            return Err(invalid());
+        }
+        let security = parent_stamp(directory.path(), end)?;
+        let directory = self.pending_history_directory.take().ok_or_else(invalid)?;
+        let mut archive = FrameArchive {
+            kind: ArchiveKind::OriginalHistory,
+            directory,
+            security,
+            source,
+            context: context.metadata(),
+            parts: Vec::new(),
+            metadata: None,
+            complete: false,
+        };
+        let result = archive.seal(self, fault == 71, end);
+        self.archive = Some(archive);
+        if let Err(error) = result {
+            self.archive_failed = true;
+            return Err(error);
+        }
+        self.check(end)?;
+        self.archive.as_mut().ok_or_else(invalid)?.reference(end)
+    }
     pub(super) fn archive(
         &mut self,
         parent: &Path,

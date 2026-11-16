@@ -1,6 +1,8 @@
 //! Borrowed exact native objects, not Stop/content qualification. Only the
 //! anchored module can construct it; no path/JSON/Clone/serde factory exists.
 use super::*;
+#[path = "history.rs"]
+mod history;
 pub(in crate::infrastructure::windows_client_originals024) struct RecoveryWitness<'a> {
     trees: &'a mut [AnchoredTree; 2],
 }
@@ -14,6 +16,14 @@ pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn re
     let mut out = RecoveryWitness { trees };
     out.check(claim, end)?;
     Ok(out)
+}
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn released_history_witness(
+    trees: &mut [AnchoredTree; 2],
+    end: Instant,
+) -> io::Result<RecoveryWitness<'_>> {
+    let mut witness = RecoveryWitness { trees };
+    witness.post_release(end)?;
+    Ok(witness)
 }
 impl RecoveryWitness<'_> {
     pub(in crate::infrastructure::windows_client_originals024) fn check(
@@ -207,6 +217,9 @@ impl RecoveryWitness<'_> {
                 // Includes every exact original/retired object/archive/child
                 // and acquisition+explicit release of the two stable ranges.
                 t.readback_retirement_after_release(end)?;
+                if let Some(history) = &mut t.original_history {
+                    history.check(end)?;
+                }
             }
             Ok(())
         })();

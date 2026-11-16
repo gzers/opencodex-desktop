@@ -262,6 +262,7 @@ impl Progress {
                             )))
                     })
                     .collect::<BTreeSet<_>>();
+                identities.extend(self.snapshot_objects.iter().cloned());
                 for r in refs {
                     if !identities.insert((r.volume, r.file_id.clone()))
                         || !identities.insert((r.volume, r.metadata_id.clone()))
@@ -359,6 +360,9 @@ impl Progress {
             self.ready_generation = e.ready.clone();
         }
         if let Some(hashes) = links {
+            for r in e.references.as_ref().ok_or_else(invalid)? {
+                self.snapshot_objects.extend(r.object_ids());
+            }
             self.snapshot_links.insert(e.purpose, hashes);
             self.linked_frames
                 .insert(e.observation_sequence, e.frame_digests.clone());

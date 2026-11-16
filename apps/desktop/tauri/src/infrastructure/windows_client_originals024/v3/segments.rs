@@ -47,9 +47,13 @@ pub(super) enum ChainEntry {
     Snapshot(super::snapshots::SnapshotEvent),
     Action(super::actions::ActionEvent),
     Recovery(super::recovery::RecoveryEvent),
+    History(super::history::HistoryEvent),
 }
 impl Progress {
     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
+        if self.history.is_some() && !matches!(e, ChainEntry::History(_)) {
+            return Err(invalid());
+        }
         match e {
             ChainEntry::Node(n) => self.apply(plan, n),
             ChainEntry::Lease(e) => self.apply_lease(plan, e),
@@ -57,6 +61,7 @@ impl Progress {
             ChainEntry::Snapshot(e) => self.apply_snapshot(plan, e),
             ChainEntry::Action(e) => self.apply_action(plan, e),
             ChainEntry::Recovery(e) => self.apply_recovery(plan, e),
+            ChainEntry::History(e) => self.apply_history(plan, e),
         }
     }
     pub(super) fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {

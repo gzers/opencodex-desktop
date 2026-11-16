@@ -4,6 +4,7 @@
 use super::*;
 mod witness;
 pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::recovery_witness;
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::released_history_witness;
 pub(in crate::infrastructure::windows_client_originals024) use witness::RecoveryWitness;
 struct Item {
     frame_index: usize,
@@ -387,6 +388,9 @@ impl AnchoredTree {
 #[cfg(test)]
 #[path = "retirement_chain_tests.rs"]
 mod chain_tests;
+#[cfg(test)]
+#[path = "retirement_history_tests.rs"]
+mod history_tests;
 #[cfg(test)]
 #[path = "retirement_release_tests.rs"]
 mod release_tests;

@@ -81,6 +81,22 @@ fn same<A: Serialize, B: Serialize>(a: &A, b: &B) -> io::Result<bool> {
         == serde_json::to_value(b).map_err(|_| invalid())?)
 }
 impl RecoveryPlan {
+    fn node_root(&self, id: &str) -> io::Result<String> {
+        let matches = self
+            .roots
+            .iter()
+            .filter(|r| {
+                r.original_tree.nodes.iter().any(|n| n.node_id == id)
+                    || r.retirements
+                        .iter()
+                        .any(|n| key(&r.original_tree.nodes[0].root_id, &n.relative) == id)
+            })
+            .collect::<Vec<_>>();
+        if matches.len() != 1 {
+            return Err(invalid());
+        }
+        Ok(matches[0].original_tree.nodes[0].root_id.clone())
+    }
     fn anchor_release(&self, id: &str) -> io::Result<(String, RecoveryMove)> {
         let n = self
             .roots
@@ -445,6 +461,7 @@ pub(super) struct RecoveryEvent {
     pub(super) plan: Option<RecoveryPlan>,
     pub(super) recovery_plan_digest: String,
     pub(super) node_id: Option<String>,
+    pub(super) root_id: Option<String>,
     pub(super) node_digest: Option<String>,
     pub(super) movement: Option<RecoveryMove>,
     pub(super) lease_epoch: String,
@@ -478,6 +495,61 @@ pub(super) struct RecoverySummary {
     anchor_released_count: usize,
 }
 impl Progress {
+    pub(super) fn recovery_reserved_identities(&self) -> io::Result<BTreeSet<(u32, String)>> {
+        let r = self.recovery.as_ref().ok_or_else(invalid)?;
+        let mut ids = self.snapshot_objects.clone();
+        for root in &r.plan.roots {
+            ids.insert((
+                root.current_tree.parent_volume,
+                root.current_tree.parent_id.clone(),
+            ));
+            ids.insert((
+                root.original_tree.custody_volume,
+                root.original_tree.custody_id.clone(),
+            ));
+            for n in &root.original_tree.nodes {
+                ids.insert((n.volume, n.file_id.clone()));
+            }
+            for n in &root.current_tree.nodes {
+                ids.insert((n.volume, n.file_id.clone()));
+            }
+            for id in root.current_snapshot.object_ids() {
+                ids.insert(id);
+            }
+        }
+        for (id, (_, work)) in &self.nodes {
+            if let Some(work) = work {
+                let root = r
+                    .plan
+                    .roots
+                    .iter()
+                    .find(|r| r.original_tree.nodes.iter().any(|n| n.node_id == *id))
+                    .ok_or_else(invalid)?;
+                ids.insert((root.original_tree.custody_volume, work.clone()));
+            }
+        }
+        Ok(ids)
+    }
+    pub(super) fn original_history_frames(
+        &self,
+        plan: &StoragePlan,
+    ) -> io::Result<[serde_json::Value; 2]> {
+        let r = self.recovery.as_ref().ok_or_else(invalid)?;
+        if !self.complete_files(plan) || self.lease_state != segments::LeaseState::Released {
+            return Err(invalid());
+        }
+        Ok(std::array::from_fn(|index| {
+            let root = &plan.roots[index];
+            let current = &r.plan.roots[index].current_tree;
+            serde_json::json!({"root":root.root,"parentVolume":current.parent_volume,"parentId":current.parent_id,
+                "parentSecurity":current.parent_security,"nodes":root.nodes.iter().map(|n|serde_json::json!({
+                    "relative":n.relative,"directory":n.kind==Kind::DirectoryAnchor,"volume":n.volume,"fileId":n.file_id,
+                    "security":n.security,"bytes":n.length,"sha256":n.content_digest,"children":n.children})).collect::<Vec<_>>()})
+        }))
+    }
+    pub(super) fn retirement_history_digest(&self) -> io::Result<String> {
+        self.recovery.as_ref().ok_or_else(invalid)?.plan.digest()
+    }
     pub(super) fn recovery_event(
         &self,
         operation: RecoveryOperation,
@@ -522,6 +594,7 @@ impl Progress {
                 .transpose()?,
             recovery_plan_digest: p.digest()?,
             node_id: node.map(str::to_string),
+            root_id: node.map(|id| p.node_root(id)).transpose()?,
             node_digest,
             movement,
             lease_epoch: self.epoch.clone(),
@@ -602,6 +675,22 @@ impl Progress {
             return Err(invalid());
         }
         let bytes = encoded(e)?;
+        if let Some(id) = &e.node_id {
+            if e.root_id.as_ref()
+                != Some(
+                    &self
+                        .recovery
+                        .as_ref()
+                        .ok_or_else(invalid)?
+                        .plan
+                        .node_root(id)?,
+                )
+            {
+                return Err(invalid());
+            }
+        } else if e.root_id.is_some() {
+            return Err(invalid());
+        }
         if e.operation == RecoveryPlanIntent {
             let p = e.plan.as_ref().ok_or_else(invalid)?;
             if self.recovery.is_some()
@@ -790,4 +879,4 @@ impl Progress {
 }
 #[cfg(test)]
 #[path = "recovery_data_tests.rs"]
-mod tests;
+pub(super) mod tests;

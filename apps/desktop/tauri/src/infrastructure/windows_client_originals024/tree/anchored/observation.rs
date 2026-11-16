@@ -69,6 +69,7 @@ pub(super) struct WorkFrame {
     nodes: Vec<FrameNode>,
     archive: Option<archive::FrameArchive>,
     archive_failed: bool,
+    pending_history_directory: Option<PinnedDirectory>,
 }
 /// Immutable byte/history objects retained after current working handles are
 /// handed back. Recheck archive objects, never compare a later live client tree
@@ -138,6 +139,7 @@ impl WorkFrame {
             nodes: Vec::new(),
             archive: None,
             archive_failed: false,
+            pending_history_directory: None,
         })
     }
     fn capture(&mut self, end: Instant) -> io::Result<()> {
@@ -150,7 +152,7 @@ impl WorkFrame {
         self.check(end)
     }
     pub(super) fn check(&mut self, end: Instant) -> io::Result<()> {
-        if self.archive_failed {
+        if self.archive_failed || self.pending_history_directory.is_some() {
             return Err(invalid());
         }
         let parent = PinnedDirectory::open(self.root.parent().ok_or_else(invalid)?)?;

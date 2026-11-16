@@ -19,9 +19,11 @@ use std::{
 };
 mod actions;
 mod driver;
+mod history;
 mod leases;
 mod observations;
 mod recovery;
+pub(in super::super) use history::HistoryContext;
 mod snapshots;
 fn before(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {
@@ -190,6 +192,7 @@ struct Current {
     action_pending: Option<(String, super::actions::ActionKind)>,
     action_kind: super::actions::ActionKind,
     recovery: Option<super::recovery::RecoverySummary>,
+    history: Option<super::history::HistorySummary>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -529,6 +532,7 @@ impl Journal {
             action_pending: None,
             action_kind: super::actions::ActionKind::Start,
             recovery: None,
+            history: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -641,6 +645,7 @@ impl Journal {
             || tip.action_pending != self.progress.action_pending
             || tip.action_kind != self.progress.action_kind
             || tip.recovery != self.progress.recovery_summary()?
+            || tip.history != self.progress.history_summary()?
         {
             return Err(invalid());
         }
@@ -739,6 +744,7 @@ impl Journal {
             action_pending: next.action_pending.clone(),
             action_kind: next.action_kind,
             recovery: next.recovery_summary()?,
+            history: next.history_summary()?,
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw
