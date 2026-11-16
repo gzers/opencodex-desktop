@@ -44,6 +44,60 @@ impl RetiredLeaseHistory {
     }
 }
 impl ReleasedLease {
+    pub(in super::super) fn observe_close_inventory(
+        &self,
+        inventory: &mut super::super::handle_release::ExpectedHandleInventory,
+        prefix: &str,
+        end: Instant,
+    ) -> io::Result<()> {
+        before(end)?;
+        if self.poisoned
+            || self.original.files.len() != 4
+            || self.completed_at >= self.original.deadline
+        {
+            return Err(refused());
+        }
+        for (i, pin) in self.original.files.iter().enumerate() {
+            inventory.observe(
+                format!("{prefix}/coord/{i}/file"),
+                &pin.file,
+                pin.id,
+                false,
+                false,
+                end,
+            )?;
+            match &pin.parent {
+                ParentPin::Strict(pin) => {
+                    inventory.observe_directory(&format!("{prefix}/coord/{i}/parent"), pin, end)?
+                }
+                ParentPin::Claim(pin) => {
+                    inventory.observe(
+                        format!("{prefix}/coord/{i}/claim-parent"),
+                        &pin.file,
+                        pin.id,
+                        true,
+                        false,
+                        end,
+                    )?;
+                    inventory.observe_directory(
+                        &format!("{prefix}/coord/{i}/ancestor"),
+                        &pin.ancestor,
+                        end,
+                    )?;
+                }
+            }
+        }
+        if let Some(bound) = &self.original.bound {
+            for (name, pin) in [
+                ("profile", &bound.profile),
+                ("home", &bound.home),
+                ("client", &bound.client),
+            ] {
+                inventory.observe_directory(&format!("{prefix}/bound/{name}"), pin, end)?;
+            }
+        }
+        before(end)
+    }
     /// Caller checked original receipt immediately before ownership transfer.
     /// This operation is infallible and retains every actual file in the batch.
     pub(in super::super) fn transfer_original_files(

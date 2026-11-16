@@ -82,6 +82,25 @@ impl Journal {
                 .pending_history_references(end)?;
             self.progress
                 .verify_original_history_references(&self.manifest.storage_plan, refs)?;
+            if self.close_inventory.is_some() {
+                return Err(invalid());
+            }
+            let mut inventory =
+                super::super::super::handle_release::ExpectedHandleInventory::new(end);
+            self.original_handoff
+                .as_ref()
+                .ok_or_else(invalid)?
+                .observe_close_inventory(&mut inventory, end)?;
+            for (i, lease) in self.previous_releases.iter().enumerate() {
+                lease.observe_close_inventory(&mut inventory, &format!("lease/old/{i:04}"), end)?;
+            }
+            self.released_lease
+                .as_ref()
+                .ok_or_else(invalid)?
+                .observe_close_inventory(&mut inventory, "lease/final", end)?;
+            // Retain the separately observed full expected inventory BEFORE
+            // detach or any receipt/file ownership transfer can partially fail.
+            self.close_inventory = Some(inventory);
             self.original_handoff
                 .as_mut()
                 .ok_or_else(invalid)?
@@ -95,6 +114,10 @@ impl Journal {
             self.retired_lease_histories
                 .push(lease.transfer_original_files(batch, "lease/final"));
             batch.check_held(end)?;
+            self.close_inventory
+                .as_ref()
+                .ok_or_else(invalid)?
+                .matches(batch, end)?;
             let inventory = batch.inventory()?;
             let rows: Vec<HandleRow> =
                 serde_json::from_value(inventory["rows"].clone()).map_err(|_| invalid())?;
@@ -111,6 +134,10 @@ impl Journal {
                 .ok_or_else(invalid)?
                 .handles
                 .check_held(end)?;
+            self.close_inventory.as_ref().ok_or_else(invalid)?.matches(
+                &self.original_handoff.as_ref().ok_or_else(invalid)?.handles,
+                end,
+            )?;
             #[cfg(test)]
             if self.fault == 80 {
                 return Err(io::Error::other(
@@ -147,6 +174,10 @@ impl Journal {
             {
                 return Err(invalid());
             }
+            self.close_inventory.as_ref().ok_or_else(invalid)?.matches(
+                &self.original_handoff.as_ref().ok_or_else(invalid)?.handles,
+                end,
+            )?;
             #[cfg(test)]
             {
                 if self.fault == 82 {

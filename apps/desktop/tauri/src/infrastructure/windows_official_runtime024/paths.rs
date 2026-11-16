@@ -110,6 +110,24 @@ pub struct PinnedDirectory {
     sid: Option<String>,
 }
 impl PinnedDirectory {
+    /// Observe the exact already-owned ancestor handles without cloning,
+    /// reopening or transferring them. IDs are DATA, never a directory permit.
+    pub(crate) fn owned_file_identities(&self) -> io::Result<Vec<FileIdentity>> {
+        self.recheck()?;
+        if self.files.len() != self.path.ancestors().count() {
+            return Err(denied("original ancestor handle set incomplete"));
+        }
+        let ids = self
+            .files
+            .iter()
+            .map(|file| identity(file, true))
+            .collect::<io::Result<Vec<_>>>()?;
+        if ids.last() != Some(&self.id) {
+            return Err(denied("original ancestor terminal identity changed"));
+        }
+        self.recheck()?;
+        Ok(ids)
+    }
     /// Transfer exact already-owned ancestor files; no reopen, native close or
     /// permission is performed. Only the caller's durable close driver may use
     /// these objects after independently checking this original pin.

@@ -24,6 +24,101 @@ pub(in crate::infrastructure::windows_client_originals024) struct OriginalHandle
     poisoned: bool,
 }
 impl OriginalHandleHandoff {
+    pub(in crate::infrastructure::windows_client_originals024) fn observe_close_inventory(
+        &self,
+        inventory: &mut crate::infrastructure::windows_client_originals024::handle_release::ExpectedHandleInventory,
+        end: Instant,
+    ) -> io::Result<()> {
+        check(end)?;
+        if self.poisoned || !self.roots.is_empty() {
+            return Err(invalid());
+        }
+        for (r, tree) in self
+            .pending
+            .as_ref()
+            .ok_or_else(invalid)?
+            .iter()
+            .enumerate()
+        {
+            if tree.poisoned || tree.observed.is_some() || tree.release_view.is_some() {
+                return Err(invalid());
+            }
+            for (i, node) in tree.nodes.iter().enumerate() {
+                if node.pending_work.is_some() {
+                    return Err(invalid());
+                }
+                inventory.observe(
+                    format!("tree/{r}/original/{i:04}"),
+                    &node.file,
+                    node.original.id,
+                    node.original.directory,
+                    false,
+                    end,
+                )?;
+                if let Some((file, entry)) = &node.work {
+                    inventory.observe(
+                        format!("tree/{r}/initial-work/{i:04}"),
+                        file,
+                        entry.id,
+                        false,
+                        true,
+                        end,
+                    )?;
+                }
+            }
+            let history = tree.original_history.as_ref().ok_or_else(invalid)?;
+            if history.archive.is_none() {
+                return Err(invalid());
+            }
+            for (i, n) in history.nodes.iter().enumerate() {
+                inventory.observe(
+                    format!("tree/{r}/history-source/{i:04}"),
+                    &n.file,
+                    n.entry.id,
+                    n.entry.directory,
+                    false,
+                    end,
+                )?;
+            }
+            let retirement = tree.retirement.as_ref().ok_or_else(invalid)?;
+            if retirement.frame.archive.is_none() {
+                return Err(invalid());
+            }
+            let mut retired = std::collections::BTreeSet::new();
+            for item in &retirement.items {
+                if item.frame_index >= retirement.frame.nodes.len()
+                    || !retired.insert(item.frame_index)
+                {
+                    return Err(invalid());
+                }
+            }
+            for (i, n) in retirement.frame.nodes.iter().enumerate() {
+                if !retired.contains(&i) {
+                    inventory.observe(
+                        format!("tree/{r}/stopped-anchor/{i:04}"),
+                        &n.file,
+                        n.entry.id,
+                        n.entry.directory,
+                        false,
+                        end,
+                    )?;
+                }
+            }
+            for (s, snapshot) in tree.snapshot_history.iter().enumerate() {
+                for (i, (file, id)) in snapshot.work_objects.iter().enumerate() {
+                    inventory.observe(
+                        format!("tree/{r}/old-work/{s:04}/{i:04}"),
+                        file,
+                        *id,
+                        false,
+                        true,
+                        end,
+                    )?;
+                }
+            }
+        }
+        check(end)
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn retain(
         trees: [AnchoredTree; 2],
         end: Instant,
