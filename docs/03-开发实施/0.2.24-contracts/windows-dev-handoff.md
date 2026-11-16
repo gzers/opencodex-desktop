@@ -617,3 +617,10 @@ v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Clos
 源码 c61327035fcd0f64aa38701d440162d6ead76d66/treea6a6bb730cc8695ddf31361c6f35b295018b9959；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-work-observation-20261116-r1/。同v3 node/lease/current work-open/seal事件，活claim下准确work ReOpenFile观察，完整frame冻结+同卷chunk/metadata；未变化全树允许继续退休还原，变化产物仅data。首library01 E0277/raw101无新EXE；library02六过；library03受影响回归24过1败（原子替换后的旧work observer links0与通用单链接helper冲突），受限已登记旧WORK ID观察修正，target04一过；library05七过1败（新增历史观察位置过早破坏原硬链测试阶段），保持原断言移回完整frame边界，final06八过。原失败/双代次/ADS观察/部分chunk/current源与EXE保留，完整表归final-status/report，产品debug MSVC bins raw0/179930ms。
 
 正式phase与snapshot reference/source内容policy、生产v3 Store/跨动作权限、动态工作node/恢复/Stop/Closed/history/后继/原Owner-H-S-D仍待；production factory未实跑、Start无条件拒绝。原缺席安全退根blocked单列。不旧raw5/空GUI/W2/双SID/发布。
+
+
+## 2026-11-16 TEAM16/r6 双根native快照canonical引用
+
+源码 d0a31c2ded5639cec59a6a1580829302060e166e/treed379abefbc0eaa74e67b237d83065a5461077dd3；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-snapshot-links-20261116-r1/。snapshot intent/current先写，真实两WorkFrame/archive借用Witness核ID/all8/字节后完成link；严绑purpose/观察序号/两根/source上下文，不接受文本。39事件原件恢复与显式release正例仍Preparing，不签Ready/Closed；archive history在还原工作句柄后保留。首library01 E0365/raw101无新EXE，移除无必要导出后原生/数据/受影响回归通过如report。产品debug MSVC bins0/187403ms；EXE摘要/完整表/失败及清理归final-status/report。
+
+生产typedReady snapshot工厂编译未实跑，PreStop/Stopped/跨动作桥/原policy/动态节点/Stop/Closed/后继/实际H-S-D仍待；v2生产入口/Start拒绝保持，原缺席退根blocked单列。不W2/双SID/发布，不重复旧raw5/空GUI。

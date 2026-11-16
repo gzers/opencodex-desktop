@@ -1,0 +1,66 @@
+[
+  {
+    "run": "library03",
+    "trace": "r6-snapshot-links canonical intent precedes both actual archive writes; exact references linked, current link digest retains immutable histories after native source handles return; full original tree restored+explicit lease release, lifecycle still Preparing, never native Ready/Closed"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-snapshot-unknown-or-duplicate foreign=false exact existing snapshot retained; no new link/Ready/Closed from strings"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-snapshot-unknown-or-duplicate foreign=true exact existing snapshot retained; no new link/Ready/Closed from strings"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-snapshot-link-fault=17 archives=0 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after durable snapshot intent/current, before snapshot creation; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-snapshot-link-fault=18 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after BOTH native snapshot archives before link result; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-snapshot-link-fault=19 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after immutable event sync/readback before current CAS; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-snapshot-link-fault=20 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected real partial current write/sync; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-snapshot-link-missing-second error=original phase chain unknown; preserve pending custody/Required"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-snapshot-links canonical intent precedes both actual archive writes; exact references linked, current link digest retains immutable histories after native source handles return; full original tree restored+explicit lease release, lifecycle still Preparing, never native Ready/Closed"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-snapshot-unknown-or-duplicate foreign=false exact existing snapshot retained; no new link/Ready/Closed from strings"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-snapshot-unknown-or-duplicate foreign=true exact existing snapshot retained; no new link/Ready/Closed from strings"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-snapshot-link-fault=17 archives=0 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after durable snapshot intent/current, before snapshot creation; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-snapshot-link-fault=18 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after BOTH native snapshot archives before link result; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-snapshot-link-fault=19 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected after immutable event sync/readback before current CAS; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-snapshot-link-fault=20 archives=2 actualPendingSnapshot=true sequence23 previousFrame22 error=injected real partial current write/sync; no repaired result/current or text Ready"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-snapshot-link-missing-second error=original phase chain unknown; preserve pending custody/Required"
+  }
+]
