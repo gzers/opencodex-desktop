@@ -1,0 +1,105 @@
+{
+  "methods": [
+    {
+      "method": "retire_current_file",
+      "private": true,
+      "definition": "tree/anchored/observation/retirement.rs",
+      "moduleSha256": "6004d9bccaa709dc4f2be9697a8a774345505a9fd3ab132bb843238dfd39c86e",
+      "actualCallers": [
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 181
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 238
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 301
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 344
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 349
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 375
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 443
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 447
+        },
+        {
+          "path": "tree/anchored/observation/retirement/witness.rs",
+          "line": 95
+        }
+      ]
+    },
+    {
+      "method": "restore_original_file",
+      "private": true,
+      "definition": "tree/anchored/observation/retirement.rs",
+      "moduleSha256": "6004d9bccaa709dc4f2be9697a8a774345505a9fd3ab132bb843238dfd39c86e",
+      "actualCallers": [
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 190
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 250
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 309
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 389
+        },
+        {
+          "path": "tree/anchored/observation/retirement/witness.rs",
+          "line": 144
+        }
+      ]
+    },
+    {
+      "method": "prepare_native_recovery",
+      "private": true,
+      "definition": "v3/journal/recovery.rs",
+      "moduleSha256": "6bd4133a7c3abad01e2f1baed41e34cc0ef5170d9c89e1a677434c32f30ee88c",
+      "actualCallers": [
+        {
+          "path": "v3/journal/recovery.rs",
+          "line": 155
+        }
+      ]
+    },
+    {
+      "method": "execute_native_recovery",
+      "private": true,
+      "definition": "v3/journal/recovery.rs",
+      "moduleSha256": "6bd4133a7c3abad01e2f1baed41e34cc0ef5170d9c89e1a677434c32f30ee88c",
+      "actualCallers": [
+        {
+          "path": "v3/journal/recovery.rs",
+          "line": 169
+        }
+      ]
+    }
+  ],
+  "privateNativeDriversOnlyTestEntrypoints": true,
+  "witnessOnlyBorrowsNativeTrees": true,
+  "noSerdeWitness": true,
+  "publicStartOpen": false,
+  "actualStopContentFactoryJoined": false
+}

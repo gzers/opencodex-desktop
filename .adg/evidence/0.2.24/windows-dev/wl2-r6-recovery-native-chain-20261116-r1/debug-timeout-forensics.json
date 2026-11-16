@@ -1,0 +1,804 @@
+{
+  "rawExit": 101,
+  "passed": 21,
+  "failed": 2,
+  "originalCutoffUnchanged": true,
+  "observations": [
+    {
+      "test": "infrastructure::windows_client_originals024::tree::anchored::observation::retirement::chain_tests::wl2_r6_recovery_chain_native_all_current_and_original_nodes_use_same_canonical_chain",
+      "scene": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-921b97ee-2ac8-421a-b2e2-8c4050362f35\\session",
+      "lastRecoveryEvent": {
+        "schema": "windows-client-originals-v3",
+        "documentKind": "stopped-recovery-event",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "eventId": "4fefbe22-396a-4e20-ae47-9dfdc0b209d9",
+        "sequence": 59,
+        "sessionId": "49b24d4a-912a-42d9-a3f4-e0ef856ae438",
+        "operation": "WorkRetireIntent",
+        "plan": null,
+        "recoveryPlanDigest": "decbfb428f91b8124348e16a959728fd1a797e2613861150cbf4fc49a8b1f220",
+        "nodeId": "f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459",
+        "nodeDigest": "f2ad766c0a6ced0814759575e67e7c29dd85f218fbb550df665ed6bcdf4719b4",
+        "movement": {
+          "from": ".codex/models_cache.json",
+          "to": "custody/.codex/retired-current-f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459-562949954740593",
+          "nativeId": "562949954740593",
+          "volume": 247287385,
+          "parentId": "5348024558817583",
+          "expectedBefore": "06f7824445a2d3b57759ba8409e45007ce5834a4947a2324ee30bd83fd0822f1",
+          "expectedAfter": "43d765a3c0f170663c37cf286327acb7fc0328676f1ad9b2d867937ab10185b9"
+        },
+        "leaseEpoch": "e0f9ad51-ec34-4145-a414-86994a02533f",
+        "claimKey": "eaa429459dd055ed2f196a2ee916286e2677dbf560fea81d289ebf290c9c8e4d",
+        "deadlineScope": "7442e34c-da61-4060-83f2-1913ef811431",
+        "previousEventDigest": "903b5631508fd0e71c9169cc00f0d42c6d955a11009afdfffbd12296cfeb4dea",
+        "storagePlanDigest": "4c61bed55e426ca9f717ac1145501ea63a646c1bd584b850bcbb803f36d83c23",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "b1e31486057f7e0ef64d8e78c555d5fde9cb6b67b765b1481278473edab4a9f1",
+        "bindingDigest": "e05f18c025549aed66c8bd3206b12ca97aee2ff8df2726c05b69334f7d1cba08"
+      },
+      "immutableRecoveryEvents": 5,
+      "current": {
+        "schema": "windows-client-current-v3",
+        "sessionId": "49b24d4a-912a-42d9-a3f4-e0ef856ae438",
+        "sequence": 59,
+        "eventDigest": "41393aafdb1b3b39e79204ff7c7e1b242137264be83522081ce2d69724d4073f",
+        "previousEventDigest": "903b5631508fd0e71c9169cc00f0d42c6d955a11009afdfffbd12296cfeb4dea",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "storagePlanDigest": "4c61bed55e426ca9f717ac1145501ea63a646c1bd584b850bcbb803f36d83c23",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "b1e31486057f7e0ef64d8e78c555d5fde9cb6b67b765b1481278473edab4a9f1",
+        "bindingDigest": "e05f18c025549aed66c8bd3206b12ca97aee2ff8df2726c05b69334f7d1cba08",
+        "leaseEpoch": "e0f9ad51-ec34-4145-a414-86994a02533f",
+        "claimKey": "eaa429459dd055ed2f196a2ee916286e2677dbf560fea81d289ebf290c9c8e4d",
+        "deadlineScope": "7442e34c-da61-4060-83f2-1913ef811431",
+        "leaseState": "Active",
+        "leaseObjectsDigest": "fdc83396a835ab69ac49fca50a5b7f66f1cd0e84937d35e436acf46b5b79519f",
+        "workMode": "Observed",
+        "workFrames": [
+          "cabbd987481c012383ce7cfc1252890658242413df3e4cb93bebe117b5ff3452",
+          "e49652f973324e3d87aed3b3abe5b5e3e798e5c0f23d36f4a28c9a49fab38328"
+        ],
+        "observedFrames": [
+          "0dc42bf388d4512a626ba269d21adbd878db39405d0c338aee0096cf7225f9d8",
+          "e49652f973324e3d87aed3b3abe5b5e3e798e5c0f23d36f4a28c9a49fab38328"
+        ],
+        "snapshotPending": null,
+        "snapshotLinks": {
+          "Ready": [
+            "a13ad861b8727d3d1bf42028b01325f1027092bf28842b58871cc047c2f002cd",
+            "6c7e1f6cf9e7ccec210abfc81b52ba8d7c869082e52abf13c999b7f0eb2b7caa"
+          ],
+          "PreStop": [
+            "1e9a6ff691ad3133b6290b2382cbee34af28b12c2eeca97dc86b63726e5e575e",
+            "33da57be30c4d3d446c0f4028b160ce63bf3df82bcee28dcb6ce3b1d5ff3b775"
+          ],
+          "Stopped": [
+            "29b2a2349d1e00324f71a30d82789b881f5ea4220c7e43fe7319e4cd29513e8c",
+            "32a3da48c2fde5c98c80e0e3d02ca9f1252f5cc5ffd5960cedc5273f2eef462e"
+          ]
+        },
+        "observedSequence": 51,
+        "linkedFrames": {
+          "26": [
+            "e519df473b0fd445fc4bddaa066857c9b70bac73e2aa62ac78250bb0d4de9ef7",
+            "e49652f973324e3d87aed3b3abe5b5e3e798e5c0f23d36f4a28c9a49fab38328"
+          ],
+          "39": [
+            "e519df473b0fd445fc4bddaa066857c9b70bac73e2aa62ac78250bb0d4de9ef7",
+            "e49652f973324e3d87aed3b3abe5b5e3e798e5c0f23d36f4a28c9a49fab38328"
+          ],
+          "51": [
+            "0dc42bf388d4512a626ba269d21adbd878db39405d0c338aee0096cf7225f9d8",
+            "e49652f973324e3d87aed3b3abe5b5e3e798e5c0f23d36f4a28c9a49fab38328"
+          ]
+        },
+        "lifecycle": "Stopped",
+        "readyGeneration": [
+          123,
+          456,
+          "7777777777777777777777777777777777777777777777777777777777777777"
+        ],
+        "actionPending": null,
+        "actionKind": "Stop",
+        "recovery": {
+          "planDigest": "decbfb428f91b8124348e16a959728fd1a797e2613861150cbf4fc49a8b1f220",
+          "progressDigest": "b5b33579e1c3f2d817020652b171cd5ac7a5784465c01ae683035dd02d637f36",
+          "planVerified": true,
+          "retiredCount": 1,
+          "restoredCount": 0,
+          "pending": [
+            "WorkRetireIntent",
+            "f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459"
+          ]
+        }
+      },
+      "currentRawSha256": "700f51fa823bc7a75a5601cd77935073ce52d550dc1b18863a3967d672df8ed0",
+      "positions": [
+        {
+          "kind": "original",
+          "relative": "",
+          "expectedId": "7036874419040336",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex",
+              "volume": 247287385,
+              "fileId": "7036874419040336",
+              "links": 1,
+              "attributes": 16
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": ".opencodex-native-main.claim.sqlite",
+          "expectedId": "5066549582104958",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\.opencodex-native-main.claim.sqlite",
+              "volume": 247287385,
+              "fileId": "5066549582104958",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": ".opencodex-native-main.owner.sqlite",
+          "expectedId": "2251799814998598",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\.opencodex-native-main.owner.sqlite",
+              "volume": 247287385,
+              "fileId": "2251799814998598",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "config.toml",
+          "expectedId": "1970324838273822",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\config.toml",
+              "openRawError": 2
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\custody\\original-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039",
+              "volume": 247287385,
+              "fileId": "1970324838273822",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 25,
+              "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "empty",
+          "expectedId": "15199648743670165",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\empty",
+              "volume": 247287385,
+              "fileId": "15199648743670165",
+              "links": 1,
+              "attributes": 16
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "nested",
+          "expectedId": "3377699721822228",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\nested",
+              "volume": 247287385,
+              "fileId": "3377699721822228",
+              "links": 1,
+              "attributes": 16
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "nested/auth.json",
+          "expectedId": "2533274791709020",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\nested\\auth.json",
+              "volume": 247287385,
+              "fileId": "2251799815004330",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 30,
+              "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\custody\\original-87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b",
+              "volume": 247287385,
+              "fileId": "2533274791709020",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 30,
+              "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "config.toml",
+          "expectedId": "2533274791714984",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\config.toml",
+              "openRawError": 2
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\custody\\retired-current-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039-2533274791714984",
+              "volume": 247287385,
+              "fileId": "2533274791714984",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 25,
+              "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "models_cache.json",
+          "expectedId": "562949954740593",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\models_cache.json",
+              "openRawError": 2
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\custody\\retired-current-f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459-562949954740593",
+              "volume": 247287385,
+              "fileId": "562949954740593",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 23,
+              "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "nested/auth.json",
+          "expectedId": "2251799815004330",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\nested\\auth.json",
+              "volume": 247287385,
+              "fileId": "2251799815004330",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 30,
+              "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\custody\\retired-current-87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b-2251799815004330",
+              "openRawError": 2
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "opencodex-catalog-audit.jsonl",
+          "expectedId": "3659174698557814",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\opencodex-catalog-audit.jsonl",
+              "volume": 247287385,
+              "fileId": "3659174698557814",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 16,
+              "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\custody\\retired-current-e25011923fff409a99bcc119f4b4e3dcd5246253375de6542b8be2ce8ff44caf-3659174698557814",
+              "openRawError": 2
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "opencodex-catalog.json",
+          "expectedId": "1407374884872606",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.codex\\opencodex-catalog.json",
+              "volume": 247287385,
+              "fileId": "1407374884872606",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 41,
+              "sha256": "a427dc3adbddb15ae6ecfe91953c3ea26d45596c5e5e667e3505bbb0db852940"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\custody\\retired-current-7523c2e48143c78a465739cac56bc7c859fd68c4d27840578fc3d45d25136988-1407374884872606",
+              "openRawError": 2
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "",
+          "expectedId": "7599824372502832",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.grok",
+              "volume": 247287385,
+              "fileId": "7599824372502832",
+              "links": 1,
+              "attributes": 16
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "settings.json",
+          "expectedId": "6755399442373258",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.grok\\settings.json",
+              "volume": 247287385,
+              "fileId": "1970324838293675",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 23,
+              "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\grok-custody\\original-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012",
+              "volume": 247287385,
+              "fileId": "6755399442373258",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 23,
+              "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "settings.json",
+          "expectedId": "1970324838293675",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\.grok\\settings.json",
+              "volume": 247287385,
+              "fileId": "1970324838293675",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 23,
+              "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp7BbA8N\\Profile\\grok-custody\\retired-current-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012-1970324838293675",
+              "openRawError": 2
+            }
+          ]
+        }
+      ],
+      "timing": [
+        "ready remainingMs=6860",
+        "pre-stop remainingMs=4106",
+        "stopped remainingMs=2659"
+      ]
+    },
+    {
+      "test": "infrastructure::windows_client_originals024::tree::anchored::observation::retirement::chain_tests::wl2_r6_recovery_chain_native_interrupted_original_restore_preserves_exact_native_prefix",
+      "scene": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-2a77dadb-6dda-4585-a5fe-7bf947e0413f\\session",
+      "lastRecoveryEvent": {
+        "schema": "windows-client-originals-v3",
+        "documentKind": "stopped-recovery-event",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "eventId": "1c80abac-05f1-499a-8059-ddf1029ed4cf",
+        "sequence": 59,
+        "sessionId": "bf4c7999-0e19-480c-9814-9d8b29c32b5b",
+        "operation": "WorkRetireIntent",
+        "plan": null,
+        "recoveryPlanDigest": "436454b77716a83402f6a80c62f68305f14c4ae40ab4fcf1b5031e1385ec7a2d",
+        "nodeId": "f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459",
+        "nodeDigest": "e14204ce45e8ee8159dcc9a4c3192384d79dd484236ab8310cf2978388034cf2",
+        "movement": {
+          "from": ".codex/models_cache.json",
+          "to": "custody/.codex/retired-current-f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459-562949954740685",
+          "nativeId": "562949954740685",
+          "volume": 247287385,
+          "parentId": "562949954740673",
+          "expectedBefore": "478cf8aa2fde4242dcac5643484ff36a13aacbfadfd7920b576f2a7757d95f2d",
+          "expectedAfter": "d7c68b5fcbbc3cd6e2471a6f124795403c0697d26cfc8467b413aa8269860f38"
+        },
+        "leaseEpoch": "eb75ccd0-1b69-4980-a82c-cf4cd0e2e96f",
+        "claimKey": "bbbd819c893655ac8d06b7752bfc717a0e573818a3051f7669098450c16fc24c",
+        "deadlineScope": "f6ea875d-e215-4f4c-a4d2-36418edb9fdc",
+        "previousEventDigest": "69e8e851e6724c5573bed1783dfa02c177d3658d85b45ad1fde0e9ec8037dd03",
+        "storagePlanDigest": "d96767f9817e8aa756d51ed3e9a0a88a935a0cfd9ca6b94da248ca72547b2c55",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "4708c920ee0c70c2af6ba5d4ca1a255e8c23992c188c28621c77b2275af38320",
+        "bindingDigest": "a5ae98ab6017e68f6570dc55547470a6a1039cee24d36d5a49af79a354ad34e6"
+      },
+      "immutableRecoveryEvents": 5,
+      "current": {
+        "schema": "windows-client-current-v3",
+        "sessionId": "bf4c7999-0e19-480c-9814-9d8b29c32b5b",
+        "sequence": 59,
+        "eventDigest": "410d17b45df9ce540051f8db135ae756c21be6de2a2b91f0742fe57f485e215a",
+        "previousEventDigest": "69e8e851e6724c5573bed1783dfa02c177d3658d85b45ad1fde0e9ec8037dd03",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "storagePlanDigest": "d96767f9817e8aa756d51ed3e9a0a88a935a0cfd9ca6b94da248ca72547b2c55",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "4708c920ee0c70c2af6ba5d4ca1a255e8c23992c188c28621c77b2275af38320",
+        "bindingDigest": "a5ae98ab6017e68f6570dc55547470a6a1039cee24d36d5a49af79a354ad34e6",
+        "leaseEpoch": "eb75ccd0-1b69-4980-a82c-cf4cd0e2e96f",
+        "claimKey": "bbbd819c893655ac8d06b7752bfc717a0e573818a3051f7669098450c16fc24c",
+        "deadlineScope": "f6ea875d-e215-4f4c-a4d2-36418edb9fdc",
+        "leaseState": "Active",
+        "leaseObjectsDigest": "b5304fb8137974f2dc705a9a442248b310941f6a7a87b92d9a0027724c270f84",
+        "workMode": "Observed",
+        "workFrames": [
+          "071f99b0eb994c15de86d697638048931ac6b787f82e9814ba247aa0c174d140",
+          "15bb9e089ded73d8f0029e404df37adddbf2d25bbe3b11a75fe126a1cfb5382c"
+        ],
+        "observedFrames": [
+          "a634317c99683188159c25fbad68e14905c39d301e7fa4997291def4ca4fa6b3",
+          "15bb9e089ded73d8f0029e404df37adddbf2d25bbe3b11a75fe126a1cfb5382c"
+        ],
+        "snapshotPending": null,
+        "snapshotLinks": {
+          "Ready": [
+            "a4aac341c45d7f9abc6f01e77105faf3a13b250c6fccd310c7937498d84a85f9",
+            "dffb18a0026a00866e7eacc1a0264231a0f2b3cd016b398c6cdfaf562a6e8c61"
+          ],
+          "PreStop": [
+            "d4488bbf2918b51818b34083e1c19e83a60271ca591f909edb0c4f89419a1061",
+            "3f19aef512634945df18218daf2d9914cf20b706883596dd62ec580684d8be8f"
+          ],
+          "Stopped": [
+            "25e0a0d197851f072e96e8555f89a96042bc856d4965c2a9d6667a59b4ab7bcc",
+            "13c9b0d8565269caa771436371cad07ebbcd767a4526b2481fe3e224aa5262f8"
+          ]
+        },
+        "observedSequence": 51,
+        "linkedFrames": {
+          "26": [
+            "261ea58b16649ce4c32d764ca100cfc2c0ff15f090a13819e1dd525dfa8b9469",
+            "15bb9e089ded73d8f0029e404df37adddbf2d25bbe3b11a75fe126a1cfb5382c"
+          ],
+          "39": [
+            "261ea58b16649ce4c32d764ca100cfc2c0ff15f090a13819e1dd525dfa8b9469",
+            "15bb9e089ded73d8f0029e404df37adddbf2d25bbe3b11a75fe126a1cfb5382c"
+          ],
+          "51": [
+            "a634317c99683188159c25fbad68e14905c39d301e7fa4997291def4ca4fa6b3",
+            "15bb9e089ded73d8f0029e404df37adddbf2d25bbe3b11a75fe126a1cfb5382c"
+          ]
+        },
+        "lifecycle": "Stopped",
+        "readyGeneration": [
+          123,
+          456,
+          "7777777777777777777777777777777777777777777777777777777777777777"
+        ],
+        "actionPending": null,
+        "actionKind": "Stop",
+        "recovery": {
+          "planDigest": "436454b77716a83402f6a80c62f68305f14c4ae40ab4fcf1b5031e1385ec7a2d",
+          "progressDigest": "24dd4ed3ef8898ef4281c97241676deae148799f1e2421c5ce3024a747ab7a1b",
+          "planVerified": true,
+          "retiredCount": 1,
+          "restoredCount": 0,
+          "pending": [
+            "WorkRetireIntent",
+            "f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459"
+          ]
+        }
+      },
+      "currentRawSha256": "3eeec6d7a3ce24d91260d85cd015f929a3eeeb127d07a3cabc258650e12a6716",
+      "positions": [
+        {
+          "kind": "original",
+          "relative": "",
+          "expectedId": "844424931451315",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex",
+              "volume": 247287385,
+              "fileId": "844424931451315",
+              "links": 1,
+              "attributes": 16
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": ".opencodex-native-main.claim.sqlite",
+          "expectedId": "844424931451320",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\.opencodex-native-main.claim.sqlite",
+              "volume": 247287385,
+              "fileId": "844424931451320",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": ".opencodex-native-main.owner.sqlite",
+          "expectedId": "562949954740666",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\.opencodex-native-main.owner.sqlite",
+              "volume": 247287385,
+              "fileId": "562949954740666",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "config.toml",
+          "expectedId": "562949954740662",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\config.toml",
+              "openRawError": 2
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\custody\\original-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039",
+              "volume": 247287385,
+              "fileId": "562949954740662",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 25,
+              "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "empty",
+          "expectedId": "562949954740661",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\empty",
+              "volume": 247287385,
+              "fileId": "562949954740661",
+              "links": 1,
+              "attributes": 16
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "nested",
+          "expectedId": "844424931451316",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\nested",
+              "volume": 247287385,
+              "fileId": "844424931451316",
+              "links": 1,
+              "attributes": 16
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "nested/auth.json",
+          "expectedId": "562949954740663",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\nested\\auth.json",
+              "volume": 247287385,
+              "fileId": "844424931451338",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 30,
+              "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\custody\\original-87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b",
+              "volume": 247287385,
+              "fileId": "562949954740663",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 30,
+              "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "config.toml",
+          "expectedId": "562949954740680",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\config.toml",
+              "openRawError": 2
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\custody\\retired-current-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039-562949954740680",
+              "volume": 247287385,
+              "fileId": "562949954740680",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 25,
+              "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "models_cache.json",
+          "expectedId": "562949954740685",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\models_cache.json",
+              "volume": 247287385,
+              "fileId": "562949954740685",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 23,
+              "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\custody\\retired-current-f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459-562949954740685",
+              "openRawError": 2
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "nested/auth.json",
+          "expectedId": "844424931451338",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\nested\\auth.json",
+              "volume": 247287385,
+              "fileId": "844424931451338",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 30,
+              "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\custody\\retired-current-87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b-844424931451338",
+              "openRawError": 2
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "opencodex-catalog-audit.jsonl",
+          "expectedId": "562949954740686",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\opencodex-catalog-audit.jsonl",
+              "volume": 247287385,
+              "fileId": "562949954740686",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 16,
+              "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\custody\\retired-current-e25011923fff409a99bcc119f4b4e3dcd5246253375de6542b8be2ce8ff44caf-562949954740686",
+              "openRawError": 2
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "opencodex-catalog.json",
+          "expectedId": "844424931451374",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.codex\\opencodex-catalog.json",
+              "volume": 247287385,
+              "fileId": "844424931451374",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 41,
+              "sha256": "a427dc3adbddb15ae6ecfe91953c3ea26d45596c5e5e667e3505bbb0db852940"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\custody\\retired-current-7523c2e48143c78a465739cac56bc7c859fd68c4d27840578fc3d45d25136988-844424931451374",
+              "openRawError": 2
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "",
+          "expectedId": "562949954740674",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.grok",
+              "volume": 247287385,
+              "fileId": "562949954740674",
+              "links": 1,
+              "attributes": 16
+            }
+          ]
+        },
+        {
+          "kind": "original",
+          "relative": "settings.json",
+          "expectedId": "562949954740675",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.grok\\settings.json",
+              "volume": 247287385,
+              "fileId": "562949954740683",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 23,
+              "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\grok-custody\\original-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012",
+              "volume": 247287385,
+              "fileId": "562949954740675",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 23,
+              "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+            }
+          ]
+        },
+        {
+          "kind": "current",
+          "relative": "settings.json",
+          "expectedId": "562949954740683",
+          "locations": [
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\.grok\\settings.json",
+              "volume": 247287385,
+              "fileId": "562949954740683",
+              "links": 1,
+              "attributes": 32,
+              "bytes": 23,
+              "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+            },
+            {
+              "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQxdnrX\\Profile\\grok-custody\\retired-current-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012-562949954740683",
+              "openRawError": 2
+            }
+          ]
+        }
+      ],
+      "timing": [
+        "ready remainingMs=6458",
+        "pre-stop remainingMs=4297",
+        "stopped remainingMs=2799"
+      ]
+    }
+  ],
+  "readOnlyAfterOriginalDeadline": true,
+  "freshReadIsNotMutationOrRecoveryPermission": true,
+  "newSecurityQualification": false,
+  "cleanupAttempted": false
+}
