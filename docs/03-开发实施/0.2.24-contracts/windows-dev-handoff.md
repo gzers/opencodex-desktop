@@ -589,3 +589,10 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 源码 5a7cccaaaf65f45cb8ac614cfa8944f6ee529c3c/tree8d9519122a5bc95fc0fa6b1b1e5fe032e354cc4f；原证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-v3-20261116-r1/。完整两根节点计划/planDigest/绑定及严格8事件进度，真实不可覆盖phase与同ID current CAS/部分写poison、两稳定对象释放读回。library01 8过；library02 8过3败/raw101（D任务父目录缺席raw2，原现场保留）；按记录补自身父目录后同源library03 11过0败，产品debug MSVC bins raw0/181908ms。EXE SHA、原单字节current、完整继承表、首错、10处本轮成功清理/60失败pending保留归final-status/report。
 
 组件尚未绑定真实节点变更与阶段/source/history/lease分段/Stop/Closed/后继/原包H-S-D，生产入口仍v2且Start无条件拒绝；原缺席退根blocked单列，不转换旧记录、不W2/双SID/发布。继续范围内实现native intent/结果绑定及组合中断，非整组已验收。
+
+
+## 2026-11-16 TEAM16/r6 节点native与v3记录绑定
+
+源码 285be9fada2461cc7c386f6e2228c6ca1804a572/tree16f6ec340cfaedeafeb4b6e3c0c5d94ae254f0e1；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-node-driver-20261116-r1/。原生动作前intent/current刷盘，后同原对象ID/8投影结果；Codex+Grok三原文件30事件全树往返，四处组合中断/new epoch拒绝通过。首轮14过，补原子CREATE_NEW立即保管准确工作句柄及空/1字节/封存前3故障，最终15过0败；本轮无非预期首错。产品MSVC debug bins原码0/156873ms，SHA/完整状态表归final-status/product01-artifacts/report。10成功场景核归档后清理，78失败/pending原场景和25 D日志根保留，不是原生元数据克隆。
+
+还需释放Prepared/真实结果及新lease段、正式阶段/封存/source/route/history/successor/副作用/原包H-S-D/typed Closed，现生产入口仍v2且Start无条件拒绝；原缺席Codex安全退根blocked单列。旧raw5/空GUI不重跑，不转换旧记录，不W2/双SID/发布。

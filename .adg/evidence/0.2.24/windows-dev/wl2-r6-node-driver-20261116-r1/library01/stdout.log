@@ -1,0 +1,130 @@
+
+running 14 tests
+test infrastructure::windows_client_originals024::tree::anchored::tests::driver::wl2_r6_native_node_driver_binds_durable_intents_actual_generations_and_original_tree_restore ... r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-journal-prefix root=0 node=3 action=MoveOriginal journal=(8, false)
+r6-native-journal-prefix root=0 node=6 action=MoveOriginal journal=(10, false)
+r6-native-journal-prefix root=1 node=1 action=MoveOriginal journal=(12, false)
+r6-native-journal-prefix root=0 node=3 action=CreateWork journal=(14, false)
+r6-native-journal-prefix root=0 node=6 action=CreateWork journal=(16, false)
+r6-native-journal-prefix root=1 node=1 action=CreateWork journal=(18, false)
+r6-native-journal-prefix root=0 node=3 action=RetireWork journal=(20, false)
+r6-native-journal-prefix root=0 node=6 action=RetireWork journal=(22, false)
+r6-native-journal-prefix root=1 node=1 action=RetireWork journal=(24, false)
+r6-native-journal-prefix root=0 node=3 action=RestoreOriginal journal=(26, false)
+r6-native-journal-prefix root=0 node=6 action=RestoreOriginal journal=(28, false)
+r6-native-journal-prefix root=1 node=1 action=RestoreOriginal journal=(30, false)
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired
+ stderr=
+r6 native driver actual three-file Codex+Grok whole trees restore original IDs/bytes/all8/children;30 canonical events include6 anchor snapshots and24 ordered native file intent/results; explicit lease release+stable proof, no production phase/Closed/successor or release-event authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpGD2Pti
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-7649ca6f-9513-465b-8b4d-d46759d84fe9
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::driver::wl2_r6_native_node_driver_interruptions_keep_exact_native_prefix_and_durable_pending ... r6-native-journal-interruption fault=4 originalPresent=true nativeState=Original journal=(7, true) error=injected after durable node intent/current, before native mutation
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp8SIuBp
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-2b3f8df0-44bb-4ba7-b91d-8a617a4d2c0a
+r6-native-journal-interruption fault=3 originalPresent=false nativeState=Moved journal=(7, true) error=injected after actual native mutation before result publication
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp9rPwuu
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-7f1a7e31-aa86-4374-bf4b-b433f10899c2
+r6-native-journal-interruption fault=5 originalPresent=false nativeState=Moved journal=(7, true) error=injected after immutable event sync/readback before current CAS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpuBDrlU
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-27fcb249-5c37-42df-bdbd-a365c42f6f4a
+r6-native-journal-interruption fault=6 originalPresent=false nativeState=Moved journal=(7, true) error=injected real partial current write/sync
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0QtX3S
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-becf07c2-da6b-451a-bb30-643dec83a2dd
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::driver::wl2_r6_native_node_driver_new_lease_epoch_cannot_inherit_previous_permission ... r6 new actual lease same paths/files/token cannot reuse previous epoch; original retained, no native write/current advance; production reacquisition requires explicit phase/release protocol
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp7Gvwk9
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-708bc2c6-784d-4925-9301-3c8e8f1792f7
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_absent_root_wrong_claim_open_file_and_sidecar_admission_refuse ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpn68J92
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpOI3ssC
+r6 ordinary file open admission raw=Some(32), original retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpIsuR8Z
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpISvLwV
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_every_native_prefix_retains_handles_without_resume ... r6 interrupted-native-prefix=0 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpoYlEjS
+r6 interrupted-native-prefix=1 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmplk25dg
+r6 interrupted-native-prefix=2 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpxbQ6Qe
+r6 interrupted-native-prefix=3 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpp5VMe8
+r6 interrupted-native-prefix=4 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmppBQOK3
+r6 interrupted-native-prefix=5 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpjOF2mx
+r6 interrupted-native-prefix=6 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpP0MWxS
+r6 interrupted-native-prefix=7 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpLARAnb
+r6 interrupted-native-prefix=8 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpJo5RmG
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_existing_tree_continuous_claim_node_roundtrip ... r6-epoch=68bb6835-2896-46b6-8da7-0ae5fcb1f7a5 key=b1f57a0d6a70bc519ebd7f0b35aea6710c04f60444e4dda9ca315b7f4d9c5668
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Moved
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Moved
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Working
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Working
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Retired
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Retired
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Restored
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Restored
+r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired
+ stderr=
+r6 exact original directory/two stable file IDs/all8 and complete children retained; original files restored by original handles; work generations retired; lease explicitly released; component only, Start/Closed=false
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpKvLlpY
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_grok_names_are_ordinary_and_large_work_file_keeps_original_ids ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpS7E5qc
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_unknown_empty_directory_and_original_edit_refuse_without_overwrite ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp4abKG8
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_event_or_partial_current_failure_poison_without_catchup ... r6 durable injected fault=1: injected after immutable event sync/readback before current CAS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpTFk52Y
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-25e4ee4b-4431-4981-9813-640a3f495a89
+r6 durable injected fault=2: injected real partial current write/sync
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpC1g5NF
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-a52ee23a-a84b-401b-b3ab-98802885bd4c
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_manifest_event_current_and_other_writer_refusal ... r6 native manifest/event immutable sync/readback and current same-ID CAS pass; actual D separate volume; second current writer raw32. This is data journal only, original tree not mutated, no recovery capability.
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp6DWM3l
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-49b4defd-8250-4b90-bc0a-6caca61f1a03
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_unknown_node_and_late_deadline_poison ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp8885La
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-9fec7953-fdb6-4913-b205-0d997ce2b7bc
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpBhejpr
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-1b250909-a3ce-4269-ae1c-aa668870440f
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_every_node_requires_full_order_and_anchors_require_release ... r6 v3 complete DATA requires all8 ordered events per file plus every anchor snapshot/release; no native Restored or Closed is minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpsrwQRR
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_full_native_plan_rejects_missing_duplicate_extra_anchor_wrong_parent_and_unknown_fields ... r6 full native-derived v3 plan data validates two complete trees/actual IDs/all8/parent and same-volume custody;10 malformed plans plus duplicate fields refuse; parsing never admits native authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpuYscTw
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_node_events_reject_skip_reverse_context_drift_cross_node_and_text_closed ... r6 v3 pending blocks cross-node, skip/reverse/replay/context/claim/deadline/expected digest drift and text Closed; data has no native resume factory
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpEdloRp
+ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 1986 filtered out; finished in 11.24s
+

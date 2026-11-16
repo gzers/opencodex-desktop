@@ -1,0 +1,140 @@
+
+running 15 tests
+test infrastructure::windows_client_originals024::tree::anchored::tests::driver::wl2_r6_native_node_driver_binds_durable_intents_actual_generations_and_original_tree_restore ... r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-journal-prefix root=0 node=3 action=MoveOriginal journal=(8, false)
+r6-native-journal-prefix root=0 node=6 action=MoveOriginal journal=(10, false)
+r6-native-journal-prefix root=1 node=1 action=MoveOriginal journal=(12, false)
+r6-native-journal-prefix root=0 node=3 action=CreateWork journal=(14, false)
+r6-native-journal-prefix root=0 node=6 action=CreateWork journal=(16, false)
+r6-native-journal-prefix root=1 node=1 action=CreateWork journal=(18, false)
+r6-native-journal-prefix root=0 node=3 action=RetireWork journal=(20, false)
+r6-native-journal-prefix root=0 node=6 action=RetireWork journal=(22, false)
+r6-native-journal-prefix root=1 node=1 action=RetireWork journal=(24, false)
+r6-native-journal-prefix root=0 node=3 action=RestoreOriginal journal=(26, false)
+r6-native-journal-prefix root=0 node=6 action=RestoreOriginal journal=(28, false)
+r6-native-journal-prefix root=1 node=1 action=RestoreOriginal journal=(30, false)
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired
+ stderr=
+r6 native driver actual three-file Codex+Grok whole trees restore original IDs/bytes/all8/children;30 canonical events include6 anchor snapshots and24 ordered native file intent/results; explicit lease release+stable proof, no production phase/Closed/successor or release-event authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpiDeJe9
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-da388b0b-11cb-423a-8c2d-06d0c59ebffa
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::driver::wl2_r6_native_node_driver_interruptions_keep_exact_native_prefix_and_durable_pending ... r6-native-journal-interruption fault=4 originalPresent=true nativeState=Original journal=(7, true) error=injected after durable node intent/current, before native mutation
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpbihNuE
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-559c3af2-284f-4554-8526-ab276dea2fe8
+r6-native-journal-interruption fault=3 originalPresent=false nativeState=Moved journal=(7, true) error=injected after actual native mutation before result publication
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpHREwF3
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-6dce9e11-5fec-4d85-bf07-ec11d97e9931
+r6-native-journal-interruption fault=5 originalPresent=false nativeState=Moved journal=(7, true) error=injected after immutable event sync/readback before current CAS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpJdkY5P
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-3ee5b72f-7f9e-414a-81ba-d61796a46b64
+r6-native-journal-interruption fault=6 originalPresent=false nativeState=Moved journal=(7, true) error=injected real partial current write/sync
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmptda1qg
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-1152557f-5798-4cdb-8199-3a2d2a83e90c
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::driver::wl2_r6_native_node_driver_new_lease_epoch_cannot_inherit_previous_permission ... r6 new actual lease same paths/files/token cannot reuse previous epoch; original retained, no native write/current advance; production reacquisition requires explicit phase/release protocol
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpST3nRI
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-af4f7753-f51f-451f-ac5e-1441c021c59d
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::driver::wl2_r6_native_node_driver_work_create_empty_partial_and_preseal_keep_exact_new_handle ... r6-work-created-pending {"bytes":0,"complete":false,"error":"injected after actual CREATE_NEW, exact new handle retained","fault":1,"fileId":"844424931414125","originalCustodyPresent":true,"rawOtherWriter":32,"security":{"auditSaclAssurance":"excluded-unknown","fileId":"844424931414125","fullSecurityProven":false,"projections":[{"nativeStatus":0,"requestedMask":1,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":1,"revision":1,"sid":[1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],"state":"present"},"structureDigest":"439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"},{"nativeStatus":0,"requestedMask":2,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":2,"revision":1,"sid":[1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],"state":"present"},"structureDigest":"ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"},{"nativeStatus":0,"requestedMask":4,"structure":{"aces":[[0,0,36,0,255,1,31,0,1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],[0,0,20,0,255,1,31,0,1,1,0,0,0,0,0,5,18,0,0,0]],"aclRevision":2,"control":4100,"mask":4,"revision":1,"sid":null,"state":"present"},"structureDigest":"41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"},{"nativeStatus":0,"requestedMask":16,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":16,"revision":1,"sid":null,"state":"absent"},"structureDigest":"532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"},{"nativeStatus":0,"requestedMask":32,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":32,"revision":1,"sid":null,"state":"absent"},"structureDigest":"7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"},{"nativeStatus":0,"requestedMask":64,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":64,"revision":1,"sid":null,"state":"absent"},"structureDigest":"1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"},{"nativeStatus":0,"requestedMask":128,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":128,"revision":1,"sid":null,"state":"absent"},"structureDigest":"56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"},{"nativeStatus":0,"requestedMask":256,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":256,"revision":1,"sid":null,"state":"absent"},"structureDigest":"6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"}],"scopeId":"windows-bounded-access-v1","securityPolicyDigest":"688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07","volume":247287385},"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855","volume":247287385}
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpgJaWZG
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-506e6564-78de-4035-94c1-8dec3d891b01
+r6-work-created-pending {"bytes":1,"complete":false,"error":"injected after real partial work write/sync, exact handle retained","fault":2,"fileId":"844424931414146","originalCustodyPresent":true,"rawOtherWriter":32,"security":{"auditSaclAssurance":"excluded-unknown","fileId":"844424931414146","fullSecurityProven":false,"projections":[{"nativeStatus":0,"requestedMask":1,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":1,"revision":1,"sid":[1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],"state":"present"},"structureDigest":"439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"},{"nativeStatus":0,"requestedMask":2,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":2,"revision":1,"sid":[1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],"state":"present"},"structureDigest":"ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"},{"nativeStatus":0,"requestedMask":4,"structure":{"aces":[[0,0,36,0,255,1,31,0,1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],[0,0,20,0,255,1,31,0,1,1,0,0,0,0,0,5,18,0,0,0]],"aclRevision":2,"control":4100,"mask":4,"revision":1,"sid":null,"state":"present"},"structureDigest":"41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"},{"nativeStatus":0,"requestedMask":16,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":16,"revision":1,"sid":null,"state":"absent"},"structureDigest":"532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"},{"nativeStatus":0,"requestedMask":32,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":32,"revision":1,"sid":null,"state":"absent"},"structureDigest":"7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"},{"nativeStatus":0,"requestedMask":64,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":64,"revision":1,"sid":null,"state":"absent"},"structureDigest":"1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"},{"nativeStatus":0,"requestedMask":128,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":128,"revision":1,"sid":null,"state":"absent"},"structureDigest":"56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"},{"nativeStatus":0,"requestedMask":256,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":256,"revision":1,"sid":null,"state":"absent"},"structureDigest":"6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"}],"scopeId":"windows-bounded-access-v1","securityPolicyDigest":"688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07","volume":247287385},"sha256":"043a718774c572bd8a25adbeb1bfcd5c0256ae11cecf9f9c3f925d0e52beaf89","volume":247287385}
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpb6pY6X
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-623aeab6-0dc7-4488-8e45-7dc7c94dae3b
+r6-work-created-pending {"bytes":25,"complete":false,"error":"injected after complete work sync/readback, before native publication","fault":3,"fileId":"844424931414166","originalCustodyPresent":true,"rawOtherWriter":32,"security":{"auditSaclAssurance":"excluded-unknown","fileId":"844424931414166","fullSecurityProven":false,"projections":[{"nativeStatus":0,"requestedMask":1,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":1,"revision":1,"sid":[1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],"state":"present"},"structureDigest":"439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"},{"nativeStatus":0,"requestedMask":2,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":2,"revision":1,"sid":[1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],"state":"present"},"structureDigest":"ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"},{"nativeStatus":0,"requestedMask":4,"structure":{"aces":[[0,0,36,0,255,1,31,0,1,5,0,0,0,0,0,5,21,0,0,0,192,34,3,35,214,218,7,51,96,117,250,153,233,3,0,0],[0,0,20,0,255,1,31,0,1,1,0,0,0,0,0,5,18,0,0,0]],"aclRevision":2,"control":4100,"mask":4,"revision":1,"sid":null,"state":"present"},"structureDigest":"41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"},{"nativeStatus":0,"requestedMask":16,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":16,"revision":1,"sid":null,"state":"absent"},"structureDigest":"532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"},{"nativeStatus":0,"requestedMask":32,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":32,"revision":1,"sid":null,"state":"absent"},"structureDigest":"7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"},{"nativeStatus":0,"requestedMask":64,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":64,"revision":1,"sid":null,"state":"absent"},"structureDigest":"1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"},{"nativeStatus":0,"requestedMask":128,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":128,"revision":1,"sid":null,"state":"absent"},"structureDigest":"56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"},{"nativeStatus":0,"requestedMask":256,"structure":{"aces":[],"aclRevision":null,"control":0,"mask":256,"revision":1,"sid":null,"state":"absent"},"structureDigest":"6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"}],"scopeId":"windows-bounded-access-v1","securityPolicyDigest":"688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07","volume":247287385},"sha256":"ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85","volume":247287385}
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpiWAbCn
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-c61eb593-6aec-468b-a167-df45c88800e3
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_absent_root_wrong_claim_open_file_and_sidecar_admission_refuse ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpkDaSiK
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpuLsSAw
+r6 ordinary file open admission raw=Some(32), original retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpv03Xhi
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpJupIOW
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_every_native_prefix_retains_handles_without_resume ... r6 interrupted-native-prefix=0 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpvJuYfT
+r6 interrupted-native-prefix=1 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpiLkvhp
+r6 interrupted-native-prefix=2 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmphRplDL
+r6 interrupted-native-prefix=3 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpMkdJ7c
+r6 interrupted-native-prefix=4 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpH2PUU8
+r6 interrupted-native-prefix=5 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpFZiELC
+r6 interrupted-native-prefix=6 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpoXFzhF
+r6 interrupted-native-prefix=7 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0iePes
+r6 interrupted-native-prefix=8 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmplKua9h
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_existing_tree_continuous_claim_node_roundtrip ... r6-epoch=33548e2c-131c-47eb-afcf-3bf13f2678ba key=91b28ad7b4948623ef73ae5ba2e5d4b7dba593f8a878d3476149df1af4591275
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Moved
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Moved
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Working
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Working
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Retired
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Retired
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Restored
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Restored
+r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired
+ stderr=
+r6 exact original directory/two stable file IDs/all8 and complete children retained; original files restored by original handles; work generations retired; lease explicitly released; component only, Start/Closed=false
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpAkr6P9
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_grok_names_are_ordinary_and_large_work_file_keeps_original_ids ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp8HwKsn
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_unknown_empty_directory_and_original_edit_refuse_without_overwrite ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpjgSeDw
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_event_or_partial_current_failure_poison_without_catchup ... r6 durable injected fault=1: injected after immutable event sync/readback before current CAS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp6cXBRP
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-667a1d47-15cf-433b-8866-f869eed01f36
+r6 durable injected fault=2: injected real partial current write/sync
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpHvGHZC
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-2302ed89-768d-4b40-b57b-e4aad39a4ee1
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_manifest_event_current_and_other_writer_refusal ... r6 native manifest/event immutable sync/readback and current same-ID CAS pass; actual D separate volume; second current writer raw32. This is data journal only, original tree not mutated, no recovery capability.
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpHHFdzV
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-4c63df91-3a5a-483e-84cb-41203b3945e0
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_unknown_node_and_late_deadline_poison ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmppAMNNY
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-93c1381d-c2d5-4a71-bc54-ca92b4704fa4
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpcNeRgI
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-65250864-7808-4426-9b94-79a01c0fd92a
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_every_node_requires_full_order_and_anchors_require_release ... r6 v3 complete DATA requires all8 ordered events per file plus every anchor snapshot/release; no native Restored or Closed is minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp9hYkxi
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_full_native_plan_rejects_missing_duplicate_extra_anchor_wrong_parent_and_unknown_fields ... r6 full native-derived v3 plan data validates two complete trees/actual IDs/all8/parent and same-volume custody;10 malformed plans plus duplicate fields refuse; parsing never admits native authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpOKPvN5
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_node_events_reject_skip_reverse_context_drift_cross_node_and_text_closed ... r6 v3 pending blocks cross-node, skip/reverse/replay/context/claim/deadline/expected digest drift and text Closed; data has no native resume factory
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpC2aAdw
+ok
+
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 1986 filtered out; finished in 12.08s
+

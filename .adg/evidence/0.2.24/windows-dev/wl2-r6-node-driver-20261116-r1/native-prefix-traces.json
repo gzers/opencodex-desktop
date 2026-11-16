@@ -1,0 +1,130 @@
+[
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=0 node=3 action=MoveOriginal journal=(8, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=0 node=6 action=MoveOriginal journal=(10, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=1 node=1 action=MoveOriginal journal=(12, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=0 node=3 action=CreateWork journal=(14, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=0 node=6 action=CreateWork journal=(16, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=1 node=1 action=CreateWork journal=(18, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=0 node=3 action=RetireWork journal=(20, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=0 node=6 action=RetireWork journal=(22, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=1 node=1 action=RetireWork journal=(24, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=0 node=3 action=RestoreOriginal journal=(26, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=0 node=6 action=RestoreOriginal journal=(28, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-prefix root=1 node=1 action=RestoreOriginal journal=(30, false)"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-interruption fault=4 originalPresent=true nativeState=Original journal=(7, true) error=injected after durable node intent/current, before native mutation"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-interruption fault=3 originalPresent=false nativeState=Moved journal=(7, true) error=injected after actual native mutation before result publication"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-interruption fault=5 originalPresent=false nativeState=Moved journal=(7, true) error=injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-native-journal-interruption fault=6 originalPresent=false nativeState=Moved journal=(7, true) error=injected real partial current write/sync"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=0 node=3 action=MoveOriginal journal=(8, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=0 node=6 action=MoveOriginal journal=(10, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=1 node=1 action=MoveOriginal journal=(12, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=0 node=3 action=CreateWork journal=(14, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=0 node=6 action=CreateWork journal=(16, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=1 node=1 action=CreateWork journal=(18, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=0 node=3 action=RetireWork journal=(20, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=0 node=6 action=RetireWork journal=(22, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=1 node=1 action=RetireWork journal=(24, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=0 node=3 action=RestoreOriginal journal=(26, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=0 node=6 action=RestoreOriginal journal=(28, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-prefix root=1 node=1 action=RestoreOriginal journal=(30, false)"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-interruption fault=4 originalPresent=true nativeState=Original journal=(7, true) error=injected after durable node intent/current, before native mutation"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-interruption fault=3 originalPresent=false nativeState=Moved journal=(7, true) error=injected after actual native mutation before result publication"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-interruption fault=5 originalPresent=false nativeState=Moved journal=(7, true) error=injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-native-journal-interruption fault=6 originalPresent=false nativeState=Moved journal=(7, true) error=injected real partial current write/sync"
+  }
+]
