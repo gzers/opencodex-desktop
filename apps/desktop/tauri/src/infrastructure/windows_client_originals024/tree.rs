@@ -19,8 +19,9 @@ use std::{
     path::{Path, PathBuf},
     time::Instant,
 };
-mod locks;
+mod anchored;
 mod artifacts;
+mod locks;
 pub(super) use artifacts::ArtifactFrame;
 mod working;
 pub(super) use working::{SnapshotPhase, WorkingArchive, WorkingReference};

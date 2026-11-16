@@ -365,8 +365,77 @@ pub(super) struct NativeLease {
     active: bool,
     bound: Option<Bound>,
     _not_send: PhantomData<*mut ()>,
+    epoch: String,
+}
+/// Borrowed exclusion for one anchored critical section. Cannot outlive or
+/// release the actual lease. Persisted epoch/key are locators, never permits.
+pub(super) struct AnchoredClaim<'a> {
+    lease: &'a mut NativeLease,
+    path: PathBuf,
+    id: FileIdentity,
+    end: Instant,
+}
+impl AnchoredClaim<'_> {
+    pub(super) fn check(&mut self, root: &Path, end: Instant) -> io::Result<()> {
+        if end > self.end || self.path.parent() != Some(root) {
+            self.lease.active = false;
+            return Err(refused());
+        }
+        self.lease.check(end)?;
+        let held = &self.lease.held[0];
+        if held.pin.path != self.path
+            || held.pin.id != self.id
+            || held.ranges.len() != 1
+            || held.ranges[0].offset != BASE
+            || held.ranges[0].length != 512
+        {
+            self.lease.active = false;
+            return Err(refused());
+        }
+        Ok(())
+    }
+    pub(super) fn epoch(&self) -> &str {
+        &self.lease.epoch
+    }
+    pub(super) fn key(&self) -> String {
+        hash::sha256_hex(
+            format!(
+                "{}:{}:{}",
+                self.path.display(),
+                self.id.volume,
+                self.id.index
+            )
+            .as_bytes(),
+        )
+    }
 }
 impl NativeLease {
+    #[cfg(test)]
+    pub(super) fn acquire_synthetic(paths: &[PathBuf; 4], end: Instant) -> io::Result<Self> {
+        Self::acquire_paths(paths, end)
+    }
+    pub(super) fn anchored_claim(
+        &mut self,
+        root: &Path,
+        end: Instant,
+    ) -> io::Result<AnchoredClaim<'_>> {
+        self.check(end)?;
+        let pin = &self.held[0].pin;
+        if pin.path != root.join(".opencodex-native-main.claim.sqlite") {
+            self.active = false;
+            return Err(refused());
+        }
+        let path = pin.path.clone();
+        let id = pin.id;
+        let mut claim = AnchoredClaim {
+            lease: self,
+            path,
+            id,
+            end,
+        };
+        claim.check(root, end)?;
+        Ok(claim)
+    }
     fn acquire_paths(paths: &[PathBuf; 4], end: Instant) -> io::Result<Self> {
         before(end)?;
         let token = native::current_identity()?;
@@ -387,6 +456,7 @@ impl NativeLease {
             active: true,
             bound: None,
             _not_send: PhantomData,
+            epoch: uuid::Uuid::new_v4().to_string(),
         };
         for (i, path) in paths.iter().enumerate() {
             let pin = LockFile::capture(path, end, i == 0)?;
