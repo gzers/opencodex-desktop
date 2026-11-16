@@ -20,6 +20,8 @@ use std::{
     path::{Component, Path},
 };
 mod actions;
+mod capture;
+pub(super) use capture::CaptureSlot;
 pub(super) mod journal;
 mod observations;
 mod segments;

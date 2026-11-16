@@ -340,25 +340,31 @@ impl Held {
             pin,
             ranges: Vec::new(),
         };
-        if claim {
-            held.range(BASE, 512, true)?;
-        } else {
-            // Original SQLite Windows VFS SHARED admission and RESERVED writer
-            // exclusion; no BEGIN/PRAGMA or writes through a SQLite connection.
-            held.range(BASE, 1, false)?;
-            held.range(BASE + 2, 510, false)?;
-            held.unlock(BASE)?;
-            held.range(BASE + 1, 1, true)?;
+        let result = (|| {
+            if claim {
+                held.range(BASE, 512, true)?;
+            } else {
+                // Original SQLite Windows VFS SHARED admission and RESERVED writer
+                // exclusion; no BEGIN/PRAGMA or writes through a SQLite connection.
+                held.range(BASE, 1, false)?;
+                held.range(BASE + 2, 510, false)?;
+                held.unlock(BASE)?;
+                held.range(BASE + 1, 1, true)?;
+            }
+            held.pin.check(end)
+        })();
+        if let Err(error) = result {
+            // Before enrollment in NativeLease, explicitly attempt each owned
+            // partial range. Closing this own file on a failed unlock remains
+            // failure cleanup, never a successful ordinary release receipt.
+            let _ = held.release();
+            return Err(error);
         }
-        held.pin.check(end)?;
         Ok(held)
     }
 }
-impl Drop for Held {
-    fn drop(&mut self) {
-        let _ = self.release();
-    }
-}
+// NativeLease owns release for every enrolled Held. A Held is never exposed
+// independently; failed acquisition above releases its own incomplete ranges.
 struct Bound {
     scope: String,
     profile: PinnedDirectory,

@@ -85,6 +85,7 @@ pub(crate) enum LivePhase {
 }
 #[derive(Default)]
 pub(crate) struct WindowsOriginals {
+    v3_capture: super::super::v3::CaptureSlot,
     store: Option<Store>,
     closed: Vec<Store>,
     successor: Option<SuccessorTicket>,
@@ -99,6 +100,23 @@ struct SuccessorTicket {
     previous_session: String,
 }
 impl WindowsOriginals {
+    /// Retained v3 lane for production wiring. It cannot replace active v2
+    /// native state or adopt old Closed text. Public durable gate stays shut.
+    pub(crate) fn prepare_v3_capture(
+        &mut self,
+        owner: &mut Owner,
+        window: &ActionWindow,
+    ) -> AppResult<()> {
+        if self.failed
+            || self.store.is_some()
+            || !self.closed.is_empty()
+            || self.successor.is_some()
+            || self.v3_capture.occupied()
+        {
+            return Err(refused("原适配器已有v2/v3/native历史；不转换或替换"));
+        }
+        self.v3_capture.capture_existing(owner, window)
+    }
     /// Borrow the original Closed tag; no boolean/serialized status may request
     /// a successful close. This is a fresh native observation in THIS window.
     pub(crate) fn check_closed(
@@ -292,7 +310,7 @@ impl ClientOriginals for WindowsOriginals {
     type ClosedEligibility = ClosedEligibility;
     fn capture(&mut self, owner: &mut Owner, window: &ActionWindow) -> AppResult<OriginalSession> {
         window.remaining()?;
-        if self.store.is_some() {
+        if self.store.is_some() || self.v3_capture.occupied() {
             return Err(refused("已有原生session；不得替换/自动追赶"));
         }
         let end = window.deadline();

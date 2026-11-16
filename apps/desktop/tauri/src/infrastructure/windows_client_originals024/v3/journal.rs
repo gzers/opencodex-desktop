@@ -64,6 +64,37 @@ fn directory_security(pin: &PinnedDirectory, end: Instant) -> io::Result<Snapsho
     native::verify_private_directory(&file)?;
     security(&file, end)
 }
+fn session_namespace(
+    directory: &PinnedDirectory,
+    data: &PinnedDirectory,
+) -> io::Result<Option<String>> {
+    data.recheck()?;
+    directory.recheck()?;
+    // Direct child is the existing isolated COMPONENT journal layout. Native
+    // Source factory below requires the exact production namespace instead.
+    if directory.path().parent() == Some(data.path()) {
+        return Ok(None);
+    }
+    let expected = data.path().join("official024/windows");
+    if directory.path().parent() != Some(expected.as_path()) {
+        return Err(invalid());
+    }
+    let official = PinnedDirectory::open_private(&data.path().join("official024"))?;
+    let windows = PinnedDirectory::open_private(&expected)?;
+    let session = directory
+        .path()
+        .file_name()
+        .and_then(|n| n.to_str())
+        .ok_or_else(invalid)?;
+    if !uuid(session) {
+        return Err(invalid());
+    }
+    official.recheck()?;
+    windows.recheck()?;
+    directory.recheck()?;
+    data.recheck()?;
+    Ok(Some(session.into()))
+}
 fn contents(file: &mut File) -> io::Result<Vec<u8>> {
     file.seek(SeekFrom::Start(0))?;
     let mut out = Vec::new();
@@ -251,6 +282,9 @@ impl Journal {
         end: Instant,
     ) -> io::Result<Self> {
         let (pins, peer, binding, action) = context.into_parts();
+        if session_namespace(&directory, &pins[1])?.is_none() {
+            return Err(invalid());
+        }
         action.check(owner, end).map_err(io::Error::other)?;
         if action.deadline() != end {
             return Err(invalid());
@@ -321,12 +355,11 @@ impl Journal {
         binding.check_native(&peer, &pins)?;
         plan.validate(pins[0].path(), pins[0].identity())?;
         directory.recheck()?;
-        if directory.path().parent() != Some(pins[1].path())
-            || std::fs::read_dir(directory.path())?.next().is_some()
-        {
+        let namespace_session = session_namespace(&directory, &pins[1])?;
+        if std::fs::read_dir(directory.path())?.next().is_some() {
             return Err(invalid());
         }
-        let session = uuid::Uuid::new_v4().to_string();
+        let session = namespace_session.unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
         let binding_digest = hash::sha256_hex(&encoded(&binding)?);
         let manifest = Manifest {
             schema: ANCHORED_ORIGINALS_SCHEMA_V3.into(),

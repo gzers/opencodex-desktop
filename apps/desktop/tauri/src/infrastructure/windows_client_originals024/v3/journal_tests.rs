@@ -55,6 +55,67 @@ fn setup() -> (
     (f, retained, journal)
 }
 #[test]
+fn wl2_r6_capture_canonical_data_namespace_binds_native_session_leaf_and_rejects_other_descendants()
+{
+    let (mut f, _data, journal) = setup();
+    let end = journal.deadline;
+    let data = journal.pins[1].path();
+    let official = create_private_directory(&data.join("official024")).unwrap();
+    let windows = create_private_directory(&official.path().join("windows")).unwrap();
+    let session = uuid::Uuid::new_v4().to_string();
+    let directory = create_private_directory(&windows.path().join(&session)).unwrap();
+    assert_eq!(
+        session_namespace(&directory, &journal.pins[1]).unwrap(),
+        Some(session.clone())
+    );
+    let peer = RetainedPeer::current().unwrap();
+    let pins = [
+        PinnedDirectory::open(journal.pins[0].path()).unwrap(),
+        PinnedDirectory::open_private(data).unwrap(),
+        PinnedDirectory::open(journal.pins[2].path()).unwrap(),
+        PinnedDirectory::open(journal.pins[3].path()).unwrap(),
+    ];
+    let binding = Binding::from_native(
+        &peer,
+        &pins,
+        hash::sha256_hex(b"synthetic namespace source, not production admission"),
+        hash::sha256_hex(b"synthetic namespace current"),
+    )
+    .unwrap();
+    let plan: StoragePlan =
+        serde_json::from_slice(&encoded(&journal.manifest.storage_plan).unwrap()).unwrap();
+    let mut canonical = Journal::create(
+        directory,
+        pins,
+        peer,
+        binding,
+        plan,
+        &uuid::Uuid::new_v4().to_string(),
+        &"c".repeat(64),
+        &uuid::Uuid::new_v4().to_string(),
+        end,
+    )
+    .unwrap();
+    canonical.check(end).unwrap();
+    assert_eq!(canonical.manifest.session_id, session);
+    assert_eq!(canonical.progress.session, session);
+    let wrong = create_private_directory(&data.join("wrong-parent")).unwrap();
+    let leaf =
+        create_private_directory(&wrong.path().join(uuid::Uuid::new_v4().to_string())).unwrap();
+    assert!(session_namespace(&leaf, &journal.pins[1]).is_err());
+    let invalid = create_private_directory(&windows.path().join("not-a-session")).unwrap();
+    assert!(session_namespace(&invalid, &journal.pins[1]).is_err());
+    println!("r6 actual native D/official024/windows/canonicalUUID journal uses same UUID in immutable manifest/current; wrong descendant/nonUUID refuse, direct D/session remains component-only, actual Source create factory still requires production namespace and original Owner");
+    drop(canonical);
+    drop(invalid);
+    drop(leaf);
+    drop(wrong);
+    drop(windows);
+    drop(official);
+    drop(journal);
+    f.retain();
+}
+#[test]
 fn wl2_r6_v3_native_journal_manifest_event_current_and_other_writer_refusal() {
     let (mut f, _data, mut journal) = setup();
     let end = journal.deadline;

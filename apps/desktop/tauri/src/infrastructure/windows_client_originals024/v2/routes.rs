@@ -27,7 +27,7 @@ fn before(end: Instant) -> io::Result<()> {
         Ok(())
     }
 }
-pub(super) struct RoutePin {
+pub(in crate::infrastructure::windows_client_originals024) struct RoutePin {
     home: PinnedDirectory,
     file: File,
     security: BoundedAccessV1,
@@ -50,7 +50,10 @@ impl RoutePin {
         before(end)?;
         Ok(raw)
     }
-    pub(super) fn capture(home: &Path, end: Instant) -> io::Result<Self> {
+    pub(in crate::infrastructure::windows_client_originals024) fn capture(
+        home: &Path,
+        end: Instant,
+    ) -> io::Result<Self> {
         before(end)?;
         let home = PinnedDirectory::open(home)?;
         let path = home.path().join("config.json");
@@ -102,7 +105,7 @@ impl RoutePin {
         self.home.recheck()?;
         before(end)
     }
-    pub(super) fn declared<'a>(
+    pub(in crate::infrastructure::windows_client_originals024) fn declared<'a>(
         &'a mut self,
         home: &Path,
         end: Instant,

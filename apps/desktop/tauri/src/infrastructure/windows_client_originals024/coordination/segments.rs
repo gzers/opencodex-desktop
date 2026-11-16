@@ -1,5 +1,5 @@
-//! Actual unlock receipt retains original file/pin objects. It is not serde,
-//! Clone, Send or a recoverable permission. No factory from text or Drop.
+//! Explicit release moves exact original file/pin objects into history, without
+//! active ranges/OVERLAPPED or a NativeLease. No serde/Clone or Drop factory.
 use super::*;
 #[derive(serde::Serialize, serde::Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -9,29 +9,59 @@ pub(in super::super) struct LeaseFacts {
     pub(in super::super) objects_digest: String,
 }
 pub(in super::super) struct ReleasedLease {
-    original: NativeLease,
+    original: ReleasedObjects,
     facts: LeaseFacts,
     poisoned: bool,
     reacquired: bool,
     completed_at: Instant,
 }
+struct ReleasedObjects {
+    files: Vec<LockFile>,
+    token: TokenIdentity,
+    deadline: Instant,
+    bound: Option<Bound>,
+    epoch: String,
+}
+fn facts_from_files(
+    epoch: &str,
+    token: &TokenIdentity,
+    bound: Option<&Bound>,
+    files: &[&LockFile],
+) -> io::Result<LeaseFacts> {
+    if files.len() != 4 {
+        return Err(refused());
+    }
+    let pin = files[0];
+    let claim_key = hash::sha256_hex(
+        format!("{}:{}:{}", pin.path.display(), pin.id.volume, pin.id.index).as_bytes(),
+    );
+    let files=files.iter().map(|pin|serde_json::json!({"path":pin.path,"volume":pin.id.volume,"fileId":pin.id.index.to_string(),"security":pin.security,"bytes":pin.raw.len(),"sha256":hash::sha256_hex(&pin.raw)})).collect::<Vec<_>>();
+    let scope = bound.map(|b| b.scope.as_str());
+    let raw=serde_json::to_vec(&serde_json::json!({"tokenSid":token.sid,"tokenSession":token.session_id,"tokenElevation":token.elevation_type,"scope":scope,"files":files})).map_err(io_error)?;
+    Ok(LeaseFacts {
+        epoch: epoch.into(),
+        claim_key,
+        objects_digest: hash::sha256_hex(&raw),
+    })
+}
+impl ReleasedObjects {
+    fn facts_inner(&self) -> io::Result<LeaseFacts> {
+        facts_from_files(
+            &self.epoch,
+            &self.token,
+            self.bound.as_ref(),
+            &self.files.iter().collect::<Vec<_>>(),
+        )
+    }
+}
 impl NativeLease {
     fn facts_inner(&self) -> io::Result<LeaseFacts> {
-        if self.held.len() != 4 {
-            return Err(refused());
-        }
-        let pin = &self.held[0].pin;
-        let claim_key = hash::sha256_hex(
-            format!("{}:{}:{}", pin.path.display(), pin.id.volume, pin.id.index).as_bytes(),
-        );
-        let files=self.held.iter().map(|h|serde_json::json!({"path":h.pin.path,"volume":h.pin.id.volume,"fileId":h.pin.id.index.to_string(),"security":h.pin.security,"bytes":h.pin.raw.len(),"sha256":hash::sha256_hex(&h.pin.raw)})).collect::<Vec<_>>();
-        let scope = self.bound.as_ref().map(|b| b.scope.as_str());
-        let raw=serde_json::to_vec(&serde_json::json!({"tokenSid":self.token.sid,"tokenSession":self.token.session_id,"tokenElevation":self.token.elevation_type,"scope":scope,"files":files})).map_err(io_error)?;
-        Ok(LeaseFacts {
-            epoch: self.epoch.clone(),
-            claim_key,
-            objects_digest: hash::sha256_hex(&raw),
-        })
+        facts_from_files(
+            &self.epoch,
+            &self.token,
+            self.bound.as_ref(),
+            &self.held.iter().map(|h| &h.pin).collect::<Vec<_>>(),
+        )
     }
     pub(in super::super) fn release_with_receipt(
         mut self,
@@ -62,8 +92,18 @@ impl NativeLease {
             held.pin.check(end)?;
         }
         before(end)?;
+        // All ranges are empty and read back BEFORE moving the original pins.
+        // Held has no independent Drop, so exact LockFile objects can move out
+        // safely. NativeLease's destructor observes an empty held vector.
+        let objects = ReleasedObjects {
+            files: self.held.drain(..).map(|h| h.pin).collect(),
+            token: self.token.clone(),
+            deadline: self.deadline,
+            bound: self.bound.take(),
+            epoch: self.epoch.clone(),
+        };
         let mut released = ReleasedLease {
-            original: self,
+            original: objects,
             facts,
             poisoned: false,
             reacquired: false,
@@ -101,19 +141,15 @@ impl ReleasedLease {
     /// this object; Drop/JSON cannot supply the completed original window.
     pub(in super::super) fn readback_history(&mut self, end: Instant) -> io::Result<()> {
         let result = (|| {
-            if self.poisoned || self.original.active || self.completed_at >= self.original.deadline
-            {
+            if self.poisoned || self.completed_at >= self.original.deadline {
                 return Err(refused());
             }
             before(end)?;
             if native::current_identity()? != self.original.token {
                 return Err(refused());
             }
-            for held in &mut self.original.held {
-                if !held.ranges.is_empty() {
-                    return Err(refused());
-                }
-                held.pin.check(end)?;
+            for file in &mut self.original.files {
+                file.check(end)?;
             }
             if let Some(bound) = &self.original.bound {
                 bound.profile.recheck()?;
@@ -211,9 +247,9 @@ impl ReleasedLease {
         }
         let paths: [PathBuf; 4] = self
             .original
-            .held
+            .files
             .iter()
-            .map(|h| h.pin.path.clone())
+            .map(|file| file.path.clone())
             .collect::<Vec<_>>()
             .try_into()
             .map_err(|_| refused())?;
@@ -240,6 +276,44 @@ mod tests {
     use super::*;
     use crate::infrastructure::windows_client_originals024::tree::tests::Fixture;
     use native::{create_private_directory, PrivateRecord};
+    #[test]
+    fn wl2_r6_release_objects_move_exact_original_pins_without_active_ranges_or_reopen() {
+        fn send<T: Send>() {}
+        send::<ReleasedLease>();
+        let mut f = Fixture::new();
+        let pin = create_private_directory(&f.path().join("synthetic-locks")).unwrap();
+        let paths: [PathBuf; 4] = std::array::from_fn(|i| pin.path().join(format!("{i}.sqlite")));
+        for p in &paths {
+            drop(PrivateRecord::create(p, b"", 16).unwrap());
+        }
+        let end = Instant::now() + std::time::Duration::from_secs(10);
+        let lease = NativeLease::acquire_paths(&paths, end).unwrap();
+        let before = lease.facts_inner().unwrap();
+        let receipt = lease.release_with_receipt(end).unwrap();
+        assert!(receipt.facts == before);
+        assert!(receipt.original.files.len() == 4);
+        let mut receipt = std::thread::spawn(move || {
+            let mut receipt = receipt;
+            receipt.check(end).unwrap();
+            receipt
+        })
+        .join()
+        .unwrap();
+        receipt.check(end).unwrap();
+        assert!(receipt.facts == before);
+        let mut new = receipt.reacquire(None, end).unwrap();
+        assert_ne!(new.epoch, before.epoch);
+        new.check(end).unwrap();
+        new.release(end).unwrap();
+        assert!(
+            receipt.reacquire(None, end).is_err(),
+            "released objects are retained history, not a repeatable permission or live ranges"
+        );
+        println!("r6 explicit unlock moves exact original4 LockFile+parent pins, same serialized facts before/after; worker readback and return under same ordinary Token, fresh local lease needs actual acquisition and single-use epoch, no handle clone/reopen/unsafeSend or active NativeLease transfer");
+        drop(receipt);
+        drop(pin);
+        f.retain();
+    }
     #[test]
     fn wl2_r6_release_history_fresh_read_after_original_expiry_does_not_reauthorize_lease() {
         let mut f = Fixture::new();

@@ -22,17 +22,21 @@ type Setup = (
     Instant,
 );
 pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup() -> Setup {
-    setup_with_claim(false, false)
+    setup_with_claim(false, false, true)
 }
 pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup_initialized_claim(
 ) -> Setup {
-    setup_with_claim(true, false)
+    setup_with_claim(true, false, true)
 }
 pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup_artifacts(
 ) -> Setup {
-    setup_with_claim(false, true)
+    setup_with_claim(false, true, true)
 }
-fn setup_with_claim(initialized: bool, artifacts: bool) -> Setup {
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup_unsnapshotted(
+) -> Setup {
+    setup_with_claim(false, false, false)
+}
+fn setup_with_claim(initialized: bool, artifacts: bool, anchors: bool) -> Setup {
     let f = Fixture::new();
     let end = end();
     let (root, custody, paths) = prepare(&f);
@@ -106,9 +110,11 @@ fn setup_with_claim(initialized: bool, artifacts: bool) -> Setup {
         end,
     )
     .unwrap();
-    for tree in &mut trees {
-        tree.journal_snapshot_anchors(&mut journal, &mut claim, end)
-            .unwrap();
+    if anchors {
+        for tree in &mut trees {
+            tree.journal_snapshot_anchors(&mut journal, &mut claim, end)
+                .unwrap();
+        }
     }
     drop(claim);
     (f, scene, paths, lease, trees, journal, end)

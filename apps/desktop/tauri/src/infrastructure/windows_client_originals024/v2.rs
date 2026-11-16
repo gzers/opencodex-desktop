@@ -22,7 +22,7 @@ use std::{
     path::{Component, Path},
 };
 mod history;
-mod routes;
+pub(super) mod routes;
 use history::{check_predecessors, ClosedReference};
 #[derive(Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
