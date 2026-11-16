@@ -19,6 +19,7 @@ use std::{
 };
 mod driver;
 mod leases;
+mod observations;
 fn before(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {
         Err(io::ErrorKind::TimedOut.into())
@@ -143,6 +144,9 @@ struct Current {
     deadline_scope: String,
     lease_state: LeaseState,
     lease_objects_digest: Option<String>,
+    work_mode: super::observations::WorkMode,
+    work_frames: Option<[String; 2]>,
+    observed_frames: Option<[String; 2]>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -168,7 +172,56 @@ pub(in super::super) struct Journal {
     #[cfg(test)]
     fault: u8,
 }
+/// Live-journal context for snapshot DATA only. Private construction, no serde
+/// recovery/phase capability; synthetic component journal stays non-production.
+pub(in super::super) struct ObservationContext {
+    session: String,
+    plan: String,
+    binding: String,
+    manifest: String,
+    deadline_scope: String,
+    frames: [String; 2],
+}
+impl ObservationContext {
+    pub(in super::super) fn session(&self) -> &str {
+        &self.session
+    }
+    pub(in super::super) fn metadata(&self) -> serde_json::Value {
+        serde_json::json!({"sessionId":self.session,"storagePlanDigest":self.plan,"bindingDigest":self.binding,"manifestDigest":self.manifest,"deadlineScope":self.deadline_scope,"frameDigests":self.frames})
+    }
+    pub(in super::super) fn matches(&self, root: &Path, frame: &str) -> bool {
+        let index = match root.file_name().and_then(|n| n.to_str()) {
+            Some(".codex") => 0,
+            Some(".grok") => 1,
+            _ => return false,
+        };
+        self.frames[index] == frame
+    }
+}
 impl Journal {
+    pub(in super::super) fn observation_context(
+        &mut self,
+        claim: &mut super::super::coordination::AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<ObservationContext> {
+        self.check(end)?;
+        claim.check(&self.pins[0].path().join(".codex"), end)?;
+        if self.progress.work_mode != super::observations::WorkMode::Observed
+            || self.progress.lease_state != LeaseState::Active
+            || self.progress.epoch != claim.epoch()
+            || self.progress.claim != claim.key()
+        {
+            return Err(invalid());
+        }
+        Ok(ObservationContext {
+            session: self.progress.session.clone(),
+            plan: self.progress.plan.clone(),
+            binding: self.progress.binding.clone(),
+            manifest: self.progress.manifest.clone(),
+            deadline_scope: self.progress.deadline.clone(),
+            frames: self.progress.observed_frames.clone().ok_or_else(invalid)?,
+        })
+    }
     /// Exact native source/Owner ActionWindow context only. This factory stays
     /// below the unchanged public Start gate until complete v3 adapter/Closed.
     pub(in super::super) fn create_from_source(
@@ -301,6 +354,9 @@ impl Journal {
             deadline_scope: scope.into(),
             lease_state: LeaseState::Active,
             lease_objects_digest: None,
+            work_mode: super::observations::WorkMode::Sealed,
+            work_frames: None,
+            observed_frames: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -394,6 +450,9 @@ impl Journal {
             || tip.deadline_scope != self.progress.deadline
             || tip.lease_state != self.progress.lease_state
             || tip.lease_objects_digest != self.progress.lease_objects
+            || tip.work_mode != self.progress.work_mode
+            || tip.work_frames != self.progress.work_frames
+            || tip.observed_frames != self.progress.observed_frames
         {
             return Err(invalid());
         }
@@ -480,6 +539,9 @@ impl Journal {
             deadline_scope: next.deadline.clone(),
             lease_state: next.lease_state,
             lease_objects_digest: next.lease_objects.clone(),
+            work_mode: next.work_mode,
+            work_frames: next.work_frames.clone(),
+            observed_frames: next.observed_frames.clone(),
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

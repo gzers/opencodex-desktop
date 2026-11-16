@@ -43,12 +43,14 @@ pub(super) struct LeaseEvent {
 pub(super) enum ChainEntry {
     Node(Event),
     Lease(LeaseEvent),
+    Work(super::observations::WorkEvent),
 }
 impl Progress {
     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
         match e {
             ChainEntry::Node(n) => self.apply(plan, n),
             ChainEntry::Lease(e) => self.apply_lease(plan, e),
+            ChainEntry::Work(e) => self.apply_work(plan, e),
         }
     }
     fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {
@@ -95,7 +97,12 @@ impl Progress {
             .all(|n| self.nodes[&n.node_id].0 >= 1);
         let next = match (self.lease_state, e.operation) {
             (LeaseState::Active, LeaseOperation::LeaseReleasePrepared)
-                if anchors && (all_files(4) || all_files(8)) =>
+                if anchors
+                    && (all_files(4) || all_files(8))
+                    && matches!(
+                        self.work_mode,
+                        super::observations::WorkMode::Sealed | super::observations::WorkMode::Open
+                    ) =>
             {
                 LeaseState::ReleasePrepared
             }

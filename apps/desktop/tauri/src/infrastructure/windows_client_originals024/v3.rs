@@ -19,7 +19,8 @@ use std::{
     io,
     path::{Component, Path},
 };
-mod journal;
+pub(super) mod journal;
+mod observations;
 mod segments;
 pub(super) use journal::Journal;
 #[derive(Clone, Copy, Debug, Serialize)]
@@ -306,6 +307,9 @@ pub(super) struct Progress {
     lease_state: segments::LeaseState,
     lease_objects: Option<String>,
     seen_epochs: BTreeSet<String>,
+    work_mode: observations::WorkMode,
+    work_frames: Option<[String; 2]>,
+    observed_frames: Option<[String; 2]>,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -353,10 +357,13 @@ impl Progress {
             lease_state: segments::LeaseState::Active,
             lease_objects: None,
             seen_epochs: BTreeSet::from([epoch.to_string()]),
+            work_mode: observations::WorkMode::Sealed,
+            work_frames: None,
+            observed_frames: None,
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {
-        if self.lease_state!=segments::LeaseState::Active || e.schema
+        if self.lease_state!=segments::LeaseState::Active || self.work_mode!=observations::WorkMode::Sealed || e.schema
             != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "node-event"
             || e.storage_strategy != ANCHORED_STORAGE_STRATEGY

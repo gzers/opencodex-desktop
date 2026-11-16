@@ -6,7 +6,9 @@ use super::*;
 use crate::infrastructure::windows_official_runtime024 as native;
 use crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_CODEX_STABLE_FILES;
 use std::io::{Seek, SeekFrom, Write};
+mod observation;
 mod segments;
+use observation::WorkMode;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Kind {
@@ -29,6 +31,7 @@ struct Node {
     state: State,
     work: Option<(File, Entry)>,
     pending_work: Option<File>,
+    work_open: bool,
 }
 /// All fields are actual native objects or snapshots sealed from those objects.
 /// No constructor from plan data, no Clone/serde, no mutable pathname admission.
@@ -40,6 +43,8 @@ pub(in super::super) struct AnchoredTree {
     custody_security: SnapshotData,
     nodes: Vec<Node>,
     poisoned: bool,
+    work_mode: WorkMode,
+    observed: Option<observation::WorkFrame>,
     #[cfg(test)]
     create_fault: u8,
 }
@@ -170,6 +175,7 @@ fn collect(
         state: State::Original,
         work: None,
         pending_work: None,
+        work_open: false,
     });
     for name in children {
         let child = if relative.is_empty() {
@@ -322,6 +328,8 @@ impl AnchoredTree {
             custody_security,
             nodes,
             poisoned: false,
+            work_mode: WorkMode::Sealed,
+            observed: None,
             #[cfg(test)]
             create_fault: 0,
         };
@@ -437,6 +445,13 @@ impl AnchoredTree {
                 custody_names.push(path.file_name().unwrap().to_str().unwrap().to_string());
             }
             if let Some((file, entry)) = &mut n.work {
+                let mut read;
+                let file = if n.work_open {
+                    read = observation::reopen(file, 0x80020000, 1 | 2 | 4)?;
+                    &mut read
+                } else {
+                    file
+                };
                 if stamp(&workpath, file, &entry.relative, Kind::File, end)? != *entry {
                     return Err(invalid());
                 }
@@ -499,6 +514,9 @@ impl AnchoredTree {
         codex_root: &Path,
         end: Instant,
     ) -> io::Result<()> {
+        if self.work_mode != WorkMode::Sealed {
+            return Err(invalid());
+        }
         self.verify(claim, codex_root, end)?;
         let n = self.nodes.get(i).ok_or_else(invalid)?;
         if n.kind != Kind::File

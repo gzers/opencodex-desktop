@@ -22,16 +22,23 @@ type Setup = (
     Instant,
 );
 pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup() -> Setup {
-    setup_with_claim(false)
+    setup_with_claim(false, false)
 }
 pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup_initialized_claim(
 ) -> Setup {
-    setup_with_claim(true)
+    setup_with_claim(true, false)
 }
-fn setup_with_claim(initialized: bool) -> Setup {
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup_artifacts(
+) -> Setup {
+    setup_with_claim(false, true)
+}
+fn setup_with_claim(initialized: bool, artifacts: bool) -> Setup {
     let f = Fixture::new();
     let end = end();
     let (root, custody, paths) = prepare(&f);
+    if artifacts {
+        for(name,bytes)in [("opencodex-catalog.json",b"{\"models\":[]}".as_slice()),("models_cache.json",b"{\"models\":[],\"fetched_at\":\"2000-01-01T00:00:00Z\",\"client_version\":\"0.0.0\"}".as_slice()),("opencodex-catalog-audit.jsonl",b"".as_slice())]{drop(PrivateRecord::create(&root.join(name),bytes,1024).unwrap());}
+    }
     if initialized {
         // Fixture-only BEFORE capture. Empty SQLite first-use may create a
         // transient journal during BEGIN EXCLUSIVE, which correctly triggers
