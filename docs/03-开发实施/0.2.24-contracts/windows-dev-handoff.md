@@ -596,3 +596,10 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 源码 285be9fada2461cc7c386f6e2228c6ca1804a572/tree16f6ec340cfaedeafeb4b6e3c0c5d94ae254f0e1；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-node-driver-20261116-r1/。原生动作前intent/current刷盘，后同原对象ID/8投影结果；Codex+Grok三原文件30事件全树往返，四处组合中断/new epoch拒绝通过。首轮14过，补原子CREATE_NEW立即保管准确工作句柄及空/1字节/封存前3故障，最终15过0败；本轮无非预期首错。产品MSVC debug bins原码0/156873ms，SHA/完整状态表归final-status/product01-artifacts/report。10成功场景核归档后清理，78失败/pending原场景和25 D日志根保留，不是原生元数据克隆。
 
 还需释放Prepared/真实结果及新lease段、正式阶段/封存/source/route/history/successor/副作用/原包H-S-D/typed Closed，现生产入口仍v2且Start无条件拒绝；原缺席Codex安全退根blocked单列。旧raw5/空GUI不重跑，不转换旧记录，不W2/双SID/发布。
+
+
+## 2026-11-16 TEAM16/r6 同原动作窗口lease分段
+
+源码 e7c18e97ce5e7f65ed989ea2f15ac6a5d2cc62bc/tree13947bf9e07d0c46de3266c5884bc758b575a9c2；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-lease-segments-20261116-r1/。同一canonical节点/lease链与current，Prepared刷盘→实际显式解锁原对象回执→Released→新lease scope/4对象/原deadline全验→新epoch事件；36事件完整原件恢复。首轮20过，扩展后21过1败/raw101，诊断03原断言仍败（空SQLite生成-journal，按未知拒绝而非native busy，current20 Released/原窗剩8.6秒）；仅新夹具在capture前初始化合成rollback DB，定向04原raw33断言通过，其余21过生产实源字节一致复用。原失败/真实部分写与release/acquire前缀/EXE摘要/完整表/清理归final-status/report。
+
+本轮仅同原窗口，不签不同ActionWindow/正式Source阶段、工作可写窗口/副作用、封存/Stop/Closed/history/后继或原包H-S-D；现生产入口仍v2，Start无条件拒绝，原缺席安全退根blocked。产品debug MSVC bins raw0/231034ms；不重复旧raw5/空GUI，不W2/双SID/发布。

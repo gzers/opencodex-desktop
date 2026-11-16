@@ -1,0 +1,13 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_actual_busy_claim_refuses_without_release_retry_or_deadline_reset ... r6-busy-admission before-reacquire remainingMs=8650 codexChildren=Ok([".opencodex-native-main.claim.sqlite", ".opencodex-native-main.owner.sqlite", "config.toml", "empty", "nested"])
+r6-busy-tree-observation root=0 result=Ok(())
+r6-busy-tree-observation root=1 result=Ok(())
+r6-busy-admission after-reacquire remainingMs=8562 kind=Uncategorized raw=Some(33) error=另一个程序已锁定文件的一部分，进程无法访问。 (os error 33) progress=(21, true) state=AcquirePrepared
+r6-segment-real-busy raw=Some(33) foreign claim transaction untouched; native acquire failure leaves canonical pending, no release-retry after foreign unlock, no renewed deadline
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmphCUJMh
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-8cc15c51-2aae-4e0d-bea6-72946d0579f5
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2007 filtered out; finished in 1.44s
+

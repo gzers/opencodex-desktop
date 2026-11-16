@@ -1,0 +1,17 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_actual_busy_claim_refuses_without_release_retry_or_deadline_reset ... r6-busy-admission before-reacquire remainingMs=8609 codexChildren=Ok([".opencodex-native-main.claim.sqlite", ".opencodex-native-main.claim.sqlite-journal", ".opencodex-native-main.owner.sqlite", "config.toml", "empty", "nested"])
+r6-busy-tree-observation root=0 result=Err(Custom { kind: InvalidData, error: "original phase chain unknown; preserve pending custody/Required" })
+r6-busy-tree-observation root=1 result=Ok(())
+r6-busy-admission after-reacquire remainingMs=8603 kind=InvalidData raw=None error=original phase chain unknown; preserve pending custody/Required progress=(20, true) state=Released
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-4753547d-fcee-470f-92b1-baacf578bb75
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpAHKvmO
+FAILED
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_actual_busy_claim_refuses_without_release_retry_or_deadline_reset
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2007 filtered out; finished in 1.40s
+

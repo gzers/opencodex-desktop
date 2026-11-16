@@ -1,0 +1,297 @@
+{
+  "time": "2026-11-16T10:23:36.566194+08:00",
+  "sourceHead": "e7c18e97ce5e7f65ed989ea2f15ac6a5d2cc62bc",
+  "sourceTree": "13947bf9e07d0c46de3266c5884bc758b575a9c2",
+  "contract": "TEAM16/IMP142/r6",
+  "baselineMain": "fac8573e55441fe514919c63c7f1d65181ff3577",
+  "baselineDocs": "5782307174f0d1b011b5415c6c1e8d60414e6b36",
+  "runs": {
+    "library01": {
+      "rawExit": 0,
+      "passed": 20,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedMs": 276103,
+      "artifact": {
+        "executed": true,
+        "rawExit": 0,
+        "accepted": false,
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+        "bytes": 97618944,
+        "sha256": "42fecf85b221941f522e9c8ddfadb06c4cd3d1e165500eb7e9a064542a4ba12f"
+      }
+    },
+    "library02": {
+      "rawExit": 101,
+      "passed": 21,
+      "failed": 1,
+      "ignored": 0,
+      "elapsedMs": 269086,
+      "artifact": {
+        "executed": true,
+        "rawExit": 101,
+        "accepted": false,
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+        "bytes": 97691136,
+        "sha256": "ee4bcd7bb7542d49158ed7265c25a34c28f933897753c0779d9dd5f697cf4291"
+      }
+    },
+    "library03": {
+      "rawExit": 101,
+      "passed": 0,
+      "failed": 1,
+      "ignored": 0,
+      "elapsedMs": 154983,
+      "artifact": {
+        "executed": true,
+        "rawExit": 101,
+        "accepted": false,
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+        "bytes": 97695232,
+        "sha256": "f6980863e16c55aaf9154c2060e4f3be91b9cd54a5d3d8a9380eab3b458926f8"
+      }
+    },
+    "library04": {
+      "rawExit": 0,
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedMs": 100826,
+      "artifact": {
+        "executed": true,
+        "rawExit": 0,
+        "accepted": false,
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+        "bytes": 97696256,
+        "sha256": "d7c5c09af8501a1fc9c2b9cc8f4384a43f054dfe1961e7db92cac974b825e32a"
+      }
+    },
+    "product01": {
+      "rawExit": 0,
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "elapsedMs": 231034,
+      "artifact": null
+    }
+  },
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77688832,
+      "sha256": "ecd7bdb926915f6e961145de23974293801b1e15fc786686052b1ed2efa22ad7",
+      "sourceHead": "e7c18e97ce5e7f65ed989ea2f15ac6a5d2cc62bc",
+      "sourceTree": "13947bf9e07d0c46de3266c5884bc758b575a9c2",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "ecd331e188254836500319a3e0c609ee02376e470f5eaf9c441f1a4efb522ac9",
+      "sourceHead": "e7c18e97ce5e7f65ed989ea2f15ac6a5d2cc62bc",
+      "sourceTree": "13947bf9e07d0c46de3266c5884bc758b575a9c2",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "c38bc400a5666c26193db8719b01d082e273746be4746362d9e0d5b8afdaabe6",
+      "sourceHead": "e7c18e97ce5e7f65ed989ea2f15ac6a5d2cc62bc",
+      "sourceTree": "13947bf9e07d0c46de3266c5884bc758b575a9c2",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    }
+  ],
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "mandatory exact ordered predecessor references bind old session/private directory/current IDs, canonical/current/manifest/context/policy digests and D volume. Older missing-field records refuse; text/serde only locates pending data."
+    },
+    {
+      "id": "O1",
+      "result": "native-storage/component-pass",
+      "fact": "three synthetic native generations capture fresh user originals independently while old exact history remains unchanged; current original bytes restored each cycle. Full official side-effect assessment/live native coordination still incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "missing/sparse/reversed known histories, foreign namespace, source mismatch, native old archive drift and drift before next first move refuse with retained scenes. Complete actual official interruption/Closed matrix still unverified."
+    },
+    {
+      "id": "H",
+      "result": "actual-GUI-empty-broker-component-pass",
+      "fact": "Real main GUI/native HWND/pageFinished under ordinary marenben session7 passed across normal exit, exact Child-only forced GUI, fresh authentication and explicit empty-host exit; original broker31484/FILETIME134392264041593579/imageID562949954696391 preserved across manager generations1..4 with original creation handle. No official Owner/Job/H-S-D production proof; broker raw exit unrecorded=null."
+    },
+    {
+      "id": "S/D",
+      "result": "native-close-readback-wiring/component-pass",
+      "fact": "Current Closed tag now authorizes only fresh source/old-history/raw-family/listener/record/supervisor/tree rechecks. Actual production native factory and Stop/Restart combinations remain unexecuted."
+    },
+    {
+      "id": "P",
+      "result": "Start-refused/r5-integrated",
+      "fact": "r5 shared route and status interfaces integrated; Windows full recovery_state_at preserved byte-equivalent during merge. Actual side effects/NativeLease/original-package production closure incomplete; no official launch in this round."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    },
+    {
+      "id": "Route",
+      "result": "native-pin/component-pass",
+      "fact": "Independent shared parser11 plus native H/config ID/8projections/noADS/singlelink/2MiB/exact bytes/None-vs-empty/wrongH/expired checks; active Store source boundaries use the pin, each successor captures fresh. No generated-catalog inference or content-policy permission."
+    },
+    {
+      "id": "Sample",
+      "result": "shared/native-unknown-path-pass",
+      "fact": "Shared6 deadline cases and true OfficialStatusSource fetch/light/native missing-Owner path trace share one original5s each; private one-shot receipt binds Slot/session/scope/stopped/deadline before original Closed recheck. Actual retained Closed Owner positive/change/concurrent proof factories not yet executed."
+    },
+    {
+      "id": "NativeLease",
+      "result": "native-lock-component-pass/not-production-permit",
+      "fact": "Retained private original four Windows files, claim-exclusive/N-L-K-shared+reserved ranges, same original deadline/token/ID/8projections/content; real rusqlite and exact bundle Bun competitors blocked while held and succeed after release, all bytes unchanged. Busy/sidecar/header/WAL/ADS/links/missing/expiry/raw data drift refuse; failed recheck poisons. Official initialization/owner receipt and root relocation handoff still incomplete; no production mutation authorization."
+    },
+    {
+      "id": "ArtifactContent",
+      "result": "native-snapshot/data-policy-pass",
+      "fact": "Original same-object custody, actual sealed Ready+PreStop working images and fresh current native frame feed unchanged shared content policy; all8 security key separate from live generation/archive-copy identity. Undeclared nodes/config drift/allowed-name directory/archive contamination/PreStop changes refuse. Restore and unchanged-working veto remain; no native permission or canonical Changed-Ready/Closed production factory proved."
+    },
+    {
+      "id": "ClaimRootHandoff",
+      "result": "r6-plan-consumed/root-rename-not-retried",
+      "fact": "TEAM16/IMP142 chooses anchored existing directories and two exact stable Codex objects; ordinary files move individually with uninterrupted claim/NLK. Historical raw5 retained, not retried; no claim gap or old assertion changed."
+    },
+    {
+      "id": "AnchoredExistingTree",
+      "result": "component-pass",
+      "fact": "Codex root/nested/empty directories and two stable objects retain IDs/all8. Ordinary originals roundtrip with separate work/retired generations and full predicted children. Grok stable-name file remains ordinary; 1280KiB copy passes."
+    },
+    {
+      "id": "AnchoredClaim",
+      "result": "component-pass",
+      "fact": "Borrowed scope ties exact actual claim path/ID/range and original deadline to live NativeLease. Fixed Bun claim-only BEGIN EXCLUSIVE busy initially and after8 native writes (raw73), explicitly released -> raw0. No production Owner/source authority."
+    },
+    {
+      "id": "AnchoredInterruptions",
+      "result": "native-prefix-component-pass",
+      "fact": "Nine 0..8 two-file native prefixes retain exact locations. Foreign empty dir/sidecar/wrong claim/absence refuse; occupied original file raw32. Not persistent interruption recovery."
+    },
+    {
+      "id": "V3CanonicalNodeJournal",
+      "result": "native-intent/result-component-pass; production-phase-adapter-incomplete",
+      "fact": "Actual callback requires same live borrowed claim/epoch/key/deadline and exact immutable complete native plan; intent phase+current synced/read back BEFORE mutation, result records actual same-generation ID/all8. Three original files in Codex+Grok roundtrip with30 canonical events (6 anchor snapshots+24 file intent/results). Actual post-release tree/stable proof succeeds. New lease epoch cannot inherit permissions. This is not production Source/phase/release/Closed eligibility."
+    },
+    {
+      "id": "OriginalAbsentCodexRetirement",
+      "result": "blocked-plan/not-attempted",
+      "fact": "r6 leaves safe no-gap first-use root retirement unresolved. Do not leave directories/stable files as original absence or release claim and rely on NLK."
+    },
+    {
+      "id": "AnchoredStableRelease",
+      "result": "component-pass",
+      "fact": "Both exact coordinator bytes use finite rollback header rule, unknown sidecars remain rejected. After explicit NativeLease release, full native directory/file/retired image and exact two stable kernel ranges acquired/released with original IDs/all8/bytes; no SQLite open/recovery/schema in production."
+    },
+    {
+      "id": "V3NativeCombinedInterruptions",
+      "result": "component-pass",
+      "fact": "After durable intent/before mutation, after native move/before result, after result publish/before CAS, and partial result-current preserve exact original/native prefix and poison tree+journal; no overwrite/catchup/retry."
+    },
+    {
+      "id": "V3WorkCreateOriginalHandle",
+      "result": "component-pass",
+      "fact": "Private TokenUser/SYSTEM protected CREATE_NEW returns exact RW/DELETE creation handle immediately and stores it in pending_work BEFORE any fallible query/write. Empty, real1-byte partial-write/sync, complete-sync/prepublication faults retain that exact handle/ID/all8 and untouched original custody. Another writer raw32. Successful work uses same creation description; no seed/reopen identity gap."
+    },
+    {
+      "id": "V3LeaseSegmentsAndPhases",
+      "result": "same-original-window-lease-segments-pass; production-phase/action-bridge-incomplete",
+      "fact": "Same immutable node+lease event chain/current state; durable ReleasePrepared before actual four-range unlock, retained nonserde original-object receipt, explicit Released result, AcquirePrepared and fresh same-context/objects/deadline lease result before native node resume.36 events restore both trees. New/historical epoch replay, Drop-as-release, half tree/foreign data/empty dir/extended deadline and result/current failures refuse. Later lifecycle ActionWindow/source/phase permissions, official writable interval/archives/Stop/Closed remain pending; public Start gate stays."
+    },
+    {
+      "id": "CanonicalLeaseState",
+      "result": "component-pass",
+      "fact": "Manifest binds initial epoch/claim/deadline; current binds active epoch/lease state/full four-object digest. Node and lease records replay in same immutable chain from initial epoch; previous release original handles/bytes/security continuously rechecked, no Drop-derived or serde receipt."
+    },
+    {
+      "id": "LeaseBusyAndSidecar",
+      "result": "component-pass-with-failures-retained",
+      "fact": "Empty synthetic SQLite BEGIN EXCLUSIVE created transient unknown -journal, so earlier full-tree InvalidData/rawNone correctly refuses before acquire-prepared; original expected raw33 test failed in library02 and diagnostic03. New PRE-capture initialized rollback fixture has no sidecar; exact original raw33 assertion passes, pending AcquirePrepared, foreign transaction untouched, refuses retry after rollback. No production initialization or sidecar exception."
+    }
+  ],
+  "firstError": {
+    "run": "library02",
+    "rawExit": 101,
+    "rawWin32": null,
+    "passed": 21,
+    "failed": 1,
+    "stage": "busy-claim expected33 assertion hit earlier unknown SQLite journal rejection",
+    "canonicalSequence": 20,
+    "canonicalState": "Released",
+    "diagnosticRun": "library03",
+    "diagnosticRemainingMs": 8609,
+    "fixedBy": "fixture-only initialize synthetic rollback claim BEFORE capture; no product safety change",
+    "fixedTargetRun": "library04"
+  },
+  "finalCoverage": {
+    "reusedUnchangedPassing": 21,
+    "finalAffectedTargetPassed": 1,
+    "all22CasesCovered": true,
+    "finalFull22SuiteRepeated": false,
+    "sourceDeltaAfter21Pass": "diagnostic and fixture-only setup helper; all production Rust verified byte-identical"
+  },
+  "retainedControlledFailures": [
+    "prepared event/current failure before native unlock",
+    "explicit native unlock -> result/partial-current windows",
+    "new native lease -> result/partial-current windows",
+    "Drop without receipt/partial original tree/foreign objects/deadline extension/historical epoch",
+    "actual busy claim raw33 preserves canonical pending and foreign transaction"
+  ],
+  "productionAdapterUsesV3": false,
+  "allAccepted": false,
+  "startOpen": false,
+  "productionExecuted": false,
+  "officialOwnerCreated": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false,
+  "cleanup": {
+    "archivedScenes": 157,
+    "archivedFiles": 1824,
+    "archivedBytes": 9796289,
+    "completedOwnScenesRemoved": 11,
+    "failureAndPendingScenesRetained": 146,
+    "crossVolumePendingRootsRetained": 59,
+    "reusedTaskParentDirectoriesRetained": 3,
+    "nativeMetadataCloned": false,
+    "historicalRejectedDeletionRetried": false,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicRoots": 0,
+    "newGUIProcesses": 0,
+    "newOfficialServices": 0,
+    "dailyPathConfigPolicyChanged": false,
+    "overallCleanupComplete": false
+  }
+}

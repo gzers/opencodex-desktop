@@ -1,0 +1,150 @@
+[
+  {
+    "run": "library01",
+    "trace": "r6-segment-refusal case=0 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-refusal case=1 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-refusal case=2 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-success original same deadline, all4 exact object/security/content digest, old epoch=a661dc5d-25ec-4865-88bf-2d608a139a45;36 same-chain node+lease events, explicit native receipts retained, full trees restored+stable proof. No official writable interval/new action or Ready/Closed authority."
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-foreign=0 preserve original custody/foreign object, actual reacquire not admitted, no delete or repair"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-foreign=1 preserve original custody/foreign object, actual reacquire not admitted, no delete or repair"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-fault=7 explicitlyReleased=true pending=ReleasePrepared error=injected after explicit native release, before release-result event"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-fault=8 explicitlyReleased=true pending=ReleasePrepared error=injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-fault=9 explicitlyReleased=true pending=ReleasePrepared error=injected real partial current write/sync"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-fault=10 actualNewLeaseHeld=true pending=AcquirePrepared error=injected after new native lease, before acquire-result event"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-fault=11 actualNewLeaseHeld=true pending=AcquirePrepared error=injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-fault=12 actualNewLeaseHeld=true pending=AcquirePrepared error=injected real partial current write/sync"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-prepare-fault=1 no native unlock before durable prepared/current; own failure cleanup explicit, not success"
+  },
+  {
+    "run": "library01",
+    "trace": "r6-segment-prepare-fault=2 no native unlock before durable prepared/current; own failure cleanup explicit, not success"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-refusal case=0 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-refusal case=1 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-refusal case=2 (dropNoReceipt/partialTree/extendedDeadline), no successor permit"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-success original same deadline, all4 exact object/security/content digest, old epoch=70eb25cc-79f2-40c4-9a27-9be72e06c70f;36 same-chain node+lease events, explicit native receipts retained, full trees restored+stable proof. No official writable interval/new action or Ready/Closed authority."
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-foreign=0 preserve original custody/foreign object, actual reacquire not admitted, no delete or repair"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-foreign=1 preserve original custody/foreign object, actual reacquire not admitted, no delete or repair"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-fault=7 explicitlyReleased=true pending=ReleasePrepared error=injected after explicit native release, before release-result event"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-fault=8 explicitlyReleased=true pending=ReleasePrepared error=injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-fault=9 explicitlyReleased=true pending=ReleasePrepared error=injected real partial current write/sync"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-fault=10 actualNewLeaseHeld=true pending=AcquirePrepared error=injected after new native lease, before acquire-result event"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-fault=11 actualNewLeaseHeld=true pending=AcquirePrepared error=injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-fault=12 actualNewLeaseHeld=true pending=AcquirePrepared error=injected real partial current write/sync"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-prepare-fault=1 no native unlock before durable prepared/current; own failure cleanup explicit, not success"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-segment-prepare-fault=2 no native unlock before durable prepared/current; own failure cleanup explicit, not success"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-busy-admission before-reacquire remainingMs=8609 codexChildren=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.claim.sqlite-journal\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"nested\"])"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-busy-tree-observation root=0 result=Err(Custom { kind: InvalidData, error: \"original phase chain unknown; preserve pending custody/Required\" })"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-busy-tree-observation root=1 result=Ok(())"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-busy-admission after-reacquire remainingMs=8603 kind=InvalidData raw=None error=original phase chain unknown; preserve pending custody/Required progress=(20, true) state=Released"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-segment-real-busy raw=Some(33) foreign claim transaction untouched; native acquire failure leaves canonical pending, no release-retry after foreign unlock, no renewed deadline"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-busy-admission before-reacquire remainingMs=8650 codexChildren=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"nested\"])"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-busy-tree-observation root=0 result=Ok(())"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-busy-tree-observation root=1 result=Ok(())"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-busy-admission after-reacquire remainingMs=8562 kind=Uncategorized raw=Some(33) error=另一个程序已锁定文件的一部分，进程无法访问。 (os error 33) progress=(21, true) state=AcquirePrepared"
+  }
+]

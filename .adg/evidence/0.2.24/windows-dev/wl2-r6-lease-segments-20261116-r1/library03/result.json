@@ -1,0 +1,24 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r6_lease_segments_actual_busy_claim",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "elapsedMs": 154983,
+  "accepted": false,
+  "exitCode": 101,
+  "profile": "debug"
+}
