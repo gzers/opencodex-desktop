@@ -55,6 +55,67 @@ pub(in crate::infrastructure::windows_client_originals024) struct CapturedTrees 
     failed: bool,
 }
 impl CapturedTrees {
+    /// Native planning DATA only. Current and original handles remain stored;
+    /// no new retirement step is called here or authorized from the returned
+    /// plan. Canonical per-row progress + exact typed recovery scope still next.
+    pub(in crate::infrastructure::windows_client_originals024) fn inspect_original_retirement(
+        &mut self,
+        source: &mut crate::infrastructure::windows_client_originals024::source::Source,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        normal: &crate::infrastructure::windows_diagnostic_roles024::NormalExit,
+        absent: &crate::infrastructure::windows_supervisor024::Absent,
+        official: &crate::modules::runtime::official_lifecycle024::StopAccepted,
+        lease: &mut NativeLease,
+        end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        use crate::modules::runtime::windows_lifecycle024_contract::SupervisorAbsence;
+        let result = (|| {
+            if self.failed || !self.stopped_observed {
+                return Err(invalid());
+            }
+            self.prepared_stop.as_ref().ok_or_else(invalid)?.check(
+                official.pid(),
+                official.port(),
+                official.record_sha256(),
+                end,
+            )?;
+            source.check(owner, end).map_err(io::Error::other)?;
+            self.journal.check_source_owner(owner, end)?;
+            normal.check(owner, end).map_err(io::Error::other)?;
+            crate::infrastructure::windows_supervisor024::WindowsSupervisor
+                .recheck_absent(owner, absent, end)
+                .map_err(io::Error::other)?;
+            owner
+                .originals_check_stopped_records(end)
+                .map_err(io::Error::other)?;
+            let root = self.trees[0].parent.path().join(".codex");
+            let mut claim = lease.anchored_claim(&root, end)?;
+            let observations = self.journal.stopped_content_observations(
+                source, owner, normal, absent, official, &mut claim, end,
+            )?;
+            let plans = [
+                self.trees[0].capture_retirement(&mut claim, end)?,
+                self.trees[1].capture_retirement(&mut claim, end)?,
+            ];
+            source.check(owner, end).map_err(io::Error::other)?;
+            normal.check(owner, end).map_err(io::Error::other)?;
+            crate::infrastructure::windows_supervisor024::WindowsSupervisor
+                .recheck_absent(owner, absent, end)
+                .map_err(io::Error::other)?;
+            owner
+                .originals_check_stopped_records(end)
+                .map_err(io::Error::other)?;
+            self.journal.check_source_owner(owner, end)?;
+            claim.check(&root, end)?;
+            Ok(
+                serde_json::json!({"schema":"windows-anchored-stopped-retirement-preview-v3","roots":plans,"observationSequences":observations.sequences(),"stageContexts":[observations.binding(0)?,observations.binding(1)?,observations.binding(2)?],"contentPolicyAssessed":false,"mutationAuthority":false,"ClosedEligibility":false}),
+            )
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn prepare_original_stop(
         &mut self,
         source: &mut crate::infrastructure::windows_client_originals024::source::Source,
