@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 15；2026-11-15。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r4增量及真实GUI空broker组件已回交，Mac补共享Route与同采样5秒r5；Windows沿r4范围/r5接口继续，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 16；2026-11-16。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r5共享已消费及原锁组件回交，Mac已定claim原目录留位保管r6；Windows沿r4安全/r5接口/r6布局继续，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -163,3 +163,14 @@ r2/r3/r4 Windows单写集保持，新增明确消费共享client_route_declarati
 先MSVC/共享纯例及真实同窗receiver，再原配置pin→declaration→完整官方副作用/NativeLease与H-S-D生产闭环，前提未齐公共Start仍拒绝。真实GUI空宿主通过证据复用，不重复旧fixture或未变化CLI/MSI；CAP/trust非空、普通MSI/历史清理保持未完。窗口期限、rawexit/未知拒绝、r4排除和v2不变，原有新假设/一次完整表/批量修复/失败现场规则继续，固定候选前不W2/双SID、不发布。
 
 > fetch main358e7fc4717787616f049f3bdc1cfe02f6d353f9及本次docs/governance-main，按TEAM15/IMP141/windows-shared-routes-status-r5在0549后继合入。唯一native冲突保留Windows完整recovery_state_at；消费共享纯route及fetch/light/recovery同一个原5秒deadline。继续官方副作用/NativeLease和H-S-D原包闭环，前提不齐Start仍拒绝。沿允许集连续开发批量定向核验及时分别push完整状态/首错/source与EXE/清理，不重跑旧GUI空组件，不W2/双SID、不发布。
+
+
+## 2026-11-16 当前入口：claim连续排他、原目录留位r6
+
+正式进度只归IMP142。Windows代码3e19075846dfea81ba8392bb60a3d3031afbf116/本轮docs已接来源与证据；后继共享main fac8573e55441fe514919c63c7f1d65181ff3577只增storageStrategy/新v3格式声明，不含Windows本线万行实现。[r6执行合同](0.2.24-contracts/windows-claim-anchored-custody-r6.md)决定existing-root客户端根/子目录与两稳定对象留原位、其它原文件逐节点同卷custody，claim保持于每个变更临界段，禁止仅持N/L/K的claim空窗。
+
+r2-r5逐文件单写集继续，新增明确originals目录内anchored/v3节点计划/phase/current/progress/coordination/adapter/history及其native tests，Windows负责实现完整节点/根children读回和中断/原件恢复，不改四trait/HMAC/Route/Status算法、Mac、官方、安装器/workflow或日常策略。Mac交接后不并行写。v2失败/pending保持不迁移，新storagePlanDigest与r4安全策略均入canonical链；本次不是安全范围再次降低。
+
+先原存在根有真实claim竞争的单文件/目录锚点与v3反例，再整树/lease分段/恢复后继。原根缺席初始化与最终退根仍未解决，不把旧Absent断言降为留目录，保持对应gate拒绝和最终未验收；有新排他方案带最小原对象/时序回交，不重新跑无新假设的raw5/shareDelete。其它独立软件任务继续，已过空GUI/Route/Sample/Bun非影响不重跑。原预算/Unknown/rawexit/scene保留、普通MSI/B2/旧拒绝清理全保持，固定候选前不W2/双SID、不发布。
+
+> fetch main fac8573e55441fe514919c63c7f1d65181ff3577及本次docs/governance-main，在3e1907584后继按TEAM16/IMP142/windows-claim-anchored-custody-r6继续。采用原已存在目录/两稳定文件留位、其它原文件逐节点同卷custody与v3 canonical进度，临界段保持claim/NLK，禁止释放claim只靠N/L/K移根。先原语/中断/整树验证，前提未齐Start拒绝；原缺席Codex安全退根仍单列未完，新具体排他方案再交。沿允许集持续批量修复核验分别push完整表/首错/source与EXE/清理，不重跑旧raw5/空GUI，不W2/双SID、不发布。

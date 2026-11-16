@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 141；2026-11-15。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 142；2026-11-16。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 358e7fc4717787616f049f3bdc1cfe02f6d353f9（非冻结候选）；Windows实现检查点codex/024-windows-native 0549a660ee3f77ea243e798ec55b01f52545e492（产品实际源6e312f022）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main fac8573e55441fe514919c63c7f1d65181ff3577（非冻结候选）；Windows实现检查点codex/024-windows-native 3e19075846dfea81ba8392bb60a3d3031afbf116（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -24,7 +24,7 @@ revision: 141；2026-11-15。用户要求本机与Windows可独立开发部分�
 | P24-01 | Mac保留配置的卸载/重装及原登记同版本修复已接；其它来源/跨平台原生与整包验收未完 | 本机实现POST-01/02程序/配置分离、Mac标准单.app、用户可写供应、安装/更新/回退同一来源；POST-07磁盘/运行/历史版本分开识别。 | 默认与自定义根、只读资源、来源漂移、校验失败保全；清单/切换/保护单一来源。 | 依P24-00；Windows W0并行，不等完整UI或名称路线。 |
 | P24-02 | 共享保存/手动备份/恢复与现有安装事务保护已接；版本化升级接线及候选验收未完 | 本机POST-04保存重核、POST-08原生JSON单层导入/完整备份/回退，复用真实配置事务。 | 保留草稿/密钥意图、有限等价变化不误锁，真实冲突拒绝；导入仅保留本机port和模式，其它按源替换，备份失败零覆盖。 | 后端8例及原型已定；不把Read的模版匹配暗当无副作用刷新。 |
 | P24-03 | Mac相关消费者已接；Windows终端共享PATH事务/控制台转交及卸载helper已接，W1-C原生/候选未验 | 本机POST-03同版本同HOME CLI核心及Mac入口；POST-05环境阶段/就绪区分、POST-06应用网络/更新说明；已采用UI接线。 | CLI显式启停/冲突不覆盖；内置环境不依赖系统Node；npm/GitHub错误准确；原型一致。 | main83b27e9ae终端21/数据卸载13/console2及前端11项隔离通过；Windows SDK缺失未编译到产品分支，MSI/NSIS hook及真实终端交W1-C。 |
-| P24-W1 | W-L1生产Start/Status定向已接，完整Stop/原件恢复/跨管理器连续性未通过；r4八投影/O整树后继有组件进展，真实GUI空broker通过；共享Route/同采样5秒r5已给，官方副作用/NativeLease/H-S-D生产及普通MSI/清理未完 | Windows后端接共享调用合同；Windows当前用户CLI/PATH和自定义安装根/版本目录/卸载平台适配。 | 实际运行版本/HOME/安装根一致；用户级入口/PATH有归属与撤销，安装更新不误删配置或别用户对象。 | 管理员MSI原两项通过不变。c47953ccf/fe1a54f6e已fetch并复核来源/证据；未整合5573行未完实现到main。main2ebdd3ae0只增共享r4范围/新schema声明，TEAMr14继续Windows单写；原语和空H组件不冒生产能力通过，完整Stop/普通MSI/cleanup/allAccepted仍false，固定候选前不W2。 |
+| P24-W1 | W-L1生产Start/Status定向已接，完整Stop/原件恢复/跨管理器连续性未通过；r5共享已消费，NativeLease/Bun与产物内容组件有进展；开claim移整根raw5，r6已定原目录留位逐文件保管，原缺席退根/官方生产与普通MSI/清理未完 | Windows后端接共享调用合同；Windows当前用户CLI/PATH和自定义安装根/版本目录/卸载平台适配。 | 实际运行版本/HOME/安装根一致；用户级入口/PATH有归属与撤销，安装更新不误删配置或别用户对象。 | 管理员MSI原两项通过不变。c47953ccf/fe1a54f6e已fetch并复核来源/证据；未整合5573行未完实现到main。main2ebdd3ae0只增共享r4范围/新schema声明，TEAMr14继续Windows单写；原语和空H组件不冒生产能力通过，完整Stop/普通MSI/cleanup/allAccepted仍false，固定候选前不W2。 |
 | P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置及Grok备份可逆恢复已接；缺根目录归属/同锁登记与原缺席原件捕获已接，整根可逆归档/独立movement登记与缺根只读核验、真实Guard约束的整根读回事务已接，首次缺根生产捕获/阶段与Stop恢复已接，原包release定向首次30/5/10通过且debug超时保留；多代来源/专用捕获/存储滚动及生产nextStart/状态同源接线已接，main287ee0c9d固定release库宿主正常原包两代30/5/10已定向通过（Stop6016/9572ms、RootAbsent9/18、两closed）；动作后继资格与status同源通过，旧超时/pending19失败全保留，重复启停/根未移中断与创建取消/状态UI收口/一般范围/固定候选/缺Ready/Windows未完；根已退休完整读回的显式metadata收尾及重复确认已过本批原包专用验；动作回执后继资格已接同次完整认证，固定候选原包验收未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
 | P24-NAME | 剩余技术方案未定，局部等待 | 非直接合法运行键名称及多协议派生组名称展示/官方刷新保持；普通合法英文改名已有能力不重复开发。 | 原始模型/认证/能力保持，明确改名可改实际键及引用；正式显示出口、默认客户端/刷新/重启/回退有证据。 | 10组真实保存确认，中文等新增/改名均转内部键；不私改原样2.99、不用combo降能力/双写轮询。只阻塞依赖它的名称改动和整版最终验收。 |
 | P24-05 | Mac真实024工程.app及正常首次供应已验证；旧工程DMG早于最新源码，非冻结候选，Windows/NAME/完整原生未完 | 本机完成共享逻辑/页面/原型对照、Mac真实原包与必要安装/CLI/升级回退；构建并固定Windows集成候选。 | 给精确代码SHA、官方包版本/SHA、安装器SHA、调用合同和一次完整受影响原生验收表。 | 共享页面不重复交Windows；Mac可在Windows开发期间做有用检查。 |
@@ -1450,3 +1450,18 @@ O实际8投影、v2整树/阶段/current CAS、两锁native只读、Ready/PreSto
 已落实两份最小共享请求：8e2699a91将Mac私有declaration纯解析/helpers/10旧测试提为modules/runtime/client_route_declaration，Mac复用；API先拒超2MiB，None不等空。358e7fc4717787616f049f3bdc1cfe02f6d353f9将Windows managed Status采样真实起点一次5秒传fetch/light/recovery，fresh来源debounce不重用授权，迟到/未知/失败不清恢复；Mac/fixtures默认旧路径。main只保守native桥接，合入时必须保留Windows既有原Closed recovery_state_at，唯一merge-tree冲突及解法见[r5合同](0.2.24-contracts/windows-shared-routes-status-r5.md)。本次不改Windows独占其它产品逻辑/不打开Start。
 
 本机route11/status33/source10/Mac会话17共71通过，2原ignored保持；fmt/严格Clippy通过。首次纯提取import位置E0753修复，事实写证据。Windows须合入后MSVC及同deadline实际native回归，接口可编译不当原生证书。TEAMr15沿允许集继续官方副作用/NativeLease、原包闭环及实际GUI官方owner组合，不重做旧空GUI测试、不每关回Mac；原先NAME/Mac/最终候选等整体范围继续。无日常配置/策略/官方包修改、真实模型/同步，固定候选前不W2/双SID，不发布。
+
+
+## 2026-11-16 r5回交接收与claim保管策略r6
+
+revision142消费代码3e19075846dfea81ba8392bb60a3d3031afbf116/证据13e5c322351dba048fc8fe773aace56aae72e654。r5 RoutePin/同窗private StatusReceipt已由Windows接入，原receiver保留；4轮净2659文件导入，2654payload/31,356,233字节全核，4组产品输入114/116/118/118逐份对各自源核验。原生执行/失败/已忽略组件保持，接收是证据与来源复核，非整树安全审计或新生产验收。实现仍Windows独占未整批集成main，[复核证据](../../.adg/evidence/0.2.24/windows-wl2-claim-receive-r6/receive-result.json)及[后继合同r6](0.2.24-contracts/windows-claim-anchored-custody-r6.md)限定当前事实。
+
+原claim/N/L/K四文件kernel ranges与固定Bun SQLite/真实rusqlite互斥、KnownFolder原Tokennamespace反例有定向通过；原封存Ready/PreStop/current三产物接共享内容视图，非产物节点仍严格不变。不能把content eligible或partial组件当NativeLease生产mutation、真实Closed采样或官方副作用完整性；原Start门仍拒绝，官方初始化/ownerreceipt/broker官方Owner/H-S-D生产仍未实跑。真GUI空broker前批通过复用。
+
+真实目录rename五格已定位：baseline与仅metadata根句柄成功，开claim文件/file+metadata/实际lease均raw5失败，shareDelete也无效且已撤回；library07 raw0为诊断记录完成，不将失败格改过，原5/6失败保留、continuous-open正例blocked/ignored。固定tgz的main-account.ts:463→:394/native-main-claim.ts:167证明claim-only凭据writer存在，未执行真实凭据/网络，N/L/K不替代claim。
+
+本对话采用r6 windows-anchored-directories-v1：原已存在根/子目录和准确两稳定文件留原位，普通原文件逐节点同卷保管，变更临界段内保持原claim/NLK，逐事件canonical intent/完成/退工作/还原及children核验。拒绝放claim仅持N/L/K移整根的空窗；租约分段不允许mutation权限逃逸，也不在官方运行/teardown要取claim时一直持锁自阻。新v3 originals/current+storagePlanDigest；r4安全8投影/ExcludedUnknown、内容/ID/存在性与预算不变，不迁移旧v2或新设锁例外。main fac8573e55441fe514919c63c7f1d65181ff3577仅提供声明，不实现/开启产品。
+
+明确剩余：原Codex根缺席时初始化与最终准确退根仍需独立无空窗排他证明，不能保留目录/两锁冒Absent，也不能偷放claim。r6先解决existing-root策略，不删除首次空环境目标；该项未闭合整版不通过。Windows继续其余软件实现，不将已定策略再称缺共享trait，若缺席退根有新具体原生方案再回交，不重复原raw5实验。
+
+最新clean3e1907584 debug MSVC bins0/77327ms、library08为10过2原ignored；本机仅声明fmt/Clippy通过，未新增Windows运行或原包正例。最新30scene/155文件1217258字节私有ZIP/原scene保留，前轮39scene/6scene分别留；ZIP不克隆NTFS元数据。旧broker40588/Public8拒读、CAP-trust非空/B2、普通MSI及全部删除拒绝/历史清理未关，overallCleanupComplete=false。TEAM16沿r2-r5写集和r6新布局继续，先原语/中断/整树后再单SID原包前提；无日常配置/策略/官方修改、业务同步/模型请求，固定候选前不W2/双SID、不发布，其它本版完整范围保持。

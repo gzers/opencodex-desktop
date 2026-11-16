@@ -1,5 +1,7 @@
 # Windows r4增量接收与路由声明、状态同窗接口 r5
 
+2026-11-16后继：[claim保管r6](windows-claim-anchored-custody-r6.md)已明确新的Windows布局/进度；本合同Route与同窗期限接口继续消费，不要求重冻或复制。旧r5失败/组件边界保持。
+
 revision: 5；2026-11-15 Asia/Shanghai；TEAM15/IMP141。共享后继 **main358e7fc4717787616f049f3bdc1cfe02f6d353f9**（路由提取8e2699a91＋状态期限358e7fc47）；Windows实现输入 **0549a660ee3f77ea243e798ec55b01f52545e492**，实际最新产品源 **6e312f02270f247d2f440ec369385e523a4a8043**。证据分支 **a7baa88e1**完整SHA归同批integrated-source.json。r4固定8投影/审计ExcludedUnknown/v2、原四trait/预算/未知拒绝全部继续；本次不整批合并Windows未完实现，不开放Start或发行。
 
 ## 接收结论
