@@ -11,7 +11,13 @@ impl Journal {
         claim: &mut AnchoredClaim<'_>,
         end: Instant,
     ) -> io::Result<()> {
-        self.check(end)?;
+        // The surrounding append primitive fully validates journal/current
+        // immediately after intent and before result. This helper owns live
+        // native claim/cutoff checks, not a duplicate traversal of all records.
+        before(end)?;
+        if self.poisoned || end > self.deadline {
+            return Err(invalid());
+        }
         claim.check(&self.pins[0].path().join(".codex"), end)?;
         if self.progress.lease_state != LeaseState::Active
             || self.progress.epoch != claim.epoch()
@@ -42,13 +48,16 @@ impl Journal {
         drop(claim);
         Ok(lease)
     }
-    fn recovery_native_check(
+    pub(super) fn recovery_native_check(
         &mut self,
         witness: &mut RecoveryWitness<'_>,
         claim: &mut AnchoredClaim<'_>,
         end: Instant,
     ) -> io::Result<()> {
-        self.check(end)?;
+        before(end)?;
+        if self.poisoned || end > self.deadline {
+            return Err(invalid());
+        }
         claim.check(&self.pins[0].path().join(".codex"), end)?;
         if self.progress.lease_state != LeaseState::Active
             || self.progress.epoch != claim.epoch()
@@ -69,7 +78,9 @@ impl Journal {
         // plans() just rechecked both complete native trees. Serializing and
         // validating that immutable DATA above does not mutate either tree.
         claim.check(&self.pins[0].path().join(".codex"), end)?;
-        self.check(end)
+        // No journal/client mutation occurs while serializing/validating the
+        // retained plan. Durable writes retain their full before/after check.
+        before(end)
     }
     fn prepare_native_recovery(
         &mut self,

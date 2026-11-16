@@ -38,7 +38,10 @@ impl HistoryContext {
 }
 impl Journal {
     fn original_history_boundary(&mut self, end: Instant) -> io::Result<()> {
-        self.check(end)?;
+        before(end)?;
+        if self.poisoned || end > self.deadline {
+            return Err(invalid());
+        }
         if self.progress.lease_state != LeaseState::Released
             || !self.progress.complete_files(&self.manifest.storage_plan)
         {
@@ -48,9 +51,9 @@ impl Journal {
             .as_mut()
             .ok_or_else(invalid)?
             .check(end)?;
-        // Each native witness operation supplies complete BOTH-tree before and
-        // after checks. This boundary owns original receipt/journal checks;
-        // stacking a second identical tree traversal here changes no predicate.
+        // Receipt checks read only retained objects. One full journal-native
+        // observation after it covers this boundary; native operations have
+        // their own full BOTH-tree before/after and append checks BEFORE/AFTER.
         self.check(end)
     }
     fn seal_original_history(

@@ -53,6 +53,7 @@ pub(super) struct HistoryEvent {
     pub(super) references: Option<[HistoryReference; 2]>,
     pub(super) previous_event_digest: String,
 }
+#[derive(Serialize, Deserialize)]
 pub(super) struct HistoryProgress {
     context: HistoryContextData,
     references: Option<[String; 2]>,
@@ -195,6 +196,9 @@ impl Progress {
         })
     }
     pub(super) fn apply_history(&mut self, plan: &StoragePlan, e: &HistoryEvent) -> io::Result<()> {
+        if self.batch.is_some() {
+            return Err(invalid());
+        }
         if e.schema
             != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "original-history-event"

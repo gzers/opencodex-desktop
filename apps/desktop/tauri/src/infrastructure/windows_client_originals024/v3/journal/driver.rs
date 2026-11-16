@@ -29,7 +29,7 @@ impl Journal {
         }
         before(end)
     }
-    fn event(
+    pub(super) fn event(
         &self,
         node: &str,
         op: Operation,

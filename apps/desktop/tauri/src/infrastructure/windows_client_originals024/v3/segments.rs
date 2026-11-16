@@ -49,9 +49,13 @@ pub(super) enum ChainEntry {
     Recovery(super::recovery::RecoveryEvent),
     History(super::history::HistoryEvent),
     Handles(super::handles::HandleEvent),
+    Batch(super::batches::BatchEvent),
 }
 impl Progress {
     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
+        if self.batch.is_some() && !matches!(e, ChainEntry::Batch(_)) {
+            return Err(invalid());
+        }
         if self.history.is_some() && !matches!(e, ChainEntry::History(_) | ChainEntry::Handles(_)) {
             return Err(invalid());
         }
@@ -64,9 +68,13 @@ impl Progress {
             ChainEntry::Recovery(e) => self.apply_recovery(plan, e),
             ChainEntry::History(e) => self.apply_history(plan, e),
             ChainEntry::Handles(e) => self.apply_handles(plan, e),
+            ChainEntry::Batch(e) => self.apply_batch(plan, e),
         }
     }
     pub(super) fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {
+        if self.batch.is_some() {
+            return Err(invalid());
+        }
         // Final recovery admits ONLY its original prepared/result release pair;
         // never a new acquisition or an incomplete per-node aggregate.
         let recovery_release = self.recovery.is_some();

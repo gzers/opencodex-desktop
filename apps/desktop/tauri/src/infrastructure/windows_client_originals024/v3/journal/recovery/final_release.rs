@@ -93,34 +93,38 @@ impl Journal {
                 return Err(io::Error::other("injected after actual final unlock/retained receipt before native postconditions"));
             }
             self.final_release_postconditions(&mut witness, end)?;
-            let anchors = self
-                .manifest
-                .storage_plan
-                .roots
-                .iter()
-                .flat_map(|r| &r.nodes)
-                .filter(|n| n.kind != Kind::CustodiedFile)
-                .map(|n| n.node_id.clone())
-                .collect::<Vec<_>>();
-            for node in anchors {
-                // Each anchor gets its own immutable ReleaseVerified event,
-                // only after actual unlock and stable range/full-tree proof.
-                self.final_release_postconditions(&mut witness, end)?;
-                #[cfg(test)]
-                {
-                    if self.fault == 59 {
-                        self.fault = 1;
-                    } else if self.fault == 60 {
-                        self.fault = 2;
+            if self.progress.uses_node_batches() {
+                self.publish_released_anchor_batch(&mut witness, end)?;
+            } else {
+                let anchors = self
+                    .manifest
+                    .storage_plan
+                    .roots
+                    .iter()
+                    .flat_map(|r| &r.nodes)
+                    .filter(|n| n.kind != Kind::CustodiedFile)
+                    .map(|n| n.node_id.clone())
+                    .collect::<Vec<_>>();
+                for node in anchors {
+                    // Each anchor gets its own immutable ReleaseVerified event,
+                    // only after actual unlock and stable range/full-tree proof.
+                    self.final_release_postconditions(&mut witness, end)?;
+                    #[cfg(test)]
+                    {
+                        if self.fault == 59 {
+                            self.fault = 1;
+                        } else if self.fault == 60 {
+                            self.fault = 2;
+                        }
                     }
+                    let event = self.progress.recovery_event(
+                        RecoveryOperation::ReleaseVerified,
+                        None,
+                        Some(&node),
+                    )?;
+                    self.append_entry_inner(ChainEntry::Recovery(event), end)?;
+                    self.final_release_postconditions(&mut witness, end)?;
                 }
-                let event = self.progress.recovery_event(
-                    RecoveryOperation::ReleaseVerified,
-                    None,
-                    Some(&node),
-                )?;
-                self.append_entry_inner(ChainEntry::Recovery(event), end)?;
-                self.final_release_postconditions(&mut witness, end)?;
             }
             #[cfg(test)]
             {

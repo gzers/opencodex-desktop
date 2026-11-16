@@ -164,6 +164,9 @@ impl Progress {
         plan: &StoragePlan,
         e: &SnapshotEvent,
     ) -> io::Result<()> {
+        if self.batch.is_some() {
+            return Err(invalid());
+        }
         if self.recovery.is_some() {
             return Err(invalid());
         }

@@ -43,6 +43,17 @@ pub(super) fn prepare(
                 .unwrap();
         }
     }
+    drop(claim);
+    sample_phases(trees, journal, lease, end);
+}
+pub(super) fn sample_phases(
+    trees: &mut [AnchoredTree; 2],
+    journal: &mut Journal,
+    lease: &mut Option<NativeLease>,
+    end: Instant,
+) {
+    let root = trees[0].root.clone();
+    let mut claim = lease.as_mut().unwrap().anchored_claim(&root, end).unwrap();
     open_trees(trees, journal, &mut claim, end).unwrap();
     drop(claim);
     release_trees(trees, journal, lease, end).unwrap();

@@ -199,6 +199,9 @@ impl Progress {
         })
     }
     pub(super) fn apply_handles(&mut self, plan: &StoragePlan, e: &HandleEvent) -> io::Result<()> {
+        if self.batch.is_some() {
+            return Err(invalid());
+        }
         let summary = self.history_summary()?.ok_or_else(invalid)?;
         if !self.complete_files(plan)||!self.history_linked()||self.lease_state!=segments::LeaseState::Released
             ||e.schema!=crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3

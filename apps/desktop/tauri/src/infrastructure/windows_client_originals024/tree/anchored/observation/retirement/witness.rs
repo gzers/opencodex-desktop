@@ -33,6 +33,105 @@ pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn bo
     RecoveryWitness { trees }
 }
 impl RecoveryWitness<'_> {
+    pub(in crate::infrastructure::windows_client_originals024) fn execute_batch_node(
+        &mut self,
+        node: &str,
+        retire: bool,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<crate::infrastructure::windows_client_originals024::tree::VerifiedBatchValue>
+    {
+        use crate::infrastructure::windows_client_originals024::tree::VerifiedBatchValue;
+        if retire {
+            self.retire(node, claim, end)?;
+        } else {
+            self.restore(node, claim, end)?;
+        }
+        // Existing native methods already checked complete BOTH-tree before
+        // and after the actual same-handle move. Read the exact retained file
+        // again for the sealed result, never produce it from parsed JSON.
+        for t in &mut *self.trees {
+            let root = t
+                .root
+                .file_name()
+                .and_then(|s| s.to_str())
+                .ok_or_else(invalid)?
+                .to_string();
+            if retire {
+                let frozen = t.retirement.as_mut().ok_or_else(invalid)?;
+                for item in &frozen.items {
+                    let n = &mut frozen.frame.nodes[item.frame_index];
+                    if hash::sha256_hex(format!("{root}/{}", n.entry.relative).as_bytes()) == node {
+                        if !item.retired {
+                            return Err(invalid());
+                        }
+                        let observed = stamp(
+                            &item.target,
+                            &mut n.file,
+                            &n.entry.relative,
+                            Kind::File,
+                            end,
+                        )?;
+                        if observed != n.entry {
+                            return Err(invalid());
+                        }
+                        return Ok(VerifiedBatchValue::observed(
+                            root,
+                            node.into(),
+                            observed.id.index.to_string(),
+                            observed.security,
+                        ));
+                    }
+                }
+            } else {
+                for i in 0..t.nodes.len() {
+                    if t.nodes[i].kind == Kind::File && t.key(i) == node {
+                        if t.nodes[i].state != State::Restored {
+                            return Err(invalid());
+                        }
+                        let (id, security) = t.node_security(i, false, end)?;
+                        return Ok(VerifiedBatchValue::observed(
+                            root,
+                            node.into(),
+                            id,
+                            security,
+                        ));
+                    }
+                }
+            }
+        }
+        Err(invalid())
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn released_anchors(
+        &mut self,
+        end: Instant,
+    ) -> io::Result<Vec<crate::infrastructure::windows_client_originals024::tree::VerifiedBatchValue>>
+    {
+        use crate::infrastructure::windows_client_originals024::tree::VerifiedBatchValue;
+        self.post_release(end)?;
+        let mut rows = Vec::new();
+        for t in &mut *self.trees {
+            let root = t
+                .root
+                .file_name()
+                .and_then(|s| s.to_str())
+                .ok_or_else(invalid)?
+                .to_string();
+            for i in 0..t.nodes.len() {
+                if t.nodes[i].kind != Kind::File {
+                    let (id, security) = t.node_security(i, false, end)?;
+                    rows.push(VerifiedBatchValue::observed(
+                        root.clone(),
+                        t.key(i),
+                        id,
+                        security,
+                    ));
+                }
+            }
+        }
+        self.post_release(end)?;
+        Ok(rows)
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn check(
         &mut self,
         claim: &mut AnchoredClaim<'_>,

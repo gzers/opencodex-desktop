@@ -18,6 +18,8 @@ use std::{
     time::Instant,
 };
 mod actions;
+mod batches;
+mod completed;
 mod driver;
 mod handles;
 mod history;
@@ -113,6 +115,9 @@ struct Record {
     path: PathBuf,
     raw: Vec<u8>,
     security: SnapshotData,
+    // Immutable pure DATA derived from exactly raw=encoded(event) at local
+    // creation. Native ID/all8/raw-file checks still run on every observation.
+    entry: Option<ChainEntry>,
 }
 impl Record {
     fn create(path: &Path, raw: Vec<u8>, end: Instant) -> io::Result<Self> {
@@ -130,6 +135,7 @@ impl Record {
             path: path.into(),
             raw,
             security: security(&observed, end)?,
+            entry: None,
         };
         before(end)?;
         Ok(out)
@@ -195,6 +201,7 @@ struct Current {
     recovery: Option<super::recovery::RecoverySummary>,
     history: Option<super::history::HistorySummary>,
     handles: Option<super::handles::HandleSummary>,
+    batch: Option<super::batches::BatchSummary>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -222,6 +229,8 @@ pub(in super::super) struct Journal {
     old_source_actions: Vec<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
     original_handoff: Option<super::super::tree::OriginalHandleHandoff>,
     retired_lease_histories: Vec<super::super::coordination::RetiredLeaseHistory>,
+    close_completion: Option<completed::CompletedOriginals>,
+    native_batches: Vec<batches::RetainedNativeBatch>,
     #[cfg(test)]
     fault: u8,
 }
@@ -538,6 +547,7 @@ impl Journal {
             recovery: None,
             history: None,
             handles: None,
+            batch: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -581,6 +591,8 @@ impl Journal {
             old_source_actions: Vec::new(),
             original_handoff: None,
             retired_lease_histories: Vec::new(),
+            close_completion: None,
+            native_batches: Vec::new(),
             #[cfg(test)]
             fault: 0,
         };
@@ -598,6 +610,16 @@ impl Journal {
         }
         before(end)?;
         before(authorized_end)?;
+        self.check_records(end)
+    }
+    // Shared exact native comparisons. Mutation callers enter ONLY through
+    // check_inner's original action cutoff; historical entry additionally
+    // requires a retained timely completion object before and after reading.
+    fn check_records(&mut self, end: Instant) -> io::Result<()> {
+        if self.poisoned {
+            return Err(invalid());
+        }
+        before(end)?;
         if native::current_identity()? != self.token {
             return Err(invalid());
         }
@@ -657,6 +679,7 @@ impl Journal {
             || tip.recovery != self.progress.recovery_summary()?
             || tip.history != self.progress.history_summary()?
             || tip.handles != self.progress.handle_progress
+            || tip.batch != self.progress.batch_summary()
         {
             return Err(invalid());
         }
@@ -702,14 +725,18 @@ impl Journal {
             &self.manifest.deadline_scope,
         )?;
         for record in &self.events {
-            let event: ChainEntry = serde_json::from_slice(&record.raw).map_err(|_| invalid())?;
-            next.apply_entry(&self.manifest.storage_plan, &event)?;
+            // self.check(end) above independently reobserved exact raw bytes,
+            // native identity/all8/membership of EVERY record. The locally
+            // owned typed event cannot change and is the same encoded value;
+            // replay all original progression rules without decoding it again.
+            let event = record.entry.as_ref().ok_or_else(invalid)?;
+            next.apply_entry(&self.manifest.storage_plan, event)?;
         }
         next.apply_entry(&self.manifest.storage_plan, &event)?;
         if self.events.len() >= 4096 {
             return Err(invalid());
         }
-        let record = Record::create(
+        let mut record = Record::create(
             &self
                 .directory
                 .path()
@@ -717,6 +744,7 @@ impl Journal {
             encoded(&event)?,
             end,
         )?;
+        record.entry = Some(event);
         // Retain the actual published event BEFORE any fallible current IO.
         self.events.push(record);
         self.poisoned = true;
@@ -761,6 +789,7 @@ impl Journal {
                 .as_ref()
                 .map(|h| serde_json::from_slice(&encoded(h)?).map_err(|_| invalid()))
                 .transpose()?,
+            batch: next.batch_summary(),
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

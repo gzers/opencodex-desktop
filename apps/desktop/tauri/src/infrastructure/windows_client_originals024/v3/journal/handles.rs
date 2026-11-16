@@ -41,7 +41,10 @@ impl Journal {
     }
     fn close_original_handles(&mut self, end: Instant) -> io::Result<()> {
         let result = (|| {
-            self.check(end)?;
+            before(end)?;
+            if self.poisoned || end > self.deadline {
+                return Err(invalid());
+            }
             if !self.progress.history_linked()
                 || self.progress.handle_progress.is_some()
                 || self.original_handoff.is_none()
@@ -127,7 +130,6 @@ impl Journal {
             {
                 return Err(invalid());
             }
-            self.check(end)?;
             #[cfg(test)]
             {
                 if self.fault == 82 {
@@ -147,7 +149,15 @@ impl Journal {
                 .as_mut()
                 .ok_or_else(invalid)?
                 .check_originals(end)?;
-            self.check(end)
+            self.check(end)?;
+            #[cfg(test)]
+            if self.fault == 87 {
+                while Instant::now() < end {
+                    std::thread::sleep(std::time::Duration::from_millis(5));
+                }
+            }
+            self.close_completion = Some(super::completed::CompletedOriginals::capture(self, end)?);
+            Ok(())
         })();
         if result.is_err() {
             self.poisoned = true;

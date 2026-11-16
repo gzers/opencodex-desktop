@@ -22,6 +22,7 @@ use std::{
 mod actions;
 mod capture;
 pub(super) use capture::CaptureSlot;
+pub(super) mod batches;
 mod handles;
 mod history;
 pub(super) mod journal;
@@ -79,6 +80,8 @@ pub(super) struct Root {
 pub(super) struct StoragePlan {
     storage_strategy: String,
     roots: Vec<Root>,
+    #[serde(skip)]
+    data_digest: std::sync::OnceLock<String>,
 }
 fn decimal(s: &str) -> bool {
     s.parse::<u64>().is_ok_and(|n| n > 0 && n.to_string() == s)
@@ -111,14 +114,18 @@ impl StoragePlan {
         let out = Self {
             storage_strategy: ANCHORED_STORAGE_STRATEGY.into(),
             roots,
+            data_digest: std::sync::OnceLock::new(),
         };
         out.validate(profile, parent)?;
         Ok(out)
     }
     pub(super) fn digest(&self) -> io::Result<String> {
-        Ok(hash::sha256_hex(
-            &serde_json::to_vec(self).map_err(|_| invalid())?,
-        ))
+        if let Some(digest) = self.data_digest.get() {
+            return Ok(digest.clone());
+        }
+        let digest = hash::sha256_hex(&serde_json::to_vec(self).map_err(|_| invalid())?);
+        let _ = self.data_digest.set(digest.clone());
+        Ok(digest)
     }
     pub(super) fn validate(&self, profile: &Path, parent: FileIdentity) -> io::Result<()> {
         if self.storage_strategy != ANCHORED_STORAGE_STRATEGY || self.roots.len() != 2 {
@@ -298,6 +305,7 @@ pub(super) struct Event {
     manifest_digest: String,
     binding_digest: String,
 }
+#[derive(Serialize, Deserialize)]
 pub(super) struct Progress {
     session: String,
     plan: String,
@@ -331,6 +339,8 @@ pub(super) struct Progress {
     recovery: Option<recovery::RecoveryProgress>,
     history: Option<history::HistoryProgress>,
     handle_progress: Option<handles::HandleSummary>,
+    batch: Option<batches::BatchProgress>,
+    seen_batches: BTreeSet<String>,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -394,9 +404,14 @@ impl Progress {
             recovery: None,
             history: None,
             handle_progress: None,
+            batch: None,
+            seen_batches: BTreeSet::new(),
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {
+        if self.batch.is_some() {
+            return Err(invalid());
+        }
         if self.recovery.is_some() {
             return Err(invalid());
         }
@@ -581,7 +596,8 @@ impl Progress {
     /// Necessary DATA completeness only. Deliberately no method yields Ready,
     /// Restored or Closed; retained native/source/stop/release are independent.
     pub(super) fn complete_files(&self, plan: &StoragePlan) -> bool {
-        self.pending.is_none()
+        self.batch.is_none()
+            && self.pending.is_none()
             && (self.recovery.is_none() || self.lease_state == segments::LeaseState::Released)
             && plan.roots.iter().flat_map(|r| &r.nodes).all(|n| {
                 self.nodes

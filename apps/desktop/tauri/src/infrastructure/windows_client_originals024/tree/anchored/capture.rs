@@ -419,6 +419,33 @@ impl CapturedTrees {
             failed: false,
         }
     }
+    pub(in crate::infrastructure::windows_client_originals024) fn prepare_working_batched(
+        &mut self,
+        lease: &mut NativeLease,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            if self.failed || self.prepared {
+                return Err(invalid());
+            }
+            self.journal.check(end)?;
+            let root = self.trees[0].parent.path().join(".codex");
+            let mut claim = lease.anchored_claim(&root, end)?;
+            self.journal.prepare_initial_batches(
+                super::batches::initial_batch_witness(&mut self.trees, &mut claim, end)?,
+                &mut claim,
+                end,
+            )?;
+            self.journal.check(end)?;
+            self.prepared = true;
+            Ok(())
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
+    #[cfg(test)]
     pub(in crate::infrastructure::windows_client_originals024) fn prepare_working(
         &mut self,
         lease: &mut NativeLease,

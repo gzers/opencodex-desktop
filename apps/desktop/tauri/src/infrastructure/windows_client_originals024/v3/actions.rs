@@ -39,6 +39,9 @@ pub(super) struct ActionEvent {
 }
 impl Progress {
     pub(super) fn apply_action(&mut self, plan: &StoragePlan, e: &ActionEvent) -> io::Result<()> {
+        if self.batch.is_some() {
+            return Err(invalid());
+        }
         if self.recovery.is_some() {
             return Err(invalid());
         }

@@ -44,6 +44,9 @@ pub(super) struct WorkEvent {
 }
 impl Progress {
     pub(super) fn apply_work(&mut self, plan: &StoragePlan, e: &WorkEvent) -> io::Result<()> {
+        if self.batch.is_some() {
+            return Err(invalid());
+        }
         if self.recovery.is_some() {
             return Err(invalid());
         }

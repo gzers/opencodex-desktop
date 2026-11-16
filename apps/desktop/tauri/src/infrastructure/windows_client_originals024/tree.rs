@@ -20,6 +20,7 @@ use std::{
     time::Instant,
 };
 mod anchored;
+pub(super) use anchored::batches::{InitialBatchWitness, VerifiedBatchValue};
 #[cfg(test)]
 pub(super) use anchored::test_plan as r6_test_plan;
 mod artifacts;

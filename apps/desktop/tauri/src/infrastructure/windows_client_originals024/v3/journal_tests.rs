@@ -55,6 +55,64 @@ fn setup() -> (
     (f, retained, journal)
 }
 #[test]
+fn wl2_r6_batch_typed_immutable_event_replay_keeps_exact_native_record_bytes_and_original_rules() {
+    let (mut f, _data, mut journal) = setup();
+    let end = journal.deadline;
+    let node = journal
+        .manifest
+        .storage_plan
+        .roots
+        .iter()
+        .flat_map(|r| &r.nodes)
+        .find(|n| n.kind != Kind::CustodiedFile)
+        .unwrap();
+    let event = super::super::tests::event(
+        &journal.manifest.storage_plan,
+        &journal.progress,
+        node,
+        Operation::SnapshotVerified,
+        "999",
+    );
+    journal.append(event, end).unwrap();
+    assert_eq!(journal.events.len(), 1);
+    let record = &journal.events[0];
+    assert_eq!(encoded(record.entry.as_ref().unwrap()).unwrap(), record.raw);
+    let decoded: ChainEntry = serde_json::from_slice(&record.raw).unwrap();
+    assert_eq!(encoded(&decoded).unwrap(), record.raw);
+    journal.check(end).unwrap();
+    let mut replay = Progress::new(
+        &journal.manifest.storage_plan,
+        &journal.progress.session,
+        &journal.progress.manifest,
+        &journal.progress.binding,
+        &journal.manifest.initial_lease_epoch,
+        &journal.manifest.claim_key,
+        &journal.manifest.deadline_scope,
+    )
+    .unwrap();
+    replay
+        .apply_entry(
+            &journal.manifest.storage_plan,
+            journal.events[0].entry.as_ref().unwrap(),
+        )
+        .unwrap();
+    assert_eq!(replay.sequence, journal.progress.sequence);
+    assert_eq!(replay.tip, journal.progress.tip);
+    let mut other = OpenOptions::new()
+        .access_mode(0x40000000)
+        .share_mode(1)
+        .custom_flags(0x200000)
+        .open(&journal.events[0].path);
+    assert!(
+        other.is_err(),
+        "retained immutable native record still denies other writer"
+    );
+    assert!(other.as_mut().unwrap_err().raw_os_error().is_some());
+    println!("r6 typed immutable record equals exact serialized native bytes, fresh native full record checks retained and original independent progression replay agrees; other writer refused, no data cache grants native identity or new deadline");
+    drop(journal);
+    f.retain();
+}
+#[test]
 fn wl2_r6_capture_canonical_data_namespace_binds_native_session_leaf_and_rejects_other_descendants()
 {
     let (mut f, _data, journal) = setup();

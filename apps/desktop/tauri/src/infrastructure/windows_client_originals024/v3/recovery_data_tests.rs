@@ -7,7 +7,9 @@ use serde_json::{json, Value};
 
 // Synthetic DATA derived from real captured native original plans. Deliberately
 // no native Stopped/Owner/process/Source authority is constructed by this helper.
-fn stopped(p: &StoragePlan) -> (Progress, Value) {
+pub(in crate::infrastructure::windows_client_originals024::v3) fn stopped(
+    p: &StoragePlan,
+) -> (Progress, Value) {
     let mut g = observed(p);
     g.lifecycle = LifecyclePhase::Stopped;
     g.action_kind = actions::ActionKind::Stop;

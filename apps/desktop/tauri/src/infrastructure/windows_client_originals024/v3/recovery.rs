@@ -62,6 +62,8 @@ pub(super) struct RecoveryRoot {
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub(super) struct RecoveryPlan {
     roots: [RecoveryRoot; 2],
+    #[serde(skip)]
+    data_digest: std::sync::OnceLock<String>,
 }
 fn key(root: &str, relative: &str) -> String {
     hash::sha256_hex(format!("{root}/{relative}").as_bytes())
@@ -182,7 +184,12 @@ impl RecoveryPlan {
         serde_json::from_value(serde_json::json!({"roots":roots})).map_err(|_| invalid())
     }
     pub(super) fn digest(&self) -> io::Result<String> {
-        Ok(hash::sha256_hex(&encoded(self)?))
+        if let Some(digest) = self.data_digest.get() {
+            return Ok(digest.clone());
+        }
+        let digest = hash::sha256_hex(&encoded(self)?);
+        let _ = self.data_digest.set(digest.clone());
+        Ok(digest)
     }
     fn retirement_keys(&self) -> BTreeMap<String, u8> {
         self.roots
@@ -473,7 +480,7 @@ pub(super) struct RecoveryEvent {
     pub(super) manifest_digest: String,
     pub(super) binding_digest: String,
 }
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize)]
 pub(super) struct RecoveryProgress {
     plan: RecoveryPlan,
     verified: bool,
@@ -495,6 +502,87 @@ pub(super) struct RecoverySummary {
     anchor_released_count: usize,
 }
 impl Progress {
+    pub(super) fn verify_batch_native_value(
+        &self,
+        node: &str,
+        retire: bool,
+        value: &super::super::tree::VerifiedBatchValue,
+    ) -> io::Result<()> {
+        if value.node() != node {
+            return Err(invalid());
+        }
+        let (id, security) = value.parts()?;
+        let plan = &self.recovery.as_ref().ok_or_else(invalid)?.plan;
+        for r in &plan.roots {
+            let root = &r.original_tree.nodes[0].root_id;
+            if retire {
+                for n in &r.retirements {
+                    if key(root, &n.relative) == node {
+                        return if root == value.root()
+                            && n.current_file_id == id
+                            && n.security == security
+                        {
+                            Ok(())
+                        } else {
+                            Err(invalid())
+                        };
+                    }
+                }
+            } else {
+                for n in &r.original_tree.nodes {
+                    if n.node_id == node && n.kind == Kind::CustodiedFile {
+                        return if root == value.root() && n.file_id == id && n.security == security
+                        {
+                            Ok(())
+                        } else {
+                            Err(invalid())
+                        };
+                    }
+                }
+            }
+        }
+        Err(invalid())
+    }
+    pub(super) fn batch_recovery_nodes(&self, retire: bool) -> io::Result<Vec<(String, String)>> {
+        let r = self.recovery.as_ref().ok_or_else(invalid)?;
+        if r.pending.is_some() {
+            return Err(invalid());
+        }
+        Ok(r.plan
+            .roots
+            .iter()
+            .flat_map(|r| {
+                let root = r.original_tree.nodes[0].root_id.clone();
+                if retire {
+                    r.retirements
+                        .iter()
+                        .map(|n| (root.clone(), key(&root, &n.relative)))
+                        .collect::<Vec<_>>()
+                } else {
+                    r.original_tree
+                        .nodes
+                        .iter()
+                        .filter(|n| n.kind == Kind::CustodiedFile)
+                        .map(|n| (root.clone(), n.node_id.clone()))
+                        .collect()
+                }
+            })
+            .collect())
+    }
+    pub(super) fn clear_batch_projection_pending(&mut self) {
+        self.pending = None;
+        if let Some(r) = &mut self.recovery {
+            r.pending = None;
+        }
+    }
+    pub(super) fn set_batch_recovery_pending(
+        &mut self,
+        operation: RecoveryOperation,
+        node: String,
+    ) -> io::Result<()> {
+        self.recovery.as_mut().ok_or_else(invalid)?.pending = Some((operation, node));
+        Ok(())
+    }
     pub(super) fn recovery_reserved_identities(&self) -> io::Result<BTreeSet<(u32, String)>> {
         let r = self.recovery.as_ref().ok_or_else(invalid)?;
         let mut ids = self.snapshot_objects.clone();
@@ -621,7 +709,15 @@ impl Progress {
                     .collect::<BTreeMap<_, _>>();
                 Ok(RecoverySummary {
                     plan_digest: r.plan.digest()?,
-                    progress_digest: hash::sha256_hex(&encoded(&(r, &anchors))?),
+                    progress_digest: hash::sha256_hex(&encoded(&(
+                        r.plan.digest()?,
+                        r.verified,
+                        &r.retired,
+                        &r.restored,
+                        &r.pending,
+                        r.whole_tree,
+                        &anchors,
+                    ))?),
                     plan_verified: r.verified,
                     retired_count: r.retired.values().filter(|s| **s == 2).count(),
                     restored_count: r.restored.values().filter(|s| **s == 2).count(),
@@ -637,6 +733,9 @@ impl Progress {
         plan: &StoragePlan,
         e: &RecoveryEvent,
     ) -> io::Result<()> {
+        if self.batch.is_some() {
+            return Err(invalid());
+        }
         use RecoveryOperation::*;
         if e.schema
             != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3

@@ -312,7 +312,10 @@ impl CaptureSlot {
                 store.check_source(owner, end)?;
                 store
                     .core
-                    .prepare_working(lease.as_mut().ok_or_else(|| refused("原lease缺席"))?, end)
+                    .prepare_working_batched(
+                        lease.as_mut().ok_or_else(|| refused("原lease缺席"))?,
+                        end,
+                    )
                     .map_err(refused)?;
                 store
                     .core
