@@ -3,6 +3,8 @@ use super::super::tests::Fixture;
 use super::*;
 use rusqlite::Connection;
 use std::time::Duration;
+#[path = "anchored_driver_tests.rs"]
+mod driver;
 fn end() -> Instant {
     Instant::now() + Duration::from_secs(10)
 }

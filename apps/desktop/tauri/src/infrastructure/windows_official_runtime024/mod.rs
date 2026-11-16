@@ -39,3 +39,44 @@ pub(crate) fn verify_private_directory(file: &std::fs::File) -> std::io::Result<
     use std::os::windows::io::AsRawHandle;
     security::verify_private(file.as_raw_handle(), &current_identity()?.sid, true)
 }
+/// CREATE_NEW private work object, returned immediately as the exact original
+/// creation handle. The caller must retain it BEFORE any fallible post-create
+/// query/write. No path reopen, truncation or ACL repair of existing objects.
+pub(crate) fn create_private_originals_work_file(
+    path: &std::path::Path,
+) -> std::io::Result<std::fs::File> {
+    use std::{
+        os::windows::{ffi::OsStrExt, io::FromRawHandle},
+        ptr,
+    };
+    validate_local_path(path)?;
+    let token = current_identity()?;
+    if token.elevated || token.elevation_type == 2 {
+        return Err(std::io::ErrorKind::PermissionDenied.into());
+    }
+    let parent =
+        PinnedDirectory::open_private(path.parent().ok_or(std::io::ErrorKind::InvalidInput)?)?;
+    let descriptor = security::PrivateDescriptor::new(&token.sid, false)?;
+    let attributes = descriptor.attributes();
+    let wide = path
+        .as_os_str()
+        .encode_wide()
+        .chain(Some(0))
+        .collect::<Vec<u16>>();
+    parent.recheck()?;
+    let raw = unsafe {
+        windows_sys::Win32::Storage::FileSystem::CreateFileW(
+            wide.as_ptr(),
+            0xc0030000,
+            1,
+            &attributes,
+            1,
+            0x200000,
+            ptr::null_mut(),
+        )
+    };
+    if raw == windows_sys::Win32::Foundation::INVALID_HANDLE_VALUE {
+        return Err(std::io::Error::last_os_error());
+    }
+    Ok(unsafe { std::fs::File::from_raw_handle(raw) })
+}

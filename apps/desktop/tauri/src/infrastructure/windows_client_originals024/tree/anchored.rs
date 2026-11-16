@@ -27,6 +27,7 @@ struct Node {
     kind: Kind,
     state: State,
     work: Option<(File, Entry)>,
+    pending_work: Option<File>,
 }
 /// All fields are actual native objects or snapshots sealed from those objects.
 /// No constructor from plan data, no Clone/serde, no mutable pathname admission.
@@ -38,6 +39,8 @@ pub(in super::super) struct AnchoredTree {
     custody_security: SnapshotData,
     nodes: Vec<Node>,
     poisoned: bool,
+    #[cfg(test)]
+    create_fault: u8,
 }
 fn open_node(path: &Path, kind: Kind, observe: bool) -> io::Result<File> {
     validate_local_path(path)?;
@@ -57,7 +60,7 @@ fn open_node(path: &Path, kind: Kind, observe: bool) -> io::Result<File> {
         .share_mode(if kind == Kind::Coordinator {
             1 | 2
         } else if observe {
-            1 | 4
+            1 | 2 | 4
         } else if kind == Kind::Directory {
             1 | 2
         } else {
@@ -165,6 +168,7 @@ fn collect(
         kind,
         state: State::Original,
         work: None,
+        pending_work: None,
     });
     for name in children {
         let child = if relative.is_empty() {
@@ -177,6 +181,99 @@ fn collect(
     Ok(())
 }
 impl AnchoredTree {
+    fn node_security(
+        &mut self,
+        i: usize,
+        working: bool,
+        end: Instant,
+    ) -> io::Result<(String, SnapshotData)> {
+        let path = if working {
+            self.work_location(i)
+        } else {
+            self.original_location(i)
+        };
+        let n = self.nodes.get_mut(i).ok_or_else(invalid)?;
+        let observed = if working {
+            let (file, entry) = n.work.as_mut().ok_or_else(invalid)?;
+            let observed = stamp(&path, file, &entry.relative, Kind::File, end)?;
+            if observed != *entry {
+                return Err(invalid());
+            }
+            observed
+        } else {
+            let observed = stamp(&path, &mut n.file, &n.original.relative, n.kind, end)?;
+            if observed != n.original {
+                return Err(invalid());
+            }
+            observed
+        };
+        Ok((observed.id.index.to_string(), observed.security))
+    }
+    fn journal_snapshot_anchors(
+        &mut self,
+        journal: &mut super::super::v3::Journal,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            let codex = self.parent.path().join(".codex");
+            self.verify(claim, &codex, end)?;
+            for i in 0..self.nodes.len() {
+                if self.nodes[i].kind == Kind::File {
+                    continue;
+                }
+                let plan = self.plan();
+                let node = self.key(i);
+                let native = self.node_security(i, false, end)?;
+                journal.snapshot_anchor(&plan, &node, native, claim, end)?;
+            }
+            self.verify(claim, &codex, end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    fn journal_step(
+        &mut self,
+        i: usize,
+        action: super::super::v3::FileAction,
+        journal: &mut super::super::v3::Journal,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        use super::super::v3::FileAction;
+        let result = (|| {
+            let codex = self.parent.path().join(".codex");
+            self.verify(claim, &codex, end)?;
+            let plan = self.plan();
+            let node = self.key(i);
+            let prior = match action {
+                FileAction::CreateWork => None,
+                FileAction::RetireWork => Some(self.node_security(i, true, end)?),
+                _ => Some(self.node_security(i, false, end)?),
+            };
+            let state = match action {
+                FileAction::MoveOriginal => State::Moved,
+                FileAction::CreateWork => State::Working,
+                FileAction::RetireWork => State::Retired,
+                FileAction::RestoreOriginal => State::Restored,
+            };
+            journal.execute_node(&plan, &node, action, prior, claim, end, |claim| {
+                self.step(i, state, claim, &codex, end)?;
+                self.node_security(
+                    i,
+                    matches!(action, FileAction::CreateWork | FileAction::RetireWork),
+                    end,
+                )
+            })?;
+            self.verify(claim, &codex, end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
     pub(in super::super) fn capture(
         root: &Path,
         custody: &Path,
@@ -224,6 +321,8 @@ impl AnchoredTree {
             custody_security,
             nodes,
             poisoned: false,
+            #[cfg(test)]
+            create_fault: 0,
         };
         out.verify(claim, codex_root, end)?;
         Ok(out)
@@ -313,6 +412,9 @@ impl AnchoredTree {
             let expected_children = self.expected_children(&self.nodes[i].original.relative);
             let workpath = self.work_location(i);
             let n = &mut self.nodes[i];
+            if n.pending_work.is_some() {
+                return Err(invalid());
+            }
             let observed = stamp(&path, &mut n.file, &n.original.relative, n.kind, end)?;
             let mut fresh = open_node(&path, n.kind, true)?;
             if id(&fresh, n.kind == Kind::Directory)? != n.original.id
@@ -425,38 +527,46 @@ impl AnchoredTree {
         match operation {
             State::Moved => rename_original_handle(&n.file, &target)?,
             State::Working => {
-                // PrivateRecord is limited to 1MiB of journal data. Seed a
-                // private CREATE_NEW empty object, then bind the writer to
-                // that exact new identity before copying the bounded 2MiB
-                // ordinary file. Never truncate an unverified path/object.
-                let record = PrivateRecord::create(&target, b"", 16)?;
-                let created = record.identity();
-                drop(record);
-                let mut writer = OpenOptions::new()
-                    .access_mode(0xc0030000)
-                    .share_mode(1)
-                    .custom_flags(0x200000)
-                    .open(&target)?;
-                if id(&writer, false)? != created {
-                    return Err(invalid());
+                // Retain the CREATE_NEW description before any fallible IO.
+                // It remains owned even on empty/partial-write/seal failure.
+                n.pending_work = Some(native::create_private_originals_work_file(&target)?);
+                let writer = n.pending_work.as_mut().ok_or_else(invalid)?;
+                let created = id(writer, false)?;
+                native::verify_private_file(writer)?;
+                #[cfg(test)]
+                if self.create_fault == 1 {
+                    return Err(io::Error::other(
+                        "injected after actual CREATE_NEW, exact new handle retained",
+                    ));
                 }
-                native::verify_private_file(&writer)?;
                 claim.check(codex_root, end)?;
+                #[cfg(test)]
+                if self.create_fault == 2 {
+                    writer.write_all(&n.original.bytes[..1])?;
+                    writer.sync_all()?;
+                    return Err(io::Error::other(
+                        "injected after real partial work write/sync, exact handle retained",
+                    ));
+                }
                 writer.write_all(&n.original.bytes)?;
                 writer.sync_all()?;
-                if id(&writer, false)? != created {
+                if id(writer, false)? != created {
                     return Err(invalid());
                 }
-                drop(writer);
-                let mut file = open_node(&target, Kind::File, false)?;
-                let entry = stamp(&target, &mut file, &n.original.relative, Kind::File, end)?;
+                let entry = stamp(&target, writer, &n.original.relative, Kind::File, end)?;
                 if entry.bytes != n.original.bytes
                     || entry.id == n.original.id
                     || entry.id != created
                 {
                     return Err(invalid());
                 }
-                n.work = Some((file, entry));
+                #[cfg(test)]
+                if self.create_fault == 3 {
+                    return Err(io::Error::other(
+                        "injected after complete work sync/readback, before native publication",
+                    ));
+                }
+                n.work = Some((n.pending_work.take().ok_or_else(invalid)?, entry));
             }
             State::Retired => {
                 rename_original_handle(&n.work.as_ref().ok_or_else(invalid)?.0, &target)?

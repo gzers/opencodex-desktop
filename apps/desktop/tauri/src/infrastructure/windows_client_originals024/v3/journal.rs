@@ -16,6 +16,7 @@ use std::{
     path::PathBuf,
     time::Instant,
 };
+mod driver;
 fn before(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {
         Err(io::ErrorKind::TimedOut.into())

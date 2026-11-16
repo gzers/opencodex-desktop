@@ -20,6 +20,14 @@ use std::{
     path::{Component, Path},
 };
 mod journal;
+pub(super) use journal::Journal;
+#[derive(Clone, Copy, Debug, Serialize)]
+pub(super) enum FileAction {
+    MoveOriginal,
+    CreateWork,
+    RetireWork,
+    RestoreOriginal,
+}
 #[derive(Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) enum Kind {
@@ -267,6 +275,7 @@ pub(super) struct Event {
     from: String,
     to: String,
     native_id: Option<String>,
+    native_security: Option<SnapshotData>,
     parent_id: String,
     expected_before: String,
     expected_after: String,
@@ -289,6 +298,7 @@ pub(super) struct Progress {
     nodes: BTreeMap<String, (u8, Option<String>)>,
     event_ids: BTreeSet<String>,
     pending: Option<Vec<u8>>,
+    work_security: BTreeMap<String, String>,
     epoch: String,
     claim: String,
     deadline: String,
@@ -332,6 +342,7 @@ impl Progress {
                 .collect(),
             event_ids: BTreeSet::new(),
             pending: None,
+            work_security: BTreeMap::new(),
             epoch: epoch.into(),
             claim: claim.into(),
             deadline: deadline.into(),
@@ -450,6 +461,31 @@ impl Progress {
         } else if e.native_id.as_deref() != Some(&n.file_id) {
             return Err(invalid());
         }
+        let mut new_security = None;
+        if e.operation == Operation::WorkCreateIntent {
+            if e.native_security.is_some() {
+                return Err(invalid());
+            }
+        } else {
+            let security = e.native_security.as_ref().ok_or_else(invalid)?;
+            security.validate()?;
+            if !security.matches_id(n.volume, e.native_id.as_deref().ok_or_else(invalid)?) {
+                return Err(invalid());
+            }
+            let key = hash::sha256_hex(&encoded(security)?);
+            if e.operation == Operation::WorkCreatedVerified {
+                new_security = Some(key);
+            } else if matches!(
+                e.operation,
+                Operation::WorkRetireIntent | Operation::WorkRetiredVerified
+            ) {
+                if self.work_security.get(&n.node_id) != Some(&key) {
+                    return Err(invalid());
+                }
+            } else if *security != n.security {
+                return Err(invalid());
+            }
+        }
         let bytes = encoded(e)?;
         let intent = matches!(
             e.operation,
@@ -483,6 +519,9 @@ impl Progress {
         }
         self.pending = if intent { Some(bytes.clone()) } else { None };
         self.nodes.insert(n.node_id.clone(), (next, new_work));
+        if let Some(key) = new_security {
+            self.work_security.insert(n.node_id.clone(), key);
+        }
         self.event_ids.insert(e.event_id.clone());
         self.sequence = e.sequence;
         self.tip = hash::sha256_hex(&bytes);

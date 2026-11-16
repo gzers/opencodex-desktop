@@ -131,6 +131,20 @@ pub(super) fn event(p: &StoragePlan, g: &Progress, n: &Node, op: Operation, work
         } else {
             Some(n.file_id.clone())
         },
+        native_security: if op == Operation::WorkCreateIntent {
+            None
+        } else {
+            let mut data = serde_json::to_value(&n.security).unwrap();
+            if matches!(
+                op,
+                Operation::WorkCreatedVerified
+                    | Operation::WorkRetireIntent
+                    | Operation::WorkRetiredVerified
+            ) {
+                data["fileId"] = work.into();
+            }
+            Some(serde_json::from_value(data).unwrap())
+        },
         parent_id: parent,
         expected_before: "d".repeat(64),
         expected_after: "e".repeat(64),
