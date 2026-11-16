@@ -1,0 +1,37 @@
+{
+  "baseline": "e7c18e97ce5e7f65ed989ea2f15ac6a5d2cc62bc",
+  "checks": [
+    {
+      "method": "CurrentPin::bytes",
+      "rustBodyTokensEqual": true,
+      "tokens": 71,
+      "sha256": "816a66c9168d36447b73ee9db31e496dfb23d4f0ff4f38be163f979becd36dd5"
+    },
+    {
+      "method": "CurrentPin::capture",
+      "rustBodyTokensEqual": true,
+      "tokens": 222,
+      "sha256": "e2efe02af286bed15d746f811875a140977098cffae568987c137be1f2f1b112"
+    },
+    {
+      "method": "CurrentPin::check",
+      "rustBodyTokensEqual": true,
+      "tokens": 94,
+      "sha256": "736654fdfebb0108606a02da234ecfb8e6b550a08e42efdc7b2227ae57debee7"
+    },
+    {
+      "method": "Source::capture",
+      "rustBodyTokensEqual": true,
+      "tokens": 404,
+      "sha256": "0cae9f6f6101932636ff2295bd4facfcc4ca5cefe3358c9bd5c540bd641f17bb"
+    },
+    {
+      "method": "Source::check",
+      "rustBodyTokensEqual": true,
+      "tokens": 226,
+      "sha256": "72bdb367dbc6136129c5a6064d8751e6181490811283a15e6d3c3d26595bd6f1"
+    }
+  ],
+  "meaning": "all five original strict native method bodies token-identical after module move; context factory is additional and separately scoped",
+  "nativeAcceptance": false
+}

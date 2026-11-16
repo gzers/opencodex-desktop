@@ -603,3 +603,10 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 源码 e7c18e97ce5e7f65ed989ea2f15ac6a5d2cc62bc/tree13947bf9e07d0c46de3266c5884bc758b575a9c2；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-lease-segments-20261116-r1/。同一canonical节点/lease链与current，Prepared刷盘→实际显式解锁原对象回执→Released→新lease scope/4对象/原deadline全验→新epoch事件；36事件完整原件恢复。首轮20过，扩展后21过1败/raw101，诊断03原断言仍败（空SQLite生成-journal，按未知拒绝而非native busy，current20 Released/原窗剩8.6秒）；仅新夹具在capture前初始化合成rollback DB，定向04原raw33断言通过，其余21过生产实源字节一致复用。原失败/真实部分写与release/acquire前缀/EXE摘要/完整表/清理归final-status/report。
 
 本轮仅同原窗口，不签不同ActionWindow/正式Source阶段、工作可写窗口/副作用、封存/Stop/Closed/history/后继或原包H-S-D；现生产入口仍v2，Start无条件拒绝，原缺席安全退根blocked。产品debug MSVC bins raw0/231034ms；不重复旧raw5/空GUI，不W2/双SID/发布。
+
+
+## 2026-11-16 TEAM16/r6 Source复用与Owner原动作窗
+
+源码 6dfdd33ade6abaa29dc4b5c6aa3fabaf50a9158f/tree1e0ba1e02bd8764b7069ae96e56b733826a8cf1a；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-source-actions-20261116-r1/。原CurrentPin/Source五方法体token与e7c18e97c完全一致，v2改消费公共Windows originals/source。Owner保留原传入Start及Stop/Restart窗口，NativeAction实际Owner/scope/Token/原UUID/end绑定；Source新上下文与v3 source工厂仅编译未实跑，不代生产。首library01 E0624/raw101（子方法对父不可见，无新EXE），修pub(super)并将Origin准入放native创建之前，library02七过0败；产品MSVC debug bins raw0/220920ms。EXE/完整表/首错归final-status/report；无新保留scene，旧pending和清理缺口保持。
+
+v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Closed/history/后继/原Owner-H-S-D仍待，原缺席退根blocked且Start无条件拒绝。不重复旧raw5/空GUI/1314，不W2/双SID/发布。
