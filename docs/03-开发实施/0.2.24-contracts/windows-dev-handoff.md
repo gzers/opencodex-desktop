@@ -582,3 +582,10 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 源码 7ece8c4b531db26a58eacf10422d6ff0658851d4/treef69a7898995b6b4edfbb395b8f7d30e70fcfacea；原证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-anchored-20261116-r1/。首轮raw101/2过2败（工作copy误用record上限），修后5过0败；原目录/两稳定文件ID与8投影留位，双原文件准确handle往返及0..8中断前缀、Grok同名普通文件1280KiB；固定Bun在原lease内9次claim-only均raw73，显式释放后raw0。
 
 仅native组件，无canonical intent/current接入，v3和生产组合继续；原缺席退根blocked，Start保持拒绝。完整表/首错/EXE摘要/清理归本轮final-status/report/cleanup，不改官方/日常配置，不重跑旧raw5/空GUI，不W2/双SID/发布。
+
+
+## 2026-11-16 TEAM16/r6 v3计划与持久日志组件
+
+源码 5a7cccaaaf65f45cb8ac614cfa8944f6ee529c3c/tree8d9519122a5bc95fc0fa6b1b1e5fe032e354cc4f；原证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-v3-20261116-r1/。完整两根节点计划/planDigest/绑定及严格8事件进度，真实不可覆盖phase与同ID current CAS/部分写poison、两稳定对象释放读回。library01 8过；library02 8过3败/raw101（D任务父目录缺席raw2，原现场保留）；按记录补自身父目录后同源library03 11过0败，产品debug MSVC bins raw0/181908ms。EXE SHA、原单字节current、完整继承表、首错、10处本轮成功清理/60失败pending保留归final-status/report。
+
+组件尚未绑定真实节点变更与阶段/source/history/lease分段/Stop/Closed/后继/原包H-S-D，生产入口仍v2且Start无条件拒绝；原缺席退根blocked单列，不转换旧记录、不W2/双SID/发布。继续范围内实现native intent/结果绑定及组合中断，非整组已验收。
