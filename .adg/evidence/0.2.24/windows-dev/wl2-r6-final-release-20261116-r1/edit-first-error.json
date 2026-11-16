@@ -1,0 +1,11 @@
+{
+  "phase":"batched source patch before final optimized compile",
+  "tool":"apply_patch",
+  "error":"apply_patch verification failed: Failed to find expected lines in retirement_release_tests.rs for single-line formatted assert_eq!(last[operation], ...)",
+  "cause":"the assertion had already been formatted across multiple lines by rustfmt",
+  "sourceChangesFromFailedPatch":false,
+  "confirmation":"focused rg/read immediately after failure found none of the attempted added fields/methods",
+  "correction":"read exact current multiline assertion and reapply the batch against those lines before starting library02",
+  "testsRerunBecauseOfPatchFailure":false,
+  "nativeErrorOrChangedDeadline":false
+}

@@ -680,3 +680,11 @@ v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Clos
 首library01 E0432/E0603/raw101为模块导出错误，无新EXE；修正父模块导出。library02 19过4败，合成Stop调用生产lease重取入口被真实Owner前提正确拒绝；仅cfg(test)原receipt/原窗重取修正，不改生产前提。library03 21过2败，完整返回及返回中断在原10秒bounded-original-deadline超时，原现场/EXE/退出码保留；library04仅这两失败用例采用同114份Rust/同断言/原截止和仓库原release参数，raw0/2过，无加预算/改profile/删读回。debug7＋release5构成完整1＋中断11；debug超时30个对象另作只读取证，未补写或续跑。原archive排他创建前缀冲突单列失败，旧归档未覆盖。
 
 88本轮场景私有ZIP完整核验，10完成纯数据场景核fresh准确路径/全部文件hash/目录membership后清理；78失败/pending和30个D根保留，历史拒绝删除不重试。产品MSVC编译/制品SHA、完整继承状态、原始日志及清理归本轮report/final-status。后继仍需实际content/typedStop→production恢复权限、canonical整树恢复/显式释放/原件history/typedClosed/同代Status5及Owner-H-S-D/后继，原缺席退根独立blocked；Start拒绝，普通MSI/CAP-trust/历史清理保持，不旧raw5/空GUI/相同1314/W2/双SID/发布。
+
+## 2026-11-16 TEAM16/r6 整树恢复确认与逐锚点最终释放
+
+源码b7c90313643342804a55b64efe9ce861126cdb0a；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-final-release-20261116-r1/。全部current退休/原件准确返回之后，WholeTreeRestoreIntent/current→实际双树原件/退休集合/原目录/两稳定对象/完整children/历史archive/ID/all8/bytes读回→WholeTreeRestoredVerified/current；仅全部row数据完成仍不够。claim/NLK保持至LeaseReleasePrepared已持久并再次全树核验；actual NativeLease.release_with_receipt立刻装入Journal，先于任何易失败post-release读回。每anchor经原对象/稳定范围释放证明后有独立ReleaseVerified，current绑定逐anchor数量与状态摘要，全部完成才准LeaseReleasedVerified/current。旧generic lease入口不能绕过恢复链；必要DATA完整仍无typedClosed/普通Stop签字。
+
+library01 custom-protocol MSVC debug数据及同链回归raw0/21过；补current锚点摘要和实际foreign-custody后，library02使用仓库原release参数、新final-release定向raw0/5过（2数据＋3原生组），13实际场景为完整1＋12负例。原10秒fixture截止/原断言保持，不重复同前提debug整段超时。四整树结果窗口、lease准备/实际unlock/receipt/结果/current窗口、首anchor不可变/current失败，以及unlock后真实未知私有目录均保留准确原生与durable前缀、poison且不catch-up；实际SQLite claim竞争与释放receipt一致。无非预期测试首错，补丁匹配失败独列编辑记录，不作为native失败或修改前提。
+
+56新场景完整私有ZIP核验，9完成纯数据scene核fresh准确路径/全部文件hash/目录membership后清理，47失败或pending及19个D根保留；ZIP非NTFS身份/安全克隆，历史删除拒绝不重试。MSVC产品编译及三制品SHA、完整继承状态/原始日志/清理归report/final-status。驱动仍private仅cfg(test)入口；后继先补恢复/anchor事件explicit rootId locator和不可变original history/原handle生命周期，再实际Source/routes/process/audit/sharedpolicy+typedStop恢复资格/Closed/Status5/后继/Owner-H-S-D。原缺席安全初始化/退根仍blocked，普通MSI/CAP-trust/历史清理保持，Start无条件拒绝；不旧raw5/空GUI/相同1314/W2/双SID/发布。
