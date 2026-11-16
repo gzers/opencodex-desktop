@@ -25,6 +25,13 @@ pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn re
     witness.post_release(end)?;
     Ok(witness)
 }
+/// Ownership borrow only, not qualification. Every native history operation
+/// still supplies its complete before/after object barrier.
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn borrow_history(
+    trees: &mut [AnchoredTree; 2],
+) -> RecoveryWitness<'_> {
+    RecoveryWitness { trees }
+}
 impl RecoveryWitness<'_> {
     pub(in crate::infrastructure::windows_client_originals024) fn check(
         &mut self,

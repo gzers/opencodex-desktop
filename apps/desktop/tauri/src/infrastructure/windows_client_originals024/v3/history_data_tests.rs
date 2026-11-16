@@ -36,6 +36,29 @@ fn references(plan: &StoragePlan, context: &HistoryContextData) -> [HistoryRefer
         }
     })
 }
+pub(in crate::infrastructure::windows_client_originals024::v3) fn linked(
+    p: &StoragePlan,
+) -> Progress {
+    let mut g = released(p);
+    let context = g.history_context(p).unwrap();
+    g.apply_history(
+        p,
+        &g.history_event(HistoryOperation::OriginalHistoryIntent, &context, None)
+            .unwrap(),
+    )
+    .unwrap();
+    g.apply_history(
+        p,
+        &g.history_event(
+            HistoryOperation::OriginalHistoryLinkedVerified,
+            &context,
+            Some(references(p, &context)),
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    g
+}
 #[test]
 fn wl2_r6_history_data_original_reference_requires_exact_release_scope_both_roots_and_no_text_closed(
 ) {
@@ -184,5 +207,28 @@ fn wl2_r6_history_data_unreleased_or_incomplete_and_context_changes_cannot_prepa
         assert!(g.history.is_none());
     }
     println!("r6 original history DATA requires original full-node/anchor/explicit release and exact native scope locators before archive intent; no deadline reset or copy permit from caller JSON");
+    f.retain();
+}
+#[test]
+fn wl2_r6_handles_data_native_history_references_must_equal_original_canonical_link() {
+    let (mut f, p, _, _) = plan();
+    let g = linked(&p);
+    let context = &g.history.as_ref().unwrap().context;
+    let refs = references(&p, context).map(|r| serde_json::to_value(r).unwrap());
+    g.verify_original_history_references(&p, refs.clone())
+        .unwrap();
+    let mut bad = refs.clone();
+    bad[0]["metadataSha256"] = "a".repeat(64).into();
+    assert!(
+        g.verify_original_history_references(&p, bad).is_err(),
+        "valid-form foreign metadata digest must not substitute actual linked original archive"
+    );
+    let mut bad = refs.clone();
+    bad.swap(0, 1);
+    assert!(g.verify_original_history_references(&p, bad).is_err());
+    let mut bad = refs;
+    bad[1]["context"]["releasedEventDigest"] = "a".repeat(64).into();
+    assert!(g.verify_original_history_references(&p, bad).is_err());
+    println!("r6 original-handle native history DATA join requires exact BOTH canonical linked references, not merely matching shape/scope/original frame; valid-form substituted archive hash/cross-root/release-context refuses");
     f.retain();
 }

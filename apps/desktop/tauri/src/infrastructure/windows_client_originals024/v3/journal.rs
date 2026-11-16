@@ -19,6 +19,7 @@ use std::{
 };
 mod actions;
 mod driver;
+mod handles;
 mod history;
 mod leases;
 mod observations;
@@ -193,6 +194,7 @@ struct Current {
     action_kind: super::actions::ActionKind,
     recovery: Option<super::recovery::RecoverySummary>,
     history: Option<super::history::HistorySummary>,
+    handles: Option<super::handles::HandleSummary>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -218,6 +220,8 @@ pub(in super::super) struct Journal {
     pending_source_action:
         Option<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
     old_source_actions: Vec<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
+    original_handoff: Option<super::super::tree::OriginalHandleHandoff>,
+    retired_lease_histories: Vec<super::super::coordination::RetiredLeaseHistory>,
     #[cfg(test)]
     fault: u8,
 }
@@ -533,6 +537,7 @@ impl Journal {
             action_kind: super::actions::ActionKind::Start,
             recovery: None,
             history: None,
+            handles: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -574,6 +579,8 @@ impl Journal {
             source_action: None,
             pending_source_action: None,
             old_source_actions: Vec::new(),
+            original_handoff: None,
+            retired_lease_histories: Vec::new(),
             #[cfg(test)]
             fault: 0,
         };
@@ -598,6 +605,9 @@ impl Journal {
         self.manifest.binding.check_native(&self.peer, &self.pins)?;
         for release in &mut self.previous_releases {
             release.readback_history(end)?;
+        }
+        for history in &self.retired_lease_histories {
+            history.check(end)?;
         }
         if directory_security(&self.directory, end)? != self.directory_security {
             return Err(invalid());
@@ -646,6 +656,7 @@ impl Journal {
             || tip.action_kind != self.progress.action_kind
             || tip.recovery != self.progress.recovery_summary()?
             || tip.history != self.progress.history_summary()?
+            || tip.handles != self.progress.handle_progress
         {
             return Err(invalid());
         }
@@ -745,6 +756,11 @@ impl Journal {
             action_kind: next.action_kind,
             recovery: next.recovery_summary()?,
             history: next.history_summary()?,
+            handles: next
+                .handle_progress
+                .as_ref()
+                .map(|h| serde_json::from_slice(&encoded(h)?).map_err(|_| invalid()))
+                .transpose()?,
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

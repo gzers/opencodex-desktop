@@ -6,6 +6,21 @@ use super::super::recovery::{RecoveryOperation, RecoveryPlan};
 use super::*;
 mod final_release;
 impl Journal {
+    fn recovery_journal_claim(
+        &mut self,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.check(end)?;
+        claim.check(&self.pins[0].path().join(".codex"), end)?;
+        if self.progress.lease_state != LeaseState::Active
+            || self.progress.epoch != claim.epoch()
+            || self.progress.claim != claim.key()
+        {
+            return Err(invalid());
+        }
+        Ok(())
+    }
     #[cfg(test)]
     pub(in crate::infrastructure::windows_client_originals024) fn component_reacquire_same_window_for_test(
         &mut self,
@@ -51,7 +66,9 @@ impl Journal {
         {
             return Err(invalid());
         }
-        witness.check(claim, end)?;
+        // plans() just rechecked both complete native trees. Serializing and
+        // validating that immutable DATA above does not mutate either tree.
+        claim.check(&self.pins[0].path().join(".codex"), end)?;
         self.check(end)
     }
     fn prepare_native_recovery(
@@ -111,7 +128,7 @@ impl Journal {
             };
             let e = self.progress.recovery_event(intent, None, Some(node))?;
             self.append_entry_inner(ChainEntry::Recovery(e), end)?;
-            self.recovery_native_check(&mut witness, claim, end)?;
+            self.recovery_journal_claim(claim, end)?;
             #[cfg(test)]
             if self.fault == 40 {
                 return Err(io::Error::other("injected after durable recovery node intent/current before native same-handle move"));
@@ -121,7 +138,9 @@ impl Journal {
             } else {
                 witness.restore(node, claim, end)?;
             }
-            self.recovery_native_check(&mut witness, claim, end)?;
+            // Native witness supplied the complete BOTH-tree before/after
+            // mutation barrier. Keep exact journal/claim here before result.
+            self.recovery_journal_claim(claim, end)?;
             #[cfg(test)]
             {
                 if self.fault == 41 {

@@ -22,6 +22,7 @@ use std::{
 mod actions;
 mod capture;
 pub(super) use capture::CaptureSlot;
+mod handles;
 mod history;
 pub(super) mod journal;
 mod observations;
@@ -329,6 +330,7 @@ pub(super) struct Progress {
     seen_actions: BTreeSet<String>,
     recovery: Option<recovery::RecoveryProgress>,
     history: Option<history::HistoryProgress>,
+    handle_progress: Option<handles::HandleSummary>,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -391,6 +393,7 @@ impl Progress {
             seen_actions: BTreeSet::from([deadline.to_string()]),
             recovery: None,
             history: None,
+            handle_progress: None,
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {

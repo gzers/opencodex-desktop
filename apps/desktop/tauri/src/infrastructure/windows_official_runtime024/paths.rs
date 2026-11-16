@@ -110,6 +110,12 @@ pub struct PinnedDirectory {
     sid: Option<String>,
 }
 impl PinnedDirectory {
+    /// Transfer exact already-owned ancestor files; no reopen, native close or
+    /// permission is performed. Only the caller's durable close driver may use
+    /// these objects after independently checking this original pin.
+    pub(crate) fn into_owned_files(self) -> Vec<File> {
+        self.files
+    }
     pub fn open(path: &Path) -> io::Result<Self> {
         validate(path)?;
         let mut files = Vec::new();

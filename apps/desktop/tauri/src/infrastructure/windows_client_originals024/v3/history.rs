@@ -107,6 +107,28 @@ impl HistoryReference {
     }
 }
 impl Progress {
+    pub(super) fn verify_original_history_references(
+        &self,
+        plan: &StoragePlan,
+        values: [serde_json::Value; 2],
+    ) -> io::Result<()> {
+        let history = self.history.as_ref().ok_or_else(invalid)?;
+        let mut hashes = Vec::new();
+        for (i, value) in values.into_iter().enumerate() {
+            let reference = HistoryReference::from_native_data(value)?;
+            reference.validate(plan, i, &history.context)?;
+            hashes.push(hash::sha256_hex(&encoded(&reference)?));
+        }
+        if history.references.as_ref().map(|r| r.as_slice()) != Some(hashes.as_slice()) {
+            return Err(invalid());
+        }
+        Ok(())
+    }
+    pub(super) fn history_linked(&self) -> bool {
+        self.history
+            .as_ref()
+            .is_some_and(|h| h.references.is_some())
+    }
     pub(super) fn history_context(&self, plan: &StoragePlan) -> io::Result<HistoryContextData> {
         if !self.complete_files(plan)
             || self.lease_state != segments::LeaseState::Released
@@ -232,4 +254,4 @@ impl Progress {
 }
 #[cfg(test)]
 #[path = "history_data_tests.rs"]
-mod tests;
+pub(super) mod tests;

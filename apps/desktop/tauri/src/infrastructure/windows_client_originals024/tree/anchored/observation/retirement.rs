@@ -2,7 +2,10 @@
 //! native component grants no permission. Execution stays private until the
 //! actual typed Stop/content + canonical node intent/result driver is joined.
 use super::*;
+mod handoff;
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::borrow_history;
 mod witness;
+pub(in crate::infrastructure::windows_client_originals024) use handoff::OriginalHandleHandoff;
 pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::recovery_witness;
 pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::released_history_witness;
 pub(in crate::infrastructure::windows_client_originals024) use witness::RecoveryWitness;
@@ -388,6 +391,9 @@ impl AnchoredTree {
 #[cfg(test)]
 #[path = "retirement_chain_tests.rs"]
 mod chain_tests;
+#[cfg(test)]
+#[path = "retirement_handoff_tests.rs"]
+mod handoff_tests;
 #[cfg(test)]
 #[path = "retirement_history_tests.rs"]
 mod history_tests;

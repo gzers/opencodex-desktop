@@ -22,6 +22,106 @@ struct ReleasedObjects {
     bound: Option<Bound>,
     epoch: String,
 }
+/// Native timely-release history after its original file ownership has moved
+/// to the exact close batch. This has no files/ranges/reacquire constructor.
+pub(in super::super) struct RetiredLeaseHistory {
+    facts: LeaseFacts,
+    token: TokenIdentity,
+    completed_at: Instant,
+    original_deadline: Instant,
+}
+impl RetiredLeaseHistory {
+    pub(in super::super) fn check(&self, end: Instant) -> io::Result<()> {
+        before(end)?;
+        if self.completed_at >= self.original_deadline || native::current_identity()? != self.token
+        {
+            return Err(refused());
+        }
+        Ok(())
+    }
+    pub(in super::super) fn data(&self) -> serde_json::Value {
+        serde_json::json!({"facts":self.facts,"completedInOriginalWindow":self.completed_at<self.original_deadline,"nativeAuthority":false})
+    }
+}
+impl ReleasedLease {
+    /// Caller checked original receipt immediately before ownership transfer.
+    /// This operation is infallible and retains every actual file in the batch.
+    pub(in super::super) fn transfer_original_files(
+        self,
+        batch: &mut super::super::handle_release::NativeHandleBatch,
+        prefix: &str,
+    ) -> RetiredLeaseHistory {
+        let ReleasedLease {
+            original,
+            facts,
+            completed_at,
+            poisoned,
+            ..
+        } = self;
+        let ReleasedObjects {
+            files,
+            token,
+            deadline,
+            bound,
+            ..
+        } = original;
+        if poisoned {
+            batch.invalidate();
+        }
+        for (i, pin) in files.into_iter().enumerate() {
+            let LockFile {
+                file, parent, id, ..
+            } = pin;
+            batch.retain(format!("{prefix}/coord/{i}/file"), file, id, false, false);
+            match parent {
+                ParentPin::Strict(pin) => {
+                    for (j, file) in pin.into_owned_files().into_iter().enumerate() {
+                        batch.retain_observed(
+                            format!("{prefix}/coord/{i}/parent/{j}"),
+                            file,
+                            true,
+                            false,
+                        );
+                    }
+                }
+                ParentPin::Claim(pin) => {
+                    batch.retain(
+                        format!("{prefix}/coord/{i}/claim-parent"),
+                        pin.file,
+                        pin.id,
+                        true,
+                        false,
+                    );
+                    for (j, file) in pin.ancestor.into_owned_files().into_iter().enumerate() {
+                        batch.retain_observed(
+                            format!("{prefix}/coord/{i}/ancestor/{j}"),
+                            file,
+                            true,
+                            false,
+                        );
+                    }
+                }
+            }
+        }
+        if let Some(bound) = bound {
+            for (name, pin) in [
+                ("profile", bound.profile),
+                ("home", bound.home),
+                ("client", bound.client),
+            ] {
+                for (i, file) in pin.into_owned_files().into_iter().enumerate() {
+                    batch.retain_observed(format!("{prefix}/bound/{name}/{i}"), file, true, false);
+                }
+            }
+        }
+        RetiredLeaseHistory {
+            facts,
+            token,
+            completed_at,
+            original_deadline: deadline,
+        }
+    }
+}
 fn facts_from_files(
     epoch: &str,
     token: &TokenIdentity,
