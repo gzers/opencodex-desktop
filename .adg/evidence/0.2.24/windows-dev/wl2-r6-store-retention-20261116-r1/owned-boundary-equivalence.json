@@ -1,0 +1,38 @@
+{
+  "baseline": "229bcb934e986b2a5a5e302b3a796884e8cb985c",
+  "methods": [
+    {
+      "method": "RoutePin::capture",
+      "tokensEqual": true,
+      "tokens": 226,
+      "sha256": "80480426a1fbb1f81a5593d4e340539d12fe9304a76c9c6cd67c8e06b7c63d41"
+    },
+    {
+      "method": "RoutePin::check",
+      "tokensEqual": true,
+      "tokens": 205,
+      "sha256": "a29a85f64dbac1ae73752185d28721022a9af1de9f4a969f7dc91c510ce8baef"
+    },
+    {
+      "method": "RoutePin::declared",
+      "tokensEqual": true,
+      "tokens": 38,
+      "sha256": "650a89c3ca15363bb6549e0efa525232a1553134091d1d24971395aabd0dc62f"
+    },
+    {
+      "method": "NativeLease::check_inner",
+      "tokensEqual": true,
+      "tokens": 137,
+      "sha256": "33d87f02fb6a2262b582e2f31bd62ef52dae03cf9240750d731308b54df641e3"
+    },
+    {
+      "method": "NativeLease::release",
+      "tokensEqual": true,
+      "tokens": 71,
+      "sha256": "2fbb98301c067f7d976b095cef087df4186d4fe4f4181e938e0baa6d06462baf"
+    }
+  ],
+  "activeNonSendMarkerRetained": true,
+  "unsafeImplSendAdded": false,
+  "meaning": "RoutePin rules unchanged except exact visibility for same-window source store; active NativeLease checking/release unchanged, historical object representation separated and native-tested"
+}

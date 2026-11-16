@@ -631,3 +631,10 @@ v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Clos
 源码 229bcb934e986b2a5a5e302b3a796884e8cb985c/tree8a1c2572ce02b7949fce7b06c32c1a423800d019；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-stop-actions-20261116-r1/。canonical新StopAction intent/current/result绑定实际Owner/Source/typedReady新原窗；旧release completed_at历史鲜读不延长原lease；PreStop/teardown/Stopped工厂保持实际NormalExit/Absent/StopAccepted/source/记录/端点与双根引用断言。新生产factory编译未实跑，非v3入口切换或native Stop正例。首library01 E0603/raw101无新EXE，修test helper到v3可见，library02三项通过（真实lease原1秒到期后历史读不grant重取＋两状态数据反例），受影响回归见report；产品MSVCdebug bins raw0/201797ms。原始源码/EXE/完整表/首错/清理归final-status/report。
 
 实际v3 Store、全phase snapshots/原policy/动态工作节点/Stop恢复/Closed/history/后继/原Owner H-S-D仍待；原缺席退根blocked单列且Start无条件拒绝。不旧raw5/空GUI/W2/双SID/发布。
+
+
+## 2026-11-16 TEAM16/r6 原v3 CaptureStore与释放对象保管
+
+源码 eee0ad1a49442f6369373d34bf22ea610f1b1af4/tree741d26814a4b122944c15c7de5bf07bf3faec8c7；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-store-retention-20261116-r1/。显式release读回后准确原LockFile/pins移入无活range/NativeLease的历史集合，自动Send；活lease非Send标记/check/release方法体保持，无unsafeSend。实际核心入槽序0先于原件move，18工作准备/20显式释放，历史+原件树/journal真实worker往返通过，0/1原件移位失败前缀保留；新production CaptureSlot已注册、Source/route/原Owner全核并先入槽再动，旧pending/textClosed和v2 fallback拒绝。新生产factory未实跑、原dispatcher未切换，非整组通过。5新定向及受影响回归见report，本轮无非预期首错。产品debug MSVC bins0/226557ms，原始EXE/完整表/清理归final-status/report。
+
+后续v3完整阶段/全快照series/原policy与动态节点恢复/Closed/history/后继/实际普通Owner-H-S-D待；原缺席退根blocked且Start无条件拒绝，不W2/双SID/发布，不重复旧raw5/空GUI。

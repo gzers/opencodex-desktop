@@ -1,0 +1,126 @@
+[
+  {
+    "run": "library01",
+    "trace": "r6 explicit unlock moves exact original4 LockFile+parent pins, same serialized facts before/after; worker readback and return under same ordinary Token, fresh local lease needs actual acquisition and single-use epoch, no handle clone/reopen/unsafeSend or active NativeLease transfer"
+  },
+  {
+    "run": "library01",
+    "trace": "r6 capture-installed-fault=1 movedOriginals=0 exact native parents/handles/journal retained before error=injected after immutable event sync/readback before current CAS; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library01",
+    "trace": "r6 capture-installed-fault=2 movedOriginals=0 exact native parents/handles/journal retained before error=injected real partial current write/sync; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library01",
+    "trace": "r6 capture-installed-fault=3 movedOriginals=1 exact native parents/handles/journal retained before error=injected after actual native mutation before result publication; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library01",
+    "trace": "r6 retained native core installed at seq0 before first mutation;18 exact anchor/file events prepare all3 work files, explicit20 release; only released historical file/pin objects+full original trees+same journal move across worker and back; no live lease/ranges or production Source/Ready/Closed granted"
+  },
+  {
+    "run": "library01",
+    "trace": "r6 actual private old namespace and textClosed refuse fresh v3 before custody/mutation; no conversion/adoption or overwrite"
+  },
+  {
+    "run": "library01",
+    "trace": "r6 compiler proves actual CaptureSlot/Source/route/fulltrees/journal/released-original-object set Send; live NativeLease remains stack-only marker unchanged, no unsafe impl Send or fake native factory"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 timely original explicit release retained4 native IDs/all8/bytes; fresh1s history read after actual original1s expiry succeeds as DATA only; original reacquire remains rejected, no generic deadline extension or new NativeAction created"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 explicit unlock moves exact original4 LockFile+parent pins, same serialized facts before/after; worker readback and return under same ordinary Token, fresh local lease needs actual acquisition and single-use epoch, no handle clone/reopen/unsafeSend or active NativeLease transfer"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 capture-installed-fault=1 movedOriginals=0 exact native parents/handles/journal retained before error=injected after immutable event sync/readback before current CAS; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 capture-installed-fault=2 movedOriginals=0 exact native parents/handles/journal retained before error=injected real partial current write/sync; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 capture-installed-fault=3 movedOriginals=1 exact native parents/handles/journal retained before error=injected after actual native mutation before result publication; no slot replace, catchup or automatic retry"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 retained native core installed at seq0 before first mutation;18 exact anchor/file events prepare all3 work files, explicit20 release; only released historical file/pin objects+full original trees+same journal move across worker and back; no live lease/ranges or production Source/Ready/Closed granted"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 fixed-Bun claim-only held=true raw=Some(73) stdout={\"code\":\"SQLITE_BUSY\",\"errno\":5}"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 new-action DATA preserves Ready generation and old scope until verified binding, rejects13 context drifts/unknown deadline/replay/skip and lease during pending; accepts no actual NativeAction, remains data only"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 PreStop/teardown/Stopped phase DATA keeps exact Ready generation/ref chains and rejects generation drift, no Closed eligibility or actual Stop proof is minted"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 actual private old namespace and textClosed refuse fresh v3 before custody/mutation; no conversion/adoption or overwrite"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 compiler proves actual CaptureSlot/Source/route/fulltrees/journal/released-original-object set Send; live NativeLease remains stack-only marker unchanged, no unsafe impl Send or fake native factory"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 durable injected fault=1: injected after immutable event sync/readback before current CAS"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 durable injected fault=2: injected real partial current write/sync"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 native manifest/event immutable sync/readback and current same-ID CAS pass; actual D separate volume; second current writer raw32. This is data journal only, original tree not mutated, no recovery capability."
+  },
+  {
+    "run": "library02",
+    "trace": "r6 work interval same-chain data refuses incomplete tree,11 context drifts, skip/text authority/native operations while open and release before open result; observed digest persists and cannot be laundered as unchanged"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 same-chain lease data rejects13 context drifts, skip/order/old epoch/object digest and node mutation while prepared/released; data transition never constructs release receipt/native authority"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 snapshot reference DATA cases reject skip,11 context+6 ref drifts, wrong roots/sequence/missing second/unknown fields/text authority; valid locator links remain data and do not construct actual SnapshotWitness/NativeAction/Ready"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 v3 complete DATA requires all8 ordered events per file plus every anchor snapshot/release; no native Restored or Closed is minted"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 full native-derived v3 plan data validates two complete trees/actual IDs/all8/parent and same-volume custody;10 malformed plans plus duplicate fields refuse; parsing never admits native authority"
+  },
+  {
+    "run": "library02",
+    "trace": "r6 v3 pending blocks cross-node, skip/reverse/replay/context/claim/deadline/expected digest drift and text Closed; data has no native resume factory"
+  },
+  {
+    "run": "library03",
+    "trace": "r6 actual private old namespace and textClosed refuse fresh v3 before custody/mutation; no conversion/adoption or overwrite"
+  },
+  {
+    "run": "library03",
+    "trace": "r6 actual native D/official024/windows/canonicalUUID journal uses same UUID in immutable manifest/current; wrong descendant/nonUUID refuse, direct D/session remains component-only, actual Source create factory still requires production namespace and original Owner"
+  }
+]
