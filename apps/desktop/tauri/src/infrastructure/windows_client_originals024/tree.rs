@@ -20,6 +20,8 @@ use std::{
     time::Instant,
 };
 mod anchored;
+#[cfg(test)]
+pub(super) use anchored::test_plan as r6_test_plan;
 mod artifacts;
 mod locks;
 pub(super) use artifacts::ArtifactFrame;

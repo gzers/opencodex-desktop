@@ -6,7 +6,7 @@ use std::time::Duration;
 fn end() -> Instant {
     Instant::now() + Duration::from_secs(10)
 }
-fn prepare(f: &Fixture) -> (PathBuf, PathBuf, [PathBuf; 4]) {
+pub(super) fn prepare(f: &Fixture) -> (PathBuf, PathBuf, [PathBuf; 4]) {
     let profile = create_private_directory(&f.path().join("Profile")).unwrap();
     let root = profile.path().join(".codex");
     drop(create_private_directory(&root).unwrap());
@@ -154,6 +154,7 @@ fn wl2_r6_anchored_existing_tree_continuous_claim_node_roundtrip() {
     tree.verify(&mut claim, &root, deadline).unwrap();
     drop(claim);
     lease.release(deadline).unwrap();
+    tree.verify_after_release(deadline).unwrap();
     compete(&paths[0], false);
     bun_claim(&paths[0], deadline, false);
     println!("r6 exact original directory/two stable file IDs/all8 and complete children retained; original files restored by original handles; work generations retired; lease explicitly released; component only, Start/Closed=false");

@@ -149,6 +149,9 @@ fn collect(
         native::verify_private_file(&file)?;
     }
     let original = stamp(&path, &mut file, relative, kind, end)?;
+    if kind == Kind::Coordinator {
+        super::super::coordination::validate_stable_bytes(&original.bytes)?;
+    }
     *total = total
         .checked_add(original.bytes.len())
         .ok_or_else(invalid)?;
@@ -289,6 +292,14 @@ impl AnchoredTree {
             return Err(invalid());
         }
         claim.check(codex_root, end)?;
+        self.verify_image(end)?;
+        claim.check(codex_root, end)
+    }
+    fn verify_image(&mut self, end: Instant) -> io::Result<()> {
+        if self.poisoned {
+            return Err(invalid());
+        }
+        check(end)?;
         self.parent.recheck()?;
         self.custody.recheck()?;
         if parent_stamp(self.parent.path(), end)? != self.parent_security
@@ -339,7 +350,40 @@ impl AnchoredTree {
         if names(self.custody.path())? != custody_names {
             return Err(invalid());
         }
-        claim.check(codex_root, end)
+        check(end)
+    }
+    fn verify_after_release(&mut self, end: Instant) -> io::Result<()> {
+        let result = (|| {
+            if self
+                .nodes
+                .iter()
+                .any(|n| n.kind == Kind::File && n.state != State::Restored)
+            {
+                return Err(invalid());
+            }
+            self.verify_image(end)?;
+            if self.root.file_name().and_then(|n| n.to_str()) == Some(".codex") {
+                let entries = self
+                    .nodes
+                    .iter_mut()
+                    .map(|n| {
+                        stamp(
+                            &self.root.join(&n.original.relative),
+                            &mut n.file,
+                            &n.original.relative,
+                            n.kind,
+                            end,
+                        )
+                    })
+                    .collect::<io::Result<Vec<_>>>()?;
+                super::locks::prove(&self.root, &self.nodes[0].file, &entries, end)?;
+            }
+            self.verify_image(end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
     }
     /// Native component event sink. The canonical v3 driver must persist an
     /// intent before entering here and a result after exact native readback.
@@ -426,7 +470,7 @@ impl AnchoredTree {
         self.verify(claim, codex_root, end)
     }
     pub(in super::super) fn plan(&self) -> serde_json::Value {
-        serde_json::json!({"root":self.root,"nodes":self.nodes.iter().enumerate().map(|(i,n)|{
+        serde_json::json!({"root":self.root,"custody":self.custody.path(),"custodyVolume":self.custody.identity().volume,"custodyId":self.custody.identity().index.to_string(),"custodySecurity":self.custody_security,"nodes":self.nodes.iter().enumerate().map(|(i,n)|{
             let parent=Path::new(&n.original.relative).parent().and_then(|p|self.nodes.iter().find(|x|Path::new(&x.original.relative)==p));
             serde_json::json!({"nodeId":self.key(i),"rootId":self.root.file_name().unwrap().to_str().unwrap(),"relative":n.original.relative,"kind":match n.kind {Kind::Directory=>"DirectoryAnchor",Kind::Coordinator=>"CoordinatorAnchor",Kind::File=>"CustodiedFile"},"volume":n.original.id.volume,"fileId":n.original.id.index.to_string(),"parentId":parent.map(|p|p.original.id.index.to_string()).unwrap_or_else(||self.parent.identity().index.to_string()),"security":n.original.security,"children":n.original.children,"length":n.original.bytes.len(),"contentDigest":hash::sha256_hex(&n.original.bytes),"target":if n.kind==Kind::File{Some(format!("original-{}",self.key(i)))}else{None}})
         }).collect::<Vec<_>>()})
@@ -435,3 +479,34 @@ impl AnchoredTree {
 #[cfg(test)]
 #[path = "anchored_tests.rs"]
 mod tests;
+#[cfg(test)]
+pub(in super::super) fn test_plan() -> (
+    super::tests::Fixture,
+    Vec<serde_json::Value>,
+    PathBuf,
+    FileIdentity,
+) {
+    use super::super::coordination::NativeLease;
+    let f = super::tests::Fixture::new();
+    let (root, custody, paths) = tests::prepare(&f);
+    let deadline = Instant::now() + std::time::Duration::from_secs(10);
+    let grok = root.with_file_name(".grok");
+    drop(create_private_directory(&grok).unwrap());
+    drop(PrivateRecord::create(&grok.join("settings.json"), b"synthetic grok", 1024).unwrap());
+    let grok_custody = root.with_file_name("grok-custody");
+    drop(create_private_directory(&grok_custody).unwrap());
+    let profile = root.parent().unwrap().to_path_buf();
+    let pin = PinnedDirectory::open(&profile).unwrap();
+    let parent = pin.identity();
+    let mut lease = NativeLease::acquire_synthetic(&paths, deadline).unwrap();
+    let mut claim = lease.anchored_claim(&root, deadline).unwrap();
+    let codex_tree = AnchoredTree::capture(&root, &custody, &mut claim, &root, deadline).unwrap();
+    let grok_tree =
+        AnchoredTree::capture(&grok, &grok_custody, &mut claim, &root, deadline).unwrap();
+    let data = vec![codex_tree.plan(), grok_tree.plan()];
+    drop(claim);
+    lease.release(deadline).unwrap();
+    drop(codex_tree);
+    drop(grok_tree);
+    (f, data, profile, parent)
+}

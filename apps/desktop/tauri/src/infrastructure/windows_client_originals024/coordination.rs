@@ -93,6 +93,14 @@ fn snapshot(file: &mut File, end: Instant) -> io::Result<Vec<u8>> {
     if raw.len() as u64 != len {
         return Err(refused());
     }
+    validate_stable_bytes(&raw)?;
+    before(end)?;
+    Ok(raw)
+}
+pub(super) fn validate_stable_bytes(raw: &[u8]) -> io::Result<()> {
+    if raw.len() > MAX as usize {
+        return Err(refused());
+    }
     if !raw.is_empty() {
         if raw.len() < 100 || &raw[..16] != b"SQLite format 3\0" || raw[18] != 1 || raw[19] != 1 {
             return Err(refused());
@@ -102,8 +110,7 @@ fn snapshot(file: &mut File, end: Instant) -> io::Result<Vec<u8>> {
             return Err(refused());
         }
     }
-    before(end)?;
-    Ok(raw)
+    Ok(())
 }
 fn no_sidecars(path: &Path) -> io::Result<()> {
     for suffix in ["-journal", "-wal", "-shm"] {
