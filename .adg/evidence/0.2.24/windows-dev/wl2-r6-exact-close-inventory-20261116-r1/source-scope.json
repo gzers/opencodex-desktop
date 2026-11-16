@@ -1,0 +1,104 @@
+{
+  "base": "502858eb56f1a5401684259e7420bc0712c6cb4f",
+  "changedFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 18696,
+      "sha256": "db75e5ae4c7699d8451cf630deb757844a9a467a8ceab7692097df06e69c6c61"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/handle_release.rs",
+      "bytes": 17383,
+      "sha256": "8be05607ba4b1f5981f161cf7f129184fb574a13ebcf01bdf376574d2c31218c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement/handoff.rs",
+      "bytes": 14949,
+      "sha256": "adb77581f6efc956f7458678e33966fe17a4217a4a03ffba5ee45719d9a26941"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs",
+      "bytes": 32474,
+      "sha256": "270a15b130d597b2dc06d052738ce4a5b6530285d14d723a705d7330f1717015"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs",
+      "bytes": 10251,
+      "sha256": "3b209fa50eec0058e8e14bd9713808e6db07492eee748c26b2036a38f133e65f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 13061,
+      "sha256": "8f5125b65e5639024b166112ab7ce541dc31d7dfe3d4c716790fb14e507b1477"
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "bytes": 28245,
+      "sha256": "fa133b0d80c96fff76713772c3665bb2bc4a593231d3084b39a8ed7a64d36292"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/production.rs",
+      "normalizedSha256": "56bc9568817b4a4d613d87b20a59e6587683c5d5139018a1602ab5e00435c0c1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture.rs",
+      "normalizedSha256": "1fee3e0af6f3ae99aa60256146c91516751e44b4392cb67e67289a0ab93be3e1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs",
+      "normalizedSha256": "adb0d32be4a3005ce5a793b7971b68c658f6f93a6a151c9e1b40695e04e137e0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/qualification.rs",
+      "normalizedSha256": "b5ea9f86c3a3b45186a79afebd393d27231b09e143e100ad7b637022e69786b0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/recovery.rs",
+      "normalizedSha256": "69fb518ef9a703bcce6b7abb3bfb40b757137328bbb7dfbc73f5384ad273d0c4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/handles.rs",
+      "normalizedSha256": "eb4ba3280f6ccc3881431bff7362480f412c7aec0b151e3db635a0e1b3a10d0c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/history.rs",
+      "normalizedSha256": "9ca929bbdabd7969ea2839f14e8b165c082587a037ae0eb1bc6080f3ffe66e50"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/content.rs",
+      "normalizedSha256": "b87d52b03e755e34a41cf72eabe560e5edf9320fd8e82a5db6417b4c30f12481"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "normalizedSha256": "7e58f87f4f32787c93e2ec57ab7a6d9344b27e22ac378dd830d06383d601588a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+      "normalizedSha256": "842e0264f900863416c209ce11c9d1829008ae147ff25013535aef703727e6bf"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/handle_release.rs",
+      "section": "    pub(super) fn close_all(",
+      "normalizedSha256": "cce8fc9a6263b96ed114223e82704a459b640f1592435a13c42900aa93f8ff8c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "section": "    pub(in super::super) fn transfer_original_files(",
+      "normalizedSha256": "c14a3ebef57a79d1a803e6fbe571d1feefd87fe68e7d81b75855bb0178c294c0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement/handoff.rs",
+      "section": "    pub(in crate::infrastructure::windows_client_originals024) fn detach(",
+      "normalizedSha256": "c7a7aea2edced747091990aaf6f1ef57a1251fb18d9697f4ba3cab9ef7679334"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "section": "    pub(crate) fn into_owned_files(",
+      "normalizedSha256": "3397279c3eb4a1da2b70eab883f7c367a2f1cd6e2fc02950d8fe112dc2e02a39"
+    }
+  ],
+  "publicGateExcerpt": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs:276:pub(crate) fn require_durable_capture() -> crate::errors::AppResult<()> {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-277-    Err(crate::errors::AppError::RuntimeManaged {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-278-        code: \"windows024_originals_custody_required\".into(),\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-279-        detail: \"有界访问安全r4仍需完成v2整树持久保管、恢复/Closed与H/S/D生产组合；未创建官方进程或宣告捕获成功\".into(),\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-280-    })\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-281-}\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-282-/// Fixed NEW-session scope only. The old Full preflight above retains its exact\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-283-/// meaning for old transactions and is never converted after a read failure.\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-284-pub(crate) fn preflight_bounded(profile: &Path, deadline: std::time::Instant) -> io::Result<()> {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-285-    let mut roots = [\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-286-        tree::RootTree::capture(&profile.join(\".codex\"), deadline)?,\n",
+  "actualProductionExecuted": false
+}

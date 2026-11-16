@@ -778,3 +778,14 @@ ProductionStop同时借actual Source/Owner/NormalExit/SupervisorAbsent/StopAccep
 本轮实际普通桌面fixedofficial Source/Owner/Stop资格/恢复/关闭仍仅编译未执行，完整production inventory roles/counts、原process/supervisor完成history/typedClosed、同次Status5/dispatcher/后继、官方config/auth/Grok/动态目录副作用、初始化/ownerreceipt及原缺席Codex安全退根保持未完。公开Start仍拒绝，不把内部restored_history或组件raw0当验收/Stop10证明。
 
 产品custom-protocol MSVCdebug bins raw0/136381ms；184产品输入/138Rust最终源核工作字节和Git（明确CRLF等价），preexisting schema未手改/暂存，三制品SHA归product01-artifacts。71场景完整私有ZIP/hash/membership核验，全部pending/incomplete现场保留，无删除/历史拒绝重试；原canonical/快照/history单独归档。ZIP非NTFS身份安全克隆，普通MSI/CAP-trust/历史Profile/Public/未知broker清理保持未完。allAccepted/productionExecuted/typedClosed/StartOpen=false，不W2/双SID/发布。
+
+
+## 2026-11-16 r6 独立完整原生关闭句柄清单
+
+源码4e26406402ae20dd3ad8b2c6102c541c2da2d183/treec69b7514af904589ea1206f61374eab1c53ce2e1已推送，承接502858eb5/f3a72381a。TEAM16/IMP142/r6及既定main/治理共同源不变；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-exact-close-inventory-20261116-r1/，完整继承状态/首错/raw/source/EXE归report/final-status。7允许文件含原Windows runtime paths只读祖先观察接口；ExpectedHandleInventory private/nonserde/nonClone在detach前从原对象独立逐项观测tree original/history-source/stopped-anchor/initial-work/全部old-work和全部old/final lease四coord/file/claim-parent/ancestor/strict-parent/bound句柄。准确顺序/key/role/nativeID/kind/history/count在关闭intent前/actual close前后全等核对，不从prefix/JSON或count生成native完成。
+
+原NativeHandleBatch.close_all/lease transfer/树detach函数体逐字保留，14处源/函数核对及公开Start拒绝保持。新原语反例missing/extra/role/actualID/changeddeadline在关闭前拒绝，无替换/关闭/Drop成功；原pin祖先handle全部原顺序/对象观察，无clone/reopen/权限改变。debug受影响46项全过，release关闭/完成history及原故障回归45项全过，原10秒操作/5秒历史窗口、raw退出/unknown拒绝不变。本轮无非预期首错，继承早先编译/测试失败保持。
+
+实际ordinary fixedofficial Source/Owner/资格/恢复/关闭仍仅编译未执行；process/supervisor完成history、typedClosed/同次Status5/dispatcher/后继、官方config/auth/Grok/动态目录副作用/首次初始化/ownerreceipt/原缺席Codex安全退根保持未完。canonical DATA额外tree/lease key严格未知角色/ordinal语法仍待；最大1MiB/512node完整batch容量需进一步核验，不能靠排除原件过界。独立native full inventory不是放行公共Start或整版验收依据。
+
+产品custom-protocol MSVCdebug bins raw0/136804ms，184产品输入/138最终releaseRust核工作/Git（明确CRLF等价），预存schema未手改/暂存；制品SHA归product01-artifacts。172scene完整私有ZIP/hash/membership核验，12完成合成inventory原语scene核fresh准确路径/字节后清理，160失败/pending及50个D根保留；原canonical/快照/history另收存。ZIP非NTFS身份安全克隆，历史拒绝删除不重试，普通MSI/CAP-trust/旧Profile/Public/未知broker清理仍未完。Start/allAccepted/typedClosed/productionExecuted=false，不W2/双SID/发布。
