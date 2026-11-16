@@ -5,15 +5,218 @@ use super::super::super::{
     v3::{FileAction, Journal},
 };
 use super::*;
+/// Retained stop-boundary locator. Data fields alone do not authorize any
+/// mutation; actual Source/Owner/typed exit checks surround every native step.
+struct PreparedStop {
+    pid: u32,
+    port: u16,
+    record: String,
+    deadline: Instant,
+}
+impl PreparedStop {
+    fn admit(
+        pid: u32,
+        port: u16,
+        record: &str,
+        kind: crate::infrastructure::windows_official_lifecycle024::OriginalActionKind,
+        end: Instant,
+    ) -> io::Result<Self> {
+        use crate::infrastructure::windows_official_lifecycle024::OriginalActionKind;
+        check(end)?;
+        if !matches!(kind, OriginalActionKind::Stop | OriginalActionKind::Restart)
+            || pid == 0
+            || port == 0
+            || !super::super::super::phase::digest(record)
+        {
+            return Err(invalid());
+        }
+        Ok(Self {
+            pid,
+            port,
+            record: record.into(),
+            deadline: end,
+        })
+    }
+    fn check(&self, pid: u32, port: u16, record: &str, end: Instant) -> io::Result<()> {
+        if self.deadline != end || self.pid != pid || self.port != port || self.record != record {
+            return Err(invalid());
+        }
+        check(end)
+    }
+}
 pub(in crate::infrastructure::windows_client_originals024) struct CapturedTrees {
     trees: [AnchoredTree; 2],
     journal: Journal,
     prepared: bool,
     opened: bool,
     ready: bool,
+    prepared_stop: Option<PreparedStop>,
+    stopped_observed: bool,
     failed: bool,
 }
 impl CapturedTrees {
+    pub(in crate::infrastructure::windows_client_originals024) fn prepare_original_stop(
+        &mut self,
+        source: &mut crate::infrastructure::windows_client_originals024::source::Source,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
+        kind: crate::infrastructure::windows_official_lifecycle024::OriginalActionKind,
+        lease: &mut Option<NativeLease>,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            if self.failed
+                || !self.prepared
+                || !self.opened
+                || !self.ready
+                || self.prepared_stop.is_some()
+                || self.stopped_observed
+                || lease.is_some()
+            {
+                return Err(invalid());
+            }
+            let intent =
+                PreparedStop::admit(ready.pid(), ready.port(), ready.record_sha256(), kind, end)?;
+            source.check(owner, end).map_err(io::Error::other)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            self.journal
+                .bind_original_stop_action(source, owner, ready, kind, end)?;
+            self.journal.check_source_owner(owner, end)?;
+            super::observation::reacquire_for_observation(
+                &mut self.trees,
+                &mut self.journal,
+                lease,
+                Some(owner),
+                end,
+            )?;
+            let root = self.trees[0].parent.path().join(".codex");
+            let mut claim = lease
+                .as_mut()
+                .ok_or_else(invalid)?
+                .anchored_claim(&root, end)?;
+            super::observation::observe_trees(&mut self.trees, &mut self.journal, &mut claim, end)?;
+            let context = self
+                .journal
+                .begin_pre_stop_snapshot_link(source, owner, ready, &mut claim, end)?;
+            super::observation::snapshots::create_snapshots(
+                &mut self.trees,
+                &mut self.journal,
+                &context,
+                &mut claim,
+                false,
+                end,
+            )?;
+            let witness = super::observation::snapshots::witness(&mut self.trees, end)?;
+            self.journal
+                .record_pre_stop_phase(source, owner, ready, witness, &mut claim, end)?;
+            self.journal
+                .record_teardown_prepared(source, owner, ready, &mut claim, end)?;
+            super::observation::series::resume_trees(
+                &mut self.trees,
+                &mut self.journal,
+                &mut claim,
+                end,
+            )?;
+            drop(claim);
+            // Release completed capture critical section before official code
+            // may itself acquire claim. Never await teardown with our lock held.
+            super::segments::release_trees(&mut self.trees, &mut self.journal, lease, end)?;
+            source.check(owner, end).map_err(io::Error::other)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            self.journal.check_source_owner(owner, end)?;
+            intent.check(ready.pid(), ready.port(), ready.record_sha256(), end)?;
+            self.prepared_stop = Some(intent);
+            Ok(())
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
+    /// Continues the ORIGINAL stop window, leaves actual NativeLease installed
+    /// on caller stack for exact restoration in the SAME critical section.
+    /// A returned observation context is DATA; no successful Stop or Closed.
+    pub(in crate::infrastructure::windows_client_originals024) fn observe_original_stopped(
+        &mut self,
+        source: &mut crate::infrastructure::windows_client_originals024::source::Source,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        normal: &crate::infrastructure::windows_diagnostic_roles024::NormalExit,
+        absent: &crate::infrastructure::windows_supervisor024::Absent,
+        official: &crate::modules::runtime::official_lifecycle024::StopAccepted,
+        lease: &mut Option<NativeLease>,
+        end: Instant,
+    ) -> io::Result<
+        crate::infrastructure::windows_client_originals024::v3::journal::ObservationSeriesContext,
+    > {
+        use crate::modules::runtime::windows_lifecycle024_contract::SupervisorAbsence;
+        let result = (|| {
+            if self.failed || !self.ready || self.stopped_observed || lease.is_some() {
+                return Err(invalid());
+            }
+            self.prepared_stop.as_ref().ok_or_else(invalid)?.check(
+                official.pid(),
+                official.port(),
+                official.record_sha256(),
+                end,
+            )?;
+            source.check(owner, end).map_err(io::Error::other)?;
+            self.journal.check_source_owner(owner, end)?;
+            normal.check(owner, end).map_err(io::Error::other)?;
+            crate::infrastructure::windows_supervisor024::WindowsSupervisor
+                .recheck_absent(owner, absent, end)
+                .map_err(io::Error::other)?;
+            owner
+                .originals_check_stopped_records(end)
+                .map_err(io::Error::other)?;
+            super::observation::reacquire_for_observation(
+                &mut self.trees,
+                &mut self.journal,
+                lease,
+                Some(owner),
+                end,
+            )?;
+            let root = self.trees[0].parent.path().join(".codex");
+            let mut claim = lease
+                .as_mut()
+                .ok_or_else(invalid)?
+                .anchored_claim(&root, end)?;
+            super::observation::observe_trees(&mut self.trees, &mut self.journal, &mut claim, end)?;
+            let context = self.journal.begin_stopped_snapshot_link(
+                source, owner, normal, absent, official, &mut claim, end,
+            )?;
+            super::observation::snapshots::create_snapshots(
+                &mut self.trees,
+                &mut self.journal,
+                &context,
+                &mut claim,
+                false,
+                end,
+            )?;
+            let witness = super::observation::snapshots::witness(&mut self.trees, end)?;
+            self.journal.record_stopped_phase(
+                source, owner, normal, absent, official, witness, &mut claim, end,
+            )?;
+            let observations = self.journal.stopped_content_observations(
+                source, owner, normal, absent, official, &mut claim, end,
+            )?;
+            self.prepared_stop.as_ref().ok_or_else(invalid)?.check(
+                official.pid(),
+                official.port(),
+                official.record_sha256(),
+                end,
+            )?;
+            self.stopped_observed = true;
+            Ok(observations)
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn open_prepared_working(
         &mut self,
         lease: &mut NativeLease,
@@ -150,6 +353,8 @@ impl CapturedTrees {
             prepared: false,
             opened: false,
             ready: false,
+            prepared_stop: None,
+            stopped_observed: false,
             failed: false,
         }
     }

@@ -22,6 +22,7 @@ struct CaptureStore {
     core: CapturedTrees,
     failed: bool,
     ready: Option<(u32, u16, String)>,
+    stop_deadline: Option<Instant>,
 }
 #[derive(Default)]
 pub(in crate::infrastructure::windows_client_originals024) struct CaptureSlot {
@@ -118,6 +119,7 @@ impl CaptureStore {
                     core,
                     failed: true,
                     ready: None,
+                    stop_deadline: None,
                 },
                 lease,
             )),
@@ -139,6 +141,64 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn prepare_stop_existing(
+        &mut self,
+        owner: &mut Owner,
+        ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
+        kind: OriginalActionKind,
+        end: Instant,
+    ) -> AppResult<()> {
+        let mut lease = None;
+        let result = (|| {
+            if self.failed {
+                return Err(refused("原v3 slot已poison"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原v3 Store缺席"))?;
+            if store.failed
+                || store.stop_deadline.is_some()
+                || store.ready.as_ref()
+                    != Some(&(ready.pid(), ready.port(), ready.record_sha256().into()))
+            {
+                return Err(refused("原v3 Ready代次/Stop窗未知或重复"));
+            }
+            store.failed = true;
+            // Prior Start window is allowed to have ended. Only fresh actual
+            // Source/routes/typedReady admission precedes the dedicated native
+            // StopAction bridge; do NOT call old journal with a new raw timer.
+            store.source.check(owner, end)?;
+            store
+                .routes
+                .declared(owner.home_path(), end)
+                .map_err(refused)?;
+            owner.originals_check_ready(ready, end)?;
+            store
+                .core
+                .prepare_original_stop(&mut store.source, owner, ready, kind, &mut lease, end)
+                .map_err(refused)?;
+            store.check_source(owner, end)?;
+            owner.originals_check_ready(ready, end)?;
+            if lease.is_some() {
+                return Err(refused("官方teardown前本段lease仍持有"));
+            }
+            store.stop_deadline = Some(end);
+            store.failed = false;
+            Ok(())
+        })();
+        if result.is_err() {
+            if let Some(held) = lease.take() {
+                let _ = held.release(end);
+            }
+            self.failed = true;
+            if let Some(store) = &mut self.retained {
+                store.failed = true;
+                store.core.poison();
+            }
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn before_resume_existing(
         &mut self,
         owner: &mut Owner,

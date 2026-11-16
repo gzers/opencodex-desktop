@@ -1,6 +1,56 @@
 use super::super::tests::{compete, driver::setup_unsnapshotted};
 use super::*;
 #[test]
+fn wl2_r6_capture_stop_prepared_boundary_requires_exact_original_generation_and_deadline() {
+    use crate::infrastructure::windows_official_lifecycle024::OriginalActionKind;
+    let started = Instant::now();
+    let deadline = started + std::time::Duration::from_secs(1);
+    let digest = "a".repeat(64);
+    let stop = PreparedStop::admit(123, 456, &digest, OriginalActionKind::Stop, deadline).unwrap();
+    assert!(stop.check(123, 456, &digest, deadline).is_ok());
+    for (pid, port, record, end) in [
+        (124, 456, digest.clone(), deadline),
+        (123, 457, digest.clone(), deadline),
+        (123, 456, "b".repeat(64), deadline),
+        (
+            123,
+            456,
+            digest.clone(),
+            deadline + std::time::Duration::from_nanos(1),
+        ),
+        (
+            123,
+            456,
+            digest.clone(),
+            deadline - std::time::Duration::from_nanos(1),
+        ),
+    ] {
+        assert!(stop.check(pid, port, &record, end).is_err());
+    }
+    assert!(PreparedStop::admit(123, 456, &digest, OriginalActionKind::Start, deadline).is_err());
+    assert!(PreparedStop::admit(0, 456, &digest, OriginalActionKind::Stop, deadline).is_err());
+    assert!(PreparedStop::admit(123, 0, &digest, OriginalActionKind::Restart, deadline).is_err());
+    assert!(PreparedStop::admit(123, 456, "bad", OriginalActionKind::Stop, deadline).is_err());
+    assert!(PreparedStop::admit(
+        123,
+        456,
+        &digest,
+        OriginalActionKind::Stop,
+        started - std::time::Duration::from_nanos(1)
+    )
+    .is_err());
+    let historical = PreparedStop {
+        pid: 123,
+        port: 456,
+        record: digest.clone(),
+        deadline: started - std::time::Duration::from_nanos(1),
+    };
+    assert!(historical
+        .check(123, 456, &digest, historical.deadline)
+        .is_err());
+    println!("r6 Stop boundary locator tests only: exact original pid/port/record/end and no renewed/substituted timer. Data cannot authorize Source/Owner/native phase; actual factories remain separate, no fake Ready/NormalExit/Closed");
+}
+#[test]
 fn wl2_r6_capture_ready_initial_open_precedes_release_actual_writer_and_preserves_originals() {
     let (mut f, _data, paths, held, trees, journal, end) = setup_unsnapshotted();
     let mut lease = Some(held);
