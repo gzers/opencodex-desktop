@@ -1,0 +1,8 @@
+{
+  "trigger":"library02 optimized raw101/0pass3fail: case90 reached completed history and refused drift, then later grouped scenes hit original10s during recovery before new history-read assertions; ordinary phase setup at failure used~5.5s instead of first scene~2.6s",
+  "causeKnown":false,
+  "hypothesis":"Recovery helpers reread the entire native journal immediately adjacent to append_entry_inner, which itself does full record/current/pin/token/membership verification before and after each durable write. Helpers do only immutable DATA validation/native tree observation/claim checks between those journal boundaries; duplicate full-record traversals can be assigned to the append primitive rather than stacked at both layers.",
+  "preserved":["exact common full journal-native body", "append_entry_inner original cutoff plus complete journal native readback BEFORE immutable event creation and AFTER synced/read-back current", "native actual BOTH-tree before/after every move and full plan before intent/after result", "live original claim/NLK/deadline/epoch/key at every helper", "fault40..43 positions/assertions/poison/precise immutable-current gaps", "all8/IDs/bytes/children/archives/stable proof and original10s"],
+  "falsification":"run full v3 data regression and original native recovery-prefix/handle-close/new completed-history scopes under original optimized profile; preserve first failure, no timer extension or file safety comparison changes",
+  "changeScope":"private recovery orchestration only; all persistent mutations continue through existing append full verification, no memoized native facts or second journal"
+}

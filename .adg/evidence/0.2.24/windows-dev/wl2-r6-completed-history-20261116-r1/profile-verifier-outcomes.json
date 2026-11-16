@@ -1,0 +1,10 @@
+{
+  "profile01CompletedTrace":"one actual case0 present; original-expired fresh read success and expired append refusal verified against exact current/events, same source/EXE",
+  "profile02CompletedVerifier":{"rawExit":1,"error":"AssertionError: observations empty","fact":"No new completed-history case reached its final observation line in full profile02; all three new grouped tests failed before the requested point. This is missing new native coverage, not a passed negative test."},
+  "profile02HandoffVerifier":{"rawExit":1,"error":"AssertionError: rows empty","fact":"No handoff case reached final observation in full profile02; all three grouped handoff tests timed out upstream. Existing assertions were not relaxed to accept empty coverage."},
+  "profile02RecoveryVerifier":{"rawExit":0,"actualObservations":12,"completeCases":1,"interruptedPrefixes":11,"fact":"Affected prior recovery scope passed in profile02 and exact immutable/current/physical payload readback verified."},
+  "fullCandidateAccepted":false,
+  "newCompleteReadScopeAccepted":false,
+  "doNotPromoteSingleDiagnosticToFullPass":true,
+  "recordingDriverError":{"operation":"one-line python importlib find_spec availability probe before profiling script","rawExit":1,"error":"NameError: name 'psutil' is not defined after shell quote loss","correction":"use saved ctypes profiling script instead of package dependency/inline quoting","nativeTestRunForProbe":false}
+}

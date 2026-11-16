@@ -1,0 +1,15 @@
+{
+  "sourceBaseline":"d20103fee084a3e63f728bf7c6664af65405e456",
+  "evidenceBaseline":"0182e060d72ed08ed3355e238307bba493b714e9",
+  "actualFetchedMain":"fac8573e55441fe514919c63c7f1d65181ff3577",
+  "actualFetchedGovernanceMain":"5782307174f0d1b011b5415c6c1e8d60414e6b36",
+  "contract":"TEAM16/IMP142/r6",
+  "hypotheses":[
+    {"id":"TimelyCompletion","falsifiable":"Only actual successful exact-handle closure, complete native original/retired/archive postconditions and durable canonical result/current within original deadline can create a private nonserde nonClone completion receipt. Native close time or all-row DATA alone, partial/late/unknown/poison cases cannot create it."},
+    {"id":"FreshReadOnlyWindow","falsifiable":"After original window expires, a fresh caller-supplied same-sample maximum5s window may recheck retained journal/current/peer/token/pins/history/retired/native release histories only with that exact receipt bound to immutable original end/session/current ID/tip/manifest/binding/history/handle summary. No generic end setter or native mutation permission is exposed."},
+    {"id":"OriginalGateUnchanged","falsifiable":"All existing append/recovery/lease/mutation methods still call the original cutoff gate. New historical reads retain every existing native record/current/security/token/membership comparison, do not rewrite any phase/current, and cannot resume expired mutation or reconstruct authority from JSON/textClosed."},
+    {"id":"UnknownAndLaterGeneration","falsifiable":"Foreign/corrupt archive or current, receipt/context drift, missing/late/poison and invalid read windows refuse with precise prefix preserved. Legitimate later synthetic live config changes are not compared against old originals. Actual production Source/Owner/process/supervisor/typedClosed qualification remains separate until joined."}
+  ],
+  "constraints":["original10s fixture and production30/5/10/Restart30 stop-sub10 budgets", "all8/unknown refusal/audit excluded-unknown unchanged", "old file and raw failure scenes retained", "no official/daily token/policy/configuration changes", "no oldraw5/emptyGUI/W2/dualSID/publication", "original-absent safe root retirement remains blocked"],
+  "publicStartOpen":false
+}

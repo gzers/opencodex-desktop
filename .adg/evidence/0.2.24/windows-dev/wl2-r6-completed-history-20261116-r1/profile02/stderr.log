@@ -1,0 +1,19 @@
+
+thread 'infrastructure::windows_client_originals024::tree::anchored::observation::retirement::completed_tests::wl2_r6_completed_history_native_drift_foreign_and_wrong_read_windows_keep_exact_prefix' (53448) panicked at src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement_release_tests.rs:32:18:
+called `Result::unwrap()` on an `Err` value: Custom { kind: Other, error: QueryError { api: "bounded-original-deadline", mask: 0, raw: None, detail: "timed out" } }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::windows_client_originals024::tree::anchored::observation::retirement::completed_tests::wl2_r6_completed_history_native_missing_partial_late_unknown_close_never_mint_receipt' (40268) panicked at src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement_release_tests.rs:32:18:
+called `Result::unwrap()` on an `Err` value: Custom { kind: Other, error: QueryError { api: "bounded-original-deadline", mask: 0, raw: None, detail: "timed out" } }
+
+thread 'infrastructure::windows_client_originals024::tree::anchored::observation::retirement::completed_tests::wl2_r6_completed_history_native_original_expiry_allows_fresh_read_but_never_append' (23144) panicked at src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement_release_tests.rs:32:18:
+called `Result::unwrap()` on an `Err` value: Kind(TimedOut)
+
+thread 'infrastructure::windows_client_originals024::tree::anchored::observation::retirement::handoff_tests::wl2_r6_handles_handoff_native_close_and_current_faults_preserve_held_closed_unknown_prefix' (20212) panicked at src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement_handoff_tests.rs:10:65:
+called `Result::unwrap()` on an `Err` value: Custom { kind: Other, error: QueryError { api: "bounded-original-deadline", mask: 0, raw: None, detail: "timed out" } }
+
+thread 'infrastructure::windows_client_originals024::tree::anchored::observation::retirement::handoff_tests::wl2_r6_handles_handoff_native_exact_ownership_close_then_history_ignores_successor_live_tree' (31476) panicked at src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement_release_tests.rs:38:10:
+called `Result::unwrap()` on an `Err` value: Custom { kind: Other, error: QueryError { api: "bounded-original-deadline", mask: 0, raw: None, detail: "timed out" } }
+
+thread 'infrastructure::windows_client_originals024::tree::anchored::observation::retirement::handoff_tests::wl2_r6_handles_handoff_native_history_foreign_membership_refuses_without_rewriting_past' (118176) panicked at src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement_release_tests.rs:32:18:
+called `Result::unwrap()` on an `Err` value: Custom { kind: Other, error: "api=bounded-original-deadline mask=0x0 raw=None timed out" }

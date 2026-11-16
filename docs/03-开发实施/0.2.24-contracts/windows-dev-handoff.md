@@ -720,3 +720,13 @@ library01 MSVCdebug v3/关闭原语回归raw0/27过。首library02优化轮raw10
 ## 2026-11-16 18:36 HTTPS复核恢复，继续r6
 
 本目标下次续轮仅原配置一次fetch成功，git原退出码0/1247ms；远端main仍fac8573e55441fe514919c63c7f1d65181ff3577、治理main仍5782307174f0d1b011b5415c6c1e8d60414e6b36，已实际读TEAM16/IMP142/r6并核原blob摘要，无新合同变更。证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-network-recheck-20261116-r2/，上轮efd8bfcd3失败仍保留原时点，不能追溯改成功。未改TLS验证/日常网络配置/机器策略，网络根因不推断。复核前源码d20103fee净树仅原schema，未新测试/编译/清理。解除该传输前提阻塞，补推本地两轮证据后继续原窗口完成receipt/新窗口只读历史与生产资格，不标goal完成，不W2/双SID/发布，Start拒绝。
+
+## 2026-11-16 r6 跨原窗历史候选：完整预算未过，源未提交
+
+已推源码仍d20103fee084a3e63f728bf7c6664af65405e456。本地7文件候选tree958c0deb01aa56c43dda74c68cbca05c31b96884为独立临时index冻结的Git tree，不是commit，不作为源码提交/推送；准确candidate.patch/执行源/参数/EXE归 .adg/evidence/0.2.24/windows-dev/wl2-r6-completed-history-20261116-r1/。候选实现私有及时交易receipt（actual closes＋canonical结果/current＋最终原生后验后、原截止前）及新同采样最大5秒只读入口，固定原current ID/tip/action/source/manifest/history摘要，原写路径截止不变、完整journal比较体逐字相同。因完整原预算仍失败，不称能力完成或生产Status/Closed通过。
+
+library01 MSVCdebug v3回归raw0/27过；library02原优化profile新scope raw101/0过3败，library03完整受影响37筛选raw101/30过7败，多数新点在上游恢复原10秒超时未执行。旧原比较函数/claim/NLK/ID/all8/bytes/children/native before-after/fault断言保持，恢复orchestration与append重复完整journal调用分配到原写前/写后边界，但未因此达成完整预算。精确同library03 EXE/source hash直接诊断profile01 raw0/1过，证实一次原窗过期新5秒读回及过期append拒绝；不能冒完整过。profile02同原完整筛选raw101/31过6败，旧恢复完整1＋11中断通过，新receipt/hand-off完整scope仍失败。失败/单例成功分别保留。
+
+诊断profile02子CPU136859.375ms/145657ms墙钟（94%单核，kernel95609.375ms），1369872 readOps/21488996 otherOps；全机采样忙约10.8%/20逻辑CPU。没有全机忙或外部I/O等待的充分依据，不向用户要放宽预算/改日常策略。后继按r6已允许的单phase有界原子节点事件批处理减少记录数/重复full-chain native成本，仍完整intent-before-native/result-after-readback/准确中断前缀/原claim/NLK/all8/未知拒绝；实现计划next-bounded-batch-plan.md，不重新请Mac决定existing-root布局或要求范围外接口。
+
+本地候选产品MSVCdebug bins raw0/195617ms，174产品输入/128最终testRust逐份核candidate tree/工作源及行尾等价；其制品未对应新源commit/未接受，和上次已推制品摘要分开。184场景完整私有ZIP核验，6完成纯数据scene核fresh准确路径/全文件hash/目录membership后清理，178失败/pending保留；4119份canonical/快照/history原字节另存。ZIP非NTFS身份安全克隆，历史拒绝清理不重试。仅本轮文档/证据提交推送，未通过源码仍在本地工作区，正常Git index未改。Start拒绝、原生产/原缺席/普通MSI/CAP-trust/历史清理全未完，goal继续active，不W2/双SID/发布。

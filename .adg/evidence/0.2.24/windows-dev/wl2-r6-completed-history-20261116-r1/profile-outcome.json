@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "run": "profile01",
+      "rawExit": 0,
+      "passed": 1,
+      "failed": 0,
+      "wallMs": 10265,
+      "childCpuMs": 6359.375,
+      "kernelMs": 4015.625,
+      "userMs": 2343.75,
+      "cpuFractionOfOneCore": 0.6195202143205065,
+      "logicalProcessors": 20,
+      "readOps": 148895,
+      "otherOps": 2202421,
+      "readBytes": 87476254,
+      "otherBytes": 70476474,
+      "diagnosticOnly": true,
+      "noSourceOrBudgetChanges": true
+    },
+    {
+      "run": "profile02",
+      "rawExit": 101,
+      "passed": 31,
+      "failed": 6,
+      "wallMs": 145657,
+      "childCpuMs": 136859.375,
+      "kernelMs": 95609.375,
+      "userMs": 41250.0,
+      "cpuFractionOfOneCore": 0.9396003968226725,
+      "logicalProcessors": 20,
+      "readOps": 1369872,
+      "otherOps": 21488996,
+      "readBytes": 758715475,
+      "otherBytes": 681733228,
+      "diagnosticOnly": true,
+      "noSourceOrBudgetChanges": true,
+      "systemBusyFraction": 0.10832698681712383
+    }
+  ],
+  "conclusion": "Full scope fails original10s with child near one-core CPU saturation while global sampled utilization is low; evidence does not justify treating this as whole-machine load or relaxing budgets. Single-test diagnostic passes are isolated observations, not full-scope acceptance.",
+  "nextImplementation": "r6-permitted bounded node event batches in same canonical chain, reducing per-node durable record count/full-chain native validation cost while retaining exact intent-before-native, completion-after-native, claim/NLK and all original safety comparisons. Requires its own native prefix and budget evidence before adoption.",
+  "publicStartOpen": false,
+  "originalBudgetsChanged": false,
+  "candidateAccepted": false
+}

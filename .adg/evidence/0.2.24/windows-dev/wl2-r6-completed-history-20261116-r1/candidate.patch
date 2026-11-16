@@ -1,0 +1,497 @@
+diff --git a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement.rs b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement.rs
+index 0c9e05d68..5443934eb 100644
+--- a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement.rs
++++ b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement.rs
+@@ -392,6 +392,9 @@ impl AnchoredTree {
+ #[path = "retirement_chain_tests.rs"]
+ mod chain_tests;
+ #[cfg(test)]
++#[path = "retirement_completed_tests.rs"]
++mod completed_tests;
++#[cfg(test)]
+ #[path = "retirement_handoff_tests.rs"]
+ mod handoff_tests;
+ #[cfg(test)]
+diff --git a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_completed_tests.rs b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_completed_tests.rs
+new file mode 100644
+index 000000000..00551658c
+--- /dev/null
++++ b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_completed_tests.rs
+@@ -0,0 +1,165 @@
++use super::super::super::tests::driver::setup;
++use super::release_tests::restore;
++use super::*;
++use std::time::Duration;
++fn run(fault: u8) {
++    let (mut f, _data, _paths, held, mut trees, mut journal, original_end) = setup();
++    let mut lease = Some(held);
++    restore(&mut trees, &mut journal, &mut lease, original_end);
++    let root = trees[0].root.clone();
++    let mut claim = lease
++        .as_mut()
++        .unwrap()
++        .anchored_claim(&root, original_end)
++        .unwrap();
++    let witness = recovery_witness(&mut trees, &mut claim, original_end).unwrap();
++    drop(claim);
++    journal
++        .component_release_recovery_for_test(witness, &mut lease, original_end)
++        .unwrap();
++    journal
++        .component_original_history_for_test(borrow_history(&mut trees), original_end)
++        .unwrap();
++    let close_fault = if matches!(fault, 80 | 81 | 83 | 84 | 85 | 87) {
++        fault
++    } else {
++        0
++    };
++    journal.inject_driver_fault(close_fault);
++    let closed = journal.component_close_original_handles_for_test(trees, original_end);
++    let receipt = journal.component_completion_for_test();
++    if close_fault != 0 {
++        let error = closed.unwrap_err();
++        assert!(receipt.is_null());
++        let before = journal.component_handle_trace_for_test().unwrap();
++        let when = Instant::now();
++        let end = when + Duration::from_secs(5);
++        assert!(journal
++            .component_completed_history_at_for_test(when, end)
++            .is_err());
++        let after = journal.component_handle_trace_for_test().unwrap();
++        assert_eq!(before["currentActualSha256"], after["currentActualSha256"]);
++        assert_eq!(
++            before["immutableHandleEvents"],
++            after["immutableHandleEvents"]
++        );
++        println!(
++            "r6-completed-history-native={}",
++            serde_json::json!({"case":fault,"closeError":error.to_string(),"completion":receipt,"freshReadRefused":true,"durable":after,"typedClosed":false})
++        );
++        drop(journal);
++        f.retain();
++        return;
++    }
++    closed.unwrap();
++    assert_eq!(receipt["completedInOriginalWindow"], true);
++    let sealed = journal.component_handle_trace_for_test().unwrap();
++    // This wait creates no mutation budget. The original transaction completed
++    // before its unchanged cutoff. A NEW caller-owned read window comes later.
++    while Instant::now() < original_end {
++        std::thread::sleep(Duration::from_millis(5));
++    }
++    let when = Instant::now();
++    let end = when + Duration::from_secs(5);
++    assert_eq!(
++        journal.component_completion_for_test()["originalDeadlineExpiredNow"],
++        true
++    );
++    std::fs::write(
++        root.join("config.toml"),
++        b"synthetic next action live config after original cutoff",
++    )
++    .unwrap();
++    if fault == 0 {
++        journal
++            .component_completed_history_at_for_test(when, end)
++            .unwrap();
++        let read = journal.component_handle_trace_for_test().unwrap();
++        assert_eq!(read["currentActualSha256"], sealed["currentActualSha256"]);
++        assert_eq!(
++            read["immutableHandleEvents"],
++            sealed["immutableHandleEvents"]
++        );
++        // Actual append still passes the ORIGINAL guard and times out before
++        // event replay/write. A fresh successful historical read cannot renew it.
++        let error = journal
++            .component_expired_append_for_test(original_end)
++            .unwrap_err();
++        assert_eq!(error.kind(), io::ErrorKind::TimedOut);
++        let refused = journal.component_handle_trace_for_test().unwrap();
++        assert_eq!(
++            refused["currentActualSha256"],
++            sealed["currentActualSha256"]
++        );
++        println!(
++            "r6-completed-history-native={}",
++            serde_json::json!({"case":fault,"completion":receipt,"originalDeadlineExpired":true,
++            "freshReadSucceeded":true,"lateMutationRefused":true,"lateMutationError":error.to_string(),"durable":refused,"typedClosed":false})
++        );
++    } else {
++        match fault {
++            90 => journal.component_drift_completion_context_for_test(),
++            91 => {
++                let dir = sealed["immutableHistoryEvents"][1]["references"][0]["directory"]
++                    .as_str()
++                    .unwrap();
++                drop(
++                    create_private_directory(
++                        &Path::new(dir).join("synthetic-completed-history-foreign"),
++                    )
++                    .unwrap(),
++                );
++            }
++            95 => journal
++                .component_corrupt_completed_current_for_test()
++                .unwrap(),
++            _ => {}
++        }
++        let (read_when, read_end) = match fault {
++            92 => (when, when + Duration::from_secs(6)),
++            93 => (
++                when + Duration::from_secs(60),
++                when + Duration::from_secs(65),
++            ),
++            94 => (original_end - Duration::from_secs(5), original_end),
++            _ => (when, end),
++        };
++        assert!(journal
++            .component_completed_history_at_for_test(read_when, read_end)
++            .is_err());
++        let after = journal.component_handle_trace_for_test().unwrap();
++        if fault == 95 {
++            assert_eq!(after["currentActualBytes"], 1);
++        } else {
++            assert_eq!(after["currentActualSha256"], sealed["currentActualSha256"]);
++        }
++        assert_eq!(
++            after["immutableHandleEvents"],
++            sealed["immutableHandleEvents"]
++        );
++        assert_eq!(after["poisoned"], true);
++        println!(
++            "r6-completed-history-native={}",
++            serde_json::json!({"case":fault,"completion":receipt,"originalDeadlineExpired":true,
++            "freshReadRefused":true,"durable":after,"typedClosed":false})
++        );
++    }
++    drop(journal);
++    f.retain();
++}
++#[test]
++fn wl2_r6_completed_history_native_original_expiry_allows_fresh_read_but_never_append() {
++    run(0);
++}
++#[test]
++fn wl2_r6_completed_history_native_missing_partial_late_unknown_close_never_mint_receipt() {
++    for fault in [80, 81, 83, 84, 85, 87] {
++        run(fault);
++    }
++}
++#[test]
++fn wl2_r6_completed_history_native_drift_foreign_and_wrong_read_windows_keep_exact_prefix() {
++    for fault in [90, 91, 92, 93, 94, 95] {
++        run(fault);
++    }
++}
+diff --git a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs
+index 1aaadada8..d6406da4a 100644
+--- a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs
++++ b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs
+@@ -18,6 +18,7 @@ use std::{
+     time::Instant,
+ };
+ mod actions;
++mod completed;
+ mod driver;
+ mod handles;
+ mod history;
+@@ -222,6 +223,7 @@ pub(in super::super) struct Journal {
+     old_source_actions: Vec<crate::infrastructure::windows_official_lifecycle024::NativeAction>,
+     original_handoff: Option<super::super::tree::OriginalHandleHandoff>,
+     retired_lease_histories: Vec<super::super::coordination::RetiredLeaseHistory>,
++    close_completion: Option<completed::CompletedOriginals>,
+     #[cfg(test)]
+     fault: u8,
+ }
+@@ -581,6 +583,7 @@ impl Journal {
+             old_source_actions: Vec::new(),
+             original_handoff: None,
+             retired_lease_histories: Vec::new(),
++            close_completion: None,
+             #[cfg(test)]
+             fault: 0,
+         };
+@@ -598,6 +601,16 @@ impl Journal {
+         }
+         before(end)?;
+         before(authorized_end)?;
++        self.check_records(end)
++    }
++    // Shared exact native comparisons. Mutation callers enter ONLY through
++    // check_inner's original action cutoff; historical entry additionally
++    // requires a retained timely completion object before and after reading.
++    fn check_records(&mut self, end: Instant) -> io::Result<()> {
++        if self.poisoned {
++            return Err(invalid());
++        }
++        before(end)?;
+         if native::current_identity()? != self.token {
+             return Err(invalid());
+         }
+diff --git a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs
+new file mode 100644
+index 000000000..806d5c993
+--- /dev/null
++++ b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs
+@@ -0,0 +1,184 @@
++//! Timely completed native history, never a mutation/lease/typed Closed permit.
++//! Only successful actual close driver construction; no serde/Clone or setter.
++use super::*;
++use std::time::Duration;
++pub(super) struct CompletedOriginals {
++    completed_at: Instant,
++    original_end: Instant,
++    current_id: FileIdentity,
++    state_digest: String,
++}
++fn state_digest(journal: &Journal) -> io::Result<String> {
++    Ok(hash::sha256_hex(&encoded(&(
++        &journal.progress.session,
++        &journal.progress.manifest,
++        &journal.progress.binding,
++        &journal.progress.plan,
++        &journal.progress.deadline,
++        &journal.progress.epoch,
++        &journal.progress.claim,
++        journal.progress.sequence,
++        &journal.progress.tip,
++        &journal.current_raw,
++        journal.progress.recovery_summary()?,
++        journal.progress.history_summary()?,
++        &journal.progress.handle_progress,
++    ))?))
++}
++impl CompletedOriginals {
++    pub(in crate::infrastructure::windows_client_originals024::v3::journal) fn capture(
++        journal: &Journal,
++        end: Instant,
++    ) -> io::Result<Self> {
++        before(end)?;
++        if journal.poisoned
++            || end != journal.deadline
++            || journal.close_completion.is_some()
++            || journal.pending_source_action.is_some()
++            || !journal.progress.history_linked()
++            || !journal
++                .progress
++                .handle_progress
++                .as_ref()
++                .is_some_and(|h| h.released)
++            || journal.progress.lease_state != LeaseState::Released
++            || !journal
++                .progress
++                .complete_files(&journal.manifest.storage_plan)
++            || !journal
++                .original_handoff
++                .as_ref()
++                .is_some_and(|h| h.handles.completed())
++            || journal.released_lease.is_some()
++            || !journal.previous_releases.is_empty()
++            || journal.retired_lease_histories.is_empty()
++        {
++            return Err(invalid());
++        }
++        let digest = state_digest(journal)?;
++        let completed_at = Instant::now();
++        if completed_at >= end {
++            return Err(io::ErrorKind::TimedOut.into());
++        }
++        Ok(Self {
++            completed_at,
++            original_end: end,
++            current_id: journal.current_id,
++            state_digest: digest,
++        })
++    }
++    fn matches(&self, journal: &Journal) -> io::Result<()> {
++        if self.completed_at >= self.original_end
++            || self.original_end != journal.deadline
++            || self.current_id != journal.current_id
++            || self.state_digest != state_digest(journal)?
++            || journal.poisoned
++            || journal.pending_source_action.is_some()
++            || journal.released_lease.is_some()
++            || !journal.previous_releases.is_empty()
++            || !journal
++                .progress
++                .handle_progress
++                .as_ref()
++                .is_some_and(|h| h.released)
++            || !journal
++                .original_handoff
++                .as_ref()
++                .is_some_and(|h| h.handles.completed())
++        {
++            return Err(invalid());
++        }
++        Ok(())
++    }
++    fn data(&self) -> serde_json::Value {
++        serde_json::json!({"completedInOriginalWindow":self.completed_at<self.original_end,"currentVolume":self.current_id.volume,
++            "currentFileId":self.current_id.index.to_string(),"stateDigest":self.state_digest,
++            "originalDeadlineExpiredNow":Instant::now()>=self.original_end,"nativeAuthority":false,"typedClosed":false})
++    }
++}
++impl Journal {
++    fn completed_history_at(&mut self, when: Instant, end: Instant) -> io::Result<()> {
++        let result = (|| {
++            // Caller owns the single original Status sample window. No now+5
++            // deadline construction, old-action deadline assignment or retry.
++            if when > Instant::now()
++                || when >= end
++                || end.duration_since(when) > Duration::from_secs(5)
++            {
++                return Err(invalid());
++            }
++            before(end)?;
++            self.close_completion
++                .as_ref()
++                .ok_or_else(invalid)?
++                .matches(self)?;
++            self.check_records(end)?;
++            self.original_handoff
++                .as_mut()
++                .ok_or_else(invalid)?
++                .check_history(end)?;
++            for history in &self.retired_lease_histories {
++                history.check(end)?;
++            }
++            self.check_records(end)?;
++            self.close_completion
++                .as_ref()
++                .ok_or_else(invalid)?
++                .matches(self)?;
++            before(end)
++        })();
++        if result.is_err() {
++            self.poisoned = true;
++            if let Some(history) = &mut self.original_handoff {
++                history.poison();
++            }
++        }
++        result
++    }
++    #[cfg(test)]
++    pub(in crate::infrastructure::windows_client_originals024) fn component_completed_history_at_for_test(
++        &mut self,
++        when: Instant,
++        end: Instant,
++    ) -> io::Result<()> {
++        if self.source_action.is_some() {
++            return Err(invalid());
++        }
++        self.completed_history_at(when, end)
++    }
++    #[cfg(test)]
++    pub(in crate::infrastructure::windows_client_originals024) fn component_completion_for_test(
++        &self,
++    ) -> serde_json::Value {
++        self.close_completion
++            .as_ref()
++            .map(CompletedOriginals::data)
++            .unwrap_or(serde_json::Value::Null)
++    }
++    #[cfg(test)]
++    pub(in crate::infrastructure::windows_client_originals024) fn component_expired_append_for_test(
++        &mut self,
++        end: Instant,
++    ) -> io::Result<()> {
++        let event = self.progress.handle_event(
++            super::super::handles::HandleOperation::OriginalHandlesReleasedVerified,
++            None,
++        )?;
++        self.append_entry_inner(ChainEntry::Handles(event), end)
++    }
++    #[cfg(test)]
++    pub(in crate::infrastructure::windows_client_originals024) fn component_drift_completion_context_for_test(
++        &mut self,
++    ) {
++        self.progress.binding = "e".repeat(64);
++    }
++    #[cfg(test)]
++    pub(in crate::infrastructure::windows_client_originals024) fn component_corrupt_completed_current_for_test(
++        &mut self,
++    ) -> io::Result<()> {
++        self.current.seek(SeekFrom::Start(0))?;
++        self.current.write_all(b"{")?;
++        self.current.set_len(1)?;
++        self.current.sync_all()
++    }
++}
+diff --git a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs
+index 448daaeac..e5dfbc5f5 100644
+--- a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs
++++ b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs
+@@ -147,7 +147,15 @@ impl Journal {
+                 .as_mut()
+                 .ok_or_else(invalid)?
+                 .check_originals(end)?;
+-            self.check(end)
++            self.check(end)?;
++            #[cfg(test)]
++            if self.fault == 87 {
++                while Instant::now() < end {
++                    std::thread::sleep(std::time::Duration::from_millis(5));
++                }
++            }
++            self.close_completion = Some(super::completed::CompletedOriginals::capture(self, end)?);
++            Ok(())
+         })();
+         if result.is_err() {
+             self.poisoned = true;
+diff --git a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery.rs b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery.rs
+index 4ddadf497..218712b24 100644
+--- a/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery.rs
++++ b/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery.rs
+@@ -11,7 +11,13 @@ impl Journal {
+         claim: &mut AnchoredClaim<'_>,
+         end: Instant,
+     ) -> io::Result<()> {
+-        self.check(end)?;
++        // The surrounding append primitive fully validates journal/current
++        // immediately after intent and before result. This helper owns live
++        // native claim/cutoff checks, not a duplicate traversal of all records.
++        before(end)?;
++        if self.poisoned || end > self.deadline {
++            return Err(invalid());
++        }
+         claim.check(&self.pins[0].path().join(".codex"), end)?;
+         if self.progress.lease_state != LeaseState::Active
+             || self.progress.epoch != claim.epoch()
+@@ -48,7 +54,10 @@ impl Journal {
+         claim: &mut AnchoredClaim<'_>,
+         end: Instant,
+     ) -> io::Result<()> {
+-        self.check(end)?;
++        before(end)?;
++        if self.poisoned || end > self.deadline {
++            return Err(invalid());
++        }
+         claim.check(&self.pins[0].path().join(".codex"), end)?;
+         if self.progress.lease_state != LeaseState::Active
+             || self.progress.epoch != claim.epoch()
+@@ -69,7 +78,9 @@ impl Journal {
+         // plans() just rechecked both complete native trees. Serializing and
+         // validating that immutable DATA above does not mutate either tree.
+         claim.check(&self.pins[0].path().join(".codex"), end)?;
+-        self.check(end)
++        // No journal/client mutation occurs while serializing/validating the
++        // retained plan. Durable writes retain their full before/after check.
++        before(end)
+     }
+     fn prepare_native_recovery(
+         &mut self,
+diff --git a/test/windows024-native/build-wl2.ps1 b/test/windows024-native/build-wl2.ps1
+index 998a28367..09fcdabd6 100644
+--- a/test/windows024-native/build-wl2.ps1
++++ b/test/windows024-native/build-wl2.ps1
+@@ -95,6 +95,9 @@ if($Mode -eq 'r6-history-data'){$arguments=@('test','--locked','--offline','--ma
+ if($Mode -eq 'r6-handles-data'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','--','windows_client_originals024::v3::','wl2_r6_handles_native_exact_','--test-threads=1','--nocapture')}
+ if($Mode -eq 'r6-handles-native'){$arguments=@('test','--release','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','wl2_r6_handles_','--','--test-threads=1','--nocapture')}
+ if($Mode -eq 'r6-handles-regression'){$arguments=@('test','--release','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','--','wl2_r6_handles_','wl2_r6_recovery_chain_native_','--test-threads=1','--nocapture')}
++if($Mode -eq 'r6-completed-data'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','windows_client_originals024::v3::','--','--test-threads=1','--nocapture')}
++if($Mode -eq 'r6-completed-native'){$arguments=@('test','--release','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','wl2_r6_completed_history_','--','--test-threads=1','--nocapture')}
++if($Mode -eq 'r6-completed-regression'){$arguments=@('test','--release','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','--','windows_client_originals024::v3::','wl2_r6_recovery_chain_native_','wl2_r6_handles_handoff_native_','wl2_r6_completed_history_','--test-threads=1','--nocapture')}
+ if($Mode -eq 'r6-history-native'){$arguments=@('test','--release','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','wl2_r6_history_','--','--test-threads=1','--nocapture')}
+ if($Mode -eq 'r6-final-release-native'){$arguments=@('test','--release','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','wl2_r6_final_release_','--','--test-threads=1','--nocapture')}
+ if($Mode -eq 'r6-retirement-existing'){$arguments=@('test','--locked','--offline','--manifest-path','apps/desktop/tauri/Cargo.toml','--target','x86_64-pc-windows-msvc','--features','custom-protocol','--lib','-j','1','wl2_r6_retirement_existing_','--','--test-threads=1','--nocapture')}

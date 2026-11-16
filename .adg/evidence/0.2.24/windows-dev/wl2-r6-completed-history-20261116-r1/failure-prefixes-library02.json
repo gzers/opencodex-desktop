@@ -1,0 +1,2907 @@
+{
+  "rawExit": 101,
+  "failedGroupedTests": 3,
+  "scenes": [
+    {
+      "test": "infrastructure::windows_client_originals024::tree::anchored::observation::retirement::completed_tests::wl2_r6_completed_history_native_drift_foreign_and_wrong_read_windows_keep_exact_prefix",
+      "directory": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-705d56d4-4a71-4e93-bb26-7d7ab15663fc\\session",
+      "lastSceneOfFailedGroup": false,
+      "current": {
+        "schema": "windows-client-current-v3",
+        "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+        "sequence": 88,
+        "eventDigest": "22a5f527bbbb6d0fe02acc48484ed93655f2f86366dd23a22dc4b15a4e2d14ca",
+        "previousEventDigest": "7d6eb1bffcc50f9d081c800e7309300074291ce2435c8b272363bfe6ee8542a6",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "storagePlanDigest": "64591c03d9115a20deaf949bfed8a7142cc43edaf559dddbec69681090b65c04",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "db805d66a0179aee5e678f6bea8dd33d17fca30f55ef0c4b4ac1d9567c4a466b",
+        "bindingDigest": "4085a0ad9b53de4772d9b1ba13a164be6cc0356fd6103fb3c64746ad3b49cf75",
+        "leaseEpoch": "9d29c31c-e795-40ad-b14a-36f577766aaf",
+        "claimKey": "4ebcc15640a516ca7dc82c43c145e10a6860f9c75994ab06980653a95c1c4da8",
+        "deadlineScope": "2c03374e-08de-4719-b27b-df086e28ba51",
+        "leaseState": "Released",
+        "leaseObjectsDigest": "c743eedc9ab94256216d38b1fd6d99506e05cdf9f1d73ca2f0f965c6de5dbc80",
+        "workMode": "Observed",
+        "workFrames": [
+          "e4a1bdd26daab75863d4344a98e512df83625722e12394f045bdf1f96bf973d7",
+          "97fcbd3d361b68923845f9cc6086999b6d7c599d704e1101fcb64e3c92a03cb3"
+        ],
+        "observedFrames": [
+          "183b8f88c6132baa2d798027edbf9d23aca5b2c4e3bb5ea286674a44dad1e162",
+          "97fcbd3d361b68923845f9cc6086999b6d7c599d704e1101fcb64e3c92a03cb3"
+        ],
+        "snapshotPending": null,
+        "snapshotLinks": {
+          "Ready": [
+            "0354002c158b5c43bb52691485ec44bb4451aee89ead1929b75e40dc9072d7f5",
+            "e106fc2eb26b35cc575abd6c7f5a66a143a103f8f3e1cd2d9988429094657eec"
+          ],
+          "PreStop": [
+            "5ca6d0ebf65f16685971c3d6fcc761eff6ca2289e83381753a7a3c1d93fd3464",
+            "07dfa413898403d8f33aca62adb874c87fbc9e54bfe6ea64b0f8a6e6b8b499e6"
+          ],
+          "Stopped": [
+            "3198641b21208cf5fd99696ae551f321c64787d2b4bf46594f51fb9b55acdea6",
+            "cdefc09e32f0f421dd01fd60703217502b77d37d7dde5d541b62d66c1eb8b4da"
+          ]
+        },
+        "observedSequence": 51,
+        "linkedFrames": {
+          "26": [
+            "84cc94a913bcc06d90cc2ceab491868fcde7b0b88b79bca8493b5b507b827ff6",
+            "97fcbd3d361b68923845f9cc6086999b6d7c599d704e1101fcb64e3c92a03cb3"
+          ],
+          "39": [
+            "84cc94a913bcc06d90cc2ceab491868fcde7b0b88b79bca8493b5b507b827ff6",
+            "97fcbd3d361b68923845f9cc6086999b6d7c599d704e1101fcb64e3c92a03cb3"
+          ],
+          "51": [
+            "183b8f88c6132baa2d798027edbf9d23aca5b2c4e3bb5ea286674a44dad1e162",
+            "97fcbd3d361b68923845f9cc6086999b6d7c599d704e1101fcb64e3c92a03cb3"
+          ]
+        },
+        "lifecycle": "Stopped",
+        "readyGeneration": [
+          123,
+          456,
+          "7777777777777777777777777777777777777777777777777777777777777777"
+        ],
+        "actionPending": null,
+        "actionKind": "Stop",
+        "recovery": {
+          "planDigest": "4e7fad79cd66edf0d907897e433e018491df728fde9e27d96dfe2fa6de23ae0c",
+          "progressDigest": "7f4388d9d3ef696430d28da00f302b0d4fc2388efb7ce753f0503ba6c6294332",
+          "planVerified": true,
+          "retiredCount": 6,
+          "restoredCount": 3,
+          "pending": null,
+          "wholeTree": 2,
+          "anchorReleasedCount": 6
+        },
+        "history": {
+          "contextDigest": "328151799cfe5ca9945cbc0a495d74ba201e389eb763e16626a6c5cf391d3618",
+          "intentSequence": 85,
+          "linkedReferences": [
+            "6e633c1fd765e7d5a3c9779d71f2f731606d8f2926373f6e8b4e4b35e7ea2a17",
+            "42215ba390968fa88a88b3aa0c47f63608fe02393e24fb2f631b40909075e92a"
+          ]
+        },
+        "handles": {
+          "inventoryDigest": "12b4ae21ef9075a20d97f3a723fa78e88c9b735e3716a0c8e3cc10158a73a4b1",
+          "count": 187,
+          "released": true
+        }
+      },
+      "currentSha256": "4b69ef03905704c0af8de022a81572d86e44a85961b81762434627bc5eb9c7f8",
+      "lastImmutableEvent": {
+        "schema": "windows-client-originals-v3",
+        "documentKind": "original-handle-release-event",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "eventId": "e734ebc1-49fd-4cce-80d6-c58af0c6fe37",
+        "sequence": 88,
+        "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+        "operation": "OriginalHandlesReleasedVerified",
+        "historyDigest": "e6cf467c6d48a529990b450221f1fb062ef767967c070d83698fe8fb389ee3b7",
+        "inventoryDigest": "12b4ae21ef9075a20d97f3a723fa78e88c9b735e3716a0c8e3cc10158a73a4b1",
+        "rows": null,
+        "count": 187,
+        "manifestDigest": "db805d66a0179aee5e678f6bea8dd33d17fca30f55ef0c4b4ac1d9567c4a466b",
+        "bindingDigest": "4085a0ad9b53de4772d9b1ba13a164be6cc0356fd6103fb3c64746ad3b49cf75",
+        "storagePlanDigest": "64591c03d9115a20deaf949bfed8a7142cc43edaf559dddbec69681090b65c04",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "deadlineScope": "2c03374e-08de-4719-b27b-df086e28ba51",
+        "leaseEpoch": "9d29c31c-e795-40ad-b14a-36f577766aaf",
+        "claimKey": "4ebcc15640a516ca7dc82c43c145e10a6860f9c75994ab06980653a95c1c4da8",
+        "previousEventDigest": "7d6eb1bffcc50f9d081c800e7309300074291ce2435c8b272363bfe6ee8542a6"
+      },
+      "historyEvents": [
+        {
+          "schema": "windows-client-originals-v3",
+          "documentKind": "original-history-event",
+          "storageStrategy": "windows-anchored-directories-v1",
+          "eventId": "608b1f9d-23a4-4b92-8d6f-40b91a25b1d2",
+          "sequence": 85,
+          "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+          "operation": "OriginalHistoryIntent",
+          "context": {
+            "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+            "storagePlanDigest": "64591c03d9115a20deaf949bfed8a7142cc43edaf559dddbec69681090b65c04",
+            "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+            "manifestDigest": "db805d66a0179aee5e678f6bea8dd33d17fca30f55ef0c4b4ac1d9567c4a466b",
+            "bindingDigest": "4085a0ad9b53de4772d9b1ba13a164be6cc0356fd6103fb3c64746ad3b49cf75",
+            "deadlineScope": "2c03374e-08de-4719-b27b-df086e28ba51",
+            "leaseEpoch": "9d29c31c-e795-40ad-b14a-36f577766aaf",
+            "claimKey": "4ebcc15640a516ca7dc82c43c145e10a6860f9c75994ab06980653a95c1c4da8",
+            "releaseObjectsDigest": "c743eedc9ab94256216d38b1fd6d99506e05cdf9f1d73ca2f0f965c6de5dbc80",
+            "releasedEventDigest": "3eb85009a8b0716c5d50f2fd8cfe0c6679bcef17b1e47cd58b44a33d38f752cc",
+            "recoveryPlanDigest": "4e7fad79cd66edf0d907897e433e018491df728fde9e27d96dfe2fa6de23ae0c",
+            "originalFrames": [
+              "9926bf9d88a150426d8fa217a00432d9a6c917fd7a394d3c9da4c7feb08f671b",
+              "13c3c2b8c641934c4b8e236a1f5dcfa0f16739d101459d9682c41b1115dbd1cd"
+            ],
+            "historyIntentSequence": 85
+          },
+          "references": null,
+          "previousEventDigest": "3eb85009a8b0716c5d50f2fd8cfe0c6679bcef17b1e47cd58b44a33d38f752cc"
+        },
+        {
+          "schema": "windows-client-originals-v3",
+          "documentKind": "original-history-event",
+          "storageStrategy": "windows-anchored-directories-v1",
+          "eventId": "3d5db5da-20f2-466b-a2f6-e92f95dad4cf",
+          "sequence": 86,
+          "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+          "operation": "OriginalHistoryLinkedVerified",
+          "context": {
+            "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+            "storagePlanDigest": "64591c03d9115a20deaf949bfed8a7142cc43edaf559dddbec69681090b65c04",
+            "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+            "manifestDigest": "db805d66a0179aee5e678f6bea8dd33d17fca30f55ef0c4b4ac1d9567c4a466b",
+            "bindingDigest": "4085a0ad9b53de4772d9b1ba13a164be6cc0356fd6103fb3c64746ad3b49cf75",
+            "deadlineScope": "2c03374e-08de-4719-b27b-df086e28ba51",
+            "leaseEpoch": "9d29c31c-e795-40ad-b14a-36f577766aaf",
+            "claimKey": "4ebcc15640a516ca7dc82c43c145e10a6860f9c75994ab06980653a95c1c4da8",
+            "releaseObjectsDigest": "c743eedc9ab94256216d38b1fd6d99506e05cdf9f1d73ca2f0f965c6de5dbc80",
+            "releasedEventDigest": "3eb85009a8b0716c5d50f2fd8cfe0c6679bcef17b1e47cd58b44a33d38f752cc",
+            "recoveryPlanDigest": "4e7fad79cd66edf0d907897e433e018491df728fde9e27d96dfe2fa6de23ae0c",
+            "originalFrames": [
+              "9926bf9d88a150426d8fa217a00432d9a6c917fd7a394d3c9da4c7feb08f671b",
+              "13c3c2b8c641934c4b8e236a1f5dcfa0f16739d101459d9682c41b1115dbd1cd"
+            ],
+            "historyIntentSequence": 85
+          },
+          "references": [
+            {
+              "schema": "windows-anchored-original-history-reference-v3",
+              "rootId": ".codex",
+              "directory": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp8EPWGn\\Profile\\.ocxd024-history-4a2ed17d-83d7-452d-87d6-4b742cd8bc9d-codex",
+              "volume": 247287385,
+              "fileId": "562949954761563",
+              "security": {
+                "scopeId": "windows-bounded-access-v1",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "volume": 247287385,
+                "fileId": "562949954761563",
+                "projections": [
+                  {
+                    "requestedMask": 1,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 1,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                  },
+                  {
+                    "requestedMask": 2,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 2,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                  },
+                  {
+                    "requestedMask": 4,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 4,
+                      "revision": 1,
+                      "control": 4100,
+                      "state": "present",
+                      "sid": null,
+                      "aclRevision": 2,
+                      "aces": [
+                        [
+                          0,
+                          3,
+                          36,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          5,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          21,
+                          0,
+                          0,
+                          0,
+                          192,
+                          34,
+                          3,
+                          35,
+                          214,
+                          218,
+                          7,
+                          51,
+                          96,
+                          117,
+                          250,
+                          153,
+                          233,
+                          3,
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          3,
+                          20,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          18,
+                          0,
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "structureDigest": "0fff336e865cfa268a0d5c6b1d4a3810fd4b70994b4c783a91d6a463d03583df"
+                  },
+                  {
+                    "requestedMask": 16,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 16,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                  },
+                  {
+                    "requestedMask": 32,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 32,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                  },
+                  {
+                    "requestedMask": 64,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 64,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                  },
+                  {
+                    "requestedMask": 128,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 128,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                  },
+                  {
+                    "requestedMask": 256,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 256,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                  }
+                ],
+                "auditSaclAssurance": "excluded-unknown",
+                "fullSecurityProven": false
+              },
+              "metadataId": "562949954762284",
+              "metadataSecurity": {
+                "scopeId": "windows-bounded-access-v1",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "volume": 247287385,
+                "fileId": "562949954762284",
+                "projections": [
+                  {
+                    "requestedMask": 1,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 1,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                  },
+                  {
+                    "requestedMask": 2,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 2,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                  },
+                  {
+                    "requestedMask": 4,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 4,
+                      "revision": 1,
+                      "control": 4100,
+                      "state": "present",
+                      "sid": null,
+                      "aclRevision": 2,
+                      "aces": [
+                        [
+                          0,
+                          0,
+                          36,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          5,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          21,
+                          0,
+                          0,
+                          0,
+                          192,
+                          34,
+                          3,
+                          35,
+                          214,
+                          218,
+                          7,
+                          51,
+                          96,
+                          117,
+                          250,
+                          153,
+                          233,
+                          3,
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0,
+                          20,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          18,
+                          0,
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "structureDigest": "41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"
+                  },
+                  {
+                    "requestedMask": 16,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 16,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                  },
+                  {
+                    "requestedMask": 32,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 32,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                  },
+                  {
+                    "requestedMask": 64,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 64,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                  },
+                  {
+                    "requestedMask": 128,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 128,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                  },
+                  {
+                    "requestedMask": 256,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 256,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                  }
+                ],
+                "auditSaclAssurance": "excluded-unknown",
+                "fullSecurityProven": false
+              },
+              "metadataSha256": "1335fb943500b94a8eb0865208d170af05e6980f9e4f55e23aee39bdef683814",
+              "frameDigest": "9926bf9d88a150426d8fa217a00432d9a6c917fd7a394d3c9da4c7feb08f671b",
+              "context": {
+                "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+                "storagePlanDigest": "64591c03d9115a20deaf949bfed8a7142cc43edaf559dddbec69681090b65c04",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "manifestDigest": "db805d66a0179aee5e678f6bea8dd33d17fca30f55ef0c4b4ac1d9567c4a466b",
+                "bindingDigest": "4085a0ad9b53de4772d9b1ba13a164be6cc0356fd6103fb3c64746ad3b49cf75",
+                "deadlineScope": "2c03374e-08de-4719-b27b-df086e28ba51",
+                "leaseEpoch": "9d29c31c-e795-40ad-b14a-36f577766aaf",
+                "claimKey": "4ebcc15640a516ca7dc82c43c145e10a6860f9c75994ab06980653a95c1c4da8",
+                "releaseObjectsDigest": "c743eedc9ab94256216d38b1fd6d99506e05cdf9f1d73ca2f0f965c6de5dbc80",
+                "releasedEventDigest": "3eb85009a8b0716c5d50f2fd8cfe0c6679bcef17b1e47cd58b44a33d38f752cc",
+                "recoveryPlanDigest": "4e7fad79cd66edf0d907897e433e018491df728fde9e27d96dfe2fa6de23ae0c",
+                "originalFrames": [
+                  "9926bf9d88a150426d8fa217a00432d9a6c917fd7a394d3c9da4c7feb08f671b",
+                  "13c3c2b8c641934c4b8e236a1f5dcfa0f16739d101459d9682c41b1115dbd1cd"
+                ],
+                "historyIntentSequence": 85
+              },
+              "runtimeAuthority": false
+            },
+            {
+              "schema": "windows-anchored-original-history-reference-v3",
+              "rootId": ".grok",
+              "directory": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp8EPWGn\\Profile\\.ocxd024-history-4a2ed17d-83d7-452d-87d6-4b742cd8bc9d-grok",
+              "volume": 247287385,
+              "fileId": "562949954762285",
+              "security": {
+                "scopeId": "windows-bounded-access-v1",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "volume": 247287385,
+                "fileId": "562949954762285",
+                "projections": [
+                  {
+                    "requestedMask": 1,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 1,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                  },
+                  {
+                    "requestedMask": 2,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 2,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                  },
+                  {
+                    "requestedMask": 4,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 4,
+                      "revision": 1,
+                      "control": 4100,
+                      "state": "present",
+                      "sid": null,
+                      "aclRevision": 2,
+                      "aces": [
+                        [
+                          0,
+                          3,
+                          36,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          5,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          21,
+                          0,
+                          0,
+                          0,
+                          192,
+                          34,
+                          3,
+                          35,
+                          214,
+                          218,
+                          7,
+                          51,
+                          96,
+                          117,
+                          250,
+                          153,
+                          233,
+                          3,
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          3,
+                          20,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          18,
+                          0,
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "structureDigest": "0fff336e865cfa268a0d5c6b1d4a3810fd4b70994b4c783a91d6a463d03583df"
+                  },
+                  {
+                    "requestedMask": 16,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 16,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                  },
+                  {
+                    "requestedMask": 32,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 32,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                  },
+                  {
+                    "requestedMask": 64,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 64,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                  },
+                  {
+                    "requestedMask": 128,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 128,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                  },
+                  {
+                    "requestedMask": 256,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 256,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                  }
+                ],
+                "auditSaclAssurance": "excluded-unknown",
+                "fullSecurityProven": false
+              },
+              "metadataId": "562949954762287",
+              "metadataSecurity": {
+                "scopeId": "windows-bounded-access-v1",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "volume": 247287385,
+                "fileId": "562949954762287",
+                "projections": [
+                  {
+                    "requestedMask": 1,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 1,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                  },
+                  {
+                    "requestedMask": 2,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 2,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                  },
+                  {
+                    "requestedMask": 4,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 4,
+                      "revision": 1,
+                      "control": 4100,
+                      "state": "present",
+                      "sid": null,
+                      "aclRevision": 2,
+                      "aces": [
+                        [
+                          0,
+                          0,
+                          36,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          5,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          21,
+                          0,
+                          0,
+                          0,
+                          192,
+                          34,
+                          3,
+                          35,
+                          214,
+                          218,
+                          7,
+                          51,
+                          96,
+                          117,
+                          250,
+                          153,
+                          233,
+                          3,
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0,
+                          20,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          18,
+                          0,
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "structureDigest": "41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"
+                  },
+                  {
+                    "requestedMask": 16,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 16,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                  },
+                  {
+                    "requestedMask": 32,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 32,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                  },
+                  {
+                    "requestedMask": 64,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 64,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                  },
+                  {
+                    "requestedMask": 128,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 128,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                  },
+                  {
+                    "requestedMask": 256,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 256,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                  }
+                ],
+                "auditSaclAssurance": "excluded-unknown",
+                "fullSecurityProven": false
+              },
+              "metadataSha256": "55592d221b13bad398435ed2cdc36a77953c5d4b878f6beb601fe75175301f02",
+              "frameDigest": "13c3c2b8c641934c4b8e236a1f5dcfa0f16739d101459d9682c41b1115dbd1cd",
+              "context": {
+                "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+                "storagePlanDigest": "64591c03d9115a20deaf949bfed8a7142cc43edaf559dddbec69681090b65c04",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "manifestDigest": "db805d66a0179aee5e678f6bea8dd33d17fca30f55ef0c4b4ac1d9567c4a466b",
+                "bindingDigest": "4085a0ad9b53de4772d9b1ba13a164be6cc0356fd6103fb3c64746ad3b49cf75",
+                "deadlineScope": "2c03374e-08de-4719-b27b-df086e28ba51",
+                "leaseEpoch": "9d29c31c-e795-40ad-b14a-36f577766aaf",
+                "claimKey": "4ebcc15640a516ca7dc82c43c145e10a6860f9c75994ab06980653a95c1c4da8",
+                "releaseObjectsDigest": "c743eedc9ab94256216d38b1fd6d99506e05cdf9f1d73ca2f0f965c6de5dbc80",
+                "releasedEventDigest": "3eb85009a8b0716c5d50f2fd8cfe0c6679bcef17b1e47cd58b44a33d38f752cc",
+                "recoveryPlanDigest": "4e7fad79cd66edf0d907897e433e018491df728fde9e27d96dfe2fa6de23ae0c",
+                "originalFrames": [
+                  "9926bf9d88a150426d8fa217a00432d9a6c917fd7a394d3c9da4c7feb08f671b",
+                  "13c3c2b8c641934c4b8e236a1f5dcfa0f16739d101459d9682c41b1115dbd1cd"
+                ],
+                "historyIntentSequence": 85
+              },
+              "runtimeAuthority": false
+            }
+          ],
+          "previousEventDigest": "d1e7134f1c7df210e7f8e31f99dc572856ea23371ad0abf027f839e253dbbd07"
+        }
+      ],
+      "handleEvents": [
+        {
+          "schema": "windows-client-originals-v3",
+          "documentKind": "original-handle-release-event",
+          "storageStrategy": "windows-anchored-directories-v1",
+          "eventId": "49a876aa-af0d-44b4-839c-96e0b17d92f0",
+          "sequence": 87,
+          "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+          "operation": "OriginalHandlesReleaseIntent",
+          "historyDigest": "e6cf467c6d48a529990b450221f1fb062ef767967c070d83698fe8fb389ee3b7",
+          "inventoryDigest": "12b4ae21ef9075a20d97f3a723fa78e88c9b735e3716a0c8e3cc10158a73a4b1",
+          "rows": [
+            {
+              "key": "tree/0/original/0000",
+              "volume": 247287385,
+              "fileId": "83598068084393401",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/original/0001",
+              "volume": 247287385,
+              "fileId": "6755399442395655",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/original/0002",
+              "volume": 247287385,
+              "fileId": "3940649675289099",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/original/0003",
+              "volume": 247287385,
+              "fileId": "3096224745150702",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/initial-work/0003",
+              "volume": 247287385,
+              "fileId": "562949954762235",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/original/0004",
+              "volume": 247287385,
+              "fileId": "3377699721861061",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/original/0005",
+              "volume": 247287385,
+              "fileId": "9288674232784272",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/original/0006",
+              "volume": 247287385,
+              "fileId": "1970324838310265",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/initial-work/0006",
+              "volume": 247287385,
+              "fileId": "562949954762236",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/history-source/0000",
+              "volume": 247287385,
+              "fileId": "83598068084393401",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/history-source/0001",
+              "volume": 247287385,
+              "fileId": "6755399442395655",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/history-source/0002",
+              "volume": 247287385,
+              "fileId": "3940649675289099",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/history-source/0003",
+              "volume": 247287385,
+              "fileId": "3096224745150702",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/history-source/0004",
+              "volume": 247287385,
+              "fileId": "3377699721861061",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/history-source/0005",
+              "volume": 247287385,
+              "fileId": "9288674232784272",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/history-source/0006",
+              "volume": 247287385,
+              "fileId": "1970324838310265",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/stopped-anchor/0000",
+              "volume": 247287385,
+              "fileId": "83598068084393401",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/stopped-anchor/0001",
+              "volume": 247287385,
+              "fileId": "6755399442395655",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/stopped-anchor/0002",
+              "volume": 247287385,
+              "fileId": "3940649675289099",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/stopped-anchor/0004",
+              "volume": 247287385,
+              "fileId": "3377699721861061",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/stopped-anchor/0006",
+              "volume": 247287385,
+              "fileId": "9288674232784272",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/0/old-work/0000/0000",
+              "volume": 247287385,
+              "fileId": "562949954762235",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0000/0001",
+              "volume": 247287385,
+              "fileId": "562949954762240",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0000/0002",
+              "volume": 247287385,
+              "fileId": "562949954762236",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0000/0003",
+              "volume": 247287385,
+              "fileId": "562949954762241",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0000/0004",
+              "volume": 247287385,
+              "fileId": "562949954762239",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0001/0000",
+              "volume": 247287385,
+              "fileId": "562949954762235",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0001/0001",
+              "volume": 247287385,
+              "fileId": "562949954762240",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0001/0002",
+              "volume": 247287385,
+              "fileId": "562949954762236",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0001/0003",
+              "volume": 247287385,
+              "fileId": "562949954762241",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/0/old-work/0001/0004",
+              "volume": 247287385,
+              "fileId": "562949954762239",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/1/original/0000",
+              "volume": 247287385,
+              "fileId": "562949954762230",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/1/original/0001",
+              "volume": 247287385,
+              "fileId": "562949954762231",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/1/initial-work/0001",
+              "volume": 247287385,
+              "fileId": "562949954762238",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/1/history-source/0000",
+              "volume": 247287385,
+              "fileId": "562949954762230",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/1/history-source/0001",
+              "volume": 247287385,
+              "fileId": "562949954762231",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/1/stopped-anchor/0000",
+              "volume": 247287385,
+              "fileId": "562949954762230",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "tree/1/old-work/0000/0000",
+              "volume": 247287385,
+              "fileId": "562949954762238",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "tree/1/old-work/0001/0000",
+              "volume": 247287385,
+              "fileId": "562949954762238",
+              "directory": false,
+              "historicalWork": true
+            },
+            {
+              "key": "lease/old/0000/coord/0/file",
+              "volume": 247287385,
+              "fileId": "6755399442395655",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/claim-parent",
+              "volume": 247287385,
+              "fileId": "83598068084393401",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/ancestor/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/ancestor/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/ancestor/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/ancestor/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/ancestor/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/ancestor/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/ancestor/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/0/ancestor/7",
+              "volume": 247287385,
+              "fileId": "14073748836859809",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/file",
+              "volume": 247287385,
+              "fileId": "1407374884894193",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/1/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/file",
+              "volume": 247287385,
+              "fileId": "1407374884894195",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/2/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/file",
+              "volume": 247287385,
+              "fileId": "1407374884894196",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0000/coord/3/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/file",
+              "volume": 247287385,
+              "fileId": "6755399442395655",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/claim-parent",
+              "volume": 247287385,
+              "fileId": "83598068084393401",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/ancestor/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/ancestor/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/ancestor/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/ancestor/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/ancestor/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/ancestor/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/ancestor/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/0/ancestor/7",
+              "volume": 247287385,
+              "fileId": "14073748836859809",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/file",
+              "volume": 247287385,
+              "fileId": "1407374884894193",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/1/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/file",
+              "volume": 247287385,
+              "fileId": "1407374884894195",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/2/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/file",
+              "volume": 247287385,
+              "fileId": "1407374884894196",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0001/coord/3/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/file",
+              "volume": 247287385,
+              "fileId": "6755399442395655",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/claim-parent",
+              "volume": 247287385,
+              "fileId": "83598068084393401",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/ancestor/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/ancestor/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/ancestor/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/ancestor/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/ancestor/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/ancestor/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/ancestor/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/0/ancestor/7",
+              "volume": 247287385,
+              "fileId": "14073748836859809",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/file",
+              "volume": 247287385,
+              "fileId": "1407374884894193",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/1/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/file",
+              "volume": 247287385,
+              "fileId": "1407374884894195",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/2/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/file",
+              "volume": 247287385,
+              "fileId": "1407374884894196",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/old/0002/coord/3/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/file",
+              "volume": 247287385,
+              "fileId": "6755399442395655",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/claim-parent",
+              "volume": 247287385,
+              "fileId": "83598068084393401",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/ancestor/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/ancestor/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/ancestor/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/ancestor/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/ancestor/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/ancestor/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/ancestor/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/0/ancestor/7",
+              "volume": 247287385,
+              "fileId": "14073748836859809",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/file",
+              "volume": 247287385,
+              "fileId": "1407374884894193",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/1/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/file",
+              "volume": 247287385,
+              "fileId": "1407374884894195",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/2/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/file",
+              "volume": 247287385,
+              "fileId": "1407374884894196",
+              "directory": false,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/parent/0",
+              "volume": 247287385,
+              "fileId": "1407374883553285",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/parent/1",
+              "volume": 247287385,
+              "fileId": "281474976712546",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/parent/2",
+              "volume": 247287385,
+              "fileId": "844424930283615",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/parent/3",
+              "volume": 247287385,
+              "fileId": "1125899907121160",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/parent/4",
+              "volume": 247287385,
+              "fileId": "1125899907122189",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/parent/5",
+              "volume": 247287385,
+              "fileId": "562949953572992",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/parent/6",
+              "volume": 247287385,
+              "fileId": "422212465066221350",
+              "directory": true,
+              "historicalWork": false
+            },
+            {
+              "key": "lease/final/coord/3/parent/7",
+              "volume": 247287385,
+              "fileId": "7036874419107306",
+              "directory": true,
+              "historicalWork": false
+            }
+          ],
+          "count": 187,
+          "manifestDigest": "db805d66a0179aee5e678f6bea8dd33d17fca30f55ef0c4b4ac1d9567c4a466b",
+          "bindingDigest": "4085a0ad9b53de4772d9b1ba13a164be6cc0356fd6103fb3c64746ad3b49cf75",
+          "storagePlanDigest": "64591c03d9115a20deaf949bfed8a7142cc43edaf559dddbec69681090b65c04",
+          "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+          "deadlineScope": "2c03374e-08de-4719-b27b-df086e28ba51",
+          "leaseEpoch": "9d29c31c-e795-40ad-b14a-36f577766aaf",
+          "claimKey": "4ebcc15640a516ca7dc82c43c145e10a6860f9c75994ab06980653a95c1c4da8",
+          "previousEventDigest": "b05eb8abb402d2814d2d0cf35f8d1fbf35691b7ec79519f94939bbc5080c1987"
+        },
+        {
+          "schema": "windows-client-originals-v3",
+          "documentKind": "original-handle-release-event",
+          "storageStrategy": "windows-anchored-directories-v1",
+          "eventId": "e734ebc1-49fd-4cce-80d6-c58af0c6fe37",
+          "sequence": 88,
+          "sessionId": "4a2ed17d-83d7-452d-87d6-4b742cd8bc9d",
+          "operation": "OriginalHandlesReleasedVerified",
+          "historyDigest": "e6cf467c6d48a529990b450221f1fb062ef767967c070d83698fe8fb389ee3b7",
+          "inventoryDigest": "12b4ae21ef9075a20d97f3a723fa78e88c9b735e3716a0c8e3cc10158a73a4b1",
+          "rows": null,
+          "count": 187,
+          "manifestDigest": "db805d66a0179aee5e678f6bea8dd33d17fca30f55ef0c4b4ac1d9567c4a466b",
+          "bindingDigest": "4085a0ad9b53de4772d9b1ba13a164be6cc0356fd6103fb3c64746ad3b49cf75",
+          "storagePlanDigest": "64591c03d9115a20deaf949bfed8a7142cc43edaf559dddbec69681090b65c04",
+          "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+          "deadlineScope": "2c03374e-08de-4719-b27b-df086e28ba51",
+          "leaseEpoch": "9d29c31c-e795-40ad-b14a-36f577766aaf",
+          "claimKey": "4ebcc15640a516ca7dc82c43c145e10a6860f9c75994ab06980653a95c1c4da8",
+          "previousEventDigest": "7d6eb1bffcc50f9d081c800e7309300074291ce2435c8b272363bfe6ee8542a6"
+        }
+      ]
+    },
+    {
+      "test": "infrastructure::windows_client_originals024::tree::anchored::observation::retirement::completed_tests::wl2_r6_completed_history_native_drift_foreign_and_wrong_read_windows_keep_exact_prefix",
+      "directory": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-fb8f9676-a2de-4330-b00a-73b9c33a0f15\\session",
+      "lastSceneOfFailedGroup": true,
+      "current": {
+        "schema": "windows-client-current-v3",
+        "sessionId": "e4730a7e-539b-4685-aa96-10fb1dfae2a9",
+        "sequence": 68,
+        "eventDigest": "22899e16a2bfbddeae832988c8a14e9878a70eb278bbd2239c8c71eb3cc2605f",
+        "previousEventDigest": "55f29bee6e744857af987422a2a3308e3c2c7ab5c0faa32b8c8c3f496a8fed0f",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "storagePlanDigest": "cff38bde22d77b1b292bcd1206b42d86aaee80305ffab2dfa36f87657c9a3cfc",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "07dde1a39560d31130c5fdbf65fb248b9c2154a47a578e76c50bc54a33c010ec",
+        "bindingDigest": "8b727de95c3b17455dac35799e307dc871e0cae0df878b39a24e0f7298ceb8a5",
+        "leaseEpoch": "4d5f5913-f4e9-4ca6-b854-17d99fa47b10",
+        "claimKey": "e24c13f5bdb1edb362a2097493c606f53eea2ba0bf93fa4feeb940c687556ceb",
+        "deadlineScope": "a8a6d386-9ece-4bf9-ad37-75150cd6eb5d",
+        "leaseState": "Active",
+        "leaseObjectsDigest": "18c0a0e2694457476405c304b683e2996b12d05fa5f277a08007ad5e9ecf4f1c",
+        "workMode": "Observed",
+        "workFrames": [
+          "331d0536fea69c83dfef0db934271df9409dde89482f0e5f89d69ebe1ae78f39",
+          "6a3936d1bfced34e23fb63ec054324d8a9a67af3c0b47a4f483aa9757f4e2fc3"
+        ],
+        "observedFrames": [
+          "d3c7cee69094ada1f57014d29228e356d2bfa3434fdfc2656d5294bf5f826ab2",
+          "6a3936d1bfced34e23fb63ec054324d8a9a67af3c0b47a4f483aa9757f4e2fc3"
+        ],
+        "snapshotPending": null,
+        "snapshotLinks": {
+          "Ready": [
+            "fa313a94aceeb1d25b92b65af7e2382262a0567f21c4f576bfb791ddea820b33",
+            "091de83cfbdb7d15409cc62046a96a043407ab8083734c50af588b1fb764a0aa"
+          ],
+          "PreStop": [
+            "1ea8cfd8887e1d7fc7292c5007a71fad6f59200187baffcb448706d56c5da80e",
+            "12060a13accbdaf5284d1ac3694d09d85ead87b0d8f7424624cd9dbd049383bf"
+          ],
+          "Stopped": [
+            "7570c51cd50b68612232a8096638b6917b1c91f019e86882757af5cd6ffe645c",
+            "d30f37c03063d35e21daa011c063e9f0a78e8dc16ef1b3a9ee04e85020813cd5"
+          ]
+        },
+        "observedSequence": 51,
+        "linkedFrames": {
+          "26": [
+            "5e47a1fc45fef9960b8e4418769a06a360465f9237a3036fe9f7732cd3d058bb",
+            "6a3936d1bfced34e23fb63ec054324d8a9a67af3c0b47a4f483aa9757f4e2fc3"
+          ],
+          "39": [
+            "5e47a1fc45fef9960b8e4418769a06a360465f9237a3036fe9f7732cd3d058bb",
+            "6a3936d1bfced34e23fb63ec054324d8a9a67af3c0b47a4f483aa9757f4e2fc3"
+          ],
+          "51": [
+            "d3c7cee69094ada1f57014d29228e356d2bfa3434fdfc2656d5294bf5f826ab2",
+            "6a3936d1bfced34e23fb63ec054324d8a9a67af3c0b47a4f483aa9757f4e2fc3"
+          ]
+        },
+        "lifecycle": "Stopped",
+        "readyGeneration": [
+          123,
+          456,
+          "7777777777777777777777777777777777777777777777777777777777777777"
+        ],
+        "actionPending": null,
+        "actionKind": "Stop",
+        "recovery": {
+          "planDigest": "66cd6500fa44a615db911e6a63018d53fdb5653e902da61094e3817444a289a4",
+          "progressDigest": "9e5fdb7a10814ca9b9e3e66dbe393bb4b19b5b56687aa258d8582ebc72a255d2",
+          "planVerified": true,
+          "retiredCount": 6,
+          "restoredCount": 0,
+          "pending": null,
+          "wholeTree": 0,
+          "anchorReleasedCount": 0
+        },
+        "history": null,
+        "handles": null
+      },
+      "currentSha256": "f8363264fc050271d03f7b8fdaf57d3c139bcf69578cce7fb5c2e97c45b550a2",
+      "lastImmutableEvent": {
+        "schema": "windows-client-originals-v3",
+        "documentKind": "stopped-recovery-event",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "eventId": "652f1358-3294-4b1f-a761-31cdd298f27e",
+        "sequence": 68,
+        "sessionId": "e4730a7e-539b-4685-aa96-10fb1dfae2a9",
+        "operation": "WorkRetiredVerified",
+        "plan": null,
+        "recoveryPlanDigest": "66cd6500fa44a615db911e6a63018d53fdb5653e902da61094e3817444a289a4",
+        "nodeId": "0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012",
+        "rootId": ".grok",
+        "nodeDigest": "e89c7ae3aea5aeee2202dd16127bb274ce49f3a4f5b17aa06581207f67351718",
+        "movement": {
+          "from": ".grok/settings.json",
+          "to": "custody/.grok/retired-current-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012-562949954762308",
+          "nativeId": "562949954762308",
+          "volume": 247287385,
+          "parentId": "562949954762303",
+          "expectedBefore": "dbbc4815c26631367ce0d24b959e2298c2ac207a2fc8e99200fc5d9cb623fe89",
+          "expectedAfter": "79ea792a02eafac3653fac4e2f2c563b7c1fe518de4970b01303430b09d8f6bb"
+        },
+        "leaseEpoch": "4d5f5913-f4e9-4ca6-b854-17d99fa47b10",
+        "claimKey": "e24c13f5bdb1edb362a2097493c606f53eea2ba0bf93fa4feeb940c687556ceb",
+        "deadlineScope": "a8a6d386-9ece-4bf9-ad37-75150cd6eb5d",
+        "previousEventDigest": "55f29bee6e744857af987422a2a3308e3c2c7ab5c0faa32b8c8c3f496a8fed0f",
+        "storagePlanDigest": "cff38bde22d77b1b292bcd1206b42d86aaee80305ffab2dfa36f87657c9a3cfc",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "07dde1a39560d31130c5fdbf65fb248b9c2154a47a578e76c50bc54a33c010ec",
+        "bindingDigest": "8b727de95c3b17455dac35799e307dc871e0cae0df878b39a24e0f7298ceb8a5"
+      },
+      "historyEvents": [],
+      "handleEvents": []
+    },
+    {
+      "test": "infrastructure::windows_client_originals024::tree::anchored::observation::retirement::completed_tests::wl2_r6_completed_history_native_missing_partial_late_unknown_close_never_mint_receipt",
+      "directory": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-41462eb1-8a77-4b61-84aa-fed1af00eb2c\\session",
+      "lastSceneOfFailedGroup": true,
+      "current": {
+        "schema": "windows-client-current-v3",
+        "sessionId": "355bd10b-ede0-4d64-94f7-6926ce6ade4d",
+        "sequence": 68,
+        "eventDigest": "655df49773f21c3048c2fca1e0792362e61611d8bf38f08643bd234f337938b5",
+        "previousEventDigest": "789bd5ca59195d55a0b8c2762cef1f9ed1ad6de3d03925f4e51fb6a94a88a76d",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "storagePlanDigest": "f27e52eee5e7562f6e00fc5278f6e667925e3070cfd38a46749cc42e1ef99be6",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "67fd85636ae211bc8c497d312028426c4b963d59bc70e253c1f14df104aa6188",
+        "bindingDigest": "a72f116df546bf59b2767e65538cc076303a275a4b6c66d8ccf0f41bff28d961",
+        "leaseEpoch": "88152ff5-79d4-418c-98fe-62ed819a0d14",
+        "claimKey": "3e4149a6cac595f91aae9777aab01e70d87fe5ff069e510f1bc83e03d273f2aa",
+        "deadlineScope": "3d493058-cfda-41ff-85fb-22ce39749452",
+        "leaseState": "Active",
+        "leaseObjectsDigest": "6472288fd6fab7633cc426ef2928c0bbdd9e483d85422e94ddef42b107ae7d6a",
+        "workMode": "Observed",
+        "workFrames": [
+          "b1e0bde0dc2cc94d9b098f6520957ca1729238996071d197cda5f348595a3759",
+          "b4426c4f12b1973db0065ed71c13c40629038c0000cbab75c33162a0ff9444da"
+        ],
+        "observedFrames": [
+          "589c8aea92d3645b7d5ba7eee873ad31ce4717060a1f8519fad63c71c29f975c",
+          "b4426c4f12b1973db0065ed71c13c40629038c0000cbab75c33162a0ff9444da"
+        ],
+        "snapshotPending": null,
+        "snapshotLinks": {
+          "Ready": [
+            "3428423626e7241163b867540e85e39c1df32d518cc60a283c8a6e9e5a01ab86",
+            "174c0794cfb0bfd9745c91652ec7d4fbcdfca22ed2c8fab32570ebadca541eb1"
+          ],
+          "PreStop": [
+            "1ea721d04f6fbe0604aa6d7352fcd4d9e8ada21794c20e5e86b8c263208afcce",
+            "8b965b73e98ec2b3e6539d8e0d83ce6bbef0aefc1c8e46c670f57ac847135f39"
+          ],
+          "Stopped": [
+            "536ca5aaf465d53d772311bb7182cc5a502f9a0c6fd282c5ac2923d745e2871a",
+            "dbd4a42cd1ff3dc9bd73bab9bed8551b4a0b35a9ab878eef0afb28780704d099"
+          ]
+        },
+        "observedSequence": 51,
+        "linkedFrames": {
+          "26": [
+            "5b7dbafcaed70ef154e7a96fd5dedd4aa6d10b8f815c6da88990b4f57ba60522",
+            "b4426c4f12b1973db0065ed71c13c40629038c0000cbab75c33162a0ff9444da"
+          ],
+          "39": [
+            "5b7dbafcaed70ef154e7a96fd5dedd4aa6d10b8f815c6da88990b4f57ba60522",
+            "b4426c4f12b1973db0065ed71c13c40629038c0000cbab75c33162a0ff9444da"
+          ],
+          "51": [
+            "589c8aea92d3645b7d5ba7eee873ad31ce4717060a1f8519fad63c71c29f975c",
+            "b4426c4f12b1973db0065ed71c13c40629038c0000cbab75c33162a0ff9444da"
+          ]
+        },
+        "lifecycle": "Stopped",
+        "readyGeneration": [
+          123,
+          456,
+          "7777777777777777777777777777777777777777777777777777777777777777"
+        ],
+        "actionPending": null,
+        "actionKind": "Stop",
+        "recovery": {
+          "planDigest": "8a27746c7a9d04f13b7fada918f6b051cc2f312c24317ecbb777d617284a34f1",
+          "progressDigest": "b7bbcf6209639859ddd02f5e0b33ba0da8251f51f3f26e58bcffb3a667934ff3",
+          "planVerified": true,
+          "retiredCount": 6,
+          "restoredCount": 0,
+          "pending": null,
+          "wholeTree": 0,
+          "anchorReleasedCount": 0
+        },
+        "history": null,
+        "handles": null
+      },
+      "currentSha256": "cbfb2d172b8a49a7470dfc3dc1101a4892d4b308cb38f981ffad2108b1905ac6",
+      "lastImmutableEvent": {
+        "schema": "windows-client-originals-v3",
+        "documentKind": "stopped-recovery-event",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "eventId": "b4b2f029-c1b1-4a29-861f-eb4fd9dcc9ea",
+        "sequence": 68,
+        "sessionId": "355bd10b-ede0-4d64-94f7-6926ce6ade4d",
+        "operation": "WorkRetiredVerified",
+        "plan": null,
+        "recoveryPlanDigest": "8a27746c7a9d04f13b7fada918f6b051cc2f312c24317ecbb777d617284a34f1",
+        "nodeId": "0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012",
+        "rootId": ".grok",
+        "nodeDigest": "1fb40ffe7270e076642d380a95d8d67f44de0dfdf85290d2cb59eb3746127ac9",
+        "movement": {
+          "from": ".grok/settings.json",
+          "to": "custody/.grok/retired-current-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012-562949954762370",
+          "nativeId": "562949954762370",
+          "volume": 247287385,
+          "parentId": "562949954762365",
+          "expectedBefore": "55797612295b433a1e79681a3f26d6e2604bba365342d17fc2816f0f74c2a44f",
+          "expectedAfter": "1bf48bec2fe3f907728ef1262a9ff45a70401eed186150925d5a802b68c81a52"
+        },
+        "leaseEpoch": "88152ff5-79d4-418c-98fe-62ed819a0d14",
+        "claimKey": "3e4149a6cac595f91aae9777aab01e70d87fe5ff069e510f1bc83e03d273f2aa",
+        "deadlineScope": "3d493058-cfda-41ff-85fb-22ce39749452",
+        "previousEventDigest": "789bd5ca59195d55a0b8c2762cef1f9ed1ad6de3d03925f4e51fb6a94a88a76d",
+        "storagePlanDigest": "f27e52eee5e7562f6e00fc5278f6e667925e3070cfd38a46749cc42e1ef99be6",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "67fd85636ae211bc8c497d312028426c4b963d59bc70e253c1f14df104aa6188",
+        "bindingDigest": "a72f116df546bf59b2767e65538cc076303a275a4b6c66d8ccf0f41bff28d961"
+      },
+      "historyEvents": [],
+      "handleEvents": []
+    },
+    {
+      "test": "infrastructure::windows_client_originals024::tree::anchored::observation::retirement::completed_tests::wl2_r6_completed_history_native_original_expiry_allows_fresh_read_but_never_append",
+      "directory": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-98a9342c-d7b7-4007-bd4b-f9375a97f989\\session",
+      "lastSceneOfFailedGroup": true,
+      "current": {
+        "schema": "windows-client-current-v3",
+        "sessionId": "5123ce83-4987-4b54-a949-1b8b1706be4b",
+        "sequence": 67,
+        "eventDigest": "8c4404b2622f93bfb0413b7cfb63794406183b61d3c763b41f64098816c8be0f",
+        "previousEventDigest": "f0af1efaafc5b7b7c0cfee565d6dc80707804a3e2806acd82bcc0025cd8308d6",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "storagePlanDigest": "fe6014847b58368c96fb1ba64c3791212ec46001e38342c7257cff45af1737e1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "46a0d3e8f26b71b2fbb92f0dd84d0d6e07537e02fcb7dddf341b1d76a6eb7b65",
+        "bindingDigest": "580e1980d2b1a8f300ffb0d2a09a4bd7776e9cb88977109dc64ab28cf5ddd932",
+        "leaseEpoch": "178e1264-1d2e-460b-ba63-3b54e22bdae8",
+        "claimKey": "4d60284a8b935cfe6f2035ec76279e271beab01e4f26c9a5d9126343bb088ed9",
+        "deadlineScope": "380ded59-a8ee-4d6f-9c1f-0408946847f7",
+        "leaseState": "Active",
+        "leaseObjectsDigest": "80c0fe74352a8a5a18de7a15ebc53aa11ccef8b95046738fd9a6445624f45f32",
+        "workMode": "Observed",
+        "workFrames": [
+          "dd5f79e5960dd505a9c8366c961c4b94d6ebe7e214f8a2a78270091dbc98e8a2",
+          "f5b276df578945fe9e6ebe1a3e79ecc98165df9e3a4c73c34aedcaba9752e2f0"
+        ],
+        "observedFrames": [
+          "749ef95a407b0359d491be29a4b8db0dc1657af6a50ec5e04f3b6721f41fb013",
+          "f5b276df578945fe9e6ebe1a3e79ecc98165df9e3a4c73c34aedcaba9752e2f0"
+        ],
+        "snapshotPending": null,
+        "snapshotLinks": {
+          "Ready": [
+            "d7c4ed21014718dc2f408a176a1516786077df9a3dbb3cb744ce1c36939979d4",
+            "e550d1b5b824ebd22e2595b31db261720252cc4ffa581cd586365e1f835da0c3"
+          ],
+          "PreStop": [
+            "9139293c7418ddfee1fe9bb6547d6e6a317f52690160f31f2da36d3e4cb857f8",
+            "5f758ad29c793588ab778535230e4909565edc2c8e976a8a0167fb9852493667"
+          ],
+          "Stopped": [
+            "6fb88df60a218cd93739baab3b1e9f99763c6b26297ed314950596e73f317239",
+            "752d3c2daf294ad3c4093dbbe68053cacfcfce8dbd7dd048585af82d658f0bb3"
+          ]
+        },
+        "observedSequence": 51,
+        "linkedFrames": {
+          "26": [
+            "4b4ba0186e44c78db78fa170fa577db0530fe9e7f43872a82148f1a0d43889c8",
+            "f5b276df578945fe9e6ebe1a3e79ecc98165df9e3a4c73c34aedcaba9752e2f0"
+          ],
+          "39": [
+            "4b4ba0186e44c78db78fa170fa577db0530fe9e7f43872a82148f1a0d43889c8",
+            "f5b276df578945fe9e6ebe1a3e79ecc98165df9e3a4c73c34aedcaba9752e2f0"
+          ],
+          "51": [
+            "749ef95a407b0359d491be29a4b8db0dc1657af6a50ec5e04f3b6721f41fb013",
+            "f5b276df578945fe9e6ebe1a3e79ecc98165df9e3a4c73c34aedcaba9752e2f0"
+          ]
+        },
+        "lifecycle": "Stopped",
+        "readyGeneration": [
+          123,
+          456,
+          "7777777777777777777777777777777777777777777777777777777777777777"
+        ],
+        "actionPending": null,
+        "actionKind": "Stop",
+        "recovery": {
+          "planDigest": "90fc86445fdc92a6bffdae1813956f8fede7165eff02ef88a5773d8c19ad1b0f",
+          "progressDigest": "0336cf3fe8a8175a9e9e57fed31ee0f3dc27742b13dacdd287ae554baa526c1b",
+          "planVerified": true,
+          "retiredCount": 5,
+          "restoredCount": 0,
+          "pending": [
+            "WorkRetireIntent",
+            "0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012"
+          ],
+          "wholeTree": 0,
+          "anchorReleasedCount": 0
+        },
+        "history": null,
+        "handles": null
+      },
+      "currentSha256": "697fe7ba154b6768ab77db098394603e5fc03eda02e146dd109761d67a4b44fe",
+      "lastImmutableEvent": {
+        "schema": "windows-client-originals-v3",
+        "documentKind": "stopped-recovery-event",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "eventId": "2f5d17a9-037f-4247-a93f-87469a776c52",
+        "sequence": 67,
+        "sessionId": "5123ce83-4987-4b54-a949-1b8b1706be4b",
+        "operation": "WorkRetireIntent",
+        "plan": null,
+        "recoveryPlanDigest": "90fc86445fdc92a6bffdae1813956f8fede7165eff02ef88a5773d8c19ad1b0f",
+        "nodeId": "0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012",
+        "rootId": ".grok",
+        "nodeDigest": "1810d26743e479e37163f5db0d193df029e9244e8546885d72e59c6bcb732f71",
+        "movement": {
+          "from": ".grok/settings.json",
+          "to": "custody/.grok/retired-current-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012-562949954762430",
+          "nativeId": "562949954762430",
+          "volume": 247287385,
+          "parentId": "562949954762425",
+          "expectedBefore": "a0be2a8135f6d10f8eeeb291a62e69c2d65f34f04b8afc8eb0e1717109cfc00a",
+          "expectedAfter": "68ea22f17d4c119a819d7521c3a837fc549fc9532c7a95825a370ee703d3f169"
+        },
+        "leaseEpoch": "178e1264-1d2e-460b-ba63-3b54e22bdae8",
+        "claimKey": "4d60284a8b935cfe6f2035ec76279e271beab01e4f26c9a5d9126343bb088ed9",
+        "deadlineScope": "380ded59-a8ee-4d6f-9c1f-0408946847f7",
+        "previousEventDigest": "f0af1efaafc5b7b7c0cfee565d6dc80707804a3e2806acd82bcc0025cd8308d6",
+        "storagePlanDigest": "fe6014847b58368c96fb1ba64c3791212ec46001e38342c7257cff45af1737e1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "46a0d3e8f26b71b2fbb92f0dd84d0d6e07537e02fcb7dddf341b1d76a6eb7b65",
+        "bindingDigest": "580e1980d2b1a8f300ffb0d2a09a4bd7776e9cb88977109dc64ab28cf5ddd932"
+      },
+      "historyEvents": [],
+      "handleEvents": []
+    }
+  ],
+  "readOnlyAfterOriginalDeadline": true,
+  "noMutationOrCatchup": true
+}
