@@ -4,6 +4,7 @@ use super::*;
 use std::os::windows::io::{AsRawHandle, FromRawHandle};
 mod archive;
 pub(super) mod retirement;
+pub(in crate::infrastructure::windows_client_originals024) use retirement::RecoveryWitness;
 pub(super) mod series;
 pub(super) mod snapshots;
 pub(in crate::infrastructure::windows_client_originals024) use snapshots::{

@@ -2,6 +2,9 @@
 //! native component grants no permission. Execution stays private until the
 //! actual typed Stop/content + canonical node intent/result driver is joined.
 use super::*;
+mod witness;
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::recovery_witness;
+pub(in crate::infrastructure::windows_client_originals024) use witness::RecoveryWitness;
 struct Item {
     frame_index: usize,
     retired: bool,
@@ -381,6 +384,9 @@ impl AnchoredTree {
         result
     }
 }
+#[cfg(test)]
+#[path = "retirement_chain_tests.rs"]
+mod chain_tests;
 #[cfg(test)]
 #[path = "retirement_tests.rs"]
 mod tests;

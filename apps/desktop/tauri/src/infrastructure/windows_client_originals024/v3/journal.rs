@@ -21,6 +21,7 @@ mod actions;
 mod driver;
 mod leases;
 mod observations;
+mod recovery;
 mod snapshots;
 fn before(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {

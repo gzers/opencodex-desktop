@@ -259,6 +259,17 @@ fn event(
         recovery_plan_digest: plan.digest().unwrap(),
         node_id: id,
         node_digest,
+        movement: node.map(|id| {
+            plan.movement(
+                id,
+                matches!(
+                    op,
+                    RecoveryOperation::WorkRetireIntent | RecoveryOperation::WorkRetiredVerified
+                ),
+            )
+            .unwrap()
+            .1
+        }),
         lease_epoch: g.epoch.clone(),
         claim_key: g.claim.clone(),
         deadline_scope: g.deadline.clone(),
@@ -480,5 +491,51 @@ fn wl2_r6_recovery_data_context_drift_unheld_and_unknown_events_never_advance() 
         .apply_recovery(&p, &event(&g, RecoveryPlanIntent, &recovery, None))
         .is_err());
     println!("r6 recovery DATA context drift/unknown/unheld/not-stopped reject before progress writes; no replacement deadline or text authority");
+    f.retain();
+}
+#[test]
+fn wl2_r6_recovery_data_exact_native_location_identity_parent_and_expected_states_reject_drift() {
+    use RecoveryOperation::*;
+    let (mut f, p, _, _) = plan();
+    let (mut g, data) = stopped(&p);
+    let recovery = decode(&data);
+    g.apply_recovery(&p, &event(&g, RecoveryPlanIntent, &recovery, None))
+        .unwrap();
+    g.apply_recovery(&p, &event(&g, RecoveryPlanVerified, &recovery, None))
+        .unwrap();
+    let id = recovery.retirement_keys().into_keys().next().unwrap();
+    let good = serde_json::to_value(event(&g, WorkRetireIntent, &recovery, Some(&id))).unwrap();
+    let before = serde_json::to_value(g.recovery_summary().unwrap()).unwrap();
+    for field in [
+        "from",
+        "to",
+        "nativeId",
+        "parentId",
+        "expectedBefore",
+        "expectedAfter",
+        "volume",
+    ] {
+        let mut bad = good.clone();
+        bad["movement"][field] = if field == "volume" {
+            json!(0)
+        } else {
+            json!("foreign")
+        };
+        assert!(
+            g.apply_recovery(&p, &serde_json::from_value(bad).unwrap())
+                .is_err(),
+            "{field}"
+        );
+        assert_eq!(
+            serde_json::to_value(g.recovery_summary().unwrap()).unwrap(),
+            before
+        );
+    }
+    let duplicate =
+        String::from_utf8(encoded(&event(&g, WorkRetireIntent, &recovery, Some(&id))).unwrap())
+            .unwrap()
+            .replacen("\"nodeId\":", "\"nodeId\":null,\"nodeId\":", 1);
+    assert!(serde_json::from_str::<segments::ChainEntry>(&duplicate).is_err());
+    println!("r6 recovery DATA exact native from/to/volume/fileID/destination-parent and expected state digests bound to immutable whole-plan row;7 location drifts/duplicate fields refuse without progress change");
     f.retain();
 }

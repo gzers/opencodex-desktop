@@ -26,6 +26,7 @@ mod artifacts;
 mod locks;
 pub(super) use artifacts::ArtifactFrame;
 mod working;
+pub(super) use anchored::observation::RecoveryWitness;
 pub(super) use anchored::observation::{SnapshotLinkObservation, SnapshotWitness};
 pub(super) use anchored::{capture::CapturedTrees, AnchoredTree};
 pub(super) use working::{SnapshotPhase, WorkingArchive, WorkingReference};

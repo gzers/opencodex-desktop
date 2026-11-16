@@ -10,6 +10,26 @@ use crate::{
     modules::runtime::official_lifecycle024::ServiceObservation,
 };
 impl Journal {
+    #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn component_stop_scope_for_test(
+        &mut self,
+        end: Instant,
+    ) -> io::Result<()> {
+        if self.source_action.is_some() {
+            return Err(invalid());
+        }
+        let scope = uuid::Uuid::new_v4().to_string();
+        for operation in [
+            ActionOperation::StopActionIntent,
+            ActionOperation::StopActionBoundVerified,
+        ] {
+            let e = self.action_event(operation, ActionKind::Stop, scope.clone())?;
+            self.append_entry_inner(ChainEntry::Action(e), end)?;
+        }
+        // Synthetic DATA only, absolutely no new deadline or native receipt.
+        // self.deadline remains the exact original fixture cutoff.
+        self.check(end)
+    }
     fn action_event(
         &self,
         operation: ActionOperation,

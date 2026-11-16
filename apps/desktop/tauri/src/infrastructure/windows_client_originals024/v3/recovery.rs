@@ -81,6 +81,61 @@ fn same<A: Serialize, B: Serialize>(a: &A, b: &B) -> io::Result<bool> {
         == serde_json::to_value(b).map_err(|_| invalid())?)
 }
 impl RecoveryPlan {
+    fn movement(&self, id: &str, retire: bool) -> io::Result<(String, RecoveryMove)> {
+        let plan = self.digest()?;
+        let (row_digest, from, to, parent_id, native_id, volume, before, after) = if retire {
+            let (r, n) = self
+                .roots
+                .iter()
+                .flat_map(|r| r.retirements.iter().map(move |n| (r, n)))
+                .find(|(r, n)| key(&r.original_tree.nodes[0].root_id, &n.relative) == id)
+                .ok_or_else(invalid)?;
+            let leaf = &r.original_tree.nodes[0].root_id;
+            let target = Path::new(&n.target)
+                .file_name()
+                .and_then(|s| s.to_str())
+                .ok_or_else(invalid)?;
+            (
+                hash::sha256_hex(&encoded(n)?),
+                format!("{leaf}/{}", n.relative),
+                format!("custody/{leaf}/{target}"),
+                n.target_parent_id.clone(),
+                n.current_file_id.clone(),
+                n.current_volume,
+                "CurrentAtClient",
+                "CurrentAtRetirement",
+            )
+        } else {
+            let n = self
+                .roots
+                .iter()
+                .flat_map(|r| &r.original_tree.nodes)
+                .find(|n| n.node_id == id && n.kind == Kind::CustodiedFile)
+                .ok_or_else(invalid)?;
+            (
+                hash::sha256_hex(&encoded(n)?),
+                format!("custody/{}/original-{}", n.root_id, n.node_id),
+                format!("{}/{}", n.root_id, n.relative),
+                n.parent_id.clone(),
+                n.file_id.clone(),
+                n.volume,
+                "OriginalAtCustody",
+                "OriginalAtClient",
+            )
+        };
+        Ok((
+            row_digest,
+            RecoveryMove {
+                from,
+                to,
+                parent_id,
+                native_id,
+                volume,
+                expected_before: hash::sha256_hex(&encoded(&(&plan, id, before))?),
+                expected_after: hash::sha256_hex(&encoded(&(&plan, id, after))?),
+            },
+        ))
+    }
     pub(super) fn from_native_data(roots: [serde_json::Value; 2]) -> io::Result<Self> {
         serde_json::from_value(serde_json::json!({"roots":roots})).map_err(|_| invalid())
     }
@@ -337,6 +392,17 @@ pub(super) enum RecoveryOperation {
     OriginalRestoreIntent,
     OriginalRestoredVerified,
 }
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct RecoveryMove {
+    from: String,
+    to: String,
+    native_id: String,
+    volume: u32,
+    parent_id: String,
+    expected_before: String,
+    expected_after: String,
+}
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub(super) struct RecoveryEvent {
@@ -351,6 +417,7 @@ pub(super) struct RecoveryEvent {
     pub(super) recovery_plan_digest: String,
     pub(super) node_id: Option<String>,
     pub(super) node_digest: Option<String>,
+    pub(super) movement: Option<RecoveryMove>,
     pub(super) lease_epoch: String,
     pub(super) claim_key: String,
     pub(super) deadline_scope: String,
@@ -371,7 +438,7 @@ pub(super) struct RecoveryProgress {
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub(super) struct RecoverySummary {
-    plan_digest: String,
+    pub(super) plan_digest: String,
     progress_digest: String,
     plan_verified: bool,
     retired_count: usize,
@@ -379,6 +446,58 @@ pub(super) struct RecoverySummary {
     pending: Option<(RecoveryOperation, String)>,
 }
 impl Progress {
+    pub(super) fn recovery_event(
+        &self,
+        operation: RecoveryOperation,
+        plan: Option<&RecoveryPlan>,
+        node: Option<&str>,
+    ) -> io::Result<RecoveryEvent> {
+        let p = plan
+            .or_else(|| self.recovery.as_ref().map(|r| &r.plan))
+            .ok_or_else(invalid)?;
+        let movement = node
+            .map(|id| {
+                p.movement(
+                    id,
+                    matches!(
+                        operation,
+                        RecoveryOperation::WorkRetireIntent
+                            | RecoveryOperation::WorkRetiredVerified
+                    ),
+                )
+            })
+            .transpose()?;
+        let (node_digest, movement) = match movement {
+            Some((d, m)) => (Some(d), Some(m)),
+            None => (None, None),
+        };
+        Ok(RecoveryEvent {
+            schema:
+                crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
+                    .into(),
+            document_kind: "stopped-recovery-event".into(),
+            storage_strategy: ANCHORED_STORAGE_STRATEGY.into(),
+            event_id: uuid::Uuid::new_v4().to_string(),
+            sequence: self.sequence.checked_add(1).ok_or_else(invalid)?,
+            session_id: self.session.clone(),
+            operation,
+            plan: plan
+                .map(|p| serde_json::from_slice(&encoded(p)?).map_err(|_| invalid()))
+                .transpose()?,
+            recovery_plan_digest: p.digest()?,
+            node_id: node.map(str::to_string),
+            node_digest,
+            movement,
+            lease_epoch: self.epoch.clone(),
+            claim_key: self.claim.clone(),
+            deadline_scope: self.deadline.clone(),
+            previous_event_digest: self.tip.clone(),
+            storage_plan_digest: self.plan.clone(),
+            security_policy_digest: Policy::fixed().digest()?,
+            manifest_digest: self.manifest.clone(),
+            binding_digest: self.binding.clone(),
+        })
+    }
     pub(super) fn recovery_summary(&self) -> io::Result<Option<RecoverySummary>> {
         self.recovery
             .as_ref()
@@ -437,6 +556,7 @@ impl Progress {
             if self.recovery.is_some()
                 || e.node_id.is_some()
                 || e.node_digest.is_some()
+                || e.movement.is_some()
                 || e.recovery_plan_digest != p.digest()?
                 || !plan.roots.iter().flat_map(|r| &r.nodes).all(|n| {
                     self.nodes[&n.node_id].0 == if n.kind == Kind::CustodiedFile { 4 } else { 1 }
@@ -464,6 +584,7 @@ impl Progress {
                     || r.pending.is_some()
                     || e.node_id.is_some()
                     || e.node_digest.is_some()
+                    || e.movement.is_some()
                 {
                     return Err(invalid());
                 }
@@ -471,6 +592,13 @@ impl Progress {
             } else {
                 let id = e.node_id.as_ref().ok_or_else(invalid)?;
                 if !r.verified {
+                    return Err(invalid());
+                }
+                let (_, expected_move) = r.plan.movement(
+                    id,
+                    matches!(e.operation, WorkRetireIntent | WorkRetiredVerified),
+                )?;
+                if e.movement.as_ref() != Some(&expected_move) {
                     return Err(invalid());
                 }
                 let (map, intent, result, expected) = match e.operation {

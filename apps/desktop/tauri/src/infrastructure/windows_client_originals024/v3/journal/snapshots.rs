@@ -15,6 +15,69 @@ use crate::{
     },
 };
 impl Journal {
+    #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn component_begin_phase_for_test(
+        &mut self,
+        purpose: &str,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<ObservationContext> {
+        if self.source_action.is_some() {
+            return Err(invalid());
+        }
+        let purpose = match purpose {
+            "ready" => SnapshotPurpose::Ready,
+            "pre-stop" => SnapshotPurpose::PreStop,
+            "stopped" => SnapshotPurpose::Stopped,
+            _ => return Err(invalid()),
+        };
+        self.begin_snapshot(purpose, claim, end)
+    }
+    #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn component_record_phase_for_test(
+        &mut self,
+        purpose: &str,
+        mut witness: SnapshotWitness<'_>,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        if self.source_action.is_some() {
+            return Err(invalid());
+        }
+        self.snapshot_claim(claim, end)?;
+        let (purpose, operation) = match purpose {
+            "ready" => (SnapshotPurpose::Ready, SnapshotOperation::ReadyVerified),
+            "pre-stop" => (SnapshotPurpose::PreStop, SnapshotOperation::PreStopVerified),
+            "stopped" => (SnapshotPurpose::Stopped, SnapshotOperation::StoppedVerified),
+            _ => return Err(invalid()),
+        };
+        let (refs, sequence) = Self::snapshot_refs(witness.reborrow(), end)?;
+        let ready = self
+            .progress
+            .ready_generation
+            .clone()
+            .unwrap_or((123, 456, "7".repeat(64)));
+        let e = self.snapshot_event(
+            operation,
+            purpose,
+            sequence,
+            Some(refs),
+            Some(ready.clone()),
+        )?;
+        self.append_entry_inner(ChainEntry::Snapshot(e), end)?;
+        if purpose == SnapshotPurpose::PreStop {
+            let e = self.snapshot_event(
+                SnapshotOperation::TeardownPrepared,
+                purpose,
+                sequence,
+                None,
+                Some(ready),
+            )?;
+            self.append_entry_inner(ChainEntry::Snapshot(e), end)?;
+        }
+        witness.references(end)?;
+        self.snapshot_claim(claim, end)
+    }
     /// Select only canonical production phase snapshots AFTER actual typed
     /// Stop predicates. Returned locators remain content DATA, no restore grant.
     pub(in crate::infrastructure::windows_client_originals024) fn stopped_content_observations(
