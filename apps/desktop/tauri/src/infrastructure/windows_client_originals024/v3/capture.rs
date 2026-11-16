@@ -153,8 +153,10 @@ impl CaptureStore {
 }
 impl CaptureSlot {
     /// Actual internal restore/history lane only. This does NOT return a
-    /// ClosedEligibility or ordinary Stop success: original-handle ownership,
-    /// process/supervisor completion history and final adapter remain pending.
+    /// ClosedEligibility or ordinary Stop success: the core retains/transfers
+    /// originals before explicit close, but process/supervisor completion
+    /// history, complete production inventory qualification and adapter remain
+    /// pending. No public production acceptance follows this internal call.
     pub(in crate::infrastructure::windows_client_originals024) fn restore_stopped_existing(
         &mut self,
         owner: &mut Owner,

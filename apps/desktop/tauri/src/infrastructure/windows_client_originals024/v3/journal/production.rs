@@ -81,6 +81,31 @@ impl<'a> ProductionStop<'a> {
     }
 }
 impl Journal {
+    pub(in crate::infrastructure::windows_client_originals024) fn close_qualified_stopped_originals(
+        &mut self,
+        guard: &mut ProductionStop<'_>,
+        assessment: &NativeContentAssessment,
+        trees: &mut Option<[super::super::super::tree::AnchoredTree; 2]>,
+        end: Instant,
+    ) -> io::Result<()> {
+        // Install exact ownership before guard checks, native readback or any
+        // possible deadline failure. A failed/expired close retains its trees,
+        // held/closed/unknown inventory and canonical prefix in this journal.
+        let result = (|| {
+            self.retain_original_handle_ownership(trees, end)?;
+            self.check_stopped_content(guard, assessment, end)?;
+            self.close_original_handles(end)?;
+            self.check_stopped_content(guard, assessment, end)?;
+            if self.close_completion.is_none() {
+                return Err(invalid());
+            }
+            before(end)
+        })();
+        if result.is_err() {
+            self.poison_segment();
+        }
+        result
+    }
     /// The intent/result both require the same ACTUAL typed guard and private
     /// native assessment. The caller re-runs the complete BOTH-tree barrier
     /// between these records, before transferring any frozen current handle.

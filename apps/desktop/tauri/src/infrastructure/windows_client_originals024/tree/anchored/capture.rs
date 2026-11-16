@@ -45,7 +45,7 @@ impl PreparedStop {
     }
 }
 pub(in crate::infrastructure::windows_client_originals024) struct CapturedTrees {
-    trees: [AnchoredTree; 2],
+    trees: Option<[AnchoredTree; 2]>,
     journal: Journal,
     prepared: bool,
     opened: bool,
@@ -71,6 +71,7 @@ impl CapturedTrees {
     ) -> io::Result<()> {
         use crate::infrastructure::windows_client_originals024::v3::journal::ProductionStop;
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed
                 || !self.stopped_observed
                 || self.restored_history
@@ -84,7 +85,7 @@ impl CapturedTrees {
                 official.record_sha256(),
                 end,
             )?;
-            let root = self.trees[0].parent.path().join(".codex");
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease
                 .as_mut()
                 .ok_or_else(invalid)?
@@ -103,7 +104,7 @@ impl CapturedTrees {
             )?;
             guard.check(&mut self.journal, end)?;
             let assessment = super::observation::series::assess_native_stopped_series(
-                &mut self.trees,
+                trees,
                 guard.observations(),
                 content,
                 &mut claim,
@@ -125,7 +126,7 @@ impl CapturedTrees {
             // barrier under the very same live claim, scope and original end.
             // A second assessment must encode exactly the first intent data.
             let fresh = super::observation::series::assess_native_stopped_series(
-                &mut self.trees,
+                trees,
                 guard.observations(),
                 content,
                 &mut claim,
@@ -133,11 +134,10 @@ impl CapturedTrees {
             )?;
             self.journal
                 .record_stopped_content(&mut guard, &fresh, true, &mut claim, end)?;
-            for tree in &mut self.trees {
+            for tree in trees.iter_mut() {
                 tree.capture_retirement(&mut claim, end)?;
             }
-            let witness =
-                super::observation::retirement::recovery_witness(&mut self.trees, &mut claim, end)?;
+            let witness = super::observation::retirement::recovery_witness(trees, &mut claim, end)?;
             drop(claim);
             self.journal.restore_qualified_stopped(
                 &mut guard,
@@ -150,6 +150,13 @@ impl CapturedTrees {
             if lease.is_some() {
                 return Err(invalid());
             }
+            self.journal.close_qualified_stopped_originals(
+                &mut guard,
+                self.content_assessment.as_ref().ok_or_else(invalid)?,
+                &mut self.trees,
+                end,
+            )?;
+            guard.check(&mut self.journal, end)?;
             self.restored_history = true;
             Ok(())
         })();
@@ -174,6 +181,7 @@ impl CapturedTrees {
     ) -> io::Result<serde_json::Value> {
         use crate::modules::runtime::windows_lifecycle024_contract::SupervisorAbsence;
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed || !self.stopped_observed {
                 return Err(invalid());
             }
@@ -192,14 +200,14 @@ impl CapturedTrees {
             owner
                 .originals_check_stopped_records(end)
                 .map_err(io::Error::other)?;
-            let root = self.trees[0].parent.path().join(".codex");
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease.anchored_claim(&root, end)?;
             let observations = self.journal.stopped_content_observations(
                 source, owner, normal, absent, official, &mut claim, end,
             )?;
             let plans = [
-                self.trees[0].capture_retirement(&mut claim, end)?,
-                self.trees[1].capture_retirement(&mut claim, end)?,
+                trees[0].capture_retirement(&mut claim, end)?,
+                trees[1].capture_retirement(&mut claim, end)?,
             ];
             source.check(owner, end).map_err(io::Error::other)?;
             normal.check(owner, end).map_err(io::Error::other)?;
@@ -230,6 +238,7 @@ impl CapturedTrees {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed
                 || !self.prepared
                 || !self.opened
@@ -250,44 +259,39 @@ impl CapturedTrees {
                 .bind_original_stop_action(source, owner, ready, kind, end)?;
             self.journal.check_source_owner(owner, end)?;
             super::observation::reacquire_for_observation(
-                &mut self.trees,
+                trees,
                 &mut self.journal,
                 lease,
                 Some(owner),
                 end,
             )?;
-            let root = self.trees[0].parent.path().join(".codex");
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease
                 .as_mut()
                 .ok_or_else(invalid)?
                 .anchored_claim(&root, end)?;
-            super::observation::observe_trees(&mut self.trees, &mut self.journal, &mut claim, end)?;
+            super::observation::observe_trees(trees, &mut self.journal, &mut claim, end)?;
             let context = self
                 .journal
                 .begin_pre_stop_snapshot_link(source, owner, ready, &mut claim, end)?;
             super::observation::snapshots::create_snapshots(
-                &mut self.trees,
+                trees,
                 &mut self.journal,
                 &context,
                 &mut claim,
                 false,
                 end,
             )?;
-            let witness = super::observation::snapshots::witness(&mut self.trees, end)?;
+            let witness = super::observation::snapshots::witness(trees, end)?;
             self.journal
                 .record_pre_stop_phase(source, owner, ready, witness, &mut claim, end)?;
             self.journal
                 .record_teardown_prepared(source, owner, ready, &mut claim, end)?;
-            super::observation::series::resume_trees(
-                &mut self.trees,
-                &mut self.journal,
-                &mut claim,
-                end,
-            )?;
+            super::observation::series::resume_trees(trees, &mut self.journal, &mut claim, end)?;
             drop(claim);
             // Release completed capture critical section before official code
             // may itself acquire claim. Never await teardown with our lock held.
-            super::segments::release_trees(&mut self.trees, &mut self.journal, lease, end)?;
+            super::segments::release_trees(trees, &mut self.journal, lease, end)?;
             source.check(owner, end).map_err(io::Error::other)?;
             owner
                 .originals_check_ready(ready, end)
@@ -319,6 +323,7 @@ impl CapturedTrees {
     > {
         use crate::modules::runtime::windows_lifecycle024_contract::SupervisorAbsence;
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed || !self.ready || self.stopped_observed || lease.is_some() {
                 return Err(invalid());
             }
@@ -338,30 +343,30 @@ impl CapturedTrees {
                 .originals_check_stopped_records(end)
                 .map_err(io::Error::other)?;
             super::observation::reacquire_for_observation(
-                &mut self.trees,
+                trees,
                 &mut self.journal,
                 lease,
                 Some(owner),
                 end,
             )?;
-            let root = self.trees[0].parent.path().join(".codex");
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease
                 .as_mut()
                 .ok_or_else(invalid)?
                 .anchored_claim(&root, end)?;
-            super::observation::observe_trees(&mut self.trees, &mut self.journal, &mut claim, end)?;
+            super::observation::observe_trees(trees, &mut self.journal, &mut claim, end)?;
             let context = self.journal.begin_stopped_snapshot_link(
                 source, owner, normal, absent, official, &mut claim, end,
             )?;
             super::observation::snapshots::create_snapshots(
-                &mut self.trees,
+                trees,
                 &mut self.journal,
                 &context,
                 &mut claim,
                 false,
                 end,
             )?;
-            let witness = super::observation::snapshots::witness(&mut self.trees, end)?;
+            let witness = super::observation::snapshots::witness(trees, end)?;
             self.journal.record_stopped_phase(
                 source, owner, normal, absent, official, witness, &mut claim, end,
             )?;
@@ -392,9 +397,10 @@ impl CapturedTrees {
                 return Err(invalid());
             }
             self.check_working(lease, end)?;
-            let root = self.trees[0].parent.path().join(".codex");
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease.anchored_claim(&root, end)?;
-            super::observation::open_trees(&mut self.trees, &mut self.journal, &mut claim, end)?;
+            super::observation::open_trees(trees, &mut self.journal, &mut claim, end)?;
             drop(claim);
             self.opened = true;
             self.check_working(lease, end)
@@ -412,6 +418,7 @@ impl CapturedTrees {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed || !self.prepared || !self.opened || self.ready || lease.is_some() {
                 return Err(invalid());
             }
@@ -420,13 +427,7 @@ impl CapturedTrees {
                 .map_err(io::Error::other)?;
             source.check(owner, end).map_err(io::Error::other)?;
             self.journal.check_source_owner(owner, end)?;
-            super::segments::reacquire_trees(
-                &mut self.trees,
-                &mut self.journal,
-                lease,
-                Some(owner),
-                end,
-            )?;
+            super::segments::reacquire_trees(trees, &mut self.journal, lease, Some(owner), end)?;
             self.check_working(lease.as_mut().ok_or_else(invalid)?, end)?;
             owner
                 .originals_require_unresumed(end)
@@ -452,6 +453,7 @@ impl CapturedTrees {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed || !self.prepared || !self.opened || self.ready || lease.is_some() {
                 return Err(invalid());
             }
@@ -461,40 +463,35 @@ impl CapturedTrees {
                 .map_err(io::Error::other)?;
             self.journal.check_source_owner(owner, end)?;
             super::observation::reacquire_for_observation(
-                &mut self.trees,
+                trees,
                 &mut self.journal,
                 lease,
                 Some(owner),
                 end,
             )?;
-            let root = self.trees[0].parent.path().join(".codex");
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease
                 .as_mut()
                 .ok_or_else(invalid)?
                 .anchored_claim(&root, end)?;
-            super::observation::observe_trees(&mut self.trees, &mut self.journal, &mut claim, end)?;
+            super::observation::observe_trees(trees, &mut self.journal, &mut claim, end)?;
             let context = self
                 .journal
                 .begin_ready_snapshot_link(source, owner, ready, &mut claim, end)?;
             super::observation::snapshots::create_snapshots(
-                &mut self.trees,
+                trees,
                 &mut self.journal,
                 &context,
                 &mut claim,
                 false,
                 end,
             )?;
-            let witness = super::observation::snapshots::witness(&mut self.trees, end)?;
+            let witness = super::observation::snapshots::witness(trees, end)?;
             self.journal
                 .record_ready_phase(source, owner, ready, witness, &mut claim, end)?;
-            super::observation::series::resume_trees(
-                &mut self.trees,
-                &mut self.journal,
-                &mut claim,
-                end,
-            )?;
+            super::observation::series::resume_trees(trees, &mut self.journal, &mut claim, end)?;
             drop(claim);
-            super::segments::release_trees(&mut self.trees, &mut self.journal, lease, end)?;
+            super::segments::release_trees(trees, &mut self.journal, lease, end)?;
             source.check(owner, end).map_err(io::Error::other)?;
             owner
                 .originals_check_ready(ready, end)
@@ -513,7 +510,7 @@ impl CapturedTrees {
         journal: Journal,
     ) -> Self {
         Self {
-            trees,
+            trees: Some(trees),
             journal,
             prepared: false,
             opened: false,
@@ -531,14 +528,15 @@ impl CapturedTrees {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed || self.prepared {
                 return Err(invalid());
             }
             self.journal.check(end)?;
-            let root = self.trees[0].parent.path().join(".codex");
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease.anchored_claim(&root, end)?;
             self.journal.prepare_initial_batches(
-                super::batches::initial_batch_witness(&mut self.trees, &mut claim, end)?,
+                super::batches::initial_batch_witness(trees, &mut claim, end)?,
                 &mut claim,
                 end,
             )?;
@@ -558,18 +556,18 @@ impl CapturedTrees {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed || self.prepared {
                 return Err(invalid());
             }
             self.journal.check(end)?;
-            let root = self.trees[0].parent.path().join(".codex");
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease.anchored_claim(&root, end)?;
-            for tree in &mut self.trees {
+            for tree in trees.iter_mut() {
                 tree.verify(&mut claim, &root, end)?;
                 tree.journal_snapshot_anchors(&mut self.journal, &mut claim, end)?;
             }
-            let files = self
-                .trees
+            let files = trees
                 .iter()
                 .enumerate()
                 .flat_map(|(r, t)| {
@@ -581,10 +579,10 @@ impl CapturedTrees {
                 .collect::<Vec<_>>();
             for action in [FileAction::MoveOriginal, FileAction::CreateWork] {
                 for (r, i) in &files {
-                    self.trees[*r].journal_step(*i, action, &mut self.journal, &mut claim, end)?;
+                    trees[*r].journal_step(*i, action, &mut self.journal, &mut claim, end)?;
                 }
             }
-            for tree in &mut self.trees {
+            for tree in trees.iter_mut() {
                 tree.verify(&mut claim, &root, end)?;
             }
             self.journal.check(end)?;
@@ -602,12 +600,13 @@ impl CapturedTrees {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
             if self.failed || !self.prepared {
                 return Err(invalid());
             }
-            let root = self.trees[0].parent.path().join(".codex");
+            let root = trees[0].parent.path().join(".codex");
             let mut claim = lease.anchored_claim(&root, end)?;
-            for tree in &mut self.trees {
+            for tree in trees.iter_mut() {
                 if tree
                     .nodes
                     .iter()
@@ -634,7 +633,8 @@ impl CapturedTrees {
                 return Err(invalid());
             }
             self.check_working(lease.as_mut().ok_or_else(invalid)?, end)?;
-            super::segments::release_trees(&mut self.trees, &mut self.journal, lease, end)
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
+            super::segments::release_trees(trees, &mut self.journal, lease, end)
         })();
         if result.is_err() {
             self.poison();
@@ -644,8 +644,10 @@ impl CapturedTrees {
     pub(in crate::infrastructure::windows_client_originals024) fn poison(&mut self) {
         self.failed = true;
         self.journal.poison_segment();
-        for tree in &mut self.trees {
-            tree.poisoned = true;
+        if let Some(trees) = &mut self.trees {
+            for tree in trees {
+                tree.poisoned = true;
+            }
         }
     }
     pub(in crate::infrastructure::windows_client_originals024) fn journal(
@@ -660,6 +662,7 @@ impl CapturedTrees {
             self.failed,
             self.trees
                 .iter()
+                .flatten()
                 .flat_map(|t| {
                     t.nodes
                         .iter()

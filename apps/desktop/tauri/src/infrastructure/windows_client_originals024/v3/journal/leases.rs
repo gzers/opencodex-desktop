@@ -6,6 +6,9 @@ use super::*;
 impl Journal {
     pub(in crate::infrastructure::windows_client_originals024) fn poison_segment(&mut self) {
         self.poisoned = true;
+        if let Some(handoff) = &mut self.original_handoff {
+            handoff.poison();
+        }
     }
     pub(super) fn lease_event(
         &self,

@@ -7,6 +7,23 @@ use super::super::super::{
 use super::super::handles::HandleOperation;
 use super::*;
 impl Journal {
+    /// Move every original tree to a retained slot BEFORE the caller performs
+    /// any fallible native close check. This is Rust ownership transfer only;
+    /// it does not validate restoration, construct a receipt or close a handle.
+    pub(in crate::infrastructure::windows_client_originals024) fn retain_original_handle_ownership(
+        &mut self,
+        trees: &mut Option<[AnchoredTree; 2]>,
+        end: Instant,
+    ) -> io::Result<()> {
+        if self.original_handoff.is_some() || trees.is_none() {
+            return Err(invalid());
+        }
+        self.original_handoff = Some(OriginalHandleHandoff::retain(
+            trees.take().ok_or_else(invalid)?,
+            end,
+        ));
+        Ok(())
+    }
     #[cfg(test)]
     pub(in crate::infrastructure::windows_client_originals024) fn component_check_handoff_history_for_test(
         &mut self,
@@ -39,7 +56,7 @@ impl Journal {
         }
         result
     }
-    fn close_original_handles(&mut self, end: Instant) -> io::Result<()> {
+    pub(super) fn close_original_handles(&mut self, end: Instant) -> io::Result<()> {
         let result = (|| {
             before(end)?;
             if self.poisoned || end > self.deadline {
