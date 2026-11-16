@@ -1,0 +1,65 @@
+{
+  "newNativeOperations": [
+    {
+      "method": "original_frames",
+      "completeBothTreeNativeBarriers": 2
+    },
+    {
+      "method": "archive_originals",
+      "completeBothTreeNativeBarriers": 2
+    },
+    {
+      "method": "history_references",
+      "completeBothTreeNativeBarriers": 2
+    }
+  ],
+  "canonicalDriverBeforeAfterReceiptAndJournal": true,
+  "allOriginalArchivePerFileComparisonsUnchanged": true,
+  "noDeadlineChanged": true,
+  "oldNativeImplementations": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded.rs",
+      "bytes": 25177,
+      "sha256": "4d85053bfe0cf72c8ad02604387d4e5093af0bcb894aba81b8f13a89ffa7e77d",
+      "allExistingNativePredicatesByteIdenticalToFailedRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "bytes": 21517,
+      "sha256": "65e1ec80e5b66de97d627735bda02191b79f3960ff33ff33d998d158bb0c3a99",
+      "allExistingNativePredicatesByteIdenticalToFailedRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 13331,
+      "sha256": "52dadd0a73e19e0110de633a12beca9b37a75f7a008646203afa936789a1b693",
+      "allExistingNativePredicatesByteIdenticalToFailedRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree.rs",
+      "bytes": 31641,
+      "sha256": "50e26608f1a948b27b3168a0a7584ce3f3ceca9ed6a2464fbb0365f6175fc4cd",
+      "allExistingNativePredicatesByteIdenticalToFailedRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement.rs",
+      "bytes": 15465,
+      "sha256": "8e6b1fd5790730abae2a87481e9c6486d8d4c7dcf57ec0cf0fdccfcfcaf9efeb",
+      "allExistingNativePredicatesByteIdenticalToFailedRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery.rs",
+      "bytes": 7784,
+      "sha256": "9f470e5510d075d673d2e6d6a8f3304f745020e85c9c5633c6304bbfa676cfb6",
+      "allExistingNativePredicatesByteIdenticalToFailedRun": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery/final_release.rs",
+      "bytes": 8168,
+      "sha256": "44707a36dfa04b9d0732d13b109e386006de3b62eb05f91e248b831f1e50e0cc",
+      "allExistingNativePredicatesByteIdenticalToFailedRun": true
+    }
+  ],
+  "mutationAuthorityExpanded": false,
+  "meaning": "Eliminate duplicate complete-tree traversal at both orchestration layers while preserving complete native before-after barriers on every witness operation and receipt/journal boundaries."
+}

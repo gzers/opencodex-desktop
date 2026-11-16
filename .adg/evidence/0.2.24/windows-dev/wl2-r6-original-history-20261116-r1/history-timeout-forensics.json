@@ -1,0 +1,2486 @@
+{
+  "rawExit": 101,
+  "passed": 4,
+  "failed": 2,
+  "observations": [
+    {
+      "test": "infrastructure::windows_client_originals024::tree::anchored::observation::retirement::history_tests::wl2_r6_history_native_changed_archive_membership_refuses_without_adopting_or_cleaning",
+      "directory": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-ab42363f-d539-4dd2-a172-81391bbdbebd\\session",
+      "current": {
+        "schema": "windows-client-current-v3",
+        "sessionId": "8524a8e3-cfcb-4d44-b7d4-709745d40c30",
+        "sequence": 85,
+        "eventDigest": "ebe078a3bb07e9353317a7ca20fd2253176febc16f1831029639b2aad12cf478",
+        "previousEventDigest": "2062d04cd3e318c872ed8e16fc4929f41fc704b1a1b7aee9aaf780ebd2753d88",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "storagePlanDigest": "61d8f1ca17d673cc4d3d4fa048c108ec498d6dda9c9e597c2736b8b113e2ab50",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "9002fec4ed4c595034bc1711286f34b82bccc7b590c2b61f1cb7370443b80a87",
+        "bindingDigest": "75d24c61aaabaa5ea2138f528759ba0b2420f362074e597ce8262304502fd0b4",
+        "leaseEpoch": "ad4b8220-401a-48e0-bf27-5969232af2a5",
+        "claimKey": "7bf4a9da9419f03424a9135a780e65b3adf758e114b52701da9aa87e9b48b04f",
+        "deadlineScope": "92ae94c7-cf46-4fd0-8696-4f8c003f51d1",
+        "leaseState": "Released",
+        "leaseObjectsDigest": "6cdeb485f3c9b030cf995abc8d1a843e4863aa4ede9fa368de1e441327358ddd",
+        "workMode": "Observed",
+        "workFrames": [
+          "3e9442d63fa791f3113d91c36b22356e0eb30798329e8ca33689eb9ff627d216",
+          "8f9394f8fd6085b770c07d181c60601f38879ddc716638e55cc5706290e2725d"
+        ],
+        "observedFrames": [
+          "ec39ba4663efbefb34c258d3a334c56e3b1c5ccaded00e973805dede49baac9b",
+          "8f9394f8fd6085b770c07d181c60601f38879ddc716638e55cc5706290e2725d"
+        ],
+        "snapshotPending": null,
+        "snapshotLinks": {
+          "Ready": [
+            "0f222a35578807e575c46e2702b5f1a0559e05bc2fd08cf8ac9c4e38b3d5f83e",
+            "af55403cb3afcc77cf909a399dc8c18021da9dbf65e724deae6173c5fcd9a193"
+          ],
+          "PreStop": [
+            "021b612ae64a0cd9fe185b7f3e2e0679f966cd36ef51c9e82bd81c1ac25664ff",
+            "80ff9f8d24d198ce2dc81bed69f316ebfae1bd34ac05d35661b56a7b2755a544"
+          ],
+          "Stopped": [
+            "9e952f673694c7e675ea42200d53490fcf90eeac94cddb4999e10898ce79ea88",
+            "b24b07c44592fc0dbbbcf569f5bbb68fb657c957114ec85ae77305aa812b20d0"
+          ]
+        },
+        "observedSequence": 51,
+        "linkedFrames": {
+          "26": [
+            "fb168f20c83a04ec1614235b7c352fca1fa1b1ce845152abd417890e2e771fef",
+            "8f9394f8fd6085b770c07d181c60601f38879ddc716638e55cc5706290e2725d"
+          ],
+          "39": [
+            "fb168f20c83a04ec1614235b7c352fca1fa1b1ce845152abd417890e2e771fef",
+            "8f9394f8fd6085b770c07d181c60601f38879ddc716638e55cc5706290e2725d"
+          ],
+          "51": [
+            "ec39ba4663efbefb34c258d3a334c56e3b1c5ccaded00e973805dede49baac9b",
+            "8f9394f8fd6085b770c07d181c60601f38879ddc716638e55cc5706290e2725d"
+          ]
+        },
+        "lifecycle": "Stopped",
+        "readyGeneration": [
+          123,
+          456,
+          "7777777777777777777777777777777777777777777777777777777777777777"
+        ],
+        "actionPending": null,
+        "actionKind": "Stop",
+        "recovery": {
+          "planDigest": "569b4c69a47d7efdc1b537a310fd1cd7a040c595a6ac8f49290f22e8614b4bde",
+          "progressDigest": "1e6e9e623a5e11abd94594d7aa96f6cdc3eca01fc7606588e7eeff66795cc471",
+          "planVerified": true,
+          "retiredCount": 6,
+          "restoredCount": 3,
+          "pending": null,
+          "wholeTree": 2,
+          "anchorReleasedCount": 6
+        },
+        "history": {
+          "contextDigest": "9d2f24222644b87c66640a120f07e5fb400a20099d77f96459db95d550a4080e",
+          "intentSequence": 85,
+          "linkedReferences": null
+        }
+      },
+      "historyEvents": [
+        {
+          "schema": "windows-client-originals-v3",
+          "documentKind": "original-history-event",
+          "storageStrategy": "windows-anchored-directories-v1",
+          "eventId": "1165ce16-1c9a-45a9-9de1-4f94721892a8",
+          "sequence": 85,
+          "sessionId": "8524a8e3-cfcb-4d44-b7d4-709745d40c30",
+          "operation": "OriginalHistoryIntent",
+          "context": {
+            "sessionId": "8524a8e3-cfcb-4d44-b7d4-709745d40c30",
+            "storagePlanDigest": "61d8f1ca17d673cc4d3d4fa048c108ec498d6dda9c9e597c2736b8b113e2ab50",
+            "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+            "manifestDigest": "9002fec4ed4c595034bc1711286f34b82bccc7b590c2b61f1cb7370443b80a87",
+            "bindingDigest": "75d24c61aaabaa5ea2138f528759ba0b2420f362074e597ce8262304502fd0b4",
+            "deadlineScope": "92ae94c7-cf46-4fd0-8696-4f8c003f51d1",
+            "leaseEpoch": "ad4b8220-401a-48e0-bf27-5969232af2a5",
+            "claimKey": "7bf4a9da9419f03424a9135a780e65b3adf758e114b52701da9aa87e9b48b04f",
+            "releaseObjectsDigest": "6cdeb485f3c9b030cf995abc8d1a843e4863aa4ede9fa368de1e441327358ddd",
+            "releasedEventDigest": "2062d04cd3e318c872ed8e16fc4929f41fc704b1a1b7aee9aaf780ebd2753d88",
+            "recoveryPlanDigest": "569b4c69a47d7efdc1b537a310fd1cd7a040c595a6ac8f49290f22e8614b4bde",
+            "originalFrames": [
+              "00674bfe567ad9f001e87b0213388ff675cfd7cad1b2fd44b5e5f9fab9c2ec8f",
+              "1882b038d66ef5e843c080ae4658e9fb0d2e2d5fd762951c7b26121585514aa0"
+            ],
+            "historyIntentSequence": 85
+          },
+          "references": null,
+          "previousEventDigest": "2062d04cd3e318c872ed8e16fc4929f41fc704b1a1b7aee9aaf780ebd2753d88"
+        }
+      ],
+      "lastEvent": {
+        "schema": "windows-client-originals-v3",
+        "documentKind": "original-history-event",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "eventId": "1165ce16-1c9a-45a9-9de1-4f94721892a8",
+        "sequence": 85,
+        "sessionId": "8524a8e3-cfcb-4d44-b7d4-709745d40c30",
+        "operation": "OriginalHistoryIntent",
+        "context": {
+          "sessionId": "8524a8e3-cfcb-4d44-b7d4-709745d40c30",
+          "storagePlanDigest": "61d8f1ca17d673cc4d3d4fa048c108ec498d6dda9c9e597c2736b8b113e2ab50",
+          "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+          "manifestDigest": "9002fec4ed4c595034bc1711286f34b82bccc7b590c2b61f1cb7370443b80a87",
+          "bindingDigest": "75d24c61aaabaa5ea2138f528759ba0b2420f362074e597ce8262304502fd0b4",
+          "deadlineScope": "92ae94c7-cf46-4fd0-8696-4f8c003f51d1",
+          "leaseEpoch": "ad4b8220-401a-48e0-bf27-5969232af2a5",
+          "claimKey": "7bf4a9da9419f03424a9135a780e65b3adf758e114b52701da9aa87e9b48b04f",
+          "releaseObjectsDigest": "6cdeb485f3c9b030cf995abc8d1a843e4863aa4ede9fa368de1e441327358ddd",
+          "releasedEventDigest": "2062d04cd3e318c872ed8e16fc4929f41fc704b1a1b7aee9aaf780ebd2753d88",
+          "recoveryPlanDigest": "569b4c69a47d7efdc1b537a310fd1cd7a040c595a6ac8f49290f22e8614b4bde",
+          "originalFrames": [
+            "00674bfe567ad9f001e87b0213388ff675cfd7cad1b2fd44b5e5f9fab9c2ec8f",
+            "1882b038d66ef5e843c080ae4658e9fb0d2e2d5fd762951c7b26121585514aa0"
+          ],
+          "historyIntentSequence": 85
+        },
+        "references": null,
+        "previousEventDigest": "2062d04cd3e318c872ed8e16fc4929f41fc704b1a1b7aee9aaf780ebd2753d88"
+      },
+      "archives": [
+        {
+          "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9qYmbc\\Profile\\.ocxd024-history-8524a8e3-cfcb-4d44-b7d4-709745d40c30-codex",
+          "exists": true,
+          "metadataPresent": true,
+          "members": [
+            {
+              "path": "data-0001-0000.bin",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "path": "data-0002-0000.bin",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "path": "data-0003-0000.bin",
+              "bytes": 25,
+              "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+            },
+            {
+              "path": "data-0006-0000.bin",
+              "bytes": 30,
+              "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+            },
+            {
+              "path": "snapshot.json",
+              "bytes": 32272,
+              "sha256": "4918fc8eec9a90aade76db18e1c2f2654d90888b7cb5e473ad344fc368606487"
+            }
+          ]
+        },
+        {
+          "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9qYmbc\\Profile\\.ocxd024-history-8524a8e3-cfcb-4d44-b7d4-709745d40c30-grok",
+          "exists": true,
+          "metadataPresent": true,
+          "members": [
+            {
+              "path": "data-0001-0000.bin",
+              "bytes": 23,
+              "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+            },
+            {
+              "path": "snapshot.json",
+              "bytes": 11486,
+              "sha256": "3fbf14f34b3507259304fab93402034abab083cfcfa235539865cbbee1f7e04e"
+            }
+          ]
+        }
+      ],
+      "timings": [
+        "ready remainingMs=8576",
+        "pre-stop remainingMs=7683",
+        "stopped remainingMs=7082"
+      ]
+    },
+    {
+      "test": "infrastructure::windows_client_originals024::tree::anchored::observation::retirement::history_tests::wl2_r6_history_native_originals_and_archive_copy_identities_remain_distinct",
+      "directory": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-8acd7496-b48b-423f-a1c0-cc24ae6c6c78\\session",
+      "current": {
+        "schema": "windows-client-current-v3",
+        "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+        "sequence": 86,
+        "eventDigest": "da948c25c65f1e9973e2d85653862cc5508d853a94592cbfbd1fb5cb0eae4b10",
+        "previousEventDigest": "ae36fea1eb49c4c9bd2692090f1f62950ac0fda65f823fc12939861b9ee93286",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "storagePlanDigest": "d18e61c8a5492924935d68f524ba863ef63b246cfc29fe375749b954cf0a01fb",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "manifestDigest": "781b5506f4aaef667c9d10caaa566e896f6996ee71e8250c61f67cd451101781",
+        "bindingDigest": "6288483bf3d9b0e3e63ab2c5c8dc5e827a4fb59909d9a7313b11c69680c1f87c",
+        "leaseEpoch": "2f999ce6-dc1e-4f3a-aabe-97ab62f930cc",
+        "claimKey": "d8bf8a94b81503ac76c9b011bf9b7ad3e6db664cb0d94e3bf71e516bd9080c0d",
+        "deadlineScope": "a003507d-66bf-44b0-8e84-5fed24ec9f49",
+        "leaseState": "Released",
+        "leaseObjectsDigest": "479f4158adaa293f721e4b8061619f4069f4ef39c155b9d4a0cad62a8a221d1e",
+        "workMode": "Observed",
+        "workFrames": [
+          "713c478d5ac605d7f3cffa2a7f82b088b6544ad81cc3d0ebde3ff7e954c5181a",
+          "58a8322eb0197701804ce60e4643adc5dfcb7d6720bd6b1dfd95614c1e672b8a"
+        ],
+        "observedFrames": [
+          "e8af3be004aa6ffc4260f46c0a77cf2030bba810385cd73746534a90a8b92152",
+          "58a8322eb0197701804ce60e4643adc5dfcb7d6720bd6b1dfd95614c1e672b8a"
+        ],
+        "snapshotPending": null,
+        "snapshotLinks": {
+          "Ready": [
+            "d5f07be71193f15c3b4ee1651bb086d6b663a1b68ee9fb22e6a51cd5f2c3585c",
+            "029f0186312f430faf89c9f2c6f541edd8be91491363a7123a4b641d86365800"
+          ],
+          "PreStop": [
+            "4c650f0eac79b903f9eda114a53669330418fd70f5c46f553d87d6d549d013c9",
+            "493fdd5e9ec89f8510945b29f408d0d91bb2963e56b2396bd7b09ee18e4ccfcb"
+          ],
+          "Stopped": [
+            "8a4fcf6ec28db480775d7d7f233e8a5040758a90d611e9eab862b6eebde8fbaf",
+            "ecb10a02e7642f0221f7860bff2e001dbe7392c67c569dbc30bf3f7cac879609"
+          ]
+        },
+        "observedSequence": 51,
+        "linkedFrames": {
+          "26": [
+            "cf0dafb27b43d3c713eba62a60841515e1ae119091a05045dc7144b12d2acc66",
+            "58a8322eb0197701804ce60e4643adc5dfcb7d6720bd6b1dfd95614c1e672b8a"
+          ],
+          "39": [
+            "cf0dafb27b43d3c713eba62a60841515e1ae119091a05045dc7144b12d2acc66",
+            "58a8322eb0197701804ce60e4643adc5dfcb7d6720bd6b1dfd95614c1e672b8a"
+          ],
+          "51": [
+            "e8af3be004aa6ffc4260f46c0a77cf2030bba810385cd73746534a90a8b92152",
+            "58a8322eb0197701804ce60e4643adc5dfcb7d6720bd6b1dfd95614c1e672b8a"
+          ]
+        },
+        "lifecycle": "Stopped",
+        "readyGeneration": [
+          123,
+          456,
+          "7777777777777777777777777777777777777777777777777777777777777777"
+        ],
+        "actionPending": null,
+        "actionKind": "Stop",
+        "recovery": {
+          "planDigest": "ca1219aea5f868cdec5b3a9c383d52d98052c1fe1650465b466142ff16473d47",
+          "progressDigest": "7ce5ff16652d09425c5b924f4b0dc577132082f818fdb64113937209a54e0286",
+          "planVerified": true,
+          "retiredCount": 6,
+          "restoredCount": 3,
+          "pending": null,
+          "wholeTree": 2,
+          "anchorReleasedCount": 6
+        },
+        "history": {
+          "contextDigest": "5babda608980f4ce8f2a0f4ec5978cc2e807bd6a6f17f18cb2930b5cc4225c65",
+          "intentSequence": 85,
+          "linkedReferences": [
+            "fcaaf0c23c2769ebabdddf65856065546b65e060936667451a124b42114f2dde",
+            "32f2550b7b6bf3cd8fec01df4e3507a9d4ef50cce5f3b1e14f13e917318dc302"
+          ]
+        }
+      },
+      "historyEvents": [
+        {
+          "schema": "windows-client-originals-v3",
+          "documentKind": "original-history-event",
+          "storageStrategy": "windows-anchored-directories-v1",
+          "eventId": "0b44df91-46ab-45bc-baa0-99f08bf35bc7",
+          "sequence": 85,
+          "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+          "operation": "OriginalHistoryIntent",
+          "context": {
+            "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+            "storagePlanDigest": "d18e61c8a5492924935d68f524ba863ef63b246cfc29fe375749b954cf0a01fb",
+            "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+            "manifestDigest": "781b5506f4aaef667c9d10caaa566e896f6996ee71e8250c61f67cd451101781",
+            "bindingDigest": "6288483bf3d9b0e3e63ab2c5c8dc5e827a4fb59909d9a7313b11c69680c1f87c",
+            "deadlineScope": "a003507d-66bf-44b0-8e84-5fed24ec9f49",
+            "leaseEpoch": "2f999ce6-dc1e-4f3a-aabe-97ab62f930cc",
+            "claimKey": "d8bf8a94b81503ac76c9b011bf9b7ad3e6db664cb0d94e3bf71e516bd9080c0d",
+            "releaseObjectsDigest": "479f4158adaa293f721e4b8061619f4069f4ef39c155b9d4a0cad62a8a221d1e",
+            "releasedEventDigest": "e04cc80abe5a11e28fb3774bb85786d6dc4ee29730c3443d5485d08f526fd324",
+            "recoveryPlanDigest": "ca1219aea5f868cdec5b3a9c383d52d98052c1fe1650465b466142ff16473d47",
+            "originalFrames": [
+              "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+              "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b"
+            ],
+            "historyIntentSequence": 85
+          },
+          "references": null,
+          "previousEventDigest": "e04cc80abe5a11e28fb3774bb85786d6dc4ee29730c3443d5485d08f526fd324"
+        },
+        {
+          "schema": "windows-client-originals-v3",
+          "documentKind": "original-history-event",
+          "storageStrategy": "windows-anchored-directories-v1",
+          "eventId": "1ae7f8b1-01b7-42c0-ae86-349e2424fb09",
+          "sequence": 86,
+          "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+          "operation": "OriginalHistoryLinkedVerified",
+          "context": {
+            "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+            "storagePlanDigest": "d18e61c8a5492924935d68f524ba863ef63b246cfc29fe375749b954cf0a01fb",
+            "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+            "manifestDigest": "781b5506f4aaef667c9d10caaa566e896f6996ee71e8250c61f67cd451101781",
+            "bindingDigest": "6288483bf3d9b0e3e63ab2c5c8dc5e827a4fb59909d9a7313b11c69680c1f87c",
+            "deadlineScope": "a003507d-66bf-44b0-8e84-5fed24ec9f49",
+            "leaseEpoch": "2f999ce6-dc1e-4f3a-aabe-97ab62f930cc",
+            "claimKey": "d8bf8a94b81503ac76c9b011bf9b7ad3e6db664cb0d94e3bf71e516bd9080c0d",
+            "releaseObjectsDigest": "479f4158adaa293f721e4b8061619f4069f4ef39c155b9d4a0cad62a8a221d1e",
+            "releasedEventDigest": "e04cc80abe5a11e28fb3774bb85786d6dc4ee29730c3443d5485d08f526fd324",
+            "recoveryPlanDigest": "ca1219aea5f868cdec5b3a9c383d52d98052c1fe1650465b466142ff16473d47",
+            "originalFrames": [
+              "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+              "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b"
+            ],
+            "historyIntentSequence": 85
+          },
+          "references": [
+            {
+              "schema": "windows-anchored-original-history-reference-v3",
+              "rootId": ".codex",
+              "directory": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFQkRLZ\\Profile\\.ocxd024-history-20f07c6b-e321-4173-b654-571da79e61a3-codex",
+              "volume": 247287385,
+              "fileId": "1125899908171104",
+              "security": {
+                "scopeId": "windows-bounded-access-v1",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "volume": 247287385,
+                "fileId": "1125899908171104",
+                "projections": [
+                  {
+                    "requestedMask": 1,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 1,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                  },
+                  {
+                    "requestedMask": 2,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 2,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                  },
+                  {
+                    "requestedMask": 4,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 4,
+                      "revision": 1,
+                      "control": 4100,
+                      "state": "present",
+                      "sid": null,
+                      "aclRevision": 2,
+                      "aces": [
+                        [
+                          0,
+                          3,
+                          36,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          5,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          21,
+                          0,
+                          0,
+                          0,
+                          192,
+                          34,
+                          3,
+                          35,
+                          214,
+                          218,
+                          7,
+                          51,
+                          96,
+                          117,
+                          250,
+                          153,
+                          233,
+                          3,
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          3,
+                          20,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          18,
+                          0,
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "structureDigest": "0fff336e865cfa268a0d5c6b1d4a3810fd4b70994b4c783a91d6a463d03583df"
+                  },
+                  {
+                    "requestedMask": 16,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 16,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                  },
+                  {
+                    "requestedMask": 32,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 32,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                  },
+                  {
+                    "requestedMask": 64,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 64,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                  },
+                  {
+                    "requestedMask": 128,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 128,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                  },
+                  {
+                    "requestedMask": 256,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 256,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                  }
+                ],
+                "auditSaclAssurance": "excluded-unknown",
+                "fullSecurityProven": false
+              },
+              "metadataId": "281474978039141",
+              "metadataSecurity": {
+                "scopeId": "windows-bounded-access-v1",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "volume": 247287385,
+                "fileId": "281474978039141",
+                "projections": [
+                  {
+                    "requestedMask": 1,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 1,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                  },
+                  {
+                    "requestedMask": 2,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 2,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                  },
+                  {
+                    "requestedMask": 4,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 4,
+                      "revision": 1,
+                      "control": 4100,
+                      "state": "present",
+                      "sid": null,
+                      "aclRevision": 2,
+                      "aces": [
+                        [
+                          0,
+                          0,
+                          36,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          5,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          21,
+                          0,
+                          0,
+                          0,
+                          192,
+                          34,
+                          3,
+                          35,
+                          214,
+                          218,
+                          7,
+                          51,
+                          96,
+                          117,
+                          250,
+                          153,
+                          233,
+                          3,
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0,
+                          20,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          18,
+                          0,
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "structureDigest": "41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"
+                  },
+                  {
+                    "requestedMask": 16,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 16,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                  },
+                  {
+                    "requestedMask": 32,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 32,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                  },
+                  {
+                    "requestedMask": 64,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 64,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                  },
+                  {
+                    "requestedMask": 128,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 128,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                  },
+                  {
+                    "requestedMask": 256,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 256,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                  }
+                ],
+                "auditSaclAssurance": "excluded-unknown",
+                "fullSecurityProven": false
+              },
+              "metadataSha256": "a1ca8e3d2c4e6b01a69c7d5a4a2177d50ca2576909f1f29020f602ab28d5c164",
+              "frameDigest": "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+              "context": {
+                "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+                "storagePlanDigest": "d18e61c8a5492924935d68f524ba863ef63b246cfc29fe375749b954cf0a01fb",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "manifestDigest": "781b5506f4aaef667c9d10caaa566e896f6996ee71e8250c61f67cd451101781",
+                "bindingDigest": "6288483bf3d9b0e3e63ab2c5c8dc5e827a4fb59909d9a7313b11c69680c1f87c",
+                "deadlineScope": "a003507d-66bf-44b0-8e84-5fed24ec9f49",
+                "leaseEpoch": "2f999ce6-dc1e-4f3a-aabe-97ab62f930cc",
+                "claimKey": "d8bf8a94b81503ac76c9b011bf9b7ad3e6db664cb0d94e3bf71e516bd9080c0d",
+                "releaseObjectsDigest": "479f4158adaa293f721e4b8061619f4069f4ef39c155b9d4a0cad62a8a221d1e",
+                "releasedEventDigest": "e04cc80abe5a11e28fb3774bb85786d6dc4ee29730c3443d5485d08f526fd324",
+                "recoveryPlanDigest": "ca1219aea5f868cdec5b3a9c383d52d98052c1fe1650465b466142ff16473d47",
+                "originalFrames": [
+                  "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+                  "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b"
+                ],
+                "historyIntentSequence": 85
+              },
+              "runtimeAuthority": false
+            },
+            {
+              "schema": "windows-anchored-original-history-reference-v3",
+              "rootId": ".grok",
+              "directory": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFQkRLZ\\Profile\\.ocxd024-history-20f07c6b-e321-4173-b654-571da79e61a3-grok",
+              "volume": 247287385,
+              "fileId": "281474978039142",
+              "security": {
+                "scopeId": "windows-bounded-access-v1",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "volume": 247287385,
+                "fileId": "281474978039142",
+                "projections": [
+                  {
+                    "requestedMask": 1,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 1,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                  },
+                  {
+                    "requestedMask": 2,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 2,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                  },
+                  {
+                    "requestedMask": 4,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 4,
+                      "revision": 1,
+                      "control": 4100,
+                      "state": "present",
+                      "sid": null,
+                      "aclRevision": 2,
+                      "aces": [
+                        [
+                          0,
+                          3,
+                          36,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          5,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          21,
+                          0,
+                          0,
+                          0,
+                          192,
+                          34,
+                          3,
+                          35,
+                          214,
+                          218,
+                          7,
+                          51,
+                          96,
+                          117,
+                          250,
+                          153,
+                          233,
+                          3,
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          3,
+                          20,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          18,
+                          0,
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "structureDigest": "0fff336e865cfa268a0d5c6b1d4a3810fd4b70994b4c783a91d6a463d03583df"
+                  },
+                  {
+                    "requestedMask": 16,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 16,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                  },
+                  {
+                    "requestedMask": 32,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 32,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                  },
+                  {
+                    "requestedMask": 64,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 64,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                  },
+                  {
+                    "requestedMask": 128,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 128,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                  },
+                  {
+                    "requestedMask": 256,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 256,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                  }
+                ],
+                "auditSaclAssurance": "excluded-unknown",
+                "fullSecurityProven": false
+              },
+              "metadataId": "281474978039144",
+              "metadataSecurity": {
+                "scopeId": "windows-bounded-access-v1",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "volume": 247287385,
+                "fileId": "281474978039144",
+                "projections": [
+                  {
+                    "requestedMask": 1,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 1,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                  },
+                  {
+                    "requestedMask": 2,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 2,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "present",
+                      "sid": [
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                  },
+                  {
+                    "requestedMask": 4,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 4,
+                      "revision": 1,
+                      "control": 4100,
+                      "state": "present",
+                      "sid": null,
+                      "aclRevision": 2,
+                      "aces": [
+                        [
+                          0,
+                          0,
+                          36,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          5,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          21,
+                          0,
+                          0,
+                          0,
+                          192,
+                          34,
+                          3,
+                          35,
+                          214,
+                          218,
+                          7,
+                          51,
+                          96,
+                          117,
+                          250,
+                          153,
+                          233,
+                          3,
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          0,
+                          20,
+                          0,
+                          255,
+                          1,
+                          31,
+                          0,
+                          1,
+                          1,
+                          0,
+                          0,
+                          0,
+                          0,
+                          0,
+                          5,
+                          18,
+                          0,
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "structureDigest": "41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"
+                  },
+                  {
+                    "requestedMask": 16,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 16,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                  },
+                  {
+                    "requestedMask": 32,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 32,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                  },
+                  {
+                    "requestedMask": 64,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 64,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                  },
+                  {
+                    "requestedMask": 128,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 128,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                  },
+                  {
+                    "requestedMask": 256,
+                    "nativeStatus": 0,
+                    "structure": {
+                      "mask": 256,
+                      "revision": 1,
+                      "control": 0,
+                      "state": "absent",
+                      "sid": null,
+                      "aclRevision": null,
+                      "aces": []
+                    },
+                    "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                  }
+                ],
+                "auditSaclAssurance": "excluded-unknown",
+                "fullSecurityProven": false
+              },
+              "metadataSha256": "a5eee6ff0ccb085d1a8a9a9549d2e9e4a3b5cc4c45308ef74a3a55f9dad785be",
+              "frameDigest": "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b",
+              "context": {
+                "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+                "storagePlanDigest": "d18e61c8a5492924935d68f524ba863ef63b246cfc29fe375749b954cf0a01fb",
+                "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+                "manifestDigest": "781b5506f4aaef667c9d10caaa566e896f6996ee71e8250c61f67cd451101781",
+                "bindingDigest": "6288483bf3d9b0e3e63ab2c5c8dc5e827a4fb59909d9a7313b11c69680c1f87c",
+                "deadlineScope": "a003507d-66bf-44b0-8e84-5fed24ec9f49",
+                "leaseEpoch": "2f999ce6-dc1e-4f3a-aabe-97ab62f930cc",
+                "claimKey": "d8bf8a94b81503ac76c9b011bf9b7ad3e6db664cb0d94e3bf71e516bd9080c0d",
+                "releaseObjectsDigest": "479f4158adaa293f721e4b8061619f4069f4ef39c155b9d4a0cad62a8a221d1e",
+                "releasedEventDigest": "e04cc80abe5a11e28fb3774bb85786d6dc4ee29730c3443d5485d08f526fd324",
+                "recoveryPlanDigest": "ca1219aea5f868cdec5b3a9c383d52d98052c1fe1650465b466142ff16473d47",
+                "originalFrames": [
+                  "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+                  "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b"
+                ],
+                "historyIntentSequence": 85
+              },
+              "runtimeAuthority": false
+            }
+          ],
+          "previousEventDigest": "ae36fea1eb49c4c9bd2692090f1f62950ac0fda65f823fc12939861b9ee93286"
+        }
+      ],
+      "lastEvent": {
+        "schema": "windows-client-originals-v3",
+        "documentKind": "original-history-event",
+        "storageStrategy": "windows-anchored-directories-v1",
+        "eventId": "1ae7f8b1-01b7-42c0-ae86-349e2424fb09",
+        "sequence": 86,
+        "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+        "operation": "OriginalHistoryLinkedVerified",
+        "context": {
+          "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+          "storagePlanDigest": "d18e61c8a5492924935d68f524ba863ef63b246cfc29fe375749b954cf0a01fb",
+          "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+          "manifestDigest": "781b5506f4aaef667c9d10caaa566e896f6996ee71e8250c61f67cd451101781",
+          "bindingDigest": "6288483bf3d9b0e3e63ab2c5c8dc5e827a4fb59909d9a7313b11c69680c1f87c",
+          "deadlineScope": "a003507d-66bf-44b0-8e84-5fed24ec9f49",
+          "leaseEpoch": "2f999ce6-dc1e-4f3a-aabe-97ab62f930cc",
+          "claimKey": "d8bf8a94b81503ac76c9b011bf9b7ad3e6db664cb0d94e3bf71e516bd9080c0d",
+          "releaseObjectsDigest": "479f4158adaa293f721e4b8061619f4069f4ef39c155b9d4a0cad62a8a221d1e",
+          "releasedEventDigest": "e04cc80abe5a11e28fb3774bb85786d6dc4ee29730c3443d5485d08f526fd324",
+          "recoveryPlanDigest": "ca1219aea5f868cdec5b3a9c383d52d98052c1fe1650465b466142ff16473d47",
+          "originalFrames": [
+            "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+            "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b"
+          ],
+          "historyIntentSequence": 85
+        },
+        "references": [
+          {
+            "schema": "windows-anchored-original-history-reference-v3",
+            "rootId": ".codex",
+            "directory": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFQkRLZ\\Profile\\.ocxd024-history-20f07c6b-e321-4173-b654-571da79e61a3-codex",
+            "volume": 247287385,
+            "fileId": "1125899908171104",
+            "security": {
+              "scopeId": "windows-bounded-access-v1",
+              "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+              "volume": 247287385,
+              "fileId": "1125899908171104",
+              "projections": [
+                {
+                  "requestedMask": 1,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 1,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "present",
+                    "sid": [
+                      1,
+                      5,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      5,
+                      21,
+                      0,
+                      0,
+                      0,
+                      192,
+                      34,
+                      3,
+                      35,
+                      214,
+                      218,
+                      7,
+                      51,
+                      96,
+                      117,
+                      250,
+                      153,
+                      233,
+                      3,
+                      0,
+                      0
+                    ],
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                },
+                {
+                  "requestedMask": 2,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 2,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "present",
+                    "sid": [
+                      1,
+                      5,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      5,
+                      21,
+                      0,
+                      0,
+                      0,
+                      192,
+                      34,
+                      3,
+                      35,
+                      214,
+                      218,
+                      7,
+                      51,
+                      96,
+                      117,
+                      250,
+                      153,
+                      233,
+                      3,
+                      0,
+                      0
+                    ],
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                },
+                {
+                  "requestedMask": 4,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 4,
+                    "revision": 1,
+                    "control": 4100,
+                    "state": "present",
+                    "sid": null,
+                    "aclRevision": 2,
+                    "aces": [
+                      [
+                        0,
+                        3,
+                        36,
+                        0,
+                        255,
+                        1,
+                        31,
+                        0,
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        3,
+                        20,
+                        0,
+                        255,
+                        1,
+                        31,
+                        0,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        18,
+                        0,
+                        0,
+                        0
+                      ]
+                    ]
+                  },
+                  "structureDigest": "0fff336e865cfa268a0d5c6b1d4a3810fd4b70994b4c783a91d6a463d03583df"
+                },
+                {
+                  "requestedMask": 16,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 16,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                },
+                {
+                  "requestedMask": 32,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 32,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                },
+                {
+                  "requestedMask": 64,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 64,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                },
+                {
+                  "requestedMask": 128,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 128,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                },
+                {
+                  "requestedMask": 256,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 256,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                }
+              ],
+              "auditSaclAssurance": "excluded-unknown",
+              "fullSecurityProven": false
+            },
+            "metadataId": "281474978039141",
+            "metadataSecurity": {
+              "scopeId": "windows-bounded-access-v1",
+              "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+              "volume": 247287385,
+              "fileId": "281474978039141",
+              "projections": [
+                {
+                  "requestedMask": 1,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 1,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "present",
+                    "sid": [
+                      1,
+                      5,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      5,
+                      21,
+                      0,
+                      0,
+                      0,
+                      192,
+                      34,
+                      3,
+                      35,
+                      214,
+                      218,
+                      7,
+                      51,
+                      96,
+                      117,
+                      250,
+                      153,
+                      233,
+                      3,
+                      0,
+                      0
+                    ],
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                },
+                {
+                  "requestedMask": 2,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 2,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "present",
+                    "sid": [
+                      1,
+                      5,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      5,
+                      21,
+                      0,
+                      0,
+                      0,
+                      192,
+                      34,
+                      3,
+                      35,
+                      214,
+                      218,
+                      7,
+                      51,
+                      96,
+                      117,
+                      250,
+                      153,
+                      233,
+                      3,
+                      0,
+                      0
+                    ],
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                },
+                {
+                  "requestedMask": 4,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 4,
+                    "revision": 1,
+                    "control": 4100,
+                    "state": "present",
+                    "sid": null,
+                    "aclRevision": 2,
+                    "aces": [
+                      [
+                        0,
+                        0,
+                        36,
+                        0,
+                        255,
+                        1,
+                        31,
+                        0,
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        20,
+                        0,
+                        255,
+                        1,
+                        31,
+                        0,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        18,
+                        0,
+                        0,
+                        0
+                      ]
+                    ]
+                  },
+                  "structureDigest": "41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"
+                },
+                {
+                  "requestedMask": 16,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 16,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                },
+                {
+                  "requestedMask": 32,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 32,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                },
+                {
+                  "requestedMask": 64,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 64,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                },
+                {
+                  "requestedMask": 128,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 128,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                },
+                {
+                  "requestedMask": 256,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 256,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                }
+              ],
+              "auditSaclAssurance": "excluded-unknown",
+              "fullSecurityProven": false
+            },
+            "metadataSha256": "a1ca8e3d2c4e6b01a69c7d5a4a2177d50ca2576909f1f29020f602ab28d5c164",
+            "frameDigest": "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+            "context": {
+              "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+              "storagePlanDigest": "d18e61c8a5492924935d68f524ba863ef63b246cfc29fe375749b954cf0a01fb",
+              "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+              "manifestDigest": "781b5506f4aaef667c9d10caaa566e896f6996ee71e8250c61f67cd451101781",
+              "bindingDigest": "6288483bf3d9b0e3e63ab2c5c8dc5e827a4fb59909d9a7313b11c69680c1f87c",
+              "deadlineScope": "a003507d-66bf-44b0-8e84-5fed24ec9f49",
+              "leaseEpoch": "2f999ce6-dc1e-4f3a-aabe-97ab62f930cc",
+              "claimKey": "d8bf8a94b81503ac76c9b011bf9b7ad3e6db664cb0d94e3bf71e516bd9080c0d",
+              "releaseObjectsDigest": "479f4158adaa293f721e4b8061619f4069f4ef39c155b9d4a0cad62a8a221d1e",
+              "releasedEventDigest": "e04cc80abe5a11e28fb3774bb85786d6dc4ee29730c3443d5485d08f526fd324",
+              "recoveryPlanDigest": "ca1219aea5f868cdec5b3a9c383d52d98052c1fe1650465b466142ff16473d47",
+              "originalFrames": [
+                "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+                "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b"
+              ],
+              "historyIntentSequence": 85
+            },
+            "runtimeAuthority": false
+          },
+          {
+            "schema": "windows-anchored-original-history-reference-v3",
+            "rootId": ".grok",
+            "directory": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFQkRLZ\\Profile\\.ocxd024-history-20f07c6b-e321-4173-b654-571da79e61a3-grok",
+            "volume": 247287385,
+            "fileId": "281474978039142",
+            "security": {
+              "scopeId": "windows-bounded-access-v1",
+              "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+              "volume": 247287385,
+              "fileId": "281474978039142",
+              "projections": [
+                {
+                  "requestedMask": 1,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 1,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "present",
+                    "sid": [
+                      1,
+                      5,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      5,
+                      21,
+                      0,
+                      0,
+                      0,
+                      192,
+                      34,
+                      3,
+                      35,
+                      214,
+                      218,
+                      7,
+                      51,
+                      96,
+                      117,
+                      250,
+                      153,
+                      233,
+                      3,
+                      0,
+                      0
+                    ],
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                },
+                {
+                  "requestedMask": 2,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 2,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "present",
+                    "sid": [
+                      1,
+                      5,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      5,
+                      21,
+                      0,
+                      0,
+                      0,
+                      192,
+                      34,
+                      3,
+                      35,
+                      214,
+                      218,
+                      7,
+                      51,
+                      96,
+                      117,
+                      250,
+                      153,
+                      233,
+                      3,
+                      0,
+                      0
+                    ],
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                },
+                {
+                  "requestedMask": 4,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 4,
+                    "revision": 1,
+                    "control": 4100,
+                    "state": "present",
+                    "sid": null,
+                    "aclRevision": 2,
+                    "aces": [
+                      [
+                        0,
+                        3,
+                        36,
+                        0,
+                        255,
+                        1,
+                        31,
+                        0,
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        3,
+                        20,
+                        0,
+                        255,
+                        1,
+                        31,
+                        0,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        18,
+                        0,
+                        0,
+                        0
+                      ]
+                    ]
+                  },
+                  "structureDigest": "0fff336e865cfa268a0d5c6b1d4a3810fd4b70994b4c783a91d6a463d03583df"
+                },
+                {
+                  "requestedMask": 16,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 16,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                },
+                {
+                  "requestedMask": 32,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 32,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                },
+                {
+                  "requestedMask": 64,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 64,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                },
+                {
+                  "requestedMask": 128,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 128,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                },
+                {
+                  "requestedMask": 256,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 256,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                }
+              ],
+              "auditSaclAssurance": "excluded-unknown",
+              "fullSecurityProven": false
+            },
+            "metadataId": "281474978039144",
+            "metadataSecurity": {
+              "scopeId": "windows-bounded-access-v1",
+              "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+              "volume": 247287385,
+              "fileId": "281474978039144",
+              "projections": [
+                {
+                  "requestedMask": 1,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 1,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "present",
+                    "sid": [
+                      1,
+                      5,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      5,
+                      21,
+                      0,
+                      0,
+                      0,
+                      192,
+                      34,
+                      3,
+                      35,
+                      214,
+                      218,
+                      7,
+                      51,
+                      96,
+                      117,
+                      250,
+                      153,
+                      233,
+                      3,
+                      0,
+                      0
+                    ],
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "439309a0e9e672d264b97cc838d765bb70dfb4da587b47f0d2c4205d365aad6d"
+                },
+                {
+                  "requestedMask": 2,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 2,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "present",
+                    "sid": [
+                      1,
+                      5,
+                      0,
+                      0,
+                      0,
+                      0,
+                      0,
+                      5,
+                      21,
+                      0,
+                      0,
+                      0,
+                      192,
+                      34,
+                      3,
+                      35,
+                      214,
+                      218,
+                      7,
+                      51,
+                      96,
+                      117,
+                      250,
+                      153,
+                      233,
+                      3,
+                      0,
+                      0
+                    ],
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "ab0f03cb69bfa1bf4517c4f0a55c463735acfe8bb07efbc1d04390506f26e83c"
+                },
+                {
+                  "requestedMask": 4,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 4,
+                    "revision": 1,
+                    "control": 4100,
+                    "state": "present",
+                    "sid": null,
+                    "aclRevision": 2,
+                    "aces": [
+                      [
+                        0,
+                        0,
+                        36,
+                        0,
+                        255,
+                        1,
+                        31,
+                        0,
+                        1,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        21,
+                        0,
+                        0,
+                        0,
+                        192,
+                        34,
+                        3,
+                        35,
+                        214,
+                        218,
+                        7,
+                        51,
+                        96,
+                        117,
+                        250,
+                        153,
+                        233,
+                        3,
+                        0,
+                        0
+                      ],
+                      [
+                        0,
+                        0,
+                        20,
+                        0,
+                        255,
+                        1,
+                        31,
+                        0,
+                        1,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5,
+                        18,
+                        0,
+                        0,
+                        0
+                      ]
+                    ]
+                  },
+                  "structureDigest": "41daec934430b50476a1aa7925d19679a565a82c6370d01fe8f50b91d48407bc"
+                },
+                {
+                  "requestedMask": 16,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 16,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+                },
+                {
+                  "requestedMask": 32,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 32,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+                },
+                {
+                  "requestedMask": 64,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 64,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+                },
+                {
+                  "requestedMask": 128,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 128,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+                },
+                {
+                  "requestedMask": 256,
+                  "nativeStatus": 0,
+                  "structure": {
+                    "mask": 256,
+                    "revision": 1,
+                    "control": 0,
+                    "state": "absent",
+                    "sid": null,
+                    "aclRevision": null,
+                    "aces": []
+                  },
+                  "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+                }
+              ],
+              "auditSaclAssurance": "excluded-unknown",
+              "fullSecurityProven": false
+            },
+            "metadataSha256": "a5eee6ff0ccb085d1a8a9a9549d2e9e4a3b5cc4c45308ef74a3a55f9dad785be",
+            "frameDigest": "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b",
+            "context": {
+              "sessionId": "20f07c6b-e321-4173-b654-571da79e61a3",
+              "storagePlanDigest": "d18e61c8a5492924935d68f524ba863ef63b246cfc29fe375749b954cf0a01fb",
+              "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+              "manifestDigest": "781b5506f4aaef667c9d10caaa566e896f6996ee71e8250c61f67cd451101781",
+              "bindingDigest": "6288483bf3d9b0e3e63ab2c5c8dc5e827a4fb59909d9a7313b11c69680c1f87c",
+              "deadlineScope": "a003507d-66bf-44b0-8e84-5fed24ec9f49",
+              "leaseEpoch": "2f999ce6-dc1e-4f3a-aabe-97ab62f930cc",
+              "claimKey": "d8bf8a94b81503ac76c9b011bf9b7ad3e6db664cb0d94e3bf71e516bd9080c0d",
+              "releaseObjectsDigest": "479f4158adaa293f721e4b8061619f4069f4ef39c155b9d4a0cad62a8a221d1e",
+              "releasedEventDigest": "e04cc80abe5a11e28fb3774bb85786d6dc4ee29730c3443d5485d08f526fd324",
+              "recoveryPlanDigest": "ca1219aea5f868cdec5b3a9c383d52d98052c1fe1650465b466142ff16473d47",
+              "originalFrames": [
+                "8a619abb2d8c0b4fdb16c0f42226b2950bf9a5eb67b77abe38770efa1f0d0604",
+                "1d37d9f5b753765d68868050ce90e144d5227118ca5c8d82b89df53f9cc66e4b"
+              ],
+              "historyIntentSequence": 85
+            },
+            "runtimeAuthority": false
+          }
+        ],
+        "previousEventDigest": "ae36fea1eb49c4c9bd2692090f1f62950ac0fda65f823fc12939861b9ee93286"
+      },
+      "archives": [
+        {
+          "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFQkRLZ\\Profile\\.ocxd024-history-20f07c6b-e321-4173-b654-571da79e61a3-codex",
+          "exists": true,
+          "metadataPresent": true,
+          "members": [
+            {
+              "path": "data-0001-0000.bin",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "path": "data-0002-0000.bin",
+              "bytes": 0,
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "path": "data-0003-0000.bin",
+              "bytes": 25,
+              "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+            },
+            {
+              "path": "data-0006-0000.bin",
+              "bytes": 30,
+              "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+            },
+            {
+              "path": "snapshot.json",
+              "bytes": 32272,
+              "sha256": "a1ca8e3d2c4e6b01a69c7d5a4a2177d50ca2576909f1f29020f602ab28d5c164"
+            }
+          ]
+        },
+        {
+          "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpFQkRLZ\\Profile\\.ocxd024-history-20f07c6b-e321-4173-b654-571da79e61a3-grok",
+          "exists": true,
+          "metadataPresent": true,
+          "members": [
+            {
+              "path": "data-0001-0000.bin",
+              "bytes": 23,
+              "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+            },
+            {
+              "path": "snapshot.json",
+              "bytes": 11486,
+              "sha256": "a5eee6ff0ccb085d1a8a9a9549d2e9e4a3b5cc4c45308ef74a3a55f9dad785be"
+            }
+          ]
+        }
+      ],
+      "timings": [
+        "ready remainingMs=8558",
+        "pre-stop remainingMs=7667",
+        "stopped remainingMs=7110"
+      ]
+    }
+  ],
+  "readOnlyForensics": true,
+  "originalDeadlineUnchanged": true,
+  "noMutationOrCatchup": true
+}

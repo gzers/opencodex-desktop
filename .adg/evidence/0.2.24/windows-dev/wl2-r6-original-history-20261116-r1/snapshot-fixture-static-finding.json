@@ -1,0 +1,11 @@
+{
+  "phase":"static review while library02 optimized source is frozen",
+  "path":"apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/snapshot_data_tests.rs",
+  "finding":"refs() currently assigns directory_id=u64::MAX-100-i*2 and metadata_id=u64::MAX-101-i*2, independent of phase/observation sequence. Thus distinct synthetic Ready/PreStop/Stopped references alias the same claimed native IDs, unlike actual create-new native archives.",
+  "newInvariant":"remember all already-linked native snapshot object identities and refuse their reuse/alias, including original-history references",
+  "nextAction":"after library02 is terminal and its EXE/source archived, make only synthetic reference factory IDs unique per purpose/observation sequence and add an explicit duplicate-native-snapshot-object rejection test; rerun affected full v3 data regression",
+  "assertionsToRemove":[],
+  "productionRulesToRelax":[],
+  "knownBadFixtureTestRun":false,
+  "nativeArchiveAndOriginalDeadlineChanges":false
+}

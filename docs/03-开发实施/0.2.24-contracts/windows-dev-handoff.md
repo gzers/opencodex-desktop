@@ -688,3 +688,13 @@ v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Clos
 library01 custom-protocol MSVC debug数据及同链回归raw0/21过；补current锚点摘要和实际foreign-custody后，library02使用仓库原release参数、新final-release定向raw0/5过（2数据＋3原生组），13实际场景为完整1＋12负例。原10秒fixture截止/原断言保持，不重复同前提debug整段超时。四整树结果窗口、lease准备/实际unlock/receipt/结果/current窗口、首anchor不可变/current失败，以及unlock后真实未知私有目录均保留准确原生与durable前缀、poison且不catch-up；实际SQLite claim竞争与释放receipt一致。无非预期测试首错，补丁匹配失败独列编辑记录，不作为native失败或修改前提。
 
 56新场景完整私有ZIP核验，9完成纯数据scene核fresh准确路径/全部文件hash/目录membership后清理，47失败或pending及19个D根保留；ZIP非NTFS身份/安全克隆，历史删除拒绝不重试。MSVC产品编译及三制品SHA、完整继承状态/原始日志/清理归report/final-status。驱动仍private仅cfg(test)入口；后继先补恢复/anchor事件explicit rootId locator和不可变original history/原handle生命周期，再实际Source/routes/process/audit/sharedpolicy+typedStop恢复资格/Closed/Status5/后继/Owner-H-S-D。原缺席安全初始化/退根仍blocked，普通MSI/CAP-trust/历史清理保持，Start无条件拒绝；不旧raw5/空GUI/相同1314/W2/双SID/发布。
+
+## 2026-11-16 TEAM16/r6 explicit rootId与不可变原件history
+
+源码b30cc913201f972d62b2d2b07a990fd5f5cded44；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-original-history-20261116-r1/。恢复current/original/anchor事件补准确rootId，缺失/重复/错根/跨根及aggregate多带根均拒绝，旧记录不转换。最终释放后、原件准确句柄尚保管时，同一canonical链/current先记OriginalHistoryIntent，再从实际原handle try_clone视图复制准确原件字节/all8/children/ID到同卷私有不可变分块/metadata，双方身份不混；完整恢复/retired集合/Stopped快照、原Source/manifest/binding/policy/action/claim/lease/最终release与两根原始帧摘要均绑定history上下文。actual native BOTH-tree与原receipt前后核验后才OriginalHistoryLinkedVerified/current。副本不能冒充原件/current/initial-work/父/custody/各阶段旧snapshot；创建新history目录立即留pin先于易失败all8读取。仅机制与DATA，不释放原件handle或签typedClosed，生产driver仍private仅cfg(test)入口。
+
+library01初版debug v3回归raw0/24过。首实际非预期失败library02优化轮raw101/4过2败：完整封存及封存后外来成员两例触及原10秒bounded-original-deadline，七注入前缀已过，原EXE/source/raw/current/scene完整保留并只读取证。新history caller/witness重复整树屏障合并为明确职责，每native操作仍完整BOTH-tree before/after、caller原receipt/journal before/after；旧安全/文件/恢复/lease/archive比较实现逐字未变，不加预算/重开计时/删断言。library03最终debug完整v3回归raw0/25过，library04同最终Rust/原release参数与原10秒fixture raw0/7过，9原生场景为完整1＋七注入＋封存后外来成员拒绝1。旧合成snapshot工厂按阶段/序列给独立ID，保留全部旧断言并补旧ID重用拒绝；未知/poison不补写。两个补丁匹配失败独列编辑记录，无compiler失败。
+
+106本轮场景私有ZIP完整核验后，14完成纯数据scene核fresh准确路径/全部文件hash/目录membership后清理；92失败/pending保留，所有历史删除拒绝不重试，ZIP非NTFS身份/安全克隆。工作快照/canonical/原件history原字节另归raw-scene-records；MSVC产品编译及三制品SHA/完整继承状态/首错/清理归report/final-status。后继继续原件/custody/history handle生命周期、实际原process/supervisor完成history及typedClosed，current转移前实际Source/routes/PID/audit原窗与原shared contentpolicy资格，生产接线/Status5/后继/Owner-H-S-D；原缺席安全初始化/退根、普通MSI/CAP-trust及历史清理保持未完。Start无条件拒绝，无旧raw5/空GUI/相同1314/W2/双SID/发布/官方或日常配置改变。
+
+上述“保管原件句柄”指测试交易内的实际保留；测试scope结束按Drop关闭自己的句柄，不是canonical原件句柄释放/typedClosed证明。所有失败文件系统现场与原日志继续保留，不从其JSON或ZIP重建native权限。

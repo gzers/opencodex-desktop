@@ -1,0 +1,194 @@
+{
+  "methods": [
+    {
+      "method": "retire_current_file",
+      "private": true,
+      "definition": "tree/anchored/observation/retirement.rs",
+      "moduleSha256": "8e6b1fd5790730abae2a87481e9c6486d8d4c7dcf57ec0cf0fdccfcfcaf9efeb",
+      "actualCallers": [
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 181
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 238
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 301
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 344
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 349
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 375
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 443
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 447
+        },
+        {
+          "path": "tree/anchored/observation/retirement/witness.rs",
+          "line": 105
+        }
+      ]
+    },
+    {
+      "method": "restore_original_file",
+      "private": true,
+      "definition": "tree/anchored/observation/retirement.rs",
+      "moduleSha256": "8e6b1fd5790730abae2a87481e9c6486d8d4c7dcf57ec0cf0fdccfcfcaf9efeb",
+      "actualCallers": [
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 190
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 250
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 309
+        },
+        {
+          "path": "tree/anchored/observation/retirement_tests.rs",
+          "line": 389
+        },
+        {
+          "path": "tree/anchored/observation/retirement/witness.rs",
+          "line": 154
+        }
+      ]
+    },
+    {
+      "method": "prepare_native_recovery",
+      "private": true,
+      "definition": "v3/journal/recovery.rs",
+      "moduleSha256": "9f470e5510d075d673d2e6d6a8f3304f745020e85c9c5633c6304bbfa676cfb6",
+      "actualCallers": [
+        {
+          "path": "v3/journal/recovery.rs",
+          "line": 156
+        }
+      ]
+    },
+    {
+      "method": "execute_native_recovery",
+      "private": true,
+      "definition": "v3/journal/recovery.rs",
+      "moduleSha256": "9f470e5510d075d673d2e6d6a8f3304f745020e85c9c5633c6304bbfa676cfb6",
+      "actualCallers": [
+        {
+          "path": "v3/journal/recovery.rs",
+          "line": 170
+        }
+      ]
+    },
+    {
+      "method": "seal_native_recovery_tree",
+      "private": true,
+      "definition": "v3/journal/recovery/final_release.rs",
+      "moduleSha256": "44707a36dfa04b9d0732d13b109e386006de3b62eb05f91e248b831f1e50e0cc",
+      "actualCallers": [
+        {
+          "path": "v3/journal/recovery/final_release.rs",
+          "line": 61
+        }
+      ]
+    },
+    {
+      "method": "release_native_recovery",
+      "private": true,
+      "definition": "v3/journal/recovery/final_release.rs",
+      "moduleSha256": "44707a36dfa04b9d0732d13b109e386006de3b62eb05f91e248b831f1e50e0cc",
+      "actualCallers": [
+        {
+          "path": "v3/journal/recovery/final_release.rs",
+          "line": 183
+        }
+      ]
+    },
+    {
+      "method": "seal_original_history",
+      "private": true,
+      "definition": "v3/journal/history.rs",
+      "moduleSha256": "cdadc51cd288b8829851553627afd46611738ea90afbe400ee8ba61f2fdaa3e7",
+      "actualCallers": [
+        {
+          "path": "v3/journal/history.rs",
+          "line": 135
+        }
+      ]
+    }
+  ],
+  "unchangedInputs": [
+    {
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "bytes": 4881,
+      "sha256": "8a4ba748ccaec01ef2b7655ca4084b191b16eea84994d1906ef33f74b37c0f38",
+      "baselineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/Cargo.lock",
+      "bytes": 145071,
+      "sha256": "9296b5c97ceee63f3a6702936bc788c7576e63e12bcd938f4fadc1ffd71f64a2",
+      "baselineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+      "bytes": 17051,
+      "sha256": "841a4659e49d0486de9960d78ac2509dfe30c7b9045818e461533638d34ab8aa",
+      "baselineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/official_lifecycle024.rs",
+      "bytes": 8145,
+      "sha256": "1fff0cc309265a6015eca8d0bf30cc59dc5bb6abd77b0d0556b55cb73088b073",
+      "baselineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "bytes": 11187,
+      "sha256": "dde515d48418d73a2f1fbee5d4c57cb7ca9972509760286195094dcfabd309ac",
+      "baselineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 11955,
+      "sha256": "196d62ebf59d8dbd839b70e088780ecd86e01e3abab9049657405aa0386e9e24",
+      "baselineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "bytes": 21517,
+      "sha256": "65e1ec80e5b66de97d627735bda02191b79f3960ff33ff33d998d158bb0c3a99",
+      "baselineEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 13331,
+      "sha256": "52dadd0a73e19e0110de633a12beca9b37a75f7a008646203afa936789a1b693",
+      "baselineEquivalent": true
+    }
+  ],
+  "publicStartOpen": false,
+  "actualStopContentFactoryJoined": false,
+  "nativeHistoryFromOriginalHandleDuplicates": true,
+  "historyDirectoryRetainedBeforeSecurityReadback": true,
+  "privateNativeDriverTestOnlyEntrypoints": true,
+  "original10sFixtureCutoff": true,
+  "noNewTimeoutOrDebugOnlyAssertion": true,
+  "releaseProfileChanged": false
+}

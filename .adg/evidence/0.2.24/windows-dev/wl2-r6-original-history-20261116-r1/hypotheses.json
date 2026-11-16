@@ -1,0 +1,12 @@
+{
+  "baseline":"b7c90313643342804a55b64efe9ce861126cdb0a",
+  "docsBaseline":"e92313aef3552e7ad4e87543dec8a3df1799b7fc",
+  "contract":"TEAM16/IMP142/r6",
+  "hypotheses":[
+    {"id":"Root","falsifiable":"Every recovery node and anchor event must carry exact explicit rootId matching the immutable node/current row and its native movement. Missing/wrong/cross-root rootId, extra rootId on aggregate events and duplicate fields refuse without advancing state; no old record conversion."},
+    {"id":"History","falsifiable":"After exact canonical full-tree/anchor/final lease release, retain actual original file objects and separately create same-volume immutable original-byte archives and references. Original source IDs/all8/children/bytes, archive copy IDs, retired-current collection and stopped snapshot references remain distinct; canonical history intent precedes any archive write and actual BOTH-tree/receipt before-after proof precedes result/current."},
+    {"id":"Fault","falsifiable":"Archive-part creation, first/second root, immutable history-result and one-byte current failures preserve original handles, partial private archives, exact intent/result/current prefixes and poison. No native capability or Closed is reconstructed from data or inferred from successful copy."}
+  ],
+  "constraints":["original lifecycle/fixture deadlines/assertions/raw exits", "all8 included unknown refuses and audit excluded-unknown", "original directories/two stable files and ordinary originals retained in exact paths", "actual Source/Stop/content qualification and original handle-release/history-to-Closed remain separate until joined", "no oldraw5/emptyGUI/W2/dualSID/publication", "no official/daily changes or historical rejected cleanup retries", "original-absent root retirement remains blocked"],
+  "publicStartOpen":false
+}
