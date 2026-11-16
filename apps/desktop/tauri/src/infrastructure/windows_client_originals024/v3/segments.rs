@@ -60,9 +60,33 @@ impl Progress {
         }
     }
     pub(super) fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {
-        // Recovery release needs a final whole-tree native/release witness.
-        // Until joined, neither data completeness nor the old release path is sufficient.
-        if self.recovery.is_some() {
+        // Final recovery admits ONLY its original prepared/result release pair;
+        // never a new acquisition or an incomplete per-node aggregate.
+        let recovery_release = self.recovery.is_some();
+        if recovery_release
+            && (!self.recovery_tree_ready_for_release(plan)
+                || !matches!(
+                    e.operation,
+                    LeaseOperation::LeaseReleasePrepared | LeaseOperation::LeaseReleasedVerified
+                ))
+        {
+            return Err(invalid());
+        }
+        if recovery_release
+            && !plan
+                .roots
+                .iter()
+                .flat_map(|r| &r.nodes)
+                .filter(|n| n.kind != Kind::CustodiedFile)
+                .all(|n| {
+                    self.nodes[&n.node_id].0
+                        == if e.operation == LeaseOperation::LeaseReleasePrepared {
+                            1
+                        } else {
+                            2
+                        }
+                })
+        {
             return Err(invalid());
         }
         use crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3;
@@ -112,10 +136,12 @@ impl Progress {
             (LeaseState::Active, LeaseOperation::LeaseReleasePrepared)
                 if anchors
                     && (all_files(4) || all_files(8))
-                    && matches!(
-                        self.work_mode,
-                        super::observations::WorkMode::Sealed | super::observations::WorkMode::Open
-                    ) =>
+                    && (recovery_release
+                        || matches!(
+                            self.work_mode,
+                            super::observations::WorkMode::Sealed
+                                | super::observations::WorkMode::Open
+                        )) =>
             {
                 LeaseState::ReleasePrepared
             }

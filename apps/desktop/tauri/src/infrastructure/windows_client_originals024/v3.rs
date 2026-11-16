@@ -574,6 +574,7 @@ impl Progress {
     /// Restored or Closed; retained native/source/stop/release are independent.
     pub(super) fn complete_files(&self, plan: &StoragePlan) -> bool {
         self.pending.is_none()
+            && (self.recovery.is_none() || self.lease_state == segments::LeaseState::Released)
             && plan.roots.iter().flat_map(|r| &r.nodes).all(|n| {
                 self.nodes
                     .get(&n.node_id)

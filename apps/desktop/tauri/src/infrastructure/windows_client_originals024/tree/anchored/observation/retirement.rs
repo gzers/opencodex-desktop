@@ -388,5 +388,8 @@ impl AnchoredTree {
 #[path = "retirement_chain_tests.rs"]
 mod chain_tests;
 #[cfg(test)]
+#[path = "retirement_release_tests.rs"]
+mod release_tests;
+#[cfg(test)]
 #[path = "retirement_tests.rs"]
 mod tests;

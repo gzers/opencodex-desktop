@@ -171,4 +171,48 @@ impl RecoveryWitness<'_> {
             t.poisoned = true;
         }
     }
+    #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn foreign_custody_for_test(
+        &mut self,
+        end: Instant,
+    ) -> io::Result<()> {
+        check(end)?;
+        let path = self.trees[0]
+            .custody
+            .path()
+            .join("synthetic-final-release-foreign");
+        drop(create_private_directory(&path)?);
+        println!(
+            "r6 final-release synthetic foreign custody directory preserved={}",
+            path.display()
+        );
+        check(end)
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn post_release(
+        &mut self,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            if self.trees[0].parent.identity() != self.trees[1].parent.identity() {
+                return Err(invalid());
+            }
+            for (i, t) in self.trees.iter_mut().enumerate() {
+                if t.root
+                    != t.parent
+                        .path()
+                        .join(if i == 0 { ".codex" } else { ".grok" })
+                {
+                    return Err(invalid());
+                }
+                // Includes every exact original/retired object/archive/child
+                // and acquisition+explicit release of the two stable ranges.
+                t.readback_retirement_after_release(end)?;
+            }
+            Ok(())
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
 }

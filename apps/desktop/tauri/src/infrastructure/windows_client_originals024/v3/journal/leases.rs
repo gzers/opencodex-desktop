@@ -7,7 +7,7 @@ impl Journal {
     pub(in crate::infrastructure::windows_client_originals024) fn poison_segment(&mut self) {
         self.poisoned = true;
     }
-    fn lease_event(
+    pub(super) fn lease_event(
         &self,
         operation: LeaseOperation,
         facts: &LeaseFacts,
@@ -40,7 +40,7 @@ impl Journal {
             binding_digest: self.progress.binding.clone(),
         })
     }
-    fn append_lease(&mut self, e: LeaseEvent, end: Instant) -> io::Result<()> {
+    pub(super) fn append_lease(&mut self, e: LeaseEvent, end: Instant) -> io::Result<()> {
         let result = self.append_entry_inner(ChainEntry::Lease(e), end);
         if result.is_err() {
             self.poisoned = true;
@@ -69,6 +69,9 @@ impl Journal {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
+            if self.progress.recovery.is_some() {
+                return Err(invalid());
+            }
             self.check_plans(plans, end)?;
             if self.progress.lease_state != LeaseState::Active || self.released_lease.is_some() {
                 return Err(invalid());
@@ -103,6 +106,9 @@ impl Journal {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
+            if self.progress.recovery.is_some() {
+                return Err(invalid());
+            }
             self.check_plans(plans, end)?;
             if self.progress.lease_state != LeaseState::ReleasePrepared {
                 return Err(invalid());

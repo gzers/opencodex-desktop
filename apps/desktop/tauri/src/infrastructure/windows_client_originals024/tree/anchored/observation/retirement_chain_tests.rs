@@ -18,7 +18,7 @@ fn key(root: &Path, relative: &str) -> String {
         .as_bytes(),
     )
 }
-fn prepare(
+pub(super) fn prepare(
     trees: &mut [AnchoredTree; 2],
     journal: &mut Journal,
     lease: &mut Option<NativeLease>,
@@ -109,7 +109,7 @@ fn prepare(
         t.capture_retirement(&mut claim, end).unwrap();
     }
 }
-fn keys(trees: &[AnchoredTree; 2]) -> (Vec<String>, Vec<String>) {
+pub(super) fn keys(trees: &[AnchoredTree; 2]) -> (Vec<String>, Vec<String>) {
     (
         trees
             .iter()
@@ -137,7 +137,7 @@ fn keys(trees: &[AnchoredTree; 2]) -> (Vec<String>, Vec<String>) {
 }
 /// Post-failure forensic data. This does not clear poison, re-open mutation
 /// permission, change the cutoff, or use those observations as recovery proof.
-fn positions(trees: &[AnchoredTree; 2]) -> serde_json::Value {
+pub(super) fn positions(trees: &[AnchoredTree; 2]) -> serde_json::Value {
     let mut rows = Vec::new();
     for t in trees {
         for n in &t.nodes {

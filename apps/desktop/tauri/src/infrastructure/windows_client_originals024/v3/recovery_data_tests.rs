@@ -260,15 +260,20 @@ fn event(
         node_id: id,
         node_digest,
         movement: node.map(|id| {
-            plan.movement(
-                id,
-                matches!(
-                    op,
-                    RecoveryOperation::WorkRetireIntent | RecoveryOperation::WorkRetiredVerified
-                ),
-            )
-            .unwrap()
-            .1
+            if op == RecoveryOperation::ReleaseVerified {
+                plan.anchor_release(id).unwrap().1
+            } else {
+                plan.movement(
+                    id,
+                    matches!(
+                        op,
+                        RecoveryOperation::WorkRetireIntent
+                            | RecoveryOperation::WorkRetiredVerified
+                    ),
+                )
+                .unwrap()
+                .1
+            }
         }),
         lease_epoch: g.epoch.clone(),
         claim_key: g.claim.clone(),
@@ -537,5 +542,200 @@ fn wl2_r6_recovery_data_exact_native_location_identity_parent_and_expected_state
             .replacen("\"nodeId\":", "\"nodeId\":null,\"nodeId\":", 1);
     assert!(serde_json::from_str::<segments::ChainEntry>(&duplicate).is_err());
     println!("r6 recovery DATA exact native from/to/volume/fileID/destination-parent and expected state digests bound to immutable whole-plan row;7 location drifts/duplicate fields refuse without progress change");
+    f.retain();
+}
+fn completed_nodes(p: &StoragePlan) -> (Progress, RecoveryPlan) {
+    use RecoveryOperation::*;
+    let (mut g, data) = stopped(p);
+    let r = decode(&data);
+    for op in [RecoveryPlanIntent, RecoveryPlanVerified] {
+        g.apply_recovery(p, &event(&g, op, &r, None)).unwrap();
+    }
+    for id in r.retirement_keys().into_keys() {
+        for op in [WorkRetireIntent, WorkRetiredVerified] {
+            g.apply_recovery(p, &event(&g, op, &r, Some(&id))).unwrap();
+        }
+    }
+    for id in r.restore_keys().into_keys() {
+        for op in [OriginalRestoreIntent, OriginalRestoredVerified] {
+            g.apply_recovery(p, &event(&g, op, &r, Some(&id))).unwrap();
+        }
+    }
+    (g, r)
+}
+fn release_event(g: &Progress, operation: segments::LeaseOperation) -> segments::LeaseEvent {
+    segments::LeaseEvent {
+        schema: "windows-client-originals-v3".into(),
+        document_kind: "lease-event".into(),
+        storage_strategy: ANCHORED_STORAGE_STRATEGY.into(),
+        event_id: uuid::Uuid::new_v4().to_string(),
+        sequence: g.sequence + 1,
+        session_id: g.session.clone(),
+        operation,
+        lease_epoch: g.epoch.clone(),
+        next_epoch: None,
+        claim_key: g.claim.clone(),
+        objects_digest: "9".repeat(64),
+        deadline_scope: g.deadline.clone(),
+        previous_event_digest: g.tip.clone(),
+        storage_plan_digest: g.plan.clone(),
+        security_policy_digest: Policy::fixed().digest().unwrap(),
+        manifest_digest: g.manifest.clone(),
+        binding_digest: g.binding.clone(),
+    }
+}
+#[test]
+fn wl2_r6_final_release_data_requires_full_tree_result_and_exact_release_pair_no_reacquire_or_text_closed(
+) {
+    use segments::LeaseOperation::*;
+    use RecoveryOperation::*;
+    let (mut f, p, _, _) = plan();
+    let (mut g, r) = completed_nodes(&p);
+    assert!(!g.complete_files(&p));
+    assert!(g
+        .apply_lease(&p, &release_event(&g, LeaseReleasePrepared))
+        .is_err());
+    assert!(g
+        .apply_recovery(&p, &event(&g, WholeTreeRestoredVerified, &r, None))
+        .is_err());
+    g.apply_recovery(&p, &event(&g, WholeTreeRestoreIntent, &r, None))
+        .unwrap();
+    assert_eq!(g.recovery_summary().unwrap().unwrap().whole_tree, 1);
+    assert!(g
+        .apply_lease(&p, &release_event(&g, LeaseReleasePrepared))
+        .is_err());
+    assert!(g
+        .apply_recovery(&p, &event(&g, WholeTreeRestoreIntent, &r, None))
+        .is_err());
+    g.apply_recovery(&p, &event(&g, WholeTreeRestoredVerified, &r, None))
+        .unwrap();
+    assert_eq!(g.recovery_summary().unwrap().unwrap().whole_tree, 2);
+    assert!(g.recovery_tree_ready_for_release(&p));
+    assert!(!g.complete_files(&p));
+    assert!(g
+        .apply_lease(&p, &release_event(&g, LeaseReleasedVerified))
+        .is_err());
+    g.apply_lease(&p, &release_event(&g, LeaseReleasePrepared))
+        .unwrap();
+    assert!(!g.complete_files(&p));
+    assert!(g
+        .apply_lease(&p, &release_event(&g, LeaseReleasePrepared))
+        .is_err());
+    assert!(
+        g.apply_lease(&p, &release_event(&g, LeaseReleasedVerified))
+            .is_err(),
+        "all exact anchors must have release events"
+    );
+    let mut anchor_count = 0;
+    for n in p
+        .roots
+        .iter()
+        .flat_map(|r| &r.nodes)
+        .filter(|n| n.kind != Kind::CustodiedFile)
+    {
+        let old_summary = g.recovery_summary().unwrap().unwrap();
+        g.apply_recovery(
+            &p,
+            &event(&g, RecoveryOperation::ReleaseVerified, &r, Some(&n.node_id)),
+        )
+        .unwrap();
+        anchor_count += 1;
+        let summary = g.recovery_summary().unwrap().unwrap();
+        assert_eq!(summary.anchor_released_count, anchor_count);
+        assert_ne!(summary.progress_digest, old_summary.progress_digest);
+        assert!(g
+            .apply_recovery(
+                &p,
+                &event(&g, RecoveryOperation::ReleaseVerified, &r, Some(&n.node_id))
+            )
+            .is_err());
+        assert!(!g.complete_files(&p));
+    }
+    g.apply_lease(&p, &release_event(&g, LeaseReleasedVerified))
+        .unwrap();
+    assert!(
+        g.complete_files(&p),
+        "necessary DATA only; no actual receipt/Closed factory"
+    );
+    assert!(g
+        .apply_lease(&p, &release_event(&g, LeaseAcquirePrepared))
+        .is_err());
+    assert!(g
+        .apply_lease(&p, &release_event(&g, LeaseReleasedVerified))
+        .is_err());
+    assert!(g
+        .apply_recovery(&p, &event(&g, WholeTreeRestoredVerified, &r, None))
+        .is_err());
+    let mut text = serde_json::to_value(release_event(&g, LeaseReleasedVerified)).unwrap();
+    text["Closed"] = true.into();
+    assert!(serde_json::from_value::<segments::ChainEntry>(text).is_err());
+    println!("r6 final-release DATA requires every original/current node, whole-tree intent/result, exact Active->ReleasePrepared->Released; anchors data completes only after release result, no reacquire/repeat/textClosed or native capability");
+    f.retain();
+}
+#[test]
+fn wl2_r6_final_release_data_full_tree_and_release_scope_drift_and_incomplete_nodes_refuse() {
+    use segments::LeaseOperation::*;
+    use RecoveryOperation::*;
+    let (mut f, p, _, _) = plan();
+    let (mut g, r) = completed_nodes(&p);
+    let original = p.roots[0]
+        .nodes
+        .iter()
+        .find(|n| n.kind == Kind::CustodiedFile)
+        .unwrap()
+        .node_id
+        .clone();
+    g.nodes.get_mut(&original).unwrap().0 = 7;
+    assert!(g
+        .apply_recovery(&p, &event(&g, WholeTreeRestoreIntent, &r, None))
+        .is_err());
+    g.nodes.get_mut(&original).unwrap().0 = 8;
+    g.apply_recovery(&p, &event(&g, WholeTreeRestoreIntent, &r, None))
+        .unwrap();
+    let good = serde_json::to_value(event(&g, WholeTreeRestoredVerified, &r, None)).unwrap();
+    for field in [
+        "claimKey",
+        "leaseEpoch",
+        "deadlineScope",
+        "sessionId",
+        "previousEventDigest",
+        "recoveryPlanDigest",
+        "nodeId",
+        "nodeDigest",
+    ] {
+        let mut bad = good.clone();
+        bad[field] = "foreign".into();
+        let tip = g.tip.clone();
+        assert!(
+            g.apply_recovery(&p, &serde_json::from_value(bad).unwrap())
+                .is_err(),
+            "{field}"
+        );
+        assert_eq!(g.tip, tip);
+        assert_eq!(g.recovery_summary().unwrap().unwrap().whole_tree, 1);
+    }
+    g.apply_recovery(&p, &event(&g, WholeTreeRestoredVerified, &r, None))
+        .unwrap();
+    let good = serde_json::to_value(release_event(&g, LeaseReleasePrepared)).unwrap();
+    for field in [
+        "claimKey",
+        "leaseEpoch",
+        "deadlineScope",
+        "sessionId",
+        "previousEventDigest",
+        "objectsDigest",
+    ] {
+        let mut bad = good.clone();
+        bad[field] = "foreign".into();
+        let tip = g.tip.clone();
+        assert!(
+            g.apply_lease(&p, &serde_json::from_value(bad).unwrap())
+                .is_err(),
+            "{field}"
+        );
+        assert_eq!(g.tip, tip);
+        assert_eq!(g.lease_state, segments::LeaseState::Active);
+    }
+    println!("r6 final-release DATA incomplete original node,8 whole-tree and6 lease context drifts refuse without sequence/state laundering; original deadline not reset");
     f.retain();
 }

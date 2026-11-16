@@ -4,6 +4,7 @@
 use super::super::super::{coordination::AnchoredClaim, tree::RecoveryWitness};
 use super::super::recovery::{RecoveryOperation, RecoveryPlan};
 use super::*;
+mod final_release;
 impl Journal {
     #[cfg(test)]
     pub(in crate::infrastructure::windows_client_originals024) fn component_reacquire_same_window_for_test(

@@ -81,6 +81,32 @@ fn same<A: Serialize, B: Serialize>(a: &A, b: &B) -> io::Result<bool> {
         == serde_json::to_value(b).map_err(|_| invalid())?)
 }
 impl RecoveryPlan {
+    fn anchor_release(&self, id: &str) -> io::Result<(String, RecoveryMove)> {
+        let n = self
+            .roots
+            .iter()
+            .flat_map(|r| &r.original_tree.nodes)
+            .find(|n| n.node_id == id && n.kind != Kind::CustodiedFile)
+            .ok_or_else(invalid)?;
+        let path = if n.relative.is_empty() {
+            n.root_id.clone()
+        } else {
+            format!("{}/{}", n.root_id, n.relative)
+        };
+        let expected = hash::sha256_hex(&encoded(&(self.digest()?, id, "OriginalAnchorReleased"))?);
+        Ok((
+            hash::sha256_hex(&encoded(n)?),
+            RecoveryMove {
+                from: path.clone(),
+                to: path,
+                native_id: n.file_id.clone(),
+                volume: n.volume,
+                parent_id: n.parent_id.clone(),
+                expected_before: expected.clone(),
+                expected_after: expected,
+            },
+        ))
+    }
     fn movement(&self, id: &str, retire: bool) -> io::Result<(String, RecoveryMove)> {
         let plan = self.digest()?;
         let (row_digest, from, to, parent_id, native_id, volume, before, after) = if retire {
@@ -391,6 +417,9 @@ pub(super) enum RecoveryOperation {
     WorkRetiredVerified,
     OriginalRestoreIntent,
     OriginalRestoredVerified,
+    WholeTreeRestoreIntent,
+    WholeTreeRestoredVerified,
+    ReleaseVerified,
 }
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -434,6 +463,7 @@ pub(super) struct RecoveryProgress {
     retired: BTreeMap<String, u8>,
     restored: BTreeMap<String, u8>,
     pending: Option<(RecoveryOperation, String)>,
+    whole_tree: u8,
 }
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -444,6 +474,8 @@ pub(super) struct RecoverySummary {
     retired_count: usize,
     restored_count: usize,
     pending: Option<(RecoveryOperation, String)>,
+    whole_tree: u8,
+    anchor_released_count: usize,
 }
 impl Progress {
     pub(super) fn recovery_event(
@@ -457,14 +489,18 @@ impl Progress {
             .ok_or_else(invalid)?;
         let movement = node
             .map(|id| {
-                p.movement(
-                    id,
-                    matches!(
-                        operation,
-                        RecoveryOperation::WorkRetireIntent
-                            | RecoveryOperation::WorkRetiredVerified
-                    ),
-                )
+                if operation == RecoveryOperation::ReleaseVerified {
+                    p.anchor_release(id)
+                } else {
+                    p.movement(
+                        id,
+                        matches!(
+                            operation,
+                            RecoveryOperation::WorkRetireIntent
+                                | RecoveryOperation::WorkRetiredVerified
+                        ),
+                    )
+                }
             })
             .transpose()?;
         let (node_digest, movement) = match movement {
@@ -502,13 +538,23 @@ impl Progress {
         self.recovery
             .as_ref()
             .map(|r| {
+                let anchors = r
+                    .plan
+                    .roots
+                    .iter()
+                    .flat_map(|r| &r.original_tree.nodes)
+                    .filter(|n| n.kind != Kind::CustodiedFile)
+                    .map(|n| (n.node_id.clone(), self.nodes[&n.node_id].0))
+                    .collect::<BTreeMap<_, _>>();
                 Ok(RecoverySummary {
                     plan_digest: r.plan.digest()?,
-                    progress_digest: hash::sha256_hex(&encoded(r)?),
+                    progress_digest: hash::sha256_hex(&encoded(&(r, &anchors))?),
                     plan_verified: r.verified,
                     retired_count: r.retired.values().filter(|s| **s == 2).count(),
                     restored_count: r.restored.values().filter(|s| **s == 2).count(),
                     pending: r.pending.clone(),
+                    whole_tree: r.whole_tree,
+                    anchor_released_count: anchors.values().filter(|state| **state == 2).count(),
                 })
             })
             .transpose()
@@ -537,7 +583,12 @@ impl Progress {
             || e.claim_key != self.claim
             || e.deadline_scope != self.deadline
             || !digest(&e.recovery_plan_digest)
-            || self.lease_state != segments::LeaseState::Active
+            || self.lease_state
+                != if e.operation == ReleaseVerified {
+                    segments::LeaseState::ReleasePrepared
+                } else {
+                    segments::LeaseState::Active
+                }
             || self.work_mode != observations::WorkMode::Observed
             || self.lifecycle != LifecyclePhase::Stopped
             || self.pending.is_some()
@@ -573,6 +624,7 @@ impl Progress {
                 plan: copy,
                 verified: false,
                 pending: None,
+                whole_tree: 0,
             });
         } else {
             let r = self.recovery.as_mut().ok_or_else(invalid)?;
@@ -589,9 +641,57 @@ impl Progress {
                     return Err(invalid());
                 }
                 r.verified = true;
+            } else if e.operation == ReleaseVerified {
+                let id = e.node_id.as_ref().ok_or_else(invalid)?;
+                let (expected, movement) = r.plan.anchor_release(id)?;
+                if !r.verified
+                    || r.whole_tree != 2
+                    || r.pending.is_some()
+                    || r.retired.values().any(|s| *s != 2)
+                    || r.restored.values().any(|s| *s != 2)
+                    || e.node_digest.as_ref() != Some(&expected)
+                    || e.movement.as_ref() != Some(&movement)
+                    || self.nodes.get(id).map(|n| n.0) != Some(1)
+                {
+                    return Err(invalid());
+                }
+                self.nodes.get_mut(id).ok_or_else(invalid)?.0 = 2;
+            } else if matches!(
+                e.operation,
+                WholeTreeRestoreIntent | WholeTreeRestoredVerified
+            ) {
+                if !r.verified
+                    || r.retired.values().any(|s| *s != 2)
+                    || r.restored.values().any(|s| *s != 2)
+                    || e.node_id.is_some()
+                    || e.node_digest.is_some()
+                    || e.movement.is_some()
+                    || !plan.roots.iter().flat_map(|r| &r.nodes).all(|n| {
+                        self.nodes[&n.node_id].0
+                            == if n.kind == Kind::CustodiedFile { 8 } else { 1 }
+                    })
+                {
+                    return Err(invalid());
+                }
+                if e.operation == WholeTreeRestoreIntent {
+                    if r.whole_tree != 0 || r.pending.is_some() {
+                        return Err(invalid());
+                    }
+                    r.whole_tree = 1;
+                    r.pending = Some((WholeTreeRestoreIntent, e.recovery_plan_digest.clone()));
+                } else {
+                    if r.whole_tree != 1
+                        || r.pending.as_ref()
+                            != Some(&(WholeTreeRestoreIntent, e.recovery_plan_digest.clone()))
+                    {
+                        return Err(invalid());
+                    }
+                    r.whole_tree = 2;
+                    r.pending = None;
+                }
             } else {
                 let id = e.node_id.as_ref().ok_or_else(invalid)?;
-                if !r.verified {
+                if !r.verified || r.whole_tree != 0 {
                     return Err(invalid());
                 }
                 let (_, expected_move) = r.plan.movement(
@@ -666,6 +766,26 @@ impl Progress {
         self.tip = hash::sha256_hex(&bytes);
         self.event_ids.insert(e.event_id.clone());
         Ok(())
+    }
+    pub(super) fn recovery_tree_ready_for_release(&self, plan: &StoragePlan) -> bool {
+        self.recovery.as_ref().is_some_and(|r| {
+            r.verified
+                && r.whole_tree == 2
+                && r.pending.is_none()
+                && r.retired.values().all(|s| *s == 2)
+                && r.restored.values().all(|s| *s == 2)
+        }) && self.lifecycle == LifecyclePhase::Stopped
+            && self.work_mode == observations::WorkMode::Observed
+            && self.pending.is_none()
+            && self.action_pending.is_none()
+            && self.snapshot_pending.is_none()
+            && plan.roots.iter().flat_map(|r| &r.nodes).all(|n| {
+                if n.kind == Kind::CustodiedFile {
+                    self.nodes[&n.node_id].0 == 8
+                } else {
+                    matches!(self.nodes[&n.node_id].0, 1 | 2)
+                }
+            })
     }
 }
 #[cfg(test)]
