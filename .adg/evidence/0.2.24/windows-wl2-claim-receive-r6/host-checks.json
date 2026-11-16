@@ -1,0 +1,41 @@
+{
+  "source": "fac8573e55441fe514919c63c7f1d65181ff3577",
+  "host": "aarch64-apple-darwin",
+  "record": "Observed command results summarized; no reconstructed raw logs",
+  "checks": [
+    {
+      "command": "cargo fmt --all -- --check",
+      "exit": 0
+    },
+    {
+      "command": "cargo clippy --locked --lib --tests -- -D warnings",
+      "exit": 0,
+      "seconds": 28.06
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    },
+    {
+      "command": "python3 .adg/evidence/0.2.24/windows-wl2-claim-receive-r6/verify_receive.py",
+      "exit": 0,
+      "payloads": 2654,
+      "bytes": 31356233,
+      "productInputSets": [
+        114,
+        116,
+        118,
+        118
+      ]
+    }
+  ],
+  "noNewBehaviorTests": "Layout/schema constants and contract only; required native tests specified in r6; no Windows runtime behavior implemented on Mac",
+  "WindowsNativeExecuted": false,
+  "newAccountsProfilesJobsDownloads": 0,
+  "dailyConfigOrPolicyWrites": 0,
+  "testCleanup": "No new native fixtures; existing project build cache retained",
+  "productionStartOpened": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}

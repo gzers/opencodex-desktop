@@ -1,5 +1,7 @@
 # Windows有界访问安全与原件恢复合同 r4
 
+2026-11-16存储后继：[r6](windows-claim-anchored-custody-r6.md)采用原目录留位/逐文件同卷保管与新v3格式，替代新会话的整根移动布局。本文安全8投影/ExcludedUnknown、内容/ID/存在性和预算断言继续，旧v2未决不迁移。r6未解决的原缺席Codex安全退根仍保持未验收。
+
 revision: 4；2026-11-15 Asia/Shanghai；归DMD-POST023 AC-P24-08、IMP-34 revision140、TEAM revision14。共同代码 **main 2ebdd3ae0423903e9e713108a09a165ac36ead37**，Windows实现基线 **codex/024-windows-native c47953ccfe4c66a976285eacffd691e3a3b0c01b**；文档输入为含本合同的docs/governance-main实际SHA。r2四trait及原30/5/10/Restart30含Stop子10预算不变；本文明确替代r3的“所有新普通会话都必须完整SD/SACL”前提及相应持久格式/验收，其余r2/r3写集/归属/失败保留约束继续。
 
 ## 明确采用的决定及代价

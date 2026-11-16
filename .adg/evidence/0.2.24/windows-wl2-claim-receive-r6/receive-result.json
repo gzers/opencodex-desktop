@@ -1,0 +1,445 @@
+{
+  "receiveVerified": true,
+  "allAccepted": false,
+  "productionExecuted": false,
+  "code": "3e19075846dfea81ba8392bb60a3d3031afbf116",
+  "docs": "13e5c322351dba048fc8fe773aace56aae72e654",
+  "netFiles": 2659,
+  "manifests": [
+    {
+      "round": "wl2-r5-artifact-observations-20261116-r1",
+      "payloads": 382,
+      "bytes": 4483990
+    },
+    {
+      "round": "wl2-r5-claim-relocation-20261116-r1",
+      "payloads": 1146,
+      "bytes": 13522712
+    },
+    {
+      "round": "wl2-r5-integration-20261115-r1",
+      "payloads": 500,
+      "bytes": 5976712
+    },
+    {
+      "round": "wl2-r5-native-coordination-20261116-r1",
+      "payloads": 626,
+      "bytes": 7372819
+    }
+  ],
+  "payloadFiles": 2654,
+  "payloadBytes": 31356233,
+  "sourceChecks": [
+    {
+      "round": "wl2-r5-artifact-observations-20261116-r1",
+      "head": "0242a22c8891244fb90a05b7e787d971371f96b2",
+      "productInputFiles": 118,
+      "gitLFToCapturedCRLF": [
+        "apps/desktop/tauri/src/infrastructure/mod.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+        "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+        "apps/desktop/tauri/src/lib.rs",
+        "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+        "test/windows024-native/.gitignore",
+        "test/windows024-native/account-w1d.ps1",
+        "test/windows024-native/build-wl2.ps1",
+        "test/windows024-native/bundle-installer.py",
+        "test/windows024-native/cleanup-wl2-prerequisites.ps1",
+        "test/windows024-native/collect-h024-desktop.ps1",
+        "test/windows024-native/launch-h024-desktop.ps1",
+        "test/windows024-native/launch-wl2.ps1",
+        "apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_artifact_policy_tests.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_route_declaration.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_route_declaration_tests.rs",
+        "apps/desktop/tauri/src/modules/runtime/mod.rs",
+        "apps/desktop/tauri/src/modules/status/client_recovery_gate_tests.rs",
+        "apps/desktop/tauri/src/modules/status/context_paths_tests.rs",
+        "apps/desktop/tauri/src/modules/status/mod.rs",
+        "apps/desktop/tauri/src/modules/status/polling.rs",
+        "apps/desktop/tauri/src/modules/status/sample_deadline_tests.rs"
+      ]
+    },
+    {
+      "round": "wl2-r5-claim-relocation-20261116-r1",
+      "head": "3e19075846dfea81ba8392bb60a3d3031afbf116",
+      "productInputFiles": 118,
+      "gitLFToCapturedCRLF": [
+        "apps/desktop/tauri/src/infrastructure/mod.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+        "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+        "apps/desktop/tauri/src/lib.rs",
+        "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+        "test/windows024-native/.gitignore",
+        "test/windows024-native/account-w1d.ps1",
+        "test/windows024-native/build-wl2.ps1",
+        "test/windows024-native/bundle-installer.py",
+        "test/windows024-native/cleanup-wl2-prerequisites.ps1",
+        "test/windows024-native/collect-h024-desktop.ps1",
+        "test/windows024-native/launch-h024-desktop.ps1",
+        "test/windows024-native/launch-wl2.ps1",
+        "apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_artifact_policy_tests.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_route_declaration.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_route_declaration_tests.rs",
+        "apps/desktop/tauri/src/modules/runtime/mod.rs",
+        "apps/desktop/tauri/src/modules/status/client_recovery_gate_tests.rs",
+        "apps/desktop/tauri/src/modules/status/context_paths_tests.rs",
+        "apps/desktop/tauri/src/modules/status/mod.rs",
+        "apps/desktop/tauri/src/modules/status/polling.rs",
+        "apps/desktop/tauri/src/modules/status/sample_deadline_tests.rs"
+      ]
+    },
+    {
+      "round": "wl2-r5-integration-20261115-r1",
+      "head": "bc64e6f1001e8533e4ab845d24ce89edff9cdf86",
+      "productInputFiles": 114,
+      "gitLFToCapturedCRLF": [
+        "apps/desktop/tauri/src/infrastructure/mod.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+        "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+        "apps/desktop/tauri/src/lib.rs",
+        "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+        "test/windows024-native/.gitignore",
+        "test/windows024-native/account-w1d.ps1",
+        "test/windows024-native/build-wl2.ps1",
+        "test/windows024-native/bundle-installer.py",
+        "test/windows024-native/cleanup-wl2-prerequisites.ps1",
+        "test/windows024-native/collect-h024-desktop.ps1",
+        "test/windows024-native/launch-h024-desktop.ps1",
+        "test/windows024-native/launch-wl2.ps1",
+        "apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_artifact_policy_tests.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_route_declaration.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_route_declaration_tests.rs",
+        "apps/desktop/tauri/src/modules/runtime/mod.rs",
+        "apps/desktop/tauri/src/modules/status/client_recovery_gate_tests.rs",
+        "apps/desktop/tauri/src/modules/status/context_paths_tests.rs",
+        "apps/desktop/tauri/src/modules/status/mod.rs",
+        "apps/desktop/tauri/src/modules/status/polling.rs",
+        "apps/desktop/tauri/src/modules/status/sample_deadline_tests.rs"
+      ]
+    },
+    {
+      "round": "wl2-r5-native-coordination-20261116-r1",
+      "head": "b8ab9b321af3563896b83bd02b087e82ae84d648",
+      "productInputFiles": 116,
+      "gitLFToCapturedCRLF": [
+        "apps/desktop/tauri/src/infrastructure/mod.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+        "apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+        "apps/desktop/tauri/src/lib.rs",
+        "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+        "test/windows024-native/.gitignore",
+        "test/windows024-native/account-w1d.ps1",
+        "test/windows024-native/build-wl2.ps1",
+        "test/windows024-native/bundle-installer.py",
+        "test/windows024-native/cleanup-wl2-prerequisites.ps1",
+        "test/windows024-native/collect-h024-desktop.ps1",
+        "test/windows024-native/launch-h024-desktop.ps1",
+        "test/windows024-native/launch-wl2.ps1",
+        "apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_artifact_policy_tests.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_route_declaration.rs",
+        "apps/desktop/tauri/src/modules/runtime/client_route_declaration_tests.rs",
+        "apps/desktop/tauri/src/modules/runtime/mod.rs",
+        "apps/desktop/tauri/src/modules/status/client_recovery_gate_tests.rs",
+        "apps/desktop/tauri/src/modules/status/context_paths_tests.rs",
+        "apps/desktop/tauri/src/modules/status/mod.rs",
+        "apps/desktop/tauri/src/modules/status/polling.rs",
+        "apps/desktop/tauri/src/modules/status/sample_deadline_tests.rs"
+      ]
+    }
+  ],
+  "claimDecisionRequest": {
+    "contract": "TEAM15/IMP141/r5",
+    "classification": "Windows claim/root relocation plan decision; no new shared API assumed",
+    "facts": {
+      "baselineRootMove": true,
+      "metadataOnlyRootMove": true,
+      "readOnlyClaimFileShareDeleteRootMove": false,
+      "readOnlyClaimFilePlusMetadataRootMove": false,
+      "nativeClaimLeaseRootMove": false,
+      "failedNativeMoveRawWin32": 5,
+      "evidence": "library07/stdout.log, predecessor actual failures library05/library06; scenes retained",
+      "noAutomaticAlternativeMoveDeleteOrPolicyChange": true
+    },
+    "requestedDecision": {
+      "question": "Choose a Windows custody/claim plan that also covers the actual claim-only credential writer. A claim-unheld interval with only N/L/K held is NOT established safe.",
+      "preferredPlanToEvaluate": "Retain the exact original client root directory and two stable lock files in place under actual claim exclusion; move other original nodes to same-volume private custody and provide controlled working nodes. Explicitly define canonical node intents/progress/identity restoration before implementation, with no old record migration.",
+      "sourceCounterexample": "claim-only-writer-source.json: main-account.ts:463 reauth -> exclusive claim -> persistNativeMainReauthTokens:394 -> atomicWriteFile; those bodies/helper do not acquire N/L/K. Source-only observation, no credential write executed.",
+      "pendingIntervalProposalStatus": "Conditional alternative only, missing sufficient exclusion proof; sequence below is requirements, not an authorized or recommended grant.",
+      "proposedMinimumSequence": [
+        "Check original Owner/source/H/current/native phase/whole tree/8 projections and exact claim identity under original full lease within original action deadline; publish existing canonical move intent and CAS before first move.",
+        "Enter private typed ClaimRelocationPending: no Ready/restore/Stopped/Closed/Start/Restart or general NativeLease callback permission. Release and close only this lease's claim file handle/ranges; original N/L/K objects/ranges and RootTree original DELETE handle stay retained.",
+        "Move only the exact original root via retained RootTree and canonical intent; verify original full tree IDs/bytes/8 projections at actual custody target. Any collision/read failure/drift leaves Required/pending and retained scene, no compensating overwrite or forced retry.",
+        "Reopen/reacquire the exact original claim at custody only from borrowed actual RootTree native facts, comparing original fileID/content/8 projections and exact private parent; no JSON/PID/path-only adoption. Recheck N/L/K/source/owner/phase, then acquire the exact initial working claim before any resumed permission.",
+        "Declare the claim-unheld interval honestly. Prove all relevant official writers cannot mutate originals through claim alone or else select another explicit custody design. Do not infer claim exclusion from N/L/K or hashes without this source/behavior proof.",
+        "Only after complete source/ownership/side-effect/exit/phase integration and original budgets may the production gate open. Interrupted interval remains pending/Required, never serialized as successful native authority."
+      ],
+      "mustKeep": [
+        "same-volume original objects, no copy/delete identity substitute",
+        "original30/5/10/Restart30Stop10",
+        "no native permission in gap",
+        "unknown refusal/failed scene retention",
+        "r4 fixed8/excluded audit semantics",
+        "single canonical journal/current CAS",
+        "ordinary original token and current policy"
+      ],
+      "alternativeIfClaimMustStayContinuouslyHeld": "Explicitly redesign custody so the open claim's directory is not renamed (for example controlled node-level custody with original directory identity retained). This needs a reviewed plan/progress schema, not an undocumented fallback.",
+      "notRequested": [
+        "privilege/elevation/impersonation",
+        "new timeout or release flag bypass",
+        "POSIX rename fallback",
+        "closing unrelated handles",
+        "official package modification",
+        "W2/dualSID/release"
+      ]
+    },
+    "currentBehavior": {
+      "publicStartRefused": true,
+      "workingUnchangedVetoRetained": true,
+      "claimFileSharingRestoredToOriginalStrict": true,
+      "metadataObservationCoexistenceFixRetained": true,
+      "continuousOpenClaimPositiveTest": "original assertions preserved as explicitly blocked ignored case, not counted passed; original failed executions retained",
+      "automaticClaimHandoffImplemented": false
+    },
+    "independentRemaining": [
+      "official first-use initialization and owner receipt",
+      "typed side-effect restoration and canonical stopped observation",
+      "production broker/official Owner/H-S-D and original package loop",
+      "actual Closed/concurrent Owner sampling positive proofs",
+      "ordinary MSI/B2 CAP-trust and historical cleanup"
+    ],
+    "allAccepted": false
+  },
+  "claimOnlyWriterSource": {
+    "files": [
+      {
+        "path": "codex/main-account.ts",
+        "bytes": 39553,
+        "sha256": "8f4f8d3ebc23d1359d91359dddd121383d5b1a1988276443d0f01f068515f717",
+        "expandedEqualsFixedOfficialTgz": true
+      },
+      {
+        "path": "codex/native-main-claim.ts",
+        "bytes": 7745,
+        "sha256": "f68443d088f08ef8b84e663939d83d8010157a7a6377eb85142e5c09f8247931",
+        "expandedEqualsFixedOfficialTgz": true
+      },
+      {
+        "path": "config/atomic-write.ts",
+        "bytes": 24476,
+        "sha256": "150894eb3383228f80fe0ee4ffb386c1b6aebfef432654027d74b74dd7f2ffb0",
+        "expandedEqualsFixedOfficialTgz": true
+      }
+    ],
+    "officialTgzSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "officialModified": false,
+    "officialExecuted": false,
+    "callChain": [
+      {
+        "file": "codex/main-account.ts",
+        "line": 463,
+        "observation": "reauth commit enters withNativeMainExclusiveClaim, checks traffic/snapshot then calls persistNativeMainReauthTokens"
+      },
+      {
+        "file": "codex/main-account.ts",
+        "line": 394,
+        "observation": "persistNativeMainReauthTokens calls atomicWriteFile(expected.path, new credential JSON) with unchanged-snapshot beforeRename guards, no N/L/K acquisition in this function"
+      },
+      {
+        "file": "codex/native-main-claim.ts",
+        "line": 167,
+        "observation": "exclusive helper opens claim SQLite, BEGIN EXCLUSIVE, invokes operation and finally releases; it does not itself acquire N/L/K"
+      }
+    ],
+    "inference": "Holding N/L/K alone is not an established replacement for claim exclusion: an actual official credential-write path uses claim. Any claim-unheld interval requires independent source/ownership proof or a different custody design; do not implement simple gap on assumption.",
+    "dynamicCredentialWriteExecuted": false
+  },
+  "latestRuns": {
+    "library01": {
+      "rawExit": 101,
+      "passed": 0,
+      "failed": 1,
+      "ignored": 0,
+      "elapsedMs": 112380,
+      "accepted": false
+    },
+    "library02": {
+      "rawExit": 101,
+      "passed": 0,
+      "failed": 1,
+      "ignored": 0,
+      "elapsedMs": 87948,
+      "accepted": false
+    },
+    "library03": {
+      "rawExit": 0,
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedMs": 106003,
+      "accepted": false
+    },
+    "library04": {
+      "rawExit": 101,
+      "passed": 1,
+      "failed": 1,
+      "ignored": 0,
+      "elapsedMs": 116776,
+      "accepted": false
+    },
+    "library05": {
+      "rawExit": 101,
+      "passed": 1,
+      "failed": 1,
+      "ignored": 0,
+      "elapsedMs": 84405,
+      "accepted": false
+    },
+    "library06": {
+      "rawExit": 101,
+      "passed": 1,
+      "failed": 1,
+      "ignored": 0,
+      "elapsedMs": 96450,
+      "accepted": false
+    },
+    "library07": {
+      "rawExit": 0,
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedMs": 104044,
+      "accepted": false
+    },
+    "library08": {
+      "rawExit": 0,
+      "passed": 10,
+      "failed": 0,
+      "ignored": 2,
+      "elapsedMs": 102021,
+      "accepted": false
+    },
+    "product01": {
+      "rawExit": 0,
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "elapsedMs": 77327,
+      "accepted": false
+    }
+  },
+  "latestMatrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "mandatory exact ordered predecessor references bind old session/private directory/current IDs, canonical/current/manifest/context/policy digests and D volume. Older missing-field records refuse; text/serde only locates pending data."
+    },
+    {
+      "id": "O1",
+      "result": "native-storage/component-pass",
+      "fact": "three synthetic native generations capture fresh user originals independently while old exact history remains unchanged; current original bytes restored each cycle. Full official side-effect assessment/live native coordination still incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "missing/sparse/reversed known histories, foreign namespace, source mismatch, native old archive drift and drift before next first move refuse with retained scenes. Complete actual official interruption/Closed matrix still unverified."
+    },
+    {
+      "id": "H",
+      "result": "actual-GUI-empty-broker-component-pass",
+      "fact": "Real main GUI/native HWND/pageFinished under ordinary marenben session7 passed across normal exit, exact Child-only forced GUI, fresh authentication and explicit empty-host exit; original broker31484/FILETIME134392264041593579/imageID562949954696391 preserved across manager generations1..4 with original creation handle. No official Owner/Job/H-S-D production proof; broker raw exit unrecorded=null."
+    },
+    {
+      "id": "S/D",
+      "result": "native-close-readback-wiring/component-pass",
+      "fact": "Current Closed tag now authorizes only fresh source/old-history/raw-family/listener/record/supervisor/tree rechecks. Actual production native factory and Stop/Restart combinations remain unexecuted."
+    },
+    {
+      "id": "P",
+      "result": "Start-refused/r5-integrated",
+      "fact": "r5 shared route and status interfaces integrated; Windows full recovery_state_at preserved byte-equivalent during merge. Actual side effects/NativeLease/original-package production closure incomplete; no official launch in this round."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    },
+    {
+      "id": "Route",
+      "result": "native-pin/component-pass",
+      "fact": "Independent shared parser11 plus native H/config ID/8projections/noADS/singlelink/2MiB/exact bytes/None-vs-empty/wrongH/expired checks; active Store source boundaries use the pin, each successor captures fresh. No generated-catalog inference or content-policy permission."
+    },
+    {
+      "id": "Sample",
+      "result": "shared/native-unknown-path-pass",
+      "fact": "Shared6 deadline cases and true OfficialStatusSource fetch/light/native missing-Owner path trace share one original5s each; private one-shot receipt binds Slot/session/scope/stopped/deadline before original Closed recheck. Actual retained Closed Owner positive/change/concurrent proof factories not yet executed."
+    },
+    {
+      "id": "NativeLease",
+      "result": "native-lock-component-pass/not-production-permit",
+      "fact": "Retained private original four Windows files, claim-exclusive/N-L-K-shared+reserved ranges, same original deadline/token/ID/8projections/content; real rusqlite and exact bundle Bun competitors blocked while held and succeed after release, all bytes unchanged. Busy/sidecar/header/WAL/ADS/links/missing/expiry/raw data drift refuse; failed recheck poisons. Official initialization/owner receipt and root relocation handoff still incomplete; no production mutation authorization."
+    },
+    {
+      "id": "ArtifactContent",
+      "result": "native-snapshot/data-policy-pass",
+      "fact": "Original same-object custody, actual sealed Ready+PreStop working images and fresh current native frame feed unchanged shared content policy; all8 security key separate from live generation/archive-copy identity. Undeclared nodes/config drift/allowed-name directory/archive contamination/PreStop changes refuse. Restore and unchanged-working veto remain; no native permission or canonical Changed-Ready/Closed production factory proved."
+    },
+    {
+      "id": "ClaimRootHandoff",
+      "result": "plan-decision-required/raw5-retained",
+      "fact": "Original DELETE root coexists with read-control/read-attributes metadata observer and moves with metadata-only. Actual root rename fails raw5 whenever claim file remains open, even read-only/share-delete with no lock. Five-case diagnostic isolates it; no force/alternative rename or automatic release/reopen implemented. A non-authorizing pending handoff or different explicit custody plan needs review."
+    }
+  ],
+  "limits": [
+    "Offline evidence/source review only; no Windows execution on Mac",
+    "Open-claim root move is a retained failure, not a passed diagnostic",
+    "N/L/K do not establish exclusion of the source-proven claim-only writer",
+    "Contribution stays on Windows branch; no wholesale implementation merge",
+    "No real original-package production/Closed sample positive acceptance; historical cleanup and B2/ordinary MSI remain unfinished"
+  ]
+}

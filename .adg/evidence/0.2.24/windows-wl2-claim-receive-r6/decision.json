@@ -1,0 +1,16 @@
+{
+  "storageStrategy": "windows-anchored-directories-v1",
+  "originalsSchema": "windows-client-originals-v3",
+  "currentSchema": "windows-client-current-v3",
+  "decision": "Keep original existing directories and exact existing Codex coordinator objects in place; same-volume custody of ordinary original files with complete per-node canonical intent/progress/restore",
+  "scope": "Existing-root claim relocation decision, not complete production acceptance",
+  "claimRequiredDuringEachCriticalMutation": true,
+  "claimOnlyWriterSourceReviewed": true,
+  "rejected": "Close claim, rename root while relying only on N/L/K, then reopen",
+  "runtimeLease": "Critical-section lease, not a continuously exclusive lock throughout official service runtime; release only after no client mutation permission remains, fresh native verification on reacquire",
+  "existingContentIdentitySecurityRequirements": "unchanged r4 fixed8 plus whole-tree content/IDs/existence, unknown refusal",
+  "originalAbsentCodex": "not solved by anchored existing-root layout; no release gap or residual-root exception authorized",
+  "oldFormatsMigrated": false,
+  "excludedSaclAssurance": "unchanged ExcludedUnknown",
+  "nextWindowsScope": "r2-r5 write set plus new native anchored/v3 internal implementation/tests; no new public trait required"
+}
