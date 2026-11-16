@@ -181,7 +181,22 @@ fn run(fault: u8) {
             94 => (original_end - Duration::from_secs(5), original_end),
             _ => (when, end),
         };
-        if fault == 96 {
+        if fault == 97 {
+            let window = crate::modules::runtime::official_lifecycle024::ActionWindow::begin(
+                crate::modules::process::LifecycleAction::Start,
+                when,
+                when + Duration::from_secs(30),
+            )
+            .unwrap();
+            let error = journal
+                .completed_stop_history_for_action(&window)
+                .unwrap_err();
+            assert_eq!(
+                error.kind(),
+                io::ErrorKind::InvalidData,
+                "fresh original action read cannot mint final Stop from old handle close"
+            );
+        } else if fault == 96 {
             assert!(journal.completed_stop_history_at(read_when,read_end).is_err(),
                 "timely original handle close receipt alone is not an actual final typed Stop completion");
         } else {
@@ -216,6 +231,10 @@ fn wl2_r6_completed_history_native_original_expiry_allows_fresh_read_but_never_a
 #[test]
 fn wl2_r6_completed_history_native_original_close_alone_cannot_sign_final_stop() {
     run(96);
+}
+#[test]
+fn wl2_r6_completed_history_native_new_action_read_cannot_convert_old_close_to_final_stop() {
+    run(97);
 }
 #[test]
 fn wl2_r6_completed_history_native_missing_partial_late_unknown_close_never_mint_receipt() {

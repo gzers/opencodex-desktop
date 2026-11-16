@@ -170,12 +170,44 @@ impl CaptureSlot {
         end: Instant,
     ) -> AppResult<()> {
         let result = (|| {
-            if self.failed
-                || when > Instant::now()
-                || when >= end
-                || end.duration_since(when) > std::time::Duration::from_secs(5)
-            {
-                return Err(refused("原Status同次5秒窗口未知"));
+            let read = super::read_window::HistoryReadWindow::status(when, end).map_err(refused)?;
+            self.completed_stop_read(owner, &read)
+        })();
+        if result.is_err() {
+            self.poison_completed_read();
+        }
+        result
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn completed_stop_for_action(
+        &mut self,
+        owner: &mut Owner,
+        window: &ActionWindow,
+    ) -> AppResult<()> {
+        let result = (|| {
+            let read = super::read_window::HistoryReadWindow::action(window).map_err(refused)?;
+            self.completed_stop_read(owner, &read)
+        })();
+        if result.is_err() {
+            self.poison_completed_read();
+        }
+        result
+    }
+    fn poison_completed_read(&mut self) {
+        self.failed = true;
+        if let Some(store) = &mut self.retained {
+            store.failed = true;
+            store.core.poison();
+        }
+    }
+    fn completed_stop_read(
+        &mut self,
+        owner: &mut Owner,
+        read: &super::read_window::HistoryReadWindow,
+    ) -> AppResult<()> {
+        let result = (|| {
+            let end = read.end().map_err(refused)?;
+            if self.failed {
+                return Err(refused("原完成历史已poison"));
             }
             let store = self
                 .retained
@@ -210,7 +242,7 @@ impl CaptureSlot {
             store
                 .core
                 .journal()
-                .completed_stop_history_at(when, end)
+                .completed_stop_history_read(read)
                 .map_err(refused)?;
             store.source.check(owner, end)?;
             store
@@ -223,18 +255,12 @@ impl CaptureSlot {
                 .as_ref()
                 .ok_or_else(|| refused("原监督history缺席"))?
                 .check(owner, end)?;
-            if Instant::now() >= end {
-                return Err(AppError::Timeout);
-            }
+            read.check().map_err(refused)?;
             store.failed = false;
             Ok(())
         })();
         if result.is_err() {
-            self.failed = true;
-            if let Some(store) = &mut self.retained {
-                store.failed = true;
-                store.core.poison();
-            }
+            self.poison_completed_read();
         }
         result
     }

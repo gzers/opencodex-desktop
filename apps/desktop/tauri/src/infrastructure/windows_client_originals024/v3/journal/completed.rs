@@ -192,12 +192,33 @@ impl Journal {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
-            if when > Instant::now()
-                || when >= end
-                || end.duration_since(when) > Duration::from_secs(5)
-            {
-                return Err(invalid());
-            }
+            let read = super::super::read_window::HistoryReadWindow::status(when, end)?;
+            self.completed_stop_history_read(&read)
+        })();
+        if result.is_err() {
+            self.poison_segment();
+        }
+        result
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn completed_stop_history_for_action(
+        &mut self,
+        window: &crate::modules::runtime::official_lifecycle024::ActionWindow,
+    ) -> io::Result<()> {
+        let result = (|| {
+            let read = super::super::read_window::HistoryReadWindow::action(window)?;
+            self.completed_stop_history_read(&read)
+        })();
+        if result.is_err() {
+            self.poison_segment();
+        }
+        result
+    }
+    pub(in crate::infrastructure::windows_client_originals024::v3) fn completed_stop_history_read(
+        &mut self,
+        read: &super::super::read_window::HistoryReadWindow,
+    ) -> io::Result<()> {
+        let result = (|| {
+            let end = read.end()?;
             before(end)?;
             self.stop_completion
                 .as_ref()
@@ -216,7 +237,7 @@ impl Journal {
                 .as_ref()
                 .ok_or_else(invalid)?
                 .matches(self)?;
-            before(end)
+            read.check()
         })();
         if result.is_err() {
             self.poison_segment();

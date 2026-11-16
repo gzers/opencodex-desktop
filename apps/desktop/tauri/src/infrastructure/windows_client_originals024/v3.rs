@@ -30,6 +30,7 @@ mod history;
 pub(super) mod journal;
 mod observations;
 mod qualification;
+mod read_window;
 mod recovery;
 mod segments;
 mod snapshots;
