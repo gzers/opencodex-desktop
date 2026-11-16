@@ -29,6 +29,117 @@ fn native_record_security(path: &Path, end: Instant) -> io::Result<SnapshotData>
     native_stamp(&file, end).map_err(failure)
 }
 impl FrameArchive {
+    pub(super) fn matches_metadata(
+        &mut self,
+        metadata: &serde_json::Value,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.check(end)?;
+        if self.source != *metadata {
+            return Err(invalid());
+        }
+        Ok(())
+    }
+    pub(super) fn observation_sequence(&self) -> io::Result<u32> {
+        self.context["observationSequence"]
+            .as_u64()
+            .and_then(|n| u32::try_from(n).ok())
+            .ok_or_else(invalid)
+    }
+    pub(super) fn matches_series_context(
+        &self,
+        expected: &serde_json::Value,
+        sequence: u32,
+        frame: &str,
+    ) -> io::Result<()> {
+        for key in [
+            "sessionId",
+            "storagePlanDigest",
+            "bindingDigest",
+            "manifestDigest",
+            "deadlineScope",
+        ] {
+            if self.context[key] != expected[key] {
+                return Err(invalid());
+            }
+        }
+        if self.observation_sequence()? != sequence || frame_digest(&self.source)? != frame {
+            return Err(invalid());
+        }
+        Ok(())
+    }
+    /// Native archive DATA: source generations are distinct from archive chunk
+    /// IDs. Every immutable chunk and metadata object was rechecked first.
+    pub(super) fn artifact_data(&self) -> io::Result<super::super::super::ArtifactFrame> {
+        // Called only inside the complete TWO-tree before/after native barrier
+        // in series::assess_tree_series. Reconstruct data from already verified
+        // immutable bytes; this function issues no permission or fresh proof.
+        if !self.complete {
+            return Err(invalid());
+        }
+        let path = PathBuf::from(self.source["root"].as_str().ok_or_else(invalid)?);
+        let rows = self.source["nodes"].as_array().ok_or_else(invalid)?;
+        if rows.len() > 512 {
+            return Err(invalid());
+        }
+        let mut entries = Vec::new();
+        let mut consumed = 0usize;
+        for (index, row) in rows.iter().enumerate() {
+            let directory = row["directory"].as_bool().ok_or_else(invalid)?;
+            let length = row["bytes"].as_u64().ok_or_else(invalid)?;
+            if length > 2 * 1024 * 1024 {
+                return Err(invalid());
+            }
+            let mut bytes = Vec::new();
+            if !directory {
+                let count = (length as usize).max(1).div_ceil(PART);
+                for part in 0..count {
+                    let expected = format!("data-{index:04}-{part:04}.bin");
+                    let p = self
+                        .parts
+                        .iter()
+                        .find(|p| p.name == expected)
+                        .ok_or_else(invalid)?;
+                    bytes.extend_from_slice(&p.bytes);
+                    consumed += 1;
+                }
+            }
+            if bytes.len() != length as usize
+                || row["sha256"].as_str() != Some(&hash::sha256_hex(&bytes))
+            {
+                return Err(invalid());
+            }
+            let security: SnapshotData =
+                serde_json::from_value(row["security"].clone()).map_err(|_| invalid())?;
+            security.validate()?;
+            let volume = u32::try_from(row["volume"].as_u64().ok_or_else(invalid)?)
+                .map_err(|_| invalid())?;
+            let file_id = row["fileId"]
+                .as_str()
+                .and_then(|s| s.parse::<u64>().ok())
+                .ok_or_else(invalid)?;
+            if !security.matches_id(volume, &file_id.to_string()) {
+                return Err(invalid());
+            }
+            let children =
+                serde_json::from_value(row["children"].clone()).map_err(|_| invalid())?;
+            entries.push(Entry {
+                relative: row["relative"].as_str().ok_or_else(invalid)?.into(),
+                directory,
+                id: FileIdentity {
+                    volume,
+                    index: file_id,
+                },
+                security,
+                bytes,
+                children,
+            });
+        }
+        if consumed != self.parts.len() {
+            return Err(invalid());
+        }
+        super::super::super::ArtifactFrame::from_entries(&path, &entries)
+    }
     fn begin(
         parent: &Path,
         source: serde_json::Value,

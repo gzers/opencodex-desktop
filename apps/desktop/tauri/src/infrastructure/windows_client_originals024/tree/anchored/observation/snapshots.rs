@@ -7,7 +7,26 @@ use crate::infrastructure::windows_client_originals024::v3::{
 pub(in crate::infrastructure::windows_client_originals024) struct SnapshotWitness<'a> {
     frames: [&'a mut WorkFrame; 2],
 }
+/// Immediately observed actual BOTH native frames, no JSON constructor.
+pub(in crate::infrastructure::windows_client_originals024) struct SnapshotLinkObservation {
+    references: [serde_json::Value; 2],
+}
+impl SnapshotLinkObservation {
+    pub(in crate::infrastructure::windows_client_originals024) fn into_values(
+        self,
+    ) -> [serde_json::Value; 2] {
+        self.references
+    }
+}
 impl SnapshotWitness<'_> {
+    pub(in crate::infrastructure::windows_client_originals024) fn link_observation(
+        &mut self,
+        end: Instant,
+    ) -> io::Result<SnapshotLinkObservation> {
+        Ok(SnapshotLinkObservation {
+            references: self.references(end)?,
+        })
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn reborrow(
         &mut self,
     ) -> SnapshotWitness<'_> {

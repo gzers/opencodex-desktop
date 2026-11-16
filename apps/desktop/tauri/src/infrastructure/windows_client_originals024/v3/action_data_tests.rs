@@ -302,6 +302,14 @@ fn wl2_r6_stop_phase_data_exact_prestop_teardown_stopped_and_ready_generation() 
             e.ready = g.ready_generation.clone();
             g.apply_snapshot(&p, &e).unwrap();
             assert_eq!(g.lifecycle, LifecyclePhase::TeardownPrepared);
+            g.apply_work(&p, &work(&g, WorkOperation::WorkResumeIntent))
+                .unwrap();
+            g.apply_work(&p, &work(&g, WorkOperation::WorkResumedVerified))
+                .unwrap();
+            g.apply_work(&p, &work(&g, WorkOperation::WorkSealIntent))
+                .unwrap();
+            g.apply_work(&p, &work(&g, WorkOperation::WorkSealedVerified))
+                .unwrap();
         }
     }
     assert!(!g.complete_files(&p));

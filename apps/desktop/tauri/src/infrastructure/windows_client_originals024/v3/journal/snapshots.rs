@@ -15,6 +15,60 @@ use crate::{
     },
 };
 impl Journal {
+    /// Select only canonical production phase snapshots AFTER actual typed
+    /// Stop predicates. Returned locators remain content DATA, no restore grant.
+    pub(in crate::infrastructure::windows_client_originals024) fn stopped_content_observations(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        normal: &NormalExit,
+        absent: &Absent,
+        official: &StopAccepted,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<ObservationSeriesContext> {
+        let result = (|| {
+            self.stopped_source(source, owner, normal, absent, official, end)?;
+            self.snapshot_claim(claim, end)?;
+            if self.progress.lifecycle != LifecyclePhase::Stopped {
+                return Err(invalid());
+            }
+            let mut prior = Vec::new();
+            for purpose in [
+                SnapshotPurpose::Ready,
+                SnapshotPurpose::PreStop,
+                SnapshotPurpose::Stopped,
+            ] {
+                let mut selected = Vec::new();
+                for record in &self.events {
+                    let entry: ChainEntry =
+                        serde_json::from_slice(&record.raw).map_err(|_| invalid())?;
+                    if let ChainEntry::Snapshot(e) = entry {
+                        if e.operation == SnapshotOperation::SnapshotLinkedVerified
+                            && e.purpose == purpose
+                        {
+                            selected.push(e.observation_sequence);
+                        }
+                    }
+                }
+                if selected.len() != 1 {
+                    return Err(invalid());
+                }
+                prior.push(selected[0]);
+            }
+            if prior[2] != self.progress.observed_sequence {
+                return Err(invalid());
+            }
+            let context = self.observation_series_context([prior[0], prior[1]], claim, end)?;
+            self.stopped_source(source, owner, normal, absent, official, end)?;
+            self.snapshot_claim(claim, end)?;
+            Ok(context)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
     fn stop_source(
         &mut self,
         source: &mut Source,
@@ -281,7 +335,7 @@ impl Journal {
         end: Instant,
     ) -> io::Result<ObservationContext> {
         self.snapshot_claim(claim, end)?;
-        let sequence = self.progress.sequence;
+        let sequence = self.progress.observed_sequence;
         let e = self.snapshot_event(
             SnapshotOperation::SnapshotLinkIntent,
             purpose,

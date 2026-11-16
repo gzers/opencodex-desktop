@@ -9,6 +9,7 @@ pub(super) enum WorkMode {
     Open,
     Sealing,
     Observed,
+    Resuming,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -18,6 +19,8 @@ pub(super) enum WorkOperation {
     WorkSealIntent,
     WorkSealedVerified,
     WorkUnchangedVerified,
+    WorkResumeIntent,
+    WorkResumedVerified,
 }
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -97,6 +100,19 @@ impl Progress {
             {
                 WorkMode::Sealed
             }
+            (WorkMode::Observed, WorkOperation::WorkResumeIntent)
+                if e.frame_digests == self.observed_frames
+                    && self.linked_frames.get(&self.observed_sequence)
+                        == e.frame_digests.as_ref()
+                    && self.lifecycle != snapshots::LifecyclePhase::Stopped =>
+            {
+                WorkMode::Resuming
+            }
+            (WorkMode::Resuming, WorkOperation::WorkResumedVerified)
+                if e.frame_digests == self.observed_frames =>
+            {
+                WorkMode::Open
+            }
             _ => return Err(invalid()),
         };
         if e.operation == WorkOperation::WorkOpenIntent {
@@ -105,6 +121,7 @@ impl Progress {
         }
         if e.operation == WorkOperation::WorkSealedVerified {
             self.observed_frames = e.frame_digests.clone();
+            self.observed_sequence = e.sequence;
         }
         self.work_mode = mode;
         self.tip = hash::sha256_hex(&encoded(e)?);

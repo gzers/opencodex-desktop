@@ -2,6 +2,84 @@ use super::super::super::coordination::AnchoredClaim;
 use super::super::observations::{WorkEvent, WorkMode, WorkOperation};
 use super::*;
 impl Journal {
+    pub(in crate::infrastructure::windows_client_originals024) fn resume_linked_work<F>(
+        &mut self,
+        plans: &[serde_json::Value; 2],
+        observed: super::super::super::tree::SnapshotLinkObservation,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+        native: F,
+    ) -> io::Result<()>
+    where
+        F: FnOnce(&mut AnchoredClaim<'_>) -> io::Result<[String; 2]>,
+    {
+        let result = (|| {
+            self.check_work_claim(plans, claim, end)?;
+            let refs = observed
+                .into_values()
+                .into_iter()
+                .map(super::super::snapshots::SnapshotReference::from_native_data)
+                .collect::<io::Result<Vec<_>>>()?;
+            let purpose = refs[0].purpose();
+            let sequence = refs[0].observation_sequence();
+            if refs[1].purpose() != purpose
+                || refs[1].observation_sequence() != sequence
+                || sequence != self.progress.observed_sequence
+            {
+                return Err(invalid());
+            }
+            for (i, r) in refs.iter().enumerate() {
+                r.validate(
+                    &self.manifest.storage_plan,
+                    i,
+                    &self.progress,
+                    purpose,
+                    sequence,
+                    self.progress.observed_frames.as_ref().ok_or_else(invalid)?,
+                )?;
+            }
+            let hashes = [
+                hash::sha256_hex(&encoded(&refs[0])?),
+                hash::sha256_hex(&encoded(&refs[1])?),
+            ];
+            if self.progress.snapshot_links.get(&purpose) != Some(&hashes) {
+                return Err(invalid());
+            }
+            let frames = self.progress.observed_frames.clone().ok_or_else(invalid)?;
+            let e = self.work_event(WorkOperation::WorkResumeIntent, Some(frames.clone()))?;
+            self.append_entry_inner(ChainEntry::Work(e), end)?;
+            #[cfg(test)]
+            if self.fault == 24 {
+                return Err(io::Error::other("injected after durable resume intent/current before exact work observer handoff"));
+            }
+            self.check_work_claim(plans, claim, end)?;
+            let actual = native(claim)?;
+            if actual != frames {
+                return Err(invalid());
+            }
+            self.check_work_claim(plans, claim, end)?;
+            #[cfg(test)]
+            {
+                if self.fault == 25 {
+                    return Err(io::Error::other(
+                        "injected after native work generation reopened before resume result",
+                    ));
+                }
+                if self.fault == 26 {
+                    self.fault = 1;
+                } else if self.fault == 27 {
+                    self.fault = 2;
+                }
+            }
+            let e = self.work_event(WorkOperation::WorkResumedVerified, Some(actual))?;
+            self.append_entry_inner(ChainEntry::Work(e), end)?;
+            self.check_work_claim(plans, claim, end)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
     fn check_work_claim(
         &mut self,
         plans: &[serde_json::Value; 2],

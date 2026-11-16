@@ -90,13 +90,19 @@ pub(super) struct SnapshotEvent {
     pub(super) binding_digest: String,
 }
 impl SnapshotReference {
+    pub(super) fn context_metadata(&self) -> io::Result<serde_json::Value> {
+        serde_json::to_value(&self.context).map_err(|_| invalid())
+    }
+    pub(super) fn purpose(&self) -> SnapshotPurpose {
+        self.context.purpose
+    }
     pub(super) fn observation_sequence(&self) -> u32 {
         self.context.observation_sequence
     }
     pub(super) fn from_native_data(value: serde_json::Value) -> io::Result<Self> {
         serde_json::from_value(value).map_err(|_| invalid())
     }
-    fn validate(
+    pub(super) fn validate(
         &self,
         plan: &StoragePlan,
         index: usize,
@@ -108,10 +114,14 @@ impl SnapshotReference {
         let root = plan.roots.get(index).ok_or_else(invalid)?;
         let profile = Path::new(&root.root).parent().ok_or_else(invalid)?;
         let leaf = if index == 0 { "codex" } else { "grok" };
+        let purpose_leaf = if purpose == SnapshotPurpose::Observation {
+            format!("{}-{sequence:06}", purpose.leaf())
+        } else {
+            purpose.leaf().into()
+        };
         let expected = profile.join(format!(
-            ".ocxd024-observed-{}-{}-{leaf}",
-            g.session,
-            purpose.leaf()
+            ".ocxd024-observed-{}-{purpose_leaf}-{leaf}",
+            g.session
         ));
         if self.schema != "windows-anchored-work-observation-reference-v3"
             || self.runtime_authority
@@ -180,8 +190,12 @@ impl Progress {
         match e.operation {
             SnapshotOperation::SnapshotLinkIntent => {
                 if self.snapshot_pending.is_some()
-                    || self.snapshot_links.contains_key(&e.purpose)
-                    || e.observation_sequence != self.sequence
+                    || if e.purpose == SnapshotPurpose::Observation {
+                        self.linked_frames.contains_key(&self.observed_sequence)
+                    } else {
+                        self.snapshot_links.contains_key(&e.purpose)
+                    }
+                    || e.observation_sequence != self.observed_sequence
                     || e.references.is_some()
                     || e.ready.is_some()
                 {
@@ -337,6 +351,8 @@ impl Progress {
         }
         if let Some(hashes) = links {
             self.snapshot_links.insert(e.purpose, hashes);
+            self.linked_frames
+                .insert(e.observation_sequence, e.frame_digests.clone());
         }
         Ok(())
     }

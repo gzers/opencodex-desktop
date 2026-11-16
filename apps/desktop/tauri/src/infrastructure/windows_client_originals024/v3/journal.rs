@@ -182,6 +182,8 @@ struct Current {
     observed_frames: Option<[String; 2]>,
     snapshot_pending: Option<(super::snapshots::SnapshotPurpose, u32)>,
     snapshot_links: std::collections::BTreeMap<super::snapshots::SnapshotPurpose, [String; 2]>,
+    observed_sequence: u32,
+    linked_frames: std::collections::BTreeMap<u32, [String; 2]>,
     lifecycle: super::snapshots::LifecyclePhase,
     ready_generation: Option<(u32, u16, String)>,
     action_pending: Option<(String, super::actions::ActionKind)>,
@@ -233,8 +235,12 @@ impl ObservationContext {
     pub(in super::super) fn metadata(&self) -> serde_json::Value {
         serde_json::json!({"sessionId":self.session,"storagePlanDigest":self.plan,"bindingDigest":self.binding,"manifestDigest":self.manifest,"deadlineScope":self.deadline_scope,"frameDigests":self.frames,"purpose":self.purpose,"observationSequence":self.observation_sequence})
     }
-    pub(in super::super) fn purpose_leaf(&self) -> &'static str {
-        self.purpose.leaf()
+    pub(in super::super) fn purpose_leaf(&self) -> String {
+        if self.purpose == super::snapshots::SnapshotPurpose::Observation {
+            format!("{}-{:06}", self.purpose.leaf(), self.observation_sequence)
+        } else {
+            self.purpose.leaf().into()
+        }
     }
     pub(in super::super) fn matches(&self, root: &Path, frame: &str) -> bool {
         let index = match root.file_name().and_then(|n| n.to_str()) {
@@ -245,7 +251,88 @@ impl ObservationContext {
         self.frames[index] == frame
     }
 }
+/// Content observation locators bound to this actual journal/claim only. They
+/// do not say the observations have production Ready/PreStop/NormalExit proof.
+pub(in super::super) struct ObservationSeriesContext {
+    bindings: [serde_json::Value; 3],
+    sequences: [u32; 3],
+    frames: [[String; 2]; 3],
+}
+impl ObservationSeriesContext {
+    pub(in super::super) fn binding(&self, stage: usize) -> io::Result<&serde_json::Value> {
+        self.bindings.get(stage).ok_or_else(invalid)
+    }
+    pub(in super::super) fn sequences(&self) -> [u32; 3] {
+        self.sequences
+    }
+    pub(in super::super) fn frame(&self, stage: usize, root: usize) -> io::Result<&str> {
+        self.frames
+            .get(stage)
+            .and_then(|v| v.get(root))
+            .map(String::as_str)
+            .ok_or_else(invalid)
+    }
+}
 impl Journal {
+    pub(in super::super) fn observation_series_context(
+        &mut self,
+        prior: [u32; 2],
+        claim: &mut super::super::coordination::AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<ObservationSeriesContext> {
+        self.check(end)?;
+        claim.check(&self.pins[0].path().join(".codex"), end)?;
+        if self.progress.work_mode != super::observations::WorkMode::Observed
+            || self.progress.lease_state != LeaseState::Active
+            || claim.epoch() != self.progress.epoch
+            || claim.key() != self.progress.claim
+            || prior[0] >= prior[1]
+            || prior[1] >= self.progress.observed_sequence
+        {
+            return Err(invalid());
+        }
+        let sequences = [prior[0], prior[1], self.progress.observed_sequence];
+        let mut frames = Vec::new();
+        for sequence in &sequences {
+            frames.push(
+                self.progress
+                    .linked_frames
+                    .get(sequence)
+                    .cloned()
+                    .ok_or_else(invalid)?,
+            );
+        }
+        let mut bindings = Vec::new();
+        for sequence in &sequences {
+            let mut matches = Vec::new();
+            for record in &self.events {
+                let entry: ChainEntry =
+                    serde_json::from_slice(&record.raw).map_err(|_| invalid())?;
+                if let ChainEntry::Snapshot(event) = entry {
+                    if event.operation
+                        == super::snapshots::SnapshotOperation::SnapshotLinkedVerified
+                        && event.observation_sequence == *sequence
+                    {
+                        let refs = event.references.as_ref().ok_or_else(invalid)?;
+                        matches.push(refs[0].context_metadata()?);
+                    }
+                }
+            }
+            if matches.len() != 1 {
+                return Err(invalid());
+            }
+            bindings.push(matches.pop().ok_or_else(invalid)?);
+        }
+        Ok(ObservationSeriesContext {
+            bindings: bindings.try_into().map_err(|_| invalid())?,
+            sequences,
+            frames: frames.try_into().map_err(|_| invalid())?,
+        })
+    }
+    #[cfg(test)]
+    pub(in super::super) fn observed_sequence_for_test(&self) -> u32 {
+        self.progress.observed_sequence
+    }
     pub(in super::super) fn observation_context(
         &mut self,
         claim: &mut super::super::coordination::AnchoredClaim<'_>,
@@ -268,7 +355,7 @@ impl Journal {
             deadline_scope: self.progress.deadline.clone(),
             frames: self.progress.observed_frames.clone().ok_or_else(invalid)?,
             purpose: super::snapshots::SnapshotPurpose::Observation,
-            observation_sequence: self.progress.sequence,
+            observation_sequence: self.progress.observed_sequence,
         })
     }
     /// Exact native source/Owner ActionWindow context only. This factory stays
@@ -410,6 +497,8 @@ impl Journal {
             observed_frames: None,
             snapshot_pending: None,
             snapshot_links: std::collections::BTreeMap::new(),
+            observed_sequence: 0,
+            linked_frames: std::collections::BTreeMap::new(),
             lifecycle: super::snapshots::LifecyclePhase::Preparing,
             ready_generation: None,
             action_pending: None,
@@ -519,6 +608,8 @@ impl Journal {
             || tip.observed_frames != self.progress.observed_frames
             || tip.snapshot_pending != self.progress.snapshot_pending
             || tip.snapshot_links != self.progress.snapshot_links
+            || tip.observed_sequence != self.progress.observed_sequence
+            || tip.linked_frames != self.progress.linked_frames
             || tip.lifecycle != self.progress.lifecycle
             || tip.ready_generation != self.progress.ready_generation
             || tip.action_pending != self.progress.action_pending
@@ -614,6 +705,8 @@ impl Journal {
             observed_frames: next.observed_frames.clone(),
             snapshot_pending: next.snapshot_pending,
             snapshot_links: next.snapshot_links.clone(),
+            observed_sequence: next.observed_sequence,
+            linked_frames: next.linked_frames.clone(),
             lifecycle: next.lifecycle,
             ready_generation: next.ready_generation.clone(),
             action_pending: next.action_pending.clone(),

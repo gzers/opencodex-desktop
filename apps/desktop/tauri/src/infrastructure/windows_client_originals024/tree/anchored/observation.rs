@@ -3,8 +3,11 @@
 use super::*;
 use std::os::windows::io::{AsRawHandle, FromRawHandle};
 mod archive;
+mod series;
 mod snapshots;
-pub(in crate::infrastructure::windows_client_originals024) use snapshots::SnapshotWitness;
+pub(in crate::infrastructure::windows_client_originals024) use snapshots::{
+    SnapshotLinkObservation, SnapshotWitness,
+};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) enum WorkMode {
     Sealed,
@@ -70,9 +73,13 @@ pub(super) struct WorkFrame {
 /// against a previous frame to mint a current-generation permission.
 pub(super) struct RetainedSnapshot {
     archive: archive::FrameArchive,
+    work_objects: Vec<(File, FileIdentity)>,
 }
 impl RetainedSnapshot {
     pub(super) fn check(&mut self, end: Instant) -> io::Result<()> {
+        for (file, expected) in &self.work_objects {
+            retained_work_identity(file, *expected)?;
+        }
         self.archive.check(end)
     }
 }
@@ -226,7 +233,10 @@ impl AnchoredTree {
         }
         let mut frame = self.observed.take().ok_or_else(invalid)?;
         if let Some(archive) = frame.archive.take() {
-            self.snapshot_history.push(RetainedSnapshot { archive });
+            self.snapshot_history.push(RetainedSnapshot {
+                archive,
+                work_objects: Vec::new(),
+            });
         }
         for observed in frame.nodes {
             let n = self

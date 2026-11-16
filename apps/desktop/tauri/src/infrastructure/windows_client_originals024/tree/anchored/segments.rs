@@ -15,7 +15,7 @@ pub(super) fn release_trees(
             .ok_or_else(invalid)?
             .anchored_claim(&root, end)?;
         for tree in trees.iter_mut() {
-            tree.verify(&mut claim, &root, end)?;
+            tree.verify_release_boundary(Some(&mut claim), end)?;
         }
         let plans = trees.each_ref().map(|t| t.plan());
         journal.prepare_lease_release(&plans, &mut claim, end)?;
@@ -28,9 +28,13 @@ pub(super) fn release_trees(
             .release_with_receipt(end)?;
         journal.retain_lease_release(receipt)?;
         for tree in trees.iter_mut() {
-            tree.verify_image(end)?;
+            tree.verify_release_boundary(None, end)?;
         }
-        journal.finish_lease_release(&plans, end)
+        journal.finish_lease_release(&plans, end)?;
+        for tree in trees.iter_mut() {
+            tree.finish_release_boundary();
+        }
+        Ok(())
     })();
     if result.is_err() {
         journal.poison_segment();

@@ -46,6 +46,7 @@ pub(in super::super) struct AnchoredTree {
     poisoned: bool,
     work_mode: WorkMode,
     observed: Option<observation::WorkFrame>,
+    release_view: Option<observation::WorkFrame>,
     snapshot_history: Vec<observation::RetainedSnapshot>,
     #[cfg(test)]
     create_fault: u8,
@@ -332,6 +333,7 @@ impl AnchoredTree {
             poisoned: false,
             work_mode: WorkMode::Sealed,
             observed: None,
+            release_view: None,
             snapshot_history: Vec::new(),
             #[cfg(test)]
             create_fault: 0,
