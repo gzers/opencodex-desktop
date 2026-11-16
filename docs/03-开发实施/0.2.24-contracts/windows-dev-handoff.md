@@ -575,3 +575,10 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 需要明确Windows claim交接计划。claim-only-writer-source已核原tgz中main-account.ts:463/394凭据写入及claim helper，不能把N/L/K当claim自动替代，未执行凭据/网络请求。优先评估保持原root/两稳定锁原位与claim连续排他、其它节点同卷custody的新canonical节点意图/恢复规则；若选typed Pending空窗必须另证claim-only writer排他，不能仅保留N/L/K便放行。两方案均未实施，不自动drop/reopen/force/POSIX/copy-delete，不开Start。
 
 共享route/同采样5秒已消费，完整NativeLease根交接/初始化/ownerreceipt、canonical stopped/typed restore、broker原Owner与原包H-S-D/Closed采样正例仍待，旧broker/Public8拒读/B2CAP-trust/普通MSI/历史清理保持。无官方日常配置/业务模型请求/W2/双SID/发布；本轮仅在具体方案变化处回交。
+
+
+## 2026-11-16 TEAM16/r6 原目录留位原语批次
+
+源码 7ece8c4b531db26a58eacf10422d6ff0658851d4/treef69a7898995b6b4edfbb395b8f7d30e70fcfacea；原证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-anchored-20261116-r1/。首轮raw101/2过2败（工作copy误用record上限），修后5过0败；原目录/两稳定文件ID与8投影留位，双原文件准确handle往返及0..8中断前缀、Grok同名普通文件1280KiB；固定Bun在原lease内9次claim-only均raw73，显式释放后raw0。
+
+仅native组件，无canonical intent/current接入，v3和生产组合继续；原缺席退根blocked，Start保持拒绝。完整表/首错/EXE摘要/清理归本轮final-status/report/cleanup，不改官方/日常配置，不重跑旧raw5/空GUI，不W2/双SID/发布。

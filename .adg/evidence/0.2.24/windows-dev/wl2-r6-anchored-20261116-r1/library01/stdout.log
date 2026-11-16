@@ -1,0 +1,32 @@
+
+running 4 tests
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_absent_root_wrong_claim_open_file_and_sidecar_admission_refuse ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0WmLVF
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpBPEkN3
+r6 ordinary file open admission raw=Some(32), original retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpQo9sNC
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpckoDwy
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_every_native_prefix_retains_handles_without_resume ... r6 interrupted-native-prefix=0 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpF0vkvO
+r6 interrupted-native-prefix=1 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp1Hbqzv
+r6 interrupted-native-prefix=2 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpoNEVx7
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpTzKZe9
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_existing_tree_continuous_claim_node_roundtrip ... r6-epoch=a083b447-d048-4085-a130-5d4e096490b0 key=e01cfd01c89039b574754192281762cc54aa050109353ad09e53701907252f3b
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Moved
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Moved
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpHsuAz2
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_unknown_empty_directory_and_original_edit_refuse_without_overwrite ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpTXdgA0
+ok
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_every_native_prefix_retains_handles_without_resume
+    infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_existing_tree_continuous_claim_node_roundtrip
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 1986 filtered out; finished in 1.17s
+

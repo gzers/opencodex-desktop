@@ -1,0 +1,66 @@
+
+running 5 tests
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_absent_root_wrong_claim_open_file_and_sidecar_admission_refuse ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpKcIY2u
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpScb50z
+r6 ordinary file open admission raw=Some(32), original retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpearAeS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpubXDxD
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_every_native_prefix_retains_handles_without_resume ... r6 interrupted-native-prefix=0 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpCbU65S
+r6 interrupted-native-prefix=1 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpJpkQjC
+r6 interrupted-native-prefix=2 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpCxlDFc
+r6 interrupted-native-prefix=3 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp35Jb3W
+r6 interrupted-native-prefix=4 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpZ3YxcA
+r6 interrupted-native-prefix=5 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpWxpty7
+r6 interrupted-native-prefix=6 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpIzxKgF
+r6 interrupted-native-prefix=7 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpUeQzro
+r6 interrupted-native-prefix=8 exact native locations preserved; no JSON reconstruction or Ready/Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpqZ1Wlp
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_existing_tree_continuous_claim_node_roundtrip ... r6-epoch=2f5fd36d-1250-42a7-abd3-d34a7a4d367c key=30e656a7dd3e7afb6d6af6e99ab0893eed3133ab75e5cbb15813a14d70baa322
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Moved
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Moved
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Working
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Working
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Retired
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Retired
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039 state=Restored
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r6-native-prefix node=87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b state=Restored
+r6 fixed-Bun claim-only held=false raw=Some(0) stdout=claim-acquired
+ stderr=
+r6 exact original directory/two stable file IDs/all8 and complete children retained; original files restored by original handles; work generations retired; lease explicitly released; component only, Start/Closed=false
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmppQgP2M
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_grok_names_are_ordinary_and_large_work_file_keeps_original_ids ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpoabB4K
+ok
+test infrastructure::windows_client_originals024::tree::anchored::tests::wl2_r6_anchored_unknown_empty_directory_and_original_edit_refuse_without_overwrite ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpFSkob9
+ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 1986 filtered out; finished in 4.85s
+
