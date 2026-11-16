@@ -1,0 +1,19 @@
+
+running 6 tests
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_stop_prepared_boundary_requires_exact_original_generation_and_deadline ... r6 Stop boundary locator tests only: exact original pid/port/record/end and no renewed/substituted timer. Data cannot authorize Source/Owner/native phase; actual factories remain separate, no fake Ready/NormalExit/Closed
+ok
+test infrastructure::windows_client_originals024::v3::actions::tests::wl2_r6_stop_action_data_exact_ready_context_order_no_replay_or_deadline_laundering ... r6 new-action DATA preserves Ready generation and old scope until verified binding, rejects13 context drifts/unknown deadline/replay/skip and lease during pending; accepts no actual NativeAction, remains data only
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpgbcIf3
+ok
+test infrastructure::windows_client_originals024::v3::actions::tests::wl2_r6_stop_phase_data_exact_prestop_teardown_stopped_and_ready_generation ... r6 PreStop/teardown/Stopped phase DATA keeps exact Ready generation/ref chains and rejects generation drift, no Closed eligibility or actual Stop proof is minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpTsHZ1l
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_exact_start_stop_and_restart_subwindow_never_reset ... r6 actual shared ActionWindow original parent/end/stop sub10 retained exactly; no nested new budget or different deadline admitted, source-owner receipt factory remains actual native only
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_late_stop_subwindow_and_expired_origin_refuse ... r6 late restart admission does not reset elapsed original stop sub10; expired private origin no permission
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_repeated_or_partially_started_stop_cannot_replace_origin ... r6 repeated/new deadline or partially started Stop cannot reset original receipt; no Origin minted for invalid kind
+ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2037 filtered out; finished in 0.29s
+

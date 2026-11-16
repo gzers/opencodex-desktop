@@ -652,3 +652,10 @@ v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Clos
 源码 f842e9b8d8abb0dde70c81ccd51a01579a725213/tree1f38618bfd755037b52410c45352e4730ff2f1c6；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-capture-ready-20261116-r1/。修实际capture prepare后sealed句柄遗漏Open，改canonicalOpen→Source/unresumed复验→显式release，before_v3_resume原Owner窗完整initial work复核，typedReady实际工厂双根观察/归档/link/Ready/Resume/release调用链已编译未调用。三新native组件测试通过，准确同debugEXE13受影响回归通过，本轮无非预期首错。产品MSVCdebug bins0/190846ms，原始源/EXE/完整表/0删除且全部pending留存见report/final-status。
 
 生产dispatcher/Start拒绝未动，actualSource/Ready正例未实跑；Store Stop/原policy+动态nodes/退休还原/Closed/history/后继/实际Owner H-S-D及原缺席安全退根仍待。不W2/双SID/发布，不旧raw5/空GUI/1314重跑。
+
+
+## 2026-11-16 TEAM16/r6 Store PreStop及Stopped采样接线
+
+源码 13c3485805f16e9ff94bf43ca35e748b5740338d/tree06f2f5f06394ea2d9c36492942a3bea9233c4773；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-capture-stop-20261116-r1/。原CaptureSlot Ready→actualSource/route/typedReady新StopAction→完整lease→双根PreStop/teardown intent→Resume→显式release，preparedStop成功后才发布。Stopped核心要求原NormalExit/Absent/StopAccepted/record/listener/原窗，freshlease下双根Stopped/context，lease留caller供后续同临界段恢复；完整Slot恢复/Closed尚未接，不对外签Stop成功。新生产链编译未实跑；六数据/窗口定向及准确同EXE16受影响回归过，本轮无非预期首错。产品MSVCdebug bins0/189219ms，源/EXE/完整表/清理归report/final-status。
+
+生产dispatcher/原typed正例/动态nodes与config/auth/Grok/退休还原/Closed/history/后继/实际原Owner-H-S-D待；原缺席退根blocked且Start拒绝，不W2/双SID/发布，不旧raw5/空GUI/1314重跑。

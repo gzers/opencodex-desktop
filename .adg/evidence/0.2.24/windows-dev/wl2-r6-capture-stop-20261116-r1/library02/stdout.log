@@ -1,0 +1,67 @@
+
+running 16 tests
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_faults_keep_installed_original_tree_and_exact_native_prefix_without_retry ... r6 capture-installed-fault=1 movedOriginals=0 exact native parents/handles/journal retained before error=injected after immutable event sync/readback before current CAS; no slot replace, catchup or automatic retry
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpNNTzmX
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-bd0f0ea6-c56c-47b2-b8dc-523f18dcd9c5
+r6 capture-installed-fault=2 movedOriginals=0 exact native parents/handles/journal retained before error=injected real partial current write/sync; no slot replace, catchup or automatic retry
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpRjkQmm
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-92a7ee67-1562-4938-95f6-7f16ba555596
+r6 capture-installed-fault=3 movedOriginals=1 exact native parents/handles/journal retained before error=injected after actual native mutation before result publication; no slot replace, catchup or automatic retry
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpPABTtv
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-18cbdf23-3802-415f-a76d-371a10e83e71
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_installed_core_precedes_native_moves_and_released_store_survives_thread_handoff ... r6 retained native core installed at seq0 before first mutation;18 exact anchor/file events prepare all3 work files, explicit20 release; only released historical file/pin objects+full original trees+same journal move across worker and back; no live lease/ranges or production Source/Ready/Closed granted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpgZfiFo
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-c59d9087-bada-41d1-b722-b3de784d1aa6
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_ready_changed_initial_work_before_official_creator_runs_refuses_recheck ... r6 capture-ready unexpected work edit before actual creator would Resume is not an official mutation, refuses unchanged preResume check; original custody and external edit both retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpXUdhz6
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-7688ee3b-e076-4e0c-bc8c-4a5804c8f25c
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_ready_initial_open_precedes_release_actual_writer_and_preserves_originals ... r6 capture-ready core original18 prepare/20 canonicalOpen/22explicitRelease, actual same-byte writer then full unchanged preResume-like recheck/26release; exact original custody remains; test does not mint actual Source/Owner/typedReady or invoke official creator
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpfwDByM
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-725617fc-1d97-4b90-a914-d607972de385
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_ready_open_faults_keep_installed_core_and_no_successful_publication ... r6-capture-ready-open-fault=13 installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpZuJ2mF
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-d33a6a1c-96e8-49bc-a113-2725fde23dd8
+r6-capture-ready-open-fault=14 installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpFtX6jd
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-1bf2da90-6f39-4f87-8c67-97b330470110
+r6-capture-ready-open-fault=15 installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpViuPgw
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-20de538d-ff60-441c-9673-060fcb9eb890
+r6-capture-ready-open-fault=16 installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpdQFbef
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-b15ebcd5-748a-4bb1-94a2-01b9a85e0c9f
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_stop_prepared_boundary_requires_exact_original_generation_and_deadline ... r6 Stop boundary locator tests only: exact original pid/port/record/end and no renewed/substituted timer. Data cannot authorize Source/Owner/native phase; actual factories remain separate, no fake Ready/NormalExit/Closed
+ok
+test infrastructure::windows_client_originals024::v2::adapter::tests::wl2_originals_current_pin_retains_actual_record_and_refuses_foreign_selection ... actual source-current record bytes/ID/8projections pinned, mutation/rename/foreign selection/expired deadline refused; synthetic selection only, not production Source/Owner/Closed proof
+ok
+test infrastructure::windows_client_originals024::v2::adapter::tests::wl2_originals_current_pin_unknown_schema_and_hardlink_never_admit_source ... unknown source field and multiple native links refused; no adapter/native phase tag issued
+ok
+test infrastructure::windows_client_originals024::v3::actions::tests::wl2_r6_stop_action_data_exact_ready_context_order_no_replay_or_deadline_laundering ... r6 new-action DATA preserves Ready generation and old scope until verified binding, rejects13 context drifts/unknown deadline/replay/skip and lease during pending; accepts no actual NativeAction, remains data only
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpaQHg7b
+ok
+test infrastructure::windows_client_originals024::v3::actions::tests::wl2_r6_stop_phase_data_exact_prestop_teardown_stopped_and_ready_generation ... r6 PreStop/teardown/Stopped phase DATA keeps exact Ready generation/ref chains and rejects generation drift, no Closed eligibility or actual Stop proof is minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmph1Ppwb
+ok
+test infrastructure::windows_client_originals024::v3::capture::tests::wl2_r6_capture_namespace_old_v2_or_text_closed_never_grants_fresh_capture ... r6 actual private old namespace and textClosed refuse fresh v3 before custody/mutation; no conversion/adoption or overwrite
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp2sJ3DR
+ok
+test infrastructure::windows_client_originals024::v3::capture::tests::wl2_r6_capture_retained_store_types_are_send_without_active_lease_or_unsafe_send ... r6 compiler proves actual CaptureSlot/Source/route/fulltrees/journal/released-original-object set Send; live NativeLease remains stack-only marker unchanged, no unsafe impl Send or fake native factory
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_capture_canonical_data_namespace_binds_native_session_leaf_and_rejects_other_descendants ... r6 actual native D/official024/windows/canonicalUUID journal uses same UUID in immutable manifest/current; wrong descendant/nonUUID refuse, direct D/session remains component-only, actual Source create factory still requires production namespace and original Owner
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpa4JtPO
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-3b9ad25b-1010-47e4-b7e2-f0aed055626c
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_exact_start_stop_and_restart_subwindow_never_reset ... r6 actual shared ActionWindow original parent/end/stop sub10 retained exactly; no nested new budget or different deadline admitted, source-owner receipt factory remains actual native only
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_late_stop_subwindow_and_expired_origin_refuse ... r6 late restart admission does not reset elapsed original stop sub10; expired private origin no permission
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_repeated_or_partially_started_stop_cannot_replace_origin ... r6 repeated/new deadline or partially started Stop cannot reset original receipt; no Origin minted for invalid kind
+ok
+
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 2027 filtered out; finished in 17.92s
+

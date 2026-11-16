@@ -1,0 +1,32 @@
+{
+  "executed": true,
+  "rawExit": 0,
+  "accepted": false,
+  "profile": "debug",
+  "sameRustInputsAndCompilationFlags": true,
+  "reusedExactArtifactFrom": "library01",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "--",
+    "wl2_r6_capture_stop_",
+    "wl2_r6_stop_action_data_",
+    "wl2_r6_stop_phase_data_",
+    "wl2_r6_original_actions",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+  "bytes": 99268096,
+  "sha256": "cf524caf5acc70161cbdaefdebaa2460262ef0d5cbfcd9f6e2f0789812a42415"
+}

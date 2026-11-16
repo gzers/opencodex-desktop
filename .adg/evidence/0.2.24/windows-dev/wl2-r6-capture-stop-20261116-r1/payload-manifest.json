@@ -1,0 +1,3390 @@
+{
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    {
+      "path": "archive_run.py",
+      "bytes": 3925,
+      "sha256": "ff09483e468bc493f15a06c6c2901881ece8840e155e999b11f887d0af6f0f60"
+    },
+    {
+      "path": "cleanup-counts.json",
+      "bytes": 108,
+      "sha256": "6263a9f0d1a3ff17a573ec029d2bc245e3929456bc7f5e27cf18a820045c9c2a"
+    },
+    {
+      "path": "cleanup-success.ps1",
+      "bytes": 2487,
+      "sha256": "796f33a5ee772362a0f0d7fb2345b4dc51084ca15e6cd2dd3390b79957665f8b"
+    },
+    {
+      "path": "cleanup.json",
+      "bytes": 2369,
+      "sha256": "161ac50396baee0f75bb89e2574a7338dcd4177c14e455266653a0d1ad7e60dc"
+    },
+    {
+      "path": "fetch-receipt.json",
+      "bytes": 391,
+      "sha256": "cc2e400d712d2c2276ae78e8afd41aad20046d17a0250fb5f8cfcca5d7b4c246"
+    },
+    {
+      "path": "final-source.json",
+      "bytes": 54918,
+      "sha256": "77c0e6a40504ac955f1c75db1ae14d78f231efa5f684f0c44d4947acc12e6dca"
+    },
+    {
+      "path": "final-status.json",
+      "bytes": 32758,
+      "sha256": "8557896cc78686d41b4897467c6baedda9419e29f94c2a49d221e04936565e67"
+    },
+    {
+      "path": "finalize.py",
+      "bytes": 13632,
+      "sha256": "5e426f4be062a22481eb68aba68780a4e9c00528e13926de1567b60e6b91d601"
+    },
+    {
+      "path": "hypotheses.json",
+      "bytes": 1583,
+      "sha256": "a021d58618595acf3245df4e5c858c39afd5fcaf76a5ee89ca6cb0917950669a"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 14423,
+      "sha256": "651fcdc03e8617559d392248f5b143123d967693d632c4bc2d4797164535568d"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1831,
+      "sha256": "bad73ec12a40164af515e030fddade7fabe0c15a65b4a8c1127388daa438eab9"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "bytes": 46522,
+      "sha256": "733d20ac0c9e7520660079bc45bbbf247bb1b768259631c50497a542f2237aed"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "bytes": 26235,
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/binding.rs",
+      "bytes": 7016,
+      "sha256": "491e448b9947fd0deeab4206d1d93ab2455b0132905536ab15950922a0d4fd83"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded/tests.rs",
+      "bytes": 13799,
+      "sha256": "8825127bef7380f23cfdbc8739e5a10a491c4989107c01114f9c8158e5e836b4"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded.rs",
+      "bytes": 25177,
+      "sha256": "4d85053bfe0cf72c8ad02604387d4e5093af0bcb894aba81b8f13a89ffa7e77d"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 13331,
+      "sha256": "52dadd0a73e19e0110de633a12beca9b37a75f7a008646203afa936789a1b693"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "bytes": 21517,
+      "sha256": "65e1ec80e5b66de97d627735bda02191b79f3960ff33ff33d998d158bb0c3a99"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination_tests.rs",
+      "bytes": 20397,
+      "sha256": "b9ad484049e398c98d48ce22f83e1136bc5a78ea72fc1337ddc4c391273db6bb"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 11955,
+      "sha256": "196d62ebf59d8dbd839b70e088780ecd86e01e3abab9049657405aa0386e9e24"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/phase.rs",
+      "bytes": 18044,
+      "sha256": "60b025ec7899e344c94c048408b77328d153ba747680094951530d6297909176"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/reference.rs",
+      "bytes": 17989,
+      "sha256": "6ce041d1cea1823da5d18f93dbac24398af485a38c8526e4d4d3959d5e286d7c"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/source.rs",
+      "bytes": 8700,
+      "sha256": "5767267214ce53becbf2f7fb28bdfb9dfd69e1580bf17050e4c69225956476a1"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture.rs",
+      "bytes": 18384,
+      "sha256": "86d02d2c45954f1be3249709d6ffe29d39892fd91cfd4dfc9f0af151a9b7e514"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture_tests.rs",
+      "bytes": 9920,
+      "sha256": "88ee11b24e68269afbcd49d220cd98273f76f991bae4de23d5c6cb85985caf83"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/archive.rs",
+      "bytes": 12650,
+      "sha256": "4b117d852c2d1c4288f870df6f4daaaf23bc3d8bf7d463bfb0231684a070bfb3"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/series.rs",
+      "bytes": 11079,
+      "sha256": "9bbc526774c839973c028f928774d88facc70193ffc6e8bd8f1012df892e9f82"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/series_tests.rs",
+      "bytes": 11329,
+      "sha256": "2def2d672fb203f7fc87a174c1338be8bc83e9e553fa8ec4ff32799d283aadb0"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/snapshot_tests.rs",
+      "bytes": 8224,
+      "sha256": "439d0af82650b1ab7972ab3867ed7f36bb80faf46d2279d7518a40510c862ad6"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/snapshots.rs",
+      "bytes": 4164,
+      "sha256": "d8ccfdae40d23acf101075b79b617884be073ae38e005097d6bb35de8bf0c43d"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation.rs",
+      "bytes": 21950,
+      "sha256": "2ad12577771d301132b8bddbb521b3d0d1fb346944565142bf0d851254dbd286"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation_tests.rs",
+      "bytes": 15838,
+      "sha256": "6360c39a3c4c4e4d044d55082efe8c6a9d62c6753fa211e3b502b02c6e75d288"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segment_tests.rs",
+      "bytes": 11016,
+      "sha256": "b64c195882f72ebcf1ae2bdddd95dadda138f5f52ce532825c2a982e5915cefe"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs",
+      "bytes": 2950,
+      "sha256": "689b636c497cfaa94e47f36c548a044ff2a550276bf8485a41dc78212a77e6b9"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+      "bytes": 23881,
+      "sha256": "0481ffc49f78e464da9daeead0c400d807895c1cd65e10e5468b87b9cdc1b19b"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_driver_tests.rs",
+      "bytes": 11897,
+      "sha256": "8c73f19c01df3487c0cfc7fd869df6de465f7434f768c31de0b39e94d4ac3e6b"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs",
+      "bytes": 12145,
+      "sha256": "4b9cfa1ecb4c123eb9dc14d9a45c05132a37fc4721d6678131efe374b310097d"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/artifacts.rs",
+      "bytes": 5071,
+      "sha256": "41373a946453e52c0eef1011156a78f251c0d8ed16c013875c6677f61c0b3433"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/artifacts_tests.rs",
+      "bytes": 8303,
+      "sha256": "58607843dee5c310a5236b3e46fbcfb7be782c44ae5de704748e7cbdfde313a9"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/locks.rs",
+      "bytes": 9580,
+      "sha256": "77e93ead781e009803d220d1c56ae3e3dd026c694f409b94ced6255b6444b3ee"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/working.rs",
+      "bytes": 20420,
+      "sha256": "d685d3ee614ca3f0a2b1add66e13059fb8db3a46d0ae73c8352ec478eeea1997"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree.rs",
+      "bytes": 31586,
+      "sha256": "6541266b8ad1fd89c3f5ccc9ea94a88dd3fe8a85a4686072e873c6a396924a0d"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/adapter.rs",
+      "bytes": 25746,
+      "sha256": "90191e6aa32d6df8f7856a7539e284f9d8a7d1af9dc93aafc5016dc338084abc"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/capture/history.rs",
+      "bytes": 6307,
+      "sha256": "8053388a173e40dfb436f9414609577c48879c2a2330be80b00a4d7fb2bc2c15"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/capture.rs",
+      "bytes": 62858,
+      "sha256": "7a7b383c49d0e7dd1c338a8750da9fc5b2408e4d7e9fd78c47f7d780148c0835"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/current.rs",
+      "bytes": 16355,
+      "sha256": "d7635ae8546134d25b983e5e203abac86fad86362249968b3d90a566bf5aab14"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/history.rs",
+      "bytes": 2146,
+      "sha256": "b0ae4b815eefbededf979c149fd40a03f7d7de6f900af1a40b664a9292d2ed34"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/progress.rs",
+      "bytes": 3312,
+      "sha256": "342af693edae8ab80d37b4051721f79d31167f2085366f79c338d093ce7498a8"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/routes.rs",
+      "bytes": 7039,
+      "sha256": "2b9e78421edeed2d2c553e61ef351a3f81995018c53ec1b67df2b9f001b633ec"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/tests.rs",
+      "bytes": 23813,
+      "sha256": "8934f637c628c82da196f25554a930ae0a8b21789c45330577951d450e0cfd8c"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2.rs",
+      "bytes": 18611,
+      "sha256": "f7945dd8b06cea4b74f2bfd1cd0344312aee0cc8d533ecc4c4ff514a67ff0aad"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/action_data_tests.rs",
+      "bytes": 10990,
+      "sha256": "3f2679e6fa7b9a1d3dcc64bf0f0a4ed815f77db471975c2b384c08e93446e614"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/actions.rs",
+      "bytes": 4309,
+      "sha256": "92b5615b9bb47618789c5479a7ed8d491ac29393b376a2155b5ce0be1d26ecb0"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 15122,
+      "sha256": "bb592206df2c37716e4b44e1a6d383180385bef396c3e47508a5f7f9947ad331"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/actions.rs",
+      "bytes": 6355,
+      "sha256": "0c34ec7daa260b993854f58347f8ebe534067cc4241dcb28a211c95b6ae6536b"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/driver.rs",
+      "bytes": 9095,
+      "sha256": "48e8fd65edbbe5b45bf4b929bd41402e0c4ad02bb03a7d4fdf5ead549b16ef36"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "bytes": 9578,
+      "sha256": "e0d1c3cf0589c8603fae02924d4c480792a9f38616508c2dd0e5262732c211d0"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/observations.rs",
+      "bytes": 8471,
+      "sha256": "e8f111a269e2e2488d7460a30020c591bcf1d747de42dd351466614b7ae98f11"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/snapshots.rs",
+      "bytes": 18852,
+      "sha256": "8b8ae4fd1ab36e561899c720d30245788a7a7f3006abcc421cc75e77d7078b83"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs",
+      "bytes": 28672,
+      "sha256": "faca1386db4cbdf6c1cbd528ad8394720638c86bcdae9d7f5ff09b56318286d2"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal_tests.rs",
+      "bytes": 8097,
+      "sha256": "288d1520b24d9e633ff85469c990fa734ea0efa1e9020c299df151e7ccb23743"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/observation_data_tests.rs",
+      "bytes": 5286,
+      "sha256": "c63cef7a08db355d500fe40b4fdb8eaf6ccae72c70fe4a24721eba9812a15e1e"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/observations.rs",
+      "bytes": 5197,
+      "sha256": "283737c9afa26b2e60cd2017ec7ad6474c9546c0ae30867526fc66693cacbd8d"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/segment_data_tests.rs",
+      "bytes": 5697,
+      "sha256": "e4ce174911bf471cf76e14780599409c9639bf4202a76fbc1111ea1aec9fb7c1"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/segments.rs",
+      "bytes": 5909,
+      "sha256": "4c8d4dd1247c1076cf0d7d04c91cfb4ce464965e50bde32dd1f1481c97fe76d7"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/snapshot_data_tests.rs",
+      "bytes": 9055,
+      "sha256": "2ec559e71b36fb6252c0d9f8649a2e1c0c660262f164c7d0d5d379a5d051c8fe"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/snapshots.rs",
+      "bytes": 14370,
+      "sha256": "14646c6edbc61c810c52147f2321ffb764821205a30c6f69b5ce2f0057c969eb"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3.rs",
+      "bytes": 21447,
+      "sha256": "33159c79a4352eff2bacd75b33570e66e855e0087651c4dee37ba2cda9b7199d"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3_tests.rs",
+      "bytes": 9865,
+      "sha256": "d828c950eb5155538b243debbb3b43460229aa94906b7708742816e83eb128f1"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+      "bytes": 28455,
+      "sha256": "ec66fd59d1f68ce7c08e36cae883521f3fdfe631417ff2a11b148a158b1f2606"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "bytes": 8985,
+      "sha256": "6197d02c4cab1f3da89a7cd1f9e097c28d406edd5dd232e1f14f69a669177313"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 39902,
+      "sha256": "ca42dbaf4c55ac9dce4c42db46258e74aefb8964690abb62de8e766ed8b05db5"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 27583,
+      "sha256": "e258d146738cae5c418363e713ced5cd20fe91452101a934011044c633fdb768"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5964,
+      "sha256": "3d71e722b98f3f6fb4fb56d731ffab1bbf5e41df45e3c91784d1daa405bffd1b"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/file_move.rs",
+      "bytes": 9152,
+      "sha256": "fb37fa6f3fb3d7bf67653c901d3104936ef8b2ebb7d52b0ea9afcd6c41a8d39b"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/host_process.rs",
+      "bytes": 5722,
+      "sha256": "075619dea0612b101bf1905123fa50e577f6386f552d11d3789aa897009dee10"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6286,
+      "sha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 3100,
+      "sha256": "24301e7cc7b7d6f659ca5af1422b0b536d33a3e982d63680820abcb3de8a6163"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 12008,
+      "sha256": "3b6474b1bc630cf92f14613450ffde8b83dadeea8aaa92056eaecc2ce09e618c"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/peer.rs",
+      "bytes": 3364,
+      "sha256": "9c20f1d1d60461e3555d7bcce4ad1d34b89fdf7026f1905f8c072e46120cb803"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/pipe.rs",
+      "bytes": 12300,
+      "sha256": "91d7dd4606429b2514279897feaba25fd91d25825baf636141f63fe88e15898f"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 37444,
+      "sha256": "a1409642c0908ffe84056c1997ec991227bf3700ef8dd163060f7bc7ebc8b5aa"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 8526,
+      "sha256": "d431220e2667305124da167d128bc2517c3cafebd89eb41412fe0d1340f12274"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4814,
+      "sha256": "da748e6976cdb9efa1c64245686c13fa3f18684aa9ef7e4ac1ee37e3f72f662a"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9568,
+      "sha256": "ca3ce25d74c02e2a8743b401ac2a0c20634a92af3090a2117534f1251867ea6d"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/actual_gui_tests.rs",
+      "bytes": 11656,
+      "sha256": "f7bf5028fee1157f6a01ac842eadea7a4be4eba4d72886e13ed97c5d01641b58"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/continuity.rs",
+      "bytes": 13328,
+      "sha256": "53fd8838e0fe8c5e6b7face8b9d43004389b12dbcd414074cff6e6e921f34222"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/desktop_tests.rs",
+      "bytes": 13005,
+      "sha256": "6b7514d9dadbc71232168d8142969cdc647d3a0b827cc72e9fa575a380586afb"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 19726,
+      "sha256": "432768fd0c9290c38d8dbcb3f144baa8c469e7aa0fb3a8f46dbdaf90f0d860c4"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/gui_probe.rs",
+      "bytes": 14427,
+      "sha256": "5855c56252edf33f8125c98ebc21f2f080a8b7c185f9ba1493852018c7beb437"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 10242,
+      "sha256": "95c973c41b4c58534dddeda1298c948fbea178c63a3db62b9f41c6d2c184a07f"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "bytes": 63894,
+      "sha256": "125434701c99f7e735b0eece6f6d9288cc1f3a5436bd94ade97b2dc7a0dcbd32"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "bytes": 14982,
+      "sha256": "753329dc7236e420bbd70df7e1da14a8a8977e093cd3801aefed69a4194ee4ee"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 17555,
+      "sha256": "6bd34bd267db93634383ee2927db4c84c08cd28a7f5e3be8fac232f51db23c5e"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3074,
+      "sha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 7398,
+      "sha256": "b16adcf426b00cfa360a4da0b2887c3bc41a2f5e8575fe6d4d6bcb48ea9009ce"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 3825,
+      "sha256": "53cb45b92b17b5fc3c026fcfffed46cc10785e487881779d0fbd7f6b9a1585f5"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_status_sample024_tests.rs",
+      "bytes": 6237,
+      "sha256": "c4b20c0b8d8e267fbca814bb02a9c064d4d9a4037dc8180faf5716efeaec6151"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 16631,
+      "sha256": "77ff99511e59895eceb79a10f0abd647f6bdcb862b33e1ea9f3a413853027d00"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 5473,
+      "sha256": "cc7e18e89a4d0c3f62a13520e61f9d2c8582b3ac65d50d46cd29a7e4d593c2c5"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+      "bytes": 4543,
+      "sha256": "a76564eb786fff9ed5ed94eb29448c55bf8d928b1ef213197742fe298dc1e3f4"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2804,
+      "sha256": "d9cbb6a609fbc7b0fa8ffa5f9d191440abc7e374fa9fccf00cbfd52516962782"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+      "bytes": 19915,
+      "sha256": "4513ebd3e8d6bcd2b08557b4aaf5a27d6b5d231f811026e96da848f23244d0d6"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/lib.rs",
+      "bytes": 61008,
+      "sha256": "adc94318f00d6ca208912bad4a44f2117fc0659502e82e73e1b5d5ac523b20cb"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+      "bytes": 17051,
+      "sha256": "841a4659e49d0486de9960d78ac2509dfe30c7b9045818e461533638d34ab8aa"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/runtime/client_artifact_policy_tests.rs",
+      "bytes": 22530,
+      "sha256": "ca6324358550d9cfb912ff228bbf46ce15a2b0965ee36af5889d291b0925bce0"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/runtime/client_route_declaration.rs",
+      "bytes": 11759,
+      "sha256": "57af2816bf1b673022a5fd4b40b8482b97690aad628aa837360d5abd42ea81fc"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/runtime/client_route_declaration_tests.rs",
+      "bytes": 12621,
+      "sha256": "26941d18e487a4118d475f5ac6fa8b1919f73b3aaca7d1a4a7284aa7081cffb8"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/runtime/mod.rs",
+      "bytes": 47846,
+      "sha256": "4de6e549d276ccb16b19882bdbed236a62d3cde1623828d4969c4c0d93f1b44c"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "bytes": 11187,
+      "sha256": "dde515d48418d73a2f1fbee5d4c57cb7ca9972509760286195094dcfabd309ac"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/status/client_recovery_gate_tests.rs",
+      "bytes": 4421,
+      "sha256": "f4711efa145b36288a7da79083ded2ccc0233ff3a4fca357bf9e34aa25bf365f"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/status/context_paths_tests.rs",
+      "bytes": 4449,
+      "sha256": "fd26698ace9e77b1da56bd1eba249b90652341ec49b98c84c90735e8ea56f8a7"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/status/mod.rs",
+      "bytes": 63226,
+      "sha256": "db074dc53003dccb4008e65812dfa03a6236f686defe6bc117ac1775c4be07f0"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/status/polling.rs",
+      "bytes": 10138,
+      "sha256": "efc0a182d87e3e13d32df25afcda90451d2e65a24de1d71e88af9f9c357f9669"
+    },
+    {
+      "path": "library01/executed-source/apps/desktop/tauri/src/modules/status/sample_deadline_tests.rs",
+      "bytes": 5562,
+      "sha256": "1bee31e9e699877031e57f8eb7185c68b8b5f1e21bd6fe743762a0f515162fa2"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/.gitignore",
+      "bytes": 10,
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/account-w1c.ps1",
+      "bytes": 9912,
+      "sha256": "2c85460147b5faae0dbccb546f024929be08001a4d4c2ee01002e5a2ff860a2e"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19709,
+      "sha256": "11e6068834e085ef780127d87636aedbbb3054cbe75c4f1b77356055618768e5"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/archive-h024-fixed-success.cmd",
+      "bytes": 169,
+      "sha256": "f117340a476937b237504390ccddfef6b7dee0c69bdb1ebf0ebe4b930b4be8dc"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/archive-h024-fixed-success.ps1",
+      "bytes": 11356,
+      "sha256": "3acfec691c38ab3b8b1548d4f233656e0c07628efff407b5938de352e209975a"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 20251,
+      "sha256": "76c00743f87e70b9834d6c8f8a26e37aebfd17775e77bedf671725d3237ff2c8"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/bundle-installer.py",
+      "bytes": 7706,
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/Cargo.lock",
+      "bytes": 630,
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/Cargo.toml",
+      "bytes": 593,
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/cleanup-h024-completed.cmd",
+      "bytes": 266,
+      "sha256": "bc07e01192c04fe19dd93b5833409d01692e23259cb976c6ef9448ea10af3735"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/cleanup-h024-completed.ps1",
+      "bytes": 5033,
+      "sha256": "b416c2bde3bd36d9172e3f5661e82bca8ac4e9631de2e8f6485c2905f0fe0b4d"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/cleanup-profiles-w1c.ps1",
+      "bytes": 3615,
+      "sha256": "290c1a71e748873fcaf5d9f2efea8538ab8d4778d2a16d62dadd0dc7f262fe89"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/cleanup-wl2-prerequisites.ps1",
+      "bytes": 4650,
+      "sha256": "cd9c950ab37fc3dd96580c89b74df2259657b88d10627269d33183d54fb916b7"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/collect-h024-actual-gui.ps1",
+      "bytes": 3230,
+      "sha256": "babf14452702e9bde23a95410eff94a02da3f1360d14911b55e34ac9b83eff2e"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/collect-h024-desktop.cmd",
+      "bytes": 300,
+      "sha256": "2e7dbc52b6f6bc2a7d349c2a61dbf571878292e4c01ea2859213239db70421bf"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/collect-h024-desktop.ps1",
+      "bytes": 3565,
+      "sha256": "b44684c5d008ef2d2370b05c793686800b602e86ef34510bc11c3db80018063b"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/compile-uninstall-probe.py",
+      "bytes": 2184,
+      "sha256": "c897c6afb58e56abe9321e63b7f9b24566bb7ab04608694feace03122045ad29"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/export-h024-task.ps1",
+      "bytes": 3165,
+      "sha256": "7b9147b208c5315a5c2c622fa1e4e76884862543112660f561de980fd17e480e"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/fixture.rs",
+      "bytes": 4076,
+      "sha256": "4bf497530abbcbce72b34775720ff0229b40c872a6eefa61b344c5b569594175"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/invoke-msi-only.ps1",
+      "bytes": 1979,
+      "sha256": "ad149ff6018d2315d89eb1b1c1edea9a9ccad025e78899e828a22d407abe467b"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/launch-h024-actual-gui.cmd",
+      "bytes": 187,
+      "sha256": "fd8de7923f7af52a9ea82be83fc44008459fe1ca84218388ca581df0928b3798"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/launch-h024-actual-gui.ps1",
+      "bytes": 4183,
+      "sha256": "854bce2717ee31d0792f33c69e21c846ebe25b473f9a0634d703767473beb834"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/launch-h024-desktop.cmd",
+      "bytes": 319,
+      "sha256": "0fd1c7fe46e01cc5b20948fc80e24b630aa3a18a223b9ad06623cb23c030812b"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/launch-h024-desktop.ps1",
+      "bytes": 3751,
+      "sha256": "7627c3d54eeb976c715b7c462b305c5c4bf71ca5e6a6f3f0404b42d90b581ac4"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/launch-wl2.ps1",
+      "bytes": 2368,
+      "sha256": "0a655f0c70f50bdbb3005ab813715ff5c6bcde5682897cc781cd51a7337cf046"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/lib.rs",
+      "bytes": 16639,
+      "sha256": "dbfbf419d4cc84a0f4b50fe121b35307e42c8a178918ce95da7411730fd6aef5"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/msi-only.md",
+      "bytes": 5641,
+      "sha256": "4c23ac4328a382f19c5b0c1e1d0370909bcce419304d923aa4c6a0b845ecd15e"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/msvc-env.ps1",
+      "bytes": 1913,
+      "sha256": "389c087a4acf88aea21982a0a9610f9887464c24a9835470568192bfa46755bc"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/populated-security-probe.cs",
+      "bytes": 5168,
+      "sha256": "ba6c9ce2dec5daa43f33b99e0da97c406f4ad465751938d3ac28e59718585e72"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/populated-security-probe.ps1",
+      "bytes": 2373,
+      "sha256": "f7ac944fca19c6e577c7d6ea47778fce4bb885a1bfad56b877b0666525fce92e"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/record-checks.ps1",
+      "bytes": 2823,
+      "sha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/recover-h024-empty-original.ps1",
+      "bytes": 11917,
+      "sha256": "cc222bbbdbc2d9dd5578fd138cd39503eced722335f7543d012e6d1d000ef4f0"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/repair-h024-desktop.cmd",
+      "bytes": 295,
+      "sha256": "8abc7331a963b5a57873c844b0928206b4b1a1c17d9360a7d2242e2d9950f20b"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/repair-h024-desktop.ps1",
+      "bytes": 1110,
+      "sha256": "416fb60922ad0ee6d6e43327ad02d4fcbb4dc3a2fd14fe3880339c9838a7dc81"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/stage-installer.py",
+      "bytes": 2600,
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/tests/process.rs",
+      "bytes": 26469,
+      "sha256": "6d5106f0660d8abc7617bf62b1f447960745d217a405505ab1d99580c6923e42"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/verify-msi-evidence.py",
+      "bytes": 13587,
+      "sha256": "64a978c83cb050aa2306842734de60c016c48f0c650b6913971b8468cc3d5376"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/verify-msi-paths.ps1",
+      "bytes": 4416,
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/verify-nsis-paths.py",
+      "bytes": 6192,
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2"
+    },
+    {
+      "path": "library01/executed-source/test/windows024-native/verify-uninstall-msi.ps1",
+      "bytes": 4157,
+      "sha256": "6ef87e6df003d5aaadeec866278222c939ac6e7659329cda5faf500b30f8f30b"
+    },
+    {
+      "path": "library01/result.json",
+      "bytes": 533,
+      "sha256": "f3b5c0e4481d35e5f9ede7bd98dd5f86e4c976ab26afa4f4a58d1cb155aa8f71"
+    },
+    {
+      "path": "library01/source-manifest.json",
+      "bytes": 30065,
+      "sha256": "cbaa29243c1b87d72e2388139243016d63b957d6f90c77c20cb05d83d6dc11aa"
+    },
+    {
+      "path": "library01/source.json",
+      "bytes": 23957,
+      "sha256": "200039f3c64f6e4b5025dbe9c141ce9178a79bfbf3d793319da660241c7049d1"
+    },
+    {
+      "path": "library01/stderr.log",
+      "bytes": 23041,
+      "sha256": "094fea1c7aebe44914baab232a2226301a2ebd9d606d26e846740b8bee0920f0"
+    },
+    {
+      "path": "library01/stdout.log",
+      "bytes": 2212,
+      "sha256": "88dec718e1adbe156a901d4c7146f1a38b9bec1600b8ff14a52fc07dffb4f73e"
+    },
+    {
+      "path": "library01-artifact.json",
+      "bytes": 435,
+      "sha256": "687d1be78b36eca01abd55d992f189fff22a0b4111f9a7b3b23d432f22e663b5"
+    },
+    {
+      "path": "library01-private-scenes.json",
+      "bytes": 3894,
+      "sha256": "4029463241cbf8620528610b6cbfdc2154eb10a66a0f52f0a466ef741601b443"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 14423,
+      "sha256": "651fcdc03e8617559d392248f5b143123d967693d632c4bc2d4797164535568d"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1831,
+      "sha256": "bad73ec12a40164af515e030fddade7fabe0c15a65b4a8c1127388daa438eab9"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "bytes": 46522,
+      "sha256": "733d20ac0c9e7520660079bc45bbbf247bb1b768259631c50497a542f2237aed"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "bytes": 26235,
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/binding.rs",
+      "bytes": 7016,
+      "sha256": "491e448b9947fd0deeab4206d1d93ab2455b0132905536ab15950922a0d4fd83"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded/tests.rs",
+      "bytes": 13799,
+      "sha256": "8825127bef7380f23cfdbc8739e5a10a491c4989107c01114f9c8158e5e836b4"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded.rs",
+      "bytes": 25177,
+      "sha256": "4d85053bfe0cf72c8ad02604387d4e5093af0bcb894aba81b8f13a89ffa7e77d"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 13331,
+      "sha256": "52dadd0a73e19e0110de633a12beca9b37a75f7a008646203afa936789a1b693"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "bytes": 21517,
+      "sha256": "65e1ec80e5b66de97d627735bda02191b79f3960ff33ff33d998d158bb0c3a99"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination_tests.rs",
+      "bytes": 20397,
+      "sha256": "b9ad484049e398c98d48ce22f83e1136bc5a78ea72fc1337ddc4c391273db6bb"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 11955,
+      "sha256": "196d62ebf59d8dbd839b70e088780ecd86e01e3abab9049657405aa0386e9e24"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/phase.rs",
+      "bytes": 18044,
+      "sha256": "60b025ec7899e344c94c048408b77328d153ba747680094951530d6297909176"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/reference.rs",
+      "bytes": 17989,
+      "sha256": "6ce041d1cea1823da5d18f93dbac24398af485a38c8526e4d4d3959d5e286d7c"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/source.rs",
+      "bytes": 8700,
+      "sha256": "5767267214ce53becbf2f7fb28bdfb9dfd69e1580bf17050e4c69225956476a1"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture.rs",
+      "bytes": 18384,
+      "sha256": "86d02d2c45954f1be3249709d6ffe29d39892fd91cfd4dfc9f0af151a9b7e514"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture_tests.rs",
+      "bytes": 9920,
+      "sha256": "88ee11b24e68269afbcd49d220cd98273f76f991bae4de23d5c6cb85985caf83"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/archive.rs",
+      "bytes": 12650,
+      "sha256": "4b117d852c2d1c4288f870df6f4daaaf23bc3d8bf7d463bfb0231684a070bfb3"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/series.rs",
+      "bytes": 11079,
+      "sha256": "9bbc526774c839973c028f928774d88facc70193ffc6e8bd8f1012df892e9f82"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/series_tests.rs",
+      "bytes": 11329,
+      "sha256": "2def2d672fb203f7fc87a174c1338be8bc83e9e553fa8ec4ff32799d283aadb0"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/snapshot_tests.rs",
+      "bytes": 8224,
+      "sha256": "439d0af82650b1ab7972ab3867ed7f36bb80faf46d2279d7518a40510c862ad6"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/snapshots.rs",
+      "bytes": 4164,
+      "sha256": "d8ccfdae40d23acf101075b79b617884be073ae38e005097d6bb35de8bf0c43d"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation.rs",
+      "bytes": 21950,
+      "sha256": "2ad12577771d301132b8bddbb521b3d0d1fb346944565142bf0d851254dbd286"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation_tests.rs",
+      "bytes": 15838,
+      "sha256": "6360c39a3c4c4e4d044d55082efe8c6a9d62c6753fa211e3b502b02c6e75d288"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segment_tests.rs",
+      "bytes": 11016,
+      "sha256": "b64c195882f72ebcf1ae2bdddd95dadda138f5f52ce532825c2a982e5915cefe"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs",
+      "bytes": 2950,
+      "sha256": "689b636c497cfaa94e47f36c548a044ff2a550276bf8485a41dc78212a77e6b9"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+      "bytes": 23881,
+      "sha256": "0481ffc49f78e464da9daeead0c400d807895c1cd65e10e5468b87b9cdc1b19b"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_driver_tests.rs",
+      "bytes": 11897,
+      "sha256": "8c73f19c01df3487c0cfc7fd869df6de465f7434f768c31de0b39e94d4ac3e6b"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs",
+      "bytes": 12145,
+      "sha256": "4b9cfa1ecb4c123eb9dc14d9a45c05132a37fc4721d6678131efe374b310097d"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/artifacts.rs",
+      "bytes": 5071,
+      "sha256": "41373a946453e52c0eef1011156a78f251c0d8ed16c013875c6677f61c0b3433"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/artifacts_tests.rs",
+      "bytes": 8303,
+      "sha256": "58607843dee5c310a5236b3e46fbcfb7be782c44ae5de704748e7cbdfde313a9"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/locks.rs",
+      "bytes": 9580,
+      "sha256": "77e93ead781e009803d220d1c56ae3e3dd026c694f409b94ced6255b6444b3ee"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/working.rs",
+      "bytes": 20420,
+      "sha256": "d685d3ee614ca3f0a2b1add66e13059fb8db3a46d0ae73c8352ec478eeea1997"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree.rs",
+      "bytes": 31586,
+      "sha256": "6541266b8ad1fd89c3f5ccc9ea94a88dd3fe8a85a4686072e873c6a396924a0d"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/adapter.rs",
+      "bytes": 25746,
+      "sha256": "90191e6aa32d6df8f7856a7539e284f9d8a7d1af9dc93aafc5016dc338084abc"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/capture/history.rs",
+      "bytes": 6307,
+      "sha256": "8053388a173e40dfb436f9414609577c48879c2a2330be80b00a4d7fb2bc2c15"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/capture.rs",
+      "bytes": 62858,
+      "sha256": "7a7b383c49d0e7dd1c338a8750da9fc5b2408e4d7e9fd78c47f7d780148c0835"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/current.rs",
+      "bytes": 16355,
+      "sha256": "d7635ae8546134d25b983e5e203abac86fad86362249968b3d90a566bf5aab14"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/history.rs",
+      "bytes": 2146,
+      "sha256": "b0ae4b815eefbededf979c149fd40a03f7d7de6f900af1a40b664a9292d2ed34"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/progress.rs",
+      "bytes": 3312,
+      "sha256": "342af693edae8ab80d37b4051721f79d31167f2085366f79c338d093ce7498a8"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/routes.rs",
+      "bytes": 7039,
+      "sha256": "2b9e78421edeed2d2c553e61ef351a3f81995018c53ec1b67df2b9f001b633ec"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/tests.rs",
+      "bytes": 23813,
+      "sha256": "8934f637c628c82da196f25554a930ae0a8b21789c45330577951d450e0cfd8c"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2.rs",
+      "bytes": 18611,
+      "sha256": "f7945dd8b06cea4b74f2bfd1cd0344312aee0cc8d533ecc4c4ff514a67ff0aad"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/action_data_tests.rs",
+      "bytes": 10990,
+      "sha256": "3f2679e6fa7b9a1d3dcc64bf0f0a4ed815f77db471975c2b384c08e93446e614"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/actions.rs",
+      "bytes": 4309,
+      "sha256": "92b5615b9bb47618789c5479a7ed8d491ac29393b376a2155b5ce0be1d26ecb0"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 15122,
+      "sha256": "bb592206df2c37716e4b44e1a6d383180385bef396c3e47508a5f7f9947ad331"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/actions.rs",
+      "bytes": 6355,
+      "sha256": "0c34ec7daa260b993854f58347f8ebe534067cc4241dcb28a211c95b6ae6536b"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/driver.rs",
+      "bytes": 9095,
+      "sha256": "48e8fd65edbbe5b45bf4b929bd41402e0c4ad02bb03a7d4fdf5ead549b16ef36"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "bytes": 9578,
+      "sha256": "e0d1c3cf0589c8603fae02924d4c480792a9f38616508c2dd0e5262732c211d0"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/observations.rs",
+      "bytes": 8471,
+      "sha256": "e8f111a269e2e2488d7460a30020c591bcf1d747de42dd351466614b7ae98f11"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/snapshots.rs",
+      "bytes": 18852,
+      "sha256": "8b8ae4fd1ab36e561899c720d30245788a7a7f3006abcc421cc75e77d7078b83"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs",
+      "bytes": 28672,
+      "sha256": "faca1386db4cbdf6c1cbd528ad8394720638c86bcdae9d7f5ff09b56318286d2"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal_tests.rs",
+      "bytes": 8097,
+      "sha256": "288d1520b24d9e633ff85469c990fa734ea0efa1e9020c299df151e7ccb23743"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/observation_data_tests.rs",
+      "bytes": 5286,
+      "sha256": "c63cef7a08db355d500fe40b4fdb8eaf6ccae72c70fe4a24721eba9812a15e1e"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/observations.rs",
+      "bytes": 5197,
+      "sha256": "283737c9afa26b2e60cd2017ec7ad6474c9546c0ae30867526fc66693cacbd8d"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/segment_data_tests.rs",
+      "bytes": 5697,
+      "sha256": "e4ce174911bf471cf76e14780599409c9639bf4202a76fbc1111ea1aec9fb7c1"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/segments.rs",
+      "bytes": 5909,
+      "sha256": "4c8d4dd1247c1076cf0d7d04c91cfb4ce464965e50bde32dd1f1481c97fe76d7"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/snapshot_data_tests.rs",
+      "bytes": 9055,
+      "sha256": "2ec559e71b36fb6252c0d9f8649a2e1c0c660262f164c7d0d5d379a5d051c8fe"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/snapshots.rs",
+      "bytes": 14370,
+      "sha256": "14646c6edbc61c810c52147f2321ffb764821205a30c6f69b5ce2f0057c969eb"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3.rs",
+      "bytes": 21447,
+      "sha256": "33159c79a4352eff2bacd75b33570e66e855e0087651c4dee37ba2cda9b7199d"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3_tests.rs",
+      "bytes": 9865,
+      "sha256": "d828c950eb5155538b243debbb3b43460229aa94906b7708742816e83eb128f1"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+      "bytes": 28455,
+      "sha256": "ec66fd59d1f68ce7c08e36cae883521f3fdfe631417ff2a11b148a158b1f2606"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "bytes": 8985,
+      "sha256": "6197d02c4cab1f3da89a7cd1f9e097c28d406edd5dd232e1f14f69a669177313"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 39902,
+      "sha256": "ca42dbaf4c55ac9dce4c42db46258e74aefb8964690abb62de8e766ed8b05db5"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 27583,
+      "sha256": "e258d146738cae5c418363e713ced5cd20fe91452101a934011044c633fdb768"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5964,
+      "sha256": "3d71e722b98f3f6fb4fb56d731ffab1bbf5e41df45e3c91784d1daa405bffd1b"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/file_move.rs",
+      "bytes": 9152,
+      "sha256": "fb37fa6f3fb3d7bf67653c901d3104936ef8b2ebb7d52b0ea9afcd6c41a8d39b"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/host_process.rs",
+      "bytes": 5722,
+      "sha256": "075619dea0612b101bf1905123fa50e577f6386f552d11d3789aa897009dee10"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6286,
+      "sha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 3100,
+      "sha256": "24301e7cc7b7d6f659ca5af1422b0b536d33a3e982d63680820abcb3de8a6163"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 12008,
+      "sha256": "3b6474b1bc630cf92f14613450ffde8b83dadeea8aaa92056eaecc2ce09e618c"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/peer.rs",
+      "bytes": 3364,
+      "sha256": "9c20f1d1d60461e3555d7bcce4ad1d34b89fdf7026f1905f8c072e46120cb803"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/pipe.rs",
+      "bytes": 12300,
+      "sha256": "91d7dd4606429b2514279897feaba25fd91d25825baf636141f63fe88e15898f"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 37444,
+      "sha256": "a1409642c0908ffe84056c1997ec991227bf3700ef8dd163060f7bc7ebc8b5aa"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 8526,
+      "sha256": "d431220e2667305124da167d128bc2517c3cafebd89eb41412fe0d1340f12274"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4814,
+      "sha256": "da748e6976cdb9efa1c64245686c13fa3f18684aa9ef7e4ac1ee37e3f72f662a"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9568,
+      "sha256": "ca3ce25d74c02e2a8743b401ac2a0c20634a92af3090a2117534f1251867ea6d"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/actual_gui_tests.rs",
+      "bytes": 11656,
+      "sha256": "f7bf5028fee1157f6a01ac842eadea7a4be4eba4d72886e13ed97c5d01641b58"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/continuity.rs",
+      "bytes": 13328,
+      "sha256": "53fd8838e0fe8c5e6b7face8b9d43004389b12dbcd414074cff6e6e921f34222"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/desktop_tests.rs",
+      "bytes": 13005,
+      "sha256": "6b7514d9dadbc71232168d8142969cdc647d3a0b827cc72e9fa575a380586afb"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 19726,
+      "sha256": "432768fd0c9290c38d8dbcb3f144baa8c469e7aa0fb3a8f46dbdaf90f0d860c4"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/gui_probe.rs",
+      "bytes": 14427,
+      "sha256": "5855c56252edf33f8125c98ebc21f2f080a8b7c185f9ba1493852018c7beb437"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 10242,
+      "sha256": "95c973c41b4c58534dddeda1298c948fbea178c63a3db62b9f41c6d2c184a07f"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "bytes": 63894,
+      "sha256": "125434701c99f7e735b0eece6f6d9288cc1f3a5436bd94ade97b2dc7a0dcbd32"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "bytes": 14982,
+      "sha256": "753329dc7236e420bbd70df7e1da14a8a8977e093cd3801aefed69a4194ee4ee"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 17555,
+      "sha256": "6bd34bd267db93634383ee2927db4c84c08cd28a7f5e3be8fac232f51db23c5e"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3074,
+      "sha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 7398,
+      "sha256": "b16adcf426b00cfa360a4da0b2887c3bc41a2f5e8575fe6d4d6bcb48ea9009ce"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 3825,
+      "sha256": "53cb45b92b17b5fc3c026fcfffed46cc10785e487881779d0fbd7f6b9a1585f5"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_status_sample024_tests.rs",
+      "bytes": 6237,
+      "sha256": "c4b20c0b8d8e267fbca814bb02a9c064d4d9a4037dc8180faf5716efeaec6151"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 16631,
+      "sha256": "77ff99511e59895eceb79a10f0abd647f6bdcb862b33e1ea9f3a413853027d00"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 5473,
+      "sha256": "cc7e18e89a4d0c3f62a13520e61f9d2c8582b3ac65d50d46cd29a7e4d593c2c5"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+      "bytes": 4543,
+      "sha256": "a76564eb786fff9ed5ed94eb29448c55bf8d928b1ef213197742fe298dc1e3f4"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2804,
+      "sha256": "d9cbb6a609fbc7b0fa8ffa5f9d191440abc7e374fa9fccf00cbfd52516962782"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+      "bytes": 19915,
+      "sha256": "4513ebd3e8d6bcd2b08557b4aaf5a27d6b5d231f811026e96da848f23244d0d6"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/lib.rs",
+      "bytes": 61008,
+      "sha256": "adc94318f00d6ca208912bad4a44f2117fc0659502e82e73e1b5d5ac523b20cb"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+      "bytes": 17051,
+      "sha256": "841a4659e49d0486de9960d78ac2509dfe30c7b9045818e461533638d34ab8aa"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/runtime/client_artifact_policy_tests.rs",
+      "bytes": 22530,
+      "sha256": "ca6324358550d9cfb912ff228bbf46ce15a2b0965ee36af5889d291b0925bce0"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/runtime/client_route_declaration.rs",
+      "bytes": 11759,
+      "sha256": "57af2816bf1b673022a5fd4b40b8482b97690aad628aa837360d5abd42ea81fc"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/runtime/client_route_declaration_tests.rs",
+      "bytes": 12621,
+      "sha256": "26941d18e487a4118d475f5ac6fa8b1919f73b3aaca7d1a4a7284aa7081cffb8"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/runtime/mod.rs",
+      "bytes": 47846,
+      "sha256": "4de6e549d276ccb16b19882bdbed236a62d3cde1623828d4969c4c0d93f1b44c"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "bytes": 11187,
+      "sha256": "dde515d48418d73a2f1fbee5d4c57cb7ca9972509760286195094dcfabd309ac"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/status/client_recovery_gate_tests.rs",
+      "bytes": 4421,
+      "sha256": "f4711efa145b36288a7da79083ded2ccc0233ff3a4fca357bf9e34aa25bf365f"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/status/context_paths_tests.rs",
+      "bytes": 4449,
+      "sha256": "fd26698ace9e77b1da56bd1eba249b90652341ec49b98c84c90735e8ea56f8a7"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/status/mod.rs",
+      "bytes": 63226,
+      "sha256": "db074dc53003dccb4008e65812dfa03a6236f686defe6bc117ac1775c4be07f0"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/status/polling.rs",
+      "bytes": 10138,
+      "sha256": "efc0a182d87e3e13d32df25afcda90451d2e65a24de1d71e88af9f9c357f9669"
+    },
+    {
+      "path": "library02/executed-source/apps/desktop/tauri/src/modules/status/sample_deadline_tests.rs",
+      "bytes": 5562,
+      "sha256": "1bee31e9e699877031e57f8eb7185c68b8b5f1e21bd6fe743762a0f515162fa2"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/.gitignore",
+      "bytes": 10,
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/account-w1c.ps1",
+      "bytes": 9912,
+      "sha256": "2c85460147b5faae0dbccb546f024929be08001a4d4c2ee01002e5a2ff860a2e"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19709,
+      "sha256": "11e6068834e085ef780127d87636aedbbb3054cbe75c4f1b77356055618768e5"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/archive-h024-fixed-success.cmd",
+      "bytes": 169,
+      "sha256": "f117340a476937b237504390ccddfef6b7dee0c69bdb1ebf0ebe4b930b4be8dc"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/archive-h024-fixed-success.ps1",
+      "bytes": 11356,
+      "sha256": "3acfec691c38ab3b8b1548d4f233656e0c07628efff407b5938de352e209975a"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 20251,
+      "sha256": "76c00743f87e70b9834d6c8f8a26e37aebfd17775e77bedf671725d3237ff2c8"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/bundle-installer.py",
+      "bytes": 7706,
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/Cargo.lock",
+      "bytes": 630,
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/Cargo.toml",
+      "bytes": 593,
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/cleanup-h024-completed.cmd",
+      "bytes": 266,
+      "sha256": "bc07e01192c04fe19dd93b5833409d01692e23259cb976c6ef9448ea10af3735"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/cleanup-h024-completed.ps1",
+      "bytes": 5033,
+      "sha256": "b416c2bde3bd36d9172e3f5661e82bca8ac4e9631de2e8f6485c2905f0fe0b4d"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/cleanup-profiles-w1c.ps1",
+      "bytes": 3615,
+      "sha256": "290c1a71e748873fcaf5d9f2efea8538ab8d4778d2a16d62dadd0dc7f262fe89"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/cleanup-wl2-prerequisites.ps1",
+      "bytes": 4650,
+      "sha256": "cd9c950ab37fc3dd96580c89b74df2259657b88d10627269d33183d54fb916b7"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/collect-h024-actual-gui.ps1",
+      "bytes": 3230,
+      "sha256": "babf14452702e9bde23a95410eff94a02da3f1360d14911b55e34ac9b83eff2e"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/collect-h024-desktop.cmd",
+      "bytes": 300,
+      "sha256": "2e7dbc52b6f6bc2a7d349c2a61dbf571878292e4c01ea2859213239db70421bf"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/collect-h024-desktop.ps1",
+      "bytes": 3565,
+      "sha256": "b44684c5d008ef2d2370b05c793686800b602e86ef34510bc11c3db80018063b"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/compile-uninstall-probe.py",
+      "bytes": 2184,
+      "sha256": "c897c6afb58e56abe9321e63b7f9b24566bb7ab04608694feace03122045ad29"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/export-h024-task.ps1",
+      "bytes": 3165,
+      "sha256": "7b9147b208c5315a5c2c622fa1e4e76884862543112660f561de980fd17e480e"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/fixture.rs",
+      "bytes": 4076,
+      "sha256": "4bf497530abbcbce72b34775720ff0229b40c872a6eefa61b344c5b569594175"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/invoke-msi-only.ps1",
+      "bytes": 1979,
+      "sha256": "ad149ff6018d2315d89eb1b1c1edea9a9ccad025e78899e828a22d407abe467b"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/launch-h024-actual-gui.cmd",
+      "bytes": 187,
+      "sha256": "fd8de7923f7af52a9ea82be83fc44008459fe1ca84218388ca581df0928b3798"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/launch-h024-actual-gui.ps1",
+      "bytes": 4183,
+      "sha256": "854bce2717ee31d0792f33c69e21c846ebe25b473f9a0634d703767473beb834"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/launch-h024-desktop.cmd",
+      "bytes": 319,
+      "sha256": "0fd1c7fe46e01cc5b20948fc80e24b630aa3a18a223b9ad06623cb23c030812b"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/launch-h024-desktop.ps1",
+      "bytes": 3751,
+      "sha256": "7627c3d54eeb976c715b7c462b305c5c4bf71ca5e6a6f3f0404b42d90b581ac4"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/launch-wl2.ps1",
+      "bytes": 2368,
+      "sha256": "0a655f0c70f50bdbb3005ab813715ff5c6bcde5682897cc781cd51a7337cf046"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/lib.rs",
+      "bytes": 16639,
+      "sha256": "dbfbf419d4cc84a0f4b50fe121b35307e42c8a178918ce95da7411730fd6aef5"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/msi-only.md",
+      "bytes": 5641,
+      "sha256": "4c23ac4328a382f19c5b0c1e1d0370909bcce419304d923aa4c6a0b845ecd15e"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/msvc-env.ps1",
+      "bytes": 1913,
+      "sha256": "389c087a4acf88aea21982a0a9610f9887464c24a9835470568192bfa46755bc"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/populated-security-probe.cs",
+      "bytes": 5168,
+      "sha256": "ba6c9ce2dec5daa43f33b99e0da97c406f4ad465751938d3ac28e59718585e72"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/populated-security-probe.ps1",
+      "bytes": 2373,
+      "sha256": "f7ac944fca19c6e577c7d6ea47778fce4bb885a1bfad56b877b0666525fce92e"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/record-checks.ps1",
+      "bytes": 2823,
+      "sha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/recover-h024-empty-original.ps1",
+      "bytes": 11917,
+      "sha256": "cc222bbbdbc2d9dd5578fd138cd39503eced722335f7543d012e6d1d000ef4f0"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/repair-h024-desktop.cmd",
+      "bytes": 295,
+      "sha256": "8abc7331a963b5a57873c844b0928206b4b1a1c17d9360a7d2242e2d9950f20b"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/repair-h024-desktop.ps1",
+      "bytes": 1110,
+      "sha256": "416fb60922ad0ee6d6e43327ad02d4fcbb4dc3a2fd14fe3880339c9838a7dc81"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/stage-installer.py",
+      "bytes": 2600,
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/tests/process.rs",
+      "bytes": 26469,
+      "sha256": "6d5106f0660d8abc7617bf62b1f447960745d217a405505ab1d99580c6923e42"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/verify-msi-evidence.py",
+      "bytes": 13587,
+      "sha256": "64a978c83cb050aa2306842734de60c016c48f0c650b6913971b8468cc3d5376"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/verify-msi-paths.ps1",
+      "bytes": 4416,
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/verify-nsis-paths.py",
+      "bytes": 6192,
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2"
+    },
+    {
+      "path": "library02/executed-source/test/windows024-native/verify-uninstall-msi.ps1",
+      "bytes": 4157,
+      "sha256": "6ef87e6df003d5aaadeec866278222c939ac6e7659329cda5faf500b30f8f30b"
+    },
+    {
+      "path": "library02/result.json",
+      "bytes": 472,
+      "sha256": "793fa3f0eb666122c5f824d09305ee1af5b689a3bd809357f12cd4a880175853"
+    },
+    {
+      "path": "library02/run-command.json",
+      "bytes": 683,
+      "sha256": "2611db12fc1ba927dab87cee84d409645d4f59aa982c787d111d3c08138eee95"
+    },
+    {
+      "path": "library02/source-manifest.json",
+      "bytes": 30065,
+      "sha256": "cbaa29243c1b87d72e2388139243016d63b957d6f90c77c20cb05d83d6dc11aa"
+    },
+    {
+      "path": "library02/source.json",
+      "bytes": 24376,
+      "sha256": "73b7bb6c838faf251e3bcbdc5fcf159251698921a95de70ac95f404fdb003684"
+    },
+    {
+      "path": "library02/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "library02/stdout.log",
+      "bytes": 9349,
+      "sha256": "2823d88c4369ba1329eb2a47d1e7d78884c3872732f3e27f07b037f92bad9aea"
+    },
+    {
+      "path": "library02-artifact.json",
+      "bytes": 965,
+      "sha256": "4929b9e989b215a2ffeb0d6b7538c36fe1d16e41a925d8f8655f6ebd30a66679"
+    },
+    {
+      "path": "library02-private-scenes.json",
+      "bytes": 69073,
+      "sha256": "880bc012e968a2e2ecc8bc6f69e046393b998414b3a88815095e39e3f798c237"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 14423,
+      "sha256": "651fcdc03e8617559d392248f5b143123d967693d632c4bc2d4797164535568d"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/mod.rs",
+      "bytes": 1831,
+      "sha256": "bad73ec12a40164af515e030fddade7fabe0c15a65b4a8c1127388daa438eab9"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "bytes": 46522,
+      "sha256": "733d20ac0c9e7520660079bc45bbbf247bb1b768259631c50497a542f2237aed"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_cli024.rs",
+      "bytes": 26235,
+      "sha256": "bd6826113af91cdb328400c4e5fab45586383b93ce963e50b75a49341e443e7b"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/binding.rs",
+      "bytes": 7016,
+      "sha256": "491e448b9947fd0deeab4206d1d93ab2455b0132905536ab15950922a0d4fd83"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded/tests.rs",
+      "bytes": 13799,
+      "sha256": "8825127bef7380f23cfdbc8739e5a10a491c4989107c01114f9c8158e5e836b4"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded.rs",
+      "bytes": 25177,
+      "sha256": "4d85053bfe0cf72c8ad02604387d4e5093af0bcb894aba81b8f13a89ffa7e77d"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 13331,
+      "sha256": "52dadd0a73e19e0110de633a12beca9b37a75f7a008646203afa936789a1b693"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "bytes": 21517,
+      "sha256": "65e1ec80e5b66de97d627735bda02191b79f3960ff33ff33d998d158bb0c3a99"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination_tests.rs",
+      "bytes": 20397,
+      "sha256": "b9ad484049e398c98d48ce22f83e1136bc5a78ea72fc1337ddc4c391273db6bb"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 11955,
+      "sha256": "196d62ebf59d8dbd839b70e088780ecd86e01e3abab9049657405aa0386e9e24"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/phase.rs",
+      "bytes": 18044,
+      "sha256": "60b025ec7899e344c94c048408b77328d153ba747680094951530d6297909176"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/reference.rs",
+      "bytes": 17989,
+      "sha256": "6ce041d1cea1823da5d18f93dbac24398af485a38c8526e4d4d3959d5e286d7c"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/source.rs",
+      "bytes": 8700,
+      "sha256": "5767267214ce53becbf2f7fb28bdfb9dfd69e1580bf17050e4c69225956476a1"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture.rs",
+      "bytes": 18384,
+      "sha256": "86d02d2c45954f1be3249709d6ffe29d39892fd91cfd4dfc9f0af151a9b7e514"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture_tests.rs",
+      "bytes": 9920,
+      "sha256": "88ee11b24e68269afbcd49d220cd98273f76f991bae4de23d5c6cb85985caf83"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/archive.rs",
+      "bytes": 12650,
+      "sha256": "4b117d852c2d1c4288f870df6f4daaaf23bc3d8bf7d463bfb0231684a070bfb3"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/series.rs",
+      "bytes": 11079,
+      "sha256": "9bbc526774c839973c028f928774d88facc70193ffc6e8bd8f1012df892e9f82"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/series_tests.rs",
+      "bytes": 11329,
+      "sha256": "2def2d672fb203f7fc87a174c1338be8bc83e9e553fa8ec4ff32799d283aadb0"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/snapshot_tests.rs",
+      "bytes": 8224,
+      "sha256": "439d0af82650b1ab7972ab3867ed7f36bb80faf46d2279d7518a40510c862ad6"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/snapshots.rs",
+      "bytes": 4164,
+      "sha256": "d8ccfdae40d23acf101075b79b617884be073ae38e005097d6bb35de8bf0c43d"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation.rs",
+      "bytes": 21950,
+      "sha256": "2ad12577771d301132b8bddbb521b3d0d1fb346944565142bf0d851254dbd286"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation_tests.rs",
+      "bytes": 15838,
+      "sha256": "6360c39a3c4c4e4d044d55082efe8c6a9d62c6753fa211e3b502b02c6e75d288"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segment_tests.rs",
+      "bytes": 11016,
+      "sha256": "b64c195882f72ebcf1ae2bdddd95dadda138f5f52ce532825c2a982e5915cefe"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs",
+      "bytes": 2950,
+      "sha256": "689b636c497cfaa94e47f36c548a044ff2a550276bf8485a41dc78212a77e6b9"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+      "bytes": 23881,
+      "sha256": "0481ffc49f78e464da9daeead0c400d807895c1cd65e10e5468b87b9cdc1b19b"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_driver_tests.rs",
+      "bytes": 11897,
+      "sha256": "8c73f19c01df3487c0cfc7fd869df6de465f7434f768c31de0b39e94d4ac3e6b"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs",
+      "bytes": 12145,
+      "sha256": "4b9cfa1ecb4c123eb9dc14d9a45c05132a37fc4721d6678131efe374b310097d"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/artifacts.rs",
+      "bytes": 5071,
+      "sha256": "41373a946453e52c0eef1011156a78f251c0d8ed16c013875c6677f61c0b3433"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/artifacts_tests.rs",
+      "bytes": 8303,
+      "sha256": "58607843dee5c310a5236b3e46fbcfb7be782c44ae5de704748e7cbdfde313a9"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/locks.rs",
+      "bytes": 9580,
+      "sha256": "77e93ead781e009803d220d1c56ae3e3dd026c694f409b94ced6255b6444b3ee"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/working.rs",
+      "bytes": 20420,
+      "sha256": "d685d3ee614ca3f0a2b1add66e13059fb8db3a46d0ae73c8352ec478eeea1997"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree.rs",
+      "bytes": 31586,
+      "sha256": "6541266b8ad1fd89c3f5ccc9ea94a88dd3fe8a85a4686072e873c6a396924a0d"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/adapter.rs",
+      "bytes": 25746,
+      "sha256": "90191e6aa32d6df8f7856a7539e284f9d8a7d1af9dc93aafc5016dc338084abc"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/capture/history.rs",
+      "bytes": 6307,
+      "sha256": "8053388a173e40dfb436f9414609577c48879c2a2330be80b00a4d7fb2bc2c15"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/capture.rs",
+      "bytes": 62858,
+      "sha256": "7a7b383c49d0e7dd1c338a8750da9fc5b2408e4d7e9fd78c47f7d780148c0835"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/current.rs",
+      "bytes": 16355,
+      "sha256": "d7635ae8546134d25b983e5e203abac86fad86362249968b3d90a566bf5aab14"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/history.rs",
+      "bytes": 2146,
+      "sha256": "b0ae4b815eefbededf979c149fd40a03f7d7de6f900af1a40b664a9292d2ed34"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/progress.rs",
+      "bytes": 3312,
+      "sha256": "342af693edae8ab80d37b4051721f79d31167f2085366f79c338d093ce7498a8"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/routes.rs",
+      "bytes": 7039,
+      "sha256": "2b9e78421edeed2d2c553e61ef351a3f81995018c53ec1b67df2b9f001b633ec"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/tests.rs",
+      "bytes": 23813,
+      "sha256": "8934f637c628c82da196f25554a930ae0a8b21789c45330577951d450e0cfd8c"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2.rs",
+      "bytes": 18611,
+      "sha256": "f7945dd8b06cea4b74f2bfd1cd0344312aee0cc8d533ecc4c4ff514a67ff0aad"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/action_data_tests.rs",
+      "bytes": 10990,
+      "sha256": "3f2679e6fa7b9a1d3dcc64bf0f0a4ed815f77db471975c2b384c08e93446e614"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/actions.rs",
+      "bytes": 4309,
+      "sha256": "92b5615b9bb47618789c5479a7ed8d491ac29393b376a2155b5ce0be1d26ecb0"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 15122,
+      "sha256": "bb592206df2c37716e4b44e1a6d383180385bef396c3e47508a5f7f9947ad331"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/actions.rs",
+      "bytes": 6355,
+      "sha256": "0c34ec7daa260b993854f58347f8ebe534067cc4241dcb28a211c95b6ae6536b"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/driver.rs",
+      "bytes": 9095,
+      "sha256": "48e8fd65edbbe5b45bf4b929bd41402e0c4ad02bb03a7d4fdf5ead549b16ef36"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "bytes": 9578,
+      "sha256": "e0d1c3cf0589c8603fae02924d4c480792a9f38616508c2dd0e5262732c211d0"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/observations.rs",
+      "bytes": 8471,
+      "sha256": "e8f111a269e2e2488d7460a30020c591bcf1d747de42dd351466614b7ae98f11"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/snapshots.rs",
+      "bytes": 18852,
+      "sha256": "8b8ae4fd1ab36e561899c720d30245788a7a7f3006abcc421cc75e77d7078b83"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs",
+      "bytes": 28672,
+      "sha256": "faca1386db4cbdf6c1cbd528ad8394720638c86bcdae9d7f5ff09b56318286d2"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal_tests.rs",
+      "bytes": 8097,
+      "sha256": "288d1520b24d9e633ff85469c990fa734ea0efa1e9020c299df151e7ccb23743"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/observation_data_tests.rs",
+      "bytes": 5286,
+      "sha256": "c63cef7a08db355d500fe40b4fdb8eaf6ccae72c70fe4a24721eba9812a15e1e"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/observations.rs",
+      "bytes": 5197,
+      "sha256": "283737c9afa26b2e60cd2017ec7ad6474c9546c0ae30867526fc66693cacbd8d"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/segment_data_tests.rs",
+      "bytes": 5697,
+      "sha256": "e4ce174911bf471cf76e14780599409c9639bf4202a76fbc1111ea1aec9fb7c1"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/segments.rs",
+      "bytes": 5909,
+      "sha256": "4c8d4dd1247c1076cf0d7d04c91cfb4ce464965e50bde32dd1f1481c97fe76d7"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/snapshot_data_tests.rs",
+      "bytes": 9055,
+      "sha256": "2ec559e71b36fb6252c0d9f8649a2e1c0c660262f164c7d0d5d379a5d051c8fe"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/snapshots.rs",
+      "bytes": 14370,
+      "sha256": "14646c6edbc61c810c52147f2321ffb764821205a30c6f69b5ce2f0057c969eb"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3.rs",
+      "bytes": 21447,
+      "sha256": "33159c79a4352eff2bacd75b33570e66e855e0087651c4dee37ba2cda9b7199d"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3_tests.rs",
+      "bytes": 9865,
+      "sha256": "d828c950eb5155538b243debbb3b43460229aa94906b7708742816e83eb128f1"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+      "bytes": 28455,
+      "sha256": "ec66fd59d1f68ce7c08e36cae883521f3fdfe631417ff2a11b148a158b1f2606"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "bytes": 8985,
+      "sha256": "6197d02c4cab1f3da89a7cd1f9e097c28d406edd5dd232e1f14f69a669177313"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 39902,
+      "sha256": "ca42dbaf4c55ac9dce4c42db46258e74aefb8964690abb62de8e766ed8b05db5"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024_tests.rs",
+      "bytes": 27583,
+      "sha256": "e258d146738cae5c418363e713ced5cd20fe91452101a934011044c633fdb768"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 5964,
+      "sha256": "3d71e722b98f3f6fb4fb56d731ffab1bbf5e41df45e3c91784d1daa405bffd1b"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/file_move.rs",
+      "bytes": 9152,
+      "sha256": "fb37fa6f3fb3d7bf67653c901d3104936ef8b2ebb7d52b0ea9afcd6c41a8d39b"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/host_process.rs",
+      "bytes": 5722,
+      "sha256": "075619dea0612b101bf1905123fa50e577f6386f552d11d3789aa897009dee10"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6286,
+      "sha256": "d4d52cea05aae0e268bdf1c190843df775f748b377f5f3b7a5cb0cb3e32758f2"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 3100,
+      "sha256": "24301e7cc7b7d6f659ca5af1422b0b536d33a3e982d63680820abcb3de8a6163"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 12008,
+      "sha256": "3b6474b1bc630cf92f14613450ffde8b83dadeea8aaa92056eaecc2ce09e618c"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/peer.rs",
+      "bytes": 3364,
+      "sha256": "9c20f1d1d60461e3555d7bcce4ad1d34b89fdf7026f1905f8c072e46120cb803"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/pipe.rs",
+      "bytes": 12300,
+      "sha256": "91d7dd4606429b2514279897feaba25fd91d25825baf636141f63fe88e15898f"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 37444,
+      "sha256": "a1409642c0908ffe84056c1997ec991227bf3700ef8dd163060f7bc7ebc8b5aa"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 8526,
+      "sha256": "d431220e2667305124da167d128bc2517c3cafebd89eb41412fe0d1340f12274"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4814,
+      "sha256": "da748e6976cdb9efa1c64245686c13fa3f18684aa9ef7e4ac1ee37e3f72f662a"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9568,
+      "sha256": "ca3ce25d74c02e2a8743b401ac2a0c20634a92af3090a2117534f1251867ea6d"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/actual_gui_tests.rs",
+      "bytes": 11656,
+      "sha256": "f7bf5028fee1157f6a01ac842eadea7a4be4eba4d72886e13ed97c5d01641b58"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/continuity.rs",
+      "bytes": 13328,
+      "sha256": "53fd8838e0fe8c5e6b7face8b9d43004389b12dbcd414074cff6e6e921f34222"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/desktop_tests.rs",
+      "bytes": 13005,
+      "sha256": "6b7514d9dadbc71232168d8142969cdc647d3a0b827cc72e9fa575a380586afb"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 19726,
+      "sha256": "432768fd0c9290c38d8dbcb3f144baa8c469e7aa0fb3a8f46dbdaf90f0d860c4"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/gui_probe.rs",
+      "bytes": 14427,
+      "sha256": "5855c56252edf33f8125c98ebc21f2f080a8b7c185f9ba1493852018c7beb437"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 10242,
+      "sha256": "95c973c41b4c58534dddeda1298c948fbea178c63a3db62b9f41c6d2c184a07f"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_private_create.rs",
+      "bytes": 63894,
+      "sha256": "125434701c99f7e735b0eece6f6d9288cc1f3a5436bd94ade97b2dc7a0dcbd32"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_fixture.rs",
+      "bytes": 14982,
+      "sha256": "753329dc7236e420bbd70df7e1da14a8a8977e093cd3801aefed69a4194ee4ee"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "bytes": 17555,
+      "sha256": "6bd34bd267db93634383ee2927db4c84c08cd28a7f5e3be8fac232f51db23c5e"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_restart.ps1",
+      "bytes": 3074,
+      "sha256": "b649124e4f579f6102993f0dd567d0b02b5df77bccb87ef559288730e7fb36c0"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_smoke.rs",
+      "bytes": 7398,
+      "sha256": "b16adcf426b00cfa360a4da0b2887c3bc41a2f5e8575fe6d4d6bcb48ea9009ce"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_startup_root.rs",
+      "bytes": 3825,
+      "sha256": "53cb45b92b17b5fc3c026fcfffed46cc10785e487881779d0fbd7f6b9a1585f5"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_status_sample024_tests.rs",
+      "bytes": 6237,
+      "sha256": "c4b20c0b8d8e267fbca814bb02a9c064d4d9a4037dc8180faf5716efeaec6151"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "bytes": 16631,
+      "sha256": "77ff99511e59895eceb79a10f0abd647f6bdcb862b33e1ea9f3a413853027d00"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_supervisor024_tests.rs",
+      "bytes": 5473,
+      "sha256": "cc7e18e89a4d0c3f62a13520e61f9d2c8582b3ac65d50d46cd29a7e4d593c2c5"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_task_scheduler.rs",
+      "bytes": 4543,
+      "sha256": "a76564eb786fff9ed5ed94eb29448c55bf8d928b1ef213197742fe298dc1e3f4"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_tray_icon.rs",
+      "bytes": 2804,
+      "sha256": "d9cbb6a609fbc7b0fa8ffa5f9d191440abc7e374fa9fccf00cbfd52516962782"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_user_scope.rs",
+      "bytes": 19915,
+      "sha256": "4513ebd3e8d6bcd2b08557b4aaf5a27d6b5d231f811026e96da848f23244d0d6"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/lib.rs",
+      "bytes": 61008,
+      "sha256": "adc94318f00d6ca208912bad4a44f2117fc0659502e82e73e1b5d5ac523b20cb"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+      "bytes": 17051,
+      "sha256": "841a4659e49d0486de9960d78ac2509dfe30c7b9045818e461533638d34ab8aa"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/runtime/client_artifact_policy_tests.rs",
+      "bytes": 22530,
+      "sha256": "ca6324358550d9cfb912ff228bbf46ce15a2b0965ee36af5889d291b0925bce0"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/runtime/client_route_declaration.rs",
+      "bytes": 11759,
+      "sha256": "57af2816bf1b673022a5fd4b40b8482b97690aad628aa837360d5abd42ea81fc"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/runtime/client_route_declaration_tests.rs",
+      "bytes": 12621,
+      "sha256": "26941d18e487a4118d475f5ac6fa8b1919f73b3aaca7d1a4a7284aa7081cffb8"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/runtime/mod.rs",
+      "bytes": 47846,
+      "sha256": "4de6e549d276ccb16b19882bdbed236a62d3cde1623828d4969c4c0d93f1b44c"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "bytes": 11187,
+      "sha256": "dde515d48418d73a2f1fbee5d4c57cb7ca9972509760286195094dcfabd309ac"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/status/client_recovery_gate_tests.rs",
+      "bytes": 4421,
+      "sha256": "f4711efa145b36288a7da79083ded2ccc0233ff3a4fca357bf9e34aa25bf365f"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/status/context_paths_tests.rs",
+      "bytes": 4449,
+      "sha256": "fd26698ace9e77b1da56bd1eba249b90652341ec49b98c84c90735e8ea56f8a7"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/status/mod.rs",
+      "bytes": 63226,
+      "sha256": "db074dc53003dccb4008e65812dfa03a6236f686defe6bc117ac1775c4be07f0"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/status/polling.rs",
+      "bytes": 10138,
+      "sha256": "efc0a182d87e3e13d32df25afcda90451d2e65a24de1d71e88af9f9c357f9669"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/modules/status/sample_deadline_tests.rs",
+      "bytes": 5562,
+      "sha256": "1bee31e9e699877031e57f8eb7185c68b8b5f1e21bd6fe743762a0f515162fa2"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/.gitignore",
+      "bytes": 10,
+      "sha256": "517b2c5ebb94b4ec644cc7999710d327942ee37d73168930b0c6f5f4b44bf6ae"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/account-w1c.ps1",
+      "bytes": 9912,
+      "sha256": "2c85460147b5faae0dbccb546f024929be08001a4d4c2ee01002e5a2ff860a2e"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/account-w1d.ps1",
+      "bytes": 19709,
+      "sha256": "11e6068834e085ef780127d87636aedbbb3054cbe75c4f1b77356055618768e5"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/archive-h024-fixed-success.cmd",
+      "bytes": 169,
+      "sha256": "f117340a476937b237504390ccddfef6b7dee0c69bdb1ebf0ebe4b930b4be8dc"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/archive-h024-fixed-success.ps1",
+      "bytes": 11356,
+      "sha256": "3acfec691c38ab3b8b1548d4f233656e0c07628efff407b5938de352e209975a"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/build-wl2.ps1",
+      "bytes": 20251,
+      "sha256": "76c00743f87e70b9834d6c8f8a26e37aebfd17775e77bedf671725d3237ff2c8"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/bundle-installer.py",
+      "bytes": 7706,
+      "sha256": "d5ed7f6cd7eee93fffe0f74498f8a0de9fec25f3aebbd90ca93e47925f296960"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/Cargo.lock",
+      "bytes": 630,
+      "sha256": "2e5f0ffb48e9763dda2953e491daa826e9e172ad2e1ca784fd91d82184b6d6b9"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/Cargo.toml",
+      "bytes": 593,
+      "sha256": "1e3fa22e5647a977693e3a79c56c46855bb5f4698569e4d60c5c9f7239445a3d"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/cleanup-h024-completed.cmd",
+      "bytes": 266,
+      "sha256": "bc07e01192c04fe19dd93b5833409d01692e23259cb976c6ef9448ea10af3735"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/cleanup-h024-completed.ps1",
+      "bytes": 5033,
+      "sha256": "b416c2bde3bd36d9172e3f5661e82bca8ac4e9631de2e8f6485c2905f0fe0b4d"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/cleanup-msi-local-admin.ps1",
+      "bytes": 4175,
+      "sha256": "2cf904215478b7696fffb36045edb3a5701d36d347045a9cc6ee154819d3b451"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/cleanup-profiles-w1c.ps1",
+      "bytes": 3615,
+      "sha256": "290c1a71e748873fcaf5d9f2efea8538ab8d4778d2a16d62dadd0dc7f262fe89"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/cleanup-wl1-accounts.ps1",
+      "bytes": 2796,
+      "sha256": "82e5071e21b52ef07ae41d9124d30d8a7d6172c02e69fe6a249be31d63d94561"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/cleanup-wl2-prerequisites.ps1",
+      "bytes": 4650,
+      "sha256": "cd9c950ab37fc3dd96580c89b74df2259657b88d10627269d33183d54fb916b7"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/collect-h024-actual-gui.ps1",
+      "bytes": 3230,
+      "sha256": "babf14452702e9bde23a95410eff94a02da3f1360d14911b55e34ac9b83eff2e"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/collect-h024-desktop.cmd",
+      "bytes": 300,
+      "sha256": "2e7dbc52b6f6bc2a7d349c2a61dbf571878292e4c01ea2859213239db70421bf"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/collect-h024-desktop.ps1",
+      "bytes": 3565,
+      "sha256": "b44684c5d008ef2d2370b05c793686800b602e86ef34510bc11c3db80018063b"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/compile-uninstall-probe.py",
+      "bytes": 2184,
+      "sha256": "c897c6afb58e56abe9321e63b7f9b24566bb7ab04608694feace03122045ad29"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/diagnose-msi-profile-lock.ps1",
+      "bytes": 3319,
+      "sha256": "4b1cb5a3d6643cff6c2d80a2e9800248b48176c9869c525fa1d9cae9ed98b5c6"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/export-h024-task.ps1",
+      "bytes": 3165,
+      "sha256": "7b9147b208c5315a5c2c622fa1e4e76884862543112660f561de980fd17e480e"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/fixture.rs",
+      "bytes": 4076,
+      "sha256": "4bf497530abbcbce72b34775720ff0229b40c872a6eefa61b344c5b569594175"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/invoke-msi-local-admin.ps1",
+      "bytes": 3339,
+      "sha256": "587b52ef7f8eabebb852f5904d9e80c3ed9f7c5555ff3a80debebea1b78bc67f"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/invoke-msi-only.ps1",
+      "bytes": 1979,
+      "sha256": "ad149ff6018d2315d89eb1b1c1edea9a9ccad025e78899e828a22d407abe467b"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/launch-h024-actual-gui.cmd",
+      "bytes": 187,
+      "sha256": "fd8de7923f7af52a9ea82be83fc44008459fe1ca84218388ca581df0928b3798"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/launch-h024-actual-gui.ps1",
+      "bytes": 4183,
+      "sha256": "854bce2717ee31d0792f33c69e21c846ebe25b473f9a0634d703767473beb834"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/launch-h024-desktop.cmd",
+      "bytes": 319,
+      "sha256": "0fd1c7fe46e01cc5b20948fc80e24b630aa3a18a223b9ad06623cb23c030812b"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/launch-h024-desktop.ps1",
+      "bytes": 3751,
+      "sha256": "7627c3d54eeb976c715b7c462b305c5c4bf71ca5e6a6f3f0404b42d90b581ac4"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/launch-msi-local-admin.ps1",
+      "bytes": 1716,
+      "sha256": "dad8fd71362fbe4097605d25bf8b66d38d9e5e4767f37a8caf28ae5b7d67cfb7"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/launch-wl1.ps1",
+      "bytes": 2314,
+      "sha256": "dc6b7854d649c61e3e6ef6efc6ea7ca36840ed369ae948103dc38a9117d55d4f"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/launch-wl2.ps1",
+      "bytes": 2368,
+      "sha256": "0a655f0c70f50bdbb3005ab813715ff5c6bcde5682897cc781cd51a7337cf046"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/lib.rs",
+      "bytes": 16639,
+      "sha256": "dbfbf419d4cc84a0f4b50fe121b35307e42c8a178918ce95da7411730fd6aef5"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/msi-only.md",
+      "bytes": 5641,
+      "sha256": "4c23ac4328a382f19c5b0c1e1d0370909bcce419304d923aa4c6a0b845ecd15e"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/msvc-env.ps1",
+      "bytes": 1913,
+      "sha256": "389c087a4acf88aea21982a0a9610f9887464c24a9835470568192bfa46755bc"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/populated-security-probe.cs",
+      "bytes": 5168,
+      "sha256": "ba6c9ce2dec5daa43f33b99e0da97c406f4ad465751938d3ac28e59718585e72"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/populated-security-probe.ps1",
+      "bytes": 2373,
+      "sha256": "f7ac944fca19c6e577c7d6ea47778fce4bb885a1bfad56b877b0666525fce92e"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/query-package-msi.ps1",
+      "bytes": 1812,
+      "sha256": "2893b4b87802e598d1db1ed4b1019b917e9a5675db871a6ddd5e76aa63b7a538"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/record-checks.ps1",
+      "bytes": 2823,
+      "sha256": "67bcbabf14f2cceb8f9c85f1699270f79d07c97f8ef2bb8f4928d14e7300a3be"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/recover-h024-empty-original.ps1",
+      "bytes": 11917,
+      "sha256": "cc222bbbdbc2d9dd5578fd138cd39503eced722335f7543d012e6d1d000ef4f0"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/repair-h024-desktop.cmd",
+      "bytes": 295,
+      "sha256": "8abc7331a963b5a57873c844b0928206b4b1a1c17d9360a7d2242e2d9950f20b"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/repair-h024-desktop.ps1",
+      "bytes": 1110,
+      "sha256": "416fb60922ad0ee6d6e43327ad02d4fcbb4dc3a2fd14fe3880339c9838a7dc81"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/stage-installer.py",
+      "bytes": 2600,
+      "sha256": "97067ea1e662f6e7c162348a8bcf7d0f5f6f6c03f16643cca0dbd0bb840b0026"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/tests/process.rs",
+      "bytes": 26469,
+      "sha256": "6d5106f0660d8abc7617bf62b1f447960745d217a405505ab1d99580c6923e42"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/verify-msi-evidence.py",
+      "bytes": 13587,
+      "sha256": "64a978c83cb050aa2306842734de60c016c48f0c650b6913971b8468cc3d5376"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/verify-msi-paths.ps1",
+      "bytes": 4416,
+      "sha256": "0999f400813f91fb90d078027d30748b03434c6a817b0a8973e85e1a109d5988"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/verify-nsis-paths.py",
+      "bytes": 6192,
+      "sha256": "0025ff3584714d31767645cd285e9ab769ad039a46d9ef7aa06f6a7d9383fab2"
+    },
+    {
+      "path": "product01/executed-source/test/windows024-native/verify-uninstall-msi.ps1",
+      "bytes": 4157,
+      "sha256": "6ef87e6df003d5aaadeec866278222c939ac6e7659329cda5faf500b30f8f30b"
+    },
+    {
+      "path": "product01/result.json",
+      "bytes": 353,
+      "sha256": "64c1e540288ac92ce3b68bfd90eb164abaa9f20f9bba691b6690d79f2f982fb4"
+    },
+    {
+      "path": "product01/source-manifest.json",
+      "bytes": 30065,
+      "sha256": "b9cf23ebf5be5829c69f4e9210a2dc2d69711c8f45fffa68b1608dd1968edd88"
+    },
+    {
+      "path": "product01/source.json",
+      "bytes": 438,
+      "sha256": "64465777f6e709c1f62937cfed69eeeced1f13bb1c3897131b2e9ef1f421bff9"
+    },
+    {
+      "path": "product01/stderr.log",
+      "bytes": 91708,
+      "sha256": "bab69ce0c7ff27afd25f5e50b6ad3cb36c06439bab833e584ef5b8d9166d2869"
+    },
+    {
+      "path": "product01/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "product01-artifacts.json",
+      "bytes": 1542,
+      "sha256": "beb552509be6ba17ce7770c4444dacb7b93a89043623103660e77d1350461251"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-001/session/current.json",
+      "bytes": 1131,
+      "sha256": "bc70e2f10f28d87cfc5c4c1f5b0d09918363c01dde3a9bad47a7114ea5776741"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-001/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "0cff343b10fec087d727f71e1a5c6e1c5686181c9df01e528d84fb93825854a5"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-001/session/manifest.json",
+      "bytes": 31901,
+      "sha256": "c6da74d4affd90aa6a255a1dda5d5ba4ba036df834a3f509b132715e0b5df437"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-003/session/current.json",
+      "bytes": 1,
+      "sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-003/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "2ff94423aba7b446fc0e0b5e96da717c6e1e466f6bfd7d5032f3fbba1de80f21"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-003/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "4da2268b3f5f3f80347d970fff46f00b5f6acebc10d694a0902e901067c0102a"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/current.json",
+      "bytes": 1131,
+      "sha256": "fb6aea8dcc709f523d5d4a5eb0ffe323c701d5eb2cd1c594557368e1bcb2d2fb"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "d478c9d7afca6adaa51468f6ac4464253f279dcbc25179e70b68d19b86d4fc96"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/event-000002.json",
+      "bytes": 3699,
+      "sha256": "e4247b9e72e5505bc9a13baa1ac6759025d0d5c2920152b5fa5e1e5134b1b1f3"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/event-000003.json",
+      "bytes": 3699,
+      "sha256": "a10a4792e904f11668aa3c3c50bded6b4cf87868ebb244fd63251505b51583b5"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/event-000004.json",
+      "bytes": 3639,
+      "sha256": "844d63f4872879b14d95e71aadb797bb5ffb3b68a3f6949976b867e1cc220e9f"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/event-000005.json",
+      "bytes": 3641,
+      "sha256": "4148bcf5da3ade7b2fa4417c9639efb5121bf577e0bc18feffe53fcaf23cc922"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/event-000006.json",
+      "bytes": 3624,
+      "sha256": "b827956e06f68e940775c87998bc2e8ac1792654a163c992eeebbd50359cde7b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/event-000007.json",
+      "bytes": 3719,
+      "sha256": "297f55895f0371428d6e35e6e4d13e85b87a36f8a1c085ba3f60bca14cbc2b75"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-005/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "21cbd1ce36acc0447b31ea4142697749746167c840a92db5b50c39fe6741e495"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/current.json",
+      "bytes": 1196,
+      "sha256": "8b96727fc72fd3859353dd56d69a370fd19fce3a43206ab5ce9827d099e35a8b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "35241e84b8776b615ed83be8a086dd85b9977986254c0291d5c31a17473e37fd"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000002.json",
+      "bytes": 3699,
+      "sha256": "b2f20adc827f8220f8f5129d32e4c5b2ef6ac69db90277ea95b3b85cfa65b108"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000003.json",
+      "bytes": 3699,
+      "sha256": "cbdacc42b7e36286f3c91ee4806f325e633dbbe4f95237a7dcc574315b8d736c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000004.json",
+      "bytes": 3639,
+      "sha256": "c8411c563b128f56e303cd6cd38e65953fd9c25138da3a4e39412a8374975b14"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000005.json",
+      "bytes": 3641,
+      "sha256": "4d0d5eba3ac5c790e46d75c98ff66b4369e6fd1557edcc4acc3692a7942fbd9b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000006.json",
+      "bytes": 3624,
+      "sha256": "45c37517b9d59b18c03ceb8c1ff7d7a8e05bb2beb1ac7d6be68aeb439d4140df"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000007.json",
+      "bytes": 3719,
+      "sha256": "f88e0e994615315a8dae74df4b7fd5951754665fb5aafecd30b9a111e24a61b6"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000008.json",
+      "bytes": 3722,
+      "sha256": "2f3a2c20998111663a8fbf53dea4cf8ad0025efd97f97a209fb3dda3b7069af5"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000009.json",
+      "bytes": 3724,
+      "sha256": "03151427ddd8ea0af3fe28905a31e024844687a08e928486fdb50b629c0225de"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000010.json",
+      "bytes": 3728,
+      "sha256": "639d18b6dd8dff97203dc84f79ab34c4c08588560d88fef975a40dc84fe4a56f"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000011.json",
+      "bytes": 3719,
+      "sha256": "796aa1c9e32d280ba1e8e28aa4dd853ef2f3b8bfb2c544f30c465bf684251834"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000012.json",
+      "bytes": 3722,
+      "sha256": "22dedb14a5904b626a561c246d2212aaa993cfab444b0d5f722badc4e62e44c0"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000013.json",
+      "bytes": 1253,
+      "sha256": "73d789a54dd2d98ac5714c1185ecb66139ad35d98a656090012f9f0cd1776541"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000014.json",
+      "bytes": 3643,
+      "sha256": "3200501848af1e18154fb0d58816e4dce9527dfe70758392ff92d284aae80d79"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000015.json",
+      "bytes": 1258,
+      "sha256": "479b29d4b728ec6217e5f1be51fabbb076df2fdda14f11393bee6e1964317e4c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000016.json",
+      "bytes": 3648,
+      "sha256": "a78cb795c4c9d768164ec503c61bee5370e59b50995e029a6d26b4e5d33874e0"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000017.json",
+      "bytes": 1253,
+      "sha256": "3d1dfb194cac9ecd03afebed4dc7a14835e5d0fdbb41c2149ffc700c01cada0b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000018.json",
+      "bytes": 3643,
+      "sha256": "2d19e5d427be828298cc37a4924b13bf14f9dc41a15206ee26a3c7288bba9283"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000019.json",
+      "bytes": 988,
+      "sha256": "d9b671e832e105eb2432c0b1dab4db85693ec25c9d244e8a3b3e3ebb5f4a045a"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/event-000020.json",
+      "bytes": 989,
+      "sha256": "04f3a4a94f6b1d3d2708177ffd48a41dceaf4aa13d1a897893d116797ef688b2"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-007/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "0722a9adeeaa33492a39a2a78f6030adcae7e6160b93ffb5c02c212e7da85914"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/current.json",
+      "bytes": 1325,
+      "sha256": "67d77749218a6035fc5bcf678e42d883d638d74807fb179945d4e4cf6de36957"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "e1adac03983d5b0811ca60613f31b635ec578f5391203bf7482977af7d8e0b78"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000002.json",
+      "bytes": 3699,
+      "sha256": "716e3eac0b8fede7a599b43ba481e66476e6da903869d48f55ecaad4ab0c02d3"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000003.json",
+      "bytes": 3699,
+      "sha256": "1ba1e0cfcdc05cc4d41c9312b3a93a2874876907367f47b38bdcb4dc6b61cd06"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000004.json",
+      "bytes": 3639,
+      "sha256": "cb481c6ca3c69092532289d9385039077c46bcf9721cba394d41b9e428bf88e8"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000005.json",
+      "bytes": 3641,
+      "sha256": "4da36fc967bef1b459a5f2eb6ae27a3aaa311388fa87e56c2198d5d1c7d0cfca"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000006.json",
+      "bytes": 3624,
+      "sha256": "723d5ce5e6dd989b4e2ab1d93a1c87c854fc77778b08befc62fac1af95be30f3"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000007.json",
+      "bytes": 3719,
+      "sha256": "57ef9a9b29507f0aba265d2e50376350f30df8115bfa40d82a0af2a3b811f2a1"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000008.json",
+      "bytes": 3722,
+      "sha256": "b41aa0156253f53fdb9c357410ee7ba6636acb8041d2a5dd89108ffc4c7a73b5"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000009.json",
+      "bytes": 3724,
+      "sha256": "b9d64ebcf1c0cfe7b4b536e211d97d81ddf753efc1de68470373cef01f254419"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000010.json",
+      "bytes": 3728,
+      "sha256": "404952457f278767072c6055996868af21e019b5d52c3bdd381f88798f88802a"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000011.json",
+      "bytes": 3719,
+      "sha256": "f412e68635a9c29937b8c7e8442aa4f26a545c61f496a920d427e86816d5c8d6"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000012.json",
+      "bytes": 3722,
+      "sha256": "3fd526297feb9d79b7c05974df8f810803a307b250d9e2437b0510aeeb8636df"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000013.json",
+      "bytes": 1253,
+      "sha256": "09ab26c966713414199372a7433c70513bfbe838d3b4ce13c21eb16f3a845ee9"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000014.json",
+      "bytes": 3643,
+      "sha256": "f25378c3c73a42217b4eb0ae1fc9c7d0da2cf94d2541cd711c75fa34bfb1e0c8"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000015.json",
+      "bytes": 1258,
+      "sha256": "34c786c5668e7ca75430628e2313a3dc8b3eace399745291de3433fbdcaaa015"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000016.json",
+      "bytes": 3648,
+      "sha256": "422c6cb71d645a02fb76db3f1e84291f407bfbe54697dff1f6d52d2e37989574"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000017.json",
+      "bytes": 1253,
+      "sha256": "ea571e2d02f570e910e0c9995af187f3d7a12413b5db62017ae59f4353636fc4"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000018.json",
+      "bytes": 3643,
+      "sha256": "f1a75342467b6bcdfb2955fe020ae7515f54927ffdc64c147b425ca09557a181"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000019.json",
+      "bytes": 1041,
+      "sha256": "7e07761f17fba5cb8f85a500bdfd450a40f5f1bd08f8ee4c46f9433baefb6b9c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000020.json",
+      "bytes": 1045,
+      "sha256": "1c533c4c360820f5c455efd2990eb5d4179d1479969f1cdd51ebf0281a970207"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000021.json",
+      "bytes": 988,
+      "sha256": "b007e31bc1b3f3d063824353b2e412180d0bdd3e210db6c5919a08d912eaadad"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/event-000022.json",
+      "bytes": 989,
+      "sha256": "60f847985733bbe0c64d9ccaf6b134d330c43fba6dc8928aae918392bb52d98b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-009/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "3b6bc6fc27670b30e315b6c52e2ab26d76e9ef75d5119386d238f352a304f414"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/current.json",
+      "bytes": 1325,
+      "sha256": "5e923d46311b6a0e235bf3269855139aad978ff3306077049ba0e348431b2a25"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "bc9a9d4c3c7eba70e5a5d5eb28a9e739aaabc8c66cafb5d7fd4f6a36ff5f8b9c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000002.json",
+      "bytes": 3699,
+      "sha256": "8981e1bcd9954151144032e5e7aa81e162050cf2b20f21aa0b96bd8b2d9f71f8"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000003.json",
+      "bytes": 3699,
+      "sha256": "80c1453a951d09345b9821a02e0c5c3f9baec06c6689ec3d78322457f029a1df"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000004.json",
+      "bytes": 3639,
+      "sha256": "40efd2c78624f8110716234710f2a59c94bf846df8294e30ad42343ba28c6146"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000005.json",
+      "bytes": 3641,
+      "sha256": "2f20d363e840f99a1c6e1ad7aa3a205f9fbef99baa2714a3f4c3e653549b695c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000006.json",
+      "bytes": 3624,
+      "sha256": "6af2ef3d2159197691d8dcc6627f8410bf17c8e5969c0eb45c33e4fee0dd0ad4"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000007.json",
+      "bytes": 3719,
+      "sha256": "e5553ff2ecf345a3652aad78a2779528d1bb33e8c81ba28ef10f50d17fbd5064"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000008.json",
+      "bytes": 3722,
+      "sha256": "4bda53baf1920ec11abe041b0b22a097bf98e6e0d4300536c57f66fe723a4e23"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000009.json",
+      "bytes": 3724,
+      "sha256": "06736d3ee57412c5e4b2f127d76a1ee138cca21e1e1dc6e9666a3d856d9022d8"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000010.json",
+      "bytes": 3728,
+      "sha256": "30318676d59d457c97b49d41813daaf69be261b77f1974a41def834934ed4c68"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000011.json",
+      "bytes": 3719,
+      "sha256": "7045f27b9527966364ef373b3ac1718f30c369c09831d579c951bd3dd65b7af6"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000012.json",
+      "bytes": 3722,
+      "sha256": "2246ef13e09fec877b84879dd1e9382b032dfabb4444092bcb27bd72a531a54f"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000013.json",
+      "bytes": 1253,
+      "sha256": "541c2c211fe8c0f3304076d1907bdce658e413425c7a9d777b82743877a98a2a"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000014.json",
+      "bytes": 3643,
+      "sha256": "8914fd50d9b93f045253dc6ab67159fb85a1f097c67fed4ee59ba57d2b1d75f7"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000015.json",
+      "bytes": 1258,
+      "sha256": "92aa0bbbe6e8c7dcada4709b0579eb5f0c8792033d4738d5601e0066960f5667"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000016.json",
+      "bytes": 3648,
+      "sha256": "92566c850bb9cfcd15359c96e456e1465f816a397eea0a101dd0ecba8fd70a8e"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000017.json",
+      "bytes": 1253,
+      "sha256": "7fb5464b7b116957a36a47858e1c15645caad2e494fc53b1941245dd8d802415"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000018.json",
+      "bytes": 3643,
+      "sha256": "68ea881b8a54a650ffd7e5a7dda275d897c65f4b338b3520b4212cdff97b4e20"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000019.json",
+      "bytes": 1041,
+      "sha256": "7db01bbea0587b1fd0ff0b12addc0a10a4bde54101de8bf6e8e0bc6428b427c7"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000020.json",
+      "bytes": 1045,
+      "sha256": "2d1fd01a16f16b2d1d27997d6cec266734d9005635d60c3b17be8741ab475ac9"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000021.json",
+      "bytes": 988,
+      "sha256": "3bf0b1083b02e64c312b5adb04747b198b8961a1fdffb5f5b2bed2a7bbeb9a4b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000022.json",
+      "bytes": 989,
+      "sha256": "11406ade28c2521f78eb3c5d462c5eb90862aceba82529a86c96dd0bccb9726f"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000023.json",
+      "bytes": 988,
+      "sha256": "4472a596059c6023e386c3e821853c2aaeacfe7b995f6f8233247b7d3dff568d"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000024.json",
+      "bytes": 1023,
+      "sha256": "f6318aa2acc47fd8d668a1a1db691503bdfb7e445a7d8a7797e9d609d54def79"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000025.json",
+      "bytes": 988,
+      "sha256": "1bf355723e94a21e30e9cd437820ef69090dfa45b6b4bd3bad8d73f8bf86b2a3"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/event-000026.json",
+      "bytes": 989,
+      "sha256": "d2c816123c4886410316e8a1b703b0a54119f8d9b96037b300613ed27b412d9e"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-011/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "705b975db49850663f1c51ca9a192691d7a805fc393be039afad8decfa5b7bbc"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/current.json",
+      "bytes": 1264,
+      "sha256": "ada24402edb9ce033789604bc10caeb299778864db987d9cff668e9baaea5dde"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "3816db2a11bff3789279658ce90660860a564f2cb121c1b126a054fba2c9e692"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000002.json",
+      "bytes": 3699,
+      "sha256": "e94059081dc8fae40b509f206cb420e454d94e53ef55a43473577dd6c7b301be"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000003.json",
+      "bytes": 3699,
+      "sha256": "a039cd42e56039deb81893242f71bf5c47c44a499b9e28b5319e3b7826b938cf"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000004.json",
+      "bytes": 3639,
+      "sha256": "5f6e11462227fa7aeb37e5f8653c87db59badaca036dca7adbbd3c02ee21273f"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000005.json",
+      "bytes": 3641,
+      "sha256": "6b9ad04ee1907ba2ee8873f29d52be45d3e7cac7eddcc02981389d185a10af7a"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000006.json",
+      "bytes": 3624,
+      "sha256": "1dfea475d214b31a7bea66e2db99fa792d9ad8a15977c8bdf97c5e163642534b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000007.json",
+      "bytes": 3719,
+      "sha256": "c3957307ef75dddabb285f471f3dd7d1452fef0dc6b299fcbd423e03020749af"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000008.json",
+      "bytes": 3722,
+      "sha256": "c8a75d2bb8ba45c23dc38312e9a305b95b887ab0a1c6ee3d533918c81a6c1c7e"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000009.json",
+      "bytes": 3724,
+      "sha256": "2ea18c31b708020565ff26a2919b2cafc84ba6f8c9fc37b73ae91f6a8cbee3a9"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000010.json",
+      "bytes": 3728,
+      "sha256": "d0125ac02c46c37fc1506a9959e1a5dc2422c01da17f438108504ba93bfff44d"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000011.json",
+      "bytes": 3719,
+      "sha256": "465385b0cd092a146fa04bef8f80fd2d59ca3b8a2479d5765bce91accb1e9f1c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000012.json",
+      "bytes": 3722,
+      "sha256": "e767e9cd225aade18954f943a2354022b3ea39f4b9aed8951fb4fda61632070e"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000013.json",
+      "bytes": 1253,
+      "sha256": "0a3374a5de803953fb54963162a0552051bc9dc578c0dd8736d20321f74ce258"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000014.json",
+      "bytes": 3643,
+      "sha256": "f7d00b1b7126ec398214273a972632aee333094fc3ea8178cc3ffe5802f100c6"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000015.json",
+      "bytes": 1258,
+      "sha256": "b3f275a77e777b64d371fe60d0c5208ceeda36dc7b0c6f198d8c3e4f1b762684"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000016.json",
+      "bytes": 3648,
+      "sha256": "761988380f333327ea95eaac3752a9ff93f05130bdd56374f3308d798695aa40"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000017.json",
+      "bytes": 1253,
+      "sha256": "11c4970569669818af5bb194bf877a9193184f322e523a66d5643d137273162a"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000018.json",
+      "bytes": 3643,
+      "sha256": "17b81fc8fdf56ec134d26c1ea246f25752935eb649fd0b50125a039b95345890"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/event-000019.json",
+      "bytes": 1041,
+      "sha256": "287a110edb1ec5b55b458d3e99b2d0578165fcc173bcda5ffcf512d3dafa43a0"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-013/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "51139c3bfa2095ee3307f959790213964d87bba56d5ffaabfb1e447d27d0bf96"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/current.json",
+      "bytes": 1264,
+      "sha256": "e6496338714c5d14a4e63213e69c74275ae229dd5553ba0d5a100007c31d9fe1"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "8c39a8cd1f3e8212bdb39661a5556df57f4a838fac403e24ea59c39f2de6b6ab"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000002.json",
+      "bytes": 3699,
+      "sha256": "e3b9fb8caa304b6f0e32eb7b4a2b24dae2010d67947596e0eaeeff447aa522f1"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000003.json",
+      "bytes": 3699,
+      "sha256": "38498fea063ff1a1c03b9f8972a80b822c0e2b48a547a9b00050093e142f3f6b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000004.json",
+      "bytes": 3639,
+      "sha256": "3d78209509adf029dfb3a4197edf0fa4f375ff997efdc2a6d9fbdaa9d355c9e9"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000005.json",
+      "bytes": 3641,
+      "sha256": "564d576d0c6ef13d710f8b479fae06e8f43c2d66446b40e5615500bdea62dcb5"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000006.json",
+      "bytes": 3624,
+      "sha256": "1825fbeb995ea330c0895b81e4dd1f236824680a798b80d89f249560bd970135"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000007.json",
+      "bytes": 3719,
+      "sha256": "0ebc8a7ee3dbd03785ae890e60e55fad5a74886d467d524d6c93e708416d9da7"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000008.json",
+      "bytes": 3722,
+      "sha256": "6d83325e33e6c721003b504c89fc6fd320f343dc8b97470607148b243384cfe1"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000009.json",
+      "bytes": 3724,
+      "sha256": "97999bcc88894e969f9a1938ed69ec910f9cfb2618a13fc7a2b30106dfc19c9e"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000010.json",
+      "bytes": 3728,
+      "sha256": "d0b70fa91d78d760a839bdaca84fc24ec5f73ec9bf0e7be79cc7bf5b393802c6"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000011.json",
+      "bytes": 3719,
+      "sha256": "ecf74bc81c9fde807f794ad8c2e199e6e698ce8024caf34e09be56e634039672"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000012.json",
+      "bytes": 3722,
+      "sha256": "be4025b1075c8d5f52ab3afa6c69c6d036da5d92862826514b8839a5fe2adbff"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000013.json",
+      "bytes": 1253,
+      "sha256": "b4bd036587fa5195aa8955c12a5da51bc429591912dde93115a749b90d2f4c23"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000014.json",
+      "bytes": 3643,
+      "sha256": "1aa1ba974f24669714c15eb487c1bdf7635f794197f33319c6ce7aa7c4f485c0"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000015.json",
+      "bytes": 1258,
+      "sha256": "a9a47650fe9a8e88ff736efd6091f1e8b9218a4df7c38ec1160116cd53eadbe0"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000016.json",
+      "bytes": 3648,
+      "sha256": "a8228aec2cc2d438e4327a5e03502005589b0a9cbc6d4432d0c7e8ab67b778e1"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000017.json",
+      "bytes": 1253,
+      "sha256": "33d06837a0616a5dc5bbbdd9d4b37d26aa1565f6cfaefa9525c4023b4440c36c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000018.json",
+      "bytes": 3643,
+      "sha256": "d0665f704c99b3bb5589a328d17a6153d545f7fdea64411de26dc263a3b41c78"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/event-000019.json",
+      "bytes": 1041,
+      "sha256": "657d5d2ea062b95d50a3b9d18b55107548afa1989da21b59f7d5b54099891c90"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-015/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "e058e853d392de765055dbd7bbd6dc1f490d5ebd102f446e9c709212eb94cd82"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/current.json",
+      "bytes": 1264,
+      "sha256": "506af3c20d61c945eb2042e9bb79f7aaecf714eeffcb730ba7b213a28c4dee62"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "327d30a66bfe6a169be28169054fa119cad8f0abc3367f5968768302ad26587e"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000002.json",
+      "bytes": 3699,
+      "sha256": "79c22c4e304b72aaacd4b3273fc0e6fb7014968c3a6def654d7347367f918459"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000003.json",
+      "bytes": 3699,
+      "sha256": "f6b4b7764359fa1bc531fb47c48b4162dc558f4f7f8e3ab86a373ab1d097908b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000004.json",
+      "bytes": 3639,
+      "sha256": "39f8f1db45541ed23fed0420c170b331d1277ca0a90ea830c0ae30cc7d5e73c3"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000005.json",
+      "bytes": 3641,
+      "sha256": "3fb97a8e1f0a31d7eb729310d412c1c28731553ea46bcef3e8a5974032fb3526"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000006.json",
+      "bytes": 3624,
+      "sha256": "e0775d5179c0d6177b465930545348326a7dbb1e0299b2b5627f190a937c550c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000007.json",
+      "bytes": 3719,
+      "sha256": "a91f97e87ac1e8577881ef61d84c3b05f09d036106e6fcdeefeb8c6a0ac7d60a"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000008.json",
+      "bytes": 3722,
+      "sha256": "8b9414bc047fba10045efff2c8901d6e37892061a6a6c2ee9a6d3a929cce115b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000009.json",
+      "bytes": 3724,
+      "sha256": "1b771176aa4d61138a10cca41fecd543c4a9619d40d346e9de8ffcb29f02c9cc"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000010.json",
+      "bytes": 3728,
+      "sha256": "0030048c7ffe116f6c7fe16052bea32714603a6ce06e4417db56ea037e4dbb4b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000011.json",
+      "bytes": 3719,
+      "sha256": "d51dbce39cb2dcca98b37aa55828945dccffa80757a670bc2b1ff41e1a9e2fea"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000012.json",
+      "bytes": 3722,
+      "sha256": "765ec713973c3821b0f5378d410f25a4dd1e1fa7ecb01de85937fdacce776ba5"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000013.json",
+      "bytes": 1253,
+      "sha256": "a3db198004111de3544c8cd377dad01453c984b4a4daf0372534c233717ad67d"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000014.json",
+      "bytes": 3643,
+      "sha256": "10a1ae3ca3e6ce1a7c0c4ac4ae4d1f034dae19cba46dfd1ef237990e38a12b66"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000015.json",
+      "bytes": 1258,
+      "sha256": "3d09bdc1b6d1cea971d267ba29545e368e447d43d4eb7b59ec251316d110e62e"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000016.json",
+      "bytes": 3648,
+      "sha256": "5d8b68edda5bd06d2cabb166055313699e62c14256838f109502a06912a6565e"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000017.json",
+      "bytes": 1253,
+      "sha256": "0025dbe6285100bd1690d968cb5571ea032d0ac8d855575aca5333e5b6e9b1ff"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000018.json",
+      "bytes": 3643,
+      "sha256": "d55a92740ebea3377a0cb2d2dfabf869e19c4b1d3a75bdcf6b203249858b6150"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000019.json",
+      "bytes": 1041,
+      "sha256": "51650ed200f48e6124943f8332135982a2f41dee86fe055032790ce038a4cd9f"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/event-000020.json",
+      "bytes": 1045,
+      "sha256": "cba44ce68841bd28e0417180e407900ae9b0fb41f108f9f666ec4d1c981c0a42"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-017/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "bd2d48e5ad0a9c29d4f9c493af5e12f2530e58c54bd1bcb9aba485d26b423fe8"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/current.json",
+      "bytes": 1,
+      "sha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000001.json",
+      "bytes": 3627,
+      "sha256": "a814e30dbf3a204d15d4116209670a514794b652f1922c1d3678d85908b41e03"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000002.json",
+      "bytes": 3699,
+      "sha256": "a63a0a81e843e01ece16298f5bf18bc2d1ac17a3c1b1788fb6a0e7d6555a63b1"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000003.json",
+      "bytes": 3699,
+      "sha256": "cdc9449c95b72b4d7c7a158bfa002705507c0c79b89a24c6137c15ba63db4982"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000004.json",
+      "bytes": 3639,
+      "sha256": "a447bef90d5bb8ecd1896d609ae7e4b27ac38d7462940139c24aa53be62827b5"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000005.json",
+      "bytes": 3641,
+      "sha256": "131c3e3f4e800ed15301ea19fe2fdd374db20736222da6d6b025238a0229e361"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000006.json",
+      "bytes": 3624,
+      "sha256": "fdfb74ad8d54f8cb759c7ef3523d8b8fe56c55a7cf007d0d283e7b1ea5c24029"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000007.json",
+      "bytes": 3719,
+      "sha256": "81eadf1a250ea5092048f18d9849d5381aa4c577d5fea75ee0006c175fc74f29"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000008.json",
+      "bytes": 3722,
+      "sha256": "d4f1c93e24c6216775d522b8242ee19668c498fbe55f25cb618722183a8d8106"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000009.json",
+      "bytes": 3724,
+      "sha256": "39b9f7c243c8bdc137759d8ee893f74e6ed06597b49511d71fd0a01ca2587b2b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000010.json",
+      "bytes": 3728,
+      "sha256": "4c66e1c63d99cd62d0b310c8552ff660dc8076e589e350f61f230be074415f07"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000011.json",
+      "bytes": 3719,
+      "sha256": "18f7023ae26745815e94f614495a59f7ae59630aca9e49ad6b5537a3205918e9"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000012.json",
+      "bytes": 3722,
+      "sha256": "e7b943d3669c7bc869dfa970cf68f6ebea8655682f5f24c1bcf047e2be37fddb"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000013.json",
+      "bytes": 1253,
+      "sha256": "f183319c82a5f03d759cdad523bebc2a0c037df0396c2329c719764e6e806199"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000014.json",
+      "bytes": 3643,
+      "sha256": "95c38f760ae3895e28aa50035c7f8177849292d6efd26cd0b4201d45713540d8"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000015.json",
+      "bytes": 1258,
+      "sha256": "d09da02fce6e9a024ce8942437219c41819a6a0ce6b7ee2635dbdefd62437204"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000016.json",
+      "bytes": 3648,
+      "sha256": "7081528fe50e409d7199146f671c12c7526695340834fb5a2f467ab578a052de"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000017.json",
+      "bytes": 1253,
+      "sha256": "ce0ac539b43afd7ca5409833eb794397dc44c70ce1e9d277345a8e9e02479ec2"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000018.json",
+      "bytes": 3643,
+      "sha256": "e984f2f62e749d6035e3bfc8d80a623fa5e4da40c722e1772485015d34593402"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000019.json",
+      "bytes": 1041,
+      "sha256": "e8f0b36fc25c72c4ba1dfdc1816c7a2728a4ae2dad2fe531af563377bb0e5692"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/event-000020.json",
+      "bytes": 1045,
+      "sha256": "3792604e6e6d522bc0f50eeb02db43567b9ae6b59e2a80c8337627f12b890f68"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-019/session/manifest.json",
+      "bytes": 31899,
+      "sha256": "a87bb8f37a8e950b5b5acdf058e2a57b959da0ebed3cb91cd888bab0473f40d3"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-024/official024/windows/ffe32b63-9184-49e0-ad5d-1d2533524b6d/current.json",
+      "bytes": 1131,
+      "sha256": "516687fad11521a8d4ccddb6aa831cc91e9a9ca2e3b9986488141ee31f4ed40b"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-024/official024/windows/ffe32b63-9184-49e0-ad5d-1d2533524b6d/manifest.json",
+      "bytes": 31895,
+      "sha256": "cbf38d7e59014067c174b927aee891c5da7f517adcfca9cdf51f435d0ecd552c"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-024/session/current.json",
+      "bytes": 1131,
+      "sha256": "8f33e42c132a3e28457c68286be838710242413d6bcb338f8b3d0b79e06544e1"
+    },
+    {
+      "path": "raw-scene-records/library02/scene-024/session/manifest.json",
+      "bytes": 31895,
+      "sha256": "092b815b6f66b25bc14d31e300cf75a3a41e81e7957b8c5e21003589123d0810"
+    },
+    {
+      "path": "raw-scene-records.json",
+      "bytes": 68704,
+      "sha256": "1f5c52ee64a78c3128b0fabf4ac99f82fa16ccc5e782cbdafcfbabdb921b9bcf"
+    },
+    {
+      "path": "report.md",
+      "bytes": 4564,
+      "sha256": "b87ffb879767a883701f4423adf3f5a0806941ce2bafe71f2ee5951737dd5eb4"
+    },
+    {
+      "path": "run-regression.py",
+      "bytes": 2200,
+      "sha256": "737f1162c46994de35f66b0ef01c8549928927ecc533fd5e1d2f0d97d5dcb7d5"
+    },
+    {
+      "path": "select-success-cleanup.py",
+      "bytes": 1899,
+      "sha256": "e900990332d3c4ced012ed1ac91b3d67de68104d6eb0cf65c670eb7174b3c920"
+    },
+    {
+      "path": "stop-boundary-traces.json",
+      "bytes": 8553,
+      "sha256": "d7418630c71531e2e298d348146da54251283d0eee21ea9dbef002113a4b98d5"
+    },
+    {
+      "path": "success-cleanup-plan.json",
+      "bytes": 8577,
+      "sha256": "9a6261933bb842678730b5bdd0faf253ac6c8c8a20823e57c0888d6e7cf5c1ce"
+    },
+    {
+      "path": "verify_evidence.py",
+      "bytes": 1095,
+      "sha256": "3e17a29910bb8af7282aa1b317dda2b3b3091b69ae9eb4fc2b120b0c625a3204"
+    },
+    {
+      "path": "verify_git_payload.py",
+      "bytes": 866,
+      "sha256": "8369dd51396511c96ce8118054183295f67e2667e956fc50bfea187463c5b96d"
+    }
+  ],
+  "nativeAuthority": false
+}
