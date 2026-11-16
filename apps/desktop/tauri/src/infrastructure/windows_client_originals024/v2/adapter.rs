@@ -100,6 +100,31 @@ struct SuccessorTicket {
     previous_session: String,
 }
 impl WindowsOriginals {
+    pub(crate) fn before_v3_resume(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+        if self.failed
+            || self.store.is_some()
+            || !self.closed.is_empty()
+            || self.successor.is_some()
+        {
+            return Err(refused("原v2/v3适配器状态混用"));
+        }
+        self.v3_capture.before_resume_existing(owner, end)
+    }
+    pub(crate) fn record_v3_ready(
+        &mut self,
+        owner: &mut Owner,
+        ready: &ServiceObservation,
+        end: Instant,
+    ) -> AppResult<()> {
+        if self.failed
+            || self.store.is_some()
+            || !self.closed.is_empty()
+            || self.successor.is_some()
+        {
+            return Err(refused("原v2/v3适配器状态混用"));
+        }
+        self.v3_capture.record_ready_existing(owner, ready, end)
+    }
     /// Retained v3 lane for production wiring. It cannot replace active v2
     /// native state or adopt old Closed text. Public durable gate stays shut.
     pub(crate) fn prepare_v3_capture(

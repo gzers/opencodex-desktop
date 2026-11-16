@@ -21,6 +21,7 @@ struct CaptureStore {
     routes: RoutePin,
     core: CapturedTrees,
     failed: bool,
+    ready: Option<(u32, u16, String)>,
 }
 #[derive(Default)]
 pub(in crate::infrastructure::windows_client_originals024) struct CaptureSlot {
@@ -116,6 +117,7 @@ impl CaptureStore {
                     routes,
                     core,
                     failed: true,
+                    ready: None,
                 },
                 lease,
             )),
@@ -137,6 +139,90 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn before_resume_existing(
+        &mut self,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> AppResult<()> {
+        let mut lease = None;
+        let result = (|| {
+            if self.failed {
+                return Err(refused("原v3 slot已poison"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原v3 Store缺席"))?;
+            if store.failed || store.ready.is_some() {
+                return Err(refused("原v3捕获阶段未知"));
+            }
+            store.failed = true;
+            store.check_source(owner, end)?;
+            owner.originals_require_unresumed(end)?;
+            store
+                .core
+                .verify_original_pre_resume(&mut store.source, owner, &mut lease, end)
+                .map_err(refused)?;
+            owner.originals_require_unresumed(end)?;
+            store.check_source(owner, end)?;
+            store.failed = false;
+            Ok(())
+        })();
+        if result.is_err() {
+            if let Some(held) = lease.take() {
+                let _ = held.release(end);
+            }
+            self.failed = true;
+            if let Some(store) = &mut self.retained {
+                store.failed = true;
+                store.core.poison();
+            }
+        }
+        result
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn record_ready_existing(
+        &mut self,
+        owner: &mut Owner,
+        ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
+        end: Instant,
+    ) -> AppResult<()> {
+        let mut lease = None;
+        let result = (|| {
+            if self.failed {
+                return Err(refused("原v3 slot已poison"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原v3 Store缺席"))?;
+            if store.failed || store.ready.is_some() {
+                return Err(refused("重复或未知原v3 Ready"));
+            }
+            store.failed = true;
+            store.check_source(owner, end)?;
+            owner.originals_check_ready(ready, end)?;
+            store
+                .core
+                .record_original_ready(&mut store.source, owner, ready, &mut lease, end)
+                .map_err(refused)?;
+            store.check_source(owner, end)?;
+            owner.originals_check_ready(ready, end)?;
+            store.ready = Some((ready.pid(), ready.port(), ready.record_sha256().into()));
+            store.failed = false;
+            Ok(())
+        })();
+        if result.is_err() {
+            if let Some(held) = lease.take() {
+                let _ = held.release(end);
+            }
+            self.failed = true;
+            if let Some(store) = &mut self.retained {
+                store.failed = true;
+                store.core.poison();
+            }
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn occupied(&self) -> bool {
         // A failed attempt is also a persistent local refusal, even if source
         // admission failed before a native Store existed. No fallback to v2.
@@ -167,6 +253,13 @@ impl CaptureSlot {
                 store
                     .core
                     .prepare_working(lease.as_mut().ok_or_else(|| refused("原lease缺席"))?, end)
+                    .map_err(refused)?;
+                store
+                    .core
+                    .open_prepared_working(
+                        lease.as_mut().ok_or_else(|| refused("原lease缺席"))?,
+                        end,
+                    )
                     .map_err(refused)?;
                 owner.originals_require_unresumed(end)?;
                 store.check_source(owner, end)?;

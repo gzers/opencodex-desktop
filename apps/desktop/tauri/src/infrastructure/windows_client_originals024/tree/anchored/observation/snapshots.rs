@@ -50,7 +50,7 @@ impl SnapshotWitness<'_> {
         values.try_into().map_err(|_| invalid())
     }
 }
-pub(super) fn witness(
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn witness(
     trees: &mut [AnchoredTree; 2],
     end: Instant,
 ) -> io::Result<SnapshotWitness<'_>> {
@@ -69,7 +69,7 @@ pub(super) fn witness(
         ],
     })
 }
-pub(super) fn create_snapshots(
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn create_snapshots(
     trees: &mut [AnchoredTree; 2],
     journal: &mut Journal,
     context: &ObservationContext,

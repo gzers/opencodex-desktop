@@ -1,6 +1,98 @@
 use super::super::tests::{compete, driver::setup_unsnapshotted};
 use super::*;
 #[test]
+fn wl2_r6_capture_ready_initial_open_precedes_release_actual_writer_and_preserves_originals() {
+    let (mut f, _data, paths, held, trees, journal, end) = setup_unsnapshotted();
+    let mut lease = Some(held);
+    let root = trees[0].root.clone();
+    let config = root.join("config.toml");
+    let mut core = CapturedTrees::retain(trees, journal);
+    core.prepare_working(lease.as_mut().unwrap(), end).unwrap();
+    assert!(std::fs::write(&config, b"blocked-before-open").is_err());
+    core.open_prepared_working(lease.as_mut().unwrap(), end)
+        .unwrap();
+    assert_eq!(core.journal.native_progress_for_test(), (20, false));
+    core.check_working(lease.as_mut().unwrap(), end).unwrap();
+    core.release_prepared(&mut lease, end).unwrap();
+    assert!(lease.is_none());
+    assert_eq!(core.journal.native_progress_for_test(), (22, false));
+    compete(&paths[0], false);
+    let original = core.trees[0]
+        .nodes
+        .iter()
+        .position(|n| n.original.relative == "config.toml")
+        .unwrap();
+    let custody = core.trees[0].original_location(original);
+    let captured = std::fs::read(&custody).unwrap();
+    assert_eq!(captured, b"synthetic original config");
+    std::fs::write(&config, &captured).unwrap();
+    assert_eq!(std::fs::read(&custody).unwrap(), captured);
+    super::super::segments::reacquire_trees(
+        &mut core.trees,
+        &mut core.journal,
+        &mut lease,
+        None,
+        end,
+    )
+    .unwrap();
+    core.check_working(lease.as_mut().unwrap(), end).unwrap();
+    core.release_prepared(&mut lease, end).unwrap();
+    assert!(lease.is_none());
+    assert!(core.opened);
+    assert!(!core.ready);
+    assert_eq!(core.journal.native_progress_for_test(), (26, false));
+    println!("r6 capture-ready core original18 prepare/20 canonicalOpen/22explicitRelease, actual same-byte writer then full unchanged preResume-like recheck/26release; exact original custody remains; test does not mint actual Source/Owner/typedReady or invoke official creator");
+    drop(core);
+    f.retain();
+}
+#[test]
+fn wl2_r6_capture_ready_open_faults_keep_installed_core_and_no_successful_publication() {
+    for fault in [13, 14, 15, 16] {
+        let (mut f, _data, _paths, mut lease, trees, journal, end) = setup_unsnapshotted();
+        let mut core = CapturedTrees::retain(trees, journal);
+        core.prepare_working(&mut lease, end).unwrap();
+        core.journal.inject_driver_fault(fault);
+        assert!(core.open_prepared_working(&mut lease, end).is_err());
+        assert!(core.failed);
+        assert!(!core.opened);
+        assert!(!core.ready);
+        assert_eq!(core.journal.work_mode_for_test(), "Opening");
+        assert!(core.trees.iter().all(|t| t.poisoned));
+        assert!(core.open_prepared_working(&mut lease, end).is_err());
+        assert!(core.journal.check(end).is_err());
+        println!("r6-capture-ready-open-fault={fault} installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state");
+        lease.release(end).unwrap();
+        drop(core);
+        f.retain();
+    }
+}
+#[test]
+fn wl2_r6_capture_ready_changed_initial_work_before_official_creator_runs_refuses_recheck() {
+    let (mut f, _data, _paths, held, trees, journal, end) = setup_unsnapshotted();
+    let mut lease = Some(held);
+    let root = trees[0].root.clone();
+    let mut core = CapturedTrees::retain(trees, journal);
+    core.prepare_working(lease.as_mut().unwrap(), end).unwrap();
+    core.open_prepared_working(lease.as_mut().unwrap(), end)
+        .unwrap();
+    core.release_prepared(&mut lease, end).unwrap();
+    std::fs::write(root.join("config.toml"), b"unexpected pre-creator mutation").unwrap();
+    assert!(super::super::segments::reacquire_trees(
+        &mut core.trees,
+        &mut core.journal,
+        &mut lease,
+        None,
+        end
+    )
+    .is_err());
+    assert!(lease.is_none());
+    assert!(core.trees.iter().all(|t| t.poisoned));
+    assert!(!core.ready);
+    println!("r6 capture-ready unexpected work edit before actual creator would Resume is not an official mutation, refuses unchanged preResume check; original custody and external edit both retained");
+    drop(core);
+    f.retain();
+}
+#[test]
 fn wl2_r6_capture_installed_core_precedes_native_moves_and_released_store_survives_thread_handoff()
 {
     let (mut f, _data, paths, held, trees, journal, end) = setup_unsnapshotted();

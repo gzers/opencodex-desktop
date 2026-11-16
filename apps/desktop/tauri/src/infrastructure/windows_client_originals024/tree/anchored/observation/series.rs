@@ -255,7 +255,7 @@ pub(in crate::infrastructure::windows_client_originals024) fn assess_tree_series
     }
     result
 }
-pub(super) fn resume_trees(
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn resume_trees(
     trees: &mut [AnchoredTree; 2],
     journal: &mut Journal,
     claim: &mut AnchoredClaim<'_>,
