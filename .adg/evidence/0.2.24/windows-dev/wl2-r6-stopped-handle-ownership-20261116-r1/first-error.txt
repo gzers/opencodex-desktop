@@ -1,0 +1,4 @@
+library01 MSVC raw101/E0609 and two E0499; no tests/new executable attributed.
+Option tree conversion left one test iterator over Option rather than contained2trees and borrowed self.trees before self.check_working in two methods.
+Fix original test iterator through as_ref and take field borrow after original check_working; no assertions/deadlines/native-close behavior changed.
+Recorder initial static expected12closures was11 and aborted before writes; corrected to observed11, original tool AssertionError retained here.

@@ -1,0 +1,94 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:29:35
+   |
+29 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |                                   ^^^^^^^^^^^^^
+30 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+
+warning: unused import: `modules::runtime::windows_lifecycle024_contract::NativeSession`
+  --> src\infrastructure\windows_client_originals024\content.rs:18:5
+   |
+18 |     modules::runtime::windows_lifecycle024_contract::NativeSession,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused import: `OpenOptions`
+  --> src\infrastructure\windows_owner_host024\desktop_tests.rs:12:22
+   |
+12 |     fs::{self, File, OpenOptions},
+   |                      ^^^^^^^^^^^
+
+error[E0609]: no field `nodes` on type `&[anchored::AnchoredTree; 2]`
+   --> src\infrastructure\windows_client_originals024\tree\anchored\capture_tests.rs:270:30
+    |
+270 |             .flat_map(|t| &t.nodes)
+    |                              ^^^^^ unknown field
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:506:14
+    |
+506 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+506 -             .fetch_update(
+506 +             .try_update(
+    |
+
+error[E0499]: cannot borrow `*self` as mutable more than once at a time
+   --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:400:13
+    |
+396 |             let trees = self.trees.as_mut().ok_or_else(invalid)?;
+    |                         ---------- first mutable borrow occurs here
+...
+400 |             self.check_working(lease, end)?;
+    |             ^^^^ second mutable borrow occurs here
+401 |             let root = trees[0].parent.path().join(".codex");
+    |                        -------- first borrow later used here
+
+error[E0499]: cannot borrow `*self` as mutable more than once at a time
+   --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:636:13
+    |
+632 |             let trees = self.trees.as_mut().ok_or_else(invalid)?;
+    |                         ---------- first mutable borrow occurs here
+...
+636 |             self.check_working(lease.as_mut().ok_or_else(invalid)?, end)?;
+    |             ^^^^ second mutable borrow occurs here
+637 |             super::segments::release_trees(trees, &mut self.journal, lease, end)
+    |                                            ----- first borrow later used here
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0499, E0609.
+For more information about an error, try `rustc --explain E0499`.
+warning: `opencodex-desktop` (lib test) generated 8 warnings
+error: could not compile `opencodex-desktop` (lib test) due to 3 previous errors; 8 warnings emitted

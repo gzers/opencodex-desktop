@@ -1,0 +1,89 @@
+{
+  "base": "d29dbc36d567d4344407a07d652311f2bfa140d9",
+  "changedFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture.rs",
+      "bytes": 27376,
+      "sha256": "621d69f943ed0f238d365d59c05e618cd74c6e190101b559f87539f4b09c3cf8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture_tests.rs",
+      "bytes": 13318,
+      "sha256": "34523dfaf082a77c6cc10567f37b0d5caba9cb57d70d35f04ab71aa50962ef63"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 19000,
+      "sha256": "f4e0d898a4bf06c8e4865a90d45f667771a8d2bfb7829f04f2a5968a735a4a37"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs",
+      "bytes": 8786,
+      "sha256": "9a86a8068bc9ad51291e44e59b47a022309bbbf7f0e3bb4fc647055a8f7c247e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "bytes": 9906,
+      "sha256": "4b1ef9181fbaa30265c2e47a3dc4b225303a2d00e09ab73b50746f78f193f830"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/production.rs",
+      "bytes": 8523,
+      "sha256": "56bc9568817b4a4d613d87b20a59e6587683c5d5139018a1602ab5e00435c0c1"
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "bytes": 27543,
+      "sha256": "ece2e87dea9ef751bc64392b3fdc5b423a5f8ad846bf5a555d564bedc3d261ab"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/handle_release.rs",
+      "normalizedSha256": "73555117f9c8a7763e49e7edcc6f2c96f7a307d4cebde9aa6dfa703bf2c59aa6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement/handoff.rs",
+      "normalizedSha256": "af553599d18797c841809c7b7dada5a13b756ae0f3b45a081af67a3eab8a9a90"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs",
+      "normalizedSha256": "adb0d32be4a3005ce5a793b7971b68c658f6f93a6a151c9e1b40695e04e137e0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/content.rs",
+      "normalizedSha256": "b87d52b03e755e34a41cf72eabe560e5edf9320fd8e82a5db6417b4c30f12481"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/qualification.rs",
+      "normalizedSha256": "b5ea9f86c3a3b45186a79afebd393d27231b09e143e100ad7b637022e69786b0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/snapshots.rs",
+      "normalizedSha256": "542b082a96e7d58a4085d50c38ce5a355d0d251f209f395ac097e0536fd067cc"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery.rs",
+      "normalizedSha256": "131426ea024cd97c25d8fe605d37cf69c75ea69c5fb736e5afbebfaac9d69580"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/history.rs",
+      "normalizedSha256": "1363577ee154183eeaa8d13943492efd081aecdb3c20e345c62f7252483a4384"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "normalizedSha256": "c8bc2c0ee98b0545824ab8aab1fe60add06eadc84eac568df35235a4a5e762fa"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/client_artifact_policy.rs",
+      "normalizedSha256": "842e0264f900863416c209ce11c9d1829008ae147ff25013535aef703727e6bf"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs",
+      "section": "original close_original_handles body, visibility only widened to journal parent",
+      "normalizedSha256": "ca351a5ff0bf5dea230b6eb7a13921b6f3d3063c8edf6bf538271fc82df589df"
+    }
+  ],
+  "publicGateExcerpt": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs:276:pub(crate) fn require_durable_capture() -> crate::errors::AppResult<()> {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-277-    Err(crate::errors::AppError::RuntimeManaged {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-278-        code: \"windows024_originals_custody_required\".into(),\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-279-        detail: \"有界访问安全r4仍需完成v2整树持久保管、恢复/Closed与H/S/D生产组合；未创建官方进程或宣告捕获成功\".into(),\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-280-    })\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-281-}\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-282-/// Fixed NEW-session scope only. The old Full preflight above retains its exact\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-283-/// meaning for old transactions and is never converted after a read failure.\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-284-pub(crate) fn preflight_bounded(profile: &Path, deadline: std::time::Instant) -> io::Result<()> {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-285-    let mut roots = [\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-286-        tree::RootTree::capture(&profile.join(\".codex\"), deadline)?,\n",
+  "productionPositiveExecuted": false
+}
