@@ -65,7 +65,7 @@ fn wl2_r6_v3_full_native_plan_rejects_missing_duplicate_extra_anchor_wrong_paren
     println!("r6 full native-derived v3 plan data validates two complete trees/actual IDs/all8/parent and same-volume custody;10 malformed plans plus duplicate fields refuse; parsing never admits native authority");
     f.retain();
 }
-fn progress(p: &StoragePlan) -> Progress {
+pub(super) fn progress(p: &StoragePlan) -> Progress {
     Progress::new(
         p,
         &uuid::Uuid::new_v4().to_string(),

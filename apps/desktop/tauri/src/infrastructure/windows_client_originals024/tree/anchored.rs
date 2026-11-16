@@ -6,6 +6,7 @@ use super::*;
 use crate::infrastructure::windows_official_runtime024 as native;
 use crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_CODEX_STABLE_FILES;
 use std::io::{Seek, SeekFrom, Write};
+mod segments;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Kind {

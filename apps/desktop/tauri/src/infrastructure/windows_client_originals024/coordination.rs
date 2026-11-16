@@ -38,6 +38,8 @@ use windows_sys::Win32::{
         IO::OVERLAPPED,
     },
 };
+mod segments;
+pub(super) use segments::{LeaseFacts, ReleasedLease};
 const BASE: u32 = 0x40000000;
 const MAX: u64 = 2 * 1024 * 1024;
 fn refused() -> io::Error {

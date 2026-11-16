@@ -4,13 +4,15 @@ use crate::infrastructure::windows_client_originals024::{
     v3::{FileAction, Journal, StoragePlan},
 };
 use native::RetainedPeer;
-struct DataScene(PathBuf);
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) struct DataScene(
+    PathBuf,
+);
 impl Drop for DataScene {
     fn drop(&mut self) {
         println!("r4-retained-synthetic-fixture={}", self.0.display());
     }
 }
-fn setup() -> (
+type Setup = (
     Fixture,
     DataScene,
     [PathBuf; 4],
@@ -18,10 +20,27 @@ fn setup() -> (
     [AnchoredTree; 2],
     Journal,
     Instant,
-) {
+);
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup() -> Setup {
+    setup_with_claim(false)
+}
+pub(in crate::infrastructure::windows_client_originals024::tree::anchored) fn setup_initialized_claim(
+) -> Setup {
+    setup_with_claim(true)
+}
+fn setup_with_claim(initialized: bool) -> Setup {
     let f = Fixture::new();
     let end = end();
     let (root, custody, paths) = prepare(&f);
+    if initialized {
+        // Fixture-only BEFORE capture. Empty SQLite first-use may create a
+        // transient journal during BEGIN EXCLUSIVE, which correctly triggers
+        // unknown-sidecar refusal instead of exercising the raw lock busy path.
+        // No production initialization, schema/PRAGMA or official data touched.
+        let c = rusqlite::Connection::open(&paths[0]).unwrap();
+        c.execute_batch("PRAGMA journal_mode=DELETE; CREATE TABLE synthetic_lease_busy(value INTEGER); INSERT INTO synthetic_lease_busy VALUES(1)").unwrap();
+        c.close().unwrap();
+    }
     let grok = root.with_file_name(".grok");
     drop(create_private_directory(&grok).unwrap());
     drop(

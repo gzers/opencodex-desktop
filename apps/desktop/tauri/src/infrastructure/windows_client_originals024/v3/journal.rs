@@ -2,6 +2,7 @@
 //! Data-only replay never rebuilds the live tree/lease/native phase. No v2 read,
 //! migration, Ready, Closed or recovery capability factory is exposed here.
 use super::super::{binding::Binding, bounded::native_stamp, tree};
+use super::segments::{ChainEntry, LeaseState};
 use super::*;
 use crate::infrastructure::windows_official_runtime024::{
     self as native, PinnedDirectory, PrivateRecord, RetainedPeer, TokenIdentity,
@@ -17,6 +18,7 @@ use std::{
     time::Instant,
 };
 mod driver;
+mod leases;
 fn before(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {
         Err(io::ErrorKind::TimedOut.into())
@@ -119,6 +121,9 @@ struct Manifest {
     security_policy_digest: String,
     storage_plan: StoragePlan,
     storage_plan_digest: String,
+    initial_lease_epoch: String,
+    claim_key: String,
+    deadline_scope: String,
 }
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
@@ -136,6 +141,8 @@ struct Current {
     lease_epoch: String,
     claim_key: String,
     deadline_scope: String,
+    lease_state: LeaseState,
+    lease_objects_digest: Option<String>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -155,6 +162,8 @@ pub(in super::super) struct Journal {
     current_raw: Vec<u8>,
     deadline: Instant,
     poisoned: bool,
+    released_lease: Option<super::super::coordination::ReleasedLease>,
+    previous_releases: Vec<super::super::coordination::ReleasedLease>,
     #[cfg(test)]
     fault: u8,
 }
@@ -196,6 +205,9 @@ impl Journal {
             security_policy_digest: Policy::fixed().digest()?,
             storage_plan_digest: plan.digest()?,
             storage_plan: plan,
+            initial_lease_epoch: epoch.into(),
+            claim_key: claim.into(),
+            deadline_scope: scope.into(),
         };
         let manifest_record = Record::create(
             &directory.path().join("manifest.json"),
@@ -225,6 +237,8 @@ impl Journal {
             lease_epoch: epoch.into(),
             claim_key: claim.into(),
             deadline_scope: scope.into(),
+            lease_state: LeaseState::Active,
+            lease_objects_digest: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -261,6 +275,8 @@ impl Journal {
             current_raw: raw,
             deadline: end,
             poisoned: false,
+            released_lease: None,
+            previous_releases: Vec::new(),
             #[cfg(test)]
             fault: 0,
         };
@@ -278,6 +294,9 @@ impl Journal {
         }
         self.directory.recheck()?;
         self.manifest.binding.check_native(&self.peer, &self.pins)?;
+        for release in &mut self.previous_releases {
+            release.check(end)?;
+        }
         if directory_security(&self.directory, end)? != self.directory_security {
             return Err(invalid());
         }
@@ -304,6 +323,14 @@ impl Journal {
             || tip.storage_plan_digest != self.progress.plan
             || tip.manifest_digest != self.progress.manifest
             || tip.binding_digest != self.progress.binding
+            || tip.session_id != self.progress.session
+            || tip.storage_strategy != ANCHORED_STORAGE_STRATEGY
+            || tip.security_policy_digest != Policy::fixed().digest()?
+            || tip.lease_epoch != self.progress.epoch
+            || tip.claim_key != self.progress.claim
+            || tip.deadline_scope != self.progress.deadline
+            || tip.lease_state != self.progress.lease_state
+            || tip.lease_objects_digest != self.progress.lease_objects
         {
             return Err(invalid());
         }
@@ -334,6 +361,9 @@ impl Journal {
         r
     }
     fn append_inner(&mut self, event: Event, end: Instant) -> io::Result<()> {
+        self.append_entry_inner(ChainEntry::Node(event), end)
+    }
+    fn append_entry_inner(&mut self, event: ChainEntry, end: Instant) -> io::Result<()> {
         self.check(end)?;
         // Validate against an independent replay before any durable write.
         let mut next = Progress::new(
@@ -341,15 +371,15 @@ impl Journal {
             &self.progress.session,
             &self.progress.manifest,
             &self.progress.binding,
-            &self.progress.epoch,
-            &self.progress.claim,
-            &self.progress.deadline,
+            &self.manifest.initial_lease_epoch,
+            &self.manifest.claim_key,
+            &self.manifest.deadline_scope,
         )?;
         for record in &self.events {
-            let event: Event = serde_json::from_slice(&record.raw).map_err(|_| invalid())?;
-            next.apply(&self.manifest.storage_plan, &event)?;
+            let event: ChainEntry = serde_json::from_slice(&record.raw).map_err(|_| invalid())?;
+            next.apply_entry(&self.manifest.storage_plan, &event)?;
         }
-        next.apply(&self.manifest.storage_plan, &event)?;
+        next.apply_entry(&self.manifest.storage_plan, &event)?;
         if self.events.len() >= 4096 {
             return Err(invalid());
         }
@@ -382,9 +412,11 @@ impl Journal {
             security_policy_digest: old.security_policy_digest,
             manifest_digest: old.manifest_digest,
             binding_digest: old.binding_digest,
-            lease_epoch: old.lease_epoch,
-            claim_key: old.claim_key,
-            deadline_scope: old.deadline_scope,
+            lease_epoch: next.epoch.clone(),
+            claim_key: next.claim.clone(),
+            deadline_scope: next.deadline.clone(),
+            lease_state: next.lease_state,
+            lease_objects_digest: next.lease_objects.clone(),
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

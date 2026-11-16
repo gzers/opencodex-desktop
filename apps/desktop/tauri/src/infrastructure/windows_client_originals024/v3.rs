@@ -20,6 +20,7 @@ use std::{
     path::{Component, Path},
 };
 mod journal;
+mod segments;
 pub(super) use journal::Journal;
 #[derive(Clone, Copy, Debug, Serialize)]
 pub(super) enum FileAction {
@@ -302,6 +303,9 @@ pub(super) struct Progress {
     epoch: String,
     claim: String,
     deadline: String,
+    lease_state: segments::LeaseState,
+    lease_objects: Option<String>,
+    seen_epochs: BTreeSet<String>,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -346,10 +350,13 @@ impl Progress {
             epoch: epoch.into(),
             claim: claim.into(),
             deadline: deadline.into(),
+            lease_state: segments::LeaseState::Active,
+            lease_objects: None,
+            seen_epochs: BTreeSet::from([epoch.to_string()]),
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {
-        if e.schema
+        if self.lease_state!=segments::LeaseState::Active || e.schema
             != crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_ORIGINALS_SCHEMA_V3
             || e.document_kind != "node-event"
             || e.storage_strategy != ANCHORED_STORAGE_STRATEGY

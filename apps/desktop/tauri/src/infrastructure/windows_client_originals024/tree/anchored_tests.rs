@@ -4,7 +4,7 @@ use super::*;
 use rusqlite::Connection;
 use std::time::Duration;
 #[path = "anchored_driver_tests.rs"]
-mod driver;
+pub(super) mod driver;
 fn end() -> Instant {
     Instant::now() + Duration::from_secs(10)
 }
@@ -41,7 +41,7 @@ pub(super) fn prepare(f: &Fixture) -> (PathBuf, PathBuf, [PathBuf; 4]) {
     drop(create_private_directory(&custody).unwrap());
     (root, custody, paths)
 }
-fn compete(path: &Path, blocked: bool) {
+pub(super) fn compete(path: &Path, blocked: bool) {
     let c = Connection::open(path).unwrap();
     c.busy_timeout(Duration::ZERO).unwrap();
     let result = c.execute_batch("BEGIN EXCLUSIVE");
@@ -55,7 +55,7 @@ fn compete(path: &Path, blocked: bool) {
     }
     c.close().unwrap();
 }
-fn bun_claim(path: &Path, deadline: Instant, blocked: bool) {
+pub(super) fn bun_claim(path: &Path, deadline: Instant, blocked: bool) {
     use std::{
         os::windows::process::CommandExt,
         process::{Command, Stdio},

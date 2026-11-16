@@ -10,6 +10,9 @@ impl Journal {
         end: Instant,
     ) -> io::Result<()> {
         self.check(end)?;
+        if self.progress.lease_state != LeaseState::Active {
+            return Err(invalid());
+        }
         let codex = self.pins[0].path().join(".codex");
         claim.check(&codex, end)?;
         if claim.epoch() != self.progress.epoch || claim.key() != self.progress.claim {
