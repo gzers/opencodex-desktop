@@ -502,6 +502,31 @@ pub(super) struct RecoverySummary {
     anchor_released_count: usize,
 }
 impl Progress {
+    pub(super) fn validate_stopped_handle_row(
+        &self,
+        root: usize,
+        index: usize,
+        row: &super::super::handle_release::HandleRow,
+    ) -> io::Result<()> {
+        let tree = self
+            .recovery
+            .as_ref()
+            .ok_or_else(invalid)?
+            .plan
+            .roots
+            .get(root)
+            .ok_or_else(invalid)?;
+        let node = tree.current_tree.nodes.get(index).ok_or_else(invalid)?;
+        if tree.retirements.iter().any(|r| r.relative == node.relative)
+            || row.volume != node.volume
+            || row.file_id != node.file_id
+            || row.directory != node.directory
+            || row.historical_work
+        {
+            return Err(invalid());
+        }
+        Ok(())
+    }
     pub(super) fn verify_batch_native_value(
         &self,
         node: &str,

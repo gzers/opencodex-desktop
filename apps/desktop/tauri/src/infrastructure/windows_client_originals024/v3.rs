@@ -23,6 +23,7 @@ mod actions;
 mod capture;
 pub(super) use capture::CaptureSlot;
 pub(super) mod batches;
+mod handle_rows;
 mod handles;
 mod history;
 pub(super) mod journal;

@@ -221,6 +221,7 @@ impl Progress {
                 }
                 let mut keys = BTreeSet::new();
                 for r in rows {
+                    super::handle_rows::validate(r, plan, self)?;
                     if !keys.insert(&r.key)
                         || !decimal(&r.file_id)
                         || r.directory && r.historical_work
