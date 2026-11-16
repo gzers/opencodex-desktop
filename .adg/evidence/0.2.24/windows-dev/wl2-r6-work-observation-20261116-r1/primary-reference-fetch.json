@@ -1,0 +1,13 @@
+{
+  "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reopenfile",
+  "bytes": 65704,
+  "sha256": "e38d681d00ce4a58de48daa6f74901274890e45a486bf24432f94cbacd8ce27a",
+  "confirmed": true,
+  "documentedTerms": {
+    "FILE_SHARE_DELETE": 2,
+    "FILE_FLAG_OPEN_REPARSE_POINT": 1,
+    "FILE_FLAG_BACKUP_SEMANTICS": 1,
+    "sharing mode": 4
+  },
+  "paraphrase": "ReOpenFile uses an existing native object handle, permits changed desired access and sharing only when all current handles are compatible. READ/WRITE/DELETE sharing and OPEN_REPARSE_POINT are documented. This task reopens only exact working objects, with all8/ID native checks; no original custody or directory relocation."
+}

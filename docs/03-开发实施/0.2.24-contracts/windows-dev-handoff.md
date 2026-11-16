@@ -610,3 +610,10 @@ Desktop77505024/c780330b94511602772e3740d82659412a1c3f5557ccf005458f4256ca3c1927
 源码 6dfdd33ade6abaa29dc4b5c6aa3fabaf50a9158f/tree1e0ba1e02bd8764b7069ae96e56b733826a8cf1a；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-source-actions-20261116-r1/。原CurrentPin/Source五方法体token与e7c18e97c完全一致，v2改消费公共Windows originals/source。Owner保留原传入Start及Stop/Restart窗口，NativeAction实际Owner/scope/Token/原UUID/end绑定；Source新上下文与v3 source工厂仅编译未实跑，不代生产。首library01 E0624/raw101（子方法对父不可见，无新EXE），修pub(super)并将Origin准入放native创建之前，library02七过0败；产品MSVC debug bins raw0/220920ms。EXE/完整表/首错归final-status/report；无新保留scene，旧pending和清理缺口保持。
 
 v3生产phase/后续动作canonical桥、工作可写/封存/副作用/Stop/Closed/history/后继/原Owner-H-S-D仍待，原缺席退根blocked且Start无条件拒绝。不重复旧raw5/空GUI/1314，不W2/双SID/发布。
+
+
+## 2026-11-16 TEAM16/r6 工作可写与后像组件
+
+源码 c61327035fcd0f64aa38701d440162d6ead76d66/treea6a6bb730cc8695ddf31361c6f35b295018b9959；证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-work-observation-20261116-r1/。同v3 node/lease/current work-open/seal事件，活claim下准确work ReOpenFile观察，完整frame冻结+同卷chunk/metadata；未变化全树允许继续退休还原，变化产物仅data。首library01 E0277/raw101无新EXE；library02六过；library03受影响回归24过1败（原子替换后的旧work observer links0与通用单链接helper冲突），受限已登记旧WORK ID观察修正，target04一过；library05七过1败（新增历史观察位置过早破坏原硬链测试阶段），保持原断言移回完整frame边界，final06八过。原失败/双代次/ADS观察/部分chunk/current源与EXE保留，完整表归final-status/report，产品debug MSVC bins raw0/179930ms。
+
+正式phase与snapshot reference/source内容policy、生产v3 Store/跨动作权限、动态工作node/恢复/Stop/Closed/history/后继/原Owner-H-S-D仍待；production factory未实跑、Start无条件拒绝。原缺席安全退根blocked单列。不旧raw5/空GUI/W2/双SID/发布。

@@ -1,0 +1,194 @@
+[
+  {
+    "run": "library02",
+    "trace": "r6-work-open-fault=13 nativeModes=[Sealed, Sealed] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-work-open-fault=14 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-work-open-fault=15 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-work-open-fault=16 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-work-observation unchanged generation: native observer permits actual writes only after canonical open/release; full frozen frames deny subsequent writes; exact unchanged whole-tree proof re-enables canonical native retirement/restore; original custody+anchors/all8 intact, no production Ready/Closed"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-work-partial-native-archive error=injected after actual immutable observation chunk sync/readback; actual firstchunk retained with exact private original ID/security; frozen frame remains, no SnapshotReference/Ready or unchanged acceptance"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-work-observation unknown case=0 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"nested\"])"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-work-observation unknown case=1 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign-empty\", \"nested\"])"
+  },
+  {
+    "run": "library02",
+    "trace": "r6-work-observation unknown case=2 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign.txt\", \"nested\"])"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-special-refusal case=0 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-special-refusal case=1 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-special-refusal case=2 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-open-fault=13 nativeModes=[Sealed, Sealed] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-open-fault=14 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-open-fault=15 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-open-fault=16 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-observation unchanged generation: native observer permits actual writes only after canonical open/release; full frozen frames deny subsequent writes; exact unchanged whole-tree proof re-enables canonical native retirement/restore; original custody+anchors/all8 intact, no production Ready/Closed"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-partial-native-archive error=injected after actual nonempty immutable observation chunk sync/readback; actual firstchunk retained with exact private original ID/security; frozen frame remains, no SnapshotReference/Ready or unchanged acceptance"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-observation unknown case=0 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"nested\"])"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-observation unknown case=1 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign-empty\", \"nested\"])"
+  },
+  {
+    "run": "library03",
+    "trace": "r6-work-observation unknown case=2 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign.txt\", \"nested\"])"
+  },
+  {
+    "run": "library04",
+    "trace": "r6-work-atomic-observation oldFileId=10696049115851274 newFileId=10133099162429971 archive=C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpropjvv\\Profile\\.ocxd024-observed-e88efa3c-0dd5-4450-a49c-0ac89aa9e889-codex exact1280KiB/2parts reconstructed; old observer retained, current data frozen; deliberately invalid cache bytes not content-policy acceptance; unknown archive empty child refuses"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-special-refusal case=0 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-atomic-observation oldFileId=2251799814602739 newFileId=2251799814602741 archive=C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpsmpipp\\Profile\\.ocxd024-observed-090be559-45c8-48c2-aaa3-1d22b01d2adf-codex exact1280KiB/2parts reconstructed; old observer retained, current data frozen; deliberately invalid cache bytes not content-policy acceptance; unknown archive empty child refuses"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-open-fault=13 nativeModes=[Sealed, Sealed] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-open-fault=14 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-open-fault=15 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-open-fault=16 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-observation unchanged generation: native observer permits actual writes only after canonical open/release; full frozen frames deny subsequent writes; exact unchanged whole-tree proof re-enables canonical native retirement/restore; original custody+anchors/all8 intact, no production Ready/Closed"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-partial-native-archive error=injected after actual nonempty immutable observation chunk sync/readback; actual firstchunk retained with exact private original ID/security; frozen frame remains, no SnapshotReference/Ready or unchanged acceptance"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-observation unknown case=0 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"nested\"])"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-observation unknown case=1 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign-empty\", \"nested\"])"
+  },
+  {
+    "run": "library05",
+    "trace": "r6-work-observation unknown case=2 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign.txt\", \"nested\"])"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-special-refusal case=0 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-special-refusal case=1 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-special-refusal case=2 (ADS/hardlink/artifact-directory); exact original custody retained, partial native observation pending; no stream deletion/link removal or unknown object overwrite"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-atomic-observation oldFileId=3377699721445145 newFileId=3096224744734492 archive=C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9tXgIv\\Profile\\.ocxd024-observed-2e7e2e46-99c7-49cb-b026-411106d05515-codex exact1280KiB/2parts reconstructed; old observer retained, current data frozen; deliberately invalid cache bytes not content-policy acceptance; unknown archive empty child refuses"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-open-fault=13 nativeModes=[Sealed, Sealed] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-open-fault=14 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-open-fault=15 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-open-fault=16 nativeModes=[Open, Open] canonical=Opening exact handles retained, no callback continuation"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-observation unchanged generation: native observer permits actual writes only after canonical open/release; full frozen frames deny subsequent writes; exact unchanged whole-tree proof re-enables canonical native retirement/restore; original custody+anchors/all8 intact, no production Ready/Closed"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-partial-native-archive error=injected after actual nonempty immutable observation chunk sync/readback; actual firstchunk retained with exact private original ID/security; frozen frame remains, no SnapshotReference/Ready or unchanged acceptance"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-observation unknown case=0 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"nested\"])"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-observation unknown case=1 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign-empty\", \"nested\"])"
+  },
+  {
+    "run": "library06",
+    "trace": "r6-work-observation unknown case=2 complete native frame retained before veto; originals remain at exact custody, no overwrite/adoption; children=Ok([\".opencodex-native-main.claim.sqlite\", \".opencodex-native-main.owner.sqlite\", \"config.toml\", \"empty\", \"foreign.txt\", \"nested\"])"
+  },
+  {
+    "run": "library07",
+    "trace": "r6-work-atomic-observation oldFileId=2251799814637622 newFileId=2251799814637624 archive=C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpZmm7uU\\Profile\\.ocxd024-observed-05b33aca-fa31-4ea7-ac84-e03d47464a4f-codex exact1280KiB/2parts reconstructed; old observer retained, current data frozen; deliberately invalid cache bytes not content-policy acceptance; unknown archive empty child refuses"
+  },
+  {
+    "run": "library07",
+    "trace": "r6-work-partial-native-archive error=injected after actual nonempty immutable observation chunk sync/readback; actual firstchunk retained with exact private original ID/security; frozen frame remains, no SnapshotReference/Ready or unchanged acceptance"
+  }
+]
