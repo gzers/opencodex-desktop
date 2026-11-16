@@ -1,0 +1,4 @@
+
+thread 'infrastructure::windows_client_originals024::tree::anchored::observation::retirement::tests::wl2_r6_retirement_existing_artifacts_changed_and_atomically_replaced_work_restore_original_objects' (66460) panicked at src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement_tests.rs:133:64:
+called `Result::unwrap()` on an `Err` value: Custom { kind: Other, error: QueryError { api: "bounded-original-deadline", mask: 0, raw: None, detail: "timed out" } }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

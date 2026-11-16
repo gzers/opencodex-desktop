@@ -1,0 +1,111 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\024-windows-native\code\apps\desktop\tauri)
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:29:35
+   |
+29 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |                                   ^^^^^^^^^^^^^
+30 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused import: `OpenOptions`
+  --> src\infrastructure\windows_owner_host024\desktop_tests.rs:12:22
+   |
+12 |     fs::{self, File, OpenOptions},
+   |                      ^^^^^^^^^^^
+
+error[E0282]: type annotations needed for `std::vec::Vec<_>`
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:116:13
+    |
+116 |         let mut custody_names = Vec::new();
+    |             ^^^^^^^^^^^^^^^^^   ---------- type must be known at this point
+    |
+help: consider giving `custody_names` an explicit type, where the type for type parameter `T` is specified
+    |
+116 |         let mut custody_names: std::vec::Vec<T> = Vec::new();
+    |                              ++++++++++++++++++
+
+error[E0283]: type annotations needed for `std::vec::Vec<_>`
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:116:13
+    |
+116 |         let mut custody_names = Vec::new();
+    |             ^^^^^^^^^^^^^^^^^
+...
+142 |                         .into(),
+    |                          ---- type must be known at this point
+    |
+    = note: multiple `impl`s satisfying `_: From<&str>` found in the following crates: `axum_core`, `bytes`, `reqwest`, `winnow`:
+            - impl From<&'static str> for axum::body::Body;
+            - impl From<&'static str> for axum::body::Bytes;
+            - impl From<&'static str> for reqwest::Body;
+            - impl From<&'static str> for winnow::error::StrContextValue;
+    = note: required for `&str` to implement `Into<_>`
+help: consider giving `custody_names` an explicit type, where the type for type parameter `T` is specified
+    |
+116 |         let mut custody_names: std::vec::Vec<T> = Vec::new();
+    |                              ++++++++++++++++++
+
+error[E0283]: type annotations needed for `std::vec::Vec<_>`
+   --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:116:13
+    |
+116 |         let mut custody_names = Vec::new();
+    |             ^^^^^^^^^^^^^^^^^
+...
+174 |                         .into(),
+    |                          ---- type must be known at this point
+    |
+    = note: multiple `impl`s satisfying `_: From<&str>` found in the following crates: `axum_core`, `bytes`, `reqwest`, `winnow`:
+            - impl From<&'static str> for axum::body::Body;
+            - impl From<&'static str> for axum::body::Bytes;
+            - impl From<&'static str> for reqwest::Body;
+            - impl From<&'static str> for winnow::error::StrContextValue;
+    = note: required for `&str` to implement `Into<_>`
+help: consider giving `custody_names` an explicit type, where the type for type parameter `T` is specified
+    |
+116 |         let mut custody_names: std::vec::Vec<T> = Vec::new();
+    |                              ++++++++++++++++++
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:506:14
+    |
+506 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+506 -             .fetch_update(
+506 +             .try_update(
+    |
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0282, E0283.
+For more information about an error, try `rustc --explain E0282`.
+warning: `opencodex-desktop` (lib test) generated 7 warnings
+error: could not compile `opencodex-desktop` (lib test) due to 3 previous errors; 7 warnings emitted

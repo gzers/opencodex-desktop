@@ -1,0 +1,219 @@
+{
+  "bundle": "C:\\Users\\Public\\ocxw1d-98b5378c87\\input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+  "bundleSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+  "officialArchiveSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+  "files": [
+    {
+      "path": "src/codex/paths.ts",
+      "bundleInnerMember": "package/src/codex/paths.ts",
+      "bytes": 8636,
+      "sha256": "37c803fb449badc7d5c40d0e6c9c2ce7998ff96a26f67bd6fd50de7c52bb9915",
+      "extractedBytesExactlyEqual": true,
+      "evidence": "fixed-official-source/src/codex/paths.ts",
+      "readOnlyLocations": [
+        {
+          "pattern": "CODEX_CONFIG_PATH",
+          "matches": [
+            {
+              "line": 29,
+              "sourceLine": "export const CODEX_CONFIG_PATH = join(CODEX_HOME, \"config.toml\");"
+            },
+            {
+              "line": 177,
+              "sourceLine": "  return home ? join(home, \"config.toml\") : CODEX_CONFIG_PATH;"
+            }
+          ]
+        },
+        {
+          "pattern": "CODEX_PROFILE_PATH",
+          "matches": [
+            {
+              "line": 30,
+              "sourceLine": "export const CODEX_PROFILE_PATH = join(CODEX_HOME, \"opencodex.config.toml\");"
+            }
+          ]
+        },
+        {
+          "pattern": "DEFAULT_CATALOG_PATH",
+          "matches": [
+            {
+              "line": 31,
+              "sourceLine": "export const DEFAULT_CATALOG_PATH = join(CODEX_HOME, \"opencodex-catalog.json\");"
+            },
+            {
+              "line": 182,
+              "sourceLine": "  return home ? join(home, \"opencodex-catalog.json\") : DEFAULT_CATALOG_PATH;"
+            }
+          ]
+        },
+        {
+          "pattern": "CODEX_MODELS_CACHE_PATH",
+          "matches": [
+            {
+              "line": 32,
+              "sourceLine": "export const CODEX_MODELS_CACHE_PATH = join(CODEX_HOME, \"models_cache.json\");"
+            },
+            {
+              "line": 187,
+              "sourceLine": "  return home ? join(home, \"models_cache.json\") : CODEX_MODELS_CACHE_PATH;"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src/codex/journal.ts",
+      "bundleInnerMember": "package/src/codex/journal.ts",
+      "bytes": 28093,
+      "sha256": "040f1e49fe32271366de021604ad2c4f83e9b1bf87b41056891eb9b73665e969",
+      "extractedBytesExactlyEqual": true,
+      "evidence": "fixed-official-source/src/codex/journal.ts",
+      "readOnlyLocations": []
+    },
+    {
+      "path": "src/codex/codex-home-owner.ts",
+      "bundleInnerMember": "package/src/codex/codex-home-owner.ts",
+      "bytes": 6493,
+      "sha256": "bad5bf5a760c6ab4b6bb3ca981095c9c38bcfccdffb9e5d30bd99a6c21ffc138",
+      "extractedBytesExactlyEqual": true,
+      "evidence": "fixed-official-source/src/codex/codex-home-owner.ts",
+      "readOnlyLocations": [
+        {
+          "pattern": "CODEX_HOME_JOURNAL_FILE",
+          "matches": [
+            {
+              "line": 7,
+              "sourceLine": "export const CODEX_HOME_JOURNAL_FILE = \"opencodex-journal.json\";"
+            },
+            {
+              "line": 95,
+              "sourceLine": "  const read = readCodexHomeJournal(join(canonicalHome, CODEX_HOME_JOURNAL_FILE));"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src/codex/inject/config-write-section.ts",
+      "bundleInnerMember": "package/src/codex/inject/config-write-section.ts",
+      "bytes": 2098,
+      "sha256": "dce49bcbb293b624a1fdf26df78ccde563b31a900b9c806d01b105048cdbac6d",
+      "extractedBytesExactlyEqual": true,
+      "evidence": "fixed-official-source/src/codex/inject/config-write-section.ts",
+      "readOnlyLocations": []
+    },
+    {
+      "path": "src/codex/catalog/write-audit.ts",
+      "bundleInnerMember": "package/src/codex/catalog/write-audit.ts",
+      "bytes": 8130,
+      "sha256": "09cd430d0337b49d4b400d2a256a9a82eaa977bed66749d64f6041ed73a405d9",
+      "extractedBytesExactlyEqual": true,
+      "evidence": "fixed-official-source/src/codex/catalog/write-audit.ts",
+      "readOnlyLocations": [
+        {
+          "pattern": "CODEX_CATALOG_AUDIT_FILE",
+          "matches": [
+            {
+              "line": 10,
+              "sourceLine": "export const CODEX_CATALOG_AUDIT_FILE = \"opencodex-catalog-audit.jsonl\";"
+            },
+            {
+              "line": 22,
+              "sourceLine": "  return join(codexHome, CODEX_CATALOG_AUDIT_FILE);"
+            }
+          ]
+        },
+        {
+          "pattern": "redactUserPath(event.opencodexHome).slice",
+          "matches": [
+            {
+              "line": 35,
+              "sourceLine": "    opencodexHome: redactUserPath(event.opencodexHome).slice(0, MAX_HOME_CHARACTERS),"
+            }
+          ]
+        },
+        {
+          "pattern": "MAX_HOME_CHARACTERS",
+          "matches": [
+            {
+              "line": 14,
+              "sourceLine": "const MAX_HOME_CHARACTERS = 256;"
+            },
+            {
+              "line": 35,
+              "sourceLine": "    opencodexHome: redactUserPath(event.opencodexHome).slice(0, MAX_HOME_CHARACTERS),"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src/codex/catalog/write-audit-contract.ts",
+      "bundleInnerMember": "package/src/codex/catalog/write-audit-contract.ts",
+      "bytes": 927,
+      "sha256": "0b7ec87dfe50ab6d300c489b18d9c1a59c732939c92c085d46b4902117ec0ccd",
+      "extractedBytesExactlyEqual": true,
+      "evidence": "fixed-official-source/src/codex/catalog/write-audit-contract.ts",
+      "readOnlyLocations": []
+    },
+    {
+      "path": "src/grok/inject.ts",
+      "bundleInnerMember": "package/src/grok/inject.ts",
+      "bytes": 64289,
+      "sha256": "573581a32d5a2d31ec7cffe1ed94a1721c74a76ceab2407d38dea5cbc3003875",
+      "extractedBytesExactlyEqual": true,
+      "evidence": "fixed-official-source/src/grok/inject.ts",
+      "readOnlyLocations": [
+        {
+          "pattern": "const configPath = join(grokHome",
+          "matches": [
+            {
+              "line": 1168,
+              "sourceLine": "  const configPath = join(grokHome, \"config.toml\");"
+            },
+            {
+              "line": 1334,
+              "sourceLine": "  const configPath = join(grokHome, \"config.toml\");"
+            }
+          ]
+        },
+        {
+          "pattern": "const backupPath = join(grokHome",
+          "matches": [
+            {
+              "line": 1169,
+              "sourceLine": "  const backupPath = join(grokHome, \"config.toml.bak-opencodex\");"
+            }
+          ]
+        },
+        {
+          "pattern": "copyBackupOnce(destination",
+          "matches": [
+            {
+              "line": 1304,
+              "sourceLine": "        if (configExisted && (!region || orphans.length > 0)) copyBackupOnce(destination, backupPath);"
+            },
+            {
+              "line": 1421,
+              "sourceLine": "      if (orphanCount > 0) copyBackupOnce(destination, join(grokHome, \"config.toml.bak-opencodex\"));"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src/lib/redact.ts",
+      "bundleInnerMember": "package/src/lib/redact.ts",
+      "bytes": 19641,
+      "sha256": "1f2804c159d0cbf670d701d83422ed0c9d0adfc9125691aa4d408dba4d847ffa",
+      "extractedBytesExactlyEqual": true,
+      "evidence": "fixed-official-source/src/lib/redact.ts",
+      "readOnlyLocations": []
+    }
+  ],
+  "inference": "Fixed-source paths/profile/journal/config/Grok backup and redacted/truncated audit projection remain required production scope. This static inventory gives no content ownership or mutation authority, and adds no accepted node-name exception; unknown nonartifact side-effects still reject pending exact phase/transform proof.",
+  "officialCodeImportedOrExecuted": false,
+  "officialArchiveOrExtractedSourcesModified": false,
+  "realCredentialsReadOrWritten": false,
+  "modelOrNetworkRequest": false
+}

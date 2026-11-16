@@ -1,0 +1,537 @@
+{
+  "time": "2026-11-16T14:49:03.201832+08:00",
+  "sourceHead": "67c37937ea044773e963ac3e5d002862b9ff30e5",
+  "sourceTree": "9fdf37e9b51ee12ffeaec91a1a2f3327e6df9fdf",
+  "contract": "TEAM16/IMP142/r6",
+  "baselineMain": "fac8573e55441fe514919c63c7f1d65181ff3577",
+  "baselineDocs": "5782307174f0d1b011b5415c6c1e8d60414e6b36",
+  "runs": {
+    "library01": {
+      "rawExit": 101,
+      "profile": "debug",
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "elapsedMs": 31856,
+      "artifact": {
+        "executed": false,
+        "rawExit": 101,
+        "accepted": false,
+        "profile": "debug",
+        "reason": "compile failed; no new executable attributed to this run"
+      }
+    },
+    "library02": {
+      "rawExit": 0,
+      "profile": "debug",
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedMs": 330241,
+      "artifact": {
+        "executed": true,
+        "rawExit": 0,
+        "accepted": false,
+        "profile": "debug",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+        "bytes": 99370496,
+        "sha256": "88ae23e50f0cb85ac34148c9bbf966174ab46431252709e0b893062d03738db6"
+      }
+    },
+    "library03": {
+      "rawExit": 0,
+      "profile": "debug",
+      "passed": 5,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedMs": 279959,
+      "artifact": {
+        "executed": true,
+        "rawExit": 0,
+        "accepted": false,
+        "profile": "debug",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+        "bytes": 99393536,
+        "sha256": "d13e77d34ede6d2b634de36016f256864ea49341a638bd96a1c562d6d80b5197"
+      }
+    },
+    "library04": {
+      "rawExit": 0,
+      "profile": "debug",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedMs": 192473,
+      "artifact": {
+        "executed": true,
+        "rawExit": 0,
+        "accepted": false,
+        "profile": "debug",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+        "bytes": 99409408,
+        "sha256": "f4d8f1df13efb52744dcc51c2ac734ad9ab17c875ecc539de56f7c427f93b94b"
+      }
+    },
+    "library05": {
+      "rawExit": 101,
+      "profile": "debug",
+      "passed": 21,
+      "failed": 1,
+      "ignored": 0,
+      "elapsedMs": 121766,
+      "artifact": {
+        "executed": true,
+        "rawExit": 101,
+        "accepted": false,
+        "profile": "debug",
+        "sameRustInputsAndCompilationFlags": true,
+        "reusedExactArtifactFrom": "library04",
+        "arguments": [
+          "test",
+          "--locked",
+          "--offline",
+          "--manifest-path",
+          "apps/desktop/tauri/Cargo.toml",
+          "--target",
+          "x86_64-pc-windows-msvc",
+          "--features",
+          "custom-protocol",
+          "--lib",
+          "-j",
+          "1",
+          "wl2_r6_retirement_existing_",
+          "--",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe",
+        "bytes": 99409408,
+        "sha256": "f4d8f1df13efb52744dcc51c2ac734ad9ab17c875ecc539de56f7c427f93b94b"
+      }
+    },
+    "library06": {
+      "rawExit": 0,
+      "profile": "release",
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "elapsedMs": 795652,
+      "artifact": {
+        "executed": true,
+        "rawExit": 0,
+        "accepted": false,
+        "profile": "release",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\release\\build\\opencodex-desktop\\18f15ef6709910e6\\out\\opencodex_desktop_lib-18f15ef6709910e6.exe",
+        "bytes": 48911872,
+        "sha256": "26b508cd17df7ee215bde002bdafb07fe38d3c1ef2b0289c15dcd826397b0811"
+      }
+    },
+    "product01": {
+      "rawExit": 0,
+      "profile": "debug",
+      "passed": null,
+      "failed": null,
+      "ignored": null,
+      "elapsedMs": 185290,
+      "artifact": null
+    }
+  },
+  "artifacts": [
+    {
+      "name": "opencodex-desktop",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\opencodex-desktop.exe",
+      "bytes": 77741056,
+      "sha256": "0438f4577500ff48a0661e0ed5330ab235ab547b741a6d64f823986834e52ede",
+      "sourceHead": "67c37937ea044773e963ac3e5d002862b9ff30e5",
+      "sourceTree": "9fdf37e9b51ee12ffeaec91a1a2f3327e6df9fdf",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocxd",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+      "bytes": 5398528,
+      "sha256": "d84433b4ee9a2f00717c869709631cee746d323d5c92431013ac3b9e7f46e032",
+      "sourceHead": "67c37937ea044773e963ac3e5d002862b9ff30e5",
+      "sourceTree": "9fdf37e9b51ee12ffeaec91a1a2f3327e6df9fdf",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    },
+    {
+      "name": "ocx",
+      "path": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocx.exe",
+      "bytes": 306176,
+      "sha256": "097a79a875c31eb7c925330c232931aa84bdabf6ed77fab9eb99fdb08da9a8cf",
+      "sourceHead": "67c37937ea044773e963ac3e5d002862b9ff30e5",
+      "sourceTree": "9fdf37e9b51ee12ffeaec91a1a2f3327e6df9fdf",
+      "profile": "debug",
+      "features": [
+        "custom-protocol"
+      ]
+    }
+  ],
+  "matrix": [
+    {
+      "id": "B1",
+      "result": "component-pass/reused",
+      "fact": "fixed8+combined ordinary native checks unchanged; controller token is not marenben production acceptance"
+    },
+    {
+      "id": "B2",
+      "result": "partial/reused",
+      "fact": "LABEL/conditional DACL/resource/filter positives reused; populated CAP/trust CREATE_NEW1314/5 unchanged and not retried"
+    },
+    {
+      "id": "B3",
+      "result": "component-pass",
+      "fact": "mandatory exact ordered predecessor references bind old session/private directory/current IDs, canonical/current/manifest/context/policy digests and D volume. Older missing-field records refuse; text/serde only locates pending data."
+    },
+    {
+      "id": "O1",
+      "result": "native-storage/component-pass",
+      "fact": "three synthetic native generations capture fresh user originals independently while old exact history remains unchanged; current original bytes restored each cycle. Full official side-effect assessment/live native coordination still incomplete."
+    },
+    {
+      "id": "O2",
+      "result": "partial/component-pass",
+      "fact": "missing/sparse/reversed known histories, foreign namespace, source mismatch, native old archive drift and drift before next first move refuse with retained scenes. Complete actual official interruption/Closed matrix still unverified."
+    },
+    {
+      "id": "H",
+      "result": "actual-GUI-empty-broker-component-pass",
+      "fact": "Real main GUI/native HWND/pageFinished under ordinary marenben session7 passed across normal exit, exact Child-only forced GUI, fresh authentication and explicit empty-host exit; original broker31484/FILETIME134392264041593579/imageID562949954696391 preserved across manager generations1..4 with original creation handle. No official Owner/Job/H-S-D production proof; broker raw exit unrecorded=null."
+    },
+    {
+      "id": "S/D",
+      "result": "native-close-readback-wiring/component-pass",
+      "fact": "Current Closed tag now authorizes only fresh source/old-history/raw-family/listener/record/supervisor/tree rechecks. Actual production native factory and Stop/Restart combinations remain unexecuted."
+    },
+    {
+      "id": "P",
+      "result": "Start-refused/r5-integrated",
+      "fact": "r5 shared route and status interfaces integrated; Windows full recovery_state_at preserved byte-equivalent during merge. Actual side effects/NativeLease/original-package production closure incomplete; no official launch in this round."
+    },
+    {
+      "id": "MSI/CLI",
+      "result": "unaffected/reused",
+      "fact": "no rerun; ordinary MSI acceptance and historic cleanup gaps unchanged"
+    },
+    {
+      "id": "Route",
+      "result": "native-pin/component-pass",
+      "fact": "Independent shared parser11 plus native H/config ID/8projections/noADS/singlelink/2MiB/exact bytes/None-vs-empty/wrongH/expired checks; active Store source boundaries use the pin, each successor captures fresh. No generated-catalog inference or content-policy permission."
+    },
+    {
+      "id": "Sample",
+      "result": "shared/native-unknown-path-pass",
+      "fact": "Shared6 deadline cases and true OfficialStatusSource fetch/light/native missing-Owner path trace share one original5s each; private one-shot receipt binds Slot/session/scope/stopped/deadline before original Closed recheck. Actual retained Closed Owner positive/change/concurrent proof factories not yet executed."
+    },
+    {
+      "id": "NativeLease",
+      "result": "native-lock-component-pass/not-production-permit",
+      "fact": "Retained private original four Windows files, claim-exclusive/N-L-K-shared+reserved ranges, same original deadline/token/ID/8projections/content; real rusqlite and exact bundle Bun competitors blocked while held and succeed after release, all bytes unchanged. Busy/sidecar/header/WAL/ADS/links/missing/expiry/raw data drift refuse; failed recheck poisons. Official initialization/owner receipt and root relocation handoff still incomplete; no production mutation authorization."
+    },
+    {
+      "id": "ArtifactContent",
+      "result": "native-snapshot/data-policy-pass",
+      "fact": "Original same-object custody, actual sealed Ready+PreStop working images and fresh current native frame feed unchanged shared content policy; all8 security key separate from live generation/archive-copy identity. Undeclared nodes/config drift/allowed-name directory/archive contamination/PreStop changes refuse. Restore and unchanged-working veto remain; no native permission or canonical Changed-Ready/Closed production factory proved."
+    },
+    {
+      "id": "ClaimRootHandoff",
+      "result": "r6-plan-consumed/root-rename-not-retried",
+      "fact": "TEAM16/IMP142 chooses anchored existing directories and two exact stable Codex objects; ordinary files move individually with uninterrupted claim/NLK. Historical raw5 retained, not retried; no claim gap or old assertion changed."
+    },
+    {
+      "id": "AnchoredExistingTree",
+      "result": "component-pass",
+      "fact": "Codex root/nested/empty directories and two stable objects retain IDs/all8. Ordinary originals roundtrip with separate work/retired generations and full predicted children. Grok stable-name file remains ordinary; 1280KiB copy passes."
+    },
+    {
+      "id": "AnchoredClaim",
+      "result": "component-pass",
+      "fact": "Borrowed scope ties exact actual claim path/ID/range and original deadline to live NativeLease. Fixed Bun claim-only BEGIN EXCLUSIVE busy initially and after8 native writes (raw73), explicitly released -> raw0. No production Owner/source authority."
+    },
+    {
+      "id": "AnchoredInterruptions",
+      "result": "native-prefix-component-pass",
+      "fact": "Nine 0..8 two-file native prefixes retain exact locations. Foreign empty dir/sidecar/wrong claim/absence refuse; occupied original file raw32. Not persistent interruption recovery."
+    },
+    {
+      "id": "V3CanonicalNodeJournal",
+      "result": "native-intent/result-component-pass; production-phase-adapter-incomplete",
+      "fact": "Actual callback requires same live borrowed claim/epoch/key/deadline and exact immutable complete native plan; intent phase+current synced/read back BEFORE mutation, result records actual same-generation ID/all8. Three original files in Codex+Grok roundtrip with30 canonical events (6 anchor snapshots+24 file intent/results). Actual post-release tree/stable proof succeeds. New lease epoch cannot inherit permissions. This is not production Source/phase/release/Closed eligibility."
+    },
+    {
+      "id": "OriginalAbsentCodexRetirement",
+      "result": "blocked-plan/not-attempted",
+      "fact": "r6 leaves safe no-gap first-use root retirement unresolved. Do not leave directories/stable files as original absence or release claim and rely on NLK."
+    },
+    {
+      "id": "AnchoredStableRelease",
+      "result": "component-pass",
+      "fact": "Both exact coordinator bytes use finite rollback header rule, unknown sidecars remain rejected. After explicit NativeLease release, full native directory/file/retired image and exact two stable kernel ranges acquired/released with original IDs/all8/bytes; no SQLite open/recovery/schema in production."
+    },
+    {
+      "id": "V3NativeCombinedInterruptions",
+      "result": "component-pass",
+      "fact": "After durable intent/before mutation, after native move/before result, after result publish/before CAS, and partial result-current preserve exact original/native prefix and poison tree+journal; no overwrite/catchup/retry."
+    },
+    {
+      "id": "V3WorkCreateOriginalHandle",
+      "result": "component-pass",
+      "fact": "Private TokenUser/SYSTEM protected CREATE_NEW returns exact RW/DELETE creation handle immediately and stores it in pending_work BEFORE any fallible query/write. Empty, real1-byte partial-write/sync, complete-sync/prepublication faults retain that exact handle/ID/all8 and untouched original custody. Another writer raw32. Successful work uses same creation description; no seed/reopen identity gap."
+    },
+    {
+      "id": "V3LeaseSegmentsAndPhases",
+      "result": "same-original-window-lease-segments-pass; production-phase/action-bridge-incomplete",
+      "fact": "Same immutable node+lease event chain/current state; durable ReleasePrepared before actual four-range unlock, retained nonserde original-object receipt, explicit Released result, AcquirePrepared and fresh same-context/objects/deadline lease result before native node resume.36 events restore both trees. New/historical epoch replay, Drop-as-release, half tree/foreign data/empty dir/extended deadline and result/current failures refuse. Later lifecycle ActionWindow/source/phase permissions, official writable interval/archives/Stop/Closed remain pending; public Start gate stays."
+    },
+    {
+      "id": "CanonicalLeaseState",
+      "result": "component-pass",
+      "fact": "Manifest binds initial epoch/claim/deadline; current binds active epoch/lease state/full four-object digest. Node and lease records replay in same immutable chain from initial epoch; previous release original handles/bytes/security continuously rechecked, no Drop-derived or serde receipt."
+    },
+    {
+      "id": "LeaseBusyAndSidecar",
+      "result": "component-pass-with-failures-retained",
+      "fact": "Empty synthetic SQLite BEGIN EXCLUSIVE created transient unknown -journal, so earlier full-tree InvalidData/rawNone correctly refuses before acquire-prepared; original expected raw33 test failed in library02 and diagnostic03. New PRE-capture initialized rollback fixture has no sidecar; exact original raw33 assertion passes, pending AcquirePrepared, foreign transaction untouched, refuses retry after rollback. No production initialization or sidecar exception."
+    },
+    {
+      "id": "SharedWindowsOriginalSource",
+      "result": "refactor-verified/native-current-pin-regression-pass",
+      "fact": "Five original CurrentPin and Source method bodies token-identical to e7c18e97c. Existing v2 consumer now imports same originals/source.rs for eventual v3 reuse; fixed official299/current/hash/image/noJob/ordinaryToken/native peer/Owner scope checks retained. Two actual current-pin tests pass; not new full Source/Owner acceptance."
+    },
+    {
+      "id": "OriginalOwnerActionWindows",
+      "result": "7-directed-tests-pass; production-execution-pending",
+      "fact": "Owner retains exact ActionWindow passed by shared boundary before creating native launcher, and original Stop/Restart window before initiating stop. NativeAction nonserde/nonClone binds actual Owner session/scope/Token/origin UUID and exact original deadline. Start parent29 cap/Stop shorter parent/Restart stop10/late stop/repeated or partially started stop all refuse reset; original restart input receipt tests pass. Native production path compiled below unchanged public Start gate."
+    },
+    {
+      "id": "V3NativeSourceContextFactory",
+      "result": "compiled-not-executed",
+      "fact": "Source journal_context rechecks actual original Owner/source/current/full Binding and creates nonserde native pins/peer+NativeAction context; v3 create_from_source/check_source_owner consumes that context and current live claim, binding original action UUID/deadline. No production v3 adapter switch or real positive factory invocation yet; no parsed Binding or hashes alone create this context."
+    },
+    {
+      "id": "CanonicalWorkWritableInterval",
+      "result": "native-component-pass; official-sideeffects-not-admitted",
+      "fact": "Same node/lease/current chain adds work-open intent/verified and seal intent/verified. Actual work creation handle uses ReOpenFile exact metadata observer while original custody/anchors/stable share remains strict. Active claim guards all transitions. Synthetic writes succeed only after full Open, frozen observation denies later writes. Native old work object retained across atomic replace; old unlink0or1 lookup limited to already-known work observation ID, never original/current path authority."
+    },
+    {
+      "id": "WholeAnchoredWorkObservation",
+      "result": "component-pass",
+      "fact": "Current bounded full tree frozen with actual file handles/IDs/all8/children. All non-artifacts exact generation/content/security; unknown empty dir/node, ADS/hardlink/allowed-name directory refuse. Exact3 Codex artifact leaves may differ only as data, no baseline adoption or mutation permit. Full unchanged frame equality can re-enable precise retirement+restore; changed digest cannot launder older baseline."
+    },
+    {
+      "id": "SameVolumeWorkObservationArchive",
+      "result": "component-pass; phase-reference-link-incomplete",
+      "fact": "Native frame full bytes/metadata sealed into private same-volume immutable chunks<=1MiB, actual archive/part/metadata IDs/all8 and hashes rechecked.1280KiB reconstructs two exact chunks; partial first NONEMPTY chunk retained and poison; unknown archive empty child refuses. Snapshot context binds actual live Journal session/plan/binding/manifest/deadline and both observed digests, but archive ref not yet in canonical official Ready/PreStop/Stopped phase or source sideeffect chain."
+    },
+    {
+      "id": "WorkHandleAndPersistenceInterruptions",
+      "result": "component-pass",
+      "fact": "Durable work intent before handle transition, exact old/new handles held before result, result publication/current partial failure preserve Opening or pending native image and poison; no release when incomplete Opening/Sealing. Current retains separate baseline and observed frame digests; textual Ready/Closed/native authority unknown fields refuse."
+    },
+    {
+      "id": "CanonicalBothRootSnapshotReferences",
+      "result": "native-component-pass",
+      "fact": "Snapshot intent/current before archive writes, actual borrowed BOTH frozen frames+native archive objects required for link result. Same chain/current carries snapshot pending/purpose/observation sequence/link digests. Native callbacks recheck both frame/source/archive IDs/all8/content/member lists before/after CAS. Missing second/archive failure/link-result/current partial write keep pending and poison, not textual completion."
+    },
+    {
+      "id": "StrictSnapshotLocatorContext",
+      "result": "data-counterexamples-pass; no native authority",
+      "fact": "Strict deny_unknown_fields includes exact session/plan/binding/manifest/deadline/purpose/observed-sequence/both frame digests, Codex/Grok root order, same-volume private path and metadata IDs/all8/hash. Original/custody/duplicate IDs refused; missing or swapped root, stale frame sequence, context/ref changes, unknown authority/Closed fields refused. Decoding never constructs actual SnapshotWitness/NativeAction/Ready."
+    },
+    {
+      "id": "SnapshotHistoryAfterWorkingHandoff",
+      "result": "native-component-pass",
+      "fact": "Whole unchanged native work can be handed back to accurate retirement+original restore with archive objects still retained in tree history; subsequent readback checks immutable snapshot bytes/metadata, not a later live client tree as historical baseline.39 canonical events restore original files/anchors and explicit lease release, lifecycle remains Preparing in component test."
+    },
+    {
+      "id": "V3TypedReadySnapshotFactory",
+      "result": "compiled-not-executed",
+      "fact": "begin_ready_snapshot_link and record_ready_phase separately require actual Source.current/image/Owner scope+original NativeAction and typed ServiceObservation with original live record/listener checks, same live claim and matching native Ready snapshot refs. No production Ready positive or adapter switch executed; pure link success remains Preparing, cannot substitute PID/digest strings."
+    },
+    {
+      "id": "TimelyReleaseFreshHistory",
+      "result": "native-component-pass",
+      "fact": "Actual original1s lease explicitly unlocked and native receipt completed before deadline; fresh native history reads after actual expiry preserve4 IDs/all8/bytes but cannot use generic reacquire(new deadline). Historical read is DATA only, not reauthorized old lease. Previous released objects remain checked under current action read window."
+    },
+    {
+      "id": "CanonicalOriginalStopActionBridge",
+      "result": "compiled-native-factory/data-counterexamples-pass; actual-Owner-positive-unexecuted",
+      "fact": "Original Source/Owner/typedReady -> fresh NativeJournalContext and exact Stop/Restart NativeAction required. Intent/current keeps old scope and actual pending native receipt, verified binding advances current to new original scope;13 context drifts/stale Ready/missing release/duplicate scopes/pending lease operations refuse. No generic deadline setter, no serde action factory. New native bound reacquire requires actual Owner and NativeAction, original4 objects/scope; no synthetic production bridge."
+    },
+    {
+      "id": "TypedPreStopTeardownStoppedV3",
+      "result": "compiled-native-factories/data-progression-pass; production-execution-pending",
+      "fact": "Current retains exact Ready PID/port/record digest; PreStop requires actual Source/current/live typed Ready+original Stop window and both PreStop archives. TeardownPrepared persisted before official callback; Stopped requires exact NormalExit/SupervisorAbsent/StopAccepted/record/listener/source and both Stopped archives. DATA stages refuse generation drift/order/foreign refs, never issue Closed. No actual new factory invocation or v3 adapter switch yet."
+    },
+    {
+      "id": "ReleasedOriginalObjectsVsLiveLease",
+      "result": "native-component-pass/compiler-Send-proof",
+      "fact": "Only after explicit range-empty/readback native release, exact original LockFile+parent pins move by ownership into ReleasedObjects with no NativeLease/OVERLAPPED/active range. Same facts before/after; actual receipt crosses worker+returns then fresh single-use local acquisition. NativeLease remains stack-only nonSend marker; no handle cloning/reopen or unsafe Send."
+    },
+    {
+      "id": "V3RetainedCaptureCore",
+      "result": "native-component-pass",
+      "fact": "Complete original trees+actual journal stored at sequence0 before any move;18 anchor/node events prepare3 original/work files,20 records explicit release. Exact core/history/full original trees/journal cross a real worker and return; actual failed event/current/native-move prefixes remain in installed core, no replace/catchup. Source is not faked in these component tests."
+    },
+    {
+      "id": "V3ProductionCaptureSlot",
+      "result": "compiled/registered-not-invoked",
+      "fact": "WindowsOriginals now owns actual v3 CaptureSlot, whose production preparation method requires original Owner/ActionWindow/Source/RoutePin and full NativeLease. Store installed before moving original files, live lease stays local, released receipt persisted. Fresh namespace rejects ANY old entry incl textClosed. Failed/occupied v3 attempt blocks v2 fallback; old v2 records not converted. Production capture dispatcher/remaining phase flow not yet switched or executed."
+    },
+    {
+      "id": "ActivePartialRangeCleanup",
+      "result": "affected-native-regression-pass",
+      "fact": "NativeLease check/release method bodies token-identical; Held no longer needs independent Drop so range-free original pins move safely. Held acquisition explicitly attempts own partial unlock on errors before enrollment, NativeLease remains sole guard for enrolled ranges. Original raw busy/expiry/drift and unknown refusal retained; no dropping to claim ordinary release."
+    },
+    {
+      "id": "V3ProductionJournalNamespace",
+      "result": "native-component-pass",
+      "fact": "Static integration review found direct D/session component journal vs production D/official024/windows/UUID mismatch. Strict private canonical native ancestors and UUID leaf now bind immutable manifest/current same session; wrong descendants/nonUUID refuse. Source factory requires canonical namespace; direct D child remains component-only, actual Source factory not invoked."
+    },
+    {
+      "id": "NativeSnapshotSeriesResume",
+      "result": "native-component-pass",
+      "fact": "Canonical WorkResume intent/result requires exact current sealed observation sequence and actual BOTH linked archives; old immutable archive objects and work metadata descriptions retained across each new writable interval. Initial working/original plan never replaced. Each independent observation has stable seal sequence and unique archive path; historical per-stage action scope remains that stage's actual recorded scope, no cross-action resigning."
+    },
+    {
+      "id": "ReleaseAfterObservedChange",
+      "result": "native-component-pass/failure-retained",
+      "fact": "Initial series first run failed at second release because old release boundary compared against initial work bytes. Fix freezes full temporary current native view matching latest linked actual archive before+after native unlock; only after canonical release result drops temporary deny-write view. Original/initial baseline stays immutable, unknown current drift refuses; failed result retains view/pending."
+    },
+    {
+      "id": "V3NativeArchiveSharedPolicy",
+      "result": "content-data-component-pass; no mutation authority",
+      "fact": "Distinct native archived stage frames reconstruct source generations/bytes/all8 from actual rechecked immutable chunks and source metadata, not archive-copy IDs. A full BOTH-tree compound native barrier checks originals/custody/all historical work objects+archives/current frames before AND after original pure policy, without repeatedly scanning rows or caching permission. Synthetic independent route/PID/audit inputs explicitly data-only. AlreadyOriginal/RestoreOriginal content branches, actual ChangedSinceReady and foreign Grok refusal prove data scope, no Ready/NormalExit/restore grant or baseline adoption."
+    },
+    {
+      "id": "TypedStoppedContentSelector",
+      "result": "compiled-not-executed",
+      "fact": "Production selector requires original actual Source/Owner/native StopAction plus NormalExit/SupervisorAbsent/StopAccepted/record/listener postconditions and Stopped lifecycle, then selects exact canonical Ready/PreStop/Stopped link sequences. No real production factory invocation or adapter switch performed."
+    },
+    {
+      "id": "InitialCaptureWorkOpen",
+      "result": "native-component-pass/production-method-wired",
+      "fact": "Static integration review found CaptureSlot prepared sealed work and released without canonical Open; CREATE_NEW description would block official writes. Actual CaptureSlot now calls prepare->canonicalOpen->Source/unresumed checks->explicit release. Native core20 Open/22release permits real same-byte work writer and keeps original custody; full unchanged preResume-like reacquire/release completes26 records, no official launch."
+    },
+    {
+      "id": "ActualSourceBeforeResumeCaptureLane",
+      "result": "compiled-not-executed",
+      "fact": "Original WindowsOriginals v3 lane delegates to CaptureSlot Source/routes/unresumed actual Owner+original Start window, full actual lease reacquire, exact initial work/native generation unchanged proof and explicit release. Unexpected pre-creator edit refuses; old v2 lane/Start gate not switched."
+    },
+    {
+      "id": "ActualSourceReadyCaptureLane",
+      "result": "compiled-not-executed",
+      "fact": "CaptureSlot->CapturedTrees original typed ServiceObservation chain reacquires full original coordination, observes BOTH work roots, writes Ready snapshot intent/archives/link, records actual Source/Owner/typedReady phase, resumes exact work descriptions keeping immutable archives, explicitly releases and rechecks Source/Ready before flag publication. No fake actual Owner/Source/typedReady positive; production dispatcher not invoked."
+    },
+    {
+      "id": "InstalledCoreOpenFaults",
+      "result": "native-component-pass",
+      "fact": "Open intent/native/result/partial-current failures retain same installed original/work/native journal and Opening prefix; no opened/ready success flag on error. Reentry refuses. Real unexpected work edit before official creator would run refuses unchanged check and preserves original custody+foreign edit."
+    },
+    {
+      "id": "V3StorePreStopCallChain",
+      "result": "compiled/adapter-lane-wired-not-invoked",
+      "fact": "Actual CaptureSlot Ready generation -> original Source/routes+typed ServiceObservation -> original Stop/Restart NativeAction binding -> full official lease reacquire -> BOTH native PreStop observation/archive/reference -> typed PreStop phase -> durable teardown intention -> precise work observer Resume -> explicit original release -> Source/Ready postcheck before prepared flag. Actual Source/Owner path not executed; dispatcher unchanged."
+    },
+    {
+      "id": "V3CoreStoppedSampling",
+      "result": "compiled-not-invoked/Slot-continuation-incomplete",
+      "fact": "CapturedTrees requires exact retained PreparedStop generation+original deadline, actual Source/Owner/NormalExit/SupervisorAbsent/StopAccepted/record/listener; then complete lease/new BOTH Stopped snapshots/native phase and original policy series selector. Returns data context while actual lease remains installed on caller stack for same critical-section restoration. Not exposed as public successful Stop/Closed; full CaptureSlot stopped transaction/retirement/restore is next work."
+    },
+    {
+      "id": "PreparedStopDataBoundary",
+      "result": "directed-counterexamples-pass",
+      "fact": "Exact pid/port/record digest and unchanged original absolute deadline; wrong generation/digest/port, shortened or extended end, invalid action/zero IDs/bad digest/expired locator refuse. Locator alone creates no native proof. Reuses strict action/PreStop/Stopped progression cases and actual shared original-window tests."
+    },
+    {
+      "id": "CompleteNativeRetirementFrozenPlan",
+      "result": "native-component-pass/production-preview-only",
+      "fact": "Full original anchored trees/custody and complete BOTH observed current frames retained separately; rows name exact current ID/volume/security/hash/length/parent/retire target and corresponding original ID/absence. Source-bound typed Stopped preview factory requires original Source/Owner/NormalExit/Absent/StopAccepted/current action/four-domain lease. Preview returns DATA and is compiled unexecuted; no parsed/native mutation factory."
+    },
+    {
+      "id": "CurrentWorkRetirementOriginalRestore",
+      "result": "native-component-pass/private-raw-tests-only",
+      "fact": "Six current ordinary work files retire by actual current handles within original volume/private custody, then three original files restore by exact original handles to absent paths. Exact directories/stable coordinators remain original; all IDs/all8/bytes/children restored, original3 absent artifacts absent again. Existing captured artifacts with modified/atomic-replaced current work restore actual original IDs separately from both initial/current working generations. Post-explicit-release readback independently proves exact stable released lock ranges."
+    },
+    {
+      "id": "RetirementNativeInterruptedPrefixes",
+      "result": "native-component-pass",
+      "fact": "All0..9 actual retire/restore prefixes retain original/current/retired paths/IDs/all8/bytes and precise child sets; unknown target/empty directory, early restore, foreign original destination and repeated step poison without overwrite/deletion/rollforward. Raw private steps NOT canonical retirement events; no production Stop/content/recovery/Closed signed."
+    }
+  ],
+  "firstError": {
+    "run": "library01",
+    "rawExit": 101,
+    "rustError": "E0282/E0283",
+    "stage": "custody name Vec element .into() type ambiguity",
+    "newExecutableProduced": false,
+    "fixedBy": "explicit Vec<String>; assertions/native deadlines unchanged"
+  },
+  "debugTimeoutFacts": {
+    "run": "library05",
+    "rawExit": 101,
+    "profile": "debug",
+    "passed": 21,
+    "failed": 1,
+    "failingCase": "wl2_r6_retirement_existing_artifacts_changed_and_atomically_replaced_work_restore_original_objects",
+    "error": "QueryError api=bounded-original-deadline mask0 rawNone detail=timed out",
+    "originalAbsoluteComponentDeadlineSeconds": 10,
+    "priorIndependentTarget": "library04 raw0/1 passed, exact same test EXE reused by library05; no changed Rust/assertions between runs",
+    "rawFailureEvidenceRetained": true,
+    "next": "library06 cargo test --release with exact same Rust assertions/deadline and repository original release profile parameters, only failing existing-artifact test filter",
+    "deadlineExtended": false,
+    "requiredReadbacksOrAssertionsRemoved": false,
+    "releaseParametersChanged": false,
+    "notW2OrFrozenCandidateOrPublish": true
+  },
+  "finalCoverage": "library05 debug21 passed1 timeout retained; same Rust original deadline failing-case release target library06 passed; unrelated prior successes reused, no full-suite retries",
+  "executionBoundary": {
+    "newRetirementMethodsPrivate": true,
+    "rawMutationCallers": "retirement_tests.rs only",
+    "newProductionMutationInvoked": false,
+    "newCanonicalRetirementNodeProgressIntegrated": false,
+    "nativeTestCurrentJournalRemains": "Observation component prefix; no text history/Stop/Closed adoption",
+    "existingNativeFileIdentityChecksUnchanged": true
+  },
+  "limits": [
+    "Raw native retirement tests use synthetic objects/known invalid cache+audit DATA, no content-policy or actual Source/Stop authority; tests prove mechanism only",
+    "New actual typed Stopped method captures a read-only complete retirement preview, compiles but not invoked; core execute paths remain private",
+    "Still must persist complete source/policy-qualified retirement plan and every native per-node intent/result/current under actual original Stop authority, then wire same CaptureSlot stopped transaction",
+    "Dynamic new directories and source-declared config/auth/Grok effects remain rejected/unimplemented; original absence safety not reduced",
+    "NormalExit/SCM/Task/listener/record/source plus full original history/typedClosed/next session/realOwner Status5/GUI-H-S-D production not complete",
+    "OriginalAbsent Codex initialization/safe root retirement blocked; ordinary MSI/CAP-trust/historical cleanup gaps unchanged"
+  ],
+  "allAccepted": false,
+  "startOpen": false,
+  "productionDispatcherUsesV3": false,
+  "actualSourceOrRecoveryFactoryExecuted": false,
+  "productionExecuted": false,
+  "officialOwnerCreated": false,
+  "W2": false,
+  "dualSID": false,
+  "published": false,
+  "cleanup": {
+    "archivedScenes": 121,
+    "archivedFiles": 2947,
+    "archivedBytes": 9321858,
+    "completedOwnScenesRemoved": 2,
+    "failureAndPendingScenesRetained": 119,
+    "crossVolumePendingRootsRetained": 59,
+    "nativeMetadataCloned": false,
+    "historicalRejectedDeletionRetried": false,
+    "newAccounts": 0,
+    "newProfiles": 0,
+    "newPublicRoots": 0,
+    "newGUIProcesses": 0,
+    "newOfficialServices": 0,
+    "dailyPathConfigPolicyChanged": false,
+    "overallCleanupComplete": false
+  }
+}
