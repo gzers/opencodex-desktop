@@ -848,3 +848,14 @@ closure intent绑定完整routeCloseDigest；同chain RouteHandlesCloseIntent/cu
 actual新route/final factory和完整ordinary fixedofficial Stop组合正例及route专属phase/current故障窗口仍未执行；synthetic own-handle/data不授typedClosed或Stop10预算接受。公共adapter/Status/dispatcher/后继、官方config/auth/Grok/动态目录副作用/初始化/ownerreceipt/原缺席Codex安全退根/最大完整batch容量、普通MSI/CAP-trust/历史清理保持未完，Start拒绝。
 
 产品MSVCdebug custom-protocol bins raw0/194711ms，194产品输入/148最终releaseRust核工作/Git（明确CRLF等价），预存schema未手改/暂存，三制品SHA归product01-artifacts。256scene私有ZIP/hash/membership核验后仅3完成纯路由原语scene核fresh准确路径/hash/membership清理，253失败/pending及protectedUnknown/ADS原现场保留。原canonical/快照/history和ADS字节另导出，原流保留；ZIP非NTFS/ADS克隆，历史拒绝删除不重试。不改官方/日常配置/PATH/账户/策略，不业务/模型请求，不旧raw5/空GUI/W2/双SID/发布；Start/allAccepted/typedClosed/productionExecuted=false。
+
+
+## 2026-11-17 r6 原typed Ready观察与保留身份读取
+
+源码7c0bc016b4daedada6fad3f2a0884ae40e7b7fc3/tree7ee628c7605fa4689f8a785469bd14706df2848e已推送，承接df0c8c24f/165f7fb88；TEAM16/IMP142/r6及共同源不变。3精确Windows允许文件，证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-typed-ready-receipt-20261117-r1/。Owner.observe在原HMAC/health/current/live和phase校验后保留同一个不可Clone ServiceObservation；take_original_ready_for_stop需原Stop/Restart动作、stop_started且未stopped，重核原typed current/nativeReady，失败准确对象放回，不用PID/port/digest重建typed证明。公共分派仍v2、Start仍拒绝，actual观察/take/read factories只编译未执行。
+
+NativeAction新增只读原Owner UUID/scope/token及准确Origin id/kind/outer/stop/end/admission比较，不改旧Mutation check/deadline，不发lease/写许可。原已接纳Origin真实到期后，元数据仍可比，原check仍Timeout，now+30替换截止拒绝，五身份/窗口替换拒绝；无假NativeAction/Owner/ServiceObservation构造。MSVC库raw0/6过0败，原Start/Stop/Status/recovery与shared typed传输/预算等12源片段核对不变（构造器仅初始化新增typed_ready字段）；无本轮非预期失败，继承首错保留。
+
+产品MSVCdebug custom-protocol bins raw0/154028ms，194产品输入/148最终Rust核工作/Git（明确CRLF等价），预存schema未手改/暂存，制品SHA归product01-artifacts。本轮无新native目录/账号/Profile/PATH/策略残留，原失败场景不动。marenben7当前Disc已请求恢复普通交互桌面，控制器/Administrator不代验收；未启动官方服务。
+
+后续完整liveReady只读原件/custody/anchors/current nonartifact/claim断言、v3 typed preStop/Closed/Status及后继，actual ordinary原包副作用/初始化/ownerreceipt/原缺席Codex安全退根/最大batch容量/普通MSI/CAP-trust/历史清理保持未完。Start/allAccepted/typedClosed/productionExecuted=false，不旧raw5/空GUI/W2/双SID/发布。

@@ -1,0 +1,17 @@
+{
+  "baseDocs": "165f7fb88c281c767355a618922221d2d8f68e9e",
+  "environment": {
+    "actualDesktopAvailable": false,
+    "marenbenSession": 7,
+    "userLoginRequested": true,
+    "state": "Disc"
+  },
+  "hypotheses": [
+    "Actual Owner can retain the same nonClone ServiceObservation observed on original HMAC/health/current path and hand it to original Stop without reconstructing from PID/port/hash",
+    "Old NativeAction can validate only immutable retained original Owner identity under a caller bounded read window without extending its old mutation deadline or skipping original action origin checks",
+    "Primitive Origin read validation must still reject substituted owner/action origin/kind/outer/Stop end and preserve original mutation timeout"
+  ],
+  "startOpen": false,
+  "baseCode": "df0c8c24fdb1e5394290cecc28a4bf68f815dbc4",
+  "actualProductionExecuted": false
+}

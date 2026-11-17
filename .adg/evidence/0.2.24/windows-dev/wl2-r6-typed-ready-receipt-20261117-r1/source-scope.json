@@ -1,0 +1,75 @@
+{
+  "base": "df0c8c24fdb1e5394290cecc28a4bf68f815dbc4",
+  "changedFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 40112,
+      "sha256": "0d9b0451ec8f947cbd71b945cef5d84aa187fdc9283cd376c3998c564bf21d15"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "bytes": 14191,
+      "sha256": "756e0b73a9f31ed4af2b6d54f0f82c611303b30d0530e1fcfebcbc5de6da2698"
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "bytes": 31437,
+      "sha256": "15c0d05092e754d98c746becdb0cd8278fd7f4f3efd7d59478158b3568d6cb4b"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "normalizedSha256": "ff6f1eb2191d76f8fc90c447e3247d3e9891376bba07594963d59a2286f9233d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/closed_stop.rs",
+      "normalizedSha256": "135b74041c89938fe38361e180f17a43a50af65c1a810856841e781a794e5741"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs",
+      "normalizedSha256": "76642e5960d727a66763a42abb7c18d5dc6d5e801ee02e6cd5b52108b2471e24"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs",
+      "normalizedSha256": "3b209fa50eec0058e8e14bd9713808e6db07492eee748c26b2036a38f133e65f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "normalizedSha256": "7e58f87f4f32787c93e2ec57ab7a6d9344b27e22ac378dd830d06383d601588a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/content.rs",
+      "normalizedSha256": "cec66adc369147bff675a408aaff15f08e56a416039be40becfc629867f8c9ab"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+      "normalizedSha256": "9aa57dd2c2f85cefa0f2ab1348e18dc908cdfb2213ef2bdd6c15c2a6cdfe36ee"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_runtime024_transport.rs",
+      "normalizedSha256": "70c31ef6e12909778cb1f07abf71f2174dc22b65bed011a6fa3ae829663196ac"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/official_lifecycle024.rs",
+      "normalizedSha256": "b912f07bbd66d27d3b71c6614ab5bfd6978c7f4ab57180c7e78c8189dd2294b4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "section": "    pub(super) fn admit(",
+      "normalizedSha256": "354fbb23998d42064bd4f77fa573d26d047d8d9ccc209a45a33ae4321bd23c09"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "section": "    pub(crate) fn check(&self, owner: &mut Owner, end: Instant)",
+      "normalizedSha256": "4f75654c3de043688bc7dda3c362505ed3727c6cfc4553cb8c4550e36acf5851"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "section": "    async fn stop(",
+      "normalizedSha256": "2c89082578b0889c52f26e731dcfc26600b9298a151e869db56f949c40bf44d2"
+    }
+  ],
+  "publicGateExcerpt": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs:276:pub(crate) fn require_durable_capture() -> crate::errors::AppResult<()> {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-277-    Err(crate::errors::AppError::RuntimeManaged {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-278-        code: \"windows024_originals_custody_required\".into(),\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-279-        detail: \"有界访问安全r4仍需完成v2整树持久保管、恢复/Closed与H/S/D生产组合；未创建官方进程或宣告捕获成功\".into(),\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-280-    })\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-281-}\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-282-/// Fixed NEW-session scope only. The old Full preflight above retains its exact\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-283-/// meaning for old transactions and is never converted after a read failure.\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-284-pub(crate) fn preflight_bounded(profile: &Path, deadline: std::time::Instant) -> io::Result<()> {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-285-    let mut roots = [\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-286-        tree::RootTree::capture(&profile.join(\".codex\"), deadline)?,\n",
+  "actualTypedObservationFactoryExecuted": false
+}
