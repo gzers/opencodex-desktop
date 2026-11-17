@@ -27,6 +27,15 @@ impl Drop for Scene {
                     scene.keep().display()
                 );
             }
+        } else if let Some(scene) = self.0.take() {
+            let path = scene.path().to_path_buf();
+            scene.close().unwrap_or_else(|e| {
+                panic!(
+                    "owned successful scanner fixture cleanup failed; path={} raw={:?} {e}",
+                    path.display(),
+                    e.raw_os_error()
+                )
+            });
         }
     }
 }
