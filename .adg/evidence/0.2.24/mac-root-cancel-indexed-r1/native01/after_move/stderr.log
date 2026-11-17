@@ -1,0 +1,5 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+
+thread 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::tests::official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker' (166213894) panicked at src/infrastructure/macos_client_root_prepare_preserve_tests.rs:296:9:
+native counterexample was not reached
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

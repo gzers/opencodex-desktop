@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--lib",
+    "root_preparation",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "elapsedMs": 27816
+}

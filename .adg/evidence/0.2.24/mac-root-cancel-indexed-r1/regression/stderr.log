@@ -1,0 +1,40 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.22s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+thread 'infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_process_exit_retains_exact_phase_without_recreating_permission' (166220882) panicked at src/infrastructure/macos_client_root_successor_capture_tests.rs:636:9:
+assertion `left == right` failed: reserved: 
+thread 'infrastructure::macos_client_originals::session_index::generation::capture_tests::successor_capture_process_exit_retains_exact_phase_without_recreating_permission' (166220884) panicked at src/infrastructure/macos_client_root_successor_capture_tests.rs:582:9:
+assertion failed: root.starts_with("/private/tmp")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+  left: Some(101)
+ right: Some(91)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+thread 'infrastructure::macos_client_originals::session_index::generation::rollover_tests::root_rollover_process_exit_preserves_third_generation_atomicity_without_recreating_custody' (166224113) panicked at src/infrastructure/macos_client_root_rollover_tests.rs:441:9:
+assertion `left == right` failed: generation_published: 
+thread 'infrastructure::macos_client_originals::session_index::generation::rollover_tests::root_rollover_process_exit_preserves_third_generation_atomicity_without_recreating_custody' (166224116) panicked at src/infrastructure/macos_client_root_rollover_tests.rs:406:9:
+assertion failed: root.starts_with("/private/tmp")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+  left: Some(101)
+ right: Some(91)
+
+thread 'infrastructure::macos_client_originals::session_index::tests::observation_does_not_close_a_sqlite_inode_while_a_same_process_writer_holds_it' (166236003) panicked at src/infrastructure/macos_client_session_index_tests.rs:395:5:
+
+running 1 test
+test infrastructure::macos_client_originals::session_index::tests::observation_does_not_close_a_sqlite_inode_while_a_same_process_writer_holds_it ... FAILED
+
+failures:
+
+failures:
+    infrastructure::macos_client_originals::session_index::tests::observation_does_not_close_a_sqlite_inode_while_a_same_process_writer_holds_it
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2690 filtered out; finished in 0.00s
+
+ 
+thread 'infrastructure::macos_client_originals::session_index::tests::observation_does_not_close_a_sqlite_inode_while_a_same_process_writer_holds_it' (166236005) panicked at src/infrastructure/macos_client_session_index_tests.rs:368:9:
+assertion failed: path.starts_with("/private/tmp")
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+error: test failed, to rerun pass `--lib`

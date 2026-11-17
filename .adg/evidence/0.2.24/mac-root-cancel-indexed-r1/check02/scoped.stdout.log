@@ -1,0 +1,26 @@
+
+running 8 tests
+test infrastructure::macos_client_originals::session_index::root_preparation::preservation::tests::cancellation_registration_rejects_missing_or_unbound_plan_and_rolls_back_the_event ... ROOT_CANCEL_INDEX_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpJCOsZp
+ok
+test infrastructure::macos_client_originals::session_index::root_preparation::preservation::tests::official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker ... ignored, explicit isolated official2.99 Guard/NativeLease fixture, no service or canonical cancel
+test infrastructure::macos_client_originals::session_index::root_preparation::preservation::tests::preservation_authority_cannot_be_deserialized_or_created_by_plan_or_readback ... ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_binds_grok_state_and_does_not_adopt_an_existing_root ... ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpcaqXkC
+ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_is_stable_readonly_and_never_closes_or_moves_root ... ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpSwfak2
+ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpmbMssF
+ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_keeps_original_deadline_and_exact_index_revision ... ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpsry0Mn
+ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_refuses_new_data_even_if_head_has_no_original_references ... ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmp1QDEco
+ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpk6TnO2
+ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpWXHNJI
+ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_refuses_wrong_context_replacement_and_permissions ... ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpHKdYdt
+ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpcPqHV6
+ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmp4xthR2
+ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpLkgCAm
+ROOT_CANCEL_FIXTURE_REMOVED /var/folders/fq/l0j4lwrs5ld6gpfx2pppv2640000gn/T/.tmpLlA7J6
+ok
+
+test result: ok. 7 passed; 0 failed; 1 ignored; 0 measured; 2683 filtered out; finished in 1.70s
+

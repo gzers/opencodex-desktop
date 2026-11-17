@@ -1,0 +1,5 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+
+thread 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::tests::official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker' (166210476) panicked at src/infrastructure/macos_client_root_prepare_preserve_tests.rs:293:16:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "test_root_prepare_registration", detail: "first root cannot enter an unintegrated ordinary lifecycle transition" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

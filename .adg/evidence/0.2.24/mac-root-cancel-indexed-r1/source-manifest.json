@@ -1,0 +1,70 @@
+{
+  "baseCode": "cfd41bf6e4cd055b69d9d27a4ca1ccc25f7332eb",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs",
+      "bytes": 14116,
+      "sha256": "7c49b0c7851e5a1d60ef3eab87360b3d9d6b16ab90a72de222ee1e068946064d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_lineage.rs",
+      "bytes": 8459,
+      "sha256": "5fb753399d2ddfb7d6686c4b94c390e58d80a7d82eafe1ebfbc7810a72dd5f47"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs",
+      "bytes": 8000,
+      "sha256": "61bc796298d5df8b30d1cfbf07e6c9b93f0fa61ad34783fdb8049270779bea34"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs",
+      "bytes": 15119,
+      "sha256": "1ad453a580d0c5c976b0a4f0a724a6eee05fc2843f11edd82ad085d6545c9252"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs",
+      "bytes": 14874,
+      "sha256": "c93772acc16a001ac6f64238a48d72905174e511422f61ba132ea8753a38d9d1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "bytes": 88654,
+      "sha256": "6f711ce5e8382239aa3f4b9d5be37682c80c646f425177883b9b479257725441"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs",
+      "bytes": 15038,
+      "sha256": "8a62194c47635904db7532cfefb1c91917a59edd582b630ff244e029f8983b32"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs",
+      "bytes": 12561,
+      "sha256": "c00e7f53c5e06166cabe1f9b8a719c462581a1dab0c8464762096b343f26ebdf"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+      "bytes": 19554,
+      "sha256": "a9bdd84077dbcbf79b25e9ce5ba8f4f54785930fd08ce8b456710247f4bcc7ae"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "bytes": 13394,
+      "sha256": "35e39b2c8c798610501d7674b524d0f9895222677fbdcef92c6d256e1b0b55da"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery.ts",
+      "bytes": 3132,
+      "sha256": "ed0c9cdeb6d263dd45f9ee8fca4b8c41fa36361a430cb1d959aa47ef444972f5"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "bytes": 42843,
+      "sha256": "c6ee82a11ac47ff00dafd32f26032b309a479ac304608ab5cab813866a8d6347"
+    }
+  ],
+  "patchSha256": "f5be27f355fe69a6ee3e55785fada6e5947fe7c26ce74831c7f160d0cad6143d",
+  "patchBytes": 38134,
+  "nativeHostSha256": "d75a6f60ce747ec85c4ef55e8119e7f78a46cf8142fb175f910b0081fc3aafbd",
+  "scope": "base plus exact patch reconstructs the candidate used by native02 and check03; no source mutation after build",
+  "committedCode": "e84cff4610c8b1f712747c874f9102904f2e30e6"
+}
