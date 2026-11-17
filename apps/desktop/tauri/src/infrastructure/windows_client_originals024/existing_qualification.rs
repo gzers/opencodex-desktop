@@ -31,8 +31,9 @@ use std::{
     time::{Duration, Instant},
 };
 pub(crate) const SCOPE: &str = "isolated-r6-existing-official-qualification";
-pub(crate) const BASE: &str = r"C:\Users\marenben\ocx024-r6-existing-20261117-r1";
-pub(crate) const PUBLIC: &str = r"C:\Users\Public\ocx-r6-official-existing-20261117-r1";
+pub(crate) const BASE: &str = r"C:\Users\marenben\ocx024-r6-existing-20261117-r2";
+pub(crate) const PUBLIC: &str = r"C:\Users\Public\ocx-r6-official-existing-20261117-r2";
+mod fresh_fixture;
 const BUNDLE_SHA: &str = "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7";
 const OFFICIAL_SHA: &str = "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c";
 const CONFIG:&[u8]=b"{\"providers\":{},\"fastRows\":false,\"catalogAutoRefresh\":{\"enabled\":false},\"quotaResetNotify\":{\"enabled\":false},\"clientIntegrations\":{\"codex\":true,\"grok\":true,\"claude-desktop\":false}}\n";
@@ -336,59 +337,7 @@ fn prepare_coordination(
     ledger: &Path,
     token: &native::TokenIdentity,
 ) -> io::Result<Value> {
-    let root = coordination::official_runtime_root(token)?;
-    let client = Path::new(r"C:\Users\marenben\.codex");
-    let canonical = fs::canonicalize(client)?;
-    let canonical = dunce::simplified(&canonical);
-    if !canonical
-        .to_string_lossy()
-        .eq_ignore_ascii_case(&client.to_string_lossy())
-    {
-        return Err(invalid("actual client canonical path differs"));
-    }
-    let digest = hash::sha256_hex(
-        canonical
-            .to_str()
-            .ok_or_else(|| invalid("canonical path utf8"))?
-            .as_bytes(),
-    );
-    let paths = [
-        root.join("native-write-locks")
-            .join(format!("{digest}.sqlite")),
-        root.join("client-desktop-lifecycle.sqlite"),
-        root.join("catalog-write-locks")
-            .join(format!("{digest}.sqlite")),
-    ];
-    // Collect all independent paths first, then mutate only this fresh synthetic
-    // account baseline. Existing/unknown files are never overwritten/adopted.
-    let state=paths.iter().map(|p|json!({"path":p,"absent":matches!(fs::symlink_metadata(p),Err(e) if e.kind()==io::ErrorKind::NotFound)})).collect::<Vec<_>>();
-    write_new(
-        &ledger.join("coordination-before.json"),
-        &json!({"root":root,"states":state,"priorAbsencePreserved":true,"officialInitializationProven":false}),
-    )?;
-    if state.iter().any(|s| s["absent"] != true) {
-        return Err(invalid(
-            "test coordination target already present or unknown",
-        ));
-    }
-    let mut created = Vec::new();
-    for (i, p) in paths.iter().enumerate() {
-        write_new(
-            &ledger.join(format!("coord-{i}-intent.json")),
-            &json!({"path":p,"operation":"CreateSyntheticExistingCoordinationFile","officialInitializationProven":false}),
-        )?;
-        private_parent(p.parent().unwrap())?;
-        let mut f = native::PrivateRecord::create(p, b"", 4096)?;
-        if !f.read()?.is_empty() {
-            return Err(invalid("new lock bytes changed"));
-        }
-        let row = json!({"path":p,"volume":f.identity().volume,"fileId":f.identity().index.to_string(),"security":snapshot(p,false,Instant::now()+Duration::from_secs(5))?,"bytes":0});
-        write_new(&ledger.join(format!("coord-{i}-verified.json")), &row)?;
-        created.push(row);
-    }
-    let result = json!({"statesBefore":state,"objects":created,"base":base,"nativeLeaseGranted":false,"officialInitializationProven":false});
-    write_new(&ledger.join("coordination-created.json"), &result)?;
-    Ok(result)
+    fresh_fixture::coordination_baseline(base, ledger, token)
 }
 /// Private native admission. This is NOT a lease, OriginalSession or Closed.
 /// No serde/Clone or constructor accepting external receipt/permit booleans.
@@ -421,10 +370,11 @@ impl ExistingQualification {
         .iter()
         .map(|p| native::PinnedDirectory::open_private(p))
         .collect::<io::Result<Vec<_>>>()?;
-        let baseline = bounded_json(&base.join("preparation/result.json"))?;
+        let baseline = fresh_fixture::prepare_baseline(base)?;
         if baseline["preparedExistingBaseline"] != true
             || baseline["actualProductionExecuted"] != false
-            || baseline["originalClientRootsBeforePreparation"] != "Absent"
+            || baseline["originalClientRootsBeforePreparation"]
+                != "PresentOriginalSyntheticBaseline"
         {
             return Err(invalid("original setup baseline unknown"));
         }
