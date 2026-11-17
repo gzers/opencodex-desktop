@@ -1,0 +1,45 @@
+{
+  "source": "89e0195acb7a0c6e7549eafa376ec520ce981546",
+  "host": "aarch64-apple-darwin",
+  "record": "Observed command-result summary, raw logs not reconstructed",
+  "checks": [
+    {
+      "command": "cargo test --locked --lib abort_window_tests -- --test-threads=1",
+      "exit": 0,
+      "passed": 2,
+      "failed": 0,
+      "seconds": 0.0
+    },
+    {
+      "command": "cargo clippy --locked --lib --tests -- -D warnings",
+      "exit": 0,
+      "seconds": 27.89
+    },
+    {
+      "command": "cargo fmt --all -- --check",
+      "exit": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit": 0
+    },
+    {
+      "command": "python3 .adg/evidence/0.2.24/windows-wl2-preresume-receive-r7/verify_receive.py",
+      "exit": 0,
+      "selectedNetFiles": 555,
+      "payloadFiles": 550,
+      "payloadBytes": 12872546
+    }
+  ],
+  "WindowsRuntimeExecutedOnMac": false,
+  "originalsRestored": false,
+  "forcedCleanupExecuted": false,
+  "normalStopOrClosedGranted": false,
+  "performanceOptimized": false,
+  "budgetChanged": false,
+  "newNativeFixturesOrDownloads": 0,
+  "temporaryIndexCleanup": "exact owned temporary index removed by closeout helpers",
+  "existingBuildCache": "retained",
+  "dailyConfigOrPolicyChanged": false,
+  "productionAcceptance": false
+}

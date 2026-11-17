@@ -1,0 +1,217 @@
+{
+  "receiveVerified": true,
+  "allAccepted": false,
+  "code": "44bb9bdbabc78f1754b9df135f3d183205fcb9ec",
+  "docs": "e34f3fe8a9caa04d12130b4728820153942437a3",
+  "remoteNetFiles": 79018,
+  "selectedNetFiles": 555,
+  "manifests": [
+    {
+      "round": "wl2-r6-fresh-existing-fixture-20261117-receive-r1",
+      "payloads": 42,
+      "bytes": 455839
+    },
+    {
+      "round": "wl2-r6-source-scan-cost-20261117-r1",
+      "payloads": 482,
+      "bytes": 5978509
+    },
+    {
+      "round": "wl2-r6-authorized-failure-cleanup-20261117-receive-r1",
+      "payloads": 12,
+      "bytes": 139239
+    },
+    {
+      "round": "wl2-r6-failure-archive-r3-20261117-receive-r1",
+      "payloads": 14,
+      "bytes": 6298959
+    }
+  ],
+  "payloadFiles": 550,
+  "payloadBytes": 12872546,
+  "recoveryRequest": {
+    "contract": "TEAM16/IMP142/r6",
+    "kind": "Concrete minimal failed-before-resume recovery interface/plan decision",
+    "source": "357210891f14a1851881e6192bd09d7031471707",
+    "facts": {
+      "brokerPid": 75744,
+      "brokerFiletime": "134393656723346634",
+      "launcherPid": 21500,
+      "launcherFiletime": "134393657318681068",
+      "creatorResumed": false,
+      "originalPhaseTagIssued": false,
+      "originalsMoved": 3,
+      "workFilesCreated": 3,
+      "canonicalSequence": 9,
+      "canonicalLifecycle": "Preparing",
+      "canonicalLease": "Released",
+      "failure": "Start30699ms/30000ms timedout"
+    },
+    "currentRestriction": [
+      "Loaded exact original host exposes read-only diagnostic Status and original Job forced cleanup only; no pre-resume client restoration operation exists.",
+      "Normal Stop restore requires real Ready/NormalExit/SupervisorAbsent/StopAccepted. No Ready or official execution happened; forced242 cannot satisfy these proofs.",
+      "New source cannot retrofit a native method into loaded broker75744 or reconstruct its original Owner/Job/nonClone capture from current.json.",
+      "External cleanup consent for old50580/54692 covers those targets only. Two current custody trees retain real original IDs and must stay preserved."
+    ],
+    "minimumNeeded": [
+      "Define distinct failed-before-first-Resume abort recovery: original retained never-resumed creation/Job check where available, exact SID/Profile/I/D/H/source/phase/canonical sequence, complete original tree and custody objects, reacquired real claim/NLK, full original8/security/bytes/children restoration. Unknown refuses.",
+      "Use a distinct AbortedBeforeResume or equivalent result. Never mint NormalExit/normalStop/Closed/successor from forced cleanup or JSON. No timeout increase, migration, claim gap, or public Start opening.",
+      "Decide this already-loaded-host case: narrowly authorized independently verified ordinary-SID external failure recovery after full scene archival and exact controlled cleanup, or a real retained-handle transfer/control mechanism. Current protocol supports neither; Windows must not invent native authority.",
+      "After adopting current-scene recovery, make next-host pre-resume recovery reachable before any client mutation; measure full-image/source/capture stages and optimize only proven redundant work. Do not rerun official production before originals are restored or an explicit isolation plan is adopted."
+    ],
+    "requestedFrom": "Mac integration/contract owner or user recovery plan decision",
+    "notRequested": [
+      "public Start opening",
+      "new timeout",
+      "normalStop/Closed exception",
+      "legacy migration",
+      "official2.99 mutation",
+      "daily policy/elevation",
+      "W2/dualSID/release"
+    ],
+    "originalScenePreserved": true,
+    "newForcedCleanupRequested": false,
+    "automaticRecoveryAttempted": false
+  },
+  "currentTip": {
+    "schema": "windows-client-current-v3",
+    "sessionId": "7e3d4697-dd04-4d8a-b40b-f4468fab88c0",
+    "sequence": 9,
+    "eventDigest": "1659c2a9488db1b51a258e919202422a6c1a1b534393b17c49a6e952bbeecdc7",
+    "previousEventDigest": "7c118d115715b42a0252395b11deaf611964eb74e11b1ea3956bfc46f516ad7b",
+    "storageStrategy": "windows-anchored-directories-v1",
+    "storagePlanDigest": "89a0094d07903d7d79943bf083d7a2d515ca90094879b1d1bb601d4343ef0151",
+    "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+    "manifestDigest": "a3b159e09f7e6c48f75d9f597e632d0f0ad545439e4c7682d25196c903a2cd11",
+    "bindingDigest": "b538802bc43c86b2839e61e743d0c173cd1832c4c2ad4ed29019ab6b80770960",
+    "leaseEpoch": "1b49d840-af01-4441-90d8-7653d3fd07d5",
+    "claimKey": "1960f3c7aa2f7681c56eb92e4469fe2d1734940019d167eaa75784319094b741",
+    "deadlineScope": "100b4cd2-f6dd-497a-b30b-4e98db2fc1b5",
+    "leaseState": "Released",
+    "leaseObjectsDigest": "17dcb49b2dcd3e2894bd250f37d53e923244bbc46752bdbd0c836cbb50d9255b",
+    "workMode": "Open",
+    "workFrames": [
+      "80265b9aa5ad880532b6f3691728b05623d0ee9a6b3ad7bdad2e9daeb60707af",
+      "554350f13ff2201db47c04ae7381594f2f780b156c4518013163b7a6ede1eabe"
+    ],
+    "observedFrames": null,
+    "snapshotPending": null,
+    "snapshotLinks": {},
+    "observedSequence": 0,
+    "linkedFrames": {},
+    "lifecycle": "Preparing",
+    "readyGeneration": null,
+    "actionPending": null,
+    "actionKind": "Start",
+    "recovery": null,
+    "history": null,
+    "handles": null,
+    "batch": null,
+    "content": null,
+    "closed": null,
+    "routeClose": null
+  },
+  "originalFiles": [
+    {
+      "root": "C:\\Users\\marenben\\.codex",
+      "custody": "C:\\Users\\marenben\\.ocxd024-originals-c3db7afd-959c-44fb-8743-1cca384043c8-codex",
+      "custodyId": "562949954956008",
+      "nodeId": "1f3a4531c58589a9c152e756a506c3d90c1d37bb25f0bc33d61c840d35664b4b",
+      "relative": "auth.json",
+      "fileId": "562949954857826",
+      "length": 3,
+      "contentDigest": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "target": "original-1f3a4531c58589a9c152e756a506c3d90c1d37bb25f0bc33d61c840d35664b4b",
+      "parentId": "1125899908279121"
+    },
+    {
+      "root": "C:\\Users\\marenben\\.codex",
+      "custody": "C:\\Users\\marenben\\.ocxd024-originals-c3db7afd-959c-44fb-8743-1cca384043c8-codex",
+      "custodyId": "562949954956008",
+      "nodeId": "f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039",
+      "relative": "config.toml",
+      "fileId": "562949954857823",
+      "length": 51,
+      "contentDigest": "d19c0773b53b6f016fbf35f317cae551c540b70e67fd5309a8a4c1d847bc7700",
+      "target": "original-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039",
+      "parentId": "1125899908279121"
+    },
+    {
+      "root": "C:\\Users\\marenben\\.grok",
+      "custody": "C:\\Users\\marenben\\.ocxd024-originals-c3db7afd-959c-44fb-8743-1cca384043c8-grok",
+      "custodyId": "281474978245353",
+      "nodeId": "3a10edefc02d709f9f87849c7b1b82b41e7c83a25dd4614f268f6bd5101ecf93",
+      "relative": "config.json",
+      "fileId": "562949954857829",
+      "length": 3,
+      "contentDigest": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "target": "original-3a10edefc02d709f9f87849c7b1b82b41e7c83a25dd4614f268f6bd5101ecf93",
+      "parentId": "1125899908279125"
+    }
+  ],
+  "manifestSha256": "a3b159e09f7e6c48f75d9f597e632d0f0ad545439e4c7682d25196c903a2cd11",
+  "performance": {
+    "source": "44bb9bdbabc78f1754b9df135f3d183205fcb9ec",
+    "contract": "TEAM16/IMP142/r6",
+    "currentActualProduction": "357210891 r2 Start30699ms/30000ms before first Resume; original custody retained",
+    "measurement": {
+      "scope": "controller-owned exact fixed package copy; unchanged shared verifier",
+      "fullImageMs": [
+        6079.433,
+        6353.553,
+        4805.45,
+        8928.7
+      ],
+      "selectionMs": [
+        2.997,
+        3.645,
+        3.684,
+        3.406
+      ],
+      "sourceDigest": "ab9314d3df4475481736245580b24a4d1a6fa52e8030512d9afc9340b6d6c3b6",
+      "ownedSourceDriftRejected": true,
+      "restoredCopyFullyVerified": true,
+      "productionPerStageTiming": false,
+      "build": "MSVC debug test root debug0/incrementalfalse/codegen-units256; not production/release performance certification"
+    },
+    "sourceTraceInference": "Current source plus canonical ReleaseVerified9 path indicates at least8 earlier full-image checks; this is not direct call instrumentation or attribution of all30699ms.",
+    "minimumNextWork": [
+      "After defining current-scene beforeResume recovery, add bounded per-stage measurements to next original native action without extending its30/5/10/Restart30sub10 deadlines.",
+      "Integration/shared owner evaluates Windows cost of modules/runtime/program_image inventory, including repeated path admission, metadata, full file read/hash and thread scheduling. Windows exclusive line cannot edit that shared implementation without scope decision.",
+      "Any optimization must preserve exact complete inventory and every file byte/hash, source/current generation, same actual native identity/security and current unknown refusal at real operation boundaries. No stale digest cache, dropped nodes, metadata-only substitution, budget reset or source exception.",
+      "Use matching fixed-source counterexamples and actual affected production timing after current original clients are restored. Do not claim controller-copy samples certify Start/Stop or release build performance."
+    ],
+    "currentSceneRecoveryStillRequired": "../wl2-r6-fresh-existing-fixture-20261117-receive-r1/minimum-recovery-interface-request.json",
+    "productionChecksChanged": false,
+    "sharedCodeChanged": false,
+    "nativeSceneTouched": false,
+    "publicStartOpen": false
+  },
+  "costSummary": {
+    "fullImageMs": [
+      6079.433,
+      6353.553,
+      4805.45,
+      8928.7
+    ],
+    "selectionMs": [
+      2.997,
+      3.645,
+      3.684,
+      3.406
+    ],
+    "medianFullImageMs": 6216.493,
+    "originalStartBudgetMs": 30000,
+    "staticEarlierFullChecksAtLeast": 8,
+    "actualR2CausalAttributionProven": false,
+    "actualOrdinaryStageTimings": false
+  },
+  "limits": [
+    "Only four named rounds and handoff imported; other 50-round net history remains on exact remote docs Git commit and is not declared integrated/reviewed",
+    "Manifest/file IDs here are locator data, not native restore or process-ownership authority",
+    "No fresh Windows live state, archive or credential read performed on Mac",
+    "Old 50580/54692 external cleanup consent is separate; does not cover 21500/75744",
+    "Copy benchmark is not production causal timing or release acceptance",
+    "No loaded-host recovery implementation/NativeProof/normal Stop/Closed minted by this decision"
+  ]
+}
