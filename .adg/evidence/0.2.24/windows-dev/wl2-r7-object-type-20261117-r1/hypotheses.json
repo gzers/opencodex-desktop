@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-17T21:19:57.840070+08:00",
+  "recordedBeforeImplementation": true,
+  "codeInput": "ca93f1bc029715a14cca3ae7b9fc552c6594a43e plus mainadcf4f94edf73c6afb2675a34438f066be8b2eb8",
+  "docsInput": "ea5bf8f59db983e81dc0c01bb7732de72d8b4f77 TEAM24/IMP152/r7 A-B-C addendum",
+  "hypotheses": [
+    {
+      "id": "T1",
+      "claim": "Every handle from minimal single own broker PSS snapshot may be typed using only dwDesiredAccess0/options0 duplicate and documented NtQueryObject ObjectTypeInformation; all copy/type/return-buffer failures remain Unknown."
+    },
+    {
+      "id": "T2",
+      "claim": "PUBLIC TypeName bounded by actual ReturnLength/header/Unicode lengths/within-buffer pointers and strictUTF16 with one <=64KiB resize rejects malformed buffers without private layout or reserved/name access."
+    },
+    {
+      "id": "T3",
+      "claim": "Two complete handle snapshots compare same retained zero-rights kernel-object copies/types before deduplicated JobQUERY membership and original historical accounting; known jobs do not stand for unknown handles."
+    }
+  ],
+  "limits": [
+    "test-only no PID input; own ordinary-token broker and synthetic never-resumed child only",
+    "no newPSS flags/type-specific/name capture/remote memory/SeDebug/ObjectName/privateNTlayout",
+    "objectNames never read or persisted, only TypeName aggregates/flags/raw errors",
+    "not full accepted prototype until all original rejection matrix/rights/unknown/timeout/side-effect proofs pass",
+    "currentR2 not read/forced/restored and old consent not reused"
+  ]
+}

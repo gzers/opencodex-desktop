@@ -1,0 +1,17 @@
+{
+  "loadedProduct": "357210891f14a1851881e6192bd09d7031471707",
+  "file": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/failure_control.rs",
+  "sha256": "b3c0544954a9ae3849d751891d9d42eff6740debea19dc6ec423e3ff225f8427",
+  "lineRangeReviewed": [
+    283,
+    361
+  ],
+  "facts": [
+    "existing CLI hardcodes Operation::ExplicitRecovery at line334",
+    "reply requires facts.forced=true",
+    "server has Status branch but loaded CLI exposes no read-only Status route"
+  ],
+  "executed": false,
+  "decision": "do not invoke cleanup as a Status probe; no replacement image/IPC admission bypass; current Job proof remains Unknown",
+  "currentSceneMutationAuthorized": false
+}

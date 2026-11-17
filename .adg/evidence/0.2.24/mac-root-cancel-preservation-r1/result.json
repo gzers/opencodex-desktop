@@ -1,0 +1,50 @@
+{
+  "sourceCommit": "cfd41bf6e4cd055b69d9d27a4ca1ccc25f7332eb",
+  "sourceManifestSha256": "f66fb41e53466f6fbf0d66ed1eb31a074c4deab14484556069a6e3045b750636",
+  "scope": "guarded storage core only; no canonical cancellation/normalStop/successor permission",
+  "nativeScenarios": [
+    {
+      "case": "success",
+      "hostSha256": "2e2ac366aa55599c6e074cdbda63b6166a7f9f47e6696de60ca96a230fd905d3",
+      "exitCode": 0,
+      "ownedRootObservedAbsent": true
+    },
+    {
+      "case": "before_move",
+      "hostSha256": "2e2ac366aa55599c6e074cdbda63b6166a7f9f47e6696de60ca96a230fd905d3",
+      "exitCode": 0,
+      "ownedRootObservedAbsent": true
+    },
+    {
+      "case": "after_move",
+      "hostSha256": "2e2ac366aa55599c6e074cdbda63b6166a7f9f47e6696de60ca96a230fd905d3",
+      "exitCode": 0,
+      "ownedRootObservedAbsent": true
+    },
+    {
+      "case": "new_data",
+      "hostSha256": "2e2ac366aa55599c6e074cdbda63b6166a7f9f47e6696de60ca96a230fd905d3",
+      "exitCode": 0,
+      "ownedRootObservedAbsent": true
+    },
+    {
+      "case": "new_root",
+      "hostSha256": "2e2ac366aa55599c6e074cdbda63b6166a7f9f47e6696de60ca96a230fd905d3",
+      "exitCode": 0,
+      "ownedRootObservedAbsent": true
+    }
+  ],
+  "scopedTests": {
+    "passed": 6,
+    "failed": 0,
+    "nativeTestIgnoredInDefaultFilter": 1,
+    "nativeExplicitScenariosRunSeparately": 5
+  },
+  "formatPassed": true,
+  "strictLibAndTestsClippyPassed": true,
+  "pythonAstPassed": true,
+  "canonicalCancellationClosed": false,
+  "releaseAcceptance": false,
+  "dailyConfigurationAccess": false,
+  "serviceStarted": false
+}

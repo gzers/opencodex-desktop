@@ -1,0 +1,23 @@
+
+running 2 tests
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::return_tests::wl2_r7_native_return_failure_after_intent_move_or_conflict_keeps_native_prefix_and_never_retries ... r7 native return after-intent: failed driver/frozen exact work handle/pending intent/actual after-image retained; no overwrite/retry/completion synthesis; original claim stays held
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpshe8ZF
+r7 native return before-result: failed driver/frozen exact work handle/pending intent/actual after-image retained; no overwrite/retry/completion synthesis; original claim stays held
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmptc7G1o
+r7 native return occupied-target: failed driver/frozen exact work handle/pending intent/actual after-image retained; no overwrite/retry/completion synthesis; original claim stays held
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpNR7TDi
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::return_tests::wl2_r7_native_return_same_actual_claim_moves_only_original_files_and_keeps_all8_retired_work_and_canonical ... r7 native return prefix0: exact original ID/bytes/all8 to original targets, work retained, durable v1 per-node records and same claim; canonical unchanged, no lockrelease/Stop/Closed/productOwner acceptance
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpiI1XDK
+r7 native return prefix101: exact original ID/bytes/all8 to original targets, work retained, durable v1 per-node records and same claim; canonical unchanged, no lockrelease/Stop/Closed/productOwner acceptance
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpMCHxK5
+r7 native return prefix141: exact original ID/bytes/all8 to original targets, work retained, durable v1 per-node records and same claim; canonical unchanged, no lockrelease/Stop/Closed/productOwner acceptance
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpP0JJ14
+r7 native return prefix254: exact original ID/bytes/all8 to original targets, work retained, durable v1 per-node records and same claim; canonical unchanged, no lockrelease/Stop/Closed/productOwner acceptance
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp8O9UEN
+r7 native return prefix255: exact original ID/bytes/all8 to original targets, work retained, durable v1 per-node records and same claim; canonical unchanged, no lockrelease/Stop/Closed/productOwner acceptance
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpQ3RPID
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2213 filtered out; finished in 17.79s
+

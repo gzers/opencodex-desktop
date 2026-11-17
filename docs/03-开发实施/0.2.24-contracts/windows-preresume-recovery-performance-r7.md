@@ -199,3 +199,12 @@ NtQueryObject参数固定ObjectTypeInformation、必要有限buffer（先固定4
 本增量只授权文档化类型查询的自有原型。先类型覆盖/未知句柄/高风险对象零访问/句柄复用/重复Job/历史退出/权限/超时/内存边界严格否例，再依现R0只读规则核当前现场；不满足继续保留CurrentJobUnknown，不以旧creation计数补签。任何更宽权限、绕same-image、外部终止Node/broker或当前原件归还仍不在此批准范围。
 
 依据：[NtQueryObject / PUBLIC_OBJECT_TYPE_INFORMATION](https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryobject)明确唯一可用类型字段TypeName；[DuplicateHandle](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle)的零desired/options与禁止关闭源；这些文档支持API语义，不代真实普通令牌fixture/当前现场证据。三请求只解除对应接口未定；R1仍未批准，所有旧失败/拒绝、原件/当前进程保持，不W2/双SID/发布。
+
+
+## 2026-11-17增量接收：零权限复制raw50与旧客户端边界
+
+Windows9fdd4c618／docs f6f8677a的object-type原型已形成新事实：两次完整91句柄遍历中24个原句柄的零权限DuplicateHandle返回ERROR_NOT_SUPPORTED(50)，未取得本地副本；其余67已取得实际类型并不证明剩余不是Job。因此C路线未通过完整覆盖，既有“成功原型后只读R0”的条件未满足，不调用当前r2 JobQUERY，不重复同前提0x8或零权限轮次。尚无经源码/API证据确认的下一有界路线，不给无假设试跑、不扩大访问权限/SAME_ACCESS或跳未知。
+
+另核实际loaded357的failure_control.rs第283—361行：request_cleanup固定Operation::ExplicitRecovery并要求facts.forced=true；服务器存在Status分支不等于已加载客户端有只读入口。不可执行旧cleanup来探状态，不用新image绕原same-image准入，不把构造相似RPC或修改旧二进制当已有能力。这里只作精确源码判读，未执行当前现场动作；证据见windows-r7-contract-receive-r12/loaded-client-route-review.json。
+
+这项当前r2的恢复证明仍为Unknown，未形成R1Ready，更未授权forced/原件归还。原r2归档/44项不受影响证据复用，旧场景清理授权不转用。future-host原worker、独立v2附件、最终同claim/全树/8/字节/children/锁释放证据按A/B及既有r7允许集连续推进；不因旧现场只读路线停点而停止其它已授权实现。新路线或具体外部修复方案需先列原事实、覆盖与未证前提，再决定对应边界；不把部分原语通过写为生产Stop/Closed或整版通过。
