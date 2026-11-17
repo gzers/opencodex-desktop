@@ -1,0 +1,36 @@
+{
+  "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQ94pON",
+  "files": {
+    ".codex/.opencodex-native-main.claim.sqlite": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "coordination/k.sqlite": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "coordination/l.sqlite": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "coordination/n.sqlite": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "source/original.bin": {
+      "bytes": 29,
+      "sha256": "9c64e94e3955d4839b3a48adc230a345479d8a0b462517be5cab551fa1d223f2"
+    }
+  },
+  "directories": [
+    ".codex",
+    "coordination",
+    "source"
+  ],
+  "archive": "failure-readonly.zip",
+  "archiveSha256": "8fd63e09adc9f8423714b0ad6a01f6ca02d4811bbbee4ea9e1fa9bbc2559e721",
+  "error": "fixture TempDir close raw32 while unvalidated returned original remains in receiver; native query unvalidated refusal already passed",
+  "meaning": "archive is exact5remaining files AFTER attempted fixture close, not claim of full untouched original scene; no actual childprocess in this source/worker-only fixture",
+  "cleanup": "readonly archive only, failed root retained/no retry deletion",
+  "currentR2Touched": false
+}

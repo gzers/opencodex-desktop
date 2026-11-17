@@ -1,0 +1,670 @@
+{
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 137,
+      "sha256": "fa00242c666527c15224c6cde0e76c7899d8ceff7e0d6a2b31dfd3a02f647250"
+    },
+    {
+      "path": "archive-product01.py",
+      "bytes": 1689,
+      "sha256": "303260eaf5c2f239695822542423a929ed87fe44da09af730e80a0be43011132"
+    },
+    {
+      "path": "artifact.json",
+      "bytes": 472,
+      "sha256": "932d030bf355052d41a579d92d7767903d871fe7f3921e8b4d1a44a8d8747ecc"
+    },
+    {
+      "path": "cleanup-readback.json",
+      "bytes": 4082,
+      "sha256": "524fb59f94fcb90e9d1f34b18cf455f6c19b33dd6e623ef29be0f5765559df0b"
+    },
+    {
+      "path": "collect.py",
+      "bytes": 7329,
+      "sha256": "4e2b1676459ed29c528e900d8586b305049a5ec363ec228b6a19e1b33755ba43"
+    },
+    {
+      "path": "finalize.py",
+      "bytes": 5776,
+      "sha256": "70a46f77e85e11111127fbe4b199b69a19d2beab550596183ea5c220952d97c9"
+    },
+    {
+      "path": "first-error-and-fixes.json",
+      "bytes": 632,
+      "sha256": "4042baa4e4ff53d68baaefdd3b70f1ec2b9d6524f42821db8a422e0df7d449a5"
+    },
+    {
+      "path": "generated-schema/desktop-schema-original.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/desktop-schema.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/windows-schema-moved.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/windows-schema.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "hypotheses.json",
+      "bytes": 1877,
+      "sha256": "3fe1f1bba939863e1adca94b275086163e891d388d17cbee6d670db01f8d9e86"
+    },
+    {
+      "path": "inputs.json",
+      "bytes": 253,
+      "sha256": "b90b7788b39b53193c98d8240aa4a1ce26fbb7cafc6f9a7ec5366fcf648712c1"
+    },
+    {
+      "path": "intake-update.json",
+      "bytes": 490,
+      "sha256": "29b8d443a14c1ce62cd71bb934e2b4a3695fcced0a8771af1d8421f32d195268"
+    },
+    {
+      "path": "prepare-regressions.py",
+      "bytes": 1268,
+      "sha256": "0ce464cad2c45b4a43bd13dc8f336e9423ad9a2f18563ef2bed47ffbb9a64327"
+    },
+    {
+      "path": "prepare-run.py",
+      "bytes": 1862,
+      "sha256": "cc57ab0e8a2fbf21f6c667e350d29052020408e2a13ea50e1c6f4aa16b4661d4"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume/attachment.rs",
+      "bytes": 18095,
+      "sha256": "a3e78a0c4142210795d4d3a571e25c106b45367a0fa9add96474a5e80b801ada"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume/history.rs",
+      "bytes": 4751,
+      "sha256": "853caa1cd934e17439c2609248f9c9fe3bc9be9986c7a6060932942fe240e4ea"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+      "bytes": 15116,
+      "sha256": "ca98192889e8949d0fe4efc1874c2afdb175da15ad3245942a69ca9f9ada3cc3"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+      "bytes": 14362,
+      "sha256": "e9a6d835690bb33282e2ac66699d3253c68d13e7dedf380e37852f00089c511c"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 23373,
+      "sha256": "a86bf032f3afed14674734d2667190d5b621b98aecc38d69b28e6f19f9545282"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/return_validation/history.rs",
+      "bytes": 4595,
+      "sha256": "91ca566b8e99ee1690564dadc0ab94396d3e3da776c076e536377daccda0293b"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/return_validation.rs",
+      "bytes": 5299,
+      "sha256": "f14c2e049cd6f524cb5953dba39f69940d3b0e266a4b51f995b11b48d4c30ad5"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/tests/return_validation_tests/history_tests.rs",
+      "bytes": 5475,
+      "sha256": "da60f1267971f35bc490bbf92343971eaead6e86e32ae49cad54817a83375f6b"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/tests/return_validation_tests.rs",
+      "bytes": 5736,
+      "sha256": "6b7bdddfe722b1ec4fe918087c1794bab8697269d128620d2ebec40dfcb2e09f"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "bytes": 19706,
+      "sha256": "6ba699ce62df17fb2eaf839d23f1ca4ac85b943a16a18ec3e935d731edfeaa0f"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/full_history_tests.rs",
+      "bytes": 6767,
+      "sha256": "ba3e982ae98cc83a1a2fb5bb54647d36d07bd99629c1228898904afdd711bb64"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/release_tests.rs",
+      "bytes": 13824,
+      "sha256": "2f8cf7fbbaeb4a0eef027e350c82e13129da3962ab0df1c2c2d27708971b8823"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture/abort_return/released.rs",
+      "bytes": 14564,
+      "sha256": "2ed950eea4a8cdf9aa29d1c5bbf188d5447f5cee899d50daebd3f31ba374613c"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture/abort_return.rs",
+      "bytes": 12341,
+      "sha256": "fb990660a03fd96814ec52e64a9faaef657206653b03cd85524fee271390f9c6"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 44737,
+      "sha256": "54698698d53ea7f9223b83b7a7402b75fc864c10beabce618f4d92429b7df999"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/before_resume.rs",
+      "bytes": 10209,
+      "sha256": "c5ab889e37c9b62d6bc630633b05b530a2968f03350b8bd7d70652adbf6bdbce"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/clock.rs",
+      "bytes": 6064,
+      "sha256": "806bd5f4e69b834512ecdfd9217e43a18a60d9c88288cbc5e7bc620767a9953a"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "bytes": 19389,
+      "sha256": "ca6f38e3d2a7274f48942427fcc1ee08557b8f8b27bbcb13af91a81d8228dfa4"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 55052,
+      "sha256": "13f7ed35f19c97938c8ef57a1c0497a189f3e626774446188946b24a737d375d"
+    },
+    {
+      "path": "product01/failure-readonly.zip",
+      "bytes": 687,
+      "sha256": "8fd63e09adc9f8423714b0ad6a01f6ca02d4811bbbee4ea9e1fa9bbc2559e721"
+    },
+    {
+      "path": "product01/failure-receive.json",
+      "bytes": 1464,
+      "sha256": "813541091f768d9c422a970edc263b822d7e7ad966e8eca0ee952079d7c75875"
+    },
+    {
+      "path": "product01/result.json",
+      "bytes": 690,
+      "sha256": "bfd2087396d0124051deccf7453165afb2966decbd0e62992433a8443571d3cc"
+    },
+    {
+      "path": "product01/source.json",
+      "bytes": 5266,
+      "sha256": "53dfc0e66ebb61eb749beda80d2367c89b155be027c5e1bf3b6f03cde18a3161"
+    },
+    {
+      "path": "product01/stderr.log",
+      "bytes": 62640,
+      "sha256": "1f442e74ab974c8db3d2e5bca2e6944b6871338f075151a7056058429ac634c9"
+    },
+    {
+      "path": "product01/stdout.log",
+      "bytes": 3764,
+      "sha256": "24f4e94b7df222dfd08b20cb8d98a834858ab18baa8570dedc97a19119cb73a6"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume/attachment.rs",
+      "bytes": 18095,
+      "sha256": "a3e78a0c4142210795d4d3a571e25c106b45367a0fa9add96474a5e80b801ada"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume/history.rs",
+      "bytes": 4751,
+      "sha256": "853caa1cd934e17439c2609248f9c9fe3bc9be9986c7a6060932942fe240e4ea"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+      "bytes": 15116,
+      "sha256": "ca98192889e8949d0fe4efc1874c2afdb175da15ad3245942a69ca9f9ada3cc3"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+      "bytes": 14362,
+      "sha256": "e9a6d835690bb33282e2ac66699d3253c68d13e7dedf380e37852f00089c511c"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 23373,
+      "sha256": "a86bf032f3afed14674734d2667190d5b621b98aecc38d69b28e6f19f9545282"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/return_validation/history.rs",
+      "bytes": 4595,
+      "sha256": "91ca566b8e99ee1690564dadc0ab94396d3e3da776c076e536377daccda0293b"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/return_validation.rs",
+      "bytes": 5299,
+      "sha256": "f14c2e049cd6f524cb5953dba39f69940d3b0e266a4b51f995b11b48d4c30ad5"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/tests/return_validation_tests/history_tests.rs",
+      "bytes": 5803,
+      "sha256": "48417690d674df38cb6546e60fc1813af74ff3ed6651ebd3fa0a9d29a75934fe"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/tests/return_validation_tests.rs",
+      "bytes": 5736,
+      "sha256": "6b7bdddfe722b1ec4fe918087c1794bab8697269d128620d2ebec40dfcb2e09f"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "bytes": 19706,
+      "sha256": "6ba699ce62df17fb2eaf839d23f1ca4ac85b943a16a18ec3e935d731edfeaa0f"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/full_history_tests.rs",
+      "bytes": 6767,
+      "sha256": "ba3e982ae98cc83a1a2fb5bb54647d36d07bd99629c1228898904afdd711bb64"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/release_tests.rs",
+      "bytes": 13824,
+      "sha256": "2f8cf7fbbaeb4a0eef027e350c82e13129da3962ab0df1c2c2d27708971b8823"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture/abort_return/released.rs",
+      "bytes": 14564,
+      "sha256": "2ed950eea4a8cdf9aa29d1c5bbf188d5447f5cee899d50daebd3f31ba374613c"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture/abort_return.rs",
+      "bytes": 12341,
+      "sha256": "fb990660a03fd96814ec52e64a9faaef657206653b03cd85524fee271390f9c6"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 44737,
+      "sha256": "54698698d53ea7f9223b83b7a7402b75fc864c10beabce618f4d92429b7df999"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/before_resume.rs",
+      "bytes": 10209,
+      "sha256": "c5ab889e37c9b62d6bc630633b05b530a2968f03350b8bd7d70652adbf6bdbce"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/clock.rs",
+      "bytes": 6064,
+      "sha256": "806bd5f4e69b834512ecdfd9217e43a18a60d9c88288cbc5e7bc620767a9953a"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "bytes": 19389,
+      "sha256": "ca6f38e3d2a7274f48942427fcc1ee08557b8f8b27bbcb13af91a81d8228dfa4"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 55052,
+      "sha256": "13f7ed35f19c97938c8ef57a1c0497a189f3e626774446188946b24a737d375d"
+    },
+    {
+      "path": "product02/result.json",
+      "bytes": 706,
+      "sha256": "4907cf75a74106850504b8dd5f09a4b8e5e8ad5f0f15ca27d5d64dad26680536"
+    },
+    {
+      "path": "product02/source.json",
+      "bytes": 5284,
+      "sha256": "c988aab1c54f79424d660e3b3349491768f8d6d6d96df52b738b347b9c2bb186"
+    },
+    {
+      "path": "product02/stderr.log",
+      "bytes": 61906,
+      "sha256": "2ff1478906daa895bdc043015269e17581526ca70a5a4b544eb33e6dd0829d6e"
+    },
+    {
+      "path": "product02/stdout.log",
+      "bytes": 5217,
+      "sha256": "2fd8214be83a4e62d6765780c5c2b5b1d36d531baf45f2ce21f7166827bfd737"
+    },
+    {
+      "path": "regression03/result.json",
+      "bytes": 390,
+      "sha256": "0f9d53305a96a8bfcb46bdbc9526d146b8d409139c427e40291a373ea2584b75"
+    },
+    {
+      "path": "regression03/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression03/stdout.log",
+      "bytes": 5291,
+      "sha256": "7c88823351784ebfc15667f63b31cbcb0b91b38d234397a9914bd109ba226934"
+    },
+    {
+      "path": "regression04/result.json",
+      "bytes": 378,
+      "sha256": "738348b1717148fddb6b230ecd6da5b8b36141f029ec5f82593849fa8ab7318d"
+    },
+    {
+      "path": "regression04/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression04/stdout.log",
+      "bytes": 2266,
+      "sha256": "4d32fd8f5b3b51e3fd46653f52d651c5e358debaf71f56009755e8635d09adf4"
+    },
+    {
+      "path": "regression04/subprocess/disconnect/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression04/subprocess/disconnect/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression04/subprocess/disconnect/cleanup.json",
+      "bytes": 903,
+      "sha256": "13325e63f715ba95a5244d9c953b6fd3a359560f964800abc8887fa2f9a763ca"
+    },
+    {
+      "path": "regression04/subprocess/disconnect/entered.json",
+      "bytes": 83,
+      "sha256": "5ab8a164b359b2ef55c7a0343715a987efaf3f4c350cf41011b90592aeecfda7"
+    },
+    {
+      "path": "regression04/subprocess/disconnect/observed.json",
+      "bytes": 567,
+      "sha256": "2cd77a3acb941f8401f1cdeb54f18f4c749fa06bf5968a7668a31afb4487d8e3"
+    },
+    {
+      "path": "regression04/subprocess/expired/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression04/subprocess/expired/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression04/subprocess/expired/cleanup.json",
+      "bytes": 953,
+      "sha256": "32e5b962f0a67b6c9507562bba38f31e6ba36a4f4ee1441b009864a1f572add1"
+    },
+    {
+      "path": "regression04/subprocess/expired/entered.json",
+      "bytes": 83,
+      "sha256": "abc0c68f79188ca84e533490c3900c55a8f39b06435f48a08a3294d70247fd71"
+    },
+    {
+      "path": "regression04/subprocess/expired/observed.json",
+      "bytes": 584,
+      "sha256": "733993c54cba8c6bbb37bf303b88b46759a8b721070cf3db58213312594f98b0"
+    },
+    {
+      "path": "regression04/subprocess/failure/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression04/subprocess/failure/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression04/subprocess/failure/cleanup.json",
+      "bytes": 956,
+      "sha256": "b70c8a0f80169789f3479a3ee01b5d0fa836b3fe0af6d0334cbf5ad7d4aed60b"
+    },
+    {
+      "path": "regression04/subprocess/failure/entered.json",
+      "bytes": 83,
+      "sha256": "d39df7a406da4e77227baeb040605c7f26499dca7ca23034623d1ff3bef34ea9"
+    },
+    {
+      "path": "regression04/subprocess/failure/observed.json",
+      "bytes": 587,
+      "sha256": "e2d6fedc0ef14ddc37d15d9ed14a5a2f7e793e2cca3ade4bdb56209d9da3f619"
+    },
+    {
+      "path": "regression04/subprocess/panic/child.stderr.log",
+      "bytes": 293,
+      "sha256": "bd6407eb3c0c5e736dd536f54af2f5fdf6fa9b02363e8aafa2665b9a2ccac899"
+    },
+    {
+      "path": "regression04/subprocess/panic/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression04/subprocess/panic/cleanup.json",
+      "bytes": 950,
+      "sha256": "428f1ab4f0d700f339fb2466dafdc2c9a1b3c2dde065e04399505866ffd91e7a"
+    },
+    {
+      "path": "regression04/subprocess/panic/entered.json",
+      "bytes": 83,
+      "sha256": "e2153e0bb929e1dcb2aa1623ccc1f44f2cdf304f0dfdd466d14fc5faccc2ac94"
+    },
+    {
+      "path": "regression04/subprocess/panic/observed.json",
+      "bytes": 581,
+      "sha256": "e99d179ac6e5b9a6edadbfab76cd83cbed191db278a516f8f9b87e98c98604c7"
+    },
+    {
+      "path": "regression04/subprocess/release-expired/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression04/subprocess/release-expired/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression04/subprocess/release-expired/cleanup.json",
+      "bytes": 953,
+      "sha256": "1a3746a27ca654131ff19652033c7f0f04b09848dc5348666494881dbf2c9b15"
+    },
+    {
+      "path": "regression04/subprocess/release-expired/entered.json",
+      "bytes": 83,
+      "sha256": "c3910941c8d9478def60411a90c35f91388fe3e36ad34dca949d338e6405b68f"
+    },
+    {
+      "path": "regression04/subprocess/release-expired/observed.json",
+      "bytes": 584,
+      "sha256": "8bf882d6a003b4a188caa71e2853f1c71f8f3394d8a58b5aa1a18372c52a058e"
+    },
+    {
+      "path": "regression04/subprocess/release-partial/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression04/subprocess/release-partial/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression04/subprocess/release-partial/cleanup.json",
+      "bytes": 959,
+      "sha256": "ecedc3c179c8c026273e0038aafff84410a1fd92d8807a38defbb651185ceb47"
+    },
+    {
+      "path": "regression04/subprocess/release-partial/entered.json",
+      "bytes": 83,
+      "sha256": "7aa7d5f482c34ee8acc0f4613ee847c36f9b45d5cc9e7b5453b5d7c3370e9fe3"
+    },
+    {
+      "path": "regression04/subprocess/release-partial/observed.json",
+      "bytes": 590,
+      "sha256": "312e34e80c682ec0d545e8df157d8e2ede30c3b03a2eb79ec420cb5bc1f78ae8"
+    },
+    {
+      "path": "regression04/subprocess/success/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression04/subprocess/success/child.stdout.log",
+      "bytes": 229,
+      "sha256": "e2c19bb5b3ca95fbf6125a89119a65ed3331085488e348011d2ba0541ceba4d7"
+    },
+    {
+      "path": "regression04/subprocess/success/cleanup.json",
+      "bytes": 933,
+      "sha256": "274ba9ef09f0c4074cf33578f3adaa2bb683d9c24c9c531335ea344545cb8f8b"
+    },
+    {
+      "path": "regression04/subprocess/success/entered.json",
+      "bytes": 83,
+      "sha256": "7bed500dbb63db34ed37877087049a0262dfd38deb48f632ffc47cf989addfb1"
+    },
+    {
+      "path": "regression04/subprocess/success/observed.json",
+      "bytes": 598,
+      "sha256": "94afc46c638664e0a495727066d6596bd6ba474c5ea2733cddf15f90b3775a38"
+    },
+    {
+      "path": "regression05/result.json",
+      "bytes": 389,
+      "sha256": "b2e6c017b7d81bf6a885b86c3c8f317896db041f5ff962d5ef59687f0610db46"
+    },
+    {
+      "path": "regression05/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression05/stdout.log",
+      "bytes": 4226,
+      "sha256": "8e30fbcde2471442cd92e7d1547157c446af3535c19dd47af8d18b691431ad70"
+    },
+    {
+      "path": "regression06/result.json",
+      "bytes": 388,
+      "sha256": "a8b11c5363575d4f1bf256f707cfef95b060fad500e099da1e040dd8b381e327"
+    },
+    {
+      "path": "regression06/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression06/stdout.log",
+      "bytes": 1927,
+      "sha256": "7c69656e145beec533e55fcf7b56317113cb5026a7319983a0f79b73026174bb"
+    },
+    {
+      "path": "regression07/result.json",
+      "bytes": 378,
+      "sha256": "4a61f2009a34aa41b18d3486e9305e625e08fc97f0e1ce9ef88ba89f731e0c89"
+    },
+    {
+      "path": "regression07/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression07/stdout.log",
+      "bytes": 1414,
+      "sha256": "443dc75e72e6955620cd364ba04dbefb7524eccf8baf795749e7e1f652965e5d"
+    },
+    {
+      "path": "regression08/result.json",
+      "bytes": 375,
+      "sha256": "2db6f758bdb877471dca116c4da1b626fa9629b8810de176f70fc33af8ca0903"
+    },
+    {
+      "path": "regression08/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression08/stdout.log",
+      "bytes": 770,
+      "sha256": "072be5dfb7f992e8f1793ce3a010e01e2aef4a6407dbef7fc06c4cdecb9b43e7"
+    },
+    {
+      "path": "regression09/result.json",
+      "bytes": 508,
+      "sha256": "a062245ffecf705284465730f0eac2f0f9fda9f07310f049f1eb32a47fb5f3de"
+    },
+    {
+      "path": "regression09/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression09/stdout.log",
+      "bytes": 415,
+      "sha256": "24cc4d898a3662ba5e21bf5b3b6ea42e8bdbba891c71239e352bd3d50a9ce20c"
+    },
+    {
+      "path": "regression10/result.json",
+      "bytes": 386,
+      "sha256": "4b2d11c859c7f852adfe2cb52ab190040b1d91a08284d312f98212d696f53e8e"
+    },
+    {
+      "path": "regression10/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression10/stdout.log",
+      "bytes": 478,
+      "sha256": "9f062f7aa12285d80e54f067f7d56065b8b6673633a2a9efaa3aa21419569354"
+    },
+    {
+      "path": "run-product.ps1",
+      "bytes": 3320,
+      "sha256": "8799752e665b693384877d5659c13b41ca319ebbcae41eef7ae0bfb1ef098528"
+    },
+    {
+      "path": "run-regressions.py",
+      "bytes": 1875,
+      "sha256": "f3e061a9190c7bbcf301a4369bf1aa0e19fdbdbc1859016ef8f30f63bdf9be82"
+    },
+    {
+      "path": "source-git-verification.json",
+      "bytes": 5009,
+      "sha256": "bd8c0b4b3730158eaa6bca72215fccb66ddbfde468a24c0c1c4da1e2cdccf66d"
+    },
+    {
+      "path": "source-manifest.json",
+      "bytes": 5326,
+      "sha256": "77d985f90dc128322f7141f5b5aa4ee2854ac7fdabedbef71caf0cedb4c545d9"
+    },
+    {
+      "path": "source-review.json",
+      "bytes": 650,
+      "sha256": "b2993bf2b984720b1ac63e53c13e72e66b069f99f217ef286a8b7ad7da6356e1"
+    },
+    {
+      "path": "sources.json",
+      "bytes": 2004,
+      "sha256": "43345d1fe4d5c3795cff2b99f83169032499f61a7db5059f0f9950fea37af243"
+    },
+    {
+      "path": "status.json",
+      "bytes": 43796,
+      "sha256": "cb1db20cf972b2bb402c97442307328c3b30b1716242f1c47377f3f31d0ffe45"
+    },
+    {
+      "path": "SUMMARY.md",
+      "bytes": 3625,
+      "sha256": "8a1e1db2189617005b11ab013acbec363f9dd69ed73025b377d5cab979d890a7"
+    },
+    {
+      "path": "verify_evidence.py",
+      "bytes": 1095,
+      "sha256": "3e17a29910bb8af7282aa1b317dda2b3b3091b69ae9eb4fc2b120b0c625a3204"
+    },
+    {
+      "path": "verify_git_payload.py",
+      "bytes": 866,
+      "sha256": "8369dd51396511c96ce8118054183295f67e2667e956fc50bfea187463c5b96d"
+    }
+  ],
+  "nativeAuthority": false
+}

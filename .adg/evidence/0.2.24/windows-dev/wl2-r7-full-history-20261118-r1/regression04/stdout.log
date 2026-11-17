@@ -1,0 +1,22 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_native_failure_expiry_panic_and_disconnect_keep_actual_ranges_on_original_thread ... r7 actual owning-worker failure: native original thread/source and4role ranges observed; ownfixture raw242, no normalStop/Closed/currentR2 actions
+r7-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-hDMWeI
+r7 actual owning-worker expired: native original thread/source and4role ranges observed; ownfixture raw242, no normalStop/Closed/currentR2 actions
+r7-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-NGD8hS
+r7 actual owning-worker panic: native original thread/source and4role ranges observed; ownfixture raw242, no normalStop/Closed/currentR2 actions
+r7-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-GiiCFj
+r7 actual owning-worker disconnect: native original thread/source and4role ranges observed; ownfixture raw242, no normalStop/Closed/currentR2 actions
+r7-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-P3Oodp
+r7 actual owning-worker release-partial: native original thread/source and4role ranges observed; ownfixture raw242, no normalStop/Closed/currentR2 actions
+r7-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-o0yiEg
+r7 actual owning-worker release-expired: native original thread/source and4role ranges observed; ownfixture raw242, no normalStop/Closed/currentR2 actions
+r7-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-YpyY3V
+ok
+test infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_native_local_stays_non_send_and_control_original_is_send ... ok
+test infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_native_success_returns_same_original_after_explicit_native_release ... r7 actual owning-worker success: native original thread/source and4role ranges observed; ownfixture raw0, no normalStop/Closed/currentR2 actions
+r7-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-ZrqLjo
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2246 filtered out; finished in 1.50s
+

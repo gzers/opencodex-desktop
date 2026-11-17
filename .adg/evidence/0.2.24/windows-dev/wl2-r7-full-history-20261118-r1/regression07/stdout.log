@@ -1,0 +1,13 @@
+
+running 5 tests
+test infrastructure::windows_official_lifecycle024::actions::recovery::tests::wl2_r7_recovery_origin_every_retained_phase_blocks_normal_dispatch_without_dropping_state ... r7 original occupied field denies ordinary dispatch in all phases; metadata-only test does not fabricate a native prepared proof
+ok
+test infrastructure::windows_official_lifecycle024::actions::recovery::tests::wl2_r7_recovery_origin_expired_start_is_metadata_only_and_fresh_end_never_replaces_it ... r7 actual admitted expired Start stays Timeout; new bounded recovery comparison never updates old permission; no native/restore capability constructed
+ok
+test infrastructure::windows_official_lifecycle024::actions::recovery::tests::wl2_r7_recovery_origin_native_errors_keep_original_raw_code ... ok
+test infrastructure::windows_official_lifecycle024::actions::recovery::tests::wl2_r7_recovery_origin_owner_generation_deadline_and_old_scope_substitutions_refuse ... ok
+test infrastructure::windows_official_lifecycle024::actions::recovery::tests::wl2_r7_recovery_origin_requires_actual_local_failed_start_result_and_never_resumed_branch ... r7 local Result provenance: success/absent/resumed/foreign failure cannot admit original beforeResume; old Timeout result remains unchanged; metadata only, no native proof fabricated
+ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2244 filtered out; finished in 0.03s
+

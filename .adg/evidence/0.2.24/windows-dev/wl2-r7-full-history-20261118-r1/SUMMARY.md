@@ -1,0 +1,17 @@
+# 同一Status5的原槽完整历史核验
+
+代码683a69fa2后继完整SHA见status.json已推送；mainfb755b8ea63d8a3fc9146dc4db491931919905b0、docs输入完整SHA见source-manifest.json，TEAM30/IMP166/r7。相对本轮编译main0675仅Mac updater校验脚本/CI/Release及Python测试，Rust产品图无净差；未发起发布任务或修改本线外文件。
+
+原core/privatefinaltag记录实际timely completion，原receiving control也记录实际原返回验证在原恢复截止前完成。历史入口只借该原控制内的BoxOwner、原window、原ReleasedLease及本地proof，不读磁盘重新构造；require原状态ReturnedValidated且完成及时、前后transferbinding一致。所有读取继承ONE caller cutoff，超过Status5/已过期拒绝，无新10秒或原Start续时。
+
+内部生产路径核registry runtimeArc/安装根/H/Profile/hostUUID、原真实StartFailure/action/旧window/QPC不变/原Jobquiescence242；Source/current/完整image、Route、原canonical fullrawchain/nativeaction和附件typedproducer首/末/终态前后核，完整原两树/retired成员/8/bytes/children及原released事实两次读回，同privatefinaldata相等。history不探新range、不写第二终态、不造normalStop/Closed/后继，普通dispatch仍被原control占位。
+
+该生产桥已完整Tauri库编译链接。真实运行证据仍是自有原生组件：完整native两树/Job/日志/附件和原control/sourcefile，不含真实固定官方产品Owner/Source准入。因此不签真实产品恢复或整版预算通过，也尚未接可达versionedprivatehost/fulltrait/V2partial恢复。
+
+product01完整MSVC raw101/184916ms：core四场景及QPC过；接收端valid/unvalidated正确，但第二自有fixture关闭raw32，返回channel仍保未验证原对象。原.tmpQ94pON是尝试TempDir关闭后的5个剩余文件，准确只读ZIP/member/hash/dirs前后核，保原根，不能冒完整未动现场。仅测试改为join已释放worker后显式drop receiver/validation/state再关scene，生产逻辑/预算/断言不改。product02 raw0/160322ms，只重测接收端六场景全过；core/QPC未改复用product01。
+
+新2native父含10模式：core valid-after-expiry/tree-member/wrong-original/expired-reader；control valid-after-expiry/unvalidated/binding-change/raw5/expired-reader/6秒reader，另1actualQPC metadata测试。原20受影响测试全过：返回验证2/33750ms、worker3父7子/1531ms、release2/41687ms、concretepipeline1/11266ms、origin5/78ms、strictV1 4/47ms、Send1/31ms、QPC2/31ms。测试父总耗时不是产品动作耗时；旧6个失败子fixture原创建handle242只单列自有处置，非Stop/Closed。
+
+最终TEST EXE SHAe106af69e6ec53038d287c71299a18fc4d128f74ecac4f2add89088462d068e3，19最终执行源逐Git行尾归一核，两轮全源/raw结果与七原worker子case证据保。40成功新root缺席，schema生成raw归档/还原tracked/移出untracked；新增5file失败余树/ZIP及所有历史失败/拒删/synthetic27960仍保，不冒全清。
+
+完整127项表见status.json。真实产品Owner普通Profile固定官方整链/原预算、可达strictprivatehost/fulltrait、完整nativeV2pre-manifest/partialwork/缺根恢复、容量/CAPtrust/普通MSI/候选仍未完。当前r2Job24raw50Unknown只停其证明，不重跑同前提/旧cleanup探Status；原21500/75744/原件/work/custody/anchors/协调/旧seq9及40588不动，无新R1执行批准，旧50580/54692授权不延用。原件未还不跑新原包，原预算/unknown/普通token/官方2.99及日常配置PATH策略保持，不W2/双SID/发布，目标active。

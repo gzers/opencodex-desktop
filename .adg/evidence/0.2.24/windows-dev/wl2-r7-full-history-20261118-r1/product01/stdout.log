@@ -1,0 +1,24 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::recovery_worker::tests::return_validation_tests::history_tests::wl2_r7_full_history_native_receiving_control_requires_actual_timely_validation_and_one_read_cutoff ... r7 fullhistory originalcontrol valid-after-expiry: actual retainedsourceFileID=2251799815260735 actualtimelyvalidation required, oneStatus5 rejectsnew6/expiredread, originalwindow unchanged, DATA no fullproductOwnerfactory; state={"actionId":"eb7350ac-9174-4a2d-bbed-4048114082a1","closed":false,"errorKind":null,"normalStop":false,"originalDeadlineExpired":true,"phase":"ReturnedValidated","rawError":null,"recoveryRequired":true,"returnValidatorThread":"ThreadId(2)","runtimeAuthority":false,"schema":"windows-original-recovery-worker-v1","scopeDigest":"e6f8b1648d06ed24974fadb2009a3a876d9ab1b736903e4d5d5c872f33c421be","sessionId":"17845a12-21ca-433a-923d-a0aa3cdf1be6","workerFinished":true,"workerThread":"ThreadId(3)"}
+r7-return-validation-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpZ0qgBd
+r7 fullhistory originalcontrol unvalidated: actual retainedsourceFileID=8162774326183646 actualtimelyvalidation required, oneStatus5 rejectsnew6/expiredread, originalwindow unchanged, DATA no fullproductOwnerfactory; state={"actionId":"564a83b1-14f5-49e8-bd8c-1bed2ecc3b49","closed":false,"errorKind":null,"normalStop":false,"originalDeadlineExpired":false,"phase":"ReturnedForValidation","rawError":null,"recoveryRequired":true,"returnValidatorThread":null,"runtimeAuthority":false,"schema":"windows-original-recovery-worker-v1","scopeDigest":"e6f8b1648d06ed24974fadb2009a3a876d9ab1b736903e4d5d5c872f33c421be","sessionId":"648cdb7d-4fa9-4ef5-964a-fa5d181f4288","workerFinished":true,"workerThread":"ThreadId(4)"}
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::return_tests::release_tests::full_history_tests::wl2_r7_full_history_native_original_trees_job_canonical_attachment_and_old_cutoff ... r7 fullhistory actualnative valid-after-expiry: same originalJob242/twoTrees/all8/bytes/members/canonical/attachment/releasedobjects, callerStatus5 only, no newrecord/range or oldmutationauthority; productOwner/officialSource acceptance false
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpkhzEpL
+r7 fullhistory actualnative tree-member: same originalJob242/twoTrees/all8/bytes/members/canonical/attachment/releasedobjects, callerStatus5 only, no newrecord/range or oldmutationauthority; productOwner/officialSource acceptance false
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp0fjBTM
+r7 fullhistory actualnative wrong-original: same originalJob242/twoTrees/all8/bytes/members/canonical/attachment/releasedobjects, callerStatus5 only, no newrecord/range or oldmutationauthority; productOwner/officialSource acceptance false
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpYa9dxu
+r7 fullhistory actualnative expired-reader: same originalJob242/twoTrees/all8/bytes/members/canonical/attachment/releasedobjects, callerStatus5 only, no newrecord/range or oldmutationauthority; productOwner/officialSource acceptance false
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpjQnTZR
+ok
+test infrastructure::windows_official_lifecycle024::actions::recovery::clock::tests::wl2_r7_full_history_native_qpc_metadata_does_not_reopen_original_clock ... ok
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::recovery_worker::tests::return_validation_tests::history_tests::wl2_r7_full_history_native_receiving_control_requires_actual_timely_validation_and_one_read_cutoff
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 2246 filtered out; finished in 26.68s
+
