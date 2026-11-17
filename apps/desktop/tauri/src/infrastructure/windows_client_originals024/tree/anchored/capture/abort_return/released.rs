@@ -164,6 +164,8 @@ impl CapturedTrees {
             let data = serde_json::json!({"originalTrees":final_image,"releasedRanges":probe.data()?,"originalNodes":nodes,"coordinationObjects":coordination});
             let digest = hash::sha256_hex(&serde_json::to_vec(&data).map_err(|_| invalid())?);
             check(end)?;
+            self.abort_return.as_mut().unwrap().final_image = Some(data);
+            self.abort_return.as_mut().unwrap().final_end = Some(end);
             self.abort_return.as_mut().unwrap().final_verified = true;
             Ok(AbortRestoredReadback {
                 nodes,
@@ -174,6 +176,81 @@ impl CapturedTrees {
         })();
         if result.is_err() {
             self.abort_return.as_mut().unwrap().failed = true;
+            self.poison();
+        }
+        result
+    }
+    /// Re-read the SAME native completed core and original released objects.
+    /// No new ranges, record, native completion tag or post-expiry authority.
+    pub(in crate::infrastructure::windows_client_originals024) fn recheck_before_resume_return(
+        &mut self,
+        scope: &mut crate::infrastructure::windows_client_originals024::OriginalReleasedScope<'_>,
+        released: &mut ReleasedLease,
+        end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        self.recheck_abort_return(scope, released, end)
+    }
+    #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn component_recheck_abort_return_for_test<
+        G: AfterReturnGuard,
+    >(
+        &mut self,
+        scope: &mut G,
+        released: &mut ReleasedLease,
+        end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        self.recheck_abort_return(scope, released, end)
+    }
+    fn recheck_abort_return<G: AfterReturnGuard>(
+        &mut self,
+        scope: &mut G,
+        released: &mut ReleasedLease,
+        end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        let result = (|| {
+            check(end)?;
+            let progress = self.abort_return.as_ref().ok_or_else(invalid)?;
+            if progress.failed
+                || !progress.finished
+                || progress.pending.is_some()
+                || !progress.final_attempted
+                || !progress.final_verified
+                || progress.final_end != Some(end)
+            {
+                return Err(invalid());
+            }
+            // This snapshot was enrolled only by this exact core's successful
+            // native final-read path. It is comparison DATA, never a factory.
+            let original = progress.final_image.as_ref().ok_or_else(invalid)?.clone();
+            released.check(end)?;
+            let facts = released.facts();
+            if original["releasedRanges"]["epoch"].as_str() != Some(&facts.epoch)
+                || original["releasedRanges"]["claim"].as_str() != Some(&facts.claim_key)
+                || original["releasedRanges"]["objectsDigest"].as_str()
+                    != Some(&facts.objects_digest)
+            {
+                return Err(invalid());
+            }
+            scope.check(&mut self.journal, released, end)?;
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
+            if restored(trees, end)? != original["originalTrees"] {
+                return Err(invalid());
+            }
+            scope.check(&mut self.journal, released, end)?;
+            released.check(end)?;
+            if restored(trees, end)? != original["originalTrees"] {
+                return Err(invalid());
+            }
+            let digest = hash::sha256_hex(&serde_json::to_vec(&original).map_err(|_| invalid())?);
+            check(end)?;
+            Ok(
+                serde_json::json!({"purpose":"native-aborted-before-resume-restored-readback","originalNodes":original["originalNodes"],"coordinationObjects":original["coordinationObjects"],"digest":digest,"normalStop":false,"closed":false,"publicStartOpen":false,"runtimeAuthority":false}),
+            )
+        })();
+        if result.is_err() {
+            if let Some(progress) = &mut self.abort_return {
+                progress.failed = true;
+            }
             self.poison();
         }
         result

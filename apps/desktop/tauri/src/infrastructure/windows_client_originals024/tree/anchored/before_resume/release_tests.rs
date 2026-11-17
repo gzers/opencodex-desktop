@@ -1,6 +1,8 @@
 use super::*;
 #[path = "driver_worker_tests.rs"]
 mod driver_worker_tests;
+#[path = "return_validation_tests.rs"]
+mod return_validation_tests;
 use crate::infrastructure::windows_client_originals024::{
     coordination::{ReleaseProbe, ReleasedLease},
     tree::AfterReturnGuard,

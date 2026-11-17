@@ -173,6 +173,40 @@ pub(crate) fn before_resume_worker_status(
         .map(|c| c.observe(end).map_err(unknown))
         .transpose()
 }
+/// Independent validation in this original registry slot. Resources stay in
+/// its worker control, including every failure. Normal dispatch remains gated.
+pub(crate) fn validate_canonical_before_resume_return(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    end: Instant,
+) -> AppResult<Option<serde_json::Value>> {
+    budget(end)?;
+    let entry = slot(runtime, home, false)?;
+    let control = entry.recovery_worker.try_lock().map_err(unknown)?;
+    if entry.owner.try_lock().map_err(unknown)?.is_some() {
+        return Err(recovery_required());
+    }
+    control
+        .as_ref()
+        .ok_or_else(recovery_required)?
+        .validate_original_owner_return(end, |owner| {
+            if !Arc::ptr_eq(&owner.runtime, &entry.runtime)
+                || !same(&owner.root, &entry.root)
+                || !same(&owner.home, &entry.home)
+                || !same(&owner.profile, &entry.profile)
+                || owner.host_instance != original_host_instance_for_process()
+            {
+                return Err(recovery_required());
+            }
+            Ok(())
+        })
+        .map_err(|e| {
+            fail(
+                "windows024_return_validation_unknown",
+                &format!("raw={:?}; kind={:?}; {e}", e.raw_os_error(), e.kind()),
+            )
+        })
+}
 /// Data about completion time only, not native close authority. Only Owner's
 /// native typed close/readback path records it; a later observation must still
 /// borrow the original Closed tag and revalidate every retained native object.

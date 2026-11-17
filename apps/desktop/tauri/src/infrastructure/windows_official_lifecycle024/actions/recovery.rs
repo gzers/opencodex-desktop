@@ -115,6 +115,19 @@ impl ProcessAbortAttempt {
     }
 }
 impl Owner {
+    pub(crate) fn before_resume_restored_data(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<serde_json::Value> {
+        self.check_before_resume_quiescent(window)?;
+        self.before_resume_process
+            .as_ref()
+            .unwrap()
+            .restored
+            .as_ref()
+            .ok_or_else(recovery_required)?
+            .read_data(window.deadline())
+    }
     pub(crate) fn retain_before_resume_restored(
         &mut self,
         proof: crate::infrastructure::windows_client_originals024::AbortedOriginals,

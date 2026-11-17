@@ -1,4 +1,5 @@
 use super::*;
+mod return_validation_tests;
 use crate::infrastructure::{
     hash,
     windows_official_runtime024::{create_private_directory, FileIdentity, PrivateRecord},

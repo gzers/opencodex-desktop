@@ -225,11 +225,14 @@ enum Phase {
     ExpiredRetained,
     LostWorkerUnknown,
     ReturnedForValidation,
+    ReturnedValidated,
+    ReturnValidationFailedRetained,
     ReturnUndeliveredRetained,
 }
 struct State {
     phase: Phase,
     thread: Option<String>,
+    validator_thread: Option<String>,
     raw: Option<i32>,
     kind: Option<String>,
     binding: TransferBinding,
@@ -240,10 +243,12 @@ pub(crate) struct WorkerControl<T> {
     state: Arc<Mutex<State>>,
     returned: Mutex<mpsc::Receiver<Returned<T>>>,
     worker: thread::JoinHandle<()>,
+    validation: Mutex<return_validation::Validation<T>>,
 }
 pub(crate) struct Returned<T> {
     pub(crate) original: Box<T>,
     pub(crate) released: ReleasedLease,
+    window: BeforeResumeRecoveryWindow,
 }
 fn publish(state: &Arc<Mutex<State>>, phase: Phase, error: Option<&io::Error>) {
     if let Ok(mut state) = state.lock() {
@@ -282,6 +287,7 @@ impl<T: Original> WorkerControl<T> {
         let state = Arc::new(Mutex::new(State {
             phase: Phase::Registered,
             thread: None,
+            validator_thread: None,
             raw: None,
             kind: None,
             binding,
@@ -317,6 +323,7 @@ impl<T: Original> WorkerControl<T> {
                         let value = Returned {
                             original,
                             released: receipt,
+                            window,
                         };
                         match returner.send(value) {
                             Ok(()) => publish(&worker_state, Phase::ReturnedForValidation, None),
@@ -328,10 +335,14 @@ impl<T: Original> WorkerControl<T> {
                                 let Returned {
                                     mut original,
                                     released,
+                                    window,
                                 } = value;
                                 local.released = Some(released);
                                 original.revoke();
                                 local.revoke();
+                                // The actual window is retained as history, not
+                                // reconstructed from the record after failure.
+                                let _original_window = window;
                                 park(original, local, worker_state, None);
                             }
                         }
@@ -367,6 +378,7 @@ impl<T: Original> WorkerControl<T> {
             state,
             returned: Mutex::new(returned),
             worker,
+            validation: Mutex::new(return_validation::Validation::new()),
         })
     }
 }
@@ -388,13 +400,19 @@ impl<T> WorkerControl<T> {
             .state
             .try_lock()
             .map_err(|_| io::Error::new(io::ErrorKind::WouldBlock, "worker projection busy"))?;
-        let phase = if self.worker.is_finished() && state.phase != Phase::ReturnedForValidation {
+        let phase = if self.worker.is_finished()
+            && !matches!(
+                state.phase,
+                Phase::ReturnedForValidation
+                    | Phase::ReturnedValidated
+                    | Phase::ReturnValidationFailedRetained
+            ) {
             Phase::LostWorkerUnknown
         } else {
             state.phase
         };
         let data = serde_json::json!({"schema":"windows-original-recovery-worker-v1","phase":format!("{phase:?}"),"sessionId":state.binding.session,
-            "actionId":state.binding.action,"scopeDigest":state.binding.scope,"workerThread":state.thread,
+            "actionId":state.binding.action,"scopeDigest":state.binding.scope,"workerThread":state.thread,"returnValidatorThread":state.validator_thread,
             "originalDeadlineExpired":Instant::now()>=state.binding.end,"rawError":state.raw,"errorKind":state.kind,
             "workerFinished":self.worker.is_finished(),"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false});
         if Instant::now() >= end {
@@ -402,6 +420,7 @@ impl<T> WorkerControl<T> {
         }
         Ok(data)
     }
+    #[cfg(test)]
     pub(crate) fn take_returned(&self) -> io::Result<Option<Returned<T>>> {
         match self.returned.try_lock().map_err(|_| invalid())?.try_recv() {
             Ok(original) => Ok(Some(original)),
@@ -410,6 +429,7 @@ impl<T> WorkerControl<T> {
         }
     }
 }
+mod return_validation;
 #[cfg(test)]
 mod tests;
 #[cfg(test)]

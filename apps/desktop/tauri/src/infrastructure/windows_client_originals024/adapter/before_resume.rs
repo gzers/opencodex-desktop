@@ -119,6 +119,44 @@ impl PreparedAbortPrefix {
     }
 }
 impl WindowsOriginals {
+    pub(crate) fn recheck_retained_quiescent(
+        &mut self,
+        owner: &mut Owner,
+        released: &mut super::super::coordination::ReleasedLease,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<serde_json::Value> {
+        let result = (|| {
+            let prefix = self
+                .abort_prefix
+                .as_ref()
+                .ok_or_else(|| refused("原返回前缀缺席"))?;
+            let proof = self
+                .quiescent_for_release
+                .as_ref()
+                .ok_or_else(|| refused("原静止凭证缺席"))?;
+            proof.check_tag(prefix)?;
+            if self.session != Some(prefix.session)
+                || self.owner_scope.as_ref() != Some(&owner.scope()?)
+            {
+                return Err(refused("不是原返回槽"));
+            }
+            let attachment = self
+                .abort_attachment
+                .as_mut()
+                .ok_or_else(|| refused("原附件缺席"))?;
+            let native = self
+                .slot
+                .recheck_before_resume_return(owner, prefix, proof, attachment, released, window)?;
+            Ok(
+                serde_json::json!({"sessionId":prefix.session.to_string(),"recoveryActionId":prefix.action,"restored":native,"normalStop":false,"closed":false,"publicStartOpen":false}),
+            )
+        })();
+        if result.is_err() {
+            self.failed = true;
+            owner.fail_before_resume_process();
+        }
+        result
+    }
     pub(crate) fn retain_quiescent_for_release(
         &mut self,
         owner: &mut Owner,

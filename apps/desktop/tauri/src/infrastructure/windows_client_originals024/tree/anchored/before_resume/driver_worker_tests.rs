@@ -243,7 +243,9 @@ fn wl2_r7_concrete_driver_native_original_pipeline_runs_once_on_same_owning_work
         );
         assert!(!root.join("must-not-execute").exists());
         println!("r7 original owning worker native pipeline open{open}: elapsedMs={} original sourceFileId={} sameThread={} actual Job242/claim/twoTrees/v1/explicitRelease/fiveRanges/fullreadback completed; private native data={}, productOwner/officialSource acceptance false",start.elapsed().as_millis(),source_id.index,observed["workerThread"],data);
-        let recovery_worker::Returned { original, released } = returned;
+        let recovery_worker::Returned {
+            original, released, ..
+        } = returned;
         component::join_success_for_test(control).unwrap();
         // Actual released coordinator history still pins its parents. Close it
         // explicitly before the original task's final TempDir fixture closes.
