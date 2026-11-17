@@ -183,7 +183,7 @@ impl Source {
         {
             return Err(refused("固定官方2.99来源不匹配"));
         }
-        program_image::verify(selected)?;
+        program_image::verify_until(selected, end)?;
         let current = CurrentPin::capture(
             &owner.installation_path().join("runtime/current.json"),
             &selected.selection,
@@ -231,7 +231,7 @@ impl Source {
             return Err(refused("原owner/source代次变化"));
         }
         program_selection::verify_current(owner.installation_path(), selected)?;
-        program_image::verify(selected)?;
+        program_image::verify_until(selected, end)?;
         self.current.check(end).map_err(refused)?;
         let binding = Binding::from_native(
             &self.broker,

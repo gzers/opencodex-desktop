@@ -617,7 +617,7 @@ impl Owner {
             });
         }
         self.observe_for_action(window, true).await?;
-        program_image::verify(&self.selected)?;
+        program_image::verify_until(&self.selected, deadline)?;
         self.source(deadline)?;
         self.original_listeners = Some(self.native.listeners().map_err(unknown)?);
         let Some(LivePhase::Ready(ready)) = self.original_phase.take() else {
