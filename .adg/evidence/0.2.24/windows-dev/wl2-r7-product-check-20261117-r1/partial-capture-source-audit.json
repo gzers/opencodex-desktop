@@ -1,0 +1,149 @@
+{
+  "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+  "reviewScope": "source prefix retention, not runtime recovery proof",
+  "findings": [
+    {
+      "location": "v3/capture.rs capture_held",
+      "fact": "two custody roots and complete AnchoredTree values are created on a fallible local stack; original CaptureSlot.retained assigned only after capture_held succeeds. Journal construction can fail and drop local source/tree/custody handles while newly created task objects remain. No client file moves occur before retained store assignment, but all preparation prefix ownership not yet anchored.",
+      "nextChange": "Install typed PartialCaptureAnchor in CaptureSlot before source/route/content/custody/journal preparation. Register path intents before create and actual returned handles before next fallible step; keep all successful partial objects reachable on errors."
+    },
+    {
+      "location": "tree/anchored.rs capture",
+      "fact": "collect fills local Vec<Node>; any failed later node/verify drops earlier original native observation handles. Ordinary files are not moved yet, so do not describe this as lost relocated originals; this remains an initial-capture prefix observation retention gap.",
+      "nextChange": "Build/enroll partial rooted tree into retained slot before collect; interrupted tree stores real nodes and all roots without manufacturing completed plan."
+    },
+    {
+      "location": "v3/journal.rs create_with_predecessor_data",
+      "fact": "manifest/create-new current records and current writer are fallible locals before Journal returned; source current writer seed is closed then reopened. Initial record/pin failure currently returns without a retained Journal preparation prefix.",
+      "nextChange": "Retain journal preparation including source context/native directory/manifest/current creation before subsequent validation. Old seq9 never repaired by converting record; no false completion when constructor fails."
+    },
+    {
+      "location": "v3/capture.rs capture_existing_with_predecessors",
+      "fact": "Once Store is returned, self.retained is assigned before prepare_working_batched, open/release; r2 actual moved originals and work remain retained with poisoned slot after failure. This already-passed retention scope must be preserved.",
+      "nextChange": "Keep current strong post-store behavior while extending earliest partial prefix coverage. Do not weaken poison/unknown/claim or Drop existing Store to create a fresh one."
+    }
+  ],
+  "sources": {
+    "v3/capture.rs": {
+      "sha256": "d962e0905c536716ca81f948634b09f9dbb276ab0aa653c677ddfbf2eeb65d46",
+      "bytes": 32578,
+      "anchors": [
+        {
+          "line": 107,
+          "text": "let custody = [\"codex\", \"grok\"]"
+        },
+        {
+          "line": 117,
+          "text": "let trees = ["
+        },
+        {
+          "line": 136,
+          "text": "let journal = Journal::create_from_source("
+        },
+        {
+          "line": 291,
+          "text": "store.core.poison();"
+        },
+        {
+          "line": 575,
+          "text": "store.core.poison();"
+        },
+        {
+          "line": 635,
+          "text": "store.core.poison();"
+        },
+        {
+          "line": 676,
+          "text": "store.core.poison();"
+        },
+        {
+          "line": 719,
+          "text": "store.core.poison();"
+        },
+        {
+          "line": 747,
+          "text": "let (store, lease) = CaptureStore::capture_held(owner, window, predecessors)?;"
+        },
+        {
+          "line": 750,
+          "text": "self.retained = Some(store);"
+        },
+        {
+          "line": 796,
+          "text": "store.core.poison();"
+        }
+      ]
+    },
+    "tree/anchored.rs": {
+      "sha256": "633df1acb51a3bb70aa5e2ccc399c5fa21a57a157a4c7a1dee7ea9fa51a21ad3",
+      "bytes": 24826,
+      "anchors": [
+        {
+          "line": 314,
+          "text": "let mut nodes = Vec::new();"
+        },
+        {
+          "line": 319,
+          "text": "collect(root, \"\", codex, &mut nodes, &mut 0, end)?;"
+        },
+        {
+          "line": 348,
+          "text": "out.verify(claim, codex_root, end)?;"
+        }
+      ]
+    },
+    "v3/journal.rs": {
+      "sha256": "94317e153724fd5fb25eea8a37d623d3df3c9b939bc5e4eff9026cec5a316f90",
+      "bytes": 37231,
+      "anchors": [
+        {
+          "line": 596,
+          "text": "let manifest_record = Record::create("
+        },
+        {
+          "line": 647,
+          "text": "let seed = PrivateRecord::create(&path, b\"\", 16)?;"
+        },
+        {
+          "line": 649,
+          "text": "drop(seed);"
+        },
+        {
+          "line": 660,
+          "text": "current.write_all(&raw)?;"
+        },
+        {
+          "line": 664,
+          "text": "let mut out = Self {"
+        },
+        {
+          "line": 694,
+          "text": "out.check(end)?;"
+        },
+        {
+          "line": 911,
+          "text": "self.current.write_all(&raw)?;"
+        }
+      ]
+    },
+    "adapter.rs": {
+      "sha256": "9e3bc797c52353a903aa9b2629d5d7892377afe216cc869997e94ae2f90b6649",
+      "bytes": 17643,
+      "anchors": [
+        {
+          "line": 277,
+          "text": "self.session = Some(session);"
+        },
+        {
+          "line": 280,
+          "text": ".capture_existing_with_predecessors(owner, window, &predecessors)?;"
+        }
+      ]
+    }
+  },
+  "nativeAbortExisting": "6 original creation/Job tests pass independently; not yet connected to this retained partial Store",
+  "fullTraitRestorationImplemented": false,
+  "newMutationExecuted": false,
+  "currentR2Touched": false,
+  "permissionOrSharedABIChangeRequested": false
+}

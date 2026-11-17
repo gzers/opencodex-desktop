@@ -1038,3 +1038,9 @@ Windows自行fetch并消费新main462e2476a9275cdf82e9e3235ed84820ac2c28c7（仅
 证据wl2-r7-pinned-scan-20261117-r1含40源快照/Git字节核、5实际生成段机械核、13项完整状态、原E0308/E0277、两次OOM及三个cmd-junction夹具首错/失败原目录。测试包scan-only关闭不相干query/Owner依赖、仅本测试包debug0/incrementalfalse/codegen256，未改断言/预算/机器；TEST EXEc2affdbb8ffcf0fa0ed7b2d4dd92f1a79758c4e5c8fe53c77dc9a00f69280155非产品。成功15fixture显式close核清理，旧3失败与原固定副本保留；100k实际最大容量、完整Tauri产品/typed转发/真实普通release生产仍缺。currentr2/原件/custody/work/旧seq9/21500/75744/40588不动，未原包重跑/W2双SID/发布。
 
 PSS24unknown类型的最小安全决定仍待（原ac7c74774请求），仅R1当前Job证明/执行依赖局部停；future原host partial anchor/fresh abort/claimNLK/整树return及其原10秒仍需继续。原6项native abort和1正常Resume证据复用，未拿扫描组件通过mint Stop/Closed。exact repair plan executionReady/approvalRequestedfalse，不沿旧50580/54692授权，不改官方2.99或日常配置/PATH/策略。
+
+## 2026-11-17 r7完整库类型检查在途与早期capture缺口定位
+
+代码64bf7aa73/证据763eeab85的15项扫描原生定向及固定副本完整入口6366ms已回交。当前另开一次完整真实Tauri库cargo check（不是重复OOM产品link）：原session85435/Cargo89796，自2026-11-17T17:50:28+08:00，--locked/offline --features custom-protocol --lib -j1，只根包debug0/incrementalfalse，不产新EXE或运行生命周期。最近真实CIM仍同一Cargo及依赖rustc在编译，不能以一段无输出/观察超时重开。检查source/checkpoint和actual live观测见wl2-r7-product-check-20261117-r1；原stdout/stderr暂位于已提交scanner轮目录的unsealed product-check18子目录，终态后完整迁至新检查轮再封存，未算入旧已提交payload，更未宣称passed。
+
+同时只读核对当前真实4源，partial-capture-source-audit.json定位完整future恢复未完：capture_held的custody/两tree准备局部变量、AnchoredTree.collect逐节点前缀、Journal manifest/current初始化在返回Store前均缺持久可达的typed partial enrollment；初期没有原文件移动，勿把它误称已移动原件遗失。现有Store安装后才move/work、失败poison并保原件行为保持，下一步在原Owner/slot先装typed PartialCaptureAnchor，逐intent/actual-native创建登记，再接fresh恢复origin/claimNLK与整树return。当前只是定位证据，尚未修改该捕获实现或签接口完成。PSS24unknown安全请求仍只阻R1当前Job依赖，不停其它独占工作，不改日常/官方配置策略/预算，不原包重跑/W2/双SID/发布。
