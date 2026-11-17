@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 159；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 160；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main fcf04caecdd7c328f03fcf1a6ceda3e18517d9bc（非冻结候选）；Windows实现检查点codex/024-windows-native 44aa85f6c8e54fe58b9719be3d0706f838f912ae（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main fcf04caecdd7c328f03fcf1a6ceda3e18517d9bc（非冻结候选）；Windows实现检查点codex/024-windows-native fbac467cbf0b83472876f733d3fe5ec34f2582e8（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1694,3 +1694,18 @@ main fcf04caecdd7c328f03fcf1a6ceda3e18517d9bc让RootCancellationAbsent作为有�
 本轮准确native根/进程组、3个受影响回归tmp根及13个明确输出单测根独立缺席复核，约0.96MB证据保留，无程序包残留/日常配置、Keychain、业务同步或模型调用。其它对话正在改文档核心/原型/协作包，均未纳本批提交，只提交IMP/TEAM和本轮.adg证据。
 
 **剩余**：本批证明真实取消动作和后继文件/索引捕获，尚需最终Tauri原包的实际页面取消、后继官方service完整30/5/10/最终回退；其它代次准备取消或已有部分Original捕获仍不能复用首次空根分支。根未移中断/一般客户端范围/缺Ready、NAME默认外部客户端与最终重启回退、Windows完整产品Owner/privatehost/v2/当前r2及最终候选发布组门均未完成。Windows44aa85f6c/b2b25c26e本轮fetch无新增，继续其独占任务，不W2/双SID、不发布，目标active。
+
+
+### 2026-11-17 revision160：Windows具体原worker驱动接收
+
+Windowsfbac467cbf0b83472876f733d3fe5ec34f2582e8／证据379cde898741dc3b26484c0e390cb8c64ce839e9已净接收concrete-driver轮，140载荷1747888字节，全成员/逐字节长度SHA匹配，10个最终源码与Git原字节或明确CRLF归一逐项核；[接收回执](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r15/receive-result.json)。本机审查具体handoff/源码绑定，不冒Windows实际执行或整批安全审计。
+
+具体canonical恢复callback已经原registry controlgate绑定唯一原window/StartFailure/原Owner→原worker贯通实际lease、准确action父pin、v1意图、quiesce、逐node原句柄return、明确释放、五范围probe和完整两树/8/bytes/children/Source/current/route/canonical/附件读回；private完成凭证先留原Owner再fallible复核。原锁方法/ReleasedLease保持private，错误仍保原worker/原槽，不改原10秒或旧v3超时事实。可调用具体driver不等可达版本化host、fulltrait或真实产品Owner已执行。
+
+首两编译E0624分别因越private锁方法/ReleasedLease，改由原WorkerLocal内部完成而不加宽API；第三轮sealednative3509ms过但fixtureclose因返回pins仍存而失败，原24文件树/归档保留；第四轮STATUS_STACK_OVERFLOW原scene24文件保留。唯一原资源incoming/returned改Box堆所有权，未增stack/预算或加unsafeSend，activelease仍原worker；成功返回验证后join已无active资源worker、先关released再关fixture，失败parkedworker不join/unlock。
+
+最终product05完整MSVC产品库raw0，一项原生集成含sealed/open实际自有worker pipeline分别3424/3535ms，各原10秒窗口内，包含真实原Job242/从未Resume/精确文件ID/所有原资源及claim线程绑定；没有真实产品Owner/官方Source准入成本，不能当完整官方整链预算通过。原worker七子case、origin五和Send一受影响回归过；EXE632dd4219b35dad9ad3f834b479d132a15924d565249bff9508fec16ebd164ce。最终2root/worker7root缺席，历史失败与新2失败root仍保留。
+
+**新增清理缺口保留**：第四轮栈溢出后合成never-resumed-fixture.exe报告PID27960/parent14936仍在，只有CIM只读事实，原creation/nativeJob/scope处置证明未完。Windows须先准确只读身份/源/作用域和可审查计划，不凭PID猜杀/收养/Resume，不把其当原r2，不沿用旧50580/54692授权；本机未执行任何处置。该新残留不能写成已清理。
+
+完整Owner官方普通Profile/原10秒、ReturnedOwner/proof独立验证及过期后只读历史、BeforeFirstResumeRecovery全trait/可达strict privatehost、独立v2准备与partial capture/work/缺根全故障覆盖仍未完成；当前r2Job24raw50仍Unknown，不重跑同前提PSS/旧cleanup探Status。Windows可持续原独占开发，TEAM28/r7写集与接口不变，不等Mac新ABI。Mac当前fcf04原包构建/实屏与官方后继验收进行中，最终候选仍未固定，不W2/双SID、不发布，目标active。
