@@ -90,6 +90,21 @@ fn first_root_cancel_review_is_stable_readonly_and_never_closes_or_moves_root() 
             .review_first_root_preparation(&f.context, &head, end())
             .unwrap();
         assert_eq!(review.fingerprint().len(), 64);
+        let history = vault_history::read(f.index.connection().unwrap(), &head).unwrap();
+        let displayed = super::super::root_cancellation::confirmation(
+            &f.context,
+            &f.data,
+            &head,
+            &history,
+            f.index.root_registration.as_ref(),
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(
+            displayed,
+            review.fingerprint(),
+            "readonly confirmation must match actual retained-index execution review"
+        );
         review.recheck().unwrap();
         assert_eq!(f.index.head().unwrap().as_ref(), Some(&head));
         assert_eq!(bytes(f.data.parent().unwrap()), before);

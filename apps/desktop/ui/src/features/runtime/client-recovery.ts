@@ -21,6 +21,7 @@ export interface ClientRecoveryPreview {
   canRearm: boolean
   canCancelPreparation: boolean
   preparationDigest: string | null
+  preparationKind?: 'created_root' | null
   canFinishUnchanged: boolean
   unchangedDigest: string | null
   rollbackDigest: string | null
@@ -30,7 +31,7 @@ export interface ClientRecoveryPreview {
 export interface ClientRecoveryFinalizeRequest { attemptId: string; revision: number; confirmationDigest: string }
 export interface ClientRecoveryFinalizeOutcome { attemptId: string; revision: number; status: 'restored' }
 export type ClientRecoveryAction = 'finalize' | 'continue' | 'rollback' | 'rearm' | 'finishUnchanged' | 'cancelPreparation' | 'preparePlan'
-export interface ClientRecoveryOutcome { attemptId: string; revision: number; status: 'restored' | 'rolled_back' | 'restore_prepared' | 'recovery_prepared' | 'unchanged' | 'cancelled_before_capture' | 'cancelled_capture' }
+export interface ClientRecoveryOutcome { attemptId: string; revision: number; status: 'restored' | 'rolled_back' | 'restore_prepared' | 'recovery_prepared' | 'unchanged' | 'cancelled_before_capture' | 'cancelled_capture' | 'root_cancelled' }
 
 // Inspection takes no file paths and never starts recovery implicitly.
 export const clientRecoveryApi = {

@@ -8,12 +8,14 @@ pub(in crate::infrastructure::macos_client_originals) struct CreationAuthority<'
 }
 impl CreationAuthority<'_> {
     pub(in crate::infrastructure::macos_client_originals) fn check(&self) -> io::Result<()> {
-        if self.closed.state != State::RootAbsent
-            || self
-                .index
-                .root_registration
-                .as_ref()
-                .is_none_or(|r| r.id != self.closed.ticket)
+        if !matches!(
+            self.closed.state,
+            State::RootAbsent | State::RootCancellationAbsent
+        ) || self
+            .index
+            .root_registration
+            .as_ref()
+            .is_none_or(|r| r.id != self.closed.ticket)
         {
             return Err(denied(
                 "successor root predecessor generation not supported",
@@ -202,8 +204,10 @@ impl Index {
             }
         };
         time()?;
-        if expected.state != State::RootAbsent
-            || self.head()?.as_ref() != Some(expected)
+        if !matches!(
+            expected.state,
+            State::RootAbsent | State::RootCancellationAbsent
+        ) || self.head()?.as_ref() != Some(expected)
             || context.working_directory != self.profile
             || context.opencodex_home != self.context_home
             || self
@@ -431,16 +435,21 @@ pub(super) fn successor_eligible_checked(
     history: &[Head],
     origin: Option<&super::root_creation::References>,
 ) -> io::Result<bool> {
-    if head.state != State::RootAbsent {
+    if !matches!(
+        head.state,
+        State::RootAbsent | State::RootCancellationAbsent
+    ) {
         return Ok(false);
     }
     let origin = origin.ok_or_else(|| denied("closed-root eligibility lacks indexed origin"))?;
     if history.last() != Some(head)
         || head.ticket != origin.id
-        || head
-            .references
-            .as_ref()
-            .is_none_or(|r| r.attempt != origin.id)
+        || (head.state == State::RootAbsent
+            && head
+                .references
+                .as_ref()
+                .is_none_or(|r| r.attempt != origin.id))
+        || (head.state == State::RootCancellationAbsent && head.references.is_some())
     {
         return Err(denied("closed-root eligibility source changed"));
     }
@@ -496,16 +505,23 @@ fn successor_cycle_capacity(
         .root_retirement
         .as_ref()
         .ok_or_else(|| denied("closed capacity source missing movement"))?;
-    let refs = closed
-        .references
-        .as_ref()
-        .ok_or_else(|| denied("closed capacity Original missing"))?;
     let pinned = PinnedDirectory::open(data)?;
-    let archived = pinned
-        .child_private("manager-state", false)?
-        .child_private("client-originals", false)?
-        .child_private(&refs.attempt, false)?
-        .child_private(&format!("root-retired-{}", movement.plan.id), false)?;
+    let manager = pinned.child_private("manager-state", false)?;
+    let archived = if closed.state == State::RootCancellationAbsent {
+        manager
+            .child_private("client-root-cancel-plans", false)?
+            .child_private(&movement.plan.id, false)?
+            .child_private("root", false)?
+    } else {
+        let refs = closed
+            .references
+            .as_ref()
+            .ok_or_else(|| denied("closed capacity Original missing"))?;
+        manager
+            .child_private("client-originals", false)?
+            .child_private(&refs.attempt, false)?
+            .child_private(&format!("root-retired-{}", movement.plan.id), false)?
+    };
     let mut tuple: serde_json::Value = serde_json::from_slice(&scope_at(
         context,
         &pinned,
@@ -628,7 +644,7 @@ pub fn inspect_client_recovery(
         Ok(match head {
             None => Recovery::NotRequired,
             Some(h) if h.state == State::Ready => Recovery::Active,
-            Some(h) if h.state == State::RootAbsent => {
+            Some(h) if matches!(h.state, State::RootAbsent | State::RootCancellationAbsent) => {
                 if successor_eligible_checked(context, data, h, history, origin)? {
                     Recovery::NotRequired
                 } else {

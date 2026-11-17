@@ -201,8 +201,10 @@ pub(super) fn parse<'a>(binding: &[u8], history: &'a [Head]) -> io::Result<Linea
                 .root_generation
                 .as_ref()
                 .ok_or_else(|| denied("successor lacks atomic initial source"))?;
-            if closed.state != State::RootAbsent
-                || source.preparing_revision != next.revision
+            if !matches!(
+                closed.state,
+                State::RootAbsent | State::RootCancellationAbsent
+            ) || source.preparing_revision != next.revision
                 || source.predecessor_revision != closed.revision
                 || source.predecessor_sha256 != digest(&encode(closed)?)
             {
