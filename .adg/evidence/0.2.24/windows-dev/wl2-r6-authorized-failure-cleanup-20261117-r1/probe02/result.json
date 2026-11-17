@@ -1,0 +1,84 @@
+﻿{
+    "passed":  true,
+    "ordinaryAcceptance":  false,
+    "officialExecuted":  false,
+    "marenbenTouched":  false,
+    "resumed":  false,
+    "refused":  [
+                    "filetime",
+                    "sid",
+                    "hash",
+                    "same-object replay"
+                ],
+    "cleanup":  {
+                    "scope":  "explicit two-target external forced failure cleanup; not original Job/NormalStop",
+                    "before":  [
+                                   {
+                                       "pid":  84256,
+                                       "filetime":  "134393633775912393",
+                                       "image":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r6-authorized-cleanup-probe-fd628df7f31f4f6799c9641662100eac\\cmd.exe",
+                                       "imageKey":  "247287385:844424931548930",
+                                       "imageSha256":  "64afc6db3aad1289533662e2d79e27dd55c7dcdb8cd918b08e145ad82ad5acb4",
+                                       "token":  {
+                                                     "sid":  "S-1-5-21-587408064-856152790-2583328096-1001",
+                                                     "session":  2,
+                                                     "elevationType":  3,
+                                                     "elevated":  0
+                                                 },
+                                       "inJob":  true,
+                                       "exited":  false,
+                                       "threadCount":  1,
+                                       "threadState":  "Wait",
+                                       "threadWaitReason":  "Suspended"
+                                   },
+                                   {
+                                       "pid":  117540,
+                                       "filetime":  "134393633776042066",
+                                       "image":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r6-authorized-cleanup-probe-fd628df7f31f4f6799c9641662100eac\\cmd.exe",
+                                       "imageKey":  "247287385:844424931548930",
+                                       "imageSha256":  "64afc6db3aad1289533662e2d79e27dd55c7dcdb8cd918b08e145ad82ad5acb4",
+                                       "token":  {
+                                                     "sid":  "S-1-5-21-587408064-856152790-2583328096-1001",
+                                                     "session":  2,
+                                                     "elevationType":  3,
+                                                     "elevated":  0
+                                                 },
+                                       "inJob":  true,
+                                       "exited":  false,
+                                       "threadCount":  1,
+                                       "threadState":  "Wait",
+                                       "threadWaitReason":  "Suspended"
+                                   }
+                               ],
+                    "terminatedPids":  [
+                                           84256,
+                                           117540
+                                       ],
+                    "rawExits":  [
+                                     242,
+                                     242
+                                 ],
+                    "pinnedSourceFiles":  [
+
+                                          ],
+                    "bothValidated":  true,
+                    "attempted":  true,
+                    "completed":  true,
+                    "forced":  true,
+                    "normalStop":  false,
+                    "closed":  false,
+                    "filesDeleted":  false,
+                    "originalJobAdopted":  false,
+                    "allCompanionsProven":  false,
+                    "publicStartOpen":  false,
+                    "firstError":  null,
+                    "elapsedMs":  29
+                },
+    "firstError":  null,
+    "originalHandleExits":  [
+                                242,
+                                242
+                            ],
+    "fixture":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r6-authorized-cleanup-probe-fd628df7f31f4f6799c9641662100eac",
+    "sourceSha256":  "d57fc34d8e0952bdf82cddb1994b33435275ce897f8dc96190118913db7a0725"
+}

@@ -1,0 +1,5 @@
+{
+  "path": "probe01/error.log",
+  "reason": "Original PS51 compiler error formatting includes trailing space/blank EOF; preserve raw failure bytes. Only this original log disables those two checks; the evidence tree retains standard whitespace checks and explicit CR-at-EOL.",
+  "rawBytesChanged": false
+}

@@ -955,3 +955,9 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 定向4过0败0忽略/raw0；frontend类型检查/build0；clean5c5c6fa85 custom-protocol全bins MSVC raw0/156984ms，三制品SHA归artifacts.json，仍debug非候选。首PS51 driver stderr中止、library02 OOM/raw101保留；只用CLI关闭根包debug符号/incremental，不改机器策略。Cargo硬链接native拒绝不冒桌面证明；单链接final EXE确认参数拒绝2/2及非测试桌面1。216个每轮输入逐原字节核并与Git归一CRLF比对。真实普通桌面pipe/实际原Owner调度、原包生命周期仍未执行通过。
 
 旧54692/未恢复50580及40588未动；controller只读raw5保持Unknown、不换访问方式。旧宿主不能接新通道，前轮两目标外部forced方案仍待明确决定，不含删除、不冒原Job/正常Stop。既有10641文件私有归档复用，旧失败/删除拒绝/全部未完保留。生成schema移入证据并还原tracked，缓存/dist/自有单链接copy保留，清理未全关。Start/allAcceptedfalse，原包生产/真GUI官方owner/H-S-D/初始化/原缺席退根/容量/普通MSI/CAP-trust等仍未完。无官方/日常/PATH/账户策略/业务/模型/旧raw5空跑/空GUI/W2/双SID/发布。
+
+## 2026-11-17 r6 获准外部失败清理入口待普通桌面执行
+
+用户明确同意精确50580/54692的外部forced失败清理并保留全部文件。源码323c3fc3ea41eae35177b43f80f0f40736b6bd6d/treeaaeaae195e3056ddf9702eadeee6f6e42f58859c已推送，仅4个Windows测试文件；apps与5c5c6fa85一致，产品制品/原验证复用。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-authorized-failure-cleanup-20261117-r1/及完整120项状态。PS51同C# validator自建从未恢复进程对两轮过：错第二FILETIME/SID/hash拒绝且两原进程仍活；有效fresh retained handles forced242/242、原创建handles独立同码；重复Commit拒绝。首probe01只C#转义编译错误，无进程，原错/源码保留；生产版compile并拒controller身份，不代普通验收。
+
+入口C:/Users/Public/ocx-r6-authorized-cleanup-20261117-r1/cleanup-r6-authorized-processes.cmd准备好，固定普通SID1003/session7/noJob/非提升/Profile、两原FILETIME/Token/imageID/hash、Node单挂起线程、私有ZIP与原首失败receipts均须准确核；原两handles同持，全部匹配才Node→broker forced242，原10s bounded readback/失败前缀分账，原件/归档全保留、40588不动，不签原Job/正常Stop/Closed。actual cleanup尚未执行，需用户原桌面运行，不能先续开原包新轮。所有原初始化/原缺席退根/真实生产/GUI官方owner/H-S-D/容量/MSI/CAP-trust/历史清理未完不关；Start/allAcceptedfalse，不改日常/官方/业务/模型/旧拒绝/W2/双SID/发布。

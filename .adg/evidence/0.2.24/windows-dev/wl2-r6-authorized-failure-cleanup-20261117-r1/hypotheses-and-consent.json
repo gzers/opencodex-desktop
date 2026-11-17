@@ -1,0 +1,25 @@
+{
+  "hypotheses": [
+    "Both retained native process handles and pinned exact image native IDs/hash, actual TokenUser/session/elevation and original failed receipts/archive match before the first mutation; any mismatch refuses BOTH.",
+    "Actual initial Node has exactly one suspended waiting thread before termination; unknown live thread state refuses.",
+    "Own never-resumed process pair proves wrong second FILETIME/SID/hash rejects both without killing; valid pair exits242 through retained fresh handles, never NormalStop/Closed.",
+    "Actual execution only from same ordinary SID1003/session7/noJob/Profile; no elevation, impersonation, Job adoption or file deletion."
+  ],
+  "plan": "wl2-r6-failure-archive-r3-20261117-receive-r1/cleanup-plan-request.json",
+  "targets": [
+    {
+      "pid": 50580,
+      "filetime": "134393577919362322"
+    },
+    {
+      "pid": 54692,
+      "filetime": "134393577413203335"
+    }
+  ],
+  "time": "2026-11-17T12:25:51.1920309+08:00",
+  "oldProcessesTouched": false,
+  "sourceBase": "5c5c6fa852315fb96447785284af06b7236b42d8",
+  "publicStartOpen": false,
+  "consent": "User: 同意按方案清理两进程，保留文件",
+  "contract": "TEAM16/IMP142/r6"
+}

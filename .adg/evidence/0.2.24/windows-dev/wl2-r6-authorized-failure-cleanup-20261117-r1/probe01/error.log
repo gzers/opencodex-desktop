@@ -1,0 +1,20 @@
+﻿Add-Type : c:\Users\15119\AppData\Local\Temp\4wrv0g1d.0.cs(41) : 字符文本中的字符太多
+
+c:\Users\15119\AppData\Local\Temp\4wrv0g1d.0.cs(40) :  static void Require(bool ok,string reason) {if(!ok)throw new Inv
+alidDataException(reason);}
+
+c:\Users\15119\AppData\Local\Temp\4wrv0g1d.0.cs(41) : >>>  static bool Same(string a,string b) {return String.Equals(Pa
+th.GetFullPath(a).TrimEnd('\'),Path.GetFullPath(b).TrimEnd('\'),StringComparison.OrdinalIgnoreCase);}
+
+c:\Users\15119\AppData\Local\Temp\4wrv0g1d.0.cs(42) :  public sealed class TokenFacts {public string sid;public int ses
+sion,elevationType,elevated;}
+
+At C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\probe-r6-authorized-cleanup.ps1
+:13 char:2
++  Add-Type -TypeDefinition ([IO.File]::ReadAllText($source)) -Compiler ...
++  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidData: (Microsoft.Power...peCompilerError:AddTypeCompilerError) [Add-Type], Except 
+   ion
+    + FullyQualifiedErrorId : SOURCE_CODE_ERROR,Microsoft.PowerShell.Commands.AddTypeCommand
+ 
+
