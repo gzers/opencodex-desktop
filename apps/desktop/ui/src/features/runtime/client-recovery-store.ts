@@ -53,7 +53,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   const canCancelPreparation=computed(()=>{
     const p=preview.value
     return p?.status==='pending'&&(p.phase==='preparing'||p.phase==='capture_reserved')&&p.canCancelPreparation
-      && (p.preparationKind==null||p.preparationKind==='created_root')
+      && (p.preparationKind==null||p.preparationKind==='created_root'&&p.phase==='preparing'||p.preparationKind==='created_root_capture'&&p.phase==='capture_reserved')
       && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm && !p.canPreparePlan&&!p.canFinishUnchanged
       && p.originalEvidence==='not_recorded'&&p.planEvidence==='not_recorded'&&p.completionEvidence==='not_recorded'&&p.phaseCount===0
       && !!p.attemptId&&Number.isSafeInteger(p.revision)&&p.revision!>0&&hash(p.preparationDigest)
@@ -136,8 +136,8 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       if (before.source !== 'live' || !before.facts.data_root || !before.facts.opencodex_home) throw new Error('当前配置位置尚未核对，请重新检查客户端恢复。')
       completionScope = { dataRoot: before.facts.data_root, home: before.facts.opencodex_home }
       const result = await clientRecoveryApi[next](request)
-      const expected = next === 'cancelPreparation' ? (p.preparationKind==='created_root'?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
-      if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + (next==='cancelPreparation'&&p.preparationKind==='created_root'?2:1)) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
+      const expected = next === 'cancelPreparation' ? ((p.preparationKind==='created_root'||p.preparationKind==='created_root_capture')?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
+      if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + (next==='cancelPreparation'&&(p.preparationKind==='created_root'||p.preparationKind==='created_root_capture')?2:1)) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
       outcome.value = result; preview.value = null; checked.value = false; choice.value = null
       // The mutation receipt is complete. The following read is observation,
       // so show its outcome while keeping the lifecycle gate until a verified

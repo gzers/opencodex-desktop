@@ -203,7 +203,11 @@ fn project_history(
                 root_cancellation::confirmation(context, data, head, history, root_origin)?;
             preview.can_cancel_preparation = preview.preparation_digest.is_some();
             if preview.can_cancel_preparation {
-                preview.preparation_kind = Some("created_root");
+                preview.preparation_kind = Some(if head.state == State::CaptureReserved {
+                    "created_root_capture"
+                } else {
+                    "created_root"
+                });
                 preview.attempt_id = Some(head.ticket.clone());
             }
             return Ok(preview);

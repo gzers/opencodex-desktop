@@ -16,6 +16,7 @@ struct Plan {
     binding_sha256: String,
     initial_review_sha256: String,
     history_sha256: String,
+    capture_vault: vault_history::Evidence,
     root: super::super::super::TreeSnapshot,
     grok: super::super::super::GrokSnapshot,
     writer: super::super::super::Image,
@@ -101,7 +102,18 @@ fn facts(review: &Review<'_>, physical: &PinnedDirectory, expected: &Head) -> st
         origin,
         physical.path(),
     )?;
-    if observation::entry(&review.index.action_parent, "client-originals")?.is_some()
+    let history = vault_history::read(review.index.connection()?, &review.head)?;
+    review
+        .capture_vault
+        .verify_root_retained(&review.index.data, &review.head, &history, false)?;
+    if vault_history::inspect(
+        &review.index.data,
+        physical,
+        &review.index.profile,
+        &review.index.binding,
+        &review.head,
+        &history,
+    )? != review.capture_vault
         || super::super::super::GrokSnapshot::read(&PinnedDirectory::open(&review.index.profile)?)?
             != review.initial_grok
     {
@@ -167,13 +179,14 @@ impl<'a> Prepared<'a> {
             return Err(denied("root-cancel root contains unexpected client data"));
         }
         let plan = Plan {
-            schema_version: 1,
+            schema_version: 2,
             id: uuid::Uuid::new_v4().to_string(),
             source: review.head.clone(),
             origin: review.index.root_registration.clone().unwrap(),
             binding_sha256: digest(&review.index.binding),
             initial_review_sha256: review.fingerprint.clone(),
             history_sha256: review.history_sha256.clone(),
+            capture_vault: review.capture_vault.clone(),
             root: tree,
             grok: review.initial_grok.clone(),
             writer: image,
@@ -267,12 +280,13 @@ impl<'a> Prepared<'a> {
             } if bytes == self.bytes && digest(&bytes) == self.sha256 => {
                 require_private(&protection, false)?;
                 let plan: Plan = decode(&bytes)?;
-                if plan.schema_version != 1
+                if plan.schema_version != 2
                     || plan.id != self.id
                     || plan.source != self.review.head
                     || plan.initial_review_sha256 != self.review.fingerprint
                     || plan.binding_sha256 != digest(&self.review.index.binding)
                     || plan.history_sha256 != self.review.history_sha256
+                    || plan.capture_vault != self.review.capture_vault
                 {
                     return Err(denied("root-cancel plan source changed"));
                 }

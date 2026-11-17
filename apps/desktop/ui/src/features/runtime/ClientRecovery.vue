@@ -41,10 +41,11 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
     </template>
     <template v-else-if="recovery.choice === 'cancelPreparation'">
       <p class="client-recovery-lead">取消这次启动准备？</p>
-      <p v-if="recovery.preview?.preparationKind==='created_root'">确认后保管这次启动新建的空目录，恢复启动前的目录缺席状态；不会删除后来写入的内容。</p>
+      <p v-if="recovery.preview?.preparationKind==='created_root_capture'">确认后保管这次新建的目录及初始化记录，恢复启动前的目录缺席状态。已经捕获的文件会完整保留，不会用作新的原件。</p>
+      <p v-else-if="recovery.preview?.preparationKind==='created_root'">确认后保管这次启动新建的空目录，恢复启动前的目录缺席状态；不会删除后来写入的内容。</p>
       <p v-else-if="recovery.preview?.phase==='capture_reserved'">原件捕获已中断。确认后重新核对服务已停止，保留已捕获文件，再取消本次启动。</p>
       <p v-else>本次准备尚未产生新的原件目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。</p>
-      <p v-if="recovery.preview?.preparationKind!=='created_root'">保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
+      <p v-if="recovery.preview?.preparationKind!=='created_root'&&recovery.preview?.preparationKind!=='created_root_capture'">保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
       <p v-else>重新核对服务停止与目录内容；保管完成后不会自动启动。</p>
     </template>
     <template v-else-if="recovery.choice === 'finishUnchanged'">

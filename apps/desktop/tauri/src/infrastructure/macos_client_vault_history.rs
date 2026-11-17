@@ -11,6 +11,78 @@ pub(super) struct Evidence {
     reserved_capture: Option<(String, Option<TreeSnapshot>)>,
 }
 impl Evidence {
+    /// Exact pre-capture contents retained by a first-root cancellation. This
+    /// is not an OriginalSession, frame/source admission or permission to use
+    /// any retained blob. The whole caller still audits the vault namespace.
+    pub(super) fn root_retained_slot(&self) -> Option<&str> {
+        self.reserved_capture
+            .as_ref()
+            .and_then(|(id, tree)| tree.as_ref().map(|_| id.as_str()))
+    }
+    pub(super) fn verify_root_retained(
+        &self,
+        data: &PinnedDirectory,
+        source: &Head,
+        history: &[Head],
+        historical: bool,
+    ) -> io::Result<()> {
+        if !self.matches_history(history)
+            || history.last() != Some(source)
+            || !self.attempts.is_empty()
+            || source.references.is_some()
+            || !matches!(source.state, State::Preparing | State::CaptureReserved)
+            || (source.state == State::CaptureReserved) != (self.reserved_capture.is_some())
+            || self
+                .reserved_capture
+                .as_ref()
+                .is_some_and(|(id, _)| id != &source.ticket)
+        {
+            return Err(denied(
+                "retained first-root capture is not its original reserved prefix",
+            ));
+        }
+        if source.state == State::Preparing && self.vault.is_some() {
+            return Err(denied(
+                "unreserved first-root capture vault cannot be retained",
+            ));
+        }
+        let manager = data.child_private("manager-state", false)?;
+        let present = observation::entry(&manager, "client-originals")?.is_some();
+        match &self.vault {
+            None => {
+                if self.root_retained_slot().is_some() || present && !historical {
+                    return Err(denied("unrecorded first-root capture vault appeared"));
+                }
+            }
+            Some((id, access)) => {
+                let vault = manager.child_private("client-originals", false)?;
+                if vault.identity() != id
+                    || protection(vault.file(), &stat(vault.file())?)? != *access
+                {
+                    return Err(denied(
+                        "retained first-root vault identity/protection changed",
+                    ));
+                }
+                if let Some((attempt, expected)) = &self.reserved_capture {
+                    match expected {
+                        Some(expected) => {
+                            let directory = vault.child_private(attempt, false)?;
+                            if TreeSnapshot::read_mode(&directory, false)? != *expected {
+                                return Err(denied("retained first-root partial capture changed"));
+                            }
+                        }
+                        None => {
+                            if observation::entry(&vault, attempt)?.is_some() {
+                                return Err(denied("uncaptured first-root attempt appeared"));
+                            }
+                        }
+                    }
+                }
+                vault.private()?;
+            }
+        }
+        Ok(())
+    }
     pub(super) fn matches_history(&self, history: &[Head]) -> bool {
         encode(&history).is_ok_and(|raw| digest(&raw) == self.history_sha256)
     }
@@ -142,11 +214,35 @@ fn inspect_root_lineage(
     let mut cancelled = Vec::new();
     let mut expected = Vec::new();
     let mut current = None;
+    let mut pending_cancellation = false;
     for generation in lineage.generations() {
         let closed = generation
             .heads
             .last()
             .ok_or_else(|| denied("empty root generation"))?;
+        if closed.state == State::RootCancellationPrepared {
+            if closed_only {
+                return Err(denied(
+                    "pending root cancellation cannot grant successor creation",
+                ));
+            }
+            let end = usize::try_from(closed.revision)
+                .map_err(|_| denied("pending cancellation history overflow"))?;
+            if let Some(attempt) = super::root_preparation::preservation::indexed::pending_retained(
+                data,
+                profile,
+                &generation.binding,
+                closed,
+                &generation.origin,
+                history
+                    .get(..end)
+                    .ok_or_else(|| denied("pending cancellation prefix missing"))?,
+            )? {
+                expected.push(attempt);
+            }
+            pending_cancellation = true;
+            continue;
+        }
         if closed.state == State::RootCancellationAbsent {
             let end = usize::try_from(closed.revision)
                 .map_err(|_| denied("cancelled-root history overflow"))?;
@@ -162,6 +258,9 @@ fn inspect_root_lineage(
                     &generation.origin,
                     prefix,
                 )?;
+            if let Some(attempt) = observation.retained_slot() {
+                expected.push(attempt.to_string());
+            }
             check_historical_scope_pins(
                 data,
                 &PinnedDirectory::open(profile)?,
@@ -247,7 +346,7 @@ fn inspect_root_lineage(
                         | State::RootCancellationPrepared
                         | State::RootCancellationAbsent
                 )
-            }) || current.is_none() && !cancelled.is_empty())
+            }) || current.is_none() && (!cancelled.is_empty() || pending_cancellation))
         {
             return Err(denied("indexed root original vault missing"));
         }

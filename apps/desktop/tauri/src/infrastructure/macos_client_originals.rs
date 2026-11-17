@@ -38,6 +38,12 @@ pub(crate) mod observation_metrics;
 const MAX_CONTENT: usize = 2 * 1024 * 1024;
 const MAX_SECURITY: usize = 256 * 1024;
 const MAX_FRAME: usize = 32 * 1024 * 1024;
+#[cfg(test)]
+thread_local! {static OWNED_ROOT_CAPTURE_POINT:std::cell::RefCell<Option<String>>=const{std::cell::RefCell::new(None)};}
+#[cfg(test)]
+pub(crate) fn fixture_take_root_capture_point() -> Option<String> {
+    OWNED_ROOT_CAPTURE_POINT.with(|p| p.borrow_mut().take())
+}
 const NAMES: [&str; 3] = [
     "opencodex-catalog.json",
     "models_cache.json",
@@ -1224,6 +1230,25 @@ impl Originals {
             &|point| {
                 reservation.require(data_root, client_root, profile_root)?;
                 reservation.root_absence()?;
+                #[cfg(test)]
+                if std::env::var("OCXD024_ROOT_CANCEL_PARTIAL_POINT")
+                    .ok()
+                    .as_deref()
+                    == Some(point)
+                {
+                    if !data_root.starts_with("/private/tmp")
+                        || !data_root.ancestors().any(|p| {
+                            p.file_name().is_some_and(|n| {
+                                n.to_string_lossy().starts_with("ocxd024-root-cancel-")
+                            })
+                        })
+                    {
+                        return Err(denied("first-root partial capture fixture scope refused"));
+                    }
+                    OWNED_ROOT_CAPTURE_POINT.with(|p| *p.borrow_mut() = Some(point.to_string()));
+                    eprintln!("OWNED_FIRST_ROOT_CAPTURE_INTERRUPT {point}");
+                    return Err(denied("owned first-root partial capture interruption"));
+                }
                 #[cfg(test)]
                 if std::env::var("OCXD024_CAPTURE_INTERRUPT_POINT")
                     .ok()

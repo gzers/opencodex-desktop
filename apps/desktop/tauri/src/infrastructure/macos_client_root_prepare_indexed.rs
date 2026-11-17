@@ -23,6 +23,7 @@ pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservati
     origin: super::super::super::root_creation::References,
     history: Vec<Head>,
     fingerprint: String,
+    retained_slot: Option<String>,
 }
 impl HistoricalObservation {
     pub(in crate::infrastructure::macos_client_originals) fn begin(
@@ -39,6 +40,25 @@ impl HistoricalObservation {
             ));
         }
         let (root, fingerprint) = observe(data, profile, binding, head, origin, history, true)?;
+        let reference = head
+            .root_retirement
+            .as_ref()
+            .ok_or_else(|| denied("cancelled capture plan reference missing"))?;
+        let slot = data
+            .child_private("manager-state", false)?
+            .child_private("client-root-cancel-plans", false)?
+            .child_private(&reference.plan.id, false)?;
+        let raw = capture_file(&slot, "plan.json", MAX_FRAME)?;
+        if raw.bytes().map(digest).as_deref() != Some(reference.plan.sha256.as_str()) {
+            return Err(denied(
+                "cancelled capture plan changed after full observation",
+            ));
+        }
+        let plan: Plan = decode(
+            raw.bytes()
+                .ok_or_else(|| denied("cancelled capture plan missing"))?,
+        )?;
+        let retained_slot = plan.capture_vault.root_retained_slot().map(str::to_owned);
         Ok((
             Self {
                 binding: binding.to_vec(),
@@ -46,9 +66,13 @@ impl HistoricalObservation {
                 origin: origin.clone(),
                 history: history.to_vec(),
                 fingerprint,
+                retained_slot,
             },
             root,
         ))
+    }
+    pub(in crate::infrastructure::macos_client_originals) fn retained_slot(&self) -> Option<&str> {
+        self.retained_slot.as_deref()
     }
     pub(in crate::infrastructure::macos_client_originals) fn finish(
         self,
@@ -111,18 +135,6 @@ fn observe(
         ));
     }
     let manager = data.child_private("manager-state", false)?;
-    if observation::entry(&manager, "client-originals")?.is_some()
-        && (!historical
-            || observation::entry(
-                &manager.child_private("client-originals", false)?,
-                &head.ticket,
-            )?
-            .is_some())
-    {
-        return Err(denied(
-            "root-cancel cannot resolve an uncaptured reference over a vault",
-        ));
-    }
     let parent = manager.child_private("client-root-cancel-plans", false)?;
     let names = super::super::super::tree::names(parent.file())?;
     if names != vec![OsString::from(&reference.plan.id)] {
@@ -148,7 +160,7 @@ fn observe(
         }
         _ => return Err(denied("indexed root-cancel plan missing")),
     };
-    if plan.schema_version != 1
+    if plan.schema_version != 2
         || plan.id != reference.plan.id
         || plan.source.revision != reference.source_revision
         || plan.source.ticket != head.ticket
@@ -176,6 +188,22 @@ fn observe(
         || digest(&encode(&source_history)?) != plan.history_sha256
     {
         return Err(denied("indexed root-cancel source event/history changed"));
+    }
+    plan.capture_vault
+        .verify_root_retained(data, &plan.source, source_history, historical)?;
+    if !historical {
+        let profile_pin = PinnedDirectory::open(profile)?;
+        let root_path = if observation::entry(&profile_pin, ".codex")?.is_some() {
+            profile_pin.path().join(".codex")
+        } else {
+            directory.path().join("root")
+        };
+        let client = PinnedDirectory::open(&root_path)?;
+        if vault_history::inspect(data, &client, profile, stored, &plan.source, source_history)?
+            != plan.capture_vault
+        {
+            return Err(denied("indexed partial capture or vault namespace changed"));
+        }
     }
     let profile = PinnedDirectory::open(profile)?;
     let logical = if historical {
@@ -282,6 +310,8 @@ fn observe(
     }
     directory.private()?;
     parent.private()?;
+    plan.capture_vault
+        .verify_root_retained(data, &plan.source, source_history, historical)?;
     super::super::super::root_creation::verify_indexed_anchor(
         &manager,
         data,
@@ -299,4 +329,33 @@ fn observe(
         &tree,
     ))?);
     Ok((root, fingerprint))
+}
+/// Pending first-root movement already has an independently indexed plan.
+/// Its retained capture is checked as DATA, never as admitted Originals.
+pub(in crate::infrastructure::macos_client_originals) fn pending_retained(
+    data: &PinnedDirectory,
+    profile: &Path,
+    binding: &[u8],
+    head: &Head,
+    origin: &super::super::super::root_creation::References,
+    history: &[Head],
+) -> std::io::Result<Option<String>> {
+    if head.state != State::RootCancellationPrepared {
+        return Err(denied("pending retained capture phase differs"));
+    }
+    observe(data, profile, binding, head, origin, history, false)?;
+    let reference = head
+        .root_retirement
+        .as_ref()
+        .ok_or_else(|| denied("pending retained capture plan missing"))?;
+    let slot = data
+        .child_private("manager-state", false)?
+        .child_private("client-root-cancel-plans", false)?
+        .child_private(&reference.plan.id, false)?;
+    let image = capture_file(&slot, "plan.json", MAX_FRAME)?;
+    if image.bytes().map(digest).as_deref() != Some(reference.plan.sha256.as_str()) {
+        return Err(denied("pending retained capture plan changed"));
+    }
+    let plan: Plan = decode(image.bytes().unwrap())?;
+    Ok(plan.capture_vault.root_retained_slot().map(str::to_owned))
 }

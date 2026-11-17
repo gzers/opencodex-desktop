@@ -14,6 +14,7 @@ pub struct Review<'a> {
     deadline: Instant,
     initial_grok: super::super::GrokSnapshot,
     history_sha256: String,
+    capture_vault: vault_history::Evidence,
 }
 impl Review<'_> {
     pub fn fingerprint(&self) -> &str {
@@ -91,15 +92,19 @@ fn snapshot(
         &index.client,
         origin,
     )?;
-    // Capture can fail after allocating a vault but before publishing refs.
-    // None must NEVER be interpreted as proof that no capture occurred.
-    if observation::entry(&manager, "client-originals")?.is_some() {
-        return Err(denied(
-            "capture storage was created; not an empty preparation",
-        ));
-    }
+    // The original reservation owns an exact retained slot, not complete
+    // Originals. Unknown slots, links, permission/content drift still refuse.
+    let capture_vault = vault_history::inspect(
+        &index.data,
+        &index.client,
+        &index.profile,
+        &index.binding,
+        head,
+        &history,
+    )?;
     if index.client.path() != context.working_directory.join(".codex")
-        || !super::super::tree::names(index.client.file())?.is_empty()
+        || head.state == State::Preparing
+            && !super::super::tree::names(index.client.file())?.is_empty()
     {
         return Err(denied(
             "created root contains new data or changed logical path",
@@ -108,14 +113,20 @@ fn snapshot(
     let profile = PinnedDirectory::open(&index.profile)?;
     let grok = super::super::GrokSnapshot::read(&profile)?;
     let tree = super::super::TreeSnapshot::read(&index.client)?;
+    if head.state == State::CaptureReserved && !tree.first_root_execution_baseline() {
+        return Err(denied(
+            "reserved first-root contains client data; not an initialization baseline",
+        ));
+    }
     let fingerprint = digest(&encode(&(
-        "macos-first-root-preparation-review-v1",
+        "macos-first-root-preparation-review-v2",
         head,
         origin,
         digest(&index.binding),
         &history,
         tree,
         grok,
+        &capture_vault,
     ))?);
     index.check()?;
     super::super::root_creation::verify_indexed(
@@ -125,8 +136,17 @@ fn snapshot(
         &index.client,
         origin,
     )?;
-    if !super::super::tree::names(index.client.file())?.is_empty()
+    if (head.state == State::Preparing
+        && !super::super::tree::names(index.client.file())?.is_empty())
         || index.head()?.as_ref() != Some(head)
+        || vault_history::inspect(
+            &index.data,
+            &index.client,
+            &index.profile,
+            &index.binding,
+            head,
+            &history,
+        )? != capture_vault
     {
         return Err(denied("first-root preparation changed during review"));
     }
@@ -145,11 +165,27 @@ impl Index {
         let initial_grok =
             super::super::GrokSnapshot::read(&PinnedDirectory::open(&self.profile)?)?;
         let history_sha256 = digest(&encode(&vault_history::read(self.connection()?, head)?)?);
+        let capture_vault = vault_history::inspect(
+            &self.data,
+            &self.client,
+            &self.profile,
+            &self.binding,
+            head,
+            &vault_history::read(self.connection()?, head)?,
+        )?;
         let first = snapshot(self, context, head, deadline)?;
         if snapshot(self, context, head, deadline)? != first
             || super::super::GrokSnapshot::read(&PinnedDirectory::open(&self.profile)?)?
                 != initial_grok
             || digest(&encode(&vault_history::read(self.connection()?, head)?)?) != history_sha256
+            || vault_history::inspect(
+                &self.data,
+                &self.client,
+                &self.profile,
+                &self.binding,
+                head,
+                &vault_history::read(self.connection()?, head)?,
+            )? != capture_vault
         {
             return Err(denied("first-root preparation did not remain stable"));
         }
@@ -161,6 +197,7 @@ impl Index {
             deadline,
             initial_grok,
             history_sha256,
+            capture_vault,
         })
     }
 }
