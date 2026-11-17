@@ -1,0 +1,57 @@
+{
+  "metrics": [
+    {
+      "prefix": 0,
+      "elapsedMs": 410,
+      "underOriginalEnd": true
+    },
+    {
+      "prefix": 101,
+      "elapsedMs": 680,
+      "underOriginalEnd": true
+    },
+    {
+      "prefix": 141,
+      "elapsedMs": 1981,
+      "underOriginalEnd": true
+    },
+    {
+      "prefix": 254,
+      "elapsedMs": 4052,
+      "underOriginalEnd": true
+    },
+    {
+      "prefix": 255,
+      "elapsedMs": 3584,
+      "underOriginalEnd": true
+    }
+  ],
+  "expectedNativeFailures": [
+    {
+      "case": "busy-owner",
+      "raw": "Some(33)",
+      "kind": "Uncategorized"
+    },
+    {
+      "case": "foreign-member",
+      "raw": "None",
+      "kind": "InvalidData"
+    },
+    {
+      "case": "final-record",
+      "raw": "None",
+      "kind": "Other"
+    },
+    {
+      "case": "after-final-member",
+      "raw": "None",
+      "kind": "InvalidData"
+    },
+    {
+      "case": "expired",
+      "raw": "None",
+      "kind": "TimedOut"
+    }
+  ],
+  "meaning": "component fixture timings from fixed fresh10s; excludes full productOwner/official source verification; not general production budget"
+}
