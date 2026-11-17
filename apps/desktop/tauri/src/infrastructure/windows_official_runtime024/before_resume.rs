@@ -143,6 +143,25 @@ impl OwnedRuntime {
         self.verify_before_resume_quiescent(&proof)?;
         Ok(proof)
     }
+    /// Read the same retained preparation without consuming it, changing its
+    /// cutoff or authorizing any force/client mutation. This permits the
+    /// original host to validate its retained partial store before quiescence.
+    pub fn verify_prepared_before_first_resume(
+        &mut self,
+        proof: &PreparedLauncherAbort,
+    ) -> io::Result<()> {
+        within(proof.deadline)?;
+        if !self.abort_blocked || self.abort_consumed || proof.binding != self.binding {
+            return Err(denied(
+                "prepared abort is not this retained pending creation",
+            ));
+        }
+        self.check_creator_not_resumed(proof.deadline)?;
+        if self.original_primary_unexecuted(proof.deadline)? != proof.thread_id {
+            return Err(denied("prepared abort original primary thread differs"));
+        }
+        within(proof.deadline)
+    }
     pub fn verify_before_resume_quiescent(&mut self, proof: &QuiescentLauncher) -> io::Result<()> {
         within(proof.deadline)?;
         if !self.abort_blocked

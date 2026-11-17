@@ -206,3 +206,68 @@ fn r7_abort_quiescent_proof_refuses_other_original_job() {
     a.0.verify_before_resume_quiescent(&proof).unwrap();
     assert!(!scene.path().join("must-not-execute").exists());
 }
+#[test]
+fn r7_abort_prepared_readback_exact_cutoff_expires_without_force_or_window_renewal() {
+    let scene = Scene::new();
+    let mut owner = scene.launch();
+    let now = Instant::now();
+    let parent = now + Duration::from_millis(180);
+    let proof = owner
+        .0
+        .prepare_before_first_resume_abort(now, parent)
+        .unwrap();
+    assert_eq!(proof.deadline(), parent);
+    owner.0.verify_prepared_before_first_resume(&proof).unwrap();
+    owner.0.verify_prepared_before_first_resume(&proof).unwrap();
+    assert!(!owner.0.forced_cleanup_requested());
+    assert!(owner.0.resume().is_err());
+    while Instant::now() < parent {
+        std::thread::sleep(Duration::from_millis(1));
+    }
+    assert_eq!(
+        owner
+            .0
+            .verify_prepared_before_first_resume(&proof)
+            .unwrap_err()
+            .kind(),
+        std::io::ErrorKind::TimedOut
+    );
+    assert_eq!(proof.deadline(), parent);
+    assert!(!owner.0.forced_cleanup_requested());
+    assert!(owner
+        .0
+        .prepare_before_first_resume_abort(Instant::now(), Instant::now() + Duration::from_secs(10))
+        .is_err());
+    assert!(!scene.path().join("must-not-execute").exists());
+    let path = scene.path().to_path_buf();
+    drop(proof);
+    drop(owner);
+    drop(scene);
+    assert!(!path.exists());
+    println!("r7 prepared readback actual original process/Job twice, exact parent expiry refuses without force or renewal; fresh cleanup absent={}", path.display());
+}
+#[test]
+fn r7_abort_prepared_readback_foreign_creation_and_force_history_refuse() {
+    let scene = Scene::new();
+    let mut a = scene.launch();
+    let mut b = scene.launch();
+    let now = Instant::now();
+    let proof =
+        a.0.prepare_before_first_resume_abort(now, now + Duration::from_secs(10))
+            .unwrap();
+    assert!(b.0.verify_prepared_before_first_resume(&proof).is_err());
+    assert!(!b.0.resume_revoked_by_abort());
+    assert!(!a.0.forced_cleanup_requested() && !b.0.forced_cleanup_requested());
+    a.0.verify_prepared_before_first_resume(&proof).unwrap();
+    let forced = a.0.force_owned_cleanup(proof.deadline()).unwrap();
+    assert!(forced.forced);
+    assert!(a.0.verify_prepared_before_first_resume(&proof).is_err());
+    assert!(!scene.path().join("must-not-execute").exists());
+    let path = scene.path().to_path_buf();
+    drop(proof);
+    drop(a);
+    drop(b);
+    drop(scene);
+    assert!(!path.exists());
+    println!("r7 prepared readback original creation mismatch and actual forced history refused; no normal exit/client restore grant; fresh cleanup absent={}", path.display());
+}
