@@ -1,4 +1,4 @@
-//! W-L2 native boundaries for unchanged official 2.99.0 (r4 coverage decision).
+//! W-L2 native boundaries for unchanged official 2.99.0 (r4/r6/r7 contracts).
 //!
 //! These are implementation contracts, not a new source of native authority.
 //! Associated proof types must retain their original native objects. No proof
@@ -8,7 +8,64 @@ use super::official_lifecycle024::{ActionWindow, ServiceObservation, StopAccepte
 use crate::errors::AppResult;
 use std::time::Instant;
 
-pub const CONTRACT_VERSION: u32 = 3;
+pub const CONTRACT_VERSION: u32 = 4;
+/// Explicit recovery actions have their own bounded window. This is not an
+/// extension/retry of the failed Start, Stop or Restart deadline, nor OS authority.
+pub struct BeforeResumeRecoveryWindow {
+    deadline: Instant,
+}
+impl BeforeResumeRecoveryWindow {
+    pub fn begin(started: Instant, parent_deadline: Instant) -> AppResult<Self> {
+        let now = Instant::now();
+        let deadline = parent_deadline.min(started + crate::modules::process::stop_timeout());
+        if started > now || now >= deadline {
+            return Err(crate::errors::AppError::Timeout);
+        }
+        Ok(Self { deadline })
+    }
+    pub fn deadline(&self) -> Instant {
+        self.deadline
+    }
+}
+pub const BEFORE_RESUME_RECOVERY_RECORD: &str = "windows-before-resume-recovery-v1";
+/// Separate failure-recovery boundary. It must be reachable on the original
+/// host BEFORE first client mutation, even when capture has not returned a tag.
+/// Native associated proofs have private fields and no Clone/serde conversion.
+/// AbortRestored is deliberately not ClosedEligibility/NormalExit/Stopped and
+/// cannot authorize automatic Start, Restart or a successor capture.
+pub trait BeforeFirstResumeRecovery {
+    type Owner: NativeSession;
+    type PreparedAbort;
+    type QuiescentLauncher;
+    type AbortRestored;
+
+    /// Verify the original creation/thread/Job and monotonic never-resumed fact;
+    /// freeze the actual partial store/claim/source/session and exact prefix.
+    /// Invalidates resume and all normal lifecycle dispatch on this old owner.
+    fn prepare_abort(
+        &mut self,
+        owner: &mut Self::Owner,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<Self::PreparedAbort>;
+    /// May explicitly terminate the exact never-resumed original launcher/Job.
+    /// Preserve forced/raw outcomes; these cannot mint normal service-exit proof.
+    fn quiesce_launcher(
+        &mut self,
+        owner: &mut Self::Owner,
+        prepared: &Self::PreparedAbort,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<Self::QuiescentLauncher>;
+    /// Fresh actual claim/N/L/K + complete original/native readback, not JSON
+    /// adoption or a previous expired Start permission. Partial failure retains
+    /// custody/prefix and Required. No Ready/StopAccepted factory is fabricated.
+    fn restore_originals(
+        &mut self,
+        owner: &mut Self::Owner,
+        prepared: Self::PreparedAbort,
+        quiescent: Self::QuiescentLauncher,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<Self::AbortRestored>;
+}
 pub const OFFICIAL_PACKAGE_SHA256: &str =
     "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c";
 pub const OFFICIAL_TASK: &str = "opencodex-proxy";
@@ -233,4 +290,37 @@ pub trait DiagnosticRoles {
         supervisor: &Self::SupervisorAbsent,
         stop_deadline: Instant,
     ) -> AppResult<Self::NormalExit>;
+}
+
+#[cfg(test)]
+mod abort_window_tests {
+    use super::*;
+    use std::time::Duration;
+
+    #[test]
+    fn recovery_keeps_original_parent_deadline_and_ten_second_ceiling() {
+        let start = Instant::now();
+        let short =
+            BeforeResumeRecoveryWindow::begin(start, start + Duration::from_secs(2)).unwrap();
+        assert_eq!(short.deadline(), start + Duration::from_secs(2));
+        let ceiling =
+            BeforeResumeRecoveryWindow::begin(start, start + Duration::from_secs(60)).unwrap();
+        assert_eq!(ceiling.deadline(), start + Duration::from_secs(10));
+    }
+
+    #[test]
+    fn recovery_rejects_expired_or_future_admission_without_renewal() {
+        let now = Instant::now();
+        assert!(BeforeResumeRecoveryWindow::begin(now, now).is_err());
+        assert!(BeforeResumeRecoveryWindow::begin(
+            now - Duration::from_secs(11),
+            now + Duration::from_secs(60)
+        )
+        .is_err());
+        assert!(BeforeResumeRecoveryWindow::begin(
+            now + Duration::from_secs(60),
+            now + Duration::from_secs(61)
+        )
+        .is_err());
+    }
 }
