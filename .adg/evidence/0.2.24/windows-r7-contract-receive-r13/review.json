@@ -1,0 +1,104 @@
+{
+  "source": "bf16cad3f61259591a8fafff6f8fb2805f5e99c0",
+  "sourceFilesVerified": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "exactOrGitCrlfNormalized": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation.rs",
+      "exactOrGitCrlfNormalized": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "exactOrGitCrlfNormalized": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "exactOrGitCrlfNormalized": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "exactOrGitCrlfNormalized": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/tests.rs",
+      "exactOrGitCrlfNormalized": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "exactOrGitCrlfNormalized": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "exactOrGitCrlfNormalized": true
+    }
+  ],
+  "sevenFinalModes": [
+    {
+      "run": "product07",
+      "mode": "success",
+      "phase": "ReturnedForValidation",
+      "originalNativeThread": "ThreadId(3)",
+      "action": "6c8ce4c6-a825-4a4c-9a45-0cc2783b2eae",
+      "raw": 0,
+      "forcedFixtureDisposalNotNativeRelease": false
+    },
+    {
+      "run": "product07",
+      "mode": "failure",
+      "phase": "FailedRetained",
+      "originalNativeThread": "ThreadId(3)",
+      "action": "a78194ea-587a-4eb2-accd-d045fb499f7f",
+      "raw": 242,
+      "forcedFixtureDisposalNotNativeRelease": true
+    },
+    {
+      "run": "product07",
+      "mode": "expired",
+      "phase": "ExpiredRetained",
+      "originalNativeThread": "ThreadId(3)",
+      "action": "852d9c00-4a7a-4de5-8ac6-cb0bbc5e48ac",
+      "raw": 242,
+      "forcedFixtureDisposalNotNativeRelease": true
+    },
+    {
+      "run": "product07",
+      "mode": "panic",
+      "phase": "LostWorkerUnknown",
+      "originalNativeThread": "ThreadId(3)",
+      "action": "409046ff-4ec2-42a4-a8df-50779e33ae12",
+      "raw": 242,
+      "forcedFixtureDisposalNotNativeRelease": true
+    },
+    {
+      "run": "product07",
+      "mode": "disconnect",
+      "phase": "FailedRetained",
+      "originalNativeThread": "ThreadId(3)",
+      "action": "86e77ff0-a541-428a-97b2-096b64b1607a",
+      "raw": 242,
+      "forcedFixtureDisposalNotNativeRelease": true
+    },
+    {
+      "run": "product07",
+      "mode": "release-partial",
+      "phase": "FailedRetained",
+      "originalNativeThread": "ThreadId(3)",
+      "action": "6f0bc0f6-6108-42f1-91be-03b2d25d5d90",
+      "raw": 242,
+      "forcedFixtureDisposalNotNativeRelease": true
+    },
+    {
+      "run": "product07",
+      "mode": "release-expired",
+      "phase": "ExpiredRetained",
+      "originalNativeThread": "ThreadId(3)",
+      "action": "01fcef2d-e188-4969-b395-4cb535128202",
+      "raw": 242,
+      "forcedFixtureDisposalNotNativeRelease": true
+    }
+  ],
+  "scope": "reviewed native fixture outputs, not executed on Mac; forced242 is task-owned fixture disposal, not native release or actual currentR2 recovery",
+  "wholeProductionPassed": false
+}
