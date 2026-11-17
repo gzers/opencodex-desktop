@@ -1,0 +1,68 @@
+{
+  "sourceCommit": "fcf04caecdd7c328f03fcf1a6ceda3e18517d9bc",
+  "nativeHostSha256": "b8cc1e7c6227e3cdc7d22031c715cd7d6c36a05c95e1f58dea8bc7c889733dc2",
+  "nativeEntry": {
+    "actualCurrentServiceAdmission": true,
+    "actualUserActionEntry": true,
+    "budgetMs": 10000,
+    "canonicalCancellationClosed": true,
+    "canonicalHead": {
+      "completionSha256": "9a840efb8dbb85ee1cac6ec74370f471a6732aa62577faf36beaf4e4fb018ef6",
+      "references": null,
+      "restorePlan": null,
+      "revision": 3,
+      "rootRetirement": {
+        "plan": {
+          "id": "2511f6be-696d-46ff-bc37-ac9584af36c3",
+          "sha256": "0760d759e849b1d201006fa05efb2aa401c4282d28ddf9ef9f0842c1a2b77793"
+        },
+        "sourceRevision": 1
+      },
+      "state": "root_cancellation_absent",
+      "ticket": "a4e6f058-3ca1-4888-a927-6264892f74b8"
+    },
+    "elapsedActionMs": 9351,
+    "normalStop": false,
+    "oldArchiveTamperReopenRefused": true,
+    "originalFourNativeScopesReleased": true,
+    "releaseAcceptance": false,
+    "scenario": "success",
+    "serviceStarted": false,
+    "staleConfirmationRefused": true,
+    "successorCaptureBudgetMs": 30000,
+    "successorCaptureElapsedMs": 1680,
+    "successorCapturedHead": {
+      "completionSha256": null,
+      "references": {
+        "attempt": "79ca3b73-f75a-4b4c-b192-2d68bdaa97f5",
+        "liveSha256": null,
+        "originalSha256": "37d55b3e2d8f2e5131f05ee101bfbe4cc7b2444b4074288046b452941d167334",
+        "phases": [],
+        "scopeSha256": "fe7f9ccbab6435b8282e5deb95cca54a70d02a0f424e55c95c10c81d07181b20"
+      },
+      "restorePlan": null,
+      "revision": 6,
+      "state": "captured",
+      "ticket": "79ca3b73-f75a-4b4c-b192-2d68bdaa97f5"
+    },
+    "successorEligible": true,
+    "syntheticCaptureScopeOnlyNotService": true
+  },
+  "scopedTests": {
+    "passed": 7,
+    "failed": 0,
+    "defaultIgnoredNativeEntries": 2,
+    "userActionNativeEntryExplicitlyRun": true
+  },
+  "affectedRegressionTests": 10,
+  "uiInteractionTests": 90,
+  "typecheckPassed": true,
+  "strictClippyPassed": true,
+  "userCommandAndVueConfirmationWired": true,
+  "actualTauriGuiCandidateVerification": false,
+  "officialSuccessorServiceStartVerified": false,
+  "syntheticSuccessorCaptureNotService": true,
+  "releaseAcceptance": false,
+  "dailyConfigurationChanged": false,
+  "modelRequests": false
+}

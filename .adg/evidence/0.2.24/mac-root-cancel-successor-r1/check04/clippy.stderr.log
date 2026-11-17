@@ -1,0 +1,92 @@
+    Checking opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:265:41
+    |
+265 |     let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
+    |                                         ^^^^^^^^ help: change this to: `context`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+    = note: `-D clippy::needless-borrow` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:265:51
+    |
+265 |     let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
+    |                                                   ^^^^^ help: change this to: `data`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:269:58
+    |
+269 |     let preview = super::super::preview::inspect_preview(&context, &data);
+    |                                                          ^^^^^^^^ help: change this to: `context`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:269:68
+    |
+269 |     let preview = super::super::preview::inspect_preview(&context, &data);
+    |                                                                    ^^^^^ help: change this to: `data`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:280:38
+    |
+280 |         Index::prepare_start_capture(&context, &data, next_started + Duration::from_secs(30))
+    |                                      ^^^^^^^^ help: change this to: `context`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:280:48
+    |
+280 |         Index::prepare_start_capture(&context, &data, next_started + Duration::from_secs(30))
+    |                                                ^^^^^ help: change this to: `data`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:286:62
+    |
+286 |         super::super::generation::fixture_captured_successor(&context, &successor, &preparing);
+    |                                                              ^^^^^^^^ help: change this to: `context`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:292:41
+    |
+292 |     let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
+    |                                         ^^^^^^^^ help: change this to: `context`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:292:51
+    |
+292 |     let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
+    |                                                   ^^^^^ help: change this to: `data`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:304:34
+    |
+304 |     assert!(Index::open_existing(&context, &data, &profile.join(".codex")).is_err());
+    |                                  ^^^^^^^^ help: change this to: `context`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_cancel_service_tests.rs:304:44
+    |
+304 |     assert!(Index::open_existing(&context, &data, &profile.join(".codex")).is_err());
+    |                                            ^^^^^ help: change this to: `data`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: could not compile `opencodex-desktop` (lib test) due to 11 previous errors
