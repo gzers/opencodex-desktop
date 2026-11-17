@@ -1,0 +1,21 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: this `map_or` can be simplified
+   --> src/infrastructure/native_config_write_guard.rs:328:17
+    |
+328 | /                 crate::infrastructure::macos_process_exit::Generation::observe(self.child.id())
+329 | |                     .map_or(true, |now| now != original)
+    | |________________________________________________________^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#unnecessary_map_or
+    = note: `-D clippy::unnecessary-map-or` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::unnecessary_map_or)]`
+help: use a standard comparison instead
+    |
+328 -                 crate::infrastructure::macos_process_exit::Generation::observe(self.child.id())
+329 -                     .map_or(true, |now| now != original)
+328 +                 crate::infrastructure::macos_process_exit::Generation::observe(self.child.id()) != Ok(original)
+    |
+
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 1 previous error

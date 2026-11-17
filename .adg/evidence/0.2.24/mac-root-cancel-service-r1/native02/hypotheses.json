@@ -1,0 +1,8 @@
+{
+  "beforeRun": true,
+  "testScope": "current-service success only",
+  "hypothesis": "Removing two duplicate full audits at unchanged pre-transaction/receipt boundaries lets the same original 10000ms action finish; complete OS, four native scopes, full program image inside SQL and after COMMIT still required",
+  "unchangedBudgets": true,
+  "unchangedAssertions": true,
+  "priorFourNativeCounterexamplesReused": true
+}

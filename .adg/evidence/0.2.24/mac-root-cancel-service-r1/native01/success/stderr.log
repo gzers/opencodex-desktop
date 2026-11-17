@@ -1,0 +1,8 @@
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+CONFIG_GUARD_TRACE expected=prepared actual=prepared phase=prepare
+CONFIG_GUARD_TRACE expected=relocated actual=relocated phase=relocate
+CONFIG_GUARD_TRACE expected=released actual=released phase=release
+
+thread 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::service_tests::current_service_movement_and_native_release_bind_a_distinct_cancellation_terminal' (166280575) panicked at src/infrastructure/macos_client_root_cancel_service_tests.rs:200:10:
+called `Result::unwrap()` on an `Err` value: Custom { kind: PermissionDenied, error: "first-root cancellation review expired" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<stdin>", line 14, in <module>
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-root-cancel.py", line 100, in run
+    if result is None or result['exitCode'] or residues: raise RuntimeError('official guarded preservation test or cleanup failed')
+RuntimeError: official guarded preservation test or cleanup failed
