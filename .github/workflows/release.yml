@@ -182,12 +182,35 @@ jobs:
           report = binding.verify(app, receipt, root / 'apps/desktop/tauri', source)
           (directory / 'macos-build-binding.json').write_text(json.dumps(report, indent=2) + '\n')
           PY
+      - name: Verify signed macOS updater against sealed app and official runtime
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! command -v minisign >/dev/null; then brew install minisign; fi
+          python3 - <<'PY'
+          import importlib.util, json, os
+          from pathlib import Path
+          root = Path.cwd()
+          spec = importlib.util.spec_from_file_location('updater024', root / '.github/scripts/verify_macos_updater_024.py')
+          verifier = importlib.util.module_from_spec(spec); spec.loader.exec_module(verifier)
+          bundle = root / 'apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos'
+          archives = list(bundle.glob('*.app.tar.gz'))
+          if len(archives) != 1:
+              raise ValueError('one actual signed updater archive is required')
+          archive = archives[0]
+          report = verifier.verify(bundle / 'OpenCodeX Desktop.app', archive,
+                                   Path(str(archive) + '.sig'), root / 'apps/desktop/tauri/tauri.conf.json')
+          (Path(os.environ['OCXD_TAURI_RETRY_EVIDENCE']) / 'macos-updater-delivery.json').write_text(json.dumps(report, indent=2) + '\n')
+          PY
       - name: Preserve macOS executable build binding
         if: always() && runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
           name: release-macos-build-binding
-          path: test/out/release-tauri-downloads/macos-build-binding.json
+          path: |
+            test/out/release-tauri-downloads/macos-build-binding.json
+            test/out/release-tauri-downloads/macos-updater-delivery.json
           if-no-files-found: warn
       - name: Package verified standalone macOS application
         if: runner.os == 'macOS'
