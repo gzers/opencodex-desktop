@@ -1,0 +1,20 @@
+{
+  "product01": {
+    "raw": 101,
+    "error": "E0624 test called private validate_returned twice, E0382 test tried drop of already consumed old_lease",
+    "nativeExecuted": false,
+    "fix": "cfg(test) wrapper only; keep production generic callback private, remove duplicate consumed fixture drop"
+  },
+  "product02": {
+    "raw": 101,
+    "error": "new worker fixture attempted private source file directly in unprotected temp root; native helper correctly PermissionDenied before worker creation",
+    "passed": "all6fullnativecorevalidation modes",
+    "fix": "new own private source directory per existing native fixture pattern; preserve4file failure tree+readonlyZIP"
+  },
+  "product03": {
+    "raw": 0,
+    "passed": "all4actualworkerreturnvalidation modes, core source unchanged/reused"
+  },
+  "boundariesChanged": false,
+  "currentR2Touched": false
+}
