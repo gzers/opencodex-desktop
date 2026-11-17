@@ -1,0 +1,80 @@
+{
+  "sourceCommit": "8140844dcb6a363263f679db5f6245102947f46a",
+  "nativeSuccessHostSha256": "b6e8c26479ae6d5857d3b87a7f2164ebe81e89848f5675abf3e321918daa1646",
+  "actualCurrentServiceActionElapsedMs": 9102,
+  "originalBudgetMs": 10000,
+  "nativeSuccess": {
+    "actualCurrentServiceAdmission": true,
+    "budgetMs": 10000,
+    "canonicalCancellationClosed": true,
+    "canonicalHead": {
+      "completionSha256": "93bef30f642eadbf79496a573a0a192829308ba559900d81d9d554229eb32f1a",
+      "references": null,
+      "restorePlan": null,
+      "revision": 3,
+      "rootRetirement": {
+        "plan": {
+          "id": "16c6a1c0-2b8c-4619-bfa3-70b3b33f462b",
+          "sha256": "dbc92bcfe3a734fa48aa62f2931b9b5464f4c7e19185bc1e2826093d04dd40d5"
+        },
+        "sourceRevision": 1
+      },
+      "state": "root_cancellation_absent",
+      "ticket": "aff50b21-e3cd-4850-84ff-39b28323ea4c"
+    },
+    "elapsedActionMs": 9102,
+    "normalStop": false,
+    "originalFourNativeScopesReleased": true,
+    "releaseAcceptance": false,
+    "scenario": "success",
+    "serviceStarted": false,
+    "successorEligible": false
+  },
+  "negativeCases": [
+    {
+      "case": "before_move",
+      "sourceBatch": "native01",
+      "hostSha256": "8288e5929e607baa22a36682eacbefd84ea589903af707ca8b138ec00a31c35a",
+      "reusedUnchangedBranch": true
+    },
+    {
+      "case": "after_move",
+      "sourceBatch": "native01",
+      "hostSha256": "8288e5929e607baa22a36682eacbefd84ea589903af707ca8b138ec00a31c35a",
+      "reusedUnchangedBranch": true
+    },
+    {
+      "case": "new_data",
+      "sourceBatch": "native01",
+      "hostSha256": "8288e5929e607baa22a36682eacbefd84ea589903af707ca8b138ec00a31c35a",
+      "reusedUnchangedBranch": true
+    },
+    {
+      "case": "new_root",
+      "sourceBatch": "native01",
+      "hostSha256": "8288e5929e607baa22a36682eacbefd84ea589903af707ca8b138ec00a31c35a",
+      "reusedUnchangedBranch": true
+    }
+  ],
+  "scopedTests": {
+    "passed": 7,
+    "failed": 0,
+    "ignoredNativeEntries": 2,
+    "currentServiceEntryExplicitlyRun": true
+  },
+  "ownerRegression": {
+    "passed": 20,
+    "failed": 0,
+    "ignoredDedicatedOsFixture": 1
+  },
+  "uiTestsPassed": 87,
+  "typecheckPassed": true,
+  "strictClippyPassed": true,
+  "productionMutationFactory": "actual CurrentService + independently registered Prepared + actual Guard/claim only",
+  "userCommandOrUiEntryWired": false,
+  "successorEligible": false,
+  "normalStop": false,
+  "releaseAcceptance": false,
+  "dailyConfigurationChanged": false,
+  "officialServiceStarted": false
+}
