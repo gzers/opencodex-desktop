@@ -179,6 +179,77 @@ fn name_is_actual_provider_authority_even_when_display_label_was_already_changed
         .all(|m| m.binding.is_none()));
 }
 #[test]
+fn saved_logical_channel_reopens_without_unsaved_policy_changes() {
+    let (_t, root, home) = fixture(raw());
+    let observed = snapshot(&root, &home).unwrap();
+    let initial = read_existing(&root, &home, request(&observed))
+        .unwrap()
+        .snapshot;
+    let id = initial.draft.as_ref().unwrap().policy.channels[0]
+        .id
+        .clone();
+    let saved = save(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: initial.draft.unwrap().base,
+            edits: vec![],
+            scope_channel_id: Some(id.clone()),
+            channel_intents: vec![ChannelIntentV2::Rename {
+                channel_id: id,
+                name: "界面中文渠道".into(),
+            }],
+        },
+    )
+    .unwrap();
+    let reopened = begin_draft(&root, &home, request(&saved)).unwrap();
+    assert_eq!(reopened.draft.unwrap().policy, saved.saved_policy);
+}
+
+#[test]
+fn scoped_first_save_does_not_adopt_an_unrelated_disk_default_channel() {
+    let mut initial = raw();
+    initial["providers"]["Other"] = json!({"name":"Other","adapter":"openai-chat","apiKey":"other-synthetic","baseUrl":"https://other.invalid/v1","models":["other-model"],"selectedModels":["other-model"]});
+    initial["defaultProvider"] = json!("Other");
+    initial["defaultModel"] = json!("Other/other-model");
+    let (_t, root, home) = fixture(initial.clone());
+    let observed = snapshot(&root, &home).unwrap();
+    let initial_read = read_existing(&root, &home, request(&observed))
+        .unwrap()
+        .snapshot;
+    let draft = initial_read.draft.unwrap();
+    let selected = draft
+        .policy
+        .channels
+        .iter()
+        .find(|c| c.label == "Krill")
+        .unwrap()
+        .id
+        .clone();
+    let saved = save(
+        &root,
+        &home,
+        SaveRequestV2 {
+            expected: draft.base,
+            edits: vec![],
+            scope_channel_id: Some(selected.clone()),
+            channel_intents: vec![ChannelIntentV2::Rename {
+                channel_id: selected.clone(),
+                name: "界面中文渠道".into(),
+            }],
+        },
+    )
+    .unwrap();
+    assert_eq!(saved.saved_policy.channels.len(), 1);
+    assert_eq!(saved.saved_policy.channels[0].id, selected);
+    assert_eq!(saved.saved_policy.default_channel_id, None);
+    let (written, _) = read_raw(&home).unwrap();
+    assert_eq!(written["defaultProvider"], "Other");
+    assert_eq!(written["defaultModel"], "Other/other-model");
+    assert_eq!(written["providers"]["Other"], initial["providers"]["Other"]);
+}
+
+#[test]
 fn dotted_provider_name_uses_official_identity_and_keeps_credentials_models_and_references() {
     // Compare against the ordinary save projection: it materializes current
     // defaults independently of renaming. Renaming must add no further changes.
