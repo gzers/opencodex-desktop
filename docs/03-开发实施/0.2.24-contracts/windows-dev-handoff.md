@@ -1257,3 +1257,13 @@ status.json 87项完整本线状态。canonical具体driver接线与原native完
 证据wl2-r7-v2-reference-20261117-r1：完整Tauri库MSVC product01 11过/raw0/177421ms，product03 12过/raw0/165114ms，native04最终native3过/raw0/206340ms，最终独立9strictDATA+3native；原backend02 check raw0/3680ms，无新serde依赖。原abort4/partialcapture3/Send1回归分别raw0/90/266/61ms。无意外产品首错，补充sourceReview literal查找AssertionError及宽substring误中未改println两错误留，修正采集后过，非独立安全审计。14最终执行源逐Git行尾归一核，最终TEST EXE SHA d16a5697f6b441900b6423eee7a76faafb6b35ca4cc91e3534f0f3714993a014（100747264字节，非release候选）；8新fixture根缺席，schema生成raw归档/还原，原partialregression仅原Drop不冒历史全清。完整96项状态与每轮原输出/源快照/精确参数见status.json及各result.json。
 
 真实产品Owner完整driver、原slot返回对象独立复验/截止后只读status、fulltrait/版本化可达privatecontrol、v2全native准备与部分capture/work/absentroot仍继续，实际普通Profile固定官方整链/原预算未验收。当前r2原Job24raw50依赖不重复空跑，21500/75744/原件/custody/work/anchors/协调/旧seq9及40588不动，旧50580/54692授权不沿用，无当前执行确认请求；原件未还不重跑原包。旧两目录删除自动审批blocked by policy拒绝源、历史失败树和synthetic27960清理缺口保持，不绕过或重删。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/日常与官方边界不变，不W2/双SID/发布，目标active。
+
+## 2026-11-17 TEAM28 独立v2原生DATA持久化
+
+代码c3b99c0fa704d278393bf9f854eec4de6968ba4c已推送；原strictV2后继，仅Windows V2 storage/原生tests及注册3文件，不改旧v1。先消费docs857fbd672/IMP160对具体driver和synthetic27960清理缺口的接收，TEAM28/r7写集未变；docmerge仅保本地handoff追加，修复未发布冲突后c17b031f1推送，前一证据89blobs最终HEAD逐字节核仍过。
+
+独立v2-record命名与严格V2前驱/candidate全链验证先于CREATE_NEW；每个实际文件/目录在后续fallible检查前登记，原fileID/所含8/bytes/ADS/完整members前后读回，失败保原资源和前缀、不读旧目录收养、不重试或新开window。独立V2不调用v1decoder/不转换记录。原生持久化只是DATA，不构造原Owner/claim/quiescent/restore证明；原生准备producer和partial恢复未接完整。
+
+证据wl2-r7-v2-durability-20261117-r1：product01真实完整Tauri库MSVC raw0/145459ms，6过0败0ignored，native tests0.98s；26实际新目录覆盖完整canonical DATA链、7版本/引用/链beforewrite拒绝、5原生写入中断点、4过期/替换截止/非空拒绝、6成员/SD/ADS/晚变化、3完整声明DATA/Pending/未知终态拒绝。完整声明ID是合成DATA不冒nativeOriginalSet/产品Owner。无意外product首错，原112编译warning留；续接工具调用/未发布文档merge错误及修正单列operational-errors.json，非产品失败，不隐记录。4最终执行源逐Git行尾归一核，TEST EXE SHA4b5e372f7c50b3b4d3be904a725d2d0b2bb371ee890bb3475d7fb0690ccdebea；26新root缺席，schema生成raw归档还原。原strictDATA9/原生准备3及未受影响CLI/MSI/空GUI/归档复用，不重复计数或重跑。
+
+status.json完整103项状态，真正产品Owner returned/proof独立slot复验、截止后只读history/status、strict可达versionedprivatehost/fulltrait、完整nativeV2原安全/内容/成员producer及pre-manifest/partial恢复、真实普通Profile固定官方整链与原预算继续未完。当前r2Job24raw50Unknown只停自身证明，不反复PSS/zeroDuplicate或旧cleanup作Status；原21500/75744/原件/work/custody/anchors/协调/旧seq9及40588不动，无当前执行授权请求，旧50580/54692批准不沿用，原件未还不跑新原包。旧两目录删除自动审批blocked by policy拒绝源、其它失败树和synthetic27960清理缺口保留，不绕过重删或按PIDguess清理。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方及日常配置PATH策略不改，不W2/双SID/发布，目标active。
