@@ -11,6 +11,7 @@ import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
+from runtime_delivery_fixture024 import DeliveryFixture
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location('package_macos_024', ROOT / '.github/scripts/package_macos_024.py')
 pack = importlib.util.module_from_spec(spec); spec.loader.exec_module(pack)
@@ -27,15 +28,11 @@ class Package024(unittest.TestCase):
         (self.app / 'Contents/MacOS/opencodex-desktop').chmod(0o755)
         (self.app / 'Contents/Info.plist').write_bytes(plistlib.dumps({'CFBundleShortVersionString':pack.VERSION,'CFBundleIdentifier':'fixture-only','CFBundleExecutable':'opencodex-desktop'}))
         self.resources = self.app / 'Contents/Resources/runtime-bundle'; self.resources.mkdir(parents=True)
-        self.source = b'official fixture bytes not a real archive'
-        self.platform = b'complete platform fixture bytes'
-        self.identity = {'runtime':{'version':'2.99.0','sha256':hashlib.sha256(self.source).hexdigest()}}
-        self.descriptor = {'schemaVersion':1,'platform':'darwin-arm64','runtimeVersion':'2.99.0','runtimeArchiveSha256':self.identity['runtime']['sha256'],'archiveName':'complete.tar.gz','archiveBytes':len(self.platform),'archiveSha256':hashlib.sha256(self.platform).hexdigest()}
-        raw = json.dumps(self.descriptor).encode()
-        (self.resources / 'runtime-bundle.manifest.json').write_bytes(raw)
-        (self.resources / 'runtime-bundle.manifest.sha256').write_text(hashlib.sha256(raw).hexdigest()+'\n')
-        (self.resources / 'official-runtime.tgz').write_bytes(self.source)
-        (self.resources / 'complete.tar.gz').write_bytes(self.platform)
+        self.fixture = DeliveryFixture(self.resources)
+        self.source = self.fixture.source
+        self.platform = (self.resources / 'complete.tar.gz').read_bytes()
+        self.identity = self.fixture.policy
+        self.descriptor = self.fixture.descriptor
         self.output = self.root / 'artifacts'; self.output.mkdir()
         self.dmg = self.output / 'candidate.dmg'; self.evidence = self.output / 'evidence.json'
         self.calls=[]; self.mounted=False; self.readonly=True; self.corrupt=False

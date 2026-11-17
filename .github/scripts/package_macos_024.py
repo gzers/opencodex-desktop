@@ -5,7 +5,6 @@ Creates a NEW DMG, verifies its read-only mounted payload and leaves source
 bytes/signatures untouched. Never installs, launches, changes HOME or publishes.
 """
 import argparse
-import hashlib
 import importlib.util
 import json
 import os
@@ -17,6 +16,9 @@ import tempfile
 _spec = importlib.util.spec_from_file_location('macos_package_common', Path(__file__).with_name('macos_package_common.py'))
 common = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(common)
+_delivery_spec = importlib.util.spec_from_file_location('verify_runtime_delivery_024', Path(__file__).with_name('verify_runtime_delivery_024.py'))
+delivery = importlib.util.module_from_spec(_delivery_spec)
+_delivery_spec.loader.exec_module(delivery)
 ROOT = Path(__file__).resolve().parents[2]
 APP = 'OpenCodeX Desktop.app'
 VERSION = '0.2.24'
@@ -52,35 +54,7 @@ def resources(app):
     root = app / 'Contents/Resources/runtime-bundle'
     if root.is_symlink() or not root.is_dir():
         raise ValueError('single .app must carry its own runtime-bundle directory')
-    descriptor = root / 'runtime-bundle.manifest.json'
-    if descriptor.is_symlink() or descriptor.stat().st_size > 64 * 1024 * 1024:
-        raise ValueError('invalid bundled runtime descriptor')
-    raw = descriptor.read_bytes()
-    value = json.loads(raw)
-    source = policy()['runtime']
-    if (value['schemaVersion'] != 1 or value['platform'] != 'darwin-arm64'
-            or value['runtimeVersion'] != source['version']
-            or value['runtimeArchiveSha256'] != source['sha256']):
-        raise ValueError('app runtime descriptor differs from the official policy')
-    name = value['archiveName']
-    if (not isinstance(name, str) or Path(name).name != name or '\\' in name
-            or ':' in name or name in {'', '.', '..'}):
-        raise ValueError('invalid runtime archive resource name')
-    archive = root / name
-    official = root / 'official-runtime.tgz'
-    for entry in (archive, official, root / 'runtime-bundle.manifest.sha256'):
-        if entry.is_symlink() or not entry.is_file() or entry.stat().st_nlink != 1:
-            raise ValueError('runtime resource must be a single-link bundle-local file')
-    pin = hashlib.sha256(raw).hexdigest()
-    if (root / 'runtime-bundle.manifest.sha256').read_text().strip() != pin:
-        raise ValueError('resource descriptor pin differs from its actual bytes')
-    if common.sha256(official) != source['sha256']:
-        raise ValueError('original official runtime archive differs from tagged bytes')
-    if archive.stat().st_size != value['archiveBytes'] or common.sha256(archive) != value['archiveSha256']:
-        raise ValueError('complete platform bundle differs from its descriptor')
-    return {'descriptorSha256': pin, 'officialRuntimeVersion': source['version'],
-            'officialRuntimeSha256': source['sha256'], 'platformArchiveSha256': value['archiveSha256'],
-            'platformArchiveBytes': value['archiveBytes']}
+    return delivery.verify(root, 'darwin-arm64', policy())
 
 
 def verify_payload(mount, expected, original, command, report):

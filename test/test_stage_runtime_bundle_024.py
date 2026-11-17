@@ -74,16 +74,33 @@ class OfficialStageBoundary(unittest.TestCase):
             manifest.write_bytes(b'{"schemaVersion":1}')
             (bundle / 'result.json').write_text(json.dumps({'archive': str(archive),
                 'archiveName': archive.name, 'manifest': str(manifest)}))
-        with patch.object(stage, 'POLICY', self.policy), patch.object(stage.subprocess, 'run', side_effect=built):
+        with patch.object(stage, 'POLICY', self.policy), patch.object(stage.subprocess, 'run', side_effect=built), patch.object(stage.delivery, 'verify', return_value={'releaseAcceptance': False}) as verification:
             result = self.run_stage()
         self.assertEqual((self.resources / 'official-runtime.tgz').read_bytes(), self.archive.read_bytes())
         self.assertFalse((self.resources / 'maintained-runtime.tgz').exists())
         self.assertEqual((self.resources / 'runtime-bundle.manifest.sha256').read_text().strip(), result['descriptorSha256'])
         self.assertTrue(Path(result['tauriConfig']).is_relative_to(self.output.resolve()))
+        verification.assert_called_once_with(self.resources.resolve(), 'darwin-arm64', json.loads(self.policy.read_bytes()))
+        self.assertFalse(result['deliveryVerification']['releaseAcceptance'])
+        self.assertEqual(json.loads((self.output / 'runtime-delivery-verification.json').read_bytes()), result['deliveryVerification'])
         self.assertEqual(len(commands), 1)
         self.assertIn('--policy', commands[0])
         self.assertNotIn('--execute', commands[0])
         self.assertIn('build_desktop_runtime_bundle.py', commands[0][1])
+
+    def test_invalid_delivery_never_emits_packaging_configuration(self):
+        def built(argv, check):
+            bundle = self.output / 'platform-bundle'; bundle.mkdir()
+            archive = bundle / 'bundle.tar.gz'; archive.write_bytes(b'bad closure')
+            manifest = bundle / 'manifest.json'; manifest.write_bytes(b'{}')
+            (bundle / 'result.json').write_text(json.dumps({'archive': str(archive),
+                'archiveName': archive.name, 'manifest': str(manifest)}))
+        with patch.object(stage, 'POLICY', self.policy), patch.object(stage.subprocess, 'run', side_effect=built), patch.object(stage.delivery, 'verify', side_effect=ValueError('bad closure')):
+            with self.assertRaisesRegex(ValueError, 'bad closure'):
+                self.run_stage()
+        self.assertFalse((self.output / 'tauri.runtime-bundle.conf.json').exists())
+        self.assertFalse((self.output / 'runtime-delivery-verification.json').exists())
+        self.assertEqual((self.resources / 'bundle.tar.gz').read_bytes(), b'bad closure')
 
 
 if __name__ == '__main__':
