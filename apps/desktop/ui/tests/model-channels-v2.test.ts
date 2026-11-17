@@ -61,3 +61,14 @@ it('places policy status/actions in the tab target and retains secondary directo
   s.channelEditorId=id(1);await flushPromises();expect(target.textContent).toBe('');s.channelEditorId='';await flushPromises();expect(target.textContent).toContain('待保存修改')
  }finally{w.unmount();expect(target.textContent).toBe('');target.remove()}
 })
+
+it('explains official display overflow and retains the queued channel rename',async()=>{
+ const s=useModelsV2Store();await s.loadChannels()
+ const prior=ipc.getMockImplementation()!
+ ipc.mockImplementation(async(command,args)=>{if(command==='model_v2_file_save')throw {code:'model_display_name_limit',issues:[]};return prior(command,args)})
+ s.queueChannel({kind:'rename',channelId:id(1),name:'新的中文渠道'})
+ await s.saveChannels(id(1))
+ expect(s.fileError).toContain('请缩短渠道名或为模型指定显示名称')
+ expect(s.channelIntents).toContainEqual({kind:'rename',channelId:id(1),name:'新的中文渠道'})
+ expect(s.fileSourceStale).toBe(false)
+})

@@ -512,7 +512,7 @@ fn allocate(name: &str, id: &str, occupied: &BTreeSet<String>) -> String {
         !s.is_empty()
             && s.len() <= 64
             && s.bytes()
-                .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_'))
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'.' | b'-' | b'_'))
             && s.as_bytes()[0].is_ascii_alphanumeric()
             && s.as_bytes()[s.len() - 1].is_ascii_alphanumeric()
             && ![
@@ -660,18 +660,35 @@ fn allocate_mappings(
             }) {
                 continue;
             }
-            let base = format!(
-                "{}-{}-{}",
-                channel.connection.provider_id,
-                group.protocol.as_str(),
-                &group.wire_profile_digest[7..15]
-            );
-            let mut id = base.clone();
-            let mut i = 0;
-            while occupied.contains(&id.to_lowercase()) {
+            // Official2.99 permits at most64 ASCII bytes. Reserve the protocol,
+            // digest and collision suffix BEFORE taking the parent prefix.
+            // Persisted mapping identity remains authoritative after allocation.
+            let mut i = 0u32;
+            let id = loop {
+                let suffix = format!(
+                    "-{}-{}{}",
+                    group.protocol.as_str(),
+                    &group.wire_profile_digest[7..15],
+                    if i == 0 {
+                        String::new()
+                    } else {
+                        format!("-{i}")
+                    }
+                );
+                let parent = &channel.connection.provider_id;
+                let count = (64usize - suffix.len()).min(parent.len());
+                let prefix = parent
+                    .get(..count)
+                    .ok_or_else(|| error("model_runtime_mapping_conflict"))?;
+                let candidate = format!("{prefix}{suffix}");
+                if !occupied.contains(&candidate.to_lowercase()) {
+                    break candidate;
+                }
                 i += 1;
-                id = format!("{base}-{i}");
-            }
+                if i > 8192 {
+                    return Err(error("model_runtime_mapping_conflict"));
+                }
+            };
             occupied.insert(id.to_lowercase());
             next.mappings.push(RuntimeMappingV2 {
                 channel_id: channel.id.clone(),

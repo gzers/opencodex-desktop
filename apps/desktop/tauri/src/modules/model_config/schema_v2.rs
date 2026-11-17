@@ -64,6 +64,7 @@ pub fn error(code: &str) -> MatchErrorV2 {
         "model_channel_protocol_forbidden" => &["remove_channel_protocol"],
         "model_read_stale" | "model_save_stale" => &["refresh_and_retry"],
         "model_limit" => &["reduce_scope"],
+        "model_display_name_limit" => &["shorten_channel_name", "set_model_display_name"],
         "model_source_invalid" | "model_read_empty" | "model_read_unavailable" => {
             &["inspect_source", "retry_read"]
         }
@@ -79,7 +80,9 @@ pub fn error(code: &str) -> MatchErrorV2 {
             field_path: None,
             condition_ids: vec![],
             reference: None,
-            message: "模型配置未通过核对".into(),
+            message: if code == "model_display_name_limit" {
+                "渠道与模型的显示名称超出官方长度限制或含控制字符；请缩短渠道名或为该模型指定显示名称，原配置和输入已保留。"
+            } else { "模型配置未通过核对" }.into(),
             recovery_actions: actions.iter().map(|s| (*s).into()).collect(),
         }],
     }

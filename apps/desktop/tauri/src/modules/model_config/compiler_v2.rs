@@ -351,13 +351,28 @@ pub fn compile_file_v2(
                 row.insert("fastEnabled".into(), json!(true));
             }
             if let Some(naming) = channel.naming.get(id) {
-                for (map, value) in [
-                    ("modelAliases", naming.alias.as_ref()),
-                    ("modelDisplayNames", naming.display_name.as_ref()),
-                ] {
-                    set_exact(&mut row, map, id, value.map(|v| json!(v)).as_ref())?;
-                }
+                set_exact(
+                    &mut row,
+                    "modelAliases",
+                    id,
+                    naming.alias.as_ref().map(|v| json!(v)).as_ref(),
+                )?;
             }
+            let display = match channel
+                .naming
+                .get(id)
+                .and_then(|n| n.display_name.clone())
+                .filter(|v| !v.is_empty())
+            {
+                Some(manual) => Some(manual),
+                None => super::channel_display_v2::generated(channel, &mapping.provider_id, id)?,
+            };
+            set_exact(
+                &mut row,
+                "modelDisplayNames",
+                id,
+                display.map(Value::String).as_ref(),
+            )?;
             destinations.insert(
                 (channel.id.clone(), id.clone()),
                 mapping.provider_id.clone(),
@@ -505,6 +520,17 @@ pub fn compile_file_v2(
             })
             .ok_or_else(|| error("model_runtime_mapping_conflict"))?;
         let mut model_targets = targets_for(model, &provider);
+        model_targets.push(MaterializedTargetV2 {
+            channel_id: model.channel_id.clone(),
+            raw_model_id: model.raw_model_id.clone(),
+            field: "displayName".into(),
+            provider_id: provider.clone(),
+            pointer: format!(
+                "/providers/{}/modelDisplayNames/{}",
+                escaped(&provider),
+                escaped(&model.raw_model_id)
+            ),
+        });
         if next["providers"][&provider]["modelCapabilities"]
             .get(&model.raw_model_id)
             .and_then(|v| v.get("inputModalities"))

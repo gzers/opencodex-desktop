@@ -699,11 +699,11 @@ pub(super) fn provider_renames(
                 .contains(&target.to_ascii_lowercase().as_str())
             || !target
                 .bytes()
-                .all(|c| c.is_ascii_alphanumeric() || c == b'-' || c == b'_')
+                .all(|c| c.is_ascii_alphanumeric() || b"._-".contains(&c))
         {
             return Err(invalid(
                 "provider",
-                "运行渠道标识须为 1–64 位字母、数字、连字符或下划线，以字母或数字开头和结尾，且不可使用系统保留标识",
+                "运行渠道标识须为 1–64 位字母、数字、点、连字符或下划线，以字母或数字开头和结尾，且不可使用系统保留标识",
             ));
         }
         let source = config["providers"]
@@ -1684,6 +1684,33 @@ mod tests {
             first.channels[0].connection.active_node_id,
             third.channels[0].connection.active_node_id
         );
+    }
+
+    #[test]
+    fn dotted_provider_name_rename_keeps_full_provider_and_routed_references() {
+        let mut config = fixture();
+        let original = config.clone();
+        let before = read(&config);
+        let mut after = before.clone();
+        after.channels[0].label = "demo.v2".into();
+        after.channels[0].connection.provider_id = "demo.v2".into();
+        save(&mut config, &before, &after);
+        let mut expected = original;
+        let mut row = expected["providers"]
+            .as_object_mut()
+            .unwrap()
+            .remove("demo")
+            .unwrap();
+        row["name"] = json!("demo.v2");
+        expected["providers"]["demo.v2"] = row;
+        expected["defaultProvider"] = json!("demo.v2");
+        expected["modelPickerOrder"] = json!([
+            "native-unknown",
+            "demo.v2/b",
+            "demo.v2/vendor-a",
+            "native-tail"
+        ]);
+        assert!(config == expected);
     }
 
     #[test]

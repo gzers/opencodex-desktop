@@ -391,9 +391,24 @@ pub fn read_policy_v2(
                     all_selected = false;
                 }
                 channel.model_order.push(id.clone());
+                let own_display = old
+                    .map(|old| {
+                        super::channel_display_v2::is_own_projection(
+                            old,
+                            &alias,
+                            &id,
+                            raw["modelDisplayNames"][&id].as_str(),
+                            ledger,
+                            &expected_policy,
+                        )
+                    })
+                    .transpose()?
+                    .unwrap_or(false);
                 let naming = ModelNaming {
                     alias: raw["modelAliases"][&id].as_str().map(String::from),
-                    display_name: raw["modelDisplayNames"][&id].as_str().map(String::from),
+                    display_name: (!own_display)
+                        .then(|| raw["modelDisplayNames"][&id].as_str().map(String::from))
+                        .flatten(),
                 };
                 if naming.alias.is_some() || naming.display_name.is_some() {
                     channel.naming.insert(id.clone(), naming.clone());

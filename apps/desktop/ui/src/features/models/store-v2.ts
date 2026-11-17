@@ -13,7 +13,7 @@ import {
 } from './api-v2'
 
 const clone=<T>(value:T):T=>JSON.parse(JSON.stringify(value)) as T
-const message=(cause:unknown)=>cause instanceof Error?cause.message:typeof cause==='object'&&cause!==null&&'code' in cause?String(cause.code):'操作未完成，当前输入已保留。'
+const message=(cause:unknown)=>{const code=cause instanceof Error?cause.message:typeof cause==='object'&&cause!==null&&'code' in cause?String(cause.code):'操作未完成，当前输入已保留。';return code==='model_display_name_limit'?'显示名称超出官方长度限制或含控制字符；请缩短渠道名或为模型指定显示名称，当前输入已保留。':code}
 const isSourceConflict=(cause:unknown)=>['model_read_stale','model_save_stale','model_transaction_cas'].includes(message(cause))
 export interface FileSourceReview { request:ReconcileRequestV2; preview:ReconcilePreviewV2; context:string }
 export interface RevisionBufferV2 {templateId:string;baseRevision:string|null;label:string;content:TemplateContentV2;makeDefault:boolean}
