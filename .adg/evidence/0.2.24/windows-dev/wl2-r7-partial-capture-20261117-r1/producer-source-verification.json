@@ -1,0 +1,368 @@
+{
+  "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+  "ProjectionAliasFix": "a41718ae452040a689b318e32dcf6edf95b9e2c0",
+  "changedFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded.rs",
+      "bytes": 7777,
+      "sha256": "6554188e67e20a97bad705e52d67ce1de7d9c43655bc35fe651790b52d72743a",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+      "bytes": 25314,
+      "sha256": "863dd02157544064f2dd15022d5d0e75a2625147bb2edd3edc7b4e6713d52b95",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs",
+      "bytes": 16986,
+      "sha256": "9c2c787f5233315d1d12b8961edb6d6f165d0b010d22a07bffc619193a405f1a",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 33340,
+      "sha256": "0d7875bbe9c1e3c2df36ae9c73345ed0db7d5ccf4b524a70f8d02a6afeea2e45",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs",
+      "bytes": 2661,
+      "sha256": "02befe9c9ff12b374924fb5895c0a69a0c3527ac6c01cc14f5afc94ae4d93678",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/build.rs",
+      "bytes": 5475,
+      "sha256": "9ad063f08b36288348e72edea343539cc6657676e2b9c9d9700348cb3f72bc47",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/bounded.rs",
+      "bytes": 215,
+      "sha256": "3005594a03f55d570c3dbb34e7d8dea2fdc6e15197642604361fc2d11dfa6a77",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 500,
+      "sha256": "5484e13f241502db918908b1ec969d34c62fc1c259178d2704050e3532bcd3d0",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/partial_collect_tests.rs",
+      "bytes": 4862,
+      "sha256": "4a238b7486695698e7cb553489b6f5e5cb42ca445a87c30f55cc0d89ed245ddb",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "test/windows024-native/run-r7-query.ps1",
+      "bytes": 7579,
+      "sha256": "9186d296cc49cbace0cb6983c62ac2c2719147bf2e4a767b794c4180bb0095a6",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "test/windows024-native/verify-r7-partial-sections.py",
+      "bytes": 3854,
+      "sha256": "0e5b8b61d5655d30eb2ea0f2161ca327ae16954fdbb0d67c6c50bf4e1c6fb43f",
+      "workingMatchesSaved": true,
+      "producerGitCRLFOnly": true
+    }
+  ],
+  "lightActualConsumedFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/hash.rs",
+      "bytes": 3272,
+      "sha256": "9c12a52d3441112415be7340d44e44067802a1ac449c490a33e69fd24fdb6e13",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+      "bytes": 12579,
+      "sha256": "70c389799f079b3972cde525fb6256a9609eadbfc4f77977d2c58666affd232c",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/tests.rs",
+      "bytes": 7630,
+      "sha256": "8135c3cf09e3faadba39e58c7231d80bc117ac3849ca7dc883e9d44b523129a4",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded/query.rs",
+      "bytes": 22240,
+      "sha256": "30ba16b5ffa8a1db6c05de2f642a254572243ff62fe109b91e4d7638399318ac",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "bytes": 22226,
+      "sha256": "5b32be7cf85ab71870536bcb7dffa350ab9568e1af4d790581991e53a0b380a9",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/phase.rs",
+      "bytes": 18496,
+      "sha256": "3300970abe65a0e2a27e7a2bc0c4d2a8c97cc77fec2ede3695b7f4c13e8c10e3",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/r7_readonly.rs",
+      "bytes": 5515,
+      "sha256": "6440d96b7eb1489cde53f8b654833f5cb91c6335bfa89c6db98722b97089ab19",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/r7_readonly/objects.rs",
+      "bytes": 4093,
+      "sha256": "02256779ea63b066549e553d2ad7bb0300f8b8389597dd7ed167af51a37617df",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree.rs",
+      "bytes": 31049,
+      "sha256": "721682b3c3ffaf138b150ebe350d5fba3e622c58a9eddad41b38a98c0cf859c2",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+      "bytes": 25314,
+      "sha256": "863dd02157544064f2dd15022d5d0e75a2625147bb2edd3edc7b4e6713d52b95",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/streams.rs",
+      "bytes": 1914,
+      "sha256": "d60b045ec40694c73db80750f92ba19f09cb1688bd24f7b524912e1a644f4f71",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/before_resume.rs",
+      "bytes": 7065,
+      "sha256": "819844ccb3de6f735d9d58afb8efb3ade9b0ebfa5bb2b80c34a1bf2d8294ba6e",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "bytes": 6144,
+      "sha256": "17d879e6da4a43d609215d1175ffc5cf4b34319a8f02999cfa566887c05ef30a",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/file_move.rs",
+      "bytes": 9400,
+      "sha256": "3e80b9c73ef29088918075645db13ca3ecfa527cfea610741dfaf28965ebdc1f",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/host_process.rs",
+      "bytes": 5869,
+      "sha256": "190e5be7fbba467e9a12e2b42e729332f6104fb7a526fbbbc3c7e9ac0cab86e4",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "bytes": 6464,
+      "sha256": "dca88402cbba920d7432b38ea7b4089f24e818065a2e24651cab405d90aa545a",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "bytes": 3229,
+      "sha256": "1dfb1f756c574760180d9306298e54ca406d8c6d2cf93f46745c9dd8e020cbe9",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "bytes": 13407,
+      "sha256": "181d18bf49812c62f54da81304edfa8c004d8ef5cefb27ca554e7efcb0384c94",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/peer.rs",
+      "bytes": 3468,
+      "sha256": "2bb3f48e42c40ffc1dbd43a7d7ad97fb8b78bf25dcdf73fc15e78adb2f04b5ad",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/pipe.rs",
+      "bytes": 12663,
+      "sha256": "f3f746498f48c9222ac95b5fa63921954a018b5a2327f6076ca477a7aca9def1",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "bytes": 8526,
+      "sha256": "d431220e2667305124da167d128bc2517c3cafebd89eb41412fe0d1340f12274",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 39658,
+      "sha256": "7c963be50030bd772c329b990bc9d89665d453612f4be843f93f0e235258a54e",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "bytes": 4883,
+      "sha256": "5470b54a2773ae4c87270a3c2901aadcad7ec63d48f579c45ddf6110de0ef7ff",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "bytes": 9847,
+      "sha256": "6064f2fd7fcc9d9654ed73dab9929cc6eb6c491083d56a4028ebe3b2e7326d8b",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/backup/safety.rs",
+      "bytes": 10076,
+      "sha256": "75add47e40990bc7fb3ae81cf8a555081fa88279d72a1d7b40f999e7404b6185",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_windows_tests.rs",
+      "bytes": 23443,
+      "sha256": "4d5ac4be021116d14a0fba2af038110cee3427a7bf9b849ae46aee633c4b3eef",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_windows.rs",
+      "bytes": 19587,
+      "sha256": "f71dd9f2331e98fe720a1b6d8308155bb0f1223d5e16c1257484753efd48f5cf",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+      "bytes": 33760,
+      "sha256": "c6e04300492a47034fa035b54749c3506dbfc34b47f5f564d86d882e68620875",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_layout.rs",
+      "bytes": 8934,
+      "sha256": "11de66fdb0013baff93000d49be3a3af616fca3808966c266ba166428cb2e5c3",
+      "matchesExecuted": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "bytes": 14967,
+      "sha256": "6db1733ab2d1890c10cefd5989b567885c470e45829ce104f30bdc167486bd1c",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/build.rs",
+      "bytes": 5475,
+      "sha256": "9ad063f08b36288348e72edea343539cc6657676e2b9c9d9700348cb3f72bc47",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/Cargo.lock",
+      "bytes": 7785,
+      "sha256": "df9f708d612fa885f3c461720981722cee0a293d43cf6ccb0d1d1a2f726e66a2",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/Cargo.toml",
+      "bytes": 701,
+      "sha256": "c3f0cb02a26ea495956c99fbe246414ee1d487839a6cd27e150b564e477e0e17",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/abort_fixture.rs",
+      "bytes": 133,
+      "sha256": "90d6033e2aeaee1a941e222ceb9387cbcdd27d5ae3177585af27f5df7cbe3200",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/mod.rs",
+      "bytes": 183,
+      "sha256": "ae3188f3ac2e1f24a0a217d4f535b0798208ae93575ea9cd3ee231aec99c9798",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/bounded.rs",
+      "bytes": 215,
+      "sha256": "3005594a03f55d570c3dbb34e7d8dea2fdc6e15197642604361fc2d11dfa6a77",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/bounded/tests.rs",
+      "bytes": 5654,
+      "sha256": "7defd3375621277facae5e0ae83851468f4013764f998b6fbffb18daaaa745f1",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/collector.rs",
+      "bytes": 11013,
+      "sha256": "ace9d21cf10eada42526d6d61756b6e35b915618a40a04f79aa42eac46a84b02",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 500,
+      "sha256": "5484e13f241502db918908b1ec969d34c62fc1c259178d2704050e3532bcd3d0",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/lib.rs",
+      "bytes": 1900,
+      "sha256": "499bf9f1c9de38f1b5c73aaf9d6225175de70ef4f9329534cc458fd1492983fc",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/observer.rs",
+      "bytes": 713,
+      "sha256": "46db9129e0743835f17c233c719efc2ca97ab019a57eeaf80939d358c6247de3",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/partial_collect_tests.rs",
+      "bytes": 4862,
+      "sha256": "4a238b7486695698e7cb553489b6f5e5cb42ca445a87c30f55cc0d89ed245ddb",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/tests/abort.rs",
+      "bytes": 7404,
+      "sha256": "3c5a21c4ec535455870fcb6372fcd1f1398e4e4bca608cc2a5a7e33c4e13ce9e",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/r7-scene-locators.json",
+      "bytes": 110171,
+      "sha256": "d55002e6bfefc5780599099cb4561e8b2ecd2eabe522c3d0956c8fb00441f707",
+      "matchesExecuted": true
+    },
+    {
+      "path": "test/windows024-native/run-r7-query.ps1",
+      "bytes": 7579,
+      "sha256": "9186d296cc49cbace0cb6983c62ac2c2719147bf2e4a767b794c4180bb0095a6",
+      "matchesExecuted": true
+    }
+  ],
+  "productNativeTestExecutable": {
+    "kind": "actual Tauri lib test binary, not distributable product",
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\53d6a296bd8051e2\\out\\opencodex_desktop_lib-53d6a296bd8051e2.exe",
+    "bytes": 99206656,
+    "sha256": "6725963037110a6954e5391c81045872352d62e5b2bf68b7860be07372d9a4c9"
+  },
+  "tests": {
+    "productNativePassed": 3,
+    "lightNativePassed": 3,
+    "actualLibraryTypecheckPassed": true,
+    "actualProductTestMetadataPassed": true
+  },
+  "productionRecoveryAccepted": false
+}

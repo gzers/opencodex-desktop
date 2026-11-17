@@ -1,0 +1,98 @@
+   Compiling windows024-r7-query-proof v0.1.0 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness)
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `PathBuf`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/22f61c6cd29fab18\out/safety_section.rs:7:29
+  |
+7 |     path::{Component, Path, PathBuf},
+  |                             ^^^^^^^
+
+warning: unused import: `infrastructure::hash`
+ --> src\infrastructure\windows_client_originals024\collector.rs:4:32
+  |
+4 | use crate::{backend as native, infrastructure::hash, modules::runtime::program_image};
+  |                                ^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/22f61c6cd29fab18\out/program_image_section.rs:526:14
+    |
+526 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+526 -             .fetch_update(
+526 +             .try_update(
+    |
+
+warning: unused import: `io::Read`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/22f61c6cd29fab18\out/safety_section.rs:6:5
+  |
+6 |     io::Read,
+  |     ^^^^^^^^
+
+memory allocation of 1179664 bytes failed
+stack backtrace:
+   0:     0x7ffba3e7cbb9 - std::backtrace_rs::backtrace::win64::trace
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\..\..\backtrace\src\backtrace\win64.rs:85
+   1:     0x7ffba3e7cbb9 - std::backtrace_rs::backtrace::trace_unsynchronized
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\..\..\backtrace\src\backtrace\mod.rs:66
+   2:     0x7ffba3e7cbb9 - std::sys::backtrace::_print_fmt
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\sys\backtrace.rs:74
+   3:     0x7ffba3e7cbb9 - std::sys::backtrace::impl$0::print::impl$0::fmt
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\sys\backtrace.rs:44
+   4:     0x7ffba3ea648e - core::fmt::write
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/core\src\fmt\mod.rs:0
+   5:     0x7ffba3e8d064 - core::io::write::default_write_fmt
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/core\src\io\write.rs:402
+   6:     0x7ffba3e8d064 - core::io::write::Write::write_fmt<std::sys::stdio::windows::Stderr>
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/core\src\io\write.rs:335
+   7:     0x7ffba3e6daf2 - std::sys::backtrace::BacktraceLock::print
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\sys\backtrace.rs:47
+   8:     0x7ffba3e6daf2 - std::alloc::default_alloc_error_hook
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\alloc.rs:417
+   9:     0x7ffba3e510ac - std::alloc::rust_oom::closure$0
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\alloc.rs:448
+  10:     0x7ffba3e4e77f - std::sys::backtrace::__rust_end_short_backtrace<std::alloc::rust_oom::closure_env$0,never$>
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\sys\backtrace.rs:182
+  11:     0x7ffba3e6db9b - std::alloc::rust_oom
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\alloc.rs:444
+  12:     0x7ffba3e51e48 - std::alloc::_::__rust_alloc_error_handler
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\alloc.rs:443
+  13:     0x7ffba81be198 - alloc::alloc::handle_alloc_error::rt_error
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/alloc\src\alloc.rs:678
+  14:     0x7ffba81be198 - alloc::alloc::handle_alloc_error
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/alloc\src\alloc.rs:684
+  15:     0x7ffba3c37ce2 - <rustc_proc_macro[92975a63a5d48931]::bridge::server::RunningSameThreadGuard as core[32d34355a42fe4fc]::ops::drop::Drop>::drop
+  16:     0x7ffba57430fa - RINvMs6_NtCs9aBU1q96m36_9hashbrown3rawINtB6_8RawTableTINtNtNtCsaXnrYQLryW7_12rustc_middle2ty7context13InternedInSetINtNtCscHjYIzlNln5_13rustc_type_ir7ty_info18WithCachedTypeInfoINtNtB1U_6binder6BinderNtBT_6TyCtxtINtNtB1U_14predicate_kind13PredicateKindB3c_
+  17:     0x7ffba58022d4 - <rustc_middle[7fa19acedaab6bb5]::ty::context::CtxtInterners>::intern_predicate
+  18:     0x7ffba4899acd - <rustc_borrowck[19cb775847a1f3b0]::type_check::TypeChecker as rustc_middle[7fa19acedaab6bb5]::mir::visit::Visitor>::visit_body
+  19:     0x7ffba47f896c - rustc_borrowck[19cb775847a1f3b0]::mir_borrowck
+  20:     0x7ffba481320b - <rustc_borrowck[19cb775847a1f3b0]::borrow_set::BorrowSet>::build
+  21:     0x7ffba478ef9a - rustc_borrowck[19cb775847a1f3b0]::mir_borrowck
+  22:     0x7ffba4f94a4b - rustc_query_impl[9f062a2856a0cdf0]::query_system
+  23:     0x7ffba4e7a024 - RINvMs6_NtCs9aBU1q96m36_9hashbrown3rawINtB6_8RawTableTTNtNtNtCsaXnrYQLryW7_12rustc_middle2ty8instance8InstanceNtNtBX_4mono14CollectionModeETINtNtNtBX_5query5erase10ErasedDataAhj20_ENtNtNtBX_9dep_graph5graph12DepNodeIndexEEE14reserve_rehashNCNvMs1_NtCs6bkpt
+  24:     0x7ffba4f94a9b - rustc_query_impl[9f062a2856a0cdf0]::query_system
+  25:     0x7ffba3ecfb65 - rustc_interface[fd8320524f8c10d4]::passes::analysis
+  26:     0x7ffba398e03a - rustc_query_impl[9f062a2856a0cdf0]::self_profile::alloc_self_profile_query_strings
+  27:     0x7ffba3877c6b - <rustc_privacy[ac6dd8d9f5a4855d]::DefIdsToImplsCollector as rustc_privacy[ac6dd8d9f5a4855d]::DefIdVisitor>::visit_def_id
+  28:     0x7ffba398e076 - rustc_query_impl[9f062a2856a0cdf0]::self_profile::alloc_self_profile_query_strings
+  29:     0x7ffba05ced4e - std[7ac5527a03ca1e7b]::sys::backtrace::__rust_begin_short_backtrace::<std[7ac5527a03ca1e7b]::thread::lifecycle::spawn_unchecked<ctrlc[5bf1741e561b9891]::set_handler_inner<rustc_driver_impl[372a0a0235827044]::install_ctrlc_handler::{closure#0}>::{closure#0}, !>::{closure#1}::{closure#0}::{closure#0}, ()>
+  30:     0x7ffba05c88f5 - RINvNtNtCsaxvnbPqUQwF_3std3sys9backtrace28___rust_begin_short_backtraceNCNCINvNtCslLrfEnpE3se_15rustc_interface4util26run_in_thread_with_globalsNCINvB1e_31run_in_thread_pool_with_globalsNCINvNtB1g_9interface12run_compileruNCNvCs4JDxN7GNbcS_17rustc_driver_i
+  31:     0x7ffba05d3c47 - std[7ac5527a03ca1e7b]::sys::backtrace::__rust_begin_short_backtrace::<std[7ac5527a03ca1e7b]::thread::lifecycle::spawn_unchecked<ctrlc[5bf1741e561b9891]::set_handler_inner<rustc_driver_impl[372a0a0235827044]::install_ctrlc_handler::{closure#0}>::{closure#0}, !>::{closure#1}::{closure#0}::{closure#0}, ()>
+  32:     0x7ffba3e79997 - std::sys::thread::windows::impl$0::new::thread_start
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\sys\thread\windows.rs:58
+  33:     0x7ffcf187e987 - BaseThreadInitThunk
+  34:     0x7ffcf328c53c - RtlUserThreadStart
+warning: `windows024-r7-query-proof` (lib test) generated 5 warnings (run `cargo fix --lib -p windows024-r7-query-proof --tests` to apply 4 suggestions)
+error: could not compile `windows024-r7-query-proof` (lib test); 5 warnings emitted
+
+Caused by:
+  process didn't exit successfully: `D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/rustc.exe --crate-name windows024_r7_query_proof --edition=2021 src\lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat,unused-externs-silent --emit=dep-info,link -C embed-bitcode=no -C codegen-units=256 --test --check-cfg cfg(docsrs,test) --check-cfg "cfg(feature, values())" -C metadata=27aa3822ba6a702d -C extra-filename=-dedf01b2e4cff204 --out-dir C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/dedf01b2e4cff204\out --target x86_64-pc-windows-msvc -C linker=D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\msvc-w1c\msvc\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\link.exe -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\debug\build\serde_derive/9481974dad2d8d19\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\block-buffer/1d22905e242e5c73\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\cfg-if/aec01ecafb64c5a7\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\cpufeatures/9545914a6c5191da\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\crypto-common/dbdad59d384b3430\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\digest/f16e2263095cd1e2\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\fastrand/dd029fef7a865a7c\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\generic-array/8d518bda491fec54\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\getrandom/300426602955f9f7\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\itoa/b6bd98f28662d3e8\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\memchr/d771128f1a8971a2\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\once_cell/9feed6a3c30d8ff3\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\serde_core/8d8aafc8681f86c3\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\subtle/21f72f59c2759979\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\typenum/8467810cdf32bf47\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows-link/5ba5be261238fdbf\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows-sys/f5c8281557ebe677\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\zmij/d60294bf9a249912\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\debug\build\windows024-r7-query-proof/dedf01b2e4cff204\out --extern hmac=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\hmac/8afc0da567992b74\out\libhmac-8afc0da567992b74.rlib --extern serde=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\serde/ceabdfd8adac899f\out\libserde-ceabdfd8adac899f.rlib --extern serde_json=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\serde_json/4944ded28c64c5e3\out\libserde_json-4944ded28c64c5e3.rlib --extern sha2=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\sha2/97a31f1ec85c0b6b\out\libsha2-97a31f1ec85c0b6b.rlib --extern tempfile=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\tempfile/85f18ca6c4825fa9\out\libtempfile-85f18ca6c4825fa9.rlib --extern windows_sys=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows-sys/f5c8281557ebe677\out\libwindows_sys-f5c8281557ebe677.rlib --force-warn=unused_crate_dependencies` (exit code: 0xc0000409, STATUS_STACK_BUFFER_OVERRUN)

@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 148；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 149；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 634fc376cda19ca039e9fc30d3be83699058414a（非冻结候选）；Windows实现检查点codex/024-windows-native 2306f39880fde481a182e724c7a58bbbbf2a0310（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 634fc376cda19ca039e9fc30d3be83699058414a（非冻结候选）；Windows实现检查点codex/024-windows-native 89f55e76d4f5a6e599b0e9db8cb359fcadce0254（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1551,3 +1551,12 @@ main 634fc376cda19ca039e9fc30d3be83699058414a接中文/派生组官方显示：�
 [本批证据](../../.adg/evidence/0.2.24/channel-display-native-r1/adoption-and-results.json)：100项Rust定向（file29/consumer27/source37/display1/protocol6）＋26项渠道页面测试/类型检查通过；分类边界后续补测与全targets严格Clippy/fmt通过，最终源码逐hash核对。native04实际Rust保存导出三代中文/改名/人工覆盖＋协议分组配置，每代新进程在OS sandbox禁止日常HOME/外网/Keychain，原样官方saveConfig/loadConfig＋两次syncCatalogModels完整目录刷新，共6次通过，slug唯一、名字正确/配置读回和合成Key/原ID保持。无服务/真实业务同步/模型调用；准确临时提取包/Profile均已清，旧失败保持。
 
 本条只完成名称技术路线与生产保存/读取接线及官方原生目录函数链的定向验证，不关闭AC-P24-09：默认Codex实际GUI加载、最终应用包重启/相应备份回退仍待固定候选。之前462e工程DMG早于本次名称代码，不能作为新名称包验收。Windows恢复/完整预算/普通MSI/最终集成W2继续未完；本轮未发布，目标active。
+
+
+### 2026-11-17 revision149：并行Windows进展与PSS最小参数决定
+
+fetch Windows89f55e76d4f5a6e599b0e9db8cb359fcadce0254／docs540025ef6，净接7轮1567文件＋handoff追加，1560payload/45,124,509字节全核，原内容保持；[接收回执](../../.adg/evidence/0.2.24/windows-r7-parallel-receive-r10/receive-result.json)。载荷核验不冒Windows全实现代码审计/整批集成/原生重跑，Windows独占写集保持，main仍634fc376c。
+
+完整Tauri库typecheck在原同一次进程404677ms raw0；新partial capture实际产品测试链接3项raw0/166883ms，原Projection再导出修复后通过，不冒产品三bin/release；扫描15项原生、固定副本完整入口6366ms通过但不冒整体Stop10/Start30/Status5。r2真实完整归档10701files/1664dirs/1192222294源字节与原前后native/44项已回交（原WMI-null拒绝及修双来源比较原样留），原件/custody/进程/seq9保持，R1执行仍未Ready/未请求批准。
+
+已消费PSS24unknown的新请求，r7追加明确允许文档化0x8在自有单broker原型取完整类型、绝不解引用/记录ObjectName；OS内部会捕获名称的事实明确承认，非“没有采集”。原全遍历/未知拒绝/QUERY-only/对象去重/原历史/未Resume/预算不变，成功原型后才R0，现场forced/原件归还须原具体确认。Windows可自行fetch继续，不必用户中转普通只读试验。Mac继续独立产品缺口，最终候选/NAME实际GUI及Windows全部未完不关闭。

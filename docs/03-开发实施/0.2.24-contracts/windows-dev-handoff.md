@@ -1006,3 +1006,51 @@ r7后续宿主附件schema实现前设计已写入.adg/evidence/0.2.24/windows-d
 源码a7e60c347f85ed35a2193e1001f6b7ec9523022a拆分原8投影只读查询，token逻辑与原实现一致、原保留能力实现字节不变；2f3b67b4169a587e3cf91c43ac014370b11b2b1d实现已先推设计的beforeResume严格附件及负例。轻量MSVC最终7通过0失败/raw0，25实际执行源码逐份核工作/Git，TEST EXE cff4fb1638c198a0f02d4d920feeaae076844cb043de3674820c7d401b0bed5b不是产品/发布制品。首E0432、后E0583及unit事件接受unknown字段的真实失败均保留于.adg/evidence/0.2.24/windows-dev/wl2-r7-async-20261117-r1/；修正不放宽8投影、期限或未知拒绝。
 
 Windows自行fetch并消费新main462e2476a9275cdf82e9e3235ed84820ac2c28c7（仅运行包完整成员/字节校验写集，无交叉），合入并推送285989b2a0401c5db7ac1aa1469c8c0ffd9c0ee5；新增只读合成包校验8项raw0，未官方执行/发布。异步Job观测请求仍待集成决定，仅对应当前R1依赖停点；完整产品OOM不阻断独立开发。当前r2原进程/原件/work/custody/旧seq9继续留，原件未还不跑原包；future原宿主partial anchor/新恢复origin/quiesce/restore与完整扫描优化仍未完。普通生产/Closed/publicStart/allAccepted=false，不W2/双SID，不改日常/官方策略配置，不发布。
+
+## 2026-11-17 TEAM18接续：完整扫描计量及r2真实只读归档
+
+代码98bd879265ff3444a34c38887262bdc4f706ccea增加仅cfg(test)阶段计量与Windows扫描反例，生产扫描算法tokens不变；cd427f938d6fe84e29b1e49ad447eb10d662b7c8交付独立R0采集器，解除Tauri产品OOM对只读准备的依赖。固定自有副本worker1/default4完整12,213项/623,970,751字节均得原树摘要，elapsed14,552.660/4,892.017ms；阶段重叠且冷热先后不同，不签生产预算或精确加速比。真实source/query/core机械抽取4段逐字核、36执行源逐份核；collector EXE67a8d01e8358f4516b3407510d741f17def4283e8a47ee137b1f4ca5251e3220仅R0工具非产品。library04 14过、1显式副本ignored，collector-source05另1过，build06raw0，直接Cargo多链接EXE导致negative07先被原native断言拒绝，原错留；按部署create-new单链接copy后negative08缺参/错phase raw2、错SID raw1三项过。全部原日志见wl2-r7-scan-metrics-20261117-r1。
+
+用户已原marenben普通SID1003/session7执行入口，完整r2归档10,701文件/1,664目录/1,192,222,294源字节，ZIP674,194,759字节，SHA c3906f7814f48c00f88ce16f6de6fbdc55b6bdffcaf2f2f2c61f3af9a67c6c0a，原SID私有路径C:/Users/marenben/ocx024-r7-r2-private-archive-20261117-r1/r2-complete-content.zip保留。ZIP成员/hash及12,365 nativeID/ADS/membership前后通过，关键44项前后及完整source/current都过，before fullscan31049ms/after4164ms是120s独立只读观察，不冒恢复10秒。原采集唯一首错WMI对挂起Node ExecutablePath=null，native句柄原路径/ID/hash已读且WMI命令/parent可读；原失败回执不覆盖，不重跑归档。2306f39880fde481a182e724c7a58bbbbf2a0310仅修工具的双来源DATA比较（原native pair必需、WMI非空不许矛盾、原argv/parent严格匹配），原回执2实际命令一致、9反例拒绝。原完整10份Public回执28,777,603字节与实际原件填充的exact-repair-plan.json在wl2-r7-r2-readonly-20261117-receive-r1。
+
+当前依赖请求更新：R0工具构建缺口已解除；原Job current-history/旧same-image无Status客户端仍待Mac明确合同，仅R1执行依赖保持。loaded357/no-postfailureResume组合复核、修复器真实原语/中断/未知/锁/期限与10秒完整校验尚未齐，fullR0Accepted/executionReady/approvalRequested=false，不沿旧清理授权force。75744/21500/40588、三custody原件/三work/四anchors/三协调、旧seq9保留；源文件未归还、不原包重跑。future原宿主恢复/P1优化继续，不W2/双SID/发布，不改官方/日常配置策略/预算/未知拒绝。
+
+## 2026-11-17 r7 原创建线程/Job首次Resume前静止原语
+
+源码63d631513b8921e952493c58024c8873000cfa0a已推送。新增私有非Clone非serde原创建凭据与强制静止凭据：新显式窗口最长10秒/parent更短；prepare先永久撤销原Resume/普通捕获，任何失败不重开窗口。原创建时保存实际主线程周期基线，后续必须同句柄/ID/原Job total1active1无后代且周期不变；只消费一次原Job forced242并核total1active0/raw242，不产NormalStop/Closed或client restore权。已尝试ResumeThread在调用API前单调置位，异常返回也不落回beforeResume分支。MSVC6项新原生反例和受影响原创建者正常Resume/退出1项raw0；TEST EXE74b1565233291ee0093bdfa079f2dc83f489d0643f799ae2f58c631525253879不是产品/发布包。首E0432以及零周期假设2过2败raw101保留；实际CREATE_SUSPENDED仍可能有内核初始化周期，改为原创建baseline完整保持，不用后读数覆盖/不Suspend或Resume探测。
+
+证据wl2-r7-native-abort-20261117-r1，39执行源逐份核工作/Git，2失败自有fixture/原日志留、成功自有fixture清理，当前r2未动。loaded357-review精确5源与原broker568f..制品映射核，capture Err在唯一resume前?返回、qualification outcome?停后续动作、失败control无Resume分派；只证明原源码分支无failure后自动Resume，不拿旧creator flag或当前Suspended单独签从未运行/当前Job证明。原Job观测请求仍待Mac合同决定；未新image接旧pipe/强杀Node或broker。
+
+此批是未来BeforeFirstResumeRecovery的下层原生原语，完整trait/partialStore anchor/canonical附件/原host fresh认证/新claimNLK/完整原件返还及原10秒源校验尚未接完。r2 exact-repair-plan executionReady/approvalRequested仍false，原3件/work/根anchors/协调/旧seq9、75744/21500/40588保留；不因工具/原语通过重跑官方或放开Start/Closed/W2/双SID/发布。缺接口仅对应R1依赖停，其余独占工作继续。
+
+## 2026-11-17 TEAM19原Job PSS能力实测：24未知类型保持依赖
+
+已自行接入main98787e64f与docs f48f642a2/TEAM19/IMP147，不等用户转交；原R0/原native63d631513成果继续保留。源码3c7bc980e8edc478ddabc529badba9384f2c40c3新增仅test下自有PSS探针，最终capability07普通未提升/MSVCraw0/自有launcher242与broker0清理。原QUERY_LIMITED(+DUP_HANDLE)快照均raw5，最小实测0x100440 QUERY_INFORMATION|DUP_HANDLE|SYNCHRONIZE成功；允许flags4/20/52完整captured91/walk91/end259，67项TypeName可读、24项ObjectType0/Flags0/TypeName缺失。两明确自有Job候选只QUERY复制、CompareObjectHandles去重同一实际Job并唯一匹配launcher，但不能以此排除24unknown内另有Job，原型accepted/当前r2JobObserved=false，未做现场查询或两遍/counter/完整拒绝表。证据wl2-r7-pss-query-20261117-r1含SDK原头/末轮2实际源、全部原编译/执行失败、最小权限表和blocking-request.json；EXE14c5505749603d8dad08ceddc72fa663356e83304b1aac7b8631bb7712ac0538是能力探针非产品。
+
+请求Mac仅决定当前PSS信息缺口：是否可用有文档HANDLE_NAME_INFORMATION为类型信息完整性、永不解引用/log ObjectName，或另有界文档路线。Windows没有扩大flags/内存/名称捕获或NT解析，没有跳24unknown计成功。原LNK2019、库缺LNK1181、CRLF自有清理回执比较、TypeName有界末尾NUL诊断均原错留，后修不改安全范围。只暂停当前r2Job事实/R1执行准备，其余future-host/整树修复器/扫描继续；不要求用户为普通原型重授权，不用旧cleanup试探或外部终止Node。实际r2全归档与前后44项已有证据，不重跑；当前21500/75744/40588与custody/work/旧seq9保留，不签Stop/Closed、不W2/双SID/发布。
+
+## 2026-11-17 r7 Windows同次原对象完整扫描与原deadline
+
+源码9b3eb595f58590eae71c1aa1277a0e793ef6e6ff实现单次完整inventory原句柄pin，20775b54e向Source捕获/复验与Stop3个原调用点传同一个原deadline，64bf7aa73a61be2b50469657bbc7515d486eca00核成功fixture精确清理。已自行合入main634fc376cda19ca039e9fc30d3be83699058414a（NAME共享/页面，无scanner写集交叉）。Windows每次新开原目录/全部文件句柄至所有reader join和原metadata/volume-ID/path/所含安全SD/ADS/完整children最终fence；文件拒写删与同名替换，完整每byte/SHA、Entry/manifest/tree和原100k/64深/512MiB/2GiB/4workers不变。无跨动作缓存、选择代全树、删操作边界scan、假补时。Mac/Unix参考语义保持；新原生只读安全fence在允许program_image_windows内实现，不改共享backup/safety/hash/权限ABI，不从rawSD签r4原件恢复/Full。
+
+最终MSVC轻量scan-only library17 15过0败3显式副本ignored/raw0，真实ACL变化/junction/ADS/硬链/字节变化/成员/空目录/同名替换/稀疏上限/aggregate2GiB/depth/截止和错误-panic全部join明确拒绝。fixed04首新算法5.968s对参考5.802s没有加速，原样保留；减去同open重复属性查询仍保前后全fence后fixed11旧4worker6.916s/新5.908s，1worker13.134/13.082s，全部12,213项623,970,751字节及原tree306e..精确一致。冷热/争用未控制，不推生产/release预算或可靠因果加速比。entry14完整同inventory+manifest函数体在原10s测试窗6366ms过，非完整恢复10s/Status5s/Start30或普通生产通过。
+
+证据wl2-r7-pinned-scan-20261117-r1含40源快照/Git字节核、5实际生成段机械核、13项完整状态、原E0308/E0277、两次OOM及三个cmd-junction夹具首错/失败原目录。测试包scan-only关闭不相干query/Owner依赖、仅本测试包debug0/incrementalfalse/codegen256，未改断言/预算/机器；TEST EXEc2affdbb8ffcf0fa0ed7b2d4dd92f1a79758c4e5c8fe53c77dc9a00f69280155非产品。成功15fixture显式close核清理，旧3失败与原固定副本保留；100k实际最大容量、完整Tauri产品/typed转发/真实普通release生产仍缺。currentr2/原件/custody/work/旧seq9/21500/75744/40588不动，未原包重跑/W2双SID/发布。
+
+PSS24unknown类型的最小安全决定仍待（原ac7c74774请求），仅R1当前Job证明/执行依赖局部停；future原host partial anchor/fresh abort/claimNLK/整树return及其原10秒仍需继续。原6项native abort和1正常Resume证据复用，未拿扫描组件通过mint Stop/Closed。exact repair plan executionReady/approvalRequestedfalse，不沿旧50580/54692授权，不改官方2.99或日常配置/PATH/策略。
+
+## 2026-11-17 r7完整库类型检查在途与早期capture缺口定位
+
+代码64bf7aa73/证据763eeab85的15项扫描原生定向及固定副本完整入口6366ms已回交。当前另开一次完整真实Tauri库cargo check（不是重复OOM产品link）：原session85435/Cargo89796，自2026-11-17T17:50:28+08:00，--locked/offline --features custom-protocol --lib -j1，只根包debug0/incrementalfalse，不产新EXE或运行生命周期。最近真实CIM仍同一Cargo及依赖rustc在编译，不能以一段无输出/观察超时重开。检查source/checkpoint和actual live观测见wl2-r7-product-check-20261117-r1；原stdout/stderr暂位于已提交scanner轮目录的unsealed product-check18子目录，终态后完整迁至新检查轮再封存，未算入旧已提交payload，更未宣称passed。
+
+同时只读核对当前真实4源，partial-capture-source-audit.json定位完整future恢复未完：capture_held的custody/两tree准备局部变量、AnchoredTree.collect逐节点前缀、Journal manifest/current初始化在返回Store前均缺持久可达的typed partial enrollment；初期没有原文件移动，勿把它误称已移动原件遗失。现有Store安装后才move/work、失败poison并保原件行为保持，下一步在原Owner/slot先装typed PartialCaptureAnchor，逐intent/actual-native创建登记，再接fresh恢复origin/claimNLK与整树return。当前只是定位证据，尚未修改该捕获实现或签接口完成。PSS24unknown安全请求仍只阻R1当前Job依赖，不停其它独占工作，不改日常/官方配置策略/预算，不原包重跑/W2/双SID/发布。
+
+完整库检查已真实终态raw0：原session85435/Cargo89796同一次404677ms完成，源码64bf7aa73，--locked/offline/custom-protocol/lib，实际全部Tauri产品模块图类型通过；先前活原stdout/stderr已终态迁至wl2-r7-product-check-20261117-r1/product-check18并封存。它关闭的是完整库typecheck缺口，旧产品linkOOM、无新EXE/真实生产/完整恢复原预算仍未通过。下一批PartialCaptureAnchor源码已有另一次实际check01raw0，原生3项定向测试在途，不能拿旧check替代新运行断言。
+
+## 2026-11-17 r7 初始typed准备区与逐节点失败前缀实际验证
+
+源码a41718ae452040a689b318e32dcf6edf95b9e2c0修回原内部Projection再导出，89f55e76d4f5a6e599b0e9db8cb359fcadce0254在原CaptureSlot先装typed PartialCaptureAnchor，Source/route/content/context/目录pins/custody/两tree与成功返回journal保原槽；任务路径先intent。AnchoredTree先登记原父/custody和空nodes，每实际file open先放pending_capture，再private/ADS/8/bytes/协调内容检查，错误poison保原nodes/pendinghandle、失败槽不可重采覆盖；成功只同对象转Store，原文件move/work仍在Store留位后。没有JSON旧记录收养、phase/Stop/Closed工厂，不热补加载357。
+
+证据wl2-r7-partial-capture-20261117-r1：check01实际全Tauri库raw0/48638ms；native-test02首E0603为先前query拆分漏内部Projection别名，同时allocation2162704 OOM/raw101，未运行断言，原日志留。修内部可见性后native-light03同实际collect/open/stamp/id/security/ADS原函数真实3过raw0（不模拟claim/Owner）；test-check04真实全部产品测试元数据raw0/173189ms。观测commit从约3.5GiB变至约8.5GiB后仅再尝试一次真实产品库链接，native-test05同原assert/期限 actual3过0败0ignored/raw0/166883ms，普通controller自有fixture，非marenben生产。TEST EXE6725963037110a6954e5391c81045872352d62e5b2bf68b7860be07372d9a4c9；11最终改动源和45实际light源逐份核，2生成段独立机械核。生成schema保raw并还原/移出代码，旧失败/删除拒绝不重试。旧产品Fixture仅Drop释放、没有逐文件清理receipt，不签全部历史清理closed。
+
+本次不是全BeforeFirstResumeRecovery完成：create_private_directory内部create后检查失败的原创建handle、journal manifest/current初始化局部record/nativecontext仍缺直接保留sink；journal-enrollment-next.json写精确缺口和后续故障反例。fresh原host恢复命令/neworigin/新claimNLK/完整原件返还与原10秒仍未实现。PSS24unknown依赖继续仅R1局部停，无新flag/currentJobquery或force。当前75744/21500/40588、原件/custody/work/anchors/协调与旧seq9保留；原r2ZIP/44项、P1scanner15、nativeabort6+normalResume1复用，不原包重跑、不沿旧50580/54692授权。actualproduct库测试链接不冒3产品bin/GUI/release/完整生产验收，不W2/双SID/发布，不改官方或日常配置策略。目标active继续journal登记和原恢复接线。

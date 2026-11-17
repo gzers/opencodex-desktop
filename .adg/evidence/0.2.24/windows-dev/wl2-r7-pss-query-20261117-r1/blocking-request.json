@@ -1,0 +1,22 @@
+{
+  "schema": "windows-async-blocking-request-v1",
+  "requestId": "r7-pss-incomplete-type-information",
+  "supersedesRouteOnly": "r7-loaded-job-status initial path now attempted",
+  "source": "3c7bc980e8edc478ddabc529badba9384f2c40c3",
+  "evidenceRound": ".adg/evidence/0.2.24/windows-dev/wl2-r7-pss-query-20261117-r1",
+  "owner": "Mac integration contract",
+  "blockedItems": [
+    "currentr2 originalJob readonly proof and R1 execution readiness"
+  ],
+  "actualFacts": "24 of91 single-broker snapshot entries report ObjectType0/Flags0 and missing TypeName under all permitted flags4/20/52. Cannot prove those unknown entries are non-Job. No unknown skipped to success.",
+  "minimalQuestion": "Can documented PSS HANDLE_NAME_INFORMATION be used only to obtain complete TypeName/flags for this one exact broker while never dereferencing/logging ObjectName, or is another bounded documented type-query route required? Current contract says unknown type refuses; Windows has not expanded flags or read names.",
+  "noSafetyChangeAssumed": true,
+  "userRecoveryConsentNotRequested": true,
+  "continuing": [
+    "future original-host partial capture/restore wiring",
+    "same-pass scanner implementation and native counterexamples",
+    "exact repairer synthetic validation"
+  ],
+  "currentR2Touched": false,
+  "accepted": false
+}

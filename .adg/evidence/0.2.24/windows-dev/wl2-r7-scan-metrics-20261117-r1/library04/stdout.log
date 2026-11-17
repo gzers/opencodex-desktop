@@ -1,0 +1,27 @@
+
+running 15 tests
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_chain_rejects_cross_scope_replay_gaps_and_false_closed ... ok
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_event_fields_are_required_and_unknowns_and_duplicate_nodes_refuse ... ok
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_prefix_rejects_missing_quiescence_reordered_or_wrong_native_ids ... ok
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_strict_fields_versions_duplicates_and_timing ... ok
+test infrastructure::windows_client_originals024::bounded::tests::r7_native_exact_object_rename_roundtrip_preserves_projection_and_detects_replacement ... ok
+test infrastructure::windows_client_originals024::bounded::tests::r7_query_uses_fixed_product_policy_and_refuses_missing_unknown_duplicate_or_old_fields ... ok
+test infrastructure::windows_client_originals024::bounded::tests::r7_same_native_handle_all_eight_repeated_queries_and_expiry_refusal ... same actual File: all8 individual/combined/repeated native queries; fixed policy; expired refused; ordinary SID=S-1-5-21-587408064-856152790-2583328096-1001 type=3 (controller fixture, not marenben acceptance)
+ok
+test infrastructure::windows_client_originals024::collector::tests::r7_collector_actual_native_objects_keep_8_bytes_children_and_reject_work_drift ... ok
+test infrastructure::windows_client_originals024::collector::tests::r7_collector_native_stream_query_rejects_ads_without_changing_default_bytes ... ok
+test infrastructure::windows_client_originals024::collector::tests::r7_collector_refuses_foreign_controller_and_unknown_version_phase_before_any_scene_access ... ok
+test modules::runtime::program_image::windows_tests::r7_image_baseline_worker1_default4_and_serial_reference_cover_every_byte_and_empty_directory ... R7_SCAN_BASELINE {"referenceDigest":"38df8b486c8768338d3a20bbe98dc314bd9d4d2d7d68885e88642531477a6a2e","samples":[{"elapsedUs":1290,"entries":5,"fileBytes":48,"metricNote":"worker nanoseconds sum overlapping spans; join wait includes worker I/O, not pure CPU cost","nativeOwner":false,"officialExecuted":false,"ordinal":0,"productionBudgetAccepted":false,"source":"same actual program_image inventory section","stages":{"stages":{"directory-enumeration":[3,237100],"directory-final-fence":[3,185300],"directory-path-admission":[3,140800],"entry-inspect-name":[6,115900],"existing-path-boundary":[9,388500],"file-admission-open":[3,136900],"file-read-hash":[3,57700],"file-total":[3,203900],"inventory-enumeration-total":[1,455600],"inventory-read-and-fence-total":[1,831500],"worker-join-wait":[1,588800]}},"treeSha256":"38df8b486c8768338d3a20bbe98dc314bd9d4d2d7d68885e88642531477a6a2e","workers":1},{"elapsedUs":1116,"entries":5,"fileBytes":48,"metricNote":"worker nanoseconds sum overlapping spans; join wait includes worker I/O, not pure CPU cost","nativeOwner":false,"officialExecuted":false,"ordinal":1,"productionBudgetAccepted":false,"source":"same actual program_image inventory section","stages":{"stages":{"directory-enumeration":[3,242800],"directory-final-fence":[3,146700],"directory-path-admission":[3,120500],"entry-inspect-name":[6,110500],"existing-path-boundary":[9,486800],"file-admission-open":[3,143400],"file-read-hash":[3,94100],"file-total":[3,248100],"inventory-enumeration-total":[1,433600],"inventory-read-and-fence-total":[1,681700],"worker-join-wait":[3,462500]}},"treeSha256":"38df8b486c8768338d3a20bbe98dc314bd9d4d2d7d68885e88642531477a6a2e","workers":4}]}
+ok
+test modules::runtime::program_image::windows_tests::r7_image_fixed_copy_stage_metrics_worker1_and_default4 ... ignored, explicit fixed copied image only; no product/Owner/official launch
+test modules::runtime::program_image::windows_tests::r7_image_same_length_byte_change_add_delete_empty_directory_and_hardlink_are_not_cached ... ok
+test modules::runtime::program_image::windows_tests::r7_image_sparse_file_bound_refuses_without_reading_payload ... ok
+test modules::runtime::program_image::windows_tests::r7_image_worker_failure_joins_every_started_worker_before_returning_error ... ok
+
+test result: ok. 14 passed; 0 failed; 1 ignored; 0 measured; 4 filtered out; finished in 0.10s
+
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

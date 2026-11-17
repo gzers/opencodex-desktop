@@ -1,0 +1,32 @@
+{
+  "scope": "remaining exact journal initialization enrollment design; no schema/state migration or execution grant",
+  "preserveExisting": "v3 manifest/current/events schema and original failed seq9 unchanged",
+  "currentCoverage": [
+    "CaptureSlot installs typed partial scope before source/route/custody preparation",
+    "Successful custody directory/native tree results retained on original anchor",
+    "Node-open actual file enrolled before private/security/stream/bytes validation",
+    "Successful full preparation transfers same objects into existing Store before first file move"
+  ],
+  "notYetCovered": [
+    "create_private_directory can create an on-disk task object then fail a later native reopen/private check before returning; anchor has prior exact intent but not that lost creation handle",
+    "Journal::create_from_source consumes native context and creates manifest/current locals before full Journal return; a later initializer failure can still drop those local record handles",
+    "Route/Source initial constructors internal partial opens are not independently retained where no task/client mutation happened",
+    "Partial failed prefix has no product fresh authenticated restoration factory yet"
+  ],
+  "nextImplementation": [
+    "Add a typed JournalPreparation sink to the original PartialCaptureAnchor, enroll exact source context/directory and per-record original file handles before post-create reads or fallible checks",
+    "Use existing create_private_originals_work_file CREATE_NEW original handle for current record so no seed-close/reopen is needed; keep exact ID/bytes/security expectations and deny sharing unchanged",
+    "Retain incomplete record/tree states as Required; do not synthesize completed manifest/current, OriginalSession or recovery proof from intent/path",
+    "Fresh explicit restore origin must rebind same original Owner and prefix; old source-action mutation cutoff remains expired. Normal capture/resume stays revoked after abort prepare",
+    "Original claim/NLK must be actual under same bounded recovery action; no root move or gap; no forced-to-normal/Closed/successor conversion"
+  ],
+  "requiredCounterexamples": [
+    "failure before/after each CREATE_NEW/write/sync/security/record-check and partial capture tag return",
+    "current/manifest identity/bytes/8 mismatch and directory membership drift",
+    "attempted replay/unknown fields or old phase conversion",
+    "expiry/lock busy/unknown partial native prefix retains exact originals/records and reports failure"
+  ],
+  "implemented": false,
+  "clientRestoreExecuted": false,
+  "currentR2Touched": false
+}

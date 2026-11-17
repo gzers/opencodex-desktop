@@ -1,0 +1,4 @@
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+**/stdout.log -text whitespace=blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+**/stderr.log -text whitespace=blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+capability07/ProcessSnapshot.h -text whitespace=-blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol

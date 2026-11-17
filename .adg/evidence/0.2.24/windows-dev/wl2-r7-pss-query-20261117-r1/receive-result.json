@@ -1,0 +1,186 @@
+{
+  "source": "3c7bc980e8edc478ddabc529badba9384f2c40c3",
+  "mainIntake": "98787e64f152515a6aa8e5b3c31b0330beaeca67",
+  "docsIntake": "f48f642a21873f42272ddab607451d3f74a39758",
+  "team": 19,
+  "IMP": 147,
+  "checks": [
+    {
+      "path": "test/windows024-native/r7-pss-job-probe.cpp",
+      "bytes": 12792,
+      "sha256": "4401b83602657ce1a803e77d75fcb213ea1bd34c5005d634e3b4aad55f03a1d2",
+      "executedWorkingEqual": true,
+      "gitCRLFOnly": true
+    },
+    {
+      "path": "test/windows024-native/run-r7-pss-probe.ps1",
+      "bytes": 2599,
+      "sha256": "dd61aeef36f378979142d05ef0ae35f26443ca4227748b6e5945f7fc652c7442",
+      "executedWorkingEqual": true,
+      "gitCRLFOnly": true
+    }
+  ],
+  "artifact": {
+    "bytes": 366592,
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-pss-query\\run-da7a08d137b74ebbafb6c3112b07d2ea.exe",
+    "sha256": "14c5505749603d8dad08ceddc72fa663356e83304b1aac7b8631bb7712ac0538"
+  },
+  "samples": [
+    {
+      "rights": 1052672,
+      "captureFlags": 4,
+      "accepted": false,
+      "error": "PssCaptureSnapshot",
+      "raw": 5
+    },
+    {
+      "rights": 1052672,
+      "captureFlags": 20,
+      "accepted": false,
+      "error": "PssCaptureSnapshot",
+      "raw": 5
+    },
+    {
+      "rights": 1052672,
+      "captureFlags": 52,
+      "accepted": false,
+      "error": "PssCaptureSnapshot",
+      "raw": 5
+    },
+    {
+      "rights": 1052736,
+      "captureFlags": 4,
+      "accepted": false,
+      "error": "PssCaptureSnapshot",
+      "raw": 5
+    },
+    {
+      "rights": 1052736,
+      "captureFlags": 20,
+      "accepted": false,
+      "error": "PssCaptureSnapshot",
+      "raw": 5
+    },
+    {
+      "rights": 1052736,
+      "captureFlags": 52,
+      "accepted": false,
+      "error": "PssCaptureSnapshot",
+      "raw": 5
+    },
+    {
+      "rights": 1049664,
+      "captureFlags": 4,
+      "captureRaw": 0,
+      "walkEndRaw": 259,
+      "captured": 91,
+      "walked": 91,
+      "entriesWithType": 67,
+      "missingType": 24,
+      "ownFixtureJobEntries": 2,
+      "ownFixtureJobMissingType": 0,
+      "ownFixtureJobTypeByteLength": 8,
+      "ownFixtureJobTypeLastCodeUnit": 0,
+      "jobCandidates": 2,
+      "duplicateJobHandles": 1,
+      "distinctJobs": 1,
+      "matchingJobs": 1,
+      "identifiableInThisSinglePass": false,
+      "accepted": false,
+      "missingTypeKinds": [
+        {
+          "objectType": 0,
+          "flags": 0,
+          "count": 24
+        }
+      ],
+      "scope": "capability only; no two-pass drift/accounting/rejection matrix yet"
+    },
+    {
+      "rights": 1049664,
+      "captureFlags": 20,
+      "captureRaw": 0,
+      "walkEndRaw": 259,
+      "captured": 91,
+      "walked": 91,
+      "entriesWithType": 67,
+      "missingType": 24,
+      "ownFixtureJobEntries": 2,
+      "ownFixtureJobMissingType": 0,
+      "ownFixtureJobTypeByteLength": 8,
+      "ownFixtureJobTypeLastCodeUnit": 0,
+      "jobCandidates": 2,
+      "duplicateJobHandles": 1,
+      "distinctJobs": 1,
+      "matchingJobs": 1,
+      "identifiableInThisSinglePass": false,
+      "accepted": false,
+      "missingTypeKinds": [
+        {
+          "objectType": 0,
+          "flags": 0,
+          "count": 24
+        }
+      ],
+      "scope": "capability only; no two-pass drift/accounting/rejection matrix yet"
+    },
+    {
+      "rights": 1049664,
+      "captureFlags": 52,
+      "captureRaw": 0,
+      "walkEndRaw": 259,
+      "captured": 91,
+      "walked": 91,
+      "entriesWithType": 67,
+      "missingType": 24,
+      "ownFixtureJobEntries": 2,
+      "ownFixtureJobMissingType": 0,
+      "ownFixtureJobTypeByteLength": 8,
+      "ownFixtureJobTypeLastCodeUnit": 0,
+      "jobCandidates": 2,
+      "duplicateJobHandles": 1,
+      "distinctJobs": 1,
+      "matchingJobs": 1,
+      "identifiableInThisSinglePass": false,
+      "accepted": false,
+      "missingTypeKinds": [
+        {
+          "objectType": 0,
+          "flags": 0,
+          "count": 24
+        }
+      ],
+      "scope": "capability only; no two-pass drift/accounting/rejection matrix yet"
+    },
+    {
+      "probeFinished": true,
+      "ownLauncherRaw": 242,
+      "ownBrokerRaw": 0,
+      "currentR2Touched": false,
+      "objectNamesRead": false,
+      "memoryCaptured": false,
+      "accepted": false
+    }
+  ],
+  "completePrototypeAccepted": false,
+  "currentR2JobObserved": false,
+  "unresolved": "24 of91 single-broker snapshot entries report ObjectType0/Flags0 and missing TypeName under all permitted flags4/20/52. Cannot prove those unknown entries are non-Job. No unknown skipped to success.",
+  "stillMissing": [
+    "two complete stable passes and identity checks",
+    "full actual original Job counter/pid/limits before-after",
+    "history/multiJob/PID-reuse/permission/drift/timeout rejection matrix",
+    "same ordinarySID1003 actual application"
+  ],
+  "notAttempted": [
+    "PSS_CAPTURE_HANDLE_NAME_INFORMATION",
+    "VA clone",
+    "NT object parsing",
+    "all-system scan",
+    "elevation/SeDebugPrivilege/ACL repair",
+    "currentr2 original pipe/forced/restore"
+  ],
+  "cleanup": "Own broker preserved original Job handles until explicit self-fixture x; original synthetic launcher raw242, Jobtotal1active0 then broker raw0. No matching probe processes remain.",
+  "normalStop": false,
+  "closed": false,
+  "publicStartOpen": false
+}

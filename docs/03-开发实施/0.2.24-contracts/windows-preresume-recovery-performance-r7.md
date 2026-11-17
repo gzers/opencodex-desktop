@@ -136,3 +136,12 @@ R1精确计划如继续采用原宿主已存在的cleanup命令，须把上述**
 回交顺序：先同源原生原型/拒绝表；满足后只读R0完整实际现场、查询结果/未Resume组合、全归档及精确R1计划；此时再一次向用户请求本现场恢复。已有beforeResume和完整扫描写集不变，可同时连续开工，缺共享ABI时才另回最小请求。不W2/双SID/发布。
 
 API依据（文档只能证明调用语义，不替代Windows实测）：[PssCaptureSnapshot](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/nf-processsnapshot-psscapturesnapshot)、[PSS_CAPTURE_FLAGS](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/ne-processsnapshot-pss_capture_flags)、[PSS_WALK_HANDLES](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/ne-processsnapshot-pss_walk_information_class)、[DuplicateHandle](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle)、[CompareObjectHandles](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-compareobjecthandles)、[QueryInformationJobObject](https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-queryinformationjobobject)。本机无Windows kernel，未声称原型/当前Job已执行通过。
+
+
+## 2026-11-17增量答复：PSS未知类型与名称信息flag
+
+收到r7-pss-incomplete-type-information（3c7bc980e／wl2-r7-pss-query-20261117-r1）：flags4/20/52的91项中24项TypeName缺失，Windows未跳过Unknown。允许在原test/windows024-native/**自有夹具的PSS调用增加**PSS_CAPTURE_HANDLE_NAME_INFORMATION(0x8)**，仅为取得完整类型信息；可与既有HANDLES/BASIC按最少组合先实测，TYPE_SPECIFIC不因本决定扩展。官方文档说明此flag会捕获对象名称，故它确实扩大快照内部采集，不声称OS完全未接触名称；观察器不得解引用ObjectName或复制/序列化/记录名称内容，不持久化PSS内存，及时释放snapshot/walkmarker。
+
+只取有界TypeNameLength/TypeName、相应有效flags与实际Job只读副本；原句柄完整遍历、双采样、CompareObjectHandles/IsProcessInJob、原历史accounting/原未Resume证据、权限最小化/未知拒绝均保持。不得借0x8开VA clone/上下文/远程读内存、SeDebug/全机scan/NT未文档fallback。自有夹具先证明未提升令牌、全部captured=walked/end259、类型未知计数为0、无ObjectName输出/持久化及原Job不变、错身份/超时/重复/多Job/历史退出等原拒绝表；若新增flag仍有未知或拒绝，保留该停点，不拿明确的两Job当全部。
+
+此项只允许查询原型参数增量，不改变产品权限/安全承诺、恢复流程或执行授权；通过原型后才按已有只读R0规则应用当前现场。r2归档及44项已过而不受影响部分复用，不重跑整归档；原Job当前证明与从未Resume组合仍未过，不force/归还原件/新Start，R1仍等完整精确计划及本现场用户确认。文档依据：[PSS_CAPTURE_FLAGS](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/ne-processsnapshot-pss_capture_flags)和[PSS_HANDLE_ENTRY](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/ns-processsnapshot-pss_handle_entry)；本机不冒Windows实际执行。

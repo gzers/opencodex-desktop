@@ -1,0 +1,26 @@
+{
+  "arguments": [
+    "check",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.dev.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.dev.package.opencodex-desktop.incremental=false",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1"
+  ],
+  "elapsedMs": 404677,
+  "newProductArtifact": false,
+  "raw": 0,
+  "officialExecuted": false,
+  "productionAccepted": false,
+  "kind": "product library check only"
+}

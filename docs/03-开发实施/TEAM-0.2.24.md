@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 20；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 21；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -211,3 +211,8 @@ r7-async源码/实际执行源分开见IMP-34 revision147，不将后继无证�
 Mac已按用户采用的官方显示格式完成共享模型保存/读回/协议组名称接线，代码634fc376cda19ca039e9fc30d3be83699058414a（前笔带点名称f7f5f8b1649d89181187692dd37cd93a31958509）；测试和未完只归IMP-34 revision148。Windows可增量合入，不碰本批模型配置/Vue写集，不需重跑本批普通页面或重复官方函数目录测试；原生候选受影响集最终固定后再给。
 
 本批未改Windows原件/Job/进程/安全投影/扫描ABI，r7原Job只读查询增补及future-host/性能独占写集不变。Windows继续轻量原生查询/拒绝表，满足后只读R0，准备精确恢复方案再一次请求本现场R1批准；不以Mac名称单测/目录函数链代Windows恢复、默认客户端GUI或整版验收。新工程包须明确晚于名称源，旧462e包不冒候选；不W2/双SID/发布。
+
+
+## revision21 PSS请求答复与并行接续
+
+Windows89f55e76d／最新540025ef6证据净接收见IMP149，不改产品接口或既有独占写集。r7文末允许PSS HANDLE_NAME_INFORMATION(0x8)在test/windows024-native/**自有原型中用于完整类型，禁读/日志ObjectName；原Unknown拒绝/唯一同内核Job等不变。原型真实过后可只读R0，未授权本现场恢复，旧归档/44项复用不重跑。future部分捕获sink/新恢复origin/claimNLK/完整return与scanner继续本线，Mac不并行改。默认客户端真实展示与Mac生命周期缺口由Mac独立继续，最终集成候选仍未固定，不W2/双SID/发布。

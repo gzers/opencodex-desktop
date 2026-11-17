@@ -1,0 +1,413 @@
+{
+  "code": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+  "evidence": "540025ef6751f7d69acfcb527c1bf739697fcd1f",
+  "rounds": [
+    {
+      "round": "wl2-r7-native-abort-20261117-r1",
+      "files": 367,
+      "payloadFiles": 366,
+      "payloadBytes": 4041779
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "files": 94,
+      "payloadFiles": 93,
+      "payloadBytes": 1473758
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "files": 764,
+      "payloadFiles": 763,
+      "payloadBytes": 8061901
+    },
+    {
+      "round": "wl2-r7-product-check-20261117-r1",
+      "files": 22,
+      "payloadFiles": 21,
+      "payloadBytes": 212171
+    },
+    {
+      "round": "wl2-r7-pss-query-20261117-r1",
+      "files": 42,
+      "payloadFiles": 41,
+      "payloadBytes": 62562
+    },
+    {
+      "round": "wl2-r7-r2-readonly-20261117-receive-r1",
+      "files": 24,
+      "payloadFiles": 23,
+      "payloadBytes": 29153173
+    },
+    {
+      "round": "wl2-r7-scan-metrics-20261117-r1",
+      "files": 254,
+      "payloadFiles": 253,
+      "payloadBytes": 2119165
+    }
+  ],
+  "payloadFiles": 1560,
+  "payloadBytes": 45124509,
+  "nativeExecutedOnMac": false,
+  "productionIntegrated": false,
+  "fullSecurityReview": false,
+  "releaseAcceptance": false,
+  "sourceChecks": [
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "test/windows024-native/r7-query-harness/build.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/bounded.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "test/windows024-native/r7-query-harness/src/partial_collect_tests.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "test/windows024-native/run-r7-query.ps1",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-partial-capture-20261117-r1",
+      "source": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+      "path": "test/windows024-native/verify-r7-partial-sections.py",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/hash.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/tests.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded/query.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/r7_readonly.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/r7_readonly/objects.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/streams.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/before_resume.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/file_move.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/host_process.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/peer.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/pipe.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/modules/backup/safety.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_windows_tests.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_windows.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/modules/runtime/program_layout.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/build.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/Cargo.lock",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/Cargo.toml",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/src/abort_fixture.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/mod.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/bounded.rs",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/bounded/tests.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/collector.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/src/lib.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/src/observer.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-query-harness/tests/abort.rs",
+      "exactGit": true,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/r7-scene-locators.json",
+      "exactGit": false,
+      "CRLFOnly": true
+    },
+    {
+      "round": "wl2-r7-pinned-scan-20261117-r1",
+      "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+      "path": "test/windows024-native/run-r7-query.ps1",
+      "exactGit": false,
+      "CRLFOnly": true
+    }
+  ]
+}

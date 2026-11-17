@@ -1,0 +1,118 @@
+{
+  "rawFiles": [
+    {
+      "name": "archive-result.json",
+      "bytes": 9921,
+      "sha256": "0f79c3becb787c64d67a85d64810cfb01f23317cc76a62ea5e0d737944faa0be"
+    },
+    {
+      "name": "content-manifest.json",
+      "bytes": 6152582,
+      "sha256": "6f26494c7e475d1c7fd8fedef4e6bcc029da5d77316ef24d25c919058d573120"
+    },
+    {
+      "name": "metadata-after.json",
+      "bytes": 10856802,
+      "sha256": "900270ff787fd4931dd72cbc07c79e94f31d3dc4939483d8a227185b67cdf534"
+    },
+    {
+      "name": "metadata-before.json",
+      "bytes": 10856803,
+      "sha256": "08f0572863d7b4d59a1a0a1d28320358d7e6150f7685c0c0b51e89ec7e9c00c7"
+    },
+    {
+      "name": "native-after.json",
+      "bytes": 450773,
+      "sha256": "520e588497a3a54384b23037797c476e890a65c6c7a37d927c04be07cef8206b"
+    },
+    {
+      "name": "native-after.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "native-after.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "native-before.json",
+      "bytes": 450722,
+      "sha256": "e86a820f0f398099a7e697a37fe4406e641ffa74ab4d110ff1bb808a4aaa0895"
+    },
+    {
+      "name": "native-before.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "native-before.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "fullArchive": {
+    "files": 10701,
+    "directories": 1664,
+    "sourceBytes": 1192222294,
+    "zip": {
+      "path": "C:\\Users\\marenben\\ocx024-r7-r2-private-archive-20261117-r1\\r2-complete-content.zip",
+      "sha256": "c3906f7814f48c00f88ce16f6de6fbdc55b6bdffcaf2f2f2c61f3af9a67c6c0a",
+      "bytes": 674194759
+    },
+    "memberIdentityADSBeforeAfter": 12365
+  },
+  "nativeCriticalRowsBefore": 44,
+  "nativeCriticalRowsAfter": 44,
+  "allCriticalRowsMatched": true,
+  "rawFirstError": [
+    {
+      "message": "System.Management.Automation.RuntimeException: exact live command lineage unavailable/differs",
+      "stage": "command-lineage",
+      "line": 64
+    }
+  ],
+  "lineageDerivedComparison": [
+    {
+      "pid": 21500,
+      "argv": [
+        "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime/versions\\2.99.0\\dependencies\\node/node.exe",
+        "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime/versions\\2.99.0\\opencodex\\node_modules/@bitkyc08/opencodex\\bin/ocx.mjs",
+        "start",
+        "--port",
+        "0"
+      ],
+      "actualNativeImage": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime\\versions\\2.99.0\\dependencies\\node\\node.exe",
+      "nativeImageId": "247287385:562949954845630",
+      "nativeImageSha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+      "wmiExecutablePath": null,
+      "imageIdentitySource": "fresh retained exact native handle before/after; WMI optional path remains null where unavailable",
+      "pairedDataConsistent": true
+    },
+    {
+      "pid": 75744,
+      "argv": [
+        "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+        "--internal-runtime-owner024"
+      ],
+      "actualNativeImage": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+      "nativeImageId": "247287385:562949954845608",
+      "nativeImageSha256": "568f9c7916a4d3c70ad8966cc54bcac263b2faa99fdb56c994d48dd42642bec0",
+      "wmiExecutablePath": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+      "imageIdentitySource": "fresh retained exact native handle before/after; WMI optional path remains null where unavailable",
+      "pairedDataConsistent": true
+    }
+  ],
+  "rawCollectorPassed": false,
+  "archiveContentPassed": true,
+  "fullR0Accepted": false,
+  "currentJobStatus": "unknown; Mac request still pending",
+  "neverResumedProofComplete": false,
+  "loadedCodeReview": "pending",
+  "repairExecutionReady": false,
+  "recoveryConsentRequested": false,
+  "originalSceneChanged": false,
+  "normalStop": false,
+  "closed": false,
+  "publicStartOpen": false
+}

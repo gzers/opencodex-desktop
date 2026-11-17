@@ -1,0 +1,3 @@
+r7-pss-job-probe.cpp
+r7-pss-job-probe.obj : error LNK2019: unresolved external symbol __imp_CompareObjectHandles referenced in function "void __cdecl observe(unsigned long,unsigned __int64,unsigned long,unsigned __int64,unsigned long,unsigned long)" (?observe@@YAXK_KK0KK@Z)
+test\windows024-native\target\r7-pss-query\r7-pss-job-probe.exe : fatal error LNK1120: 1 unresolved externals
