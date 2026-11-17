@@ -998,3 +998,5 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 代码73d8eb155ae474940cecf4d8933c41d924b29a83、原始证据48181b0b59eda60e32ce31dc670ef689c542183a已推送。r7只读工具与PS5.1身份/摘要/ADS/硬链反例通过，完整MSVC test/product因真实内存不足raw101，尚无新制品；r2全归档/预检未执行。阻塞请求位于.adg/evidence/0.2.24/windows-dev/wl2-r7-async-20261117-r1/blocking-request.json：请Mac明确已加载旧same-image无Status客户端时的原Job观测边界，当前R1执行准备依赖该决定；不以新image绕过原通道，不把旧creator历史冒当前Job事实。该Git请求只代表已交付，尚不声称Mac已接收或放行。
 
 Windows继续同源轻量原生测试、修复工具与beforeResume/schema/完整扫描工作；root产品构建和当前现场恢复保持局部缺口。当前21500/75744/custody/旧seq9及40588不动，旧50580/54692授权不延伸；完成准确归档/预检/计划后才一次请求本现场恢复确认。公开Start/allAccepted/normalStop/Closed仍false；不改官方/日常配置策略，不W2/双SID/发布。
+
+r7后续宿主附件schema实现前设计已写入.adg/evidence/0.2.24/windows-dev/wl2-r7-async-20261117-r1/before-resume-schema-plan.md。选择v3原节点事件＋windows-before-resume-recovery-v1严格附件，不改旧v3 union/current、不反向升级seq9；字段/事件/重放与拒绝矩阵均先列明。该DATA层不授native PreparedAbort/Quiescent/恢复权，Windows继续实现及轻量负例，实际原Owner接线后另交native证据。
