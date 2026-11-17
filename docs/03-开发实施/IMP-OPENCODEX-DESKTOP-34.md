@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 153；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 154；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 144391b95cc82cbc191e187537c736fd95284918（非冻结候选）；Windows实现检查点codex/024-windows-native 57c982b683f065ca73e3afc718d0127c82eae775（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main cfd41bf6e4cd055b69d9d27a4ca1ccc25f7332eb（非冻结候选）；Windows实现检查点codex/024-windows-native 9fdd4c618a57dbe5c9b52cee01680d6637300b5a（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1604,3 +1604,18 @@ Windows可自行消费新main/docs继续已有独占集，非必要不回Mac。�
 main 144391b95cc82cbc191e187537c736fd95284918仅完善本批取消审查的5项测试清理：关闭原Index/Context后显式TempDir.close，12个任务自有临时根逐项缺席断言并输出准确路径，接收端按同12路径再次核缺席。5项保持通过，全targets strict Clippy通过，diff无空白错误；[清理回执](../../.adg/evidence/0.2.24/mac-root-cancel-review-r1/cleanup-explicit/observed-absent.json)。原152的guard-only局限由这一新执行证据补齐，不回填旧日志、未删除任何历史失败或旧拒绝目录。
 
 本批仅只读首次目录取消审查，非取消功能完成。shared v2标识/三Windows具体决定已推main78dc2b814及docs ea5bf8f59；后继main含Mac文件/测试，不改Windows运行时产品或原现场。下一Mac工作仍为实际guard排他/目录保管读回/索引取消事件及界面接入；Windows独占恢复线继续，最终候选及所有原验收不放宽，目标active、不发布。
+
+
+### 2026-11-17 revision154：首次目录受锁保管与Windows净回交
+
+main cfd41bf6e4cd055b69d9d27a4ca1ccc25f7332eb在原首次空根Review上绑定Grok及独立历史摘要，新增实际官方Guard/NativeLease保护的同对象保管内核。持原claim交接、准确Guard marker与原Head/binding/history/creation身份，先落不可变plan和move-intent，再用原父目录描述符RENAME_EXCL归档同一根；归档后重锚两实际协调对象、释放本次Guard、完整树及逻辑缺席读回。途中失败保原目录/归档/意图与新数据，不自动覆盖、删除或回滚新目录。
+
+[精确代码与验证结果](../../.adg/evidence/0.2.24/mac-root-cancel-preservation-r1/result.json)：最终6项定向测试、strict lib/tests Clippy及fmt通过；默认过滤的1项原生test明确ignored，由原同源宿主在独立sandbox批次显式运行5场景：成功、移动前中断、移动后中断、后来新增内容、原路径新目录。五项实际官方2.99 Guard/claim均到达目标判断并通过，宿主SHA2e2ac366aa55599c6e074cdbda63b6166a7f9f47e6696de60ca96a230fd905d3不变；原native01语法失败、native02和final/旧检查均保留。首次供应成本与10秒保管窗口分开；不把整批耗时或存储test当完整Stop预算验收。5个任务根及共享程序根已清理并独立缺席核，无服务、日常配置、Keychain、业务同步或模型请求。
+
+**这不是正式取消功能完成。** MovementAuthority在生产无构造工厂，仅cfg(test)可用。原独立索引仍保持Preparing/CaptureReserved，不生成Cancelled/Closed/后继；移动后的旧普通解析必须拒绝。下一步接原独立索引对取消计划的注册、live/archived/中断解析、实际服务/来源权限工厂及用户入口；不得靠伪造Original references或普通Stop复用绕过未完成捕获。目录保管测试通过不允许提前暴露移动按钮。
+
+Windows9fdd4c618a57dbe5c9b52cee01680d6637300b5a／证据f6f8677a5724a527985b21eca374734c6c06c8c6新增native-return与object-type两轮，已逐原成员/长度/SHA接收，并消费原handoff追加；[回执](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r12/receive-result.json)。57文件1107196字节原件返回证据、25文件175689字节类型原型证据均匹配，非Windows实际重跑或整批源码安全审计。原返回首轮raw32失败与两树保留，修复后5实际前缀及3故障阶段通过；原10秒分别作用于各新夹具，2项17.79秒总和不冒一次完整恢复通过。现在只输出allOriginalFilesAtClient DATA，claim仍持有、locksReleased/normalStop/closed均false；最终释放、原Owner/fulltrait/完整10秒仍未完。
+
+类型原型两遍各91捕获/91遍历/259结束，67实际类型、24零访问DuplicateHandle raw50；完整覆盖仍失败，未运行JobQUERY或当前r2。原loaded357源码确认旧CLI硬编码ExplicitRecovery且要求forced=true，不能借其探Status；[只读源码核查](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r12/loaded-client-route-review.json)。没有已确认的新文档路线，禁止重复同前提试验或将raw50当非Job；当前r2恢复依赖保持Unknown，未来worker/v2/最后锁释放仍按TEAM24/r7既有写集独立继续，不要求用户来回传普通进度。
+
+NAME原生格式、官方保存/载入及六次刷新、Desktop保存后重开结论沿revision148/151；外部默认客户端、最终服务重启/回退仍未验。当前未固定整版候选，不W2/双SID、不发布，目标active。
