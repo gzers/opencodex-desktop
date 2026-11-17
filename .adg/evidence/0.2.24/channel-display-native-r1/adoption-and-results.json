@@ -1,0 +1,35 @@
+{
+  "userDecision": "接受原生显示格式，继续验证刷新与保存",
+  "commit": "634fc376cda19ca039e9fc30d3be83699058414a",
+  "dottedNameCommit": "f7f5f8b1649d89181187692dd37cd93a31958509",
+  "scopedRustTestsPassed": 100,
+  "uiTestsPassed": 26,
+  "uiTypecheck": true,
+  "strictClippyAllTargets": true,
+  "rustfmt": true,
+  "followupAfterClassifierRefinement": "logical_channel and display-limit tests, Clippy/fmt passed; final-source-manifest exact, final native04 from same source",
+  "native04": {
+    "phases": 3,
+    "refreshesEach": 2,
+    "freshProcessEachPhase": true,
+    "officialSaveLoad": true,
+    "routedCatalogDisplay": true,
+    "groupKeyMax64": true,
+    "rawModelIdsAndSyntheticKeysPreserved": true,
+    "allPassed": true,
+    "temporaryRootAbsent": true
+  },
+  "preservedFailures": [
+    "dotted name test initially compared against pre-materialization raw rather than ordinary save projection; test expectation corrected, no product assertions weakened",
+    "native02: actual official config load refused protocol group key longer than64; original logs/input/fallback retained; product allocation corrected",
+    "first export driver used wrong Cargo argument index; exact error and cleanup retained"
+  ],
+  "notProven": [
+    "default Codex GUI loaded labels",
+    "final integrated candidate restart/rollback",
+    "Windows full product lifecycle and current r2 recovery"
+  ],
+  "releaseAcceptance": false,
+  "realBusinessSyncOrModelRequests": false,
+  "dailyConfigurationModified": false
+}
