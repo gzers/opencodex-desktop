@@ -1,0 +1,41 @@
+{
+  "officialServiceStarted": false,
+  "imageSha256": "9f0a6fd15735ef0182c95a98d61036fc786bc16ef814a10fb171fd38cd3277b4",
+  "oldCleanupExecuted": false,
+  "cases": [
+    {
+      "argv": [
+        "--internal-existing-failure-cleanup024"
+      ],
+      "elapsedMs": 133,
+      "passed": true,
+      "rawExit": 2,
+      "name": "missing-confirm",
+      "expected": 2
+    },
+    {
+      "argv": [
+        "--internal-existing-failure-cleanup024",
+        "--confirm",
+        "--extra"
+      ],
+      "elapsedMs": 56,
+      "passed": true,
+      "rawExit": 2,
+      "name": "extra-argument",
+      "expected": 2
+    },
+    {
+      "argv": [
+        "--internal-existing-failure-cleanup024",
+        "--confirm"
+      ],
+      "elapsedMs": 61,
+      "passed": true,
+      "rawExit": 1,
+      "name": "controller-wrong-desktop",
+      "expected": 1
+    }
+  ],
+  "ordinaryAcceptance": false
+}

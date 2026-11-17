@@ -1,0 +1,13 @@
+{
+  "samePriorProcessTerminal": true,
+  "error": "rustc memory allocation of 2096992 bytes failed; exit0xc0000409",
+  "machinePolicyChanged": false,
+  "dailyProcessesStopped": false,
+  "retryChanges": [
+    "Only root test package debug=0/incremental=false; CLI config captured in source/result",
+    "Stop subdeadline precondition and min deadline plus regression counterexample"
+  ],
+  "hypothesis": "Root test crate without debug symbols/incremental needs less compiler commit; original production dependencies and all test/runtime assertions stay unchanged.",
+  "priorRaw": 101,
+  "priorLibrary": "library02"
+}

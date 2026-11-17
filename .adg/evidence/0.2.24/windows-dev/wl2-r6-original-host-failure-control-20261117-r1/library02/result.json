@@ -1,0 +1,23 @@
+{
+  "profile": "debug",
+  "exitCode": 101,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--lib",
+    "-j",
+    "1",
+    "--",
+    "windows_owner_host024::failure_control::tests::",
+    "windows_owner_host024::tests::",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "elapsedMs": 504557,
+  "accepted": false
+}

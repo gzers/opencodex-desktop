@@ -1,0 +1,24 @@
+{
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)",
+  "diff": null,
+  "time": "2026-11-17T12:09:25.8351039+08:00",
+  "head": "5c5c6fa852315fb96447785284af06b7236b42d8",
+  "arguments": [
+    "build",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.dev.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.dev.package.opencodex-desktop.incremental=false",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--bins",
+    "-j",
+    "1"
+  ]
+}

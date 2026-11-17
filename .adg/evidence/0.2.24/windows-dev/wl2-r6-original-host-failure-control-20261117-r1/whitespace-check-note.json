@@ -1,0 +1,10 @@
+{
+  "rawBytesChanged": false,
+  "CRLF": "Explicitly permit CR-at-EOL while retaining blank-at-eol, blank-at-eof and space-before-tab checks for the evidence tree.",
+  "exception": {
+    "path": "library03/stdout.log",
+    "reason": "Original cargo successful test stdout ends with an extra blank line; retain original bytes.",
+    "onlyDisabled": "blank-at-eof"
+  },
+  "previousSeal": "payload-manifest-first-seal.json preserves the initial pre-attribute-update seal; current authority is payload-manifest.json."
+}

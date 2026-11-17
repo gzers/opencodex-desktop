@@ -1,0 +1,41 @@
+{
+  "cases": [
+    {
+      "rawExit": 2,
+      "name": "missing-confirm",
+      "argv": [
+        "--internal-existing-failure-cleanup024"
+      ],
+      "passed": true,
+      "expected": 2,
+      "elapsedMs": 479
+    },
+    {
+      "rawExit": 2,
+      "name": "extra-argument",
+      "argv": [
+        "--internal-existing-failure-cleanup024",
+        "--confirm",
+        "--extra"
+      ],
+      "passed": true,
+      "expected": 2,
+      "elapsedMs": 58
+    },
+    {
+      "rawExit": 1,
+      "name": "controller-wrong-desktop",
+      "argv": [
+        "--internal-existing-failure-cleanup024",
+        "--confirm"
+      ],
+      "passed": true,
+      "expected": 1,
+      "elapsedMs": 86
+    }
+  ],
+  "oldCleanupExecuted": false,
+  "officialServiceStarted": false,
+  "imageSha256": "781385f473b4186505d4888f5b9f7307405990f119bc8e7f15408d40dc2d9551",
+  "ordinaryAcceptance": false
+}

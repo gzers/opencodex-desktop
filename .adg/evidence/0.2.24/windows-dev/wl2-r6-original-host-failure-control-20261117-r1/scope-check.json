@@ -1,0 +1,40 @@
+{
+  "baseline": "c0d42f8dcc72d56b84fb5bbea050efe2d66ee65f",
+  "changed": [
+    "apps/desktop/tauri/src/bin/ocxd.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/failure_control.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+    "test/windows024-native/build-wl2.ps1"
+  ],
+  "protected": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "normalizedSha256": "a1409642c0908ffe84056c1997ec991227bf3700ef8dd163060f7bc7ebc8b5aa"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter.rs",
+      "normalizedSha256": "7aaf47c01eff4959317986d5262b17ff395678467455276c3e5543906350921f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "normalizedSha256": "44330b2415fb1a04bbf0fbfeef79af0fed94edc15c61db4462fd7e7ce6d1e42d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "normalizedSha256": "7e7ddb61d2ed732a7dc49201afafa2e1dcdc2d37300f6d70f34c4cf1b6b7372e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/official_lifecycle024.rs",
+      "normalizedSha256": "b912f07bbd66d27d3b71c6614ab5bfd6978c7f4ab57180c7e78c8189dd2294b4"
+    },
+    {
+      "path": "apps/desktop/ui/package-lock.json",
+      "normalizedSha256": "69f109c39d4b8d7b3fda68d194e18ec7e6d38b708bcc29542baf0b43972d3980"
+    }
+  ],
+  "existingLifecycleIncludingFullRecoveryStateAndStatusUnchanged": true,
+  "nativeAuthority": false
+}

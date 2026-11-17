@@ -947,3 +947,11 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 原marenben SID1003/session7实际r3归档验证成功，10641文件723798906源字节1642目录，privateZIP338702293字节，SHA256 d7664840a85258fe49b8488e79861285d1748ab6fddb7cd18424abd3e10a0026。原SID完整逐member/sourcehash和前后membership核，receiver核完整清单/分组/原c870三产品摘要，controller未独立重开privateZIP，不冒NTFS身份权限克隆。完整原6171427字节receipt归.adg/evidence/0.2.24/windows-dev/wl2-r6-failure-archive-r3-20261117-receive-r1/；原54692与未恢复Node50580同FILETIME前后仍活，原树/ZIP均留，没有kill/delete/权限变更或原包重跑。
 
 源码c0d42f8dc（归档脚本），生产路径修复仍3afd4e59d，原失败c870不改接受。当前loaded c870宿主park无后续控制channel，原非Clone Owner/Job在内部，新程序不能PID/JSON收养其权威；归档不构成NormalStop/Closed或后继。具体最小方案归cleanup-plan-request.json：若明确采用新外部forced失败清理机制，只在原普通SID持有两目标经原FILETIME/TokenUser/session/imagehash核的句柄后执行forced242并读回，绝不冒Job/NormalStop权威、不动旧40588/其它进程、不含删除；下一独立scene先补原宿主可达的受限失败控制入口。此方案改变尚未实施/执行，等待明确决定。原公共Start/typedClosed/生产/整版acceptedfalse；全部原初始化/ownerreceipt/原缺席安全退根/GUI官方owner/容量/普通MSI/CAP-trust/历史清理未完保持，无日常/官方/业务/模型/W2/双SID/发布。
+
+## 2026-11-17 r6 原宿主失败控制增量与干净制品
+
+源码5c5c6fa852315fb96447785284af06b7236b42d8/tree57c02d87b995671a0baf614f9d0a0a86597dec2e已推送，仅7个Windows允许文件。原Owner创建前建立私有控制pipe，本地failed Result＋原生同image/普通Token/session/noJob/pins/原record及fresh request/action/challenge、原QPC<=10s和Stop子窗验证后，才调原registry Owner的原Job forced清理；无PID/JSON收养，不签NormalStop/Closed/恢复/后继，始终保原宿主/原件，日志失败不退出。公共Start及完整recovery_state_at/Status、原v3/lease/共享接口保持。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-original-host-failure-control-20261117-r1/；116项完整matrix及7项原限制归final-status.json。
+
+定向4过0败0忽略/raw0；frontend类型检查/build0；clean5c5c6fa85 custom-protocol全bins MSVC raw0/156984ms，三制品SHA归artifacts.json，仍debug非候选。首PS51 driver stderr中止、library02 OOM/raw101保留；只用CLI关闭根包debug符号/incremental，不改机器策略。Cargo硬链接native拒绝不冒桌面证明；单链接final EXE确认参数拒绝2/2及非测试桌面1。216个每轮输入逐原字节核并与Git归一CRLF比对。真实普通桌面pipe/实际原Owner调度、原包生命周期仍未执行通过。
+
+旧54692/未恢复50580及40588未动；controller只读raw5保持Unknown、不换访问方式。旧宿主不能接新通道，前轮两目标外部forced方案仍待明确决定，不含删除、不冒原Job/正常Stop。既有10641文件私有归档复用，旧失败/删除拒绝/全部未完保留。生成schema移入证据并还原tracked，缓存/dist/自有单链接copy保留，清理未全关。Start/allAcceptedfalse，原包生产/真GUI官方owner/H-S-D/初始化/原缺席退根/容量/普通MSI/CAP-trust等仍未完。无官方/日常/PATH/账户策略/业务/模型/旧raw5空跑/空GUI/W2/双SID/发布。
