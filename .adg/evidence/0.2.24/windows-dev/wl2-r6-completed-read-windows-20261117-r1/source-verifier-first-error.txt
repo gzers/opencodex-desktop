@@ -1,0 +1,4 @@
+Recorder error, not product/build/test failure.
+First check_source.py ran after library01 already completed and created source-scope-final.json for that then-current source.
+After TimedOut classification fix/new elapsed-window test, repeated checker refused overwrite with FileExistsError source-scope-final.json.
+Preserve first file unchanged. New explicit bounded filename source-scope-verified.json records final source, not a bypass of original-byte verification.
