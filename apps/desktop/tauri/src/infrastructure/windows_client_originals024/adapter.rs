@@ -77,6 +77,7 @@ pub(crate) struct WindowsOriginals {
     // Its native sources remain in this exact slot and the original Owner.
     abort_prefix: Option<PreparedAbortPrefix>,
     abort_attachment: Option<before_resume::attachment::BoundAttachment>,
+    quiescent_for_release: Option<QuiescentOriginals>,
 }
 impl WindowsOriginals {
     pub(crate) fn read_before_resume_prefix(

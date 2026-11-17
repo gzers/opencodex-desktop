@@ -119,6 +119,52 @@ impl PreparedAbortPrefix {
     }
 }
 impl WindowsOriginals {
+    pub(crate) fn retain_quiescent_for_release(
+        &mut self,
+        owner: &mut Owner,
+        proof: QuiescentOriginals,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<()> {
+        if self.quiescent_for_release.is_some() {
+            return Err(refused("原释放阶段已留位"));
+        }
+        self.quiescent_for_release = Some(proof);
+        owner.check_before_resume_quiescent(window)
+    }
+    pub(crate) fn finish_retained_quiescent(
+        &mut self,
+        owner: &mut Owner,
+        released: &mut super::super::coordination::ReleasedLease,
+        probe: &mut super::super::coordination::ReleaseProbe,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<AbortedOriginals> {
+        let proof = self
+            .quiescent_for_release
+            .as_ref()
+            .ok_or_else(|| refused("原静止释放凭证缺席"))?;
+        let prefix = self
+            .abort_prefix
+            .as_ref()
+            .ok_or_else(|| refused("原前缀缺席"))?;
+        proof.check_tag(prefix)?;
+        let native = self.slot.finish_before_resume_release(
+            owner,
+            prefix,
+            proof,
+            self.abort_attachment
+                .as_mut()
+                .ok_or_else(|| refused("原附件缺席"))?,
+            released,
+            probe,
+            window,
+        )?;
+        Ok(AbortedOriginals {
+            session: prefix.session,
+            action: prefix.action.clone(),
+            end: window.deadline(),
+            native,
+        })
+    }
     pub(crate) fn finish_released_originals(
         &mut self,
         owner: &mut Owner,

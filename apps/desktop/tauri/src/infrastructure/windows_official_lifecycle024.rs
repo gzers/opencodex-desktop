@@ -93,6 +93,33 @@ struct Slot {
 fn worker_occupied(entry: &Slot) -> AppResult<bool> {
     Ok(entry.recovery_worker.try_lock().map_err(unknown)?.is_some())
 }
+/// Internal concrete action entry. Native authenticated host admission still
+/// must supply this one original explicit recovery window. Public Start stays
+/// gated; old loaded hosts never gain this command by reading disk records.
+pub(crate) fn start_canonical_before_resume_recovery(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    window: crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+) -> AppResult<()> {
+    budget(window.deadline())?;
+    let entry = slot(runtime, home, false)?;
+    let mut control = entry.recovery_worker.try_lock().map_err(unknown)?;
+    if control.is_some() {
+        return Err(recovery_required());
+    }
+    let mut original = entry.owner.try_lock().map_err(unknown)?;
+    let owner = original.as_mut().ok_or_else(recovery_required)?;
+    entry.cancel.store(true, Ordering::SeqCst);
+    owner.prepare_before_resume_process(&window)?;
+    let worker = super::windows_client_originals024::recovery_worker::WorkerControl::start_owner(
+        &mut original,
+        window,
+        actions::run_before_resume_worker,
+    )
+    .map_err(unknown)?;
+    *control = Some(worker);
+    Ok(())
+}
 /// Internal transport of the already prepared ORIGINAL Owner before any active
 /// lease acquisition. The versioned host command/full recovery driver must
 /// independently admit the explicit action; this is not a public dispatch.
@@ -344,7 +371,7 @@ impl Owner {
         }
         Ok(())
     }
-    fn with_originals<T>(
+    pub(crate) fn with_originals<T>(
         &mut self,
         operation: impl FnOnce(&mut WindowsOriginals, &mut Owner) -> AppResult<T>,
     ) -> AppResult<T> {

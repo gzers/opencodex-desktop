@@ -4,6 +4,7 @@
 use super::*;
 use crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow;
 mod clock;
+pub(in crate::infrastructure::windows_official_lifecycle024) mod driver;
 use clock::RecoveryClock;
 #[derive(PartialEq, Eq)]
 enum ProcessPhase {
@@ -51,6 +52,8 @@ pub(in crate::infrastructure::windows_official_lifecycle024) struct ProcessAbort
     launcher: Option<native::PreparedLauncherAbort>,
     quiescent: Option<native::QuiescentLauncher>,
     clock: Option<RecoveryClock>,
+    restored: Option<crate::infrastructure::windows_client_originals024::AbortedOriginals>,
+    attachment_directory: Option<native::PinnedDirectory>,
     phase: ProcessPhase,
 }
 impl ProcessAbortAttempt {
@@ -74,6 +77,8 @@ impl ProcessAbortAttempt {
             launcher: None,
             quiescent: None,
             clock: None,
+            restored: None,
+            attachment_directory: None,
             phase: ProcessPhase::Pending,
         }
     }
@@ -110,6 +115,43 @@ impl ProcessAbortAttempt {
     }
 }
 impl Owner {
+    pub(crate) fn retain_before_resume_restored(
+        &mut self,
+        proof: crate::infrastructure::windows_client_originals024::AbortedOriginals,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<()> {
+        if self
+            .before_resume_process
+            .as_ref()
+            .ok_or_else(recovery_required)?
+            .restored
+            .is_some()
+        {
+            return Err(recovery_required());
+        }
+        self.before_resume_process.as_mut().unwrap().restored = Some(proof);
+        self.check_before_resume_quiescent(window)?;
+        self.before_resume_process
+            .as_ref()
+            .unwrap()
+            .restored
+            .as_ref()
+            .unwrap()
+            .read_data(window.deadline())?;
+        Ok(())
+    }
+    pub(crate) fn take_before_resume_attachment_directory(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<native::PinnedDirectory> {
+        self.check_before_resume_process(window)?;
+        self.before_resume_process
+            .as_mut()
+            .unwrap()
+            .attachment_directory
+            .take()
+            .ok_or_else(recovery_required)
+    }
     pub(crate) fn before_resume_owner_session(&self) -> String {
         self.session.to_string()
     }

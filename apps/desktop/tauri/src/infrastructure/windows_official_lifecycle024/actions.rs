@@ -3,6 +3,7 @@
 use super::*;
 use crate::modules::runtime::windows_lifecycle024_contract::NativeSession;
 mod recovery;
+pub(super) use recovery::driver::run as run_before_resume_worker;
 pub(super) use recovery::{ProcessAbortAttempt, StartFailure};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum OriginalActionKind {

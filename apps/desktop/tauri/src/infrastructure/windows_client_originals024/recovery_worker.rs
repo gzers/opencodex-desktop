@@ -59,8 +59,57 @@ pub(crate) struct WorkerLocal {
     released: Option<ReleasedLease>,
     probe: ReleaseProbe,
     revoked: bool,
+    directories:
+        Vec<crate::infrastructure::windows_official_runtime024::PrivateDirectoryPreparation>,
+    directory_pins: Vec<crate::infrastructure::windows_official_runtime024::PinnedDirectory>,
 }
 impl WorkerLocal {
+    pub(crate) fn finish_released_stage(
+        &mut self,
+        owner: &mut Owner,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> io::Result<()> {
+        let (released, probe) = self.released_and_probe()?;
+        let proof = owner
+            .with_originals(|originals, owner| {
+                originals.finish_retained_quiescent(owner, released, probe, window)
+            })
+            .map_err(io::Error::other)?;
+        owner
+            .retain_before_resume_restored(proof, window)
+            .map_err(io::Error::other)
+    }
+    pub(crate) fn canonical_claim_stage(
+        &mut self,
+        owner: &mut Owner,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> io::Result<()> {
+        let lease = self.lease()?;
+        lease.check_owner(owner, window.deadline())?;
+        let root = owner.profile_path().join(".codex");
+        let mut claim = lease.anchored_claim(&root, window.deadline())?;
+        let result = (|| {
+            let prefix = owner.with_originals(|originals, owner| {
+                originals.prepare_abort_prefix(owner, &mut claim, window)
+            })?;
+            owner.with_originals(|originals, owner| {
+                let directory = owner.take_before_resume_attachment_directory(window)?;
+                originals.initialize_abort_attachment(owner, &prefix, &mut claim, directory, window)
+            })?;
+            let quiescent = owner.with_originals(|originals, owner| {
+                originals.quiesce_abort_prefix(owner, prefix, &mut claim, window)
+            })?;
+            owner.with_originals(|originals, owner| {
+                originals.return_quiescent_originals(owner, &quiescent, &mut claim, window)
+            })?;
+            owner.with_originals(|originals, owner| {
+                originals.retain_quiescent_for_release(owner, quiescent, window)
+            })?;
+            Ok::<_, crate::errors::AppError>(())
+        })();
+        result.map_err(io::Error::other)?;
+        claim.check(&root, window.deadline())
+    }
     fn new() -> Self {
         Self {
             preparation: LeasePreparation::default(),
@@ -68,6 +117,8 @@ impl WorkerLocal {
             released: None,
             probe: ReleaseProbe::default(),
             revoked: false,
+            directories: Vec::new(),
+            directory_pins: Vec::new(),
         }
     }
     pub(crate) fn acquire(
@@ -87,6 +138,46 @@ impl WorkerLocal {
             return Err(invalid());
         }
         self.lease.as_mut().ok_or_else(invalid)
+    }
+    pub(crate) fn attachment_directory(
+        &mut self,
+        owner: &mut Owner,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> io::Result<crate::infrastructure::windows_official_runtime024::PinnedDirectory> {
+        use crate::infrastructure::windows_official_runtime024::{
+            PinnedDirectory, PrivateDirectoryPreparation,
+        };
+        if self.revoked || !self.directories.is_empty() || !self.directory_pins.is_empty() {
+            return Err(invalid());
+        }
+        owner
+            .check_before_resume_process(window)
+            .map_err(io::Error::other)?;
+        let action = owner
+            .before_resume_action_id(window)
+            .map_err(io::Error::other)?;
+        self.directory_pins
+            .push(PinnedDirectory::open_private(owner.data_path())?);
+        let parent = owner.data_path().join("before-resume-recovery");
+        match std::fs::symlink_metadata(&parent) {
+            Ok(_) => self
+                .directory_pins
+                .push(PinnedDirectory::open_private(&parent)?),
+            Err(e) if e.kind() == io::ErrorKind::NotFound => {
+                self.directories
+                    .push(PrivateDirectoryPreparation::default());
+                let original = self.directories.last_mut().unwrap();
+                original.create(&parent, window.deadline())?;
+                self.directory_pins.push(original.take_complete()?);
+            }
+            Err(e) => return Err(e),
+        }
+        let path = parent.join(action);
+        self.directories
+            .push(PrivateDirectoryPreparation::default());
+        let original = self.directories.last_mut().unwrap();
+        original.create(&path, window.deadline())?;
+        original.take_complete()
     }
     pub(crate) fn release(&mut self, end: Instant) -> io::Result<()> {
         if self.revoked {
@@ -151,7 +242,7 @@ pub(crate) struct WorkerControl<T> {
     worker: thread::JoinHandle<()>,
 }
 pub(crate) struct Returned<T> {
-    pub(crate) original: T,
+    pub(crate) original: Box<T>,
     pub(crate) released: ReleasedLease,
 }
 fn publish(state: &Arc<Mutex<State>>, phase: Phase, error: Option<&io::Error>) {
@@ -195,7 +286,7 @@ impl<T: Original> WorkerControl<T> {
             kind: None,
             binding,
         }));
-        let (incoming, receive) = mpsc::sync_channel::<T>(1);
+        let (incoming, receive) = mpsc::sync_channel::<Box<T>>(1);
         let (returner, returned) = mpsc::channel();
         let worker_state = state.clone();
         // No original Owner is captured by the fallible spawn closure. If
@@ -264,9 +355,9 @@ impl<T: Original> WorkerControl<T> {
                     }
                 }
             })?;
-        let original = slot.take().unwrap();
+        let original = Box::new(slot.take().unwrap());
         if let Err(error) = incoming.send(original) {
-            *slot = Some(error.0);
+            *slot = Some(*error.0);
             return Err(io::Error::new(
                 io::ErrorKind::BrokenPipe,
                 "original worker transfer failed; Owner returned to slot",
@@ -321,3 +412,69 @@ impl<T> WorkerControl<T> {
 }
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+pub(in crate::infrastructure::windows_client_originals024) mod component {
+    use super::*;
+    pub(in crate::infrastructure::windows_client_originals024) trait Task:
+        Send + 'static
+    {
+        fn actual_binding(
+            &mut self,
+            window: &BeforeResumeRecoveryWindow,
+        ) -> io::Result<[String; 3]>;
+        fn run(
+            &mut self,
+            local: &mut WorkerLocal,
+            window: &BeforeResumeRecoveryWindow,
+        ) -> io::Result<()>;
+        fn revoke(&mut self);
+    }
+    pub(in crate::infrastructure::windows_client_originals024) struct OriginalTask<T: Task> {
+        pub(in crate::infrastructure::windows_client_originals024) task: T,
+    }
+    impl<T: Task> Original for OriginalTask<T> {
+        fn binding(&mut self, w: &BeforeResumeRecoveryWindow) -> io::Result<TransferBinding> {
+            let [session, action, scope] = self.task.actual_binding(w)?;
+            Ok(TransferBinding {
+                session,
+                action,
+                scope,
+                end: w.deadline(),
+            })
+        }
+        fn revoke(&mut self) {
+            self.task.revoke();
+        }
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn start<T: Task>(
+        slot: &mut Option<OriginalTask<T>>,
+        window: BeforeResumeRecoveryWindow,
+    ) -> io::Result<WorkerControl<OriginalTask<T>>> {
+        WorkerControl::start(slot, window, |original, local, w| {
+            original.task.run(local, w)
+        })
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn acquire(
+        local: &mut WorkerLocal,
+        paths: &[std::path::PathBuf; 4],
+        end: Instant,
+    ) -> io::Result<()> {
+        local.preparation.prepare_fixture_paths(paths, end)?;
+        local.lease = Some(local.preparation.take_complete()?);
+        Ok(())
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn join_success_for_test<T: Task>(
+        control: WorkerControl<OriginalTask<T>>,
+    ) -> io::Result<()> {
+        let phase = control.state.try_lock().map_err(|_| invalid())?.phase;
+        if phase != Phase::ReturnedForValidation {
+            return Err(invalid());
+        }
+        control.worker.join().map_err(|_| {
+            io::Error::new(
+                io::ErrorKind::Other,
+                "successful native worker unexpectedly panicked during own fixture closure",
+            )
+        })
+    }
+}
