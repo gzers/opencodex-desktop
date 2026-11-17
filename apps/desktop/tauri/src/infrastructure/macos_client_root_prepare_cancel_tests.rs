@@ -37,6 +37,20 @@ impl Fixture {
             head,
         }
     }
+    fn close(self) {
+        let Self {
+            _temp,
+            index,
+            context,
+            ..
+        } = self;
+        let path = _temp.path().to_path_buf();
+        drop(index);
+        drop(context);
+        _temp.close().expect("owned root-cancel fixture cleanup");
+        assert!(!path.exists());
+        println!("ROOT_CANCEL_FIXTURE_REMOVED {}", path.display());
+    }
 }
 fn end() -> Instant {
     Instant::now() + Duration::from_secs(10)
@@ -81,6 +95,7 @@ fn first_root_cancel_review_is_stable_readonly_and_never_closes_or_moves_root() 
         assert_eq!(bytes(f.data.parent().unwrap()), before);
         assert!(f.context.working_directory.join(".codex").is_dir());
         assert!(!f.data.join("manager-state/client-originals").exists());
+        f.close();
     }
 }
 #[test]
@@ -108,6 +123,7 @@ fn first_root_cancel_review_refuses_new_data_even_if_head_has_no_original_refere
             .review_first_root_preparation(&f.context, &f.head, end())
             .is_err());
         assert_eq!(before, bytes(f.data.parent().unwrap()));
+        f.close();
     }
 }
 #[test]
@@ -141,6 +157,7 @@ fn first_root_cancel_review_keeps_original_deadline_and_exact_index_revision() {
         ..review
     };
     assert!(expired.recheck().is_err());
+    f.close();
 }
 #[test]
 fn first_root_cancel_review_refuses_wrong_context_replacement_and_permissions() {
@@ -176,6 +193,7 @@ fn first_root_cancel_review_refuses_wrong_context_replacement_and_permissions() 
             assert!(review.recheck().is_err());
         }
         assert_eq!(bytes(f.data.parent().unwrap()), before);
+        f.close();
     }
 }
 
@@ -213,4 +231,6 @@ fn first_root_cancel_review_binds_grok_state_and_does_not_adopt_an_existing_root
         .review_first_root_preparation(&context, &head, end())
         .is_err());
     assert_eq!(before, bytes(&root));
+    drop(index);
+    f.close();
 }
