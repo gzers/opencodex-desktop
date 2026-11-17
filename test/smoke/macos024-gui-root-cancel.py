@@ -28,7 +28,8 @@ def write(path, value):
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + chr(10))
 
 
-def run(app, expected_sha, output, seed_host):
+def run(app, expected_sha, output, seed_host, flow="root-cancel"):
+    if flow not in ('root-cancel','stop-progress'):raise ValueError('unknown explicit GUI flow')
     app = app.resolve(strict=True)
     if app.name != base.APP or base.sha(app / 'Contents/MacOS/opencodex-desktop') != expected_sha:
         raise ValueError('explicit exact sealed app required')
@@ -46,7 +47,7 @@ def run(app, expected_sha, output, seed_host):
     service_verified_stopped = False
     report = {'inputApp': str(app), 'inputSha256': expected_sha, 'releaseAcceptance': False,
               'dailyConfigurationModified': False, 'serviceActionRequested': False, 'result': 'incomplete',
-              'scope': 'packaged GUI explicit first-root cancellation and official successor Start/Stop; no model requests'}
+              'scope': 'packaged GUI explicit first-root cancellation and official successor Start/Stop; no model requests', 'flow':flow}
 
     def command(argv, timeout=30, env=None, required=True):
         p = subprocess.run([str(x) for x in argv], cwd=root, env=env, capture_output=True, timeout=timeout)
@@ -88,7 +89,18 @@ def run(app, expected_sha, output, seed_host):
             # Both are PID/executable-scoped WebView buttons; choose the footer.
             found = [max(found,key=lambda n:n.get('frame',{}).get('y',-1))]
         if len(found) != 1: raise RuntimeError('ambiguous candidate button: ' + label)
-        command([helper, 'press', proc.pid, exe, found[0]['path'], label])
+        clicked = command([helper, 'press', proc.pid, exe, found[0]['path'], label], required=False)
+        if clicked.returncode == 7 and b'AX tree changed; expected control label no longer matches' in clicked.stdout:
+            # The native helper refused BEFORE AXPress. Reobserve this same
+            # live PID/executable once; do not replay an admitted user action.
+            fresh = wait_for('relocate-' + label, lambda v: bool(matches(v,label,'AXButton')))
+            found = matches(fresh,label,'AXButton')
+            if label == '关闭' and len(found) == 2: found = [max(found,key=lambda n:n.get('frame',{}).get('y',-1))]
+            if len(found) != 1: raise RuntimeError('ambiguous refreshed candidate button: ' + label)
+            command([helper,'press',proc.pid,exe,found[0]['path'],label])
+        elif clicked.returncode:
+            raise RuntimeError('native press failed without a safe pre-action retry: ' + label)
+
 
     def end_process():
         nonlocal proc, log
@@ -150,49 +162,56 @@ def run(app, expected_sha, output, seed_host):
                 raise
             finally:c.close()
         launch(1)
-        end_process()
-        seed=root/'seed-host';shutil.copyfile(seed_host,seed);seed.chmod(0o700)
-        command(['/usr/bin/codesign','--verify','--strict',seed])
-        seed_env=dict(env,OCXD024_GUI_ROOT_CANCEL_SEED=str(root))
-        command(['/usr/bin/sandbox-exec','-f',str(policy),str(seed),'--exact','prepare_exact_owned_first_root_for_real_gui','--ignored','--nocapture'],60,env=seed_env)
-        shutil.copyfile(root/'seed-result.json',output/'seed-result.json');write(output/'head-before-cancel.json',head())
-        launch(2);press('诊断')
-        press('检查客户端恢复');press('取消启动准备')
-        value=wait_for('first-root-confirmation',lambda v:any('保管这次启动新建的空目录' in str(n.get('value','')) for n in v['nodes']))
-        if status.get('screenCaptureAllowed'):
-            windows=[w for w in value.get('windows',[]) if w.get('onscreen') and w.get('layer')==0]
-            if windows:command([capture,windows[0]['id'],output/'cancel-confirmation.png'])
-        cancel_attempts=[]
-        for attempt in range(1,5):
-            clicked=time.monotonic();press('确认取消启动准备')
-            end=time.monotonic()+30;observed=None
-            while time.monotonic()<end:
-                observed=snapshot('cancelled')
-                if observed is not None:
-                    text='\n'.join(str(n.get('value')or n.get('title')or n.get('description')or'') for n in observed['nodes'])
-                    if '原目录缺席已恢复' in text:break
-                    if '运行状态正在核对，请稍后刷新' in text:break
-                time.sleep(.6)
-            else:raise RuntimeError('cancellation observation timed out')
-            if '原目录缺席已恢复' in text:
-                cancel_attempts.append({'attempt':attempt,'outcome':'completed'});break
-            current_head=head()
-            if current_head is None or current_head['state']!='preparing' or current_head['revision']!=1:
-                raise RuntimeError('busy retry refused: original preparation changed')
-            cancel_attempts.append({'attempt':attempt,'outcome':'preflight-busy-no-mutation','head':current_head})
+        closed=None
+        if flow=='root-cancel':
+            end_process()
+            seed=root/'seed-host';shutil.copyfile(seed_host,seed);seed.chmod(0o700)
+            command(['/usr/bin/codesign','--verify','--strict',seed])
+            seed_env=dict(env,OCXD024_GUI_ROOT_CANCEL_SEED=str(root))
+            command(['/usr/bin/sandbox-exec','-f',str(policy),str(seed),'--exact','prepare_exact_owned_first_root_for_real_gui','--ignored','--nocapture'],60,env=seed_env)
+            shutil.copyfile(root/'seed-result.json',output/'seed-result.json');write(output/'head-before-cancel.json',head())
+            launch(2);press('诊断')
+            press('检查客户端恢复');press('取消启动准备')
+            value=wait_for('first-root-confirmation',lambda v:any('保管这次启动新建的空目录' in str(n.get('value','')) for n in v['nodes']))
+            if status.get('screenCaptureAllowed'):
+                windows=[w for w in value.get('windows',[]) if w.get('onscreen') and w.get('layer')==0]
+                if windows:command([capture,windows[0]['id'],output/'cancel-confirmation.png'])
+            cancel_attempts=[]
+            for attempt in range(1,5):
+                clicked=time.monotonic();press('确认取消启动准备')
+                end=time.monotonic()+30;observed=None
+                while time.monotonic()<end:
+                    observed=snapshot('cancelled')
+                    if observed is not None:
+                        text='\n'.join(str(n.get('value')or n.get('title')or n.get('description')or'') for n in observed['nodes'])
+                        if '原目录缺席已恢复' in text:break
+                        if '运行状态正在核对，请稍后刷新' in text:break
+                    time.sleep(.6)
+                else:raise RuntimeError('cancellation observation timed out')
+                if '原目录缺席已恢复' in text:
+                    cancel_attempts.append({'attempt':attempt,'outcome':'completed'});break
+                current_head=head()
+                if current_head is None or current_head['state']!='preparing' or current_head['revision']!=1:
+                    raise RuntimeError('busy retry refused: original preparation changed')
+                cancel_attempts.append({'attempt':attempt,'outcome':'preflight-busy-no-mutation','head':current_head})
+                write(output/'explicit-cancel-attempts.json',cancel_attempts)
+                if attempt==4:raise RuntimeError('status preflight busy after bounded explicit rechecks')
+                time.sleep(.7);press('重新检查');press('取消启动准备')
             write(output/'explicit-cancel-attempts.json',cancel_attempts)
-            if attempt==4:raise RuntimeError('status preflight busy after bounded explicit rechecks')
-            time.sleep(.7);press('重新检查');press('取消启动准备')
-        write(output/'explicit-cancel-attempts.json',cancel_attempts)
-        closed=head();assert closed['state']=='root_cancellation_absent' and closed['completionSha256'] and not client.exists()
-        write(output/'head-after-cancel.json',closed);report['guiCancellationObservedMs']=round((time.monotonic()-clicked)*1000)
-        report['actualGuiCancellationPassed']=True
-        # Close just the app dialog using its explicit WebView button.
-        press('关闭');press('概览');service_requested=True;report['serviceActionRequested']=True;press('启动 OpenCodex')
+            closed=head();assert closed['state']=='root_cancellation_absent' and closed['completionSha256'] and not client.exists()
+            write(output/'head-after-cancel.json',closed);report['guiCancellationObservedMs']=round((time.monotonic()-clicked)*1000)
+            report['actualGuiCancellationPassed']=True
+            # Close just the app dialog using its explicit WebView button.
+            press('关闭');press('概览')
+        if flow=='stop-progress':
+            # Production startup supply and its first status are asynchronous;
+            # observing readiness here precedes any lifecycle action/budget.
+            wait_for('pre-action-ui-ready',lambda v:bool(matches(v,'启动 OpenCodex','AXButton')),120)
+        service_requested=True;report['serviceActionRequested']=True;press('启动 OpenCodex')
         home=profile/'.codex-desktop/opencodex/home';record=home/'runtime-port.json'
         wait_for('successor-service-ready',lambda v:record.exists() and head() is not None and head()['state']=='ready',60)
         running=head();r=json.loads(record.read_bytes());report['service']={'pid':r['pid'],'port':r['port']}
-        assert running['ticket']!=closed['ticket'] and running['references'];write(output/'successor-ready-head.json',running)
+        assert running['references'] and (closed is None or running['ticket']!=closed['ticket']);write(output/'successor-ready-head.json',running)
         # Progress overlay may dismiss itself; close it only if visible.
         value=snapshot('before-stop')
         if value is not None and matches(value,'关闭','AXButton'):press('关闭')
@@ -200,7 +219,23 @@ def run(app, expected_sha, output, seed_host):
         wait_for('successor-service-stopped',lambda v:not record.exists() and head() is not None and head()['state']=='root_absent',45)
         stopped=head();write(output/'successor-stopped-head.json',stopped)
         assert stopped['completionSha256'] and not client.exists();service_verified_stopped=True
-        report.update(result='passed',actualGuiSuccessorStartStop=True,actualGuiCancellationPassed=True,normalStopAndOriginalAbsence=True)
+        def text_of(value):return '\n'.join(str(n.get('value')or n.get('title')or n.get('description')or'') for n in value['nodes'])
+        completed=wait_for('stop-card-completed',lambda v:'停止已完成' in text_of(v),20)
+        report['stopCompletedCardObserved']=True
+        # Countdown intentionally pauses for hover/focus. Move both to the
+        # existing Overview navigation, with native target-PID hit testing.
+        command([helper,'focus',proc.pid,exe]);press('概览')
+        value=wait_for('countdown-clear-focus',lambda v:bool(matches(v,'概览','AXButton')))
+        nav=matches(value,'概览','AXButton')
+        if len(nav)!=1:raise RuntimeError('ambiguous existing overview navigation')
+        command([helper,'click',proc.pid,exe,nav[0]['path'],'概览'])
+        snapshot('native-click-outside-completed-card')
+        dismissed=wait_for('stop-card-dismissed',lambda v:'停止已完成' not in text_of(v) and '正在停止 OpenCodex' not in text_of(v) and bool(matches(v,'启动 OpenCodex','AXButton')),15)
+        report['stopCardAutomaticallyDismissed']=True
+        if status.get('screenCaptureAllowed'):
+            windows=[w for w in dismissed.get('windows',[]) if w.get('onscreen') and w.get('layer')==0]
+            if windows:command([capture,windows[0]['id'],output/'stop-card-dismissed.png'])
+        report.update(result='passed',actualGuiSuccessorStartStop=flow=='root-cancel',actualGuiCancellationPassed=flow=='root-cancel',normalStopAndOriginalAbsence=True)
         end_process()
     except BaseException as exc:
         report.update(result='failed', error=repr(exc))
@@ -261,6 +296,7 @@ if __name__ == '__main__':
     parser.add_argument('--expected-sha256', required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--seed-host', type=Path, required=True)
+    parser.add_argument('--flow',choices=['root-cancel','stop-progress'],default='root-cancel')
     args = parser.parse_args()
-    result = run(args.app, args.expected_sha256, args.output, args.seed_host)
+    result = run(args.app, args.expected_sha256, args.output, args.seed_host, args.flow)
     print(json.dumps({k:v for k,v in result.items() if k != 'coordinatorCleanup'}, ensure_ascii=False), flush=True)
