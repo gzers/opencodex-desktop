@@ -1,0 +1,8 @@
+﻿使用“1”个参数调用“GetFullPath”时发生异常:“路径的形式不合法。”
+所在位置 C:\Users\Public\ocx-r6-failure-archive-20261117-r1\archive-r6-failed-preresume.ps1:20 字符: 6
++   if($p.SessionId -ne 7 -or $time -cne $ExpectedFiletime -or [IO.Path ...
++      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : ArgumentException
+ 
+

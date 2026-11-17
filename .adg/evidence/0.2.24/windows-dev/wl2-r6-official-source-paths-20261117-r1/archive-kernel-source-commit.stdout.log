@@ -1,0 +1,4 @@
+[codex/024-windows-native 625101e7b] fix(windows): 用只读内核句柄核验挂起归档代次
+ 3 files changed, 101 insertions(+), 9 deletions(-)
+ create mode 100644 test/windows024-native/archive-r6-process-facts.cs
+ create mode 100644 test/windows024-native/probe-r6-archive-process-facts.ps1

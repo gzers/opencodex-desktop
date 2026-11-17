@@ -1,0 +1,28 @@
+﻿{
+    "scope":  "controller-owned never-resumed harmless cmd only; no official/marenben process, Owner or normalStop authority",
+    "passed":  false,
+    "source":  {
+                   "image":  "C:\\WINDOWS\\System32\\cmd.exe",
+                   "helperSha256":  "97aa8ad3eda50db0193108b5f047c7905c8b7433885edc0d55bafb46b89b02ab"
+               },
+    "ordinaryAcceptance":  false,
+    "officialExecuted":  false,
+    "resumed":  false,
+    "forcedCleanup":  true,
+    "rawExit":  242,
+    "pid":  69964,
+    "creation":  "134393585485278140",
+    "actualFacts":  {
+                        "pid":  69964,
+                        "filetime":  "134393585485278140",
+                        "image":  "C:\\Windows\\System32\\cmd.exe",
+                        "session":  2,
+                        "exited":  false,
+                        "source":  "fresh query-only native handle; no Job/Owner/NormalExit or cleanup authority"
+                    },
+    "firstError":  {
+                       "line":  38,
+                       "message":  "query-only kernel image/times/session differs from retained original suspended creation"
+                   },
+    "originalHandlesClosed":  true
+}

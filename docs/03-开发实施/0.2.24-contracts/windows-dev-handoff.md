@@ -924,3 +924,12 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 实际c870bd81f在marenben SID1003/session7/noJob运行，固定包8660文件611461049字节/shared完整image及无凭据配置/NLK setup通过；首Start9842ms/原30s返回windows024_originals_required、oserror2。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-existing-official-qualification-20261117-receive-r1/；22份原字节/同SIDexport完整核。原Node50580/FILETIME134393577919362322仍create-suspended/creatorResumedfalse/原Job1active1total，无OriginalSession/custody变更或官方服务/Ready，Stop/后继/Restart/Status未执行。原broker54692/FILETIME134393577413203335保留rawExitnull，PATH摘要一致，旧40588不动。
 
 源码定位StartContentScope把RuntimeVersionPaths.package_root npm prefix当包目录，四审计源缺PACKAGE_SUBPATH；D角色CLI/sentinel/callsite同类需批量修，prefix的bun实际路径不改。启动器默认编码导致副本错误展示乱码，原nativeUTF8首错完整保留。宿主首轮park后无后续控制通道，新程序不得从PID/文本接管旧Job；完整同SID私有现场归档与原失败对象受控清理/新独立夹具仍待，不自动重试失败会话或补Closed。公开Start/allAccepted/production/typedClosedfalse，其余全版未完/历史清理原样，无官方/日常配置/PATH/策略/业务/模型/W2/双SID/发布。
+
+
+## 2026-11-17 r6真实包目录修复及归档内核观察
+
+生产修复3afd4e59dc61c01a9d63053b498a222b91597634/tree047c497a83a772e1d81e4fb4db726c08301e66fd、后续archive脚本625101e7bfa9dd60e5753361ebe9dce9561969d8已推送，证据.adg/evidence/0.2.24/windows-dev/wl2-r6-official-source-paths-20261117-r1/。统一Owner实际包目录prefix/PACKAGE_SUBPATH用于audit4与D角色CLI/sentinel/callsite，Bun仍prefix/node_modules/bun/bin/bun.exe，全部固定SHA/原roles/argv/rawcodes不改。实际固定包旧prefix raw2复现，正确包目录原生pin/ID/8/摘要及五角色source摘要通过；9定向raw0/0失败0忽略。共享HMAC/trait/lease/native退出/监督/Closed和完整recovery_state_at/Status尾段保持；正确custom-protocol产品MSVCdebug raw0/146753ms，211输入/157Rust核producer Git，archive独立脚本差额明列，不冒重编。
+
+首归档r1 .MainModule未初始化路径失败，尚无文件/目录归档；原错误/脚本保留。kernel query-only helper无terminate/resume/Job/Owner，实际controller自有挂起cmd证明FILETIME/镜像/session可核且MainModulenull。首probe仅Windows目录大小写DATA比较失败，原错留；同Windows路径比较修后probe02过，两次从未Resume且只用自己原创建handleforced242关闭，不冒NormalStop/普通验收、不动marenben/40588。r2只读归档入口C:/Users/Public/ocx-r6-failure-archive-20261117-r2/archive-r6-failed-preresume.cmd待原桌面运行。
+
+两新source-only scene私有ZIP/hash核后，删除请求被自动审批以blocked by policy拒绝，命令未执行、两源与归档留，不换方式重试。marenben首失败broker54692/原挂起Node50580及全scene继续留，loaded宿主无控制通道，新程序不能接管旧Job/Owner；全归档后仍需明确受控清理/新独立夹具方案，不直接重试或签Closed。Start/allAccepted/production/typedClosedfalse，全部原初始化/原缺席安全退根/GUI官方owner/容量/普通MSI/CAP-trust/历史清理未完保持，无官方/日常/PATH/策略/业务/模型/旧raw5/空GUI/W2/双SID/发布。

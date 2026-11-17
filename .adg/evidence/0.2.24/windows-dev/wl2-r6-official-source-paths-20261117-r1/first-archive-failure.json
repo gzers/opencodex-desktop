@@ -1,0 +1,37 @@
+{
+  "files": [
+    {
+      "path": "first-archive-failure/out01/archive-result.json",
+      "bytes": 1280,
+      "sha256": "fdb13508cbe966b83a1776d26b520c4d317d8788ae70d61a5f0bdad8d440995b"
+    },
+    {
+      "path": "first-archive-failure/out01/archive-error.log",
+      "bytes": 492,
+      "sha256": "6e7ff29301606f9d99afa9955d7b060aab15f578165a115aa4e037364e5d5773"
+    },
+    {
+      "path": "first-archive-failure/archive-r6-failed-preresume.ps1",
+      "bytes": 9756,
+      "sha256": "d691a82f25748233a8c91cfe1bea46b1928a39a442702c82fa49475c0f15d7a1"
+    },
+    {
+      "path": "first-archive-failure/archive-r6-failed-preresume.cmd",
+      "bytes": 234,
+      "sha256": "7289e005889ba4ea1b40e6a892da6d47cd21390f96e3b6437ad956aaf538a08c"
+    },
+    {
+      "path": "first-archive-failure/input-manifest.json",
+      "bytes": 761,
+      "sha256": "556b1bc1f850cb107a23626ae2270f7a751c6b2b9216a5d2d8f61f5b6fde1d28"
+    }
+  ],
+  "archiveVerified": false,
+  "sourceSceneChanged": false,
+  "processesStopped": false,
+  "firstError": {
+    "line": 20,
+    "message": "使用“1”个参数调用“GetFullPath”时发生异常:“路径的形式不合法。”"
+  },
+  "nextHypothesis": "Use read-only kernel QueryFullProcessImageName/GetProcessTimes on actual suspended process; original .MainModule enumeration need not yield an initialized-module path. New exact archive r2 only; preserve r1 outputs."
+}
