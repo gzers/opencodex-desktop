@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 154；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 155；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main cfd41bf6e4cd055b69d9d27a4ca1ccc25f7332eb（非冻结候选）；Windows实现检查点codex/024-windows-native 9fdd4c618a57dbe5c9b52cee01680d6637300b5a（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main cfd41bf6e4cd055b69d9d27a4ca1ccc25f7332eb（非冻结候选）；Windows实现检查点codex/024-windows-native bf16cad3f61259591a8fafff6f8fb2805f5e99c0（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1619,3 +1619,14 @@ Windows9fdd4c618a57dbe5c9b52cee01680d6637300b5a／证据f6f8677a5724a527985b21ec
 类型原型两遍各91捕获/91遍历/259结束，67实际类型、24零访问DuplicateHandle raw50；完整覆盖仍失败，未运行JobQUERY或当前r2。原loaded357源码确认旧CLI硬编码ExplicitRecovery且要求forced=true，不能借其探Status；[只读源码核查](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r12/loaded-client-route-review.json)。没有已确认的新文档路线，禁止重复同前提试验或将raw50当非Job；当前r2恢复依赖保持Unknown，未来worker/v2/最后锁释放仍按TEAM24/r7既有写集独立继续，不要求用户来回传普通进度。
 
 NAME原生格式、官方保存/载入及六次刷新、Desktop保存后重开结论沿revision148/151；外部默认客户端、最终服务重启/回退仍未验。当前未固定整版候选，不W2/双SID、不发布，目标active。
+
+
+### 2026-11-17 revision155：Windows原worker与失败保留接收
+
+Windows代码bf16cad3f61259591a8fafff6f8fb2805f5e99c0／证据3b343c66ba0878a387e47353099bdc569e5883d4已净接收wl2-r7-owning-worker-20261117-r1，150项载荷1240837字节，完整成员/逐原长度与SHA匹配；8个最终源码逐Git原字节或明确CRLF归一核对，7个最终子进程模式的phase/raw/action/thread回执逐项核查。[接收与审查](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r13/review.json)。原product01编译失败、product02两保护目录夹具失败、保留树/只读归档和后来成功均原样留下；未运行或删除Windows现场。
+
+新增实际原Owner在活动锁前转到唯一worker；registry只持control，Status独立trylock且前后核原end，普通Start/Stop/Restart保持拒绝。活动LeasePreparation/NativeLease在原worker创建，仍!Send/!Sync；失败、过期、panic、断连或部分释放失败撤销mutation并在同线程保留原资源，不靠Drop/autounlock或新10秒补通过。成功返回也仅ReturnedForValidation，原slot独立验证及专门AbortRestored尚未完成，不能当正常Stop/Closed/后继。
+
+product07真实MSVC全Tauri库3父测试过，1专用子进程入口默认ignored由父测试exact显式调用7次；成功、失败、过期、panic、断连、部分释放、释放已过期七case均有原entered/observed/cleanup及stdout/stderr。成功raw0且原4范围释放/同原fileID和bytes返回；六失败raw242仅任务自有子进程的明确强制处置，不当产品正常释放或当前r2恢复授权。原native范围冲突/准确ThreadId/原action读回保留。最终EXE79d05a4b125205b5acb9a88f3a03567378415fed114ed6d8074ac7d3861b070d；本机只审原回执和源码绑定，不冒Windows本机执行或独立完整源码安全审计。
+
+完整beforeResume driver仍需把prefix/附件/quiesce/逐原件return/全树与8/字节/children/精确release/AbortRestoreVerified贯成同原10秒，独立v2真实映射、可达版本化host命令和原官方产品Owner实测未过。TEAM25/r7允许集不变，Windows继续这些已授权独占项，Mac无需先提供新共享ABI。当前r2的24raw50/Job证明仍单独Unknown，不重复已失败同前提；原件/21500/75744/原seq9和旧40588均不动，未授权forced/归还。Mac索引取消接线进行中，尚未固定最终候选，不W2/双SID、不发布，目标active。
