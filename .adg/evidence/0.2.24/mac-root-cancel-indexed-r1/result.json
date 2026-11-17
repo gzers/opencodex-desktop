@@ -1,0 +1,58 @@
+{
+  "sourceCommit": "e84cff4610c8b1f712747c874f9102904f2e30e6",
+  "sourceManifestSha256": "9c7683ba7794091e56ccd19c8bb91fafbdce1a482f35d97915ea7d2a55d7802b",
+  "scope": "registered pending cancellation plan and native live/archive/interrupted resolver; not completed cancellation",
+  "scoped": {
+    "passed": 7,
+    "failed": 0,
+    "defaultIgnoredNativeEntry": 1,
+    "explicitNativeScenarioRuns": 5
+  },
+  "regression": {
+    "originalRaw": 101,
+    "originalPassed": 100,
+    "originalFailed": 3,
+    "defaultIgnored": 6,
+    "threeOriginalFailures": "child private-temp root assertions, not source/config assertion changes",
+    "threeExactSameHostCorrectedTmpdirPassed": 3,
+    "prior100NotRepeated": true
+  },
+  "uiInteractionTestsPassed": 86,
+  "typecheckPassed": true,
+  "strictLibTestsClippyPassed": true,
+  "nativeHostSha256": "d75a6f60ce747ec85c4ef55e8119e7f78a46cf8142fb175f910b0081fc3aafbd",
+  "nativeScenarios": [
+    {
+      "scenario": "success",
+      "passed": true,
+      "elapsedMs": 70393
+    },
+    {
+      "scenario": "before_move",
+      "passed": true,
+      "elapsedMs": 4843
+    },
+    {
+      "scenario": "after_move",
+      "passed": true,
+      "elapsedMs": 4919
+    },
+    {
+      "scenario": "new_data",
+      "passed": true,
+      "elapsedMs": 4060
+    },
+    {
+      "scenario": "new_root",
+      "passed": true,
+      "elapsedMs": 4140
+    }
+  ],
+  "productionMovementAuthorityFactory": false,
+  "canonicalCancellationClosed": false,
+  "normalStop": false,
+  "successorEligible": false,
+  "releaseAcceptance": false,
+  "serviceStarted": false,
+  "dailyConfigurationAccess": false
+}

@@ -1,0 +1,12 @@
+
+running 7 tests
+test infrastructure::macos_client_originals::session_index::root_preparation::preservation::tests::official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker ... ignored, explicit isolated official2.99 Guard/NativeLease fixture, no service or canonical cancel
+test infrastructure::macos_client_originals::session_index::root_preparation::preservation::tests::preservation_authority_cannot_be_deserialized_or_created_by_plan_or_readback ... ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_binds_grok_state_and_does_not_adopt_an_existing_root ... ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_is_stable_readonly_and_never_closes_or_moves_root ... ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_keeps_original_deadline_and_exact_index_revision ... ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_refuses_new_data_even_if_head_has_no_original_references ... ok
+test infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_cancel_review_refuses_wrong_context_replacement_and_permissions ... ok
+
+test result: ok. 6 passed; 0 failed; 1 ignored; 0 measured; 2683 filtered out; finished in 1.63s
+

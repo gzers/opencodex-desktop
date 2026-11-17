@@ -1,0 +1,746 @@
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs
+index 56e555b6d..6dc6e8bf9 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs
+@@ -256,6 +256,20 @@ pub(super) fn resolve_originals_projected(
+     }
+ 
+     let head = head.ok_or_else(|| denied("registered root has no current independent session"))?;
++    if head.state == State::RootCancellationPrepared {
++        let client = super::root_preparation::preservation::indexed::inspect(
++            data,
++            &context.working_directory,
++            &active,
++            head,
++            &binding.original_root,
++            connection,
++        )?;
++        if scope_at(context, data, &client, &logical)? != binding.scope {
++            return Err(denied("indexed root cancellation logical scope changed"));
++        }
++        return Ok((client, Some(binding.original_root), None));
++    }
+     if let Some(movement) = &head.root_retirement {
+         if !matches!(
+             head.state,
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_lineage.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_lineage.rs
+index 40a419044..765ec054f 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_lineage.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_lineage.rs
+@@ -86,6 +86,10 @@ fn validate_segment(heads: &[Head], origin: &super::root_creation::References) -
+         if !matches!(
+             (before.state, after.state),
+             (State::Preparing, State::CaptureReserved)
++                | (
++                    State::Preparing | State::CaptureReserved,
++                    State::RootCancellationPrepared
++                )
+                 | (State::CaptureReserved, State::Captured)
+                 | (State::Captured, State::Ready)
+                 | (State::Ready, State::StopPrepared)
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs
+new file mode 100644
+index 000000000..ac962dee4
+--- /dev/null
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs
+@@ -0,0 +1,194 @@
++//! Read the actual plan ONLY through its independently committed Head. This
++//! resolves pending live/moved states but grants no movement, cancellation,
++//! normal Stop or successor permission. A receipt file alone has no authority.
++use super::*;
++use std::ffi::OsString;
++
++pub(in crate::infrastructure::macos_client_originals) fn inspect(
++    data: &PinnedDirectory,
++    profile: &Path,
++    stored: &[u8],
++    head: &Head,
++    origin: &super::super::super::root_creation::References,
++    connection: &Connection,
++) -> std::io::Result<PinnedDirectory> {
++    validate(head)?;
++    if head.state != State::RootCancellationPrepared
++        || head.references.is_some()
++        || head.restore_plan.is_some()
++        || head.completion_sha256.is_some()
++        || head.root_generation.is_some()
++        || origin.id != head.ticket
++        || origin.generation_slot.is_some()
++    {
++        return Err(denied(
++            "indexed root cancellation is not an initial pending plan",
++        ));
++    }
++    let reference = head
++        .root_retirement
++        .as_ref()
++        .ok_or_else(|| denied("root-cancel movement reference missing"))?;
++    if reference.source_revision.checked_add(1) != Some(head.revision) {
++        return Err(denied(
++            "root-cancel source is not the immediately preceding event",
++        ));
++    }
++    let manager = data.child_private("manager-state", false)?;
++    if observation::entry(&manager, "client-originals")?.is_some() {
++        return Err(denied(
++            "root-cancel cannot resolve an uncaptured reference over a vault",
++        ));
++    }
++    let parent = manager.child_private("client-root-cancel-plans", false)?;
++    let names = super::super::super::tree::names(parent.file())?;
++    if names != vec![OsString::from(&reference.plan.id)] {
++        return Err(denied(
++            "root-cancel namespace differs from its independent reference",
++        ));
++    }
++    let directory = parent.child_private(&reference.plan.id, false)?;
++    let plan_image = capture_file(&directory, "plan.json", MAX_FRAME)?;
++    let plan: Plan = match &plan_image {
++        Image::File {
++            bytes, protection, ..
++        } => {
++            require_private(protection, false)?;
++            if digest(bytes) != reference.plan.sha256 {
++                return Err(denied("indexed root-cancel plan digest changed"));
++            }
++            let plan: Plan = decode(bytes)?;
++            if encode(&plan)?.as_slice() != bytes.as_slice() {
++                return Err(denied("indexed root-cancel plan encoding changed"));
++            }
++            plan
++        }
++        _ => return Err(denied("indexed root-cancel plan missing")),
++    };
++    if plan.schema_version != 1
++        || plan.id != reference.plan.id
++        || plan.source.revision != reference.source_revision
++        || plan.source.ticket != head.ticket
++        || !matches!(plan.source.state, State::Preparing | State::CaptureReserved)
++        || plan.source.references.is_some()
++        || plan.source.restore_plan.is_some()
++        || plan.source.root_retirement.is_some()
++        || plan.source.completion_sha256.is_some()
++        || plan.source.root_generation.is_some()
++        || plan.origin != *origin
++        || plan.binding_sha256 != digest(stored)
++        || !valid_hash(&plan.initial_review_sha256)
++        || digest(&encode(&vault_history::read(connection, &plan.source)?)?) != plan.history_sha256
++        || super::super::super::GrokSnapshot::read(&PinnedDirectory::open(profile)?)? != plan.grok
++    {
++        return Err(denied("indexed root-cancel source/history/context changed"));
++    }
++    let raw_source: Vec<u8> = connection
++        .query_row(
++            "SELECT document FROM events WHERE revision=?1",
++            [reference.source_revision],
++            |r| r.get(0),
++        )
++        .map_err(database_error)?;
++    if raw_source != encode(&plan.source)? {
++        return Err(denied("indexed root-cancel source event changed"));
++    }
++    let profile = PinnedDirectory::open(profile)?;
++    let logical = observation::entry(&profile, ".codex")?;
++    let archived = observation::entry(&directory, "root")?;
++    let intent = capture_file(&directory, "move-intent.json", MAX_FRAME)?;
++    let has_intent = match &intent {
++        Image::Absent => false,
++        Image::File {
++            bytes, protection, ..
++        } => {
++            require_private(protection, false)?;
++            if bytes.as_slice()
++                != encode(&(reference.plan.sha256.as_str(), &plan.root.root))?.as_slice()
++            {
++                return Err(denied("root-cancel move intent changed"));
++            }
++            true
++        }
++    };
++    let path = match (logical, archived) {
++        (Some(_), None) => profile.path().join(".codex"),
++        (None, Some(_)) if has_intent => directory.path().join("root"),
++        _ => {
++            return Err(denied(
++                "root-cancel live/archive location is absent, ambiguous or unregistered",
++            ))
++        }
++    };
++    let root = PinnedDirectory::open(&path)?;
++    super::super::super::root_creation::verify_indexed_anchor(
++        &manager,
++        data,
++        profile.path(),
++        &root,
++        origin,
++        &path,
++    )?;
++    let tree = super::super::super::TreeSnapshot::read(&root)?;
++    if tree != plan.root && tree != plan.root.without_config_guard(&plan.writer)? {
++        return Err(denied("root-cancel exact indexed tree changed"));
++    }
++    // Explicit namespace, not a scan to discover a plan or invent a source.
++    let mut expected = vec![OsString::from("plan.json")];
++    if has_intent {
++        expected.push(OsString::from("move-intent.json"));
++    }
++    if archived.is_some() {
++        expected.push(OsString::from("root"));
++    }
++    let receipt = capture_file(&directory, "preserved-readback.json", MAX_FRAME)?;
++    if receipt != Image::Absent {
++        // A stored preservation receipt is only DATA. The index stays pending.
++        let expected_receipt = encode(&serde_json::json!({
++            "schema":"macos-root-preparation-preserved-v1", "planSha256":reference.plan.sha256,
++            "rootIdentity":root.identity(),"logicalRootAbsent":true,"writerReleased":true,
++            "canonicalCancellationClosed":false,"normalStop":false,"successorEligible":false,
++        }))?;
++        match &receipt {
++            Image::File {
++                bytes, protection, ..
++            } if has_intent
++                && archived.is_some()
++                && bytes.as_slice() == expected_receipt.as_slice() =>
++            {
++                require_private(protection, false)?;
++            }
++            _ => return Err(denied("root-cancel preservation receipt differs")),
++        }
++        if tree != plan.root.without_config_guard(&plan.writer)? {
++            return Err(denied("root-cancel preservation receipt has a live writer"));
++        }
++        expected.push(OsString::from("preserved-readback.json"));
++    }
++    expected.sort();
++    if super::super::super::tree::names(directory.file())? != expected
++        || super::super::super::TreeSnapshot::read(&root)? != tree
++        || super::super::super::GrokSnapshot::read(&profile)? != plan.grok
++        || capture_file(&directory, "plan.json", MAX_FRAME)? != plan_image
++        || capture_file(&directory, "move-intent.json", MAX_FRAME)? != intent
++        || capture_file(&directory, "preserved-readback.json", MAX_FRAME)? != receipt
++        || super::super::super::tree::names(parent.file())? != names
++        || observation::entry(&profile, ".codex")?.map(|s| identity(&s))
++            != logical.map(|s| identity(&s))
++        || observation::entry(&directory, "root")?.map(|s| identity(&s))
++            != archived.map(|s| identity(&s))
++    {
++        return Err(denied("indexed root-cancel readback changed"));
++    }
++    directory.private()?;
++    parent.private()?;
++    super::super::super::root_creation::verify_indexed_anchor(
++        &manager,
++        data,
++        profile.path(),
++        &root,
++        origin,
++        &path,
++    )?;
++    Ok(root)
++}
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
+index 612a1c2e3..67b7c3bdd 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
+@@ -1,7 +1,8 @@
+ //! Same-object preservation for an INITIAL uncaptured root. It does not publish
+ //! a cancellation terminal or turn the old index into a new Start permission.
+-//! MovementAuthority has no production factory until canonical registration and
+-//! the concrete service/source admission are connected by the action owner.
++//! Plans are registered in the original independent index. MovementAuthority
++//! still has no production factory until concrete service/source admission is
++//! connected by the action owner.
+ use super::*;
+ use crate::infrastructure::official_client_coordination::native::{config::Guard, NativeLease};
+ use std::os::fd::AsRawFd;
+@@ -15,6 +16,7 @@ struct Plan {
+     origin: super::super::super::root_creation::References,
+     binding_sha256: String,
+     initial_review_sha256: String,
++    history_sha256: String,
+     root: super::super::super::TreeSnapshot,
+     grok: super::super::super::GrokSnapshot,
+     writer: super::super::super::Image,
+@@ -25,6 +27,7 @@ pub struct Prepared<'a> {
+     id: String,
+     bytes: Vec<u8>,
+     sha256: String,
++    registered: Option<Head>,
+ }
+ /// An action owner must supply its original canonical registration and current
+ /// service/source/native permissions. No callbacks or deserialized plan can
+@@ -59,10 +62,10 @@ fn io(error: crate::errors::AppError) -> std::io::Error {
+     let _ = error;
+     denied("root-cancel native coordinator unconfirmed")
+ }
+-fn facts(review: &Review<'_>, physical: &PinnedDirectory) -> std::io::Result<()> {
++fn facts(review: &Review<'_>, physical: &PinnedDirectory, expected: &Head) -> std::io::Result<()> {
+     check_time(review.deadline)?;
+     review.index.check_storage()?;
+-    if read_head(review.index.connection()?)?.as_ref() != Some(&review.head) {
++    if read_head(review.index.connection()?)?.as_ref() != Some(expected) {
+         return Err(denied("root-cancel original independent head changed"));
+     }
+     if digest(&encode(&vault_history::read(
+@@ -124,7 +127,7 @@ impl<'a> Prepared<'a> {
+         native
+             .require_context(review.context, review.index.client.path())
+             .map_err(io)?;
+-        facts(&review, &review.index.client)?;
++        facts(&review, &review.index.client, &review.head)?;
+         let image = guard
+             .root_image(native, review.index.client.path())
+             .map_err(io)?;
+@@ -149,6 +152,7 @@ impl<'a> Prepared<'a> {
+             origin: review.index.root_registration.clone().unwrap(),
+             binding_sha256: digest(&review.index.binding),
+             initial_review_sha256: review.fingerprint.clone(),
++            history_sha256: review.history_sha256.clone(),
+             root: tree,
+             grok: review.initial_grok.clone(),
+             writer: image,
+@@ -157,6 +161,11 @@ impl<'a> Prepared<'a> {
+             .index
+             .action_parent
+             .child_private("client-root-cancel-plans", true)?;
++        if !super::super::super::tree::names(parent.file())?.is_empty() {
++            return Err(denied(
++                "root-cancel retained plan namespace requires resolution",
++            ));
++        }
+         let directory = parent.child_private(&plan.id, true)?;
+         if !super::super::super::tree::names(directory.file())?.is_empty() {
+             return Err(denied("root-cancel plan slot already exists"));
+@@ -172,12 +181,63 @@ impl<'a> Prepared<'a> {
+             id: plan.id,
+             bytes,
+             sha256,
++            registered: None,
+         };
+         result.require_live()?;
+         native.check().map_err(io)?;
+         guard.check().map_err(io)?;
+         Ok(result)
+     }
++    fn expected(&self) -> &Head {
++        self.registered.as_ref().unwrap_or(&self.review.head)
++    }
++    /// Publish the actual guarded plan in the original CAS/event stream BEFORE
++    /// any move. This is a pending reference, never service-absence or mutation
++    /// authority. A failed commit/readback retains the plan and rejects reuse.
++    pub fn register(mut self) -> std::io::Result<Self> {
++        self.require_live()?;
++        if self.registered.is_some() {
++            return Err(denied("root-cancel plan already registered"));
++        }
++        let next = Head {
++            revision: self
++                .review
++                .head
++                .revision
++                .checked_add(1)
++                .ok_or_else(|| denied("root-cancel revision overflow"))?,
++            ticket: self.review.head.ticket.clone(),
++            state: State::RootCancellationPrepared,
++            references: None,
++            restore_plan: None,
++            completion_sha256: None,
++            root_retirement: Some(RootRetirement {
++                source_revision: self.review.head.revision,
++                plan: RestorePlan {
++                    id: self.id.clone(),
++                    sha256: self.sha256.clone(),
++                },
++            }),
++            root_generation: None,
++        };
++        self.review.index.write_checked_admitted(
++            Some(&self.review.head),
++            &next,
++            &|_| Ok(()),
++            &|originals| {
++                if originals.is_some() {
++                    return Err(denied("root-cancel cannot register captured originals"));
++                }
++                self.require_live()
++            },
++        )?;
++        self.registered = Some(next);
++        self.require_live()?;
++        Ok(self)
++    }
++    pub fn registered_head(&self) -> Option<&Head> {
++        self.registered.as_ref()
++    }
+     fn plan(&self) -> std::io::Result<Plan> {
+         self.directory.private()?;
+         match capture_file(&self.directory, "plan.json", MAX_FRAME)? {
+@@ -191,6 +251,7 @@ impl<'a> Prepared<'a> {
+                     || plan.source != self.review.head
+                     || plan.initial_review_sha256 != self.review.fingerprint
+                     || plan.binding_sha256 != digest(&self.review.index.binding)
++                    || plan.history_sha256 != self.review.history_sha256
+                 {
+                     return Err(denied("root-cancel plan source changed"));
+                 }
+@@ -201,7 +262,7 @@ impl<'a> Prepared<'a> {
+     }
+     fn require_live(&self) -> std::io::Result<()> {
+         let plan = self.plan()?;
+-        facts(&self.review, &self.review.index.client)?;
++        facts(&self.review, &self.review.index.client, self.expected())?;
+         if observation::entry(&self.directory, "root")?.is_some()
+             || super::super::super::TreeSnapshot::read(&self.review.index.client)? != plan.root
+         {
+@@ -226,7 +287,7 @@ impl<'a> Prepared<'a> {
+         mut guard: Guard<'_>,
+         checkpoint: &impl Fn(&str) -> std::io::Result<()>,
+     ) -> std::io::Result<PreservedRoot> {
+-        if !std::ptr::eq(authority.prepared, self) {
++        if self.registered.is_none() || !std::ptr::eq(authority.prepared, self) {
+             return Err(denied("root-cancel authority belongs to another plan"));
+         }
+         let end = self.review.deadline.min(authority.deadline);
+@@ -286,7 +347,7 @@ impl<'a> Prepared<'a> {
+         native.reanchor_claim(&target).map_err(io)?;
+         guard.reanchor(&target).map_err(io)?;
+         checkpoint("after_reanchor")?;
+-        facts(&self.review, &archived)?;
++        facts(&self.review, &archived, self.expected())?;
+         native.check().map_err(io)?;
+         guard.check().map_err(io)?;
+         check_time(end)?;
+@@ -297,7 +358,7 @@ impl<'a> Prepared<'a> {
+         {
+             return Err(denied("root-cancel release or logical absence unconfirmed"));
+         }
+-        facts(&self.review, &archived)?;
++        facts(&self.review, &archived, self.expected())?;
+         native.check().map_err(io)?;
+         check_time(end)?;
+         let bytes = encode(&serde_json::json!({
+@@ -319,6 +380,7 @@ impl<'a> Prepared<'a> {
+     }
+     #[cfg(test)]
+     fn fixture_authority(&'a self) -> MovementAuthority<'a> {
++        assert!(self.registered.is_some());
+         MovementAuthority {
+             prepared: self,
+             deadline: self.review.deadline,
+@@ -326,6 +388,9 @@ impl<'a> Prepared<'a> {
+     }
+ }
+ 
++#[path = "macos_client_root_prepare_indexed.rs"]
++pub(in crate::infrastructure::macos_client_originals) mod indexed;
++
+ #[cfg(test)]
+ #[path = "macos_client_root_prepare_preserve_tests.rs"]
+ mod tests;
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs
+index 07f9bc8bd..8a773be91 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs
+@@ -14,6 +14,71 @@ fn preservation_authority_cannot_be_deserialized_or_created_by_plan_or_readback(
+     assert!(decode::<Plan>(b"{\"canonicalCancellationClosed\":true}").is_err());
+ }
+ 
++#[test]
++fn cancellation_registration_rejects_missing_or_unbound_plan_and_rolls_back_the_event() {
++    let temp = tempfile::tempdir().unwrap();
++    let root = temp.path().canonicalize().unwrap();
++    let data = root.join("desktop");
++    let profile = root.join("profile");
++    let home = profile.join("home");
++    for path in [&data, &profile, &home] {
++        fs::DirBuilder::new().mode(0o700).create(path).unwrap();
++    }
++    let context = ProcessContext {
++        runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(),
++        working_directory: profile.clone(),
++        opencodex_home: home,
++    };
++    let (index, head) =
++        Index::prepare_start_capture(&context, &data, Instant::now() + Duration::from_secs(10))
++            .unwrap();
++    let id = uuid::Uuid::new_v4().to_string();
++    let candidate = Head {
++        revision: head.revision + 1,
++        ticket: head.ticket.clone(),
++        state: State::RootCancellationPrepared,
++        references: None,
++        restore_plan: None,
++        completion_sha256: None,
++        root_retirement: Some(RootRetirement {
++            source_revision: head.revision,
++            plan: RestorePlan {
++                id: id.clone(),
++                sha256: digest(b"not-a-registered-plan"),
++            },
++        }),
++        root_generation: None,
++    };
++    for stage in 0..3 {
++        if stage == 1 {
++            let parent = index
++                .action_parent
++                .child_private("client-root-cancel-plans", true)
++                .unwrap();
++            let slot = parent.child_private(&id, true).unwrap();
++            create(&slot, "plan.json", b"not-a-registered-plan").unwrap();
++        }
++        let mut wrong = candidate.clone();
++        if stage == 2 {
++            wrong.completion_sha256 = Some(digest(b"sidecar claims success"));
++        }
++        assert!(index.write(Some(&head), &wrong).is_err());
++        assert_eq!(index.head().unwrap().as_ref(), Some(&head));
++        assert!(
++            vault_history::read(index.connection().unwrap(), &head).unwrap() == vec![head.clone()]
++        );
++        assert!(super::super::super::tree::names(index.client.file())
++            .unwrap()
++            .is_empty());
++    }
++    drop(index);
++    drop(context);
++    let path = temp.path().to_path_buf();
++    temp.close().unwrap();
++    assert!(!path.exists());
++    println!("ROOT_CANCEL_INDEX_FIXTURE_REMOVED {}", path.display());
++}
++
+ #[test]
+ #[ignore = "explicit isolated official2.99 Guard/NativeLease fixture, no service or canonical cancel"]
+ fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker() {
+@@ -116,6 +181,17 @@ fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker()
+                 detail: e.to_string(),
+             }
+         })?;
++        let pending = pending
++            .register()
++            .map_err(|e| crate::errors::AppError::RuntimeManaged {
++                code: "test_root_prepare_registration".into(),
++                detail: e.to_string(),
++            })?;
++        assert_eq!(
++            pending.registered_head().unwrap().state,
++            State::RootCancellationPrepared
++        );
++        assert_eq!(index.head().unwrap().as_ref(), pending.registered_head());
+         let destination = pending.destination();
+         let scenario =
+             std::env::var("OCXD024_ROOT_CANCEL_CASE").unwrap_or_else(|_| "success".into());
+@@ -222,13 +298,53 @@ fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker()
+             "native counterexample was not reached"
+         );
+     }
+-    assert_eq!(
+-        read_head(index.connection().unwrap()).unwrap().as_ref(),
+-        Some(&head)
+-    );
+-    // Until canonical wiring exists, the old index MUST refuse normal status/
+-    // Start rather than claiming that preservation alone cancelled the action.
+-    if scenario != "before_move" {
++    let indexed = read_head(index.connection().unwrap()).unwrap().unwrap();
++    assert_eq!(indexed.state, State::RootCancellationPrepared);
++    assert_eq!(indexed.revision, head.revision + 1);
++    assert!(indexed.completion_sha256.is_none());
++    // Registered plans resolve exact live and moved/interrupted objects, while
++    // unknown new data or a replacement logical root remain refused. No close.
++    if matches!(scenario.as_str(), "new_data" | "new_root") {
+         assert!(index.head().is_err());
++    } else {
++        assert_eq!(index.head().unwrap().as_ref(), Some(&indexed));
++    }
++    drop(index);
++    if !matches!(scenario.as_str(), "new_data" | "new_root") {
++        let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
++        assert_eq!(reopened.head().unwrap().as_ref(), Some(&indexed));
++        assert!(reopened.reserve_start().is_err());
++        drop(reopened);
++        let preview = super::super::preview::inspect_preview(&context, &data);
++        assert_eq!(preview.status, super::super::preview::Status::Pending);
++        assert_eq!(preview.phase, Some(State::RootCancellationPrepared));
++        assert_eq!(
++            preview.original_evidence,
++            super::super::preview::Evidence::NotRecorded
++        );
++        assert_eq!(
++            preview.plan_evidence,
++            super::super::preview::Evidence::Verified
++        );
++        assert!(
++            !preview.can_continue
++                && !preview.can_rollback
++                && !preview.can_finalize
++                && !preview.can_rearm
++                && !preview.can_cancel_preparation
++        );
++        assert!(!super::super::generation::inspect_successor_eligibility(&context, &data).unwrap());
++    } else {
++        assert!(Index::open_existing(&context, &data, &profile.join(".codex")).is_err());
+     }
++    let receipt_path = root.join("native-preservation-result.json");
++    let mut receipt: serde_json::Value =
++        serde_json::from_slice(&fs::read(&receipt_path).unwrap()).unwrap();
++    receipt["registeredHead"] = serde_json::to_value(&indexed).unwrap();
++    receipt["canonicalCancellationClosed"] = serde_json::json!(false);
++    receipt["indexReopenedAndPending"] =
++        serde_json::json!(!matches!(scenario.as_str(), "new_data" | "new_root"));
++    receipt["newDataReopenRefused"] =
++        serde_json::json!(matches!(scenario.as_str(), "new_data" | "new_root"));
++    fs::write(receipt_path, serde_json::to_vec_pretty(&receipt).unwrap()).unwrap();
+ }
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs b/apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs
+index 5785c07a1..c964edad9 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs
+@@ -87,6 +87,8 @@ pub enum State {
+     RecoveryPrepared,
+     RestoreRolledBack,
+     RootRetirementPrepared,
++    /// An indexed first-root cancellation plan; neither cancelled nor Closed.
++    RootCancellationPrepared,
+     RootAbsent,
+     Restored,
+     Unchanged,
+@@ -250,7 +252,7 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
+     }
+     let root_phase = matches!(
+         head.state,
+-        State::RootRetirementPrepared | State::RootAbsent
++        State::RootRetirementPrepared | State::RootCancellationPrepared | State::RootAbsent
+     );
+     if root_phase != head.root_retirement.is_some()
+         || head.root_retirement.as_ref().is_some_and(|r| {
+@@ -311,6 +313,7 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
+             head.state,
+             State::Preparing
+                 | State::CaptureReserved
++                | State::RootCancellationPrepared
+                 | State::Failed
+                 | State::CancelledBeforeCapture
+                 | State::CancelledCapture
+@@ -356,7 +359,7 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
+             }
+             Some((refs.phases.len(), true))
+         }
+-        State::Preparing | State::CaptureReserved => {
++        State::Preparing | State::CaptureReserved | State::RootCancellationPrepared => {
+             return Err(denied("unpublished originals in preparing index"))
+         }
+         State::RootRetirementPrepared | State::RootAbsent => {
+@@ -2101,9 +2104,17 @@ impl Index {
+         project: RootProjection<'_>,
+     ) -> io::Result<()> {
+         validate(next)?;
++        if next.state == State::RootCancellationPrepared && self.root_registration.is_none() {
++            return Err(denied(
++                "root cancellation requires independently registered original absence",
++            ));
++        }
+         if self.root_registration.is_some()
+             && !(expected.is_some_and(|h| h.state == State::Preparing)
+                 && next.state == State::CaptureReserved
++                || expected
++                    .is_some_and(|h| matches!(h.state, State::Preparing | State::CaptureReserved))
++                    && next.state == State::RootCancellationPrepared
+                 || expected.is_some_and(|h| h.state == State::CaptureReserved)
+                     && next.state == State::Captured
+                 || expected.is_some_and(|h| h.state == State::Captured)
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs b/apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs
+index 39bfe5cb9..6bd2678bd 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_session_observation.rs
+@@ -395,6 +395,14 @@ pub(super) fn physical_root(context: &ProcessContext, data: &Path) -> io::Result
+             .root_retirement
+             .as_ref()
+             .ok_or_else(|| denied("missing root lacks registered retirement"))?;
++        if h.state == State::RootCancellationPrepared {
++            // inspect_map resolved and fully checked the independently indexed
++            // cancellation before this projection. Never discover a plan here.
++            return Ok(data
++                .join("manager-state/client-root-cancel-plans")
++                .join(&movement.plan.id)
++                .join("root"));
++        }
+         let refs = h
+             .references
+             .as_ref()
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs b/apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs
+index fb2695d0b..deabe53cd 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs
+@@ -148,6 +148,14 @@ fn project_history(
+         rearm_digest: None,
+         confirmation_digest: None,
+     };
++    if head.state == State::RootCancellationPrepared {
++        // The original index resolver has already verified this exact plan.
++        // No OriginalSession exists and no cancellation terminal was committed.
++        preview.status = Status::Pending;
++        preview.attempt_id = Some(head.ticket.clone());
++        preview.plan_evidence = Evidence::Verified;
++        return Ok(preview);
++    }
+     if root_origin.is_some() && head.root_retirement.is_some() {
+         preview.status =
+             if generation::successor_eligible_checked(context, data, head, history, root_origin)? {
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs b/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
+index dbc28b612..cbb2dc5f3 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
+@@ -214,7 +214,12 @@ fn inspect_root_lineage(
+     let manager = data.child_private("manager-state", false)?;
+     if observation::entry(&manager, "client-originals")?.is_none() {
+         if !expected.is_empty()
+-            || current.is_none_or(|h| !matches!(h.state, State::Preparing | State::CaptureReserved))
++            || current.is_none_or(|h| {
++                !matches!(
++                    h.state,
++                    State::Preparing | State::CaptureReserved | State::RootCancellationPrepared
++                )
++            })
+         {
+             return Err(denied("indexed root original vault missing"));
+         }
+diff --git a/apps/desktop/ui/src/features/runtime/ClientRecovery.vue b/apps/desktop/ui/src/features/runtime/ClientRecovery.vue
+index a10783ffe..18a5ed06b 100644
+--- a/apps/desktop/ui/src/features/runtime/ClientRecovery.vue
++++ b/apps/desktop/ui/src/features/runtime/ClientRecovery.vue
+@@ -7,7 +7,7 @@ import { useLifecycleStore } from '@/app/lifecycle/store'
+ import type { ClientRecoveryEvidence, ClientRecoveryPhase } from './client-recovery'
+ const recovery = useClientRecoveryStore(), lifecycle = useLifecycleStore()
+ const busy = computed(() => recovery.reading || recovery.executing || recovery.refreshing)
+-const phases: Record<ClientRecoveryPhase, string> = { root_retirement_prepared:'客户端目录恢复待核对',root_absent:'原目录缺席已核对', preparing: '正在登记原会话',capture_reserved:'原件捕获已预留', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对',recovery_prepared:'恢复前状态已核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', unchanged: '原件保持，原会话已结束', cancelled_before_capture: '启动准备已取消',cancelled_capture:'本次捕获已取消并保留', failed: '原会话需要核对' }
++const phases: Record<ClientRecoveryPhase, string> = { root_cancellation_prepared:'首次目录取消待完成',root_retirement_prepared:'客户端目录恢复待核对',root_absent:'原目录缺席已核对', preparing: '正在登记原会话',capture_reserved:'原件捕获已预留', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对',recovery_prepared:'恢复前状态已核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', unchanged: '原件保持，原会话已结束', cancelled_before_capture: '启动准备已取消',cancelled_capture:'本次捕获已取消并保留', failed: '原会话需要核对' }
+ const evidence = (value: ClientRecoveryEvidence) => ({ verified: '已核对', not_recorded: '尚未登记', unregistered: '待确认', unknown: '未核实' })[value]
+ const progress = computed(() => ({ finalize:'正在完成恢复收尾…',continue:'正在继续恢复客户端配置…',rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…',finishUnchanged:'正在核对原件并结束原会话…',cancelPreparation:'正在核对并取消启动准备…',preparePlan:'正在核对并准备恢复计划…' })[recovery.action])
+ const restoredOutcome = computed(() => recovery.outcome?.status === 'restored' || recovery.outcome?.status === 'unchanged' || recovery.outcome?.status === 'cancelled_before_capture' || recovery.outcome?.status === 'cancelled_capture')
+diff --git a/apps/desktop/ui/src/features/runtime/client-recovery.ts b/apps/desktop/ui/src/features/runtime/client-recovery.ts
+index 7d8f6d650..93b253a4a 100644
+--- a/apps/desktop/ui/src/features/runtime/client-recovery.ts
++++ b/apps/desktop/ui/src/features/runtime/client-recovery.ts
+@@ -3,7 +3,7 @@ import type { StatusSnapshot } from '@/contracts/runtimeStatus'
+ 
+ export type ClientRecoveryStatus = 'not_required' | 'active' | 'pending' | 'restored' | 'unknown' | 'unsupported'
+ export type ClientRecoveryEvidence = 'not_recorded' | 'verified' | 'unregistered' | 'unknown'
+-export type ClientRecoveryPhase = 'preparing' | 'capture_reserved' | 'captured' | 'ready' | 'stop_prepared' | 'stopped' | 'restore_prepared' | 'recovery_prepared' | 'restore_rolled_back' | 'restored' | 'unchanged' | 'cancelled_before_capture' | 'cancelled_capture' | 'root_retirement_prepared' | 'root_absent' | 'failed'
++export type ClientRecoveryPhase = 'preparing' | 'capture_reserved' | 'captured' | 'ready' | 'stop_prepared' | 'stopped' | 'restore_prepared' | 'recovery_prepared' | 'restore_rolled_back' | 'restored' | 'unchanged' | 'cancelled_before_capture' | 'cancelled_capture' | 'root_retirement_prepared' | 'root_cancellation_prepared' | 'root_absent' | 'failed'
+ export interface ClientRecoveryPreview {
+   status: ClientRecoveryStatus
+   phase: ClientRecoveryPhase | null
+diff --git a/apps/desktop/ui/tests/client-recovery-flow.test.ts b/apps/desktop/ui/tests/client-recovery-flow.test.ts
+index 94cb9516f..159d47a36 100644
+--- a/apps/desktop/ui/tests/client-recovery-flow.test.ts
++++ b/apps/desktop/ui/tests/client-recovery-flow.test.ts
+@@ -65,7 +65,7 @@ describe('already retired root finalization',()=>{
+ });
+ afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
+ describe('explicit client recovery interaction', () => {
+-  it.each(['root_retirement_prepared','root_absent'] as const)('keeps %s read-only even if a payload advertises ordinary mutation capabilities',async phase=>{
++  it.each(['root_retirement_prepared','root_cancellation_prepared','root_absent'] as const)('keeps %s read-only even if a payload advertises ordinary mutation capabilities',async phase=>{
+     vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preview(),phase,canContinue:true,canFinalize:true,canRollback:true,canRearm:true,canFinishUnchanged:true,canCancelPreparation:true,canPreparePlan:true,planDigest:'d'.repeat(64),unchangedDigest:'e'.repeat(64),preparationDigest:'f'.repeat(64),rollbackDigest:'b'.repeat(64),rearmDigest:'c'.repeat(64)})
+     const store=await inspect();expect(store.canContinue||store.canFinalize||store.canRollback||store.canRearm||store.canFinishUnchanged||store.canCancelPreparation||store.canPreparePlan).toBe(false)
+     expect(await store.apply('finalize')).toBe(false);expect(await store.apply('continue')).toBe(false);expect(clientRecoveryApi.finalize).not.toHaveBeenCalled();expect(clientRecoveryApi.continue).not.toHaveBeenCalled();expect(useLifecycleStore().clientRecoveryRequired).toBe(true)

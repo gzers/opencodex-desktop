@@ -1,0 +1,46 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error: this expression creates a reference which is immediately dereferenced by the compiler
+  --> src/infrastructure/macos_client_root_prepare_indexed.rs:56:29
+   |
+56 |             require_private(&protection, false)?;
+   |                             ^^^^^^^^^^^ help: change this to: `protection`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+   = note: `-D clippy::needless-borrow` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::needless_borrow)]`
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+  --> src/infrastructure/macos_client_root_prepare_indexed.rs:57:23
+   |
+57 |             if digest(&bytes) != reference.plan.sha256 {
+   |                       ^^^^^^ help: change this to: `bytes`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+  --> src/infrastructure/macos_client_root_prepare_indexed.rs:60:37
+   |
+60 |             let plan: Plan = decode(&bytes)?;
+   |                                     ^^^^^^ help: change this to: `bytes`
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_prepare_indexed.rs:105:29
+    |
+105 |             require_private(&protection, false)?;
+    |                             ^^^^^^^^^^^ help: change this to: `protection`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: this expression creates a reference which is immediately dereferenced by the compiler
+   --> src/infrastructure/macos_client_root_prepare_indexed.rs:159:33
+    |
+159 |                 require_private(&protection, false)?;
+    |                                 ^^^^^^^^^^^ help: change this to: `protection`
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.95.0/index.html#needless_borrow
+
+error: could not compile `opencodex-desktop` (lib) due to 5 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 5 previous errors
