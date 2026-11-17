@@ -131,6 +131,9 @@ pub(crate) fn inventory_digest(rows: &BTreeMap<String, Entry>) -> AppResult<Stri
     Ok(hash::sha256_hex(&bytes))
 }
 const MAX_WORKERS: usize = 4;
+#[cfg(windows)]
+#[path = "program_image_windows.rs"]
+mod windows;
 /// Inventory requires existing paths only. Each component gets the same native
 /// symlink/reparse/type admission once, before any content read. Do not turn
 /// this into a cached directory grant or use it for create/missing paths.
@@ -190,6 +193,8 @@ fn same_directory(before: &fs::Metadata, after: &fs::Metadata) -> AppResult<bool
     Ok(true)
 }
 fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
+    #[cfg(test)]
+    let _cost = cost::span("inventory-enumeration-total");
     if !super::program_layout::clean_absolute(root) || !safety::inspect(root)?.is_dir() {
         return Err(fail());
     }
@@ -215,6 +220,8 @@ fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
         }
         #[cfg(test)]
         drop(directory_cost);
+        #[cfg(test)]
+        let enumeration_cost = cost::span("directory-enumeration");
         for item in fs::read_dir(&directory).map_err(|_| fail())? {
             count += 1;
             if count > MAX_ENTRIES {
@@ -254,6 +261,8 @@ fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
                 draft.jobs.push((name, path));
             }
         }
+        #[cfg(test)]
+        drop(enumeration_cost);
         let after = safety::inspect(&directory)?;
         if !same_directory(&before, &after)? {
             return Err(fail());
@@ -275,6 +284,8 @@ fn finish_inventory_checked(
     workers: usize,
     checkpoint: &(impl Fn(&Path) -> AppResult<()> + Sync),
 ) -> AppResult<BTreeMap<String, Entry>> {
+    #[cfg(test)]
+    let _cost = cost::span("inventory-read-and-fence-total");
     use std::sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering};
     let workers = workers.clamp(1, MAX_WORKERS).min(draft.jobs.len().max(1));
     let next = AtomicUsize::new(0);
@@ -342,6 +353,8 @@ fn finish_inventory_checked(
         // continues into cleanup and no successful subset is returned.
         let mut rows = Vec::with_capacity(jobs.len());
         for h in handles {
+            #[cfg(test)]
+            let _join_cost = cost::span("worker-join-wait");
             match h.join() {
                 Ok(Ok(mut part)) => rows.append(&mut part),
                 Ok(Err(e)) => {
@@ -387,6 +400,8 @@ fn finish_inventory_checked(
     // Keep the enumeration-end check and also fence all original directory
     // paths/identities/mtimes AFTER the scoped byte readers finish.
     for (directory, before) in &draft.directories {
+        #[cfg(test)]
+        let _cost = cost::span("directory-final-fence");
         check_inventory_path(root, directory)?;
         let after = safety::inspect(directory)?;
         if !same_directory(before, &after)? {
@@ -396,8 +411,27 @@ fn finish_inventory_checked(
     Ok(draft.rows)
 }
 pub(crate) fn inventory(root: &Path) -> AppResult<BTreeMap<String, Entry>> {
-    finish_inventory(root, collect_inventory(root)?, MAX_WORKERS)
+    #[cfg(test)]
+    let _cost = cost::span("inventory-total");
+    #[cfg(windows)]
+    {
+        windows::inventory(root, None)
+    }
+    #[cfg(not(windows))]
+    {
+        finish_inventory(root, collect_inventory(root)?, MAX_WORKERS)
+    }
 }
+#[cfg(windows)]
+pub(crate) fn inventory_until(
+    root: &Path,
+    end: std::time::Instant,
+) -> AppResult<BTreeMap<String, Entry>> {
+    windows::inventory(root, Some(end))
+}
+#[cfg(all(test, windows))]
+#[path = "program_image_windows_tests.rs"]
+mod windows_tests;
 #[cfg(test)]
 fn inventory_serial(root: &Path) -> AppResult<BTreeMap<String, Entry>> {
     if !super::program_layout::clean_absolute(root) || !safety::inspect(root)?.is_dir() {
@@ -565,15 +599,30 @@ fn file_entry_checked(
         executable,
     })
 }
-pub fn verify(selected: &super::program_selection::SelectedProgram) -> AppResult<()> {
-    if content_digest(&selected.paths.version_root)? != selected.image.tree_sha256 {
+fn verify_inventory(
+    root: &Path,
+    expected_tree: &str,
+    expected_manifest: &str,
+    end: Option<std::time::Instant>,
+) -> AppResult<()> {
+    let rows = {
+        #[cfg(windows)]
+        {
+            match end {
+                Some(end) => inventory_until(root, end)?,
+                None => inventory(root)?,
+            }
+        }
+        #[cfg(not(windows))]
+        {
+            inventory(root)?
+        }
+    };
+    if rows.is_empty() || inventory_digest(&rows)? != expected_tree {
         return Err(fail());
     }
-    let manifest_path = selected
-        .paths
-        .version_root
-        .join(super::program_selection::IMAGE_MANIFEST);
-    safety::check_path(&selected.paths.version_root, &manifest_path, false)?;
+    let manifest_path = root.join(super::program_selection::IMAGE_MANIFEST);
+    safety::check_path(root, &manifest_path, false)?;
     let file = safety::open_file(&manifest_path, false)?;
     safety::require_single_link(&file)?;
     let mut manifest = Vec::new();
@@ -583,10 +632,35 @@ pub fn verify(selected: &super::program_selection::SelectedProgram) -> AppResult
     if manifest.len() > 64 * 1024 {
         return Err(fail());
     }
-    if hash::sha256_hex(&manifest) != selected.selection.image_sha256 {
+    if hash::sha256_hex(&manifest) != expected_manifest {
+        return Err(fail());
+    }
+    if end.is_some_and(|end| std::time::Instant::now() >= end) {
         return Err(fail());
     }
     Ok(())
+}
+
+pub fn verify(selected: &super::program_selection::SelectedProgram) -> AppResult<()> {
+    verify_at(selected, None)
+}
+#[cfg(windows)]
+pub(crate) fn verify_until(
+    selected: &super::program_selection::SelectedProgram,
+    end: std::time::Instant,
+) -> AppResult<()> {
+    verify_at(selected, Some(end))
+}
+fn verify_at(
+    selected: &super::program_selection::SelectedProgram,
+    end: Option<std::time::Instant>,
+) -> AppResult<()> {
+    verify_inventory(
+        &selected.paths.version_root,
+        &selected.image.tree_sha256,
+        &selected.selection.image_sha256,
+        end,
+    )
 }
 
 #[cfg(all(test, unix))]
