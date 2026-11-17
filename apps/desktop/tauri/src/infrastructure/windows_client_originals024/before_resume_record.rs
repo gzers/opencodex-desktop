@@ -4,6 +4,10 @@ use serde::{Deserialize, Serialize};
 use std::{collections::BTreeMap, io};
 const SCHEMA: &str = "windows-before-resume-recovery-v1";
 const MAX_RECORD: usize = 65536;
+#[cfg(windows)]
+mod storage;
+#[cfg(windows)]
+pub(super) use storage::AttachmentStorage;
 fn invalid() -> io::Error {
     io::Error::new(
         io::ErrorKind::InvalidData,

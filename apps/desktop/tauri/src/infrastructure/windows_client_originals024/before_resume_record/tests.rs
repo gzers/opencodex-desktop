@@ -1,12 +1,12 @@
 use super::*;
 use serde_json::{json, Value};
-fn record() -> Value {
+pub(super) fn record() -> Value {
     json!({"schema":SCHEMA,"sessionId":"11111111-1111-1111-1111-111111111111","failedActionId":"22222222-2222-2222-2222-222222222222","manifestDigest":"a".repeat(64),"bindingDigest":"b".repeat(64),"storagePlanDigest":"c".repeat(64),"securityPolicyDigest":"d".repeat(64),"failedPrefixDigest":"e".repeat(64),"recoveryActionId":"33333333-3333-3333-3333-333333333333","sequence":1,"previousRecordDigest":null,"startedQpc":"1000","deadlineQpc":"11000","qpcFrequency":"1000","event":{"kind":"AbortRecoveryIntent"}})
 }
-fn bytes(v: &Value) -> Vec<u8> {
+pub(super) fn bytes(v: &Value) -> Vec<u8> {
     serde_json::to_vec(v).unwrap()
 }
-fn chain(events: &[Value]) -> Vec<Vec<u8>> {
+pub(super) fn chain(events: &[Value]) -> Vec<Vec<u8>> {
     let mut out: Vec<Vec<u8>> = Vec::new();
     for (i, event) in events.iter().enumerate() {
         let mut r = record();
@@ -19,7 +19,7 @@ fn chain(events: &[Value]) -> Vec<Vec<u8>> {
     }
     out
 }
-fn events() -> Vec<Value> {
+pub(super) fn events() -> Vec<Value> {
     vec![
         json!({"kind":"AbortRecoveryIntent"}),
         json!({"kind":"LauncherQuiesced","pid":123,"creationFiletime":"42","forced":true,"rawExit":242,"jobTotal":1,"jobActive":0}),
