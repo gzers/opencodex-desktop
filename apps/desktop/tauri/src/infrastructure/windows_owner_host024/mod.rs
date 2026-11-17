@@ -13,6 +13,7 @@ mod existing_qualification;
 #[cfg(debug_assertions)]
 mod failure_control;
 pub(crate) mod gui_probe;
+mod recovery_control;
 use std::{
     io,
     time::{Duration, Instant},
