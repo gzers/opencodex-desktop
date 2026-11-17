@@ -940,3 +940,10 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 源码c0d42f8dcc72d56b84fb5bbea050efe2d66ee65f已推送，仅4test脚本；生产Rust/制品仍3afd4e59d，证据.adg/evidence/0.2.24/windows-dev/wl2-r6-failure-archive-r3-20261117-r1/。r2原普通session7读回broker/Node同FILETIME，但Measure-Object无法解析Hashtable bytes统计，ZIP未建，原617148bytes receipt/548bytes错误保留。共享readonly archive helper显式Int64累加原20k/2GiB/512MiB限；实际PS51完整测试发现openlog目录项length滞后后改readonly handle.Length，全部原字节/hash/前后membership断言保持。测试70文件1049255源字节完整压缩/逐member/源hash过，独立Python核；existingZIP/duplicate/escape/missing四反例拒绝，前两localpartial69member源码/ZIP/错日志保留。三localscene未删、不重试旧删除拒绝。
 
 旧工作树tracked检出执行中消失，managed新code/docs从已推送6251/3b3恢复；当前根详final-status，不改旧D feature。r3入口C:\Users\Public\ocx-r6-failure-archive-20261117-r3\archive-r6-failed-preresume.cmd待用户原桌面，改批处理准确exit0/1不再统一finished，4input摘要核。普通全归档尚未完成，原54692/挂起50580/旧40588与失败全树留，未kill/权限/配置/PATH/官方/业务/模型/W2/双SID/发布。原宿主无后续控制channel，归档后仍需明确受控清理/新独立scene方案，不从PID/JSON构建旧Owner/NormalStop；Start/allAcceptedfalse，全版其余未完保持。
+
+
+## 2026-11-17 r3全失败树归档成功与受控清理方案待定
+
+原marenben SID1003/session7实际r3归档验证成功，10641文件723798906源字节1642目录，privateZIP338702293字节，SHA256 d7664840a85258fe49b8488e79861285d1748ab6fddb7cd18424abd3e10a0026。原SID完整逐member/sourcehash和前后membership核，receiver核完整清单/分组/原c870三产品摘要，controller未独立重开privateZIP，不冒NTFS身份权限克隆。完整原6171427字节receipt归.adg/evidence/0.2.24/windows-dev/wl2-r6-failure-archive-r3-20261117-receive-r1/；原54692与未恢复Node50580同FILETIME前后仍活，原树/ZIP均留，没有kill/delete/权限变更或原包重跑。
+
+源码c0d42f8dc（归档脚本），生产路径修复仍3afd4e59d，原失败c870不改接受。当前loaded c870宿主park无后续控制channel，原非Clone Owner/Job在内部，新程序不能PID/JSON收养其权威；归档不构成NormalStop/Closed或后继。具体最小方案归cleanup-plan-request.json：若明确采用新外部forced失败清理机制，只在原普通SID持有两目标经原FILETIME/TokenUser/session/imagehash核的句柄后执行forced242并读回，绝不冒Job/NormalStop权威、不动旧40588/其它进程、不含删除；下一独立scene先补原宿主可达的受限失败控制入口。此方案改变尚未实施/执行，等待明确决定。原公共Start/typedClosed/生产/整版acceptedfalse；全部原初始化/ownerreceipt/原缺席安全退根/GUI官方owner/容量/普通MSI/CAP-trust/历史清理未完保持，无日常/官方/业务/模型/W2/双SID/发布。
