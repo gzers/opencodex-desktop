@@ -1,0 +1,8 @@
+﻿Exception calling "WriteAllText" with "2" argument(s): "The given path's format is not supported."
+At C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\probe-r7-readonly.ps1:28 char:2
++  [IO.File]::WriteAllText($file+':r7-test','owned alternate stream')
++  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : NotSupportedException
+ 
+

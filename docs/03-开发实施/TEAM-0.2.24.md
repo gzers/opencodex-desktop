@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 17；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 18；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -187,3 +187,13 @@ r2-r5逐文件单写集继续，新增明确originals目录内anchored/v3节点�
 当前恢复与只读计划优先，自有副本可平行计量/编译；原件未还不真实原包重跑。完整校验/每byte/hash/原权限/目录与source-current/原操作边界保持，Windows先全阶段计量再单pass优化，不跨动作缓存/元数据代hash/延预算。整个范围内连续批量修复及时分别push；新范围/现场执行确认在具体计划就绪时一次完成，不每个小修回Mac。既有未完/失败证据/旧删除拒绝全部保持，不W2/双SID、不发布。
 
 > fetch main 89e0195acb7a0c6e7549eafa376ec520ce981546及本次docs/governance-main，在44bb后继按TEAM17/IMP143/windows-preresume-recovery-performance-r7继续。先准备当前r2只读全归档/native预检及精确修复计划，在原Windows对话一次确认新两目标forced/3原件归还后执行，不能沿用旧清理授权；不签Stop/Closed或后继。未来宿主在首变更前装partial恢复接口；共享program_image Windows优化/tests已单写授权，先量阶段再等强优化，full inventory/每byte/hash/原预算未知拒绝不变。原件未还不原包重跑，及时分别push完整状态/首错/source与EXE/清理，不W2/双SID、不发布。
+
+
+## revision18 异步并行接续
+
+用户已授权本对话目标模式至0.2.24发布前就绪。Windows73d8eb155/docs48181b0b5交回的是r7只读工具准备及编译OOM，实际状态唯一见IMP-34 revision144；本次不改r7恢复接口/扫描允许集，不整批集成未完成Windows产品。
+
+- Windows继续原件/只读现场预检、beforeResume恢复、host与扫描优化独占集；环境可构建前不原前提重复OOM。现场恢复须先有可审查的归档/真实预检/具体计划再请求单独授权，旧场景forced授权不转用；普通token/日常策略/原预算/未知拒绝不变。
+- Mac并行维护.github装配与Mac程序来源/封装验收、共享页面与NAME剩余路线，不改Windows独占恢复/扫描文件。本次main 462e2476a9275cdf82e9e3235ed84820ac2c28c7仅离线交付核验/装配及相关测试；Windows合入main只承接这些装配变更，无需重跑已过原生项。
+- 双方一批完成即推送各自代码/证据分支。缺共享接口只暂停对应接线，其余继续；不每次准备动作另开全轮/改合同。Windows新handoff须区分工具/新产物/实际部署/生产完成；本次新r7轮次尚未补入旧handoff的事实由IMP回执注明。
+- 不提前W2/双SID或发布。最终候选清单、签名/来源和受影响原生验收由Mac固定后一次给Windows，旧失败证据不覆盖。

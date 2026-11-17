@@ -1,0 +1,106 @@
+{
+  "source": "73d8eb155ae474940cecf4d8933c41d924b29a83",
+  "evidenceSource": "48181b0b59eda60e32ce31dc670ef689c542183a",
+  "importedFiles": 503,
+  "payloadFilesVerified": 502,
+  "payloadBytesVerified": 6714147,
+  "finalSource": [
+    {
+      "path": "apps/desktop/tauri/src/bin/ocxd.rs",
+      "exactGitMatch": false,
+      "gitBytes": 15897,
+      "claimedBytes": 16301,
+      "crlfEquivalent": true,
+      "matchingPayload": "product-build/executed-source/apps/desktop/tauri/src/bin/ocxd.rs",
+      "scopeNote": "line endings only; original bytes retained"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "exactGitMatch": false,
+      "gitBytes": 12252,
+      "claimedBytes": 12585,
+      "crlfEquivalent": true,
+      "matchingPayload": "product-build/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "scopeNote": "line endings only; original bytes retained"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/r7_readonly.rs",
+      "exactGitMatch": true,
+      "gitBytes": 9167,
+      "claimedBytes": 9167,
+      "crlfEquivalent": true,
+      "matchingPayload": "final-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/r7_readonly.rs",
+      "scopeNote": "exact Git bytes"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "exactGitMatch": false,
+      "gitBytes": 20402,
+      "claimedBytes": 20875,
+      "crlfEquivalent": true,
+      "matchingPayload": "product-build/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "scopeNote": "line endings only; original bytes retained"
+    },
+    {
+      "path": "test/windows024-native/archive-r7-current-r2.cmd",
+      "exactGitMatch": true,
+      "gitBytes": 465,
+      "claimedBytes": 465,
+      "crlfEquivalent": true,
+      "matchingPayload": "product-build/executed-source/test/windows024-native/archive-r7-current-r2.cmd",
+      "scopeNote": "exact Git bytes"
+    },
+    {
+      "path": "test/windows024-native/archive-r7-current-r2.ps1",
+      "exactGitMatch": false,
+      "gitBytes": 9351,
+      "claimedBytes": 9467,
+      "crlfEquivalent": true,
+      "matchingPayload": "final-source/test/windows024-native/archive-r7-current-r2.ps1",
+      "scopeNote": "line endings only; original bytes retained"
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "exactGitMatch": false,
+      "gitBytes": 36307,
+      "claimedBytes": 36482,
+      "crlfEquivalent": true,
+      "matchingPayload": "product-build/executed-source/test/windows024-native/build-wl2.ps1",
+      "scopeNote": "line endings only; original bytes retained"
+    },
+    {
+      "path": "test/windows024-native/probe-r7-readonly.ps1",
+      "exactGitMatch": false,
+      "gitBytes": 3906,
+      "claimedBytes": 3963,
+      "crlfEquivalent": true,
+      "matchingPayload": "product-build/executed-source/test/windows024-native/probe-r7-readonly.ps1",
+      "scopeNote": "line endings only; original bytes retained"
+    },
+    {
+      "path": "test/windows024-native/r7-readonly-scene.cs",
+      "exactGitMatch": false,
+      "gitBytes": 13319,
+      "claimedBytes": 13491,
+      "crlfEquivalent": true,
+      "matchingPayload": "product-build/executed-source/test/windows024-native/r7-readonly-scene.cs",
+      "scopeNote": "line endings only; original bytes retained"
+    },
+    {
+      "path": "test/windows024-native/r7-scene-locators.json",
+      "exactGitMatch": false,
+      "gitBytes": 106249,
+      "claimedBytes": 110171,
+      "crlfEquivalent": true,
+      "matchingPayload": "product-build/executed-source/test/windows024-native/r7-scene-locators.json",
+      "scopeNote": "line endings only; original bytes retained"
+    }
+  ],
+  "handoff": "windows-dev-handoff.md still describes r6 scan-cost; new r7 result comes from this immutable round",
+  "accepted": false,
+  "newProductArtifact": false,
+  "nativePreflightExecuted": false,
+  "restorationExecuted": false,
+  "closed": false,
+  "scope": "evidence/source provenance only; not full code security review or native acceptance"
+}

@@ -1,0 +1,94 @@
+﻿{
+    "passed":  true,
+    "scope":  "controller-owned query-only helper tests; not ordinary desktop acceptance",
+    "refused":  [
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"ProbeProcess\" with \"3\" argument(s): \"pinned file SHA256 differs\" ---\u003e System.IO.InvalidDataException: pinned file SHA256 differs\r\n   at R7ReadOnlyScene.Pinned.Recheck()\r\n   at R7ReadOnlyScene.Pinned..ctor(String path, String sha, Int64 expectedBytes, Boolean liveWriter)\r\n   at R7ReadOnlyScene.Target..ctor(UInt32 pid, String filetime, String image, String sha, String sid, Int32 session, Boolean ordinary, Boolean noJob, Boolean suspended)\r\n   at R7ReadOnlyScene.ProbeProcess(Int32 pid, String expectedHash, String expectedFiletime)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , String , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "fault":  "hash"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"ProbeProcess\" with \"3\" argument(s): \"exact FILETIME/PID differs\" ---\u003e System.IO.InvalidDataException: exact FILETIME/PID differs\r\n   at R7ReadOnlyScene.Target.Recheck()\r\n   at R7ReadOnlyScene.Target..ctor(UInt32 pid, String filetime, String image, String sha, String sid, Int32 session, Boolean ordinary, Boolean noJob, Boolean suspended)\r\n   at R7ReadOnlyScene.ProbeProcess(Int32 pid, String expectedHash, String expectedFiletime)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , String )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "fault":  "filetime"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"ObserveFile\" with \"2\" argument(s): \"alternate or unknown stream refused: :r7-test:$DATA\" ---\u003e System.IO.InvalidDataException: alternate or unknown stream refused: :r7-test:$DATA\r\n   at R7ReadOnlyScene.ObserveFile(String path, Boolean directory)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Boolean )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "fault":  "ADS"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"ObserveFile\" with \"2\" argument(s): \"multiple-link task file refused\" ---\u003e System.IO.InvalidDataException: multiple-link task file refused\r\n   at R7ReadOnlyScene.Identity(SafeFileHandle file, String expected, Boolean directory)\r\n   at R7ReadOnlyScene.ObserveFile(String path, Boolean directory)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Boolean )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "fault":  "hardlink"
+                    }
+                ],
+    "originalR2Touched":  false,
+    "processTerminated":  false,
+    "removed":  false,
+    "current":  {
+                    "pid":  110520,
+                    "filetime":  "134393761157805427",
+                    "image":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-evidence-resume\\code\\.adg\\evidence\\0.2.24\\windows-dev\\wl2-r7-r2-readonly-20261117-r1\\helper-probe-r4\\cmd.exe",
+                    "imageKey":  "247287385:5629499535046607",
+                    "imageSha256":  "64afc6db3aad1289533662e2d79e27dd55c7dcdb8cd918b08e145ad82ad5acb4",
+                    "token":  {
+                                  "sid":  "S-1-5-21-587408064-856152790-2583328096-1001",
+                                  "session":  2,
+                                  "elevationType":  3,
+                                  "elevated":  0
+                              },
+                    "inJob":  true,
+                    "exited":  false,
+                    "threadCount":  0,
+                    "threadState":  null,
+                    "threadWaitReason":  null
+                },
+    "file":  {
+                 "path":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-evidence-resume\\code\\.adg\\evidence\\0.2.24\\windows-dev\\wl2-r7-r2-readonly-20261117-r1\\helper-probe-r4\\fixture\\content.txt",
+                 "key":  "247287385:4503599628203986",
+                 "attributes":  32,
+                 "links":  1,
+                 "directory":  false,
+                 "streams":  [
+                                 "::$DATA"
+                             ],
+                 "bytes":  25
+             },
+    "directory":  {
+                      "path":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-evidence-resume\\code\\.adg\\evidence\\0.2.24\\windows-dev\\wl2-r7-r2-readonly-20261117-r1\\helper-probe-r4\\fixture",
+                      "key":  "247287385:4503599628203984",
+                      "attributes":  16,
+                      "links":  1,
+                      "directory":  true,
+                      "streams":  [
+
+                                  ],
+                      "bytes":  0
+                  },
+    "archive":  {
+                    "files":  [
+                                  {
+                                      "sha256":  "a3edc912eaa0568513abbb9ed409ffd2a19b09bb6402d450f0c0129823c92004",
+                                      "source":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-evidence-resume\\code\\.adg\\evidence\\0.2.24\\windows-dev\\wl2-r7-r2-readonly-20261117-r1\\helper-probe-r4\\fixture\\content.txt",
+                                      "relative":  "owned-fixture/content.txt",
+                                      "bytes":  25
+                                  }
+                              ],
+                    "directories":  [
+                                        {
+                                            "relative":  "owned-fixture",
+                                            "source":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-evidence-resume\\code\\.adg\\evidence\\0.2.24\\windows-dev\\wl2-r7-r2-readonly-20261117-r1\\helper-probe-r4\\fixture"
+                                        }
+                                    ],
+                    "fileErrors":  [
+
+                                   ],
+                    "totalSourceBytes":  25,
+                    "archiveVerified":  true,
+                    "zipIsNtfsMetadataClone":  false,
+                    "archive":  {
+                                    "path":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-evidence-resume\\code\\.adg\\evidence\\0.2.24\\windows-dev\\wl2-r7-r2-readonly-20261117-r1\\helper-probe-r4\\probe.zip",
+                                    "sha256":  "2072d31de47c8124f7b1975c6cb49c865c191c130fe42b7730a7bca358a6db5e",
+                                    "bytes":  175
+                                }
+                },
+    "ownProbeExited":  true,
+    "ownProbeRawExit":  0
+}

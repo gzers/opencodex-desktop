@@ -1,0 +1,6 @@
+* -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+**/stderr.log -text whitespace=blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+**/stdout.log -text whitespace=blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+helper-probe/error.log -text whitespace=-blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+helper-probe-r2/error.log -text whitespace=-blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol
+helper-probe-r3/error.log -text whitespace=-blank-at-eol,-blank-at-eof,space-before-tab,cr-at-eol

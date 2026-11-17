@@ -1,0 +1,46 @@
+{
+  "schema": "windows-r7-current-r2-repair-plan-draft-v1",
+  "executionReady": false,
+  "approvalRequested": false,
+  "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+  "session": 7,
+  "originManifestSha256": "a3b159e09f7e6c48f75d9f597e632d0f0ad545439e4c7682d25196c903a2cd11",
+  "originCurrentEventDigest": "1659c2a9488db1b51a258e919202422a6c1a1b534393b17c49a6e952bbeecdc7",
+  "targets": [
+    {
+      "pid": 21500,
+      "filetime": "134393657318681068",
+      "image": "I/runtime/versions/2.99.0/dependencies/node/node.exe",
+      "sha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5"
+    },
+    {
+      "pid": 75744,
+      "filetime": "134393656723346634",
+      "image": "I/ocxd.exe",
+      "sha256": "568f9c7916a4d3c70ad8966cc54bcac263b2faa99fdb56c994d48dd42642bec0"
+    }
+  ],
+  "scopeLocators": "final-source/test/windows024-native/r7-scene-locators.json",
+  "futureOrderedSteps": [
+    "Exact full r2 archive and native preflight; immutable loaded-code/no-postfailure-Resume corroboration; current Job history gap resolved or return concrete blocker",
+    "Implement and test native exact repairer with all mismatch/interruption/timeout/unknown cases before asking one exact current-scene approval",
+    "After one explicit approval only: old same-image original authenticated Job cleanup; raw242 forced receipt and original Job empty",
+    "Only if independently included in that exact approval and needed for custody handles: fresh exact retained broker75744 handle forced; never broker40588",
+    "New recovery action10s with actual claim/N/L/K ranges and exact source/current/full8/tree checks; retire3work via same-volume native handles no delete/overwrite; return3original handles to absent destinations",
+    "Full native10 baseline objects/coordinators/security/bytes/children/locks/endpoints verification; external schema windows-external-preresume-repair-v1; keep oldseq9 unchanged"
+  ],
+  "requiredBeforeApproval": [
+    "New compiled observer artifact SHA and native tests",
+    "r2 complete private content ZIP/path/hash/member verification plus all native ADS/ID records",
+    "Actual ordinary context/query-handle process facts and command lineage",
+    "All required8/bytes/children/source/current/events1..9 observations",
+    "Complete never-resumed proof combination and current original Job history boundaries",
+    "Exact private retired area paths and repairer synthetic outcomes",
+    "One concrete complete plan; no consent inferred from old two-target cleanup"
+  ],
+  "failurePolicy": "Any mismatch/unknown/expired/busy/logfailure keeps exact prefix/objects; no recovery retry or PID fallback",
+  "forcedIsNormalStop": false,
+  "closed": false,
+  "publicStartOpen": false,
+  "nextOfficialRunAuthorizedByRestore": false
+}
