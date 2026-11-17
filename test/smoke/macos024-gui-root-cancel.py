@@ -162,8 +162,28 @@ def run(app, expected_sha, output, seed_host):
         if status.get('screenCaptureAllowed'):
             windows=[w for w in value.get('windows',[]) if w.get('onscreen') and w.get('layer')==0]
             if windows:command([capture,windows[0]['id'],output/'cancel-confirmation.png'])
-        clicked=time.monotonic();press('确认取消启动准备')
-        wait_for('cancelled',lambda v:any('原目录缺席已恢复' in str(n.get('value','')) for n in v['nodes']),30)
+        cancel_attempts=[]
+        for attempt in range(1,5):
+            clicked=time.monotonic();press('确认取消启动准备')
+            end=time.monotonic()+30;observed=None
+            while time.monotonic()<end:
+                observed=snapshot('cancelled')
+                if observed is not None:
+                    text='\n'.join(str(n.get('value')or n.get('title')or n.get('description')or'') for n in observed['nodes'])
+                    if '原目录缺席已恢复' in text:break
+                    if '运行状态正在核对，请稍后刷新' in text:break
+                time.sleep(.6)
+            else:raise RuntimeError('cancellation observation timed out')
+            if '原目录缺席已恢复' in text:
+                cancel_attempts.append({'attempt':attempt,'outcome':'completed'});break
+            current_head=head()
+            if current_head is None or current_head['state']!='preparing' or current_head['revision']!=1:
+                raise RuntimeError('busy retry refused: original preparation changed')
+            cancel_attempts.append({'attempt':attempt,'outcome':'preflight-busy-no-mutation','head':current_head})
+            write(output/'explicit-cancel-attempts.json',cancel_attempts)
+            if attempt==4:raise RuntimeError('status preflight busy after bounded explicit rechecks')
+            time.sleep(.7);press('重新检查');press('取消启动准备')
+        write(output/'explicit-cancel-attempts.json',cancel_attempts)
         closed=head();assert closed['state']=='root_cancellation_absent' and closed['completionSha256'] and not client.exists()
         write(output/'head-after-cancel.json',closed);report['guiCancellationObservedMs']=round((time.monotonic()-clicked)*1000)
         report['actualGuiCancellationPassed']=True
@@ -242,4 +262,5 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--seed-host', type=Path, required=True)
     args = parser.parse_args()
-    print(json.dumps(run(args.app, args.expected_sha256, args.output, args.seed_host), ensure_ascii=False), flush=True)
+    result = run(args.app, args.expected_sha256, args.output, args.seed_host)
+    print(json.dumps({k:v for k,v in result.items() if k != 'coordinatorCleanup'}, ensure_ascii=False), flush=True)
