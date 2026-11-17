@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 163；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 164；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 81f52452cb4cfafc64a80ca92d97a3ba5990c2fb（非冻结候选）；Windows实现检查点codex/024-windows-native c3b99c0fa704d278393bf9f854eec4de6968ba4c（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 0675a105017ae7fc82a4bd58dd43fe72031470df（非冻结候选）；Windows实现检查点codex/024-windows-native c3b99c0fa704d278393bf9f854eec4de6968ba4c（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1750,3 +1750,20 @@ Windowsc3b99c0fa704d278393bf9f854eec4de6968ba4c／docs954b4540c9bb705edbbbdd4990
 真实MSVC全Tauri库product01 6过/raw0/145459ms（native tests0.98秒），26新目录覆盖完整canonical DATA链、7链/引用/版本写前拒绝、5原生中断点、4过期/截止替换/非空拒绝、6实际member/SD/ADS/晚变化及3完整声明DATA/Pending/未知终态拒绝。完整声明ID为明确合成DATA，不冒native原件集合或产品Owner。EXE4b5e372f7c50b3b4d3be904a725d2d0b2bb371ee890bb3475d7fb0690ccdebea；26新root缺席，旧strict9/native准备3及无影响CLI/MSI/空GUI/归档复用不重复计。原112warning与工具/文档merge操作错误如实留，不冒新产品首错。
 
 完整103项本线状态仍保真实Owner returned对象/完成proof原slot复验、截止后只读status/history、fulltrait/可达privatehost、全nativeV2准备及pre-manifest/partialcapture/work/缺根恢复、普通Profile原官方整链和预算未完。当前r2raw50依赖、synthetic27960清理和旧拒绝删除目录/失败源保持；不PSS重复同前提、不cleanup探Status、不原现场forced/归还或新原包Start。TEAM29/r7允许集与共享接口未变，Windows持续独占实现；Mac正在补停止进度卡实屏观察，不改已通过native断言，不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision164：停止完成任务卡实屏自动收起补验
+
+本批main0675a105017ae7fc82a4bd58dd43fe72031470df仅扩实屏验证器两种明确flow，**产品仍为45571c2b83024425bd7d019d3a4270b5dc73bb4e/原sealed Desktop351807b2cf36227d04255510f581dee2f066c1b03dc96a291a2c05e759c76f48**。stop-progress单独做实际正常Start/Ready/Stop，不重跑已过首次取消；既有源码和倒计时/超时断言未改。[结果与完整来源](../../.adg/evidence/0.2.24/mac-stop-progress-native-r1/result.json)。
+
+先对照原任务卡store及NotificationCountdown：正常Stop准确回执会结束执行态，成功倒计时按既定规则在悬停/键盘焦点/隐藏时暂停。此前在RootAbsent刚提交即停止观察，不能据此推产品任务卡不收口。本轮gui01在供包结束后的UI可操作观察超时，尚未点击Start；实际原候选仍活，按准确PID/exe原生重观测按钮已可用，接同一进程继续，未重新供包/重启。same-scene continuation真实正常Stop/完成卡已见，但AXPress导航＋mouseMoved不足以证明所有暂停原因已解除，自动收起观察失败；原完整summary/AX/stream保留。
+
+gui02在真实Ready后，旧AX路径上的按钮标签发生变化，原native helper在AXPress之前明确返回7/expected label mismatch，未执行该点击；该轮正常Stop清理成功，未按失败强制杀官方服务。验证器只对这种准确“未点击”拒绝重新观察同PID/原exe一次，不重放已准入动作，其它错误保持失败。只读pre-action UI readiness等待与内置供包分开，120秒是尚未开始任何生命周期的页面观察窗口，原Start30/Status5/Stop10保持。
+
+最终gui03同原包、内核拒日常HOME/Keychain/公网、只loopback/合成provider，无模型或业务同步请求：实际Start→Ready→正常Stop→原RootAbsent→真实AX“停止已完成”→原生activate并点击现有概览导航，使键盘焦点及指针确实离开任务卡→倒计时自动收起，未点击卡上的关闭/收起按钮。末屏[截图](../../.adg/evidence/0.2.24/mac-stop-progress-native-r1/gui03/stop-card-dismissed.png)可见概览导航焦点、未运行/启动入口且任务卡已消失；原步骤AX与命令全部留存。22项既有notification-countdown/process-action测试通过，确认不因实屏补验改暂停规则。
+
+独立内核复核最终服务与GUI PID均proc_pidinfo原返回0/ESRCH，导出主端口在合法有界TCP内核表缺席；产品日志另有原服务/launcher正常code0及捕获4监听全部消失，清理不以tasklist/ps成功推断服务停止。三个任务专用协调文件独占可重获、原字节/身份留档后删除，所有准确本轮Profile/appcopy及进程组缺席；初gui01原报告retained状态不回填，后续same-scene清理与独立复核另记。无日常配置或原signedapp变化。
+
+**证据错误如实保留**：既有gui02已结束后，一次准备重跑在exclusive stdout创建处发现文件已存在、并未再次启动；该次准备此前误覆盖hypotheses02.json/runner02.py两文件。现明确标为事后分析/来源副本，beforeRun=false，不用于证明gui02原执行源码/事前假设，原gui02命令/AX/streams仍完整；最终gui03唯一新目录的runner03.py/hash/事前假设与真实native输出独立可核。原始gui01/continued/gui02失败均不覆盖、不当产品失败或已通过。约28MB证据，不保重复运行包。
+
+此项补齐revision162“最终停止任务卡自动收起未观察”缺口，相关标记以后以本轮实际证据为准，不改旧结果。仍未完：Mac其它代次取消/部分捕获/根未移恢复/一般客户端范围/缺Ready，NAME默认外部客户端及最终回退，Windows完整Owner/slot/v2/privatehost/当前r2与synthetic27960清理、最终集成候选及发行签名/安装/升级回退门。Windowsc3b99c0fa/954b4540c回交已归revision163，本批只test脚本、不改其独占写集或共享产品接口，不要求无影响全组重跑，不W2/双SID、不发布，目标active。

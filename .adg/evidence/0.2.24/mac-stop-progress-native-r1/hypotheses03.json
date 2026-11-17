@@ -1,0 +1,10 @@
+{
+  "beforeRun": true,
+  "hypothesis": "current completed card automatically collapses after native click outside, while any AX pre-action path churn is reobserved once before any admitted press",
+  "priorFailures": "gui01 pre-action-ready observation; continued actual Stop/card completed but no proven pause release; gui02 pre-AXPress path/label mismatch, original normal cleanup succeeded",
+  "productSource": "45571c2b83024425bd7d019d3a4270b5dc73bb4e",
+  "runnerSha256": "61cd8d9bbc2fa41540cf75817a8a3fa566fee8490f9fc77a28683e47a5cba14e",
+  "noProductOrBudgetChanges": true,
+  "scope": "stop-progress only; no repeated cancellation",
+  "releaseAcceptance": false
+}

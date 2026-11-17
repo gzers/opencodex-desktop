@@ -1,0 +1,11 @@
+2026-11-17T16:05:08.905Z [manager] startup version=0.2.24 commit=45571c2b83024425bd7d019d3a4270b5dc73bb4e
+2026-11-17T16:06:04.281Z [manager] integrated runtime provisioned and verified
+2026-11-17T16:09:08.169Z [manager] start: start confirmed
+2026-11-17T16:09:09.442Z [manager] stop-proof: native-tcp-listeners captured count=4
+2026-11-17T16:09:10.316Z [manager] stop-proof: original-native-exit confirmed code=0
+2026-11-17T16:09:10.321Z [manager] stop-proof: captured-tcp-listeners absent count=4
+2026-11-17T16:09:10.357Z [manager] stop-proof: original-native-launcher-and-service confirmed code=0
+2026-11-17T16:09:13.721Z [manager] client-stop-recovery: assessed-artifact-originals restored and readback verified
+2026-11-17T16:09:14.255Z [manager] client-stop-recovery: measured elapsed_ms=3908 timings=[("original-pair-exit", 0), ("native-coordination", 13), ("seal-stopped", 663), ("index-stopped", 906), ("prepare-plan", 906), ("index-plan", 1013), ("restore-three-artifacts", 1131), ("root-stop-admission", 1131), ("root-artifacts-held", 1740), ("root-plan", 2144), ("root-retire", 2363), ("root-close", 3059), ("release-coordination", 3378), ("root-absence-complete", 3908)]
+2026-11-17T16:09:14.259Z [manager] lifecycle-stop-phase: complete elapsed_ms=5933 budget_ms=10000 action=stop
+2026-11-17T16:09:14.263Z [manager] stop: stop completed

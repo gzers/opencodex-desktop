@@ -1,0 +1,33 @@
+{
+  "port": 57048,
+  "managementUsageMaxReadBytes": 67108864,
+  "appOwnedMemoryBudgetMb": 256,
+  "hostname": "127.0.0.1",
+  "providers": {
+    "gui-fixture": {
+      "adapter": "openai-chat",
+      "baseUrl": "http://127.0.0.1:1/v1",
+      "defaultAliases": false,
+      "allowPrivateNetwork": true,
+      "apiKey": "synthetic-ui-unused",
+      "authMode": "key",
+      "liveModels": false,
+      "models": [
+        "gui-fixture-model"
+      ],
+      "selectedModels": [
+        "gui-fixture-model"
+      ]
+    }
+  },
+  "defaultProvider": "gui-fixture",
+  "defaultModelAliases": false,
+  "fastRows": true,
+  "openaiProviderTierVersion": 2,
+  "subagentModels": [
+    "gpt-6-astra",
+    "gpt-6.1-sol",
+    "gpt-6-luna"
+  ],
+  "subagentModelsVersion": 3
+}

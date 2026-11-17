@@ -1,0 +1,11 @@
+{
+  "beforeRun": false,
+  "hypothesis": "explicit actual native click on Overview moves focus+pointer outside the completed card and releases adopted pauses; auto collapse occurs with product unchanged",
+  "initialFailure": "pre-action UI observation timed out before Start; same live instance was continued and actual Stop/completed card passed; prior AXPress+mouseMoved insufficient to prove real focus/pointer leave",
+  "productSource": "45571c2b83024425bd7d019d3a4270b5dc73bb4e",
+  "runnerSha256": "e04dcf90d186503816c6b34a0dc18a95e72587f897dbe3bc282531393cc817db",
+  "noLifecycleBudgetChanges": true,
+  "preActionObservationOnlyExtended": true,
+  "releaseAcceptance": false,
+  "evidenceCorrection": "This file and runner02.py were inadvertently overwritten by a later setup attempt after existing gui02 had already finished. They are late analysis/source copies, not authoritative pre-run records or exact source of gui02. Original native commands/logs/snapshots retained; actual gui03 source is runner03.py."
+}

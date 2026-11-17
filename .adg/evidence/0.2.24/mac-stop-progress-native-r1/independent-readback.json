@@ -1,0 +1,34 @@
+{
+  "productSource": "45571c2b83024425bd7d019d3a4270b5dc73bb4e",
+  "sealedAppSha256": "351807b2cf36227d04255510f581dee2f066c1b03dc96a291a2c05e759c76f48",
+  "flow": "stop-progress only; prior cancellation not repeated",
+  "stopCompletedCardObserved": true,
+  "automaticallyCollapsedAfterActualNativeClickOutsideCard": true,
+  "manualDismissNotUsed": true,
+  "normalProductionStopRootAbsent": true,
+  "serviceAndGuiNativeAbsence": [
+    {
+      "pid": 48721,
+      "raw": 0,
+      "errno": 3,
+      "absent": true
+    },
+    {
+      "pid": 48529,
+      "raw": 0,
+      "errno": 3,
+      "absent": true
+    }
+  ],
+  "independentTcp": {
+    "exportedPrimaryPort": 57580,
+    "listenerAbsent": true,
+    "kernelFramingVerified": true,
+    "snapshotSha256": "1bec11063a809cdeb593761820c4573d8318e58cc7609d0a96eeb0f66491aa70"
+  },
+  "exactOwnedCoordinatorFilesArchivedAndAbsent": 3,
+  "taskRootObservedAbsent": true,
+  "oldFailuresRetained": true,
+  "productModifiedInThisRound": false,
+  "releaseAcceptance": false
+}
