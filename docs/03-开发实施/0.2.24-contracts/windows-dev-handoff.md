@@ -1114,3 +1114,14 @@ canonical只读取原immutable manifest/events/current的Native ID/8/raw/完整�
 证据wl2-r7-prefix-read-20261117-r1：先hypotheses及独立项状态，product01真实MSVC完整Tauri库raw0/142101ms，8过0败0ignored，5原树+3日志；实际DACL/字节/成员变化、3真实CREATE_NEW/partial/full-unpublished pending work、invalid coordinator pending original、外来真实claim/截止、immutable event无current及真实截断current均拒；原deadline实际过期后只读原完整链通过而mutation仍拒。11原树+7日志新root缺席核，6源快照逐Git归一行尾核；TEST EXE SHA03194e090e52c1c522f91071aae4e8878616c004146bbf83ec3b8b8fce60a56a，23payload/522194字节封存。无意外product首错，预期负例成功后仅清自有新fixture；panic仍保原tree，旧两regression审批blocked by policy源继续留，未绕过重删。生成schema raw归档/还原tracked/移出untracked。
 
 本批没有完整BeforeFirstResumeRecovery：原CaptureSlot/CapturedTrees汇合、canonical意图与真实after-image严格对照、同实际claim/NLK跨quiesce/return持有及失败保留、原10s整树归还/新控制协议仍待。b01b78219的原manifest缺席格式请求及PSS0x8仍24unknown请求只停对应依赖，不能伪造manifest/放宽Unknown；其它独占开发继续。status.json现35项完整本线状态；既有原r2全归档/44项、scanner15、原生abort/GUI空host/CLI均复用，不重跑。currentR221500/75744/原件/custody/work/anchors/协调/旧seq9和40588未动，无R1执行授权/请求，旧50580/54692授权不沿用，原件未归还不跑原包；原Source/Profile普通令牌/日常/官方/预算边界不变，publicStart/production/allAcceptedfalse，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 原槽两树canonical汇合与原生批次后像
+
+代码015106899f82f8140a7888af6e44dc2f5b7fb2fb已推送，仍main7fade183d／docs b291bf8fa、TEAM22/IMP150/r7。WindowsOriginals原session/scope及原preparedProcess -> 原CaptureSlot retained完整Store/原route -> 两树原native prefix前后读 -> 原canonical/source/同Start retainedAction/实际新claim前后核；所有tree/canonical数据精确相同才返回DATA。未形成manifest/partial/缺Store明确Required，不从记录/路径重建；Ready/Stop/closed/后继分支拒绝。失败保原槽/Store/树/日志poison，不签归还、Stop或Closed。
+
+逐root/节点原plan与Progress完整匹配，原native original/work ID/volume/bytes/hash/所含8/location逐项核；pending OriginalMove/WorkCreate批次只认原宿主保留的唯一batch ID/kind/有序native values，并对durable prefix与值上界核，不能只按计数猜完成。单节点durable意图和实际原句柄后像可区分前后，仍保意图，不补event/current；原v3格式/原Start权限/poison不改。该汇合消费此前953cdf原树/日志全读证据，无删完整扫描边界/弱化断言。
+
+证据wl2-r7-prefix-join-20261117-r1：product01真实全Tauri库MSVC raw0/149203ms，2过0败0ignored。8实际原批次场景0/100/101/112/140/141/152/255分别覆盖未动、move intent、实际move后无result、durable prefix、work intent、实际work后无result、work durable prefix及完整初始化；新actual claim下原两树/日志匹配，不补完成。另在真实完整原场景派生9类DATA反例：plan/rootorder/claim/nodeorder/state/workID/workSD/缺member/originalLocation均拒；DATA反例不冒额外原生Owner证明。九新fixture缺席清理，9实测源逐Git行尾归一核，schema生成raw归档/还原tracked/移出untracked。TEST EXE SHAb9b7ded48db1628925ee820b95a82695ecca33d53307d570216b5fe5fd35220f；26payload/589463字节原样封存，无意外product首错。8场景总7.90s只是fixture运行量，不冒原恢复10s/Start30/Status5/Stop10验收。
+
+原生产入口仅完整产品图编译链接，真实原Owner/固定官方生产恢复尚未执行；原恢复动作的actual claim/NLK必须继续装入原槽跨quiesce/return/失败持有，原launcher静止/所有原件return及8/children/锁释放原10s、新私有通道/附件native绑定仍未完，目标active。status.json 38项状态，已过未受影响scanner15/CLI/空GUI/归档/原生abort复用。b01b78219原manifest缺席引用合同请求和PSS0x8仍24unknown请求只停其依赖，暂无主线新答复，不重复空跑。currentR221500/75744/3原件/3work/custody/anchors/协调/旧seq9及40588保持，不force、不R1执行批准请求，旧50580/54692授权不沿用；原件未还不再跑官方包。旧两regression目录删除自动审批blocked by policy原样保留，不换工具重删；日常配置PATH策略/官方/原普通Token/预算/Unknown拒绝不变，不W2/双SID/发布。
