@@ -1,0 +1,179 @@
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `PathBuf`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/safety_section.rs:7:29
+  |
+7 |     path::{Component, Path, PathBuf},
+  |                             ^^^^^^^
+
+warning: unused import: `infrastructure::hash`
+ --> src\infrastructure\windows_client_originals024\collector.rs:4:32
+  |
+4 | use crate::{backend as native, infrastructure::hash, modules::runtime::program_image};
+  |                                ^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/program_image_section.rs:523:14
+    |
+523 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+523 -             .fetch_update(
+523 +             .try_update(
+    |
+
+warning: unused import: `io::Read`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/safety_section.rs:6:5
+  |
+6 |     io::Read,
+  |     ^^^^^^^^
+
+warning: function `verify_private_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:35:15
+   |
+35 | pub(crate) fn verify_private_file(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `verify_private_directory` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:39:15
+   |
+39 | pub(crate) fn verify_private_directory(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_originals_work_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:46:15
+   |
+46 | pub(crate) fn create_private_originals_work_file(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `owned_file_identities` and `into_owned_files` are never used
+   --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths.rs:115:19
+    |
+112 | impl PinnedDirectory {
+    | -------------------- methods in this implementation
+...
+115 |     pub(crate) fn owned_file_identities(&self) -> io::Result<Vec<FileIdentity>> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+134 |     pub(crate) fn into_owned_files(self) -> Vec<File> {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: function `file_entry` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/program_image_section.rs:488:15
+    |
+488 | pub(crate) fn file_entry(path: &Path) -> AppResult<Entry> {
+    |               ^^^^^^^^^^
+
+warning: constant `SCHEMA` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:5:7
+  |
+5 | const SCHEMA: &str = "windows-before-resume-recovery-v1";
+  |       ^^^^^^
+
+warning: constant `MAX_RECORD` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:6:7
+  |
+6 | const MAX_RECORD: usize = 65536;
+  |       ^^^^^^^^^^
+
+warning: function `invalid` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:7:4
+  |
+7 | fn invalid() -> io::Error {
+  |    ^^^^^^^
+
+warning: function `digest` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:13:4
+   |
+13 | fn digest(s: &str) -> bool {
+   |    ^^^^^^
+
+warning: function `uuid` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:18:4
+   |
+18 | fn uuid(s: &str) -> bool {
+   |    ^^^^
+
+warning: function `number` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:29:4
+   |
+29 | fn number(s: &str) -> io::Result<u64> {
+   |    ^^^^^^
+
+warning: function `object_id` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:35:4
+   |
+35 | fn object_id(s: &str) -> bool {
+   |    ^^^^^^^^^
+
+warning: function `required_option` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:38:4
+   |
+38 | fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+   |    ^^^^^^^^^^^^^^^
+
+warning: struct `Record` is never constructed
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:47:19
+   |
+47 | pub(super) struct Record {
+   |                   ^^^^^^
+
+warning: enum `Event` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:67:6
+   |
+67 | enum Event {
+   |      ^^^^^
+
+warning: associated items `decode`, `validate`, and `same_origin_action` are never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:118:19
+    |
+117 | impl Record {
+    | ----------- associated items in this implementation
+118 |     pub(super) fn decode(raw: &[u8]) -> io::Result<Self> {
+    |                   ^^^^^^
+...
+126 |     fn validate(&self) -> io::Result<()> {
+    |        ^^^^^^^^
+...
+244 |     fn same_origin_action(&self, other: &Self) -> bool {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `validate_chain` is never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:260:15
+    |
+260 | pub(super) fn validate_chain(raw: &[Vec<u8>]) -> io::Result<()> {
+    |               ^^^^^^^^^^^^^^
+
+warning: methods `matches_id` and `content_policy_protection` are never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\bounded\query.rs:322:67
+    |
+286 | impl SnapshotData {
+    | ----------------- methods in this implementation
+...
+322 |     pub(in crate::infrastructure::windows_client_originals024) fn matches_id(
+    |                                                                   ^^^^^^^^^^
+...
+331 |     pub(in crate::infrastructure::windows_client_originals024) fn content_policy_protection(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `windows024-r7-query-proof` (lib) generated 23 warnings (run `cargo fix --lib -p windows024-r7-query-proof` to apply 4 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.21s
+     Running tests\abort.rs (test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/76bdb7ac3cd89f57\out\abort-76bdb7ac3cd89f57.exe)
+separate owned synthetic cleanup after failure; not recovery success
+separate owned synthetic cleanup after failure; not recovery success
+separate owned synthetic cleanup after failure; not recovery success
+separate owned synthetic cleanup after failure; not recovery success
+separate owned synthetic cleanup after failure; not recovery success
+separate owned synthetic cleanup after failure; not recovery success
+separate owned synthetic cleanup after failure; not recovery success

@@ -1,0 +1,23 @@
+{
+  "currentR2Touched": false,
+  "scope": "original creator-owned synthetic primary-thread/Job abort primitive, no currentr2/client restore/normalStop/Closed",
+  "raw": 101,
+  "elapsedMs": 3391,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/r7-query-harness/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "-j",
+    "1",
+    "--test",
+    "abort",
+    "r7_abort_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "loadedSource": "357210891f14a1851881e6192bd09d7031471707",
+  "brokerArtifact": {
+    "releaseCandidate": false,
+    "sourceCommit": "357210891f14a1851881e6192bd09d7031471707",
+    "build": "product02",
+    "bytes": 16772096,
+    "name": "ocxd.exe",
+    "sha256": "568f9c7916a4d3c70ad8966cc54bcac263b2faa99fdb56c994d48dd42642bec0",
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\ocxd.exe",
+    "profile": "debug"
+  },
+  "exactCurrentNativeImageSha256": "568f9c7916a4d3c70ad8966cc54bcac263b2faa99fdb56c994d48dd42642bec0",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 47208,
+      "sha256": "5637c60fcf856f6e7ed8aa33effc9e614b25b245a46b20297c4e8172d98a9ad5",
+      "reviewedAnchors": [
+        {
+          "line": 955,
+          "text": "owner.capture_originals(&window)?;"
+        },
+        {
+          "line": 963,
+          "text": "owner.originals_before_resume(window.deadline())?;"
+        },
+        {
+          "line": 965,
+          "text": "owner.native.resume().map_err(unknown)?;"
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs",
+      "bytes": 9165,
+      "sha256": "b77e125984edd54d6bca3dbaaaa2233d5eef6fdcda52ce708a012b30ba8d8703",
+      "reviewedAnchors": [
+        {
+          "line": 141,
+          "text": "outcome.map_err(invalid)?;"
+        },
+        {
+          "line": 189,
+          "text": "control.serve(&mut log, runtime_for_trace.as_ref(), failed, evidence_error)"
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/failure_control.rs",
+      "bytes": 18118,
+      "sha256": "b3c0544954a9ae3849d751891d9d42eff6740debea19dc6ec423e3ff225f8427",
+      "reviewedAnchors": [
+        {
+          "line": 209,
+          "text": "Operation::Status => runtime"
+        },
+        {
+          "line": 212,
+          "text": "Operation::ExplicitRecovery => {"
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "bytes": 37444,
+      "sha256": "a1409642c0908ffe84056c1997ec991227bf3700ef8dd163060f7bc7ebc8b5aa",
+      "reviewedAnchors": [
+        {
+          "line": 770,
+          "text": "let n = unsafe { ResumeThread(h.as_raw_handle()) };"
+        },
+        {
+          "line": 778,
+          "text": "self.resumed = true;"
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 15167,
+      "sha256": "512631b015cfadd0761f0d5589bd252a52ae9ef96122464a831642b1e5a45931",
+      "reviewedAnchors": [
+        {
+          "line": 21,
+          "text": "if argv.first().map(String::as_str) == Some(\"--internal-existing-failure-cleanup024\") {"
+        }
+      ]
+    }
+  ],
+  "reviewConclusions": [
+    "Original Start stores the native Owner before capture_originals. The exact retained capture Err returns through ? before originals_before_resume and the only subsequent native.resume call.",
+    "Qualification action loop applies outcome? immediately after raw failure/trace evidence; later stop/start/restart actions are not dispatched after first failure.",
+    "After failure, exact original control serves Status or one ExplicitRecovery original-Job forced cleanup; the served branch has no Resume/Start/Restart dispatch.",
+    "Loaded exact ocxd contains cleanup dispatch only, no read-only Status client entry; new standalone tool was never connected to old pipe.",
+    "Loaded old resume sets creator flag after successful ResumeThread only, so its flag alone cannot rule out an unexpected native Resume result; exact failure-before-capture-return control path plus actual suspended thread observations are essential.",
+    "New abort implementation now records any ResumeThread attempt before invoking native API; it cannot retrofit this old loaded357 host."
+  ],
+  "stillUnknown": [
+    "Current original Job total/history unavailable through supported old-image readonly client",
+    "External thread manipulation cannot be excluded solely by Suspended/current creator flag; no restore eligibility minted",
+    "Repairer exact native locks/retirement/return/readback and unchanged10s remain unimplemented/unverified"
+  ],
+  "noPostFailureResumeInReviewedControlFlow": true,
+  "fullNeverResumeRecoveryProof": false,
+  "executionReady": false,
+  "forced": false,
+  "normalStop": false,
+  "closed": false
+}

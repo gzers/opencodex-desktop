@@ -1,0 +1,30 @@
+{
+  "normalStop": false,
+  "syntheticForcedPathExercised": true,
+  "closed": false,
+  "ordinaryMarenbenAcceptance": false,
+  "currentR2Forced": false,
+  "raw": 0,
+  "rootProduct": false,
+  "publicStartOpen": false,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/r7-query-harness/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "-j",
+    "1",
+    "--test",
+    "abort",
+    "r7_abort_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "elapsedMs": 777,
+  "originalR2Touched": false,
+  "restored": false
+}

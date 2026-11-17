@@ -1014,3 +1014,11 @@ Windows自行fetch并消费新main462e2476a9275cdf82e9e3235ed84820ac2c28c7（仅
 用户已原marenben普通SID1003/session7执行入口，完整r2归档10,701文件/1,664目录/1,192,222,294源字节，ZIP674,194,759字节，SHA c3906f7814f48c00f88ce16f6de6fbdc55b6bdffcaf2f2f2c61f3af9a67c6c0a，原SID私有路径C:/Users/marenben/ocx024-r7-r2-private-archive-20261117-r1/r2-complete-content.zip保留。ZIP成员/hash及12,365 nativeID/ADS/membership前后通过，关键44项前后及完整source/current都过，before fullscan31049ms/after4164ms是120s独立只读观察，不冒恢复10秒。原采集唯一首错WMI对挂起Node ExecutablePath=null，native句柄原路径/ID/hash已读且WMI命令/parent可读；原失败回执不覆盖，不重跑归档。2306f39880fde481a182e724c7a58bbbbf2a0310仅修工具的双来源DATA比较（原native pair必需、WMI非空不许矛盾、原argv/parent严格匹配），原回执2实际命令一致、9反例拒绝。原完整10份Public回执28,777,603字节与实际原件填充的exact-repair-plan.json在wl2-r7-r2-readonly-20261117-receive-r1。
 
 当前依赖请求更新：R0工具构建缺口已解除；原Job current-history/旧same-image无Status客户端仍待Mac明确合同，仅R1执行依赖保持。loaded357/no-postfailureResume组合复核、修复器真实原语/中断/未知/锁/期限与10秒完整校验尚未齐，fullR0Accepted/executionReady/approvalRequested=false，不沿旧清理授权force。75744/21500/40588、三custody原件/三work/四anchors/三协调、旧seq9保留；源文件未归还、不原包重跑。future原宿主恢复/P1优化继续，不W2/双SID/发布，不改官方/日常配置策略/预算/未知拒绝。
+
+## 2026-11-17 r7 原创建线程/Job首次Resume前静止原语
+
+源码63d631513b8921e952493c58024c8873000cfa0a已推送。新增私有非Clone非serde原创建凭据与强制静止凭据：新显式窗口最长10秒/parent更短；prepare先永久撤销原Resume/普通捕获，任何失败不重开窗口。原创建时保存实际主线程周期基线，后续必须同句柄/ID/原Job total1active1无后代且周期不变；只消费一次原Job forced242并核total1active0/raw242，不产NormalStop/Closed或client restore权。已尝试ResumeThread在调用API前单调置位，异常返回也不落回beforeResume分支。MSVC6项新原生反例和受影响原创建者正常Resume/退出1项raw0；TEST EXE74b1565233291ee0093bdfa079f2dc83f489d0643f799ae2f58c631525253879不是产品/发布包。首E0432以及零周期假设2过2败raw101保留；实际CREATE_SUSPENDED仍可能有内核初始化周期，改为原创建baseline完整保持，不用后读数覆盖/不Suspend或Resume探测。
+
+证据wl2-r7-native-abort-20261117-r1，39执行源逐份核工作/Git，2失败自有fixture/原日志留、成功自有fixture清理，当前r2未动。loaded357-review精确5源与原broker568f..制品映射核，capture Err在唯一resume前?返回、qualification outcome?停后续动作、失败control无Resume分派；只证明原源码分支无failure后自动Resume，不拿旧creator flag或当前Suspended单独签从未运行/当前Job证明。原Job观测请求仍待Mac合同决定；未新image接旧pipe/强杀Node或broker。
+
+此批是未来BeforeFirstResumeRecovery的下层原生原语，完整trait/partialStore anchor/canonical附件/原host fresh认证/新claimNLK/完整原件返还及原10秒源校验尚未接完。r2 exact-repair-plan executionReady/approvalRequested仍false，原3件/work/根anchors/协调/旧seq9、75744/21500/40588保留；不因工具/原语通过重跑官方或放开Start/Closed/W2/双SID/发布。缺接口仅对应R1依赖停，其余独占工作继续。
