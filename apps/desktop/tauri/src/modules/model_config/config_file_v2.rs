@@ -512,7 +512,7 @@ fn allocate(name: &str, id: &str, occupied: &BTreeSet<String>) -> String {
         !s.is_empty()
             && s.len() <= 64
             && s.bytes()
-                .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_'))
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'.' | b'-' | b'_'))
             && s.as_bytes()[0].is_ascii_alphanumeric()
             && s.as_bytes()[s.len() - 1].is_ascii_alphanumeric()
             && ![

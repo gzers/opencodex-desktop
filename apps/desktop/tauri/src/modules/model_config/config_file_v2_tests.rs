@@ -179,6 +179,75 @@ fn name_is_actual_provider_authority_even_when_display_label_was_already_changed
         .all(|m| m.binding.is_none()));
 }
 #[test]
+fn dotted_provider_name_uses_official_identity_and_keeps_credentials_models_and_references() {
+    // Compare against the ordinary save projection: it materializes current
+    // defaults independently of renaming. Renaming must add no further changes.
+    let (_baseline, baseline_root, baseline_home) = fixture(raw());
+    let baseline = begin(&baseline_root, &baseline_home);
+    save(
+        &baseline_root,
+        &baseline_home,
+        SaveRequestV2 {
+            expected: baseline.draft.unwrap().base,
+            edits: vec![],
+            scope_channel_id: None,
+            channel_intents: vec![],
+        },
+    )
+    .unwrap();
+    let baseline = read_raw(&baseline_home).unwrap().0;
+    for name in ["Krill.v2", "Krill_2.v3", "K.r.i.l.l"] {
+        let (_t, root, home) = fixture(raw());
+        let started = begin(&root, &home);
+        let draft = started.draft.as_ref().unwrap();
+        let id = draft.policy.channels[0].id.clone();
+        let saved = save(
+            &root,
+            &home,
+            SaveRequestV2 {
+                expected: draft.base.clone(),
+                edits: vec![],
+                scope_channel_id: None,
+                channel_intents: vec![ChannelIntentV2::Rename {
+                    channel_id: id.clone(),
+                    name: name.into(),
+                }],
+            },
+        )
+        .unwrap();
+        let (actual, _) = read_raw(&home).unwrap();
+        assert_eq!(
+            actual["providers"]
+                .as_object()
+                .unwrap()
+                .keys()
+                .collect::<Vec<_>>(),
+            [&name.to_string()]
+        );
+        let mut expected = baseline["providers"]["Krill"].clone();
+        expected["name"] = json!(name);
+        assert_eq!(
+            actual["providers"][name], expected,
+            "{name}: full provider bytes/fields must survive"
+        );
+        assert_eq!(actual["defaultProvider"], name);
+        assert_eq!(actual["defaultModel"], format!("{name}/vendor/custom"));
+        assert_eq!(
+            actual["modelPickerOrder"],
+            json!([format!("{name}/gpt-6-sol"), format!("{name}/vendor/custom")])
+        );
+        assert_eq!(actual["unrelated"], raw()["unrelated"]);
+        assert_eq!(saved.saved_policy.channels[0].connection.provider_id, name);
+        let reopened = snapshot(&root, &home).unwrap();
+        assert_eq!(reopened.saved_policy.channels[0].id, id);
+        assert_eq!(
+            reopened.saved_policy.channels[0].connection.provider_id,
+            name
+        );
+    }
+}
+
+#[test]
 fn explicit_read_matches_and_repeat_is_idempotent_save_reopen_preserves_source() {
     let (_t, root, home) = fixture(raw());
     let s = snapshot(&root, &home).unwrap();
