@@ -93,6 +93,9 @@ pub(super) fn run(c: EmptyBootstrap) -> io::Result<()> {
         "original-broker-admitted",
         json!({"pid":current.identity().pid,"filetime":current.identity().creation_filetime.to_string(),"sid":token.sid,"session":token.session_id,"elevated":false,"noOuterJob":true,"officialOwnerCreated":false,"profile":profile,"I":c.installation,"D":c.data,"H":c.home}),
     )?;
+    // Establish reachability before any fallible native Owner creation. The
+    // locator is DATA only; every request authenticates the native pipe peer.
+    let control = super::failure_control::Control::create(&c, current)?;
     let mut runtime_for_trace: Option<SharedRuntimeExecutable> = None;
     let result = (|| -> io::Result<Value> {
         let q = ExistingQualification::prepare()?;
@@ -168,18 +171,20 @@ pub(super) fn run(c: EmptyBootstrap) -> io::Result<()> {
         .unwrap_or_else(
             || json!({"nativeOwner":false,"creatorResumed":false,"preparationOnly":true}),
         );
+    let failed = result.is_err();
     let final_result = match result {
         Ok(v) => v,
         Err(e) => {
             json!({"nativeProductionSequencePassed":false,"raw":e.raw_os_error(),"firstError":e.to_string(),"actualProductionExecuted":trace["creatorResumed"]==true,"nativeOwnerRetained":trace["nativeOwner"]==true,"trace":trace,"allAccepted":false,"startOpen":false})
         }
     };
-    event(&mut log, "qualification-result", final_result.clone())?;
-    write_new(&c.data.join("qualification-result.json"), &final_result)?;
+    // A failed evidence write must not strand an original Owner by dropping
+    // the host. The control loop records these errors and remains reachable.
+    let evidence_error = event(&mut log, "qualification-result", final_result.clone())
+        .and_then(|_| write_new(&c.data.join("qualification-result.json"), &final_result))
+        .err();
     // Success retains original closed history; failure retains ALL original
     // Owner/Job/custody and exact prefixes. No implicit exit/Drop, termination,
     // retry/rollforward or public admission follows this diagnostic result.
-    loop {
-        std::thread::park_timeout(Duration::from_secs(30));
-    }
+    control.serve(&mut log, runtime_for_trace.as_ref(), failed, evidence_error)
 }

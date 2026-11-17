@@ -17,6 +17,17 @@ use zeroize::Zeroize;
 #[cfg(windows)]
 mod windows_owner024 {
     pub fn dispatch(argv: &[String]) -> Option<std::process::ExitCode> {
+        #[cfg(debug_assertions)]
+        if argv.first().map(String::as_str) == Some("--internal-existing-failure-cleanup024") {
+            if argv.len() != 2 || argv[1] != "--confirm" {
+                eprintln!("Exact internal failure cleanup requires --confirm.");
+                return Some(std::process::ExitCode::from(2));
+            }
+            return Some(match opencodex_desktop_lib::infrastructure::windows_owner_host024::empty_host::request_existing_failure_cleanup() {
+                Ok(report) => { println!("{report}"); std::process::ExitCode::SUCCESS },
+                Err(e) => { eprintln!("Forced failure cleanup unconfirmed: raw={:?}; {e}",e.raw_os_error()); std::process::ExitCode::from(1) }
+            });
+        }
         if argv.first().map(String::as_str) != Some("--internal-runtime-owner024") {
             return None;
         }

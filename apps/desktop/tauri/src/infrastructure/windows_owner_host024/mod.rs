@@ -10,6 +10,8 @@ mod desktop_tests;
 pub mod empty_host;
 #[cfg(debug_assertions)]
 mod existing_qualification;
+#[cfg(debug_assertions)]
+mod failure_control;
 pub(crate) mod gui_probe;
 use std::{
     io,

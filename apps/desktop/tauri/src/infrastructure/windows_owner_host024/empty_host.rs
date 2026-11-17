@@ -434,6 +434,10 @@ pub fn run_from_inherited_bootstrap() -> io::Result<()> {
     }
     run_empty(config)
 }
+#[cfg(debug_assertions)]
+pub fn request_existing_failure_cleanup() -> io::Result<serde_json::Value> {
+    super::failure_control::request_cleanup()
+}
 #[cfg(test)]
 mod tests {
     use super::*;

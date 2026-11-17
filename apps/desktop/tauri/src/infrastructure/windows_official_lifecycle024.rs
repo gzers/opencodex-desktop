@@ -1015,6 +1015,49 @@ pub(crate) fn qualify_existing(
     ))
 }
 #[cfg(debug_assertions)]
+pub(crate) struct QualificationFailureCleanup {
+    pub(crate) report: serde_json::Value,
+}
+/// Only called by the original debug host after native peer authentication
+/// and a locally retained failed Result. Neither a PID nor a JSON receipt can
+/// reconstruct this registry entry or its original Job. Custody is never moved.
+#[cfg(debug_assertions)]
+pub(crate) fn qualification_failure_cleanup(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    deadline: Instant,
+) -> std::io::Result<QualificationFailureCleanup> {
+    budget(deadline).map_err(std::io::Error::other)?;
+    let entry = slot(runtime, home, false).map_err(std::io::Error::other)?;
+    let mut guard = entry
+        .owner
+        .try_lock()
+        .map_err(|_| std::io::Error::other("original Owner busy"))?;
+    let owner = guard
+        .as_mut()
+        .ok_or_else(|| std::io::Error::other("original Owner missing"))?;
+    entry.cancel.store(true, Ordering::SeqCst);
+    budget(deadline).map_err(std::io::Error::other)?;
+    let forced = owner.native.force_owned_cleanup(deadline)?;
+    // Forced cleanup never closes an original phase, restores clients, or
+    // proves previous owners absent. Keep those originals and their host alive.
+    owner.stopped = false;
+    owner.stop_completion = None;
+    owner.stage = "forced-failure-cleanup";
+    Ok(QualificationFailureCleanup {
+        report: serde_json::json!({
+            "forced":forced.forced, "root":format!("{:?}",forced.final_state.root),
+            "active":forced.final_state.active_processes,
+            "total":forced.final_state.total_processes,
+            "originalPhaseRetained":owner.original_phase.is_some(),
+            "previousOwners":owner.previous.len(), "hostMayExit":false,
+            "forcedExitCode":242,
+            "normalStop":false, "closed":false, "clientsRestored":false,
+            "allAccepted":false, "publicStartOpen":false
+        }),
+    })
+}
+#[cfg(debug_assertions)]
 pub(crate) fn qualification_trace(
     runtime: &SharedRuntimeExecutable,
     home: &Path,
