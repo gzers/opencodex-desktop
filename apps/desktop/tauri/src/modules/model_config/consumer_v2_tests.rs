@@ -95,6 +95,61 @@ fn commit_in_test(root: &Path, writes: Vec<PendingWriteV2>) {
     }
 }
 #[test]
+fn logical_channel_split_displays_share_parent_name_and_refresh_without_manual_adoption() {
+    let raw = config();
+    let before = imported(&raw);
+    let library = seed_library_v2().unwrap();
+    let mut intended = before.clone();
+    intended.channels[0].label = "中文渠道".into();
+    intended.channels[0].models[0].explicit_overrides.protocol =
+        super::schema::Field::Custom("openai-responses".into());
+    let mappings = mapping_for(&library, &before, &intended);
+    let compiled = compile_file_v2(&library, &before, &intended, &raw, &mappings, &auth()).unwrap();
+    for mapping in &compiled.mappings.mappings {
+        let row = &compiled.next_config["providers"][&mapping.provider_id];
+        for id in row["models"].as_array().unwrap() {
+            let id = id.as_str().unwrap();
+            assert_eq!(
+                row["modelDisplayNames"][id],
+                format!("中文渠道 · {}", id.replace('/', "／"))
+            );
+        }
+        assert_eq!(row["apiKey"], raw["providers"]["vendor"]["apiKey"]);
+    }
+    let imported = read_policy_v2(
+        &compiled.next_config,
+        &digest(&canonical_bytes(&compiled.next_config).unwrap()),
+        &compiled.policy,
+        Some(&compiled.ledger),
+        &compiled.mappings,
+        &bindings(),
+    )
+    .unwrap();
+    assert!(imported.channels[0].naming.is_empty());
+    let mut renamed = imported.clone();
+    renamed.channels[0].label = "再次改名".into();
+    let again = compile_file_v2(
+        &library,
+        &imported,
+        &renamed,
+        &compiled.next_config,
+        &compiled.mappings,
+        &auth(),
+    )
+    .unwrap();
+    assert_eq!(again.mappings, compiled.mappings);
+    for mapping in &again.mappings.mappings {
+        let row = &again.next_config["providers"][&mapping.provider_id];
+        for id in row["models"].as_array().unwrap() {
+            let id = id.as_str().unwrap();
+            assert_eq!(
+                row["modelDisplayNames"][id],
+                format!("再次改名 · {}", id.replace('/', "／"))
+            );
+        }
+    }
+}
+#[test]
 fn config_read_keeps_exact_ids_selection_auth_out_of_dto_and_unknown_fields() {
     let raw = config();
     let policy = imported(&raw);

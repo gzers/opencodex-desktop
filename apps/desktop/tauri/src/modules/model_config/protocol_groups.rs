@@ -945,8 +945,23 @@ pub fn validate_mappings_v2(file: &MappingFileV2) -> super::schema_v2::Result<()
         check_id(&mapping.channel_id)?;
         if !valid_digest(&mapping.wire_profile_digest)
             || mapping.provider_id.trim().is_empty()
-            || mapping.provider_id.len() > 512
-            || mapping.provider_id.chars().any(char::is_control)
+            || mapping.provider_id.len() > 64
+            || !mapping
+                .provider_id
+                .as_bytes()
+                .first()
+                .is_some_and(u8::is_ascii_alphanumeric)
+            || !mapping
+                .provider_id
+                .as_bytes()
+                .last()
+                .is_some_and(u8::is_ascii_alphanumeric)
+            || !mapping
+                .provider_id
+                .bytes()
+                .all(|c| c.is_ascii_alphanumeric() || b"._-".contains(&c))
+            || ["policy", "__proto__", "prototype", "constructor"]
+                .contains(&mapping.provider_id.to_ascii_lowercase().as_str())
             || !keys.insert((
                 &mapping.channel_id,
                 &mapping.protocol,

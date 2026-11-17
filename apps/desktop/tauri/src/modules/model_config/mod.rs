@@ -7,6 +7,7 @@ pub mod agent_runtime_v2;
 pub mod broker;
 pub mod cache_refresh;
 pub(crate) mod channel_actions;
+mod channel_display_v2;
 pub mod compiler;
 pub mod compiler_v2;
 pub mod config_file;

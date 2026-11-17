@@ -729,12 +729,17 @@ pub fn reconcile_source_v2(
         .iter()
         .filter(|e| e.channel_id == channel_id && e.raw_model_id == saved.raw_model_id)
     {
-        if !RULE_KEYS.contains(&entry.field.as_str())
+        if (!RULE_KEYS.contains(&entry.field.as_str()) && entry.field != "displayName")
             || !seen.insert(&entry.field)
             || !entry.target_pointer.starts_with("/providers/")
             || !valid_digest(&entry.value_digest)
         {
             return Err(error("model_source_provenance_unknown"));
+        }
+        if entry.field == "displayName" {
+            // Display provenance is consumed separately by provider_import; it
+            // must never become a model capability/routing source rule.
+            continue;
         }
         let actual = actual_document.pointer(&entry.target_pointer);
         let unchanged = if entry.present {
@@ -960,6 +965,7 @@ pub fn finalize_materialization_ledger_v2(
             "noReasoning" => (None, Some("noReasoningModels")),
             "reasoningAuthoritative" => (None, Some("modelReasoningEffortsAuthoritative")),
             "fastWire" => (None, Some("fastWire")),
+            "displayName" => (Some("modelDisplayNames"), None),
             _ => return Err(error("model_unknown_field")),
         };
         let allowed = parent == Some(relative)
