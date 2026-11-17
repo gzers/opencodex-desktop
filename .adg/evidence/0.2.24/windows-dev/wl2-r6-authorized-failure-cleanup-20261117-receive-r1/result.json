@@ -1,0 +1,120 @@
+{
+  "source": "323c3fc3ea41eae35177b43f80f0f40736b6bd6d",
+  "failedProductSource": "c870bd81fcbd65310ff79d262c9c49fc5a2c6f62",
+  "ordinarySid": "S-1-5-21-587408064-856152790-2583328096-1003",
+  "session": 7,
+  "completed": true,
+  "cleanup": {
+    "scope": "explicit two-target external forced failure cleanup; not original Job/NormalStop",
+    "before": [
+      {
+        "pid": 50580,
+        "filetime": "134393577919362322",
+        "image": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r1\\I\\runtime\\versions\\2.99.0\\dependencies\\node\\node.exe",
+        "imageKey": "247287385:1407374884991201",
+        "imageSha256": "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+        "token": {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+          "session": 7,
+          "elevationType": 1,
+          "elevated": 0
+        },
+        "inJob": true,
+        "exited": false,
+        "threadCount": 1,
+        "threadState": "Wait",
+        "threadWaitReason": "Suspended"
+      },
+      {
+        "pid": 54692,
+        "filetime": "134393577413203335",
+        "image": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r1\\I\\ocxd.exe",
+        "imageKey": "247287385:2533274791758463",
+        "imageSha256": "0249a1b5e55e554274f7759c3cbe99d1f581fed045dcb1080fc03a03ad0d5a0b",
+        "token": {
+          "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+          "session": 7,
+          "elevationType": 1,
+          "elevated": 0
+        },
+        "inJob": false,
+        "exited": false,
+        "threadCount": 0,
+        "threadState": null,
+        "threadWaitReason": null
+      }
+    ],
+    "terminationRequestedPids": [
+      50580,
+      54692
+    ],
+    "terminatedPids": [
+      50580,
+      54692
+    ],
+    "rawExits": [
+      242,
+      242
+    ],
+    "pinnedSourceFiles": [
+      "C:\\Users\\marenben\\ocx024-r6-private-failure-archive-20261117-r3\\failed-existing-root-original-bytes.zip|247287385:1688849861602871|d7664840a85258fe49b8488e79861285d1748ab6fddb7cd18424abd3e10a0026",
+      "C:\\Users\\Public\\ocx-r6-failure-archive-20261117-r3\\out01\\archive-result.json|247287385:1407374884892183|465e946bdefbbf7ac749001ba3f74e4cc2dcce3d0dcfef5f87ed1b6e04fabd70",
+      "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r1\\D\\qualification-result.json|247287385:562949954892556|887e4d59b4987b04fec3f4f5fe4c914af4fe567e8f62997c470f61cd8828747c",
+      "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r1\\D\\qualification-start1.json|247287385:1970324838445497|8e8e5d2d109019c19ced038ff1c8a0ec4b7968ae04d1378225cf0e837b4aaabd",
+      "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r1\\D\\qualification-events.jsonl|247287385:562949954859211|fe716402c8484dd111f50b07dda6452368ab496b0219be1daebd768bf2c021f6"
+    ],
+    "bothValidated": true,
+    "preconditionsRevalidated": true,
+    "sourcesRecheckedAfter": true,
+    "attempted": true,
+    "completed": true,
+    "forced": true,
+    "normalStop": false,
+    "closed": false,
+    "filesDeleted": false,
+    "originalJobAdopted": false,
+    "allCompanionsProven": false,
+    "publicStartOpen": false,
+    "firstError": null,
+    "elapsedMs": 492
+  },
+  "dailyPathUnchanged": true,
+  "normalStop": false,
+  "closed": false,
+  "allCompanionsProven": false,
+  "filesDeleted": false,
+  "old40588Touched": false,
+  "publicStartOpen": false,
+  "rawFiles": [
+    {
+      "path": "raw/cleanup-r6-authorized-processes.cmd",
+      "bytes": 448,
+      "sha256": "d3580b1d7ace032df2aa0015e42bf134ff37079a8cd01c9d6d4f148969e2923d"
+    },
+    {
+      "path": "raw/cleanup-r6-authorized-processes.cs",
+      "bytes": 18910,
+      "sha256": "748319f7424925f830a3fa12e9af7899e7e07296960fc8838b054fefd9f589fd"
+    },
+    {
+      "path": "raw/cleanup-r6-authorized-processes.ps1",
+      "bytes": 5255,
+      "sha256": "b816423cfe1356889cb58b3e588ca17944e075351fff2dca57c60ba3896110f9"
+    },
+    {
+      "path": "raw/input-manifest.json",
+      "bytes": 922,
+      "sha256": "2a05cfbb8002f269ee1b52af122da769894122e8347d623f6950e5eaf8843061"
+    },
+    {
+      "path": "raw/out01/cleanup-result.json",
+      "bytes": 12595,
+      "sha256": "7a8c90139cf67184853837c699d4182464c9800b1a0999f975166daf7067cf0e"
+    },
+    {
+      "path": "raw/out01/native-preflight.json",
+      "bytes": 3850,
+      "sha256": "3c69451102fa3ecc6062ed2a4d157183b86d9a6dcc92681c76062aea5c33a3df"
+    }
+  ]
+}

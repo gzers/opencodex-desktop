@@ -961,3 +961,7 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 用户明确同意精确50580/54692的外部forced失败清理并保留全部文件。源码323c3fc3ea41eae35177b43f80f0f40736b6bd6d/treeaaeaae195e3056ddf9702eadeee6f6e42f58859c已推送，仅4个Windows测试文件；apps与5c5c6fa85一致，产品制品/原验证复用。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-authorized-failure-cleanup-20261117-r1/及完整120项状态。PS51同C# validator自建从未恢复进程对两轮过：错第二FILETIME/SID/hash拒绝且两原进程仍活；有效fresh retained handles forced242/242、原创建handles独立同码；重复Commit拒绝。首probe01只C#转义编译错误，无进程，原错/源码保留；生产版compile并拒controller身份，不代普通验收。
 
 入口C:/Users/Public/ocx-r6-authorized-cleanup-20261117-r1/cleanup-r6-authorized-processes.cmd准备好，固定普通SID1003/session7/noJob/非提升/Profile、两原FILETIME/Token/imageID/hash、Node单挂起线程、私有ZIP与原首失败receipts均须准确核；原两handles同持，全部匹配才Node→broker forced242，原10s bounded readback/失败前缀分账，原件/归档全保留、40588不动，不签原Job/正常Stop/Closed。actual cleanup尚未执行，需用户原桌面运行，不能先续开原包新轮。所有原初始化/原缺席退根/真实生产/GUI官方owner/H-S-D/容量/MSI/CAP-trust/历史清理未完不关；Start/allAcceptedfalse，不改日常/官方/业务/模型/旧拒绝/W2/双SID/发布。
+
+## 2026-11-17 r6 获准两目标实际forced清理回执
+
+原普通marenben SID1003/session7入口执行成功：同保留句柄Node50580→broker54692退出242/242，492ms；原FILETIME/image nativeID/hash/Token/Node单挂起线程、私有ZIP与原首失败receipts5项nativeID/hash前后核验。原始7文件归.adg/evidence/0.2.24/windows-dev/wl2-r6-authorized-failure-cleanup-20261117-receive-r1/，全121项状态保持。控制器核原字节/已知摘要/回执字段，CIM两PID缺席、40588仍在；不冒原Job/NormalStop/Closed或全companions/整体清理通过。文件未删、旧scene/ZIP保留、PATH一致，旧删除拒绝不重试。源码仍323c3fc3e，产品5c5c6fa85；下一步fresh独立I/D/H与真实原包闭环，不复用首失败事务，不改公开Start拒绝。全部原未完/日常官方边界/W2双SID及不发布继续。
