@@ -148,6 +148,31 @@ public static class R7ReadOnlyScene {
   public ProcessFacts[] Snapshot(){foreach(Target target in targets)target.Recheck();return new ProcessFacts[]{targets[0].facts,targets[1].facts};}
   public void Dispose(){foreach(Target target in targets)target.Dispose();}
  }
+ [DllImport("shell32.dll",CharSet=CharSet.Unicode,SetLastError=true)] static extern IntPtr CommandLineToArgvW(string command,out int count);
+ [DllImport("kernel32.dll")] static extern IntPtr LocalFree(IntPtr value);
+ public sealed class LineageData {
+  public uint pid,parentPid;public string nativeImage,optionalWmiImage;public string[] arguments;
+  public bool optionalWmiImageUnavailable,consistent,nativeAuthority=false;
+ }
+ // Compare already observed DATA only. The caller must still retain/recheck
+ // Pair; this does not open a process or confer cleanup/recovery authority.
+ public static LineageData CompareLineageData(ProcessFacts[] observed,uint pid,uint parent,string optionalWmiImage,string command) {
+  Require(observed!=null && observed.Length==2,"exact native pair observations required");
+  ProcessFacts target=null;foreach(ProcessFacts p in observed){if(p.pid==pid){Require(target==null,"duplicate process data");target=p;}}
+  Require(target!=null && !target.exited && (pid==21500 || pid==75744),"exact task process data required");
+  string expected=Base+(pid==21500?@"\I\runtime\versions\2.99.0\dependencies\node\node.exe":@"\I\ocxd.exe");
+  Require(Same(target.image,expected),"native query image data differs");
+  Require(String.IsNullOrEmpty(optionalWmiImage) || Same(optionalWmiImage,target.image),"WMI contradicts native image data");
+  Require(!String.IsNullOrEmpty(command) && command.Length<32768,"bounded real command line required");
+  foreach(char c in command)Require(!Char.IsControl(c),"command control character refused");
+  int count;IntPtr raw=CommandLineToArgvW(command,out count);Require(raw!=IntPtr.Zero,"native argv query failed");
+  string[] args;try{Require(count>0 && count<=32,"bounded argv required");args=new string[count];for(int i=0;i<count;i++)args[i]=Marshal.PtrToStringUni(Marshal.ReadIntPtr(raw,i*IntPtr.Size));}finally{LocalFree(raw);}
+  Require(Same(args[0],target.image),"command image contradicts exact native image data");
+  if(pid==21500){
+   Require(parent==75744 && args.Length==5 && Same(args[1],Base+@"\I\runtime\versions\2.99.0\opencodex\node_modules\@bitkyc08\opencodex\bin\ocx.mjs") && args[2]=="start" && args[3]=="--port" && args[4]=="0","exact Node command/parent differs");
+  }else{Require(args.Length==2 && args[1]=="--internal-runtime-owner024","exact broker command differs");}
+  return new LineageData{pid=pid,parentPid=parent,nativeImage=target.image,optionalWmiImage=optionalWmiImage,optionalWmiImageUnavailable=String.IsNullOrEmpty(optionalWmiImage),arguments=args,consistent=true};
+ }
  public static void RequireContext() {
   using(Process p=Process.GetCurrentProcess()) {TokenFacts t=Token(p.Handle);
    Require(t.sid==Sid && t.session==7 && t.elevated==0 && t.elevationType==1 && !InJob(p.Handle),"exact ordinary SID1003/session7/noJob required");}

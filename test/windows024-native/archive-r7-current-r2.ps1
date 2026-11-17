@@ -61,7 +61,8 @@ try{
  try{
   $cim=@(Get-CimInstance Win32_Process -Filter 'ProcessId=21500 OR ProcessId=75744' -ErrorAction Stop)
   $result.processLineage=@($cim|Select-Object ProcessId,ParentProcessId,ExecutablePath,CommandLine,CreationDate)
-  if($cim.Count -ne 2 -or @($cim|Where-Object {$_.ProcessId -eq 21500 -and $_.ParentProcessId -eq 75744}).Count -ne 1 -or @($cim|Where-Object {[string]::IsNullOrEmpty($_.CommandLine) -or [string]::IsNullOrEmpty($_.ExecutablePath)}).Count){throw 'exact live command lineage unavailable/differs'}
+  if($cim.Count -ne 2 -or $null -eq $pair){throw 'exact native pair and WMI command lineage required'}
+  $result.commandLineageComparison=@($cim|ForEach-Object {[R7ReadOnlyScene]::CompareLineageData($result.processBefore,[uint32]$_.ProcessId,[uint32]$_.ParentProcessId,$_.ExecutablePath,$_.CommandLine)})
  }catch{ErrorFact 'command-lineage' $_}
  try{
   $original=Get-Content -LiteralPath (Join-Path $base 'D/qualification-result.json') -Raw -Encoding UTF8|ConvertFrom-Json
