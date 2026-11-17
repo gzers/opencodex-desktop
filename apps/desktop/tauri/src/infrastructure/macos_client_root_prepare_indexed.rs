@@ -13,10 +13,12 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
     connection: &Connection,
 ) -> std::io::Result<PinnedDirectory> {
     validate(head)?;
-    if head.state != State::RootCancellationPrepared
-        || head.references.is_some()
+    if !matches!(
+        head.state,
+        State::RootCancellationPrepared | State::RootCancellationAbsent
+    ) || head.references.is_some()
         || head.restore_plan.is_some()
-        || head.completion_sha256.is_some()
+        || (head.state == State::RootCancellationPrepared && head.completion_sha256.is_some())
         || head.root_generation.is_some()
         || origin.id != head.ticket
         || origin.generation_slot.is_some()
@@ -29,7 +31,12 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
         .root_retirement
         .as_ref()
         .ok_or_else(|| denied("root-cancel movement reference missing"))?;
-    if reference.source_revision.checked_add(1) != Some(head.revision) {
+    let distance = if head.state == State::RootCancellationAbsent {
+        2
+    } else {
+        1
+    };
+    if reference.source_revision.checked_add(distance) != Some(head.revision) {
         return Err(denied(
             "root-cancel source is not the immediately preceding event",
         ));
@@ -165,6 +172,16 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
         }
         expected.push(OsString::from("preserved-readback.json"));
     }
+    let completed =
+        completion::verify_receipt(&directory, &plan, head, &root, &reference.plan.sha256)?;
+    if completed != Image::Absent {
+        if logical.is_some() || archived.is_none() || !has_intent || receipt == Image::Absent {
+            return Err(denied(
+                "root-cancel completion requires original logical absence",
+            ));
+        }
+        expected.push(OsString::from("cancellation-completed.json"));
+    }
     expected.sort();
     if super::super::super::tree::names(directory.file())? != expected
         || super::super::super::TreeSnapshot::read(&root)? != tree
@@ -172,6 +189,7 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
         || capture_file(&directory, "plan.json", MAX_FRAME)? != plan_image
         || capture_file(&directory, "move-intent.json", MAX_FRAME)? != intent
         || capture_file(&directory, "preserved-readback.json", MAX_FRAME)? != receipt
+        || capture_file(&directory, "cancellation-completed.json", MAX_FRAME)? != completed
         || super::super::super::tree::names(parent.file())? != names
         || observation::entry(&profile, ".codex")?.map(|s| identity(&s))
             != logical.map(|s| identity(&s))

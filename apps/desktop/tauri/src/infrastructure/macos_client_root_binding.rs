@@ -256,7 +256,10 @@ pub(super) fn resolve_originals_projected(
     }
 
     let head = head.ok_or_else(|| denied("registered root has no current independent session"))?;
-    if head.state == State::RootCancellationPrepared {
+    if matches!(
+        head.state,
+        State::RootCancellationPrepared | State::RootCancellationAbsent
+    ) {
         let client = super::root_preparation::preservation::indexed::inspect(
             data,
             &context.working_directory,

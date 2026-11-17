@@ -217,7 +217,10 @@ fn inspect_root_lineage(
             || current.is_none_or(|h| {
                 !matches!(
                     h.state,
-                    State::Preparing | State::CaptureReserved | State::RootCancellationPrepared
+                    State::Preparing
+                        | State::CaptureReserved
+                        | State::RootCancellationPrepared
+                        | State::RootCancellationAbsent
                 )
             })
         {

@@ -148,12 +148,18 @@ fn project_history(
         rearm_digest: None,
         confirmation_digest: None,
     };
-    if head.state == State::RootCancellationPrepared {
+    if matches!(
+        head.state,
+        State::RootCancellationPrepared | State::RootCancellationAbsent
+    ) {
         // The original index resolver has already verified this exact plan.
         // No OriginalSession exists and no cancellation terminal was committed.
         preview.status = Status::Pending;
         preview.attempt_id = Some(head.ticket.clone());
         preview.plan_evidence = Evidence::Verified;
+        if head.state == State::RootCancellationAbsent {
+            preview.completion_evidence = Evidence::Verified;
+        }
         return Ok(preview);
     }
     if root_origin.is_some() && head.root_retirement.is_some() {

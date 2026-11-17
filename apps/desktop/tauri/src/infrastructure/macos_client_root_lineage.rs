@@ -71,7 +71,7 @@ fn validate_segment(heads: &[Head], origin: &super::root_creation::References) -
         {
             return Err(denied("generation events rebound source"));
         }
-        if h.state == State::RootAbsent {
+        if matches!(h.state, State::RootAbsent | State::RootCancellationAbsent) {
             if completion.is_some_and(|old| Some(old) != h.completion_sha256.as_ref()) {
                 return Err(denied(
                     "generation reclose changes immutable completion receipt",
@@ -89,6 +89,10 @@ fn validate_segment(heads: &[Head], origin: &super::root_creation::References) -
                 | (
                     State::Preparing | State::CaptureReserved,
                     State::RootCancellationPrepared
+                )
+                | (
+                    State::RootCancellationPrepared,
+                    State::RootCancellationAbsent
                 )
                 | (State::CaptureReserved, State::Captured)
                 | (State::Captured, State::Ready)
