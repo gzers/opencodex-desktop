@@ -20,8 +20,12 @@ function ErrorFact([string]$Stage,$ErrorRecord){
 }
 function NativeObservation([string]$Phase){
  try{
-  & (Join-Path $rootPath 'input/ocxd.exe') '--internal-r7-r2-readonly024-v1' $Phase 1> (Join-Path $out ('native-'+$Phase+'.stdout.log')) 2> (Join-Path $out ('native-'+$Phase+'.stderr.log'))
-  $code=$LASTEXITCODE
+  $previousPreference=$ErrorActionPreference
+  try{
+   $ErrorActionPreference='Continue'
+   & (Join-Path $rootPath 'input/r7-scene-observer.exe') '--r7-r2-readonly024-v1' $Phase 1> (Join-Path $out ('native-'+$Phase+'.stdout.log')) 2> (Join-Path $out ('native-'+$Phase+'.stderr.log'))
+   $code=$LASTEXITCODE
+  }finally{$ErrorActionPreference=$previousPreference}
   $result[('native'+(Get-Culture).TextInfo.ToTitleCase($Phase)+'RawExit')]=$code
   $path=Join-Path $out ('native-'+$Phase+'.json')
   if(Test-Path -LiteralPath $path){$report=Get-Content -LiteralPath $path -Raw -Encoding UTF8|ConvertFrom-Json;$result[('native'+(Get-Culture).TextInfo.ToTitleCase($Phase)+'Passed')]=($code -eq 0 -and $report.passed)}
@@ -42,7 +46,7 @@ function InventoryMetadata($Inventory,[string]$Phase){
 }
 try{
  $manifest=Get-Content -LiteralPath (Join-Path $rootPath 'input-manifest.json') -Raw -Encoding UTF8|ConvertFrom-Json
- if($manifest.schema -cne 'windows-r7-r2-readonly-input-v1' -or $manifest.expectedSid -cne $sid -or $manifest.expectedSession -ne 7){throw 'fixed prepared manifest scope differs'}
+ if($manifest.schema -cne 'windows-r7-r2-readonly-input-v2' -or $manifest.expectedSid -cne $sid -or $manifest.expectedSession -ne 7 -or $manifest.collector -cne 'standalone-native-shared-inventory-section'){throw 'fixed prepared manifest scope differs'}
  foreach($row in $manifest.files){
   if($row.name.Contains('..') -or [IO.Path]::IsPathRooted($row.name)){throw 'noncanonical prepared member'}
   $path=Join-Path $rootPath $row.name
