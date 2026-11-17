@@ -2,12 +2,18 @@
 //! and exact files stay retained. No normal Stop/Closed or lock-release proof.
 use super::*;
 use crate::infrastructure::windows_client_originals024::before_resume_record::Event;
+mod released;
+pub(in crate::infrastructure::windows_client_originals024) use released::{
+    AbortRestoredReadback, AfterReturnGuard,
+};
 pub(super) struct ReturnProgress {
     frozen: Vec<(usize, usize, File)>,
     pending: Option<ReturnStep>,
     completed: Vec<ReturnStep>,
     failed: bool,
     finished: bool,
+    final_attempted: bool,
+    final_verified: bool,
 }
 pub(in crate::infrastructure::windows_client_originals024) struct ReturnStep {
     node: String,
@@ -130,6 +136,8 @@ impl CapturedTrees {
             completed: Vec::new(),
             failed: true,
             finished: false,
+            final_attempted: false,
+            final_verified: false,
         });
         // Freeze the old mutation path before every fallible read/write. This
         // operation has its own native guard; ordinary verify stays poisoned.

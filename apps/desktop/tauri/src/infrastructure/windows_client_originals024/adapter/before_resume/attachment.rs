@@ -22,6 +22,120 @@ pub(crate) struct OriginalReturnScope<'a> {
     attachment: &'a mut BoundAttachment,
     window: &'a BeforeResumeRecoveryWindow,
 }
+pub(crate) struct OriginalReleasedScope<'a> {
+    routes: &'a mut crate::infrastructure::windows_client_originals024::v2::routes::RoutePin,
+    source: &'a mut crate::infrastructure::windows_client_originals024::source::Source,
+    owner: &'a mut Owner,
+    prefix: &'a PreparedAbortPrefix,
+    attachment: &'a mut BoundAttachment,
+    window: &'a BeforeResumeRecoveryWindow,
+}
+impl<'a> OriginalReleasedScope<'a> {
+    pub(in crate::infrastructure::windows_client_originals024) fn bind(
+        routes: &'a mut crate::infrastructure::windows_client_originals024::v2::routes::RoutePin,
+        source: &'a mut crate::infrastructure::windows_client_originals024::source::Source,
+        owner: &'a mut Owner,
+        prefix: &'a PreparedAbortPrefix,
+        proof: &QuiescentOriginals,
+        attachment: &'a mut BoundAttachment,
+        window: &'a BeforeResumeRecoveryWindow,
+    ) -> AppResult<Self> {
+        proof.check_tag(prefix)?;
+        owner.check_before_resume_quiescent(window)?;
+        attachment.check(owner, prefix, window)?;
+        Ok(Self {
+            routes,
+            source,
+            owner,
+            prefix,
+            attachment,
+            window,
+        })
+    }
+}
+impl crate::infrastructure::windows_client_originals024::tree::AfterReturnGuard
+    for OriginalReleasedScope<'_>
+{
+    fn check(
+        &mut self,
+        journal: &mut crate::infrastructure::windows_client_originals024::v3::Journal,
+        released:&mut crate::infrastructure::windows_client_originals024::coordination::ReleasedLease,
+        end: Instant,
+    ) -> std::io::Result<()> {
+        let result = (|| {
+            if end != self.window.deadline() {
+                return Err(refused("原post-release截止不同"));
+            }
+            self.owner.check_before_resume_quiescent(self.window)?;
+            self.routes
+                .declared(self.owner.home_path(), end)
+                .map_err(refused)?;
+            self.attachment
+                .check(self.owner, self.prefix, self.window)?;
+            let canonical = journal
+                .read_before_resume_released(
+                    self.source,
+                    self.owner,
+                    released,
+                    &self.prefix.epoch,
+                    &self.prefix.claim,
+                    self.window,
+                )
+                .map_err(refused)?;
+            if canonical != self.prefix.observed["canonical"] {
+                return Err(refused("原canonical变化"));
+            }
+            Ok(())
+        })();
+        if result.is_err() {
+            self.owner.fail_before_resume_process();
+            self.attachment.failed = true;
+        }
+        result.map_err(std::io::Error::other)
+    }
+    fn record_verified(
+        &mut self,
+        nodes: u32,
+        coordination: u32,
+        end: Instant,
+    ) -> std::io::Result<()> {
+        let result = (|| {
+            if end != self.window.deadline() {
+                return Err(refused("原finalrecord截止不符"));
+            }
+            self.attachment
+                .check(self.owner, self.prefix, self.window)?;
+            let record = self
+                .attachment
+                .last
+                .as_ref()
+                .unwrap()
+                .next_data(
+                    self.attachment.last_raw.as_ref().unwrap(),
+                    Event::AbortRestoreVerified {
+                        original_nodes: nodes,
+                        coordination_objects: coordination,
+                        normal_stop: false,
+                        closed: false,
+                        public_start_open: false,
+                    },
+                )
+                .map_err(refused)?;
+            self.attachment.last_raw = Some(record.encode_data().map_err(refused)?);
+            self.attachment.last = Some(record);
+            self.attachment
+                .storage
+                .append_data(self.attachment.last_raw.as_ref().unwrap(), end)
+                .map_err(refused)?;
+            self.attachment.check(self.owner, self.prefix, self.window)
+        })();
+        if result.is_err() {
+            self.owner.fail_before_resume_process();
+            self.attachment.failed = true;
+        }
+        result.map_err(std::io::Error::other)
+    }
+}
 impl<'a> OriginalReturnScope<'a> {
     pub(in crate::infrastructure::windows_client_originals024) fn bind(
         routes: &'a mut crate::infrastructure::windows_client_originals024::v2::routes::RoutePin,

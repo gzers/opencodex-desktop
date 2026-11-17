@@ -47,6 +47,23 @@ pub(crate) struct QuiescentOriginals {
     end: Instant,
     prefix_digest: String,
 }
+pub(crate) struct AbortedOriginals {
+    session: uuid::Uuid,
+    action: String,
+    end: Instant,
+    native: crate::infrastructure::windows_client_originals024::tree::AbortRestoredReadback,
+}
+impl AbortedOriginals {
+    pub(crate) fn read_data(&self, end: Instant) -> AppResult<serde_json::Value> {
+        let data = self.native.data(end).map_err(refused)?;
+        if end != self.end {
+            return Err(refused("原Aborted读回截止不符"));
+        }
+        Ok(
+            serde_json::json!({"sessionId":self.session.to_string(),"recoveryActionId":self.action,"restored":data,"normalStop":false,"closed":false,"publicStartOpen":false}),
+        )
+    }
+}
 fn data_digest(data: &serde_json::Value) -> AppResult<String> {
     serde_json::to_vec(data)
         .map(|bytes| hash::sha256_hex(&bytes))
@@ -102,6 +119,45 @@ impl PreparedAbortPrefix {
     }
 }
 impl WindowsOriginals {
+    pub(crate) fn finish_released_originals(
+        &mut self,
+        owner: &mut Owner,
+        proof: &QuiescentOriginals,
+        released: &mut super::super::coordination::ReleasedLease,
+        probe: &mut super::super::coordination::ReleaseProbe,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<AbortedOriginals> {
+        let result = (|| {
+            owner.check_before_resume_quiescent(window)?;
+            let prefix = self
+                .abort_prefix
+                .as_ref()
+                .ok_or_else(|| refused("原prefix缺席"))?;
+            proof.check_tag(prefix)?;
+            let native = self.slot.finish_before_resume_release(
+                owner,
+                prefix,
+                proof,
+                self.abort_attachment
+                    .as_mut()
+                    .ok_or_else(|| refused("原附件缺席"))?,
+                released,
+                probe,
+                window,
+            )?;
+            Ok(AbortedOriginals {
+                session: prefix.session,
+                action: prefix.action.clone(),
+                end: window.deadline(),
+                native,
+            })
+        })();
+        if result.is_err() {
+            self.failed = true;
+            owner.fail_before_resume_process();
+        }
+        result
+    }
     pub(crate) fn return_quiescent_originals(
         &mut self,
         owner: &mut Owner,

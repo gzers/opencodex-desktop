@@ -14,7 +14,9 @@ use crate::{
 };
 use std::time::{Duration, Instant};
 pub(super) mod before_resume;
+pub(crate) use before_resume::attachment::OriginalReleasedScope;
 pub(crate) use before_resume::attachment::OriginalReturnScope;
+pub(crate) use before_resume::AbortedOriginals;
 pub(crate) use before_resume::{ClaimBoundAbort, PreparedAbortPrefix, QuiescentOriginals};
 fn refused(reason: impl std::fmt::Display) -> AppError {
     AppError::RuntimeManaged {

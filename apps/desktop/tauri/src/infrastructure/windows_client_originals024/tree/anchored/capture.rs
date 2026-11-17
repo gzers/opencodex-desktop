@@ -15,6 +15,9 @@ struct PreparedStop {
 }
 mod abort_return;
 pub(in crate::infrastructure::windows_client_originals024) use abort_return::{
+    AbortRestoredReadback, AfterReturnGuard,
+};
+pub(in crate::infrastructure::windows_client_originals024) use abort_return::{
     ReturnGuard, ReturnStep,
 };
 impl PreparedStop {

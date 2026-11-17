@@ -5,6 +5,8 @@ use crate::infrastructure::windows_client_originals024::{
     tree::{CapturedTrees, ReturnGuard, ReturnStep},
 };
 use native::QuiescentLauncher;
+#[path = "release_tests.rs"]
+mod release_tests;
 struct Guard<'a> {
     native: &'a mut OriginalSynthetic,
     proof: &'a QuiescentLauncher,

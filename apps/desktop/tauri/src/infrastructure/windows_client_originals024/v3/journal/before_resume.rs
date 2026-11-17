@@ -10,6 +10,44 @@ use crate::{
     modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
 };
 impl Journal {
+    pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_released(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        released:&mut crate::infrastructure::windows_client_originals024::coordination::ReleasedLease,
+        epoch: &str,
+        key: &str,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> io::Result<serde_json::Value> {
+        let result = (|| {
+            let end = window.deadline();
+            released.check_before_resume_owner(owner, epoch, key, window)?;
+            source.check(owner, end).map_err(io::Error::other)?;
+            let original = self.source_action.as_ref().ok_or_else(invalid)?;
+            if original.kind() != OriginalActionKind::Start
+                || original.scope_id() != self.manifest.deadline_scope
+                || source.binding_raw != encoded(&self.manifest.binding)?
+            {
+                return Err(invalid());
+            }
+            original
+                .check_retained_owner_for_read(owner, end)
+                .map_err(io::Error::other)?;
+            let data = self.read_failed_start_records(end)?;
+            source.check(owner, end).map_err(io::Error::other)?;
+            self.source_action
+                .as_ref()
+                .unwrap()
+                .check_retained_owner_for_read(owner, end)
+                .map_err(io::Error::other)?;
+            released.check_before_resume_owner(owner, epoch, key, window)?;
+            Ok(data)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
     #[cfg(test)]
     pub(in crate::infrastructure::windows_client_originals024) fn component_failed_canonical_for_test(
         &mut self,

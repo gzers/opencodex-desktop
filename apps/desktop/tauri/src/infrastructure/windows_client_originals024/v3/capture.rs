@@ -214,6 +214,59 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn finish_before_resume_release(
+        &mut self,
+        owner: &mut Owner,
+        prefix: &crate::infrastructure::windows_client_originals024::PreparedAbortPrefix,
+        proof: &crate::infrastructure::windows_client_originals024::QuiescentOriginals,
+        attachment: &mut super::super::adapter::before_resume::attachment::BoundAttachment,
+        released: &mut super::super::coordination::ReleasedLease,
+        probe: &mut super::super::coordination::ReleaseProbe,
+        window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+    ) -> AppResult<super::super::tree::AbortRestoredReadback> {
+        let result = (|| {
+            owner.check_before_resume_quiescent(window)?;
+            if self.partial.is_some() {
+                return Err(refused("原preparation不能签canonical释放完成"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原Store缺席"))?;
+            if store.ready.is_some()
+                || store.stop_deadline.is_some()
+                || store.restored_history
+                || store.closed_exit.is_some()
+                || store.closed_absent.is_some()
+                || store.stopped_content.is_some()
+                || store.stop_completed
+            {
+                return Err(refused("不是原beforeResume分支"));
+            }
+            let mut scope =
+                crate::infrastructure::windows_client_originals024::OriginalReleasedScope::bind(
+                    store
+                        .routes
+                        .as_mut()
+                        .ok_or_else(|| refused("原route缺席"))?,
+                    &mut store.source,
+                    owner,
+                    prefix,
+                    proof,
+                    attachment,
+                    window,
+                )?;
+            store
+                .core
+                .finish_before_resume_release(&mut scope, released, probe, window.deadline())
+                .map_err(refused)
+        })();
+        if result.is_err() {
+            self.failed = true;
+            owner.fail_before_resume_process();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn return_before_resume(
         &mut self,
         owner: &mut Owner,
