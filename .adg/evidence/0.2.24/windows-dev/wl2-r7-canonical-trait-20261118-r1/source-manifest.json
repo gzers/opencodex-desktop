@@ -1,0 +1,45 @@
+{
+  "codeBefore": "f9c896253142e45d7c983e8c0fe45697b6071c98",
+  "mainBuilt": "fb755b8ea63d8a3fc9146dc4db491931919905b0",
+  "mainConsumed": "4ea82e8a61fe00c1f76334db5e39654f49f4342e",
+  "mainOnlyUncompiledDelta": [
+    ".github/scripts/verify_windows_installer_024.py",
+    ".github/workflows/ci.yml",
+    ".github/workflows/release.yml",
+    "test/test_verify_windows_installer_024.py"
+  ],
+  "rustProductGraphUnchangedByMainIntake": true,
+  "docsConsumed": "bf819aab38cb4259524f3620415a15fdae966dd5",
+  "authority": "TEAM31/IMP168/r7 unchanged",
+  "files": [
+    {
+      "sha256": "787d38e640f027362a7d7dff8470c657cb98c3c683eab29a34bb4f3e1aa72baf",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "bytes": 19810
+    },
+    {
+      "sha256": "6a4242d94123dc58731d8981e6015860bec41533d23fe6b4206d288818cb0a22",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait.rs",
+      "bytes": 11165
+    },
+    {
+      "sha256": "68a8a48332ec7e767acf8189d219ad7b2cd77b6d70d62286a9c5b3e094cbb1bd",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait/tests.rs",
+      "bytes": 7867
+    },
+    {
+      "sha256": "1d806e708e5fc3d3ae7036c681eaa9354f8a03766d248e637827e60865546f59",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "bytes": 19933
+    },
+    {
+      "sha256": "05d51e77e6e632e9f3eccf6798c937d162728d848dc34eef3e20f9845611169a",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/driver.rs",
+      "bytes": 1508
+    }
+  ],
+  "metadataTypesProduct01Reused": true,
+  "onlyChangeAfterProduct01": [
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait/tests.rs"
+  ]
+}

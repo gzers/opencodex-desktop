@@ -1,0 +1,23 @@
+{
+  "authority":"TEAM30/IMP166/r7 Windows exclusive originalworker recovery scope",
+  "codeBefore":"683a69fa2a34684acb6b16873125b0cc599fd15c",
+  "hypotheses":[
+    "Existing canonical originalworker recovery can implement the unchanged three-stage BeforeFirstResumeRecovery trait without moving active NativeLease across threads or resetting its original recovery deadline.",
+    "NonClone/nonserde private stage tags bind the same original Owner/action/worker/thread/window; actual prepared prefix/quiescent tag/native resources stay in WorkerLocal/Owner before every later fallible step and failed stage cannot retry.",
+    "Dropping a short-lived AnchoredClaim borrow between trait calls does not release the actual same worker NativeLease claim/NLK ranges; restore validates the same actual claim facts, returns originals then explicitly releases/fully reads native results.",
+    "Trait return completion only locates the actual private native proof already retained by this original Owner; it never constructs proof/Stop/Closed from metadata."
+  ],
+  "independentStatus":{
+    "canonicalProductionDriver":"implemented/nativecomponentpipeline passed; real officialOwner qualification incomplete",
+    "fullHistory":"internal canonical path compiled/nativecomponent10modes+QPC passed, code683a69fa2",
+    "canonicalSharedTrait":"not yet implemented before this round",
+    "V2preManifestPartialRestore":"separate incomplete scope; canonical trait implementation must reject missingprefix without inventing success",
+    "reachableVersionedPrivateHost":"separate incomplete scope",
+    "currentR2":"preserve raw50Unknown; no new force/restoration approval",
+    "cleanup":"failed/rejected roots and synthetic27960 retained, no disposal"
+  },
+  "currentR2Touched":false,
+  "publicStartOpen":false,
+  "W2":false,
+  "release":false
+}

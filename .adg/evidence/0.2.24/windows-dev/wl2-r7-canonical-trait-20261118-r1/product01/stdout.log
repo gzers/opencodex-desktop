@@ -1,0 +1,18 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::recovery_worker::canonical_trait::tests::wl2_r7_canonical_trait_bound_types_implement_unchanged_contract_without_clone_or_serde ... ok
+test infrastructure::windows_client_originals024::recovery_worker::canonical_trait::tests::wl2_r7_canonical_trait_native_stage_borrows_keep_same_actual_claim_nlk_until_explicit_release ... r7 canonicaltrait actuallease prepared: borrowedclaim dropped only, sameepoch/key and all4actualranges remain raw33; no originalOwner constructed
+r7 canonicaltrait actuallease quiescent: borrowedclaim dropped only, sameepoch/key and all4actualranges remain raw33; no originalOwner constructed
+r7 canonicaltrait actuallease return: borrowedclaim dropped only, sameepoch/key and all4actualranges remain raw33; no originalOwner constructed
+r7-canonical-trait-failed-root=C:\Users\15119\AppData\Local\Temp\.tmpe2DUqC
+FAILED
+test infrastructure::windows_client_originals024::recovery_worker::canonical_trait::tests::wl2_r7_canonical_trait_original_metadata_thread_and_deadline_substitutions_refuse ... r7 canonicaltrait metadata guard only, no nativeproof created; crosssession/action/scope/end/thread/cutoff refused
+ok
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::recovery_worker::canonical_trait::tests::wl2_r7_canonical_trait_native_stage_borrows_keep_same_actual_claim_nlk_until_explicit_release
+
+test result: FAILED. 2 passed; 1 failed; 0 ignored; 0 measured; 2249 filtered out; finished in 0.08s
+

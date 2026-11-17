@@ -1,0 +1,490 @@
+{
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 221,
+      "sha256": "d74215525e5b96a339d8fefc769b11b45bc09b1de895dcb2c6a6d645f77a8a4b"
+    },
+    {
+      "path": "archive-product01.py",
+      "bytes": 1743,
+      "sha256": "dd32a58a7f035ef677ea72764be457a291b27938231ad35cf996f61db58a7608"
+    },
+    {
+      "path": "artifact.json",
+      "bytes": 470,
+      "sha256": "b913d0b0837a93c62f10f39f71c44ea96bb0d7de4564151b6aa4b97df51a0fe1"
+    },
+    {
+      "path": "cleanup-readback.json",
+      "bytes": 2846,
+      "sha256": "b466c3d97617c7065aebcb7494c698c3a753651f565ecd98de7b46f2957fb74e"
+    },
+    {
+      "path": "collect.py",
+      "bytes": 7335,
+      "sha256": "c48faedf68efd481cfdc76d56d812fc4dfd75af941ccebb9b10084b423ad2203"
+    },
+    {
+      "path": "finalize.py",
+      "bytes": 4973,
+      "sha256": "44cb1f8c8593af4bedcf54a25d1ca06766610d35ead2be702e8fcb26536c5ac3"
+    },
+    {
+      "path": "first-error-and-fixes.json",
+      "bytes": 721,
+      "sha256": "ed7d110e6152b76783a6b84eb59f9024de8f9af5dc143b0eec76ad48f9289068"
+    },
+    {
+      "path": "generated-schema/desktop-schema-original.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/desktop-schema.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/windows-schema-moved.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/windows-schema.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "hypotheses.json",
+      "bytes": 1834,
+      "sha256": "1dc0e8a219bbf5ceba16dec07003a490db879065ecb1347186932b8915a6feee"
+    },
+    {
+      "path": "inputs.json",
+      "bytes": 220,
+      "sha256": "2b7ca5d2e9a205f01f803e8df72802604187a951ec579fac23cddfe29a2393b9"
+    },
+    {
+      "path": "prepare-regressions.py",
+      "bytes": 1205,
+      "sha256": "8515d175b6f96181a3928db19957cfcf2dfaf2497ef164783381887ef5e17945"
+    },
+    {
+      "path": "prepare-run.py",
+      "bytes": 1572,
+      "sha256": "026e75dbf0ba6b16cc6e2d759de281d3e1345987ac9f36cbc82dff23a7fc761a"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait/tests.rs",
+      "bytes": 6741,
+      "sha256": "20f0429864ce9ff477030adb78d7573027a62c58c6fc8f546248744ae0285e3e"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait.rs",
+      "bytes": 11165,
+      "sha256": "6a4242d94123dc58731d8981e6015860bec41533d23fe6b4206d288818cb0a22"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "bytes": 19810,
+      "sha256": "787d38e640f027362a7d7dff8470c657cb98c3c683eab29a34bb4f3e1aa72baf"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/driver.rs",
+      "bytes": 1508,
+      "sha256": "05d51e77e6e632e9f3eccf6798c937d162728d848dc34eef3e20f9845611169a"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "bytes": 19933,
+      "sha256": "1d806e708e5fc3d3ae7036c681eaa9354f8a03766d248e637827e60865546f59"
+    },
+    {
+      "path": "product01/failure-readonly.zip",
+      "bytes": 544,
+      "sha256": "3f4ac84ebddc786099d6e4e9f260d2604d80d30b7cf6cff99bec7f9d25828904"
+    },
+    {
+      "path": "product01/failure-receive.json",
+      "bytes": 1435,
+      "sha256": "3008a799a4a8a0b6d84bf1a44ecd97159ee4f7f6922915f8ad127fc05caab0d6"
+    },
+    {
+      "path": "product01/result.json",
+      "bytes": 686,
+      "sha256": "fc58be7243e93f34ba79d3026421ade49826ca8840fc58e3f0b2d92227723236"
+    },
+    {
+      "path": "product01/source.json",
+      "bytes": 1896,
+      "sha256": "0c19e00f8c63a904a8b8725b1230802c27f3caa69f63b300385f09662feb3cf0"
+    },
+    {
+      "path": "product01/stderr.log",
+      "bytes": 52541,
+      "sha256": "58e1a7b7792ed3d34a2f00965923bfad6e7b622e3c3795fcf03e31881331fcd6"
+    },
+    {
+      "path": "product01/stdout.log",
+      "bytes": 1515,
+      "sha256": "0203a0bdbbd3d2e3e07e4483d24b11eab026aa771dbf3be1941338c18d7535ae"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait/tests.rs",
+      "bytes": 7867,
+      "sha256": "68a8a48332ec7e767acf8189d219ad7b2cd77b6d70d62286a9c5b3e094cbb1bd"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait.rs",
+      "bytes": 11165,
+      "sha256": "6a4242d94123dc58731d8981e6015860bec41533d23fe6b4206d288818cb0a22"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "bytes": 19810,
+      "sha256": "787d38e640f027362a7d7dff8470c657cb98c3c683eab29a34bb4f3e1aa72baf"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/driver.rs",
+      "bytes": 1508,
+      "sha256": "05d51e77e6e632e9f3eccf6798c937d162728d848dc34eef3e20f9845611169a"
+    },
+    {
+      "path": "product02/executed-source/apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "bytes": 19933,
+      "sha256": "1d806e708e5fc3d3ae7036c681eaa9354f8a03766d248e637827e60865546f59"
+    },
+    {
+      "path": "product02/result.json",
+      "bytes": 697,
+      "sha256": "008c371419dff4465a6dbb52752cc831d966c921ddf7f9ab4a5029083274cbad"
+    },
+    {
+      "path": "product02/source.json",
+      "bytes": 1909,
+      "sha256": "7b6641a41988d1a75c2c6dfe61548ad552be48e6196e149261d7b3c958e57e9a"
+    },
+    {
+      "path": "product02/stderr.log",
+      "bytes": 52048,
+      "sha256": "33874d7dbdacbf7f63b1446e364fffcfb9b28d5a6b9e312b8e6a7a12362e1d5c"
+    },
+    {
+      "path": "product02/stdout.log",
+      "bytes": 823,
+      "sha256": "590340f82144992dd49ceaa8bda3eeebfecd65b9a8ce878416d0f901db0811e4"
+    },
+    {
+      "path": "received-raw-whitespace-check.log",
+      "bytes": 3303,
+      "sha256": "2de55ce9ce34a57433f6bb05aec53e86081e4b3a00a0afe63f870847c41477e3"
+    },
+    {
+      "path": "regression02/result.json",
+      "bytes": 381,
+      "sha256": "9cda2b65d7976c6a9e13005e229c3c2879c51eb0bb0405357f7d28ebfb3af97d"
+    },
+    {
+      "path": "regression02/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression02/stdout.log",
+      "bytes": 2266,
+      "sha256": "4c9d77d3757fe225f7422eac3b649fb13a812130b6a6d2a19f95ff4e5737efe1"
+    },
+    {
+      "path": "regression02/subprocess/disconnect/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression02/subprocess/disconnect/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression02/subprocess/disconnect/cleanup.json",
+      "bytes": 903,
+      "sha256": "697434bb41a67991b83be152bad7b22825811e9dbd6e6d21c1fc6eb1daa9e62b"
+    },
+    {
+      "path": "regression02/subprocess/disconnect/entered.json",
+      "bytes": 83,
+      "sha256": "6fbb313ae993dea6da8c3a64006413caf5ebe2ea22440573bd7fa34ae8bbc94b"
+    },
+    {
+      "path": "regression02/subprocess/disconnect/observed.json",
+      "bytes": 567,
+      "sha256": "356414c2d1357d8a2a452f56b097fdce5e16d1cf92950ff823263156a412f723"
+    },
+    {
+      "path": "regression02/subprocess/expired/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression02/subprocess/expired/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression02/subprocess/expired/cleanup.json",
+      "bytes": 953,
+      "sha256": "1c0cd8b120078333510e978df3d493397f53d1a56b2d046b0aa36a30686fa224"
+    },
+    {
+      "path": "regression02/subprocess/expired/entered.json",
+      "bytes": 83,
+      "sha256": "956b2e3442e61a42f32d9542228ce3cae09c72a258f6115ef882496f18116f97"
+    },
+    {
+      "path": "regression02/subprocess/expired/observed.json",
+      "bytes": 584,
+      "sha256": "d86dca04ac0529db7e50133016d775a69429728c420b1ef437ef1f113f0d25aa"
+    },
+    {
+      "path": "regression02/subprocess/failure/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression02/subprocess/failure/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression02/subprocess/failure/cleanup.json",
+      "bytes": 956,
+      "sha256": "2c0e84647e52936311112da69354a3f72bd3316ace66fe8cd33c6141a64a939f"
+    },
+    {
+      "path": "regression02/subprocess/failure/entered.json",
+      "bytes": 83,
+      "sha256": "5aa09d68c3ece0f7c63549efa43a3f55c7d5420f0d7b8f02e3ba29d72e531019"
+    },
+    {
+      "path": "regression02/subprocess/failure/observed.json",
+      "bytes": 587,
+      "sha256": "c56c1d797df5984c3dfdb051197d9b53c25171f3bec68268eb4e43b06a8d4760"
+    },
+    {
+      "path": "regression02/subprocess/panic/child.stderr.log",
+      "bytes": 292,
+      "sha256": "15dfa7aaf40ceadd60f98fe469552bd8695a0db4242dc85a16f3c1b722268fe0"
+    },
+    {
+      "path": "regression02/subprocess/panic/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression02/subprocess/panic/cleanup.json",
+      "bytes": 950,
+      "sha256": "7eb5c0dbf85e440af848bbca4c6fd087ba7a707170a64123819694fb82edd972"
+    },
+    {
+      "path": "regression02/subprocess/panic/entered.json",
+      "bytes": 83,
+      "sha256": "1ee3bfaa83cc25f35038cb0e9335984343be1e2c502370045fabfb783a3fd206"
+    },
+    {
+      "path": "regression02/subprocess/panic/observed.json",
+      "bytes": 581,
+      "sha256": "fb977895a4083f655123e530a5e3af86dc28b66803348aa662010de5687e30fb"
+    },
+    {
+      "path": "regression02/subprocess/release-expired/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression02/subprocess/release-expired/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression02/subprocess/release-expired/cleanup.json",
+      "bytes": 953,
+      "sha256": "ef3cae428f9fe955677d67f986abb3c90bcfc87574cb28c1262124228bf0c13a"
+    },
+    {
+      "path": "regression02/subprocess/release-expired/entered.json",
+      "bytes": 83,
+      "sha256": "0921249d7d18d1b2a0661d54e6f5126a79be752807fbcf3ffeffcb446dce591a"
+    },
+    {
+      "path": "regression02/subprocess/release-expired/observed.json",
+      "bytes": 584,
+      "sha256": "d3da32b6d8149ccd178426f9d19b8cbfd86a252a0d3df8c2d3476e7492393281"
+    },
+    {
+      "path": "regression02/subprocess/release-partial/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression02/subprocess/release-partial/child.stdout.log",
+      "bytes": 127,
+      "sha256": "c4a6ccef1679ecac7b142b5d1e6d4d1d43c35c69ce8e839f9bd66781dae45454"
+    },
+    {
+      "path": "regression02/subprocess/release-partial/cleanup.json",
+      "bytes": 959,
+      "sha256": "634dd4ad1ad5fa9086ec8c676caa31d9989176a144b70a8d3d85beb4973af262"
+    },
+    {
+      "path": "regression02/subprocess/release-partial/entered.json",
+      "bytes": 83,
+      "sha256": "6a459bdcdfd607e11f06a731dcdf29060aa743988e9af24fa71109a49ba80985"
+    },
+    {
+      "path": "regression02/subprocess/release-partial/observed.json",
+      "bytes": 590,
+      "sha256": "3186eda61b406544da51ef0b8cad09e49898f80cdcb7a74ba004da519cfdc2df"
+    },
+    {
+      "path": "regression02/subprocess/success/child.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression02/subprocess/success/child.stdout.log",
+      "bytes": 229,
+      "sha256": "9af41c5908f96417f2be86fc5d8a79c98bbd31d2e0b29ca2f9a6c795ff470f94"
+    },
+    {
+      "path": "regression02/subprocess/success/cleanup.json",
+      "bytes": 933,
+      "sha256": "2aea2779d33dfd38645e85771ff01ee5f0a3040f5374991d888353dadc19474c"
+    },
+    {
+      "path": "regression02/subprocess/success/entered.json",
+      "bytes": 83,
+      "sha256": "c4f44f38ec7472e9c98390c2c0c2b6fef080adab3755411b9cda9cfe6b35248f"
+    },
+    {
+      "path": "regression02/subprocess/success/observed.json",
+      "bytes": 598,
+      "sha256": "2c485ed90a8101087c8f9dde63032ebbbacc32d748bd0b0e7f12c0118c504ef9"
+    },
+    {
+      "path": "regression03/result.json",
+      "bytes": 391,
+      "sha256": "e1ea21c186646e93ded51a5f95921b0550371743cb980c4a78830e231f95cc4b"
+    },
+    {
+      "path": "regression03/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression03/stdout.log",
+      "bytes": 1925,
+      "sha256": "a3cb27dcf1cd724ee08cd0a574d386a0c8fbcd814ff78643a3cc691b11fcd78c"
+    },
+    {
+      "path": "regression04/result.json",
+      "bytes": 393,
+      "sha256": "ce1bcfa097f42038901a63113ba979e9e92021a08930c335dbbbf130b1e3b5ff"
+    },
+    {
+      "path": "regression04/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression04/stdout.log",
+      "bytes": 5293,
+      "sha256": "4fce7439b1bb5df201c7fede3cf09649d188dbbfd08ed7922f22aabb4775df81"
+    },
+    {
+      "path": "regression05/result.json",
+      "bytes": 381,
+      "sha256": "5a4e504fdaa1d494bfa656e83908a30f1002aa151665f9c76bf2de2b5c30428a"
+    },
+    {
+      "path": "regression05/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression05/stdout.log",
+      "bytes": 1414,
+      "sha256": "33debd0d737fa7935f8885bb33758f109b389d0ba3d675c230f2f9aae9e3a8cc"
+    },
+    {
+      "path": "regression06/result.json",
+      "bytes": 511,
+      "sha256": "80fcfd738efa134bb4f34e0924dfa283202a7a3784edf51564be07f5080b9866"
+    },
+    {
+      "path": "regression06/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression06/stdout.log",
+      "bytes": 415,
+      "sha256": "10d5d8c3ca8ef4bb9bae59c42fca8badae1caea40a0256b129dcf9dc7b21894f"
+    },
+    {
+      "path": "run-product.ps1",
+      "bytes": 3316,
+      "sha256": "6accb982de1d8c7637195a7c29dfbed58601033c261caed9e465220ae37396fa"
+    },
+    {
+      "path": "run-regressions.py",
+      "bytes": 1736,
+      "sha256": "0f40847031c02fe7f0276d61a1c1b92983111eaca341758c7860d2f4f153d2fb"
+    },
+    {
+      "path": "source-git-verification.json",
+      "bytes": 1358,
+      "sha256": "e7fa1f89732ce4762db1a4d93754b9d553ceda7301f055fd6ca036c9b3e9cdf1"
+    },
+    {
+      "path": "source-manifest.json",
+      "bytes": 1949,
+      "sha256": "02753bf363daebb028b7335874225c96ca0da5f063a4341c3b1fa3ac45fab803"
+    },
+    {
+      "path": "source-review.json",
+      "bytes": 685,
+      "sha256": "3c5e13066ed846cdf11a2b7babcbe383993e05bac2f1778e3389031d3e8aae8b"
+    },
+    {
+      "path": "sources.json",
+      "bytes": 509,
+      "sha256": "2f9810a7aba4d0072af1a09a25a1db446ac706f61c9209aa6512ae2510b966a9"
+    },
+    {
+      "path": "status.json",
+      "bytes": 43940,
+      "sha256": "5823c5dc078b8e9f16de03ff63ce3b35374532046089b0677ee645710df5864d"
+    },
+    {
+      "path": "SUMMARY.md",
+      "bytes": 3534,
+      "sha256": "5dd97cc112bc740510b0366e078a72513b96a39a9f7b9899ce02724f4072fc56"
+    },
+    {
+      "path": "upstream-raw-preservation.json",
+      "bytes": 666,
+      "sha256": "f75ccf3279297769d27694a801823c53c89033447f720eb5dde7003ed2aa0e4a"
+    },
+    {
+      "path": "verify_evidence.py",
+      "bytes": 1095,
+      "sha256": "3e17a29910bb8af7282aa1b317dda2b3b3091b69ae9eb4fc2b120b0c625a3204"
+    },
+    {
+      "path": "verify_git_payload.py",
+      "bytes": 866,
+      "sha256": "8369dd51396511c96ce8118054183295f67e2667e956fc50bfea187463c5b96d"
+    }
+  ],
+  "nativeAuthority": false
+}

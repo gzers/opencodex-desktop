@@ -1,0 +1,32 @@
+{
+  "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpe2DUqC",
+  "files": {
+    ".codex/.opencodex-native-main.claim.sqlite": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "coordination/k.sqlite": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "coordination/l.sqlite": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "coordination/n.sqlite": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "directories": [
+    ".codex",
+    "coordination"
+  ],
+  "archive": "failure-readonly.zip",
+  "archiveSha256": "3f4ac84ebddc786099d6e4e9f260d2604d80d30b7cf6cff99bec7f9d25828904",
+  "error": "new fixture incorrectly asserted original lease Option None after explicitrelease, existing implementation retains inactive drained shell",
+  "alreadyPassed": "sameclaim epoch/key and all4actualranges busy between3stage borrows; explicit release/readback returned success",
+  "fix": "test actual4ranges becomeacquirable+explicitunlock and originalinactivelease claimrefuses; no productionprimitive or budget changed",
+  "cleanup": "readonly archive/member/hash/dirs beforeafter only, failedroot retained no delete/retry",
+  "currentR2Touched": false
+}
