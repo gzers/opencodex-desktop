@@ -1,0 +1,43 @@
+{
+  "verifiedCommit": "0f0cd79efa755122cd935b03dbac6bd83c7b26dc",
+  "checks": [
+    {
+      "name": "other-files-strict",
+      "args": [
+        "git",
+        "-c",
+        "core.whitespace=cr-at-eol,-blank-at-eof",
+        "diff",
+        "HEAD^",
+        "HEAD",
+        "--check",
+        "--",
+        ".",
+        ":!.adg/evidence/0.2.24/windows-dev/wl2-r6-official-source-paths-20261117-r1/first-archive-failure/out01/archive-error.log"
+      ],
+      "rawExit": 0
+    },
+    {
+      "name": "original-raw-log-only",
+      "args": [
+        "git",
+        "-c",
+        "core.whitespace=cr-at-eol,-blank-at-eof,-blank-at-eol",
+        "diff",
+        "HEAD^",
+        "HEAD",
+        "--check",
+        "--",
+        ".adg/evidence/0.2.24/windows-dev/wl2-r6-official-source-paths-20261117-r1/first-archive-failure/out01/archive-error.log"
+      ],
+      "rawExit": 0
+    }
+  ],
+  "initialWholeEvidenceWhitespaceCheckRawExit": 1,
+  "reason": "Original WindowsPowerShell error log line7 contains one space on an otherwise blank CRLF line; raw bytes must remain unchanged. Other files passed original check, only exact original raw log excludes blank-at-eol. No source/test predicate/timeout/security or failed log bytes changed.",
+  "rawErrorLog": ".adg/evidence/0.2.24/windows-dev/wl2-r6-official-source-paths-20261117-r1/first-archive-failure/out01/archive-error.log",
+  "rawErrorLogSha256": "6e7ff29301606f9d99afa9955d7b060aab15f578165a115aa4e037364e5d5773",
+  "allChecksPassedWithNarrowRawLogException": true,
+  "actualProductionExecuted": false,
+  "startOpen": false
+}
