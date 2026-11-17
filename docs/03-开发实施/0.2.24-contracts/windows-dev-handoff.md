@@ -971,3 +971,11 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 源码357210891f14a1851881e6192bd09d7031471707/treea284da0e1bd517daa26848857b8189bbc88838c0已推送，仅6个Windows允许文件。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-fresh-existing-fixture-20261117-r1/及完整125项状态。fresh r2 I/D/H不复用旧失败事务；旧10节点合成基线/3处协调文件只在原来源SHA与当前实际原ID/8/字节一致时只读复用为准备，未重建/迁移/取得旧lease或mint NativeProof。新真实Owner仍须取得实际NativeLease及四trait，原全部预算/Unknown拒绝/full recovery_state_at/Status/公共Startgate保持。当前PresentOriginalSyntheticBaseline，原始Absent历史另列，初始化与原缺席退根未通过。
 
 定向MSVC7过0败0忽略；PS51同一新目录函数真实owner/SYSTEM-only私有权限及既存/越界拒绝过。clean357产品custom-protocol全bins raw0/135791ms，actual run/stdout与lib.d提交标记核；三EXE完整SHA归artifacts.json。身份首查误用output文件名/移动空日志失败属本地工具，不冒产品失败或隐去旧raw2；修按实际路径核。library源中两未执行launcher脚本后加one-shot/raw-exit差额明列，其它Rust逐原字节/归一CRLF对Git核。public入口C:/Users/Public/ocx-r6-official-existing-20261117-r2/launch-r6-official-existing-r2.cmd待用户普通marenben/session7/noJob桌面，实际生产尚未重验。首错停止动作、原broker/Owner及全部文件保留，自动完整有界导出；新宿主可受限控制、不自动force。原40588不动，旧失败scene/ZIP/删除拒绝/所有原未完保留，Start/allAcceptedfalse，无日常/官方/业务/模型/旧raw5空跑/空GUI/W2/双SID/发布。
+
+## 2026-11-17 r6 独立r2原包Start超时与恢复接口缺口
+
+原普通SID1003/session7执行357210891，首Start30699ms/原30s超时；固定全image/原10节点基线与3协调对象通过，Node21500/FILETIME134393657318681068仍未Resume，broker75744/FILETIME134393656723346634保留。35原始文件及25条同SID导出294197字节逐字摘要核归.adg/evidence/0.2.24/windows-dev/wl2-r6-fresh-existing-fixture-20261117-receive-r1/，current与事件1..9原链核；原4anchors留位，3原文件准确ID保管到两custody、3工作副本发布、workOpen及lease Released已实际发生，current仍Preparing，无Ready/OriginalSession/normalStop/Closed/后继。Stop/Status/Restart后续未运行，公开Start拒绝、PATH不变。原raw2不再首错，新30s超时保留，不延预算。
+
+本轮原件已保管，不能只force进程或新场景重采。minimum-recovery-interface-request.json给最小缺口：定义首次Resume前失败的独立Abort恢复证明与入口，严格原对象整树/原8/同SID/source/canonical/claimNLK，不从forced/JSON mint正常Stop/Closed/后继。THIS loaded宿主仅Status/forcedJob，无新恢复方法，新源码不能补入其原非Clone能力；需集成合同或用户方案明确本现场受限外部恢复或真正原句柄转移机制。未请求/实施新进程强制清理或客户端恢复。原custody/broker/Job及旧40588/失败scene/ZIP/拒绝全部保留，无原包空跑/W2/双SID/发布。
+
+准备证据60e018646本地提交完整，GitHub连接与低速推送失败，保同一提交待远端成功回读，不宣称已上传。源码357此前已成功推送；真实失败接收独立提交保存，不改原证据迁就网络。

@@ -1,0 +1,49 @@
+﻿{
+    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session":  7,
+    "elevated":  false,
+    "scope":  "actual isolated existing-root fixed official native lifecycle qualification; public Start remains refused",
+    "publicStartOpen":  false,
+    "allAccepted":  false,
+    "brokerRawExit":  null,
+    "brokerRetained":  true,
+    "brokerPid":  75744,
+    "brokerCreation":  "2026-11-17T13:07:52.3346634+08:00",
+    "observerElapsedMs":  82375,
+    "nativeResultPresent":  true,
+    "actualProductionExecuted":  false,
+    "nativeProductionSequencePassed":  false,
+    "nativeFirstError":  "managed runtime operation failed: windows024_originals_required; 原件持久恢复未确认；保留原代次/记录/句柄：timed out",
+    "dailyPathBefore":  {
+                            "value":  [
+                                          {
+                                              "scope":  "User",
+                                              "sha256":  "625cb5d5b94b97cd27db16bf4774d27c1534b04445a411c12c459c462f6cbfcc",
+                                              "present":  true
+                                          },
+                                          {
+                                              "scope":  "Machine",
+                                              "sha256":  "368600143328666aaee50ba330b38cfc65e7742e7661369087325224177af22d",
+                                              "present":  true
+                                          }
+                                      ],
+                            "Count":  2
+                        },
+    "dailyPathAfter":  {
+                           "value":  [
+                                         {
+                                             "scope":  "User",
+                                             "sha256":  "625cb5d5b94b97cd27db16bf4774d27c1534b04445a411c12c459c462f6cbfcc",
+                                             "present":  true
+                                         },
+                                         {
+                                             "scope":  "Machine",
+                                             "sha256":  "368600143328666aaee50ba330b38cfc65e7742e7661369087325224177af22d",
+                                             "present":  true
+                                         }
+                                     ],
+                           "Count":  2
+                       },
+    "dailyPathUnchanged":  true,
+    "taskAndClientRootsRetained":  true
+}
