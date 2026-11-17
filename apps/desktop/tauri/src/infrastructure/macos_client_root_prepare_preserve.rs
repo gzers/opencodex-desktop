@@ -1,8 +1,7 @@
 //! Same-object preservation for an INITIAL uncaptured root. It does not publish
 //! a cancellation terminal or turn the old index into a new Start permission.
-//! Plans are registered in the original independent index. MovementAuthority
-//! still has no production factory until concrete service/source admission is
-//! connected by the action owner.
+//! Plans are registered in the original independent index. Concrete current
+//! service/source admission is required for production movement.
 use super::*;
 use crate::infrastructure::official_client_coordination::native::{config::Guard, NativeLease};
 use std::os::fd::AsRawFd;
@@ -35,6 +34,7 @@ pub struct Prepared<'a> {
 pub struct MovementAuthority<'a> {
     prepared: &'a Prepared<'a>,
     deadline: Instant,
+    service: Option<&'a service::CurrentService<'a>>,
 }
 /// Original native movement/readback from this invocation only. This is not
 /// Closed, CancelledBeforeCapture, normal Stop, or successor eligibility.
@@ -43,6 +43,8 @@ pub struct PreservedRoot {
     plan_sha256: String,
     receipt_sha256: String,
     root_identity: super::super::super::Identity,
+    admitted: bool,
+    deadline: Instant,
 }
 impl PreservedRoot {
     pub fn id(&self) -> &str {
@@ -108,6 +110,25 @@ fn facts(review: &Review<'_>, physical: &PinnedDirectory, expected: &Head) -> st
     check_time(review.deadline)
 }
 impl<'a> Prepared<'a> {
+    /// The current concrete service/source admission is rechecked under the
+    /// actual original Guard/claim. Registration alone cannot mint this permit.
+    pub fn authorize_current(
+        &'a self,
+        service: &'a service::CurrentService<'a>,
+        native: &NativeLease,
+        guard: &mut Guard<'_>,
+    ) -> std::io::Result<MovementAuthority<'a>> {
+        if self.registered.is_none() {
+            return Err(denied("root-cancel movement plan unregistered"));
+        }
+        self.require_live()?;
+        service.guarded(self, native, guard)?;
+        Ok(MovementAuthority {
+            prepared: self,
+            deadline: self.review.deadline,
+            service: Some(service),
+        })
+    }
     pub fn id(&self) -> &str {
         &self.id
     }
@@ -290,6 +311,10 @@ impl<'a> Prepared<'a> {
         if self.registered.is_none() || !std::ptr::eq(authority.prepared, self) {
             return Err(denied("root-cancel authority belongs to another plan"));
         }
+        #[cfg(not(test))]
+        if authority.service.is_none() {
+            return Err(denied("root-cancel concrete service admission missing"));
+        }
         let end = self.review.deadline.min(authority.deadline);
         check_time(end)?;
         self.require_live()?;
@@ -298,6 +323,9 @@ impl<'a> Prepared<'a> {
             .map_err(io)?;
         native.require_claim_handoff().map_err(io)?;
         let plan = self.plan()?;
+        if let Some(service) = authority.service {
+            service.guarded(self, native, &mut guard)?;
+        }
         if guard
             .root_image(native, self.review.index.client.path())
             .map_err(io)?
@@ -320,6 +348,9 @@ impl<'a> Prepared<'a> {
         guard.check().map_err(io)?;
         check_time(end)?;
         checkpoint("before_rename")?;
+        if let Some(service) = authority.service {
+            service.guarded(self, native, &mut guard)?;
+        }
         let from = name(OsStr::new(".codex"))?;
         let to = name(OsStr::new("root"))?;
         if unsafe {
@@ -350,6 +381,9 @@ impl<'a> Prepared<'a> {
         facts(&self.review, &archived, self.expected())?;
         native.check().map_err(io)?;
         guard.check().map_err(io)?;
+        if let Some(service) = authority.service {
+            service.guarded(self, native, &mut guard)?;
+        }
         check_time(end)?;
         guard.finish().map_err(io)?;
         let released = plan.root.without_config_guard(&plan.writer)?;
@@ -376,6 +410,8 @@ impl<'a> Prepared<'a> {
             plan_sha256: self.sha256.clone(),
             receipt_sha256: digest(&bytes),
             root_identity: archived.identity().clone(),
+            admitted: authority.service.is_some(),
+            deadline: end,
         })
     }
     #[cfg(test)]
@@ -384,13 +420,21 @@ impl<'a> Prepared<'a> {
         MovementAuthority {
             prepared: self,
             deadline: self.review.deadline,
+            service: None,
         }
     }
 }
 
+#[path = "macos_client_root_cancel_complete.rs"]
+pub mod completion;
 #[path = "macos_client_root_prepare_indexed.rs"]
 pub(in crate::infrastructure::macos_client_originals) mod indexed;
+#[path = "macos_client_root_cancel_service.rs"]
+pub mod service;
 
+#[cfg(test)]
+#[path = "macos_client_root_cancel_service_tests.rs"]
+mod service_tests;
 #[cfg(test)]
 #[path = "macos_client_root_prepare_preserve_tests.rs"]
 mod tests;

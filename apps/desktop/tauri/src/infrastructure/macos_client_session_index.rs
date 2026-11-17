@@ -89,6 +89,8 @@ pub enum State {
     RootRetirementPrepared,
     /// An indexed first-root cancellation plan; neither cancelled nor Closed.
     RootCancellationPrepared,
+    /// Original absence restored by the dedicated cancellation action; not Stop.
+    RootCancellationAbsent,
     RootAbsent,
     Restored,
     Unchanged,
@@ -252,7 +254,10 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
     }
     let root_phase = matches!(
         head.state,
-        State::RootRetirementPrepared | State::RootCancellationPrepared | State::RootAbsent
+        State::RootRetirementPrepared
+            | State::RootCancellationPrepared
+            | State::RootCancellationAbsent
+            | State::RootAbsent
     );
     if root_phase != head.root_retirement.is_some()
         || head.root_retirement.as_ref().is_some_and(|r| {
@@ -281,6 +286,7 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
             State::Restored
                 | State::RestoreRolledBack
                 | State::RootAbsent
+                | State::RootCancellationAbsent
                 | State::Unchanged
                 | State::CancelledBeforeCapture
                 | State::CancelledCapture
@@ -314,6 +320,7 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
             State::Preparing
                 | State::CaptureReserved
                 | State::RootCancellationPrepared
+                | State::RootCancellationAbsent
                 | State::Failed
                 | State::CancelledBeforeCapture
                 | State::CancelledCapture
@@ -359,7 +366,10 @@ pub(super) fn validate(head: &Head) -> io::Result<()> {
             }
             Some((refs.phases.len(), true))
         }
-        State::Preparing | State::CaptureReserved | State::RootCancellationPrepared => {
+        State::Preparing
+        | State::CaptureReserved
+        | State::RootCancellationPrepared
+        | State::RootCancellationAbsent => {
             return Err(denied("unpublished originals in preparing index"))
         }
         State::RootRetirementPrepared | State::RootAbsent => {
@@ -2104,7 +2114,11 @@ impl Index {
         project: RootProjection<'_>,
     ) -> io::Result<()> {
         validate(next)?;
-        if next.state == State::RootCancellationPrepared && self.root_registration.is_none() {
+        if matches!(
+            next.state,
+            State::RootCancellationPrepared | State::RootCancellationAbsent
+        ) && self.root_registration.is_none()
+        {
             return Err(denied(
                 "root cancellation requires independently registered original absence",
             ));
@@ -2115,6 +2129,8 @@ impl Index {
                 || expected
                     .is_some_and(|h| matches!(h.state, State::Preparing | State::CaptureReserved))
                     && next.state == State::RootCancellationPrepared
+                || expected.is_some_and(|h| h.state == State::RootCancellationPrepared)
+                    && next.state == State::RootCancellationAbsent
                 || expected.is_some_and(|h| h.state == State::CaptureReserved)
                     && next.state == State::Captured
                 || expected.is_some_and(|h| h.state == State::Captured)

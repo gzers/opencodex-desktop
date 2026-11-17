@@ -32,6 +32,9 @@ pub struct Guard<'a> {
     released: bool,
     planned: Option<PathBuf>,
     poisoned: bool,
+    holder_generation: Option<crate::infrastructure::macos_process_exit::Generation>,
+    holder_image: PathBuf,
+    holder_arguments: Vec<String>,
 }
 fn guard_error<T>(_: T) -> AppError {
     fail("client_config_write_guard_unconfirmed")
@@ -68,8 +71,14 @@ impl NativeLease {
         }
         let operation = uuid::Uuid::new_v4().to_string();
         let input = serde_json::json!({"schema":SCHEMA,"operation":operation,"packageRoot":selected.paths.package_root.join(PACKAGE_SUBPATH),"profile":self.profile.path(),"home":self.home.path(),"codex":self.client.path(),"target":target_path});
+        let holder_arguments = vec![
+            "--eval".to_string(),
+            HELPER.to_string(),
+            "--".to_string(),
+            input.to_string(),
+        ];
         let mut child = Command::new(&selected.paths.bun)
-            .args(["--eval", HELPER, "--", &input.to_string()])
+            .args(&holder_arguments)
             .env_clear()
             .env("HOME", self.profile.path())
             .env("CODEX_HOME", self.client.path())
@@ -124,7 +133,12 @@ impl NativeLease {
             released: false,
             planned: None,
             poisoned: false,
+            holder_generation: None,
+            holder_image: selected.paths.bun,
+            holder_arguments,
         };
+        guard.holder_generation =
+            Some(crate::infrastructure::macos_process_exit::Generation::observe(guard.child.id())?);
         guard.event("held", &target_path)?;
         let image = guard
             .target
@@ -148,6 +162,32 @@ impl NativeLease {
     }
 }
 impl Guard<'_> {
+    /// The actual retained Child and its immutable launch tuple, not a PID or
+    /// serialized role hint, are the only source of this exclusion. Callers
+    /// still scan all other relevant processes and recheck the live Guard.
+    pub(crate) fn matches_holder_snapshot(
+        &mut self,
+        pid: u32,
+        owner: &str,
+        created: &str,
+        image: &Path,
+        argv: &[String],
+        home: Option<&Path>,
+    ) -> AppResult<bool> {
+        self.check()?;
+        let generation = self.holder_generation.ok_or_else(|| guard_error(()))?;
+        if pid != generation.pid {
+            return Ok(false);
+        }
+        let expected = fs::canonicalize(&self.holder_image).map_err(guard_error)?;
+        Ok(owner == generation.uid.to_string()
+            && created == format!("{}:{}", generation.start_seconds, generation.start_micros)
+            && fs::canonicalize(image).map_err(guard_error)? == expected
+            && argv.len() == self.holder_arguments.len() + 1
+            && fs::canonicalize(Path::new(&argv[0])).map_err(guard_error)? == expected
+            && argv[1..] == self.holder_arguments
+            && home == Some(self.native.home.path()))
+    }
     /// Current live holder facts only; no disk-only constructor returns a Guard.
     pub(crate) fn root_image(&mut self, native: &NativeLease, root: &Path) -> AppResult<Image> {
         self.check()?;
@@ -284,6 +324,10 @@ impl Guard<'_> {
         self.native.check()?;
         self.target.recheck().map_err(guard_error)?;
         if self.child.try_wait().map_err(guard_error)?.is_some()
+            || self.holder_generation.is_none_or(|original| {
+                !crate::infrastructure::macos_process_exit::Generation::observe(self.child.id())
+                    .is_ok_and(|now| now == original)
+            })
             || self.image.as_ref()
                 != Some(&self.target.config_write_lock_image().map_err(guard_error)?)
         {

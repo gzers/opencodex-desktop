@@ -18,6 +18,8 @@ use std::{
 /// This proves coordinator ownership only, not service exit or file provenance.
 #[path = "native_config_write_guard.rs"]
 pub mod config;
+#[path = "native_client_release.rs"]
+pub mod released;
 
 pub struct NativeLease {
     claim: RefCell<Option<rusqlite::Connection>>,
@@ -399,6 +401,24 @@ pub fn with_native_relocation_coordination<T>(
         true,
     )
 }
+/// Return a nonserializable release receipt only after the original native
+/// owner released all four coordinators and its final complete source passed.
+pub fn with_native_relocation_release<T>(
+    context: &Context,
+    deadline: Instant,
+    operation: impl FnOnce(&NativeLease) -> AppResult<T>,
+) -> AppResult<(T, released::ReleasedCoordination)> {
+    let (admission, selected) = native_admission(context, deadline)?;
+    with_admission_mode_released(
+        context,
+        &admission,
+        &selected,
+        deadline,
+        operation,
+        &|_| Ok(()),
+        true,
+    )
+}
 fn with_admission<T>(
     context: &Context,
     admission: &Record,
@@ -420,6 +440,20 @@ fn with_admission_mode<T>(
     checkpoint: &impl Fn(usize) -> AppResult<()>,
     relocation: bool,
 ) -> AppResult<T> {
+    with_admission_mode_released(
+        context, admission, expected, deadline, operation, checkpoint, relocation,
+    )
+    .map(|(value, _)| value)
+}
+fn with_admission_mode_released<T>(
+    context: &Context,
+    admission: &Record,
+    expected: &program_selection::SelectedProgram,
+    deadline: Instant,
+    operation: impl FnOnce(&NativeLease) -> AppResult<T>,
+    checkpoint: &impl Fn(usize) -> AppResult<()>,
+    relocation: bool,
+) -> AppResult<(T, released::ReleasedCoordination)> {
     let root = context
         .runtime
         .managed_installation_root()
@@ -436,6 +470,10 @@ fn with_admission_mode<T>(
     #[cfg(test)]
     let tail_started = Instant::now();
     let valid = lease.check();
+    let mut released_paths = admission.paths.clone();
+    if let Some(physical) = lease.physical_client.borrow().as_ref() {
+        released_paths[0] = physical.path().join(".opencodex-native-main.claim.sqlite");
+    }
     #[cfg(test)]
     let checked_at = Instant::now();
     let release = lease.release();
@@ -472,7 +510,21 @@ fn with_admission_mode<T>(
     if Instant::now() >= deadline {
         return Err(fail("client_native_coordination_timeout"));
     }
-    Ok(value)
+    // Close all original pins only AFTER all original SQLite connections have
+    // closed, before a recipient can open a new release-probe connection.
+    drop(lease);
+    Ok((
+        value,
+        released::ReleasedCoordination {
+            runtime: context.runtime.clone(),
+            profile: context.user_profile.clone(),
+            home: context.opencodex_home.clone(),
+            logical: context.codex_home.clone(),
+            paths: released_paths,
+            keys: admission.locks.clone(),
+            deadline,
+        },
+    ))
 }
 
 #[cfg(test)]

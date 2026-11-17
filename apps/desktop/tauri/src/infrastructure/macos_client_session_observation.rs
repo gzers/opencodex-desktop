@@ -395,7 +395,10 @@ pub(super) fn physical_root(context: &ProcessContext, data: &Path) -> io::Result
             .root_retirement
             .as_ref()
             .ok_or_else(|| denied("missing root lacks registered retirement"))?;
-        if h.state == State::RootCancellationPrepared {
+        if matches!(
+            h.state,
+            State::RootCancellationPrepared | State::RootCancellationAbsent
+        ) {
             // inspect_map resolved and fully checked the independently indexed
             // cancellation before this projection. Never discover a plan here.
             return Ok(data

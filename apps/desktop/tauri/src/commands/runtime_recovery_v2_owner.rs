@@ -220,6 +220,78 @@ impl CompletedLifecycleStop {
     }
 }
 impl SystemServiceOwnerProofProvider {
+    /// Full current-H absence while the actual official config Guard is live.
+    /// Only that retained Child's exact native generation/launch tuple may be
+    /// excluded. No normal-Stop/exit/port proof is fabricated for an unstarted
+    /// root, and an unrecognized process still means refusal.
+    #[cfg(target_os = "macos")]
+    pub(crate) fn require_unstarted_guarded(
+        &self,
+        context: &ProcessContext,
+        native: &crate::infrastructure::official_client_coordination::native::NativeLease,
+        guard: &mut crate::infrastructure::official_client_coordination::native::config::Guard<'_>,
+    ) -> AppResult<StoppedObservation> {
+        self.same_context(context)?;
+        native.require_context(context, &context.working_directory.join(".codex"))?;
+        guard.check()?;
+        if !self.service_home_valid()?
+            || self.record()?.is_some()
+            || self.read("ocx.pid", 64)?.is_some()
+            || !self.host.manager_absent()?
+        {
+            return Err(fail(
+                "client_unstarted_service_unknown",
+                "启动准备的服务缺席尚未确认，未移动客户端目录",
+            ));
+        }
+        let mut holder_seen = false;
+        for process in self.host.processes()? {
+            if guard.matches_holder_snapshot(
+                process.pid,
+                &process.owner,
+                &process.created,
+                &process.image,
+                &process.argv,
+                process.home.as_deref(),
+            )? {
+                if holder_seen {
+                    return Err(fail(
+                        "client_unstarted_service_unknown",
+                        "锁辅助进程代次不唯一",
+                    ));
+                }
+                holder_seen = true;
+                continue;
+            }
+            let runtime_command = process.home.is_some()
+                || matches!(
+                    process.image.file_name().and_then(|s| s.to_str()),
+                    Some("ocx" | "ocx.exe" | "opencodex" | "opencodex.exe")
+                )
+                || process.argv.iter().any(|s| {
+                    s.replace('\\', "/").contains("/opencodex/") || s.contains("@bitkyc08")
+                });
+            if runtime_command && (process.home.is_none() || self.process_home_matches(&process)) {
+                return Err(fail(
+                    "client_unstarted_service_unknown",
+                    "存在未排除的运行进程，未移动客户端目录",
+                ));
+            }
+        }
+        guard.check()?;
+        native.check()?;
+        if !holder_seen
+            || self.record()?.is_some()
+            || self.read("ocx.pid", 64)?.is_some()
+            || !self.host.manager_absent()?
+        {
+            return Err(fail(
+                "client_unstarted_service_unknown",
+                "服务缺席或锁辅助进程读回变化",
+            ));
+        }
+        Ok(StoppedObservation { _private: () })
+    }
     /// Per-publication checks INSIDE an already owned official native writer
     /// lease. The session factory requires full OS Stopped before issuing the
     /// borrow-scoped permit and again after publication. Do not replace that
