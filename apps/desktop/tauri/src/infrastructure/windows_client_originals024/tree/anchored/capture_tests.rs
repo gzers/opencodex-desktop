@@ -1,6 +1,172 @@
 use super::super::tests::{compete, driver::setup_unsnapshotted};
 use super::*;
 #[test]
+fn wl2_r6_ready_read_native_complete_two_roots_and_known_artifact_changes_do_not_mutate_journal() {
+    let (mut f, _data, paths, held, trees, journal, end) = setup_unsnapshotted();
+    let mut lease = Some(held);
+    let mut core = CapturedTrees::retain(trees, journal);
+    core.prepare_working_batched(lease.as_mut().unwrap(), end)
+        .unwrap();
+    core.open_prepared_working(lease.as_mut().unwrap(), end)
+        .unwrap();
+    core.release_prepared(&mut lease, end).unwrap();
+    let sequence = core.journal.native_progress_for_test();
+    let root = core.trees.as_ref().unwrap()[0].root.clone();
+    drop(
+        PrivateRecord::create(
+            &root.join("opencodex-catalog.json"),
+            b"synthetic content DATA, not restore qualification",
+            1024,
+        )
+        .unwrap(),
+    );
+    let entries = || {
+        let mut names = std::fs::read_dir(root.parent().unwrap())
+            .unwrap()
+            .map(|e| e.unwrap().file_name())
+            .collect::<Vec<_>>();
+        names.sort();
+        names
+    };
+    let before_names = entries();
+    let read_end = Instant::now() + std::time::Duration::from_secs(5);
+    for tree in core.trees.as_mut().unwrap() {
+        tree.read_ready_tree(read_end).unwrap();
+    }
+    for tree in core.trees.as_mut().unwrap() {
+        tree.check_ready_tree_read(read_end).unwrap();
+    }
+    assert_eq!(
+        std::fs::write(root.join("config.toml"), b"blocked by held complete view")
+            .unwrap_err()
+            .raw_os_error(),
+        Some(32)
+    );
+    assert_eq!(
+        entries(),
+        before_names,
+        "read must not create a snapshot/history directory"
+    );
+    for tree in core.trees.as_mut().unwrap() {
+        tree.finish_ready_tree_read();
+    }
+    assert_eq!(core.journal.native_progress_for_test(), sequence);
+    assert!(core
+        .trees
+        .as_ref()
+        .unwrap()
+        .iter()
+        .all(|t| t.work_mode == WorkMode::Open && t.ready_read.is_none()));
+    compete(&paths[0], false);
+    println!("r6 Ready native read holds BOTH full read-only views/all8/source original custody+anchors+all nonartifact work, only3artifact DATA shape allowance, no snapshot directory/phase/newclaim mutation. Original journal prefix unchanged and claim available after temporary read");
+    drop(core);
+    f.retain();
+}
+#[test]
+fn wl2_r6_ready_read_native_nonartifact_unknown_node_and_artifact_directory_refuse_with_originals_retained(
+) {
+    for mode in 0..5 {
+        let (mut f, _data, _paths, held, trees, journal, end) = setup_unsnapshotted();
+        let mut lease = Some(held);
+        let mut core = CapturedTrees::retain(trees, journal);
+        core.prepare_working_batched(lease.as_mut().unwrap(), end)
+            .unwrap();
+        core.open_prepared_working(lease.as_mut().unwrap(), end)
+            .unwrap();
+        core.release_prepared(&mut lease, end).unwrap();
+        let roots = core
+            .trees
+            .as_ref()
+            .unwrap()
+            .each_ref()
+            .map(|t| t.root.clone());
+        match mode {
+            0 => std::fs::write(roots[0].join("config.toml"), b"external config edit").unwrap(),
+            1 => drop(create_private_directory(&roots[0].join("unknown-empty")).unwrap()),
+            2 => drop(create_private_directory(&roots[0].join("opencodex-catalog.json")).unwrap()),
+            3 => std::fs::write(roots[1].join("settings.json"), b"external grok edit").unwrap(),
+            _ => {
+                std::fs::rename(
+                    roots[0].join("config.toml"),
+                    roots[0].parent().unwrap().join("saved-work-config"),
+                )
+                .unwrap();
+                drop(
+                    PrivateRecord::create(
+                        &roots[0].join("config.toml"),
+                        b"synthetic original config",
+                        1024,
+                    )
+                    .unwrap(),
+                );
+            }
+        }
+        let sequence = core.journal.native_progress_for_test();
+        let index = usize::from(mode == 3);
+        let error = core.trees.as_mut().unwrap()[index]
+            .read_ready_tree(Instant::now() + std::time::Duration::from_secs(5))
+            .unwrap_err();
+        assert_ne!(error.kind(), io::ErrorKind::TimedOut);
+        assert_eq!(
+            error.kind(),
+            io::ErrorKind::InvalidData,
+            "upstream private-permission failure cannot credit a node/identity comparison"
+        );
+        let tree = &core.trees.as_ref().unwrap()[index];
+        assert!(tree.poisoned && tree.ready_read.is_some());
+        for tree in core.trees.as_ref().unwrap() {
+            for (i, n) in tree
+                .nodes
+                .iter()
+                .enumerate()
+                .filter(|(_, n)| n.kind == Kind::File)
+            {
+                assert_eq!(
+                    std::fs::read(tree.original_location(i)).unwrap(),
+                    n.original.bytes
+                );
+            }
+        }
+        assert_eq!(core.journal.native_progress_for_test(), sequence);
+        println!("r6 Ready read native counterexample mode={mode}: current unknown/nonartifact/nativeID substitution refused, exact original custody/files preserved and partial read view retained; no phase/adoption/mutation");
+        drop(core);
+        f.retain();
+    }
+}
+#[test]
+fn wl2_r6_ready_read_native_after_original_cutoff_is_readonly_and_does_not_renew_mutation() {
+    let (mut f, _data, paths, held, trees, journal, end) = setup_unsnapshotted();
+    let mut lease = Some(held);
+    let mut core = CapturedTrees::retain(trees, journal);
+    core.prepare_working_batched(lease.as_mut().unwrap(), end)
+        .unwrap();
+    core.open_prepared_working(lease.as_mut().unwrap(), end)
+        .unwrap();
+    core.release_prepared(&mut lease, end).unwrap();
+    let prefix = core.journal.native_progress_for_test();
+    while Instant::now() < end {
+        std::thread::sleep(std::time::Duration::from_millis(5));
+    }
+    let read_end = Instant::now() + std::time::Duration::from_secs(5);
+    for tree in core.trees.as_mut().unwrap() {
+        tree.read_ready_tree(read_end).unwrap();
+    }
+    for tree in core.trees.as_mut().unwrap() {
+        tree.check_ready_tree_read(read_end).unwrap();
+    }
+    for tree in core.trees.as_mut().unwrap() {
+        tree.finish_ready_tree_read();
+    }
+    assert_eq!(core.journal.native_progress_for_test(), prefix);
+    compete(&paths[0], false);
+    let error = core.journal.check(end).unwrap_err();
+    assert_eq!(error.kind(), io::ErrorKind::TimedOut);
+    assert_eq!(core.journal.native_progress_for_test().0, prefix.0);
+    println!("r6 old actual native-custody fixture cutoff expired; fresh BOTH-tree read <=5s succeeds without journal append or claim, original mutation check remains TimedOut/poison and exact sequence unchanged; no fake Ready/Owner factory");
+    drop(core);
+    f.retain();
+}
+#[test]
 fn wl2_r6_capture_owned_tree_transfer_retains_native_files_before_fallible_close_and_refuses_mutation(
 ) {
     let (mut f, _data, _paths, mut lease, trees, journal, end) = setup_unsnapshotted();

@@ -57,6 +57,47 @@ pub(in crate::infrastructure::windows_client_originals024) struct CapturedTrees 
     failed: bool,
 }
 impl CapturedTrees {
+    pub(in crate::infrastructure::windows_client_originals024) fn check_original_ready_read(
+        &mut self,
+        source: &mut crate::infrastructure::windows_client_originals024::source::Source,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            if self.failed
+                || !self.ready
+                || !self.prepared
+                || !self.opened
+                || self.prepared_stop.is_some()
+                || self.stopped_observed
+                || self.restored_history
+            {
+                return Err(invalid());
+            }
+            self.journal
+                .check_live_ready_read(source, owner, ready, end)?;
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
+            for tree in trees.iter_mut() {
+                tree.read_ready_tree(end)?;
+            }
+            self.journal
+                .check_live_ready_read(source, owner, ready, end)?;
+            for tree in trees.iter_mut() {
+                tree.check_ready_tree_read(end)?;
+            }
+            self.journal
+                .check_live_ready_read(source, owner, ready, end)?;
+            for tree in trees.iter_mut() {
+                tree.finish_ready_tree_read();
+            }
+            Ok(())
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn restore_original_stopped(
         &mut self,
         source: &mut crate::infrastructure::windows_client_originals024::source::Source,

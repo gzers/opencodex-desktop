@@ -143,6 +143,7 @@ impl OriginalHandleHandoff {
             }
             if trees.iter().any(|t| {
                 t.observed.is_some()
+                    || t.ready_read.is_some()
                     || t.release_view.is_some()
                     || t.nodes.iter().any(|n| n.pending_work.is_some())
             }) {

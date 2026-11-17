@@ -164,6 +164,51 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn check_ready_existing(
+        &mut self,
+        owner: &mut Owner,
+        ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
+        end: Instant,
+    ) -> AppResult<()> {
+        let result = (|| {
+            if self.failed {
+                return Err(refused("原Ready槽已poison"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原ReadyStore缺席"))?;
+            if store.failed
+                || store.stop_deadline.is_some()
+                || store.route_close.is_some()
+                || store.stop_completed
+                || store.ready.as_ref()
+                    != Some(&(ready.pid(), ready.port(), ready.record_sha256().into()))
+            {
+                return Err(refused("原Ready代次或阶段未知"));
+            }
+            store.failed = true;
+            store.source.check(owner, end)?;
+            store
+                .routes
+                .as_mut()
+                .ok_or_else(|| refused("原Ready路由pin缺席"))?
+                .declared(owner.home_path(), end)
+                .map_err(refused)?;
+            store
+                .core
+                .check_original_ready_read(&mut store.source, owner, ready, end)
+                .map_err(refused)?;
+            owner.originals_check_ready(ready, end)?;
+            store.source.check(owner, end)?;
+            store.failed = false;
+            Ok(())
+        })();
+        if result.is_err() {
+            self.poison_completed_read();
+        }
+        result
+    }
     /// Read only under the caller's SAME Status sample; old mutation cutoff
     /// stays immutable. This is internal history verification, not a status
     /// boolean/serialized Closed factory or successor authorization.

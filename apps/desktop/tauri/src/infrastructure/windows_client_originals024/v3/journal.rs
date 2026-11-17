@@ -472,6 +472,55 @@ impl Journal {
         }
         result
     }
+    pub(in super::super) fn check_live_ready_read(
+        &mut self,
+        source: &mut super::super::source::Source,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = (|| {
+            before(end)?;
+            if self.poisoned
+                || self.pending_source_action.is_some()
+                || self.progress.lifecycle != super::snapshots::LifecyclePhase::Ready
+                || self.progress.lease_state != LeaseState::Released
+                || self.progress.work_mode != super::observations::WorkMode::Open
+                || self.progress.action_pending.is_some()
+                || self.progress.snapshot_pending.is_some()
+                || self.progress.batch.is_some()
+                || self.progress.recovery.is_some()
+                || self.progress.content.is_some()
+                || self.progress.closed.is_some()
+                || self.progress.ready_generation.as_ref()
+                    != Some(&(ready.pid(), ready.port(), ready.record_sha256().into()))
+                || !self
+                    .progress
+                    .snapshot_links
+                    .contains_key(&super::snapshots::SnapshotPurpose::Ready)
+            {
+                return Err(invalid());
+            }
+            let action = self.source_action.as_ref().ok_or_else(invalid)?;
+            if action.scope_id()!=self.progress.deadline || action.kind()!=crate::infrastructure::windows_official_lifecycle024::OriginalActionKind::Start {return Err(invalid());}
+            action
+                .check_retained_owner_for_read(owner, end)
+                .map_err(io::Error::other)?;
+            source.check(owner, end).map_err(io::Error::other)?;
+            owner
+                .originals_check_ready(ready, end)
+                .map_err(io::Error::other)?;
+            if source.binding_raw != encoded(&self.manifest.binding)? {
+                return Err(invalid());
+            }
+            self.check_records(end)?;
+            before(end)
+        })();
+        if result.is_err() {
+            self.poison_segment();
+        }
+        result
+    }
     pub(in super::super) fn create(
         directory: PinnedDirectory,
         pins: [PinnedDirectory; 4],

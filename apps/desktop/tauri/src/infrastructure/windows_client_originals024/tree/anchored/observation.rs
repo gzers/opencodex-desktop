@@ -3,6 +3,7 @@
 use super::*;
 use std::os::windows::io::{AsRawHandle, FromRawHandle};
 mod archive;
+mod ready_read;
 pub(super) mod retirement;
 pub(in crate::infrastructure::windows_client_originals024) use retirement::OriginalHandleHandoff;
 pub(in crate::infrastructure::windows_client_originals024) use retirement::RecoveryWitness;
