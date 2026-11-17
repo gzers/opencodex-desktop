@@ -52,6 +52,30 @@ impl RetiredLeaseHistory {
     }
 }
 impl ReleasedLease {
+    pub(in crate::infrastructure::windows_client_originals024) fn check_before_resume_history_owner(
+        &mut self,
+        owner: &mut Owner,
+        epoch: &str,
+        key: &str,
+        window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+        read_end: Instant,
+    ) -> io::Result<()> {
+        self.readback_history(read_end)?;
+        owner
+            .check_before_resume_history(window, read_end)
+            .map_err(io_error)?;
+        let bound = self.original.bound.as_ref().ok_or_else(refused)?;
+        if self.original.deadline != window.deadline()
+            || self.facts.epoch != epoch
+            || self.facts.claim_key != key
+            || bound.scope != owner.scope().map_err(io_error)?
+            || bound.profile.path() != owner.profile_path()
+            || bound.home.path() != owner.home_path()
+        {
+            return Err(refused());
+        }
+        self.readback_history(read_end)
+    }
     pub(super) fn probe_originals(
         &mut self,
         end: Instant,

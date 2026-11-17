@@ -7,6 +7,7 @@ use crate::{
     modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
 };
 pub(in crate::infrastructure::windows_client_originals024) mod attachment;
+pub(in crate::infrastructure::windows_client_originals024) mod history;
 pub(crate) struct PreparedAbortPrefix {
     session: uuid::Uuid,
     scope: String,
@@ -54,6 +55,12 @@ pub(crate) struct AbortedOriginals {
     native: crate::infrastructure::windows_client_originals024::tree::AbortRestoredReadback,
 }
 impl AbortedOriginals {
+    pub(crate) fn read_history_data(&self, read_end: Instant) -> AppResult<serde_json::Value> {
+        let data = self.native.history_data(read_end).map_err(refused)?;
+        Ok(
+            serde_json::json!({"sessionId":self.session.to_string(),"recoveryActionId":self.action,"restored":data,"normalStop":false,"closed":false,"publicStartOpen":false}),
+        )
+    }
     pub(crate) fn read_data(&self, end: Instant) -> AppResult<serde_json::Value> {
         let data = self.native.data(end).map_err(refused)?;
         if end != self.end {
@@ -82,6 +89,22 @@ impl QuiescentOriginals {
     }
 }
 impl PreparedAbortPrefix {
+    fn check_history_owner(
+        &self,
+        owner: &mut Owner,
+        window: &BeforeResumeRecoveryWindow,
+        read_end: Instant,
+    ) -> AppResult<()> {
+        let [_, action, scope] = owner.before_resume_history_binding(window, read_end)?;
+        if self.scope != scope
+            || self.action != action
+            || self.end != window.deadline()
+            || self.digest != data_digest(&self.observed)?
+        {
+            return Err(refused("原历史前缀/Owner/原截止不同"));
+        }
+        Ok(())
+    }
     pub(crate) fn check_owner(
         &self,
         owner: &mut Owner,

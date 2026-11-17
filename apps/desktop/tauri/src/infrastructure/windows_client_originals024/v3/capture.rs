@@ -214,6 +214,60 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_history(
+        &mut self,
+        owner: &mut Owner,
+        prefix: &crate::infrastructure::windows_client_originals024::PreparedAbortPrefix,
+        proof: &crate::infrastructure::windows_client_originals024::QuiescentOriginals,
+        attachment: &mut super::super::adapter::before_resume::attachment::BoundAttachment,
+        released: &mut super::super::coordination::ReleasedLease,
+        window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+        read_end: Instant,
+    ) -> AppResult<serde_json::Value> {
+        let result = (|| {
+            owner.check_before_resume_history(window, read_end)?;
+            if self.partial.is_some() {
+                return Err(refused("原partial不能签完整history"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原history Store缺席"))?;
+            if store.ready.is_some()
+                || store.stop_deadline.is_some()
+                || store.restored_history
+                || store.closed_exit.is_some()
+                || store.closed_absent.is_some()
+                || store.stopped_content.is_some()
+                || store.stop_completed
+            {
+                return Err(refused("不是原beforeResume history分支"));
+            }
+            let mut scope =
+                super::super::adapter::before_resume::history::OriginalHistoricalScope::bind(
+                    store
+                        .routes
+                        .as_mut()
+                        .ok_or_else(|| refused("原history route缺席"))?,
+                    &mut store.source,
+                    owner,
+                    prefix,
+                    proof,
+                    attachment,
+                    window,
+                    read_end,
+                )?;
+            store
+                .core
+                .read_before_resume_history(&mut scope, released, window.deadline(), read_end)
+                .map_err(refused)
+        })();
+        if result.is_err() {
+            self.failed = true;
+            owner.fail_before_resume_process();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn recheck_before_resume_return(
         &mut self,
         owner: &mut Owner,

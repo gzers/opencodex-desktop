@@ -17,6 +17,26 @@ fn invalid() -> io::Error {
     )
 }
 impl RecoveryClock {
+    pub(super) fn check_history(&self, original_end: Instant, read_end: Instant) -> io::Result<()> {
+        if Instant::now() >= read_end {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        let (counter, frequency) = crate::infrastructure::windows_owner_host024::qpc()?;
+        if original_end != self.end
+            || frequency != self.frequency
+            || counter < self.start
+            || self.cutoff <= self.start
+            || frequency
+                .checked_mul(10)
+                .is_none_or(|max| self.cutoff - self.start > max)
+        {
+            return Err(invalid());
+        }
+        if Instant::now() >= read_end {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        Ok(())
+    }
     pub(super) fn capture(end: Instant) -> io::Result<Self> {
         let (counter, frequency) = crate::infrastructure::windows_owner_host024::qpc()?;
         // Sampling the remaining duration AFTER the QPC read rounds the record
@@ -81,6 +101,30 @@ impl RecoveryClock {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn wl2_r7_full_history_native_qpc_metadata_does_not_reopen_original_clock() {
+        let end = Instant::now() + Duration::from_millis(60);
+        let mut clock = RecoveryClock::capture(end).unwrap();
+        let original = clock.data();
+        while Instant::now() < end {
+            std::thread::sleep(Duration::from_millis(1));
+        }
+        assert_eq!(
+            clock.check(end).unwrap_err().kind(),
+            io::ErrorKind::TimedOut
+        );
+        let read_end = Instant::now() + Duration::from_secs(5);
+        clock.check_history(end, read_end).unwrap();
+        assert_eq!(clock.data(), original);
+        assert_eq!(clock.end, end);
+        assert!(clock
+            .check_history(end + Duration::from_nanos(1), read_end)
+            .is_err());
+        assert!(clock.check_history(end, Instant::now()).is_err());
+        clock.frequency += 1;
+        assert!(clock.check_history(end, read_end).is_err());
+        assert_eq!(clock.end, end);
+    }
     #[test]
     fn wl2_r7_attachment_origin_clock_native_fixed_projection_never_resamples_or_renews() {
         let end = Instant::now() + Duration::from_secs(2);

@@ -227,6 +227,7 @@ enum Phase {
     ReturnedForValidation,
     ReturnedValidated,
     ReturnValidationFailedRetained,
+    HistoryReadFailedRetained,
     ReturnUndeliveredRetained,
 }
 struct State {
@@ -406,6 +407,7 @@ impl<T> WorkerControl<T> {
                 Phase::ReturnedForValidation
                     | Phase::ReturnedValidated
                     | Phase::ReturnValidationFailedRetained
+                    | Phase::HistoryReadFailedRetained
             ) {
             Phase::LostWorkerUnknown
         } else {

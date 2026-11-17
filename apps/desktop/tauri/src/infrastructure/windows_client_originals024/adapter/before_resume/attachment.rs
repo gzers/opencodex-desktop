@@ -260,6 +260,52 @@ fn initial_data(
     .map_err(refused)
 }
 impl BoundAttachment {
+    pub(super) fn failed_for_history(&mut self) {
+        self.failed = true;
+    }
+    pub(super) fn check_history(
+        &mut self,
+        owner: &mut Owner,
+        prefix: &PreparedAbortPrefix,
+        window: &BeforeResumeRecoveryWindow,
+        read_end: Instant,
+    ) -> AppResult<()> {
+        let result = (|| {
+            if self.failed
+                || !self.attempted
+                || self.pending_directory.is_some()
+                || self.prefix_digest != prefix.digest
+            {
+                return Err(refused("原历史附件未完整/已失败"));
+            }
+            prefix.check_history_owner(owner, window, read_end)?;
+            let (failed, clock) = owner.before_resume_history_origin(window, read_end)?;
+            let expected = initial_data(prefix, failed, clock)?
+                .encode_data()
+                .map_err(refused)?;
+            let records = self.storage.read_history_data(read_end).map_err(refused)?;
+            let raw = self
+                .last_raw
+                .as_ref()
+                .ok_or_else(|| refused("原附件last缺席"))?;
+            let last = self
+                .last
+                .as_ref()
+                .ok_or_else(|| refused("原附件typedlast缺席"))?;
+            if records.first() != Some(&expected)
+                || records.last() != Some(raw)
+                || !last.is_restore_verified_data()
+                || last.encode_data().map_err(refused)? != *raw
+            {
+                return Err(refused("原历史附件完整链/原producer/final不符"));
+            }
+            prefix.check_history_owner(owner, window, read_end)
+        })();
+        if result.is_err() {
+            self.failed = true;
+        }
+        result
+    }
     fn pending(prefix: &PreparedAbortPrefix, directory: PinnedDirectory) -> Self {
         Self {
             storage: AttachmentStorage::default(),

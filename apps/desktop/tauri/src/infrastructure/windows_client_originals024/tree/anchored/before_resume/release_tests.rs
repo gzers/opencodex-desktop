@@ -1,6 +1,8 @@
 use super::*;
 #[path = "driver_worker_tests.rs"]
 mod driver_worker_tests;
+#[path = "full_history_tests.rs"]
+mod full_history_tests;
 #[path = "return_validation_tests.rs"]
 mod return_validation_tests;
 use crate::infrastructure::windows_client_originals024::{

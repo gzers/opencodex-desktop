@@ -1,4 +1,5 @@
 use super::*;
+mod history_tests;
 struct Scene(Option<tempfile::TempDir>);
 impl Drop for Scene {
     fn drop(&mut self) {

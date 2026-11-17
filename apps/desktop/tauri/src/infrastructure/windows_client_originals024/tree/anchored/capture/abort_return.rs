@@ -16,6 +16,7 @@ pub(super) struct ReturnProgress {
     final_verified: bool,
     final_image: Option<serde_json::Value>,
     final_end: Option<Instant>,
+    final_completed_at: Option<Instant>,
 }
 pub(in crate::infrastructure::windows_client_originals024) struct ReturnStep {
     node: String,
@@ -142,6 +143,7 @@ impl CapturedTrees {
             final_verified: false,
             final_image: None,
             final_end: None,
+            final_completed_at: None,
         });
         // Freeze the old mutation path before every fallible read/write. This
         // operation has its own native guard; ordinary verify stays poisoned.

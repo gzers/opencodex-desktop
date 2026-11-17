@@ -9,8 +9,21 @@ pub(in crate::infrastructure::windows_client_originals024) struct AbortRestoredR
     coordination: u32,
     end: Instant,
     digest: String,
+    completed_at: Instant,
 }
 impl AbortRestoredReadback {
+    pub(in crate::infrastructure::windows_client_originals024) fn history_data(
+        &self,
+        read_end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        check(read_end)?;
+        if self.completed_at >= self.end || self.completed_at > Instant::now() {
+            return Err(invalid());
+        }
+        Ok(
+            serde_json::json!({"purpose":"native-aborted-before-resume-restored-readback","originalNodes":self.nodes,"coordinationObjects":self.coordination,"digest":self.digest,"normalStop":false,"closed":false,"publicStartOpen":false,"runtimeAuthority":false}),
+        )
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn data(
         &self,
         end: Instant,
@@ -163,15 +176,18 @@ impl CapturedTrees {
             }
             let data = serde_json::json!({"originalTrees":final_image,"releasedRanges":probe.data()?,"originalNodes":nodes,"coordinationObjects":coordination});
             let digest = hash::sha256_hex(&serde_json::to_vec(&data).map_err(|_| invalid())?);
+            let completed_at = Instant::now();
             check(end)?;
             self.abort_return.as_mut().unwrap().final_image = Some(data);
             self.abort_return.as_mut().unwrap().final_end = Some(end);
+            self.abort_return.as_mut().unwrap().final_completed_at = Some(completed_at);
             self.abort_return.as_mut().unwrap().final_verified = true;
             Ok(AbortRestoredReadback {
                 nodes,
                 coordination,
                 end,
                 digest,
+                completed_at,
             })
         })();
         if result.is_err() {
@@ -243,6 +259,83 @@ impl CapturedTrees {
             }
             let digest = hash::sha256_hex(&serde_json::to_vec(&original).map_err(|_| invalid())?);
             check(end)?;
+            Ok(
+                serde_json::json!({"purpose":"native-aborted-before-resume-restored-readback","originalNodes":original["originalNodes"],"coordinationObjects":original["coordinationObjects"],"digest":digest,"normalStop":false,"closed":false,"publicStartOpen":false,"runtimeAuthority":false}),
+            )
+        })();
+        if result.is_err() {
+            if let Some(progress) = &mut self.abort_return {
+                progress.failed = true;
+            }
+            self.poison();
+        }
+        result
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_history(
+        &mut self,
+        scope: &mut crate::infrastructure::windows_client_originals024::adapter::before_resume::history::OriginalHistoricalScope<'_>,
+        released: &mut ReleasedLease,
+        original_end: Instant,
+        read_end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        self.read_abort_history(scope, released, original_end, read_end)
+    }
+    #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn component_read_abort_history_for_test<
+        G: AfterReturnGuard,
+    >(
+        &mut self,
+        scope: &mut G,
+        released: &mut ReleasedLease,
+        original_end: Instant,
+        read_end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        self.read_abort_history(scope, released, original_end, read_end)
+    }
+    fn read_abort_history<G: AfterReturnGuard>(
+        &mut self,
+        scope: &mut G,
+        released: &mut ReleasedLease,
+        original_end: Instant,
+        read_end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        let result = (|| {
+            check(read_end)?;
+            let progress = self.abort_return.as_ref().ok_or_else(invalid)?;
+            let completed = progress.final_completed_at.ok_or_else(invalid)?;
+            if progress.failed
+                || !progress.finished
+                || progress.pending.is_some()
+                || !progress.final_attempted
+                || !progress.final_verified
+                || progress.final_end != Some(original_end)
+                || completed >= original_end
+                || completed > Instant::now()
+            {
+                return Err(invalid());
+            }
+            let original = progress.final_image.as_ref().ok_or_else(invalid)?.clone();
+            released.readback_history(read_end)?;
+            let facts = released.facts();
+            if original["releasedRanges"]["epoch"].as_str() != Some(&facts.epoch)
+                || original["releasedRanges"]["claim"].as_str() != Some(&facts.claim_key)
+                || original["releasedRanges"]["objectsDigest"].as_str()
+                    != Some(&facts.objects_digest)
+            {
+                return Err(invalid());
+            }
+            scope.check(&mut self.journal, released, read_end)?;
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
+            if restored(trees, read_end)? != original["originalTrees"] {
+                return Err(invalid());
+            }
+            scope.check(&mut self.journal, released, read_end)?;
+            released.readback_history(read_end)?;
+            if restored(trees, read_end)? != original["originalTrees"] {
+                return Err(invalid());
+            }
+            let digest = hash::sha256_hex(&serde_json::to_vec(&original).map_err(|_| invalid())?);
+            check(read_end)?;
             Ok(
                 serde_json::json!({"purpose":"native-aborted-before-resume-restored-readback","originalNodes":original["originalNodes"],"coordinationObjects":original["coordinationObjects"],"digest":digest,"normalStop":false,"closed":false,"publicStartOpen":false,"runtimeAuthority":false}),
             )

@@ -207,6 +207,40 @@ pub(crate) fn validate_canonical_before_resume_return(
             )
         })
 }
+/// One caller Status5 cutoff. Complete native historical readback only; no
+/// cached worker snapshot, old-window mutation check or normal dispatch grant.
+pub(crate) fn read_canonical_before_resume_history(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    end: Instant,
+) -> AppResult<serde_json::Value> {
+    budget(end)?;
+    let entry = slot(runtime, home, false)?;
+    let control = entry.recovery_worker.try_lock().map_err(unknown)?;
+    if entry.owner.try_lock().map_err(unknown)?.is_some() {
+        return Err(recovery_required());
+    }
+    control
+        .as_ref()
+        .ok_or_else(recovery_required)?
+        .read_original_owner_history(end, |owner| {
+            if !Arc::ptr_eq(&owner.runtime, &entry.runtime)
+                || !same(&owner.root, &entry.root)
+                || !same(&owner.home, &entry.home)
+                || !same(&owner.profile, &entry.profile)
+                || owner.host_instance != original_host_instance_for_process()
+            {
+                return Err(recovery_required());
+            }
+            Ok(())
+        })
+        .map_err(|e| {
+            fail(
+                "windows024_native_history_unknown",
+                &format!("raw={:?}; kind={:?}; {e}", e.raw_os_error(), e.kind()),
+            )
+        })
+}
 /// Data about completion time only, not native close authority. Only Owner's
 /// native typed close/readback path records it; a later observation must still
 /// borrow the original Closed tag and revalidate every retained native object.

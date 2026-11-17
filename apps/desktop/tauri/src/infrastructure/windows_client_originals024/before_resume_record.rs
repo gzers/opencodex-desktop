@@ -119,6 +119,17 @@ pub(super) enum Event {
     },
 }
 impl Record {
+    pub(super) fn is_restore_verified_data(&self) -> bool {
+        matches!(
+            &self.event,
+            Event::AbortRestoreVerified {
+                normal_stop: false,
+                closed: false,
+                public_start_open: false,
+                ..
+            }
+        )
+    }
     // Validated DATA constructor only. The original native adapter, not this
     // type or disk parser, is responsible for the provenance of every field.
     pub(super) fn initial_data(fields: [String; 8], clock: [String; 3]) -> io::Result<Self> {

@@ -90,9 +90,18 @@ impl ProcessAbortAttempt {
         end: Instant,
     ) -> AppResult<()> {
         budget(end)?;
+        self.check_origin_metadata(owner, start, failure, end)
+    }
+    fn check_origin_metadata(
+        &self,
+        owner: uuid::Uuid,
+        start: &ActionOrigin,
+        failure: Option<&StartFailure>,
+        original_end: Instant,
+    ) -> AppResult<()> {
         let failure = failure.ok_or_else(recovery_required)?;
         if owner != self.owner
-            || end != self.end
+            || original_end != self.end
             || self.id == self.failed_start
             || failure.owner != owner
             || failure.start != self.failed_start
@@ -115,6 +124,97 @@ impl ProcessAbortAttempt {
     }
 }
 impl Owner {
+    pub(crate) fn check_before_resume_history(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+        read_end: Instant,
+    ) -> AppResult<()> {
+        let result = (|| {
+            budget(read_end)?;
+            let original = self
+                .before_resume_process
+                .as_ref()
+                .ok_or_else(recovery_required)?;
+            original.check_origin_metadata(
+                self.session,
+                &self.start_action,
+                self.start_failure.as_ref(),
+                window.deadline(),
+            )?;
+            if original.phase != ProcessPhase::Quiescent
+                || original.restored.is_none()
+                || original.launcher.is_some()
+                || original.scope.as_ref() != Some(&self.scope()?)
+                || original.token.as_ref()
+                    != Some(&native::current_identity().map_err(native_failure)?)
+            {
+                return Err(recovery_required());
+            }
+            original
+                .clock
+                .as_ref()
+                .ok_or_else(recovery_required)?
+                .check_history(window.deadline(), read_end)
+                .map_err(native_failure)?;
+            original
+                .restored
+                .as_ref()
+                .unwrap()
+                .read_history_data(read_end)?;
+            self.source(read_end)?;
+            let original = self.before_resume_process.as_ref().unwrap();
+            let proof = original.quiescent.as_ref().ok_or_else(recovery_required)?;
+            if proof.deadline() != window.deadline() {
+                return Err(recovery_required());
+            }
+            self.native
+                .read_before_resume_quiescent_history(proof, read_end)
+                .map_err(native_failure)?;
+            budget(read_end)
+        })();
+        if result.is_err() {
+            self.fail_before_resume_process();
+        }
+        result
+    }
+    pub(crate) fn before_resume_history_origin(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+        read_end: Instant,
+    ) -> AppResult<(String, [String; 3])> {
+        self.check_before_resume_history(window, read_end)?;
+        let original = self.before_resume_process.as_ref().unwrap();
+        Ok((
+            original.failed_start.to_string(),
+            original.clock.as_ref().unwrap().data(),
+        ))
+    }
+    pub(crate) fn before_resume_history_binding(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+        read_end: Instant,
+    ) -> AppResult<[String; 3]> {
+        self.check_before_resume_history(window, read_end)?;
+        Ok([
+            self.session.to_string(),
+            self.before_resume_process.as_ref().unwrap().id.to_string(),
+            self.scope()?,
+        ])
+    }
+    pub(crate) fn before_resume_restored_history_data(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+        read_end: Instant,
+    ) -> AppResult<serde_json::Value> {
+        self.check_before_resume_history(window, read_end)?;
+        self.before_resume_process
+            .as_ref()
+            .unwrap()
+            .restored
+            .as_ref()
+            .unwrap()
+            .read_history_data(read_end)
+    }
     pub(crate) fn before_resume_restored_data(
         &mut self,
         window: &BeforeResumeRecoveryWindow,

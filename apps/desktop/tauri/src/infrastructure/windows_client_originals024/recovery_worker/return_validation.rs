@@ -2,6 +2,7 @@
 //! All originals are retained here before a fallible check. No native release
 //! probe/range is acquired on the receiving thread or across a new deadline.
 use super::*;
+mod history;
 fn publish_validation(state: &Arc<Mutex<State>>, phase: Phase, error: Option<&io::Error>) {
     if let Ok(mut state) = state.lock() {
         state.phase = phase;
@@ -14,6 +15,7 @@ pub(super) struct Validation<T> {
     pub(super) original: Option<Returned<T>>,
     pub(super) attempted: bool,
     pub(super) complete: bool,
+    pub(super) completed_at: Option<Instant>,
 }
 impl<T> Validation<T> {
     pub(super) fn new() -> Self {
@@ -21,6 +23,7 @@ impl<T> Validation<T> {
             original: None,
             attempted: false,
             complete: false,
+            completed_at: None,
         }
     }
 }
@@ -87,14 +90,16 @@ impl<T: Original> WorkerControl<T> {
             if before != after || after != self.state.try_lock().map_err(|_| invalid())?.binding {
                 return Err(invalid());
             }
-            if Instant::now() >= end {
+            let completed = Instant::now();
+            if completed >= end {
                 return Err(io::ErrorKind::TimedOut.into());
             }
-            Ok(data)
+            Ok((data, completed))
         })();
         match result {
-            Ok(data) => {
+            Ok((data, completed)) => {
                 retained.complete = true;
+                retained.completed_at = Some(completed);
                 publish_validation(&self.state, Phase::ReturnedValidated, None);
                 Ok(Some(data))
             }
