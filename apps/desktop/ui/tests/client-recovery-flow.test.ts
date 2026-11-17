@@ -65,6 +65,17 @@ describe('already retired root finalization',()=>{
 });
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('shows completed root cancellation while reconciliation waits and keeps the lifecycle gate',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),preparationKind:'created_root'})
+    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:3,status:'root_cancelled'})
+    const waiting=pending<StatusSnapshot>()
+    vi.mocked(clientRecoveryApi.status).mockResolvedValueOnce(status(true)).mockReturnValueOnce(waiting.promise)
+    const store=await inspect();store.choose('cancelPreparation');const work=store.apply('cancelPreparation');await flushPromises()
+    expect(store.executing).toBe(false);expect(store.refreshing).toBe(true);expect(store.outcome?.status).toBe('root_cancelled')
+    expect(store.ready).toBe(false);expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    expect(await store.apply('cancelPreparation')).toBe(false);expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledTimes(1)
+    waiting.resolve(status());expect(await work).toBe(true);expect(store.ready).toBe(true)
+  })
   it('explicitly confirms first-root preservation and accepts its two-event cancellation receipt',async()=>{
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),preparationKind:'created_root'})
     vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:3,status:'root_cancelled'})

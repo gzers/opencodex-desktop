@@ -872,7 +872,16 @@ pub async fn get_status_snapshot(
 pub fn get_status_snapshot_with_collector(
     collector: &SharedStatusCollector,
 ) -> AppResult<crate::types::runtime_status::StatusSnapshotDto> {
-    let mut collector = collector.lock().map_err(|_| AppError::NotConfigured)?;
+    // Polls and post-mutation reconciliation share one sampler. Never queue
+    // arbitrarily many full CLI reads behind another live sample: the caller
+    // receives uncertainty and retains its existing lifecycle gate.
+    let mut collector = collector.try_lock().map_err(|error| match error {
+        std::sync::TryLockError::WouldBlock => AppError::RuntimeManaged {
+            code: "status_sample_in_progress".into(),
+            detail: "运行状态正在核对，请稍后刷新；当前操作权限保持原状态".into(),
+        },
+        std::sync::TryLockError::Poisoned(_) => AppError::NotConfigured,
+    })?;
     status_snapshot_from_collector(&mut collector)
 }
 
