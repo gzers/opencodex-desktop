@@ -1,0 +1,41 @@
+{
+  "codeSha": "41043665d55f7f65bd550e1543701dd7c64192d9",
+  "codeBranch": "codex/024-windows-native",
+  "docsInput": "5d5d5a3f81e794de8a238bc3ce18f352633b7b14",
+  "team": 21,
+  "imp": 149,
+  "contract": "windows-preresume-recovery-performance-r7 final NAME_INFORMATION addendum",
+  "hypothesisTested": "Adding documented NAME_INFORMATION to existing HANDLES[/BASIC] might complete TypeName; falsified in actual own-broker native fixture.",
+  "result": "UnknownRefused",
+  "raw": 0,
+  "rawMeaning": "probe/build/own cleanup succeeded; acceptance remains false",
+  "newFlags": [
+    12,
+    28
+  ],
+  "successfulRights": 1049664,
+  "unknownTypes": 24,
+  "nativeScope": "self-owned non-elevated controller broker; not SID1003/currentR2",
+  "namesCapturedInsideTransientSnapshot": true,
+  "objectNamesDereferencedOrPersisted": false,
+  "snapshotPersisted": false,
+  "fullTwoPassAndRejectionMatrixCompleted": false,
+  "currentR2QueryApplied": false,
+  "currentR2Touched": false,
+  "r1ExecutionReady": false,
+  "publicStartOpen": false,
+  "productionAccepted": false,
+  "oldCleanupAuthorizationReused": false,
+  "cleanup": {
+    "ownLauncherRaw": 242,
+    "ownBrokerRaw": 0,
+    "originalJobUsedOnlyForOwnFixtureCleanup": true,
+    "snapshotsAndQueryCopiesReleased": true,
+    "compilerAndRunArtifactsRetained": true
+  },
+  "independentWorkContinues": [
+    "journal initializer original-handle retention",
+    "future host fresh recovery origin and claim/NLK",
+    "complete original-tree return"
+  ]
+}

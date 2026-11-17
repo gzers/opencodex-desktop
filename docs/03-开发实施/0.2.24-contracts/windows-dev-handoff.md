@@ -1054,3 +1054,10 @@ PSS24unknown类型的最小安全决定仍待（原ac7c74774请求），仅R1当
 证据wl2-r7-partial-capture-20261117-r1：check01实际全Tauri库raw0/48638ms；native-test02首E0603为先前query拆分漏内部Projection别名，同时allocation2162704 OOM/raw101，未运行断言，原日志留。修内部可见性后native-light03同实际collect/open/stamp/id/security/ADS原函数真实3过raw0（不模拟claim/Owner）；test-check04真实全部产品测试元数据raw0/173189ms。观测commit从约3.5GiB变至约8.5GiB后仅再尝试一次真实产品库链接，native-test05同原assert/期限 actual3过0败0ignored/raw0/166883ms，普通controller自有fixture，非marenben生产。TEST EXE6725963037110a6954e5391c81045872352d62e5b2bf68b7860be07372d9a4c9；11最终改动源和45实际light源逐份核，2生成段独立机械核。生成schema保raw并还原/移出代码，旧失败/删除拒绝不重试。旧产品Fixture仅Drop释放、没有逐文件清理receipt，不签全部历史清理closed。
 
 本次不是全BeforeFirstResumeRecovery完成：create_private_directory内部create后检查失败的原创建handle、journal manifest/current初始化局部record/nativecontext仍缺直接保留sink；journal-enrollment-next.json写精确缺口和后续故障反例。fresh原host恢复命令/neworigin/新claimNLK/完整原件返还与原10秒仍未实现。PSS24unknown依赖继续仅R1局部停，无新flag/currentJobquery或force。当前75744/21500/40588、原件/custody/work/anchors/协调与旧seq9保留；原r2ZIP/44项、P1scanner15、nativeabort6+normalResume1复用，不原包重跑、不沿旧50580/54692授权。actualproduct库测试链接不冒3产品bin/GUI/release/完整生产验收，不W2/双SID/发布，不改官方或日常配置策略。目标active继续journal登记和原恢复接线。
+
+
+## 2026-11-17 r7 TEAM21 PSS名称参数增量仍未知拒绝
+
+已fetch并消费docs5d5d5a3f81e794de8a238bc3ce18f352633b7b14／TEAM21／IMP149，按r7新答复只在自有普通controller单broker夹具增加NAME_INFORMATION(0x8)，代码41043665d55f7f65bd550e1543701dd7c64192d9已推送。实际flags12/28、rights1049664均captured=walked91/end259，仍24条ObjectType0/Flags0缺TypeName；两明确Job候选只去重成一个内核Job/匹配原自有child，不能排除24未知，accepted=false。四条低权限组合PssCaptureSnapshot raw5原样保留。未扩大TYPE_SPECIFIC/VAclone/内存/上下文/SeDebug/NT fallback，不读取或记录ObjectName、不保存PSS内存；明确OS瞬态快照确实采集名称。自有原Job清子进程raw242、broker raw0，查询副本/snapshot释放；不签Stop/Closed。
+
+完整原始证据wl2-r7-pss-types-20261117-r1，TEST EXE SHA49589d63eca399be1bc43d63db57ba597102aa0177baa66ef82007392a787772，14payload逐字节封存。blocking-request.json请求Mac评估另一文档化有界完整类型/Job覆盖路线或明确合同调整；只暂停currentR2 Job证明/R1计划Ready依赖，future-host journal/native-prefix/完整return继续。currentR2只读原型尚未应用，原r2全归档/44项复用，21500/75744/40588与原件/custody/work/旧seq9不变；原包不重跑、无force/恢复许可、旧50580/54692授权不沿用。公共Start/production/allAcceptedfalse，不改官方/日常/策略，不W2/双SID/发布。
