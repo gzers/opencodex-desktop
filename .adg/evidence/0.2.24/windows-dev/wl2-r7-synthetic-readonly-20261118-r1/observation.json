@@ -1,0 +1,42 @@
+{
+  "observedAt": "2026-11-18T00:08:30.0601069+08:00",
+  "targetPid": 27960,
+  "expectedImage": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpMgOtNr\\never-resumed-fixture.exe",
+  "expectedImageSha256": "4699667b79d3aebd6e1e90c8b063f80a95b3f32c5c4a69ec49bd4c70217e4a38",
+  "readOnly": true,
+  "processAccess": "PROCESS_QUERY_LIMITED_INFORMATION 0x1000 only",
+  "originalCreationHandleRetained": false,
+  "originalJobHandleRetained": false,
+  "historicalNeverResumeProof": "Unknown; no assertion from currently suspended state",
+  "terminationAuthorized": false,
+  "terminationExecuted": false,
+  "currentR2Touched": false,
+  "errors": [],
+  "creationFiletime": "134394012184503726",
+  "creationUtc": "2026-11-17T15:00:18.4503726Z",
+  "imagePath": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpMgOtNr\\never-resumed-fixture.exe",
+  "exactTaskPath": true,
+  "inSomeJob": true,
+  "sessionId": 2,
+  "exitCodeRead": 259,
+  "cim": {
+    "ProcessId": 27960,
+    "ParentProcessId": 14936,
+    "Name": "never-resumed-fixture.exe",
+    "CreationDate": "2026-11-17T23:00:18.450372+08:00",
+    "ExecutablePath": null
+  },
+  "threads": [
+    {
+      "Handle": "132708",
+      "ProcessHandle": "27960",
+      "ThreadState": 5,
+      "ThreadWaitReason": 5,
+      "ExecutionState": null
+    }
+  ],
+  "taskFileSha256": "4699667b79d3aebd6e1e90c8b063f80a95b3f32c5c4a69ec49bd4c70217e4a38",
+  "taskFileHashMatches": true,
+  "sameHeldQueryHandleCreation": true,
+  "queryHandleClosed": true
+}

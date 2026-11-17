@@ -1267,3 +1267,9 @@ status.json 87项完整本线状态。canonical具体driver接线与原native完
 证据wl2-r7-v2-durability-20261117-r1：product01真实完整Tauri库MSVC raw0/145459ms，6过0败0ignored，native tests0.98s；26实际新目录覆盖完整canonical DATA链、7版本/引用/链beforewrite拒绝、5原生写入中断点、4过期/替换截止/非空拒绝、6成员/SD/ADS/晚变化、3完整声明DATA/Pending/未知终态拒绝。完整声明ID是合成DATA不冒nativeOriginalSet/产品Owner。无意外product首错，原112编译warning留；续接工具调用/未发布文档merge错误及修正单列operational-errors.json，非产品失败，不隐记录。4最终执行源逐Git行尾归一核，TEST EXE SHA4b5e372f7c50b3b4d3be904a725d2d0b2bb371ee890bb3475d7fb0690ccdebea；26新root缺席，schema生成raw归档还原。原strictDATA9/原生准备3及未受影响CLI/MSI/空GUI/归档复用，不重复计数或重跑。
 
 status.json完整103项状态，真正产品Owner returned/proof独立slot复验、截止后只读history/status、strict可达versionedprivatehost/fulltrait、完整nativeV2原安全/内容/成员producer及pre-manifest/partial恢复、真实普通Profile固定官方整链与原预算继续未完。当前r2Job24raw50Unknown只停自身证明，不反复PSS/zeroDuplicate或旧cleanup作Status；原21500/75744/原件/work/custody/anchors/协调/旧seq9及40588不动，无当前执行授权请求，旧50580/54692批准不沿用，原件未还不跑新原包。旧两目录删除自动审批blocked by policy拒绝源、其它失败树和synthetic27960清理缺口保留，不绕过重删或按PIDguess清理。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方及日常配置PATH策略不改，不W2/双SID/发布，目标active。
+
+## 2026-11-18 synthetic27960只读身份与未就绪处置计划
+
+证据wl2-r7-synthetic-readonly-20261118-r1：00:08:30+08:00用PROCESS_QUERY_LIMITED_INFORMATION0x1000取真实QueryFullProcessImageName/原创建FILETIME134394012184503726，同句柄前后相同，实际image为.tmpMgOtNr/never-resumed-fixture.exe，对应product04历史CIM23:00:18.450372；任务镜像文件SHA4699667b79d3aebd6e1e90c8b063f80a95b3f32c5c4a69ec49bd4c70217e4a38与旧24文件ZIP一致。parent14936/session2，exit259，inSomeJobtrue；CIM线程132708/state5/wait5仅当前状态。所有查询成功、查询handle已关，未读进程内存/提升/终止/Resume/收养/删文件或改策略。
+
+exact-disposition-plan执行就绪false：原Job身份/完整成员及monotonicneverResume仍Unknown，新观察非原creator能力；不得据PID/path/hash或当前Suspended补证明。计划仅描述今后明确针对该synthetic代次可能处置，当前不请求批准、不执行force；原24文件失败tree/ZIP保留，清理缺口不关闭。它不是marenben/session7的r2，旧50580/54692授权不沿用；原r2/40588和两旧拒删目录未动。独立returnedOwner/原树完整复核仍在MSVC验证，目标active继续，publicStart不放开，不W2/双SID/发布。
