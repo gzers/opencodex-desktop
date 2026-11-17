@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 21；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 22；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -216,3 +216,10 @@ Mac已按用户采用的官方显示格式完成共享模型保存/读回/协议
 ## revision21 PSS请求答复与并行接续
 
 Windows89f55e76d／最新540025ef6证据净接收见IMP149，不改产品接口或既有独占写集。r7文末允许PSS HANDLE_NAME_INFORMATION(0x8)在test/windows024-native/**自有原型中用于完整类型，禁读/日志ObjectName；原Unknown拒绝/唯一同内核Job等不变。原型真实过后可只读R0，未授权本现场恢复，旧归档/44项复用不重跑。future部分捕获sink/新恢复origin/claimNLK/完整return与scanner继续本线，Mac不并行改。默认客户端真实展示与Mac生命周期缺口由Mac独立继续，最终集成候选仍未固定，不W2/双SID/发布。
+
+
+## revision22 三文件scanner接收
+
+Mac main 7fade183da7b43fa88fff3e459404aac704ff21b已按净差接入64bf7aa73三scanner文件，与Windows89f55原字节同树；本机不更改Windows独占算法/恢复/Source/Stop消费者。本批35项Mac回归＋1真实完整镜像/清理与Clippy/fmt归IMP150；贡献本线可增量merge此main，三scanner内容相同不应自行改回参考旧实现。只有真实冲突由双方针对文件处理，不用全仓ours/theirs。
+
+r7恢复/PSS0x8补充/partial原件/预算与全部前提保持；后继Windows独占继续，不因Mac接这三文件放开Start或当完整Windows已集成。Mac继续本机独立剩余功能与最终Mac候选，Windows最终W2仍等全体集成源码/制品固定后一次交验；不重复无影响已过项，不发布。

@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/private/tmp/ocxd024-versioned-lifecycle-scan-7j__6kfg/isolated.sb",
+    "/private/tmp/ocxd024-versioned-lifecycle-scan-7j__6kfg/test-host",
+    "--exact",
+    "modules::runtime::program_image::tests::official299_complete_image_inventory_stage_cost",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exitCode": 0,
+  "elapsedMs": 67514,
+  "testHostSha256": "ed208d945185b6ad936181af8fe0d2f902d23f5e6364cd8ca6d5d9ec902643e8",
+  "hostUnchanged": true,
+  "serviceStarted": false,
+  "dailyConfigChanged": false,
+  "releaseAcceptance": false
+}

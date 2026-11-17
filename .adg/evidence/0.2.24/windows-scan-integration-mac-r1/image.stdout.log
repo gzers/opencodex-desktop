@@ -1,0 +1,19 @@
+
+running 14 tests
+test modules::runtime::program_image::parallel_tests::bounded_image_readers_match_serial_every_row_digest_empty_directory_and_executable_bit ... ok
+test modules::runtime::program_image::parallel_tests::bounded_image_workers_join_and_refuse_panic_or_failure_before_caller_cleanup ... ok
+test modules::runtime::program_image::parallel_tests::budgeted_image_reader_keeps_eof_growth_probe_before_any_later_size_restore ... ok
+test modules::runtime::program_image::parallel_tests::delayed_image_jobs_refuse_retargeted_ancestor_before_reading_foreign_payload ... ok
+test modules::runtime::program_image::parallel_tests::finished_image_inventory_refuses_directory_change_during_reader_work_without_partial_success ... ok
+test modules::runtime::program_image::parallel_tests::image_existing_path_admission_matches_old_all_component_boundaries ... ok
+test modules::runtime::program_image::parallel_tests::image_existing_path_full_pipeline_matches_old_inventory_and_keeps_all_reads ... ok
+test modules::runtime::program_image::parallel_tests::image_existing_path_reference_and_new_both_refuse_delayed_redirect_before_any_read ... ok
+test modules::runtime::program_image::parallel_tests::parallel_image_name_collision_links_and_late_sparse_growth_never_return_an_inventory ... ok
+test modules::runtime::program_image::parallel_tests::shared_image_read_budget_is_reserved_before_hashing_even_with_competing_readers ... ok
+test modules::runtime::program_image::tests::action_time_inventory_detects_noncritical_changes_without_reading_other_directories ... ok
+test modules::runtime::program_image::tests::official299_complete_image_inventory_stage_cost ... ignored, explicit owned official2.99 image read-only cost observation; no service actions
+test modules::runtime::program_image::tests::rejects_sparse_oversize_without_allocating_payload_and_preserves_file ... ok
+test modules::runtime::program_image::tests::seal_excludes_only_root_manifest_and_still_binds_it_through_selection ... ok
+
+test result: ok. 13 passed; 0 failed; 1 ignored; 0 measured; 2667 filtered out; finished in 0.11s
+

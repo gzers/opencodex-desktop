@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 149；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 150；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 634fc376cda19ca039e9fc30d3be83699058414a（非冻结候选）；Windows实现检查点codex/024-windows-native 89f55e76d4f5a6e599b0e9db8cb359fcadce0254（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 7fade183da7b43fa88fff3e459404aac704ff21b（非冻结候选）；Windows实现检查点codex/024-windows-native 89f55e76d4f5a6e599b0e9db8cb359fcadce0254（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1560,3 +1560,14 @@ fetch Windows89f55e76d4f5a6e599b0e9db8cb359fcadce0254／docs540025ef6，净接7�
 完整Tauri库typecheck在原同一次进程404677ms raw0；新partial capture实际产品测试链接3项raw0/166883ms，原Projection再导出修复后通过，不冒产品三bin/release；扫描15项原生、固定副本完整入口6366ms通过但不冒整体Stop10/Start30/Status5。r2真实完整归档10701files/1664dirs/1192222294源字节与原前后native/44项已回交（原WMI-null拒绝及修双来源比较原样留），原件/custody/进程/seq9保持，R1执行仍未Ready/未请求批准。
 
 已消费PSS24unknown的新请求，r7追加明确允许文档化0x8在自有单broker原型取完整类型、绝不解引用/记录ObjectName；OS内部会捕获名称的事实明确承认，非“没有采集”。原全遍历/未知拒绝/QUERY-only/对象去重/原历史/未Resume/预算不变，成功原型后才R0，现场forced/原件归还须原具体确认。Windows可自行fetch继续，不必用户中转普通只读试验。Mac继续独立产品缺口，最终候选/NAME实际GUI及Windows全部未完不关闭。
+
+
+### 2026-11-17 revision150：完整scanner净差接入与本机实测
+
+main 7fade183da7b43fa88fff3e459404aac704ff21b只从Windows已测64bf7aa73a61be2b50469657bbc7515d486eca00取program_image.rs、program_image_windows.rs及program_image_windows_tests.rs三文件，逐原字节与最新89f55完全相同；不merge后继Owner/capture/原件恢复/消费者来源文件，也未接未完成Windows产品整体。单写Windows贡献仍继续，本机只是按净差接入共享main；后继原Source/Stop deadline消费者仍在Windows本线，最终真实生命周期需同树再验。
+
+[审查/来源/证据](../../.adg/evidence/0.2.24/windows-scan-integration-mac-r1/intake.json)：新Windows每同次inventory保留原对象、全字节hash/全目录集合/空目录/同原SD-ADS-path-ID等前后fence、4workers全部join与原deadline，Entry/树摘要和限额不变，无跨动作缓存/删扫描；Mac继续原Unix路径/完整读取与独立manifest绑定。本批是这三文件语义及来源审查，非Windows整树安全审计或完整产品验收。
+
+本机定向35项通过（镜像13、选择13、激活回退7、登记2），严格全targets Clippy及fmt通过。另在精确新临时私有Profile、内核禁止日常HOME/外网/Keychain，原样官方2.99实际供应与完整扫描1项通过：15646条/645549518内容字节，13393真实文件全读/hash计数齐，tree a29dedc203311ca4d6d4005db94b4a10d4fb84409283669e25272f080756b790与固定官方源b920ba…一致；单次inventory602915微秒，整夹具供应/执行66.56秒，不把它当Start30/Status5/Stop10或Windows性能结论。测试宿主原签名/原字节未改，未启动服务，无业务同步/模型请求，准确本轮复制程序/资源/镜像/Profile整体清理且缺席核验，证据全部保留。
+
+r7 PSS0x8参数答复已随docs5d5d5a3f8推送，Windows可自行取用并继续原型/否例与只读R0；无现场恢复授权。当前原r2归档已具但Job当前证明/受限修复具体前提、future完整恢复接口与原预算、默认客户端真实名称、Mac取消/一般客户端图/缺Ready、最终候选及发行整组门仍未完成，目标active；不W2/双SID/发布。代码主线新SHA只开放以上扫描来源，不要求Windows重跑无影响页面/CLI/旧归档。
