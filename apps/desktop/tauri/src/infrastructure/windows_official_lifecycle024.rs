@@ -80,6 +80,10 @@ fn system_console() -> AppResult<PathBuf> {
 // Shared by GUI, IPC runner and status. A short registry lock never spans I/O.
 // Owners deliberately remain retained even after a failed action or runner Drop.
 static OWNERS: OnceLock<Mutex<Vec<Arc<Slot>>>> = OnceLock::new();
+static ORIGINAL_HOST_INSTANCE: OnceLock<uuid::Uuid> = OnceLock::new();
+pub(crate) fn original_host_instance_for_process() -> uuid::Uuid {
+    *ORIGINAL_HOST_INSTANCE.get_or_init(uuid::Uuid::new_v4)
+}
 struct Slot {
     runtime: SharedRuntimeExecutable,
     root: PathBuf,
@@ -219,6 +223,7 @@ fn after_stop_input(
     }
 }
 pub(crate) struct Owner {
+    host_instance: uuid::Uuid,
     start_action: actions::ActionOrigin,
     stop_action: Option<actions::ActionOrigin>,
     // Original one-shot process preparation retained before every later
@@ -402,6 +407,9 @@ impl Owner {
     }
     pub(crate) fn profile_path(&self) -> &Path {
         &self.profile
+    }
+    pub(crate) fn original_host_instance(&self) -> uuid::Uuid {
+        self.host_instance
     }
     pub(crate) fn installation_path(&self) -> &Path {
         &self.root
@@ -1022,6 +1030,7 @@ async fn execute_admitted(
         previous.push(old);
     }
     *guard = Some(Owner {
+        host_instance: original_host_instance_for_process(),
         start_action,
         stop_action: None,
         before_resume_process: None,

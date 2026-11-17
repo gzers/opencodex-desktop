@@ -920,13 +920,14 @@ impl CaptureSlot {
         window: &ActionWindow,
     ) -> AppResult<()> {
         let empty = NativePredecessors::empty(window);
-        self.capture_existing_with_predecessors(owner, window, &empty)
+        self.capture_existing_with_predecessors(owner, window, &empty, uuid::Uuid::new_v4())
     }
     pub(in crate::infrastructure::windows_client_originals024) fn capture_existing_with_predecessors(
         &mut self,
         owner: &mut Owner,
         window: &ActionWindow,
         predecessors: &NativePredecessors,
+        session_id: uuid::Uuid,
     ) -> AppResult<()> {
         let result = (|| {
             if self.failed || self.retained.is_some() || self.partial.is_some() {
@@ -935,7 +936,11 @@ impl CaptureSlot {
             // Install the original typed prefix BEFORE source/route/custody
             // preparation. No returned tag or completed Store is required to
             // retain every successfully enrolled native object after failure.
-            self.partial = Some(PartialCaptureAnchor::new(owner.scope()?));
+            self.partial = Some(PartialCaptureAnchor::new(
+                owner.scope()?,
+                session_id,
+                owner.original_host_instance(),
+            ));
             let (store, lease) = CaptureStore::capture_held(
                 owner,
                 window,

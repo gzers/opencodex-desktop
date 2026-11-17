@@ -25,6 +25,17 @@ pub(in crate::infrastructure::windows_client_originals024) struct JournalPrepara
     fault: u8,
 }
 impl JournalPreparation {
+    pub(in crate::infrastructure::windows_client_originals024) fn retained_v2_membership_data(
+        &self,
+    ) -> serde_json::Value {
+        // A finite projection of actual enrolled resource presence. Expected
+        // bytes/old snapshots are deliberately not labeled current verified SD
+        // or content; incomplete preparation stays Pending in the V2 producer.
+        serde_json::json!({"attempted":self.attempted,"initializationStarted":self.initialization_started,"ready":self.ready,"failed":self.failed,
+            "directory":self.directory.is_some(),"pins":self.pins.as_ref().map(|p|p.len()),"peer":self.peer.is_some(),"binding":self.binding.is_some(),"action":self.action.is_some(),
+            "plan":self.plan.is_some(),"predecessors":self.predecessors.len(),"manifest":self.manifest.is_some(),"manifestExpected":self.manifest_raw.is_some(),
+            "manifestOriginalHandle":self.manifest_open.is_some(),"manifestRecord":self.manifest_record.is_some(),"currentOriginalHandle":self.current_open.is_some(),"currentExpected":self.current_expected.is_some(),"completeOriginalJournal":self.completed.is_some()})
+    }
     fn enroll(
         &mut self,
         directory: PinnedDirectory,

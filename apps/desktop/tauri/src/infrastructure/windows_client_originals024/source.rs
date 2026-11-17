@@ -128,6 +128,12 @@ impl NativeJournalContext {
     }
 }
 impl Source {
+    pub(super) fn retained_v2_source_data(&self) -> (String, String) {
+        (
+            hash::sha256_hex(&self.binding_raw),
+            self.image_digest.clone(),
+        )
+    }
     pub(super) fn journal_context(
         &mut self,
         owner: &mut Owner,

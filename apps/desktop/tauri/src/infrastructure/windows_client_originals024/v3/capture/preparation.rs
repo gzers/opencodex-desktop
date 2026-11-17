@@ -2,7 +2,10 @@
 //! successful phase/repair proof exists here, even when no tag was returned.
 use super::*;
 use std::path::PathBuf;
+mod v2;
 pub(super) struct PartialCaptureAnchor {
+    pub(super) session_id: uuid::Uuid,
+    pub(super) host_instance_id: uuid::Uuid,
     pub(super) owner_scope: String,
     pub(super) intents: Vec<PathBuf>,
     pub(super) source: Option<Source>,
@@ -19,8 +22,14 @@ pub(super) struct PartialCaptureAnchor {
     pub(super) failed: bool,
 }
 impl PartialCaptureAnchor {
-    pub(super) fn new(owner_scope: String) -> Self {
+    pub(super) fn new(
+        owner_scope: String,
+        session_id: uuid::Uuid,
+        host_instance_id: uuid::Uuid,
+    ) -> Self {
         Self {
+            session_id,
+            host_instance_id,
             owner_scope,
             intents: Vec::new(),
             source: None,

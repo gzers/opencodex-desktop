@@ -2,6 +2,81 @@
 //! clears poison nor permits a move, lease transition, restore or Closed.
 use super::*;
 impl AnchoredTree {
+    pub(in crate::infrastructure::windows_client_originals024) fn v2_retained_object_data(
+        &self,
+        session: uuid::Uuid,
+        role: crate::infrastructure::windows_client_originals024::before_resume_record_v2::Role,
+        end: Instant,
+    ) -> io::Result<(
+        Vec<crate::infrastructure::windows_client_originals024::before_resume_record_v2::Object>,
+        Vec<serde_json::Value>,
+    )> {
+        use crate::infrastructure::windows_client_originals024::before_resume_record_v2::{
+            projection_digest, retained_object, Stage,
+        };
+        let mut objects = Vec::new();
+        let mut errors = Vec::new();
+        for n in &self.nodes {
+            check(end)?;
+            // Snapshot DATA was captured on the actual original node. This
+            // producer does not re-admit it as current restoration proof: all
+            // observations intentionally leave SD/content nullable until the
+            // dedicated native partial recovery reader independently checks it.
+            let identity = match id(&n.file, n.kind == Kind::Directory) {
+                Ok(id) => Some(projection_digest(&(id.volume, id.index.to_string()))?),
+                Err(e) => {
+                    errors.push(serde_json::json!({"role":role,"ordinal":objects.len(),"raw":e.raw_os_error(),"kind":format!("{:?}",e.kind())}));
+                    None
+                }
+            };
+            objects.push(retained_object(
+                session,
+                role,
+                objects.len(),
+                Stage::HandleRetained,
+                projection_digest(&self.root.join(&n.original.relative))?,
+                identity,
+                None,
+                None,
+            )?);
+        }
+        if self.pending_capture.is_some() {
+            objects.push(retained_object(
+                session,
+                role,
+                objects.len(),
+                Stage::HandleRetained,
+                projection_digest(&(self.root.clone(), "pending-native-open"))?,
+                None,
+                None,
+                None,
+            )?);
+        }
+        // Ancestor/custody pin ownership is itself part of the actual retained
+        // native membership, even when collect failed before the first node.
+        objects.push(retained_object(
+            session,
+            role,
+            objects.len(),
+            Stage::HandleRetained,
+            projection_digest(&(self.parent.path(), "original-parent-pin"))?,
+            None,
+            None,
+            None,
+        )?);
+        objects.push(retained_object(
+            session,
+            role,
+            objects.len(),
+            Stage::HandleRetained,
+            projection_digest(&(self.custody.path(), "original-custody-pin"))?,
+            None,
+            None,
+            None,
+        )?);
+        check(end)?;
+        Ok((objects, errors))
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_prefix(
         &mut self,
         claim: &mut AnchoredClaim<'_>,

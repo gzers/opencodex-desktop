@@ -313,7 +313,7 @@ impl ClientOriginals for WindowsOriginals {
         self.session = Some(session);
         self.owner_scope = Some(owner.scope()?);
         self.slot
-            .capture_existing_with_predecessors(owner, window, &predecessors)?;
+            .capture_existing_with_predecessors(owner, window, &predecessors, session)?;
         self.check_histories_for_action(owner, window, false)?;
         self.awaiting_successor = false;
         self.stage = Some(Stage::Original);

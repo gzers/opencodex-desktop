@@ -18,6 +18,21 @@ pub(crate) struct PrivateDirectoryPreparation {
     fault: u8,
 }
 impl PrivateDirectoryPreparation {
+    /// Bounded DATA only, no new serialization dependency in the native backend.
+    pub(crate) fn retained_stage_data(&self) -> (Option<PathBuf>, [bool; 7]) {
+        (
+            self.path.clone(),
+            [
+                self.attempted,
+                self.parent.is_some(),
+                self.created,
+                self.pending.is_some(),
+                self.complete.is_some(),
+                self.ready,
+                self.failed,
+            ],
+        )
+    }
     fn checkpoint(&self, stage: u8, end: Instant) -> io::Result<()> {
         if Instant::now() >= end {
             return Err(io::ErrorKind::TimedOut.into());
