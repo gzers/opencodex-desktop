@@ -21,5 +21,7 @@
   "serviceStarted": false,
   "dailyConfigChanged": false,
   "releaseAcceptance": false,
-  "cleanup": "owned tempfile guards only; no persistent fixture or service; no independently enumerated per-fixture cleanup receipt in this round"
+  "cleanup": "12 owned fixtures: Index and Context dropped before explicit TempDir.close(), absence asserted; actual exact-path receipts independently rechecked absent",
+  "cleanupEvidence": "cleanup-explicit/observed-absent.json",
+  "cleanupTestSource": "144391b95cc82cbc191e187537c736fd95284918"
 }
