@@ -1,0 +1,31 @@
+{
+  "accepted": false,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=256",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r6_source_scan_cost_fixed_full_image_no_owner",
+    "--",
+    "--ignored",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "elapsedMs": 392182,
+  "profile": "debug",
+  "exitCode": 0
+}

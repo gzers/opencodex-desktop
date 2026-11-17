@@ -1,0 +1,11 @@
+# r6 固定 Windows 镜像校验成本
+
+源码44bb9bdbabc78f1754b9df135f3d183205fcb9ec只新增Windows独占模块中的显式ignored计量测试和测试驱动模式；全部非测试生产Rust与共享模块保持。产品仍使用357210891及既有EXE摘要，本轮未重编产品或启动官方程序。
+
+控制器自有固定包副本与实际r2 sourceDigest完全相同。未修改共享program_image::verify，连续4次全量校验为6079.433/6353.553/4805.450/8928.700ms；选择记录检查2.997/3.645/3.684/3.406ms。8660包成员/611461049解包字节准备115668ms另列，不能并入生产Start预算。自有副本package.json改变后完整校验拒绝，恢复原字节后全量通过；原官方/普通账户包与现场没有改动。测试1过0败0忽略/raw0；scope、artifact和原样本见cost-summary/test-artifact/fixture-records。
+
+当前源码路径到实际LeaseReleasedVerified9之前至少8次完整镜像校验，是源码与事务trace的推断，不是原普通进程实时计数。副本样本支持重复扫描为预算风险，不证明实际30699ms各阶段耗时或唯一原因，也不能乘样本后当生产下界。测试使用debug0/incrementalfalse/codegen256，仍不能代生产/release性能或30/5/10验收。
+
+首library01 LLVM OOM/raw101，无测试执行或fixture创建，原失败完整保留。改为仅根测试包codegen-units256降低LLVM分区峰值，library02同Rust测试/原断言通过；不改机器策略/日常进程。所有执行输入原字节对manifest及Git核；首轮驱动与最终仅codegen参数差额明列。生成schema已保存并恢复tracked，自有约完整镜像副本/日志保留不删，不重试历史删除拒绝。
+
+shared-performance-request.json提出集成范围最小下一步：先解决原现场首次Resume前失败恢复，再测真实原动作每阶段，评估共享完整镜像inventory的Windows成本并严格保全原完整文件集合/字节/安全与来源检查，不能仅缓存旧摘要或删检查。本轮Windows不擅改共享program_image，也未修改/结束原75744/21500/40588或custody；publicStart/allAccepted仍false。当前恢复接口需求和全部原未完保持，不原包重跑/旧raw5/空GUI/W2/双SID/发布。

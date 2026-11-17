@@ -1,0 +1,122 @@
+{
+  "kind": "read-only callsite analysis, no runtime instrumentation/proof",
+  "facts": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/source.rs",
+      "sha256": "c95d59293f679d127df17e14a434bfdcb7b99d0287b99e0ae93458fed2b1121f",
+      "calls": [
+        {
+          "line": 137,
+          "text": "self.check(owner, end)?;"
+        },
+        {
+          "line": 157,
+          "text": "self.check(owner, end)?;"
+        },
+        {
+          "line": 186,
+          "text": "program_image::verify(selected)?;"
+        },
+        {
+          "line": 217,
+          "text": "out.check(owner, end)?;"
+        },
+        {
+          "line": 234,
+          "text": "program_image::verify(selected)?;"
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/content.rs",
+      "sha256": "28d8564b62909886727f892815a2c62311654d99c0d1c9485fdaf16e1ab4d3be",
+      "calls": [
+        {
+          "line": 275,
+          "text": "source.check(owner, end)?;"
+        },
+        {
+          "line": 293,
+          "text": "source.check(owner, end)?;"
+        }
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "sha256": "d962e0905c536716ca81f948634b09f9dbb276ab0aa653c677ddfbf2eeb65d46",
+      "calls": [
+        {
+          "line": 472,
+          "text": "store.check_source(owner, end)?;"
+        },
+        {
+          "line": 619,
+          "text": "store.check_source(owner, end)?;"
+        },
+        {
+          "line": 658,
+          "text": "store.check_source(owner, end)?;"
+        },
+        {
+          "line": 665,
+          "text": "store.check_source(owner, end)?;"
+        },
+        {
+          "line": 700,
+          "text": "store.check_source(owner, end)?;"
+        },
+        {
+          "line": 706,
+          "text": "store.check_source(owner, end)?;"
+        },
+        {
+          "line": 759,
+          "text": "store.check_source(owner, end)?;"
+        },
+        {
+          "line": 775,
+          "text": "store.check_source(owner, end)?;"
+        },
+        {
+          "line": 781,
+          "text": "store.check_source(owner, end)?;"
+        }
+      ]
+    }
+  ],
+  "staticPath": [
+    {
+      "stage": "Source::capture",
+      "fullImageCalls": 2,
+      "reason": "explicit verify then out.check"
+    },
+    {
+      "stage": "StartContentScope::capture",
+      "fullImageCalls": 2,
+      "reason": "source.check before/after audit pin"
+    },
+    {
+      "stage": "Source::journal_context",
+      "fullImageCalls": 2,
+      "reason": "self.check before/after context and original action"
+    },
+    {
+      "stage": "capture_existing_with_predecessors before mutation",
+      "fullImageCalls": 1,
+      "reason": "store.check_source"
+    },
+    {
+      "stage": "capture_existing_with_predecessors after opening working frames",
+      "fullImageCalls": 1,
+      "reason": "store.check_source before journaled release"
+    },
+    {
+      "stage": "capture_existing_with_predecessors after release",
+      "fullImageCalls": "0 or1",
+      "reason": "final store.check_source may reject at original deadline before image verification"
+    }
+  ],
+  "inference": "Reaching canonical LeaseReleasedVerified event9 implies at least8 earlier full-image verifications completed along the current source path, barring an unmodelled early path. This is source/trace inference, not per-stage real ordinary timing.",
+  "notProven": "No causal allocation of the actual30699ms to image scans vs tree/journal/lease costs. Controller copied image latency does not substitute ordinary scene measurement.",
+  "changesToChecks": false
+}

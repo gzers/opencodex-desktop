@@ -1,0 +1,14 @@
+{
+  "phase": "LLVM code generation; no test executed or fixture created",
+  "memory": {
+    "TotalVisibleMemorySize": 33310792,
+    "FreePhysicalMemory": 7471072,
+    "TotalVirtualMemorySize": 94209476,
+    "FreeVirtualMemory": 10721588
+  },
+  "newHypothesis": "Root test codegen-units256 instead of nonincremental default16 lowers per LLVM partition peak memory; original full verifier and Rust test inputs unchanged",
+  "prior": "library01",
+  "machinePolicyChanged": false,
+  "priorRawExit": 101,
+  "dailyProcessesStopped": false
+}

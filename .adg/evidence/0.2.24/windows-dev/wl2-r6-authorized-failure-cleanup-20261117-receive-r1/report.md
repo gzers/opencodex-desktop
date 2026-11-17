@@ -1,0 +1,1 @@
+实际marenben普通SID1003/session7已完成获准外部清理：Node50580→broker54692，同保留句柄raw242/242，492ms。两原FILETIME/image nativeID/hash/Token、Node单挂起线程和5处ZIP/原失败receipt/source文件前后原ID/hash均在原SID核验。控制器逐原字节接收6文件，核已知SHA/完整回执；同SIDnative句柄读回属于原执行回执，不能构造原Job/NormalStop/Closed或全companions证明。旧40588仍在，不动；无删除，旧scene/ZIP保留，PATH不变。完整121项状态继承，原Start与全版acceptedfalse，后续需独立fresh I/D/H及真实原包闭环，不原失败事务重跑。

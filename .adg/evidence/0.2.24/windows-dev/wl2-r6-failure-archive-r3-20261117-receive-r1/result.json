@@ -1,0 +1,82 @@
+{
+  "contract": "TEAM16/IMP142/r6",
+  "archiveSourceHead": "c0d42f8dcc72d56b84fb5bbea050efe2d66ee65f",
+  "failedProductionSource": "c870bd81fcbd65310ff79d262c9c49fc5a2c6f62",
+  "archiveVerifiedInOriginalSID": true,
+  "archiveIndependentlyReadByController": false,
+  "archive": {
+    "path": "C:\\Users\\marenben\\ocx024-r6-private-failure-archive-20261117-r3\\failed-existing-root-original-bytes.zip",
+    "sha256": "d7664840a85258fe49b8488e79861285d1748ab6fddb7cd18424abd3e10a0026",
+    "bytes": 338702293
+  },
+  "members": 10641,
+  "totalSourceBytes": 723798906,
+  "groups": {
+    "failed-task": 10633,
+    "synthetic-codex": 4,
+    "synthetic-grok": 1,
+    "synthetic-coordination": 3
+  },
+  "directories": 1642,
+  "publicRawFiles": [
+    {
+      "path": "raw/out01/archive-result.json",
+      "bytes": 6171427,
+      "sha256": "465e946bdefbbf7ac749001ba3f74e4cc2dcce3d0dcfef5f87ed1b6e04fabd70"
+    },
+    {
+      "path": "raw/archive-r6-failed-preresume.cmd",
+      "bytes": 385,
+      "sha256": "cb6d998f4e2a4341d63c39f9f8558868becdaa9553d5cc0443dd9ff197350ff2"
+    },
+    {
+      "path": "raw/archive-r6-failed-preresume.ps1",
+      "bytes": 6251,
+      "sha256": "581a1ecc0dacbb53d1cfd2ea4978b793dda7862687386b8d5d72177842498e0d"
+    },
+    {
+      "path": "raw/archive-r6-process-facts.cs",
+      "bytes": 2727,
+      "sha256": "1959b81e02779b9a88bb64f7321c1cc1975c68c506f4746340178b81e7d05603"
+    },
+    {
+      "path": "raw/archive-r6-content.ps1",
+      "bytes": 6289,
+      "sha256": "d8167ff8fb4782f418cf8a317b7e36621cfc2a1b316ac83671981ec153e386de"
+    },
+    {
+      "path": "raw/input-manifest.json",
+      "bytes": 1088,
+      "sha256": "f0e4e158f08385096ac56bff76e5a69ab1176800d9dca5bee518c9d175f211c6"
+    }
+  ],
+  "originalBroker": {
+    "pid": 54692,
+    "filetime": "134393577413203335",
+    "image": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r1\\I\\ocxd.exe",
+    "session": 7,
+    "exited": false,
+    "source": "fresh query-only native handle; no Job/Owner/NormalExit or cleanup authority"
+  },
+  "originalSuspendedLauncher": {
+    "pid": 50580,
+    "filetime": "134393577919362322",
+    "image": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r1\\I\\runtime\\versions\\2.99.0\\dependencies\\node\\node.exe",
+    "session": 7,
+    "exited": false,
+    "source": "fresh query-only native handle; no Job/Owner/NormalExit or cleanup authority"
+  },
+  "firstProductionError": "managed runtime operation failed: windows024_originals_required; 原件持久恢复未确认；保留原代次/记录/句柄：系统找不到指定的文件。 (os error 2)",
+  "actualProductionExecuted": false,
+  "forcedCleanupExecuted": false,
+  "nativeNormalStopProven": false,
+  "zipIsNTFSMetadataClone": false,
+  "originalObjectsRetained": true,
+  "startOpen": false,
+  "allAccepted": false,
+  "scopeNote": "Original ordinarySID helper verified complete source and ZIP bytes/hash/membership beforeafter, independent receiver verifies exact complete receipt shape and known c870 product hashes. Private ZIP not independently reopened by controller; no identity/security cloning claim.",
+  "remaining": "Loaded c870 debug broker lacks cleanup control channel and holds original Owner/Job. Rebuilt process cannot adopt them. Need explicit controlled failure-cleanup/new-independent-fixture plan; no same-session retry or inferredClosed. Other original fullscope failures/unknowns remain.",
+  "W2": false,
+  "dualSID": false,
+  "published": false
+}
