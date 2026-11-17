@@ -1,0 +1,5 @@
+{
+  "scope": "supplemental collector only",
+  "error": "AssertionError in a literal type/method source search after rustfmt; no product assertion/runtime altered",
+  "fix": "source inspection lookups normalize only whitespace, original bytes preserved"
+}

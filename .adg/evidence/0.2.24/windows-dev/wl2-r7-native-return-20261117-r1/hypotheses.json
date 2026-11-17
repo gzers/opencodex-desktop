@@ -1,0 +1,27 @@
+{
+  "recordedBeforeImplementation": true,
+  "at": "2026-11-17T20:58:41.771335+08:00",
+  "codeInput": "57c982b683f065ca73e3afc718d0127c82eae775",
+  "docsInput": "f214cc84d TEAM23/IMP151/r7",
+  "hypotheses": [
+    {
+      "id": "R1",
+      "claim": "An original quiescent/claim-bound native return driver can persist per-node v1 intent before exact same-volume same-object retire/return, then full BOTH-tree/raw8/bytes/children/custody and canonical/source fences before result."
+    },
+    {
+      "id": "R2",
+      "claim": "Original/partlyMoved/working prefixes can return original objects without moving root/coordinators or overwriting existing targets; open work generation must retain original metadata and freeze same native work object before move."
+    },
+    {
+      "id": "R3",
+      "claim": "Intent/write/move/result/timeout/unknown conflicts retain original driver state plus actual frozen handles and exact after-image; no retry/oldpoison clearing/normalStop/Closed/final restored proof."
+    }
+  ],
+  "limits": [
+    "incomplete pending capture/work objects remain Required, not guessed completed; full coverage remains an outstanding requirement",
+    "returned native nodes alone do not prove released claim/NLK/anchors or full AbortRestored",
+    "activeworker and premanifest contracts pending, no unsafeSend/active transfer",
+    "no currentR2 termination/return/new officialStart",
+    "original10s/freshaction/rawcodes/unknown rejection unchanged"
+  ]
+}
