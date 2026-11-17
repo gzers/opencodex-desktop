@@ -1,0 +1,37 @@
+{
+  "scannerFunctionsUnchanged": true,
+  "pathAndNativeFunctionsUnchanged": true,
+  "adaptations": [
+    "CRLF decoding",
+    "outer documentation comments",
+    "unused backup document type import",
+    "test-only error envelope"
+  ],
+  "doesNotCompile": [
+    "product selection/verify wrapper",
+    "Tauri GUI",
+    "native Owner/lifecycle"
+  ],
+  "files": [
+    {
+      "path": "program_image_section.rs",
+      "bytes": 20568,
+      "sha256": "a18ee5e75e05f3bed3cb83ade546baf01c626efd2c19bcb48d8ea6c820056a51"
+    },
+    {
+      "path": "safety_section.rs",
+      "bytes": 4463,
+      "sha256": "cf2cabd900bd9dd7a3667a6a78578a61260766619bfa0795da30c132de59530e"
+    },
+    {
+      "path": "layout_section.rs",
+      "bytes": 462,
+      "sha256": "3dc475581efdb10798e46c7dbaad5af3c6a2c27b06c2cc7f55ff36b497b89b6a"
+    },
+    {
+      "path": "program_image_windows_tests.rs",
+      "bytes": 7218,
+      "sha256": "1dff6f9a3cbf9f3a3583a5b14559e537f169b5d02aeaa308f89e27ba811aac36"
+    }
+  ]
+}

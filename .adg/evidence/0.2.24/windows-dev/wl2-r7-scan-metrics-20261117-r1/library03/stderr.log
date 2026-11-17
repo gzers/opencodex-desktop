@@ -1,0 +1,151 @@
+   Compiling windows024-r7-query-proof v0.1.0 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness)
+error[E0425]: cannot find value `invalid` in this scope
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\tree\streams.rs:46:21
+   |
+46 |         .ok_or_else(invalid)?;
+   |                     ^^^^^^^ not found in this scope
+   |
+note: these functions exist but are inaccessible
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:7:1
+   |
+ 7 | fn invalid() -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::before_resume_record::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\bounded\query.rs:78:1
+   |
+78 | pub(super) fn invalid(message: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::bounded::query::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\collector.rs:14:1
+   |
+14 | fn invalid(reason: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::collector::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\r7_readonly\objects.rs:12:1
+   |
+12 | fn invalid(reason: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::collector::objects::invalid`: not accessible
+
+error[E0425]: cannot find function `invalid` in this scope
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\tree\streams.rs:47:63
+   |
+47 |     if String::from_utf16(&data.cStreamName[..n]).map_err(|_| invalid())? != "::$DATA" {
+   |                                                               ^^^^^^^ not found in this scope
+   |
+note: these functions exist but are inaccessible
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:7:1
+   |
+ 7 | fn invalid() -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::before_resume_record::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\bounded\query.rs:78:1
+   |
+78 | pub(super) fn invalid(message: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::bounded::query::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\collector.rs:14:1
+   |
+14 | fn invalid(reason: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::collector::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\r7_readonly\objects.rs:12:1
+   |
+12 | fn invalid(reason: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::collector::objects::invalid`: not accessible
+
+error[E0425]: cannot find function `invalid` in this scope
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\tree\streams.rs:48:20
+   |
+48 |         return Err(invalid());
+   |                    ^^^^^^^ not found in this scope
+   |
+note: these functions exist but are inaccessible
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:7:1
+   |
+ 7 | fn invalid() -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::before_resume_record::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\bounded\query.rs:78:1
+   |
+78 | pub(super) fn invalid(message: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::bounded::query::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\collector.rs:14:1
+   |
+14 | fn invalid(reason: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::collector::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\r7_readonly\objects.rs:12:1
+   |
+12 | fn invalid(reason: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::collector::objects::invalid`: not accessible
+
+error[E0425]: cannot find function `invalid` in this scope
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\tree\streams.rs:53:20
+   |
+53 |         return Err(invalid());
+   |                    ^^^^^^^ not found in this scope
+   |
+note: these functions exist but are inaccessible
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:7:1
+   |
+ 7 | fn invalid() -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::before_resume_record::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\bounded\query.rs:78:1
+   |
+78 | pub(super) fn invalid(message: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::bounded::query::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\collector.rs:14:1
+   |
+14 | fn invalid(reason: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::collector::invalid`: not accessible
+   |
+  ::: src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\r7_readonly\objects.rs:12:1
+   |
+12 | fn invalid(reason: &str) -> io::Error {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `crate::infrastructure::windows_client_originals024::collector::objects::invalid`: not accessible
+
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `PathBuf`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/safety_section.rs:7:29
+  |
+7 |     path::{Component, Path, PathBuf},
+  |                             ^^^^^^^
+
+warning: unused import: `infrastructure::hash`
+ --> src\infrastructure\windows_client_originals024\collector.rs:4:32
+  |
+4 | use crate::{backend as native, infrastructure::hash, modules::runtime::program_image};
+  |                                ^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/program_image_section.rs:523:14
+    |
+523 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+523 -             .fetch_update(
+523 +             .try_update(
+    |
+
+warning: unused import: `io::Read`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/safety_section.rs:6:5
+  |
+6 |     io::Read,
+  |     ^^^^^^^^
+
+For more information about this error, try `rustc --explain E0425`.
+warning: `windows024-r7-query-proof` (lib) generated 5 warnings
+error: could not compile `windows024-r7-query-proof` (lib) due to 4 previous errors; 5 warnings emitted

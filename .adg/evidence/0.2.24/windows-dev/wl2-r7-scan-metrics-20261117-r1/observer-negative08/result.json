@@ -1,0 +1,38 @@
+{
+  "rows": [
+    {
+      "name": "missing",
+      "argv": [],
+      "raw": 2,
+      "passed": true,
+      "originalSceneTouched": false
+    },
+    {
+      "name": "wrong-phase",
+      "argv": [
+        "--r7-r2-readonly024-v1",
+        "resume"
+      ],
+      "raw": 2,
+      "passed": true,
+      "originalSceneTouched": false
+    },
+    {
+      "name": "wrong-controller",
+      "argv": [
+        "--r7-r2-readonly024-v1",
+        "before"
+      ],
+      "raw": 1,
+      "passed": true,
+      "originalSceneTouched": false
+    }
+  ],
+  "executable": {
+    "path": "C:\\Users\\Public\\ocx-r7-r2-readonly-20261117-r1\\input\\r7-scene-observer.exe",
+    "bytes": 1175552,
+    "sha256": "67a8d01e8358f4516b3407510d741f17def4283e8a47ee137b1f4ca5251e3220"
+  },
+  "kind": "standalone R0 query collector, not product/release",
+  "passed": true
+}

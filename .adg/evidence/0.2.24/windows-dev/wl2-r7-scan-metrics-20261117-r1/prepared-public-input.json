@@ -1,0 +1,40 @@
+{
+  "root": "C:\\Users\\Public\\ocx-r7-r2-readonly-20261117-r1",
+  "manifestSha256": "4b68662a38df731e9be658e84d757b7b38394214067688303181bf89b6b5edc1",
+  "manifest": {
+    "schema": "windows-r7-r2-readonly-input-v2",
+    "collector": "standalone-native-shared-inventory-section",
+    "source": "cd427f938d6fe84e29b1e49ad447eb10d662b7c8",
+    "expectedSid": "S-1-5-21-587408064-856152790-2583328096-1003",
+    "expectedSession": 7,
+    "scope": "R0 read-only complete r2 archive and native preflight; no force/resume/restore",
+    "files": [
+      {
+        "name": "archive-r7-current-r2.ps1",
+        "bytes": 9695,
+        "sha256": "2760e2c5f2b07a160a9b9f33c5c905f713cb43fb72ecf5a763b4779bea0fc7f5"
+      },
+      {
+        "name": "archive-r7-current-r2.cmd",
+        "bytes": 473,
+        "sha256": "6455c05f2cb62a8a777a4629006e91190cdcbe0769e4fbcb7bef4688828bff02"
+      },
+      {
+        "name": "archive-r6-content.ps1",
+        "bytes": 6289,
+        "sha256": "d8167ff8fb4782f418cf8a317b7e36621cfc2a1b316ac83671981ec153e386de"
+      },
+      {
+        "name": "r7-readonly-scene.cs",
+        "bytes": 13491,
+        "sha256": "47e6f019db701e3eea6858a3a3e2c5d4baced6f663c61fb9a0367a9045ecf572"
+      },
+      {
+        "name": "input/r7-scene-observer.exe",
+        "bytes": 1175552,
+        "sha256": "67a8d01e8358f4516b3407510d741f17def4283e8a47ee137b1f4ca5251e3220"
+      }
+    ]
+  },
+  "notExecutedByMarenben": true
+}

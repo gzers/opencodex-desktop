@@ -1,0 +1,167 @@
+﻿{
+    "schema":  "windows-r7-r2-readonly-archive-v1",
+    "scope":  "full r2 content archive plus exact native observations; no repair authority",
+    "started":  "2026-11-17T16:48:09.8868387+08:00",
+    "errors":  [
+                   {
+                       "message":  "System.Management.Automation.RuntimeException: exact live command lineage unavailable/differs",
+                       "stage":  "command-lineage",
+                       "line":  64
+                   }
+               ],
+    "archiveVerified":  true,
+    "nativeBeforePassed":  true,
+    "nativeAfterPassed":  true,
+    "metadataStable":  true,
+    "finalQuiescentSeal":  false,
+    "repairExecutionReady":  false,
+    "forced":  false,
+    "restored":  false,
+    "normalStop":  false,
+    "closed":  false,
+    "publicStartOpen":  false,
+    "zipIsNtfsIdentitySecurityClone":  false,
+    "allOriginalFilesRetained":  true,
+    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+    "session":  7,
+    "ordinaryNoJob":  true,
+    "processBefore":  [
+                          {
+                              "pid":  21500,
+                              "filetime":  "134393657318681068",
+                              "image":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime\\versions\\2.99.0\\dependencies\\node\\node.exe",
+                              "imageKey":  "247287385:562949954845630",
+                              "imageSha256":  "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+                              "token":  {
+                                            "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                                            "session":  7,
+                                            "elevationType":  1,
+                                            "elevated":  0
+                                        },
+                              "inJob":  true,
+                              "exited":  false,
+                              "threadCount":  1,
+                              "threadState":  "Wait",
+                              "threadWaitReason":  "Suspended"
+                          },
+                          {
+                              "pid":  75744,
+                              "filetime":  "134393656723346634",
+                              "image":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+                              "imageKey":  "247287385:562949954845608",
+                              "imageSha256":  "568f9c7916a4d3c70ad8966cc54bcac263b2faa99fdb56c994d48dd42642bec0",
+                              "token":  {
+                                            "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                                            "session":  7,
+                                            "elevationType":  1,
+                                            "elevated":  0
+                                        },
+                              "inJob":  false,
+                              "exited":  false,
+                              "threadCount":  0,
+                              "threadState":  null,
+                              "threadWaitReason":  null
+                          }
+                      ],
+    "nativeBeforeRawExit":  0,
+    "processLineage":  [
+                           {
+                               "ProcessId":  75744,
+                               "ParentProcessId":  25208,
+                               "ExecutablePath":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+                               "CommandLine":  "\"C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe\" --internal-runtime-owner024",
+                               "CreationDate":  "\/Date(1794892072334)\/"
+                           },
+                           {
+                               "ProcessId":  21500,
+                               "ParentProcessId":  75744,
+                               "ExecutablePath":  null,
+                               "CommandLine":  "\"C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime/versions\\2.99.0\\dependencies\\node/node.exe\" \"C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime/versions\\2.99.0\\opencodex\\node_modules/@bitkyc08/opencodex\\bin/ocx.mjs\" \"start\" \"--port\" \"0\"",
+                               "CreationDate":  "\/Date(1794892131868)\/"
+                           }
+                       ],
+    "originalFailure":  {
+                            "actualProductionExecuted":  false,
+                            "allAccepted":  false,
+                            "firstError":  "managed runtime operation failed: windows024_originals_required; 原件持久恢复未确认；保留原代次/记录/句柄：timed out",
+                            "nativeOwnerRetained":  true,
+                            "nativeProductionSequencePassed":  false,
+                            "raw":  null,
+                            "startOpen":  false,
+                            "trace":  {
+                                          "binding":  {
+                                                          "filetime":  "134393657318681068",
+                                                          "image":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime\\versions\\2.99.0\\dependencies\\node\\node.exe",
+                                                          "pid":  21500
+                                                      },
+                                          "creatorResumed":  false,
+                                          "family":  {
+                                                         "active":  1,
+                                                         "members":  [
+
+                                                                     ],
+                                                         "root":  "Running",
+                                                         "total":  1
+                                                     },
+                                          "nativeOwner":  true,
+                                          "originalPhaseRetained":  false,
+                                          "ownerScope":  "ca8eb36271074117abdd876e1fa6762e98ec306860dcf9d0aa1065a479e65424",
+                                          "ownerSession":  "6f43da33-dd54-44db-a23a-8c49448c14e9",
+                                          "previousOwners":  0,
+                                          "retainedSlot":  true,
+                                          "stage":  "created-suspended",
+                                          "stopped":  false
+                                      }
+                        },
+    "originalJobCurrentStatus":  "Unavailable: original image has cleanup command but no readonly Status client dispatch; no new-image authentication attempted",
+    "archiveSnapshotStarted":  "2026-11-17T16:48:51.7898656+08:00",
+    "archiveSnapshotCompleted":  "2026-11-17T16:49:39.5016911+08:00",
+    "archive":  {
+                    "path":  "C:\\Users\\marenben\\ocx024-r7-r2-private-archive-20261117-r1\\r2-complete-content.zip",
+                    "sha256":  "c3906f7814f48c00f88ce16f6de6fbdc55b6bdffcaf2f2f2c61f3af9a67c6c0a",
+                    "bytes":  674194759
+                },
+    "files":  10701,
+    "directories":  1664,
+    "bytes":  1192222294,
+    "processAfter":  [
+                         {
+                             "pid":  21500,
+                             "filetime":  "134393657318681068",
+                             "image":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime\\versions\\2.99.0\\dependencies\\node\\node.exe",
+                             "imageKey":  "247287385:562949954845630",
+                             "imageSha256":  "5cba0ea928508c65ddadefc0681d2fb6d95f1f3beea4428f04397631140ee8e5",
+                             "token":  {
+                                           "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                                           "session":  7,
+                                           "elevationType":  1,
+                                           "elevated":  0
+                                       },
+                             "inJob":  true,
+                             "exited":  false,
+                             "threadCount":  1,
+                             "threadState":  "Wait",
+                             "threadWaitReason":  "Suspended"
+                         },
+                         {
+                             "pid":  75744,
+                             "filetime":  "134393656723346634",
+                             "image":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+                             "imageKey":  "247287385:562949954845608",
+                             "imageSha256":  "568f9c7916a4d3c70ad8966cc54bcac263b2faa99fdb56c994d48dd42642bec0",
+                             "token":  {
+                                           "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                                           "session":  7,
+                                           "elevationType":  1,
+                                           "elevated":  0
+                                       },
+                             "inJob":  false,
+                             "exited":  false,
+                             "threadCount":  0,
+                             "threadState":  null,
+                             "threadWaitReason":  null
+                         }
+                     ],
+    "nativeAfterRawExit":  0,
+    "completed":  "2026-11-17T16:49:51.2366962+08:00"
+}

@@ -1,0 +1,86 @@
+﻿{
+    "scope":  "comparison of existing actual native/WMI observations DATA; no new process access or native authority",
+    "rawReceiptSha256":  "0f79c3becb787c64d67a85d64810cfb01f23317cc76a62ea5e0d737944faa0be",
+    "passed":  true,
+    "rawOriginalFirstError":  [
+                                  {
+                                      "message":  "System.Management.Automation.RuntimeException: exact live command lineage unavailable/differs",
+                                      "stage":  "command-lineage",
+                                      "line":  64
+                                  }
+                              ],
+    "comparisons":  [
+                        {
+                            "pid":  75744,
+                            "parentPid":  25208,
+                            "nativeImage":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+                            "optionalWmiImage":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+                            "arguments":  [
+                                              "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\ocxd.exe",
+                                              "--internal-runtime-owner024"
+                                          ],
+                            "optionalWmiImageUnavailable":  false,
+                            "consistent":  true,
+                            "nativeAuthority":  false
+                        },
+                        {
+                            "pid":  21500,
+                            "parentPid":  75744,
+                            "nativeImage":  "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime\\versions\\2.99.0\\dependencies\\node\\node.exe",
+                            "optionalWmiImage":  "",
+                            "arguments":  [
+                                              "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime/versions\\2.99.0\\dependencies\\node/node.exe",
+                                              "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I\\runtime/versions\\2.99.0\\opencodex\\node_modules/@bitkyc08/opencodex\\bin/ocx.mjs",
+                                              "start",
+                                              "--port",
+                                              "0"
+                                          ],
+                            "optionalWmiImageUnavailable":  true,
+                            "consistent":  true,
+                            "nativeAuthority":  false
+                        }
+                    ],
+    "refused":  [
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"native query image data differs\" ---\u003e System.IO.InvalidDataException: native query image data differs\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "native-image"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"WMI contradicts native image data\" ---\u003e System.IO.InvalidDataException: WMI contradicts native image data\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "contradictory-wmi"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"exact Node command/parent differs\" ---\u003e System.IO.InvalidDataException: exact Node command/parent differs\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "parent"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"command image contradicts exact native image data\" ---\u003e System.IO.InvalidDataException: command image contradicts exact native image data\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "command-image"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"exact Node command/parent differs\" ---\u003e System.IO.InvalidDataException: exact Node command/parent differs\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "command-script"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"exact Node command/parent differs\" ---\u003e System.IO.InvalidDataException: exact Node command/parent differs\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "port"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"exact native pair observations required\" ---\u003e System.IO.InvalidDataException: exact native pair observations required\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "missing-native-pair"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"exact task process data required\" ---\u003e System.IO.InvalidDataException: exact task process data required\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "old-target"
+                    },
+                    {
+                        "error":  "System.Management.Automation.MethodInvocationException: Exception calling \"CompareLineageData\" with \"5\" argument(s): \"duplicate process data\" ---\u003e System.IO.InvalidDataException: duplicate process data\r\n   at R7ReadOnlyScene.CompareLineageData(ProcessFacts[] observed, UInt32 pid, UInt32 parent, String optionalWmiImage, String command)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object , Object , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)",
+                        "case":  "duplicate-native"
+                    }
+                ],
+    "originalSceneTouched":  false,
+    "nativeAuthority":  false,
+    "forced":  false,
+    "restored":  false,
+    "closed":  false
+}
