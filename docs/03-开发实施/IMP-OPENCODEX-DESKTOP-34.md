@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 168；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 169；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 4ea82e8a61fe00c1f76334db5e39654f49f4342e（非冻结候选）；Windows实现检查点codex/024-windows-native f8feb3825a4f2194e4c5081a29a760d446473f61（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 4ea82e8a61fe00c1f76334db5e39654f49f4342e（非冻结候选）；Windows实现检查点codex/024-windows-native 58f0d49f2b45ad108cf921ef04fae32f9980f133（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1825,3 +1825,14 @@ MSI只允许当前固定Compound→app.cab→Cab结构及模板声明的准确Fi
 Release Windows新步骤在实际tauri签名出包后各自要求唯一MSI/NSIS及.sig，用checkout公钥和实际build资源调用同脚本，两个kind均记passed/firstError再统一阻断并完整上传结果；读取工具从已安装7z.exe显式定位，minisign只在缺失时准备。实际候选尚未运行此步骤，当前只有工具/装配和旧读取法验证，不冒Windows0.2.24真实签名内容或安装路径/正常用户验收已过。publish_release.py>=024硬拒绝保持，公开制品最终输入/正式签名及整组发行验证尚待候选闭合，不提前发布。
 
 Windowsf8feb3825/801e53cc8原生历史回交已接revision167，本批不改变其Owner/slot/nativeV2/privatehost/当前r2和synthetic27960清理依赖。Mac其它既列取消/中断/一般图/缺Ready、NAME最终外部客户端/回退和最终集成候选完整验收仍未完；不因发行校验增量缩小版本范围。目标active，不W2/双SID、不发布。
+
+
+### 2026-11-18 revision169：Windows三阶段canonical trait与独立私有wire接收
+
+Windows58f0d49f2b45ad108cf921ef04fae32f9980f133（含1f940af6c39ab38805c12e301f6b096c3ed74cbb）／docs0d6fa9c0dae16eb37327e8738ee2de0064dd549c净接收canonical-trait/private-wire两轮，97载荷850487字节、31载荷660933字节，全成员/原长度SHA核，5/4最终源逐Git或明确CRLF归一核；[接收回执](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r21/receive-result.json)。本机只审来源与具体handoff，非Windows执行或全树安全审计。
+
+WorkerLocal已实现原BeforeFirstResumeRecovery prepare→quiesce→restore，BoxAttempt先保唯一原session/action/scope/end/thread/nonce，原prefix/quiescent/tag在原槽先留再fallible核，claim borrow跨阶段释放但底层同lease claim/N/L/K连续持有。private非Clone/非serde关联tag只定位原native阶段，不能从record产权限；原失败revoke/worker保资源，不新window/unsafeSend。首native测试误断言primitive须丢弃已drained lease壳，原4范围释放/readback其实已过；保4file失败scene，只改新fixture检查真实4range可独占/原失活lease拒claim/releasedcheck，最终native过，两个metadata/type测试未变复用。12受影响测试过，20新成功root缺席；真实产品Owner官方整链未跑，不能用test trait通过开Start。
+
+新windows-before-resume-private-control-v2是独立严格DATA codec，只支持带明确确认的begin-canonical-abort和两只读操作。所有字段/嵌套budget必需，拒旧v1/unknown/duplicate/任意PID-path-handle-proof/超长与尾随frame；原QPC扣耗时，Begin10秒/read5秒，instance/generation/challenge/scope和3类单次keys上限16384。transportActionId不冒真实Owner recoveryAction，locator不授nativepeer身份。6项DATA测试真实完整MSVC库过，未创建实际endpoint/Owner；格式转义准备错误及未生成script path错误原样单列，非产品运行失败。尚需protectedlocator/pipe、双端ordinary/noJob/sameimage/token认证和首次变更前实际可达dispatch，不把codec当可达能力。
+
+最终两EXE6c94be0ddb710f3dd0c22290a3de3a22dbb924cba5e146800d666119be721d00、aa94e650a57fe06953b8586c78120c9627b7e88228f2c74b72e1784ddecdca57及所有raw/source/清理原件保留。141项状态仍保nativeV2partial/pre-manifest/缺根、真实普通Profile固定官方Owner整链原预算、容量/CAPtrust/普通MSI/最终候选未完；r2raw50及synthetic27960清理只停相应依赖，不重复query/旧cleanup或触原21500/75744/原件/seq9/40588。TEAM31/r7独占与四ABI不变，Windows可连续接线，不等Mac新接口；不W2/双SID、不发布，目标active。

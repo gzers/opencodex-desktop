@@ -1,0 +1,16 @@
+{
+  "product01": {
+    "raw": 101,
+    "elapsedMs": 168410,
+    "passed": "actual4ranges raw33 across3borrowstages/epochkey, explicitrelease/readback; nonClone/nonserde and metadata guards",
+    "error": "new fixture asserted lease OptionNone but original release intentionally keeps inactive drained lease shell",
+    "fix": "onlyfixture tests actual4ranges reacquirable+explicitlyunlocked and oldlease rejectsclaim, no primitive/production/limits changed;4filefailure root/ZIPretained"
+  },
+  "product02": {
+    "raw": 0,
+    "elapsedMs": 167330,
+    "passed": "actualsamelease continuity and release/oldclaimrefusal"
+  },
+  "productionSourceUnchangedAfterFirstRun": true,
+  "currentR2Touched": false
+}

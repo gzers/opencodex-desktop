@@ -1295,3 +1295,35 @@ WorkerControl接收槽先保唯一Box原Owner＋实际原window＋原ReleasedLea
 受影响原V1storage5raw0/343ms、V2storage6raw0/1032ms、同原claimquiesce1含3prefix raw0/2765ms、原完整workerpipeline1含2模式raw0/9797ms过；共新4native测试14场景/受影响13回归，不重复轮次数。最终TEST EXE SHA8ee6ad6e2d167d8fdb9bc42e56709571c9386468c10fa65b7c8bff9d43ea58f3；9最终执行源逐Git行尾归一核，所有失败source/raw输出/22file原ZIP保。65成功fixture root缺席、schema生成raw归档还原；两新失败源/历史拒删与driver失败/synthetic27960仍保，不冒历史全清。
 
 status.json119项完整状态；仍待完整原Slot及时完成事实、原core/两树/Source/route/canonical/附件/privatefinalproof在ONE Status5汇合及可达versionedprivatehost/fulltrait、nativeV2partial准备与缺根恢复、普通Profile固定官方整链原预算和容量/CAPtrust/候选。当前r2Job24raw50Unknown不重复空跑，原21500/75744/原件/work/custody/anchors/协调/旧seq9及40588不动，无本现场执行确认请求，旧50580/54692授权不沿用，原件未还不跑新官方；旧两目录删除自动审批blocked by policy源不绕过或重删。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方与日常配置PATH策略不变，不W2/双SID/发布，目标active继续。
+
+## 2026-11-18 TEAM30 同一Status5汇合原槽完整历史核验
+
+代码683a69fa2a34684acb6b16873125b0cc599fd15c已推送。已消费/合mainfb755b8ea63d8a3fc9146dc4db491931919905b0、docsf1765ceaa后继完整输入见source-manifest.json，TEAM30/IMP166/r7不变。相对本轮编译main0675只有Macupdater校验/CI/Release/Python测试，无Rust产品图净差，无发布任务；不改共享算法或Windows独占外文件。
+
+原core与privatefinaltag保实际完成Instant，原receiving control保原返回验证completed_at<原恢复截止；只有原BoxOwner/window/ReleasedLease仍在原control且ReturnedValidated才可完整history。ONE caller cutoff<=Status5，原registry runtimeArc/root/H/Profile/hostUUID、actualfailedStart/recoveryaction/旧window/QPCmetadata和原Job242前后核；Source/current/完整image、Route、原canonical fullrawchain/nativeaction、原附件typedproducer initial/last/final完整核，原两树/retiredmembers/8/bytes/children/released对象事实两次读回与原privatefinaldata相等。新history不取range/不写第二终态/不续旧action，失败保对象/revoke/Required，原worker/接收线程身份不改；普通dispatch/Start/Stop/Closed/后继仍拒绝。内部生产桥已全Tauri产品图编译链接，未在真实原产品Owner/固定官方Source上运行，组件native不是产品整链或预算通过。
+
+证据wl2-r7-full-history-20261118-r1：product01完整MSVC raw101/184916ms，原nativecore四模式与QPC过、接收valid/unvalidated正确，但自有未验证receiver还持原对象即TempDirclose raw32；原.tmpQ94pON是尝试关闭后的5余文件，精确readonlyZIP/member/hash/dirs前后核并保源，不冒完整未动scene。仅test修为join已释放worker、显式drop receiver/validation/state后关scene，生产逻辑/原断言/预算不改。product02 raw0/160322ms，接收六模式全过；core/QPC未改复用前轮。新2native父10模式＋1实际QPC：core旧截止后valid/tree-member/wrong-original/expired-reader，control旧截止后valid/unvalidated/binding-change/raw5/expired-reader/6秒reader；均保持原window与Required，无DATA升许可。
+
+原20受影响测试全raw0：returned2/33750ms、worker3父七子/1531ms、release2/41687ms、concrete1/11266ms、origin5/78ms、strictV1data4/47ms、Send1/31ms、QPC2/31ms；六原失败子fixture只原创建handle242处置，不签Stop/Closed。最终TEST EXE SHAe106af69e6ec53038d287c71299a18fc4d128f74ecac4f2add89088462d068e3；19最终执行源逐Git行尾归一核，两轮全source/raw输出与七子case保。40成功root缺席，schema生成raw归档还原/移出；1新失败5余文件根/ZIP、历史拒删/driver失败/synthetic27960保留，无历史全清。
+
+status.json127项完整状态。当前新增为内部canonical fullhistory接线/原生组件证据，不等strict可达privatehost/fulltrait/nativeV2partial准备或真实普通Profile官方Owner已验；原预算整链/容量/CAPtrust/普通MSI/最终候选继续未完。当前r2Job24raw50Unknown不重复PSS/零访问query/旧cleanup探Status，原21500/75744/原件/work/custody/anchors/协调/旧seq9及40588不动，无当前执行确认请求，旧50580/54692授权不延用；原件未还不跑新官方。旧两目录删除自动审批blocked by policy源不绕过/重删。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99与日常配置PATH策略不变，不W2/双SID/发布，目标active继续。
+
+## 2026-11-18 TEAM31 原worker canonical三阶段trait接线
+
+代码1f940af6c39ab38805c12e301f6b096c3ed74cbb已推送；消费/合main4ea82e8a61fe00c1f76334db5e39654f49f4342e及docsbf819aab3后继完整输入见source-manifest.json，TEAM31/IMP168/r7原写集与共享接口不变。新增Windows签名封装校验/.github workflow/Pythontests，Rust图无净差，非安装行为或发布验收，不据此重跑MSI/CLI/scan/旧归档；收到工具原证据Git树逐upstream完全相同，原空白diagnostic单列log、只rawlog/patch检查时例外，不改原bytes。
+
+WorkerLocal实现 unchanged BeforeFirstResumeRecovery：canonical prepare锁/目录/原prefix/持久附件Intent，quiesce原同claim+Job，restore逐nodeReturn/原tag留位/显式release/原nativefinal全读。BoxAttempt先保原session/action/scope/end/thread/nonce再fallible锁，实际prefix/quiescent保原worker/Owner/adapter再后check，tagtake在原adaptermutex取得后才发生，失败Failed/revoke/原worker持锁原资源不重试。阶段间只释放claim borrow，底层sameNativeLease的claim/N/L/K始终持有，无activeSend。三个private/nonClone/nonserde关联tag仅定位原native阶段，final locator只能借已存原Owner actualprivateproof核，不能由记录构造。生产callback已按trait prepare→quiesce→restore→actualretainedproofcheck消费，无新计时/共享ABI变化。
+
+证据wl2-r7-canonical-trait-20261118-r1：product01真实完整MSVC库raw101/168410ms，类型/metadata2过、原生3stage借用同epoch/key/all4ranges raw33过且显式release/readback过，最后新test误断言leaseOptionNone（原primitive保失活drained壳）；原.tmpe2DUqC四空协调文件/dirs只读ZIP/member/hash前后核并保scene。仅改新test为实际4range可独占取得并明确unlock、原失活lease拒claim、ReleasedLeasecheck继续过，生产实现/预算/断言边界不改；product02 raw0/167330ms只重测原生项过，两个类型/metadata不变复用。原12受影响测试全raw0：worker3父7子/1735ms、concretepipeline1父2模式/11187ms、returned2/33594ms、origin5/63ms、Send1/46ms；六原失败子fixture只原创建handle242单列自有处置，非Stop/Closed/currentr2。新3tests中只有1实际lease夹具，metadata/type守卫不冒原Owner运行。
+
+最终TEST EXE SHA6c94be0ddb710f3dd0c22290a3de3a22dbb924cba5e146800d666119be721d00；5最终执行源逐Git行尾归一核，首错/两轮全source/raw输出/七子case保。20新成功root缺席，schema生成raw归档还原/移出；1新4file失败树/ZIP及所有旧失败/拒删/synthetic27960清理缺口保持，不冒历史全清。status.json135项完整状态。canonical trait生产桥已全产品图编译，真实普通Profile固定官方Owner运行尚未执行；完整trait范围V2pre-manifest/partial恢复与缺根、strict可达privatehost、容量/CAPtrust/普通MSI/最终候选/整链原预算仍未完。当前r2Job24raw50Unknown只停自身证明，不重跑PSS/零query/旧cleanup探Status，原21500/75744/原件/work/custody/anchors/协调/旧seq9及40588不动，无当前执行确认请求，旧50580/54692授权不延用，原件未还不跑新官方。旧两目录删除自动审批blocked by policy源不绕过/重删。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99与日常配置PATH策略不变，不W2/双SID/发布，目标active继续。
+
+## 2026-11-18 独立严格v2私有恢复协议DATA
+
+代码58f0d49f2b45ad108cf921ef04fae32f9980f133已推送；main4ea82e8a61fe00c1f76334db5e39654f49f4342e、TEAM31/IMP168/r7，docs当前输入完整SHA见source-manifest.json。新Windows ownerhost codec/注册不改旧schema1/cleanup，不为原loaded357热补或新image接旧pipe；TEAM原写集明确ocxd.rs仅Windows internalowner分派可写，后续不要求额外共享ABI。
+
+windows-before-resume-private-control-v2严格独立结构，仅begin-canonical-abort（显式before-first-resume确认）/read-worker-diagnostic与read-canonical-history（只读确认）。全fields/嵌套budget必需，拒旧v1/unknown/duplicate/缺字段/尾随或超长frame/非规范UUID-QPC/任意PID-path-handle-proof。Locator只本地pipe/scope摘要/非零broker代次DATA，必须后续原nativepeer绑定，不从定位数据创造Owner。QPC固定Begin原10/两读原5，从采样起点扣已耗时间；Instant先于nativeQPC、remaining向下elapsed向上，future/expired/freq替换/overflow/超预算拒。hello原instance/generation/challenge/scope，requestID/transportActionID/challenge三单次keys、有界16384，全部检查完才登记；transportID不冒原Owner真实recoveryActionId。
+
+证据wl2-r7-private-wire-20261118-r1：product01真实完整MSVC产品库raw0/160830ms，6过0败0ignored，DATA测试0.01s，无意外产品首错；准备rustfmt新UNC负例普通转义p/o raw1，原source保留，后改rawstring并重新准备才build；依赖script未生成时pathabsent未启动build/native，preparation-error.json如实列。4最终源逐Git行尾归一核，TEST EXE SHAaa94e650a57fe06953b8586c78120c9627b7e88228f2c74b72e1784ddecdca57。未创建nativeFixture/endpoint/Owner或恢复动作，schema生成raw归档还原/移出；历史失败/拒删/synthetic27960清理缺口保持，不重试删除。
+
+status.json141项完整状态。本批仅协议DATA，实际protectedlocator/pipe、ordinary/noJob/sameimage/token双端认证、原registry dispatch/首次变更前可达endpoint仍待；不把codec等同可达或nativeOwner能力。完整nativeV2partial/pre-manifest/缺根、真实普通Profile固定官方Owner整链原预算/容量/CAPtrust/普通MSI/候选未完。原r2Job24raw50Unknown只停自身证据，不PSS重复/旧cleanup探Status，原21500/75744/原件/work/custody/anchors/协调/旧seq9及40588不动，旧50580/54692授权不延用，无当前force/归还批准，原件未还不跑新官方。旧两目录删除自动审批blocked by policy源不绕过重删。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99与日常PATH配置策略保持，不W2/双SID/发布，目标active继续。

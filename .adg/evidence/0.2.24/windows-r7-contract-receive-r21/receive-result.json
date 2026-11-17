@@ -1,0 +1,37 @@
+{
+  "code": "58f0d49f2b45ad108cf921ef04fae32f9980f133",
+  "evidence": "0d6fa9c0dae16eb37327e8738ee2de0064dd549c",
+  "rounds": [
+    {
+      "round": "wl2-r7-canonical-trait-20261118-r1",
+      "payloadFiles": 97,
+      "payloadBytes": 850487,
+      "exactManifestAndMembership": true
+    },
+    {
+      "round": "wl2-r7-private-wire-20261118-r1",
+      "payloadFiles": 31,
+      "payloadBytes": 660933,
+      "exactManifestAndMembership": true
+    }
+  ],
+  "sourceFilesGitOrCrlfVerified": {
+    "wl2-r7-canonical-trait-20261118-r1": [
+      "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait.rs",
+      "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait/tests.rs",
+      "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/driver.rs"
+    ],
+    "wl2-r7-private-wire-20261118-r1": [
+      "apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control.rs",
+      "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire.rs",
+      "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire_tests.rs"
+    ]
+  },
+  "scope": "payload/source/handoff review, not Windows execution or full product acceptance",
+  "allAccepted": false,
+  "currentR2Unchanged": true,
+  "endpointReachabilityNotProvedByCodec": true
+}

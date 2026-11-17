@@ -1,0 +1,15 @@
+# 原worker canonical三阶段trait接线
+
+代码1f940af6c后继完整SHA见status.json已推送；main4ea82e8a61fe00c1f76334db5e39654f49f4342e与docs输入完整SHA见source-manifest.json，TEAM31/IMP168/r7。新main只有Windows embedded signedinstaller校验/.github/workflow/Pythontests，不改Rust图/安装器模板或本线native独占集；不重复MSI/CLI/扫描/归档，不执行发布。收到的两个原工具证据Git树与upstream一致，raw空白检查诊断保留、只这些rawlog/sourcepatch检查时例外，原bytes不改。
+
+WorkerLocal实现原BeforeFirstResumeRecovery三阶段：canonical prepare锁/目录/原prefix/附件持久意图；quiesce原同claim与原Job；restore逐node原件返回/保原tag/显式release/原final全读。实际prefix/quiescent/native资源留原worker BoxAttempt/原Owner/adapter后才后续fallible检查；take实际tag在原adapter mutex取得后，失败原worker持锁/资源，revoke/Failed禁止重试。阶段间只drop借用claim，底层同NativeLease claim/N/L/K仍持有，无跨线程activeSend。
+
+三associated类型private/nonClone/nonserde，仅定位原worker nonce/thread/原Owner/action/scope/end，完成locator只核已经留原Owner的actual private恢复proof，不能从JSON创建。生产driver已消费trait的prepare→quiesce→restore→actual original proof check，不改共享trait/CONTRACT_VERSION4、不新开计时。canonical完整manifest路径外仍Required；**V2pre-manifest/partial恢复、可达privatehost和真正原产品Owner固定官方验收未完成**，不能以trait存在宣称完整范围通过。
+
+product01完整MSVC库raw101/168410ms：2类型/metadata测试过，实际3借用阶段epoch/key/all4ranges raw33过，显式释放/原读回也成功；末test错断言原lease Option必须None，而原release保失活drained壳。原.tmpe2DUqC四空协调文件与dirs精确只读ZIP/member/hash前后核，原scene保。仅修新test：实际四range可独占取得并明确unlock、原失活lease拒claim、原ReleasedLeasecheck继续过，不改生产primitive/预算/权限。product02完整产品库raw0/167330ms，只重测实际lease项过；类型/metadata源码未变复用product01。
+
+原12受影响测试过：worker3父7子raw0/1735ms、concretepipeline1父2模式raw0/11187ms、returned2raw0/33594ms、origin5raw0/63ms、Send1raw0/46ms。原六失败子fixture只准确自有创建handle242单列清理，非normalStop/Closed/currentr2。新三测试中只有一个实际原生lease夹具，另两个typed/metadata guard不冒真实Owner证明；生产trait调用已全图编译，尚未实际固定官方Owner运行。
+
+最终TEST EXE SHA6c94be0ddb710f3dd0c22290a3de3a22dbb924cba5e146800d666119be721d00；5最终执行源逐Git行尾归一核，原首错/两轮source/raw输出/7子case全保。20成功新root缺席，schema生成raw归档还原/移出；新增4file失败树/ZIP及历史失败/拒删/synthetic27960清理缺口保留。
+
+完整135项本线状态见status.json。当前r2原Job24raw50Unknown只停其证明，不重复同前提/PSS/旧cleanup探Status；21500/75744/原件/work/custody/协调/旧seq9和40588不动，旧50580/54692批准不延用，无新force/归还授权。原件未还不新跑官方，publicStart/production/allAcceptedfalse；真实普通Profile官方完整预算、nativeV2partial/缺根、privatehost、容量/CAPtrust/普通MSI/候选继续未完。原预算/unknown/普通token/官方2.99与日常配置PATH策略保持，不W2/双SID/发布，目标active。

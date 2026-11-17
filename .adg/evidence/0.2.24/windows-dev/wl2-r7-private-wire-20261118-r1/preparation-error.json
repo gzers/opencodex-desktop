@@ -1,0 +1,8 @@
+{
+  "dependentInvocation": "run-product.ps1 absent because formatting preparation failed; no test or native process started",
+  "fix": "use Rust raw string for exact remote path negative; preserve original source",
+  "error": "test remote pipe literal used normal quoted backslashes: unknown character escape p/o",
+  "stage": "prepare/rustfmt",
+  "productBuildStarted": false,
+  "raw": 1
+}

@@ -1,0 +1,50 @@
+{
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs",
+      "bytes": 10363,
+      "sha256": "3d960b9013f151aa970f9e7c587cd94fd813c4559112d03262af14f44d5966d8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control.rs",
+      "bytes": 245,
+      "sha256": "93f6a81435669ae718f7cf8613a062a6d244014f4a4602c52fefb80810d7d16d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire.rs",
+      "bytes": 8210,
+      "sha256": "8072563f5289d351a96f2fae047099ee92f47d0ec3cc516269c116ca38482c04"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire_tests.rs",
+      "bytes": 9929,
+      "sha256": "7da1023b7419f5113cc2b2a8fb83497a9600a7d61d5e0f66a84dbd1c1f8b8146"
+    }
+  ],
+  "currentR2Touched": false,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_private_wire_v2_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}
