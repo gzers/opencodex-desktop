@@ -1,0 +1,3 @@
+Tool-only static preparation marker mismatch; no source writes had occurred.
+prepare_route_slot.py expected one-line store.content_start.check_completed_history but source was multiline chained .content_start then .check_completed_history.
+AssertionError at exact-count check before write_text. Corrected exact multiline marker and reran only source transformation, not a native experiment.
