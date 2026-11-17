@@ -3,6 +3,8 @@
 //! checks, claim/NLK, transport and full restoration remain separate work.
 use super::*;
 use crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow;
+mod clock;
+use clock::RecoveryClock;
 #[derive(PartialEq, Eq)]
 enum ProcessPhase {
     Pending,
@@ -48,6 +50,7 @@ pub(in crate::infrastructure::windows_official_lifecycle024) struct ProcessAbort
     token: Option<native::TokenIdentity>,
     launcher: Option<native::PreparedLauncherAbort>,
     quiescent: Option<native::QuiescentLauncher>,
+    clock: Option<RecoveryClock>,
     phase: ProcessPhase,
 }
 impl ProcessAbortAttempt {
@@ -70,6 +73,7 @@ impl ProcessAbortAttempt {
             token: None,
             launcher: None,
             quiescent: None,
+            clock: None,
             phase: ProcessPhase::Pending,
         }
     }
@@ -106,6 +110,37 @@ impl ProcessAbortAttempt {
     }
 }
 impl Owner {
+    pub(crate) fn before_resume_quiescent_record(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<(u32, u64, u32)> {
+        self.check_before_resume_quiescent(window)?;
+        let binding = &self.native.binding().process;
+        let proof = self
+            .before_resume_process
+            .as_ref()
+            .unwrap()
+            .quiescent
+            .as_ref()
+            .unwrap();
+        Ok((
+            binding.pid,
+            binding.creation_filetime,
+            proof.forced_raw_exit(),
+        ))
+    }
+    /// DATA projection only from this original retained recovery action. It
+    /// never creates a native deadline or action from serialized QPC strings.
+    pub(crate) fn before_resume_record_origin(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<(String, [String; 3])> {
+        self.check_before_resume_process(window)?;
+        let original = self.before_resume_process.as_ref().unwrap();
+        let clock = original.clock.as_ref().ok_or_else(recovery_required)?;
+        clock.check(window.deadline()).map_err(native_failure)?;
+        Ok((original.failed_start.to_string(), clock.data()))
+    }
     pub(crate) fn fail_before_resume_process(&mut self) {
         if let Some(original) = &mut self.before_resume_process {
             original.phase = ProcessPhase::Failed;
@@ -196,6 +231,8 @@ impl Owner {
         ));
         let result = (|| {
             let end = window.deadline();
+            self.before_resume_process.as_mut().unwrap().clock =
+                Some(RecoveryClock::capture(end).map_err(native_failure)?);
             self.before_resume_process.as_ref().unwrap().check_origin(
                 self.session,
                 &self.start_action,
@@ -290,6 +327,12 @@ impl Owner {
             self.start_failure.as_ref(),
             end,
         )?;
+        original
+            .clock
+            .as_ref()
+            .ok_or_else(recovery_required)?
+            .check(end)
+            .map_err(native_failure)?;
         if original.scope.as_ref() != Some(&self.scope()?)
             || original.token.as_ref() != Some(&native::current_identity().map_err(native_failure)?)
         {

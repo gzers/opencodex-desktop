@@ -68,7 +68,7 @@ pub(super) struct Record {
 }
 #[derive(Deserialize, Serialize, PartialEq, Eq)]
 #[serde(tag = "kind", deny_unknown_fields)]
-enum Event {
+pub(super) enum Event {
     AbortRecoveryIntent {},
     #[serde(rename_all = "camelCase")]
     LauncherQuiesced {
@@ -119,6 +119,47 @@ enum Event {
     },
 }
 impl Record {
+    // Validated DATA constructor only. The original native adapter, not this
+    // type or disk parser, is responsible for the provenance of every field.
+    pub(super) fn initial_data(fields: [String; 8], clock: [String; 3]) -> io::Result<Self> {
+        let [session_id, failed_action_id, manifest_digest, binding_digest, storage_plan_digest, security_policy_digest, failed_prefix_digest, recovery_action_id] =
+            fields;
+        let [started_qpc, deadline_qpc, qpc_frequency] = clock;
+        let record = Self {
+            schema: SCHEMA.into(),
+            session_id,
+            failed_action_id,
+            manifest_digest,
+            binding_digest,
+            storage_plan_digest,
+            security_policy_digest,
+            failed_prefix_digest,
+            recovery_action_id,
+            sequence: 1,
+            previous_record_digest: None,
+            started_qpc,
+            deadline_qpc,
+            qpc_frequency,
+            event: Event::AbortRecoveryIntent {},
+        };
+        record.validate()?;
+        Ok(record)
+    }
+    pub(super) fn next_data(&self, previous_raw: &[u8], event: Event) -> io::Result<Self> {
+        if Self::decode(previous_raw)? != *self {
+            return Err(invalid());
+        }
+        let mut next: Self = serde_json::from_slice(previous_raw).map_err(|_| invalid())?;
+        next.sequence = next.sequence.checked_add(1).ok_or_else(invalid)?;
+        next.previous_record_digest = Some(crate::infrastructure::hash::sha256_hex(previous_raw));
+        next.event = event;
+        next.validate()?;
+        Ok(next)
+    }
+    pub(super) fn encode_data(&self) -> io::Result<Vec<u8>> {
+        self.validate()?;
+        serde_json::to_vec(self).map_err(|_| invalid())
+    }
     pub(super) fn decode(raw: &[u8]) -> io::Result<Self> {
         if raw.is_empty() || raw.len() > MAX_RECORD {
             return Err(invalid());

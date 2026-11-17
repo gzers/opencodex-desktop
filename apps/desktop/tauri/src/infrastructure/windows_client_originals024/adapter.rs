@@ -73,6 +73,7 @@ pub(crate) struct WindowsOriginals {
     // Original checked prefix retained before any one-shot quiescence call.
     // Its native sources remain in this exact slot and the original Owner.
     abort_prefix: Option<PreparedAbortPrefix>,
+    abort_attachment: Option<before_resume::attachment::BoundAttachment>,
 }
 impl WindowsOriginals {
     pub(crate) fn read_before_resume_prefix(

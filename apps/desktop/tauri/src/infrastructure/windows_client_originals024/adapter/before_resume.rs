@@ -6,6 +6,7 @@ use crate::{
     infrastructure::{hash, windows_client_originals024::coordination::AnchoredClaim},
     modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
 };
+pub(super) mod attachment;
 pub(crate) struct PreparedAbortPrefix {
     session: uuid::Uuid,
     scope: String,
@@ -148,11 +149,19 @@ impl WindowsOriginals {
                 window.deadline(),
                 &actual,
             )?;
+            self.abort_attachment
+                .as_mut()
+                .ok_or_else(|| refused("原恢复附件未先持久化Intent"))?
+                .check(owner, prefix, window)?;
             let mut bound = ClaimBoundAbort {
                 prefix,
                 claim: &mut *claim,
             };
             owner.quiesce_before_resume_process(&mut bound, window)?;
+            self.abort_attachment
+                .as_mut()
+                .unwrap()
+                .record_quiescent(owner, prefix, window)?;
             // The SAME actual claim is never released/reacquired here. Native
             // original quiescence plus unchanged complete original prefix must
             // both hold; forced is still not a normal service exit.
@@ -195,6 +204,10 @@ impl WindowsOriginals {
                 .as_ref()
                 .ok_or_else(|| refused("原quiescent前缀缺席"))?;
             proof.check_tag(prefix)?;
+            self.abort_attachment
+                .as_mut()
+                .ok_or_else(|| refused("原恢复附件缺席"))?
+                .check(owner, prefix, window)?;
             prefix.check_read(
                 self.session,
                 claim.epoch(),
