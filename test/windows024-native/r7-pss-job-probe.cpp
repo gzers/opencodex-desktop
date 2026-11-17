@@ -1,5 +1,7 @@
-// Initial TEAM19 PSS capability probe, self-owned broker/anonymous Job only.
-// No CLI accepts a target PID. No VA clone, names, memory/thread-context dump,
+// TEAM21 PSS capability probe, self-owned broker/anonymous Job only.
+// NAME_INFORMATION captures names inside the transient OS snapshot solely to
+// obtain complete TypeName. ObjectName is never dereferenced or persisted.
+// No CLI accepts a target PID. No VA clone, memory/thread-context dump,
 // external cleanup, SAME_ACCESS or CLOSE_SOURCE is used by the observer.
 #define WIN32_LEAN_AND_MEAN
 #define _WIN32_WINNT 0x0A00
@@ -115,11 +117,11 @@ int main(int argc,char** argv){
   DWORD brokerPid=0,nodePid=0;uint64_t nodeTime=0,brokerTime=0;uintptr_t ownJob=0,ownDuplicate=0;std::string text=line(outRead);std::istringstream input(text);input>>brokerPid>>nodePid>>nodeTime>>brokerTime>>ownJob>>ownDuplicate;
   require(brokerPid==p.dwProcessId && brokerTime==created(p.hProcess) && nodePid && nodeTime && ownJob && ownDuplicate && ownJob!=ownDuplicate,"own original broker receipt");
   for(DWORD rights:{DWORD(PROCESS_QUERY_LIMITED_INFORMATION|SYNCHRONIZE),DWORD(PROCESS_QUERY_LIMITED_INFORMATION|PROCESS_DUP_HANDLE|SYNCHRONIZE),DWORD(PROCESS_QUERY_INFORMATION|PROCESS_DUP_HANDLE|SYNCHRONIZE)})
-   for(DWORD flags:{DWORD(PSS_CAPTURE_HANDLES),DWORD(PSS_CAPTURE_HANDLES|PSS_CAPTURE_HANDLE_BASIC_INFORMATION),DWORD(PSS_CAPTURE_HANDLES|PSS_CAPTURE_HANDLE_BASIC_INFORMATION|PSS_CAPTURE_HANDLE_TYPE_SPECIFIC_INFORMATION)})
+   for(DWORD flags:{DWORD(PSS_CAPTURE_HANDLES|PSS_CAPTURE_HANDLE_NAME_INFORMATION),DWORD(PSS_CAPTURE_HANDLES|PSS_CAPTURE_HANDLE_NAME_INFORMATION|PSS_CAPTURE_HANDLE_BASIC_INFORMATION)})
     observe(brokerPid,brokerTime,nodePid,nodeTime,ownJob,ownDuplicate,rights,flags);
   char command='x';DWORD written=0;require(WriteFile(inWrite,&command,1,&written,nullptr)!=FALSE && written==1,"own cleanup signal");
   auto cleanup=line(outRead);require(cleanup=="cleaned 242 1 0","own cleanup receipt");require(WaitForSingleObject(p.hProcess,5000)==WAIT_OBJECT_0,"own broker normal exit");DWORD raw=0;require(GetExitCodeProcess(p.hProcess,&raw)!=FALSE && raw==0,"own broker raw0");
-  std::cout<<"{\"probeFinished\":true,\"ownLauncherRaw\":242,\"ownBrokerRaw\":0,\"currentR2Touched\":false,\"objectNamesRead\":false,\"memoryCaptured\":false,\"accepted\":false}"<<std::endl;
+  std::cout<<"{\"probeFinished\":true,\"ownLauncherRaw\":242,\"ownBrokerRaw\":0,\"currentR2Touched\":false,\"objectNamesRead\":false,\"objectNamesCapturedInsideTransientSnapshot\":true,\"snapshotPersisted\":false,\"memoryCaptured\":false,\"accepted\":false}"<<std::endl;
   return 0;
  }catch(const Error& e){std::cerr<<"probe FAILED "<<e.what()<<" raw="<<e.raw<<std::endl;return 1;}
 }
