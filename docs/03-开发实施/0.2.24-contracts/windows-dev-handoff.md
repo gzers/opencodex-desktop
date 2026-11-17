@@ -965,3 +965,9 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 ## 2026-11-17 r6 获准两目标实际forced清理回执
 
 原普通marenben SID1003/session7入口执行成功：同保留句柄Node50580→broker54692退出242/242，492ms；原FILETIME/image nativeID/hash/Token/Node单挂起线程、私有ZIP与原首失败receipts5项nativeID/hash前后核验。原始6文件归.adg/evidence/0.2.24/windows-dev/wl2-r6-authorized-failure-cleanup-20261117-receive-r1/，全121项状态保持。控制器核原字节/已知摘要/回执字段，CIM两PID缺席、40588仍在；不冒原Job/NormalStop/Closed或全companions/整体清理通过。文件未删、旧scene/ZIP保留、PATH一致，旧删除拒绝不重试。源码仍323c3fc3e，产品5c5c6fa85；下一步fresh独立I/D/H与真实原包闭环，不复用首失败事务，不改公开Start拒绝。全部原未完/日常官方边界/W2双SID及不发布继续。
+
+## 2026-11-17 r6 独立existing原包r2入口
+
+源码357210891f14a1851881e6192bd09d7031471707/treea284da0e1bd517daa26848857b8189bbc88838c0已推送，仅6个Windows允许文件。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-fresh-existing-fixture-20261117-r1/及完整125项状态。fresh r2 I/D/H不复用旧失败事务；旧10节点合成基线/3处协调文件只在原来源SHA与当前实际原ID/8/字节一致时只读复用为准备，未重建/迁移/取得旧lease或mint NativeProof。新真实Owner仍须取得实际NativeLease及四trait，原全部预算/Unknown拒绝/full recovery_state_at/Status/公共Startgate保持。当前PresentOriginalSyntheticBaseline，原始Absent历史另列，初始化与原缺席退根未通过。
+
+定向MSVC7过0败0忽略；PS51同一新目录函数真实owner/SYSTEM-only私有权限及既存/越界拒绝过。clean357产品custom-protocol全bins raw0/135791ms，actual run/stdout与lib.d提交标记核；三EXE完整SHA归artifacts.json。身份首查误用output文件名/移动空日志失败属本地工具，不冒产品失败或隐去旧raw2；修按实际路径核。library源中两未执行launcher脚本后加one-shot/raw-exit差额明列，其它Rust逐原字节/归一CRLF对Git核。public入口C:/Users/Public/ocx-r6-official-existing-20261117-r2/launch-r6-official-existing-r2.cmd待用户普通marenben/session7/noJob桌面，实际生产尚未重验。首错停止动作、原broker/Owner及全部文件保留，自动完整有界导出；新宿主可受限控制、不自动force。原40588不动，旧失败scene/ZIP/删除拒绝/所有原未完保留，Start/allAcceptedfalse，无日常/官方/业务/模型/旧raw5空跑/空GUI/W2/双SID/发布。

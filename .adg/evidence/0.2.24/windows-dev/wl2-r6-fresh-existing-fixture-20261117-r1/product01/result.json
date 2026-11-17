@@ -1,0 +1,24 @@
+{
+  "accepted": false,
+  "elapsedMs": 141253,
+  "profile": "debug",
+  "exitCode": 0,
+  "arguments": [
+    "build",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.dev.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.dev.package.opencodex-desktop.incremental=false",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--bins",
+    "-j",
+    "1"
+  ]
+}

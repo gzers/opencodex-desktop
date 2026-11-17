@@ -1,0 +1,31 @@
+{
+  "profile": "debug",
+  "exitCode": 0,
+  "elapsedMs": 160528,
+  "accepted": false,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "--",
+    "windows_client_originals024::existing_qualification::tests::",
+    "windows_client_originals024::existing_qualification::fresh_fixture::tests::",
+    "windows_owner_host024::failure_control::tests::",
+    "windows_owner_host024::tests::",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

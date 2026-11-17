@@ -1,0 +1,14 @@
+
+running 7 tests
+test infrastructure::windows_client_originals024::existing_qualification::fresh_fixture::tests::wl2_r6_fresh_fixture_forced_receipt_shape_refuses_normal_or_incomplete_facts ... ok
+test infrastructure::windows_client_originals024::existing_qualification::tests::wl2_r6_existing_qualification_archive_mapping_rejects_escape_and_unknown_source_without_authority ... r6 qualification fixed source map refuses traversal/unknown prefixes/ADS/alternate separator; DATA path mapping creates no qualification, native Owner/lease/Closed or public Start permit
+ok
+test infrastructure::windows_client_originals024::existing_qualification::tests::wl2_r6_existing_qualification_baseline_shape_rejects_omitted_extra_and_foreign_data ... r6 original credential-free synthetic baseline requires exact complete10 ordered locators and kinds before any native source read/setup; omitted/extra/foreign DATA never grants admission
+ok
+test infrastructure::windows_owner_host024::failure_control::tests::wl2_r6_failure_control_rejects_expired_extended_or_duplicate_action_before_consuming ... ok
+test infrastructure::windows_owner_host024::failure_control::tests::wl2_r6_failure_control_rejects_success_service_actions_stale_binding_and_replay ... ok
+test infrastructure::windows_owner_host024::tests::wl2_qpc_preserves_original_restart_stop_subwindow ... ok
+test infrastructure::windows_owner_host024::tests::wl2_strict_frames_reject_duplicate_truncated_and_unknown ... ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 2126 filtered out; finished in 0.06s
+
