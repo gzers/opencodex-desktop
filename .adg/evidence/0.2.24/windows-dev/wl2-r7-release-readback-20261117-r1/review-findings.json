@@ -1,0 +1,13 @@
+{
+  "product01": "2passed with complete native assertions and original cutoffs; no unexpected error",
+  "reviewGap": "negative cases only Err could fail earlier for another reason, including timeout; tightened to exact targeted error and final durable record presence",
+  "productionCodeChangedFrom01": false,
+  "product02TestOnlyChanges": [
+    "busyowner exactly raw33",
+    "expired exactlyTimedOut",
+    "finalrecord must exact injected message",
+    "foreignmember/afterfinalmember exactlyInvalidData",
+    "afterfinalmember must actually have reached durableAbortRestoreVerified before native after-fence denial",
+    "success5prefixes output actualelapsed with originalend status; no newtimer"
+  ]
+}

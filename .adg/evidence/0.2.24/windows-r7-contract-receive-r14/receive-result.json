@@ -1,0 +1,30 @@
+{
+  "code": "44aa85f6c8e54fe58b9719be3d0706f838f912ae",
+  "evidence": "b2b25c26e5d644c905ca45e89fd8315802fec449",
+  "round": "wl2-r7-release-readback-20261117-r1",
+  "payloadFiles": 103,
+  "payloadBytes": 1143798,
+  "exactManifestAndMembership": true,
+  "sourceFilesGitOrCrlfVerified": [
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume/attachment.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/release_probe.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/release_tests.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/return_tests.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture/abort_return.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture/abort_return/released.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/before_resume.rs"
+  ],
+  "scope": "payload/source/handoff review, not Windows execution or full product acceptance",
+  "allAccepted": false,
+  "currentR2Unchanged": true
+}
