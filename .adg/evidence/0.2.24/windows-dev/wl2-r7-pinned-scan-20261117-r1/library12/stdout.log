@@ -1,0 +1,22 @@
+
+running 16 tests
+test modules::runtime::program_image::windows_tests::r7_image_baseline_worker1_default4_and_serial_reference_cover_every_byte_and_empty_directory ... R7_SCAN_BASELINE {"referenceDigest":"38df8b486c8768338d3a20bbe98dc314bd9d4d2d7d68885e88642531477a6a2e","samples":[{"elapsedUs":1711,"entries":5,"fileBytes":48,"metricNote":"worker nanoseconds sum overlapping spans; join wait includes worker I/O, not pure CPU cost","nativeOwner":false,"officialExecuted":false,"ordinal":0,"productionBudgetAccepted":false,"source":"same actual program_image inventory section","stages":{"stages":{"directory-enumeration":[3,309300],"directory-final-fence":[3,158500],"directory-path-admission":[3,143800],"entry-inspect-name":[6,156800],"existing-path-boundary":[9,406800],"file-admission-open":[3,115000],"file-read-hash":[3,75500],"file-total":[3,199500],"inventory-enumeration-total":[1,634200],"inventory-read-and-fence-total":[1,1076100],"worker-join-wait":[1,629500]}},"treeSha256":"38df8b486c8768338d3a20bbe98dc314bd9d4d2d7d68885e88642531477a6a2e","workers":1},{"elapsedUs":1201,"entries":5,"fileBytes":48,"metricNote":"worker nanoseconds sum overlapping spans; join wait includes worker I/O, not pure CPU cost","nativeOwner":false,"officialExecuted":false,"ordinal":1,"productionBudgetAccepted":false,"source":"same actual program_image inventory section","stages":{"stages":{"directory-enumeration":[3,249200],"directory-final-fence":[3,154400],"directory-path-admission":[3,141400],"entry-inspect-name":[6,113000],"existing-path-boundary":[9,619400],"file-admission-open":[3,176600],"file-read-hash":[3,114600],"file-total":[3,303900],"inventory-enumeration-total":[1,461100],"inventory-read-and-fence-total":[1,739300],"worker-join-wait":[3,497800]}},"treeSha256":"38df8b486c8768338d3a20bbe98dc314bd9d4d2d7d68885e88642531477a6a2e","workers":4}]}
+ok
+test modules::runtime::program_image::windows_tests::r7_image_fixed_copy_stage_metrics_worker1_and_default4 ... ignored, explicit fixed copied image only; no product/Owner/official launch
+test modules::runtime::program_image::windows_tests::r7_image_fixed_pinned_reference_same_full_bytes_and_digest ... ignored, explicit complete fixed owned image reference/new implementation measurement
+test modules::runtime::program_image::windows_tests::r7_image_pinned_acl_change_during_read_is_refused_at_security_fence ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_ads_hardlink_sparse_and_expired_deadline_are_refused ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_aggregate2gib_bound_refuses_before_any_payload_read ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_deadline_expires_without_returning_subset_or_detached_reader ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_depth65_preserves_original64_directory_bound ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_full_inventory_matches_reference_workers1_and4 ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_full_membership_detects_extra_file_and_directory_in_final_fence ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_junction_is_refused_without_reading_target_files ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_objects_deny_content_write_delete_and_same_name_replacement ... ok
+test modules::runtime::program_image::windows_tests::r7_image_pinned_worker_error_and_panic_join_all_started_readers ... ok
+test modules::runtime::program_image::windows_tests::r7_image_same_length_byte_change_add_delete_empty_directory_and_hardlink_are_not_cached ... ok
+test modules::runtime::program_image::windows_tests::r7_image_sparse_file_bound_refuses_without_reading_payload ... ok
+test modules::runtime::program_image::windows_tests::r7_image_worker_failure_joins_every_started_worker_before_returning_error ... ok
+
+test result: ok. 14 passed; 0 failed; 2 ignored; 0 measured; 4 filtered out; finished in 0.28s
+

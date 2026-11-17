@@ -1,0 +1,3922 @@
+{
+  "schema": "windows-r7-readonly-locators-v1",
+  "authority": false,
+  "originManifestSha256": "a3b159e09f7e6c48f75d9f597e632d0f0ad545439e4c7682d25196c903a2cd11",
+  "objects": [
+    {
+      "path": "C:\\Users\\marenben\\.codex",
+      "directory": true,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "1125899908279121",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  3,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  3,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "b00c86a107d897f4c8e60e96028049a6bcfcd344ed49b9bd72f0aed4ffe7ee82"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [
+        ".opencodex-native-main.claim.sqlite",
+        ".opencodex-native-main.owner.sqlite",
+        "auth.json",
+        "config.toml"
+      ],
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "DirectoryAnchor",
+      "parentId": "750412287910721434"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.codex\\.opencodex-native-main.claim.sqlite",
+      "directory": false,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "844424931568473",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [],
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "CoordinatorAnchor",
+      "parentId": "1125899908279121"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.codex\\.opencodex-native-main.owner.sqlite",
+      "directory": false,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "562949954857820",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [],
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "CoordinatorAnchor",
+      "parentId": "1125899908279121"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.ocxd024-originals-c3db7afd-959c-44fb-8743-1cca384043c8-codex\\original-1f3a4531c58589a9c152e756a506c3d90c1d37bb25f0bc33d61c840d35664b4b",
+      "directory": false,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "562949954857826",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [],
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "role": "CustodiedOriginal",
+      "parentId": "562949954956008"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.codex\\auth.json",
+      "directory": false,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "281474978245361",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [],
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "role": "WorkingCopy",
+      "parentId": "1125899908279121"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.ocxd024-originals-c3db7afd-959c-44fb-8743-1cca384043c8-codex\\original-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039",
+      "directory": false,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "562949954857823",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [],
+      "bytes": 51,
+      "sha256": "d19c0773b53b6f016fbf35f317cae551c540b70e67fd5309a8a4c1d847bc7700",
+      "role": "CustodiedOriginal",
+      "parentId": "562949954956008"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.codex\\config.toml",
+      "directory": false,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "281474978245362",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [],
+      "bytes": 51,
+      "sha256": "d19c0773b53b6f016fbf35f317cae551c540b70e67fd5309a8a4c1d847bc7700",
+      "role": "WorkingCopy",
+      "parentId": "1125899908279121"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.ocxd024-originals-c3db7afd-959c-44fb-8743-1cca384043c8-codex",
+      "directory": true,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "562949954956008",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  3,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  3,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "b00c86a107d897f4c8e60e96028049a6bcfcd344ed49b9bd72f0aed4ffe7ee82"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [
+        "original-1f3a4531c58589a9c152e756a506c3d90c1d37bb25f0bc33d61c840d35664b4b",
+        "original-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039"
+      ],
+      "role": "Custody",
+      "parentId": "750412287910721434"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.grok",
+      "directory": true,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "1125899908279125",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  3,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  3,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "b00c86a107d897f4c8e60e96028049a6bcfcd344ed49b9bd72f0aed4ffe7ee82"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [
+        "config.json"
+      ],
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "DirectoryAnchor",
+      "parentId": "750412287910721434"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.ocxd024-originals-c3db7afd-959c-44fb-8743-1cca384043c8-grok\\original-3a10edefc02d709f9f87849c7b1b82b41e7c83a25dd4614f268f6bd5101ecf93",
+      "directory": false,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "562949954857829",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [],
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "role": "CustodiedOriginal",
+      "parentId": "281474978245353"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.grok\\config.json",
+      "directory": false,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "281474978245363",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [],
+      "bytes": 3,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+      "role": "WorkingCopy",
+      "parentId": "1125899908279125"
+    },
+    {
+      "path": "C:\\Users\\marenben\\.ocxd024-originals-c3db7afd-959c-44fb-8743-1cca384043c8-grok",
+      "directory": true,
+      "security": {
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385,
+        "fileId": "281474978245353",
+        "projections": [
+          {
+            "requestedMask": 1,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 1,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "requestedMask": 2,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 2,
+              "revision": 1,
+              "control": 0,
+              "state": "present",
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "requestedMask": 4,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 4,
+              "revision": 1,
+              "control": 4100,
+              "state": "present",
+              "sid": null,
+              "aclRevision": 2,
+              "aces": [
+                [
+                  0,
+                  3,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  3,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ]
+            },
+            "structureDigest": "b00c86a107d897f4c8e60e96028049a6bcfcd344ed49b9bd72f0aed4ffe7ee82"
+          },
+          {
+            "requestedMask": 16,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 16,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "requestedMask": 32,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 32,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "requestedMask": 64,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 64,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "requestedMask": 128,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 128,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "requestedMask": 256,
+            "nativeStatus": 0,
+            "structure": {
+              "mask": 256,
+              "revision": 1,
+              "control": 0,
+              "state": "absent",
+              "sid": null,
+              "aclRevision": null,
+              "aces": []
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "auditSaclAssurance": "excluded-unknown",
+        "fullSecurityProven": false
+      },
+      "children": [
+        "original-3a10edefc02d709f9f87849c7b1b82b41e7c83a25dd4614f268f6bd5101ecf93"
+      ],
+      "role": "Custody",
+      "parentId": "750412287910721434"
+    },
+    {
+      "bytes": 0,
+      "fileId": "281474978181881",
+      "path": "C:\\Users\\marenben\\AppData\\Local\\OpenCodex/Runtime/v1\\S-1-5-21-587408064-856152790-2583328096-1003\\native-write-locks\\db888acd5ce5e0ac06e0392032d3bb4646b5328a4c6f39ff8c6419ffa312a676.sqlite",
+      "security": {
+        "auditSaclAssurance": "excluded-unknown",
+        "fileId": "281474978181881",
+        "fullSecurityProven": false,
+        "projections": [
+          {
+            "nativeStatus": 0,
+            "requestedMask": 1,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 1,
+              "revision": 1,
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "state": "present"
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 2,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 2,
+              "revision": 1,
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "state": "present"
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 4,
+            "structure": {
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "aclRevision": 2,
+              "control": 4100,
+              "mask": 4,
+              "revision": 1,
+              "sid": null,
+              "state": "present"
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 16,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 16,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 32,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 32,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 64,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 64,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 128,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 128,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 256,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 256,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385
+      },
+      "volume": 247287385,
+      "directory": false,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "Coordination"
+    },
+    {
+      "bytes": 0,
+      "fileId": "281474978181884",
+      "path": "C:\\Users\\marenben\\AppData\\Local\\OpenCodex/Runtime/v1\\S-1-5-21-587408064-856152790-2583328096-1003\\client-desktop-lifecycle.sqlite",
+      "security": {
+        "auditSaclAssurance": "excluded-unknown",
+        "fileId": "281474978181884",
+        "fullSecurityProven": false,
+        "projections": [
+          {
+            "nativeStatus": 0,
+            "requestedMask": 1,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 1,
+              "revision": 1,
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "state": "present"
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 2,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 2,
+              "revision": 1,
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "state": "present"
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 4,
+            "structure": {
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "aclRevision": 2,
+              "control": 4100,
+              "mask": 4,
+              "revision": 1,
+              "sid": null,
+              "state": "present"
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 16,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 16,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 32,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 32,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 64,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 64,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 128,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 128,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 256,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 256,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385
+      },
+      "volume": 247287385,
+      "directory": false,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "Coordination"
+    },
+    {
+      "bytes": 0,
+      "fileId": "281474978181888",
+      "path": "C:\\Users\\marenben\\AppData\\Local\\OpenCodex/Runtime/v1\\S-1-5-21-587408064-856152790-2583328096-1003\\catalog-write-locks\\db888acd5ce5e0ac06e0392032d3bb4646b5328a4c6f39ff8c6419ffa312a676.sqlite",
+      "security": {
+        "auditSaclAssurance": "excluded-unknown",
+        "fileId": "281474978181888",
+        "fullSecurityProven": false,
+        "projections": [
+          {
+            "nativeStatus": 0,
+            "requestedMask": 1,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 1,
+              "revision": 1,
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                235,
+                3,
+                0,
+                0
+              ],
+              "state": "present"
+            },
+            "structureDigest": "9781651766bc1f6a304d71f1677dadb14251a83750a8e96e86d5518832944968"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 2,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 2,
+              "revision": 1,
+              "sid": [
+                1,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                5,
+                21,
+                0,
+                0,
+                0,
+                192,
+                34,
+                3,
+                35,
+                214,
+                218,
+                7,
+                51,
+                96,
+                117,
+                250,
+                153,
+                1,
+                2,
+                0,
+                0
+              ],
+              "state": "present"
+            },
+            "structureDigest": "4e6e0a4da57e9ebc9ee8a265c976d182852818c0361debaf4970b666c7ab2b55"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 4,
+            "structure": {
+              "aces": [
+                [
+                  0,
+                  0,
+                  36,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  5,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  21,
+                  0,
+                  0,
+                  0,
+                  192,
+                  34,
+                  3,
+                  35,
+                  214,
+                  218,
+                  7,
+                  51,
+                  96,
+                  117,
+                  250,
+                  153,
+                  235,
+                  3,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0,
+                  20,
+                  0,
+                  255,
+                  1,
+                  31,
+                  0,
+                  1,
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  5,
+                  18,
+                  0,
+                  0,
+                  0
+                ]
+              ],
+              "aclRevision": 2,
+              "control": 4100,
+              "mask": 4,
+              "revision": 1,
+              "sid": null,
+              "state": "present"
+            },
+            "structureDigest": "602cb9f3f13458441d610590342231f74320dc64ede6baee885af3b52ee9a6f8"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 16,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 16,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "532545b03ef6dd8c7ee4ab0f9f51be4a7eed23ab92149d122d0701f55688b4bb"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 32,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 32,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "7427483733c5833ec22c2ae2c19265de43618082998499c08c77067022d16537"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 64,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 64,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "1545a81bd6cdbe6a57912226e8011465fe81107e5943831b1946da7346eb113d"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 128,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 128,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "56bd4a3d1341810012fbb26c23f3b187148c55db801dba72ae6b44e0dd10b912"
+          },
+          {
+            "nativeStatus": 0,
+            "requestedMask": 256,
+            "structure": {
+              "aces": [],
+              "aclRevision": null,
+              "control": 0,
+              "mask": 256,
+              "revision": 1,
+              "sid": null,
+              "state": "absent"
+            },
+            "structureDigest": "6a595dad2f920f91954092afb6b27b85aad3b5356e5777b0a9c1fc2e7a1eacdb"
+          }
+        ],
+        "scopeId": "windows-bounded-access-v1",
+        "securityPolicyDigest": "688b50b892f40096c8add9263783bfec9102573f9a791a6883ad261d14437f07",
+        "volume": 247287385
+      },
+      "volume": 247287385,
+      "directory": false,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "role": "Coordination"
+    },
+    {
+      "path": "C:\\Users\\marenben",
+      "directory": true,
+      "fileId": "750412287910721434",
+      "volume": 247287385,
+      "role": "profile"
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D",
+      "directory": true,
+      "fileId": "562949954845606",
+      "volume": 247287385,
+      "role": "data"
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\H",
+      "directory": true,
+      "fileId": "562949954845607",
+      "volume": 247287385,
+      "role": "home"
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\I",
+      "directory": true,
+      "fileId": "562949954845605",
+      "volume": 247287385,
+      "role": "installation"
+    }
+  ],
+  "records": [
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\logs/windows024-5078ef82-7c4a-46de-b5d4-4f76af2cc1a5/stderr.private.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\logs/windows024-5078ef82-7c4a-46de-b5d4-4f76af2cc1a5/stdout.private.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\manager-state/runtime.json",
+      "sha256": "bbb60f5438e5e82b0bc9fa91a80dc5e81b8f1c1cc587e18644cdfcdb7d94e21e",
+      "bytes": 235
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/current.json",
+      "sha256": "9eed086820a48ee52fb9bb65966b7843c8ea7167188126bd69978e723ae0a482",
+      "bytes": 1430
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000001.json",
+      "sha256": "8e07daf1f12a16df441fe8e0d8df377dd4faf422ea789d3b62e5011d878eeca5",
+      "bytes": 15823
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000002.json",
+      "sha256": "60205b7cf02d467b92de801a4232b0be778b6fbe83061c05598c567daef9f61d",
+      "bytes": 12282
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000003.json",
+      "sha256": "ec62712e210930a5107272fbc34d8a6a29477f6a2a9de9eecea69cadbf4f5048",
+      "bytes": 12299
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000004.json",
+      "sha256": "da0c13b841e59251e04b8372ac67184d9a6a0c46aa3014f71e0cf96e5349c612",
+      "bytes": 4889
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000005.json",
+      "sha256": "3aa33e409a8817ab8290e3d14bb878325bde83e33cc2811e08c29034ce63e98b",
+      "bytes": 12061
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000006.json",
+      "sha256": "6f853b8b3294b4cbe454b7e97903ca02b6b9de8b20694b0c37fcd167177da2b4",
+      "bytes": 1040
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000007.json",
+      "sha256": "5948d614437bd4e6163e3b584aecb278df15ab399c512caf61bb9184c2f01d32",
+      "bytes": 1044
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000008.json",
+      "sha256": "7c118d115715b42a0252395b11deaf611964eb74e11b1ea3956bfc46f516ad7b",
+      "bytes": 987
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/event-000009.json",
+      "sha256": "1659c2a9488db1b51a258e919202422a6c1a1b534393b17c49a6e952bbeecdc7",
+      "bytes": 988
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\official024/windows/7e3d4697-dd04-4d8a-b40b-f4468fab88c0/manifest.json",
+      "sha256": "a3b159e09f7e6c48f75d9f597e632d0f0ad545439e4c7682d25196c903a2cd11",
+      "bytes": 26259
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\qualification-events.jsonl",
+      "sha256": "7bf3f58d40721e9d4b3cdf0e6223c02e7d4b5f4ee105e7ec400188855ff6750e",
+      "bytes": 2656
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\qualification-failure-control.json",
+      "sha256": "790fb647fe62849e00ec2ec903cddcbc3896ad3cd3b784d8e9743a736ac93ff6",
+      "bytes": 387
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\qualification-result.json",
+      "sha256": "0e673b3f101e60b24f16134ec6ba2a44a1ca3ccc2494adf3a233bf927e543218",
+      "bytes": 1008
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\D\\qualification-start1.json",
+      "sha256": "378a0406ba15ec135fac206519895ba9f61d1365654c6ca8674b5b7ee29e1b44",
+      "bytes": 944
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\preparation/result.json",
+      "sha256": "f6750a388094b7f2800f1547006bfa8f10007234611f63b42eb799bbf5b46cb8",
+      "bytes": 65206
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\qualification-preparation/admission.json",
+      "sha256": "0122b4ff4285db383fa0d379a9a89f24be1d17f5dcdc86f54f24aeca76c4bdb0",
+      "bytes": 70468
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\qualification-preparation/coordination-before.json",
+      "sha256": "cb42c023513bbc2c3aaf6d8e44287d69fe8ca2118c2dcfd73ef6541b1e3ab50d",
+      "bytes": 19473
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\qualification-preparation/coordination-retained.json",
+      "sha256": "4486d31c8d17182ea3f73edf8199aff1d9ea2b021925e04bfb6575f0c1374e7e",
+      "bytes": 19922
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\qualification-preparation/image-create-intent.json",
+      "sha256": "05108fba16c7a6e44fda112b0ddc82b23d8e509f27b98ac039b6327c6d758bef",
+      "bytes": 304
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\qualification-preparation/image-created-verified.json",
+      "sha256": "12f28bd645eb42362996a180fb75e9434818e8180a308a8580ca962fda654195",
+      "bytes": 1337
+    },
+    {
+      "path": "C:\\Users\\marenben\\ocx024-r6-existing-20261117-r2\\qualification-preparation/prepared.json",
+      "sha256": "4e6bf78d29158457bfdb484039c2beb0a04a2318cac7d56f439e655a69204656",
+      "bytes": 23155
+    }
+  ],
+  "currentSelectionSha256": "e4520d7078ba59c562e78f4363696570fec8f17f2d7b51d9eca11846fb29ef61",
+  "sourceDigest": "ab9314d3df4475481736245580b24a4d1a6fa52e8030512d9afc9340b6d6c3b6"
+}

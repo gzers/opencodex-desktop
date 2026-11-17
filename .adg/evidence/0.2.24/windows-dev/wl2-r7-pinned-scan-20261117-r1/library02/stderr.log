@@ -1,0 +1,377 @@
+   Compiling windows024-r7-query-proof v0.1.0 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness)
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `PathBuf`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/safety_section.rs:7:29
+  |
+7 |     path::{Component, Path, PathBuf},
+  |                             ^^^^^^^
+
+warning: unused import: `infrastructure::hash`
+ --> src\infrastructure\windows_client_originals024\collector.rs:4:32
+  |
+4 | use crate::{backend as native, infrastructure::hash, modules::runtime::program_image};
+  |                                ^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/program_image_section.rs:526:14
+    |
+526 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+526 -             .fetch_update(
+526 +             .try_update(
+    |
+
+warning: unused import: `io::Read`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/safety_section.rs:6:5
+  |
+6 |     io::Read,
+  |     ^^^^^^^^
+
+warning: function `verify_private_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:35:15
+   |
+35 | pub(crate) fn verify_private_file(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `verify_private_directory` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:39:15
+   |
+39 | pub(crate) fn verify_private_directory(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_originals_work_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:46:15
+   |
+46 | pub(crate) fn create_private_originals_work_file(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `owned_file_identities` and `into_owned_files` are never used
+   --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths.rs:115:19
+    |
+112 | impl PinnedDirectory {
+    | -------------------- methods in this implementation
+...
+115 |     pub(crate) fn owned_file_identities(&self) -> io::Result<Vec<FileIdentity>> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+134 |     pub(crate) fn into_owned_files(self) -> Vec<File> {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: function `file_entry` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out/program_image_section.rs:491:15
+    |
+491 | pub(crate) fn file_entry(path: &Path) -> AppResult<Entry> {
+    |               ^^^^^^^^^^
+
+warning: function `check` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:38:4
+   |
+38 | fn check(end: Option<Instant>) -> AppResult<()> {
+   |    ^^^^^
+
+warning: function `clean` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:45:4
+   |
+45 | fn clean(path: &Path) -> bool {
+   |    ^^^^^
+
+warning: struct `Stamp` is never constructed
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:56:8
+   |
+56 | struct Stamp {
+   |        ^^^^^
+
+warning: function `stamp` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:65:4
+   |
+65 | fn stamp(file: &File, directory: bool) -> AppResult<Stamp> {
+   |    ^^^^^
+
+warning: function `final_path` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:91:4
+   |
+91 | fn final_path(file: &File, path: &Path) -> AppResult<()> {
+   |    ^^^^^^^^^^
+
+warning: function `security` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:108:4
+    |
+108 | fn security(file: &File) -> AppResult<Vec<u8>> {
+    |    ^^^^^^^^
+
+warning: function `streams` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:154:4
+    |
+154 | fn streams(path: &Path, directory: bool) -> AppResult<()> {
+    |    ^^^^^^^
+
+warning: struct `Pin` is never constructed
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:200:8
+    |
+200 | struct Pin {
+    |        ^^^
+
+warning: associated items `open`, `check`, and `hash` are never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:208:8
+    |
+207 | impl Pin {
+    | -------- associated items in this implementation
+208 |     fn open(path: &Path, directory: bool, end: Option<Instant>) -> AppResult<Self> {
+    |        ^^^^
+...
+233 |     fn check(&self, end: Option<Instant>) -> AppResult<()> {
+    |        ^^^^^
+...
+244 |     fn hash(&self, end: Option<Instant>, cancelled: &AtomicBool) -> AppResult<Entry> {
+    |        ^^^^
+
+warning: function `names` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:282:4
+    |
+282 | fn names(path: &Path) -> AppResult<Vec<String>> {
+    |    ^^^^^
+
+warning: struct `Directory` is never constructed
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:304:8
+    |
+304 | struct Directory {
+    |        ^^^^^^^^^
+
+warning: struct `FileJob` is never constructed
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:309:8
+    |
+309 | struct FileJob {
+    |        ^^^^^^^
+
+warning: struct `Inventory` is never constructed
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:314:8
+    |
+314 | struct Inventory {
+    |        ^^^^^^^^^
+
+warning: associated items `collect` and `finish` are never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:320:8
+    |
+319 | impl Inventory {
+    | -------------- associated items in this implementation
+320 |     fn collect(root: &Path, end: Option<Instant>) -> AppResult<Self> {
+    |        ^^^^^^^
+...
+407 |     fn finish(
+    |        ^^^^^^
+
+warning: function `inventory` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:527:15
+    |
+527 | pub(super) fn inventory(root: &Path, end: Option<Instant>) -> AppResult<BTreeMap<String, Entry>> {
+    |               ^^^^^^^^^
+
+warning: function `inventory_checked` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:530:15
+    |
+530 | pub(super) fn inventory_checked(
+    |               ^^^^^^^^^^^^^^^^^
+
+warning: function `QuerySecurityAccessMask` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:26:8
+   |
+26 |     fn QuerySecurityAccessMask(mask: u32, access: *mut u32);
+   |        ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `GetSecurityInfo` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:27:8
+   |
+27 |     fn GetSecurityInfo(
+   |        ^^^^^^^^^^^^^^^
+
+warning: constant `SCHEMA` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:5:7
+  |
+5 | const SCHEMA: &str = "windows-before-resume-recovery-v1";
+  |       ^^^^^^
+
+warning: constant `MAX_RECORD` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:6:7
+  |
+6 | const MAX_RECORD: usize = 65536;
+  |       ^^^^^^^^^^
+
+warning: function `invalid` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:7:4
+  |
+7 | fn invalid() -> io::Error {
+  |    ^^^^^^^
+
+warning: function `digest` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:13:4
+   |
+13 | fn digest(s: &str) -> bool {
+   |    ^^^^^^
+
+warning: function `uuid` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:18:4
+   |
+18 | fn uuid(s: &str) -> bool {
+   |    ^^^^
+
+warning: function `number` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:29:4
+   |
+29 | fn number(s: &str) -> io::Result<u64> {
+   |    ^^^^^^
+
+warning: function `object_id` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:35:4
+   |
+35 | fn object_id(s: &str) -> bool {
+   |    ^^^^^^^^^
+
+warning: function `required_option` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:38:4
+   |
+38 | fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+   |    ^^^^^^^^^^^^^^^
+
+warning: struct `Record` is never constructed
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:47:19
+   |
+47 | pub(super) struct Record {
+   |                   ^^^^^^
+
+warning: enum `Event` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:67:6
+   |
+67 | enum Event {
+   |      ^^^^^
+
+warning: associated items `decode`, `validate`, and `same_origin_action` are never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:118:19
+    |
+117 | impl Record {
+    | ----------- associated items in this implementation
+118 |     pub(super) fn decode(raw: &[u8]) -> io::Result<Self> {
+    |                   ^^^^^^
+...
+126 |     fn validate(&self) -> io::Result<()> {
+    |        ^^^^^^^^
+...
+244 |     fn same_origin_action(&self, other: &Self) -> bool {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `validate_chain` is never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:260:15
+    |
+260 | pub(super) fn validate_chain(raw: &[Vec<u8>]) -> io::Result<()> {
+    |               ^^^^^^^^^^^^^^
+
+warning: methods `matches_id` and `content_policy_protection` are never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\bounded\query.rs:322:67
+    |
+286 | impl SnapshotData {
+    | ----------------- methods in this implementation
+...
+322 |     pub(in crate::infrastructure::windows_client_originals024) fn matches_id(
+    |                                                                   ^^^^^^^^^^
+...
+331 |     pub(in crate::infrastructure::windows_client_originals024) fn content_policy_protection(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `GetSecurityInfo` redeclared with a different signature
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/8e77930eb3778e04\out\program_image_windows.rs:27:5
+   |
+27 | /     fn GetSecurityInfo(
+28 | |         handle: *mut std::ffi::c_void,
+29 | |         kind: i32,
+30 | |         mask: u32,
+...  |
+35 | |         descriptor: *mut *mut std::ffi::c_void,
+36 | |     ) -> u32;
+   | |_____________^ this signature doesn't match the previous declaration
+   |
+  ::: src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\security.rs:27:5
+   |
+27 | /     fn GetSecurityInfo(
+28 | |         handle: HANDLE,
+29 | |         kind: i32,
+30 | |         requested: u32,
+...  |
+35 | |         descriptor: *mut *mut c_void,
+36 | |     ) -> u32;
+   | |_____________- `GetSecurityInfo` previously declared here
+   |
+   = note: expected `unsafe extern "system" fn(*mut c_void, i32, u32, *mut *mut c_void, *mut *mut c_void, *mut *mut ACL, *mut *mut ACL, *mut *mut c_void) -> u32`
+              found `unsafe extern "system" fn(*mut c_void, i32, u32, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void) -> u32`
+   = note: `#[warn(clashing_extern_declarations)]` on by default
+
+memory allocation of 2097152 bytes failed
+stack backtrace:
+   0:     0x7ffba3e7cbb9 - std::backtrace_rs::backtrace::win64::trace
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\..\..\backtrace\src\backtrace\win64.rs:85
+   1:     0x7ffba3ea648e - core::fmt::write
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/core\src\fmt\mod.rs:0
+   2:     0x7ffba3e8d064 - core::io::write::default_write_fmt
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/core\src\io\write.rs:402
+   3:     0x7ffba3e8d064 - core::io::write::Write::write_fmt<std::sys::stdio::windows::Stderr>
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/core\src\io\write.rs:335
+   4:     0x7ffba3e6daf2 - std::sys::backtrace::BacktraceLock::print
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\sys\backtrace.rs:47
+   5:     0x7ffba3e6daf2 - std::alloc::default_alloc_error_hook
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\alloc.rs:417
+   6:     0x7ffba3e510ac - std::alloc::rust_oom::closure$0
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\alloc.rs:448
+   7:     0x7ffba3e4e77f - std::sys::backtrace::__rust_end_short_backtrace<std::alloc::rust_oom::closure_env$0,never$>
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\sys\backtrace.rs:182
+   8:     0x7ffba3e6db9b - std::alloc::rust_oom
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\alloc.rs:444
+   9:     0x7ffba3e51e48 - std::alloc::_::__rust_alloc_error_handler
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\alloc.rs:443
+  10:     0x7ffba81be198 - alloc::alloc::handle_alloc_error::rt_error
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/alloc\src\alloc.rs:678
+  11:     0x7ffba81be198 - alloc::alloc::handle_alloc_error
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/alloc\src\alloc.rs:684
+  12:     0x7ffba81be1b5 - alloc::raw_vec::handle_error
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/alloc\src\raw_vec\mod.rs:929
+  13:     0x7ffba5954d24 - <rustc_arena[78f0684c2a27c7ff]::DroplessArena>::grow
+  14:     0x7ffba585d06b - <rustc_middle[7fa19acedaab6bb5]::ty::SymbolName>::new
+  15:     0x7ffba4f19ec2 - RINvMs6_NtCs9aBU1q96m36_9hashbrown3rawINtB6_8RawTableTTNtNtNtCsaXnrYQLryW7_12rustc_middle2ty8instance8InstanceNtNtBX_4mono14CollectionModeETINtNtNtBX_5query5erase10ErasedDataAhj20_ENtNtNtBX_9dep_graph5graph12DepNodeIndexEEE14reserve_rehashNCNvMs1_NtCs6bkpt
+  16:     0x7ffba4f92759 - rustc_query_impl[9f062a2856a0cdf0]::query_system
+  17:     0x7ffba578bc18 - <rustc_middle[7fa19acedaab6bb5]::mono::MonoItem>::symbol_name
+  18:     0x7ffba43f0fdb - <hashbrown[6ad272e33840437a]::raw::RawTable<usize>>::reserve_rehash::<indexmap[e01b47b42c2cccc3]::inner::get_hash<rustc_middle[7fa19acedaab6bb5]::mono::MonoItem, ()>::{closure#0}>
+  19:     0x7ffba4414931 - rustc_monomorphize[9f4d2299f149928a]::partitioning::collect_and_partition_mono_items
+  20:     0x7ffba398b127 - rustc_query_impl[9f062a2856a0cdf0]::self_profile::alloc_self_profile_query_strings
+  21:     0x7ffba387e377 - <rustc_privacy[ac6dd8d9f5a4855d]::DefIdsToImplsCollector as rustc_privacy[ac6dd8d9f5a4855d]::DefIdVisitor>::visit_def_id
+  22:     0x7ffba748beee - <rustc_query_impl[9f062a2856a0cdf0]::execution::ActiveJobGuard<()> as core[32d34355a42fe4fc]::ops::drop::Drop>::drop
+  23:     0x7ffba5835630 - <rustc_middle[7fa19acedaab6bb5]::dep_graph::graph::DepGraphData>::try_mark_green
+  24:     0x7ffba5834bf5 - <rustc_middle[7fa19acedaab6bb5]::dep_graph::graph::DepGraphData>::try_mark_green
+  25:     0x7ffba386784c - <rustc_privacy[ac6dd8d9f5a4855d]::DefIdsToImplsCollector as rustc_privacy[ac6dd8d9f5a4855d]::DefIdVisitor>::visit_def_id
+  26:     0x7ffba3986877 - rustc_query_impl[9f062a2856a0cdf0]::self_profile::alloc_self_profile_query_strings
+  27:     0x7ffba53d6ddd - <rustc_metadata[c999e5e25b185c3b]::creader::CStore>::from_tcx
+  28:     0x7ffba3b47520 - RINvNtNtNtCs4mxzSKgHcRc_4core5slice4sort6stable14driftsort_mainTNtNtCs8XHkU1UBtT0_9rustc_abi6layout10VariantIdxNtNtCsaXnrYQLryW7_12rustc_middle2ty10VariantDefENCINvMNtCs6USBHBw88HH_5alloc5sliceSBZ_11sort_by_keyB10_NCNvMsr_NtNtCshj7kBXDlo93_14rustc_metadata
+  29:     0x7ffba3b621ac - rustc_metadata[c999e5e25b185c3b]::rmeta::encoder::encode_metadata
+  30:     0x7ffba3b5d5c2 - rustc_metadata[c999e5e25b185c3b]::fs::encode_and_write_metadata
+  31:     0x7ffba05fde70 - <rustc_interface[fd8320524f8c10d4]::queries::Linker>::codegen_and_build_linker
+  32:     0x7ffba05ced9d - std[7ac5527a03ca1e7b]::sys::backtrace::__rust_begin_short_backtrace::<std[7ac5527a03ca1e7b]::thread::lifecycle::spawn_unchecked<ctrlc[5bf1741e561b9891]::set_handler_inner<rustc_driver_impl[372a0a0235827044]::install_ctrlc_handler::{closure#0}>::{closure#0}, !>::{closure#1}::{closure#0}::{closure#0}, ()>
+  33:     0x7ffba05c88f5 - RINvNtNtCsaxvnbPqUQwF_3std3sys9backtrace28___rust_begin_short_backtraceNCNCINvNtCslLrfEnpE3se_15rustc_interface4util26run_in_thread_with_globalsNCINvB1e_31run_in_thread_pool_with_globalsNCINvNtB1g_9interface12run_compileruNCNvCs4JDxN7GNbcS_17rustc_driver_i
+  34:     0x7ffba05d3c47 - std[7ac5527a03ca1e7b]::sys::backtrace::__rust_begin_short_backtrace::<std[7ac5527a03ca1e7b]::thread::lifecycle::spawn_unchecked<ctrlc[5bf1741e561b9891]::set_handler_inner<rustc_driver_impl[372a0a0235827044]::install_ctrlc_handler::{closure#0}>::{closure#0}, !>::{closure#1}::{closure#0}::{closure#0}, ()>
+  35:     0x7ffba3e79997 - std::sys::thread::windows::impl$0::new::thread_start
+                               at /rustc/0ef1bc386059596dada8fb65b50425aab2ea637a/library/std\src\sys\thread\windows.rs:58
+  36:     0x7ffcf187e987 - BaseThreadInitThunk
+  37:     0x7ffcf328c53c - RtlUserThreadStart
+warning: `windows024-r7-query-proof` (lib) generated 42 warnings (run `cargo fix --lib -p windows024-r7-query-proof` to apply 4 suggestions)
+error: could not compile `windows024-r7-query-proof` (lib); 42 warnings emitted
+
+Caused by:
+  process didn't exit successfully: `D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/rustc.exe --crate-name windows024_r7_query_proof --edition=2021 src\lib.rs --error-format=json --json=diagnostic-rendered-ansi,artifacts,future-incompat,unused-externs-silent --crate-type lib --emit=dep-info,metadata,link -C embed-bitcode=no -C debuginfo=2 --check-cfg cfg(docsrs,test) --check-cfg "cfg(feature, values())" -C metadata=9bb3b61b61deb2ec -C extra-filename=-340131a668c45274 --out-dir C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/340131a668c45274\out --target x86_64-pc-windows-msvc -C linker=D:\Users\15119\WorkSpace\Code\tools\opencodex-desktop\.toolchain\msvc-w1c\msvc\VC\Tools\MSVC\14.44.35207\bin\Hostx64\x64\link.exe -C incremental=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\incremental -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\debug\build\serde_derive/9481974dad2d8d19\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\block-buffer/1d22905e242e5c73\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\cfg-if/aec01ecafb64c5a7\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\cpufeatures/9545914a6c5191da\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\crypto-common/dbdad59d384b3430\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\digest/f16e2263095cd1e2\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\fastrand/dd029fef7a865a7c\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\generic-array/8d518bda491fec54\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\getrandom/300426602955f9f7\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\itoa/b6bd98f28662d3e8\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\memchr/d771128f1a8971a2\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\once_cell/9feed6a3c30d8ff3\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\serde_core/8d8aafc8681f86c3\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\subtle/21f72f59c2759979\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\typenum/8467810cdf32bf47\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows-link/5ba5be261238fdbf\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows-sys/f5c8281557ebe677\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\zmij/d60294bf9a249912\out -L dependency=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\debug\build\windows024-r7-query-proof/340131a668c45274\out --extern hmac=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\hmac/8afc0da567992b74\out\libhmac-8afc0da567992b74.rmeta --extern serde=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\serde/ceabdfd8adac899f\out\libserde-ceabdfd8adac899f.rmeta --extern serde_json=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\serde_json/4944ded28c64c5e3\out\libserde_json-4944ded28c64c5e3.rmeta --extern sha2=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\sha2/97a31f1ec85c0b6b\out\libsha2-97a31f1ec85c0b6b.rmeta --extern tempfile=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\tempfile/85f18ca6c4825fa9\out\libtempfile-85f18ca6c4825fa9.rmeta --extern windows_sys=C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows-sys/f5c8281557ebe677\out\libwindows_sys-f5c8281557ebe677.rmeta --force-warn=unused_crate_dependencies` (exit code: 0xc0000409, STATUS_STACK_BUFFER_OVERRUN)
