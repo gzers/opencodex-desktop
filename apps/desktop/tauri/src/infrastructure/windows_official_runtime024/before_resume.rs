@@ -29,6 +29,7 @@ pub struct QuiescentLauncher {
     deadline: Instant,
     raw_exit: u32,
     total: u32,
+    completed_at: Instant,
 }
 fn within(end: Instant) -> io::Result<()> {
     if Instant::now() >= end {
@@ -139,6 +140,7 @@ impl OwnedRuntime {
             deadline: prepared.deadline,
             raw_exit: 242,
             total: 1,
+            completed_at: Instant::now(),
         };
         self.verify_before_resume_quiescent(&proof)?;
         Ok(proof)
@@ -164,6 +166,17 @@ impl OwnedRuntime {
     }
     pub fn verify_before_resume_quiescent(&mut self, proof: &QuiescentLauncher) -> io::Result<()> {
         within(proof.deadline)?;
+        self.read_before_resume_quiescent_history(proof, proof.deadline)
+    }
+    /// A fresh read cutoff never revives the original mutation deadline. The
+    /// original private proof, original Job/creator and timely actual completion
+    /// are all required; disk DATA/current thread state cannot construct them.
+    pub fn read_before_resume_quiescent_history(
+        &mut self,
+        proof: &QuiescentLauncher,
+        read_end: Instant,
+    ) -> io::Result<()> {
+        within(read_end)?;
         if !self.abort_blocked
             || !self.abort_consumed
             || self.resumed
@@ -171,6 +184,8 @@ impl OwnedRuntime {
             || self.binding != proof.binding
             || proof.raw_exit != 242
             || proof.total != 1
+            || proof.completed_at >= proof.deadline
+            || proof.completed_at > Instant::now()
         {
             return Err(denied("quiescent proof is not this original failed abort"));
         }
@@ -184,7 +199,7 @@ impl OwnedRuntime {
         {
             return Err(denied("original Job no longer exactly quiescent"));
         }
-        within(proof.deadline)
+        within(read_end)
     }
     pub fn resume_revoked_by_abort(&self) -> bool {
         self.abort_blocked

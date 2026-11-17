@@ -422,3 +422,5 @@ fn wl2_r7_v2_storage_native_expired_renewed_or_existing_namespace_never_adopts()
         drop(scene);
     }
 }
+
+mod history_tests;

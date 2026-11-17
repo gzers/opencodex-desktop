@@ -294,3 +294,5 @@ fn wl2_r7_attachment_storage_native_expired_renewed_or_existing_namespace_never_
         drop(scene);
     }
 }
+
+mod history_tests;

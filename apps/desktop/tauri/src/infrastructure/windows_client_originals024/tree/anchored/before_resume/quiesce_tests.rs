@@ -1,4 +1,6 @@
 use super::*;
+#[path = "quiesce_tests/history_tests.rs"]
+mod history_tests;
 use native::{LaunchSpec, OwnedRuntime, ProcessState};
 use std::collections::BTreeMap;
 pub(super) struct OriginalSynthetic(pub(super) OwnedRuntime);

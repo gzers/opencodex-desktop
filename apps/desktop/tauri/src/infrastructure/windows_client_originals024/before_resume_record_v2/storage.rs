@@ -22,6 +22,7 @@ pub(in crate::infrastructure::windows_client_originals024) struct AttachmentStor
     directory_file: Option<File>,
     directory_security: Option<SnapshotData>,
     end: Option<Instant>,
+    last_complete_at: Option<Instant>,
     files: Vec<NativeRecord>,
     pending_file: Option<File>,
     pending_raw: Option<Vec<u8>>,
@@ -190,6 +191,14 @@ impl AttachmentStorageV2 {
     }
     fn read_inner(&mut self, end: Instant) -> io::Result<Vec<Vec<u8>>> {
         self.cutoff(end)?;
+        self.read_retained_files(end)
+    }
+    // Original native files only. Every operation still bounded by its caller
+    // read end; this private helper has no write or deadline-reset authority.
+    fn read_retained_files(&mut self, end: Instant) -> io::Result<Vec<Vec<u8>>> {
+        if Instant::now() >= end {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
         if self.failed
             || !self.ready
             || self.pending_file.is_some()
@@ -243,8 +252,29 @@ impl AttachmentStorageV2 {
         if Some(&stamp(file, end)?) != self.directory_security.as_ref() {
             return Err(invalid());
         }
-        self.cutoff(end)?;
+        if Instant::now() >= end {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
         Ok(out)
+    }
+    /// DATA-only historical read of the same successfully completed native
+    /// prefix. No existing directory adoption or renewed append permission.
+    pub(in crate::infrastructure::windows_client_originals024) fn read_history_data(
+        &mut self,
+        read_end: Instant,
+    ) -> io::Result<Vec<Vec<u8>>> {
+        let result = (|| {
+            let original_end = self.end.ok_or_else(invalid)?;
+            let completed = self.last_complete_at.ok_or_else(invalid)?;
+            if completed >= original_end || completed > Instant::now() || self.files.is_empty() {
+                return Err(invalid());
+            }
+            self.read_retained_files(read_end)
+        })();
+        if result.is_err() {
+            self.failed = true;
+        }
+        result
     }
     pub(in crate::infrastructure::windows_client_originals024) fn read_data(
         &mut self,
@@ -316,7 +346,11 @@ impl AttachmentStorageV2 {
                 raw: self.pending_raw.take().unwrap(),
             });
             self.checkpoint(5, end)?;
-            self.read_inner(end).map(|_| ())
+            self.read_inner(end)?;
+            let completed = Instant::now();
+            self.cutoff(end)?;
+            self.last_complete_at = Some(completed);
+            Ok(())
         })();
         if result.is_err() {
             self.failed = true;
