@@ -15,3 +15,7 @@ windows-sys = { version = "=0.61.2", features = ["Win32_Foundation", "Win32_Secu
 [[bin]]
 name = "r7-scene-observer"
 path = "src/observer.rs"
+
+[[bin]]
+name = "r7-abort-fixture"
+path = "src/abort_fixture.rs"

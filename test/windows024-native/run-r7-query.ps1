@@ -1,4 +1,4 @@
-param([Parameter(Mandatory)][string]$Evidence,[ValidateSet('all','scan-tests','fixed-scan','collector-source','observer-build')][string]$Mode='all',[string]$ScanRoot)
+param([Parameter(Mandatory)][string]$Evidence,[ValidateSet('all','scan-tests','fixed-scan','collector-source','observer-build','abort')][string]$Mode='all',[string]$ScanRoot)
 $ErrorActionPreference='Stop'
 $evidencePath=[IO.Path]::GetFullPath($Evidence)
 if(Test-Path -LiteralPath $evidencePath){throw 'fresh immutable evidence directory required'}
@@ -46,10 +46,11 @@ if($Mode -in @('fixed-scan','collector-source')){
  if($Mode -eq 'collector-source'){$arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/r7-query-harness/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','r7_collector_full_source_native_manifest_current_and_full_inventory_are_bound','--','--ignored','--test-threads=1','--nocapture')}
 }
 if($Mode -eq 'observer-build'){$arguments=@('build','--locked','--offline','--manifest-path','test/windows024-native/r7-query-harness/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','--bin','r7-scene-observer')}
+if($Mode -eq 'abort'){$arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/r7-query-harness/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','--test','abort','r7_abort_','--','--test-threads=1','--nocapture')}
 @{head=(git rev-parse HEAD);source=$source;arguments=$arguments;rustc=(& $env:RUSTC --version);scope='actual shared query/backend and strict attachment; not Tauri product or ordinary marenben lifecycle acceptance';rootProduct=$false}|ConvertTo-Json -Depth 7|Set-Content -LiteralPath (Join-Path $evidencePath 'source.json') -Encoding utf8
 $watch=[Diagnostics.Stopwatch]::StartNew()
 & $cargo @arguments 1> (Join-Path $evidencePath 'stdout.log') 2> (Join-Path $evidencePath 'stderr.log')
 $rc=$LASTEXITCODE
 if($Mode -in @('fixed-scan','collector-source')){[Environment]::SetEnvironmentVariable('OCXD024_R7_FIXED_SCAN_ROOT',$null,'Process')}
-@{raw=$rc;elapsedMs=$watch.ElapsedMilliseconds;arguments=$arguments;rootProduct=$false;ordinaryMarenbenAcceptance=$false;originalR2Touched=$false;restored=$false;forced=$false;normalStop=$false;closed=$false;publicStartOpen=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $evidencePath 'result.json') -Encoding utf8
+@{raw=$rc;elapsedMs=$watch.ElapsedMilliseconds;arguments=$arguments;rootProduct=$false;ordinaryMarenbenAcceptance=$false;originalR2Touched=$false;restored=$false;currentR2Forced=$false;syntheticForcedPathExercised=($Mode -eq 'abort');normalStop=$false;closed=$false;publicStartOpen=$false}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $evidencePath 'result.json') -Encoding utf8
 exit $rc

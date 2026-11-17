@@ -28,6 +28,7 @@ pub use process::SuspendedOwnerHost;
 pub use process::{
     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
     ProcessState, RootBinding,
+    PreparedLauncherAbort, QuiescentLauncher,
 };
 pub use security::{current_identity, TokenIdentity};
 /// Read-only private TokenUser/SYSTEM check on this exact retained file handle.

@@ -113,6 +113,9 @@ pub use command::{CommandEvidence, NativeArguments};
 #[path = "host_process.rs"]
 mod host_process;
 pub use host_process::SuspendedOwnerHost;
+#[path = "before_resume.rs"]
+mod before_resume;
+pub use before_resume::{PreparedLauncherAbort, QuiescentLauncher};
 fn image_identity(file: &File, path: &Path) -> io::Result<FileIdentity> {
     #[link(name = "kernel32")]
     unsafe extern "system" {
@@ -399,6 +402,7 @@ pub struct OwnedRuntime {
     monitor: monitor::Monitor,
     process: OwnedHandle,
     thread: Option<OwnedHandle>,
+    primary_cycles_at_creation: u64,
     job: OwnedHandle,
     binding: RootBinding,
     root_source: RetainedSource,
@@ -411,6 +415,8 @@ pub struct OwnedRuntime {
     commands: HashMap<u32, Result<CommandEvidence, String>>,
     sources: HashMap<u32, RetainedSource>,
     resumed: bool,
+    abort_blocked: bool,
+    abort_consumed: bool,
     forced_cleanup_requested: bool,
 }
 impl OwnedRuntime {
@@ -534,9 +540,12 @@ impl OwnedRuntime {
             home.recheck()?;
             let source = RetainedSource::capture(process.as_raw_handle(), &fact)?;
             let arguments = command::arguments(process.as_raw_handle())?;
-            Ok((fact, source, arguments))
+            // Preserve the original suspended-creation baseline. Kernel
+            // initialization may already have charged nonzero thread cycles.
+            let primary_cycles = before_resume::thread_cycles(thread.as_raw_handle())?;
+            Ok((fact, source, arguments, primary_cycles))
         })();
-        let (fact, root_source, root_arguments) = match admission {
+        let (fact, root_source, root_arguments, primary_cycles_at_creation) = match admission {
             Ok(f) => f,
             Err(e) => {
                 check(unsafe { TerminateProcess(process.as_raw_handle(), 241) })?;
@@ -554,6 +563,7 @@ impl OwnedRuntime {
             root_source,
             root_arguments,
             thread: Some(thread),
+            primary_cycles_at_creation,
             job,
             binding: RootBinding {
                 process: fact,
@@ -569,6 +579,8 @@ impl OwnedRuntime {
             commands: HashMap::new(),
             sources: HashMap::new(),
             resumed: false,
+            abort_blocked: false,
+            abort_consumed: false,
             forced_cleanup_requested: false,
         })
     }
@@ -721,6 +733,14 @@ impl OwnedRuntime {
     /// state is never decoded from JSON or reconstructed from a PID. It does
     /// not assert an untrusted peer has never called a thread API externally.
     pub fn require_creator_not_resumed(&mut self, deadline: Instant) -> io::Result<()> {
+        if self.abort_blocked {
+            return Err(denied("ordinary pre-resume mutation revoked by explicit abort"));
+        }
+        self.check_creator_not_resumed(deadline)
+    }
+    // Recovery uses the same original-creation check after permanent normal
+    // dispatch revocation; this private helper grants no ordinary mutation.
+    fn check_creator_not_resumed(&mut self, deadline: Instant) -> io::Result<()> {
         if Instant::now() >= deadline {
             return Err(io::ErrorKind::TimedOut.into());
         }
@@ -758,8 +778,8 @@ impl OwnedRuntime {
         Ok(())
     }
     pub fn resume(&mut self) -> io::Result<()> {
-        if self.resumed {
-            return Err(denied("runtime was already resumed"));
+        if self.resumed || self.abort_blocked {
+            return Err(denied("runtime resume already attempted or revoked by abort"));
         }
         self.verify_binding(&self.binding)?;
         self.monitor.start(self.binding.process.clone())?;
@@ -767,6 +787,9 @@ impl OwnedRuntime {
             .thread
             .as_ref()
             .ok_or_else(|| denied("missing primary thread"))?;
+        // An attempted ResumeThread with an unexpected/unknown result can
+        // never be reinterpreted as before-first-Resume eligibility.
+        self.resumed = true;
         let n = unsafe { ResumeThread(h.as_raw_handle()) };
         if n != 1 {
             return Err(if n == u32::MAX {
@@ -775,7 +798,6 @@ impl OwnedRuntime {
                 denied("unexpected primary-thread suspension count")
             });
         }
-        self.resumed = true;
         self.thread.take();
         Ok(())
     }
