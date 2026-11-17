@@ -1,0 +1,15 @@
+# 原生历史只读基础边界
+
+代码f8feb3825后继完整SHA见status.json已推送；TEAM29/IMP164/r7。已合main0675a105017ae7fc82a4bd58dd43fe72031470df，仅Mac实屏smoke脚本相对编译输入81f52452c有净差，Rust产品图不变；docsb4a54df778b3322e46e895af9a5836f604c86346消费/合并，保本线handoff追加，raw Mac原输出空白诊断留received-raw-whitespace-check.log、只对这些原log使用检查时空白例外，字节不改。共享statusbusy仍Unknown/Required，不放Start。
+
+原private QuiescentLauncher在原quiesce真实成功时保completed_at，必须小于原deadline；新历史入口只查同一原creator/Job/绑定/原242结果和total1active0，无旧记录构造/Resume/prepare能力，原verify入口仍先检查原截止。V1/V2 storage各保实际原append完整native读回的完成Instant，只对成功保留的同files/prefix用新read_end读ID/8/bytes/ADS/fullmembers/严格原版本链；缺完成/partial/drift/过期保持拒绝。append和原read_data仍固定旧截止，不收养旧目录/不转schema。
+
+这是两个独立基础原语，**不是完整原产品Owner历史状态**；仍缺原Slot成功返回验证的及时完成事实、原core/两树/Source/route/canonical/附件/privatefinalproof在单一Status5的全读汇合。worker observe不等完整status或后继权限。详remaining-history-boundaries.json，公共Start/production/allAccepted仍false。
+
+product01 raw101/62725ms E0583，测试显式path父模块需显式nestedpath，未native。backend02原standalonecheck raw0/3046ms，原native源与最终相同。product03完整产品库raw101/160056ms：V1/V2历史12真实场景过，两个Job夹具未建私有H而raw2，源码H打开在CreateJob/Process前；原.tmpErP935/.tmpvhhXRI共22文件及dirs只读归档ZIP逐member/hash前后核，失败源保。补测试私有H及存在断言，不改预算/产品准入。
+
+product04完整MSVC库raw0/158769ms，原Job历史positive过：原1秒parent内真实quiescent242，过期后旧verify TimedOut，新有界查询同原Job/root，Resume/reprepare仍拒。native05 raw0/94ms，另两个真实原Job交叉proof前后都拒、各自原proof过，均真实242、无执行marker。附件12场景代码未改复用product03：valid/member/fileSD/expiredread/pendingwrite/missingcompletion各版本六场景，append旧截止/新截止都拒。
+
+原V1 storage5回归raw0/343ms、V2 storage6回归raw0/1032ms、同claim quiesce1/3前缀raw0/2765ms、原完整workerpipeline1/2模式raw0/9797ms全部过。最终新4测试14场景及受影响13回归，不重复计编译轮。最终TEST EXE SHA8ee6ad6e2d167d8fdb9bc42e56709571c9386468c10fa65b7c8bff9d43ea58f3；9最终执行源逐Git行尾归一核。65成功新root缺席，schema生成raw归档还原/移出，新增两失败树+原ZIP及旧失败/拒删目录、synthetic27960清理缺口保留。
+
+完整119项本线状态见status.json。当前r2Job24raw50Unknown对应依赖不重跑，21500/75744/原件/custody/work/协调/旧seq9及40588不动，旧清理授权不沿用；原件未还不跑新原包。本轮无force这些目标/修权限/改官方2.99或日常Profile/PATH策略，不W2/双SID/发布，目标active。

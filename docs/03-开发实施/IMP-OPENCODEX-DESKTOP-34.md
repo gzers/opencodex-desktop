@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 166；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 167；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main fb755b8ea63d8a3fc9146dc4db491931919905b0（非冻结候选）；Windows实现检查点codex/024-windows-native 361cdedf032b20e57b7ca2421daf5ddf3044d631（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main fb755b8ea63d8a3fc9146dc4db491931919905b0（非冻结候选）；Windows实现检查点codex/024-windows-native f8feb3825a4f2194e4c5081a29a760d446473f61（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1795,3 +1795,14 @@ mainfb755b8ea63d8a3fc9146dc4db491931919905b0新增verify_macos_updater_024.py并
 **证据范围**：本地archive是从真实signed app新生成的tar，使用测试key，不是最终Tauri产出的正式updater或发行key实测。Release新步骤在实际tauri-action完成后、同源Mac binary绑定后要求恰好一个真实*.app.tar.gz及其.sig，用tagged原公钥执行同脚本，并上传macos-updater-delivery.json；缺包/签名/内容不等则失败，不改DMG或updater字节。只有以后真实固定候选CI过才计这一生产装配已验，不能以本机测试代签名发行验收。
 
 Windows MSI/NSIS内容抽取/实际封装资源绑定及正式公共制品核验尚需完成；本机已发现7zz可用，但未以未证解析或模拟安装结果草率放行。publish_release.py整版硬拒绝继续保留，不把Mac校验接线当全部发行核验完成。Windows361cdedf0/f8552e56c已接revision165，完整产品Owner/privatehost/nativeV2/当前r2和synthetic27960处置依赖继续，Mac其它既列功能/NAME最终客户端/候选回退不删。目标active，不W2/双SID、不发布。
+
+
+### 2026-11-18 revision167：Windows原生历史只读基础边界接收
+
+Windowsf8feb3825a4f2194e4c5081a29a760d446473f61／docs801e53cc888ea73a5c9a72e19485371a64cd38ad的history-primitives轮净接收，100载荷1267628字节，完整成员/原长度与SHA相符；9执行源逐Git原字节或明确CRLF归一核，[回执](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r19/receive-result.json)。本机核原handoff/来源，不冒Windows实际执行或整批源码安全审计。
+
+真实原QuiescentLauncher保存quiesce完成Instant在旧deadline之前；原截止后只读借原privateproof/creator/Job/绑定核total1active0/root242，原verify/Resume/reprepare仍拒旧过期，不靠DATA补权限。V1/V2 native storage保存真实完整append读回完成Instant；历史读取在新caller读取截止内只核原files/ID/所含8/bytes/ADS/members/严格原链，缺完成、partial/漂移/过期拒；旧append/read权限窗口不变，不从磁盘收养。此为原Job和原记录两基础只读能力，尚非完整产品Status或后继许可。
+
+首编译测试模块path错误保原raw；后Tauri库12附件历史场景通过，但两Job fixture漏建私有H在CreateJob/Process之前被拒，22文件两个失败树精确只读ZIP/集合/hash前后核后保源；仅补fixture H。最终MSVC原Job按原1秒parent内242完成，旧verify过期仍TimedOut，新读回核同原Job，两个交叉proof各拒、各自原proof过/原marker未执行；附件12模式源码不变复用前轮，原V1/V2 storage/claimquiesce/完整workerpipeline13受影响回归过。EXE8ee6ad6e2d167d8fdb9bc42e56709571c9386468c10fa65b7c8bff9d43ea58f3，65成功root缺席；两个新失败树与所有旧拒删/driver失败/synthetic27960保持，不泛称历史全清。
+
+119项本线状态仍待原Slot及时完成事实、原core/Source/route/canonical/两树/附件/privateproof汇成同一次Status5秒、strict可达privatehost/fulltrait、nativeV2partial/缺根、真实Owner普通Profile固定官方整链原预算和容量/CAPtrust/最终候选。当前r2raw50只停自身证明，不PSS重复、不旧cleanup探Status、不触21500/75744/原件/seq9/40588；旧场景清理授权不转用。TEAM30/r7独占集和共享接口保持，Windows继续本线；Mac仅只读研究Windows封装格式，不安装或运行旧installer，不W2/双SID、不发布，目标active。

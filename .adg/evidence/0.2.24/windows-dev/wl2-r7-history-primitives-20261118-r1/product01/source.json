@@ -1,0 +1,75 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_history_primitives_native_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code",
+  "currentR2Touched": false,
+  "sources": [
+    {
+      "sha256": "9115bf2009ed4ce0f80f7438d3c8b0f5e921f71bb67b5c221ef03127b2b9b68f",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/before_resume.rs",
+      "bytes": 8616
+    },
+    {
+      "sha256": "f0551b021b189def1ef6d54bec11f8dbb40d8b5e337dc8d4d363e9558112713b",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/storage.rs",
+      "bytes": 13111
+    },
+    {
+      "sha256": "7198b95822b259e443bb32792c45c0ffd671ef827e97402d2e206bd155c2692a",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record_v2/storage.rs",
+      "bytes": 13186
+    },
+    {
+      "sha256": "71a3eae857a324c4439ff226411a314d64c1bb9ed5e3f500269fb2fb1c71786d",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/storage/tests.rs",
+      "bytes": 11129
+    },
+    {
+      "sha256": "5026047d2e0e4e41ad6ca94659cbd5ee61941b330f9c47d20ec8c39967dc6c87",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record_v2/storage/tests.rs",
+      "bytes": 17914
+    },
+    {
+      "sha256": "e07546064681f0b982a23ad45d0d754083046fcdd01231bfdfbdfd732b7af721",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/storage/tests/history_tests.rs",
+      "bytes": 2435
+    },
+    {
+      "sha256": "5fff0a9d501280a6c707fee16ea72240f74ba7fdcc0d8e63bf05bb24d68d2dd0",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record_v2/storage/tests/history_tests.rs",
+      "bytes": 2438
+    },
+    {
+      "sha256": "5ed52a8ddb1fa2df9c663e734d35dc4e112107cb152a20fae224f553395abc33",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/quiesce_tests.rs",
+      "bytes": 5575
+    },
+    {
+      "sha256": "f45c6e49c41a187d166bcce695728d2a3feaa65442a28dfc842847b5066da3b5",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/quiesce_tests/history_tests.rs",
+      "bytes": 4596
+    }
+  ]
+}

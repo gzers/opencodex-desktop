@@ -1,0 +1,52 @@
+
+running 6 tests
+test infrastructure::windows_client_originals024::before_resume_record_v2::storage::tests::wl2_r7_v2_storage_native_complete_strict_chain_exact_original_files_and_no_authority ... r7 actual native attachment bytes/ID/all8/ADS/complete directory verified; terminal suffix rejected, immutable files retained; DATA never grants restore/Stop/Closed
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpoPQtUq
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::storage::tests::wl2_r7_v2_storage_native_cross_scope_replay_unknown_and_wrong_sequence_refuse_before_write ... r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpBcSdaH
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpPIA6cS
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmphC3E5Q
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmppXCK6O
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpbB13Ye
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp85Od8y
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpqkKGWE
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::storage::tests::wl2_r7_v2_storage_native_every_empty_half_full_or_published_failure_keeps_exact_prefix ... r7 actual native attachment stage1: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp9cICFw
+r7 actual native attachment stage2: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpqDRy6W
+r7 actual native attachment stage3: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp53FPhu
+r7 actual native attachment stage4: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpi57TxV
+r7 actual native attachment stage5: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpQl7m8O
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::storage::tests::wl2_r7_v2_storage_native_expired_renewed_or_existing_namespace_never_adopts ... r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpY3HaOz
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEkGM5d
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp0WJcOS
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpFoPacQ
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::storage::tests::wl2_r7_v2_storage_native_member_file_security_directory_security_or_ads_drift_refuse ... r7 actual native attachment refuses member; original file/content retained
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmprPOdQW
+r7 actual native attachment refuses file-security; original file/content retained
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpyCqDWP
+r7 actual native attachment refuses directory-security; original file/content retained
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpublF0Y
+r7 actual native attachment refuses ads; original file/content retained
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpFkyeJ0
+r7 actual native attachment refuses late-file-security; original file/content retained
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpsH9LUw
+r7 actual native attachment refuses late-member; original file/content retained
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpedr90O
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::storage::tests::wl2_r7_v2_storage_native_preparation_pending_and_complete_declared_members_remain_data ... r7-v2 native DATA persistence complete-data; synthetic declared IDs are DATA only, no original Owner/claim/quiescence/restore constructed
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmplZ7Xso
+r7-v2 native DATA persistence pending-data; synthetic declared IDs are DATA only, no original Owner/claim/quiescence/restore constructed
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpePxydJ
+r7-v2 native DATA persistence unknown-terminal-refused; synthetic declared IDs are DATA only, no original Owner/claim/quiescence/restore constructed
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpUuai5V
+ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 2240 filtered out; finished in 1.01s
+
