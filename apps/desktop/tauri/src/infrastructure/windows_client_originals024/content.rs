@@ -121,6 +121,13 @@ struct AuditSourcePin {
     path: PathBuf,
     sha: String,
 }
+fn capture_audit_sources(package: &Path, end: Instant) -> io::Result<Vec<AuditSourcePin>> {
+    let mut pins = Vec::new();
+    for (path, sha) in AUDIT_SOURCES {
+        pins.push(AuditSourcePin::capture(package.join(path), sha, end)?);
+    }
+    Ok(pins)
+}
 impl AuditSourcePin {
     fn capture(path: PathBuf, sha: &str, end: Instant) -> io::Result<Self> {
         before(end)?;
@@ -277,11 +284,8 @@ impl StartContentScope {
             if not_before > Utc::now() {
                 return Err(invalid());
             }
-            let package = owner.selected_program().paths.package_root.clone();
-            let mut pins = Vec::new();
-            for (path, sha) in AUDIT_SOURCES {
-                pins.push(AuditSourcePin::capture(package.join(path), sha, end)?);
-            }
+            let package = owner.official_package_root();
+            let pins = capture_audit_sources(&package, end)?;
             Ok((root, not_before, audit_home, routes_digest, pins))
         })()
         .map_err(super::source::content_error)?;
@@ -408,3 +412,28 @@ impl StoppedContentScope {
 #[cfg(test)]
 #[path = "content_tests.rs"]
 mod tests;
+#[cfg(test)]
+mod fixed_package_path_tests {
+    use super::*;
+    #[test]
+    fn wl2_r6_fixed_audit_native_package_paths_exist_with_all_original_hashes_and_wrong_prefix_raw2(
+    ) {
+        let prefix=Path::new("C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/installer-w1/attempt01/stage/platform-bundle/runtime-bundle/runtime/opencodex");
+        let end = Instant::now() + std::time::Duration::from_secs(5);
+        let wrong =
+            AuditSourcePin::capture(prefix.join(AUDIT_SOURCES[0].0), AUDIT_SOURCES[0].1, end);
+        assert_eq!(wrong.err().unwrap().raw_os_error(), Some(2));
+        let package = prefix.join(crate::modules::runtime::install::PACKAGE_SUBPATH);
+        let mut pins = capture_audit_sources(&package, end).unwrap();
+        assert_eq!(pins.len(), 4);
+        for pin in &mut pins {
+            pin.check(end).unwrap();
+        }
+        assert!(
+            AuditSourcePin::capture(package.join(AUDIT_SOURCES[0].0), &"0".repeat(64), end)
+                .is_err()
+        );
+        assert!(prefix.join("node_modules/bun/bin/bun.exe").is_file());
+        println!("r6 real fixed299 audit4 source native pins/IDs/all8/original hashes pass in npm-prefix/PACKAGE_SUBPATH; old prefix source returns raw2 and wrong hash refuses. Bun launcher stays npm-prefix. No actual Source/Owner/lease/Closed authority minted by source-file component");
+    }
+}

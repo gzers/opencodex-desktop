@@ -252,7 +252,7 @@ fn bun_source(
         return Err(refuse("Bun父代次不是原Node创建者或捕获阶段倒置"));
     }
     let selected = owner.selected_program();
-    let cli = selected.paths.package_root.join("src/cli/index.ts");
+    let cli = owner.official_package_root().join("src/cli/index.ts");
     let bun = selected
         .paths
         .package_root
@@ -317,7 +317,7 @@ fn sentinel_source(owner: &mut Owner, child: &ProcessIdentity, deadline: Instant
         return Err(refuse("sentinel父代次/原启动阶段不匹配"));
     }
     let parent_command = bun_source(owner, &original_service, deadline)?;
-    let package = owner.selected_program().paths.package_root.clone();
+    let package = owner.official_package_root();
     if parent_command.captured_at > command.captured_at
         || !exact_sentinel(
             &command.argv,
@@ -357,6 +357,9 @@ fn call_site(owner: &Owner, role: &ChildRole) -> AppResult<String> {
     if selected.image.official_archive_sha256 != OFFICIAL_PACKAGE_SHA256 {
         return Err(refuse("官方包来源不匹配"));
     }
+    fixed_call_site(&owner.official_package_root(), role)
+}
+fn fixed_call_site(package: &Path, role: &ChildRole) -> AppResult<String> {
     let (relative, expected) = match role {
         ChildRole::ScmRegistrationQuery => (
             "src/lib/winsw.ts",
@@ -395,8 +398,7 @@ fn call_site(owner: &Owner, role: &ChildRole) -> AppResult<String> {
             ];
             let mut seal = Vec::new();
             for (relative, expected) in sources {
-                if hash::sha256_file(&selected.paths.package_root.join(relative))
-                    .map_err(|e| refuse(e.to_string()))?
+                if hash::sha256_file(&package.join(relative)).map_err(|e| refuse(e.to_string()))?
                     != expected
                 {
                     return Err(refuse("sentinel原入口/启动/原生父句柄源码改变"));
@@ -410,12 +412,49 @@ fn call_site(owner: &Owner, role: &ChildRole) -> AppResult<String> {
         }
         _ => return Err(refuse("没有固定角色调用点")),
     };
-    let actual = hash::sha256_file(&selected.paths.package_root.join(relative))
-        .map_err(|e| refuse(e.to_string()))?;
+    let actual = hash::sha256_file(&package.join(relative)).map_err(|e| refuse(e.to_string()))?;
     if actual != expected {
         return Err(refuse("官方诊断call-site字节改变"));
     }
     Ok(actual)
+}
+#[cfg(test)]
+mod fixed_package_path_tests {
+    use super::*;
+    #[test]
+    fn wl2_r6_fixed_diagnostic_package_callsite_hashes_and_exact_sentinel_refuse_wrong_prefix() {
+        let prefix=Path::new("C:/Users/15119/.codex/worktrees/024-windows-native/code/test/windows024-native/target/installer-w1/attempt01/stage/platform-bundle/runtime-bundle/runtime/opencodex");
+        let package = prefix.join(crate::modules::runtime::install::PACKAGE_SUBPATH);
+        for role in [
+            ChildRole::ScmRegistrationQuery,
+            ChildRole::SchedulerRegistrationQuery,
+            ChildRole::Launcher,
+            ChildRole::Service,
+            ChildRole::OtherRequired,
+        ] {
+            assert!(fixed_call_site(prefix, &role).is_err());
+            assert_eq!(fixed_call_site(&package, &role).unwrap().len(), 64);
+        }
+        let bun = prefix.join("node_modules/bun/bin/bun.exe");
+        let correct = vec![
+            bun.to_string_lossy().into_owned(),
+            package
+                .join("src/service/health-sentinel-main.ts")
+                .to_string_lossy()
+                .into_owned(),
+        ];
+        let wrong = vec![
+            bun.to_string_lossy().into_owned(),
+            prefix
+                .join("src/service/health-sentinel-main.ts")
+                .to_string_lossy()
+                .into_owned(),
+        ];
+        assert!(exact_sentinel(&correct, &bun, &bun, &package));
+        assert!(!exact_sentinel(&wrong, &bun, &bun, &package));
+        assert!(!exact_sentinel(&correct, &bun, &bun, prefix));
+        println!("r6 fixed299 five original diagnostic role callsite source hashes resolve at actual installed package, exact sentinel TS entry remains bound to original Bun prefix image; wrong-prefix paths reject. DATA/source-file checks mint no role/NormalExit/Owner or raw-exit exemption");
+    }
 }
 pub(crate) struct WindowsDiagnostics;
 impl DiagnosticRoles for WindowsDiagnostics {
@@ -468,7 +507,7 @@ impl DiagnosticRoles for WindowsDiagnostics {
             &command.argv,
             &native.executable,
             &command.parent.executable,
-            &owner.selected_program().paths.package_root,
+            &owner.official_package_root(),
         ) {
             sentinel_source(owner, &native, deadline)?;
             ChildRole::OtherRequired

@@ -407,6 +407,12 @@ impl Owner {
     pub(crate) fn selected_program(&self) -> &program_selection::SelectedProgram {
         &self.selected
     }
+    pub(crate) fn official_package_root(&self) -> PathBuf {
+        self.selected
+            .paths
+            .package_root
+            .join(crate::modules::runtime::install::PACKAGE_SUBPATH)
+    }
     pub(crate) fn original_native(&mut self) -> &mut OwnedRuntime {
         &mut self.native
     }

@@ -58,7 +58,7 @@ try {
   if($process.HasExited){$process.WaitForExit();$copyOut.GetAwaiter().GetResult();$copyErr.GetAwaiter().GetResult();$result.brokerRawExit=$process.ExitCode}
   else{$result.brokerRetained=$true}
   $result.nativeResultPresent=Test-Path -LiteralPath $nativeResult
-  if($result.nativeResultPresent){$native=Get-Content -LiteralPath $nativeResult -Raw|ConvertFrom-Json;$result.actualProductionExecuted=$native.actualProductionExecuted;$result.nativeProductionSequencePassed=$native.nativeProductionSequencePassed;$result.nativeFirstError=$native.firstError}
+  if($result.nativeResultPresent){$native=Get-Content -LiteralPath $nativeResult -Raw -Encoding UTF8|ConvertFrom-Json;$result.actualProductionExecuted=$native.actualProductionExecuted;$result.nativeProductionSequencePassed=$native.nativeProductionSequencePassed;$result.nativeFirstError=$native.firstError}
  }finally{$stdout.Flush();$stderr.Flush();if(!$process.HasExited){$result.brokerRetained=$true};$process.Dispose()}
 }catch{$result.firstError=@{message=$_.Exception.Message;line=$_.InvocationInfo.ScriptLineNumber};$_|Out-String|Set-Content -LiteralPath (Join-Path $out 'launcher-error.log') -Encoding utf8}
 finally {
