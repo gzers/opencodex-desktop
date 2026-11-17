@@ -27,6 +27,7 @@ mod handles;
 mod history;
 mod leases;
 mod observations;
+mod predecessors;
 mod production;
 pub(in crate::infrastructure::windows_client_originals024) use production::ProductionStop;
 mod recovery;
@@ -160,6 +161,7 @@ impl Record {
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 struct Manifest {
+    predecessors: Vec<super::predecessors::Predecessor>,
     schema: String,
     document_kind: String,
     session_id: String,
@@ -414,6 +416,7 @@ impl Journal {
         directory: PinnedDirectory,
         context: super::super::source::NativeJournalContext,
         plan: StoragePlan,
+        predecessors: &super::NativePredecessors,
         claim: &mut super::super::coordination::AnchoredClaim<'_>,
         owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
         end: Instant,
@@ -431,8 +434,10 @@ impl Journal {
         let epoch = claim.epoch().to_string();
         let key = claim.key();
         let scope = action.scope_id();
-        let mut out = Self::create(
-            directory, pins, peer, binding, plan, &epoch, &key, &scope, end,
+        let references = predecessors.data()?;
+        super::predecessors::validate_set(&references, &binding)?;
+        let mut out = Self::create_with_predecessor_data(
+            directory, pins, peer, binding, plan, references, &epoch, &key, &scope, end,
         )?;
         out.source_action = Some(action);
         if let Err(e) = out.check_source_owner(owner, end) {
@@ -532,6 +537,31 @@ impl Journal {
         scope: &str,
         end: Instant,
     ) -> io::Result<Self> {
+        Self::create_with_predecessor_data(
+            directory,
+            pins,
+            peer,
+            binding,
+            plan,
+            Vec::new(),
+            epoch,
+            claim,
+            scope,
+            end,
+        )
+    }
+    fn create_with_predecessor_data(
+        directory: PinnedDirectory,
+        pins: [PinnedDirectory; 4],
+        peer: RetainedPeer,
+        binding: Binding,
+        plan: StoragePlan,
+        predecessors: Vec<super::predecessors::Predecessor>,
+        epoch: &str,
+        claim: &str,
+        scope: &str,
+        end: Instant,
+    ) -> io::Result<Self> {
         before(end)?;
         let token = native::current_identity()?;
         if token.elevated || token.elevation_type == 2 {
@@ -539,6 +569,7 @@ impl Journal {
         }
         binding.validate(Some(&token.sid))?;
         binding.check_native(&peer, &pins)?;
+        super::predecessors::validate_set(&predecessors, &binding)?;
         plan.validate(pins[0].path(), pins[0].identity())?;
         directory.recheck()?;
         let namespace_session = session_namespace(&directory, &pins[1])?;
@@ -548,6 +579,7 @@ impl Journal {
         let session = namespace_session.unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
         let binding_digest = hash::sha256_hex(&encoded(&binding)?);
         let manifest = Manifest {
+            predecessors,
             schema: ANCHORED_ORIGINALS_SCHEMA_V3.into(),
             document_kind: "manifest".into(),
             session_id: session.clone(),

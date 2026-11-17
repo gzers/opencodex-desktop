@@ -526,6 +526,27 @@ impl Owner {
         self.source(deadline)
     }
     async fn observe(&mut self, deadline: Instant) -> AppResult<serde_json::Value> {
+        self.observe_in(deadline, None).await
+    }
+    async fn observe_for_action(
+        &mut self,
+        window: &shared::ActionWindow,
+        stopping: bool,
+    ) -> AppResult<serde_json::Value> {
+        window.remaining()?;
+        let end = if stopping {
+            window.stop_deadline()
+        } else {
+            window.deadline()
+        };
+        budget(end)?;
+        self.observe_in(end, Some((window, stopping))).await
+    }
+    async fn observe_in(
+        &mut self,
+        deadline: Instant,
+        action: Option<(&shared::ActionWindow, bool)>,
+    ) -> AppResult<serde_json::Value> {
         if !matches!(
             self.original_phase,
             Some(LivePhase::Original(_) | LivePhase::Ready(_))
@@ -560,8 +581,11 @@ impl Owner {
             }
             Some(LivePhase::Ready(ready)) => {
                 self.original_phase = Some(LivePhase::Ready(ready));
-                self.with_originals(|originals, owner| {
-                    originals.check_ready(owner, &observed, deadline)
+                self.with_originals(|originals, owner| match action {
+                    Some((window, stopping)) => {
+                        originals.check_ready_for_action(owner, &observed, window, stopping)
+                    }
+                    None => originals.check_ready(owner, &observed, deadline),
                 })?;
             }
             phase => {
@@ -586,7 +610,7 @@ impl Owner {
                 completion: StopCompletion::record(deadline)?,
             });
         }
-        self.observe(deadline).await?;
+        self.observe_for_action(window, true).await?;
         program_image::verify(&self.selected)?;
         self.source(deadline)?;
         self.original_listeners = Some(self.native.listeners().map_err(unknown)?);
@@ -754,7 +778,7 @@ async fn execute_async(
                     owner.check_completed_stop_for_action(&window)?;
                 } else {
                     return owner
-                        .observe(window.deadline())
+                        .observe_for_action(&window, false)
                         .await
                         .map(|_| LifecycleResult::Started);
                 }
@@ -934,7 +958,7 @@ async fn execute_async(
                 ));
             }
         }
-        if owner.observe(window.deadline()).await.is_ok() {
+        if owner.observe_for_action(&window, false).await.is_ok() {
             return Ok(LifecycleResult::Started);
         }
         if owner.original_phase.is_none() {

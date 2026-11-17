@@ -371,6 +371,13 @@ pub(super) struct CompletedStop {
     state_digest: String,
 }
 impl CompletedStop {
+    pub(in crate::infrastructure::windows_client_originals024::v3::journal) fn original_state_digest(
+        &self,
+        journal: &Journal,
+    ) -> io::Result<String> {
+        self.matches(journal)?;
+        Ok(self.state_digest.clone())
+    }
     pub(super) fn capture(
         journal: &mut Journal,
         guard: &mut super::closed_stop::CompletedStopGuard<'_>,

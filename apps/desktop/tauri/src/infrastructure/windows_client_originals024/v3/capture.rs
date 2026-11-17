@@ -16,6 +16,8 @@ use crate::{
     modules::runtime::official_lifecycle024::ActionWindow,
 };
 use std::time::Instant;
+mod predecessors;
+pub(in crate::infrastructure::windows_client_originals024) use predecessors::NativePredecessors;
 struct CaptureStore {
     source: Source,
     routes: Option<RoutePin>,
@@ -66,10 +68,17 @@ fn require_fresh_namespace(windows: &PinnedDirectory) -> io::Result<()> {
     windows.recheck()
 }
 impl CaptureStore {
-    fn capture_held(owner: &mut Owner, window: &ActionWindow) -> AppResult<(Self, NativeLease)> {
+    fn capture_held(
+        owner: &mut Owner,
+        window: &ActionWindow,
+        predecessors: &NativePredecessors,
+    ) -> AppResult<(Self, NativeLease)> {
         window.remaining()?;
         let end = window.deadline();
         let (mut source, _) = Source::capture(owner, end)?;
+        predecessors
+            .check_source_window(&source.binding_raw, window)
+            .map_err(refused)?;
         let routes = RoutePin::capture(owner.home_path(), end).map_err(refused)?;
         let mut routes = routes;
         let content_start = super::super::content::StartContentScope::capture(
@@ -85,7 +94,9 @@ impl CaptureStore {
         );
         let official = private_child(&data, "official024").map_err(refused)?;
         let windows = private_child(&official, "windows").map_err(refused)?;
-        require_fresh_namespace(&windows).map_err(refused)?;
+        predecessors
+            .check_namespace(&windows, &source.binding_raw, None, end)
+            .map_err(refused)?;
         let mut lease = NativeLease::acquire_existing(owner, end).map_err(refused)?;
         let created = (|| -> io::Result<_> {
             let root = profile.path().join(".codex");
@@ -118,11 +129,19 @@ impl CaptureStore {
                 profile.path(),
                 profile.identity(),
             )?;
-            require_fresh_namespace(&windows)?;
+            predecessors.check_namespace(&windows, &source.binding_raw, None, end)?;
             let directory =
                 create_private_directory(&windows.path().join(uuid::Uuid::new_v4().to_string()))?;
-            let journal =
-                Journal::create_from_source(directory, context, plan, &mut claim, owner, end)?;
+            predecessors.check_namespace(&windows, &source.binding_raw, Some(&directory), end)?;
+            let journal = Journal::create_from_source(
+                directory,
+                context,
+                plan,
+                predecessors,
+                &mut claim,
+                owner,
+                end,
+            )?;
             Ok(CapturedTrees::retain(trees, journal))
         })();
         match created {
@@ -160,6 +179,10 @@ impl CaptureStore {
         self.core
             .journal()
             .check_source_owner(owner, end)
+            .map_err(refused)?;
+        self.core
+            .journal()
+            .check_capture_namespace(end)
             .map_err(refused)
     }
 }
@@ -708,11 +731,20 @@ impl CaptureSlot {
         owner: &mut Owner,
         window: &ActionWindow,
     ) -> AppResult<()> {
+        let empty = NativePredecessors::empty(window);
+        self.capture_existing_with_predecessors(owner, window, &empty)
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn capture_existing_with_predecessors(
+        &mut self,
+        owner: &mut Owner,
+        window: &ActionWindow,
+        predecessors: &NativePredecessors,
+    ) -> AppResult<()> {
         let result = (|| {
             if self.failed || self.retained.is_some() {
                 return Err(refused("原v3 slot已有状态；不得替换或追赶"));
             }
-            let (store, lease) = CaptureStore::capture_held(owner, window)?;
+            let (store, lease) = CaptureStore::capture_held(owner, window, predecessors)?;
             // Store is reachable through the ORIGINAL adapter before the first
             // journaled client move. Active lease stays on this stack only.
             self.retained = Some(store);

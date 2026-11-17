@@ -1,6 +1,6 @@
 //! Current v3 typed adapter. Tags locate this original retained native slot.
 //! No v2 fallback/migration, serialized-phase factory or PID/source adoption.
-use super::v3::CaptureSlot;
+use super::v3::{CaptureSlot, NativePredecessors};
 use crate::{
     errors::{AppError, AppResult},
     infrastructure::{
@@ -44,9 +44,25 @@ pub(crate) enum LivePhase {
     Prepared(PreparedRestore),
     Closed(ClosedEligibility),
 }
+struct ClosedGeneration {
+    closed: ClosedEligibility,
+    scope: String,
+    // Retain the SAME actual observation taken from the old native Owner.
+    _ready: ServiceObservation,
+}
+struct SuccessorTicket {
+    previous_session: uuid::Uuid,
+    previous_scope: String,
+    predecessors: NativePredecessors,
+    digest: String,
+}
 #[derive(Default)]
 pub(crate) struct WindowsOriginals {
     slot: CaptureSlot,
+    closed: Vec<CaptureSlot>,
+    closed_generations: Vec<ClosedGeneration>,
+    tickets: Vec<SuccessorTicket>,
+    awaiting_successor: bool,
     session: Option<uuid::Uuid>,
     owner_scope: Option<String>,
     stage: Option<Stage>,
@@ -54,6 +70,42 @@ pub(crate) struct WindowsOriginals {
     failed: bool,
 }
 impl WindowsOriginals {
+    fn check_closed_owners(&self, owner: &mut Owner) -> AppResult<()> {
+        let previous = owner.originals_previous_owners();
+        if self.closed.len() != previous.len()
+            || self.closed.len() != self.closed_generations.len()
+            || self.closed.len() != self.tickets.len()
+            || self.closed.len() > 512
+        {
+            return Err(refused("原closed槽/Owner/typed观察/票据集合不一致"));
+        }
+        for (generation, old) in self.closed_generations.iter().zip(previous) {
+            if !old.originals_is_stopped() || old.scope()? != generation.scope {
+                return Err(refused("保留原Owner不是原closed代次"));
+            }
+        }
+        Ok(())
+    }
+    fn check_histories_for_action(
+        &mut self,
+        owner: &mut Owner,
+        window: &ActionWindow,
+        stopping: bool,
+    ) -> AppResult<()> {
+        self.check_closed_owners(owner)?;
+        self.slot
+            .check_predecessors_for_action(&mut self.closed, owner, window, stopping)
+    }
+    fn check_histories_at(
+        &mut self,
+        owner: &mut Owner,
+        when: Instant,
+        end: Instant,
+    ) -> AppResult<()> {
+        self.check_closed_owners(owner)?;
+        self.slot
+            .check_predecessors_at(&mut self.closed, owner, when, end)
+    }
     fn matches_tag(&self, id: uuid::Uuid, stage: Stage, scope: &str) -> bool {
         !self.failed
             && self.session == Some(id)
@@ -83,7 +135,10 @@ impl WindowsOriginals {
     }
     pub(crate) fn before_resume(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
         self.admit(self.current_id()?, Stage::Original, owner, end)?;
+        let window = owner.originals_action_window(false, end)?;
+        self.check_histories_for_action(owner, &window, false)?;
         self.slot.before_resume_existing(owner, end)?;
+        self.check_histories_for_action(owner, &window, false)?;
         self.failed = false;
         Ok(())
     }
@@ -94,7 +149,31 @@ impl WindowsOriginals {
         end: Instant,
     ) -> AppResult<()> {
         self.admit(self.current_id()?, Stage::Ready, owner, end)?;
+        let when = end
+            .checked_sub(Duration::from_secs(5))
+            .ok_or_else(|| refused("原Status截止不可定位"))?;
+        self.check_histories_at(owner, when, end)?;
         self.slot.check_ready_existing(owner, ready, end)?;
+        self.check_histories_at(owner, when, end)?;
+        self.failed = false;
+        Ok(())
+    }
+    pub(crate) fn check_ready_for_action(
+        &mut self,
+        owner: &mut Owner,
+        ready: &ServiceObservation,
+        window: &ActionWindow,
+        stopping: bool,
+    ) -> AppResult<()> {
+        let end = if stopping {
+            window.stop_deadline()
+        } else {
+            window.deadline()
+        };
+        self.admit(self.current_id()?, Stage::Ready, owner, end)?;
+        self.check_histories_for_action(owner, window, stopping)?;
+        self.slot.check_ready_existing(owner, ready, end)?;
+        self.check_histories_for_action(owner, window, stopping)?;
         self.failed = false;
         Ok(())
     }
@@ -119,7 +198,9 @@ impl WindowsOriginals {
         end: Instant,
     ) -> AppResult<()> {
         self.admit(closed.session, Stage::Closed, owner, end)?;
+        self.check_histories_at(owner, when, end)?;
         self.slot.completed_stop_at(owner, when, end)?;
+        self.check_histories_at(owner, when, end)?;
         self.failed = false;
         Ok(())
     }
@@ -130,7 +211,12 @@ impl WindowsOriginals {
         end: Instant,
     ) -> AppResult<()> {
         self.admit(closed.session, Stage::Closed, owner, end)?;
+        self.check_closed_owners(owner)?;
+        self.slot
+            .check_predecessors_original(&mut self.closed, owner, end)?;
         self.slot.completed_stop_original(owner, end)?;
+        self.slot
+            .check_predecessors_original(&mut self.closed, owner, end)?;
         self.failed = false;
         Ok(())
     }
@@ -142,7 +228,9 @@ impl WindowsOriginals {
     ) -> AppResult<()> {
         window.remaining()?;
         self.admit(closed.session, Stage::Closed, owner, window.deadline())?;
+        self.check_histories_for_action(owner, window, false)?;
         self.slot.completed_stop_for_action(owner, window)?;
+        self.check_histories_for_action(owner, window, false)?;
         self.failed = false;
         Ok(())
     }
@@ -161,10 +249,37 @@ impl ClientOriginals for WindowsOriginals {
             return Err(refused("已有原v3会话或失败；不替换/追赶"));
         }
         self.failed = true;
+        self.check_closed_owners(owner)?;
+        let predecessors = NativePredecessors::collect_previous(&mut self.closed, owner, window)?;
+        if self.closed.is_empty() {
+            if self.awaiting_successor || !self.tickets.is_empty() {
+                return Err(refused("首代不得携未消费后继票据"));
+            }
+        } else {
+            let ticket = self
+                .tickets
+                .last()
+                .ok_or_else(|| refused("原后继票据缺席"))?;
+            let previous = self
+                .closed_generations
+                .last()
+                .ok_or_else(|| refused("原closed代次缺席"))?;
+            if !self.awaiting_successor
+                || ticket.previous_session != previous.closed.session
+                || ticket.previous_scope != previous.scope
+                || ticket.digest != predecessors.digest().map_err(refused)?
+                || !ticket.predecessors.same(&predecessors).map_err(refused)?
+            {
+                return Err(refused("后继票据不是原有序前驱/来源/完整动作截止"));
+            }
+        }
         let session = uuid::Uuid::new_v4();
         self.session = Some(session);
         self.owner_scope = Some(owner.scope()?);
-        self.slot.capture_existing(owner, window)?;
+        self.slot
+            .capture_existing_with_predecessors(owner, window, &predecessors)?;
+        self.check_histories_for_action(owner, window, false)?;
+        self.awaiting_successor = false;
         self.stage = Some(Stage::Original);
         self.failed = false;
         Ok(OriginalSession { session })
@@ -177,7 +292,10 @@ impl ClientOriginals for WindowsOriginals {
         end: Instant,
     ) -> AppResult<ReadySession> {
         self.admit(original.session, Stage::Original, owner, end)?;
+        let window = owner.originals_action_window(false, end)?;
+        self.check_histories_for_action(owner, &window, false)?;
         self.slot.record_ready_existing(owner, ready, end)?;
+        self.check_histories_for_action(owner, &window, false)?;
         self.stage = Some(Stage::Ready);
         self.failed = false;
         Ok(ReadySession {
@@ -191,6 +309,8 @@ impl ClientOriginals for WindowsOriginals {
         end: Instant,
     ) -> AppResult<PreparedRestore> {
         self.admit(ready.session, Stage::Ready, owner, end)?;
+        let window = owner.originals_action_window(true, end)?;
+        self.check_histories_for_action(owner, &window, true)?;
         if self.prepared_ready.is_some() {
             return Err(refused("重复原typedReady"));
         }
@@ -206,6 +326,7 @@ impl ClientOriginals for WindowsOriginals {
             kind,
             end,
         )?;
+        self.check_histories_for_action(owner, &window, true)?;
         self.stage = Some(Stage::Prepared);
         self.failed = false;
         Ok(PreparedRestore {
@@ -222,6 +343,8 @@ impl ClientOriginals for WindowsOriginals {
         end: Instant,
     ) -> AppResult<ClosedEligibility> {
         self.admit(prepared.session, Stage::Prepared, owner, end)?;
+        let window = owner.originals_action_window(true, end)?;
+        self.check_histories_for_action(owner, &window, true)?;
         let ready = self
             .prepared_ready
             .as_ref()
@@ -234,6 +357,7 @@ impl ClientOriginals for WindowsOriginals {
         self.slot
             .restore_stopped_existing(owner, normal, absent, official, end)?;
         self.slot.completed_stop_original(owner, end)?;
+        self.check_histories_for_action(owner, &window, true)?;
         self.stage = Some(Stage::Closed);
         self.failed = false;
         Ok(ClosedEligibility {
@@ -247,12 +371,38 @@ impl ClientOriginals for WindowsOriginals {
         window: &ActionWindow,
     ) -> AppResult<()> {
         self.check_closed_for_action(&closed, owner, window)?;
-        // No replacement/empty fake capture until exact canonical predecessor
-        // set and retained native history namespace have been joined.
         self.failed = true;
-        Err(refused(
-            "原v3后继完整前驱集合/namespace引用尚未接通，禁止新代次",
-        ))
+        if self.awaiting_successor || !owner.originals_is_stopped() || self.closed.len() >= 512 {
+            return Err(refused("后继重复/原Stop未知/完整前驱预算耗尽"));
+        }
+        let predecessors =
+            NativePredecessors::with_current(&mut self.closed, &mut self.slot, owner, window)?;
+        let scope = owner.scope()?;
+        let ticket = SuccessorTicket {
+            previous_session: closed.session,
+            previous_scope: scope.clone(),
+            digest: predecessors.digest().map_err(refused)?,
+            predecessors,
+        };
+        // All fallible native admission precedes this move. Every old slot,
+        // original typed observation and consumed Closed locator stays retained.
+        let ready = self
+            .prepared_ready
+            .take()
+            .ok_or_else(|| refused("原Stop观察缺席"))?;
+        self.closed.push(std::mem::take(&mut self.slot));
+        self.closed_generations.push(ClosedGeneration {
+            closed,
+            scope,
+            _ready: ready,
+        });
+        self.tickets.push(ticket);
+        self.awaiting_successor = true;
+        self.session = None;
+        self.owner_scope = None;
+        self.stage = None;
+        self.failed = false;
+        Ok(())
     }
 }
 #[cfg(test)]

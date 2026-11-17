@@ -9,6 +9,7 @@ pub(crate) enum OriginalActionKind {
     Restart,
 }
 pub(super) struct ActionOrigin {
+    window: shared::ActionWindow,
     id: uuid::Uuid,
     kind: OriginalActionKind,
     end: Instant,
@@ -47,6 +48,7 @@ impl ActionOrigin {
             return Err(AppError::Timeout);
         }
         let out = Self {
+            window: *window,
             id: uuid::Uuid::new_v4(),
             kind,
             end: window.deadline(),
@@ -83,6 +85,32 @@ pub(crate) struct NativeAction {
     token: native::TokenIdentity,
 }
 impl Owner {
+    /// Copies only the exact ActionWindow admitted with this retained origin.
+    /// No begin()/new timer, and the old relevant cutoff still has to match.
+    pub(crate) fn originals_action_window(
+        &mut self,
+        stopping: bool,
+        end: Instant,
+    ) -> AppResult<shared::ActionWindow> {
+        let action = if stopping {
+            self.original_stop_action(end)?
+        } else {
+            self.original_action(OriginalActionKind::Start, end)?
+        };
+        let origin = if stopping {
+            self.stop_action.as_ref().ok_or_else(recovery_required)?
+        } else {
+            &self.start_action
+        };
+        if action.origin != origin.id
+            || origin.window.deadline() != origin.end
+            || origin.window.stop_deadline() != origin.stop_end
+        {
+            return Err(recovery_required());
+        }
+        origin.check(end)?;
+        Ok(origin.window)
+    }
     /// Move the very SAME HMAC/current observation just produced by observe.
     /// Caller must have original Stop/Restart action, not copied tuple fields.
     pub(crate) fn take_original_ready_for_stop(
@@ -335,6 +363,8 @@ mod tests {
         let parent = now + Duration::from_secs(29);
         let start = window(LifecycleAction::Start, now, parent);
         let original = ActionOrigin::admit(OriginalActionKind::Start, &start).unwrap();
+        assert_eq!(original.window.deadline(), start.deadline());
+        assert_eq!(original.window.stop_deadline(), start.stop_deadline());
         assert_eq!(original.end, parent);
         assert_eq!(original.stop_end, now + Duration::from_secs(10));
         assert!(original.check(parent).is_ok());
@@ -342,6 +372,8 @@ mod tests {
         assert!(original.check(now + Duration::from_secs(28)).is_err());
         let restart = window(LifecycleAction::Restart, now, parent);
         let original = ActionOrigin::admit(OriginalActionKind::Restart, &restart).unwrap();
+        assert_eq!(original.window.deadline(), restart.deadline());
+        assert_eq!(original.window.stop_deadline(), restart.stop_deadline());
         assert_eq!(original.end, parent);
         assert_eq!(original.relevant_end(), now + Duration::from_secs(10));
         assert!(

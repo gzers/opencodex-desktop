@@ -6,6 +6,7 @@ use std::time::{Duration, Instant};
 enum Origin {
     Status(Instant),
     Action(ActionWindow),
+    StopAction(ActionWindow),
     CompletedOriginal(Instant),
 }
 pub(super) struct HistoryReadWindow {
@@ -46,6 +47,14 @@ impl HistoryReadWindow {
         out.check()?;
         Ok(out)
     }
+    pub(super) fn stop_action(window: &ActionWindow) -> io::Result<Self> {
+        let out = Self {
+            origin: Origin::StopAction(*window),
+            end: window.stop_deadline(),
+        };
+        out.check()?;
+        Ok(out)
+    }
     pub(super) fn check(&self) -> io::Result<()> {
         if Instant::now() >= self.end {
             return Err(io::ErrorKind::TimedOut.into());
@@ -72,6 +81,14 @@ impl HistoryReadWindow {
                     .remaining()
                     .map_err(|_| io::Error::from(io::ErrorKind::TimedOut))?;
             }
+            Origin::StopAction(window) => {
+                if self.end != window.stop_deadline() || self.end > window.deadline() {
+                    return Err(invalid());
+                }
+                window
+                    .remaining()
+                    .map_err(|_| io::Error::from(io::ErrorKind::TimedOut))?;
+            }
         }
         Ok(())
     }
@@ -84,6 +101,60 @@ impl HistoryReadWindow {
 mod tests {
     use super::*;
     use crate::modules::process::LifecycleAction;
+    #[test]
+    fn wl2_r6_ready_action_read_keeps_actual_window_without_relabeling_it_status() {
+        let start = Instant::now();
+        for kind in [
+            LifecycleAction::Start,
+            LifecycleAction::Stop,
+            LifecycleAction::Restart,
+        ] {
+            let window = ActionWindow::begin(kind, start, start + Duration::from_secs(30)).unwrap();
+            let read = HistoryReadWindow::action(&window).unwrap();
+            let stop = HistoryReadWindow::stop_action(&window).unwrap();
+            assert_eq!(read.end().unwrap(), window.deadline());
+            assert_eq!(stop.end().unwrap(), window.stop_deadline());
+            assert!(
+                HistoryReadWindow::status(
+                    window.deadline() - Duration::from_secs(5),
+                    window.deadline()
+                )
+                .is_err(),
+                "future deterministic Status start must NOT be used for a longer original action"
+            );
+        }
+        println!("r6 Ready observation action windows retain actual Start30/Stop10/Restart outer30+sub10; Status future/over5 checks unchanged. No Owner or typed Ready factory from these locators");
+    }
+    #[test]
+    fn wl2_r6_predecessor_stop_read_uses_original_subwindow_even_while_restart_outer_is_live() {
+        let start = Instant::now() - Duration::from_secs(9);
+        let window = ActionWindow::begin(
+            LifecycleAction::Restart,
+            start,
+            start + Duration::from_secs(30),
+        )
+        .unwrap();
+        let read = HistoryReadWindow::stop_action(&window).unwrap();
+        assert_eq!(read.end().unwrap(), window.stop_deadline());
+        assert!(read.end().unwrap() < window.deadline());
+        while Instant::now() < window.stop_deadline() {
+            std::thread::sleep(Duration::from_millis(1));
+        }
+        assert!(
+            window.remaining().is_ok(),
+            "original Restart outer is still live"
+        );
+        assert_eq!(read.end().err().unwrap().kind(), io::ErrorKind::TimedOut);
+        assert_eq!(
+            HistoryReadWindow::stop_action(&window)
+                .err()
+                .unwrap()
+                .kind(),
+            io::ErrorKind::TimedOut
+        );
+        assert_eq!(window.stop_deadline(), start + Duration::from_secs(10));
+        println!("r6 native predecessor readonly Stop keeps exact original Restart sub10; real elapsed subwindow refuses even with live outer30, no retry/budget reset or native authority");
+    }
     #[test]
     fn wl2_r6_read_window_original_completion_requires_exact_original_cutoff() {
         let original = Instant::now() + Duration::from_secs(2);
