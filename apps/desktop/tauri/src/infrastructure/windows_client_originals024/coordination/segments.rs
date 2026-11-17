@@ -1,6 +1,14 @@
 //! Explicit release moves exact original file/pin objects into history, without
 //! active ranges/OVERLAPPED or a NativeLease. No serde/Clone or Drop factory.
 use super::*;
+#[cfg(test)]
+thread_local! {static RECOVERY_RELEASE_FAIL_AFTER:std::cell::Cell<Option<usize>>=const{std::cell::Cell::new(None)};}
+#[cfg(test)]
+pub(in crate::infrastructure::windows_client_originals024) fn fail_recovery_release_after(
+    count: usize,
+) {
+    RECOVERY_RELEASE_FAIL_AFTER.with(|fault| fault.set(Some(count)));
+}
 #[derive(serde::Serialize, serde::Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub(in super::super) struct LeaseFacts {
@@ -209,6 +217,59 @@ impl ReleasedObjects {
     }
 }
 impl NativeLease {
+    // Recovery worker owns this same reference on its owning thread. On any
+    // error the exact remaining Held/ranges or already released original pins
+    // stay reachable; a consuming Drop is never used as a release receipt.
+    pub(in super::super) fn release_retained(
+        &mut self,
+        out: &mut Option<ReleasedLease>,
+        end: Instant,
+    ) -> io::Result<()> {
+        if out.is_some() {
+            return Err(refused());
+        }
+        let result = (|| {
+            self.check(end)?;
+            let facts = self.facts_inner()?;
+            self.active = false;
+            for (index, held) in self.held.iter_mut().rev().enumerate() {
+                before(end)?;
+                held.release()?;
+                #[cfg(test)]
+                if RECOVERY_RELEASE_FAIL_AFTER.with(|fault| fault.get() == Some(index + 1)) {
+                    return Err(io::Error::from_raw_os_error(5));
+                }
+                #[cfg(not(test))]
+                let _ = index;
+            }
+            for held in &mut self.held {
+                if !held.ranges.is_empty() {
+                    return Err(refused());
+                }
+                held.pin.check(end)?;
+            }
+            before(end)?;
+            let objects = ReleasedObjects {
+                files: self.held.drain(..).map(|h| h.pin).collect(),
+                token: self.token.clone(),
+                deadline: self.deadline,
+                bound: self.bound.take(),
+                epoch: self.epoch.clone(),
+            };
+            *out = Some(ReleasedLease {
+                original: objects,
+                facts,
+                poisoned: false,
+                reacquired: false,
+                completed_at: Instant::now(),
+            });
+            out.as_mut().unwrap().check(end)
+        })();
+        if result.is_err() {
+            self.active = false;
+        }
+        result
+    }
     fn facts_inner(&self) -> io::Result<LeaseFacts> {
         facts_from_files(
             &self.epoch,

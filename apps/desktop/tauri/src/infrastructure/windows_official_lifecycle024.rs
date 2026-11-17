@@ -87,6 +87,60 @@ struct Slot {
     profile: PathBuf,
     owner: Mutex<Option<Owner>>,
     cancel: AtomicBool,
+    recovery_worker:
+        Mutex<Option<super::windows_client_originals024::recovery_worker::WorkerControl<Owner>>>,
+}
+fn worker_occupied(entry: &Slot) -> AppResult<bool> {
+    Ok(entry.recovery_worker.try_lock().map_err(unknown)?.is_some())
+}
+/// Internal transport of the already prepared ORIGINAL Owner before any active
+/// lease acquisition. The versioned host command/full recovery driver must
+/// independently admit the explicit action; this is not a public dispatch.
+pub(crate) fn handoff_before_resume_worker(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    window: crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+    driver: fn(
+        &mut Owner,
+        &mut super::windows_client_originals024::recovery_worker::WorkerLocal,
+        &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+    ) -> std::io::Result<()>,
+) -> AppResult<()> {
+    budget(window.deadline())?;
+    let entry = slot(runtime, home, false)?;
+    let mut control = entry.recovery_worker.try_lock().map_err(unknown)?;
+    if control.is_some() {
+        return Err(recovery_required());
+    }
+    let mut original = entry.owner.try_lock().map_err(unknown)?;
+    original
+        .as_mut()
+        .ok_or_else(recovery_required)?
+        .check_before_resume_process(&window)?;
+    entry.cancel.store(true, Ordering::SeqCst);
+    let worker = super::windows_client_originals024::recovery_worker::WorkerControl::start_owner(
+        &mut original,
+        window,
+        driver,
+    )
+    .map_err(unknown)?;
+    // Original control lock stays held across Owner take/send and registration,
+    // so ordinary dispatch can never observe an unprotected empty Owner slot.
+    *control = Some(worker);
+    Ok(())
+}
+pub(crate) fn before_resume_worker_status(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    end: Instant,
+) -> AppResult<Option<serde_json::Value>> {
+    budget(end)?;
+    let entry = slot(runtime, home, false)?;
+    let control = entry.recovery_worker.try_lock().map_err(unknown)?;
+    control
+        .as_ref()
+        .map(|c| c.observe(end).map_err(unknown))
+        .transpose()
 }
 /// Data about completion time only, not native close authority. Only Owner's
 /// native typed close/readback path records it; a later observation must still
@@ -199,6 +253,7 @@ fn slot(runtime: &SharedRuntimeExecutable, home: &Path, create: bool) -> AppResu
         profile: platform::home_dir().ok_or_else(|| unknown(()))?,
         owner: Mutex::new(None),
         cancel: AtomicBool::new(false),
+        recovery_worker: Mutex::new(None),
     });
     registry.push(slot.clone());
     Ok(slot)
@@ -800,7 +855,12 @@ async fn execute_admitted(
         &command.environment.opencodex_home,
         command.action == LifecycleAction::Start,
     )?;
+    let worker_gate = entry.recovery_worker.try_lock().map_err(unknown)?;
+    if worker_gate.is_some() {
+        return Err(recovery_required());
+    }
     let mut guard = entry.owner.try_lock().map_err(unknown)?;
+    drop(worker_gate);
     if let Some(owner) = guard.as_ref() {
         owner.require_normal_dispatch()?;
     }
@@ -1134,6 +1194,7 @@ pub(crate) fn recovery_state(
 ) -> crate::modules::status::ClientRecoveryState {
     use crate::modules::status::ClientRecoveryState as R;
     match slot(runtime, home, false) {
+        Ok(s) if worker_occupied(&s).unwrap_or(true) => R::Required,
         Ok(s) => match s.owner.try_lock() {
             Ok(o) => match o.as_ref() {
                 Some(o) if o.stopped || o.original_phase.is_none() => R::Required,
@@ -1158,6 +1219,7 @@ pub(crate) fn recovery_state_at(
         return R::Unknown;
     }
     match slot(runtime, home, false) {
+        Ok(entry) if worker_occupied(&entry).unwrap_or(true) => R::Required,
         Ok(entry) => match entry.owner.try_lock() {
             Ok(mut guard) => match guard.as_mut() {
                 Some(owner) if owner.originals_is_stopped() => {
@@ -1210,6 +1272,9 @@ pub(crate) fn recovery_for_sample(
     if !Arc::ptr_eq(&entry, &receipt.entry) {
         return R::Unknown;
     }
+    if worker_occupied(&entry).unwrap_or(true) {
+        return R::Required;
+    }
     let Ok(mut guard) = entry.owner.try_lock() else {
         return R::Unknown;
     };
@@ -1257,10 +1322,18 @@ pub(crate) async fn status_sample(
 ) -> Result<(serde_json::Value, StatusReceipt), CollectError> {
     budget(deadline).map_err(|_| CollectError::Timeout)?;
     let entry = slot(runtime, home, false).map_err(|_| CollectError::Unreachable)?;
+    let worker_gate = entry
+        .recovery_worker
+        .try_lock()
+        .map_err(|_| CollectError::Unreachable)?;
+    if worker_gate.is_some() {
+        return Err(CollectError::Unreachable);
+    }
     let mut guard = entry
         .owner
         .try_lock()
         .map_err(|_| CollectError::Unreachable)?;
+    drop(worker_gate);
     let owner = guard.as_mut().ok_or(CollectError::Unreachable)?;
     let payload = if owner.stopped {
         owner

@@ -26,6 +26,7 @@ pub(crate) use r7_readonly::observe_current_r2 as r7_observe_current_r2;
 pub(crate) mod existing_qualification;
 mod handle_release;
 mod phase;
+pub(crate) mod recovery_worker;
 mod reference;
 mod source;
 mod tree;

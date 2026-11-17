@@ -23,6 +23,26 @@ struct PendingFile {
     complete: Option<LockFile>,
 }
 impl LeasePreparation {
+    pub(in crate::infrastructure::windows_client_originals024) fn revoke_retained(&mut self) {
+        self.poison();
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn empty_after_transfer(
+        &self,
+    ) -> bool {
+        self.lease.is_none()
+            && self.pending.file.is_none()
+            && self.pending.complete.is_none()
+            && self.pending.parent.is_none()
+            && self.pending.path.is_none()
+    }
+    #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn prepare_fixture_paths(
+        &mut self,
+        paths: &[PathBuf; 4],
+        end: Instant,
+    ) -> io::Result<()> {
+        self.acquire(paths, None, end)
+    }
     fn checkpoint(&self, stage: u8, end: Instant) -> io::Result<()> {
         before(end)?;
         #[cfg(test)]

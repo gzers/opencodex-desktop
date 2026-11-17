@@ -110,6 +110,9 @@ impl ProcessAbortAttempt {
     }
 }
 impl Owner {
+    pub(crate) fn before_resume_owner_session(&self) -> String {
+        self.session.to_string()
+    }
     pub(crate) fn before_resume_quiescent_record(
         &mut self,
         window: &BeforeResumeRecoveryWindow,

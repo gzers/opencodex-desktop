@@ -41,6 +41,8 @@ use windows_sys::Win32::{
 mod preparation;
 mod segments;
 pub(super) use preparation::LeasePreparation;
+#[cfg(test)]
+pub(super) use segments::fail_recovery_release_after;
 pub(super) use segments::RetiredLeaseHistory;
 pub(super) use segments::{LeaseFacts, ReleasedLease};
 const BASE: u32 = 0x40000000;
@@ -428,6 +430,9 @@ impl AnchoredClaim<'_> {
     }
 }
 impl NativeLease {
+    pub(super) fn revoke_retained(&mut self) {
+        self.active = false;
+    }
     #[cfg(test)]
     pub(super) fn acquire_synthetic(paths: &[PathBuf; 4], end: Instant) -> io::Result<Self> {
         Self::acquire_paths(paths, end)
