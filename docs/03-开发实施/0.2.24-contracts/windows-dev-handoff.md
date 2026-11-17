@@ -1134,3 +1134,14 @@ canonical只读取原immutable manifest/events/current的Native ID/8/raw/完整�
 请Mac明确本轮原恢复控制模型：可否以一个原fixed10s/更短parent动作、同一原worker借原Owner完成prepare/quiesce/return，注册表仅保实际worker控制关联；若失败须跨请求保活动范围，应原owning worker继续保留，不移动lease/无新10s重激活。还需明确失败/过期时活动锁是保原worker等待显式处置，还是允许准确失败cleanup解锁并保原句柄/历史（不得记正常释放/Stop/Closed）。不默默改变现原lease线程/Drop语义，不把claim释放后NLK移根当恢复。只有该生产跨请求接线依赖停，same-thread逐步获取保留槽/native反例正在独立验证；不要求用户中转普通合同请求。
 
 原manifest缺席引用b01b78219/PSS0x8仍24unknown请求原样，当前r2/原件/进程不动，无force/归还/原包重跑、旧授权不沿用。普通令牌/原预算/Unknown拒绝/日常与官方边界不改，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 同线程锁获取前缀原生验证
+
+代码17c2b0575cea48dd2bc242c22901d19a37e39357已推送；main7fade183d／docs b291bf8fa、TEAM22/IMP150/r7未变。新增LeasePreparation一旦attempt先保原lease，原LockFile在post-open private/ADS/ID/8/bytes验证前留原file；每Held在首LockFileEx前入原槽，NLK shared/pending/reserved逐步失败保准确files/ranges，failed/expired拒take/重试，不局部close伪装普通release。成功仅同原文件描述/范围/epoch一次转NativeLease；既有acquire_existing只将原context/path/scope只读部分提为共用函数，实际原acquire/check/release语义保持。prepare_existing wrapper需原Owner的prepared process与同一共享恢复window前后核，完整产品图可编译，但未实际原Owner执行/整树恢复。
+
+证据wl2-r7-lease-prefix-20261117-r1：product01真实MSVC全Tauri库raw0/144586ms，5过0败0ignored（4原生＋1!Send/!Sync编译型反例）；11阶段1..8/20..22实际native失败，四角色SQLite BEGIN IMMEDIATE raw33外国事务保留，原精确held ranges对新file description实际LockFileEx冲突，unknown bytes/ADS保pending原handle和前置locks，expiry/duplicate/retry拒；18新fixture原字节/ID/8未变及缺席清理核。regression02同testEXE只跑旧成功获取锁原test1项raw0/347ms，通过真实SQLite writer排除/读者共存及原explicit release/native字节8ID核；旧test仅FixtureDrop不输出准确root，未把它算历史全部清理。TEST EXE SHAee081dc21fb670186316bd407a3b77bd2723c7541fe12afeb0d7cb644f9b334e，3最终源逐Git行尾归一核，schema生成raw归档还原，23payload/479337字节封存，无意外product首错。
+
+范围限制：新旧activelease均刻意!Send/!Sync，没有unsafeSend/transmute或跨线程移动；private parent观察若在自身工厂验证前失败且本role尚无file/ranges，不冒完整原parent或恢复permit。本批是同线程获取/失败保留primitive，尚不能放入Send原OWNERS注册表；跨请求原worker保持活动范围及失败/过期处置的最小方案请求9f775ebe7已先发，只暂停其生产持有接线。不得把成功ReleasedLease或Drop当连续claim/NLK，不释放claim仅靠NLK移根。
+
+status.json现42项完整本线状态，完整原恢复过程/通道/native附件/同10s原件return、原manifest缺席引用请求b01b78219、PSS0x8仍24unknown、普通MSI/原缺席退根/GUI官方owner/容量/最终候选仍未完。已过原r2全归档/44项、scanner15/CLI/空GUI/原生abort复用，不重复空跑；currentR221500/75744/3原件/3work/custody/anchors/协调/旧seq9与40588不动，无R1新执行授权/批准请求，旧50580/54692授权不沿用，原件未还不跑原包。旧两regression目录删除自动审批blocked by policy原样留、不换工具重试；日常/官方/普通Token/原预算/Unknown边界保持，不W2/双SID/发布，目标active。

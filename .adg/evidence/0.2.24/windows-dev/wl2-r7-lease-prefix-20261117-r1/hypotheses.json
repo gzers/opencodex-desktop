@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-17T20:03:16.436552+08:00",
+  "recordedBeforeImplementation": true,
+  "codeInput": "015106899f82f8140a7888af6e44dc2f5b7fb2fb",
+  "docsInput": "b291bf8fa TEAM22/IMP150/r7",
+  "hypotheses": [
+    {
+      "id": "L1",
+      "claim": "A same-thread one-shot preparation can enroll NativeLease before capture, original LockFile before post-open validations, and each Held before the first native range acquisition; failures retain all actual owned files/ranges until explicit cleanup."
+    },
+    {
+      "id": "L2",
+      "claim": "Busy at each actual role, failures during shared/reserved acquisition, partial capture, expired/wrong window and repeated preparation refuse without clearing prefix or manufacturing normal release."
+    },
+    {
+      "id": "L3",
+      "claim": "Successful preparation transfers the exact original NativeLease/files/ranges once; failed prefix never take_complete/retry/rebind."
+    }
+  ],
+  "limits": [
+    "NativeLease remains !Send/!Sync and stack/owning-thread scoped; no unsafe Send/transmute/active transfer",
+    "production recovery process check and fixed BeforeResumeRecoveryWindow required for actual existing-role preparation",
+    "cross-request original worker/slot integration requires explicit contract decision; local primitive is not full original-slot retention",
+    "no currentR2/official process/configuration/policy change",
+    "no new timers/budget extension/lock fallback/claim release during root move"
+  ]
+}
