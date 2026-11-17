@@ -1,0 +1,4 @@
+library02 raw101/53pass1fail: positive new synthetic artifact created by std::fs::write inherited an unprotected DACL; original native private-file assertion rejected it.
+Keep actual private-DACL assertion; create positive synthetic artifact using existing PrivateRecord factory.
+Strengthen same-bytes replaced nonartifact case: keep displaced work file outside client root and create protected new file at original path, so same childset/bytes but different native ID drives rejection. Negative must be InvalidData, not upstream PermissionDenied/timeout.
+Add actual old-cutoff-expired native read <=5s and original mutation TimedOut test; no new action/Owner/Ready proof constructed.

@@ -1,0 +1,3 @@
+library03 raw101/54pass1fail: temporary Ready view reused original open_node observe mode, intentionally sharing write/delete for official runtime, so live-view write probe returned Ok rather than original required raw32.
+Keep actual raw32 assertion. New READ-ONLY barrier uses FILE_GENERIC_READ+READ_CONTROL (directory metadata only), no DELETE, shareRead only for ordinary file; directories shareRead/Write and coordinators preserve original shareRead/Write.
+Original open_node/native original mutation and coordinator sharing implementations unchanged. Live writer conflict refuses directly, no retry, no claim/lease permission. Accurate failed source/EXE/90scenes retained.
