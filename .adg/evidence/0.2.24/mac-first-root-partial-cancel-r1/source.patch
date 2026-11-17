@@ -1,0 +1,1086 @@
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_originals.rs b/apps/desktop/tauri/src/infrastructure/macos_client_originals.rs
+index 1055fdafe..8137e6198 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_originals.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_originals.rs
+@@ -38,6 +38,12 @@ pub(crate) mod observation_metrics;
+ const MAX_CONTENT: usize = 2 * 1024 * 1024;
+ const MAX_SECURITY: usize = 256 * 1024;
+ const MAX_FRAME: usize = 32 * 1024 * 1024;
++#[cfg(test)]
++thread_local! {static OWNED_ROOT_CAPTURE_POINT:std::cell::RefCell<Option<String>>=const{std::cell::RefCell::new(None)};}
++#[cfg(test)]
++pub(crate) fn fixture_take_root_capture_point() -> Option<String> {
++    OWNED_ROOT_CAPTURE_POINT.with(|p| p.borrow_mut().take())
++}
+ const NAMES: [&str; 3] = [
+     "opencodex-catalog.json",
+     "models_cache.json",
+@@ -1225,6 +1231,25 @@ impl Originals {
+                 reservation.require(data_root, client_root, profile_root)?;
+                 reservation.root_absence()?;
+                 #[cfg(test)]
++                if std::env::var("OCXD024_ROOT_CANCEL_PARTIAL_POINT")
++                    .ok()
++                    .as_deref()
++                    == Some(point)
++                {
++                    if !data_root.starts_with("/private/tmp")
++                        || !data_root.ancestors().any(|p| {
++                            p.file_name().is_some_and(|n| {
++                                n.to_string_lossy().starts_with("ocxd024-root-cancel-")
++                            })
++                        })
++                    {
++                        return Err(denied("first-root partial capture fixture scope refused"));
++                    }
++                    OWNED_ROOT_CAPTURE_POINT.with(|p| *p.borrow_mut() = Some(point.to_string()));
++                    eprintln!("OWNED_FIRST_ROOT_CAPTURE_INTERRUPT {point}");
++                    return Err(denied("owned first-root partial capture interruption"));
++                }
++                #[cfg(test)]
+                 if std::env::var("OCXD024_CAPTURE_INTERRUPT_POINT")
+                     .ok()
+                     .as_deref()
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_action.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_action.rs
+index 7bae6bf9a..a648f32ff 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_action.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_action.rs
+@@ -59,14 +59,12 @@ pub(super) fn confirmation(
+     }
+     let data = PinnedDirectory::open(data)?;
+     let manager = data.child_private("manager-state", false)?;
+-    if observation::entry(&manager, "client-originals")?.is_some()
+-        || observation::entry(&manager, "client-root-cancel-plans")?.is_some()
+-    {
++    if observation::entry(&manager, "client-root-cancel-plans")?.is_some() {
+         return Ok(None);
+     }
+     let logical = context.working_directory.join(".codex");
+     let client = PinnedDirectory::open(&logical)?;
+-    if !super::super::tree::names(client.file())?.is_empty() {
++    if head.state == State::Preparing && !super::super::tree::names(client.file())?.is_empty() {
+         return Ok(None);
+     }
+     super::super::root_creation::verify_indexed(
+@@ -78,18 +76,40 @@ pub(super) fn confirmation(
+     )?;
+     let binding = root_binding::encode_binding(&scope(context, &data, &client)?, Some(origin))?;
+     let tree = TreeSnapshot::read(&client)?;
++    if head.state == State::CaptureReserved && !tree.first_root_execution_baseline() {
++        return Ok(None);
++    }
++    let capture_vault = vault_history::inspect(
++        &data,
++        &client,
++        &context.working_directory,
++        &binding,
++        head,
++        history,
++    )?;
+     let profile = PinnedDirectory::open(&context.working_directory)?;
+     let grok = GrokSnapshot::read(&profile)?;
+     let digest = digest(&encode(&(
+-        "macos-first-root-preparation-review-v1",
++        "macos-first-root-preparation-review-v2",
+         head,
+         origin,
+         digest(&binding),
+         history,
+         &tree,
+         &grok,
++        &capture_vault,
+     ))?);
+-    if TreeSnapshot::read(&client)? != tree || GrokSnapshot::read(&profile)? != grok {
++    if TreeSnapshot::read(&client)? != tree
++        || GrokSnapshot::read(&profile)? != grok
++        || vault_history::inspect(
++            &data,
++            &client,
++            &context.working_directory,
++            &binding,
++            head,
++            history,
++        )? != capture_vault
++    {
+         return Err(denied("first-root cancellation confirmation changed"));
+     }
+     Ok(Some(digest))
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_service_tests.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_service_tests.rs
+index 4e1794ec4..02e8fd129 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_service_tests.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_service_tests.rs
+@@ -86,9 +86,81 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
+         working_directory: profile.clone(),
+         opencodex_home: home.clone(),
+     };
++    let partial_point = std::env::var("OCXD024_ROOT_CANCEL_PARTIAL_POINT").ok();
+     let started = Instant::now();
+-    let end = started + Duration::from_secs(10);
+-    let (index, head) = Index::prepare_start_capture(&context, &data, end).unwrap();
++    let start_end = started + Duration::from_secs(if partial_point.is_some() { 30 } else { 10 });
++    let (index, head) = Index::prepare_start_capture(&context, &data, start_end).unwrap();
++    let head = if let Some(point) = &partial_point {
++        assert!([
++            "directory_created",
++            "codex_archived",
++            "grok_archived",
++            "original_published"
++        ]
++        .contains(&point.as_str()));
++        let grok = profile.join(".grok");
++        fs::DirBuilder::new().mode(0o700).create(&grok).unwrap();
++        fs::write(
++            grok.join("config.toml"),
++            b"model = \"synthetic-partial-grok\"\n",
++        )
++        .unwrap();
++        fs::set_permissions(grok.join("config.toml"), fs::Permissions::from_mode(0o600)).unwrap();
++        let reserved = index.reserve_first_root_capture(&head).unwrap();
++        let reservation = index.capture_reservation(&reserved).unwrap();
++        let coordinator = Context {
++            runtime: context.runtime.clone(),
++            user_profile: profile.clone(),
++            codex_home: profile.join(".codex"),
++            opencodex_home: home.clone(),
++            control_root: index.control_root().unwrap(),
++        };
++        let captured =
++            crate::infrastructure::official_client_coordination::native::with_native_coordination(
++                &coordinator,
++                start_end,
++                |native| {
++                    crate::infrastructure::macos_client_originals::session::StartupSession::begin_reserved(&context,&data,&profile.join(".codex"),native,start_end,&reservation)
++                },
++            );
++        assert!(
++            captured.is_err(),
++            "real capture must interrupt at requested point"
++        );
++        assert_eq!(
++            crate::infrastructure::macos_client_originals::fixture_take_root_capture_point()
++                .as_deref(),
++            Some(point.as_str()),
++            "an unrelated early error cannot satisfy the capture counterexample"
++        );
++        assert!(Instant::now() < start_end);
++        assert!(reserved.references.is_none());
++        reserved
++    } else {
++        head
++    };
++    let partial_before = partial_point.as_ref().map(|_| {
++        super::super::super::TreeSnapshot::read_mode(
++            &PinnedDirectory::open(
++                &data
++                    .join("manager-state/client-originals")
++                    .join(&head.ticket),
++            )
++            .unwrap(),
++            false,
++        )
++        .unwrap()
++    });
++    let started = if partial_point.is_some() {
++        Instant::now()
++    } else {
++        started
++    };
++    let end = if partial_point.is_some() {
++        started + Duration::from_secs(10)
++    } else {
++        start_end
++    };
+     let review = index
+         .review_first_root_preparation(&context, &head, end)
+         .unwrap();
+@@ -101,7 +173,14 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
+         drop(index);
+         let preview = super::super::preview::inspect_preview(&context, &data);
+         assert!(preview.can_cancel_preparation);
+-        assert_eq!(preview.preparation_kind, Some("created_root"));
++        assert_eq!(
++            preview.preparation_kind,
++            Some(if head.state == State::CaptureReserved {
++                "created_root_capture"
++            } else {
++                "created_root"
++            })
++        );
+         let request = super::super::finalization::Request {
+             attempt_id: head.ticket.clone(),
+             revision: head.revision,
+@@ -122,7 +201,15 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
+         let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
+         let closed = reopened.head().unwrap().unwrap();
+         drop(reopened);
+-        successor_and_history(&root, &context, &data, closed, action_elapsed, &case);
++        successor_and_history(
++            &root,
++            &context,
++            &data,
++            closed,
++            action_elapsed,
++            &case,
++            partial_before.as_ref(),
++        );
+         let result_path = root.join("native-preservation-result.json");
+         let mut result: serde_json::Value =
+             serde_json::from_slice(&fs::read(&result_path).unwrap()).unwrap();
+@@ -251,6 +338,7 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
+         closed,
+         started.elapsed().as_millis(),
+         &case,
++        partial_before.as_ref(),
+     );
+ }
+ fn successor_and_history(
+@@ -260,8 +348,24 @@ fn successor_and_history(
+     closed: Head,
+     cancellation_elapsed: u128,
+     case: &str,
++    partial_before: Option<&super::super::super::TreeSnapshot>,
+ ) {
+     let profile = context.working_directory.clone();
++    let partial_point = std::env::var("OCXD024_ROOT_CANCEL_PARTIAL_POINT").ok();
++    std::env::remove_var("OCXD024_ROOT_CANCEL_PARTIAL_POINT");
++    let partial_path = data
++        .join("manager-state/client-originals")
++        .join(&closed.ticket);
++    if let Some(before) = partial_before {
++        assert_eq!(
++            &super::super::super::TreeSnapshot::read_mode(
++                &PinnedDirectory::open(&partial_path).unwrap(),
++                false
++            )
++            .unwrap(),
++            before
++        );
++    }
+     let reopened = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
+     assert!(reopened.head().unwrap().as_ref() == Some(&closed));
+     assert!(reopened.reserve_start().is_err());
+@@ -296,11 +400,25 @@ fn successor_and_history(
+         .join("manager-state/client-root-cancel-plans")
+         .join(&closed.root_retirement.as_ref().unwrap().plan.id);
+     // A historical old-root edit is not hidden by the later active generation.
++    if let Some(before) = partial_before {
++        assert_eq!(
++            &super::super::super::TreeSnapshot::read_mode(
++                &PinnedDirectory::open(&partial_path).unwrap(),
++                false
++            )
++            .unwrap(),
++            before
++        );
++    }
+     fs::write(
+-        old_slot.join("root/unexpected"),
++        if partial_before.is_some() {
++            partial_path.join("unexpected")
++        } else {
++            old_slot.join("root/unexpected")
++        },
+         b"preserve historical corruption fixture",
+     )
+     .unwrap();
+     assert!(Index::open_existing(context, data, &profile.join(".codex")).is_err());
+-    fs::write(root.join("native-preservation-result.json"),serde_json::to_vec_pretty(&serde_json::json!({"scenario":case,"actualCurrentServiceAdmission":true,"originalFourNativeScopesReleased":true,"canonicalHead":closed,"canonicalCancellationClosed":true,"normalStop":false,"successorEligible":true,"elapsedActionMs":cancellation_elapsed,"budgetMs":10000,"successorCaptureElapsedMs":successor_elapsed,"successorCaptureBudgetMs":30000,"successorCapturedHead":captured,"syntheticCaptureScopeOnlyNotService":true,"oldArchiveTamperReopenRefused":true,"serviceStarted":false,"releaseAcceptance":false})).unwrap()).unwrap();
++    fs::write(root.join("native-preservation-result.json"),serde_json::to_vec_pretty(&serde_json::json!({"scenario":case,"actualCurrentServiceAdmission":true,"originalFourNativeScopesReleased":true,"canonicalHead":closed,"canonicalCancellationClosed":true,"normalStop":false,"successorEligible":true,"elapsedActionMs":cancellation_elapsed,"budgetMs":10000,"successorCaptureElapsedMs":successor_elapsed,"successorCaptureBudgetMs":30000,"successorCapturedHead":captured,"syntheticCaptureScopeOnlyNotService":true,"oldArchiveTamperReopenRefused":true,"partialCaptureRetainedWithoutAdoption":partial_before.is_some(),"partialCapturePoint":partial_point,"serviceStarted":false,"releaseAcceptance":false})).unwrap()).unwrap();
+ }
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel.rs
+index 456b82e4b..721fa13c2 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel.rs
+@@ -14,6 +14,7 @@ pub struct Review<'a> {
+     deadline: Instant,
+     initial_grok: super::super::GrokSnapshot,
+     history_sha256: String,
++    capture_vault: vault_history::Evidence,
+ }
+ impl Review<'_> {
+     pub fn fingerprint(&self) -> &str {
+@@ -91,15 +92,19 @@ fn snapshot(
+         &index.client,
+         origin,
+     )?;
+-    // Capture can fail after allocating a vault but before publishing refs.
+-    // None must NEVER be interpreted as proof that no capture occurred.
+-    if observation::entry(&manager, "client-originals")?.is_some() {
+-        return Err(denied(
+-            "capture storage was created; not an empty preparation",
+-        ));
+-    }
++    // The original reservation owns an exact retained slot, not complete
++    // Originals. Unknown slots, links, permission/content drift still refuse.
++    let capture_vault = vault_history::inspect(
++        &index.data,
++        &index.client,
++        &index.profile,
++        &index.binding,
++        head,
++        &history,
++    )?;
+     if index.client.path() != context.working_directory.join(".codex")
+-        || !super::super::tree::names(index.client.file())?.is_empty()
++        || head.state == State::Preparing
++            && !super::super::tree::names(index.client.file())?.is_empty()
+     {
+         return Err(denied(
+             "created root contains new data or changed logical path",
+@@ -108,14 +113,20 @@ fn snapshot(
+     let profile = PinnedDirectory::open(&index.profile)?;
+     let grok = super::super::GrokSnapshot::read(&profile)?;
+     let tree = super::super::TreeSnapshot::read(&index.client)?;
++    if head.state == State::CaptureReserved && !tree.first_root_execution_baseline() {
++        return Err(denied(
++            "reserved first-root contains client data; not an initialization baseline",
++        ));
++    }
+     let fingerprint = digest(&encode(&(
+-        "macos-first-root-preparation-review-v1",
++        "macos-first-root-preparation-review-v2",
+         head,
+         origin,
+         digest(&index.binding),
+         &history,
+         tree,
+         grok,
++        &capture_vault,
+     ))?);
+     index.check()?;
+     super::super::root_creation::verify_indexed(
+@@ -125,8 +136,17 @@ fn snapshot(
+         &index.client,
+         origin,
+     )?;
+-    if !super::super::tree::names(index.client.file())?.is_empty()
++    if (head.state == State::Preparing
++        && !super::super::tree::names(index.client.file())?.is_empty())
+         || index.head()?.as_ref() != Some(head)
++        || vault_history::inspect(
++            &index.data,
++            &index.client,
++            &index.profile,
++            &index.binding,
++            head,
++            &history,
++        )? != capture_vault
+     {
+         return Err(denied("first-root preparation changed during review"));
+     }
+@@ -145,11 +165,27 @@ impl Index {
+         let initial_grok =
+             super::super::GrokSnapshot::read(&PinnedDirectory::open(&self.profile)?)?;
+         let history_sha256 = digest(&encode(&vault_history::read(self.connection()?, head)?)?);
++        let capture_vault = vault_history::inspect(
++            &self.data,
++            &self.client,
++            &self.profile,
++            &self.binding,
++            head,
++            &vault_history::read(self.connection()?, head)?,
++        )?;
+         let first = snapshot(self, context, head, deadline)?;
+         if snapshot(self, context, head, deadline)? != first
+             || super::super::GrokSnapshot::read(&PinnedDirectory::open(&self.profile)?)?
+                 != initial_grok
+             || digest(&encode(&vault_history::read(self.connection()?, head)?)?) != history_sha256
++            || vault_history::inspect(
++                &self.data,
++                &self.client,
++                &self.profile,
++                &self.binding,
++                head,
++                &vault_history::read(self.connection()?, head)?,
++            )? != capture_vault
+         {
+             return Err(denied("first-root preparation did not remain stable"));
+         }
+@@ -161,6 +197,7 @@ impl Index {
+             deadline,
+             initial_grok,
+             history_sha256,
++            capture_vault,
+         })
+     }
+ }
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel_tests.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel_tests.rs
+index abf87cc11..df25584f7 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel_tests.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel_tests.rs
+@@ -114,6 +114,98 @@ fn first_root_cancel_review_is_stable_readonly_and_never_closes_or_moves_root()
+     }
+ }
+ #[test]
++fn first_root_reserved_partial_capture_is_exactly_retained_without_original_admission() {
++    for mode in ["empty-vault", "empty-slot", "partial-bytes"] {
++        let f = Fixture::new();
++        let reserved = f.index.reserve_first_root_capture(&f.head).unwrap();
++        let manager = f
++            .index
++            .action_parent
++            .child_private("client-originals", true)
++            .unwrap();
++        if mode != "empty-vault" {
++            let slot = manager.child_private(&reserved.ticket, true).unwrap();
++            if mode == "partial-bytes" {
++                create(
++                    &slot,
++                    "unpublished-capture.bin",
++                    b"synthetic partial bytes; not Originals",
++                )
++                .unwrap();
++            }
++        }
++        let before = bytes(f.data.parent().unwrap());
++        let review = f
++            .index
++            .review_first_root_preparation(&f.context, &reserved, end())
++            .unwrap();
++        review.recheck().unwrap();
++        assert!(reserved.references.is_none());
++        assert_eq!(bytes(f.data.parent().unwrap()), before);
++        let history = vault_history::read(f.index.connection().unwrap(), &reserved).unwrap();
++        assert_eq!(
++            super::super::root_cancellation::confirmation(
++                &f.context,
++                &f.data,
++                &reserved,
++                &history,
++                f.index.root_registration.as_ref()
++            )
++            .unwrap()
++            .as_deref(),
++            Some(review.fingerprint())
++        );
++        let foreign = manager
++            .child_private("ffffffff-ffff-4fff-bfff-ffffffffffff", true)
++            .unwrap();
++        assert!(review.recheck().is_err());
++        drop(foreign);
++        assert!(read_head(f.index.connection().unwrap()).unwrap().as_ref() == Some(&reserved));
++        f.close();
++    }
++}
++#[test]
++fn first_root_partial_capture_late_bytes_and_permissions_invalidate_original_confirmation() {
++    for mutation in ["bytes", "protection"] {
++        let f = Fixture::new();
++        let reserved = f.index.reserve_first_root_capture(&f.head).unwrap();
++        let vault = f
++            .index
++            .action_parent
++            .child_private("client-originals", true)
++            .unwrap();
++        let slot = vault.child_private(&reserved.ticket, true).unwrap();
++        create(&slot, "part.bin", b"old partial").unwrap();
++        let review = f
++            .index
++            .review_first_root_preparation(&f.context, &reserved, end())
++            .unwrap();
++        if mutation == "bytes" {
++            let original = fs::metadata(slot.path().join("part.bin"))
++                .unwrap()
++                .permissions();
++            fs::set_permissions(
++                slot.path().join("part.bin"),
++                fs::Permissions::from_mode(0o600),
++            )
++            .unwrap();
++            fs::write(slot.path().join("part.bin"), b"late partial").unwrap();
++            fs::set_permissions(slot.path().join("part.bin"), original).unwrap();
++        } else {
++            fs::set_permissions(
++                slot.path().join("part.bin"),
++                fs::Permissions::from_mode(0o644),
++            )
++            .unwrap();
++        }
++        assert!(review.recheck().is_err());
++        assert!(reserved.references.is_none());
++        drop(slot);
++        drop(vault);
++        f.close();
++    }
++}
++#[test]
+ fn first_root_cancel_review_refuses_new_data_even_if_head_has_no_original_references() {
+     for target in ["root-data", "partial-capture", "empty-capture-storage"] {
+         let f = Fixture::new();
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs
+index 51039eeec..f7f25cd41 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs
+@@ -23,6 +23,7 @@ pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservati
+     origin: super::super::super::root_creation::References,
+     history: Vec<Head>,
+     fingerprint: String,
++    retained_slot: Option<String>,
+ }
+ impl HistoricalObservation {
+     pub(in crate::infrastructure::macos_client_originals) fn begin(
+@@ -39,6 +40,25 @@ impl HistoricalObservation {
+             ));
+         }
+         let (root, fingerprint) = observe(data, profile, binding, head, origin, history, true)?;
++        let reference = head
++            .root_retirement
++            .as_ref()
++            .ok_or_else(|| denied("cancelled capture plan reference missing"))?;
++        let slot = data
++            .child_private("manager-state", false)?
++            .child_private("client-root-cancel-plans", false)?
++            .child_private(&reference.plan.id, false)?;
++        let raw = capture_file(&slot, "plan.json", MAX_FRAME)?;
++        if raw.bytes().map(digest).as_deref() != Some(reference.plan.sha256.as_str()) {
++            return Err(denied(
++                "cancelled capture plan changed after full observation",
++            ));
++        }
++        let plan: Plan = decode(
++            raw.bytes()
++                .ok_or_else(|| denied("cancelled capture plan missing"))?,
++        )?;
++        let retained_slot = plan.capture_vault.root_retained_slot().map(str::to_owned);
+         Ok((
+             Self {
+                 binding: binding.to_vec(),
+@@ -46,10 +66,14 @@ impl HistoricalObservation {
+                 origin: origin.clone(),
+                 history: history.to_vec(),
+                 fingerprint,
++                retained_slot,
+             },
+             root,
+         ))
+     }
++    pub(in crate::infrastructure::macos_client_originals) fn retained_slot(&self) -> Option<&str> {
++        self.retained_slot.as_deref()
++    }
+     pub(in crate::infrastructure::macos_client_originals) fn finish(
+         self,
+         data: &PinnedDirectory,
+@@ -111,18 +135,6 @@ fn observe(
+         ));
+     }
+     let manager = data.child_private("manager-state", false)?;
+-    if observation::entry(&manager, "client-originals")?.is_some()
+-        && (!historical
+-            || observation::entry(
+-                &manager.child_private("client-originals", false)?,
+-                &head.ticket,
+-            )?
+-            .is_some())
+-    {
+-        return Err(denied(
+-            "root-cancel cannot resolve an uncaptured reference over a vault",
+-        ));
+-    }
+     let parent = manager.child_private("client-root-cancel-plans", false)?;
+     let names = super::super::super::tree::names(parent.file())?;
+     if names != vec![OsString::from(&reference.plan.id)] {
+@@ -148,7 +160,7 @@ fn observe(
+         }
+         _ => return Err(denied("indexed root-cancel plan missing")),
+     };
+-    if plan.schema_version != 1
++    if plan.schema_version != 2
+         || plan.id != reference.plan.id
+         || plan.source.revision != reference.source_revision
+         || plan.source.ticket != head.ticket
+@@ -177,6 +189,22 @@ fn observe(
+     {
+         return Err(denied("indexed root-cancel source event/history changed"));
+     }
++    plan.capture_vault
++        .verify_root_retained(data, &plan.source, source_history, historical)?;
++    if !historical {
++        let profile_pin = PinnedDirectory::open(profile)?;
++        let root_path = if observation::entry(&profile_pin, ".codex")?.is_some() {
++            profile_pin.path().join(".codex")
++        } else {
++            directory.path().join("root")
++        };
++        let client = PinnedDirectory::open(&root_path)?;
++        if vault_history::inspect(data, &client, profile, stored, &plan.source, source_history)?
++            != plan.capture_vault
++        {
++            return Err(denied("indexed partial capture or vault namespace changed"));
++        }
++    }
+     let profile = PinnedDirectory::open(profile)?;
+     let logical = if historical {
+         None
+@@ -282,6 +310,8 @@ fn observe(
+     }
+     directory.private()?;
+     parent.private()?;
++    plan.capture_vault
++        .verify_root_retained(data, &plan.source, source_history, historical)?;
+     super::super::super::root_creation::verify_indexed_anchor(
+         &manager,
+         data,
+@@ -300,3 +330,32 @@ fn observe(
+     ))?);
+     Ok((root, fingerprint))
+ }
++/// Pending first-root movement already has an independently indexed plan.
++/// Its retained capture is checked as DATA, never as admitted Originals.
++pub(in crate::infrastructure::macos_client_originals) fn pending_retained(
++    data: &PinnedDirectory,
++    profile: &Path,
++    binding: &[u8],
++    head: &Head,
++    origin: &super::super::super::root_creation::References,
++    history: &[Head],
++) -> std::io::Result<Option<String>> {
++    if head.state != State::RootCancellationPrepared {
++        return Err(denied("pending retained capture phase differs"));
++    }
++    observe(data, profile, binding, head, origin, history, false)?;
++    let reference = head
++        .root_retirement
++        .as_ref()
++        .ok_or_else(|| denied("pending retained capture plan missing"))?;
++    let slot = data
++        .child_private("manager-state", false)?
++        .child_private("client-root-cancel-plans", false)?
++        .child_private(&reference.plan.id, false)?;
++    let image = capture_file(&slot, "plan.json", MAX_FRAME)?;
++    if image.bytes().map(digest).as_deref() != Some(reference.plan.sha256.as_str()) {
++        return Err(denied("pending retained capture plan changed"));
++    }
++    let plan: Plan = decode(image.bytes().unwrap())?;
++    Ok(plan.capture_vault.root_retained_slot().map(str::to_owned))
++}
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
+index 4541db9de..f2b43a14c 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
+@@ -16,6 +16,7 @@ struct Plan {
+     binding_sha256: String,
+     initial_review_sha256: String,
+     history_sha256: String,
++    capture_vault: vault_history::Evidence,
+     root: super::super::super::TreeSnapshot,
+     grok: super::super::super::GrokSnapshot,
+     writer: super::super::super::Image,
+@@ -101,7 +102,18 @@ fn facts(review: &Review<'_>, physical: &PinnedDirectory, expected: &Head) -> st
+         origin,
+         physical.path(),
+     )?;
+-    if observation::entry(&review.index.action_parent, "client-originals")?.is_some()
++    let history = vault_history::read(review.index.connection()?, &review.head)?;
++    review
++        .capture_vault
++        .verify_root_retained(&review.index.data, &review.head, &history, false)?;
++    if vault_history::inspect(
++        &review.index.data,
++        physical,
++        &review.index.profile,
++        &review.index.binding,
++        &review.head,
++        &history,
++    )? != review.capture_vault
+         || super::super::super::GrokSnapshot::read(&PinnedDirectory::open(&review.index.profile)?)?
+             != review.initial_grok
+     {
+@@ -167,13 +179,14 @@ impl<'a> Prepared<'a> {
+             return Err(denied("root-cancel root contains unexpected client data"));
+         }
+         let plan = Plan {
+-            schema_version: 1,
++            schema_version: 2,
+             id: uuid::Uuid::new_v4().to_string(),
+             source: review.head.clone(),
+             origin: review.index.root_registration.clone().unwrap(),
+             binding_sha256: digest(&review.index.binding),
+             initial_review_sha256: review.fingerprint.clone(),
+             history_sha256: review.history_sha256.clone(),
++            capture_vault: review.capture_vault.clone(),
+             root: tree,
+             grok: review.initial_grok.clone(),
+             writer: image,
+@@ -267,12 +280,13 @@ impl<'a> Prepared<'a> {
+             } if bytes == self.bytes && digest(&bytes) == self.sha256 => {
+                 require_private(&protection, false)?;
+                 let plan: Plan = decode(&bytes)?;
+-                if plan.schema_version != 1
++                if plan.schema_version != 2
+                     || plan.id != self.id
+                     || plan.source != self.review.head
+                     || plan.initial_review_sha256 != self.review.fingerprint
+                     || plan.binding_sha256 != digest(&self.review.index.binding)
+                     || plan.history_sha256 != self.review.history_sha256
++                    || plan.capture_vault != self.review.capture_vault
+                 {
+                     return Err(denied("root-cancel plan source changed"));
+                 }
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs b/apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs
+index f43ad5cd6..24191f9b4 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_session_preview.rs
+@@ -203,7 +203,11 @@ fn project_history(
+                 root_cancellation::confirmation(context, data, head, history, root_origin)?;
+             preview.can_cancel_preparation = preview.preparation_digest.is_some();
+             if preview.can_cancel_preparation {
+-                preview.preparation_kind = Some("created_root");
++                preview.preparation_kind = Some(if head.state == State::CaptureReserved {
++                    "created_root_capture"
++                } else {
++                    "created_root"
++                });
+                 preview.attempt_id = Some(head.ticket.clone());
+             }
+             return Ok(preview);
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs b/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
+index 90b1abf6b..62693c07b 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
+@@ -11,6 +11,78 @@ pub(super) struct Evidence {
+     reserved_capture: Option<(String, Option<TreeSnapshot>)>,
+ }
+ impl Evidence {
++    /// Exact pre-capture contents retained by a first-root cancellation. This
++    /// is not an OriginalSession, frame/source admission or permission to use
++    /// any retained blob. The whole caller still audits the vault namespace.
++    pub(super) fn root_retained_slot(&self) -> Option<&str> {
++        self.reserved_capture
++            .as_ref()
++            .and_then(|(id, tree)| tree.as_ref().map(|_| id.as_str()))
++    }
++    pub(super) fn verify_root_retained(
++        &self,
++        data: &PinnedDirectory,
++        source: &Head,
++        history: &[Head],
++        historical: bool,
++    ) -> io::Result<()> {
++        if !self.matches_history(history)
++            || history.last() != Some(source)
++            || !self.attempts.is_empty()
++            || source.references.is_some()
++            || !matches!(source.state, State::Preparing | State::CaptureReserved)
++            || (source.state == State::CaptureReserved) != (self.reserved_capture.is_some())
++            || self
++                .reserved_capture
++                .as_ref()
++                .is_some_and(|(id, _)| id != &source.ticket)
++        {
++            return Err(denied(
++                "retained first-root capture is not its original reserved prefix",
++            ));
++        }
++        if source.state == State::Preparing && self.vault.is_some() {
++            return Err(denied(
++                "unreserved first-root capture vault cannot be retained",
++            ));
++        }
++        let manager = data.child_private("manager-state", false)?;
++        let present = observation::entry(&manager, "client-originals")?.is_some();
++        match &self.vault {
++            None => {
++                if self.root_retained_slot().is_some() || present && !historical {
++                    return Err(denied("unrecorded first-root capture vault appeared"));
++                }
++            }
++            Some((id, access)) => {
++                let vault = manager.child_private("client-originals", false)?;
++                if vault.identity() != id
++                    || protection(vault.file(), &stat(vault.file())?)? != *access
++                {
++                    return Err(denied(
++                        "retained first-root vault identity/protection changed",
++                    ));
++                }
++                if let Some((attempt, expected)) = &self.reserved_capture {
++                    match expected {
++                        Some(expected) => {
++                            let directory = vault.child_private(attempt, false)?;
++                            if TreeSnapshot::read_mode(&directory, false)? != *expected {
++                                return Err(denied("retained first-root partial capture changed"));
++                            }
++                        }
++                        None => {
++                            if observation::entry(&vault, attempt)?.is_some() {
++                                return Err(denied("uncaptured first-root attempt appeared"));
++                            }
++                        }
++                    }
++                }
++                vault.private()?;
++            }
++        }
++        Ok(())
++    }
+     pub(super) fn matches_history(&self, history: &[Head]) -> bool {
+         encode(&history).is_ok_and(|raw| digest(&raw) == self.history_sha256)
+     }
+@@ -142,11 +214,35 @@ fn inspect_root_lineage(
+     let mut cancelled = Vec::new();
+     let mut expected = Vec::new();
+     let mut current = None;
++    let mut pending_cancellation = false;
+     for generation in lineage.generations() {
+         let closed = generation
+             .heads
+             .last()
+             .ok_or_else(|| denied("empty root generation"))?;
++        if closed.state == State::RootCancellationPrepared {
++            if closed_only {
++                return Err(denied(
++                    "pending root cancellation cannot grant successor creation",
++                ));
++            }
++            let end = usize::try_from(closed.revision)
++                .map_err(|_| denied("pending cancellation history overflow"))?;
++            if let Some(attempt) = super::root_preparation::preservation::indexed::pending_retained(
++                data,
++                profile,
++                &generation.binding,
++                closed,
++                &generation.origin,
++                history
++                    .get(..end)
++                    .ok_or_else(|| denied("pending cancellation prefix missing"))?,
++            )? {
++                expected.push(attempt);
++            }
++            pending_cancellation = true;
++            continue;
++        }
+         if closed.state == State::RootCancellationAbsent {
+             let end = usize::try_from(closed.revision)
+                 .map_err(|_| denied("cancelled-root history overflow"))?;
+@@ -162,6 +258,9 @@ fn inspect_root_lineage(
+                     &generation.origin,
+                     prefix,
+                 )?;
++            if let Some(attempt) = observation.retained_slot() {
++                expected.push(attempt.to_string());
++            }
+             check_historical_scope_pins(
+                 data,
+                 &PinnedDirectory::open(profile)?,
+@@ -247,7 +346,7 @@ fn inspect_root_lineage(
+                         | State::RootCancellationPrepared
+                         | State::RootCancellationAbsent
+                 )
+-            }) || current.is_none() && !cancelled.is_empty())
++            }) || current.is_none() && (!cancelled.is_empty() || pending_cancellation))
+         {
+             return Err(denied("indexed root original vault missing"));
+         }
+diff --git a/apps/desktop/ui/src/features/runtime/ClientRecovery.vue b/apps/desktop/ui/src/features/runtime/ClientRecovery.vue
+index d001153bb..a837804a1 100644
+--- a/apps/desktop/ui/src/features/runtime/ClientRecovery.vue
++++ b/apps/desktop/ui/src/features/runtime/ClientRecovery.vue
+@@ -41,10 +41,11 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤
+     </template>
+     <template v-else-if="recovery.choice === 'cancelPreparation'">
+       <p class="client-recovery-lead">取消这次启动准备？</p>
+-      <p v-if="recovery.preview?.preparationKind==='created_root'">确认后保管这次启动新建的空目录，恢复启动前的目录缺席状态；不会删除后来写入的内容。</p>
++      <p v-if="recovery.preview?.preparationKind==='created_root_capture'">确认后保管这次新建的目录及初始化记录，恢复启动前的目录缺席状态。已经捕获的文件会完整保留，不会用作新的原件。</p>
++      <p v-else-if="recovery.preview?.preparationKind==='created_root'">确认后保管这次启动新建的空目录，恢复启动前的目录缺席状态；不会删除后来写入的内容。</p>
+       <p v-else-if="recovery.preview?.phase==='capture_reserved'">原件捕获已中断。确认后重新核对服务已停止，保留已捕获文件，再取消本次启动。</p>
+       <p v-else>本次准备尚未产生新的原件目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。</p>
+-      <p v-if="recovery.preview?.preparationKind!=='created_root'">保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
++      <p v-if="recovery.preview?.preparationKind!=='created_root'&&recovery.preview?.preparationKind!=='created_root_capture'">保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
+       <p v-else>重新核对服务停止与目录内容；保管完成后不会自动启动。</p>
+     </template>
+     <template v-else-if="recovery.choice === 'finishUnchanged'">
+diff --git a/apps/desktop/ui/src/features/runtime/client-recovery-store.ts b/apps/desktop/ui/src/features/runtime/client-recovery-store.ts
+index d373e3853..92e85a91f 100644
+--- a/apps/desktop/ui/src/features/runtime/client-recovery-store.ts
++++ b/apps/desktop/ui/src/features/runtime/client-recovery-store.ts
+@@ -53,7 +53,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
+   const canCancelPreparation=computed(()=>{
+     const p=preview.value
+     return p?.status==='pending'&&(p.phase==='preparing'||p.phase==='capture_reserved')&&p.canCancelPreparation
+-      && (p.preparationKind==null||p.preparationKind==='created_root')
++      && (p.preparationKind==null||p.preparationKind==='created_root'&&p.phase==='preparing'||p.preparationKind==='created_root_capture'&&p.phase==='capture_reserved')
+       && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm && !p.canPreparePlan&&!p.canFinishUnchanged
+       && p.originalEvidence==='not_recorded'&&p.planEvidence==='not_recorded'&&p.completionEvidence==='not_recorded'&&p.phaseCount===0
+       && !!p.attemptId&&Number.isSafeInteger(p.revision)&&p.revision!>0&&hash(p.preparationDigest)
+@@ -136,8 +136,8 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
+       if (before.source !== 'live' || !before.facts.data_root || !before.facts.opencodex_home) throw new Error('当前配置位置尚未核对，请重新检查客户端恢复。')
+       completionScope = { dataRoot: before.facts.data_root, home: before.facts.opencodex_home }
+       const result = await clientRecoveryApi[next](request)
+-      const expected = next === 'cancelPreparation' ? (p.preparationKind==='created_root'?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
+-      if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + (next==='cancelPreparation'&&p.preparationKind==='created_root'?2:1)) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
++      const expected = next === 'cancelPreparation' ? ((p.preparationKind==='created_root'||p.preparationKind==='created_root_capture')?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
++      if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + (next==='cancelPreparation'&&(p.preparationKind==='created_root'||p.preparationKind==='created_root_capture')?2:1)) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
+       outcome.value = result; preview.value = null; checked.value = false; choice.value = null
+       // The mutation receipt is complete. The following read is observation,
+       // so show its outcome while keeping the lifecycle gate until a verified
+diff --git a/apps/desktop/ui/src/features/runtime/client-recovery.ts b/apps/desktop/ui/src/features/runtime/client-recovery.ts
+index a410d1849..4ed02bf16 100644
+--- a/apps/desktop/ui/src/features/runtime/client-recovery.ts
++++ b/apps/desktop/ui/src/features/runtime/client-recovery.ts
+@@ -21,7 +21,7 @@ export interface ClientRecoveryPreview {
+   canRearm: boolean
+   canCancelPreparation: boolean
+   preparationDigest: string | null
+-  preparationKind?: 'created_root' | null
++  preparationKind?: 'created_root' | 'created_root_capture' | null
+   canFinishUnchanged: boolean
+   unchangedDigest: string | null
+   rollbackDigest: string | null
+diff --git a/apps/desktop/ui/tests/client-recovery-flow.test.ts b/apps/desktop/ui/tests/client-recovery-flow.test.ts
+index afc88fd80..3353e33b7 100644
+--- a/apps/desktop/ui/tests/client-recovery-flow.test.ts
++++ b/apps/desktop/ui/tests/client-recovery-flow.test.ts
+@@ -65,6 +65,24 @@ describe('already retired root finalization',()=>{
+ });
+ afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
+ describe('explicit client recovery interaction', () => {
++  it.each([
++    {phase:'preparing' as const,preparationKind:'created_root_capture' as const},
++    {phase:'capture_reserved' as const,preparationKind:'created_root' as const},
++  ])('refuses mismatched created-root confirmation kind and durable phase %#',async wrong=>{
++    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),...wrong})
++    const store=await inspect();expect(store.canCancelPreparation).toBe(false);store.choose('cancelPreparation')
++    expect(await store.apply('cancelPreparation')).toBe(false);expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled()
++  })
++  it('keeps reserved first-root partial captures and requires the distinct root two-event receipt',async()=>{
++    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),phase:'capture_reserved',revision:2,preparationKind:'created_root_capture'})
++    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:4,status:'root_cancelled'})
++    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
++    await button('取消启动准备')!.trigger('click')
++    expect(view.text()).toContain('已经捕获的文件会完整保留');expect(view.text()).toContain('不会用作新的原件')
++    await button('确认取消启动准备')!.trigger('click');await flushPromises()
++    expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledWith({attemptId:preparing().attemptId,revision:2,confirmationDigest:'f'.repeat(64)})
++    expect(useClientRecoveryStore().outcome?.revision).toBe(4);expect(useClientRecoveryStore().ready).toBe(true)
++  })
+   it('shows completed root cancellation while reconciliation waits and keeps the lifecycle gate',async()=>{
+     vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),preparationKind:'created_root'})
+     vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:3,status:'root_cancelled'})
+diff --git a/test/smoke/macos024-root-cancel.py b/test/smoke/macos024-root-cancel.py
+index b5316e6a3..42f7fca14 100644
+--- a/test/smoke/macos024-root-cancel.py
++++ b/test/smoke/macos024-root-cancel.py
+@@ -4,6 +4,7 @@ Storage and current-service scopes are explicit. No official service is started.
+ Refuses existing outputs, retains evidence and removes only its owned fixture.
+ """
+ import argparse
++import base64
+ import hashlib
+ import json
+ import os
+@@ -11,6 +12,8 @@ from pathlib import Path
+ import pwd
+ import shutil
+ import signal
++import sqlite3
++import stat
+ import subprocess
+ import tempfile
+ import time
+@@ -36,7 +39,40 @@ def owned_group(pid):
+             for row in rows.splitlines() if len(p := row.split(None, 3)) == 4 and int(p[2]) == pid]
+ 
+ 
+-def run(output, scenario='success', shared_program=None, scope='storage'):
++def coordinators(profile):
++    client = str(profile / '.codex'); state = client + '/state_5.sqlite'
++    scope = hashlib.sha256(client.encode()).hexdigest()
++    history = hashlib.sha256((str(len(client))+':'+client+str(len(state))+':'+state).encode()).hexdigest()
++    namespace = Path('/private/tmp') / ('opencodex-runtime-v1-' + str(os.getuid()))
++    return [namespace / role / (key + '.sqlite') for role,key in
++            [('native-write-locks',scope),('catalog-write-locks',scope),('history-write-locks',history)]]
++
++
++def clean_coordinators(paths, output):
++    """Exact fresh task-keyed databases only, never shared lifecycle/global L."""
++    removed = []
++    for path in paths:
++        for suffix in ('-journal','-wal','-shm'):
++            if os.path.lexists(str(path)+suffix): raise RuntimeError('pending task coordinator sidecar; retained')
++        if not os.path.lexists(path): continue
++        before = path.lstat()
++        if not stat.S_ISREG(before.st_mode) or before.st_uid!=os.getuid() or before.st_nlink!=1 or stat.S_IMODE(before.st_mode)!=0o600:
++            raise RuntimeError('task coordinator identity/protection unconfirmed; retained')
++        connection = sqlite3.connect(path.as_uri()+'?mode=rw',uri=True,timeout=0)
++        try: connection.execute('BEGIN EXCLUSIVE'); connection.execute('ROLLBACK')
++        finally: connection.close()
++        raw = path.read_bytes(); after = path.lstat()
++        if (before.st_dev,before.st_ino,before.st_mode,before.st_uid,before.st_gid)!=(after.st_dev,after.st_ino,after.st_mode,after.st_uid,after.st_gid):
++            raise RuntimeError('task coordinator changed during release probe; retained')
++        removed.append({'path':str(path),'device':after.st_dev,'inode':after.st_ino,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'rawBase64':base64.b64encode(raw).decode()})
++        write(output/'owned-coordinator-bytes.json',removed)
++        if path.lstat().st_ino!=after.st_ino or path.read_bytes()!=raw: raise RuntimeError('task coordinator changed before cleanup')
++        path.unlink()
++    if any(os.path.lexists(path) for path in paths): raise RuntimeError('task coordinators remain')
++    write(output/'owned-coordinator-cleanup.json',{'removed':len(removed),'exactPathsAbsent':[str(p) for p in paths], 'preexistingGlobalLifecycleUntouched':True})
++
++
++def run(output, scenario='success', shared_program=None, scope='storage', partial_point=None):
+     output = output.absolute(); output.mkdir(parents=True, exist_ok=False)
+     argv = ['cargo', 'test', '--lib', '--no-run', '--message-format=json']
+     build = subprocess.run(argv, cwd=ROOT / 'apps/desktop/tauri', capture_output=True)
+@@ -49,6 +85,10 @@ def run(output, scenario='success', shared_program=None, scope='storage'):
+     parent = Path(tempfile.mkdtemp(prefix='ocxd024-root-cancel-', dir='/private/tmp')); parent.chmod(0o700)
+     root = parent / 'fixture'; root.mkdir(mode=0o700)
+     (root / 'profile').mkdir(mode=0o700); (root / 'resources').mkdir(mode=0o700)
++    task_coordinators = coordinators(root / 'profile')
++    if any(os.path.lexists(str(path)+suffix) for path in task_coordinators for suffix in ('','-journal','-wal','-shm')):
++        raise RuntimeError('fresh fixture task coordination path already exists; not adopted')
++    write(output/'owned-coordinator-before.json',{'exactPathsAbsent':[str(p) for p in task_coordinators]})
+     result = None
+     proc = None
+     try:
+@@ -61,11 +101,14 @@ def run(output, scenario='success', shared_program=None, scope='storage'):
+         policy.write_text('(version 1) (allow default) (deny network*) (deny file-read* file-write* (subpath ' + json.dumps(pwd.getpwuid(os.getuid()).pw_dir) + ')) (deny file-read* file-write* (subpath "/Library/Keychains")) (deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))')
+         shutil.copyfile(policy, output / 'native.sb')
+         test = TEST if scope == 'storage' else 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::service_tests::current_service_movement_and_native_release_bind_a_distinct_cancellation_terminal'
+-        if scope not in ('storage', 'current-service', 'user-action'): raise ValueError('unknown root cancellation test scope')
++        if scope not in ('storage', 'current-service', 'user-action', 'partial-capture'): raise ValueError('unknown root cancellation test scope')
+         argv = ['/usr/bin/sandbox-exec', '-f', str(policy), str(host), '--exact', test, '--ignored', '--nocapture', '--test-threads=1']
+         env = {'HOME': str(root / 'profile'), 'CFFIXED_USER_HOME': str(root / 'profile'), 'PATH': '/usr/bin:/bin', 'TMPDIR': str(parent), 'OCXD024_ROOT_CANCEL_NATIVE': str(root)}
+         env['OCXD024_ROOT_CANCEL_CASE'] = scenario
+-        if scope == 'user-action': env['OCXD024_ROOT_CANCEL_USER_ACTION'] = '1'
++        if scope in ('user-action', 'partial-capture'): env['OCXD024_ROOT_CANCEL_USER_ACTION'] = '1'
++        if scope == 'partial-capture':
++            if partial_point not in ('directory_created','codex_archived','grok_archived','original_published'): raise ValueError('explicit capture boundary required')
++            env['OCXD024_ROOT_CANCEL_PARTIAL_POINT'] = partial_point
+         if shared_program is not None: env['OCXD024_ROOT_CANCEL_REUSE'] = str(shared_program)
+         started = time.monotonic()
+         with (output / 'stdout.log').open('xb') as stdout, (output / 'stderr.log').open('xb') as stderr:
+@@ -91,11 +134,26 @@ def run(output, scenario='success', shared_program=None, scope='storage'):
+                 if path.is_file() and (path.suffix == '.json' or path.name == 'client-session-index.sqlite'):
+                     target = output / 'raw-metadata' / path.relative_to(records)
+                     target.parent.mkdir(parents=True, exist_ok=True); shutil.copyfile(path, target)
++        if scope == 'partial-capture':
++            vault = records / 'client-originals'
++            rows, total = [], 0
++            if vault.exists():
++                for path in sorted(vault.rglob('*')):
++                    if path.is_symlink(): raise RuntimeError('partial fixture archive refuses unexpected link')
++                    if not path.is_file(): continue
++                    raw = path.read_bytes(); total += len(raw)
++                    if total > 16 * 1024 * 1024: raise RuntimeError('synthetic partial fixture evidence exceeds budget')
++                    info = path.stat()
++                    rows.append({'path':path.relative_to(records).as_posix(),'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),
++                                 'device':info.st_dev,'inode':info.st_ino,'mode':info.st_mode & 0o777,'rawBase64':base64.b64encode(raw).decode()})
++            write(output / 'synthetic-partial-capture-bytes.json', {'scope':'task synthetic Grok/Original blobs only; no real service or business credentials','files':rows})
+         inventory = [{'path': p.relative_to(root).as_posix(), 'bytes': p.stat().st_size, 'sha256': sha(p)} for p in root.rglob('*')
+                      if p.is_file() and not p.is_symlink() and not p.is_relative_to(root / 'program') and not p.is_relative_to(root / 'resources')]
+         write(output / 'fixture-content-inventory.json', inventory)
+         write(output / 'result.json', result or {'failedBeforeRun': True, 'releaseAcceptance': False})
+-        if not residues: shutil.rmtree(parent)
++        if not residues:
++            clean_coordinators(task_coordinators,output)
++            shutil.rmtree(parent)
+         write(output / 'cleanup.json', {'ownedRoot': str(parent), 'absent': not parent.exists(), 'ownedGroupResidues': residues, 'serviceStarted': False,
+                                        'scope': 'new synthetic profile/program/copied test host only; evidence retained'})
+     if result is None or result['exitCode'] or residues: raise RuntimeError('official guarded preservation test or cleanup failed')
+@@ -105,6 +163,7 @@ if __name__ == '__main__':
+     parser = argparse.ArgumentParser(description=__doc__)
+     parser.add_argument('--output', type=Path, required=True)
+     parser.add_argument('--case', choices=['success', 'before_move', 'after_move', 'new_data', 'new_root'], default='success')
+-    parser.add_argument('--scope', choices=['storage', 'current-service', 'user-action'], default='storage')
++    parser.add_argument('--scope', choices=['storage', 'current-service', 'user-action', 'partial-capture'], default='storage')
++    parser.add_argument('--partial-point', choices=['directory_created','codex_archived','grok_archived','original_published'])
+     args = parser.parse_args()
+-    run(args.output, args.case, scope=args.scope)
++    run(args.output, args.case, scope=args.scope, partial_point=args.partial_point)

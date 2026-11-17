@@ -1,0 +1,25 @@
+{
+  "derivation": "exact fresh task profile from original creation intent and native-run receipt; not a directory scan",
+  "originalPreRunAbsenceReceiptMissing": true,
+  "currentIdentityObservedBeforeReleaseProbe": [
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/native-write-locks/462bb447dcc03f0a17baf0deef78b3a49e9158c9c08c1623bdd2f792ebd51eec.sqlite",
+      "present": true,
+      "device": 16777231,
+      "inode": 447507112
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/462bb447dcc03f0a17baf0deef78b3a49e9158c9c08c1623bdd2f792ebd51eec.sqlite",
+      "present": true,
+      "device": 16777231,
+      "inode": 447507115
+    },
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/history-write-locks/73e1db7c64747bf6b4daaeed0079eff2ebcef6349b61b7d9acc287881599d2c9.sqlite",
+      "present": false,
+      "device": null,
+      "inode": null
+    }
+  ],
+  "globalLNeverSelected": true
+}

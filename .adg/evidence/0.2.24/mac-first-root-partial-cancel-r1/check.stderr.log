@@ -1,0 +1,36 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0308]: mismatched types
+   --> src/infrastructure/macos_client_root_prepare_indexed.rs:279:53
+    |
+279 |             let profile_pin = PinnedDirectory::open(profile)?;
+    |                               --------------------- ^^^^^^^ expected `&Path`, found `PinnedDirectory`
+    |                               |
+    |                               arguments to this function are incorrect
+    |
+note: associated function defined here
+   --> src/infrastructure/macos_client_originals.rs:351:12
+    |
+351 |     pub fn open(path: &Path) -> io::Result<Self> {
+    |            ^^^^ -----------
+
+error[E0308]: mismatched types
+   --> src/infrastructure/macos_client_root_prepare_indexed.rs:286:54
+    |
+286 |             if vault_history::inspect(data, &client, profile, stored, &plan.source, source_history)?
+    |                ----------------------                ^^^^^^^ expected `&Path`, found `PinnedDirectory`
+    |                |
+    |                arguments to this function are incorrect
+    |
+note: function defined here
+   --> src/infrastructure/macos_client_vault_history.rs:421:15
+    |
+421 | pub(super) fn inspect(
+    |               ^^^^^^^
+...
+424 |     profile: &Path,
+    |     --------------
+
+For more information about this error, try `rustc --explain E0308`.
+error: could not compile `opencodex-desktop` (lib) due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
+error: could not compile `opencodex-desktop` (lib test) due to 2 previous errors

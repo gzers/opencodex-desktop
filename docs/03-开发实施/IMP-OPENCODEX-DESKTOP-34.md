@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 169；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 170；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 4ea82e8a61fe00c1f76334db5e39654f49f4342e（非冻结候选）；Windows实现检查点codex/024-windows-native 58f0d49f2b45ad108cf921ef04fae32f9980f133（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 346b46a69b1d9951335359a334cda7bf21ddd132（非冻结候选）；Windows实现检查点codex/024-windows-native 58f0d49f2b45ad108cf921ef04fae32f9980f133（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1836,3 +1836,24 @@ WorkerLocal已实现原BeforeFirstResumeRecovery prepare→quiesce→restore，B
 新windows-before-resume-private-control-v2是独立严格DATA codec，只支持带明确确认的begin-canonical-abort和两只读操作。所有字段/嵌套budget必需，拒旧v1/unknown/duplicate/任意PID-path-handle-proof/超长与尾随frame；原QPC扣耗时，Begin10秒/read5秒，instance/generation/challenge/scope和3类单次keys上限16384。transportActionId不冒真实Owner recoveryAction，locator不授nativepeer身份。6项DATA测试真实完整MSVC库过，未创建实际endpoint/Owner；格式转义准备错误及未生成script path错误原样单列，非产品运行失败。尚需protectedlocator/pipe、双端ordinary/noJob/sameimage/token认证和首次变更前实际可达dispatch，不把codec当可达能力。
 
 最终两EXE6c94be0ddb710f3dd0c22290a3de3a22dbb924cba5e146800d666119be721d00、aa94e650a57fe06953b8586c78120c9627b7e88228f2c74b72e1784ddecdca57及所有raw/source/清理原件保留。141项状态仍保nativeV2partial/pre-manifest/缺根、真实普通Profile固定官方Owner整链原预算、容量/CAPtrust/普通MSI/最终候选未完；r2raw50及synthetic27960清理只停相应依赖，不重复query/旧cleanup或触原21500/75744/原件/seq9/40588。TEAM31/r7独占与四ABI不变，Windows可连续接线，不等Mac新接口；不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision170：首次新根部分捕获的保留取消与后继存储链
+
+main346b46a69b1d9951335359a334cda7bf21ddd132扩首次目录取消，读取原CaptureReserved的唯一ticket保管槽并绑定准确目录身份/Protection/全文件bytes与成员投影；它是部分内容保全DATA，不是OriginalSession、完整frame/scope或来源许可。Preparing仍要求无任何未预留vault，CaptureReserved只接受原预留槽/空vault的准确状态，未知另槽/链接/不可读/后续变化一律拒。新review-domain/plan schema2明确包含capture_vault，严格无v1fallback或迁移，不收养磁盘Original来补引用。
+
+移动前后、独立计划/取消完成与历史后继均复核原部分槽。当前取消期间完整vault namespace必须相同；后继有新Original时，由全谱系分别期待旧取消保留slot和新真实attempt集合，历史只读仍两次验证旧部分内容，不拿后代当前树冒旧来源。未到Captured的published Original文件只保留字节，绝不读取它生成refs；普通已有目录取消/正常原件Stop仍走原分支。功能合同见[首次部分捕获取消](0.2.24-contracts/client-first-root-partial-cancel-r1.md)。
+
+[结果与准确源码/patch](../../.adg/evidence/0.2.24/mac-first-root-partial-cancel-r1/result.json)：原样官方2.99＋实际OS owner/Guard/四锁准入，在真实StartupSession::begin_reserved四实际写入checkpoint注入中断：directory_created/codex_archived/grok_archived/original_published。测试仅cfgtest准确新/private/tmp根可注入，私有线程槽确认实际到达point，不能用泛Err让早错冒反例。原捕获30秒窗口结束后新显式取消独立10秒；四取消9488/8888/8957/9306ms，原预算均过。错摘要先拒且原head保留，确认后原CaptureReserved2→RootCancellationPrepared3→RootCancellationAbsent4，无Original refs，原目录缺席，实际四协调范围释放核。
+
+同四场景随后另一次新30秒动作，实际后继目录创建/预留/原件存储捕获2736/2307/3089/3060ms，关闭后重开准确新Captured；旧部分槽前后全snapshot相同，随后只在自有旧槽加入合成反例字节，实际重开拒。该后继capture scope用已明确storage test合成，不冒官方服务后继启动/模型调用；本轮未Start任何服务。native hostafa8e44994045d68ab6007e909cb1fa2693224b13a33d1cfd95b2a7042c8cc9e原签名/字节不变，14最终源中Rust产品/测试源与实际编译回执原字节相同。
+
+9项准备检查、原vault1/Start8/三个精确普通取消预约回归共12项受影响回归通过（后端去重共21）；首次ordinary filter只匹配manual ignored1/0pass原日志留，不计通过，之后准确三真实用例补跑。严格lib/testsClippy过；前端typecheck/94交互通过，新增created_root_capture只准CaptureReserved、created_root只准Preparing，匹配后才接受root_cancelled＋revision+2，wrongkind/phase拒。确认文案明示初始化记录/部分文件保留、不作为新的原件，不自动启动。最终UI仅在native执行后增强kind/phase拒绝并重测，非Rust动作变更，不重跑已过四场景。
+
+初两个编译检查E0308因路径变量被pinned profile遮蔽，原raw保；移回未遮蔽边界，没有改变安全断言。新byte变更反例第一次对产品readonly部分文件写失败，按失败留原log；仅在合成fixture临时开写再还原原mode以测试bytes漂移，产品保护不改。四全部诊断场景一轮continue收集，无首错逐项重跑，供包一次且每场景完整重新准入；80秒第一场景含供应/构建，非10秒动作结论。
+
+清理复核发现原smoke只清task Profile/program，遗漏外部每task-key的N/K协调DB；本轮四原Profile与创建intent严格对应的8文件已准确前后inode/uid/mode读取、SQLite EXCLUSIVE可取得并释放、原bytes/base64/SHA先留后删、独立缺席复核；不存在的H保持缺席，**全局共享L未选中/未修改**。原native01没有外部DB运行前缺席回执，不反填假证；精确唯一fresh Profile来源/当前identity与释放事实分别记。验证器后继加preflight exact key absence和结束后准确清理，不泛扫全局目录。5实际清理helper场景验证released成功/busy独立原子进程持锁/sidecar/symlink/错误mode拒绝，不重跑四产品动作。4测试根/共享program/18准确打印新单测根已缺席核，合成部分blob原字节及反例保留后清，证据约2.65MB不留重复程序包。
+
+**未完**：本次新partial分支最终signed app真实界面→IPC→后继官方service启停、唯一原型新文案/状态对齐（原型文件正在其它对话工作，未并发写）；后继代次Preparing取消与已有plan中断的显式恢复仍独立未完，不能复用首次限定。一般客户端图/缺Ready、NAME外部客户端最终显示与回退、发行正式签名/封装门真实CI、Windows完整Owner/privatehost/nativeV2/当前r2和synthetic27960等原范围保持。代码首次push临时SSH断连raw128，原commit未重建，重试push成功后才记远端已接；不掩网络错误。
+
+Windows58f0d49f2/0d6fa9c0d两回交已归revision169；本批只Mac原件/状态UI和smoke、无Windows独占路径/共享4trait变化，Windows可自行合入继续，候选未冻结，不W2/双SID、不发布，目标active。

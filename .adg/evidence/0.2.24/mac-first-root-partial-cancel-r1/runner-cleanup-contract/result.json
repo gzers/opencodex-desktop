@@ -1,0 +1,32 @@
+{
+  "cases": [
+    {
+      "case": "released",
+      "expectedRefusal": false,
+      "passed": true
+    },
+    {
+      "case": "busy",
+      "expectedRefusal": true,
+      "passed": true
+    },
+    {
+      "case": "sidecar",
+      "expectedRefusal": true,
+      "passed": true
+    },
+    {
+      "case": "symlink",
+      "expectedRefusal": true,
+      "passed": true
+    },
+    {
+      "case": "wrong-mode",
+      "expectedRefusal": true,
+      "passed": true
+    }
+  ],
+  "ownedUnitRootAbsent": true,
+  "globalNamespaceTouched": false,
+  "actualSQLiteLockHeldInSeparateChild": true
+}
