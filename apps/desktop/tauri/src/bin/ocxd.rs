@@ -18,6 +18,17 @@ use zeroize::Zeroize;
 mod windows_owner024 {
     pub fn dispatch(argv: &[String]) -> Option<std::process::ExitCode> {
         #[cfg(debug_assertions)]
+        if argv.first().map(String::as_str) == Some("--internal-r7-r2-readonly024-v1") {
+            if argv.len() != 2 || !matches!(argv[1].as_str(), "before" | "after") {
+                eprintln!("Exact version1 read-only phase before/after required.");
+                return Some(std::process::ExitCode::from(2));
+            }
+            return Some(match opencodex_desktop_lib::infrastructure::windows_owner_host024::empty_host::observe_r7_current_r2(&argv[1]) {
+                Ok(()) => std::process::ExitCode::SUCCESS,
+                Err(e) => { eprintln!("Read-only r2 observation refused: raw={:?}; {e}",e.raw_os_error()); std::process::ExitCode::from(1) }
+            });
+        }
+        #[cfg(debug_assertions)]
         if argv.first().map(String::as_str) == Some("--internal-existing-failure-cleanup024") {
             if argv.len() != 2 || argv[1] != "--confirm" {
                 eprintln!("Exact internal failure cleanup requires --confirm.");

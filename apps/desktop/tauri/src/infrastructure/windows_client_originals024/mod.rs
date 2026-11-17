@@ -18,6 +18,10 @@ mod coordination;
 #[cfg(test)]
 mod desktop_preflight_tests;
 #[cfg(debug_assertions)]
+mod r7_readonly;
+#[cfg(debug_assertions)]
+pub(crate) use r7_readonly::observe_current_r2 as r7_observe_current_r2;
+#[cfg(debug_assertions)]
 pub(crate) mod existing_qualification;
 mod handle_release;
 mod phase;

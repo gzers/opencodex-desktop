@@ -15,6 +15,13 @@ use std::{
     path::{Path, PathBuf},
 };
 
+/// Debug-only task observer. It never connects to the old owner or grants an
+/// action/lease: both exact ordinary context and output scope are fixed inside.
+#[cfg(debug_assertions)]
+pub fn observe_r7_current_r2(phase: &str) -> io::Result<()> {
+    crate::infrastructure::windows_client_originals024::r7_observe_current_r2(phase)
+}
+
 #[derive(Deserialize, Serialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub struct EmptyBootstrap {
