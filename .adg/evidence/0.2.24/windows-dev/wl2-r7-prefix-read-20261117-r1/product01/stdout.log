@@ -1,0 +1,42 @@
+
+running 8 tests
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::wl2_r7_prefix_read_tree_native_members_bytes_and_security_drift_refuse ... r7 actual tree prefix rejects client-member, preserves original native handles and poison
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp04U4C0
+r7 actual tree prefix rejects custody-member, preserves original native handles and poison
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpSu5ba4
+r7 actual tree prefix rejects bytes, preserves original native handles and poison
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpwevXlP
+r7 actual tree prefix rejects security, preserves original native handles and poison
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpPMxL5Q
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::wl2_r7_prefix_read_tree_native_mixed_states_fresh_claim_keeps_poison_and_same_original_objects ... r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpGu083J
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::wl2_r7_prefix_read_tree_native_pending_original_capture_remains_unknown ... r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp1M0ANG
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::wl2_r7_prefix_read_tree_native_pending_work_open_partial_and_full_unpublished_refuse ... r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpURh04m
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpzVw7a3
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpUgSi1f
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::wl2_r7_prefix_read_tree_native_wrong_actual_claim_and_expired_cutoff_refuse ... r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpl2yjHs
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpl2k4Kw
+ok
+test infrastructure::windows_client_originals024::v3::journal::before_resume::tests::wl2_r7_prefix_read_canonical_native_event_without_current_and_partial_current_are_not_completed ... r7 actual failed append stage1: immutable extra event/partial current retained, never inferred complete by recovery read
+r7-canonical-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpaT2mk9
+r7 actual failed append stage2: immutable extra event/partial current retained, never inferred complete by recovery read
+r7-canonical-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpOpDdhA
+ok
+test infrastructure::windows_client_originals024::v3::journal::before_resume::tests::wl2_r7_prefix_read_canonical_native_expired_original_complete_chain_reads_without_mutation_renewal ... r7 actual immutable native records/all8/current/membership and full DATA replay read after original expiry; old deadline/poison unchanged; no Source/Owner/native capability fabricated
+r7-canonical-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpKhbqBt
+ok
+test infrastructure::windows_client_originals024::v3::journal::before_resume::tests::wl2_r7_prefix_read_canonical_native_membership_security_partial_bytes_and_cutoff_refuse ... r7 actual canonical prefix rejects member; retains old native objects, deadline and poison
+r7-canonical-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpWRm29e
+r7 actual canonical prefix rejects security; retains old native objects, deadline and poison
+r7-canonical-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpTuMbul
+r7 actual canonical prefix rejects partial-current; retains old native objects, deadline and poison
+r7-canonical-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpmIAsF3
+r7 actual canonical prefix rejects expired; retains old native objects, deadline and poison
+r7-canonical-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpsHBtQf
+ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2183 filtered out; finished in 2.50s
+

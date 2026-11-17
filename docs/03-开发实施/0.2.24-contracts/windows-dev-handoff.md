@@ -1103,3 +1103,14 @@ interface-request.json与3份当前源逐hash归wl2-r7-preparation-record-reques
 79payload/1008595字节最终封存，33源快照逐Git归一行尾核，旧product02/03源码及复核发现原样保留；本批product/native测试无首错，补充源码顺序采集首GBK decode失败记录保留，改显式UTF8后核过，它不冒独立安全审计。schema生成raw归档/还原tracked移出untracked。旧两regression目录自动审批blocked by policy拒绝仍保持，只读ZIP留，不绕过重删；历史40588/失败场景/账号Profile不动。
 
 pre-manifest附件最小请求b01b78219见上一条（已有v1 DATA存在，缺的是初始manifest缺席的真实引用/原native接线）；PSS0x8仍24unknown的原Job请求继续，二者只停对应依赖。status.json完整31项本线状态；full-canonical prefix/native claim与整树return原10s、当前r2原件还原、GUI官方owner/S-D/普通MSI/原缺席退根/容量与最终候选均未完。所有已过未受影响项复用，currentR221500/75744/原件/custody/work/anchors/协调/旧seq9原样，forced不签正常Stop/Closed；原件未还不跑原包、旧50580/54692授权不沿用，无当前R1执行批准请求。公共Start/production/allAcceptedfalse，原预算/unknown/普通令牌/日常/官方边界保持，不W2/双SID/发布，目标active继续。
+
+
+## 2026-11-17 r7 原树与canonical失败前缀只读核验
+
+代码ac6d1d8a2d750aae91114e3158d944c60315c27a（原树）及953cdf79a153107a6cad4b8831c46ce08774be95（日志）已分批推送；当前main7fade183d／docs b291bf8fa、TEAM22/IMP150/r7未变。本批原树只读在实际fresh claim下保留同原目录/文件/工作句柄，读取每byte/ID/所含8/ADS及完整children/custody前后fence，返回纯DATA；成功不清poison，旧verify/step mutation仍拒。未知pending capture/work、无完整根、已退休/恢复分支、外来claim、字节/安全/成员变更或expired cutoff均拒，保原prefix。原100k程序镜像与原512节点/32MiB客户端树各自边界不改。
+
+canonical只读取原immutable manifest/events/current的Native ID/8/raw/完整成员，逐原event解码重放全部规则并与完整保留Progress逐序列字段相等；events数量与current/progress精确一致才可读，不拿新增event、部分current或原Intent猜Completed。旧Start deadline不更新、旧poison不清，现有正常/historical check仍先拒poison。生产包装另要求原Owner已保留的prepared process/实际failedResult、同fresh恢复窗、实际claim、完整Source/current/binding和原Start NativeAction retained-read对照；不调过期Start mutation，不写旧canonical。生产Source包装仅真实完整产品图编译链接，尚无原Owner运行/原恢复10s通过。
+
+证据wl2-r7-prefix-read-20261117-r1：先hypotheses及独立项状态，product01真实MSVC完整Tauri库raw0/142101ms，8过0败0ignored，5原树+3日志；实际DACL/字节/成员变化、3真实CREATE_NEW/partial/full-unpublished pending work、invalid coordinator pending original、外来真实claim/截止、immutable event无current及真实截断current均拒；原deadline实际过期后只读原完整链通过而mutation仍拒。11原树+7日志新root缺席核，6源快照逐Git归一行尾核；TEST EXE SHA03194e090e52c1c522f91071aae4e8878616c004146bbf83ec3b8b8fce60a56a，23payload/522194字节封存。无意外product首错，预期负例成功后仅清自有新fixture；panic仍保原tree，旧两regression审批blocked by policy源继续留，未绕过重删。生成schema raw归档/还原tracked/移出untracked。
+
+本批没有完整BeforeFirstResumeRecovery：原CaptureSlot/CapturedTrees汇合、canonical意图与真实after-image严格对照、同实际claim/NLK跨quiesce/return持有及失败保留、原10s整树归还/新控制协议仍待。b01b78219的原manifest缺席格式请求及PSS0x8仍24unknown请求只停对应依赖，不能伪造manifest/放宽Unknown；其它独占开发继续。status.json现35项完整本线状态；既有原r2全归档/44项、scanner15、原生abort/GUI空host/CLI均复用，不重跑。currentR221500/75744/原件/custody/work/anchors/协调/旧seq9和40588未动，无R1执行授权/请求，旧50580/54692授权不沿用，原件未归还不跑原包；原Source/Profile普通令牌/日常/官方/预算边界不变，publicStart/production/allAcceptedfalse，不W2/双SID/发布。
