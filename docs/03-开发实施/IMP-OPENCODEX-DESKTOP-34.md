@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 167；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 168；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main fb755b8ea63d8a3fc9146dc4db491931919905b0（非冻结候选）；Windows实现检查点codex/024-windows-native f8feb3825a4f2194e4c5081a29a760d446473f61（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 4ea82e8a61fe00c1f76334db5e39654f49f4342e（非冻结候选）；Windows实现检查点codex/024-windows-native f8feb3825a4f2194e4c5081a29a760d446473f61（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1806,3 +1806,22 @@ Windowsf8feb3825a4f2194e4c5081a29a760d446473f61／docs801e53cc888ea73a5c9a72e194
 首编译测试模块path错误保原raw；后Tauri库12附件历史场景通过，但两Job fixture漏建私有H在CreateJob/Process之前被拒，22文件两个失败树精确只读ZIP/集合/hash前后核后保源；仅补fixture H。最终MSVC原Job按原1秒parent内242完成，旧verify过期仍TimedOut，新读回核同原Job，两个交叉proof各拒、各自原proof过/原marker未执行；附件12模式源码不变复用前轮，原V1/V2 storage/claimquiesce/完整workerpipeline13受影响回归过。EXE8ee6ad6e2d167d8fdb9bc42e56709571c9386468c10fa65b7c8bff9d43ea58f3，65成功root缺席；两个新失败树与所有旧拒删/driver失败/synthetic27960保持，不泛称历史全清。
 
 119项本线状态仍待原Slot及时完成事实、原core/Source/route/canonical/两树/附件/privateproof汇成同一次Status5秒、strict可达privatehost/fulltrait、nativeV2partial/缺根、真实Owner普通Profile固定官方整链原预算和容量/CAPtrust/最终候选。当前r2raw50只停自身证明，不PSS重复、不旧cleanup探Status、不触21500/75744/原件/seq9/40588；旧场景清理授权不转用。TEAM30/r7独占集和共享接口保持，Windows继续本线；Mac仅只读研究Windows封装格式，不安装或运行旧installer，不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision168：Windows签名安装器内嵌内容绑定与只读探测
+
+main4ea82e8a61fe00c1f76334db5e39654f49f4342e新增verify_windows_installer_024.py及CI/Release接线，不改Windows独占产品/安装模板/四trait。显式当前tagged config版本/identity/updater公钥先真实minisign校验installer.sig，再完整准入当前Windows stage官方archive/descriptor/pin/原tgz/productionlock，读取installer的实际内嵌成员，分别绑定3个当前构建程序、native-entry和4运行包资源，共8项原长度/完整SHA，首尾archive/signature/config/全部输入和读取器原对象/字节复核，防止途中换包或换build输入。
+
+MSI只允许当前固定Compound→app.cab→Cab结构及模板声明的准确File IDs；NSIS要求实际Nsis容器与完整logical路径，不泛匹配文件名。完整有界technical listing拒重复key、路径/case别名、遍历/控制字符、link/加密/未知大小（唯一NSIS生成uninstall.exe大小例外、不作为目标资源）、多容器/过大成员。实际7zip x -so -spd输出直接有界hash，不向磁盘解压；两pipe同步drain、stdout按准确声明长度、stderr1MiB、listing8MiB、成员10000/总2GiB和每进程120秒上限，超限或时间到只结束本次原读取器child，不执行installer/脚本，不覆盖用户文件。读取器本身固定显式路径，前后文件身份/hash绑定。
+
+**不是安装布局证明**：MSI CAB的File ID能证明准确内嵌bytes，不能代Directory/Component table/native costing；NSIS文件内容不能代安装脚本实际目标/注册/卸载行为。输出明确installationDestinationVerified/nativeInstallUninstallVerified/releaseAcceptance=false，原真实Windows安装验收依旧必需。没有把安装成功tasklist或单hash当完整安全范围。
+
+[离线验证](../../.adg/evidence/0.2.24/windows-installer-content-r1/result.json)：7新项含真实临时minisign、两容器明确模拟回复、8成员逐missing/篡改/大小/输入漂移、listing framing/特殊路径/类别拒绝，实际子进程两pipe有界输出/溢出/timeout/非零；9Mac updater＋7runtime delivery＋30publisher回归全部过，共53项。首unit01 NSIS最后空Size字段被通用strip误删空格，原raw1保留；仅改trim换行后unit02/final过，未放宽空Size一般规则。两workflow经Ruby YAML解析通过，PythonAST过；本机无PowerShell，未声称实际Windows装配步骤已执行。
+
+真实容器探测用原发布0.2.22 MSI7467008字节/SHA204a9a…及NSIS5323941字节/SHA0b8246…原GitHub资产digest核后，只读7zz listing及主exe流，MSI实际Path ID、NSIS完整opencodex-desktop.exe，各15296000字节；新最终有界读取器与初独立探测摘要一致。旧两个exe实际SHA不同如实各存，未推它们是同一build或当前0.2.24包，不借旧版本证明新包合格。原完整命令/列表/摘要见[只读证据](../../.adg/evidence/0.2.24/windows-distribution-probe-r1/final-bounded-reader.json)。未运行、安装、解压写目录或改注册表。
+
+最初尝试原0.2.23两包约580MB，读取速度低且格式研究不必大包，明确只对已核父子关系/准确命令的自有gh child发SIGTERM，不重试同一download；原raw-15/部分文件长度hash留证后改小022。最终4个旧资产/部分download共38569758字节全部从准确任务根清除、原根缺席核，保约47KB metadata/source/test证据，无重复安装器残留。中断不冒网络错误自然终止或下载成功。
+
+Release Windows新步骤在实际tauri签名出包后各自要求唯一MSI/NSIS及.sig，用checkout公钥和实际build资源调用同脚本，两个kind均记passed/firstError再统一阻断并完整上传结果；读取工具从已安装7z.exe显式定位，minisign只在缺失时准备。实际候选尚未运行此步骤，当前只有工具/装配和旧读取法验证，不冒Windows0.2.24真实签名内容或安装路径/正常用户验收已过。publish_release.py>=024硬拒绝保持，公开制品最终输入/正式签名及整组发行验证尚待候选闭合，不提前发布。
+
+Windowsf8feb3825/801e53cc8原生历史回交已接revision167，本批不改变其Owner/slot/nativeV2/privatehost/当前r2和synthetic27960清理依赖。Mac其它既列取消/中断/一般图/缺Ready、NAME最终外部客户端/回退和最终集成候选完整验收仍未完；不因发行校验增量缩小版本范围。目标active，不W2/双SID、不发布。
