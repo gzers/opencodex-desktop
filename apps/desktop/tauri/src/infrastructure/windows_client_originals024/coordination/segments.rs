@@ -52,6 +52,46 @@ impl RetiredLeaseHistory {
     }
 }
 impl ReleasedLease {
+    pub(super) fn probe_originals(
+        &mut self,
+        end: Instant,
+    ) -> io::Result<(&[LockFile], &LeaseFacts)> {
+        self.check(end)?;
+        Ok((&self.original.files, &self.facts))
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn observe_released_ranges(
+        &mut self,
+        probe: &mut super::ReleaseProbe,
+        stable_path: &Path,
+        stable_file: &mut File,
+        end: Instant,
+    ) -> io::Result<()> {
+        probe.inspect(self, stable_path, stable_file, end)
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn check_before_resume_owner(
+        &mut self,
+        owner: &mut Owner,
+        epoch: &str,
+        key: &str,
+        window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+    ) -> io::Result<()> {
+        let end = window.deadline();
+        self.check(end)?;
+        owner
+            .check_before_resume_quiescent(window)
+            .map_err(io_error)?;
+        let bound = self.original.bound.as_ref().ok_or_else(refused)?;
+        if self.original.deadline != end
+            || self.facts.epoch != epoch
+            || self.facts.claim_key != key
+            || bound.scope != owner.scope().map_err(io_error)?
+            || bound.profile.path() != owner.profile_path()
+            || bound.home.path() != owner.home_path()
+        {
+            return Err(refused());
+        }
+        self.check(end)
+    }
     pub(in super::super) fn observe_close_inventory(
         &self,
         inventory: &mut super::super::handle_release::ExpectedHandleInventory,

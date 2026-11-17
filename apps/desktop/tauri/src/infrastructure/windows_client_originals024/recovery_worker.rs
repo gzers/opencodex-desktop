@@ -2,7 +2,7 @@
 //! Active locks are created only AFTER unique original state reaches this
 //! worker; only actual released objects may ever leave it.
 use super::{
-    coordination::{LeasePreparation, NativeLease, ReleasedLease},
+    coordination::{LeasePreparation, NativeLease, ReleaseProbe, ReleasedLease},
     phase::invalid,
 };
 use crate::infrastructure::windows_official_lifecycle024::Owner;
@@ -57,6 +57,7 @@ pub(crate) struct WorkerLocal {
     preparation: LeasePreparation,
     lease: Option<NativeLease>,
     released: Option<ReleasedLease>,
+    probe: ReleaseProbe,
     revoked: bool,
 }
 impl WorkerLocal {
@@ -65,6 +66,7 @@ impl WorkerLocal {
             preparation: LeasePreparation::default(),
             lease: None,
             released: None,
+            probe: ReleaseProbe::default(),
             revoked: false,
         }
     }
@@ -95,6 +97,14 @@ impl WorkerLocal {
             .ok_or_else(invalid)?
             .release_retained(&mut self.released, end)
     }
+    pub(crate) fn released_and_probe(
+        &mut self,
+    ) -> io::Result<(&mut ReleasedLease, &mut ReleaseProbe)> {
+        if self.revoked {
+            return Err(invalid());
+        }
+        Ok((self.released.as_mut().ok_or_else(invalid)?, &mut self.probe))
+    }
     fn revoke(&mut self) {
         self.revoked = true;
         self.preparation.revoke_retained();
@@ -108,7 +118,12 @@ impl WorkerLocal {
         }
         // release_retained already moved all exact held files into this native
         // receipt BEFORE fallible readback. No JSON/boolean can supply it.
-        self.released.as_mut().ok_or_else(invalid)?.check(end)
+        let released = self.released.as_mut().ok_or_else(invalid)?;
+        released.check(end)?;
+        if self.probe.started() {
+            self.probe.check(released, end)?;
+        }
+        Ok(())
     }
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

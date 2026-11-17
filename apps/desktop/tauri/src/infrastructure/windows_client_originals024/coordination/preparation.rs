@@ -23,6 +23,17 @@ struct PendingFile {
     complete: Option<LockFile>,
 }
 impl LeasePreparation {
+    pub(super) fn capture_probe_file(
+        &mut self,
+        path: &Path,
+        claim: bool,
+        end: Instant,
+    ) -> io::Result<LockFile> {
+        self.capture(path, claim, end)?;
+        let file = self.pending.complete.take().ok_or_else(refused)?;
+        self.pending = PendingFile::default();
+        Ok(file)
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn revoke_retained(&mut self) {
         self.poison();
     }

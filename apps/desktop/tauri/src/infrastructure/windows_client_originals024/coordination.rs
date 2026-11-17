@@ -39,6 +39,8 @@ use windows_sys::Win32::{
     },
 };
 mod preparation;
+mod release_probe;
+pub(super) use release_probe::ReleaseProbe;
 mod segments;
 pub(super) use preparation::LeasePreparation;
 #[cfg(test)]
