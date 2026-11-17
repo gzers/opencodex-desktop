@@ -1125,3 +1125,12 @@ canonical只读取原immutable manifest/events/current的Native ID/8/raw/完整�
 证据wl2-r7-prefix-join-20261117-r1：product01真实全Tauri库MSVC raw0/149203ms，2过0败0ignored。8实际原批次场景0/100/101/112/140/141/152/255分别覆盖未动、move intent、实际move后无result、durable prefix、work intent、实际work后无result、work durable prefix及完整初始化；新actual claim下原两树/日志匹配，不补完成。另在真实完整原场景派生9类DATA反例：plan/rootorder/claim/nodeorder/state/workID/workSD/缺member/originalLocation均拒；DATA反例不冒额外原生Owner证明。九新fixture缺席清理，9实测源逐Git行尾归一核，schema生成raw归档/还原tracked/移出untracked。TEST EXE SHAb9b7ded48db1628925ee820b95a82695ecca33d53307d570216b5fe5fd35220f；26payload/589463字节原样封存，无意外product首错。8场景总7.90s只是fixture运行量，不冒原恢复10s/Start30/Status5/Stop10验收。
 
 原生产入口仅完整产品图编译链接，真实原Owner/固定官方生产恢复尚未执行；原恢复动作的actual claim/NLK必须继续装入原槽跨quiesce/return/失败持有，原launcher静止/所有原件return及8/children/锁释放原10s、新私有通道/附件native绑定仍未完，目标active。status.json 38项状态，已过未受影响scanner15/CLI/空GUI/归档/原生abort复用。b01b78219原manifest缺席引用合同请求和PSS0x8仍24unknown请求只停其依赖，暂无主线新答复，不重复空跑。currentR221500/75744/3原件/3work/custody/anchors/协调/旧seq9及40588保持，不force、不R1执行批准请求，旧50580/54692授权不沿用；原件未还不再跑官方包。旧两regression目录删除自动审批blocked by policy原样保留，不换工具重删；日常配置PATH策略/官方/原普通Token/预算/Unknown拒绝不变，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 活动lease线程归属与原恢复槽最小请求
+
+核对015106899原实现：NativeLease含Held/OVERLAPPED与PhantomData<*mut()>，明确!Send/!Sync；原OWNERS static的Arc<Slot>/Owner/WindowsOriginals/CaptureSlot跨线程注册表要求Send。不能直接加活动lease字段或unsafe Send绕过；ReleasedLease只有实际unlock/readback后可Send，不能替代临界段连续claim。证据wl2-r7-lease-affinity-request-20261117-r1含4当前源快照及interface-request.json，coordination源含本线在测same-thread prefix增量而非已验收提交。
+
+请Mac明确本轮原恢复控制模型：可否以一个原fixed10s/更短parent动作、同一原worker借原Owner完成prepare/quiesce/return，注册表仅保实际worker控制关联；若失败须跨请求保活动范围，应原owning worker继续保留，不移动lease/无新10s重激活。还需明确失败/过期时活动锁是保原worker等待显式处置，还是允许准确失败cleanup解锁并保原句柄/历史（不得记正常释放/Stop/Closed）。不默默改变现原lease线程/Drop语义，不把claim释放后NLK移根当恢复。只有该生产跨请求接线依赖停，same-thread逐步获取保留槽/native反例正在独立验证；不要求用户中转普通合同请求。
+
+原manifest缺席引用b01b78219/PSS0x8仍24unknown请求原样，当前r2/原件/进程不动，无force/归还/原包重跑、旧授权不沿用。普通令牌/原预算/Unknown拒绝/日常与官方边界不改，不W2/双SID/发布。

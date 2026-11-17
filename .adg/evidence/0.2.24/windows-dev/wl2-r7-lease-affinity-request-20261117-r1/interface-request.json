@@ -1,0 +1,50 @@
+{
+  "kind": "r7-original-recovery-active-lease-thread-affinity",
+  "codeBaseline": "015106899f82f8140a7888af6e44dc2f5b7fb2fb",
+  "docsInput": "b291bf8fa TEAM22/IMP150/r7",
+  "dependencyOnly": "production original-slot active lease persistence across prepare/quiesce/restore/control requests",
+  "facts": [
+    "NativeLease holds active Held ranges/OVERLAPPED and PhantomData<*mut()>; intentionally !Send/!Sync and stack/owning-thread scoped.",
+    "ReleasedLease is Send only after exact explicit original unlock and native readback; it cannot stand for continuously held claim/NLK.",
+    "OWNERS static Mutex<Vec<Arc<Slot>>> and original Owner/WindowsOriginals/CaptureSlot must remain Send-compatible. A NativeLease/LeasePreparation field in that original registry is ill-typed; unsafe Send/transmute/serialize/reopen would defeat existing boundary.",
+    "A new same-thread acquisition prefix is being natively tested independently; it retains partial files/ranges on failure, but does not yet solve original cross-request worker retention."
+  ],
+  "request": "Mac clarify original bounded recovery operation/control threading and failed active-lease disposition before cross-request integration. A same-thread single recovery driver may own actual lease through all stages while borrowing original Owner; if failure must retain active ranges across requests, original owning worker must stay alive behind explicit retained control. Do not infer permission to move active lease across threads or release claim in a mutation critical section.",
+  "proposedMinimalBoundary": {
+    "success": "one original explicit recovery action and original fixed10s/shorter parent; prepare/quiesce/return all run on same original owning thread with actual claim/NLK continuously held during mutations",
+    "registry": "stores only actual owning-worker control/action association; never JSON-based active rights or unsafe-send native lease",
+    "failure": "clarify whether keep same worker/resources/ranges parked without reactivation, or exact explicit failed cleanup unlock retaining original resources/history; no normal release/Stop/Closed on failure",
+    "retry": "no automatic fresh10s, no expired old mutation readmission",
+    "sharedChanges": "request an exact minimum shared/control interface only if required; otherwise Windows exclusive implementation can continue after contract clarification"
+  },
+  "notAuthorizedOrAttempted": [
+    "currentR2 termination/return",
+    "claim release then NLK-only root move",
+    "unsafe Send/Sync or active range thread transfer",
+    "machine token/policy/ACL change",
+    "new original action deadline or auto retry"
+  ],
+  "independentWork": "same-thread retained acquisition prefix, native busy/partial/unknown/expiry proof and existing complete tree/code work continue",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "sha256": "ff32f51a59c21b99379ca5640311b40b6cfe67457ae7c2cf62ddfd8874732a96",
+      "bytes": 21919
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "sha256": "4121d47b17b2a594b336ea652da5f7f2be4e8891728421346a71b45ccceaab77",
+      "bytes": 19196
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "sha256": "79a7e6de1e260e9a4719ffa3462b211bf0b66037763f544217de7fbda8a2dd79",
+      "bytes": 48043
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "sha256": "f3b84f99975f3848869e3f098fe25ab779aae9a5e608e355ac41b5ed2f12570f",
+      "bytes": 35418
+    }
+  ]
+}
