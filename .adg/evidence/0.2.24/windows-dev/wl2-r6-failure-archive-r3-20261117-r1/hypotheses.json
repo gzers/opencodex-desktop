@@ -1,0 +1,50 @@
+{
+  "contract": "TEAM16/IMP142/r6",
+  "baseCode": "625101e7bfa9dd60e5753361ebe9dce9561969d8",
+  "hypotheses": [
+    "PS51 Hashtable needs explicit bounded Int64 byte sum; original20k/2GiB/512MiB limits unchanged",
+    "One shared archive helper is executed through actual PS51 end-to-end before next ordinary invocation, zip bytes/membership independently checked with Python",
+    "Fresh readonly file-handle Length avoids stale directoryentry length for open logs; require unchanged original bytes before/after+same complete membership",
+    "r1/r2 outputs/native process scene unchanged; r3 private ZIP target fresh, no retries of same scene operation or cleanup/permission/process changes"
+  ],
+  "priorR2": {
+    "files": [
+      {
+        "path": "prior-r2/out01/archive-result.json",
+        "bytes": 617148,
+        "sha256": "206095154ab765ce227ccef4eba312918eca05e949826936fe91463e91d564da"
+      },
+      {
+        "path": "prior-r2/out01/archive-error.log",
+        "bytes": 548,
+        "sha256": "347b5b043bc9f4375b0bf1220a055ec7ffdbcd8495c01f9506c4b5f4342867fc"
+      },
+      {
+        "path": "prior-r2/archive-r6-failed-preresume.ps1",
+        "bytes": 9664,
+        "sha256": "155cf61541a1f337f0a69d8e14c272c5b573a4de4f90f98ebf2224b5ecfa0105"
+      },
+      {
+        "path": "prior-r2/archive-r6-process-facts.cs",
+        "bytes": 2681,
+        "sha256": "97aa8ad3eda50db0193108b5f047c7905c8b7433885edc0d55bafb46b89b02ab"
+      },
+      {
+        "path": "prior-r2/input-manifest.json",
+        "bytes": 961,
+        "sha256": "fc2d0469daeedcff97d6b01bf7a6877954f2070218204f7e702fa7095c919836"
+      }
+    ],
+    "error": {
+      "line": 59,
+      "message": "无法处理参数，因为参数“Property”的值无效。请更改“Property”参数的值，然后再次运行此操作。"
+    },
+    "archiveVerified": false,
+    "zipCreated": false
+  },
+  "environmentEvent": "During this turn both original C worktree Git checkouts disappeared, only ignored target remains. Existing D code checkout is unrelated older feature, not reused for edits. Managed worktrees restored from remote625101e7b and docs3b3f222ed; failed ordinary Public/Profile/processes remain. Uncommitted helper earlier lost, rebuilt from same design and new tests. No official service resumed.",
+  "newCodeRoot": "C:/Users/15119/.codex/worktrees/r6-windows-native-resume/code",
+  "newDocsRoot": "C:/Users/15119/.codex/worktrees/r6-windows-evidence-resume/code",
+  "startOpen": false,
+  "actualProductionExecuted": false
+}

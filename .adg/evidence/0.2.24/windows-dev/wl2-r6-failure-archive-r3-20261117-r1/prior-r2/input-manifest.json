@@ -1,0 +1,27 @@
+{
+  "scope": "read-only-first-failed-preresume-full-archive-r2",
+  "expectedSid": "S-1-5-21-587408064-856152790-2583328096-1003",
+  "expectedSession": 7,
+  "sourceHead": "625101e7bfa9dd60e5753361ebe9dce9561969d8",
+  "files": [
+    {
+      "name": "archive-r6-failed-preresume.cmd",
+      "bytes": 234,
+      "sha256": "7289e005889ba4ea1b40e6a892da6d47cd21390f96e3b6437ad956aaf538a08c"
+    },
+    {
+      "name": "archive-r6-failed-preresume.ps1",
+      "bytes": 9664,
+      "sha256": "155cf61541a1f337f0a69d8e14c272c5b573a4de4f90f98ebf2224b5ecfa0105"
+    },
+    {
+      "name": "archive-r6-process-facts.cs",
+      "bytes": 2681,
+      "sha256": "97aa8ad3eda50db0193108b5f047c7905c8b7433885edc0d55bafb46b89b02ab"
+    }
+  ],
+  "doesNotStopOrKillAnyProcess": true,
+  "doesNotRerunTests": true,
+  "doesNotChangePermissions": true,
+  "priorFailurePreserved": "C:/Users/Public/ocx-r6-failure-archive-20261117-r1/out01/archive-result.json"
+}

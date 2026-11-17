@@ -1,0 +1,7 @@
+﻿Measure-Object : 在任何对象的输入中都找不到属性“bytes”。
+所在位置 C:\Users\Public\ocx-r6-failure-archive-20261117-r2\archive-r6-failed-preresume.ps1:59 字符: 38
++ ... ount -gt 20000 -or ($todo|Measure-Object -Property bytes -Sum).Sum -g ...
++                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Measure-Object]，PSArgumentException
+    + FullyQualifiedErrorId : GenericMeasurePropertyNotFound,Microsoft.PowerShell.Commands.MeasureObjectCommand
+

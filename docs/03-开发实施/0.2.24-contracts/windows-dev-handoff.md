@@ -933,3 +933,10 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 首归档r1 .MainModule未初始化路径失败，尚无文件/目录归档；原错误/脚本保留。kernel query-only helper无terminate/resume/Job/Owner，实际controller自有挂起cmd证明FILETIME/镜像/session可核且MainModulenull。首probe仅Windows目录大小写DATA比较失败，原错留；同Windows路径比较修后probe02过，两次从未Resume且只用自己原创建handleforced242关闭，不冒NormalStop/普通验收、不动marenben/40588。r2只读归档入口C:/Users/Public/ocx-r6-failure-archive-20261117-r2/archive-r6-failed-preresume.cmd待原桌面运行。
 
 两新source-only scene私有ZIP/hash核后，删除请求被自动审批以blocked by policy拒绝，命令未执行、两源与归档留，不换方式重试。marenben首失败broker54692/原挂起Node50580及全scene继续留，loaded宿主无控制通道，新程序不能接管旧Job/Owner；全归档后仍需明确受控清理/新独立夹具方案，不直接重试或签Closed。Start/allAccepted/production/typedClosedfalse，全部原初始化/原缺席安全退根/GUI官方owner/容量/普通MSI/CAP-trust/历史清理未完保持，无官方/日常/PATH/策略/业务/模型/旧raw5/空GUI/W2/双SID/发布。
+
+
+## 2026-11-17 r3只读归档PS51完整验证
+
+源码c0d42f8dcc72d56b84fb5bbea050efe2d66ee65f已推送，仅4test脚本；生产Rust/制品仍3afd4e59d，证据.adg/evidence/0.2.24/windows-dev/wl2-r6-failure-archive-r3-20261117-r1/。r2原普通session7读回broker/Node同FILETIME，但Measure-Object无法解析Hashtable bytes统计，ZIP未建，原617148bytes receipt/548bytes错误保留。共享readonly archive helper显式Int64累加原20k/2GiB/512MiB限；实际PS51完整测试发现openlog目录项length滞后后改readonly handle.Length，全部原字节/hash/前后membership断言保持。测试70文件1049255源字节完整压缩/逐member/源hash过，独立Python核；existingZIP/duplicate/escape/missing四反例拒绝，前两localpartial69member源码/ZIP/错日志保留。三localscene未删、不重试旧删除拒绝。
+
+旧工作树tracked检出执行中消失，managed新code/docs从已推送6251/3b3恢复；当前根详final-status，不改旧D feature。r3入口C:\Users\Public\ocx-r6-failure-archive-20261117-r3\archive-r6-failed-preresume.cmd待用户原桌面，改批处理准确exit0/1不再统一finished，4input摘要核。普通全归档尚未完成，原54692/挂起50580/旧40588与失败全树留，未kill/权限/配置/PATH/官方/业务/模型/W2/双SID/发布。原宿主无后续控制channel，归档后仍需明确受控清理/新独立scene方案，不从PID/JSON构建旧Owner/NormalStop；Start/allAcceptedfalse，全版其余未完保持。
