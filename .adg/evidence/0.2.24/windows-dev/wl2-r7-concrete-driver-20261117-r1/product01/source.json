@@ -1,0 +1,70 @@
+{
+  "scope": "actual native source/Job/claim/bothTree/canonical/attachment/release pipeline on owningworker component, actual productOwner driver compiled only",
+  "head": "462c606f79ea444148574fe071c79c5632f3b600",
+  "files": [
+    {
+      "sha256": "4862396b7889788223898a50c4547a6dbda21b86297a0b0d3dbb21d03b1b1cc4",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter.rs"
+    },
+    {
+      "sha256": "dc38548de2d5a628263de23711320c908a8c09d478e500eb2c300d8b5c02e3ae",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs"
+    },
+    {
+      "sha256": "e951ea699fd3b8c7824ac25e95773dceea2902daf9be5ffc122f207fd1461306",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs"
+    },
+    {
+      "sha256": "c61eb608672d7fecd62c57205ddcfb864e2ebefc1dfd79bd4faa9e180b4da068",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs"
+    },
+    {
+      "sha256": "30e9c9596ef461192248b5a8496535764ee5950df1bb9e9870c2415cd471463f",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/driver_worker_tests.rs"
+    },
+    {
+      "sha256": "e9a038cd9c90b27cede29aed8bfa77d9808e35f0dcb6d1722c044535a1746391",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/release_tests.rs"
+    },
+    {
+      "sha256": "57b225f128efed7c717e37e847545400bf624c5101dd142ded543081844048a2",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs"
+    },
+    {
+      "sha256": "f3156e437d98e78453763857b01e41f757fd16efa24bed9fe5773e0b2aabf195",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs"
+    },
+    {
+      "sha256": "35753f6abb1f01dba524b8abdfc5e87d47c63f5e29223d2b2af8004886831cf2",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs"
+    },
+    {
+      "sha256": "8fec7ec676a975aa10bef434ba65d1a805601ad8c9ee15238f3cd47059070c75",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/driver.rs"
+    }
+  ],
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_concrete_driver_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

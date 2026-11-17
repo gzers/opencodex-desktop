@@ -1,0 +1,5 @@
+{
+  "scope": "supplemental collector only, no productmutation",
+  "error": "ValueError substring notfound on formatted chainedcall literal in earlyorderlookup",
+  "fix": "normalize whitespace in source-order lookup only; keep actual source bytes and native assertions unchanged"
+}
