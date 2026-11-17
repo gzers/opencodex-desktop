@@ -1,0 +1,42 @@
+
+running 5 tests
+test infrastructure::windows_client_originals024::before_resume_record::storage::tests::wl2_r7_attachment_storage_native_complete_strict_chain_exact_original_files_and_no_authority ... r7 actual native attachment bytes/ID/all8/ADS/complete directory verified; terminal suffix rejected, immutable files retained; DATA never grants restore/Stop/Closed
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpzaZekG
+ok
+test infrastructure::windows_client_originals024::before_resume_record::storage::tests::wl2_r7_attachment_storage_native_cross_scope_replay_unknown_and_wrong_sequence_refuse_before_write ... r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpsBrzSz
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpYOGT22
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpjtxO1q
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpUqeXWj
+ok
+test infrastructure::windows_client_originals024::before_resume_record::storage::tests::wl2_r7_attachment_storage_native_every_empty_half_full_or_published_failure_keeps_exact_prefix ... r7 actual native attachment stage1: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp8KYM9R
+r7 actual native attachment stage2: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpJ1UhTx
+r7 actual native attachment stage3: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpyYQNwV
+r7 actual native attachment stage4: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp9ZwILu
+r7 actual native attachment stage5: original pending/written resources and exact bytes kept, replay/read-success refused
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp1xYTcV
+ok
+test infrastructure::windows_client_originals024::before_resume_record::storage::tests::wl2_r7_attachment_storage_native_expired_renewed_or_existing_namespace_never_adopts ... r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpuQzusM
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpc0YWDz
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEXpX7u
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpLeE7bv
+ok
+test infrastructure::windows_client_originals024::before_resume_record::storage::tests::wl2_r7_attachment_storage_native_member_file_security_directory_security_or_ads_drift_refuse ... r7 actual native attachment refuses member; original file/content retained
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmprBidk3
+r7 actual native attachment refuses file-security; original file/content retained
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEAvpyh
+r7 actual native attachment refuses directory-security; original file/content retained
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEmg7Jk
+r7 actual native attachment refuses ads; original file/content retained
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpug2tv7
+r7 actual native attachment refuses late-file-security; original file/content retained
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpItAIhD
+r7 actual native attachment refuses late-member; original file/content retained
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpDWCGIj
+ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2203 filtered out; finished in 0.34s
+

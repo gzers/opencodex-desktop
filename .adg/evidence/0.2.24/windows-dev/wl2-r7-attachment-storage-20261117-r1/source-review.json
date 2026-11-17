@@ -1,0 +1,14 @@
+{
+  "method": "supplemental exact source ordering; not independent native acceptance",
+  "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/storage.rs",
+  "sha256": "37dcb30ee4128f37c411a103f5c3bfb83223aeaba8a81e5f7bcfcd1c5a57956b",
+  "checks": [
+    "strict full old/new DATA chain validated before any file creation",
+    "actual CREATE_NEW File held before any post-create identity/security/stream/write",
+    "published actual file retained before final fallible checks",
+    "failed partial record/cutoff leaves original resources and refuses replay",
+    "exact members checked before read and after entire raw-chain replay/full final native fence",
+    "no implicit old-schema conversion, native proof factory, unsafeSend, or canonical writes"
+  ],
+  "runtimeAuthority": false
+}
