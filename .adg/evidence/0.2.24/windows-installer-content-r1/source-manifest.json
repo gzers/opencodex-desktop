@@ -1,0 +1,28 @@
+{
+  "base": "fb755b8ea63d8a3fc9146dc4db491931919905b0",
+  "files": [
+    {
+      "path": ".github/scripts/verify_windows_installer_024.py",
+      "bytes": 10350,
+      "sha256": "bb59cd22467b8c8ff9aef5f75991baabbf34d0f871355f4c465fad3fdcc6f3db"
+    },
+    {
+      "path": "test/test_verify_windows_installer_024.py",
+      "bytes": 8670,
+      "sha256": "21eb56f67d30fe470c8317132571b725df50b3c3cc5a65e910bbe3180c0e762b"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 24391,
+      "sha256": "8e8c5f6be721180b2aa5af8c276225f37c530caa1723df767ca8b6151cef66d8"
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "bytes": 16226,
+      "sha256": "5d54c8a17f06f00a05952d2588cbc1b4e07793946f097479368bcd9d499763c1"
+    }
+  ],
+  "patchSha256": "2f4b7f2160739eb5d93790efd24597c591e1a10344429e81afa635f58a7d0ecc",
+  "scope": "signed selected installer embedded payload; not native installation destination or whole release acceptance",
+  "committedCode": "4ea82e8a61fe00c1f76334db5e39654f49f4342e"
+}

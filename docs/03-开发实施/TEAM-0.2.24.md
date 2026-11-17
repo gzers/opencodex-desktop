@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 30；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 31；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -279,3 +279,12 @@ Mac实际原包首次取消和官方后继Ready/正常Stop已验，仍需其它�
 Mac mainfb755b8ea63d8a3fc9146dc4db491931919905b0仅.github/scripts新Mac signed-updater校验器、对应离线反例及CI/Release装配；状态/真实本机测试与正式发行证据边界归IMP166。Windows可自行增量合入，不要求重跑已有Owner/CLI/MSI/扫描或Mac页面；没有Windows独占文件/四trait/CONTRACT_VERSION4变化。新Mac步骤必须读取真实tauri输出archive/sig和tagged公钥，缺任何事实保持失败；发布总拒绝门仍在，非正式发行或放宽。
 
 Windows361cdedf0/f8552e56c回交与合成残留只读事实归IMP165，原nativeOwner/returnslot/privatehost/v2独占继续；当前r2与synthetic27960恢复/清理仍需准确原事实和具体计划，不借本批发行工具授权处置。Mac继续Windows封装读取方式/发行核验及其它剩余本机需求；最终完整源码/制品固定前不W2/双SID，不发布。
+
+
+## revision31 Windows签名封装内容装配接续
+
+Mac main4ea82e8a61fe00c1f76334db5e39654f49f4342e仅新增.github Windows签名installer内嵌内容校验及CI/Release接线和离线tests；真实探测/签名fixture/未完成实际候选边界只归IMP168。不改安装器模板、Owner/恢复/扫描独占文件、四trait/CONTRACT_VERSION4。Windows可增量合入，不要求因此重跑既过native恢复/MSI/CLI/旧归档；下一真实最终候选安装器出包后会新增这层校验，不在当前未冻结产品图跑W2/双SID。
+
+新输出仅8项当前构建资源/程序bytes绑定，MSI目录表/costing及NSIS安装行为仍由原Windows native安装验收拥有，不以embedded-payload pass替代。流水线分kind收集两结果后统一失败，publish总门仍拒，未授权新发布。工具依赖installed7zip/minisign/当前stage内容和签名，缺任一保持失败，不用旧022探测结果放候选。
+
+Windowsf8feb3825/801e53cc8已归IMP167，继续原独占完整Status5/Owner/nativeV2/privatehost/真实原预算及清理计划；当前r2raw50和synthetic27960处置不因这批Git接线获得force/归还许可。Mac继续发行最终入口/其它需求，非必要用户不中转，及时push，不发布。
