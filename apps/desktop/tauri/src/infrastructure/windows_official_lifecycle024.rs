@@ -147,6 +147,8 @@ pub(crate) struct Owner {
     home: PathBuf,
     native: OwnedRuntime,
     service: Option<(u32, u16, String)>,
+    // Exact original typed observation, never rebuilt from the service tuple.
+    typed_ready: Option<shared::ServiceObservation>,
     original_listeners: Option<OwnedListeners>,
     stopped: bool,
     stop_completion: Option<StopCompletion>,
@@ -541,9 +543,9 @@ impl Owner {
         }
         budget(deadline)?;
         self.stage = "ready-current";
-        Ok(
-            serde_json::json!({"status":"running","ready":true,"pid":observed.pid(),"port":observed.port(),"version":observed.version(),"protection":"retained-job","rebootSafe":false}),
-        )
+        let payload = serde_json::json!({"status":"running","ready":true,"pid":observed.pid(),"port":observed.port(),"version":observed.version(),"protection":"retained-job","rebootSafe":false});
+        self.typed_ready = Some(observed);
+        Ok(payload)
     }
     async fn stop(&mut self, deadline: Instant) -> AppResult<StopReceipt> {
         self.source(deadline)?;
@@ -852,6 +854,7 @@ async fn execute_async(
         home: plan.opencodex_home().into(),
         native,
         service: None,
+        typed_ready: None,
         original_listeners: None,
         stopped: false,
         stop_completion: None,

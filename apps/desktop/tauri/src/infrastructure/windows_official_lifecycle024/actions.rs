@@ -16,6 +16,27 @@ pub(super) struct ActionOrigin {
     admitted_at: Instant,
 }
 impl ActionOrigin {
+    // DATA comparison for an already-admitted origin. No budget/permission is
+    // issued here, and original check() still enforces the OLD mutation end.
+    fn check_retained_metadata(
+        &self,
+        id: uuid::Uuid,
+        kind: OriginalActionKind,
+        outer: Instant,
+        stop: Instant,
+        end: Instant,
+    ) -> AppResult<()> {
+        if id != self.id
+            || kind != self.kind
+            || outer != self.end
+            || stop != self.stop_end
+            || end != self.relevant_end()
+            || self.admitted_at >= self.relevant_end()
+        {
+            return Err(recovery_required());
+        }
+        Ok(())
+    }
     pub(super) fn admit(
         kind: OriginalActionKind,
         window: &shared::ActionWindow,
@@ -62,6 +83,27 @@ pub(crate) struct NativeAction {
     token: native::TokenIdentity,
 }
 impl Owner {
+    /// Move the very SAME HMAC/current observation just produced by observe.
+    /// Caller must have original Stop/Restart action, not copied tuple fields.
+    pub(crate) fn take_original_ready_for_stop(
+        &mut self,
+        end: Instant,
+    ) -> AppResult<shared::ServiceObservation> {
+        let action = self.original_stop_action(end)?;
+        if self.stop_started.is_none() || self.stopped {
+            return Err(recovery_required());
+        }
+        let observed = self.typed_ready.take().ok_or_else(recovery_required)?;
+        let checked = (|| {
+            self.originals_check_ready(&observed, end)?;
+            action.check(self, end)
+        })();
+        if let Err(error) = checked {
+            self.typed_ready = Some(observed);
+            return Err(error);
+        }
+        Ok(observed)
+    }
     pub(crate) fn original_stop_action(&mut self, end: Instant) -> AppResult<NativeAction> {
         let kind = self
             .stop_action
@@ -133,6 +175,36 @@ fn install_stop_origin(
     Ok(())
 }
 impl NativeAction {
+    /// Read-only retained-origin/Owner check under a caller-bounded read end.
+    /// It NEVER changes old action end, calls original mutation check with a
+    /// new deadline, authorizes a lease/write, or creates another NativeAction.
+    pub(crate) fn check_retained_owner_for_read(
+        &self,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> AppResult<()> {
+        budget(end)?;
+        if self.owner != owner.session
+            || self.scope != owner.scope()?
+            || native::current_identity().map_err(unknown)? != self.token
+        {
+            return Err(recovery_required());
+        }
+        let origin = if self.kind == OriginalActionKind::Start {
+            &owner.start_action
+        } else {
+            owner.stop_action.as_ref().ok_or_else(recovery_required)?
+        };
+        origin.check_retained_metadata(
+            self.origin,
+            self.kind,
+            self.outer_end,
+            self.stop_end,
+            self.end,
+        )?;
+        owner.check_current(end)?;
+        budget(end)
+    }
     pub(crate) fn same_original_owner(&self, other: &Self) -> bool {
         self.owner == other.owner && self.scope == other.scope && self.token == other.token
     }
@@ -172,6 +244,64 @@ impl NativeAction {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn wl2_r6_typed_ready_retained_origin_read_never_renews_expired_mutation_budget() {
+        let now = Instant::now();
+        let end = now + Duration::from_secs(1);
+        let w = shared::ActionWindow::begin(LifecycleAction::Start, now, end).unwrap();
+        let origin = ActionOrigin::admit(OriginalActionKind::Start, &w).unwrap();
+        let id = origin.id;
+        let outer = origin.end;
+        let stop = origin.stop_end;
+        let old = origin.relevant_end();
+        while Instant::now() < old {
+            std::thread::sleep(Duration::from_millis(1));
+        }
+        origin
+            .check_retained_metadata(id, OriginalActionKind::Start, outer, stop, old)
+            .unwrap();
+        assert!(matches!(origin.check(old), Err(AppError::Timeout)));
+        assert!(origin
+            .check(Instant::now() + Duration::from_secs(30))
+            .is_err());
+        for (bad_id, bad_kind, bad_outer, bad_stop, bad_end) in [
+            (
+                uuid::Uuid::new_v4(),
+                OriginalActionKind::Start,
+                outer,
+                stop,
+                old,
+            ),
+            (id, OriginalActionKind::Stop, outer, stop, old),
+            (
+                id,
+                OriginalActionKind::Start,
+                outer + Duration::from_nanos(1),
+                stop,
+                old,
+            ),
+            (
+                id,
+                OriginalActionKind::Start,
+                outer,
+                stop + Duration::from_nanos(1),
+                old,
+            ),
+            (
+                id,
+                OriginalActionKind::Start,
+                outer,
+                stop,
+                old + Duration::from_nanos(1),
+            ),
+        ] {
+            assert!(origin
+                .check_retained_metadata(bad_id, bad_kind, bad_outer, bad_stop, bad_end)
+                .is_err());
+        }
+        assert_eq!(origin.relevant_end(), old);
+        println!("r6 retained actual-admitted Origin metadata can still be compared after elapsed old end; original mutation remains Timeout/no renewed end. Five substitutions reject; no synthetic NativeAction/Owner/ServiceObservation or native read permit constructed");
+    }
     #[test]
     fn wl2_r6_original_actions_repeated_or_partially_started_stop_cannot_replace_origin() {
         let now = Instant::now();
