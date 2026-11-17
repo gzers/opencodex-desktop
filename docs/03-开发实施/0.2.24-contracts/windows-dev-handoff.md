@@ -1145,3 +1145,14 @@ canonical只读取原immutable manifest/events/current的Native ID/8/raw/完整�
 范围限制：新旧activelease均刻意!Send/!Sync，没有unsafeSend/transmute或跨线程移动；private parent观察若在自身工厂验证前失败且本role尚无file/ranges，不冒完整原parent或恢复permit。本批是同线程获取/失败保留primitive，尚不能放入Send原OWNERS注册表；跨请求原worker保持活动范围及失败/过期处置的最小方案请求9f775ebe7已先发，只暂停其生产持有接线。不得把成功ReleasedLease或Drop当连续claim/NLK，不释放claim仅靠NLK移根。
 
 status.json现42项完整本线状态，完整原恢复过程/通道/native附件/同10s原件return、原manifest缺席引用请求b01b78219、PSS0x8仍24unknown、普通MSI/原缺席退根/GUI官方owner/容量/最终候选仍未完。已过原r2全归档/44项、scanner15/CLI/空GUI/原生abort复用，不重复空跑；currentR221500/75744/3原件/3work/custody/anchors/协调/旧seq9与40588不动，无R1新执行授权/批准请求，旧50580/54692授权不沿用，原件未还不跑原包。旧两regression目录删除自动审批blocked by policy原样留、不换工具重试；日常/官方/普通Token/原预算/Unknown边界保持，不W2/双SID/发布，目标active。
+
+
+## 2026-11-17 r7 原槽凭证与同claim接原Owner quiesce
+
+代码24841bd6d2693f11a1f585b186b7a075b7d07b64已推送，当前fetch仍main7fade183d／docs b291bf8fa、TEAM22/IMP150/r7无新答复。新增私有nonClone/nonserde PreparedAbortPrefix只从原WindowsOriginals的实际原slot/session/scope、Source/Owner preparedProcess、同fresh窗口/实际claim/完整两树canonical读生成；不从DATA请求/PID/旧记录构造。原Owner native quiesce入口还必须借ClaimBoundAbort私有构造类型，持同一个实际AnchoredClaim跨native调用并前后核，不能只拿prefix摘要在claim释放后调终止。
+
+quiesce前先将prefix留原WindowsOriginals，再重复实际完整读和exact before；原Owner一旦进入Quiescing就不重试，原Job返回native QuiescentLauncher后先存原process attempt再fallible Source/claim/postchecks；check_before_resume_process明确区分Prepared与Quiescent的原native proof，普通调度在两态/Quiescing/Failed仍拒。native静止后再全读原树/canonical并与prefix精确相同才产私有QuiescentOriginals locator，actual nativeproof始终在原Owner。raw242/forced不签NativeNormalExit/Stopped/Closed，不自动Start/后继；所有失败保原prefix/Owner资源、拒绝恢复。不改旧Start截止/原v3/current/intent，无旧宿主热补。
+
+证据wl2-r7-quiesce-join-20261117-r1：product01真实完整Tauri库MSVC raw0/143128ms，3过0败0ignored。1原生集成含三真实原前缀101（move后）、141（work后）、255（完整初始化），固定自有synthetic launcher SHA4699667b…从未Resume、原Jobforced242，持同实际NativeLease/claim前后两树/canonical/旧poison完全相同；不是伪造产品Source/Owner，也未执行原产品Owner恢复。2metadata拒绝测试验证session/epoch/claim/end/data和quiescent tag替换/expired，不冒native authority。regression02受影响原origin/旧权限5过raw0/248ms；regression03原typed槽Send1过raw0/208ms，无unsafeSend/activelease跨线程。TEST EXE SHA8329c90eaa17b7dbb2dfc5bc6c1d430723da504ea2a0d53fc93db7ed57b028d8；8执行源逐Git行尾归一核，复用合成helper source/hash另留，不冒新官方制品。3新fixture全部原进程raw242/无marker后缺席清理，33payload/520282字节原样封存，源码顺序补充核不是独立安全审计。无意外product首错；2.69s原生fixture总量不冒完整恢复10s/Start30/Status5/Stop10验收。
+
+status.json现48项完整状态。本次只接quiesce阶段；完整BeforeFirstResumeRecovery、实际产品Owner整链/newworker原10s、native附件及逐node退休/原件归还/8+字节+children+锁释放、新私有版本化控制通道仍未完。活动lease线程/失败处置9f775ebe7、pre-manifest引用b01b78219、PSS0x8仍24unknown请求各只阻对应依赖，未趁无答复更改边界。当前r221500/75744/3原件/3work/custody/anchors/协调/旧seq9及40588不动，无当前R1执行授权/批准请求；旧50580/54692授权不延用、原件未还不跑官方。已过scanner/CLI/空GUI/归档/原语复用。旧两regression目录删除审批blocked by policy保留，不绕过/重试；官方2.99/日常配置PATH策略/普通Token/原预算/Unknown拒绝保持，不W2/双SID/发布，目标active。
