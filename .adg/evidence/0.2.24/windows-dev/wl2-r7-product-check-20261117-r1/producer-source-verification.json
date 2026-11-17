@@ -1,0 +1,36 @@
+{
+  "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+  "targetedConsumedFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+      "bytes": 33760,
+      "sha256": "c6e04300492a47034fa035b54749c3506dbfc34b47f5f564d86d882e68620875",
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_windows.rs",
+      "bytes": 19587,
+      "sha256": "f71dd9f2331e98fe720a1b6d8308155bb0f1223d5e16c1257484753efd48f5cf",
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/source.rs",
+      "bytes": 9066,
+      "sha256": "b7ccf7000be38b9fd3a432a7e2aa9fd150d46950091da71b613ca1d2a98c6bf8",
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 48496,
+      "sha256": "f5d657079550b061c0259b3c8c672d10897524d90c0984116611cbb36c53130a",
+      "producerGitCRLFOnly": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/before_resume.rs",
+      "bytes": 7065,
+      "sha256": "819844ccb3de6f735d9d58afb8efb3ade9b0ebfa5bb2b80c34a1bf2d8294ba6e",
+      "producerGitCRLFOnly": true
+    }
+  ],
+  "scope": "five changed Windows/scanner/Owner sources; complete cargo source provenance anchored to clean commit, not duplicate whole source tree"
+}
