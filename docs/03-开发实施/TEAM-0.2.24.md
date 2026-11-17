@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 28；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 29；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -263,3 +263,12 @@ Windows44aa85f6c/b2b25c26e的五范围释放后全读/专门AbortedOriginals原�
 Mac mainfcf04caecdd7c328f03fcf1a6ceda3e18517d9bc接首次取消用户命令/确认预览和Vue状态、准确root_cancelled两事件回执，以及独立取消前驱的历史验证/后继创建捕获/实时状态资格。原包原生动作和存储捕获的范围、预算及未验真实界面/service只归IMP159；不是最终候选或整版放行。Windows可自行增量合入本机文件/共享命令的Mac分支/前端字段，不改Windows原件/worker/host/协调/扫描独占集与四trait/CONTRACT_VERSION4，不要求重跑无影响原生项。
 
 Windows维持44aa85f6c后继独占，完整Owner driver/原slot验证/v2/privatecontrol及真实官方整链继续；r2raw50依赖/本现场单独恢复批准不变。Mac后续集中最终原包界面/官方服务后继、其它取消/中断及既列缺口，不为已有通过项重复空轮。最终源码/制品固定前不W2/双SID，不发布。
+
+
+## revision29 实屏后状态采样与独立Windows接续
+
+共享main80fcd4d2d修get_status_snapshot_with_collector的排队等待：try_lock忙返回明确不确定错误，不复用旧成功、不开始第二采样，不改变原budget/collector映射/Windows Owner。45571c2b8只加Mac真实GUI验证器，81f52452c只修测试遇busy-before-mutation的明确重新确认/精简输出。真实sealed包来源只认45571，本批状态归IMP162；非最终候选。
+
+Windows可自行增量合入。共享commands/mod.rs若与本线注册发生冲突逐段保留双方真实净差，不全文件ours/theirs；原私有Owner/恢复/扫描独占集、四trait/CONTRACT_VERSION4和r7无变化。本次status API在busy时现在明确Err，Windows既有定向调用须按原Unknown/Required处理，不能吞错放Start；固定候选时再验真实并发调用，不提前W2/双SID或重复无影响MSI/CLI/扫描/旧归档。
+
+Mac实际原包首次取消和官方后继Ready/正常Stop已验，仍需其它既列缺口/最终状态投影与候选；Windowsdd42d5e后继完整Owner driver/slot复核/v2全native/privatehost继续，r2raw50依赖及synthetic27960清理计划按原边界，不因本批观察修复放宽。继续异步Git回交，非必要用户不中转；不发布。

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 290, in <module>
+    result = run(args.app, args.expected_sha256, args.output, args.seed_host, args.flow)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 207, in run
+    press('停止')
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 92, in press
+    command([helper, 'press', proc.pid, exe, found[0]['path'], label])
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 56, in command
+    if p.returncode and required: raise RuntimeError('native command failed: ' + str(argv[0]) + ' / ' + p.stderr.decode(errors='replace')[:400])
+RuntimeError: native command failed: /private/tmp/ocxd024-gui-root-cancel-7lk79von/ax / 

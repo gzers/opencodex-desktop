@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 241, in <module>
+    print(json.dumps(run(args.app, args.expected_sha256, args.output, args.seed_host), ensure_ascii=False), flush=True)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 162, in run
+    wait_for('cancelled',lambda v:any('原目录缺席已恢复' in str(n.get('value','')) for n in v['nodes']),30)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 77, in wait_for
+    raise RuntimeError('observation timeout: ' + label)
+RuntimeError: observation timeout: cancelled

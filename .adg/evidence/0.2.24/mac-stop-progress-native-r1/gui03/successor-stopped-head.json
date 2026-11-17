@@ -1,0 +1,37 @@
+{
+  "revision": 9,
+  "ticket": "478a1ffb-9450-4a78-94ae-3a2da3e7ba8c",
+  "state": "root_absent",
+  "references": {
+    "attempt": "478a1ffb-9450-4a78-94ae-3a2da3e7ba8c",
+    "originalSha256": "cfd23f493aaa170c7d9820d3330e7a43e938237d828b5466c8d559d452e48b29",
+    "scopeSha256": "4232aff7088a2670ebba8f58934849c304a691ace26bc302bfe02b6f5855849e",
+    "phases": [
+      [
+        "ready",
+        "e2e262fd77d698dafb6d6de347cb07350a1b82cac5d04dfa5d5b4441ea3ae68a"
+      ],
+      [
+        "pre_stop",
+        "e9b5258e1651c7714f847e7fcc58c690bf7ad3ae12ddcf2976b2c3d893a527e6"
+      ],
+      [
+        "stopped",
+        "2dd08796bf42bde194c8126aa6af784630e4fdee735b434db48d63b1bfd6c334"
+      ]
+    ],
+    "liveSha256": "12440166ba160d9b7616f6606ce2dcc91be63486bc10cf246fa96fe56e1e0b27"
+  },
+  "restorePlan": {
+    "id": "18111570-08c3-4242-9bf1-16145df69cf6",
+    "sha256": "1abb2acf10a7866cd7fa53aaeddfbfc8c0fa98e8b434a5229f9759860be6779b"
+  },
+  "completionSha256": "c3ed8dfdb77074c4dedf47d4e609601162fbc7a90e3fe79c5b8a13d697276519",
+  "rootRetirement": {
+    "sourceRevision": 7,
+    "plan": {
+      "id": "857ee475-ca9f-4921-a951-7347c4116733",
+      "sha256": "139ef62a06470eb78ad6f8038f46e96e3e35e0fab4deaccda2064b2f12f460c9"
+    }
+  }
+}

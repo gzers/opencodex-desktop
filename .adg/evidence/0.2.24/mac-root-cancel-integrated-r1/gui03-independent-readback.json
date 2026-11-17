@@ -1,0 +1,36 @@
+{
+  "exactAppSource": "45571c2b83024425bd7d019d3a4270b5dc73bb4e",
+  "sealedAppSha256": "351807b2cf36227d04255510f581dee2f066c1b03dc96a291a2c05e759c76f48",
+  "nativeProcessAbsence": [
+    {
+      "pid": 46175,
+      "nativeReturn": 0,
+      "errno": 3,
+      "absent": true
+    },
+    {
+      "pid": 45879,
+      "nativeReturn": 0,
+      "errno": 3,
+      "absent": true
+    },
+    {
+      "pid": 46040,
+      "nativeReturn": 0,
+      "errno": 3,
+      "absent": true
+    }
+  ],
+  "independentTcp": {
+    "exactExportedPort": 54516,
+    "listenerAbsent": true,
+    "kernelSnapshotSha256": "b25d72d009b3b371a7f3afd4a90cc1cb207b8799f6158e5a0510690b3ca40f68",
+    "framingVerified": true,
+    "scope": "independent exported primary port only; actual production Stop separately proved all4 captured listeners"
+  },
+  "all3OwnedCoordinatorFilesAbsentAndBytesArchived": true,
+  "temporaryRootObservedAbsent": true,
+  "actualProductionNormalExitAndFourListenerProofLogged": true,
+  "guiStateLimit": "AX observed cancellation result and running state; final Stop readback used complete canonicalRootAbsent before GUI late status projection, not a claim that progress overlay had already disappeared",
+  "releaseAcceptance": false
+}

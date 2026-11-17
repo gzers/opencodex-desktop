@@ -1,0 +1,37 @@
+{
+  "inputApp": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+  "inputSha256": "351807b2cf36227d04255510f581dee2f066c1b03dc96a291a2c05e759c76f48",
+  "releaseAcceptance": false,
+  "dailyConfigurationModified": false,
+  "serviceActionRequested": false,
+  "result": "failed",
+  "scope": "packaged GUI explicit first-root cancellation and official successor Start/Stop; no model requests",
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "networkGuard": {
+    "exitCode": 1,
+    "stderr": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted\n"
+  },
+  "error": "RuntimeError('observation timeout: cancelled')",
+  "processes": [
+    {
+      "pid": 45447,
+      "exitCode": -15,
+      "residues": []
+    },
+    {
+      "pid": 45602,
+      "exitCode": -15,
+      "residues": []
+    }
+  ],
+  "sourceAppUnchanged": true,
+  "copiedAppUnchanged": true,
+  "coordinatorCleanup": [],
+  "temporaryRoot": "/private/tmp/ocxd024-gui-root-cancel-98h3lt0z",
+  "temporaryRootAbsent": true
+}
