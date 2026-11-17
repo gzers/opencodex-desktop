@@ -27,8 +27,8 @@ use windows_sys::Win32::{
     Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
 };
 mod query;
-use query::{err, invalid, native_id, projections, time, Projection, ProjectionRecord};
-pub(super) use query::{native_stamp, required_access, Policy, QueryError, SnapshotData, REQUIRED};
+use query::{err, invalid, native_id, projections, time, ProjectionRecord};
+pub(super) use query::{native_stamp, required_access, Policy, Projection, QueryError, SnapshotData, REQUIRED};
 #[cfg(test)]
 use query::{project, query, same_covered_component};
 
