@@ -1,7 +1,8 @@
 //! Same-object preservation for an INITIAL uncaptured root. It does not publish
 //! a cancellation terminal or turn the old index into a new Start permission.
-//! MovementAuthority has no production factory until canonical registration and
-//! the concrete service/source admission are connected by the action owner.
+//! Plans are registered in the original independent index. MovementAuthority
+//! still has no production factory until concrete service/source admission is
+//! connected by the action owner.
 use super::*;
 use crate::infrastructure::official_client_coordination::native::{config::Guard, NativeLease};
 use std::os::fd::AsRawFd;
@@ -15,6 +16,7 @@ struct Plan {
     origin: super::super::super::root_creation::References,
     binding_sha256: String,
     initial_review_sha256: String,
+    history_sha256: String,
     root: super::super::super::TreeSnapshot,
     grok: super::super::super::GrokSnapshot,
     writer: super::super::super::Image,
@@ -25,6 +27,7 @@ pub struct Prepared<'a> {
     id: String,
     bytes: Vec<u8>,
     sha256: String,
+    registered: Option<Head>,
 }
 /// An action owner must supply its original canonical registration and current
 /// service/source/native permissions. No callbacks or deserialized plan can
@@ -59,10 +62,10 @@ fn io(error: crate::errors::AppError) -> std::io::Error {
     let _ = error;
     denied("root-cancel native coordinator unconfirmed")
 }
-fn facts(review: &Review<'_>, physical: &PinnedDirectory) -> std::io::Result<()> {
+fn facts(review: &Review<'_>, physical: &PinnedDirectory, expected: &Head) -> std::io::Result<()> {
     check_time(review.deadline)?;
     review.index.check_storage()?;
-    if read_head(review.index.connection()?)?.as_ref() != Some(&review.head) {
+    if read_head(review.index.connection()?)?.as_ref() != Some(expected) {
         return Err(denied("root-cancel original independent head changed"));
     }
     if digest(&encode(&vault_history::read(
@@ -124,7 +127,7 @@ impl<'a> Prepared<'a> {
         native
             .require_context(review.context, review.index.client.path())
             .map_err(io)?;
-        facts(&review, &review.index.client)?;
+        facts(&review, &review.index.client, &review.head)?;
         let image = guard
             .root_image(native, review.index.client.path())
             .map_err(io)?;
@@ -149,6 +152,7 @@ impl<'a> Prepared<'a> {
             origin: review.index.root_registration.clone().unwrap(),
             binding_sha256: digest(&review.index.binding),
             initial_review_sha256: review.fingerprint.clone(),
+            history_sha256: review.history_sha256.clone(),
             root: tree,
             grok: review.initial_grok.clone(),
             writer: image,
@@ -157,6 +161,11 @@ impl<'a> Prepared<'a> {
             .index
             .action_parent
             .child_private("client-root-cancel-plans", true)?;
+        if !super::super::super::tree::names(parent.file())?.is_empty() {
+            return Err(denied(
+                "root-cancel retained plan namespace requires resolution",
+            ));
+        }
         let directory = parent.child_private(&plan.id, true)?;
         if !super::super::super::tree::names(directory.file())?.is_empty() {
             return Err(denied("root-cancel plan slot already exists"));
@@ -172,11 +181,62 @@ impl<'a> Prepared<'a> {
             id: plan.id,
             bytes,
             sha256,
+            registered: None,
         };
         result.require_live()?;
         native.check().map_err(io)?;
         guard.check().map_err(io)?;
         Ok(result)
+    }
+    fn expected(&self) -> &Head {
+        self.registered.as_ref().unwrap_or(&self.review.head)
+    }
+    /// Publish the actual guarded plan in the original CAS/event stream BEFORE
+    /// any move. This is a pending reference, never service-absence or mutation
+    /// authority. A failed commit/readback retains the plan and rejects reuse.
+    pub fn register(mut self) -> std::io::Result<Self> {
+        self.require_live()?;
+        if self.registered.is_some() {
+            return Err(denied("root-cancel plan already registered"));
+        }
+        let next = Head {
+            revision: self
+                .review
+                .head
+                .revision
+                .checked_add(1)
+                .ok_or_else(|| denied("root-cancel revision overflow"))?,
+            ticket: self.review.head.ticket.clone(),
+            state: State::RootCancellationPrepared,
+            references: None,
+            restore_plan: None,
+            completion_sha256: None,
+            root_retirement: Some(RootRetirement {
+                source_revision: self.review.head.revision,
+                plan: RestorePlan {
+                    id: self.id.clone(),
+                    sha256: self.sha256.clone(),
+                },
+            }),
+            root_generation: None,
+        };
+        self.review.index.write_checked_admitted(
+            Some(&self.review.head),
+            &next,
+            &|_| Ok(()),
+            &|originals| {
+                if originals.is_some() {
+                    return Err(denied("root-cancel cannot register captured originals"));
+                }
+                self.require_live()
+            },
+        )?;
+        self.registered = Some(next);
+        self.require_live()?;
+        Ok(self)
+    }
+    pub fn registered_head(&self) -> Option<&Head> {
+        self.registered.as_ref()
     }
     fn plan(&self) -> std::io::Result<Plan> {
         self.directory.private()?;
@@ -191,6 +251,7 @@ impl<'a> Prepared<'a> {
                     || plan.source != self.review.head
                     || plan.initial_review_sha256 != self.review.fingerprint
                     || plan.binding_sha256 != digest(&self.review.index.binding)
+                    || plan.history_sha256 != self.review.history_sha256
                 {
                     return Err(denied("root-cancel plan source changed"));
                 }
@@ -201,7 +262,7 @@ impl<'a> Prepared<'a> {
     }
     fn require_live(&self) -> std::io::Result<()> {
         let plan = self.plan()?;
-        facts(&self.review, &self.review.index.client)?;
+        facts(&self.review, &self.review.index.client, self.expected())?;
         if observation::entry(&self.directory, "root")?.is_some()
             || super::super::super::TreeSnapshot::read(&self.review.index.client)? != plan.root
         {
@@ -226,7 +287,7 @@ impl<'a> Prepared<'a> {
         mut guard: Guard<'_>,
         checkpoint: &impl Fn(&str) -> std::io::Result<()>,
     ) -> std::io::Result<PreservedRoot> {
-        if !std::ptr::eq(authority.prepared, self) {
+        if self.registered.is_none() || !std::ptr::eq(authority.prepared, self) {
             return Err(denied("root-cancel authority belongs to another plan"));
         }
         let end = self.review.deadline.min(authority.deadline);
@@ -286,7 +347,7 @@ impl<'a> Prepared<'a> {
         native.reanchor_claim(&target).map_err(io)?;
         guard.reanchor(&target).map_err(io)?;
         checkpoint("after_reanchor")?;
-        facts(&self.review, &archived)?;
+        facts(&self.review, &archived, self.expected())?;
         native.check().map_err(io)?;
         guard.check().map_err(io)?;
         check_time(end)?;
@@ -297,7 +358,7 @@ impl<'a> Prepared<'a> {
         {
             return Err(denied("root-cancel release or logical absence unconfirmed"));
         }
-        facts(&self.review, &archived)?;
+        facts(&self.review, &archived, self.expected())?;
         native.check().map_err(io)?;
         check_time(end)?;
         let bytes = encode(&serde_json::json!({
@@ -319,12 +380,16 @@ impl<'a> Prepared<'a> {
     }
     #[cfg(test)]
     fn fixture_authority(&'a self) -> MovementAuthority<'a> {
+        assert!(self.registered.is_some());
         MovementAuthority {
             prepared: self,
             deadline: self.review.deadline,
         }
     }
 }
+
+#[path = "macos_client_root_prepare_indexed.rs"]
+pub(in crate::infrastructure::macos_client_originals) mod indexed;
 
 #[cfg(test)]
 #[path = "macos_client_root_prepare_preserve_tests.rs"]

@@ -86,6 +86,10 @@ fn validate_segment(heads: &[Head], origin: &super::root_creation::References) -
         if !matches!(
             (before.state, after.state),
             (State::Preparing, State::CaptureReserved)
+                | (
+                    State::Preparing | State::CaptureReserved,
+                    State::RootCancellationPrepared
+                )
                 | (State::CaptureReserved, State::Captured)
                 | (State::Captured, State::Ready)
                 | (State::Ready, State::StopPrepared)

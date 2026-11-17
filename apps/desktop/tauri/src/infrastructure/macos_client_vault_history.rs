@@ -214,7 +214,12 @@ fn inspect_root_lineage(
     let manager = data.child_private("manager-state", false)?;
     if observation::entry(&manager, "client-originals")?.is_none() {
         if !expected.is_empty()
-            || current.is_none_or(|h| !matches!(h.state, State::Preparing | State::CaptureReserved))
+            || current.is_none_or(|h| {
+                !matches!(
+                    h.state,
+                    State::Preparing | State::CaptureReserved | State::RootCancellationPrepared
+                )
+            })
         {
             return Err(denied("indexed root original vault missing"));
         }
