@@ -76,6 +76,7 @@ jobs:
           name: release-official-runtime-${{ matrix.platform }}
           path: |
             test/out/runtime-stage-result.json
+            test/out/runtime-stage/runtime-delivery-verification.json
             apps/desktop/tauri/resources/runtime-bundle/runtime-bundle.manifest.json
             apps/desktop/tauri/resources/runtime-bundle/runtime-bundle.manifest.sha256
           if-no-files-found: warn

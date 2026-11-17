@@ -5,12 +5,16 @@ configuration writes. Outputs are explicit fresh build paths.
 """
 import argparse
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import shutil
 import subprocess
 import urllib.request
 
+_spec = importlib.util.spec_from_file_location('verify_runtime_delivery_024', Path(__file__).with_name('verify_runtime_delivery_024.py'))
+delivery = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(delivery)
 ROOT = Path(__file__).resolve().parents[2]
 POLICY = ROOT / '.github/runtime-platforms-024.json'
 
@@ -76,6 +80,8 @@ def stage(platform, node, npm, output, archive=None, node_archive=None, proxy=No
     shutil.copy2(manifest, destination / 'runtime-bundle.manifest.json')
     pin = digest(manifest)
     (destination / 'runtime-bundle.manifest.sha256').write_text(pin + '\n')
+    verified = delivery.verify(destination, platform, policy)
+    (output / 'runtime-delivery-verification.json').write_text(json.dumps(verified, indent=2) + '\n')
     override = {'bundle': {'resources': {
         'resources/LICENSE': 'resources/LICENSE',
         'resources/THIRD-PARTY-NOTICES.txt': 'resources/THIRD-PARTY-NOTICES.txt',
@@ -83,7 +89,8 @@ def stage(platform, node, npm, output, archive=None, node_archive=None, proxy=No
     config = output / 'tauri.runtime-bundle.conf.json'
     config.write_text(json.dumps(override, indent=2) + '\n')
     return {'resourceDirectory': str(destination), 'descriptorSha256': pin,
-            'officialSourceSha256': digest(archive), 'tauriConfig': str(config)}
+            'officialSourceSha256': digest(archive), 'tauriConfig': str(config),
+            'deliveryVerification': verified}
 
 
 if __name__ == '__main__':
