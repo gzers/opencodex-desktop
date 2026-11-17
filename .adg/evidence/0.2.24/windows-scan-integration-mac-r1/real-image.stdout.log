@@ -1,0 +1,7 @@
+
+running 1 test
+test modules::runtime::program_image::tests::official299_complete_image_inventory_stage_cost ... IMAGE_SCAN_COST {"accepted":false,"elapsedUs":602915,"entries":15646,"fileBytes":645549518,"metrics":{"stages":{"directory-enumeration":[2254,155029798],"directory-final-fence":[2254,43047841],"directory-path-admission":[2254,50210531],"entry-inspect-name":[15647,74537396],"existing-path-boundary":[17901,483037793],"file-admission-open":[13393,483657515],"file-read-hash":[13393,288031792],"file-total":[13393,780160037],"inventory-enumeration-total":[1,212691500],"inventory-read-and-fence-total":[1,389816792],"inventory-total":[1,602914625],"worker-join-wait":[4,338590333]}},"officialArchiveSha256":"b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c","scope":"actual official image inventory only; no service or Stop acceptance","treeSha256":"a29dedc203311ca4d6d4005db94b4a10d4fb84409283669e25272f080756b790","versionRoot":"/private/tmp/ocxd024-versioned-lifecycle-scan-7j__6kfg/fixture/program 中文 space/runtime/versions/2.99.0"}
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2680 filtered out; finished in 66.56s
+

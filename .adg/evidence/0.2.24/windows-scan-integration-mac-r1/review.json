@@ -1,0 +1,42 @@
+{
+  "source": "64bf7aa73a61be2b50469657bbc7515d486eca00",
+  "acceptedScope": "three exact scanner files only; original Windows consumers/source/owner/capture/restore not merged",
+  "reviewed": [
+    {
+      "requirement": "same Entry/manifest digest semantics",
+      "finding": "Windows rows use identical Entry::File bytes/SHA256/executable=false and Directory entries; exclude only root image manifest then verify that manifest separately"
+    },
+    {
+      "requirement": "full reads/no cache",
+      "finding": "each call creates fresh Inventory and retained native handles, reads each regular file to expected EOF plus growth check, hashes every byte; no lifetime beyond call"
+    },
+    {
+      "requirement": "native identity/membership fences",
+      "finding": "retains open objects; before/after volume/fileID/type/reparse/single-link/path/streams/security; complete directory children compared; exact original pins remain until joined workers and final fence"
+    },
+    {
+      "requirement": "same limits and unknown refusal",
+      "finding": "100000 entries/64depth/512MiB file/2GiB total/4workers retained; failures return error rather than partial tree; security requires same included mask, not Full SD proof"
+    },
+    {
+      "requirement": "thread ownership and deadline",
+      "finding": "finite scoped workers all joined; cancellation flag on panic/error; supplied end checked through collect/read/final-fence and after manifest; synchronous OS delays can still exceed budget but cannot return accepted late"
+    },
+    {
+      "requirement": "Mac semantics",
+      "finding": "cfg(not(windows)) still finish_inventory(root, collect_inventory(root),4); same empty-tree/tree digest and independent image manifest binding; targeted Unix plus consumers tested"
+    },
+    {
+      "requirement": "performance inference",
+      "finding": "Windows fixed debug samples and6366ms inventory-only result are not production Start/Status/Stop budget or full restore acceptance"
+    }
+  ],
+  "remaining": [
+    "native Windows integrated release bins and original deadline consumers must be tested with final Windows lifecycle integration",
+    "100k native actual maximum capacity incomplete in contribution",
+    "current r2 Job/restore/normalStop/Closed unresolved"
+  ],
+  "fullImplementationSecurityAudit": false,
+  "releaseAcceptance": false,
+  "actualMacImage": "image-scan-baseline.json, exact official source/tree/13393 full file hash reads/own fixture cleanup passed"
+}
