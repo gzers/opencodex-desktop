@@ -1,0 +1,13 @@
+{
+  "method": "supplemental strictcodec/QPCsample/replay/source check, not independent safety audit/native peer or Owner test",
+  "checks": {
+    "independentVersion2Schema": true,
+    "noOldDecoderFallback": true,
+    "finiteCommandConfirmation": true,
+    "sampledInstantBeforeNativeQpc": true,
+    "elapsed10Or5NoRenewal": true,
+    "replayKeysEnrolledOnlyAfterChecks": true,
+    "noNativeOwnerDispatchOrProofFactory": true
+  },
+  "nativeServerClientImplemented": false
+}

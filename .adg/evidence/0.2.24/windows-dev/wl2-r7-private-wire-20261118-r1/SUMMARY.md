@@ -1,0 +1,13 @@
+# 独立严格v2私有恢复协议DATA
+
+代码58f0d49f2后继完整SHA见status.json已推送；main4ea82e8a61fe00c1f76334db5e39654f49f4342e，TEAM31/IMP168/r7，当前docs输入见source-manifest.json。只新增Windows ownerhost独占协议codec/注册，不改旧schema1解码/cleanup或任何旧加载宿主。已核TEAM写集包含ocxd.rs仅Windows internal-owner分派，后续接入无需虚构新共享ABI或扩大权限。
+
+版本windows-before-resume-private-control-v2独立strict结构：有限命令begin-canonical-abort/read-worker-diagnostic/read-canonical-history，前者必须显式before-first-Resume确认，后两必须只读确认；拒旧v1/未知/重复/缺字段/额外PID-path-handle-proof、非规范UUID/QPC/大小及尾随frame。Locator只允许本地pipe命名空间/明确scope摘要/非零broker代次DATA，实际原nativepeer仍须另核，不据DATA恢复。
+
+Begin最多原10s、两读命令最多原Status5。Instant先于nativeQPC采样，余ticks向下/elapsed向上转换且已耗时间不补回，拒future/expired/frequency替换/overflow/额外预算。请求ID、transportActionID与challenge各一次，绑定hello原instance/generation/scope，16384key有界，完成全部准入检查才登记；transportActionID不是凭空构造原Owner recoveryActionID。
+
+product01真实MSVC完整Tauri库raw0/160830ms，6过0败0ignored，DATA测试0.01s，无意外产品首错。此前准备rustfmt测试UNC负例普通转义p/o raw1，原source单列保留；改rawstring负例后才构建，依赖script因未生成曾返回pathabsent、未启动build/native，无隐失败。4最终执行源逐Git行尾归一核，最终TEST EXE SHAaa94e650a57fe06953b8586c78120c9627b7e88228f2c74b72e1784ddecdca57，非release或nativehost验收。
+
+本批仅协议格式、clock/replay/locator DATA；实际protected locator/pipe、ordinary/noJob/sameimage/token双端认证、原registryOwner dispatch及首次变更前可达安装仍待，不因codec存在宣称可达。没有创建endpoint/nativeFixture/恢复Owner或执行official程序；schema生成raw归档还原/移出，全部历史失败/拒删/synthetic27960清理缺口保留。
+
+完整141项表见status.json。nativeV2partial/pre-manifest与缺根、真实普通Profile原官方Owner完整预算/容量/CAPtrust/普通MSI/候选仍未完；当前r2Job24raw50Unknown不反复PSS/旧cleanup探Status，21500/75744/原件/custody/work/协调/旧seq9及40588不动，旧50580/54692批准不延用，无新force/归还授权。原件未还不跑新原包，publicStart/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99及日常配置PATH策略保持，不W2/双SID/发布，目标active。
