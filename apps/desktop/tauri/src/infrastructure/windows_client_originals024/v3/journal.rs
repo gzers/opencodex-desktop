@@ -18,6 +18,7 @@ use std::{
     time::Instant,
 };
 mod actions;
+mod before_resume;
 mod preparation;
 pub(in super::super) use preparation::JournalPreparation;
 mod batches;
@@ -760,6 +761,11 @@ impl Journal {
         if self.poisoned {
             return Err(invalid());
         }
+        self.read_retained_records(end)
+    }
+    // Exact immutable native observations, not permission to mutate a failed
+    // chain. Ordinary/historical callers still enter via check_records.
+    fn read_retained_records(&mut self, end: Instant) -> io::Result<()> {
         before(end)?;
         if native::current_identity()? != self.token {
             return Err(invalid());
