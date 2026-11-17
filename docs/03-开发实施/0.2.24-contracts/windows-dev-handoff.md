@@ -1070,3 +1070,14 @@ PSS24unknown类型的最小安全决定仍待（原ac7c74774请求），仅R1当
 证据wl2-r7-journal-prefix-20261117-r1，44payload/705643字节（最终manifest以实际封存为准）。实际全产品库test03原生3过、regression04受影响旧链1过；test05加12scene清理核时rustc allocation34078736失败/raw101，断言未跑，原错留。只根测试包codegen256→16降低编译并发后test06 raw0/148989ms，3过0败0ignored、10故障阶段及12新root清理缺席逐项核；TEST EXE4616867d8b9611e53230db94a48732ef7fe83e5ee49cb4f331e33ea32c96c982。check01 E0618和check02 E0599首错/修复日志完整留，6最终源与Git归一行尾比对，schema生成raw归档并还原/移出代码。旧regression两成功fixture删除被自动审批以blocked by policy拒绝，命令未执行；后续只读ZIP/member/hash核过，两原根仍留，不换工具重删。
 
 仅关闭日志初始化前缀保留缺口：CreateDirectoryW create/open后检查失败的阶段登记、新fresh恢复origin/版本化原宿主命令/claimNLK/完整return10s仍未完。PSS0x8仍24unknown请求见上一条，仅R1依赖停；currentR2/3原件/3work/anchors/协调/21500/75744/40588/旧seq9原样，已有全归档/44项、scanner15、6abort+1Resume复用。原r2force/恢复未授权，不沿旧清理授权，原件未归还不再跑原包；Start/production/allAcceptedfalse，普通MSI/原缺席退根/全部生产与历史清理未完保持，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 原目录创建分段保留与TEAM22主线接续
+
+代码8c8922975e4b96c0af8430d1616e5c2ce586ada6已推送；已fetch消费main7fade183da7b43fa88fff3e459404aac704ff21b／docs b291bf8fa607b265fdfe8f51dd49d19ca0f07b3e、TEAM22/IMP150，增量合main时3scanner原字节相同，未改回旧实现、不重复旧15native/Mac页面/CLI/归档/空GUI。原CaptureSlot安装PrivateDirectoryPreparation后才调用CreateDirectoryW；原父pin/intent、成功create事实、pending实际File及complete同句柄依次留位，在fallible ID/private/deadline前保留，failed/重试/take拒绝，official/windows/两custody/canonical目录均接新sink。
+
+准确限制：CreateDirectoryW只返BOOL，不返目录创建handle/ID；成功create但terminal未打开时只保原父/intent/事实，不能声称原terminal身份已证、不能重开收养/签恢复。stage2外部换名及替身实际反例保持Unknown拒绝。新sink只解决该范围的实际父/已开句柄丢失，不声称原子创建身份或完整恢复。已有legacy API/权限/共享ABI/v3格式均不变。
+
+证据wl2-r7-directory-prefix-20261117-r1，预先hypotheses、6实测源快照/Git行尾归一核、完整产品库test01 raw0/146863ms，4过0败0ignored、5故障阶段/同实际句柄转交/过期已有名/替换拒绝，8新scene缺席清理；TEST EXE c88ec4294e9decb50a73c8a903c9ca0f31b8b608233fb0b488760a8acf0e7693，schema生成raw归档并还原tracked/移出untracked。23payload逐字节封存，status.json含26项完整本线状态表。
+
+当前r2原Job证明仍24unknown（包括新0x8），最小请求已异步回交而只停R1依赖；尚无当前21500/75744force/恢复授权，全部r2原件/custody/work/anchors/协调/旧seq9与40588保持。future fresh恢复origin/私有原宿主命令/严格abort记录schema/实际claimNLK/整树return原10s仍待继续；当前目录sink与前笔journal通过不冒BeforeFirstResumeRecovery完成或NormalStop/Closed。旧两regression根自动审批blocked by policy删除拒绝继续保留，不绕过；本轮8和前轮12新root清理过不覆盖历史残留。公共Start/production/allAcceptedfalse，普通MSI/原缺席退根/生产GUI官方owner/容量/CAPtrust/最终候选仍未完，不W2/双SID/发布，不改官方/日常配置PATH策略。

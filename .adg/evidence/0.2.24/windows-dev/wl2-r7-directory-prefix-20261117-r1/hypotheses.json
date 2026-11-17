@@ -1,0 +1,31 @@
+{
+  "recordedBeforeImplementation": true,
+  "at": "2026-11-17T18:57:04.749784+08:00",
+  "codeInput": "a1f15fee6265e2e7df238d2df81f4bfefac19f2a",
+  "contractInput": "TEAM21/IMP149/r7",
+  "hypotheses": [
+    {
+      "id": "D1",
+      "claim": "A staged directory preparation installed in the original capture anchor can retain the exact pinned parent and successful CreateDirectoryW fact before the next fallible open/check."
+    },
+    {
+      "id": "D2",
+      "claim": "Once the original terminal file is opened, enroll it before ID/security/deadline checks; transfer those same ancestor/terminal handles into a complete pin, with no path reopen."
+    },
+    {
+      "id": "D3",
+      "claim": "Failure before terminal open cannot prove terminal identity, so keep parent/intent/create-success as an incomplete poisoned prefix and never mint restoration authority or retry."
+    },
+    {
+      "id": "D4",
+      "claim": "Existing name, expiry, all injected prefixes, external replacement and complete transfer can be rejected/checked with native Windows fixtures; successful fresh fixtures are explicitly cleaned."
+    }
+  ],
+  "limits": [
+    "CreateDirectoryW does not return a directory handle; no claim of an atomic creation handle",
+    "no undocumented NT directory API",
+    "no currentR2 action",
+    "full fresh recovery and whole-tree return remain incomplete",
+    "original deadlines/unknown refusal unchanged"
+  ]
+}
