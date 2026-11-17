@@ -7,6 +7,7 @@ use crate::infrastructure::windows_official_runtime024 as native;
 use crate::modules::runtime::windows_lifecycle024_contract::ANCHORED_CODEX_STABLE_FILES;
 use std::io::{Seek, SeekFrom, Write};
 pub(super) mod batches;
+mod before_resume;
 pub(super) mod capture;
 pub(super) mod observation;
 mod segments;
@@ -455,6 +456,18 @@ impl AnchoredTree {
     }
     fn verify_image(&mut self, end: Instant) -> io::Result<()> {
         if self.poisoned {
+            return Err(invalid());
+        }
+        self.read_retained_image(end)
+    }
+    // Original retained objects only. A recovery reader may compare a failed
+    // prefix, but no mutation caller may bypass verify_image's poison gate.
+    fn read_retained_image(&mut self, end: Instant) -> io::Result<()> {
+        if self.pending_capture.is_some()
+            || self.nodes.is_empty()
+            || self.nodes[0].kind != Kind::Directory
+            || !self.nodes[0].original.relative.is_empty()
+        {
             return Err(invalid());
         }
         check(end)?;
