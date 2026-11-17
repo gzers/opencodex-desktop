@@ -2,6 +2,7 @@
 //! No new timer, detached native work, phase reconstruction or public gate.
 use super::*;
 use crate::infrastructure::windows_client_originals024::recovery_worker::WorkerLocal;
+use crate::modules::runtime::windows_lifecycle024_contract::BeforeFirstResumeRecovery;
 pub(in crate::infrastructure::windows_official_lifecycle024) fn run(
     owner: &mut Owner,
     local: &mut WorkerLocal,
@@ -13,23 +14,10 @@ pub(in crate::infrastructure::windows_official_lifecycle024) fn run(
         if attempt.restored.is_some() || attempt.attachment_directory.is_some() {
             return Err(recovery_required());
         }
-        local.acquire(owner, window).map_err(native_failure)?;
-        owner
-            .before_resume_process
-            .as_mut()
-            .unwrap()
-            .attachment_directory = Some(
-            local
-                .attachment_directory(owner, window)
-                .map_err(native_failure)?,
-        );
-        local
-            .canonical_claim_stage(owner, window)
-            .map_err(native_failure)?;
-        local.release(window.deadline()).map_err(native_failure)?;
-        local
-            .finish_released_stage(owner, window)
-            .map_err(native_failure)?;
+        let prepared = local.prepare_abort(owner, window)?;
+        let quiescent = local.quiesce_launcher(owner, &prepared, window)?;
+        let restored = local.restore_originals(owner, prepared, quiescent, window)?;
+        restored.check_original(local, owner, window)?;
         owner.check_before_resume_quiescent(window)?;
         owner
             .before_resume_process

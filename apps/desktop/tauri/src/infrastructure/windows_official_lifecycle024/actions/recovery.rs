@@ -124,6 +124,21 @@ impl ProcessAbortAttempt {
     }
 }
 impl Owner {
+    pub(crate) fn retain_before_resume_attachment_directory(
+        &mut self,
+        directory: native::PinnedDirectory,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<()> {
+        let original = self
+            .before_resume_process
+            .as_mut()
+            .ok_or_else(recovery_required)?;
+        if original.attachment_directory.is_some() {
+            return Err(recovery_required());
+        }
+        original.attachment_directory = Some(directory);
+        self.check_before_resume_process(window)
+    }
     pub(crate) fn check_before_resume_history(
         &mut self,
         window: &BeforeResumeRecoveryWindow,

@@ -14,6 +14,7 @@ use std::{
     thread,
     time::Instant,
 };
+mod canonical_trait;
 #[derive(PartialEq, Eq)]
 pub(crate) struct TransferBinding {
     session: String,
@@ -62,6 +63,7 @@ pub(crate) struct WorkerLocal {
     directories:
         Vec<crate::infrastructure::windows_official_runtime024::PrivateDirectoryPreparation>,
     directory_pins: Vec<crate::infrastructure::windows_official_runtime024::PinnedDirectory>,
+    canonical: Option<Box<canonical_trait::Attempt>>,
 }
 impl WorkerLocal {
     pub(crate) fn finish_released_stage(
@@ -119,6 +121,7 @@ impl WorkerLocal {
             revoked: false,
             directories: Vec::new(),
             directory_pins: Vec::new(),
+            canonical: None,
         }
     }
     pub(crate) fn acquire(
