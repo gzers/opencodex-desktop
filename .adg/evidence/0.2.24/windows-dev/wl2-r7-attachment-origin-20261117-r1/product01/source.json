@@ -1,0 +1,58 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_attachment_origin_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter.rs",
+      "sha256": "6de5b249e5cfff78b9fc27275374b590c687702d31bb66ca93c6497d9baa4550"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+      "sha256": "050b7cdc4004bcf60f50ee4ce3f5d3071e5c376d32de440fda28f357e5aee1c6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume/attachment.rs",
+      "sha256": "0f5ac20b1972bdc6f06c724ddb52420e189274bec7232eb5fc0790f67bae7c68"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume/attachment/tests.rs",
+      "sha256": "3138626d1b703d2029bd204a8e9faf2ff1d36e47565a15a59dbc1839d5c598c6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+      "sha256": "1798e898e5f0d5eb893f0874286b54386a1da6ab53d8323ff358cd734f61f47f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "sha256": "27085669ea88b9e85e4c3144a371bc8f1395dfd8a0fd450b16813a451c5434e2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/clock.rs",
+      "sha256": "7fec37e86406229145e823e34aa1074028b33d6f14fec5e9437bf00e563d1566"
+    }
+  ],
+  "head": "ae283cf8f001b4ea091c2b05e9b828983fa6f65f",
+  "scope": "actual native QPC/retained private pin plus exact strict DATA mapping; full original product Owner runtime remains separate"
+}
