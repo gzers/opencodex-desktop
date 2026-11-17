@@ -901,3 +901,10 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 源码f5fd8211e5e6aeafc0c025887175c1f5905ab5af已推送，仅6Windows测试文件；生产仍4452d583d/证据1836d28ef。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-ordinary-profile-preflight-20261117-r1/。MSVCcustom-protocol库raw0/1DATA反例过/1真实普通桌面ignored待用户，本轮不重跑原v3/空GUI。精确marenben SID1003/session7/KnownFolder/noJob和全部客户端/任务根Absent才create-new无凭据existing测试基线，原缺席事实准确保留，不当官方初始化/退根证明。固定8投影/原ID/bytes/setup前缀只作准备DATA，不是恢复journal或许可。原SID可读日志导出独立脚本两PowerShell解析通过；首次checker FileReadError仅args传递错误保留，未native重跑。入口C:\Users\Public\ocx-r6-profile-preflight-20261117-r1/launch-r6-profile-preflight.cmd及EXE摘要d76a8de7448bf5b71219fa3e9737889899dc913ca35bed482434de3a861519aa已核；Public本任务ACL局部赋测试SID Modify，未动日常策略/账户。
 
 普通桌面用例尚未执行，真实Profile客户端根尚未修改/服务未启动；当前需用户在原桌面运行，控制器/Administrator不代验收。公开Start与实际Closed/生产/后继仍false；上一轮全状态/首错/234scene中6纯DATA清228保留/609raw等继承，所有普通MSI/CAP-trust/原缺席Codex安全退根/初始化/原包副作用/容量/真实H-S-D/历史清理未完不关闭。无官方/日常配置/PATH/策略/业务/模型/旧raw5/空GUI/W2/双SID/发布。
+
+
+## 2026-11-17 r6普通桌面已有根基线实际准备结果
+
+实际marenben SID1003/session7/elevatedfalse/type1/noJob/原KnownFolder Profile执行f5fd8211e准备入口1过0败/raw0，固定8投影在Profile和10个create-new无凭据对象均完整nativeStatus0，审计ExcludedUnknown/fullSecurityProvenfalse未改。User/Machine PATH摘要一致。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-ordinary-profile-preflight-20261117-receive-r1/；6份Public原日志及24份原SID导出逐字长度/摘要核，20intent/result+initial-absence/result齐备，原现场保留。
+
+准备前.codex/.grok/base真实Absent单列；此后仅作为existing-root测试基线，不签官方初始化/原缺席Codex无空窗退根/生产Closed许可。尚缺同SID真实协调域固定原包/原Owner，继续完整原包lease/副作用/canonical Stop/Status/后继与真GUI官方owner，不重跑旧空GUI。Start/allAccepted/production/typedClosedfalse，旧首错与所有历史清理/普通MSI/CAP-trust及其它未完保留。无本轮首错，无删除/旧拒绝重试，无官方/日常配置/PATH/账户策略修改、业务/模型/W2/双SID/发布。
