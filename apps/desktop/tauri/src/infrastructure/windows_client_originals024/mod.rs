@@ -15,6 +15,8 @@ mod binding;
 mod bounded;
 mod content;
 mod coordination;
+#[cfg(test)]
+mod desktop_preflight_tests;
 mod handle_release;
 mod phase;
 mod reference;
