@@ -3,6 +3,8 @@
 //! No public disk reference can construct the borrowed independent index.
 use super::*;
 use std::time::Instant;
+#[path = "macos_client_root_prepare_preserve.rs"]
+pub mod preservation;
 
 pub struct Review<'a> {
     index: &'a Index,
@@ -10,6 +12,8 @@ pub struct Review<'a> {
     context: &'a ProcessContext,
     fingerprint: String,
     deadline: Instant,
+    initial_grok: super::super::GrokSnapshot,
+    history_sha256: String,
 }
 impl Review<'_> {
     pub fn fingerprint(&self) -> &str {
@@ -138,8 +142,15 @@ impl Index {
         head: &Head,
         deadline: Instant,
     ) -> io::Result<Review<'a>> {
+        let initial_grok =
+            super::super::GrokSnapshot::read(&PinnedDirectory::open(&self.profile)?)?;
+        let history_sha256 = digest(&encode(&vault_history::read(self.connection()?, head)?)?);
         let first = snapshot(self, context, head, deadline)?;
-        if snapshot(self, context, head, deadline)? != first {
+        if snapshot(self, context, head, deadline)? != first
+            || super::super::GrokSnapshot::read(&PinnedDirectory::open(&self.profile)?)?
+                != initial_grok
+            || digest(&encode(&vault_history::read(self.connection()?, head)?)?) != history_sha256
+        {
             return Err(denied("first-root preparation did not remain stable"));
         }
         Ok(Review {
@@ -148,6 +159,8 @@ impl Index {
             head: head.clone(),
             fingerprint: first,
             deadline,
+            initial_grok,
+            history_sha256,
         })
     }
 }
