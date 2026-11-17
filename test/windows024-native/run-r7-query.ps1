@@ -1,4 +1,4 @@
-param([Parameter(Mandatory)][string]$Evidence,[ValidateSet('all','scan-tests','fixed-scan','pinned-fixed','pinned-entry','collector-source','observer-build','abort')][string]$Mode='all',[string]$ScanRoot)
+param([Parameter(Mandatory)][string]$Evidence,[ValidateSet('all','scan-tests','fixed-scan','pinned-fixed','pinned-entry','collector-source','observer-build','abort','partial-native')][string]$Mode='all',[string]$ScanRoot)
 $ErrorActionPreference='Stop'
 $evidencePath=[IO.Path]::GetFullPath($Evidence)
 if(Test-Path -LiteralPath $evidencePath){throw 'fresh immutable evidence directory required'}
@@ -17,6 +17,10 @@ $paths=@('test/windows024-native/run-r7-query.ps1',
  'apps/desktop/tauri/src/infrastructure/windows_client_originals024/r7_readonly.rs',
  'apps/desktop/tauri/src/infrastructure/windows_client_originals024/r7_readonly/objects.rs',
  'apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/streams.rs',
+ 'apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree.rs',
+ 'apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs',
+ 'apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs',
+ 'apps/desktop/tauri/src/infrastructure/windows_client_originals024/phase.rs',
  'test/windows024-native/r7-scene-locators.json',
  'apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs',
  'apps/desktop/tauri/src/modules/runtime/program_image.rs',
@@ -50,6 +54,9 @@ if($Mode -in @('fixed-scan','pinned-fixed','pinned-entry','collector-source')){
 }
 if($Mode -eq 'observer-build'){$arguments=@('build','--locked','--offline','--manifest-path','test/windows024-native/r7-query-harness/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','--bin','r7-scene-observer')}
 if($Mode -eq 'abort'){$arguments=@('test','--locked','--offline','--manifest-path','test/windows024-native/r7-query-harness/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','--test','abort','r7_abort_','--','--test-threads=1','--nocapture')}
+if($Mode -eq 'partial-native'){
+ $arguments=@('test','--locked','--offline','--config','profile.test.package.windows024-r7-query-proof.debug=0','--config','profile.test.package.windows024-r7-query-proof.incremental=false','--config','profile.test.package.windows024-r7-query-proof.codegen-units=256','--lib','--manifest-path','test/windows024-native/r7-query-harness/Cargo.toml','--target','x86_64-pc-windows-msvc','-j','1','r7_partial_actual_collect_','--','--test-threads=1','--nocapture')
+}
 if($Mode -in @('scan-tests','fixed-scan','pinned-fixed','pinned-entry')){
  $arguments=@($arguments[0],'--config','profile.test.package.windows024-r7-query-proof.debug=0','--config','profile.test.package.windows024-r7-query-proof.incremental=false','--config','profile.test.package.windows024-r7-query-proof.codegen-units=256','--no-default-features','--lib')+$arguments[1..($arguments.Length-1)]
 }

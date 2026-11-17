@@ -17,7 +17,9 @@ use crate::{
 };
 use std::time::Instant;
 mod predecessors;
+mod preparation;
 pub(in crate::infrastructure::windows_client_originals024) use predecessors::NativePredecessors;
+use preparation::PartialCaptureAnchor;
 struct CaptureStore {
     source: Source,
     routes: Option<RoutePin>,
@@ -36,6 +38,7 @@ struct CaptureStore {
 #[derive(Default)]
 pub(in crate::infrastructure::windows_client_originals024) struct CaptureSlot {
     retained: Option<CaptureStore>,
+    partial: Option<PartialCaptureAnchor>,
     failed: bool,
 }
 fn refused(error: impl std::fmt::Display) -> AppError {
@@ -72,99 +75,117 @@ impl CaptureStore {
         owner: &mut Owner,
         window: &ActionWindow,
         predecessors: &NativePredecessors,
+        anchor: &mut PartialCaptureAnchor,
     ) -> AppResult<(Self, NativeLease)> {
         window.remaining()?;
         let end = window.deadline();
-        let (mut source, _) = Source::capture(owner, end)?;
+        if anchor.owner_scope != owner.scope()? || anchor.source.is_some() {
+            return Err(refused("original preparation anchor differs or reused"));
+        }
+        anchor.source = Some(Source::capture(owner, end)?.0);
+        let source = anchor
+            .source
+            .as_mut()
+            .ok_or_else(|| refused("original source prefix missing"))?;
         predecessors
             .check_source_window(&source.binding_raw, window)
             .map_err(refused)?;
-        let routes = RoutePin::capture(owner.home_path(), end).map_err(refused)?;
-        let mut routes = routes;
-        let content_start = super::super::content::StartContentScope::capture(
-            &mut source,
+        anchor.routes = Some(RoutePin::capture(owner.home_path(), end).map_err(refused)?);
+        anchor.content_start = Some(super::super::content::StartContentScope::capture(
+            source,
             owner,
-            &mut routes,
+            anchor.routes.as_mut().unwrap(),
             end,
-        )?;
-        let context = source.journal_context(owner, OriginalActionKind::Start, end)?;
-        let (data, profile) = (
-            PinnedDirectory::open_private(owner.data_path()).map_err(refused)?,
-            PinnedDirectory::open(owner.profile_path()).map_err(refused)?,
-        );
-        let official = private_child(&data, "official024").map_err(refused)?;
-        let windows = private_child(&official, "windows").map_err(refused)?;
+        )?);
+        anchor.context = Some(source.journal_context(owner, OriginalActionKind::Start, end)?);
+        anchor
+            .pins
+            .push(PinnedDirectory::open_private(owner.data_path()).map_err(refused)?);
+        anchor
+            .pins
+            .push(PinnedDirectory::open(owner.profile_path()).map_err(refused)?);
+        let official_path = anchor.pins[0].path().join("official024");
+        anchor.intend(official_path).map_err(refused)?;
+        let official = private_child(&anchor.pins[0], "official024").map_err(refused)?;
+        anchor.pins.push(official);
+        let windows_path = anchor.pins[2].path().join("windows");
+        anchor.intend(windows_path).map_err(refused)?;
+        let windows = private_child(&anchor.pins[2], "windows").map_err(refused)?;
+        anchor.pins.push(windows);
         predecessors
-            .check_namespace(&windows, &source.binding_raw, None, end)
+            .check_namespace(
+                &anchor.pins[3],
+                &anchor.source.as_ref().unwrap().binding_raw,
+                None,
+                end,
+            )
             .map_err(refused)?;
         let mut lease = NativeLease::acquire_existing(owner, end).map_err(refused)?;
-        let created = (|| -> io::Result<_> {
-            let root = profile.path().join(".codex");
+        let created = (|| -> io::Result<()> {
+            let root = anchor.pins[1].path().join(".codex");
             let mut claim = lease.anchored_claim(&root, end)?;
-            // Both complete native trees are captured before any ordinary-file
-            // move. New private custody directories are never old client data.
             let reservation = uuid::Uuid::new_v4();
-            let custody = ["codex", "grok"]
-                .map(|name| {
-                    create_private_directory(
-                        &profile
-                            .path()
-                            .join(format!(".ocxd024-originals-{reservation}-{name}")),
-                    )
-                })
-                .into_iter()
-                .collect::<io::Result<Vec<_>>>()?;
-            let trees = [
-                AnchoredTree::capture(&root, custody[0].path(), &mut claim, &root, end)?,
-                AnchoredTree::capture(
-                    &profile.path().join(".grok"),
-                    custody[1].path(),
+            for (i, name) in ["codex", "grok"].into_iter().enumerate() {
+                let path = anchor.pins[1]
+                    .path()
+                    .join(format!(".ocxd024-originals-{reservation}-{name}"));
+                anchor.intend(path.clone())?;
+                anchor.custody[i] = Some(create_private_directory(&path)?);
+            }
+            for (i, name) in [".codex", ".grok"].into_iter().enumerate() {
+                let path = anchor.pins[1].path().join(name);
+                AnchoredTree::capture_retained(
+                    &path,
+                    anchor.custody[i].as_ref().unwrap().path(),
                     &mut claim,
                     &root,
                     end,
-                )?,
-            ];
+                    &mut anchor.trees[i],
+                )?;
+            }
             let plan = StoragePlan::from_native_data(
-                trees.iter().map(AnchoredTree::plan).collect(),
-                profile.path(),
-                profile.identity(),
+                anchor
+                    .trees
+                    .iter()
+                    .map(|t| t.as_ref().unwrap().plan())
+                    .collect(),
+                anchor.pins[1].path(),
+                anchor.pins[1].identity(),
             )?;
-            predecessors.check_namespace(&windows, &source.binding_raw, None, end)?;
-            let directory =
-                create_private_directory(&windows.path().join(uuid::Uuid::new_v4().to_string()))?;
-            predecessors.check_namespace(&windows, &source.binding_raw, Some(&directory), end)?;
-            let journal = Journal::create_from_source(
+            predecessors.check_namespace(
+                &anchor.pins[3],
+                &anchor.source.as_ref().unwrap().binding_raw,
+                None,
+                end,
+            )?;
+            let path = anchor.pins[3].path().join(uuid::Uuid::new_v4().to_string());
+            anchor.intend(path.clone())?;
+            anchor.pins.push(create_private_directory(&path)?);
+            predecessors.check_namespace(
+                &anchor.pins[3],
+                &anchor.source.as_ref().unwrap().binding_raw,
+                anchor.pins.last(),
+                end,
+            )?;
+            let directory = PinnedDirectory::open_private(anchor.pins.last().unwrap().path())?;
+            anchor.intend(directory.path().join("manifest.json"))?;
+            anchor.intend(directory.path().join("current.json"))?;
+            anchor.journal = Some(Journal::create_from_source(
                 directory,
-                context,
+                anchor.context.take().ok_or_else(invalid)?,
                 plan,
                 predecessors,
                 &mut claim,
                 owner,
                 end,
-            )?;
-            Ok(CapturedTrees::retain(trees, journal))
+            )?);
+            Ok(())
         })();
         match created {
-            Ok(core) => Ok((
-                Self {
-                    source,
-                    routes: Some(routes),
-                    route_close: None,
-                    core,
-                    failed: true,
-                    ready: None,
-                    stop_deadline: None,
-                    content_start,
-                    restored_history: false,
-                    closed_exit: None,
-                    closed_absent: None,
-                    stopped_content: None,
-                    stop_completed: false,
-                },
-                lease,
-            )),
+            Ok(()) => Ok((anchor.into_store().map_err(refused)?, lease)),
             Err(error) => {
                 let _ = lease.release(end);
+                anchor.failed = true;
                 Err(refused(error))
             }
         }
@@ -570,6 +591,9 @@ impl CaptureSlot {
                 let _ = held.release(end);
             }
             self.failed = true;
+            if let Some(partial) = &mut self.partial {
+                partial.failed = true;
+            }
             if let Some(store) = &mut self.retained {
                 store.failed = true;
                 store.core.poison();
@@ -724,7 +748,7 @@ impl CaptureSlot {
     pub(in crate::infrastructure::windows_client_originals024) fn occupied(&self) -> bool {
         // A failed attempt is also a persistent local refusal, even if source
         // admission failed before a native Store existed. No fallback to v2.
-        self.failed || self.retained.is_some()
+        self.failed || self.retained.is_some() || self.partial.is_some()
     }
     pub(in crate::infrastructure::windows_client_originals024) fn capture_existing(
         &mut self,
@@ -741,13 +765,23 @@ impl CaptureSlot {
         predecessors: &NativePredecessors,
     ) -> AppResult<()> {
         let result = (|| {
-            if self.failed || self.retained.is_some() {
+            if self.failed || self.retained.is_some() || self.partial.is_some() {
                 return Err(refused("原v3 slot已有状态；不得替换或追赶"));
             }
-            let (store, lease) = CaptureStore::capture_held(owner, window, predecessors)?;
+            // Install the original typed prefix BEFORE source/route/custody
+            // preparation. No returned tag or completed Store is required to
+            // retain every successfully enrolled native object after failure.
+            self.partial = Some(PartialCaptureAnchor::new(owner.scope()?));
+            let (store, lease) = CaptureStore::capture_held(
+                owner,
+                window,
+                predecessors,
+                self.partial.as_mut().unwrap(),
+            )?;
             // Store is reachable through the ORIGINAL adapter before the first
             // journaled client move. Active lease stays on this stack only.
             self.retained = Some(store);
+            self.partial.take();
             let mut lease = Some(lease);
             let end = window.deadline();
             let work = (|| {

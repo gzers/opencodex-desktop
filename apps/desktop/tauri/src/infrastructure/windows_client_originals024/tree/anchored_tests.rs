@@ -41,6 +41,117 @@ pub(super) fn prepare(f: &Fixture) -> (PathBuf, PathBuf, [PathBuf; 4]) {
     drop(create_private_directory(&custody).unwrap());
     (root, custody, paths)
 }
+#[test]
+fn wl2_r7_partial_capture_native_invalid_coordinator_keeps_completed_nodes_and_pending_handle() {
+    let f = Fixture::new();
+    let (root, custody, paths) = prepare(&f);
+    let owner = root.join(ANCHORED_CODEX_STABLE_FILES[1]);
+    std::fs::write(&owner, b"invalid SQLite original fixture").unwrap();
+    let end = end();
+    let mut lease = NativeLease::acquire_synthetic(&paths, end).unwrap();
+    let mut claim = lease.anchored_claim(&root, end).unwrap();
+    let mut retained = None;
+    assert!(
+        AnchoredTree::capture_retained(&root, &custody, &mut claim, &root, end, &mut retained)
+            .is_err()
+    );
+    let tree = retained
+        .as_mut()
+        .expect("partial enrolled before fallible node collection");
+    assert!(tree.poisoned);
+    assert!(tree.pending_capture.is_some());
+    assert!(!tree.nodes.is_empty());
+    assert!(tree.nodes.iter().all(|n| n.state == State::Original));
+    let pending_id=id(tree.pending_capture.as_ref().unwrap(),false).unwrap();
+    let fresh=OpenOptions::new().access_mode(0x20080).share_mode(7).open(&owner).unwrap();
+    assert_eq!(id(&fresh,false).unwrap(),pending_id);drop(fresh);
+    assert!(std::fs::remove_file(&owner).is_err());
+    assert!(
+        AnchoredTree::capture_retained(&root, &custody, &mut claim, &root, end, &mut retained)
+            .is_err(),
+        "failed original prefix cannot be replaced by retry"
+    );
+    assert_eq!(
+        std::fs::read(root.join("config.toml")).unwrap(),
+        b"synthetic original config"
+    );
+    assert!(names(&custody).unwrap().is_empty());
+    drop(retained);
+    drop(claim);
+    lease.release(end).unwrap();
+    assert_eq!(
+        std::fs::read(&owner).unwrap(),
+        b"invalid SQLite original fixture"
+    );
+    println!("r7 partial original tree retains actual completed native nodes + pending invalid coordinator handle; no move/work/phase/restore/Closed or replacement of failed prefix");
+}
+#[test]
+fn wl2_r7_partial_capture_native_unknown_stream_retains_prefix_and_never_moves_original() {
+    let f = Fixture::new();
+    let (root, custody, paths) = prepare(&f);
+    let file = root.join("config.toml");
+    let ads = PathBuf::from(format!("{}:r7-owned-stream", file.display()));
+    std::fs::write(&ads, b"unknown stream fixture").unwrap();
+    let end = end();
+    let mut lease = NativeLease::acquire_synthetic(&paths, end).unwrap();
+    let mut claim = lease.anchored_claim(&root, end).unwrap();
+    let mut retained = None;
+    assert!(
+        AnchoredTree::capture_retained(&root, &custody, &mut claim, &root, end, &mut retained)
+            .is_err()
+    );
+    let tree = retained.as_ref().unwrap();
+    assert!(tree.poisoned && tree.pending_capture.is_some());
+    assert!(tree.nodes.iter().all(|n| n.state == State::Original));
+    assert!(std::fs::OpenOptions::new().write(true).open(&file).is_err());
+    assert!(names(&custody).unwrap().is_empty());
+    assert_eq!(std::fs::read(&file).unwrap(), b"synthetic original config");
+    drop(retained);
+    drop(claim);
+    lease.release(end).unwrap();
+    assert_eq!(std::fs::read(&ads).unwrap(), b"unknown stream fixture");
+}
+#[test]
+fn wl2_r7_partial_capture_native_success_transfers_same_complete_tree_and_refuses_reenrollment() {
+    let f = Fixture::new();
+    let (root, custody, paths) = prepare(&f);
+    let end = end();
+    let mut lease = NativeLease::acquire_synthetic(&paths, end).unwrap();
+    let mut claim = lease.anchored_claim(&root, end).unwrap();
+    let mut retained = None;
+    AnchoredTree::capture_retained(&root, &custody, &mut claim, &root, end, &mut retained).unwrap();
+    let original = retained
+        .as_ref()
+        .unwrap()
+        .nodes
+        .iter()
+        .map(|n| n.original.id)
+        .collect::<Vec<_>>();
+    assert!(!retained.as_ref().unwrap().poisoned);
+    assert!(retained.as_ref().unwrap().pending_capture.is_none());
+    assert!(
+        AnchoredTree::capture_retained(&root, &custody, &mut claim, &root, end, &mut retained)
+            .is_err()
+    );
+    assert_eq!(
+        retained
+            .as_ref()
+            .unwrap()
+            .nodes
+            .iter()
+            .map(|n| n.original.id)
+            .collect::<Vec<_>>(),
+        original
+    );
+    retained
+        .as_mut()
+        .unwrap()
+        .verify(&mut claim, &root, end)
+        .unwrap();
+    drop(retained);
+    drop(claim);
+    lease.release(end).unwrap();
+}
 pub(super) fn compete(path: &Path, blocked: bool) {
     let c = Connection::open(path).unwrap();
     c.busy_timeout(Duration::ZERO).unwrap();

@@ -71,4 +71,49 @@ fn main() {
         ),
     )
     .unwrap();
+    let tree = source(
+        &repo,
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree.rs",
+    );
+    let anchored = source(
+        &repo,
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+    );
+    let phase = source(
+        &repo,
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/phase.rs",
+    );
+    let coordination = source(
+        &repo,
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+    );
+    let between = |text: &str, start: &str, end: &str| -> String {
+        let start = text.find(start).expect("exact native source section start");
+        let end = text[start..]
+            .find(end)
+            .expect("exact native source section end")
+            + start;
+        text[start..end].to_owned()
+    };
+    fs::write(out.join("coordination_validation.rs"),format!("use std::io;\nfn refused()->io::Error{{io::ErrorKind::InvalidData.into()}}\nconst MAX:u64=2*1024*1024;\n{}",between(&coordination,"pub(super) fn validate_stable_bytes(","fn no_sidecars("))).unwrap();
+    let mut partial=String::from("use crate::backend as native;\nuse native::{FileIdentity,validate_local_path};\nuse crate::infrastructure::windows_client_originals024::{bounded::{native_stamp,SnapshotData,QueryError},tree::streams};\nuse std::{fs::{File,OpenOptions},io::{self,Read,Seek,SeekFrom},os::windows::{fs::OpenOptionsExt,io::AsRawHandle},path::Path,time::Instant};\nconst ANCHORED_CODEX_STABLE_FILES:[&str;2]=[\".opencodex-native-main.claim.sqlite\",\".opencodex-native-main.owner.sqlite\"];\n");
+    partial += &between(&phase, "pub(super) fn invalid()", "pub(super) fn digest(")
+        .replace("pub(super) fn invalid()", "fn invalid()");
+    partial += &between(
+        &tree,
+        "#[derive(PartialEq, Eq)]\nstruct Entry",
+        "/// The actual working directory handle",
+    );
+    partial += &between(&tree, "fn check(end:", "fn open(path:")
+        .replace("super::bounded::QueryError", "QueryError");
+    partial += &between(&tree, "fn id(file:", "mod streams;");
+    partial += &between(&tree, "fn names(path:", "fn scan(");
+    partial += &between(
+        &anchored,
+        "#[derive(Clone, Copy, Debug, PartialEq, Eq)]\nenum Kind",
+        "/// All fields are actual native objects",
+    );
+    partial += &between(&anchored, "fn open_node(", "impl AnchoredTree {");
+    partial+="\n#[cfg(test)]\nmod tests {include!(concat!(env!(\"CARGO_MANIFEST_DIR\"),\"/src/partial_collect_tests.rs\"));}\n";
+    fs::write(out.join("native_partial_collect.rs"), partial).unwrap();
 }

@@ -44,6 +44,7 @@ pub(in super::super) struct AnchoredTree {
     custody: PinnedDirectory,
     custody_security: SnapshotData,
     nodes: Vec<Node>,
+    pending_capture: Option<File>,
     poisoned: bool,
     work_mode: WorkMode,
     observed: Option<observation::WorkFrame>,
@@ -135,6 +136,7 @@ fn collect(
     codex: bool,
     out: &mut Vec<Node>,
     total: &mut usize,
+    pending: &mut Option<File>,
     end: Instant,
 ) -> io::Result<()> {
     check(end)?;
@@ -158,13 +160,17 @@ fn collect(
     {
         return Err(invalid());
     }
-    let mut file = open_node(&path, kind, false)?;
-    if kind == Kind::Directory {
-        native::verify_private_directory(&file)?;
-    } else {
-        native::verify_private_file(&file)?;
+    if pending.is_some() {
+        return Err(invalid());
     }
-    let original = stamp(&path, &mut file, relative, kind, end)?;
+    *pending = Some(open_node(&path, kind, false)?);
+    let file = pending.as_mut().ok_or_else(invalid)?;
+    if kind == Kind::Directory {
+        native::verify_private_directory(file)?;
+    } else {
+        native::verify_private_file(file)?;
+    }
+    let original = stamp(&path, file, relative, kind, end)?;
     if kind == Kind::Coordinator {
         super::super::coordination::validate_stable_bytes(&original.bytes)?;
     }
@@ -175,6 +181,7 @@ fn collect(
         return Err(invalid());
     }
     let children = original.children.clone();
+    let file = pending.take().ok_or_else(invalid)?;
     out.push(Node {
         original,
         file,
@@ -190,7 +197,7 @@ fn collect(
         } else {
             format!("{relative}/{name}")
         };
-        collect(root, &child, codex, out, total, end)?;
+        collect(root, &child, codex, out, total, pending, end)?;
     }
     Ok(())
 }
@@ -295,6 +302,21 @@ impl AnchoredTree {
         codex_root: &Path,
         end: Instant,
     ) -> io::Result<Self> {
+        let mut retained = None;
+        Self::capture_retained(root, custody, claim, codex_root, end, &mut retained)?;
+        retained.take().ok_or_else(invalid)
+    }
+    pub(in super::super) fn capture_retained(
+        root: &Path,
+        custody: &Path,
+        claim: &mut AnchoredClaim<'_>,
+        codex_root: &Path,
+        end: Instant,
+        retained: &mut Option<Self>,
+    ) -> io::Result<()> {
+        if retained.is_some() {
+            return Err(invalid());
+        }
         claim.check(codex_root, end)?;
         if ![Some(".codex"), Some(".grok")].contains(&root.file_name().and_then(|n| n.to_str())) {
             return Err(invalid());
@@ -311,29 +333,19 @@ impl AnchoredTree {
         }
         // Existing roots only. OriginalAbsent initialization/retirement is
         // intentionally unimplemented; never mkdir/adopt a missing client.
-        let mut nodes = Vec::new();
+
         let codex = root.file_name().and_then(|n| n.to_str()) == Some(".codex");
         if codex && root != codex_root {
             return Err(invalid());
         }
-        collect(root, "", codex, &mut nodes, &mut 0, end)?;
-        nodes.sort_by(|a, b| a.original.relative.cmp(&b.original.relative));
-        if codex
-            && ANCHORED_CODEX_STABLE_FILES.iter().any(|s| {
-                !nodes
-                    .iter()
-                    .any(|n| n.original.relative == *s && n.kind == Kind::Coordinator)
-            })
-        {
-            return Err(invalid());
-        }
-        let mut out = Self {
+        *retained = Some(Self {
             parent,
             parent_security,
             root: root.into(),
             custody,
             custody_security,
-            nodes,
+            nodes: Vec::new(),
+            pending_capture: None,
             poisoned: false,
             work_mode: WorkMode::Sealed,
             observed: None,
@@ -344,9 +356,35 @@ impl AnchoredTree {
             original_history: None,
             #[cfg(test)]
             create_fault: 0,
-        };
-        out.verify(claim, codex_root, end)?;
-        Ok(out)
+        });
+        let out = retained.as_mut().ok_or_else(invalid)?;
+        let result = (|| {
+            collect(
+                root,
+                "",
+                codex,
+                &mut out.nodes,
+                &mut 0,
+                &mut out.pending_capture,
+                end,
+            )?;
+            out.nodes
+                .sort_by(|a, b| a.original.relative.cmp(&b.original.relative));
+            if codex
+                && ANCHORED_CODEX_STABLE_FILES.iter().any(|s| {
+                    !out.nodes
+                        .iter()
+                        .any(|n| n.original.relative == *s && n.kind == Kind::Coordinator)
+                })
+            {
+                return Err(invalid());
+            }
+            out.verify(claim, codex_root, end)
+        })();
+        if result.is_err() {
+            out.poisoned = true;
+        }
+        result
     }
     fn key(&self, i: usize) -> String {
         hash::sha256_hex(
