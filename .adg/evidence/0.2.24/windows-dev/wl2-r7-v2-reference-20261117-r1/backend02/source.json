@@ -1,0 +1,18 @@
+{
+  "head": "f9dd5bbfe12334b8b912171e6b8427a2e70b904c",
+  "nativeChangedSource": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths/preparation.rs",
+  "scope": "original standalone actual native backend no new serialization dependency; no runtime predicates changed",
+  "arguments": [
+    "check",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--lib",
+    "-j",
+    "1"
+  ],
+  "nativeChangedSha256": "8fdf9bcdecb70451cff9bdaf5d9c0d71c0705efc5f28dee528685d3733feabe7"
+}

@@ -1,0 +1,64 @@
+{
+  "recordedBeforeImplementation": true,
+  "at": "2026-11-17T23:13:25.692554+08:00",
+  "codeInput": "fbac467cbf0b83472876f733d3fe5ec34f2582e8 plus mainfcf04caecdd7c328f03fcf1a6ceda3e18517d9bc",
+  "docsInput": "d0c692bba4108b5f97c0cacbd31f86aa3d504057 TEAM27/IMP158/r7A unchanged",
+  "hypotheses": [
+    {
+      "id": "V1",
+      "claim": "Independent strictV2 decoder can express canonical or actual unverified preparation without manufacturing manifest/plan digests; oldv1/v3 never fallback/migrate."
+    },
+    {
+      "id": "V2",
+      "claim": "Fixed ordered5components, unique stable object IDs, explicit requirednulls, finite stage, sourcevariants and full rawchain linkage reject unknown/missing/replayed/crossaction/hidden0node records and incompleteSource terminals."
+    },
+    {
+      "id": "V3",
+      "claim": "CaptureSlot can retain one original sessionUUID before sourcecapture and partialanchor observe actual native resource membership/intents; initialpreparation mapping staysPending when any nativeSource/security/content unconfirmed, no restoration grant."
+    }
+  ],
+  "schemaDetails": {
+    "roles": [
+      "source",
+      "custody",
+      "codex",
+      "grok",
+      "journal"
+    ],
+    "stages": [
+      "registered",
+      "intentPublished",
+      "nativeCreated",
+      "handleRetained",
+      "securityReadback",
+      "contentReadback",
+      "journalPublished",
+      "currentPublished"
+    ],
+    "objectFields": [
+      "objectId",
+      "role",
+      "originalStage",
+      "pathDigest",
+      "identityDigest",
+      "securityDigest",
+      "contentDigest"
+    ],
+    "optionalObjectFields": "last3 digests explicitnull permitted, never missing; objectId lowercase64hex stable bound originalsession/role/stageordinal, not kerneladdress/rights",
+    "componentFields": [
+      "role",
+      "state",
+      "prefixDigest",
+      "objects"
+    ],
+    "unobserved": "explicitnull prefixDigest and emptyobjects; sourceunobserved can still have retainedunverified preparationresources",
+    "terminalDataNecessaryOnly": "sourcecaptured+allcomponentreferencescomplete and no pendingevent/object; allnativeOwner/source/all8/bytes/children/lockproof still independently required; DATAnever grants nativepermits",
+    "frameLimits": "64KiB each,4096records,512totalobjectrows, distinctpathidentity digests mustmatch declaredobjectset; no arbitraryabsolutepaths stored"
+  },
+  "limits": [
+    "strictv2nativeproducer/storage/fullworker integration separately required",
+    "preparation retainedevents are not restoreterminal",
+    "currentR2/failedsynthetic27960 untouched; noofficialStart/W2/dualSID/release",
+    "oldv1source rules/sharedtrait/constants unchanged; only originalsWindows allowedfiles/registration"
+  ]
+}
