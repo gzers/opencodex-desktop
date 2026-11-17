@@ -881,3 +881,16 @@ Status end-only frozen入口按相同end-5s定位确定最早样本起点，不�
 firstgeneration公开typed链已注册但actual ordinary fixedofficial capture/Ready/Closed/Status正例未执行，不能拿编译或purelocator/native组件当生产验收。后继目前明确拒绝并保留slot/失败，必须先接准确v3 predecessor有序集合、native namespace/原Owner.previous与newcapture原前驱引用，不放宽empty namespace断言。公开Start仍拒绝；原包config/auth/Grok/动态目录副作用、初始化/ownerreceipt/原缺席Codex安全退根、最大完整容量、普通MSI/CAP-trust/全部历史清理未完。
 
 产品MSVCdebug custom-protocol bins raw0/216286ms，196产品输入/150最终Rust核工作/Git（明确CRLF等价），预存schema未手改/暂存，制品SHA归product01-artifacts。76scene私有ZIP/hash/membership核验后全留，原canonical/快照/history另收存，ZIP非NTFS克隆，无删除/历史拒绝重试。marenben普通桌面登录仍待，控制器/Administrator不代验收。未改官方/日常配置/PATH/账户/策略，不业务/模型请求，不旧raw5/空GUI/W2/双SID/发布；Start/allAccepted/actualtypedClosed/productionExecuted=false。
+
+
+## 2026-11-17 r6完整前驱链与一次性后继接线
+
+源码4452d583d16f33865a27d8a8518e3a330bd57d2a/tree594bbeca3b1f68b494a0c22f85fd634d3eda95c9已推送，承接fb9a64ff7/7e428aef7；TEAM16/IMP142/r6及共同main fac8573e5/治理578230717不变，仅13Windows允许文件。证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-successor-predecessors-20261117-r1/。单一canonical manifest保存有序前驱DATA：原session/目录ID/8投影摘要/current ID/8投影/原字节/final content-route-Closed-seal lineage及准确前缀摘要，不在Current增字段，原4096/1MiB/512node等边界不改。NativePredecessors私有nonserde/nonClone工厂只读取实际原完成槽/对应Owner.previous，DATA测试不构造原生资格。
+
+后继一次性票据由实际Closed/native history读产生，绑定同一原newActionWindow双截止/来源/旧scope/完整refs摘要；新capture逐一重核票据和Owner.previous有序集合。旧槽、原typed观察、Closed定位及所有旧Owner保留，未Drop/替换/从文本重建；阶段前后当前manifest前驱集合与实际旧历史/精确namespace核对，不把非空目录或oldv2/textClosed收养为许可。真正普通原包Owner/完整Closed/后继仍未执行，不将编译/locatorDATA/native目录组件当生产。
+
+三轮MSVC库raw0，分别57/62/63过0失败0忽略；实际Stop子截止elapsed而Restart外层仍有效反例拒绝。源码检查发现Ready复核共用于Status和Start/Stop动作，在真实执行前改成动作显式借同一个ActionWindow，Status原end-5仍严格，仅Stop子10读，不重建begin/now+预算。共享四trait/HMAC/原来源/claim/normal/supervisor/content谓词及完整recovery_state_at/Status接收尾段与14源片段核保持。本轮无产品/测试首错，继承首错保留。
+
+product01模式名误写导致默认非custom MSVC构建raw0，原参数/源码/制品摘要保留且不充目标；product02正确custom-protocol MSVCdebug bins raw0/193471ms，最终4452d583d16f33865a27d8a8518e3a330bd57d2a产品200输入对工作/Git逐字核（CRLF明确等价），预存schema未手改/暂存。234scene私有ZIP/hash/membership核，6纯DATA成功fixture清理，228原生现场留；609份canonical/快照/history另收存。清理JSON准确记录6removed=true，控制台OrderedDictionary投影null仅显示错误，未重跑删除；ZIP非NTFS克隆，历史删除拒绝未重试。
+
+marenben SID1003/session7已交互Active，原包入口仍待准备，无官方服务启动。公开Start/allAccepted/actualtypedClosed/actualSuccessor/productionExecuted仍false。官方config/auth/Grok/动态副作用、初始化/ownerreceipt/原缺席Codex安全退根、全容量/实际H-S-D及普通MSI/CAP-trust/全部历史清理未完。未改官方/日常配置/PATH/账户/策略，不业务/模型，不旧raw5/空GUI/W2/双SID/发布。

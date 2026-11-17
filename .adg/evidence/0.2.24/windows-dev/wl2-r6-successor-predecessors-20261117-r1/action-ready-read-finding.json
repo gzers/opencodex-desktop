@@ -1,0 +1,8 @@
+{
+  "kind": "source inspection before production; not a native test failure",
+  "finding": "Owner.observe is used by Status and actual Start/Stop action observations. Newly added adapter.check_ready predecessor reads used deterministic end-5 Status locator for all calls; for Stop remaining above5 this start is future and correctly refuses. Must carry actual caller ActionWindow in action observe path, preserving Status original5 and Stop sub10.",
+  "hypothesis": "Separate internal observe_for_action borrowing same ActionWindow invokes check_ready_for_action; unchanged observe(deadline) remains Status-only, full recovery_state_at and Status receiver tail bytes preserved. No begin or now+budget.",
+  "build02SourceFrozen": true,
+  "actualProductionExecuted": false,
+  "startOpen": false
+}

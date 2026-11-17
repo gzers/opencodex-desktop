@@ -1,0 +1,6 @@
+[codex/024-windows-native 4452d583d] feat(windows): 保留v3完整前驱链并接入一次性后继捕获
+ 13 files changed, 1120 insertions(+), 20 deletions(-)
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/predecessors.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/predecessors.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/predecessor_data_tests.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/predecessors.rs

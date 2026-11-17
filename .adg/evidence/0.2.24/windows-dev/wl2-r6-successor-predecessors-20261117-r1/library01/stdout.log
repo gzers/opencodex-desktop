@@ -1,0 +1,202 @@
+
+running 57 tests
+test infrastructure::windows_client_originals024::adapter::tests::wl2_r6_typed_adapter_data_locator_never_accepts_missing_stale_foreign_or_failed_stage ... r6 typed adapter DATA locator permutations reject missing/stale/foreign/failed/wrong stages; no phase tag, Owner, ServiceObservation, original capture or ClosedEligibility constructed from this test
+ok
+test infrastructure::windows_client_originals024::adapter::tests::wl2_r6_typed_adapter_retained_v3_slot_and_private_observation_types_are_send ... r6 compiler retains exact original typed observation+v3 slot within Send production adapter; no serde/Clone/native reconstruction or unsafeSend added
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_faults_keep_installed_original_tree_and_exact_native_prefix_without_retry ... r6 capture-installed-fault=1 movedOriginals=0 exact native parents/handles/journal retained before error=injected after immutable event sync/readback before current CAS; no slot replace, catchup or automatic retry
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpgCF4jv
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-06f762eb-3817-43bc-9753-1f9ec2d92f2e
+r6 capture-installed-fault=2 movedOriginals=0 exact native parents/handles/journal retained before error=injected real partial current write/sync; no slot replace, catchup or automatic retry
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpFj79Im
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-466e3a69-8202-4f2a-9730-a567029e9c3b
+r6 capture-installed-fault=3 movedOriginals=1 exact native parents/handles/journal retained before error=injected after actual native mutation before result publication; no slot replace, catchup or automatic retry
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmppUgXNC
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-1921a041-8bef-42e9-840e-a5a43f86af40
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_installed_core_precedes_native_moves_and_released_store_survives_thread_handoff ... r6 retained native core installed at seq0 before first mutation;18 exact anchor/file events prepare all3 work files, explicit20 release; only released historical file/pin objects+full original trees+same journal move across worker and back; no live lease/ranges or production Source/Ready/Closed granted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpCqJUVM
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-c532efae-a4d3-42a2-ae1f-a55214279964
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_owned_tree_duplicate_transfer_never_replaces_or_drops_either_original_set ... r6 duplicate original-tree ownership transfer rejects before take; first journal tree set and second caller tree set both retain exact actual files/raw32; no replacement, native close or new action deadline
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmptWNMCo
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpRjPc67
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-fe5485f0-84ab-4444-bbab-5cbad8e78803
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-a349b3ef-d8f9-47e6-b3c6-d2710383d02d
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_owned_tree_transfer_retains_native_files_before_fallible_close_and_refuses_mutation ... r6 exact owned tree transfer: original files remain native deny-write before any fallible close; later mutation on absent local slot refuses and poisons retained journal handoff, same bytes/raw32 retained; no close/Closed/Drop proof or actual production guard constructed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpYsoie6
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-648ab826-0892-43aa-8c0c-6545e5fde753
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_ready_changed_initial_work_before_official_creator_runs_refuses_recheck ... r6 capture-ready unexpected work edit before actual creator would Resume is not an official mutation, refuses unchanged preResume check; original custody and external edit both retained
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp5hLGZg
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-9eb537ad-f7e4-4c99-a550-7a181a58d1fd
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_ready_initial_open_precedes_release_actual_writer_and_preserves_originals ... r6 capture-ready core original18 prepare/20 canonicalOpen/22explicitRelease, actual same-byte writer then full unchanged preResume-like recheck/26release; exact original custody remains; test does not mint actual Source/Owner/typedReady or invoke official creator
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmplb3qNo
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-588f2923-9af1-48c4-9ed6-27789e0070f7
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_ready_open_faults_keep_installed_core_and_no_successful_publication ... r6-capture-ready-open-fault=13 installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpRmPnRD
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-97a15159-b72c-449d-9c9d-5a635da95c2f
+r6-capture-ready-open-fault=14 installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpz62K2H
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-d1237551-7c6d-4be3-948c-9e2288e25b87
+r6-capture-ready-open-fault=15 installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0YDWaM
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-92c780aa-90cd-452d-b419-9d3e058925f8
+r6-capture-ready-open-fault=16 installed core keeps exact original/work handles and Opening/current pending; no retry or typedReady state
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpun3RCq
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-19a1c272-3d2f-48b0-9af1-22b0dc678f6e
+ok
+test infrastructure::windows_client_originals024::tree::anchored::capture::tests::wl2_r6_capture_stop_prepared_boundary_requires_exact_original_generation_and_deadline ... r6 Stop boundary locator tests only: exact original pid/port/record/end and no renewed/substituted timer. Data cannot authorize Source/Owner/native phase; actual factories remain separate, no fake Ready/NormalExit/Closed
+ok
+test infrastructure::windows_client_originals024::v3::actions::tests::wl2_r6_stop_action_data_exact_ready_context_order_no_replay_or_deadline_laundering ... r6 new-action DATA preserves Ready generation and old scope until verified binding, rejects13 context drifts/unknown deadline/replay/skip and lease during pending; accepts no actual NativeAction, remains data only
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpycmew4
+ok
+test infrastructure::windows_client_originals024::v3::actions::tests::wl2_r6_stop_phase_data_exact_prestop_teardown_stopped_and_ready_generation ... r6 PreStop/teardown/Stopped phase DATA keeps exact Ready generation/ref chains and rejects generation drift, no Closed eligibility or actual Stop proof is minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpIfu9xO
+ok
+test infrastructure::windows_client_originals024::v3::batches::tests::wl2_r6_batch_data_complete_plan_context_ordinal_event_drift_duplicate_and_nested_rows_refuse_atomically ... r6 bounded batch DATA full plan/context/row ordinal/node-root/duplicate/nesting/late-row native parent drift all reject atomically, including recomputed plan digest; no skip or textClosed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp2DzTRg
+ok
+test infrastructure::windows_client_originals024::v3::batches::tests::wl2_r6_batch_data_current_retirement_before_original_restore_and_exact_recovery_prefixes ... r6 batch recovery DATA uses exact stopped current plan and original rows; early restore/truncated count claims refuse atomically, exact full retired then original prefixes advance without anchor/Closed grant
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp3BMOGr
+ok
+test infrastructure::windows_client_originals024::v3::batches::tests::wl2_r6_batch_data_digest_reuse_only_immutable_plan_bytes_never_serialized_native_facts ... r6 pure immutable plan digest reuse changes no serialized bytes/native proof: new deserialization starts empty, changed DATA hashes differently, spoofed persisted cache refuses; no native ID/security/content/lease observation is cached
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpjIWZe8
+ok
+test infrastructure::windows_client_originals024::v3::batches::tests::wl2_r6_batch_data_one_phase_complete_intents_ordered_result_prefix_and_old_bypass_refuse ... r6 bounded batch DATA exactly one sequence per envelope, complete anchor/original/work rows, strict ordered prefix and pending blocks old node path; pure projection uses unchanged validators, no native authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp6LZvAp
+ok
+test infrastructure::windows_client_originals024::v3::capture::tests::wl2_r6_capture_namespace_old_v2_or_text_closed_never_grants_fresh_capture ... r6 actual private old namespace and textClosed refuse fresh v3 before custody/mutation; no conversion/adoption or overwrite
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpQsyNjb
+ok
+test infrastructure::windows_client_originals024::v3::capture::tests::wl2_r6_capture_retained_store_types_are_send_without_active_lease_or_unsafe_send ... r6 compiler proves actual CaptureSlot/Source/route/fulltrees/journal/released-original-object set Send; live NativeLease remains stack-only marker unchanged, no unsafe impl Send or fake native factory
+ok
+test infrastructure::windows_client_originals024::v3::closed::tests::wl2_r6_closed_data_context_missing_stage_and_text_native_completion_refuse_atomically ... r6 final closure DATA strict scopes/close parent/ready/history/count/qualification/completed handles/stopped phase required; unknown native flags and duplicate receipt digest reject without any progress change
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpL1eu1j
+ok
+test infrastructure::windows_client_originals024::v3::closed::tests::wl2_r6_closed_data_original_close_parent_and_exact_qualification_history_intent_result_required ... r6 final closure DATA: original actual-close locator parent required; verified cannot precede intent or substitute original current/native/content/history/handle digest, terminal verified chain cannot reopen; typed Stop/native completion NEVER constructed from DATA
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpjNWrNm
+ok
+test infrastructure::windows_client_originals024::v3::handle_rows::tests::wl2_r6_handle_rows_all_actual_producer_grammars_and_tree_object_bindings_validate_as_data ... r6 handle-row DATA exact producer grammars retain original/history/initialwork/stoppedanchor and oldwork/leasecoord/ancestor/bound grammar; tree IDs/generation bindings independently checked, native full expected inventory remains separate
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpU4Yc1e
+ok
+test infrastructure::windows_client_originals024::v3::handle_rows::tests::wl2_r6_handle_rows_self_hashed_unknown_roles_wrong_ordinals_and_flags_refuse_atomically ... r6 handle-row grammar27 self-hashed extra rows refuse exact role/root/ordinal/kind/history; original complete inventory present and hash/count recomputed, all progress unchanged, no parsed native authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpc5ZpL8
+ok
+test infrastructure::windows_client_originals024::v3::handles::tests::wl2_r6_handles_data_exact_inventory_history_scope_skip_drift_and_text_closed_refuse ... r6 exact-handle close DATA binds original/history-source complete inventory and original native/history/claim/deadline context; drift/missing/duplicate/wrong IDs/replay/textClosed refuse, no actual handles or native close proof minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpkfWg6f
+ok
+test infrastructure::windows_client_originals024::v3::history::tests::wl2_r6_handles_data_native_history_references_must_equal_original_canonical_link ... r6 original-handle native history DATA join requires exact BOTH canonical linked references, not merely matching shape/scope/original frame; valid-form substituted archive hash/cross-root/release-context refuses
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpEgK934
+ok
+test infrastructure::windows_client_originals024::v3::history::tests::wl2_r6_history_data_original_reference_requires_exact_release_scope_both_roots_and_no_text_closed ... r6 original history DATA exact released-action/source/manifest/plan/claim/recovery/both original frames binds intent then immutable references; malformed/missing/replay/textClosed reject, no native history/Closed factory
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmphO0ld4
+ok
+test infrastructure::windows_client_originals024::v3::history::tests::wl2_r6_history_data_unreleased_or_incomplete_and_context_changes_cannot_prepare_archive ... r6 original history DATA requires original full-node/anchor/explicit release and exact native scope locators before archive intent; no deadline reset or copy permit from caller JSON
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpxCAQqV
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_batch_typed_immutable_event_replay_keeps_exact_native_record_bytes_and_original_rules ... r6 typed immutable record equals exact serialized native bytes, fresh native full record checks retained and original independent progression replay agrees; other writer refused, no data cache grants native identity or new deadline
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpT5VIER
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-d3664b31-2fca-4c11-b701-4415b0ae5859
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_capture_canonical_data_namespace_binds_native_session_leaf_and_rejects_other_descendants ... r6 actual native D/official024/windows/canonicalUUID journal uses same UUID in immutable manifest/current; wrong descendant/nonUUID refuse, direct D/session remains component-only, actual Source create factory still requires production namespace and original Owner
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpIddaxU
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-bbffbcff-8e62-43d5-82fa-f4ce7845316b
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_content_chain_bounded_current_retains_all_original_summary_fields ... r6 original current full four-stage/recovery/history/handles/content summary bytes=3980
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmppFDFSB
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-f1f27c16-5673-4526-b672-134509f5eeed
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_event_or_partial_current_failure_poison_without_catchup ... r6 durable injected fault=1: injected after immutable event sync/readback before current CAS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpTXkdSX
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-806885de-b780-4b5a-9b80-a1013d2544bb
+r6 durable injected fault=2: injected real partial current write/sync
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpeePG3b
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-892883b3-6af0-4b68-9b3c-746368f6cf2e
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_manifest_event_current_and_other_writer_refusal ... r6 native manifest/event immutable sync/readback and current same-ID CAS pass; actual D separate volume; second current writer raw32. This is data journal only, original tree not mutated, no recovery capability.
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmphptWxl
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-d5959f67-e817-4558-8823-69faf63001ba
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_unknown_node_and_late_deadline_poison ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpa3XJDg
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-8179c593-21e6-407c-89db-c34babb21ca8
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpIvB1DJ
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-142a1f3c-6225-4e5b-b3d3-8accebd28095
+ok
+test infrastructure::windows_client_originals024::v3::observations::tests::wl2_r6_work_observation_data_rejects_incomplete_context_skip_changed_reaccept_and_text_permission ... r6 work interval same-chain data refuses incomplete tree,11 context drifts, skip/text authority/native operations while open and release before open result; observed digest persists and cannot be laundered as unchanged
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpZMeFz5
+ok
+test infrastructure::windows_client_originals024::v3::predecessors::tests::wl2_r6_predecessors_data_exact_order_scope_ids_and_complete_prior_prefix_refuse_unknown ... r6 predecessor DATA exact ordered prefix/same broker binding/session directory/nativeIDs/all8/current/closure hashes/bounds rejects23malformed sets and duplicate fields; synthetic locator records do not construct NativePredecessors or completed native histories
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpGpl5Yr
+ok
+test infrastructure::windows_client_originals024::v3::predecessors::tests::wl2_r6_predecessors_native_namespace_exact_membership_new_active_and_foreign_current_hash_refuse ... r6 native namespace pins reobserve exact parent/current directory IDs/all8 digests/current bytes/streams and BOTH membership barriers; known new active allowed only explicitly, missing/extra/foreigntextClosed/wrongID/security/hash refuse. Synthetic records DATA only, no native history adoption
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpMs1fcj
+ok
+test infrastructure::windows_client_originals024::v3::qualification::tests::wl2_r6_content_chain_missing_stage_or_reordered_frame_and_incomplete_tree_refuse ... r6 content DATA requires all three original stage links/order/BOTH-frame digests, actual phase/lease locators and complete original tree progress; no missing subset admitted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpiQ1IgY
+ok
+test infrastructure::windows_client_originals024::v3::qualification::tests::wl2_r6_content_chain_pending_blocks_other_operations_and_result_binds_exact_data ... r6 content canonical DATA: intent blocks otherwise-valid recovery; result must match exact original content/actions; strict event roundtrip; verified recovery DATA accepted, no native restoration authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpoc8qUa
+ok
+test infrastructure::windows_client_originals024::v3::qualification::tests::wl2_r6_content_chain_unknown_duplicate_and_cross_scope_stage_data_refuse_atomically ... r6 content DATA rejects nineteen unknown/cross-context/self-rehashed stage cases and duplicate fields without changing progress; no parsed native permit
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp3gIatv
+ok
+test infrastructure::windows_client_originals024::v3::read_window::tests::wl2_r6_read_window_actions_keep_borrowed_original_outer_and_stop_deadlines ... r6 readonly action window consumes original ActionWindow deadline exactly; caller parent shrinks Start/Stop/Restart, original Restart outer30/Stop10 unchanged; no new budget/adoption/native permit
+ok
+test infrastructure::windows_client_originals024::v3::read_window::tests::wl2_r6_read_window_expired_original_action_stays_timeout_without_new_deadline ... r6 real elapsed original ActionWindow retains TimedOut both on original read and attempted later construction; no replacement window/deadline or native permission
+ok
+test infrastructure::windows_client_originals024::v3::read_window::tests::wl2_r6_read_window_original_completion_requires_exact_original_cutoff ... r6 original completed-Stop read locator requires exact old end, not shortened/extended/expired. Journal separately binds end to original native transaction; locator alone grants no completion
+ok
+test infrastructure::windows_client_originals024::v3::read_window::tests::wl2_r6_read_window_status_keeps_same_sample_and_refuses_unknown_or_renewed_bound ... r6 readonly Status window preserves exact original when/end, <=5s, no future/expired/renewed sample; locator grants no native history or mutation
+ok
+test infrastructure::windows_client_originals024::v3::recovery::tests::wl2_r6_final_release_data_full_tree_and_release_scope_drift_and_incomplete_nodes_refuse ... r6 final-release DATA incomplete original node,8 whole-tree and6 lease context drifts refuse without sequence/state laundering; original deadline not reset
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmplOBPU4
+ok
+test infrastructure::windows_client_originals024::v3::recovery::tests::wl2_r6_final_release_data_requires_full_tree_result_and_exact_release_pair_no_reacquire_or_text_closed ... r6 final-release DATA requires every original/current node, whole-tree intent/result, exact Active->ReleasePrepared->Released; anchors data completes only after release result, no reacquire/repeat/textClosed or native capability
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmps0MplS
+ok
+test infrastructure::windows_client_originals024::v3::recovery::tests::wl2_r6_history_root_locator_exact_current_original_anchor_and_aggregate_scope_refuse ... r6 history explicit recovery rootId binds exact node/current/original/anchor root; missing/wrong/cross-root/aggregate/duplicate roots refuse without old-record conversion
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmprK0UOr
+ok
+test infrastructure::windows_client_originals024::v3::recovery::tests::wl2_r6_recovery_data_chain_all_prefixes_pending_pairing_and_legacy_bypass_refuse ... r6 recovery DATA plan intent/result + all 6 current retirement and 3 original restore intent/result prefixes share sequence/tip; skips/cross-node/reentry/early restore/legacy anchor release refuse, no Closed
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpkmRgrj
+ok
+test infrastructure::windows_client_originals024::v3::recovery::tests::wl2_r6_recovery_data_context_drift_unheld_and_unknown_events_never_advance ... r6 recovery DATA context drift/unknown/unheld/not-stopped reject before progress writes; no replacement deadline or text authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpIOMn7r
+ok
+test infrastructure::windows_client_originals024::v3::recovery::tests::wl2_r6_recovery_data_exact_native_location_identity_parent_and_expected_states_reject_drift ... r6 recovery DATA exact native from/to/volume/fileID/destination-parent and expected state digests bound to immutable whole-plan row;7 location drifts/duplicate fields refuse without progress change
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpnijBUq
+ok
+test infrastructure::windows_client_originals024::v3::recovery::tests::wl2_r6_recovery_data_full_plan_missing_duplicate_unknown_cross_scope_and_generation_refuse ... r6 recovery DATA full plan: 19 malformed forms rejected; original/current/archive/retirement generations separated, no native authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpa7NDqT
+ok
+test infrastructure::windows_client_originals024::v3::recovery::tests::wl2_r6_recovery_data_self_consistent_changed_nonartifact_missing_anchor_and_unknown_nodes_refuse ... r6 recovery DATA self-consistent rewritten frame/archive/context digests do not allow changed/replaced/missing nonartifact or unknown directory; no content policy minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp5Wb4Yk
+ok
+test infrastructure::windows_client_originals024::v3::route_close::tests::wl2_r6_route_chain_exact_parent_intent_result_and_both_original_ancestor_sets_required ... r6 route-close canonical DATA requires original closure parent then exact intent/result; complete primary/security/BOTH ancestor identity/order/count/flags validated, self-hashed omissions/substitutions refuse; no Files or Stop permit from DATA
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp7fLZt0
+ok
+test infrastructure::windows_client_originals024::v3::segments::tests::wl2_r6_lease_data_same_chain_rejects_bad_state_epoch_scope_digest_and_node_escape ... r6 same-chain lease data rejects13 context drifts, skip/order/old epoch/object digest and node mutation while prepared/released; data transition never constructs release receipt/native authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpaF1IMJ
+ok
+test infrastructure::windows_client_originals024::v3::snapshots::tests::wl2_r6_history_snapshot_archive_ids_cannot_alias_previously_linked_native_objects ... r6 history snapshot DATA reusing any previously linked native archive/metadata ID refuses; synthetic phase references now carry independent IDs without changing original assertions or native qualification
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpVprB36
+ok
+test infrastructure::windows_client_originals024::v3::snapshots::tests::wl2_r6_snapshot_data_strict_both_roots_context_and_reference_rejects_text_native_authority ... r6 snapshot reference DATA cases reject skip,11 context+6 ref drifts, wrong roots/sequence/missing second/unknown fields/text authority; valid locator links remain data and do not construct actual SnapshotWitness/NativeAction/Ready
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0sgfFF
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_every_node_requires_full_order_and_anchors_require_release ... r6 v3 complete DATA requires all8 ordered events per file plus every anchor snapshot/release; no native Restored or Closed is minted
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0lEb7J
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_full_native_plan_rejects_missing_duplicate_extra_anchor_wrong_parent_and_unknown_fields ... r6 full native-derived v3 plan data validates two complete trees/actual IDs/all8/parent and same-volume custody;10 malformed plans plus duplicate fields refuse; parsing never admits native authority
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpzvN2S9
+ok
+test infrastructure::windows_client_originals024::v3::tests::wl2_r6_v3_node_events_reject_skip_reverse_context_drift_cross_node_and_text_closed ... r6 v3 pending blocks cross-node, skip/reverse/replay/context/claim/deadline/expected digest drift and text Closed; data has no native resume factory
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpgM9ogf
+ok
+
+test result: ok. 57 passed; 0 failed; 0 ignored; 0 measured; 2065 filtered out; finished in 17.37s
+
