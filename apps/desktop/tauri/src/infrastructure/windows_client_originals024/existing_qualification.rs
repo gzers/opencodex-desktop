@@ -481,6 +481,103 @@ impl ExistingQualification {
 mod tests {
     use super::*;
     #[test]
+    #[ignore = "explicit controller-owned fixed-image cost observation; no native Owner or service"]
+    fn wl2_r6_source_scan_cost_fixed_full_image_no_owner() {
+        let root = PathBuf::from(
+            std::env::var_os("OCXD024_SOURCE_SCAN_COST_ROOT")
+                .expect("explicit owned fresh fixture"),
+        );
+        let parent = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../../../test/windows024-native/target")
+            .canonicalize()
+            .unwrap();
+        assert_eq!(root.parent().unwrap().canonicalize().unwrap(), parent);
+        assert!(root
+            .file_name()
+            .unwrap()
+            .to_string_lossy()
+            .starts_with("r6-source-scan-cost-"));
+        assert!(!root.exists(), "no reuse/retry of an existing fixture");
+        assert_ne!(
+            native::current_identity().unwrap().sid,
+            "S-1-5-21-587408064-856152790-2583328096-1003"
+        );
+        let task = native::create_private_directory(&root).unwrap();
+        let installation = native::create_private_directory(&root.join("I")).unwrap();
+        let ledger = native::create_private_directory(&root.join("setup")).unwrap();
+        let mut report = json!({"scope":"controller-owned complete fixed2.99 image measurement only",
+            "officialExecuted":false,"ordinaryAcceptance":false,"nativeOwnerCreated":false,
+            "productionBudgetsChanged":false,"publicStartOpen":false,"accepted":false,
+            "fixture":root,"samples":[],"sceneRetained":true});
+        write_new(&root.join("cost-intent.json"), &report).unwrap();
+        let result = (|| -> io::Result<()> {
+            let setup = Instant::now();
+            let image = install_fixed(&root, ledger.path())?;
+            report["setupElapsedMs"] = json!(setup.elapsed().as_millis());
+            report["setupImage"] = image;
+            let selected = program_selection::read_complete(
+                installation.path(),
+                Platform::Windows,
+                "win32-x64",
+            )
+            .map_err(invalid)?
+            .ok_or_else(|| invalid("fixed measured image selection absent"))?;
+            let mut samples = Vec::new();
+            for ordinal in 0..4 {
+                let start = Instant::now();
+                program_selection::verify_current(installation.path(), &selected)
+                    .map_err(invalid)?;
+                let selection_us = start.elapsed().as_micros();
+                let start = Instant::now();
+                // Exact unmodified shared verifier: entire inventory and every
+                // file byte/hash plus bound manifest. No metadata-only substitute.
+                program_image::verify(&selected).map_err(invalid)?;
+                let full_us = start.elapsed().as_micros();
+                let row = json!({"ordinal":ordinal,"selectionUs":selection_us,"fullImageUs":full_us,
+                    "treeSha256":selected.image.tree_sha256,"sourceDigest":selected.selection.image_sha256});
+                write_new(&root.join(format!("sample-{ordinal:02}.json")), &row)?;
+                samples.push(row);
+            }
+            // Counterexample changes only an owned copy's noncritical ordinary
+            // file. The same full verifier must still reject real source drift.
+            let changed = selected
+                .paths
+                .package_root
+                .join(install::PACKAGE_SUBPATH)
+                .join("package.json");
+            let original = fs::read(&changed)?;
+            let mut altered = original.clone();
+            altered.push(b' ');
+            write_new(
+                &root.join("owned-image-change-intent.json"),
+                &json!({"path":changed,
+                "originalSha256":hash::sha256_hex(&original),"newSha256":hash::sha256_hex(&altered),
+                "controllerOwnedCopyOnly":true}),
+            )?;
+            fs::write(&changed, &altered)?;
+            let rejected = program_image::verify(&selected).is_err();
+            report["ownedCopySourceDriftRejected"] = json!(rejected);
+            fs::write(&changed, &original)?;
+            program_image::verify(&selected).map_err(invalid)?;
+            if !rejected {
+                return Err(invalid(
+                    "unchanged complete verifier failed source drift counterexample",
+                ));
+            }
+            report["restoredOwnedCopyFullyVerified"] = json!(true);
+            report["samples"] = json!(samples);
+            task.recheck()?;
+            installation.recheck()?;
+            ledger.recheck()?;
+            Ok(())
+        })();
+        report["passed"] = json!(result.is_ok());
+        report["firstError"] = json!(result.as_ref().err().map(|e| e.to_string()));
+        write_new(&root.join("cost-result.json"), &report).unwrap();
+        println!("R6_SOURCE_SCAN_COST {report}");
+        result.unwrap();
+    }
+    #[test]
     fn wl2_r6_existing_qualification_baseline_shape_rejects_omitted_extra_and_foreign_data() {
         let base = Path::new(BASE);
         assert!(baseline_shape(base, &[]).is_err());
