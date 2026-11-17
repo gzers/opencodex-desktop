@@ -248,6 +248,9 @@ impl Journal {
     ) -> io::Result<()> {
         let result = (|| {
             let end = read.end()?;
+            if read.requires_original_end() && end != self.deadline {
+                return Err(invalid());
+            }
             before(end)?;
             self.stop_completion
                 .as_ref()

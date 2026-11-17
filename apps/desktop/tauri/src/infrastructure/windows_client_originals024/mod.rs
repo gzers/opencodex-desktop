@@ -10,6 +10,7 @@ use std::{
     os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
     path::Path,
 };
+mod adapter;
 mod binding;
 mod bounded;
 mod content;
@@ -21,7 +22,7 @@ mod source;
 mod tree;
 mod v2;
 mod v3;
-pub(crate) use v2::{LivePhase, WindowsOriginals};
+pub(crate) use adapter::{LivePhase, WindowsOriginals};
 use windows_sys::Win32::{
     Foundation::LocalFree,
     Security::{

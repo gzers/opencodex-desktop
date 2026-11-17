@@ -164,6 +164,26 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn completed_stop_original(
+        &mut self,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> AppResult<()> {
+        let result = (|| {
+            let old = self
+                .retained
+                .as_ref()
+                .and_then(|s| s.stop_deadline)
+                .ok_or_else(|| refused("原Stop截止缺席"))?;
+            let read = super::read_window::HistoryReadWindow::completed_original(end, old)
+                .map_err(refused)?;
+            self.completed_stop_read(owner, &read)
+        })();
+        if result.is_err() {
+            self.poison_completed_read();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn check_ready_existing(
         &mut self,
         owner: &mut Owner,

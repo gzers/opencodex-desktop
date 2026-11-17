@@ -215,7 +215,7 @@ impl Owner {
         self.native.creator_has_resumed()
     }
     fn authorize_originals_successor(&mut self, window: &shared::ActionWindow) -> AppResult<()> {
-        self.check_completed_stop(window.deadline())?;
+        self.check_completed_stop_for_action(window)?;
         let Some(LivePhase::Closed(closed)) = self.original_phase.take() else {
             return Err(recovery_required());
         };
@@ -238,6 +238,34 @@ impl Owner {
         }
         self.check_closed_native(deadline)?;
         budget(deadline)
+    }
+    fn check_closed_native_original(&mut self, deadline: Instant) -> AppResult<()> {
+        let phase = self.original_phase.take().ok_or_else(recovery_required)?;
+        let result = match &phase {
+            LivePhase::Closed(closed) => self.with_originals(|originals, owner| {
+                originals.check_closed_original(closed, owner, deadline)
+            }),
+            _ => Err(recovery_required()),
+        };
+        self.original_phase = Some(phase);
+        result
+    }
+    fn check_completed_stop_for_action(&mut self, window: &shared::ActionWindow) -> AppResult<()> {
+        window.remaining()?;
+        if !self.originals_is_stopped() {
+            return Err(recovery_required());
+        }
+        let phase = self.original_phase.take().ok_or_else(recovery_required)?;
+        let result = match &phase {
+            LivePhase::Closed(closed) => self.with_originals(|originals, owner| {
+                originals.check_closed_for_action(closed, owner, window)
+            }),
+            _ => Err(recovery_required()),
+        };
+        self.original_phase = Some(phase);
+        result?;
+        window.remaining()?;
+        Ok(())
     }
     fn check_action_scope(
         &self,
@@ -547,11 +575,13 @@ impl Owner {
         self.typed_ready = Some(observed);
         Ok(payload)
     }
-    async fn stop(&mut self, deadline: Instant) -> AppResult<StopReceipt> {
+    async fn stop(&mut self, window: &shared::ActionWindow) -> AppResult<StopReceipt> {
+        window.remaining()?;
+        let deadline = window.stop_deadline();
         self.source(deadline)?;
         self.stop_started.get_or_insert_with(Instant::now);
         if self.stopped {
-            self.check_completed_stop(deadline)?;
+            self.check_completed_stop_for_action(window)?;
             return Ok(StopReceipt {
                 completion: StopCompletion::record(deadline)?,
             });
@@ -632,7 +662,7 @@ impl Owner {
             originals.complete_stop(prepared, owner, normal, absent, &accepted, deadline)
         })?;
         self.original_phase = Some(LivePhase::Closed(closed));
-        self.check_closed_native(deadline)?;
+        self.check_closed_native_original(deadline)?;
         let completion = StopCompletion::record(deadline)?;
         let receipt = StopReceipt {
             completion: StopCompletion::record(deadline)?,
@@ -721,7 +751,7 @@ async fn execute_async(
         match command.action {
             LifecycleAction::Start => {
                 if owner.stopped {
-                    owner.check_completed_stop(window.deadline())?;
+                    owner.check_completed_stop_for_action(&window)?;
                 } else {
                     return owner
                         .observe(window.deadline())
@@ -733,7 +763,7 @@ async fn execute_async(
                 if !owner.stopped {
                     owner.bind_stop_action(command.action, &window)?;
                 }
-                let receipt = owner.stop(window.stop_deadline()).await?;
+                let receipt = owner.stop(&window).await?;
                 restart_input = after_stop_input(command, &window, receipt)?;
                 if restart_input.is_none() {
                     return Ok(LifecycleResult::Stopped);

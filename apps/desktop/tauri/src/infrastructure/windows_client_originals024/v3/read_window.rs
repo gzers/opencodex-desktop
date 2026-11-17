@@ -6,12 +6,27 @@ use std::time::{Duration, Instant};
 enum Origin {
     Status(Instant),
     Action(ActionWindow),
+    CompletedOriginal(Instant),
 }
 pub(super) struct HistoryReadWindow {
     origin: Origin,
     end: Instant,
 }
 impl HistoryReadWindow {
+    pub(super) fn completed_original(end: Instant, original: Instant) -> io::Result<Self> {
+        if end != original {
+            return Err(invalid());
+        }
+        let out = Self {
+            origin: Origin::CompletedOriginal(original),
+            end,
+        };
+        out.check()?;
+        Ok(out)
+    }
+    pub(super) fn requires_original_end(&self) -> bool {
+        matches!(self.origin, Origin::CompletedOriginal(_))
+    }
     pub(super) fn status(when: Instant, end: Instant) -> io::Result<Self> {
         let out = Self {
             origin: Origin::Status(when),
@@ -36,6 +51,11 @@ impl HistoryReadWindow {
             return Err(io::ErrorKind::TimedOut.into());
         }
         match &self.origin {
+            Origin::CompletedOriginal(end) => {
+                if *end != self.end {
+                    return Err(invalid());
+                }
+            }
             Origin::Status(when) => {
                 if *when > Instant::now()
                     || *when >= self.end
@@ -64,6 +84,26 @@ impl HistoryReadWindow {
 mod tests {
     use super::*;
     use crate::modules::process::LifecycleAction;
+    #[test]
+    fn wl2_r6_read_window_original_completion_requires_exact_original_cutoff() {
+        let original = Instant::now() + Duration::from_secs(2);
+        let read = HistoryReadWindow::completed_original(original, original).unwrap();
+        assert!(read.requires_original_end());
+        assert_eq!(read.end().unwrap(), original);
+        assert!(HistoryReadWindow::completed_original(
+            original + Duration::from_nanos(1),
+            original
+        )
+        .is_err());
+        assert!(HistoryReadWindow::completed_original(
+            original - Duration::from_nanos(1),
+            original
+        )
+        .is_err());
+        let old = Instant::now() - Duration::from_nanos(1);
+        assert!(HistoryReadWindow::completed_original(old, old).is_err());
+        println!("r6 original completed-Stop read locator requires exact old end, not shortened/extended/expired. Journal separately binds end to original native transaction; locator alone grants no completion");
+    }
     #[test]
     fn wl2_r6_read_window_status_keeps_same_sample_and_refuses_unknown_or_renewed_bound() {
         let when = Instant::now();
