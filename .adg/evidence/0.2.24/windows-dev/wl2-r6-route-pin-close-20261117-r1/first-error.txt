@@ -1,0 +1,5 @@
+library01 raw101:47pass1fail; route-close fault81 closed primary config first.
+Real write probe after that partial close returned Ok, so remaining READ_CONTROL-only BoundedAccess observer did not substitute primary deny-write sharing.
+Preserve original raw32 denial assertion; fix algorithm/independent expected order to close security+all ancestor sets first and primary route/config last.
+First failed testcase detailed native trace was not emitted before panic at write-probe line121. Preserve exact source/EXE/log/file aftermath; do not invent a retrospective full prefix trace or repeat the old premise. Final tests emit actual attempt trace before assertions/probes.
+Source recorder first marker new() selected ExpectedHandleInventory.new rather than NativeHandleBatch.new; unchanged-body assertion refused. Fix recorder anchor to exact NativeHandleBatch impl; no old native close body modified.
