@@ -1,0 +1,29 @@
+{
+  "method": "supplemental exact-source ownership/order audit; not runtime original productOwner acceptance",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "sha256": "06fc2b85a26e2ccc761c1b352506cc0bfa8386d59dd6af3565dc13b82e384dfc"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "sha256": "67b83b8122885e6086e200401e494bd3b5c3e269a5e8ffcec7b89b13c030876c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "sha256": "6b26d2840c499160902ba6c69e162c47f29816edc779c3610970d19a77776e71"
+    }
+  ],
+  "checks": [
+    "original source not captured by fallible spawn; slot take/send after worker exists, send failure restores original",
+    "same owning-thread NativeLease/LeasePreparation outside borrowed catch_unwind closure",
+    "failure/expiry/panic revoke original mutation and park original objects with no cleanup RPC or newdeadline",
+    "original binding rechecked on worker before locks and before returned resource transfer",
+    "only actual retained-release native history can return for independent final validation",
+    "original registry gate locked across Owner take/control registration; ordinary dispatch requires gate before ownermutex/cancelreset",
+    "reference-based release keeps original Held on errors and installs actual ReleasedLease before final readback",
+    "no unsafeSend/activelease cross-thread transfer",
+    "same caller observation cutoff checked before and after projection serialization; no renewed action deadline"
+  ],
+  "currentR2Touched": false
+}

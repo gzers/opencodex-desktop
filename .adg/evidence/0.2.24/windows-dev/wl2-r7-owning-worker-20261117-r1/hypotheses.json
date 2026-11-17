@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-17T21:28:47.358822+08:00",
+  "recordedBeforeImplementation": true,
+  "codeInput": "9fdd4c618a57dbe5c9b52cee01680d6637300b5a plus main144391b95cc82cbc191e187537c736fd95284918",
+  "docsInput": "d2ff640a0bc0f621399deca671e542f644df00b6 TEAM24/r7B unchanged",
+  "hypotheses": [
+    {
+      "id": "W1",
+      "claim": "A dedicated original worker can receive unique Send original state before it constructs any actual thread-local lease, keep immutable original binding/end, and only return original objects with actual explicit released-history after native full release/readback."
+    },
+    {
+      "id": "W2",
+      "claim": "Failed/panicking/expired work can revoke mutation but retain original objects/partially acquired ranges in same live thread outside unwinding; dropping an observer/control channel does not drop worker resources or create a new action."
+    },
+    {
+      "id": "W3",
+      "claim": "Reference-based lease release can keep exact Held/ranges or ReleasedLease objects installed before fallible postchecks, avoiding original consuming releaseDrop as recovery success."
+    },
+    {
+      "id": "W4",
+      "claim": "Real subprocess native fixtures can observe original worker thread IDs, actual four-role locks held after failure/expiry/panic/observer detach, no new windows, and exact original file identities/content; controlled fixture process termination is recorded separately, never normal release."
+    }
+  ],
+  "limits": [
+    "generic worker return is transport of original native resources/history for independent final validation, not AbortRestored/Stop/Closed or successor proof",
+    "product Owner pipeline/control endpoint and full original10s/runtime qualification remain required",
+    "no active NativeLease cross-thread movement/unsafeSend; only pre-lock original Send state and actual released resources may move",
+    "failure fixtures use isolated own test subprocesses; no currentR2/official process or dailyconfiguration touched",
+    "worker failure has no unlock/retry RPC; explicit FailedLeaseDisposition remains separately required"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "reason": "fixture source parent now freshly created native private subdirectory, no security fallback; unique original binding also rechecked before returned resource transfer",
+  "head": "28306a5959c765269e75a0dca420e51f90770c7f",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_worker_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "scope": "native ownworker locks/source/control, not actual productOwner recovery",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "sha256": "7ea8957f359fd68e150c1eb50e162cbadd7203c1f09885bd4f27bf59978c8cc5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation.rs",
+      "sha256": "a3324818e8585f95859f1ce945372dfc80157da13cfe9735c544cd9f9d30d079"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "sha256": "6b26d2840c499160902ba6c69e162c47f29816edc779c3610970d19a77776e71"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "sha256": "68b1c01a3ed2c06390c4739b2545db34740d5cd513f445679cc22dfbcb642d27"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "sha256": "c2ba8da98feca2f15330f0544e6f482bebbfd2cd698b0224b93232bfb6e75e7f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/tests.rs",
+      "sha256": "e95877cd4d38f0255d77d405d39680c88ea40ede9572f9c4ff4388c79774f6bf"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "sha256": "67b83b8122885e6086e200401e494bd3b5c3e269a5e8ffcec7b89b13c030876c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "sha256": "0a6154b81817c2fa04eb2f2fa01ecedb3b4f44a6626dddaff1336c96a6c938dd"
+    }
+  ]
+}

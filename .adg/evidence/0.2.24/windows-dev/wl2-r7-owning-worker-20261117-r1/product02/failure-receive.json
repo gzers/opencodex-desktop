@@ -1,0 +1,37 @@
+{
+  "operation": "read-only ZIP/member/sourcehash before-after, no deletion/permissions/process mutation",
+  "firstError": "synthetic source PrivateRecord::create parent lacked protectedDACL; actual native security API refusal before worker/lease creation",
+  "bothChildRaw": 101,
+  "activeWorkersCreated": false,
+  "currentR2Touched": false,
+  "scenes": [
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-worker-test-oUALce",
+      "members": {
+        "child.stderr.log": "a8132db32d43ad02189c47f89a5237b22add438bc8add934cc7ca4c9a5859793",
+        "child.stdout.log": "a397a18abeaccac37d53f259b91dadb050098a7444ac4268ab92c5a89a41a167",
+        ".codex/.opencodex-native-main.claim.sqlite": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "coordination/k.sqlite": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "coordination/l.sqlite": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "coordination/n.sqlite": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "archive": "product02/failure-readonly/scene0.zip",
+      "archiveSha256": "d337c5ce20084575bdfd527fa2a62b0bc540c6af32891531fcbe5f5482399bd3",
+      "originalRetained": true
+    },
+    {
+      "root": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-worker-test-sJBrlm",
+      "members": {
+        "child.stderr.log": "c5d1160e6396372a0b6f8984f93c70d11a4fa8f34862c4ecad783df0899f17ef",
+        "child.stdout.log": "a397a18abeaccac37d53f259b91dadb050098a7444ac4268ab92c5a89a41a167",
+        ".codex/.opencodex-native-main.claim.sqlite": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "coordination/k.sqlite": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "coordination/l.sqlite": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "coordination/n.sqlite": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "archive": "product02/failure-readonly/scene1.zip",
+      "archiveSha256": "afbe6ac22b241637c3388e4f850cc8e1a023e29389db3fa439714a2eb5067d22",
+      "originalRetained": true
+    }
+  ]
+}

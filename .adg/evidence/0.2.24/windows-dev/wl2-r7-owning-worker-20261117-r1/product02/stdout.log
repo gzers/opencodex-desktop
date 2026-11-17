@@ -1,0 +1,17 @@
+
+running 4 tests
+test infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_native_failure_expiry_panic_and_disconnect_keep_actual_ranges_on_original_thread ... r7-worker-failed-fixture-retained=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-oUALce
+FAILED
+test infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_native_local_stays_non_send_and_control_original_is_send ... ok
+test infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_native_success_returns_same_original_after_explicit_native_release ... r7-worker-failed-fixture-retained=C:\Users\15119\AppData\Local\Temp\ocx024-r7-worker-test-sJBrlm
+FAILED
+test infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_subprocess_fixture ... ignored, explicit subprocess fixture only; parent tests invoke this exact entry
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_native_failure_expiry_panic_and_disconnect_keep_actual_ranges_on_original_thread
+    infrastructure::windows_client_originals024::recovery_worker::tests::wl2_r7_worker_native_success_returns_same_original_after_explicit_native_release
+
+test result: FAILED. 1 passed; 2 failed; 1 ignored; 0 measured; 2215 filtered out; finished in 0.14s
+
