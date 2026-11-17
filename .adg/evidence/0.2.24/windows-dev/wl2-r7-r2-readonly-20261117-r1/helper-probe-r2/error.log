@@ -1,0 +1,8 @@
+﻿Exception calling "ProbeProcess" with "3" argument(s): "exact FILETIME/PID differs"
+At C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\probe-r7-readonly.ps1:17 char:2
++  $result.current=[R7ReadOnlyScene]::ProbeProcess($process.Id,$hash,$n ...
++  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : InvalidDataException
+ 
+

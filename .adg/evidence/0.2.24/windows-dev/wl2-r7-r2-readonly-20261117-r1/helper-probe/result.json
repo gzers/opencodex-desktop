@@ -1,0 +1,11 @@
+﻿{
+    "passed":  false,
+    "scope":  "controller-owned query-only helper tests; not ordinary desktop acceptance",
+    "refused":  [
+
+                ],
+    "originalR2Touched":  false,
+    "processTerminated":  false,
+    "removed":  false,
+    "firstError":  "System.Management.Automation.MethodInvocationException: Exception calling \"ProbeCurrent\" with \"2\" argument(s): \"multiple-link task file refused\" ---\u003e System.IO.InvalidDataException: multiple-link task file refused\r\n   at R7ReadOnlyScene.Identity(SafeFileHandle file, String expected, Boolean directory)\r\n   at R7ReadOnlyScene.Pinned..ctor(String path, String sha, Int64 expectedBytes, Boolean liveWriter)\r\n   at R7ReadOnlyScene.Target..ctor(UInt32 pid, String filetime, String image, String sha, String sid, Int32 session, Boolean ordinary, Boolean noJob, Boolean suspended)\r\n   at R7ReadOnlyScene.ProbeCurrent(String expectedHash, String expectedFiletime)\r\n   at CallSite.Target(Closure , CallSite , Type , Object , Object )\r\n   --- End of inner exception stack trace ---\r\n   at System.Management.Automation.ExceptionHandlingOps.CheckActionPreference(FunctionContext funcContext, Exception exception)\r\n   at System.Management.Automation.Interpreter.ActionCallInstruction`2.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)\r\n   at System.Management.Automation.Interpreter.EnterTryCatchFinallyInstruction.Run(InterpretedFrame frame)"
+}
