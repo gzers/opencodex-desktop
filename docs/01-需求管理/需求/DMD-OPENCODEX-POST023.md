@@ -42,3 +42,8 @@ Windows仅按本次实际平台变更触发验收；普通共享UI以页面/组�
 用户要求Mac评估完整SD/SACL安全覆盖并提交明确决定、后继合同。本次正式采用[Windows有界访问安全与原件恢复r4](../../03-开发实施/0.2.24-contracts/windows-security-coverage-r4.md)：新v2会话固定windows-bounded-access-v1，必需覆盖owner/group/DACL、mandatory label、resource attributes、CAP scope、process trust label、access filter的独立及合并原生读取与恢复；全部所含投影不可读/未知拒绝。完整审计SACL及未请求扩展明确ExcludedUnknown，不承诺完整SD相等/恢复，不把旧partialDiagnostic或Full-v1 pending降级成新许可。
 
 采用理由是完整SACL所需系统安全权限在已测普通原令牌不具备，当前无不提升/不改策略的完整正例。新范围是显式产品保证变更，不宣称已实现或已验收，也不保证所有普通文件可用。现生产Start拒绝保持，直到真正完成新scope native整树capture/custody/restore/Closed及真实GUI/官方owner与S/D生产组合；原内容/凭据/fileID/存在性及30/5/10预算、未知拒绝、固定候选前不W2/双SID/发布均不放宽。Mac安全恢复分支未在本次被更改。后继格式/写集/受影响表归r4，进度仍只在IMP-34，协作归TEAM。
+
+
+## 2026-11-17 首次Resume前失败恢复边界
+
+按用户明确要求，当前r2实际Start超时且原件已进入custody的恢复及性能协调归[r7](../../03-开发实施/0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。须有区别于普通Stop/Closed的显式before-first-Resume原件恢复，capture未返回tag也保留可达partialStore/原对象；forced进程清理不代原件归还/正常退出/后继资格。当前已加载旧宿主不能热补恢复方法，外部任务修复按完整同SID归档/准确native预检及单独确认实施，旧清理授权不扩。本补充不更改原30/5/10/Restart30预算、r4八安全投影或r6存储断言，不将恢复后当旧失败通过。具体实际进度仍只归IMP143，未关闭本版验收或允许发布。

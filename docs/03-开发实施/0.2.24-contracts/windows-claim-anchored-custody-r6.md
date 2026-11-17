@@ -1,5 +1,7 @@
 # Windows claim连续排他与原目录留位保管 r6
 
+2026-11-17后继：[r7](windows-preresume-recovery-performance-r7.md)明确首次Resume前失败的受限原件恢复与共享扫描责任/临时写集；本布局、r4安全及原预算不变，新的恢复回执不当正常Stop/Closed。旧失败事务与原缺席退根未完仍保留。
+
 revision: 6；2026-11-16 Asia/Shanghai；TEAM16/IMP142，承接r4安全覆盖及[r5共享接口](windows-shared-routes-status-r5.md)。Windows实现输入3e19075846dfea81ba8392bb60a3d3031afbf116；本次共享常量提交 **main fac8573e55441fe514919c63c7f1d65181ff3577**。四trait签名、普通Token、固定8投影/审计ExcludedUnknown及30/5/10/Restart30含Stop子10不变。本轮是具体Windows保管策略决定，不授权发布或把原失败改通过。
 
 ## 已接收事实

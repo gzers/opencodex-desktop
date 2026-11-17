@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 16；2026-11-16。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r5共享已消费及原锁组件回交，Mac已定claim原目录留位保管r6；Windows沿r4安全/r5接口/r6布局继续，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 17；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -174,3 +174,16 @@ r2-r5逐文件单写集继续，新增明确originals目录内anchored/v3节点�
 先原存在根有真实claim竞争的单文件/目录锚点与v3反例，再整树/lease分段/恢复后继。原根缺席初始化与最终退根仍未解决，不把旧Absent断言降为留目录，保持对应gate拒绝和最终未验收；有新排他方案带最小原对象/时序回交，不重新跑无新假设的raw5/shareDelete。其它独立软件任务继续，已过空GUI/Route/Sample/Bun非影响不重跑。原预算/Unknown/rawexit/scene保留、普通MSI/B2/旧拒绝清理全保持，固定候选前不W2/双SID、不发布。
 
 > fetch main fac8573e55441fe514919c63c7f1d65181ff3577及本次docs/governance-main，在3e1907584后继按TEAM16/IMP142/windows-claim-anchored-custody-r6继续。采用原已存在目录/两稳定文件留位、其它原文件逐节点同卷custody与v3 canonical进度，临界段保持claim/NLK，禁止释放claim只靠N/L/K移根。先原语/中断/整树验证，前提未齐Start拒绝；原缺席Codex安全退根仍单列未完，新具体排他方案再交。沿允许集持续批量修复核验分别push完整表/首错/source与EXE/清理，不重跑旧raw5/空GUI，不W2/双SID、不发布。
+
+
+## 2026-11-17 当前入口：r7受限恢复与完整扫描性能
+
+正式状态只归IMP143；当前Windows44bb9bdba、已载入r2产品357210891、docs两请求已消费。[r7合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)对应main 89e0195acb7a0c6e7549eafa376ec520ce981546新增BeforeFirstResumeRecovery及独立最多10秒恢复动作窗口，不热补旧进程/不签Closed。Mac未整批合入Windows实现，Windows在44bb后继合入共享声明，原r2 I/EXE/记录必须保持，不替换其正在加载的镜像。
+
+先实现/合成验证受限外部修复器、完成当前r2原SID全归档/只读native预检，给准确75744/21500和3原件计划；本次新forced/外部恢复须在原Windows对话按AGENTS单独确认，旧两目标授权不扩。原件未还或无明确隔离采用前不重开官方新轮；原通道只清Job不还原/不允许broker正常退出，不能用新程序PID/JSON收养旧Owner。恢复输出独立ExternalOriginalsRestoredBeforeResume，Start超时事实不改，不自动后继。
+
+未来原宿主capture前装partialStore恢复控制/原从未Resume证明，落实trait prepare/quiesce/restore与新恢复origin，保持r4/r6完整对象与claim/NLK、预算/未知拒绝。r2-r6 Windows单写集继续，新增程序镜像临时单写 **modules/runtime/program_image.rs及其Windows局部模块/定向tests**；program_selection/official_lifecycle仅cfg(test)只读costhook。Windows负责实现和实际MSVC性能/反例，Mac暂停该性能写集负责共享语义复核与集成；backup/safety/hash等未放行，不变HMAC/来源算法/其它平台/官方包/根构建。共享policy不得因效率删full扫描或改缓存语义。
+
+当前恢复与只读计划优先，自有副本可平行计量/编译；原件未还不真实原包重跑。完整校验/每byte/hash/原权限/目录与source-current/原操作边界保持，Windows先全阶段计量再单pass优化，不跨动作缓存/元数据代hash/延预算。整个范围内连续批量修复及时分别push；新范围/现场执行确认在具体计划就绪时一次完成，不每个小修回Mac。既有未完/失败证据/旧删除拒绝全部保持，不W2/双SID、不发布。
+
+> fetch main 89e0195acb7a0c6e7549eafa376ec520ce981546及本次docs/governance-main，在44bb后继按TEAM17/IMP143/windows-preresume-recovery-performance-r7继续。先准备当前r2只读全归档/native预检及精确修复计划，在原Windows对话一次确认新两目标forced/3原件归还后执行，不能沿用旧清理授权；不签Stop/Closed或后继。未来宿主在首变更前装partial恢复接口；共享program_image Windows优化/tests已单写授权，先量阶段再等强优化，full inventory/每byte/hash/原预算未知拒绝不变。原件未还不原包重跑，及时分别push完整状态/首错/source与EXE/清理，不W2/双SID、不发布。
