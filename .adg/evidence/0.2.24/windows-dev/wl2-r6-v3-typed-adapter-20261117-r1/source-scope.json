@@ -1,0 +1,103 @@
+{
+  "base": "14b3198a8cfe0ce92c4db405def22aa7725f7e6c",
+  "changedFiles": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter.rs",
+      "bytes": 10980,
+      "sha256": "f73157355b1dda0fe1da76267c9b3b12b399fed28aef6b62a7cc39a4ac82c322"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 12006,
+      "sha256": "f56a8d2ff65dc588c7325ddb349eec8c13ee0028e1a2888e660758cb9945a15b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 30615,
+      "sha256": "97f60121af6e464c38590e7273f12a2bff207cc0121030e19773531f1df11f11"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/completed.rs",
+      "bytes": 15652,
+      "sha256": "27ad2561d8c28f0ed76fad57d61883bd4bc0ff546cd0a5d6d35ff27ba08f7fd1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/read_window.rs",
+      "bytes": 7270,
+      "sha256": "c57adbc59f57db2142a6ed477eacae4bdff9a9a84d7e422b4f2189871ca2f8f2"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 41369,
+      "sha256": "a9c4a3f8191843e575fc82a4089023edade97c0d96155de44375befbfdf5c770"
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "bytes": 32151,
+      "sha256": "8339874f5b7d7b41462e1e15c05b32aed8fe0c3930e3e3775948ef5c7b72d252"
+    }
+  ],
+  "preserved": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v2/adapter.rs",
+      "normalizedSha256": "90191e6aa32d6df8f7856a7539e284f9d8a7d1af9dc93aafc5016dc338084abc"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/closed_stop.rs",
+      "normalizedSha256": "135b74041c89938fe38361e180f17a43a50af65c1a810856841e781a794e5741"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/handles.rs",
+      "normalizedSha256": "3b209fa50eec0058e8e14bd9713808e6db07492eee748c26b2036a38f133e65f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/handle_release.rs",
+      "normalizedSha256": "209f1ae872ffa45936f7e4e6e4da842e4ad1a392ce38bfdd20f1414b7f6a7a45"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture.rs",
+      "normalizedSha256": "347476a6af0ce31ce2b8367c1d2ef1bec34e57c4dde7e7ea9854f83fc69c82f7"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "normalizedSha256": "7e58f87f4f32787c93e2ec57ab7a6d9344b27e22ac378dd830d06383d601588a"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/content.rs",
+      "normalizedSha256": "cec66adc369147bff675a408aaff15f08e56a416039be40becfc629867f8c9ab"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "normalizedSha256": "756e0b73a9f31ed4af2b6d54f0f82c611303b30d0530e1fcfebcbc5de6da2698"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_diagnostic_roles024.rs",
+      "normalizedSha256": "9aa57dd2c2f85cefa0f2ab1348e18dc908cdfb2213ef2bdd6c15c2a6cdfe36ee"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_supervisor024.rs",
+      "normalizedSha256": "77ff99511e59895eceb79a10f0abd647f6bdcb862b33e1ea9f3a413853027d00"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/official_runtime024_transport.rs",
+      "normalizedSha256": "70c31ef6e12909778cb1f07abf71f2174dc22b65bed011a6fa3ae829663196ac"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "normalizedSha256": "7e7ddb61d2ed732a7dc49201afafa2e1dcdc2d37300f6d70f34c4cf1b6b7372e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/official_lifecycle024.rs",
+      "normalizedSha256": "b912f07bbd66d27d3b71c6614ab5bfd6978c7f4ab57180c7e78c8189dd2294b4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "section": "full original recovery_state_at/StatusReceipt/recovery_for_sample/status/status_sample/tests-registration tail",
+      "normalizedSha256": "7a428a0cfce097de4aee0c7e69a0dbbb32a85285b519af251ad1fa54253afd12"
+    }
+  ],
+  "publicGateExcerpt": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs:277:pub(crate) fn require_durable_capture() -> crate::errors::AppResult<()> {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-278-    Err(crate::errors::AppError::RuntimeManaged {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-279-        code: \"windows024_originals_custody_required\".into(),\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-280-        detail: \"有界访问安全r4仍需完成v2整树持久保管、恢复/Closed与H/S/D生产组合；未创建官方进程或宣告捕获成功\".into(),\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-281-    })\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-282-}\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-283-/// Fixed NEW-session scope only. The old Full preflight above retains its exact\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-284-/// meaning for old transactions and is never converted after a read failure.\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-285-pub(crate) fn preflight_bounded(profile: &Path, deadline: std::time::Instant) -> io::Result<()> {\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-286-    let mut roots = [\napps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs-287-        tree::RootTree::capture(&profile.join(\".codex\"), deadline)?,\n",
+  "sharedTraitAndHMACUnchanged": true,
+  "v2OnlyLegacyRetainedNotPublicDefault": true,
+  "actualProductionExecuted": false
+}

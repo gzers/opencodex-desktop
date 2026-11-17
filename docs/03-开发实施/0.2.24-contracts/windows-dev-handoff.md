@@ -870,3 +870,14 @@ NativeAction新增只读原Owner UUID/scope/token及准确Origin id/kind/outer/s
 末library04 raw0/55过0败，完整两树持有时普通config写raw32、原claim仍可取、journal序列不变；config编辑/未知目录/artifact目录/Grok编辑/samebytes不同ID均InvalidData且原custody字节保持；实际旧fixture10秒截止后read<=5秒仍可检查，原journal变更检查TimedOut，准确序列未续。该正例是native storage read，不是actual ordinaryOwner/private typed gate；公共Status/typed adapter/后继与实际原包仍未接。14处原变更/完整Stop/typed传输/内容policy保持原样。
 
 产品custom-protocol MSVCdebug bins raw0/137597ms，195产品输入/149最终Rust核工作/Git（CRLF明确等价），预存schema未手改/暂存，三制品SHA归product01-artifacts。268scene私有ZIP/hash/membership核验后全留（含失败部分readview/custody/canonical），原canonical/快照/history另归档；ZIP非NTFS克隆，无删除/历史拒绝重试。本轮不改官方/日常配置/PATH/账号/策略，不业务/模型请求；原生产副作用/初始化/ownerreceipt/原缺席根/最大容量/普通MSI/CAP-trust/历史清理未完，Start/allAccepted/typedClosed/productionExecuted=false，不旧raw5/空GUI/W2/双SID/发布。
+
+
+## 2026-11-17 r6 首代公共typed生命周期分派接入v3
+
+源码fb9a64ff79319383f015850d54903866bc6756d7/tree2cb28e9c35883138b80c4dd4ddc2b40bd266788d已推送，承接14b3198a8/4aea903c3；TEAM16/IMP142/r6和新fetch共同源不变，7允许Windows文件。证据 .adg/evidence/0.2.24/windows-dev/wl2-r6-v3-typed-adapter-20261117-r1/。根WindowsOriginals导出切唯一新v3 adapter，私有nonClone/nonserde阶段tag只定位当前retained slot/UUID/actual Owner.scope/准确阶段，失败poison不fallback/migrate/adopt文本。capture/Ready/重复Ready完整readonly/preStop/完整Stop-route-finalClosed接原actual工厂，preStop保存Owner同一个真实ServiceObservation后才fallible prepare，complete接受tuple必须同原typed对象代次，Closed tag只在actual内部完整finalproof及原截止重读后发出。
+
+Status end-only frozen入口按相同end-5s定位确定最早样本起点，不生成now+5；新动作借原ActionWindow，Owner.stop携原window；原Stop内read须精确等于Store.stop_deadline及Journal.original end，不能缩/延/晚补。共享trait/HMAC和原完整recovery_state_at/StatusReceipt/同次receiver尾段、原来源/claim/normal/supervisor/完整恢复关闭等14源片段核对保持。MSVC库raw0/60过0败，DATA locator stage/ID/scope/failed反例只比较DATA不构造fakeOwner/ServiceObservation/Closedtag/nativepermit；原capture/v3/native原语/Restart/Windows同次无Owner拒绝回归通过。初prepare patch格式marker不匹配在写前拒绝原记录留；无本轮非预期产品/测试失败，继承首错保持。
+
+firstgeneration公开typed链已注册但actual ordinary fixedofficial capture/Ready/Closed/Status正例未执行，不能拿编译或purelocator/native组件当生产验收。后继目前明确拒绝并保留slot/失败，必须先接准确v3 predecessor有序集合、native namespace/原Owner.previous与newcapture原前驱引用，不放宽empty namespace断言。公开Start仍拒绝；原包config/auth/Grok/动态目录副作用、初始化/ownerreceipt/原缺席Codex安全退根、最大完整容量、普通MSI/CAP-trust/全部历史清理未完。
+
+产品MSVCdebug custom-protocol bins raw0/216286ms，196产品输入/150最终Rust核工作/Git（明确CRLF等价），预存schema未手改/暂存，制品SHA归product01-artifacts。76scene私有ZIP/hash/membership核验后全留，原canonical/快照/history另收存，ZIP非NTFS克隆，无删除/历史拒绝重试。marenben普通桌面登录仍待，控制器/Administrator不代验收。未改官方/日常配置/PATH/账户/策略，不业务/模型请求，不旧raw5/空GUI/W2/双SID/发布；Start/allAccepted/actualtypedClosed/productionExecuted=false。
