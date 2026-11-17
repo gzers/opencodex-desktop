@@ -139,6 +139,10 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       const expected = next === 'cancelPreparation' ? (p.preparationKind==='created_root'?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
       if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + (next==='cancelPreparation'&&p.preparationKind==='created_root'?2:1)) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
       outcome.value = result; preview.value = null; checked.value = false; choice.value = null
+      // The mutation receipt is complete. The following read is observation,
+      // so show its outcome while keeping the lifecycle gate until a verified
+      // current snapshot arrives. A busy/failed read cannot replay the action.
+      executing.value = false
       await refresh()
       return true
     } catch (cause) {

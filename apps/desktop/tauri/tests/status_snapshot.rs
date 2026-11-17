@@ -4,6 +4,51 @@ use opencodex_desktop_lib::types::runtime_status::{unconfigured_snapshot, Status
 use opencodex_desktop_lib::types::status::{ConnectionState, OperationState, RuntimeState};
 
 #[test]
+fn concurrent_status_observer_refuses_instead_of_queuing_another_full_sample() {
+    use opencodex_desktop_lib::{
+        commands::get_status_snapshot_with_collector,
+        infrastructure::{
+            runtime_executable::FixedRuntimeExecutable, status_source::OfficialStatusSource,
+        },
+        modules::process::EnvironmentPolicy,
+    };
+    use std::{
+        sync::{mpsc, Arc, Mutex},
+        time::Duration,
+    };
+    let root = tempfile::tempdir().unwrap();
+    let source = OfficialStatusSource::new(
+        FixedRuntimeExecutable::unresolved(),
+        root.path(),
+        EnvironmentPolicy {
+            opencodex_home: root.path().join("home"),
+            ..Default::default()
+        },
+    );
+    let collector = Arc::new(Mutex::new(StatusCollector::new(source)));
+    let held = collector.lock().unwrap();
+    let other = collector.clone();
+    let (send, receive) = mpsc::channel();
+    let observer = std::thread::spawn(move || {
+        let result = get_status_snapshot_with_collector(&other);
+        send.send(result.map(|_| None).unwrap_or_else(|e| Some(e.to_string())))
+            .unwrap();
+    });
+    let immediate = receive.recv_timeout(Duration::from_millis(500));
+    drop(held);
+    observer.join().unwrap();
+    let error = immediate
+        .expect("busy sample must not queue behind the original lock")
+        .expect("busy is uncertainty, never an old successful snapshot");
+    assert!(error.contains("status_sample_in_progress"), "{error}");
+    assert_eq!(
+        collector.lock().unwrap().failure_count(),
+        0,
+        "no second sampling or failure mutation occurred"
+    );
+}
+
+#[test]
 fn status_snapshot_reports_unconfigured_without_guessing_live_state() {
     let snapshot = unconfigured_snapshot();
     assert_eq!(snapshot.matrix.runtime, RuntimeState::Loading);
