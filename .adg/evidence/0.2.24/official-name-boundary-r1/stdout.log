@@ -1,0 +1,63 @@
+{
+  "providerKeys": [
+    {
+      "value": "Krill",
+      "accepted": true
+    },
+    {
+      "value": "Krill.v2",
+      "accepted": true
+    },
+    {
+      "value": "中文渠道",
+      "accepted": false
+    },
+    {
+      "value": "渠道/组",
+      "accepted": false
+    },
+    {
+      "value": "ocxd-0123456789abcdef",
+      "accepted": true
+    }
+  ],
+  "labels": [
+    {
+      "label": "中文渠道/gpt-6-sol",
+      "error": "modelDisplayNames.\"gpt-6-sol\" must not contain /"
+    },
+    {
+      "label": "中文渠道 · gpt-6-sol",
+      "error": null
+    },
+    {
+      "label": "中文渠道 · vendor/a",
+      "error": "modelDisplayNames.\"gpt-6-sol\" must not contain /"
+    },
+    {
+      "label": "人工名称",
+      "error": null
+    }
+  ],
+  "projection": {
+    "input": {
+      "provider": "ocxd-0123456789abcdef",
+      "id": "gpt-6-sol",
+      "displayName": "中文渠道 · gpt-6-sol"
+    },
+    "output": {
+      "slug": "ocxd-0123456789abcdef/gpt-6-sol",
+      "display_name": "中文渠道 · gpt-6-sol",
+      "priority": 4,
+      "capabilitySentinel": {
+        "keep": true
+      },
+      "opencodex_capability_provenance": {
+        "provider": "ocxd-0123456789abcdef",
+        "model_id": "gpt-6-sol"
+      }
+    },
+    "routeUnchanged": true
+  },
+  "scope": "official exported validators/display projection only; no save/service/catalog-refresh/real client"
+}

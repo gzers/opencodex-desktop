@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 18；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 19；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -197,3 +197,10 @@ r2-r5逐文件单写集继续，新增明确originals目录内anchored/v3节点�
 - Mac并行维护.github装配与Mac程序来源/封装验收、共享页面与NAME剩余路线，不改Windows独占恢复/扫描文件。本次main 462e2476a9275cdf82e9e3235ed84820ac2c28c7仅离线交付核验/装配及相关测试；Windows合入main只承接这些装配变更，无需重跑已过原生项。
 - 双方一批完成即推送各自代码/证据分支。缺共享接口只暂停对应接线，其余继续；不每次准备动作另开全轮/改合同。Windows新handoff须区分工具/新产物/实际部署/生产完成；本次新r7轮次尚未补入旧handoff的事实由IMP回执注明。
 - 不提前W2/双SID或发布。最终候选清单、签名/来源和受影响原生验收由Mac固定后一次给Windows，旧失败证据不覆盖。
+
+
+## revision19 原Job只读观察接续
+
+r7-async源码/实际执行源分开见IMP-34 revision147，不将后继无证据提交算生产完成。对旧357无Status客户端的阻塞，由[r7文末增补](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)提供先原型后R0的只读Job原生查询路线：Windows临时允许test/windows024-native/**新PSS/仅QUERY复制/原生反例，不改原已加载image及产品权限ABI；既有future-host/完整scanner独占写集继续。
+
+当前不需Mac新产品接口SHA；main98787e64f已推只是Mac封装装配，Windows可增量合入，不因此重跑已有原生项。先交原型真实拒绝表，满足后当前R0全现场/唯一原Job当前历史/归档/精确R1计划；实际forced/恢复仍需用户对本现场单独确认。无权读取则停对应依赖，不提升/改策略/绕same-image；其余开发连续推进。当前尚无本机或Windows该新增查询原型通过的证明，不W2/双SID/发布。

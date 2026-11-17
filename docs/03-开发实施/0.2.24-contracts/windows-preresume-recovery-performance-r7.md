@@ -104,3 +104,35 @@ restore_originals在同一恢复10秒内，借原partialStore/原件handle与新
 | P2 定向产品 | 当前r2原件恢复且未来接口负例齐，精确新source/EXE/release profile；单SIDStart/同采样Status/Stop/后继等按原前提真实计量 | 未过前提不跑真实官方新轮；Start仍公开拒绝，仅原批准隔离通道，不W2/双SID/发布 |
 
 后继提示词给代码/文档精确SHA。Windows范围内可连续完成恢复工具、未来接口与性能改动、批量定向验证及时推送；方案或原生权限/新不可读scope变更时带具体事实回交。原缺席Codex安全退根/初始化/ownerreceipt/最大batch容量/普通MSI/CAP-trust/GUI官方Owner/H-S-D/历史清理与NAME等整版未完不由本次关闭。全部失败目录/旧删除拒绝保持，不改官方或日常配置/策略、不真实业务/模型调用、不发布。
+
+
+## 2026-11-17增补：旧宿主缺只读Status客户端的原Job查询边界
+
+消费Windows r7-async的blocking-request.json/r7-loaded-job-status。已复核载入源357210891：failure-control服务端允许Status，但ocxd只暴露确认式failure-cleanup客户端；原Job为匿名CreateJobObjectW，原宿主/monitor保留其句柄。**不能凭源码中存在Status分支称客户端可用，不能把旧total1/active1当当前证明，也不能执行cleanup来试探当前状态。**
+
+决定允许Windows先在**test/windows024-native/**新增独立轻量的、仅查询的原Job观察原型，优先使用有文档的PssCaptureSnapshot/PssWalkSnapshot句柄快照＋DuplicateHandle只读复制。它观察原内核Job对象，不伪造旧same-image客户端、不成为NativeOwner/恢复权限。此增补只解除“无可尝试的只读观测路线”，不是宣称已经能读取原Job；真实成功及全部否例仍须原生证明。产品四trait/Schema/预算/当前r2恢复确认均不变，不新增全产品构建依赖。
+
+### 查询实现的有限写集与前置
+
+1. 原型先只针对自己创建的broker/匿名Job/从未Resume launcher夹具，真实普通token、不提升/SeDebugPrivilege/改ACL或策略。只打开已经逐native核准身份的broker（当前现场对应75744/原FILETIME/source/SID1003/session7）和准确Node21500观察句柄；所需Process查询及DUP_HANDLE权限先最小值实测记录，不用PROCESS_ALL_ACCESS/PROCESS_VM_WRITE/CREATE_THREAD/SUSPEND_RESUME/TERMINATE。缺权限即Unknown，禁止换提升令牌或驱动。
+2. 用PSS_CAPTURE_HANDLES及必要的handle基本/类型信息，完整遍历该**单一broker**的句柄快照，核返回标记/类型名称长度/完整终止状态。不得开VA_CLONE、线程上下文、内存dump或全机handle扫描；不读取/日志输出无关File/Token内容及名字。SDK若不能仅在这些flags下完整提供Job类型，先回实测阻塞，不转未声明NT解析或扩大读范围。raw错误/预算耗尽/截断/类型未知均不得跳过计成功。
+3. 只对明确Job候选调用DuplicateHandle：目标为观察器本进程，desiredAccess仅JOB_OBJECT_QUERY，inherit=false、options=0；禁止DUPLICATE_SAME_ACCESS、DUPLICATE_CLOSE_SOURCE、远程关闭任何句柄、注入/重写入口或改变原宿主文件。本地副本只用于QueryInformationJobObject/IsProcessInJob/CompareObjectHandles，不调用SetInformationJobObject/TerminateJobObject或任何Resume。
+4. 同一次观察内保留全部Job副本，用CompareObjectHandles识别重复句柄实际是否同一个内核Job；对原Node实际保留进程句柄执行IsProcessInJob，必须**唯一内核Job**匹配，不凭一个PID列表或命名/handle整数宣称原对象身份。完整两遍broker句柄枚举、对应副本对象比对与原broker/Node FILETIME/token/image/退出状态前后复核；原相关句柄或候选集合漂移/多个不同Job匹配/不支持比对/任一所需读失败均Unknown。
+5. 从这个**实际原Job查询副本**取得BasicAccounting（TotalProcesses/ActiveProcesses/TotalTerminatedProcesses）、完整PIDList及ExtendedLimitInformation；在原预算内前后再次采样。当前beforeResume分支必须total=1、active=1、terminated=0、唯一实际成员为原Node；原Job禁breakaway的flags/原对象所属与源实现一致，原Node原线程/未Resume谱系及源/current/原件断言仍必须另核。计数不符、曾额外成员/退出历史、PID复用、静止/单线程不够、所有未知均拒绝此修复路径。**不把“当前只有1个PID”替代“历史total=1”**，也不把查询到Job替代从未Resume的组合证据。
+6. 只读原型结束时只释放自己创建的snapshot/walkmarker和本地副本；原broker/Node/source/records/Job继续原样。原型观察句柄不持久化为权限，不给产品恢复mint proof。需证明自己的Job副本没有引入原对象最后句柄关闭副作用；源创建的Job配置及原broker存活仍在前后实际核对，原句柄从未关闭。
+
+### 通过原型之后的当前现场与恢复边界
+
+只有同源普通token夹具证明完整枚举/重复handle去重、正确Job匹配、从未Resume/历史退出/多Job/错PID-FILETIME/权限拒绝/候选变化/超时均严格分类后，Windows可在本轮已授权**只读R0**中对原现场应用相同原型，保留原字节源码/新exe hash/原生事实及完整r2归档。只读收集不要求用户为无副作用查询再授权；此处不授权执行R1终止/返回原件。
+
+R1精确计划如继续采用原宿主已存在的cleanup命令，须把上述**同一个原Job的查询副本**保持到前后查询：先唯一原成员与total=1，再执行用户批准的原控制cleanup，之后同一查询句柄total=1/active=0/terminated计数与该forced事实一致、原Node同保留进程句柄退出/raw码、原宿主回执一并核验。**查询副本只替代不可达只读Status的观测来源，不取代原宿主的终止权，也不放行外部TerminateProcess(Node)**；原cleanup认证/路径不可达仍拒绝。
+
+若释放原件句柄确需终止准确broker，仍必须在同一具体R1计划中单独列出并获原Windows用户确认；query副本可在broker退出前后复核同内核Job为空，但不是NormalStop/Closed。任何新Job/额外成员/原查询能力丢失、counter矛盾、source/current/原件变化均不恢复。CurrentR2权限仍未批准、旧50580/54692授权不沿用。无法满足本增补时保留该依赖阻塞，Windows继续future-host和扫描独立开发；不得再以“只差Status”重跑官方Start。
+
+### 实现验证输入与输出
+
+共享代码无需新增接口，本次Mac只改合同/接收证据/IMP/TEAM，不触碰Windows独占源码。Windows基线2306f39880fde481a182e724c7a58bbbbf2a0310（该末尾若有本线新提交增量承接），main98787e64f152515a6aa8e5b3c31b0330beaeca67只含Mac封装装配；本轮允许写test/windows024-native/**里的新Job-query原型、fixture/负例/执行器及本线证据与handoff，不改原已加载image/旧namespace/产品权限类型。不得把DATA负例或controller夹具当SID1003当前现场读取通过。
+
+回交顺序：先同源原生原型/拒绝表；满足后只读R0完整实际现场、查询结果/未Resume组合、全归档及精确R1计划；此时再一次向用户请求本现场恢复。已有beforeResume和完整扫描写集不变，可同时连续开工，缺共享ABI时才另回最小请求。不W2/双SID/发布。
+
+API依据（文档只能证明调用语义，不替代Windows实测）：[PssCaptureSnapshot](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/nf-processsnapshot-psscapturesnapshot)、[PSS_CAPTURE_FLAGS](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/ne-processsnapshot-pss_capture_flags)、[PSS_WALK_HANDLES](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/ne-processsnapshot-pss_walk_information_class)、[DuplicateHandle](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle)、[CompareObjectHandles](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-compareobjecthandles)、[QueryInformationJobObject](https://learn.microsoft.com/en-us/windows/win32/api/jobapi2/nf-jobapi2-queryinformationjobobject)。本机无Windows kernel，未声称原型/当前Job已执行通过。

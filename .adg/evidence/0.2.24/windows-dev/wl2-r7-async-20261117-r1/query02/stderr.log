@@ -1,0 +1,60 @@
+   Compiling subtle v2.6.1
+   Compiling digest v0.10.7
+   Compiling sha2 v0.10.9
+   Compiling hmac v0.12.1
+   Compiling windows024-r7-query-proof v0.1.0 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness)
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `verify_private_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:34:15
+   |
+34 | pub(crate) fn verify_private_file(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `verify_private_directory` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:38:15
+   |
+38 | pub(crate) fn verify_private_directory(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_originals_work_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:45:15
+   |
+45 | pub(crate) fn create_private_originals_work_file(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `owned_file_identities` and `into_owned_files` are never used
+   --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths.rs:115:19
+    |
+112 | impl PinnedDirectory {
+    | -------------------- methods in this implementation
+...
+115 |     pub(crate) fn owned_file_identities(&self) -> io::Result<Vec<FileIdentity>> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+134 |     pub(crate) fn into_owned_files(self) -> Vec<File> {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: methods `matches_id` and `content_policy_protection` are never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\bounded\query.rs:322:67
+    |
+286 | impl SnapshotData {
+    | ----------------- methods in this implementation
+...
+322 |     pub(in crate::infrastructure::windows_client_originals024) fn matches_id(
+    |                                                                   ^^^^^^^^^^
+...
+331 |     pub(in crate::infrastructure::windows_client_originals024) fn content_policy_protection(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: `windows024-r7-query-proof` (lib test) generated 6 warnings (run `cargo fix --lib -p windows024-r7-query-proof --tests` to apply 1 suggestion)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.72s
+     Running unittests src\lib.rs (test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/eb6d7435641b3603\out\windows024_r7_query_proof-eb6d7435641b3603.exe)

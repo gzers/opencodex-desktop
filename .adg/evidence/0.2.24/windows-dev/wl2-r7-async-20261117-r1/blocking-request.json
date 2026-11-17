@@ -1,0 +1,16 @@
+{
+  "schema":"windows-async-blocking-request-v1",
+  "source":"73d8eb155ae474940cecf4d8933c41d924b29a83",
+  "evidence":"48181b0b59eda60e32ce31dc670ef689c542183a",
+  "teamRevision":17,
+  "contract":"windows-preresume-recovery-performance-r7",
+  "delivery":"existing windows-dev-handoff.md via docs/024-windows-dev Git; receiving/decision not yet proven",
+  "requests":[
+    {"id":"r7-loaded-job-status","owner":"Mac integration contract","blockedItems":["R1 current r2 execution readiness"],"fact":"Loaded357 ocxd exact-image client dispatch only exposes forced cleanup, no read-only Status. New helper cannot authenticate as old image. Original Job total1/active1 is creator failure history; current read-only Job total is not reachable using supported client.","ask":"Determine an explicit admissible observation boundary for the already-loaded host or keep this dependency blocked. Any external termination fallback or relaxation of unknown history requires explicit contract/security decision and later exact user recovery approval.","kept":"No new-image pipe attempt, injection, process resume or external cleanup; old two-target consent never reused."},
+    {"id":"r7-build-memory","owner":"Windows implementation","blockedItems":["full Tauri lib test and product artifact"],"fact":"MSVC lib test and product build raw101 allocation/LLVM OOM; current available commit about4.7GiB, original logs in previous evidence.","next":"Build a light native harness against actual independent Windows security/native modules; retain full product qualification as a dependent gap. No pagefile/policy/daily-process change, no same-premise full build retry.","ask":"Mac may continue shared review and main integration independently; no user turnaround required for this routine blocker."}
+  ],
+  "continuing":["same-source lightweight native security query tests","exact recovery tooling and synthetic counterexamples","future beforeResume native proof/schema implementation within write set","single-inventory metrics and Windows scan optimization"],
+  "publicStartOpen":false,
+  "forcedExecuted":false,
+  "allAccepted":false
+}
