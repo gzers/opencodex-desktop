@@ -3,6 +3,8 @@ use crate::infrastructure::windows_client_originals024::{
     coordination::NativeLease, tree::tests::Fixture,
 };
 use std::time::Duration;
+#[path = "join_tests.rs"]
+mod join_tests;
 struct Scene {
     fixture: Option<Fixture>,
     root: PathBuf,

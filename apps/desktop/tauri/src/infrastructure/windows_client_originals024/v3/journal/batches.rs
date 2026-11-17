@@ -9,10 +9,10 @@ use super::super::batches::{BatchKind, BatchOperation, BatchRow, RowEvent};
 use super::super::recovery::RecoveryOperation;
 use super::*;
 pub(super) struct RetainedNativeBatch {
-    id: String,
-    kind: BatchKind,
-    values: Vec<VerifiedBatchValue>,
-    committed: bool,
+    pub(super) id: String,
+    pub(super) kind: BatchKind,
+    pub(super) values: Vec<VerifiedBatchValue>,
+    pub(super) committed: bool,
 }
 impl Journal {
     fn batch_claim(&mut self, claim: &mut AnchoredClaim<'_>, end: Instant) -> io::Result<()> {

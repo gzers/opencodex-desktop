@@ -214,6 +214,53 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_prefix(
+        &mut self,
+        owner: &mut Owner,
+        claim: &mut super::super::coordination::AnchoredClaim<'_>,
+        window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+    ) -> AppResult<serde_json::Value> {
+        let result = (|| {
+            owner.check_before_resume_process(window)?;
+            if self.partial.is_some() {
+                return Err(refused("原准备前缀尚无完整canonical；不得补造manifest"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原Store缺席；不从记录重建"))?;
+            if store.ready.is_some()
+                || store.stop_deadline.is_some()
+                || store.restored_history
+                || store.closed_exit.is_some()
+                || store.closed_absent.is_some()
+                || store.stopped_content.is_some()
+                || store.stop_completed
+            {
+                return Err(refused("不是原失败Start分支"));
+            }
+            store
+                .routes
+                .as_mut()
+                .ok_or_else(|| refused("原route缺席"))?
+                .declared(owner.home_path(), window.deadline())
+                .map_err(refused)?;
+            let data = store
+                .core
+                .read_before_resume_prefix(&mut store.source, owner, claim, window)
+                .map_err(refused)?;
+            owner.check_before_resume_process(window)?;
+            Ok(data)
+        })();
+        if result.is_err() {
+            self.failed = true;
+            if let Some(store) = &mut self.retained {
+                store.failed = true;
+                store.core.poison();
+            }
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn completed_stop_original(
         &mut self,
         owner: &mut Owner,

@@ -57,6 +57,50 @@ pub(in crate::infrastructure::windows_client_originals024) struct CapturedTrees 
     failed: bool,
 }
 impl CapturedTrees {
+    pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_prefix(
+        &mut self,
+        source: &mut crate::infrastructure::windows_client_originals024::source::Source,
+        owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
+        claim: &mut AnchoredClaim<'_>,
+        window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+    ) -> io::Result<serde_json::Value> {
+        let result = (|| {
+            if self.ready
+                || self.prepared_stop.is_some()
+                || self.stopped_observed
+                || self.content_assessment.is_some()
+                || self.restored_history
+            {
+                return Err(invalid());
+            }
+            let trees = self.trees.as_mut().ok_or_else(invalid)?;
+            let before = [
+                trees[0].read_before_resume_prefix(claim, window.deadline())?,
+                trees[1].read_before_resume_prefix(claim, window.deadline())?,
+            ];
+            let canonical = self
+                .journal
+                .read_before_resume_trees(source, owner, claim, window, &before)?;
+            let after = [
+                trees[0].read_before_resume_prefix(claim, window.deadline())?,
+                trees[1].read_before_resume_prefix(claim, window.deadline())?,
+            ];
+            if before != after {
+                return Err(invalid());
+            }
+            let final_canonical = self
+                .journal
+                .read_before_resume_trees(source, owner, claim, window, &after)?;
+            if canonical != final_canonical {
+                return Err(invalid());
+            }
+            Ok(serde_json::json!({"canonical":canonical,"trees":after,"runtimeAuthority":false}))
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn check_original_ready_read(
         &mut self,
         source: &mut crate::infrastructure::windows_client_originals024::source::Source,

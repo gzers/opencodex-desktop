@@ -66,6 +66,20 @@ pub(super) struct BatchProgress {
     rows: Vec<BatchRow>,
     prefix: usize,
 }
+impl BatchProgress {
+    pub(super) fn before_resume_parts(&self) -> io::Result<(&str, BatchKind, usize, usize)> {
+        if !matches!(self.kind, BatchKind::OriginalMove | BatchKind::WorkCreate)
+            || self.prefix >= self.rows.len()
+        {
+            return Err(invalid());
+        }
+        Ok((&self.batch_id, self.kind, self.rows.len(), self.prefix))
+    }
+    pub(super) fn before_resume_rows(&self) -> io::Result<&[BatchRow]> {
+        self.before_resume_parts()?;
+        Ok(&self.rows)
+    }
+}
 #[derive(Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub(super) struct BatchSummary {

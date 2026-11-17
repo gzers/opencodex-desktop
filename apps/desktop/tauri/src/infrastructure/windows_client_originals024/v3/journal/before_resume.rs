@@ -1,6 +1,7 @@
 //! Read-only failed-Start canonical DATA. No old deadline changes, poison
 //! clearing, event/current writes, deserialized native proofs or Closed grant.
 use super::*;
+mod join;
 use crate::{
     infrastructure::{
         windows_client_originals024::{coordination::AnchoredClaim, source::Source},
@@ -9,6 +10,21 @@ use crate::{
     modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
 };
 impl Journal {
+    #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn component_read_before_resume_trees_for_test(
+        &mut self,
+        trees: &[serde_json::Value; 2],
+        epoch: &str,
+        key: &str,
+        end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        if self.source_action.is_some() {
+            return Err(invalid());
+        }
+        let data = self.read_failed_start_records(end)?;
+        self.match_before_resume_trees(trees, epoch, key)?;
+        Ok(data)
+    }
     fn read_failed_start_records(&mut self, end: Instant) -> io::Result<serde_json::Value> {
         let result = (|| {
             before(end)?;
@@ -116,6 +132,25 @@ impl Journal {
                 .check_before_resume_process(window)
                 .map_err(io::Error::other)?;
             Ok(data)
+        })();
+        if result.is_err() {
+            self.poisoned = true;
+        }
+        result
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_trees(
+        &mut self,
+        source: &mut Source,
+        owner: &mut Owner,
+        claim: &mut AnchoredClaim<'_>,
+        window: &BeforeResumeRecoveryWindow,
+        trees: &[serde_json::Value; 2],
+    ) -> io::Result<serde_json::Value> {
+        let result = (|| {
+            let canonical = self.read_before_resume_prefix(source, owner, claim, window)?;
+            self.match_before_resume_trees(trees, claim.epoch(), &claim.key())?;
+            before(window.deadline())?;
+            Ok(canonical)
         })();
         if result.is_err() {
             self.poisoned = true;

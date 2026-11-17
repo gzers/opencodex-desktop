@@ -70,6 +70,32 @@ pub(crate) struct WindowsOriginals {
     failed: bool,
 }
 impl WindowsOriginals {
+    pub(crate) fn read_before_resume_prefix(
+        &mut self,
+        owner: &mut Owner,
+        claim: &mut super::coordination::AnchoredClaim<'_>,
+        window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+    ) -> AppResult<serde_json::Value> {
+        let result = (|| {
+            owner.check_before_resume_process(window)?;
+            if self.owner_scope.as_ref() != Some(&owner.scope()?)
+                || self.session.is_none()
+                || self.prepared_ready.is_some()
+                || matches!(
+                    self.stage,
+                    Some(Stage::Ready | Stage::Prepared | Stage::Closed)
+                )
+                || self.awaiting_successor
+            {
+                return Err(refused("不是原失败capture槽"));
+            }
+            self.slot.read_before_resume_prefix(owner, claim, window)
+        })();
+        if result.is_err() {
+            self.failed = true;
+        }
+        result
+    }
     fn check_closed_owners(&self, owner: &mut Owner) -> AppResult<()> {
         let previous = owner.originals_previous_owners();
         if self.closed.len() != previous.len()
