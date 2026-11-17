@@ -1,0 +1,23 @@
+{
+  "elapsedMs": 9133,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/r7-query-harness/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--test",
+    "abort",
+    "-j",
+    "1",
+    "r7_abort_prepared_readback_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "raw": 0,
+  "currentR2Touched": false,
+  "productionAccepted": false
+}

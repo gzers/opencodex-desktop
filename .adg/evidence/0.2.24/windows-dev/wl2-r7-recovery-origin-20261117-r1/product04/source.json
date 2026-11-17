@@ -1,0 +1,46 @@
+{
+  "files": [
+    {
+      "sha256": "79a7e6de1e260e9a4719ffa3462b211bf0b66037763f544217de7fbda8a2dd79",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs"
+    },
+    {
+      "sha256": "fad25276b12e155157a5cc27865e91f9befb9e17d62bac1f0888ea7507c2b127",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs"
+    },
+    {
+      "sha256": "e877e7af5e9306bc8c5efb081c34bbf5dccf755275ef69a927e216915e19738e",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs"
+    },
+    {
+      "sha256": "17277416effa740875b496a15b467dbb1d803454da5511d076d5f3e10d47bf3c",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/tests.rs"
+    }
+  ],
+  "reason": "final already-issued NativeAction mutation receipt also refuses original recovery occupancy; raw code and ErrorKind preserved",
+  "head": "be3745fb93d2f06049128c3ae2f7e2ca6825e49f",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_recovery_origin_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}
