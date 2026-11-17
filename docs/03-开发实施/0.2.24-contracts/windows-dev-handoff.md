@@ -984,3 +984,9 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 ## 2026-11-17 r6 代理交付恢复
 
 用户指定127.0.0.1:3060代理。仅各次Git命令配置proxy，未改日常Git配置；fetch成功且main fac8573e5 / governance578230717未变。首push连接reset后回读仍950d3f6da；改HTTP/1.1后按原提交顺序60e018646、37d29aed0均成功推送，远端分支37d29aed0111d448bd130bf7abf97cf1aac5e8e7精确核验。准备717个与真实接收43个Git载荷原字节核验通过。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-proxy-delivery-20261117-r1/。此前网络未交付停点现已解除；首次Resume前失败恢复最小接口请求仍未解除，原75744/21500/custody与40588不动，公开Start/整版accepted仍false，不原包重跑/W2/双SID/发布。
+
+## 2026-11-17 r6 固定Windows完整镜像校验成本
+
+源码44bb9bdbabc78f1754b9df135f3d183205fcb9ec/tree54d000bcf8fc9165eb6e1f518df989a7728f86ce已推送，仅Windows独占测试与驱动，非测试生产Rust/共享模块均未改。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-source-scan-cost-20261117-r1/。同固定官方sourceDigest的控制器自有副本，原共享全量verify四样本6079.433/6353.553/4805.450/8928.700ms，selection2.997/3.645/3.684/3.406ms；setup115668ms单列。实际改变副本源文件被拒绝，恢复原字节全量通过，1pass/raw0。源码+原r2事件9推断至少8次先前全量校验，不是原普通进程的实时阶段计数；副本样本只支持预算风险，不冒实际30699ms因果分配/生产时间下界/release预算。原包产品制品仍357210891，不重编/重跑官方。
+
+首library01 LLVM OOM101未执行测试，无fixture，原失败留；仅根测试包CLI codegen256后library02同Rust及断言过，测试debug0/incrementalfalse配置明列，不改日常机器/进程。源原字节manifest/Git核，初轮driver代码生成参数差额明列；生成schema保原字节且还原tracked，完整副本/日志保留无删除。完整127项状态与全部原未完保持。shared-performance-request.json请求集成先定当前beforeResume恢复，再量实际动作并评估共享program_image Windows inventory成本；不跳检查/旧摘要缓存/延预算/元数据替代/改共享范围。原75744/21500/custody及40588不动，Start/allAcceptedfalse，无日常/官方/模型/业务/旧raw5/空GUI/W2/双SID/发布。

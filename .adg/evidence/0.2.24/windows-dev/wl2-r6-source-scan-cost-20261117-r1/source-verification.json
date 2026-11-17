@@ -1,0 +1,24 @@
+{
+  "commit": "44bb9bdbabc78f1754b9df135f3d183205fcb9ec",
+  "runs": [
+    {
+      "run": "library01",
+      "files": 224,
+      "rawBytesVerified": true,
+      "committedRustInputsMatch": true,
+      "driverDifferences": [
+        "test/windows024-native/build-wl2.ps1"
+      ]
+    },
+    {
+      "run": "library02",
+      "files": 224,
+      "rawBytesVerified": true,
+      "committedRustInputsMatch": true,
+      "driverDifferences": []
+    }
+  ],
+  "allNonTestProductionRustUnchanged": true,
+  "allSharedFilesUnchanged": true,
+  "actualR2SourceDigestMatchesCopy": true
+}
