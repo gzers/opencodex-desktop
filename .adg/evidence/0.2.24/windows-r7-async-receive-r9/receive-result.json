@@ -1,0 +1,164 @@
+{
+  "codeFetched": "2306f39880fde481a182e724c7a58bbbbf2a0310",
+  "evidenceSource": "571de2ee0ed0075229bd41a142ff5476c0949c4c",
+  "verifiedExecutionSource": "2f3b67b4169a587e3cf91c43ac014370b11b2b1d",
+  "evidenceFiles": 61,
+  "payloadFiles": 60,
+  "payloadBytes": 254688,
+  "sourceChecks": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/hash.rs",
+      "executedBytes": 3272,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+      "executedBytes": 12579,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/tests.rs",
+      "executedBytes": 7630,
+      "exactGit": true,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/bounded/query.rs",
+      "executedBytes": 22240,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/command.rs",
+      "executedBytes": 6144,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/file_move.rs",
+      "executedBytes": 9400,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/host_process.rs",
+      "executedBytes": 5869,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/listeners.rs",
+      "executedBytes": 6464,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "executedBytes": 3182,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "executedBytes": 13407,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/peer.rs",
+      "executedBytes": 3468,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/pipe.rs",
+      "executedBytes": 12663,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process_monitor.rs",
+      "executedBytes": 8526,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "executedBytes": 38425,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/README.md",
+      "executedBytes": 4883,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/security.rs",
+      "executedBytes": 9847,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/windows_lifecycle024_contract.rs",
+      "executedBytes": 14967,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/Cargo.lock",
+      "executedBytes": 7785,
+      "exactGit": true,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/Cargo.toml",
+      "executedBytes": 522,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/mod.rs",
+      "executedBytes": 183,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/bounded.rs",
+      "executedBytes": 152,
+      "exactGit": false,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/bounded/tests.rs",
+      "executedBytes": 5654,
+      "exactGit": true,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+      "executedBytes": 163,
+      "exactGit": true,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/lib.rs",
+      "executedBytes": 615,
+      "exactGit": true,
+      "crlfEquivalent": true
+    },
+    {
+      "path": "test/windows024-native/run-r7-query.ps1",
+      "executedBytes": 3120,
+      "exactGit": true,
+      "crlfEquivalent": true
+    }
+  ],
+  "laterCodeBoundary": "98bd87926/cd427f938/2306f3988 newer than this evidence; not counted as tested or production accepted",
+  "allAccepted": false,
+  "nativeCurrentR2Queried": false,
+  "productBuilt": false
+}

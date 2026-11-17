@@ -1,0 +1,44 @@
+[
+  {
+    "name": "binding-tests",
+    "argv": [
+      "python3",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "test",
+      "-p",
+      "test_verify_macos_build_024.py",
+      "-v"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "retry-tests",
+    "argv": [
+      "node",
+      "--test",
+      "test/smoke/tauri-build-retry.test.mjs"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "workflow-yaml",
+    "argv": [
+      "ruby",
+      "-e",
+      "require \"yaml\"; YAML.load_file(\".github/workflows/release.yml\"); puts \"YAML parsed\""
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "diff-check",
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitCode": 0
+  }
+]

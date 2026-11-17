@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 144；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 147；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 462e2476a9275cdf82e9e3235ed84820ac2c28c7（非冻结候选）；Windows实现检查点codex/024-windows-native 73d8eb155ae474940cecf4d8933c41d924b29a83（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 98787e64f152515a6aa8e5b3c31b0330beaeca67（非冻结候选）；Windows实现检查点codex/024-windows-native 2306f39880fde481a182e724c7a58bbbbf2a0310（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -27,7 +27,7 @@ revision: 144；2026-11-17。用户要求本机与Windows可独立开发部分�
 | P24-W1 | W-L1生产Start/Status定向已接，完整Stop/原件恢复/跨管理器连续性未通过；r6已有根r2实测Start超30秒、从未Resume但3原件已custody；r7明确受限修复/未来beforeResume接口与扫描写集，现场待安全恢复/生产闭环未完 | Windows后端接共享调用合同；Windows当前用户CLI/PATH和自定义安装根/版本目录/卸载平台适配。 | 实际运行版本/HOME/安装根一致；用户级入口/PATH有归属与撤销，安装更新不误删配置或别用户对象。 | 管理员MSI原两项通过不变。c47953ccf/fe1a54f6e已fetch并复核来源/证据；未整合5573行未完实现到main。main2ebdd3ae0只增共享r4范围/新schema声明，TEAMr14继续Windows单写；原语和空H组件不冒生产能力通过，完整Stop/普通MSI/cleanup/allAccepted仍false，固定候选前不W2。 |
 | P24-04 | Mac普通Stop及显式中断恢复已接；已有Codex但缺Grok/未用专用清单路径已核验；首次空配置及Grok备份可逆恢复已接；缺根目录归属/同锁登记与原缺席原件捕获已接，整根可逆归档/独立movement登记与缺根只读核验、真实Guard约束的整根读回事务已接，首次缺根生产捕获/阶段与Stop恢复已接，原包release定向首次30/5/10通过且debug超时保留；多代来源/专用捕获/存储滚动及生产nextStart/状态同源接线已接，main287ee0c9d固定release库宿主正常原包两代30/5/10已定向通过（Stop6016/9572ms、RootAbsent9/18、两closed）；动作后继资格与status同源通过，旧超时/pending19失败全保留，重复启停/根未移中断与创建取消/状态UI收口/一般范围/固定候选/缺Ready/Windows未完；根已退休完整读回的显式metadata收尾及重复确认已过本批原包专用验；动作回执后继资格已接同次完整认证，固定候选原包验收未完 | 本机接收W0/W1，核对来源与写集，接共享模块/命令/配置和生命周期/事务；Windows修本线集成编译问题。 | 最终合并树跑真实共享流程；分线通过不当集成通过；同30/5/10秒和未知拒绝保持。 | 小批次回交，不等Windows末轮才合并；保持开发重叠。 |
 | P24-NAME | 剩余技术方案未定，局部等待 | 非直接合法运行键名称及多协议派生组名称展示/官方刷新保持；普通合法英文改名已有能力不重复开发。 | 原始模型/认证/能力保持，明确改名可改实际键及引用；正式显示出口、默认客户端/刷新/重启/回退有证据。 | 10组真实保存确认，中文等新增/改名均转内部键；不私改原样2.99、不用combo降能力/双写轮询。只阻塞依赖它的名称改动和整版最终验收。 |
-| P24-05 | 官方运行包离线逐成员/原样源码发行装配核验已接，19项定向检查与真实Darwin包已过；Mac真实024工程.app及正常首次供应已验证；旧工程DMG早于最新源码，非冻结候选，Windows/NAME/完整原生未完 | 本机完成共享逻辑/页面/原型对照、Mac真实原包与必要安装/CLI/升级回退；构建并固定Windows集成候选。 | 给精确代码SHA、官方包版本/SHA、安装器SHA、调用合同和一次完整受影响原生验收表。 | 共享页面不重复交Windows；Mac可在Windows开发期间做有用检查。 |
+| P24-05 | 官方运行包离线逐成员/原样源码发行装配核验已接，19项定向检查与真实Darwin包已过；同轮Tauri三个程序来源绑定及真实只读单appDMG已核验（产品源462e2476）；非冻结候选，Windows/NAME/完整原生未完 | 本机完成共享逻辑/页面/原型对照、Mac真实原包与必要安装/CLI/升级回退；构建并固定Windows集成候选。 | 给精确代码SHA、官方包版本/SHA、安装器SHA、调用合同和一次完整受影响原生验收表。 | 共享页面不重复交Windows；Mac可在Windows开发期间做有用检查。 |
 | P24-W2 | 最后交接，当前不跑 | 用户把本对话生成的最终简短提示词交Windows；针对固定集成候选，一轮采集所有受影响原生项状态/证据。 | 双SID真实桌面并行、受保护生命周期/恢复及原预算、路径/CLI/相关安装更新卸载；失败保留，未知不通过。 | 按最终diff选必需项。不是旧r5第六轮，也不在未集成源码上提前宣称产品通过。 |
 | P24-06 | 待最终回交 | 本机复核Windows完整表，批量修全部可并行失败项，再做受影响增量验；名称未闭合仍不发版。 | 所有本版必需项有最终来源证据、清理、文档/原型对照和有效发布授权；无假放行。 | Windows成功结果不覆盖旧失败；测试来源变更先评估依赖，不一处失败一轮全跑。 |
 
@@ -1503,3 +1503,36 @@ main 462e2476a9275cdf82e9e3235ed84820ac2c28c7新增离线官方交付核验并�
 [定向证据](../../.adg/evidence/0.2.24/official-delivery-verifier-r1/result.json)：19项测试通过；真实Darwin包246,638,059字节、11,467成员/633,363,932展开字节、102个锁定依赖、2,664官方文件通过，descriptor e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3；原包b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c。压缩尾部中间反例曾失败，修复说明及最终源码/日志保留。测试临时夹具自动清理，未解包执行真实程序、未写日常配置/同步/模型请求；此处不是新sealed .app/DMG验收。
 
 下一步本机独立处理最终sidecar/已封装程序来源绑定与受影响Mac候选；NAME剩余路线仍须闭合，Windows沿当前写集独立继续，最终固定集成候选后才W2。当前不创建版本标签/发布。
+
+
+### 2026-11-17 revision145：Mac三个程序来源与真实单appDMG
+
+本机继续独立P24-05，main 98787e64f152515a6aa8e5b3c31b0330beaeca67新增Mac封装来源核验：直接消费同轮Tauri转交Cargo的成功compiler-artifact/build-finished回执，固定项目src/main.rs及src/bin/ocx.rs、ocxd.rs三个准确输出；源提交/产品工作树不变、封装MacOS成员集合恰为三项、原封装codesign严格通过。对各compiled/sealed临时副本去签名后统一无时间戳ad-hoc标识，再完整字节比较；原产物从不重签或改字节，操作后重核原SHA，副本清理。未知输出/重复或失败回执/旧helper/额外成员/链接/签名失败拒绝。
+
+Tauri wrapper增独立标准输出证据（16MiB上限，截断不能通过），workflow传Cargo JSON并在Mac封装复核后消费唯一成功尝试、保存build-binding artifact；下载重试分类/原失败保留不变。5项新边界测试＋3项真实子进程重试测试通过；YAML解析与内嵌Python编译通过、diff检查通过，未冒actionlint或完整GitHub workflow运行。
+
+[真实工程证据](../../.adg/evidence/0.2.24/macos-build-binding-r1/package-evidence.json)：产品源main462e2476a9275cdf82e9e3235ed84820ac2c28c7，以同轮Tauri实际Cargo输出构建/封装三个程序及官方资源，Release构建305593ms通过。sealed Desktop SHA9dd6cf70f6cad7c25ef597e4b585e0ab701a45fc13c3cc4c813383566e499913，ocxd c142ddbd73e17f55da247aaacc9ed0d149aaf1643947ce59d0290f0c4f882632，ocx 5a33b3d9ba6cee1192e95a454fae14ccc7a0a9f0fa1d886b1e0de0b9c011ffdf。verifier后继提交只改装配/测试，不冒产品由该后继SHA编译。
+
+单appDMG278285528字节，SHA52097916684d23cb5ec4da592aa114b5559a3750b3bfacc8f19ea3ab382f090c；真实hdiutil只读挂载、完整原封装tree/签名/逐成员官方资源比对、单.app＋Applications精确链接＋Install.txt通过，原app不变/未安装未启动服务、临时mount/scratch退出，去签名诊断副本精确清理，工程包和历史app明确留作工程产物。非notarized/非updater签名/非最终集成候选，不交用户升级或公开发布。
+
+中间错误保留：另行cargo build与Tauri配置不同的主程序比较先拒绝；同Tauri产物去签名后仍两字节__LINKEDIT签名分配元数据不同，实际位置/命令归诊断证据。最终方法在副本统一签名身份后完整一致，未按偏移忽略字节。原失败与新成功分别保留，不回填成功覆盖。
+
+P24-05当前完成这一独立工程装配缺口，最终发行整组校验门仍关闭；NAME方案、Mac剩余一般客户端图/取消/缺Ready/真实集成及Windows生产恢复/预算未完成。本机继续独立工作；Windows无需重复本批共享/页面检查，按r7恢复与性能独占写集接续。
+
+
+### 2026-11-17 revision146：精确Mac工程包首次供应复验
+
+产品源462e2476a9275cdf82e9e3235ed84820ac2c28c7／sealed Desktop9dd6cf70f6cad7c25ef597e4b585e0ab701a45fc13c3cc4c813383566e499913同前述DMG，不换原包/预算/配置语义。[首次供应证据](../../.adg/evidence/0.2.24/macos-462e2476-first-supply-r1/summary.json)以当前普通私有Profile、生产startup、无OPENCODEX_SANDBOX执行，OS sandbox负控证明外网/日常HOME拒绝；先置当前格式合成配置只为关闭自动在线/同步/启动，不调用Start或业务。
+
+73.419秒完成观察和清理：UI从展开包→核对固定依赖→核对入口→内置程序已就绪→概览，正确无陈旧“接入后可启动”；current真实版本2.99.0及原官方SHA、实际Node v26.8.1/npm11.19.0/ocx opencodex2.99.0 exit0；临时配置字节保持、runtimePortRecordAbsent、原app和副本binary不变。此耗时是首次离线供应＋GUI观察清理，不冒30秒服务Start预算通过。
+
+截图/AX与实际调用、来源/程序镜像、合成启动配置/日志均留证。仅测试GUI结束用SIGTERM raw-15，不称正常服务Stop；无forced fallback、原生进程组残留为空，准确临时Profile/复制app/运行目录删除，日常配置/安装应用/真实同步/模型请求未动。accepted:false、frozenCandidate:false保持；源码未新增产品变化，Windows不需因此重跑已通过项。后续仍是NAME/Mac其它生命周期与最终候选/Windows生产恢复闭环，当前未发布。
+
+
+### 2026-11-17 revision147：Windows异步请求接收与Job观测决定
+
+收到最新代码2306f39880fde481a182e724c7a58bbbbf2a0310／证据571de2ee0ed0075229bd41a142ff5476c0949c4c。只导入新的r7-async轮61份及handoff增量；60载荷254,688字节、实际query-schema06的25源码对实施2f3b67b4169a587e3cf91c43ac014370b11b2b1d核原字节/hash/CRLF差额，[接收回执](../../.adg/evidence/0.2.24/windows-r7-async-receive-r9/receive-result.json)。同源安全查询与严格beforeResume DATA附件的7项MSVC测试raw0通过，仅controller夹具；原E0432/E0583/unknown字段失败保留。末尾98bd87926/cd427f938/2306f3988有扫描/只读采集器/命令谱系代码更新，当前这份证据未覆盖，不冒已测试或完整产品构建。未整批merge Windows产品。
+
+已消费blocking-request.json。r7增补允许先用PSS单broker句柄完整快照＋仅JOB_OBJECT_QUERY本地DuplicateHandle的原生原型，唯一内核Job／成员／历史accounting与原从未Resume组合证据均核；禁止same-image绕过/注入/全机scan/提升/权限修补/外部杀Node，不修改shared接口。只有先通过原生夹具/所有拒绝测试才应用现有只读R0；如果不可读保持Unknown并继续独立线，不在Mac冒通过。原R1实际终止/原件恢复依旧需完整具体计划与用户单独确认，此决定不降低安全范围或给执行授权。Windows可自行取新docs继续，Mac不要求用户为每个只读工具步骤转交批准。
+
+Mac P24-NAME新增原样官方函数动态边界核验：中文provider键被拒绝，官方显示名含半角/被拒绝；中文渠道·模型的显示投影可行且不改slug/保留能力sentinel，但这只是原函数验证，不是实际保存/自动刷新/默认客户端验收。原“渠道名/原始模型ID”格式的采用冲突已提给用户选择，未收到前不擅自以新分隔符替换。证据.adg/evidence/0.2.24/official-name-boundary-r1/；实际包633MB隔离提取目录已清理，无服务/真实同步/模型请求/日常配置修改。P24-NAME仍未关闭，Mac其它生命周期可独立继续。
