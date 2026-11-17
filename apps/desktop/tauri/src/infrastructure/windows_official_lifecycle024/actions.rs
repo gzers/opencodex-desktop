@@ -2,6 +2,8 @@
 //! ActionWindow::begin, replacement now+budget, serde or text receipt factory.
 use super::*;
 use crate::modules::runtime::windows_lifecycle024_contract::NativeSession;
+mod recovery;
+pub(super) use recovery::{ProcessAbortAttempt, StartFailure};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum OriginalActionKind {
     Start,
@@ -148,6 +150,7 @@ impl Owner {
         kind: LifecycleAction,
         window: &shared::ActionWindow,
     ) -> AppResult<()> {
+        self.require_normal_dispatch()?;
         self.source(window.stop_deadline())?;
         let kind = match kind {
             LifecycleAction::Stop => OriginalActionKind::Stop,
@@ -166,6 +169,7 @@ impl Owner {
         kind: OriginalActionKind,
         end: Instant,
     ) -> AppResult<NativeAction> {
+        self.require_normal_dispatch()?;
         self.check_current(end)?;
         let origin = if kind == OriginalActionKind::Start {
             &self.start_action
@@ -237,6 +241,7 @@ impl NativeAction {
         self.owner == other.owner && self.scope == other.scope && self.token == other.token
     }
     pub(crate) fn check(&self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+        owner.require_normal_dispatch()?;
         if self.end != end
             || self.owner != owner.session
             || self.scope != owner.scope()?

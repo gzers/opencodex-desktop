@@ -140,6 +140,10 @@ fn after_stop_input(
 pub(crate) struct Owner {
     start_action: actions::ActionOrigin,
     stop_action: Option<actions::ActionOrigin>,
+    // Original one-shot process preparation retained before every later
+    // fallible source/prefix check. It is not full client recovery authority.
+    before_resume_process: Option<actions::ProcessAbortAttempt>,
+    start_failure: Option<actions::StartFailure>,
     runtime: SharedRuntimeExecutable,
     selected: program_selection::SelectedProgram,
     root: PathBuf,
@@ -273,6 +277,7 @@ impl Owner {
         command: &ProcessCommand,
         data: &Path,
     ) -> AppResult<()> {
+        self.require_normal_dispatch()?;
         if !Arc::ptr_eq(&self.runtime, runtime)
             || !same(&self.profile, &command.working_directory)
             || !same(&self.home, &command.environment.opencodex_home)
@@ -326,6 +331,7 @@ impl Owner {
         &self.data
     }
     pub(crate) fn originals_require_unresumed(&mut self, deadline: Instant) -> AppResult<()> {
+        self.require_normal_dispatch()?;
         self.source(deadline)?;
         if self.stage != "created-suspended"
             || self.service.is_some()
@@ -474,6 +480,7 @@ impl Owner {
         budget(deadline)
     }
     fn live(&mut self, pid: u32, port: u16, digest: &str, deadline: Instant) -> AppResult<()> {
+        self.require_normal_dispatch()?;
         self.stage = "native-source";
         self.source(deadline)?;
         if self.stopped || port == 0 || digest.len() != 64 {
@@ -794,6 +801,9 @@ async fn execute_admitted(
         command.action == LifecycleAction::Start,
     )?;
     let mut guard = entry.owner.try_lock().map_err(unknown)?;
+    if let Some(owner) = guard.as_ref() {
+        owner.require_normal_dispatch()?;
+    }
     entry.cancel.store(false, Ordering::SeqCst);
     let mut restart_input = None;
     if let Some(owner) = guard.as_mut() {
@@ -927,6 +937,8 @@ async fn execute_admitted(
     *guard = Some(Owner {
         start_action,
         stop_action: None,
+        before_resume_process: None,
+        start_failure: None,
         runtime: runtime.clone(),
         selected,
         root,
@@ -952,50 +964,55 @@ async fn execute_admitted(
         _pins: pins,
     });
     let owner = guard.as_mut().unwrap();
-    owner.capture_originals(&window)?;
-    plan.check_current(runtime)?;
-    if entry.cancel.load(Ordering::SeqCst) {
-        return Err(fail(
-            "windows024_cancelled_retained",
-            "取消后保留原创建句柄与Job，未推断退出",
-        ));
-    }
-    owner.originals_before_resume(window.deadline())?;
-    plan.check_current(runtime)?;
-    owner.native.resume().map_err(unknown)?;
-    loop {
-        if Instant::now() >= window.deadline() {
-            return Err(fail(
-                "lifecycle_timeout",
-                &format!("原30秒内未确认就绪；stage={}；owner保留", owner.stage),
-            ));
-        }
+    let result = async {
+        owner.capture_originals(&window)?;
+        plan.check_current(runtime)?;
         if entry.cancel.load(Ordering::SeqCst) {
             return Err(fail(
                 "windows024_cancelled_retained",
-                "取消后保留原owner，未强杀服务",
+                "取消后保留原创建句柄与Job，未推断退出",
             ));
         }
-        if let ProcessState::Exited { code } = owner.native.root_state().map_err(unknown)? {
-            if code != 0 {
+        owner.originals_before_resume(window.deadline())?;
+        plan.check_current(runtime)?;
+        owner.native.resume().map_err(unknown)?;
+        loop {
+            if Instant::now() >= window.deadline() {
                 return Err(fail(
-                    "windows024_start_exit",
-                    &format!("官方launcher非零退出 exit_code={code}；原owner保留"),
+                    "lifecycle_timeout",
+                    &format!("原30秒内未确认就绪；stage={}；owner保留", owner.stage),
                 ));
             }
+            if entry.cancel.load(Ordering::SeqCst) {
+                return Err(fail(
+                    "windows024_cancelled_retained",
+                    "取消后保留原owner，未强杀服务",
+                ));
+            }
+            if let ProcessState::Exited { code } = owner.native.root_state().map_err(unknown)? {
+                if code != 0 {
+                    return Err(fail(
+                        "windows024_start_exit",
+                        &format!("官方launcher非零退出 exit_code={code}；原owner保留"),
+                    ));
+                }
+            }
+            if owner.observe_for_action(&window, false).await.is_ok() {
+                return Ok(LifecycleResult::Started);
+            }
+            if owner.original_phase.is_none() {
+                return Err(recovery_required());
+            }
+            tokio::time::sleep(
+                Duration::from_millis(20)
+                    .min(window.deadline().saturating_duration_since(Instant::now())),
+            )
+            .await;
         }
-        if owner.observe_for_action(&window, false).await.is_ok() {
-            return Ok(LifecycleResult::Started);
-        }
-        if owner.original_phase.is_none() {
-            return Err(recovery_required());
-        }
-        tokio::time::sleep(
-            Duration::from_millis(20)
-                .min(window.deadline().saturating_duration_since(Instant::now())),
-        )
-        .await;
     }
+    .await;
+    owner.remember_start_failure(&result);
+    result
 }
 #[cfg(debug_assertions)]
 pub(crate) fn qualify_existing(
