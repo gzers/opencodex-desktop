@@ -145,7 +145,7 @@ jobs:
           releaseBody: ${{ steps.notes.outputs.body }}
           releaseDraft: true
           prerelease: true
-          args: --features custom-protocol --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }}
+          args: --features custom-protocol --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }} -- --message-format=json-render-diagnostics
 
       - name: Preserve every packaging-tool download attempt
         if: always()
@@ -165,6 +165,30 @@ jobs:
           codesign -dvv "$app" 2>&1
           test -s "$app/Contents/Resources/resources/LICENSE"
           test -s "$app/Contents/Resources/resources/THIRD-PARTY-NOTICES.txt"
+          python3 - <<'PY'
+          import importlib.util, json, os, subprocess
+          from pathlib import Path
+          root = Path.cwd()
+          spec = importlib.util.spec_from_file_location('binding024', root / '.github/scripts/verify_macos_build_024.py')
+          binding = importlib.util.module_from_spec(spec); spec.loader.exec_module(binding)
+          directory = Path(os.environ['OCXD_TAURI_RETRY_EVIDENCE'])
+          attempts = [json.loads(p.read_bytes()) for p in sorted(directory.glob('attempt-*.json'))]
+          successful = [row for row in attempts if row['exitCode'] == 0]
+          if len(successful) != 1 or successful[0]['stdoutTruncated']:
+              raise ValueError('one complete successful Tauri Cargo receipt is required')
+          receipt = directory / ('attempt-' + str(successful[0]['attempt']) + '.stdout.log')
+          app = root / 'apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos/OpenCodeX Desktop.app'
+          source = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          report = binding.verify(app, receipt, root / 'apps/desktop/tauri', source)
+          (directory / 'macos-build-binding.json').write_text(json.dumps(report, indent=2) + '\n')
+          PY
+      - name: Preserve macOS executable build binding
+        if: always() && runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-macos-build-binding
+          path: test/out/release-tauri-downloads/macos-build-binding.json
+          if-no-files-found: warn
       - name: Package verified standalone macOS application
         if: runner.os == 'macOS'
         shell: bash
