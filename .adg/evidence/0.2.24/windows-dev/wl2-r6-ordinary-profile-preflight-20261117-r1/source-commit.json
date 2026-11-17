@@ -1,0 +1,53 @@
+{
+  "head": "f5fd8211e5e6aeafc0c025887175c1f5905ab5af",
+  "tree": "8e00741d64e1898b75148424fef6fc10cc3c9a66",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/desktop_preflight_tests.rs",
+      "bytes": 10126,
+      "sha256": "53e344dcfb4da86b922cc2d48f6c0769fe8a1b4e0354947b15837a4dba0a64bb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "bytes": 12048,
+      "sha256": "63dbe78e6bc13e5810b7545aaf436842025fc713b1e6cbaae750408de1d6e381"
+    },
+    {
+      "path": "test/windows024-native/build-wl2.ps1",
+      "bytes": 32822,
+      "sha256": "d6735d0732afe97e651d787e9c40b5f32ed3111c4a74ba85f0729dbf016af1b3"
+    },
+    {
+      "path": "test/windows024-native/export-r6-profile-preflight.ps1",
+      "bytes": 3318,
+      "sha256": "cec6a737a30f4e04bf4fab0a074cc3b81e49b83e26d4fac1d1cdffd9cf507cd5"
+    },
+    {
+      "path": "test/windows024-native/launch-r6-profile-preflight.cmd",
+      "bytes": 244,
+      "sha256": "3d6ca7cef9c4111100547eadf0f4337dded95ce15db4931b13b276895906822a"
+    },
+    {
+      "path": "test/windows024-native/launch-r6-profile-preflight.ps1",
+      "bytes": 4675,
+      "sha256": "6e7e4f3083d20b008a1ce98aa706279d677aa2bf8161efd1bd2424fdad283c80"
+    }
+  ],
+  "scriptOnlyAfterBuildChanges": [
+    {
+      "path": "test/windows024-native/launch-r6-profile-preflight.ps1",
+      "buildSnapshotSha256": "9ec615c8570057d24577c7ab2cc5cb3303844a36cb5f5b6b663e4d3527ed1494",
+      "finalSha256": "6e7e4f3083d20b008a1ce98aa706279d677aa2bf8161efd1bd2424fdad283c80",
+      "reason": "Added exact same-SID evidence export invocation after terminal native Rust build; independent PowerShell helper does not affect compiled Rust tests. Parsed in actual WindowsPowerShell5.1."
+    },
+    {
+      "path": "test/windows024-native/export-r6-profile-preflight.ps1",
+      "finalSha256": "cec6a737a30f4e04bf4fab0a074cc3b81e49b83e26d4fac1d1cdffd9cf507cd5",
+      "reason": "Standalone same-SID task-only log exporter added after terminal Rust build, no Rust/test assertion changed. Actual PowerShell5.1 parse checked."
+    }
+  ],
+  "nativeRustTestPassed": 1,
+  "ordinaryDesktopTestIgnoredPendingUser": true,
+  "actualProductionExecuted": false,
+  "startOpen": false
+}

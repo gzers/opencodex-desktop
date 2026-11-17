@@ -1,0 +1,58 @@
+{
+  "public": "C:\\Users\\Public\\ocx-r6-profile-preflight-20261117-r1",
+  "scope": "r6-ordinary-existing-baseline-preparation",
+  "expectedSid": "S-1-5-21-587408064-856152790-2583328096-1003",
+  "expectedSession": 7,
+  "sourceHead": "f5fd8211e5e6aeafc0c025887175c1f5905ab5af",
+  "testRustProducer": "library01",
+  "scriptOnlyAfterBuildChanges": [
+    {
+      "path": "test/windows024-native/launch-r6-profile-preflight.ps1",
+      "buildSnapshotSha256": "9ec615c8570057d24577c7ab2cc5cb3303844a36cb5f5b6b663e4d3527ed1494",
+      "finalSha256": "6e7e4f3083d20b008a1ce98aa706279d677aa2bf8161efd1bd2424fdad283c80",
+      "reason": "Added exact same-SID evidence export invocation after terminal native Rust build; independent PowerShell helper does not affect compiled Rust tests. Parsed in actual WindowsPowerShell5.1."
+    },
+    {
+      "path": "test/windows024-native/export-r6-profile-preflight.ps1",
+      "finalSha256": "cec6a737a30f4e04bf4fab0a074cc3b81e49b83e26d4fac1d1cdffd9cf507cd5",
+      "reason": "Standalone same-SID task-only log exporter added after terminal Rust build, no Rust/test assertion changed. Actual PowerShell5.1 parse checked."
+    }
+  ],
+  "files": [
+    {
+      "name": "r6-profile-tests.exe",
+      "bytes": 104307200,
+      "sha256": "d76a8de7448bf5b71219fa3e9737889899dc913ca35bed482434de3a861519aa",
+      "source": "C:\\Users\\15119\\.codex\\worktrees\\024-windows-native\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\b424977fd6e5186d\\out\\opencodex_desktop_lib-b424977fd6e5186d.exe"
+    }
+  ],
+  "actualProductionExecuted": false,
+  "startOpen": false,
+  "stagedFiles": [
+    {
+      "path": "C:\\Users\\Public\\ocx-r6-profile-preflight-20261117-r1\\export-r6-profile-preflight.ps1",
+      "bytes": 3318,
+      "sha256": "cec6a737a30f4e04bf4fab0a074cc3b81e49b83e26d4fac1d1cdffd9cf507cd5"
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r6-profile-preflight-20261117-r1\\input\\r6-profile-tests.exe",
+      "bytes": 104307200,
+      "sha256": "d76a8de7448bf5b71219fa3e9737889899dc913ca35bed482434de3a861519aa"
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r6-profile-preflight-20261117-r1\\input-manifest.json",
+      "bytes": 1610,
+      "sha256": "22f408f71a9a4b303926ac472fa8c898d4fbbfdc2844978c65b8a3884a54fa55"
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r6-profile-preflight-20261117-r1\\launch-r6-profile-preflight.cmd",
+      "bytes": 244,
+      "sha256": "3d6ca7cef9c4111100547eadf0f4337dded95ce15db4931b13b276895906822a"
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r6-profile-preflight-20261117-r1\\launch-r6-profile-preflight.ps1",
+      "bytes": 4675,
+      "sha256": "6e7e4f3083d20b008a1ce98aa706279d677aa2bf8161efd1bd2424fdad283c80"
+    }
+  ]
+}
