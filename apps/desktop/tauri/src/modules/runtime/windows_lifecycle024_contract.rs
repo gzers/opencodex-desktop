@@ -28,6 +28,10 @@ impl BeforeResumeRecoveryWindow {
     }
 }
 pub const BEFORE_RESUME_RECOVERY_RECORD: &str = "windows-before-resume-recovery-v1";
+/// New explicit attachment for absent pre-manifest preparation references.
+/// Distinct strict decoder/version: never coerce missing v1 manifest/plan data
+/// to placeholders, upgrade old sessions, or deserialize a native permission.
+pub const BEFORE_RESUME_RECOVERY_RECORD_V2: &str = "windows-before-resume-recovery-v2";
 /// Separate failure-recovery boundary. It must be reachable on the original
 /// host BEFORE first client mutation, even when capture has not returned a tag.
 /// Native associated proofs have private fields and no Clone/serde conversion.
