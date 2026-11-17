@@ -1,0 +1,17 @@
+test_invalid_delivery_never_emits_packaging_configuration (test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_official_policy_preserves_transitive_lock_and_both_platforms (test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_staging_copies_the_exact_official_source_and_isolated_config (test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_unknown_resource_directory_is_not_overwritten_or_downloaded (test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_wrong_archive_stops_before_build_or_resource_creation (test_stage_runtime_bundle_024.OfficialStageBoundary) ... ok
+test_both_platforms_are_verified_without_extraction_execution_or_mutation (test_verify_runtime_delivery_024.RuntimeDelivery024) ... ok
+test_budget_malformed_duplicate_json_wrong_policy_and_links_are_refused (test_verify_runtime_delivery_024.RuntimeDelivery024) ... ok
+test_descriptor_path_and_link_attacks_are_refused (test_verify_runtime_delivery_024.RuntimeDelivery024) ... ok
+test_hidden_second_archive_after_end_marker_is_refused (test_verify_runtime_delivery_024.RuntimeDelivery024) ... ok
+test_resealed_lock_recovery_source_and_dependency_drift_are_refused (test_verify_runtime_delivery_024.RuntimeDelivery024) ... ok
+test_resealed_mutated_missing_or_extra_official_file_is_refused (test_verify_runtime_delivery_024.RuntimeDelivery024) ... ok
+test_truncated_extra_duplicate_and_special_members_are_refused (test_verify_runtime_delivery_024.RuntimeDelivery024) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.102s
+
+OK

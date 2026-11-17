@@ -1,0 +1,65 @@
+{
+  "checks": [
+    {
+      "name": "runtime-tests",
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "test",
+        "-p",
+        "test_*runtime*024.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 191
+    },
+    {
+      "name": "packaging-tests",
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "test",
+        "-p",
+        "test_package_macos_024.py",
+        "-v"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 126
+    },
+    {
+      "name": "real-darwin-bundle",
+      "argv": [
+        "python3",
+        ".github/scripts/verify_runtime_delivery_024.py",
+        "--directory",
+        "apps/desktop/tauri/resources/runtime-bundle",
+        "--platform",
+        "darwin-arm64"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 1780
+    },
+    {
+      "name": "whitespace",
+      "argv": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "elapsedMs": 15
+    }
+  ],
+  "allChecksPassed": true,
+  "releaseAcceptance": false,
+  "dailyConfigChanged": false,
+  "businessSyncOrModelRequests": false,
+  "fixtureCleanup": "TemporaryDirectory per test; no extracted real tree, installed program or service created",
+  "scope": "offline archive and packaging assembly only; no Windows native execution, no final candidate"
+}

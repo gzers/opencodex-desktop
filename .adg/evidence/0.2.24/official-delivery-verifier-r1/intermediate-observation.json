@@ -1,0 +1,7 @@
+{
+  "hypothesis": "A gzip member appended after the tar end marker must be rejected even if descriptor/pin are recalculated",
+  "initialResult": "test_hidden_second_archive_after_end_marker_is_refused FAILED: ValueError not raised",
+  "initialReader": "tarfile r|gz stopped after first compressed stream",
+  "fix": "gzip.GzipFile consumes concatenated streams; bounded zero-only tar trailer check refuses extra bytes",
+  "evidenceBoundary": "initial failure observed in tool output; this is a diagnostic note, not a preserved raw runner log; final exact source and logs are retained"
+}
