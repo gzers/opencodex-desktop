@@ -133,7 +133,7 @@ def run(app, expected_sha, output):
                 value = wait_for('channel-editor', lambda s: bool(matches(s, '渠道名称', 'AXTextField')))
                 node = matches(value, '渠道名称', 'AXTextField')
                 if len(node) != 1: raise RuntimeError('channel name field ambiguous')
-                command([helper, 'type', proc.pid, exe, node[0]['path'], '界面中文渠道', '渠道名称'])
+                command([helper, 'set', proc.pid, exe, node[0]['path'], '界面中文渠道', '渠道名称'])
                 wait_for('renamed-input', lambda s: any(n.get('description') == '渠道名称' and n.get('value') == '界面中文渠道' for n in s['nodes']))
                 # Detail save is the explicit single-channel commit. Only the
                 # global list action opens a separate confirmation dialog.
@@ -152,12 +152,14 @@ def run(app, expected_sha, output):
             assert row['modelDisplayNames']['vendor/custom'] == '界面中文渠道 · vendor／custom'
             assert document['defaultModel'] == provider + '/vendor/custom'
             shutil.copyfile(config, output / ('saved-config-' + str(generation) + '.json'))
-            value = snapshot('final-' + str(generation))
+            value = wait_for('clean-save-state-' + str(generation),
+                lambda s: any(n.get('value') == '未修改' for n in s['nodes'])
+                and not any(n.get('value') in ('待保存修改', '未保存修改') for n in s['nodes']))
             if status.get('screenCaptureAllowed'):
                 windows = [w for w in value.get('windows', []) if w.get('onscreen') and w.get('layer') == 0]
                 if windows: command([capture, windows[0]['id'], output / ('window-' + str(generation) + '.png')])
             end_process()
-        report.update(result='passed', realGuiSave=True, applicationReopen=True, rawModelsAndSyntheticKeyPreserved=True)
+        report.update(result='passed', realGuiSave=True, applicationReopen=True, cleanAfterSaveAndReopen=True, rawModelsAndSyntheticKeyPreserved=True)
     except BaseException as exc:
         report.update(result='failed', error=repr(exc))
         raise
