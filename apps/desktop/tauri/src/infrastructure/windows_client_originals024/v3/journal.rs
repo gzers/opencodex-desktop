@@ -18,6 +18,8 @@ use std::{
     time::Instant,
 };
 mod actions;
+mod preparation;
+pub(in super::super) use preparation::JournalPreparation;
 mod batches;
 mod closed_stop;
 mod completed;
@@ -115,8 +117,52 @@ fn contents(file: &mut File) -> io::Result<Vec<u8>> {
     }
     Ok(out)
 }
+enum RecordFile {
+    Sealed(PrivateRecord),
+    // The actual CREATE_NEW descriptor remains retained; its READ-only share
+    // mask denies any external writer/deleter. After publication this private
+    // wrapper exposes only identity/read, never write or a mutable raw handle.
+    Original {
+        file: File,
+        parent: PinnedDirectory,
+        id: FileIdentity,
+        max: usize,
+    },
+}
+impl RecordFile {
+    fn identity(&self) -> FileIdentity {
+        match self {
+            Self::Sealed(f) => f.identity(),
+            Self::Original { id, .. } => *id,
+        }
+    }
+    fn read(&mut self) -> io::Result<Vec<u8>> {
+        match self {
+            Self::Sealed(file) => file.read(),
+            Self::Original {
+                file,
+                parent,
+                id,
+                max,
+            } => {
+                parent.recheck()?;
+                native::verify_private_file(file)?;
+                if identity(file)? != *id || file.metadata()?.len() > *max as u64 {
+                    return Err(invalid());
+                }
+                file.seek(SeekFrom::Start(0))?;
+                let mut bytes = Vec::new();
+                file.take(*max as u64 + 1).read_to_end(&mut bytes)?;
+                if bytes.len() > *max {
+                    return Err(invalid());
+                }
+                Ok(bytes)
+            }
+        }
+    }
+}
 struct Record {
-    file: PrivateRecord,
+    file: RecordFile,
     path: PathBuf,
     raw: Vec<u8>,
     security: SnapshotData,
@@ -136,7 +182,7 @@ impl Record {
             return Err(invalid());
         }
         let out = Self {
-            file,
+            file: RecordFile::Sealed(file),
             path: path.into(),
             raw,
             security: security(&observed, end)?,

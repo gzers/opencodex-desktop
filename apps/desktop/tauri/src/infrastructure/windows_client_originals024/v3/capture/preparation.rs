@@ -13,6 +13,7 @@ pub(super) struct PartialCaptureAnchor {
     pub(super) custody: [Option<PinnedDirectory>; 2],
     pub(super) trees: [Option<AnchoredTree>; 2],
     pub(super) journal: Option<Journal>,
+    pub(super) journal_prefix: super::super::journal::JournalPreparation,
     pub(super) failed: bool,
 }
 impl PartialCaptureAnchor {
@@ -28,6 +29,7 @@ impl PartialCaptureAnchor {
             custody: [None, None],
             trees: [None, None],
             journal: None,
+            journal_prefix: super::super::journal::JournalPreparation::default(),
             failed: true,
         }
     }

@@ -170,7 +170,7 @@ impl CaptureStore {
             let directory = PinnedDirectory::open_private(anchor.pins.last().unwrap().path())?;
             anchor.intend(directory.path().join("manifest.json"))?;
             anchor.intend(directory.path().join("current.json"))?;
-            anchor.journal = Some(Journal::create_from_source(
+            Journal::create_from_source_retained(
                 directory,
                 anchor.context.take().ok_or_else(invalid)?,
                 plan,
@@ -178,7 +178,9 @@ impl CaptureStore {
                 &mut claim,
                 owner,
                 end,
-            )?);
+                &mut anchor.journal_prefix,
+            )?;
+            anchor.journal = Some(anchor.journal_prefix.take_complete()?);
             Ok(())
         })();
         match created {

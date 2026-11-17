@@ -26,9 +26,8 @@ pub use paths::{
 };
 pub use process::SuspendedOwnerHost;
 pub use process::{
-    CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
-    ProcessState, RootBinding,
-    PreparedLauncherAbort, QuiescentLauncher,
+    CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, PreparedLauncherAbort,
+    ProcessIdentity, ProcessState, QuiescentLauncher, RootBinding,
 };
 pub use security::{current_identity, TokenIdentity};
 /// Read-only private TokenUser/SYSTEM check on this exact retained file handle.
@@ -45,6 +44,20 @@ pub(crate) fn verify_private_directory(file: &std::fs::File) -> std::io::Result<
 /// query/write. No path reopen, truncation or ACL repair of existing objects.
 pub(crate) fn create_private_originals_work_file(
     path: &std::path::Path,
+) -> std::io::Result<std::fs::File> {
+    create_private_initial_file(path, 0xc0030000)
+}
+/// CREATE_NEW journal initializer with the original current/record access and
+/// READ-only sharing. Return the actual writer before any fallible post-create
+/// validation; the original preparation sink owns every later write/readback.
+pub(crate) fn create_private_journal_file(
+    path: &std::path::Path,
+) -> std::io::Result<std::fs::File> {
+    create_private_initial_file(path, 0xc0020000)
+}
+fn create_private_initial_file(
+    path: &std::path::Path,
+    access: u32,
 ) -> std::io::Result<std::fs::File> {
     use std::{
         os::windows::{ffi::OsStrExt, io::FromRawHandle},
@@ -68,7 +81,7 @@ pub(crate) fn create_private_originals_work_file(
     let raw = unsafe {
         windows_sys::Win32::Storage::FileSystem::CreateFileW(
             wide.as_ptr(),
-            0xc0030000,
+            access,
             1,
             &attributes,
             1,
