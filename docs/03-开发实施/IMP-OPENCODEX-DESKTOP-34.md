@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 150；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 151；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 7fade183da7b43fa88fff3e459404aac704ff21b（非冻结候选）；Windows实现检查点codex/024-windows-native 89f55e76d4f5a6e599b0e9db8cb359fcadce0254（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 29bdae6fba4f58653e26e43063d0e112292468e1（非冻结候选）；Windows实现检查点codex/024-windows-native 89f55e76d4f5a6e599b0e9db8cb359fcadce0254（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1571,3 +1571,16 @@ main 7fade183da7b43fa88fff3e459404aac704ff21b只从Windows已测64bf7aa73a61be2b
 本机定向35项通过（镜像13、选择13、激活回退7、登记2），严格全targets Clippy及fmt通过。另在精确新临时私有Profile、内核禁止日常HOME/外网/Keychain，原样官方2.99实际供应与完整扫描1项通过：15646条/645549518内容字节，13393真实文件全读/hash计数齐，tree a29dedc203311ca4d6d4005db94b4a10d4fb84409283669e25272f080756b790与固定官方源b920ba…一致；单次inventory602915微秒，整夹具供应/执行66.56秒，不把它当Start30/Status5/Stop10或Windows性能结论。测试宿主原签名/原字节未改，未启动服务，无业务同步/模型请求，准确本轮复制程序/资源/镜像/Profile整体清理且缺席核验，证据全部保留。
 
 r7 PSS0x8参数答复已随docs5d5d5a3f8推送，Windows可自行取用并继续原型/否例与只读R0；无现场恢复授权。当前原r2归档已具但Job当前证明/受限修复具体前提、future完整恢复接口与原预算、默认客户端真实名称、Mac取消/一般客户端图/缺Ready、最终候选及发行整组门仍未完成，目标active；不W2/双SID/发布。代码主线新SHA只开放以上扫描来源，不要求Windows重跑无影响页面/CLI/旧归档。
+
+
+### 2026-11-17 revision151：真实Mac保存/重开及首次纳管默认引用修复
+
+main cb82a7a06bfd19e74872b2d5b3ef3b47c50c98c6修首次单渠道纳管保存：旧transform在将选定渠道插入受管集合前筛defaultChannelId，导致磁盘defaultProvider/defaultModel正确而saved policy丢默认；新begin按实际JSON读回产生幽灵“待保存修改”。同一旧7fade真实GUI已观察，隔离Rust严格整policy相等反例失败（原工具输出、固定差异说明保留），仅改先插入该scope再解析已观察默认；未受管无关默认仍不纳入，不改真实磁盘其它渠道/Key/引用。31文件事务测试、全targets严格Clippy与fmt过；main 29bdae6fba4f58653e26e43063d0e112292468e1只补真实保存状态断言/稳定AX输入方式，不冒产品由后继测试提交编译。
+
+[本批原始证据](../../.adg/evidence/0.2.24/mac-model-save-reopen-r1/result.json)留旧7fade三次界面轮/原source构建绑定及新cb82两轮。新实际Tauri Release267337ms，sealed Desktop c851af6e356c56634883828b6d359229d98682b25ff9c89332f9ecbe435b9d0d，三个bin同轮Cargo回执与签名归一副本全字节一致；原app字节/签名不改，不是updater/notarization/最终集成候选。
+
+新cb82原包GUI自有临时Profile：生产startup离线供应→模型读取现有渠道→精确原生AX字段中文改名→详情单渠道保存→实际JSON读回→退出→新GUI进程重开；两代均真实页面“未修改”，无待保存输入。中文显示maps、原始vendor/custom/gpt模型ID、合成Key、unknown字段及准确defaultModel引用均保持。内核sandbox拒外网、日常HOME及Keychain，未Start服务/真实业务同步/模型请求。两个自有GUI进程组SIGTERM -15且无残留，精确临时Profile/appcopy/程序目录清理，原signed app不变；旧工具AX初次注册/误等确认/选中文字不足失败保留，成功不覆盖失败。
+
+此处是Desktop模型页真实写入与应用重开验，不是外部Codex默认选择器或OpenCodex服务重启；AC-P24-09仍需最终集成包外部客户端/回退，其它生命周期不借此签通过。Mac新建根的Preparing/CaptureReserved取消路径已重新核实：普通prepare_cancel显式拒creation evidence、Index.close_preparation拒root_registration，根lineage未含对应取消分支；当前生产尚缺根保留/退根与独立索引收口，不能删除目录或改ordinary断言冒通过。本批未修改这条缺口，列下一本机独立开发项。
+
+Windows最新41043665d55f7f65bd550e1543701dd7c64192d9已fetch，只有PSS0x8原型变更无更新docs，尚不计当前Job或原型通过；继续其独占恢复线，旧R1未经具体确认。主线精确SHA已推，不放最终W2/双SID/发布，目标active。

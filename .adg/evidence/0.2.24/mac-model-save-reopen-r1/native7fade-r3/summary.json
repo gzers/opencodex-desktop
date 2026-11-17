@@ -1,0 +1,38 @@
+{
+  "inputApp": "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+  "inputSha256": "d5a739f58ea66d3191ddcd87b7cdf3a92d3dd786ecb3731ae668d4b9dda2ae11",
+  "releaseAcceptance": false,
+  "dailyConfigurationModified": false,
+  "serviceActionRequested": false,
+  "result": "passed",
+  "scope": "real Desktop file save and application reopen; not external Codex GUI or service restart",
+  "permissions": {
+    "axTrusted": true,
+    "locked": false,
+    "onConsole": true,
+    "screenCaptureAllowed": true
+  },
+  "networkGuard": {
+    "exitCode": 1,
+    "stderr": "nc: connectx to 192.0.2.1 port 443 (tcp) failed: Operation not permitted\n"
+  },
+  "realGuiSave": true,
+  "applicationReopen": true,
+  "rawModelsAndSyntheticKeyPreserved": true,
+  "processes": [
+    {
+      "pid": 12590,
+      "exitCode": -15,
+      "residues": []
+    },
+    {
+      "pid": 12756,
+      "exitCode": -15,
+      "residues": []
+    }
+  ],
+  "sourceAppUnchanged": true,
+  "copiedAppUnchanged": true,
+  "temporaryRoot": "/private/tmp/ocxd024-native-model-save-6yqngf_e",
+  "temporaryRootAbsent": true
+}
