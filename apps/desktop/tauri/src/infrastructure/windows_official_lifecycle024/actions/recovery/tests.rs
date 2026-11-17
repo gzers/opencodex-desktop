@@ -84,6 +84,8 @@ fn wl2_r7_recovery_origin_every_retained_phase_blocks_normal_dispatch_without_dr
     for phase in [
         ProcessPhase::Pending,
         ProcessPhase::Prepared,
+        ProcessPhase::Quiescing,
+        ProcessPhase::Quiescent,
         ProcessPhase::Failed,
     ] {
         let mut slot = Some(ProcessAbortAttempt::pending(

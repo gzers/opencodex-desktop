@@ -11,8 +11,8 @@ use std::{
     path::Path,
 };
 mod adapter;
-mod binding;
 mod before_resume_record;
+mod binding;
 mod bounded;
 mod content;
 mod coordination;
@@ -31,6 +31,7 @@ mod source;
 mod tree;
 mod v2;
 mod v3;
+pub(crate) use adapter::{ClaimBoundAbort, PreparedAbortPrefix, QuiescentOriginals};
 pub(crate) use adapter::{LivePhase, WindowsOriginals};
 use windows_sys::Win32::{
     Foundation::LocalFree,

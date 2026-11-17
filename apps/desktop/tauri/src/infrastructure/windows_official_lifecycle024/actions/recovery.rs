@@ -7,6 +7,8 @@ use crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecovery
 enum ProcessPhase {
     Pending,
     Prepared,
+    Quiescing,
+    Quiescent,
     Failed,
 }
 // Minted only from this original Start's locally returned Result, never an IPC
@@ -45,6 +47,7 @@ pub(in crate::infrastructure::windows_official_lifecycle024) struct ProcessAbort
     scope: Option<String>,
     token: Option<native::TokenIdentity>,
     launcher: Option<native::PreparedLauncherAbort>,
+    quiescent: Option<native::QuiescentLauncher>,
     phase: ProcessPhase,
 }
 impl ProcessAbortAttempt {
@@ -66,6 +69,7 @@ impl ProcessAbortAttempt {
             scope: None,
             token: None,
             launcher: None,
+            quiescent: None,
             phase: ProcessPhase::Pending,
         }
     }
@@ -102,6 +106,62 @@ impl ProcessAbortAttempt {
     }
 }
 impl Owner {
+    pub(crate) fn fail_before_resume_process(&mut self) {
+        if let Some(original) = &mut self.before_resume_process {
+            original.phase = ProcessPhase::Failed;
+        }
+    }
+    pub(crate) fn before_resume_action_id(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<String> {
+        self.check_before_resume_process(window)?;
+        Ok(self.before_resume_process.as_ref().unwrap().id.to_string())
+    }
+    pub(crate) fn quiesce_before_resume_process(
+        &mut self,
+        prefix: &mut crate::infrastructure::windows_client_originals024::ClaimBoundAbort<'_, '_>,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<()> {
+        let result = (|| {
+            prefix.check_owner(self, window)?;
+            let original = self
+                .before_resume_process
+                .as_mut()
+                .ok_or_else(recovery_required)?;
+            if original.phase != ProcessPhase::Prepared || original.quiescent.is_some() {
+                return Err(recovery_required());
+            }
+            original.phase = ProcessPhase::Quiescing;
+            let prepared = original.launcher.take().ok_or_else(recovery_required)?;
+            let quiescent = self
+                .native
+                .quiesce_before_first_resume(prepared)
+                .map_err(native_failure)?;
+            // Retain the ACTUAL native result before any post-quiescence check.
+            // Failed postchecks never discard it or turn raw242 into NormalExit.
+            let original = self.before_resume_process.as_mut().unwrap();
+            original.quiescent = Some(quiescent);
+            original.phase = ProcessPhase::Quiescent;
+            self.check_before_resume_quiescent(window)?;
+            prefix.check_owner(self, window)
+        })();
+        if result.is_err() {
+            self.fail_before_resume_process();
+        }
+        result
+    }
+    pub(crate) fn check_before_resume_quiescent(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<()> {
+        self.check_before_resume_process(window)?;
+        let original = self.before_resume_process.as_ref().unwrap();
+        if original.phase != ProcessPhase::Quiescent || original.quiescent.is_none() {
+            return Err(recovery_required());
+        }
+        Ok(())
+    }
     pub(in crate::infrastructure::windows_official_lifecycle024) fn remember_start_failure(
         &mut self,
         result: &AppResult<LifecycleResult>,
@@ -216,7 +276,11 @@ impl Owner {
             .as_ref()
             .ok_or_else(recovery_required)?;
         if original.phase == ProcessPhase::Failed
-            || prepared && original.phase != ProcessPhase::Prepared
+            || prepared
+                && !matches!(
+                    original.phase,
+                    ProcessPhase::Prepared | ProcessPhase::Quiescent
+                )
         {
             return Err(recovery_required());
         }
@@ -228,26 +292,28 @@ impl Owner {
         )?;
         if original.scope.as_ref() != Some(&self.scope()?)
             || original.token.as_ref() != Some(&native::current_identity().map_err(native_failure)?)
-            || original
-                .launcher
-                .as_ref()
-                .ok_or_else(recovery_required)?
-                .deadline()
-                != end
         {
             return Err(recovery_required());
         }
         self.source(end)?;
-        self.native
-            .verify_prepared_before_first_resume(
-                self.before_resume_process
-                    .as_ref()
-                    .unwrap()
-                    .launcher
-                    .as_ref()
-                    .unwrap(),
-            )
-            .map_err(native_failure)?;
+        let original = self.before_resume_process.as_ref().unwrap();
+        if original.phase == ProcessPhase::Quiescent {
+            let proof = original.quiescent.as_ref().ok_or_else(recovery_required)?;
+            if proof.deadline() != end || original.launcher.is_some() {
+                return Err(recovery_required());
+            }
+            self.native
+                .verify_before_resume_quiescent(proof)
+                .map_err(native_failure)?;
+        } else {
+            let proof = original.launcher.as_ref().ok_or_else(recovery_required)?;
+            if proof.deadline() != end || original.quiescent.is_some() {
+                return Err(recovery_required());
+            }
+            self.native
+                .verify_prepared_before_first_resume(proof)
+                .map_err(native_failure)?;
+        }
         budget(end)
     }
 }

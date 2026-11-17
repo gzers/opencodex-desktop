@@ -13,6 +13,8 @@ use crate::{
     },
 };
 use std::time::{Duration, Instant};
+mod before_resume;
+pub(crate) use before_resume::{ClaimBoundAbort, PreparedAbortPrefix, QuiescentOriginals};
 fn refused(reason: impl std::fmt::Display) -> AppError {
     AppError::RuntimeManaged {
         code: "windows024_v3_adapter_required".into(),
@@ -68,6 +70,9 @@ pub(crate) struct WindowsOriginals {
     stage: Option<Stage>,
     prepared_ready: Option<ServiceObservation>,
     failed: bool,
+    // Original checked prefix retained before any one-shot quiescence call.
+    // Its native sources remain in this exact slot and the original Owner.
+    abort_prefix: Option<PreparedAbortPrefix>,
 }
 impl WindowsOriginals {
     pub(crate) fn read_before_resume_prefix(
