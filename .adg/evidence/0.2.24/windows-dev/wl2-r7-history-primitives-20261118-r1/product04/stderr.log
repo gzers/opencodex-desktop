@@ -1,0 +1,1199 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\apps\desktop\tauri)
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:30:35
+   |
+30 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, PreparedLauncherAbort,
+   |                                   ^^^^^^^^^^^^^
+31 |     ProcessIdentity, ProcessState, QuiescentLauncher, RootBinding,
+   |                                                       ^^^^^^^^^^^
+
+warning: unused import: `storage::AttachmentStorageV2`
+   --> src\infrastructure\windows_client_originals024\before_resume_record_v2.rs:565:16
+    |
+565 | pub(super) use storage::AttachmentStorageV2;
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `BOUNDED_SECURITY_EXCLUDED_ASSURANCE`
+ --> src\infrastructure\windows_client_originals024\bounded.rs:9:9
+  |
+9 |         BOUNDED_SECURITY_EXCLUDED_ASSURANCE, BOUNDED_SECURITY_INFORMATION,
+  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:13:13
+   |
+13 | use serde::{Deserialize, Serialize};
+   |             ^^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `io::AsRawHandle`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:17:39
+   |
+17 |     os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
+   |                                       ^^^^^^^^^^^^^^^
+
+warning: unused imports: `BY_HANDLE_FILE_INFORMATION`, `GetFileInformationByHandle`, `GetSecurityDescriptorControl`, `GetSecurityDescriptorLength`, `IsValidSecurityDescriptor`, and `MakeSelfRelativeSD`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:24:9
+   |
+24 |         GetSecurityDescriptorControl, GetSecurityDescriptorLength, IsValidSecurityDescriptor,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+25 |         MakeSelfRelativeSD,
+   |         ^^^^^^^^^^^^^^^^^^
+26 |     },
+27 |     Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `modules::runtime::windows_lifecycle024_contract::NativeSession`
+  --> src\infrastructure\windows_client_originals024\content.rs:18:5
+   |
+18 |     modules::runtime::windows_lifecycle024_contract::NativeSession,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\r7_readonly.rs:3:22
+  |
+3 |     infrastructure::{hash, platform, windows_official_runtime024 as native},
+  |                      ^^^^
+
+warning: unused import: `self`
+ --> src\infrastructure\windows_client_originals024\r7_readonly.rs:8:10
+  |
+8 |     fs::{self, OpenOptions},
+  |          ^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused imports: `LivePhase` and `WindowsOriginals`
+   --> src\infrastructure\windows_client_originals024\v2.rs:459:26
+    |
+459 | pub(crate) use adapter::{LivePhase, WindowsOriginals};
+    |                          ^^^^^^^^^  ^^^^^^^^^^^^^^^^
+
+warning: unused import: `OpenOptions`
+  --> src\infrastructure\windows_owner_host024\desktop_tests.rs:12:22
+   |
+12 |     fs::{self, File, OpenOptions},
+   |                      ^^^^^^^^^^^
+
+warning: unused import: `ffi::OsStrExt`
+   --> src\modules\runtime\program_image_windows_tests.rs:488:28
+    |
+488 |     use std::os::windows::{ffi::OsStrExt, fs::OpenOptionsExt, io::AsRawHandle};
+    |                            ^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:540:14
+    |
+540 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+540 -             .fetch_update(
+540 +             .try_update(
+    |
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: type `windows_client_originals024::coordination::AnchoredClaim<'_>` is more private than the item `windows_client_originals024::adapter::WindowsOriginals::read_before_resume_prefix`
+   --> src\infrastructure\windows_client_originals024\adapter.rs:83:5
+    |
+ 83 | /     pub(crate) fn read_before_resume_prefix(
+ 84 | |         &mut self,
+ 85 | |         owner: &mut Owner,
+ 86 | |         claim: &mut super::coordination::AnchoredClaim<'_>,
+ 87 | |         window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+ 88 | |     ) -> AppResult<serde_json::Value> {
+    | |_____________________________________^ method `windows_client_originals024::adapter::WindowsOriginals::read_before_resume_prefix` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::AnchoredClaim<'_>` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination.rs:394:1
+    |
+394 | pub(super) struct AnchoredClaim<'a> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_interfaces)]` on by default
+
+warning: type `windows_client_originals024::coordination::segments::ReleasedLease` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::recheck_retained_quiescent`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:122:5
+    |
+122 | /     pub(crate) fn recheck_retained_quiescent(
+123 | |         &mut self,
+124 | |         owner: &mut Owner,
+125 | |         released: &mut super::super::coordination::ReleasedLease,
+126 | |         window: &BeforeResumeRecoveryWindow,
+127 | |     ) -> AppResult<serde_json::Value> {
+    | |_____________________________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::recheck_retained_quiescent` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::segments::ReleasedLease` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:19:1
+    |
+ 19 | pub(in super::super) struct ReleasedLease {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::segments::ReleasedLease` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::finish_retained_quiescent`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:172:5
+    |
+172 | /     pub(crate) fn finish_retained_quiescent(
+173 | |         &mut self,
+174 | |         owner: &mut Owner,
+175 | |         released: &mut super::super::coordination::ReleasedLease,
+176 | |         probe: &mut super::super::coordination::ReleaseProbe,
+177 | |         window: &BeforeResumeRecoveryWindow,
+178 | |     ) -> AppResult<AbortedOriginals> {
+    | |____________________________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::finish_retained_quiescent` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::segments::ReleasedLease` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:19:1
+    |
+ 19 | pub(in super::super) struct ReleasedLease {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `release_probe::ReleaseProbe` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::finish_retained_quiescent`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:172:5
+    |
+172 | /     pub(crate) fn finish_retained_quiescent(
+173 | |         &mut self,
+174 | |         owner: &mut Owner,
+175 | |         released: &mut super::super::coordination::ReleasedLease,
+176 | |         probe: &mut super::super::coordination::ReleaseProbe,
+177 | |         window: &BeforeResumeRecoveryWindow,
+178 | |     ) -> AppResult<AbortedOriginals> {
+    | |____________________________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::finish_retained_quiescent` is reachable at visibility `pub(crate)`
+    |
+note: but type `release_probe::ReleaseProbe` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination\release_probe.rs:5:1
+    |
+  5 | pub(in crate::infrastructure::windows_client_originals024) struct ReleaseProbe {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::segments::ReleasedLease` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::finish_released_originals`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:206:5
+    |
+206 | /     pub(crate) fn finish_released_originals(
+207 | |         &mut self,
+208 | |         owner: &mut Owner,
+209 | |         proof: &QuiescentOriginals,
+...   |
+212 | |         window: &BeforeResumeRecoveryWindow,
+213 | |     ) -> AppResult<AbortedOriginals> {
+    | |____________________________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::finish_released_originals` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::segments::ReleasedLease` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:19:1
+    |
+ 19 | pub(in super::super) struct ReleasedLease {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `release_probe::ReleaseProbe` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::finish_released_originals`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:206:5
+    |
+206 | /     pub(crate) fn finish_released_originals(
+207 | |         &mut self,
+208 | |         owner: &mut Owner,
+209 | |         proof: &QuiescentOriginals,
+...   |
+212 | |         window: &BeforeResumeRecoveryWindow,
+213 | |     ) -> AppResult<AbortedOriginals> {
+    | |____________________________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::finish_released_originals` is reachable at visibility `pub(crate)`
+    |
+note: but type `release_probe::ReleaseProbe` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination\release_probe.rs:5:1
+    |
+  5 | pub(in crate::infrastructure::windows_client_originals024) struct ReleaseProbe {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::AnchoredClaim<'_>` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::return_quiescent_originals`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:245:5
+    |
+245 | /     pub(crate) fn return_quiescent_originals(
+246 | |         &mut self,
+247 | |         owner: &mut Owner,
+248 | |         proof: &QuiescentOriginals,
+249 | |         claim: &mut AnchoredClaim<'_>,
+250 | |         window: &BeforeResumeRecoveryWindow,
+251 | |     ) -> AppResult<serde_json::Value> {
+    | |_____________________________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::return_quiescent_originals` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::AnchoredClaim<'_>` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination.rs:394:1
+    |
+394 | pub(super) struct AnchoredClaim<'a> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::AnchoredClaim<'_>` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::prepare_abort_prefix`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:271:5
+    |
+271 | /     pub(crate) fn prepare_abort_prefix(
+272 | |         &mut self,
+273 | |         owner: &mut Owner,
+274 | |         claim: &mut AnchoredClaim<'_>,
+275 | |         window: &BeforeResumeRecoveryWindow,
+276 | |     ) -> AppResult<PreparedAbortPrefix> {
+    | |_______________________________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::prepare_abort_prefix` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::AnchoredClaim<'_>` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination.rs:394:1
+    |
+394 | pub(super) struct AnchoredClaim<'a> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::AnchoredClaim<'_>` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::quiesce_abort_prefix`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:294:5
+    |
+294 | /     pub(crate) fn quiesce_abort_prefix(
+295 | |         &mut self,
+296 | |         owner: &mut Owner,
+297 | |         prefix: PreparedAbortPrefix,
+298 | |         claim: &mut AnchoredClaim<'_>,
+299 | |         window: &BeforeResumeRecoveryWindow,
+300 | |     ) -> AppResult<QuiescentOriginals> {
+    | |______________________________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::quiesce_abort_prefix` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::AnchoredClaim<'_>` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination.rs:394:1
+    |
+394 | pub(super) struct AnchoredClaim<'a> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::AnchoredClaim<'_>` is more private than the item `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::check_quiescent_prefix`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:358:5
+    |
+358 | /     pub(crate) fn check_quiescent_prefix(
+359 | |         &mut self,
+360 | |         owner: &mut Owner,
+361 | |         proof: &QuiescentOriginals,
+362 | |         claim: &mut AnchoredClaim<'_>,
+363 | |         window: &BeforeResumeRecoveryWindow,
+364 | |     ) -> AppResult<()> {
+    | |______________________^ method `windows_client_originals024::adapter::before_resume::<impl windows_client_originals024::adapter::WindowsOriginals>::check_quiescent_prefix` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::AnchoredClaim<'_>` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination.rs:394:1
+    |
+394 | pub(super) struct AnchoredClaim<'a> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::AnchoredClaim<'_>` is more private than the item `attachment::<impl windows_client_originals024::adapter::WindowsOriginals>::initialize_abort_attachment`
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume\attachment.rs:392:5
+    |
+392 | /     pub(crate) fn initialize_abort_attachment(
+393 | |         &mut self,
+394 | |         owner: &mut Owner,
+395 | |         prefix: &PreparedAbortPrefix,
+...   |
+398 | |         window: &BeforeResumeRecoveryWindow,
+399 | |     ) -> AppResult<()> {
+    | |______________________^ method `attachment::<impl windows_client_originals024::adapter::WindowsOriginals>::initialize_abort_attachment` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::AnchoredClaim<'_>` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination.rs:394:1
+    |
+394 | pub(super) struct AnchoredClaim<'a> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::NativeLease` is more private than the item `recovery_worker::WorkerLocal::lease`
+   --> src\infrastructure\windows_client_originals024\recovery_worker.rs:136:5
+    |
+136 |     pub(crate) fn lease(&mut self) -> io::Result<&mut NativeLease> {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ method `recovery_worker::WorkerLocal::lease` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::NativeLease` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination.rs:383:1
+    |
+383 | pub(super) struct NativeLease {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::segments::ReleasedLease` is more private than the item `recovery_worker::WorkerLocal::released_and_probe`
+   --> src\infrastructure\windows_client_originals024\recovery_worker.rs:191:5
+    |
+191 | /     pub(crate) fn released_and_probe(
+192 | |         &mut self,
+193 | |     ) -> io::Result<(&mut ReleasedLease, &mut ReleaseProbe)> {
+    | |____________________________________________________________^ method `recovery_worker::WorkerLocal::released_and_probe` is reachable at visibility `pub(crate)`
+    |
+note: but type `windows_client_originals024::coordination::segments::ReleasedLease` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:19:1
+    |
+ 19 | pub(in super::super) struct ReleasedLease {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `release_probe::ReleaseProbe` is more private than the item `recovery_worker::WorkerLocal::released_and_probe`
+   --> src\infrastructure\windows_client_originals024\recovery_worker.rs:191:5
+    |
+191 | /     pub(crate) fn released_and_probe(
+192 | |         &mut self,
+193 | |     ) -> io::Result<(&mut ReleasedLease, &mut ReleaseProbe)> {
+    | |____________________________________________________________^ method `recovery_worker::WorkerLocal::released_and_probe` is reachable at visibility `pub(crate)`
+    |
+note: but type `release_probe::ReleaseProbe` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination\release_probe.rs:5:1
+    |
+  5 | pub(in crate::infrastructure::windows_client_originals024) struct ReleaseProbe {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: type `windows_client_originals024::coordination::segments::ReleasedLease` is more private than the item `recovery_worker::Returned::released`
+   --> src\infrastructure\windows_client_originals024\recovery_worker.rs:250:5
+    |
+250 |     pub(crate) released: ReleasedLease,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ field `recovery_worker::Returned::released` is reachable at visibility `pub(in crate::infrastructure)`
+    |
+note: but type `windows_client_originals024::coordination::segments::ReleasedLease` is only usable at visibility `pub(in crate::infrastructure::windows_client_originals024)`
+   --> src\infrastructure\windows_client_originals024\coordination\segments.rs:19:1
+    |
+ 19 | pub(in super::super) struct ReleasedLease {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: trait `recovery_worker::Original` is more private than the item `recovery_worker::WorkerControl<T>`
+   --> src\infrastructure\windows_client_originals024\recovery_worker.rs:275:1
+    |
+275 | impl<T: Original> WorkerControl<T> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ implementation `recovery_worker::WorkerControl<T>` is reachable at visibility `pub(in crate::infrastructure)`
+    |
+note: but trait `recovery_worker::Original` is only usable at visibility `pub(self)`
+   --> src\infrastructure\windows_client_originals024\recovery_worker.rs:44:1
+    |
+ 44 | trait Original: Send + 'static {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: `#[warn(private_bounds)]` on by default
+
+warning: trait `recovery_worker::Original` is more private than the item `return_validation::<impl recovery_worker::WorkerControl<T>>`
+  --> src\infrastructure\windows_client_originals024\recovery_worker\return_validation.rs:27:1
+   |
+27 | impl<T: Original> WorkerControl<T> {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ implementation `return_validation::<impl recovery_worker::WorkerControl<T>>` is reachable at visibility `pub(in crate::infrastructure)`
+   |
+note: but trait `recovery_worker::Original` is only usable at visibility `pub(self)`
+  --> src\infrastructure\windows_client_originals024\recovery_worker.rs:44:1
+   |
+44 | trait Original: Send + 'static {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `execute_lifecycle` is never used
+   --> src\commands\mod.rs:412:4
+    |
+412 | fn execute_lifecycle<R: ProcessRunner + ?Sized>(
+    |    ^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `LIMIT` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:24:7
+   |
+24 | const LIMIT: usize = 2 * 1024 * 1024;
+   |       ^^^^^
+
+warning: function `before` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:25:4
+   |
+25 | fn before(deadline: Instant) -> io::Result<()> {
+   |    ^^^^^^
+
+warning: function `unnamed_stream_only` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:32:4
+   |
+32 | fn unnamed_stream_only(path: &Path) -> io::Result<()> {
+   |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `bytes` is never used
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:74:4
+   |
+74 | fn bytes(file: &mut File) -> io::Result<Vec<u8>> {
+   |    ^^^^^
+
+warning: struct `RetainedFileMove` is never constructed
+  --> src\infrastructure\windows_official_runtime024\file_move.rs:89:12
+   |
+89 | pub struct RetainedFileMove {
+   |            ^^^^^^^^^^^^^^^^
+
+warning: associated items `open`, `identity`, `location`, `verify`, `move_into`, and `restore` are never used
+   --> src\infrastructure\windows_official_runtime024\file_move.rs:99:12
+    |
+ 98 | impl RetainedFileMove {
+    | --------------------- associated items in this implementation
+ 99 |     pub fn open(path: &Path, deadline: Instant) -> io::Result<Self> {
+    |            ^^^^
+...
+129 |     pub fn identity(&self) -> FileIdentity {
+    |            ^^^^^^^^
+...
+132 |     pub fn location(&self) -> &Path {
+    |            ^^^^^^^^
+...
+135 |     pub fn verify(&mut self, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^
+...
+159 |     pub fn move_into(&mut self, target: &Path, name: &str, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^^^^
+...
+188 |     pub fn restore(&mut self, deadline: Instant) -> io::Result<()> {
+    |            ^^^^^^^
+
+warning: field `raw_command_line` is never read
+ --> src\infrastructure\windows_official_runtime024\command.rs:8:9
+  |
+6 | pub struct CommandEvidence {
+  |            --------------- field in this struct
+7 |     pub captured_at: Instant,
+8 |     pub raw_command_line: String,
+  |         ^^^^^^^^^^^^^^^^
+  |
+  = note: `CommandEvidence` has derived impls for the traits `Debug` and `Clone`, but these are intentionally ignored during dead code analysis
+
+warning: method `resume_revoked_by_abort` is never used
+   --> src\infrastructure\windows_official_runtime024\before_resume.rs:204:12
+    |
+ 41 | impl OwnedRuntime {
+    | ----------------- method in this implementation
+...
+204 |     pub fn resume_revoked_by_abort(&self) -> bool {
+    |            ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `preflight` is never used
+   --> src\infrastructure\windows_client_originals024\mod.rs:252:15
+    |
+252 | pub(crate) fn preflight(profile: &Path, deadline: std::time::Instant) -> Result<(), CaptureError> {
+    |               ^^^^^^^^^
+
+warning: fields `abort_prefix`, `abort_attachment`, and `quiescent_for_release` are never read
+  --> src\infrastructure\windows_client_originals024\adapter.rs:78:5
+   |
+65 | pub(crate) struct WindowsOriginals {
+   |                   ---------------- fields in this struct
+...
+78 |     abort_prefix: Option<PreparedAbortPrefix>,
+   |     ^^^^^^^^^^^^
+79 |     abort_attachment: Option<before_resume::attachment::BoundAttachment>,
+   |     ^^^^^^^^^^^^^^^^
+80 |     quiescent_for_release: Option<QuiescentOriginals>,
+   |     ^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `read_before_resume_prefix` is never used
+  --> src\infrastructure\windows_client_originals024\adapter.rs:83:19
+   |
+82 | impl WindowsOriginals {
+   | --------------------- method in this implementation
+83 |     pub(crate) fn read_before_resume_prefix(
+   |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `scope` is never read
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:12:5
+   |
+10 | pub(crate) struct PreparedAbortPrefix {
+   |                   ------------------- field in this struct
+11 |     session: uuid::Uuid,
+12 |     scope: String,
+   |     ^^^^^
+
+warning: struct `ClaimBoundAbort` is never constructed
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:22:19
+   |
+22 | pub(crate) struct ClaimBoundAbort<'a, 'lease> {
+   |                   ^^^^^^^^^^^^^^^
+
+warning: method `check_owner` is never used
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:27:19
+   |
+26 | impl ClaimBoundAbort<'_, '_> {
+   | ---------------------------- method in this implementation
+27 |     pub(crate) fn check_owner(
+   |                   ^^^^^^^^^^^
+
+warning: fields `session`, `action`, `end`, and `native` are never read
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:51:5
+   |
+50 | pub(crate) struct AbortedOriginals {
+   |                   ---------------- fields in this struct
+51 |     session: uuid::Uuid,
+   |     ^^^^^^^
+52 |     action: String,
+   |     ^^^^^^
+53 |     end: Instant,
+   |     ^^^
+54 |     native: crate::infrastructure::windows_client_originals024::tree::AbortRestoredReadback,
+   |     ^^^^^^
+
+warning: method `read_data` is never used
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:57:19
+   |
+56 | impl AbortedOriginals {
+   | --------------------- method in this implementation
+57 |     pub(crate) fn read_data(&self, end: Instant) -> AppResult<serde_json::Value> {
+   |                   ^^^^^^^^^
+
+warning: method `check_owner` is never used
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:85:19
+   |
+84 | impl PreparedAbortPrefix {
+   | ------------------------ method in this implementation
+85 |     pub(crate) fn check_owner(
+   |                   ^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume.rs:122:19
+    |
+121 | impl WindowsOriginals {
+    | --------------------- methods in this implementation
+122 |     pub(crate) fn recheck_retained_quiescent(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+160 |     pub(crate) fn retain_quiescent_for_release(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+172 |     pub(crate) fn finish_retained_quiescent(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+206 |     pub(crate) fn finish_released_originals(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+245 |     pub(crate) fn return_quiescent_originals(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+271 |     pub(crate) fn prepare_abort_prefix(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+294 |     pub(crate) fn quiesce_abort_prefix(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+358 |     pub(crate) fn check_quiescent_prefix(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `storage`, `last_raw`, and `prefix_digest` are never read
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume\attachment.rs:9:5
+   |
+ 8 | pub(in crate::infrastructure::windows_client_originals024) struct BoundAttachment {
+   |                                                                   --------------- fields in this struct
+ 9 |     storage: AttachmentStorage,
+   |     ^^^^^^^
+...
+12 |     last_raw: Option<Vec<u8>>,
+   |     ^^^^^^^^
+13 |     prefix_digest: String,
+   |     ^^^^^^^^^^^^^
+
+warning: struct `OriginalReturnScope` is never constructed
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume\attachment.rs:17:19
+   |
+17 | pub(crate) struct OriginalReturnScope<'a> {
+   |                   ^^^^^^^^^^^^^^^^^^^
+
+warning: struct `OriginalReleasedScope` is never constructed
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume\attachment.rs:25:19
+   |
+25 | pub(crate) struct OriginalReleasedScope<'a> {
+   |                   ^^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function `bind` is never used
+  --> src\infrastructure\windows_client_originals024\adapter\before_resume\attachment.rs:34:67
+   |
+33 | impl<'a> OriginalReleasedScope<'a> {
+   | ---------------------------------- associated function in this implementation
+34 |     pub(in crate::infrastructure::windows_client_originals024) fn bind(
+   |                                                                   ^^^^
+
+warning: associated function `bind` is never used
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume\attachment.rs:140:67
+    |
+139 | impl<'a> OriginalReturnScope<'a> {
+    | -------------------------------- associated function in this implementation
+140 |     pub(in crate::infrastructure::windows_client_originals024) fn bind(
+    |                                                                   ^^^^
+
+warning: methods `initialize`, `check`, and `record_quiescent` are never used
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume\attachment.rs:274:8
+    |
+262 | impl BoundAttachment {
+    | -------------------- methods in this implementation
+...
+274 |     fn initialize(
+    |        ^^^^^^^^^^
+...
+312 |     pub(super) fn check(
+    |                   ^^^^^
+...
+353 |     pub(super) fn record_quiescent(
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: method `initialize_abort_attachment` is never used
+   --> src\infrastructure\windows_client_originals024\adapter\before_resume\attachment.rs:392:19
+    |
+391 | impl WindowsOriginals {
+    | --------------------- method in this implementation
+392 |     pub(crate) fn initialize_abort_attachment(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `check_completed_stop` is never used
+   --> src\infrastructure\windows_client_originals024\content.rs:230:19
+    |
+180 | impl StartContentScope {
+    | ---------------------- method in this implementation
+...
+230 |     pub(super) fn check_completed_stop(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: method `prepare_existing` is never used
+   --> src\infrastructure\windows_client_originals024\coordination\preparation.rs:199:67
+    |
+ 25 | impl LeasePreparation {
+    | --------------------- method in this implementation
+...
+199 |     pub(in crate::infrastructure::windows_client_originals024) fn prepare_existing(
+    |                                                                   ^^^^^^^^^^^^^^^^
+
+warning: method `check_before_resume_owner` is never used
+  --> src\infrastructure\windows_client_originals024\coordination\segments.rs:71:67
+   |
+54 | impl ReleasedLease {
+   | ------------------ method in this implementation
+...
+71 |     pub(in crate::infrastructure::windows_client_originals024) fn check_before_resume_owner(
+   |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: fields `directories` and `directory_pins` are never read
+  --> src\infrastructure\windows_client_originals024\recovery_worker.rs:62:5
+   |
+56 | pub(crate) struct WorkerLocal {
+   |                   ----------- fields in this struct
+...
+62 |     directories:
+   |     ^^^^^^^^^^^
+63 |         Vec<crate::infrastructure::windows_official_runtime024::PrivateDirectoryPreparation>,
+64 |     directory_pins: Vec<crate::infrastructure::windows_official_runtime024::PinnedDirectory>,
+   |     ^^^^^^^^^^^^^^
+
+warning: methods `finish_released_stage`, `canonical_claim_stage`, `acquire`, and `attachment_directory` are never used
+   --> src\infrastructure\windows_client_originals024\recovery_worker.rs:67:19
+    |
+ 66 | impl WorkerLocal {
+    | ---------------- methods in this implementation
+ 67 |     pub(crate) fn finish_released_stage(
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+ 82 |     pub(crate) fn canonical_claim_stage(
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+124 |     pub(crate) fn acquire(
+    |                   ^^^^^^^
+...
+142 |     pub(crate) fn attachment_directory(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: associated function `start_owner` is never used
+   --> src\infrastructure\windows_client_originals024\recovery_worker.rs:386:19
+    |
+385 | impl WorkerControl<Owner> {
+    | ------------------------- associated function in this implementation
+386 |     pub(crate) fn start_owner(
+    |                   ^^^^^^^^^^^
+
+warning: method `validate_original_owner_return` is never used
+   --> src\infrastructure\windows_client_originals024\recovery_worker\return_validation.rs:114:19
+    |
+113 | impl WorkerControl<Owner> {
+    | ------------------------- method in this implementation
+114 |     pub(crate) fn validate_original_owner_return<F>(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `Full` is never constructed
+  --> src\infrastructure\windows_client_originals024\reference.rs:59:8
+   |
+59 | struct Full;
+   |        ^^^^
+
+warning: struct `CurrentReference` is never constructed
+  --> src\infrastructure\windows_client_originals024\reference.rs:69:19
+   |
+69 | pub(super) struct CurrentReference(Reference<Full>);
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: associated items `append_pending_phase`, `create`, `open`, and `advance` are never used
+   --> src\infrastructure\windows_client_originals024\reference.rs:71:19
+    |
+ 70 | impl CurrentReference {
+    | --------------------- associated items in this implementation
+ 71 |     pub(super) fn append_pending_phase(
+    |                   ^^^^^^^^^^^^^^^^^^^^
+...
+ 86 |     pub(super) fn create(
+    |                   ^^^^^^
+...
+ 98 |     pub(super) fn open(
+    |                   ^^^^
+...
+105 |     pub(super) fn advance(&mut self, prefix: &PendingOnly, deadline: Instant) -> io::Result<()> {
+    |                   ^^^^^^^
+
+warning: methods `read_before_resume_prefix` and `inspect_original_retirement` are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:68:67
+    |
+ 67 | impl CapturedTrees {
+    | ------------------ methods in this implementation
+ 68 |     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_prefix(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+265 |     pub(in crate::infrastructure::windows_client_originals024) fn inspect_original_retirement(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `return_before_resume` is never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\capture\abort_return.rs:107:67
+    |
+ 89 | impl CapturedTrees {
+    | ------------------ method in this implementation
+...
+107 |     pub(in crate::infrastructure::windows_client_originals024) fn return_before_resume(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `finish_before_resume_release` and `recheck_before_resume_return` are never used
+   --> src\infrastructure\windows_client_originals024\tree\anchored\capture\abort_return\released.rs:84:67
+    |
+ 74 | impl CapturedTrees {
+    | ------------------ methods in this implementation
+...
+ 84 |     pub(in crate::infrastructure::windows_client_originals024) fn finish_before_resume_release(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+185 |     pub(in crate::infrastructure::windows_client_originals024) fn recheck_before_resume_return(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `data` is never used
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\series.rs:79:67
+   |
+22 | impl NativeContentAssessment {
+   | ---------------------------- method in this implementation
+...
+79 |     pub(in crate::infrastructure::windows_client_originals024) fn data(&self) -> serde_json::Value {
+   |                                                                   ^^^^
+
+warning: field `records` is never read
+   --> src\infrastructure\windows_client_originals024\v2.rs:462:5
+    |
+460 | pub(super) struct PendingV2 {
+    |                   --------- field in this struct
+461 |     directory: PinnedDirectory,
+462 |     records: Vec<PrivateRecord>,
+    |     ^^^^^^^
+
+warning: methods `assess_artifacts`, `assess_artifacts_inner`, `session_id`, and `verify_working_unchanged` are never used
+   --> src\infrastructure\windows_client_originals024\v2\capture.rs:113:19
+    |
+110 | impl TreeCaptureV2 {
+    | ------------------ methods in this implementation
+...
+113 |     pub(super) fn assess_artifacts(
+    |                   ^^^^^^^^^^^^^^^^
+...
+129 |     fn assess_artifacts_inner(
+    |        ^^^^^^^^^^^^^^^^^^^^^^
+...
+484 |     pub(super) fn session_id(&self) -> &str {
+    |                   ^^^^^^^^^^
+...
+610 |     pub(super) fn verify_working_unchanged(&mut self, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `binding_data` is never used
+   --> src\infrastructure\windows_client_originals024\v2\capture\history.rs:155:71
+    |
+  4 | impl TreeCaptureV2 {
+    | ------------------ method in this implementation
+...
+155 |     pub(in crate::infrastructure::windows_client_originals024::v2) fn binding_data(
+    |                                                                       ^^^^^^^^^^^^
+
+warning: function `refused` is never used
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:22:4
+   |
+22 | fn refused(reason: impl std::fmt::Display) -> AppError {
+   |    ^^^^^^^
+
+warning: function `before` is never used
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:28:4
+   |
+28 | fn before(end: Instant) -> io::Result<()> {
+   |    ^^^^^^
+
+warning: enum `State` is never used
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:36:6
+   |
+36 | enum State {
+   |      ^^^^^
+
+warning: struct `Store` is never constructed
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:42:8
+   |
+42 | struct Store {
+   |        ^^^^^
+
+warning: method `check_source` is never used
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:54:8
+   |
+53 | impl Store {
+   | ---------- method in this implementation
+54 |     fn check_source(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+   |        ^^^^^^^^^^^^
+
+warning: struct `OriginalSession` is never constructed
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:68:19
+   |
+68 | pub(crate) struct OriginalSession {
+   |                   ^^^^^^^^^^^^^^^
+
+warning: struct `ReadySession` is never constructed
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:71:19
+   |
+71 | pub(crate) struct ReadySession {
+   |                   ^^^^^^^^^^^^
+
+warning: struct `PreparedRestore` is never constructed
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:74:19
+   |
+74 | pub(crate) struct PreparedRestore {
+   |                   ^^^^^^^^^^^^^^^
+
+warning: struct `ClosedEligibility` is never constructed
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:77:19
+   |
+77 | pub(crate) struct ClosedEligibility {
+   |                   ^^^^^^^^^^^^^^^^^
+
+warning: enum `LivePhase` is never used
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:80:17
+   |
+80 | pub(crate) enum LivePhase {
+   |                 ^^^^^^^^^
+
+warning: struct `WindowsOriginals` is never constructed
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:87:19
+   |
+87 | pub(crate) struct WindowsOriginals {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: struct `SuccessorTicket` is never constructed
+  --> src\infrastructure\windows_client_originals024\v2\adapter.rs:96:8
+   |
+96 | struct SuccessorTicket {
+   |        ^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_client_originals024\v2\adapter.rs:103:19
+    |
+102 | impl WindowsOriginals {
+    | --------------------- methods in this implementation
+103 |     pub(crate) fn prepare_v3_stop(
+    |                   ^^^^^^^^^^^^^^^
+...
+120 |     pub(crate) fn before_v3_resume(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+    |                   ^^^^^^^^^^^^^^^^
+...
+130 |     pub(crate) fn record_v3_ready(
+    |                   ^^^^^^^^^^^^^^^
+...
+147 |     pub(crate) fn prepare_v3_capture(
+    |                   ^^^^^^^^^^^^^^^^^^
+...
+164 |     pub(crate) fn check_closed(
+    |                   ^^^^^^^^^^^^
+...
+208 |     fn recheck_closed(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+    |        ^^^^^^^^^^^^^^
+...
+278 |     pub(crate) fn before_resume(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+    |                   ^^^^^^^^^^^^^
+...
+299 |     pub(crate) fn check_ready(
+    |                   ^^^^^^^^^^^
+...
+324 |     fn begin(
+    |        ^^^^^
+
+warning: methods `recheck_before_resume_return`, `finish_before_resume_release`, `return_before_resume`, `read_before_resume_prefix`, and `capture_existing` are never used
+   --> src\infrastructure\windows_client_originals024\v3\capture.rs:217:67
+    |
+216 | impl CaptureSlot {
+    | ---------------- methods in this implementation
+217 |     pub(in crate::infrastructure::windows_client_originals024) fn recheck_before_resume_return(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+269 |     pub(in crate::infrastructure::windows_client_originals024) fn finish_before_resume_release(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+322 |     pub(in crate::infrastructure::windows_client_originals024) fn return_before_resume(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^
+...
+380 |     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_prefix(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+969 |     pub(in crate::infrastructure::windows_client_originals024) fn capture_existing(
+    |                                                                   ^^^^^^^^^^^^^^^^
+
+warning: associated function `empty` is never used
+  --> src\infrastructure\windows_client_originals024\v3\capture\predecessors.rs:38:67
+   |
+37 | impl NativePredecessors {
+   | ----------------------- associated function in this implementation
+38 |     pub(in crate::infrastructure::windows_client_originals024) fn empty(
+   |                                                                   ^^^^^
+
+warning: method `check_active_namespace` is never used
+   --> src\infrastructure\windows_client_originals024\v3\capture\predecessors.rs:256:67
+    |
+156 | impl CaptureSlot {
+    | ---------------- method in this implementation
+...
+256 |     pub(in crate::infrastructure::windows_client_originals024) fn check_active_namespace(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: method `batch_intent_rows` is never used
+   --> src\infrastructure\windows_client_originals024\v3\batches.rs:213:19
+    |
+159 | impl Progress {
+    | ------------- method in this implementation
+...
+213 |     pub(super) fn batch_intent_rows(&self) -> io::Result<serde_json::Value> {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: associated function `create_from_source` is never used
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:462:29
+    |
+352 | impl Journal {
+    | ------------ associated function in this implementation
+...
+462 |     pub(in super::super) fn create_from_source(
+    |                             ^^^^^^^^^^^^^^^^^^
+
+warning: methods `read_before_resume_released`, `read_before_resume_prefix`, and `read_before_resume_trees` are never used
+   --> src\infrastructure\windows_client_originals024\v3\journal\before_resume.rs:13:67
+    |
+ 12 | impl Journal {
+    | ------------ methods in this implementation
+ 13 |     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_released(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+144 |     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_prefix(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+189 |     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_trees(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `start_canonical_before_resume_recovery` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:103:15
+    |
+103 | pub(crate) fn start_canonical_before_resume_recovery(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `handoff_before_resume_worker` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:130:15
+    |
+130 | pub(crate) fn handoff_before_resume_worker(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `before_resume_worker_status` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:163:15
+    |
+163 | pub(crate) fn before_resume_worker_status(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `validate_canonical_before_resume_return` is never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:178:15
+    |
+178 | pub(crate) fn validate_canonical_before_resume_return(
+    |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `originals_creator_has_resumed` and `originals_check_live_record` are never used
+   --> src\infrastructure\windows_official_lifecycle024.rs:339:19
+    |
+327 | impl Owner {
+    | ---------- methods in this implementation
+...
+339 |     pub(crate) fn originals_creator_has_resumed(&self) -> bool {
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+494 |     pub(crate) fn originals_check_live_record(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `cancel` is never used
+    --> src\infrastructure\windows_official_lifecycle024.rs:1232:15
+     |
+1232 | pub(crate) fn cancel(runtime: &SharedRuntimeExecutable, home: &Path) {
+     |               ^^^^^^
+
+warning: function `status` is never used
+    --> src\infrastructure\windows_official_lifecycle024.rs:1379:21
+     |
+1379 | pub(crate) async fn status(
+     |                     ^^^^^^
+
+warning: fields `restored` and `attachment_directory` are never read
+  --> src\infrastructure\windows_official_lifecycle024\actions\recovery.rs:55:5
+   |
+41 | pub(in crate::infrastructure::windows_official_lifecycle024) struct ProcessAbortAttempt {
+   |                                                                     ------------------- fields in this struct
+...
+55 |     restored: Option<crate::infrastructure::windows_client_originals024::AbortedOriginals>,
+   |     ^^^^^^^^
+56 |     attachment_directory: Option<native::PinnedDirectory>,
+   |     ^^^^^^^^^^^^^^^^^^^^
+
+warning: multiple methods are never used
+   --> src\infrastructure\windows_official_lifecycle024\actions\recovery.rs:118:19
+    |
+117 | impl Owner {
+    | ---------- methods in this implementation
+118 |     pub(crate) fn before_resume_restored_data(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+131 |     pub(crate) fn retain_before_resume_restored(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+156 |     pub(crate) fn take_before_resume_attachment_directory(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+171 |     pub(crate) fn before_resume_quiescent_record(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+192 |     pub(crate) fn before_resume_record_origin(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+214 |     pub(crate) fn quiesce_before_resume_process(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+247 |     pub(crate) fn check_before_resume_quiescent(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+279 |     pub(crate) fn prepare_before_resume_process(
+    |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `run` is never used
+ --> src\infrastructure\windows_official_lifecycle024\actions\recovery\driver.rs:5:65
+  |
+5 | pub(in crate::infrastructure::windows_official_lifecycle024) fn run(
+  |                                                                 ^^^
+
+warning: struct `ManagerConnection` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:19:19
+   |
+19 | pub(crate) struct ManagerConnection {
+   |                   ^^^^^^^^^^^^^^^^^
+
+warning: struct `AttachedManager` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:26:19
+   |
+26 | pub(crate) struct AttachedManager {
+   |                   ^^^^^^^^^^^^^^^
+
+warning: struct `WindowsOwnerHost` is never constructed
+  --> src\infrastructure\windows_owner_host024\continuity.rs:33:19
+   |
+33 | pub(crate) struct WindowsOwnerHost {
+   |                   ^^^^^^^^^^^^^^^^
+
+warning: associated items `new` and `challenge` are never used
+  --> src\infrastructure\windows_owner_host024\continuity.rs:44:19
+   |
+41 | impl WindowsOwnerHost {
+   | --------------------- associated items in this implementation
+...
+44 |     pub(crate) fn new(
+   |                   ^^^
+...
+72 |     pub(crate) fn challenge(
+   |                   ^^^^^^^^^
+
+warning: function `hash_hex` is never used
+   --> src\infrastructure\windows_owner_host024\continuity.rs:110:4
+    |
+110 | fn hash_hex(bytes: &[u8]) -> String {
+    |    ^^^^^^^^
+
+warning: method `action_window` is never used
+   --> src\infrastructure\windows_owner_host024\continuity.rs:152:19
+    |
+151 | impl AttachedManager {
+    | -------------------- method in this implementation
+152 |     pub(crate) fn action_window(
+    |                   ^^^^^^^^^^^^^
+
+warning: fields `argv`, `parent`, `source_sha`, and `phase` are never read
+  --> src\infrastructure\windows_diagnostic_roles024.rs:36:5
+   |
+31 | pub(crate) struct ProvenRole {
+   |                   ---------- fields in this struct
+...
+36 |     argv: Vec<String>,
+   |     ^^^^
+37 |     parent: ProcessIdentity,
+   |     ^^^^^^
+38 |     source_sha: String,
+   |     ^^^^^^^^^^
+39 |     phase: &'static str,
+   |     ^^^^^
+
+warning: function `path_reference` is never used
+  --> src\modules\runtime\program_image.rs:24:19
+   |
+24 |     pub(super) fn path_reference<T>(action: impl FnOnce() -> T) -> T {
+   |                   ^^^^^^^^^^^^^^
+
+warning: method `interrupt_fixture` is never used
+   --> src\modules\runtime\program_removal.rs:502:19
+    |
+500 | impl Prepared {
+    | ------------- method in this implementation
+501 |     #[cfg(test)]
+502 |     pub(crate) fn interrupt_fixture(
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: `GetSecurityInfo` redeclared with a different signature
+   --> src\infrastructure\windows_client_originals024\reference.rs:285:17
+    |
+285 | /                 fn GetSecurityInfo(
+286 | |                     h: *mut std::ffi::c_void,
+287 | |                     kind: i32,
+288 | |                     mask: u32,
+...   |
+293 | |                     out: *mut *mut std::ffi::c_void,
+294 | |                 ) -> u32;
+    | |_________________________^ this signature doesn't match the previous declaration
+    |
+   ::: src\infrastructure\windows_cli024.rs:43:5
+    |
+ 43 | /     fn GetSecurityInfo(
+ 44 | |         handle: HANDLE,
+ 45 | |         kind: i32,
+ 46 | |         requested: u32,
+...   |
+ 51 | |         descriptor: *mut *mut c_void,
+ 52 | |     ) -> u32;
+    | |_____________- `GetSecurityInfo` previously declared here
+    |
+    = note: expected `unsafe extern "system" fn(*mut c_void, i32, u32, *mut *mut c_void, *mut *mut c_void, *mut *mut ACL, *mut *mut ACL, *mut *mut c_void) -> u32`
+               found `unsafe extern "system" fn(*mut c_void, i32, u32, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void, *mut *mut c_void) -> u32`
+    = note: `#[warn(clashing_extern_declarations)]` on by default
+
+warning: `opencodex-desktop` (lib test) generated 116 warnings (run `cargo fix --lib -p opencodex-desktop --tests` to apply 17 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2m 37s
+     Running unittests src\lib.rs (test\windows024-native\target\w1c-product\x86_64-pc-windows-msvc\debug\build\opencodex-desktop/182e378daf0091d7\out\opencodex_desktop_lib-182e378daf0091d7.exe)

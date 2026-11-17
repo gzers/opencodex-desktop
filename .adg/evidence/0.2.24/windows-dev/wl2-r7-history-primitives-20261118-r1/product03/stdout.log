@@ -1,0 +1,41 @@
+
+running 4 tests
+test infrastructure::windows_client_originals024::before_resume_record::storage::tests::history_tests::wl2_r7_history_primitives_native_v1attachment_same_files_after_write_cutoff_no_new_permission ... r7 historical v1attachment native valid: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpwOx6wy
+r7 historical v1attachment native member: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpOi71eq
+r7 historical v1attachment native file-security: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpTPcqF3
+r7 historical v1attachment native expired-read: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmptrVWZp
+r7 historical v1attachment native pending-write: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpcqrFNN
+r7 historical v1attachment native missing-completion: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpPY2DuI
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::storage::tests::history_tests::wl2_r7_history_primitives_native_v2attachment_same_files_after_write_cutoff_no_new_permission ... r7 historical v2attachment native valid: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpJOSCho
+r7 historical v2attachment native member: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpxa0W5n
+r7 historical v2attachment native file-security: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp2FMiHn
+r7 historical v2attachment native expired-read: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp6kFhGS
+r7 historical v2attachment native pending-write: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpokp3XI
+r7 historical v2attachment native missing-completion: same original files/native prefix, original write cutoff expired/no newappend or rewindow; DATA only
+r7-v2-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp2KWQS6
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::quiesce_tests::history_tests::wl2_r7_history_primitives_native_foreign_actual_job_never_passes_history_read ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpErP935
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::quiesce_tests::history_tests::wl2_r7_history_primitives_native_original_quiescence_after_expiry_never_renews_mutation ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpvhhXRI
+FAILED
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::quiesce_tests::history_tests::wl2_r7_history_primitives_native_foreign_actual_job_never_passes_history_read
+    infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::quiesce_tests::history_tests::wl2_r7_history_primitives_native_original_quiescence_after_expiry_never_renews_mutation
+
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 2242 filtered out; finished in 7.31s
+
