@@ -12,6 +12,7 @@ use std::{
 };
 mod adapter;
 mod binding;
+mod before_resume_record;
 mod bounded;
 mod content;
 mod coordination;
