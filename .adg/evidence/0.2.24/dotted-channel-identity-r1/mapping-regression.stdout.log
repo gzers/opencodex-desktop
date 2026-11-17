@@ -1,0 +1,26 @@
+
+running 21 tests
+test modules::model_config::config_file_mapping::tests::capability_modalities_patch_preserves_nested_unknowns_and_inherit_clears_both_sources ... ok
+test modules::model_config::config_file_mapping::tests::connection_enable_and_node_edits_do_not_rewrite_model_json_or_keys ... ok
+test modules::model_config::config_file_mapping::tests::declared_only_models_get_every_file_rule_without_discovery ... ok
+test modules::model_config::config_file_mapping::tests::deterministic_ids_are_lowercase_uuid_v4_and_do_not_depend_on_url ... ok
+test modules::model_config::config_file_mapping::tests::dotted_provider_name_rename_keeps_full_provider_and_routed_references ... ok
+test modules::model_config::config_file_mapping::tests::each_model_control_is_an_independent_single_field_patch ... ok
+test modules::model_config::config_file_mapping::tests::exact_native_id_wins_over_lossy_slug_and_family_rules_are_read_from_file ... ok
+test modules::model_config::config_file_mapping::tests::fast_operator_off_is_effective_without_erasing_original_capabilities ... ok
+test modules::model_config::config_file_mapping::tests::file_snapshot_replaces_stale_facts_but_keeps_ids_labels_nodes_and_adoptions ... ok
+test modules::model_config::config_file_mapping::tests::future_fast_wire_members_survive_read_noop_and_known_member_edits ... ok
+test modules::model_config::config_file_mapping::tests::inherit_deletes_all_exact_rule_keys_without_recompiling_other_models ... ok
+test modules::model_config::config_file_mapping::tests::manual_model_id_is_saved_offline_without_catalog_or_key_gate ... ok
+test modules::model_config::config_file_mapping::tests::naming_patch_keeps_display_names_until_explicitly_cleared ... ok
+test modules::model_config::config_file_mapping::tests::none_persists_empty_allowlist_off_policy_and_real_official_disables_then_all_restores ... ok
+test modules::model_config::config_file_mapping::tests::noop_preserves_every_field_and_name_edit_updates_only_existing_display_name ... ok
+test modules::model_config::config_file_mapping::tests::one_model_field_changes_only_one_map_entry_and_default_change_only_scalar ... ok
+test modules::model_config::config_file_mapping::tests::picker_restores_channel_and_model_order_and_keeps_opaque_native_rows ... ok
+test modules::model_config::config_file_mapping::tests::protected_connections_identity_and_unrepresentable_shared_edits_fail_atomically ... ok
+test modules::model_config::config_file_mapping::tests::selection_absence_uses_official_install_default_but_explicit_empty_stays_none ... ok
+test modules::model_config::config_file_mapping::tests::shared_rules_are_persisted_at_provider_scope_and_no_reasoning_inherit_removes_membership ... ok
+test modules::model_config::config_file_mapping::tests::template_adoption_projects_only_changed_fields_and_preserves_unrelated_json ... ok
+
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 2653 filtered out; finished in 0.01s
+

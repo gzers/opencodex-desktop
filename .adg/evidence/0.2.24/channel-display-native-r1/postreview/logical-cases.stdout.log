@@ -1,0 +1,11 @@
+
+running 6 tests
+test modules::model_config::config_file::v2::tests::export_logical_channel_official_refresh_inputs ... ignored, explicit isolated official2.99 display/save/refresh probe input
+test modules::model_config::config_file::v2::tests::logical_channel_display_overflow_refuses_atomically_but_manual_name_takes_priority ... ok
+test modules::model_config::config_file::v2::tests::logical_channel_display_save_read_rename_preserves_routes_and_manual_priority ... ok
+test modules::model_config::config_file::v2::tests::logical_channel_external_display_edit_is_never_reclassified_by_name_similarity ... ok
+test modules::model_config::config_file::v2::tests::logical_channel_long_anchor_and_collision_keep_every_new_group_within_official_limit ... ok
+test modules::model_config::consumer_v2_tests::logical_channel_split_displays_share_parent_name_and_refresh_without_manual_adoption ... ok
+
+test result: ok. 5 passed; 0 failed; 1 ignored; 0 measured; 2675 filtered out; finished in 2.44s
+

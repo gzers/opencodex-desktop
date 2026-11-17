@@ -1,0 +1,10 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 32.10s
+     Running unittests src/lib.rs (target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+thread 'modules::model_config::config_file::v2::tests::dotted_provider_name_uses_official_identity_and_keeps_credentials_models_and_references' (165773273) panicked at src/modules/model_config/config_file_v2_tests.rs:198:9:
+assertion `left == right` failed: Krill.v2: full provider bytes/fields must survive
+  left: Object {"adapter": String("openai-chat"), "apiKey": String("synthetic-only-never-return"), "authMode": String("key"), "baseUrl": String("https://fixture.invalid/v1"), "disabled": Bool(false), "modelAdapters": Object {"gpt-6-sol": String("openai-chat"), "vendor/custom": String("openai-chat")}, "modelContextWindows": Object {"vendor/custom": Number(4096)}, "models": Array [String("gpt-6-sol"), String("vendor/custom")], "name": String("Krill.v2"), "noReasoningModels": Array [], "retainModels": Array [String("gpt-6-sol"), String("vendor/custom")], "selectedModels": Array [String("gpt-6-sol"), String("vendor/custom")], "unknown": Object {"keep": Bool(true)}}
+ right: Object {"adapter": String("openai-chat"), "apiKey": String("synthetic-only-never-return"), "authMode": String("key"), "baseUrl": String("https://fixture.invalid/v1"), "modelContextWindows": Object {"vendor/custom": Number(4096)}, "models": Array [String("gpt-6-sol"), String("vendor/custom")], "name": String("Krill.v2"), "selectedModels": Array [String("gpt-6-sol"), String("vendor/custom")], "unknown": Object {"keep": Bool(true)}}
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--lib`
