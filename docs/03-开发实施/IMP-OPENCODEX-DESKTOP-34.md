@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 152；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 153；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main adcf4f94edf73c6afb2675a34438f066be8b2eb8（非冻结候选）；Windows实现检查点codex/024-windows-native 57c982b683f065ca73e3afc718d0127c82eae775（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 144391b95cc82cbc191e187537c736fd95284918（非冻结候选）；Windows实现检查点codex/024-windows-native 57c982b683f065ca73e3afc718d0127c82eae775（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1597,3 +1597,10 @@ main adcf4f94edf73c6afb2675a34438f066be8b2eb8新增借原独立Index的首次目
 三请求已于[r7文末](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)一次明确：未有manifest采用独立strictv2 canonical/preparation存在性，不伪造摘要、不转换v1/旧v3；活动lease由同一原worker连续持有，失败停驻不Drop伪释放/不重开10秒，后继失败处置另需具体证据；PSS0x8仍24unknown，允许documented NtQueryObject仅类型＋单broker零访问复制自有原型，缺权限/未知仍拒，禁止名字/全机/私有结构/提升/现场变更。main 78dc2b8149c4b2f948f6de0d649bea7b46dada02只加BEFORE_RESUME_RECOVERY_RECORD_V2标识，四trait签名及CONTRACT_VERSION4不变。格式标识不等实现或原生证明。
 
 Windows可自行消费新main/docs继续已有独占集，非必要不回Mac。当前r221500/75744/原件/work/custody/anchors/协调及seq9保持，R1具体计划/确认尚未完成，任何实际forced/return不因本合同获得授权。NAME默认客户端/候选回退、Mac其它原生与完整候选/W2仍未完，不发布，目标active。
+
+
+### 2026-11-17 revision153：取消审查新夹具精确清理
+
+main 144391b95cc82cbc191e187537c736fd95284918仅完善本批取消审查的5项测试清理：关闭原Index/Context后显式TempDir.close，12个任务自有临时根逐项缺席断言并输出准确路径，接收端按同12路径再次核缺席。5项保持通过，全targets strict Clippy通过，diff无空白错误；[清理回执](../../.adg/evidence/0.2.24/mac-root-cancel-review-r1/cleanup-explicit/observed-absent.json)。原152的guard-only局限由这一新执行证据补齐，不回填旧日志、未删除任何历史失败或旧拒绝目录。
+
+本批仅只读首次目录取消审查，非取消功能完成。shared v2标识/三Windows具体决定已推main78dc2b814及docs ea5bf8f59；后继main含Mac文件/测试，不改Windows运行时产品或原现场。下一Mac工作仍为实际guard排他/目录保管读回/索引取消事件及界面接入；Windows独占恢复线继续，最终候选及所有原验收不放宽，目标active、不发布。
