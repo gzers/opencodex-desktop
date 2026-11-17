@@ -1,0 +1,27 @@
+{
+  "method": "supplemental exact-source order/type inspection; not production native execution or independent security review",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+      "sha256": "a0dd08bc6027ab3bd8c3536aedacf7770d81d31107fc9535087b3c017b0e8c91"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "sha256": "d5ddd4e365572c36b666b7706d44864a84fdda652c5fa32e2f8ec44f19377bc1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "sha256": "ff32f51a59c21b99379ca5640311b40b6cfe67457ae7c2cf62ddfd8874732a96"
+    }
+  ],
+  "checks": [
+    "original prefix installed before all fallible quiescence checks",
+    "same actual claim borrow required by private native entry and spans native call",
+    "full source/store/native read admitted before quiesce and repeated after",
+    "one-shot Quiescing set before native Job call",
+    "actual native QuiescentLauncher retained before postchecks",
+    "native active lease nonSend boundary remains; no unsafe Send or record constructor added"
+  ],
+  "originalProductOwnerExecution": false,
+  "currentR2Touched": false
+}

@@ -1,0 +1,46 @@
+{
+  "head": "8b2d2fce7acfaa62c386c594424d367eb9d33521",
+  "files": [
+    {
+      "sha256": "9cb319190f7f2678cf82f41607f0140172163515dbbc89bd3f905849ee6ab27b",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs"
+    },
+    {
+      "sha256": "37dcb30ee4128f37c411a103f5c3bfb83223aeaba8a81e5f7bcfcd1c5a57956b",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/storage.rs"
+    },
+    {
+      "sha256": "cda4f5d7ac3163f31a01906a375e08d23e45c1134f7a1535123f67869f080715",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/storage/tests.rs"
+    },
+    {
+      "sha256": "5b50ad8444a88dbd5db878e0d3b533789062ce4832e3582dccae67c1015e60f8",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/tests.rs"
+    }
+  ],
+  "reason": "test equality assertion avoids extra Debug trait; actual per-record before+after and global final full-file fence, late native DACL/member changes refuse",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_attachment_storage_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

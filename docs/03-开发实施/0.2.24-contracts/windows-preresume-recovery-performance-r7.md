@@ -145,3 +145,57 @@ API依据（文档只能证明调用语义，不替代Windows实测）：[PssCap
 只取有界TypeNameLength/TypeName、相应有效flags与实际Job只读副本；原句柄完整遍历、双采样、CompareObjectHandles/IsProcessInJob、原历史accounting/原未Resume证据、权限最小化/未知拒绝均保持。不得借0x8开VA clone/上下文/远程读内存、SeDebug/全机scan/NT未文档fallback。自有夹具先证明未提升令牌、全部captured=walked/end259、类型未知计数为0、无ObjectName输出/持久化及原Job不变、错身份/超时/重复/多Job/历史退出等原拒绝表；若新增flag仍有未知或拒绝，保留该停点，不拿明确的两Job当全部。
 
 此项只允许查询原型参数增量，不改变产品权限/安全承诺、恢复流程或执行授权；通过原型后才按已有只读R0规则应用当前现场。r2归档及44项已过而不受影响部分复用，不重跑整归档；原Job当前证明与从未Resume组合仍未过，不force/归还原件/新Start，R1仍等完整精确计划及本现场用户确认。文档依据：[PSS_CAPTURE_FLAGS](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/ne-processsnapshot-pss_capture_flags)和[PSS_HANDLE_ENTRY](https://learn.microsoft.com/en-us/windows/win32/api/processsnapshot/ns-processsnapshot-pss_handle_entry)；本机不冒Windows实际执行。
+
+
+## 2026-11-17增量决定：未完成捕获记录、锁线程及PSS剩余类型
+
+消费Windows三请求：wl2-r7-preparation-record-request-20261117-r1/interface-request.json、wl2-r7-lease-affinity-request-20261117-r1/interface-request.json及wl2-r7-pss-types-20261117-r1/blocking-request.json。允许以下独占实现接续，不允许现场R1执行；原4trait/CONTRACT_VERSION4不变。共享main78dc2b8149c4b2f948f6de0d649bea7b46dada02仅新增BEFORE_RESUME_RECOVERY_RECORD_V2字符串常量，原v1保持。
+
+### A. 明确独立v2附件，不为缺manifest制造摘要
+
+采用schema **windows-before-resume-recovery-v2**，使用独立strict RecordV2/ReferenceV2解码与工厂，不扩v1 decoder或v3/current/union、不将无效v1回退v2，不升级seq9/旧记录。不要求改现有v1正常canonical producer；Windows新future捕获可显式选择v2，所有recovery同动作始终同schema。只有原Owner/PartialCaptureAnchor的实际对象工厂能提供输入，DATA合法不授任何native权限。
+
+V2必需顶层字段：schema、sessionId、failedActionId、recoveryActionId、securityPolicyDigest、reference、sequence、previousRecordDigest、startedQpc、deadlineQpc、qpcFrequency、event。UUID/64hex/QPC字符串/链严格性及原64KiB单记录、10秒/更短parent保持；nullable字段都须显式null而非缺省。重复/未知字段/非法variant拒绝。sessionId必须原捕获槽一次分配并持有的真实session UUID，不从后来的manifest倒推或另生造替代。
+
+reference是kind标记的严格二选一：
+
+| kind | 必需且仅有的字段 | 来源与限制 |
+| --- | --- | --- |
+| canonical | kind、manifestDigest、bindingDigest、storagePlanDigest、failedPrefixDigest | 全部来自完整已初始化的原Store/manifest/当前前缀真实字节，缺任一不得选此variant |
+| preparation | kind、ownerInstanceId、source、intentPrefixDigest、nativeStagePrefixDigest、lastStage、components | 来自原宿主实例UUID/实际PartialCaptureAnchor已登记的准备前缀；不出现manifest/storagePlan字段，不填zero/占位hash；两个prefixDigest只可hash实际已存在的有限DATA投影/已持久前缀，序列长度和source scope必须覆盖原已登记集合 |
+
+preparation.source是严格状态variant：unobserved{state}、observedAbsent{state,parentIdentityDigest,observationDigest}、captured{state,bindingDigest,imageDigest}。不存在完整Source时必须unobserved，不拿配置路径/旧Source摘要补权；observedAbsent只能原实际native父/准确缺席观察证明，不能以read失败转缺席。components为固定五角色有序数组（source/custody/codex/grok/journal），每项严格role、state、prefixDigest、objects；state仅unobserved/retained/verifiedAbsent，prefixDigest显式Option摘要，objects为按原native stage登记的唯一稳定objectId/role/原path定位摘要/identityDigest/securityDigest/contentDigest可空DATA记录。unobserved或任何必需identity/security/content未核实必须保持Pending；未打开/创建失败不产Absent。全列表上限512node/原帧字节上限延续，超限拒绝。exact native对象/prefix仍保原槽，DATA不含凭据明文或可绕scope的新绝对任意路径。
+
+lastStage用已登记有限stage枚举，不接受任意诊断文本；给原准备节点intent发布、native创建/原句柄放槽、原8/内容读回、journal/current实际发布各阶段区分。记录字段要求的是如实可表达部分前缀，并不要求为了记录而创建原本缺失的manifest或额外成功事件。
+
+事件保持原v1的严格意图/回读/forced区分，但V2须独立关联reference.kind。canonical的LauncherQuiesced/WorkRetire/OriginalReturn/Verified/Pending断言不变。preparation增严格PreparationRetainIntent及PreparationRetainedVerified（objectId、role、originalStage、identityDigest、retainedMembershipDigest），仅描述本次实际已建准备对象原位保留，不表示原件已恢复。原本未动任何原文件时originalNodes允许真实0，必须原完整登记集合/实际全tree与初始观察证明零变更；不能仅用无manifest/无refs/空array推断。无法核全部对象/锁/源即AbortRecoveryPending；PreparationRetainedVerified本身不能终结为AbortedBeforeResumeOriginalsRestored。
+
+成功AbortRestoreVerified对canonical仍须真实所有原文件/工作副本/anchors/原8/完整children/锁释放后验证；对preparation仅当实际原Owner证明完整初始对象集合、所有前缀、全部必要源与安全事实并精确撤销/归还本次副作用后方可同名terminal，originalNodes可为0但不能漏未登记创建/源未知。缺Source但仍有未知原对象只可如实Pending，不能借V2降低准入。normalStop/closed/publicStartOpen固定false，绝不mint NativePredecessors/自动Start/Closed。准备用新manifest过渡canonical必须实际完成初始化并明确新事件绑定两前缀，不准为恢复先“补完Start”。
+
+Windows写集承接before_resume_record.rs，可新before_resume_record_v2.rs/tests及v3/capture/preparation/journal的原native producer，mod仅注册；共享V2标识由Mac本笔给出。先DATA严格正负例与真实原槽字段映射，再原pre-manifest各故障点native readback，旧v1负例和实际canonical producer复用。必须新增缺字段/Option缺省/错variant/造manifest/未知component/重复或丢node/不完整Source/零node有隐藏对象/旧v1转译/失败超期/两action重放反例。未知保持Required，不把DATA测试代原Owner完整恢复。
+
+### B. 同一个实际worker持活动lease，不跨线程转移/不Drop补释放
+
+采用一个原宿主拥有的专用恢复worker：在取得任何活动LeasePreparation/NativeLease前，将可Send的原Owner/CaptureSlot的**唯一原对象所有权或排他借用**绑定此worker；原registry保其不可复制的control、原session/action标识和一次注册的固定deadline，正常调度即时标RecoveryInProgress/Required。不得clone Owner/Store、从文本重建、跨线程移动活动lease/OVERLAPPED或unsafe Send/Sync/transmute，原Windows单写类型/API范围保持。
+
+一个显式恢复命令只创建一次窗口；worker同线程连续prepare→quiesce→完整return/readback→精确release，三trait阶段不能等待用户/新的RPC批准来续期。客户端断开只停止观察，不取消worker或新开10秒；状态请求只读当前实际worker投影，不拿JSON当持锁权限。原Owner可Send资源转交必须留明确slot/worker binding及前后scope/source核，转交失败无新lease，保持原槽。普通Start/Restart/Stop在期间拒绝，不用等待mutex无限阻塞高频Status；注册表用独立control状态反馈Required且原5秒budget不变。
+
+成功路径在同一个原deadline内完整native证明全部变更返还、同claim/NLK精确释放/范围冲突负控、原对象/源/附件链读回后，才将实际已释放资源和专门AbortRestored回执交回原slot；不签normalStopped/Closed或后继许可。任何条件/OS调用超时只能失败，不能把同步调用占时伪装准时成功。
+
+失败/过期时worker撤销所有mutation许可，保持原Owner/部分lease/files/ranges/前缀原对象在同线程停驻，仅接受无副作用状态读取。**不能依赖Rust Drop或线程退出自动释放仍有义务的锁后报告成功，也不能重新调用prepare用新deadline接旧动作。** worker panic/崩溃必须记录LostWorker/Unknown、原进程句柄/锁未知，禁止平台drop自动清理结果冒原正常释放；原异常不改变原失败事实。该保留状态不是主动后台循环恢复。
+
+后继若需要释放失败持锁以便人工修复，须明确单独FailedLeaseDisposition：由原worker就其准确原held ranges/source/partialPrefix/实际进程静止和所有已发生副作用可证明状态形成可审查计划；未证明则Required。当前本合同不授权自动unlock/drop/force/替换工作进程，尤其不能放claim只靠NLK做目录变更。具体异常清理实现/计划先留证再决定，原实际现场高风险恢复仍单独确认。允许Windows先完成成功路径与“失败原worker保留、观察不续期”正负例，不把失败处置设计未完扩大成其它独立开发停点。
+
+不新增共享trait签名，必要内部worker-control严格协议由Windows在windows_owner_host024/**本线实现并版本化，原loaded357不热补/不新image接旧pipe；Mac不需要先造一套平行Owner接口。测试需真实同线程ID、活动lease !Send/!Sync编译否例、registry仅control/Send原对象、断连/expire/重复action/panic失联分类、失败后原ranges仍真实冲突、无新窗口/无原件变化。不得为易通过只在DATA模拟锁或把controller夹具当marenben原现场。
+
+### C. PSS名称flag仍未知：增加文档化类型查询原型，未知不跳过
+
+0x8实测仍24unknown，现路线尚未通过，不继续扩大PSS flags或重跑已过同组。允许test/windows024-native/**单broker自有夹具新增**仅对象类型**的NtQueryObject(ObjectTypeInformation)路线，动态从系统Ntdll解析有文档函数，只读取PUBLIC_OBJECT_TYPE_INFORMATION.TypeName；不使用私有layout、reserved字段、ObjectNameInformation、远程内存或全机NtQuerySystemInformation。微软文档说明API可能变化，故缺导出/不支持/不合法buffer必须Unknown，不设未文档fallback。
+
+类型输入只来自原PSS单broker完整handle快照。对每个原handle先DuplicateHandle到本观察进程：dwDesiredAccess=0、inherit=false、options=0，禁止SAME_ACCESS/CLOSE_SOURCE。保留原broker实际身份和存活及scope，所有复制原handle均不关闭；本地零权限副本只是内核同对象引用，不得调用数据读写、等待消费、信号/锁、socket操作或变更对象。受系统不支持复制的类型/无法复制/句柄变代/类型读取失败均Unknown，不把ERROR_INVALID_HANDLE或非Job特定错误当“不是Job”。源进程及对象原最后句柄仍保，观察前后原对象行为无变更；新副本close影响/回收必须自有fixture实测，不冒OS绝对无影响。
+
+NtQueryObject参数固定ObjectTypeInformation、必要有限buffer（先固定4KiB，若原返回所需合法长度则最多64KiB、最多一次增大，原5秒更短parent不变）；只接受成功NTSTATUS与实际ReturnLength及头结构边界有效，UNICODE_STRING长度偶数/非0/≤512bytes、MaximumLength/Buffer全部在返回缓冲范围，无溢出/越界/悬指针，TypeName严格UTF-16。不得解reserved或把对象地址/handle整数作为授权。按类型识别Job后，再从同原broker原handle只QUERY复制并CompareObjectHandles与零权限副本一致，完整两遍集合/同内核对象去重/原Node成员/counter/未Resume组合前后仍按r7全文核。所有非Job也必须有实际类型，不吞24unknown或仅对已知两Job查询。
+
+本增量只授权文档化类型查询的自有原型。先类型覆盖/未知句柄/高风险对象零访问/句柄复用/重复Job/历史退出/权限/超时/内存边界严格否例，再依现R0只读规则核当前现场；不满足继续保留CurrentJobUnknown，不以旧creation计数补签。任何更宽权限、绕same-image、外部终止Node/broker或当前原件归还仍不在此批准范围。
+
+依据：[NtQueryObject / PUBLIC_OBJECT_TYPE_INFORMATION](https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntqueryobject)明确唯一可用类型字段TypeName；[DuplicateHandle](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-duplicatehandle)的零desired/options与禁止关闭源；这些文档支持API语义，不代真实普通令牌fixture/当前现场证据。三请求只解除对应接口未定；R1仍未批准，所有旧失败/拒绝、原件/当前进程保持，不W2/双SID/发布。

@@ -1,0 +1,46 @@
+{
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+      "sha256": "9cb319190f7f2678cf82f41607f0140172163515dbbc89bd3f905849ee6ab27b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/storage.rs",
+      "sha256": "8e5a6a215c7dcc0921003e1082d78112167927a101ccd58c9166dce93d2b79e4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/storage/tests.rs",
+      "sha256": "1540a6d2357b290a197f21fe2166505808fa93cf4eb49f4b533586cb722b2fbb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/tests.rs",
+      "sha256": "5b50ad8444a88dbd5db878e0d3b533789062ce4832e3582dccae67c1015e60f8"
+    }
+  ],
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_attachment_storage_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "scope": "actual native v1 DATA attachment storage only, not original product Owner recovery",
+  "head": "8b2d2fce7acfaa62c386c594424d367eb9d33521"
+}

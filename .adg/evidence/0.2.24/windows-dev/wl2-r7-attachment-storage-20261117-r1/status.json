@@ -1,0 +1,398 @@
+{
+  "codeSha": "0feb596b0d267f8fa34f01318b2aeb787883c801",
+  "codeBranch": "codex/024-windows-native",
+  "mainInput": "cb82a7a06bfd19e74872b2d5b3ef3b47c50c98c6",
+  "docsInput": "b291bf8fa607b265fdfe8f51dd49d19ca0f07b3e TEAM22/IMP150/r7",
+  "tests": {
+    "product01": {
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=16",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_attachment_storage_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "raw": 101,
+      "elapsedMs": 52123,
+      "productionAccepted": false,
+      "currentR2Touched": false
+    },
+    "product01FirstError": "E0277 SnapshotData noDebug; assert_eq required it; changed to same equality assert without native/shared type edits; no runtime tests executed",
+    "product02": {
+      "productionAccepted": false,
+      "elapsedMs": 143978,
+      "currentR2Touched": false,
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=16",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_attachment_storage_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "raw": 0
+    },
+    "passed": 5,
+    "failed": 0,
+    "ignored": 0,
+    "actualNativeWriteFaultStages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "driftCases": [
+      "member",
+      "fileDACL",
+      "directoryDACL",
+      "directoryADS",
+      "late-fileDACL-afterFullRead",
+      "late-member-afterFullRead"
+    ],
+    "strictRejectCases": [
+      "replay",
+      "crossAction",
+      "unknownField",
+      "sequenceGap",
+      "oldExistingNamespace",
+      "expiredInit",
+      "wrongRenewedEnd",
+      "terminalAfterSuffix"
+    ],
+    "regression03": {
+      "scope": "affected original v1 strict fields/chain/type parser regression; original rules unchanged",
+      "elapsedMs": 74,
+      "raw": 0,
+      "artifactSha256": "31c3ca9bcc16645f08a63fc226c31437de1f2d2c2f2a4a558df2853c0d84bccd",
+      "currentR2Touched": false,
+      "arguments": [
+        "r7_abort_attachment_",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    "regressionPassed": 4,
+    "scope": "actual product-library native attachment DATA fixtures, not actual original product Owner/full recovery10s"
+  },
+  "firstErrorPreserved": true,
+  "reviewCorrection": "before and after full file reads/strict replay exact directory set and every record raw/ID/security/ADS fence retained; actual late drift fixtures verify final rejection",
+  "artifact": {
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\182e378daf0091d7\\out\\opencodex_desktop_lib-182e378daf0091d7.exe",
+    "bytes": 99667456,
+    "sha256": "31c3ca9bcc16645f08a63fc226c31437de1f2d2c2f2a4a558df2853c0d84bccd",
+    "kind": "actual full Tauri library native TEST exe; not product/release candidate"
+  },
+  "source": {
+    "changedExecuted": 4,
+    "gitNormalizedBytesEqual": true,
+    "firstFailSourceRetained": true,
+    "unchangedInputs": "baseline Git+actual locked complete Tauri graph"
+  },
+  "storageLimits": [
+    "already-native-pinned private empty directory supplied by caller, no disk directory/session adoption",
+    "actual CREATE_NEW writer retained before postcreate queries/write/sync",
+    "failed pending/partially-written/published records stay on original storage object; no retry/autoFinish",
+    "same exact inherited Instant end only; no new action timer",
+    "all previous bytes and candidate strict chain validated before disk creation; max4096 records/65536 bytes each remains original DATA rules",
+    "writers are retained private implementation handles; read-only OS handle is not claimed; READ sharing blocks outside write/delete",
+    "canonical schema/union/current unchanged; no grants from JSON/storage validation",
+    "runtime/session/QPC/action provenance must still bind actual original native objects in later driver; not inferred from valid DATA"
+  ],
+  "cleanup": {
+    "newAttachmentRootsAbsent": [
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpzaZekG",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpsBrzSz",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpYOGT22",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpjtxO1q",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpUqeXWj",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp8KYM9R",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpJ1UhTx",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpyYQNwV",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9ZwILu",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp1xYTcV",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpuQzusM",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpc0YWDz",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEXpX7u",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpLeE7bv",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmprBidk3",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEAvpyh",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEmg7Jk",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpug2tv7",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpItAIhD",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpDWCGIj"
+    ],
+    "oldRejectedRootsRetained": [
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp4xeKly",
+      "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-v3-4ce90bbc-24ec-4cff-8740-815d72aa55cc"
+    ],
+    "oldDeletionRetried": false,
+    "currentR2Touched": false
+  },
+  "generatedSchemaRawArchivedTrackedRestored": true,
+  "activeLeaseWorkerContractRequest": "9f775ebe7 unchanged",
+  "preManifestReferenceRequest": "b01b78219 unchanged",
+  "PSSCurrentR2Job": "24unknown incl0x8 no unchanged-premise rerun",
+  "currentR2Touched": false,
+  "currentR2ForceOrRestoreApproved": false,
+  "publicStartOpen": false,
+  "productionAccepted": false,
+  "allAccepted": false,
+  "fullBeforeFirstResumeRecoveryImplemented": false,
+  "remaining": [
+    "v1 attachment native original session/source/action/claim/QPC binding and durable event writer driver",
+    "each-node retirement/original-return with actual full before/after native tree/claim/raw8 readback in original10s",
+    "activelease owning-worker and failure disposition contract",
+    "pre-manifest actual-reference contract",
+    "reachable versioned private recovery command",
+    "currentR2 originalJob proof/exactR1 plan readiness/separate user confirmation",
+    "ordinaryMSI/absent-root/GUI official owner/production/capacity/CAPtrust/final candidate"
+  ],
+  "matrix": [
+    {
+      "item": "currentr2 complete archive/10701files1664dirs/44critical rows",
+      "status": "passed evidence reused; no archive rerun"
+    },
+    {
+      "item": "currentr2 originalJob complete coverage/neverResume proof",
+      "status": "required; 24unknown even PSS0x8; blocking request7f36470ef"
+    },
+    {
+      "item": "currentr2 exact R1 repair plan",
+      "status": "not executionReady; current actions not authorized"
+    },
+    {
+      "item": "currentr2 forced/3 originals return",
+      "status": "not executed; old50580/54692 consent not reused"
+    },
+    {
+      "item": "native scanner",
+      "status": "15 passed evidence reused; main3samefiles consumed"
+    },
+    {
+      "item": "fixed complete scan+manifest10s fixture",
+      "status": "6366ms passed reused; not full recovery10s or production"
+    },
+    {
+      "item": "Tauri full lib check",
+      "status": "raw0 prior evidence reused"
+    },
+    {
+      "item": "actual product library journal initializer tests",
+      "status": "3passed plus1old regression; a1f15fee6/c2b4a288e"
+    },
+    {
+      "item": "new original directory preparation",
+      "status": "4nativepassed/5faultstages/8cleanup; current code"
+    },
+    {
+      "item": "native abort primitives",
+      "status": "6negative+1normalResume prior evidence reused"
+    },
+    {
+      "item": "future fresh recovery origin/private host command",
+      "status": "original Owner process preparation/failure Result retention/fixed fresh origin implemented; actual Owner runtime admission, complete prefix and host command still incomplete"
+    },
+    {
+      "item": "future same-window actual claimNLK and entire prefix return",
+      "status": "new same-thread acquisition prefix implemented/tested; original active lease across requests/worker and all-tree return still incomplete"
+    },
+    {
+      "item": "future canonical abort recovery record/strict schema",
+      "status": "existing strict v1 DATA+4 negatives reused; native join incomplete; pre-manifest reference format requested in b01b78219"
+    },
+    {
+      "item": "actual GUI empty broker",
+      "status": "prior passed not repeated"
+    },
+    {
+      "item": "officialStart/Status/Stop/Restart normal lifecycle",
+      "status": "r2Start30699ms timeout; no further official runs before originals restored"
+    },
+    {
+      "item": "GUI official owner / S-D production combination",
+      "status": "incomplete"
+    },
+    {
+      "item": "original absent-root safe retreat",
+      "status": "incomplete"
+    },
+    {
+      "item": "ordinary per-userMSI acceptance",
+      "status": "prior prerequisite/acceptance gap remains; not repeated"
+    },
+    {
+      "item": "maximum capacity/production full budgets",
+      "status": "incomplete"
+    },
+    {
+      "item": "CAP trust and final candidate",
+      "status": "incomplete; no freeze"
+    },
+    {
+      "item": "fresh directory fixtures cleanup",
+      "status": "prior8 roots absent evidence reused; no deletion retried"
+    },
+    {
+      "item": "fresh journal fixtures cleanup",
+      "status": "prior12 roots absent evidence reused; no deletion retried"
+    },
+    {
+      "item": "old regression roots deletion",
+      "status": "auto-review blocked by policy; only readonly archive done,2roots retained; no retry"
+    },
+    {
+      "item": "historic40588/failed trees/accountProfile",
+      "status": "unchanged; cleanup not closed"
+    },
+    {
+      "item": "official2.99/daily configurationPATHpolicy",
+      "status": "unchanged"
+    },
+    {
+      "item": "W2/dualSID/release",
+      "status": "not run/not published"
+    },
+    {
+      "item": "new prepared native readonly recheck",
+      "status": "native01 raw0/2passed/9138ms; no currentR2/official runtime"
+    },
+    {
+      "item": "final original failed Result/deadline/dispatch metadata rules",
+      "status": "actual full product lib product04 raw0/5passed/144024ms; core DATA/guard tests, not actual Owner production cycle"
+    },
+    {
+      "item": "source order supplemental audit",
+      "status": "verified actual source ordering; collector firstGBK decode error retained and fixed to explicitUTF8; not independent native audit"
+    },
+    {
+      "item": "new native self-owned fixtures cleanup",
+      "status": "2roots absent readback; separate fixture-owned force never normalStop/restore/Closed"
+    },
+    {
+      "item": "pre-manifest capture attachment",
+      "status": "minimal contract request pushed; do not synthesize manifest/plan digests or auto-convert old v1/v3"
+    },
+    {
+      "item": "failed original native tree read",
+      "status": "5actual product-library native tests passed; mixed original/moved/working + fresh actual claim/all8/bytes/SD/membership/pending/wrong claim/cutoff; normal mutation remains poisoned"
+    },
+    {
+      "item": "failed canonical native records read",
+      "status": "3actual product-library native tests passed; exact old native objects/raw/current/full-chain replay after expiry; extra event/current truncation/security/membership/expiry refuse"
+    },
+    {
+      "item": "actual source/Owner/claim wrapper for failed journal read",
+      "status": "implemented and full product graph linked; native actual original Owner production execution not performed, no budget acceptance"
+    },
+    {
+      "item": "new prefix read fixture cleanup",
+      "status": "11tree+7journal roots absent; no deletion of previous rejected roots retried"
+    },
+    {
+      "item": "original CaptureSlot/two-tree/canonical read join",
+      "status": "production path implemented and full product library compiled/linked; requires original prepared process/source/route/actual claim; original Owner production runtime not exercised"
+    },
+    {
+      "item": "initial batch native after-image joining",
+      "status": "2native integration tests passed;8actual interruption states;9DATA mutation refusals after real native fixtures; no completed intent/current written"
+    },
+    {
+      "item": "new join fixture cleanup",
+      "status": "9new own roots absent readback; historical rejected roots preserved/no deletion retry"
+    },
+    {
+      "item": "same-thread actual lease acquisition failure prefix",
+      "status": "4native tests passed +1compile type-boundary check;11actual injected stages,4realSQLitebusy roles,bytes/ADS refusal; original exact held ranges retained until explicit ownfixture cleanup"
+    },
+    {
+      "item": "active lease thread affinity and failed disposition",
+      "status": "minimal contract request9f775ebe7; NativeLease and preparation remain !Send/!Sync; production original registry/worker integration not completed"
+    },
+    {
+      "item": "old successful native ranges/release regression",
+      "status": "unchanged original test exact1passed raw0; actual SQLite writers blocked/read coexist/release and all8/bytes/IDs preserved"
+    },
+    {
+      "item": "new lease prefix fixture cleanup",
+      "status": "18new roots absent; old regression only originalDrop/no exact-root receipt; no full historical cleanup claim"
+    },
+    {
+      "item": "private original-slot prepared prefix / claim-bound native quiescence entry",
+      "status": "implemented/actual full product graph linked; private nonClone/nonserde prefix factory consumes original native read; actual claim borrow checked across native operation; real original product Owner orchestration not runtime-tested"
+    },
+    {
+      "item": "original Owner quiescence state/result retention",
+      "status": "one-shot Quiescing before native call; actual QuiescentLauncher retained before postchecks; Failed denies ordinary dispatch/retry; no NormalExit/Stopped/Closed grant"
+    },
+    {
+      "item": "same actual claim/two-tree/canonical across real synthetic native quiescence",
+      "status": "1actual native test with3real initial prefixes101/141/255 passed; all own launcher raw242 neverResume; exact tree/canonical before-after; original10s applies to native fixture only, no whole product budget acceptance"
+    },
+    {
+      "item": "private prefix/tag expiry/substitutions",
+      "status": "2metadata tests passed; no original native Owner permission constructed from DATA tests"
+    },
+    {
+      "item": "affected old original-origin and Send regressions",
+      "status": "5origin/normal-dispatch +1Send exact test passed, raw0; normal mutation remains refused in Quiescing/Quiescent"
+    },
+    {
+      "item": "new quiescence fixture cleanup",
+      "status": "3new roots absent; three own processraw242 proof and noexecution marker asserted; old rejected roots retained/no retry"
+    },
+    {
+      "item": "v1 attachment native durability",
+      "status": "5actual native tests passed; strict full previous/candidate chain beforeCREATE_NEW, exact file handles/raw/ID/all8/ADS/full members before+after complete replay; partial initialization/write fails retained and unretryable"
+    },
+    {
+      "item": "existing v1 strict fields/chain compatibility",
+      "status": "4original parser/replay regressions passed raw0; schema/fields unchanged, no v3/canonical conversion"
+    },
+    {
+      "item": "native attachment origin/Owner/action/claim binding",
+      "status": "not implemented; this append_data/read_data storage is DATA only, not native restore authority; exact v1 QPC/session/source linkage remains required"
+    },
+    {
+      "item": "attachment new fixture cleanup",
+      "status": "20new own roots absent, old rejected roots retained/no deletion retry"
+    },
+    {
+      "item": "main model-save incremental intake",
+      "status": "cb82a7a06 merged; only modelconfig/Macsmoke files, Windows paths unchanged; no unaffected Mac/CLI/GUI rerun"
+    }
+  ]
+}

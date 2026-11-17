@@ -1,0 +1,46 @@
+{
+  "files": [
+    {
+      "sha256": "79a7e6de1e260e9a4719ffa3462b211bf0b66037763f544217de7fbda8a2dd79",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs"
+    },
+    {
+      "sha256": "08c063a68f503ae978796a65949620fd599c45659a93d45cb6f863636e4c2e6b",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs"
+    },
+    {
+      "sha256": "4aab02ac5b0fa5ca477cb28afc184ca8068d5770d21ec63b8a5990386f253bf3",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs"
+    },
+    {
+      "sha256": "dc281231e28ea94dd3c67dabd4d3a8d46eccb0d0182c6984fc02001769899fcd",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/tests.rs"
+    }
+  ],
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_recovery_origin_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "reason": "actual failed Start Result retention and raw native error preservation; 5 targeted tests",
+  "head": "be3745fb93d2f06049128c3ae2f7e2ca6825e49f"
+}

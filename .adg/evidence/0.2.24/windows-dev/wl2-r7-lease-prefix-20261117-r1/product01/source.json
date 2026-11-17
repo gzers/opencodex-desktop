@@ -1,0 +1,42 @@
+{
+  "head": "015106899f82f8140a7888af6e44dc2f5b7fb2fb",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "sha256": "ff32f51a59c21b99379ca5640311b40b6cfe67457ae7c2cf62ddfd8874732a96"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation.rs",
+      "sha256": "25698cb45c3ee9ddfe91c945220b6187f252a57bd792f39510ae1caf4c4e755b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs",
+      "sha256": "7a5a91633ced2bb3a640f0b7e68e1d8cdcff364eb26be7950f0f2ee45efc479c"
+    }
+  ],
+  "scope": "original same-thread native lease preparation only; no currentR2 or production restore",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_lease_prefix_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

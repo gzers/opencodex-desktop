@@ -1,0 +1,53 @@
+{
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "sha256": "07565a134fe21d31db154a6b21afa5d272da743c17bea0fa6618b8bbb26ad03e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs",
+      "sha256": "1f2b1a1331c4a5aaf20eb7b5ee52c9c762bfe2999e9676c29ba3a4d6aa2a877d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs",
+      "sha256": "db5373541f53ee293a977a32b72be760ffc349ae85ee8c52e224942fae902637"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths.rs",
+      "sha256": "7cfd900bbfea819d2d2b1851e09b6422434ae7d6936d1dc90428a76f020ff78e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths/preparation.rs",
+      "sha256": "8a6589ecb011d3dbdffe3c962055386772f031bffdb4e0d15831c50ac19bc2ca"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths/preparation/tests.rs",
+      "sha256": "08ad79c2e8e6fbeefdf758d52083ac9c7d7b08e074938a2ae74a31ad130c180e"
+    }
+  ],
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_directory_prefix_native_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "head": "a1f15fee6265e2e7df238d2df81f4bfefac19f2a"
+}

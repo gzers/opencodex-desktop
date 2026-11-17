@@ -1,0 +1,31 @@
+{
+  "at": "2026-11-17T19:08:24.267108+08:00",
+  "recordedBeforeImplementation": true,
+  "codeInput": "8c8922975e4b96c0af8430d1616e5c2ce586ada6",
+  "docsInput": "b291bf8fa607b265fdfe8f51dd49d19ca0f07b3e TEAM22/IMP150/r7",
+  "hypotheses": [
+    {
+      "id": "O1",
+      "claim": "A private nonserde original Owner field installed before fallible checks can retain original failed Start metadata, one fresh fixed recovery end, actual native prepared abort and all failed prefixes; never resetting old Start permissions."
+    },
+    {
+      "id": "O2",
+      "claim": "Ordinary Start/Stop/Restart dispatch refuses any original Owner with a pending/failed recovery attempt, including before cancellation is reset."
+    },
+    {
+      "id": "O3",
+      "claim": "The original native prepared abort can be revalidated without consuming it or renewing its cutoff; foreign creation, expiration and force history remain refused."
+    }
+  ],
+  "reuse": [
+    "existing strict before_resume_record DATA and4negatives; no schema change this batch",
+    "existing native6abort plus1normalResume; repeat only newly affected verification cases",
+    "actualr2 complete archive/readback and scanner15/emptyGUI unchanged"
+  ],
+  "limits": [
+    "process preparation is not full BeforeFirstResumeRecovery; no claim/prefix/restore grant",
+    "no currentR2 query or termination",
+    "full recovery transport and tree return still incomplete",
+    "no change to ordinary token/machine policy/official/daily settings/budgets"
+  ]
+}

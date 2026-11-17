@@ -1,0 +1,11 @@
+{
+  "product01FirstError": "E0277 assert_eq on SnapshotData requires Debug; actual equality assertion converted to assert(a==b), no shared native type change",
+  "sourceReviewGap": "after full strict replay, reread every retained file bytes/ID/all8/ADS/path and exact membership; also compare SD/identity after each bytes read",
+  "product02Adds": [
+    "before/after exact directory membership",
+    "per-file before/after native fence",
+    "complete final all-record native fence",
+    "actual late file-DACL change and late directory member insertion fixtures"
+  ],
+  "authority": "DATA storage only; typed original recovery/session/source/action/claim coupling remains incomplete"
+}

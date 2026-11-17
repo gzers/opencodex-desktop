@@ -1,0 +1,374 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling windows024-r7-query-proof v0.1.0 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness)
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `paths::PrivateDirectoryPreparation`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:24:16
+   |
+24 | pub(crate) use paths::PrivateDirectoryPreparation;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `PathBuf`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/safety_section.rs:7:29
+  |
+7 |     path::{Component, Path, PathBuf},
+  |                             ^^^^^^^
+
+warning: unused import: `infrastructure::hash`
+ --> src\infrastructure\windows_client_originals024\collector.rs:4:32
+  |
+4 | use crate::{backend as native, infrastructure::hash, modules::runtime::program_image};
+  |                                ^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:540:14
+    |
+540 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+540 -             .fetch_update(
+540 +             .try_update(
+    |
+
+warning: unused import: `io::Read`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/safety_section.rs:6:5
+  |
+6 |     io::Read,
+  |     ^^^^^^^^
+
+warning: function `verify_private_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:35:15
+   |
+35 | pub(crate) fn verify_private_file(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `verify_private_directory` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:39:15
+   |
+39 | pub(crate) fn verify_private_directory(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_originals_work_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:46:15
+   |
+46 | pub(crate) fn create_private_originals_work_file(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_journal_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:54:15
+   |
+54 | pub(crate) fn create_private_journal_file(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_initial_file` is never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:59:4
+   |
+59 | fn create_private_initial_file(
+   |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `owned_file_identities` and `into_owned_files` are never used
+   --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths.rs:115:19
+    |
+112 | impl PinnedDirectory {
+    | -------------------- methods in this implementation
+...
+115 |     pub(crate) fn owned_file_identities(&self) -> io::Result<Vec<FileIdentity>> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+134 |     pub(crate) fn into_owned_files(self) -> Vec<File> {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: struct `PrivateDirectoryPreparation` is never constructed
+ --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths\preparation.rs:7:19
+  |
+7 | pub(crate) struct PrivateDirectoryPreparation {
+  |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `checkpoint`, `create`, `create_inner`, and `take_complete` are never used
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths\preparation.rs:21:8
+   |
+20 | impl PrivateDirectoryPreparation {
+   | -------------------------------- methods in this implementation
+21 |     fn checkpoint(&self, stage: u8, end: Instant) -> io::Result<()> {
+   |        ^^^^^^^^^^
+...
+35 |     pub(crate) fn create(&mut self, path: &Path, end: Instant) -> io::Result<()> {
+   |                   ^^^^^^
+...
+49 |     fn create_inner(&mut self, end: Instant) -> io::Result<()> {
+   |        ^^^^^^^^^^^^
+...
+99 |     pub(crate) fn take_complete(&mut self) -> io::Result<PinnedDirectory> {
+   |                   ^^^^^^^^^^^^^
+
+warning: function `check_inventory_path` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:140:4
+    |
+140 | fn check_inventory_path(root: &Path, path: &Path) -> AppResult<()> {
+    |    ^^^^^^^^^^^^^^^^^^^^
+
+warning: struct `InventoryDraft` is never constructed
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:161:8
+    |
+161 | struct InventoryDraft {
+    |        ^^^^^^^^^^^^^^
+
+warning: function `same_directory` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:166:4
+    |
+166 | fn same_directory(before: &fs::Metadata, after: &fs::Metadata) -> AppResult<bool> {
+    |    ^^^^^^^^^^^^^^
+
+warning: function `collect_inventory` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:195:4
+    |
+195 | fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
+    |    ^^^^^^^^^^^^^^^^^
+
+warning: function `finish_inventory` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:274:4
+    |
+274 | fn finish_inventory(
+    |    ^^^^^^^^^^^^^^^^
+
+warning: function `finish_inventory_checked` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:281:4
+    |
+281 | fn finish_inventory_checked(
+    |    ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `inventory_until` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:426:15
+    |
+426 | pub(crate) fn inventory_until(
+    |               ^^^^^^^^^^^^^^^
+
+warning: function `file_entry` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:505:15
+    |
+505 | pub(crate) fn file_entry(path: &Path) -> AppResult<Entry> {
+    |               ^^^^^^^^^^
+
+warning: function `file_entry_budgeted` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:508:4
+    |
+508 | fn file_entry_budgeted(
+    |    ^^^^^^^^^^^^^^^^^^^
+
+warning: function `file_entry_checked` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:514:4
+    |
+514 | fn file_entry_checked(
+    |    ^^^^^^^^^^^^^^^^^^
+
+warning: function `verify_inventory` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/program_image_section.rs:602:4
+    |
+602 | fn verify_inventory(
+    |    ^^^^^^^^^^^^^^^^
+
+warning: constant `SCHEMA` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:5:7
+  |
+5 | const SCHEMA: &str = "windows-before-resume-recovery-v1";
+  |       ^^^^^^
+
+warning: constant `MAX_RECORD` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:6:7
+  |
+6 | const MAX_RECORD: usize = 65536;
+  |       ^^^^^^^^^^
+
+warning: function `invalid` is never used
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:7:4
+  |
+7 | fn invalid() -> io::Error {
+  |    ^^^^^^^
+
+warning: function `digest` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:13:4
+   |
+13 | fn digest(s: &str) -> bool {
+   |    ^^^^^^
+
+warning: function `uuid` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:18:4
+   |
+18 | fn uuid(s: &str) -> bool {
+   |    ^^^^
+
+warning: function `number` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:29:4
+   |
+29 | fn number(s: &str) -> io::Result<u64> {
+   |    ^^^^^^
+
+warning: function `object_id` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:35:4
+   |
+35 | fn object_id(s: &str) -> bool {
+   |    ^^^^^^^^^
+
+warning: function `required_option` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:38:4
+   |
+38 | fn required_option<'de, D, T>(deserializer: D) -> Result<Option<T>, D::Error>
+   |    ^^^^^^^^^^^^^^^
+
+warning: struct `Record` is never constructed
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:47:19
+   |
+47 | pub(super) struct Record {
+   |                   ^^^^^^
+
+warning: enum `Event` is never used
+  --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:67:6
+   |
+67 | enum Event {
+   |      ^^^^^
+
+warning: associated items `decode`, `validate`, and `same_origin_action` are never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:118:19
+    |
+117 | impl Record {
+    | ----------- associated items in this implementation
+118 |     pub(super) fn decode(raw: &[u8]) -> io::Result<Self> {
+    |                   ^^^^^^
+...
+126 |     fn validate(&self) -> io::Result<()> {
+    |        ^^^^^^^^
+...
+244 |     fn same_origin_action(&self, other: &Self) -> bool {
+    |        ^^^^^^^^^^^^^^^^^^
+
+warning: function `validate_chain` is never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:260:15
+    |
+260 | pub(super) fn validate_chain(raw: &[Vec<u8>]) -> io::Result<()> {
+    |               ^^^^^^^^^^^^^^
+
+warning: methods `matches_id` and `content_policy_protection` are never used
+   --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\bounded\query.rs:322:67
+    |
+286 | impl SnapshotData {
+    | ----------------- methods in this implementation
+...
+322 |     pub(in crate::infrastructure::windows_client_originals024) fn matches_id(
+    |                                                                   ^^^^^^^^^^
+...
+331 |     pub(in crate::infrastructure::windows_client_originals024) fn content_policy_protection(
+    |                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `refused` is never used
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/coordination_validation.rs:2:4
+  |
+2 | fn refused()->io::Error{io::ErrorKind::InvalidData.into()}
+  |    ^^^^^^^
+
+warning: constant `MAX` is never used
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/coordination_validation.rs:3:7
+  |
+3 | const MAX:u64=2*1024*1024;
+  |       ^^^
+
+warning: function `validate_stable_bytes` is never used
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/coordination_validation.rs:4:15
+  |
+4 | pub(super) fn validate_stable_bytes(raw: &[u8]) -> io::Result<()> {
+  |               ^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `ANCHORED_CODEX_STABLE_FILES` is never used
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:5:7
+  |
+5 | const ANCHORED_CODEX_STABLE_FILES:[&str;2]=[".opencodex-native-main.claim.sqlite",".opencodex-native-main.owner.sqlite"];
+  |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `invalid` is never used
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:6:4
+  |
+6 | fn invalid() -> io::Error {
+  |    ^^^^^^^
+
+warning: struct `Entry` is never constructed
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:13:8
+   |
+13 | struct Entry {
+   |        ^^^^^
+
+warning: function `check` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:21:4
+   |
+21 | fn check(end: Instant) -> io::Result<()> {
+   |    ^^^^^
+
+warning: function `failure` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:28:4
+   |
+28 | fn failure(e: QueryError) -> io::Error {
+   |    ^^^^^^^
+
+warning: function `id` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:31:4
+   |
+31 | fn id(file: &File, dir: bool) -> io::Result<FileIdentity> {
+   |    ^^
+
+warning: function `names` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:51:4
+   |
+51 | fn names(path: &Path) -> io::Result<Vec<String>> {
+   |    ^^^^^
+
+warning: enum `Kind` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:65:6
+   |
+65 | enum Kind {
+   |      ^^^^
+
+warning: enum `State` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:71:6
+   |
+71 | enum State {
+   |      ^^^^^
+
+warning: struct `Node` is never constructed
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:78:8
+   |
+78 | struct Node {
+   |        ^^^^
+
+warning: function `open_node` is never used
+  --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:87:4
+   |
+87 | fn open_node(path: &Path, kind: Kind, observe: bool) -> io::Result<File> {
+   |    ^^^^^^^^^
+
+warning: function `stamp` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:121:4
+    |
+121 | fn stamp(
+    |    ^^^^^
+
+warning: function `collect` is never used
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code/test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/58556e8fe9258527\out/native_partial_collect.rs:161:4
+    |
+161 | fn collect(
+    |    ^^^^^^^
+
+warning: `windows024-r7-query-proof` (lib) generated 54 warnings (run `cargo fix --lib -p windows024-r7-query-proof` to apply 5 suggestions)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.73s
+     Running tests\abort.rs (test/windows024-native/target/r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/970a634e886e9c1d\out\abort-970a634e886e9c1d.exe)
+separate owned synthetic cleanup after failure; not recovery success
+separate owned synthetic cleanup after failure; not recovery success

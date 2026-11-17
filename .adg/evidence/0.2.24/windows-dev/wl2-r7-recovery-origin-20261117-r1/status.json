@@ -1,0 +1,311 @@
+{
+  "codeSha": "a8bbc874555b0a95a96caaec175c41863584dbac",
+  "nativeHelperCodeSha": "be3745fb93d2f06049128c3ae2f7e2ca6825e49f",
+  "codeBranch": "codex/024-windows-native",
+  "docsInput": "b291bf8fa607b265fdfe8f51dd49d19ca0f07b3e TEAM22/IMP150/r7",
+  "mainInput": "7fade183da7b43fa88fff3e459404aac704ff21b",
+  "scope": "persistent original Owner PROCESS recovery preparation and local actual failed Start provenance; no complete trait/transport/claim/tree restore yet",
+  "tests": [
+    {
+      "run": "native01",
+      "elapsedMs": 9133,
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "test/windows024-native/r7-query-harness/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--test",
+        "abort",
+        "-j",
+        "1",
+        "r7_abort_prepared_readback_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "raw": 0,
+      "currentR2Touched": false,
+      "productionAccepted": false
+    },
+    {
+      "run": "product02",
+      "productionAccepted": false,
+      "raw": 0,
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=16",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_recovery_origin_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "elapsedMs": 146638,
+      "currentR2Touched": false
+    },
+    {
+      "run": "product03",
+      "currentR2Touched": false,
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=16",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_recovery_origin_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "elapsedMs": 139442,
+      "raw": 0,
+      "productionAccepted": false
+    },
+    {
+      "run": "product04",
+      "elapsedMs": 144020,
+      "raw": 0,
+      "currentR2Touched": false,
+      "productionAccepted": false,
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=16",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_recovery_origin_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    }
+  ],
+  "uniqueFinalTests": {
+    "nativeActualProcess": 2,
+    "fullProductLibraryMetadataAndGuard": 5,
+    "meaning": "7 unique new targeted assertions/tests; product02/03 were earlier source revisions, not extra independent acceptance"
+  },
+  "reviewedCorrections": [
+    "retain actual local new Start Result Err on original Owner; successful/resumed/absent/foreign result cannot admit beforeResume",
+    "preserve raw native OS error code and ErrorKind",
+    "already-issued original NativeAction mutation check also refuses recovery occupancy; read-only retained-origin comparison unchanged"
+  ],
+  "productOrNativeTestFirstError": null,
+  "evidenceCollectorFirstError": "source-review01 GBK UnicodeDecodeError; explicit UTF8 fixed before source inspection",
+  "artifacts": {
+    "artifacts": [
+      {
+        "run": "native01",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-query-proof\\x86_64-pc-windows-msvc\\debug\\build\\windows024-r7-query-proof\\970a634e886e9c1d\\out\\abort-970a634e886e9c1d.exe",
+        "bytes": 1392640,
+        "sha256": "d4f2177af8ac4e3a8cab21b93546ba15ce6a2a454e555b9cd602c92f0de5cdd0",
+        "kind": "native test exe; not release/product candidate"
+      },
+      {
+        "run": "product04",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\182e378daf0091d7\\out\\opencodex_desktop_lib-182e378daf0091d7.exe",
+        "bytes": 99207168,
+        "sha256": "4bc1e58517f786b899fe2d37e9c8f7e72802455f23ad67953dab9d1646d71caa",
+        "kind": "native test exe; not release/product candidate"
+      }
+    ]
+  },
+  "sourceFiles": 33,
+  "finalSourceNormalizedGitBytesEqual": true,
+  "cleanup": {
+    "freshNativeSceneRootsAbsent": [
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-native-abort-Np9ZXL",
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-native-abort-xR2v7O"
+    ],
+    "oldRejectedRootsRetained": [
+      "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp4xeKly",
+      "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-v3-4ce90bbc-24ec-4cff-8740-815d72aa55cc"
+    ],
+    "oldDeletionRetried": false,
+    "currentR2Touched": false,
+    "compilerOutputsAndNativeBinariesRetained": true
+  },
+  "oldCleanupApprovalRejection": "two old regression roots deletion rejected blocked by policy; retained with readonly archive; no bypass/retry this round",
+  "schemaRequestDocsSha": "b01b78219a311eab1e14401962bec739eb16449f",
+  "nativeAssociatedProofMadeFromRecord": false,
+  "oldStartDeadlineRenewed": false,
+  "actualOriginalOwnerFullRecoveryExercised": false,
+  "beforeFirstResumeRecoveryImplementedCompletely": false,
+  "currentR2Touched": false,
+  "currentR2ForcedOrRestored": false,
+  "currentR2ApprovalRequested": false,
+  "publicStartOpen": false,
+  "productionAccepted": false,
+  "allAccepted": false,
+  "generatedSchemaRawArchivedTrackedRestored": true,
+  "matrix": [
+    {
+      "item": "currentr2 complete archive/10701files1664dirs/44critical rows",
+      "status": "passed evidence reused; no archive rerun"
+    },
+    {
+      "item": "currentr2 originalJob complete coverage/neverResume proof",
+      "status": "required; 24unknown even PSS0x8; blocking request7f36470ef"
+    },
+    {
+      "item": "currentr2 exact R1 repair plan",
+      "status": "not executionReady; current actions not authorized"
+    },
+    {
+      "item": "currentr2 forced/3 originals return",
+      "status": "not executed; old50580/54692 consent not reused"
+    },
+    {
+      "item": "native scanner",
+      "status": "15 passed evidence reused; main3samefiles consumed"
+    },
+    {
+      "item": "fixed complete scan+manifest10s fixture",
+      "status": "6366ms passed reused; not full recovery10s or production"
+    },
+    {
+      "item": "Tauri full lib check",
+      "status": "raw0 prior evidence reused"
+    },
+    {
+      "item": "actual product library journal initializer tests",
+      "status": "3passed plus1old regression; a1f15fee6/c2b4a288e"
+    },
+    {
+      "item": "new original directory preparation",
+      "status": "4nativepassed/5faultstages/8cleanup; current code"
+    },
+    {
+      "item": "native abort primitives",
+      "status": "6negative+1normalResume prior evidence reused"
+    },
+    {
+      "item": "future fresh recovery origin/private host command",
+      "status": "original Owner process preparation/failure Result retention/fixed fresh origin implemented; actual Owner runtime admission, complete prefix and host command still incomplete"
+    },
+    {
+      "item": "future same-window actual claimNLK and entire prefix return",
+      "status": "not implemented"
+    },
+    {
+      "item": "future canonical abort recovery record/strict schema",
+      "status": "existing strict v1 DATA+4 negatives reused; native join incomplete; pre-manifest reference format requested in b01b78219"
+    },
+    {
+      "item": "actual GUI empty broker",
+      "status": "prior passed not repeated"
+    },
+    {
+      "item": "officialStart/Status/Stop/Restart normal lifecycle",
+      "status": "r2Start30699ms timeout; no further official runs before originals restored"
+    },
+    {
+      "item": "GUI official owner / S-D production combination",
+      "status": "incomplete"
+    },
+    {
+      "item": "original absent-root safe retreat",
+      "status": "incomplete"
+    },
+    {
+      "item": "ordinary per-userMSI acceptance",
+      "status": "prior prerequisite/acceptance gap remains; not repeated"
+    },
+    {
+      "item": "maximum capacity/production full budgets",
+      "status": "incomplete"
+    },
+    {
+      "item": "CAP trust and final candidate",
+      "status": "incomplete; no freeze"
+    },
+    {
+      "item": "fresh directory fixtures cleanup",
+      "status": "prior8 roots absent evidence reused; no deletion retried"
+    },
+    {
+      "item": "fresh journal fixtures cleanup",
+      "status": "prior12 roots absent evidence reused; no deletion retried"
+    },
+    {
+      "item": "old regression roots deletion",
+      "status": "auto-review blocked by policy; only readonly archive done,2roots retained; no retry"
+    },
+    {
+      "item": "historic40588/failed trees/accountProfile",
+      "status": "unchanged; cleanup not closed"
+    },
+    {
+      "item": "official2.99/daily configurationPATHpolicy",
+      "status": "unchanged"
+    },
+    {
+      "item": "W2/dualSID/release",
+      "status": "not run/not published"
+    },
+    {
+      "item": "new prepared native readonly recheck",
+      "status": "native01 raw0/2passed/9138ms; no currentR2/official runtime"
+    },
+    {
+      "item": "final original failed Result/deadline/dispatch metadata rules",
+      "status": "actual full product lib product04 raw0/5passed/144024ms; core DATA/guard tests, not actual Owner production cycle"
+    },
+    {
+      "item": "source order supplemental audit",
+      "status": "verified actual source ordering; collector firstGBK decode error retained and fixed to explicitUTF8; not independent native audit"
+    },
+    {
+      "item": "new native self-owned fixtures cleanup",
+      "status": "2roots absent readback; separate fixture-owned force never normalStop/restore/Closed"
+    },
+    {
+      "item": "pre-manifest capture attachment",
+      "status": "minimal contract request pushed; do not synthesize manifest/plan digests or auto-convert old v1/v3"
+    }
+  ]
+}

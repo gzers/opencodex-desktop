@@ -1,0 +1,43 @@
+
+running 5 tests
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_each_partial_open_and_range_failure_retains_exact_owned_resources ... r7 actual retained lease stage1: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpp7CGPx
+r7 actual retained lease stage2: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpGbSXa5
+r7 actual retained lease stage3: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp25BzVZ
+r7 actual retained lease stage4: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpTrWpYP
+r7 actual retained lease stage5: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpWFmMt4
+r7 actual retained lease stage6: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpwszEVO
+r7 actual retained lease stage7: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpzRjPXp
+r7 actual retained lease stage8: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpfaeX9h
+r7 actual retained lease stage20: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmph14rJD
+r7 actual retained lease stage21: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpaQz5ez
+r7 actual retained lease stage22: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp11G77P
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_invalid_bytes_or_ads_keep_original_open_and_preceding_ranges ... r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpnk1XQZ
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpvtIcuc
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_real_sqlite_busy_each_role_keeps_foreign_transaction_and_own_prefix ... r7 real SQLite busy role0 raw33: original foreign transaction remains, exact own partial ranges retained until explicit fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpnkL4iZ
+r7 real SQLite busy role1 raw33: original foreign transaction remains, exact own partial ranges retained until explicit fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmprceiHp
+r7 real SQLite busy role2 raw33: original foreign transaction remains, exact own partial ranges retained until explicit fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpw71M3d
+r7 real SQLite busy role3 raw33: original foreign transaction remains, exact own partial ranges retained until explicit fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpHV6BSz
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_success_transfers_same_files_ranges_once_and_expiry_never_retries ... r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpfW34ZP
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_type_boundary_stays_non_send_and_non_sync_without_unsafe_impl ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2193 filtered out; finished in 1.15s
+

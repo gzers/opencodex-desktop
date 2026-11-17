@@ -1,0 +1,30 @@
+{
+  "method": "bounded exact-source ordering inspection, supplemental only; not actual original Owner runtime acceptance",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "sha256": "79a7e6de1e260e9a4719ffa3462b211bf0b66037763f544217de7fbda8a2dd79"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "sha256": "fad25276b12e155157a5cc27865e91f9befb9e17d62bac1f0888ea7507c2b127"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "sha256": "e877e7af5e9306bc8c5efb081c34bbf5dccf755275ef69a927e216915e19738e"
+    }
+  ],
+  "checks": [
+    "recovery occupancy gate before cancellation reset",
+    "actual new Start async result retained without replacing returned error",
+    "already-issued NativeAction mutation check gates occupancy",
+    "retained origin read remains read-only and does not renew old action",
+    "original pending state installed before fallible checks",
+    "actual retained failed Result metadata checked before native process preparation",
+    "actual native preparation stored before source check",
+    "native rawOS and ErrorKind kept",
+    "no old Start mutation check with fresh recovery deadline"
+  ],
+  "actualOriginalOwnerRuntimeExercised": false,
+  "fullRecoveryAccepted": false
+}

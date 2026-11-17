@@ -1,0 +1,39 @@
+{
+  "kind": "r7-before-resume-preparation-prefix-record-shape",
+  "contractInput": "b291bf8fa TEAM22/IMP150/r7",
+  "oldAttachmentSource": "2f3b67b4169a587e3cf91c43ac014370b11b2b1d",
+  "currentCodeInput": "be3745fb93d2f06049128c3ae2f7e2ca6825e49f; originalOwner process integration currently testing",
+  "authority": "Mac contract/shared boundary; current r7 fixes record identifier windows-before-resume-recovery-v1 and shared constant CONTRACT_VERSION4",
+  "observedGap": "Existing strict v1 requires real manifestDigest/storagePlanDigest and nonzero originalNodes; a failure during original Source/custody/tree collection can leave no complete storage plan or manifest, but typed native preparation resources and newly created directories exist. Placeholder/synthetic manifest hashes cannot truthfully stand for a missing canonical original.",
+  "dependencyOnly": "native recovery attachment and full return for pre-manifest partial-capture cases; not full-canonical store logic or currentR2 PSS query",
+  "minimumDecisionRequested": "Approve exact explicit next attachment/reference format (or another explicit r7-compatible representation) for original retained preparation with absent canonical manifest, without converting v1/oldv3, inventing hashes or granting mutation from DATA. Clarify shared record label if a next schema is selected.",
+  "proposedBoundary": {
+    "canonicalReference": "existing exact canonical session/manifest/storagePlan/current digests when all actual records exist",
+    "preparationReference": "explicit distinct typed variant for original owner/session/startAction, source binding if actually captured, original intent/native-stage prefix digest and per-component presence/unknown; no made-up manifest/plan; unsafe unopened/unknown native object stays Required",
+    "deadline": "one already-admitted recovery10s/shorter parent, never repeat or extend oldStart",
+    "proof": "native original Owner/actual retained objects plus claimNLK/full tree/all8 still required independently of record bytes",
+    "success": "AbortedBeforeResumeOriginalsRestored only after real complete verification; no Stop/Closed/successor/autoStart eligibility"
+  },
+  "notAuthorizedOrAttempted": [
+    "currentR2 force or original return",
+    "new officialStart before original return",
+    "relax all8/unknown/budgets",
+    "oldrecord migration",
+    "schema fallback from invalid v1"
+  ],
+  "auditSource": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+      "sha256": "70c389799f079b3972cde525fb6256a9609eadbfc4f77977d2c58666affd232c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs",
+      "sha256": "1f2b1a1331c4a5aaf20eb7b5ee52c9c762bfe2999e9676c29ba3a4d6aa2a877d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation.rs",
+      "sha256": "4251ed3be6115cf73ba043afc9cb510fc908dbf777e3565a440d2ad137c7a24e"
+    }
+  ],
+  "independentWork": "actual original Owner failure-result retention/process fresh origin and ordinary dispatch revocation continue; complete-canonical prefix validation and existing primitives remain independent"
+}

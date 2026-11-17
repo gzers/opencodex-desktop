@@ -1,0 +1,1 @@
+日志创建句柄直接登记原CaptureSlot；manifest/current半写及检查失败保留原句柄、上下文和字节前缀，无重开/重试。实际产品库3项原生定向过，10故障阶段；受影响旧记录回归1项过。test05编译内存分配失败原日志保留，根测试包codegen减至16后test06实际3过/12新scene缺席核。原v3序列化逐字节同旧参考，原manifest writer仅私有read/identity接口，不谎称OS readonly。完整beforeResume仍未实现，公共Start拒绝。自动审批曾拒绝两旧回归根删除（blocked by policy），只读ZIP归档完成而原根保留，无绕过；r2现场原样。

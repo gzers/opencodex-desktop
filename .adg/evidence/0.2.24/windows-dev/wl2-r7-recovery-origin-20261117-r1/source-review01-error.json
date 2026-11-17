@@ -1,0 +1,6 @@
+{
+  "scope": "evidence source-order review collector only; no native/product action",
+  "raw": "UnicodeDecodeError: gbk codec cannot decode byte 0xae in position1503",
+  "effect": "collector stopped on source read before checks; no product test changed",
+  "fix": "explicit UTF-8 reading of exact repository source"
+}

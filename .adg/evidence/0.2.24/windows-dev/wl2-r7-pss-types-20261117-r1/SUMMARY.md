@@ -1,0 +1,1 @@
+TEAM21／IMP149／r7新增0x8自有原型实测。flags12和28均完整遍历91/91、end259，但仍24条ObjectType0/Flags0无TypeName；两Job句柄同内核去重仍不足覆盖未知，accepted=false。4条最小权限组合raw5保持拒绝，成功组合1049664。未读取/输出ObjectName，未保存PSS内存；OS transient snapshot确实采集名称。原创建Job仅清自有挂起合成child242，broker0。当前r2未查询/变更，不签Stop/Closed/生产，未重跑归档。最小新阻塞请求仅暂停R1依赖，其它Windows工作继续。

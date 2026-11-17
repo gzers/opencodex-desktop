@@ -1,0 +1,8 @@
+{
+  "result": "metadata tests passed but full new preparation remains incomplete",
+  "findings": [
+    "original Owner must retain actual failed Start Result fact before any new recovery call; a same-owner deadline alone is insufficient",
+    "native preparation/token/readback errors must carry their original rawOS codes in AppError detail"
+  ],
+  "next": "retain actual result-bound StartFailure and preserve raw native errors before committing Owner integration"
+}

@@ -1,0 +1,23 @@
+{
+  "sharedSource": "78dc2b8149c4b2f948f6de0d649bea7b46dada02",
+  "unchangedContractVersion": 4,
+  "recordV2": "windows-before-resume-recovery-v2",
+  "requests": [
+    {
+      "id": "r7-before-resume-preparation-prefix-record-shape",
+      "decision": "independent strictv2 canonical/preparation variants, no invented manifest/plan, true0 only when native complete zero mutation proven"
+    },
+    {
+      "id": "r7-original-recovery-active-lease-thread-affinity",
+      "decision": "single original owning recovery worker; active !Send lease stays same thread, failed worker retains resources without new deadline/automatic unlock"
+    },
+    {
+      "id": "r7-pss-name-information-still-incomplete",
+      "decision": "prototype documented NtQueryObject ObjectTypeInformation on same-broker zero-access local duplicates; no names, no skip of unreadable handles"
+    }
+  ],
+  "currentR2MutationAuthorized": false,
+  "nativePassedByMac": false,
+  "newProductRuntimeImplementation": false,
+  "releaseAcceptance": false
+}

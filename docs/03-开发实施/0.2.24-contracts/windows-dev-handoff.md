@@ -1054,3 +1054,127 @@ PSS24unknown类型的最小安全决定仍待（原ac7c74774请求），仅R1当
 证据wl2-r7-partial-capture-20261117-r1：check01实际全Tauri库raw0/48638ms；native-test02首E0603为先前query拆分漏内部Projection别名，同时allocation2162704 OOM/raw101，未运行断言，原日志留。修内部可见性后native-light03同实际collect/open/stamp/id/security/ADS原函数真实3过raw0（不模拟claim/Owner）；test-check04真实全部产品测试元数据raw0/173189ms。观测commit从约3.5GiB变至约8.5GiB后仅再尝试一次真实产品库链接，native-test05同原assert/期限 actual3过0败0ignored/raw0/166883ms，普通controller自有fixture，非marenben生产。TEST EXE6725963037110a6954e5391c81045872352d62e5b2bf68b7860be07372d9a4c9；11最终改动源和45实际light源逐份核，2生成段独立机械核。生成schema保raw并还原/移出代码，旧失败/删除拒绝不重试。旧产品Fixture仅Drop释放、没有逐文件清理receipt，不签全部历史清理closed。
 
 本次不是全BeforeFirstResumeRecovery完成：create_private_directory内部create后检查失败的原创建handle、journal manifest/current初始化局部record/nativecontext仍缺直接保留sink；journal-enrollment-next.json写精确缺口和后续故障反例。fresh原host恢复命令/neworigin/新claimNLK/完整原件返还与原10秒仍未实现。PSS24unknown依赖继续仅R1局部停，无新flag/currentJobquery或force。当前75744/21500/40588、原件/custody/work/anchors/协调与旧seq9保留；原r2ZIP/44项、P1scanner15、nativeabort6+normalResume1复用，不原包重跑、不沿旧50580/54692授权。actualproduct库测试链接不冒3产品bin/GUI/release/完整生产验收，不W2/双SID/发布，不改官方或日常配置策略。目标active继续journal登记和原恢复接线。
+
+
+## 2026-11-17 r7 TEAM21 PSS名称参数增量仍未知拒绝
+
+已fetch并消费docs5d5d5a3f81e794de8a238bc3ce18f352633b7b14／TEAM21／IMP149，按r7新答复只在自有普通controller单broker夹具增加NAME_INFORMATION(0x8)，代码41043665d55f7f65bd550e1543701dd7c64192d9已推送。实际flags12/28、rights1049664均captured=walked91/end259，仍24条ObjectType0/Flags0缺TypeName；两明确Job候选只去重成一个内核Job/匹配原自有child，不能排除24未知，accepted=false。四条低权限组合PssCaptureSnapshot raw5原样保留。未扩大TYPE_SPECIFIC/VAclone/内存/上下文/SeDebug/NT fallback，不读取或记录ObjectName、不保存PSS内存；明确OS瞬态快照确实采集名称。自有原Job清子进程raw242、broker raw0，查询副本/snapshot释放；不签Stop/Closed。
+
+完整原始证据wl2-r7-pss-types-20261117-r1，TEST EXE SHA49589d63eca399be1bc43d63db57ba597102aa0177baa66ef82007392a787772，14payload逐字节封存。blocking-request.json请求Mac评估另一文档化有界完整类型/Job覆盖路线或明确合同调整；只暂停currentR2 Job证明/R1计划Ready依赖，future-host journal/native-prefix/完整return继续。currentR2只读原型尚未应用，原r2全归档/44项复用，21500/75744/40588与原件/custody/work/旧seq9不变；原包不重跑、无force/恢复许可、旧50580/54692授权不沿用。公共Start/production/allAcceptedfalse，不改官方/日常/策略，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 原journal初始化逐阶段保留通过
+
+代码a1f15fee6265e2e7df238d2df81f4bfefac19f2a已推送，原CaptureSlot的JournalPreparation先留原native context/pins/peer/action/plan，manifest/current实际CREATE_NEW writer在任何post-create ID/私有权限/ADS/写入/sync/readback前直接入槽。半写/最终检查失败poison留精确原资源，禁止重试/takeComplete；成功仅同对象转Store。RecordFile原manifest隐藏writer、仅read/identity接口/shareREAD拒外写删，不谎称OS只读句柄；旧events仍PrivateRecord，v3原bytes不变。
+
+证据wl2-r7-journal-prefix-20261117-r1，44payload/705643字节（最终manifest以实际封存为准）。实际全产品库test03原生3过、regression04受影响旧链1过；test05加12scene清理核时rustc allocation34078736失败/raw101，断言未跑，原错留。只根测试包codegen256→16降低编译并发后test06 raw0/148989ms，3过0败0ignored、10故障阶段及12新root清理缺席逐项核；TEST EXE4616867d8b9611e53230db94a48732ef7fe83e5ee49cb4f331e33ea32c96c982。check01 E0618和check02 E0599首错/修复日志完整留，6最终源与Git归一行尾比对，schema生成raw归档并还原/移出代码。旧regression两成功fixture删除被自动审批以blocked by policy拒绝，命令未执行；后续只读ZIP/member/hash核过，两原根仍留，不换工具重删。
+
+仅关闭日志初始化前缀保留缺口：CreateDirectoryW create/open后检查失败的阶段登记、新fresh恢复origin/版本化原宿主命令/claimNLK/完整return10s仍未完。PSS0x8仍24unknown请求见上一条，仅R1依赖停；currentR2/3原件/3work/anchors/协调/21500/75744/40588/旧seq9原样，已有全归档/44项、scanner15、6abort+1Resume复用。原r2force/恢复未授权，不沿旧清理授权，原件未归还不再跑原包；Start/production/allAcceptedfalse，普通MSI/原缺席退根/全部生产与历史清理未完保持，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 原目录创建分段保留与TEAM22主线接续
+
+代码8c8922975e4b96c0af8430d1616e5c2ce586ada6已推送；已fetch消费main7fade183da7b43fa88fff3e459404aac704ff21b／docs b291bf8fa607b265fdfe8f51dd49d19ca0f07b3e、TEAM22/IMP150，增量合main时3scanner原字节相同，未改回旧实现、不重复旧15native/Mac页面/CLI/归档/空GUI。原CaptureSlot安装PrivateDirectoryPreparation后才调用CreateDirectoryW；原父pin/intent、成功create事实、pending实际File及complete同句柄依次留位，在fallible ID/private/deadline前保留，failed/重试/take拒绝，official/windows/两custody/canonical目录均接新sink。
+
+准确限制：CreateDirectoryW只返BOOL，不返目录创建handle/ID；成功create但terminal未打开时只保原父/intent/事实，不能声称原terminal身份已证、不能重开收养/签恢复。stage2外部换名及替身实际反例保持Unknown拒绝。新sink只解决该范围的实际父/已开句柄丢失，不声称原子创建身份或完整恢复。已有legacy API/权限/共享ABI/v3格式均不变。
+
+证据wl2-r7-directory-prefix-20261117-r1，预先hypotheses、6实测源快照/Git行尾归一核、完整产品库test01 raw0/146863ms，4过0败0ignored、5故障阶段/同实际句柄转交/过期已有名/替换拒绝，8新scene缺席清理；TEST EXE c88ec4294e9decb50a73c8a903c9ca0f31b8b608233fb0b488760a8acf0e7693，schema生成raw归档并还原tracked/移出untracked。23payload逐字节封存，status.json含26项完整本线状态表。
+
+当前r2原Job证明仍24unknown（包括新0x8），最小请求已异步回交而只停R1依赖；尚无当前21500/75744force/恢复授权，全部r2原件/custody/work/anchors/协调/旧seq9与40588保持。future fresh恢复origin/私有原宿主命令/严格abort记录schema/实际claimNLK/整树return原10s仍待继续；当前目录sink与前笔journal通过不冒BeforeFirstResumeRecovery完成或NormalStop/Closed。旧两regression根自动审批blocked by policy删除拒绝继续保留，不绕过；本轮8和前轮12新root清理过不覆盖历史残留。公共Start/production/allAcceptedfalse，普通MSI/原缺席退根/生产GUI官方owner/容量/CAPtrust/最终候选仍未完，不W2/双SID/发布，不改官方/日常配置PATH策略。
+
+
+## 2026-11-17 r7 原manifest形成前前缀的附件最小合同请求
+
+已核现有严格windows-before-resume-recovery-v1 DATA源码2f3b67b4169a587e3cf91c43ac014370b11b2b1d及原schema-plan/4负例，不重复另建附件实现；此前“schema未完”应准确读为原native接线未完成。新定位：Record强制manifestDigest/storagePlanDigest、最终originalNodes>0，而Source/custody/tree capture中途失败可能没有完整原plan/manifest，仅有原typed父/目录/节点/文件句柄前缀。不能以虚构占位hash签原manifest或把缺字段吞掉。
+
+interface-request.json与3份当前源逐hash归wl2-r7-preparation-record-request-20261117-r1。请Mac明确采用显式next附件/引用格式或另一r7兼容表示：完整canonical分支仍精确原session/manifest/plan/current；准备中分支显式原owner/startAction/source是否已捕获/intent与实际native阶段prefixDigest，absent/unknown明列，不制造原manifest。若选择下一schema，需明确原共享BEFORE_RESUME_RECOVERY_RECORD标识及拒绝旧格式/不迁移边界；v1解析/旧v3/current/已加载357一律不改。此请求只阻原manifest缺席分支附件接线，其它完整canonical和原进程准备继续，无DATA恢复权。
+
+原生新增prepared只读复验2项已过，be3745fb93d2f06049128c3ae2f7e2ca6825e49f已推送；原Owner一次fresh origin/实际失败Result保留/旧权限拒绝正在真实产品库定向验证，尚不冒完整BeforeFirstResumeRecovery。当前r2 PSS0x8仍24unknown的另一请求保持，不重复官方Start/归档或当前查询，不force/归还；旧50580/54692授权不沿用，所有普通token/8投影/原预算/unknown拒绝/日常/官方边界保持。不W2/双SID/发布。
+
+
+## 2026-11-17 r7 原Owner失败事实与进程恢复origin留位
+
+代码be3745fb93d2f06049128c3ae2f7e2ca6825e49f增加实际原prepared只读复验，a8bbc874555b0a95a96caaec175c41863584dbac接原Owner一次性process recovery state，均已推送。新Start在原创建Owner后执行原capture/plan/beforeResume/Resume/观察，实际返回Result经局部async保原样返回，仅Err在原Owner记录原UUID/StartUUID/失败时刻/creatorResumed；不从请求failed bool/附件构造失败事实。ProcessAbortAttempt先入原Owner再fallible核验，绑定原origin元数据、实际失败事实、一次fresh shared恢复end、scope/token及原native preparation；后者在source/token检查前先留原槽，失败poison留原对象、不重试、不续旧Start。
+
+普通Start/Stop/Restart在清cancel前拒任何原恢复占位，原action工厂/Stop绑定/普通preResume/live及已发NativeAction.check同样拒绝；旧retained-origin只读元数据核验保持，不把新end塞进旧mutation check。native preparation复验只读原线程/原Job/原generation/原cutoff，无force或权限增发；rawOS/原ErrorKind完整留。此处仅PROCESS组件，未实现完整BeforeFirstResumeRecovery trait/原槽prefix验证/claimNLK/归还/新控制协议，实际原Owner生产恢复未跑；代码不能热补loaded357/当前r2。
+
+完整证据wl2-r7-recovery-origin-20261117-r1：native01 raw0/9138ms，2实际自有进程/Job测试通过，原parent180ms到期/外来proof/已有forced history拒绝、2新root缺席。首product02全产品库3过后source复核补真实失败Result与raw错误；product03再5过后复核补旧NativeAction mutation gate；最终product04真实全Tauri库raw0/144024ms，5过0败0ignored（metadata/guard测试，不伪造NativeOwner/PreparedAbort权限、不冒原Owner运行验收），原windows_native6abort+1normalResume及严格附件4负例复用。TEST EXE product04 SHA4bc1e58517f786b899fe2d37e9c8f7e72802455f23ad67953dab9d1646d71caa，native01 SHAd4f2177af8ac4e3a8cab21b93546ba15ce6a2a454e555b9cd602c92f0de5cdd0。
+
+79payload/1008595字节最终封存，33源快照逐Git归一行尾核，旧product02/03源码及复核发现原样保留；本批product/native测试无首错，补充源码顺序采集首GBK decode失败记录保留，改显式UTF8后核过，它不冒独立安全审计。schema生成raw归档/还原tracked移出untracked。旧两regression目录自动审批blocked by policy拒绝仍保持，只读ZIP留，不绕过重删；历史40588/失败场景/账号Profile不动。
+
+pre-manifest附件最小请求b01b78219见上一条（已有v1 DATA存在，缺的是初始manifest缺席的真实引用/原native接线）；PSS0x8仍24unknown的原Job请求继续，二者只停对应依赖。status.json完整31项本线状态；full-canonical prefix/native claim与整树return原10s、当前r2原件还原、GUI官方owner/S-D/普通MSI/原缺席退根/容量与最终候选均未完。所有已过未受影响项复用，currentR221500/75744/原件/custody/work/anchors/协调/旧seq9原样，forced不签正常Stop/Closed；原件未还不跑原包、旧50580/54692授权不沿用，无当前R1执行批准请求。公共Start/production/allAcceptedfalse，原预算/unknown/普通令牌/日常/官方边界保持，不W2/双SID/发布，目标active继续。
+
+
+## 2026-11-17 r7 原树与canonical失败前缀只读核验
+
+代码ac6d1d8a2d750aae91114e3158d944c60315c27a（原树）及953cdf79a153107a6cad4b8831c46ce08774be95（日志）已分批推送；当前main7fade183d／docs b291bf8fa、TEAM22/IMP150/r7未变。本批原树只读在实际fresh claim下保留同原目录/文件/工作句柄，读取每byte/ID/所含8/ADS及完整children/custody前后fence，返回纯DATA；成功不清poison，旧verify/step mutation仍拒。未知pending capture/work、无完整根、已退休/恢复分支、外来claim、字节/安全/成员变更或expired cutoff均拒，保原prefix。原100k程序镜像与原512节点/32MiB客户端树各自边界不改。
+
+canonical只读取原immutable manifest/events/current的Native ID/8/raw/完整成员，逐原event解码重放全部规则并与完整保留Progress逐序列字段相等；events数量与current/progress精确一致才可读，不拿新增event、部分current或原Intent猜Completed。旧Start deadline不更新、旧poison不清，现有正常/historical check仍先拒poison。生产包装另要求原Owner已保留的prepared process/实际failedResult、同fresh恢复窗、实际claim、完整Source/current/binding和原Start NativeAction retained-read对照；不调过期Start mutation，不写旧canonical。生产Source包装仅真实完整产品图编译链接，尚无原Owner运行/原恢复10s通过。
+
+证据wl2-r7-prefix-read-20261117-r1：先hypotheses及独立项状态，product01真实MSVC完整Tauri库raw0/142101ms，8过0败0ignored，5原树+3日志；实际DACL/字节/成员变化、3真实CREATE_NEW/partial/full-unpublished pending work、invalid coordinator pending original、外来真实claim/截止、immutable event无current及真实截断current均拒；原deadline实际过期后只读原完整链通过而mutation仍拒。11原树+7日志新root缺席核，6源快照逐Git归一行尾核；TEST EXE SHA03194e090e52c1c522f91071aae4e8878616c004146bbf83ec3b8b8fce60a56a，23payload/522194字节封存。无意外product首错，预期负例成功后仅清自有新fixture；panic仍保原tree，旧两regression审批blocked by policy源继续留，未绕过重删。生成schema raw归档/还原tracked/移出untracked。
+
+本批没有完整BeforeFirstResumeRecovery：原CaptureSlot/CapturedTrees汇合、canonical意图与真实after-image严格对照、同实际claim/NLK跨quiesce/return持有及失败保留、原10s整树归还/新控制协议仍待。b01b78219的原manifest缺席格式请求及PSS0x8仍24unknown请求只停对应依赖，不能伪造manifest/放宽Unknown；其它独占开发继续。status.json现35项完整本线状态；既有原r2全归档/44项、scanner15、原生abort/GUI空host/CLI均复用，不重跑。currentR221500/75744/原件/custody/work/anchors/协调/旧seq9和40588未动，无R1执行授权/请求，旧50580/54692授权不沿用，原件未归还不跑原包；原Source/Profile普通令牌/日常/官方/预算边界不变，publicStart/production/allAcceptedfalse，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 原槽两树canonical汇合与原生批次后像
+
+代码015106899f82f8140a7888af6e44dc2f5b7fb2fb已推送，仍main7fade183d／docs b291bf8fa、TEAM22/IMP150/r7。WindowsOriginals原session/scope及原preparedProcess -> 原CaptureSlot retained完整Store/原route -> 两树原native prefix前后读 -> 原canonical/source/同Start retainedAction/实际新claim前后核；所有tree/canonical数据精确相同才返回DATA。未形成manifest/partial/缺Store明确Required，不从记录/路径重建；Ready/Stop/closed/后继分支拒绝。失败保原槽/Store/树/日志poison，不签归还、Stop或Closed。
+
+逐root/节点原plan与Progress完整匹配，原native original/work ID/volume/bytes/hash/所含8/location逐项核；pending OriginalMove/WorkCreate批次只认原宿主保留的唯一batch ID/kind/有序native values，并对durable prefix与值上界核，不能只按计数猜完成。单节点durable意图和实际原句柄后像可区分前后，仍保意图，不补event/current；原v3格式/原Start权限/poison不改。该汇合消费此前953cdf原树/日志全读证据，无删完整扫描边界/弱化断言。
+
+证据wl2-r7-prefix-join-20261117-r1：product01真实全Tauri库MSVC raw0/149203ms，2过0败0ignored。8实际原批次场景0/100/101/112/140/141/152/255分别覆盖未动、move intent、实际move后无result、durable prefix、work intent、实际work后无result、work durable prefix及完整初始化；新actual claim下原两树/日志匹配，不补完成。另在真实完整原场景派生9类DATA反例：plan/rootorder/claim/nodeorder/state/workID/workSD/缺member/originalLocation均拒；DATA反例不冒额外原生Owner证明。九新fixture缺席清理，9实测源逐Git行尾归一核，schema生成raw归档/还原tracked/移出untracked。TEST EXE SHAb9b7ded48db1628925ee820b95a82695ecca33d53307d570216b5fe5fd35220f；26payload/589463字节原样封存，无意外product首错。8场景总7.90s只是fixture运行量，不冒原恢复10s/Start30/Status5/Stop10验收。
+
+原生产入口仅完整产品图编译链接，真实原Owner/固定官方生产恢复尚未执行；原恢复动作的actual claim/NLK必须继续装入原槽跨quiesce/return/失败持有，原launcher静止/所有原件return及8/children/锁释放原10s、新私有通道/附件native绑定仍未完，目标active。status.json 38项状态，已过未受影响scanner15/CLI/空GUI/归档/原生abort复用。b01b78219原manifest缺席引用合同请求和PSS0x8仍24unknown请求只停其依赖，暂无主线新答复，不重复空跑。currentR221500/75744/3原件/3work/custody/anchors/协调/旧seq9及40588保持，不force、不R1执行批准请求，旧50580/54692授权不沿用；原件未还不再跑官方包。旧两regression目录删除自动审批blocked by policy原样保留，不换工具重删；日常配置PATH策略/官方/原普通Token/预算/Unknown拒绝不变，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 活动lease线程归属与原恢复槽最小请求
+
+核对015106899原实现：NativeLease含Held/OVERLAPPED与PhantomData<*mut()>，明确!Send/!Sync；原OWNERS static的Arc<Slot>/Owner/WindowsOriginals/CaptureSlot跨线程注册表要求Send。不能直接加活动lease字段或unsafe Send绕过；ReleasedLease只有实际unlock/readback后可Send，不能替代临界段连续claim。证据wl2-r7-lease-affinity-request-20261117-r1含4当前源快照及interface-request.json，coordination源含本线在测same-thread prefix增量而非已验收提交。
+
+请Mac明确本轮原恢复控制模型：可否以一个原fixed10s/更短parent动作、同一原worker借原Owner完成prepare/quiesce/return，注册表仅保实际worker控制关联；若失败须跨请求保活动范围，应原owning worker继续保留，不移动lease/无新10s重激活。还需明确失败/过期时活动锁是保原worker等待显式处置，还是允许准确失败cleanup解锁并保原句柄/历史（不得记正常释放/Stop/Closed）。不默默改变现原lease线程/Drop语义，不把claim释放后NLK移根当恢复。只有该生产跨请求接线依赖停，same-thread逐步获取保留槽/native反例正在独立验证；不要求用户中转普通合同请求。
+
+原manifest缺席引用b01b78219/PSS0x8仍24unknown请求原样，当前r2/原件/进程不动，无force/归还/原包重跑、旧授权不沿用。普通令牌/原预算/Unknown拒绝/日常与官方边界不改，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 同线程锁获取前缀原生验证
+
+代码17c2b0575cea48dd2bc242c22901d19a37e39357已推送；main7fade183d／docs b291bf8fa、TEAM22/IMP150/r7未变。新增LeasePreparation一旦attempt先保原lease，原LockFile在post-open private/ADS/ID/8/bytes验证前留原file；每Held在首LockFileEx前入原槽，NLK shared/pending/reserved逐步失败保准确files/ranges，failed/expired拒take/重试，不局部close伪装普通release。成功仅同原文件描述/范围/epoch一次转NativeLease；既有acquire_existing只将原context/path/scope只读部分提为共用函数，实际原acquire/check/release语义保持。prepare_existing wrapper需原Owner的prepared process与同一共享恢复window前后核，完整产品图可编译，但未实际原Owner执行/整树恢复。
+
+证据wl2-r7-lease-prefix-20261117-r1：product01真实MSVC全Tauri库raw0/144586ms，5过0败0ignored（4原生＋1!Send/!Sync编译型反例）；11阶段1..8/20..22实际native失败，四角色SQLite BEGIN IMMEDIATE raw33外国事务保留，原精确held ranges对新file description实际LockFileEx冲突，unknown bytes/ADS保pending原handle和前置locks，expiry/duplicate/retry拒；18新fixture原字节/ID/8未变及缺席清理核。regression02同testEXE只跑旧成功获取锁原test1项raw0/347ms，通过真实SQLite writer排除/读者共存及原explicit release/native字节8ID核；旧test仅FixtureDrop不输出准确root，未把它算历史全部清理。TEST EXE SHAee081dc21fb670186316bd407a3b77bd2723c7541fe12afeb0d7cb644f9b334e，3最终源逐Git行尾归一核，schema生成raw归档还原，23payload/479337字节封存，无意外product首错。
+
+范围限制：新旧activelease均刻意!Send/!Sync，没有unsafeSend/transmute或跨线程移动；private parent观察若在自身工厂验证前失败且本role尚无file/ranges，不冒完整原parent或恢复permit。本批是同线程获取/失败保留primitive，尚不能放入Send原OWNERS注册表；跨请求原worker保持活动范围及失败/过期处置的最小方案请求9f775ebe7已先发，只暂停其生产持有接线。不得把成功ReleasedLease或Drop当连续claim/NLK，不释放claim仅靠NLK移根。
+
+status.json现42项完整本线状态，完整原恢复过程/通道/native附件/同10s原件return、原manifest缺席引用请求b01b78219、PSS0x8仍24unknown、普通MSI/原缺席退根/GUI官方owner/容量/最终候选仍未完。已过原r2全归档/44项、scanner15/CLI/空GUI/原生abort复用，不重复空跑；currentR221500/75744/3原件/3work/custody/anchors/协调/旧seq9与40588不动，无R1新执行授权/批准请求，旧50580/54692授权不沿用，原件未还不跑原包。旧两regression目录删除自动审批blocked by policy原样留、不换工具重试；日常/官方/普通Token/原预算/Unknown边界保持，不W2/双SID/发布，目标active。
+
+
+## 2026-11-17 r7 原槽凭证与同claim接原Owner quiesce
+
+代码24841bd6d2693f11a1f585b186b7a075b7d07b64已推送，当前fetch仍main7fade183d／docs b291bf8fa、TEAM22/IMP150/r7无新答复。新增私有nonClone/nonserde PreparedAbortPrefix只从原WindowsOriginals的实际原slot/session/scope、Source/Owner preparedProcess、同fresh窗口/实际claim/完整两树canonical读生成；不从DATA请求/PID/旧记录构造。原Owner native quiesce入口还必须借ClaimBoundAbort私有构造类型，持同一个实际AnchoredClaim跨native调用并前后核，不能只拿prefix摘要在claim释放后调终止。
+
+quiesce前先将prefix留原WindowsOriginals，再重复实际完整读和exact before；原Owner一旦进入Quiescing就不重试，原Job返回native QuiescentLauncher后先存原process attempt再fallible Source/claim/postchecks；check_before_resume_process明确区分Prepared与Quiescent的原native proof，普通调度在两态/Quiescing/Failed仍拒。native静止后再全读原树/canonical并与prefix精确相同才产私有QuiescentOriginals locator，actual nativeproof始终在原Owner。raw242/forced不签NativeNormalExit/Stopped/Closed，不自动Start/后继；所有失败保原prefix/Owner资源、拒绝恢复。不改旧Start截止/原v3/current/intent，无旧宿主热补。
+
+证据wl2-r7-quiesce-join-20261117-r1：product01真实完整Tauri库MSVC raw0/143128ms，3过0败0ignored。1原生集成含三真实原前缀101（move后）、141（work后）、255（完整初始化），固定自有synthetic launcher SHA4699667b…从未Resume、原Jobforced242，持同实际NativeLease/claim前后两树/canonical/旧poison完全相同；不是伪造产品Source/Owner，也未执行原产品Owner恢复。2metadata拒绝测试验证session/epoch/claim/end/data和quiescent tag替换/expired，不冒native authority。regression02受影响原origin/旧权限5过raw0/248ms；regression03原typed槽Send1过raw0/208ms，无unsafeSend/activelease跨线程。TEST EXE SHA8329c90eaa17b7dbb2dfc5bc6c1d430723da504ea2a0d53fc93db7ed57b028d8；8执行源逐Git行尾归一核，复用合成helper source/hash另留，不冒新官方制品。3新fixture全部原进程raw242/无marker后缺席清理，33payload/520282字节原样封存，源码顺序补充核不是独立安全审计。无意外product首错；2.69s原生fixture总量不冒完整恢复10s/Start30/Status5/Stop10验收。
+
+status.json现48项完整状态。本次只接quiesce阶段；完整BeforeFirstResumeRecovery、实际产品Owner整链/newworker原10s、native附件及逐node退休/原件归还/8+字节+children+锁释放、新私有版本化控制通道仍未完。活动lease线程/失败处置9f775ebe7、pre-manifest引用b01b78219、PSS0x8仍24unknown请求各只阻对应依赖，未趁无答复更改边界。当前r221500/75744/3原件/3work/custody/anchors/协调/旧seq9及40588不动，无当前R1执行授权/批准请求；旧50580/54692授权不延用、原件未还不跑官方。已过scanner/CLI/空GUI/归档/原语复用。旧两regression目录删除审批blocked by policy保留，不绕过/重试；官方2.99/日常配置PATH策略/普通Token/原预算/Unknown拒绝保持，不W2/双SID/发布，目标active。
+
+
+## 2026-11-17 r7 v1附件原生持久层与main增量接续
+
+代码0feb596b0d267f8fa34f01318b2aeb787883c801已推送；本轮先fetch合main cb82a7a06bfd19e74872b2d5b3ef3b47c50c98c6，仅模型保存config_file_v2/测试/Macsmoke净差，Windows独占无交叉，不重跑无影响CLI/GUI/归档/扫描。docs仍b291bf8fa、TEAM22/IMP150/r7未改。新增AttachmentStorage只消费调用者原native-pinned私有空目录，将原目录/file/8/end先留位，再逐记录原CREATE_NEW writer先入槽而后ID/private/ADS/字节写入sync/readback。完整旧raw链＋候选严格v1字段/版本/顺序/previous/action/window校验必须先于create，保持max4096×65536原DATA边界。
+
+空/半写/完成未发布/已发布后失败全部留实际原file/bytes/native字段并poison，不重试/续期/补完成；exact inherited Instant截止相等，不从QPC数据创建新timer。每文件原/路径readback的完整bytes/ID/所含8/ADS前后核、目录member前后核、完整chain重放后所有原file再全读最终fence，真实lateDACL/member改变也拒。原writer只藏在实现内/shareREAD拒外写删，不谎称OSreadonlyhandle。存储API append_data/read_data只管DATA，不验证其内容的实际原Owner来源，也绝不由valid JSON构造PreparedAbort/Quiescent/恢复权；原native session/source/action/claim/QPC与record字段绑定和生产事件writer仍待。旧v3/canonical/current/namespace不改、不转换/迁移既有记录。
+
+证据wl2-r7-attachment-storage-20261117-r1：product01首raw101/52126ms E0277为测试assert_eq要求SnapshotData Debug，未执行runtime，原日志/四源快照保留；改同等相等assert、不改共享native类型。复核补最终全文件fence并加lateSD/member反例后product02真实MSVC全Tauri库raw0/143982ms，5过0败0ignored：5写入故障stage、完整7event v1原bytes/ID/8/denywrite-delete、replay/scope/unknown/gap/terminal拒绝、fileSD/dirSD/ADS/member及lateSD/member真实变化拒绝、过期/不同end/已有namespace拒绝，20新fixture缺席清理。regression03同EXE原v1strict字段/chain4回归过raw0/206ms，格式原规则保持。TEST EXE SHA31c3ca9bcc16645f08a63fc226c31437de1f2d2c2f2a4a558df2853c0d84bccd；4最终源逐Git行尾归一核，生成schema raw归档还原，35payload/542392字节封存。该DATA持久层通过不冒原Owner生产恢复/原10s完整验收。
+
+status.json现53项本线完整状态，实际原session/source/action/claim/QPC附件工厂及node intent/retire/return/8+字节+children+lockrelease、新worker/full10s/版本化控制通道仍待。活动lease归属9f775ebe7、pre-manifest引用b01b78219、PSS0x8仍24unknown各只阻相应依赖，暂无新合同答复，其它Windows工作持续。currentR221500/75744/原件/work/custody/anchors/协调/旧seq9及40588不动，未force/原件归还/再跑官方，旧50580/54692授权不沿用、无R1执行批准请求。既过GUI空host/CLI/scan/归档/原语复用；旧两regression目录自动审批blocked by policy源保留，不换工具重删。官方2.99/日常配置PATH策略/原普通Token/预算/Unknown拒绝不变，不W2/双SID/发布，目标active。
+
+
+## 2026-11-17 r7 原动作QPC与附件字段真实来源接线
+
+代码57c982b683f065ca73e3afc718d0127c82eae775已推送；先fetch合main29bdae6fba4f58653e26e43063d0e112292468e1（只Macsmoke改动），消费docs f214cc84dab78e4f2c5990a1f835467394c48c36／TEAM23/IMP151。新文档仅Mac模型保存/重开，r7Windows恢复/查询与写集未改，三异步请求暂无新答复。原ProcessAbortAttempt首次prepare保一次native QPC投影，counter采样后取原Instant remaining向下取整，record cutoff不晚于原end；固定origin内后续反复用，不接受新end/频率漂移/倒退/溢出/过期，旧Startdeadline仍过期不变，DATA QPC不构造新的权限窗口。
+
+原BoundAttachment先存实际目录pin到原WindowsOriginals，再检查原Owner/prefix/Source/实际claim和准确D/before-resume-recovery/action路径；缺实际manifest不填占位。首条由原canonical sessionUUID（不是adapter tag）、manifest/binding/storagePlan/securityPolicy摘要、原failedStartUUID/新recoveryActionUUID/fixedQPC及原prefixDigest投影；每producer读取都重建原字段与首raw精确比，再核整链/last原typed事件。quiesce入口现在要求该原producer先持久化AbortRecoveryIntent并读回，原Job静止后取原Owner retainedQuiescent的实际PID/FILETIME/forcedraw242追加LauncherQuiesced，写失败保原native proof/附件prefix并拒原动作。v1数据构造器只返回严格DATA，不从record生成原Owner/Job/恢复/Closed。
+
+证据wl2-r7-attachment-origin-20261117-r1：product01真实MSVC完整Tauri库raw0/145705ms，5过0败0ignored：实际QPC固定采样及nativepin denyrename/缺席清理、QPC数据频率/倒退/overflow/rounding/end/expiry否例、canonicalUUID/各hash/原action/同clock/previous精确DATA映射及缺字段/同action拒绝。只有QPC和目录pin是实际native组件；mapping测试不冒原Owner权限/生产整链。regression02原origin5过raw0/233ms，regression03原v1parser4过raw0/227ms，regression04原slotSend1过raw0/202ms。TEST EXE SHA3f6fb5fb65569bd4d8654343c0828ff63133b0cd0febf537172a9a46520ee2b2，7最终执行源逐Git行尾归一核，1新fixture缺席。无意外product首错；源码顺序补充采集首AssertionError因rustfmt拆remaining.as_nanos字面行，原记录保留，仅采集查询归一空白后通过，不改实际测试/源码，不冒独立安全审计。生成schema raw归档还原，35payload/523809字节封存。
+
+status.json 58项完整本线状态。实际产品原Owner producer/attachment/quiesce整链尚未运行；node Intent/retire/return/8+bytes+children+lockrelease原10s、sameowningworker活动lease/失败处置、新strict私有控制/fulltrait仍未完。9f775ebe7线程、b01b78219 pre-manifest、PSS0x8仍24unknown各只阻其依赖，其它独占继续。currentR221500/75744/3原件/3work/custody/anchors/协调/旧seq9及40588不动，不force/归还/原包重跑；旧50580/54692授权不沿用、无本r2R1批准请求。已过scanner/CLI/空GUI/全归档/原语复用；旧两regression目录审批blocked by policy仍保原源，不绕过重删。官方2.99/日常配置PATH策略/普通Token/预算/Unknown拒绝保持，publicStart/production/allAcceptedfalse，不W2/双SID/发布，目标active。

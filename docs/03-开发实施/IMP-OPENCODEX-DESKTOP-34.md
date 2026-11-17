@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 151；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 152；2026-11-17。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 29bdae6fba4f58653e26e43063d0e112292468e1（非冻结候选）；Windows实现检查点codex/024-windows-native 89f55e76d4f5a6e599b0e9db8cb359fcadce0254（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main adcf4f94edf73c6afb2675a34438f066be8b2eb8（非冻结候选）；Windows实现检查点codex/024-windows-native 57c982b683f065ca73e3afc718d0127c82eae775（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1584,3 +1584,16 @@ main cb82a7a06bfd19e74872b2d5b3ef3b47c50c98c6修首次单渠道纳管保存：�
 此处是Desktop模型页真实写入与应用重开验，不是外部Codex默认选择器或OpenCodex服务重启；AC-P24-09仍需最终集成包外部客户端/回退，其它生命周期不借此签通过。Mac新建根的Preparing/CaptureReserved取消路径已重新核实：普通prepare_cancel显式拒creation evidence、Index.close_preparation拒root_registration，根lineage未含对应取消分支；当前生产尚缺根保留/退根与独立索引收口，不能删除目录或改ordinary断言冒通过。本批未修改这条缺口，列下一本机独立开发项。
 
 Windows最新41043665d55f7f65bd550e1543701dd7c64192d9已fetch，只有PSS0x8原型变更无更新docs，尚不计当前Job或原型通过；继续其独占恢复线，旧R1未经具体确认。主线精确SHA已推，不放最终W2/双SID/发布，目标active。
+
+
+### 2026-11-17 revision152：Mac取消前置与Windows三依赖决定
+
+main adcf4f94edf73c6afb2675a34438f066be8b2eb8新增借原独立Index的首次目录取消只读审查：Preparing/CaptureReserved、原已注册初始缺席、原Head/history/目录native身份/精确HOME/profile/未过期窗口、root空且无任何client-originals存储、Grok完整状态绑定，两次一致读回；Review不序列化、不构造movement/恢复/Closed或后继许可。5项原生文件系统测试与8项创建/后继回归过，strict全targets Clippy/fmt过。首次root_start_tests过滤0项原日志保留且不计，通过用完整generation::start_tests过滤补验。证据.mac路径见[结果](../../.adg/evidence/0.2.24/mac-root-cancel-review-r1/result.json)。本批夹具用tempfile guard清理，无持久服务/日常配置；缺逐fixture独立清理回执不冒全历史清理证明。
+
+此批未接实际退根/取消事件、服务缺席/新协调排他、已部分捕获/后继代次以及UI入口；普通取消的原拒绝仍保持。取消全链尚未完成，不以只读前置过当用户可取消。下一阶段继续原guard保护的精确目录保管/读回及取消记录接线，不删除用户新数据。
+
+新fetch Windows57c982b683f065ca73e3afc718d0127c82eae775／docs00997673a，净12轮及handoff追加。实际payload数/总字节与固定code/docs摘要以[接收回执](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r11/receive-result.json)为准，逐原bytes/SHA/完整成员核；这次是载荷和具体请求接收，不冒整批源码安全审计/Windows native或完整集成。未来partial slot/lease/claim/QPC/附件/storage等新原语与生产库测试陆续通过；实际原Owner全trait、完整return/10秒及当前r2原件恢复未过，原57/EXE/测试来源分别保留。
+
+三请求已于[r7文末](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)一次明确：未有manifest采用独立strictv2 canonical/preparation存在性，不伪造摘要、不转换v1/旧v3；活动lease由同一原worker连续持有，失败停驻不Drop伪释放/不重开10秒，后继失败处置另需具体证据；PSS0x8仍24unknown，允许documented NtQueryObject仅类型＋单broker零访问复制自有原型，缺权限/未知仍拒，禁止名字/全机/私有结构/提升/现场变更。main 78dc2b8149c4b2f948f6de0d649bea7b46dada02只加BEFORE_RESUME_RECOVERY_RECORD_V2标识，四trait签名及CONTRACT_VERSION4不变。格式标识不等实现或原生证明。
+
+Windows可自行消费新main/docs继续已有独占集，非必要不回Mac。当前r221500/75744/原件/work/custody/anchors/协调及seq9保持，R1具体计划/确认尚未完成，任何实际forced/return不因本合同获得授权。NAME默认客户端/候选回退、Mac其它原生与完整候选/W2仍未完，不发布，目标active。

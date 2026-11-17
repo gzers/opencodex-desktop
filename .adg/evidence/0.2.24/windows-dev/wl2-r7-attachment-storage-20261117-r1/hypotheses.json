@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-17T20:24:13.674450+08:00",
+  "recordedBeforeImplementation": true,
+  "codeInput": "24841bd6d2693f11a1f585b186b7a075b7d07b64 plus merged main cb82a7a06bfd19e74872b2d5b3ef3b47c50c98c6",
+  "docsInput": "b291bf8fa TEAM22/IMP150/r7",
+  "hypotheses": [
+    {
+      "id": "A1",
+      "claim": "Existing strict v1 attachment DATA may be persisted in an already-native-pinned empty private directory, with each actual CREATE_NEW file retained before any post-create query/write and exact bytes/ID/all8/ADS/member checks."
+    },
+    {
+      "id": "A2",
+      "claim": "Every append validates the complete previous original bytes plus strict candidate chain before any disk mutation; partial writes, terminal/replayed/cross-scope/unknown records and wrong/expired inherited cutoff poison and preserve original prefix without retry."
+    },
+    {
+      "id": "A3",
+      "claim": "Readback of actual complete files plus directory all8 and exact membership cannot mint native PreparedAbort/Quiescent/restore authority; native original Owner/action/claim and record origin integration remain separate required work."
+    }
+  ],
+  "limits": [
+    "storage is DATA durability only; no factory from stored JSON to native rights",
+    "caller must supply actual original PinnedDirectory, storage does not create/adopt directories",
+    "fixed inherited end equality, no renewed timer",
+    "pre-manifest nextformat and activelease worker contract still pending",
+    "no currentR2/officialStart/force/originalReturn or shared schema change"
+  ]
+}

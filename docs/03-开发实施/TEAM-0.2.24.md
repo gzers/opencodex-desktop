@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 23；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 24；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -228,3 +228,10 @@ r7恢复/PSS0x8补充/partial原件/预算与全部前提保持；后继Windows�
 ## revision23 Mac真实模型页保存接续
 
 Mac main cb82a7a06bfd19e74872b2d5b3ef3b47c50c98c6修首次单scope纳管默认引用，29bdae6fba4f58653e26e43063d0e112292468e1为本机AX验证器后继；实际源码/31测试/真实应用保存重开证据只归IMP151。均无Windows独占文件/接口变化，本线可自行增量合入，不重跑无影响原件/Job/CLI/MSI。根creation取消与NAME最终外部客户端/回退、最终候选由Mac继续，Windows按r7/PSS0x8/future恢复/scanner独占集并行；当前r2实际恢复仍需完整计划及用户单独确认。
+
+
+## revision24 三请求一次接续
+
+main 78dc2b8149c4b2f948f6de0d649bea7b46dada02新增独立v2附件标识（四trait/CONTRACT_VERSION4不改），adcf4f94edf73c6afb2675a34438f066be8b2eb8是Mac只读取消前置，非新实际恢复能力；状态归IMP152。r7文末已明确Windows未完成捕获variant、同线程原worker/失败持锁处置、文档化对象类型查询三请求，不再等Mac另造产品接口。Windows在57c982后继增量合入，沿自身before_resume_record_v2、v3/capture/journal、原ownerworker/control及test/windows024-native独占集实施/定向负例；Mac不并行改。
+
+旧v1/oldv3不迁移或fallback，原deadline/所有8投影/未知拒绝不变，DATA不授native/Closed。query只原型通过后可只读R0；当前r2实际force/归还仍需精确计划及独立确认。未有activelease跨线程/unsafeSend/自动Drop解锁许可，不把新recordconstant当工厂已实现。Mac继续真正目录取消/一般图/候选及NAME外部客户端，Windows恢复线独立继续；不W2/双SID/发布。
