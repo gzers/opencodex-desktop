@@ -52,11 +52,12 @@ pub(super) enum ChainEntry {
     Batch(super::batches::BatchEvent),
     Content(super::qualification::ContentEvent),
     Closed(super::closed::ClosedEvent),
+    RouteClose(super::route_close::RouteCloseEvent),
 }
 impl Progress {
     pub(super) fn apply_entry(&mut self, plan: &StoragePlan, e: &ChainEntry) -> io::Result<()> {
         if let Some(closed) = &self.closed {
-            if closed.verified || !matches!(e, ChainEntry::Closed(_)) {
+            if closed.verified || !matches!(e, ChainEntry::Closed(_) | ChainEntry::RouteClose(_)) {
                 return Err(invalid());
             }
         }
@@ -81,7 +82,10 @@ impl Progress {
         if self.history.is_some()
             && !matches!(
                 e,
-                ChainEntry::History(_) | ChainEntry::Handles(_) | ChainEntry::Closed(_)
+                ChainEntry::History(_)
+                    | ChainEntry::Handles(_)
+                    | ChainEntry::Closed(_)
+                    | ChainEntry::RouteClose(_)
             )
         {
             return Err(invalid());
@@ -98,6 +102,7 @@ impl Progress {
             ChainEntry::Batch(e) => self.apply_batch(plan, e),
             ChainEntry::Content(e) => self.apply_content(plan, e),
             ChainEntry::Closed(e) => self.apply_closed(plan, e),
+            ChainEntry::RouteClose(e) => self.apply_route_close(plan, e),
         }
     }
     pub(super) fn apply_lease(&mut self, plan: &StoragePlan, e: &LeaseEvent) -> io::Result<()> {

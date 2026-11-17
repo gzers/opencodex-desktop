@@ -32,10 +32,19 @@ mod observations;
 mod qualification;
 mod read_window;
 mod recovery;
+mod route_close;
 mod segments;
 mod snapshots;
 pub(super) use journal::Journal;
 use snapshots::SnapshotPurpose;
+#[cfg(test)]
+pub(in crate::infrastructure::windows_client_originals024) fn validate_route_close_component(
+    value: serde_json::Value,
+) -> io::Result<String> {
+    let data: route_close::RouteCloseData = serde_json::from_value(value).map_err(|_| invalid())?;
+    data.validate()?;
+    data.digest()
+}
 #[derive(Clone, Copy, Debug, Serialize)]
 pub(super) enum FileAction {
     MoveOriginal,
@@ -349,6 +358,7 @@ pub(super) struct Progress {
     seen_batches: BTreeSet<String>,
     content: Option<qualification::ContentSummary>,
     closed: Option<closed::ClosedSummary>,
+    route_close: Option<route_close::RouteCloseSummary>,
 }
 fn uuid(s: &str) -> bool {
     uuid::Uuid::parse_str(s).is_ok_and(|u| !u.is_nil() && u.to_string() == s)
@@ -418,6 +428,7 @@ impl Progress {
             seen_batches: BTreeSet::new(),
             content: None,
             closed: None,
+            route_close: None,
         })
     }
     pub(super) fn apply(&mut self, plan: &StoragePlan, e: &Event) -> io::Result<()> {

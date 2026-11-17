@@ -171,6 +171,25 @@ pub(super) struct StartContentScope {
     pins: Vec<AuditSourcePin>,
 }
 impl StartContentScope {
+    pub(super) fn check_completed_route_close(
+        &mut self,
+        scope: &StoppedContentScope,
+        source: &mut Source,
+        owner: &mut Owner,
+        exit: &crate::infrastructure::windows_diagnostic_roles024::ClosedExitHistory,
+        routes: &super::v2::routes::RetainedRouteClose,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.check_completed_history(scope, source, owner, end)?;
+        scope.action.check(owner, end).map_err(ioe)?;
+        if scope.action.deadline() != end
+            || exit.original_stop_processes(owner, end).map_err(ioe)? != scope.processes
+        {
+            return Err(invalid());
+        }
+        routes.check_original_routes(&scope.home, &scope.routes, end)?;
+        before(end)
+    }
     pub(super) fn check_completed_history(
         &mut self,
         scope: &StoppedContentScope,

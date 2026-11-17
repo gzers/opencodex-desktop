@@ -9,6 +9,7 @@ pub(super) enum ClosedOperation {
 #[derive(Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub(super) struct ClosedData {
+    pub(super) route_close_digest: String,
     pub(super) close_sequence: u32,
     pub(super) close_event_digest: String,
     pub(super) close_current_digest: String,
@@ -27,6 +28,7 @@ impl ClosedData {
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub(super) struct ClosedSummary {
+    pub(super) route_close_digest: String,
     pub(super) digest: String,
     pub(super) verified: bool,
     pub(super) close_sequence: u32,
@@ -70,13 +72,14 @@ impl Progress {
             || e.closed.content_digest!=content.digest || e.closed.inventory_digest!=handles.inventory_digest || e.closed.handle_count!=handles.count
             || self.ready_generation.as_ref()!=Some(&e.closed.ready)
             || e.closed.original_history_digest!=hash::sha256_hex(&encoded(&self.history_summary()?.ok_or_else(invalid)?)?)
-            || !digest(&e.closed.close_event_digest) || !digest(&e.closed.close_current_digest) || !digest(&e.closed.native_close_digest)
+            || !digest(&e.closed.close_event_digest) || !digest(&e.closed.close_current_digest) || !digest(&e.closed.native_close_digest) || !digest(&e.closed.route_close_digest)
             || self.handle_close.as_ref()!=Some(&(e.closed.close_sequence,e.closed.close_event_digest.clone()))
         {return Err(invalid());}
         let value = e.closed.digest()?;
         match e.operation {
             ClosedOperation::StopClosureIntent
                 if self.closed.is_none()
+                    && self.route_close.is_none()
                     && e.closed.close_sequence == self.sequence
                     && e.closed.close_event_digest == self.tip => {}
             ClosedOperation::StopClosedVerified
@@ -86,11 +89,16 @@ impl Progress {
                         && c.close_sequence == e.closed.close_sequence
                         && c.close_event_digest == e.closed.close_event_digest
                         && c.native_close_digest == e.closed.native_close_digest
-                }) => {}
+                }) && self.route_close.as_ref()
+                    == Some(&super::route_close::RouteCloseSummary {
+                        digest: e.closed.route_close_digest.clone(),
+                        verified: true,
+                    }) => {}
             _ => return Err(invalid()),
         }
         let tip = hash::sha256_hex(&encoded(e)?);
         self.closed = Some(ClosedSummary {
+            route_close_digest: e.closed.route_close_digest.clone(),
             digest: value,
             verified: e.operation == ClosedOperation::StopClosedVerified,
             close_sequence: e.closed.close_sequence,
@@ -131,4 +139,4 @@ impl Progress {
 }
 #[cfg(test)]
 #[path = "closed_data_tests.rs"]
-mod tests;
+pub(super) mod tests;

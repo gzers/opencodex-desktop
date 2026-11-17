@@ -25,7 +25,8 @@ fn wl2_r6_content_chain_bounded_current_retains_all_original_summary_fields() {
         serde_json::json!({"contextDigest":h,"intentSequence":4095,"linkedReferences":[h,h]});
     v["handles"] = serde_json::json!({"inventoryDigest":h,"count":65536,"released":true});
     v["content"] = serde_json::json!({"digest":h,"verified":true});
-    v["closed"] = serde_json::json!({"digest":h,"verified":true,"closeSequence":4094,"closeEventDigest":h,"nativeCloseDigest":h});
+    v["closed"] = serde_json::json!({"digest":h,"verified":true,"closeSequence":4094,"closeEventDigest":h,"nativeCloseDigest":h,"routeCloseDigest":h});
+    v["routeClose"] = serde_json::json!({"digest":h,"verified":true});
     let typed: Current = serde_json::from_value(v).unwrap();
     let raw = encoded(&typed).unwrap();
     println!(

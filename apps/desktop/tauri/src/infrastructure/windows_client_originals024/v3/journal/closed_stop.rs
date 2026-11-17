@@ -3,7 +3,7 @@
 use super::super::super::{
     content::{StartContentScope, StoppedContentScope},
     source::Source,
-    v2::routes::RoutePin,
+    v2::routes::RetainedRouteClose,
 };
 use super::*;
 use crate::{
@@ -19,7 +19,7 @@ pub(in crate::infrastructure::windows_client_originals024) struct CompletedStopG
     exit: &'a ClosedExitHistory,
     absent: &'a ClosedAbsentHistory,
     official: &'a StopAccepted,
-    routes: &'a mut RoutePin,
+    routes: &'a mut RetainedRouteClose,
     start: &'a mut StartContentScope,
     stopped: &'a StoppedContentScope,
 }
@@ -30,7 +30,7 @@ impl<'a> CompletedStopGuard<'a> {
         exit: &'a ClosedExitHistory,
         absent: &'a ClosedAbsentHistory,
         official: &'a StopAccepted,
-        routes: &'a mut RoutePin,
+        routes: &'a mut RetainedRouteClose,
         start: &'a mut StartContentScope,
         stopped: &'a StoppedContentScope,
         journal: &mut Journal,
@@ -50,7 +50,7 @@ impl<'a> CompletedStopGuard<'a> {
         Ok(out)
     }
     pub(super) fn check(&mut self, journal: &mut Journal, end: Instant) -> io::Result<()> {
-        self.start.check_completed_stop(
+        self.start.check_completed_route_close(
             self.stopped,
             self.source,
             self.owner,
@@ -102,15 +102,51 @@ impl Journal {
         use super::super::closed::{ClosedData, ClosedOperation};
         let result = (|| {
             guard.check(self, end)?;
-            let original = self.original_close_data(end)?;
+            let route: super::super::route_close::RouteCloseData =
+                serde_json::from_value(guard.routes.canonical_data()?).map_err(|_| invalid())?;
+            let original = self.original_close_data(route.digest()?, end)?;
             let intent = self
                 .progress
                 .closed_event(ClosedOperation::StopClosureIntent, original)?;
             self.append_entry_inner(ChainEntry::Closed(intent), end)?;
             guard.check(self, end)?;
             self.completed_stop_boundary(end)?;
-            let data: ClosedData = match self.events.last().and_then(|r| r.entry.as_ref()) {
-                Some(ChainEntry::Closed(e)) => {
+            use super::super::route_close::{RouteCloseData, RouteCloseOperation};
+            guard.routes.check_before_close(end)?;
+            let data: RouteCloseData =
+                serde_json::from_value(guard.routes.canonical_data()?).map_err(|_| invalid())?;
+            let route_intent = self
+                .progress
+                .route_close_event(RouteCloseOperation::RouteHandlesCloseIntent, data)?;
+            self.append_entry_inner(ChainEntry::RouteClose(route_intent), end)?;
+            guard.check(self, end)?;
+            // Exact original read primary closes LAST. No claim/NLK or client
+            // mutation permission derives from releasing this route observer.
+            guard.routes.close_owned(end)?;
+            guard.routes.check_history(end)?;
+            guard.check(self, end)?;
+            let data: RouteCloseData =
+                serde_json::from_value(guard.routes.canonical_data()?).map_err(|_| invalid())?;
+            let route_result = self
+                .progress
+                .route_close_event(RouteCloseOperation::RouteHandlesClosedVerified, data)?;
+            self.append_entry_inner(ChainEntry::RouteClose(route_result), end)?;
+            guard.check(self, end)?;
+            self.completed_stop_boundary(end)?;
+            let original_sequence = self
+                .progress
+                .closed
+                .as_ref()
+                .ok_or_else(invalid)?
+                .close_sequence;
+            let data: ClosedData = match self
+                .events
+                .get(original_sequence as usize)
+                .and_then(|r| r.entry.as_ref())
+            {
+                Some(ChainEntry::Closed(e))
+                    if e.operation == ClosedOperation::StopClosureIntent =>
+                {
                     serde_json::from_slice(&encoded(&e.closed)?).map_err(|_| invalid())?
                 }
                 _ => return Err(invalid()),

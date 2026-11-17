@@ -18,7 +18,8 @@ use crate::{
 use std::time::Instant;
 struct CaptureStore {
     source: Source,
-    routes: RoutePin,
+    routes: Option<RoutePin>,
+    route_close: Option<super::super::v2::routes::RetainedRouteClose>,
     core: CapturedTrees,
     failed: bool,
     ready: Option<(u32, u16, String)>,
@@ -128,7 +129,8 @@ impl CaptureStore {
             Ok(core) => Ok((
                 Self {
                     source,
-                    routes,
+                    routes: Some(routes),
+                    route_close: None,
                     core,
                     failed: true,
                     ready: None,
@@ -151,6 +153,8 @@ impl CaptureStore {
     fn check_source(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
         self.source.check(owner, end)?;
         self.routes
+            .as_mut()
+            .ok_or_else(|| refused("原路由pin已转移或缺席"))?
             .declared(owner.home_path(), end)
             .map_err(refused)?;
         self.core
@@ -217,6 +221,15 @@ impl CaptureSlot {
                 return Err(refused("原Stop未完成"));
             }
             store.failed = true;
+            if store.routes.is_some() {
+                return Err(refused("完成历史仍持原live路由pin"));
+            }
+            store
+                .route_close
+                .as_ref()
+                .ok_or_else(|| refused("原路由关闭history缺席"))?
+                .check_history(end)
+                .map_err(refused)?;
             store
                 .content_start
                 .check_completed_history(
@@ -243,6 +256,17 @@ impl CaptureSlot {
                 .core
                 .journal()
                 .completed_stop_history_read(read)
+                .map_err(refused)?;
+            store
+                .core
+                .journal()
+                .check_route_closed_history(
+                    store
+                        .route_close
+                        .as_ref()
+                        .ok_or_else(|| refused("原路由关闭history缺席"))?,
+                    end,
+                )
                 .map_err(refused)?;
             store.source.check(owner, end)?;
             store
@@ -305,7 +329,16 @@ impl CaptureSlot {
             store.failed = true;
             let content = store
                 .content_start
-                .stopped(&mut store.source, owner, &normal, &mut store.routes, end)
+                .stopped(
+                    &mut store.source,
+                    owner,
+                    &normal,
+                    store
+                        .routes
+                        .as_mut()
+                        .ok_or_else(|| refused("原路由pin已转移或缺席"))?,
+                    end,
+                )
                 .map_err(refused)?;
             store
                 .core
@@ -320,7 +353,16 @@ impl CaptureSlot {
                 )
                 .map_err(refused)?;
             content
-                .check(&mut store.source, owner, &normal, &mut store.routes, end)
+                .check(
+                    &mut store.source,
+                    owner,
+                    &normal,
+                    store
+                        .routes
+                        .as_mut()
+                        .ok_or_else(|| refused("原路由pin已转移或缺席"))?,
+                    end,
+                )
                 .map_err(refused)?;
             store
                 .core
@@ -330,7 +372,10 @@ impl CaptureSlot {
                     &normal,
                     &absent,
                     official,
-                    &mut store.routes,
+                    store
+                        .routes
+                        .as_mut()
+                        .ok_or_else(|| refused("原路由pin已转移或缺席"))?,
                     &content,
                     &mut lease,
                     end,
@@ -338,7 +383,16 @@ impl CaptureSlot {
                 .map_err(refused)?;
             store.check_source(owner, end)?;
             content
-                .check(&mut store.source, owner, &normal, &mut store.routes, end)
+                .check(
+                    &mut store.source,
+                    owner,
+                    &normal,
+                    store
+                        .routes
+                        .as_mut()
+                        .ok_or_else(|| refused("原路由pin已转移或缺席"))?,
+                    end,
+                )
                 .map_err(refused)?;
             if lease.is_some() {
                 return Err(refused("原恢复段lease未显式释放"));
@@ -349,6 +403,24 @@ impl CaptureSlot {
             store.closed_exit = Some(normal.into_closed_history(owner, end)?);
             store.closed_absent = Some(absent.into_closed_history(owner, end)?);
             store.stopped_content = Some(content);
+            if store.route_close.is_some() {
+                return Err(refused("原路由关闭对象已有状态"));
+            }
+            // Move exact owned RoutePin into a retained slot BEFORE prepare or
+            // any fallible route-close IO. No Drop release or replacement.
+            let routes = store
+                .routes
+                .take()
+                .ok_or_else(|| refused("原路由pin缺席"))?;
+            store.route_close = Some(super::super::v2::routes::RetainedRouteClose::retain(
+                routes, end,
+            ));
+            store
+                .route_close
+                .as_mut()
+                .ok_or_else(|| refused("原路由关闭槽缺席"))?
+                .prepare(end)
+                .map_err(refused)?;
             let mut guard = super::journal::CompletedStopGuard::bind(
                 &mut store.source,
                 owner,
@@ -361,7 +433,10 @@ impl CaptureSlot {
                     .as_ref()
                     .ok_or_else(|| refused("原Stop监督history缺席"))?,
                 official,
-                &mut store.routes,
+                store
+                    .route_close
+                    .as_mut()
+                    .ok_or_else(|| refused("原路由关闭槽缺席"))?,
                 &mut store.content_start,
                 store
                     .stopped_content
@@ -376,7 +451,18 @@ impl CaptureSlot {
                 .journal()
                 .complete_original_stop_history(&mut guard, end)
                 .map_err(refused)?;
-            store.check_source(owner, end)?;
+            store.source.check(owner, end)?;
+            store
+                .core
+                .journal()
+                .check_source_owner(owner, end)
+                .map_err(refused)?;
+            store
+                .route_close
+                .as_ref()
+                .ok_or_else(|| refused("原路由关闭history缺席"))?
+                .check_history(end)
+                .map_err(refused)?;
             store
                 .closed_exit
                 .as_ref()
@@ -433,6 +519,8 @@ impl CaptureSlot {
             store.source.check(owner, end)?;
             store
                 .routes
+                .as_mut()
+                .ok_or_else(|| refused("原路由pin已转移或缺席"))?
                 .declared(owner.home_path(), end)
                 .map_err(refused)?;
             owner.originals_check_ready(ready, end)?;

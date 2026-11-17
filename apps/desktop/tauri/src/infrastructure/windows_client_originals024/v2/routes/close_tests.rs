@@ -30,6 +30,10 @@ fn wl2_r6_route_close_native_all_original_main_security_and_two_ancestor_sets_cl
         Some(32)
     );
     candidate.prepare(end).unwrap();
+    crate::infrastructure::windows_client_originals024::v3::validate_route_close_component(
+        candidate.canonical_data().unwrap(),
+    )
+    .unwrap();
     let trace = candidate.trace();
     let rows = trace["handles"]["rows"].as_array().unwrap();
     assert_eq!(

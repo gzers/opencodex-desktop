@@ -105,6 +105,7 @@ impl CompletedOriginals {
 impl Journal {
     pub(super) fn original_close_data(
         &mut self,
+        route_close_digest: String,
         end: Instant,
     ) -> io::Result<super::super::closed::ClosedData> {
         self.check(end)?;
@@ -118,6 +119,7 @@ impl Journal {
             .filter(|c| c.verified)
             .ok_or_else(invalid)?;
         Ok(super::super::closed::ClosedData {
+            route_close_digest,
             close_sequence: proof.sequence,
             close_event_digest: proof.event_digest.clone(),
             close_current_digest: proof.current_digest.clone(),
@@ -172,7 +174,34 @@ impl Journal {
         {
             return Err(invalid());
         }
+        if closed.verified
+            && self.progress.route_close.as_ref()
+                != Some(&super::super::route_close::RouteCloseSummary {
+                    digest: closed.route_close_digest.clone(),
+                    verified: true,
+                })
+        {
+            return Err(invalid());
+        }
         Ok(())
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn check_route_closed_history(
+        &self,
+        route: &super::super::super::v2::routes::RetainedRouteClose,
+        end: Instant,
+    ) -> io::Result<()> {
+        route.check_history(end)?;
+        let data: super::super::route_close::RouteCloseData =
+            serde_json::from_value(route.canonical_data()?).map_err(|_| invalid())?;
+        if self.progress.route_close.as_ref()
+            != Some(&super::super::route_close::RouteCloseSummary {
+                digest: data.digest()?,
+                verified: true,
+            })
+        {
+            return Err(invalid());
+        }
+        before(end)
     }
     pub(super) fn completed_stop_boundary(&mut self, end: Instant) -> io::Result<()> {
         self.check(end)?;

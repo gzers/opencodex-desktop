@@ -4,7 +4,9 @@ use super::super::{
 use super::*;
 use crate::infrastructure::windows_client_originals024::handle_release::HandleRow;
 use serde_json::{json, Value};
-fn setup(p: &StoragePlan) -> (Progress, ClosedData) {
+pub(in crate::infrastructure::windows_client_originals024::v3) fn setup(
+    p: &StoragePlan,
+) -> (Progress, ClosedData) {
     // Pure canonical DATA only. No fake Owner/Stop/NormalExit/Absent/native
     // assessment/completion constructor is used or made available to tests.
     let mut g = linked(p);
@@ -39,6 +41,7 @@ fn setup(p: &StoragePlan) -> (Progress, ClosedData) {
     g.apply_entry(p, &ChainEntry::Handles(e)).unwrap();
     let handles = g.handle_progress.as_ref().unwrap();
     let data = ClosedData {
+        route_close_digest: super::super::route_close::tests::data(p).digest().unwrap(),
         close_sequence: g.sequence,
         close_event_digest: g.tip.clone(),
         close_current_digest: "c".repeat(64),
@@ -83,6 +86,12 @@ fn wl2_r6_closed_data_original_close_parent_and_exact_qualification_history_inte
     let e = event(&g, &d, ClosedOperation::StopClosureIntent);
     g.apply_entry(&p, &ChainEntry::Closed(e)).unwrap();
     assert!(!g.closed.as_ref().unwrap().verified);
+    reject(
+        &p,
+        &g,
+        serde_json::to_value(event(&g, &d, ClosedOperation::StopClosedVerified)).unwrap(),
+    );
+    super::super::route_close::tests::qualify(&mut g, &p);
     for field in [
         "nativeCloseDigest",
         "closeCurrentDigest",

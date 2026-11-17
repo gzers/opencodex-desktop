@@ -208,6 +208,7 @@ struct Current {
     batch: Option<super::batches::BatchSummary>,
     content: Option<super::qualification::ContentSummary>,
     closed: Option<super::closed::ClosedSummary>,
+    route_close: Option<super::route_close::RouteCloseSummary>,
 }
 /// Native handles keep records/current/peer/directory bindings alive. This is
 /// a component journal, deliberately NOT NativeSession or production adapter.
@@ -558,6 +559,7 @@ impl Journal {
             batch: None,
             content: None,
             closed: None,
+            route_close: None,
         };
         let raw = encoded(&tip)?;
         let path = directory.path().join("current.json");
@@ -694,6 +696,7 @@ impl Journal {
             || tip.batch != self.progress.batch_summary()
             || tip.content != self.progress.content
             || tip.closed != self.progress.closed
+            || tip.route_close != self.progress.route_close
         {
             return Err(invalid());
         }
@@ -806,6 +809,7 @@ impl Journal {
             batch: next.batch_summary(),
             content: next.content.clone(),
             closed: next.closed.clone(),
+            route_close: next.route_close.clone(),
         };
         let raw = encoded(&tip)?;
         if contents(&mut self.current)? != self.current_raw

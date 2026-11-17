@@ -35,6 +35,29 @@ pub(in crate::infrastructure::windows_client_originals024) struct RetainedRouteC
     poisoned: bool,
 }
 impl RetainedRouteClose {
+    pub(in crate::infrastructure::windows_client_originals024) fn canonical_data(
+        &self,
+    ) -> io::Result<serde_json::Value> {
+        let facts = self.facts.as_ref().ok_or_else(refused)?;
+        let mut data = serde_json::to_value(facts).map_err(|_| refused())?;
+        data["rows"] = self.handles.inventory()?["rows"].clone();
+        Ok(data)
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn check_original_routes(
+        &self,
+        home: &Path,
+        routes: &[String],
+        end: Instant,
+    ) -> io::Result<()> {
+        if self.facts.as_ref().ok_or_else(refused)?.home != home || self.routes != routes {
+            return Err(refused());
+        }
+        if self.completed.is_some() {
+            self.check_history(end)
+        } else {
+            self.check_before_close(end)
+        }
+    }
     /// Move the ORIGINAL owned pin into a reachable retained candidate before
     /// any fallible read. No IO, handle clone, close or native grant occurs.
     pub(in crate::infrastructure::windows_client_originals024) fn retain(
