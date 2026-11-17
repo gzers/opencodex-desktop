@@ -1022,3 +1022,9 @@ Windows自行fetch并消费新main462e2476a9275cdf82e9e3235ed84820ac2c28c7（仅
 证据wl2-r7-native-abort-20261117-r1，39执行源逐份核工作/Git，2失败自有fixture/原日志留、成功自有fixture清理，当前r2未动。loaded357-review精确5源与原broker568f..制品映射核，capture Err在唯一resume前?返回、qualification outcome?停后续动作、失败control无Resume分派；只证明原源码分支无failure后自动Resume，不拿旧creator flag或当前Suspended单独签从未运行/当前Job证明。原Job观测请求仍待Mac合同决定；未新image接旧pipe/强杀Node或broker。
 
 此批是未来BeforeFirstResumeRecovery的下层原生原语，完整trait/partialStore anchor/canonical附件/原host fresh认证/新claimNLK/完整原件返还及原10秒源校验尚未接完。r2 exact-repair-plan executionReady/approvalRequested仍false，原3件/work/根anchors/协调/旧seq9、75744/21500/40588保留；不因工具/原语通过重跑官方或放开Start/Closed/W2/双SID/发布。缺接口仅对应R1依赖停，其余独占工作继续。
+
+## 2026-11-17 TEAM19原Job PSS能力实测：24未知类型保持依赖
+
+已自行接入main98787e64f与docs f48f642a2/TEAM19/IMP147，不等用户转交；原R0/原native63d631513成果继续保留。源码3c7bc980e8edc478ddabc529badba9384f2c40c3新增仅test下自有PSS探针，最终capability07普通未提升/MSVCraw0/自有launcher242与broker0清理。原QUERY_LIMITED(+DUP_HANDLE)快照均raw5，最小实测0x100440 QUERY_INFORMATION|DUP_HANDLE|SYNCHRONIZE成功；允许flags4/20/52完整captured91/walk91/end259，67项TypeName可读、24项ObjectType0/Flags0/TypeName缺失。两明确自有Job候选只QUERY复制、CompareObjectHandles去重同一实际Job并唯一匹配launcher，但不能以此排除24unknown内另有Job，原型accepted/当前r2JobObserved=false，未做现场查询或两遍/counter/完整拒绝表。证据wl2-r7-pss-query-20261117-r1含SDK原头/末轮2实际源、全部原编译/执行失败、最小权限表和blocking-request.json；EXE14c5505749603d8dad08ceddc72fa663356e83304b1aac7b8631bb7712ac0538是能力探针非产品。
+
+请求Mac仅决定当前PSS信息缺口：是否可用有文档HANDLE_NAME_INFORMATION为类型信息完整性、永不解引用/log ObjectName，或另有界文档路线。Windows没有扩大flags/内存/名称捕获或NT解析，没有跳24unknown计成功。原LNK2019、库缺LNK1181、CRLF自有清理回执比较、TypeName有界末尾NUL诊断均原错留，后修不改安全范围。只暂停当前r2Job事实/R1执行准备，其余future-host/整树修复器/扫描继续；不要求用户为普通原型重授权，不用旧cleanup试探或外部终止Node。实际r2全归档与前后44项已有证据，不重跑；当前21500/75744/40588与custody/work/旧seq9保留，不签Stop/Closed、不W2/双SID/发布。
