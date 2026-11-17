@@ -1081,3 +1081,12 @@ PSS24unknown类型的最小安全决定仍待（原ac7c74774请求），仅R1当
 证据wl2-r7-directory-prefix-20261117-r1，预先hypotheses、6实测源快照/Git行尾归一核、完整产品库test01 raw0/146863ms，4过0败0ignored、5故障阶段/同实际句柄转交/过期已有名/替换拒绝，8新scene缺席清理；TEST EXE c88ec4294e9decb50a73c8a903c9ca0f31b8b608233fb0b488760a8acf0e7693，schema生成raw归档并还原tracked/移出untracked。23payload逐字节封存，status.json含26项完整本线状态表。
 
 当前r2原Job证明仍24unknown（包括新0x8），最小请求已异步回交而只停R1依赖；尚无当前21500/75744force/恢复授权，全部r2原件/custody/work/anchors/协调/旧seq9与40588保持。future fresh恢复origin/私有原宿主命令/严格abort记录schema/实际claimNLK/整树return原10s仍待继续；当前目录sink与前笔journal通过不冒BeforeFirstResumeRecovery完成或NormalStop/Closed。旧两regression根自动审批blocked by policy删除拒绝继续保留，不绕过；本轮8和前轮12新root清理过不覆盖历史残留。公共Start/production/allAcceptedfalse，普通MSI/原缺席退根/生产GUI官方owner/容量/CAPtrust/最终候选仍未完，不W2/双SID/发布，不改官方/日常配置PATH策略。
+
+
+## 2026-11-17 r7 原manifest形成前前缀的附件最小合同请求
+
+已核现有严格windows-before-resume-recovery-v1 DATA源码2f3b67b4169a587e3cf91c43ac014370b11b2b1d及原schema-plan/4负例，不重复另建附件实现；此前“schema未完”应准确读为原native接线未完成。新定位：Record强制manifestDigest/storagePlanDigest、最终originalNodes>0，而Source/custody/tree capture中途失败可能没有完整原plan/manifest，仅有原typed父/目录/节点/文件句柄前缀。不能以虚构占位hash签原manifest或把缺字段吞掉。
+
+interface-request.json与3份当前源逐hash归wl2-r7-preparation-record-request-20261117-r1。请Mac明确采用显式next附件/引用格式或另一r7兼容表示：完整canonical分支仍精确原session/manifest/plan/current；准备中分支显式原owner/startAction/source是否已捕获/intent与实际native阶段prefixDigest，absent/unknown明列，不制造原manifest。若选择下一schema，需明确原共享BEFORE_RESUME_RECOVERY_RECORD标识及拒绝旧格式/不迁移边界；v1解析/旧v3/current/已加载357一律不改。此请求只阻原manifest缺席分支附件接线，其它完整canonical和原进程准备继续，无DATA恢复权。
+
+原生新增prepared只读复验2项已过，be3745fb93d2f06049128c3ae2f7e2ca6825e49f已推送；原Owner一次fresh origin/实际失败Result保留/旧权限拒绝正在真实产品库定向验证，尚不冒完整BeforeFirstResumeRecovery。当前r2 PSS0x8仍24unknown的另一请求保持，不重复官方Start/归档或当前查询，不force/归还；旧50580/54692授权不沿用，所有普通token/8投影/原预算/unknown拒绝/日常/官方边界保持。不W2/双SID/发布。
