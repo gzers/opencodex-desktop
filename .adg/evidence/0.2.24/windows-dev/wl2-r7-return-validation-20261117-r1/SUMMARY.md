@@ -1,0 +1,15 @@
+# 原worker返回槽与原树独立复核
+
+代码361cdedf0后继完整SHA见status.json已推送。main81f52452cb4cfafc64a80ca92d97a3ba5990c2fb及docs bf135bf249066f7fa306400bdd839893d747e425已消费，TEAM28/IMP161/r7写集未变。新main的共享status try_lock和恢复回执/GUI入口已同图编译，未修改该共享实现或重复未受影响项。证据跨11-17/11-18同一轮，目录日期保最初假设身份。
+
+原native最终读回将完整finalimage/end先留原core；新只读复核仅同一原恢复截止，实际原released对象/facts、Source/route/canonical/原附件完整核与两次原树8/bytes/children读回，相同digest才返回DATA；不新探range、不写第二终态、不造proof。
+
+WorkerControl保唯一Box原Owner＋原window＋原ReleasedLease于接收槽，先留后验证；原transfer binding前后核，再原Slot runtime Arc/root/H/Profile/hostUUID、原Ownerquiescence/privateproof/原adapter/core完整读回。一次性失败保全部资源并revokes，既过后仍挡普通dispatch/Start/Stop/Closed/后继。workerThread保持原worker，returnValidatorThread另记接收端；收过后状态仍recoveryRequired/runtimeAuthorityfalse。生产原Slot/Owner桥已完整产品库编译链接，尚未真实产品Owner/普通Profile固定官方执行，不冒完整验收。
+
+首错product01 raw101/63090ms：测试越private方法E0624及重复drop已消费leaseE0382，未native；只加cfgtest入口，生产generic callback仍private。product02 raw101/202576ms：原树6真实模式全过，接收端夹具在未保护临时根创建私有source被PermissionDenied，worker尚未创建；4文件原失败树.tmpJEMT1O只读ZIP/member/sourcehash核后保留，修正为原规则私有source子目录。product03完整MSVC库raw0/192493ms，只受影响worker1父含4真实模式通过；原树代码未再改，复用product02六模式。
+
+原树模式valid、额外树member、额外journalmember、错截止、过期、不同原released；worker模式valid、原raw5、错截止、过期。均完整原断言，未知失败保留，禁止第二次重试。regression04原worker3父/7子case过raw0/1485ms，regression05原release2/10场景过raw0/36859ms，regression06原concretepipeline1/2场景过raw0/9516ms，Send1过raw0/31ms。仅自有六失败子进程按原创建handle raw242处置，不签normalStop/Closed。
+
+最终TEST EXE SHA fb6c54fe2a79ca14fb9d92c9dd2a24b0d6fd950e557bde4451c58ac51a5cefc0；13最终执行源逐Git行尾归一核，product01/02/03源码与原输出保全。29成功新根缺席，1新失败根/ZIP保留；schema生成raw归档/还原tracked/移出untracked。旧拒删两根、旧driver失败两根、synthetic27960及其它历史残留保持，未冒全清。
+
+完整状态111项见status.json。过期后的fullhistoricalStatus、可达versionedprivatehost/fulltrait、完整nativeV2producer/partial恢复/缺根、安全容量和真正产品Owner固定官方全预算仍未完。原r2Job24raw50Unknown对应依赖保持；21500/75744/原件/custody/work/协调/旧seq9及40588不动，无新forced/归还授权，原件未还不跑新原包。原预算/unknown/普通token/日常配置PATH策略/官方2.99不改，不W2/双SID/发布，目标active。

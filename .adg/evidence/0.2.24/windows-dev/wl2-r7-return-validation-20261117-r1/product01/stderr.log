@@ -1,0 +1,177 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\apps\desktop\tauri)
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:30:35
+   |
+30 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, PreparedLauncherAbort,
+   |                                   ^^^^^^^^^^^^^
+31 |     ProcessIdentity, ProcessState, QuiescentLauncher, RootBinding,
+   |                                                       ^^^^^^^^^^^
+
+warning: unused import: `storage::AttachmentStorageV2`
+   --> src\infrastructure\windows_client_originals024\before_resume_record_v2.rs:565:16
+    |
+565 | pub(super) use storage::AttachmentStorageV2;
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `BOUNDED_SECURITY_EXCLUDED_ASSURANCE`
+ --> src\infrastructure\windows_client_originals024\bounded.rs:9:9
+  |
+9 |         BOUNDED_SECURITY_EXCLUDED_ASSURANCE, BOUNDED_SECURITY_INFORMATION,
+  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:13:13
+   |
+13 | use serde::{Deserialize, Serialize};
+   |             ^^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `io::AsRawHandle`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:17:39
+   |
+17 |     os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
+   |                                       ^^^^^^^^^^^^^^^
+
+warning: unused imports: `BY_HANDLE_FILE_INFORMATION`, `GetFileInformationByHandle`, `GetSecurityDescriptorControl`, `GetSecurityDescriptorLength`, `IsValidSecurityDescriptor`, and `MakeSelfRelativeSD`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:24:9
+   |
+24 |         GetSecurityDescriptorControl, GetSecurityDescriptorLength, IsValidSecurityDescriptor,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+25 |         MakeSelfRelativeSD,
+   |         ^^^^^^^^^^^^^^^^^^
+26 |     },
+27 |     Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `modules::runtime::windows_lifecycle024_contract::NativeSession`
+  --> src\infrastructure\windows_client_originals024\content.rs:18:5
+   |
+18 |     modules::runtime::windows_lifecycle024_contract::NativeSession,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\r7_readonly.rs:3:22
+  |
+3 |     infrastructure::{hash, platform, windows_official_runtime024 as native},
+  |                      ^^^^
+
+warning: unused import: `self`
+ --> src\infrastructure\windows_client_originals024\r7_readonly.rs:8:10
+  |
+8 |     fs::{self, OpenOptions},
+  |          ^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused imports: `LivePhase` and `WindowsOriginals`
+   --> src\infrastructure\windows_client_originals024\v2.rs:459:26
+    |
+459 | pub(crate) use adapter::{LivePhase, WindowsOriginals};
+    |                          ^^^^^^^^^  ^^^^^^^^^^^^^^^^
+
+warning: unused import: `OpenOptions`
+  --> src\infrastructure\windows_owner_host024\desktop_tests.rs:12:22
+   |
+12 |     fs::{self, File, OpenOptions},
+   |                      ^^^^^^^^^^^
+
+warning: unused import: `ffi::OsStrExt`
+   --> src\modules\runtime\program_image_windows_tests.rs:488:28
+    |
+488 |     use std::os::windows::{ffi::OsStrExt, fs::OpenOptionsExt, io::AsRawHandle};
+    |                            ^^^^^^^^^^^^^
+
+error[E0624]: method `validate_returned` is private
+  --> src\infrastructure\windows_client_originals024\recovery_worker\tests\return_validation_tests.rs:85:30
+   |
+85 |           let result = control.validate_returned(cutoff, |actual, released, window| {
+   |                                ^^^^^^^^^^^^^^^^^ private method
+   |
+  ::: src\infrastructure\windows_client_originals024\recovery_worker\return_validation.rs:28:5
+   |
+28 | /     fn validate_returned<F>(&self, end: Instant, check: F) -> io::Result<Option<serde_json::Value>>
+29 | |     where
+30 | |         F: FnOnce(
+31 | |             &mut T,
+32 | |             &mut ReleasedLease,
+33 | |             &BeforeResumeRecoveryWindow,
+34 | |         ) -> io::Result<serde_json::Value>,
+   | |___________________________________________- private method defined here
+
+error[E0624]: method `validate_returned` is private
+   --> src\infrastructure\windows_client_originals024\recovery_worker\tests\return_validation_tests.rs:111:14
+    |
+111 |               .validate_returned(end, |_, _, _| panic!("must not retry"))
+    |                ^^^^^^^^^^^^^^^^^ private method
+    |
+   ::: src\infrastructure\windows_client_originals024\recovery_worker\return_validation.rs:28:5
+    |
+ 28 | /     fn validate_returned<F>(&self, end: Instant, check: F) -> io::Result<Option<serde_json::Value>>
+ 29 | |     where
+ 30 | |         F: FnOnce(
+ 31 | |             &mut T,
+ 32 | |             &mut ReleasedLease,
+ 33 | |             &BeforeResumeRecoveryWindow,
+ 34 | |         ) -> io::Result<serde_json::Value>,
+    | |___________________________________________- private method defined here
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:540:14
+    |
+540 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+540 -             .fetch_update(
+540 +             .try_update(
+    |
+
+error[E0382]: use of moved value: `old_lease`
+   --> src\infrastructure\windows_client_originals024\tree\anchored\before_resume\return_validation_tests.rs:152:14
+    |
+ 14 |         let mut old_lease = NativeLease::acquire_synthetic(&scene.paths, old).unwrap();
+    |             ------------- move occurs because `old_lease` has type `windows_client_originals024::coordination::NativeLease`, which does not implement the `Copy` trait
+...
+ 28 |         old_lease.release(old).unwrap();
+    |                   ------------ `old_lease` moved due to this method call
+...
+152 |         drop(old_lease);
+    |              ^^^^^^^^^ value used here after move
+    |
+note: `infrastructure::windows_client_originals024::coordination::NativeLease::release` takes ownership of the receiver `self`, which moves `old_lease`
+   --> src\infrastructure\windows_client_originals024\coordination.rs:590:31
+    |
+590 |     pub(super) fn release(mut self, end: Instant) -> io::Result<()> {
+    |                               ^^^^
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0382, E0624.
+For more information about an error, try `rustc --explain E0382`.
+warning: `opencodex-desktop` (lib test) generated 17 warnings
+error: could not compile `opencodex-desktop` (lib test) due to 3 previous errors; 17 warnings emitted
