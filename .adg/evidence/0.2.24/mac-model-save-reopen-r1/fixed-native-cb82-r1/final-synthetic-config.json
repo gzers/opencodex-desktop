@@ -1,0 +1,32 @@
+{
+  "hostname": "127.0.0.1",
+  "port": 0,
+  "defaultProvider": "GuiSource",
+  "defaultModel": "GuiSource/vendor/custom",
+  "defaultModelAliases": false,
+  "providers": {
+    "GuiSource": {
+      "name": "GuiSource",
+      "adapter": "openai-chat",
+      "authMode": "key",
+      "apiKey": "synthetic-ui-key-never-used",
+      "baseUrl": "https://fixture.invalid/v1",
+      "models": [
+        "gpt-6-sol",
+        "vendor/custom"
+      ],
+      "selectedModels": [
+        "gpt-6-sol",
+        "vendor/custom"
+      ],
+      "modelContextWindows": {
+        "vendor/custom": 4096
+      },
+      "liveModels": false,
+      "defaultAliases": false,
+      "unknownFixture": {
+        "keep": true
+      }
+    }
+  }
+}

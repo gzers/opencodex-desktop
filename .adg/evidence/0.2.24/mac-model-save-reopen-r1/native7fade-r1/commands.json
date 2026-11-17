@@ -1,0 +1,71 @@
+[
+  {
+    "argv": [
+      "/usr/bin/ditto",
+      "--rsrc",
+      "--extattr",
+      "--acl",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri/target/release/bundle/macos/OpenCodeX Desktop.app",
+      "/private/tmp/ocxd024-native-model-save-lg5aglp6/OpenCodeX Desktop.app"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/codesign",
+      "--verify",
+      "--deep",
+      "--strict",
+      "/private/tmp/ocxd024-native-model-save-lg5aglp6/OpenCodeX Desktop.app"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/xcrun",
+      "swiftc",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/ocx021-macos-native.swift",
+      "-o",
+      "/private/tmp/ocxd024-native-model-save-lg5aglp6/ax"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/usr/bin/xcrun",
+      "swiftc",
+      "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/lib/capwin.swift",
+      "-o",
+      "/private/tmp/ocxd024-native-model-save-lg5aglp6/capture"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-native-model-save-lg5aglp6/ax",
+      "status"
+    ],
+    "exitCode": 0,
+    "stdout": "{\"axTrusted\":true,\"locked\":false,\"onConsole\":true,\"screenCaptureAllowed\":true}\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "/private/tmp/ocxd024-native-model-save-lg5aglp6/ax",
+      "snapshot",
+      "12120",
+      "/private/tmp/ocxd024-native-model-save-lg5aglp6/OpenCodeX Desktop.app/Contents/MacOS/opencodex-desktop"
+    ],
+    "exitCode": 3,
+    "stdout": "{\"error\":\"PID\\/executable admission failed\"}\n",
+    "stderr": ""
+  }
+]

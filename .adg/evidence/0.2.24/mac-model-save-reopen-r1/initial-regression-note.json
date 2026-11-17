@@ -1,0 +1,9 @@
+{
+  "observation": "7fade real GUI save and reopen succeeded but showed pending edits without new input",
+  "unitReproduction": "saved_logical_channel_reopens_without_unsaved_policy_changes failed left defaultChannelId=actual channel ID, saved right defaultChannelId=null; all channel fields equal",
+  "cause": "scoped first adoption resolves observed default before adding that scoped channel",
+  "originalUnitRawLog": "available in conversation tool output; not retained as a raw file, this is a diagnostic note",
+  "fix": "resolve default only after adding exact scoped channel; unrelated unmanaged default remains excluded",
+  "nativeGuardPreserved": true,
+  "releaseAcceptance": false
+}
