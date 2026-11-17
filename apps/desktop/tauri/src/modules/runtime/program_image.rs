@@ -190,6 +190,8 @@ fn same_directory(before: &fs::Metadata, after: &fs::Metadata) -> AppResult<bool
     Ok(true)
 }
 fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
+    #[cfg(test)]
+    let _cost = cost::span("inventory-enumeration-total");
     if !super::program_layout::clean_absolute(root) || !safety::inspect(root)?.is_dir() {
         return Err(fail());
     }
@@ -215,6 +217,8 @@ fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
         }
         #[cfg(test)]
         drop(directory_cost);
+        #[cfg(test)]
+        let enumeration_cost = cost::span("directory-enumeration");
         for item in fs::read_dir(&directory).map_err(|_| fail())? {
             count += 1;
             if count > MAX_ENTRIES {
@@ -254,6 +258,8 @@ fn collect_inventory(root: &Path) -> AppResult<InventoryDraft> {
                 draft.jobs.push((name, path));
             }
         }
+        #[cfg(test)]
+        drop(enumeration_cost);
         let after = safety::inspect(&directory)?;
         if !same_directory(&before, &after)? {
             return Err(fail());
@@ -275,6 +281,8 @@ fn finish_inventory_checked(
     workers: usize,
     checkpoint: &(impl Fn(&Path) -> AppResult<()> + Sync),
 ) -> AppResult<BTreeMap<String, Entry>> {
+    #[cfg(test)]
+    let _cost = cost::span("inventory-read-and-fence-total");
     use std::sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering};
     let workers = workers.clamp(1, MAX_WORKERS).min(draft.jobs.len().max(1));
     let next = AtomicUsize::new(0);
@@ -342,6 +350,8 @@ fn finish_inventory_checked(
         // continues into cleanup and no successful subset is returned.
         let mut rows = Vec::with_capacity(jobs.len());
         for h in handles {
+            #[cfg(test)]
+            let _join_cost = cost::span("worker-join-wait");
             match h.join() {
                 Ok(Ok(mut part)) => rows.append(&mut part),
                 Ok(Err(e)) => {
@@ -387,6 +397,8 @@ fn finish_inventory_checked(
     // Keep the enumeration-end check and also fence all original directory
     // paths/identities/mtimes AFTER the scoped byte readers finish.
     for (directory, before) in &draft.directories {
+        #[cfg(test)]
+        let _cost = cost::span("directory-final-fence");
         check_inventory_path(root, directory)?;
         let after = safety::inspect(directory)?;
         if !same_directory(before, &after)? {
@@ -396,8 +408,13 @@ fn finish_inventory_checked(
     Ok(draft.rows)
 }
 pub(crate) fn inventory(root: &Path) -> AppResult<BTreeMap<String, Entry>> {
+    #[cfg(test)]
+    let _cost = cost::span("inventory-total");
     finish_inventory(root, collect_inventory(root)?, MAX_WORKERS)
 }
+#[cfg(all(test, windows))]
+#[path = "program_image_windows_tests.rs"]
+mod windows_tests;
 #[cfg(test)]
 fn inventory_serial(root: &Path) -> AppResult<BTreeMap<String, Entry>> {
     if !super::program_layout::clean_absolute(root) || !safety::inspect(root)?.is_dir() {
