@@ -5,7 +5,7 @@ use crate::infrastructure::{
     windows_client_originals024::before_resume_record::{AttachmentStorage, Event, Record},
     windows_official_runtime024::PinnedDirectory,
 };
-pub(in crate::infrastructure::windows_client_originals024::adapter) struct BoundAttachment {
+pub(in crate::infrastructure::windows_client_originals024) struct BoundAttachment {
     storage: AttachmentStorage,
     pending_directory: Option<PinnedDirectory>,
     last: Option<Record>,
@@ -13,6 +13,110 @@ pub(in crate::infrastructure::windows_client_originals024::adapter) struct Bound
     prefix_digest: String,
     attempted: bool,
     failed: bool,
+}
+pub(crate) struct OriginalReturnScope<'a> {
+    routes: &'a mut crate::infrastructure::windows_client_originals024::v2::routes::RoutePin,
+    source: &'a mut crate::infrastructure::windows_client_originals024::source::Source,
+    owner: &'a mut Owner,
+    prefix: &'a PreparedAbortPrefix,
+    attachment: &'a mut BoundAttachment,
+    window: &'a BeforeResumeRecoveryWindow,
+}
+impl<'a> OriginalReturnScope<'a> {
+    pub(in crate::infrastructure::windows_client_originals024) fn bind(
+        routes: &'a mut crate::infrastructure::windows_client_originals024::v2::routes::RoutePin,
+        source: &'a mut crate::infrastructure::windows_client_originals024::source::Source,
+        owner: &'a mut Owner,
+        prefix: &'a PreparedAbortPrefix,
+        proof: &QuiescentOriginals,
+        attachment: &'a mut BoundAttachment,
+        window: &'a BeforeResumeRecoveryWindow,
+    ) -> AppResult<Self> {
+        proof.check_tag(prefix)?;
+        owner.check_before_resume_quiescent(window)?;
+        attachment.check(owner, prefix, window)?;
+        Ok(Self {
+            routes,
+            source,
+            owner,
+            prefix,
+            attachment,
+            window,
+        })
+    }
+}
+impl crate::infrastructure::windows_client_originals024::tree::ReturnGuard
+    for OriginalReturnScope<'_>
+{
+    fn check(
+        &mut self,
+        journal: &mut crate::infrastructure::windows_client_originals024::v3::Journal,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> std::io::Result<()> {
+        let result = (|| {
+            if end != self.window.deadline()
+                || claim.epoch() != self.prefix.epoch
+                || claim.key() != self.prefix.claim
+            {
+                return Err(refused("原return截止/claim不符"));
+            }
+            self.owner.check_before_resume_quiescent(self.window)?;
+            self.routes
+                .declared(self.owner.home_path(), end)
+                .map_err(refused)?;
+            self.attachment
+                .check(self.owner, self.prefix, self.window)?;
+            let canonical = journal
+                .read_before_resume_prefix(self.source, self.owner, claim, self.window)
+                .map_err(refused)?;
+            if canonical != self.prefix.observed["canonical"] {
+                return Err(refused("原canonical变化"));
+            }
+            Ok(())
+        })();
+        if result.is_err() {
+            self.attachment.failed = true;
+            self.owner.fail_before_resume_process();
+        }
+        result.map_err(std::io::Error::other)
+    }
+    fn record(
+        &mut self,
+        step: &crate::infrastructure::windows_client_originals024::tree::ReturnStep,
+        verified: bool,
+        end: Instant,
+    ) -> std::io::Result<()> {
+        let result = (|| {
+            if end != self.window.deadline() {
+                return Err(refused("原return附件截止不符"));
+            }
+            self.attachment
+                .check(self.owner, self.prefix, self.window)?;
+            let record = self
+                .attachment
+                .last
+                .as_ref()
+                .unwrap()
+                .next_data(
+                    self.attachment.last_raw.as_ref().unwrap(),
+                    step.event(verified),
+                )
+                .map_err(refused)?;
+            self.attachment.last_raw = Some(record.encode_data().map_err(refused)?);
+            self.attachment.last = Some(record);
+            self.attachment
+                .storage
+                .append_data(self.attachment.last_raw.as_ref().unwrap(), end)
+                .map_err(refused)?;
+            self.attachment.check(self.owner, self.prefix, self.window)
+        })();
+        if result.is_err() {
+            self.attachment.failed = true;
+            self.owner.fail_before_resume_process();
+        }
+        result.map_err(std::io::Error::other)
+    }
 }
 fn field(value: &serde_json::Value, name: &str) -> AppResult<String> {
     value[name]

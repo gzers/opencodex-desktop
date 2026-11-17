@@ -6,7 +6,7 @@ use crate::{
     infrastructure::{hash, windows_client_originals024::coordination::AnchoredClaim},
     modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
 };
-pub(super) mod attachment;
+pub(in crate::infrastructure::windows_client_originals024) mod attachment;
 pub(crate) struct PreparedAbortPrefix {
     session: uuid::Uuid,
     scope: String,
@@ -102,6 +102,32 @@ impl PreparedAbortPrefix {
     }
 }
 impl WindowsOriginals {
+    pub(crate) fn return_quiescent_originals(
+        &mut self,
+        owner: &mut Owner,
+        proof: &QuiescentOriginals,
+        claim: &mut AnchoredClaim<'_>,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<serde_json::Value> {
+        let result = (|| {
+            self.check_quiescent_prefix(owner, proof, claim, window)?;
+            let prefix = self
+                .abort_prefix
+                .as_ref()
+                .ok_or_else(|| refused("原quiescent prefix缺席"))?;
+            let attachment = self
+                .abort_attachment
+                .as_mut()
+                .ok_or_else(|| refused("原附件缺席"))?;
+            self.slot
+                .return_before_resume(owner, prefix, proof, attachment, claim, window)
+        })();
+        if result.is_err() {
+            self.failed = true;
+            owner.fail_before_resume_process();
+        }
+        result
+    }
     pub(crate) fn prepare_abort_prefix(
         &mut self,
         owner: &mut Owner,

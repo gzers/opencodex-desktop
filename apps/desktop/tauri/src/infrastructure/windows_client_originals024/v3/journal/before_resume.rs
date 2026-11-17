@@ -11,6 +11,16 @@ use crate::{
 };
 impl Journal {
     #[cfg(test)]
+    pub(in crate::infrastructure::windows_client_originals024) fn component_failed_canonical_for_test(
+        &mut self,
+        end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        if self.source_action.is_some() {
+            return Err(invalid());
+        }
+        self.read_failed_start_records(end)
+    }
+    #[cfg(test)]
     pub(in crate::infrastructure::windows_client_originals024) fn component_read_before_resume_trees_for_test(
         &mut self,
         trees: &[serde_json::Value; 2],

@@ -6,6 +6,8 @@ use crate::infrastructure::windows_client_originals024::{
 use native::RetainedPeer;
 #[path = "quiesce_tests.rs"]
 mod quiesce_tests;
+#[path = "return_tests.rs"]
+mod return_tests;
 fn pair(
     scene: &Scene,
     claim: &mut AnchoredClaim<'_>,

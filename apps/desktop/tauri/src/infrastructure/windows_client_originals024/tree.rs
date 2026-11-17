@@ -27,6 +27,7 @@ mod artifacts;
 mod locks;
 pub(super) use artifacts::ArtifactFrame;
 mod working;
+pub(super) use anchored::capture::{ReturnGuard, ReturnStep};
 pub(super) use anchored::observation::NativeContentAssessment;
 pub(super) use anchored::observation::OriginalHandleHandoff;
 pub(super) use anchored::observation::RecoveryWitness;

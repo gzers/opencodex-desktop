@@ -214,6 +214,64 @@ impl CaptureStore {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn return_before_resume(
+        &mut self,
+        owner: &mut Owner,
+        prefix: &crate::infrastructure::windows_client_originals024::PreparedAbortPrefix,
+        proof: &crate::infrastructure::windows_client_originals024::QuiescentOriginals,
+        attachment: &mut super::super::adapter::before_resume::attachment::BoundAttachment,
+        claim: &mut super::super::coordination::AnchoredClaim<'_>,
+        window: &crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+    ) -> AppResult<serde_json::Value> {
+        let result = (|| {
+            owner.check_before_resume_quiescent(window)?;
+            if self.partial.is_some() {
+                return Err(refused("原准备分支未能完整核验，保留Required"));
+            }
+            let store = self
+                .retained
+                .as_mut()
+                .ok_or_else(|| refused("原Store缺席"))?;
+            if store.ready.is_some()
+                || store.stop_deadline.is_some()
+                || store.restored_history
+                || store.closed_exit.is_some()
+                || store.closed_absent.is_some()
+                || store.stopped_content.is_some()
+                || store.stop_completed
+            {
+                return Err(refused("不是原beforeResume分支"));
+            }
+            store
+                .routes
+                .as_mut()
+                .ok_or_else(|| refused("原route缺席"))?
+                .declared(owner.home_path(), window.deadline())
+                .map_err(refused)?;
+            let mut scope =
+                crate::infrastructure::windows_client_originals024::OriginalReturnScope::bind(
+                    store
+                        .routes
+                        .as_mut()
+                        .ok_or_else(|| refused("原route缺席"))?,
+                    &mut store.source,
+                    owner,
+                    prefix,
+                    proof,
+                    attachment,
+                    window,
+                )?;
+            store
+                .core
+                .return_before_resume(&mut scope, claim, window.deadline())
+                .map_err(refused)
+        })();
+        if result.is_err() {
+            self.failed = true;
+            owner.fail_before_resume_process();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_prefix(
         &mut self,
         owner: &mut Owner,

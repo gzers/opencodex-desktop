@@ -31,6 +31,7 @@ mod source;
 mod tree;
 mod v2;
 mod v3;
+pub(crate) use adapter::OriginalReturnScope;
 pub(crate) use adapter::{ClaimBoundAbort, PreparedAbortPrefix, QuiescentOriginals};
 pub(crate) use adapter::{LivePhase, WindowsOriginals};
 use windows_sys::Win32::{

@@ -1,7 +1,7 @@
 use super::*;
 use native::{LaunchSpec, OwnedRuntime, ProcessState};
 use std::collections::BTreeMap;
-struct OriginalSynthetic(OwnedRuntime);
+pub(super) struct OriginalSynthetic(pub(super) OwnedRuntime);
 impl Drop for OriginalSynthetic {
     fn drop(&mut self) {
         if !self
@@ -16,7 +16,7 @@ impl Drop for OriginalSynthetic {
         }
     }
 }
-fn launcher(scene: &Scene) -> (OriginalSynthetic, [File; 2]) {
+pub(super) fn launcher(scene: &Scene) -> (OriginalSynthetic, [File; 2]) {
     let base = scene.fixture.as_ref().unwrap().path();
     let source=PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../test/windows024-native/target/r7-query-proof/x86_64-pc-windows-msvc/debug/r7-abort-fixture.exe");
     let source_pin = OpenOptions::new()

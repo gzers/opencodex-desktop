@@ -13,6 +13,10 @@ struct PreparedStop {
     record: String,
     deadline: Instant,
 }
+mod abort_return;
+pub(in crate::infrastructure::windows_client_originals024) use abort_return::{
+    ReturnGuard, ReturnStep,
+};
 impl PreparedStop {
     fn admit(
         pid: u32,
@@ -55,6 +59,7 @@ pub(in crate::infrastructure::windows_client_originals024) struct CapturedTrees 
     content_assessment: Option<super::observation::NativeContentAssessment>,
     restored_history: bool,
     failed: bool,
+    abort_return: Option<abort_return::ReturnProgress>,
 }
 impl CapturedTrees {
     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_prefix(
@@ -605,6 +610,7 @@ impl CapturedTrees {
             content_assessment: None,
             restored_history: false,
             failed: false,
+            abort_return: None,
         }
     }
     pub(in crate::infrastructure::windows_client_originals024) fn prepare_working_batched(
