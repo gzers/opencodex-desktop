@@ -21,6 +21,7 @@ pub use pipe::PrivatePipe;
 pub use listeners::{
     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
 };
+pub(crate) use paths::PrivateDirectoryPreparation;
 pub use paths::{
     create_private_directory, validate_local_path, FileIdentity, PinnedDirectory, PrivateRecord,
 };

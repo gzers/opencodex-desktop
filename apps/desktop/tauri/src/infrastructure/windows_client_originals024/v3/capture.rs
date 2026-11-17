@@ -47,17 +47,22 @@ fn refused(error: impl std::fmt::Display) -> AppError {
         detail: format!("原v3捕获/来源/保管未确认，保留已发生前缀：{error}"),
     }
 }
-fn private_child(parent: &PinnedDirectory, name: &str) -> io::Result<PinnedDirectory> {
-    parent.recheck()?;
-    let path = parent.path().join(name);
+fn private_child_retained(
+    anchor: &mut PartialCaptureAnchor,
+    parent: usize,
+    name: &str,
+    end: Instant,
+) -> io::Result<()> {
+    anchor.pins[parent].recheck()?;
+    let path = anchor.pins[parent].path().join(name);
     let child = match std::fs::symlink_metadata(&path) {
         Ok(_) => PinnedDirectory::open_private(&path)?,
-        Err(e) if e.kind() == io::ErrorKind::NotFound => create_private_directory(&path)?,
+        Err(e) if e.kind() == io::ErrorKind::NotFound => anchor.create_directory(&path, end)?,
         Err(e) => return Err(e),
     };
-    parent.recheck()?;
-    child.recheck()?;
-    Ok(child)
+    anchor.pins.push(child);
+    anchor.pins[parent].recheck()?;
+    anchor.pins.last().unwrap().recheck()
 }
 fn require_fresh_namespace(windows: &PinnedDirectory) -> io::Result<()> {
     windows.recheck()?;
@@ -106,12 +111,10 @@ impl CaptureStore {
             .push(PinnedDirectory::open(owner.profile_path()).map_err(refused)?);
         let official_path = anchor.pins[0].path().join("official024");
         anchor.intend(official_path).map_err(refused)?;
-        let official = private_child(&anchor.pins[0], "official024").map_err(refused)?;
-        anchor.pins.push(official);
+        private_child_retained(anchor, 0, "official024", end).map_err(refused)?;
         let windows_path = anchor.pins[2].path().join("windows");
         anchor.intend(windows_path).map_err(refused)?;
-        let windows = private_child(&anchor.pins[2], "windows").map_err(refused)?;
-        anchor.pins.push(windows);
+        private_child_retained(anchor, 2, "windows", end).map_err(refused)?;
         predecessors
             .check_namespace(
                 &anchor.pins[3],
@@ -130,7 +133,7 @@ impl CaptureStore {
                     .path()
                     .join(format!(".ocxd024-originals-{reservation}-{name}"));
                 anchor.intend(path.clone())?;
-                anchor.custody[i] = Some(create_private_directory(&path)?);
+                anchor.custody[i] = Some(anchor.create_directory(&path, end)?);
             }
             for (i, name) in [".codex", ".grok"].into_iter().enumerate() {
                 let path = anchor.pins[1].path().join(name);
@@ -160,7 +163,8 @@ impl CaptureStore {
             )?;
             let path = anchor.pins[3].path().join(uuid::Uuid::new_v4().to_string());
             anchor.intend(path.clone())?;
-            anchor.pins.push(create_private_directory(&path)?);
+            let directory = anchor.create_directory(&path, end)?;
+            anchor.pins.push(directory);
             predecessors.check_namespace(
                 &anchor.pins[3],
                 &anchor.source.as_ref().unwrap().binding_raw,

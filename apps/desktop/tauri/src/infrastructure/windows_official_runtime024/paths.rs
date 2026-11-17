@@ -189,6 +189,8 @@ pub fn create_private_directory(path: &Path) -> io::Result<PinnedDirectory> {
     check(unsafe { CreateDirectoryW(w.as_ptr(), &sa) })?;
     PinnedDirectory::open_private(path)
 }
+mod preparation;
+pub(crate) use preparation::PrivateDirectoryPreparation;
 
 /// An immutable, current-user-owned record. Format/meaning belongs to the caller.
 /// The handle denies write/delete sharing for the entire object's lifetime.

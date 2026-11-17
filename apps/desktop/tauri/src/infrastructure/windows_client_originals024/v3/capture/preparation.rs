@@ -14,6 +14,8 @@ pub(super) struct PartialCaptureAnchor {
     pub(super) trees: [Option<AnchoredTree>; 2],
     pub(super) journal: Option<Journal>,
     pub(super) journal_prefix: super::super::journal::JournalPreparation,
+    pub(super) directory_prefixes:
+        Vec<crate::infrastructure::windows_official_runtime024::PrivateDirectoryPreparation>,
     pub(super) failed: bool,
 }
 impl PartialCaptureAnchor {
@@ -30,6 +32,7 @@ impl PartialCaptureAnchor {
             trees: [None, None],
             journal: None,
             journal_prefix: super::super::journal::JournalPreparation::default(),
+            directory_prefixes: Vec::new(),
             failed: true,
         }
     }
@@ -39,6 +42,21 @@ impl PartialCaptureAnchor {
         }
         self.intents.push(path);
         Ok(())
+    }
+    pub(super) fn create_directory(
+        &mut self,
+        path: &Path,
+        end: Instant,
+    ) -> io::Result<PinnedDirectory> {
+        if self.directory_prefixes.len() >= 8 || !self.intents.iter().any(|p| p == path) {
+            return Err(invalid());
+        }
+        self.directory_prefixes.push(
+            crate::infrastructure::windows_official_runtime024::PrivateDirectoryPreparation::default(),
+        );
+        let original = self.directory_prefixes.last_mut().unwrap();
+        original.create(path, end)?;
+        original.take_complete()
     }
     pub(super) fn into_store(&mut self) -> io::Result<CaptureStore> {
         // Validate the full native component set BEFORE moving any object out
