@@ -790,11 +790,6 @@ fn transform_draft_v2(
                     *channel = current.clone();
                 }
             }
-            p.default_channel_id = observed
-                .default_channel_id
-                .as_ref()
-                .filter(|id| p.channels.iter().any(|channel| &channel.id == *id))
-                .cloned();
         }
         let channel = edited
             .channels
@@ -806,6 +801,17 @@ fn transform_draft_v2(
             *slot = channel;
         } else {
             p.channels.push(channel);
+        }
+        // The scoped channel may be newly adopted from Read. Resolve its
+        // existing disk default only AFTER adding that exact channel; doing
+        // this earlier drops it and a clean reopen looks like an unsaved edit.
+        // Unrelated providers absent from the managed set are still excluded.
+        if let Some(observed) = &draft.observed_baseline {
+            p.default_channel_id = observed
+                .default_channel_id
+                .as_ref()
+                .filter(|id| p.channels.iter().any(|channel| &channel.id == *id))
+                .cloned();
         }
         p
     } else {
