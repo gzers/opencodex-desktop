@@ -1,0 +1,31 @@
+{
+  "firstGuiSource": "fcf04caecdd7c328f03fcf1a6ceda3e18517d9bc",
+  "firstSealedAppSha256": "d34aeced423bebc9a8968ff87c3caa19ad940466d93438b6afcbb297a51f5e52",
+  "gui01Result": "failed; cancelled observation timeout",
+  "canonicalCancellationCommitted": true,
+  "retainedHead": {
+    "revision": 3,
+    "ticket": "f756d705-89c5-4934-91ac-252bee5a58e7",
+    "state": "root_cancellation_absent",
+    "references": null,
+    "restorePlan": null,
+    "completionSha256": "f72c24f7bcc10f71a1637f58a1666eb0cb157aacb07ff2639d8829a83e02ccc2",
+    "rootRetirement": {
+      "sourceRevision": 1,
+      "plan": {
+        "id": "7b771c7d-c709-4432-9ffe-8eeaab2c575c",
+        "sha256": "d7908177def971bf616054332a5d09f72111062a2db59b46eb73363cd2c8f929"
+      }
+    }
+  },
+  "observation": "actual AX remains executing while footer offers status refresh; outcome receipt exists, post-mutation observation awaited",
+  "sourceFinding": "get_status_snapshot_with_collector previously blocked on shared sampler Mutex; UI executing stayed true through await refresh even after exact success receipt",
+  "fix": "80fcd4d2d: busy sampler explicit error, no queued sample; mutation complete UI before separate observation, gate remains until valid fresh status",
+  "evidenceBoundary": "source shows unbounded wait possible; no live stack sample proves exact wait duration in gui01",
+  "serviceActionActuallyRequestedGui01": false,
+  "originalRunnerIncorrectIntentFlag": "summary.serviceActionRequested true was set at setup, not execution; GUI did not reach Start; new runner sets it immediately before click",
+  "fixtureRootIndependentlyAbsent": true,
+  "ownedGroupsEmpty": true,
+  "allRealDailyConfigUntouched": true,
+  "releaseAcceptance": false
+}

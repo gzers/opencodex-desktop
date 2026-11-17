@@ -1,0 +1,23 @@
+{
+  "hostname": "127.0.0.1",
+  "port": 0,
+  "defaultProvider": "gui-fixture",
+  "defaultModelAliases": false,
+  "providers": {
+    "gui-fixture": {
+      "adapter": "openai-chat",
+      "authMode": "key",
+      "apiKey": "synthetic-ui-unused",
+      "baseUrl": "http://127.0.0.1:1/v1",
+      "allowPrivateNetwork": true,
+      "models": [
+        "gui-fixture-model"
+      ],
+      "selectedModels": [
+        "gui-fixture-model"
+      ],
+      "liveModels": false,
+      "defaultAliases": false
+    }
+  }
+}
