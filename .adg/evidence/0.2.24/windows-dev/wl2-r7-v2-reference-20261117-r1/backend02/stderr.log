@@ -1,0 +1,90 @@
+    Checking windows-link v0.2.1
+    Checking windows-sys v0.61.2
+    Checking windows024-native-proof v0.1.0 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native)
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `paths::PrivateDirectoryPreparation`
+  --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:24:16
+   |
+24 | pub(crate) use paths::PrivateDirectoryPreparation;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `verify_private_file` is never used
+  --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:35:15
+   |
+35 | pub(crate) fn verify_private_file(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `verify_private_directory` is never used
+  --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:39:15
+   |
+39 | pub(crate) fn verify_private_directory(file: &std::fs::File) -> std::io::Result<()> {
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_originals_work_file` is never used
+  --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:46:15
+   |
+46 | pub(crate) fn create_private_originals_work_file(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_journal_file` is never used
+  --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:54:15
+   |
+54 | pub(crate) fn create_private_journal_file(
+   |               ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: function `create_private_initial_file` is never used
+  --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:59:4
+   |
+59 | fn create_private_initial_file(
+   |    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `owned_file_identities` and `into_owned_files` are never used
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths.rs:115:19
+    |
+112 | impl PinnedDirectory {
+    | -------------------- methods in this implementation
+...
+115 |     pub(crate) fn owned_file_identities(&self) -> io::Result<Vec<FileIdentity>> {
+    |                   ^^^^^^^^^^^^^^^^^^^^^
+...
+134 |     pub(crate) fn into_owned_files(self) -> Vec<File> {
+    |                   ^^^^^^^^^^^^^^^^
+
+warning: struct `PrivateDirectoryPreparation` is never constructed
+ --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths\preparation.rs:7:19
+  |
+7 | pub(crate) struct PrivateDirectoryPreparation {
+  |                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: methods `retained_stage_data`, `checkpoint`, `create`, `create_inner`, and `take_complete` are never used
+   --> ..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\paths\preparation.rs:22:19
+    |
+ 20 | impl PrivateDirectoryPreparation {
+    | -------------------------------- methods in this implementation
+ 21 |     /// Bounded DATA only, no new serialization dependency in the native backend.
+ 22 |     pub(crate) fn retained_stage_data(&self) -> (Option<PathBuf>, [bool; 7]) {
+    |                   ^^^^^^^^^^^^^^^^^^^
+...
+ 36 |     fn checkpoint(&self, stage: u8, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^
+...
+ 50 |     pub(crate) fn create(&mut self, path: &Path, end: Instant) -> io::Result<()> {
+    |                   ^^^^^^
+...
+ 64 |     fn create_inner(&mut self, end: Instant) -> io::Result<()> {
+    |        ^^^^^^^^^^^^
+...
+114 |     pub(crate) fn take_complete(&mut self) -> io::Result<PinnedDirectory> {
+    |                   ^^^^^^^^^^^^^
+
+warning: `windows024-native-proof` (lib) generated 10 warnings (run `cargo fix --lib -p windows024-native-proof` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 3.57s
