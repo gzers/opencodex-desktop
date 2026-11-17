@@ -964,4 +964,4 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 
 ## 2026-11-17 r6 获准两目标实际forced清理回执
 
-原普通marenben SID1003/session7入口执行成功：同保留句柄Node50580→broker54692退出242/242，492ms；原FILETIME/image nativeID/hash/Token/Node单挂起线程、私有ZIP与原首失败receipts5项nativeID/hash前后核验。原始7文件归.adg/evidence/0.2.24/windows-dev/wl2-r6-authorized-failure-cleanup-20261117-receive-r1/，全121项状态保持。控制器核原字节/已知摘要/回执字段，CIM两PID缺席、40588仍在；不冒原Job/NormalStop/Closed或全companions/整体清理通过。文件未删、旧scene/ZIP保留、PATH一致，旧删除拒绝不重试。源码仍323c3fc3e，产品5c5c6fa85；下一步fresh独立I/D/H与真实原包闭环，不复用首失败事务，不改公开Start拒绝。全部原未完/日常官方边界/W2双SID及不发布继续。
+原普通marenben SID1003/session7入口执行成功：同保留句柄Node50580→broker54692退出242/242，492ms；原FILETIME/image nativeID/hash/Token/Node单挂起线程、私有ZIP与原首失败receipts5项nativeID/hash前后核验。原始6文件归.adg/evidence/0.2.24/windows-dev/wl2-r6-authorized-failure-cleanup-20261117-receive-r1/，全121项状态保持。控制器核原字节/已知摘要/回执字段，CIM两PID缺席、40588仍在；不冒原Job/NormalStop/Closed或全companions/整体清理通过。文件未删、旧scene/ZIP保留、PATH一致，旧删除拒绝不重试。源码仍323c3fc3e，产品5c5c6fa85；下一步fresh独立I/D/H与真实原包闭环，不复用首失败事务，不改公开Start拒绝。全部原未完/日常官方边界/W2双SID及不发布继续。
