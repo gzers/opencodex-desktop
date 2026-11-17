@@ -917,3 +917,10 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 首library01 E0596/raw101未测/无EXE，实际family_state需同原Owner可变观察，修后library02 10过/library03 11过raw0；custom-protocol产品MSVCdebug raw0/219669ms，209输入/157Rust逐字核工作/Git。共享四trait/HMAC/原native关闭及完整recovery_state_at/Status接收尾段保持。入口C:\Users\Public\ocx-r6-official-existing-20261117-r1/launch-r6-official-existing.cmd已备，尚需用户原桌面运行，实际生产仍false；不拿普通基线准备1过替代原包。成功/失败均保原broker/Owner/Job/source与scene，无强杀/Drop补0。
 
 实际GUI官方owner/manager切换/原包副作用/finalphase-current反例/全容量/初始化与ownerreceipt/原缺席Codex安全退根、普通MSI/CAP-trust及历史清理全部未完保持。基线/本Public输入留，未创建新nativeOwner或启动服务，未旧拒绝删除重试。Start/allAccepted/typedClosedfalse，无官方/日常/PATH/策略/业务/模型/旧raw5/空GUI/W2/双SID/发布。
+
+
+## 2026-11-17 r6原包轮首错与未恢复launcher保留
+
+实际c870bd81f在marenben SID1003/session7/noJob运行，固定包8660文件611461049字节/shared完整image及无凭据配置/NLK setup通过；首Start9842ms/原30s返回windows024_originals_required、oserror2。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-existing-official-qualification-20261117-receive-r1/；22份原字节/同SIDexport完整核。原Node50580/FILETIME134393577919362322仍create-suspended/creatorResumedfalse/原Job1active1total，无OriginalSession/custody变更或官方服务/Ready，Stop/后继/Restart/Status未执行。原broker54692/FILETIME134393577413203335保留rawExitnull，PATH摘要一致，旧40588不动。
+
+源码定位StartContentScope把RuntimeVersionPaths.package_root npm prefix当包目录，四审计源缺PACKAGE_SUBPATH；D角色CLI/sentinel/callsite同类需批量修，prefix的bun实际路径不改。启动器默认编码导致副本错误展示乱码，原nativeUTF8首错完整保留。宿主首轮park后无后续控制通道，新程序不得从PID/文本接管旧Job；完整同SID私有现场归档与原失败对象受控清理/新独立夹具仍待，不自动重试失败会话或补Closed。公开Start/allAccepted/production/typedClosedfalse，其余全版未完/历史清理原样，无官方/日常配置/PATH/策略/业务/模型/W2/双SID/发布。
