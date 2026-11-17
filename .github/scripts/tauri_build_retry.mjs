@@ -17,6 +17,8 @@ export async function run(cli,args,directory) {
  if(build)mkdirSync(directory,{recursive:false})
  for(let attempt=1;attempt<=maximum;attempt++){
   const log=build?createWriteStream(resolve(directory,'attempt-'+attempt+'.log'),{flags:'wx'}):null
+  const cargoLog=build?createWriteStream(resolve(directory,'attempt-'+attempt+'.stdout.log'),{flags:'wx'}):null
+  let stdoutBytes=0,stdoutTruncated=false
   let output='',bytes=0,truncated=false
   const child=spawn(process.execPath,[cli,...args],{stdio:['inherit','pipe','pipe'],env:process.env})
   const observe=(chunk,stream)=>{
@@ -24,11 +26,15 @@ export async function run(cli,args,directory) {
    if(log){const remaining=16*1024*1024-bytes;if(remaining>0){const kept=chunk.subarray(0,remaining);log.write(kept);bytes+=kept.length}if(chunk.length>remaining)truncated=true}
    output=(output+chunk.toString('utf8')).slice(-1024*1024)
   }
-  child.stdout.on('data',chunk=>observe(chunk,process.stdout));child.stderr.on('data',chunk=>observe(chunk,process.stderr))
+  child.stdout.on('data',chunk=>{
+   if(cargoLog){const remaining=16*1024*1024-stdoutBytes;if(remaining>0){const kept=chunk.subarray(0,remaining);cargoLog.write(kept);stdoutBytes+=kept.length}if(chunk.length>remaining)stdoutTruncated=true}
+   observe(chunk,process.stdout)
+  });child.stderr.on('data',chunk=>observe(chunk,process.stderr))
   const code=await new Promise((accept,reject)=>{child.on('error',reject);child.on('close',code=>accept(code??1))})
   if(log)await new Promise(accept=>log.end(accept))
+  if(cargoLog)await new Promise(accept=>cargoLog.end(accept))
   const transient=retryable(code,output)
-  if(build)writeFileSync(resolve(directory,'attempt-'+attempt+'.json'),JSON.stringify({attempt,exitCode:code,transientToolDownloadFailure:transient,logBytes:bytes,logTruncated:truncated,accepted:false},null,2)+'\n',{flag:'wx'})
+  if(build)writeFileSync(resolve(directory,'attempt-'+attempt+'.json'),JSON.stringify({attempt,exitCode:code,transientToolDownloadFailure:transient,logBytes:bytes,logTruncated:truncated,stdoutBytes,stdoutTruncated,accepted:false},null,2)+'\n',{flag:'wx'})
   if(code===0)return 0
   if(!transient||attempt===maximum)return code
   await new Promise(accept=>setTimeout(accept,attempt*1000))
