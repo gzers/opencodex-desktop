@@ -38,6 +38,9 @@ fn main() {
     let tests = repo.join("apps/desktop/tauri/src/modules/runtime/program_image_windows_tests.rs");
     println!("cargo:rerun-if-changed={}", tests.display());
     fs::copy(&tests, out.join("program_image_windows_tests.rs")).unwrap();
+    let windows = repo.join("apps/desktop/tauri/src/modules/runtime/program_image_windows.rs");
+    println!("cargo:rerun-if-changed={}", windows.display());
+    fs::copy(&windows, out.join("program_image_windows.rs")).unwrap();
     fs::write(out.join("program_image_section.rs"), outer_docs(image)).unwrap();
     let safety = source(&repo, "apps/desktop/tauri/src/modules/backup/safety.rs");
     let safety = safety

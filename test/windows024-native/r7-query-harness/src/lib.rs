@@ -1,5 +1,6 @@
 #![cfg(windows)]
 #[path = "../../../../apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs"]
+#[cfg(feature = "query")]
 pub mod backend;
 pub mod modules {
     pub mod backup {
@@ -26,7 +27,13 @@ pub mod modules {
         }
     }
 }
+#[cfg(feature = "query")]
 pub mod infrastructure;
+#[cfg(not(feature = "query"))]
+pub mod infrastructure {
+    #[path = "../../../../../apps/desktop/tauri/src/infrastructure/hash.rs"]
+    pub mod hash;
+}
 
 // Only an error envelope to compile the actual scanner section. No native
 // call, success, selection, ownership, lifetime or recovery is simulated here.

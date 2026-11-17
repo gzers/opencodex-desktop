@@ -34,6 +34,8 @@ def verify(repo, generated):
     assert (generated / 'layout_section.rs').read_text(encoding='utf-8') == expected
     tests_path = repo / (relative + 'modules/runtime/program_image_windows_tests.rs')
     assert (generated / tests_path.name).read_bytes() == tests_path.read_bytes()
+    windows_path = repo / (relative + 'modules/runtime/program_image_windows.rs')
+    assert (generated / windows_path.name).read_bytes() == windows_path.read_bytes()
     return {
         'scannerFunctionsUnchanged': True,
         'pathAndNativeFunctionsUnchanged': True,
@@ -43,7 +45,8 @@ def verify(repo, generated):
         'files': [{'path': name, 'bytes': (generated / name).stat().st_size,
                    'sha256': hashlib.sha256((generated / name).read_bytes()).hexdigest()}
                   for name in ('program_image_section.rs', 'safety_section.rs',
-                               'layout_section.rs', 'program_image_windows_tests.rs')],
+                               'layout_section.rs', 'program_image_windows_tests.rs',
+                               'program_image_windows.rs')],
     }
 
 
