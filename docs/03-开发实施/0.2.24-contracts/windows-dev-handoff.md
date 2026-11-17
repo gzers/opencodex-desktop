@@ -1000,3 +1000,9 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 Windows继续同源轻量原生测试、修复工具与beforeResume/schema/完整扫描工作；root产品构建和当前现场恢复保持局部缺口。当前21500/75744/custody/旧seq9及40588不动，旧50580/54692授权不延伸；完成准确归档/预检/计划后才一次请求本现场恢复确认。公开Start/allAccepted/normalStop/Closed仍false；不改官方/日常配置策略，不W2/双SID/发布。
 
 r7后续宿主附件schema实现前设计已写入.adg/evidence/0.2.24/windows-dev/wl2-r7-async-20261117-r1/before-resume-schema-plan.md。选择v3原节点事件＋windows-before-resume-recovery-v1严格附件，不改旧v3 union/current、不反向升级seq9；字段/事件/重放与拒绝矩阵均先列明。该DATA层不授native PreparedAbort/Quiescent/恢复权，Windows继续实现及轻量负例，实际原Owner接线后另交native证据。
+
+## 2026-11-17 r7 同源轻量原生验证与严格附件回交
+
+源码a7e60c347f85ed35a2193e1001f6b7ec9523022a拆分原8投影只读查询，token逻辑与原实现一致、原保留能力实现字节不变；2f3b67b4169a587e3cf91c43ac014370b11b2b1d实现已先推设计的beforeResume严格附件及负例。轻量MSVC最终7通过0失败/raw0，25实际执行源码逐份核工作/Git，TEST EXE cff4fb1638c198a0f02d4d920feeaae076844cb043de3674820c7d401b0bed5b不是产品/发布制品。首E0432、后E0583及unit事件接受unknown字段的真实失败均保留于.adg/evidence/0.2.24/windows-dev/wl2-r7-async-20261117-r1/；修正不放宽8投影、期限或未知拒绝。
+
+Windows自行fetch并消费新main462e2476a9275cdf82e9e3235ed84820ac2c28c7（仅运行包完整成员/字节校验写集，无交叉），合入并推送285989b2a0401c5db7ac1aa1469c8c0ffd9c0ee5；新增只读合成包校验8项raw0，未官方执行/发布。异步Job观测请求仍待集成决定，仅对应当前R1依赖停点；完整产品OOM不阻断独立开发。当前r2原进程/原件/work/custody/旧seq9继续留，原件未还不跑原包；future原宿主partial anchor/新恢复origin/quiesce/restore与完整扫描优化仍未完。普通生产/Closed/publicStart/allAccepted=false，不W2/双SID，不改日常/官方策略配置，不发布。

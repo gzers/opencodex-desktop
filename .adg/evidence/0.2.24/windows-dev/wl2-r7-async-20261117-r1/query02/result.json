@@ -1,0 +1,21 @@
+{
+  "raw": 0,
+  "ordinaryMarenbenAcceptance": false,
+  "rootProductTest": false,
+  "elapsedMs": 8869,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--manifest-path",
+    "test/windows024-native/r7-query-harness/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "-j",
+    "1",
+    "r7_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

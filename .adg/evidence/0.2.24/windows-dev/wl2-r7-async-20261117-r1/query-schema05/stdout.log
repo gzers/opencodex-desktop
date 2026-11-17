@@ -1,0 +1,12 @@
+
+running 6 tests
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_chain_rejects_cross_scope_replay_gaps_and_false_closed ... ok
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_prefix_rejects_missing_quiescence_reordered_or_wrong_native_ids ... ok
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_strict_fields_versions_duplicates_and_timing ... ok
+test infrastructure::windows_client_originals024::bounded::tests::r7_native_exact_object_rename_roundtrip_preserves_projection_and_detects_replacement ... ok
+test infrastructure::windows_client_originals024::bounded::tests::r7_query_uses_fixed_product_policy_and_refuses_missing_unknown_duplicate_or_old_fields ... ok
+test infrastructure::windows_client_originals024::bounded::tests::r7_same_native_handle_all_eight_repeated_queries_and_expiry_refusal ... same actual File: all8 individual/combined/repeated native queries; fixed policy; expired refused; ordinary SID=S-1-5-21-587408064-856152790-2583328096-1001 type=3 (controller fixture, not marenben acceptance)
+ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.03s
+
