@@ -2,12 +2,14 @@
 //! grants no ownership; native peer authentication and the four proofs remain
 //! mandatory before any production operation can be dispatched.
 use serde::{Deserialize, Serialize};
+#[cfg(test)]
+mod actual_gui_tests;
 mod continuity;
 #[cfg(test)]
 mod desktop_tests;
-#[cfg(test)]
-mod actual_gui_tests;
 pub mod empty_host;
+#[cfg(debug_assertions)]
+mod existing_qualification;
 pub(crate) mod gui_probe;
 use std::{
     io,

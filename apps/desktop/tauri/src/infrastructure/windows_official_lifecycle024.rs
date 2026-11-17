@@ -761,6 +761,26 @@ async fn execute_async(
     data: &Path,
     window: shared::ActionWindow,
 ) -> AppResult<LifecycleResult> {
+    execute_admitted(runtime, command, data, window, |_, _, _, _| {
+        super::windows_client_originals024::require_durable_capture()
+    })
+    .await
+}
+// Private factoring only. Public execute always supplies the unchanged refusal.
+// Debug qualification below supplies native task admission, never a bool/env
+// switch; the original source/lease/custody/typed gates below still all execute.
+async fn execute_admitted(
+    runtime: &SharedRuntimeExecutable,
+    command: &ProcessCommand,
+    data: &Path,
+    window: shared::ActionWindow,
+    admission: impl Fn(
+        &SharedRuntimeExecutable,
+        &ProcessCommand,
+        &Path,
+        &shared::ActionWindow,
+    ) -> AppResult<()>,
+) -> AppResult<LifecycleResult> {
     window.remaining()?;
     let entry = slot(
         runtime,
@@ -862,7 +882,7 @@ async fn execute_async(
             )
         },
     )?;
-    super::windows_client_originals024::require_durable_capture()?;
+    admission(runtime, command, data, &window)?;
     // This remains BELOW the unchanged public production gate. Qualification
     // consumes the one original Closed tag only after actual new source/plan
     // admission. Failure retains the old Owner and all old native stores.
@@ -969,6 +989,48 @@ async fn execute_async(
                 .min(window.deadline().saturating_duration_since(Instant::now())),
         )
         .await;
+    }
+}
+#[cfg(debug_assertions)]
+pub(crate) fn qualify_existing(
+    qualification: &super::windows_client_originals024::existing_qualification::ExistingQualification,
+    runtime: &SharedRuntimeExecutable,
+    command: &ProcessCommand,
+    data: &Path,
+    window: shared::ActionWindow,
+) -> AppResult<LifecycleResult> {
+    qualification.admit(runtime, command, data, &window)?;
+    tauri::async_runtime::block_on(execute_admitted(
+        runtime,
+        command,
+        data,
+        window,
+        |r, c, d, w| qualification.admit(r, c, d, w),
+    ))
+}
+#[cfg(debug_assertions)]
+pub(crate) fn qualification_trace(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+) -> serde_json::Value {
+    let Ok(entry) = slot(runtime, home, false) else {
+        return serde_json::json!({"retainedSlot":false});
+    };
+    let Ok(mut guard) = entry.owner.try_lock() else {
+        return serde_json::json!({"retainedSlot":true,"ownerLock":"unknown"});
+    };
+    match guard.as_mut() {
+        None => serde_json::json!({"retainedSlot":true,"nativeOwner":false}),
+        Some(o) => {
+            let family = o.native.family_state();
+            let detail = match family {
+                Ok(f) => {
+                    serde_json::json!({"root":format!("{:?}",f.root),"active":f.active_processes,"total":f.total_processes,"members":f.retained_members.iter().map(|(i,s)|serde_json::json!({"pid":i.pid,"filetime":i.creation_filetime.to_string(),"image":i.executable,"state":format!("{s:?}")})).collect::<Vec<_>>()})
+                }
+                Err(e) => serde_json::json!({"raw":e.raw_os_error(),"error":e.to_string()}),
+            };
+            serde_json::json!({"retainedSlot":true,"nativeOwner":true,"stage":o.stage,"originalPhaseRetained":o.original_phase.is_some(),"stopped":o.stopped,"creatorResumed":o.native.creator_has_resumed(),"ownerSession":o.session.to_string(),"ownerScope":o.scope().ok(),"previousOwners":o.previous.len(),"binding":{"pid":o.native.binding().process.pid,"filetime":o.native.binding().process.creation_filetime.to_string(),"image":o.native.binding().process.executable},"family":detail})
+        }
     }
 }
 pub(crate) fn cancel(runtime: &SharedRuntimeExecutable, home: &Path) {

@@ -588,7 +588,7 @@ impl Drop for NativeLease {
         }
     }
 }
-fn official_runtime_root(token: &TokenIdentity) -> io::Result<PathBuf> {
+pub(super) fn official_runtime_root(token: &TokenIdentity) -> io::Result<PathBuf> {
     // Official user-identity.ts uses FOLDERID_LocalAppData DEFAULT_PATH(0x400),
     // effective TokenUser SID, then OpenCodex/Runtime/v1/<uppercaseSID>.
     let folder = windows_sys::core::GUID {

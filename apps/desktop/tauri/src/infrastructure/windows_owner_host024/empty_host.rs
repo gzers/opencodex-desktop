@@ -428,6 +428,10 @@ pub fn run_from_inherited_bootstrap() -> io::Result<()> {
     let config = rx
         .recv_timeout(Duration::from_secs(5))
         .map_err(|_| io::Error::from(io::ErrorKind::TimedOut))??;
+    #[cfg(debug_assertions)]
+    if config.scope == super::super::windows_client_originals024::existing_qualification::SCOPE {
+        return super::existing_qualification::run(config);
+    }
     run_empty(config)
 }
 #[cfg(test)]

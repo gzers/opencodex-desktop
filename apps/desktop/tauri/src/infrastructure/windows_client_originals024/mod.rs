@@ -17,6 +17,8 @@ mod content;
 mod coordination;
 #[cfg(test)]
 mod desktop_preflight_tests;
+#[cfg(debug_assertions)]
+pub(crate) mod existing_qualification;
 mod handle_release;
 mod phase;
 mod reference;
