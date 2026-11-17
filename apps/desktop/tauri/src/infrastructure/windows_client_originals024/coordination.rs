@@ -38,7 +38,9 @@ use windows_sys::Win32::{
         IO::OVERLAPPED,
     },
 };
+mod preparation;
 mod segments;
+pub(super) use preparation::LeasePreparation;
 pub(super) use segments::RetiredLeaseHistory;
 pub(super) use segments::{LeaseFacts, ReleasedLease};
 const BASE: u32 = 0x40000000;
@@ -487,41 +489,52 @@ impl NativeLease {
     /// Existing original files only. Initial official admission/owner receipts,
     /// relocation handoff and post-write compensation integration remain gated.
     pub(super) fn acquire_existing(owner: &mut Owner, end: Instant) -> io::Result<Self> {
-        before(end)?;
-        owner.check_current(end).map_err(io_error)?;
-        let profile = PinnedDirectory::open(owner.profile_path())?;
-        let home = PinnedDirectory::open(owner.home_path())?;
-        let client = PinnedDirectory::open_private(&profile.path().join(".codex"))?;
-        let scope = owner.scope().map_err(io_error)?;
-        let token = native::current_identity()?;
-        let root = official_runtime_root(&token)?;
-        let canonical = std::fs::canonicalize(client.path())?;
-        let canonical = dunce::simplified(&canonical);
-        if !canonical
-            .to_string_lossy()
-            .eq_ignore_ascii_case(&client.path().to_string_lossy())
-        {
-            return Err(refused());
-        }
-        let digest = hash::sha256_hex(canonical.to_str().ok_or_else(refused)?.as_bytes());
-        let paths = [
-            client.path().join(".opencodex-native-main.claim.sqlite"),
-            root.join("native-write-locks")
-                .join(format!("{digest}.sqlite")),
-            root.join("client-desktop-lifecycle.sqlite"),
-            root.join("catalog-write-locks")
-                .join(format!("{digest}.sqlite")),
-        ];
+        let (paths, bound) = existing_context(owner, end)?;
         let mut lease = Self::acquire_paths(&paths, end)?;
-        lease.bound = Some(Bound {
+        lease.bound = Some(bound);
+        lease.check_owner(owner, end)?;
+        Ok(lease)
+    }
+}
+// Observes the original live Owner/Profile/H/claim location. It holds no ranges
+// and grants no mutation; both acquisition paths still perform real native IO.
+fn existing_context(owner: &mut Owner, end: Instant) -> io::Result<([PathBuf; 4], Bound)> {
+    before(end)?;
+    owner.check_current(end).map_err(io_error)?;
+    let profile = PinnedDirectory::open(owner.profile_path())?;
+    let home = PinnedDirectory::open(owner.home_path())?;
+    let client = PinnedDirectory::open_private(&profile.path().join(".codex"))?;
+    let scope = owner.scope().map_err(io_error)?;
+    let token = native::current_identity()?;
+    let root = official_runtime_root(&token)?;
+    let canonical = std::fs::canonicalize(client.path())?;
+    let canonical = dunce::simplified(&canonical);
+    if !canonical
+        .to_string_lossy()
+        .eq_ignore_ascii_case(&client.path().to_string_lossy())
+    {
+        return Err(refused());
+    }
+    let digest = hash::sha256_hex(canonical.to_str().ok_or_else(refused)?.as_bytes());
+    let paths = [
+        client.path().join(".opencodex-native-main.claim.sqlite"),
+        root.join("native-write-locks")
+            .join(format!("{digest}.sqlite")),
+        root.join("client-desktop-lifecycle.sqlite"),
+        root.join("catalog-write-locks")
+            .join(format!("{digest}.sqlite")),
+    ];
+    Ok((
+        paths,
+        Bound {
             scope,
             profile,
             home,
             client,
-        });
-        lease.check_owner(owner, end)?;
-        Ok(lease)
-    }
+        },
+    ))
+}
+impl NativeLease {
     pub(super) fn check(&mut self, end: Instant) -> io::Result<()> {
         let result = self.check_inner(end);
         if result.is_err() {
