@@ -908,3 +908,12 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 实际marenben SID1003/session7/elevatedfalse/type1/noJob/原KnownFolder Profile执行f5fd8211e准备入口1过0败/raw0，固定8投影在Profile和10个create-new无凭据对象均完整nativeStatus0，审计ExcludedUnknown/fullSecurityProvenfalse未改。User/Machine PATH摘要一致。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-ordinary-profile-preflight-20261117-receive-r1/；6份Public原日志及24份原SID导出逐字长度/摘要核，20intent/result+initial-absence/result齐备，原现场保留。
 
 准备前.codex/.grok/base真实Absent单列；此后仅作为existing-root测试基线，不签官方初始化/原缺席Codex无空窗退根/生产Closed许可。尚缺同SID真实协调域固定原包/原Owner，继续完整原包lease/副作用/canonical Stop/Status/后继与真GUI官方owner，不重跑旧空GUI。Start/allAccepted/production/typedClosedfalse，旧首错与所有历史清理/普通MSI/CAP-trust及其它未完保留。无本轮首错，无删除/旧拒绝重试，无官方/日常配置/PATH/账户策略修改、业务/模型/W2/双SID/发布。
+
+
+## 2026-11-17 r6真实原包existing-root内部验证入口
+
+源码c870bd81fcbd65310ff79d262c9c49fc5a2c6f62/treed4297896548b098b46007c10686fba39b72c17a6已推送，仅11Windows允许文件。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-existing-official-qualification-20261117-r1/。公共execute_async恒调用原durable拒绝，私有debug原生通道只接受原普通marenben/session7/noJob/KnownFolder/精确I-D-H及既有10对象path/kind/ID/8/bytes；通过原one-shot继承pipe进入实际I/ocxd.exe，非环境bool/JSON proof。固定bundle同一拒写handle hash+正规全文件解包，复用shared program_image/selection/entry；N/L/K初始化仅本fixture原缺席setup带intent/result，不是产品首次初始化。原来源/lease/custody/content/typedReady/normal/supervisor/Closed原断言和原预算全走，公共Start不放行。
+
+首library01 E0596/raw101未测/无EXE，实际family_state需同原Owner可变观察，修后library02 10过/library03 11过raw0；custom-protocol产品MSVCdebug raw0/219669ms，209输入/157Rust逐字核工作/Git。共享四trait/HMAC/原native关闭及完整recovery_state_at/Status接收尾段保持。入口C:\Users\Public\ocx-r6-official-existing-20261117-r1/launch-r6-official-existing.cmd已备，尚需用户原桌面运行，实际生产仍false；不拿普通基线准备1过替代原包。成功/失败均保原broker/Owner/Job/source与scene，无强杀/Drop补0。
+
+实际GUI官方owner/manager切换/原包副作用/finalphase-current反例/全容量/初始化与ownerreceipt/原缺席Codex安全退根、普通MSI/CAP-trust及历史清理全部未完保持。基线/本Public输入留，未创建新nativeOwner或启动服务，未旧拒绝删除重试。Start/allAccepted/typedClosedfalse，无官方/日常/PATH/策略/业务/模型/旧raw5/空GUI/W2/双SID/发布。

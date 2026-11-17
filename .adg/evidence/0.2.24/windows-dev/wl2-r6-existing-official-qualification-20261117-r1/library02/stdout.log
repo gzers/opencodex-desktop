@@ -1,0 +1,27 @@
+
+running 10 tests
+test infrastructure::status_source::windows_sample_tests::wl2_r5_native_receiver_unknown_source_and_wrong_home_refuse_without_creation ... ok
+test infrastructure::status_source::windows_sample_tests::wl2_r5_real_windows_source_expired_or_late_admission_cannot_mint_receipt ... r5-native-source expired no-IO; delayed branch admission cannot grant late Closed or a new5s receipt; synthetic source/no real Owner
+ok
+test infrastructure::status_source::windows_sample_tests::wl2_r5_real_windows_source_full_light_same_deadline_no_owner_stays_unknown ... r5-native-source stage=fetch elapsedUs=31 deadlineFromTraceStartUs=5000015 original5=true owner=missing recovery=Unknown
+r5-native-source stage=recovery elapsedUs=99 deadlineFromTraceStartUs=5000015 original5=true owner=missing recovery=Unknown
+r5-native-source stage=light elapsedUs=341 deadlineFromTraceStartUs=5000340 original5=true owner=missing recovery=Unknown
+r5-native-source stage=recovery elapsedUs=353 deadlineFromTraceStartUs=5000340 original5=true owner=missing recovery=Unknown
+ok
+test infrastructure::windows_client_originals024::existing_qualification::tests::wl2_r6_existing_qualification_archive_mapping_rejects_escape_and_unknown_source_without_authority ... r6 qualification fixed source map refuses traversal/unknown prefixes/ADS/alternate separator; DATA path mapping creates no qualification, native Owner/lease/Closed or public Start permit
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_exact_start_stop_and_restart_subwindow_never_reset ... r6 actual shared ActionWindow original parent/end/stop sub10 retained exactly; no nested new budget or different deadline admitted, source-owner receipt factory remains actual native only
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_late_stop_subwindow_and_expired_origin_refuse ... r6 late restart admission does not reset elapsed original stop sub10; expired private origin no permission
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_original_actions_repeated_or_partially_started_stop_cannot_replace_origin ... r6 repeated/new deadline or partially started Stop cannot reset original receipt; no Origin minted for invalid kind
+ok
+test infrastructure::windows_official_lifecycle024::actions::tests::wl2_r6_typed_ready_retained_origin_read_never_renews_expired_mutation_budget ... r6 retained actual-admitted Origin metadata can still be compared after elapsed old end; original mutation remains Timeout/no renewed end. Five substitutions reject; no synthetic NativeAction/Owner/ServiceObservation or native read permit constructed
+ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_restart_stop_receipt_keeps_original_outer_window_and_input ... Restart dispatch preserves exact original30/Stop10 window and all launch inputs; timely synthetic Stop at9 remains data-valid at12, new Start has only original remaining18; no process or native permission issued
+ok
+test infrastructure::windows_official_lifecycle024::tests::wl2_restart_wrong_late_or_expired_stop_receipt_never_returns_launch_input ... late/wrong-window Stop receipt, expired recording and action mixing refuse successor input; Stop returns no launch input; private time fixtures never mint native ClosedEligibility
+ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 2117 filtered out; finished in 1.03s
+

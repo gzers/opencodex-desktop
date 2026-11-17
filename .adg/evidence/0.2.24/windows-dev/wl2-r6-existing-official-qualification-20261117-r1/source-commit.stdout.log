@@ -1,0 +1,7 @@
+[codex/024-windows-native c870bd81f] test(windows): 接入隔离原包existing-root原生闭环验证通道
+ 11 files changed, 939 insertions(+), 4 deletions(-)
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_client_originals024/existing_qualification.rs
+ create mode 100644 apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs
+ create mode 100644 test/windows024-native/export-r6-official-existing.ps1
+ create mode 100644 test/windows024-native/launch-r6-official-existing.cmd
+ create mode 100644 test/windows024-native/launch-r6-official-existing.ps1
