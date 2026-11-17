@@ -560,6 +560,8 @@ impl RecordV2 {
     }
 }
 mod chain;
+mod storage;
 pub(super) use chain::validate_chain_v2;
+pub(super) use storage::AttachmentStorageV2;
 #[cfg(test)]
 mod tests;
