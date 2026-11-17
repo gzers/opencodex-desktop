@@ -14,6 +14,8 @@ use std::{
     time::Instant,
 };
 const MAX: u64 = 2 * 1024 * 1024;
+mod close;
+pub(in crate::infrastructure::windows_client_originals024) use close::RetainedRouteClose;
 fn refused() -> io::Error {
     io::Error::new(
         io::ErrorKind::InvalidData,

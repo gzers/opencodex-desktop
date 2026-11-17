@@ -131,6 +131,50 @@ fn before(end: Instant) -> io::Result<()> {
     }
 }
 impl NativeHandleBatch {
+    /// Fresh read of an exact owned primary FILE. The expectation is bounded
+    /// DATA; only the already-owned native File supplies observation authority.
+    pub(super) fn check_config_read(
+        &self,
+        key: &str,
+        security: &super::bounded::SnapshotData,
+        length: usize,
+        digest: &str,
+        end: Instant,
+    ) -> io::Result<()> {
+        use std::io::{Read, Seek, SeekFrom};
+        self.check_held(end)?;
+        if length == 0 || length > 2 * 1024 * 1024 {
+            return Err(invalid());
+        }
+        let item = self
+            .items
+            .iter()
+            .find(|i| i.row.key == key)
+            .ok_or_else(invalid)?;
+        let OwnedState::Held(file) = &item.state else {
+            return Err(invalid());
+        };
+        if item.row.directory
+            || item.row.historical_work
+            || file.metadata()?.len() != length as u64
+            || super::bounded::native_stamp(file, end).map_err(io::Error::other)? != *security
+        {
+            return Err(invalid());
+        }
+        let mut observed = file;
+        observed.seek(SeekFrom::Start(0))?;
+        let mut raw = Vec::new();
+        observed
+            .take((2 * 1024 * 1024 + 1) as u64)
+            .read_to_end(&mut raw)?;
+        if raw.len() != length || crate::infrastructure::hash::sha256_hex(&raw) != digest {
+            return Err(invalid());
+        }
+        if super::bounded::native_stamp(file, end).map_err(io::Error::other)? != *security {
+            return Err(invalid());
+        }
+        self.check_held(end)
+    }
     pub(super) fn new(end: Instant) -> Self {
         Self {
             items: Vec::new(),

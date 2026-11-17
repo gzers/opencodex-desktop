@@ -325,9 +325,14 @@ impl SnapshotData {
     /// covered security includes all8 projections and exact r4 exclusions.
     pub(super) fn content_policy_protection(&self) -> io::Result<String> {
         self.validate()?;
-        let raw=serde_json::to_vec(&(&self.scope_id,&self.security_policy_digest,&self.projections,
-            &self.audit_sacl_assurance,self.full_security_proven))
-            .map_err(|_|invalid("content security projection encoding"))?;
+        let raw = serde_json::to_vec(&(
+            &self.scope_id,
+            &self.security_policy_digest,
+            &self.projections,
+            &self.audit_sacl_assurance,
+            self.full_security_proven,
+        ))
+        .map_err(|_| invalid("content security projection encoding"))?;
         Ok(hash::sha256_hex(&raw))
     }
 }
@@ -585,6 +590,44 @@ pub(super) fn native_stamp(file: &File, deadline: Instant) -> Result<SnapshotDat
     Ok(data)
 }
 impl BoundedAccessV1 {
+    /// Observe actual config security/parent files BEFORE their close transfer.
+    /// This exposes only DATA, never a close/restore/Stop permission.
+    pub(super) fn config_close_identity(&self, end: Instant) -> io::Result<FileIdentity> {
+        self.recheck(end).map_err(io::Error::other)?;
+        Ok(self.id)
+    }
+    pub(super) fn observe_config_close_inventory(
+        &self,
+        inventory: &mut super::handle_release::ExpectedHandleInventory,
+        prefix: &str,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.recheck(end).map_err(io::Error::other)?;
+        inventory.observe(
+            format!("{prefix}/file"),
+            &self.file,
+            self.id,
+            false,
+            false,
+            end,
+        )?;
+        inventory.observe_directory(&format!("{prefix}/parent"), &self.parent, end)
+    }
+    /// Infallible ownership transfer. Only RoutePin's already-observed FILE
+    /// scope uses this method; all original native files have a retained sink.
+    pub(super) fn transfer_config_close_files(
+        self,
+        batch: &mut super::handle_release::NativeHandleBatch,
+        prefix: &str,
+    ) {
+        let Self {
+            file, parent, id, ..
+        } = self;
+        batch.retain(format!("{prefix}/file"), file, id, false, false);
+        for (i, file) in parent.into_owned_files().into_iter().enumerate() {
+            batch.retain_observed(format!("{prefix}/parent/{i}"), file, true, false);
+        }
+    }
     pub(super) fn snapshot_data(&self) -> io::Result<SnapshotData> {
         let projections = self
             .projections
