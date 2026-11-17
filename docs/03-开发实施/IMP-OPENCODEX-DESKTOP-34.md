@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 164；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 166；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 0675a105017ae7fc82a4bd58dd43fe72031470df（非冻结候选）；Windows实现检查点codex/024-windows-native c3b99c0fa704d278393bf9f854eec4de6968ba4c（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main fb755b8ea63d8a3fc9146dc4db491931919905b0（非冻结候选）；Windows实现检查点codex/024-windows-native 361cdedf032b20e57b7ca2421daf5ddf3044d631（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1767,3 +1767,31 @@ gui02在真实Ready后，旧AX路径上的按钮标签发生变化，原native h
 **证据错误如实保留**：既有gui02已结束后，一次准备重跑在exclusive stdout创建处发现文件已存在、并未再次启动；该次准备此前误覆盖hypotheses02.json/runner02.py两文件。现明确标为事后分析/来源副本，beforeRun=false，不用于证明gui02原执行源码/事前假设，原gui02命令/AX/streams仍完整；最终gui03唯一新目录的runner03.py/hash/事前假设与真实native输出独立可核。原始gui01/continued/gui02失败均不覆盖、不当产品失败或已通过。约28MB证据，不保重复运行包。
 
 此项补齐revision162“最终停止任务卡自动收起未观察”缺口，相关标记以后以本轮实际证据为准，不改旧结果。仍未完：Mac其它代次取消/部分捕获/根未移恢复/一般客户端范围/缺Ready，NAME默认外部客户端及最终回退，Windows完整Owner/slot/v2/privatehost/当前r2与synthetic27960清理、最终集成候选及发行签名/安装/升级回退门。Windowsc3b99c0fa/954b4540c回交已归revision163，本批只test脚本、不改其独占写集或共享产品接口，不要求无影响全组重跑，不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision165：Windows独立返回复核与合成残留只读接收
+
+Windows361cdedf032b20e57b7ca2421daf5ddf3044d631／docsf8552e56cc4ea0ddb8aaab143bc917e9a7d202df净接收synthetic-readonly及return-validation两轮，分别7载荷11629字节、123载荷1414795字节，完整成员/原长度SHA匹配；返回线13执行源逐Git原字节或明确CRLF归一核，[回执](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r18/receive-result.json)。本机只审来源/具体handoff，非Windows实机执行或整批安全审计。
+
+原WorkerControl成功返回槽先保唯一Box原Owner、同原window与ReleasedLease再fallible核：前后transferbinding、registrySlot runtimeArc/安装根/HOME/Profile/hostUUID、原quiescence/private完成proof、adapter两次原树8/bytes/children与Source/route/canonical/附件读回相同。失败保原对象/revoke/原control占位，不重试；ReturnedValidated仍Required/runtimeAuthorityfalse，不造正常Stop/Closed/后继。截止后完整只读status/history仍未完，不把同窗口readback当永久权限。
+
+首编译private测试入口与重复drop错误、后原workerfixture未保护source正确拒绝均原样留，后者新.tmpJEMT1O四文件readonly归档保留；只修新fixture私有子目录、不放宽原断言。最终MSVC全Tauri库一父四worker模式valid/raw5/wrongcutoff/expired通过；原树六模式在前轮已通过且源码未变复用，worker七子/释放十场景/concrete两pipeline及Send受影响回归过。最终EXEfb6c54fe2a79ca14fb9d92c9dd2a24b0d6fd950e557bde4451c58ac51a5cefc0；29成功root缺席，1新失败树及所有旧拒删/driver失败/残留保持，不冒历史全清。
+
+synthetic27960新只读证据用QUERY_LIMITED_INFORMATION取得实际image、创建FILETIME134394012184503726、同句柄前后代次不变和任务文件SHA与旧ZIP一致，inSomeJob=true、parent14936/session2/exit259；这只确认当前进程身份，原Job完整成员和monotonic neverResume仍Unknown。处置计划ready=false，当前不请求执行批准，不凭PID/path/hash/当前Suspended补原creator能力；本机不终止/Resume/收养。此残留与r2/session7不同，旧清理授权不转用。
+
+111项表仍保完整nativeV2准备producer/partialwork-capture/缺根、可达strictprivatehost/fulltrait、截止后status、真实Owner固定官方普通Profile整链原预算及容量/CAPtrust未完。当前r2raw50只停自身证明，21500/75744/原件/work/seq9与40588不变，不重跑PSS/旧cleanup，不forced/归还或原包新Start。TEAM29/r7写集不变，Windows继续原独占任务，Mac发行校验独立推进，不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision166：Mac签名更新归档与完整封装内容绑定
+
+mainfb755b8ea63d8a3fc9146dc4db491931919905b0新增verify_macos_updater_024.py并接CI/Release Mac装配。信任输入是明确checkout/tagged tauri.conf版本/identifier/updater公钥和固定官方平台policy；先真实minisign验detached base64签名，再真实codesign验证sealed app，流式读取整个.app.tar.gz而不extract或执行，把全部成员/字节SHA/模式/目录/安全链接与同轮sealed app精确相等；再复用原delivery核内置平台archive/descriptor/pin/原官方tgz逐文件与productionlock。验前后原签名app完整tree/xattrs和archive/signature/config原identity/stat/hash不变。输出始终releaseAcceptance=false，不能由这一部件回执签整版通过。
+
+归档完整性包含单app准确根、精确目录父成员、去重/类型/模式、拒hardlink/设备/特殊文件、越界链接、额外成员/丢成员、PAX xattr overlay/未知metadata、global header和尾随第二归档。压缩文件上限1GiB、未压缩普通内容2GiB及100000成员；TarInfo在标准库处理longname/link/PAX正文前截断声明大小至16KiB，rawheader计数和整个解压流也有界，不能靠迭代前扩展头先申请大内存。读取固定块，不从归档磁盘执行源码或隐式提取文件。
+
+[精确源码/验证](../../.adg/evidence/0.2.24/macos-updater-archive-r1/result.json)：最终9测试过，用真实minisign临时key做有效签名、错公钥/错误签名，并对内容/模式/丢失/额外/恶意成员/官方源码自洽篡改/隐藏trailer重新签名，确保有效签名不掩篡改；16GiB声明扩展头在读取正文前拒。Linux synthetic fixture仅codesign调用明确mock，完整crypto仍真实，不冒Mac签名测试。7项原delivery与30项publisher回归过，共46项；原publisher对>=0.2.24的拒绝门和旧版维护包合同未修改。两workflow经Ruby YAML.parse_file语法通过，未发起GitHub或发布任务。
+
+真实本机原sealed45571包（Desktop351807b2cf36227d04255510f581dee2f066c1b03dc96a291a2c05e759c76f48）生成符合updater布局的GNU tar，仅用新临时测试key替换副本config公钥签名，实际系统codesign和最终有界parser完整过：outer19成员/289224644内容字节，压缩276791819字节/SHA7567162c1806982cfae8ab6d7cf8b3b385bd7cb0fd00988e847b161e250c5095；内置11467成员/633363932字节、2664原官方源码文件、102锁定包准确，官方源b920ba…不变。最终实测7204ms为离线校验/构造成本，非原生生命周期预算。两次自有私有根/临时签名私钥/约277MB测试archive全部删除并缺席核，保公钥/签名/config和摘要约47KB证据，无日常配置或源app变化。
+
+**证据范围**：本地archive是从真实signed app新生成的tar，使用测试key，不是最终Tauri产出的正式updater或发行key实测。Release新步骤在实际tauri-action完成后、同源Mac binary绑定后要求恰好一个真实*.app.tar.gz及其.sig，用tagged原公钥执行同脚本，并上传macos-updater-delivery.json；缺包/签名/内容不等则失败，不改DMG或updater字节。只有以后真实固定候选CI过才计这一生产装配已验，不能以本机测试代签名发行验收。
+
+Windows MSI/NSIS内容抽取/实际封装资源绑定及正式公共制品核验尚需完成；本机已发现7zz可用，但未以未证解析或模拟安装结果草率放行。publish_release.py整版硬拒绝继续保留，不把Mac校验接线当全部发行核验完成。Windows361cdedf0/f8552e56c已接revision165，完整产品Owner/privatehost/nativeV2/当前r2和synthetic27960处置依赖继续，Mac其它既列功能/NAME最终客户端/候选回退不删。目标active，不W2/双SID、不发布。

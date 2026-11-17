@@ -1,0 +1,9 @@
+{
+  "assemblyBoundary": "complete signed outer payload must match same sealed app; nested official runtime compared full stream and upstream; no selfconsistent-descriptor-only trust",
+  "signatureBoundary": "fixture tests use actual minisign + ephemeral public key; Linux synthetic codesign call explicitly mocked; real app check uses actual codesign; no release secret accessed",
+  "actualArtifactBoundary": "the local actual-app archive was generated in GNU tar format, not final Tauri updater; CI step requires real tauri artifact and original tagged updater public key, no fallback",
+  "publicationBoundary": "publish_release.py still rejects>=0.2.24; Windows installer/published resource/readiness remains unfinished; do not delete refusal to infer delivery complete",
+  "outerMetadataBoundary": "content/modes/member/link equality checked; outer xattr/PAX overlay refused; sealed source tree xattrs unchanged via full pre/post tree snapshot",
+  "remaining": "full Windows installer archive evidence + updater/publicasset contract and actual final workflow/native acceptance",
+  "releaseAcceptance": false
+}

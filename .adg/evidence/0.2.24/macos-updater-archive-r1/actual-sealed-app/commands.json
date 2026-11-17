@@ -1,0 +1,29 @@
+[
+  {
+    "argv": [
+      "minisign",
+      "-G",
+      "-W",
+      "-p",
+      "/private/tmp/ocxd024-real-updater-verification-p8nysbv8/ephemeral.pub",
+      "-s",
+      "/private/tmp/ocxd024-real-updater-verification-p8nysbv8/ephemeral.key"
+    ],
+    "exitCode": 0,
+    "stdout": "The secret key was saved as /private/tmp/ocxd024-real-updater-verification-p8nysbv8/ephemeral.key - Keep it secret!\nThe public key was saved as /private/tmp/ocxd024-real-updater-verification-p8nysbv8/ephemeral.pub - That one can be public.\n\nFiles signed using this key pair can be verified with the following command:\n\nminisign -Vm <file> -P RWS1RsmVopzKczli/+x6UOKUgunxYAGdi10Qja88UxlBg9qXZo4V5VTT\n\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "minisign",
+      "-S",
+      "-m",
+      "/private/tmp/ocxd024-real-updater-verification-p8nysbv8/OpenCodeX Desktop.app.tar.gz",
+      "-s",
+      "/private/tmp/ocxd024-real-updater-verification-p8nysbv8/ephemeral.key"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

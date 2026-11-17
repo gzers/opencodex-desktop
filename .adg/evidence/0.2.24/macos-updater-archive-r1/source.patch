@@ -1,0 +1,454 @@
+diff --git a/.github/scripts/verify_macos_updater_024.py b/.github/scripts/verify_macos_updater_024.py
+new file mode 100644
+index 000000000..d32bda2f1
+--- /dev/null
++++ b/.github/scripts/verify_macos_updater_024.py
+@@ -0,0 +1,188 @@
++"""Bind a signed updater archive to the complete sealed app and official runtime.
++
++Never extract an app, install, execute archive content, publish or rewrite the
++sealed input. This assembly check does not grant whole-release acceptance.
++"""
++import argparse
++import base64
++import gzip
++import hashlib
++import importlib.util
++import json
++from pathlib import Path, PurePosixPath
++import posixpath
++import stat
++import subprocess
++import tarfile
++import tempfile
++
++
++def module(name):
++    spec = importlib.util.spec_from_file_location(name, Path(__file__).with_name(name + '.py'))
++    value = importlib.util.module_from_spec(spec); spec.loader.exec_module(value)
++    return value
++
++
++delivery = module('verify_runtime_delivery_024')
++common = module('macos_package_common')
++APP = 'OpenCodeX Desktop.app'
++MAX_ENTRIES = 100000
++MAX_OUTER_BYTES = 2 * 1024 * 1024 * 1024
++MAX_COMPRESSED = 1024 * 1024 * 1024
++MAX_EXTENDED_HEADER = 16384
++
++
++def require(ok, reason):
++    if not ok:
++        raise ValueError(reason)
++
++
++def snapshot(path, limit):
++    value = path.lstat()
++    require(stat.S_ISREG(value.st_mode) and value.st_nlink == 1, 'single-link regular input required')
++    require(0 < value.st_size <= limit, 'updater input size exceeds budget')
++    return (value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns, value.st_ctime_ns,
++            value.st_mode, common.sha256(path))
++
++
++class BoundedTarInfo(tarfile.TarInfo):
++    @classmethod
++    def frombuf(cls, buf, encoding, errors):
++        value = super().frombuf(buf, encoding, errors)
++        # tarfile processes extended headers before yielding a member. Bound
++        # them HERE, before an untrusted size can allocate/read a large buffer.
++        if value.type in (tarfile.GNUTYPE_LONGNAME, tarfile.GNUTYPE_LONGLINK, tarfile.XHDTYPE):
++            require(0 <= value.size <= MAX_EXTENDED_HEADER, 'extended updater header exceeds budget')
++        else:
++            require(value.type in (tarfile.REGTYPE, tarfile.AREGTYPE, tarfile.DIRTYPE, tarfile.SYMTYPE),
++                    'special/hardlink/global updater header')
++            require(0 <= value.size <= MAX_OUTER_BYTES, 'updater member size exceeds budget')
++        return value
++
++    def _proc_member(self, archive):
++        archive.ocxd_header_count = getattr(archive, 'ocxd_header_count', 0) + 1
++        require(archive.ocxd_header_count <= MAX_ENTRIES * 3, 'raw updater header count exceeds budget')
++        return super()._proc_member(archive)
++
++
++class BoundedStream:
++    def __init__(self, source):
++        self.source, self.read_bytes = source, 0
++
++    def read(self, size):
++        value = self.source.read(size)
++        self.read_bytes += len(value)
++        require(self.read_bytes <= MAX_OUTER_BYTES + MAX_ENTRIES * 2048 + 10240,
++                'decompressed updater stream exceeds budget')
++        return value
++
++
++def archive_rows(path):
++    """Complete streamed outer membership; no extract()/extractall()."""
++    rows, total, count = {}, 0, 0
++    with gzip.open(path, 'rb') as compressed, tarfile.open(
++            fileobj=BoundedStream(compressed), mode='r|', tarinfo=BoundedTarInfo) as archive:
++        for member in archive:
++            count += 1
++            require(count <= MAX_ENTRIES, 'updater member count exceeds budget')
++            name = member.name.rstrip('/') if member.isdir() else member.name
++            delivery.safe_path(name)
++            require(name == APP or name.startswith(APP + '/'), 'member outside single app')
++            require(name not in rows, 'duplicate updater member')
++            # Only standard path/time metadata. Names have already been
++            # resolved by tarfile; sparse files, xattr overlays and unknown
++            # metadata cannot quietly change the extracted app's semantics.
++            require(set(member.pax_headers) <= {'path', 'linkpath', 'mtime', 'atime', 'ctime'},
++                    'unsupported updater member metadata')
++            require(member.mode & ~0o777 == 0, 'special updater permission bits')
++            row = {'mode': member.mode}
++            if member.isdir():
++                require(member.size == 0, 'nonempty directory member')
++                row['kind'] = 'directory'
++            elif member.issym():
++                link = member.linkname
++                require(isinstance(link, str) and link and not link.startswith('/')
++                        and '\\' not in link and ':' not in link
++                        and not any(ord(c) < 32 for c in link), 'unsafe app symlink')
++                resolved = posixpath.normpath(posixpath.join(posixpath.dirname(name), link))
++                require(resolved == APP or resolved.startswith(APP + '/'), 'app symlink escapes')
++                require(member.size == 0, 'nonempty symlink member')
++                row.update(kind='symlink', target=link)
++            else:
++                require(member.type in (tarfile.REGTYPE, tarfile.AREGTYPE), 'special/hardlink updater member')
++                total += member.size
++                require(0 <= member.size <= MAX_OUTER_BYTES and total <= MAX_OUTER_BYTES,
++                        'updater unpacked budget exceeded')
++                observed, _ = delivery.file_row(archive, member)
++                row.update(observed)
++            rows[name] = row
++        delivery.finish_archive(archive)
++    require(rows.get(APP, {}).get('kind') == 'directory', 'single app directory root missing')
++    # No file or symlink may also act as an archive member's parent.
++    for name in rows:
++        for parent in PurePosixPath(name).parents:
++            if str(parent) == '.':
++                break
++            require(rows.get(str(parent), {}).get('kind') == 'directory', 'missing/non-directory updater parent')
++    return rows, total
++
++
++def app_rows(app):
++    complete = common.tree_manifest(app)
++    rows = {}
++    for item in complete:
++        relative = item['path']
++        name = APP if relative == '.' else APP + '/' + relative
++        rows[name] = {key: value for key, value in item.items() if key not in ('path', 'xattrs')}
++    return rows, complete
++
++
++def verify(app, archive, signature, config, policy=None):
++    app, archive, signature, config = map(Path, (app, archive, signature, config))
++    require(app.name == APP and not app.is_symlink() and app.is_dir(), 'explicit sealed single app required')
++    app = app.resolve(strict=True)
++    for path in (archive, signature, config):
++        require(not path.is_symlink() and not path.resolve().is_relative_to(app), 'input inside sealed app or symlink')
++    limits = (MAX_COMPRESSED, 16384, 1024 * 1024)
++    before = [snapshot(path, limit) for path, limit in zip((archive, signature, config), limits)]
++    policy = delivery.load_json(delivery.POLICY.read_bytes()) if policy is None else policy
++    settings = delivery.load_json(config.read_bytes())
++    require(settings.get('version') == policy['bundleVersion'], 'tagged config version differs from policy')
++    info = common.version_info(app, policy['bundleVersion'])
++    require(info['CFBundleIdentifier'] == settings.get('identifier') == 'com.gzers.opencodex.desktop'
++            and info['CFBundleExecutable'] == 'opencodex-desktop', 'sealed app identity differs')
++    require({p.name for p in (app / 'Contents/MacOS').iterdir()} == {'opencodex-desktop', 'ocxd', 'ocx'},
++            'sealed executable membership differs')
++    public = base64.b64decode(settings['plugins']['updater']['pubkey'], validate=True)
++    encoded_signature = signature.read_bytes().strip()
++    require(encoded_signature, 'missing updater signature')
++    detached = base64.b64decode(encoded_signature, validate=True)
++    with tempfile.TemporaryDirectory(prefix='ocxd024-updater-crypto-') as temporary:
++        root = Path(temporary); key = root / 'tagged.pub'; sig = root / 'artifact.minisig'
++        key.write_bytes(public); sig.write_bytes(detached)
++        subprocess.run(['minisign', '-V', '-m', str(archive), '-p', str(key), '-x', str(sig)],
++                       check=True, capture_output=True, timeout=60)
++    subprocess.run(['/usr/bin/codesign', '--verify', '--deep', '--strict', str(app)],
++                   check=True, capture_output=True, timeout=60)
++    expected, original = app_rows(app)
++    observed, unpacked = archive_rows(archive)
++    require(observed == expected, 'updater complete app membership/bytes/modes/links differ from sealed app')
++    runtime = delivery.verify(app / 'Contents/Resources/runtime-bundle', 'darwin-arm64', policy)
++    require(common.tree_manifest(app) == original, 'sealed source app changed during verification')
++    require([snapshot(path, limit) for path, limit in zip((archive, signature, config), limits)] == before,
++            'updater archive/signature/tagged config changed during verification')
++    return {'schemaVersion': 1, 'status': 'verified-signed-macos-updater',
++            'appVersion': info['CFBundleShortVersionString'], 'archiveSha256': before[0][-1],
++            'archiveBytes': before[0][2], 'archiveMembers': len(observed), 'unpackedBytes': unpacked,
++            'sealedAppTreeSha256': common.tree_digest(original), 'officialRuntime': runtime,
++            'updaterSignatureVerified': True, 'sealedAppSignatureVerified': True,
++            'allMembersMatchSealedApp': True, 'sourceUnchanged': True, 'temporaryKeyFilesRemoved': True,
++            'archiveExtracted': False, 'applicationLaunched': False, 'releaseAcceptance': False}
++
++
++if __name__ == '__main__':
++    parser = argparse.ArgumentParser(description=__doc__)
++    for name in ('app', 'archive', 'signature', 'config'):
++        parser.add_argument('--' + name, type=Path, required=True)
++    arguments = parser.parse_args()
++    print(json.dumps(verify(arguments.app, arguments.archive, arguments.signature, arguments.config), indent=2))
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 77a08cfed..63795a2bc 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -55,6 +55,7 @@ jobs:
+       - run: sudo apt-get update && sudo apt-get install -y minisign
+       - run: python3 -B -m unittest discover -s test -p 'test_publish_release.py' -v
+       - run: python3 -B -m unittest discover -s test -p 'test_runtime_delivery_manifest.py' -v
++      - run: python3 -B -m unittest discover -s test -p 'test_verify_macos_updater_024.py' -v
+       - run: python3 -B -m unittest discover -s test -p 'test_package_macos_023.py' -v
+       - run: python3 -B -m unittest discover -s test -p 'test_stage_runtime_bundle_023.py' -v
+       - run: python3 -B -m unittest discover -s test -p 'test_maintained_runtime.py' -v
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index 25f470dc4..d6a66b384 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -182,12 +182,35 @@ jobs:
+           report = binding.verify(app, receipt, root / 'apps/desktop/tauri', source)
+           (directory / 'macos-build-binding.json').write_text(json.dumps(report, indent=2) + '\n')
+           PY
++      - name: Verify signed macOS updater against sealed app and official runtime
++        if: runner.os == 'macOS'
++        shell: bash
++        run: |
++          set -euo pipefail
++          if ! command -v minisign >/dev/null; then brew install minisign; fi
++          python3 - <<'PY'
++          import importlib.util, json, os
++          from pathlib import Path
++          root = Path.cwd()
++          spec = importlib.util.spec_from_file_location('updater024', root / '.github/scripts/verify_macos_updater_024.py')
++          verifier = importlib.util.module_from_spec(spec); spec.loader.exec_module(verifier)
++          bundle = root / 'apps/desktop/tauri/target/aarch64-apple-darwin/release/bundle/macos'
++          archives = list(bundle.glob('*.app.tar.gz'))
++          if len(archives) != 1:
++              raise ValueError('one actual signed updater archive is required')
++          archive = archives[0]
++          report = verifier.verify(bundle / 'OpenCodeX Desktop.app', archive,
++                                   Path(str(archive) + '.sig'), root / 'apps/desktop/tauri/tauri.conf.json')
++          (Path(os.environ['OCXD_TAURI_RETRY_EVIDENCE']) / 'macos-updater-delivery.json').write_text(json.dumps(report, indent=2) + '\n')
++          PY
+       - name: Preserve macOS executable build binding
+         if: always() && runner.os == 'macOS'
+         uses: actions/upload-artifact@v4
+         with:
+           name: release-macos-build-binding
+-          path: test/out/release-tauri-downloads/macos-build-binding.json
++          path: |
++            test/out/release-tauri-downloads/macos-build-binding.json
++            test/out/release-tauri-downloads/macos-updater-delivery.json
+           if-no-files-found: warn
+       - name: Package verified standalone macOS application
+         if: runner.os == 'macOS'
+diff --git a/test/test_verify_macos_updater_024.py b/test/test_verify_macos_updater_024.py
+new file mode 100644
+index 000000000..65c6a417c
+--- /dev/null
++++ b/test/test_verify_macos_updater_024.py
+@@ -0,0 +1,201 @@
++"""Actual ephemeral minisign crypto; synthetic non-executable sealed app.
++
++Only codesign is mocked on non-macOS fixtures. No GitHub, installation or model
++requests; payload mutations are re-signed to test content independently of crypto.
++"""
++import base64
++import gzip
++import importlib.util
++import io
++import json
++from pathlib import Path
++import plistlib
++import subprocess
++import tarfile
++import tempfile
++import unittest
++from unittest.mock import patch
++from runtime_delivery_fixture024 import DeliveryFixture
++
++ROOT = Path(__file__).resolve().parents[1]
++spec = importlib.util.spec_from_file_location('verify_macos_updater_024', ROOT / '.github/scripts/verify_macos_updater_024.py')
++verify = importlib.util.module_from_spec(spec); spec.loader.exec_module(verify)
++
++
++class MacUpdater024(unittest.TestCase):
++    @classmethod
++    def setUpClass(cls):
++        cls.keys = tempfile.TemporaryDirectory(prefix='ocxd024-updater-testkeys-')
++        cls.public, cls.secret = (Path(cls.keys.name) / name for name in ('fixture.pub', 'fixture.key'))
++        subprocess.run(['minisign', '-G', '-W', '-p', str(cls.public), '-s', str(cls.secret)],
++                       check=True, capture_output=True)
++
++    @classmethod
++    def tearDownClass(cls):
++        cls.keys.cleanup()
++
++    def setUp(self):
++        self.temp = tempfile.TemporaryDirectory(prefix='ocxd024-updater-unit-')
++        self.addCleanup(self.temp.cleanup); self.root = Path(self.temp.name)
++        self.app = self.root / verify.APP
++        self.macos = self.app / 'Contents/MacOS'; self.macos.mkdir(parents=True)
++        for name in ('opencodex-desktop', 'ocxd', 'ocx'):
++            path = self.macos / name; path.write_bytes(b'never run fixture ' + name.encode()); path.chmod(0o755)
++        (self.app / 'Contents/Info.plist').write_bytes(plistlib.dumps({
++            'CFBundleShortVersionString': '0.2.24', 'CFBundleIdentifier': 'com.gzers.opencodex.desktop',
++            'CFBundleExecutable': 'opencodex-desktop'}))
++        self.fixture = DeliveryFixture(self.app / 'Contents/Resources/runtime-bundle')
++        self.config = self.root / 'tagged-config.json'
++        self.config.write_text(json.dumps({'version': '0.2.24', 'identifier': 'com.gzers.opencodex.desktop',
++            'plugins': {'updater': {'pubkey': base64.b64encode(self.public.read_bytes()).decode()}}}))
++        self.archive = self.root / 'candidate.app.tar.gz'; self.signature = self.root / 'candidate.sig'
++        self.real_run = subprocess.run; self.calls = []
++
++    def run_tool(self, args, **kwargs):
++        self.calls.append(args)
++        if args[0] == '/usr/bin/codesign':
++            self.assertEqual(args[1:4], ['--verify', '--deep', '--strict'])
++            return subprocess.CompletedProcess(args, 0, b'', b'')
++        self.assertEqual(args[0], 'minisign')
++        return self.real_run(args, **kwargs)
++
++    def pack(self, mutate=None, extra=()):
++        rows, _ = verify.app_rows(self.app)
++        with tarfile.open(self.archive, 'w:gz', format=tarfile.PAX_FORMAT) as archive:
++            for name, row in rows.items():
++                member = tarfile.TarInfo(name); member.mode = row['mode']
++                data = b''
++                if row['kind'] == 'directory': member.type = tarfile.DIRTYPE
++                elif row['kind'] == 'symlink': member.type = tarfile.SYMTYPE; member.linkname = row['target']
++                else:
++                    data = (self.app / name.removeprefix(verify.APP + '/')).read_bytes(); member.size = len(data)
++                if mutate: member, data = mutate(member, data)
++                if member is not None:
++                    archive.addfile(member, io.BytesIO(data) if member.isfile() else None)
++            for member, data in extra:
++                archive.addfile(member, io.BytesIO(data) if member.isfile() else None)
++        self.sign()
++
++    def sign(self):
++        path = self.root / 'native.minisig'
++        self.real_run(['minisign', '-S', '-m', str(self.archive), '-s', str(self.secret), '-x', str(path)],
++                      check=True, capture_output=True)
++        self.signature.write_bytes(base64.b64encode(path.read_bytes()))
++
++    def check(self):
++        with patch.object(verify.subprocess, 'run', side_effect=self.run_tool):
++            return verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
++
++    def test_real_crypto_complete_payload_and_runtime_pass_without_mutation_or_extraction(self):
++        (self.app / 'Contents/Resources/internal-link').symlink_to('../MacOS/ocx')
++        self.pack(); before = verify.common.tree_manifest(self.app)
++        result = self.check()
++        self.assertTrue(result['allMembersMatchSealedApp']); self.assertTrue(result['updaterSignatureVerified'])
++        self.assertFalse(result['archiveExtracted']); self.assertFalse(result['applicationLaunched'])
++        self.assertFalse(result['releaseAcceptance']); self.assertEqual(result['officialRuntime']['upstreamFiles'], 2)
++        self.assertEqual(verify.common.tree_manifest(self.app), before)
++
++    def test_resigned_changed_missing_extra_member_and_mode_are_rejected(self):
++        target = verify.APP + '/Contents/MacOS/ocx'
++        for mode in ('changed', 'missing', 'permissions', 'hardlink'):
++            def mutate(member, data):
++                if member.name == target:
++                    if mode == 'missing': return None, data
++                    if mode == 'changed': data = b'x' * len(data)
++                    if mode == 'permissions': member.mode = 0o644
++                    if mode == 'hardlink': member.type = tarfile.LNKTYPE; member.linkname = target
++                return member, data
++            with self.subTest(mode=mode):
++                self.pack(mutate)
++                with self.assertRaises(ValueError): self.check()
++        extra = tarfile.TarInfo(verify.APP + '/Contents/unexpected'); extra.size = 1
++        self.pack(extra=[(extra, b'x')])
++        with self.assertRaisesRegex(ValueError, 'differ'): self.check()
++
++    def test_duplicate_traversal_other_root_special_and_file_parent_are_rejected(self):
++        for name, kind in ((verify.APP, tarfile.DIRTYPE), ('../escape', tarfile.REGTYPE),
++                           ('Other.app/file', tarfile.REGTYPE), (verify.APP + '/Contents/socket', tarfile.FIFOTYPE),
++                           (verify.APP + '/Contents/MacOS/ocx/child', tarfile.REGTYPE)):
++            with self.subTest(name=name):
++                member = tarfile.TarInfo(name); member.type = kind
++                self.pack(extra=[(member, b'')])
++                with self.assertRaises(ValueError): self.check()
++
++    def test_wrong_signature_or_tagged_key_and_codesign_failure_refuse(self):
++        self.pack(); self.archive.write_bytes(self.archive.read_bytes() + b'unsigned change')
++        with self.assertRaises(subprocess.CalledProcessError): self.check()
++        self.pack(); self.signature.write_text('not-base64')
++        with self.assertRaises(ValueError): self.check()
++        self.pack()
++        original = self.config.read_bytes()
++        other_public, other_secret = self.root / 'other.pub', self.root / 'other.key'
++        self.real_run(['minisign', '-G', '-W', '-p', str(other_public), '-s', str(other_secret)],
++                      check=True, capture_output=True)
++        settings = json.loads(original)
++        settings['plugins']['updater']['pubkey'] = base64.b64encode(other_public.read_bytes()).decode()
++        self.config.write_text(json.dumps(settings))
++        with self.assertRaises(subprocess.CalledProcessError): self.check()
++        self.config.write_bytes(original)
++        with patch.object(verify.subprocess, 'run', side_effect=subprocess.CalledProcessError(1, ['minisign'])):
++            with self.assertRaises(subprocess.CalledProcessError): verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
++        def signer(args, **kwargs):
++            if args[0] == '/usr/bin/codesign': raise subprocess.CalledProcessError(1, args)
++            return self.real_run(args, **kwargs)
++        with patch.object(verify.subprocess, 'run', side_effect=signer):
++            with self.assertRaises(subprocess.CalledProcessError): verify.verify(self.app, self.archive, self.signature, self.config, self.fixture.policy)
++
++    def test_signed_outer_with_self_consistent_but_mutated_official_payload_refuses(self):
++        path = 'runtime/opencodex/node_modules/@bitkyc08/opencodex/bin/ocx.mjs'
++        self.fixture.files[path] = b'mutated official'; self.fixture.write(); self.pack()
++        with self.assertRaisesRegex(ValueError, 'differs from upstream'): self.check()
++
++    def test_signed_hidden_trailer_pax_overlay_and_special_permissions_refuse(self):
++        self.pack(); self.archive.write_bytes(self.archive.read_bytes() + gzip.compress(b'hidden archive'))
++        self.sign()
++        with self.assertRaisesRegex(ValueError, 'trailer'): self.check()
++        for mode in ('pax', 'setuid', 'escaping-link'):
++            def mutate(member, data):
++                if member.name.endswith('/ocx'):
++                    if mode == 'pax': member.pax_headers = {'SCHILY.xattr.user.overlay': 'x'}
++                    if mode == 'setuid': member.mode |= 0o4000
++                    if mode == 'escaping-link': member.type = tarfile.SYMTYPE; member.size = 0; member.linkname = '/etc/passwd'
++                return member, data
++            self.pack(mutate)
++            with self.assertRaises(ValueError): self.check()
++
++    def test_version_membership_input_identity_and_late_source_change_refuse(self):
++        self.pack(); original = self.config.read_bytes()
++        value = json.loads(original); value['version'] = '0.2.25'; self.config.write_text(json.dumps(value))
++        with self.assertRaisesRegex(ValueError, 'version'): self.check()
++        self.config.write_bytes(original)
++        alias = self.root / 'alias.tar.gz'; alias.symlink_to(self.archive)
++        with self.assertRaises(ValueError): verify.verify(self.app, alias, self.signature, self.config, self.fixture.policy)
++        real_delivery = verify.delivery.verify
++        def change(*args):
++            result = real_delivery(*args); (self.macos / 'ocx').write_bytes(b'changed during verification'); return result
++        with patch.object(verify.delivery, 'verify', side_effect=change):
++            with self.assertRaisesRegex(ValueError, 'changed during'): self.check()
++
++    def test_budgets_and_unknown_structure_refuse_before_unbounded_work(self):
++        self.pack()
++        with patch.object(verify, 'MAX_COMPRESSED', 1):
++            with self.assertRaisesRegex(ValueError, 'size exceeds'): self.check()
++        with patch.object(verify, 'MAX_ENTRIES', 1):
++            with self.assertRaisesRegex(ValueError, 'count exceeds'): self.check()
++        with patch.object(verify, 'MAX_OUTER_BYTES', 1):
++            with self.assertRaisesRegex(ValueError, 'budget'): self.check()
++        (self.macos / 'unexpected').write_bytes(b'unknown executable')
++        with self.assertRaisesRegex(ValueError, 'membership'): self.check()
++
++    def test_extended_header_size_is_rejected_before_reading_its_declared_body(self):
++        for kind in (tarfile.GNUTYPE_LONGNAME, tarfile.GNUTYPE_LONGLINK, tarfile.XHDTYPE):
++            with self.subTest(kind=kind):
++                header = tarfile.TarInfo('././@LongLink'); header.type = kind
++                header.size = 16 * 1024 * 1024 * 1024
++                self.archive.write_bytes(gzip.compress(header.tobuf(format=tarfile.GNU_FORMAT)))
++                self.sign()
++                with self.assertRaisesRegex(ValueError, 'extended updater header'): self.check()
++
++
++if __name__ == '__main__':
++    unittest.main()
