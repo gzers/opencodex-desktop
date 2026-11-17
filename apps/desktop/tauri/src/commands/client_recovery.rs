@@ -332,6 +332,9 @@ pub async fn client_recovery_cancel_preparation(
         crate::modules::runtime::protection::ensure_binding_ready(&data)?;
         #[cfg(target_os = "macos")]
         {
+            if crate::infrastructure::macos_client_originals::session_index::root_cancellation::applies(&data)? {
+                return crate::infrastructure::macos_client_originals::session_index::root_cancellation::cancel(&context,&data,request);
+            }
             crate::infrastructure::macos_client_originals::session_index::preparation::cancel(
                 &context, &data, request,
             )

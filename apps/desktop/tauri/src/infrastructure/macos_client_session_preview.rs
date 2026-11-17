@@ -39,6 +39,8 @@ pub struct Preview {
     pub can_finish_unchanged: bool,
     pub can_cancel_preparation: bool,
     pub preparation_digest: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub preparation_kind: Option<&'static str>,
     pub unchanged_digest: Option<String>,
     pub rollback_digest: Option<String>,
     pub rearm_digest: Option<String>,
@@ -67,6 +69,7 @@ impl Preview {
             can_finish_unchanged: false,
             can_cancel_preparation: false,
             preparation_digest: None,
+            preparation_kind: None,
             unchanged_digest: None,
             rollback_digest: None,
             rearm_digest: None,
@@ -107,6 +110,7 @@ fn project_history(
             can_finish_unchanged: false,
             can_cancel_preparation: false,
             preparation_digest: None,
+            preparation_kind: None,
             unchanged_digest: None,
             rollback_digest: None,
             rearm_digest: None,
@@ -143,6 +147,7 @@ fn project_history(
         can_finish_unchanged: false,
         can_cancel_preparation: false,
         preparation_digest: None,
+        preparation_kind: None,
         unchanged_digest: None,
         rollback_digest: None,
         rearm_digest: None,
@@ -159,6 +164,9 @@ fn project_history(
         preview.plan_evidence = Evidence::Verified;
         if head.state == State::RootCancellationAbsent {
             preview.completion_evidence = Evidence::Verified;
+            if generation::successor_eligible_checked(context, data, head, history, root_origin)? {
+                preview.status = Status::Restored;
+            }
         }
         return Ok(preview);
     }
@@ -190,6 +198,16 @@ fn project_history(
         return Ok(preview);
     }
     if matches!(head.state, State::Preparing | State::CaptureReserved) {
+        if root_origin.is_some() {
+            preview.preparation_digest =
+                root_cancellation::confirmation(context, data, head, history, root_origin)?;
+            preview.can_cancel_preparation = preview.preparation_digest.is_some();
+            if preview.can_cancel_preparation {
+                preview.preparation_kind = Some("created_root");
+                preview.attempt_id = Some(head.ticket.clone());
+            }
+            return Ok(preview);
+        }
         preview.preparation_digest = preparation::confirmation(context, data, head, history)?;
         preview.can_cancel_preparation = preview.preparation_digest.is_some();
         if preview.can_cancel_preparation {

@@ -10,7 +10,7 @@ const busy = computed(() => recovery.reading || recovery.executing || recovery.r
 const phases: Record<ClientRecoveryPhase, string> = { root_cancellation_prepared:'首次目录取消待完成',root_cancellation_absent:'首次目录缺席已核对',root_retirement_prepared:'客户端目录恢复待核对',root_absent:'原目录缺席已核对', preparing: '正在登记原会话',capture_reserved:'原件捕获已预留', captured: '原件已保存', ready: '服务会话已就绪', stop_prepared: '已准备停止', stopped: '服务已停止', restore_prepared: '配置恢复待核对',recovery_prepared:'恢复前状态已核对', restore_rolled_back: '本次恢复已撤销', restored: '恢复已完成', unchanged: '原件保持，原会话已结束', cancelled_before_capture: '启动准备已取消',cancelled_capture:'本次捕获已取消并保留', failed: '原会话需要核对' }
 const evidence = (value: ClientRecoveryEvidence) => ({ verified: '已核对', not_recorded: '尚未登记', unregistered: '待确认', unknown: '未核实' })[value]
 const progress = computed(() => ({ finalize:'正在完成恢复收尾…',continue:'正在继续恢复客户端配置…',rollback:'正在撤销本次恢复…',rearm:'正在重新准备原件恢复…',finishUnchanged:'正在核对原件并结束原会话…',cancelPreparation:'正在核对并取消启动准备…',preparePlan:'正在核对并准备恢复计划…' })[recovery.action])
-const restoredOutcome = computed(() => recovery.outcome?.status === 'restored' || recovery.outcome?.status === 'unchanged' || recovery.outcome?.status === 'cancelled_before_capture' || recovery.outcome?.status === 'cancelled_capture')
+const restoredOutcome = computed(() => recovery.outcome?.status === 'restored' || recovery.outcome?.status === 'unchanged' || recovery.outcome?.status === 'cancelled_before_capture' || recovery.outcome?.status === 'cancelled_capture' || recovery.outcome?.status === 'root_cancelled')
 const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤销恢复' : recovery.choice === 'finishUnchanged' ? '确认结束会话' : recovery.choice === 'cancelPreparation' ? '确认取消启动准备' : recovery.choice==='preparePlan'?'确认准备计划':'确认重新准备')
 </script>
 <template>
@@ -41,9 +41,11 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
     </template>
     <template v-else-if="recovery.choice === 'cancelPreparation'">
       <p class="client-recovery-lead">取消这次启动准备？</p>
-      <p v-if="recovery.preview?.phase==='capture_reserved'">原件捕获已中断。确认后重新核对服务已停止，保留已捕获文件，再取消本次启动。</p>
+      <p v-if="recovery.preview?.preparationKind==='created_root'">确认后保管这次启动新建的空目录，恢复启动前的目录缺席状态；不会删除后来写入的内容。</p>
+      <p v-else-if="recovery.preview?.phase==='capture_reserved'">原件捕获已中断。确认后重新核对服务已停止，保留已捕获文件，再取消本次启动。</p>
       <p v-else>本次准备尚未产生新的原件目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。</p>
-      <p>保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
+      <p v-if="recovery.preview?.preparationKind!=='created_root'">保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
+      <p v-else>重新核对服务停止与目录内容；保管完成后不会自动启动。</p>
     </template>
     <template v-else-if="recovery.choice === 'finishUnchanged'">
       <p class="client-recovery-lead">核对并结束原会话？</p>
@@ -51,7 +53,7 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
       <p>客户端配置保持不变，不会自动启动服务。</p>
     </template>
     <template v-else-if="restoredOutcome">
-      <p role="status">{{ recovery.outcome?.status === 'cancelled_capture' ? '本次启动已取消，已捕获文件保留。' : recovery.outcome?.status === 'cancelled_before_capture' ? '启动准备已取消，当前配置保持不变。' : recovery.outcome?.status === 'unchanged' ? '原件保持完整，原会话已结束。' : recovery.continuing ? '客户端配置恢复已完成。' : '配置恢复收尾已完成。' }}</p>
+      <p role="status">{{ recovery.outcome?.status === 'root_cancelled' ? '启动准备已取消，原目录缺席已恢复。' : recovery.outcome?.status === 'cancelled_capture' ? '本次启动已取消，已捕获文件保留。' : recovery.outcome?.status === 'cancelled_before_capture' ? '启动准备已取消，当前配置保持不变。' : recovery.outcome?.status === 'unchanged' ? '原件保持完整，原会话已结束。' : recovery.continuing ? '客户端配置恢复已完成。' : '配置恢复收尾已完成。' }}</p>
       <p v-if="recovery.ready">服务保持停止，现在可以启动。</p>
       <p v-else-if="recovery.refreshing">正在核对当前运行状态，核对通过后才能启动。</p>
       <p v-else>当前运行状态尚未核实，核对通过后才能启动。</p>

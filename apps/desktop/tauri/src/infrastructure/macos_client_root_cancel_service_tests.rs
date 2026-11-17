@@ -93,6 +93,44 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         .review_first_root_preparation(&context, &head, end)
         .unwrap();
     let case = std::env::var("OCXD024_ROOT_CANCEL_CASE").unwrap_or_else(|_| "success".into());
+    if std::env::var_os("OCXD024_ROOT_CANCEL_USER_ACTION").as_deref()
+        == Some(std::ffi::OsStr::new("1"))
+    {
+        assert_eq!(case, "success");
+        drop(review);
+        drop(index);
+        let preview = super::super::preview::inspect_preview(&context, &data);
+        assert!(preview.can_cancel_preparation);
+        assert_eq!(preview.preparation_kind, Some("created_root"));
+        let request = super::super::finalization::Request {
+            attempt_id: head.ticket.clone(),
+            revision: head.revision,
+            confirmation_digest: preview.preparation_digest.unwrap(),
+        };
+        let stale = super::super::finalization::Request {
+            attempt_id: request.attempt_id.clone(),
+            revision: request.revision,
+            confirmation_digest: "0".repeat(64),
+        };
+        assert!(super::super::root_cancellation::cancel(&context, &data, stale).is_err());
+        let action_started = Instant::now();
+        let outcome = super::super::root_cancellation::cancel(&context, &data, request).unwrap();
+        let action_elapsed = action_started.elapsed().as_millis();
+        assert!(action_elapsed < 10000);
+        assert_eq!(outcome.status, "root_cancelled");
+        assert_eq!(outcome.revision, head.revision + 2);
+        let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
+        let closed = reopened.head().unwrap().unwrap();
+        drop(reopened);
+        successor_and_history(&root, &context, &data, closed, action_elapsed, &case);
+        let result_path = root.join("native-preservation-result.json");
+        let mut result: serde_json::Value =
+            serde_json::from_slice(&fs::read(&result_path).unwrap()).unwrap();
+        result["actualUserActionEntry"] = serde_json::json!(true);
+        result["staleConfirmationRefused"] = serde_json::json!(true);
+        fs::write(result_path, serde_json::to_vec_pretty(&result).unwrap()).unwrap();
+        return;
+    }
     if case == "new_data" {
         // Real extra same-HOME runtime. It is not a Guard and must never be
         // excluded by name/path alone. Only this newly spawned fixture is killed.
@@ -203,19 +241,66 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
     assert!(closed.completion_sha256.is_some());
     assert!(Instant::now() < end);
     assert!(!profile.join(".codex").exists());
-    assert!(!index.successor_eligible(&context, &closed).unwrap());
+    assert!(index.successor_eligible(&context, &closed).unwrap());
     drop(proof);
     drop(index);
-    let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
+    successor_and_history(
+        &root,
+        &context,
+        &data,
+        closed,
+        started.elapsed().as_millis(),
+        &case,
+    );
+}
+fn successor_and_history(
+    root: &Path,
+    context: &ProcessContext,
+    data: &Path,
+    closed: Head,
+    cancellation_elapsed: u128,
+    case: &str,
+) {
+    let profile = context.working_directory.clone();
+    let reopened = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
     assert!(reopened.head().unwrap().as_ref() == Some(&closed));
     assert!(reopened.reserve_start().is_err());
     drop(reopened);
-    let preview = super::super::preview::inspect_preview(&context, &data);
+    let preview = super::super::preview::inspect_preview(context, data);
     assert_eq!(preview.phase, Some(State::RootCancellationAbsent));
-    assert_eq!(preview.status, super::super::preview::Status::Pending);
+    assert_eq!(preview.status, super::super::preview::Status::Restored);
     assert_eq!(
         preview.completion_evidence,
         super::super::preview::Evidence::Verified
     );
-    fs::write(root.join("native-preservation-result.json"),serde_json::to_vec_pretty(&serde_json::json!({"scenario":case,"actualCurrentServiceAdmission":true,"originalFourNativeScopesReleased":true,"canonicalHead":closed,"canonicalCancellationClosed":true,"normalStop":false,"successorEligible":false,"elapsedActionMs":started.elapsed().as_millis(),"budgetMs":10000,"serviceStarted":false,"releaseAcceptance":false})).unwrap()).unwrap();
+    // New explicit Start action has its own original 30s window. No service is
+    // launched: this verifies actual new root custody and storage-only capture.
+    let next_started = Instant::now();
+    let (successor, preparing) =
+        Index::prepare_start_capture(context, data, next_started + Duration::from_secs(30))
+            .unwrap();
+    assert_ne!(preparing.ticket, closed.ticket);
+    assert_eq!(preparing.revision, closed.revision + 1);
+    assert!(preparing.root_generation.is_some());
+    let (captured, originals) =
+        super::super::generation::fixture_captured_successor(context, &successor, &preparing);
+    assert_eq!(captured.state, State::Captured);
+    let successor_elapsed = next_started.elapsed().as_millis();
+    assert!(successor_elapsed < 30000);
+    drop(originals);
+    drop(successor);
+    let reopened = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
+    assert!(reopened.head().unwrap().as_ref() == Some(&captured));
+    drop(reopened);
+    let old_slot = data
+        .join("manager-state/client-root-cancel-plans")
+        .join(&closed.root_retirement.as_ref().unwrap().plan.id);
+    // A historical old-root edit is not hidden by the later active generation.
+    fs::write(
+        old_slot.join("root/unexpected"),
+        b"preserve historical corruption fixture",
+    )
+    .unwrap();
+    assert!(Index::open_existing(context, data, &profile.join(".codex")).is_err());
+    fs::write(root.join("native-preservation-result.json"),serde_json::to_vec_pretty(&serde_json::json!({"scenario":case,"actualCurrentServiceAdmission":true,"originalFourNativeScopesReleased":true,"canonicalHead":closed,"canonicalCancellationClosed":true,"normalStop":false,"successorEligible":true,"elapsedActionMs":cancellation_elapsed,"budgetMs":10000,"successorCaptureElapsedMs":successor_elapsed,"successorCaptureBudgetMs":30000,"successorCapturedHead":captured,"syntheticCaptureScopeOnlyNotService":true,"oldArchiveTamperReopenRefused":true,"serviceStarted":false,"releaseAcceptance":false})).unwrap()).unwrap();
 }

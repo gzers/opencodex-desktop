@@ -65,6 +65,25 @@ describe('already retired root finalization',()=>{
 });
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('explicitly confirms first-root preservation and accepts its two-event cancellation receipt',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),preparationKind:'created_root'})
+    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:3,status:'root_cancelled'})
+    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
+    expect(await useClientRecoveryStore().apply('cancelPreparation')).toBe(false)
+    await button('取消启动准备')!.trigger('click');expect(view.text()).toContain('保管这次启动新建的空目录');expect(view.text()).toContain('不会删除后来写入的内容')
+    expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled()
+    await button('确认取消启动准备')!.trigger('click');await flushPromises()
+    expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledWith({attemptId:preparing().attemptId,revision:1,confirmationDigest:'f'.repeat(64)})
+    expect(view.text()).toContain('原目录缺席已恢复');expect(useClientRecoveryStore().ready).toBe(true)
+    expect(useLifecycleStore().clientRecoveryRequired).toBe(false)
+    expect(clientRecoveryApi.continue).not.toHaveBeenCalled();expect(clientRecoveryApi.finalize).not.toHaveBeenCalled()
+  })
+  it.each([{revision:2,status:'root_cancelled' as const},{revision:3,status:'cancelled_before_capture' as const}])('refuses a first-root receipt with ordinary revision/status semantics %#',async receipt=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),preparationKind:'created_root'})
+    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),...receipt})
+    const store=await inspect();store.choose('cancelPreparation');expect(await store.apply('cancelPreparation')).toBe(false)
+    expect(store.error).toContain('回执');expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+  })
   it.each(['root_retirement_prepared','root_cancellation_prepared','root_cancellation_absent','root_absent'] as const)('keeps %s read-only even if a payload advertises ordinary mutation capabilities',async phase=>{
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preview(),phase,canContinue:true,canFinalize:true,canRollback:true,canRearm:true,canFinishUnchanged:true,canCancelPreparation:true,canPreparePlan:true,planDigest:'d'.repeat(64),unchangedDigest:'e'.repeat(64),preparationDigest:'f'.repeat(64),rollbackDigest:'b'.repeat(64),rearmDigest:'c'.repeat(64)})
     const store=await inspect();expect(store.canContinue||store.canFinalize||store.canRollback||store.canRearm||store.canFinishUnchanged||store.canCancelPreparation||store.canPreparePlan).toBe(false)

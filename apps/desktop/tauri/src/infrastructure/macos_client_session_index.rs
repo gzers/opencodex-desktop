@@ -67,6 +67,8 @@ pub mod preview;
 pub mod rearm;
 #[path = "macos_client_recovery_rollback.rs"]
 pub mod rollback;
+#[path = "macos_client_root_cancel_action.rs"]
+pub mod root_cancellation;
 #[path = "macos_client_root_prepare_cancel.rs"]
 pub mod root_preparation;
 #[path = "macos_client_unchanged.rs"]

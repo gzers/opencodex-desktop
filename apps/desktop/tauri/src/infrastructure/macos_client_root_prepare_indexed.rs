@@ -12,6 +12,75 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
     origin: &super::super::super::root_creation::References,
     connection: &Connection,
 ) -> std::io::Result<PinnedDirectory> {
+    let history = vault_history::read(connection, head)?;
+    observe(data, profile, stored, head, origin, &history, false).map(|(root, _)| root)
+}
+/// One independently indexed initial cancellation, checked without reading the
+/// live client/Grok of a later generation. It grants no current permission.
+pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservation {
+    binding: Vec<u8>,
+    head: Head,
+    origin: super::super::super::root_creation::References,
+    history: Vec<Head>,
+    fingerprint: String,
+}
+impl HistoricalObservation {
+    pub(in crate::infrastructure::macos_client_originals) fn begin(
+        data: &PinnedDirectory,
+        profile: &Path,
+        binding: &[u8],
+        head: &Head,
+        origin: &super::super::super::root_creation::References,
+        history: &[Head],
+    ) -> std::io::Result<(Self, PinnedDirectory)> {
+        if head.state != State::RootCancellationAbsent || history.last() != Some(head) {
+            return Err(denied(
+                "cancellation history is not the independently closed prefix",
+            ));
+        }
+        let (root, fingerprint) = observe(data, profile, binding, head, origin, history, true)?;
+        Ok((
+            Self {
+                binding: binding.to_vec(),
+                head: head.clone(),
+                origin: origin.clone(),
+                history: history.to_vec(),
+                fingerprint,
+            },
+            root,
+        ))
+    }
+    pub(in crate::infrastructure::macos_client_originals) fn finish(
+        self,
+        data: &PinnedDirectory,
+        profile: &Path,
+    ) -> std::io::Result<PinnedDirectory> {
+        let (root, fingerprint) = observe(
+            data,
+            profile,
+            &self.binding,
+            &self.head,
+            &self.origin,
+            &self.history,
+            true,
+        )?;
+        if fingerprint != self.fingerprint {
+            return Err(denied(
+                "historical cancelled-root evidence changed during full lineage review",
+            ));
+        }
+        Ok(root)
+    }
+}
+fn observe(
+    data: &PinnedDirectory,
+    profile: &Path,
+    stored: &[u8],
+    head: &Head,
+    origin: &super::super::super::root_creation::References,
+    history: &[Head],
+    historical: bool,
+) -> std::io::Result<(PinnedDirectory, String)> {
     validate(head)?;
     if !matches!(
         head.state,
@@ -42,7 +111,14 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
         ));
     }
     let manager = data.child_private("manager-state", false)?;
-    if observation::entry(&manager, "client-originals")?.is_some() {
+    if observation::entry(&manager, "client-originals")?.is_some()
+        && (!historical
+            || observation::entry(
+                &manager.child_private("client-originals", false)?,
+                &head.ticket,
+            )?
+            .is_some())
+    {
         return Err(denied(
             "root-cancel cannot resolve an uncaptured reference over a vault",
         ));
@@ -85,23 +161,28 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
         || plan.origin != *origin
         || plan.binding_sha256 != digest(stored)
         || !valid_hash(&plan.initial_review_sha256)
-        || digest(&encode(&vault_history::read(connection, &plan.source)?)?) != plan.history_sha256
-        || super::super::super::GrokSnapshot::read(&PinnedDirectory::open(profile)?)? != plan.grok
+        || !historical
+            && super::super::super::GrokSnapshot::read(&PinnedDirectory::open(profile)?)?
+                != plan.grok
     {
         return Err(denied("indexed root-cancel source/history/context changed"));
     }
-    let raw_source: Vec<u8> = connection
-        .query_row(
-            "SELECT document FROM events WHERE revision=?1",
-            [reference.source_revision],
-            |r| r.get(0),
-        )
-        .map_err(database_error)?;
-    if raw_source != encode(&plan.source)? {
-        return Err(denied("indexed root-cancel source event changed"));
+    let source_end = usize::try_from(plan.source.revision)
+        .map_err(|_| denied("cancelled-root source revision overflow"))?;
+    let source_history = history
+        .get(..source_end)
+        .ok_or_else(|| denied("cancelled-root original prefix missing"))?;
+    if source_history.last() != Some(&plan.source)
+        || digest(&encode(&source_history)?) != plan.history_sha256
+    {
+        return Err(denied("indexed root-cancel source event/history changed"));
     }
     let profile = PinnedDirectory::open(profile)?;
-    let logical = observation::entry(&profile, ".codex")?;
+    let logical = if historical {
+        None
+    } else {
+        observation::entry(&profile, ".codex")?
+    };
     let archived = observation::entry(&directory, "root")?;
     let intent = capture_file(&directory, "move-intent.json", MAX_FRAME)?;
     let has_intent = match &intent {
@@ -185,14 +266,15 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
     expected.sort();
     if super::super::super::tree::names(directory.file())? != expected
         || super::super::super::TreeSnapshot::read(&root)? != tree
-        || super::super::super::GrokSnapshot::read(&profile)? != plan.grok
+        || !historical && super::super::super::GrokSnapshot::read(&profile)? != plan.grok
         || capture_file(&directory, "plan.json", MAX_FRAME)? != plan_image
         || capture_file(&directory, "move-intent.json", MAX_FRAME)? != intent
         || capture_file(&directory, "preserved-readback.json", MAX_FRAME)? != receipt
         || capture_file(&directory, "cancellation-completed.json", MAX_FRAME)? != completed
         || super::super::super::tree::names(parent.file())? != names
-        || observation::entry(&profile, ".codex")?.map(|s| identity(&s))
-            != logical.map(|s| identity(&s))
+        || !historical
+            && observation::entry(&profile, ".codex")?.map(|s| identity(&s))
+                != logical.map(|s| identity(&s))
         || observation::entry(&directory, "root")?.map(|s| identity(&s))
             != archived.map(|s| identity(&s))
     {
@@ -208,5 +290,13 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
         origin,
         &path,
     )?;
-    Ok(root)
+    let fingerprint = digest(&encode(&(
+        head,
+        &plan_image,
+        &intent,
+        &receipt,
+        &completed,
+        &tree,
+    ))?);
+    Ok((root, fingerprint))
 }

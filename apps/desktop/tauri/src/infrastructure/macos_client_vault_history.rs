@@ -139,6 +139,7 @@ fn inspect_root_lineage(
         lineage.bind_pending(transfer)?;
     }
     let mut references = Vec::new();
+    let mut cancelled = Vec::new();
     let mut expected = Vec::new();
     let mut current = None;
     for generation in lineage.generations() {
@@ -146,6 +147,30 @@ fn inspect_root_lineage(
             .heads
             .last()
             .ok_or_else(|| denied("empty root generation"))?;
+        if closed.state == State::RootCancellationAbsent {
+            let end = usize::try_from(closed.revision)
+                .map_err(|_| denied("cancelled-root history overflow"))?;
+            let prefix = history
+                .get(..end)
+                .ok_or_else(|| denied("cancelled-root closed prefix missing"))?;
+            let (observation, root) =
+                super::root_preparation::preservation::indexed::HistoricalObservation::begin(
+                    data,
+                    profile,
+                    &generation.binding,
+                    closed,
+                    &generation.origin,
+                    prefix,
+                )?;
+            check_historical_scope_pins(
+                data,
+                &PinnedDirectory::open(profile)?,
+                &root,
+                &generation.binding,
+            )?;
+            cancelled.push((observation, generation.binding.clone()));
+            continue;
+        }
         if closed.state != State::RootAbsent {
             if closed_only {
                 return Err(denied("root history has an unclosed generation"));
@@ -214,18 +239,19 @@ fn inspect_root_lineage(
     let manager = data.child_private("manager-state", false)?;
     if observation::entry(&manager, "client-originals")?.is_none() {
         if !expected.is_empty()
-            || current.is_none_or(|h| {
-                !matches!(
+            || !(current.is_some_and(|h| {
+                matches!(
                     h.state,
                     State::Preparing
                         | State::CaptureReserved
                         | State::RootCancellationPrepared
                         | State::RootCancellationAbsent
                 )
-            })
+            }) || current.is_none() && !cancelled.is_empty())
         {
             return Err(denied("indexed root original vault missing"));
         }
+        finish_cancelled_history(data, profile, cancelled)?;
         return Ok(Vec::new());
     }
     let vault = manager.child_private("client-originals", false)?;
@@ -278,6 +304,7 @@ fn inspect_root_lineage(
         };
         check_historical_scope(&archive, binding)?;
     }
+    finish_cancelled_history(data, profile, cancelled)?;
     if let Some((directory, observed)) = active_directory {
         let info = stat(directory.file())?;
         if (
@@ -301,6 +328,20 @@ fn inspect_root_lineage(
         .into_iter()
         .map(|(reference, _, _)| reference)
         .collect())
+}
+fn finish_cancelled_history(
+    data: &PinnedDirectory,
+    profile: &Path,
+    observations: Vec<(
+        super::root_preparation::preservation::indexed::HistoricalObservation,
+        Vec<u8>,
+    )>,
+) -> io::Result<()> {
+    for (observation, binding) in observations {
+        let root = observation.finish(data, profile)?;
+        check_historical_scope_pins(data, &PinnedDirectory::open(profile)?, &root, &binding)?;
+    }
+    Ok(())
 }
 pub(super) fn inspect(
     data: &PinnedDirectory,

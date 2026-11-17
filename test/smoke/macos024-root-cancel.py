@@ -61,10 +61,11 @@ def run(output, scenario='success', shared_program=None, scope='storage'):
         policy.write_text('(version 1) (allow default) (deny network*) (deny file-read* file-write* (subpath ' + json.dumps(pwd.getpwuid(os.getuid()).pw_dir) + ')) (deny file-read* file-write* (subpath "/Library/Keychains")) (deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))')
         shutil.copyfile(policy, output / 'native.sb')
         test = TEST if scope == 'storage' else 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::service_tests::current_service_movement_and_native_release_bind_a_distinct_cancellation_terminal'
-        if scope not in ('storage', 'current-service'): raise ValueError('unknown root cancellation test scope')
+        if scope not in ('storage', 'current-service', 'user-action'): raise ValueError('unknown root cancellation test scope')
         argv = ['/usr/bin/sandbox-exec', '-f', str(policy), str(host), '--exact', test, '--ignored', '--nocapture', '--test-threads=1']
         env = {'HOME': str(root / 'profile'), 'CFFIXED_USER_HOME': str(root / 'profile'), 'PATH': '/usr/bin:/bin', 'TMPDIR': str(parent), 'OCXD024_ROOT_CANCEL_NATIVE': str(root)}
         env['OCXD024_ROOT_CANCEL_CASE'] = scenario
+        if scope == 'user-action': env['OCXD024_ROOT_CANCEL_USER_ACTION'] = '1'
         if shared_program is not None: env['OCXD024_ROOT_CANCEL_REUSE'] = str(shared_program)
         started = time.monotonic()
         with (output / 'stdout.log').open('xb') as stdout, (output / 'stderr.log').open('xb') as stderr:
@@ -104,6 +105,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--case', choices=['success', 'before_move', 'after_move', 'new_data', 'new_root'], default='success')
-    parser.add_argument('--scope', choices=['storage', 'current-service'], default='storage')
+    parser.add_argument('--scope', choices=['storage', 'current-service', 'user-action'], default='storage')
     args = parser.parse_args()
     run(args.output, args.case, scope=args.scope)
