@@ -256,6 +256,20 @@ pub(super) fn resolve_originals_projected(
     }
 
     let head = head.ok_or_else(|| denied("registered root has no current independent session"))?;
+    if head.state == State::RootCancellationPrepared {
+        let client = super::root_preparation::preservation::indexed::inspect(
+            data,
+            &context.working_directory,
+            &active,
+            head,
+            &binding.original_root,
+            connection,
+        )?;
+        if scope_at(context, data, &client, &logical)? != binding.scope {
+            return Err(denied("indexed root cancellation logical scope changed"));
+        }
+        return Ok((client, Some(binding.original_root), None));
+    }
     if let Some(movement) = &head.root_retirement {
         if !matches!(
             head.state,

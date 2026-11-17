@@ -15,6 +15,71 @@ fn preservation_authority_cannot_be_deserialized_or_created_by_plan_or_readback(
 }
 
 #[test]
+fn cancellation_registration_rejects_missing_or_unbound_plan_and_rolls_back_the_event() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path().canonicalize().unwrap();
+    let data = root.join("desktop");
+    let profile = root.join("profile");
+    let home = profile.join("home");
+    for path in [&data, &profile, &home] {
+        fs::DirBuilder::new().mode(0o700).create(path).unwrap();
+    }
+    let context = ProcessContext {
+        runtime: crate::infrastructure::runtime_executable::FixedRuntimeExecutable::unresolved(),
+        working_directory: profile.clone(),
+        opencodex_home: home,
+    };
+    let (index, head) =
+        Index::prepare_start_capture(&context, &data, Instant::now() + Duration::from_secs(10))
+            .unwrap();
+    let id = uuid::Uuid::new_v4().to_string();
+    let candidate = Head {
+        revision: head.revision + 1,
+        ticket: head.ticket.clone(),
+        state: State::RootCancellationPrepared,
+        references: None,
+        restore_plan: None,
+        completion_sha256: None,
+        root_retirement: Some(RootRetirement {
+            source_revision: head.revision,
+            plan: RestorePlan {
+                id: id.clone(),
+                sha256: digest(b"not-a-registered-plan"),
+            },
+        }),
+        root_generation: None,
+    };
+    for stage in 0..3 {
+        if stage == 1 {
+            let parent = index
+                .action_parent
+                .child_private("client-root-cancel-plans", true)
+                .unwrap();
+            let slot = parent.child_private(&id, true).unwrap();
+            create(&slot, "plan.json", b"not-a-registered-plan").unwrap();
+        }
+        let mut wrong = candidate.clone();
+        if stage == 2 {
+            wrong.completion_sha256 = Some(digest(b"sidecar claims success"));
+        }
+        assert!(index.write(Some(&head), &wrong).is_err());
+        assert_eq!(index.head().unwrap().as_ref(), Some(&head));
+        assert!(
+            vault_history::read(index.connection().unwrap(), &head).unwrap() == vec![head.clone()]
+        );
+        assert!(super::super::super::tree::names(index.client.file())
+            .unwrap()
+            .is_empty());
+    }
+    drop(index);
+    drop(context);
+    let path = temp.path().to_path_buf();
+    temp.close().unwrap();
+    assert!(!path.exists());
+    println!("ROOT_CANCEL_INDEX_FIXTURE_REMOVED {}", path.display());
+}
+
+#[test]
 #[ignore = "explicit isolated official2.99 Guard/NativeLease fixture, no service or canonical cancel"]
 fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker() {
     use crate::infrastructure::official_client_coordination::{
@@ -116,6 +181,17 @@ fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker()
                 detail: e.to_string(),
             }
         })?;
+        let pending = pending
+            .register()
+            .map_err(|e| crate::errors::AppError::RuntimeManaged {
+                code: "test_root_prepare_registration".into(),
+                detail: e.to_string(),
+            })?;
+        assert_eq!(
+            pending.registered_head().unwrap().state,
+            State::RootCancellationPrepared
+        );
+        assert_eq!(index.head().unwrap().as_ref(), pending.registered_head());
         let destination = pending.destination();
         let scenario =
             std::env::var("OCXD024_ROOT_CANCEL_CASE").unwrap_or_else(|_| "success".into());
@@ -222,13 +298,53 @@ fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker()
             "native counterexample was not reached"
         );
     }
-    assert_eq!(
-        read_head(index.connection().unwrap()).unwrap().as_ref(),
-        Some(&head)
-    );
-    // Until canonical wiring exists, the old index MUST refuse normal status/
-    // Start rather than claiming that preservation alone cancelled the action.
-    if scenario != "before_move" {
+    let indexed = read_head(index.connection().unwrap()).unwrap().unwrap();
+    assert_eq!(indexed.state, State::RootCancellationPrepared);
+    assert_eq!(indexed.revision, head.revision + 1);
+    assert!(indexed.completion_sha256.is_none());
+    // Registered plans resolve exact live and moved/interrupted objects, while
+    // unknown new data or a replacement logical root remain refused. No close.
+    if matches!(scenario.as_str(), "new_data" | "new_root") {
         assert!(index.head().is_err());
+    } else {
+        assert_eq!(index.head().unwrap().as_ref(), Some(&indexed));
     }
+    drop(index);
+    if !matches!(scenario.as_str(), "new_data" | "new_root") {
+        let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
+        assert_eq!(reopened.head().unwrap().as_ref(), Some(&indexed));
+        assert!(reopened.reserve_start().is_err());
+        drop(reopened);
+        let preview = super::super::preview::inspect_preview(&context, &data);
+        assert_eq!(preview.status, super::super::preview::Status::Pending);
+        assert_eq!(preview.phase, Some(State::RootCancellationPrepared));
+        assert_eq!(
+            preview.original_evidence,
+            super::super::preview::Evidence::NotRecorded
+        );
+        assert_eq!(
+            preview.plan_evidence,
+            super::super::preview::Evidence::Verified
+        );
+        assert!(
+            !preview.can_continue
+                && !preview.can_rollback
+                && !preview.can_finalize
+                && !preview.can_rearm
+                && !preview.can_cancel_preparation
+        );
+        assert!(!super::super::generation::inspect_successor_eligibility(&context, &data).unwrap());
+    } else {
+        assert!(Index::open_existing(&context, &data, &profile.join(".codex")).is_err());
+    }
+    let receipt_path = root.join("native-preservation-result.json");
+    let mut receipt: serde_json::Value =
+        serde_json::from_slice(&fs::read(&receipt_path).unwrap()).unwrap();
+    receipt["registeredHead"] = serde_json::to_value(&indexed).unwrap();
+    receipt["canonicalCancellationClosed"] = serde_json::json!(false);
+    receipt["indexReopenedAndPending"] =
+        serde_json::json!(!matches!(scenario.as_str(), "new_data" | "new_root"));
+    receipt["newDataReopenRefused"] =
+        serde_json::json!(matches!(scenario.as_str(), "new_data" | "new_root"));
+    fs::write(receipt_path, serde_json::to_vec_pretty(&receipt).unwrap()).unwrap();
 }
