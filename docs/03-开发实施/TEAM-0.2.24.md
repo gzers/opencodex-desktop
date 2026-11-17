@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 27；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 28；2026-11-17。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -256,3 +256,10 @@ Windowsbf16cad3f/3b343c66b的7原worker场景与范围接收归IMP155；保持TE
 Mac main8140844dcb6a363263f679db5f6245102947f46a已接实际CurrentService/Guard角色识别、明确四协调器释放回执和RootCancellationAbsent独立收口；原预算与失败/来源只归IMP158。后继资格/用户命令和入口未接，不将RootCancellationAbsent当正常Stopped/Closed或Start许可。Windows可自行合入：cfg-mac新增owner方法、Mac native/Index和前端标签，不改Windows独占文件、四trait/CONTRACT_VERSION4或r7允许集，不要求无影响原生重跑。
 
 Windows44aa85f6c/b2b25c26e的五范围释放后全读/专门AbortedOriginals原语已接，真实Owner全driver、独立v2准备、可达私有host和完整原预算仍由Windows独占推进；r2 Job raw50未知依赖及本现场单独恢复批准保持。Mac继续首次取消后继/入口和其它本机缺口，最终候选固定后才W2/双SID，不发布。
+
+
+## revision28 首次取消入口与后继资格接续
+
+Mac mainfcf04caecdd7c328f03fcf1a6ceda3e18517d9bc接首次取消用户命令/确认预览和Vue状态、准确root_cancelled两事件回执，以及独立取消前驱的历史验证/后继创建捕获/实时状态资格。原包原生动作和存储捕获的范围、预算及未验真实界面/service只归IMP159；不是最终候选或整版放行。Windows可自行增量合入本机文件/共享命令的Mac分支/前端字段，不改Windows原件/worker/host/协调/扫描独占集与四trait/CONTRACT_VERSION4，不要求重跑无影响原生项。
+
+Windows维持44aa85f6c后继独占，完整Owner driver/原slot验证/v2/privatecontrol及真实官方整链继续；r2raw50依赖/本现场单独恢复批准不变。Mac后续集中最终原包界面/官方服务后继、其它取消/中断及既列缺口，不为已有通过项重复空轮。最终源码/制品固定前不W2/双SID，不发布。

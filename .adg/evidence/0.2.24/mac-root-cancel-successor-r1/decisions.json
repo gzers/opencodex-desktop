@@ -1,0 +1,21 @@
+{
+  "firstCompile": {
+    "raw": 0
+  },
+  "intermediateClippy": {
+    "raw": 101,
+    "scope": "11 needless borrow reports in refactored test helper",
+    "repaired": "removed redundant refs only; no product/assertion/budget change",
+    "logsRetained": "check04"
+  },
+  "nativeRounds": {
+    "count": 1,
+    "result": "passed; no repeated already-passed negative scenarios"
+  },
+  "budgetsMs": {
+    "cancel": 10000,
+    "newStartPreparationCapture": 30000
+  },
+  "preservedOriginalReceipt": "normalStop/successorEligible=false stays immutable DATA; successor eligibility comes from new full historical/native context validation, not editing the old receipt",
+  "scope": "initial created-root cancellation only; partial capture or successor-generation cancellation not silently adopted"
+}
