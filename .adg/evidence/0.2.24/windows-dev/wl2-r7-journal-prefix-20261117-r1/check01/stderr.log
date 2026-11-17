@@ -1,0 +1,174 @@
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\apps\desktop\tauri)
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused import: `process::SuspendedOwnerHost`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:27:9
+   |
+27 | pub use process::SuspendedOwnerHost;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup`, `PreparedLauncherAbort`, `QuiescentLauncher`, and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:29:35
+   |
+29 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, ProcessIdentity,
+   |                                   ^^^^^^^^^^^^^
+30 |     ProcessState, RootBinding,
+   |                   ^^^^^^^^^^^
+31 |     PreparedLauncherAbort, QuiescentLauncher,
+   |     ^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `BOUNDED_SECURITY_EXCLUDED_ASSURANCE`
+ --> src\infrastructure\windows_client_originals024\bounded.rs:9:9
+  |
+9 |         BOUNDED_SECURITY_EXCLUDED_ASSURANCE, BOUNDED_SECURITY_INFORMATION,
+  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:13:13
+   |
+13 | use serde::{Deserialize, Serialize};
+   |             ^^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `io::AsRawHandle`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:17:39
+   |
+17 |     os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
+   |                                       ^^^^^^^^^^^^^^^
+
+warning: unused imports: `BY_HANDLE_FILE_INFORMATION`, `Foundation::LocalFree`, `GetFileInformationByHandle`, `GetSecurityDescriptorControl`, `GetSecurityDescriptorLength`, `IsValidSecurityDescriptor`, and `MakeSelfRelativeSD`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:22:5
+   |
+22 |     Foundation::LocalFree,
+   |     ^^^^^^^^^^^^^^^^^^^^^
+23 |     Security::{
+24 |         GetSecurityDescriptorControl, GetSecurityDescriptorLength, IsValidSecurityDescriptor,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+25 |         MakeSelfRelativeSD,
+   |         ^^^^^^^^^^^^^^^^^^
+26 |     },
+27 |     Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `modules::runtime::windows_lifecycle024_contract::NativeSession`
+  --> src\infrastructure\windows_client_originals024\content.rs:18:5
+   |
+18 |     modules::runtime::windows_lifecycle024_contract::NativeSession,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\r7_readonly.rs:3:22
+  |
+3 |     infrastructure::{hash, platform, windows_official_runtime024 as native},
+  |                      ^^^^
+
+warning: unused import: `self`
+ --> src\infrastructure\windows_client_originals024\r7_readonly.rs:8:10
+  |
+8 |     fs::{self, OpenOptions},
+  |          ^^^^
+
+warning: unused import: `create_private_directory`
+ --> src\infrastructure\windows_client_originals024\phase.rs:6:35
+  |
+6 |     windows_official_runtime024::{create_private_directory, PinnedDirectory, PrivateRecord},
+  |                                   ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused import: `FileAction`
+ --> src\infrastructure\windows_client_originals024\tree\anchored\capture.rs:5:10
+  |
+5 |     v3::{FileAction, Journal},
+  |          ^^^^^^^^^^
+
+warning: unused import: `witness::released_history_witness`
+  --> src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement.rs:10:80
+   |
+10 | pub(in crate::infrastructure::windows_client_originals024::tree::anchored) use witness::released_history_witness;
+   |                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `LivePhase` and `WindowsOriginals`
+   --> src\infrastructure\windows_client_originals024\v2.rs:459:26
+    |
+459 | pub(crate) use adapter::{LivePhase, WindowsOriginals};
+    |                          ^^^^^^^^^  ^^^^^^^^^^^^^^^^
+
+error[E0618]: expected function, found `query::SnapshotData`
+   --> src\infrastructure\windows_client_originals024\v3\journal.rs:68:1
+    |
+ 68 | fn security(file: &File, end: Instant) -> io::Result<SnapshotData> {
+    | ------------------------------------------------------------------ this function of the same name is available here, but it's shadowed by the local binding
+    |
+   ::: src\modules\runtime\program_image_windows.rs:109:1
+    |
+109 | fn security(file: &File) -> AppResult<Vec<u8>> {
+    | ---------------------------------------------- this function of the same name is available here, but it's shadowed by the local binding
+    |
+   ::: src\infrastructure\windows_client_originals024\v3\journal\preparation.rs:150:13
+    |
+150 |         let security = security(self.manifest_open.as_ref().unwrap(), end)?;
+    |             -------- `security` has type `query::SnapshotData`
+...
+229 |         let current_security = security(self.current_open.as_ref().unwrap(), end)?;
+    |                                ^^^^^^^^------------------------------------------
+    |                                |
+    |                                call expression requires function
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:540:14
+    |
+540 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+540 -             .fetch_update(
+540 +             .try_update(
+    |
+
+warning: unused variable: `index`
+   --> src\infrastructure\windows_client_originals024\handle_release.rs:268:18
+    |
+268 |             for (index, item) in self.items.iter_mut().enumerate() {
+    |                  ^^^^^ help: if this is intentional, prefix it with an underscore: `_index`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `fault`
+   --> src\infrastructure\windows_client_originals024\handle_release.rs:264:40
+    |
+264 |     pub(super) fn close_all(&mut self, fault: u8, end: Instant) -> io::Result<()> {
+    |                                        ^^^^^ help: if this is intentional, prefix it with an underscore: `_fault`
+
+warning: unused variable: `ordinal`
+   --> src\infrastructure\windows_client_originals024\v3\journal\batches.rs:202:22
+    |
+202 |                 for (ordinal, (root, node)) in expected_nodes.iter().enumerate() {
+    |                      ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_ordinal`
+
+warning: unused variable: `ordinal`
+   --> src\infrastructure\windows_client_originals024\v3\journal\batches.rs:335:18
+    |
+335 |             for (ordinal, (root, node)) in nodes.iter().enumerate() {
+    |                  ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_ordinal`
+
+For more information about this error, try `rustc --explain E0618`.
+warning: `opencodex-desktop` (lib) generated 21 warnings
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error; 21 warnings emitted

@@ -1,0 +1,54 @@
+{
+  "head": "89f55e76d4f5a6e599b0e9db8cb359fcadce0254",
+  "files": [
+    {
+      "sha256": "87573f09132a168d889c44e0392abeb4d7b8353caae24c0cf5d1c77c3d2eb57f",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs"
+    },
+    {
+      "sha256": "b75aa78eaf93918dd5304f2b69b26d79cc7e8d04c3a0c0c0e4ce0356b41d6c51",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs"
+    },
+    {
+      "sha256": "48cfc49e393448135deadf03e924cd21f07da30d78999dc31c6ce1d3738c2414",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs"
+    },
+    {
+      "sha256": "2cacedb8003ea7c688d326b0cdc6bdba73993d0454a8fb2909d4f5b4092779fc",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation_tests.rs"
+    },
+    {
+      "sha256": "4251ed3be6115cf73ba043afc9cb510fc908dbf777e3565a440d2ad137c7a24e",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation.rs"
+    },
+    {
+      "sha256": "ffafce056ee17af32bd522c35ffb79b2ef4de3ec56a4a9d9f48c5ed831ba6cde",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/mod.rs"
+    }
+  ],
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_journal_prefix_native_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "reason": "test05 rustc allocation failed; reducing only root test package codegen parallelism; assertions/deadlines unchanged"
+}

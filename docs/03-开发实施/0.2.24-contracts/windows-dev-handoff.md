@@ -1061,3 +1061,12 @@ PSS24unknown类型的最小安全决定仍待（原ac7c74774请求），仅R1当
 已fetch并消费docs5d5d5a3f81e794de8a238bc3ce18f352633b7b14／TEAM21／IMP149，按r7新答复只在自有普通controller单broker夹具增加NAME_INFORMATION(0x8)，代码41043665d55f7f65bd550e1543701dd7c64192d9已推送。实际flags12/28、rights1049664均captured=walked91/end259，仍24条ObjectType0/Flags0缺TypeName；两明确Job候选只去重成一个内核Job/匹配原自有child，不能排除24未知，accepted=false。四条低权限组合PssCaptureSnapshot raw5原样保留。未扩大TYPE_SPECIFIC/VAclone/内存/上下文/SeDebug/NT fallback，不读取或记录ObjectName、不保存PSS内存；明确OS瞬态快照确实采集名称。自有原Job清子进程raw242、broker raw0，查询副本/snapshot释放；不签Stop/Closed。
 
 完整原始证据wl2-r7-pss-types-20261117-r1，TEST EXE SHA49589d63eca399be1bc43d63db57ba597102aa0177baa66ef82007392a787772，14payload逐字节封存。blocking-request.json请求Mac评估另一文档化有界完整类型/Job覆盖路线或明确合同调整；只暂停currentR2 Job证明/R1计划Ready依赖，future-host journal/native-prefix/完整return继续。currentR2只读原型尚未应用，原r2全归档/44项复用，21500/75744/40588与原件/custody/work/旧seq9不变；原包不重跑、无force/恢复许可、旧50580/54692授权不沿用。公共Start/production/allAcceptedfalse，不改官方/日常/策略，不W2/双SID/发布。
+
+
+## 2026-11-17 r7 原journal初始化逐阶段保留通过
+
+代码a1f15fee6265e2e7df238d2df81f4bfefac19f2a已推送，原CaptureSlot的JournalPreparation先留原native context/pins/peer/action/plan，manifest/current实际CREATE_NEW writer在任何post-create ID/私有权限/ADS/写入/sync/readback前直接入槽。半写/最终检查失败poison留精确原资源，禁止重试/takeComplete；成功仅同对象转Store。RecordFile原manifest隐藏writer、仅read/identity接口/shareREAD拒外写删，不谎称OS只读句柄；旧events仍PrivateRecord，v3原bytes不变。
+
+证据wl2-r7-journal-prefix-20261117-r1，44payload/705643字节（最终manifest以实际封存为准）。实际全产品库test03原生3过、regression04受影响旧链1过；test05加12scene清理核时rustc allocation34078736失败/raw101，断言未跑，原错留。只根测试包codegen256→16降低编译并发后test06 raw0/148989ms，3过0败0ignored、10故障阶段及12新root清理缺席逐项核；TEST EXE4616867d8b9611e53230db94a48732ef7fe83e5ee49cb4f331e33ea32c96c982。check01 E0618和check02 E0599首错/修复日志完整留，6最终源与Git归一行尾比对，schema生成raw归档并还原/移出代码。旧regression两成功fixture删除被自动审批以blocked by policy拒绝，命令未执行；后续只读ZIP/member/hash核过，两原根仍留，不换工具重删。
+
+仅关闭日志初始化前缀保留缺口：CreateDirectoryW create/open后检查失败的阶段登记、新fresh恢复origin/版本化原宿主命令/claimNLK/完整return10s仍未完。PSS0x8仍24unknown请求见上一条，仅R1依赖停；currentR2/3原件/3work/anchors/协调/21500/75744/40588/旧seq9原样，已有全归档/44项、scanner15、6abort+1Resume复用。原r2force/恢复未授权，不沿旧清理授权，原件未归还不再跑原包；Start/production/allAcceptedfalse，普通MSI/原缺席退根/全部生产与历史清理未完保持，不W2/双SID/发布。
