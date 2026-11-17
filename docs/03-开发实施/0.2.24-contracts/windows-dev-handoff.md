@@ -979,3 +979,8 @@ marenben SID1003/session7已交互Active，原包入口仍待准备，无官方�
 本轮原件已保管，不能只force进程或新场景重采。minimum-recovery-interface-request.json给最小缺口：定义首次Resume前失败的独立Abort恢复证明与入口，严格原对象整树/原8/同SID/source/canonical/claimNLK，不从forced/JSON mint正常Stop/Closed/后继。THIS loaded宿主仅Status/forcedJob，无新恢复方法，新源码不能补入其原非Clone能力；需集成合同或用户方案明确本现场受限外部恢复或真正原句柄转移机制。未请求/实施新进程强制清理或客户端恢复。原custody/broker/Job及旧40588/失败scene/ZIP/拒绝全部保留，无原包空跑/W2/双SID/发布。
 
 准备证据60e018646本地提交完整，GitHub连接与低速推送失败，保同一提交待远端成功回读，不宣称已上传。源码357此前已成功推送；真实失败接收独立提交保存，不改原证据迁就网络。
+
+
+## 2026-11-17 r6 代理交付恢复
+
+用户指定127.0.0.1:3060代理。仅各次Git命令配置proxy，未改日常Git配置；fetch成功且main fac8573e5 / governance578230717未变。首push连接reset后回读仍950d3f6da；改HTTP/1.1后按原提交顺序60e018646、37d29aed0均成功推送，远端分支37d29aed0111d448bd130bf7abf97cf1aac5e8e7精确核验。准备717个与真实接收43个Git载荷原字节核验通过。证据.adg/evidence/0.2.24/windows-dev/wl2-r6-proxy-delivery-20261117-r1/。此前网络未交付停点现已解除；首次Resume前失败恢复最小接口请求仍未解除，原75744/21500/custody与40588不动，公开Start/整版accepted仍false，不原包重跑/W2/双SID/发布。

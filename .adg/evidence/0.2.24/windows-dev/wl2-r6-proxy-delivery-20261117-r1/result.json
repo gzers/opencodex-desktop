@@ -1,0 +1,32 @@
+{
+  "time": "2026-11-17T14:41:14.177560+08:00",
+  "proxy": "http://127.0.0.1:3060",
+  "configurationScope": "per Git command only; no persisted user/system Git config modified",
+  "initialPush": "connection reset; remote remained950d3f6da confirmed before retry",
+  "successfulRetry": "HTTP/1.1; original commits pushed sequentially without content changes",
+  "commits": [
+    "60e018646f4a19f292871a3f25b43e62c4977703",
+    "37d29aed0111d448bd130bf7abf97cf1aac5e8e7"
+  ],
+  "remoteDocsHead": "37d29aed0111d448bd130bf7abf97cf1aac5e8e7",
+  "fetchedMain": "fac8573e55441fe514919c63c7f1d65181ff3577",
+  "fetchedGovernanceMain": "5782307174f0d1b011b5415c6c1e8d60414e6b36",
+  "verified": [
+    {
+      "revision": "37d29aed0111d448bd130bf7abf97cf1aac5e8e7",
+      "verified": 717,
+      "method": "git cat-file --batch",
+      "originalBytesEqual": true
+    },
+    {
+      "revision": "37d29aed0111d448bd130bf7abf97cf1aac5e8e7",
+      "verified": 43,
+      "method": "git cat-file --batch",
+      "originalBytesEqual": true
+    }
+  ],
+  "recoveryInterfaceStillRequired": true,
+  "nativeSceneTouched": false,
+  "publicStartOpen": false,
+  "published": false
+}
