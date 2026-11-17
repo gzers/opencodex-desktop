@@ -1,0 +1,31 @@
+# r7初始捕获原槽准备区与逐节点失败前缀
+
+源码a41718ae452040a689b318e32dcf6edf95b9e2c0修复Projection内部再导出；89f55e76d4f5a6e599b0e9db8cb359fcadce0254实现初始PartialCaptureAnchor和逐节点原文件登记，均已推送Windows代码分支。沿TEAM19/r7原写集，不改shared trait、旧v3 schema、原包、原预算或公开Start门。
+
+## 改动覆盖及明确未完
+
+CaptureSlot在Source/route/content/custody准备之前安装私有typed PartialCaptureAnchor，绑定原Owner scope。已成功取得的Source/routes/content/context、准备目录pins、两个custody、两原tree与完整journal返回对象留在原槽；创建各任务路径前记录本次准确intent，任何失败保原槽为occupied/failed，不把没有OriginalSession tag解释为没有原件状态。成功只转移同一实际对象到原CaptureStore，原Store安装后才移动原件/创建work的已有强保留行为不变。
+
+AnchoredTree先登记原父/custody与空native nodes，再collect；每次open得到的实际File先放pending_capture，再做private/streams/8/bytes/children/协调字节验证，通过后才转入完整Node。失败即poison、原完成nodes和pendingFile仍可达，不替换失败slot。没有从intent/JSON/路径构造原生恢复能力，不把不完整树当StoragePlan/OriginalSession/Closed；新代码不热补当前已加载357。
+
+**这不是完整BeforeFirstResumeRecovery实现**。create_private_directory内部可能创建成功后再open/private检查失败；本准备区保准确intent，但尚未直接持有该API丢失的原创建句柄。Journal::create_from_source内部manifest/current构造、写/sync/security失败仍可能丢失局部record句柄/native context；完整返回后的journal才登记。本次只保成功返回资源及逐节点初始校验前缀，不冒所有fallible CREATE_NEW已覆盖。journal-enrollment-next.json逐项列明剩余确切构造sink/原句柄接线和故障注入要求；fresh认证控制/new recovery origin、实际claim/NLK与整树原件返回、全部中断和原10秒仍未实现/未验，不签Aborted/ExternalRestored/normalStop/Closed/后继。
+
+## 实际验证与首错
+
+check01完整真实Tauri库cargo check/raw0/48638ms，验证新准备区与tree/slot实际产品接线；当时尚未补回仅旧测试引用的Projection再导出，不能因此说全测试模块已通过。
+
+native-test02尝试实际产品库三native用例，首次E0603 Projection import private（先前安全query拆分漏原内部再导出），同轮又allocation2162704 bytes失败/raw101/79258ms；**没有执行任何native测试**。原stderr/source/args保留，恢复原windows_client_originals024内部DATA类型再导出，不开放结构字段或native构造，不改旧v2测试断言。同轮低提交空间还导致一次docs Git calloc失败，命令未完成；构建终态后按同一stage/manifest字节校验重试提交，不改raw规避。
+
+native-light03轻量宿主逐字取实际product collect/open_node/stamp/id/names/原error及SQLite字节验证函数，安全投影/ADS/原文件API仍链接真实原源码；只适配import、QueryError路径和固定const/error envelope，2生成段机械核验，未模拟AnchoredClaim/Owner/锁成功。真实Win32三项raw0/8032ms：非法协调内容保completed nodes+pending原句柄/原ID且拒DELETE；未知ADS失败保deny-write/delete普通原句柄/原字节及流；成功全原ID/8/bytes正确，pending为空。仅文件collection行为，不把轻量证据当原Slot/claim/Store完整恢复。
+
+test-check04完整实际Tauri cargo check --tests --lib raw0/173189ms，全部真实产品测试模块能编译元数据（含旧v2 Projection及新3用例、slot Send约束）。不链接/运行断言，不能冒native运行通过。
+
+随后重新实测可用commit约8.5GiB，较native-test02前提已改变；native-test05在同一组原assert/原10秒各用例下完成真实MSVC产品库测试链接，166883ms/raw0，**3通过0失败0ignored**（2168其它tests过滤）。真实用例：非法协调内容保completed+pending原句柄并拒删除，失败prefix不能重采替换；未知ADS失败不移动原件且pending普通原文件拒写删；成功完整捕获原ID保持、重复enrollment拒绝且原树仍能verify。同一cargo/rustc持续观察到终态，没有以观测timeout重开，没有结束日常进程/改页面文件/策略。三个runtime用例均真实普通controller合成fixture，不是marenben生产验收。
+
+实际完整产品lib TEST EXE SHA6725963037110a6954e5391c81045872352d62e5b2bf68b7860be07372d9a4c9（不是发布程序）。11最终改动源对保存/工作/Git仅CRLF差额核，45份light实际输入逐份核，2实际生成函数段独立核。早期native-test02/source.json有原diff、未追补成功原件覆盖；新untracked准备区与测试文件在final-source单列，完整来源并不意味着所有范围运行通过。
+
+## 清理、当前现场与继续
+
+三产品/三light测试只用自身私有临时fixture与真实query/native文件句柄，按原Fixture/tempfile Drop释放；产品旧Fixture没有逐文件显式删除回执，不把这个当整版历史清理闭合。runtime失败前的native-test02编译没有创建fixture。生成desktop/windows schema原字节归档，tracked恢复HEAD、untracked移入本证据；不把生成物提交代码。旧失败/删除审批拒绝未重试，原包固定副本及全部现场原件不删除。
+
+当前r2完整ZIP和前后44项、P0/P1扫描、原Job静止6项与正常Resume1项复用已有证据，当前Job24unknown类型仍待Mac合同决定；本轮未开新PSS flag或连接旧same-image、未执行旧cleanup/外部force。marenben21500/75744、40588、三custody原件/三work/根anchors/协调文件与旧seq9不动，原Start30699ms失败保持。exact-repair-plan executionReady/approvalRequestedfalse，未要求新恢复批准、原件未还不原包重跑。完整产品库typecheck及本3项libtest通过不冒GUI/exe链接/普通生产/恢复10秒/W2/双SID或发布。目标继续active，下一步补journal创建原句柄登记和future恢复工厂，保持原范围/安全/预算/未知拒绝。

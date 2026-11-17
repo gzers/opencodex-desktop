@@ -1,0 +1,27 @@
+{
+  "rounds": [
+    {
+      "round": "native-test05",
+      "scope": "only own synthetic private fixture/temp files",
+      "success": true,
+      "cleanup": "fixture drop releases exact own native handles; old product Fixture does not report explicit per-file deletion receipt",
+      "completeGlobalCleanupProven": false
+    },
+    {
+      "round": "native-light03",
+      "scope": "only own synthetic private fixture/temp files",
+      "success": true,
+      "cleanup": "fixture drop releases exact own native handles; old product Fixture does not report explicit per-file deletion receipt",
+      "completeGlobalCleanupProven": false
+    }
+  ],
+  "currentR2Touched": false,
+  "accountsRemoved": false,
+  "profileChanged": false,
+  "dailyPATHChanged": false,
+  "officialSourceChanged": false,
+  "generatedSchema": "raw outputs archived; tracked desktop restored HEAD; untracked windows output moved into this evidence",
+  "oldDeletionRejectionRetried": false,
+  "failedRuntimeScene": "native-test02 compile failed before test execution; no test runtime fixture created",
+  "allGlobalHistoricalCleanupClosed": false
+}

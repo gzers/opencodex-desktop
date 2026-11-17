@@ -1,0 +1,28 @@
+{
+  "nativeFileFunctionsSameSource": true,
+  "readSecurityAndADSFunctions": "actual native backend/query/stream modules linked by path",
+  "nativeGrantConstructed": false,
+  "omitted": [
+    "AnchoredClaim/native lease and production slot/Owner",
+    "whole journal/Store recovery",
+    "MoveOriginal/working/Closed"
+  ],
+  "adaptations": [
+    "module imports/type visibility",
+    "two constant names and fixed MAX checked against source",
+    "error envelope for coordination validation",
+    "QueryError import path"
+  ],
+  "files": [
+    {
+      "path": "native_partial_collect.rs",
+      "bytes": 6925,
+      "sha256": "8a88597595fb397dc18e4784decd69f9bd605dd8859c4abdc7485d1fde63b359"
+    },
+    {
+      "path": "coordination_validation.rs",
+      "bytes": 623,
+      "sha256": "895d46f479b6badca5e99d367fd3d6d62bac38b8877e4b8ec9b4474eb7705386"
+    }
+  ]
+}
