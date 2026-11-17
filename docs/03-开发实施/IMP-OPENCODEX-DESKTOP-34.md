@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 165；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 166；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 0675a105017ae7fc82a4bd58dd43fe72031470df（非冻结候选）；Windows实现检查点codex/024-windows-native 361cdedf032b20e57b7ca2421daf5ddf3044d631（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main fb755b8ea63d8a3fc9146dc4db491931919905b0（非冻结候选）；Windows实现检查点codex/024-windows-native 361cdedf032b20e57b7ca2421daf5ddf3044d631（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1780,3 +1780,18 @@ Windows361cdedf032b20e57b7ca2421daf5ddf3044d631／docsf8552e56cc4ea0ddb8aaab143b
 synthetic27960新只读证据用QUERY_LIMITED_INFORMATION取得实际image、创建FILETIME134394012184503726、同句柄前后代次不变和任务文件SHA与旧ZIP一致，inSomeJob=true、parent14936/session2/exit259；这只确认当前进程身份，原Job完整成员和monotonic neverResume仍Unknown。处置计划ready=false，当前不请求执行批准，不凭PID/path/hash/当前Suspended补原creator能力；本机不终止/Resume/收养。此残留与r2/session7不同，旧清理授权不转用。
 
 111项表仍保完整nativeV2准备producer/partialwork-capture/缺根、可达strictprivatehost/fulltrait、截止后status、真实Owner固定官方普通Profile整链原预算及容量/CAPtrust未完。当前r2raw50只停自身证明，21500/75744/原件/work/seq9与40588不变，不重跑PSS/旧cleanup，不forced/归还或原包新Start。TEAM29/r7写集不变，Windows继续原独占任务，Mac发行校验独立推进，不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision166：Mac签名更新归档与完整封装内容绑定
+
+mainfb755b8ea63d8a3fc9146dc4db491931919905b0新增verify_macos_updater_024.py并接CI/Release Mac装配。信任输入是明确checkout/tagged tauri.conf版本/identifier/updater公钥和固定官方平台policy；先真实minisign验detached base64签名，再真实codesign验证sealed app，流式读取整个.app.tar.gz而不extract或执行，把全部成员/字节SHA/模式/目录/安全链接与同轮sealed app精确相等；再复用原delivery核内置平台archive/descriptor/pin/原官方tgz逐文件与productionlock。验前后原签名app完整tree/xattrs和archive/signature/config原identity/stat/hash不变。输出始终releaseAcceptance=false，不能由这一部件回执签整版通过。
+
+归档完整性包含单app准确根、精确目录父成员、去重/类型/模式、拒hardlink/设备/特殊文件、越界链接、额外成员/丢成员、PAX xattr overlay/未知metadata、global header和尾随第二归档。压缩文件上限1GiB、未压缩普通内容2GiB及100000成员；TarInfo在标准库处理longname/link/PAX正文前截断声明大小至16KiB，rawheader计数和整个解压流也有界，不能靠迭代前扩展头先申请大内存。读取固定块，不从归档磁盘执行源码或隐式提取文件。
+
+[精确源码/验证](../../.adg/evidence/0.2.24/macos-updater-archive-r1/result.json)：最终9测试过，用真实minisign临时key做有效签名、错公钥/错误签名，并对内容/模式/丢失/额外/恶意成员/官方源码自洽篡改/隐藏trailer重新签名，确保有效签名不掩篡改；16GiB声明扩展头在读取正文前拒。Linux synthetic fixture仅codesign调用明确mock，完整crypto仍真实，不冒Mac签名测试。7项原delivery与30项publisher回归过，共46项；原publisher对>=0.2.24的拒绝门和旧版维护包合同未修改。两workflow经Ruby YAML.parse_file语法通过，未发起GitHub或发布任务。
+
+真实本机原sealed45571包（Desktop351807b2cf36227d04255510f581dee2f066c1b03dc96a291a2c05e759c76f48）生成符合updater布局的GNU tar，仅用新临时测试key替换副本config公钥签名，实际系统codesign和最终有界parser完整过：outer19成员/289224644内容字节，压缩276791819字节/SHA7567162c1806982cfae8ab6d7cf8b3b385bd7cb0fd00988e847b161e250c5095；内置11467成员/633363932字节、2664原官方源码文件、102锁定包准确，官方源b920ba…不变。最终实测7204ms为离线校验/构造成本，非原生生命周期预算。两次自有私有根/临时签名私钥/约277MB测试archive全部删除并缺席核，保公钥/签名/config和摘要约47KB证据，无日常配置或源app变化。
+
+**证据范围**：本地archive是从真实signed app新生成的tar，使用测试key，不是最终Tauri产出的正式updater或发行key实测。Release新步骤在实际tauri-action完成后、同源Mac binary绑定后要求恰好一个真实*.app.tar.gz及其.sig，用tagged原公钥执行同脚本，并上传macos-updater-delivery.json；缺包/签名/内容不等则失败，不改DMG或updater字节。只有以后真实固定候选CI过才计这一生产装配已验，不能以本机测试代签名发行验收。
+
+Windows MSI/NSIS内容抽取/实际封装资源绑定及正式公共制品核验尚需完成；本机已发现7zz可用，但未以未证解析或模拟安装结果草率放行。publish_release.py整版硬拒绝继续保留，不把Mac校验接线当全部发行核验完成。Windows361cdedf0/f8552e56c已接revision165，完整产品Owner/privatehost/nativeV2/当前r2和synthetic27960处置依赖继续，Mac其它既列功能/NAME最终客户端/候选回退不删。目标active，不W2/双SID、不发布。

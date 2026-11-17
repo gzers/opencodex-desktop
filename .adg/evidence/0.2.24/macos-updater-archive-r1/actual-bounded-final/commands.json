@@ -1,0 +1,29 @@
+[
+  {
+    "argv": [
+      "minisign",
+      "-G",
+      "-W",
+      "-p",
+      "/private/tmp/ocxd024-updater-final-seucsnvh/fixture.pub",
+      "-s",
+      "/private/tmp/ocxd024-updater-final-seucsnvh/fixture.key"
+    ],
+    "exitCode": 0,
+    "stdout": "The secret key was saved as /private/tmp/ocxd024-updater-final-seucsnvh/fixture.key - Keep it secret!\nThe public key was saved as /private/tmp/ocxd024-updater-final-seucsnvh/fixture.pub - That one can be public.\n\nFiles signed using this key pair can be verified with the following command:\n\nminisign -Vm <file> -P RWRqmQ3cJeb4CqwuJcHU/VVGUA0OC+n4IgRQcoKWY6kcbyJ7cFZxs0L1\n\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "minisign",
+      "-S",
+      "-m",
+      "/private/tmp/ocxd024-updater-final-seucsnvh/OpenCodeX Desktop.app.tar.gz",
+      "-s",
+      "/private/tmp/ocxd024-updater-final-seucsnvh/fixture.key"
+    ],
+    "exitCode": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 29；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 30；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -272,3 +272,10 @@ Windows维持44aa85f6c后继独占，完整Owner driver/原slot验证/v2/private
 Windows可自行增量合入。共享commands/mod.rs若与本线注册发生冲突逐段保留双方真实净差，不全文件ours/theirs；原私有Owner/恢复/扫描独占集、四trait/CONTRACT_VERSION4和r7无变化。本次status API在busy时现在明确Err，Windows既有定向调用须按原Unknown/Required处理，不能吞错放Start；固定候选时再验真实并发调用，不提前W2/双SID或重复无影响MSI/CLI/扫描/旧归档。
 
 Mac实际原包首次取消和官方后继Ready/正常Stop已验，仍需其它既列缺口/最终状态投影与候选；Windowsdd42d5e后继完整Owner driver/slot复核/v2全native/privatehost继续，r2raw50依赖及synthetic27960清理计划按原边界，不因本批观察修复放宽。继续异步Git回交，非必要用户不中转；不发布。
+
+
+## revision30 Mac更新归档装配接续
+
+Mac mainfb755b8ea63d8a3fc9146dc4db491931919905b0仅.github/scripts新Mac signed-updater校验器、对应离线反例及CI/Release装配；状态/真实本机测试与正式发行证据边界归IMP166。Windows可自行增量合入，不要求重跑已有Owner/CLI/MSI/扫描或Mac页面；没有Windows独占文件/四trait/CONTRACT_VERSION4变化。新Mac步骤必须读取真实tauri输出archive/sig和tagged公钥，缺任何事实保持失败；发布总拒绝门仍在，非正式发行或放宽。
+
+Windows361cdedf0/f8552e56c回交与合成残留只读事实归IMP165，原nativeOwner/returnslot/privatehost/v2独占继续；当前r2与synthetic27960恢复/清理仍需准确原事实和具体计划，不借本批发行工具授权处置。Mac继续Windows封装读取方式/发行核验及其它剩余本机需求；最终完整源码/制品固定前不W2/双SID，不发布。

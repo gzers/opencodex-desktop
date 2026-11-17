@@ -1,0 +1,28 @@
+{
+  "base": "0675a105017ae7fc82a4bd58dd43fe72031470df",
+  "files": [
+    {
+      "path": ".github/scripts/verify_macos_updater_024.py",
+      "bytes": 9703,
+      "sha256": "14c43920a9d81de4e247af9908560fa01a1941cd8dd1b965841bd035fbb78858"
+    },
+    {
+      "path": "test/test_verify_macos_updater_024.py",
+      "bytes": 11604,
+      "sha256": "7103217f8fc01d5acf4b60ed16ad6af1324387ca9b5367c70763ccd5394b2deb"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "bytes": 24293,
+      "sha256": "d186dd7fcbe98f1fefef3defdcea1ebf5d74d591315684a436f62f673671f0df"
+    },
+    {
+      "path": ".github/workflows/release.yml",
+      "bytes": 13805,
+      "sha256": "8e23ebca2abe111949e32728b41afecb745b18535739a195533b1fbaee36b26e"
+    }
+  ],
+  "patchSha256": "2dbf740682eb3d6ac895ba2be6c166d163b179dc0d0be531fd817557caa4d4a7",
+  "scope": "Mac updater signed complete payload validation; final publication hard gate remains unchanged",
+  "committedCode": "fb755b8ea63d8a3fc9146dc4db491931919905b0"
+}
