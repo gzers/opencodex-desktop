@@ -1,0 +1,13 @@
+{
+  "method": "supplemental source order and independent decoder/namespace check; not independent security audit/native recovery acceptance",
+  "checks": {
+    "independentV2Decoder": true,
+    "strictPreviousAndCandidateBeforeCreate": true,
+    "directoryRetainedBeforeChecks": true,
+    "fileRetainedBeforePostchecks": true,
+    "pendingFailureUnretryable": true,
+    "sameDeadlineOnly": true
+  },
+  "nativeAuthorityFromData": false,
+  "currentR2Touched": false
+}

@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 162；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 163；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 81f52452cb4cfafc64a80ca92d97a3ba5990c2fb（非冻结候选）；Windows实现检查点codex/024-windows-native dd42d5e3871b71f860a5149bd22ea0166fd717b1（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 81f52452cb4cfafc64a80ca92d97a3ba5990c2fb（非冻结候选）；Windows实现检查点codex/024-windows-native c3b99c0fa704d278393bf9f854eec4de6968ba4c（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1739,3 +1739,14 @@ Windowsdd42d5e3871b71f860a5149bd22ea0166fd717b1（前笔a1470004b）／docsc17b0
 三轮准确测试根/自有进程组均清，三条本次digest协调器每轮排他重新取得、原bytes/base64/digest留证后删除，preexisting共享全局L未删除/重建；本轮未单独记录其前后bytes，故不冒完整原共享L字节保持证明。原app/副本sealed字节未改。约24MB证据含原失败两轮/三截图与AX/同源构建，不存重复运行包。初seed格式检查raw1保原输出，格式化后build02 raw0，未更改产品源；最终runner新摘要不再终端重复base64。
 
 **未完保留**：最终Tauri/Windows完整集成候选与签名/安装/升级回退发行门；取消后重复代次/部分捕获中断的其它分支、一般客户端图/缺Ready、NAME默认外部客户端与最终重启回退；最后Stop状态任务卡投影未等到收口。本批实际取消及官方后继Start/Ready/Stop通过不替代上述范围。Windowsdd42d5e/c17b031f1新v2回交已归revision161，完整Owner/v2/privatehost/普通Profile/当前r2及synthetic27960清理仍未闭合；本机不触其独占文件或旧现场。目标active，不W2/双SID、不发布。
+
+
+### 2026-11-18 revision163：Windows独立V2原生持久化接收
+
+Windowsc3b99c0fa704d278393bf9f854eec4de6968ba4c／docs954b4540c9bb705edbbbdd4990e8be82df61a402净接收v2-durability轮，29载荷678509字节，完整成员/逐原长度SHA匹配，4执行源逐Git原字节或明确CRLF归一核；[接收回执](../../.adg/evidence/0.2.24/windows-r7-contract-receive-r17/receive-result.json)。本机核原数据与具体handoff，非Windows实际执行或整批安全审计。
+
+独立V2记录命名/strict前驱与候选全链在CREATE_NEW前验证；实际新文件/目录先入原保留槽再作fallible保护/ID/bytes/ADS/完整members前后核。失败留原资源/部分前缀，不读旧目录收养、不重试/重开window；不调用v1 decoder或转换旧记录。该持久化仍只是DATA，不构造Owner/claim/quiescent/恢复许可，不能替代原生准备producer及完整partial恢复。
+
+真实MSVC全Tauri库product01 6过/raw0/145459ms（native tests0.98秒），26新目录覆盖完整canonical DATA链、7链/引用/版本写前拒绝、5原生中断点、4过期/截止替换/非空拒绝、6实际member/SD/ADS/晚变化及3完整声明DATA/Pending/未知终态拒绝。完整声明ID为明确合成DATA，不冒native原件集合或产品Owner。EXE4b5e372f7c50b3b4d3be904a725d2d0b2bb371ee890bb3475d7fb0690ccdebea；26新root缺席，旧strict9/native准备3及无影响CLI/MSI/空GUI/归档复用不重复计。原112warning与工具/文档merge操作错误如实留，不冒新产品首错。
+
+完整103项本线状态仍保真实Owner returned对象/完成proof原slot复验、截止后只读status/history、fulltrait/可达privatehost、全nativeV2准备及pre-manifest/partialcapture/work/缺根恢复、普通Profile原官方整链和预算未完。当前r2raw50依赖、synthetic27960清理和旧拒绝删除目录/失败源保持；不PSS重复同前提、不cleanup探Status、不原现场forced/归还或新原包Start。TEAM29/r7允许集与共享接口未变，Windows持续独占实现；Mac正在补停止进度卡实屏观察，不改已通过native断言，不W2/双SID、不发布，目标active。
