@@ -1,0 +1,28 @@
+{
+  "code": "fbac467cbf0b83472876f733d3fe5ec34f2582e8",
+  "evidence": "379cde898741dc3b26484c0e390cb8c64ce839e9",
+  "round": "wl2-r7-concrete-driver-20261117-r1",
+  "payloadFiles": 140,
+  "payloadBytes": 1747888,
+  "exactManifestAndMembership": true,
+  "sourceFilesGitOrCrlfVerified": [
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/driver_worker_tests.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/release_tests.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/driver.rs"
+  ],
+  "scope": "payload/source/handoff review, not Windows execution or full product acceptance",
+  "allAccepted": false,
+  "currentR2Unchanged": true,
+  "additionalSyntheticProcessCleanupUnfinished": {
+    "pidReported": 27960,
+    "nameReported": "never-resumed-fixture.exe",
+    "nativeCreationAndScopeStillRequiredBeforeDisposition": true
+  }
+}

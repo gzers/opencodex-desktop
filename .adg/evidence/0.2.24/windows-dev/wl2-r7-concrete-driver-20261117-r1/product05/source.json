@@ -1,0 +1,70 @@
+{
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter.rs",
+      "sha256": "4862396b7889788223898a50c4547a6dbda21b86297a0b0d3dbb21d03b1b1cc4"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+      "sha256": "dc38548de2d5a628263de23711320c908a8c09d478e500eb2c300d8b5c02e3ae"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "sha256": "e951ea699fd3b8c7824ac25e95773dceea2902daf9be5ffc122f207fd1461306"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "sha256": "dccdd81bf92e45c734ed8557d12112c7cbf73ca1c6d27a3b6f1abdc69a4ed6be"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/driver_worker_tests.rs",
+      "sha256": "16056ca26073376a71740d5ca0b62a40a2f84250b61ab506c8fc5afbd35cea30"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/release_tests.rs",
+      "sha256": "e9a038cd9c90b27cede29aed8bfa77d9808e35f0dcb6d1722c044535a1746391"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "sha256": "11ee1f000fd4a682e8cd56647ad1045d09b855696458c722ce419a24ff8f1d5d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "sha256": "f3156e437d98e78453763857b01e41f757fd16efa24bed9fe5773e0b2aabf195"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "sha256": "4fd6beb2c4795e9e0b3a544d939f732f1edc90aa1dbef7f2710d88a5f9193738"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery/driver.rs",
+      "sha256": "321bdf11371a3e860ddac73ef001fc951fc07b397438fcae94880b6a3028eb17"
+    }
+  ],
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_concrete_driver_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "head": "1041d489bbc91d4c7109f9c74bdbfe74a60e0e61",
+  "reason": "actualparent teststack overflow during large native task value transport; unique heaporiginal via Box on incoming/returned channel and boxed large fixturetask; no stacklimit/deadline/security/assertion increase; failedsynthetic process retained"
+}
