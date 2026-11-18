@@ -1,0 +1,90 @@
+{
+  "observed": "2026-11-18T22:15:32.9484206+08:00",
+  "reportedWorkingDirectory": "C:/Users/15119",
+  "governance": "e083f35b4bb7266b1837860818a4458cc0c501ca",
+  "main": "040f411e6d48d97bde6e7b2e6c22860e547b6173",
+  "session": [
+    " USERNAME              SESSIONNAME        ID  STATE   IDLE TIME  LOGON TIME",
+    " marenben              rdp-tcp#3           7  Active         30  2026/11/14 22:10"
+  ],
+  "nineR1Prior": {
+    "scans": 3,
+    "raw": 32,
+    "elapsedMs": 6460,
+    "workerCreated": false
+  },
+  "reportedLastLine": "Initial Start prerequisite failed. Preserve this window and do not rerun.",
+  "reportedEntrypoint": "C:/Users/Public/ocx-r7-isolated-owner-nine-r1/launch-r7-partial-owner.cmd Host",
+  "reportedCurrentDirectoryProvesToken": false,
+  "observedProcessMetadata": [
+    {
+      "session": 7,
+      "creationFiletime": "134393656723346630",
+      "pid": 75744
+    },
+    {
+      "session": 7,
+      "creationFiletime": "134393657318681060",
+      "pid": 21500
+    },
+    {
+      "session": 7,
+      "creationFiletime": "134394756616993800",
+      "pid": 95724
+    }
+  ],
+  "profiles": [
+    {
+      "path": "C:/Users/marenben/ocx024-r7-isolated-owner-nine-r2",
+      "absent": true
+    },
+    {
+      "path": "C:/Users/marenben/ocx024-r7-isolated-owner-range-r1",
+      "absent": true
+    },
+    {
+      "path": "C:/Users/Public/ocx-r7-isolated-owner-range-r1",
+      "absent": true
+    }
+  ],
+  "nineR2": {
+    "files": [
+      {
+        "bytes": 109,
+        "sha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2",
+        "path": "launch-r7-partial-owner.cmd"
+      },
+      {
+        "bytes": 28277,
+        "sha256": "9467b0b3ae267c062656972adb65750f9b993a15cc94b1061f38885fbbcda3b8",
+        "path": "launch-r7-partial-owner.ps1"
+      },
+      {
+        "bytes": 329,
+        "sha256": "24a9e54ea54d122b59129cb207a521269cdb5dbb783a0fd5fcf0e01ea7243525",
+        "path": "input/manifest.json"
+      },
+      {
+        "bytes": 103972352,
+        "sha256": "ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030",
+        "path": "input/fixture-test.exe"
+      },
+      {
+        "bytes": 274033721,
+        "sha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+        "path": "input/runtime-bundle-0.2.24-win32-x64.tar.gz"
+      }
+    ],
+    "qualified": false,
+    "dispatched": false,
+    "outputMembers": [],
+    "manifest": {
+      "sourceCommit": "daae8ffff7f304ec28b9c0214db26691e930a395",
+      "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+      "testSha256": "ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030",
+      "schema": 1,
+      "session": 7,
+      "bundleSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+    }
+  }
+}

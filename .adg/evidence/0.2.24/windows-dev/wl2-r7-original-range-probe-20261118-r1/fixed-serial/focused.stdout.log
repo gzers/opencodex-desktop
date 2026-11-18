@@ -1,0 +1,43 @@
+
+running 20 tests
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_preflight_keeps_client_names_and_restores_strict_pins ... strict pin full preflight raw=Some(32)
+.codex original DELETE handle rename raw=Some(5)
+.codex leaf rename raw=Some(5), child rename raw=Some(32)
+.grok original DELETE handle rename raw=Some(5)
+.grok leaf rename raw=Some(5), child rename raw=Some(32)
+ancestor rename raw=Some(32)
+fenced full preflight raw=0
+restored strict pins raw=Some(32)
+restored strict pins with native claim/N/L/K and both anchored captures raw=0
+native preflight success fixture absent after cleanup
+ok
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_preflight_refuses_missing_identity_and_does_not_retry ... expired preflight kind=TimedOut
+child identity mismatch=fixture preflight child identity changed
+original rejected preflight raw=Some(31)
+leaf still pinned after failure raw=Some(5)
+native preflight negative fixture absent after cleanup
+ok
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_rejects_native_image_alias_and_digest_drift ... ok
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_rejects_native_junction_before_creation ... r7-fixture-junction raw=Some(0); stderr=
+ok
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_rejects_overlap_and_refuses_replacement_while_pinned ... r7-fixture-directory-replacement raw=Some(32)
+ok
+test infrastructure::windows_official_lifecycle024::start_worker::tests::wl2_r7_fixture_range_probe_dispatches_once_to_registered_thread_and_keeps_native_error ... ok
+test infrastructure::windows_official_lifecycle024::start_worker::tests::wl2_r7_same_start_queue_admits_only_one_known_unresumed_failure ... one recovery dispatched to original Start thread; Running/Unknown/uncertain Resume and replay refused; first raw33 preserved
+ok
+test infrastructure::windows_official_lifecycle024::start_worker::tests::wl2_r7_start_worker_status_stays_bounded_and_reports_lost_worker_unknown ... ok
+test infrastructure::windows_official_lifecycle024::start_worker::tests::wl2_r7_start_worker_waiter_drop_preserves_first_result_and_rejects_late_success ... ok
+test infrastructure::windows_official_lifecycle024::wl2_r7_isolation_rejects_missing_mismatched_injection_and_resume ... ok
+test infrastructure::windows_owner_host024::recovery_control::server::worker_result_tests::wl2_r7_private_worker_wait_preserves_terminal_unknown_error_and_expiry ... ok
+test infrastructure::windows_owner_host024::recovery_control::server::worker_result_tests::wl2_r7_private_worker_wait_uses_same_deadline_after_projection_contention ... ok
+test infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_native_v2_refusal_preserves_raw_without_success_flags ... ok
+test infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_native_v2_reply_and_ack_strict_no_release_authority_or_wrong_request ... ok
+test infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_exact_original10_or5_qpc_window_floor_and_elapsed_notrenewed ... ok
+test infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_frame_and_confirmation_refuse_unknown_beforeadmission ... ok
+test infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_fresh_challenge_scope_and_every_replay_key_refuse ... ok
+test infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_future_expiry_freq_overflow_and_clock_substitutions_refuse ... ok
+test infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_locator_native_target_data_is_strict_local_and_notauthority ... ok
+test infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_strict_every_field_duplicate_unknown_and_oldprotocol_refuse ... ok
+
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 2311 filtered out; finished in 0.39s
+

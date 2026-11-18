@@ -1781,3 +1781,13 @@ MSVC x64 产品测试库 14/14、raw0，制品 SHA-256 8be7b249774d2f10f4f1ccdca
 准备计划及后续移动记录绑定同一原树实例，在首个检查点及完成记录前拒绝错绑。MSVC x64 夹具 12/12，raw0，SHA-256 0c01924882a2311dc7dccaeafca0e1170e1248a3f0ab10cd97578db1ab144873。链接产品原生租约的测试库 16/16，raw0，SHA-256 6a62641918b52c08be6a327ff0f5ccb671bfd35b349609e26b00aa96b348361a。正常路径仍通过精确归还、租约持续、释放及读回。原日志、测试字节、四份失败归档及逐文件摘要见 wl2-r7-external-tree-binding-20261118-r1。32 个通过用例的夹具根已确认缺席。执行权限层以 blocked by policy 拒绝删除四个已归档失败夹具根及一件构建生成的未跟踪 schema，现场保留。
 
 桌面转述再次确认实际命令使用 nine-r1，已归档首错仍是 6,460 ms／raw32。nine-r2 的 out01 未见回执。请继续沿既定配对采集 marenben session 7 的一次 Host；5／10／5 秒仍等待存活身份和原锁覆盖。旧官方 r2 仍无完整 Job／谱系证据，三件原件和现场继续保全。生产外部修复、单 SID 生命周期、普通 MSI 和固定候选待验，公开 Start 维持拒绝。
+
+## 2026-11-18 r7 原 Start 线程只读范围探针
+
+输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 e083f35b4bb7266b1837860818a4458cc0c501ca、TEAM62／IMP201 和 r7 TEAM61 探针写集。待证伪判断为原注册 Start 线程能在同一 DiagnosticBefore 5 秒内只读确认原失败、原对象与原 claim/N/L/K，身份或范围变化时拒绝 Explicit。测试草稿从 f3564fbb34713beee97ed221fb4797b422b11d57 开始，在回复前后复核原线程、两个原生范围样本和同样本 Required 状态。客户端核对请求与动作，测试宿主在原期限内收到对应 ACK 才接受进入下一门。生产库检查通过。
+
+初版 MSVC 组件 135 通过、1 忽略，raw0。最终草稿首次链接 raw101／LNK1104，目标 EXE 当时由初版测试占用。初版退出后独占打开原输出成功，串行重编译 raw0。最终草稿 MSVC 定向 20/20、raw0，非测试产品库 cargo check raw0。测试 EXE SHA-256 1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8。Windows PowerShell 5.1 入口门槛有效样本 1 个通过、10 个改写样本拒绝。原始日志、源码快照摘要和结果见 wl2-r7-original-range-probe-20261118-r1。日志所列控制端临时根 268 处确认缺席。两份刻意保留的合成夹具已归档、逐项读回核验。执行权限层以 blocked by policy 拒绝删除合成原目录。既有四份失败夹具、未跟踪生成 schema 与旧现场仍保留。
+
+新隔离配对的源码提交与暂存待合同补充。请 Mac 将 apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture.rs 的 BASE、PUBLIC、BUNDLE 三个测试路径常量列入本轮写集。它们与允许写入的 launch-r7-partial-owner.ps1 固定配对，需同时指向新 Public／Profile 根。其余原生门槛、生产权限、原 30／5／10／5 秒及持久格式沿用。两处新根均查证缺席，当前探针仍是测试草稿。固定制品须绑定提交与全部暂存输入，真实普通桌面仍待验收。
+
+用户贴录的入口是 nine-r1，工作目录为 C:/Users/15119，最后一行为 Initial Start prerequisite failed. Preserve this window and do not rerun. 该文字无 SID 或令牌证明。nine-r1 已有首错 6,460 ms／raw32，三次扫描后未建立原 worker。固定 nine-r2 的 EXE 和运行时摘要已复核，out01 空，现有 marenben 普通 session 7 活动，可单次采集 Host。该已固定制品缺原线程范围探针，回执合格后停在 Explicit 前。独立的旧官方 r2 仍保全，Job 24 项 Unknown/raw50、谱系 raw64，executionReady=false。普通 MSI raw1625、真实原件归还、生产单 SID 及固定候选仍待，公开 Start 保持拒绝。
