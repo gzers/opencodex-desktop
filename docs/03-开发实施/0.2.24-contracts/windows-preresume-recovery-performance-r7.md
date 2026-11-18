@@ -237,3 +237,12 @@ Windows9fdd4c618／docs f6f8677a的object-type原型已形成新事实：两次�
 一次独立显式私有恢复命令须证明原 action、同一 slot、同一线程及仍持有原生范围，沿原单一 10 秒绝对期限只创建 V2 Intent／Pending 附件并完成 flush、精确回读及父目录和失败前缀复核。验证错绑定、父目录漂移、写入失败、过期和失联维持拒绝；Status 在 5 秒内准确区分 Pending、durable 与 Unknown。禁止重启 Start、补造 manifest、释放再取锁或凭附件归还原件。组件通过仅证明定向保全，正式 Start、Stop、Closed、后继及完整恢复预算独立判定。清理前先证实际进程缺席及锁释放，未知则保留现场并回交。
 
 共享 main 6bafdd342e69ee83e842f4b35a20bafa1320645a，Windows 7fb2f870683566487cd0fee236f03dfa90fee93c。Windows 写集限既有独占的 windows_owner_host024/**、Windows 原件／生命周期装配文件和 test/windows024-native/** 中的 Bootstrap、绑定、注入及定向验证。四个共享 trait、CONTRACT_VERSION4、原持久格式、未知拒绝和旧现场权限沿用现行合同。
+
+## 2026-11-18 增量决定：现有普通账户的隔离根定向补验
+
+TEAM54／IMP193 接收 Windows 源码 `18833e7b65c4cb48316f37ee15a3dc584650877e` 与证据 `2a9c671969723fa9afca569b6ba2a163cb01a7e4`。此次允许用现有 marenben 验证原线程在首次 Resume 前失败时能否继续持有真实捕获范围，并在独立动作中完成 V2 Pending。实际 SID 为 S-1-5-21-587408064-856152790-2583328096-1003，登记 Profile 为 C:/Users/marenben。交接时 session 7 已断开。实施与负例预检完成后再请用户重连。实际普通令牌、真实 Profile、同 SID 交互会话、WinSta0/Default、无外层 Job、宿主与管理客户端同镜像必须实证。
+
+- 候选假设是绑定到单一封闭夹具的测试引导能沿用真实捕获、保全和 V2 验证，同时完全隔离日常客户端和旧 r2。仅改变 I/D/H 不足以证实。正常协调从实际 Profile 的 .codex claim 和令牌绑定的 Known Folder 定位 N/L/K，源、捕获、历史和恢复还会再次校验客户端路径。仅在 `cfg(test)` 入口选择一次只读隔离描述，绑定实际 SID／Profile、会话、镜像摘要、专用 I/D/H、两个合成客户端根、四个协调文件及保管范围。使用真实规范路径、对象身份、ACL 和持有句柄校验根与祖先，拒绝重解析、别名、交叉绑定及无法确认的范围。新建阶段只可在已绑定父目录内创建，建立对象后固定其身份再使用。缺席阶段也要绑定父目录和精确名称。
+- 在任何夹具写入和子进程创建前，验证默认客户端与协调根、旧 r2 的 I/D/H、锁、原件及 custody 均不可能成为测试读写目标。用专用引导贯通真实原 Owner、扫描、捕获、lease 及原线程 V2 验证。禁止替换 Owner 的实际 Profile、进程环境或生产 locator。测试入口必须结构性隔绝首次 Resume，注入缺失、失配或未触发也要拒绝，且不能走正常成功路径。入场负例覆盖路径重叠、对象替换、重解析、描述缺失或错绑、非预期镜像及 Resume 尝试。产品与正式制品应无此入口。
+- 沿用原样官方 2.99 和 pre-manifest raw31 注入。证明三次完整镜像扫描及各自围栏，记录 30 秒 Start 首错和原线程持有范围，5 秒 Status 投影，以及独立 10 秒动作内同线程唯一创建、flush、逐字节读回 V2 Intent／Pending。过期、未知或身份分歧按原合同拒绝。结果只计入单 SID 原 Owner 的未 Resume 部分捕获与 V2 附件验证。默认客户端与协调、完整归还及释放、普通 MSI 和官方生产生命周期各有独立验收条件。保留原始证据与安全清理回执。
+- 此增量写集限于基础路径 `apps/desktop/tauri/src/infrastructure/` 下 `windows_client_originals024/{mod.rs,partial_capture_fixture.rs,coordination.rs,coordination/{preparation,segments,retained_start}.rs,source.rs,content.rs,v3/{capture,journal}.rs,adapter/before_resume.rs,recovery_worker.rs,recovery_worker/canonical_trait.rs}`、`windows_owner_host024/{mod.rs,partial_capture_tests.rs,recovery_control/server.rs}`、`windows_official_lifecycle024.rs` 与 `windows_official_lifecycle024/start_worker.rs` 中的测试专用接线，以及 `test/windows024-native/**` 的定向入口。允许同目录新增仅由测试模块编入的描述与负例文件。保持生产 Owner、locator、四个共享 trait、CONTRACT_VERSION4 和持久格式。若须修改共享接口、扩大写集，或不能证明路径隔离和无 Resume，先回交准确依赖再执行。旧 r2、日常配置与正式候选范围继续受原合同约束。

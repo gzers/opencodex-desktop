@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 53；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 54；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -418,3 +418,9 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 共享 main `6bafdd342e69ee83e842f4b35a20bafa1320645a`，Windows 代码 `766d1f010be60865e7a425dab242ab5d861773b5`，证据 `f4bd13e48a82474b1cb23e000bfe86976733e4ce`。组件复核归 IMP192。沿用 TEAM52／[r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)的原生准入、Windows 独占写集、四个共享 trait、CONTRACT_VERSION=4 及原预算。
 
 > fetch 最新 docs/governance-main，按 TEAM53／IMP192／r7 从 766d1f010 接续。先用新普通交互账户、真实 SID／会话、无外层 Job、独占 I/D/H、预绑定私有 D 与官方 2.99 夹具，记录 CaptureStore::capture_held 在 custody、前驱及 namespace 围栏后、首次 manifest 意图前注入时的原 Owner／worker、原件／锁、未 Resume、三次完整扫描、首错和时间。独立 10 秒动作只创建并核对原绑定 V2 附件。随后按既定合同验证同线程恢复、普通 MSI 及官方单 SID 生命周期。保持公开 Start 拒绝及旧 r2 现场，固定签名候选后进入 W2／双 SID。
+
+## revision54 Windows r7 现有账户隔离补验
+
+共享 main `6bafdd342e69ee83e842f4b35a20bafa1320645a`，Windows `18833e7b65c4cb48316f37ee15a3dc584650877e`，证据 `2a9c671969723fa9afca569b6ba2a163cb01a7e4`。本批独占文件和验证边界见 [r7 隔离根增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)，接收事实归 IMP193。首个可执行回交须包含入口预检和无 Resume 负例，完成后再安排普通桌面。
+
+> fetch docs/governance-main，按 TEAM54／IMP193／r7，从 18833e7b6 接续。先实现并验证仅测试制品可用的隔离引导，绑定 marenben 的真实普通交互身份和全新合成客户端、协调、custody、I/D/H；入场前排除默认根和旧 r2，并证明缺失注入也无法 Resume。预检齐备后仅跑单 SID 原 Owner raw31 及同线程 V2，回交三次完整扫描、30／5／10 秒、失败与清理证据。共享接口依赖或隔离失证先回交。签名候选冻结前保持定向范围。
