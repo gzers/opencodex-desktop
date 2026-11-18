@@ -437,3 +437,10 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 共享 main 1c69bff16b1f6d1edf35c91c93640ee236894312，Windows b4e23087e5c9c90f0e0731453c0b1421b6be37c5，证据 ccc5e84286c3824f5ff663f891e76fc13405160b。接收结论归 IMP195，执行边界见 [r7 期限增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。Mac 提交覆盖前两处共享入口。第三处 Windows 入口、实机构建与验证由 Windows 单写。
 
 > fetch 最新 docs/governance-main／main。按 TEAM56／IMP195／r7，从 Windows b4e23087e 接入 main 1c69bff16，补第三处 execute_admitted 原 deadline，再用 marenben 普通真实桌面验证九次首启扫描、原 Owner raw31、未 Resume 和 V2 Intent/Pending 刷盘读回。沿用 30／5／10 秒和原完整扫描断言，回交源码、制品、原始时间、首错与清理。七计量暂存可按原配对独立执行。候选固定前保持单 SID 定向范围，保全旧 r2。
+
+
+## revision57 Windows r7 九次完整扫描实机回执
+
+共享 main `040f411e6d48d97bde6e7b2e6c22860e547b6173`，Windows `8266cf6a6b67402719c89689984b2154c8cc4599`，证据 `b0eaf2e54a42cffe5298cad6d5892ba1c2b02379`。组件复核归 IMP196，实机条件见 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。Windows 继续独占生命周期与定向夹具写集；扫描器本批已在共享 main，原 trait、格式和预算沿用。
+
+> fetch main／docs/governance-main，按 TEAM57／IMP196／r7 使用 8266cf6a 已固定九扫描配对。重连 marenben 普通桌面后先验证实际 SID、普通令牌、WinSta0/Default、无外层 Job 与独立 I/D/H，再跑 Host。记录同一 30 秒内九次完整扫描、首错、原 Owner、未 Resume、原线程和 claim/N/L/K。证明到达 raw31 且范围仍持有后再执行 5／10／5 秒 V2 定向诊断和精确回读。若超时，回交实际覆盖和首错。保留旧七扫描配对及旧 r2；固定签名候选前保持单 SID，不发布。

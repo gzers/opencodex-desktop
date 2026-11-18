@@ -254,3 +254,8 @@ TEAM54／IMP193 接收 Windows 源码 `18833e7b65c4cb48316f37ee15a3dc584650877e`
 - 共享改动已接入 LaunchPlan::prepare 和 LaunchPlan::verify_full。Windows 在独占文件 windows_official_lifecycle024.rs 的 execute_admitted 中，将剩余一次 read_complete 改用 read_complete_until，传入同一 window.deadline()。允许更新 Windows 定向计量与启动器断言以固定这三处入口加六处 worker 的九条完整回执。原 Current 栅栏、镜像／源复核、四个 trait、CONTRACT_VERSION=4 和持久格式继续适用。
 - 使用 marenben 的真实普通令牌、SID S-1-5-21-587408064-856152790-2583328096-1003、C:/Users/marenben、WinSta0/Default、无外层 Job 和独立 I/D/H。先证明同一原 Owner、夹具隔离、结构性不可 Resume，再执行 Host。DiagnosticBefore／Explicit／DiagnosticAfter 分别使用 5／10／5 秒原期限。记录原宿主恢复准备三次完整扫描、原失败动作、同线程原句柄、原 claim/N/L/K、唯一 V2 Intent/Pending 的 flush 和逐字节回读。未知或逾期保持拒绝。
 - 既有七计量暂存使用原启动器及固定测试制品 f0e00e93b49f47f565b2aa2f8096e041b8bc9d22ad30c83935dfcb598f22ff0a，独立留证，不能充当九扫描结果。保全 C:/Users/marenben/ocx024-r6-existing-20261117-r2 及三件原件和原锁。旧 Job 24 项 Unknown/raw50、command-lineage raw64、executionReady=false。强制清理不计正常 Stop 或 Closed。完整归还、实际 GUI、官方单 SID 生产生命周期、普通 MSI 独立验收。保留失败证据和现场，确认进程缺席与锁释放后清理本轮可清理夹具。
+
+
+## 2026-11-18 执行输入：九次完整扫描固定配对
+
+TEAM57／IMP196 接收 `8266cf6a6b67402719c89689984b2154c8cc4599` 的第三处期限接线及 `b0eaf2e54a42cffe5298cad6d5892ba1c2b02379` 的定向证据。固定测试制品 SHA-256 `af9d31a7faaa9f364038fb3c492ba994c7445f7d36e19f7bc04834b109a92221`。真实 Host 验证继续使用此源码、启动器、制品及镜像配对。共享扫描器文件已等字节接入 main `040f411e6d48d97bde6e7b2e6c22860e547b6173`。任何重新构建须记录新配对和摘要。真实桌面暂存目前无 Host 回执。验证假设、九次完整覆盖、原身份及 30／5／10／5 秒不变，确认 raw31 与未 Resume 才接续独立 V2 附件动作。

@@ -2125,3 +2125,12 @@ Windows 代码 `4fc73cd1c26aa51fa288a3b436d2f0c050d36e1c`，证据 `34e36638acd7
 | 共享入口 | LaunchPlan 构造的完整读取与 verify_full 传入同一原期限。完整读取在进入、扫描前和成功返回前检查期限，Windows 完整清单收到同一个绝对时间。Mac 定向 14/14 与 4/4；Windows MSVC 及第三处入口由 Windows 接续。 |
 
 实际单 SID 桌面同一原 Owner 的 raw31／V2 附件、九次首启扫描、完整恢复、官方生产生命周期和普通用户 MSI 仍待。会话显示连接只作为线索，实际普通令牌、SID、桌面和无外层 Job 尚需实证。旧 r2 继续保全，公开 Start 维持拒绝。W2／双 SID 在签名候选固定后开始。
+
+
+## revision196 Windows r7 第三处期限接线与扫描器集成
+
+固定 Windows 源码 `8266cf6a6b67402719c89689984b2154c8cc4599`、证据 `b0eaf2e54a42cffe5298cad6d5892ba1c2b02379`。核对 32 件 Git 原始载荷，共 2,279,467 字节，清单精确成员与五项源码 blob／SHA-256 绑定一致。MSVC 测试库及三个开发制品编译通过。隔离及不可 Resume 5/5，原 worker／Status 5/5，扫描 8/8，PowerShell 5.1 启动器 19/19。测试制品摘要 `af9d31a7faaa9f364038fb3c492ba994c7445f7d36e19f7bc04834b109a92221`。[固定证据](https://github.com/gzers/opencodex-desktop/tree/b0eaf2e54a42cffe5298cad6d5892ba1c2b02379/.adg/evidence/0.2.24/windows-dev/wl2-r7-shared-start-deadline-20261118-r1)
+
+共享 main `040f411e6d48d97bde6e7b2e6c22860e547b6173` 接收三份扫描器文件，文件内容与上述 Windows 输入一致。保留整树成员、固定对象、权限和哈希核验。枚举提示独立校验，长路径可沿原方式打开，到期停止派发并收束已起线程。Mac 定向回归 13 项通过，官方镜像独立测时项维持显式忽略。先前派发负例在已逾期后仍执行一次读取，基线 raw101，修复后原生定向 4/4。官方固定镜像单次完整读取 10,586 个文件及 manifest，8,242,335 微秒，不能外推九次扫描总时长。[派发期限证据](https://github.com/gzers/opencodex-desktop/tree/e00ad101ee36f4276dbbd1fea560fc928472e222/.adg/evidence/0.2.24/windows-dev/wl2-r7-dispatch-deadline-20261118-r1)
+
+Windows 分支保留第三次入口和四文件定向变更。交接时普通桌面 session 7 断开，两个配对均无 Host 结果。按 TEAM57 承接九次实际扫描和原宿主 V2。旧 r2 保持保全。完整原件归还、普通用户 MSI、正式单 SID 生命周期、W2／双 SID 和 ChatGPT 内 Codex 的实际选择器仍待验收。
