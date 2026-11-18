@@ -1,0 +1,12 @@
+Merge made by the 'ort' strategy.
+ .../macos_client_retired_completion.rs             |  1 +
+ .../infrastructure/macos_client_root_binding.rs    | 16 ++++--
+ .../macos_client_root_cancel_namespace.rs          | 66 ++++++++++++++++++++--
+ .../macos_client_root_prepare_cancel_tests.rs      | 29 ++++++++++
+ .../macos_client_root_prepare_indexed.rs           | 12 ++--
+ .../macos_client_root_prepare_preserve.rs          | 31 +++++-----
+ .../macos_client_root_prepare_preserve_tests.rs    | 12 +++-
+ .../infrastructure/macos_client_session_index.rs   | 47 ++++++++++++---
+ .../macos_client_successor_prepare_cancel.rs       |  9 ++-
+ .../infrastructure/macos_client_vault_history.rs   | 19 ++++---
+ 10 files changed, 189 insertions(+), 53 deletions(-)

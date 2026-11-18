@@ -1,0 +1,20 @@
+{
+  "run": "before",
+  "cargoStarted": false,
+  "firstFailure": "source input joined two paths into one path",
+  "malformedInput": "sources-malformed.json",
+  "correctedInput": "sources.json",
+  "originalOutputFiles": [],
+  "cleanupCheckerAttempts": [
+    {
+      "raw": 1,
+      "error": "AssertionError: expected 3 tests, actual filter ran 4"
+    },
+    {
+      "raw": 1,
+      "error": "AssertionError: failed fixture identifier occurred after the Rust test name"
+    }
+  ],
+  "changedFilesBeforeErrors": false,
+  "testsRerun": false
+}

@@ -1,0 +1,40 @@
+{
+  "sources": [
+    {
+      "bytes": 14224,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation/read.rs",
+      "sha256": "8d9b91c58f3d06b6855df9ee99947b8d31772a1003421798d14fea898ce6306b"
+    },
+    {
+      "bytes": 13991,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation/read_tests.rs",
+      "sha256": "fc977d8db6a451b3fdc6971aa46dc477a98a0915f28338cc29b3d2bb2cd3dacb"
+    }
+  ],
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_preparation_read_native_every_original_initializer_prefix_preserves_pending_and_bytes",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "currentR2Touched": false,
+  "codeRoot": "C:/Users/15119/.codex/worktrees/r6-windows-native-resume/code"
+}

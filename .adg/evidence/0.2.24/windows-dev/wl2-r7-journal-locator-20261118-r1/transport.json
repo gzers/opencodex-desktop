@@ -1,0 +1,36 @@
+{
+  "proxy": "127.0.0.1:3060",
+  "certificateVerificationChanged": false,
+  "persistentSettingsChanged": false,
+  "fetchAttempts": [
+    {
+      "backend": "schannel",
+      "error": "schannel: failed to receive handshake, SSL/TLS connection failed"
+    },
+    {
+      "backend": "openssl",
+      "raw": 1,
+      "error": "TLS connect error: error:0A000126:SSL routines::unexpected eof while reading"
+    },
+    {
+      "httpVersion": "HTTP/1.1",
+      "governance": "503e5aceba86b5a507a8368ae9af668c3eba8d26",
+      "raw": 0,
+      "main": "9daf5599151b65437f94ab2cadb1988060ee38c3"
+    }
+  ],
+  "mergeIntakeAttempts": [
+    {
+      "raw": 128,
+      "error": "schannel handshake failed while fetching promisor blob 6f0c8e0fb1ee127c12fa12c186b5279383b70f0f"
+    },
+    {
+      "raw": 128,
+      "error": "Windows text pipe retained carriage return in a blob refspec"
+    },
+    {
+      "raw": 0,
+      "method": "batch fetch ten exact blobs using LF input over the proxy"
+    }
+  ]
+}

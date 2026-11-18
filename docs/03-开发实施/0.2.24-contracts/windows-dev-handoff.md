@@ -1413,3 +1413,9 @@ Windows 代码 dc3e3248550081c9070d1a56664a76148a01219b 已推送并核对远端
 每 worker 复用读取缓冲区，短路径使用栈缓冲区，长路径有界重查。原完整文件字节和 native admission/fence 保持。完整 MSVC scanner 16 项回归通过，同一固定副本全树与 manifest 在原 10000 ms 窗口内通过，raw0 / 2634.174 ms。制品 SHA-256 0b900fa43f2c9d2e3001cfcd9545d77d669a14684f88b8e592886eea20b13664。两轮缓存及负载未控制，尚无因果提速或生产预算结论。原始日志、计量、受测源的提交和摘要及 185 项状态在 wl2-r7-full-msvc-scan-entry-20261118-r1。生成 schema 已归档，工作树已还原，无新增测试根。封存前代理 TLS 握手失败，远端交付以独立回执为准。
 
 本轮确认 r7 只读归档 Public out01 全部十文件与先前证据逐字节相同。r2 原 Job 的 24 项未知/raw50 延续，现场计划仍 executionReady=false。初次 Start 原 worker 接口沿既有 handoff 待集成决定。普通桌面私有 V2 输出为空，session 7 断开。公开 Start 继续拒绝。
+
+## 2026-11-18 r7 原 journal 目录定位一致性
+
+代码 61e3a1e8eef34a17db51e131534527eae5f1d8c7 通过定向验证，合入纯 macOS 增量 9daf5599151b65437f94ab2cadb1988060ee38c3 后交接 SHA 4b8284f152d4940fd9e7f7b30abd304c909f6a98。原 journal 目录定位摘要绑定实际保留路径，成员和初始化标记变化仍进入观测摘要。第一个原生反例在故障点 1，raw101，原失败根保留。修复版完整 MSVC 4 项及同制品关联 3 项均过，TEST EXE SHA-256 51ae3050151c2ad363fd2d7a9063adc012280eff5680468a88724452fed44efe。原始日志、手工修正前的运行器输入、源码摘要、32 个成功根清理和 190 项状态见证据 wl2-r7-journal-locator-20261118-r1。
+
+普通桌面私有 V2 待原入口实际结果，原 r2 Job 未知与修复禁止执行延续。初始 Start 原 worker 按既有接口请求等待主线。公开 Start 继续拒绝，保持原动作预算与未知拒绝。
