@@ -761,7 +761,18 @@ impl Journal {
         if self.poisoned {
             return Err(invalid());
         }
-        self.read_retained_records(end)
+        #[cfg(test)]
+        let timing = super::super::recovery_timing::readback("journal-records", end, || {
+            let bytes = self.manifest_record.raw.len() + self.current_raw.len()
+                + self.events.iter().map(|event| event.raw.len()).sum::<usize>();
+            (self.events.len() + 2, bytes)
+        });
+        let result = self.read_retained_records(end);
+        #[cfg(test)]
+        if let Some(timing) = timing {
+            timing.finish(&result);
+        }
+        result
     }
     // Exact immutable native observations, not permission to mutate a failed
     // chain. Ordinary/historical callers still enter via check_records.

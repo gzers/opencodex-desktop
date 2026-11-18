@@ -28,6 +28,8 @@ pub(crate) mod existing_qualification;
 mod handle_release;
 mod phase;
 pub(crate) mod recovery_worker;
+#[cfg(test)]
+mod recovery_timing;
 mod reference;
 mod source;
 mod tree;

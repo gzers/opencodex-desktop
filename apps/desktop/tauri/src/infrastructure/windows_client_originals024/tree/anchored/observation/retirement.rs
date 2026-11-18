@@ -108,6 +108,31 @@ impl AnchoredTree {
         result
     }
     fn check_retirement_objects(&mut self, end: Instant) -> io::Result<()> {
+        #[cfg(test)]
+        let timing = super::super::super::super::recovery_timing::readback(
+            match self.root.file_name().and_then(|name| name.to_str()) {
+                Some(".codex") => "retirement-codex",
+                Some(".grok") => "retirement-grok",
+                _ => "retirement-other",
+            },
+            end,
+            || {
+                let frozen_items = self.retirement.iter().flat_map(|frozen| {
+                    frozen.items.iter().filter_map(|item| frozen.frame.nodes.get(item.frame_index).map(|node| &node.entry))
+                });
+                self.nodes.iter().map(|node| &node.original).chain(frozen_items)
+                    .fold((0, 0), |(count, bytes), entry| (count + 1, bytes + entry.bytes.len()))
+            },
+        );
+        let result = self.check_retirement_objects_inner(end);
+        #[cfg(test)]
+        if let Some(timing) = timing {
+            timing.finish(&result);
+        }
+        result
+    }
+
+    fn check_retirement_objects_inner(&mut self, end: Instant) -> io::Result<()> {
         if self.poisoned {
             return Err(invalid());
         }

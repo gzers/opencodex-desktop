@@ -194,7 +194,9 @@ fn wl2_r6_final_release_native_explicit_unlock_and_result_faults_retain_exact_re
 fn wl2_r7_final_release_native_partial_unlock_keeps_original_claim_pending() {
     use super::super::super::tests::driver::setup_unsnapshotted;
     use super::batch_tests::restore_batched;
+    use crate::infrastructure::windows_client_originals024::recovery_timing::{self, Capture};
 
+    let _timing = Capture::begin();
     let (fixture, _data, paths, held, mut trees, mut journal, end) = setup_unsnapshotted();
     let fixture_root = fixture.path().to_owned();
     let mut lease = Some(held);
@@ -203,6 +205,7 @@ fn wl2_r7_final_release_native_partial_unlock_keeps_original_claim_pending() {
     let mut claim = lease.as_mut().unwrap().anchored_claim(&root, end).unwrap();
     let witness = recovery_witness(&mut trees, &mut claim, end).unwrap();
     drop(claim);
+    recovery_timing::phase("final-release-injected-raw5");
     crate::infrastructure::windows_client_originals024::coordination::fail_recovery_release_after(
         1,
     );

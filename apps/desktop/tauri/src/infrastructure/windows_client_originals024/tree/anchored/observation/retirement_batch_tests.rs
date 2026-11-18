@@ -4,12 +4,15 @@ use super::super::super::{
 };
 use super::*;
 use crate::infrastructure::windows_client_originals024::{coordination::NativeLease, v3::Journal};
+use crate::infrastructure::windows_client_originals024::recovery_timing::{self, Capture};
+
 pub(super) fn restore_batched(
     trees: &mut [AnchoredTree; 2],
     journal: &mut Journal,
     lease: &mut Option<NativeLease>,
     end: Instant,
 ) {
+    recovery_timing::phase("initial-batches");
     let root = trees[0].root.clone();
     let mut claim = lease.as_mut().unwrap().anchored_claim(&root, end).unwrap();
     journal
@@ -20,7 +23,9 @@ pub(super) fn restore_batched(
         )
         .unwrap();
     drop(claim);
+    recovery_timing::phase("sample-work");
     super::chain_tests::sample_phases(trees, journal, lease, end);
+    recovery_timing::phase("prepare-recovery");
     let mut claim = lease.as_mut().unwrap().anchored_claim(&root, end).unwrap();
     journal
         .component_prepare_recovery_for_test(
@@ -30,6 +35,7 @@ pub(super) fn restore_batched(
         )
         .unwrap();
     for retire in [true, false] {
+        recovery_timing::phase(if retire { "retire-work" } else { "return-originals" });
         journal
             .component_recover_batch_for_test(
                 recovery_witness(trees, &mut claim, end).unwrap(),
@@ -39,6 +45,7 @@ pub(super) fn restore_batched(
             )
             .unwrap();
     }
+    recovery_timing::phase("restored-witness");
     recovery_witness(trees, &mut claim, end)
         .unwrap()
         .restored(&mut claim, end)
@@ -72,6 +79,7 @@ fn initial_positions(trees: &[AnchoredTree; 2]) -> serde_json::Value {
 }
 #[test]
 fn wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals_and_claim() {
+    let _timing = Capture::begin();
     let (mut f, _data, paths, held, mut trees, mut journal, end) = setup_unsnapshotted();
     let mut lease = Some(held);
     let original = trees.each_ref().map(|t| t.plan());
@@ -94,6 +102,7 @@ fn wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals
             .collect::<Vec<_>>(),
         vec![6, 3, 3, 6, 3]
     );
+    recovery_timing::phase("final-release");
     let release = recovery_witness(&mut trees, &mut claim, end).unwrap();
     drop(claim);
     journal
@@ -101,9 +110,11 @@ fn wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals
         .unwrap();
     assert!(lease.is_none());
     compete(&paths[0], false);
+    recovery_timing::phase("original-history");
     journal
         .component_original_history_for_test(borrow_history(&mut trees), end)
         .unwrap();
+    recovery_timing::phase("close-handles");
     journal
         .component_close_original_handles_for_test(trees, end)
         .unwrap();
