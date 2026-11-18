@@ -492,3 +492,9 @@ Windows 源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 e479ab8a5b657fe
 nine-r2 证据 cdf54c6a1cd095f8421c5e07a14929c30d6cc913 已按 IMP204 接收。沿 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 和 TEAM64 的单 SID、固定配对和写集继续。Mac 并行推进后继取消。
 
 > fetch 最新 docs/governance-main，按 TEAM65／IMP204／r7，保全已完成的 nine-r2。用 IMP203 的 range-r1 固定配对在 marenben session 7 真实普通桌面单跑 Host，现场核 WinSta0/Default、普通令牌、无外层 Job 及父目录身份。独立确认同一存活 PID/FILETIME，并在原 DiagnosticBefore 5 秒由原 worker 核原失败和准确 claim/N/L/K。齐备才做 10 秒 Explicit 和 5 秒读回，证明唯一持久 V2 Intent/Pending 和独立字节读回。首错或未知保全并回交 Git。旧现场继续保全，固定签名候选前维持单 SID 定向验证。
+
+## revision66 固定独立读回计时，继续 range-r1
+
+接收 Windows 源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7、证据 f2dc1b60fa2215f3102347953f1d26cf363d9ff0，审查见 IMP205。按 [r7 增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 暂存指定观察脚本，Mac 并行推进后继取消和渠道名称验收。
+
+> fetch docs/governance-main，按 TEAM66／IMP205／r7。在 marenben 普通 session 7 单跑固定 range-r1 Host，先独立确认同一存活 PID/FILETIME，再由原 worker 在 5 秒内核原失败和 claim/N/L/K。齐备后做 10 秒 Explicit、核唯一持久 V2、固定回执摘要，再用指定脚本计时 DiagnosticAfter，要求实际独立字节读回和语义核验在原 5 秒内。回交 Git 原始证据、计时绑定及首错。保全旧现场，候选冻结前保持单 SID 定向范围。

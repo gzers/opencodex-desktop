@@ -2216,3 +2216,11 @@ nine-r1 在 6,460 ms 后 raw32，仅三次完整扫描且未建立原 worker。P
 后继按 TEAM65 使用 IMP203 的固定 range-r1 配对独立补验。nine-r1 的 PID 95724 仍为 raw5，身份与缺席未知。独立旧官方 r2 仍保有三件原件，24 个 Job 成员 Unknown/raw50，谱系 raw64，executionReady=false。普通用户 MSI raw1625、生产恢复、生产单 SID 与签名候选仍待验。公开 Start 保持拒绝。
 
 [原始证据](https://github.com/gzers/opencodex-desktop/tree/cdf54c6a1cd095f8421c5e07a14929c30d6cc913/.adg/evidence/0.2.24/windows-dev/wl2-r7-nine-r2-host-20261118-r1)
+
+## revision205 接收独立回读计时缺口及定向观察脚本
+
+证据 b0684d0a9 的实证交叉检查中，range-r1 核验器 04109655081281036a20f7965016007ffb5c7a6b2560ab8fc8b14855174ccc9d 接受按原路径和镜像摘要绑定的 nine-r2，拒绝将同一回执用于 range-r1，存活身份和后续范围连续性仍未证实。旧 launcher 只计管理器响应；独立回读 44 ms 与注入后 5,107 ms 均通过，证明计时没有覆盖实际附件核验。
+
+复核 f2dc1b60fa2215f3102347953f1d26cf363d9ff0 清单 37 项，Git 字节及摘要一致。观察脚本的合成案例覆盖及时完成、5,309 ms 上界超限、launcher 非零保留首错、动作错绑和缺回执；控制端 session 2 拒绝。接受 [r7 增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 的测试专用保守计时和绑定条件。range-r1 尚无真实 Host 回执，观察脚本尚未暂存，现场结果待 TEAM66。原设定的期限、范围和拒绝条件继续适用。
+
+[Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/f2dc1b60fa2215f3102347953f1d26cf363d9ff0/.adg/evidence/0.2.24/windows-dev/wl2-r7-readback-timing-observer-20261118-r1)

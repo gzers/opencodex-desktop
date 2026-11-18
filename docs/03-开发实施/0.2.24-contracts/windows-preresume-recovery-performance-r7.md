@@ -283,3 +283,12 @@ TEAM63／IMP202。接收证据 644f8bc861bd7a1009aed9c5789699ff569f0895。Window
 固定新配对前先将探针草稿绑定准确 Git 源提交，并核对测试 EXE、启动脚本、核验器、官方运行时及全量暂存文件的摘要与清单。新普通桌面轮次的待证伪判断为同一原 30 秒内完成九次完整扫描并在首次 Intent 前 raw31，Node 未 Resume，且同一原 worker 能在 DiagnosticBefore 5 秒内证明原失败、同一原生对象和 claim/N/L/K 连续持有。独立系统观察须证明同一存活 PID/FILETIME。两项齐备才进入 Explicit 10 秒及 DiagnosticAfter 5 秒，验证唯一 V2 Intent/Pending、flush 和独立逐字节读回。未知或失败保留首错和真实覆盖，停止后继动作。
 
 固定 nine-r2 仍用 a7d7284a3 核验 Host。已有回执直接消费。out01 仍空时，在已准入的 marenben 普通 session 7 单跑一次 Host，随后保全并停在 Explicit 前。旧官方 r2 和 nine-r1 独立保全。本定向轮不替代正式恢复、Stop、Closed 或生产验收。
+
+## 2026-11-18 执行增量：独立字节读回的同轮计时
+
+TEAM66／IMP205。后继待证伪判断是固定 range-r1 在原普通桌面由同一存活宿主和原 worker 通过范围门，并在原期限内完成唯一持久 V2 Intent/Pending 与独立字节读回。输入沿 IMP203，已完成的 nine-r2 保全。启用证据提交 f2dc1b60fa2215f3102347953f1d26cf363d9ff0 的测试专用观察脚本，SHA-256 5567494d2174270d77bac6f862ab789c0d43eb3aaab7689e4e5a20e771a2f426。
+
+- 先在 marenben session 7 核普通 SID、WinSta0/Default、无外层 Job 及父目录对象身份。out01 已有 Host 回执就核对，为空才单跑一次。独立系统观察证明同一存活 PID/FILETIME，DiagnosticBefore 在原 5 秒内由原 worker 核原失败、原生对象和准确 claim/N/L/K。两项齐备才执行原 10 秒 Explicit，并独立查证同一恢复动作、唯一 V2 Intent/Pending 已创建及刷盘，固定 Explicit-result.json 的原字节 SHA-256。
+- Windows 本次新增写集仅允许把上述明确摘要的原样脚本暂存为 C:/Users/Public/ocx-r7-isolated-owner-range-r1/observe-r7-readback-timing.ps1，复核全部暂存文件、ACL 和路径绑定。测试运行仅追加本轮夹具自身的回执与原始证据。Windows 证据继续在 docs/024-windows-dev 回交。禁止改动固定 launcher、测试 EXE、运行时、产品接口、权限及持久格式。
+- 从调用固定 launcher 之前到 launcher 完成独立附件字节读回和语义核验并返回之后计取同一高分辨率单调 QPC。比较原始 tick，要求 0 ≤ 差值 < 5 × frequency。记录原始 tick、频率、launcher 退出码与首错，后置审查将 DiagnosticAfter 原始结果 SHA-256、同一 Explicit 原始结果 SHA-256、recovery action、两附件及 create-only 计时记录核对到同一次已计时调用。后置审查仅绑定和复核证据，实际独立字节读回及语义核验必须已经在计时区间内完成。输出缺失、绑定不明、上界达到 5 秒，均保留原首错并判期限未证实。若启动开销使上界无法区分，回交原证据后再议测试专用 cutoff/frequency，保持原期限与单次执行要求。
+- 旧现场与证据保持独立。该轮仅验收定向诊断；公开 Start 继续拒绝，固定签名候选前保持单 SID，完整生产恢复、正常 Stop/Closed、普通 MSI 与候选验收仍待。
