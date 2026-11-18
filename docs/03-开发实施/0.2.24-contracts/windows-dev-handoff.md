@@ -1479,3 +1479,11 @@ Windows 源码 06aaf204fc5d8ac8a38d251c59265c52127c9588 已推送并回读。输
 请 Mac 在现有 r7 合同内明确部分捕获的严格 V2 首次持久化边界。候选是初次 capture 前绑定原 Owner 与原目录对象的宿主私有 D，供原线程在同一新动作和原 10 秒窗口内创建限定附件。完整 claim/NLK 尚未证明时，当前字节留在原线程内存，保持 durable=false 及原锁。详细边界见同批 interface-request.json。
 
 普通桌面原私有 V2 入口无输出，marenben session 7 断开。当前 r2 沿用已核验归档及十份只读回执，原 Job 24 项未知、raw50，executionReady=false。原件、进程及失败现场保留。公开 Start 继续拒绝，真实原 Owner 全链、原预算、普通用户 MSI 及单 SID 原包待验收。
+
+## 2026-11-18 r7 私有命令等待原恢复 worker
+
+代码 37fd73ffa1015a214594f33faed5b05b683b9bca 已推送并回读。私有显式恢复只等待本次注册的原 worker，短暂投影锁竞争占用原动作时间。Unknown、锁中毒、原始错误和超时停止等待，返回结果仍经原注册槽的 Owner 验证。独立 Status 在竞争时继续拒绝。
+
+MSVC 测试编译 raw0，六组共 18/18，首个意外原生错误无。测试 EXE SHA-256 ebe598d6690ed148e6f1684597ff2ba3818ba7b0d04d27dbfe92e67a516c9363。MSVC 产品三制品编译 raw0，128525 ms。原始日志、源码和制品摘要、27 个缺席夹具根、生成 schema 的归档与清理、累计 246 项状态见 wl2-r7-worker-result-20261118-r1。代理首次 fetch 和首次代码 push 均遇 TLS EOF raw128，后续成功。
+
+共同输入仍为 main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 7cc64ed4ffd0f8b67f642e676290fbcfae7eac84、TEAM48／IMP187／r7。部分捕获严格 V2 Pending 首次持久化仍待既有 Git 接口请求答复。普通桌面原私有 V2 输出为空，marenben session 7 断开，沿用既有入口。r2 沿用已核归档，原 Job 24 项未知，raw50，executionReady=false。公开 Start 保持拒绝。生产原 Owner 全链、预算、普通用户 MSI 和固定官方单 SID 验收仍待完成。
