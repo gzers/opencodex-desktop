@@ -139,7 +139,8 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
         shutil.copyfile(policy, output / 'candidate.sb')
         env = {'HOME': str(profile), 'CFFIXED_USER_HOME': str(profile), 'CODEX_HOME': str(profile / '.codex'),
                'PATH': '/usr/bin:/bin:/usr/sbin:/sbin', 'TMPDIR': str(temporary) + '/', 'LANG': 'en_US.UTF-8',
-               'USER': pwd.getpwuid(os.getuid()).pw_name, 'LOGNAME': pwd.getpwuid(os.getuid()).pw_name}
+               'USER': pwd.getpwuid(os.getuid()).pw_name, 'LOGNAME': pwd.getpwuid(os.getuid()).pw_name,
+               'OCXD024_STATUS_TRACE': '1'}
         denied = subprocess.run(['/usr/bin/sandbox-exec', '-f', str(policy), '/usr/bin/nc', '-v', '-G', '1', '-z', '192.0.2.1', '443'], env=env, capture_output=True)
         report['networkGuard'] = {'exitCode': denied.returncode, 'stderr': denied.stderr.decode(errors='replace')}
         if denied.returncode == 0 or b'Operation not permitted' not in denied.stderr: raise RuntimeError('network denial unproven')
@@ -159,7 +160,7 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
                 time.sleep(.3)
             else:raise RuntimeError('candidate OS registration did not complete')
             current=profile/'Library/Application Support/OpenCodeX Desktop/runtime/current.json'
-            wait_for('startup-'+str(generation),lambda v:current.is_file() and any('运行状态与常用操作' in str(n.get('value','')) or n.get('title')=='版本升级' for n in v['nodes']),180)
+            wait_for('startup-'+str(generation),lambda v:current.is_file() and not (current.parent/'.selection-pending.json').exists() and any('运行状态与常用操作' in str(n.get('value','')) or n.get('title')=='版本升级' for n in v['nodes']),180)
         def head():
             path=profile/'.codex-desktop/desktop/manager-state/client-session-index.sqlite'
             if not path.exists():return None
