@@ -1,7 +1,6 @@
 //! Dedicated test-image admission and create-only preparation for the r7 original worker.
 use super::{
     bounded::BoundedAccessV1,
-    coordination,
     existing_qualification::{install_fixed_bundle, CONFIG},
 };
 use crate::{
@@ -18,22 +17,29 @@ use crate::{
         },
     },
 };
+mod isolation;
+pub(crate) use isolation::Isolation;
+pub(crate) use isolation::Stage;
+use isolation::{canonical_pin, checked_image, Boundary};
 use serde_json::{json, Value};
-use sha2::{Digest, Sha256};
 use std::{
     ffi::c_void,
-    fs::{self, File, OpenOptions},
+    fs::{self, File},
     io::{self, Read, Write},
-    os::windows::fs::OpenOptionsExt,
     path::{Path, PathBuf},
+    sync::Arc,
     time::{Duration, Instant},
 };
 
 pub(crate) const SCOPE: &str = "isolated-r7-partial-capture-original-worker";
-pub(crate) const PROFILE: &str = r"C:\Users\ocxr7owner";
-pub(crate) const BASE: &str = r"C:\Users\ocxr7owner\ocx024-r7-partial-owner-r1";
+pub(crate) const PROFILE: &str = r"C:\Users\marenben";
+const SID: &str = "S-1-5-21-587408064-856152790-2583328096-1003";
+const BASE: &str = r"C:\Users\marenben\ocx024-r7-isolated-owner-r1";
+const PUBLIC: &str = r"C:\Users\Public\ocx-r7-isolated-owner-r1";
 const BUNDLE: &str =
-    r"C:\Users\Public\ocx-r7-partial-owner-r1\input\runtime-bundle-0.2.24-win32-x64.tar.gz";
+    r"C:\Users\Public\ocx-r7-isolated-owner-r1\input\runtime-bundle-0.2.24-win32-x64.tar.gz";
+
+const BUNDLE_SHA: &str = "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7";
 
 fn invalid(reason: &str) -> io::Error {
     io::Error::new(io::ErrorKind::InvalidData, reason)
@@ -48,7 +54,7 @@ fn app(error: io::Error) -> AppError {
 
 fn absent(path: &Path) -> io::Result<()> {
     match fs::symlink_metadata(path) {
-        Err(error) if error.kind() == io::ErrorKind::NotFound => Ok(()),
+        Err(error) if error.raw_os_error() == Some(2) => Ok(()),
         Err(error) => Err(error),
         Ok(_) => Err(io::Error::new(
             io::ErrorKind::AlreadyExists,
@@ -122,6 +128,7 @@ fn bootstrap_matches(c: &EmptyBootstrap, token: &native::TokenIdentity, profile:
         && c.scope == SCOPE
         && c.profile == Path::new(PROFILE)
         && c.profile == profile
+        && token.sid == SID
         && token.sid == c.expected_sid
         && token.session_id != 0
         && token.session_id == c.expected_session
@@ -160,7 +167,7 @@ fn local_account_matches(token: &native::TokenIdentity) -> io::Result<()> {
     let account = computer
         .iter()
         .copied()
-        .chain("\\ocxr7owner\0".encode_utf16())
+        .chain("\\marenben\0".encode_utf16())
         .collect::<Vec<_>>();
     let mut sid = [0usize; 16];
     let mut sid_bytes = std::mem::size_of_val(&sid) as u32;
@@ -238,6 +245,8 @@ pub(crate) struct Fixture {
     peer: native::RetainedPeer,
     pins: [native::PinnedDirectory; 5],
     _image: File,
+    boundary: Boundary,
+    isolation: Option<Arc<Isolation>>,
 }
 
 #[test]
@@ -245,7 +254,7 @@ fn wl2_r7_partial_owner_bootstrap_rejects_wrong_locator_token_or_image() {
     let profile = Path::new(PROFILE);
     let base = Path::new(BASE);
     let token = native::TokenIdentity {
-        sid: "S-1-5-21-1-2-3-1001".into(),
+        sid: SID.into(),
         session_id: 8,
         elevated: false,
         elevation_type: 1,
@@ -266,9 +275,12 @@ fn wl2_r7_partial_owner_bootstrap_rejects_wrong_locator_token_or_image() {
     assert!(!bootstrap_matches(
         &valid(),
         &token,
-        Path::new(r"C:\Users\marenben")
+        Path::new(r"C:\Users\Administrator")
     ));
     let mut wrong = valid();
+    wrong.expected_sid = "S-1-5-21-1-2-3-1001".into();
+    assert!(!bootstrap_matches(&wrong, &token, profile));
+    wrong = valid();
     wrong.data = base.join("H");
     assert!(!bootstrap_matches(&wrong, &token, profile));
     wrong = valid();
@@ -298,48 +310,18 @@ impl Fixture {
     }
 
     fn admit_inner(c: &EmptyBootstrap, end: Option<Instant>) -> io::Result<Self> {
-        let peer = native::RetainedPeer::current()?;
-        let profile = crate::infrastructure::windows_startup_root::current_user_profile()?;
-        if !bootstrap_matches(c, &peer.identity().token, &profile) {
-            return Err(invalid("isolated r7 native bootstrap refused"));
-        }
-        local_account_matches(&peer.identity().token)?;
-        desktop()?;
-        peer.no_outer_job()?;
+        let (peer, boundary) = Boundary::admit(c)?;
+        let profile = boundary.profile.path();
         let pins = [
-            native::PinnedDirectory::open(&profile)?,
-            native::PinnedDirectory::open_private(Path::new(BASE))?,
-            native::PinnedDirectory::open_private(&c.installation)?,
-            native::PinnedDirectory::open_private(&c.data)?,
-            native::PinnedDirectory::open_private(&c.home)?,
+            canonical_pin(profile, false)?,
+            canonical_pin(Path::new(BASE), true)?,
+            canonical_pin(&c.installation, true)?,
+            canonical_pin(&c.data, true)?,
+            canonical_pin(&c.home, true)?,
         ];
         let image_path = c.installation.join("ocxd.exe");
         peer.verify_image(&image_path)?;
-        let mut image = OpenOptions::new()
-            .read(true)
-            .share_mode(1)
-            .custom_flags(0x200000)
-            .open(&image_path)?;
-        let mut hasher = Sha256::new();
-        let mut count = 0;
-        let mut buffer = [0u8; 65536];
-        loop {
-            if end.is_some_and(|end| Instant::now() >= end) {
-                return Err(io::ErrorKind::TimedOut.into());
-            }
-            let read = image.read(&mut buffer)?;
-            if read == 0 {
-                break;
-            }
-            count += read;
-            if count > 512 * 1024 * 1024 {
-                return Err(invalid("fixture test image exceeds byte bound"));
-            }
-            hasher.update(&buffer[..read]);
-        }
-        if format!("{:x}", hasher.finalize()) != c.broker_sha256 {
-            return Err(invalid("exact test-only same image hash differs"));
-        }
+        let image = checked_image(&image_path, &c.broker_sha256, end, true)?;
         peer.verify_image(&image_path)?;
         if end.is_some_and(|end| Instant::now() >= end) {
             return Err(io::ErrorKind::TimedOut.into());
@@ -348,57 +330,57 @@ impl Fixture {
             peer,
             pins,
             _image: image,
+            boundary,
+            isolation: None,
         })
     }
 
-    pub(crate) fn prepare(&self, c: &EmptyBootstrap) -> io::Result<()> {
+    pub(crate) fn prepare(&mut self, c: &EmptyBootstrap) -> io::Result<()> {
         let base = Path::new(BASE);
-        let codex = c.profile.join(".codex");
-        let grok = c.profile.join(".grok");
+        let clients = base.join("clients");
+        let codex = clients.join(".codex");
+        let grok = clients.join(".grok");
         let config = c.home.join("config.json");
         let ledger = base.join("preparation");
         let token = &self.peer.identity().token;
-        let root = coordination::official_runtime_root(token)?;
-        let app_data = c.profile.join("AppData/Local");
-        if root
-            != app_data
-                .join("OpenCodex/Runtime/v1")
-                .join(token.sid.to_uppercase())
-        {
-            return Err(invalid(
-                "coordinator not under isolated native LocalAppData",
-            ));
-        }
-        let app_data_pin = native::PinnedDirectory::open(&app_data)?;
+        let root = base.join("coordination");
         let targets = [
-            codex.clone(),
-            grok.clone(),
-            app_data.join("OpenCodex"),
+            clients.clone(),
+            root.clone(),
             c.installation.join("runtime"),
             config.clone(),
             ledger.clone(),
         ];
+        let [_, base_pin, installation, data, home] = &self.pins;
+        let input = canonical_pin(Path::new(PUBLIC).join("input").as_path(), false)?;
+        let _bundle = checked_image(Path::new(BUNDLE), BUNDLE_SHA, None, false)?;
         let observations = targets
             .iter()
-            .map(|path| (path, absent(path)))
+            .zip([base_pin, base_pin, installation, home, base_pin])
+            .map(|(path, parent)| (path, isolation::fixed_leaf(parent, path)))
             .collect::<Vec<_>>();
-        report(
-            &c.data.join("fixture-preflight.json"),
-            &json!({"sid":token.sid,"session":token.session_id,
+        self.recheck(c)?;
+        let preflight = json!({"sid":token.sid,"session":token.session_id,
             "elevationType":token.elevation_type,"elevated":token.elevated,"outerJobAbsent":true,"desktop":"WinSta0/Default",
             "profile":c.profile,"pid":self.peer.identity().pid,"creationFiletime":self.peer.identity().creation_filetime.to_string(),
             "imageSha256":c.broker_sha256,"imageId":self.peer.identity().executable_id.index.to_string(),
-            "targets":observations.iter().map(|(path,result)| json!({"path":path,"absent":result.is_ok(),"raw":result.as_ref().err().and_then(io::Error::raw_os_error),"error":result.as_ref().err().map(ToString::to_string)})).collect::<Vec<_>>() }),
-        )?;
+            "excludedRoots":self.boundary.excluded,
+            "targets":observations.iter().map(|(path,result)| json!({"path":path,"absent":result.is_ok(),"raw":result.as_ref().err().and_then(io::Error::raw_os_error),"error":result.as_ref().err().map(ToString::to_string)})).collect::<Vec<_>>() });
+        if observations.iter().any(|(_, result)| result.is_err()) {
+            eprintln!("r7-fixture-preflight={preflight}");
+        }
         for (_, result) in observations {
             result?;
         }
+        isolation::fixed_leaf(data, &c.data.join("fixture-preflight.json"))?;
+        report(&c.data.join("fixture-preflight.json"), &preflight)?;
         self.recheck(c)?;
-        app_data_pin.recheck()?;
-        let ledger = native::create_private_directory(&ledger)?;
+        let ledger = isolation::create(base_pin, &ledger)?;
+        let clients_pin = isolation::create(base_pin, &clients)?;
         let image = install_fixed_bundle(base, ledger.path(), Path::new(BUNDLE))?;
-        let codex_pin = native::create_private_directory(&codex)?;
-        let grok_pin = native::create_private_directory(&grok)?;
+        input.recheck()?;
+        let codex_pin = isolation::create(&clients_pin, &codex)?;
+        let grok_pin = isolation::create(&clients_pin, &grok)?;
         let canonical = fs::canonicalize(&codex)?;
         let canonical = dunce::simplified(&canonical);
         if canonical != codex {
@@ -424,32 +406,27 @@ impl Fixture {
             (grok.join("config.json"), &b"{}\n"[..]),
             (config, CONFIG),
         ]);
-        for dir in [
-            app_data.join("OpenCodex"),
-            app_data.join("OpenCodex/Runtime"),
-            app_data.join("OpenCodex/Runtime/v1"),
-            root.clone(),
-            root.join("native-write-locks"),
-            root.join("catalog-write-locks"),
-        ] {
-            let pin = native::create_private_directory(&dir)?;
-            pin.recheck()?;
-        }
-        files.extend([
-            (
-                root.join("native-write-locks")
-                    .join(format!("{digest}.sqlite")),
-                &b""[..],
-            ),
-            (root.join("client-desktop-lifecycle.sqlite"), &b""[..]),
-            (
-                root.join("catalog-write-locks")
-                    .join(format!("{digest}.sqlite")),
-                &b""[..],
-            ),
-        ]);
+        let coordination_pin = isolation::create(base_pin, &root)?;
+        let paths = isolation::coordination_paths(&codex, &root, &digest);
+        files.extend(paths.iter().skip(1).map(|path| (path.clone(), &b""[..])));
         for (path, bytes) in files {
-            write_new(&path, bytes)?;
+            let parent = [&codex_pin, &grok_pin, home, &coordination_pin]
+                .into_iter()
+                .find(|pin| Some(pin.path()) == path.parent())
+                .ok_or_else(|| invalid("fixture file has no pinned parent"))?;
+            isolation::fixed_leaf(parent, &path)?;
+            let mut file = platform::create_new_private_file(&path, 0o600)?;
+            file.write_all(bytes)?;
+            file.sync_all()?;
+            let created = super::coordination::file_id(&file)?;
+            drop(file);
+            let observed = isolation::open_file(&path, 3, true)?;
+            if created != super::coordination::file_id(&observed)?
+                || created.volume != parent.identity().volume
+            {
+                return Err(invalid("fixture file differs from the create-only object"));
+            }
+            parent.recheck()?;
             rows.push(existing_file_snapshot(
                 &path,
                 bytes,
@@ -459,15 +436,22 @@ impl Fixture {
         self.recheck(c)?;
         codex_pin.recheck()?;
         grok_pin.recheck()?;
-        app_data_pin.recheck()?;
         ledger.recheck()?;
+        self.isolation = Some(Arc::new(Isolation::bind(
+            c,
+            [clients_pin, codex_pin, grok_pin, coordination_pin],
+            paths,
+        )?));
+        let prepared = ledger.path().join("prepared.json");
+        isolation::fixed_leaf(&ledger, &prepared)?;
         report(
-            &ledger.path().join("prepared.json"),
+            &prepared,
             &json!({"image":image,"syntheticObjects":rows,"officialInitializationProven":false,"publicStartOpen":false}),
         )
     }
 
     fn recheck(&self, c: &EmptyBootstrap) -> io::Result<()> {
+        self.boundary.recheck()?;
         self.peer.no_outer_job()?;
         self.peer.verify_image(&c.installation.join("ocxd.exe"))?;
         for pin in &self.pins {
@@ -476,13 +460,13 @@ impl Fixture {
         Ok(())
     }
 
-    pub(crate) fn pin_for_start(
+    pub(crate) fn isolation_for_start(
         &self,
         runtime: &SharedRuntimeExecutable,
         command: &ProcessCommand,
         data: &Path,
         window: &ActionWindow,
-    ) -> AppResult<native::PinnedDirectory> {
+    ) -> AppResult<Arc<Isolation>> {
         window.remaining()?;
         let [profile, _, installation, original_data, home] = &self.pins;
         self.peer.no_outer_job().map_err(app)?;
@@ -502,7 +486,23 @@ impl Fixture {
         }
         existing_file_snapshot(&home.path().join("config.json"), CONFIG, window.deadline())
             .map_err(app)?;
-        let parent = native::PinnedDirectory::open_private(data).map_err(app)?;
+        let isolation = self.isolation.as_ref().ok_or_else(|| {
+            app(invalid(
+                "test Start requires a prepared native isolation description",
+            ))
+        })?;
+        isolation.recheck(window.deadline()).map_err(app)?;
+        window.remaining()?;
+        Ok(isolation.clone())
+    }
+
+    pub(crate) fn pin_attachment_parent(
+        &self,
+        data: &Path,
+        window: &ActionWindow,
+    ) -> AppResult<native::PinnedDirectory> {
+        let original_data = &self.pins[3];
+        let parent = canonical_pin(data, true).map_err(app)?;
         if parent.identity() != original_data.identity() {
             return Err(app(invalid("original D identity drift")));
         }

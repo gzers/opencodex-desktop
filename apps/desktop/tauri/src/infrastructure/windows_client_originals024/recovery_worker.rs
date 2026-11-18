@@ -551,6 +551,13 @@ impl RetainedRequest {
                 let partial = owner
                     .with_originals(|originals, _| Ok(originals.has_failed_preparation()))
                     .map_err(io::Error::other)?;
+                #[cfg(test)]
+                if let Some(isolation) = owner.fixture_isolation() {
+                    isolation.verify_owner(owner, window.deadline())?;
+                    if !partial || local.pending_attachment.is_none() {
+                        return Err(invalid());
+                    }
+                }
                 if partial {
                     #[cfg(test)]
                     let _timing = local
@@ -606,6 +613,10 @@ impl RetainedRequest {
                                 || ranges.inspect_failed_start(owner, &origin, end)? != held
                             {
                                 return Err(invalid());
+                            }
+                            #[cfg(test)]
+                            if let Some(isolation) = owner.fixture_isolation() {
+                                isolation.verify_owner(owner, end)?;
                             }
                             Ok(held)
                         })();

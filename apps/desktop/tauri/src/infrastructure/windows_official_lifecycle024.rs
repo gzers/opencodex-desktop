@@ -323,6 +323,9 @@ pub(crate) struct Owner {
     // fallible source/prefix check. It is not full client recovery authority.
     before_resume_process: Option<actions::ProcessAbortAttempt>,
     start_failure: Option<actions::StartFailure>,
+    #[cfg(test)]
+    fixture_isolation:
+        Option<Arc<super::windows_client_originals024::partial_capture_fixture::Isolation>>,
     runtime: SharedRuntimeExecutable,
     selected: program_selection::SelectedProgram,
     root: PathBuf,
@@ -512,6 +515,16 @@ impl Owner {
     }
     pub(crate) fn profile_path(&self) -> &Path {
         &self.profile
+    }
+    #[cfg(test)]
+    pub(crate) fn fixture_isolation(
+        &self,
+    ) -> Option<&super::windows_client_originals024::partial_capture_fixture::Isolation> {
+        self.fixture_isolation.as_deref()
+    }
+    #[cfg(test)]
+    pub(crate) fn fixture_creator_token(&self) -> &native::TokenIdentity {
+        &self.native.binding().process.token
     }
     pub(crate) fn original_host_instance(&self) -> uuid::Uuid {
         self.host_instance
@@ -992,10 +1005,18 @@ async fn execute_async(
     data: &Path,
     window: shared::ActionWindow,
 ) -> AppResult<LifecycleResult> {
-    execute_admitted(runtime, command, data, window, |_, _, _, _| {
-        super::windows_client_originals024::require_durable_capture()
-            .map(|()| StartAdmission::default())
-    })
+    execute_admitted(
+        runtime,
+        command,
+        data,
+        window,
+        #[cfg(test)]
+        None,
+        |_, _, _, _| {
+            super::windows_client_originals024::require_durable_capture()
+                .map(|()| StartAdmission::default())
+        },
+    )
     .await
 }
 // Private factoring only. Public execute always supplies the unchanged refusal.
@@ -1013,6 +1034,9 @@ async fn execute_admitted(
     command: &ProcessCommand,
     data: &Path,
     window: shared::ActionWindow,
+    #[cfg(test)] fixture: Option<
+        &super::windows_client_originals024::partial_capture_fixture::Fixture,
+    >,
     admission: impl FnOnce(
         &SharedRuntimeExecutable,
         &ProcessCommand,
@@ -1021,6 +1045,10 @@ async fn execute_admitted(
     ) -> AppResult<StartAdmission>,
 ) -> AppResult<LifecycleResult> {
     window.remaining()?;
+    #[cfg(test)]
+    let isolation = fixture
+        .map(|fixture| fixture.isolation_for_start(runtime, command, data, &window))
+        .transpose()?;
     let entry = slot(
         runtime,
         &command.environment.opencodex_home,
@@ -1034,6 +1062,10 @@ async fn execute_admitted(
     let mut guard = entry.owner.try_lock().map_err(unknown)?;
     drop(start_gate);
     drop(worker_gate);
+    #[cfg(test)]
+    if isolation.is_some() && guard.is_some() {
+        return Err(recovery_required());
+    }
     if let Some(owner) = guard.as_ref() {
         owner.require_normal_dispatch()?;
     }
@@ -1088,6 +1120,21 @@ async fn execute_admitted(
         return Err(unknown(()));
     }
     #[cfg(test)]
+    if let Some(scope) = &isolation {
+        let installation = runtime
+            .managed_installation_root()
+            .ok_or_else(|| unknown(()))?;
+        scope
+            .verify_paths(
+                plan.user_profile(),
+                &installation,
+                data,
+                plan.opencodex_home(),
+                window.deadline(),
+            )
+            .map_err(unknown)?;
+    }
+    #[cfg(test)]
     super::windows_client_originals024::recovery_timing::verify_initial_image(
         "launch-plan",
         || plan.verify_full(runtime),
@@ -1127,7 +1174,12 @@ async fn execute_admitted(
     // Original capture must precede the first official mutation. This read-only
     // gate uses the fixed r4 scope for NEW sessions, never a Full fallback. The
     // still-unfinished durable custody adapter cannot be bypassed on success.
-    super::windows_client_originals024::preflight_bounded(plan.user_profile(), window.deadline()).map_err(
+    let client_parent = plan.user_profile();
+    #[cfg(test)]
+    let client_parent = isolation
+        .as_ref()
+        .map_or(client_parent, |scope| scope.client_parent());
+    super::windows_client_originals024::preflight_bounded(client_parent, window.deadline()).map_err(
         |e| {
             fail(
                 "windows024_originals_security_unconfirmed",
@@ -1138,6 +1190,13 @@ async fn execute_admitted(
         },
     )?;
     let admitted = admission(runtime, command, data, &window)?;
+    #[cfg(test)]
+    {
+        require_isolated_injection(isolation.is_some(), admitted.capture_failure.is_some())?;
+        if let Some(scope) = &isolation {
+            scope.recheck(window.deadline()).map_err(unknown)?;
+        }
+    }
     // This remains BELOW the unchanged public production gate. Qualification
     // consumes the one original Closed tag only after actual new source/plan
     // admission. Failure retains the old Owner and all old native stores.
@@ -1179,6 +1238,8 @@ async fn execute_admitted(
         stop_action: None,
         before_resume_process: None,
         start_failure: None,
+        #[cfg(test)]
+        fixture_isolation: isolation,
         runtime: runtime.clone(),
         selected,
         root,
@@ -1230,6 +1291,8 @@ pub(crate) fn qualify_existing(
         command,
         data,
         window,
+        #[cfg(test)]
+        None,
         |r, c, d, w| {
             qualification.admit(r, c, d, w)?;
             Ok(StartAdmission {
@@ -1238,6 +1301,29 @@ pub(crate) fn qualify_existing(
             })
         },
     ))
+}
+#[cfg(test)]
+fn require_isolated_injection(isolated: bool, armed: bool) -> AppResult<()> {
+    if isolated == armed {
+        Ok(())
+    } else {
+        Err(recovery_required())
+    }
+}
+#[cfg(test)]
+fn require_resume_allowed(isolated: bool) -> AppResult<()> {
+    if isolated {
+        return Err(recovery_required());
+    }
+    Ok(())
+}
+#[cfg(test)]
+#[test]
+fn wl2_r7_isolation_rejects_missing_mismatched_injection_and_resume() {
+    assert!(require_isolated_injection(true, false).is_err());
+    assert!(require_isolated_injection(false, true).is_err());
+    assert!(require_isolated_injection(true, true).is_ok());
+    assert!(require_resume_allowed(true).is_err());
 }
 #[cfg(test)]
 pub(crate) fn qualify_partial_capture(
@@ -1258,9 +1344,10 @@ pub(crate) fn qualify_partial_capture(
         command,
         data,
         window,
-        |r, c, d, w| {
+        Some(qualification),
+        |_, _, d, w| {
             Ok(StartAdmission {
-                pending_parent: Some(qualification.pin_for_start(r, c, d, w)?),
+                pending_parent: Some(qualification.pin_attachment_parent(d, w)?),
                 capture_failure: Some(arm),
             })
         },

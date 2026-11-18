@@ -262,6 +262,11 @@ impl StartWorker {
                 );
             }
             #[cfg(test)]
+            require_isolated_injection(
+                original.fixture_isolation().is_some(),
+                admitted.capture_failure.is_some(),
+            )?;
+            #[cfg(test)]
             let _scans = admitted.capture_failure.as_ref().map(|_| {
                 super::super::windows_client_originals024::recovery_timing::StartScans::begin(
                     "start-worker",
@@ -385,6 +390,8 @@ impl StartWorker {
         check_cancel(entry)?;
         self.stage(Stage::Capture);
         owner.capture_originals(capture_session, &window, ranges)?;
+        #[cfg(test)]
+        require_resume_allowed(owner.fixture_isolation().is_some())?;
         plan.check_current(&entry.runtime)?;
         check_cancel(entry)?;
         self.stage(Stage::BeforeResume);
@@ -397,6 +404,8 @@ impl StartWorker {
             state.snapshot.stage = Stage::Resume;
             state.snapshot.creator_resumed = None;
         }
+        #[cfg(test)]
+        require_resume_allowed(owner.fixture_isolation().is_some())?;
         owner.native.resume().map_err(|error| {
             *raw = error.raw_os_error();
             unknown(error)

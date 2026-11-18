@@ -7,7 +7,7 @@ use crate::{
     infrastructure::{
         runtime_executable::SharedRuntimeExecutable,
         windows_client_originals024::{
-            partial_capture_fixture::{report, Fixture},
+            partial_capture_fixture::{report, Fixture, Stage},
             CaptureFailureArm,
         },
         windows_official_lifecycle024 as lifecycle,
@@ -19,7 +19,7 @@ use crate::{
 };
 use serde_json::{json, Value};
 use std::{
-    io,
+    io::{self, Read, Write},
     os::windows::io::AsRawHandle,
     time::{Duration, Instant},
 };
@@ -42,6 +42,76 @@ fn bootstrap(end: Instant) -> io::Result<EmptyBootstrap> {
         .map_err(|_| io::Error::from(io::ErrorKind::TimedOut))?
 }
 
+fn stage(host: bool) {
+    let outcome = (|| -> io::Result<()> {
+        let end = Instant::now() + Duration::from_secs(5);
+        if unsafe {
+            windows_sys::Win32::Storage::FileSystem::GetFileType(io::stdin().as_raw_handle())
+        } != 3
+        {
+            return Err(fail("fixture staging requires an inherited pipe"));
+        }
+        let (send, receive) = std::sync::mpsc::sync_channel(1);
+        let (release, wait) = std::sync::mpsc::sync_channel(1);
+        std::thread::spawn(move || {
+            let mut input = io::stdin().lock();
+            let decoded = (|| -> io::Result<EmptyBootstrap> {
+                let mut len = [0; 4];
+                input.read_exact(&mut len)?;
+                let len = u32::from_le_bytes(len) as usize;
+                if len == 0 || len > 65536 {
+                    return Err(fail("fixture staging frame exceeds its bound"));
+                }
+                let mut frame = Vec::with_capacity(len + 4);
+                frame.extend_from_slice(&(len as u32).to_le_bytes());
+                frame.resize(len + 4, 0);
+                input.read_exact(&mut frame[4..])?;
+                read_bootstrap(frame.as_slice())
+            })();
+            let accepted = decoded.is_ok();
+            if send.send(decoded).is_ok() && accepted {
+                let mut extra = [0];
+                let result = input.read(&mut extra).and_then(|length| {
+                    if length == 0 {
+                        Ok(())
+                    } else {
+                        Err(fail("unexpected fixture staging input"))
+                    }
+                });
+                let _ = release.send(result);
+            }
+        });
+        let c = receive
+            .recv_timeout(end.saturating_duration_since(Instant::now()))
+            .map_err(|_| io::Error::from(io::ErrorKind::TimedOut))??;
+        let pinned = Stage::admit(&c, host)?;
+        println!("r7-stage-ready");
+        io::stdout().flush()?;
+        let result = wait.recv().map_err(io::Error::other)?;
+        drop(pinned);
+        result
+    })();
+    if let Err(error) = &outcome {
+        eprintln!(
+            "r7-stage-failed={}",
+            json!({"raw":error.raw_os_error(),"message":error.to_string()})
+        );
+    }
+    outcome.unwrap();
+}
+
+#[test]
+#[ignore = "native stage for the fixed ordinary interactive fixture"]
+fn isolated_r7_partial_capture_stage_host() {
+    stage(true);
+}
+
+#[test]
+#[ignore = "native stage for the fixed ordinary interactive fixture"]
+fn isolated_r7_partial_capture_stage_manager() {
+    stage(false);
+}
+
 fn fail(error: impl std::fmt::Display) -> io::Error {
     io::Error::other(error.to_string())
 }
@@ -50,7 +120,7 @@ fn fail(error: impl std::fmt::Display) -> io::Error {
 #[ignore = "dedicated ordinary interactive account and immutable fixed source only; retains original Owner on failure"]
 fn isolated_r7_partial_capture_host() {
     let c = bootstrap(Instant::now() + Duration::from_secs(5)).unwrap();
-    let fixture = Fixture::admit(&c).unwrap();
+    let mut fixture = Fixture::admit(&c).unwrap();
     if let Err(error) = fixture.prepare(&c) {
         let facts = json!({"stage":"prepare","raw":error.raw_os_error(),"firstError":error.to_string(),"publicStartOpen":false});
         eprintln!("r7-partial-capture={facts}");

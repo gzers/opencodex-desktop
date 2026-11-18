@@ -39,8 +39,8 @@ use windows_sys::Win32::{
     },
 };
 mod preparation;
-mod retained_start;
 mod release_probe;
+mod retained_start;
 pub(super) use release_probe::ReleaseProbe;
 mod segments;
 pub(super) use preparation::LeasePreparation;
@@ -68,7 +68,7 @@ fn before(end: Instant) -> io::Result<()> {
 fn io_error(e: impl std::fmt::Display) -> io::Error {
     io::Error::other(e.to_string())
 }
-fn file_id(file: &File) -> io::Result<FileIdentity> {
+pub(super) fn file_id(file: &File) -> io::Result<FileIdentity> {
     let mut data: BY_HANDLE_FILE_INFORMATION = unsafe { std::mem::zeroed() };
     if unsafe { GetFileType(file.as_raw_handle()) } != FILE_TYPE_DISK
         || unsafe { GetFileInformationByHandle(file.as_raw_handle(), &mut data) } == 0
@@ -533,6 +533,22 @@ fn existing_context(owner: &mut Owner, end: Instant) -> io::Result<([PathBuf; 4]
     owner.check_current(end).map_err(io_error)?;
     let profile = PinnedDirectory::open(owner.profile_path())?;
     let home = PinnedDirectory::open(owner.home_path())?;
+    #[cfg(test)]
+    if let Some(isolation) = owner.fixture_isolation() {
+        isolation.verify_owner(owner, end)?;
+        let client = isolation.pin_client()?;
+        let scope = owner.scope().map_err(io_error)?;
+        before(end)?;
+        return Ok((
+            isolation.lock_paths().clone(),
+            Bound {
+                scope,
+                profile,
+                home,
+                client,
+            },
+        ));
+    }
     let client = PinnedDirectory::open_private(&profile.path().join(".codex"))?;
     let scope = owner.scope().map_err(io_error)?;
     let token = native::current_identity()?;
@@ -570,7 +586,9 @@ impl NativeLease {
         if result.is_err() {
             self.active = false;
             if matches!(self.start_state, StartLeaseState::Start(_))
-                && result.as_ref().is_err_and(|e| e.kind() != io::ErrorKind::TimedOut)
+                && result
+                    .as_ref()
+                    .is_err_and(|e| e.kind() != io::ErrorKind::TimedOut)
             {
                 self.start_state = StartLeaseState::Spent;
             }
@@ -606,7 +624,11 @@ impl NativeLease {
         if self.acquisition_thread != std::thread::current().id() || self.held.len() != 4 {
             return Err(refused());
         }
-        for (held, expected) in self.held.iter().zip([&CLAIM[..], &SQLITE, &SQLITE, &SQLITE]) {
+        for (held, expected) in self
+            .held
+            .iter()
+            .zip([&CLAIM[..], &SQLITE, &SQLITE, &SQLITE])
+        {
             if !held
                 .ranges
                 .iter()
@@ -623,7 +645,9 @@ impl NativeLease {
         if result.is_err() {
             self.active = false;
             if matches!(self.start_state, StartLeaseState::Start(_))
-                && result.as_ref().is_err_and(|e| e.kind() != io::ErrorKind::TimedOut)
+                && result
+                    .as_ref()
+                    .is_err_and(|e| e.kind() != io::ErrorKind::TimedOut)
             {
                 self.start_state = StartLeaseState::Spent;
             }

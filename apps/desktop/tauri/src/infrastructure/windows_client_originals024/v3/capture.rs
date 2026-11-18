@@ -181,6 +181,19 @@ impl CaptureStore {
         if anchor.owner_scope != owner.scope()? || anchor.source.is_some() {
             return Err(refused("original preparation anchor differs or reused"));
         }
+        #[cfg(test)]
+        let fixture_parent = match (owner.fixture_isolation(), ranges.failure.is_some()) {
+            (Some(isolation), true) => {
+                isolation.verify_owner(owner, end).map_err(refused)?;
+                Some(isolation.pin_client_parent().map_err(refused)?)
+            }
+            (None, false) => None,
+            _ => {
+                return Err(refused(
+                    "fixture capture requires exactly one bound failure arm",
+                ))
+            }
+        };
         anchor.source = Some(Source::capture(owner, end)?.0);
         let source = anchor
             .source
@@ -200,9 +213,10 @@ impl CaptureStore {
         anchor
             .pins
             .push(PinnedDirectory::open_private(owner.data_path()).map_err(refused)?);
-        anchor
-            .pins
-            .push(PinnedDirectory::open(owner.profile_path()).map_err(refused)?);
+        let client_parent = || PinnedDirectory::open(owner.profile_path()).map_err(refused);
+        #[cfg(test)]
+        let client_parent = || fixture_parent.map_or_else(client_parent, Ok);
+        anchor.pins.push(client_parent()?);
         let official_path = anchor.pins[0].path().join("official024");
         anchor.intend(official_path).map_err(refused)?;
         private_child_retained(anchor, 0, "official024", end).map_err(refused)?;
@@ -283,6 +297,10 @@ impl CaptureStore {
             #[cfg(test)]
             if let Some(arm) = ranges.failure.take() {
                 arm.fail(owner, anchor, &directory, &mut claim, &root, end)?;
+            }
+            #[cfg(test)]
+            if owner.fixture_isolation().is_some() {
+                return Err(invalid());
             }
             anchor.intend(directory.path().join("manifest.json"))?;
             anchor.intend(directory.path().join("current.json"))?;

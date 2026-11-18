@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory)][ValidateSet('Host','DiagnosticBefore','Explicit','DiagnosticAfter')][string]$Mode
 )
 $ErrorActionPreference = 'Stop'
-$public = 'C:\Users\Public\ocx-r7-partial-owner-r1'
-$profile = 'C:\Users\ocxr7owner'
-$base = Join-Path $profile 'ocx024-r7-partial-owner-r1'
+$public = 'C:\Users\Public\ocx-r7-isolated-owner-r1'
+$profile = 'C:\Users\marenben'
+$base = Join-Path $profile 'ocx024-r7-isolated-owner-r1'
 $out = Join-Path $public 'out01'
 $image = Join-Path $base 'I\ocxd.exe'
 $utf8 = [Text.UTF8Encoding]::new($false)
@@ -199,13 +199,6 @@ function CheckAttachment($Snapshot, $Injection, $ImageProof) {
     return ,$rows
 }
 
-function RequireAbsent([string]$Path) {
-    try { [void][IO.File]::GetAttributes($Path) }
-    catch [IO.FileNotFoundException] { return }
-    catch [IO.DirectoryNotFoundException] { return }
-    throw "Fixture path already present: $Path"
-}
-
 function RequirePlain([string]$Path, [bool]$Directory) {
     $item = Get-Item -LiteralPath $Path -Force
     if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -or $item.PSIsContainer -ne $Directory) {
@@ -213,12 +206,25 @@ function RequirePlain([string]$Path, [bool]$Directory) {
     }
 }
 
-function CopyExact([string]$Source, [string]$Target) {
-    $from = [IO.File]::Open($Source, 'Open', 'Read', 'Read')
-    try {
-        $to = [IO.File]::Open($Target, 'CreateNew', 'Write', 'Read')
-        try { $from.CopyTo($to); $to.Flush($true) } finally { $to.Dispose() }
-    } finally { $from.Dispose() }
+function NewFixtureProcess([string]$Image, [string]$Directory, [string]$Test) {
+    $info = [Diagnostics.ProcessStartInfo]::new()
+    $info.FileName = $Image
+    $info.Arguments = "--ignored --exact infrastructure::windows_owner_host024::partial_capture_tests::$Test --nocapture --test-threads=1"
+    $info.WorkingDirectory = $Directory
+    $info.UseShellExecute = $false
+    $info.CreateNoWindow = $true
+    $info.RedirectStandardInput = $true
+    $info.RedirectStandardOutput = $true
+    $info.RedirectStandardError = $true
+    return $info
+}
+
+function SendBootstrap($Process, [byte[]]$Payload) {
+    $pipe = $Process.StandardInput.BaseStream
+    $length = [BitConverter]::GetBytes([uint32]$Payload.Length)
+    $pipe.Write($length, 0, $length.Length)
+    $pipe.Write($Payload, 0, $Payload.Length)
+    $pipe.Flush()
 }
 
 if ($PSScriptRoot -cne $public) { throw 'Use the fixed staged fixture root.' }
@@ -228,9 +234,8 @@ foreach ($folder in @('C:\Users', 'C:\Users\Public', $public, $out, (Join-Path $
 $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
 $session = [Diagnostics.Process]::GetCurrentProcess().SessionId
 $admin = [Security.Principal.WindowsPrincipal]::new($identity).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-$local = Get-LocalUser -Name 'ocxr7owner'
-if (!$local.Enabled -or $local.SID.Value -cne $identity.User.Value -or $admin -or $session -le 0 -or $env:USERPROFILE -cne $profile) {
-    throw 'Use the dedicated ocxr7owner ordinary interactive desktop.'
+if ($identity.User.Value -cne 'S-1-5-21-587408064-856152790-2583328096-1003' -or $admin -or $session -le 0 -or $env:USERPROFILE -cne $profile) {
+    throw 'Use the existing marenben ordinary interactive desktop.'
 }
 $input = Join-Path $public 'input'
 $manifestFile = Join-Path $input 'manifest.json'
@@ -243,33 +248,38 @@ if ($manifest.schema -ne 1 -or $manifest.sid -cne $identity.User.Value -or $mani
     $manifest.bundleSha256 -cne '14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7') {
     throw 'Immutable source manifest or actual fixture identity differs.'
 }
-WriteOnce "$Mode-intent.json" @{ mode=$Mode; sid=$identity.User.Value; session=$session; testSha256=$manifest.testSha256; publicStartOpen=$false }
+if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $manifest.testSha256) {
+    throw 'Fixed test image digest differs.'
+}
+$config = @{ schema=1; scope='isolated-r7-partial-capture-original-worker'; expectedSid=$identity.User.Value; expectedSession=$session; profile=$profile;
+    installation=(Join-Path $base 'I'); data=(Join-Path $base 'D'); home=(Join-Path $base 'H'); brokerSha256=$manifest.testSha256; managerSha256=$manifest.testSha256 }
+$payload = $utf8.GetBytes(($config | ConvertTo-Json -Compress))
 
 $result = @{ mode=$Mode; passed=$false; publicStartOpen=$false; normalStop=$false; closed=$false }
 $process = $null
 $outFile = $null
 $errFile = $null
+$stage = $null
+$stageReady = $false
 try {
+    $stageTest = if ($Mode -ceq 'Host') { 'isolated_r7_partial_capture_stage_host' } else { 'isolated_r7_partial_capture_stage_manager' }
+    $stage = [Diagnostics.Process]::Start((NewFixtureProcess $source $input $stageTest))
+    $stageError = $stage.StandardError.ReadToEndAsync()
+    SendBootstrap $stage $payload
+    $stageClock = [Diagnostics.Stopwatch]::StartNew()
+    do {
+        $remaining = [Math]::Max(0, 210000 - $stageClock.ElapsedMilliseconds)
+        $read = $stage.StandardOutput.ReadLineAsync()
+        if (!$read.Wait([int]$remaining)) { throw 'Native fixture staging timed out.' }
+        $line = $read.Result
+        if ($null -eq $line) {
+            $detail = if ($stageError.Wait(1000)) { $stageError.Result } else { 'stderr pending' }
+            throw "Native fixture staging refused. $detail"
+        }
+        $stageReady = $line.EndsWith('r7-stage-ready', [StringComparison]::Ordinal)
+    } until ($stageReady)
+    WriteOnce "$Mode-intent.json" @{ mode=$Mode; sid=$identity.User.Value; session=$session; testSha256=$manifest.testSha256; publicStartOpen=$false; nativeStageReady=$true }
     if ($Mode -ceq 'Host') {
-        $targets = @($base, (Join-Path $profile '.codex'), (Join-Path $profile '.grok'), (Join-Path $profile 'AppData\Local\OpenCodex'))
-        $facts = foreach ($target in $targets) {
-            try { RequireAbsent $target; @{ path=$target; absent=$true } }
-            catch { @{ path=$target; absent=$false; error=$_.Exception.Message; hresult=$_.Exception.HResult } }
-        }
-        WriteOnce 'Host-absence.json' @{ paths=@($facts) }
-        if ($facts | Where-Object { !$_.absent }) { throw 'Fixture targets must be absent before preparation.' }
-        if ((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash.ToLowerInvariant() -cne $manifest.testSha256 -or
-            (Get-FileHash -LiteralPath $bundle -Algorithm SHA256).Hash.ToLowerInvariant() -cne $manifest.bundleSha256) {
-            throw 'Fixed input digest differs.'
-        }
-        foreach ($path in @($base, (Join-Path $base 'I'), (Join-Path $base 'D'), (Join-Path $base 'H'))) {
-            RequireAbsent $path
-            $security = [Security.AccessControl.DirectorySecurity]::new()
-            $security.SetSecurityDescriptorSddlForm(('O:{0}D:P(A;OICI;FA;;;{0})(A;OICI;FA;;;SY)' -f $identity.User.Value))
-            [void][IO.Directory]::CreateDirectory($path, $security)
-            RequirePlain $path $true
-        }
-        CopyExact $source $image
         $test = 'isolated_r7_partial_capture_host'
     } else {
         $ready = ReadJson (Join-Path $out 'Host-ready.json')
@@ -293,18 +303,7 @@ try {
     if ((Get-FileHash -LiteralPath $image -Algorithm SHA256).Hash.ToLowerInvariant() -cne $manifest.testSha256) {
         throw 'Private same-image fixture digest differs.'
     }
-    $config = @{ schema=1; scope='isolated-r7-partial-capture-original-worker'; expectedSid=$identity.User.Value; expectedSession=$session; profile=$profile;
-        installation=(Join-Path $base 'I'); data=(Join-Path $base 'D'); home=(Join-Path $base 'H'); brokerSha256=$manifest.testSha256; managerSha256=$manifest.testSha256 }
-    $payload = $utf8.GetBytes(($config | ConvertTo-Json -Compress))
-    $info = [Diagnostics.ProcessStartInfo]::new()
-    $info.FileName = $image
-    $info.Arguments = "--ignored --exact infrastructure::windows_owner_host024::partial_capture_tests::$test --nocapture --test-threads=1"
-    $info.WorkingDirectory = $base
-    $info.UseShellExecute = $false
-    $info.CreateNoWindow = $true
-    $info.RedirectStandardInput = $true
-    $info.RedirectStandardOutput = $true
-    $info.RedirectStandardError = $true
+    $info = NewFixtureProcess $image $base $test
     $stdoutPath = Join-Path $out "$Mode.stdout.log"
     $outFile = [IO.FileStream]::new($stdoutPath, 'CreateNew', 'Write', 'Read', 1)
     $errFile = [IO.FileStream]::new((Join-Path $out "$Mode.stderr.log"), 'CreateNew', 'Write', 'Read', 1)
@@ -314,11 +313,7 @@ try {
     WriteOnce "$Mode-creation.json" @{ pid=$result.pid; creationFiletime=$result.creationFiletime; image=$image; arguments=$info.Arguments }
     $copyOut = $process.StandardOutput.BaseStream.CopyToAsync($outFile)
     $copyErr = $process.StandardError.BaseStream.CopyToAsync($errFile)
-    $pipe = $process.StandardInput.BaseStream
-    $length = [BitConverter]::GetBytes([uint32]$payload.Length)
-    $pipe.Write($length, 0, $length.Length)
-    $pipe.Write($payload, 0, $payload.Length)
-    $pipe.Flush()
+    SendBootstrap $process $payload
     $process.StandardInput.Close()
     if ($Mode -ceq 'Host') {
         $nativeResult = Join-Path $base 'D\fixture-result.json'
@@ -436,7 +431,13 @@ try {
 } catch {
     $result.firstError = @{ message=$_.Exception.Message; hresult=$_.Exception.HResult; line=$_.InvocationInfo.ScriptLineNumber }
     if ($null -ne $process -and $process.HasExited) { $result.raw = $process.ExitCode }
+    if (!$stageReady) { throw }
 } finally {
+    if ($null -ne $stage) {
+        $stage.StandardInput.Close()
+        [void]$stage.WaitForExit(1000)
+        $stage.Dispose()
+    }
     if ($null -ne $outFile) { $outFile.Dispose() }
     if ($null -ne $errFile) { $errFile.Dispose() }
     if ($null -ne $process) { $process.Dispose() }

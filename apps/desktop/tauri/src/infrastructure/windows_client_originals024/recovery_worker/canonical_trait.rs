@@ -123,6 +123,10 @@ impl BeforeFirstResumeRecovery for WorkerLocal {
         window: &BeforeResumeRecoveryWindow,
     ) -> AppResult<Self::PreparedAbort> {
         let result = (|| {
+            #[cfg(test)]
+            if owner.fixture_isolation().is_some() {
+                return Err(fail(invalid()));
+            }
             if self.revoked || self.canonical.is_some() {
                 return Err(fail(invalid()));
             }
