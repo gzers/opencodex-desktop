@@ -203,6 +203,7 @@ fn inspect_root_lineage(
     pending: Option<&super::root_creation::Transfer>,
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
     let mut lineage = root_lineage::parse(binding, history)?;
+    let cancellation_namespace = root_cancel_namespace::Namespace::from_history(history)?;
     #[cfg(not(test))]
     let reference_mode = false;
     #[cfg(test)]
@@ -237,6 +238,7 @@ fn inspect_root_lineage(
                 history
                     .get(..end)
                     .ok_or_else(|| denied("pending cancellation prefix missing"))?,
+                &cancellation_namespace,
             )? {
                 expected.push(attempt);
             }
@@ -257,6 +259,7 @@ fn inspect_root_lineage(
                     closed,
                     &generation.origin,
                     prefix,
+                    &cancellation_namespace,
                 )?;
             if let Some(attempt) = observation.retained_slot() {
                 expected.push(attempt.to_string());
