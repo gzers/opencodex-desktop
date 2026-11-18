@@ -14,6 +14,7 @@ use serde::{Deserialize, Serialize};
 use std::{
     io::Read,
     path::{Component, Path, PathBuf},
+    time::Instant,
 };
 
 pub const IMAGE_MANIFEST: &str = ".runtime-image.json";
@@ -206,7 +207,7 @@ pub fn read(
 #[derive(Clone, Copy)]
 enum Admission {
     CriticalFiles,
-    CompleteImage,
+    CompleteImage(Option<Instant>),
 }
 
 /// Fresh complete admission for an action boundary. One full inventory binds
@@ -222,8 +223,36 @@ pub fn read_complete(
         platform,
         target,
         false,
-        Admission::CompleteImage,
+        Admission::CompleteImage(None),
     )
+}
+
+/// Complete admission under the caller's original action deadline.
+#[cfg(any(windows, test))]
+pub(crate) fn read_complete_until(
+    program_root: &Path,
+    platform: Platform,
+    target: &str,
+    deadline: Instant,
+) -> AppResult<Option<SelectedProgram>> {
+    check_deadline(deadline)?;
+    let selected = read_inner(
+        program_root,
+        platform,
+        target,
+        false,
+        Admission::CompleteImage(Some(deadline)),
+    )?;
+    check_deadline(deadline)?;
+    Ok(selected)
+}
+
+fn check_deadline(deadline: Instant) -> AppResult<()> {
+    if Instant::now() >= deadline {
+        Err(AppError::Timeout)
+    } else {
+        Ok(())
+    }
 }
 
 /// Installer-only final readback while its own serialized journal is present.
@@ -404,7 +433,16 @@ fn read_image_inner(
     }
     let package = paths.package_root.join(install::PACKAGE_SUBPATH);
     let script = package.join(&image.bin);
-    let inventory = if matches!(admission, Admission::CompleteImage) {
+    let inventory = if let Admission::CompleteImage(deadline) = admission {
+        if let Some(deadline) = deadline {
+            check_deadline(deadline)?;
+        }
+        #[cfg(windows)]
+        let rows = match deadline {
+            Some(deadline) => super::program_image::inventory_until(&paths.version_root, deadline)?,
+            None => super::program_image::inventory(&paths.version_root)?,
+        };
+        #[cfg(not(windows))]
         let rows = super::program_image::inventory(&paths.version_root)?;
         if rows.is_empty() || super::program_image::inventory_digest(&rows)? != image.tree_sha256 {
             return Err(invalid("运行程序完整文件树与版本清单不一致"));

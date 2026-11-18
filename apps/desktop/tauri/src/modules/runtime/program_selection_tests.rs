@@ -116,6 +116,28 @@ fn complete_admission_matches_selection_and_never_reuses_a_prior_content_check()
 }
 
 #[test]
+fn deadline_admission_preserves_complete_readback_and_rejects_expired_reads() {
+    let f = Fixture::new();
+    let missing = f.root.join("not-created");
+    let read_until = |root: &Path, deadline| {
+        read_complete_until(root, Platform::Macos, "darwin-arm64", deadline)
+    };
+    let deadline = Instant::now() + std::time::Duration::from_secs(10);
+    assert_eq!(
+        read_until(&f.root, deadline).unwrap(),
+        f.complete().unwrap()
+    );
+    assert_eq!(read_until(&missing, deadline).unwrap(), None);
+    let expired = Instant::now();
+    for root in [&f.root, &missing] {
+        assert!(matches!(read_until(root, expired), Err(AppError::Timeout)));
+    }
+    fs::write(f.paths.package_root.join("extra-file"), b"drift").unwrap();
+    assert!(read_until(&f.root, deadline).is_err());
+    assert!(!missing.exists());
+}
+
+#[test]
 fn complete_tree_seal_does_not_replace_any_named_executable_digest() {
     for index in 0..6 {
         let mut f = Fixture::new();
