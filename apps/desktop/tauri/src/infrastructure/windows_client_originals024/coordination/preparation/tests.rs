@@ -1,8 +1,32 @@
 use super::*;
-use crate::infrastructure::windows_client_originals024::tree::tests::Fixture;
+use crate::infrastructure::windows_client_originals024::{bounded, tree::tests::Fixture};
+use native as backend;
 use native::{create_private_directory, PrivateRecord};
 use rusqlite::Connection;
 use std::time::Duration;
+
+#[path = "../../../../../../../../test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs"]
+mod external_repair_steps;
+
+const CLAIM_NAME: &str = ".opencodex-native-main.claim.sqlite";
+
+fn seed_coordination(client: &Path, coordination: &Path) -> [PathBuf; 4] {
+    let paths = std::array::from_fn(|i| {
+        if i == 0 {
+            client.join(CLAIM_NAME)
+        } else {
+            coordination.join(format!("{i}.sqlite"))
+        }
+    });
+    for p in &paths {
+        drop(PrivateRecord::create(p, b"", 16).unwrap());
+        let c = Connection::open(p).unwrap();
+        c.execute_batch("PRAGMA journal_mode=DELETE; CREATE TABLE synthetic(value INTEGER); INSERT INTO synthetic VALUES(1)").unwrap();
+        c.close().unwrap();
+    }
+    paths
+}
+
 struct Scene {
     fixture: Option<Fixture>,
     paths: [PathBuf; 4],
@@ -12,19 +36,7 @@ impl Scene {
         let fixture = Fixture::new();
         let client = create_private_directory(&fixture.path().join(".codex")).unwrap();
         let coordination = create_private_directory(&fixture.path().join("coordination")).unwrap();
-        let paths = std::array::from_fn(|i| {
-            if i == 0 {
-                client.path().join(".opencodex-native-main.claim.sqlite")
-            } else {
-                coordination.path().join(format!("{i}.sqlite"))
-            }
-        });
-        for p in &paths {
-            drop(PrivateRecord::create(p, b"", 16).unwrap());
-            let c = Connection::open(p).unwrap();
-            c.execute_batch("PRAGMA journal_mode=DELETE; CREATE TABLE synthetic(value INTEGER); INSERT INTO synthetic VALUES(1)").unwrap();
-            c.close().unwrap();
-        }
+        let paths = seed_coordination(client.path(), coordination.path());
         Self {
             fixture: Some(fixture),
             paths,
@@ -92,6 +104,90 @@ fn cleanup_own_failed(prefix: &mut LeasePreparation) {
     }
     // Fixture-only explicit release is not a valid lease/normal release receipt.
     assert!(prefix.take_complete().is_err());
+}
+
+fn external_scene() -> (external_repair_steps::Scene, [PathBuf; 4]) {
+    let mut scene = external_repair_steps::Scene::new();
+    let root = scene.root.as_ref().unwrap().path();
+    let coordination = create_private_directory(&root.join("coordination")).unwrap();
+    let paths = seed_coordination(scene.client.path(), coordination.path());
+    scene.claim_name = Some(CLAIM_NAME);
+    (scene, paths)
+}
+
+#[test]
+fn wl2_r7_external_steps_native_lease_denies_busy_last_role_before_first_intent() {
+    let (scene, paths) = external_scene();
+    let before = images(&paths);
+    let prepared = scene.prepare().unwrap();
+    let blocker = Connection::open(&paths[3]).unwrap();
+    blocker.busy_timeout(Duration::ZERO).unwrap();
+    blocker.execute_batch("BEGIN IMMEDIATE").unwrap();
+    let mut prefix = LeasePreparation::default();
+    let mut checkpoints = 0;
+    let error = prepared
+        .run_checked(|| {
+            checkpoints += 1;
+            assert_eq!(checkpoints, 1);
+            prefix.prepare_fixture_paths(&paths, scene.end)
+        })
+        .unwrap_err();
+    assert_eq!(checkpoints, 1);
+    assert_eq!(error.raw_os_error(), Some(33));
+    assert!(prefix.take_complete().is_err());
+    let retained = prefix.lease.as_ref().unwrap();
+    assert_eq!(retained.held.len(), 4);
+    for held in &retained.held {
+        actual_ranges_block(held);
+    }
+    assert!(!blocker.is_autocommit());
+    // Full pair preparation accepts the same two originals and still finds an empty record directory.
+    drop(scene.prepare().unwrap());
+    cleanup_own_failed(&mut prefix);
+    assert!(!blocker.is_autocommit());
+    blocker.execute_batch("ROLLBACK").unwrap();
+    blocker.close().unwrap();
+    drop(prefix);
+    assert!(images(&paths) == before);
+    println!("external repair pair: K contention raw33 before Intent; original pair/records and SQLite transaction preserved");
+    scene.finish();
+}
+
+#[test]
+fn wl2_r7_external_steps_native_lease_keeps_claim_and_nlk_through_moves_until_release() {
+    let (scene, paths) = external_scene();
+    let before = images(&paths);
+    let root = scene.client.path();
+    let prepared = scene.prepare().unwrap();
+    let mut prefix = LeasePreparation::default();
+    prefix.prepare_fixture_paths(&paths, scene.end).unwrap();
+    let mut lease = prefix.take_complete().unwrap();
+    let mut claim = lease.anchored_claim(root, scene.end).unwrap();
+    let mut checkpoints = 0;
+    prepared
+        .run_checked(|| {
+            claim.check(root, scene.end)?;
+            assert_eq!(claim.lease.held.len(), 4);
+            for held in &claim.lease.held {
+                actual_ranges_block(held);
+            }
+            checkpoints += 1;
+            Ok(())
+        })
+        .unwrap();
+    assert_eq!(checkpoints, 5);
+    drop(claim);
+    lease.release(scene.end).unwrap();
+    let mut competitor = LeasePreparation::default();
+    competitor.prepare_fixture_paths(&paths, scene.end).unwrap();
+    competitor
+        .take_complete()
+        .unwrap()
+        .release(scene.end)
+        .unwrap();
+    assert!(images(&paths) == before);
+    println!("external repair pair: claim/N/L/K refused competing ranges (raw33) at five mutation/readback boundaries; independent reacquisition after explicit release; unchanged coordination IDs/security/bytes");
+    scene.finish();
 }
 
 fn retained_start(

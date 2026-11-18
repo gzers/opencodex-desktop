@@ -1,7 +1,9 @@
 //! Synthetic proof of the external repair file steps. This module has no
 //! entry point for an existing scene and cannot qualify a repair as complete.
-use super::bounded::{native_stamp, SnapshotData};
-use crate::backend::{self, PinnedDirectory, PrivateRecord, RetainedFileMove};
+use super::{
+    backend::{self, PinnedDirectory, PrivateRecord, RetainedFileMove},
+    bounded::{native_stamp, SnapshotData},
+};
 use std::{
     fs::{self, OpenOptions},
     io::{self, Read},
@@ -38,16 +40,17 @@ fn read_image(path: &Path, end: Instant) -> io::Result<FileImage> {
     Ok(FileImage { security, bytes })
 }
 
-struct Scene {
-    client: PinnedDirectory,
+pub(super) struct Scene {
+    pub(super) client: PinnedDirectory,
     custody: PinnedDirectory,
     retired: PinnedDirectory,
     records: PinnedDirectory,
-    root: Option<tempfile::TempDir>,
+    pub(super) root: Option<tempfile::TempDir>,
+    pub(super) claim_name: Option<&'static str>,
     original: FileImage,
     working: FileImage,
     started: Instant,
-    end: Instant,
+    pub(super) end: Instant,
 }
 
 struct FileStep<'a> {
@@ -74,20 +77,29 @@ impl FileStep<'_> {
     }
 }
 
-struct PreparedScene<'a> {
+pub(super) struct PreparedScene<'a> {
     scene: &'a Scene,
     retire: FileStep<'a>,
     restore: FileStep<'a>,
 }
 
 impl PreparedScene<'_> {
-    fn run(mut self) -> io::Result<()> {
+    fn run(self) -> io::Result<()> {
+        self.run_checked(|| Ok(()))
+    }
+
+    pub(super) fn run_checked(
+        mut self,
+        mut check_claim: impl FnMut() -> io::Result<()>,
+    ) -> io::Result<()> {
+        check_claim()?;
         self.retire.verify_source(self.scene.end)?;
         self.restore.verify_source(self.scene.end)?;
         self.scene
             .require_members(&["settings"], &["held"], &[], &[])?;
-        self.scene.move_file(&mut self.retire, |_| Ok(()))?;
-        self.scene.move_file(&mut self.restore, |_| Ok(()))?;
+        self.scene.move_file(&mut self.retire, |_| check_claim())?;
+        check_claim()?;
+        self.scene.move_file(&mut self.restore, |_| check_claim())?;
         self.retire.verify_source(self.scene.end)?;
         self.restore.verify_source(self.scene.end)?;
         self.scene.require_members(
@@ -95,12 +107,13 @@ impl PreparedScene<'_> {
             &[],
             &["work"],
             &["OriginalReturnIntent.json", "RetireIntent.json"],
-        )
+        )?;
+        check_claim()
     }
 }
 
 impl Scene {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let root = tempfile::Builder::new()
             .prefix("ocx024-r7-external-steps-")
             .tempdir()
@@ -123,6 +136,7 @@ impl Scene {
             retired,
             records,
             root: Some(root),
+            claim_name: None,
             started,
             end,
         }
@@ -189,11 +203,11 @@ impl Scene {
         retired: &[&str],
         records: &[&str],
     ) -> io::Result<()> {
-        for (parent, expected) in [
-            (&self.client, client),
-            (&self.custody, custody),
-            (&self.retired, retired),
-            (&self.records, records),
+        for (parent, expected, claim) in [
+            (&self.client, client, self.claim_name),
+            (&self.custody, custody, None),
+            (&self.retired, retired, None),
+            (&self.records, records, None),
         ] {
             self.check_time()?;
             parent.recheck()?;
@@ -201,7 +215,9 @@ impl Scene {
             for entry in fs::read_dir(parent.path())? {
                 self.check_time()?;
                 let name = entry?.file_name();
-                if !expected.iter().any(|leaf| name == *leaf) || seen.contains(&name) {
+                let is_claim = claim.is_some_and(|claim| name == claim);
+                if !(is_claim || expected.iter().any(|leaf| name == *leaf)) || seen.contains(&name)
+                {
                     return Err(io::Error::new(
                         io::ErrorKind::InvalidData,
                         "unexpected fixture directory member",
@@ -209,7 +225,7 @@ impl Scene {
                 }
                 seen.push(name);
             }
-            if seen.len() != expected.len() {
+            if seen.len() != expected.len() + usize::from(claim.is_some()) {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidData,
                     "missing fixture directory member",
@@ -220,7 +236,7 @@ impl Scene {
         self.check_time()
     }
 
-    fn prepare(&self) -> io::Result<PreparedScene<'_>> {
+    pub(super) fn prepare(&self) -> io::Result<PreparedScene<'_>> {
         self.require_members(&["settings"], &["held"], &[], &[])?;
         let retire = self.retain(true)?;
         let restore = self.retain(false)?;
@@ -289,7 +305,7 @@ impl Scene {
         self.move_file(&mut self.retain(retire_work)?, after_intent)
     }
 
-    fn finish(mut self) {
+    pub(super) fn finish(mut self) {
         let root = self.root.take().unwrap();
         let path = root.path().to_owned();
         drop(self);

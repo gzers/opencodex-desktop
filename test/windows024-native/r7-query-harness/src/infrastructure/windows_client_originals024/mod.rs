@@ -5,6 +5,8 @@ mod before_resume_record {
 pub mod bounded;
 pub mod collector;
 #[cfg(test)]
+use crate::backend;
+#[cfg(test)]
 mod external_repair_steps;
 mod coordination {include!(concat!(env!("OUT_DIR"),"/coordination_validation.rs"));}
 mod partial_capture {mod native_collection {include!(concat!(env!("OUT_DIR"),"/native_partial_collect.rs"));}}
