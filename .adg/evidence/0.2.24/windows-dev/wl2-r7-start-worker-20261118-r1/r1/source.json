@@ -1,0 +1,95 @@
+{
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter.rs",
+      "sha256": "4f47391aa7cd5ee691603fe88371082e2e8bbafd0f3a68471334a408c8f9b0c2",
+      "bytes": 19602
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation.rs",
+      "sha256": "61309f8cd9eb4b2148ed88a7b55e250acc743ffb3a1260b193aefa815a2e017a",
+      "bytes": 9851
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "sha256": "70a7bb0396fe0872d3cd9ee7adeea55556c78accbf92f72dd0c6e54d94277570",
+      "bytes": 24179
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "sha256": "88562841a42666a7c8dae2690da2437352cbc93bbfff940aa0344d5244ddc094",
+      "bytes": 12590
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture.rs",
+      "sha256": "867491e30618ac1ce7fe5a6e7810de6b9c1db8a8478fea1f960a8741c9cee5a9",
+      "bytes": 31614
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation.rs",
+      "sha256": "f830000d32b3ffbf81b6f2f6444b6f66b546449ea31d3795e1cdf707d678cca7",
+      "bytes": 22928
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs",
+      "sha256": "4015fdac43462a2aa5c67ac63923b94536b4332ad3dc027d294d64d0901556a1",
+      "bytes": 3310
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3.rs",
+      "sha256": "3620c50764367dd035c6cbddbd24608fe0d4529ed1828ec380861a7f60a62544",
+      "bytes": 23503
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "sha256": "2673b803c19296ab10313f0754260af6a3497e0496e543073cdd78a9c1665fd4",
+      "bytes": 48337
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "sha256": "56dfb5e5e1ef659c1af71661c5949fe37cf114c1c657010b33471eb00865fe96",
+      "bytes": 10445
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "sha256": "705823410fda06c143580008e548c3de09e641a39066f3d95c1813be20caac2e",
+      "bytes": 56555
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "sha256": "69215525a991ceee252fa97f9213dad28f76f5231e44de7afd5acd5e0ac1a754",
+      "bytes": 15799
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/start_worker.rs",
+      "sha256": "bdb66ad924292147b896e862117c01276c28e7b297829db728b901d63ed169bb",
+      "bytes": 10532
+    }
+  ],
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_lease_prefix_native_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "currentR2Touched": false
+}

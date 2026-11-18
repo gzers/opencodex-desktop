@@ -1453,3 +1453,9 @@ Windows 代码 e6cc1f29a5444a76da3e123d6f97b7b6ee6757f2 已推送与回读，消
 代码 e54a1156de42d445903faedb93aed4923f400b3a 已核对远端。基线真实解锁第三角色 RESERVED 后，原入口仍准入，首断言 raw101，失败目录保留。修复版精确范围 5/5、租约分段 7/7、恢复中断 1/1，均 raw0。原 claim 仍冲突。制品 SHA-256 a8f32eff2cba875ae93339e14a12ab701754043af26d59da9d987b48d01e7985。原始证据和累计 216 项状态见 wl2-r7-lease-range-20261118-r1。
 
 已消费 TEAM46／IMP185／r7。当前 r2 Job 仍有 24 项未知，raw50，executionReady=false。后续沿原宿主、原 Start 窗及同线程保全接入，公开 Start 保持拒绝。
+
+## 2026-11-18 r7 首启原工作线程保全
+
+源码 7ca43ca47bb642a91e8c69444afaad673582a213。首次原生获取前登记唯一 Owner，失败在原线程保留已登记对象、局部范围和原锁。Status 独立投影。MSVC 原范围 5/5、控制层 2/2，均 raw0，四种真实 SQLite 冲突 raw33，19 个本轮夹具已缺席。控制层测试制品 SHA-256 11dd88f897ab5cc1fe141080c380d4bbeddc4283e56b65659bd3f1483ac9df70。第一批共用的 EXE 已覆盖，原日志和执行源码保留。证据 wl2-r7-start-worker-20261118-r1。
+
+十份 r2 只读回执与原留档逐份摘要一致，未重复归档。旧现场仍因原 Job 24 项未知／raw50 保持 executionReady=false。显式恢复仍需原 Start worker 对同一原生范围、原失败前缀及唯一新动作窗口签发独立许可，生产 Start 保持拒绝。
