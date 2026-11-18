@@ -282,7 +282,7 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
                         value=snapshot('failure-stop-check')
                         if value is not None and matches(value,'关闭','AXButton'):press('关闭')
                         press('概览');press('停止')
-                        wait_for('failure-normal-stop',lambda v:not (profile/'.codex-desktop/opencodex/home/runtime-port.json').exists(),35)
+                        wait_for('failure-normal-stop',lambda v:not (profile/'.codex-desktop/opencodex/home/runtime-port.json').exists() and head() is not None and head()['state']=='root_absent',35)
                         service_verified_stopped=True
                     except Exception as e:report['normalStopCleanupError']=repr(e)
             if not service_requested or service_verified_stopped:end_process()
