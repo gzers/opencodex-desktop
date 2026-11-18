@@ -2006,3 +2006,9 @@ run05 原生显式取消在 6,982 ms／10,000 ms 到达 RootCancellationAbsent r
 代码 0816047f30f667e56bea4167ec012f6e12bfcbdd，证据 cecd17bda58ebbccc0bd0bb0a0a017a5df1ab5ba。接收全树成员、原准备绑定V2 Pending DATA、长路径查询和复用扫描缓冲的定向证据，未整合Windows生产分支。按固定Git对象核对四个清单的逐文件长度与SHA256：tree-membership 73件、bound-preparation 109件、full-msvc-scan-entry 37件、initial-start-worker-request 10件。实际固定副本MSVC完整扫描2634.174ms，16项回归通过，初次10079.394ms失败保留。缓存和宿主负载未控制，生产Start 30秒仍须定向实证。Public输入的活动比对来自Windows回交。普通桌面私有V2未取得输出，session 7断开。整链原件恢复、普通桌面生命周期和候选资格尚未通过。
 
 初始Start持锁线程的所有权和后继恢复权限已在[Windows r7合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)冻结。Windows可继续本线开发，先在自有夹具证明同原线程和同范围。旧r2保持原状，固定候选前不进入W2。
+
+## revision184：Windows r7 Journal 定向回交接收
+
+代码 89e8c64478553c9715eb5babfe00f9eeed14af11，证据 420d7a948aeea76f198d6ffe8e2ee4a8b05499f0。按共同基线 9daf5599151b65437f94ab2cadb1988060ee38c3 核净差，并逐文件核对 Git blob 的长度和 SHA-256。定位摘要轮 43 件、最终命名数据流轮 40 件，均与清单相符。两轮基线均为 raw101。修复后定位摘要轮 4 项及关联 3 项通过，最终命名数据流轮 5 项通过。定位摘要绑定原保留目录实际路径，成员变化仍进入观测摘要。完整初始化 Journal 在末尾再次检查命名数据流。Windows 回交确认两轮分别清理了 32、31 个成功测试根，失败现场保留。两轮均为 productionAccepted:false，生产代码尚未合入。
+
+[Windows r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)的写集、接口、预算与未知拒绝继续有效。初始 Start 持锁 worker、显式恢复和普通桌面 private V2 仍待交付。旧 r2 的 10 份只读导出一致，Job 仍有 24 项未知（raw50），恢复计划 executionReady=false。旧现场保持原状，固定候选后才进入 W2 或双 SID。

@@ -367,3 +367,7 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 ## revision44 Windows初始Start worker接续
 
 共同代码基线main 9daf5599151b65437f94ab2cadb1988060ee38c3，Windows输入 0816047f30f667e56bea4167ec012f6e12bfcbdd，证据 cecd17bda58ebbccc0bd0bb0a0a017a5df1ab5ba。接收结果归IMP183。按[本次r7合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)继续Windows原宿主worker、生命周期/捕获/协调及定向测试。Mac继续后继准备取消。复用未受影响的扫描、CLI和MSI证据。
+
+## revision45 Windows r7 Journal 交接接收
+
+共同代码基线 9daf5599151b65437f94ab2cadb1988060ee38c3，Windows 代码 89e8c64478553c9715eb5babfe00f9eeed14af11，证据 420d7a948aeea76f198d6ffe8e2ee4a8b05499f0。IMP184 记录 Journal 两轮定向证据。按现有 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)继续原宿主 worker、显式恢复和普通桌面 private V2，沿用单写归属与既有验收预算。Mac 并行继续后继准备取消。既有旧 r2 现场保持原状。
