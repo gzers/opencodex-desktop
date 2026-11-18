@@ -1,0 +1,72 @@
+
+running 5 tests
+test infrastructure::windows_client_originals024::v3::journal::preparation::tests::read_tests::wl2_r7_preparation_read_native_actual_slot_v2_maps_all_original_journal_prefixes_pending ... r7 preparationread actualslot fault1: exact originaljournal nativeobjects+session/host -> strictV2 handleRetained, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpOqwSIB
+r7 preparationread actualslot fault2: exact originaljournal nativeobjects+session/host -> strictV2 handleRetained, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmprW9DxI
+r7 preparationread actualslot fault3: exact originaljournal nativeobjects+session/host -> strictV2 handleRetained, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpggR3cc
+r7 preparationread actualslot fault4: exact originaljournal nativeobjects+session/host -> strictV2 journalPublished, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpoCDU7S
+r7 preparationread actualslot fault5: exact originaljournal nativeobjects+session/host -> strictV2 handleRetained, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmplrLzJy
+r7 preparationread actualslot fault6: exact originaljournal nativeobjects+session/host -> strictV2 handleRetained, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpCOERVh
+r7 preparationread actualslot fault7: exact originaljournal nativeobjects+session/host -> strictV2 handleRetained, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpHjnX5X
+r7 preparationread actualslot fault8: exact originaljournal nativeobjects+session/host -> strictV2 currentPublished, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpD4AqCl
+r7 preparationread actualslot fault10: exact originaljournal nativeobjects+session/host -> strictV2 handleRetained, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpAQnclk
+r7 preparationread actualslot fault11: exact originaljournal nativeobjects+session/host -> strictV2 handleRetained, missing Source/all8baseline staysPending/no nativefactory
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpenbC30
+ok
+test infrastructure::windows_client_originals024::v3::journal::preparation::tests::read_tests::wl2_r7_preparation_read_native_completed_journal_rejects_late_directory_stream ... completed journal late directory stream: refused InvalidData, both original handles retained
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpkDXX9l
+ok
+test infrastructure::windows_client_originals024::v3::journal::preparation::tests::read_tests::wl2_r7_preparation_read_native_every_original_initializer_prefix_preserves_pending_and_bytes ... r7 preparationread actualjournal fault1: retained files=0 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpnbCkNr
+r7 preparationread actualjournal fault2: retained files=1 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmptr2btC
+r7 preparationread actualjournal fault3: retained files=1 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpVSitTA
+r7 preparationread actualjournal fault4: retained files=1 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpI1bLxN
+r7 preparationread actualjournal fault5: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpuUeIoS
+r7 preparationread actualjournal fault6: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpRh9IwJ
+r7 preparationread actualjournal fault7: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpCd3PiK
+r7 preparationread actualjournal fault8: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpHgvXqx
+r7 preparationread actualjournal fault10: retained files=1 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpbqf9sh
+r7 preparationread actualjournal fault11: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpdA2YPj
+ok
+test infrastructure::windows_client_originals024::v3::journal::preparation::tests::read_tests::wl2_r7_preparation_read_native_expired_start_prefix_reads_without_mutation_reactivation ... r7 preparationread expired originalStart: same actual halfmanifest bytes read in caller5, no oldmutationreactivation/newcurrent/nativeproof
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEFHCYe
+ok
+test infrastructure::windows_client_originals024::v3::journal::preparation::tests::read_tests::wl2_r7_preparation_read_native_mismatch_member_security_ads_and_cutoff_refuse ... r7 preparationread actualjournal refuses member: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpfLmSR9
+r7 preparationread actualjournal refuses file-security: raw=None kind=PermissionDenied, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpgMWyxR
+r7 preparationread actualjournal refuses directory-security: raw=None kind=PermissionDenied, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpITRXkp
+r7 preparationread actualjournal refuses ads: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpP1cv5a
+r7 preparationread actualjournal refuses wrong-prefix: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpmVdt32
+r7 preparationread actualjournal refuses expired: raw=None kind=TimedOut, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpAvE8Jg
+r7 preparationread actualjournal refuses unregistered: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpSJTrph
+r7 preparationread actualjournal refuses late-member: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp7oO6bG
+r7 preparationread actualjournal refuses late-file-security: raw=None kind=PermissionDenied, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp0gzzsA
+ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2277 filtered out; finished in 3.56s
+

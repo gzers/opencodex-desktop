@@ -1419,3 +1419,9 @@ Windows 代码 dc3e3248550081c9070d1a56664a76148a01219b 已推送并核对远端
 代码 61e3a1e8eef34a17db51e131534527eae5f1d8c7 通过定向验证，合入纯 macOS 增量 9daf5599151b65437f94ab2cadb1988060ee38c3 后交接 SHA 4b8284f152d4940fd9e7f7b30abd304c909f6a98。原 journal 目录定位摘要绑定实际保留路径，成员和初始化标记变化仍进入观测摘要。第一个原生反例在故障点 1，raw101，原失败根保留。修复版完整 MSVC 4 项及同制品关联 3 项均过，TEST EXE SHA-256 51ae3050151c2ad363fd2d7a9063adc012280eff5680468a88724452fed44efe。原始日志、手工修正前的运行器输入、源码摘要、32 个成功根清理和 190 项状态见证据 wl2-r7-journal-locator-20261118-r1。
 
 普通桌面私有 V2 待原入口实际结果，原 r2 Job 未知与修复禁止执行延续。初始 Start 原 worker 按既有接口请求等待主线。公开 Start 继续拒绝，保持原动作预算与未知拒绝。
+
+## 2026-11-18 r7 已初始化 Journal 目录末尾数据流复查
+
+源码 89e8c64478553c9715eb5babfe00f9eeed14af11。基线在原读取边界之间向合成目录添加命名数据流，读取仍返回 Pending DATA，原生断言 raw101。末尾复查补齐后，原 MSVC 5 项定向测试通过，raw0。反例返回 InvalidData，原文件句柄和 Pending 状态保留，原截止时间沿用。制品 SHA-256 f2c0d1163669854aaecc39b8231a99d3e636bb56cd07f409093e6abf03eebf80。失败现场保留，31 个成功测试根核实缺席，生成 schema 已归档。原始日志、源码摘要、代理回执及 193 项状态在 wl2-r7-journal-final-streams-20261118-r1。
+
+代理 TLS 握手阻断本轮 fetch 及两次代码 push，远端交付以独立回执为准。最后实际消费 TEAM42／IMP181／r7。r2 十份只读导出匹配，原 Job 24 项未知／raw50，计划 executionReady=false。普通桌面私有 V2 尚无输出，初次 Start 原 worker 继续沿已提交接口请求等待主线。公开 Start 保持拒绝。
