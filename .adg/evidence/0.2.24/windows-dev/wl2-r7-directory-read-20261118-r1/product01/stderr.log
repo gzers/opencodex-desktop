@@ -1,0 +1,191 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+   Compiling opencodex-desktop v0.2.24 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\apps\desktop\tauri)
+error[E0433]: cannot find module or crate `native` in this scope
+  --> src\infrastructure\windows_client_originals024\v3\capture\preparation\directory_read.rs:21:40
+   |
+21 | fn identity(file: &File) -> io::Result<native::FileIdentity> {
+   |                                        ^^^^^^ use of unresolved module or unlinked crate `native`
+   |
+   = help: if you wanted to use a crate named `native`, use `cargo add native` to add it to your `Cargo.toml`
+note: module `crate::infrastructure::windows_owner_host024::gui_probe::tests::native` exists but is inaccessible
+  --> src\infrastructure\mod.rs:38:1
+   |
+38 | pub(crate) mod windows_official_runtime024;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not accessible
+
+error[E0433]: cannot find module or crate `native` in this scope
+  --> src\infrastructure\windows_client_originals024\v3\capture\preparation\directory_read.rs:35:8
+   |
+35 |     Ok(native::FileIdentity {
+   |        ^^^^^^ use of unresolved module or unlinked crate `native`
+   |
+   = help: if you wanted to use a crate named `native`, use `cargo add native` to add it to your `Cargo.toml`
+note: module `crate::infrastructure::windows_owner_host024::gui_probe::tests::native` exists but is inaccessible
+  --> src\infrastructure\mod.rs:38:1
+   |
+38 | pub(crate) mod windows_official_runtime024;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not accessible
+
+error[E0433]: cannot find module or crate `native` in this scope
+  --> src\infrastructure\windows_client_originals024\v3\capture\preparation\directory_read.rs:53:14
+   |
+53 |     prefix: &native::PrivateDirectoryPreparation,
+   |              ^^^^^^ use of unresolved module or unlinked crate `native`
+   |
+   = help: if you wanted to use a crate named `native`, use `cargo add native` to add it to your `Cargo.toml`
+note: module `crate::infrastructure::windows_owner_host024::gui_probe::tests::native` exists but is inaccessible
+  --> src\infrastructure\mod.rs:38:1
+   |
+38 | pub(crate) mod windows_official_runtime024;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not accessible
+
+error[E0433]: cannot find module or crate `native` in this scope
+  --> src\infrastructure\windows_client_originals024\v3\capture\preparation\directory_read.rs:82:9
+   |
+82 |         native::verify_private_directory(terminal)?;
+   |         ^^^^^^ use of unresolved module or unlinked crate `native`
+   |
+   = help: if you wanted to use a crate named `native`, use `cargo add native` to add it to your `Cargo.toml`
+note: module `crate::infrastructure::windows_owner_host024::gui_probe::tests::native` exists but is inaccessible
+  --> src\infrastructure\mod.rs:38:1
+   |
+38 | pub(crate) mod windows_official_runtime024;
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not accessible
+
+error[E0433]: cannot find module or crate `native` in this scope
+   --> src\infrastructure\windows_client_originals024\v3\capture\preparation\directory_read.rs:119:9
+    |
+119 |         native::verify_private_directory(terminal)?;
+    |         ^^^^^^ use of unresolved module or unlinked crate `native`
+    |
+    = help: if you wanted to use a crate named `native`, use `cargo add native` to add it to your `Cargo.toml`
+note: module `crate::infrastructure::windows_owner_host024::gui_probe::tests::native` exists but is inaccessible
+   --> src\infrastructure\mod.rs:38:1
+    |
+ 38 | pub(crate) mod windows_official_runtime024;
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ not accessible
+
+warning: unused import: `file_move::RetainedFileMove`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:11:9
+   |
+11 | pub use file_move::RetainedFileMove;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused imports: `ListenerFamily`, `Listener`, and `tcp_listeners`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:22:29
+   |
+22 |     listener_exit_readback, tcp_listeners, Listener, ListenerFamily, OwnedListeners,
+   |                             ^^^^^^^^^^^^^  ^^^^^^^^  ^^^^^^^^^^^^^^
+
+warning: unused imports: `ForcedCleanup` and `RootBinding`
+  --> src\infrastructure\windows_official_runtime024\mod.rs:30:35
+   |
+30 |     CommandEvidence, FamilyState, ForcedCleanup, LaunchSpec, OwnedRuntime, PreparedLauncherAbort,
+   |                                   ^^^^^^^^^^^^^
+31 |     ProcessIdentity, ProcessState, QuiescentLauncher, RootBinding,
+   |                                                       ^^^^^^^^^^^
+
+warning: unused import: `storage::AttachmentStorageV2`
+   --> src\infrastructure\windows_client_originals024\before_resume_record_v2.rs:565:16
+    |
+565 | pub(super) use storage::AttachmentStorageV2;
+    |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `BOUNDED_SECURITY_EXCLUDED_ASSURANCE`
+ --> src\infrastructure\windows_client_originals024\bounded.rs:9:9
+  |
+9 |         BOUNDED_SECURITY_EXCLUDED_ASSURANCE, BOUNDED_SECURITY_INFORMATION,
+  |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Deserialize` and `Serialize`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:13:13
+   |
+13 | use serde::{Deserialize, Serialize};
+   |             ^^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `io::AsRawHandle`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:17:39
+   |
+17 |     os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
+   |                                       ^^^^^^^^^^^^^^^
+
+warning: unused imports: `BY_HANDLE_FILE_INFORMATION`, `GetFileInformationByHandle`, `GetSecurityDescriptorControl`, `GetSecurityDescriptorLength`, `IsValidSecurityDescriptor`, and `MakeSelfRelativeSD`
+  --> src\infrastructure\windows_client_originals024\bounded.rs:24:9
+   |
+24 |         GetSecurityDescriptorControl, GetSecurityDescriptorLength, IsValidSecurityDescriptor,
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^
+25 |         MakeSelfRelativeSD,
+   |         ^^^^^^^^^^^^^^^^^^
+26 |     },
+27 |     Storage::FileSystem::{GetFileInformationByHandle, BY_HANDLE_FILE_INFORMATION},
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `modules::runtime::windows_lifecycle024_contract::NativeSession`
+  --> src\infrastructure\windows_client_originals024\content.rs:18:5
+   |
+18 |     modules::runtime::windows_lifecycle024_contract::NativeSession,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\r7_readonly.rs:3:22
+  |
+3 |     infrastructure::{hash, platform, windows_official_runtime024 as native},
+  |                      ^^^^
+
+warning: unused import: `self`
+ --> src\infrastructure\windows_client_originals024\r7_readonly.rs:8:10
+  |
+8 |     fs::{self, OpenOptions},
+  |          ^^^^
+
+warning: unused import: `hash`
+ --> src\infrastructure\windows_client_originals024\reference.rs:8:5
+  |
+8 |     hash,
+  |     ^^^^
+
+warning: unused imports: `LivePhase` and `WindowsOriginals`
+   --> src\infrastructure\windows_client_originals024\v2.rs:459:26
+    |
+459 | pub(crate) use adapter::{LivePhase, WindowsOriginals};
+    |                          ^^^^^^^^^  ^^^^^^^^^^^^^^^^
+
+warning: unused import: `OpenOptions`
+  --> src\infrastructure\windows_owner_host024\desktop_tests.rs:12:22
+   |
+12 |     fs::{self, File, OpenOptions},
+   |                      ^^^^^^^^^^^
+
+warning: unused import: `ffi::OsStrExt`
+   --> src\modules\runtime\program_image_windows_tests.rs:488:28
+    |
+488 |     use std::os::windows::{ffi::OsStrExt, fs::OpenOptionsExt, io::AsRawHandle};
+    |                            ^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> src\modules\runtime\program_image.rs:540:14
+    |
+540 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+540 -             .fetch_update(
+540 +             .try_update(
+    |
+
+warning: unused variable: `p`
+   --> src\modules\runtime\terminal_cli_windows_native_tests.rs:835:9
+    |
+835 |     let p = plan(&c, Action::Enable, &[], &r).unwrap().1;
+    |         ^ help: if this is intentional, prefix it with an underscore: `_p`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+For more information about this error, try `rustc --explain E0433`.
+warning: `opencodex-desktop` (lib test) generated 17 warnings
+error: could not compile `opencodex-desktop` (lib test) due to 5 previous errors; 17 warnings emitted

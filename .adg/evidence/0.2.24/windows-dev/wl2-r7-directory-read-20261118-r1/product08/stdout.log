@@ -1,0 +1,36 @@
+
+running 5 tests
+test infrastructure::windows_client_originals024::v3::capture::preparation::v2::tests::directory_read_tests::wl2_r7_directory_read_native_all_create_prefixes_use_original_handles_without_absence_or_baseline_grant ... r7 directoryread actualCreate fault1: exact originalparent/terminal resources; currentSDdiagnostic only, no missingbaseline/Absent/recovery factory
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpz0fK9Q
+r7 directoryread actualCreate fault2: exact originalparent/terminal resources; currentSDdiagnostic only, no missingbaseline/Absent/recovery factory
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp8Jxn0e
+r7 directoryread actualCreate fault3: exact originalparent/terminal resources; currentSDdiagnostic only, no missingbaseline/Absent/recovery factory
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpTbYbXj
+r7 directoryread actualCreate fault4: exact originalparent/terminal resources; currentSDdiagnostic only, no missingbaseline/Absent/recovery factory
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpRBx7Py
+r7 directoryread actualCreate fault5: exact originalparent/terminal resources; currentSDdiagnostic only, no missingbaseline/Absent/recovery factory
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpcZjJlp
+ok
+test infrastructure::windows_client_originals024::v3::capture::preparation::v2::tests::directory_read_tests::wl2_r7_directory_read_native_stable_custody_labels_do_not_shift_when_first_role_arrives ... r7 directoryread actualcustody/nativeprefix transfer stablelabels: codex0/grok1/directory16+/sourcepins16+; missing slot never compacts earlier IDs; no nativeOwner constructed
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpXbs02X
+ok
+test infrastructure::windows_client_originals024::v3::capture::preparation::v2::tests::directory_read_tests::wl2_r7_directory_read_native_transfer_existing_and_expired_reads_cannot_reactivate_creation ... r7 directoryread transferred/existing/expired native prefix staysPending; no reopen/adopt/renew original creation
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpgDP7Wz
+ok
+test infrastructure::windows_client_originals024::v3::capture::preparation::v2::tests::directory_read_tests::wl2_r7_directory_read_native_unknown_and_late_member_security_or_ads_refuse ... r7 directoryread native refuses member: raw=None kind=InvalidData; exact own prefix/resources retained, no repair
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp0FsSh4
+r7 directoryread native refuses security: raw=None kind=PermissionDenied; exact own prefix/resources retained, no repair
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmptaN20U
+r7 directoryread native refuses ads: raw=None kind=InvalidData; exact own prefix/resources retained, no repair
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpobQOWW
+r7 directoryread native refuses late-member: raw=None kind=InvalidData; exact own prefix/resources retained, no repair
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpB8Md6f
+r7 directoryread native refuses late-security: raw=None kind=PermissionDenied; exact own prefix/resources retained, no repair
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpKmlYEf
+ok
+test infrastructure::windows_client_originals024::v3::capture::preparation::v2::tests::directory_read_tests::wl2_r7_directory_read_native_unopened_created_path_never_adopts_replacement_or_unknown_members ... r7 directoryread nativeunopened created path replaced: no terminalopen/memberenumeration/Absent or inferred permit; originalcreation gap remainsUnknown
+r7-v2-reference-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpvMb2hQ
+ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2264 filtered out; finished in 0.05s
+

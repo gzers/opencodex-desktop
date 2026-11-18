@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 39；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 40；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -344,3 +344,10 @@ main18a126a58只有config_file_v2新ignored文件事务测试、Darwin官方刷�
 main15dbb8286只改Darwin名称验证器的task-key预检/末端清理，不改产品/Windows独占文件或共享接口。实际原K释放与原字节、预检拒绝/0子进程负例及缺席补证唯一归IMP177；原round01的初始外部缺席未记录不补造。Windows无需重跑无影响nativeOwner/MSI/CLI/scan，继续revision37/r7本线。
 
 原ChatGPT自身UI工具禁用不尝试旁路，人工客户端证据仍未完；这只停该依赖，本机继续其它尚未验收功能，候选未固定、不W2/双SID、不发布。
+
+
+## revision40 Windows目录准备槽接收与Mac后继审查并行
+
+Windowsb1ef52972/7adf93a64已接，准确范围与163项状态只归IMP179。原四trait/CONTRACT_VERSION4/r7写集不变，Mac不并发改目录/partial/source原生文件，未整批merge生产分支。Windows继续完整Source/initialSD/partialwork/nativeV2/原Owner与普通桌面独立依赖，原Public输入及旧r2/synthetic27960/40588不动。
+
+Mac按client-successor-prepare-cancel-r1先补后继Preparing完整历史审查，再独立移动/索引/plan中断恢复；仅Macroot文件/共享必要字段归本机，前端和原型当前并行写集先核归属。首次取消、名称回退等未变通过项不重复；ChatGPT自身UI禁用依赖保持，不W2/双SID、不发布。

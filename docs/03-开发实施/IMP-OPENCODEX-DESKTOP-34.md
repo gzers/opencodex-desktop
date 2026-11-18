@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 178；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 179；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 15dbb82869ff02c4c2b5cf154869489afa92390d（非冻结候选）；Windows实现检查点codex/024-windows-native 96396f19bb03add0fdd29c56ec20fbeab189e6d3（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 15dbb82869ff02c4c2b5cf154869489afa92390d（非冻结候选）；Windows实现检查点codex/024-windows-native b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1961,3 +1961,14 @@ main15dbb8286只收紧验证器：开跑先记录该新Profile的12准确路径�
 [三例独立补证](../../.adg/evidence/0.2.24/channel-name-rollback-coordination-r1/historical/result.json)先留原字节/identity/owner/mode/nlink，原SQLite排他取得并释放、重核后只删三个准确K；原三根及36准确路径全部缺席，global L未动，当前其它Profile/Windows现场未选中。运行前外部缺席回执原轮次未采，仍不补造；native02的功能失败和原清理记录不改成通过。原round01及本三轮的后续清理事实分别保留，不重复原保存/六刷新或扩跑全量验收。
 
 本批只有事实/证据补充，main仍15dbb8286、TEAM39/r7与产品/Windows写集保持；实际ChatGPT选择器工具禁用和其余正式候选/原生/恢复未完项按revision176/177继续，目标active，不发布。
+
+
+### 2026-11-18 revision179：Windows目录准备槽原生读回接收
+
+已fetch并净差复核代码b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec、证据7adf93a64d7b5f9afdd4c87963b744c4c39ca47f；原目录读取证据432afe278和后续push-receipt一起保留，不回写seal时pushPending/TLS失败历史。新目录77项manifest/875662字节全部匹配，6最终product08源与准确Git仅行尾归一相同，[接收回执](../../.adg/evidence/0.2.24/windows-directory-read-receive-r1/result.json)不冒本机Windows原生执行/生产全链或整批merge。
+
+PrivateDirectoryPreparation只借原对象及actualTransferred事实；terminal-held才取准确path/ID/所含8/ADS/两读members/SD/pins与原parent复核，无terminal创建禁止从path补ID/Absent/新open或成员枚举，转交后不收养后续内容。initialSD未捕获继续securityDigest=null，currentSD仅diagnostic，完整Source/coverage保持Pending；没有restorefactory或权限扩大。V2固定context/custody/grok/目录slot不随subset缩号。
+
+Windows报告新5native测试13fixture过、9受影响回归过；真实native后端check过且源不变。两编译错误仅明确别名/引用修正，全部失败raw/源保留，无意外native首错。TEST EXE547d50530139edcf728e4a1161847dbc413409c74b358aa60c076787b5b95dfe；34新成功根缺席，不冒旧拒删/失败/synthetic27960/40588历史全清。163项状态仍保完整initialSD/Source/partialcapture-work/nativeV2恢复/缺根、真实普通Profile官方Owner原预算全链/容量/CAPtrust/普通MSI/最终候选未完。普通桌面Publicout仍空/session7Disconnected，原55cd6ef…输入未覆盖。
+
+当前r2 Job24raw50未知依赖只停自身，原21500/75744及原件/work/custody/anchors/协调/seq9未动，无新force/归还授权；不重复旧query/cleanup或旧拒删。Windows继续原r7单写，不等待Mac新接口；本机新增[后继准备取消合同](0.2.24-contracts/client-successor-prepare-cancel-r1.md)承接既有未完范围，先完整历史只读审查再原生保全/终态/恢复与实屏，不放宽首次限定或把组件当整项通过。不W2/双SID、不发布，目标active。

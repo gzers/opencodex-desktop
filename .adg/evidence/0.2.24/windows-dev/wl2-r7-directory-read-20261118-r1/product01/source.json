@@ -1,0 +1,60 @@
+{
+  "sources": [
+    {
+      "bytes": 6882,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths/preparation.rs",
+      "sha256": "2d38743644b130c8c5aa50a23f7970807145285a00815d4188e29e0992cd0db3"
+    },
+    {
+      "bytes": 4972,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs",
+      "sha256": "a1c6f09dd71c5ed13a1201c7d838551e48ed16b7747dbb3e72f6a49d50b13d46"
+    },
+    {
+      "bytes": 10067,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2.rs",
+      "sha256": "e87979c22014b066f3bf206481dcaf1d392b2ec3766d608720baa2e27e73a4c7"
+    },
+    {
+      "bytes": 6159,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/directory_read.rs",
+      "sha256": "2365ba1686e6a28fc01cae314e3208b931417b83fcb86f1662ed5aa04dc6b66c"
+    },
+    {
+      "bytes": 7692,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2/tests.rs",
+      "sha256": "a506a3ce0cd5e2728677d595d55d78a3021ceeb43d96ab2343af52b5f644beee"
+    },
+    {
+      "bytes": 11078,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2/tests/directory_read_tests.rs",
+      "sha256": "d60269b9970c756594ff28fa73043dd22a9a74432232e710507e6a4031b89945"
+    }
+  ],
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_directory_read_native_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "currentR2Touched": false
+}

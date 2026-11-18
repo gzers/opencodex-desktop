@@ -1355,3 +1355,19 @@ TLS失败历史不回填：本轮原生端点证据331ac32fa已实际push后，�
 TEST EXE SHAdefec542f74cf2e87dc77ea8fbe5ea0e7fcc0d08e418cf56010a49350b880b03；6最终执行源逐Git行尾归一核，全部source/raw日志/首错保。55新成功fixture根明确缺席（含执行修订及定向回归），旧partialcapture只有FixtureDrop无全历史清理主张；schema生成raw归档还原/移出，旧失败/拒删/synthetic27960/40588缺口保持，不增意外native残留或重试旧删除。
 
 status.json157项完整状态。普通desktopV2仍待用户原入口结果，原输入ocxd55cd6ef…/b6db构建未覆盖；当前新增为pre-manifest必要native读回，不等fullSource/全部对象/partialwork或缺根恢复完成。真实普通Profile固定官方Owner整链原预算、容量/CAPtrust/普通MSI/最终候选仍未完。r2Job24raw50Unknown只停自身依赖，不PSS/旧cleanup探Status，原21500/75744/原件/work/custody/anchors/协调/旧seq9不动，无新forced/归还批准，旧50580/54692授权不延用。旧两目录删除自动审批blocked by policy拒绝源未绕过/重删。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99及日常配置PATH策略保持，不W2/双SID/发布，目标active继续。上轮本地ec129a900补充push回执仍按真实Git传输记录判断，此批提交保其父链，不改旧TLS失败事实。
+
+## 2026-11-18 原目录准备槽原生读回与稳定V2成员
+
+代码b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec已本地提交，首push因代理TLS握手失败未到远端；最终推送事实以另条实际Git回执为准，不将commit冒remote。main88b8fc33d/docs4a09aa011、TEAM33/IMP171/r7最后实际消费不变，本轮latestfetch两次TLS失败，未声称读新revision，仅继续原Windows独占集。
+
+原PrivateDirectoryPreparation增加只读原对象借用/actualTransferred事实，不新open/rights/serde依赖或clone/movehandle；实际take_complete移出后记transferred，原create顺序/权限/预算不变。V2从原terminal-held分支查询准确path/ID/private/所含8/ADS/两次完整members及SD/身份和原parent前后，未转交消费者的目录须仍空；创建无原terminal时禁止targetopen/memberenumeration，不根据path存在或replacement补ID/Absent；transferred后不收养后续内容。原initialSD未捕获就securityDigestnull/currentSD仅observedDiagnostic，Source/完整coverage仍Pending，无restorefactory。Source/context0..3/pins16+、custodycodex0/grok1/directory16+固定slot，缺role不compact，actualgrok/prefixID不随后来codexpin登记漂移。
+
+证据wl2-r7-directory-read-20261118-r1：backend02原nativebackend check raw0/751ms，最终native源相同。product01 MSVC全库raw101/59954ms为新module nativealias漏import E0433，product03raw101/58659ms为Path不定长直传原Sized摘要函数E0277，均未native；只明确import/callsite引用，不宽API。product08真实全Tauri库raw0/154344ms新5native tests13fixture过（test0.05s非产品预算）：5createfailureprefix、无terminal创建路径被移/换不接管、transfer/existing/expired不续原create、5member/SD/ADS/late变化拒、stablecustody原nativepins映射。原9受影响回归过：directory4raw0/31ms、v2native3/94ms、actualjournalSlot1十faultstate/1250ms、Send1/16ms；其它GUI/CLI/MSI/scan不重复。
+
+TEST EXE SHA547d50530139edcf728e4a1161847dbc413409c74b358aa60c076787b5b95dfe；6最终执行源逐Git行尾归一核、首两compile/raw源码日志保，无意外nativefailure。34新成功root缺席（13/8/3/10），schema生成raw归档还原/移出，所有旧失败/拒删/synthetic27960和40588缺口保持，未增失败native残留，不冒历史全清。status.json163项完整状态，完整initialSD/Source/partialcapture-work/v2恢复/缺根、普通Profile固定官方Owner原预算整链、容量/CAPtrust/普通MSI/候选仍未完。
+
+普通desktopV2原Publicout仍空/marenbensession7Disconnected，未重跑原入口/未覆盖ocxd55cd6ef…；用户参与只停该验收，其它独立项继续。原r2Job24raw50Unknown不重复PSS/旧cleanup探Status，21500/75744/原件/work/custody/anchors/协调/seq9未动，无newforced/归还批准，旧50580/54692授权不延用。旧两目录删除自动审批blocked by policy原拒绝源未绕过/重删。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99及日常配置PATH策略保持，不W2/双SID/发布，目标active。
+
+### 2026-11-18 目录准备读回最终推送回执
+
+代码b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec及独立证据432afe278均已真实push成功；完整SHA与实际后续成功事实见同级wl2-r7-directory-read-20261118-r1-push-receipt.json。先前status/SUMMARY/本页的seal时pending及TLS失败保原历史，不回写假成功。两工作树当前代码/证据已交远端，普通desktopV2原入口仍Pending，未重跑/未触旧r2及全部旧失败/拒删/synthetic27960；原预算/unknown/普通token/官方与日常策略不变，不W2/双SID/发布，目标active。
