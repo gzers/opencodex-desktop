@@ -1,0 +1,6 @@
+{
+  "falsifier": "The same bytes are not still authoritative at publication, a fault changes outcome, the validated readback count changes, or standalone measurement does not isolate replay/readback/decode.",
+  "originalDeadlineUnchanged": true,
+  "syntheticFixtureOnly": true,
+  "hypothesis": "An append rereads the identical in-memory current via serde after native validation and immutable event publication. Passing the already verified decoded value through that append avoids the second decode, while all mandatory native readback boundaries remain."
+}

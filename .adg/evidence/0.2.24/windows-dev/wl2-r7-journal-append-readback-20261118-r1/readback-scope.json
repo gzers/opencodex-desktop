@@ -1,0 +1,17 @@
+{
+  "basis": "Source review and native regression, with no comparative timing sample for this batch.",
+  "successfulAppendCurrentDecodes": {
+    "before": 3,
+    "after": 2
+  },
+  "checksRetained": [
+    "full native validation before replay",
+    "independent event replay",
+    "immutable event publication and readback",
+    "current byte, identity and security comparison before overwrite",
+    "sync and immediate current readback",
+    "full native check of newly written current",
+    "same action cutoff and poison behavior"
+  ],
+  "endToEndBudgetAccepted": false
+}
