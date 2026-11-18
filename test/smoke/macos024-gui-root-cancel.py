@@ -218,6 +218,26 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
             # Production startup supply and its first status are asynchronous;
             # observing readiness here precedes any lifecycle action/budget.
             wait_for('pre-action-ui-ready',lambda v:bool(matches(v,'启动 OpenCodex','AXButton')),120)
+        if flow in ('root-cancel','root-partial-cancel'):
+            # Reopening explicit inspection may reconcile an old UI latch using
+            # final indexed previews + live status, never a repeated mutation.
+            for recheck in range(4):
+                value=snapshot('post-cancel-start-gate')
+                if value is not None and matches(value,'启动 OpenCodex','AXButton'):break
+                press('诊断');press('检查客户端恢复')
+                end=time.monotonic()+12
+                while time.monotonic()<end:
+                    value=snapshot('closed-root-readonly-reconcile')
+                    if value is not None:
+                        content='\n'.join(str(n.get('value')or n.get('title')or'') for n in value['nodes'])
+                        if '现在可以启动' in content:break
+                        if matches(value,'刷新运行状态','AXButton'):
+                            press('刷新运行状态')
+                    time.sleep(.6)
+                if head()!=closed:raise RuntimeError('readonly root reconciliation changed canonical state')
+                report['explicitReadonlyPostCancelRechecks']=recheck+1
+                press('关闭');press('概览')
+            else:raise RuntimeError('closed-root current status not confirmed; no Start replayed')
         service_requested=True;report['serviceActionRequested']=True;press('启动 OpenCodex')
         home=profile/'.codex-desktop/opencodex/home';record=home/'runtime-port.json'
         wait_for('successor-service-ready',lambda v:record.exists() and head() is not None and head()['state']=='ready',60)
