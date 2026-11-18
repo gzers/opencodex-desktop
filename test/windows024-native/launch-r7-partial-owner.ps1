@@ -131,9 +131,9 @@ function SameData($Left, $Right) {
     return ($Left | ConvertTo-Json -Compress -Depth 32) -ceq ($Right | ConvertTo-Json -Compress -Depth 32)
 }
 
-function ExportExact([string]$Path, [string]$Name, [int]$Limit) {
+function ExportExact([string]$Path, [string]$Name, [int]$Limit, [IO.FileShare]$Share = [IO.FileShare]::Read) {
     RequirePlain $Path $false
-    $file = [IO.File]::Open($Path, 'Open', 'Read', 'Read')
+    $file = [IO.File]::Open($Path, 'Open', 'Read', $Share)
     try {
         Check ($file.Length -le $Limit) 'Private fixture evidence exceeds its byte limit.'
         $reader = [IO.BinaryReader]::new($file, $utf8, $true)
@@ -186,7 +186,7 @@ function CheckAttachment($Snapshot, $Injection, $ImageProof) {
     Check (SameData $members $names) 'Pending directory has unexpected membership.'
     $rows = foreach ($name in $names) {
         $path = Join-Path $actionDir $name
-        ExportExact $path ("DiagnosticAfter-" + $name) 65536
+        ExportExact $path ("DiagnosticAfter-" + $name) 65536 ([IO.FileShare]::ReadWrite)
     }
     $intent = $rows[0].record
     $pending = $rows[1].record
