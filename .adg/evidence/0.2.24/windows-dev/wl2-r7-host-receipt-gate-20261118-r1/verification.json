@@ -1,0 +1,28 @@
+{
+  "sourceCommit": "e19642724af81cc40c3dea6dbe4dc7d4caee9d21",
+  "stagedFixtureSourceCommit": "daae8ffff7f304ec28b9c0214db26691e930a395",
+  "stagedFixtureTestSha256": "ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030",
+  "main": "040f411e6d48d97bde6e7b2e6c22860e547b6173",
+  "governance": "be7854debe024631cb1499331cbfe3347466ba4b",
+  "nativeHostR1": {
+    "existingFirstErrorRaw": 32,
+    "verifierExitCode": 1,
+    "rereadOriginalStdoutWhileResident": true,
+    "hostRunRepeated": false
+  },
+  "synthetic": {
+    "exitCode": 0,
+    "valid": 1,
+    "negative": 8,
+    "temporaryReceiptSetsRemoved": true,
+    "initialAttempt": "The missing-range regression expected the word range in the error; the verifier correctly refused with an original claim/N/L/K receipt error. Corrected the regression assertion and reran."
+  },
+  "nativeHostR2": {
+    "receiptCount": 0,
+    "liveProcessVerified": false,
+    "laterRangeContinuityVerified": false
+  },
+  "publicStartOpen": false,
+  "normalStop": false,
+  "closed": false
+}

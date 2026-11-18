@@ -1692,3 +1692,10 @@ TEAM57／IMP196 的固定配对在 marenben session 7 实际执行。宿主 9572
 MSVC x64 产品编译及测试编译均 raw0。products.json 记录 ocx.exe、ocxd.exe 和 opencodex-desktop.exe 的 SHA-256，三者均无测试夹具标记。MSVC x64 定向 6/6。完整预检 raw0，两个 DELETE 能力原句柄改名均 raw5，叶改名 raw5，子文件与祖先改名 raw32。严格叶句柄恢复后，真实 native claim/N/L/K 与两棵树 anchored capture 同时成立。错误码保留、超期、身份不符和 junction 拒绝均验证。定向临时夹具已删除并核对缺席。原始证据见 wl2-r7-isolation-preflight-fence-20261118-r1，首轮原始桌面收据仍在 wl2-r7-nine-desktop-first-20261118-r1。
 
 新配对固定于现有 marenben/session 7，测试制品 SHA-256 ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030，运行时包 SHA-256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。暂存路径为 C:/Users/Public/ocx-r7-isolated-owner-nine-r2，启动脚本已通过 Windows PowerShell 5.1 语法检查，out01 空，私有树缺席。等待单次真实 Host；只有原工作线程、原锁、九次完整扫描和 raw31/no-Resume 齐备后才进入 5／10／5 秒。旧原包 r2 完整原件归还仍受原 Job raw50 和命令谱系 raw64 阻塞。普通用户 MSI raw1625，单 SID 生产启停待验证，公开 Start 仍拒绝。
+
+
+## 2026-11-18 r7 Host 原始回执的独立核验
+
+Windows 工具源码 e19642724af81cc40c3dea6dbe4dc7d4caee9d21 已推送。控制端在发出诊断请求前读取 Host 原始 stdout、三份私有导出及进程、启动意图、就绪和结果回执。核对三个入口及六个 worker 全量调用的真实区间和同一原期限，同时要求原 worker 的 thread/action/session/scope 与注入回执一致、存在实际 claim/N/L/K 的三字段投影和 raw31/no-Resume 证据。核验器为只读工具，桌面暂存仍为 daae8ffff7f304ec28b9c0214db26691e930a395 的固定配对。
+
+记录于 wl2-r7-host-receipt-gate-20261118-r1。原 r1 居留时可读取原 stdout，核验器按原首错 raw32 退出 1。合成回执一项通过、八项反例拒绝，临时目录已核对缺席。记录时 marenben session 7 Active，修复版 out01 为空。下一次真实 Host 回执须再独立确认进程仍为同一 PID/FILETIME，之后才接 5／10／5 秒观察与原范围连续性证明。旧原包的 Job 成员证据仍有 24 项 Unknown/raw50，保留两目标和三件原件现场，公开 Start 维持拒绝。
