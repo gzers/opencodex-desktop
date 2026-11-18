@@ -1611,3 +1611,11 @@ Windows 代码 4fc73cd1c26aa51fa288a3b436d2f0c050d36e1c 已推送并回读。启
 原始 PowerShell DATA 及失败归档见同级证据轮次 wl2-r7-initial-scan-gate-20261118-r1。扫描门槛 15/15，原 DATA 回归 11/11。保留首次 PS5.1 数组层级错误、模块装载错误及旧测试的英文错误文字断言失败。最后使用 Windows 系统模块和 ERROR_FILE_EXISTS 原始码重验。三处失败夹具原路径已不存在，六个文件按 SHA-256 移入证据；两处成功夹具已核实缺席。原 MSVC 制品沿用，启动器字节绑定已更新。
 
 已收到治理 926e684a4824373ef308716b8b9acfa50ff5bb6f、TEAM54／IMP193。现有账户隔离合同已明确，后续验收须先完成隔离引导和不可 Resume 负例，再安排 marenben 普通桌面。本轮未运行原包或改变旧 r2；其 Job 24 项 Unknown／raw50、command-lineage raw64 与 executionReady=false 沿用。
+
+## 2026-11-18 r7 现有普通账户隔离补验
+
+输入 main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 926e684a4824373ef308716b8b9acfa50ff5bb6f、TEAM54／IMP193／r7。Windows 代码 1478fbd15a5acde54373bcee2af0559bade49afd 已推送并回读。仅定向测试制品贯通固定 marenben Profile 内的专用 I/D/H、合成客户端树和四处协调文件，验证规范路径、原生对象、卷及保留句柄。测试入口贯通真实原 Owner，在登记 manifest／Current 和首次 Resume 前均有拒绝门槛。公开 Start 继续拒绝。
+
+最终 MSVC 测试编译 raw0，五项隔离／引导负例全部通过，Windows PowerShell 5.1 解析通过。提交后复编三个正式形状的开发制品 raw0／119025 ms，均无测试入口特征。复用此前 15/15 扫描门槛与 11/11 DATA 证据。保留首编译 E0433／raw101、首个 junction 用例的入口路径 raw123 和筛选数误差时的原日志。新证据见 wl2-r7-isolated-owner-20261118-r1，含源／制品 SHA-256、暂存摘要及 ACL、原始编译／测试输出和清理回执。
+
+Public 暂存已核验，输出为零，私有夹具根缺席。marenben session 7 仍断开。重连后先执行 Host，先读取实际原 Owner 的 30 秒 Start、原锁及未 Resume 回执；符合准入后依次执行 DiagnosticBefore、Explicit、DiagnosticAfter，核对 5／10／5 秒独立期限、三次完整恢复扫描与 V2 flush／精确读回。旧 r2 的三件原件、原进程、原锁及已有只读归档继续保全。Job 24 项 Unknown／raw50、command-lineage raw64，executionReady=false。未启动旧原包或执行现场恢复。普通 MSI raw1625 与生产验收仍待。

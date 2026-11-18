@@ -1,0 +1,40 @@
+{
+  "sha256": "5833295c19beae5ae288998344106779e69204ebc76a5eef92b9cef2b349473d",
+  "checks": [
+    {
+      "matched": false,
+      "elapsedMs": 82,
+      "expected": 3,
+      "label": "isolation-list",
+      "raw": 0,
+      "args": [
+        "wl2_r7_isolation_rejects",
+        "--list"
+      ]
+    },
+    {
+      "matched": true,
+      "elapsedMs": 54,
+      "expected": 1,
+      "label": "bootstrap-list",
+      "raw": 0,
+      "args": [
+        "wl2_r7_partial_owner_bootstrap_rejects_wrong_locator_token_or_image",
+        "--list"
+      ]
+    },
+    {
+      "matched": true,
+      "elapsedMs": 54,
+      "expected": 1,
+      "label": "bootstrap-run",
+      "raw": 0,
+      "args": [
+        "wl2_r7_partial_owner_bootstrap_rejects_wrong_locator_token_or_image",
+        "--nocapture",
+        "--test-threads=1"
+      ]
+    }
+  ],
+  "exe": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop/bdc9ec5a3f66e096\\out\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe"
+}

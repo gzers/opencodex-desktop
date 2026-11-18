@@ -1,0 +1,52 @@
+{
+  "exe": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop/bdc9ec5a3f66e096\\out\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+  "checks": [
+    {
+      "args": [
+        "wl2_r7_isolation_rejects",
+        "--list"
+      ],
+      "expected": 4,
+      "elapsedMs": 82,
+      "label": "isolation-list",
+      "matched": true,
+      "raw": 0
+    },
+    {
+      "args": [
+        "wl2_r7_isolation_rejects",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "expected": 4,
+      "elapsedMs": 260,
+      "label": "isolation-run",
+      "matched": true,
+      "raw": 0
+    },
+    {
+      "args": [
+        "wl2_r7_partial_owner_bootstrap_rejects_wrong_locator_token_or_image",
+        "--list"
+      ],
+      "expected": 1,
+      "elapsedMs": 53,
+      "label": "bootstrap-list",
+      "matched": true,
+      "raw": 0
+    },
+    {
+      "args": [
+        "wl2_r7_partial_owner_bootstrap_rejects_wrong_locator_token_or_image",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "expected": 1,
+      "elapsedMs": 56,
+      "label": "bootstrap-run",
+      "matched": true,
+      "raw": 0
+    }
+  ],
+  "sha256": "f0e00e93b49f47f565b2aa2f8096e041b8bc9d22ad30c83935dfcb598f22ff0a"
+}

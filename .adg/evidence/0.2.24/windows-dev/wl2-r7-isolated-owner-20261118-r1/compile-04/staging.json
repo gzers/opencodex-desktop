@@ -1,0 +1,67 @@
+{
+  "outputMembers": 0,
+  "privateRootCreated": false,
+  "acl": [
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-r1",
+      "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)",
+      "owner": "EZIO-MINI\\15119",
+      "protected": true
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-r1\\input",
+      "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)",
+      "owner": "EZIO-MINI\\15119",
+      "protected": true
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-r1\\out01",
+      "sddl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1201bf;;;S-1-5-21-587408064-856152790-2583328096-1003)",
+      "owner": "EZIO-MINI\\15119",
+      "protected": true
+    }
+  ],
+  "inputs": [
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-r1\\input\\fixture-test.exe",
+      "sha256": "f0e00e93b49f47f565b2aa2f8096e041b8bc9d22ad30c83935dfcb598f22ff0a",
+      "bytes": 103741952,
+      "acl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-r1\\input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "sha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+      "bytes": 274033721,
+      "acl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-r1\\launch-r7-partial-owner.cmd",
+      "sha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2",
+      "bytes": 109,
+      "acl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-r1\\launch-r7-partial-owner.ps1",
+      "sha256": "ce054723dace244866443550a6b3192168db4b458867ebefcd2f85bfcb7ed062",
+      "bytes": 27531,
+      "acl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-r1\\input\\manifest.json",
+      "sha256": "caadca5facf8f6da5136ba531ee0b43bf20ac6d174aa0c394ecbc8e1fe455c87",
+      "bytes": 329,
+      "acl": "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    }
+  ],
+  "manifest": {
+    "sourceCommit": "1478fbd15a5acde54373bcee2af0559bade49afd",
+    "testSha256": "f0e00e93b49f47f565b2aa2f8096e041b8bc9d22ad30c83935dfcb598f22ff0a",
+    "schema": 1,
+    "session": 7,
+    "sid": "S-1-5-21-587408064-856152790-2583328096-1003",
+    "bundleSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+  },
+  "fixtureLaunched": false,
+  "schema": 1,
+  "sourceCommit": "1478fbd15a5acde54373bcee2af0559bade49afd"
+}

@@ -1,0 +1,4 @@
+
+thread 'infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_rejects_native_junction_before_creation' (55376) panicked at src\infrastructure\windows_client_originals024\partial_capture_fixture\isolation.rs:457:6:
+called `Result::unwrap()` on an `Err` value: Os { code: 123, kind: InvalidFilename, message: "文件名、目录名或卷标语法不正确。" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

@@ -1,0 +1,82 @@
+{
+  "code": "1478fbd15a5acde54373bcee2af0559bade49afd",
+  "main": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+  "governance": "926e684a4824373ef308716b8b9acfa50ff5bb6f",
+  "team": 54,
+  "imp": 193,
+  "priorMatrix": "../wl2-r7-partial-owner-20261118-r1/status.json",
+  "priorScanGate": "../wl2-r7-initial-scan-gate-20261118-r1/status.json",
+  "hypothesis": "The original ordinary Owner remains on its original thread holding claim and N/L/K after pre-Resume raw31. One explicit 10s action creates, flushes and reads back strict V2 Intent and Pending in the original private D.",
+  "matrix": [
+    {
+      "scope": "MSVC source-fixed test executable",
+      "state": "passed",
+      "raw": 0,
+      "receipt": "compile-04/result.json"
+    },
+    {
+      "scope": "MSVC three standard executables",
+      "state": "passed",
+      "raw": 0,
+      "receipt": "products-02/result.json",
+      "artifacts": "product-artifacts.json"
+    },
+    {
+      "scope": "Test-only bootstrap markers",
+      "state": "passed",
+      "receipt": "binary-marker-readback.json"
+    },
+    {
+      "scope": "Five scoped native negatives",
+      "state": "passed",
+      "receipt": "negatives-03/result.json"
+    },
+    {
+      "scope": "PowerShell 5.1 launcher syntax",
+      "state": "passed",
+      "receipt": "powershell-parser.json"
+    },
+    {
+      "scope": "Launcher DATA and complete scan receipts",
+      "state": "reused, 11/11 and 15/15",
+      "receipt": "../wl2-r7-initial-scan-gate-20261118-r1/status.json"
+    },
+    {
+      "scope": "Immutable test image and original package inputs",
+      "state": "staged and digest/ACL verified",
+      "receipt": "compile-04/staging.json"
+    },
+    {
+      "scope": "Existing marenben ordinary desktop",
+      "state": "waiting for session 7 reconnection; native process identity admission pending",
+      "receipt": "session.snapshot.txt"
+    },
+    {
+      "scope": "Original Owner 30s Start, seven instrumented full verifications, raw31, before first Resume, claim and N/L/K",
+      "state": "pending"
+    },
+    {
+      "scope": "Original worker 5s DiagnosticBefore, 10s Explicit V2 Intent/Pending, three recovery scans, 5s DiagnosticAfter",
+      "state": "pending"
+    },
+    {
+      "scope": "New private fixture process absence and lock release",
+      "state": "pending desktop run; no private tree yet"
+    },
+    {
+      "scope": "Current r2 original Job and repair",
+      "state": "blocked; 24 Unknown/raw50, command-lineage raw64, three originals held, executionReady=false",
+      "receipt": "../wl2-r7-r2-readonly-20261117-receive-r1/exact-repair-plan.json"
+    },
+    {
+      "scope": "Normal production lifecycle, complete recovery/return and ordinary MSI normal/failure retention",
+      "state": "pending; earlier MSI raw1625 remains"
+    }
+  ],
+  "publicStartOpen": false,
+  "productionAccepted": false,
+  "currentR2Touched": false,
+  "published": false,
+  "dualSidRun": false,
+  "w2Run": false
+}

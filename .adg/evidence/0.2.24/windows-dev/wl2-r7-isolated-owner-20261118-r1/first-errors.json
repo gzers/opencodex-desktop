@@ -1,0 +1,31 @@
+{
+  "build": {
+    "at": "partial_capture_fixture/isolation.rs:422",
+    "raw": 101,
+    "original": "compile-02/cargo.stdout.jsonl",
+    "attempt": "compile-02",
+    "error": "E0433",
+    "detail": "super::super::hash did not resolve",
+    "resolution": "Use the module imported by the parent"
+  },
+  "evidenceTool": {
+    "detail": "Initial source-binding collector received a malformed newline in a string literal and stopped before writing any file",
+    "raw": 1,
+    "resolution": "Emit the newline explicitly; source-binding.json was produced only by the corrected collector"
+  },
+  "harness": {
+    "attempt": "negatives-01",
+    "detail": "List returned four matching isolation tests while the runner expected three; native isolation execution correctly withheld",
+    "wrapperRaw": 1,
+    "original": "negatives-01/isolation-list.stdout.txt"
+  },
+  "native": {
+    "systemRaw": 123,
+    "at": "partial_capture_fixture/isolation.rs:457",
+    "raw": 101,
+    "original": "negatives-02/isolation-run.stderr.txt",
+    "attempt": "negatives-02",
+    "detail": "InvalidFilename while spawning Windows PowerShell for the junction setup",
+    "resolution": "Use the correct component path; the original native rejection assertion is unchanged"
+  }
+}
