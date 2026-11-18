@@ -1509,3 +1509,13 @@ MSVC 测试编译 raw0，六组共 18/18，首个意外原生错误无。测试 
 MSVC 七组定向测试全部通过，15/15。产品三制品编译 raw0。58 个已报告夹具路径核实缺席，生成 Windows schema 已归档。证据 wl2-r7-journal-append-readback-20261118-r1 含原始日志、制品摘要、清理及累计 255 项状态。上一批 e4146ea686ff5a04421f031710301b6c4807651a 已独立确认远端，27 个附件的 Git 原字节核对一致。
 
 本轮只验证当前追加语义，原 10 秒整链仍沿用失败证据。r2 原 Job 24 项未知／raw50，未取得现场修复前提。公开 Start 仍拒绝。原准备槽 V2 Pending 持久边界沿用已提交 Mac 请求。
+
+## 2026-11-18 r7 Journal 独立重放耗时
+
+代码 ca1de1350a565b3a0be8557591b7332a60994c71 已推送并独立回读。最新 fetch 仍是 main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 7cc64ed4ffd0f8b67f642e676290fbcfae7eac84，TEAM48／IMP187／r7。首次代理 push 遇 TLS EOF，第二次成功。
+
+原 10 秒窗口内的 12 次合成追加中，24 次完整原生 Journal 读回合计 88909 μs，12 次独立重放合计 21159 μs，两者之比 23.80%。固定策略摘要占该夹具重放约 2.85%，本批保留原检查和截止，继续计量一次完整读回内部的原生对象核验、字节和纯数据成本。样本使用 MSVC debug 合成前缀，真实原 Owner 恢复预算仍待验证。
+
+首编译 raw101，测试格式串报 expected comma，原日志保留。修正后 MSVC 起编 raw0，定向 5/5。测试制品 SHA-256 805630fe64161e3e21d4fb392b0bbd5878e4affc34a9faace182a26104986fcb。14 个成功夹具根核实缺席，Windows 生成 schema 归档后清理。本批无新产品制品。原始日志、源码摘要及累计 258 项状态见 wl2-r7-journal-replay-cost-20261118-r1。
+
+r2 继续沿用已核验归档。生产首错 command-lineage raw64，原 Job 24 项未知、raw50，executionReady=false。原现场保留。严格 V2 Pending 首次持久化等待已提交的 Mac 接口答复，公开 Start 保持拒绝。

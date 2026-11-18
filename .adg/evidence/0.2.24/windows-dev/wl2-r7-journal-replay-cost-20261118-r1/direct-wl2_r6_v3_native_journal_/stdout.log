@@ -1,0 +1,21 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_event_or_partial_current_failure_poison_without_catchup ... r6 durable injected fault=1: injected after immutable event sync/readback before current CAS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpGilMy3
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-ba1a0cf3-169a-4f90-8b24-044cbae3bfef
+r6 durable injected fault=2: injected real partial current write/sync
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpf6lllb
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-a35c60bb-9b1d-4e07-976e-62baf6109e57
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_manifest_event_current_and_other_writer_refusal ... r6 native manifest/event immutable sync/readback and current same-ID CAS pass; actual D separate volume; second current writer raw32. This is data journal only, original tree not mutated, no recovery capability.
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpyYndSI
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-d61f53b1-cc1c-44bd-a2fd-b231f8c2be97
+ok
+test infrastructure::windows_client_originals024::v3::journal::tests::wl2_r6_v3_native_journal_unknown_node_and_late_deadline_poison ... r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpAUaNcy
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-41c63740-d8a8-4f53-9f63-f81a8c7e444f
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpGzbmhc
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-v3-777b0a03-74bf-48f6-921f-655fa5c83562
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2290 filtered out; finished in 0.76s
+

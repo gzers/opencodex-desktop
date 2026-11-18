@@ -1,0 +1,49 @@
+{
+  "scope": "One debug MSVC native Journal with synthetic node-event transitions. The independent final check is excluded from the append-only comparison.",
+  "appends": 12,
+  "originalDeadlineSeconds": 10,
+  "lastCheckRemainingUs": 9608334,
+  "pureCalibration": {
+    "eventBytes": 3725,
+    "eventEncodeAndDigestUs": 879723,
+    "iterations": 8192,
+    "policyDigestUs": 63368
+  },
+  "independentReplay": {
+    "count": 12,
+    "sumUs": 21159,
+    "medianUs": 1881.5,
+    "minUs": 373,
+    "maxUs": 3043
+  },
+  "nativeJournalReadback": {
+    "count": 24,
+    "sumUs": 88909,
+    "medianUs": 3639.0,
+    "minUs": 1528,
+    "maxUs": 6502
+  },
+  "finalIndependentCheck": {
+    "ordinal": 37,
+    "phase": "synthetic-node-prefix",
+    "operation": "journal-records",
+    "startedUs": 348263,
+    "elapsedUs": 4942,
+    "remainingUs": 9608334,
+    "expectedObjects": 14,
+    "expectedBytes": 77485,
+    "completed": true,
+    "rawOsError": null
+  },
+  "replayedEntriesIncludingProposed": 78,
+  "replayToNativeReadbackPercent": 23.798490591503672,
+  "estimatedPolicyDigestUsPerCall": 7.7353515625,
+  "estimatedEventEncodeAndDigestUsPerCall": 107.3880615234375,
+  "estimatedPolicyShareOfReplayPercent": 2.8515403463065363,
+  "scopeLimits": [
+    "Policy share is an estimate from a separate tight loop, not an in-path timer.",
+    "Native journal readback includes byte validation and typed Current checks.",
+    "Append preparation, writing, immediate readback, and CAS are outside these two timers.",
+    "The sample neither qualifies production nor projects a complete recovery budget."
+  ]
+}

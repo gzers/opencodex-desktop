@@ -1,0 +1,5 @@
+{
+  "hypothesis": "Independent typed replay is smaller than native journal readback in a bounded, synthetic node-event prefix; fixed policy hashing is measurable but may be too small to justify a production change.",
+  "falsifiers": ["Total replay time approaches or exceeds native readback time", "Isolated fixed policy hashing accounts for a material share of the measured replay"],
+  "scope": "One synthetic native Journal prefix under its original ten-second action cutoff. Pure-data calibration is outside that action and cannot establish production or full-chain acceptance."
+}
