@@ -401,6 +401,54 @@ pub(super) struct RecordV2 {
     event: EventV2,
 }
 impl RecordV2 {
+    /// Pure DATA encoder. Native provenance must come from the original-slot
+    /// producer; even a valid terminal record cannot create a native grant.
+    pub(super) fn initial_preparation_data(
+        fields: [String; 4],
+        reference: ReferenceV2,
+        clock: [String; 3],
+    ) -> io::Result<Self> {
+        if !matches!(&reference, ReferenceV2::Preparation { .. }) {
+            return Err(invalid());
+        }
+        let [session_id, failed_action_id, recovery_action_id, security_policy_digest] = fields;
+        let [started_qpc, deadline_qpc, qpc_frequency] = clock;
+        let record = Self {
+            schema: SCHEMA.into(),
+            session_id,
+            failed_action_id,
+            recovery_action_id,
+            security_policy_digest,
+            reference,
+            sequence: 1,
+            previous_record_digest: None,
+            started_qpc,
+            deadline_qpc,
+            qpc_frequency,
+            event: EventV2::AbortRecoveryIntent {},
+        };
+        record.validate()?;
+        Ok(record)
+    }
+    pub(super) fn encode_data(&self) -> io::Result<Vec<u8>> {
+        self.validate()?;
+        let raw = serde_json::to_vec(self).map_err(|_| invalid())?;
+        if raw.is_empty() || raw.len() > 65536 {
+            return Err(invalid());
+        }
+        Ok(raw)
+    }
+    pub(super) fn next_data(&self, previous_raw: &[u8], event: EventV2) -> io::Result<Self> {
+        if Self::decode(previous_raw)? != *self {
+            return Err(invalid());
+        }
+        let mut next: Self = serde_json::from_slice(previous_raw).map_err(|_| invalid())?;
+        next.sequence = next.sequence.checked_add(1).ok_or_else(invalid)?;
+        next.previous_record_digest = Some(crate::infrastructure::hash::sha256_hex(previous_raw));
+        next.event = event;
+        next.validate()?;
+        Ok(next)
+    }
     pub(super) fn decode(raw: &[u8]) -> io::Result<Self> {
         if raw.is_empty() || raw.len() > 65536 {
             return Err(invalid());

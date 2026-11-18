@@ -123,6 +123,28 @@ pub(super) struct NativeJournalContext {
     action: NativeAction,
 }
 impl NativeJournalContext {
+    pub(super) fn check_failed_start_read(
+        &self,
+        owner: &mut Owner,
+        failed_action: &str,
+        end: Instant,
+    ) -> AppResult<()> {
+        before(end).map_err(refused)?;
+        if self.action.kind() != OriginalActionKind::Start
+            || self.action.scope_id() != failed_action
+        {
+            return Err(refused("原journal context不是准确failedStart"));
+        }
+        self.peer.no_outer_job().map_err(refused)?;
+        for pin in &self.pins {
+            pin.recheck().map_err(refused)?;
+        }
+        self.binding
+            .check_native(&self.peer, &self.pins)
+            .map_err(refused)?;
+        self.action.check_retained_owner_for_read(owner, end)?;
+        before(end).map_err(refused)
+    }
     pub(super) fn into_parts(self) -> ([PinnedDirectory; 4], RetainedPeer, Binding, NativeAction) {
         (self.pins, self.peer, self.binding, self.action)
     }

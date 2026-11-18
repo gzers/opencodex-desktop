@@ -2,6 +2,7 @@
 //! successful phase/repair proof exists here, even when no tag was returned.
 use super::*;
 use std::path::PathBuf;
+mod bound;
 mod directory_read;
 mod v2;
 pub(super) struct PartialCaptureAnchor {

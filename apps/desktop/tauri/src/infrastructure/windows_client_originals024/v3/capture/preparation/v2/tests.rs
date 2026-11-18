@@ -1,4 +1,5 @@
 use super::*;
+mod binding_tests;
 mod directory_read_tests;
 use crate::infrastructure::windows_client_originals024::{
     coordination::NativeLease, tree::tests::Fixture,

@@ -1,5 +1,84 @@
 use super::*;
 use serde_json::{json, Value};
+#[test]
+fn wl2_r7_bound_preparation_data_encoder_rejects_canonical_origin_clock_and_previous_substitution()
+{
+    let fields = [
+        "11111111-1111-1111-1111-111111111111",
+        "22222222-2222-2222-2222-222222222222",
+        "33333333-3333-3333-3333-333333333333",
+    ]
+    .map(String::from);
+    let policy = "e".repeat(64);
+    let clock = ["1000", "11000", "1000"].map(String::from);
+    let refdata: ReferenceV2 = serde_json::from_value(reference()).unwrap();
+    assert!(RecordV2::initial_preparation_data(
+        [
+            fields[0].clone(),
+            fields[1].clone(),
+            fields[2].clone(),
+            policy.clone()
+        ],
+        refdata,
+        clock.clone()
+    )
+    .is_err());
+    for variant in ["same-action", "nil-session", "bad-policy", "long-clock"] {
+        let refdata: ReferenceV2 = serde_json::from_value(preparation(false)).unwrap();
+        let mut input = [
+            fields[0].clone(),
+            fields[1].clone(),
+            fields[2].clone(),
+            policy.clone(),
+        ];
+        let mut time = clock.clone();
+        match variant {
+            "same-action" => input[2] = input[1].clone(),
+            "nil-session" => input[0] = uuid::Uuid::nil().to_string(),
+            "bad-policy" => input[3] = "unknown".into(),
+            _ => time[1] = "11001".into(),
+        }
+        assert!(
+            RecordV2::initial_preparation_data(input, refdata, time).is_err(),
+            "{variant}"
+        );
+    }
+    let refdata: ReferenceV2 = serde_json::from_value(preparation(false)).unwrap();
+    let record = RecordV2::initial_preparation_data(
+        [
+            fields[0].clone(),
+            fields[1].clone(),
+            fields[2].clone(),
+            policy,
+        ],
+        refdata,
+        clock,
+    )
+    .unwrap();
+    let raw = record.encode_data().unwrap();
+    let mut wrong: Value = serde_json::from_slice(&raw).unwrap();
+    wrong["sessionId"] = json!(uuid::Uuid::new_v4().to_string());
+    assert!(record
+        .next_data(
+            &bytes(&wrong),
+            EventV2::AbortRecoveryPending {
+                stage: Stage::Registered,
+                raw_error: None
+            }
+        )
+        .is_err());
+    let next = record
+        .next_data(
+            &raw,
+            EventV2::AbortRecoveryPending {
+                stage: Stage::Registered,
+                raw_error: None,
+            },
+        )
+        .unwrap();
+    let next_raw = next.encode_data().unwrap();
+    validate_chain_v2(&[raw, next_raw]).unwrap();
+}
 fn reference() -> Value {
     json!({"kind":"canonical","manifestDigest":"a".repeat(64),"bindingDigest":"b".repeat(64),"storagePlanDigest":"c".repeat(64),"failedPrefixDigest":"d".repeat(64)})
 }

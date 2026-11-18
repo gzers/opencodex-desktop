@@ -142,6 +142,31 @@ impl PreparedAbortPrefix {
     }
 }
 impl WindowsOriginals {
+    pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_preparation_record(
+        &mut self,
+        owner: &mut Owner,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<super::super::before_resume_record_v2::RecordV2> {
+        let result = (|| {
+            owner.check_before_resume_process(window)?;
+            if self.owner_scope.as_ref() != Some(&owner.scope()?)
+                || self.prepared_ready.is_some()
+                || self.awaiting_successor
+                || self.stage.is_some()
+            {
+                return Err(refused("不是原失败pre-manifest adapter阶段"));
+            }
+            let session = self
+                .session
+                .ok_or_else(|| refused("原捕获session未登记，不能另生造"))?;
+            self.slot.read_bound_preparation_record(owner, session, window)
+        })();
+        if result.is_err() {
+            self.failed = true;
+            owner.fail_before_resume_process();
+        }
+        result
+    }
     pub(crate) fn recheck_retained_quiescent(
         &mut self,
         owner: &mut Owner,
