@@ -1,0 +1,27 @@
+
+running 2 tests
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::return_tests::release_tests::wl2_r7_release_readback_native_busy_anchor_drift_or_final_record_failure_keep_exact_originals_required ... r7 native released failurebusy-owner: actualErrorRaw=Some(33) actualErrorKind=Uncategorized actualError=另一个程序已锁定文件的一部分，进程无法访问。 (os error 33) no final native grant, failed original driver/actual remaining probe ranges and immutable canonical retained; no retry or overwrite
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmprhpRZx
+r7 native released failureforeign-member: actualErrorRaw=None actualErrorKind=InvalidData actualError=original phase chain unknown; preserve pending custody/Required no final native grant, failed original driver/actual remaining probe ranges and immutable canonical retained; no retry or overwrite
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpGICz5o
+r7 native released failurefinal-record: actualErrorRaw=None actualErrorKind=Other actualError=injected final record write refusal no final native grant, failed original driver/actual remaining probe ranges and immutable canonical retained; no retry or overwrite
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp2ipIOO
+r7 native released failureafter-final-member: actualErrorRaw=None actualErrorKind=InvalidData actualError=original phase chain unknown; preserve pending custody/Required no final native grant, failed original driver/actual remaining probe ranges and immutable canonical retained; no retry or overwrite
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpzNH8RO
+r7 native released failureexpired: actualErrorRaw=None actualErrorKind=TimedOut actualError=timed out no final native grant, failed original driver/actual remaining probe ranges and immutable canonical retained; no retry or overwrite
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpHW1mEo
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::return_tests::release_tests::wl2_r7_release_readback_native_original_return_explicit_release_five_ranges_and_final_strict_record ... r7 native released prefix0: elapsedMs=418 underOriginalEnd=true original source/two-tree/readback after same original range explicit release, five actual ranges probed concurrently+released, strict final DATA recorded, native proof private; no Stop/Closed/successor/productOwner budget claim
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpHCHNxI
+r7 native released prefix101: elapsedMs=725 underOriginalEnd=true original source/two-tree/readback after same original range explicit release, five actual ranges probed concurrently+released, strict final DATA recorded, native proof private; no Stop/Closed/successor/productOwner budget claim
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpfgYnXr
+r7 native released prefix141: elapsedMs=2470 underOriginalEnd=true original source/two-tree/readback after same original range explicit release, five actual ranges probed concurrently+released, strict final DATA recorded, native proof private; no Stop/Closed/successor/productOwner budget claim
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpXbtRTL
+r7 native released prefix254: elapsedMs=3904 underOriginalEnd=true original source/two-tree/readback after same original range explicit release, five actual ranges probed concurrently+released, strict final DATA recorded, native proof private; no Stop/Closed/successor/productOwner budget claim
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmptNnwPC
+r7 native released prefix255: elapsedMs=3675 underOriginalEnd=true original source/two-tree/readback after same original range explicit release, five actual ranges probed concurrently+released, strict final DATA recorded, native proof private; no Stop/Closed/successor/productOwner budget claim
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpayu5zK
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2288 filtered out; finished in 38.70s
+

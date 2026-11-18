@@ -1,0 +1,100 @@
+{
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "sha256": "fe9916eb43d79acb1ee77fd4270beb0f62107bee9dd32748f5b3e841ceffc410",
+      "bytes": 24437
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation.rs",
+      "sha256": "270e6973d375279986b4c30cf13b62b85504a7fe28a8b2792745f6f2efbde58a",
+      "bytes": 10031
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "sha256": "1b68e66314d5b8411681af6d0ad5da97ee2b92553e12b85f4eff91548e7b7a48",
+      "bytes": 24619
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "sha256": "29a26f6abf33aebe3032bfb3a89fca85867701ffe25c31cab521913f77c81632",
+      "bytes": 23271
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/canonical_trait.rs",
+      "sha256": "291aca8ca01cda5a96425baf10375e7c168b4ea529ce6e990b7f169b44ce95b7",
+      "bytes": 11050
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/return_validation.rs",
+      "sha256": "2d74cc89930b6888ea7c3a14701a5fa41b0547e50ec0901c53f6620e145f5c3c",
+      "bytes": 5331
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/return_validation/history.rs",
+      "sha256": "47ed2dc46214e9e63176b344e8347143dfd147924c736f0e08c5e6cadbb4a9e5",
+      "bytes": 4627
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/tests.rs",
+      "sha256": "2d358ae0c3bf25885bdad0e9455b05450fd71d02685d4e7527b3c3907f7c2819",
+      "bytes": 15609
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "sha256": "535f1e9e2327c43c0d499659e4a4c99908236a15de8f94445587ffd22882e98e",
+      "bytes": 48656
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "sha256": "43ceb76270ca3f43a53520db10cc18302cd148d5ad72a55c3b7b4c4a9873baf3",
+      "bytes": 58766
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions.rs",
+      "sha256": "68962f4d2d6f2da711217375f049ace4dc0cd9ab934027f78dfd5884255f017c",
+      "bytes": 15911
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/actions/recovery.rs",
+      "sha256": "a2156b35eaf427ea64403e530af31ebfbaf2a217a0659e403738f0ed8f861ee2",
+      "bytes": 20447
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/start_worker.rs",
+      "sha256": "fd6adcc1972e53748220cad5743e3f096d37771c9ef3f8e3c9589a314fe01530",
+      "bytes": 16766
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/retained_start.rs",
+      "sha256": "b70ff0900a9b8e9671791594d0c077bfe9766ebdf15d3134076d853184972dbc",
+      "bytes": 4054
+    }
+  ],
+  "currentR2Touched": false,
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_start_worker_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

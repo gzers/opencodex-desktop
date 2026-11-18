@@ -1459,3 +1459,12 @@ Windows 代码 e6cc1f29a5444a76da3e123d6f97b7b6ee6757f2 已推送与回读，消
 源码 7ca43ca47bb642a91e8c69444afaad673582a213。首次原生获取前登记唯一 Owner，失败在原线程保留已登记对象、局部范围和原锁。Status 独立投影。MSVC 原范围 5/5、控制层 2/2，均 raw0，四种真实 SQLite 冲突 raw33，19 个本轮夹具已缺席。控制层测试制品 SHA-256 11dd88f897ab5cc1fe141080c380d4bbeddc4283e56b65659bd3f1483ac9df70。第一批共用的 EXE 已覆盖，原日志和执行源码保留。证据 wl2-r7-start-worker-20261118-r1。
 
 十份 r2 只读回执与原留档逐份摘要一致，未重复归档。旧现场仍因原 Job 24 项未知／raw50 保持 executionReady=false。显式恢复仍需原 Start worker 对同一原生范围、原失败前缀及唯一新动作窗口签发独立许可，生产 Start 保持拒绝。
+
+
+## 2026-11-18 r7 首启原 worker 显式恢复
+
+Windows 实施源码 5331c4bfca129e11b10c9110d2da06c43d50eefa，合入 main 6bafdd342 后为 7123e2f283f0b8a052270ba47dbc12626d70798d，代码分支已回读同一 SHA。已消费治理 9d95826b1914a45a2f7028c2769c13b7c6a5d0d0、TEAM47、IMP186 与 r7 增量。首次 Start 失败后，原 worker 继续持有原 Owner 和锁范围。唯一显式请求在同线程核验原对象、四角色范围、动作及截止时间。状态独立读取，首错保留。
+
+MSVC 三制品全部构建成功，raw0、122715 ms。20 项定向测试通过，首轮编译 raw101、E0027（旧测试漏 registration），另有两处 E0599。44 个成功夹具目录核实缺席，既存生成 schema 未跟踪。原始日志、测试和产品制品摘要、源映射、清理清单及累计 235 项状态见 wl2-r7-retained-start-recovery-20261118-r1。
+
+现有 r2 只读收件与归档证据沿用。原 Job 24 项未知、raw50，executionReady=false。后续继续原准备槽 V2 Pending 接线，真实普通桌面私有 V2、原 Owner 的同线程生产全链和实际预算仍待验证。公开 Start 保持拒绝。

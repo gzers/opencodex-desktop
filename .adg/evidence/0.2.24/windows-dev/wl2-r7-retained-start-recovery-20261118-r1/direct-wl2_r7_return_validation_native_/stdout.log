@@ -1,0 +1,27 @@
+
+running 2 tests
+test infrastructure::windows_client_originals024::recovery_worker::tests::return_validation_tests::wl2_r7_return_validation_native_worker_retains_original_before_failure_and_preserves_worker_identity ... r7-return-validation actualworker valid: originalfileID=4503599628423079 received before checks, fixedwindow retained, originalworker identity unchanged, no retry/normalStop/Closed; state={"actionId":"f4b5280a-5b11-45e6-9b25-f268cc66aa0d","closed":false,"errorKind":null,"normalStop":false,"originalDeadlineExpired":false,"phase":"ReturnedValidated","rawError":null,"recoveryRequired":true,"returnValidatorThread":"ThreadId(2)","runtimeAuthority":false,"schema":"windows-original-recovery-worker-v1","scopeDigest":"a830a49b8fdd81b605b1d5ac84e9aaebbe4355a00e1cc4be4c8d3d9429beacf7","sessionId":"1bf39df9-489b-4289-852e-5e4b8cb31276","stage":null,"workerFinished":true,"workerThread":"ThreadId(3)"}
+r7-return-validation-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpxPc3gj
+r7-return-validation actualworker callback-raw5: originalfileID=2251799814737839 received before checks, fixedwindow retained, originalworker identity unchanged, no retry/normalStop/Closed; state={"actionId":"dbe0aaa2-74aa-4335-8f59-b21d1b39da94","closed":false,"errorKind":"PermissionDenied","normalStop":false,"originalDeadlineExpired":false,"phase":"ReturnValidationFailedRetained","rawError":5,"recoveryRequired":true,"returnValidatorThread":"ThreadId(2)","runtimeAuthority":false,"schema":"windows-original-recovery-worker-v1","scopeDigest":"a830a49b8fdd81b605b1d5ac84e9aaebbe4355a00e1cc4be4c8d3d9429beacf7","sessionId":"e1867e23-4810-4b54-a67f-cdfa097c7dc4","stage":null,"workerFinished":true,"workerThread":"ThreadId(4)"}
+r7-return-validation-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpQVNyHu
+r7-return-validation actualworker wrong-cutoff: originalfileID=2533274791448495 received before checks, fixedwindow retained, originalworker identity unchanged, no retry/normalStop/Closed; state={"actionId":"b60c9077-af18-4ad4-a1a0-65feac3f012a","closed":false,"errorKind":"InvalidData","normalStop":false,"originalDeadlineExpired":false,"phase":"ReturnValidationFailedRetained","rawError":null,"recoveryRequired":true,"returnValidatorThread":"ThreadId(2)","runtimeAuthority":false,"schema":"windows-original-recovery-worker-v1","scopeDigest":"a830a49b8fdd81b605b1d5ac84e9aaebbe4355a00e1cc4be4c8d3d9429beacf7","sessionId":"93b51c5b-edfe-43a7-aa51-6daf09d9dbb6","stage":null,"workerFinished":true,"workerThread":"ThreadId(5)"}
+r7-return-validation-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpT5PBzv
+r7-return-validation actualworker expired: originalfileID=2814749768159151 received before checks, fixedwindow retained, originalworker identity unchanged, no retry/normalStop/Closed; state={"actionId":"ba61447f-f0ad-4cf5-923d-9ccc3f8caf9b","closed":false,"errorKind":"TimedOut","normalStop":false,"originalDeadlineExpired":true,"phase":"ReturnValidationFailedRetained","rawError":null,"recoveryRequired":true,"returnValidatorThread":"ThreadId(2)","runtimeAuthority":false,"schema":"windows-original-recovery-worker-v1","scopeDigest":"a830a49b8fdd81b605b1d5ac84e9aaebbe4355a00e1cc4be4c8d3d9429beacf7","sessionId":"54371de7-14a5-4fed-893a-b889ebf6f585","stage":null,"workerFinished":true,"workerThread":"ThreadId(6)"}
+r7-return-validation-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpzWXaRJ
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::return_tests::release_tests::return_validation_tests::wl2_r7_return_validation_native_full_trees_canonical_original_release_and_cutoff ... r7-return-validation native valid: complete original trees/8/bytes/membership and original released objects, same deadline; no new ranges/record/native permit or currentr2 action
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp5Ia8fe
+r7-return-validation native tree-member: complete original trees/8/bytes/membership and original released objects, same deadline; no new ranges/record/native permit or currentr2 action
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp55CKob
+r7-return-validation native journal-member: complete original trees/8/bytes/membership and original released objects, same deadline; no new ranges/record/native permit or currentr2 action
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpXlzXz4
+r7-return-validation native wrong-cutoff: complete original trees/8/bytes/membership and original released objects, same deadline; no new ranges/record/native permit or currentr2 action
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp1aq67R
+r7-return-validation native expired: complete original trees/8/bytes/membership and original released objects, same deadline; no new ranges/record/native permit or currentr2 action
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEJKJXQ
+r7-return-validation native foreign-released: complete original trees/8/bytes/membership and original released objects, same deadline; no new ranges/record/native permit or currentr2 action
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp5TQha3
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2288 filtered out; finished in 32.49s
+
