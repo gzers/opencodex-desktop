@@ -190,6 +190,50 @@ fn wl2_r7_external_steps_native_lease_keeps_claim_and_nlk_through_moves_until_re
     scene.finish();
 }
 
+#[test]
+fn wl2_r7_external_steps_whole_tree_requires_continuous_native_lease() {
+    let (scene, paths) =
+        external_repair_steps::whole_tree::WholeTree::with_claim(CLAIM_NAME, |client, root| {
+            let coordination = create_private_directory(&root.join("coordination")).unwrap();
+            seed_coordination(client, coordination.path())
+        });
+    let before = images(&paths);
+    let nodes = scene.prepare().unwrap();
+    let root = paths[0].parent().unwrap();
+    let mut prefix = LeasePreparation::default();
+    prefix.prepare_fixture_paths(&paths, scene.end).unwrap();
+    let mut lease = prefix.take_complete().unwrap();
+    let mut claim = lease.anchored_claim(root, scene.end).unwrap();
+    let epoch = claim.epoch().to_owned();
+    let mut checkpoints = 0;
+    scene
+        .run(
+            nodes,
+            || {
+                claim.check(root, scene.end)?;
+                assert_eq!(claim.epoch(), epoch);
+                assert_eq!(claim.lease.held.len(), 4);
+                for held in &claim.lease.held {
+                    actual_ranges_block(held);
+                }
+                checkpoints += 1;
+                Ok(())
+            },
+            |_, _, _| Ok(()),
+        )
+        .unwrap();
+    assert_eq!(checkpoints, 26);
+    drop(claim);
+    lease.release(scene.end).unwrap();
+    NativeLease::acquire_synthetic(&paths, scene.end)
+        .unwrap()
+        .release(scene.end)
+        .unwrap();
+    assert!(images(&paths) == before);
+    println!("three originals: same claim/N/L/K epoch and raw33 contention at 26 checkpoints; explicit release, independent reacquisition and unchanged coordination images");
+    scene.finish();
+}
+
 fn retained_start(
     scene: &Scene,
 ) -> (

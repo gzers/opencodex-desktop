@@ -6,22 +6,22 @@ use std::path::PathBuf;
 
 const LEAVES: [&str; 3] = ["auth.json", "config.toml", "config.json"];
 const GROUPS: [usize; 3] = [0, 0, 1];
-const STABLE: [&str; 2] = ["claim.sqlite", "owner.sqlite"];
 
-struct WholeTree {
+pub(crate) struct WholeTree {
     root: Option<tempfile::TempDir>,
     clients: [PinnedDirectory; 2],
     custody: [PinnedDirectory; 2],
     retired: PinnedDirectory,
     records: PinnedDirectory,
     anchors: [SnapshotData; 2],
+    claim_name: &'static str,
     stable: [FileImage; 2],
     originals: [FileImage; 3],
     working: [FileImage; 3],
-    end: Instant,
+    pub(crate) end: Instant,
 }
 
-struct Node<'a> {
+pub(crate) struct Node<'a> {
     retire: FileStep<'a>,
     restore: FileStep<'a>,
 }
@@ -77,6 +77,16 @@ fn require_members(dir: &PinnedDirectory, names: &[&str], end: Instant) -> io::R
 
 impl WholeTree {
     fn new() -> Self {
+        Self::with_claim("claim.sqlite", |client, _| {
+            fs::write(client.join("claim.sqlite"), b"claim.sqlite").unwrap();
+        })
+        .0
+    }
+
+    pub(crate) fn with_claim<T>(
+        claim_name: &'static str,
+        seed: impl FnOnce(&Path, &Path) -> T,
+    ) -> (Self, T) {
         let root = tempfile::Builder::new()
             .prefix("ocx024-r7-whole-tree-")
             .tempdir()
@@ -99,30 +109,32 @@ impl WholeTree {
             )
             .unwrap();
         }
-        for leaf in STABLE {
-            fs::write(clients[0].path().join(leaf), leaf.as_bytes()).unwrap();
-        }
+        let seeded = seed(clients[0].path(), root.path());
+        fs::write(clients[0].path().join("owner.sqlite"), b"owner.sqlite").unwrap();
         let end = Instant::now() + Duration::from_secs(10);
         let anchors = std::array::from_fn(|i| observe_directory(&clients[i], end).unwrap());
-        let stable = STABLE.map(|leaf| observe_file(&clients[0].path().join(leaf), end).unwrap());
+        let stable = [claim_name, "owner.sqlite"]
+            .map(|leaf| observe_file(&clients[0].path().join(leaf), end).unwrap());
         let originals = std::array::from_fn(|i| {
             observe_file(&custody[GROUPS[i]].path().join(LEAVES[i]), end).unwrap()
         });
         let working = std::array::from_fn(|i| {
             observe_file(&clients[GROUPS[i]].path().join(LEAVES[i]), end).unwrap()
         });
-        Self {
+        let scene = Self {
             root: Some(root),
             clients,
             custody,
             retired,
             records,
             anchors,
+            claim_name,
             stable,
             originals,
             working,
             end,
-        }
+        };
+        (scene, seeded)
     }
 
     fn verify_anchors(&self) -> io::Result<()> {
@@ -131,7 +143,7 @@ impl WholeTree {
                 return Err(invalid("stable client directory changed"));
             }
         }
-        for (index, leaf) in STABLE.iter().enumerate() {
+        for (index, leaf) in [self.claim_name, "owner.sqlite"].into_iter().enumerate() {
             if observe_file(&self.clients[0].path().join(leaf), self.end)? != self.stable[index] {
                 return Err(invalid("stable file changed"));
             }
@@ -147,7 +159,7 @@ impl WholeTree {
     ) -> io::Result<()> {
         require_members(
             &self.clients[0],
-            &[STABLE[0], STABLE[1], LEAVES[0], LEAVES[1]],
+            &[self.claim_name, "owner.sqlite", LEAVES[0], LEAVES[1]],
             self.end,
         )?;
         require_members(&self.clients[1], &[LEAVES[2]], self.end)?;
@@ -162,7 +174,7 @@ impl WholeTree {
         require_members(&self.records, records, self.end)
     }
 
-    fn prepare(&self) -> io::Result<Vec<Node<'_>>> {
+    pub(crate) fn prepare(&self) -> io::Result<Vec<Node<'_>>> {
         self.verify_anchors()?;
         self.verify_members(&[], &[], 0)?;
         let mut nodes = Vec::with_capacity(LEAVES.len());
@@ -191,9 +203,10 @@ impl WholeTree {
         Ok(nodes)
     }
 
-    fn run(
+    pub(crate) fn run(
         &self,
         mut nodes: Vec<Node<'_>>,
+        mut checkpoint: impl FnMut() -> io::Result<()>,
         mut after_intent: impl FnMut(usize, &str, &Path) -> io::Result<()>,
     ) -> io::Result<()> {
         self.verify_anchors()?;
@@ -202,6 +215,7 @@ impl WholeTree {
             node.retire.verify_source(self.end)?;
             node.restore.verify_source(self.end)?;
         }
+        checkpoint()?;
         let mut records: Vec<(String, PrivateRecord, Vec<u8>)> = Vec::with_capacity(12);
         for (index, node) in nodes.iter_mut().enumerate() {
             let names: Vec<_> = records.iter().map(|(name, _, _)| name.as_str()).collect();
@@ -226,6 +240,7 @@ impl WholeTree {
                     "budgetMs": 10000,
                 });
                 let intent_bytes = serde_json::to_vec(&intent)?;
+                checkpoint()?;
                 self.record(
                     &mut records,
                     format!("{index}-{}.json", step.intent),
@@ -233,8 +248,10 @@ impl WholeTree {
                 )?;
                 after_intent(index, step.intent, &target)?;
                 step.verify_source(self.end)?;
+                checkpoint()?;
                 step.held
                     .move_into(step.to.path(), step.target_name, self.end)?;
+                checkpoint()?;
                 require_absent(&source)?;
                 step.verify_source(self.end)?;
                 if observe_file(&target, self.end)? != *step.expected {
@@ -256,6 +273,7 @@ impl WholeTree {
                     format!("{index}-{}Readback.json", step.intent),
                     serde_json::to_vec(&completion)?,
                 )?;
+                checkpoint()?;
             }
         }
         let names: Vec<_> = records.iter().map(|(name, _, _)| name.as_str()).collect();
@@ -270,6 +288,7 @@ impl WholeTree {
                 return Err(invalid("durable move record changed"));
             }
         }
+        checkpoint()?;
         check_time(self.end)
     }
 
@@ -296,7 +315,7 @@ impl WholeTree {
         )
     }
 
-    fn finish(mut self) {
+    pub(crate) fn finish(mut self) {
         let root = self.root.take().unwrap();
         let path = root.path().to_owned();
         drop(self);
@@ -323,7 +342,7 @@ impl Drop for WholeTree {
 fn r7_external_steps_whole_tree_restores_three_originals_with_durable_records() {
     let scene = WholeTree::new();
     let nodes = scene.prepare().unwrap();
-    scene.run(nodes, |_, _, _| Ok(())).unwrap();
+    scene.run(nodes, || Ok(()), |_, _, _| Ok(())).unwrap();
     for index in 0..LEAVES.len() {
         let (client, custody, retired) = scene.node_paths(index);
         assert!(observe_file(&client, scene.end).unwrap() == scene.originals[index]);
@@ -342,7 +361,11 @@ fn r7_external_steps_whole_tree_late_custody_drift_refuses_before_any_record() {
     let extra = scene.custody[1].path().join("unplanned");
     fs::write(&extra, b"foreign member").unwrap();
     let error = scene
-        .run(nodes, |_, _, _| panic!("refuse before first intent"))
+        .run(
+            nodes,
+            || panic!("refuse before first checkpoint"),
+            |_, _, _| panic!("refuse before first intent"),
+        )
         .unwrap_err();
     assert_eq!(error.to_string(), "whole tree has unexpected member");
     assert!(fs::read_dir(scene.records.path()).unwrap().next().is_none());
@@ -362,12 +385,16 @@ fn r7_external_steps_whole_tree_second_return_collision_keeps_exact_native_prefi
     let scene = WholeTree::new();
     let nodes = scene.prepare().unwrap();
     let error = scene
-        .run(nodes, |index, intent, target| {
-            if index == 1 && intent == "OriginalReturnIntent" {
-                fs::write(target, b"foreign destination")?;
-            }
-            Ok(())
-        })
+        .run(
+            nodes,
+            || Ok(()),
+            |index, intent, target| {
+                if index == 1 && intent == "OriginalReturnIntent" {
+                    fs::write(target, b"foreign destination")?;
+                }
+                Ok(())
+            },
+        )
         .unwrap_err();
     assert!(matches!(error.raw_os_error(), Some(80 | 183)));
     require_members(

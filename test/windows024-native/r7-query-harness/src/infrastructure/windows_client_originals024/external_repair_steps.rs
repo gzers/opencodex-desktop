@@ -13,7 +13,7 @@ use std::{
 };
 
 #[path = "external_repair_whole_tree.rs"]
-mod whole_tree;
+pub(super) mod whole_tree;
 
 const RECORD_LIMIT: usize = 128 * 1024;
 
