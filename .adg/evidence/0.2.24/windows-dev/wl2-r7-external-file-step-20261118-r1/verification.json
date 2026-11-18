@@ -1,0 +1,123 @@
+{
+  "codeCommit": "3ef31c9caae35f4d7cc6083de27bdf106ca0b560",
+  "codeTree": "f59a818b7c467468d36950187b6ad136dc150d37",
+  "main": "040f411e6d48d97bde6e7b2e6c22860e547b6173",
+  "governanceAtTest": "be7854debe024631cb1499331cbfe3347466ba4b",
+  "governanceAtHandoff": "61339ef854e21ce0dfb2dec3ca262839cb6c0c47",
+  "contract": "TEAM57/IMP196/r7 section D. TEAM58/IMP197 applies to the independently staged Host.",
+  "source": [
+    {
+      "path": "test/windows024-native/r7-query-harness/build.rs",
+      "gitBlob": "e11a5f87586ac24a544188835795f3b429b2d9e7",
+      "buildInputSha256": "45971bbe3168014b7f8e3b9e3e97fa66cffb227f59833784d63dd1c0ef7b6771"
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/partial_collect_tests.rs",
+      "gitBlob": "b01314bd1157de794bf091da4a6dc850f0ed841d",
+      "buildInputSha256": "f3d15adbe047350a33d713c64bbf7675bde069cbb009a70741792524b3b8ff5e"
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+      "gitBlob": "102d478eb1e432cb0b6a10307674140397288ad0",
+      "buildInputSha256": "7df4084c4cd5c46ae4f573474a7e75df3a336806a2c777ea2f385dc8f0f2990b"
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+      "gitBlob": "f85eeee1ed47a6500ee2d6d3b41a77cd2088d739",
+      "buildInputSha256": "5375853466ac0cd5588586d3da2647f67658226f2b654b86f794aab07502a3af"
+    }
+  ],
+  "artifact": {
+    "target": "x86_64-pc-windows-msvc",
+    "path": "test/windows024-native/target/r7-query-proof/x86_64-pc-windows-msvc/debug/build/windows024-r7-query-proof/803c99ecdabf4233/out/windows024_r7_query_proof-803c99ecdabf4233.exe",
+    "bytes": 3395584,
+    "sha256": "08c69095386e22b5b8825d0394dcc2d7114a77175ae26fffc7ac1f739c65f4be"
+  },
+  "runs": [
+    "raw101 E0583, E0616 and E0061",
+    "raw0 10 passed, 0 failed",
+    "raw0 11 passed, 0 failed, 0 ignored, 39 filtered, 0.14s"
+  ],
+  "nativeNegativeCodes": {
+    "destinationCollision": 183,
+    "intentAlreadyExists": 80,
+    "retainedSourceSharing": 32
+  },
+  "verifiedAbsentFinalFixtureRoots": [
+    "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-mC9GFz",
+    "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Gxt5ir",
+    "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Jrkhmq",
+    "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-qQGgnd"
+  ],
+  "limitations": [
+    "Synthetic file steps only",
+    "Whole-scene process quiescence, continuous claim/N/L/K, full membership and release remain open",
+    "No live scene recovery, production executor or acceptance result"
+  ],
+  "controlCommandNotes": [
+    "Quoted tree expression on retry after initial PowerShell parsing error.",
+    "Cleanup receipt prefix can follow libtest inline output. Matched it anywhere on each line and verified all four absolute paths."
+  ],
+  "rawPayloads": [
+    {
+      "path": "run-01/input.json",
+      "bytes": 773,
+      "sha256": "c5feb29a96baffc99317be28d86c557a032039325c34c1c2fa4c2608e2944077"
+    },
+    {
+      "path": "run-01/result.json",
+      "bytes": 42,
+      "sha256": "79c25c7aebff2521c3e1832df23b7eebba48307e8beece460c0e7896f4913a86"
+    },
+    {
+      "path": "run-01/stderr.log",
+      "bytes": 8188,
+      "sha256": "27470f5aeb4c31b07de3b57b514c0b6b560f3fedc0f6d66c5d98ceb8a0e3473e"
+    },
+    {
+      "path": "run-01/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "run-02/input.json",
+      "bytes": 1575,
+      "sha256": "2b918f8c624f0f387ddb3b39b90ccd2fb9be082cc4165dbfdaf4705c602b90fc"
+    },
+    {
+      "path": "run-02/result.json",
+      "bytes": 40,
+      "sha256": "0979612b889b14cc15ecd9801dd24c462567a9f437ba501abe80d6f6e56ea7fa"
+    },
+    {
+      "path": "run-02/stderr.log",
+      "bytes": 8451,
+      "sha256": "5b4d8ae8a5bd8b9dd94137d29eb8d3e1cbe6cc7c321fb3904258455f8a1a70bd"
+    },
+    {
+      "path": "run-02/stdout.log",
+      "bytes": 2298,
+      "sha256": "957761c46dcabaed1a84eae4d02424327235cb9ee88ab193231b920dee6bb308"
+    },
+    {
+      "path": "run-03/input.json",
+      "bytes": 1575,
+      "sha256": "dc4181503f81c32f1f54c5ff88e9592dc1a34c5087ff972c182a8153702caba7"
+    },
+    {
+      "path": "run-03/result.json",
+      "bytes": 40,
+      "sha256": "eb028e46ac95cbc81bc586035b06aad7f486e9717081169fcb1811b2e47bb1cd"
+    },
+    {
+      "path": "run-03/stderr.log",
+      "bytes": 8451,
+      "sha256": "7c7a398464b62341f68f27c3c08c8df5e9a937bfa17f80b98e5b0cbd64a36a60"
+    },
+    {
+      "path": "run-03/stdout.log",
+      "bytes": 2591,
+      "sha256": "dc10a14d71ea13cfd00fc6c515909a00d1b06f807366fe5cc460ea51da1d5252"
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+
+running 11 tests
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_chain_rejects_cross_scope_replay_gaps_and_false_closed ... ok
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_event_fields_are_required_and_unknowns_and_duplicate_nodes_refuse ... ok
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_prefix_rejects_missing_quiescence_reordered_or_wrong_native_ids ... ok
+test infrastructure::windows_client_originals024::before_resume_record::tests::r7_abort_attachment_strict_fields_versions_duplicates_and_timing ... ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_collision_after_durable_intent_keeps_exact_prefix ... collision raw=Some(183) kind=AlreadyExists
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-mC9GFz
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_publish_failure_prevents_any_move ... publication raw=Some(80) kind=AlreadyExists
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-Gxt5ir
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_retire_then_return_bound_native_objects ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-Jrkhmq
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_unreleased_source_handle_retains_original_after_retirement ... retained source sharing error raw=Some(32)
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-qQGgnd
+ok
+test infrastructure::windows_client_originals024::partial_capture::native_collection::tests::r7_partial_actual_collect_keeps_pending_invalid_coordinator_handle_and_completed_original_nodes ... actual product collect/stamp/open/id/security/stream code retains pending original coordinator + completed nodes; no claim/admission/move/restore authority asserted
+ok
+test infrastructure::windows_client_originals024::partial_capture::native_collection::tests::r7_partial_actual_collect_success_retains_all_native_ids8_and_bytes_without_pending_slot ... ok
+test infrastructure::windows_client_originals024::partial_capture::native_collection::tests::r7_partial_actual_collect_unknown_stream_retains_deny_write_delete_original_and_does_not_move ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 39 filtered out; finished in 0.14s
+

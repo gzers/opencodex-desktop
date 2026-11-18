@@ -1,0 +1,46 @@
+{
+  "source": [
+    {
+      "sha256": "45971bbe3168014b7f8e3b9e3e97fa66cffb227f59833784d63dd1c0ef7b6771",
+      "path": "test/windows024-native/r7-query-harness/build.rs"
+    },
+    {
+      "sha256": "f3d15adbe047350a33d713c64bbf7675bde069cbb009a70741792524b3b8ff5e",
+      "path": "test/windows024-native/r7-query-harness/src/partial_collect_tests.rs"
+    },
+    {
+      "sha256": "7df4084c4cd5c46ae4f573474a7e75df3a336806a2c777ea2f385dc8f0f2990b",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs"
+    },
+    {
+      "sha256": "5375853466ac0cd5588586d3da2647f67658226f2b654b86f794aab07502a3af",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs"
+    }
+  ],
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)",
+  "base": "e19642724af81cc40c3dea6dbe4dc7d4caee9d21",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.debug=0",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.incremental=false",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.codegen-units=256",
+    "--lib",
+    "--manifest-path",
+    "test/windows024-native/r7-query-harness/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "-j",
+    "1",
+    "--",
+    "r7_external_steps_",
+    "r7_partial_actual_collect_",
+    "before_resume_record::tests",
+    "--test-threads=1",
+    "--nocapture"
+  ]
+}

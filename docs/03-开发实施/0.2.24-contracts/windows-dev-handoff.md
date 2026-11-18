@@ -1699,3 +1699,12 @@ MSVC x64 产品编译及测试编译均 raw0。products.json 记录 ocx.exe、oc
 Windows 工具源码 e19642724af81cc40c3dea6dbe4dc7d4caee9d21 已推送。控制端在发出诊断请求前读取 Host 原始 stdout、三份私有导出及进程、启动意图、就绪和结果回执。核对三个入口及六个 worker 全量调用的真实区间和同一原期限，同时要求原 worker 的 thread/action/session/scope 与注入回执一致、存在实际 claim/N/L/K 的三字段投影和 raw31/no-Resume 证据。核验器为只读工具，桌面暂存仍为 daae8ffff7f304ec28b9c0214db26691e930a395 的固定配对。
 
 记录于 wl2-r7-host-receipt-gate-20261118-r1。原 r1 居留时可读取原 stdout，核验器按原首错 raw32 退出 1。合成回执一项通过、八项反例拒绝，临时目录已核对缺席。记录时 marenben session 7 Active，修复版 out01 为空。下一次真实 Host 回执须再独立确认进程仍为同一 PID/FILETIME，之后才接 5／10／5 秒观察与原范围连续性证明。旧原包的 Job 成员证据仍有 24 项 Unknown/raw50，保留两目标和三件原件现场，公开 Start 维持拒绝。
+
+
+## 2026-11-18 r7 外部任务恢复的单文件保管验证
+
+Windows 源码 3ef31c9caae35f4d7cc6083de27bdf106ca0b560 已推送并回读。按 TEAM57／IMP196／r7 D 节，仅定向 harness 复用原生保留目录、文件移动及私有记录。在 10 秒原期限下验证先唯一创建并读回意图，再持准确文件句柄同卷移入空目标。退工作副本和还原件均比较原对象、字节和 8 项安全投影。反例分别保留目标冲突 raw183、意图已存在 raw80、原文件仍被占用 raw32 以及对应准确前缀。
+
+MSVC x64 最终 11/11，制品 SHA-256 08c69095386e22b5b8825d0394dcc2d7114a77175ae26fffc7ac1f739c65f4be。首次编译 raw101／E0583，另有 E0616 与 E0061。修复 harness 的 DATA 源引用及 collector 参数后复验。原始三轮日志、源码配对及四个最终夹具缺席记录见 wl2-r7-external-file-step-20261118-r1。生产文件和桌面制品无改动。单文件结果仅覆盖原语，进程静止、整树全量预检、连续 claim/N/L/K、整树读回与精确释放仍待验证。
+
+已消费治理 61339ef854e21ce0dfb2dec3ca262839cb6c0c47、TEAM58／IMP197 的修复版配对。用户回执对应 nine-r1，nine-r2 的 out01 仍为空。旧原包 r2 继续保留其归档、三原件和锁，Job 24 项 Unknown/raw50，命令谱系首错 raw64，executionReady=false。正式公开 Start 维持拒绝。

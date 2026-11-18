@@ -1,0 +1,146 @@
+   Compiling windows024-r7-query-proof v0.1.0 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness)
+error[E0583]: file not found for module `storage`
+ --> src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\before_resume_record.rs:8:1
+  |
+8 | mod storage;
+  | ^^^^^^^^^^^^
+  |
+  = help: to create the module `storage`, create file "src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\storage.rs" or "src\infrastructure\windows_client_originals024\..\..\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_client_originals024\storage\mod.rs"
+  = note: if there is a `mod storage` elsewhere in the crate already, import it with `use crate::...` instead
+
+warning: unused import: `file_move::rename_handle as rename_original_handle`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:10:16
+   |
+10 | pub(crate) use file_move::rename_handle as rename_original_handle;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `paths::PrivateDirectoryPreparation`
+  --> src\..\..\..\..\apps\desktop\tauri\src\infrastructure\windows_official_runtime024\mod.rs:24:16
+   |
+24 | pub(crate) use paths::PrivateDirectoryPreparation;
+   |                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `PathBuf`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\target\r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/d8194c9ee072b270\out/safety_section.rs:7:29
+  |
+7 |     path::{Component, Path, PathBuf},
+  |                             ^^^^^^^
+
+warning: unused import: `ffi::OsStrExt`
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\target\r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/d8194c9ee072b270\out\program_image_windows_tests.rs:557:28
+    |
+557 |     use std::os::windows::{ffi::OsStrExt, fs::OpenOptionsExt, io::AsRawHandle};
+    |                            ^^^^^^^^^^^^^
+
+warning: unused import: `infrastructure::hash`
+ --> src\infrastructure\windows_client_originals024\collector.rs:4:32
+  |
+4 | use crate::{backend as native, infrastructure::hash, modules::runtime::program_image};
+  |                                ^^^^^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `std::sync::atomic::Atomic::<u64>::fetch_update`: renamed to `try_update` for consistency
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\target\r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/d8194c9ee072b270\out/program_image_section.rs:540:14
+    |
+540 |             .fetch_update(
+    |              ^^^^^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+help: replace the use of the deprecated method
+    |
+540 -             .fetch_update(
+540 +             .try_update(
+    |
+
+error[E0616]: field `file_id` of struct `SnapshotData` is private
+   --> src\infrastructure\windows_client_originals024\external_repair_steps.rs:120:71
+    |
+120 |             || held.identity().index.to_string() != expected.security.file_id
+    |                                                                       ^^^^^^^ private field
+
+error[E0616]: field `volume` of struct `SnapshotData` is private
+   --> src\infrastructure\windows_client_originals024\external_repair_steps.rs:121:60
+    |
+121 |             || held.identity().volume != expected.security.volume
+    |                                                            ^^^^^^ private field
+
+error[E0061]: this function takes 8 arguments but 7 arguments were supplied
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness/src/partial_collect_tests.rs:57:13
+    |
+ 57 |     assert!(collect(&root, "", true, &mut nodes, &mut 0, &mut pending, end).is_err());
+    |             ^^^^^^^                                                    --- argument #7 of type `&mut std::option::Option<(std::string::String, native_collection::Kind)>` is missing
+    |
+note: function defined here
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\target\r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/d8194c9ee072b270\out/native_partial_collect.rs:161:4
+    |
+161 | fn collect(
+    |    ^^^^^^^
+...
+168 |     pending_locator: &mut Option<(String, Kind)>,
+    |     --------------------------------------------
+help: provide the argument
+    |
+ 57 |     assert!(collect(&root, "", true, &mut nodes, &mut 0, &mut pending, /* &mut Option<(String, Kind)> */, end).is_err());
+    |                                                                        ++++++++++++++++++++++++++++++++++
+
+error[E0061]: this function takes 8 arguments but 7 arguments were supplied
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness/src/partial_collect_tests.rs:90:13
+    |
+ 90 |     assert!(collect(
+    |             ^^^^^^^
+...
+ 97 |         Instant::now() + Duration::from_secs(5)
+    |         --------------------------------------- argument #7 of type `&mut std::option::Option<(std::string::String, native_collection::Kind)>` is missing
+    |
+note: function defined here
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\target\r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/d8194c9ee072b270\out/native_partial_collect.rs:161:4
+    |
+161 | fn collect(
+    |    ^^^^^^^
+...
+168 |     pending_locator: &mut Option<(String, Kind)>,
+    |     --------------------------------------------
+help: provide the argument
+    |
+ 90 ~     assert!(collect(
+ 91 +         &root,
+ 92 +         "",
+ 93 +         true,
+ 94 +         &mut nodes,
+ 95 +         &mut 0,
+ 96 +         &mut pending,
+ 97 +         /* &mut Option<(String, Kind)> */,
+ 98 +         Instant::now() + Duration::from_secs(5),
+ 99 +     )
+    |
+
+error[E0061]: this function takes 8 arguments but 7 arguments were supplied
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness/src/partial_collect_tests.rs:120:5
+    |
+120 |     collect(&root, "", true, &mut nodes, &mut bytes, &mut pending, end).unwrap();
+    |     ^^^^^^^                                                        --- argument #7 of type `&mut std::option::Option<(std::string::String, native_collection::Kind)>` is missing
+    |
+note: function defined here
+   --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\target\r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/d8194c9ee072b270\out/native_partial_collect.rs:161:4
+    |
+161 | fn collect(
+    |    ^^^^^^^
+...
+168 |     pending_locator: &mut Option<(String, Kind)>,
+    |     --------------------------------------------
+help: provide the argument
+    |
+120 |     collect(&root, "", true, &mut nodes, &mut bytes, &mut pending, /* &mut Option<(String, Kind)> */, end).unwrap();
+    |                                                                    ++++++++++++++++++++++++++++++++++
+
+warning: unused import: `io::Read`
+ --> C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\target\r7-query-proof\x86_64-pc-windows-msvc\debug\build\windows024-r7-query-proof/d8194c9ee072b270\out/safety_section.rs:6:5
+  |
+6 |     io::Read,
+  |     ^^^^^^^^
+
+Some errors have detailed explanations: E0061, E0583, E0616.
+For more information about an error, try `rustc --explain E0061`.
+warning: `windows024-r7-query-proof` (lib test) generated 7 warnings
+error: could not compile `windows024-r7-query-proof` (lib test) due to 6 previous errors; 7 warnings emitted
