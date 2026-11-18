@@ -1849,3 +1849,9 @@ nine-r1 仍保留 6,460 ms／raw32 首错与控制端身份查询 raw5。独立�
 复用代码分支 36b70383e 的 archive-r6-process-facts.cs，独立入口固定 range-r1 并先核已离线验收的 Host 结果摘要。PowerShell 5.1 原生自测确认同账户进程精确匹配，错 FILETIME、session、镜像拒绝，未知 PID 保留 raw87。完整入口在控制端 session 2 的普通桌面门返回 raw1。实际 range-r1 尚无回执，未对其运行任何动作。取证脚本、原始回执和校验清单见 wl2-r7-host-live-observer-20261118-r1。
 
 活进程脚本及其原生源码、上一批独立计时脚本均已暂存至 C:/Users/Public/ocx-r7-range-observers-20261118-r1。三份文件的原始摘要和受保护 ACL 已回读，marenben 只读执行。固定 range-r1 启动器、制品及输出目录均未改动。先核 Host 原始回执，再给活进程脚本传已验收 Host-result.json 的 SHA-256。其一次性回执只证实当前进程代次，随后仍需单独取得同一原线程在 DiagnosticBefore 原 5 秒内的范围证明。原期限、公开 Start 拒绝、旧 r2 保全和不可执行状态仍沿用。
+
+## 2026-11-18 TEAM66 指定计时脚本暂存回执
+
+已消费治理 bebdfa503f374d6115b9fa313b9c62b213009278，TEAM66／IMP205。按新合同，将 f2dc1b60fa2215f3102347953f1d26cf363d9ff0 的原样脚本暂存至 C:/Users/Public/ocx-r7-isolated-owner-range-r1/observe-r7-readback-timing.ps1，6394 字节，SHA-256 5567494d2174270d77bac6f862ab789c0d43eb3aaab7689e4e5a20e771a2f426。原六份文件前后重新核字节数、SHA-256 和 ACL，三个目录及完整成员集合均符合固定清单，只有指定脚本新增，脚本继承与原 launcher 相同的 ACL。暂存 raw0，stderr 为空。原始回执见 wl2-r7-team66-timing-stage-20261118-r1。
+
+上一批 44502ee7c2d3038e37a313c86378c1724378c004 的独立活进程入口继续放在单独目录。该目录还有新合同发布前暂存的同字节计时副本，执行只使用新合同指定路径。range-r1/out01 仍空，尚无现场 Host、DiagnosticBefore、Explicit 或 DiagnosticAfter 结果。原 5 秒以原始 QPC tick 严格比较，读回超限或不明保全首错，保持只执行一次。
