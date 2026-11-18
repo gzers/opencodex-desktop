@@ -219,3 +219,11 @@ Windows9fdd4c618／docs f6f8677a的object-type原型已形成新事实：两次�
 - 同一线程区分原Start能力、只读保全能力、显式恢复能力。原Start到期永久失效。只读凭证核对原slot/worker/thread、原session/action、同源与同范围成员身份及锁。新恢复能力由原worker在一次显式请求中验证同一失败前缀、当前独立注册、原对象身份和实际连续持锁后生成，绑定原失败action、唯一新action和单一10秒或更短父限。能力只许可合同已证明的静止、原件返还、工作副本处置、读回与精确释放阶段。缺任一原范围或持有事实即Required。不得向原lease传新deadline重开Start权限，不clone/adopt，不释放再取得，不出现仅持NLK写入窗口。恢复过期维持原位保全，异常持锁处置仍需独立决定。恢复结论不签正常Stop、Closed或后继许可。
 - Windows独占 windows_owner_host024/** 及r7已授权的Windows原件/生命周期/协调实现和 test/windows024-native/**。Windows基线 0816047f30f667e56bea4167ec012f6e12bfcbdd，共享main 9daf5599151b65437f94ab2cadb1988060ee38c3。四trait/CONTRACT_VERSION4及共享持久格式不变。新的共享依赖先交最小接口申请。原Owner绑定的V2/Pending可独立继续。
 - 先用隔离自有夹具验证首个/部分/全范围取得后的真实失败、原Start超时后拒绝写、同原线程续用原句柄、外部冲突负控、显式恢复成功与过期、断连/重放/重复派发/worker失联、Status 5秒及普通请求拒绝。继续严格核验原件身份、安全、字节、children、锁释放、原预算和准确回执。旧r2现场、日常配置和官方包维持原状，本合同只放行上述新实现和隔离验证。
+
+## 2026-11-18 增量决定：未来隔离宿主的部分捕获附件
+
+采用 99520867ba3836b5443f61fc4620e6968083987c 中 wl2-r7-preparation-pending-20261118-r1/interface-request.json 的受限方案。完整 claim／NLK 待证明时，原 worker 可在未来隔离场景的原宿主私有 D 内首次持久化严格 V2 保全附件。捕获前绑定私有附件父目录的 F/S 对象身份及原 Owner。发生失败后沿用原线程和原句柄，在一次显式恢复动作的新 10 秒绝对期限内使用独立且仅创建的动作路径。严格编码记录原生对象、Owner、原 session、失败 action、唯一新 action、来源和准确部分字节前缀。核对父目录及对象绑定、完整写入、flush 和精确回读后才报告 durable=true。
+
+匹配、写入、刷新或回读失败以及过期时，保留内存字节、已持锁及首错，报告 durable=false，已有部分附件留待只读诊断。权限仅覆盖上述私有附件写入。禁止写客户端根、claim 或协调对象，禁止补造 manifest、释放再获取锁、终止进程或恢复原件。附件不提供生产启动、恢复、Stop 或 Closed 证明。定向验证覆盖父目录或 Owner 漂移、同名路径、失败动作／新动作错绑、短写、flush／回读失败和过期。原预算及未知即拒绝继续适用。
+
+扫描覆盖维持现行合同。cfce007f0 仅复用同一完整写前检查解析出的 Current。进一步减少原生读取须回交准确调用序列和同一对象、同一覆盖及前后条件的证明。四个共享 trait、CONTRACT_VERSION4、Windows 独占写集和旧 r2 权限维持现行合同。
