@@ -280,6 +280,7 @@ impl Pin {
         if self.directory || self.before.bytes > MAX_FILE {
             return Err(fail());
         }
+        check(end)?;
         let mut source = &self.file;
         source.seek(SeekFrom::Start(0)).map_err(|_| fail())?;
         let mut source = source.take(self.before.bytes.checked_add(1).ok_or_else(fail)?);
@@ -300,6 +301,7 @@ impl Pin {
             }
             digest.update(&buffer[..n]);
         }
+        check(end)?;
         if bytes != self.before.bytes || stamp(&self.file, false)? != self.before {
             return Err(fail());
         }
@@ -608,6 +610,30 @@ pub(super) fn inventory_checked(
 mod tests {
     use super::*;
     use std::{cell::Cell, time::Duration};
+
+    #[test]
+    fn r7_image_expired_reader_stops_before_seeking_pinned_file() {
+        let scene = tempfile::Builder::new()
+            .prefix("ocx024-r7-file-deadline-")
+            .tempdir()
+            .unwrap();
+        let path = scene.path().join("source");
+        fs::write(&path, b"pinned bytes").unwrap();
+        let pin = Pin::open(&path, false, None).unwrap();
+        let mut file = &pin.file;
+        file.seek(SeekFrom::Start(1)).unwrap();
+
+        let result = pin.hash(Some(Instant::now()), &AtomicBool::new(false), &mut [0; 8]);
+        let offset = file.stream_position().unwrap();
+        drop(pin);
+        if result.is_ok() || offset != 1 {
+            panic!(
+                "expired read returned {result:?} with offset {offset}; fixture {}",
+                scene.keep().display()
+            );
+        }
+        scene.close().unwrap();
+    }
 
     #[test]
     fn r7_image_directory_enumeration_aborts_without_returning_partial_membership() {
