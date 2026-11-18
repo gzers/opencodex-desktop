@@ -1,0 +1,4 @@
+
+thread 'modules::runtime::program_image::windows::tests::r7_image_expired_reader_stops_before_seeking_pinned_file' (116356) panicked at src\modules\runtime\program_image_windows.rs:628:13:
+expired read returned Err(RuntimeManaged { code: "runtime_image_unconfirmed", detail: "运行版本文件树无法核对，原目录保留" }) with offset 0; fixture C:\Users\15119\AppData\Local\Temp\ocx024-r7-file-deadline-uARFRD
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

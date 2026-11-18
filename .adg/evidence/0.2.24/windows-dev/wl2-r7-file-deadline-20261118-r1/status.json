@@ -1,0 +1,75 @@
+{
+  "code": "b4e23087e5c9c90f0e0731453c0b1421b6be37c5",
+  "artifactSha256": "21ddec31c5b879fed7d05adfe46eb359f060a38535b0be623fe1d30384649201",
+  "main": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+  "governance": "f1f041bf1e783a2cef54eb6fdc08b39697926cf5",
+  "team": 55,
+  "imp": 194,
+  "priorMatrix": "../wl2-r7-directory-deadline-20261118-r1/status.json",
+  "hypothesis": "An expired file-hash call could change the offset of the retained native handle before checking the original deadline. An EOF read returning after the deadline could also start the final native stamp.",
+  "matrix": [
+    {
+      "scope": "Baseline native expired-file offset",
+      "state": "Reproduced",
+      "raw": 101,
+      "offsetBefore": 1,
+      "offsetAfter": 0,
+      "receipt": "baseline-native.stderr.txt"
+    },
+    {
+      "scope": "MSVC x64 targeted library build",
+      "state": "passed",
+      "raw": 0,
+      "receipt": "fixed-compile.json"
+    },
+    {
+      "scope": "Expired cursor, one/four-worker equality, and joined readers",
+      "state": "passed 3/3",
+      "raw": 0,
+      "receipt": "fixed-native.stdout.txt"
+    },
+    {
+      "scope": "2.99 copied-image full inventory and manifest under original 10-second budget",
+      "state": "passed 1/1",
+      "raw": 0,
+      "elapsedUs": 3940515,
+      "fullReadFiles": 10586,
+      "receipt": "image.stdout.txt"
+    },
+    {
+      "scope": "Original same-thread ordinary desktop Host",
+      "state": "requires staged Host receipt",
+      "prior": "../wl2-r7-isolated-owner-20261118-r1/status.json"
+    },
+    {
+      "scope": "Shared entry deadline and actual nine-scan Start",
+      "state": "awaiting existing Git handoff and desktop receipts",
+      "prior": "../wl2-r7-nine-scan-timing-20261118-r1/status.json"
+    },
+    {
+      "scope": "Archived r2 repair",
+      "state": "executionReady=false; raw64 lineage and 24 Unknown/raw50 Job entries",
+      "prior": "../wl2-r7-r2-readonly-20261117-receive-r1/exact-repair-plan.json"
+    },
+    {
+      "scope": "Production return, release and lifecycle; ordinary per-user MSI",
+      "state": "open; MSI raw1625"
+    }
+  ],
+  "firstError": {
+    "scope": "Pre-fix native regression",
+    "raw": 101,
+    "detail": "File offset moved from 1 to 0 before returning runtime_image_unconfirmed.",
+    "receipt": "baseline-native.stderr.txt"
+  },
+  "limitations": [
+    "A single synchronous OS call can run past the deadline and invalidate the call.",
+    "This copied-image run gives no actual desktop Host or production recovery timing."
+  ],
+  "cleanup": "cleanup.json",
+  "currentR2Touched": false,
+  "publicStartOpen": false,
+  "w2Run": false,
+  "dualSidRun": false,
+  "published": false
+}

@@ -1,0 +1,30 @@
+{
+  "base": "c439ea46e0c07568b8c11fc9bc0c5071b945c6f1",
+  "sourcePath": "apps/desktop/tauri/src/modules/runtime/program_image_windows.rs",
+  "elapsedMs": 151620,
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)",
+  "args": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "sourceSha256": "d2e697a414a5b2bdbf3a6df7a73f19aef58b74c9d8a5a50c3ba7256e35ba62cf",
+  "raw": 0
+}
