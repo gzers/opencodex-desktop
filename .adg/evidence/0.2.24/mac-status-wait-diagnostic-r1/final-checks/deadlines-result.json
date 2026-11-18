@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--lib",
+    "sample_deadline_tests",
+    "--",
+    "--test-threads=1"
+  ],
+  "exitCode": 0,
+  "elapsedMs": 480
+}

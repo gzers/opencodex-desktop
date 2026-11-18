@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--test",
+    "status_polling_contention",
+    "--",
+    "--nocapture"
+  ],
+  "exitCode": 0,
+  "elapsedMs": 24305
+}

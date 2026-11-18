@@ -1,0 +1,19 @@
+STATUS024_PHASE {"acceptance":false,"elapsedUs":0,"stage":"collector.before-lock","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":133,"stage":"collector.acquired","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":274,"stage":"recovery.enter","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15281,"stage":"recovery.return","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15364,"stage":"fetch.enter","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15423,"stage":"source.before","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15732,"stage":"source.after","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15795,"stage":"endpoint.before","thread":"ThreadId(16)"}
+STATUS024_ACTUAL_BUSY_POLLER_RETURNED
+STATUS024_PHASE {"acceptance":false,"elapsedUs":127907,"stage":"endpoint.absent","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":128006,"stage":"cli.before-spawn","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":128488,"stage":"cli.spawned","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":128561,"stage":"cli.read-before","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2769729,"stage":"cli.read-after","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2769928,"stage":"cli.await-finished","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2770087,"stage":"recovery.enter","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2785194,"stage":"recovery.return","thread":"ThreadId(16)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2785307,"stage":"collector.return","thread":"ThreadId(16)"}
+STATUS024_PROBE_RESULT {"actualBackgroundContention":true,"budgetMs":5000,"elapsedMs":2785,"releaseAcceptance":false,"scope":"one actual official status on reserved partial root; no cancel/Start/Stop or model requests","serviceStarted":false,"snapshot":{"canStart":false,"clientRecovery":"required","matrix":{"connection":"unconfigured","operation":"idle","runtime":"stopped"}},"withinBudget":true}

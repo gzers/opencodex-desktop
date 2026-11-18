@@ -1,0 +1,25 @@
+{
+  "source": "bec99201e6ef4addaed61d6d50bf8b67a956d0e2",
+  "diagnosticOnly": true,
+  "releaseAcceptance": false,
+  "guiWaitCauseConfirmed": false,
+  "deterministicExecutorStarvation": {
+    "beforePoll": 91,
+    "beforeSchedule": 91,
+    "afterBoth": 0
+  },
+  "actualOfficialQueryMs": 2056,
+  "actualOfficialQueryWithBusyPollingMs": 2785,
+  "statusBudgetMs": 5000,
+  "ownedRootsRemoved": true,
+  "noServiceActions": true,
+  "checks": {
+    "pollingUnit": 5,
+    "sampleDeadlines": 6,
+    "statusSnapshot": 4,
+    "contentionParent": 1,
+    "contentionChildren": 2,
+    "strictClippyExit": 0
+  },
+  "next": "one bounded actual packaged GUI status IPC diagnostic; no cancellation/lifecycle rerun"
+}

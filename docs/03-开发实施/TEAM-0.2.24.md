@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 33；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 34；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -302,3 +302,10 @@ Windows可增量merge这些Mac文件/UI，不重跑无影响Owner/MSI/CLI/扫描
 Mac测试ebe80da86、只读重核修复0d44a4643、pendingRequest修复0b77472be及后继测试bb13a7f12/88b8fc33d均可增量合入；源、三包实际绑定、四失败轮次及未完唯一归IMP171。Rust取消/Windows原生后端/四trait均无新变化；前端明确已结案的只读协调和原invoke结算前不释放UI动作，不因此提前开放真实Start。Windows无需重跑无影响MSI/CLI/scan/归档/原Owner测试，继续原独占privatewire/native端点/V2恢复。
 
 Mac下一本机任务只针对gui04取消前status等待的真实阶段/线程取证，未知不重跑全流程；gui02旧cleanup不足完整RootAbsent的问题已收紧后继测试，不用当前无残留代签原正常Stop。其它既列功能/原型与最终候选仍未验，当前两端禁止W2/双SID/发布边界保持。Windows最新58f0d49f2/0d6fa9c0d已接，无新接口依赖；不借本批授权处置原r2或synthetic27960。
+
+
+## revision34 状态轮询争锁与只读诊断接续
+
+共享main17f07758e/51c8aca18/bec99201e只改状态polling、Mac准确隔离stage及定向测试，实际结果和未完GUI边界只归IMP172。Windows可自行增量合入；busy不发事件、不改原due时间或成功事实，原Status5/Unknown/Required保持。无Windows原件/Owner/worker/privatewire/scan独占文件或四trait变化，不重跑无影响MSI/CLI/旧归档/原Owner；实际共享并发集成在固定候选核。
+
+Mac继续单个真实包的只读状态IPC观察，不复跑供包/取消/启停。Windows077cbd56e/331ac32fa已fetch，尚待净差及原证据接收；原生端点桌面项Pending不能当通过。本批不授权r2/synthetic27960处置，原恢复/清理批准边界保持；不W2/双SID、不发布。

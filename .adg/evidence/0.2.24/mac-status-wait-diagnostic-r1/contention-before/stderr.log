@@ -1,0 +1,11 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.12s
+     Running tests/status_polling_contention.rs (apps/desktop/tauri/target/debug/deps/status_polling_contention-1d2c524cea8aaec8)
+
+thread 'occupied_sampler_never_blocks_the_executor_that_must_release_it' (167256440) panicked at tests/status_polling_contention.rs:37:13:
+poll: child=Some(91); stdout=
+running 1 test
+; stderr=COLLECTOR_EXECUTOR_STARVATION_WATCHDOG phase=poll
+
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--test status_polling_contention`

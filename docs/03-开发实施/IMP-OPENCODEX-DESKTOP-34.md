@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 171；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 172；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 88b8fc33d5ec21b54c494cdb529fd68026b3f8b9（非冻结候选）；Windows实现检查点codex/024-windows-native 58f0d49f2b45ad108cf921ef04fae32f9980f133（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main bec99201e6ef4addaed61d6d50bf8b67a956d0e2（非冻结候选）；Windows实现检查点codex/024-windows-native 58f0d49f2b45ad108cf921ef04fae32f9980f133（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1880,3 +1880,14 @@ Windows58f0d49f2/0d6fa9c0d两回交已归revision169；本批只Mac原件/状态
 最后88b8fc33d只激活准确PID/exe测试窗口后观察AX，编译与生命周期原30/5/10预算不变。原生后端/完整原件与安全覆盖未改，不为提高测试通过率删范围。7个准确已返回GUI/service PID经proc_pidinfo均ESRCH、4准确任务根及专用协调DB缺席复核；这只证明当前残留清理，**不补gui02的正常Stop/恢复证书**。原app/副本签名字节不变，完整失败证据约38.4MB、不保重复运行包/真实凭据。首次推送SSH瞬断raw128保记录，成功与否以真实push返回为准。
 
 下一步本机只做gui04取消前status请求的定向阶段/原线程等待取证，确认具体阻塞点后才修对应后端；**没有新的已证假设，不再重跑整份供包/取消/启停**。此缺口与revision170部分文件算法通过分别记录。原型新文案对齐、后继代次取消/已有plan中断、一般客户端图/缺Ready、NAME真实默认客户端/最终回退、正式发行候选签名/资源校验和Windows完整Owner/privatehost/nativeV2/旧r2/synthetic27960等完整剩余保持。Windowsfetch仍58f0d49f2/0d6fa9c0d，无新回交；不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision172：状态等待定向取证与异步轮询争锁修复
+
+main17f07758e修后台轮询对collector的阻塞锁，51c8aca18加隔离阶段诊断与真实官方查询测试，bec99201e仅允许准确GUI任务根输出同一诊断。旧poll_once/next_wait在单worker运行时阻塞等待另线程持有的采样锁，持锁线程依赖同执行器timer才能释放；两入口各被实际watchdog以raw91截断。修后busy tick不调用来源、不清失败数、不发成功事件、不推进原due时间；调度仅按现有debounce重试。成功采样只取同一锁下投影，发事件前释放，不二次争锁。原Status5/Unknown拒绝保持。
+
+[定向结果](../../.adg/evidence/0.2.24/mac-status-wait-diagnostic-r1/result.json)：修后两子场景/父测试、5轮询单测、6原deadline、4status投影和严格Clippy过。真实原样官方2.99在新任务Profile、实际CaptureReserved部分槽只读查询2056ms；另一独立任务在同一官方采样确实占锁时，实际后台poll_once与next_wait返回且无事件，完整查询2785ms，守原5000ms。后者host ef970752f49e448a6c4c6360bff481ab8dce9b2c086dee82cd639ed3db17cbf1；stage显示CLI读取2641ms、前后恢复检查各约15ms；返回Stopped/RecoveryRequired/canStartfalse，未取消或启停。两原group/准确任务根缺席，专用协调key均缺席，全局L未动。
+
+诊断只在OCXD024_STATUS_TRACE=1及HOME为准确新/private/tmp/ocxd024-status-probe-*或ocxd024-gui-root-cancel-*/profile输出固定stage/相对微秒/threadID，不输出配置/载荷/凭据，不改权限或预算。首编译E0433、旧raw91、失败源与修后源/回执/清理保留。新增记录脚本的stdin编码准备错误发生在执行前，未修改产品或原证据。
+
+**边界**：已证实具体调度缺陷与真实官方重叠查询通过；未采到gui04原线程栈，不能断言是原GUI等待唯一原因或签部分捕获GUI整链通过。下一步仅重建此源一包、定向真实WebView状态IPC/后台重叠观察，不执行取消/Start/Stop，不开无假设轮。NAME最终外部默认Codex客户端、一般图/恢复/候选与Windows原未完范围保持。不W2/双SID、不发布，目标active。

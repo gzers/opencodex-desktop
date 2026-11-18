@@ -1,0 +1,25 @@
+{
+  "beforeRun": true,
+  "baseCode": "88b8fc33d5ec21b54c494cdb529fd68026b3f8b9",
+  "hostSha256": "32d6d6ec31ccae5fbc6d363f0af18dfce29c36d4aaed2468d73947c8e983a2d1",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/commands/mod.rs",
+      "bytes": 59753,
+      "sha256": "f1548c12984190b494d9401a54c3252814d147ff91e1ec40edd61355d50bc340"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "bytes": 47168,
+      "sha256": "66a938b2d900d9be22b697246ce7fcfff78fa60c79d968cee6af1f3b00c6925f"
+    },
+    {
+      "path": "apps/desktop/tauri/tests/macos024_status_probe.rs",
+      "bytes": 5074,
+      "sha256": "bbd8e1cad42864b0ee191389372610248cd47d79e36bcf37bce67e62593d7ee5"
+    }
+  ],
+  "hypothesis": "phase markers and raw time identify whether direct official status stalls at recovery/source/endpoint/CLI; one isolated query, no GUI or lifecycle acceptance",
+  "budgetMs": 5000,
+  "releaseAcceptance": false
+}
