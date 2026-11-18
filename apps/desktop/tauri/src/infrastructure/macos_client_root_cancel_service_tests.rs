@@ -386,6 +386,64 @@ fn successor_and_history(
     assert_ne!(preparing.ticket, closed.ticket);
     assert_eq!(preparing.revision, closed.revision + 1);
     assert!(preparing.root_generation.is_some());
+    if std::env::var_os("OCXD024_SUCCESSOR_CANCEL_REVIEW_ONLY").as_deref()
+        == Some(std::ffi::OsStr::new("1"))
+    {
+        // This is a fresh read-only cancellation review, not a resumed Start
+        // window or a grant to move the successor root. The predecessor was
+        // just closed through the actual native CurrentService/Guard path.
+        let review_started = Instant::now();
+        let review_end = review_started + Duration::from_secs(10);
+        let review = successor
+            .review_successor_root_preparation(context, &preparing, review_end)
+            .unwrap();
+        let fingerprint = review.fingerprint().to_owned();
+        review.recheck().unwrap();
+        let review_ms = review_started.elapsed().as_millis();
+        assert!(review_ms < 10000);
+        assert_eq!(successor.head().unwrap(), Some(preparing.clone()));
+        assert!(successor
+            .review_first_root_preparation(context, &preparing, review_end)
+            .is_err());
+        drop(review);
+        drop(successor);
+        let reopened = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
+        reopened
+            .review_successor_root_preparation(context, &preparing, review_end)
+            .unwrap()
+            .recheck()
+            .unwrap();
+        let old_slot = data
+            .join("manager-state/client-root-cancel-plans")
+            .join(&closed.root_retirement.as_ref().unwrap().plan.id);
+        fs::write(
+            old_slot.join("root/unexpected"),
+            b"explicit cancelled predecessor drift fixture",
+        )
+        .unwrap();
+        assert!(reopened
+            .review_successor_root_preparation(context, &preparing, review_end)
+            .is_err());
+        assert_eq!(
+            fs::read(old_slot.join("root/unexpected")).unwrap(),
+            b"explicit cancelled predecessor drift fixture"
+        );
+        fs::write(
+            root.join("native-preservation-result.json"),
+            serde_json::to_vec_pretty(&serde_json::json!({
+                "scenario":"successor-review-only", "actualCurrentServiceAdmission":true,
+                "originalFourNativeScopesReleased":true, "canonicalCancellationClosed":true,
+                "predecessor":closed, "successorPreparing":preparing,
+                "reviewElapsedMs":review_ms,"reviewBudgetMs":10000,"fingerprint":fingerprint,
+                "factsOnlyReopenReviewed":true,"oldCancelledArchiveDriftRefused":true,
+                "successorCaptureOrMovementStarted":false,"serviceStarted":false,
+                "elapsedActionMs":cancellation_elapsed,"budgetMs":10000,"releaseAcceptance":false
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        return;
+    }
     let (captured, originals) =
         super::super::generation::fixture_captured_successor(context, &successor, &preparing);
     assert_eq!(captured.state, State::Captured);
