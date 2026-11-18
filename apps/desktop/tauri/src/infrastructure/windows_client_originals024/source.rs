@@ -246,6 +246,31 @@ impl Source {
         Ok((out, binding))
     }
     pub(super) fn check(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+        self.check_inner(
+            owner,
+            end,
+            #[cfg(test)]
+            None,
+        )
+    }
+
+    #[cfg(test)]
+    pub(super) fn check_preparation(
+        &mut self,
+        owner: &mut Owner,
+        end: Instant,
+        ordinal: u8,
+        failed_action: &str,
+    ) -> AppResult<()> {
+        self.check_inner(owner, end, Some((ordinal, failed_action)))
+    }
+
+    fn check_inner(
+        &mut self,
+        owner: &mut Owner,
+        end: Instant,
+        #[cfg(test)] preparation: Option<(u8, &str)>,
+    ) -> AppResult<()> {
         owner.check_current(end)?;
         self.broker.no_outer_job().map_err(refused)?;
         self.broker
@@ -259,6 +284,18 @@ impl Source {
             return Err(refused("原owner/source代次变化"));
         }
         program_selection::verify_current(owner.installation_path(), selected)?;
+        #[cfg(test)]
+        if let Some((ordinal, failed_action)) = preparation {
+            super::recovery_timing::verify_preparation_image(
+                ordinal,
+                failed_action,
+                selected,
+                end,
+            )?;
+        } else {
+            program_image::verify_until(selected, end)?;
+        }
+        #[cfg(not(test))]
         program_image::verify_until(selected, end)?;
         self.current.check(end).map_err(refused)?;
         let binding = Binding::from_native(

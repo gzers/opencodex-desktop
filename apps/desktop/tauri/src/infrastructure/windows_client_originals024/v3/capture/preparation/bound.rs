@@ -45,6 +45,7 @@ impl PartialCaptureAnchor {
         owner: &mut Owner,
         session: uuid::Uuid,
         window: &BeforeResumeRecoveryWindow,
+        #[cfg(test)] ordinal: u8,
     ) -> AppResult<()> {
         owner.check_before_resume_process(window)?;
         self.check_original_capture_metadata(
@@ -56,6 +57,9 @@ impl PartialCaptureAnchor {
         .map_err(refused)?;
         let (failed, _) = owner.before_resume_record_origin(window)?;
         if let Some(source) = &mut self.source {
+            #[cfg(test)]
+            source.check_preparation(owner, window.deadline(), ordinal, &failed)?;
+            #[cfg(not(test))]
             source.check(owner, window.deadline())?;
         }
         if let Some(routes) = &mut self.routes {
@@ -74,11 +78,23 @@ impl PartialCaptureAnchor {
         session: uuid::Uuid,
         window: &BeforeResumeRecoveryWindow,
     ) -> AppResult<OriginalPreparationData> {
-        self.original_read_fence(owner, session, window)?;
+        self.original_read_fence(
+            owner,
+            session,
+            window,
+            #[cfg(test)]
+            1,
+        )?;
         let action = owner.before_resume_action_id(window)?;
         let (failed_action, clock) = owner.before_resume_record_origin(window)?;
         let (first, _) = self.v2_reference_data(window.deadline()).map_err(refused)?;
-        self.original_read_fence(owner, session, window)?;
+        self.original_read_fence(
+            owner,
+            session,
+            window,
+            #[cfg(test)]
+            2,
+        )?;
         let (second, _) = self.v2_reference_data(window.deadline()).map_err(refused)?;
         if first != second
             || owner.before_resume_action_id(window)? != action
@@ -86,7 +102,13 @@ impl PartialCaptureAnchor {
         {
             return Err(refused("原preparation/source/action/clock在读回中变化"));
         }
-        self.original_read_fence(owner, session, window)?;
+        self.original_read_fence(
+            owner,
+            session,
+            window,
+            #[cfg(test)]
+            3,
+        )?;
         Ok(OriginalPreparationData {
             session,
             host: self.host_instance_id,
@@ -133,7 +155,9 @@ impl OriginalPreparationData {
     }
 }
 impl CaptureSlot {
-    pub(in crate::infrastructure::windows_client_originals024) fn has_original_preparation(&self) -> bool {
+    pub(in crate::infrastructure::windows_client_originals024) fn has_original_preparation(
+        &self,
+    ) -> bool {
         self.failed && self.partial.is_some() && self.retained.is_none()
     }
 
