@@ -109,7 +109,7 @@ pub(crate) fn start_canonical_before_resume_recovery(
     runtime: &SharedRuntimeExecutable,
     home: &Path,
     window: crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
-) -> AppResult<()> {
+) -> AppResult<Arc<WorkerControl<Owner>>> {
     budget(window.deadline())?;
     let entry = slot(runtime, home, false)?;
     let mut control = entry.recovery_worker.try_lock().map_err(unknown)?;
@@ -117,8 +117,9 @@ pub(crate) fn start_canonical_before_resume_recovery(
         return Err(recovery_required());
     }
     if let Some(start) = entry.start_worker.try_lock().map_err(unknown)?.as_ref() {
-        *control = Some(Arc::new(start.queue_recovery(window)?));
-        return Ok(());
+        let worker = Arc::new(start.queue_recovery(window)?);
+        *control = Some(worker.clone());
+        return Ok(worker);
     }
     let mut original = entry.owner.try_lock().map_err(unknown)?;
     let owner = original.as_mut().ok_or_else(recovery_required)?;
@@ -130,8 +131,9 @@ pub(crate) fn start_canonical_before_resume_recovery(
         actions::run_before_resume_worker,
     )
     .map_err(unknown)?;
-    *control = Some(Arc::new(worker));
-    Ok(())
+    let worker = Arc::new(worker);
+    *control = Some(worker.clone());
+    Ok(worker)
 }
 /// Internal transport of the already prepared ORIGINAL Owner before any active
 /// lease acquisition. The versioned host command/full recovery driver must

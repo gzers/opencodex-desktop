@@ -582,10 +582,12 @@ impl<T> WorkerControl<T> {
         if Instant::now() >= end {
             return Err(io::ErrorKind::TimedOut.into());
         }
-        let state = self
-            .state
-            .try_lock()
-            .map_err(|_| io::Error::new(io::ErrorKind::WouldBlock, "worker projection busy"))?;
+        let state = self.state.try_lock().map_err(|error| match error {
+            std::sync::TryLockError::WouldBlock => {
+                io::Error::new(io::ErrorKind::WouldBlock, "worker projection busy")
+            }
+            std::sync::TryLockError::Poisoned(_) => invalid(),
+        })?;
         let finished = self.worker.is_finished();
         let phase = if finished
             && !matches!(

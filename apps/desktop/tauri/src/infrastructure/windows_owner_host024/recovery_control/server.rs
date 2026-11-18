@@ -29,6 +29,90 @@ fn before(end: Instant) -> io::Result<()> {
         Ok(())
     }
 }
+// Follow only the worker registered by this action. Projection contention can
+// clear while that worker proceeds. Unknown states and all other errors stop.
+fn await_worker_result(
+    end: Instant,
+    mut observe: impl FnMut(Instant) -> io::Result<serde_json::Value>,
+) -> io::Result<serde_json::Value> {
+    loop {
+        before(end)?;
+        match observe(end) {
+            Ok(facts) if !matches!(facts["phase"].as_str(), Some("Registered" | "Running")) => {
+                before(end)?;
+                return Ok(facts);
+            }
+            Ok(_) => {}
+            Err(error) if error.kind() == io::ErrorKind::WouldBlock => {}
+            Err(error) => return Err(error),
+        }
+        thread::sleep(
+            end.saturating_duration_since(Instant::now())
+                .min(Duration::from_millis(5)),
+        );
+    }
+}
+
+#[cfg(test)]
+mod worker_result_tests {
+    use super::*;
+
+    #[test]
+    fn wl2_r7_private_worker_wait_uses_same_deadline_after_projection_contention() {
+        let projection = Mutex::new("ReturnedForValidation");
+        let mut publisher = Some(projection.lock().unwrap());
+        let end = Instant::now() + Duration::from_secs(2);
+        let mut polls = 0;
+        let result = await_worker_result(end, |registered_end| {
+            assert_eq!(registered_end, end);
+            polls += 1;
+            let observed = projection.try_lock();
+            drop(publisher.take());
+            let phase = observed.map_err(|error| {
+                assert!(matches!(error, std::sync::TryLockError::WouldBlock));
+                io::Error::from(io::ErrorKind::WouldBlock)
+            })?;
+            Ok(serde_json::json!({"phase":*phase}))
+        })
+        .unwrap();
+        assert_eq!(polls, 2);
+        assert_eq!(result["phase"], "ReturnedForValidation");
+    }
+
+    #[test]
+    fn wl2_r7_private_worker_wait_preserves_terminal_unknown_error_and_expiry() {
+        let end = Instant::now() + Duration::from_secs(2);
+        let mut polls = 0;
+        let unknown = await_worker_result(end, |_| {
+            polls += 1;
+            Ok(serde_json::json!({"phase":"LostWorkerUnknown"}))
+        })
+        .unwrap();
+        let raw = await_worker_result(end, |_| {
+            polls += 1;
+            Err(io::Error::from_raw_os_error(5))
+        })
+        .unwrap_err();
+        assert_eq!(polls, 2);
+        assert_eq!(unknown["phase"], "LostWorkerUnknown");
+        assert_eq!(raw.raw_os_error(), Some(5));
+
+        let cutoff = Instant::now() + Duration::from_millis(30);
+        let timeout = await_worker_result(cutoff, |registered_end| {
+            assert_eq!(registered_end, cutoff);
+            Err(io::ErrorKind::WouldBlock.into())
+        })
+        .unwrap_err();
+        assert_eq!(timeout.kind(), io::ErrorKind::TimedOut);
+        assert_eq!(
+            await_worker_result(cutoff, |_| panic!("expired window observed again"))
+                .unwrap_err()
+                .kind(),
+            io::ErrorKind::TimedOut
+        );
+    }
+}
+
 fn event(log: &mut File, stage: &str, facts: serde_json::Value) -> io::Result<()> {
     writeln!(
         log,
@@ -223,39 +307,26 @@ impl Control {
                 if window.deadline() != end {
                     return Err(denied("wire original recovery end changed"));
                 }
-                lifecycle::start_canonical_before_resume_recovery(&runtime, &self.home, window)
-                    .map_err(io::Error::other)?;
-                loop {
-                    before(end)?;
-                    let observed =
-                        lifecycle::before_resume_worker_status(&runtime, &self.home, end)
-                            .map_err(io::Error::other)?
-                            .ok_or_else(|| denied("original recovery worker absent"))?;
-                    match observed["phase"].as_str() {
-                        Some("Registered" | "Running") => {
-                            let remaining = end.saturating_duration_since(Instant::now());
-                            thread::sleep(remaining.min(Duration::from_millis(5)));
-                        }
-                        Some("ReturnedForValidation") => {
-                            let result = lifecycle::validate_canonical_before_resume_return(
-                                &runtime, &self.home, end,
-                            )
-                            .map_err(io::Error::other)?
-                            .ok_or_else(|| {
-                                denied("original return not delivered for validation")
-                            })?;
-                            before(end)?;
-                            return Ok(
-                                serde_json::json!({"purpose":"actual-original-slot-validated-before-resume-abort","transportActionId":request.transport_action_id,"history":result,"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false}),
-                            );
-                        }
-                        _ => {
-                            return Err(denied(format!(
-                                "original recovery retained/unknown; worker DATA={observed}"
-                            )))
-                        }
-                    }
+                let worker =
+                    lifecycle::start_canonical_before_resume_recovery(&runtime, &self.home, window)
+                        .map_err(io::Error::other)?;
+                let observed = await_worker_result(end, |end| worker.observe(end))?;
+                if observed["phase"] != "ReturnedForValidation" {
+                    let facts = lifecycle::before_resume_worker_status(&runtime, &self.home, end)
+                        .ok()
+                        .flatten()
+                        .unwrap_or(observed);
+                    return Err(denied(format!(
+                        "original recovery retained/unknown; worker DATA={facts}"
+                    )));
                 }
+                let result = lifecycle::validate_canonical_before_resume_return(
+                    &runtime, &self.home, end,
+                )
+                .map_err(io::Error::other)?
+                .ok_or_else(|| denied("original return not delivered for validation"))?;
+                before(end)?;
+                Ok(serde_json::json!({"purpose":"actual-original-slot-validated-before-resume-abort","transportActionId":request.transport_action_id,"history":result,"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false}))
             }
         }
     }
