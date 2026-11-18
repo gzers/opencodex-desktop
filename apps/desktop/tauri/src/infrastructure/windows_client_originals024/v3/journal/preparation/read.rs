@@ -210,6 +210,7 @@ fn read_initial_journal(
     if manifest != manifest_again || current != current_again {
         return Err(invalid());
     }
+    tree::streams(path, true)?;
     if names(path)? != expected
         || directory_security(&journal.directory, end)? != journal.directory_security
     {

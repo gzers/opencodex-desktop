@@ -275,6 +275,47 @@ fn wl2_r7_preparation_read_native_mismatch_member_security_ads_and_cutoff_refuse
     }
 }
 #[test]
+fn wl2_r7_preparation_read_native_completed_journal_rejects_late_directory_stream() {
+    let scene = Scene::new();
+    let (mut original, path) = scene.prefix(8);
+    let end = Instant::now() + Duration::from_secs(10);
+    assert!(original
+        .initialize(
+            &uuid::Uuid::new_v4().to_string(),
+            &"c".repeat(64),
+            &uuid::Uuid::new_v4().to_string(),
+            end,
+        )
+        .is_err());
+    let before = original.read_v2_retained_native(end).unwrap();
+    assert_eq!(before["directory"]["fullInitialJournal"], true);
+    assert_eq!(before["objects"].as_array().unwrap().len(), 2);
+    super::super::read::after_rows_for_test(|directory| {
+        std::fs::write(
+            PathBuf::from(format!("{}:fixture-stream", directory.display())),
+            b"synthetic stream",
+        )
+        .unwrap();
+    });
+    let result = original.read_v2_retained_native(end);
+    let error = result.expect_err("completed journal must reject a late directory stream");
+    assert_eq!(error.kind(), io::ErrorKind::InvalidData);
+    assert!(original.failed && !original.ready);
+    assert!(original.take_complete().is_err());
+    assert!(original.completed.is_some());
+    assert_eq!(
+        std::fs::read(PathBuf::from(format!("{}:fixture-stream", path.display()))).unwrap(),
+        b"synthetic stream"
+    );
+    for name in ["manifest.json", "current.json"] {
+        assert!(OpenOptions::new().write(true).open(path.join(name)).is_err());
+    }
+    println!("completed journal late directory stream: refused {:?}, both original handles retained", error.kind());
+    drop(original);
+    drop(scene);
+}
+
+#[test]
 fn wl2_r7_preparation_read_native_expired_start_prefix_reads_without_mutation_reactivation() {
     let scene = Scene::new();
     let (mut original, path) = scene.prefix(10);
