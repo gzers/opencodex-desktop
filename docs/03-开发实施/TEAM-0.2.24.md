@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 40；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 41；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -351,3 +351,10 @@ main15dbb8286只改Darwin名称验证器的task-key预检/末端清理，不改�
 Windowsb1ef52972/7adf93a64已接，准确范围与163项状态只归IMP179。原四trait/CONTRACT_VERSION4/r7写集不变，Mac不并发改目录/partial/source原生文件，未整批merge生产分支。Windows继续完整Source/initialSD/partialwork/nativeV2/原Owner与普通桌面独立依赖，原Public输入及旧r2/synthetic27960/40588不动。
 
 Mac按client-successor-prepare-cancel-r1先补后继Preparing完整历史审查，再独立移动/索引/plan中断恢复；仅Macroot文件/共享必要字段归本机，前端和原型当前并行写集先核归属。首次取消、名称回退等未变通过项不重复；ChatGPT自身UI禁用依赖保持，不W2/双SID、不发布。
+
+
+## revision41 后继准备只读组件接续
+
+main845b28619只新增Mac generation的后继Preparing完整历史Review，7765271ff仅原生定向测试/driver。实际普通与真实取消关闭前驱、6测试/847ms审查、原9705ms首次取消及未完只归IMP180。无Windows独占文件/四trait/CONTRACT_VERSION4变化；Windows可增量合入，不要求重跑无影响MSI/CLI/scan/旧归档，仍按r7本线推进。
+
+Mac接下来实现后继保全移动/独立终态、多计划namespace和已登记plan中断恢复；只读组件不开放按钮或Start，产品预览/前端/真实GUI仍待后续。原型文件保持其唯一写者，本机不并发覆盖。固定候选/ChatGPT选择器与Windows实际普通桌面/Owner缺口各保留，不W2/双SID、不发布，旧现场处置无新授权。

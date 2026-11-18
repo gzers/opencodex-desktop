@@ -1,0 +1,53 @@
+{
+  "source": "7765271fff6c4e5deaad6a122b82bdc58145b439",
+  "scope": "successor Preparing complete-history read-only review only; no product preview/movement/terminal/Start authority",
+  "newUniqueTests": 6,
+  "testedPredecessor": "ordinary RootAbsent storage fixture",
+  "cancelledRootPredecessorActualNative": "native-review-result.json",
+  "productionSourceUnresolvedInStorageFixture": true,
+  "runtimeServiceOrMovementProofNotClaimed": true,
+  "totalFreshTestRootsRemoved": 10,
+  "sourceChecks": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_generation.rs",
+      "sha256": "ca967c930c7181f3764d8a94d8233a1c418e9ed2a923588914b1e9bed1ec0a78",
+      "bytes": 26886,
+      "executedSourceMatchesGit": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_successor_prepare_cancel.rs",
+      "sha256": "721976bef9b58c1b36c18561031699c88db485802302cf93cec02628c4d4c00c",
+      "bytes": 5701,
+      "executedSourceMatchesGit": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_successor_prepare_cancel_tests.rs",
+      "sha256": "1188bbb52a550f917f00d3bbbece8449ae43aa168d08fa279dde1b414b60de87",
+      "bytes": 7557,
+      "executedSourceMatchesGit": true
+    }
+  ],
+  "strictClippyExitCode": 0,
+  "serviceStarted": false,
+  "releaseAcceptance": false,
+  "next": "test cancellation-closed predecessor via actual current native action, then implement guarded preservation/indexed terminal/history across generations and interrupted plan recovery",
+  "productImplementationSource": "845b2861924a4412a168a8ac148a8d1320f097d9",
+  "nativeReviewElapsedMs": 847,
+  "initialActualCancellationElapsedMs": 9705,
+  "nativeSourceChecks": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_service_tests.rs",
+      "sha256": "ed47cbf037026571a17e4718a3d2019a723a39b19705eae355b374091e646854",
+      "bytes": 20732,
+      "executedSourceMatchesGit": true
+    },
+    {
+      "path": "test/smoke/macos024-root-cancel.py",
+      "sha256": "9ddd10c72263a3812be22c149131b7a82d538bf30a279cddb48c4d411026308f",
+      "bytes": 12100,
+      "executedSourceMatchesGit": true
+    }
+  ],
+  "strictNativeClippyExitCode": 0,
+  "remaining": "successor guarded preservation, terminal/index/history/namespace and interrupted-plan recovery; user action/UI/actual successor StartStop not implemented or accepted"
+}

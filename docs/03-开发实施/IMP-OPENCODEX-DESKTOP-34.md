@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 179；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 180；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 15dbb82869ff02c4c2b5cf154869489afa92390d（非冻结候选）；Windows实现检查点codex/024-windows-native b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 7765271fff6c4e5deaad6a122b82bdc58145b439（非冻结候选）；Windows实现检查点codex/024-windows-native b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1972,3 +1972,18 @@ PrivateDirectoryPreparation只借原对象及actualTransferred事实；terminal-
 Windows报告新5native测试13fixture过、9受影响回归过；真实native后端check过且源不变。两编译错误仅明确别名/引用修正，全部失败raw/源保留，无意外native首错。TEST EXE547d50530139edcf728e4a1161847dbc413409c74b358aa60c076787b5b95dfe；34新成功根缺席，不冒旧拒删/失败/synthetic27960/40588历史全清。163项状态仍保完整initialSD/Source/partialcapture-work/nativeV2恢复/缺根、真实普通Profile官方Owner原预算全链/容量/CAPtrust/普通MSI/最终候选未完。普通桌面Publicout仍空/session7Disconnected，原55cd6ef…输入未覆盖。
 
 当前r2 Job24raw50未知依赖只停自身，原21500/75744及原件/work/custody/anchors/协调/seq9未动，无新force/归还授权；不重复旧query/cleanup或旧拒删。Windows继续原r7单写，不等待Mac新接口；本机新增[后继准备取消合同](0.2.24-contracts/client-successor-prepare-cancel-r1.md)承接既有未完范围，先完整历史只读审查再原生保全/终态/恢复与实屏，不放宽首次限定或把组件当整项通过。不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision180：后继Preparing取消完整历史审查与真实取消前驱
+
+main845b2861924a4412a168a8ac148a8d1320f097d9新增generation::preparation_cancellation独立只读Review，7765271fff6c4e5deaad6a122b82bdc58145b439仅原生定向测试/准确driver。当前只读审查**不接产品预览或按钮、不赋移动/服务缺席/恢复/关闭/Start许可**，不是后继取消完整实现。[本批结果](../../.adg/evidence/0.2.24/mac-successor-cancel-review-r1/result.json)和[完整目标合同](0.2.24-contracts/client-successor-prepare-cancel-r1.md)分别保范围，不因组件通过删后继移动/计划中断未完。
+
+Review借原Index/context/deadline，只接受当前后继Preparing＋原rootGeneration初始事件、无Original refs/计划/完成，原准确ticket/代次slot/RootOrigin/紧邻RootAbsent或RootCancellationAbsent前驱与原编码摘要。全有界独立lineage前后核，按根代次规则逐前代原件/归档/安全属性/成员/关闭来源完整读取，当前根仍空且Grok/Head/目录身份前后相等；同指纹两次观察后才返回确认摘要，recheck仍原deadline。首次review保原限制，CaptureReserved/新数据或未知历史不被收养。没有更改旧source/binding/revision或原预算。
+
+6个新唯一测试通过：真实文件/索引的普通RootAbsent前驱正例，错Head/HOME/期限与后续CaptureReserved拒；新增用户文件、未登记vault成员、旧Original字节漂移拒且读操作不改现场；Grok变化使旧确认失效，新观察可反映当前Grok但原deadline真实经过3秒后仍拒。两执行修订共10准确fresh fixture均打印创建/删除路径且独立缺席核；已通过项不叠加验收，严格lib+tests Clippy过。测试启动的scope是明确合成存储，不冒官方/服务能力。
+
+为覆盖另一允许前驱，只补一项[真实原生取消前驱](../../.adg/evidence/0.2.24/mac-successor-cancel-review-r1/native-review-result.json)：固定原样官方Darwin2.99＋真实CurrentService/Guard/四锁，首次新根Preparing1→RootCancellationAbsent3，原取消9705ms<=10000ms。再独立新Start准备生成后继Preparing4，新的只读审查窗口仍10秒，完整Review+recheck847ms，重开事实Index仍能审查；不捕获后继Original、不移动后继、不Start服务。附加旧取消归档改动后重核拒，原合成字节保留；该附加拒绝未单独采错误分类/末端耗时，不当完整独立反例证明，普通旧Original漂移已有上面新deadline负例。
+
+native host807474a4eeb04706e8c708465b276b5e7a9f3c18225bff321b391fc1597e4a0b同轮Cargo回执/执行测试源逐Git相等；产品source845、native test source776分开。完整native运行81981ms包含先供包，非取消/审查预算；同一原进程等待期间只读sample证明仍在program_selection完整SHA读取，未取消/重跑，随后原进程raw0。driver真实10秒以产品动作判定，不用外层180秒观察冒通过；scope=successor-review若失败/超时保准确进程及fixture，不走旧自动kill/删根。两严格Clippy回执均0。
+
+准确原native进程25686经proc_pidinfo确认ESRCH、其独立processgroup空、task根及准确N/K/H十二文件/sidecar缺席；运行前缺席回执与释放后原字节保留，global L未动，无真实凭据或业务请求。新增证据约0.83MB不保重复运行包。Windowsb1ef52972/7adf93a64接收归revision179，原写集/四trait/r7不变；本机继续后继保全移动/索引终态/多计划namespace与中断恢复，再真实用户动作/原包后继启停，不重复首次或NAME已过项。ChatGPT选择器、一般客户端图/缺Ready、最终候选及Windows原完整未完保持；不W2/双SID、不发布，目标active。

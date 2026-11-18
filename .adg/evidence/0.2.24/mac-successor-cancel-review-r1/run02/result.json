@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--lib",
+    "generation::preparation_cancellation::tests::",
+    "--",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "exitCode": 0,
+  "elapsedMs": 39093,
+  "releaseAcceptance": false
+}

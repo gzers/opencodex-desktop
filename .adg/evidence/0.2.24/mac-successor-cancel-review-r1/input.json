@@ -1,0 +1,25 @@
+{
+  "beforeRun": true,
+  "gitBase": "15dbb82869ff02c4c2b5cf154869489afa92390d",
+  "uncommittedSource": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_generation.rs",
+      "bytes": 26886,
+      "sha256": "ca967c930c7181f3764d8a94d8233a1c418e9ed2a923588914b1e9bed1ec0a78"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_successor_prepare_cancel.rs",
+      "bytes": 5701,
+      "sha256": "721976bef9b58c1b36c18561031699c88db485802302cf93cec02628c4d4c00c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_successor_prepare_cancel_tests.rs",
+      "bytes": 5182,
+      "sha256": "3c8c51c35323967f2963bfe83d499f94af2105920306908e805a45c957b38997"
+    }
+  ],
+  "hypothesis": "successor Preparing read-only review audits complete prior closed history and exact root origin; new user data, unknown vault member, wrong context/head/deadline and CaptureReserved must refuse unchanged",
+  "scope": "file/native identity and independent history only; no service/cancel/movement authority",
+  "failureFixture": "keep created exact root and raw test output for inspection; success removes exact owned root",
+  "releaseAcceptance": false
+}

@@ -1,0 +1,19 @@
+{
+  "beforeRun": true,
+  "gitBase": "845b2861924a4412a168a8ac148a8d1320f097d9",
+  "uncommittedTestOnlySources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_service_tests.rs",
+      "bytes": 20732,
+      "sha256": "ed47cbf037026571a17e4718a3d2019a723a39b19705eae355b374091e646854"
+    },
+    {
+      "path": "test/smoke/macos024-root-cancel.py",
+      "bytes": 12100,
+      "sha256": "9ddd10c72263a3812be22c149131b7a82d538bf30a279cddb48c4d411026308f"
+    }
+  ],
+  "hypothesis": "actual native official CurrentService/Guard first cancellation then new successor Preparing reviews complete cancelled-root history under a fresh read-only10s; old archived-root drift refuses, no successor mutation/service",
+  "failureHandling": "retain exact process/scene; no automatic kill/restart/cleanup",
+  "releaseAcceptance": false
+}
