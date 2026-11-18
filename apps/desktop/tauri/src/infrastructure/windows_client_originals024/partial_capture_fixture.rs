@@ -34,10 +34,10 @@ use std::{
 pub(crate) const SCOPE: &str = "isolated-r7-partial-capture-original-worker";
 pub(crate) const PROFILE: &str = r"C:\Users\marenben";
 const SID: &str = "S-1-5-21-587408064-856152790-2583328096-1003";
-const BASE: &str = r"C:\Users\marenben\ocx024-r7-isolated-owner-nine-r2";
-const PUBLIC: &str = r"C:\Users\Public\ocx-r7-isolated-owner-nine-r2";
+const BASE: &str = r"C:\Users\marenben\ocx024-r7-isolated-owner-range-r1";
+const PUBLIC: &str = r"C:\Users\Public\ocx-r7-isolated-owner-range-r1";
 const BUNDLE: &str =
-    r"C:\Users\Public\ocx-r7-isolated-owner-nine-r2\input\runtime-bundle-0.2.24-win32-x64.tar.gz";
+    r"C:\Users\Public\ocx-r7-isolated-owner-range-r1\input\runtime-bundle-0.2.24-win32-x64.tar.gz";
 
 const BUNDLE_SHA: &str = "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7";
 

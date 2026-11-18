@@ -18,6 +18,41 @@ use std::{
     time::Instant,
 };
 mod canonical_trait;
+#[cfg(test)]
+pub(crate) fn inspect_fixture_start_ranges(
+    ranges: &mut StartRanges,
+    owner: &mut Owner,
+    transport_action: uuid::Uuid,
+    start_end: Instant,
+    end: Instant,
+) -> io::Result<serde_json::Value> {
+    let ([_, session, failed_start], _) = owner.test_capture_binding().map_err(io::Error::other)?;
+    // This is only the comparison key for inspect_failed_start. Inspection
+    // leaves the retained Start state untouched and grants no recovery permit.
+    let origin = crate::infrastructure::windows_official_lifecycle024::BeforeResumeLeaseBinding {
+        owner: session,
+        failed_start,
+        recovery: transport_action,
+        start_deadline: start_end,
+    };
+    owner
+        .fixture_isolation()
+        .ok_or_else(invalid)?
+        .verify_owner(owner, end)?;
+    owner.test_suspended_creator(end)?;
+    let before = ranges.inspect_failed_start(owner, &origin, end)?;
+    owner.test_suspended_creator(end)?;
+    owner
+        .fixture_isolation()
+        .ok_or_else(invalid)?
+        .verify_owner(owner, end)?;
+    let after = ranges.inspect_failed_start(owner, &origin, end)?;
+    if before != after {
+        return Err(invalid());
+    }
+    serde_json::to_value(after).map_err(io::Error::other)
+}
+
 #[derive(PartialEq, Eq)]
 pub(crate) struct TransferBinding {
     session: String,

@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory)][ValidateSet('Host','DiagnosticBefore','Explicit','DiagnosticAfter')][string]$Mode
 )
 $ErrorActionPreference = 'Stop'
-$public = 'C:\Users\Public\ocx-r7-isolated-owner-nine-r2'
+$public = 'C:\Users\Public\ocx-r7-isolated-owner-range-r1'
 $profile = 'C:\Users\marenben'
-$base = Join-Path $profile 'ocx024-r7-isolated-owner-nine-r2'
+$base = Join-Path $profile 'ocx024-r7-isolated-owner-range-r1'
 $out = Join-Path $public 'out01'
 $image = Join-Path $base 'I\ocxd.exe'
 $utf8 = [Text.UTF8Encoding]::new($false)
@@ -153,6 +153,17 @@ function CheckOriginalWorker($Worker, $Injection) {
         $Worker.rawError -eq 31 -and $Worker.creatorResumed -eq $false -and $Worker.phase -ceq 'FailedRetained') 'Original Start worker binding or first error differs.'
 }
 
+function CheckOriginalRangeProof($Proof, $Reply, $Injection) {
+    $uuid = '^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$'
+    Check ($null -ne $Proof -and $Proof.requestId -ceq $Reply.requestId -and $Proof.requestId -cmatch $uuid -and
+        $Proof.transportActionId -cmatch $uuid -and $Proof.transportActionId -cne $Reply.requestId -and
+        $Proof.transportActionId -cne $Injection.failedActionId -and $Proof.sessionId -ceq $Injection.ownerSessionId -and
+        $Proof.hostInstanceId -ceq $Injection.hostInstanceId -and $Proof.hostInstanceId -cmatch $uuid -and
+        $Proof.failedActionId -ceq $Injection.failedActionId -and $Proof.scopeDigest -ceq $Injection.scopeDigest -and
+        $Proof.workerThread -ceq $Injection.workerThread -and $Proof.startRawError -eq 31 -and $Proof.creatorResumed -eq $false -and
+        (SameData $Proof.originalRanges $Injection.originalClaimAndNlkVerified)) 'Fresh original worker claim/N/L/K proof is missing or differs.'
+}
+
 function CheckPendingWorker($Snapshot, $Injection) {
     CheckOriginalWorker $Snapshot.startWorker $Injection
     Check ($Snapshot.workerThread -ceq $Injection.workerThread -and $Snapshot.sessionId -ceq $Injection.ownerSessionId -and
@@ -296,12 +307,22 @@ try {
             $ready.initialScansVerified -ne $true) { throw 'Original worker injection, full scans and private evidence must be proven first.' }
         $resident = [Diagnostics.Process]::GetProcessById([int]$ready.pid)
         try {
+            $observed = [ordered]@{ pid=$resident.Id; session=$resident.SessionId;
+                creationFiletime=$resident.StartTime.ToUniversalTime().ToFileTimeUtc().ToString();
+                image=$resident.MainModule.FileName }
             if ($resident.HasExited -or $resident.SessionId -ne $session -or
-                $resident.StartTime.ToUniversalTime().ToFileTimeUtc().ToString() -cne $ready.creationFiletime -or
-                $resident.MainModule.FileName -ine $image) { throw 'Exact original fixture process changed.' }
+                $observed.creationFiletime -cne $ready.creationFiletime -or
+                $observed.image -ine $image) { throw 'Exact original fixture process changed.' }
+            WriteOnce "$Mode-original-host.json" $observed
         } finally { $resident.Dispose() }
         if ($Mode -ceq 'Explicit') {
-            if (!(ReadJson (Join-Path $out 'DiagnosticBefore-result.json')).passed) { throw 'Verify the original worker with DiagnosticBefore first.' }
+            $prior = ReadJson (Join-Path $out 'DiagnosticBefore-result.json')
+            $priorHost = ReadJson (Join-Path $out 'DiagnosticBefore-original-host.json')
+            Check ($prior.passed -eq $true -and $priorHost.pid -eq $observed.pid -and
+                $priorHost.session -eq $observed.session -and $priorHost.creationFiletime -ceq $observed.creationFiletime -and
+                $priorHost.image -ieq $observed.image) 'Verify the same original Host with DiagnosticBefore first.'
+            $priorReply = $prior.manager.result.response
+            CheckOriginalRangeProof $priorReply.facts.originalRangeProof $priorReply $ready.nativeResult.injection
             $test = 'isolated_r7_partial_capture_explicit'
         } else {
             if ($Mode -ceq 'DiagnosticAfter') { [void](ReadJson (Join-Path $out 'Explicit-intent.json')) }
@@ -422,6 +443,7 @@ try {
         if ($Mode -ceq 'DiagnosticBefore') {
             CheckOriginalWorker $facts.snapshot $injection
             Check ($null -eq $facts.sameSampleStatus.payload.recoveryWorker) 'Recovery was already present at the first diagnostic.'
+            CheckOriginalRangeProof $facts.originalRangeProof $reply $injection
         } else {
             CheckPendingWorker $facts.snapshot $injection
             $sample = $facts.sameSampleStatus.payload.recoveryWorker

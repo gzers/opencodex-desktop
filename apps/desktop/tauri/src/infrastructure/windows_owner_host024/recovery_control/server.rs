@@ -188,6 +188,8 @@ pub(in crate::infrastructure::windows_owner_host024) fn install_before_capture(
 struct Control {
     #[cfg(test)]
     partial_capture_fixture: bool,
+    #[cfg(test)]
+    fixture_range_proof_delivered: bool,
     pipe: native::PrivatePipe,
     locator: LocatorV2,
     record: native::PrivateRecord,
@@ -244,6 +246,8 @@ impl Control {
         Ok(Self {
             #[cfg(test)]
             partial_capture_fixture: c.scope == crate::infrastructure::windows_client_originals024::partial_capture_fixture::SCOPE,
+            #[cfg(test)]
+            fixture_range_proof_delivered: false,
             pipe,
             locator,
             record,
@@ -292,12 +296,41 @@ impl Control {
                     .map_err(io::Error::other)?;
                 #[cfg(test)]
                 if self.partial_capture_fixture {
+                    let range_proof = if *attempted {
+                        None
+                    } else {
+                        let request_id =
+                            uuid::Uuid::parse_str(&request.request_id).map_err(io::Error::other)?;
+                        let action_id = uuid::Uuid::parse_str(&request.transport_action_id)
+                            .map_err(io::Error::other)?;
+                        Some(lifecycle::inspect_fixture_start_ranges(
+                            &runtime, &self.home, request_id, action_id, end,
+                        )?)
+                    };
                     let status = super::super::partial_capture_tests::native_status(
                         &runtime, &self.home, end,
                     )?;
+                    if let Some(proof) = &range_proof {
+                        let start = snapshot
+                            .as_ref()
+                            .ok_or_else(|| denied("original Start snapshot absent"))?;
+                        if proof["requestId"] != request.request_id
+                            || proof["transportActionId"] != request.transport_action_id
+                            || status["sameSample"] != true
+                            || status["recovery"] != "Required"
+                            || !fixture_proof_matches_start(proof, start)
+                            || !fixture_proof_matches_start(
+                                proof,
+                                &status["payload"]["startWorker"],
+                            )
+                            || !status["payload"]["recoveryWorker"].is_null()
+                        {
+                            return Err(denied("original Start changed during range proof"));
+                        }
+                    }
                     before(end)?;
                     return Ok(
-                        serde_json::json!({"purpose":"worker-metadata-only-not-full-history","snapshot":snapshot,"sameSampleStatus":status,"recoveryRequired":true,"runtimeAuthority":false}),
+                        serde_json::json!({"purpose":"worker-metadata-only-not-full-history","snapshot":snapshot,"sameSampleStatus":status,"originalRangeProof":range_proof,"recoveryRequired":true,"runtimeAuthority":false}),
                     );
                 }
                 before(end)?;
@@ -310,6 +343,12 @@ impl Control {
                     .map_err(io::Error::other)
             }
             CommandV2::BeginCanonicalAbort => {
+                #[cfg(test)]
+                if self.partial_capture_fixture && !self.fixture_range_proof_delivered {
+                    return Err(denied(
+                        "original fixture Start range proof has not been delivered",
+                    ));
+                }
                 if *attempted {
                     return Err(denied(
                         "original explicit recovery already attempted, no new window",
@@ -411,6 +450,16 @@ impl Control {
                     &request,
                     &self.locator.scope_digest,
                 )?;
+                #[cfg(test)]
+                if self.partial_capture_fixture
+                    && request.command == CommandV2::ReadWorkerDiagnostic
+                {
+                    before(request.deadline.end)?;
+                    if let Ok(data) = &facts {
+                        self.fixture_range_proof_delivered |=
+                            data["originalRangeProof"].is_object();
+                    }
+                }
                 // Every native identity/source fence already ran before and
                 // after the action and before the result frame. ACK is delivery
                 // DATA only; an exiting exact client cannot revoke an already
@@ -429,4 +478,15 @@ impl Control {
             // drop an original Owner or restart/force/release its retained work.
         }
     }
+}
+
+#[cfg(test)]
+fn fixture_proof_matches_start(proof: &serde_json::Value, start: &serde_json::Value) -> bool {
+    start["phase"] == "FailedRetained"
+        && start["creatorResumed"] == false
+        && start["rawError"] == 31
+        && start["sessionId"] == proof["sessionId"]
+        && start["scopeDigest"] == proof["scopeDigest"]
+        && start["actionId"] == proof["failedActionId"]
+        && start["thread"] == proof["workerThread"]
 }

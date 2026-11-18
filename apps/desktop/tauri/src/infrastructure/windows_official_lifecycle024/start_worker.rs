@@ -50,6 +50,36 @@ struct State {
     result: Option<AppResult<LifecycleResult>>,
     recovery: Option<RetainedRequest>,
     recovery_queued: bool,
+    #[cfg(test)]
+    range_probe: Option<RangeProbe>,
+}
+
+#[cfg(test)]
+struct RangeProbe {
+    request: uuid::Uuid,
+    action: uuid::Uuid,
+    end: Instant,
+    snapshot: Snapshot,
+    reply: mpsc::SyncSender<io::Result<serde_json::Value>>,
+}
+
+#[cfg(test)]
+fn fixture_probe_eligible(state: &State, thread: thread::ThreadId) -> bool {
+    !state.recovery_queued
+        && state.thread == Some(thread)
+        && state.snapshot.phase == Phase::FailedRetained
+        && matches!(state.snapshot.stage, Stage::Capture | Stage::BeforeResume)
+        && state.snapshot.raw == Some(31)
+        && state.snapshot.creator_resumed == Some(false)
+        && state.result.as_ref().is_some_and(Result::is_err)
+}
+
+#[cfg(test)]
+fn probe_refused() -> io::Error {
+    io::Error::new(
+        io::ErrorKind::PermissionDenied,
+        "original fixture Start range proof unavailable",
+    )
 }
 
 pub(super) struct StartWorker {
@@ -95,6 +125,8 @@ impl StartWorker {
                 result: None,
                 recovery: None,
                 recovery_queued: false,
+                #[cfg(test)]
+                range_probe: None,
             }),
             wake: Notify::new(),
             thread: Arc::new(OnceLock::new()),
@@ -126,6 +158,98 @@ impl StartWorker {
             return Err(unknown(()));
         }
         Ok(control)
+    }
+
+    #[cfg(test)]
+    pub(super) fn probe_ranges(
+        &self,
+        request: uuid::Uuid,
+        action: uuid::Uuid,
+        end: Instant,
+    ) -> io::Result<serde_json::Value> {
+        let remaining = || {
+            end.checked_duration_since(Instant::now())
+                .filter(|time| !time.is_zero())
+                .ok_or_else(|| io::Error::from(io::ErrorKind::TimedOut))
+        };
+        remaining()?;
+        let worker = self
+            .thread
+            .get()
+            .filter(|thread| !thread.is_finished())
+            .ok_or_else(probe_refused)?;
+        let (reply, receive) = mpsc::sync_channel(1);
+        {
+            let mut state = self.state.try_lock().map_err(|_| probe_refused())?;
+            if !fixture_probe_eligible(&state, worker.thread().id())
+                || state.range_probe.is_some()
+                || request == action
+                || action == self.action
+            {
+                return Err(probe_refused());
+            }
+            remaining()?;
+            let snapshot = state.snapshot;
+            state.range_probe = Some(RangeProbe {
+                request,
+                action,
+                end,
+                snapshot,
+                reply,
+            });
+        }
+        worker.thread().unpark();
+        let proof = receive
+            .recv_timeout(remaining()?)
+            .map_err(|error| match error {
+                mpsc::RecvTimeoutError::Timeout => io::ErrorKind::TimedOut.into(),
+                mpsc::RecvTimeoutError::Disconnected => probe_refused(),
+            })??;
+        remaining()?;
+        Ok(proof)
+    }
+
+    #[cfg(test)]
+    fn read_probe(
+        &self,
+        probe: &RangeProbe,
+        owner: &mut Owner,
+        ranges: &mut StartRanges,
+    ) -> io::Result<serde_json::Value> {
+        let thread = thread::current().id();
+        let check = |owner: &Owner| {
+            if Instant::now() >= probe.end {
+                return Err(io::ErrorKind::TimedOut.into());
+            }
+            let state = self.state.try_lock().map_err(|_| probe_refused())?;
+            if !fixture_probe_eligible(&state, thread)
+                || state.snapshot != probe.snapshot
+                || self
+                    .thread
+                    .get()
+                    .is_none_or(|registered| registered.thread().id() != thread)
+                || owner.session != self.session
+                || owner.start_action.id() != self.action
+                || owner.native.binding().process != self.root
+                || owner.native.creator_has_resumed()
+                || owner.scope().map_err(io::Error::other)? != self.scope
+            {
+                return Err(probe_refused());
+            }
+            Ok(())
+        };
+        check(owner)?;
+        let held = crate::infrastructure::windows_client_originals024::recovery_worker::inspect_fixture_start_ranges(
+            ranges, owner, probe.action, self.deadline, probe.end,
+        )?;
+        check(owner)?;
+        Ok(serde_json::json!({
+            "requestId":probe.request, "transportActionId":probe.action,
+            "hostInstanceId":owner.original_host_instance(), "sessionId":self.session,
+            "failedActionId":self.action, "scopeDigest":self.scope,
+            "workerThread":format!("{thread:?}"), "startRawError":probe.snapshot.raw,
+            "creatorResumed":false, "originalRanges":held,
+        }))
     }
 
     pub(super) fn queue_recovery(
@@ -337,6 +461,21 @@ impl StartWorker {
         }
         self.wake.notify_one();
         loop {
+            #[cfg(test)]
+            {
+                let probe = self
+                    .state
+                    .lock()
+                    .ok()
+                    .and_then(|mut state| state.range_probe.take());
+                if let Some(probe) = probe {
+                    let result = owner
+                        .as_mut()
+                        .ok_or_else(probe_refused)
+                        .and_then(|owner| self.read_probe(&probe, owner, &mut ranges));
+                    let _ = probe.reply.send(result);
+                }
+            }
             let request = self
                 .state
                 .lock()
@@ -480,6 +619,7 @@ mod tests {
                 result: None,
                 recovery: None,
                 recovery_queued: false,
+                range_probe: None,
             }),
             wake: Notify::new(),
             thread: Arc::new(OnceLock::new()),
@@ -502,6 +642,75 @@ mod tests {
         assert_eq!(facts["binding"]["pid"], std::process::id());
         assert!(worker.observe(started).is_err());
         assert!(started.elapsed() < Duration::from_secs(5));
+    }
+
+    #[test]
+    fn wl2_r7_fixture_range_probe_dispatches_once_to_registered_thread_and_keeps_native_error() {
+        let worker = control(Instant::now());
+        let assigned = worker.clone();
+        let (ready, started) = mpsc::sync_channel(1);
+        let end = Instant::now() + Duration::from_secs(5);
+        let request = uuid::Uuid::new_v4();
+        let action = uuid::Uuid::new_v4();
+        let thread = thread::spawn(move || {
+            let id = thread::current().id();
+            assigned.state.lock().unwrap().thread = Some(id);
+            ready.send(id).unwrap();
+            loop {
+                assert!(Instant::now() < end);
+                let probe = assigned.state.lock().unwrap().range_probe.take();
+                if let Some(probe) = probe {
+                    assert_eq!(
+                        (probe.request, probe.action, probe.end),
+                        (request, action, end)
+                    );
+                    assert_eq!(probe.snapshot.raw, Some(31));
+                    assert!(fixture_probe_eligible(&assigned.state.lock().unwrap(), id));
+                    drop(assigned);
+                    probe
+                        .reply
+                        .send(Err(io::Error::from_raw_os_error(32)))
+                        .unwrap();
+                    break;
+                }
+                thread::park_timeout(end.saturating_duration_since(Instant::now()));
+            }
+        });
+        worker.thread.set(thread).unwrap();
+        assert_eq!(
+            started.recv_timeout(Duration::from_secs(5)).unwrap(),
+            worker.thread.get().unwrap().thread().id()
+        );
+        assert!(worker.probe_ranges(request, action, end).is_err());
+        {
+            let mut state = worker.state.lock().unwrap();
+            state.snapshot.phase = Phase::FailedRetained;
+            state.snapshot.raw = Some(31);
+            state.result = Some(Err(recovery_required()));
+        }
+        assert!(worker.probe_ranges(request, request, end).is_err());
+        assert!(worker.probe_ranges(request, worker.action, end).is_err());
+        assert_eq!(
+            worker
+                .probe_ranges(request, action, Instant::now())
+                .unwrap_err()
+                .kind(),
+            io::ErrorKind::TimedOut
+        );
+        assert_eq!(
+            worker
+                .probe_ranges(request, action, end)
+                .unwrap_err()
+                .raw_os_error(),
+            Some(32)
+        );
+        let thread = Arc::try_unwrap(worker).ok().unwrap().thread;
+        Arc::try_unwrap(thread)
+            .unwrap()
+            .into_inner()
+            .unwrap()
+            .join()
+            .unwrap();
     }
 
     #[test]

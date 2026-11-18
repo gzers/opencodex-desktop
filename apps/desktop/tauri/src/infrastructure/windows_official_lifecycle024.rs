@@ -198,6 +198,41 @@ pub(crate) fn before_resume_worker_status(
         None => Ok(start),
     }
 }
+
+#[cfg(test)]
+pub(crate) fn inspect_fixture_start_ranges(
+    runtime: &SharedRuntimeExecutable,
+    home: &Path,
+    request: uuid::Uuid,
+    action: uuid::Uuid,
+    end: Instant,
+) -> std::io::Result<serde_json::Value> {
+    let entry = slot(runtime, home, false).map_err(std::io::Error::other)?;
+    let registered = || {
+        let refused = |_| std::io::Error::other(recovery_required());
+        let recovery = entry
+            .recovery_worker
+            .try_lock()
+            .map_err(|_| std::io::Error::other(recovery_required()))?;
+        let start = entry.start_worker.try_lock().map_err(refused)?;
+        if recovery.is_some() {
+            return Err(std::io::Error::other(recovery_required()));
+        }
+        start
+            .clone()
+            .ok_or_else(|| std::io::Error::other(recovery_required()))
+    };
+    let worker = registered()?;
+    let proof = worker.probe_ranges(request, action, end)?;
+    if !Arc::ptr_eq(&worker, &registered()?) {
+        return Err(std::io::Error::other(recovery_required()));
+    }
+    if Instant::now() >= end {
+        return Err(std::io::ErrorKind::TimedOut.into());
+    }
+    Ok(proof)
+}
+
 /// Independent validation in this original registry slot. Resources stay in
 /// its worker control, including every failure. Normal dispatch remains gated.
 pub(crate) fn validate_canonical_before_resume_return(

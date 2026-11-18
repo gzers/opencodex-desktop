@@ -116,6 +116,18 @@ pub(in crate::infrastructure::windows_owner_host024) fn request(
     recheck(true)?;
     let refused = reply.is_refused();
     let data = reply.into_data()?;
+    #[cfg(test)]
+    if let Some(proof) = data["facts"]
+        .get("originalRangeProof")
+        .filter(|proof| !proof.is_null())
+    {
+        if command != CommandV2::ReadWorkerDiagnostic
+            || proof["requestId"] != receipt.request_id
+            || proof["transportActionId"] != receipt.transport_action_id
+        {
+            return Err(denied("original range proof differs from admitted request"));
+        }
+    }
     pipe.write_frame(
         &serde_json::to_vec(&AckV2::for_request(&receipt, &locator.scope_digest))
             .map_err(io::Error::other)?,
