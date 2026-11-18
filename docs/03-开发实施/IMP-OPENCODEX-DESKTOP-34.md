@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 186；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 187；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2030,3 +2030,11 @@ run05 原生显式取消在 6,982 ms／10,000 ms 到达 RootCancellationAbsent r
 租约范围基线复现第三个角色释放 SQLite RESERVED 字节后仍通过准入，定向测试 raw101。修正后逐范围核对排他租约与获取线程，检查失败时撤销变更权限并保留仍持有的 claim。精确范围 5/5、分段 7/7、中断 1/1，修正测试 raw0。夹具清单记录 53 个根，其中 33 个存在、20 个缺席。[固定范围证据](https://github.com/gzers/opencodex-desktop/tree/e9e0522629f522e172650f3ea3734fa6b6cc4ae0/.adg/evidence/0.2.24/windows-dev/wl2-r7-lease-range-20261118-r1)
 
 按 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)接续首启原线程持锁和显式恢复。原 worker 在首次原生获取前绑定 Start，过期变更权限维持失效，独立恢复权限仅覆盖原对象及连续持有的精确范围。公开 Start 维持拒绝。普通桌面 private V2、普通用户 MSI 和官方单 SID 生产生命周期仍待验证。旧 r2 的三件原件留在 custody，Node 从未 Resume，十份只读导出一致，24 项 Job 查询未知（raw50），executionReady=false。固定候选后进入 W2 与双 SID。
+
+## revision187：Windows 首启工作线程回交与 Mac 后继取消预览
+
+Windows 代码 a5ba9aee338ed69841a836e4a5be639115fa8e1c，证据 b8fe82f802b4df3d2a621b416e365ca609ec5671。14 个 Windows 文件的净差检查通过，27 个证据文件与清单一致。第二批控制测试与 7ca43ca47bb642a91e8c69444afaad673582a213 的 13 个源文件全部一致，2/2 通过。证据记有四次真实 SQLite raw33 冲突及 19 个测试根缺席。第二批 EXE SHA-256 为 11dd88f897ab5cc1fe141080c380d4bbeddc4283e56b65659bd3f1483ac9df70。第一批报告 5/5，但换行归一后仅 11/13 个源文件匹配，测试入口与 start_worker 测试模块不同，原 EXE 在记录摘要前被覆盖。保留原报告，待实际输入或更正回执绑定后再计入验证。三个产品 MSVC 二进制构建通过，14/14 源文件与代码提交一致，运行验收待做。[Windows 固定证据](https://github.com/gzers/opencodex-desktop/tree/b8fe82f802b4df3d2a621b416e365ca609ec5671/.adg/evidence/0.2.24/windows-dev/wl2-r7-start-worker-20261118-r1)
+
+代码已在首次获取前登记 Owner，派发失败时保留 Owner 并拒绝普通动作。尚需证实原线程连续存活、同范围持有及显式恢复派发。登记本身只证明记录存在。默认 MSVC Stop 10,070 ms 失败仍有效，9.40 秒优化测试控制轮未完成生产验收。普通桌面私有 V2、普通用户 MSI、官方单 SID 生命周期、候选集成仍待完成。旧 r2 的三件原件、十份只读回执和 24 项 Job 未知保持原状，executionReady=false。公开 Start 保持拒绝。
+
+Mac main 6bafdd342e69ee83e842f4b35a20bafa1320645a 用原 Index 和 SQLite 连接对齐后继准备取消的操作审查与产品预览，避免打开同一文件的第二个描述符。真实存储夹具的首次取消用时 6,787 ms，后继审查 792 ms，预览 164 ms，确认指纹一致。原 Guard 的持有、准备、移动与释放均有回执。准确测试根和外部协调路径已清理，全局协调未动。此轮只证明后继确认入口，后继保全、独立取消终态、中断接续及签名候选尚待闭合。聊天内 Codex 仍是名称选择器的实际验收目标。[Mac 证据清单](../../.adg/evidence/0.2.24/mac-successor-cancel-preview-r1/evidence-manifest.json)
