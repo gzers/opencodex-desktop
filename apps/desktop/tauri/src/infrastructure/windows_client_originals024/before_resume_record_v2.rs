@@ -449,6 +449,25 @@ impl RecordV2 {
         next.validate()?;
         Ok(next)
     }
+    pub(super) fn preparation_pending_data(&self, raw_error: Option<i32>) -> io::Result<[Vec<u8>; 2]> {
+        let ReferenceV2::Preparation { last_stage, .. } = &self.reference else {
+            return Err(invalid());
+        };
+        let initial = self.encode_data()?;
+        let pending = self
+            .next_data(
+                &initial,
+                EventV2::AbortRecoveryPending {
+                    stage: *last_stage,
+                    raw_error,
+                },
+            )?
+            .encode_data()?;
+        let records = [initial, pending];
+        validate_chain_v2(&records)?;
+        Ok(records)
+    }
+
     pub(super) fn decode(raw: &[u8]) -> io::Result<Self> {
         if raw.is_empty() || raw.len() > 65536 {
             return Err(invalid());

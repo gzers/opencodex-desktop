@@ -282,6 +282,7 @@ impl StartWorker {
             Ok(Ok(())) => unreachable!(),
         };
         ranges.revoke();
+        let start_raw = raw.or(ranges.raw_error());
         let result = Err(error);
         let resumed = owner
             .as_ref()
@@ -291,7 +292,7 @@ impl StartWorker {
         }
         if let Ok(mut state) = self.state.lock() {
             state.snapshot.phase = phase;
-            state.snapshot.raw = raw.or(ranges.raw_error());
+            state.snapshot.raw = start_raw;
             state.snapshot.launcher_exit = launcher_exit;
             state.snapshot.creator_resumed = resumed;
             state.result = Some(result);
@@ -308,6 +309,7 @@ impl StartWorker {
                     request.execute(
                         original,
                         &mut ranges,
+                        start_raw,
                         |owner| {
                             let thread = self
                                 .thread

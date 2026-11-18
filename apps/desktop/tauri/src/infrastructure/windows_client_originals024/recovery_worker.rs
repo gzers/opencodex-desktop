@@ -290,6 +290,7 @@ struct State {
     raw: Option<i32>,
     kind: Option<String>,
     binding: Option<TransferBinding>,
+    preparation_pending: Option<[Vec<u8>; 2]>,
 }
 enum WorkerThread {
     Dedicated(thread::JoinHandle<()>),
@@ -361,6 +362,7 @@ impl State {
             raw: None,
             kind: None,
             binding,
+            preparation_pending: None,
         }
     }
 }
@@ -523,6 +525,7 @@ impl RetainedRequest {
         self,
         owner: Owner,
         ranges: &mut StartRanges,
+        start_raw: Option<i32>,
         check: impl FnOnce(&Owner) -> io::Result<()>,
         run: fn(&mut Owner, &mut WorkerLocal, &BeforeResumeRecoveryWindow) -> io::Result<()>,
     ) {
@@ -533,6 +536,33 @@ impl RetainedRequest {
             self.returner,
             |owner, local, window, state| {
                 check(owner)?;
+                let partial = owner
+                    .with_originals(|originals, _| Ok(originals.has_failed_preparation()))
+                    .map_err(io::Error::other)?;
+                if partial {
+                    owner
+                        .prepare_before_resume_process(window)
+                        .map_err(io::Error::other)?;
+                    let records = owner
+                        .with_originals(|originals, owner| {
+                            originals.read_before_resume_preparation_record(owner, window)
+                        })
+                        .map_err(io::Error::other)?
+                        .preparation_pending_data(start_raw)?;
+                    let binding = owner.binding(window)?;
+                    let mut state = state.lock().map_err(|_| invalid())?;
+                    if Instant::now() >= window.deadline() {
+                        return Err(io::ErrorKind::TimedOut.into());
+                    }
+                    state.binding = Some(binding);
+                    state.preparation_pending = Some(records);
+                    // A partial prefix supplies observation only. StartRanges
+                    // stays on this thread, even if it holds a complete lease.
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        "original preparation pending; restore authority unavailable",
+                    ));
+                }
                 // If Start acquired only a prefix, its exact original ranges stay
                 // where they were enrolled and this action cannot acquire replacements.
                 local.enroll_retained_start(ranges)?;
@@ -584,10 +614,21 @@ impl<T> WorkerControl<T> {
             ),
             (None, None) => return Err(invalid()),
         };
+        let pending = state.preparation_pending.as_ref().filter(|_| {
+            matches!(phase, Phase::FailedRetained | Phase::ExpiredRetained)
+        }).map(|records| {
+            let [intent, pending] = records;
+            use crate::infrastructure::hash::sha256_hex;
+            serde_json::json!({
+                "intentDigest": sha256_hex(intent),
+                "pendingDigest": sha256_hex(pending),
+                "durable": false
+            })
+        });
         let data = serde_json::json!({"schema":"windows-original-recovery-worker-v1","phase":format!("{phase:?}"),"stage":state.stage.map(|stage|format!("{stage:?}")),"sessionId":session,
             "actionId":action,"scopeDigest":scope,"workerThread":state.thread,"returnValidatorThread":state.validator_thread,
             "originalDeadlineExpired":Instant::now()>=deadline,"rawError":state.raw,"errorKind":state.kind,
-            "workerFinished":finished,"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false});
+            "workerFinished":finished,"preparationPending":pending,"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false});
         if Instant::now() >= end {
             return Err(io::ErrorKind::TimedOut.into());
         }

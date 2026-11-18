@@ -142,6 +142,10 @@ impl PreparedAbortPrefix {
     }
 }
 impl WindowsOriginals {
+    pub(in crate::infrastructure::windows_client_originals024) fn has_failed_preparation(&self) -> bool {
+        self.failed && self.stage.is_none() && self.slot.has_original_preparation()
+    }
+
     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_preparation_record(
         &mut self,
         owner: &mut Owner,

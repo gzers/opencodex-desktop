@@ -86,18 +86,15 @@ fn wl2_r7_bound_preparation_native_reference_encodes_strict_v2_pending_original_
     assert_eq!(data["reference"]["ownerInstanceId"], host.to_string());
     assert_eq!(data["reference"]["source"]["state"], "unobserved");
     assert!(data["reference"].get("manifestDigest").is_none());
-    let pending = record
-        .next_data(
-            &raw,
-            EventV2::AbortRecoveryPending {
-                stage: Stage::HandleRetained,
-                raw_error: Some(32),
-            },
-        )
-        .unwrap();
-    let pending_raw = pending.encode_data().unwrap();
-    validate_chain_v2(&[raw.clone(), pending_raw.clone()]).unwrap();
-    let data: serde_json::Value = serde_json::from_slice(&pending_raw).unwrap();
+    let records = record.preparation_pending_data(Some(32)).unwrap();
+    let [intent_raw, pending_raw] = &records;
+    assert_eq!(intent_raw, &raw);
+    validate_chain_v2(&records).unwrap();
+    assert!(RecordV2::decode(pending_raw)
+        .unwrap()
+        .preparation_pending_data(None)
+        .is_err());
+    let data: serde_json::Value = serde_json::from_slice(pending_raw).unwrap();
     assert_eq!(data["failedActionId"], failed);
     assert_eq!(data["recoveryActionId"], recovery);
     assert_eq!(
@@ -105,6 +102,7 @@ fn wl2_r7_bound_preparation_native_reference_encodes_strict_v2_pending_original_
         crate::infrastructure::hash::sha256_hex(&raw)
     );
     assert_eq!(data["event"]["rawError"], 32);
+    assert_eq!(data["event"]["stage"], data["reference"]["lastStage"]);
     assert!(record
         .next_data(
             &raw,

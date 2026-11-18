@@ -133,6 +133,10 @@ impl OriginalPreparationData {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn has_original_preparation(&self) -> bool {
+        self.failed && self.partial.is_some() && self.retained.is_none()
+    }
+
     pub(in crate::infrastructure::windows_client_originals024) fn read_bound_preparation_record(
         &mut self,
         owner: &mut Owner,
