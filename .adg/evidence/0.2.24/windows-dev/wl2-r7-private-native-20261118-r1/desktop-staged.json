@@ -1,0 +1,45 @@
+{
+    "outDirectoryEmpty":  true,
+    "privateRoot":  "C:\\Users\\marenben\\ocx024-r7-private-native-20261118-r1",
+    "publicRoot":  "C:\\Users\\Public\\ocx-r7-private-native-20261118-r1",
+    "files":  [
+                  {
+                      "path":  "input-manifest.json",
+                      "sha256":  "44c16eda0ac5a8ceec318f62cca4bb6a0506853726d8c9ba26b27d08ff3c7be8",
+                      "bytes":  632
+                  },
+                  {
+                      "path":  "launch-r7-private-native-empty.cmd",
+                      "sha256":  "ba7ca9da9e02be60e8cd99df13e0f3052175359cdf450a79f3a8eb5bfa62cd76",
+                      "bytes":  179
+                  },
+                  {
+                      "path":  "launch-r7-private-native-empty.ps1",
+                      "sha256":  "2268a74ef020faea4db3e2074aa6e86ed60b8f9364258efee82755a34cb627b2",
+                      "bytes":  14668
+                  },
+                  {
+                      "path":  "input\\ocxd.exe",
+                      "sha256":  "55cd6ef08653edc8bf2b5c754006473fba7b3fc8f4a0a04c486ea89222181d3e",
+                      "bytes":  18220032
+                  }
+              ],
+    "expectedSession":  7,
+    "expectedSid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+    "acl":  [
+                {
+                    "Path":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\Public\\ocx-r7-private-native-20261118-r1",
+                    "Sddl":  "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:P(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+                },
+                {
+                    "Path":  "Microsoft.PowerShell.Core\\FileSystem::C:\\Users\\Public\\ocx-r7-private-native-20261118-r1\\out01",
+                    "Sddl":  "O:S-1-5-21-587408064-856152790-2583328096-1001G:S-1-5-21-587408064-856152790-2583328096-1001D:P(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1301bf;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+                }
+            ],
+    "artifactSha256":  "55cd6ef08653edc8bf2b5c754006473fba7b3fc8f4a0a04c486ea89222181d3e",
+    "currentR2Touched":  false,
+    "actualDesktopExecution":  "Pending, user desktop required",
+    "noOfficial":  true,
+    "launcherPs51CheckSha256":  "2268a74ef020faea4db3e2074aa6e86ed60b8f9364258efee82755a34cb627b2",
+    "account":  "marenben"
+}

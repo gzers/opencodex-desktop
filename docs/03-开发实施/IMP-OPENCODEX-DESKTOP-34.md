@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 172；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 173；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main bec99201e6ef4addaed61d6d50bf8b67a956d0e2（非冻结候选）；Windows实现检查点codex/024-windows-native 58f0d49f2b45ad108cf921ef04fae32f9980f133（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main bec99201e6ef4addaed61d6d50bf8b67a956d0e2（非冻结候选）；Windows实现检查点codex/024-windows-native 077cbd56e103b9208450cbc3bc31274217a00656（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1891,3 +1891,14 @@ main17f07758e修后台轮询对collector的阻塞锁，51c8aca18加隔离阶段�
 诊断只在OCXD024_STATUS_TRACE=1及HOME为准确新/private/tmp/ocxd024-status-probe-*或ocxd024-gui-root-cancel-*/profile输出固定stage/相对微秒/threadID，不输出配置/载荷/凭据，不改权限或预算。首编译E0433、旧raw91、失败源与修后源/回执/清理保留。新增记录脚本的stdin编码准备错误发生在执行前，未修改产品或原证据。
 
 **边界**：已证实具体调度缺陷与真实官方重叠查询通过；未采到gui04原线程栈，不能断言是原GUI等待唯一原因或签部分捕获GUI整链通过。下一步仅重建此源一包、定向真实WebView状态IPC/后台重叠观察，不执行取消/Start/Stop，不开无假设轮。NAME最终外部默认Codex客户端、一般图/恢复/候选与Windows原未完范围保持。不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision173：Windows私有原生端点构建回交接收
+
+已fetch并按净差接收codex/024-windows-native 077cbd56e103b9208450cbc3bc31274217a00656、docs/024-windows-dev 331ac32fa70ff570a2dd86c3f74e123e41789bce；功能源b6db6d582cdabd4f87329c6548526fc40db6bc30。原handoff的“077待push”为提交前时点事实，当前真实远端已核到077，不改原件。新wl2-r7-private-native-20261118-r1的109文件/108manifest项/1317391字节完整摘要过，10最终执行源逐Git仅行尾归一相等；[本机接收回执](../../.adg/evidence/0.2.24/windows-private-native-receive-r1/result.json)。这是Git/证据净差复核，没有本机Windows执行或独立原生安全认证，也未整批merge该Windows生产分支。
+
+schema2 protectedlocator/first-instance SID管道先于ExistingQualification::prepare/OwnerStart创建；原ordinaryToken/session/exactimage/noOuterJob/nativepeer/locator/pin前后核、freshhello/nonce/replay及原QPC窗口不变。Begin仍只原registry canonicaltraitworker/ReturnedOwner复核，诊断metadata与fullhistory分开；ACK只交付数据不产权限。无旧v1回退、原loaded357热补、新image接旧pipe或自动force。新专用空fixture不绑定Runtime/Owner/官方，只用于两端原生身份与认证后拒绝检查。
+
+Windows报告实际MSVC严格DATA8过、invalidargv7项raw2、原5受影响回归过。最终ocxd 18220032字节SHA55cd6ef08653edc8bf2b5c754006473fba7b3fc8f4a0a04c486ea89222181d3e；TEST EXE4fa4d5bdb510dce997aae19419c5e7a1be5242da82e423728cb9e7f1b6910991。四构建原首错/修后源/PS51入口检查与制品清单保留；最后nativepeer记录/ACK净差仅编译通过，不能冒原生执行通过。
+
+**普通桌面实际端点仍Pending**：Public入口四输入摘要已核，marenben session7最后Disconnected，尚未执行launch-r7-private-native-empty.cmd。此项需该普通账户真实桌面；不提升token、不使用继承Job的控制环境绕过准入。用户参与只停本依赖，Windows可继续其它独立授权开发。151项状态不简写为“Windows完成”，真实普通Profile固定官方Owner原预算全链、V2 pre-manifest/partial/缺根、容量/CAPtrust/普通MSI/最终候选均未完。当前r2、40588、synthetic27960及拒删原现场不动，原件未还不跑新官方，原场景具体恢复需单独批准；不W2/双SID/发布。

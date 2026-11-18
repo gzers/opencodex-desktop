@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 34；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 35；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -309,3 +309,10 @@ Mac下一本机任务只针对gui04取消前status等待的真实阶段/线程�
 共享main17f07758e/51c8aca18/bec99201e只改状态polling、Mac准确隔离stage及定向测试，实际结果和未完GUI边界只归IMP172。Windows可自行增量合入；busy不发事件、不改原due时间或成功事实，原Status5/Unknown/Required保持。无Windows原件/Owner/worker/privatewire/scan独占文件或四trait变化，不重跑无影响MSI/CLI/旧归档/原Owner；实际共享并发集成在固定候选核。
 
 Mac继续单个真实包的只读状态IPC观察，不复跑供包/取消/启停。Windows077cbd56e/331ac32fa已fetch，尚待净差及原证据接收；原生端点桌面项Pending不能当通过。本批不授权r2/synthetic27960处置，原恢复/清理批准边界保持；不W2/双SID、不发布。
+
+
+## revision35 Windows私有原生端点回交后接续
+
+已接Windows077cbd56e/331ac32fa，精确摘要、151项状态和普通桌面Pending唯一归IMP173。原shared四trait/CONTRACT_VERSION4/r7写集不变；本机未整批merge原生实现。Windows继续唯一写原worker/privatecontrol/nativeV2/现有资格入口，不等Mac新接口。桌面只验证空fixture双端认证/四准确拒绝，不能当原产品Owner恢复或启停已过；原账户原普通令牌/noJob/同image/单次nonce和原5/10秒保持。
+
+当前需要普通账户实际桌面运行已摘要固定的launch-r7-private-native-empty.cmd；在此之前不提升、不从管理器Job绕过、不使用旧image/pipe/cleanup替代。此依赖不阻其它独立授权开发。原r2/synthetic27960/40588及拒删现场仍保留，不借本批接收授权force或归还。Mac独立继续状态IPC/NAME/恢复与候选，最终冻结前不W2/双SID、不发布。
