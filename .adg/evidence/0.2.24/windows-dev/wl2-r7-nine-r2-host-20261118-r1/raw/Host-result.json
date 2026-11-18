@@ -1,0 +1,143 @@
+{
+    "pid":  133584,
+    "creationFiletime":  "134394870078415414",
+    "observationMs":  59739,
+    "privateEvidenceComplete":  true,
+    "closed":  false,
+    "initialScans":  [
+                         {
+                             "deadlineNs":  29999788800,
+                             "phase":  "start-worker",
+                             "scans":  [
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2143071,
+                                               "finishedNs":  9505198300,
+                                               "firstError":  null,
+                                               "operation":  "source-capture",
+                                               "ordinal":  1,
+                                               "remainingAfterUs":  20494590,
+                                               "remainingBeforeUs":  22637662,
+                                               "startedNs":  7362126400
+                                           },
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2098382,
+                                               "finishedNs":  11608409200,
+                                               "firstError":  null,
+                                               "operation":  "source-readback",
+                                               "ordinal":  2,
+                                               "remainingAfterUs":  18391379,
+                                               "remainingBeforeUs":  20489762,
+                                               "startedNs":  9510026800
+                                           },
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2081224,
+                                               "finishedNs":  13696850800,
+                                               "firstError":  null,
+                                               "operation":  "source-readback",
+                                               "ordinal":  3,
+                                               "remainingAfterUs":  16302938,
+                                               "remainingBeforeUs":  18384162,
+                                               "startedNs":  11615626600
+                                           },
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2056365,
+                                               "finishedNs":  15772689200,
+                                               "firstError":  null,
+                                               "operation":  "source-readback",
+                                               "ordinal":  4,
+                                               "remainingAfterUs":  14227099,
+                                               "remainingBeforeUs":  16283465,
+                                               "startedNs":  13716323700
+                                           },
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2082905,
+                                               "finishedNs":  17863195100,
+                                               "firstError":  null,
+                                               "operation":  "source-readback",
+                                               "ordinal":  5,
+                                               "remainingAfterUs":  12136593,
+                                               "remainingBeforeUs":  14219498,
+                                               "startedNs":  15780290000
+                                           },
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2109658,
+                                               "finishedNs":  19984074500,
+                                               "firstError":  null,
+                                               "operation":  "source-readback",
+                                               "ordinal":  6,
+                                               "remainingAfterUs":  10015714,
+                                               "remainingBeforeUs":  12125372,
+                                               "startedNs":  17874416300
+                                           }
+                                       ]
+                         },
+                         {
+                             "deadlineNs":  29999788800,
+                             "phase":  "start-entry",
+                             "scans":  [
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2170804,
+                                               "finishedNs":  2174022000,
+                                               "firstError":  null,
+                                               "operation":  "launch-plan-prepare",
+                                               "ordinal":  1,
+                                               "remainingAfterUs":  27825766,
+                                               "remainingBeforeUs":  29996570,
+                                               "startedNs":  3218000
+                                           },
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2164279,
+                                               "finishedNs":  4339295100,
+                                               "firstError":  null,
+                                               "operation":  "launch-plan",
+                                               "ordinal":  2,
+                                               "remainingAfterUs":  25660493,
+                                               "remainingBeforeUs":  27824773,
+                                               "startedNs":  2175015600
+                                           },
+                                           {
+                                               "completed":  true,
+                                               "elapsedUs":  2170296,
+                                               "finishedNs":  6509635800,
+                                               "firstError":  null,
+                                               "operation":  "windows-read-complete",
+                                               "ordinal":  3,
+                                               "remainingAfterUs":  23490153,
+                                               "remainingBeforeUs":  25660449,
+                                               "startedNs":  4339339000
+                                           }
+                                       ]
+                         }
+                     ],
+    "normalStop":  false,
+    "reachedOriginalInjection":  true,
+    "privateEvidence":  [
+                            {
+                                "name":  "Host-fixture-preflight.json",
+                                "bytes":  1406,
+                                "sha256":  "93ee6e82bc55b887dda80711e60df3eb5378e73889f2d23e06f79cb7ea142707"
+                            },
+                            {
+                                "name":  "Host-fixture-result.json",
+                                "bytes":  74764,
+                                "sha256":  "8afad9a21e294f846a296f1318ddfc665af9f6c3a40f08d4de0b7a868145d28e"
+                            },
+                            {
+                                "name":  "Host-image-created-verified.json",
+                                "bytes":  1428,
+                                "sha256":  "d99edee9de401d5146512796e8c2679fcd91b54639536a6a24d5ef15b5470496"
+                            }
+                        ],
+    "publicStartOpen":  false,
+    "passed":  true,
+    "mode":  "Host",
+    "initialScansVerified":  true
+}
