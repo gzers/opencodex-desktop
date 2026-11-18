@@ -34,6 +34,8 @@ mod start_worker;
 pub(crate) use actions::{NativeAction, OriginalActionKind};
 use start_worker::StartWorker;
 
+const START_DISPATCH_FAILED: &str = "start-dispatch-failed-retained";
+
 fn fail(code: &str, detail: &str) -> AppError {
     AppError::RuntimeManaged {
         code: code.into(),
@@ -1151,11 +1153,18 @@ async fn execute_admitted(
         _outputs: outputs,
         _pins: pins,
     });
-    let mut start_gate = entry.start_worker.try_lock().map_err(unknown)?;
-    let worker = StartWorker::dispatch(&entry, &mut guard, &mut start_gate, plan, window)?;
+    let worker = (|| {
+        let mut start_gate = entry.start_worker.try_lock().map_err(unknown)?;
+        StartWorker::dispatch(&entry, &mut guard, &mut start_gate, plan, window)
+    })();
+    if let Err(error) = &worker {
+        if let Some(owner) = guard.as_mut() {
+            owner.stage = START_DISPATCH_FAILED;
+            owner.remember_start_failure(&Err(error.clone()));
+        }
+    }
     drop(guard);
-    drop(start_gate);
-    worker.wait().await
+    worker?.wait().await
 }
 #[cfg(debug_assertions)]
 pub(crate) fn qualify_existing(

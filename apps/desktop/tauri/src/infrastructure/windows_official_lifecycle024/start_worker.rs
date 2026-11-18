@@ -97,7 +97,15 @@ impl StartWorker {
                     worker_control.run(worker_entry, owner, plan, window);
                 }
             })
-            .map_err(unknown)?;
+            .map_err(|error| {
+                fail(
+                    "windows024_start_dispatch_failed",
+                    &format!(
+                        "原启动工作线程未创建；保留原 Owner。raw={:?}",
+                        error.raw_os_error()
+                    ),
+                )
+            })?;
         let _ = control.thread.set(worker);
         *registered = Some(control.clone());
         if let Err(error) = send.send(slot.take().unwrap()) {

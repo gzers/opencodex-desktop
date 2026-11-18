@@ -386,6 +386,9 @@ impl Owner {
     pub(in crate::infrastructure::windows_official_lifecycle024) fn require_normal_dispatch(
         &self,
     ) -> AppResult<()> {
+        if self.stage == START_DISPATCH_FAILED {
+            return Err(recovery_required());
+        }
         require_unoccupied(&self.before_resume_process)
     }
     /// Only the PROCESS portion, retained on this original Owner. No returned
