@@ -1,0 +1,4 @@
+
+thread 'modules::runtime::program_image::windows::tests::r7_image_expiry_after_pinning_prevents_file_dispatch' (18864) panicked at src\modules\runtime\program_image_windows.rs:638:13:
+expired inventory returned Err(RuntimeManaged { code: "runtime_image_unconfirmed", detail: "运行版本文件树无法核对，原目录保留" }) with 1 file dispatches; fixture C:\Users\15119\AppData\Local\Temp\ocx024-r7-dispatch-deadline-IsrnIt
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

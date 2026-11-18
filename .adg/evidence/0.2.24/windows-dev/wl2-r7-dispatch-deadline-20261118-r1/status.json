@@ -1,0 +1,49 @@
+{
+  "imp": 194,
+  "firstError": {
+    "receipt": "baseline-native.stderr.txt",
+    "raw": 101,
+    "detail": "Scanner rejected the result after dispatching one additional file job."
+  },
+  "hypothesis": "Expiry after object pinning could still permit a native reader dispatch.",
+  "w2Run": false,
+  "publicStartOpen": false,
+  "artifactSha256": "b31c65d57ae9c082599ba36a7a3da1ab062808e4a33c9dcb151d8d0cbac67c97",
+  "priorMatrix": "../wl2-r7-file-deadline-20261118-r1/status.json",
+  "matrix": [
+    {
+      "receipt": "baseline-native.stderr.txt",
+      "scope": "Baseline queued read dispatch after the original deadline",
+      "state": "reproduced",
+      "raw": 101,
+      "observedDispatches": 1
+    },
+    {
+      "receipt": "fixed-compile.json",
+      "scope": "MSVC x64 test library build",
+      "state": "passed",
+      "raw": 0
+    },
+    {
+      "receipt": "fixed-native.stdout.txt",
+      "scope": "Expiry after pinning, inventory equality, deadline, and worker join",
+      "state": "passed 4/4",
+      "raw": 0
+    },
+    {
+      "receipt": "fixed-image.stdout.txt",
+      "scope": "Fixed copied 2.99 complete image and manifest",
+      "state": "passed 1/1",
+      "raw": 0
+    },
+    {
+      "state": "tracked in successor and prior matrix",
+      "scope": "Shared entry, ordinary desktop, production return/lifecycle and MSI"
+    }
+  ],
+  "code": "7b20e70fa27ab7cf09a1925e2cbe477926960b11",
+  "cleanup": "cleanup.json",
+  "dualSidRun": false,
+  "published": false,
+  "team": 55
+}
