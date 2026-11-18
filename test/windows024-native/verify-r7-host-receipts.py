@@ -13,6 +13,14 @@ EXPORTS = {
 }
 HEX = r'[0-9a-f]{64}'
 UUID = r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}'
+RUNTIME_BUNDLE_SHA = '14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7'
+OFFICIAL_ARCHIVE_SHA = 'b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c'
+RUNTIME_IMAGE_SHA = 'ab9314d3df4475481736245580b24a4d1a6fa52e8030512d9afc9340b6d6c3b6'
+# The setup serializes ImageManifest in this order before hashing its bytes.
+IMAGE_MANIFEST_FIELDS = (
+    'schemaVersion', 'package', 'version', 'platform', 'officialArchiveSha256', 'treeSha256',
+    'bin', 'packageSha256', 'binSha256', 'nodeSha256', 'npmSha256', 'bunSha256', 'bunLauncherSha256',
+)
 
 
 def require(condition, message):
@@ -37,6 +45,24 @@ def read(root, name):
         raw = source.read(1048577)
     require(len(raw) <= 1048576, f'oversized receipt: {name}')
     return raw
+
+
+def verify_runtime_image(report):
+    current = report['current']
+    image = report['image']
+    require(set(image) == set(IMAGE_MANIFEST_FIELDS), 'runtime image manifest fields differ')
+    image_manifest = {field: image[field] for field in IMAGE_MANIFEST_FIELDS}
+    manifest_sha = hashlib.sha256(json.dumps(image_manifest, indent=2).encode('ascii')).hexdigest()
+    require(report['setupOnly'] is True and report['sharedFullImageReadback'] is True
+            and report['bundleSha256'] == RUNTIME_BUNDLE_SHA
+            and report['officialArchiveSha256'] == image['officialArchiveSha256'] == OFFICIAL_ARCHIVE_SHA
+            and current['imageSha256'] == manifest_sha == RUNTIME_IMAGE_SHA
+            and current['version'] == image['version'] == '2.99.0'
+            and current['platform'] == image['platform'] == 'win32-x64'
+            and type(current['schemaVersion']) is int and type(image['schemaVersion']) is int
+            and current['schemaVersion'] == image['schemaVersion'] == 1
+            and image['package'] == '@bitkyc08/opencodex' and image['bin'] == 'bin/ocx.mjs',
+            'fixed runtime image or full readback differs')
 
 
 def verify_scans(reports, elapsed_ms):
@@ -81,6 +107,7 @@ def verify(root, sid, session, profile, image, image_sha):
         require(len(raw) == row['bytes'] and hashlib.sha256(raw).hexdigest() == row['sha256'],
                 f"private export length or digest differs: {row['name']}")
         exports[row['name']] = decode(raw)
+    verify_runtime_image(exports['Host-image-created-verified.json'])
     preflight = exports['Host-fixture-preflight.json']
     record = exports['Host-fixture-result.json']
     require(intent['mode'] == 'Host' and intent['nativeStageReady'] is True
