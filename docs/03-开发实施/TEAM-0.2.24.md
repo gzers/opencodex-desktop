@@ -406,3 +406,9 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 共同 main 6bafdd342e69ee83e842f4b35a20bafa1320645a，Windows 代码 0d0c9d29ccd9075d59f92350c158c256c835924b，证据 3155e8fa0b9f6f82d023d415996e9edabffdc3f4。组件复核归 IMP190。四个共享 trait、CONTRACT_VERSION4、写集和时限沿用 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。Mac 并行承接后继取消及最终客户端验收。
 
 > fetch 最新 docs/governance-main，按 TEAM51／IMP190／r7 接续原 worker。复用隔离 D 的 V2 持久化组件证据，继续真实普通桌面私有 V2、实际原 Owner 同线程完整恢复、普通用户 MSI 及官方单 SID 原预算验收。保留原超时和旧 r2 现场，公开 Start 维持拒绝，固定签名候选前不跑 W2／双 SID。
+
+## revision52 Windows 原 Owner 普通桌面准入
+
+共享 main 6bafdd342e69ee83e842f4b35a20bafa1320645a，Windows 代码 7fb2f870683566487cd0fee236f03dfa90fee93c，证据 4cf484e08e13060f0e8d8687bd755f1c69c1025d。复核归 IMP191。[r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)规定独立普通交互桌面、隔离 I/D/H、原私有 D 预绑定及准确的 pre-manifest 注入点。沿用 Windows 独占写集和四个共享 trait。
+
+> fetch 最新 docs/governance-main，按 TEAM52／IMP191／r7 从 7fb2f8706 接续。用新普通交互账户隔离夹具测原 Owner 同线程 V2 Pending，真实捕获后、首次 manifest 意图前注入。回交三次完整扫描、原对象及锁、首错与预算。独立显式动作验证附件独占创建、刷盘、精确回读及否例。公开 Start 和旧 r2 维持原状，固定签名候选前保持单 SID 定向范围。

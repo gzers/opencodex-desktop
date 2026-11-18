@@ -227,3 +227,13 @@ Windows9fdd4c618／docs f6f8677a的object-type原型已形成新事实：两次�
 匹配、写入、刷新或回读失败以及过期时，保留内存字节、已持锁及首错，报告 durable=false，已有部分附件留待只读诊断。权限仅覆盖上述私有附件写入。禁止写客户端根、claim 或协调对象，禁止补造 manifest、释放再获取锁、终止进程或恢复原件。附件不提供生产启动、恢复、Stop 或 Closed 证明。定向验证覆盖父目录或 Owner 漂移、同名路径、失败动作／新动作错绑、短写、flush／回读失败和过期。原预算及未知即拒绝继续适用。
 
 扫描覆盖维持现行合同。cfce007f0 仅复用同一完整写前检查解析出的 Current。进一步减少原生读取须回交准确调用序列和同一对象、同一覆盖及前后条件的证明。四个共享 trait、CONTRACT_VERSION4、Windows 独占写集和旧 r2 权限维持现行合同。
+
+## 2026-11-18 增量决定：独立普通桌面的原 Owner 保全附件验证
+
+接收 4cf484e08e13060f0e8d8687bd755f1c69c1025d 中 ordinary-owner-admission-request.json。使用新建的独立普通本地账户真实交互桌面、独占 I/D/H 和该账户专用的合成客户端目录。先固定实际普通令牌、SID、Profile、会话、进程无外层 Job、同镜像管理客户端和宿主及执行入口身份，完整验证原样官方 2.99 镜像。Bootstrap 仅编入定向测试制品，正式包和公开 Start 均无法选择。夹具根、合成原件及协调键先核缺席，再创建和绑定。旧 r2、旧归档和日常配置排除。
+
+首次取得范围前固定私有 D 的附件父目录身份和安全投影，将实际 Owner、worker 和 slot 绑定到原启动。在 CaptureStore::capture_held 已捕获合成 .codex／.grok 保管树、完成前驱和 namespace 核对并固定计划目录后，在首次登记 manifest.json／current.json 意图前注入一次确定性失败。记录注入点、原始错误码、首错 QPC、原范围仍持有、真实部分前缀、Journal 缺席及实际子进程从未 Resume。经现有失败路径保全 anchor 和 ranges。沿用原 Start 30 秒总窗含队列，逾期如实保留。三次完整镜像核验与前后栅栏全部保留，逐次记录顺序、覆盖和用时。
+
+一次独立显式私有恢复命令须证明原 action、同一 slot、同一线程及仍持有原生范围，沿原单一 10 秒绝对期限只创建 V2 Intent／Pending 附件并完成 flush、精确回读及父目录和失败前缀复核。验证错绑定、父目录漂移、写入失败、过期和失联维持拒绝；Status 在 5 秒内准确区分 Pending、durable 与 Unknown。禁止重启 Start、补造 manifest、释放再取锁或凭附件归还原件。组件通过仅证明定向保全，正式 Start、Stop、Closed、后继及完整恢复预算独立判定。清理前先证实际进程缺席及锁释放，未知则保留现场并回交。
+
+共享 main 6bafdd342e69ee83e842f4b35a20bafa1320645a，Windows 7fb2f870683566487cd0fee236f03dfa90fee93c。Windows 写集限既有独占的 windows_owner_host024/**、Windows 原件／生命周期装配文件和 test/windows024-native/** 中的 Bootstrap、绑定、注入及定向验证。四个共享 trait、CONTRACT_VERSION4、原持久格式、未知拒绝和旧现场权限沿用现行合同。

@@ -2067,3 +2067,15 @@ Windows 继续原 worker 的严格 V2 部分捕获附件与同线程恢复，公
 Windows 代码 `0d0c9d29ccd9075d59f92350c158c256c835924b`，证据 `3155e8fa0b9f6f82d023d415996e9edabffdc3f4`。复核 11 个改动文件及最终执行源、67 项清单的字节数和 SHA-256、七组原始日志及 263 项矩阵。定向 28/28、最终测试和三个 MSVC 开发制品编译通过，51 个不同夹具根在本批前后经报告核实缺席。首次 Cargo 成功而包装器因生成 schema 拒绝的日志保留。原 `status.json` 回执把治理提交 ec5c597b77701811d60a2f1c394c3dd06cef0b43 写为 TEAM48／IMP187，实际为 TEAM49／IMP188，以原交接与提交内容为准。[固定证据](https://github.com/gzers/opencodex-desktop/tree/3155e8fa0b9f6f82d023d415996e9edabffdc3f4/.adg/evidence/0.2.24/windows-dev/wl2-r7-pending-durable-20261118-r1)
 
 本次接收隔离宿主的持久化组件证据。原 worker 绑定原私有 D、普通令牌、原线程及动作，严格 V2 Intent／Pending 独占创建、刷盘、读回并复核后才报告 durable=true；失败保留准确前缀。本次未向 main 合入 Windows 分支。普通桌面私有 V2、实际原 Owner 回执、同线程整链 10 秒恢复、普通用户 MSI 和官方单 SID 生命周期待验。继续保留 10,144 与 10,039 ms 的整链超时。公开 Start 保持拒绝；旧 r2 现场维持原状，三件原件仍在 custody，Node 未 Resume，Job 24 项 unknown／raw50，executionReady=false。固定签名候选前不进入 W2／双 SID。
+
+## revision191 Windows r7 保全状态、扫描与普通桌面准入
+
+净差复核代码 7fb2f870683566487cd0fee236f03dfa90fee93c、证据 4cf484e08e13060f0e8d8687bd755f1c69c1025d。相对 0d0c9d29 增量两笔、六个 Windows 文件，完整镜像校验保留，计时仅用于测试。三组清单成员、原始 Git 字节长度与 SHA-256 逐项匹配，前两组六份执行源匹配。当前为交接接收。[固定交接](https://github.com/gzers/opencodex-desktop/blob/4cf484e08e13060f0e8d8687bd755f1c69c1025d/docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md)
+
+| 证据 | 复核结果 |
+| --- | --- |
+| 准备保全状态，46 件 | 2/2，93 与 63 ms。真实附件 I/O、存活夹具 worker、合成 worker 状态。覆盖精确读回、同名、短写、flush、回读失败和失联。首错和两条记录保留，回执确认五个最终根及首个归档夹具缺席。 |
+| 准备完整扫描，32 件 | 1/1，47 ms，三个 MSVC 开发制品编译通过。第三次完整校验拒绝等长字节变化，原 deadline 保留。回执确认夹具及生成 schema 缺席，真实 Owner 顺序和生产预算待验。 |
+| 旧 r2 源码复核，4 件 | 原宿主提交 357210891f14a1851881e6192bd09d7031471707，树 a284da0e1bd517daa26848857b8189bbc88838c0。唯一 Resume 在捕获成功之后。实际捕获 30,699 ms，created-suspended，originalPhaseRetained=false。24 个 Job 观察为 Unknown／raw50。 |
+
+后继隔离准入与注入点见 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。仍缺普通桌面原 Owner V2 回执、同原线程完整恢复 10 秒、普通用户 MSI 和官方单 SID 生命周期。整链 10,144／10,039 ms 超时保留。旧 r2 保持原状，三件原件仍在 custody，Node 未 Resume，首错 command-lineage raw64，executionReady=false。公开 Start 保持拒绝，签名固定候选后再进入 W2／双 SID。
