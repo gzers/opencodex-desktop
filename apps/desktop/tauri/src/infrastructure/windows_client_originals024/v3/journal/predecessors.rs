@@ -13,7 +13,7 @@ impl Journal {
                 return Err(invalid());
             }
             self.check_capture_namespace(end)?;
-            self.check_records(end)
+            self.check_records(end).map(drop)
         })();
         if result.is_err() {
             self.poison_segment();

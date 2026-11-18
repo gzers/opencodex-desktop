@@ -68,7 +68,7 @@ pub(super) struct Readback {
 }
 
 impl Readback {
-    pub(super) fn finish(mut self, result: &io::Result<()>) {
+    pub(super) fn finish<T>(mut self, result: &io::Result<T>) {
         let finish = Instant::now();
         self.row.elapsed_us = finish.duration_since(self.start).as_micros() as u64;
         self.row.remaining_us = self.end.saturating_duration_since(finish).as_micros() as u64;

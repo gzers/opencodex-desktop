@@ -741,7 +741,7 @@ impl Journal {
         out.check(end)?;
         Ok(out)
     }
-    fn check_inner(&mut self, end: Instant) -> io::Result<()> {
+    fn check_inner(&mut self, end: Instant) -> io::Result<Current> {
         let authorized_end = self
             .pending_source_action
             .as_ref()
@@ -757,7 +757,7 @@ impl Journal {
     // Shared exact native comparisons. Mutation callers enter ONLY through
     // check_inner's original action cutoff; historical entry additionally
     // requires a retained timely completion object before and after reading.
-    fn check_records(&mut self, end: Instant) -> io::Result<()> {
+    fn check_records(&mut self, end: Instant) -> io::Result<Current> {
         if self.poisoned {
             return Err(invalid());
         }
@@ -776,7 +776,7 @@ impl Journal {
     }
     // Exact immutable native observations, not permission to mutate a failed
     // chain. Ordinary/historical callers still enter via check_records.
-    fn read_retained_records(&mut self, end: Instant) -> io::Result<()> {
+    fn read_retained_records(&mut self, end: Instant) -> io::Result<Current> {
         before(end)?;
         if native::current_identity()? != self.token {
             return Err(invalid());
@@ -854,9 +854,13 @@ impl Journal {
         if actual != names {
             return Err(invalid());
         }
-        before(end)
+        before(end)?;
+        Ok(tip)
     }
     pub(in super::super) fn check(&mut self, end: Instant) -> io::Result<()> {
+        self.checked_current(end).map(drop)
+    }
+    fn checked_current(&mut self, end: Instant) -> io::Result<Current> {
         let r = self.check_inner(end);
         if r.is_err() {
             self.poisoned = true;
@@ -874,7 +878,9 @@ impl Journal {
         self.append_entry_inner(ChainEntry::Node(event), end)
     }
     fn append_entry_inner(&mut self, event: ChainEntry, end: Instant) -> io::Result<()> {
-        self.check(end)?;
+        // The old tip comes from this append's full native check. Keep the
+        // separate disk comparison below before overwriting current.
+        let old = self.checked_current(end)?;
         // Validate against an independent replay before any durable write.
         let mut next = Progress::new(
             &self.manifest.storage_plan,
@@ -886,7 +892,7 @@ impl Journal {
             &self.manifest.deadline_scope,
         )?;
         for record in &self.events {
-            // self.check(end) above independently reobserved exact raw bytes,
+            // checked_current above independently reobserved exact raw bytes,
             // native identity/all8/membership of EVERY record. The locally
             // owned typed event cannot change and is the same encoded value;
             // replay all original progression rules without decoding it again.
@@ -915,7 +921,6 @@ impl Journal {
                 "injected after immutable event sync/readback before current CAS",
             ));
         }
-        let old: Current = serde_json::from_slice(&self.current_raw).map_err(|_| invalid())?;
         let tip = Current {
             schema: ANCHORED_CURRENT_SCHEMA_V3.into(),
             session_id: old.session_id,
