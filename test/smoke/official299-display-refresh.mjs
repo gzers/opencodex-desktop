@@ -5,7 +5,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 const [packageRoot,input,reportFile]=process.argv.slice(2)
 const profile=fs.realpathSync(process.env.HOME??'')
-assert(profile.startsWith('/private/tmp/ocxd024-name-refresh-'))
+assert(profile.startsWith('/private/tmp/ocxd024-name-refresh-')||profile.startsWith('/private/tmp/ocxd024-name-rollback-'))
 assert.equal(process.env.OPENCODEX_HOME,path.join(profile,'opencodex'))
 assert.equal(process.env.CODEX_HOME,path.join(profile,'.codex'))
 assert(path.isAbsolute(packageRoot)&&path.isAbsolute(input)&&path.isAbsolute(reportFile))

@@ -863,6 +863,7 @@ where
 pub async fn get_status_snapshot(
     collector: tauri::State<'_, SharedStatusCollector>,
 ) -> AppResult<crate::types::runtime_status::StatusSnapshotDto> {
+    crate::infrastructure::status_source::diagnostic_stage("command.received");
     let collector = collector.inner().clone();
     tauri::async_runtime::spawn_blocking(move || get_status_snapshot_with_collector(&collector))
         .await
@@ -872,6 +873,7 @@ pub async fn get_status_snapshot(
 pub fn get_status_snapshot_with_collector(
     collector: &SharedStatusCollector,
 ) -> AppResult<crate::types::runtime_status::StatusSnapshotDto> {
+    crate::infrastructure::status_source::diagnostic_stage("collector.before-lock");
     // Polls and post-mutation reconciliation share one sampler. Never queue
     // arbitrarily many full CLI reads behind another live sample: the caller
     // receives uncertainty and retains its existing lifecycle gate.
@@ -882,7 +884,10 @@ pub fn get_status_snapshot_with_collector(
         },
         std::sync::TryLockError::Poisoned(_) => AppError::NotConfigured,
     })?;
-    status_snapshot_from_collector(&mut collector)
+    crate::infrastructure::status_source::diagnostic_stage("collector.acquired");
+    let result = status_snapshot_from_collector(&mut collector);
+    crate::infrastructure::status_source::diagnostic_stage("collector.return");
+    result
 }
 
 #[tauri::command]

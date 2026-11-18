@@ -2,6 +2,8 @@
 //! does NOT grant service Start or ordinary capture permission. Old binding,
 //! events, Originals and archives remain immutable.
 use super::*;
+#[path = "macos_client_successor_prepare_cancel.rs"]
+pub mod preparation_cancellation;
 pub(in crate::infrastructure::macos_client_originals) struct CreationAuthority<'a> {
     index: &'a Index,
     closed: Head,

@@ -101,10 +101,13 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
         policy.write_text('(version 1) (allow default) (deny network*) (deny file-read* file-write* (subpath ' + json.dumps(pwd.getpwuid(os.getuid()).pw_dir) + ')) (deny file-read* file-write* (subpath "/Library/Keychains")) (deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))')
         shutil.copyfile(policy, output / 'native.sb')
         test = TEST if scope == 'storage' else 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::service_tests::current_service_movement_and_native_release_bind_a_distinct_cancellation_terminal'
-        if scope not in ('storage', 'current-service', 'user-action', 'partial-capture'): raise ValueError('unknown root cancellation test scope')
+        if scope not in ('storage', 'current-service', 'user-action', 'partial-capture', 'successor-review'): raise ValueError('unknown root cancellation test scope')
         argv = ['/usr/bin/sandbox-exec', '-f', str(policy), str(host), '--exact', test, '--ignored', '--nocapture', '--test-threads=1']
         env = {'HOME': str(root / 'profile'), 'CFFIXED_USER_HOME': str(root / 'profile'), 'PATH': '/usr/bin:/bin', 'TMPDIR': str(parent), 'OCXD024_ROOT_CANCEL_NATIVE': str(root)}
         env['OCXD024_ROOT_CANCEL_CASE'] = scenario
+        if scope == 'successor-review':
+            if scenario != 'success': raise ValueError('successor review requires the exact successful predecessor setup')
+            env['OCXD024_SUCCESSOR_CANCEL_REVIEW_ONLY'] = '1'
         if scope in ('user-action', 'partial-capture'): env['OCXD024_ROOT_CANCEL_USER_ACTION'] = '1'
         if scope == 'partial-capture':
             if partial_point not in ('directory_created','codex_archived','grok_archived','original_published'): raise ValueError('explicit capture boundary required')
@@ -121,7 +124,7 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
         print((output / 'stdout.log').read_text()[-2000:], flush=True)
         print((output / 'stderr.log').read_text()[-2000:], flush=True)
     finally:
-        if proc and proc.poll() is None:
+        if proc and proc.poll() is None and scope != 'successor-review':
             os.killpg(proc.pid, signal.SIGTERM)
             try: proc.wait(timeout=5)
             except subprocess.TimeoutExpired: pass
@@ -151,11 +154,13 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
                      if p.is_file() and not p.is_symlink() and not p.is_relative_to(root / 'program') and not p.is_relative_to(root / 'resources')]
         write(output / 'fixture-content-inventory.json', inventory)
         write(output / 'result.json', result or {'failedBeforeRun': True, 'releaseAcceptance': False})
-        if not residues:
+        retain_review = scope == 'successor-review' and (result is None or result.get('exitCode') != 0 or residues)
+        if not residues and not retain_review:
             clean_coordinators(task_coordinators,output)
             shutil.rmtree(parent)
         write(output / 'cleanup.json', {'ownedRoot': str(parent), 'absent': not parent.exists(), 'ownedGroupResidues': residues, 'serviceStarted': False,
-                                       'scope': 'new synthetic profile/program/copied test host only; evidence retained'})
+                                       'scope': 'new synthetic profile/program/copied test host only; evidence retained',
+                                       'failedSuccessorReviewSceneRetained': bool(retain_review)})
     if result is None or result['exitCode'] or residues: raise RuntimeError('official guarded preservation test or cleanup failed')
 
 
@@ -163,7 +168,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--case', choices=['success', 'before_move', 'after_move', 'new_data', 'new_root'], default='success')
-    parser.add_argument('--scope', choices=['storage', 'current-service', 'user-action', 'partial-capture'], default='storage')
+    parser.add_argument('--scope', choices=['storage', 'current-service', 'user-action', 'partial-capture', 'successor-review'], default='storage')
     parser.add_argument('--partial-point', choices=['directory_created','codex_archived','grok_archived','original_published'])
     args = parser.parse_args()
     run(args.output, args.case, scope=args.scope, partial_point=args.partial_point)

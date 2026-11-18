@@ -20,6 +20,37 @@ pub fn status_collect_timeout() -> Duration {
 #[cfg(all(test, windows))]
 #[path = "windows_status_sample024_tests.rs"]
 mod windows_sample_tests;
+/// Task-scoped read-only diagnostics. No paths, configuration, payloads or
+/// credentials are emitted, and this cannot change status/permission/budgets.
+#[cfg(target_os = "macos")]
+pub(crate) fn diagnostic_stage(stage: &'static str) {
+    if std::env::var_os("OCXD024_STATUS_TRACE").as_deref() != Some(std::ffi::OsStr::new("1")) {
+        return;
+    }
+    let Some(home) = std::env::var_os("HOME").map(PathBuf::from) else {
+        return;
+    };
+    if !home.starts_with("/private/tmp")
+        || home.file_name() != Some(std::ffi::OsStr::new("profile"))
+        || !home
+            .parent()
+            .and_then(std::path::Path::file_name)
+            .is_some_and(|n| {
+                let name = n.to_string_lossy();
+                name.starts_with("ocxd024-status-probe-")
+                    || name.starts_with("ocxd024-gui-root-cancel-")
+            })
+    {
+        return;
+    }
+    static START: std::sync::OnceLock<Instant> = std::sync::OnceLock::new();
+    eprintln!(
+        "STATUS024_PHASE {}",
+        serde_json::json!({"stage":stage,"elapsedUs":START.get_or_init(Instant::now).elapsed().as_micros(),"thread":format!("{:?}",std::thread::current().id()),"acceptance":false})
+    );
+}
+#[cfg(not(target_os = "macos"))]
+pub(crate) fn diagnostic_stage(_stage: &'static str) {}
 
 /// 显式路径官方状态来源。
 #[derive(Debug)]
@@ -119,6 +150,7 @@ impl OfficialStatusSource {
     }
 
     async fn fetch_inner_at(&self, deadline: Instant) -> Result<serde_json::Value, CollectError> {
+        diagnostic_stage("fetch.enter");
         let started = Instant::now();
         if started >= deadline {
             return Err(CollectError::Timeout);
@@ -152,10 +184,12 @@ impl OfficialStatusSource {
                 _ => {}
             }
         }
+        diagnostic_stage("source.before");
         if self.runtime.source_problem().is_some() {
             return Err(CollectError::Unreachable);
         }
         let executable = self.runtime.executable();
+        diagnostic_stage("source.after");
         let validate = || -> Result<(), CollectError> {
             if !self.working_directory.is_dir() {
                 return Err(CollectError::Unreachable);
@@ -182,16 +216,19 @@ impl OfficialStatusSource {
         {
             return Err(CollectError::Unreachable);
         }
+        diagnostic_stage("endpoint.before");
         if let Some(payload) = super::attested_status::fetch(
             self.runtime.clone(),
             self.environment.opencodex_home.clone(),
         )
         .await?
         {
+            diagnostic_stage("endpoint.attested");
             // Never use the legacy lightweight cache for this partial, freshly
             // authenticated report. Every call repeats record/connection proofs.
             return Ok(payload);
         }
+        diagnostic_stage("endpoint.absent");
         // The lease may have become active during the endpoint observation.
         // Returning unknown preserves the collector's last state; it never
         // bypasses any proof required by the lifecycle action itself.
@@ -202,20 +239,24 @@ impl OfficialStatusSource {
             .checked_duration_since(Instant::now())
             .ok_or(CollectError::Timeout)?;
         let mut command = self.command(&executable);
+        diagnostic_stage("cli.before-spawn");
         #[cfg(unix)]
         command.process_group(0);
         let mut child = command.spawn().map_err(|_| CollectError::Unreachable)?;
+        diagnostic_stage("cli.spawned");
         #[cfg(unix)]
         let diagnostic_group = child.id();
         let mut stdout = child.stdout.take().ok_or(CollectError::Unreachable)?;
         let limit = crate::modules::runtime_defaults::status_output_max_bytes();
         let mut bytes = Vec::new();
         let result = tokio::time::timeout(budget, async {
+            diagnostic_stage("cli.read-before");
             (&mut stdout)
                 .take(limit + 1)
                 .read_to_end(&mut bytes)
                 .await
                 .map_err(|_| CollectError::Unreachable)?;
+            diagnostic_stage("cli.read-after");
             if bytes.len() as u64 > limit {
                 return Err(CollectError::Parse);
             }
@@ -227,6 +268,7 @@ impl OfficialStatusSource {
         })
         .await
         .unwrap_or(Err(CollectError::Timeout));
+        diagnostic_stage("cli.await-finished");
         if result.is_err() {
             // Only this diagnostic's isolated process group; never the proxy PID.
             #[cfg(unix)]
@@ -237,6 +279,7 @@ impl OfficialStatusSource {
             }
             let _ = child.kill().await;
             let _ = child.wait().await;
+            diagnostic_stage("cli.failure-reaped");
         }
         let payload: serde_json::Value = result?;
         if self.runtime.managed_installation_root().is_some() {
@@ -533,6 +576,7 @@ impl StatusSource for OfficialStatusSource {
             .map(|data| (data.clone(), self.environment.opencodex_home.clone()))
     }
     fn client_recovery(&self) -> crate::modules::status::ClientRecoveryState {
+        diagnostic_stage("recovery.enter");
         use crate::modules::status::ClientRecoveryState as State;
         #[cfg(windows)]
         if self.runtime.managed_installation_root().is_some() {
@@ -554,8 +598,9 @@ impl StatusSource for OfficialStatusSource {
                 working_directory: self.working_directory.clone(),
                 opencodex_home: self.environment.opencodex_home.clone(),
             };
-            return crate::infrastructure::macos_client_originals::session_index::generation::inspect_client_recovery(&context, data)
-                .unwrap_or(State::Unknown);
+            let result=crate::infrastructure::macos_client_originals::session_index::generation::inspect_client_recovery(&context, data).unwrap_or(State::Unknown);
+            diagnostic_stage("recovery.return");
+            return result;
         }
         // No native backend/input means unknown, including unsupported managed
         // platforms. Do not substitute an absent JSON field or a guessed path.
