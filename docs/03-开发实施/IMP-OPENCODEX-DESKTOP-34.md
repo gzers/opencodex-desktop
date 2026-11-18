@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 197；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 202；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2190,3 +2190,11 @@ Windows 测试源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 e479ab8a5
 修复前两项失败，raw101，2,927 ms。外树动作能写入完成记录，交换计划能移动源树 auth.json 并在目标留下四份记录。修复将已准备节点和持久移动记录绑定其原 WholeTree。MSVC 夹具 12/12、raw0、3,503 ms，链接产品库 16/16、raw0，实际测试 1.49 秒，含构建计时 222,171 ms。接收范围为合成夹具。Windows 报告 32 个夹具根已核缺席，四个已归档失败夹具和一个未跟踪生成 schema 因权限策略保留。本机复核 Git 证据和归档，物理清理状态取自 Windows 回执。
 
 普通桌面仍无 nine-r2 合格 Host 回执。按 TEAM62 继续定向，保全 nine-r1 与独立旧官方 r2。普通用户 MSI、生产单 SID、正式恢复和签名候选仍待验收。公开 Start 保持拒绝。[固定证据](https://github.com/gzers/opencodex-desktop/tree/e479ab8a5b657fe90987868a109378ffad6b8f46/.adg/evidence/0.2.24/windows-dev/wl2-r7-external-tree-binding-20261118-r1)
+
+## revision202 接收原 Start 线程范围探针草稿
+
+Windows 核验器源码 673d1166334c4fb78d5094bc09ef130e578e0991，证据 644f8bc861bd7a1009aed9c5789699ff569f0895。复核 Git 对象 36 项文件长度与 SHA-256。核验器净差限测试脚本，其对固定 nine-r2 回执的适用性待证，现有 nine-r2 沿用 a7d7284a3。探针是 sourceCommit:null、productionAccepted:false 的测试草稿。最终 MSVC 定向 20/20，非测试生产库 cargo check raw0。PowerShell 启动门槛 1 项有效样本通过、10 项改写拒绝。测试 EXE SHA-256 为 1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8。原 LNK1104 保留。Windows 报告 268 个临时根已核缺席，两份合成夹具已归档并因删除被拒保留原目录。
+
+最新交接时 nine-r2/out01 无 Host 回执。按 TEAM63／r7 采集固定配对单次 Host，旧制品缺原线程探针，取证后停在 Explicit 前。含探针的后继配对待绑定源码、制品和全量暂存清单，再执行真实普通桌面定向验证。旧 nine-r1 首错 6,460 ms／raw32，三次扫描且无 worker。独立旧官方 r2 三件原件仍在 custody，24 个 Job 成员 Unknown／raw50，命令谱系 raw64，executionReady=false。普通用户 MSI raw1625、生产单 SID、完整恢复和固定候选待验，公开 Start 维持拒绝。
+
+[固定证据](https://github.com/gzers/opencodex-desktop/tree/644f8bc861bd7a1009aed9c5789699ff569f0895/.adg/evidence/0.2.24/windows-dev/wl2-r7-original-range-probe-20261118-r1)

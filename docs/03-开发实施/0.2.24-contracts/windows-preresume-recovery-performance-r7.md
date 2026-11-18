@@ -275,3 +275,11 @@ TEAM61／IMP200。沿用 nine-r2 源码 daae8ffff7f304ec28b9c0214db26691e930a395
 Explicit 前分别取得同一存活 Host PID/FILETIME 的独立系统观察，以及由原注册 worker 在原 DiagnosticBefore 5 秒内出具的新鲜原生范围证明。控制端无法读取时可在原普通 SID 和真实会话内独立观察。raw5、PID 单独匹配、注入时快照、当前 worker 元数据、Status 或离线 JSON 均不满足范围门。只读探针从 ReadWorkerDiagnostic 经原 registry 调度到持有对象的原线程，绑定准确 failure、action、worker、线程、claim/N/L/K 和同一原生对象，前后核同次请求、原期限和连续持有。保持完整覆盖、活性和未知拒绝。探针禁止持久写入、释放、恢复、重取锁、Resume 或改变生产权限及合约。两个前置条件齐备后才进入原 10 秒 Explicit 与 5 秒 DiagnosticAfter，验证唯一 V2 Intent/Pending、刷盘和逐字节独立回读。
 
 测试接线写集限 apps/desktop/tauri/src/infrastructure/ 下 windows_owner_host024/recovery_control/{server,client,wire,wire_tests}.rs、windows_official_lifecycle024.rs、windows_official_lifecycle024/start_worker.rs、windows_client_originals024/recovery_worker.rs、windows_client_originals024/coordination/retained_start.rs。定向入口限 test/windows024-native/ 下 launch-r7-partial-owner.{cmd,ps1}、launch-r7-private-native-empty.{cmd,ps1}、verify-r7-host-receipts.py。生产入口、共享 trait 与持久格式维持现行合同。原二进制缺少实际范围探针时，保全 Host 结果并暂停 Explicit。需要重建时固定新源码、测试二进制与脚本摘要，使用新隔离配对，保留原始证据和运行对象。旧 nine-r1 与旧官方 r2 均独立保全。公开 Start、普通 MSI、生产 Stop/Closed 和单 SID 生命周期仍独立验收，固定候选前保持原范围。
+
+## 2026-11-18 执行增量：含原线程探针的隔离配对
+
+TEAM63／IMP202。接收证据 644f8bc861bd7a1009aed9c5789699ff569f0895。Windows 独占写集增加 apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture.rs 的测试常量 BASE、PUBLIC 和 BUNDLE，须与已授权的 test/windows024-native/launch-r7-partial-owner.ps1 同一批指向新隔离 Public／Profile 根。入场核根缺席、父目录身份、实际普通令牌、WinSta0/Default、无外层 Job 与结构性不可 Resume。沿用 TEAM61 其余限定写集，生产权限、格式和期限维持原合同。
+
+固定新配对前先将探针草稿绑定准确 Git 源提交，并核对测试 EXE、启动脚本、核验器、官方运行时及全量暂存文件的摘要与清单。新普通桌面轮次的待证伪判断为同一原 30 秒内完成九次完整扫描并在首次 Intent 前 raw31，Node 未 Resume，且同一原 worker 能在 DiagnosticBefore 5 秒内证明原失败、同一原生对象和 claim/N/L/K 连续持有。独立系统观察须证明同一存活 PID/FILETIME。两项齐备才进入 Explicit 10 秒及 DiagnosticAfter 5 秒，验证唯一 V2 Intent/Pending、flush 和独立逐字节读回。未知或失败保留首错和真实覆盖，停止后继动作。
+
+固定 nine-r2 仍用 a7d7284a3 核验 Host。已有回执直接消费。out01 仍空时，在已准入的 marenben 普通 session 7 单跑一次 Host，随后保全并停在 Explicit 前。旧官方 r2 和 nine-r1 独立保全。本定向轮不替代正式恢复、Stop、Closed 或生产验收。

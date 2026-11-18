@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 60；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 63；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -474,3 +474,9 @@ Windows 源码 a7d7284a3280d973aaacddf361adae6f6dcc8a3c，证据 f9bf34095e06e1f
 Windows 源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 e479ab8a5b657fe90987868a109378ffad6b8f46，组件接收见 IMP201。桌面输入继续使用 TEAM61／r7 已固定配对。Mac 独立推进后继准备取消。
 
 > fetch docs/governance-main，按 TEAM62／IMP201／r7。若 out01 仍空，在 marenben 普通 session 7 单跑固定 nine-r2 Host，用 a7d7284a3 核验 30 秒内九次完整扫描、首次 Intent 前 raw31、Node 未 Resume。先独立核同一存活 PID/FILETIME，并在原 DiagnosticBefore 5 秒内由原 worker 实查 claim/N/L/K，再做 10 秒 Explicit 与 5 秒读回。固定制品缺探针时保留 Host 回执并停在 Explicit 前，按 r7 另固定测试配对。原失败现场保全，签名候选冻结前保持单 SID，原始证据走 Git。
+
+## revision63 固定原线程探针的测试配对
+
+共享 main 040f411e6d48d97bde6e7b2e6c22860e547b6173，Windows 核验器源码 673d1166334c4fb78d5094bc09ef130e578e0991，证据 644f8bc861bd7a1009aed9c5789699ff569f0895。接收结果见 IMP202。按 [r7 增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 配对调整三个测试路径常量及启动器，沿用原线程探针写集。Mac 并行承接后继取消。固定签名候选前保持单 SID 定向验证。
+
+> fetch 最新 docs/governance-main，按 TEAM63／IMP202／r7 推进。先查 nine-r2/out01，空时用固定制品在 marenben 普通 session 7 只跑一次 Host，用 a7d7284a3 核九次全量扫描、30 秒、首次 Intent 前 raw31、Node 未 Resume。旧制品取证后停在 Explicit 前。同步固定含原线程探针的新隔离配对及全量输入摘要。新配对先独立证明同一存活 PID/FILETIME，再由原 worker 在 5 秒内核原失败与 claim/N/L/K，齐备才跑 10 秒 Explicit 和 5 秒读回。保留原失败及旧 r2，回交 Git 证据。
