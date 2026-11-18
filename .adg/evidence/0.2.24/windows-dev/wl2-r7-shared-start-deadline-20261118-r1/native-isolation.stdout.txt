@@ -1,0 +1,12 @@
+
+running 5 tests
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_rejects_native_image_alias_and_digest_drift ... ok
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_rejects_native_junction_before_creation ... r7-fixture-junction raw=Some(0); stderr=
+ok
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_rejects_overlap_and_refuses_replacement_while_pinned ... r7-fixture-directory-replacement raw=Some(32)
+ok
+test infrastructure::windows_client_originals024::partial_capture_fixture::wl2_r7_partial_owner_bootstrap_rejects_wrong_locator_token_or_image ... ok
+test infrastructure::windows_official_lifecycle024::wl2_r7_isolation_rejects_missing_mismatched_injection_and_resume ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2307 filtered out; finished in 0.23s
+

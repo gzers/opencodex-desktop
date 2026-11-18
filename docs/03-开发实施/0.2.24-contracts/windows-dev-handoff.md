@@ -1664,3 +1664,12 @@ MSVC x64 raw0。定向原生 4/4，含在三成员夹具的首项后到期，以
 Windows 源码 7b20e70fa27ab7cf09a1925e2cbe477926960b11 已推送并核对远端。固定原生对象后检查原 deadline，并在创建读线程前和逐项派发前再次核对。到期即停止后续任务派发，已启动线程仍收束，完整覆盖与原错误语义沿用。
 
 MSVC x64 基线及修复均 raw0。原负例 raw101，已逾期但仍派发一次文件读取。修复原生 4/4；固定 2.99 副本在原 10 秒内读回 10586 个文件及 manifest，用时 8242335 微秒。修复制品 SHA-256 b31c65d57ae9c082599ba36a7a3da1ab062808e4a33c9dcb151d8d0cbac67c97。原始证据、基线制品摘要、首错和逐文件摘要见 wl2-r7-dispatch-deadline-20261118-r1。首错夹具保留，成功夹具缺席。共享首启集成与 marenben 真实桌面待后继回执。旧 r2 和公开 Start 拒绝沿用。
+
+
+## 2026-11-18 r7 首启完整扫描接入共享期限
+
+消费 main 1c69bff16b1f6d1edf35c91c93640ee236894312、governance a244a6cdf2b7bdfc1ea8044f9ed45761cc6f402d、TEAM56／IMP195。Windows 源码 8266cf6a6b67402719c89689984b2154c8cc4599 已推送并回读。第三次入口完整读取使用同一 ActionWindow.deadline()；共享 LaunchPlan 提供前两次期限接线。定向回执用同一进程的单调时钟记录入口三次和原 worker 六次的实际区间、原期限和首错。PowerShell 5.1 验证 19/19，包含截止点不一致、区间重叠和微秒截断。实际九次用时待原宿主，单次固定镜像的通过不能推出全组可达。
+
+MSVC x64 测试库 raw0，三个产品开发形状 raw0，检查到的测试入口标记仅出现在测试制品。原生定向 18/18：隔离／禁止 Resume 5 项、原 worker／Status 5 项、扫描截止／整树／线程收束 8 项。共享 admission 用例限定 Unix，Windows 定向回执使用其原生覆盖。测试制品 SHA-256 af9d31a7faaa9f364038fb3c492ba994c7445f7d36e19f7bc04834b109a92221。证据 wl2-r7-shared-start-deadline-20261118-r1 保存原 Cargo、原生、PowerShell 日志、源码及制品摘要和暂存 ACL。首次本地写集检查因命令优先级误拒，重新分组比较后只提交了合规四文件。成功 PowerShell 夹具及本轮命名扫描夹具缺席，生成 schema 与原存档相同后移除。
+
+九扫描独立夹具已绑定现有 marenben、session 7、源码、固定运行时包及新测试制品。旧七扫描配对原样保存。记录时 session 7 断开，新旧 out01 均空，新私有树缺席。需原桌面先运行 Host，再凭实际令牌、no-Job、全组时限、raw31 和未 Resume 回执决定能否继续 5／10／5 秒同 Owner 动作。保留旧 r2 的三原件和原锁。旧 Job 24 项 Unknown／raw50、command-lineage raw64、executionReady=false。完整原件归还、正式单 SID 生命周期及普通 MSI 仍待，公开 Start 持续拒绝。

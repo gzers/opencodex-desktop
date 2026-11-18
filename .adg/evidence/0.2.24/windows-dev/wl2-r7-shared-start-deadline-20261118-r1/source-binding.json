@@ -1,0 +1,45 @@
+{
+  "code": "8266cf6a6b67402719c89689984b2154c8cc4599",
+  "buildBase": "e7c8cdcd80208ef30772fe88e6d18b73daaa1420",
+  "testArtifact": "integrated-test.exe",
+  "testBytes": 103869440,
+  "testSha256": "af9d31a7faaa9f364038fb3c492ba994c7445f7d36e19f7bc04834b109a92221",
+  "testMarkers": [
+    "isolated_r7_partial_capture_stage_host",
+    "isolated-r7-partial-capture-original-worker",
+    "fixture descriptor escaped its private roots",
+    "ocx024-r7-isolated-owner-nine-r1"
+  ],
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture.rs",
+      "gitBlob": "394c274288b89c2dac744e4851aee4f0e51dc59f",
+      "committedSha256": "c9aeaa687e5ef465d3ff0027a6b2b2117838477aaeb818c210a4626e39c546f5",
+      "checkoutSha256": "c9aeaa687e5ef465d3ff0027a6b2b2117838477aaeb818c210a4626e39c546f5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_timing.rs",
+      "gitBlob": "3c8b7c04fe6585d1d002ed4da1b79e9cf999bd8f",
+      "committedSha256": "d095d83032eba2219cd3c7fbb7478fae4e68bd7a7af5aa9f7264c3285da94e7d",
+      "checkoutSha256": "d095d83032eba2219cd3c7fbb7478fae4e68bd7a7af5aa9f7264c3285da94e7d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "gitBlob": "fd3f1939bf7273c7053fc3e090236067684a60c7",
+      "committedSha256": "0ccbf3b9b1b841fd28f0d0c482d7604a3cf33203147d2a0ad74ebadd3db8872d",
+      "checkoutSha256": "0ccbf3b9b1b841fd28f0d0c482d7604a3cf33203147d2a0ad74ebadd3db8872d"
+    },
+    {
+      "path": "test/windows024-native/launch-r7-partial-owner.ps1",
+      "gitBlob": "e7974ccc2ea964bb9b1d6010e0f01a745c1a0309",
+      "committedSha256": "12f3a82f71cd74f3a0c47758953bb61ff07cc51c06e519503dbb79a53f3ed249",
+      "checkoutSha256": "12f3a82f71cd74f3a0c47758953bb61ff07cc51c06e519503dbb79a53f3ed249"
+    },
+    {
+      "path": "test/windows024-native/launch-r7-partial-owner.cmd",
+      "gitBlob": "d616cfeb1eff14fe22ed466e95d8734ead1788d6",
+      "committedSha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2",
+      "checkoutSha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2"
+    }
+  ]
+}

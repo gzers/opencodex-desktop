@@ -1,0 +1,19 @@
+{
+  "artifactSha256": "af9d31a7faaa9f364038fb3c492ba994c7445f7d36e19f7bc04834b109a92221",
+  "args": [
+    "r7_image_directory_enumeration_aborts",
+    "r7_image_expired_reader_stops",
+    "r7_image_expiry_after_pinning",
+    "r7_image_pinned_deadline_expires",
+    "r7_image_pinned_full_inventory_matches_reference",
+    "r7_image_pinned_full_membership_detects",
+    "r7_image_pinned_full_verify_still_binds",
+    "r7_image_pinned_worker_error_and_panic_join",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "elapsedMs": 2200,
+  "expected": 8,
+  "raw": 0,
+  "passed": 8
+}

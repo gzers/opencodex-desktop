@@ -1,0 +1,107 @@
+{
+  "team": 56,
+  "imp": 195,
+  "contract": "windows-preresume-recovery-performance-r7",
+  "code": "8266cf6a6b67402719c89689984b2154c8cc4599",
+  "main": "1c69bff16b1f6d1edf35c91c93640ee236894312",
+  "governance": "a244a6cdf2b7bdfc1ea8044f9ed45761cc6f402d",
+  "hypothesis": "All nine complete scans share the original Start deadline and reach the specified raw31 before Resume.",
+  "testArtifactSha256": "af9d31a7faaa9f364038fb3c492ba994c7445f7d36e19f7bc04834b109a92221",
+  "matrix": [
+    {
+      "scope": "Third Windows entry complete read uses caller ActionWindow.deadline",
+      "state": "implemented and built",
+      "receipt": "source-binding.json"
+    },
+    {
+      "scope": "MSVC x64 test library build",
+      "state": "passed",
+      "raw": 0,
+      "receipt": "integrated-compile.json"
+    },
+    {
+      "scope": "MSVC x64 product development shapes, test markers absent",
+      "state": "passed 3/3",
+      "raw": 0,
+      "receipt": "product-artifacts.json"
+    },
+    {
+      "scope": "Isolation, identity, missing injection, and Resume refusal",
+      "state": "passed 5/5",
+      "raw": 0,
+      "receipt": "native-isolation.json"
+    },
+    {
+      "scope": "Original Start worker, bounded Status, deadlines and Unknown",
+      "state": "passed 5/5",
+      "raw": 0,
+      "receipt": "native-start-worker.json"
+    },
+    {
+      "scope": "Complete scanner deadlines, inventory, final fence and joined readers",
+      "state": "passed 8/8",
+      "raw": 0,
+      "receipt": "native-scanner.json"
+    },
+    {
+      "scope": "PowerShell 5.1 timing report checks, including equal absolute deadline, order and overlap",
+      "state": "passed 19/19",
+      "raw": 0,
+      "receipt": "scan-gate-01.stdout.txt"
+    },
+    {
+      "scope": "Shared read_complete_until regression test",
+      "state": "Unix-only test at shared input, Windows suite has no such case"
+    },
+    {
+      "scope": "Public staging byte and ACL readback, prior seven-scan pairing preserved",
+      "state": "passed",
+      "raw": 0,
+      "receipt": "staging.json"
+    },
+    {
+      "scope": "marenben Host actual token, desktop, nine scans, raw31 and no Resume",
+      "state": "pending desktop receipt",
+      "receipt": "environment-gate.json"
+    },
+    {
+      "scope": "Same original thread independent Status, explicit V2 flush and readback, final Status",
+      "state": "pending admissible Host"
+    },
+    {
+      "scope": "Old r2 complete original return",
+      "state": "blocked",
+      "commandLineageRaw": 64,
+      "unknownJobEntries": 24,
+      "rawJob": 50,
+      "executionReady": false,
+      "receipt": "../wl2-r7-r2-readonly-20261117-receive-r1/exact-repair-plan.json"
+    },
+    {
+      "scope": "Official single-SID lifecycle and full original return/release",
+      "state": "pending"
+    },
+    {
+      "scope": "Ordinary per-user MSI healthy and failure-preserving uninstall",
+      "state": "blocked on eligible environment",
+      "previousRaw": 1625
+    }
+  ],
+  "firstErrors": [
+    {
+      "scope": "Reader dispatch precursor",
+      "raw": 101,
+      "receipt": "../wl2-r7-dispatch-deadline-20261118-r1/baseline-native.stderr.txt"
+    },
+    {
+      "scope": "Local staging command",
+      "raw": 1,
+      "detail": "PowerShell precedence caused the first path-set assertion to reject identical sets. Explicitly grouped each joined set and checked it before staging. The first attempt did not stage files."
+    }
+  ],
+  "cleanup": "local-test-cleanup.json",
+  "publicStartOpen": false,
+  "w2Run": false,
+  "dualSidRun": false,
+  "published": false
+}
