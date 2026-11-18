@@ -387,11 +387,11 @@ pub(super) enum EventV2 {
 #[serde(deny_unknown_fields, rename_all = "camelCase")]
 pub(super) struct RecordV2 {
     schema: String,
-    session_id: String,
+    pub(super) session_id: String,
     failed_action_id: String,
     recovery_action_id: String,
     security_policy_digest: String,
-    reference: ReferenceV2,
+    pub(super) reference: ReferenceV2,
     sequence: u32,
     #[serde(deserialize_with = "optional")]
     previous_record_digest: Option<String>,
@@ -449,7 +449,10 @@ impl RecordV2 {
         next.validate()?;
         Ok(next)
     }
-    pub(super) fn preparation_pending_data(&self, raw_error: Option<i32>) -> io::Result<[Vec<u8>; 2]> {
+    pub(super) fn preparation_pending_data(
+        &self,
+        raw_error: Option<i32>,
+    ) -> io::Result<[Vec<u8>; 2]> {
         let ReferenceV2::Preparation { last_stage, .. } = &self.reference else {
             return Err(invalid());
         };
@@ -627,10 +630,10 @@ impl RecordV2 {
     }
 }
 mod chain;
-mod storage;
 mod pending_attachment;
-pub(crate) use pending_attachment::PendingAttachment;
+mod storage;
 pub(super) use chain::validate_chain_v2;
+pub(crate) use pending_attachment::PendingAttachment;
 pub(super) use storage::AttachmentStorageV2;
 #[cfg(test)]
 mod tests;

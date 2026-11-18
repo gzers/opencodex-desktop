@@ -1,7 +1,7 @@
 //! Process-local production authority for unchanged official2.99. No adoption,
 //! durable recovery journal or manager-restart handle transfer is invented here.
-use super::windows_client_originals024::{LivePhase, StartRanges, WindowsOriginals};
 use super::windows_client_originals024::recovery_worker::WorkerControl;
+use super::windows_client_originals024::{LivePhase, StartRanges, WindowsOriginals};
 use super::windows_official_runtime024::{
     self as native, LaunchSpec, OwnedListeners, OwnedRuntime, ProcessState,
 };
@@ -183,7 +183,10 @@ pub(crate) fn before_resume_worker_status(
         let start = entry.start_worker.try_lock().map_err(unknown)?;
         (recovery.clone(), start.clone())
     };
-    let start = start.as_ref().map(|worker| worker.observe(end).map(|(_, facts)| facts)).transpose()?;
+    let start = start
+        .as_ref()
+        .map(|worker| worker.observe(end).map(|(_, facts)| facts))
+        .transpose()?;
     match control {
         Some(control) => {
             let mut facts = control.observe(end).map_err(unknown)?;
@@ -512,6 +515,23 @@ impl Owner {
     }
     pub(crate) fn original_host_instance(&self) -> uuid::Uuid {
         self.host_instance
+    }
+    #[cfg(test)]
+    pub(crate) fn test_capture_binding(&self) -> AppResult<([uuid::Uuid; 3], String)> {
+        Ok((
+            [self.host_instance, self.session, self.start_action.id()],
+            self.scope()?,
+        ))
+    }
+    #[cfg(test)]
+    pub(crate) fn test_suspended_creator(&mut self, end: Instant) -> std::io::Result<()> {
+        if self.stage != "created-suspended"
+            || self.service.is_some()
+            || self.original_phase.is_some()
+        {
+            return Err(std::io::Error::other(recovery_required()));
+        }
+        self.native.require_creator_not_resumed(end)
     }
     pub(crate) fn installation_path(&self) -> &Path {
         &self.root
@@ -973,24 +993,32 @@ async fn execute_async(
     window: shared::ActionWindow,
 ) -> AppResult<LifecycleResult> {
     execute_admitted(runtime, command, data, window, |_, _, _, _| {
-        super::windows_client_originals024::require_durable_capture().map(|()| None)
+        super::windows_client_originals024::require_durable_capture()
+            .map(|()| StartAdmission::default())
     })
     .await
 }
 // Private factoring only. Public execute always supplies the unchanged refusal.
 // Debug qualification below supplies native task admission, never a bool/env
 // switch; the original source/lease/custody/typed gates below still all execute.
+#[derive(Default)]
+struct StartAdmission {
+    pending_parent: Option<native::PinnedDirectory>,
+    #[cfg(test)]
+    capture_failure: Option<super::windows_client_originals024::CaptureFailureArm>,
+}
+
 async fn execute_admitted(
     runtime: &SharedRuntimeExecutable,
     command: &ProcessCommand,
     data: &Path,
     window: shared::ActionWindow,
-    admission: impl Fn(
+    admission: impl FnOnce(
         &SharedRuntimeExecutable,
         &ProcessCommand,
         &Path,
         &shared::ActionWindow,
-    ) -> AppResult<Option<native::PinnedDirectory>>,
+    ) -> AppResult<StartAdmission>,
 ) -> AppResult<LifecycleResult> {
     window.remaining()?;
     let entry = slot(
@@ -1059,6 +1087,12 @@ async fn execute_admitted(
     ) {
         return Err(unknown(()));
     }
+    #[cfg(test)]
+    super::windows_client_originals024::recovery_timing::verify_initial_image(
+        "launch-plan",
+        || plan.verify_full(runtime),
+    )?;
+    #[cfg(not(test))]
     plan.verify_full(runtime)?;
     let root = plan.program_root().to_path_buf();
     let selected = program_selection::read_complete(
@@ -1103,7 +1137,7 @@ async fn execute_admitted(
             )
         },
     )?;
-    let pending_parent = admission(runtime, command, data, &window)?;
+    let admitted = admission(runtime, command, data, &window)?;
     // This remains BELOW the unchanged public production gate. Qualification
     // consumes the one original Closed tag only after actual new source/plan
     // admission. Failure retains the old Owner and all old native stores.
@@ -1171,7 +1205,7 @@ async fn execute_admitted(
     });
     let worker = (|| {
         let mut start_gate = entry.start_worker.try_lock().map_err(unknown)?;
-        StartWorker::dispatch(&entry, &mut guard, &mut start_gate, plan, window, pending_parent)
+        StartWorker::dispatch(&entry, &mut guard, &mut start_gate, plan, window, admitted)
     })();
     if let Err(error) = &worker {
         if let Some(owner) = guard.as_mut() {
@@ -1198,7 +1232,37 @@ pub(crate) fn qualify_existing(
         window,
         |r, c, d, w| {
             qualification.admit(r, c, d, w)?;
-            qualification.pin_attachment_parent(d, w).map(Some)
+            Ok(StartAdmission {
+                pending_parent: Some(qualification.pin_attachment_parent(d, w)?),
+                ..StartAdmission::default()
+            })
+        },
+    ))
+}
+#[cfg(test)]
+pub(crate) fn qualify_partial_capture(
+    qualification: &super::windows_client_originals024::partial_capture_fixture::Fixture,
+    runtime: &SharedRuntimeExecutable,
+    command: &ProcessCommand,
+    data: &Path,
+    window: shared::ActionWindow,
+    arm: super::windows_client_originals024::CaptureFailureArm,
+) -> AppResult<LifecycleResult> {
+    let _scans = super::windows_client_originals024::recovery_timing::StartScans::begin(
+        "start-entry",
+        window.deadline(),
+    );
+    // FnOnce is consumed only at the final actual Start admission.
+    tauri::async_runtime::block_on(execute_admitted(
+        runtime,
+        command,
+        data,
+        window,
+        |r, c, d, w| {
+            Ok(StartAdmission {
+                pending_parent: Some(qualification.pin_for_start(r, c, d, w)?),
+                capture_failure: Some(arm),
+            })
         },
     ))
 }
@@ -1525,7 +1589,10 @@ pub(crate) async fn status_sample(
             .map_err(|_| CollectError::Unreachable)?;
         let mut payload = unknown_status();
         payload["startWorker"] = facts;
-        let recovery = worker_gate.as_ref().map(|worker| worker.observe(deadline)).transpose()
+        let recovery = worker_gate
+            .as_ref()
+            .map(|worker| worker.observe(deadline))
+            .transpose()
             .map_err(|_| CollectError::Unreachable)?;
         if let Some(facts) = &recovery {
             payload["recoveryWorker"] = facts.clone();

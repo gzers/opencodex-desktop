@@ -36,7 +36,7 @@ pub(crate) const PUBLIC: &str = r"C:\Users\Public\ocx-r6-official-existing-20261
 mod fresh_fixture;
 const BUNDLE_SHA: &str = "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7";
 const OFFICIAL_SHA: &str = "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c";
-const CONFIG:&[u8]=b"{\"providers\":{},\"fastRows\":false,\"catalogAutoRefresh\":{\"enabled\":false},\"quotaResetNotify\":{\"enabled\":false},\"clientIntegrations\":{\"codex\":true,\"grok\":true,\"claude-desktop\":false}}\n";
+pub(super) const CONFIG:&[u8]=b"{\"providers\":{},\"fastRows\":false,\"catalogAutoRefresh\":{\"enabled\":false},\"quotaResetNotify\":{\"enabled\":false},\"clientIntegrations\":{\"codex\":true,\"grok\":true,\"claude-desktop\":false}}\n";
 fn invalid(reason: impl std::fmt::Display) -> io::Error {
     io::Error::new(io::ErrorKind::InvalidData, reason.to_string())
 }
@@ -179,6 +179,10 @@ fn copy_private(source: &Path, target: &Path) -> io::Result<()> {
 }
 fn install_fixed(base: &Path, ledger: &Path) -> io::Result<Value> {
     let bundle = Path::new(PUBLIC).join("input/runtime-bundle-0.2.24-win32-x64.tar.gz");
+    install_fixed_bundle(base, ledger, &bundle)
+}
+
+pub(super) fn install_fixed_bundle(base: &Path, ledger: &Path, bundle: &Path) -> io::Result<Value> {
     let mut pinned_bundle = OpenOptions::new()
         .read(true)
         .share_mode(1)
@@ -282,13 +286,24 @@ fn install_fixed(base: &Path, ledger: &Path) -> io::Result<Value> {
     if package_value["name"] != "@bitkyc08/opencodex" || package_value["version"] != "2.99.0" {
         return Err(invalid("fixed official package identity"));
     }
+    let inventory = program_image::inventory(&paths.version_root).map_err(invalid)?;
+    if inventory.is_empty() {
+        return Err(invalid("empty fixed runtime image inventory"));
+    }
+    let (file_count, file_bytes) =
+        inventory
+            .values()
+            .fold((0, 0), |(files, total), entry| match entry {
+                program_image::Entry::File { bytes, .. } => (files + 1, total + bytes),
+                program_image::Entry::Directory => (files, total),
+            });
     let image = ImageManifest {
         schema_version: 1,
         package: "@bitkyc08/opencodex".into(),
         version: "2.99.0".into(),
         platform: "win32-x64".into(),
         official_archive_sha256: OFFICIAL_SHA.into(),
-        tree_sha256: program_image::content_digest(&paths.version_root).map_err(invalid)?,
+        tree_sha256: program_image::inventory_digest(&inventory).map_err(invalid)?,
         bin: bin.into(),
         package_sha256: digest_file(&package.join("package.json"))?,
         bin_sha256: digest_file(&package.join(bin))?,
@@ -328,7 +343,7 @@ fn install_fixed(base: &Path, ledger: &Path) -> io::Result<Value> {
             .map_err(invalid)?
             .ok_or_else(|| invalid("exact fixed current absent"))?;
     program_image::verify(&selected).map_err(invalid)?;
-    let report = json!({"bundleSha256":BUNDLE_SHA,"officialArchiveSha256":OFFICIAL_SHA,"members":seen.len(),"unpackedBytes":bytes,"current":current,"image":image,"sharedFullImageReadback":true,"setupOnly":true});
+    let report = json!({"bundleSha256":BUNDLE_SHA,"officialArchiveSha256":OFFICIAL_SHA,"members":seen.len(),"unpackedBytes":bytes,"inventoryEntries":inventory.len(),"inventoryFiles":file_count,"inventoryFileBytes":file_bytes,"current":current,"image":image,"sharedFullImageReadback":true,"setupOnly":true});
     write_new(&ledger.join("image-created-verified.json"), &report)?;
     Ok(report)
 }
@@ -446,7 +461,10 @@ impl ExistingQualification {
         window: &ActionWindow,
     ) -> AppResult<native::PinnedDirectory> {
         window.remaining()?;
-        let original = self.pins.iter().find(|pin| pin.path() == data)
+        let original = self
+            .pins
+            .iter()
+            .find(|pin| pin.path() == data)
             .filter(|_| data == self.base.join("D"))
             .ok_or_else(|| app("original qualification data pin missing"))?;
         original.recheck().map_err(app)?;

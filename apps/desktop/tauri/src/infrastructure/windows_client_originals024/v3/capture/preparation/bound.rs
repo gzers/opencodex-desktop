@@ -155,6 +155,36 @@ impl OriginalPreparationData {
     }
 }
 impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn recheck_preparation_reference(
+        &mut self,
+        owner: &mut Owner,
+        expected: &RecordV2,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<()> {
+        let anchor = self
+            .partial
+            .as_mut()
+            .ok_or_else(|| refused("original preparation absent"))?;
+        owner.check_before_resume_process(window)?;
+        anchor
+            .check_original_capture_metadata(
+                uuid::Uuid::parse_str(&expected.session_id).map_err(refused)?,
+                owner.original_host_instance(),
+                &owner.scope()?,
+                window.deadline(),
+            )
+            .map_err(refused)?;
+        let (actual, _) = anchor
+            .v2_reference_data(window.deadline())
+            .map_err(refused)?;
+        if actual != expected.reference {
+            return Err(refused(
+                "original preparation reference changed during attachment write",
+            ));
+        }
+        owner.check_before_resume_process(window)
+    }
+
     pub(in crate::infrastructure::windows_client_originals024) fn has_original_preparation(
         &self,
     ) -> bool {

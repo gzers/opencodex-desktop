@@ -92,6 +92,54 @@ impl Drop for Capture {
     }
 }
 
+// Record the fixture's initial Start across its entry and native worker.
+thread_local! {
+    static START_SCANS: RefCell<Option<(&'static str, Instant, Vec<serde_json::Value>)>> = const { RefCell::new(None) };
+}
+
+pub(in crate::infrastructure) struct StartScans;
+
+impl StartScans {
+    pub(in crate::infrastructure) fn begin(phase: &'static str, end: Instant) -> Self {
+        START_SCANS.with_borrow_mut(|slot| {
+            assert!(slot.is_none());
+            *slot = Some((phase, end, Vec::new()));
+        });
+        Self
+    }
+}
+
+impl Drop for StartScans {
+    fn drop(&mut self) {
+        let (phase, _, rows) = START_SCANS.with_borrow_mut(Option::take).unwrap();
+        println!(
+            "r7-initial-image-scans={}",
+            serde_json::json!({"phase":phase,"scans":rows})
+        );
+    }
+}
+
+pub(in crate::infrastructure) fn verify_initial_image<T>(
+    operation: &'static str,
+    verify: impl FnOnce() -> AppResult<T>,
+) -> AppResult<T> {
+    let end = START_SCANS.with_borrow(|slot| slot.as_ref().map(|(_, end, _)| *end));
+    let Some(end) = end else { return verify() };
+    let start = Instant::now();
+    let result = verify();
+    let finish = Instant::now();
+    START_SCANS.with_borrow_mut(|slot| {
+        let (_, _, rows) = slot.as_mut().unwrap();
+        let ordinal = rows.len() + 1;
+        rows.push(serde_json::json!({"ordinal":ordinal,"operation":operation,
+            "elapsedUs":finish.duration_since(start).as_micros(),
+            "remainingBeforeUs":end.saturating_duration_since(start).as_micros(),
+            "remainingAfterUs":end.saturating_duration_since(finish).as_micros(),
+            "completed":result.is_ok(),"firstError":result.as_ref().err().map(ToString::to_string)}));
+    });
+    result
+}
+
 pub(super) fn verify_preparation_image(
     ordinal: u8,
     failed_action: &str,

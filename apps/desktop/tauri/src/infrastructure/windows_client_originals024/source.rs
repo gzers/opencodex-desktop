@@ -211,6 +211,11 @@ impl Source {
         {
             return Err(refused("固定官方2.99来源不匹配"));
         }
+        #[cfg(test)]
+        super::recovery_timing::verify_initial_image("source-capture", || {
+            program_image::verify_until(selected, end)
+        })?;
+        #[cfg(not(test))]
         program_image::verify_until(selected, end)?;
         let current = CurrentPin::capture(
             &owner.installation_path().join("runtime/current.json"),
@@ -293,7 +298,9 @@ impl Source {
                 end,
             )?;
         } else {
-            program_image::verify_until(selected, end)?;
+            super::recovery_timing::verify_initial_image("source-readback", || {
+                program_image::verify_until(selected, end)
+            })?;
         }
         #[cfg(not(test))]
         program_image::verify_until(selected, end)?;

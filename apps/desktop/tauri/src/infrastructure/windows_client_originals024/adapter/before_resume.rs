@@ -142,8 +142,20 @@ impl PreparedAbortPrefix {
     }
 }
 impl WindowsOriginals {
-    pub(in crate::infrastructure::windows_client_originals024) fn has_failed_preparation(&self) -> bool {
+    pub(in crate::infrastructure::windows_client_originals024) fn has_failed_preparation(
+        &self,
+    ) -> bool {
         self.failed && self.stage.is_none() && self.slot.has_original_preparation()
+    }
+
+    pub(in crate::infrastructure::windows_client_originals024) fn recheck_preparation_reference(
+        &mut self,
+        owner: &mut Owner,
+        expected: &super::super::before_resume_record_v2::RecordV2,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<()> {
+        self.slot
+            .recheck_preparation_reference(owner, expected, window)
     }
 
     pub(in crate::infrastructure::windows_client_originals024) fn read_before_resume_preparation_record(
@@ -163,7 +175,8 @@ impl WindowsOriginals {
             let session = self
                 .session
                 .ok_or_else(|| refused("原捕获session未登记，不能另生造"))?;
-            self.slot.read_bound_preparation_record(owner, session, window)
+            self.slot
+                .read_bound_preparation_record(owner, session, window)
         })();
         if result.is_err() {
             self.failed = true;

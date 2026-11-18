@@ -139,6 +139,11 @@ pub(in crate::infrastructure::windows_client_originals024) fn assert_pending_att
         window,
         worker.clone(),
     );
+    let outcome = outcome.map(|()| super::super::coordination::LeaseFacts {
+        epoch: "synthetic epoch".into(),
+        claim_key: "synthetic claim".into(),
+        objects_digest: hash::sha256_hex(b"synthetic original ranges"),
+    });
     let durable = outcome.is_ok();
     let error = outcome.as_ref().err();
     let expected = serde_json::json!({
@@ -149,6 +154,7 @@ pub(in crate::infrastructure::windows_client_originals024) fn assert_pending_att
         "attachmentRawError": error.and_then(io::Error::raw_os_error),
         "attachmentErrorKind": error.map(|error| format!("{:?}", error.kind())),
         "durable": durable,
+        "originalRanges": outcome.as_ref().ok(),
     });
     {
         let mut state = control.state.lock().unwrap();

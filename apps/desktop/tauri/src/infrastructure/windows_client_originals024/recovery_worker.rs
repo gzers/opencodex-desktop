@@ -297,7 +297,7 @@ struct State {
 struct PreparationPending {
     records: [Vec<u8>; 2],
     start_raw: Option<i32>,
-    attachment: Option<io::Result<()>>,
+    attachment: Option<io::Result<super::coordination::LeaseFacts>>,
 }
 enum WorkerThread {
     Dedicated(thread::JoinHandle<()>),
@@ -552,15 +552,20 @@ impl RetainedRequest {
                     .with_originals(|originals, _| Ok(originals.has_failed_preparation()))
                     .map_err(io::Error::other)?;
                 if partial {
+                    #[cfg(test)]
+                    let _timing = local
+                        .pending_attachment
+                        .as_ref()
+                        .map(|_| super::recovery_timing::Capture::begin());
                     owner
                         .prepare_before_resume_process(window)
                         .map_err(io::Error::other)?;
-                    let records = owner
+                    let record = owner
                         .with_originals(|originals, owner| {
                             originals.read_before_resume_preparation_record(owner, window)
                         })
-                        .map_err(io::Error::other)?
-                        .preparation_pending_data(start_raw)?;
+                        .map_err(io::Error::other)?;
+                    let records = record.preparation_pending_data(start_raw)?;
                     {
                         let mut projection = state.lock().map_err(|_| invalid())?;
                         projection.preparation_pending = Some(PreparationPending {
@@ -574,24 +579,47 @@ impl RetainedRequest {
                     if let Some(attachment) = &mut local.pending_attachment {
                         let end = window.deadline();
                         let outcome = (|| {
-                            let origin = owner.before_resume_lease_binding(window).map_err(io::Error::other)?;
+                            let origin = owner
+                                .before_resume_lease_binding(window)
+                                .map_err(io::Error::other)?;
+                            let held = ranges.inspect_failed_start(owner, &origin, end)?;
                             attachment.persist(
                                 owner.data_path(),
-                                [owner.original_host_instance(), origin.owner, origin.failed_start],
+                                [
+                                    owner.original_host_instance(),
+                                    origin.owner,
+                                    origin.failed_start,
+                                ],
                                 origin.recovery,
                                 &records,
                                 end,
                             )?;
-                            owner.check_before_resume_process(window).map_err(io::Error::other)
+                            owner
+                                .with_originals(|originals, owner| {
+                                    originals.recheck_preparation_reference(owner, &record, window)
+                                })
+                                .map_err(io::Error::other)?;
+                            if owner
+                                .before_resume_lease_binding(window)
+                                .map_err(io::Error::other)?
+                                != origin
+                                || ranges.inspect_failed_start(owner, &origin, end)? != held
+                            {
+                                return Err(invalid());
+                            }
+                            Ok(held)
                         })();
                         let mut projection = state.lock().map_err(|_| invalid())?;
-                        projection.preparation_pending.as_mut().ok_or_else(invalid)?.attachment =
-                            Some(outcome.and_then(|()| {
-                                if Instant::now() >= end {
-                                    return Err(io::ErrorKind::TimedOut.into());
-                                }
-                                Ok(())
-                            }));
+                        projection
+                            .preparation_pending
+                            .as_mut()
+                            .ok_or_else(invalid)?
+                            .attachment = Some(outcome.and_then(|held| {
+                            if Instant::now() >= end {
+                                return Err(io::ErrorKind::TimedOut.into());
+                            }
+                            Ok(held)
+                        }));
                     }
                     // A partial prefix supplies observation only. StartRanges
                     // stays on this thread, even if it holds a complete lease.
@@ -666,7 +694,8 @@ impl<T> WorkerControl<T> {
                 "attachmentAttempted": original.attachment.is_some(),
                 "attachmentRawError": failure.and_then(io::Error::raw_os_error),
                 "attachmentErrorKind": failure.map(|error| format!("{:?}", error.kind())),
-                "durable": matches!(&original.attachment, Some(Ok(())))
+                "durable": matches!(&original.attachment, Some(Ok(_))),
+                "originalRanges": original.attachment.as_ref().and_then(|result| result.as_ref().ok())
             })
         });
         let data = serde_json::json!({"schema":"windows-original-recovery-worker-v1","phase":format!("{phase:?}"),"stage":state.stage.map(|stage|format!("{stage:?}")),"sessionId":session,

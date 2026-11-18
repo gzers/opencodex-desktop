@@ -18,8 +18,12 @@ use crate::{
 use std::time::Instant;
 mod predecessors;
 mod preparation;
+#[cfg(test)]
+mod test_failure;
 pub(in crate::infrastructure::windows_client_originals024) use predecessors::NativePredecessors;
 use preparation::PartialCaptureAnchor;
+#[cfg(test)]
+pub(crate) use test_failure::CaptureFailureArm;
 struct CaptureStore {
     source: Source,
     routes: Option<RoutePin>,
@@ -48,6 +52,8 @@ pub(crate) struct StartRanges {
     preparation: Option<LeasePreparation>,
     lease: Option<NativeLease>,
     raw: Option<i32>,
+    #[cfg(test)]
+    failure: Option<test_failure::BoundCaptureFailure>,
 }
 impl StartRanges {
     pub(crate) fn retained() -> Self {
@@ -86,8 +92,32 @@ impl StartRanges {
     pub(crate) fn raw_error(&self) -> Option<i32> {
         self.raw
     }
-    pub(in crate::infrastructure::windows_client_originals024) fn take_retained_lease(&mut self) -> io::Result<NativeLease> {
-        if !self.preparation.as_ref().is_some_and(LeasePreparation::empty_after_transfer) {
+    pub(in crate::infrastructure::windows_client_originals024) fn inspect_failed_start(
+        &mut self,
+        owner: &mut Owner,
+        origin: &crate::infrastructure::windows_official_lifecycle024::BeforeResumeLeaseBinding,
+        end: Instant,
+    ) -> io::Result<super::super::coordination::LeaseFacts> {
+        if !self
+            .preparation
+            .as_ref()
+            .is_some_and(LeasePreparation::empty_after_transfer)
+        {
+            return Err(invalid());
+        }
+        self.lease
+            .as_mut()
+            .ok_or_else(invalid)?
+            .inspect_failed_start(owner, origin, end)
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn take_retained_lease(
+        &mut self,
+    ) -> io::Result<NativeLease> {
+        if !self
+            .preparation
+            .as_ref()
+            .is_some_and(LeasePreparation::empty_after_transfer)
+        {
             return Err(invalid());
         }
         self.lease.take().ok_or_else(invalid)
@@ -250,6 +280,10 @@ impl CaptureStore {
                 end,
             )?;
             let directory = PinnedDirectory::open_private(anchor.pins.last().unwrap().path())?;
+            #[cfg(test)]
+            if let Some(arm) = ranges.failure.take() {
+                arm.fail(owner, anchor, &directory, &mut claim, &root, end)?;
+            }
             anchor.intend(directory.path().join("manifest.json"))?;
             anchor.intend(directory.path().join("current.json"))?;
             Journal::create_from_source_retained(

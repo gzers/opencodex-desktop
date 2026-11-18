@@ -70,7 +70,7 @@ impl StartWorker {
         registered: &mut Option<Arc<Self>>,
         plan: shared::LaunchPlan,
         window: shared::ActionWindow,
-        pending_parent: Option<native::PinnedDirectory>,
+        admitted: StartAdmission,
     ) -> AppResult<Arc<Self>> {
         window.remaining()?;
         if registered.is_some() {
@@ -106,7 +106,7 @@ impl StartWorker {
             .name("windows024-original-start".into())
             .spawn(move || {
                 if let Ok(owner) = receive.recv() {
-                    worker_control.run(worker_entry, owner, plan, window, pending_parent);
+                    worker_control.run(worker_entry, owner, plan, window, admitted);
                 }
             })
             .map_err(|error| {
@@ -219,7 +219,7 @@ impl StartWorker {
         owner: Owner,
         plan: shared::LaunchPlan,
         window: shared::ActionWindow,
-        pending_parent: Option<native::PinnedDirectory>,
+        admitted: StartAdmission,
     ) {
         let mut owner = Some(owner);
         let mut ranges = StartRanges::retained();
@@ -244,7 +244,7 @@ impl StartWorker {
                 state.snapshot.phase = Phase::Running;
                 state.thread = Some(thread::current().id());
             }
-            if let Some(parent) = pending_parent {
+            if let Some(parent) = admitted.pending_parent {
                 let original_data = original.scope_pins.first().ok_or_else(recovery_required)?;
                 if parent.path() != original.data_path()
                     || parent.identity() != original_data.identity()
@@ -260,6 +260,17 @@ impl StartWorker {
                     )
                     .map_err(unknown)?,
                 );
+            }
+            #[cfg(test)]
+            let _scans = admitted.capture_failure.as_ref().map(|_| {
+                super::super::windows_client_originals024::recovery_timing::StartScans::begin(
+                    "start-worker",
+                    self.deadline,
+                )
+            });
+            #[cfg(test)]
+            if let Some(arm) = admitted.capture_failure {
+                ranges.arm_capture_failure(arm, original, capture_session, self.deadline)?;
             }
             tauri::async_runtime::block_on(self.start(
                 &entry,

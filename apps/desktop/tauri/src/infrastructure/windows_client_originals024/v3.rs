@@ -22,6 +22,8 @@ use std::{
 mod actions;
 mod capture;
 mod closed;
+#[cfg(test)]
+pub(crate) use capture::CaptureFailureArm;
 pub(super) use capture::CaptureSlot;
 pub(super) use capture::NativePredecessors;
 pub(crate) use capture::StartRanges;

@@ -13,6 +13,8 @@ mod existing_qualification;
 #[cfg(debug_assertions)]
 mod failure_control;
 pub(crate) mod gui_probe;
+#[cfg(test)]
+mod partial_capture_tests;
 mod recovery_control;
 use std::{
     io,

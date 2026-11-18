@@ -24,13 +24,15 @@ mod desktop_preflight_tests;
 mod r7_readonly;
 #[cfg(debug_assertions)]
 pub(crate) use r7_readonly::observe_current_r2 as r7_observe_current_r2;
-#[cfg(debug_assertions)]
+#[cfg(any(debug_assertions, test))]
 pub(crate) mod existing_qualification;
 mod handle_release;
-mod phase;
-pub(crate) mod recovery_worker;
 #[cfg(test)]
-mod recovery_timing;
+pub(crate) mod partial_capture_fixture;
+mod phase;
+#[cfg(test)]
+pub(super) mod recovery_timing;
+pub(crate) mod recovery_worker;
 mod reference;
 mod source;
 mod tree;
@@ -342,4 +344,6 @@ mod tests {
     }
 }
 
+#[cfg(test)]
+pub(crate) use v3::CaptureFailureArm;
 pub(crate) use v3::StartRanges;

@@ -186,6 +186,8 @@ pub(in crate::infrastructure::windows_owner_host024) fn install_before_capture(
     Ok(registration)
 }
 struct Control {
+    #[cfg(test)]
+    partial_capture_fixture: bool,
     pipe: native::PrivatePipe,
     locator: LocatorV2,
     record: native::PrivateRecord,
@@ -240,6 +242,8 @@ impl Control {
         LocatorV2::decode(&original_record)?;
         let record = native::PrivateRecord::create(&c.data.join(LOCATOR), &original_record, 65536)?;
         Ok(Self {
+            #[cfg(test)]
+            partial_capture_fixture: c.scope == crate::infrastructure::windows_client_originals024::partial_capture_fixture::SCOPE,
             pipe,
             locator,
             record,
@@ -286,6 +290,16 @@ impl Control {
             CommandV2::ReadWorkerDiagnostic => {
                 let snapshot = lifecycle::before_resume_worker_status(&runtime, &self.home, end)
                     .map_err(io::Error::other)?;
+                #[cfg(test)]
+                if self.partial_capture_fixture {
+                    let status = super::super::partial_capture_tests::native_status(
+                        &runtime, &self.home, end,
+                    )?;
+                    before(end)?;
+                    return Ok(
+                        serde_json::json!({"purpose":"worker-metadata-only-not-full-history","snapshot":snapshot,"sameSampleStatus":status,"recoveryRequired":true,"runtimeAuthority":false}),
+                    );
+                }
                 before(end)?;
                 Ok(
                     serde_json::json!({"purpose":"worker-metadata-only-not-full-history","snapshot":snapshot,"recoveryRequired":true,"runtimeAuthority":false}),
@@ -320,13 +334,14 @@ impl Control {
                         "original recovery retained/unknown; worker DATA={facts}"
                     )));
                 }
-                let result = lifecycle::validate_canonical_before_resume_return(
-                    &runtime, &self.home, end,
-                )
-                .map_err(io::Error::other)?
-                .ok_or_else(|| denied("original return not delivered for validation"))?;
+                let result =
+                    lifecycle::validate_canonical_before_resume_return(&runtime, &self.home, end)
+                        .map_err(io::Error::other)?
+                        .ok_or_else(|| denied("original return not delivered for validation"))?;
                 before(end)?;
-                Ok(serde_json::json!({"purpose":"actual-original-slot-validated-before-resume-abort","transportActionId":request.transport_action_id,"history":result,"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false}))
+                Ok(
+                    serde_json::json!({"purpose":"actual-original-slot-validated-before-resume-abort","transportActionId":request.transport_action_id,"history":result,"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false}),
+                )
             }
         }
     }

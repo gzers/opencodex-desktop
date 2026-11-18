@@ -345,7 +345,7 @@ impl NativeLease {
         });
         out.as_mut().unwrap().check(end)
     }
-    fn facts_inner(&self) -> io::Result<LeaseFacts> {
+    pub(super) fn facts_inner(&self) -> io::Result<LeaseFacts> {
         facts_from_files(
             &self.epoch,
             &self.token,

@@ -22,6 +22,27 @@ pub(in crate::infrastructure::windows_client_originals024) struct RecoveryPermit
 }
 
 impl NativeLease {
+    pub(in crate::infrastructure::windows_client_originals024) fn inspect_failed_start(
+        &mut self,
+        owner: &mut Owner,
+        origin: &BeforeResumeLeaseBinding,
+        end: Instant,
+    ) -> io::Result<super::segments::LeaseFacts> {
+        before(end)?;
+        if self.active
+            || self.start_state != StartLeaseState::Failed((origin.owner, origin.failed_start))
+            || origin.failed_start == origin.recovery
+            || origin.start_deadline != self.deadline
+        {
+            return Err(refused());
+        }
+        self.check_bound_owner(owner, end)?;
+        self.verify_retained_objects(end)?;
+        let facts = self.facts_inner()?;
+        before(end)?;
+        Ok(facts)
+    }
+
     pub(in crate::infrastructure::windows_client_originals024) fn retain_failed_start(&mut self) {
         self.active = false;
         self.start_state = match self.start_state {
