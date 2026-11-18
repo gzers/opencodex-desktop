@@ -1855,3 +1855,9 @@ nine-r1 仍保留 6,460 ms／raw32 首错与控制端身份查询 raw5。独立�
 已消费治理 bebdfa503f374d6115b9fa313b9c62b213009278，TEAM66／IMP205。按新合同，将 f2dc1b60fa2215f3102347953f1d26cf363d9ff0 的原样脚本暂存至 C:/Users/Public/ocx-r7-isolated-owner-range-r1/observe-r7-readback-timing.ps1，6394 字节，SHA-256 5567494d2174270d77bac6f862ab789c0d43eb3aaab7689e4e5a20e771a2f426。原六份文件前后重新核字节数、SHA-256 和 ACL，三个目录及完整成员集合均符合固定清单，只有指定脚本新增，脚本继承与原 launcher 相同的 ACL。暂存 raw0，stderr 为空。原始回执见 wl2-r7-team66-timing-stage-20261118-r1。
 
 上一批 44502ee7c2d3038e37a313c86378c1724378c004 的独立活进程入口继续放在单独目录。该目录还有新合同发布前暂存的同字节计时副本，执行只使用新合同指定路径。range-r1/out01 仍空，尚无现场 Host、DiagnosticBefore、Explicit 或 DiagnosticAfter 结果。原 5 秒以原始 QPC tick 严格比较，读回超限或不明保全首错，保持只执行一次。
+
+## 2026-11-19 r7 固定读回入口的保留句柄共享冲突
+
+输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 bebdfa503f374d6115b9fa313b9c62b213009278、TEAM66／IMP205。待证伪判断是固定 ExportExact 以 Read access 和 Read share 打开 V2 文件时，与原 worker 保留的写句柄冲突。Windows PowerShell 5.1 用原启动器函数及同一组 CreateFileW 参数复现 raw32。合成提取版只将只读打开改为 ReadWrite share，写句柄仍开启时读回 34 字节完全匹配，第二写者仍 raw32。关闭合成句柄后，原函数也通过，双方 SHA-256 一致。首轮因控制端子进程继承模块路径找不到 Get-FileHash，raw1，尚未创建夹具。修正子进程环境后原语检查 raw0，合成目录已确认缺席。原始记录及摘要见 wl2-r7-range-readback-sharing-20261119-r1。
+
+请 Mac 固定最小改动及摘要。候选仅令 CheckAttachment 的只读打开兼容已经存在的写句柄，保留原写句柄与它的互斥、绑定、只创建导出和完整语义校验，更新启动器与计时观察脚本的摘要配对，原 5 秒及单次门槛不变。TEAM66 的当前固定文件未改。range-r1/out01 仍空，可独立采集 Host 及其原 worker 只读诊断。可用的后续计时读回路径明确前暂停 Explicit 和 DiagnosticAfter，避免消耗单次动作。合成原语不计真实读回。旧场景、旧归档和公开 Start 拒绝沿用。
