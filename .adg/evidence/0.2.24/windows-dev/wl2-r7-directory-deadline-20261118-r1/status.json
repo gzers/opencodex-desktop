@@ -1,0 +1,63 @@
+{
+  "code": "c439ea46e0c07568b8c11fc9bc0c5071b945c6f1",
+  "artifactSha256": "31e592189f16a65ca621437f132c83cc96947d030932a7854ee833165b53395c",
+  "main": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+  "governance": "f1f041bf1e783a2cef54eb6fdc08b39697926cf5",
+  "team": 55,
+  "imp": 194,
+  "hypothesis": "A complete directory traversal could continue issuing enumerations after the already supplied native deadline. A per-entry fence rejects expiry without returning partial membership or skipping any successful coverage.",
+  "matrix": [
+    {
+      "scope": "MSVC x64 test executable",
+      "raw": 0,
+      "state": "passed",
+      "receipt": "compile-result.json"
+    },
+    {
+      "scope": "Deadline during enumeration, full equality at one and four workers, final membership drift, joined reader expiry",
+      "raw": 0,
+      "state": "passed 4/4",
+      "receipt": "native.stdout.txt"
+    },
+    {
+      "state": "passed 1/1",
+      "scope": "Pinned 2.99 copied-image full inventory and manifest; original 10-second window",
+      "receipt": "fixed.stdout.txt",
+      "elapsedUs": 5650041,
+      "raw": 0,
+      "fullReadFiles": 10586
+    },
+    {
+      "scope": "Original seven-scan desktop Host",
+      "state": "pending actual marenben session 7 entry",
+      "prior": "../wl2-r7-isolated-owner-20261118-r1/status.json"
+    },
+    {
+      "scope": "Three Start entry deadlines and nine live timings",
+      "state": "pending shared deadline API and desktop verification",
+      "prior": "../wl2-r7-nine-scan-timing-20261118-r1/status.json"
+    },
+    {
+      "scope": "Current r2 return, production lifecycle and ordinary-user per-user MSI",
+      "state": "open; current Job Unknown/raw50, command lineage raw64, MSI raw1625",
+      "prior": "../wl2-r7-r2-readonly-20261117-receive-r1/exact-repair-plan.json"
+    }
+  ],
+  "limitations": [
+    "Single synchronous directory calls can still run beyond the deadline; their outputs cannot yield success after expiry.",
+    "No production lifecycle or desktop acceptance inferred from copied-image timing."
+  ],
+  "firstErrors": [
+    {
+      "scope": "Remote verification shell",
+      "raw": 1,
+      "reason": "Initial local ls-remote parser used an incorrect delimiter. Re-read the same remote ref using a literal tab and matched the pushed commit."
+    }
+  ],
+  "cleanup": "cleanup.json",
+  "currentR2Touched": false,
+  "publicStartOpen": false,
+  "w2Run": false,
+  "dualSidRun": false,
+  "published": false
+}
