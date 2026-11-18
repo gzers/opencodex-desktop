@@ -153,6 +153,70 @@ fn wl2_r6_batch_typed_immutable_event_replay_keeps_exact_native_record_bytes_and
     f.retain();
 }
 #[test]
+fn wl2_r7_journal_replay_cost_tracks_native_prefix_and_pure_data_separately() {
+    let (mut fixture, _data, mut journal) = setup();
+    let end = journal.deadline;
+    let nodes: Vec<_> = journal
+        .manifest
+        .storage_plan
+        .roots
+        .iter()
+        .flat_map(|root| &root.nodes)
+        .map(|node| (node.root_id.clone(), node.node_id.clone(), node.kind == Kind::CustodiedFile))
+        .collect();
+    {
+        let _timing = super::super::super::recovery_timing::Capture::begin();
+        super::super::super::recovery_timing::phase("synthetic-node-prefix");
+        for (root_id, node_id, custodied) in nodes {
+            let operations: &[_] = if custodied {
+                &[Operation::NodeMoveIntent, Operation::NodeMovedVerified]
+            } else {
+                &[Operation::SnapshotVerified]
+            };
+            for &operation in operations {
+                let plan = &journal.manifest.storage_plan;
+                let node = plan
+                    .roots
+                    .iter()
+                    .flat_map(|root| &root.nodes)
+                    .find(|node| node.node_id == node_id && node.root_id == root_id)
+                    .unwrap();
+                let event =
+                    super::super::tests::event(plan, &journal.progress, node, operation, "999");
+                journal.append(event, end).unwrap();
+            }
+        }
+        assert!(journal.events.len() >= 8);
+        let tip = journal.checked_current(end).unwrap();
+        assert_eq!(tip.sequence as usize, journal.events.len());
+        assert_eq!(tip.event_digest, journal.progress.tip);
+    }
+    let event = journal.events.last().unwrap().entry.as_ref().unwrap();
+    let bytes = encoded(event).unwrap();
+    assert_eq!(hash::sha256_hex(&bytes), journal.progress.tip);
+    fn measure(iterations: usize, mut operation: impl FnMut() -> String) -> u128 {
+        let started = Instant::now();
+        for _ in 0..iterations {
+            std::hint::black_box(operation());
+        }
+        started.elapsed().as_micros()
+    }
+    let iters = 8192;
+    let policy_us = measure(iters, || Policy::fixed().digest().unwrap());
+    let event_us = measure(iters, || {
+        hash::sha256_hex(&encoded(std::hint::black_box(event)).unwrap())
+    });
+    let data = serde_json::json!({
+        "iterations": iters,
+        "policyDigestUs": policy_us,
+        "eventEncodeAndDigestUs": event_us,
+        "eventBytes": bytes.len(),
+    });
+    println!("r7-journal-pure-data={data}");
+    drop(journal);
+    fixture.retain();
+}
+#[test]
 fn wl2_r6_capture_canonical_data_namespace_binds_native_session_leaf_and_rejects_other_descendants()
 {
     let (mut f, _data, journal) = setup();

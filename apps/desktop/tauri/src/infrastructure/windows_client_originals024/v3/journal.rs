@@ -877,10 +877,7 @@ impl Journal {
     fn append_inner(&mut self, event: Event, end: Instant) -> io::Result<()> {
         self.append_entry_inner(ChainEntry::Node(event), end)
     }
-    fn append_entry_inner(&mut self, event: ChainEntry, end: Instant) -> io::Result<()> {
-        // The old tip comes from this append's full native check. Keep the
-        // separate disk comparison below before overwriting current.
-        let old = self.checked_current(end)?;
+    fn replay_append(&self, event: &ChainEntry) -> io::Result<Progress> {
         // Validate against an independent replay before any durable write.
         let mut next = Progress::new(
             &self.manifest.storage_plan,
@@ -899,7 +896,24 @@ impl Journal {
             let event = record.entry.as_ref().ok_or_else(invalid)?;
             next.apply_entry(&self.manifest.storage_plan, event)?;
         }
-        next.apply_entry(&self.manifest.storage_plan, &event)?;
+        next.apply_entry(&self.manifest.storage_plan, event)?;
+        Ok(next)
+    }
+    fn append_entry_inner(&mut self, event: ChainEntry, end: Instant) -> io::Result<()> {
+        // The old tip comes from this append's full native check. Keep the
+        // separate disk comparison below before overwriting current.
+        let old = self.checked_current(end)?;
+        #[cfg(test)]
+        let timing = super::super::recovery_timing::readback("journal-append-replay", end, || {
+            let retained_bytes = self.events.iter().map(|record| record.raw.len()).sum();
+            (self.events.len() + 1, retained_bytes)
+        });
+        let next = self.replay_append(&event);
+        #[cfg(test)]
+        if let Some(timing) = timing {
+            timing.finish(&next);
+        }
+        let next = next?;
         if self.events.len() >= 4096 {
             return Err(invalid());
         }
