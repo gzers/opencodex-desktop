@@ -1,0 +1,27 @@
+{
+  "firstCompile": {
+    "raw": 101,
+    "elapsedMs": 54683,
+    "errors": [
+      "E0502 at retirement.rs",
+      "E0502 at journal.rs"
+    ],
+    "resolution": "Concrete owned Readback, then MSVC test compile raw0 in 148117ms"
+  },
+  "wholeChain": {
+    "raw": 101,
+    "firstStage": "final-release",
+    "detail": "bounded-original-deadline, raw=None",
+    "timedReadbacksCompleted": 242,
+    "firstIncompleteReadback": null,
+    "fixedBunHeldClaimRaw": 73
+  },
+  "partialUnlock": {
+    "raw": 101,
+    "firstStage": "sample-work",
+    "detail": "bounded-original-deadline, raw=None",
+    "firstIncompleteReadbackOrdinal": 138,
+    "injectedRaw5Reached": false
+  },
+  "cleanupWrapper": "The initial wrapper formed an incorrect literal path and stopped before copy or remove."
+}

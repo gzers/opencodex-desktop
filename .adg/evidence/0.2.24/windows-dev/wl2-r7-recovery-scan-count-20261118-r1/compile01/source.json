@@ -1,0 +1,51 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs",
+      "sha256": "09dc7d218ec684c33d10a1e17973b2d8bad64e910eeae9803631179566288fae"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement.rs",
+      "sha256": "eed5d6acb163f35b88853c420c931b3cd7a94d5cbca1154c282899ce68c135ba"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_batch_tests.rs",
+      "sha256": "6714e8cca20820ba6169ca75cbe36b186c2815518e4b818c968b5901e76ff760"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_release_tests.rs",
+      "sha256": "4345467b01bcf8af9842beba4041e44386b4e9e6648b7f38a3f6ba77611687a1"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal.rs",
+      "sha256": "d84a9f16a78175df9964c4add943ef7c95c83f7f5d0274815ceed82c45e344ce"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_timing.rs",
+      "sha256": "43713a3c403cfc53344875c2215a9bb2e8729b0cff46cd3a2d8e3bbc1b6c75a0"
+    }
+  ],
+  "base": "37fd73ffa1015a214594f33faed5b05b683b9bca"
+}

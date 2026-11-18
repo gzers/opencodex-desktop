@@ -1,0 +1,1772 @@
+{
+  "traces": {
+    "whole-chain": {
+      "raw": 101,
+      "elapsedMs": 10144,
+      "totalCalls": 242,
+      "measuredUnionUs": 3780540,
+      "stages": [
+        {
+          "phase": "setup",
+          "operation": "journal-records",
+          "calls": 1,
+          "completed": 1,
+          "elapsedUs": 3163
+        },
+        {
+          "phase": "initial-batches",
+          "operation": "journal-records",
+          "calls": 11,
+          "completed": 11,
+          "elapsedUs": 38147
+        },
+        {
+          "phase": "sample-work",
+          "operation": "journal-records",
+          "calls": 127,
+          "completed": 127,
+          "elapsedUs": 2051446
+        },
+        {
+          "phase": "sample-work",
+          "operation": "retirement-codex",
+          "calls": 1,
+          "completed": 1,
+          "elapsedUs": 17522
+        },
+        {
+          "phase": "sample-work",
+          "operation": "retirement-grok",
+          "calls": 1,
+          "completed": 1,
+          "elapsedUs": 5677
+        },
+        {
+          "phase": "prepare-recovery",
+          "operation": "retirement-codex",
+          "calls": 4,
+          "completed": 4,
+          "elapsedUs": 78548
+        },
+        {
+          "phase": "prepare-recovery",
+          "operation": "retirement-grok",
+          "calls": 4,
+          "completed": 4,
+          "elapsedUs": 23311
+        },
+        {
+          "phase": "prepare-recovery",
+          "operation": "journal-records",
+          "calls": 4,
+          "completed": 4,
+          "elapsedUs": 108475
+        },
+        {
+          "phase": "retire-work",
+          "operation": "retirement-codex",
+          "calls": 16,
+          "completed": 16,
+          "elapsedUs": 306143
+        },
+        {
+          "phase": "retire-work",
+          "operation": "retirement-grok",
+          "calls": 16,
+          "completed": 16,
+          "elapsedUs": 105656
+        },
+        {
+          "phase": "retire-work",
+          "operation": "journal-records",
+          "calls": 5,
+          "completed": 5,
+          "elapsedUs": 137973
+        },
+        {
+          "phase": "return-originals",
+          "operation": "retirement-codex",
+          "calls": 10,
+          "completed": 10,
+          "elapsedUs": 240763
+        },
+        {
+          "phase": "return-originals",
+          "operation": "retirement-grok",
+          "calls": 10,
+          "completed": 10,
+          "elapsedUs": 75496
+        },
+        {
+          "phase": "return-originals",
+          "operation": "journal-records",
+          "calls": 5,
+          "completed": 5,
+          "elapsedUs": 163336
+        },
+        {
+          "phase": "restored-witness",
+          "operation": "retirement-codex",
+          "calls": 2,
+          "completed": 2,
+          "elapsedUs": 34722
+        },
+        {
+          "phase": "restored-witness",
+          "operation": "retirement-grok",
+          "calls": 2,
+          "completed": 2,
+          "elapsedUs": 10589
+        },
+        {
+          "phase": "final-release",
+          "operation": "retirement-codex",
+          "calls": 8,
+          "completed": 8,
+          "elapsedUs": 140794
+        },
+        {
+          "phase": "final-release",
+          "operation": "retirement-grok",
+          "calls": 8,
+          "completed": 8,
+          "elapsedUs": 43347
+        },
+        {
+          "phase": "final-release",
+          "operation": "journal-records",
+          "calls": 7,
+          "completed": 7,
+          "elapsedUs": 195432
+        }
+      ],
+      "firstIncompleteReadback": null,
+      "originalDeadlineReported": true,
+      "fixedBunBusyRaw73": true
+    },
+    "raw5": {
+      "raw": 101,
+      "elapsedMs": 10039,
+      "totalCalls": 138,
+      "measuredUnionUs": 1867474,
+      "stages": [
+        {
+          "phase": "setup",
+          "operation": "journal-records",
+          "calls": 1,
+          "completed": 1,
+          "elapsedUs": 2536
+        },
+        {
+          "phase": "initial-batches",
+          "operation": "journal-records",
+          "calls": 11,
+          "completed": 11,
+          "elapsedUs": 28733
+        },
+        {
+          "phase": "sample-work",
+          "operation": "journal-records",
+          "calls": 126,
+          "completed": 125,
+          "elapsedUs": 1836205
+        }
+      ],
+      "firstIncompleteReadback": {
+        "ordinal": 138,
+        "phase": "sample-work",
+        "operation": "journal-records",
+        "startedUs": 9982848,
+        "elapsedUs": 17574,
+        "remainingUs": 0,
+        "expectedObjects": 43,
+        "expectedBytes": 207036,
+        "completed": false,
+        "rawOsError": null
+      },
+      "originalDeadlineReported": true,
+      "fixedBunBusyRaw73": false
+    }
+  },
+  "fixtures": [
+    {
+      "test": "whole-chain",
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-a3d3b4d2-13cb-4d8f-af3b-ab31df8159f2",
+      "present": true,
+      "archive": null,
+      "rows": [
+        {
+          "relative": ".",
+          "fileId": 13229323905543220,
+          "volume": 18354462194728818117,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "session",
+          "fileId": 12666373952122077,
+          "volume": 18354462194728818117,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "session/current.json",
+          "fileId": 5910974511066342,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "cc538ab9cb8a4a4b566f73bf5bbc6801fb8e8762fa30c25e074f572ab3766bb9"
+        },
+        {
+          "relative": "session/event-000001.json",
+          "fileId": 13229323905543399,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "083ab7c53542539c338ae9006123b1488f49e21d38b32da6f41dd39ae856daf6"
+        },
+        {
+          "relative": "session/event-000002.json",
+          "fileId": 4503599627513092,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "72615013d8b6b8bcc1c8223173343e02a447d687931da5149eae21cc26894662"
+        },
+        {
+          "relative": "session/event-000003.json",
+          "fileId": 4503599627513093,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "73ebda98d8e93c74b02fded8ad116e5e8f21533fd44ab463e08d430e1bec5c2a"
+        },
+        {
+          "relative": "session/event-000004.json",
+          "fileId": 11258999068568852,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "17706d312fd2ab37998ea91a9b59844b84ced5a7ce5bfa8f369b5125486f5ebd"
+        },
+        {
+          "relative": "session/event-000005.json",
+          "fileId": 19984723346599317,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "505280d7149c7a22cc03ffde808b6a6d9e7ee42a6b9b6cd6aa3cc13f3b18eb43"
+        },
+        {
+          "relative": "session/event-000006.json",
+          "fileId": 17732923532914096,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "7279a75aed7830e7b7e2bc7a576bc59a23d623b150f0345bd168b82bffc16728"
+        },
+        {
+          "relative": "session/event-000007.json",
+          "fileId": 5629499534355898,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "74a930268c3a8b56296225e7b9e0ed4617f7087925ba78422c433460aaa5b7d2"
+        },
+        {
+          "relative": "session/event-000008.json",
+          "fileId": 28991922601344641,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "d97fd84a163886ca4e22641a0f6047b58d84ac69f6c54faafce842030dfff332"
+        },
+        {
+          "relative": "session/event-000009.json",
+          "fileId": 3377699721549025,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "8020ab3bd28c68bad494c7c803e5526a37486b305b15e01ba76ab2f7fcde22aa"
+        },
+        {
+          "relative": "session/event-000010.json",
+          "fileId": 2533274791419578,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "2c33abe7d718991662b141f30cf29fea8c4b34f551a7eb24fbeb86b239987d4f"
+        },
+        {
+          "relative": "session/event-000011.json",
+          "fileId": 2251799814708923,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "f6c0df0635dd6edb484b3c2af6c9c0074af90a528d51b73a66bc9971341eaf00"
+        },
+        {
+          "relative": "session/event-000012.json",
+          "fileId": 1125899907866300,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "738ae129c4e64cf402be1f131c575fefde6fa623860cfb7a7b8455bc114f2831"
+        },
+        {
+          "relative": "session/event-000013.json",
+          "fileId": 2251799814708950,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "cc08d7475c341ae65515e33207463f9d3cf21612609f351c3b2f08c300b7528d"
+        },
+        {
+          "relative": "session/event-000014.json",
+          "fileId": 1970324837998297,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "9137da60f5ddf7bcd0e9a497a2883e196d8663d228b5c631ce2bf685d45ec2e6"
+        },
+        {
+          "relative": "session/event-000015.json",
+          "fileId": 1688849861287642,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "09ef9ff16fcc957674c30f68017ffb4505e13a2c826f9360c57a316c89a02b2c"
+        },
+        {
+          "relative": "session/event-000016.json",
+          "fileId": 1407374884576987,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "b69960269d8c6e340b40488d5902399e94c51bd04873190bafb75129edc6b8ac"
+        },
+        {
+          "relative": "session/event-000017.json",
+          "fileId": 1407374884576988,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "c05c425583ddf159efde5e3cae46bb956bf3c2eb16223de976c4bfb36e931e3b"
+        },
+        {
+          "relative": "session/event-000018.json",
+          "fileId": 1407374884576989,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "7d4ba29628420d4dcf69a5fb0591d907d9113ed3725541d477f3a2c0a5a6db60"
+        },
+        {
+          "relative": "session/event-000019.json",
+          "fileId": 1407374884576990,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "bcbeebd01e123bd26509472e82c33570860435477c9334396c3ac0ef0d87efa0"
+        },
+        {
+          "relative": "session/event-000020.json",
+          "fileId": 1407374884576991,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "3e1ab49b4254b647fffc62204ca7daabc64fedd564728444015271554a2dbbd0"
+        },
+        {
+          "relative": "session/event-000021.json",
+          "fileId": 1407374884576992,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "356db33b070658fa939c79562edabaddce0b97c12109c00e9fc6ac05f0dbfec2"
+        },
+        {
+          "relative": "session/event-000022.json",
+          "fileId": 1407374884576993,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "bf2a5daa63d944c5d27ece47af4bad2f1b42ba90bb1bea560444bf1d9b3c1e04"
+        },
+        {
+          "relative": "session/event-000023.json",
+          "fileId": 1407374884576994,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "d3831a03d6a52bd905ca048ac354674730be2280db566c2cdfcd7edf761d4911"
+        },
+        {
+          "relative": "session/event-000024.json",
+          "fileId": 1407374884576995,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "74bdaf337f5a78e79ee59212fb4facda7514b39ed4c1f74db95e9a732046e861"
+        },
+        {
+          "relative": "session/event-000025.json",
+          "fileId": 1407374884576996,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "465d2c529070e9fb777dd6b782f0586368f8cd59618a23775576f26d8e2905cc"
+        },
+        {
+          "relative": "session/event-000026.json",
+          "fileId": 1970324837998310,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "f9d7391fb067d6a86e50e16dedcb86acd8fa621792e66e7dfd938e21e54e55e7"
+        },
+        {
+          "relative": "session/event-000027.json",
+          "fileId": 2814749768130324,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "da6792caa48132de14c53719ae4bb5474acf09380df615f428ab71613d0e9298"
+        },
+        {
+          "relative": "session/event-000028.json",
+          "fileId": 1688849861287702,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "e5191ad734b219852d0172644d8488e6bc7baa21fc8ff5353ce1540113a313cb"
+        },
+        {
+          "relative": "session/event-000029.json",
+          "fileId": 2533274791419673,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "f0abf2fb4e8f19ad5725dbf1c13a4f1bfd3167c88bbcb5428f4d06aca0d0042e"
+        },
+        {
+          "relative": "session/event-000030.json",
+          "fileId": 2251799814709018,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "97f6c5f72948864487227ee3fe94264210dc31f844bf008d422ba3bd4dc5c0fd"
+        },
+        {
+          "relative": "session/event-000031.json",
+          "fileId": 1688849861287707,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "bc49d5ea7f391c419b85d7e1dab8307ac6930b100dfdb01e109d08e00200a187"
+        },
+        {
+          "relative": "session/event-000032.json",
+          "fileId": 1407374884577052,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "a1935983321504c87ef0d706be165c3279a6a58e7e7446b1a060a81f23887e86"
+        },
+        {
+          "relative": "session/event-000033.json",
+          "fileId": 1407374884577053,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "3124bb63bed19cede1356d0ac3d6d6fcb4fec400d4ab64317ba7fdd0b63931b6"
+        },
+        {
+          "relative": "session/event-000034.json",
+          "fileId": 1407374884577055,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "bcc600aaf16fcffb9a4a99bb3656e69484a25e2ae194d0b7c89aea315d7c5920"
+        },
+        {
+          "relative": "session/event-000035.json",
+          "fileId": 1688849861287712,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "cad5ed2be06d38b74ee9e262fdb22bfbb57fc9b2f847f814c59317e32d1d9c81"
+        },
+        {
+          "relative": "session/event-000036.json",
+          "fileId": 1407374884577057,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "76fd8f2db0d566303b8fa04939fa1ed8e7dcad3bfdcd3409cbf533848790aa33"
+        },
+        {
+          "relative": "session/event-000037.json",
+          "fileId": 2533274791419682,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "633d09e26b6ff60f5bf77af24616347064ab41f0523582a6dd88b31bc1564907"
+        },
+        {
+          "relative": "session/event-000038.json",
+          "fileId": 1688849861287715,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "a139b47e2a1261f3e6fa0bd8bcaf4a3bbac80f8b9ab6d2a3a1a5623944e4b960"
+        },
+        {
+          "relative": "session/event-000039.json",
+          "fileId": 1407374884577060,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "9ddcb29e8892876cccf4e0591468a716e91600c69d04ed2b45faffe21c33a3c4"
+        },
+        {
+          "relative": "session/event-000040.json",
+          "fileId": 1407374884577061,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "af7bd17d5298728b84a772442bb20652b4c11384a8786523838a95396ae085b3"
+        },
+        {
+          "relative": "session/event-000041.json",
+          "fileId": 1407374884577062,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "66766c634b88434d1700eef4e4c57dc61835b3453bfff1b2ddd469867c93f204"
+        },
+        {
+          "relative": "session/event-000042.json",
+          "fileId": 1407374884577063,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "b4dd811fa70da24a5592d0c15d32b9f80e4ec9b68b42b809c939828e01e66502"
+        },
+        {
+          "relative": "session/event-000043.json",
+          "fileId": 1407374884577064,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "859f3bf47abc827ea0a709c5edc341bafecde24e9dc873f0d54a965716221638"
+        },
+        {
+          "relative": "session/event-000044.json",
+          "fileId": 1407374884577065,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "e92589fbfff209c0880169a4ef75850f3414fe8275871fe218bd94b2b0fd3f33"
+        },
+        {
+          "relative": "session/event-000045.json",
+          "fileId": 1407374884577066,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "bf4fc26201ae3568b1e8a3da1c718b4ec6ad17cd94da4a82033c8c381cb85d78"
+        },
+        {
+          "relative": "session/event-000046.json",
+          "fileId": 4222124651683631,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "27fd3e941c9e20e7304aaaa582efa81a8ef317b6a263ef2be197d55bdaf01b5d"
+        },
+        {
+          "relative": "session/event-000047.json",
+          "fileId": 3096224744841017,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "1e19e931b3217da1ee0680a9cbaf3ba2eff8dc48960f105fac5983fa8d3e1bc3"
+        },
+        {
+          "relative": "session/event-000048.json",
+          "fileId": 2533274791419706,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "b9eed63d5a7069f8ed11f22f7cfed2a1d2483b29bd2f872a256490a8ef64c977"
+        },
+        {
+          "relative": "session/event-000049.json",
+          "fileId": 2251799814709051,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "26acefada0d09d002501101e1d36b864080a892de7b93e81e547385b1a88120b"
+        },
+        {
+          "relative": "session/event-000050.json",
+          "fileId": 2533274791419737,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "e0755010ba9a50ad0325f891a609d2cd5a5f76bde8cfff9c91454744de7140e1"
+        },
+        {
+          "relative": "session/manifest.json",
+          "fileId": 5910974511066339,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "7a6e7eddaa016d63342f1111f841acbff47553ef25b3282cb1977ff926f124d1"
+        }
+      ]
+    },
+    {
+      "test": "whole-chain",
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpDl2hfJ",
+      "present": true,
+      "archive": null,
+      "rows": [
+        {
+          "relative": ".",
+          "fileId": 3940649675002397,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "coordination",
+          "fileId": 1970324838027826,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "coordination/1.sqlite",
+          "fileId": 1970324838027827,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "coordination/2.sqlite",
+          "fileId": 1970324838027828,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "coordination/3.sqlite",
+          "fileId": 2251799814738485,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "H",
+          "fileId": 1688849861317178,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "I",
+          "fileId": 1688849861317179,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile",
+          "fileId": 5066549581845023,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.codex",
+          "fileId": 5348024558555691,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+          "fileId": 2251799814738480,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+          "fileId": 1970324838027825,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.codex/config.toml",
+          "fileId": 2251799814738478,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/.codex/empty",
+          "fileId": 2251799814738477,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.codex/nested",
+          "fileId": 2814749768159788,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.codex/nested/auth.json",
+          "fileId": 2251799814738479,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/.grok",
+          "fileId": 1688849861317175,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.grok/settings.json",
+          "fileId": 1688849861317176,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex",
+          "fileId": 1688849861317198,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex/data-0001-0000.bin",
+          "fileId": 1970324838027855,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex/data-0002-0000.bin",
+          "fileId": 1970324838027856,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex/data-0003-0000.bin",
+          "fileId": 1970324838027857,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex/data-0005-0000.bin",
+          "fileId": 1688849861317202,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex/data-0007-0000.bin",
+          "fileId": 1688849861317203,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex/data-0008-0000.bin",
+          "fileId": 1970324838027860,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex/data-0009-0000.bin",
+          "fileId": 1688849861317205,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "a6fe9ec6e26a38d99fca418b69826e0238b7a2bb319ff05eb153a6fcfd1fa28d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-codex/snapshot.json",
+          "fileId": 1688849861317206,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "c3935b28f7b0e50bc4b521b7b9486721b8d469679c0632a46381d3f5ddc96be7"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-grok",
+          "fileId": 1688849861317207,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-grok/data-0001-0000.bin",
+          "fileId": 1688849861317208,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-pre-stop-grok/snapshot.json",
+          "fileId": 1688849861317209,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "517304d0874f4397120b138b1f3546610d2997264e50492683bce10719da8694"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex",
+          "fileId": 1970324838027842,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex/data-0001-0000.bin",
+          "fileId": 1970324838027843,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex/data-0002-0000.bin",
+          "fileId": 1970324838027844,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex/data-0003-0000.bin",
+          "fileId": 1970324838027845,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex/data-0005-0000.bin",
+          "fileId": 1688849861317190,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex/data-0007-0000.bin",
+          "fileId": 1688849861317191,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex/data-0008-0000.bin",
+          "fileId": 1688849861317192,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex/data-0009-0000.bin",
+          "fileId": 1688849861317193,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "a6fe9ec6e26a38d99fca418b69826e0238b7a2bb319ff05eb153a6fcfd1fa28d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-codex/snapshot.json",
+          "fileId": 1688849861317194,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "53c2bf2ea761448d62d71284e489a219fcb6d62e5751454fe2284761db5e6962"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-grok",
+          "fileId": 1688849861317195,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-grok/data-0001-0000.bin",
+          "fileId": 1688849861317196,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-ready-grok/snapshot.json",
+          "fileId": 1688849861317197,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "532a86180312e9d42089495de1df5921026584f258d765de29c58174aaf28979"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex",
+          "fileId": 1688849861317211,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex/data-0001-0000.bin",
+          "fileId": 1688849861317212,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex/data-0002-0000.bin",
+          "fileId": 1970324838027869,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex/data-0003-0000.bin",
+          "fileId": 1688849861317214,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex/data-0005-0000.bin",
+          "fileId": 1688849861317215,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex/data-0007-0000.bin",
+          "fileId": 1688849861317216,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex/data-0008-0000.bin",
+          "fileId": 1688849861317217,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex/data-0009-0000.bin",
+          "fileId": 1688849861317218,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "a427dc3adbddb15ae6ecfe91953c3ea26d45596c5e5e667e3505bbb0db852940"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-codex/snapshot.json",
+          "fileId": 1688849861317219,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ed94f778792b107cfb44f13c5e1be7505b1b3e2ca2c795b371cfdf6d51a230cf"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-grok",
+          "fileId": 1688849861317220,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-grok/data-0001-0000.bin",
+          "fileId": 1970324838027877,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-50e08740-9327-46a2-beb2-33fbc2162b11-stopped-grok/snapshot.json",
+          "fileId": 1970324838027878,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "214b02c2684275eeceb77a2563c218f622f6e6ec9b7f5e0488b28e40b3eef223"
+        },
+        {
+          "relative": "Profile/custody",
+          "fileId": 1970324838027830,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/custody/retired-current-7523c2e48143c78a465739cac56bc7c859fd68c4d27840578fc3d45d25136988-9570149209215180",
+          "fileId": 9570149209215180,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "a427dc3adbddb15ae6ecfe91953c3ea26d45596c5e5e667e3505bbb0db852940"
+        },
+        {
+          "relative": "Profile/custody/retired-current-87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b-1688849861317181",
+          "fileId": 1688849861317181,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/custody/retired-current-e25011923fff409a99bcc119f4b4e3dcd5246253375de6542b8be2ce8ff44caf-1688849861317185",
+          "fileId": 1688849861317185,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+        },
+        {
+          "relative": "Profile/custody/retired-current-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039-1970324838027836",
+          "fileId": 1970324838027836,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/custody/retired-current-f45a9b364f913707b10ba5d4ec56bbc8c8d7f2070ecbdedde7b481a20ca5a459-1688849861317184",
+          "fileId": 1688849861317184,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+        },
+        {
+          "relative": "Profile/grok-custody",
+          "fileId": 1688849861317177,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/grok-custody/retired-current-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012-1688849861317182",
+          "fileId": 1688849861317182,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        }
+      ]
+    },
+    {
+      "test": "raw5",
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-7076c8d9-0989-42cd-ba7a-d4574be58a49",
+      "present": true,
+      "archive": null,
+      "rows": [
+        {
+          "relative": ".",
+          "fileId": 1688849861287771,
+          "volume": 18354462194728818117,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "session",
+          "fileId": 1407374884577116,
+          "volume": 18354462194728818117,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "session/current.json",
+          "fileId": 1407374884577118,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "35bc1d26cacb45cdf59c53eeedc24158d3f97383cc6a2811ad733f72916a08cc"
+        },
+        {
+          "relative": "session/event-000001.json",
+          "fileId": 1407374884577119,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "0e8aa5894d29cefb2f1913d2647a69072bbcf5851dabccd84ab40086f5715855"
+        },
+        {
+          "relative": "session/event-000002.json",
+          "fileId": 1407374884577120,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "ede8788e7ab9c2fd7b88a61fe7052a631fe1474c7bf4b3a5385e9be0613884ab"
+        },
+        {
+          "relative": "session/event-000003.json",
+          "fileId": 1407374884577121,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "f8de2a24e3cbbd0bae48b20b4012aa11425fa0bd63e1fa990e8481e8000c9ef2"
+        },
+        {
+          "relative": "session/event-000004.json",
+          "fileId": 1407374884577122,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "276a994386a04ff06dab3ca0bc2947d2d9c709be18caf8b68b78fa40c51affd0"
+        },
+        {
+          "relative": "session/event-000005.json",
+          "fileId": 1407374884577123,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "840733015117435902ffd851af1a02515a0281bfb836d648124446661df542c5"
+        },
+        {
+          "relative": "session/event-000006.json",
+          "fileId": 3096224744841060,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "b737b429f36f478f5f8704b452d836052d3b4a86e93dfd5e4c19344ca47a8497"
+        },
+        {
+          "relative": "session/event-000007.json",
+          "fileId": 1407374884577125,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "79b8c8427fa43ba3bbcbcac5e3691e1c82b2b65d7f9ff7cb303f89db24e3b1fe"
+        },
+        {
+          "relative": "session/event-000008.json",
+          "fileId": 1407374884577144,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "9b2d6fb3ce1eaee8d76b3d462dca6d47ca4e16c6792212799107d96b7c234a9e"
+        },
+        {
+          "relative": "session/event-000009.json",
+          "fileId": 1407374884577145,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "ca7b86cb8139aff277ce26d75df566542322e5d2944d4349e42b2babd109a41b"
+        },
+        {
+          "relative": "session/event-000010.json",
+          "fileId": 2251799814709184,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "c9f12cfc00f55597035031b1c6e7377e0621e85732a639fe216664d7ce0ffbd3"
+        },
+        {
+          "relative": "session/event-000011.json",
+          "fileId": 1688849861287897,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "d5fd8fb34f47f5f5daaf0eae6d821dcf8ae9a60e0c6e3d72dad424e30e941ccd"
+        },
+        {
+          "relative": "session/event-000012.json",
+          "fileId": 1407374884577242,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "d061e0f4c116b61086da4797a10056e18edc2f57b65e46ac05927361faaf27c6"
+        },
+        {
+          "relative": "session/event-000013.json",
+          "fileId": 1125899907866587,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "726fb599c5eb8ef778d6020d21121299e790057196485c4570e4e346700cd4e8"
+        },
+        {
+          "relative": "session/event-000014.json",
+          "fileId": 1125899907866588,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "6c550c0af904709054cf7bc5d9f84d60c76d1767e9f6b831093b40541779ddef"
+        },
+        {
+          "relative": "session/event-000015.json",
+          "fileId": 1125899907866589,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "bfd02817634bd658bba75744eab14b5bae87e56cf22270630a26218378bc4851"
+        },
+        {
+          "relative": "session/event-000016.json",
+          "fileId": 1125899907866590,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "b0cb2ee146e554d2922b042ff2f8f5b00ffbf2b5d8be76acaf00ef20cc62f6ce"
+        },
+        {
+          "relative": "session/event-000017.json",
+          "fileId": 1125899907866591,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "be76fd07f8d7044f696631a96af0bbff5bacf80b915ab63b5c21051da49c0f4b"
+        },
+        {
+          "relative": "session/event-000018.json",
+          "fileId": 1125899907866592,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "1e991348a970bf537a78c958b692f06c8290d9975bd920cd6d05b4b793eeeacf"
+        },
+        {
+          "relative": "session/event-000019.json",
+          "fileId": 1125899907866593,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "8404cede922311b91286b7150455183cfc35bc5d1edcc9275a57cf823a949d63"
+        },
+        {
+          "relative": "session/event-000020.json",
+          "fileId": 1125899907866594,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "706aefca73f524916e32a2fe547713ab37185d0698076ea4d2e6a22af5504efa"
+        },
+        {
+          "relative": "session/event-000021.json",
+          "fileId": 1125899907866595,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "bf0ea067dc24965527e08b87b80c93ec7c0a26a9ec71d83528f0378cb83211c8"
+        },
+        {
+          "relative": "session/event-000022.json",
+          "fileId": 1125899907866596,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "8f7123970d298790a41bd386e96102d42a06d6e3c180397e17098b6f1f987dc4"
+        },
+        {
+          "relative": "session/event-000023.json",
+          "fileId": 1125899907866597,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "839ae31757f0aa54fd4b32721043d0abd862766c9c70650778b29075df547b4a"
+        },
+        {
+          "relative": "session/event-000024.json",
+          "fileId": 1125899907866598,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "8cf6b514d290c73db37312b554c3b8c9a1b4ff08e0cad30e1b1aeb113e93c1aa"
+        },
+        {
+          "relative": "session/event-000025.json",
+          "fileId": 1125899907866599,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "4fa52b3700ca2c80f9396f4e2e94dada035e32bf163a7ba2e0ff996ed3a4be8a"
+        },
+        {
+          "relative": "session/event-000026.json",
+          "fileId": 1125899907866600,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "06b76c069c3d0bffefc51dd1b23e38a03ffce5560570697b2c72b9af3bb0459e"
+        },
+        {
+          "relative": "session/event-000027.json",
+          "fileId": 1125899907866601,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "f69b0418a019280ea0d5c27bacfa50e91749e15cead61cbebb924d43e4d4eb5d"
+        },
+        {
+          "relative": "session/event-000028.json",
+          "fileId": 1125899907866602,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "fd45331b0b85edda6f9bd1aea8c5d6fb1c6f2a9d73447589e555dce028455f42"
+        },
+        {
+          "relative": "session/event-000029.json",
+          "fileId": 1125899907866603,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "561d73e517c1c96566406554832d2d016d7ba5ce272bd73658ab07db8b21f166"
+        },
+        {
+          "relative": "session/event-000030.json",
+          "fileId": 1125899907866604,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "d0cec804afc95e52f3cef00a08ccd70ccc59d83a5287a6e1febc36581c0c6a9d"
+        },
+        {
+          "relative": "session/event-000031.json",
+          "fileId": 37436171902659749,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "8ca596c9fb5f4452d1359101e24a00a755e0553ead3f1955e36f8915f89e9ac1"
+        },
+        {
+          "relative": "session/event-000032.json",
+          "fileId": 1125899907866606,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "be6068deb682c25e610d101afb9a8b52aa0c601aa176524b1566b80d345c6b22"
+        },
+        {
+          "relative": "session/event-000033.json",
+          "fileId": 42502721483450574,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "139c80db06807f993376784f65d0a2147adc0f2ac2ec2317623552238f6c0d81"
+        },
+        {
+          "relative": "session/event-000034.json",
+          "fileId": 7599824371330273,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "2a7146db96b3e68d6695c558f091d124ec5112dbe7038a15037f985b22aebce0"
+        },
+        {
+          "relative": "session/event-000035.json",
+          "fileId": 1125899907866609,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "9c6a57bbbb4050a25d07e479a29dc41fc376738b27986d86010a88f124403f44"
+        },
+        {
+          "relative": "session/event-000036.json",
+          "fileId": 1125899907866610,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "9422817c7839e7a0a2f84a0d7473b97ff9cefad2dcffc79b76262f2bffd29829"
+        },
+        {
+          "relative": "session/event-000037.json",
+          "fileId": 1125899907866611,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "7dc502e8f354778fc979e6eab97ee6f5d7015a1d3d834014eaa23dacf68fd709"
+        },
+        {
+          "relative": "session/event-000038.json",
+          "fileId": 1125899907866612,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "1a527b421c73ebc959836b566684976f467892f9ac7b57b970d4ac8c6112dbd7"
+        },
+        {
+          "relative": "session/event-000039.json",
+          "fileId": 1125899907866613,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "21d2cb1c2e2804896a5eb53714b6702002f4ca16fcd636f67766839234ec3ceb"
+        },
+        {
+          "relative": "session/event-000040.json",
+          "fileId": 1125899907866614,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "521a2484e43a72731080d66c8455d9d3ae1257c996b9c8eceda5d224b72e276e"
+        },
+        {
+          "relative": "session/event-000041.json",
+          "fileId": 1125899907866615,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "62efc7ecdd3b257845f32cef89ab54ff8f4d2868e4507ab7f2eaabc6b11c04f6"
+        },
+        {
+          "relative": "session/manifest.json",
+          "fileId": 1407374884577117,
+          "volume": 18354462194728818117,
+          "directory": false,
+          "sha256": "7f6126f68d007ec60254dabf7601776e1080bf0dbefcd25c0281b2f86bbc5bee"
+        }
+      ]
+    },
+    {
+      "test": "raw5",
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpQnmn9c",
+      "present": true,
+      "archive": null,
+      "rows": [
+        {
+          "relative": ".",
+          "fileId": 2251799814738536,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "coordination",
+          "fileId": 1688849861317233,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "coordination/1.sqlite",
+          "fileId": 1688849861317234,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "coordination/2.sqlite",
+          "fileId": 1688849861317235,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "coordination/3.sqlite",
+          "fileId": 1688849861317236,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "H",
+          "fileId": 1688849861317241,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "I",
+          "fileId": 1688849861317242,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile",
+          "fileId": 2251799814738537,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.codex",
+          "fileId": 1970324838027882,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.codex/.opencodex-native-main.claim.sqlite",
+          "fileId": 1688849861317231,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.codex/.opencodex-native-main.owner.sqlite",
+          "fileId": 1688849861317232,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.codex/config.toml",
+          "fileId": 1688849861317243,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/.codex/empty",
+          "fileId": 1688849861317228,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.codex/models_cache.json",
+          "fileId": 1688849861317247,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+        },
+        {
+          "relative": "Profile/.codex/nested",
+          "fileId": 1688849861317227,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.codex/nested/auth.json",
+          "fileId": 1688849861317244,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/.codex/opencodex-catalog-audit.jsonl",
+          "fileId": 1688849861317248,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+        },
+        {
+          "relative": "Profile/.codex/opencodex-catalog.json",
+          "fileId": 2814749768159898,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "a427dc3adbddb15ae6ecfe91953c3ea26d45596c5e5e667e3505bbb0db852940"
+        },
+        {
+          "relative": "Profile/.grok",
+          "fileId": 1688849861317238,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.grok/settings.json",
+          "fileId": 1688849861317245,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex",
+          "fileId": 1970324838027917,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex/data-0001-0000.bin",
+          "fileId": 1688849861317262,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex/data-0002-0000.bin",
+          "fileId": 1688849861317263,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex/data-0003-0000.bin",
+          "fileId": 1688849861317264,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex/data-0005-0000.bin",
+          "fileId": 1688849861317265,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex/data-0007-0000.bin",
+          "fileId": 1688849861317266,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex/data-0008-0000.bin",
+          "fileId": 1688849861317267,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex/data-0009-0000.bin",
+          "fileId": 1688849861317268,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "a6fe9ec6e26a38d99fca418b69826e0238b7a2bb319ff05eb153a6fcfd1fa28d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-codex/snapshot.json",
+          "fileId": 1688849861317269,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "8d0a9c16a97f0551b497c3e2abc2a66dbf837d07c29e5fdf21a47dde733aa499"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-grok",
+          "fileId": 1688849861317270,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-grok/data-0001-0000.bin",
+          "fileId": 1688849861317271,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-pre-stop-grok/snapshot.json",
+          "fileId": 1688849861317272,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "446573e0fc76282fadecbf79e3333c80a4a82178f54115df9e0e2bf5414126e0"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex",
+          "fileId": 1688849861317249,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex/data-0001-0000.bin",
+          "fileId": 1688849861317250,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex/data-0002-0000.bin",
+          "fileId": 1688849861317251,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex/data-0003-0000.bin",
+          "fileId": 1688849861317252,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex/data-0005-0000.bin",
+          "fileId": 1688849861317253,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex/data-0007-0000.bin",
+          "fileId": 1688849861317254,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex/data-0008-0000.bin",
+          "fileId": 1688849861317255,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex/data-0009-0000.bin",
+          "fileId": 1688849861317256,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "a6fe9ec6e26a38d99fca418b69826e0238b7a2bb319ff05eb153a6fcfd1fa28d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-codex/snapshot.json",
+          "fileId": 1688849861317257,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "bb49f7c925dac824fda60d8ce81dcd3e51287a12b327214a668a7438d75c6d47"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-grok",
+          "fileId": 1688849861317258,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-grok/data-0001-0000.bin",
+          "fileId": 1688849861317259,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-ready-grok/snapshot.json",
+          "fileId": 1688849861317260,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "4ca996f9c5719709606222513012adf1e32c5d8db2f20d801636015ffa40db0e"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex",
+          "fileId": 2533274791449241,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex/data-0001-0000.bin",
+          "fileId": 1688849861317275,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex/data-0002-0000.bin",
+          "fileId": 1688849861317276,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex/data-0003-0000.bin",
+          "fileId": 1688849861317277,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex/data-0005-0000.bin",
+          "fileId": 1688849861317278,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "b37da3a10adebd6b75b69b78c750fc8614070d49233afa9f6b3d2a3fa9c79f51"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex/data-0007-0000.bin",
+          "fileId": 1688849861317279,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex/data-0008-0000.bin",
+          "fileId": 1688849861317280,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "9dde5bc155dc5d74a288a51bc904d041b852427056efbca2c0a7e35708be003f"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex/data-0009-0000.bin",
+          "fileId": 1688849861317281,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "a427dc3adbddb15ae6ecfe91953c3ea26d45596c5e5e667e3505bbb0db852940"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-codex/snapshot.json",
+          "fileId": 1688849861317282,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "2d8b89e06e747f566a83fb70dde1c2885dd6e02850109d943113ceb965206ed2"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-grok",
+          "fileId": 1688849861317283,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-grok/data-0001-0000.bin",
+          "fileId": 1688849861317284,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        },
+        {
+          "relative": "Profile/.ocxd024-observed-d6866414-4cac-4085-8c67-79800c1e8f14-stopped-grok/snapshot.json",
+          "fileId": 1688849861317285,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "efcf08eac3c4704ea00594104ff0e4b840b23df0f837dfa3b9cf96b9e4edf386"
+        },
+        {
+          "relative": "Profile/custody",
+          "fileId": 1688849861317237,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/custody/original-87939a28d205cbcf4696638dd8165ddb5def6fed3275f1184c5854db012c738b",
+          "fileId": 1688849861317230,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "f2a1b2989788b7e3f3cefd6a9c39aad1b8ade87b2d4d8a73b848219f82fd2463"
+        },
+        {
+          "relative": "Profile/custody/original-f32a51ab0e49c380ad5e0cfea774308e9720411df829fa54269505e70b58e039",
+          "fileId": 1688849861317229,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "ec950a5aeafbd920c0d422bc7e6bf8b3234465fbf64b19ca92419cea95499b85"
+        },
+        {
+          "relative": "Profile/grok-custody",
+          "fileId": 1688849861317240,
+          "volume": 12542170421513768537,
+          "directory": true,
+          "sha256": null
+        },
+        {
+          "relative": "Profile/grok-custody/original-0b50eb989881266b167aff56abd14a9dd1129ad6dd5c3d69ceb337dc929cb012",
+          "fileId": 1688849861317239,
+          "volume": 12542170421513768537,
+          "directory": false,
+          "sha256": "5d408f900a453761e7cfa358a41297f89be961314d25d61688ef0ecd96d1768d"
+        }
+      ]
+    }
+  ]
+}
