@@ -1,0 +1,20 @@
+{
+  "input": {
+    "main": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+    "governance": "6ef21eb5f144905318d94f5080b2acf408e258bf",
+    "team": 50,
+    "imp": 189,
+    "contract": "r7"
+  },
+  "hypotheses": [
+    {
+      "statement": "The three preparation fences can share one unchanged absolute recovery cutoff in the complete scanner.",
+      "falsifier": "Recorded offsets move, a scan resets budget, a scan is removed, or observations bypass the real scanner."
+    },
+    {
+      "statement": "A same-size file change stays refused by the actual complete scanner when measured.",
+      "falsifier": "A scan succeeds after the byte change or the reported error differs from the direct scanner at the same cutoff."
+    }
+  ],
+  "scope": "controller-owned synthetic image; no actual Owner, no official execution, no current r2 activity"
+}

@@ -1545,3 +1545,9 @@ r2 沿用既有全归档与 10 份只读回执。原 Job 24 项未知／raw50，
 同一原恢复截止内，Source 存在且各检查通过时，两次原 V2 引用实际读取前中后三次调用完整包验证，source-call-chain.md 列调用与覆盖。上一固定副本单扫 2634.174 ms、仿真整链／部分解锁 raw101 沿用。没有跨两次引用读取锁住同一整包对象及字节的等价证据，现有三次完整扫描保持。下一次真实普通桌面应记录每次完整扫描进入、退出、失败阶段及余量，沿现有 r7 接收规则复核。
 
 目前私有 D pin 唯一入场绑定旧 ExistingQualification 的固定 r2 I/D/H、原 SID/session、原 Profile 客户端和原协调对象。原 Job 24 项未知 raw50，executionReady=false，三个原件仍保管。真实实际 Owner V2 回执和恢复预算依赖新的合同合规普通桌面入场与实际同线程保全前缀；请在后续 handoff 接收时保留为待验。当前 R1 的 Job 覆盖和单独授权仍是独立依赖。既有普通 MSI、CAP、原缺席退根和固定原包单 SID 生产闭环继续待验。公开 Start 保持拒绝。证据 wl2-r7-pending-status-20261118-r1，累计 267 项。
+
+## 2026-11-18 r7 准备前缀的完整扫描调用计量
+
+代码 7fb2f870683566487cd0fee236f03dfa90fee93c，main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 6ef21eb5f144905318d94f5080b2acf408e258bf，TEAM50／IMP189／r7。用测试构建计量原准备围栏在实际全量 verify 进入与退出的序号、失败 Start action、来源 SHA、同一截止、剩余预算和实际失败。原 Source/Current/两次原引用读回及校验顺序不变。MSVC raw0／150172 ms，三个产品 MSVC 开发构建 raw0／112922 ms。原生定向 1/1。合成镜像同一截止下前两次成功，第三次等长字节改变仍返回 runtime_image_unconfirmed，与直接复验一致。一个自有夹具根和生成 schema 核实清理。证据 wl2-r7-preparation-scan-trace-20261118-r1。
+
+合成镜像仅证明调用点观测与原验证结果一致。真实 Owner 同线程三次围栏及原 10 秒预算仍待独立普通桌面入场。独立入场的最小合同请求见同轮 ordinary-owner-admission-request.json。固定副本计量与合成端到端超时沿用。当前 r2 原 Job 完整覆盖和新的现场执行授权仍是独立依赖，公开 Start 保持拒绝。
