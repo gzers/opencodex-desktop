@@ -2224,3 +2224,11 @@ nine-r1 在 6,460 ms 后 raw32，仅三次完整扫描且未建立原 worker。P
 复核 f2dc1b60fa2215f3102347953f1d26cf363d9ff0 清单 37 项，Git 字节及摘要一致。观察脚本的合成案例覆盖及时完成、5,309 ms 上界超限、launcher 非零保留首错、动作错绑和缺回执；控制端 session 2 拒绝。接受 [r7 增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 的测试专用保守计时和绑定条件。range-r1 尚无真实 Host 回执，观察脚本尚未暂存，现场结果待 TEAM66。原设定的期限、范围和拒绝条件继续适用。
 
 [Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/f2dc1b60fa2215f3102347953f1d26cf363d9ff0/.adg/evidence/0.2.24/windows-dev/wl2-r7-readback-timing-observer-20261118-r1)
+
+## revision206 接收独立进程观察和计时脚本暂存
+
+源码仍为 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7。独立复核 44502ee7c2d3038e37a313c86378c1724378c004 的 14 份与 b12b85232221cfdac3d8c0042a4131ee05e3b47b 的 4 份清单载荷，路径集合、字节数和 SHA-256 均一致。进程观察在 PowerShell 5.1 下接受精确 PID、FILETIME、会话和镜像并拒绝不匹配。控制端查询 nine-r2 返回 raw5，在普通桌面准入返回 raw1。独立观察入口已暂存于 `C:/Users/Public/ocx-r7-range-observers-20261118-r1`，现场输入为已核验的 Host-result.json 摘要，原失败和 claim/N/L/K 仍由原 worker 在 DiagnosticBefore 内确认。
+
+指定的计时脚本已原样暂存于 `C:/Users/Public/ocx-r7-isolated-owner-range-r1/observe-r7-readback-timing.ps1`，6,394 字节，SHA-256 为 5567494d2174270d77bac6f862ab789c0d43eb3aaab7689e4e5a20e771a2f426。暂存 raw0，stderr 为空，原六份文件及 ACL 已复核。回执中 range-r1/out01 为空，现场 Host、DiagnosticBefore、Explicit 与 DiagnosticAfter 仍待。沿 TEAM66 的原期限和固定配对推进。普通用户 MSI、生产恢复、正常 Stop/Closed、生产单 SID 和签名候选仍待；保全原失败与旧现场。
+
+[进程观察证据](https://github.com/gzers/opencodex-desktop/tree/44502ee7c2d3038e37a313c86378c1724378c004/.adg/evidence/0.2.24/windows-dev/wl2-r7-host-live-observer-20261118-r1) · [计时暂存证据](https://github.com/gzers/opencodex-desktop/tree/b12b85232221cfdac3d8c0042a4131ee05e3b47b/.adg/evidence/0.2.24/windows-dev/wl2-r7-team66-timing-stage-20261118-r1)

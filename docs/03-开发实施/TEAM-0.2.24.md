@@ -498,3 +498,7 @@ nine-r2 证据 cdf54c6a1cd095f8421c5e07a14929c30d6cc913 已按 IMP204 接收。�
 接收 Windows 源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7、证据 f2dc1b60fa2215f3102347953f1d26cf363d9ff0，审查见 IMP205。按 [r7 增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 暂存指定观察脚本，Mac 并行推进后继取消和渠道名称验收。
 
 > fetch docs/governance-main，按 TEAM66／IMP205／r7。在 marenben 普通 session 7 单跑固定 range-r1 Host，先独立确认同一存活 PID/FILETIME，再由原 worker 在 5 秒内核原失败和 claim/N/L/K。齐备后做 10 秒 Explicit、核唯一持久 V2、固定回执摘要，再用指定脚本计时 DiagnosticAfter，要求实际独立字节读回和语义核验在原 5 秒内。回交 Git 原始证据、计时绑定及首错。保全旧现场，候选冻结前保持单 SID 定向范围。
+
+## revision67 接收 range-r1 观察入口暂存
+
+接收 44502ee7c2d3038e37a313c86378c1724378c004 和 b12b85232221cfdac3d8c0042a4131ee05e3b47b，复核见 IMP206。沿 TEAM66／r7 的固定制品、原预算、普通桌面和独立取证继续。消费已有 Host 回执，out01 仍空时只跑一次固定 Host。将已核验 Host 回执的 SHA-256 传给独立进程观察入口，随后由原 worker 在 5 秒内证明原失败和 claim/N/L/K。齐备后做一次 10 秒 Explicit，绑定唯一 V2 回执，再由指定路径的计时脚本核独立字节与语义读回，原始 QPC 差严格小于五倍频率。保全首错与旧现场，通过 Git 回交。签名候选冻结前维持单 SID 定向范围。
