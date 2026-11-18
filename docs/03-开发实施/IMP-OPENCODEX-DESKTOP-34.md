@@ -2232,3 +2232,11 @@ nine-r1 在 6,460 ms 后 raw32，仅三次完整扫描且未建立原 worker。P
 指定的计时脚本已原样暂存于 `C:/Users/Public/ocx-r7-isolated-owner-range-r1/observe-r7-readback-timing.ps1`，6,394 字节，SHA-256 为 5567494d2174270d77bac6f862ab789c0d43eb3aaab7689e4e5a20e771a2f426。暂存 raw0，stderr 为空，原六份文件及 ACL 已复核。回执中 range-r1/out01 为空，现场 Host、DiagnosticBefore、Explicit 与 DiagnosticAfter 仍待。沿 TEAM66 的原期限和固定配对推进。普通用户 MSI、生产恢复、正常 Stop/Closed、生产单 SID 和签名候选仍待；保全原失败与旧现场。
 
 [进程观察证据](https://github.com/gzers/opencodex-desktop/tree/44502ee7c2d3038e37a313c86378c1724378c004/.adg/evidence/0.2.24/windows-dev/wl2-r7-host-live-observer-20261118-r1) · [计时暂存证据](https://github.com/gzers/opencodex-desktop/tree/b12b85232221cfdac3d8c0042a4131ee05e3b47b/.adg/evidence/0.2.24/windows-dev/wl2-r7-team66-timing-stage-20261118-r1)
+
+## revision207 接收 Windows 回读脚本配对证据
+
+Windows 源码仍为 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7。复核证据 70c6d7f4f972ff93edd3d8b35ace4e5aad25cfe5 与 896bbd71105a08562943d56d39230db368486d7e，两份清单共 12 个载荷和 2 个归档文件的大小与 SHA-256 一致。PowerShell 5.1 合成探针证实原只读打开遇保留写句柄返回 raw32，修订后独立读取准确的 3,523 与 3,669 字节并核语义及摘要链。第二写者仍 raw32，重复导出 raw80 且保留原字节，动作错绑、额外成员、内容变更均拒绝。两份完整配对均通过摘要门，混配及 CMD 漂移均拒绝。Mac 从 Git 原字节独立重算同一修订摘要。
+
+按 [r7 配对增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 与 TEAM68 固定实际暂存字节后再进入 Explicit。现有 Host 回执可直接消费，未有则只跑一次；原 worker 的范围证明能与脚本落地并行。合成结果只确认共享模式和脚本摘要门，现场 5 秒尚未证实。普通用户 MSI、生产恢复、正常 Stop/Closed、生产单 SID 和签名候选继续保留待验。
+
+[独立回读及配对证据](https://github.com/gzers/opencodex-desktop/tree/896bbd71105a08562943d56d39230db368486d7e/.adg/evidence/0.2.24/windows-dev)

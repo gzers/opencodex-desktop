@@ -502,3 +502,9 @@ nine-r2 证据 cdf54c6a1cd095f8421c5e07a14929c30d6cc913 已按 IMP204 接收。�
 ## revision67 接收 range-r1 观察入口暂存
 
 接收 44502ee7c2d3038e37a313c86378c1724378c004 和 b12b85232221cfdac3d8c0042a4131ee05e3b47b，复核见 IMP206。沿 TEAM66／r7 的固定制品、原预算、普通桌面和独立取证继续。消费已有 Host 回执，out01 仍空时只跑一次固定 Host。将已核验 Host 回执的 SHA-256 传给独立进程观察入口，随后由原 worker 在 5 秒内证明原失败和 claim/N/L/K。齐备后做一次 10 秒 Explicit，绑定唯一 V2 回执，再由指定路径的计时脚本核独立字节与语义读回，原始 QPC 差严格小于五倍频率。保全首错与旧现场，通过 Git 回交。签名候选冻结前维持单 SID 定向范围。
+
+## revision68 交接 Windows 回读脚本配对与现场验证
+
+基线 Windows 源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7，证据 896bbd71105a08562943d56d39230db368486d7e。按 [r7 配对增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 由原 Windows 对话独占落两份脚本并复核实际暂存文件，接收结果归 IMP207。Host 和原 worker 的只读诊断可以先行。Mac 并行处理后继代次取消及选模验收。
+
+> fetch docs/governance-main，按 TEAM68／IMP207／r7 固定并推送 launcher 与观察脚本配对。消费已有 range-r1 Host 回执，空时才在 marenben 普通 session 7 单跑一次。独立核存活 PID/FILETIME，原 worker 在 5 秒内核原失败与 claim/N/L/K。配对、ACL 和两项前置全部确认后才做一次 10 秒 Explicit 和一次严格小于 5 秒的 DiagnosticAfter，绑定唯一持久 V2、原字节和语义。保全首错与旧现场，通过 Git 回交；候选冻结前维持单 SID 定向范围。
