@@ -66,13 +66,7 @@ where
         )
     }
 
-    fn current_snapshot(&self) -> StatusSnapshotDto {
-        let guard = self.collector.lock().expect("status collector lock");
-        self.snapshot(&guard)
-    }
-
-    fn emit_current(&mut self) {
-        let snapshot = self.current_snapshot();
+    fn emit_snapshot(&mut self, snapshot: StatusSnapshotDto) {
         let allowed = self
             .gate
             .lock()
@@ -87,13 +81,15 @@ where
     pub async fn poll_once(&mut self) {
         let now = Instant::now();
         let backgrounded = self.background_state.backgrounded();
-        let (runtime_interval, connection_interval) = {
-            let guard = self.collector.lock().expect("status collector lock");
-            (
-                guard.next_interval(StatusDimension::Runtime, backgrounded),
-                guard.next_interval(StatusDimension::Connection, backgrounded),
-            )
+        // A manual sampler can be awaiting timers/IO on this runtime while
+        // owning the collector. Blocking here can starve that very runtime.
+        // A busy tick is neither a completed sample nor a successful event.
+        let Ok(mut collector) = self.collector.try_lock() else {
+            return;
         };
+        let runtime_interval = collector.next_interval(StatusDimension::Runtime, backgrounded);
+        let connection_interval =
+            collector.next_interval(StatusDimension::Connection, backgrounded);
         let runtime_due = self
             .runtime_at
             .is_none_or(|at| now.duration_since(at) >= runtime_interval);
@@ -102,13 +98,12 @@ where
             .is_none_or(|at| now.duration_since(at) >= connection_interval);
 
         if runtime_due || connection_due {
-            let refresh_result = self
-                .collector
-                .lock()
-                .map(|mut collector| collector.refresh_light_at(now))
-                .unwrap_or(Err(crate::modules::status::CollectError::Unreachable));
-            let _ = refresh_result;
-            self.emit_current();
+            let _ = collector.refresh_light_at(now);
+            let snapshot = self.snapshot(&collector);
+            // Emit only this same sample's retained projection. Never acquire
+            // the collector a second time on the asynchronous executor.
+            drop(collector);
+            self.emit_snapshot(snapshot);
             if runtime_due {
                 self.runtime_at = Some(now);
             }
@@ -126,7 +121,11 @@ where
     pub fn next_wait(&self) -> Duration {
         let now = Instant::now();
         let backgrounded = self.background_state.backgrounded();
-        let collector = self.collector.lock().expect("status collector lock");
+        let Ok(collector) = self.collector.try_lock() else {
+            // Preserve original due times; this is a scheduling retry, not a
+            // new status window or permission inferred from the old snapshot.
+            return crate::modules::status::refresh_debounce();
+        };
         let wait = |at: Option<Instant>, dimension| {
             at.map(|at| {
                 collector
@@ -223,6 +222,75 @@ mod tests {
         let service =
             StatusPollingService::new(collector.clone(), emitter.clone(), ForegroundFixture);
         (service, collector, emitter)
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn busy_tick_preserves_schedule_source_and_emissions_then_retries_original_due_sample() {
+        let (mut service, collector, emitter) = service();
+        let other = collector.clone();
+        let (entered, entry) = std::sync::mpsc::channel();
+        let (release, released) = std::sync::mpsc::channel();
+        let holder = std::thread::spawn(move || {
+            let held = other.lock().unwrap();
+            entered.send(()).unwrap();
+            released.recv().unwrap();
+            assert_eq!(held.source.calls.load(Ordering::SeqCst), 0);
+            assert_eq!(held.failure_count(), 0);
+        });
+        entry.recv().unwrap();
+        let before = Instant::now();
+        service.poll_once().await;
+        assert!(before.elapsed() < Duration::from_millis(100));
+        assert!(service.runtime_at.is_none() && service.connection_at.is_none());
+        assert!(emitter.snapshots.lock().unwrap().is_empty());
+        assert_eq!(
+            service.next_wait(),
+            crate::modules::status::refresh_debounce()
+        );
+        release.send(()).unwrap();
+        holder.join().unwrap();
+        service.poll_once().await;
+        assert_eq!(
+            collector
+                .lock()
+                .unwrap()
+                .source
+                .calls
+                .load(Ordering::SeqCst),
+            1
+        );
+        assert!(service.runtime_at.is_some() && service.connection_at.is_some());
+        assert_eq!(emitter.snapshots.lock().unwrap().len(), 1);
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn emitted_sample_has_released_collector_and_keeps_the_same_projection() {
+        struct ReentrantEmitter {
+            collector: Arc<Mutex<StatusCollector<SequenceSource>>>,
+            called: Arc<AtomicU32>,
+        }
+        impl StatusSnapshotEmitter for ReentrantEmitter {
+            fn emit(&self, snapshot: &StatusSnapshotDto) {
+                let collector = self
+                    .collector
+                    .try_lock()
+                    .expect("event emission must never own the sampler lock");
+                assert_eq!(collector.matrix().runtime, snapshot.matrix.runtime);
+                self.called.fetch_add(1, Ordering::SeqCst);
+            }
+        }
+        let collector = Arc::new(Mutex::new(StatusCollector::new(SequenceSource::new())));
+        let called = Arc::new(AtomicU32::new(0));
+        let mut service = StatusPollingService::new(
+            collector.clone(),
+            ReentrantEmitter {
+                collector,
+                called: called.clone(),
+            },
+            ForegroundFixture,
+        );
+        service.poll_once().await;
+        assert_eq!(called.load(Ordering::SeqCst), 1);
     }
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
