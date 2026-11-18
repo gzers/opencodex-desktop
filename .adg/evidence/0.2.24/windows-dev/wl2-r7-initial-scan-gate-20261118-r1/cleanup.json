@@ -1,0 +1,59 @@
+{
+  "archivedFailures": [
+    {
+      "source": "fixture",
+      "archive": "first-attempt/desktop-fixture",
+      "sourceAbsent": true,
+      "files": [
+        {
+          "name": "D\\before-resume-pending-33333333-3333-4333-8333-333333333333\\v2-record-000001.json",
+          "sha256": "736fc8b702c8decf098d5f45863d2395857982962b6ef5a22ab24f30aa496260",
+          "bytes": 3523
+        }
+      ]
+    },
+    {
+      "source": "scan-gate-fixture",
+      "archive": "first-attempt/scan-gate-fixture",
+      "sourceAbsent": true,
+      "files": [
+        {
+          "name": "Host.stdout.log",
+          "sha256": "67a4c7d61b0e6c4f27bde127b7a2bd1203d0e4c8861214bd9e2452f77973b1b9",
+          "bytes": 2359
+        }
+      ]
+    },
+    {
+      "source": "verified/fixture",
+      "archive": "verified/desktop-fixture-failure",
+      "sourceAbsent": true,
+      "files": [
+        {
+          "name": "D\\before-resume-pending-33333333-3333-4333-8333-333333333333\\v2-record-000001.json",
+          "sha256": "736fc8b702c8decf098d5f45863d2395857982962b6ef5a22ab24f30aa496260",
+          "bytes": 3523
+        },
+        {
+          "name": "D\\before-resume-pending-33333333-3333-4333-8333-333333333333\\v2-record-000002.json",
+          "sha256": "8732c35bacea55dd2fff61fd96a57e2688d663a868c9b3e0b4596537350f9f9e",
+          "bytes": 3669
+        },
+        {
+          "name": "out\\DiagnosticAfter-v2-record-000001.json",
+          "sha256": "736fc8b702c8decf098d5f45863d2395857982962b6ef5a22ab24f30aa496260",
+          "bytes": 3523
+        },
+        {
+          "name": "out\\DiagnosticAfter-v2-record-000002.json",
+          "sha256": "8732c35bacea55dd2fff61fd96a57e2688d663a868c9b3e0b4596537350f9f9e",
+          "bytes": 3669
+        }
+      ]
+    }
+  ],
+  "successfulFixturesAbsent": [
+    "verified/scan-gate-fixture",
+    "desktop-verified/fixture"
+  ]
+}

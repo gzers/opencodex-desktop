@@ -1603,3 +1603,11 @@ Mac 接收时以原 stdout 与 `cleanup.json` 为准。原回执、283 项矩阵
 请在 TEAM52／r7 增量内确认以下最小测试方案。真实 SID、Profile、桌面、令牌及执行进程身份保持实测。在 `cfg(test)` 的封闭引导内，由预先绑定的私有且无重解析的新树分别提供两个合成客户端根、四个协调文件及新 I/D/H。一次性固定实际对象身份、ACL、规范路径和制品摘要，拒绝旧 r2 任一对象、路径重叠、其他 locator 或生产入口。将同一隔离描述贯穿实际原 Owner、扫描、捕获、原线程范围绑定及 V2 验证，沿用四 trait、持久格式、原样 2.99 镜像和 30／5／10 秒。请明确此测试可否计作原 Owner 未 Resume 的部分捕获保全验证，以及实际触及的 Windows 文件写集。真实默认客户端根、默认协调与官方生命周期仍各按生产形状独立验收。若替代根必须经共享接口或会发生首次 Resume，请先明确该前提，独立夹具须在存在这两种情况时拒绝入场。
 
 旧 r2 的 seq9、三件原件及原锁沿用 `wl2-r7-r2-readonly-20261117-receive-r1/exact-repair-plan.json`。首错 command-lineage raw64、原 Job 24 项 Unknown/raw50，`executionReady=false`、`approvalRequested=false`。本轮只读核对，未运行旧或新桌面入口。既有 283 项和源码／制品绑定复用。普通 MSI 的历史 raw1625 仍保留。本次机器和该 SID 的 32/64 位注册表策略视图均未找到 `DisableMSI`，与既有只读记录一致，仍缺实际许可的 per-user 环境。此请求只阻塞依赖实际准入的验证。接收决定前无需让用户重连桌面。
+
+## 2026-11-18 r7 原宿主扫描回执门槛
+
+Windows 代码 4fc73cd1c26aa51fa288a3b436d2f0c050d36e1c 已推送并回读。启动器在允许后续管理器前，核验原宿主初次 Start 已计量的七条完整镜像验证记录。Source 捕获含一次立即读回，内容捕获和 Journal 上下文各有前后读回。原入口还有 `read_complete` 的完整清单读取，该日志门槛仅覆盖原测试制品已有的计量点。DiagnosticAfter 另从同一宿主核验恢复准备的三条记录，匹配失败 action、原镜像摘要及同一 10 秒期限。沿用原 Status 5 秒、Start 30 秒与首错保留机制。
+
+原始 PowerShell DATA 及失败归档见同级证据轮次 wl2-r7-initial-scan-gate-20261118-r1。扫描门槛 15/15，原 DATA 回归 11/11。保留首次 PS5.1 数组层级错误、模块装载错误及旧测试的英文错误文字断言失败。最后使用 Windows 系统模块和 ERROR_FILE_EXISTS 原始码重验。三处失败夹具原路径已不存在，六个文件按 SHA-256 移入证据；两处成功夹具已核实缺席。原 MSVC 制品沿用，启动器字节绑定已更新。
+
+已收到治理 926e684a4824373ef308716b8b9acfa50ff5bb6f、TEAM54／IMP193。现有账户隔离合同已明确，后续验收须先完成隔离引导和不可 Resume 负例，再安排 marenben 普通桌面。本轮未运行原包或改变旧 r2；其 Job 24 项 Unknown／raw50、command-lineage raw64 与 executionReady=false 沿用。

@@ -1,0 +1,71 @@
+{
+    "schema":  "windows-before-resume-recovery-v2",
+    "sessionId":  "11111111-1111-4111-8111-111111111111",
+    "failedActionId":  "22222222-2222-4222-8222-222222222222",
+    "recoveryActionId":  "33333333-3333-4333-8333-333333333333",
+    "securityPolicyDigest":  "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "reference":  {
+                      "kind":  "preparation",
+                      "ownerInstanceId":  "host",
+                      "source":  {
+                                     "state":  "captured",
+                                     "bindingDigest":  "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                                     "imageDigest":  "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+                                 },
+                      "intentPrefixDigest":  "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                      "nativeStagePrefixDigest":  "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+                      "lastStage":  "handleRetained",
+                      "components":  [
+                                         {
+                                             "role":  "source",
+                                             "state":  "retained",
+                                             "prefixDigest":  null,
+                                             "objects":  [
+
+                                                         ]
+                                         },
+                                         {
+                                             "role":  "custody",
+                                             "state":  "retained",
+                                             "prefixDigest":  null,
+                                             "objects":  [
+
+                                                         ]
+                                         },
+                                         {
+                                             "role":  "codex",
+                                             "state":  "retained",
+                                             "prefixDigest":  null,
+                                             "objects":  [
+
+                                                         ]
+                                         },
+                                         {
+                                             "role":  "grok",
+                                             "state":  "retained",
+                                             "prefixDigest":  null,
+                                             "objects":  [
+
+                                                         ]
+                                         },
+                                         {
+                                             "role":  "journal",
+                                             "state":  "retained",
+                                             "prefixDigest":  null,
+                                             "objects":  [
+
+                                                         ]
+                                         }
+                                     ]
+                  },
+    "sequence":  2,
+    "previousRecordDigest":  "736fc8b702c8decf098d5f45863d2395857982962b6ef5a22ab24f30aa496260",
+    "startedQpc":  "1000",
+    "deadlineQpc":  "11000",
+    "qpcFrequency":  "1000",
+    "event":  {
+                  "kind":  "AbortRecoveryPending",
+                  "stage":  "handleRetained",
+                  "rawError":  31
+              }
+}

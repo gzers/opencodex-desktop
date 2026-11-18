@@ -1,0 +1,11 @@
+Expected '*already exists*'; received '使用“4”个参数调用“Open”时发生异常:“文件“C:\Users\15119\.codex\worktrees\r6
+-windows-evidence-resume\code\.adg\evidence\0.2.24\windows-dev\wl2-r7-initial-scan-gate-20261118-r1\verified\fixture\ou
+t\DiagnosticAfter-v2-record-000002.json”已经存在。”'.
+所在位置 行:2 字符: 24
++     if (!$Condition) { throw $Message }
++                        ~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Expected '*alre...2.json”已经存在。”'.:String) [], RuntimeException
+    + FullyQualifiedErrorId : Expected '*already exists*'; received '使用“4”个参数调用“Open”时发生异常:“文件“C:\U
+sers\15119\.codex\w    orktrees\r6-windows-evidence-resume\code\.adg\evidence\0.2.24\windows-dev\wl2-r7-initial-scan-ga
+te-20261118-r1\ver    ified\fixture\out\DiagnosticAfter-v2-record-000002.json”已经存在。”'.
+ 
