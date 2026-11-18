@@ -1,0 +1,22 @@
+{
+  "source-audit": {
+    "raw": 1,
+    "arguments": [
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "-NoProfile",
+      "-File",
+      "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-partial-owner-20261118-r1\\stage-r7-desktop.ps1"
+    ],
+    "scriptSha256": "25b3bb278db56032787c162ef4dd4adaa53c161d7628b47be2cb5e206fa8bfc3"
+  },
+  "acl-probe": {
+    "raw": 1,
+    "arguments": [
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "-NoProfile",
+      "-File",
+      "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-partial-owner-20261118-r1\\stage-r7-acl-probe.ps1"
+    ],
+    "scriptSha256": "389d5b93ee60dda6bc08590f7acc733c54aef84abcec98d58fedcd7ecf4846ec"
+  }
+}

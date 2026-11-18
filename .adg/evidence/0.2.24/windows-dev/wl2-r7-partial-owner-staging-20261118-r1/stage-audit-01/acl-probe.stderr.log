@@ -1,0 +1,8 @@
+Get-Acl : The 'Get-Acl' command was found in the module 'Microsoft.PowerShell.Security', but the module could not be lo
+aded. For more information, run 'Import-Module Microsoft.PowerShell.Security'.
+At line:8 char:15
++     $actual = Get-Acl -LiteralPath $Path
++               ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (Get-Acl:String) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : CouldNotAutoloadMatchingModule
+ 

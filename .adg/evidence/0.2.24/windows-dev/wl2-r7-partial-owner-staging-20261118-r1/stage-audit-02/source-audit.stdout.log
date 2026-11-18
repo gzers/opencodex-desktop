@@ -1,0 +1,40 @@
+{
+    "schema":  1,
+    "auditedUtc":  "2026-11-18T08:36:05.6622388Z",
+    "source":  "18833e7b65c4cb48316f37ee15a3dc584650877e",
+    "input":  [
+                  {
+                      "expected":  "523bdc65235a90d85ac77da0f2b55266194f3dbb86077e91721729714f8df0d5",
+                      "from":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-partial-owner-20261118-r1\\compile-test-05\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+                      "to":  "C:\\Users\\Public\\ocx-r7-partial-owner-r1\\input\\fixture-test.exe",
+                      "bytes":  103620608,
+                      "sha256":  "523bdc65235a90d85ac77da0f2b55266194f3dbb86077e91721729714f8df0d5"
+                  },
+                  {
+                      "expected":  "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+                      "from":  "C:\\Users\\Public\\ocx-r6-official-existing-20261117-r2\\input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+                      "to":  "C:\\Users\\Public\\ocx-r7-partial-owner-r1\\input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+                      "bytes":  274033721,
+                      "sha256":  "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+                  },
+                  {
+                      "from":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\launch-r7-partial-owner.ps1",
+                      "to":  "C:\\Users\\Public\\ocx-r7-partial-owner-r1\\launch-r7-partial-owner.ps1",
+                      "bytes":  22065,
+                      "gitBlob":  "f61c53b41d85060477f4a32458003c98c741a6db",
+                      "sha256":  "183159fa5a7dc676968599391979997dee937534cc9d13fdb6c85cb9e016adee"
+                  },
+                  {
+                      "from":  "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\launch-r7-partial-owner.cmd",
+                      "to":  "C:\\Users\\Public\\ocx-r7-partial-owner-r1\\launch-r7-partial-owner.cmd",
+                      "bytes":  109,
+                      "gitBlob":  "d616cfeb1eff14fe22ed466e95d8734ead1788d6",
+                      "sha256":  "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2"
+                  }
+              ],
+    "stagingRoot":  "C:\\Users\\Public\\ocx-r7-partial-owner-r1",
+    "activeSession":  null,
+    "accountSid":  null,
+    "ready":  false,
+    "staged":  false
+}

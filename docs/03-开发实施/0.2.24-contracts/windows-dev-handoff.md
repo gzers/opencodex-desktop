@@ -1581,3 +1581,9 @@ Windows 源码 18833e7b65c4cb48316f37ee15a3dc584650877e 已推送并核对远端
 证据 wl2-r7-partial-owner-20261118-r1 保存制品 SHA-256、源码 Git 字节绑定、构建日志、定向原始回执、环境门槛、清理和累计 283 项状态。组件通过。控制端 15119 无管理员权限，专用普通本地账户 ocxr7owner、Profile 和 Public staging 经核对缺席。待账号交互登录后核对实际令牌、no-Job、桌面、私有目录，再执行原 Owner 四阶段。真实 30 秒 Start、5 秒 Status、10 秒 V2 Pending 的扫描与同线程回执、完整归还和生产验收仍待。
 
 用户已运行的 r2 只读回执继续沿用已核验的完整归档。旧现场原 Job 24 项 unknown／raw50，command-lineage raw64，executionReady=false。原进程、三原件及锁保留。新一轮旧原包、现场 R1、W2／双 SID 或发布均未执行。
+
+## 2026-11-18 r7 普通桌面输入暂存预检
+
+Windows 源码 18833e7b65c4cb48316f37ee15a3dc584650877e 与原构建证据不变。证据 wl2-r7-partial-owner-staging-20261118-r1 记录四份输入的字节摘要及两个启动器的 Git blob，以及 PowerShell 5.1 本地 ACL 探针的回执。以合成 SID 核对输入的继承只读权限和输出目录的写入权限。重复创建拒绝。首轮嵌套子进程继承的模块路径导致 Get-FileHash 和 Get-Acl 不可用，保留 raw1；只在子进程指定系统模块路径后两项 raw0。探针目录核实已清除。
+
+ocxr7owner、对应 Profile 与 Public 暂存根仍缺席。真实桌面与产品运行仍待，旧 r2 保持隔离。

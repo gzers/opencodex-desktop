@@ -1,0 +1,9 @@
+Get-FileHash : The term 'Get-FileHash' is not recognized as the name of a cmdlet, function, script file, or operable pr
+ogram. Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+At C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\target\r7-partial-owner-2026111
+8-r1\stage-r7-desktop.ps1:28 char:13
++     return (Get-FileHash -LiteralPath $Path -Algorithm SHA256).Hash.T ...
++             ~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (Get-FileHash:String) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
