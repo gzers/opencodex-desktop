@@ -1801,3 +1801,13 @@ marenben session 7 活动，nine-r2/out01 仍空。用户提供的窗口命令�
 ## 2026-11-18 r7 探针制品的构建输入血缘校验
 
 成功草稿构建的父提交 f3564fbb34713beee97ed221fb4797b422b11d57 之后，直接后继 673d1166334c4fb78d5094bc09ef130e578e0991 的净差仅为独立 Python Host 回执核验器。复核当前七项草稿路径、每项原字节长度和 SHA-256 均与 fixed-serial 构建记录一致，草稿 EXE SHA-256 仍为 1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8。只读校验 raw0、stderr 为空，新证据见 wl2-r7-probe-lineage-20261118-r1。后续固定配对可据此把原构建基线和独立核验器提交分别登记，仍须确认测试路径写集，并按新源码提交逐项核对制品与暂存输入。当前未提交探针草稿或暂存配对，nine-r2 的普通桌面 Host 继续独立等待。
+
+## 2026-11-18 r7 原线程探针固定配对与普通桌面待验
+
+输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 ae566d2196046d1d4c5a39ec446c20d7df0ebc52、TEAM63／IMP202／r7。源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7 已推送。测试 EXE SHA-256 1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8，运行时包 SHA-256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。原构建基线 f3564fbb3 至 673d11663 仅增加独立回执核验器改动。七项构建输入的原字节、长度及规范化 Git blob 全部匹配；两个启动入口和独立核验器逐项绑定提交及暂存字节。复用 MSVC 20/20、正常产品库检查 raw0 和 PS5.1 启动门槛证据。
+
+新配对位于 C:/Users/Public/ocx-r7-isolated-owner-range-r1，六份文件和两级子目录的完整集合、实际 ACL、SHA-256 均已二次读回。控制端核对 Profile 夹具路径缺席，已有 marenben session 7 活动；父目录原生身份、实际普通令牌、WinSta0/Default 与无外层 Job 仍由目标桌面原生入口现场确认。测试路径在两处 Resume 前都拒绝隔离夹具。前两次暂存预检分别遇到 Windows PowerShell 子进程找不到 Get-FileHash 和无窗口 quser 活动状态本地化，均于创建 Public 前退出。改用现有 PowerShell 7 控制端并核活动状态后暂存 raw0，stderr 为空。日志、脚本、回读及可复核清单见 wl2-r7-probe-staging-20261118-r1。
+
+用户提供的窗口使用 nine-r1 路径。原回执仍为三次全量扫描、6,460 ms、raw32，未创建原 worker，PID 95724 仍可见。nine-r2 和新区间探针对应 out01 在读回时均为空。按 TEAM63 先等待现有 marenben 普通 session 7 的一次 nine-r2 Host，用 a7d7284a3 验证九次完整扫描、原 30 秒、首次 Intent 前 raw31 与 Node 未 Resume，随后保全该旧制品。新区间探针另需同一存活 PID/FILETIME 的独立系统观察和原 worker 在 5 秒内对原失败及同一 claim/N/L/K 的新鲜证明，两项通过后才做 10 秒 Explicit 和 5 秒回读。任一未知时保留首错及现场。
+
+旧官方 r2 的两进程仍可见，三件原件和锁由原现场持续保全，缺原 Job 全覆盖和命令谱系，executionReady=false。公开 Start 维持拒绝。真实原件归还、正常 Stop/Closed、生产单 SID、普通 MSI 和签名候选继续待验。未请求强制清理或生产恢复；未运行 W2、双 SID 或发布。

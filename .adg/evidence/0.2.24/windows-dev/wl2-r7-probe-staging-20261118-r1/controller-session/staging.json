@@ -1,0 +1,63 @@
+{
+  "session": " 用户名                会话名             ID  状态    空闲时间   登录时间\r\n marenben              rdp-tcp#3           7  运行中         50  2026/11/14 22:10\r\n",
+  "acl": {
+    "input": "D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)",
+    "root": "D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)",
+    "output": "D:PAI(A;OICI;FA;;;SY)(A;OICI;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;OICI;0x1201bf;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+  },
+  "source": "36b70383eac5c44dffc51d34a4c4673cd8a3dbf7",
+  "profileFixtureAbsent": true,
+  "runtimeBundle": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+  "outputEmpty": true,
+  "members": [
+    "input",
+    "out01",
+    "launch-r7-partial-owner.cmd",
+    "launch-r7-partial-owner.ps1",
+    "input/fixture-test.exe",
+    "input/manifest.json",
+    "input/runtime-bundle-0.2.24-win32-x64.tar.gz",
+    "input/verify-r7-host-receipts.py"
+  ],
+  "profileFixture": "C:\\Users\\marenben\\ocx024-r7-isolated-owner-range-r1",
+  "files": [
+    {
+      "sha256": "1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8",
+      "bytes": 104751616,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\input\\fixture-test.exe",
+      "acl": "D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "sha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+      "bytes": 274033721,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "acl": "D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "sha256": "04109655081281036a20f7965016007ffb5c7a6b2560ab8fc8b14855174ccc9d",
+      "bytes": 11467,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\input\\verify-r7-host-receipts.py",
+      "acl": "D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "sha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2",
+      "bytes": 109,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\launch-r7-partial-owner.cmd",
+      "acl": "D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "sha256": "b7207c94ceb391230639fb6230e4fe228faed874e39ece68e75c27f2d3487b4f",
+      "bytes": 30085,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\launch-r7-partial-owner.ps1",
+      "acl": "D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    },
+    {
+      "sha256": "2ac99e9e6f4463b8253d1d25e478176e0729cd83e8f7edec4dfdc8fc1bda0a14",
+      "bytes": 329,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\input\\manifest.json",
+      "acl": "D:AI(A;ID;FA;;;SY)(A;ID;FA;;;S-1-5-21-587408064-856152790-2583328096-1001)(A;ID;0x1200a9;;;S-1-5-21-587408064-856152790-2583328096-1003)"
+    }
+  ],
+  "publicRoot": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1",
+  "testExe": "1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8"
+}

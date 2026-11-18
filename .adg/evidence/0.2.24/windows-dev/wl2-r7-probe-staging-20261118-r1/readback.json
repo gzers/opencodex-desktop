@@ -1,0 +1,77 @@
+{
+  "nineR2Receipts": [],
+  "members": [
+    "input",
+    "input/fixture-test.exe",
+    "input/manifest.json",
+    "input/runtime-bundle-0.2.24-win32-x64.tar.gz",
+    "input/verify-r7-host-receipts.py",
+    "launch-r7-partial-owner.cmd",
+    "launch-r7-partial-owner.ps1",
+    "out01"
+  ],
+  "files": [
+    {
+      "bytes": 104751616,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\input\\fixture-test.exe",
+      "sha256": "1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8"
+    },
+    {
+      "bytes": 274033721,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "sha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+    },
+    {
+      "bytes": 11467,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\input\\verify-r7-host-receipts.py",
+      "sha256": "04109655081281036a20f7965016007ffb5c7a6b2560ab8fc8b14855174ccc9d"
+    },
+    {
+      "bytes": 109,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\launch-r7-partial-owner.cmd",
+      "sha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2"
+    },
+    {
+      "bytes": 30085,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\launch-r7-partial-owner.ps1",
+      "sha256": "b7207c94ceb391230639fb6230e4fe228faed874e39ece68e75c27f2d3487b4f"
+    },
+    {
+      "bytes": 329,
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-range-r1\\input\\manifest.json",
+      "sha256": "2ac99e9e6f4463b8253d1d25e478176e0729cd83e8f7edec4dfdc8fc1bda0a14"
+    }
+  ],
+  "nativeOrdinaryAdmissionVerified": false,
+  "profileFixturePresent": false,
+  "rangeReceipts": [],
+  "readUtc": "2026-11-18T14:36:13.1628687Z",
+  "structuralNoResumeReviewed": true,
+  "processCreationTimeVerified": false,
+  "nineR1": {
+    "elapsedMs": 6460,
+    "firstError": {
+      "message": "managed runtime operation failed: windows024_originals_security_unconfirmed; 原件声明访问安全捕获前拒绝；scope=windows-bounded-access-v1; audit=excluded-unknown; fullSecurityProven=false; 另一个程序正在使用此文件，进程无法访问。 (os error 32)",
+      "status": "same-sample Status Unreachable"
+    },
+    "initialScanCount": 3,
+    "pid": 95724
+  },
+  "observedProcesses": [
+    {
+      "Id": 21500,
+      "ProcessName": "node",
+      "SessionId": 7
+    },
+    {
+      "Id": 75744,
+      "ProcessName": "ocxd",
+      "SessionId": 7
+    },
+    {
+      "Id": 95724,
+      "ProcessName": "ocxd",
+      "SessionId": 7
+    }
+  ]
+}

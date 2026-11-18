@@ -1,0 +1,63 @@
+{
+  "source": "36b70383eac5c44dffc51d34a4c4673cd8a3dbf7",
+  "verifierParent": "673d1166334c4fb78d5094bc09ef130e578e0991",
+  "builtInputs": [
+    {
+      "sha256": "a28571b0714c27a1000192941b74d956b6288207da5c39eb3d9973dfca3c45ce",
+      "bytes": 19328,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture.rs",
+      "gitBlob": "9f2a4bc98f9924df551ec48cc2fca6be64329625"
+    },
+    {
+      "sha256": "ab475038ad3a61c419c0f0af8b5836f32f424eeb877a7caad1f9fd9c56cfa10d",
+      "bytes": 32262,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "gitBlob": "f5486d55d39a1c121cffacdf2851e5d3a274c4f5"
+    },
+    {
+      "sha256": "56f0336a6a2622a2b09a992cf4dc2b7fd0eecbd8690df84599f50c41e83fa7fa",
+      "bytes": 65871,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "gitBlob": "24f8d9fef3bce2732963450ccd42a4e1bf1afb81"
+    },
+    {
+      "sha256": "283de13c7f33d1351fe747accbfcb9d2064f6c0c858ee0d246fc407de3a2d487",
+      "bytes": 29744,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/start_worker.rs",
+      "gitBlob": "402a10ffaca9d3709a5e44ff66faf4eadb084ba3"
+    },
+    {
+      "sha256": "168f01f7a932592f55496aa126996ae26ee1bad9d14ad9836170bfc81df88c21",
+      "bytes": 5669,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/client.rs",
+      "gitBlob": "0120c0cc59c2765b066da74e1eb2e2dcacef740f"
+    },
+    {
+      "sha256": "9227a76a17bf1943b5ddadfbd0f50250006eaf0d0a74fb4d533703aa2c833c1e",
+      "bytes": 21353,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/server.rs",
+      "gitBlob": "1ba59a87d255e2c53f16de5f739de184eb72c14e"
+    },
+    {
+      "sha256": "b7207c94ceb391230639fb6230e4fe228faed874e39ece68e75c27f2d3487b4f",
+      "bytes": 30085,
+      "path": "test/windows024-native/launch-r7-partial-owner.ps1",
+      "gitBlob": "ba42ea36870d261d30bb8ed106c9f6f17279b295"
+    }
+  ],
+  "standaloneInputs": [
+    {
+      "sha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2",
+      "bytes": 109,
+      "path": "test/windows024-native/launch-r7-partial-owner.cmd",
+      "gitBlob": "d616cfeb1eff14fe22ed466e95d8734ead1788d6"
+    },
+    {
+      "sha256": "04109655081281036a20f7965016007ffb5c7a6b2560ab8fc8b14855174ccc9d",
+      "bytes": 11467,
+      "path": "test/windows024-native/verify-r7-host-receipts.py",
+      "gitBlob": "127568c8636391002e97ddf74495fc99cd702830"
+    }
+  ],
+  "baseline": "f3564fbb34713beee97ed221fb4797b422b11d57"
+}
