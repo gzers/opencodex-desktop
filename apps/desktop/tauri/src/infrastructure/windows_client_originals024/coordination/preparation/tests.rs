@@ -206,7 +206,7 @@ fn wl2_r7_external_steps_whole_tree_requires_continuous_native_lease() {
     let mut claim = lease.anchored_claim(root, scene.end).unwrap();
     let epoch = claim.epoch().to_owned();
     let mut checkpoints = 0;
-    scene
+    let moves = scene
         .run(
             nodes,
             || {
@@ -229,7 +229,16 @@ fn wl2_r7_external_steps_whole_tree_requires_continuous_native_lease() {
         .unwrap()
         .release(scene.end)
         .unwrap();
-    assert!(images(&paths) == before);
+    let after = images(&paths);
+    assert!(after == before);
+    let coordination: Vec<_> = after.iter().map(|(id, security, bytes)| (
+        id.volume, id.index, security, crate::infrastructure::hash::sha256_hex(bytes),
+    )).collect();
+    let lease_release_sha256 = crate::infrastructure::hash::sha256_hex(
+        &serde_json::to_vec(&(epoch, coordination)).unwrap(),
+    );
+    scene.record_released(moves, lease_release_sha256).unwrap();
+    println!("completion record followed exact native release and coordination readback");
     println!("three originals: same claim/N/L/K epoch and raw33 contention at 26 checkpoints; explicit release, independent reacquisition and unchanged coordination images");
     scene.finish();
 }

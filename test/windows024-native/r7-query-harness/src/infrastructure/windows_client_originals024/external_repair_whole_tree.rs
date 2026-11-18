@@ -1,7 +1,10 @@
 //! Native external-repair component tests with three synthetic originals.
 use super::*;
+use crate::infrastructure::hash::sha256_hex;
 use crate::infrastructure::windows_client_originals024::tree::streams;
-use serde_json::json;
+#[path = "external_repair_record.rs"]
+mod repair_record;
+use repair_record::{CompletionObservations, Plan, Progress};
 use std::path::PathBuf;
 
 const LEAVES: [&str; 3] = ["auth.json", "config.toml", "config.json"];
@@ -18,7 +21,29 @@ pub(crate) struct WholeTree {
     stable: [FileImage; 2],
     originals: [FileImage; 3],
     working: [FileImage; 3],
+    started: Instant,
     pub(crate) end: Instant,
+}
+
+pub(crate) struct DurableMoves {
+    plan: Plan,
+    records: Vec<(String, PrivateRecord, Vec<u8>)>,
+    full_readback_sha256: String,
+}
+
+impl DurableMoves {
+    fn raw(&self) -> impl Iterator<Item = &[u8]> {
+        self.records.iter().map(|(_, _, bytes)| bytes.as_slice())
+    }
+
+    fn reread(&mut self) -> io::Result<()> {
+        for (_, record, bytes) in &mut self.records {
+            if record.read()? != *bytes {
+                return Err(invalid("durable move record changed"));
+            }
+        }
+        Ok(())
+    }
 }
 
 pub(crate) struct Node<'a> {
@@ -111,7 +136,8 @@ impl WholeTree {
         }
         let seeded = seed(clients[0].path(), root.path());
         fs::write(clients[0].path().join("owner.sqlite"), b"owner.sqlite").unwrap();
-        let end = Instant::now() + Duration::from_secs(10);
+        let started = Instant::now();
+        let end = started + Duration::from_secs(10);
         let anchors = std::array::from_fn(|i| observe_directory(&clients[i], end).unwrap());
         let stable = [claim_name, "owner.sqlite"]
             .map(|leaf| observe_file(&clients[0].path().join(leaf), end).unwrap());
@@ -132,6 +158,7 @@ impl WholeTree {
             stable,
             originals,
             working,
+            started,
             end,
         };
         (scene, seeded)
@@ -208,7 +235,7 @@ impl WholeTree {
         mut nodes: Vec<Node<'_>>,
         mut checkpoint: impl FnMut() -> io::Result<()>,
         mut after_intent: impl FnMut(usize, &str, &Path) -> io::Result<()>,
-    ) -> io::Result<()> {
+    ) -> io::Result<DurableMoves> {
         self.verify_anchors()?;
         self.verify_members(&[], &[], 0)?;
         for node in &mut nodes {
@@ -216,6 +243,31 @@ impl WholeTree {
             node.restore.verify_source(self.end)?;
         }
         checkpoint()?;
+        let root = self.root.as_ref().unwrap().path();
+        let action_id = sha256_hex(
+            root.to_str()
+                .ok_or_else(|| invalid("scene path encoding"))?
+                .as_bytes(),
+        );
+        let manifest = serde_json::to_vec(&(
+            &self.anchors,
+            self.stable
+                .each_ref()
+                .map(|image| (&image.security, sha256_hex(&image.bytes))),
+            LEAVES,
+        ))?;
+        let current = serde_json::to_vec(&(
+            "synthetic interrupted before Resume",
+            sha256_hex(&manifest),
+            &action_id,
+        ))?;
+        let plan = Plan::synthetic(
+            nodes.iter().flat_map(|node| [&node.retire, &node.restore]),
+            &manifest,
+            &current,
+            action_id,
+            self.end.duration_since(self.started),
+        )?;
         let mut records: Vec<(String, PrivateRecord, Vec<u8>)> = Vec::with_capacity(12);
         for (index, node) in nodes.iter_mut().enumerate() {
             let names: Vec<_> = records.iter().map(|(name, _, _)| name.as_str()).collect();
@@ -225,26 +277,13 @@ impl WholeTree {
                 let source = step.held.location().to_owned();
                 let target = step.to.path().join(step.target_name);
                 require_absent(&target)?;
-                let object = step.expected;
-                let intent = json!({
-                    "schema": "windows-external-preresume-repair-v1",
-                    "scope": "synthetic-three-originals",
-                    "node": index,
-                    "event": step.intent,
-                    "source": source,
-                    "target": target,
-                    "sourceParentId": step.from.identity().index.to_string(),
-                    "targetParentId": step.to.identity().index.to_string(),
-                    "security": object.security,
-                    "sha256": crate::infrastructure::hash::sha256_hex(&object.bytes),
-                    "budgetMs": 10000,
-                });
-                let intent_bytes = serde_json::to_vec(&intent)?;
+                let previous = records.last().map(|(_, _, bytes)| bytes.as_slice());
+                let intent = plan.step_record(records.len(), previous)?;
                 checkpoint()?;
                 self.record(
                     &mut records,
                     format!("{index}-{}.json", step.intent),
-                    intent_bytes.clone(),
+                    intent,
                 )?;
                 after_intent(index, step.intent, &target)?;
                 step.verify_source(self.end)?;
@@ -257,21 +296,12 @@ impl WholeTree {
                 if observe_file(&target, self.end)? != *step.expected {
                     return Err(invalid("moved node readback differs"));
                 }
-                let completion = json!({
-                    "schema": "windows-external-preresume-repair-v1",
-                    "scope": "synthetic-three-originals",
-                    "node": index,
-                    "event": format!("{}Readback", step.intent),
-                    "intentSha256": crate::infrastructure::hash::sha256_hex(&intent_bytes),
-                    "target": target,
-                    "targetParentId": step.to.identity().index.to_string(),
-                    "security": object.security,
-                    "sha256": crate::infrastructure::hash::sha256_hex(&object.bytes),
-                });
+                let previous = records.last().map(|(_, _, bytes)| bytes.as_slice());
+                let readback = plan.step_record(records.len(), previous)?;
                 self.record(
                     &mut records,
                     format!("{index}-{}Readback.json", step.intent),
-                    serde_json::to_vec(&completion)?,
+                    readback,
                 )?;
                 checkpoint()?;
             }
@@ -283,12 +313,54 @@ impl WholeTree {
             node.retire.verify_source(self.end)?;
             node.restore.verify_source(self.end)?;
         }
-        for (_, record, bytes) in &mut records {
-            if record.read()? != *bytes {
-                return Err(invalid("durable move record changed"));
-            }
+        let full_readback_sha256 = sha256_hex(&serde_json::to_vec(&(
+            manifest,
+            records
+                .iter()
+                .map(|(_, _, bytes)| sha256_hex(bytes))
+                .collect::<Vec<_>>(),
+        ))?);
+        let mut result = DurableMoves {
+            plan,
+            records,
+            full_readback_sha256,
+        };
+        result.reread()?;
+        if result.plan.verify(result.raw(), None)? != Progress::RepairPending {
+            return Err(invalid("file moves alone cannot complete repair"));
         }
         checkpoint()?;
+        check_time(self.end)?;
+        Ok(result)
+    }
+
+    #[allow(dead_code)] // Product-linked test supplies the native lease observations.
+    pub(crate) fn record_released(
+        &self,
+        mut moves: DurableMoves,
+        lease_release_sha256: String,
+    ) -> io::Result<()> {
+        check_time(self.end)?;
+        let observed = CompletionObservations::synthetic(
+            moves.full_readback_sha256.clone(),
+            lease_release_sha256,
+        );
+        let previous = moves
+            .records
+            .last()
+            .ok_or_else(|| invalid("external repair prefix missing"))?;
+        let bytes = moves.plan.completion_record(&previous.2, &observed)?;
+        self.record(&mut moves.records, "completion.json".into(), bytes)?;
+        moves.reread()?;
+        let names: Vec<_> = moves
+            .records
+            .iter()
+            .map(|(name, _, _)| name.as_str())
+            .collect();
+        self.verify_members(&LEAVES, &names, LEAVES.len())?;
+        if moves.plan.verify(moves.raw(), Some(&observed))? != Progress::CompleteData {
+            return Err(invalid("external repair completion differs"));
+        }
         check_time(self.end)
     }
 
@@ -342,7 +414,7 @@ impl Drop for WholeTree {
 fn r7_external_steps_whole_tree_restores_three_originals_with_durable_records() {
     let scene = WholeTree::new();
     let nodes = scene.prepare().unwrap();
-    scene.run(nodes, || Ok(()), |_, _, _| Ok(())).unwrap();
+    let moves = scene.run(nodes, || Ok(()), |_, _, _| Ok(())).unwrap();
     for index in 0..LEAVES.len() {
         let (client, custody, retired) = scene.node_paths(index);
         assert!(observe_file(&client, scene.end).unwrap() == scene.originals[index]);
@@ -350,6 +422,70 @@ fn r7_external_steps_whole_tree_restores_three_originals_with_durable_records() 
         require_absent(&custody).unwrap();
     }
     assert_eq!(fs::read_dir(scene.records.path()).unwrap().count(), 12);
+    assert_eq!(
+        moves.plan.verify(moves.raw().take(7), None).unwrap(),
+        Progress::RepairPending
+    );
+    let mut changed: Vec<_> = moves.raw().map(<[u8]>::to_vec).collect();
+    let original = changed[0].clone();
+    for field in [
+        "failedManifestSha256",
+        "failedCurrentSha256",
+        "confirmedScopeSha256",
+        "quiescenceEvidenceSha256",
+        "repairActionId",
+        "deadlineNsFromActionStart",
+    ] {
+        let field_value: serde_json::Value = serde_json::from_slice(&original).unwrap();
+        let value = serde_json::to_vec(&field_value["binding"][field]).unwrap();
+        let at = original
+            .windows(value.len())
+            .position(|window| window == value)
+            .unwrap();
+        let offset = at + 1;
+        changed[0][offset] = if original[offset] == b'8' { b'9' } else { b'8' };
+        assert!(
+            moves
+                .plan
+                .verify(changed.iter().map(Vec::as_slice), None)
+                .is_err(),
+            "{field}"
+        );
+        changed[0].clone_from(&original);
+    }
+    changed.swap(3, 4);
+    assert!(moves
+        .plan
+        .verify(changed.iter().map(Vec::as_slice), None)
+        .is_err());
+    changed.swap(3, 4);
+    changed[0].pop();
+    changed[0].extend_from_slice(br#", "foreign":true}"#);
+    assert!(moves
+        .plan
+        .verify(changed.iter().map(Vec::as_slice), None)
+        .is_err());
+    changed[0] = original;
+    let fabricated = CompletionObservations::synthetic(
+        moves.full_readback_sha256.clone(),
+        "fabricated release".into(),
+    );
+    let false_completion = moves
+        .plan
+        .completion_record(changed.last().unwrap(), &fabricated)
+        .unwrap();
+    changed.push(false_completion);
+    assert!(moves
+        .plan
+        .verify(changed.iter().map(Vec::as_slice), None)
+        .is_err());
+    changed.remove(6);
+    assert!(moves
+        .plan
+        .verify(changed.iter().map(Vec::as_slice), Some(&fabricated))
+        .is_err());
+    drop(moves);
+    println!("external repair record refused changed binding, unknown fields, reordered prefix and false completion");
     println!("three native originals returned; four anchors, exact children and twelve flushed intent/readback records verified in one 10 s action");
     scene.finish();
 }
@@ -366,7 +502,8 @@ fn r7_external_steps_whole_tree_late_custody_drift_refuses_before_any_record() {
             || panic!("refuse before first checkpoint"),
             |_, _, _| panic!("refuse before first intent"),
         )
-        .unwrap_err();
+        .err()
+        .unwrap();
     assert_eq!(error.to_string(), "whole tree has unexpected member");
     assert!(fs::read_dir(scene.records.path()).unwrap().next().is_none());
     for index in 0..LEAVES.len() {
@@ -395,7 +532,8 @@ fn r7_external_steps_whole_tree_second_return_collision_keeps_exact_native_prefi
                 Ok(())
             },
         )
-        .unwrap_err();
+        .err()
+        .unwrap();
     assert!(matches!(error.raw_os_error(), Some(80 | 183)));
     require_members(
         &scene.records,
