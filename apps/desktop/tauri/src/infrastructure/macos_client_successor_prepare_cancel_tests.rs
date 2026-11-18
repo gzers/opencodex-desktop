@@ -45,6 +45,10 @@ fn close(temp: PathBuf, context: ProcessContext, index: Index) {
     let path = temp;
     drop(index);
     drop(context);
+    remove_fixture(path);
+}
+
+fn remove_fixture(path: PathBuf) {
     fs::remove_dir_all(&path).expect("exact owned successor-review fixture cleanup");
     assert!(!path.exists());
     println!("SUCCESSOR_CANCEL_REVIEW_FIXTURE_REMOVED {}", path.display());
@@ -67,11 +71,35 @@ fn successor_preparation_review_audits_history_without_mutation_or_first_root_pe
     assert!(index.reserve_start().is_err());
     assert!(index.reserve_first_root_capture(&head).is_err());
     assert_eq!(bytes(&temp), before);
+    let fingerprint = review.fingerprint().to_owned();
+    drop(review);
+    drop(index);
+    use super::super::super::preview::{self, Status};
+    let data = temp.join("desktop");
+    let started = Instant::now();
+    let preview = preview::inspect_preview(&context, &data);
+    let preview_ms = started.elapsed().as_millis();
+    assert!(preview_ms < 5000);
+    assert_eq!(preview.status, Status::Pending);
+    assert_eq!(preview.phase, Some(State::Preparing));
+    assert_eq!(preview.attempt_id.as_deref(), Some(head.ticket.as_str()));
+    assert_eq!(preview.preparation_kind, Some("successor_root"));
+    assert_eq!(
+        preview.preparation_digest.as_deref(),
+        Some(fingerprint.as_str())
+    );
+    assert!(!preview.can_cancel_preparation);
+    let expired = preview::inspect_preview_until(&context, &data, Instant::now());
+    assert_eq!(expired.status, Status::Unknown);
+    assert!(expired.preparation_digest.is_none());
+    assert!(!expired.can_cancel_preparation);
+    assert_eq!(bytes(&temp), before);
     println!(
         "SUCCESSOR_CANCEL_REVIEW {}",
-        serde_json::json!({"readOnly":true,"revision":head.revision,"phase":head.state,"noMovementOrStartPermission":true,"releaseAcceptance":false})
+        serde_json::json!({"readOnly":true,"revision":head.revision,"phase":head.state,"previewElapsedMs":preview_ms,"fingerprintsMatch":true,"noMovementOrStartPermission":true,"releaseAcceptance":false})
     );
-    close(temp, context, index);
+    drop(context);
+    remove_fixture(temp);
 }
 
 #[test]

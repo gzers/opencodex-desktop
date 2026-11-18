@@ -2,7 +2,7 @@
 //! Acquire the separate shared action lock BEFORE opening the SQLite inode:
 //! otherwise closing an auxiliary fd could release a same-process writer's
 //! POSIX locks. Busy/unsafe/interrupted state is unknown, never an empty index.
-use super::*;
+use super::{generation::preparation_cancellation::View, *};
 use std::os::unix::fs::FileExt;
 /// Observe through the pin opened BEFORE SQLite locks. No auxiliary fd is
 /// opened/closed, and immutable SQLite page caching is not the mutation check.
@@ -138,10 +138,25 @@ pub(super) fn inspect_map_history_root<T>(
         Option<&super::super::root_creation::References>,
     ) -> io::Result<T>,
 ) -> io::Result<T> {
+    inspect_map_history_view(context, data_root, |head, history, origin, _view| {
+        project(head, history, origin)
+    })
+}
+
+pub(super) fn inspect_map_history_view<T>(
+    context: &ProcessContext,
+    data_root: &Path,
+    project: impl FnOnce(
+        Option<&Head>,
+        &[Head],
+        Option<&super::super::root_creation::References>,
+        Option<View<'_>>,
+    ) -> io::Result<T>,
+) -> io::Result<T> {
     let data = PinnedDirectory::open(data_root)?;
     data.private()?;
     if entry(&data, "manager-state")?.is_none() {
-        return project(None, &[], None);
+        return project(None, &[], None, None);
     }
     let manager = data.child_private("manager-state", false)?;
     let action = entry(&manager, "client-session-action.lock")?;
@@ -151,7 +166,7 @@ pub(super) fn inspect_map_history_root<T>(
     }
     if action.is_none() && index.is_none() {
         return if entry(&manager, "client-originals")?.is_none() {
-            project(None, &[], None)
+            project(None, &[], None, None)
         } else {
             Err(denied("originals remain without their independent index"))
         };
@@ -294,7 +309,17 @@ pub(super) fn inspect_map_history_root<T>(
     }
     // Project under the SAME read transaction/connection, not after closing
     // SQLite. The complete independent view is repeated before returning.
-    let projected = project(result.as_ref(), &history, root_registration.as_ref())?;
+    let projected = project(
+        result.as_ref(),
+        &history,
+        root_registration.as_ref(),
+        Some(View {
+            connection: &connection,
+            binding: &stored,
+            data: &data,
+            client: &client,
+        }),
+    )?;
     let mut moved = 1i32;
     let status = unsafe {
         rusqlite::ffi::sqlite3_file_control(
