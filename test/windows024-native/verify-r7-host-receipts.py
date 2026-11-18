@@ -91,6 +91,32 @@ def verify_scans(reports, elapsed_ms):
     require(prior < (elapsed_ms + 1) * 1_000_000, 'last scan follows the Start receipt')
 
 
+def verify_preflight(preflight, profile, image):
+    base = image.parent.parent
+    require(profile.is_absolute() and base.parent == profile and base.name != '..'
+            and image == base / 'I/ocxd.exe',
+            'Host image is outside the expected fixture layout')
+    expected_excluded = {
+        profile / name for name in ('.codex', '.grok', 'AppData/Local/OpenCodex',
+                                    'ocx024-r6-existing-20261117-r2')
+    }
+    excluded = [PureWindowsPath(path) for path in preflight['excludedRoots']]
+    require(len(excluded) == len(expected_excluded) and set(excluded) == expected_excluded
+            and all(root != base and root not in base.parents and base not in root.parents
+                    for root in excluded),
+            'Host exclusion roots differ or overlap the fixture')
+    expected_targets = {
+        base / name for name in ('clients', 'coordination', 'I/runtime', 'H/config.json', 'preparation')
+    }
+    targets = preflight['targets']
+    require(len(targets) == len(expected_targets)
+            and {PureWindowsPath(row['path']) for row in targets} == expected_targets
+            and all(row['absent'] is True and row['raw'] is None and row['error'] is None
+                    for row in targets), 'Host target absence evidence differs')
+    require(type(preflight['elevationType']) is int and preflight['elevationType'] == 1,
+            'Host preflight does not prove an ordinary token')
+
+
 def verify(root, sid, session, profile, image, image_sha):
     result = decode(read(root, 'Host-result.json'))
     require(result['mode'] == 'Host' and result['passed'] is True,
@@ -109,6 +135,7 @@ def verify(root, sid, session, profile, image, image_sha):
         exports[row['name']] = decode(raw)
     verify_runtime_image(exports['Host-image-created-verified.json'])
     preflight = exports['Host-fixture-preflight.json']
+    verify_preflight(preflight, profile, image)
     record = exports['Host-fixture-result.json']
     require(intent['mode'] == 'Host' and intent['nativeStageReady'] is True
             and intent['sid'] == preflight['sid'] == sid
