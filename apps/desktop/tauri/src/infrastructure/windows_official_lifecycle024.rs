@@ -1150,10 +1150,11 @@ async fn execute_admitted(
     plan.verify_full(runtime)?;
     let root = plan.program_root().to_path_buf();
     let read_selection = || {
-        program_selection::read_complete(
+        program_selection::read_complete_until(
             &root,
             crate::modules::data_root::layout::Platform::Windows,
             "win32-x64",
+            window.deadline(),
         )?
         .ok_or_else(|| unknown(()))
     };

@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory)][ValidateSet('Host','DiagnosticBefore','Explicit','DiagnosticAfter')][string]$Mode
 )
 $ErrorActionPreference = 'Stop'
-$public = 'C:\Users\Public\ocx-r7-isolated-owner-r1'
+$public = 'C:\Users\Public\ocx-r7-isolated-owner-nine-r1'
 $profile = 'C:\Users\marenben'
-$base = Join-Path $profile 'ocx024-r7-isolated-owner-r1'
+$base = Join-Path $profile 'ocx024-r7-isolated-owner-nine-r1'
 $out = Join-Path $public 'out01'
 $image = Join-Path $base 'I\ocxd.exe'
 $utf8 = [Text.UTF8Encoding]::new($false)
@@ -75,7 +75,10 @@ function CheckInitialScans($Reports) {
     Check ($entry.Count -eq $expectedEntry.Count -and $worker.Count -eq $expectedWorker.Count) 'Initial Start full scan count differs.'
     $scans = $entry + $worker
     $operations = $expectedEntry + $expectedWorker
+    $deadline = $Reports[1].deadlineNs
+    Check ($deadline -gt 0 -and $Reports[0].deadlineNs -eq $deadline) 'Initial Start scan phases have different absolute deadlines.'
     $remaining = 30000000
+    $lastFinish = 0
     for ($i = 0; $i -lt $scans.Count; $i++) {
         $scan = $scans[$i]
         $ordinal = if ($i -lt $entry.Count) { $i + 1 } else { $i - $entry.Count + 1 }
@@ -84,9 +87,14 @@ function CheckInitialScans($Reports) {
         $elapsed = $scan.elapsedUs
         Check ($scan.ordinal -eq $ordinal -and $scan.operation -ceq $operations[$i] -and
             $scan.completed -eq $true -and $null -eq $scan.firstError) 'Initial Start full scan did not complete in the expected order.'
-        Check ($before -le $remaining -and $after -gt 0 -and $before -ge $after -and
-            $elapsed -gt 0 -and [Math]::Abs(($before - $after) - $elapsed) -le 1) 'Initial Start scans did not share the original 30-second deadline.'
+        Check ($null -ne $scan.startedNs -and $scan.startedNs -ge $lastFinish -and
+            $scan.finishedNs -gt $scan.startedNs -and $scan.finishedNs -lt $deadline -and
+            $before -le $remaining -and $after -gt 0 -and $before -ge $after -and $elapsed -gt 0 -and
+            [Math]::Abs((($deadline - $scan.startedNs) / 1000) - $before) -lt 1 -and
+            [Math]::Abs((($deadline - $scan.finishedNs) / 1000) - $after) -lt 1 -and
+            [Math]::Abs((($scan.finishedNs - $scan.startedNs) / 1000) - $elapsed) -lt 1) 'Initial Start scans did not share the original 30-second deadline.'
         $remaining = $after
+        $lastFinish = $scan.finishedNs
     }
 }
 

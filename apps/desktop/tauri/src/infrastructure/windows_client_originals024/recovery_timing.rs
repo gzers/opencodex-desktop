@@ -1,6 +1,6 @@
 //! Buffer timings on the fixture thread and emit them after native work.
 use serde::Serialize;
-use std::{cell::RefCell, io, time::Instant};
+use std::{cell::RefCell, io, sync::OnceLock, time::Instant};
 
 use crate::{
     errors::{AppError, AppResult},
@@ -93,6 +93,7 @@ impl Drop for Capture {
 }
 
 // Record the fixture's initial Start across its entry and native worker.
+static START_SCAN_ORIGIN: OnceLock<Instant> = OnceLock::new();
 thread_local! {
     static START_SCANS: RefCell<Option<(&'static str, Instant, Vec<serde_json::Value>)>> = const { RefCell::new(None) };
 }
@@ -101,6 +102,7 @@ pub(in crate::infrastructure) struct StartScans;
 
 impl StartScans {
     pub(in crate::infrastructure) fn begin(phase: &'static str, end: Instant) -> Self {
+        START_SCAN_ORIGIN.get_or_init(Instant::now);
         START_SCANS.with_borrow_mut(|slot| {
             assert!(slot.is_none());
             *slot = Some((phase, end, Vec::new()));
@@ -111,12 +113,18 @@ impl StartScans {
 
 impl Drop for StartScans {
     fn drop(&mut self) {
-        let (phase, _, rows) = START_SCANS.with_borrow_mut(Option::take).unwrap();
+        let (phase, end, rows) = START_SCANS.with_borrow_mut(Option::take).unwrap();
         println!(
             "r7-initial-image-scans={}",
-            serde_json::json!({"phase":phase,"scans":rows})
+            serde_json::json!({"phase":phase,"deadlineNs":start_scan_ns(end),"scans":rows})
         );
     }
+}
+
+fn start_scan_ns(instant: Instant) -> u128 {
+    instant
+        .saturating_duration_since(*START_SCAN_ORIGIN.get().unwrap())
+        .as_nanos()
 }
 
 pub(in crate::infrastructure) fn verify_initial_image<T>(
@@ -132,6 +140,7 @@ pub(in crate::infrastructure) fn verify_initial_image<T>(
         let (_, _, rows) = slot.as_mut().unwrap();
         let ordinal = rows.len() + 1;
         rows.push(serde_json::json!({"ordinal":ordinal,"operation":operation,
+            "startedNs":start_scan_ns(start),"finishedNs":start_scan_ns(finish),
             "elapsedUs":finish.duration_since(start).as_micros(),
             "remainingBeforeUs":end.saturating_duration_since(start).as_micros(),
             "remainingAfterUs":end.saturating_duration_since(finish).as_micros(),
