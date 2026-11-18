@@ -1,0 +1,49 @@
+{
+  "actualCurrentServiceAdmission": true,
+  "actualUserActionEntry": true,
+  "budgetMs": 10000,
+  "canonicalCancellationClosed": true,
+  "canonicalHead": {
+    "completionSha256": "21eb0262125311556d86a600ba6a2c6031c1c86f0a081a925f3e853c7dee9d02",
+    "references": null,
+    "restorePlan": null,
+    "revision": 3,
+    "rootRetirement": {
+      "plan": {
+        "id": "978f3f57-cc5d-4fe1-a923-8c23c458782b",
+        "sha256": "3d01280b54cef660a08cf62833fa232de8c4e7287bb6fe2775b6ad9f0218a948"
+      },
+      "sourceRevision": 1
+    },
+    "state": "root_cancellation_absent",
+    "ticket": "acb6198f-f0ba-49a9-88ee-cb11aa2664a4"
+  },
+  "elapsedActionMs": 6982,
+  "normalStop": false,
+  "oldArchiveTamperReopenRefused": true,
+  "originalFourNativeScopesReleased": true,
+  "partialCapturePoint": null,
+  "partialCaptureRetainedWithoutAdoption": false,
+  "releaseAcceptance": false,
+  "scenario": "success",
+  "serviceStarted": false,
+  "staleConfirmationRefused": true,
+  "successorCaptureBudgetMs": 30000,
+  "successorCaptureElapsedMs": 2044,
+  "successorCapturedHead": {
+    "completionSha256": null,
+    "references": {
+      "attempt": "9cf9659d-478d-4843-bd60-aacdcc334150",
+      "liveSha256": null,
+      "originalSha256": "0374dd3c4adcb14de1d407675dd103058d42494cb115be2f4078ab54aa6ffe1e",
+      "phases": [],
+      "scopeSha256": "30049f1cbfcfe76d7b3a20849aeb476e30192c50b732eaf2cc041f6832deb495"
+    },
+    "restorePlan": null,
+    "revision": 6,
+    "state": "captured",
+    "ticket": "9cf9659d-478d-4843-bd60-aacdcc334150"
+  },
+  "successorEligible": true,
+  "syntheticCaptureScopeOnlyNotService": true
+}

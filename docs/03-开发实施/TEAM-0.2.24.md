@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 42；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 43；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -360,3 +360,5 @@ main845b28619只新增Mac generation的后继Preparing完整历史Review，77652
 Mac接下来实现后继保全移动/独立终态、多计划namespace和已登记plan中断恢复；只读组件不开放按钮或Start，产品预览/前端/真实GUI仍待后续。原型文件保持其唯一写者，本机不并发覆盖。固定候选/ChatGPT选择器与Windows实际普通桌面/Owner缺口各保留，不W2/双SID、不发布，旧现场处置无新授权。
 
 main cd7cd0a9e62b3f5f88e0054c3498cbfe18616943 增量为 macOS 独立取消计划目录校验，Windows 写集和共享合同不变。结果、证据和后继未完范围见 IMP181。
+
+main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修复。原生回执、清理证据和未完范围见 IMP182。该批 Windows 写集和共享合同不变。

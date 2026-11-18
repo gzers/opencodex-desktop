@@ -1,0 +1,627 @@
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_retired_completion.rs b/apps/desktop/tauri/src/infrastructure/macos_client_retired_completion.rs
+index f78fb5ab6..6f0c8e0fb 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_retired_completion.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_retired_completion.rs
+@@ -259,6 +259,7 @@ impl Index {
+                     .map_err(|_| denied("retired recovery admission unconfirmed"))
+             },
+             &|_, _, _| Ok(()),
++            None,
+         );
+         let result = (|| {
+             write.map_err(fail)?;
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs
+index dee38f914..ee77cb36e 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_binding.rs
+@@ -66,13 +66,14 @@ pub(super) fn active_binding(
+     stored: &[u8],
+     head: &Head,
+ ) -> io::Result<(Vec<u8>, root_creation::References)> {
+-    active_binding_projected(connection, stored, head, &|_, _, _| Ok(()))
++    active_binding_projected(connection, stored, head, &|_, _, _| Ok(()), None)
+ }
+ fn active_binding_projected(
+     connection: &Connection,
+     stored: &[u8],
+     head: &Head,
+     project: RootProjection<'_>,
++    registering: Option<&root_cancel_namespace::RegisteringSlot>,
+ ) -> io::Result<(Vec<u8>, root_creation::References)> {
+     let history = vault_history::read(connection, head)?;
+     let lineage = root_lineage::parse(stored, &history)?;
+@@ -93,7 +94,7 @@ fn active_binding_projected(
+     let manager = data.child_private("manager-state", false)?;
+     let slots = lineage.slots();
+     root_creation::verify_generation_slots(&manager, &slots)?;
+-    vault_history::inspect_root_history(&data, Path::new(profile), stored, &history)?;
++    vault_history::inspect_root_history(&data, Path::new(profile), stored, &history, registering)?;
+     root_creation::verify_generation_slots(&manager, &slots)?;
+     let confirmed: Vec<u8> = connection
+         .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
+@@ -213,7 +214,7 @@ pub(super) fn resolve_originals(
+         stored,
+         head,
+         connection,
+-        &|_, _, _| Ok(()),
++        (&|_, _, _| Ok(()), None),
+     )
+ }
+ pub(super) fn resolve_originals_projected(
+@@ -223,12 +224,16 @@ pub(super) fn resolve_originals_projected(
+     stored: &[u8],
+     head: Option<&Head>,
+     connection: &Connection,
+-    project: RootProjection<'_>,
++    observation: (
++        RootProjection<'_>,
++        Option<&root_cancel_namespace::RegisteringSlot>,
++    ),
+ ) -> io::Result<(
+     PinnedDirectory,
+     Option<root_creation::References>,
+     Option<Originals>,
+ )> {
++    let (project, registering) = observation;
+     let logical = context.working_directory.join(".codex");
+     let value = crate::modules::model_config::schema_v2::parse_strict_json_v2(stored)
+         .map_err(|_| denied("root scope binding is not strict JSON"))?;
+@@ -247,7 +252,8 @@ pub(super) fn resolve_originals_projected(
+         return Ok((client, None, None));
+     }
+     let current = head.ok_or_else(|| denied("registered root has no independent head"))?;
+-    let (active, origin) = active_binding_projected(connection, stored, current, project)?;
++    let (active, origin) =
++        active_binding_projected(connection, stored, current, project, registering)?;
+     let stored = active.as_slice();
+     let mut binding: RootBinding = decode(stored)?;
+     binding.original_root.inherit_namespace(&origin)?;
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_namespace.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_namespace.rs
+index 362651661..cc091f12d 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_namespace.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_namespace.rs
+@@ -1,13 +1,35 @@
+ //! Exact cancellation-plan names from independently indexed events only.
+ //! This is membership DATA, never a plan source, movement or restoration permit.
+ use super::*;
+-use std::ffi::OsString;
++use std::{ffi::OsString, os::fd::AsRawFd};
++
++pub(super) struct RegisteringSlot(PinnedDirectory);
++
++impl RegisteringSlot {
++    pub(super) fn create(parent: &PinnedDirectory, id: &str) -> io::Result<Self> {
++        parent.private()?;
++        let leaf = name(OsStr::new(id))?;
++        if unsafe { libc::mkdirat(parent.file().as_raw_fd(), leaf.as_ptr(), 0o700) } != 0 {
++            return Err(io::Error::last_os_error());
++        }
++        let directory = parent.child_private(id, false)?;
++        if !super::super::tree::names(directory.file())?.is_empty() {
++            return Err(denied("new cancellation plan slot is not empty"));
++        }
++        Ok(Self(directory))
++    }
++
++    pub(super) fn directory(&self) -> &PinnedDirectory {
++        &self.0
++    }
++}
+ 
+ #[derive(Clone)]
+-pub(super) struct Namespace {
++pub(super) struct Namespace<'a> {
+     names: Vec<OsString>,
++    registering: Option<&'a RegisteringSlot>,
+ }
+-impl Namespace {
++impl<'a> Namespace<'a> {
+     /// The SQLite history reader has already validated each canonical head
+     /// and enforced its serialized size and total byte budget.
+     pub(super) fn from_history(history: &[Head]) -> io::Result<Self> {
+@@ -80,17 +102,49 @@ impl Namespace {
+         }
+         Ok(Self {
+             names: plans.into_keys().map(OsString::from).collect(),
++            registering: None,
+         })
+     }
++    pub(super) fn during_registration(mut self, slot: Option<&'a RegisteringSlot>) -> Self {
++        self.registering = slot;
++        self
++    }
++    pub(super) fn require_at(&self, manager: &PinnedDirectory) -> io::Result<()> {
++        if observation::entry(manager, "client-root-cancel-plans")?.is_none() {
++            if self.names.is_empty() && self.registering.is_none() {
++                return manager.recheck();
++            }
++            return Err(denied("indexed cancellation plan parent missing"));
++        }
++        self.require(&manager.child_private("client-root-cancel-plans", false)?)
++    }
+     pub(super) fn require(&self, parent: &PinnedDirectory) -> io::Result<()> {
+         parent.private()?;
+-        if super::super::tree::names(parent.file())? != self.names {
++        let mut expected = self.names.clone();
++        if let Some(slot) = self.registering.map(RegisteringSlot::directory) {
++            let leaf = slot
++                .path()
++                .file_name()
++                .ok_or_else(|| denied("new cancellation slot name missing"))?;
++            if slot.path().parent() != Some(parent.path()) {
++                return Err(denied("new cancellation slot parent differs"));
++            }
++            let position = expected
++                .binary_search_by(|name| name.as_os_str().cmp(leaf))
++                .err()
++                .ok_or_else(|| denied("new cancellation slot already indexed"))?;
++            PinnedDirectory::recheck_set(&[parent, slot])?;
++            expected.insert(position, leaf.to_owned());
++        }
++        if super::super::tree::names(parent.file())? != expected {
+             return Err(denied(
+                 "cancellation plan namespace differs from independent history",
+             ));
+         }
+-        parent.recheck()?;
+-        Ok(())
++        if let Some(slot) = self.registering.map(RegisteringSlot::directory) {
++            return PinnedDirectory::recheck_set(&[parent, slot]);
++        }
++        parent.recheck()
+     }
+     pub(super) fn contains(&self, id: &str) -> bool {
+         self.names.binary_search(&OsString::from(id)).is_ok()
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel_tests.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel_tests.rs
+index df25584f7..8aaeae89b 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel_tests.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_cancel_tests.rs
+@@ -233,6 +233,35 @@ fn first_root_cancel_review_refuses_new_data_even_if_head_has_no_original_refere
+         f.close();
+     }
+ }
++#[test]
++fn first_root_cancel_rejects_unregistered_slot_before_any_plan_is_indexed() {
++    let f = Fixture::new();
++    let parent = f
++        .index
++        .action_parent
++        .child_private("client-root-cancel-plans", true)
++        .unwrap();
++    let id = uuid::Uuid::new_v4().to_string();
++    let rogue = parent.child_private(&id, true).unwrap();
++    create(&rogue, "plan.json", b"unregistered test evidence").unwrap();
++    let before = bytes(f.data.parent().unwrap());
++
++    assert!(f.index.checked_head().is_err());
++    assert!(root_cancel_namespace::RegisteringSlot::create(&parent, &id).is_err());
++    assert!(f
++        .index
++        .review_first_root_preparation(&f.context, &f.head, end())
++        .is_err());
++    assert_eq!(
++        read_head(f.index.connection().unwrap()).unwrap(),
++        Some(f.head.clone())
++    );
++    assert_eq!(bytes(f.data.parent().unwrap()), before);
++    drop(rogue);
++    drop(parent);
++    f.close();
++}
++
+ #[test]
+ fn first_root_cancel_review_keeps_original_deadline_and_exact_index_revision() {
+     let f = Fixture::new();
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs
+index dc5ef9e88..3b7273b67 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs
+@@ -27,16 +27,16 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
+ }
+ /// One independently indexed initial cancellation, checked without reading the
+ /// live client/Grok of a later generation. It grants no current permission.
+-pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservation {
++pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservation<'a> {
+     binding: Vec<u8>,
+     head: Head,
+     origin: super::super::super::root_creation::References,
+     history: Vec<Head>,
+     fingerprint: String,
+     retained_slot: Option<String>,
+-    namespace: root_cancel_namespace::Namespace,
++    namespace: root_cancel_namespace::Namespace<'a>,
+ }
+-impl HistoricalObservation {
++impl<'a> HistoricalObservation<'a> {
+     pub(in crate::infrastructure::macos_client_originals::session_index) fn begin(
+         data: &PinnedDirectory,
+         profile: &Path,
+@@ -44,7 +44,7 @@ impl HistoricalObservation {
+         head: &Head,
+         origin: &super::super::super::root_creation::References,
+         history: &[Head],
+-        namespace: &root_cancel_namespace::Namespace,
++        namespace: &root_cancel_namespace::Namespace<'a>,
+     ) -> std::io::Result<(Self, PinnedDirectory)> {
+         if head.state != State::RootCancellationAbsent || history.last() != Some(head) {
+             return Err(denied(
+@@ -124,7 +124,7 @@ fn observe(
+     head: &Head,
+     origin: &super::super::super::root_creation::References,
+     history: &[Head],
+-    mode: (bool, &root_cancel_namespace::Namespace),
++    mode: (bool, &root_cancel_namespace::Namespace<'_>),
+ ) -> std::io::Result<(PinnedDirectory, String)> {
+     let (historical, namespace) = mode;
+     validate(head)?;
+@@ -360,7 +360,7 @@ pub(in crate::infrastructure::macos_client_originals::session_index) fn pending_
+     head: &Head,
+     origin: &super::super::super::root_creation::References,
+     history: &[Head],
+-    namespace: &root_cancel_namespace::Namespace,
++    namespace: &root_cancel_namespace::Namespace<'_>,
+ ) -> std::io::Result<Option<String>> {
+     if head.state != State::RootCancellationPrepared {
+         return Err(denied("pending retained capture phase differs"));
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
+index f2b43a14c..fbc2086c3 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve.rs
+@@ -23,7 +23,7 @@ struct Plan {
+ }
+ pub struct Prepared<'a> {
+     review: Review<'a>,
+-    directory: PinnedDirectory,
++    slot: root_cancel_namespace::RegisteringSlot,
+     id: String,
+     bytes: Vec<u8>,
+     sha256: String,
+@@ -148,7 +148,7 @@ impl<'a> Prepared<'a> {
+         &self.sha256
+     }
+     pub fn destination(&self) -> PathBuf {
+-        self.directory.path().join("root")
++        self.slot.directory().path().join("root")
+     }
+     /// The Review was minted BEFORE coordination initialization on an empty
+     /// root. Only actual official Guard/NativeLease may explain those new locks.
+@@ -200,18 +200,15 @@ impl<'a> Prepared<'a> {
+                 "root-cancel retained plan namespace requires resolution",
+             ));
+         }
+-        let directory = parent.child_private(&plan.id, true)?;
+-        if !super::super::super::tree::names(directory.file())?.is_empty() {
+-            return Err(denied("root-cancel plan slot already exists"));
+-        }
++        let slot = root_cancel_namespace::RegisteringSlot::create(&parent, &plan.id)?;
+         let bytes = encode(&plan)?;
+         let sha256 = digest(&bytes);
+-        create(&directory, "plan.json", &bytes)?;
++        create(slot.directory(), "plan.json", &bytes)?;
+         parent.sync()?;
+         review.index.action_parent.sync()?;
+         let result = Self {
+             review,
+-            directory,
++            slot,
+             id: plan.id,
+             bytes,
+             sha256,
+@@ -254,7 +251,7 @@ impl<'a> Prepared<'a> {
+             }),
+             root_generation: None,
+         };
+-        self.review.index.write_checked_admitted(
++        self.review.index.write_checked_projected(
+             Some(&self.review.head),
+             &next,
+             &|_| Ok(()),
+@@ -264,6 +261,8 @@ impl<'a> Prepared<'a> {
+                 }
+                 self.require_live()
+             },
++            &|_, _, _| Ok(()),
++            Some(&self.slot),
+         )?;
+         self.registered = Some(next);
+         self.require_live()?;
+@@ -273,8 +272,8 @@ impl<'a> Prepared<'a> {
+         self.registered.as_ref()
+     }
+     fn plan(&self) -> std::io::Result<Plan> {
+-        self.directory.private()?;
+-        match capture_file(&self.directory, "plan.json", MAX_FRAME)? {
++        self.slot.directory().private()?;
++        match capture_file(self.slot.directory(), "plan.json", MAX_FRAME)? {
+             Image::File {
+                 bytes, protection, ..
+             } if bytes == self.bytes && digest(&bytes) == self.sha256 => {
+@@ -298,7 +297,7 @@ impl<'a> Prepared<'a> {
+     fn require_live(&self) -> std::io::Result<()> {
+         let plan = self.plan()?;
+         facts(&self.review, &self.review.index.client, self.expected())?;
+-        if observation::entry(&self.directory, "root")?.is_some()
++        if observation::entry(self.slot.directory(), "root")?.is_some()
+             || super::super::super::TreeSnapshot::read(&self.review.index.client)? != plan.root
+         {
+             return Err(denied("root-cancel root or destination changed"));
+@@ -353,7 +352,7 @@ impl<'a> Prepared<'a> {
+         // Persist intent before the first rename. A missing readback is pending,
+         // not permission to retry/overwrite or infer that no rename occurred.
+         create(
+-            &self.directory,
++            self.slot.directory(),
+             "move-intent.json",
+             &encode(&(self.sha256.as_str(), self.review.index.client.identity()))?,
+         )?;
+@@ -371,7 +370,7 @@ impl<'a> Prepared<'a> {
+             libc::renameatx_np(
+                 profile.file().as_raw_fd(),
+                 from.as_ptr(),
+-                self.directory.file().as_raw_fd(),
++                self.slot.directory().file().as_raw_fd(),
+                 to.as_ptr(),
+                 libc::RENAME_EXCL,
+             )
+@@ -380,7 +379,7 @@ impl<'a> Prepared<'a> {
+             return Err(std::io::Error::last_os_error());
+         }
+         profile.sync()?;
+-        self.directory.sync()?;
++        self.slot.directory().sync()?;
+         // On failure AFTER rename, preserve the exact root and all records. No
+         // catch-all rollback to a potentially newly created logical path.
+         let archived = PinnedDirectory::open(&target)?;
+@@ -414,7 +413,7 @@ impl<'a> Prepared<'a> {
+             "rootIdentity":archived.identity(),"logicalRootAbsent":true,"writerReleased":true,
+             "canonicalCancellationClosed":false,"normalStop":false,"successorEligible":false,
+         }))?;
+-        create(&self.directory, "preserved-readback.json", &bytes)?;
++        create(self.slot.directory(), "preserved-readback.json", &bytes)?;
+         if super::super::super::TreeSnapshot::read(&archived)? != released {
+             return Err(denied("root-cancel readback root changed"));
+         }
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs
+index 8a773be91..81018eb8f 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_preserve_tests.rs
+@@ -227,12 +227,18 @@ fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker()
+                 });
+             assert!(failed.is_err());
+             assert!(!pending
+-                .directory
++                .slot
++                .directory()
+                 .path()
+                 .join("preserved-readback.json")
+                 .exists());
+-            assert!(pending.directory.path().join("plan.json").is_file());
+-            assert!(pending.directory.path().join("move-intent.json").is_file());
++            assert!(pending.slot.directory().path().join("plan.json").is_file());
++            assert!(pending
++                .slot
++                .directory()
++                .path()
++                .join("move-intent.json")
++                .is_file());
+             let kept = if scenario == "before_move" {
+                 profile.join(".codex")
+             } else {
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs b/apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs
+index 3be789773..6d20ea6cd 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs
+@@ -67,12 +67,12 @@ pub mod preview;
+ pub mod rearm;
+ #[path = "macos_client_recovery_rollback.rs"]
+ pub mod rollback;
++#[path = "macos_client_root_cancel_namespace.rs"]
++mod root_cancel_namespace;
+ #[path = "macos_client_root_cancel_action.rs"]
+ pub mod root_cancellation;
+ #[path = "macos_client_root_prepare_cancel.rs"]
+ pub mod root_preparation;
+-#[path = "macos_client_root_cancel_namespace.rs"]
+-mod root_cancel_namespace;
+ #[path = "macos_client_unchanged.rs"]
+ pub mod unchanged;
+ #[path = "macos_client_vault_history.rs"]
+@@ -1037,11 +1037,12 @@ impl Index {
+         self.checked_head_originals().map(|v| v.0)
+     }
+     fn checked_head_originals(&self) -> io::Result<(Option<Head>, Option<Originals>)> {
+-        self.checked_head_originals_projected(&|_, _, _| Ok(()))
++        self.checked_head_originals_projected(&|_, _, _| Ok(()), None)
+     }
+     fn checked_head_originals_projected(
+         &self,
+         project: RootProjection<'_>,
++        registering: Option<&root_cancel_namespace::RegisteringSlot>,
+     ) -> io::Result<(Option<Head>, Option<Originals>)> {
+         let mut originals = None;
+         let observed_head = read_head(self.connection()?)?;
+@@ -1073,7 +1074,7 @@ impl Index {
+                 &stored,
+                 current.as_ref(),
+                 self.connection()?,
+-                project,
++                (project, registering),
+             )?;
+             originals = observed_originals;
+             if resolved.identity() != self.client.identity() || origin.as_ref() != Some(refs) {
+@@ -1834,7 +1835,14 @@ impl Index {
+             root_retirement: expected.root_retirement.clone(),
+             root_generation: None,
+         };
+-        self.write_checked_projected(Some(expected), &next, &|_| Ok(()), &|_| Ok(()), project)?;
++        self.write_checked_projected(
++            Some(expected),
++            &next,
++            &|_| Ok(()),
++            &|_| Ok(()),
++            project,
++            None,
++        )?;
+         if let Err(error) = proof.require(&self.data, &self.profile, expected) {
+             let mut pending = expected.clone();
+             pending.revision = next
+@@ -2107,7 +2115,7 @@ impl Index {
+         checkpoint: &impl Fn(&str) -> io::Result<()>,
+         admit: &impl Fn(Option<&Originals>) -> io::Result<()>,
+     ) -> io::Result<()> {
+-        self.write_checked_projected(expected, next, checkpoint, admit, &|_, _, _| Ok(()))
++        self.write_checked_projected(expected, next, checkpoint, admit, &|_, _, _| Ok(()), None)
+     }
+     fn write_checked_projected(
+         &self,
+@@ -2116,8 +2124,25 @@ impl Index {
+         checkpoint: &impl Fn(&str) -> io::Result<()>,
+         admit: &impl Fn(Option<&Originals>) -> io::Result<()>,
+         project: RootProjection<'_>,
++        registering: Option<&root_cancel_namespace::RegisteringSlot>,
+     ) -> io::Result<()> {
+         validate(next)?;
++        if let Some(slot) = registering {
++            let reference = next.root_retirement.as_ref().filter(|reference| {
++                expected.is_some_and(|head| {
++                    head.revision == reference.source_revision && head.ticket == next.ticket
++                })
++            });
++            if next.state != State::RootCancellationPrepared
++                || !reference.is_some_and(|reference| {
++                    slot.directory().path().file_name() == Some(OsStr::new(&reference.plan.id))
++                })
++            {
++                return Err(denied(
++                    "cancellation registration slot differs from its next event",
++                ));
++            }
++        }
+         if matches!(
+             next.state,
+             State::RootCancellationPrepared | State::RootCancellationAbsent
+@@ -2191,7 +2216,8 @@ impl Index {
+                     r.get(0)
+                 })
+                 .map_err(database_error)?;
+-            let (head, originals) = self.checked_head_originals()?;
++            let (head, originals) =
++                self.checked_head_originals_projected(&|_, _, _| Ok(()), registering)?;
+             if binding != self.binding || head.as_ref() != expected {
+                 return Err(denied("current session changed before reference commit"));
+             }
+@@ -2244,7 +2270,12 @@ impl Index {
+         }
+         #[cfg(test)]
+         let _metric = observation_metrics::span("transaction_postcommit");
+-        if self.checked_head_originals_projected(project)?.0.as_ref() != Some(next) {
++        if self
++            .checked_head_originals_projected(project, None)?
++            .0
++            .as_ref()
++            != Some(next)
++        {
+             return Err(denied("session references commit readback differs"));
+         }
+         self.check_capture_publication(next)?;
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_successor_prepare_cancel.rs b/apps/desktop/tauri/src/infrastructure/macos_client_successor_prepare_cancel.rs
+index 4f1e16c93..a2e443983 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_successor_prepare_cancel.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_successor_prepare_cancel.rs
+@@ -96,8 +96,13 @@ fn snapshot(
+     // Ordinary cancellation's vault inspection accepts Restored/Unchanged
+     // attempts. Created-root generations instead require the full independent
+     // RootAbsent/cancelled-root lineage, archives and exact slot namespace.
+-    let closures =
+-        vault_history::inspect_root_history(&index.data, &index.profile, &index.binding, &history)?;
++    let closures = vault_history::inspect_root_history(
++        &index.data,
++        &index.profile,
++        &index.binding,
++        &history,
++        None,
++    )?;
+     let tree = TreeSnapshot::read(&index.client)?;
+     let profile = PinnedDirectory::open(&index.profile)?;
+     let grok = GrokSnapshot::read(&profile)?;
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs b/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
+index e6d7e75a2..5dfe3f8f0 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs
+@@ -140,15 +140,16 @@ pub(super) fn inspect_root_closures(
+     binding: &[u8],
+     history: &[Head],
+ ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
+-    inspect_root_lineage(data, profile, binding, history, true, None)
++    inspect_root_lineage(data, profile, binding, history, true, None, None)
+ }
+ pub(super) fn inspect_root_history(
+     data: &PinnedDirectory,
+     profile: &Path,
+     binding: &[u8],
+     history: &[Head],
++    registering: Option<&root_cancel_namespace::RegisteringSlot>,
+ ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
+-    inspect_root_lineage(data, profile, binding, history, false, None)
++    inspect_root_lineage(data, profile, binding, history, false, None, registering)
+ }
+ /// Only a live create-only transfer can supply the extra pending namespace
+ /// while the predecessor Head is still current inside its commit transaction.
+@@ -159,7 +160,7 @@ pub(super) fn inspect_root_closures_pending(
+     history: &[Head],
+     transfer: &super::root_creation::Transfer,
+ ) -> io::Result<()> {
+-    inspect_root_lineage(data, profile, binding, history, true, Some(transfer)).map(|_| ())
++    inspect_root_lineage(data, profile, binding, history, true, Some(transfer), None).map(|_| ())
+ }
+ fn check_historical_scope(originals: &Originals, binding: &[u8]) -> io::Result<()> {
+     check_historical_scope_pins(
+@@ -201,9 +202,13 @@ fn inspect_root_lineage(
+     history: &[Head],
+     closed_only: bool,
+     pending: Option<&super::root_creation::Transfer>,
++    registering: Option<&root_cancel_namespace::RegisteringSlot>,
+ ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
+     let mut lineage = root_lineage::parse(binding, history)?;
+-    let cancellation_namespace = root_cancel_namespace::Namespace::from_history(history)?;
++    let cancellation_namespace =
++        root_cancel_namespace::Namespace::from_history(history)?.during_registration(registering);
++    let manager = data.child_private("manager-state", false)?;
++    cancellation_namespace.require_at(&manager)?;
+     #[cfg(not(test))]
+     let reference_mode = false;
+     #[cfg(test)]
+@@ -338,7 +343,6 @@ fn inspect_root_lineage(
+         expected.push(generation.origin.id.clone());
+         references.push((reference, generation.binding.clone(), observation));
+     }
+-    let manager = data.child_private("manager-state", false)?;
+     if observation::entry(&manager, "client-originals")?.is_none() {
+         if !expected.is_empty()
+             || !(current.is_some_and(|h| {
+@@ -354,6 +358,7 @@ fn inspect_root_lineage(
+             return Err(denied("indexed root original vault missing"));
+         }
+         finish_cancelled_history(data, profile, cancelled)?;
++        cancellation_namespace.require_at(&manager)?;
+         return Ok(Vec::new());
+     }
+     let vault = manager.child_private("client-originals", false)?;
+@@ -425,7 +430,7 @@ fn inspect_root_lineage(
+         return Err(denied("root vault membership changed during history audit"));
+     }
+     vault.private()?;
+-    manager.recheck()?;
++    cancellation_namespace.require_at(&manager)?;
+     Ok(references
+         .into_iter()
+         .map(|(reference, _, _)| reference)
+@@ -435,7 +440,7 @@ fn finish_cancelled_history(
+     data: &PinnedDirectory,
+     profile: &Path,
+     observations: Vec<(
+-        super::root_preparation::preservation::indexed::HistoricalObservation,
++        super::root_preparation::preservation::indexed::HistoricalObservation<'_>,
+         Vec<u8>,
+     )>,
+ ) -> io::Result<()> {
