@@ -1593,3 +1593,13 @@ ocxr7owner、对应 Profile 与 Public 暂存根仍缺席。真实桌面与产�
 证据提交 `78736de0fc6bf5ebc4ea0c53148f45f8c6e22dcc` 的 `wl2-r7-partial-owner-20261118-r1/status.json` 中，顶层 `cleanupUniqueRoots=1` 沿用了扫描组件基线的计数。本批实际为 **72** 个不同的本地原生测试根。`targeted-01`、`targeted-02`、`targeted-03` 的原始 stdout 各记录 24 个，三组无重复，合并后与 `cleanup.json` 的 `verifiedAbsentLocalTestRoots` 逐项一致，当前路径也均缺席。PowerShell DATA 夹具和已归档的生成 schema 单独核实缺席。
 
 Mac 接收时以原 stdout 与 `cleanup.json` 为准。原回执、283 项矩阵、证据清单及制品 SHA 保留，真实普通桌面和旧 r2 恢复的准入状态仍待。
+
+## 2026-11-18 r7 复用 marenben 的单 SID 准入请求
+
+用户指定使用现有 `marenben`，不创建新账户。fetch 核对 main `6bafdd342e69ee83e842f4b35a20bafa1320645a`、governance `89294318f8c5010c58c6b2ba6d3cd9e3deecb219`、Windows `18833e7b65c4cb48316f37ee15a3dc584650877e`。该本地账户启用，SID `S-1-5-21-587408064-856152790-2583328096-1003`，未列于本机 Administrators 组，登记 Profile 为 `C:\Users\marenben`。`quser` 显示 session 7 已断开。有效普通令牌、`WinSta0/Default` 与无外层 Job 仍待该桌面实证。
+
+换账户名或 I/D/H 后仍发生路径碰撞。`Fixture::prepare` 对真实 Profile 的 `.codex`、`.grok` 及默认 LocalAppData 下 `OpenCodex` 执行缺席检查。`existing_context` 在 `Owner::profile_path()` 下绑定 `.codex/.opencodex-native-main.claim.sqlite`，并经实际令牌与 `SHGetKnownFolderPath(DEFAULT_PATH)` 取得 `OpenCodex/Runtime/v1/<SID>` 下同一 `client-desktop-lifecycle.sqlite` 及按 `.codex` 规范路径摘要索引的 NLK 对象。v3 capture／history 还按原 Profile 校验客户端树。仅改变 `H`、协调文件名或重连 session 7 无法建立独立所有权。
+
+请在 TEAM52／r7 增量内确认以下最小测试方案。真实 SID、Profile、桌面、令牌及执行进程身份保持实测。在 `cfg(test)` 的封闭引导内，由预先绑定的私有且无重解析的新树分别提供两个合成客户端根、四个协调文件及新 I/D/H。一次性固定实际对象身份、ACL、规范路径和制品摘要，拒绝旧 r2 任一对象、路径重叠、其他 locator 或生产入口。将同一隔离描述贯穿实际原 Owner、扫描、捕获、原线程范围绑定及 V2 验证，沿用四 trait、持久格式、原样 2.99 镜像和 30／5／10 秒。请明确此测试可否计作原 Owner 未 Resume 的部分捕获保全验证，以及实际触及的 Windows 文件写集。真实默认客户端根、默认协调与官方生命周期仍各按生产形状独立验收。若替代根必须经共享接口或会发生首次 Resume，请先明确该前提，独立夹具须在存在这两种情况时拒绝入场。
+
+旧 r2 的 seq9、三件原件及原锁沿用 `wl2-r7-r2-readonly-20261117-receive-r1/exact-repair-plan.json`。首错 command-lineage raw64、原 Job 24 项 Unknown/raw50，`executionReady=false`、`approvalRequested=false`。本轮只读核对，未运行旧或新桌面入口。既有 283 项和源码／制品绑定复用。普通 MSI 的历史 raw1625 仍保留。本次机器和该 SID 的 32/64 位注册表策略视图均未找到 `DisableMSI`，与既有只读记录一致，仍缺实际许可的 per-user 环境。此请求只阻塞依赖实际准入的验证。接收决定前无需让用户重连桌面。
