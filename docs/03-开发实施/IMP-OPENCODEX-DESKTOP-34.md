@@ -2240,3 +2240,13 @@ Windows 源码仍为 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7。复核证据 70c
 按 [r7 配对增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 与 TEAM68 固定实际暂存字节后再进入 Explicit。现有 Host 回执可直接消费，未有则只跑一次；原 worker 的范围证明能与脚本落地并行。合成结果只确认共享模式和脚本摘要门，现场 5 秒尚未证实。普通用户 MSI、生产恢复、正常 Stop/Closed、生产单 SID 和签名候选继续保留待验。
 
 [独立回读及配对证据](https://github.com/gzers/opencodex-desktop/tree/896bbd71105a08562943d56d39230db368486d7e/.adg/evidence/0.2.24/windows-dev)
+
+## revision208 接收 Windows 实际暂存与配对预检
+
+复核源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0 与证据 bd29ce9c75a259aa845d153f732bf3e8ddd2cccc。17 份载荷的路径、大小及 SHA-256 一致。暂存前后各七项，仅替换两份脚本，文件 ACL 一致，三处目录 ACL 均受保护。源码净差仅为测试 launcher 的三处替换。
+
+实际 launcher 为 30,158 字节，SHA-256 为 6b553204560d59ba7a292f64c322404028eceb1a0899661f5f9dc9d76953e990。证据分支中的观察脚本为 6,394 字节，SHA-256 为 f3a0c5ed9f8ba698d0b5d3e37d1b1209b4b88fa5ee4714a5fe06c1ff000aba5f，绑定实际 launcher 和原 CMD。PowerShell 5.1 接受实装配对，混配拒绝并报告 `The fixed DiagnosticAfter launcher bytes differ.`。首次准备 raw1 与 stderr 已保留，修正后的准备、暂存与预检均 raw0，stderr 为空。
+
+本次接收暂存与配对预检。range-r1 预检时没有 Host 回执，也未执行桌面动作。现场沿 TEAM69 推进。普通用户 MSI raw1625、生产恢复及正常 Stop/Closed、生产单 SID 和签名候选继续待验。
+
+[Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/bd29ce9c75a259aa845d153f732bf3e8ddd2cccc/.adg/evidence/0.2.24/windows-dev/wl2-r7-team68-readback-stage-20261119-r1)

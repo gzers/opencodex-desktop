@@ -508,3 +508,9 @@ nine-r2 证据 cdf54c6a1cd095f8421c5e07a14929c30d6cc913 已按 IMP204 接收。�
 基线 Windows 源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7，证据 896bbd71105a08562943d56d39230db368486d7e。按 [r7 配对增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 由原 Windows 对话独占落两份脚本并复核实际暂存文件，接收结果归 IMP207。Host 和原 worker 的只读诊断可以先行。Mac 并行处理后继代次取消及选模验收。
 
 > fetch docs/governance-main，按 TEAM68／IMP207／r7 固定并推送 launcher 与观察脚本配对。消费已有 range-r1 Host 回执，空时才在 marenben 普通 session 7 单跑一次。独立核存活 PID/FILETIME，原 worker 在 5 秒内核原失败与 claim/N/L/K。配对、ACL 和两项前置全部确认后才做一次 10 秒 Explicit 和一次严格小于 5 秒的 DiagnosticAfter，绑定唯一持久 V2、原字节和语义。保全首错与旧现场，通过 Git 回交；候选冻结前维持单 SID 定向范围。
+
+## revision69 接收暂存预检并继续 range-r1 现场验证
+
+Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0、证据 bd29ce9c75a259aa845d153f732bf3e8ddd2cccc，实装脚本配对、ACL 与原 CMD 的审查见 IMP208。保全旧官方 r2 和原始失败证据，按 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 继续现场。公共 Start 维持拒绝，W2 和双 SID 留待固定签名候选。
+
+> fetch docs/governance-main，按 TEAM69／IMP208／r7。使用 marenben 普通账户、SID 后缀 -1003、session 7、WinSta0/Default、无外层 Job。消费 range-r1/out01 内有效 Host 回执，空时才跑一次固定 Host。独立证实同一存活 PID/FILETIME，再由原 worker 在原 5 秒内通过 DiagnosticBefore 证实原失败和 claim/N/L/K。两项齐备后只做一次 10 秒 Explicit，再用固定配对执行 DiagnosticAfter，核唯一持久 V2 Intent/Pending 和独立逐字节及语义读回，原始 QPC 差严格小于五倍频率。保全首错和旧现场并通过 Git 回交。
