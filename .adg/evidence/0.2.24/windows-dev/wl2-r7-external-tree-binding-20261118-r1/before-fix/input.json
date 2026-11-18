@@ -1,0 +1,27 @@
+{
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)",
+  "sha256": "7ddfb242561ae77f82c959509af91144d937ce5cfe934eb4e03c0971d138fb1d",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.debug=0",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.incremental=false",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.codegen-units=256",
+    "--lib",
+    "--manifest-path",
+    "test/windows024-native/r7-query-harness/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "-j",
+    "4",
+    "r7_external_steps_whole_tree_rejects_another",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "parent": "def21dfe1c3645c8d838b1ec01727b8dc392f546"
+}

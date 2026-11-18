@@ -1,0 +1,41 @@
+
+running 12 tests
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_collision_after_durable_intent_keeps_exact_prefix ... collision raw=Some(183) kind=AlreadyExists
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-tBLL83
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_preflight_denies_late_source_before_any_intent ... preflight refused before first intent: raw32
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-bUZId7
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_preflight_rechecks_members_before_first_intent ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-RpX28a
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_prepared_pair_carries_both_native_handles_into_moves ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-jG8vL7
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_publish_failure_prevents_any_move ... publication raw=Some(80) kind=AlreadyExists
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-CLBiZJ
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_retire_then_return_bound_native_objects ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-tdw2tj
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_unreleased_source_handle_retains_original_after_retirement ... retained source sharing error raw=Some(32)
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-bhUDLi
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::whole_tree::r7_external_steps_whole_tree_late_custody_drift_refuses_before_any_record ... second custody drift refused before first intent; all six files unchanged
+whole tree fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-whole-tree-DRL24j
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::whole_tree::r7_external_steps_whole_tree_rejects_another_scenes_move_records ... foreign completion rejected with both 12-record prefixes intact; the target completed using its own prefix
+whole tree fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-whole-tree-MgGbKr
+whole tree fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-whole-tree-O9Uq4w
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::whole_tree::r7_external_steps_whole_tree_rejects_another_scenes_prepared_nodes ... foreign move plan refused before the first checkpoint; both trees retain their exact initial state
+whole tree fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-whole-tree-BZUIwT
+whole tree fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-whole-tree-5GfiTE
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::whole_tree::r7_external_steps_whole_tree_restores_three_originals_with_durable_records ... external repair record refused changed binding, unknown fields, reordered prefix and false completion
+three native originals returned; four anchors, exact children and twelve flushed intent/readback records verified in one 10 s action
+whole tree fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-whole-tree-0AJghq
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::whole_tree::r7_external_steps_whole_tree_second_return_collision_keeps_exact_native_prefix ... second return collision raw183; exact seven-record prefix; last node unchanged
+whole tree fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-whole-tree-W0K3HT
+ok
+
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 46 filtered out; finished in 0.65s
+
