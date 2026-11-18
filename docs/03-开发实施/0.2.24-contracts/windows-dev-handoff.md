@@ -1447,3 +1447,9 @@ Windows 代码 e6cc1f29a5444a76da3e123d6f97b7b6ee6757f2 已推送与回读，消
 证据 wl2-r7-final-release-timing-20261118-r1。MSVC raw5 负例 1/1、8.55 秒且原 claim 仍冲突，恢复中断 1/1、退休 6/6。默认测试配置的 10 秒正常对照首错 retirement_batch_tests.rs:106:10，bounded-original-deadline、raw=None，进程 raw101。相同源码以单次 crate opt-level=1 构建，正常对照 1/1、9.40 秒、raw0，制品 030692def4d1b7b4487463fbef8bd1c24664d3f0ab406bc59e7f626d77846501。固定 Bun raw73 均保留。该单次结果属于合成对照，负载缓存条件及生产预算待核。MSVC 产品三制品构建 raw0。累计状态表 210 项。
 
 四处清理在执行前被自动审批拒绝，原失败根和新对照根均保留。当前 r2 Job 24 项未知、raw50，executionReady=false。后续继续持久首启与同范围恢复，公开 Start 保持拒绝。
+
+## 2026-11-18 r7 原锁范围回归
+
+代码 e54a1156de42d445903faedb93aed4923f400b3a 已核对远端。基线真实解锁第三角色 RESERVED 后，原入口仍准入，首断言 raw101，失败目录保留。修复版精确范围 5/5、租约分段 7/7、恢复中断 1/1，均 raw0。原 claim 仍冲突。制品 SHA-256 a8f32eff2cba875ae93339e14a12ab701754043af26d59da9d987b48d01e7985。原始证据和累计 216 项状态见 wl2-r7-lease-range-20261118-r1。
+
+已消费 TEAM46／IMP185／r7。当前 r2 Job 仍有 24 项未知，raw50，executionReady=false。后续沿原宿主、原 Start 窗及同线程保全接入，公开 Start 保持拒绝。

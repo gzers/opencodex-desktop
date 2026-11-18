@@ -1,0 +1,45 @@
+{
+  "currentR2Touched": false,
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_lease_prefix_native_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "sources": [
+    {
+      "bytes": 23035,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "sha256": "12eaaacbf07a7c40d324cb15cf7e08579c5916ea82be554f04ca71cdf05a1fca"
+    },
+    {
+      "bytes": 8650,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation.rs",
+      "sha256": "5c3b45f71bf0de9164f4bcccc6476fa4c5a23bde9f3e7cb18ce2e184a01ada45"
+    },
+    {
+      "bytes": 13331,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs",
+      "sha256": "c1617e86b70616f07a8904c56e6a817e5712a0aae1ceaedd107a5d698465c3d6"
+    }
+  ],
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code"
+}
