@@ -1,0 +1,29 @@
+{
+  "beforeRun": true,
+  "gitBase": "7765271fff6c4e5deaad6a122b82bdc58145b439",
+  "uncommittedSource": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "8d968b899d779196ce1c21cb6b2aedd1c67b27163724b7be16d79d2a55c2942d",
+      "bytes": 89372
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_namespace.rs",
+      "sha256": "6326cce55c016373da5ade21766049df0a30e451b31aaf2c72165dca37611772",
+      "bytes": 8776
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs",
+      "sha256": "f5ac2c231f81899bb314c6f20f10d384076ba0ee6e2ec7bb7475acc3ca7588c3",
+      "bytes": 15071
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+      "sha256": "59f7fad0a5180bed5e148ba557bd6f8bc99c50b9aaa6b53e962388091a7923fb",
+      "bytes": 25695
+    }
+  ],
+  "hypothesis": "exact cancellation plan namespace comes from bounded full independent event history; historical per-generation observer receives whole indexed set, never assumes one plan or discovers references by scanning",
+  "scope": "namespace DATA plus existing first-root historical readers only; no successor movement/terminal/action permission",
+  "releaseAcceptance": false
+}

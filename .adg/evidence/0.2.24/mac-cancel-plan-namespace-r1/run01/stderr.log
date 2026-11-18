@@ -1,0 +1,38 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+warning: type `macos_client_originals::session_index::root_cancel_namespace::Namespace` is more private than the item `preservation::indexed::HistoricalObservation::begin`
+  --> src/infrastructure/macos_client_root_prepare_indexed.rs:40:5
+   |
+40 | /     pub(in crate::infrastructure::macos_client_originals) fn begin(
+41 | |         data: &PinnedDirectory,
+42 | |         profile: &Path,
+43 | |         binding: &[u8],
+...  |
+47 | |         namespace: &root_cancel_namespace::Namespace,
+48 | |     ) -> std::io::Result<(Self, PinnedDirectory)> {
+   | |_________________________________________________^ associated function `preservation::indexed::HistoricalObservation::begin` is reachable at visibility `pub(in crate::infrastructure::macos_client_originals)`
+   |
+note: but type `macos_client_originals::session_index::root_cancel_namespace::Namespace` is only usable at visibility `pub(in crate::infrastructure::macos_client_originals::session_index)`
+  --> src/infrastructure/macos_client_root_cancel_namespace.rs:7:1
+   |
+ 7 | pub(super) struct Namespace {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   = note: `#[warn(private_interfaces)]` on by default
+
+warning: type `macos_client_originals::session_index::root_cancel_namespace::Namespace` is more private than the item `pending_retained`
+   --> src/infrastructure/macos_client_root_prepare_indexed.rs:358:1
+    |
+358 | / pub(in crate::infrastructure::macos_client_originals) fn pending_retained(
+359 | |     data: &PinnedDirectory,
+360 | |     profile: &Path,
+361 | |     binding: &[u8],
+...   |
+365 | |     namespace: &root_cancel_namespace::Namespace,
+366 | | ) -> std::io::Result<Option<String>> {
+    | |____________________________________^ function `pending_retained` is reachable at visibility `pub(in crate::infrastructure::macos_client_originals)`
+    |
+note: but type `macos_client_originals::session_index::root_cancel_namespace::Namespace` is only usable at visibility `pub(in crate::infrastructure::macos_client_originals::session_index)`
+   --> src/infrastructure/macos_client_root_cancel_namespace.rs:7:1
+    |
+  7 | pub(super) struct Namespace {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+

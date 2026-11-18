@@ -1,0 +1,22 @@
+{
+  "namespace": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "root_cancel_namespace::tests::",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 101,
+    "elapsedMs": 49990,
+    "counts": [
+      1,
+      1,
+      0
+    ]
+  }
+}

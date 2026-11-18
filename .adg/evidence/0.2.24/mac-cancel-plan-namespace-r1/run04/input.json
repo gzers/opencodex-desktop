@@ -1,0 +1,30 @@
+{
+  "hypothesis": "History-derived namespace preserves predecessor admission and cancellation registration with unchanged strict checks",
+  "source": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_session_index.rs",
+      "sha256": "8d968b899d779196ce1c21cb6b2aedd1c67b27163724b7be16d79d2a55c2942d",
+      "bytes": 89372
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_cancel_namespace.rs",
+      "sha256": "b8ad67cfe60ea23829b32a1ee69e90aafed711205e01654ff060e7f183af9e5a",
+      "bytes": 8646
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_root_prepare_indexed.rs",
+      "sha256": "91e7cba27c8acdd5d8b2d42fed774a90b7e6ea40e93d4bdbe30857ae457a0d98",
+      "bytes": 14976
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/macos_client_vault_history.rs",
+      "sha256": "59f7fad0a5180bed5e148ba557bd6f8bc99c50b9aaa6b53e962388091a7923fb",
+      "bytes": 25695
+    }
+  ],
+  "filters": {
+    "successor": "preparation_cancellation::tests::",
+    "first-registration": "preservation::tests::",
+    "closed-history": "root_retirement::history_tests::"
+  }
+}

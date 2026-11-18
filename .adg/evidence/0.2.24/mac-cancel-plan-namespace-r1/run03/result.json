@@ -1,0 +1,117 @@
+{
+  "namespace": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "root_cancel_namespace::tests::",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 24106,
+    "counts": [
+      2,
+      0,
+      0
+    ]
+  },
+  "successor": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "successor_prepare_cancel_tests::",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 469,
+    "counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  "first-review": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "first_root_cancel_review_",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 1845,
+    "counts": [
+      5,
+      0,
+      0
+    ]
+  },
+  "first-registration": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "root_cancel_service::tests::",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 192,
+    "counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  "closed-history": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "root_closed_history_tests::",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 179,
+    "counts": [
+      0,
+      0,
+      0
+    ]
+  },
+  "clippy": {
+    "argv": [
+      "cargo",
+      "clippy",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--all-targets",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 25573,
+    "counts": null
+  }
+}

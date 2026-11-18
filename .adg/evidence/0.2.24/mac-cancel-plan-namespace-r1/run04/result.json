@@ -1,0 +1,65 @@
+{
+  "successor": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "preparation_cancellation::tests::",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 13323,
+    "counts": [
+      6,
+      0,
+      0
+    ],
+    "passed": true
+  },
+  "first-registration": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "preservation::tests::",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 461,
+    "counts": [
+      2,
+      0,
+      1
+    ],
+    "passed": false
+  },
+  "closed-history": {
+    "argv": [
+      "cargo",
+      "test",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--lib",
+      "root_retirement::history_tests::",
+      "--",
+      "--nocapture",
+      "--test-threads=1"
+    ],
+    "exitCode": 0,
+    "elapsedMs": 30761,
+    "counts": [
+      20,
+      0,
+      0
+    ],
+    "passed": true
+  }
+}
