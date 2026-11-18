@@ -468,3 +468,9 @@ Windows 源码 a7d7284a3280d973aaacddf361adae6f6dcc8a3c，证据 f9bf34095e06e1f
 共享 main 040f411e6d48d97bde6e7b2e6c22860e547b6173，Windows 源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 ref 2e08a4463ec572c08787402cb8453b56a760a0f2。接收范围归 IMP200。Mac 与 Windows 分别推进，读探针限 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 的测试写集。
 
 > fetch docs/governance-main，按 TEAM61／IMP200／r7 复用固定 nine-r2，在 marenben 普通桌面只执行一次 Host。验证原 30 秒九次完整扫描、首次 Intent 前 raw31、Node 未 Resume。独立核同一存活 PID/FILETIME，并在原 DiagnosticBefore 5 秒内由原 worker 实查 claim/N/L/K。两项齐备再执行原 10 秒 Explicit 与 5 秒回读。现有制品无范围探针时停在已取证阶段，另固定含探针的配对并保留本轮。回交 Git 原始证据。保全旧现场，候选冻结前保持单 SID 定向范围。
+
+## revision62 接收原树绑定回归，继续普通桌面 Host
+
+Windows 源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 e479ab8a5b657fe90987868a109378ffad6b8f46，组件接收见 IMP201。桌面输入继续使用 TEAM61／r7 已固定配对。Mac 独立推进后继准备取消。
+
+> fetch docs/governance-main，按 TEAM62／IMP201／r7。若 out01 仍空，在 marenben 普通 session 7 单跑固定 nine-r2 Host，用 a7d7284a3 核验 30 秒内九次完整扫描、首次 Intent 前 raw31、Node 未 Resume。先独立核同一存活 PID/FILETIME，并在原 DiagnosticBefore 5 秒内由原 worker 实查 claim/N/L/K，再做 10 秒 Explicit 与 5 秒读回。固定制品缺探针时保留 Host 回执并停在 Explicit 前，按 r7 另固定测试配对。原失败现场保全，签名候选冻结前保持单 SID，原始证据走 Git。

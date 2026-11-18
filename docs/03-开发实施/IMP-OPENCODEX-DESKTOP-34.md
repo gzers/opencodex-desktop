@@ -2183,3 +2183,10 @@ nine-r2 继续使用已固定的源码与二进制配对 daae8ffff7f304ec28b9c02
 新源码 f3564fbb34713beee97ed221fb4797b422b11d57 仅改测试 harness 的 external_repair_whole_tree.rs，把已准备节点及持久移动记录绑定到原 WholeTree，增加交叉夹具拒绝用例。净差及空白检查已复核。最新证据 ref 2e08a4463ec572c08787402cb8453b56a760a0f2 尚未绑定这份新源码的执行结果。
 
 固定 nine-r2 真实普通会话允许一次 Host。当前 DiagnosticBefore 提供元数据与 Status 投影，实际范围仍需原线程检查。旧 nine-r1 PID 95724 独立观察 raw5，进程缺席与同 FILETIME 均未证明。Explicit 需独立进程代次证据和原 worker 的新鲜只读范围证明。具体合同见 TEAM61 和 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。旧 nine-r1 和独立的官方 r2 保全，生产恢复、普通 MSI、单 SID 生命周期及签名候选仍待验收。
+## revision201 接收 Windows r7 原树绑定回归
+
+Windows 测试源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 e479ab8a5b657fe90987868a109378ffad6b8f46。独立复核清单文件集合、大小和 SHA-256，修复前快照仅向 def21dfe1 插入两项反例，两个修复后快照均与所交源码一致。四份失败归档的总摘要和 61 个成员的大小与摘要一致。
+
+修复前两项失败，raw101，2,927 ms。外树动作能写入完成记录，交换计划能移动源树 auth.json 并在目标留下四份记录。修复将已准备节点和持久移动记录绑定其原 WholeTree。MSVC 夹具 12/12、raw0、3,503 ms，链接产品库 16/16、raw0，实际测试 1.49 秒，含构建计时 222,171 ms。接收范围为合成夹具。Windows 报告 32 个夹具根已核缺席，四个已归档失败夹具和一个未跟踪生成 schema 因权限策略保留。本机复核 Git 证据和归档，物理清理状态取自 Windows 回执。
+
+普通桌面仍无 nine-r2 合格 Host 回执。按 TEAM62 继续定向，保全 nine-r1 与独立旧官方 r2。普通用户 MSI、生产单 SID、正式恢复和签名候选仍待验收。公开 Start 保持拒绝。[固定证据](https://github.com/gzers/opencodex-desktop/tree/e479ab8a5b657fe90987868a109378ffad6b8f46/.adg/evidence/0.2.24/windows-dev/wl2-r7-external-tree-binding-20261118-r1)
