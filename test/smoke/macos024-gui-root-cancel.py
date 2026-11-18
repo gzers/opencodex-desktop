@@ -148,6 +148,16 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
             log=(output/('application-'+str(generation)+'.log')).open('xb')
             proc=subprocess.Popen(['/usr/bin/sandbox-exec','-f',str(policy),str(exe)],cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
             print(json.dumps({'generation':generation,'pid':proc.pid,'phase':'started'}),flush=True)
+            # A visible WebKit surface can exist before its accessibility tree
+            # is activated. Activate only this exact original process after the
+            # OS registers it; never restart just because AX is not ready yet.
+            activation_end=time.monotonic()+12
+            while time.monotonic()<activation_end:
+                activated=command([helper,'focus',proc.pid,exe],required=False)
+                if activated.returncode==0:break
+                if activated.returncode!=3 or proc.poll() is not None:raise RuntimeError('candidate activation unconfirmed')
+                time.sleep(.3)
+            else:raise RuntimeError('candidate OS registration did not complete')
             current=profile/'Library/Application Support/OpenCodeX Desktop/runtime/current.json'
             wait_for('startup-'+str(generation),lambda v:current.is_file() and any('运行状态与常用操作' in str(n.get('value','')) or n.get('title')=='版本升级' for n in v['nodes']),180)
         def head():
