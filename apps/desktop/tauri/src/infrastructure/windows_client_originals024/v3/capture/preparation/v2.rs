@@ -91,42 +91,44 @@ impl PartialCaptureAnchor {
                 &self.owner_scope,
             )?);
         }
-        for (label, exists) in [
+        for (ordinal, (label, exists)) in [
             ("originalRoute", self.routes.is_some()),
             ("originalContentScope", self.content_start.is_some()),
             ("originalJournalContext", self.context.is_some()),
-        ] {
+        ]
+        .into_iter()
+        .enumerate()
+        {
             if exists {
                 source.push(opaque(
                     session,
                     Role::Source,
-                    source.len(),
+                    ordinal + 1,
                     label,
                     &self.owner_scope,
                 )?);
             }
         }
-        for original in &self.pins {
+        for (ordinal, original) in self.pins.iter().enumerate() {
             source.push(pin(
                 session,
                 Role::Source,
-                source.len(),
+                16 + ordinal,
                 original,
                 &mut errors,
             )?);
         }
         let mut custody = Vec::new();
-        for original in self.custody.iter().flatten() {
-            custody.push(pin(
-                session,
-                Role::Custody,
-                custody.len(),
-                original,
-                &mut errors,
-            )?);
+        for (ordinal, original) in self
+            .custody
+            .iter()
+            .enumerate()
+            .filter_map(|(ordinal, pin)| pin.as_ref().map(|pin| (ordinal, pin)))
+        {
+            custody.push(pin(session, Role::Custody, ordinal, original, &mut errors)?);
         }
         let stages=self.directory_prefixes.iter().map(|p|{let (path,[attempted,parent,created,pending,complete,ready,failed])=p.retained_stage_data();
-            serde_json::json!({"path":path,"attempted":attempted,"parent":parent,"created":created,"pendingOriginalHandle":pending,"completePin":complete,"ready":ready,"failed":failed})}).collect::<Vec<_>>();
+            Ok(serde_json::json!({"path":path,"attempted":attempted,"parent":parent,"created":created,"pendingOriginalHandle":pending,"completePin":complete,"ready":ready,"failed":failed,"nativeRead":super::directory_read::read(p,end)?}))}).collect::<io::Result<Vec<_>>>()?;
         for (i, data) in stages.iter().enumerate() {
             // Path is never persisted raw; this bounded native locator is only
             // hashed here. Create succeeded but open unknown remains explicit.
@@ -134,8 +136,8 @@ impl PartialCaptureAnchor {
             custody.push(retained_object(
                 session,
                 Role::Custody,
-                custody.len(),
-                if data["pendingOriginalHandle"] == true {
+                16 + i,
+                if data["pendingOriginalHandle"] == true || data["completePin"] == true {
                     Stage::HandleRetained
                 } else if data["created"] == true {
                     Stage::NativeCreated
@@ -143,11 +145,14 @@ impl PartialCaptureAnchor {
                     Stage::IntentPublished
                 },
                 path,
+                data["nativeRead"]["identityDigest"]
+                    .as_str()
+                    .map(str::to_string),
                 None,
-                None,
-                None,
+                data["nativeRead"]["contentDigest"]
+                    .as_str()
+                    .map(str::to_string),
             )?);
-            let _ = i;
         }
         let mut tree_components = Vec::new();
         for (i, role) in [Role::Codex, Role::Grok].into_iter().enumerate() {
@@ -197,7 +202,7 @@ impl PartialCaptureAnchor {
             })
             .unwrap_or(SourceState::Unobserved {});
         let intent_projection = serde_json::json!({"sessionId":session.to_string(),"ownerInstanceId":self.host_instance_id.to_string(),"scope":self.owner_scope,"intents":self.intents.iter().map(projection_digest).collect::<io::Result<Vec<_>>>()?});
-        let stage_projection = serde_json::json!({"components":components,"directoryStages":stages.iter().map(projection_digest).collect::<io::Result<Vec<_>>>()?,"journalMembership":journal_members,"nativeJournalRead":native_journal,"nativeReadErrors":errors,"failed":self.failed});
+        let stage_projection = serde_json::json!({"components":components,"directoryStages":stages.iter().map(projection_digest).collect::<io::Result<Vec<_>>>()?,"nativeDirectoryReads":stages.iter().map(|p|p["nativeRead"].clone()).collect::<Vec<_>>(),"journalMembership":journal_members,"nativeJournalRead":native_journal,"nativeReadErrors":errors,"failed":self.failed});
         let reference = ReferenceV2::Preparation {
             owner_instance_id: self.host_instance_id.to_string(),
             source: source_state,

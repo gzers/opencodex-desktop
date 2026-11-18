@@ -14,10 +14,64 @@ pub(crate) struct PrivateDirectoryPreparation {
     attempted: bool,
     ready: bool,
     failed: bool,
+    transferred: bool,
     #[cfg(test)]
     fault: u8,
 }
+/// Borrow of this exact original preparation only. Its terminal file, when
+/// present, has read/query access; no active lease, clone, rights acquisition,
+/// serialization or existing-path recovery constructor is involved.
+pub(crate) struct RetainedDirectoryRead<'a> {
+    pub(crate) path: Option<&'a Path>,
+    pub(crate) parent: Option<&'a PinnedDirectory>,
+    pub(crate) terminal: Option<&'a File>,
+    pub(crate) complete: Option<&'a PinnedDirectory>,
+    pub(crate) created: bool,
+    pub(crate) transferred: bool,
+    pub(crate) attempted: bool,
+    pub(crate) ready: bool,
+    pub(crate) failed: bool,
+}
 impl PrivateDirectoryPreparation {
+    pub(crate) fn retained_native_read(
+        &self,
+        end: Instant,
+    ) -> io::Result<RetainedDirectoryRead<'_>> {
+        if Instant::now() >= end {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        if self.pending.is_some() && self.complete.is_some()
+            || !self.created
+                && (self.pending.is_some() || self.complete.is_some() || self.transferred)
+            || self.transferred
+                && (self.parent.is_some() || self.pending.is_some() || self.complete.is_some())
+        {
+            return Err(denied("original preparation resource set inconsistent"));
+        }
+        let terminal = self
+            .pending
+            .as_ref()
+            .or_else(|| self.complete.as_ref().and_then(|p| p.files.last()));
+        Ok(RetainedDirectoryRead {
+            path: self.path.as_deref(),
+            parent: self.parent.as_ref(),
+            terminal,
+            complete: self.complete.as_ref(),
+            created: self.created,
+            transferred: self.transferred,
+            attempted: self.attempted,
+            ready: self.ready,
+            failed: self.failed,
+        })
+    }
+    #[cfg(test)]
+    pub(crate) fn inject_directory_read_fixture_fault(&mut self, stage: u8) -> io::Result<()> {
+        if self.attempted || !(1..=5).contains(&stage) {
+            return Err(denied("fresh directory component fixture stage required"));
+        }
+        self.fault = stage;
+        Ok(())
+    }
     /// Bounded DATA only, no new serialization dependency in the native backend.
     pub(crate) fn retained_stage_data(&self) -> (Option<PathBuf>, [bool; 7]) {
         (
@@ -115,9 +169,12 @@ impl PrivateDirectoryPreparation {
         if !self.ready || self.failed {
             return Err(denied("original directory preparation incomplete"));
         }
-        self.complete
+        let original = self
+            .complete
             .take()
-            .ok_or_else(|| denied("original directory already transferred"))
+            .ok_or_else(|| denied("original directory already transferred"))?;
+        self.transferred = true;
+        Ok(original)
     }
 }
 #[cfg(test)]
