@@ -246,6 +246,45 @@ fn r7_image_pinned_objects_deny_content_write_delete_and_same_name_replacement()
     assert_ne!(windows::inventory(&root, None).unwrap(), pinned);
 }
 #[test]
+fn r7_image_stale_enumeration_type_refuses_both_replacement_directions() {
+    use std::sync::atomic::{AtomicBool, Ordering};
+
+    for initially_directory in [false, true] {
+        let scene = Scene::new();
+        let root = scene.root();
+        let leaf = root.join("child");
+        if initially_directory {
+            fs::create_dir(&leaf).unwrap();
+        } else {
+            fs::write(&leaf, b"original file").unwrap();
+        }
+        let replaced = AtomicBool::new(false);
+        let result = windows::inventory_checked(&root, None, 4, &|stage| {
+            if stage == "root-children-listed" {
+                assert!(!replaced.swap(true, Ordering::AcqRel));
+                if initially_directory {
+                    fs::remove_dir(&leaf).unwrap();
+                    fs::write(&leaf, b"replacement file").unwrap();
+                } else {
+                    fs::remove_file(&leaf).unwrap();
+                    fs::create_dir(&leaf).unwrap();
+                }
+            }
+            assert_ne!(stage, "all-objects-pinned");
+            Ok(())
+        });
+        assert!(replaced.load(Ordering::Acquire));
+        assert!(
+            matches!(result, Err(crate::errors::AppError::RuntimeManaged { ref code, .. }) if code == "runtime_image_unconfirmed")
+        );
+        assert_eq!(
+            windows::inventory(&root, None).unwrap(),
+            inventory_serial(&root).unwrap()
+        );
+    }
+}
+
+#[test]
 fn r7_image_pinned_full_membership_detects_extra_file_and_directory_in_final_fence() {
     for directory in [false, true] {
         let scene = Scene::new();

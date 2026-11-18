@@ -311,32 +311,50 @@ impl Pin {
         })
     }
 }
-fn names(path: &Path) -> AppResult<Vec<String>> {
+fn list_children<T>(
+    path: &Path,
+    details: impl Fn(&fs::DirEntry) -> AppResult<T>,
+) -> AppResult<Vec<(String, T)>> {
     let mut rows = Vec::new();
     for item in fs::read_dir(path).map_err(|_| fail())? {
         if rows.len() >= MAX_ENTRIES {
             return Err(fail());
         }
-        let name = item
-            .map_err(|_| fail())?
-            .file_name()
-            .into_string()
-            .map_err(|_| fail())?;
+        let item = item.map_err(|_| fail())?;
+        let name = item.file_name().into_string().map_err(|_| fail())?;
         if name.is_empty() || name.contains(['/', '\\']) || name == "." || name == ".." {
             return Err(fail());
         }
-        rows.push(name);
+        rows.push((name, details(&item)?));
     }
-    rows.sort();
-    if rows.windows(2).any(|x| x[0] == x[1]) {
+    rows.sort_by(|a, b| a.0.cmp(&b.0));
+    if rows.windows(2).any(|x| x[0].0 == x[1].0) {
         return Err(fail());
     }
     Ok(rows)
 }
+fn opening_hints(path: &Path) -> AppResult<Vec<(String, bool)>> {
+    list_children(path, |item| {
+        Ok(item.file_type().map_err(|_| fail())?.is_dir())
+    })
+}
 struct Directory {
     pin: Pin,
-    children: Vec<String>,
+    children: Vec<(String, bool)>,
     depth: usize,
+}
+impl Directory {
+    fn check_membership(&self) -> AppResult<()> {
+        let current = list_children(&self.pin.path, |_| Ok(()))?;
+        if current
+            .iter()
+            .map(|(name, ())| name)
+            .ne(self.children.iter().map(|(name, _)| name))
+        {
+            return Err(fail());
+        }
+        Ok(())
+    }
 }
 struct FileJob {
     name: String,
@@ -349,20 +367,25 @@ struct Inventory {
     rows: BTreeMap<String, Entry>,
 }
 impl Inventory {
-    fn collect(root: &Path, end: Option<Instant>) -> AppResult<Self> {
+    fn collect(
+        root: &Path,
+        end: Option<Instant>,
+        checkpoint: &impl Fn(&str) -> AppResult<()>,
+    ) -> AppResult<Self> {
         #[cfg(test)]
         let _cost = super::cost::span("windows-native-enumeration-pin");
         let pin = Pin::open(root, true, end)?;
         let volume = pin.before.volume;
         let mut out = Self {
             directories: vec![Directory {
-                children: names(root)?,
+                children: opening_hints(root)?,
                 pin,
                 depth: 0,
             }],
             files: Vec::new(),
             rows: BTreeMap::new(),
         };
+        checkpoint("root-children-listed")?;
         let mut cursor = 0;
         let mut count = 0usize;
         let mut bytes = 0u64;
@@ -376,15 +399,16 @@ impl Inventory {
             }
             let parent = directory.pin.path.clone();
             let children = directory.children.clone();
-            for leaf in children {
+            for (leaf, directory_hint) in children {
                 check(end)?;
                 count += 1;
                 if count > MAX_ENTRIES {
                     return Err(fail());
                 }
                 let path = parent.join(leaf);
-                let meta = fs::symlink_metadata(&path).map_err(|_| fail())?;
-                let pin = Pin::open(&path, meta.is_dir(), end)?;
+                // Enumeration chooses the open mode. The opened handle must
+                // independently prove its type and reject any reparse point.
+                let pin = Pin::open(&path, directory_hint, end)?;
                 if pin.before.volume != volume {
                     return Err(fail());
                 }
@@ -403,7 +427,7 @@ impl Inventory {
                     if manifest || depth >= 64 {
                         return Err(fail());
                     }
-                    let children = names(&path)?;
+                    let children = opening_hints(&path)?;
                     out.rows.insert(relative, Entry::Directory);
                     out.directories.push(Directory {
                         pin,
@@ -432,9 +456,7 @@ impl Inventory {
                 return Err(fail());
             }
             check(end)?;
-            if names(&parent)? != out.directories[cursor].children {
-                return Err(fail());
-            }
+            out.directories[cursor].check_membership()?;
             cursor += 1;
         }
         check(end)?;
@@ -553,9 +575,7 @@ impl Inventory {
         }
         for directory in &self.directories {
             directory.pin.check(end)?;
-            if names(&directory.pin.path)? != directory.children {
-                return Err(fail());
-            }
+            directory.check_membership()?;
         }
         check(end)?;
         Ok(rows)
@@ -572,5 +592,5 @@ pub(super) fn inventory_checked(
 ) -> AppResult<BTreeMap<String, Entry>> {
     #[cfg(test)]
     let _cost = super::cost::span("windows-inventory-total");
-    Inventory::collect(root, end)?.finish(end, workers, checkpoint)
+    Inventory::collect(root, end, checkpoint)?.finish(end, workers, checkpoint)
 }
