@@ -100,6 +100,10 @@ impl LaunchPlan {
         }
         let root = runtime.managed_installation_root().ok_or_else(refused)?;
         let (target, platform) = program_layout::host_target()?;
+        #[cfg(windows)]
+        let program = program_selection::read_complete_until(&root, platform, target, deadline)?
+            .ok_or_else(refused)?;
+        #[cfg(not(windows))]
         let program =
             program_selection::read_complete(&root, platform, target)?.ok_or_else(refused)?;
         if program.selection.version != "2.99.0"
@@ -177,6 +181,9 @@ impl LaunchPlan {
     }
     pub fn verify_full(&self, runtime: &SharedRuntimeExecutable) -> AppResult<()> {
         self.check_current(runtime)?;
+        #[cfg(windows)]
+        super::program_image::verify_until(&self.program, self.deadline)?;
+        #[cfg(not(windows))]
         super::program_image::verify(&self.program)?;
         self.check_current(runtime)
     }
