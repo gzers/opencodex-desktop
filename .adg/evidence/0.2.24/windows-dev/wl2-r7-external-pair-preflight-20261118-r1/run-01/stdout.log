@@ -1,0 +1,23 @@
+
+running 7 tests
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_collision_after_durable_intent_keeps_exact_prefix ... collision raw=Some(183) kind=AlreadyExists
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-p4ixBZ
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_preflight_denies_late_source_before_any_intent ... preflight refused before first intent: raw32
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-GWoGWO
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_preflight_rechecks_members_before_first_intent ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-nuHVO5
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_prepared_pair_carries_both_native_handles_into_moves ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-LCPYQF
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_publish_failure_prevents_any_move ... publication raw=Some(80) kind=AlreadyExists
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-5dcUiD
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_retire_then_return_bound_native_objects ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-4yZor2
+ok
+test infrastructure::windows_client_originals024::external_repair_steps::r7_external_steps_unreleased_source_handle_retains_original_after_retirement ... retained source sharing error raw=Some(32)
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-mWqHfC
+ok
+
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 46 filtered out; finished in 0.11s
+

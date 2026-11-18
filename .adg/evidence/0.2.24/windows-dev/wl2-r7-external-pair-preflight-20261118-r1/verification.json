@@ -1,0 +1,102 @@
+{
+  "codeCommit": "0e9f9cf486425d9fa4ba70ddcef376340f1abe5e",
+  "codeTree": "9532409a4f7557697bcac1efb088915e47187851",
+  "main": "040f411e6d48d97bde6e7b2e6c22860e547b6173",
+  "governance": "61339ef854e21ce0dfb2dec3ca262839cb6c0c47",
+  "contract": "TEAM58/IMP197/r7 section D",
+  "target": "x86_64-pc-windows-msvc",
+  "sourcePath": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+  "sourceBlob": "bb58682b550a5afeefadb3023b0d846c33069c84",
+  "sourceSha256": "d2f4dc0723edf63f66e8edf55ae426c7c635345507784649e36b5fb92ed26a5c",
+  "runs": [
+    {
+      "run": 1,
+      "raw": 0,
+      "elapsedMs": 3421,
+      "passed": 7,
+      "artifactSha256": "98a08ef5f98bd6cb9d0b1fd99970e46f2cf53935be09db4f79ff30647c9cf165",
+      "artifactBytes": 3437056,
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-p4ixBZ",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-GWoGWO",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-nuHVO5",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-LCPYQF",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-5dcUiD",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-4yZor2",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-mWqHfC"
+      ]
+    },
+    {
+      "run": 2,
+      "raw": 0,
+      "elapsedMs": 3524,
+      "passed": 7,
+      "artifactSha256": "e4252d6ed4dcb57135f81e9e5e37e89f0269e5117719836e69161e5afc84750b",
+      "artifactBytes": 3429888,
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-7ADHx9",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-eng0yQ",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-2oTnW6",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Fiq7o2",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-ADuJbP",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-BzoV7q",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-iwmxVE"
+      ]
+    }
+  ],
+  "rawPayloads": [
+    {
+      "path": "run-01/input.json",
+      "bytes": 899,
+      "sha256": "fce11bcc03841fc0440f01791c7916a3c72abb7077b306e0e76b6044b3084dfc"
+    },
+    {
+      "path": "run-01/result.json",
+      "bytes": 40,
+      "sha256": "8663980f2ebe64b1f89bac9f021937da7000d8910f5bd464da3e113214f6f7ff"
+    },
+    {
+      "path": "run-01/stderr.log",
+      "bytes": 8451,
+      "sha256": "8e018f5362b3f234b228cd993dc766d4c3ecee375bd41b1cf165296225ac3ebf"
+    },
+    {
+      "path": "run-01/stdout.log",
+      "bytes": 1956,
+      "sha256": "f45016cb1441b4a104effe491aaa57b7d1a8530f795a3e21a72081dcf32cda78"
+    },
+    {
+      "path": "run-02/input.json",
+      "bytes": 899,
+      "sha256": "a1b325fea9e28e19401fad4c76ad97cac1ca8b87557ec1d26f2d60db23a56231"
+    },
+    {
+      "path": "run-02/result.json",
+      "bytes": 40,
+      "sha256": "8f89dfd1ff86948cbcf9e96541e2af33bc6c057d76f3da9b5a71394e8e0ee395"
+    },
+    {
+      "path": "run-02/stderr.log",
+      "bytes": 8451,
+      "sha256": "56c74549aa5397fb847d127043794b9cbcd68f9836b9ede69157d7f4944bbc77"
+    },
+    {
+      "path": "run-02/stdout.log",
+      "bytes": 1956,
+      "sha256": "5a616e4167df3b6f1e5bc95354a9af3f30dab8cf02b4b155f2c5dd2e823569ad"
+    }
+  ],
+  "covered": [
+    "two planned source handles fixed and verified before the first intent",
+    "late source sharing blocker preserved raw32 with all paths and bytes unchanged",
+    "extra member added after initial preparation refused before first intent",
+    "exact retained IDs and bytes rechecked after both moves, then four fixture directory memberships read back"
+  ],
+  "pending": [
+    "three-node production scene with retained anchors and original N/L/K",
+    "verified process quiescence and complete Job evidence",
+    "durable per-node production schema and checked lock release",
+    "real desktop Host / V2 Pending and production admission"
+  ],
+  "evidenceControlNote": "The first handoff append command was rejected before execution due to a Python string literal error. The corrected append verified the exact prior Git bytes before writing."
+}
