@@ -1673,3 +1673,12 @@ MSVC x64 基线及修复均 raw0。原负例 raw101，已逾期但仍派发一�
 MSVC x64 测试库 raw0，三个产品开发形状 raw0，检查到的测试入口标记仅出现在测试制品。原生定向 18/18：隔离／禁止 Resume 5 项、原 worker／Status 5 项、扫描截止／整树／线程收束 8 项。共享 admission 用例限定 Unix，Windows 定向回执使用其原生覆盖。测试制品 SHA-256 af9d31a7faaa9f364038fb3c492ba994c7445f7d36e19f7bc04834b109a92221。证据 wl2-r7-shared-start-deadline-20261118-r1 保存原 Cargo、原生、PowerShell 日志、源码及制品摘要和暂存 ACL。首次本地写集检查因命令优先级误拒，重新分组比较后只提交了合规四文件。成功 PowerShell 夹具及本轮命名扫描夹具缺席，生成 schema 与原存档相同后移除。
 
 九扫描独立夹具已绑定现有 marenben、session 7、源码、固定运行时包及新测试制品。旧七扫描配对原样保存。记录时 session 7 断开，新旧 out01 均空，新私有树缺席。需原桌面先运行 Host，再凭实际令牌、no-Job、全组时限、raw31 和未 Resume 回执决定能否继续 5／10／5 秒同 Owner 动作。保留旧 r2 的三原件和原锁。旧 Job 24 项 Unknown／raw50、command-lineage raw64、executionReady=false。完整原件归还、正式单 SID 生命周期及普通 MSI 仍待，公开 Start 持续拒绝。
+
+
+## 2026-11-18 r7 九次扫描首轮真实桌面回执
+
+TEAM57／IMP196 的固定配对在 marenben session 7 实际执行。宿主 95724 的真实令牌未提升，Profile、WinSta0/Default、无外层 Job、同一制品摘要和五个预期缺席目标均由原回执确认。三份私有导出全部核对摘要。固定 2.99 镜像准备覆盖 10,586 个文件，三次入口完整扫描在同一 30 秒原期限内分别用时 2,154,243、2,114,464、2,184,376 微秒。
+
+首错出现在启动第 6460 毫秒的原件捕获前安全门，为 windows024_originals_security_unconfirmed，原错误 raw32。六次 worker 扫描、raw31 注入和 5／10／5 秒恢复均未到达。Status 返回 Unreachable。该门位于子进程创建前。原宿主仍驻留，仅观察到 conhost 子进程。宿主、私有夹具与 Public 日志原样保留。原始证据归档在 wl2-r7-nine-desktop-first-20261118-r1。Windows 已接入 040f411e6，分支提交 5ff7d6aea 与固定实测源码 8266cf6a 的 Git 树相同。
+
+待证伪判断是测试描述为两个客户端叶目录长期持有不共享 DELETE 的目录句柄，而完整捕获前门须以 DELETE 权限打开同一原目录。用独立夹具复现共享冲突，再验证与完整门共存的同对象身份安全留位。旧 r2 继续保留，公开 Start 维持拒绝。

@@ -1,0 +1,34 @@
+{
+    "pid":  95724,
+    "creationFiletime":  "134394756616993808",
+    "observationMs":  50204,
+    "privateEvidenceComplete":  true,
+    "closed":  false,
+    "normalStop":  false,
+    "reachedOriginalInjection":  false,
+    "firstError":  {
+                       "message":  "managed runtime operation failed: windows024_originals_security_unconfirmed; 原件声明访问安全捕获前拒绝；scope=windows-bounded-access-v1; audit=excluded-unknown; fullSecurityProven=false; 另一个程序正在使用此文件，进程无法访问。 (os error 32)",
+                       "status":  "same-sample Status Unreachable"
+                   },
+    "privateEvidence":  [
+                            {
+                                "name":  "Host-fixture-preflight.json",
+                                "bytes":  1405,
+                                "sha256":  "7f9982c5b9690df767204276d9fbfbc0944d84b163002e03cb15bc1bc65c292b"
+                            },
+                            {
+                                "name":  "Host-fixture-result.json",
+                                "bytes":  608,
+                                "sha256":  "3f4b456c9aa35cc9f794808ef6f0d9bf9778e1373aecc981eaac79e4850df48d"
+                            },
+                            {
+                                "name":  "Host-image-created-verified.json",
+                                "bytes":  1428,
+                                "sha256":  "d99edee9de401d5146512796e8c2679fcd91b54639536a6a24d5ef15b5470496"
+                            }
+                        ],
+    "publicStartOpen":  false,
+    "passed":  false,
+    "mode":  "Host",
+    "initialScansVerified":  false
+}
