@@ -1,0 +1,65 @@
+diff --git a/apps/desktop/tauri/src/infrastructure/macos_client_originals.rs b/apps/desktop/tauri/src/infrastructure/macos_client_originals.rs
+index 8137e6198e2fd5fef8d6e7d47a96d1c8e752d9ec..3b169646660cad866f4fa9b6b78eca2e25859c7f 100644
+--- a/apps/desktop/tauri/src/infrastructure/macos_client_originals.rs
++++ b/apps/desktop/tauri/src/infrastructure/macos_client_originals.rs
+@@ -403,6 +403,11 @@ impl PinnedDirectory {
+     pub fn identity(&self) -> &Identity {
+         &self.chain.last().unwrap().1
+     }
++    #[cfg(test)]
++    pub(crate) fn coordination_expectation(&self) -> (&Identity, &Protection) {
++        let (_, identity, protection) = self.chain.last().unwrap();
++        (identity, protection)
++    }
+     pub fn recheck(&self) -> io::Result<()> {
+         #[cfg(test)]
+         let _metric = observation_metrics::span("pinned_recheck");
+@@ -795,6 +800,11 @@ pub(crate) struct CoordinationFilePin {
+     protection: Protection,
+ }
+ impl CoordinationFilePin {
++    #[cfg(test)]
++    pub(crate) fn coordination_expectation(&self) -> (&Identity, &Protection) {
++        (&self.identity, &self.protection)
++    }
++
+     pub(crate) fn open(path: &Path) -> io::Result<Self> {
+         let parent =
+             PinnedDirectory::open(path.parent().ok_or_else(|| denied("lock parent missing"))?)?;
+diff --git a/apps/desktop/tauri/src/infrastructure/native_client_coordination_tests.rs b/apps/desktop/tauri/src/infrastructure/native_client_coordination_tests.rs
+index f1a57409e5b5e7dca8954927de4487dddd332056..e1b950843abe0d297dadfdfae5dcdee67fc8a457 100644
+--- a/apps/desktop/tauri/src/infrastructure/native_client_coordination_tests.rs
++++ b/apps/desktop/tauri/src/infrastructure/native_client_coordination_tests.rs
+@@ -3,6 +3,8 @@ use std::io::Write;
+ use std::os::unix::fs::{symlink, DirBuilderExt, MetadataExt, PermissionsExt};
+ #[path = "native_client_relocation_tests.rs"]
+ mod relocation;
++#[path = "native_client_reacquire_tests.rs"]
++mod reacquire;
+ 
+ struct Fixture {
+     _temp: tempfile::TempDir,
+@@ -632,6 +634,10 @@ fn official299_native_handover_holds_through_work_and_preserves_original_ownersh
+         config::relocation_tests::official_round(&context, &selected, &root);
+         return;
+     }
++    if std::env::var_os("OCXD_NATIVE_COORDINATION_REACQUIRE").is_some() {
++        reacquire::official_round(&context, &selected, &root);
++        return;
++    }
+     if std::env::var_os("OCXD_NATIVE_COORDINATION_RELOCATION").is_some() {
+         relocation::official_round(&context, &selected, &root, &owner);
+         return;
+diff --git a/apps/desktop/tauri/src/infrastructure/native_client_relocation_tests.rs b/apps/desktop/tauri/src/infrastructure/native_client_relocation_tests.rs
+index 2c182e4dd785c3babdb56aa71158042d91d7fcaa..b208cd3680b3d557261fe93f2bb79a0fa9f83a8d 100644
+--- a/apps/desktop/tauri/src/infrastructure/native_client_relocation_tests.rs
++++ b/apps/desktop/tauri/src/infrastructure/native_client_relocation_tests.rs
+@@ -183,7 +183,7 @@ fn relocation_failed_handoff_stays_pending_with_n_l_k_excluded_until_cleanup() {
+     assert!(lease.release().is_err());
+     external_probe(&f.record.paths, false);
+ }
+-const HOLDER: &str="infrastructure::official_client_coordination::native::tests::relocation::handoff_foreign_claim_holder";
++pub(super) const HOLDER: &str="infrastructure::official_client_coordination::native::tests::relocation::handoff_foreign_claim_holder";
+ #[test]
+ fn handoff_foreign_claim_holder() {
+     let Some(path) = std::env::var_os("OCXD_HANDOFF_FOREIGN_CLAIM") else {

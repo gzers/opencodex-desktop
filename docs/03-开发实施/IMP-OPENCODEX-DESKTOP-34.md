@@ -2276,3 +2276,11 @@ Windows 源码仍为 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7。复核证据 70c
 串行回归首轮 2,627 通过、21 失败、59 忽略。失败集中于运行包安装、路径和卸载，原因是夹具落在受保护的 /private 前缀。用同源码构建的隔离测试宿主在 /Users/Shared 专用临时目录复跑失败项，21 项全通过。校验策略未改。原失败和复跑日志均留在本机 /private/tmp/ocxd024-regression.Z95TuT/，已确认复跑退出码 0、进程组缺席及夹具删除。21 项复跑单列，仍以两轮原始结果作证，不宣称另跑了全绿的全量测试。
 
 该提交为共享检查点，releaseAcceptance=false。已登记计划的显式续接、固定候选正常启停、ChatGPT 内 Codex 实屏选择器和 Windows 生产验收继续开放。
+
+## revision212 Mac 归档根原协调锁重取原语通过
+
+使用 main cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2 与试验差异 SHA-256 0ab947ab8f2e32389c0b3c9b9124e2c802cb43494d9e57dcdac48a01d04c9a89。已核对构建输出中的测试可执行文件，实测摘要为 3735237073f6055a4851a250d786f6dce0f9051083345f9b64efa9a0d8aa557e。使用原样官方 Darwin 2.99，归档后重取原 Claim/N/L/K、进程外核对并正常释放耗时 14 ms，预算为 10,000 ms。锁争用、逻辑根重现、inode 替换、保护属性变化、owner 回执变化均拒绝进入回调。进程组、夹具和两个专用协调文件已核缺席，既有 UID 级 L 保持。
+
+此为测试专用原语。独立计划的生产续接、四个中断阶段、真实启停与整版验收继续待验。本轮未启动服务。
+
+[执行差异及证据](../../.adg/evidence/0.2.24/mac-native-reacquire-spike-r1/evidence-manifest.json)
