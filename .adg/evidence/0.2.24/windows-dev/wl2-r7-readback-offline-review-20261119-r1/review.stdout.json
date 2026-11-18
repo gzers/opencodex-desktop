@@ -1,0 +1,80 @@
+{
+  "scope": "synthetic receipts with archived V2 bytes",
+  "cases": [
+    {
+      "case": "one-tick-under",
+      "raw": 0,
+      "result": {
+        "reviewPassed": true,
+        "recoveryActionId": "33333333-3333-4333-8333-333333333333",
+        "explicitSha256": "0515508e3bc1afdf515199c8981edc5970b96fd578f1e6fa4307f22edd375346",
+        "diagnosticSha256": "2b4af3fc03200010941afc9de64697b5fb5130786db84542ece65677a95cf594",
+        "timingSha256": "a4e5a1003789c26503b6513ce14369aa1b605d656c967fa719946147f7df811c",
+        "elapsedQpc": 49999999,
+        "frequency": 10000000,
+        "exports": [
+          {
+            "name": "DiagnosticAfter-v2-record-000001.json",
+            "bytes": 3523,
+            "sha256": "736fc8b702c8decf098d5f45863d2395857982962b6ef5a22ab24f30aa496260"
+          },
+          {
+            "name": "DiagnosticAfter-v2-record-000002.json",
+            "bytes": 3669,
+            "sha256": "8732c35bacea55dd2fff61fd96a57e2688d663a868c9b3e0b4596537350f9f9e"
+          }
+        ]
+      }
+    },
+    {
+      "case": "at-cutoff",
+      "raw": 1,
+      "result": {
+        "reviewPassed": false,
+        "firstError": "Original five-second readback bound unproven."
+      }
+    },
+    {
+      "case": "forged-timing-display",
+      "raw": 1,
+      "result": {
+        "reviewPassed": false,
+        "firstError": "Derived timing fields differ from original ticks."
+      }
+    },
+    {
+      "case": "mixed-pair",
+      "raw": 1,
+      "result": {
+        "reviewPassed": false,
+        "firstError": "Attempt or timing binding differs."
+      }
+    },
+    {
+      "case": "wrong-explicit-hash",
+      "raw": 1,
+      "result": {
+        "reviewPassed": false,
+        "firstError": "Explicit receipt differs."
+      }
+    },
+    {
+      "case": "wrong-action-with-recomputed-hash",
+      "raw": 1,
+      "result": {
+        "reviewPassed": false,
+        "firstError": "DiagnosticAfter snapshot action differs."
+      }
+    },
+    {
+      "case": "changed-export",
+      "raw": 1,
+      "result": {
+        "reviewPassed": false,
+        "firstError": "Independent attachment 2 bytes differ."
+      }
+    }
+  ],
+  "cleanupComplete": true,
+  "scratch": "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx-r7-post-review-fqaj0bsl"
+}

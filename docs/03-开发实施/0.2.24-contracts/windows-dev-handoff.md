@@ -1877,3 +1877,8 @@ nine-r1 仍保留 6,460 ms／raw32 首错与控制端身份查询 raw5。独立�
 沿 TEAM67／IMP206／r7，使用原暂存字节离线推导三处 launcher 替换和一处计时脚本摘要替换。候选只从 CheckAttachment 传 ReadWrite share，保持 ExportExact 其它调用使用 Read share，文件访问仍只读。候选 launcher SHA-256 6b553204560d59ba7a292f64c322404028eceb1a0899661f5f9dc9d76953e990，独立计时脚本 SHA-256 f3a0c5ed9f8ba698d0b5d3e37d1b1209b4b88fa5ee4714a5fe06c1ff000aba5f。原 CMD 字节及 pin 继续使用。
 
 PowerShell 5.1 提取并执行准确摘要门，原版配对与候选配对通过，两种混配及一字节 CMD 漂移拒绝，整体 raw0，stderr 为空。原始输出与准确替换见 wl2-r7-range-readback-pins-20261119-r1，可用于固定前对照。候选仅在内存中生成，待治理指定新配对后再接入和现场验证。
+
+
+## 2026-11-19 r7 读回归档的独立后置验收
+
+按 TEAM67／IMP206／r7 新增仅用于证据归档的离线核验器，见 wl2-r7-readback-offline-review-20261119-r1。给定已验收 Explicit 与固定 CMD、launcher 三个摘要，在采集后核同轮尝试、QPC 原 tick、DiagnosticAfter 原字节、同一动作 Pending 及两份实际导出。复用旧合成 V2 原字节，正例在五秒期限前一 tick 接受；恰到期限、篡改显示时长、配对或 Explicit 错绑、重新摘要后动作错绑及文件变更均拒绝。Python 3.12.10 raw0，stderr 为空，临时目录已清理。验证器只留证据分支，固定文件与真实现场未写入。
