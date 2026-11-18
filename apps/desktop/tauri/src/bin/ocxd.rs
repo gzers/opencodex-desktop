@@ -18,6 +18,26 @@ use zeroize::Zeroize;
 mod windows_owner024 {
     pub fn dispatch(argv: &[String]) -> Option<std::process::ExitCode> {
         #[cfg(debug_assertions)]
+        if argv.first().map(String::as_str) == Some("--internal-before-resume-control024-v2") {
+            let valid = matches!(
+                argv.get(1).map(String::as_str),
+                Some("begin-canonical-abort")
+            ) && argv.len() == 3
+                && argv[2] == "--confirm"
+                || matches!(
+                    argv.get(1).map(String::as_str),
+                    Some("read-worker-diagnostic" | "read-canonical-history")
+                ) && argv.len() == 2;
+            if !valid {
+                eprintln!("Exact V2 operation required; begin-canonical-abort requires --confirm, read commands accept no confirmation or targets.");
+                return Some(std::process::ExitCode::from(2));
+            }
+            return Some(match opencodex_desktop_lib::infrastructure::windows_owner_host024::empty_host::request_before_resume_private_v2(&argv[1]){
+                Ok((report,refused))=>{println!("{report}");if refused{std::process::ExitCode::from(1)}else{std::process::ExitCode::SUCCESS}},
+                Err(error)=>{eprintln!("Private V2 recovery unconfirmed: raw={:?}; kind={:?}; {error}",error.raw_os_error(),error.kind());std::process::ExitCode::from(1)}
+            });
+        }
+        #[cfg(debug_assertions)]
         if argv.first().map(String::as_str) == Some("--internal-r7-r2-readonly024-v1") {
             if argv.len() != 2 || !matches!(argv[1].as_str(), "before" | "after") {
                 eprintln!("Exact version1 read-only phase before/after required.");

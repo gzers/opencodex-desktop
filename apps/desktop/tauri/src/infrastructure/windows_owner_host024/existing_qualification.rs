@@ -96,8 +96,10 @@ pub(super) fn run(c: EmptyBootstrap) -> io::Result<()> {
     // Establish reachability before any fallible native Owner creation. The
     // locator is DATA only; every request authenticates the native pipe peer.
     let control = super::failure_control::Control::create(&c, current)?;
+    let recovery_control = super::recovery_control::install_before_capture(&c)?;
     let mut runtime_for_trace: Option<SharedRuntimeExecutable> = None;
     let result = (|| -> io::Result<Value> {
+        recovery_control.check_alive()?;
         let q = ExistingQualification::prepare()?;
         event(
             &mut log,
@@ -107,6 +109,7 @@ pub(super) fn run(c: EmptyBootstrap) -> io::Result<()> {
         let runtime: SharedRuntimeExecutable =
             runtime::RuntimeHandle::initialize_versioned(&c.data, &c.installation);
         runtime_for_trace = Some(runtime.clone());
+        recovery_control.bind_runtime(runtime.clone())?;
         let mut command = ProcessCommand::new(
             LifecycleAction::Start,
             c.installation.join("runtime/bin/ocx-runtime.cmd"),
@@ -122,6 +125,7 @@ pub(super) fn run(c: EmptyBootstrap) -> io::Result<()> {
             ("restart2", LifecycleAction::Restart),
             ("stop3", LifecycleAction::Stop),
         ] {
+            recovery_control.check_alive()?;
             command.action = action;
             let started = Instant::now();
             let window = ActionWindow::begin(action, started, started + Duration::from_secs(30))

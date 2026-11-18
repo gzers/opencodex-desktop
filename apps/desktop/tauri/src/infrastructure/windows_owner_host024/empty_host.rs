@@ -436,10 +436,40 @@ pub fn run_from_inherited_bootstrap() -> io::Result<()> {
         .recv_timeout(Duration::from_secs(5))
         .map_err(|_| io::Error::from(io::ErrorKind::TimedOut))??;
     #[cfg(debug_assertions)]
+    if config.scope == "isolated-private-control-v2-empty-fixture" {
+        return super::recovery_control::run_empty_fixture(config);
+    }
+    #[cfg(debug_assertions)]
     if config.scope == super::super::windows_client_originals024::existing_qualification::SCOPE {
         return super::existing_qualification::run(config);
     }
     run_empty(config)
+}
+/// New internal V2 client only. Reads one bounded private inherited bootstrap;
+/// never falls back to old schema1 cleanup/locator or arbitrary target PIDs.
+#[cfg(debug_assertions)]
+pub fn request_before_resume_private_v2(operation: &str) -> io::Result<(serde_json::Value, bool)> {
+    use std::os::windows::io::AsRawHandle;
+    let seconds = super::recovery_control::command_budget(operation)?;
+    let started = Instant::now();
+    let (counter, frequency) = qpc()?;
+    let end = started + Duration::from_secs(seconds);
+    if unsafe {
+        windows_sys::Win32::Storage::FileSystem::GetFileType(std::io::stdin().as_raw_handle())
+    } != 3
+    {
+        return Err(refused(
+            "V2 client needs one exact private inherited pipe bootstrap",
+        ));
+    }
+    let (tx, rx) = std::sync::mpsc::sync_channel(1);
+    std::thread::spawn(move || {
+        let _ = tx.send(read_bootstrap(std::io::stdin().lock()));
+    });
+    let config = rx
+        .recv_timeout(end.saturating_duration_since(Instant::now()))
+        .map_err(|_| io::Error::from(io::ErrorKind::TimedOut))??;
+    super::recovery_control::request(&config, operation, started, end, counter, frequency)
 }
 #[cfg(debug_assertions)]
 pub fn request_existing_failure_cleanup() -> io::Result<serde_json::Value> {

@@ -1,5 +1,92 @@
 use super::*;
 use serde_json::{json, Value};
+#[test]
+fn wl2_r7_private_native_v2_reply_and_ack_strict_no_release_authority_or_wrong_request() {
+    let request = decode(&value("read-canonical-history"))
+        .unwrap()
+        .admit_at(&hello(), &mut BTreeSet::new(), 3000, 1000, Instant::now())
+        .unwrap();
+    let scope = "b".repeat(64);
+    let reply = ReplyV2::result(
+        &request,
+        &scope,
+        json!({"readOnly":true,"runtimeAuthority":false}),
+    );
+    let good = serde_json::to_value(reply).unwrap();
+    ReplyV2::decode(
+        &frame(&serde_json::to_vec(&good).unwrap()),
+        &request,
+        &scope,
+    )
+    .unwrap();
+    for field in good.as_object().unwrap().keys() {
+        let mut bad = good.clone();
+        bad.as_object_mut().unwrap().remove(field);
+        assert!(
+            ReplyV2::decode(&frame(&serde_json::to_vec(&bad).unwrap()), &request, &scope).is_err(),
+            "{field}"
+        );
+    }
+    for (field, data) in [
+        ("schema", json!(1)),
+        ("requestId", json!(uuid::Uuid::new_v4().to_string())),
+        ("scopeDigest", json!("c".repeat(64))),
+        ("purpose", json!("worker-diagnostic")),
+        ("purpose", json!("refused")),
+        ("normalStop", json!(true)),
+        ("closed", json!(true)),
+        ("allAccepted", json!(true)),
+        ("publicStartOpen", json!(true)),
+        ("hostMayExit", json!(true)),
+        ("nativeHandle", json!(1)),
+        ("facts", json!([])),
+    ] {
+        let mut bad = good.clone();
+        bad[field] = data;
+        assert!(
+            ReplyV2::decode(&frame(&serde_json::to_vec(&bad).unwrap()), &request, &scope).is_err(),
+            "{field}"
+        );
+    }
+    let ack = serde_json::to_value(AckV2::for_request(&request, &scope)).unwrap();
+    AckV2::check(&frame(&serde_json::to_vec(&ack).unwrap()), &request, &scope).unwrap();
+    for field in ack.as_object().unwrap().keys() {
+        let mut bad = ack.clone();
+        bad.as_object_mut().unwrap().remove(field);
+        assert!(
+            AckV2::check(&frame(&serde_json::to_vec(&bad).unwrap()), &request, &scope).is_err()
+        );
+    }
+}
+#[test]
+fn wl2_r7_private_native_v2_refusal_preserves_raw_without_success_flags() {
+    let request = decode(&value("begin-canonical-abort"))
+        .unwrap()
+        .admit_at(&hello(), &mut BTreeSet::new(), 3000, 1000, Instant::now())
+        .unwrap();
+    let scope = "b".repeat(64);
+    let reply = ReplyV2::refused(&request, &scope, &io::Error::from_raw_os_error(5));
+    let encoded = serde_json::to_value(reply).unwrap();
+    let read = ReplyV2::decode(
+        &frame(&serde_json::to_vec(&encoded).unwrap()),
+        &request,
+        &scope,
+    )
+    .unwrap();
+    assert!(read.is_refused());
+    let data = read.into_data().unwrap();
+    assert_eq!(data["error"]["raw"], 5);
+    assert_eq!(data["normalStop"], false);
+    assert_eq!(data["hostMayExit"], false);
+    assert_eq!(data["allAccepted"], false);
+    for field in ["raw", "kind", "detail"] {
+        let mut bad = encoded.clone();
+        bad["error"].as_object_mut().unwrap().remove(field);
+        assert!(
+            ReplyV2::decode(&frame(&serde_json::to_vec(&bad).unwrap()), &request, &scope).is_err()
+        );
+    }
+}
 fn value(command: &str) -> Value {
     json!({"schema":SCHEMA,"requestId":"11111111-1111-4111-8111-111111111111","instanceId":"22222222-2222-4222-8222-222222222222","managerGeneration":"1","challenge":"a".repeat(64),"scopeDigest":"b".repeat(64),"command":command,"confirmation":if command=="begin-canonical-abort"{"explicit-before-first-resume-recovery"}else{"read-only"},"budget":{"transportActionId":"33333333-3333-4333-8333-333333333333","startedQpc":"1000","deadlineQpc":if command=="begin-canonical-abort"{"11000"}else{"6000"},"qpcFrequency":"1000"}})
 }

@@ -63,6 +63,11 @@ pub(super) struct HelloV2 {
     pub(super) scope_digest: String,
 }
 impl HelloV2 {
+    pub(super) fn decode(frame: &[u8]) -> io::Result<Self> {
+        let value: Self = decode_frame(frame)?;
+        value.validate()?;
+        Ok(value)
+    }
     pub(super) fn validate(&self) -> io::Result<()> {
         if self.schema != SCHEMA
             || !uuid(&self.instance_id)
@@ -120,7 +125,185 @@ pub(super) struct AdmittedV2 {
     pub(super) command: CommandV2,
     pub(super) deadline: ReadDeadline,
 }
+fn decode_frame<T: serde::de::DeserializeOwned>(frame: &[u8]) -> io::Result<T> {
+    if frame.len() < 4 {
+        return Err(invalid());
+    }
+    let len = u32::from_le_bytes(frame[..4].try_into().unwrap()) as usize;
+    if len == 0 || len > 65536 || frame.len() != len + 4 {
+        return Err(invalid());
+    }
+    serde_json::from_slice(&frame[4..]).map_err(|_| invalid())
+}
+#[derive(Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "kebab-case")]
+pub(super) enum PurposeV2 {
+    CanonicalAbortResult,
+    WorkerDiagnostic,
+    CanonicalHistory,
+    Refused,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct ErrorV2 {
+    #[serde(deserialize_with = "required_option")]
+    pub(super) raw: Option<i32>,
+    pub(super) kind: String,
+    pub(super) detail: String,
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct ReplyV2 {
+    schema: String,
+    request_id: String,
+    scope_digest: String,
+    purpose: PurposeV2,
+    facts: serde_json::Value,
+    #[serde(deserialize_with = "required_option")]
+    error: Option<ErrorV2>,
+    normal_stop: bool,
+    closed: bool,
+    all_accepted: bool,
+    public_start_open: bool,
+    host_may_exit: bool,
+}
+fn required_option<'de, D, T>(d: D) -> Result<Option<T>, D::Error>
+where
+    D: serde::Deserializer<'de>,
+    T: Deserialize<'de>,
+{
+    Option::<T>::deserialize(d)
+}
+impl ReplyV2 {
+    pub(super) fn is_refused(&self) -> bool {
+        self.purpose == PurposeV2::Refused
+    }
+    pub(super) fn result(request: &AdmittedV2, scope: &str, facts: serde_json::Value) -> Self {
+        Self {
+            schema: SCHEMA.into(),
+            request_id: request.request_id.clone(),
+            scope_digest: scope.into(),
+            purpose: match request.command {
+                CommandV2::BeginCanonicalAbort => PurposeV2::CanonicalAbortResult,
+                CommandV2::ReadWorkerDiagnostic => PurposeV2::WorkerDiagnostic,
+                CommandV2::ReadCanonicalHistory => PurposeV2::CanonicalHistory,
+            },
+            facts,
+            error: None,
+            normal_stop: false,
+            closed: false,
+            all_accepted: false,
+            public_start_open: false,
+            host_may_exit: false,
+        }
+    }
+    pub(super) fn refused(request: &AdmittedV2, scope: &str, error: &io::Error) -> Self {
+        let mut data = Self::result(
+            request,
+            scope,
+            serde_json::json!({"recoveryRequired":true,"runtimeAuthority":false}),
+        );
+        data.purpose = PurposeV2::Refused;
+        data.error = Some(ErrorV2 {
+            raw: error.raw_os_error(),
+            kind: format!("{:?}", error.kind()),
+            detail: error.to_string(),
+        });
+        data
+    }
+    pub(super) fn decode(frame: &[u8], request: &AdmittedV2, scope: &str) -> io::Result<Self> {
+        let data: Self = decode_frame(frame)?;
+        let expected = match request.command {
+            CommandV2::BeginCanonicalAbort => PurposeV2::CanonicalAbortResult,
+            CommandV2::ReadWorkerDiagnostic => PurposeV2::WorkerDiagnostic,
+            CommandV2::ReadCanonicalHistory => PurposeV2::CanonicalHistory,
+        };
+        if data.schema != SCHEMA
+            || data.request_id != request.request_id
+            || data.scope_digest != scope
+            || !data.facts.is_object()
+            || data.normal_stop
+            || data.closed
+            || data.all_accepted
+            || data.public_start_open
+            || data.host_may_exit
+            || (data.purpose == PurposeV2::Refused) != data.error.is_some()
+            || data.purpose != PurposeV2::Refused && data.purpose != expected
+        {
+            return Err(invalid());
+        }
+        Ok(data)
+    }
+    pub(super) fn into_data(self) -> io::Result<serde_json::Value> {
+        serde_json::to_value(self).map_err(|_| invalid())
+    }
+}
+#[derive(Serialize, Deserialize)]
+#[serde(deny_unknown_fields, rename_all = "camelCase")]
+pub(super) struct AckV2 {
+    schema: String,
+    request_id: String,
+    scope_digest: String,
+}
+impl AckV2 {
+    pub(super) fn for_request(request: &AdmittedV2, scope: &str) -> Self {
+        Self {
+            schema: SCHEMA.into(),
+            request_id: request.request_id.clone(),
+            scope_digest: scope.into(),
+        }
+    }
+    pub(super) fn check(frame: &[u8], request: &AdmittedV2, scope: &str) -> io::Result<()> {
+        let value: Self = decode_frame(frame)?;
+        if value.schema != SCHEMA
+            || value.request_id != request.request_id
+            || value.scope_digest != scope
+        {
+            return Err(invalid());
+        }
+        Ok(())
+    }
+}
 impl RequestV2 {
+    pub(super) fn for_client(
+        hello: &HelloV2,
+        command: CommandV2,
+        start: u64,
+        end: u64,
+        frequency: u64,
+    ) -> io::Result<Self> {
+        hello.validate()?;
+        let value = Self {
+            schema: SCHEMA.into(),
+            request_id: uuid::Uuid::new_v4().to_string(),
+            instance_id: hello.instance_id.clone(),
+            manager_generation: hello.manager_generation.clone(),
+            challenge: hello.challenge.clone(),
+            scope_digest: hello.scope_digest.clone(),
+            command,
+            confirmation: if command == CommandV2::BeginCanonicalAbort {
+                Confirmation::ExplicitBeforeFirstResumeRecovery
+            } else {
+                Confirmation::ReadOnly
+            },
+            budget: BudgetV2 {
+                transport_action_id: uuid::Uuid::new_v4().to_string(),
+                started_qpc: start.to_string(),
+                deadline_qpc: end.to_string(),
+                qpc_frequency: frequency.to_string(),
+            },
+        };
+        value.validate_shape()?;
+        Ok(value)
+    }
+    pub(super) fn client_receipt(&self, end: Instant, started: Instant) -> AdmittedV2 {
+        AdmittedV2 {
+            request_id: self.request_id.clone(),
+            transport_action_id: self.budget.transport_action_id.clone(),
+            command: self.command,
+            deadline: ReadDeadline { started, end },
+        }
+    }
     pub(super) fn decode(frame: &[u8]) -> io::Result<Self> {
         if frame.len() < 4 {
             return Err(invalid());
