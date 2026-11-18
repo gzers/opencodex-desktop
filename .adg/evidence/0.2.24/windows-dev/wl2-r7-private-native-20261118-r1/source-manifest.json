@@ -1,0 +1,68 @@
+{
+  "codeBefore": "58f0d49f2b45ad108cf921ef04fae32f9980f133",
+  "mainInput": "4ea82e8a61fe00c1f76334db5e39654f49f4342e",
+  "docsInput": "bf819aab38cb4259524f3620415a15fdae966dd5",
+  "authority": "TEAM31/IMP168/r7 unchanged",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/bin/ocxd.rs",
+      "sha256": "138579dbed8c057a91cae9ec4746384c21a8c756969960d57960644e5646d1d8",
+      "bytes": 17166
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs",
+      "sha256": "3e55b6d3abf6dab8946e029141b161f9370db7f04befdb419b5513cb12a53d18",
+      "bytes": 9583
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "sha256": "04c789d6d9633b9fe285a517395f3634f361d28035c3a90bab9f91c2a736c76b",
+      "bytes": 21753
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control.rs",
+      "sha256": "9acfb66f2e5c6ab0cdd8859d2b63290543a77b0a6753ff4ef3c4a4a5446fb4ec",
+      "bytes": 1264
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire.rs",
+      "sha256": "bb7deeeee5cb837c10e82cac777dab527f2013bad8e06fdcbeb13f11b2e578a1",
+      "bytes": 14550
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire_tests.rs",
+      "sha256": "ab1d01092a00bf7abe69034f33fadd8e27405f828746ac754c6248ab537dd509",
+      "bytes": 13125
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/server.rs",
+      "sha256": "0c995aafc5ccf92520de2452654c7ac66c61cfc5ce6b4844f71925c21124811b",
+      "bytes": 15262
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/client.rs",
+      "sha256": "0ac8e2bce66fb8ee3138fe4abac9b5255b55c0e88770071fab50537969bdc9a8",
+      "bytes": 5235
+    },
+    {
+      "path": "test/windows024-native/launch-r7-private-native-empty.ps1",
+      "bytes": 14668,
+      "sha256": "2268a74ef020faea4db3e2074aa6e86ed60b8f9364258efee82755a34cb627b2",
+      "verification": "PS51 actual AST/helpers for ps1; exact command dispatch wrapper for cmd"
+    },
+    {
+      "path": "test/windows024-native/launch-r7-private-native-empty.cmd",
+      "bytes": 179,
+      "sha256": "ba7ca9da9e02be60e8cd99df13e0f3052175359cdf450a79f3a8eb5bfa62cd76",
+      "verification": "PS51 actual AST/helpers for ps1; exact command dispatch wrapper for cmd"
+    }
+  ],
+  "finalBinaryRustSources": 8,
+  "launcherSources": 2,
+  "onlyPostUnitRustChanges": [
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/server.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/client.rs"
+  ],
+  "postUnitChanges": "server nativepeer DATA logging + expected terminalACK disconnect no authority race; action native pre/post auth fences unchanged",
+  "unitCodecSourceUnchanged": true
+}

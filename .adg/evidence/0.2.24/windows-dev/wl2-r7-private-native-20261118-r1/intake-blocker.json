@@ -1,0 +1,17 @@
+{
+  "kind":"facts transcribed from actual Git tool results; not a full raw-command log",
+  "proxy":"command-only http://127.0.0.1:3060, HTTP/1.1, TLS verification retained",
+  "mainPreviouslyConsumed":"4ea82e8a61fe00c1f76334db5e39654f49f4342e",
+  "docsPreviouslyConsumed":"bf819aab38cb4259524f3620415a15fdae966dd5",
+  "latestFetchedShortRefs":{"main":"88b8fc33d","docs":"4a09aa011"},
+  "latestContentsConsumed":false,
+  "failures":[
+    "schannel failed to receive handshake while lazy promisor fetching missing blobs 8137e6198e2fd5fef8d6e7d47a96d1c8e752d9ec / 47ae63935cde6213ec6a6e18210daa3253a6fc53 / fa754481350f2f36edf350b94590d42530d361c2",
+    "command-only OpenSSL backend also returned TLS unexpected EOF, no sslVerify disabled or persistent config change",
+    "one explicit missing-object fetch returned bad revision / did not send all necessary objects"
+  ],
+  "proxyListenerObserved":{"localAddress":"::","port":3060,"owningProcess":58488},
+  "decision":"do not claim fetched refs are consumed; no main/docs merge or new scope inferred from unread contents. Preserve this already-authorized native endpoint increment and prepared ordinary desktop fixture; resume exact latest intake when transport works.",
+  "currentR2Touched":false,
+  "policiesOrDailyConfigurationChanged":false
+}

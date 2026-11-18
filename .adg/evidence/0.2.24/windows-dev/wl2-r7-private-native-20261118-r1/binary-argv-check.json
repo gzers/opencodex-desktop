@@ -1,0 +1,75 @@
+{
+  "artifactSha256": "55cd6ef08653edc8bf2b5c754006473fba7b3fc8f4a0a04c486ea89222181d3e",
+  "artifactBytes": 18220032,
+  "cases": [
+    {
+      "arguments": [
+        "--internal-before-resume-control024-v2"
+      ],
+      "raw": 2,
+      "elapsedMs": 32,
+      "stage": "exact Windows argv guard only, before bootstrap/peer/endpoint/Owner"
+    },
+    {
+      "arguments": [
+        "--internal-before-resume-control024-v2",
+        "begin-canonical-abort"
+      ],
+      "raw": 2,
+      "elapsedMs": 31,
+      "stage": "exact Windows argv guard only, before bootstrap/peer/endpoint/Owner"
+    },
+    {
+      "arguments": [
+        "--internal-before-resume-control024-v2",
+        "begin-canonical-abort",
+        "--confirm",
+        "extra"
+      ],
+      "raw": 2,
+      "elapsedMs": 31,
+      "stage": "exact Windows argv guard only, before bootstrap/peer/endpoint/Owner"
+    },
+    {
+      "arguments": [
+        "--internal-before-resume-control024-v2",
+        "read-worker-diagnostic",
+        "--confirm"
+      ],
+      "raw": 2,
+      "elapsedMs": 31,
+      "stage": "exact Windows argv guard only, before bootstrap/peer/endpoint/Owner"
+    },
+    {
+      "arguments": [
+        "--internal-before-resume-control024-v2",
+        "read-canonical-history",
+        "21500"
+      ],
+      "raw": 2,
+      "elapsedMs": 16,
+      "stage": "exact Windows argv guard only, before bootstrap/peer/endpoint/Owner"
+    },
+    {
+      "arguments": [
+        "--internal-before-resume-control024-v2",
+        "explicit-recovery"
+      ],
+      "raw": 2,
+      "elapsedMs": 31,
+      "stage": "exact Windows argv guard only, before bootstrap/peer/endpoint/Owner"
+    },
+    {
+      "arguments": [
+        "--internal-before-resume-control024-v2",
+        "force"
+      ],
+      "raw": 2,
+      "elapsedMs": 32,
+      "stage": "exact Windows argv guard only, before bootstrap/peer/endpoint/Owner"
+    }
+  ],
+  "nativeEndpointCreated": false,
+  "currentR2Touched": false,
+  "officialExecuted": false
+}

@@ -1,0 +1,545 @@
+{
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 44,
+      "sha256": "d63ee73e00c9734f0ed5446c050accab94bb949633d18ce2352ff778d45da0b2"
+    },
+    {
+      "path": "artifacts.json",
+      "bytes": 963,
+      "sha256": "69475ec76d439961934c8bdaabefd36a2f8183ca2f49f5736598ae520b9133c9"
+    },
+    {
+      "path": "binary-argv-check.json",
+      "bytes": 2070,
+      "sha256": "9b55d5514b710aacb5a3919c2ff34eb18323d9edd772958efb3ec5672a846d0e"
+    },
+    {
+      "path": "binary02/executed-source/apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 17166,
+      "sha256": "138579dbed8c057a91cae9ec4746384c21a8c756969960d57960644e5646d1d8"
+    },
+    {
+      "path": "binary02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 21753,
+      "sha256": "04c789d6d9633b9fe285a517395f3634f361d28035c3a90bab9f91c2a736c76b"
+    },
+    {
+      "path": "binary02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs",
+      "bytes": 9583,
+      "sha256": "3e55b6d3abf6dab8946e029141b161f9370db7f04befdb419b5513cb12a53d18"
+    },
+    {
+      "path": "binary02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/client.rs",
+      "bytes": 5030,
+      "sha256": "9532a7b9d54b0e6a11deff494a095b1e55c0872f6dbbfb1f43fd71bc238ed721"
+    },
+    {
+      "path": "binary02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/server.rs",
+      "bytes": 14965,
+      "sha256": "cddd8a4e4f87e84bfedb5776b275909a47afb2877d4e2b4632a16dc307c6190a"
+    },
+    {
+      "path": "binary02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire.rs",
+      "bytes": 14550,
+      "sha256": "bb7deeeee5cb837c10e82cac777dab527f2013bad8e06fdcbeb13f11b2e578a1"
+    },
+    {
+      "path": "binary02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire_tests.rs",
+      "bytes": 13125,
+      "sha256": "ab1d01092a00bf7abe69034f33fadd8e27405f828746ac754c6248ab537dd509"
+    },
+    {
+      "path": "binary02/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control.rs",
+      "bytes": 1264,
+      "sha256": "9acfb66f2e5c6ab0cdd8859d2b63290543a77b0a6753ff4ef3c4a4a5446fb4ec"
+    },
+    {
+      "path": "binary02/result.json",
+      "bytes": 607,
+      "sha256": "e26f6f3258689827d89c02ee2ac51ca742f57982b5c3b703a9305e932f1fdea8"
+    },
+    {
+      "path": "binary02/source.json",
+      "bytes": 2387,
+      "sha256": "968257bfc7650ad3c28f341622721e168e6e6f2818ea0b66c5ef963d08612e1d"
+    },
+    {
+      "path": "binary02/stderr.log",
+      "bytes": 96764,
+      "sha256": "c79864d4a2e95151126624feee1a40173bd976052e8cfd46d8e4e53d5a43b080"
+    },
+    {
+      "path": "binary02/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "binary04/executed-source/apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 17166,
+      "sha256": "138579dbed8c057a91cae9ec4746384c21a8c756969960d57960644e5646d1d8"
+    },
+    {
+      "path": "binary04/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 21753,
+      "sha256": "04c789d6d9633b9fe285a517395f3634f361d28035c3a90bab9f91c2a736c76b"
+    },
+    {
+      "path": "binary04/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs",
+      "bytes": 9583,
+      "sha256": "3e55b6d3abf6dab8946e029141b161f9370db7f04befdb419b5513cb12a53d18"
+    },
+    {
+      "path": "binary04/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/client.rs",
+      "bytes": 5235,
+      "sha256": "0ac8e2bce66fb8ee3138fe4abac9b5255b55c0e88770071fab50537969bdc9a8"
+    },
+    {
+      "path": "binary04/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/server.rs",
+      "bytes": 15262,
+      "sha256": "0c995aafc5ccf92520de2452654c7ac66c61cfc5ce6b4844f71925c21124811b"
+    },
+    {
+      "path": "binary04/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire.rs",
+      "bytes": 14550,
+      "sha256": "bb7deeeee5cb837c10e82cac777dab527f2013bad8e06fdcbeb13f11b2e578a1"
+    },
+    {
+      "path": "binary04/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire_tests.rs",
+      "bytes": 13125,
+      "sha256": "ab1d01092a00bf7abe69034f33fadd8e27405f828746ac754c6248ab537dd509"
+    },
+    {
+      "path": "binary04/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control.rs",
+      "bytes": 1264,
+      "sha256": "9acfb66f2e5c6ab0cdd8859d2b63290543a77b0a6753ff4ef3c4a4a5446fb4ec"
+    },
+    {
+      "path": "binary04/result.json",
+      "bytes": 607,
+      "sha256": "c9ea71d284bf9467ae684af96b57daae3f8674909053c90658842449d2585c16"
+    },
+    {
+      "path": "binary04/source.json",
+      "bytes": 2387,
+      "sha256": "1ec3638b3cc0d853b9017884c0878ab8256ce7633ac5824473e30e17907d05e9"
+    },
+    {
+      "path": "binary04/stderr.log",
+      "bytes": 96764,
+      "sha256": "56ad8e1d54b7e97e81e450c945cbafe61910e96ca16e400548b5f4ef70bf815b"
+    },
+    {
+      "path": "binary04/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "check-binary.py",
+      "bytes": 1607,
+      "sha256": "4916883486b107459a83a200043784ab33c144ab4b298533f349e18558873242"
+    },
+    {
+      "path": "check-launcher.ps1",
+      "bytes": 4580,
+      "sha256": "a9af3266f44eafcb8493ae1d525bb276753f1f202eacfa1f14114af48a17951f"
+    },
+    {
+      "path": "cleanup-readback.json",
+      "bytes": 1589,
+      "sha256": "cf298590cd5f8298097005affa3691404b58b7d069b4cd12b63af571a5d312bb"
+    },
+    {
+      "path": "cli00.stderr.log",
+      "bytes": 120,
+      "sha256": "7e301e316e6afd5a817c67b55f763605fc7e808af7f84c8060b417e09e0b9621"
+    },
+    {
+      "path": "cli00.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cli01.stderr.log",
+      "bytes": 120,
+      "sha256": "7e301e316e6afd5a817c67b55f763605fc7e808af7f84c8060b417e09e0b9621"
+    },
+    {
+      "path": "cli01.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cli02.stderr.log",
+      "bytes": 120,
+      "sha256": "7e301e316e6afd5a817c67b55f763605fc7e808af7f84c8060b417e09e0b9621"
+    },
+    {
+      "path": "cli02.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cli03.stderr.log",
+      "bytes": 120,
+      "sha256": "7e301e316e6afd5a817c67b55f763605fc7e808af7f84c8060b417e09e0b9621"
+    },
+    {
+      "path": "cli03.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cli04.stderr.log",
+      "bytes": 120,
+      "sha256": "7e301e316e6afd5a817c67b55f763605fc7e808af7f84c8060b417e09e0b9621"
+    },
+    {
+      "path": "cli04.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cli05.stderr.log",
+      "bytes": 120,
+      "sha256": "7e301e316e6afd5a817c67b55f763605fc7e808af7f84c8060b417e09e0b9621"
+    },
+    {
+      "path": "cli05.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "cli06.stderr.log",
+      "bytes": 120,
+      "sha256": "7e301e316e6afd5a817c67b55f763605fc7e808af7f84c8060b417e09e0b9621"
+    },
+    {
+      "path": "cli06.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "collect.py",
+      "bytes": 8072,
+      "sha256": "d3d6c7786ce3dcb597769c2aa05915d6ee4d00840d5a0ececdb8a28da4a55fbf"
+    },
+    {
+      "path": "desktop-preflight-readback.json",
+      "bytes": 474,
+      "sha256": "593edb4edcddb92d5e1ae9d4e57ed1e4bd6958c43a5c33d358555c4364e85763"
+    },
+    {
+      "path": "desktop-staged.json",
+      "bytes": 2550,
+      "sha256": "fea2a4e0c6c042b4bf90e3bea669b89c4871e0d7cfecb7e5deabec8a9b40932d"
+    },
+    {
+      "path": "finalize.py",
+      "bytes": 5860,
+      "sha256": "93c64a3b40f5932b6b8294f106456db6f6fb870d32fcc10bc5dc5b5f855cf963"
+    },
+    {
+      "path": "first-error-and-fixes.json",
+      "bytes": 898,
+      "sha256": "98effde1eafcc58cbea596180615522c5746bd4175a85bc7da0adcd470558fc0"
+    },
+    {
+      "path": "generated-schema/desktop-schema-original.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/desktop-schema.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/windows-schema-moved.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "generated-schema/windows-schema.json",
+      "bytes": 126231,
+      "sha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49"
+    },
+    {
+      "path": "hypotheses.json",
+      "bytes": 1880,
+      "sha256": "801adb02d7bda6c6eab841b3de6ea072d3810cdf842070fc52b52787c963216d"
+    },
+    {
+      "path": "intake-blocker.json",
+      "bytes": 1296,
+      "sha256": "4f329cd1d689a5bd8b24014bf55952442205a3ac491c0a7fdcb86d88880de7a8"
+    },
+    {
+      "path": "intake-resolution.json",
+      "bytes": 1256,
+      "sha256": "cc56fdba7d039c9e554a7971b5fa34da5f4718e323fe1e5fa61577e36c074685"
+    },
+    {
+      "path": "launcher-ps51-check.json",
+      "bytes": 1376,
+      "sha256": "fc25e36a19b0dc2a52a4d12dcacc246f1bbfe878efc73654f68ea91ecd4f1332"
+    },
+    {
+      "path": "launcher-source/test/windows024-native/launch-r7-private-native-empty.cmd",
+      "bytes": 179,
+      "sha256": "ba7ca9da9e02be60e8cd99df13e0f3052175359cdf450a79f3a8eb5bfa62cd76"
+    },
+    {
+      "path": "launcher-source/test/windows024-native/launch-r7-private-native-empty.ps1",
+      "bytes": 14668,
+      "sha256": "2268a74ef020faea4db3e2074aa6e86ed60b8f9364258efee82755a34cb627b2"
+    },
+    {
+      "path": "prepare-run.py",
+      "bytes": 1738,
+      "sha256": "31a23df217ce34176329a80193f04b3a7eff4546ba5c60ba818e24a8feeca377"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 17166,
+      "sha256": "138579dbed8c057a91cae9ec4746384c21a8c756969960d57960644e5646d1d8"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 21755,
+      "sha256": "ca09cde6ba942ce6afee067e4461bdd060a7d43cb1d3728b6b358dc825b85363"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs",
+      "bytes": 9583,
+      "sha256": "3e55b6d3abf6dab8946e029141b161f9370db7f04befdb419b5513cb12a53d18"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/client.rs",
+      "bytes": 5030,
+      "sha256": "9532a7b9d54b0e6a11deff494a095b1e55c0872f6dbbfb1f43fd71bc238ed721"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/server.rs",
+      "bytes": 14281,
+      "sha256": "a47c020780f364f8f857059f1b4c45d2952178ef30c8c6536d9c75d944058e79"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire.rs",
+      "bytes": 14550,
+      "sha256": "bb7deeeee5cb837c10e82cac777dab527f2013bad8e06fdcbeb13f11b2e578a1"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire_tests.rs",
+      "bytes": 13125,
+      "sha256": "ab1d01092a00bf7abe69034f33fadd8e27405f828746ac754c6248ab537dd509"
+    },
+    {
+      "path": "product01/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control.rs",
+      "bytes": 817,
+      "sha256": "c8cc7dd66b268d8360f33238792c2efb7ad16a43f430fee584ace8c5f20e4951"
+    },
+    {
+      "path": "product01/result.json",
+      "bytes": 677,
+      "sha256": "33fd920c2b2cc7a52cd2c572561e79dda99c4a1251376073b45e7863679daf8e"
+    },
+    {
+      "path": "product01/source.json",
+      "bytes": 2455,
+      "sha256": "bfbce900a26a2f6ca6e1cfc22960ccbb1a0b86da959083eea33bb5162fb90988"
+    },
+    {
+      "path": "product01/stderr.log",
+      "bytes": 45543,
+      "sha256": "8ef5deca316bcbee33bff633a5ec2e4c53adfe52d4dd6250b8a51f5a071996b2"
+    },
+    {
+      "path": "product01/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "product03/executed-source/apps/desktop/tauri/src/bin/ocxd.rs",
+      "bytes": 17166,
+      "sha256": "138579dbed8c057a91cae9ec4746384c21a8c756969960d57960644e5646d1d8"
+    },
+    {
+      "path": "product03/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "bytes": 21753,
+      "sha256": "04c789d6d9633b9fe285a517395f3634f361d28035c3a90bab9f91c2a736c76b"
+    },
+    {
+      "path": "product03/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs",
+      "bytes": 9583,
+      "sha256": "3e55b6d3abf6dab8946e029141b161f9370db7f04befdb419b5513cb12a53d18"
+    },
+    {
+      "path": "product03/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/client.rs",
+      "bytes": 5030,
+      "sha256": "9532a7b9d54b0e6a11deff494a095b1e55c0872f6dbbfb1f43fd71bc238ed721"
+    },
+    {
+      "path": "product03/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/server.rs",
+      "bytes": 14281,
+      "sha256": "a47c020780f364f8f857059f1b4c45d2952178ef30c8c6536d9c75d944058e79"
+    },
+    {
+      "path": "product03/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire.rs",
+      "bytes": 14550,
+      "sha256": "bb7deeeee5cb837c10e82cac777dab527f2013bad8e06fdcbeb13f11b2e578a1"
+    },
+    {
+      "path": "product03/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/wire_tests.rs",
+      "bytes": 13125,
+      "sha256": "ab1d01092a00bf7abe69034f33fadd8e27405f828746ac754c6248ab537dd509"
+    },
+    {
+      "path": "product03/executed-source/apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control.rs",
+      "bytes": 1264,
+      "sha256": "9acfb66f2e5c6ab0cdd8859d2b63290543a77b0a6753ff4ef3c4a4a5446fb4ec"
+    },
+    {
+      "path": "product03/result.json",
+      "bytes": 676,
+      "sha256": "57d0b10fc3bc0d5dc487713feb7ecba710cad77611518c8a7e782733b6fb5e7c"
+    },
+    {
+      "path": "product03/source.json",
+      "bytes": 2456,
+      "sha256": "5d40c6f568075af59bfc5f8fce377e4d1bf80c7f34be17a6154e474df6770cb6"
+    },
+    {
+      "path": "product03/stderr.log",
+      "bytes": 43291,
+      "sha256": "0d9dde33cd881f88d8f660100374e9fe1279bb3321050cfe171a80cb9b4b8a4e"
+    },
+    {
+      "path": "product03/stdout.log",
+      "bytes": 1407,
+      "sha256": "7e8b7d9c2905c340e963c5c1d5627e71d414f6a594da6f23e13774e9e7219d20"
+    },
+    {
+      "path": "regression05/result.json",
+      "bytes": 340,
+      "sha256": "2de69e3e45ff97342be212457540a620ec2cc5d1066a2af07a11411817c81d4f"
+    },
+    {
+      "path": "regression05/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression05/stdout.log",
+      "bytes": 431,
+      "sha256": "b9fa4939b77860ec9f58976acc67d704f0eea68abd6e6913ae9b51691b741eff"
+    },
+    {
+      "path": "regression06/result.json",
+      "bytes": 335,
+      "sha256": "071cdd0adc67337dc4e71273aa3c48ddb5ff4e5a60f10a8d13271b733be1c9c7"
+    },
+    {
+      "path": "regression06/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression06/stdout.log",
+      "bytes": 230,
+      "sha256": "15d2e7c3350bf80fcc20f1c4690dce0a4fe7dde43a4bce214f10754235f23aac"
+    },
+    {
+      "path": "regression07/result.json",
+      "bytes": 335,
+      "sha256": "dc227bd48cd340b4bbc0469d27f9422a7bb886b5294f23f9f6871ac2d57d69ee"
+    },
+    {
+      "path": "regression07/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression07/stdout.log",
+      "bytes": 223,
+      "sha256": "32847e545345d16d4e3b286ffd95251f9549f5f857b99b556c47114df9958d67"
+    },
+    {
+      "path": "regression08/result.json",
+      "bytes": 341,
+      "sha256": "289efc547df1a21ad01f2da47ee32a4a9f3007a9e133456209727cb83e61b167"
+    },
+    {
+      "path": "regression08/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "regression08/stdout.log",
+      "bytes": 258,
+      "sha256": "de5760b6de9a1b470002366c5f01c45756e2473b12b624dec8f96758c8c0f4ad"
+    },
+    {
+      "path": "run-binary.ps1",
+      "bytes": 3266,
+      "sha256": "6dbab14ab1e391abc9a25806a7e22cfd34d80a05b5d59c0f2e64ffc704db4eb1"
+    },
+    {
+      "path": "run-product.ps1",
+      "bytes": 3308,
+      "sha256": "516b5d0267d252c021ac68aabbafcea6ee552921682ae34efb05c53916cfa87b"
+    },
+    {
+      "path": "run-regressions.py",
+      "bytes": 1280,
+      "sha256": "b139eadb0db94152a2357edbe09a7d6cd0fc00d8c9dd2bb5860c70202d900257"
+    },
+    {
+      "path": "source-git-verification.json",
+      "bytes": 2498,
+      "sha256": "74248524efe09383c72674328a949c91a8331fe42cfadce14c7761d60098cc7e"
+    },
+    {
+      "path": "source-manifest.json",
+      "bytes": 3058,
+      "sha256": "9dd0e76e4cb1e7be583ea2f3535529b0e24f7fff40205f201ab17f9901a3d2be"
+    },
+    {
+      "path": "source-review.json",
+      "bytes": 795,
+      "sha256": "ea0e657d70ea515a041418b7e715f8184d3a5be5dffd75055b1afd6363bc2678"
+    },
+    {
+      "path": "sources.json",
+      "bytes": 676,
+      "sha256": "8ce4df7323d0b65433342adb3b7673eab080351d36ca88d7d96182ddd268d916"
+    },
+    {
+      "path": "stage-public.ps1",
+      "bytes": 3439,
+      "sha256": "56fb21530126678f1fdb0e599711ae1b8f1bd6ce8cecbe42b5f2152b58d0f4e2"
+    },
+    {
+      "path": "status.json",
+      "bytes": 49059,
+      "sha256": "5e7457a7042ad10c728867d5965631f2ba9e61a64370bacae84adf19c77f8991"
+    },
+    {
+      "path": "SUMMARY.md",
+      "bytes": 4240,
+      "sha256": "916cbd3687a65224c79ef97310b40e086499de310b8c0899e4f676fba94c952b"
+    },
+    {
+      "path": "verify_evidence.py",
+      "bytes": 1095,
+      "sha256": "3e17a29910bb8af7282aa1b317dda2b3b3091b69ae9eb4fc2b120b0c625a3204"
+    },
+    {
+      "path": "verify_git_payload.py",
+      "bytes": 866,
+      "sha256": "8369dd51396511c96ce8118054183295f67e2667e956fc50bfea187463c5b96d"
+    }
+  ],
+  "nativeAuthority": false
+}
