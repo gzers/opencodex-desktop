@@ -1,0 +1,65 @@
+{
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_tree_membership_native_failed_open_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "currentR2Touched": false,
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored.rs",
+      "bytes": 26499,
+      "sha256": "4b1e17cbceb432d13b01d5a2e93b70a1d0e1b3c99e3de26277808d93eac2cc2c"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume.rs",
+      "bytes": 3865,
+      "sha256": "a568dbdd1c6c363d65d6960bf82dc02db21381b5f4ae9d384d998e69792391a8"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/membership.rs",
+      "bytes": 12737,
+      "sha256": "e023bbf3ada6c7e45129ddc85d3684ec60186afad2fc0e96fc0e3d5384a243f5"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/before_resume/membership/tests.rs",
+      "bytes": 15261,
+      "sha256": "3eda7161ceda4617f97634fbd735197e487d63ecb914ab70a227603ccd92a470"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/capture/abort_return/released.rs",
+      "bytes": 14615,
+      "sha256": "cf3496651d9dfb8dde965842929d4b8d8c4323fd1fecbc10d63febe6cea9dadb"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2.rs",
+      "bytes": 10071,
+      "sha256": "dceb46cee5799844f6442da083cc0fdf3d4a76916e807e03ee080cf57fdde01d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2/tests.rs",
+      "bytes": 8196,
+      "sha256": "02179ba8b5bf01ea35b601793e7e485a7132089fe9de075a7e8f41ed5a3f95d3"
+    }
+  ]
+}

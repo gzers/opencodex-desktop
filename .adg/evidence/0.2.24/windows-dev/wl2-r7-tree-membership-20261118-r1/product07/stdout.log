@@ -1,0 +1,39 @@
+
+running 4 tests
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::membership::tests::wl2_r7_tree_membership_native_complete_capture_sort_and_later_work_do_not_rekey_originals ... r7 treemembership actualnative original IDs stable across nodeorder/move/work and originalparent/custody stablekeys; bounded DATA no nativeOwnergrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp6c2HrP
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::membership::tests::wl2_r7_tree_membership_native_partial_capture_retains_exact_locator_and_missing_baseline ... r7 treemembership actualpartialcapture exact pendinglocator+originalhandle ID/content observed, missingSD baseline null, poisoned oldread/mutation stillrefuses
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpqvRTk6
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::membership::tests::wl2_r7_tree_membership_native_unknown_bytes_sd_ads_members_and_deadline_refuse ... r7 treemembership native refuses work-bytes: raw=None kind=InvalidData, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpVUcBoN
+r7 treemembership native refuses pending-bytes: raw=None kind=InvalidData, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpbs1qWQ
+r7 treemembership native refuses security: raw=None kind=PermissionDenied, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpOVzGlp
+r7 treemembership native refuses stream: raw=None kind=InvalidData, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpCq602r
+r7 treemembership native refuses member: raw=None kind=InvalidData, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpBPJGti
+r7 treemembership native refuses custody-member: raw=None kind=InvalidData, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpGf1UkC
+r7 treemembership native refuses late-member: raw=None kind=InvalidData, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpDcP3FC
+r7 treemembership native refuses late-security: raw=None kind=PermissionDenied, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpr5OkDY
+r7 treemembership native refuses expired: raw=None kind=TimedOut, sameactualresources retained/no repair or terminalgrant
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpIX4Eqb
+ok
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::membership::tests::wl2_r7_tree_membership_native_working_and_every_pending_creator_list_each_actual_original_object ... r7 treemembership actualwork fault0: sameoriginal/nativeworkdistinctIDs, each retainedcreator is member, bytes=25 missingbaselinePending/no completedintent inferred
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp0qjYxl
+r7 treemembership actualwork fault1: sameoriginal/nativeworkdistinctIDs, each retainedcreator is member, bytes=0 missingbaselinePending/no completedintent inferred
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpaaM4jV
+r7 treemembership actualwork fault2: sameoriginal/nativeworkdistinctIDs, each retainedcreator is member, bytes=1 missingbaselinePending/no completedintent inferred
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpOd4VQs
+r7 treemembership actualwork fault3: sameoriginal/nativeworkdistinctIDs, each retainedcreator is member, bytes=25 missingbaselinePending/no completedintent inferred
+r7-tree-membership-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpkrmls8
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2269 filtered out; finished in 2.50s
+

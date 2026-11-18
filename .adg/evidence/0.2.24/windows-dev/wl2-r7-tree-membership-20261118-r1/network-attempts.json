@@ -1,0 +1,12 @@
+{
+  "kind":"transcription of actual tool results, not full raw Git process logs",
+  "proxy":"command-only http://127.0.0.1:3060/HTTP1.1 and child environment propagation; persistent config/TLS policy unchanged",
+  "facts":[
+    {"stage":"start fetch main/docs","toolShellExit":1,"gitNativeExitSeparatelyCaptured":false,"error":"schannel failed to receive handshake, SSL/TLS connection failed"},
+    {"stage":"first code push a22f6ebe8","toolShellExit":1,"gitNativeExitSeparatelyCaptured":false,"error":"same schannel TLS handshake failure"}
+  ],
+  "lastConsumedMain":"88b8fc33d5ec21b54c494cdb529fd68026b3f8b9",
+  "lastConsumedDocs":"4a09aa011c18d2880ed63bfb211694d49ed84669",
+  "unreadRevisionClaimedConsumed":false,
+  "currentR2Touched":false
+}

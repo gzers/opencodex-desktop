@@ -1,0 +1,14 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::tree::anchored::before_resume::tests::join_tests::return_tests::release_tests::driver_worker_tests::wl2_r7_concrete_driver_native_original_pipeline_runs_once_on_same_owning_worker_and_returns_released_resources ... r7-driver-worker-fixture-start=C:\Users\15119\AppData\Local\Temp\.tmpufNPmO
+r7 original owning worker native pipeline openfalse: elapsedMs=3430 original sourceFileId=281474978359618 sameThread="ThreadId(3)" actual Job242/claim/twoTrees/v1/explicitRelease/fiveRanges/fullreadback completed; private native data={"closed":false,"coordinationObjects":3,"digest":"866a07533c6aba16200cb7a7b4d5bc799bad05ce840fadb64a50cdde6794fb0f","normalStop":false,"originalNodes":10,"publicStartOpen":false,"purpose":"native-aborted-before-resume-restored-readback","runtimeAuthority":false}, productOwner/officialSource acceptance false
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpufNPmO
+r7-driver-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpufNPmO
+r7-driver-worker-fixture-start=C:\Users\15119\AppData\Local\Temp\.tmpiPP0hW
+r7 original owning worker native pipeline opentrue: elapsedMs=3507 original sourceFileId=562949955070274 sameThread="ThreadId(4)" actual Job242/claim/twoTrees/v1/explicitRelease/fiveRanges/fullreadback completed; private native data={"closed":false,"coordinationObjects":3,"digest":"69953977a27ae0cf574e37c9e90c81a992553bfb8cd0b75a4c10b3c0ebedebb7","normalStop":false,"originalNodes":10,"publicStartOpen":false,"purpose":"native-aborted-before-resume-restored-readback","runtimeAuthority":false}, productOwner/officialSource acceptance false
+r7-tree-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpiPP0hW
+r7-driver-worker-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpiPP0hW
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2273 filtered out; finished in 9.22s
+

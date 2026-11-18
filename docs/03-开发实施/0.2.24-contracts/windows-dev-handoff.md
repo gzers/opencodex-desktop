@@ -1371,3 +1371,15 @@ TEST EXE SHA547d50530139edcf728e4a1161847dbc413409c74b358aa60c076787b5b95dfe；6
 ### 2026-11-18 目录准备读回最终推送回执
 
 代码b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec及独立证据432afe278均已真实push成功；完整SHA与实际后续成功事实见同级wl2-r7-directory-read-20261118-r1-push-receipt.json。先前status/SUMMARY/本页的seal时pending及TLS失败保原历史，不回写假成功。两工作树当前代码/证据已交远端，普通desktopV2原入口仍Pending，未重跑/未触旧r2及全部旧失败/拒删/synthetic27960；原预算/unknown/普通token/官方与日常策略不变，不W2/双SID/发布，目标active。
+
+## 2026-11-18 原树工作及pending句柄完整V2成员
+
+代码a22f6ebe81b6d298525842af5bd3b90f355e0ab0已本地提交，首两次codepush均代理TLS失败，未冒远端已交；最终成功须独立后续Git回执。输入main88b8fc33d/docs4a09aa011、TEAM33/IMP171/r7不变，开轮fetch失败、不声称消费未读revision，继续Windows既有tree/preparation/V2独占集。
+
+修旧成员投影只列原node/漏work-pendingwork缺口：collect在实际nativeopen前留准确relative/kind，同pendingfile留槽，Node登记后才清locator；真实open失败无handle仍Intent，冲突消失不重开或升身份/Absent，普通mutation/finalread gate拒pendinglocator。每original/work/pendingcreator/pendingcapture/parent/custody独立DATA成员；完整节点actualID/所含8/bytes核原snapshot，pendingwork实际empty/partial/fullbytes须原内容前缀，无初始SDbaseline即null；pendingcapture仅观察currentID/content，原安全与Source/完整集合未知不补权。全组两个native读回pass/完整children-custodymembers/父与custodySD前后，unknown/late/SD/ADS/bytes/cutoff拒，保poison，不write/move/repair或造Owner/claim/restoreproof。stableID按原session-role-type-relative键、sorted对象集，不compact已知node/parent/custody、不随排序/移入custody/新增work漂移，logicalpath摘要保持。原V2对象512/record64KiB界限保持，超量拒而不删目标成员。
+
+证据wl2-r7-tree-membership-20261118-r1：product01完整MSVC库raw101/55361ms为新test assert_eq/unwrap_err需要ObjectDebug E0277，未native；只测试等值predicate/显式err分支，不改Object或权限类型。product07全Tauri库raw0/161763ms新4tests15fixtures过：实际partialinvalidcoordinator准确pendingpath/handle、4workcreatorstates、sort/move/workstableID、9unknown/drift/cutoff拒。product08raw0/160560ms新增actualshare0conflict原open raw32，准确Intent先保，无handle；实际冲突close后同原tree仍不重open/升ID/Absent/retry；原实现与product07相同，只新test。去重5tests16nativefixtures，不把DATA型session或component当真实官方Owner/Source或完整恢复。
+
+原13受影响tests全raw0：treeprefix5/1172ms、v2native3/94ms、partialcapture3/219ms、concretepipeline1两模式/9250ms、Send1/31ms。pipeline仅自有syntheticJob242/原两树/canonical/附件/显式release原语，不冒普通Profile固定官方预算或Stop/Closed。最终TEST EXE SHA6a5e7f400712e6c8b6af36fb3468850c5ec74578ad6b1e0b424d3ca92e7b28b2；7最终源逐Git行尾归一核，所有source/raw stdout-stderr/首错保。32新root缺席（15/1/11/3/2），oldpartial只有FixtureDrop不冒全历史清理；无意外nativefailure，schema生成raw归档还原/移出。旧失败/拒删/synthetic27960/40588缺口保留，不绕过或重试两旧blocked by policy删除拒绝。
+
+status.json169项完整状态，普通desktopV2仍Pending（原Publicout空/marenbensession7Disconnected），原ocxd55cd6ef…/入口未覆盖或重跑。完整Source/初始原件集合与恢复permission、nativeV2pre-manifest/partial/缺根恢复、普通Profile固定官方Owner预算整链、容量/CAPtrust/普通MSI/最终候选未完。r2Job24raw50Unknown不重复PSS/旧cleanup探Status，原21500/75744/原件/work/custody/anchors/协调/seq9不动，无newforce/归还批准，旧50580/54692授权不延用。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99及日常PATH配置策略不变，不W2/双SID/发布，目标active。

@@ -1,0 +1,17 @@
+# 原树／工作／pending句柄完整V2成员
+
+代码a22f6ebe8后继完整SHA见status.json，本地提交已完成；首push代理TLS失败，最终remote状态须后续真实推送回执，不能以commit冒已交。输入main88b8fc33d/docs4a09aa011，TEAM33/IMP171/r7，开轮fetch失败，不声称消费未读新revision；只原Windows独占tree/preparation/V2文件，未改共享trait/预算/日常配置或官方。
+
+修正旧V2成员投影只列原节点、漏工作/pendingwork的缺口。collect在原nativeopen前留准确relative/kind intent，原handle失败后同槽持有；仅成功登记Node后清pending locator。失败open无handle仍Intent，不读失败路径补身份/Absent，普通mutation/原finalproof入口继续拒pending locator，不自动重试原capture。
+
+每原node、原work、pendingworkcreator、pendingcapture及parent/custody单列DATA对象。已完成原快照独立核actualID/所含8/bytes；pendingwork核实际empty/partial/fullbytes是原内容前缀，原securitybaseline缺失保持null；pendingcapture只能当前观察ID/content而无baseline恢复许可。两次整组read，原完整目录children/custodymembers、parent/custodysecurity/identity前后核，unknown/late member/SD/ADS/bytes/cutoff拒，保poison，不写/move/repair/造Source/Owner/claim/native恢复proof。
+
+对象ID按原session/role/type/scopedrelative而非compact数组序号，原logical locator移到custody后不变，sort/nativework加入不改变原node/parent/custody ID；输出hash而非raw内容/secret或新任意路径权限。此前只原membership测试期DATA无新旧record迁移；V2 strict总512对象与记录64KiB仍由原validator保留，超量拒绝，不减少目标集合来让它通过。完整Source/原初始集合/恢复和锁释放仍未由这些DATA提供。
+
+product01完整MSVC库raw101/55361ms：测试assert_eq/unwrap_err要求Object Debug导致E0277，未native；只改测试等值predicate/显式err分支，未改Object/API/安全断言。product07全Tauri库raw0/161763ms，新4native测试15fixture过；product08 raw0/160560ms只新增真实failedopen用例，原实现未变：share0原文件真实nativeopen raw32，准确Intent留槽，即使外部冲突关闭仍不重开/升级。新去重5tests16fixture；原coordinator失效/工作0-3前缀/排序稳定/9unknown拒绝全保源和raw。
+
+原13受影响测试全raw0：treeprefix5/1172ms、v2native3/94ms、partialcapture3/219ms、concretepipeline1两模式/9250ms、Send1/31ms；原严格窗口/poison未知拒绝不变，不跑无影响GUI/CLI/MSI/scan。pipeline仅自有synthetic originalJob242/两树/日志原语，非真实固定官方Owner运行或整版预算通过。
+
+最终完整库TEST EXE SHA6a5e7f400712e6c8b6af36fb3468850c5ec74578ad6b1e0b424d3ca92e7b28b2；7最终执行源逐Git行尾归一核，三product轮和全部回归source/raw结果保。32实际新fixture root缺席（15新/1新failedopen/11旧tree/3旧V2/2旧pipeline），oldpartial只有原FixtureDrop不冒全历史清理；无意外native失败，schema生成raw归档还原/移出。旧所有失败/拒删/synthetic27960/40588缺口保留，未绕过或重试两旧blocked by policy删除拒绝。
+
+完整169项状态见status.json。普通desktopV2仍待原Public入口（out空/session7Disconnected），未重跑或覆盖旧ocxd55cd6ef…；当前r2Job24raw50Unknown只停自身证明，不PSS/旧cleanup探Status，原21500/75744/原件/work/custody/协调/seq9不动，无新force/归还批准、旧50580/54692授权不延用。完整nativeV2partial/pre-manifest/缺根恢复、真实普通Profile固定官方Owner预算整链、容量/CAPtrust/普通MSI/最终候选仍未完。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99与日常PATH配置策略不变，不W2/双SID/发布，目标active。

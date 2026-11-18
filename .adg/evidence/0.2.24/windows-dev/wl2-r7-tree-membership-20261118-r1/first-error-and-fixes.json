@@ -1,0 +1,21 @@
+{
+  "product01": {
+    "raw": 101,
+    "elapsedMs": 55361,
+    "error": "new tests used assert_eq/unwrap_err requiring Debug for strict Object type (E0277); no native execution",
+    "fix": "test equality predicate and explicit .err() branch; no Object type or security assertion changed"
+  },
+  "product07": {
+    "raw": 0,
+    "elapsedMs": 161763,
+    "passed": "4actual native membership tests/15fixtures"
+  },
+  "product08": {
+    "raw": 0,
+    "elapsedMs": 160560,
+    "passed": "real share0 open conflict raw32/no handle: intent preserved after actual conflict release, never reopened"
+  },
+  "productionSourceUnchangedAfterProduct07": true,
+  "unexpectedNativeError": null,
+  "currentR2Touched": false
+}
