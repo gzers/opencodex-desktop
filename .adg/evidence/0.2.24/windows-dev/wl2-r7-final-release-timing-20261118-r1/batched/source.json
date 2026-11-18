@@ -1,0 +1,65 @@
+{
+  "sources": [
+    {
+      "sha256": "8cce5bd743b2322c1b7c56c0439cfcc63c67004df24107eb16176a91e4bfb592",
+      "bytes": 8857,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_release_tests.rs"
+    },
+    {
+      "sha256": "fe1934e433e4b5fe911e4881ddaa49b8f78bd368384437113b42afbdbdbbddd2",
+      "bytes": 2956,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs"
+    },
+    {
+      "sha256": "b6f029e82b4803e2050717cfaea0c2295df1da61612a582327627e03e4a4ca37",
+      "bytes": 17082,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs"
+    },
+    {
+      "sha256": "3ad31c7447678ec6cebfd52931439567f62b972d66cd6cdbe81e7c8439678fde",
+      "bytes": 10310,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs"
+    },
+    {
+      "sha256": "5079006820d1c981ac274a2b476149e2220b7e2417742a5a58e4bd89fd6c6627",
+      "bytes": 9742,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery/final_release.rs"
+    },
+    {
+      "sha256": "3be4e3d32b9490245e9815c7ac0b7e61e61f75ab54b25e306c3683ae5707b602",
+      "bytes": 10858,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_batch_tests.rs"
+    },
+    {
+      "sha256": "ad5553c8a7c0febe3eca77fed81de264dbb480c47186b3a4a04b737fb1c6b7ea",
+      "bytes": 12515,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement/witness.rs"
+    }
+  ],
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_final_release_native_partial_unlock",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "currentR2Touched": false
+}

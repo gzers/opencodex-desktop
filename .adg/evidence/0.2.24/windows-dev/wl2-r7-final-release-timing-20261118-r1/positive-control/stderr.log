@@ -1,0 +1,4 @@
+
+thread 'infrastructure::windows_client_originals024::tree::anchored::observation::retirement::batch_tests::wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals_and_claim' (72048) panicked at src\infrastructure\windows_client_originals024\tree\anchored\observation\retirement_batch_tests.rs:106:10:
+called `Result::unwrap()` on an `Err` value: Custom { kind: Other, error: QueryError { api: "bounded-original-deadline", mask: 0, raw: None, detail: "timed out" } }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

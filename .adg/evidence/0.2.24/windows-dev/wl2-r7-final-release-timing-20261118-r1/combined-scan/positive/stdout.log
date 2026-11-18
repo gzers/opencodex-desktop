@@ -1,0 +1,18 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::tree::anchored::observation::retirement::batch_tests::wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals_and_claim ... r6 recovery native canonical component phase=ready remainingMs=7361
+r6 recovery native canonical component phase=pre-stop remainingMs=5409
+r6 recovery native canonical component phase=stopped remainingMs=4115
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-a016f1ca-65a3-4314-b39c-6a0ad1ac2357
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpOLNSKg
+FAILED
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::observation::retirement::batch_tests::wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals_and_claim
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2283 filtered out; finished in 10.01s
+

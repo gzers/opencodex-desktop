@@ -1439,3 +1439,11 @@ Windows 代码 dc3e3248550081c9070d1a56664a76148a01219b 已推送并核对远端
 已消费 main 9daf5599151b65437f94ab2cadb1988060ee38c3 和治理 d751f9c44dc1168d71821c5b7bbcd381b736e6b7（TEAM45／IMP184）。原持久 worker 和基于原范围的显式恢复待接入。公开 Start 保持拒绝。普通用户 MSI、原包单 SID 生产闭环及候选冻结仍待完成。
 
 原始证据见 wl2-r7-start-owner-release-20261118-r1，累计 202 项状态。上一批 Journal 证据 420d7a948aeea76f198d6ffe8e2ee4a8b05499f0 已核对远端。
+
+## 2026-11-18 原 lease 最终释放与同边界计量
+
+Windows 代码 e6cc1f29a5444a76da3e123d6f97b7b6ee6757f2 已推送与回读，消费 main 9daf5599151b65437f94ab2cadb1988060ee38c3 和 governance d751f9c44dc1168d71821c5b7bbcd381b736e6b7，TEAM45／IMP184／r7。失败时保留原 lease 剩余范围及 ReleasePrepared。完整移动前后双树扫描和 durable append 后重放保持。
+
+证据 wl2-r7-final-release-timing-20261118-r1。MSVC raw5 负例 1/1、8.55 秒且原 claim 仍冲突，恢复中断 1/1、退休 6/6。默认测试配置的 10 秒正常对照首错 retirement_batch_tests.rs:106:10，bounded-original-deadline、raw=None，进程 raw101。相同源码以单次 crate opt-level=1 构建，正常对照 1/1、9.40 秒、raw0，制品 030692def4d1b7b4487463fbef8bd1c24664d3f0ab406bc59e7f626d77846501。固定 Bun raw73 均保留。该单次结果属于合成对照，负载缓存条件及生产预算待核。MSVC 产品三制品构建 raw0。累计状态表 210 项。
+
+四处清理在执行前被自动审批拒绝，原失败根和新对照根均保留。当前 r2 Job 24 项未知、raw50，executionReady=false。后续继续持久首启与同范围恢复，公开 Start 保持拒绝。

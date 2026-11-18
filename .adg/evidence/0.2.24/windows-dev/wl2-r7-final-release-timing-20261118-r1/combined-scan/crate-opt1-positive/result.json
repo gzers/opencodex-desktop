@@ -1,0 +1,32 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.opt-level=1",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals_and_claim",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "elapsedMs": 603559,
+  "productionAccepted": false,
+  "raw": 0,
+  "currentR2Touched": false
+}

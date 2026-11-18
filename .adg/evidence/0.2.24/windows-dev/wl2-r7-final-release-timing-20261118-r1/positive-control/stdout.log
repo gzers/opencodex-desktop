@@ -1,0 +1,29 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::tree::anchored::observation::retirement::batch_tests::wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals_and_claim ... r6 recovery native canonical component phase=ready remainingMs=7406
+r6 recovery native canonical component phase=pre-stop remainingMs=5596
+r6 recovery native canonical component phase=stopped remainingMs=4411
+r6 fixed-Bun claim-only held=true raw=Some(73) stdout={"code":"SQLITE_BUSY","errno":5}
+ stderr=
+r7 final release stage=seal-recovery-tree remainingMs=1733
+r7 final release stage=verify-active-tree-before-intent remainingMs=1733
+r7 final release stage=append-whole-tree-intent remainingMs=1685
+r7 final release stage=verify-whole-tree-restored remainingMs=1505
+r7 final release stage=append-whole-tree-result remainingMs=1379
+r7 final release stage=read-lease-facts remainingMs=1063
+r7 final release stage=append-release-prepared remainingMs=1059
+r7 final release stage=unlock-native-lease remainingMs=860
+r7 final release stage=verify-first-post-unlock remainingMs=851
+r7 final release stage=publish-anchor-release-batch remainingMs=746
+r7 final release stage=append-release-verified remainingMs=418
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-359926fe-c87f-4f88-a0e3-1518ff306011
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpjTC197
+FAILED
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::observation::retirement::batch_tests::wl2_r6_batch_native_complete_initial_and_recovery_phases_keep_exact_originals_and_claim
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 2283 filtered out; finished in 10.01s
+

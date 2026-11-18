@@ -1,0 +1,7 @@
+{
+  "hypothesis": "The original 10-second window expires before explicit unlock because whole-tree validation or journal append consumes the remaining time.",
+  "falsifier": "Explicit unlock stage reached within the window, or first error is not timeout.",
+  "bunSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+  "code": "737bca2e3cd8899cda0d0d86bf8b5fbb446ebca1",
+  "timing": "test-only environment switch"
+}
