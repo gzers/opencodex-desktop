@@ -1,0 +1,35 @@
+{
+  "gui02": "partial cancellation and read-only reconciliation passed, official successor Ready8, first Stop request failed; later cleanup saw record absent and ended app too early",
+  "actualFinalCanonical": {
+    "revision": 9,
+    "ticket": "36ca8679-2e0a-4ebc-9079-5e290974da7f",
+    "state": "stop_prepared",
+    "references": {
+      "attempt": "36ca8679-2e0a-4ebc-9079-5e290974da7f",
+      "originalSha256": "d23b32151577e5aad021f14001b7eb6eb352a1d48dc56662e543c2aeb7e76cd4",
+      "scopeSha256": "774722b9cad83a444195647e2b8e517c136d6745f0b85a321728bcb82297b35a",
+      "phases": [
+        [
+          "ready",
+          "0a4a3eedc2aed74ebaea561096ef4e9280017bf7ee211a6b661c16fcf8a4a1df"
+        ],
+        [
+          "pre_stop",
+          "10c31df0613412974d679cf165d7fd3d869a7c80830238653eade65d92835f2e"
+        ]
+      ],
+      "liveSha256": "84b7f9789b43c7c72d0af94a0de2e1171ebcf8f3846994922b355bdfe47ddf1d"
+    },
+    "restorePlan": null,
+    "completionSha256": null
+  },
+  "completeNormalStopNotProved": true,
+  "cleanupWeakness": "record absence alone was insufficient; tightened to complete RootAbsent before stopping GUI group or deleting fixture",
+  "originalFailureAndRawManagerPreserved": true,
+  "dataPreservationBeforeCancellationVerified": true,
+  "frameAndPartialSourcePreservedAsRawEvidence": true,
+  "exactRuntimeReasonOfFirstStopFailureNotRecorded": "source plus actual earlyReady supports a UI request overlap hypothesis; no back-end lease diagnostic or live stack was captured",
+  "sourceFix": "processRequestPending remains true until actual invoke resolves; snapshots can showReady but cannot end request; no lifecycle timeout extension",
+  "remaining": "run new sealed GUI pipeline with explicit complete cleanup; current firstStop failure and incomplete tail stay failure",
+  "releaseAcceptance": false
+}

@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 32；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 33；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -295,3 +295,10 @@ Windowsf8feb3825/801e53cc8已归IMP167，继续原独占完整Status5/Owner/nati
 Mac main346b46a69b1d9951335359a334cda7bf21ddd132只首次新根部分槽的取消/独立历史/后继、Mac确认状态及测试准确清理；数据合同与真实native预算只归IMP170。新plan/review schema2明确保部分vault投影，不读旧v1/fallback/收养；测试目录之外DB清理只准确task-key，不改共享全局L或其它机器现场。最终signedapp部分分支与原型一致性还未验，不将source测试/后继storage capture冒官方服务验收。
 
 Windows可增量merge这些Mac文件/UI，不重跑无影响Owner/MSI/CLI/扫描。原smoke新增cfgtest捕获checkpoint只在task根生效、不改变生产代码路径；Windows若遇相同文件diff逐段保其真实注册，不全文件ours/theirs。原Windows独占stage/worker/privatewire/v2、四trait/CONTRACT_VERSION4不变，继续本线。58f0d49f2与0d6fa9c0d回交已接IMP169，codec不是native可达权限、当前r2/synthetic27960仍按原计划与独立批准边界，不W2/双SID、不发布。
+
+
+## revision33 部分捕获实屏诊断后接续
+
+Mac测试ebe80da86、只读重核修复0d44a4643、pendingRequest修复0b77472be及后继测试bb13a7f12/88b8fc33d均可增量合入；源、三包实际绑定、四失败轮次及未完唯一归IMP171。Rust取消/Windows原生后端/四trait均无新变化；前端明确已结案的只读协调和原invoke结算前不释放UI动作，不因此提前开放真实Start。Windows无需重跑无影响MSI/CLI/scan/归档/原Owner测试，继续原独占privatewire/native端点/V2恢复。
+
+Mac下一本机任务只针对gui04取消前status等待的真实阶段/线程取证，未知不重跑全流程；gui02旧cleanup不足完整RootAbsent的问题已收紧后继测试，不用当前无残留代签原正常Stop。其它既列功能/原型与最终候选仍未验，当前两端禁止W2/双SID/发布边界保持。Windows最新58f0d49f2/0d6fa9c0d已接，无新接口依赖；不借本批授权处置原r2或synthetic27960。

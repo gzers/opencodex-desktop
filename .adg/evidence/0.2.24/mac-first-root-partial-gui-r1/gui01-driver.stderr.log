@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 314, in <module>
+    result = run(args.app, args.expected_sha256, args.output, args.seed_host, args.flow)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 221, in run
+    service_requested=True;report['serviceActionRequested']=True;press('启动 OpenCodex')
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 85, in press
+    value = wait_for('find-' + label, lambda s: bool(matches(s, label, 'AXButton')))
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 78, in wait_for
+    raise RuntimeError('observation timeout: ' + label)
+RuntimeError: observation timeout: find-启动 OpenCodex

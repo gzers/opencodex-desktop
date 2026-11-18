@@ -1,0 +1,23 @@
+{
+  "beforeGuiRun": true,
+  "productSource": "ebe80da860551c85c1ec53f1d57d0c8e2b0264b1",
+  "hypothesis": "actual sealed GUI exposes created_root_capture confirmation, preserves exact fragment bytes/identity/mode through cancellation and official successor Start/Ready/normalStop with originalAbsent",
+  "syntheticSeedBoundary": "reservation is actual productIndex; fragment DATA is explicitly synthetic and not proof of official capture; four native capture boundaries already separately verified",
+  "budgetsUnchanged": true,
+  "dailyConfigurationUnchanged": true,
+  "businessOrModelRequest": false,
+  "flow": "root-partial-cancel",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/tests/macos024_gui_root_seed.rs",
+      "bytes": 4871,
+      "sha256": "56f1cd70cc845f4cb803be2fb4ec41a727556b8c2f0a7f6a0c6b764975b619b5"
+    },
+    {
+      "path": "test/smoke/macos024-gui-root-cancel.py",
+      "bytes": 22433,
+      "sha256": "6e01ca525626a75f02bc4f18e6aff6b523399137f30aea22cddf5fd3eafdcd37"
+    }
+  ],
+  "releaseAcceptance": false
+}

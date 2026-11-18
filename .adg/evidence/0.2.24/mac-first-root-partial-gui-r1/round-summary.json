@@ -1,0 +1,50 @@
+{
+  "rounds": [
+    {
+      "round": "gui01",
+      "originalResult": "failed",
+      "state": "root_cancellation_absent",
+      "revision": 4,
+      "rootObservedAbsent": true,
+      "serviceActionIntentFlag": true,
+      "actualGuiCancellationPassed": true,
+      "officialStartReadyRecorded": false,
+      "fullStopRootAbsentRecorded": false
+    },
+    {
+      "round": "gui02",
+      "originalResult": "failed",
+      "state": "stop_prepared",
+      "revision": 9,
+      "rootObservedAbsent": true,
+      "serviceActionIntentFlag": true,
+      "actualGuiCancellationPassed": true,
+      "officialStartReadyRecorded": true,
+      "fullStopRootAbsentRecorded": false
+    },
+    {
+      "round": "gui03",
+      "originalResult": "failed",
+      "state": null,
+      "revision": null,
+      "rootObservedAbsent": true,
+      "serviceActionIntentFlag": false,
+      "actualGuiCancellationPassed": false,
+      "officialStartReadyRecorded": false,
+      "fullStopRootAbsentRecorded": false
+    },
+    {
+      "round": "gui04",
+      "originalResult": "failed",
+      "state": "capture_reserved",
+      "revision": 2,
+      "rootObservedAbsent": true,
+      "serviceActionIntentFlag": false,
+      "actualGuiCancellationPassed": false,
+      "officialStartReadyRecorded": false,
+      "fullStopRootAbsentRecorded": false
+    }
+  ],
+  "scope": "actual GUI diagnostic rounds, no whole acceptance",
+  "releaseAcceptance": false
+}
