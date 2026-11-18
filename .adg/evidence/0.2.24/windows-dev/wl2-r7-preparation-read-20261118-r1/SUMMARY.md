@@ -1,0 +1,15 @@
+# 原journal准备前缀原生读回与V2映射
+
+代码96396f19b后继完整SHA见status.json，已实际push。输入main88b8fc33d5ec21b54c494cdb529fd68026b3f8b9/docs4a09aa011c18d2880ed63bfb211694d49ed84669，TEAM33/IMP171/r7允许集不变。新fetch因127.0.0.1:3060代理TLS失败，未声称消费未读新版本。此轮独立于待验普通桌面empty端点、当前r2JobUnknown；未改public输入、旧loaded357/普通Profile/官方程序。
+
+原JournalPreparation只读同保留CREATE_NEW句柄：实际empty/half/full manifest-current字节必须原内存expected的准确前缀；实际ID及path对应、原private/所含8/ADS、两次整组file读回、完整directorymembers/SD/pins/nativepeer前后核。原完整record有baseline则必须同原snapshot；原pendingopen未捕获初始安全基线即securityDigest=null，不能拿当前观察代原初值。Source未知/peer-pins聚合coverage仍Pending；不补manifest/current、不init/write/清poison/takecomplete或造Owner/恢复proof，旧Start截止后只读不续mutation。
+
+V2 journal对象由实际manifest/current观察及pending聚合成员组成，固定slot0/1/2，避免文件出现后aggregate ID漂移；DATA只输出hash/字节数/有限stage，无secret原内容或新任意路径。PartialCaptureAnchor保同JournalPreparation后重读原native对象，完整未发布journal为CurrentPublished、原manifestRecord JournalPublished、原manifest/current/pins句柄HandleRetained；原捕获session/host由原槽输入，Source不足始终Pending，无伪造canonical hash。
+
+准备rustfmt多余括号raw1及原source保，未build/native；product01全TauriMSVC raw101/71333ms，E0599因原SnapshotData不可Clone，改借原raw/path/SD，无类型/API放宽、未native。product02全产品库raw0/161281ms：3实际原生测试20场景（10初始化故障点、9native漂移/拒绝含late member/lateSD、1旧Start过期后原halfmanifest只读/无新current）。product03 raw0/157895ms只重测10prefix，新增稳定槽号验证；product08 raw0/158641ms新增实际原CaptureSlot/PartialCaptureAnchor10faultstates全过，原node写/权限/安全断言未减。组件test有显式DATA session/host，非真实产品Owner/官方Source运行许可。
+
+最终去重4测试30场景，重复执行轮次不叠加验收；55实际新root缺席包含执行修订+回归。原journal initializer3过/raw0/1437ms，原v2native3过/94ms，原partialcapture3过/250ms，Send1过/31ms，共10受影响回归。旧partialcapture只有原FixtureDrop，不冒全历史清理。补充collector生成换行SyntaxError raw1保原script/error，修查询表达式后核过，不冒产品或独立安全审计失败。
+
+最终完整产品库TEST EXE SHA256 defec542f74cf2e87dc77ea8fbe5ea0e7fcc0d08e418cf56010a49350b880b03；6最终执行源逐Git行尾归一核，所有阶段source/raw日志保留。schema生成raw归档还原/移出；旧所有失败/拒删root、synthetic27960及旧40588保留，未新增意外native残留，不假称历史全清。旧两目录删除自动审批blocked by policy未绕过或重试。
+
+完整157项状态见status.json。真实普通desktop V2端点结果仍Pending（Public out空、session7Disconnected，原入口不重跑）；完整Source/原对象集合、pre-manifest/partialwork/缺根恢复、真实固定官方Owner整链预算、容量/CAPtrust/普通MSI/最终候选仍未完。r2Job24raw50Unknown不重复PSS/旧cleanup探Status，原21500/75744/原件/work/custody/anchors/协调/旧seq9不动，无新forced/归还批准，旧50580/54692授权不延用。原预算/unknown/普通token/官方2.99和日常配置PATH策略保持，不W2/双SID/发布，目标active。

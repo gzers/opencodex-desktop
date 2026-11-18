@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 36；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 37；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -323,3 +323,10 @@ Mac继续单个真实包的只读状态IPC观察，不复跑供包/取消/启停
 共享main最新0ae095327，实际验证包编译源bec99201e；两者区分不冒最终冻结。Mac真实查询775.519ms/界面2146ms、首次部分取消和官方后继Ready→正常Stop/RootAbsent13已闭合，实际原预算及旧失败保留只归IMP174。436e6dd9a/841291a2a/0ae095327仅定向GUI验证器和激活完成前置，不改Windows独占文件/共享四trait；Windows可增量合入，无需重跑无影响MSI/CLI/scan/旧归档。
 
 Windows继续revision35/r7原单写与普通桌面Pending；本机不等待此依赖，转剩余一般图/中断与NAME外部客户端/最终包回退。首次部分取消完整成功不等Windows产品恢复/整版可发布，也不授权旧现场force；原型文件继续原单写者，不同时改。最终图固定前不W2/双SID，不发布。
+
+
+## revision37 Windows准备前缀读回接续
+
+Windows96396f19b/3294b72b3已接，组件实际范围与157项状态唯一归IMP175；原四trait/CONTRACT_VERSION4/r7排他写集不变。本机未整批merge其生产分支。Windows继续fullSource与原nativeV2各覆盖/原Owner/privateendpoint实际普通桌面工作；不把带null安全baseline的Pending观察升级许可，不补旧Start窗口。
+
+普通桌面入口仍用原四输入/55cd6ef…独立执行，不为本新增source覆盖未验产物；当前r2/40588/synthetic27960及拒删权限边界保持。Mac继续NAME隔离回退与其它本机独立项，不因本批要求重跑无影响GUI/MSI/CLI/scan。最终候选冻结前不W2/双SID、不发布。

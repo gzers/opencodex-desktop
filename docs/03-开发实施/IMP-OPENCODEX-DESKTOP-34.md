@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 174；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 175；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 0ae095327c7a1d911ff106360fa505b6a4854001（非冻结候选）；Windows实现检查点codex/024-windows-native 077cbd56e103b9208450cbc3bc31274217a00656（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 0ae095327c7a1d911ff106360fa505b6a4854001（非冻结候选）；Windows实现检查点codex/024-windows-native 96396f19bb03add0fdd29c56ec20fbeab189e6d3（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1917,3 +1917,14 @@ Windows报告实际MSVC严格DATA8过、invalidargv7项raw2、原5受影响回�
 [清理补证](../../.adg/evidence/0.2.24/mac-first-root-partial-gui-r1/gui05-final-cleanup.json)：两原GUI PID18241/18498和服务18678均原生proc_pidinfo返回ESRCH，准确测试根与十二task-key协调文件/sidecar缺席；已有global L未动。原sealed包/副本字节一致，原gui01~04失败与gui02旧不完整Stop清理不改成通过。新成功单独放gui05，本场景scenarioAccepted=true而releaseAcceptance=false；两组新GUI证据合计约28MB，不保重复app/运行包或真实密钥。原型同步仍属其它对话写集，未越权并发修改。
 
 **后续不重复本场景**。首次部分取消及真实官方后继正常Stop缺口在本源关闭；后继代次Preparing取消、已有plan中断显式恢复、一般客户端图/缺Ready、NAME真实默认客户端加载及最终重启/回退、发行正式入口/密钥/实际候选与Windows完整Owner/nativeV2/普通桌面等独立未完保持。Windows最新接收见revision173，不借本批授权处置原r2/synthetic27960/40588。下一批按未完依赖选单个明确假设，不扩大sweep、不W2/双SID、不发布，目标active。
+
+
+### 2026-11-18 revision175：Windows准备前缀原生读回回交接收
+
+已fetch并净差核对代码96396f19bb03add0fdd29c56ec20fbeab189e6d3、证据3294b72b3138e45a97fbc1d0748864dc42560cb9，最新handoff与原push最终回执已接。新wl2-r7-preparation-read-20261118-r1的79文件/78manifest项/1021339字节逐摘要完整；6最终product08执行源与该Git只行尾归一相等。[接收回执](../../.adg/evidence/0.2.24/windows-preparation-read-receive-r1/result.json)只证明来源/证据一致，不冒本机Windows执行或整批生产集成。
+
+原JournalPreparation只读原CREATE_NEW句柄中的empty/partial/full manifest/current与原expected准确前缀，ID/path/所含8/ADS/members/目录SD/pins/nativepeer前后核，每文件两读及整组复读，漂移拒。缺初始安全baseline保持securityDigest=null，不用当前安全描述符补原证明；Source/聚合coverage未知仍Pending，不写完整记录或清poison、不续旧Start。V2 actual journal固定manifest0/current1/aggregate2，原CaptureSlot/PartialAnchor只有限阶段映射，无从DATA构造Owner/恢复许可。
+
+Windows报告4实际native测试去重30场景：10 initializerfault、9未知/漂移拒绝、1旧Start过期后原半manifest在新只读5秒观察，以及10 actualslot故障阶段映射。后继执行只复核变化项，不叠加轮次算通过；10受影响回归过。原rustfmt/编译/collector准备错误与修后源、全部raw保留，TEST EXE defec542f74cf2e87dc77ea8fbe5ea0e7fcc0d08e418cf56010a49350b880b03；55新成功fixture根缺席，旧partialcapture只FixtureDrop不冒全历史清理。
+
+157项原状态表保持：这只是pre-manifest必要读回，不等fullSource/全部对象/partialwork/缺根恢复。普通桌面V2入口仍Pending，原Public输入55cd6ef…未覆盖；真实普通Profile官方Owner原预算全链/容量/CAPtrust/普通MSI/固定候选未完。当前r2/40588/synthetic27960/旧拒删现场未动，没有新force/归还授权；原四trait/r7允许写集不变，Windows可继续独立推进，不等Mac接口。不W2/双SID、不发布，目标active。
