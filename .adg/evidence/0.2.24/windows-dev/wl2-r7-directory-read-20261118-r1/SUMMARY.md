@@ -1,0 +1,15 @@
+# 原目录准备槽原生读回与稳定V2成员
+
+代码b1ef52972后继完整SHA见status.json，首次push因127.0.0.1:3060代理TLS失败，本地提交/实际测试完成；最终推送事实须读独立后续回执，不能以commit冒remote。输入仍main88b8fc33d/docs4a09aa011、TEAM33/IMP171/r7，开轮及修复中fetch失败，不声称消费未读revision，继续既有Windows独占集，不改共享trait/预算/安装模板。
+
+PrivateDirectoryPreparation提供同原对象的只读借用，暴露原path/parent/terminal/complete/actualTransferred事实；不新开句柄/权限/serde依赖，不clone/移动原件。take_complete实际移出原pin后记录transferred，不改变原创建顺序/验证。WindowsV2 producer从原借用中read：保terminal时才只读query匹配准确路径ID，核原private/directorykind/所含8/ADS、两次完整members/身份/SD、原parent前后，尚未交消费者的目录必须空。没有原terminal时不打开目标、不枚举路径、不将创建成功或失败转Absent/identity；已transferred不收养后续内容。缺初始SD快照始终securityDigestnull，当前SD只observed diagnostic，不造restore许可或假完全保存。
+
+Source/context保固定0..3角色槽/pins16+，custody固定codex0/grok1/directory16+，不compact缺席成员。原grok和directoryprefix ID不因后来codex原pin登记而漂移；v2只hash定位/当前nativeID与空成员DATA、缺SD/Source仍Pending。原host/session来自真实保留anchor输入，测试component不是产品Owner权威。
+
+backend02原独立nativebackend cargo check raw0/751ms，最终native source与其相同。product01完整MSVC库raw101/59954ms新模块漏nativealias E0433，未native；product03 raw101/58659ms Path不定长直接给原Sized摘要函数E0277，未native。仅补明确import与callsite引用，不放宽原API。product08完整Tauri库raw0/154344ms，新5项native测试13夹具全过（test总0.05s，不冒产品预算）：5创建stage失败；无terminal创建路径被移/替换仍不观察接管；完整transfer/已有名/过期读取拒续；5未知及晚member/SD/ADS拒绝；实际stable custody/nativeprefixID检查。两编译原source/raw原样留，无意外native首错。
+
+9受影响原回归全raw0：directory4/31ms、v2native3/94ms、实际journalpartialanchor1含10faultstates/1250ms、Send1/16ms，未重跑其它GUI/CLI/MSI/W2。34实际新fixture根缺席（13新/8原dir/3原v2/10原journal）；旧所有失败/拒删及synthetic27960清理缺口保留、未增失败native残留，不泛称历史全清。schema生成raw归档还原tracked/移出untracked。
+
+最终完整产品库TEST EXE SHA547d50530139edcf728e4a1161847dbc413409c74b358aa60c076787b5b95dfe；6最终执行源逐Git行尾归一核，所有运行source/原退出码与stdout-stderr保。完整163项状态见status.json。真实普通desktopV2结果仍Pending：原Publicout空/marenbensession7Disconnected，原入口和ocxd55cd6ef…未覆盖/未重跑。新读回仍缺初始SD/完整Source/其它partialcapture-work/全部恢复权限，完整v2恢复/缺根、固定官方Owner普通Profile预算整链、容量/CAPtrust/普通MSI/最终候选未完。
+
+r2Job24raw50Unknown只停对应证据，不重复PSS/旧cleanup探Status，原21500/75744/原件/work/custody/协调/seq9及40588不动，无新force/归还批准，旧50580/54692授权不延用。两旧目录删除自动审批blocked by policy拒绝源未绕过或重试。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99与日常配置PATH策略保持，不W2/双SID/发布，目标active。

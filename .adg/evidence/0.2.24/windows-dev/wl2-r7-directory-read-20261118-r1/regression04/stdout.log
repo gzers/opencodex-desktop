@@ -1,0 +1,22 @@
+
+running 4 tests
+test infrastructure::windows_official_runtime024::paths::preparation::tests::wl2_r7_directory_prefix_native_complete_transfers_same_original_handles_without_reopen ... r7-directory-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpCE1sSS
+ok
+test infrastructure::windows_official_runtime024::paths::preparation::tests::wl2_r7_directory_prefix_native_every_failure_keeps_exact_created_prefix_and_refuses_retry ... r7 actual directory stage1: original parent/create fact/native-open prefix retained; incomplete refuses take/retry
+r7-directory-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpWpL6ok
+r7 actual directory stage2: original parent/create fact/native-open prefix retained; incomplete refuses take/retry
+r7-directory-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpWtkGM7
+r7 actual directory stage3: original parent/create fact/native-open prefix retained; incomplete refuses take/retry
+r7-directory-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmphJLoAy
+r7 actual directory stage4: original parent/create fact/native-open prefix retained; incomplete refuses take/retry
+r7-directory-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpHpplPM
+r7 actual directory stage5: original parent/create fact/native-open prefix retained; incomplete refuses take/retry
+r7-directory-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp6mOJp9
+ok
+test infrastructure::windows_official_runtime024::paths::preparation::tests::wl2_r7_directory_prefix_native_expired_and_existing_name_refuse_without_mutation ... r7-directory-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp5x2Abx
+ok
+test infrastructure::windows_official_runtime024::paths::preparation::tests::wl2_r7_directory_prefix_native_unopened_create_never_adopts_replacement_or_proves_identity ... r7-directory-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpdxcH4O
+ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 2265 filtered out; finished in 0.02s
+

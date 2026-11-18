@@ -1,0 +1,27 @@
+{
+  "product01": {
+    "raw": 101,
+    "elapsedMs": 59954,
+    "error": "E0433 new directory_read module missing explicit native alias import at5sites",
+    "fix": "explicit module import only, no native tests executed"
+  },
+  "product03": {
+    "raw": 101,
+    "elapsedMs": 58659,
+    "error": "E0277 passing unsized Path directly to existing Sized projection_digest",
+    "fix": "hash path reference at callsite, no existing signature widening/no native execution"
+  },
+  "backend02": {
+    "raw": 0,
+    "elapsedMs": 751,
+    "sameNativeSourceAsFinal": true
+  },
+  "product08": {
+    "raw": 0,
+    "elapsedMs": 154344,
+    "passed": "5actual native directoryread tests/13fixtures"
+  },
+  "unexpectedNativeError": null,
+  "toolPreparation": "one functions cell had unclosed JS string after patch before tool execution; reissued valid exact cell/no file or native mutation in failedcell",
+  "currentR2Touched": false
+}
