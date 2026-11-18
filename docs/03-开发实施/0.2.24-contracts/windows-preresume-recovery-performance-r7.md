@@ -259,3 +259,11 @@ TEAM54／IMP193 接收 Windows 源码 `18833e7b65c4cb48316f37ee15a3dc584650877e`
 ## 2026-11-18 执行输入：九次完整扫描固定配对
 
 TEAM57／IMP196 接收 `8266cf6a6b67402719c89689984b2154c8cc4599` 的第三处期限接线及 `b0eaf2e54a42cffe5298cad6d5892ba1c2b02379` 的定向证据。固定测试制品 SHA-256 `af9d31a7faaa9f364038fb3c492ba994c7445f7d36e19f7bc04834b109a92221`。真实 Host 验证继续使用此源码、启动器、制品及镜像配对。共享扫描器文件已等字节接入 main `040f411e6d48d97bde6e7b2e6c22860e547b6173`。任何重新构建须记录新配对和摘要。真实桌面暂存目前无 Host 回执。验证假设、九次完整覆盖、原身份及 30／5／10／5 秒不变，确认 raw31 与未 Resume 才接续独立 V2 附件动作。
+
+## 2026-11-18 执行增量：单次真实桌面验证修复配对
+
+TEAM58／IMP197。此前真实首轮在三次入口扫描后以 raw32 拒绝。假设 daae8ffff7f304ec28b9c0214db26691e930a395 的夹具句柄修复可清除该首错，令同一普通桌面原 Owner 在 30 秒内完成三次入口及六次 worker 全量扫描，达到 captured-both-trees-before-first-journal-intent 的 raw31，且 Node 从未 Resume。记录九次全树覆盖、时间区间、同一绝对期限和首错。实际失败按原路径保全。
+
+固定配对 C:/Users/Public/ocx-r7-isolated-owner-nine-r2，测试镜像 SHA-256 ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030，运行时 SHA-256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。按 staging.json、原启动器和原隔离准入确认 SID、会话 7、实际普通令牌、WinSta0/Default、无外层 Job 及独立根。e19642724 的只读核验器作为发送诊断前的回执前置检查。另以系统证据确认 Host 仍是同一 PID/FILETIME，以当前原 Owner 的受控回执确认原工作线程及 claim/N/L/K 仍持有。离线回执不能代替这两项。
+
+前三项齐备后进入 DiagnosticBefore／Explicit／DiagnosticAfter 原 5／10／5 秒窗口。保留恢复准备全量扫描、同线程 V2 Intent/Pending 唯一创建、flush 和逐字节读回；不能证实任一条件则停在对应首错。原权限、持久格式、完整校验及未知拒绝沿用。旧原件恢复 r2 的三件原件、锁和宿主与 nine-r2 分开保护。任何强制清理均不能作为正常 Stop 或 Closed。

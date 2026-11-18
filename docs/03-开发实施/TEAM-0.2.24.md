@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 56；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 58；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -444,3 +444,9 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 共享 main `040f411e6d48d97bde6e7b2e6c22860e547b6173`，Windows `8266cf6a6b67402719c89689984b2154c8cc4599`，证据 `b0eaf2e54a42cffe5298cad6d5892ba1c2b02379`。组件复核归 IMP196，实机条件见 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。Windows 继续独占生命周期与定向夹具写集；扫描器本批已在共享 main，原 trait、格式和预算沿用。
 
 > fetch main／docs/governance-main，按 TEAM57／IMP196／r7 使用 8266cf6a 已固定九扫描配对。重连 marenben 普通桌面后先验证实际 SID、普通令牌、WinSta0/Default、无外层 Job 与独立 I/D/H，再跑 Host。记录同一 30 秒内九次完整扫描、首错、原 Owner、未 Resume、原线程和 claim/N/L/K。证明到达 raw31 且范围仍持有后再执行 5／10／5 秒 V2 定向诊断和精确回读。若超时，回交实际覆盖和首错。保留旧七扫描配对及旧 r2；固定签名候选前保持单 SID，不发布。
+
+## revision58 Windows r7 修复配对的真实桌面验证
+
+共享 main 040f411e6d48d97bde6e7b2e6c22860e547b6173，固定配对源码 daae8ffff7f304ec28b9c0214db26691e930a395，回执核验器 e19642724af81cc40c3dea6dbe4dc7d4caee9d21，最新证据 a223e560670550b43c6bd042833ebc1d4a01fccf。组件接收见 IMP197，Windows 继续独占定向验证写集。本轮保留现有配对，核验器独立使用。
+
+> fetch docs/governance-main，按 TEAM58／IMP197／r7，用 Public 下已固定的 nine-r2 配对，在 marenben 的 session 7 真实普通桌面执行一次 Host。证伪目标是新夹具清除 raw32，在原 30 秒完成九次全量扫描并到达 pre-manifest raw31、Node 未 Resume。用 e19642724 核验原回执，另证同一存活 PID/FILETIME、原 Owner/线程和原 claim/N/L/K 仍持有，再做原 5／10／5 秒观察及同线程 V2 Intent/Pending 刷盘、逐字节读回。首错或未知按原合同拒绝并保留现场。旧原件恢复 r2 与本配对独立保全。回交 Git 证据，暂不做 W2／双 SID。
