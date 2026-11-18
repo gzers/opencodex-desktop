@@ -313,10 +313,18 @@ impl Pin {
 }
 fn list_children<T>(
     path: &Path,
+    end: Option<Instant>,
     details: impl Fn(&fs::DirEntry) -> AppResult<T>,
 ) -> AppResult<Vec<(String, T)>> {
+    check(end)?;
+    let mut children = fs::read_dir(path).map_err(|_| fail())?;
     let mut rows = Vec::new();
-    for item in fs::read_dir(path).map_err(|_| fail())? {
+    loop {
+        check(end)?;
+        let Some(item) = children.next() else {
+            break;
+        };
+        check(end)?;
         if rows.len() >= MAX_ENTRIES {
             return Err(fail());
         }
@@ -328,13 +336,14 @@ fn list_children<T>(
         rows.push((name, details(&item)?));
     }
     rows.sort_by(|a, b| a.0.cmp(&b.0));
+    check(end)?;
     if rows.windows(2).any(|x| x[0].0 == x[1].0) {
         return Err(fail());
     }
     Ok(rows)
 }
-fn opening_hints(path: &Path) -> AppResult<Vec<(String, bool)>> {
-    list_children(path, |item| {
+fn opening_hints(path: &Path, end: Option<Instant>) -> AppResult<Vec<(String, bool)>> {
+    list_children(path, end, |item| {
         Ok(item.file_type().map_err(|_| fail())?.is_dir())
     })
 }
@@ -344,8 +353,8 @@ struct Directory {
     depth: usize,
 }
 impl Directory {
-    fn check_membership(&self) -> AppResult<()> {
-        let current = list_children(&self.pin.path, |_| Ok(()))?;
+    fn check_membership(&self, end: Option<Instant>) -> AppResult<()> {
+        let current = list_children(&self.pin.path, end, |_| Ok(()))?;
         if current
             .iter()
             .map(|(name, ())| name)
@@ -378,7 +387,7 @@ impl Inventory {
         let volume = pin.before.volume;
         let mut out = Self {
             directories: vec![Directory {
-                children: opening_hints(root)?,
+                children: opening_hints(root, end)?,
                 pin,
                 depth: 0,
             }],
@@ -427,7 +436,7 @@ impl Inventory {
                     if manifest || depth >= 64 {
                         return Err(fail());
                     }
-                    let children = opening_hints(&path)?;
+                    let children = opening_hints(&path, end)?;
                     out.rows.insert(relative, Entry::Directory);
                     out.directories.push(Directory {
                         pin,
@@ -456,7 +465,7 @@ impl Inventory {
                 return Err(fail());
             }
             check(end)?;
-            out.directories[cursor].check_membership()?;
+            out.directories[cursor].check_membership(end)?;
             cursor += 1;
         }
         check(end)?;
@@ -575,7 +584,7 @@ impl Inventory {
         }
         for directory in &self.directories {
             directory.pin.check(end)?;
-            directory.check_membership()?;
+            directory.check_membership(end)?;
         }
         check(end)?;
         Ok(rows)
@@ -593,4 +602,42 @@ pub(super) fn inventory_checked(
     #[cfg(test)]
     let _cost = super::cost::span("windows-inventory-total");
     Inventory::collect(root, end, checkpoint)?.finish(end, workers, checkpoint)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::{cell::Cell, time::Duration};
+
+    #[test]
+    fn r7_image_directory_enumeration_aborts_without_returning_partial_membership() {
+        let scene = tempfile::Builder::new()
+            .prefix("ocx024-r7-directory-deadline-")
+            .tempdir()
+            .unwrap();
+        for name in ["one", "two", "three"] {
+            File::create(scene.path().join(name)).unwrap();
+        }
+        let visited = Cell::new(0);
+        let deadline = Instant::now() + Duration::from_secs(1);
+        let result = list_children(scene.path(), Some(deadline), |_| {
+            visited.set(visited.get() + 1);
+            std::thread::sleep(
+                deadline.saturating_duration_since(Instant::now()) + Duration::from_millis(10),
+            );
+            Ok(())
+        });
+        if result.is_ok() || visited.get() != 1 {
+            panic!(
+                "expired enumeration returned {result:?} after {} entries; fixture {}",
+                visited.get(),
+                scene.keep().display()
+            );
+        }
+        assert_eq!(
+            list_children(scene.path(), None, |_| Ok(())).unwrap().len(),
+            3
+        );
+        scene.close().unwrap();
+    }
 }
