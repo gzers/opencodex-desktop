@@ -1,0 +1,109 @@
+{
+  "files": [
+    {
+      "run": "baseline",
+      "bytes": 13182,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs",
+      "sha256": "d8b10359aa9d22c54e9581dd5b6e8e1dbf63752fdc7969e3e686136e4b5e5217"
+    },
+    {
+      "run": "baseline",
+      "bytes": 22131,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "sha256": "833e213362eca3de73ede14034980c64832548fe499c7675bb166a636d7e015f"
+    },
+    {
+      "run": "baseline",
+      "bytes": 8585,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation.rs",
+      "sha256": "027c86e9cae976422ee26a073a72e23c918af20706ba32adab42dc9a58ef60f7"
+    },
+    {
+      "run": "release-native",
+      "sha256": "5cb121386c04c29873dbafd4b6c128489f3ede72ddd0e8299f8d622e545a0232",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segment_tests.rs",
+      "bytes": 12555
+    },
+    {
+      "run": "release-native",
+      "sha256": "0261f64ab6ddb24c90e89abaf41ee74f0ed4ea682d68e271b7c2299bbca98a95",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs",
+      "bytes": 3015
+    },
+    {
+      "run": "release-native",
+      "sha256": "9788243df8b188f8cd76a86d58a33371d70867689edf67edb5ac76e9080fb256",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "bytes": 10565
+    },
+    {
+      "run": "release-native",
+      "sha256": "a86bf032f3afed14674734d2667190d5b621b98aecc38d69b28e6f19f9545282",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs",
+      "bytes": 23373
+    },
+    {
+      "run": "final-release-native",
+      "sha256": "8b4821cc0786d50b691025acf50f35c925de9ee7ef9edbff59ed12b4f7eef6a1",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_release_tests.rs",
+      "bytes": 8721
+    },
+    {
+      "run": "final-release-native",
+      "sha256": "fe1934e433e4b5fe911e4881ddaa49b8f78bd368384437113b42afbdbdbbddd2",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs",
+      "bytes": 2956
+    },
+    {
+      "run": "final-release-native",
+      "sha256": "b6f029e82b4803e2050717cfaea0c2295df1da61612a582327627e03e4a4ca37",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs",
+      "bytes": 17082
+    },
+    {
+      "run": "final-release-native",
+      "sha256": "3ad31c7447678ec6cebfd52931439567f62b972d66cd6cdbe81e7c8439678fde",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "bytes": 10310
+    },
+    {
+      "run": "final-release-native",
+      "sha256": "8fa5e0a66f2ff039b667c2dc13e25451044f4203e45b00ff428d5c5b59a8cb91",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery/final_release.rs",
+      "bytes": 8514
+    },
+    {
+      "run": "final-release-batched-msvc/native",
+      "sha256": "8cce5bd743b2322c1b7c56c0439cfcc63c67004df24107eb16176a91e4bfb592",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_release_tests.rs",
+      "bytes": 8857
+    },
+    {
+      "run": "final-release-batched-msvc/native",
+      "sha256": "fe1934e433e4b5fe911e4881ddaa49b8f78bd368384437113b42afbdbdbbddd2",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs",
+      "bytes": 2956
+    },
+    {
+      "run": "final-release-batched-msvc/native",
+      "sha256": "b6f029e82b4803e2050717cfaea0c2295df1da61612a582327627e03e4a4ca37",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs",
+      "bytes": 17082
+    },
+    {
+      "run": "final-release-batched-msvc/native",
+      "sha256": "3ad31c7447678ec6cebfd52931439567f62b972d66cd6cdbe81e7c8439678fde",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "bytes": 10310
+    },
+    {
+      "run": "final-release-batched-msvc/native",
+      "sha256": "8fa5e0a66f2ff039b667c2dc13e25451044f4203e45b00ff428d5c5b59a8cb91",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery/final_release.rs",
+      "bytes": 8514
+    }
+  ],
+  "method": "SHA-256 against local exact executed snapshots",
+  "committedFix": "737bca2e3cd8899cda0d0d86bf8b5fbb446ebca1",
+  "finalReleaseCommitted": false
+}

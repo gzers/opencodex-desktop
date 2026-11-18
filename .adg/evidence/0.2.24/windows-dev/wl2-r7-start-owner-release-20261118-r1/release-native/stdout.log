@@ -1,0 +1,68 @@
+
+running 7 tests
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_actual_busy_claim_refuses_without_release_retry_or_deadline_reset ... r6-busy-admission before-reacquire remainingMs=8381 codexChildren=Ok([".opencodex-native-main.claim.sqlite", ".opencodex-native-main.owner.sqlite", "config.toml", "empty", "nested"])
+r6-busy-tree-observation root=0 result=Ok(())
+r6-busy-tree-observation root=1 result=Ok(())
+r6-busy-admission after-reacquire remainingMs=8287 kind=Uncategorized raw=Some(33) error=另一个程序已锁定文件的一部分，进程无法访问。 (os error 33) progress=(21, true) state=AcquirePrepared
+r6-segment-real-busy raw=Some(33) foreign claim transaction untouched; native acquire failure leaves canonical pending, no release-retry after foreign unlock, no renewed deadline
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpOlGbEn
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-ea04108d-542c-4bfc-97fe-da9df9898574
+ok
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_drop_without_receipt_partial_tree_and_deadline_extension_refuse ... r6-segment-refusal case=0 (dropNoReceipt/partialTree/extendedDeadline), no successor permit
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpNnuopT
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-8a4bf0c2-943f-4944-a91e-58b069e122b0
+r6-segment-refusal case=1 (dropNoReceipt/partialTree/extendedDeadline), no successor permit
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpuCTTxX
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-c0231257-6d8b-4b4f-aeef-304b7d80b2e2
+r6-segment-refusal case=2 (dropNoReceipt/partialTree/extendedDeadline), no successor permit
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpzHtOEV
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-5396ebc9-dd83-405d-b0d9-4933107cb05e
+ok
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_explicit_release_same_window_reacquire_and_restore ... r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-a24623d1-f483-4df4-81e1-c8c065f8cc73
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpzv81Ae
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_foreign_coordination_bytes_and_foreign_empty_dir_refuse_reacquire ... r6-segment-foreign=0 preserve original custody/foreign object, actual reacquire not admitted, no delete or repair
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpZta2Qy
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-3fdea4ee-f0f4-4491-94b5-3f3e96e6550b
+r6-segment-foreign=1 preserve original custody/foreign object, actual reacquire not admitted, no delete or repair
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmptnvRif
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-14fe1a7e-4422-4a4f-9d33-c57f08fc2ff8
+ok
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_native_release_and_acquire_result_failures_preserve_pending ... r6-segment-fault=7 explicitlyReleased=true pending=ReleasePrepared error=injected after explicit native release, before release-result event
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpGJZ9xL
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-152e5e16-177f-40be-bc41-5c948624c9c0
+r6-segment-fault=8 explicitlyReleased=true pending=ReleasePrepared error=injected after immutable event sync/readback before current CAS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpaADe5e
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-1bc92a08-aee8-47e5-b83c-e43211334691
+r6-segment-fault=9 explicitlyReleased=true pending=ReleasePrepared error=injected real partial current write/sync
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpkgOSaw
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-10d5df55-309d-40a5-ba6b-0571144c5cbe
+r6-segment-fault=10 actualNewLeaseHeld=true pending=AcquirePrepared error=injected after new native lease, before acquire-result event
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpxMq319
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-eef4c4ad-90f3-4c9f-8e34-f17e94c82074
+r6-segment-fault=11 actualNewLeaseHeld=true pending=AcquirePrepared error=injected after immutable event sync/readback before current CAS
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpypD7Dh
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-c0ecb4a0-857c-45c5-adaf-9293993406b1
+r6-segment-fault=12 actualNewLeaseHeld=true pending=AcquirePrepared error=injected real partial current write/sync
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpvIMj1X
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-dce6dceb-31db-43c2-93c1-d5cf3cc45d13
+ok
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_prepared_write_failure_keeps_original_locks ... r6-segment-prepare-fault=1 no native unlock before durable prepared/current; own failure cleanup explicit, not success
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp8x9JzN
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-23503001-1e45-44d9-b944-b92914a980d6
+r6-segment-prepare-fault=2 no native unlock before durable prepared/current; own failure cleanup explicit, not success
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpvj5now
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-68b46b2a-d4c1-41ac-a127-f99f988fa93e
+ok
+test infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r7_lease_segments_release_failure_keeps_unreleased_claim ... r7 raw5 after first explicit file unlock retains original claim, poisons Start lease and preserves ReleasePrepared
+r7-release-fixture-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpAFYcXu
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-a5db9b8a-22aa-4c75-b1e9-6f2acf52c9fa
+ok
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::segments::tests::wl2_r6_lease_segments_explicit_release_same_window_reacquire_and_restore
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 2276 filtered out; finished in 35.38s
+

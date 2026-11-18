@@ -1,0 +1,47 @@
+{
+  "hypothesis": "The batched synthetic restore reaches explicit final unlock in the original 10-second window and injected raw5 leaves the original claim contended.",
+  "observed": "Neither run reached a confirmed explicit unlock. The fault regression saw no raw5. The fixed-Bun positive control reported bounded-original-deadline.",
+  "falsified": true,
+  "deadlineChanged": false,
+  "fixtureReadback": [
+    {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-245b4d45-9301-46d6-aa7b-ac34364f1f7a",
+      "retained": true,
+      "removed": false,
+      "run": "final-release-batched-msvc/native"
+    },
+    {
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpIPGnRU",
+      "retained": true,
+      "removed": false,
+      "run": "final-release-batched-msvc/native"
+    },
+    {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-57fd6c6e-34df-4311-a4e7-986fee9d1565",
+      "retained": true,
+      "removed": false,
+      "run": "final-release-batched-msvc/positive-control"
+    },
+    {
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpGfQMrA",
+      "retained": true,
+      "removed": false,
+      "run": "final-release-batched-msvc/positive-control"
+    },
+    {
+      "path": "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\test\\windows024-native\\target\\r6-driver-12e0edec-0c82-4387-b06c-a5f4c2fe50a4",
+      "retained": true,
+      "removed": false,
+      "run": "final-release-batched-msvc/positive-control-fixed-bun"
+    },
+    {
+      "path": "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpYiBIvD",
+      "retained": true,
+      "removed": false,
+      "run": "final-release-batched-msvc/positive-control-fixed-bun"
+    }
+  ],
+  "baselineArtifactSha256": "013eefa3feb66124201b49108861d8b617d1c242fa15c0b3cf42d5f6d16ee128",
+  "currentR2Touched": false,
+  "productionAccepted": false
+}

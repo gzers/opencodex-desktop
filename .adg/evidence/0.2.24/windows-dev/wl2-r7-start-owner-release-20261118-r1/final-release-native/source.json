@@ -1,0 +1,57 @@
+{
+  "fixture": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r6-source-scan-cost-d57c32d10af74ab888fcde86e6ec97cd\\I\\runtime\\versions\\2.99.0\\dependencies\\bun\\bun.exe",
+  "source": [
+    {
+      "sha256": "8b4821cc0786d50b691025acf50f35c925de9ee7ef9edbff59ed12b4f7eef6a1",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/observation/retirement_release_tests.rs",
+      "bytes": 8721
+    },
+    {
+      "sha256": "fe1934e433e4b5fe911e4881ddaa49b8f78bd368384437113b42afbdbdbbddd2",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored/segments.rs",
+      "bytes": 2956
+    },
+    {
+      "sha256": "b6f029e82b4803e2050717cfaea0c2295df1da61612a582327627e03e4a4ca37",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/tree/anchored_tests.rs",
+      "bytes": 17082
+    },
+    {
+      "sha256": "3ad31c7447678ec6cebfd52931439567f62b972d66cd6cdbe81e7c8439678fde",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/leases.rs",
+      "bytes": 10310
+    },
+    {
+      "sha256": "8fa5e0a66f2ff039b667c2dc13e25451044f4203e45b00ff428d5c5b59a8cb91",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/recovery/final_release.rs",
+      "bytes": 8514
+    }
+  ],
+  "fixtureSha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "final_release_native",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "head": "737bca2e3cd8899cda0d0d86bf8b5fbb446ebca1",
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)"
+}

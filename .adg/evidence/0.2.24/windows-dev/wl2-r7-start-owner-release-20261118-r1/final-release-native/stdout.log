@@ -1,0 +1,37 @@
+
+running 4 tests
+test infrastructure::windows_client_originals024::tree::anchored::observation::retirement::release_tests::wl2_r6_final_release_native_explicit_unlock_and_result_faults_retain_exact_receipt ... r6 recovery native canonical component phase=ready remainingMs=6994
+r6 recovery native canonical component phase=pre-stop remainingMs=5098
+r6 recovery native canonical component phase=stopped remainingMs=3903
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-eb8fb0ff-ac9d-4b42-ad84-ac5baca9a9e7
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmp0KWrBd
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::observation::retirement::release_tests::wl2_r6_final_release_native_full_tree_canonical_receipt_and_released_stable_ranges ... r6 recovery native canonical component phase=ready remainingMs=7093
+r6 recovery native canonical component phase=pre-stop remainingMs=5246
+r6 recovery native canonical component phase=stopped remainingMs=4004
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-807a332d-ec90-4007-aa02-f5ee74e05644
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpRLoJBH
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::observation::retirement::release_tests::wl2_r6_final_release_native_whole_tree_result_faults_keep_lease_and_precise_current ... r6 recovery native canonical component phase=ready remainingMs=6908
+r6 recovery native canonical component phase=pre-stop remainingMs=4995
+r6 recovery native canonical component phase=stopped remainingMs=3787
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-c2566160-2437-49fb-a037-43ea689326eb
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpeq9riX
+FAILED
+test infrastructure::windows_client_originals024::tree::anchored::observation::retirement::release_tests::wl2_r7_final_release_native_partial_unlock_keeps_original_claim_pending ... r6 recovery native canonical component phase=ready remainingMs=7096
+r6 recovery native canonical component phase=pre-stop remainingMs=5168
+r6 recovery native canonical component phase=stopped remainingMs=3948
+r4-retained-synthetic-fixture=D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/test/windows024-native/target\r6-driver-1a8e35d0-181b-46fa-b151-7596482cc450
+r4-retained-synthetic-fixture=C:\Users\15119\AppData\Local\Temp\.tmpx1cMst
+FAILED
+
+failures:
+
+failures:
+    infrastructure::windows_client_originals024::tree::anchored::observation::retirement::release_tests::wl2_r6_final_release_native_explicit_unlock_and_result_faults_retain_exact_receipt
+    infrastructure::windows_client_originals024::tree::anchored::observation::retirement::release_tests::wl2_r6_final_release_native_full_tree_canonical_receipt_and_released_stable_ranges
+    infrastructure::windows_client_originals024::tree::anchored::observation::retirement::release_tests::wl2_r6_final_release_native_whole_tree_result_faults_keep_lease_and_precise_current
+    infrastructure::windows_client_originals024::tree::anchored::observation::retirement::release_tests::wl2_r7_final_release_native_partial_unlock_keeps_original_claim_pending
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 2280 filtered out; finished in 40.07s
+

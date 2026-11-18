@@ -1425,3 +1425,17 @@ Windows 代码 dc3e3248550081c9070d1a56664a76148a01219b 已推送并核对远端
 源码 89e8c64478553c9715eb5babfe00f9eeed14af11。基线在原读取边界之间向合成目录添加命名数据流，读取仍返回 Pending DATA，原生断言 raw101。末尾复查补齐后，原 MSVC 5 项定向测试通过，raw0。反例返回 InvalidData，原文件句柄和 Pending 状态保留，原截止时间沿用。制品 SHA-256 f2c0d1163669854aaecc39b8231a99d3e636bb56cd07f409093e6abf03eebf80。失败现场保留，31 个成功测试根核实缺席，生成 schema 已归档。原始日志、源码摘要、代理回执及 193 项状态在 wl2-r7-journal-final-streams-20261118-r1。
 
 代理 TLS 握手阻断本轮 fetch 及两次代码 push，远端交付以独立回执为准。最后实际消费 TEAM42／IMP181／r7。r2 十份只读导出匹配，原 Job 24 项未知／raw50，计划 executionReady=false。普通桌面私有 V2 尚无输出，初次 Start 原 worker 继续沿已提交接口请求等待主线。公开 Start 保持拒绝。
+
+## 2026-11-18 r7 首启原 claim 与原生释放
+
+首启拿到第一个范围后，第二角色被真实 SQLite 写事务阻挡，返回 raw33。旧入口释放了已取得的原 claim，外部探针成功抢到。MSVC 断言 raw101，原日志和失败根保留。
+
+准备释放修复 737bca2e3cd8899cda0d0d86bf8b5fbb446ebca1 已推送并经远端回读。解锁一组范围后注入 raw5，外部仍拿不到原 claim，journal 保持 ReleasePrepared。首轮套件 6/7，首错是固定 Bun 旧夹具路径缺失（Win32 raw3）。同组使用校验过的原 Bun 路径后 7/7，raw0，SQLite 负控 raw73。
+
+最终恢复释放补丁保留在本地。原四项逐节点恢复先耗尽窗口。批量注入反例进入最终释放后没有取得 raw5。使用同一制品及固定 Bun 的批量正例在最终释放调用内报 bounded-original-deadline。原 10 秒及断言保持，最终释放阶段耗时待定位。
+
+自动审批在执行前拒绝删除两处已成功合成目录，两处均保留。六个新增失败根已核实保留，生成的 Windows schema 已随轮次归档。r2 沿用完整只读归档。Job 24 项未知，raw50，executionReady=false，原现场保持。
+
+已消费 main 9daf5599151b65437f94ab2cadb1988060ee38c3 和治理 d751f9c44dc1168d71821c5b7bbcd381b736e6b7（TEAM45／IMP184）。原持久 worker 和基于原范围的显式恢复待接入。公开 Start 保持拒绝。普通用户 MSI、原包单 SID 生产闭环及候选冻结仍待完成。
+
+原始证据见 wl2-r7-start-owner-release-20261118-r1，累计 202 项状态。上一批 Journal 证据 420d7a948aeea76f198d6ffe8e2ee4a8b05499f0 已核对远端。

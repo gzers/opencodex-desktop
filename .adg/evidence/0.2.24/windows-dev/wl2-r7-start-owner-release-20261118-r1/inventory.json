@@ -1,0 +1,48 @@
+{
+  "hypothesis": "A genuine contention failure after the first native range is acquired loses the original claim because initial capture uses the consuming acquisition path.",
+  "falsifier": "After the second role returns raw33 the original claim still denies an independently opened exclusive range, and its bytes and identity match.",
+  "refs": {
+    "main": "9daf5599151b65437f94ab2cadb1988060ee38c3",
+    "governance": "913953753d10e4c2094a26960c95d48fa181a097",
+    "code": "89e8c64478553c9715eb5babfe00f9eeed14af11",
+    "docs": "420d7a948aeea76f198d6ffe8e2ee4a8b05499f0"
+  },
+  "items": [
+    [
+      "acquisition",
+      "legacy stack path drops earlier ranges on any failure; retained preparation exists for recovery"
+    ],
+    [
+      "capture",
+      "capture_held and capture_existing_with_predecessors explicitly release after failure"
+    ],
+    [
+      "release",
+      "release_trees consumes the lease before fallible unlock/readback; retained release exists"
+    ],
+    [
+      "owner",
+      "registry owns Send Owner, existing recovery worker begins after failure and is one-shot"
+    ],
+    [
+      "status",
+      "existing control projection uses try_lock; Start worker projection outstanding"
+    ],
+    [
+      "recovery",
+      "existing canonical path acquires new lease rather than prove continuous initial ranges"
+    ],
+    [
+      "r2",
+      "ten raw exports match; 24 unknown/raw50, executionReady=false"
+    ],
+    [
+      "private desktop",
+      "session 7 unavailable per last receipt; do not repeat launch"
+    ],
+    [
+      "gate",
+      "public Start refuses; unchanged deadlines, no fixed-package rerun, W2, dual SID or release"
+    ]
+  ]
+}
