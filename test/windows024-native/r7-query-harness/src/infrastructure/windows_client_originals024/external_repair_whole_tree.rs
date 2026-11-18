@@ -25,13 +25,14 @@ pub(crate) struct WholeTree {
     pub(crate) end: Instant,
 }
 
-pub(crate) struct DurableMoves {
+pub(crate) struct DurableMoves<'a> {
+    scene: &'a WholeTree,
     plan: Plan,
     records: Vec<(String, PrivateRecord, Vec<u8>)>,
     full_readback_sha256: String,
 }
 
-impl DurableMoves {
+impl DurableMoves<'_> {
     fn raw(&self) -> impl Iterator<Item = &[u8]> {
         self.records.iter().map(|(_, _, bytes)| bytes.as_slice())
     }
@@ -46,7 +47,12 @@ impl DurableMoves {
     }
 }
 
-pub(crate) struct Node<'a> {
+pub(crate) struct PreparedTree<'a> {
+    scene: &'a WholeTree,
+    nodes: Vec<Node<'a>>,
+}
+
+struct Node<'a> {
     retire: FileStep<'a>,
     restore: FileStep<'a>,
 }
@@ -201,7 +207,7 @@ impl WholeTree {
         require_members(&self.records, records, self.end)
     }
 
-    pub(crate) fn prepare(&self) -> io::Result<Vec<Node<'_>>> {
+    pub(crate) fn prepare(&self) -> io::Result<PreparedTree<'_>> {
         self.verify_anchors()?;
         self.verify_members(&[], &[], 0)?;
         let mut nodes = Vec::with_capacity(LEAVES.len());
@@ -227,15 +233,19 @@ impl WholeTree {
         }
         self.verify_anchors()?;
         self.verify_members(&[], &[], 0)?;
-        Ok(nodes)
+        Ok(PreparedTree { scene: self, nodes })
     }
 
     pub(crate) fn run(
         &self,
-        mut nodes: Vec<Node<'_>>,
+        prepared: PreparedTree<'_>,
         mut checkpoint: impl FnMut() -> io::Result<()>,
         mut after_intent: impl FnMut(usize, &str, &Path) -> io::Result<()>,
-    ) -> io::Result<DurableMoves> {
+    ) -> io::Result<DurableMoves<'_>> {
+        if !std::ptr::eq(self, prepared.scene) {
+            return Err(invalid("prepared nodes belong to another scene"));
+        }
+        let mut nodes = prepared.nodes;
         self.verify_anchors()?;
         self.verify_members(&[], &[], 0)?;
         for node in &mut nodes {
@@ -321,6 +331,7 @@ impl WholeTree {
                 .collect::<Vec<_>>(),
         ))?);
         let mut result = DurableMoves {
+            scene: self,
             plan,
             records,
             full_readback_sha256,
@@ -337,9 +348,12 @@ impl WholeTree {
     #[allow(dead_code)] // Product-linked test supplies the native lease observations.
     pub(crate) fn record_released(
         &self,
-        mut moves: DurableMoves,
+        mut moves: DurableMoves<'_>,
         lease_release_sha256: String,
     ) -> io::Result<()> {
+        if !std::ptr::eq(self, moves.scene) {
+            return Err(invalid("durable move records belong to another scene"));
+        }
         check_time(self.end)?;
         moves.reread()?;
         let names: Vec<_> = moves
@@ -425,6 +439,49 @@ impl Drop for WholeTree {
             }
         }
     }
+}
+
+#[test]
+fn r7_external_steps_whole_tree_rejects_another_scenes_prepared_nodes() {
+    let source = WholeTree::new();
+    let target = WholeTree::new();
+    let error = target
+        .run(
+            source.prepare().unwrap(),
+            || panic!("foreign plan reached the first checkpoint"),
+            |_, _, _| panic!("foreign plan wrote an intent"),
+        )
+        .err()
+        .unwrap();
+    assert_eq!(error.to_string(), "prepared nodes belong to another scene");
+    drop(source.prepare().unwrap());
+    drop(target.prepare().unwrap());
+    println!("foreign move plan refused before the first checkpoint; both trees retain their exact initial state");
+    source.finish();
+    target.finish();
+}
+
+#[test]
+fn r7_external_steps_whole_tree_rejects_another_scenes_move_records() {
+    let source = WholeTree::new();
+    let target = WholeTree::new();
+    let source_moves = source
+        .run(source.prepare().unwrap(), || Ok(()), |_, _, _| Ok(()))
+        .unwrap();
+    let target_moves = target
+        .run(target.prepare().unwrap(), || Ok(()), |_, _, _| Ok(()))
+        .unwrap();
+    let release_digest = sha256_hex(b"synthetic release observation");
+    let error = target
+        .record_released(source_moves, release_digest.clone())
+        .unwrap_err();
+    assert_eq!(error.to_string(), "durable move records belong to another scene");
+    require_absent(&source.records.path().join("completion.json")).unwrap();
+    require_absent(&target.records.path().join("completion.json")).unwrap();
+    target.record_released(target_moves, release_digest).unwrap();
+    println!("foreign completion rejected with both 12-record prefixes intact; the target completed using its own prefix");
+    source.finish();
+    target.finish();
 }
 
 #[test]
