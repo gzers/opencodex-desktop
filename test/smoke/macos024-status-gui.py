@@ -142,7 +142,12 @@ def run(args):
             else:
                 raise RuntimeError('exact GUI registration timeout')
             current = profile / 'Library/Application Support/OpenCodeX Desktop/runtime/current.json'
-            wait('startup-' + str(generation), lambda v: current.is_file() and len(find(v, '刷新状态')) == 1, 180)
+            pending = current.parent / '.selection-pending.json'
+            # current.json is published before activation is fully settled.
+            # Never kill a preparation process in that intermediate state.
+            wait('startup-' + str(generation), lambda v: current.is_file() and not pending.exists()
+                 and len(find(v, '刷新状态')) == 1
+                 and any('运行状态与常用操作' in str(n.get('value', '')) for n in v['nodes']), 180)
 
         launch(1)
         end_gui()
