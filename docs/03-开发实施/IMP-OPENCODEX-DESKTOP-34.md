@@ -2103,3 +2103,12 @@ Windows 代码 `0d0c9d29ccd9075d59f92350c158c256c835924b`，证据 `3155e8fa0b9f
 | 真实普通桌面 | 现有账户方案按[隔离根合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)补验。仍缺原 Owner V2 同线程 10 秒回执、完整原件恢复、普通用户 MSI 和官方单 SID 生命周期。 |
 
 旧 r2 保留原件及锁，24 项 Job 为 Unknown／raw50、command-lineage raw64、executionReady=false。公开 Start 保持拒绝，W2／双 SID 待签名候选冻结。名称验收对象为用户确认的 ChatGPT 内的 Codex，[实际模型选择器合同](0.2.24-contracts/chatgpt-codex-name-validation-r1.md)仍待隔离环境和最终候选证据。
+
+
+## revision194 Windows r7 原宿主扫描门槛复核
+
+Windows 代码 `4fc73cd1c26aa51fa288a3b436d2f0c050d36e1c`，证据 `34e36638acd7e94a0f414c96972eb121522308c1`。净差限测试 PowerShell 启动器。核对 27 件清单载荷的原始 Git 字节、长度、SHA-256 和精确成员。启动器摘要 `ea4559116be9e4f37079e72b6cad81a7fa6982ba1b38e314eaaa287a1cb61cee`，复用 18833e7b 的 MSVC 测试制品。[固定证据](https://github.com/gzers/opencodex-desktop/tree/34e36638acd7e94a0f414c96972eb121522308c1/.adg/evidence/0.2.24/windows-dev/wl2-r7-initial-scan-gate-20261118-r1)
+
+启动器放行后续管理器前校验同一次 Start 的七条已计量完整扫描。初始化 `read_complete` 位于该计量记录之外。DiagnosticAfter 再核原宿主三条准备扫描，绑定失败动作、原镜像摘要与同一 10 秒期限。扫描门槛 15/15，DATA 11/11。保留 PowerShell 5.1 数组层级、继承模块路径及本地化错误文字三类失败。最终断言为原始 Windows 错误码 80。六件失败归档字节和摘要均匹配，原三处失败及两处成功夹具根由 Windows 回执核实缺席。
+
+本次接收启动器组件证据。普通桌面原 Owner V2、整链恢复、普通用户 MSI 与官方单 SID 生命周期仍待。旧 r2 继续隔离，公开 Start 维持拒绝。签名候选冻结后进入 W2／双 SID。

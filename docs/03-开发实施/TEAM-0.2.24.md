@@ -424,3 +424,10 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 共享 main `6bafdd342e69ee83e842f4b35a20bafa1320645a`，Windows `18833e7b65c4cb48316f37ee15a3dc584650877e`，证据 `2a9c671969723fa9afca569b6ba2a163cb01a7e4`。本批独占文件和验证边界见 [r7 隔离根增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)，接收事实归 IMP193。首个可执行回交须包含入口预检和无 Resume 负例，完成后再安排普通桌面。
 
 > fetch docs/governance-main，按 TEAM54／IMP193／r7，从 18833e7b6 接续。先实现并验证仅测试制品可用的隔离引导，绑定 marenben 的真实普通交互身份和全新合成客户端、协调、custody、I/D/H；入场前排除默认根和旧 r2，并证明缺失注入也无法 Resume。预检齐备后仅跑单 SID 原 Owner raw31 及同线程 V2，回交三次完整扫描、30／5／10 秒、失败与清理证据。共享接口依赖或隔离失证先回交。签名候选冻结前保持定向范围。
+
+
+## revision55 Windows r7 扫描门槛接续
+
+共享 main `6bafdd342e69ee83e842f4b35a20bafa1320645a`，Windows `4fc73cd1c26aa51fa288a3b436d2f0c050d36e1c`，证据 `34e36638acd7e94a0f414c96972eb121522308c1`。接收结论归 IMP194。启动器组件可作为后续独立入口的验证依据，实际普通桌面仍按 [r7 隔离根合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 准入。
+
+> fetch 最新 docs/governance-main，按 TEAM55／IMP194／r7 从 4fc73cd1 接续。先完成仅测试制品可用的隔离引导和结构性不可 Resume 负例。准入齐备后，用 marenben 的交互式普通令牌、WinSta0/Default 和无外层 Job，在独立根跑单 SID 原 Owner raw31。回交 Start 计量扫描、恢复准备三次完整扫描、原线程及 V2 Intent/Pending 刷盘精确回读。本轮沿用 30／5／10 秒、四个 trait 与 CONTRACT_VERSION=4，保留旧 r2 现场。固定候选前保持定向范围。
