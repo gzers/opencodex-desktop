@@ -1367,3 +1367,7 @@ status.json157项完整状态。普通desktopV2仍待用户原入口结果，原
 TEST EXE SHA547d50530139edcf728e4a1161847dbc413409c74b358aa60c076787b5b95dfe；6最终执行源逐Git行尾归一核、首两compile/raw源码日志保，无意外nativefailure。34新成功root缺席（13/8/3/10），schema生成raw归档还原/移出，所有旧失败/拒删/synthetic27960和40588缺口保持，未增失败native残留，不冒历史全清。status.json163项完整状态，完整initialSD/Source/partialcapture-work/v2恢复/缺根、普通Profile固定官方Owner原预算整链、容量/CAPtrust/普通MSI/候选仍未完。
 
 普通desktopV2原Publicout仍空/marenbensession7Disconnected，未重跑原入口/未覆盖ocxd55cd6ef…；用户参与只停该验收，其它独立项继续。原r2Job24raw50Unknown不重复PSS/旧cleanup探Status，21500/75744/原件/work/custody/anchors/协调/seq9未动，无newforced/归还批准，旧50580/54692授权不延用。旧两目录删除自动审批blocked by policy原拒绝源未绕过/重删。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99及日常配置PATH策略保持，不W2/双SID/发布，目标active。
+
+### 2026-11-18 目录准备读回最终推送回执
+
+代码b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec及独立证据432afe278均已真实push成功；完整SHA与实际后续成功事实见同级wl2-r7-directory-read-20261118-r1-push-receipt.json。先前status/SUMMARY/本页的seal时pending及TLS失败保原历史，不回写假成功。两工作树当前代码/证据已交远端，普通desktopV2原入口仍Pending，未重跑/未触旧r2及全部旧失败/拒删/synthetic27960；原预算/unknown/普通token/官方与日常策略不变，不W2/双SID/发布，目标active。
