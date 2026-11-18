@@ -1,0 +1,56 @@
+{
+  "firstCompile": {
+    "arguments": [
+      "test",
+      "--locked",
+      "--offline",
+      "--config",
+      "profile.test.package.opencodex-desktop.debug=0",
+      "--config",
+      "profile.test.package.opencodex-desktop.incremental=false",
+      "--config",
+      "profile.test.package.opencodex-desktop.codegen-units=4",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--target",
+      "x86_64-pc-windows-msvc",
+      "--features",
+      "custom-protocol",
+      "--lib",
+      "-j",
+      "1",
+      "--no-run",
+      "--message-format=json"
+    ],
+    "raw": 0,
+    "elapsedMs": 143547
+  },
+  "firstFixture": {
+    "failed": 1,
+    "processRawRecorded": false,
+    "actual": "LostWorkerUnknown",
+    "expected": "FailedRetained",
+    "reason": "empty thread registration production observer classifies as finished",
+    "fix": "register a live owned fixture thread and join it"
+  },
+  "wrappers": [
+    {
+      "firstError": "Python source generation broke newline escapes; SyntaxError, raw1",
+      "evidence": "first-run/first-probe-wrapper.stderr.log"
+    },
+    {
+      "firstError": "First runner count parser failed after native test; raw1, original native output retained",
+      "evidence": "first-run/first-probe-wrapper-corrected.stderr.log"
+    },
+    {
+      "firstError": "First archive wrapper had invalid -cjoin, raw1; no file action began",
+      "evidence": "archive-parser.original.ps1"
+    }
+  ],
+  "currentR2": {
+    "first": "command-lineage raw64",
+    "jobUnknown": 24,
+    "jobRaw": 50,
+    "executionReady": false
+  }
+}

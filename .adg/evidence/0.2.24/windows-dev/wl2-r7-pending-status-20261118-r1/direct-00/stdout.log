@@ -1,0 +1,12 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_same_thread_exact_readback_and_create_only ... r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":null,"attachmentRawError":null,"durable":true,"intentDigest":"df46f12129e52eb3886676993a98c6aeaec0e187b131140afeb89a45730c4a44","pendingDigest":"e7c08400efcda70a6c4fc7ef9a3c8d5d96cc1ff227fd4129745559927992e3ab","startRawError":64}
+r7-pending exact two-record native readback, no second admission
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpYqnTt6
+r7-pending collision raw=Some(183)
+r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":"AlreadyExists","attachmentRawError":183,"durable":false,"intentDigest":"f96be300c96e4789b065d3babac24d0873aad9c91e072a3a65b4f4af6218dd93","pendingDigest":"d12d22a9d4afdb1a837859d36b39df65d803b053c9a0aa95189caebbfc741334","startRawError":64}
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp8BAnuO
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2295 filtered out; finished in 0.05s
+

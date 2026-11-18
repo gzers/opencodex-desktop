@@ -1,0 +1,6 @@
+
+thread 'infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_same_thread_exact_readback_and_create_only' (132144) panicked at src\infrastructure\windows_client_originals024\recovery_worker\tests.rs:162:9:
+assertion `left == right` failed
+  left: String("LostWorkerUnknown")
+ right: "FailedRetained"
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

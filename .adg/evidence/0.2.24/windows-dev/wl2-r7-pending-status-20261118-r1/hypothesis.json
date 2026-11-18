@@ -1,0 +1,27 @@
+{
+  "inputs": {
+    "main": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+    "governance": "6ef21eb5f144905318d94f5080b2acf408e258bf",
+    "windows": "0d0c9d29ccd9075d59f92350c158c256c835924b",
+    "team": 50,
+    "imp": 189,
+    "contract": "r7"
+  },
+  "hypotheses": [
+    {
+      "claim": "The only current Owner qualification that binds the attachment is tied to the old r2 scene and requires the original baseline identities and bytes.",
+      "falsifier": "A separate authorized Owner admission with its own D pin and ordinary token exists and does not require the r2 source, profile roots or coordination objects.",
+      "method": "Read the exact caller, parent pin and baseline gates. Reuse the current r2 read-only receipt and R0 plan."
+    },
+    {
+      "claim": "The production Status serializer projects the actual two-record attachment result with distinct Start and attachment errors and no recovery authority.",
+      "falsifier": "A native collision or injected write failure is durable, the Start error is overwritten, or the projection is visible in Running or LostWorkerUnknown.",
+      "method": "Feed actual storage results into controller-owned synthetic WorkerControl state, then call the unchanged observe implementation."
+    },
+    {
+      "claim": "The retained Source, when present, requires three full scans around the two preparation-reference reads, within one original recovery deadline.",
+      "falsifier": "An extra complete scan is reached from this path or the action resets its absolute deadline between boundaries.",
+      "method": "Trace the exact conditional call sequence and compare with the existing fixed-copy and Journal measurements."
+    }
+  ]
+}

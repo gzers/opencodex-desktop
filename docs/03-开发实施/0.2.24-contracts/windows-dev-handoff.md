@@ -1537,3 +1537,11 @@ r2 沿用既有全归档与 10 份只读回执。原 Job 24 项未知／raw50，
 最终 MSVC 测试及三个开发制品编译均 raw0。七组定向 28/28；原生同名冲突 raw183，短写、flush 和回读注入保全准确前缀，flush 原测试码 raw1117。首轮 Cargo raw0，包装器因把生成 schema 纳入源码断言而 raw1，原编译日志保留。51 个报告夹具根核实缺席，生成 schema 核摘要归档后清理。证据 `wl2-r7-pending-durable-20261118-r1` 含四份制品 SHA-256、源码绑定、原日志和累计 263 项状态。真实普通桌面私有 V2、实际原 Owner 回执及恢复原预算仍待验。
 
 用户已运行的 r2 入口产出十份回执，重新核对大小和摘要均与已提交原件一致。沿用完整归档及精确计划；首错 command-lineage raw64，原 Job 24 项 unknown/raw50，`executionReady=false`。原进程、三原件、锁和 seq9 保留。本轮未执行现场修复、重跑原包、W2、双 SID 或发布。
+
+## 2026-11-18 r7 V2 保全附件 Status 投影与真实入场约束
+
+代码 96fb7829430f4c3fca0caeef384bd1a3e0bc14a6，输入 main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 6ef21eb5f144905318d94f5080b2acf408e258bf、TEAM50／IMP189／r7。仅测试改动。最终 MSVC 测试编译 raw0，受影响定向 2/2。实际附件成功 durable=true；原生同名冲突 raw183，短写、flush raw1117、回读注入均 durable=false。运行中和原线程失联不投影附件，过时 Status 拒绝。使用真实存活的自有夹具线程和合成 worker 状态，仍缺实际 Owner 回执。首轮测试缺少存活线程登记，源码观察正确返回 LostWorkerUnknown。原日志和两份失败夹具记录保全，六个本轮夹具根及生成 schema 已核实清理。
+
+同一原恢复截止内，Source 存在且各检查通过时，两次原 V2 引用实际读取前中后三次调用完整包验证，source-call-chain.md 列调用与覆盖。上一固定副本单扫 2634.174 ms、仿真整链／部分解锁 raw101 沿用。没有跨两次引用读取锁住同一整包对象及字节的等价证据，现有三次完整扫描保持。下一次真实普通桌面应记录每次完整扫描进入、退出、失败阶段及余量，沿现有 r7 接收规则复核。
+
+目前私有 D pin 唯一入场绑定旧 ExistingQualification 的固定 r2 I/D/H、原 SID/session、原 Profile 客户端和原协调对象。原 Job 24 项未知 raw50，executionReady=false，三个原件仍保管。真实实际 Owner V2 回执和恢复预算依赖新的合同合规普通桌面入场与实际同线程保全前缀；请在后续 handoff 接收时保留为待验。当前 R1 的 Job 覆盖和单独授权仍是独立依赖。既有普通 MSI、CAP、原缺席退根和固定原包单 SID 生产闭环继续待验。公开 Start 保持拒绝。证据 wl2-r7-pending-status-20261118-r1，累计 267 项。

@@ -1,0 +1,15 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_short_write_flush_and_readback_keep_diagnostic_prefix ... r7-pending injected short-write, retained bytes=743 raw=None
+r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":"Other","attachmentRawError":null,"durable":false,"intentDigest":"872beaf06ebb1c773f6be9de73137f8748f7c257a4501444e5558a6b8b27110d","pendingDigest":"c19409e6206b0d39c08d2435888e7d71e59ce79135c8f90c48cbebabd2adcd20","startRawError":64}
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpLKej3a
+r7-pending injected flush, retained bytes=1486 raw=Some(1117)
+r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":"InputOutputError","attachmentRawError":1117,"durable":false,"intentDigest":"1dd35d429bfb2f0cc8d57ed14976152d94efc249260121f0252f86d7385530b8","pendingDigest":"eacab1bd96f0316d4914bee6b50fd8fb46823f935abace448aca6c35312b7b2a","startRawError":64}
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpQRtCXD
+r7-pending injected readback, retained bytes=1486 raw=None
+r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":"Other","attachmentRawError":null,"durable":false,"intentDigest":"bfebe8e5243acb2cd250077de3b1c3361b1929715d90b014326da38d39bb277e","pendingDigest":"0d9f472dff673783f3ad796f2e40102475d79365d339c52b6f7418baf41b00eb","startRawError":64}
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpYwViTE
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2295 filtered out; finished in 0.04s
+
