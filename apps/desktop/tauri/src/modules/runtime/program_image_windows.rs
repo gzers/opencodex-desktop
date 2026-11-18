@@ -492,6 +492,11 @@ impl Inventory {
             let mut handles = Vec::new();
             let mut failure = None;
             for _ in 0..workers {
+                if let Err(e) = check(end) {
+                    cancelled.store(true, Ordering::Release);
+                    failure = Some(e);
+                    break;
+                }
                 let next = &next;
                 let cancelled = &cancelled;
                 let files = &self.files;
@@ -521,7 +526,8 @@ impl Inventory {
                             if job.excluded_manifest {
                                 continue;
                             }
-                            let result = checkpoint("before-file-read")
+                            let result = check(end)
+                                .and_then(|()| checkpoint("before-file-read"))
                                 .and_then(|()| job.pin.hash(end, cancelled, &mut buffer));
                             match result {
                                 Ok(entry) => rows.push((job.name.clone(), entry)),
@@ -610,6 +616,38 @@ pub(super) fn inventory_checked(
 mod tests {
     use super::*;
     use std::{cell::Cell, time::Duration};
+
+    #[test]
+    fn r7_image_expiry_after_pinning_prevents_file_dispatch() {
+        let scene = tempfile::Builder::new()
+            .prefix("ocx024-r7-dispatch-deadline-")
+            .tempdir()
+            .unwrap();
+        fs::write(scene.path().join("source"), b"pinned bytes").unwrap();
+        let inventory = Inventory::collect(scene.path(), None, &|_| Ok(())).unwrap();
+        let deadline = Instant::now() + Duration::from_secs(1);
+        let pinned = AtomicBool::new(false);
+        let dispatches = AtomicUsize::new(0);
+        let result = inventory.finish(Some(deadline), 1, &|stage| {
+            if stage == "all-objects-pinned" {
+                pinned.store(true, Ordering::Release);
+                std::thread::sleep(
+                    deadline.saturating_duration_since(Instant::now()) + Duration::from_millis(10),
+                );
+            } else if stage == "before-file-read" {
+                dispatches.fetch_add(1, Ordering::Relaxed);
+            }
+            Ok(())
+        });
+        let dispatches = dispatches.load(Ordering::Relaxed);
+        if !pinned.load(Ordering::Acquire) || result.is_ok() || dispatches != 0 {
+            panic!(
+                "expired inventory returned {result:?} with {dispatches} file dispatches; fixture {}",
+                scene.keep().display()
+            );
+        }
+        scene.close().unwrap();
+    }
 
     #[test]
     fn r7_image_expired_reader_stops_before_seeking_pinned_file() {
