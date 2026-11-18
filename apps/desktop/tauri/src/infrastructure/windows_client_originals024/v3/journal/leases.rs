@@ -175,26 +175,34 @@ impl Journal {
     pub(in crate::infrastructure::windows_client_originals024) fn acquire_prepared_lease(
         &mut self,
         owner: Option<&mut crate::infrastructure::windows_official_lifecycle024::Owner>,
+        lease: &mut Option<NativeLease>,
+        preparation: Option<
+            &mut crate::infrastructure::windows_client_originals024::coordination::LeasePreparation,
+        >,
         end: Instant,
-    ) -> io::Result<NativeLease> {
+    ) -> io::Result<()> {
         let result = (|| {
             self.check(end)?;
-            if self.progress.lease_state != LeaseState::AcquirePrepared {
+            if self.progress.lease_state != LeaseState::AcquirePrepared || lease.is_some() {
                 return Err(invalid());
             }
+            let receipt = self.released_lease.as_mut().ok_or_else(invalid)?;
             if self.progress.action_kind == super::super::actions::ActionKind::Start {
-                self.released_lease
-                    .as_mut()
-                    .ok_or_else(invalid)?
-                    .reacquire(owner, end)
+                if preparation.is_some() {
+                    receipt.reacquire_into(owner, lease, preparation, end)
+                } else {
+                    *lease = Some(receipt.reacquire(owner, end)?);
+                    Ok(())
+                }
             } else {
+                if preparation.is_some() {
+                    return Err(invalid());
+                }
                 let actual = owner.ok_or_else(invalid)?;
                 let action = self.source_action.as_ref().ok_or_else(invalid)?;
                 action.check(actual, end).map_err(io_error)?;
-                self.released_lease
-                    .as_mut()
-                    .ok_or_else(invalid)?
-                    .reacquire_for_action(action, actual, end)
+                *lease = Some(receipt.reacquire_for_action(action, actual, end)?);
+                Ok(())
             }
         })();
         if result.is_err() {

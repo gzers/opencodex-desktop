@@ -1,7 +1,7 @@
 //! New existing-root v3 capture store. Old pending namespaces are not adopted,
 //! converted, scanned as Closed or overwritten. Public Start gate stays closed.
 use super::super::{
-    coordination::NativeLease,
+    coordination::{LeasePreparation, NativeLease},
     source::Source,
     tree::{AnchoredTree, CapturedTrees},
     v2::routes::RoutePin,
@@ -40,6 +40,63 @@ pub(in crate::infrastructure::windows_client_originals024) struct CaptureSlot {
     retained: Option<CaptureStore>,
     partial: Option<PartialCaptureAnchor>,
     failed: bool,
+}
+/// Lives with the worker outside the fallible Start call. Legacy v2 callers
+/// use the scoped variant solely to preserve their existing test path.
+#[derive(Default)]
+pub(crate) struct StartRanges {
+    preparation: Option<LeasePreparation>,
+    lease: Option<NativeLease>,
+    raw: Option<i32>,
+}
+impl StartRanges {
+    pub(crate) fn retained() -> Self {
+        Self {
+            preparation: Some(LeasePreparation::default()),
+            ..Self::default()
+        }
+    }
+    fn next_preparation(&mut self) -> io::Result<Option<&mut LeasePreparation>> {
+        if self.lease.is_some() {
+            return Err(invalid());
+        }
+        if let Some(previous) = &mut self.preparation {
+            if !previous.empty_after_transfer() {
+                return Err(invalid());
+            }
+            *previous = LeasePreparation::default();
+        }
+        Ok(self.preparation.as_mut())
+    }
+    pub(crate) fn empty(&self) -> bool {
+        self.lease.is_none()
+            && self
+                .preparation
+                .as_ref()
+                .is_some_and(LeasePreparation::empty_after_transfer)
+    }
+    pub(crate) fn revoke(&mut self) {
+        if let Some(preparation) = &mut self.preparation {
+            preparation.revoke_retained();
+        }
+        if let Some(lease) = &mut self.lease {
+            lease.revoke_retained();
+        }
+    }
+    pub(crate) fn raw_error(&self) -> Option<i32> {
+        self.raw
+    }
+    fn refuse_io(&mut self, error: io::Error) -> AppError {
+        self.raw = error.raw_os_error();
+        refused(error)
+    }
+    fn retain_or_release_legacy(&mut self, end: Instant) {
+        if self.preparation.is_none() {
+            if let Some(held) = self.lease.take() {
+                let _ = held.release(end);
+            }
+        }
+    }
 }
 fn refused(error: impl std::fmt::Display) -> AppError {
     AppError::RuntimeManaged {
@@ -81,7 +138,8 @@ impl CaptureStore {
         window: &ActionWindow,
         predecessors: &NativePredecessors,
         anchor: &mut PartialCaptureAnchor,
-    ) -> AppResult<(Self, NativeLease)> {
+        ranges: &mut StartRanges,
+    ) -> AppResult<Self> {
         window.remaining()?;
         let end = window.deadline();
         if anchor.owner_scope != owner.scope()? || anchor.source.is_some() {
@@ -123,10 +181,24 @@ impl CaptureStore {
                 end,
             )
             .map_err(refused)?;
-        let mut lease = NativeLease::acquire_existing(owner, end).map_err(refused)?;
+        let acquired = (|| {
+            let lease = if let Some(preparation) = ranges.next_preparation()? {
+                preparation.prepare_start(owner, end)?;
+                preparation.take_complete()?
+            } else {
+                NativeLease::acquire_existing(owner, end)?
+            };
+            ranges.lease = Some(lease);
+            Ok::<_, io::Error>(())
+        })();
+        acquired.map_err(|error| ranges.refuse_io(error))?;
         let created = (|| -> io::Result<()> {
             let root = anchor.pins[1].path().join(".codex");
-            let mut claim = lease.anchored_claim(&root, end)?;
+            let mut claim = ranges
+                .lease
+                .as_mut()
+                .ok_or_else(invalid)?
+                .anchored_claim(&root, end)?;
             let reservation = uuid::Uuid::new_v4();
             for (i, name) in ["codex", "grok"].into_iter().enumerate() {
                 let path = anchor.pins[1]
@@ -188,11 +260,10 @@ impl CaptureStore {
             Ok(())
         })();
         match created {
-            Ok(()) => Ok((anchor.into_store().map_err(refused)?, lease)),
+            Ok(()) => anchor.into_store().map_err(refused),
             Err(error) => {
-                let _ = lease.release(end);
                 anchor.failed = true;
-                Err(refused(error))
+                Err(ranges.refuse_io(error))
             }
         }
     }
@@ -936,7 +1007,14 @@ impl CaptureSlot {
         owner: &mut Owner,
         end: Instant,
     ) -> AppResult<()> {
-        let mut lease = None;
+        self.before_resume_existing_retained(owner, &mut StartRanges::default(), end)
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn before_resume_existing_retained(
+        &mut self,
+        owner: &mut Owner,
+        ranges: &mut StartRanges,
+        end: Instant,
+    ) -> AppResult<()> {
         let result = (|| {
             if self.failed {
                 return Err(refused("原v3 slot已poison"));
@@ -951,19 +1029,24 @@ impl CaptureSlot {
             store.failed = true;
             store.check_source(owner, end)?;
             owner.originals_require_unresumed(end)?;
+            ranges.next_preparation().map_err(refused)?;
             store
                 .core
-                .verify_original_pre_resume(&mut store.source, owner, &mut lease, end)
-                .map_err(refused)?;
+                .verify_original_pre_resume(
+                    &mut store.source,
+                    owner,
+                    &mut ranges.lease,
+                    ranges.preparation.as_mut(),
+                    end,
+                )
+                .map_err(|error| ranges.refuse_io(error))?;
             owner.originals_require_unresumed(end)?;
             store.check_source(owner, end)?;
             store.failed = false;
             Ok(())
         })();
         if result.is_err() {
-            if let Some(held) = lease.take() {
-                let _ = held.release(end);
-            }
+            ranges.retain_or_release_legacy(end);
             self.failed = true;
             if let Some(store) = &mut self.retained {
                 store.failed = true;
@@ -978,7 +1061,15 @@ impl CaptureSlot {
         ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
         end: Instant,
     ) -> AppResult<()> {
-        let mut lease = None;
+        self.record_ready_existing_retained(owner, ready, &mut StartRanges::default(), end)
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn record_ready_existing_retained(
+        &mut self,
+        owner: &mut Owner,
+        ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
+        ranges: &mut StartRanges,
+        end: Instant,
+    ) -> AppResult<()> {
         let result = (|| {
             if self.failed {
                 return Err(refused("原v3 slot已poison"));
@@ -993,10 +1084,18 @@ impl CaptureSlot {
             store.failed = true;
             store.check_source(owner, end)?;
             owner.originals_check_ready(ready, end)?;
+            ranges.next_preparation().map_err(refused)?;
             store
                 .core
-                .record_original_ready(&mut store.source, owner, ready, &mut lease, end)
-                .map_err(refused)?;
+                .record_original_ready(
+                    &mut store.source,
+                    owner,
+                    ready,
+                    &mut ranges.lease,
+                    ranges.preparation.as_mut(),
+                    end,
+                )
+                .map_err(|error| ranges.refuse_io(error))?;
             store.check_source(owner, end)?;
             owner.originals_check_ready(ready, end)?;
             store.ready = Some((ready.pid(), ready.port(), ready.record_sha256().into()));
@@ -1004,9 +1103,7 @@ impl CaptureSlot {
             Ok(())
         })();
         if result.is_err() {
-            if let Some(held) = lease.take() {
-                let _ = held.release(end);
-            }
+            ranges.retain_or_release_legacy(end);
             self.failed = true;
             if let Some(store) = &mut self.retained {
                 store.failed = true;
@@ -1026,7 +1123,13 @@ impl CaptureSlot {
         window: &ActionWindow,
     ) -> AppResult<()> {
         let empty = NativePredecessors::empty(window);
-        self.capture_existing_with_predecessors(owner, window, &empty, uuid::Uuid::new_v4())
+        self.capture_existing_with_predecessors(
+            owner,
+            window,
+            &empty,
+            uuid::Uuid::new_v4(),
+            &mut StartRanges::default(),
+        )
     }
     pub(in crate::infrastructure::windows_client_originals024) fn capture_existing_with_predecessors(
         &mut self,
@@ -1034,6 +1137,7 @@ impl CaptureSlot {
         window: &ActionWindow,
         predecessors: &NativePredecessors,
         session_id: uuid::Uuid,
+        ranges: &mut StartRanges,
     ) -> AppResult<()> {
         let result = (|| {
             if self.failed || self.retained.is_some() || self.partial.is_some() {
@@ -1047,17 +1151,17 @@ impl CaptureSlot {
                 session_id,
                 owner.original_host_instance(),
             ));
-            let (store, lease) = CaptureStore::capture_held(
+            let store = CaptureStore::capture_held(
                 owner,
                 window,
                 predecessors,
                 self.partial.as_mut().unwrap(),
+                ranges,
             )?;
             // Store is reachable through the ORIGINAL adapter before the first
-            // journaled client move. Active lease stays on this stack only.
+            // journaled client move; the active lease remains with the worker.
             self.retained = Some(store);
             self.partial.take();
-            let mut lease = Some(lease);
             let end = window.deadline();
             let work = (|| {
                 let store = self
@@ -1069,36 +1173,38 @@ impl CaptureSlot {
                 store
                     .core
                     .prepare_working_batched(
-                        lease.as_mut().ok_or_else(|| refused("原lease缺席"))?,
+                        ranges
+                            .lease
+                            .as_mut()
+                            .ok_or_else(|| refused("原lease缺席"))?,
                         end,
                     )
-                    .map_err(refused)?;
+                    .map_err(|error| ranges.refuse_io(error))?;
                 store
                     .core
                     .open_prepared_working(
-                        lease.as_mut().ok_or_else(|| refused("原lease缺席"))?,
+                        ranges
+                            .lease
+                            .as_mut()
+                            .ok_or_else(|| refused("原lease缺席"))?,
                         end,
                     )
-                    .map_err(refused)?;
+                    .map_err(|error| ranges.refuse_io(error))?;
                 owner.originals_require_unresumed(end)?;
                 store.check_source(owner, end)?;
                 store
                     .core
-                    .release_prepared(&mut lease, end)
-                    .map_err(refused)?;
+                    .release_prepared(&mut ranges.lease, end)
+                    .map_err(|error| ranges.refuse_io(error))?;
                 owner.originals_require_unresumed(end)?;
                 store.check_source(owner, end)?;
                 store.failed = false;
                 Ok(())
             })();
-            if work.is_err() {
-                if let Some(held) = lease.take() {
-                    let _ = held.release(end);
-                }
-            }
             work
         })();
         if result.is_err() {
+            ranges.retain_or_release_legacy(window.deadline());
             self.failed = true;
             if let Some(store) = &mut self.retained {
                 store.failed = true;

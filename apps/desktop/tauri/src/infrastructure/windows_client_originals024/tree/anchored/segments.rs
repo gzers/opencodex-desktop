@@ -41,11 +41,22 @@ pub(super) fn release_trees(
     }
     result
 }
+#[cfg(test)]
 pub(super) fn reacquire_trees(
     trees: &mut [AnchoredTree; 2],
     journal: &mut Journal,
     lease: &mut Option<NativeLease>,
     owner: Option<&mut crate::infrastructure::windows_official_lifecycle024::Owner>,
+    end: Instant,
+) -> io::Result<()> {
+    reacquire_trees_retained(trees, journal, lease, owner, None, end)
+}
+pub(super) fn reacquire_trees_retained(
+    trees: &mut [AnchoredTree; 2],
+    journal: &mut Journal,
+    lease: &mut Option<NativeLease>,
+    owner: Option<&mut crate::infrastructure::windows_official_lifecycle024::Owner>,
+    preparation: Option<&mut super::super::super::coordination::LeasePreparation>,
     end: Instant,
 ) -> io::Result<()> {
     let result = (|| {
@@ -59,7 +70,7 @@ pub(super) fn reacquire_trees(
         journal.prepare_lease_acquire(&plans, end)?;
         // Install before fallible whole-tree readback/result publication so a
         // failed new segment retains its actual native held ranges for cleanup.
-        *lease = Some(journal.acquire_prepared_lease(owner, end)?);
+        journal.acquire_prepared_lease(owner, lease, preparation, end)?;
         let root = trees[0].parent.path().join(".codex");
         let mut claim = lease
             .as_mut()

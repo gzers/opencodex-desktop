@@ -555,6 +555,16 @@ pub(super) fn reacquire_for_observation(
     owner: Option<&mut crate::infrastructure::windows_official_lifecycle024::Owner>,
     end: Instant,
 ) -> io::Result<()> {
+    reacquire_for_observation_retained(trees, journal, lease, owner, None, end)
+}
+pub(super) fn reacquire_for_observation_retained(
+    trees: &mut [AnchoredTree; 2],
+    journal: &mut super::super::super::v3::Journal,
+    lease: &mut Option<super::super::super::coordination::NativeLease>,
+    owner: Option<&mut crate::infrastructure::windows_official_lifecycle024::Owner>,
+    preparation: Option<&mut super::super::super::coordination::LeasePreparation>,
+    end: Instant,
+) -> io::Result<()> {
     let result = (|| {
         if lease.is_some() || trees.iter().any(|t| t.work_mode != WorkMode::Open) {
             return Err(invalid());
@@ -564,7 +574,7 @@ pub(super) fn reacquire_for_observation(
         }
         let plans = trees.each_ref().map(|t| t.plan());
         journal.prepare_lease_acquire(&plans, end)?;
-        *lease = Some(journal.acquire_prepared_lease(owner, end)?);
+        journal.acquire_prepared_lease(owner, lease, preparation, end)?;
         let root = trees[0].parent.path().join(".codex");
         let mut claim = lease
             .as_mut()

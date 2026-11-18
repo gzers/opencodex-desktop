@@ -24,6 +24,7 @@ mod capture;
 mod closed;
 pub(super) use capture::CaptureSlot;
 pub(super) use capture::NativePredecessors;
+pub(crate) use capture::StartRanges;
 pub(super) mod batches;
 mod handle_rows;
 mod handles;

@@ -338,3 +338,5 @@ mod tests {
         // repeated without a new environment; only new pure classification is tested.
     }
 }
+
+pub(crate) use v3::StartRanges;

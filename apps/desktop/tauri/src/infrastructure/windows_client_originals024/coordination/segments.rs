@@ -497,7 +497,18 @@ impl ReleasedLease {
         owner: Option<&mut Owner>,
         end: Instant,
     ) -> io::Result<NativeLease> {
-        let result = self.reacquire_inner(owner, end);
+        let mut lease = None;
+        self.reacquire_into(owner, &mut lease, None, end)?;
+        lease.ok_or_else(refused)
+    }
+    pub(in super::super) fn reacquire_into(
+        &mut self,
+        owner: Option<&mut Owner>,
+        lease: &mut Option<NativeLease>,
+        preparation: Option<&mut super::LeasePreparation>,
+        end: Instant,
+    ) -> io::Result<()> {
+        let result = self.reacquire_inner(owner, lease, preparation, end);
         if result.is_err() {
             self.poisoned = true;
         }
@@ -506,10 +517,12 @@ impl ReleasedLease {
     fn reacquire_inner(
         &mut self,
         mut owner: Option<&mut Owner>,
+        lease: &mut Option<NativeLease>,
+        preparation: Option<&mut super::LeasePreparation>,
         end: Instant,
-    ) -> io::Result<NativeLease> {
+    ) -> io::Result<()> {
         self.check(end)?;
-        if self.reacquired {
+        if self.reacquired || lease.is_some() {
             return Err(refused());
         }
         if let Some(bound) = &self.original.bound {
@@ -532,11 +545,16 @@ impl ReleasedLease {
             .collect::<Vec<_>>()
             .try_into()
             .map_err(|_| refused())?;
-        let mut new = if let Some(actual) = owner {
-            NativeLease::acquire_existing(actual, end)?
-        } else {
-            NativeLease::acquire_paths(&paths, end)?
-        };
+        *lease = Some(match (owner, preparation) {
+            (Some(actual), Some(preparation)) => {
+                preparation.prepare_start(actual, end)?;
+                preparation.take_complete()?
+            }
+            (Some(actual), None) => NativeLease::acquire_existing(actual, end)?,
+            (None, None) => NativeLease::acquire_paths(&paths, end)?,
+            (None, Some(_)) => return Err(refused()),
+        });
+        let new = lease.as_mut().ok_or_else(refused)?;
         new.check(end)?;
         let facts = new.facts_inner()?;
         if facts.epoch == self.facts.epoch
@@ -547,7 +565,7 @@ impl ReleasedLease {
         }
         self.check(end)?;
         self.reacquired = true;
-        Ok(new)
+        Ok(())
     }
 }
 #[cfg(test)]

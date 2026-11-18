@@ -197,6 +197,42 @@ impl LeasePreparation {
             lease.active = false;
         }
     }
+    pub(in crate::infrastructure::windows_client_originals024) fn prepare_start(
+        &mut self,
+        owner: &mut Owner,
+        end: Instant,
+    ) -> io::Result<()> {
+        use crate::infrastructure::windows_official_lifecycle024::OriginalActionKind;
+
+        if self.attempted {
+            return Err(refused());
+        }
+        let context = (|| {
+            let action = owner
+                .original_action(OriginalActionKind::Start, end)
+                .map_err(io_error)?;
+            let (paths, bound) = existing_context(owner, end)?;
+            Ok::<_, io::Error>((action, paths, bound))
+        })();
+        let (action, paths, bound) = match context {
+            Ok(context) => context,
+            Err(error) => {
+                self.attempted = true;
+                self.poison();
+                return Err(error);
+            }
+        };
+        self.acquire(&paths, Some(bound), end)?;
+        let result = (|| {
+            self.lease.as_mut().unwrap().check_owner(owner, end)?;
+            action.check(owner, end).map_err(io_error)?;
+            before(end)
+        })();
+        if result.is_err() {
+            self.poison();
+        }
+        result
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn prepare_existing(
         &mut self,
         owner: &mut Owner,

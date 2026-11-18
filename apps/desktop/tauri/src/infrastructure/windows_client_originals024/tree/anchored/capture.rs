@@ -508,6 +508,9 @@ impl CapturedTrees {
         source: &mut crate::infrastructure::windows_client_originals024::source::Source,
         owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
         lease: &mut Option<NativeLease>,
+        preparation: Option<
+            &mut crate::infrastructure::windows_client_originals024::coordination::LeasePreparation,
+        >,
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
@@ -520,7 +523,14 @@ impl CapturedTrees {
                 .map_err(io::Error::other)?;
             source.check(owner, end).map_err(io::Error::other)?;
             self.journal.check_source_owner(owner, end)?;
-            super::segments::reacquire_trees(trees, &mut self.journal, lease, Some(owner), end)?;
+            super::segments::reacquire_trees_retained(
+                trees,
+                &mut self.journal,
+                lease,
+                Some(owner),
+                preparation,
+                end,
+            )?;
             self.check_working(lease.as_mut().ok_or_else(invalid)?, end)?;
             owner
                 .originals_require_unresumed(end)
@@ -543,6 +553,9 @@ impl CapturedTrees {
         owner: &mut crate::infrastructure::windows_official_lifecycle024::Owner,
         ready: &crate::modules::runtime::official_lifecycle024::ServiceObservation,
         lease: &mut Option<NativeLease>,
+        preparation: Option<
+            &mut crate::infrastructure::windows_client_originals024::coordination::LeasePreparation,
+        >,
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
@@ -555,11 +568,12 @@ impl CapturedTrees {
                 .originals_check_ready(ready, end)
                 .map_err(io::Error::other)?;
             self.journal.check_source_owner(owner, end)?;
-            super::observation::reacquire_for_observation(
+            super::observation::reacquire_for_observation_retained(
                 trees,
                 &mut self.journal,
                 lease,
                 Some(owner),
+                preparation,
                 end,
             )?;
             let root = trees[0].parent.path().join(".codex");

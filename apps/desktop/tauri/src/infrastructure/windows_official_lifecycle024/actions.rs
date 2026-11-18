@@ -61,6 +61,9 @@ impl ActionOrigin {
         out.check(out.relevant_end())?;
         Ok(out)
     }
+    pub(super) fn id(&self) -> uuid::Uuid {
+        self.id
+    }
     fn relevant_end(&self) -> Instant {
         if self.kind == OriginalActionKind::Start {
             self.end

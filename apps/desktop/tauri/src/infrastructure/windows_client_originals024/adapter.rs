@@ -1,6 +1,7 @@
 //! Current v3 typed adapter. Tags locate this original retained native slot.
 //! No v2 fallback/migration, serialized-phase factory or PID/source adoption.
 use super::v3::{CaptureSlot, NativePredecessors};
+use super::StartRanges;
 use crate::{
     errors::{AppError, AppResult},
     infrastructure::{
@@ -169,11 +170,17 @@ impl WindowsOriginals {
     fn current_id(&self) -> AppResult<uuid::Uuid> {
         self.session.ok_or_else(|| refused("原session缺席"))
     }
-    pub(crate) fn before_resume(&mut self, owner: &mut Owner, end: Instant) -> AppResult<()> {
+    pub(crate) fn before_resume(
+        &mut self,
+        owner: &mut Owner,
+        ranges: &mut StartRanges,
+        end: Instant,
+    ) -> AppResult<()> {
         self.admit(self.current_id()?, Stage::Original, owner, end)?;
         let window = owner.originals_action_window(false, end)?;
         self.check_histories_for_action(owner, &window, false)?;
-        self.slot.before_resume_existing(owner, end)?;
+        self.slot
+            .before_resume_existing_retained(owner, ranges, end)?;
         self.check_histories_for_action(owner, &window, false)?;
         self.failed = false;
         Ok(())
@@ -271,15 +278,13 @@ impl WindowsOriginals {
         Ok(())
     }
 }
-impl ClientOriginals for WindowsOriginals {
-    type Owner = Owner;
-    type OriginalSession = OriginalSession;
-    type ReadySession = ReadySession;
-    type PreparedRestore = PreparedRestore;
-    type NativeNormalExit = NormalExit;
-    type SupervisorAbsent = Absent;
-    type ClosedEligibility = ClosedEligibility;
-    fn capture(&mut self, owner: &mut Owner, window: &ActionWindow) -> AppResult<OriginalSession> {
+impl WindowsOriginals {
+    pub(crate) fn capture_retained(
+        &mut self,
+        owner: &mut Owner,
+        window: &ActionWindow,
+        ranges: &mut StartRanges,
+    ) -> AppResult<OriginalSession> {
         window.remaining()?;
         if self.failed || self.session.is_some() || self.stage.is_some() || self.slot.occupied() {
             return Err(refused("已有原v3会话或失败；不替换/追赶"));
@@ -312,31 +317,59 @@ impl ClientOriginals for WindowsOriginals {
         let session = uuid::Uuid::new_v4();
         self.session = Some(session);
         self.owner_scope = Some(owner.scope()?);
-        self.slot
-            .capture_existing_with_predecessors(owner, window, &predecessors, session)?;
+        self.slot.capture_existing_with_predecessors(
+            owner,
+            window,
+            &predecessors,
+            session,
+            ranges,
+        )?;
         self.check_histories_for_action(owner, window, false)?;
         self.awaiting_successor = false;
         self.stage = Some(Stage::Original);
         self.failed = false;
         Ok(OriginalSession { session })
     }
-    fn record_ready(
+    pub(crate) fn record_ready_retained(
         &mut self,
         original: OriginalSession,
         owner: &mut Owner,
         ready: &ServiceObservation,
+        ranges: &mut StartRanges,
         end: Instant,
     ) -> AppResult<ReadySession> {
         self.admit(original.session, Stage::Original, owner, end)?;
         let window = owner.originals_action_window(false, end)?;
         self.check_histories_for_action(owner, &window, false)?;
-        self.slot.record_ready_existing(owner, ready, end)?;
+        self.slot
+            .record_ready_existing_retained(owner, ready, ranges, end)?;
         self.check_histories_for_action(owner, &window, false)?;
         self.stage = Some(Stage::Ready);
         self.failed = false;
         Ok(ReadySession {
             session: original.session,
         })
+    }
+}
+impl ClientOriginals for WindowsOriginals {
+    type Owner = Owner;
+    type OriginalSession = OriginalSession;
+    type ReadySession = ReadySession;
+    type PreparedRestore = PreparedRestore;
+    type NativeNormalExit = NormalExit;
+    type SupervisorAbsent = Absent;
+    type ClosedEligibility = ClosedEligibility;
+    fn capture(&mut self, _: &mut Owner, _: &ActionWindow) -> AppResult<OriginalSession> {
+        Err(refused("原v3捕获需要注册的首启worker"))
+    }
+    fn record_ready(
+        &mut self,
+        _: OriginalSession,
+        _: &mut Owner,
+        _: &ServiceObservation,
+        _: Instant,
+    ) -> AppResult<ReadySession> {
+        Err(refused("原v3 Ready需要注册的首启worker"))
     }
     fn pre_stop(
         &mut self,
