@@ -133,6 +133,31 @@ fn wl2_r6_lease_segments_prepared_write_failure_keeps_original_locks() {
     }
 }
 #[test]
+fn wl2_r7_lease_segments_release_failure_keeps_unreleased_claim() {
+    let (fixture, _data, paths, lease, mut trees, mut journal, end) = setup();
+    let fixture_root = fixture.path().to_owned();
+    let mut lease = Some(lease);
+    work(&mut trees, &mut journal, lease.as_mut().unwrap(), end);
+    crate::infrastructure::windows_client_originals024::coordination::fail_recovery_release_after(1);
+    let error = release_trees(&mut trees, &mut journal, &mut lease, end).unwrap_err();
+    assert_eq!(error.raw_os_error(), Some(5));
+    assert!(lease.is_some());
+    assert_eq!(journal.lease_state_for_test(), "ReleasePrepared");
+    assert_eq!(journal.native_progress_for_test(), (19, true));
+    compete(&paths[0], true);
+    assert!(lease.as_mut().unwrap().check(end).is_err());
+    assert!(journal.check(end).is_err());
+    println!("r7 raw5 after first explicit file unlock retains original claim, poisons Start lease and preserves ReleasePrepared");
+    // The fixture owns every file and process. Drop is fixture teardown only.
+    drop(lease);
+    compete(&paths[0], false);
+    drop(journal);
+    drop(trees);
+    drop(fixture);
+    assert!(!fixture_root.exists());
+    println!("r7-release-fixture-cleanup-absent={}", fixture_root.display());
+}
+#[test]
 fn wl2_r6_lease_segments_drop_without_receipt_partial_tree_and_deadline_extension_refuse() {
     for case in 0..3 {
         let (mut f, _data, _paths, lease, mut trees, mut journal, end) = setup();

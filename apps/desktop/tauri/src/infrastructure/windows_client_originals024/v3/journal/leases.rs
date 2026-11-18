@@ -103,6 +103,16 @@ impl Journal {
         self.released_lease = Some(receipt);
         Ok(())
     }
+    pub(in crate::infrastructure::windows_client_originals024) fn release_prepared_native(
+        &mut self,
+        lease: &mut NativeLease,
+        end: Instant,
+    ) -> io::Result<()> {
+        if self.poisoned || self.progress.lease_state != LeaseState::ReleasePrepared {
+            return Err(invalid());
+        }
+        lease.release_retained(&mut self.released_lease, end)
+    }
     pub(in crate::infrastructure::windows_client_originals024) fn finish_lease_release(
         &mut self,
         plans: &[serde_json::Value; 2],

@@ -20,13 +20,11 @@ pub(super) fn release_trees(
         let plans = trees.each_ref().map(|t| t.plan());
         journal.prepare_lease_release(&plans, &mut claim, end)?;
         drop(claim);
-        // The lease is consumed only after the prepared record+current are
-        // durable. Explicit receipt is never inferred from Drop or old JSON.
-        let receipt = lease
-            .take()
-            .ok_or_else(invalid)?
-            .release_with_receipt(end)?;
-        journal.retain_lease_release(receipt)?;
+        // Keep the original lease reachable on failed unlock. If all ranges
+        // were unlocked, keep the actual pins in the journal even when the
+        // final release readback fails.
+        journal.release_prepared_native(lease.as_mut().ok_or_else(invalid)?, end)?;
+        drop(lease.take());
         for tree in trees.iter_mut() {
             tree.verify_release_boundary(None, end)?;
         }
