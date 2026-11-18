@@ -1811,3 +1811,14 @@ marenben session 7 活动，nine-r2/out01 仍空。用户提供的窗口命令�
 用户提供的窗口使用 nine-r1 路径。原回执仍为三次全量扫描、6,460 ms、raw32，未创建原 worker，PID 95724 仍可见。nine-r2 和新区间探针对应 out01 在读回时均为空。按 TEAM63 先等待现有 marenben 普通 session 7 的一次 nine-r2 Host，用 a7d7284a3 验证九次完整扫描、原 30 秒、首次 Intent 前 raw31 与 Node 未 Resume，随后保全该旧制品。新区间探针另需同一存活 PID/FILETIME 的独立系统观察和原 worker 在 5 秒内对原失败及同一 claim/N/L/K 的新鲜证明，两项通过后才做 10 秒 Explicit 和 5 秒回读。任一未知时保留首错及现场。
 
 旧官方 r2 的两进程仍可见，三件原件和锁由原现场持续保全，缺原 Job 全覆盖和命令谱系，executionReady=false。公开 Start 维持拒绝。真实原件归还、正常 Stop/Closed、生产单 SID、普通 MSI 和签名候选继续待验。未请求强制清理或生产恢复；未运行 W2、双 SID 或发布。
+
+
+## 2026-11-18 r7 九次完整扫描的真实普通桌面回执
+
+按 TEAM64／IMP203／r7，输入主线 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 74a5a6edc0f225e224b15ae6584434e21e59ed9f。nine-r2 在现有 marenben 普通 session 7 通过实际桌面、Profile、无外层 Job 与隔离前置校验。固定源码 daae8ffff7f304ec28b9c0214db26691e930a395，测试 EXE SHA-256 ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030。独立核验器 a7d7284a3280d973aaacddf361adae6f6dcc8a3c 返回 raw0。原始证据见 cdf54c6a1cd095f8421c5e07a14929c30d6cc913 的 wl2-r7-nine-r2-host-20261118-r1，含原回执、核验输出和文件摘要。
+
+同一原 30 秒窗口记录三次入口与六次原 worker 完整扫描，Start 在 20,064 ms 返回计划内首错 raw31，首次 manifest 与 current Intent 尚未建立，Node 从未 Resume。同样本 Status 为 Required／FailedRetained，原 worker 为 ThreadId(51)。Host 回执记录 PID 133584、创建 FILETIME 134394870078415414，Node PID 122240。控制端可见两 PID，存活进程代次及后续原锁连续性仍未独立证明。nine-r2 缺原线程实时范围探针，保全窗口、进程和文件，停在 Explicit 前。首轮归档命令在文件操作前遇 Python 解析错误，修正后 15 份归档文件逐字节核验并推送。
+
+range-r1 使用 IMP203 已接收的源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7、测试 EXE SHA-256 1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8、运行时 SHA-256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7，暂存证据 007dd301f16e47ed9afd59f91a17b3687e8b4dd7。marenben session 7 活动，range-r1/out01 为空。待原桌面单次 Host 通过后，在同普通桌面独立核活跃 Host 的 PID、FILETIME、镜像和会话，再取原 worker 在同一 DiagnosticBefore 5 秒窗口对原失败、原生对象和 claim/N/L/K 的新鲜证明。两项通过后才进入 Explicit 10 秒和 DiagnosticAfter 5 秒，证明唯一 V2 Intent/Pending、刷盘及独立逐字节回读。任一失败或未知则保全首错与原现场。Mac 的后继准备取消继续独立推进。
+
+nine-r1 仍保留 6,460 ms／raw32 首错与控制端身份查询 raw5。独立旧官方 r2 保留两进程、三件原件、锁和 seq9，Job 24 项 Unknown／raw50，命令谱系 raw64，executionReady=false、approvalRequested=false。普通 per-user MSI 仍为 raw1625。真实归还、正常 Stop/Closed、单 SID 生产验收及签名候选仍待，公开 Start 继续拒绝。
