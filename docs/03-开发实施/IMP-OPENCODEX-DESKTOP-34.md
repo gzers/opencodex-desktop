@@ -2147,3 +2147,15 @@ Windows 分支保留第三次入口和四文件定向变更。交接时普通桌
 [首轮桌面与预检修复证据](https://github.com/gzers/opencodex-desktop/tree/3fa3c1c1de88905257fc7ddbb4ea4f0130a32032/.adg/evidence/0.2.24/windows-dev) · [只读核验器证据](https://github.com/gzers/opencodex-desktop/tree/a223e560670550b43c6bd042833ebc1d4a01fccf/.adg/evidence/0.2.24/windows-dev/wl2-r7-host-receipt-gate-20261118-r1)
 
 公开 Start 继续拒绝，强制清理不能证明正常 Stop 或 Closed。ChatGPT 内 Codex 是渠道显示的实际验收入口。保存、磁盘读回、官方刷新和回退已有证据，实际客户端选择器仍待隔离验收。普通用户安装、生产单 SID 生命周期和签名候选仍待闭合，W2／双 SID 等候选固定后开始。
+
+
+## revision198 Windows r7 外部恢复单文件与成对预检
+
+| 组件 | 复核结论 |
+| --- | --- |
+| 单文件恢复原语 | 源码 `3ef31c9caae35f4d7cc6083de27bdf106ca0b560` 限于四个测试文件。12 件原始载荷共 34,024 字节，源码输入与载荷均与 Git 一致。最终 11/11，raw0，3,473 ms。涵盖独占意图与读回、同卷句柄移动、文件 ID／字节／八项安全投影，以及目标冲突 raw183、已有意图 raw80、共享冲突 raw32。四个隔离根报告已清理。 |
+| 两文件预检 | 源码 `0e9f9cf486425d9fa4ba70ddcef376340f1abe5e` 相对上一条仅改测试文件 `external_repair_steps.rs`。源码 blob `bb58682b550a5afeefadb3023b0d846c33069c84` 与清单一致，核对八件原始载荷共 22,692 字节。MSVC x64 两轮各 7/7，raw0，3,421／3,524 ms。首次写入恢复意图前固定两个同卷文件句柄，核查四目录精确成员和八项安全投影。额外成员在写意图前拒绝，末件共享冲突保留 raw32 和夹具内容。清单记录 14 个隔离根均已清理。 |
+
+[单文件证据](https://github.com/gzers/opencodex-desktop/tree/65e58f12d5ea3952cd63fc0e7230c8c70a8e816c/.adg/evidence/0.2.24/windows-dev) · [成对预检证据](https://github.com/gzers/opencodex-desktop/tree/87e664831c5774ee099a1d5929e0d217da03bf44/.adg/evidence/0.2.24/windows-dev/wl2-r7-external-pair-preflight-20261118-r1/)
+
+上述为组件通过。旧 r2 的三件真实原件和锁继续保全，24 项 Job 仍是 Unknown／raw50，命令谱系 raw64，`executionReady=false`，普通用户 MSI 为 raw1625。生产恢复仍需证明整树成员、进程已静止、claim/N/L/K 连续持有、持久记录、精确锁释放和原件正常归还。强制清理不能签署 Stop 或 Closed。真实桌面沿 TEAM58 的原配对，`nine-r2/out01` 尚无 Host 结果。

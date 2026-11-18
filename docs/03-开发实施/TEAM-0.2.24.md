@@ -450,3 +450,8 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 共享 main 040f411e6d48d97bde6e7b2e6c22860e547b6173，固定配对源码 daae8ffff7f304ec28b9c0214db26691e930a395，回执核验器 e19642724af81cc40c3dea6dbe4dc7d4caee9d21，最新证据 a223e560670550b43c6bd042833ebc1d4a01fccf。组件接收见 IMP197，Windows 继续独占定向验证写集。本轮保留现有配对，核验器独立使用。
 
 > fetch docs/governance-main，按 TEAM58／IMP197／r7，用 Public 下已固定的 nine-r2 配对，在 marenben 的 session 7 真实普通桌面执行一次 Host。证伪目标是新夹具清除 raw32，在原 30 秒完成九次全量扫描并到达 pre-manifest raw31、Node 未 Resume。用 e19642724 核验原回执，另证同一存活 PID/FILETIME、原 Owner/线程和原 claim/N/L/K 仍持有，再做原 5／10／5 秒观察及同线程 V2 Intent/Pending 刷盘、逐字节读回。首错或未知按原合同拒绝并保留现场。旧原件恢复 r2 与本配对独立保全。回交 Git 证据，暂不做 W2／双 SID。
+
+
+## revision59 接收外部恢复原语与成对预检
+
+Windows 源码 `0e9f9cf486425d9fa4ba70ddcef376340f1abe5e`，证据 `87e664831c5774ee099a1d5929e0d217da03bf44`。组件接收和生产缺口见 IMP198。Windows 保持定向写集，组件接收无需重跑。真实 Host 沿 TEAM58 已固定的 nine-r2 配对和原回执核验器，原 30 秒和后续 5／10／5 秒预算照旧。新手工回执仍待交接。旧 r2 独立保全，候选冻结后再做 W2／双 SID。
