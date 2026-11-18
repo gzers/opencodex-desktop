@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 204；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 211；2026-11-19。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2250,3 +2250,29 @@ Windows 源码仍为 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7。复核证据 70c
 本次接收暂存与配对预检。range-r1 预检时没有 Host 回执，也未执行桌面动作。现场沿 TEAM69 推进。普通用户 MSI raw1625、生产恢复及正常 Stop/Closed、生产单 SID 和签名候选继续待验。
 
 [Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/bd29ce9c75a259aa845d153f732bf3e8ddd2cccc/.adg/evidence/0.2.24/windows-dev/wl2-r7-team68-readback-stage-20261119-r1)
+
+
+## revision209 Mac 已取消前代的后继根取消通过
+
+以 main 040f411e6d48d97bde6e7b2e6c22860e547b6173 和实际执行差异 SHA-256 33ffdfa284a37859e6e71a7e5eb002187a8f7f4b4d6787a3fd5eeda5903642a8 为输入。原样官方 Darwin 2.99 下，生产取消入口将已取消前代的后继从 Preparing revision 4 提交到 RootCancellationAbsent revision 6，保留后继票据及前代归档，并核验再次显式 Start 的资格。前代取消 7,018 ms，后继取消 8,634 ms，均在各自 10,000 ms 预算内。拒绝归档漂移、过期审查、错误 revision 或摘要。两次 Guard 依次到达 held、prepared、relocated、released。独立夹具、进程组及本轮专用协调文件已清理。
+
+本轮覆盖已取消前代的生产动作。普通 RootAbsent 前代、已登记计划显式继续及固定候选的 Start → Ready → 正常 Stop 仍待验。服务未启动，releaseAcceptance=false。真实客户端已确认为 ChatGPT 内的 Codex，最终选择器继续沿既定隔离合同验证。
+
+[动作及绑定证据](../../.adg/evidence/0.2.24/mac-successor-cancel-action-r1/evidence-manifest.json)
+
+## revision210 Mac 普通关闭前驱的后继根取消通过
+
+在合成普通 RootAbsent revision 5 的独立夹具中，使用原样官方 Darwin 2.99 执行生产取消。后继从 Preparing revision 6 到 RootCancellationAbsent revision 8，耗时 8,414 ms，预算 10,000 ms。保留前驱归档与后继票据，拒绝归档漂移、过期审查及错误 revision 或摘要。Guard 经过 held、prepared、relocated、released；独立夹具、进程组和本轮专用协调文件已清理，既有全局生命周期锁保持。下一次显式 Start 的资格检查通过，未实际启动服务。本轮不构成整版验收。
+
+已登记 RootCancellationPrepared 的显式续接、固定候选的 Start → Ready → 正常 Stop，以及 ChatGPT 内 Codex 的真实选择器仍待验证。Windows 分支仍为 TEAM69／IMP208 已记录的两项 SHA。
+
+[成功证据](../../.adg/evidence/0.2.24/mac-ordinary-successor-cancel-action-r1/evidence-manifest.json) · [独立构建失败证据](../../.adg/evidence/0.2.24/mac-ordinary-successor-cancel-build-failure-r1/evidence-manifest.json)
+
+
+## revision211 Mac 后继取消代码检查点与回归复跑
+
+后继取消、界面确认和定向验证入口已提交并推送 main cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2。20 个文件的执行净差 SHA-256 为 f82a9b54f1d2d45f6baec5083904a7024f9e54de1e3af23078604fc9e6067063。前述三份证据逐文件核对长度和 SHA-256。
+
+串行回归首轮 2,627 通过、21 失败、59 忽略。失败集中于运行包安装、路径和卸载，原因是夹具落在受保护的 /private 前缀。用同源码构建的隔离测试宿主在 /Users/Shared 专用临时目录复跑失败项，21 项全通过。校验策略未改。原失败和复跑日志均留在本机 /private/tmp/ocxd024-regression.Z95TuT/，已确认复跑退出码 0、进程组缺席及夹具删除。21 项复跑单列，仍以两轮原始结果作证，不宣称另跑了全绿的全量测试。
+
+该提交为共享检查点，releaseAcceptance=false。已登记计划的显式续接、固定候选正常启停、ChatGPT 内 Codex 实屏选择器和 Windows 生产验收继续开放。
