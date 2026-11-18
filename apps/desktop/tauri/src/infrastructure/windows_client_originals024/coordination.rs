@@ -268,6 +268,7 @@ impl LockFile {
 struct Range {
     offset: u32,
     length: u32,
+    exclusive: bool,
     overlap: OVERLAPPED,
 }
 struct Held {
@@ -279,6 +280,7 @@ impl Held {
         let mut range = Range {
             offset,
             length,
+            exclusive,
             overlap: unsafe { std::mem::zeroed() },
         };
         range.overlap.Anonymous.Anonymous.Offset = offset;
@@ -386,6 +388,7 @@ pub(super) struct NativeLease {
     deadline: Instant,
     active: bool,
     bound: Option<Bound>,
+    acquisition_thread: std::thread::ThreadId,
     _not_send: PhantomData<*mut ()>,
     epoch: String,
 }
@@ -480,6 +483,7 @@ impl NativeLease {
             deadline: end,
             active: true,
             bound: None,
+            acquisition_thread: std::thread::current().id(),
             _not_send: PhantomData,
             epoch: uuid::Uuid::new_v4().to_string(),
         };
@@ -550,11 +554,12 @@ impl NativeLease {
         result
     }
     fn check_inner(&mut self, end: Instant) -> io::Result<()> {
-        if !self.active || self.held.len() != 4 || end > self.deadline {
+        if !self.active || end > self.deadline {
             return Err(refused());
         }
         before(end)?;
         before(self.deadline)?;
+        self.check_original_ranges()?;
         if native::current_identity()? != self.token {
             return Err(refused());
         }
@@ -567,6 +572,24 @@ impl NativeLease {
             bound.client.recheck()?;
         }
         before(end)
+    }
+    fn check_original_ranges(&self) -> io::Result<()> {
+        const CLAIM: [(u32, u32, bool); 1] = [(BASE, 512, true)];
+        const SQLITE: [(u32, u32, bool); 2] = [(BASE + 2, 510, false), (BASE + 1, 1, true)];
+        if self.acquisition_thread != std::thread::current().id() || self.held.len() != 4 {
+            return Err(refused());
+        }
+        for (held, expected) in self.held.iter().zip([&CLAIM[..], &SQLITE, &SQLITE, &SQLITE]) {
+            if !held
+                .ranges
+                .iter()
+                .map(|range| (range.offset, range.length, range.exclusive))
+                .eq(expected.iter().copied())
+            {
+                return Err(refused());
+            }
+        }
+        Ok(())
     }
     pub(super) fn check_owner(&mut self, owner: &mut Owner, end: Instant) -> io::Result<()> {
         let result = self.check_owner_inner(owner, end);

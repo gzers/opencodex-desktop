@@ -128,6 +128,7 @@ impl LeasePreparation {
                 deadline: end,
                 active: true,
                 bound,
+                acquisition_thread: std::thread::current().id(),
                 _not_send: PhantomData,
                 epoch: uuid::Uuid::new_v4().to_string(),
             });

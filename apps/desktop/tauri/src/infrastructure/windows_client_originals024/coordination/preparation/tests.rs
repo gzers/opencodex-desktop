@@ -94,6 +94,33 @@ fn cleanup_own_failed(prefix: &mut LeasePreparation) {
     assert!(prefix.take_complete().is_err());
 }
 #[test]
+fn wl2_r7_lease_prefix_native_missing_reserved_range_revokes_authority_and_keeps_claim() {
+    let scene = Scene::new();
+    let deadline = end();
+    let mut prefix = LeasePreparation::default();
+    prefix.prepare_fixture_paths(&scene.paths, deadline).unwrap();
+    let mut lease = prefix.take_complete().unwrap();
+    lease.check(deadline).unwrap();
+
+    // A successful OS unlock changes a single SQLite role without changing the
+    // pinned files, original bytes, or the original claim and other ranges.
+    lease.held[2].unlock(BASE + 1).unwrap();
+    for held in &lease.held {
+        actual_ranges_block(held);
+    }
+    assert!(lease.check(deadline).is_err());
+    assert!(!lease.active);
+    assert!(lease
+        .anchored_claim(scene.paths[0].parent().unwrap(), deadline)
+        .is_err());
+    actual_ranges_block(&lease.held[0]);
+
+    // Explicit fixture-only cleanup after verifying the surviving ranges.
+    for held in lease.held.iter_mut().rev() {
+        held.release().unwrap();
+    }
+}
+#[test]
 fn wl2_r7_lease_prefix_native_each_partial_open_and_range_failure_retains_exact_owned_resources() {
     for fault in [1, 2, 3, 4, 5, 6, 7, 8, 20, 21, 22] {
         let scene = Scene::new();
