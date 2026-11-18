@@ -62,9 +62,14 @@ fn wl2_r7_partial_capture_native_invalid_coordinator_keeps_completed_nodes_and_p
     assert!(tree.pending_capture.is_some());
     assert!(!tree.nodes.is_empty());
     assert!(tree.nodes.iter().all(|n| n.state == State::Original));
-    let pending_id=id(tree.pending_capture.as_ref().unwrap(),false).unwrap();
-    let fresh=OpenOptions::new().access_mode(0x20080).share_mode(7).open(&owner).unwrap();
-    assert_eq!(id(&fresh,false).unwrap(),pending_id);drop(fresh);
+    let pending_id = id(tree.pending_capture.as_ref().unwrap(), false).unwrap();
+    let fresh = OpenOptions::new()
+        .access_mode(0x20080)
+        .share_mode(7)
+        .open(&owner)
+        .unwrap();
+    assert_eq!(id(&fresh, false).unwrap(), pending_id);
+    drop(fresh);
     assert!(std::fs::remove_file(&owner).is_err());
     assert!(
         AnchoredTree::capture_retained(&root, &custody, &mut claim, &root, end, &mut retained)
@@ -171,7 +176,9 @@ pub(super) fn bun_claim(path: &Path, deadline: Instant, blocked: bool) {
         os::windows::process::CommandExt,
         process::{Command, Stdio},
     };
-    let bun=PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../test/windows024-native/target/installer-w1/attempt01/stage/platform-bundle/runtime-bundle/runtime/bun/bun.exe");
+    let bun = std::env::var_os("OCX024_TEST_BUN")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../test/windows024-native/target/installer-w1/attempt01/stage/platform-bundle/runtime-bundle/runtime/bun/bun.exe"));
     let _pin = OpenOptions::new()
         .read(true)
         .share_mode(1)

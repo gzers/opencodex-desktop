@@ -286,6 +286,7 @@ impl AnchoredTree {
         }
         result
     }
+    #[cfg(test)]
     fn retire_current_file(
         &mut self,
         index: usize,
@@ -294,19 +295,7 @@ impl AnchoredTree {
     ) -> io::Result<()> {
         let result = (|| {
             self.verify_retirement_prefix(claim, end)?;
-            let root = self.parent.path().join(".codex");
-            let frozen = self.retirement.as_mut().ok_or_else(invalid)?;
-            let item = frozen.items.get_mut(index).ok_or_else(invalid)?;
-            if item.retired {
-                return Err(invalid());
-            }
-            require_absent(&item.target)?;
-            claim.check(&root, end)?;
-            check(end)?;
-            self.poisoned = true;
-            rename_original_handle(&frozen.frame.nodes[item.frame_index].file, &item.target)?;
-            item.retired = true;
-            self.poisoned = false;
+            self.retire_current_file_checked(index, claim, end)?;
             self.verify_retirement_prefix(claim, end)
         })();
         if result.is_err() {
@@ -314,6 +303,29 @@ impl AnchoredTree {
         }
         result
     }
+    // Called between fresh whole-tree checks on the same native claim.
+    fn retire_current_file_checked(
+        &mut self,
+        index: usize,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        let root = self.parent.path().join(".codex");
+        let frozen = self.retirement.as_mut().ok_or_else(invalid)?;
+        let item = frozen.items.get_mut(index).ok_or_else(invalid)?;
+        if item.retired {
+            return Err(invalid());
+        }
+        require_absent(&item.target)?;
+        claim.check(&root, end)?;
+        check(end)?;
+        self.poisoned = true;
+        rename_original_handle(&frozen.frame.nodes[item.frame_index].file, &item.target)?;
+        item.retired = true;
+        self.poisoned = false;
+        Ok(())
+    }
+    #[cfg(test)]
     fn restore_original_file(
         &mut self,
         index: usize,
@@ -322,35 +334,44 @@ impl AnchoredTree {
     ) -> io::Result<()> {
         let result = (|| {
             self.verify_retirement_prefix(claim, end)?;
-            if self
-                .retirement
-                .as_ref()
-                .ok_or_else(invalid)?
-                .items
-                .iter()
-                .any(|i| !i.retired)
-            {
-                return Err(invalid());
-            }
-            let root = self.parent.path().join(".codex");
-            let n = self.nodes.get_mut(index).ok_or_else(invalid)?;
-            if n.kind != Kind::File || n.state != State::Working {
-                return Err(invalid());
-            }
-            let target = self.root.join(&n.original.relative);
-            require_absent(&target)?;
-            claim.check(&root, end)?;
-            check(end)?;
-            self.poisoned = true;
-            rename_original_handle(&n.file, &target)?;
-            n.state = State::Restored;
-            self.poisoned = false;
+            self.restore_original_file_checked(index, claim, end)?;
             self.verify_retirement_prefix(claim, end)
         })();
         if result.is_err() {
             self.poisoned = true;
         }
         result
+    }
+    fn restore_original_file_checked(
+        &mut self,
+        index: usize,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<()> {
+        if self
+            .retirement
+            .as_ref()
+            .ok_or_else(invalid)?
+            .items
+            .iter()
+            .any(|i| !i.retired)
+        {
+            return Err(invalid());
+        }
+        let root = self.parent.path().join(".codex");
+        let n = self.nodes.get_mut(index).ok_or_else(invalid)?;
+        if n.kind != Kind::File || n.state != State::Working {
+            return Err(invalid());
+        }
+        let target = self.root.join(&n.original.relative);
+        require_absent(&target)?;
+        claim.check(&root, end)?;
+        check(end)?;
+        self.poisoned = true;
+        rename_original_handle(&n.file, &target)?;
+        n.state = State::Restored;
+        self.poisoned = false;
+        Ok(())
     }
     fn verify_retirement_restored(
         &mut self,

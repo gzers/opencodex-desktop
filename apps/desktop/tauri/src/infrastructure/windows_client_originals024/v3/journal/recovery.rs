@@ -54,6 +54,16 @@ impl Journal {
         claim: &mut AnchoredClaim<'_>,
         end: Instant,
     ) -> io::Result<()> {
+        self.checked_recovery_plan(witness, claim, end, false)?;
+        Ok(())
+    }
+    fn checked_recovery_plan(
+        &mut self,
+        witness: &mut RecoveryWitness<'_>,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+        require_restored: bool,
+    ) -> io::Result<RecoveryPlan> {
         before(end)?;
         if self.poisoned || end > self.deadline {
             return Err(invalid());
@@ -65,7 +75,12 @@ impl Journal {
         {
             return Err(invalid());
         }
-        let data = RecoveryPlan::from_native_data(witness.plans(claim, end)?)?;
+        let plans = if require_restored {
+            witness.restored_plans(claim, end)?
+        } else {
+            witness.plans(claim, end)?
+        };
+        let data = RecoveryPlan::from_native_data(plans)?;
         data.validate(&self.manifest.storage_plan, &self.progress)?;
         let digest = data.digest()?;
         if self
@@ -80,7 +95,8 @@ impl Journal {
         claim.check(&self.pins[0].path().join(".codex"), end)?;
         // No journal/client mutation occurs while serializing/validating the
         // retained plan. Durable writes retain their full before/after check.
-        before(end)
+        before(end)?;
+        Ok(data)
     }
     pub(super) fn prepare_native_recovery(
         &mut self,
@@ -89,8 +105,7 @@ impl Journal {
         end: Instant,
     ) -> io::Result<()> {
         let result = (|| {
-            self.recovery_native_check(&mut witness, claim, end)?;
-            let plan = RecoveryPlan::from_native_data(witness.plans(claim, end)?)?;
+            let plan = self.checked_recovery_plan(&mut witness, claim, end, false)?;
             let e = self.progress.recovery_event(
                 RecoveryOperation::RecoveryPlanIntent,
                 Some(&plan),

@@ -15,15 +15,14 @@ impl Journal {
             self.progress
                 .recovery_event(RecoveryOperation::WholeTreeRestoreIntent, None, None)?;
         self.append_entry_inner(ChainEntry::Recovery(event), end)?;
-        self.recovery_native_check(witness, claim, end)?;
         #[cfg(test)]
         if self.fault == 50 {
+            self.recovery_native_check(witness, claim, end)?;
             return Err(io::Error::other(
                 "injected after whole-tree restore intent/current before final native proof",
             ));
         }
-        witness.restored(claim, end)?;
-        self.recovery_native_check(witness, claim, end)?;
+        self.checked_recovery_plan(witness, claim, end, true)?;
         #[cfg(test)]
         {
             if self.fault == 51 {
@@ -43,8 +42,8 @@ impl Journal {
             None,
         )?;
         self.append_entry_inner(ChainEntry::Recovery(event), end)?;
-        witness.restored(claim, end)?;
-        self.recovery_native_check(witness, claim, end)
+        self.checked_recovery_plan(witness, claim, end, true)?;
+        Ok(())
     }
     pub(in crate::infrastructure::windows_client_originals024::v3::journal) fn release_native_recovery(
         &mut self,
@@ -78,12 +77,7 @@ impl Journal {
                 ));
             }
             drop(claim);
-            let receipt = lease
-                .take()
-                .ok_or_else(invalid)?
-                .release_with_receipt(end)?;
-            // Retain immediately, before ANY fallible post-unlock readback.
-            self.retain_lease_release(receipt)?;
+            self.release_prepared_native(lease, end)?;
             #[cfg(test)]
             if self.fault == 61 {
                 witness.foreign_custody_for_test(end)?;

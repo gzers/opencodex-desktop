@@ -144,6 +144,14 @@ impl RecoveryWitness<'_> {
         claim: &mut AnchoredClaim<'_>,
         end: Instant,
     ) -> io::Result<()> {
+        self.check_trees(claim, end, AnchoredTree::verify_retirement_prefix)
+    }
+    fn check_trees(
+        &mut self,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+        verify: fn(&mut AnchoredTree, &mut AnchoredClaim<'_>, Instant) -> io::Result<()>,
+    ) -> io::Result<()> {
         let result = (|| {
             if self.trees[0].parent.identity() != self.trees[1].parent.identity() {
                 return Err(invalid());
@@ -156,7 +164,7 @@ impl RecoveryWitness<'_> {
                 {
                     return Err(invalid());
                 }
-                t.verify_retirement_prefix(claim, end)?;
+                verify(t, claim, end)?;
             }
             Ok(())
         })();
@@ -171,6 +179,17 @@ impl RecoveryWitness<'_> {
         end: Instant,
     ) -> io::Result<[serde_json::Value; 2]> {
         self.check(claim, end)?;
+        self.retirement_plans()
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn restored_plans(
+        &mut self,
+        claim: &mut AnchoredClaim<'_>,
+        end: Instant,
+    ) -> io::Result<[serde_json::Value; 2]> {
+        self.restored(claim, end)?;
+        self.retirement_plans()
+    }
+    fn retirement_plans(&self) -> io::Result<[serde_json::Value; 2]> {
         Ok([
             self.trees[0]
                 .retirement
@@ -215,7 +234,7 @@ impl RecoveryWitness<'_> {
                 }
             }
             let (root, index) = found.ok_or_else(invalid)?;
-            self.trees[root].retire_current_file(index, claim, end)?;
+            self.trees[root].retire_current_file_checked(index, claim, end)?;
             self.check(claim, end)
         })();
         if result.is_err() {
@@ -264,7 +283,7 @@ impl RecoveryWitness<'_> {
                 }
             }
             let (root, index) = found.ok_or_else(invalid)?;
-            self.trees[root].restore_original_file(index, claim, end)?;
+            self.trees[root].restore_original_file_checked(index, claim, end)?;
             self.check(claim, end)
         })();
         if result.is_err() {
@@ -277,17 +296,7 @@ impl RecoveryWitness<'_> {
         claim: &mut AnchoredClaim<'_>,
         end: Instant,
     ) -> io::Result<()> {
-        self.check(claim, end)?;
-        let result = (|| {
-            for t in &mut *self.trees {
-                t.verify_retirement_restored(claim, end)?;
-            }
-            Ok(())
-        })();
-        if result.is_err() {
-            self.poison();
-        }
-        result
+        self.check_trees(claim, end, AnchoredTree::verify_retirement_restored)
     }
     pub(in crate::infrastructure::windows_client_originals024) fn poison(&mut self) {
         for t in &mut *self.trees {

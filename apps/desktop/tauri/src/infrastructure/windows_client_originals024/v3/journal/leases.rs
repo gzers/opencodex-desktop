@@ -1,6 +1,6 @@
 //! One-action-window lease segments in the canonical v3 chain. Scope/phase
 //! authorization for a DIFFERENT lifecycle action is intentionally not minted.
-use super::super::super::coordination::{AnchoredClaim, LeaseFacts, NativeLease, ReleasedLease};
+use super::super::super::coordination::{AnchoredClaim, LeaseFacts, NativeLease};
 use super::super::segments::{LeaseEvent, LeaseOperation};
 use super::*;
 impl Journal {
@@ -90,28 +90,22 @@ impl Journal {
         }
         result
     }
-    /// Install BEFORE post-unlock tree checks or result IO, preserving actual
-    /// release receipt even if those fail. Only NativeLease can construct it.
-    pub(in crate::infrastructure::windows_client_originals024) fn retain_lease_release(
-        &mut self,
-        receipt: ReleasedLease,
-    ) -> io::Result<()> {
-        if self.released_lease.is_some() {
-            self.poisoned = true;
-            return Err(invalid());
-        }
-        self.released_lease = Some(receipt);
-        Ok(())
-    }
+    /// The caller keeps any remaining ranges, and the journal keeps any
+    /// release receipt, even when post-unlock verification fails.
     pub(in crate::infrastructure::windows_client_originals024) fn release_prepared_native(
         &mut self,
-        lease: &mut NativeLease,
+        lease: &mut Option<NativeLease>,
         end: Instant,
     ) -> io::Result<()> {
         if self.poisoned || self.progress.lease_state != LeaseState::ReleasePrepared {
             return Err(invalid());
         }
-        lease.release_retained(&mut self.released_lease, end)
+        lease
+            .as_mut()
+            .ok_or_else(invalid)?
+            .release_retained(&mut self.released_lease, end)?;
+        drop(lease.take());
+        Ok(())
     }
     pub(in crate::infrastructure::windows_client_originals024) fn finish_lease_release(
         &mut self,

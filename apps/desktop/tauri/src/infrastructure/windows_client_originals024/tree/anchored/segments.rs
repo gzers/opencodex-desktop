@@ -23,8 +23,7 @@ pub(super) fn release_trees(
         // Keep the original lease reachable on failed unlock. If all ranges
         // were unlocked, keep the actual pins in the journal even when the
         // final release readback fails.
-        journal.release_prepared_native(lease.as_mut().ok_or_else(invalid)?, end)?;
-        drop(lease.take());
+        journal.release_prepared_native(lease, end)?;
         for tree in trees.iter_mut() {
             tree.verify_release_boundary(None, end)?;
         }

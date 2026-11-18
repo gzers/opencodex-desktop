@@ -189,3 +189,47 @@ fn wl2_r6_final_release_native_explicit_unlock_and_result_faults_retain_exact_re
         run(fault);
     }
 }
+
+#[test]
+fn wl2_r7_final_release_native_partial_unlock_keeps_original_claim_pending() {
+    use super::super::super::tests::driver::setup_unsnapshotted;
+    use super::batch_tests::restore_batched;
+
+    let (fixture, _data, paths, held, mut trees, mut journal, end) = setup_unsnapshotted();
+    let fixture_root = fixture.path().to_owned();
+    let mut lease = Some(held);
+    restore_batched(&mut trees, &mut journal, &mut lease, end);
+    let root = trees[0].root.clone();
+    let mut claim = lease.as_mut().unwrap().anchored_claim(&root, end).unwrap();
+    let witness = recovery_witness(&mut trees, &mut claim, end).unwrap();
+    drop(claim);
+    crate::infrastructure::windows_client_originals024::coordination::fail_recovery_release_after(
+        1,
+    );
+    let error = journal
+        .component_release_recovery_for_test(witness, &mut lease, end)
+        .unwrap_err();
+    assert_eq!(error.raw_os_error(), Some(5));
+    assert!(lease.as_mut().unwrap().check(end).is_err());
+    compete(&paths[0], true);
+    compete(&paths[3], false);
+    let trace = journal.component_final_release_trace_for_test().unwrap();
+    assert_eq!(trace["leaseState"], "ReleasePrepared");
+    assert_eq!(trace["actualReleaseReceiptRetained"], false);
+    assert_eq!(trace["poisoned"], true);
+    assert_eq!(trace["summary"]["wholeTree"], 2);
+    assert_eq!(trace["summary"]["anchorReleasedCount"], 0);
+    assert!(trees.iter().all(|tree| tree.poisoned));
+    println!("r7-final-release raw5 kept the uncompleted original claim with no release receipt: {trace}");
+    // Only the synthetic scene is torn down after verifying the live range.
+    drop(lease);
+    compete(&paths[0], false);
+    drop(journal);
+    drop(trees);
+    drop(fixture);
+    assert!(!fixture_root.exists());
+    println!(
+        "r7-final-release-fixture-cleanup-absent={}",
+        fixture_root.display()
+    );
+}
