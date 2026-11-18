@@ -1,0 +1,8 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 45.79s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+thread 'infrastructure::macos_client_originals::session_index::root_cancel_namespace::tests::exact_multi_plan_membership_is_indexed_data_and_never_discovered_from_directories' (167434547) panicked at src/infrastructure/macos_client_root_cancel_namespace.rs:154:58:
+called `Result::unwrap()` on an `Err` value: Os { code: 20, kind: NotADirectory, message: "Not a directory" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--lib`

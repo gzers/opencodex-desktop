@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-status-gui.py", line 233, in <module>
+    print(json.dumps(run(parser.parse_args())))
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-status-gui.py", line 153, in run
+    command(['/usr/bin/sandbox-exec', '-f', policy, seed, '--exact', 'prepare_exact_owned_first_root_for_real_gui', '--ignored', '--nocapture'],
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-status-gui.py", line 65, in command
+    raise RuntimeError('native command failed: ' + str(argv[0]))
+RuntimeError: native command failed: /usr/bin/sandbox-exec

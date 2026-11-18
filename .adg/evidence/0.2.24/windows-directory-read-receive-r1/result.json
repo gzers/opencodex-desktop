@@ -1,0 +1,47 @@
+{
+  "codeSha": "b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec",
+  "docsSha": "7adf93a64d7b5f9afdd4c87963b744c4c39ca47f",
+  "payloadFiles": 77,
+  "payloadBytes": 875662,
+  "sourceChecks": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/paths/preparation.rs",
+      "snapshotSha256": "2d38743644b130c8c5aa50a23f7970807145285a00815d4188e29e0992cd0db3",
+      "normalizedGitEqual": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs",
+      "snapshotSha256": "a1c6f09dd71c5ed13a1201c7d838551e48ed16b7747dbb3e72f6a49d50b13d46",
+      "normalizedGitEqual": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2.rs",
+      "snapshotSha256": "e87979c22014b066f3bf206481dcaf1d392b2ec3766d608720baa2e27e73a4c7",
+      "normalizedGitEqual": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/directory_read.rs",
+      "snapshotSha256": "2b02ef9796e6eae72ae9d847d64ea11c3a9ec1e11d14201eba4a5e0bde7a0a93",
+      "normalizedGitEqual": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2/tests.rs",
+      "snapshotSha256": "a506a3ce0cd5e2728677d595d55d78a3021ceeb43d96ab2343af52b5f644beee",
+      "normalizedGitEqual": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2/tests/directory_read_tests.rs",
+      "snapshotSha256": "d60269b9970c756594ff28fa73043dd22a9a74432232e710507e6a4031b89945",
+      "normalizedGitEqual": true
+    }
+  ],
+  "nativeAuthority": false,
+  "independentWindowsExecution": false,
+  "ordinaryDesktopStillPending": true,
+  "reportedNativeTests": 5,
+  "reportedNativeFixtures": 13,
+  "reportedAffectedRegressionTests": 9,
+  "reportedCleanedRoots": 34,
+  "productionAccepted": false,
+  "releaseAcceptance": false
+}

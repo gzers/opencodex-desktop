@@ -1,0 +1,26 @@
+{
+  "beforeRun": true,
+  "gitBase": "0ae095327c7a1d911ff106360fa505b6a4854001",
+  "uncommittedTestOnlyFiles": [
+    {
+      "path": "apps/desktop/tauri/src/modules/model_config/config_file_v2_tests.rs",
+      "bytes": 70164,
+      "sha256": "1b5e9bcb096149cd4b42d640fe877e40801847b826d56f763c7dd824d6c467c4"
+    },
+    {
+      "path": "test/smoke/macos024-display-refresh.py",
+      "bytes": 6450,
+      "sha256": "61052f6d426c57e05f5eb7ba7f3024a44a03f713e952cd3e4a57e485bd1c25d1"
+    },
+    {
+      "path": "test/smoke/official299-display-refresh.mjs",
+      "bytes": 3959,
+      "sha256": "b0bc6c568dbece91eacebe483e27bf77ea1c2ccb15989b243e69ac9a9555f698"
+    }
+  ],
+  "hypothesis": "native manual full-config backup, changed logical name, explicit whole-file rollback restore exact bytes; three new official processes save/read/refresh preserve original route/display/capability after rollback",
+  "fileTransactionServiceAndValidatorClosuresAreTestBoundaries": true,
+  "actualOfficialServiceOrClientGUIAccepted": false,
+  "dailyConfigurationModified": false,
+  "releaseAcceptance": false
+}

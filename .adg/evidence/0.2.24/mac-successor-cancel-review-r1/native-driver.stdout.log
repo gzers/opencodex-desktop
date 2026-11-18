@@ -1,0 +1,13 @@
+{"argv": ["/usr/bin/sandbox-exec", "-f", "/private/tmp/ocxd024-root-cancel-6z57kvsj/native.sb", "/private/tmp/ocxd024-root-cancel-6z57kvsj/test-host", "--exact", "infrastructure::macos_client_originals::session_index::root_preparation::preservation::service_tests::current_service_movement_and_native_release_bind_a_distinct_cancellation_terminal", "--ignored", "--nocapture", "--test-threads=1"], "pid": 25686, "exitCode": 0, "elapsedMs": 81981, "source": "845b2861924a4412a168a8ac148a8d1320f097d9", "scenario": "success", "scope": "successor-review", "hostSha256": "807474a4eeb04706e8c708465b276b5e7a9f3c18225bff321b391fc1597e4a0b", "hostUnchanged": true, "releaseAcceptance": false, "serviceStarted": false}
+
+running 1 test
+test infrastructure::macos_client_originals::session_index::root_preparation::preservation::service_tests::current_service_movement_and_native_release_bind_a_distinct_cancellation_terminal ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2702 filtered out; finished in 80.77s
+
+
+CONFIG_GUARD_TRACE expected=held actual=held phase=initial-check
+CONFIG_GUARD_TRACE expected=prepared actual=prepared phase=prepare
+CONFIG_GUARD_TRACE expected=relocated actual=relocated phase=relocate
+CONFIG_GUARD_TRACE expected=released actual=released phase=release
+

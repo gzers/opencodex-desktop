@@ -1,0 +1,15 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+error[E0433]: cannot find type `Path` in this scope
+  --> src/infrastructure/status_source.rs:34:23
+   |
+34 |             .and_then(Path::file_name)
+   |                       ^^^^ use of undeclared type `Path`
+   |
+   = note: struct `crate::modules::runtime::install::versioned::Path` exists but is inaccessible
+help: consider importing this struct
+   |
+ 6 + use std::path::Path;
+   |
+
+For more information about this error, try `rustc --explain E0433`.
+error: could not compile `opencodex-desktop` (lib) due to 1 previous error

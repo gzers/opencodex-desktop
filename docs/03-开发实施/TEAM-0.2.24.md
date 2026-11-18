@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 33；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 42；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -302,3 +302,61 @@ Windows可增量merge这些Mac文件/UI，不重跑无影响Owner/MSI/CLI/扫描
 Mac测试ebe80da86、只读重核修复0d44a4643、pendingRequest修复0b77472be及后继测试bb13a7f12/88b8fc33d均可增量合入；源、三包实际绑定、四失败轮次及未完唯一归IMP171。Rust取消/Windows原生后端/四trait均无新变化；前端明确已结案的只读协调和原invoke结算前不释放UI动作，不因此提前开放真实Start。Windows无需重跑无影响MSI/CLI/scan/归档/原Owner测试，继续原独占privatewire/native端点/V2恢复。
 
 Mac下一本机任务只针对gui04取消前status等待的真实阶段/线程取证，未知不重跑全流程；gui02旧cleanup不足完整RootAbsent的问题已收紧后继测试，不用当前无残留代签原正常Stop。其它既列功能/原型与最终候选仍未验，当前两端禁止W2/双SID/发布边界保持。Windows最新58f0d49f2/0d6fa9c0d已接，无新接口依赖；不借本批授权处置原r2或synthetic27960。
+
+
+## revision34 状态轮询争锁与只读诊断接续
+
+共享main17f07758e/51c8aca18/bec99201e只改状态polling、Mac准确隔离stage及定向测试，实际结果和未完GUI边界只归IMP172。Windows可自行增量合入；busy不发事件、不改原due时间或成功事实，原Status5/Unknown/Required保持。无Windows原件/Owner/worker/privatewire/scan独占文件或四trait变化，不重跑无影响MSI/CLI/旧归档/原Owner；实际共享并发集成在固定候选核。
+
+Mac继续单个真实包的只读状态IPC观察，不复跑供包/取消/启停。Windows077cbd56e/331ac32fa已fetch，尚待净差及原证据接收；原生端点桌面项Pending不能当通过。本批不授权r2/synthetic27960处置，原恢复/清理批准边界保持；不W2/双SID、不发布。
+
+
+## revision35 Windows私有原生端点回交后接续
+
+已接Windows077cbd56e/331ac32fa，精确摘要、151项状态和普通桌面Pending唯一归IMP173。原shared四trait/CONTRACT_VERSION4/r7写集不变；本机未整批merge原生实现。Windows继续唯一写原worker/privatecontrol/nativeV2/现有资格入口，不等Mac新接口。桌面只验证空fixture双端认证/四准确拒绝，不能当原产品Owner恢复或启停已过；原账户原普通令牌/noJob/同image/单次nonce和原5/10秒保持。
+
+当前需要普通账户实际桌面运行已摘要固定的launch-r7-private-native-empty.cmd；在此之前不提升、不从管理器Job绕过、不使用旧image/pipe/cleanup替代。此依赖不阻其它独立授权开发。原r2/synthetic27960/40588及拒删现场仍保留，不借本批接收授权force或归还。Mac独立继续状态IPC/NAME/恢复与候选，最终冻结前不W2/双SID、不发布。
+
+
+## revision36 Mac真实状态IPC及部分取消后继闭环后接续
+
+共享main最新0ae095327，实际验证包编译源bec99201e；两者区分不冒最终冻结。Mac真实查询775.519ms/界面2146ms、首次部分取消和官方后继Ready→正常Stop/RootAbsent13已闭合，实际原预算及旧失败保留只归IMP174。436e6dd9a/841291a2a/0ae095327仅定向GUI验证器和激活完成前置，不改Windows独占文件/共享四trait；Windows可增量合入，无需重跑无影响MSI/CLI/scan/旧归档。
+
+Windows继续revision35/r7原单写与普通桌面Pending；本机不等待此依赖，转剩余一般图/中断与NAME外部客户端/最终包回退。首次部分取消完整成功不等Windows产品恢复/整版可发布，也不授权旧现场force；原型文件继续原单写者，不同时改。最终图固定前不W2/双SID，不发布。
+
+
+## revision37 Windows准备前缀读回接续
+
+Windows96396f19b/3294b72b3已接，组件实际范围与157项状态唯一归IMP175；原四trait/CONTRACT_VERSION4/r7排他写集不变。本机未整批merge其生产分支。Windows继续fullSource与原nativeV2各覆盖/原Owner/privateendpoint实际普通桌面工作；不把带null安全baseline的Pending观察升级许可，不补旧Start窗口。
+
+普通桌面入口仍用原四输入/55cd6ef…独立执行，不为本新增source覆盖未验产物；当前r2/40588/synthetic27960及拒删权限边界保持。Mac继续NAME隔离回退与其它本机独立项，不因本批要求重跑无影响GUI/MSI/CLI/scan。最终候选冻结前不W2/双SID、不发布。
+
+
+## revision38 NAME备份回退及ChatGPT目标接续
+
+main18a126a58只有config_file_v2新ignored文件事务测试、Darwin官方刷新验证器的backup-rollback分支及准确task前缀准入，无产品语义或Windows独占写集/四trait变化。Windows可增量合入，不重跑无影响nativeOwner/MSI/CLI/扫描；Mac实际组件与客户端仍未验边界只归IMP176。
+
+最终名称显示对象按用户答复固定ChatGPT内本地Codex。工具禁止控制ChatGPT自身界面，不用其它UI技术绕过、不改日常配置或重启当前宿主；最终需具备独立隔离配置的实际客户端人工证据，不能以终端或官方目录刷新代签。此项只停真实客户端依赖，Mac继续后继代次取消/中断恢复/一般图，Windows继续revision37/r7，原r2/synthetic27960/40588与拒删边界不变。不W2/双SID、不发布。
+
+
+## revision39 名称验证准确外部协调清理接续
+
+main15dbb8286只改Darwin名称验证器的task-key预检/末端清理，不改产品/Windows独占文件或共享接口。实际原K释放与原字节、预检拒绝/0子进程负例及缺席补证唯一归IMP177；原round01的初始外部缺席未记录不补造。Windows无需重跑无影响nativeOwner/MSI/CLI/scan，继续revision37/r7本线。
+
+原ChatGPT自身UI工具禁用不尝试旁路，人工客户端证据仍未完；这只停该依赖，本机继续其它尚未验收功能，候选未固定、不W2/双SID、不发布。
+
+
+## revision40 Windows目录准备槽接收与Mac后继审查并行
+
+Windowsb1ef52972/7adf93a64已接，准确范围与163项状态只归IMP179。原四trait/CONTRACT_VERSION4/r7写集不变，Mac不并发改目录/partial/source原生文件，未整批merge生产分支。Windows继续完整Source/initialSD/partialwork/nativeV2/原Owner与普通桌面独立依赖，原Public输入及旧r2/synthetic27960/40588不动。
+
+Mac按client-successor-prepare-cancel-r1先补后继Preparing完整历史审查，再独立移动/索引/plan中断恢复；仅Macroot文件/共享必要字段归本机，前端和原型当前并行写集先核归属。首次取消、名称回退等未变通过项不重复；ChatGPT自身UI禁用依赖保持，不W2/双SID、不发布。
+
+
+## revision41 后继准备只读组件接续
+
+main845b28619只新增Mac generation的后继Preparing完整历史Review，7765271ff仅原生定向测试/driver。实际普通与真实取消关闭前驱、6测试/847ms审查、原9705ms首次取消及未完只归IMP180。无Windows独占文件/四trait/CONTRACT_VERSION4变化；Windows可增量合入，不要求重跑无影响MSI/CLI/scan/旧归档，仍按r7本线推进。
+
+Mac接下来实现后继保全移动/独立终态、多计划namespace和已登记plan中断恢复；只读组件不开放按钮或Start，产品预览/前端/真实GUI仍待后续。原型文件保持其唯一写者，本机不并发覆盖。固定候选/ChatGPT选择器与Windows实际普通桌面/Owner缺口各保留，不W2/双SID、不发布，旧现场处置无新授权。
+
+main cd7cd0a9e62b3f5f88e0054c3498cbfe18616943 增量为 macOS 独立取消计划目录校验，Windows 写集和共享合同不变。结果、证据和后继未完范围见 IMP181。

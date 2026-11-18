@@ -1,0 +1,18 @@
+STATUS024_PHASE {"acceptance":false,"elapsedUs":0,"stage":"collector.before-lock","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":99,"stage":"collector.acquired","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":249,"stage":"recovery.enter","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15434,"stage":"recovery.return","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15550,"stage":"fetch.enter","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15612,"stage":"source.before","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15933,"stage":"source.after","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":15997,"stage":"endpoint.before","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":127607,"stage":"endpoint.absent","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":127711,"stage":"cli.before-spawn","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":128181,"stage":"cli.spawned","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":128248,"stage":"cli.read-before","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2040842,"stage":"cli.read-after","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2041042,"stage":"cli.await-finished","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2041202,"stage":"recovery.enter","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2056312,"stage":"recovery.return","thread":"ThreadId(17)"}
+STATUS024_PHASE {"acceptance":false,"elapsedUs":2056410,"stage":"collector.return","thread":"ThreadId(17)"}
+STATUS024_PROBE_RESULT {"budgetMs":5000,"elapsedMs":2056,"releaseAcceptance":false,"scope":"one actual official status on reserved partial root; no cancel/Start/Stop or model requests","serviceStarted":false,"snapshot":{"canStart":false,"clientRecovery":"required","matrix":{"connection":"unconfigured","operation":"idle","runtime":"stopped"}},"withinBudget":true}

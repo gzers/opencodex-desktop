@@ -1,0 +1,33 @@
+{
+  "beforeRun": true,
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/modules/status/polling.rs",
+      "bytes": 12903,
+      "sha256": "a79754dc5c4868a56d80ecef5bbb0fdc2ec7485930b218dc2147c295266f168d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/status_source.rs",
+      "bytes": 47168,
+      "sha256": "66a938b2d900d9be22b697246ce7fcfff78fa60c79d968cee6af1f3b00c6925f"
+    },
+    {
+      "path": "apps/desktop/tauri/src/commands/mod.rs",
+      "bytes": 59753,
+      "sha256": "f1548c12984190b494d9401a54c3252814d147ff91e1ec40edd61355d50bc340"
+    },
+    {
+      "path": "apps/desktop/tauri/tests/macos024_status_probe.rs",
+      "bytes": 6887,
+      "sha256": "2964ff66e207b89da5f8f097b6fff316f8674af5ab1818496e95a5402662f274"
+    },
+    {
+      "path": "apps/desktop/tauri/tests/status_polling_contention.rs",
+      "bytes": 3651,
+      "sha256": "af8a693096eaa9334c8aa7f81fabec6e15804d212d131ea6ee617420f5ede80c"
+    }
+  ],
+  "hostSha256": "ef970752f49e448a6c4c6360bff481ab8dce9b2c086dee82cd639ed3db17cbf1",
+  "hypothesis": "actual official query holds sampler while real background poll and schedule retry on single Tokio worker; they return without emission or deadlock, original fullquery still finishes within5s",
+  "releaseAcceptance": false
+}
