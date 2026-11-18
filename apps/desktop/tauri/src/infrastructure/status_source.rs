@@ -32,7 +32,11 @@ pub(crate) fn diagnostic_stage(stage: &'static str) {
         || !home
             .parent()
             .and_then(std::path::Path::file_name)
-            .is_some_and(|n| n.to_string_lossy().starts_with("ocxd024-status-probe-"))
+            .is_some_and(|n| {
+                let name = n.to_string_lossy();
+                name.starts_with("ocxd024-status-probe-")
+                    || name.starts_with("ocxd024-gui-root-cancel-")
+            })
     {
         return;
     }
