@@ -20,6 +20,7 @@ struct Row {
 struct Trace {
     started: Instant,
     phase: &'static str,
+    journal_stages: bool,
     rows: Vec<Row>,
 }
 
@@ -31,11 +32,20 @@ pub(super) struct Capture;
 
 impl Capture {
     pub(super) fn begin() -> Self {
+        Self::start(false)
+    }
+
+    pub(super) fn begin_with_journal_stages() -> Self {
+        Self::start(true)
+    }
+
+    fn start(journal_stages: bool) -> Self {
         TRACE.with_borrow_mut(|slot| {
             assert!(slot.is_none());
             *slot = Some(Trace {
                 started: Instant::now(),
                 phase: "setup",
+                journal_stages,
                 rows: Vec::with_capacity(256),
             });
         });
@@ -107,4 +117,23 @@ pub(super) fn readback(
         start,
         end,
     })
+}
+
+pub(super) fn journal_stage<T>(
+    operation: &'static str,
+    end: Instant,
+    scope: impl FnOnce() -> (usize, usize),
+    run: impl FnOnce() -> io::Result<T>,
+) -> io::Result<T> {
+    let enabled = TRACE.with_borrow(|slot| slot.as_ref().is_some_and(|trace| trace.journal_stages));
+    let timing = if enabled {
+        readback(operation, end, scope)
+    } else {
+        None
+    };
+    let result = run();
+    if let Some(timing) = timing {
+        timing.finish(&result);
+    }
+    result
 }

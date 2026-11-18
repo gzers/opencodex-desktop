@@ -165,7 +165,7 @@ fn wl2_r7_journal_replay_cost_tracks_native_prefix_and_pure_data_separately() {
         .map(|node| (node.root_id.clone(), node.node_id.clone(), node.kind == Kind::CustodiedFile))
         .collect();
     {
-        let _timing = super::super::super::recovery_timing::Capture::begin();
+        let _timing = super::super::super::recovery_timing::Capture::begin_with_journal_stages();
         super::super::super::recovery_timing::phase("synthetic-node-prefix");
         for (root_id, node_id, custodied) in nodes {
             let operations: &[_] = if custodied {

@@ -17,6 +17,17 @@ use std::{
     path::PathBuf,
     time::Instant,
 };
+// These wrappers time the existing operations only in the dedicated fixture.
+macro_rules! journal_stage {
+    ($stage:literal, $end:expr, $scope:expr, $run:expr) => {{
+        #[cfg(test)]
+        let result = super::super::recovery_timing::journal_stage($stage, $end, $scope, $run);
+        #[cfg(not(test))]
+        let result: io::Result<_> = ($run)();
+        result
+    }};
+}
+
 mod actions;
 mod before_resume;
 mod preparation;
@@ -194,14 +205,23 @@ impl Record {
     }
     fn check(&mut self, end: Instant) -> io::Result<()> {
         before(end)?;
-        let fresh = observe(&self.path)?;
-        tree::streams(&self.path, false)?;
-        if identity(&fresh)? != self.file.identity()
-            || security(&fresh, end)? != self.security
-            || self.file.read()? != self.raw
-        {
-            return Err(invalid());
-        }
+        let _fresh = journal_stage!("journal-record-fresh", end, || (1, 0), || {
+            let fresh = observe(&self.path)?;
+            tree::streams(&self.path, false)?;
+            if identity(&fresh)? != self.file.identity() || security(&fresh, end)? != self.security
+            {
+                return Err(invalid());
+            }
+            Ok(fresh)
+        })?;
+        #[cfg(test)]
+        let raw_len = self.raw.len();
+        journal_stage!("journal-record-retained-read", end, || (1, raw_len), || {
+            if self.file.read()? != self.raw {
+                return Err(invalid());
+            }
+            Ok(())
+        })?;
         before(end)
     }
 }
@@ -763,8 +783,13 @@ impl Journal {
         }
         #[cfg(test)]
         let timing = super::super::recovery_timing::readback("journal-records", end, || {
-            let bytes = self.manifest_record.raw.len() + self.current_raw.len()
-                + self.events.iter().map(|event| event.raw.len()).sum::<usize>();
+            let bytes = self.manifest_record.raw.len()
+                + self.current_raw.len()
+                + self
+                    .events
+                    .iter()
+                    .map(|event| event.raw.len())
+                    .sum::<usize>();
             (self.events.len() + 2, bytes)
         });
         let result = self.read_retained_records(end);
@@ -778,82 +803,106 @@ impl Journal {
     // chain. Ordinary/historical callers still enter via check_records.
     fn read_retained_records(&mut self, end: Instant) -> io::Result<Current> {
         before(end)?;
-        if native::current_identity()? != self.token {
-            return Err(invalid());
-        }
-        self.directory.recheck()?;
-        self.manifest.binding.check_native(&self.peer, &self.pins)?;
-        for release in &mut self.previous_releases {
-            release.readback_history(end)?;
-        }
-        for history in &self.retired_lease_histories {
-            history.check(end)?;
-        }
-        if directory_security(&self.directory, end)? != self.directory_security {
-            return Err(invalid());
-        }
+        journal_stage!("journal-context-native", end, || (0, 0), || {
+            if native::current_identity()? != self.token {
+                return Err(invalid());
+            }
+            self.directory.recheck()?;
+            self.manifest.binding.check_native(&self.peer, &self.pins)?;
+            for release in &mut self.previous_releases {
+                release.readback_history(end)?;
+            }
+            for history in &self.retired_lease_histories {
+                history.check(end)?;
+            }
+            if directory_security(&self.directory, end)? != self.directory_security {
+                return Err(invalid());
+            }
+            Ok(())
+        })?;
         self.manifest_record.check(end)?;
         for record in &mut self.events {
             record.check(end)?;
         }
-        let current_path = self.directory.path().join("current.json");
-        let fresh = observe(&current_path)?;
-        tree::streams(&current_path, false)?;
-        native::verify_private_file(&self.current)?;
-        if identity(&fresh)? != self.current_id
-            || identity(&self.current)? != self.current_id
-            || security(&self.current, end)? != self.current_security
-            || security(&fresh, end)? != self.current_security
-            || contents(&mut self.current)? != self.current_raw
-        {
-            return Err(invalid());
-        }
-        let tip: Current = serde_json::from_slice(&self.current_raw).map_err(|_| invalid())?;
-        if tip.schema != ANCHORED_CURRENT_SCHEMA_V3
-            || tip.sequence != self.progress.sequence
-            || tip.event_digest != self.progress.tip
-            || tip.storage_plan_digest != self.progress.plan
-            || tip.manifest_digest != self.progress.manifest
-            || tip.binding_digest != self.progress.binding
-            || tip.session_id != self.progress.session
-            || tip.storage_strategy != ANCHORED_STORAGE_STRATEGY
-            || tip.security_policy_digest != Policy::fixed().digest()?
-            || tip.lease_epoch != self.progress.epoch
-            || tip.claim_key != self.progress.claim
-            || tip.deadline_scope != self.progress.deadline
-            || tip.lease_state != self.progress.lease_state
-            || tip.lease_objects_digest != self.progress.lease_objects
-            || tip.work_mode != self.progress.work_mode
-            || tip.work_frames != self.progress.work_frames
-            || tip.observed_frames != self.progress.observed_frames
-            || tip.snapshot_pending != self.progress.snapshot_pending
-            || tip.snapshot_links != self.progress.snapshot_links
-            || tip.observed_sequence != self.progress.observed_sequence
-            || tip.linked_frames != self.progress.linked_frames
-            || tip.lifecycle != self.progress.lifecycle
-            || tip.ready_generation != self.progress.ready_generation
-            || tip.action_pending != self.progress.action_pending
-            || tip.action_kind != self.progress.action_kind
-            || tip.recovery != self.progress.recovery_summary()?
-            || tip.history != self.progress.history_summary()?
-            || tip.handles != self.progress.handle_progress
-            || tip.batch != self.progress.batch_summary()
-            || tip.content != self.progress.content
-            || tip.closed != self.progress.closed
-            || tip.route_close != self.progress.route_close
-        {
-            return Err(invalid());
-        }
-        let mut names = vec!["manifest.json".to_string(), "current.json".to_string()];
-        names.extend((1..=self.events.len()).map(|n| format!("event-{n:06}.json")));
-        names.sort();
-        let mut actual = std::fs::read_dir(self.directory.path())?
-            .map(|e| e.and_then(|e| e.file_name().into_string().map_err(|_| invalid())))
-            .collect::<io::Result<Vec<_>>>()?;
-        actual.sort();
-        if actual != names {
-            return Err(invalid());
-        }
+        let _fresh = journal_stage!("journal-current-native", end, || (1, 0), || {
+            let current_path = self.directory.path().join("current.json");
+            let fresh = observe(&current_path)?;
+            tree::streams(&current_path, false)?;
+            native::verify_private_file(&self.current)?;
+            if identity(&fresh)? != self.current_id
+                || identity(&self.current)? != self.current_id
+                || security(&self.current, end)? != self.current_security
+                || security(&fresh, end)? != self.current_security
+            {
+                return Err(invalid());
+            }
+            Ok(fresh)
+        })?;
+        #[cfg(test)]
+        let current_len = self.current_raw.len();
+        journal_stage!("journal-current-bytes", end, || (1, current_len), || {
+            if contents(&mut self.current)? != self.current_raw {
+                return Err(invalid());
+            }
+            Ok(())
+        })?;
+        let tip = journal_stage!("journal-current-typed", end, || (1, current_len), || {
+            let tip: Current = serde_json::from_slice(&self.current_raw).map_err(|_| invalid())?;
+            if tip.schema != ANCHORED_CURRENT_SCHEMA_V3
+                || tip.sequence != self.progress.sequence
+                || tip.event_digest != self.progress.tip
+                || tip.storage_plan_digest != self.progress.plan
+                || tip.manifest_digest != self.progress.manifest
+                || tip.binding_digest != self.progress.binding
+                || tip.session_id != self.progress.session
+                || tip.storage_strategy != ANCHORED_STORAGE_STRATEGY
+                || tip.security_policy_digest != Policy::fixed().digest()?
+                || tip.lease_epoch != self.progress.epoch
+                || tip.claim_key != self.progress.claim
+                || tip.deadline_scope != self.progress.deadline
+                || tip.lease_state != self.progress.lease_state
+                || tip.lease_objects_digest != self.progress.lease_objects
+                || tip.work_mode != self.progress.work_mode
+                || tip.work_frames != self.progress.work_frames
+                || tip.observed_frames != self.progress.observed_frames
+                || tip.snapshot_pending != self.progress.snapshot_pending
+                || tip.snapshot_links != self.progress.snapshot_links
+                || tip.observed_sequence != self.progress.observed_sequence
+                || tip.linked_frames != self.progress.linked_frames
+                || tip.lifecycle != self.progress.lifecycle
+                || tip.ready_generation != self.progress.ready_generation
+                || tip.action_pending != self.progress.action_pending
+                || tip.action_kind != self.progress.action_kind
+                || tip.recovery != self.progress.recovery_summary()?
+                || tip.history != self.progress.history_summary()?
+                || tip.handles != self.progress.handle_progress
+                || tip.batch != self.progress.batch_summary()
+                || tip.content != self.progress.content
+                || tip.closed != self.progress.closed
+                || tip.route_close != self.progress.route_close
+            {
+                return Err(invalid());
+            }
+            Ok(tip)
+        })?;
+        journal_stage!(
+            "journal-membership",
+            end,
+            || (self.events.len() + 2, 0),
+            || {
+                let mut names = vec!["manifest.json".to_string(), "current.json".to_string()];
+                names.extend((1..=self.events.len()).map(|n| format!("event-{n:06}.json")));
+                names.sort();
+                let mut actual = std::fs::read_dir(self.directory.path())?
+                    .map(|e| e.and_then(|e| e.file_name().into_string().map_err(|_| invalid())))
+                    .collect::<io::Result<Vec<_>>>()?;
+                actual.sort();
+                if actual != names {
+                    return Err(invalid());
+                }
+                Ok(())
+            }
+        )?;
         before(end)?;
         Ok(tip)
     }
