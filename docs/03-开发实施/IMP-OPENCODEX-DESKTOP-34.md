@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 188；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 189；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2052,3 +2052,12 @@ Mac main 6bafdd342e69ee83e842f4b35a20bafa1320645a 用原 Index 和 SQLite 连接
 | journal-append-readback，53 件 | cfce007f0 三条源输入匹配，报告七组 15/15、三个 MSVC 产品构建、58 个夹具根缺席。复用同一次完整写前检查解析的 Current，保留字节 CAS、独立重放、完整写后回读、poison 和原期限。端到端计时及原生读收益待证。 |
 
 [固定交接](https://github.com/gzers/opencodex-desktop/blob/99520867ba3836b5443f61fc4620e6968083987c/docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md)和 [r7 增量决定](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)记录未来隔离宿主严格 V2 部分捕获附件。普通桌面私有 V2、同原线程生产恢复原预算、普通用户 MSI 和官方单 SID 生命周期待完成。公开 Start 保持拒绝。旧 r2 的 Node 未 Resume，session 7 断开，三件原件在保管中，十份导出不变，24 项 Job 查询 raw50／Unknown，executionReady=false。
+
+
+## revision189：Windows r7 Journal 读回计时交接
+
+净差接收代码 6dbffae54c528750bfb6d5ad9b9e08dabaf78495、证据 8777e862f0b2017e94b77ad426ea7a6a324bcd9e。源码增量限三个 Windows 原件 Journal 文件的测试计时和相应用例。原生对象、安全描述符、流、成员集合、独立重放、追加读回和截止期限检查均在。两轮清单分别核对 54 和 49 份原始 Git 载荷的长度、SHA-256 和精确成员，执行源 2/2 和 3/3 分别绑定 ca1de1350a565b3a0be8557591b7332a60994c71 和 6dbffae54c528750bfb6d5ad9b9e08dabaf78495。各自最终 Journal 测试 5/5，报告各 14 个夹具根缺席。第一轮初始格式字符串编译失败 raw101 保留，修正编译 raw0。第二轮三个产品二进制构建 raw0。[固定交接](https://github.com/gzers/opencodex-desktop/blob/8777e862f0b2017e94b77ad426ea7a6a324bcd9e/docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md)
+
+第一轮 12 次追加包含 24 次全读回，合计 88,909 μs，独立重放 21,159 μs。第二轮 25 次全读回合计 97,869 μs，其中每次重新检查记录及保留文件身份、属性和字节占 60.73%，当前记录字节和解析占 1.95%。该合成结果只供后续定位，生产完整恢复在原 10 秒内仍未证明，保留此前 10,144 和 10,039 ms 失败。[重放证据](https://github.com/gzers/opencodex-desktop/tree/8777e862f0b2017e94b77ad426ea7a6a324bcd9e/.adg/evidence/0.2.24/windows-dev/wl2-r7-journal-replay-cost-20261118-r1) [分段证据](https://github.com/gzers/opencodex-desktop/tree/8777e862f0b2017e94b77ad426ea7a6a324bcd9e/.adg/evidence/0.2.24/windows-dev/wl2-r7-journal-readback-stages-20261118-r1)
+
+Windows 继续原 worker 的严格 V2 部分捕获附件与同线程恢复，公开 Start 保持拒绝。旧 r2 的 Node 从未 Resume，三个原件仍在保管中，Job 的 24 项查询为 Unknown（raw50），生产首错仍为 command-lineage raw64，executionReady=false。旧现场保持原状。普通桌面 private V2、普通用户 MSI、官方单 SID 生命周期及原预算仍待完成。固定签名候选后进入 W2／双 SID。

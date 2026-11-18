@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 49；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 50；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -393,3 +393,10 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 共同 main 6bafdd342e69ee83e842f4b35a20bafa1320645a，Windows 代码 cfce007f0ae1de13c20e797b9448b5fcc1605875，证据 99520867ba3836b5443f61fc4620e6968083987c。验收状态归 IMP188。Windows 继续独占 windows_owner_host024/**、r7 已授权的 Windows 原件／生命周期／协调文件和 test/windows024-native/**。沿用四个共享 trait、CONTRACT_VERSION4 和共享持久格式。Mac 并行承接后继取消和实际客户端验证。
 
 > fetch 最新 main 和 docs/governance-main，按 TEAM49／IMP188／r7 从 cfce007f0 接续。先验证原 worker 在未来隔离 D 创建严格 V2 部分捕获附件，覆盖准确绑定、回读、超时和 I/O 失败。再完成原线程生产恢复及原预算计时，补普通桌面私有 V2、普通用户 MSI、官方单 SID 生命周期。保留首错和夹具事实，公开 Start 维持拒绝，旧 r2 保持原状，固定签名候选前不跑 W2／双 SID。
+
+
+## revision50 Windows r7 Journal 计时接续
+
+共同基线 6bafdd342e69ee83e842f4b35a20bafa1320645a，Windows 代码 6dbffae54c528750bfb6d5ad9b9e08dabaf78495，证据 8777e862f0b2017e94b77ad426ea7a6a324bcd9e。复核结果归 IMP189。Windows 按现有独占写集继续原 worker、Mac 并行承接后继准备取消。四个共享 trait、CONTRACT_VERSION4 与验收预算沿用 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。
+
+> fetch 最新 docs/governance-main，按 TEAM50／IMP189／r7 从 6dbffae5 接续。完成原 worker 的严格 V2 部分捕获附件创建及准确读回，再验证同原线程的显式恢复和完整原预算。Journal 计时只作诊断，继续执行全量验证。保留旧 r2、公开 Start 拒绝与既有失败证据，固定候选前按单 SID 定向验证。
