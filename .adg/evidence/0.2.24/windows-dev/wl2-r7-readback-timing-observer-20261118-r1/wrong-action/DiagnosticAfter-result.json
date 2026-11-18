@@ -1,0 +1,20 @@
+{
+    "mode":  "DiagnosticAfter",
+    "manager":  {
+                    "result":  {
+                                   "response":  {
+                                                    "facts":  {
+                                                                  "snapshot":  {
+                                                                                   "actionId":  "bad-action"
+                                                                               }
+                                                              }
+                                                }
+                               }
+                },
+    "passed":  true,
+    "firstError":  null,
+    "attachment":  [
+                       "first",
+                       "second"
+                   ]
+}
