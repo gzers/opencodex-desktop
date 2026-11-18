@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 43；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 44；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -362,3 +362,8 @@ Mac接下来实现后继保全移动/独立终态、多计划namespace和已登�
 main cd7cd0a9e62b3f5f88e0054c3498cbfe18616943 增量为 macOS 独立取消计划目录校验，Windows 写集和共享合同不变。结果、证据和后继未完范围见 IMP181。
 
 main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修复。原生回执、清理证据和未完范围见 IMP182。该批 Windows 写集和共享合同不变。
+
+
+## revision44 Windows初始Start worker接续
+
+共同代码基线main 9daf5599151b65437f94ab2cadb1988060ee38c3，Windows输入 0816047f30f667e56bea4167ec012f6e12bfcbdd，证据 cecd17bda58ebbccc0bd0bb0a0a017a5df1ab5ba。接收结果归IMP183。按[本次r7合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)继续Windows原宿主worker、生命周期/捕获/协调及定向测试。Mac继续后继准备取消。复用未受影响的扫描、CLI和MSI证据。

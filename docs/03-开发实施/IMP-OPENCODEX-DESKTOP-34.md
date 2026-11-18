@@ -11,9 +11,9 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 182；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 183；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
-初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
+初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native 0816047f30f667e56bea4167ec012f6e12bfcbdd（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
 ## 实施与并行顺序
 
@@ -1999,3 +1999,10 @@ main cd7cd0a9e62b3f5f88e0054c3498cbfe18616943 从有界独立历史导出完整�
 main 9daf5599151b65437f94ab2cadb1988060ee38c3 在零登记计划时同样核对目录集合。新槽由当前动作独占创建并固定身份，只能用于准确的下一次 RootCancellationPrepared 登记。针对性 Rust 测试 15 项通过，异常槽回归核对原槽字节和 SQLite Head 保持。
 
 run05 原生显式取消在 6,982 ms／10,000 ms 到达 RootCancellationAbsent revision 3。陈旧确认与归档篡改均被拒绝，四项原生协调权限已释放。后继模拟捕获在 2,044 ms／30,000 ms 到达 Captured revision 6，服务未启动。测试根、进程组及准确协调路径均已清理，全局生命周期协调未动。回执的运行器基线和被测提交由原二进制净差及摘要绑定。该轮提供首次取消回归证据，后继取消移动、中断恢复、真实后继启停及整版验收仍待完成。[证据清单](../../.adg/evidence/0.2.24/mac-cancel-plan-namespace-r1/evidence-manifest.json)
+
+
+## revision183：Windows r7目录、准备与扫描接收
+
+代码 0816047f30f667e56bea4167ec012f6e12bfcbdd，证据 cecd17bda58ebbccc0bd0bb0a0a017a5df1ab5ba。接收全树成员、原准备绑定V2 Pending DATA、长路径查询和复用扫描缓冲的定向证据，未整合Windows生产分支。按固定Git对象核对四个清单的逐文件长度与SHA256：tree-membership 73件、bound-preparation 109件、full-msvc-scan-entry 37件、initial-start-worker-request 10件。实际固定副本MSVC完整扫描2634.174ms，16项回归通过，初次10079.394ms失败保留。缓存和宿主负载未控制，生产Start 30秒仍须定向实证。Public输入的活动比对来自Windows回交。普通桌面私有V2未取得输出，session 7断开。整链原件恢复、普通桌面生命周期和候选资格尚未通过。
+
+初始Start持锁线程的所有权和后继恢复权限已在[Windows r7合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)冻结。Windows可继续本线开发，先在自有夹具证明同原线程和同范围。旧r2保持原状，固定候选前不进入W2。

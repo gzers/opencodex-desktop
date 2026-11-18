@@ -208,3 +208,14 @@ Windows9fdd4c618／docs f6f8677a的object-type原型已形成新事实：两次�
 另核实际loaded357的failure_control.rs第283—361行：request_cleanup固定Operation::ExplicitRecovery并要求facts.forced=true；服务器存在Status分支不等于已加载客户端有只读入口。不可执行旧cleanup来探状态，不用新image绕原same-image准入，不把构造相似RPC或修改旧二进制当已有能力。这里只作精确源码判读，未执行当前现场动作；证据见windows-r7-contract-receive-r12/loaded-client-route-review.json。
 
 这项当前r2的恢复证明仍为Unknown，未形成R1Ready，更未授权forced/原件归还。原r2归档/44项不受影响证据复用，旧场景清理授权不转用。future-host原worker、独立v2附件、最终同claim/全树/8/字节/children/锁释放证据按A/B及既有r7允许集连续推进；不因旧现场只读路线停点而停止其它已授权实现。新路线或具体外部修复方案需先列原事实、覆盖与未证前提，再决定对应边界；不把部分原语通过写为生产Stop/Closed或整版通过。
+
+
+## 2026-11-18增量决定：首启与恢复共用原worker
+
+依据 cecd17bda58ebbccc0bd0bb0a0a017a5df1ab5ba 的 wl2-r7-initial-start-worker-request-20261118-r1/interface-request.json，在原B节基础上将worker的所有权起点前移。capture_held 与 capture_existing_with_predecessors 在原调用栈持有活动的 !Send/!Sync lease，失败后才启动恢复worker无法接回已释放的范围。
+
+- 原宿主以唯一Owner/slot登记一个持久worker，在第一次native acquisition之前完成绑定。每个成功取得的原范围和已有副作用前缀即时归入同线程持有状态。初次Start返回首错或过期时，先撤销Start写权限，再发布Required及精确阶段。活动lease和部分取得句柄留在原线程。不得因提前返回、接收者断连或析构而释放尚有恢复义务的范围。worker失联或panic报告Unknown，保留最早可知事实并拒绝正常操作。
+- 请求端只持控制许可。Start与显式恢复走同一worker，分别用入口签发并绑定action/slot的原绝对期限。排队计入期限，迟到请求不得开始写。原Start 30秒，Stop 10秒，Restart总30秒且Stop子窗最多10秒。持有活动lease或必须由Owner读取/修改的阶段经同一worker执行，其余共享编排留原入口。Required、Unknown或恢复处理中，普通Start/Stop/Restart立即拒绝。Status独立读受绑定的实际投影，在5秒内返回阶段及可证事实，记录失联、竞争或不可读时为Unknown，无须等worker锁。回执保留首阶段、实际结果和系统原始错误码。
+- 同一线程区分原Start能力、只读保全能力、显式恢复能力。原Start到期永久失效。只读凭证核对原slot/worker/thread、原session/action、同源与同范围成员身份及锁。新恢复能力由原worker在一次显式请求中验证同一失败前缀、当前独立注册、原对象身份和实际连续持锁后生成，绑定原失败action、唯一新action和单一10秒或更短父限。能力只许可合同已证明的静止、原件返还、工作副本处置、读回与精确释放阶段。缺任一原范围或持有事实即Required。不得向原lease传新deadline重开Start权限，不clone/adopt，不释放再取得，不出现仅持NLK写入窗口。恢复过期维持原位保全，异常持锁处置仍需独立决定。恢复结论不签正常Stop、Closed或后继许可。
+- Windows独占 windows_owner_host024/** 及r7已授权的Windows原件/生命周期/协调实现和 test/windows024-native/**。Windows基线 0816047f30f667e56bea4167ec012f6e12bfcbdd，共享main 9daf5599151b65437f94ab2cadb1988060ee38c3。四trait/CONTRACT_VERSION4及共享持久格式不变。新的共享依赖先交最小接口申请。原Owner绑定的V2/Pending可独立继续。
+- 先用隔离自有夹具验证首个/部分/全范围取得后的真实失败、原Start超时后拒绝写、同原线程续用原句柄、外部冲突负控、显式恢复成功与过期、断连/重放/重复派发/worker失联、Status 5秒及普通请求拒绝。继续严格核验原件身份、安全、字节、children、锁释放、原预算和准确回执。旧r2现场、日常配置和官方包维持原状，本合同只放行上述新实现和隔离验证。
