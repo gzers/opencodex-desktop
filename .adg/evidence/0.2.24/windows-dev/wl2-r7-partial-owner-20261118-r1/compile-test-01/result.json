@@ -1,0 +1,40 @@
+{
+  "raw": 0,
+  "elapsedMs": 143875,
+  "cargo": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/cargo.exe",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "base": "766d1f010be60865e7a425dab242ab5d861773b5",
+  "sourceHashes": {
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/existing_qualification.rs": "24a19e8ae049c8ab99a39704350836a836febf556933aa2b4b18fba6534ea328",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs": "cae34c9e3627a2e734ff45f7c4fbb5178c4833cdbf789f9230fba8b4fae4c847",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture.rs": "063292aeb0375fcdb98c235a3b8a0a14fee0e61aed42744f0d62e2db30ba40bd",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3.rs": "389ef1cc3272cff5e8338e0107ff97b4672fbfeaaa06fea89f3dbc0e4552939c",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs": "cc0d2f834fba6a94ff1100adc567cbb3f5a1ee9f888c73db5ef4552ca50de924",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/test_failure.rs": "4417c00c872410d19c13116053c6a9c7937940275d3b4efacfb7bf19b1356fec",
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs": "6e82f150d60a51e58d3aee04415912c72e32b5dcf3b4172af6694475c526cb79",
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/start_worker.rs": "722d7c79f4c45913145013eb81b8d28e2ebc8fa7e78ffece52d225f202ae9587",
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs": "fde21933d01047a0aa5117bc95b5b513f63b4960253494213b238ec787cb2a41",
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/partial_capture_tests.rs": "38642c2151f2d137c739967d7c292022d7a690526f37dbe9286fb2546d18d741"
+  }
+}

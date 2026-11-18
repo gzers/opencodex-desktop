@@ -1,0 +1,146 @@
+{
+  "source": "18833e7b65c4cb48316f37ee15a3dc584650877e",
+  "base": "766d1f010be60865e7a425dab242ab5d861773b5",
+  "main": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+  "governance": "89294318f8c5010c58c6b2ba6d3cd9e3deecb219",
+  "team": 53,
+  "imp": 192,
+  "authorizationGovernance": "81904340f107f391fec62bf3f282e91e8504b263",
+  "buildInputs": {
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs": {
+      "workingInputSha256": "6a9a6201ae80634f06fbc4d00c334b1ae30c3fb646e167a58476ac3421f15c8a",
+      "gitBlobSha256": "6a9a6201ae80634f06fbc4d00c334b1ae30c3fb646e167a58476ac3421f15c8a"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record_v2.rs": {
+      "workingInputSha256": "b99e6fc5cff8da186edd2ffc9c218f49e5dac9851de9310d0e39c10d1ff1b987",
+      "gitBlobSha256": "b99e6fc5cff8da186edd2ffc9c218f49e5dac9851de9310d0e39c10d1ff1b987"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/retained_start.rs": {
+      "workingInputSha256": "86bb32b8bac4a39ed4841a930b530cee2c70143715f736298d8278bc3e301888",
+      "gitBlobSha256": "86bb32b8bac4a39ed4841a930b530cee2c70143715f736298d8278bc3e301888"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/segments.rs": {
+      "workingInputSha256": "955c3a61ffda4dde55e10267fcc04e88df263a8a1de4a9e6cb2ffa470d253338",
+      "gitBlobSha256": "955c3a61ffda4dde55e10267fcc04e88df263a8a1de4a9e6cb2ffa470d253338"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/existing_qualification.rs": {
+      "workingInputSha256": "c2f545e562c4c74eb51de4d35edae12185b0f7816cdc61ca55bfac64f2c09110",
+      "gitBlobSha256": "c2f545e562c4c74eb51de4d35edae12185b0f7816cdc61ca55bfac64f2c09110"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/mod.rs": {
+      "workingInputSha256": "5edac2eb24b7b9c3e34a2b1b0132d89ceedd3a282c748baa9b726382dec54d6f",
+      "gitBlobSha256": "5edac2eb24b7b9c3e34a2b1b0132d89ceedd3a282c748baa9b726382dec54d6f"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture.rs": {
+      "workingInputSha256": "f20db3a55ff2d2b5eeff652fb77006c3ce1be693d8b00f0e283500f5691eea5d",
+      "gitBlobSha256": "f20db3a55ff2d2b5eeff652fb77006c3ce1be693d8b00f0e283500f5691eea5d"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_timing.rs": {
+      "workingInputSha256": "af67775e90ae1556b5b7e12a33fe8353d2aab0dd9a68e82e88cb78c53a760320",
+      "gitBlobSha256": "af67775e90ae1556b5b7e12a33fe8353d2aab0dd9a68e82e88cb78c53a760320"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs": {
+      "workingInputSha256": "3b79e93632f0a0b7bee989aea1d20f0d919a524b45fd6bb72e3d4c31ac104f34",
+      "gitBlobSha256": "3b79e93632f0a0b7bee989aea1d20f0d919a524b45fd6bb72e3d4c31ac104f34"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker/tests.rs": {
+      "workingInputSha256": "7549d2e6f19fc7008b54eb639e89d38b3203cef657fcfcc5063aa9b45c28fd17",
+      "gitBlobSha256": "7549d2e6f19fc7008b54eb639e89d38b3203cef657fcfcc5063aa9b45c28fd17"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/source.rs": {
+      "workingInputSha256": "d7e83acb8cae1893a362fddc304e19b49f37223e7fb34dffe0238d30421b77c0",
+      "gitBlobSha256": "d7e83acb8cae1893a362fddc304e19b49f37223e7fb34dffe0238d30421b77c0"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3.rs": {
+      "workingInputSha256": "aba200bcb41b888c77ba5c1bc8cb59b0c2402c68c9e00b6ffd19d14fbc6f69cc",
+      "gitBlobSha256": "aba200bcb41b888c77ba5c1bc8cb59b0c2402c68c9e00b6ffd19d14fbc6f69cc"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs": {
+      "workingInputSha256": "7b676953c5d2584481d99aa0536c77061941cbb060abb1aa50288160e47a7db7",
+      "gitBlobSha256": "7b676953c5d2584481d99aa0536c77061941cbb060abb1aa50288160e47a7db7"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/bound.rs": {
+      "workingInputSha256": "7077537d37d90a34055fdb66edff1e08aa749464d7ce89ea5d3c9524090e06e7",
+      "gitBlobSha256": "7077537d37d90a34055fdb66edff1e08aa749464d7ce89ea5d3c9524090e06e7"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/test_failure.rs": {
+      "workingInputSha256": "4417c00c872410d19c13116053c6a9c7937940275d3b4efacfb7bf19b1356fec",
+      "gitBlobSha256": "4417c00c872410d19c13116053c6a9c7937940275d3b4efacfb7bf19b1356fec"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs": {
+      "workingInputSha256": "1b0639f4cb911d8b0354c875f26d3a0728359b77272adb61cb53771d77b9c4d5",
+      "gitBlobSha256": "1b0639f4cb911d8b0354c875f26d3a0728359b77272adb61cb53771d77b9c4d5"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/start_worker.rs": {
+      "workingInputSha256": "c2581654261beb430b9bfff4c9a5b243c2591475f3ecce396438819729625b9d",
+      "gitBlobSha256": "c2581654261beb430b9bfff4c9a5b243c2591475f3ecce396438819729625b9d"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/mod.rs": {
+      "workingInputSha256": "84862089ee02ac9558a24b9e80d1ae27225e256976a773f256a1dc611c073e83",
+      "gitBlobSha256": "84862089ee02ac9558a24b9e80d1ae27225e256976a773f256a1dc611c073e83"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/partial_capture_tests.rs": {
+      "workingInputSha256": "38642c2151f2d137c739967d7c292022d7a690526f37dbe9286fb2546d18d741",
+      "gitBlobSha256": "38642c2151f2d137c739967d7c292022d7a690526f37dbe9286fb2546d18d741"
+    },
+    "apps/desktop/tauri/src/infrastructure/windows_owner_host024/recovery_control/server.rs": {
+      "workingInputSha256": "d69f6dfaff7056585641926186f4f6a769c0a96e874c509b89aad1ad359b988b",
+      "gitBlobSha256": "d69f6dfaff7056585641926186f4f6a769c0a96e874c509b89aad1ad359b988b"
+    },
+    "test/windows024-native/launch-r7-partial-owner.cmd": {
+      "workingInputSha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2",
+      "gitBlobSha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2"
+    },
+    "test/windows024-native/launch-r7-partial-owner.ps1": {
+      "workingInputSha256": "183159fa5a7dc676968599391979997dee937534cc9d13fdb6c85cb9e016adee",
+      "gitBlobSha256": "183159fa5a7dc676968599391979997dee937534cc9d13fdb6c85cb9e016adee"
+    }
+  },
+  "generatedSchemaSha256": "37ad285871f02aca13444391a6d2f14c4a7c6e8e464ff8cd5d32214d72387d49",
+  "artifacts": {
+    "test": [
+      {
+        "name": "opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-partial-owner-20261118-r1\\compile-test-05\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+        "bytes": 103620608,
+        "sha256": "523bdc65235a90d85ac77da0f2b55266194f3dbb86077e91721729714f8df0d5",
+        "testBootstrapMarkerPresent": true
+      }
+    ],
+    "products": [
+      {
+        "name": "ocxd.exe",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-partial-owner-20261118-r1\\compile-products-03\\ocxd.exe",
+        "bytes": 19357696,
+        "sha256": "f230b000ddf109869c19cb9202edbaa3c393deffd9e3970cba3c928a52cbb959",
+        "testBootstrapMarkerPresent": false
+      },
+      {
+        "name": "opencodex-desktop.exe",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-partial-owner-20261118-r1\\compile-products-03\\opencodex-desktop.exe",
+        "bytes": 79237120,
+        "sha256": "1ac1c1d5c3ff11cef309cc52e6a6e4d477eebce5049d246c386b98436206f483",
+        "testBootstrapMarkerPresent": false
+      },
+      {
+        "name": "ocx.exe",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-partial-owner-20261118-r1\\compile-products-03\\ocx.exe",
+        "bytes": 303104,
+        "sha256": "7379b72c2189523db33b6a570c9dfff191e8888369b21bab84221736680e258e",
+        "testBootstrapMarkerPresent": false
+      }
+    ]
+  },
+  "buildResults": {
+    "test": {
+      "batch": "compile-test-05",
+      "raw": 0,
+      "elapsedMs": 291297
+    },
+    "products": {
+      "batch": "compile-products-03",
+      "raw": 0,
+      "elapsedMs": 227953
+    }
+  }
+}

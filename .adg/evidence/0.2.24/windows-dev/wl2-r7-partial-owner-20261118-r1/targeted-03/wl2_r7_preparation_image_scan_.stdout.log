@@ -1,0 +1,9 @@
+
+running 1 test
+test infrastructure::windows_client_originals024::recovery_timing::wl2_r7_preparation_image_scan_observation_keeps_deadline_and_original_error ... r7-recovery-timing=[]
+r7-preparation-image-scans=[{"ordinal":1,"phase":"preparation-full-image-verify","failedAction":"642c3a8d-e79b-40a1-86d6-49cc2ad08abc","sourceDigest":"e5094a0bea868dec4e00b170f6693a881b7c3eebfa9021b5141591aedf085d0d","startedUs":17,"finishedUs":1386,"deadlineUs":9999728,"remainingBeforeUs":9999710,"remainingAfterUs":9998341,"completed":true,"errorCode":null},{"ordinal":2,"phase":"preparation-full-image-verify","failedAction":"642c3a8d-e79b-40a1-86d6-49cc2ad08abc","sourceDigest":"e5094a0bea868dec4e00b170f6693a881b7c3eebfa9021b5141591aedf085d0d","startedUs":1396,"finishedUs":3061,"deadlineUs":9999728,"remainingBeforeUs":9998331,"remainingAfterUs":9996666,"completed":true,"errorCode":null},{"ordinal":3,"phase":"preparation-full-image-verify","failedAction":"642c3a8d-e79b-40a1-86d6-49cc2ad08abc","sourceDigest":"e5094a0bea868dec4e00b170f6693a881b7c3eebfa9021b5141591aedf085d0d","startedUs":3619,"finishedUs":5622,"deadlineUs":9999728,"remainingBeforeUs":9996109,"remainingAfterUs":9994105,"completed":false,"errorCode":"runtime_image_unconfirmed"}]
+r7-preparation-image-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpDLQFYV
+ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 2302 filtered out; finished in 0.01s
+

@@ -1,0 +1,43 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_refuses_identity_action_thread_and_expiry_drift ... r7-pending parent-path refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp1gcJcG
+r7-pending parent-object refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp6vPspx
+r7-pending parent-stream refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmptD7zKC
+r7-pending owner-host refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpObz5uU
+r7-pending owner-session refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpzdF2fj
+r7-pending capture-session refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpXIP5z5
+r7-pending failed-action refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpTr5eUy
+r7-pending new-action refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpbJ1V2e
+r7-pending thread refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpMYrVdi
+r7-pending expired refused before creating files raw=None kind=TimedOut
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp8IcmUF
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_same_thread_exact_readback_and_create_only ... r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":null,"attachmentRawError":null,"durable":true,"intentDigest":"d391f958544200088b59f10a4a1b8188558f969d9d1cb447bdb2f4a5025c1edb","originalRanges":{"claimKey":"synthetic claim","epoch":"synthetic epoch","objectsDigest":"25bb8138d29a20fd9b66ffff780b5bcda287d23bb21b50cbfb22ee4593aca013"},"pendingDigest":"b8743650829e81ed060c57546027f4272aa91fb9d901933cfdb7d218cc2d07cd","startRawError":64}
+r7-pending exact two-record native readback, no second admission
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpjhJhtk
+r7-pending collision raw=Some(183)
+r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":"AlreadyExists","attachmentRawError":183,"durable":false,"intentDigest":"af4767e276fd858335e796400a4c2fd9b1d7c090ec7968cd320acdcd9a6f0015","originalRanges":null,"pendingDigest":"049ef4fe0990835692b027c5f0b2a91ad4ef27dfe2b33f244948f36d16aaf29d","startRawError":64}
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpLCCw9e
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_short_write_flush_and_readback_keep_diagnostic_prefix ... r7-pending injected short-write, retained bytes=743 raw=None
+r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":"Other","attachmentRawError":null,"durable":false,"intentDigest":"5cff32b5cb5f39012144cec5e0e02a81289da7c9b22d69b597f34640f6c12575","originalRanges":null,"pendingDigest":"99457f63a7a1b65379d221a6c7225eda3a42f650fb26d6e4d87e4ba9d320d1e2","startRawError":64}
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpimMPco
+r7-pending injected flush, retained bytes=1486 raw=Some(1117)
+r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":"InputOutputError","attachmentRawError":1117,"durable":false,"intentDigest":"d8f2a8d4f02a57e18381b72a9f6ab19ea0562085ffcedd7d40b7704926aa378a","originalRanges":null,"pendingDigest":"c658dd49d52079569c9a1e7a753bb7a37564641faaf73e209f484ef227587ce7","startRawError":64}
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpz3EfZc
+r7-pending injected readback, retained bytes=1486 raw=None
+r7-pending worker Status fixture projection={"attachmentAttempted":true,"attachmentErrorKind":"Other","attachmentRawError":null,"durable":false,"intentDigest":"3721eb703fe9795dabae295ef993a2b3ab25954193f097439e0a80d9e75079ca","originalRanges":null,"pendingDigest":"f7c119229bb43fca39c06dbf9b8f85cdc0f84a9c0f8e3ccf6f2079293b3fc95f","startRawError":64}
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEkoaQI
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2300 filtered out; finished in 0.12s
+
