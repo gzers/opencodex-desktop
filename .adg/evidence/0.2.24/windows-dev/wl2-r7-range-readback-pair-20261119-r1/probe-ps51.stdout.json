@@ -1,0 +1,66 @@
+{
+    "launcherSha256":  "b7207c94ceb391230639fb6230e4fe228faed874e39ece68e75c27f2d3487b4f",
+    "powerShell":  "5.1.26100.33438",
+    "scope":  "archived synthetic records; no live worker or real deadline proof",
+    "scratch":  "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx-r7-readback-pair-234f073679eb418391f91bd1016e08db",
+    "nativeAccess":  "0xc0020000",
+    "nativeShare":  1,
+    "nativeDisposition":  1,
+    "nativeFlags":  "0x200000",
+    "archiveSha256":  [
+                          "736fc8b702c8decf098d5f45863d2395857982962b6ef5a22ab24f30aa496260",
+                          "8732c35bacea55dd2fff61fd96a57e2688d663a868c9b3e0b4596537350f9f9e"
+                      ],
+    "results":  {
+                    "fixed":  {
+                                  "raw":  32,
+                                  "hresult":  -2147024864,
+                                  "message":  "The process cannot access the file \u0027C:\\Users\\15119\\AppData\\Local\\Temp\\ocx-r7-readback-pair-234f073679eb418391f91bd1016e08db\\D\\before-resume-pending-33333333-3333-4333-8333-333333333333\\v2-record-000001.json\u0027 because it is being used by another process."
+                              },
+                    "candidate":  [
+                                      {
+                                          "name":  "DiagnosticAfter-v2-record-000001.json",
+                                          "bytes":  3523,
+                                          "sha256":  "736fc8b702c8decf098d5f45863d2395857982962b6ef5a22ab24f30aa496260"
+                                      },
+                                      {
+                                          "name":  "DiagnosticAfter-v2-record-000002.json",
+                                          "bytes":  3669,
+                                          "sha256":  "8732c35bacea55dd2fff61fd96a57e2688d663a868c9b3e0b4596537350f9f9e"
+                                      }
+                                  ],
+                    "repeatedExport":  {
+                                           "raw":  80,
+                                           "hresult":  -2147024816,
+                                           "message":  "The file \u0027C:\\Users\\15119\\AppData\\Local\\Temp\\ocx-r7-readback-pair-234f073679eb418391f91bd1016e08db\\out\\candidate\\DiagnosticAfter-v2-record-000001.json\u0027 already exists."
+                                       },
+                    "secondWriter":  [
+                                         {
+                                             "raw":  32,
+                                             "hresult":  -2147024864,
+                                             "message":  "The process cannot access the file \u0027C:\\Users\\15119\\AppData\\Local\\Temp\\ocx-r7-readback-pair-234f073679eb418391f91bd1016e08db\\D\\before-resume-pending-33333333-3333-4333-8333-333333333333\\v2-record-000001.json\u0027 because it is being used by another process."
+                                         },
+                                         {
+                                             "raw":  32,
+                                             "hresult":  -2147024864,
+                                             "message":  "The process cannot access the file \u0027C:\\Users\\15119\\AppData\\Local\\Temp\\ocx-r7-readback-pair-234f073679eb418391f91bd1016e08db\\D\\before-resume-pending-33333333-3333-4333-8333-333333333333\\v2-record-000002.json\u0027 because it is being used by another process."
+                                         }
+                                     ],
+                    "wrongFailedAction":  {
+                                              "raw":  5377,
+                                              "hresult":  -2146233087,
+                                              "message":  "Pending record schema or original Owner and action binding differs."
+                                          },
+                    "extraMember":  {
+                                        "raw":  5377,
+                                        "hresult":  -2146233087,
+                                        "message":  "Pending directory has unexpected membership."
+                                    },
+                    "changedPendingBytes":  {
+                                                "raw":  5377,
+                                                "hresult":  -2146233087,
+                                                "message":  "Pending record event or exact file digest chain differs."
+                                            }
+                },
+    "cleanupComplete":  true
+}

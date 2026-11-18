@@ -1861,3 +1861,12 @@ nine-r1 仍保留 6,460 ms／raw32 首错与控制端身份查询 raw5。独立�
 输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 bebdfa503f374d6115b9fa313b9c62b213009278、TEAM66／IMP205。待证伪判断是固定 ExportExact 以 Read access 和 Read share 打开 V2 文件时，与原 worker 保留的写句柄冲突。Windows PowerShell 5.1 用原启动器函数及同一组 CreateFileW 参数复现 raw32。合成提取版只将只读打开改为 ReadWrite share，写句柄仍开启时读回 34 字节完全匹配，第二写者仍 raw32。关闭合成句柄后，原函数也通过，双方 SHA-256 一致。首轮因控制端子进程继承模块路径找不到 Get-FileHash，raw1，尚未创建夹具。修正子进程环境后原语检查 raw0，合成目录已确认缺席。原始记录及摘要见 wl2-r7-range-readback-sharing-20261119-r1。
 
 请 Mac 固定最小改动及摘要。候选仅令 CheckAttachment 的只读打开兼容已经存在的写句柄，保留原写句柄与它的互斥、绑定、只创建导出和完整语义校验，更新启动器与计时观察脚本的摘要配对，原 5 秒及单次门槛不变。TEAM66 的当前固定文件未改。range-r1/out01 仍空，可独立采集 Host 及其原 worker 只读诊断。可用的后续计时读回路径明确前暂停 Explicit 和 DiagnosticAfter，避免消耗单次动作。合成原语不计真实读回。旧场景、旧归档和公开 Start 拒绝沿用。
+
+
+## 2026-11-19 r7 保留写句柄下的整对附件复核
+
+已消费主线 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 534e392dd54295d760c28a33a837ef8ec7975e73，TEAM67／IMP206／r7。新治理接收观察暂存，固定读回配对仍沿用上一版。range-r1/out01 在取证后仍为空，可先独立取得 Host 与原线程只读证明。
+
+对两份已归档合成 V2 字节，用原生保留写句柄运行从固定入口 AST 提取的 CheckAttachment。固定读法 raw32 且没有输出。候选只让该函数的读入兼容原写句柄，两份原样导出 3,523／3,669 字节，语义和精确字节链通过。第二写者对两份文件均 raw32；创建同名导出 raw80，原导出摘要未改；原动作错绑、额外成员和只追加一个空格均在对应检查处拒绝。整体 PS5.1 raw0，空 stderr，合成目录已确认缺席。原始证据见 wl2-r7-range-readback-pair-20261119-r1。
+
+此结果补足上一条配对请求的语义和文件成员负例。请在固定 launcher 及计时脚本摘要的新配对中保持已有 create-only、原预算和未知拒绝。当前未改固定文件或真实现场，未启动 Explicit 或 DiagnosticAfter。旧官方 r2 和生产验收前提沿用。
