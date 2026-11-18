@@ -584,6 +584,30 @@ fn r7_image_pinned_aggregate2gib_bound_refuses_before_any_payload_read() {
     assert_eq!(calls.load(std::sync::atomic::Ordering::SeqCst), 0);
 }
 #[test]
+fn r7_image_pinned_full_inventory_accepts_long_native_paths() {
+    use std::os::windows::ffi::OsStrExt;
+    let scene = Scene::new();
+    let root = scene.root();
+    let component = "n".repeat(180);
+    let directory = root.join(&component).join(&component).join(&component);
+    let path = directory.join("payload");
+    assert!(path.as_os_str().encode_wide().count() > 512);
+    fs::create_dir_all(&directory).unwrap();
+    let payload = b"read through the long path query";
+    fs::write(&path, payload).unwrap();
+    let rows = windows::inventory(&root, None).unwrap();
+    let key = format!("{component}/{component}/{component}/payload");
+    assert_eq!(rows.len(), 4);
+    assert_eq!(
+        rows[&key],
+        Entry::File {
+            bytes: payload.len() as u64,
+            sha256: hash::sha256_hex(payload),
+            executable: false,
+        }
+    );
+}
+#[test]
 fn r7_image_pinned_depth65_preserves_original64_directory_bound() {
     let scene = Scene::new();
     let root = scene.root();
@@ -630,6 +654,7 @@ fn r7_image_fixed_pinned_entry_full_verify_with_original10s_deadline() {
     assert!(root
         .to_string_lossy()
         .contains("r6-source-scan-cost-d57c32d10af74ab888fcde86e6ec97cd"));
+    cost::begin();
     let started = Instant::now();
     let end = started + Duration::from_secs(10);
     let result = verify_inventory(
@@ -639,9 +664,10 @@ fn r7_image_fixed_pinned_entry_full_verify_with_original10s_deadline() {
         Some(end),
     );
     let elapsed = started.elapsed();
+    let metrics = cost::end();
     println!(
         "R7_PINNED_ENTRY_FULL_VERIFY {}",
-        serde_json::json!({"passed":result.is_ok(),"elapsedUs":elapsed.as_micros(),"budgetMs":10000,"error":result.as_ref().err().map(|e|e.to_string()),"completeInventoryAndManifestReadback":true,"copiedFixture":true,"officialExecuted":false,"productionRecoveryAccepted":false})
+        serde_json::json!({"passed":result.is_ok(),"elapsedUs":elapsed.as_micros(),"budgetMs":10000,"error":result.as_ref().err().map(|e|e.to_string()),"completeInventoryAndManifestReadback":result.is_ok(),"metrics":metrics,"copiedFixture":true,"officialExecuted":false,"productionRecoveryAccepted":false})
     );
     result.unwrap();
     assert!(elapsed <= Duration::from_secs(10));

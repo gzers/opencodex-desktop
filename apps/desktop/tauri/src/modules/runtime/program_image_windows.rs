@@ -90,9 +90,30 @@ fn stamp(file: &File, directory: bool) -> AppResult<Stamp> {
     })
 }
 fn final_path(file: &File, path: &Path) -> AppResult<()> {
-    let mut raw = vec![0u16; 32768];
-    let n = unsafe { GetFinalPathNameByHandleW(file.as_raw_handle(), raw.as_mut_ptr(), 32768, 0) };
-    if n == 0 || n >= 32768 {
+    const MAX_PATH_UNITS: u32 = 32768;
+    let mut inline = [0u16; 512];
+    let query = |buffer: &mut [u16]| unsafe {
+        GetFinalPathNameByHandleW(
+            file.as_raw_handle(),
+            buffer.as_mut_ptr(),
+            buffer.len() as u32,
+            0,
+        )
+    };
+    let mut n = query(&mut inline);
+    // An insufficient-buffer result includes the terminating NUL.
+    if n == 0 || n > MAX_PATH_UNITS {
+        return Err(fail());
+    }
+    let mut long_path;
+    let raw = if n as usize >= inline.len() {
+        long_path = vec![0u16; n as usize];
+        n = query(&mut long_path);
+        &long_path[..]
+    } else {
+        &inline[..]
+    };
+    if n == 0 || n as usize >= raw.len() {
         return Err(fail());
     }
     let text = String::from_utf16(&raw[..n as usize]).map_err(|_| fail())?;
@@ -248,7 +269,12 @@ impl Pin {
         streams(&self.path, self.directory)?;
         check(end)
     }
-    fn hash(&self, end: Option<Instant>, cancelled: &AtomicBool) -> AppResult<Entry> {
+    fn hash(
+        &self,
+        end: Option<Instant>,
+        cancelled: &AtomicBool,
+        buffer: &mut [u8],
+    ) -> AppResult<Entry> {
         #[cfg(test)]
         let _cost = super::cost::span("windows-file-full-read-hash");
         if self.directory || self.before.bytes > MAX_FILE {
@@ -257,7 +283,6 @@ impl Pin {
         let mut source = &self.file;
         source.seek(SeekFrom::Start(0)).map_err(|_| fail())?;
         let mut source = source.take(self.before.bytes.checked_add(1).ok_or_else(fail)?);
-        let mut buffer = [0u8; 65536];
         let mut bytes = 0u64;
         let mut digest = Sha256::new();
         loop {
@@ -265,7 +290,7 @@ impl Pin {
             if cancelled.load(Ordering::Acquire) {
                 return Err(fail());
             }
-            let n = source.read(&mut buffer).map_err(|_| fail())?;
+            let n = source.read(buffer).map_err(|_| fail())?;
             if n == 0 {
                 break;
             }
@@ -454,6 +479,7 @@ impl Inventory {
                         #[cfg(test)]
                         let _metrics = super::cost::Worker::new(measured, metrics, false);
                         let mut rows = Vec::new();
+                        let mut buffer = [0u8; 65536];
                         while !cancelled.load(Ordering::Acquire) {
                             let i = next.fetch_add(1, Ordering::Relaxed);
                             let Some(job) = files.get(i) else {
@@ -463,7 +489,7 @@ impl Inventory {
                                 continue;
                             }
                             let result = checkpoint("before-file-read")
-                                .and_then(|()| job.pin.hash(end, cancelled));
+                                .and_then(|()| job.pin.hash(end, cancelled, &mut buffer));
                             match result {
                                 Ok(entry) => rows.push((job.name.clone(), entry)),
                                 Err(e) => {
