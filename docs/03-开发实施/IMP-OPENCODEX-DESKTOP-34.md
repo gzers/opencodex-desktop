@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 183；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 185；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native 0816047f30f667e56bea4167ec012f6e12bfcbdd（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2012,3 +2012,10 @@ run05 原生显式取消在 6,982 ms／10,000 ms 到达 RootCancellationAbsent r
 代码 89e8c64478553c9715eb5babfe00f9eeed14af11，证据 420d7a948aeea76f198d6ffe8e2ee4a8b05499f0。按共同基线 9daf5599151b65437f94ab2cadb1988060ee38c3 核净差，并逐文件核对 Git blob 的长度和 SHA-256。定位摘要轮 43 件、最终命名数据流轮 40 件，均与清单相符。两轮基线均为 raw101。修复后定位摘要轮 4 项及关联 3 项通过，最终命名数据流轮 5 项通过。定位摘要绑定原保留目录实际路径，成员变化仍进入观测摘要。完整初始化 Journal 在末尾再次检查命名数据流。Windows 回交确认两轮分别清理了 32、31 个成功测试根，失败现场保留。两轮均为 productionAccepted:false，生产代码尚未合入。
 
 [Windows r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)的写集、接口、预算与未知拒绝继续有效。初始 Start 持锁 worker、显式恢复和普通桌面 private V2 仍待交付。旧 r2 的 10 份只读导出一致，Job 仍有 24 项未知（raw50），恢复计划 executionReady=false。旧现场保持原状，固定候选后才进入 W2 或双 SID。
+
+
+## revision185：Windows r7 首启保留与最终释放交接
+
+首启准备释放代码 737bca2e3cd8899cda0d0d86bf8b5fbb446ebca1，证据 8b3ed982236014b0755538d7c3f00a3649c53fc3。核对 58 份 Git blob 的长度及 SHA-256，并复核 202 项状态。Windows 交接记录修正 Bun 夹具后准备套件 7/7、raw0，SQLite 负控 raw73；已提交的 stdout 仍是修正夹具前的 6/7。注入部分解锁错误后保持 ReleasePrepared，外部未取得原 claim。最终释放负例未取得注入的 raw5，固定 Bun 正例于 10,116 ms 返回 raw101（bounded-original-deadline）。成功但未获删除批准的两处合成根和六处失败根均保留。[证据目录](../../.adg/evidence/0.2.24/windows-dev/wl2-r7-start-owner-release-20261118-r1/)
+
+复核后继代码 e6cc1f29a5444a76da3e123d6f97b7b6ee6757f2 的八处 Windows 文件。补丁将保留原租约接入最终恢复释放，在原保护边界内减少重复树读取，并增加注入部分解锁后的范围及 ReleasePrepared 断言。该 SHA 的原生回执待交，生产分支未集成。持久 worker、显式恢复、普通桌面私有 V2、普通用户 MSI 及原包单 SID 生命周期仍待闭合。公开 Start 保持拒绝，按原预算和未知拒绝继续验证。旧 r2 的 Node 未 Resume，三件原件留在 custody，十份只读导出一致，Job 仍有 24 项未知（raw50），executionReady=false。固定候选后再做 W2 或双 SID。
