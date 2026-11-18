@@ -1,0 +1,255 @@
+{
+  "builds": {
+    "product01": {
+      "currentR2Touched": false,
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=16",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_bound_preparation_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "productionAccepted": false,
+      "elapsedMs": 165158,
+      "raw": 101
+    },
+    "product02": {
+      "raw": 0,
+      "currentR2Touched": false,
+      "elapsedMs": 162564,
+      "productionAccepted": false,
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=4",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_bound_preparation_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    },
+    "product03": {
+      "state": "interrupted",
+      "raw": null,
+      "evidence": "partial stdout/stderr; process/session absent at follow-up"
+    },
+    "product04": {
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=4",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_bound_preparation_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ],
+      "raw": 0,
+      "elapsedMs": 147333,
+      "productionAccepted": false,
+      "currentR2Touched": false
+    },
+    "product05": {
+      "productionAccepted": false,
+      "elapsedMs": 135738,
+      "currentR2Touched": false,
+      "raw": 0,
+      "arguments": [
+        "test",
+        "--locked",
+        "--offline",
+        "--config",
+        "profile.test.package.opencodex-desktop.debug=0",
+        "--config",
+        "profile.test.package.opencodex-desktop.incremental=false",
+        "--config",
+        "profile.test.package.opencodex-desktop.codegen-units=4",
+        "--manifest-path",
+        "apps/desktop/tauri/Cargo.toml",
+        "--target",
+        "x86_64-pc-windows-msvc",
+        "--features",
+        "custom-protocol",
+        "--lib",
+        "-j",
+        "1",
+        "wl2_r7_bound_preparation_",
+        "--",
+        "--test-threads=1",
+        "--nocapture"
+      ]
+    }
+  },
+  "regressions": {
+    "v2-reference": {
+      "passed": 12,
+      "result": {
+        "arguments": [
+          "wl2_r7_v2_reference_",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "raw": 0,
+        "elapsedMs": 156,
+        "artifactSha256": "20ebb9e84ddb5fa32e115fb594434f258d0dbe083d23be11e156587eb1fdb63f",
+        "selected": 12,
+        "exactPassCount": true
+      }
+    },
+    "v2-storage": {
+      "passed": 6,
+      "result": {
+        "arguments": [
+          "wl2_r7_v2_storage_native_",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "raw": 0,
+        "elapsedMs": 938,
+        "artifactSha256": "20ebb9e84ddb5fa32e115fb594434f258d0dbe083d23be11e156587eb1fdb63f",
+        "selected": 6,
+        "exactPassCount": true
+      }
+    },
+    "v2-storage-history": {
+      "passed": 1,
+      "result": {
+        "arguments": [
+          "wl2_r7_history_primitives_native_v2attachment_",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "raw": 0,
+        "elapsedMs": 3640,
+        "artifactSha256": "20ebb9e84ddb5fa32e115fb594434f258d0dbe083d23be11e156587eb1fdb63f",
+        "selected": 1,
+        "exactPassCount": true
+      }
+    },
+    "v1-attachment": {
+      "passed": 4,
+      "result": {
+        "arguments": [
+          "r7_abort_attachment_",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "raw": 0,
+        "elapsedMs": 47,
+        "artifactSha256": "20ebb9e84ddb5fa32e115fb594434f258d0dbe083d23be11e156587eb1fdb63f",
+        "selected": 4,
+        "exactPassCount": true
+      }
+    },
+    "recovery-origin": {
+      "passed": 5,
+      "result": {
+        "arguments": [
+          "wl2_r7_recovery_origin_",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "raw": 0,
+        "elapsedMs": 63,
+        "artifactSha256": "20ebb9e84ddb5fa32e115fb594434f258d0dbe083d23be11e156587eb1fdb63f",
+        "selected": 5,
+        "exactPassCount": true
+      }
+    },
+    "original-adapter-send": {
+      "passed": 1,
+      "result": {
+        "arguments": [
+          "wl2_r6_typed_adapter_retained_v3_slot_and_private_observation_types_are_send",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "raw": 0,
+        "elapsedMs": 15,
+        "artifactSha256": "20ebb9e84ddb5fa32e115fb594434f258d0dbe083d23be11e156587eb1fdb63f",
+        "selected": 1,
+        "exactPassCount": true
+      }
+    },
+    "status-polling": {
+      "passed": 5,
+      "result": {
+        "arguments": [
+          "modules::status::polling::tests::",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "raw": 0,
+        "elapsedMs": 16,
+        "artifactSha256": "20ebb9e84ddb5fa32e115fb594434f258d0dbe083d23be11e156587eb1fdb63f",
+        "selected": 5,
+        "exactPassCount": true
+      }
+    },
+    "windows-status-same-sample": {
+      "passed": 3,
+      "result": {
+        "arguments": [
+          "status_source::windows_sample_tests::",
+          "--test-threads=1",
+          "--nocapture"
+        ],
+        "raw": 0,
+        "elapsedMs": 47,
+        "artifactSha256": "20ebb9e84ddb5fa32e115fb594434f258d0dbe083d23be11e156587eb1fdb63f",
+        "selected": 3,
+        "exactPassCount": true
+      }
+    }
+  },
+  "firstBuildError": "LLVM out of memory; Cargo raw101, rustc 0xc0000409; no native tests",
+  "recovery": "Command-local Cargo codegen-units 16 to 4, j1, debug0, incremental off, locked/offline",
+  "regressionSelectionFirstError": "Windows same-sample filter used source-file name and stopped before any regression executed; corrected to status_source::windows_sample_tests::",
+  "noUnexpectedNativeTestFailure": true
+}

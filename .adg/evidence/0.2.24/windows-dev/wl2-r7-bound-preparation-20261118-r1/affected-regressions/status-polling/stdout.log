@@ -1,0 +1,10 @@
+
+running 5 tests
+test modules::status::polling::tests::background_interval_uses_frozen_thirty_seconds ... ok
+test modules::status::polling::tests::busy_tick_preserves_schedule_source_and_emissions_then_retries_original_due_sample ... ok
+test modules::status::polling::tests::deadline_wait_and_failure_backoff_are_applied_once ... ok
+test modules::status::polling::tests::emitted_sample_has_released_collector_and_keeps_the_same_projection ... ok
+test modules::status::polling::tests::refreshes_once_within_debounce_and_gates_emissions ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 2275 filtered out; finished in 0.00s
+

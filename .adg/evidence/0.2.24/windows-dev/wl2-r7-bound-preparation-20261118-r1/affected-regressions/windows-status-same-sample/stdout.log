@@ -1,0 +1,13 @@
+
+running 3 tests
+test infrastructure::status_source::windows_sample_tests::wl2_r5_native_receiver_unknown_source_and_wrong_home_refuse_without_creation ... ok
+test infrastructure::status_source::windows_sample_tests::wl2_r5_real_windows_source_expired_or_late_admission_cannot_mint_receipt ... r5-native-source expired no-IO; delayed branch admission cannot grant late Closed or a new5s receipt; synthetic source/no real Owner
+ok
+test infrastructure::status_source::windows_sample_tests::wl2_r5_real_windows_source_full_light_same_deadline_no_owner_stays_unknown ... r5-native-source stage=fetch elapsedUs=32 deadlineFromTraceStartUs=5000017 original5=true owner=missing recovery=Unknown
+r5-native-source stage=recovery elapsedUs=89 deadlineFromTraceStartUs=5000017 original5=true owner=missing recovery=Unknown
+r5-native-source stage=light elapsedUs=221 deadlineFromTraceStartUs=5000221 original5=true owner=missing recovery=Unknown
+r5-native-source stage=recovery elapsedUs=229 deadlineFromTraceStartUs=5000221 original5=true owner=missing recovery=Unknown
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2277 filtered out; finished in 0.03s
+

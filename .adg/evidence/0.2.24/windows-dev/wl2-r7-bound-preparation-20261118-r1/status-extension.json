@@ -1,0 +1,51 @@
+{
+  "matrix": [
+    {
+      "item": "原准备槽绑定",
+      "status": "原 capture session、host/scope、Owner、failed Start 和固定窗口/QPC 贯穿两次原生读回。保留的 Source/Route/journal 分别核对。"
+    },
+    {
+      "item": "V2 数据输出",
+      "status": "严格 Intent/Pending，前驱绑定实际原始字节，缺失 Source 保持未知。"
+    },
+    {
+      "item": "最终测试构建",
+      "status": "product05 raw0 / 135738 ms，3 项通过，8 个受测源与 Git 仅 CRLF 差异。"
+    },
+    {
+      "item": "构建首错与中断",
+      "status": "product01 raw101 / 165158 ms，LLVM OOM，rustc 0xc0000409。仅调整该次命令 codegen-units。product03 无退出码，原部分记录保留。"
+    },
+    {
+      "item": "受影响回归",
+      "status": "product04 37 项通过。首轮选择器使用文件名，在首次执行前退出，修正后通过。"
+    },
+    {
+      "item": "本次清理",
+      "status": "39 个明确测试根不存在。生成 schema 归档、还原和移出。原历史拒删保持。"
+    },
+    {
+      "item": "初始 Start Worker",
+      "status": "原 worker 归属和同范围 recovery typed 接口请求已推送。TEAM42 / IMP181 尚无答复。"
+    },
+    {
+      "item": "当前 r2",
+      "status": "完整归档 10701 文件和 1664 目录。Job 24 项未知/raw50，精确计划 executionReady=false。"
+    },
+    {
+      "item": "普通桌面私有 V2",
+      "status": "marenben session7 Disconnected，既有 out01 空。用户回执对应 r2 归档。"
+    },
+    {
+      "item": "生产验收",
+      "status": "公开 Start 拒绝，真实固定包单 SID 整链、容量、信任、普通 MSI 和最终候选待完成。"
+    }
+  ],
+  "codeSha": "dc3e3248550081c9070d1a56664a76148a01219b",
+  "codePushConfirmedAtSeal": true,
+  "publicStartOpen": false,
+  "productionAccepted": false,
+  "allAccepted": false,
+  "currentR2ExecutionAuthorized": false,
+  "goal": "active"
+}

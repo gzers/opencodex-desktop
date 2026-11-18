@@ -1,0 +1,70 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "wl2_r7_bound_preparation_",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "sources": [
+    {
+      "sha256": "e8c1099e73f73baa26709901cb9e4f38e7dbfd3f4a3463f7b1f34a05e6472153",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record_v2.rs",
+      "bytes": 20727
+    },
+    {
+      "sha256": "7bdc117d973d64c67bea026f8f255443cc265dce9e20ab617cb9c211804d5ec0",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record_v2/tests.rs",
+      "bytes": 18825
+    },
+    {
+      "sha256": "40844fb1beb243486e916c0030e4eea96eea335002c188c45d1dc66fd55b8cb7",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/source.rs",
+      "bytes": 9764
+    },
+    {
+      "sha256": "d562de9c4882a77f32b8cc2642fa97b4665808cbf4bf59e37212de5ee82c43ba",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+      "bytes": 16209
+    },
+    {
+      "sha256": "1fc98c27326c4284ea1ffdc1d2001cc4f6818d06261c849bcb76487c881fb7ac",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs",
+      "bytes": 5078
+    },
+    {
+      "sha256": "dedcef07fecf3763b1255ac67042b9fe4f217bede80dc983985d72fe77ba92bf",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/bound.rs",
+      "bytes": 5834
+    },
+    {
+      "sha256": "f2e07382ff6240e8a2b0280d99b65832446337e142a5b216d042da331d9d8c93",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2/tests.rs",
+      "bytes": 8215
+    },
+    {
+      "sha256": "e19b566567ffbad1b3a93265362196f8af3901fd651fcb6d0b96083e55bd6743",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2/tests/binding_tests.rs",
+      "bytes": 5220
+    }
+  ],
+  "codeRoot": "C:/Users/15119/.codex/worktrees/r6-windows-native-resume/code",
+  "currentR2Touched": false
+}

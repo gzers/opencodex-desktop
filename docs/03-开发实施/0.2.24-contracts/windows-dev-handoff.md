@@ -1395,3 +1395,13 @@ status.json169项完整状态，普通desktopV2仍Pending（原Publicout空/mare
 请Mac集成线明确最小选择：是否由同一个原宿主持久owningworker在初始Start capture取任何活动lease前拥有唯一原Owner/槽，失败后同线程保原partialranges/前缀；新显式恢复如何以typed只读/受限准入借这些同原expiredStartranges而不续oldmutation/释放claim后仅NLK动作；全Start/Status/Stop/Restart是否同worker，或准确有界Start-to-recovery控制交接，仍原30/5/10/Restart30、registry独立control/Required/原Result/raw、原nativeSource/scope。若需共享持久control合同须明确，Windows不先绕过原锁线程/Drop/未知边界。只暂停这个initialStart资源归属依赖，原V2owner绑定/strictPendingproducer及其它native反例独立继续，不要求用户中转。
 
 原r7Gitblob对最新docs227aff029仍f9d39b1600974a2e4353e347034f29ce775300c0相同；新TEAM40/IMP179正文已可读、Windows原写集不变，sharedstatusdiff后续正常消费，未以新refs冒完整集成。当前r2Job24raw50、原21500/75744/原件/work/seq9/40588与synthetic27960/旧拒删原源均不动，无force/归还/自动unlock或newofficialStart，不W2/双SID/发布，publicStartfalse、目标active。
+
+## 2026-11-18 原准备槽绑定 V2 待恢复记录
+
+Windows 代码 dc3e3248550081c9070d1a56664a76148a01219b 已推送并核对远端。最终输入 main cd7cd0a9e62b3f5f88e0054c3498cbfe18616943、governance 503e5aceba86b5a507a8368ae9af668c3eba8d26，TEAM42、IMP181、r7。前一批原树成员代码 a22f6ebe8 与证据 72c5814 均已到远端。初始 Start 原 worker 接口请求已随文档 7ef162357b02f12722dc79811d10a760b17c7544 交付，旧 TLS 失败继续保留在原记录。
+
+原失败准备槽的原生读回绑定实际 capture session、host、Owner、scope、失败 Start 及固定恢复窗口/QPC。两次读回一致，并复核仍保留的 Source、Route 与 journal。缺失的 Source 保持 Pending。严格 V2 数据只记录已核对的事实，原生恢复准入尚未接通。
+
+证据 wl2-r7-bound-preparation-20261118-r1。最终 MSVC 构建 raw0 / 135738 ms，3 项通过。前一 MSVC 制品 product04 的 37 项受影响回归全部通过。最终 TEST EXE SHA-256 7b177e0c3884442e7bae099a946ed98b1d48674728cf595055d242974fd4b639。首错 LLVM 内存不足，Cargo raw101、rustc 0xc0000409，原日志保留。仅将单次命令 codegen units 由 16 调至 4。product03 中断且无退出回执。39 个可定位测试根均缺席，原生成 schema 已归档并还原代码工作树。完整状态表 179 项。
+
+当前 r2 归档完整，原 Job 仍有 24 项未知并返回 raw50，计划 executionReady=false。普通桌面的原私有 V2 入口仍待结果，session 7 断开且 out01 为空。查到主线仍缺初始 Start worker 归属和同原范围的恢复准入。生产 Start 继续拒绝，原预算保持。旧两处被自动审批拒绝删除的目录保留，未运行 W2、双 SID 或发布。
