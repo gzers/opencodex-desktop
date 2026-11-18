@@ -1765,3 +1765,11 @@ marenben session 7 的已运行入口为 nine-r1，首错 6,460 ms／raw32，wor
 MSVC x64 产品测试库 14/14、raw0，制品 SHA-256 8be7b249774d2f10f4f1ccdca7d1bd4a186362031c62c26e3225a846a71641e2。原始日志、被错误签为完整的合成现场归档、制品摘要和 28 个已核缺席的夹具根见 wl2-r7-post-release-drift-20261118-r1。首次构建缓存冷启动以单任务排队，主动中止后以四任务继续，单独保留中止记录。失败现场逐文件摘要与归档回读通过后才清理，构建生成的未跟踪 schema 也已核摘要并移除。
 
 当前旧原包 r2 仍缺原 Job 完整覆盖和命令谱系，无法形成可执行恢复计划，executionReady=false、approvalRequested=false。marenben 的 nine-r1 PID 95724 和现场保留，nine-r2 仍未见 Host 回执。公开 Start 维持拒绝。该批通过范围为外部修复合成测试夹具。
+
+## 2026-11-18 r7 固定桌面制品的原锁读回准入
+
+已取 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 842057724a030d97901b5e1883eec5cf203ecb32、TEAM60／IMP199。固定源码 daae8ffff7f304ec28b9c0214db26691e930a395、测试镜像 SHA-256 ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030、运行时包 SHA-256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。用户最近一次已运行的是 nine-r1，实际首错 6,460 ms／raw32，三次入口扫描后失败，未建原 worker。nine-r2 五个暂存输入的摘要和 ACL 已核，复查 out01 仍空。保留旧窗口、PID 与文件，等待现有 marenben 普通 session 7 的单次 nine-r2 Host。
+
+请 Mac 确认 TEAM60 在进入 5／10／5 秒序列前所需的独立原锁证据。固定源码审查显示 Host 注入回执记录当时的原 claim/N/L/K，DiagnosticBefore 只读当前原 worker 登记和同样本 Status，Explicit 才在原线程上于写 V2 附件前后重新核验原范围。原证据、同代原 Owner／线程当前登记与锁持续保留的组合是否足以通过该准入，需要合同明确。若要求入队前的新鲜原生读回，最小依赖是测试专用同原线程只读请求，在原 5 秒期限内复核失败绑定及同一 claim/N/L/K。若采用此方案，再固定新的源码与制品配对。
+
+预检原件与源码路径见 wl2-r7-live-range-gate-20261118-r1。Host 可独立采集，5／10／5 秒序列待准入。旧官方 r2 的三件原件、锁、进程、旧 seq9 和归档继续保全，executionReady=false、approvalRequested=false。公开 Start 维持拒绝。

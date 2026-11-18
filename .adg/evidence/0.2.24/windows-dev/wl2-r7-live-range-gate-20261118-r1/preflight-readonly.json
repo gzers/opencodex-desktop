@@ -1,0 +1,79 @@
+{
+  "observedAt": "2026-11-18T21:39:55.7881912+08:00",
+  "source": "daae8ffff7f304ec28b9c0214db26691e930a395",
+  "stagedImageSha256": "ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030",
+  "stagedBundleSha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7",
+  "stagedFiles": [
+    {
+      "path": "input\\fixture-test.exe",
+      "bytesMatch": true,
+      "digestMatch": true,
+      "aclMatch": true
+    },
+    {
+      "path": "input\\manifest.json",
+      "bytesMatch": true,
+      "digestMatch": true,
+      "aclMatch": true
+    },
+    {
+      "path": "input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+      "bytesMatch": true,
+      "digestMatch": true,
+      "aclMatch": true
+    },
+    {
+      "path": "launch-r7-partial-owner.cmd",
+      "bytesMatch": true,
+      "digestMatch": true,
+      "aclMatch": true
+    },
+    {
+      "path": "launch-r7-partial-owner.ps1",
+      "bytesMatch": true,
+      "digestMatch": true,
+      "aclMatch": true
+    }
+  ],
+  "stagedDirectories": [
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-nine-r2",
+      "aclMatch": true
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-nine-r2\\input",
+      "aclMatch": true
+    },
+    {
+      "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-nine-r2\\out01",
+      "aclMatch": true
+    }
+  ],
+  "session": [
+    "marenben              rdp-tcp#3           7  Active       1:58  2026/11/14 22:10"
+  ],
+  "observedNineR1Processes": [
+    {
+      "Id": 41544,
+      "SessionId": 7,
+      "ProcessName": "cmd"
+    },
+    {
+      "Id": 95724,
+      "SessionId": 7,
+      "ProcessName": "ocxd"
+    },
+    {
+      "Id": 109892,
+      "SessionId": 7,
+      "ProcessName": "powershell"
+    }
+  ],
+  "nineR2OutputNames": [],
+  "nineR2PrivateRootObserved": false,
+  "nineR2PrivateRootProbeId": "PathNotFound,Microsoft.PowerShell.Commands.GetItemCommand",
+  "liveCreationFiletimeVerified": false,
+  "originalHostOrManagerInvoked": false,
+  "processesStopped": false,
+  "filesRemoved": false
+}
