@@ -251,7 +251,7 @@ fn wl2_r7_worker_subprocess_fixture() {
         }
         let s = observation.try_lock().unwrap();
         assert_eq!(format!("{:?}", s.phase), first["phase"].as_str().unwrap());
-        assert_eq!(s.binding.action, first["actionId"].as_str().unwrap());
+        assert_eq!(s.binding.as_ref().unwrap().action, first["actionId"].as_str().unwrap());
         save(
             &root,
             "observed.json",

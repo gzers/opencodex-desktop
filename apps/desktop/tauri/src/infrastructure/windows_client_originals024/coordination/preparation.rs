@@ -127,6 +127,7 @@ impl LeasePreparation {
                 token,
                 deadline: end,
                 active: true,
+                start_state: StartLeaseState::Other,
                 bound,
                 acquisition_thread: std::thread::current().id(),
                 _not_send: PhantomData,
@@ -226,7 +227,9 @@ impl LeasePreparation {
         let result = (|| {
             self.lease.as_mut().unwrap().check_owner(owner, end)?;
             action.check(owner, end).map_err(io_error)?;
-            before(end)
+            before(end)?;
+            self.lease.as_mut().unwrap().start_state = StartLeaseState::Start(action.owner_and_action());
+            Ok(())
         })();
         if result.is_err() {
             self.poison();

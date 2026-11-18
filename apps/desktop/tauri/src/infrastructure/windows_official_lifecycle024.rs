@@ -1,6 +1,7 @@
 //! Process-local production authority for unchanged official2.99. No adoption,
 //! durable recovery journal or manager-restart handle transfer is invented here.
 use super::windows_client_originals024::{LivePhase, StartRanges, WindowsOriginals};
+use super::windows_client_originals024::recovery_worker::WorkerControl;
 use super::windows_official_runtime024::{
     self as native, LaunchSpec, OwnedListeners, OwnedRuntime, ProcessState,
 };
@@ -31,7 +32,7 @@ use std::{
 };
 mod actions;
 mod start_worker;
-pub(crate) use actions::{NativeAction, OriginalActionKind};
+pub(crate) use actions::{BeforeResumeLeaseBinding, NativeAction, OriginalActionKind};
 use start_worker::StartWorker;
 
 const START_DISPATCH_FAILED: &str = "start-dispatch-failed-retained";
@@ -96,8 +97,7 @@ struct Slot {
     owner: Mutex<Option<Owner>>,
     cancel: AtomicBool,
     start_worker: Mutex<Option<Arc<StartWorker>>>,
-    recovery_worker:
-        Mutex<Option<super::windows_client_originals024::recovery_worker::WorkerControl<Owner>>>,
+    recovery_worker: Mutex<Option<Arc<WorkerControl<Owner>>>>,
 }
 fn worker_occupied(entry: &Slot) -> AppResult<bool> {
     Ok(entry.recovery_worker.try_lock().map_err(unknown)?.is_some())
@@ -113,8 +113,12 @@ pub(crate) fn start_canonical_before_resume_recovery(
     budget(window.deadline())?;
     let entry = slot(runtime, home, false)?;
     let mut control = entry.recovery_worker.try_lock().map_err(unknown)?;
-    if control.is_some() || entry.start_worker.try_lock().map_err(unknown)?.is_some() {
+    if control.is_some() {
         return Err(recovery_required());
+    }
+    if let Some(start) = entry.start_worker.try_lock().map_err(unknown)?.as_ref() {
+        *control = Some(Arc::new(start.queue_recovery(window)?));
+        return Ok(());
     }
     let mut original = entry.owner.try_lock().map_err(unknown)?;
     let owner = original.as_mut().ok_or_else(recovery_required)?;
@@ -126,7 +130,7 @@ pub(crate) fn start_canonical_before_resume_recovery(
         actions::run_before_resume_worker,
     )
     .map_err(unknown)?;
-    *control = Some(worker);
+    *control = Some(Arc::new(worker));
     Ok(())
 }
 /// Internal transport of the already prepared ORIGINAL Owner before any active
@@ -162,7 +166,7 @@ pub(crate) fn handoff_before_resume_worker(
     .map_err(unknown)?;
     // Original control lock stays held across Owner take/send and registration,
     // so ordinary dispatch can never observe an unprotected empty Owner slot.
-    *control = Some(worker);
+    *control = Some(Arc::new(worker));
     Ok(())
 }
 pub(crate) fn before_resume_worker_status(
@@ -172,14 +176,22 @@ pub(crate) fn before_resume_worker_status(
 ) -> AppResult<Option<serde_json::Value>> {
     budget(end)?;
     let entry = slot(runtime, home, false)?;
-    let control = entry.recovery_worker.try_lock().map_err(unknown)?;
-    if let Some(start) = entry.start_worker.try_lock().map_err(unknown)?.as_ref() {
-        return start.observe(end).map(|(_, facts)| Some(facts));
+    let (control, start) = {
+        let recovery = entry.recovery_worker.try_lock().map_err(unknown)?;
+        let start = entry.start_worker.try_lock().map_err(unknown)?;
+        (recovery.clone(), start.clone())
+    };
+    let start = start.as_ref().map(|worker| worker.observe(end).map(|(_, facts)| facts)).transpose()?;
+    match control {
+        Some(control) => {
+            let mut facts = control.observe(end).map_err(unknown)?;
+            if let Some(start) = start {
+                facts["startWorker"] = start;
+            }
+            Ok(Some(facts))
+        }
+        None => Ok(start),
     }
-    control
-        .as_ref()
-        .map(|c| c.observe(end).map_err(unknown))
-        .transpose()
 }
 /// Independent validation in this original registry slot. Resources stay in
 /// its worker control, including every failure. Normal dispatch remains gated.
@@ -190,7 +202,7 @@ pub(crate) fn validate_canonical_before_resume_return(
 ) -> AppResult<Option<serde_json::Value>> {
     budget(end)?;
     let entry = slot(runtime, home, false)?;
-    let control = entry.recovery_worker.try_lock().map_err(unknown)?;
+    let control = entry.recovery_worker.try_lock().map_err(unknown)?.clone();
     if entry.owner.try_lock().map_err(unknown)?.is_some() {
         return Err(recovery_required());
     }
@@ -224,7 +236,7 @@ pub(crate) fn read_canonical_before_resume_history(
 ) -> AppResult<serde_json::Value> {
     budget(end)?;
     let entry = slot(runtime, home, false)?;
-    let control = entry.recovery_worker.try_lock().map_err(unknown)?;
+    let control = entry.recovery_worker.try_lock().map_err(unknown)?.clone();
     if entry.owner.try_lock().map_err(unknown)?.is_some() {
         return Err(recovery_required());
     }
@@ -1333,8 +1345,11 @@ pub(crate) fn recovery_state_at(
     let Ok(recovery) = entry.recovery_worker.try_lock() else {
         return R::Unknown;
     };
-    if recovery.is_some() {
-        return R::Required;
+    if let Some(worker) = recovery.as_ref() {
+        return match worker.observe(deadline) {
+            Ok(facts) if facts["phase"] != "LostWorkerUnknown" => R::Required,
+            _ => R::Unknown,
+        };
     }
     let Ok(start) = entry.start_worker.try_lock() else {
         return R::Unknown;
@@ -1381,6 +1396,7 @@ pub(crate) struct StatusReceipt {
     stopped: bool,
     deadline: Instant,
     worker: Option<(Arc<StartWorker>, start_worker::Snapshot)>,
+    recovery: Option<serde_json::Value>,
 }
 impl std::fmt::Debug for StatusReceipt {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -1405,10 +1421,21 @@ pub(crate) fn recovery_for_sample(
     if !Arc::ptr_eq(&entry, &receipt.entry) {
         return R::Unknown;
     }
+    let Ok(recovery_gate) = entry.recovery_worker.try_lock() else {
+        return R::Unknown;
+    };
     let Ok(start_gate) = entry.start_worker.try_lock() else {
         return R::Unknown;
     };
     if let Some((observed, snapshot)) = receipt.worker {
+        match (&receipt.recovery, recovery_gate.as_ref()) {
+            (Some(expected), Some(worker)) => match worker.observe(deadline) {
+                Ok(actual) if &actual == expected && actual["phase"] != "LostWorkerUnknown" => {}
+                _ => return R::Unknown,
+            },
+            (None, None) => {}
+            _ => return R::Unknown,
+        }
         return match start_gate.as_ref() {
             Some(current) if Arc::ptr_eq(current, &observed) => match current.observe(deadline) {
                 Ok((actual, _))
@@ -1426,7 +1453,7 @@ pub(crate) fn recovery_for_sample(
         return R::Unknown;
     }
     drop(start_gate);
-    if worker_occupied(&entry).unwrap_or(true) {
+    if recovery_gate.is_some() {
         return R::Required;
     }
     let Ok(mut guard) = entry.owner.try_lock() else {
@@ -1435,6 +1462,7 @@ pub(crate) fn recovery_for_sample(
     let Some(owner) = guard.as_mut() else {
         return R::Unknown;
     };
+    drop(recovery_gate);
     if owner.session != receipt.session
         || owner.stopped != receipt.stopped
         || owner.scope().ok().as_deref() != Some(receipt.scope.as_str())
@@ -1480,9 +1508,6 @@ pub(crate) async fn status_sample(
         .recovery_worker
         .try_lock()
         .map_err(|_| CollectError::Unreachable)?;
-    if worker_gate.is_some() {
-        return Err(CollectError::Unreachable);
-    }
     let start_gate = entry
         .start_worker
         .try_lock()
@@ -1493,6 +1518,11 @@ pub(crate) async fn status_sample(
             .map_err(|_| CollectError::Unreachable)?;
         let mut payload = unknown_status();
         payload["startWorker"] = facts;
+        let recovery = worker_gate.as_ref().map(|worker| worker.observe(deadline)).transpose()
+            .map_err(|_| CollectError::Unreachable)?;
+        if let Some(facts) = &recovery {
+            payload["recoveryWorker"] = facts.clone();
+        }
         let receipt = StatusReceipt {
             entry: entry.clone(),
             session: start.session,
@@ -1500,8 +1530,12 @@ pub(crate) async fn status_sample(
             stopped: false,
             deadline,
             worker: Some((start.clone(), snapshot)),
+            recovery,
         };
         return Ok((payload, receipt));
+    }
+    if worker_gate.is_some() {
+        return Err(CollectError::Unreachable);
     }
     let mut guard = entry
         .owner
@@ -1530,6 +1564,7 @@ pub(crate) async fn status_sample(
         stopped: owner.stopped,
         deadline,
         worker: None,
+        recovery: None,
     };
     Ok((payload, receipt))
 }

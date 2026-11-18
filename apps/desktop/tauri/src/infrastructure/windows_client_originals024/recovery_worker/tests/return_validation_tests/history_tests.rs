@@ -130,6 +130,7 @@ fn wl2_r7_full_history_native_receiving_control_requires_actual_timely_validatio
             validation,
             returned,
             state,
+            ..
         } = control;
         worker.join().unwrap();
         // Unvalidated originals still live in the actual return channel, not

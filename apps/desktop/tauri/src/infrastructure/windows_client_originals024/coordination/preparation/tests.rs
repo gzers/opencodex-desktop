@@ -93,12 +93,119 @@ fn cleanup_own_failed(prefix: &mut LeasePreparation) {
     // Fixture-only explicit release is not a valid lease/normal release receipt.
     assert!(prefix.take_complete().is_err());
 }
+
+fn retained_start(
+    scene: &Scene,
+) -> (
+    NativeLease,
+    crate::infrastructure::windows_official_lifecycle024::BeforeResumeLeaseBinding,
+) {
+    let mut lease = NativeLease::acquire_synthetic(&scene.paths, end()).unwrap();
+    let origin = crate::infrastructure::windows_official_lifecycle024::BeforeResumeLeaseBinding {
+        owner: uuid::Uuid::new_v4(),
+        failed_start: uuid::Uuid::new_v4(),
+        recovery: uuid::Uuid::new_v4(),
+        start_deadline: Instant::now(),
+    };
+    lease.deadline = origin.start_deadline;
+    lease.start_state = StartLeaseState::Start((origin.owner, origin.failed_start));
+    assert_eq!(
+        lease.check(origin.start_deadline).unwrap_err().kind(),
+        io::ErrorKind::TimedOut
+    );
+    lease.retain_failed_start();
+    (lease, origin)
+}
+
+#[test]
+fn wl2_r7_same_start_native_recovery_keeps_original_ranges_until_explicit_release() {
+    let scene = Scene::new();
+    let before = images(&scene.paths);
+    let (mut lease, origin) = retained_start(&scene);
+    let epoch = lease.epoch.clone();
+    let recovery_end = end();
+    let root = scene.paths[0].parent().unwrap();
+    let permit = lease.begin_recovery(origin, recovery_end).unwrap();
+    assert!(lease.anchored_claim(root, recovery_end).is_err());
+    assert!(lease.release_retained(&mut None, recovery_end).is_err());
+    assert!(lease.begin_recovery(origin, recovery_end).is_err());
+    for held in &lease.held {
+        actual_ranges_block(held);
+    }
+    {
+        let mut claim = lease.recovery_claim(&permit, root, recovery_end).unwrap();
+        assert_eq!(claim.epoch(), epoch);
+        claim.check(root, recovery_end).unwrap();
+    }
+    let mut released = None;
+    lease
+        .release_recovery_retained(&permit, &mut released, recovery_end)
+        .unwrap();
+    released.as_mut().unwrap().check(recovery_end).unwrap();
+    assert_eq!(lease.deadline, origin.start_deadline);
+    assert!(lease.held.is_empty());
+    let competitor = NativeLease::acquire_synthetic(&scene.paths, recovery_end).unwrap();
+    competitor.release(recovery_end).unwrap();
+    drop(released);
+    assert!(images(&scene.paths) == before);
+    println!("same Start epoch and actual four ranges blocked competing handles (raw33) until explicit recovery release; pinned identities/security/bytes equal");
+}
+
+#[test]
+fn wl2_r7_same_start_native_rejects_wrong_origin_epoch_expiry_and_missing_range() {
+    let scene = Scene::new();
+    let foreign = Scene::new();
+    for case in ["wrong-action", "wrong-epoch", "expired", "missing-range"] {
+        let (mut lease, origin) = retained_start(&scene);
+        let recovery_end = end();
+        let mut released = None;
+        match case {
+            "wrong-action" => {
+                let mut wrong = origin;
+                wrong.failed_start = uuid::Uuid::new_v4();
+                assert!(lease.begin_recovery(wrong, recovery_end).is_err());
+            }
+            "wrong-epoch" => {
+                let (mut other, other_origin) = retained_start(&foreign);
+                let other_permit = other.begin_recovery(other_origin, recovery_end).unwrap();
+                let _permit = lease.begin_recovery(origin, recovery_end).unwrap();
+                assert!(lease
+                    .release_recovery_retained(&other_permit, &mut released, recovery_end)
+                    .is_err());
+            }
+            "expired" => {
+                let cutoff = Instant::now();
+                assert_eq!(
+                    lease.begin_recovery(origin, cutoff).err().unwrap().kind(),
+                    io::ErrorKind::TimedOut
+                );
+            }
+            "missing-range" => {
+                lease.held[2].unlock(BASE + 1).unwrap();
+                assert!(lease.begin_recovery(origin, recovery_end).is_err());
+            }
+            _ => unreachable!(),
+        }
+        assert!(released.is_none());
+        assert!(lease.begin_recovery(origin, recovery_end).is_err());
+        for held in &lease.held {
+            actual_ranges_block(held);
+        }
+        println!("same Start recovery {case} refused; no receipt and every surviving range remained locked");
+        // Only this isolated fixture can dispose of the deliberately refused lease.
+        for held in lease.held.iter_mut().rev() {
+            held.release().unwrap();
+        }
+    }
+}
 #[test]
 fn wl2_r7_lease_prefix_native_missing_reserved_range_revokes_authority_and_keeps_claim() {
     let scene = Scene::new();
     let deadline = end();
     let mut prefix = LeasePreparation::default();
-    prefix.prepare_fixture_paths(&scene.paths, deadline).unwrap();
+    prefix
+        .prepare_fixture_paths(&scene.paths, deadline)
+        .unwrap();
     let mut lease = prefix.take_complete().unwrap();
     lease.check(deadline).unwrap();
 

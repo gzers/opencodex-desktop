@@ -80,11 +80,17 @@ impl StartRanges {
             preparation.revoke_retained();
         }
         if let Some(lease) = &mut self.lease {
-            lease.revoke_retained();
+            lease.retain_failed_start();
         }
     }
     pub(crate) fn raw_error(&self) -> Option<i32> {
         self.raw
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn take_retained_lease(&mut self) -> io::Result<NativeLease> {
+        if !self.preparation.as_ref().is_some_and(LeasePreparation::empty_after_transfer) {
+            return Err(invalid());
+        }
+        self.lease.take().ok_or_else(invalid)
     }
     fn refuse_io(&mut self, error: io::Error) -> AppError {
         self.raw = error.raw_os_error();

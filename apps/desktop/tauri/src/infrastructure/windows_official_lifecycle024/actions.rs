@@ -5,6 +5,7 @@ use crate::modules::runtime::windows_lifecycle024_contract::NativeSession;
 mod recovery;
 pub(super) use recovery::driver::run as run_before_resume_worker;
 pub(super) use recovery::{ProcessAbortAttempt, StartFailure};
+pub(crate) use recovery::BeforeResumeLeaseBinding;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum OriginalActionKind {
     Start,
@@ -270,6 +271,9 @@ impl NativeAction {
     }
     pub(crate) fn deadline(&self) -> Instant {
         self.end
+    }
+    pub(crate) fn owner_and_action(&self) -> (uuid::Uuid, uuid::Uuid) {
+        (self.owner, self.origin)
     }
     pub(crate) fn scope_id(&self) -> String {
         self.origin.to_string()

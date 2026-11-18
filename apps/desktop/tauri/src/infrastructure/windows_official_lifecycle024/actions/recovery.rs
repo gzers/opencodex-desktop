@@ -2,6 +2,13 @@
 //! caller-supplied DATA/serialized record constructs this state. Client prefix
 //! checks, claim/NLK, transport and full restoration remain separate work.
 use super::*;
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(crate) struct BeforeResumeLeaseBinding {
+    pub(crate) owner: uuid::Uuid,
+    pub(crate) failed_start: uuid::Uuid,
+    pub(crate) recovery: uuid::Uuid,
+    pub(crate) start_deadline: Instant,
+}
 use crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow;
 mod clock;
 pub(in crate::infrastructure::windows_official_lifecycle024) mod driver;
@@ -325,6 +332,19 @@ impl Owner {
     ) -> AppResult<String> {
         self.check_before_resume_process(window)?;
         Ok(self.before_resume_process.as_ref().unwrap().id.to_string())
+    }
+    pub(crate) fn before_resume_lease_binding(
+        &mut self,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> AppResult<BeforeResumeLeaseBinding> {
+        self.check_before_resume_process(window)?;
+        let attempt = self.before_resume_process.as_ref().ok_or_else(recovery_required)?;
+        Ok(BeforeResumeLeaseBinding {
+            owner: attempt.owner,
+            failed_start: attempt.failed_start,
+            recovery: attempt.id,
+            start_deadline: attempt.original_end,
+        })
     }
     pub(crate) fn quiesce_before_resume_process(
         &mut self,

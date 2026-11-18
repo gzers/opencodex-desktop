@@ -42,14 +42,14 @@ impl<T: Original> WorkerControl<T> {
                 return Err(invalid());
             }
             let before = binding(&mut value.original, &value.window, end)?;
-            if before != self.state.try_lock().map_err(|_| invalid())?.binding {
+            if self.state.try_lock().map_err(|_| invalid())?.binding.as_ref() != Some(&before) {
                 return Err(invalid());
             }
             value.released.readback_history(end)?;
             let data = read(&mut value.original, &mut value.released, &value.window, end)?;
             value.released.readback_history(end)?;
             let after = binding(&mut value.original, &value.window, end)?;
-            if before != after || after != self.state.try_lock().map_err(|_| invalid())?.binding {
+            if before != after || self.state.try_lock().map_err(|_| invalid())?.binding.as_ref() != Some(&after) {
                 return Err(invalid());
             }
             caller_read_end(end)?;

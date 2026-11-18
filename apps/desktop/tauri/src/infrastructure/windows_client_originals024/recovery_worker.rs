@@ -2,15 +2,18 @@
 //! Active locks are created only AFTER unique original state reaches this
 //! worker; only actual released objects may ever leave it.
 use super::{
-    coordination::{LeasePreparation, NativeLease, ReleaseProbe, ReleasedLease},
+    coordination::{
+        AnchoredClaim, LeasePreparation, NativeLease, RecoveryPermit, ReleaseProbe, ReleasedLease,
+    },
     phase::invalid,
+    StartRanges,
 };
 use crate::infrastructure::windows_official_lifecycle024::Owner;
 use crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow;
 use std::{
     io,
     panic::{catch_unwind, AssertUnwindSafe},
-    sync::{mpsc, Arc, Mutex},
+    sync::{mpsc, Arc, Mutex, OnceLock},
     thread,
     time::Instant,
 };
@@ -57,6 +60,7 @@ impl Original for Owner {
 pub(crate) struct WorkerLocal {
     preparation: LeasePreparation,
     lease: Option<NativeLease>,
+    retained_recovery: Option<RecoveryPermit>,
     released: Option<ReleasedLease>,
     probe: ReleaseProbe,
     revoked: bool,
@@ -64,6 +68,7 @@ pub(crate) struct WorkerLocal {
         Vec<crate::infrastructure::windows_official_runtime024::PrivateDirectoryPreparation>,
     directory_pins: Vec<crate::infrastructure::windows_official_runtime024::PinnedDirectory>,
     canonical: Option<Box<canonical_trait::Attempt>>,
+    projection: Option<Arc<Mutex<State>>>,
 }
 impl WorkerLocal {
     pub(crate) fn finish_released_stage(
@@ -116,12 +121,14 @@ impl WorkerLocal {
         Self {
             preparation: LeasePreparation::default(),
             lease: None,
+            retained_recovery: None,
             released: None,
             probe: ReleaseProbe::default(),
             revoked: false,
             directories: Vec::new(),
             directory_pins: Vec::new(),
             canonical: None,
+            projection: None,
         }
     }
     pub(crate) fn acquire(
@@ -135,6 +142,46 @@ impl WorkerLocal {
         self.preparation.prepare_existing(owner, window)?;
         self.lease = Some(self.preparation.take_complete()?);
         Ok(())
+    }
+    fn enroll_retained_start(&mut self, ranges: &mut StartRanges) -> io::Result<()> {
+        self.lease = Some(ranges.take_retained_lease()?);
+        Ok(())
+    }
+    fn prepare_canonical_lease(
+        &mut self,
+        owner: &mut Owner,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> io::Result<()> {
+        match self.lease.as_mut() {
+            Some(lease) => {
+                self.retained_recovery = Some(lease.authorize_retained_recovery(owner, window)?);
+                Ok(())
+            }
+            None => self.acquire(owner, window),
+        }
+    }
+    fn project_stage(&self, stage: canonical_trait::Stage) {
+        if let Some(projection) = &self.projection {
+            if let Ok(mut state) = projection.lock() {
+                state.stage = Some(stage);
+            }
+        }
+    }
+    fn bound_claim<'a>(
+        lease: &'a mut Option<NativeLease>,
+        recovery: Option<&'a RecoveryPermit>,
+        owner: &mut Owner,
+        root: &std::path::Path,
+        window: &BeforeResumeRecoveryWindow,
+    ) -> io::Result<AnchoredClaim<'a>> {
+        let lease = lease.as_mut().ok_or_else(invalid)?;
+        let end = window.deadline();
+        if let Some(permit) = recovery {
+            lease.check_recovery_owner(permit, owner, window)?;
+            return lease.recovery_claim(permit, root, end);
+        }
+        lease.check_owner(owner, end)?;
+        lease.anchored_claim(root, end)
     }
     pub(crate) fn lease(&mut self) -> io::Result<&mut NativeLease> {
         if self.revoked {
@@ -186,10 +233,12 @@ impl WorkerLocal {
         if self.revoked {
             return Err(invalid());
         }
-        self.lease
-            .as_mut()
-            .ok_or_else(invalid)?
-            .release_retained(&mut self.released, end)
+        let lease = self.lease.as_mut().ok_or_else(invalid)?;
+        if let Some(permit) = &self.retained_recovery {
+            lease.release_recovery_retained(permit, &mut self.released, end)
+        } else {
+            lease.release_retained(&mut self.released, end)
+        }
     }
     pub(crate) fn released_and_probe(
         &mut self,
@@ -235,19 +284,50 @@ enum Phase {
 }
 struct State {
     phase: Phase,
+    stage: Option<canonical_trait::Stage>,
     thread: Option<String>,
     validator_thread: Option<String>,
     raw: Option<i32>,
     kind: Option<String>,
-    binding: TransferBinding,
+    binding: Option<TransferBinding>,
+}
+enum WorkerThread {
+    Dedicated(thread::JoinHandle<()>),
+    InitialStart(Arc<OnceLock<thread::JoinHandle<()>>>),
+}
+impl WorkerThread {
+    fn is_finished(&self) -> bool {
+        match self {
+            Self::Dedicated(thread) => thread.is_finished(),
+            Self::InitialStart(thread) => thread.get().is_none_or(thread::JoinHandle::is_finished),
+        }
+    }
+    #[cfg(test)]
+    fn join(self) -> thread::Result<()> {
+        match self {
+            Self::Dedicated(worker) => worker.join(),
+            Self::InitialStart(_) => panic!("the retained Start test owns its thread"),
+        }
+    }
 }
 /// NonClone original control. Status takes a bounded try_lock and never owns
 /// the worker's actual task, active lease or a mutation callback.
 pub(crate) struct WorkerControl<T> {
     state: Arc<Mutex<State>>,
     returned: Mutex<mpsc::Receiver<Returned<T>>>,
-    worker: thread::JoinHandle<()>,
+    worker: WorkerThread,
+    registration: Option<RetainedRegistration>,
     validation: Mutex<return_validation::Validation<T>>,
+}
+struct RetainedRegistration {
+    session: String,
+    scope: String,
+    deadline: Instant,
+}
+pub(crate) struct RetainedRequest {
+    window: BeforeResumeRecoveryWindow,
+    state: Arc<Mutex<State>>,
+    returner: mpsc::Sender<Returned<Owner>>,
 }
 pub(crate) struct Returned<T> {
     pub(crate) original: Box<T>,
@@ -262,18 +342,26 @@ fn publish(state: &Arc<Mutex<State>>, phase: Phase, error: Option<&io::Error>) {
         state.kind = error.map(|e| format!("{:?}", e.kind()));
     }
 }
-fn park<T>(
-    mut original: T,
-    mut local: WorkerLocal,
-    state: Arc<Mutex<State>>,
-    undelivered: Option<Returned<T>>,
-) -> ! {
+fn park<T>(mut original: T, mut local: WorkerLocal, state: Arc<Mutex<State>>) -> ! {
     // Mutable original resources live OUTSIDE the unwind closure and stay here.
     // No shutdown/cleanup/disconnect command exists; worker never runs callbacks
     // or acquires a new deadline in this state. Process crash remains Unknown.
     loop {
-        std::hint::black_box((&mut original, &mut local, &state, &undelivered));
+        std::hint::black_box((&mut original, &mut local, &state));
         thread::park();
+    }
+}
+impl State {
+    fn registered(binding: Option<TransferBinding>) -> Self {
+        Self {
+            phase: Phase::Registered,
+            stage: None,
+            thread: None,
+            validator_thread: None,
+            raw: None,
+            kind: None,
+            binding,
+        }
     }
 }
 impl<T: Original> WorkerControl<T> {
@@ -288,14 +376,7 @@ impl<T: Original> WorkerControl<T> {
             + 'static,
     {
         let binding = slot.as_mut().ok_or_else(invalid)?.binding(&window)?;
-        let state = Arc::new(Mutex::new(State {
-            phase: Phase::Registered,
-            thread: None,
-            validator_thread: None,
-            raw: None,
-            kind: None,
-            binding,
-        }));
+        let state = Arc::new(Mutex::new(State::registered(Some(binding))));
         let (incoming, receive) = mpsc::sync_channel::<Box<T>>(1);
         let (returner, returned) = mpsc::channel();
         let worker_state = state.clone();
@@ -304,71 +385,17 @@ impl<T: Original> WorkerControl<T> {
         let worker = thread::Builder::new()
             .name("windows024-original-recovery".into())
             .spawn(move || {
-                let Ok(mut original) = receive.recv() else {
+                let Ok(original) = receive.recv() else {
                     return;
                 };
-                let mut local = WorkerLocal::new();
-                let result = catch_unwind(AssertUnwindSafe(|| {
-                    let binding = original.binding(&window)?;
-                    if worker_state.lock().map_err(|_| invalid())?.binding != binding {
-                        return Err(invalid());
-                    }
-                    publish(&worker_state, Phase::Running, None);
-                    run(&mut original, &mut local, &window)?;
-                    let after = original.binding(&window)?;
-                    if worker_state.lock().map_err(|_| invalid())?.binding != after {
-                        return Err(invalid());
-                    }
-                    local.released_for_transfer(window.deadline())
-                }));
-                match result {
-                    Ok(Ok(())) => {
-                        let receipt = local.released.take().unwrap();
-                        let value = Returned {
-                            original,
-                            released: receipt,
-                            window,
-                        };
-                        match returner.send(value) {
-                            Ok(()) => publish(&worker_state, Phase::ReturnedForValidation, None),
-                            Err(error) => {
-                                // The observer disappeared. It cannot make the
-                                // worker drop returned original objects or autoStart.
-                                let value = error.0;
-                                publish(&worker_state, Phase::ReturnUndeliveredRetained, None);
-                                let Returned {
-                                    mut original,
-                                    released,
-                                    window,
-                                } = value;
-                                local.released = Some(released);
-                                original.revoke();
-                                local.revoke();
-                                // The actual window is retained as history, not
-                                // reconstructed from the record after failure.
-                                let _original_window = window;
-                                park(original, local, worker_state, None);
-                            }
-                        }
-                    }
-                    Ok(Err(error)) => {
-                        original.revoke();
-                        local.revoke();
-                        let phase = if Instant::now() >= window.deadline() {
-                            Phase::ExpiredRetained
-                        } else {
-                            Phase::FailedRetained
-                        };
-                        publish(&worker_state, phase, Some(&error));
-                        park(original, local, worker_state, None);
-                    }
-                    Err(_) => {
-                        original.revoke();
-                        local.revoke();
-                        publish(&worker_state, Phase::LostWorkerUnknown, None);
-                        park(original, local, worker_state, None);
-                    }
-                }
+                run_worker(
+                    original,
+                    window,
+                    worker_state,
+                    returner,
+                    |_, _, _, _| Ok(()),
+                    run,
+                );
             })?;
         let original = Box::new(slot.take().unwrap());
         if let Err(error) = incoming.send(original) {
@@ -381,18 +408,143 @@ impl<T: Original> WorkerControl<T> {
         Ok(Self {
             state,
             returned: Mutex::new(returned),
-            worker,
+            worker: WorkerThread::Dedicated(worker),
+            registration: None,
             validation: Mutex::new(return_validation::Validation::new()),
         })
     }
 }
+fn run_worker<T: Original>(
+    mut original: Box<T>,
+    window: BeforeResumeRecoveryWindow,
+    state: Arc<Mutex<State>>,
+    returner: mpsc::Sender<Returned<T>>,
+    prepare: impl FnOnce(
+        &mut T,
+        &mut WorkerLocal,
+        &BeforeResumeRecoveryWindow,
+        &Mutex<State>,
+    ) -> io::Result<()>,
+    run: impl FnOnce(&mut T, &mut WorkerLocal, &BeforeResumeRecoveryWindow) -> io::Result<()>,
+) {
+    let mut local = WorkerLocal::new();
+    local.projection = Some(state.clone());
+    let result = catch_unwind(AssertUnwindSafe(|| {
+        if Instant::now() >= window.deadline() {
+            return Err(io::ErrorKind::TimedOut.into());
+        }
+        publish(&state, Phase::Running, None);
+        prepare(&mut original, &mut local, &window, &state)?;
+        let binding = original.binding(&window)?;
+        if state.lock().map_err(|_| invalid())?.binding.as_ref() != Some(&binding) {
+            return Err(invalid());
+        }
+        run(&mut original, &mut local, &window)?;
+        if original.binding(&window)? != binding {
+            return Err(invalid());
+        }
+        local.released_for_transfer(window.deadline())
+    }));
+    let error = match result {
+        Ok(Ok(())) => {
+            let value = Returned {
+                original,
+                released: local.released.take().unwrap(),
+                window,
+            };
+            match returner.send(value) {
+                Ok(()) => {
+                    publish(&state, Phase::ReturnedForValidation, None);
+                    return;
+                }
+                Err(error) => {
+                    let mut value = error.0;
+                    value.original.revoke();
+                    local.revoke();
+                    publish(&state, Phase::ReturnUndeliveredRetained, None);
+                    park(value, local, state);
+                }
+            }
+        }
+        Ok(Err(error)) => Some(error),
+        Err(_) => None,
+    };
+    original.revoke();
+    local.revoke();
+    let phase = if error.is_none() {
+        Phase::LostWorkerUnknown
+    } else if Instant::now() >= window.deadline() {
+        Phase::ExpiredRetained
+    } else {
+        Phase::FailedRetained
+    };
+    publish(&state, phase, error.as_ref());
+    park(original, local, state);
+}
 impl WorkerControl<Owner> {
+    pub(crate) fn register_retained_start(
+        session: String,
+        scope: String,
+        window: BeforeResumeRecoveryWindow,
+        worker: Arc<OnceLock<thread::JoinHandle<()>>>,
+    ) -> (Self, RetainedRequest) {
+        let state = Arc::new(Mutex::new(State::registered(None)));
+        let (returner, returned) = mpsc::channel();
+        let control = Self {
+            state: state.clone(),
+            returned: Mutex::new(returned),
+            worker: WorkerThread::InitialStart(worker),
+            registration: Some(RetainedRegistration {
+                session,
+                scope,
+                deadline: window.deadline(),
+            }),
+            validation: Mutex::new(return_validation::Validation::new()),
+        };
+        (
+            control,
+            RetainedRequest {
+                window,
+                state,
+                returner,
+            },
+        )
+    }
     pub(crate) fn start_owner(
         slot: &mut Option<Owner>,
         window: BeforeResumeRecoveryWindow,
         run: fn(&mut Owner, &mut WorkerLocal, &BeforeResumeRecoveryWindow) -> io::Result<()>,
     ) -> io::Result<Self> {
         Self::start(slot, window, run)
+    }
+}
+impl RetainedRequest {
+    pub(crate) fn execute(
+        self,
+        owner: Owner,
+        ranges: &mut StartRanges,
+        check: impl FnOnce(&Owner) -> io::Result<()>,
+        run: fn(&mut Owner, &mut WorkerLocal, &BeforeResumeRecoveryWindow) -> io::Result<()>,
+    ) {
+        run_worker(
+            Box::new(owner),
+            self.window,
+            self.state,
+            self.returner,
+            |owner, local, window, state| {
+                check(owner)?;
+                // If Start acquired only a prefix, its exact original ranges stay
+                // where they were enrolled and this action cannot acquire replacements.
+                local.enroll_retained_start(ranges)?;
+                owner
+                    .prepare_before_resume_process(window)
+                    .map_err(io::Error::other)?;
+                let binding = owner.binding(window)?;
+                state.lock().map_err(|_| invalid())?.binding = Some(binding);
+                Ok(())
+            },
+            run,
+        );
     }
 }
 impl<T> WorkerControl<T> {
@@ -404,7 +556,8 @@ impl<T> WorkerControl<T> {
             .state
             .try_lock()
             .map_err(|_| io::Error::new(io::ErrorKind::WouldBlock, "worker projection busy"))?;
-        let phase = if self.worker.is_finished()
+        let finished = self.worker.is_finished();
+        let phase = if finished
             && !matches!(
                 state.phase,
                 Phase::ReturnedForValidation
@@ -416,10 +569,25 @@ impl<T> WorkerControl<T> {
         } else {
             state.phase
         };
-        let data = serde_json::json!({"schema":"windows-original-recovery-worker-v1","phase":format!("{phase:?}"),"sessionId":state.binding.session,
-            "actionId":state.binding.action,"scopeDigest":state.binding.scope,"workerThread":state.thread,"returnValidatorThread":state.validator_thread,
-            "originalDeadlineExpired":Instant::now()>=state.binding.end,"rawError":state.raw,"errorKind":state.kind,
-            "workerFinished":self.worker.is_finished(),"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false});
+        let (session, action, scope, deadline) = match (&state.binding, &self.registration) {
+            (Some(binding), _) => (
+                &binding.session,
+                Some(&binding.action),
+                &binding.scope,
+                binding.end,
+            ),
+            (None, Some(registration)) => (
+                &registration.session,
+                None,
+                &registration.scope,
+                registration.deadline,
+            ),
+            (None, None) => return Err(invalid()),
+        };
+        let data = serde_json::json!({"schema":"windows-original-recovery-worker-v1","phase":format!("{phase:?}"),"stage":state.stage.map(|stage|format!("{stage:?}")),"sessionId":session,
+            "actionId":action,"scopeDigest":scope,"workerThread":state.thread,"returnValidatorThread":state.validator_thread,
+            "originalDeadlineExpired":Instant::now()>=deadline,"rawError":state.raw,"errorKind":state.kind,
+            "workerFinished":finished,"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false});
         if Instant::now() >= end {
             return Err(io::ErrorKind::TimedOut.into());
         }

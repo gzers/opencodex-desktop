@@ -1,6 +1,13 @@
 use super::*;
-use crate::infrastructure::windows_client_originals024::StartRanges;
+use crate::{
+    infrastructure::windows_client_originals024::{
+        recovery_worker::{RetainedRequest, WorkerControl},
+        StartRanges,
+    },
+    modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
+};
 use std::{
+    io,
     panic::{catch_unwind, AssertUnwindSafe},
     sync::mpsc,
     thread,
@@ -41,6 +48,8 @@ struct State {
     snapshot: Snapshot,
     thread: Option<thread::ThreadId>,
     result: Option<AppResult<LifecycleResult>>,
+    recovery: Option<RetainedRequest>,
+    recovery_queued: bool,
 }
 
 pub(super) struct StartWorker {
@@ -51,7 +60,7 @@ pub(super) struct StartWorker {
     deadline: Instant,
     state: Mutex<State>,
     wake: Notify,
-    thread: OnceLock<thread::JoinHandle<()>>,
+    thread: Arc<OnceLock<thread::JoinHandle<()>>>,
 }
 
 impl StartWorker {
@@ -83,9 +92,11 @@ impl StartWorker {
                 },
                 thread: None,
                 result: None,
+                recovery: None,
+                recovery_queued: false,
             }),
             wake: Notify::new(),
-            thread: OnceLock::new(),
+            thread: Arc::new(OnceLock::new()),
         });
         let (send, receive) = mpsc::sync_channel::<Owner>(1);
         let worker_entry = entry.clone();
@@ -116,6 +127,42 @@ impl StartWorker {
         Ok(control)
     }
 
+    pub(super) fn queue_recovery(
+        &self,
+        window: BeforeResumeRecoveryWindow,
+    ) -> AppResult<WorkerControl<Owner>> {
+        budget(window.deadline())?;
+        let worker = self
+            .thread
+            .get()
+            .filter(|thread| !thread.is_finished())
+            .ok_or_else(recovery_required)?;
+        let mut state = self.state.try_lock().map_err(unknown)?;
+        if state.recovery_queued
+            || !matches!(
+                state.snapshot.phase,
+                Phase::FailedRetained | Phase::ExpiredRetained
+            )
+            || !matches!(state.snapshot.stage, Stage::Capture | Stage::BeforeResume)
+            || state.snapshot.creator_resumed != Some(false)
+            || state.thread != Some(worker.thread().id())
+        {
+            return Err(recovery_required());
+        }
+        budget(window.deadline())?;
+        let (control, request) = WorkerControl::register_retained_start(
+            self.session.to_string(),
+            self.scope.clone(),
+            window,
+            self.thread.clone(),
+        );
+        state.recovery_queued = true;
+        state.recovery = Some(request);
+        drop(state);
+        worker.thread().unpark();
+        Ok(control)
+    }
+
     pub(super) async fn wait(&self) -> AppResult<LifecycleResult> {
         loop {
             let result = self.state.lock().map_err(unknown)?.result.clone();
@@ -136,10 +183,11 @@ impl StartWorker {
         budget(end)?;
         let state = self.state.try_lock().map_err(unknown)?;
         let mut sample = state.snapshot;
-        if self
-            .thread
-            .get()
-            .is_none_or(thread::JoinHandle::is_finished)
+        if !state.recovery_queued
+            && self
+                .thread
+                .get()
+                .is_none_or(thread::JoinHandle::is_finished)
             && sample.phase != Phase::Returned
         {
             sample.phase = Phase::LostWorkerUnknown;
@@ -250,6 +298,37 @@ impl StartWorker {
         }
         self.wake.notify_one();
         loop {
+            let request = self
+                .state
+                .lock()
+                .ok()
+                .and_then(|mut state| state.recovery.take());
+            if let Some(request) = request {
+                if let Some(original) = owner.take() {
+                    request.execute(
+                        original,
+                        &mut ranges,
+                        |owner| {
+                            let thread = self
+                                .thread
+                                .get()
+                                .ok_or_else(|| io::Error::other(recovery_required()))?;
+                            if thread.thread().id() != thread::current().id()
+                                || owner.session != self.session
+                                || owner.scope().map_err(io::Error::other)? != self.scope
+                                || owner.start_action.id() != self.action
+                                || owner.native.binding().process != self.root
+                                || owner.native.creator_has_resumed()
+                            {
+                                return Err(io::Error::other(recovery_required()));
+                            }
+                            Ok(())
+                        },
+                        actions::run_before_resume_worker,
+                    );
+                    return;
+                }
+            }
             std::hint::black_box((&mut owner, &mut ranges, &entry, self));
             thread::park();
         }
@@ -353,9 +432,11 @@ mod tests {
                 },
                 thread: None,
                 result: None,
+                recovery: None,
+                recovery_queued: false,
             }),
             wake: Notify::new(),
-            thread: OnceLock::new(),
+            thread: Arc::new(OnceLock::new()),
         })
     }
 
@@ -375,6 +456,70 @@ mod tests {
         assert_eq!(facts["binding"]["pid"], std::process::id());
         assert!(worker.observe(started).is_err());
         assert!(started.elapsed() < Duration::from_secs(5));
+    }
+
+    #[test]
+    fn wl2_r7_same_start_queue_admits_only_one_known_unresumed_failure() {
+        let worker = control(Instant::now());
+        let same_worker = worker.clone();
+        let (ready, started) = mpsc::sync_channel(1);
+        let (received, request) = mpsc::sync_channel(1);
+        let end = Instant::now() + Duration::from_secs(5);
+        let thread = thread::spawn(move || {
+            let id = thread::current().id();
+            same_worker.state.lock().unwrap().thread = Some(id);
+            ready.send(id).unwrap();
+            while Instant::now() < end {
+                let item = same_worker.state.lock().unwrap().recovery.take();
+                if let Some(item) = item {
+                    drop(same_worker);
+                    received.send((id, item)).unwrap();
+                    return;
+                }
+                thread::park_timeout(end.saturating_duration_since(Instant::now()));
+            }
+        });
+        worker.thread.set(thread).unwrap();
+        let id = started.recv_timeout(Duration::from_secs(5)).unwrap();
+        let now = Instant::now();
+        let window = || BeforeResumeRecoveryWindow::begin(now, end).unwrap();
+        assert!(worker.queue_recovery(window()).is_err());
+        {
+            let mut s = worker.state.lock().unwrap();
+            s.snapshot.phase = Phase::LostWorkerUnknown;
+        }
+        assert!(worker.queue_recovery(window()).is_err());
+        {
+            let mut s = worker.state.lock().unwrap();
+            s.snapshot.phase = Phase::ExpiredRetained;
+            s.snapshot.stage = Stage::Resume;
+            s.snapshot.creator_resumed = None;
+        }
+        assert!(worker.queue_recovery(window()).is_err());
+        {
+            let mut s = worker.state.lock().unwrap();
+            s.snapshot.stage = Stage::BeforeResume;
+            s.snapshot.creator_resumed = Some(false);
+            s.snapshot.raw = Some(33);
+        }
+        let recovery = worker.queue_recovery(window()).unwrap();
+        let (consuming_id, queued) = request.recv_timeout(Duration::from_secs(5)).unwrap();
+        assert_eq!(consuming_id, id);
+        assert!(worker.queue_recovery(window()).is_err());
+        let (_, original) = worker.observe(end).unwrap();
+        assert_eq!(original["phase"], "ExpiredRetained");
+        assert_eq!(original["rawError"], 33);
+        drop(recovery);
+        drop(queued);
+        let thread = Arc::try_unwrap(worker).ok().unwrap().thread;
+        Arc::try_unwrap(thread)
+            .ok()
+            .unwrap()
+            .into_inner()
+            .unwrap()
+            .join()
+            .unwrap();
+        println!("one recovery dispatched to original Start thread; Running/Unknown/uncertain Resume and replay refused; first raw33 preserved");
     }
 
     #[tokio::test]

@@ -7,8 +7,8 @@ use crate::{
     infrastructure::windows_client_originals024::{PreparedAbortPrefix, QuiescentOriginals},
     modules::runtime::windows_lifecycle024_contract::BeforeFirstResumeRecovery,
 };
-#[derive(Clone, Copy, PartialEq, Eq)]
-enum Stage {
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum Stage {
     Registered,
     Prepared,
     Quiescing,
@@ -141,20 +141,33 @@ impl BeforeFirstResumeRecovery for WorkerLocal {
                 prefix: None,
                 quiescent: None,
             }));
-            self.acquire(owner, window).map_err(fail)?;
-            // Owner stores the actual directory before the next fallible work.
-            let directory = self.attachment_directory(owner, window).map_err(fail)?;
-            owner.retain_before_resume_attachment_directory(directory, window)?;
+            self.project_stage(Stage::Registered);
+            self.prepare_canonical_lease(owner, window).map_err(fail)?;
             let root = owner.profile_path().join(".codex");
-            let lease = self.lease.as_mut().ok_or_else(|| fail(invalid()))?;
-            lease.check_owner(owner, window.deadline()).map_err(fail)?;
-            let mut claim = lease
-                .anchored_claim(&root, window.deadline())
-                .map_err(fail)?;
+            let mut claim = Self::bound_claim(
+                &mut self.lease,
+                self.retained_recovery.as_ref(),
+                owner,
+                &root,
+                window,
+            )
+            .map_err(fail)?;
             let prefix = owner.with_originals(|originals, owner| {
                 originals.prepare_abort_prefix(owner, &mut claim, window)
             })?;
             self.canonical.as_mut().unwrap().prefix = Some(prefix);
+            drop(claim);
+            // A complete original prefix must qualify before creating an attachment.
+            let directory = self.attachment_directory(owner, window).map_err(fail)?;
+            owner.retain_before_resume_attachment_directory(directory, window)?;
+            let mut claim = Self::bound_claim(
+                &mut self.lease,
+                self.retained_recovery.as_ref(),
+                owner,
+                &root,
+                window,
+            )
+            .map_err(fail)?;
             let prefix = self.canonical.as_ref().unwrap().prefix.as_ref().unwrap();
             owner.with_originals(|originals, owner| {
                 let directory = owner.take_before_resume_attachment_directory(window)?;
@@ -168,6 +181,7 @@ impl BeforeFirstResumeRecovery for WorkerLocal {
                 .binding
                 .check(owner, window)?;
             self.canonical.as_mut().unwrap().stage = Stage::Prepared;
+            self.project_stage(Stage::Prepared);
             Ok(PreparedCanonicalAbort {
                 nonce,
                 end: window.deadline(),
@@ -187,12 +201,16 @@ impl BeforeFirstResumeRecovery for WorkerLocal {
         let result = (|| {
             self.canonical_binding(owner, window, Stage::Prepared, prepared.nonce, prepared.end)?;
             self.canonical.as_mut().unwrap().stage = Stage::Quiescing;
+            self.project_stage(Stage::Quiescing);
             let root = owner.profile_path().join(".codex");
-            let lease = self.lease.as_mut().ok_or_else(|| fail(invalid()))?;
-            lease.check_owner(owner, window.deadline()).map_err(fail)?;
-            let mut claim = lease
-                .anchored_claim(&root, window.deadline())
-                .map_err(fail)?;
+            let mut claim = Self::bound_claim(
+                &mut self.lease,
+                self.retained_recovery.as_ref(),
+                owner,
+                &root,
+                window,
+            )
+            .map_err(fail)?;
             let attempt = &mut self.canonical;
             let quiescent = owner.with_originals(|originals, owner| {
                 let prefix = attempt
@@ -212,6 +230,7 @@ impl BeforeFirstResumeRecovery for WorkerLocal {
                 .binding
                 .check(owner, window)?;
             self.canonical.as_mut().unwrap().stage = Stage::Quiescent;
+            self.project_stage(Stage::Quiescent);
             Ok(QuiescentCanonicalLauncher {
                 nonce: prepared.nonce,
                 end: prepared.end,
@@ -241,12 +260,16 @@ impl BeforeFirstResumeRecovery for WorkerLocal {
                 return Err(fail(invalid()));
             }
             self.canonical.as_mut().unwrap().stage = Stage::Restoring;
+            self.project_stage(Stage::Restoring);
             let root = owner.profile_path().join(".codex");
-            let lease = self.lease.as_mut().ok_or_else(|| fail(invalid()))?;
-            lease.check_owner(owner, window.deadline()).map_err(fail)?;
-            let mut claim = lease
-                .anchored_claim(&root, window.deadline())
-                .map_err(fail)?;
+            let mut claim = Self::bound_claim(
+                &mut self.lease,
+                self.retained_recovery.as_ref(),
+                owner,
+                &root,
+                window,
+            )
+            .map_err(fail)?;
             let proof = self
                 .canonical
                 .as_ref()
@@ -273,6 +296,7 @@ impl BeforeFirstResumeRecovery for WorkerLocal {
             self.finish_released_stage(owner, window).map_err(fail)?;
             owner.before_resume_restored_data(window)?;
             self.canonical.as_mut().unwrap().stage = Stage::Complete;
+            self.project_stage(Stage::Complete);
             Ok(RestoredCanonicalOriginals {
                 nonce: prepared.nonce,
                 end: prepared.end,

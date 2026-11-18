@@ -39,10 +39,13 @@ use windows_sys::Win32::{
     },
 };
 mod preparation;
+mod retained_start;
 mod release_probe;
 pub(super) use release_probe::ReleaseProbe;
 mod segments;
 pub(super) use preparation::LeasePreparation;
+pub(super) use retained_start::RecoveryPermit;
+use retained_start::StartLeaseState;
 #[cfg(test)]
 pub(super) use segments::fail_recovery_release_after;
 pub(super) use segments::RetiredLeaseHistory;
@@ -387,6 +390,7 @@ pub(super) struct NativeLease {
     token: TokenIdentity,
     deadline: Instant,
     active: bool,
+    start_state: StartLeaseState,
     bound: Option<Bound>,
     acquisition_thread: std::thread::ThreadId,
     _not_send: PhantomData<*mut ()>,
@@ -399,14 +403,18 @@ pub(super) struct AnchoredClaim<'a> {
     path: PathBuf,
     id: FileIdentity,
     end: Instant,
+    recovery: Option<&'a RecoveryPermit>,
 }
 impl AnchoredClaim<'_> {
     pub(super) fn check(&mut self, root: &Path, end: Instant) -> io::Result<()> {
         if end > self.end || self.path.parent() != Some(root) {
-            self.lease.active = false;
+            self.lease.revoke_retained();
             return Err(refused());
         }
-        self.lease.check(end)?;
+        match self.recovery {
+            Some(permit) => self.lease.check_recovery(permit, end)?,
+            None => self.lease.check(end)?,
+        }
         let held = &self.lease.held[0];
         if held.pin.path != self.path
             || held.pin.id != self.id
@@ -414,7 +422,7 @@ impl AnchoredClaim<'_> {
             || held.ranges[0].offset != BASE
             || held.ranges[0].length != 512
         {
-            self.lease.active = false;
+            self.lease.revoke_retained();
             return Err(refused());
         }
         Ok(())
@@ -437,6 +445,7 @@ impl AnchoredClaim<'_> {
 impl NativeLease {
     pub(super) fn revoke_retained(&mut self) {
         self.active = false;
+        self.start_state = StartLeaseState::Spent;
     }
     #[cfg(test)]
     pub(super) fn acquire_synthetic(paths: &[PathBuf; 4], end: Instant) -> io::Result<Self> {
@@ -448,9 +457,17 @@ impl NativeLease {
         end: Instant,
     ) -> io::Result<AnchoredClaim<'_>> {
         self.check(end)?;
+        self.borrow_claim(root, end, None)
+    }
+    fn borrow_claim<'a>(
+        &'a mut self,
+        root: &Path,
+        end: Instant,
+        recovery: Option<&'a RecoveryPermit>,
+    ) -> io::Result<AnchoredClaim<'a>> {
         let pin = &self.held[0].pin;
         if pin.path != root.join(".opencodex-native-main.claim.sqlite") {
-            self.active = false;
+            self.revoke_retained();
             return Err(refused());
         }
         let path = pin.path.clone();
@@ -460,6 +477,7 @@ impl NativeLease {
             path,
             id,
             end,
+            recovery,
         };
         claim.check(root, end)?;
         Ok(claim)
@@ -482,6 +500,7 @@ impl NativeLease {
             token,
             deadline: end,
             active: true,
+            start_state: StartLeaseState::Other,
             bound: None,
             acquisition_thread: std::thread::current().id(),
             _not_send: PhantomData,
@@ -550,6 +569,11 @@ impl NativeLease {
         let result = self.check_inner(end);
         if result.is_err() {
             self.active = false;
+            if matches!(self.start_state, StartLeaseState::Start(_))
+                && result.as_ref().is_err_and(|e| e.kind() != io::ErrorKind::TimedOut)
+            {
+                self.start_state = StartLeaseState::Spent;
+            }
         }
         result
     }
@@ -559,6 +583,9 @@ impl NativeLease {
         }
         before(end)?;
         before(self.deadline)?;
+        self.verify_retained_objects(end)
+    }
+    fn verify_retained_objects(&mut self, end: Instant) -> io::Result<()> {
         self.check_original_ranges()?;
         if native::current_identity()? != self.token {
             return Err(refused());
@@ -595,11 +622,20 @@ impl NativeLease {
         let result = self.check_owner_inner(owner, end);
         if result.is_err() {
             self.active = false;
+            if matches!(self.start_state, StartLeaseState::Start(_))
+                && result.as_ref().is_err_and(|e| e.kind() != io::ErrorKind::TimedOut)
+            {
+                self.start_state = StartLeaseState::Spent;
+            }
         }
         result
     }
     fn check_owner_inner(&mut self, owner: &mut Owner, end: Instant) -> io::Result<()> {
         self.check(end)?;
+        self.check_bound_owner(owner, end)?;
+        self.check(end)
+    }
+    fn check_bound_owner(&self, owner: &mut Owner, end: Instant) -> io::Result<()> {
         let bound = self.bound.as_ref().ok_or_else(refused)?;
         if owner.scope().map_err(io_error)? != bound.scope
             || owner.profile_path() != bound.profile.path()
@@ -607,8 +643,7 @@ impl NativeLease {
         {
             return Err(refused());
         }
-        owner.check_current(end).map_err(io_error)?;
-        self.check(end)
+        owner.check_current(end).map_err(io_error)
     }
     pub(super) fn release(mut self, end: Instant) -> io::Result<()> {
         let valid = self.check(end);

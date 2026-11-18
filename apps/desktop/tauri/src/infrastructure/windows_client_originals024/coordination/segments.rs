@@ -289,50 +289,61 @@ impl NativeLease {
         out: &mut Option<ReleasedLease>,
         end: Instant,
     ) -> io::Result<()> {
+        self.check(end)?;
+        self.release_retained_checked(out, self.deadline, end)
+    }
+    pub(in super::super) fn release_recovery_retained(
+        &mut self,
+        permit: &RecoveryPermit,
+        out: &mut Option<ReleasedLease>,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.check_recovery(permit, end)?;
+        self.release_retained_checked(out, permit.end, end)
+    }
+    fn release_retained_checked(
+        &mut self,
+        out: &mut Option<ReleasedLease>,
+        release_deadline: Instant,
+        end: Instant,
+    ) -> io::Result<()> {
+        self.revoke_retained();
         if out.is_some() {
             return Err(refused());
         }
-        let result = (|| {
-            self.check(end)?;
-            let facts = self.facts_inner()?;
-            self.active = false;
-            for (index, held) in self.held.iter_mut().rev().enumerate() {
-                before(end)?;
-                held.release()?;
-                #[cfg(test)]
-                if RECOVERY_RELEASE_FAIL_AFTER.with(|fault| fault.get() == Some(index + 1)) {
-                    return Err(io::Error::from_raw_os_error(5));
-                }
-                #[cfg(not(test))]
-                let _ = index;
-            }
-            for held in &mut self.held {
-                if !held.ranges.is_empty() {
-                    return Err(refused());
-                }
-                held.pin.check(end)?;
-            }
+        let facts = self.facts_inner()?;
+        for (index, held) in self.held.iter_mut().rev().enumerate() {
             before(end)?;
-            let objects = ReleasedObjects {
-                files: self.held.drain(..).map(|h| h.pin).collect(),
-                token: self.token.clone(),
-                deadline: self.deadline,
-                bound: self.bound.take(),
-                epoch: self.epoch.clone(),
-            };
-            *out = Some(ReleasedLease {
-                original: objects,
-                facts,
-                poisoned: false,
-                reacquired: false,
-                completed_at: Instant::now(),
-            });
-            out.as_mut().unwrap().check(end)
-        })();
-        if result.is_err() {
-            self.active = false;
+            held.release()?;
+            #[cfg(test)]
+            if RECOVERY_RELEASE_FAIL_AFTER.with(|fault| fault.get() == Some(index + 1)) {
+                return Err(io::Error::from_raw_os_error(5));
+            }
+            #[cfg(not(test))]
+            let _ = index;
         }
-        result
+        for held in &mut self.held {
+            if !held.ranges.is_empty() {
+                return Err(refused());
+            }
+            held.pin.check(end)?;
+        }
+        before(end)?;
+        let objects = ReleasedObjects {
+            files: self.held.drain(..).map(|h| h.pin).collect(),
+            token: self.token.clone(),
+            deadline: release_deadline,
+            bound: self.bound.take(),
+            epoch: self.epoch.clone(),
+        };
+        *out = Some(ReleasedLease {
+            original: objects,
+            facts,
+            poisoned: false,
+            reacquired: false,
+            completed_at: Instant::now(),
+        });
+        out.as_mut().unwrap().check(end)
     }
     fn facts_inner(&self) -> io::Result<LeaseFacts> {
         facts_from_files(

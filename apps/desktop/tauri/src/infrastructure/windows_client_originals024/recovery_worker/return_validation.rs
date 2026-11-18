@@ -80,14 +80,14 @@ impl<T: Original> WorkerControl<T> {
                 return Err(io::ErrorKind::TimedOut.into());
             }
             let before = value.original.binding(&value.window)?;
-            if before != self.state.try_lock().map_err(|_| invalid())?.binding {
+            if self.state.try_lock().map_err(|_| invalid())?.binding.as_ref() != Some(&before) {
                 return Err(invalid());
             }
             value.released.check(end)?;
             let data = check(&mut value.original, &mut value.released, &value.window)?;
             value.released.check(end)?;
             let after = value.original.binding(&value.window)?;
-            if before != after || after != self.state.try_lock().map_err(|_| invalid())?.binding {
+            if before != after || self.state.try_lock().map_err(|_| invalid())?.binding.as_ref() != Some(&after) {
                 return Err(invalid());
             }
             let completed = Instant::now();
