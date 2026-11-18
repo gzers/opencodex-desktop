@@ -1,0 +1,20 @@
+{
+  "sourceEvidence": "../channel-name-rollback-r1/run01/result.json",
+  "exactTaskProfile": "/private/tmp/ocxd024-name-rollback-zsr2sph2/profile",
+  "preRunExternalAbsenceRecorded": false,
+  "beforeCleanup": [
+    {
+      "path": "/private/tmp/opencodex-runtime-v1-501/catalog-write-locks/4cd728abe594636b2141edddb908c4b04a601c33dbf08637c8eb6e89197d5e84.sqlite",
+      "device": 16777231,
+      "inode": 448009708,
+      "mode": 384,
+      "uid": 501,
+      "gid": 0,
+      "nlink": 1,
+      "bytes": 4096
+    }
+  ],
+  "hypothesis": "all3 original official commands terminal raw0; exact test-key K database is released and can be captured/removed without touching globalL",
+  "helperSha256": "f1e8aea05cff38c46af688b8319d944cc762443403c8f523c6acf2018d29829a",
+  "releaseAcceptance": false
+}
