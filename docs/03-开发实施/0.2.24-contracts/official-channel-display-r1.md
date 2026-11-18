@@ -1,6 +1,6 @@
 # 官方2.99渠道显示与保存来源 r1
 
-revision: 1；2026-11-17。需求AC-P24-09由用户明确采用“原生显示格式，继续验证刷新与保存”。本文件拥有行为/来源合同，执行进度唯一归IMP-34；不改官方包，不变更Windows生命周期ABI或独占scanner/恢复写集。
+revision: 2；2026-11-18。需求AC-P24-09由用户明确采用“原生显示格式，继续验证刷新与保存”。本文件拥有行为/来源合同，执行进度唯一归IMP-34；不改官方包，不变更Windows生命周期ABI或独占scanner/恢复写集。
 
 - 普通官方合法渠道名（含点，最多64ASCII字符、首尾字母数字及保留字限制）实际改provider key并重写已管理引用；稳定channel ID/原始模型ID/凭据保持。中文等不能直接作键时保留合法内部路由ID。
 - 当逻辑channel.label不等于实际目标providerID（含持久协议组）时，在官方modelDisplayNames精确原始模型ID处写“渠道名 · 模型ID”。显示串中/转／；不改selectedModels/models/modelAliases、请求或目录slug。生成值不超过官方128个UTF-16单元、无控制字符，超限或无法表示时事务写前拒绝，不截断。人工非空显示名优先；清空后回自动显示，无需改官方模型能力。
@@ -12,3 +12,6 @@ revision: 1；2026-11-17。需求AC-P24-09由用户明确采用“原生显示�
 验证使用独立临时Profile＋内核禁止日常HOME/外网/Keychain、固定官方bundle、合成凭据且liveModels=false；test/smoke/macos024-display-refresh.py从真实Rust保存事务导出三代配置，再以原样官方Bun函数执行保存/读回/目录刷新。先保留原失败（组key>64导致官方default fallback），修新分配逻辑后原断言不放宽。所有测试残留归本次明确根清理，证据包含原源码hash、命令、stdout/stderr、每代合成配置、目录读回和清理；无服务/真实业务同步/模型调用。
 
 当前不因本合同签整版完成：最终集成包、默认客户端真实加载/应用重启、相同显示映射的正式回退仍需固定候选证据，Windows平台无新增专属UI验证义务。版本正式发布门保持关闭。
+
+
+默认客户端按用户确认为ChatGPT桌面内本地Codex，实际选择器证据与隔离边界见[客户端验证合同](chatgpt-codex-name-validation-r1.md)。整文件备份回退组件和未验范围只归IMP176，不用官方函数通过替代客户端真实加载。

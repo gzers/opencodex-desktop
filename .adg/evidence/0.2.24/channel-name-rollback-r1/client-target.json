@@ -1,0 +1,49 @@
+{
+  "target": "ChatGPT desktop local Codex",
+  "userConfirmed": true,
+  "installedApp": {
+    "bundleId": "com.openai.codex",
+    "version": "26.1111.21308",
+    "build": "27194"
+  },
+  "guiAccepted": false,
+  "automationBlocked": {
+    "tool": "cua.getApp(ChatGPT)",
+    "message": "Computer Use is not allowed to use the app 'com.openai.codex' for safety reasons.",
+    "otherUiTechnologyFallbackAttempted": false
+  },
+  "dailyConfigurationModified": false,
+  "hostRestarted": false,
+  "fixtureSourcesOnlyNoDailyInstall": true,
+  "manualExpectedDisplayRows": [
+    {
+      "slug": "channel-073cc2c739ba4ac9900d7166cd5e87-openai-responses-8cab815a/gpt-6-sol",
+      "before": "\u4eba\u5de5\u540d\u79f0",
+      "changed": "\u4eba\u5de5\u540d\u79f0",
+      "restored": "\u4eba\u5de5\u540d\u79f0",
+      "capabilitiesUnchanged": true
+    },
+    {
+      "slug": "channel-073cc2c739ba4ac9900d7166cd5e8766/vendor-custom",
+      "before": "\u5907\u4efd\u6e20\u9053 \u00b7 vendor\uff0fcustom",
+      "changed": "\u4fee\u6539\u540e\u6e20\u9053 \u00b7 vendor\uff0fcustom",
+      "restored": "\u5907\u4efd\u6e20\u9053 \u00b7 vendor\uff0fcustom",
+      "capabilitiesUnchanged": true
+    }
+  ],
+  "officialReferences": [
+    {
+      "url": "https://learn.chatgpt.com/docs/enterprise/roll-out-a-gateway",
+      "supports": "local startup catalog and display_name picker label; restart after catalog changes"
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/models?surface=app",
+      "supports": "ChatGPT desktop local Codex shares config.toml with CLI/IDE"
+    },
+    {
+      "url": "https://learn.chatgpt.com/docs/config-file/config-reference",
+      "supports": "model_catalog_json loaded at startup; --profile documented for CLI only, no unverified app launch flag assumed"
+    }
+  ],
+  "releaseAcceptance": false
+}
