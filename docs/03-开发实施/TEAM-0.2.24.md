@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 46；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 47；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -376,3 +376,8 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 ## revision46 Windows r7 首启保留与最终释放交接
 
 共同基线 9daf5599151b65437f94ab2cadb1988060ee38c3。准备释放代码 737bca2e3cd8899cda0d0d86bf8b5fbb446ebca1，证据 8b3ed982236014b0755538d7c3f00a3649c53fc3，后继最终释放源码 e6cc1f29a5444a76da3e123d6f97b7b6ee6757f2。状态以 IMP185 为准。Windows 继续按 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)和现有写集，用独立夹具复验最终释放与原持久 worker，接续显式恢复。Mac 并行承接后继准备取消。旧现场处置仍须单独授权。
+
+
+## revision47 Windows r7 最终释放与租约范围接续
+
+共同基线 9daf5599151b65437f94ab2cadb1988060ee38c3。最终释放代码 e6cc1f29a5444a76da3e123d6f97b7b6ee6757f2、证据 f260a34da4dcabe4bf15fe733f4cd9a0686d80b9。租约范围代码 e54a1156de42d445903faedb93aed4923f400b3a、证据 e9e0522629f522e172650f3ea3734fa6b6cc4ae0。结果归 IMP186。Windows 延续 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)现有写集，继续同原线程持锁、显式恢复及生产预算验证。共享接口沿用现行合同。Mac 并行接续后继准备取消，旧现场处置仍须单独授权。
