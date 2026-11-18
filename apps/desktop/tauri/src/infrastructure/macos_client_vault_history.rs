@@ -140,15 +140,16 @@ pub(super) fn inspect_root_closures(
     binding: &[u8],
     history: &[Head],
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
-    inspect_root_lineage(data, profile, binding, history, true, None)
+    inspect_root_lineage(data, profile, binding, history, true, None, None)
 }
 pub(super) fn inspect_root_history(
     data: &PinnedDirectory,
     profile: &Path,
     binding: &[u8],
     history: &[Head],
+    registering: Option<&root_cancel_namespace::RegisteringSlot>,
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
-    inspect_root_lineage(data, profile, binding, history, false, None)
+    inspect_root_lineage(data, profile, binding, history, false, None, registering)
 }
 /// Only a live create-only transfer can supply the extra pending namespace
 /// while the predecessor Head is still current inside its commit transaction.
@@ -159,7 +160,7 @@ pub(super) fn inspect_root_closures_pending(
     history: &[Head],
     transfer: &super::root_creation::Transfer,
 ) -> io::Result<()> {
-    inspect_root_lineage(data, profile, binding, history, true, Some(transfer)).map(|_| ())
+    inspect_root_lineage(data, profile, binding, history, true, Some(transfer), None).map(|_| ())
 }
 fn check_historical_scope(originals: &Originals, binding: &[u8]) -> io::Result<()> {
     check_historical_scope_pins(
@@ -201,9 +202,13 @@ fn inspect_root_lineage(
     history: &[Head],
     closed_only: bool,
     pending: Option<&super::root_creation::Transfer>,
+    registering: Option<&root_cancel_namespace::RegisteringSlot>,
 ) -> io::Result<Vec<super::super::root_retirement::ClosedRootReferences>> {
     let mut lineage = root_lineage::parse(binding, history)?;
-    let cancellation_namespace = root_cancel_namespace::Namespace::from_history(history)?;
+    let cancellation_namespace =
+        root_cancel_namespace::Namespace::from_history(history)?.during_registration(registering);
+    let manager = data.child_private("manager-state", false)?;
+    cancellation_namespace.require_at(&manager)?;
     #[cfg(not(test))]
     let reference_mode = false;
     #[cfg(test)]
@@ -338,7 +343,6 @@ fn inspect_root_lineage(
         expected.push(generation.origin.id.clone());
         references.push((reference, generation.binding.clone(), observation));
     }
-    let manager = data.child_private("manager-state", false)?;
     if observation::entry(&manager, "client-originals")?.is_none() {
         if !expected.is_empty()
             || !(current.is_some_and(|h| {
@@ -354,6 +358,7 @@ fn inspect_root_lineage(
             return Err(denied("indexed root original vault missing"));
         }
         finish_cancelled_history(data, profile, cancelled)?;
+        cancellation_namespace.require_at(&manager)?;
         return Ok(Vec::new());
     }
     let vault = manager.child_private("client-originals", false)?;
@@ -425,7 +430,7 @@ fn inspect_root_lineage(
         return Err(denied("root vault membership changed during history audit"));
     }
     vault.private()?;
-    manager.recheck()?;
+    cancellation_namespace.require_at(&manager)?;
     Ok(references
         .into_iter()
         .map(|(reference, _, _)| reference)
@@ -435,7 +440,7 @@ fn finish_cancelled_history(
     data: &PinnedDirectory,
     profile: &Path,
     observations: Vec<(
-        super::root_preparation::preservation::indexed::HistoricalObservation,
+        super::root_preparation::preservation::indexed::HistoricalObservation<'_>,
         Vec<u8>,
     )>,
 ) -> io::Result<()> {

@@ -27,16 +27,16 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
 }
 /// One independently indexed initial cancellation, checked without reading the
 /// live client/Grok of a later generation. It grants no current permission.
-pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservation {
+pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservation<'a> {
     binding: Vec<u8>,
     head: Head,
     origin: super::super::super::root_creation::References,
     history: Vec<Head>,
     fingerprint: String,
     retained_slot: Option<String>,
-    namespace: root_cancel_namespace::Namespace,
+    namespace: root_cancel_namespace::Namespace<'a>,
 }
-impl HistoricalObservation {
+impl<'a> HistoricalObservation<'a> {
     pub(in crate::infrastructure::macos_client_originals::session_index) fn begin(
         data: &PinnedDirectory,
         profile: &Path,
@@ -44,7 +44,7 @@ impl HistoricalObservation {
         head: &Head,
         origin: &super::super::super::root_creation::References,
         history: &[Head],
-        namespace: &root_cancel_namespace::Namespace,
+        namespace: &root_cancel_namespace::Namespace<'a>,
     ) -> std::io::Result<(Self, PinnedDirectory)> {
         if head.state != State::RootCancellationAbsent || history.last() != Some(head) {
             return Err(denied(
@@ -124,7 +124,7 @@ fn observe(
     head: &Head,
     origin: &super::super::super::root_creation::References,
     history: &[Head],
-    mode: (bool, &root_cancel_namespace::Namespace),
+    mode: (bool, &root_cancel_namespace::Namespace<'_>),
 ) -> std::io::Result<(PinnedDirectory, String)> {
     let (historical, namespace) = mode;
     validate(head)?;
@@ -360,7 +360,7 @@ pub(in crate::infrastructure::macos_client_originals::session_index) fn pending_
     head: &Head,
     origin: &super::super::super::root_creation::References,
     history: &[Head],
-    namespace: &root_cancel_namespace::Namespace,
+    namespace: &root_cancel_namespace::Namespace<'_>,
 ) -> std::io::Result<Option<String>> {
     if head.state != State::RootCancellationPrepared {
         return Err(denied("pending retained capture phase differs"));

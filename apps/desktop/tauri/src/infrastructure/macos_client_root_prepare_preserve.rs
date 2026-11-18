@@ -23,7 +23,7 @@ struct Plan {
 }
 pub struct Prepared<'a> {
     review: Review<'a>,
-    directory: PinnedDirectory,
+    slot: root_cancel_namespace::RegisteringSlot,
     id: String,
     bytes: Vec<u8>,
     sha256: String,
@@ -148,7 +148,7 @@ impl<'a> Prepared<'a> {
         &self.sha256
     }
     pub fn destination(&self) -> PathBuf {
-        self.directory.path().join("root")
+        self.slot.directory().path().join("root")
     }
     /// The Review was minted BEFORE coordination initialization on an empty
     /// root. Only actual official Guard/NativeLease may explain those new locks.
@@ -200,18 +200,15 @@ impl<'a> Prepared<'a> {
                 "root-cancel retained plan namespace requires resolution",
             ));
         }
-        let directory = parent.child_private(&plan.id, true)?;
-        if !super::super::super::tree::names(directory.file())?.is_empty() {
-            return Err(denied("root-cancel plan slot already exists"));
-        }
+        let slot = root_cancel_namespace::RegisteringSlot::create(&parent, &plan.id)?;
         let bytes = encode(&plan)?;
         let sha256 = digest(&bytes);
-        create(&directory, "plan.json", &bytes)?;
+        create(slot.directory(), "plan.json", &bytes)?;
         parent.sync()?;
         review.index.action_parent.sync()?;
         let result = Self {
             review,
-            directory,
+            slot,
             id: plan.id,
             bytes,
             sha256,
@@ -254,7 +251,7 @@ impl<'a> Prepared<'a> {
             }),
             root_generation: None,
         };
-        self.review.index.write_checked_admitted(
+        self.review.index.write_checked_projected(
             Some(&self.review.head),
             &next,
             &|_| Ok(()),
@@ -264,6 +261,8 @@ impl<'a> Prepared<'a> {
                 }
                 self.require_live()
             },
+            &|_, _, _| Ok(()),
+            Some(&self.slot),
         )?;
         self.registered = Some(next);
         self.require_live()?;
@@ -273,8 +272,8 @@ impl<'a> Prepared<'a> {
         self.registered.as_ref()
     }
     fn plan(&self) -> std::io::Result<Plan> {
-        self.directory.private()?;
-        match capture_file(&self.directory, "plan.json", MAX_FRAME)? {
+        self.slot.directory().private()?;
+        match capture_file(self.slot.directory(), "plan.json", MAX_FRAME)? {
             Image::File {
                 bytes, protection, ..
             } if bytes == self.bytes && digest(&bytes) == self.sha256 => {
@@ -298,7 +297,7 @@ impl<'a> Prepared<'a> {
     fn require_live(&self) -> std::io::Result<()> {
         let plan = self.plan()?;
         facts(&self.review, &self.review.index.client, self.expected())?;
-        if observation::entry(&self.directory, "root")?.is_some()
+        if observation::entry(self.slot.directory(), "root")?.is_some()
             || super::super::super::TreeSnapshot::read(&self.review.index.client)? != plan.root
         {
             return Err(denied("root-cancel root or destination changed"));
@@ -353,7 +352,7 @@ impl<'a> Prepared<'a> {
         // Persist intent before the first rename. A missing readback is pending,
         // not permission to retry/overwrite or infer that no rename occurred.
         create(
-            &self.directory,
+            self.slot.directory(),
             "move-intent.json",
             &encode(&(self.sha256.as_str(), self.review.index.client.identity()))?,
         )?;
@@ -371,7 +370,7 @@ impl<'a> Prepared<'a> {
             libc::renameatx_np(
                 profile.file().as_raw_fd(),
                 from.as_ptr(),
-                self.directory.file().as_raw_fd(),
+                self.slot.directory().file().as_raw_fd(),
                 to.as_ptr(),
                 libc::RENAME_EXCL,
             )
@@ -380,7 +379,7 @@ impl<'a> Prepared<'a> {
             return Err(std::io::Error::last_os_error());
         }
         profile.sync()?;
-        self.directory.sync()?;
+        self.slot.directory().sync()?;
         // On failure AFTER rename, preserve the exact root and all records. No
         // catch-all rollback to a potentially newly created logical path.
         let archived = PinnedDirectory::open(&target)?;
@@ -414,7 +413,7 @@ impl<'a> Prepared<'a> {
             "rootIdentity":archived.identity(),"logicalRootAbsent":true,"writerReleased":true,
             "canonicalCancellationClosed":false,"normalStop":false,"successorEligible":false,
         }))?;
-        create(&self.directory, "preserved-readback.json", &bytes)?;
+        create(self.slot.directory(), "preserved-readback.json", &bytes)?;
         if super::super::super::TreeSnapshot::read(&archived)? != released {
             return Err(denied("root-cancel readback root changed"));
         }

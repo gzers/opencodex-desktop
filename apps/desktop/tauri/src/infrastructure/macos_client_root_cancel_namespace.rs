@@ -1,13 +1,35 @@
 //! Exact cancellation-plan names from independently indexed events only.
 //! This is membership DATA, never a plan source, movement or restoration permit.
 use super::*;
-use std::ffi::OsString;
+use std::{ffi::OsString, os::fd::AsRawFd};
+
+pub(super) struct RegisteringSlot(PinnedDirectory);
+
+impl RegisteringSlot {
+    pub(super) fn create(parent: &PinnedDirectory, id: &str) -> io::Result<Self> {
+        parent.private()?;
+        let leaf = name(OsStr::new(id))?;
+        if unsafe { libc::mkdirat(parent.file().as_raw_fd(), leaf.as_ptr(), 0o700) } != 0 {
+            return Err(io::Error::last_os_error());
+        }
+        let directory = parent.child_private(id, false)?;
+        if !super::super::tree::names(directory.file())?.is_empty() {
+            return Err(denied("new cancellation plan slot is not empty"));
+        }
+        Ok(Self(directory))
+    }
+
+    pub(super) fn directory(&self) -> &PinnedDirectory {
+        &self.0
+    }
+}
 
 #[derive(Clone)]
-pub(super) struct Namespace {
+pub(super) struct Namespace<'a> {
     names: Vec<OsString>,
+    registering: Option<&'a RegisteringSlot>,
 }
-impl Namespace {
+impl<'a> Namespace<'a> {
     /// The SQLite history reader has already validated each canonical head
     /// and enforced its serialized size and total byte budget.
     pub(super) fn from_history(history: &[Head]) -> io::Result<Self> {
@@ -80,17 +102,49 @@ impl Namespace {
         }
         Ok(Self {
             names: plans.into_keys().map(OsString::from).collect(),
+            registering: None,
         })
+    }
+    pub(super) fn during_registration(mut self, slot: Option<&'a RegisteringSlot>) -> Self {
+        self.registering = slot;
+        self
+    }
+    pub(super) fn require_at(&self, manager: &PinnedDirectory) -> io::Result<()> {
+        if observation::entry(manager, "client-root-cancel-plans")?.is_none() {
+            if self.names.is_empty() && self.registering.is_none() {
+                return manager.recheck();
+            }
+            return Err(denied("indexed cancellation plan parent missing"));
+        }
+        self.require(&manager.child_private("client-root-cancel-plans", false)?)
     }
     pub(super) fn require(&self, parent: &PinnedDirectory) -> io::Result<()> {
         parent.private()?;
-        if super::super::tree::names(parent.file())? != self.names {
+        let mut expected = self.names.clone();
+        if let Some(slot) = self.registering.map(RegisteringSlot::directory) {
+            let leaf = slot
+                .path()
+                .file_name()
+                .ok_or_else(|| denied("new cancellation slot name missing"))?;
+            if slot.path().parent() != Some(parent.path()) {
+                return Err(denied("new cancellation slot parent differs"));
+            }
+            let position = expected
+                .binary_search_by(|name| name.as_os_str().cmp(leaf))
+                .err()
+                .ok_or_else(|| denied("new cancellation slot already indexed"))?;
+            PinnedDirectory::recheck_set(&[parent, slot])?;
+            expected.insert(position, leaf.to_owned());
+        }
+        if super::super::tree::names(parent.file())? != expected {
             return Err(denied(
                 "cancellation plan namespace differs from independent history",
             ));
         }
-        parent.recheck()?;
-        Ok(())
+        if let Some(slot) = self.registering.map(RegisteringSlot::directory) {
+            return PinnedDirectory::recheck_set(&[parent, slot]);
+        }
+        parent.recheck()
     }
     pub(super) fn contains(&self, id: &str) -> bool {
         self.names.binary_search(&OsString::from(id)).is_ok()

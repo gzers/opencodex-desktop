@@ -227,12 +227,18 @@ fn official_guard_preserves_exact_uncaptured_root_and_releases_only_its_marker()
                 });
             assert!(failed.is_err());
             assert!(!pending
-                .directory
+                .slot
+                .directory()
                 .path()
                 .join("preserved-readback.json")
                 .exists());
-            assert!(pending.directory.path().join("plan.json").is_file());
-            assert!(pending.directory.path().join("move-intent.json").is_file());
+            assert!(pending.slot.directory().path().join("plan.json").is_file());
+            assert!(pending
+                .slot
+                .directory()
+                .path()
+                .join("move-intent.json")
+                .is_file());
             let kept = if scenario == "before_move" {
                 profile.join(".codex")
             } else {

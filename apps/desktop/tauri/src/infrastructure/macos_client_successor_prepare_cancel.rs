@@ -96,8 +96,13 @@ fn snapshot(
     // Ordinary cancellation's vault inspection accepts Restored/Unchanged
     // attempts. Created-root generations instead require the full independent
     // RootAbsent/cancelled-root lineage, archives and exact slot namespace.
-    let closures =
-        vault_history::inspect_root_history(&index.data, &index.profile, &index.binding, &history)?;
+    let closures = vault_history::inspect_root_history(
+        &index.data,
+        &index.profile,
+        &index.binding,
+        &history,
+        None,
+    )?;
     let tree = TreeSnapshot::read(&index.client)?;
     let profile = PinnedDirectory::open(&index.profile)?;
     let grok = GrokSnapshot::read(&profile)?;

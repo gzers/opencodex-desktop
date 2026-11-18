@@ -259,6 +259,7 @@ impl Index {
                     .map_err(|_| denied("retired recovery admission unconfirmed"))
             },
             &|_, _, _| Ok(()),
+            None,
         );
         let result = (|| {
             write.map_err(fail)?;
