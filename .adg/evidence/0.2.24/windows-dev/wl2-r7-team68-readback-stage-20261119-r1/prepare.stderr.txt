@@ -1,0 +1,5 @@
+ForEach-Object: C:\Users\15119\.codex\worktrees\r6-windows-evidence-resume\code\.adg\evidence\0.2.24\windows-dev\wl2-r7-team68-readback-stage-20261119-r1\stage-readback-pair.ps1:46
+Line |
+  46 |  … (Get-ChildItem -LiteralPath @($dirs.Values) -Force | ForEach-Object {
+     |                                                         ~~~~~~~~~~~~~~~~
+     | Exception calling "Replace" with "2" argument(s): "The value cannot be an empty string. (Parameter 'oldValue')"

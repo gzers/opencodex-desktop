@@ -1882,3 +1882,9 @@ PowerShell 5.1 提取并执行准确摘要门，原版配对与候选配对通�
 ## 2026-11-19 r7 读回归档的独立后置验收
 
 按 TEAM67／IMP206／r7 新增仅用于证据归档的离线核验器，见 wl2-r7-readback-offline-review-20261119-r1。给定已验收 Explicit 与固定 CMD、launcher 三个摘要，在采集后核同轮尝试、QPC 原 tick、DiagnosticAfter 原字节、同一动作 Pending 及两份实际导出。复用旧合成 V2 原字节，正例在五秒期限前一 tick 接受；恰到期限、篡改显示时长、配对或 Explicit 错绑、重新摘要后动作错绑及文件变更均拒绝。Python 3.12.10 raw0，stderr 为空，临时目录已清理。验证器只留证据分支，固定文件与真实现场未写入。
+
+## 2026-11-19 TEAM68 独立回读脚本配对已暂存
+
+主线 040f411e6d48d97bde6e7b2e6c22860e547b6173，治理 55dff7d7b6aad0357d310757981641c0f38d5a03，TEAM68／IMP207／r7。Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0 已推送，唯一改动为测试 launcher 的三处合同替换。固定 range-r1 原位置两份脚本已成对更新。launcher 30,158 字节，SHA-256 6b553204560d59ba7a292f64c322404028eceb1a0899661f5f9dc9d76953e990；观察脚本 6,394 字节，SHA-256 f3a0c5ed9f8ba698d0b5d3e37d1b1209b4b88fa5ee4714a5fe06c1ff000aba5f。Git blob、实际暂存原字节、三处目录与七份文件的 ACL、成员集合均已复核。EXE、固定官方运行时、CMD 和其余输入摘要维持。PowerShell 5.1 解析和实际配对摘要门通过，旧 launcher 混配拒绝。首次准备因路径分隔符转换 raw1，未写入；修正后准备、暂存及 PS5.1 检查均 raw0。原始回执、观察脚本原字节与摘要见 wl2-r7-team68-readback-stage-20261119-r1。
+
+现有 marenben session 7 活动，range-r1/out01 仍空，私有夹具根未创建。已满足固定配对门，继续等待该普通桌面单次 Host。随后独立核活进程身份及原线程五秒范围诊断。齐备方可做一次 Explicit 与一次严格小于五秒的 DiagnosticAfter。旧官方 r2 保全与生产验收缺项沿用；公开 Start 维持拒绝。
