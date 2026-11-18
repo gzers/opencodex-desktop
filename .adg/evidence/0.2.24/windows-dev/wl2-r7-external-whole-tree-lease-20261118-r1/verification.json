@@ -1,0 +1,167 @@
+{
+  "codeCommit": "82f48aa0591bbeee263ce54429c06233853c364f",
+  "codeTree": "8626e4c282fec871e3c195d16e40045a7cf60753",
+  "main": "040f411e6d48d97bde6e7b2e6c22860e547b6173",
+  "governance": "65835a0b3726d50f18018fbb8d8b8f6375ad286b",
+  "contract": "TEAM59/IMP198/r7 section D",
+  "scope": "three synthetic original pairs with product NativeLease",
+  "budgetMs": 10000,
+  "nativeLeaseCheckpoints": 26,
+  "verifiedAbsentFixtureCount": 23,
+  "runs": [
+    {
+      "name": "harness-01",
+      "result": {
+        "raw": 0,
+        "elapsedMs": 4594
+      },
+      "artifact": {
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-query\\x86_64-pc-windows-msvc\\debug\\build\\windows024-r7-query-proof\\803c99ecdabf4233\\out\\windows024_r7_query_proof-803c99ecdabf4233.exe",
+        "sha256": "1cd9edf93d874949d788a2d063fd54b386fae81133c6d167807ac9982a24db73",
+        "bytes": 3562496
+      },
+      "passed": 10,
+      "matchedFinalCompiledSources": [
+        "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+        "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_whole_tree.rs"
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-jXUbFc",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-zdiV68",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-PZ2tQ1",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-DhEAhU",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-6NUjjN",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-wWgRcw",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-uUpgmT",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-RVN57m",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-4itBxh",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-NbtvoS"
+      ]
+    },
+    {
+      "name": "product-01",
+      "result": {
+        "raw": 101,
+        "elapsedMs": 74750
+      },
+      "artifact": null,
+      "passed": 0,
+      "matchedFinalCompiledSources": [],
+      "verifiedAbsentFixtureRoots": []
+    },
+    {
+      "name": "product-02",
+      "result": {
+        "raw": 0,
+        "elapsedMs": 164641
+      },
+      "artifact": {
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\182e378daf0091d7\\out\\opencodex_desktop_lib-182e378daf0091d7.exe",
+        "sha256": "8a11bedea080b7af4e8ebade044d93210bcc786811215503c7d928d2b287af30",
+        "bytes": 104455168
+      },
+      "passed": 13,
+      "matchedFinalCompiledSources": [
+        "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+        "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_whole_tree.rs",
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs"
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-sfHB9M",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-36s6Q0",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-TSHd7N",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-0266Jb",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-6OB9ZG",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Ykpc44",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-CMUicb",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-YSWlGQ",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-T7gXyK",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-w3KdcD",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-28ndST",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-X9zNhw",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-CgiXvo"
+      ]
+    }
+  ],
+  "rawPayloads": [
+    {
+      "path": "harness-01/artifact.json",
+      "bytes": 368,
+      "sha256": "5282620edaee9a0532ae9979bdf3893543de23c5fec74477a86d1f6a7ccd02fb"
+    },
+    {
+      "path": "harness-01/input.json",
+      "bytes": 1628,
+      "sha256": "ab3fd6654234e5abb0754713970c60a78f678a96a655a485342c52f44eb23b9b"
+    },
+    {
+      "path": "harness-01/result.json",
+      "bytes": 40,
+      "sha256": "2f1ea53c395ee5497906ba4f14601de5901009147ebbd781de76dc4b170d1d47"
+    },
+    {
+      "path": "harness-01/stderr.log",
+      "bytes": 8393,
+      "sha256": "28d1ca17763d1ab9213b6cdddd9270f65e7879bed0476800fcd38539e44a9b62"
+    },
+    {
+      "path": "harness-01/stdout.log",
+      "bytes": 3018,
+      "sha256": "29b70edf087e2fcfb4d87b6bab599ef7b59ba98a9c9a2fe88334e87feb4bbdf7"
+    },
+    {
+      "path": "product-01/input.json",
+      "bytes": 1628,
+      "sha256": "6ab3414699a2004cbb3fa44e66a1d9a83064e17573a11fc28bbd8affd8d53e54"
+    },
+    {
+      "path": "product-01/result.json",
+      "bytes": 43,
+      "sha256": "82823ce24d0d99cd2526eb03cfcfe03b360c73560ffdce3b903efa0ab365df1c"
+    },
+    {
+      "path": "product-01/stderr.log",
+      "bytes": 5947,
+      "sha256": "a1f3cff13ada32512fe12168041f8fb81dbc33be3f531916014fc9570a2627ee"
+    },
+    {
+      "path": "product-01/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "product-02/artifact.json",
+      "bytes": 361,
+      "sha256": "43c4857fb3ec19fbe48a4fe95cec8775501593400958bd3b4ab53f4f4ad9622d"
+    },
+    {
+      "path": "product-02/input.json",
+      "bytes": 1628,
+      "sha256": "4274fe45d8298ae19c79c1a29f307d0a46108beeb22ee210fc4c92b2a9890e0d"
+    },
+    {
+      "path": "product-02/result.json",
+      "bytes": 42,
+      "sha256": "b97183336eca57f7c6cdc590af9a30fb4f0d9d68e0ac801ba882b3a36195a51b"
+    },
+    {
+      "path": "product-02/stderr.log",
+      "bytes": 42186,
+      "sha256": "db886524741cdfa8ad8e2184ffd8cf4dbebfed077d5fdd42a01be81212f9417a"
+    },
+    {
+      "path": "product-02/stdout.log",
+      "bytes": 4601,
+      "sha256": "6129bad31d98cd2103fab0d5080368496949dba6a44392bfab5421c490cf29a6"
+    }
+  ],
+  "setupFirstError": "MSVC helper was initially given the parent of the extracted tool directory. No Cargo ran in that attempt.",
+  "firstCargoError": {
+    "stage": "product test compile",
+    "raw": 101,
+    "rust": "E0502"
+  },
+  "oldR2Touched": false,
+  "publicStartOpen": false,
+  "productionAccepted": false
+}

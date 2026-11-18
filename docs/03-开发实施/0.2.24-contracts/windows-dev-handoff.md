@@ -1733,3 +1733,11 @@ MSVC x64 原生两轮各 9/9，harness 两轮各 7/7；最终产品测试制品�
 第二处 custody 在预检后出现额外成员时，首份 Intent 前拒绝，六份文件保持。第二件原件归还碰撞返回原 raw183，七份记录、已执行移动及最后未动节点均核实。首次编译 raw101／E0502，修正借用后 MSVC harness 两轮各 10/10，最终 MSVC 产品测试库定向 12/12。最终制品 SHA-256 分别为 60ad54a97259cccec46d4c4ac2791e585e162750afcfd785e650fb282f345682 和 84dda39041961c74f646fbf28f51e305c107206b4dc4d837cd25f561a6d809cc。原始日志及已执行源码摘要见 wl2-r7-external-whole-tree-20261118-r1。32 个夹具根核实缺席，未跟踪的生成 schema 已核摘要后移除。
 
 三原件整树回执使用合成留位文件。原生连续 claim/N/L/K 与准确释放由此前单对原件回执覆盖，组合验收、原进程静止来源及外部修复正式记录继续待证。marenben session 7 活动，nine-r2 out01 仍空，nine-r1 宿主 95724 和 raw32 首错现场保留。旧原包 r2 继续保留，Job 24 项 Unknown/raw50、命令谱系 raw64、executionReady=false。公开 Start 维持拒绝，生产单 SID 与普通 per-user MSI 验收仍待。
+
+## 2026-11-18 r7 三原件归还与连续原生锁组合回执
+
+TEAM59／IMP198／r7 D 节。Windows 测试源码 82f48aa0591bbeee263ce54429c06233853c364f，承接 bcf5332091431a67719f8a6442ce53d5e29745fd 的三原件整树夹具。使用产品 NativeLease 实际获取准确 claim/N/L/K，在首个 Intent 前、六次移动和刷盘读回以及全树核对后共 26 处校验同一代次，并由单独原生句柄观察每组 range 竞争均 raw33。走同一个原 10 秒窗口。整树读回后明确释放，独立重取并释放，再比较四个协调文件身份、八项安全投影及字节。
+
+Harness 10/10，最终 MSVC x64 产品测试库 13/13，均 raw0。制品 SHA-256 分别为 1cd9edf93d874949d788a2d063fd54b386fae81133c6d167807ac9982a24db73 和 8a11bedea080b7af4e8ebade044d93210bcc786811215503c7d928d2b287af30。本地工具链初次定位到容器目录，修正到实际解包根后启动。Cargo 首错 raw101／E0502，修正锁代次借用后通过。原始日志、已执行源码摘要和清理见 wl2-r7-external-whole-tree-lease-20261118-r1。23 个夹具根确认缺席，生成 schema 核对摘要后移除。
+
+此组合覆盖合成硬盘原件和产品锁。实际原进程静止、旧 manifest/current 绑定、独立正式修复记录及旧 r2 执行仍待。旧 r2 的 Job 24 项 Unknown/raw50 和命令谱系 raw64 原样保留，executionReady=false、approvalRequested=false。真实普通桌面修复版 nine-r2 尚无新 Host 回执，保留 nine-r1 首错现场。无需重跑现有通过的组件测试。公开 Start 维持拒绝，生产单 SID 与普通 per-user MSI 仍待验收。
