@@ -50,6 +50,55 @@ struct Scene {
     end: Instant,
 }
 
+struct FileStep<'a> {
+    from: &'a PinnedDirectory,
+    to: &'a PinnedDirectory,
+    target_name: &'static str,
+    expected: &'a FileImage,
+    intent: &'static str,
+    held: RetainedFileMove,
+}
+
+impl FileStep<'_> {
+    fn verify_source(&mut self, end: Instant) -> io::Result<()> {
+        self.from.recheck()?;
+        self.to.recheck()?;
+        self.held.verify(end)?;
+        if &read_image(self.held.location(), end)? != self.expected {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "retained source changed since preparation",
+            ));
+        }
+        Ok(())
+    }
+}
+
+struct PreparedScene<'a> {
+    scene: &'a Scene,
+    retire: FileStep<'a>,
+    restore: FileStep<'a>,
+}
+
+impl PreparedScene<'_> {
+    fn run(mut self) -> io::Result<()> {
+        self.retire.verify_source(self.scene.end)?;
+        self.restore.verify_source(self.scene.end)?;
+        self.scene
+            .require_members(&["settings"], &["held"], &[], &[])?;
+        self.scene.move_file(&mut self.retire, |_| Ok(()))?;
+        self.scene.move_file(&mut self.restore, |_| Ok(()))?;
+        self.retire.verify_source(self.scene.end)?;
+        self.restore.verify_source(self.scene.end)?;
+        self.scene.require_members(
+            &["settings"],
+            &[],
+            &["work"],
+            &["OriginalReturnIntent.json", "RetireIntent.json"],
+        )
+    }
+}
+
 impl Scene {
     fn new() -> Self {
         let root = tempfile::Builder::new()
@@ -86,11 +135,7 @@ impl Scene {
         Ok(())
     }
 
-    fn step(
-        &self,
-        retire_work: bool,
-        after_intent: impl FnOnce(&Path) -> io::Result<()>,
-    ) -> io::Result<()> {
+    fn retain(&self, retire_work: bool) -> io::Result<FileStep<'_>> {
         self.check_time()?;
         let (from, source_name, to, target_name, expected, intent) = if retire_work {
             (
@@ -112,10 +157,9 @@ impl Scene {
             )
         };
         let source = from.path().join(source_name);
-        let target = to.path().join(target_name);
         from.recheck()?;
         to.recheck()?;
-        let mut held = RetainedFileMove::open(&source, self.end)?;
+        let held = RetainedFileMove::open(&source, self.end)?;
         let expected_security = serde_json::to_value(&expected.security)?;
         if &read_image(&source, self.end)? != expected
             || held.identity().index.to_string() != expected_security["fileId"]
@@ -127,26 +171,94 @@ impl Scene {
                 "native source differs from fixed fixture image",
             ));
         }
+        self.check_time()?;
+        Ok(FileStep {
+            from,
+            to,
+            target_name,
+            expected,
+            intent,
+            held,
+        })
+    }
+
+    fn require_members(
+        &self,
+        client: &[&str],
+        custody: &[&str],
+        retired: &[&str],
+        records: &[&str],
+    ) -> io::Result<()> {
+        for (parent, expected) in [
+            (&self.client, client),
+            (&self.custody, custody),
+            (&self.retired, retired),
+            (&self.records, records),
+        ] {
+            self.check_time()?;
+            parent.recheck()?;
+            let mut seen = Vec::with_capacity(expected.len());
+            for entry in fs::read_dir(parent.path())? {
+                self.check_time()?;
+                let name = entry?.file_name();
+                if !expected.iter().any(|leaf| name == *leaf) || seen.contains(&name) {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        "unexpected fixture directory member",
+                    ));
+                }
+                seen.push(name);
+            }
+            if seen.len() != expected.len() {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidData,
+                    "missing fixture directory member",
+                ));
+            }
+            parent.recheck()?;
+        }
+        self.check_time()
+    }
+
+    fn prepare(&self) -> io::Result<PreparedScene<'_>> {
+        self.require_members(&["settings"], &["held"], &[], &[])?;
+        let retire = self.retain(true)?;
+        let restore = self.retain(false)?;
+        self.require_members(&["settings"], &["held"], &[], &[])?;
+        Ok(PreparedScene {
+            scene: self,
+            retire,
+            restore,
+        })
+    }
+
+    fn move_file(
+        &self,
+        step: &mut FileStep<'_>,
+        after_intent: impl FnOnce(&Path) -> io::Result<()>,
+    ) -> io::Result<()> {
+        self.check_time()?;
+        step.verify_source(self.end)?;
+        let source = step.held.location().to_owned();
+        let target = step.to.path().join(step.target_name);
         require_absent(&target)?;
         self.records.recheck()?;
         let payload = serde_json::to_vec(&serde_json::json!({
             "schema": "windows-external-preresume-repair-v1",
             "scope": "synthetic-file-step-only",
-            "event": intent,
+            "event": step.intent,
             "from": source,
             "to": target,
-            "fromParentId": from.identity().index.to_string(),
-            "toParentId": to.identity().index.to_string(),
-            "object": expected.security,
-            "bytesSha256": crate::infrastructure::hash::sha256_hex(&expected.bytes),
+            "fromParentId": step.from.identity().index.to_string(),
+            "toParentId": step.to.identity().index.to_string(),
+            "object": step.expected.security,
+            "bytesSha256": crate::infrastructure::hash::sha256_hex(&step.expected.bytes),
             "deadlineMs": self.end.duration_since(self.started).as_millis(),
             "normalStop": false, "closed": false, "publicStartOpen": false,
         }))?;
-        let mut record = PrivateRecord::create(
-            &self.records.path().join(format!("{intent}.json")),
-            &payload,
-            RECORD_LIMIT,
-        )?;
+        let record_path = self.records.path().join(format!("{}.json", step.intent));
+        self.check_time()?;
+        let mut record = PrivateRecord::create(&record_path, &payload, RECORD_LIMIT)?;
         if record.read()? != payload {
             return Err(io::Error::new(
                 io::ErrorKind::InvalidData,
@@ -154,20 +266,27 @@ impl Scene {
             ));
         }
         after_intent(&target)?;
-        from.recheck()?;
-        to.recheck()?;
+        step.verify_source(self.end)?;
         self.check_time()?;
-        held.move_into(to.path(), target_name, self.end)?;
+        step.held
+            .move_into(step.to.path(), step.target_name, self.end)?;
         require_absent(&source)?;
-        from.recheck()?;
-        to.recheck()?;
-        if &read_image(&target, self.end)? != expected || record.read()? != payload {
+        step.verify_source(self.end)?;
+        if record.read()? != payload {
             return Err(io::Error::new(
                 io::ErrorKind::InvalidData,
-                "retained file or intent readback differs",
+                "intent readback differs after native move",
             ));
         }
         self.check_time()
+    }
+
+    fn step(
+        &self,
+        retire_work: bool,
+        after_intent: impl FnOnce(&Path) -> io::Result<()>,
+    ) -> io::Result<()> {
+        self.move_file(&mut self.retain(retire_work)?, after_intent)
     }
 
     fn finish(mut self) {
@@ -289,5 +408,67 @@ fn r7_external_steps_unreleased_source_handle_retains_original_after_retirement(
     assert!(read_image(&scene.retired.path().join("work"), scene.end).unwrap() == scene.working);
     assert_eq!(fs::read_dir(scene.records.path()).unwrap().count(), 1);
     drop(remote_pin);
+    scene.finish();
+}
+
+#[test]
+fn r7_external_steps_prepared_pair_carries_both_native_handles_into_moves() {
+    let scene = Scene::new();
+    let prepared = scene.prepare().unwrap();
+    for path in [
+        scene.client.path().join("settings"),
+        scene.custody.path().join("held"),
+    ] {
+        let error = OpenOptions::new()
+            .write(true)
+            .share_mode(1 | 2 | 4)
+            .open(path)
+            .unwrap_err();
+        assert_eq!(error.raw_os_error(), Some(32));
+    }
+    prepared.run().unwrap();
+    assert!(
+        read_image(&scene.client.path().join("settings"), scene.end).unwrap() == scene.original
+    );
+    assert!(read_image(&scene.retired.path().join("work"), scene.end).unwrap() == scene.working);
+    scene.finish();
+}
+
+#[test]
+fn r7_external_steps_preflight_denies_late_source_before_any_intent() {
+    let scene = Scene::new();
+    let source = scene.custody.path().join("held");
+    let conflict = OpenOptions::new()
+        .access_mode(0x80020000)
+        .share_mode(1)
+        .open(&source)
+        .unwrap();
+    let error = scene.prepare().err().expect("blocked original must refuse");
+    assert_eq!(error.raw_os_error(), Some(32));
+    println!("preflight refused before first intent: raw32");
+    scene
+        .require_members(&["settings"], &["held"], &[], &[])
+        .unwrap();
+    assert!(read_image(&scene.client.path().join("settings"), scene.end).unwrap() == scene.working);
+    assert!(read_image(&source, scene.end).unwrap() == scene.original);
+    drop(conflict);
+    scene.finish();
+}
+
+#[test]
+fn r7_external_steps_preflight_rechecks_members_before_first_intent() {
+    let scene = Scene::new();
+    let prepared = scene.prepare().unwrap();
+    let extra = scene.custody.path().join("extra");
+    fs::write(&extra, b"unexpected member").unwrap();
+    let error = prepared.run().unwrap_err();
+    assert_eq!(error.kind(), io::ErrorKind::InvalidData);
+    assert_eq!(error.to_string(), "unexpected fixture directory member");
+    scene
+        .require_members(&["settings"], &["extra", "held"], &[], &[])
+        .unwrap();
+    assert!(read_image(&scene.client.path().join("settings"), scene.end).unwrap() == scene.working);
+    assert!(read_image(&scene.custody.path().join("held"), scene.end).unwrap() == scene.original);
+    assert_eq!(fs::read(extra).unwrap(), b"unexpected member");
     scene.finish();
 }
