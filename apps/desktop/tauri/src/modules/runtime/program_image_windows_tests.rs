@@ -290,6 +290,36 @@ fn r7_image_pinned_ads_hardlink_sparse_and_expired_deadline_are_refused() {
     }
 }
 #[test]
+fn r7_image_pinned_refuses_directory_stream_added_after_payload_reads() {
+    let scene = Scene::new();
+    let root = scene.root();
+    populate(&root);
+    let reference = inventory_serial(&root).unwrap();
+    assert_eq!(windows::inventory(&root, None).unwrap(), reference);
+
+    let stream = root.join("empty:r7-late-stream");
+    let read_jobs = std::sync::atomic::AtomicUsize::new(0);
+    let result = windows::inventory_checked(&root, None, 4, &|stage| {
+        if stage == "before-file-read" {
+            read_jobs.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        }
+        if stage == "before-final-fence" {
+            assert_eq!(read_jobs.load(std::sync::atomic::Ordering::Relaxed), 3);
+            fs::write(&stream, b"late directory stream").unwrap();
+        }
+        Ok(())
+    });
+    assert_eq!(fs::read(&stream).unwrap(), b"late directory stream");
+    assert!(matches!(
+        result,
+        Err(AppError::RuntimeManaged { code, .. }) if code == "runtime_image_unconfirmed"
+    ));
+    assert_eq!(fs::read_dir(root.join("empty")).unwrap().count(), 0);
+    fs::remove_file(&stream).unwrap();
+    assert_eq!(windows::inventory(&root, None).unwrap(), reference);
+    println!("R7_LATE_DIRECTORY_STREAM root={} reads=3", root.display());
+}
+#[test]
 fn r7_image_pinned_worker_error_and_panic_join_all_started_readers() {
     use std::sync::{
         atomic::{AtomicUsize, Ordering},
