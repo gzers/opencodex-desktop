@@ -11,6 +11,8 @@ fn prepare_exact_owned_first_root_for_real_gui() {
         state::ProcessContext,
     };
     use std::{
+        fs,
+        os::unix::fs::{DirBuilderExt, PermissionsExt},
         path::PathBuf,
         time::{Duration, Instant},
     };
@@ -59,16 +61,43 @@ fn prepare_exact_owned_first_root_for_real_gui() {
     assert_eq!(head.state, State::Preparing);
     assert_eq!(head.revision, 1);
     assert!(head.references.is_none() && head.completion_sha256.is_none());
+    let partial = std::env::var_os("OCXD024_GUI_ROOT_PARTIAL_SEED").as_deref()
+        == Some(std::ffi::OsStr::new("1"));
+    let head = if partial {
+        // The actual product reservation establishes the one slot's owner.
+        // Bytes below are explicit synthetic interrupted-content DATA only;
+        // no Original frame, source permission or completion is fabricated.
+        let reserved = index.reserve_first_root_capture(&head).unwrap();
+        let vault = data.join("manager-state/client-originals");
+        fs::DirBuilder::new().mode(0o700).create(&vault).unwrap();
+        let slot = vault.join(&reserved.ticket);
+        fs::DirBuilder::new().mode(0o700).create(&slot).unwrap();
+        let fragment = slot.join("synthetic-unpublished-fragment.json");
+        let bytes = b"{\"fixtureOnly\":true,\"notOriginalSession\":true,\"payload\":\"preserve partial bytes\"}\n";
+        fs::write(&fragment, bytes).unwrap();
+        fs::set_permissions(&fragment, fs::Permissions::from_mode(0o400)).unwrap();
+        reserved
+    } else {
+        head
+    };
     drop(index);
     let preview = session_index::preview::inspect_preview(&context, &data);
     assert!(preview.can_cancel_preparation);
-    assert_eq!(preview.preparation_kind, Some("created_root"));
+    assert_eq!(
+        preview.preparation_kind,
+        Some(if partial {
+            "created_root_capture"
+        } else {
+            "created_root"
+        })
+    );
     runtime::program_selection::verify_current(&program, &selected).unwrap();
     runtime::program_image::verify(&selected).unwrap();
     let result = serde_json::json!({"schema":"owned-gui-first-root-preparation/1","head":head,
         "preview":preview,"officialArchiveSha256":selected.image.official_archive_sha256,
         "programImageSha256":selected.selection.image_sha256,"serviceStarted":false,
-        "canonicalRecordsWrittenOnlyByProductIndex":true,"releaseAcceptance":false});
+        "canonicalRecordsWrittenOnlyByProductIndex":true,"partialCaptureSyntheticSeed":partial,
+        "syntheticFragmentIsNotOfficialCaptureExecution":true,"releaseAcceptance":false});
     std::fs::write(
         root.join("seed-result.json"),
         serde_json::to_vec_pretty(&result).unwrap(),

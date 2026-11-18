@@ -59,14 +59,12 @@ pub(super) fn confirmation(
     }
     let data = PinnedDirectory::open(data)?;
     let manager = data.child_private("manager-state", false)?;
-    if observation::entry(&manager, "client-originals")?.is_some()
-        || observation::entry(&manager, "client-root-cancel-plans")?.is_some()
-    {
+    if observation::entry(&manager, "client-root-cancel-plans")?.is_some() {
         return Ok(None);
     }
     let logical = context.working_directory.join(".codex");
     let client = PinnedDirectory::open(&logical)?;
-    if !super::super::tree::names(client.file())?.is_empty() {
+    if head.state == State::Preparing && !super::super::tree::names(client.file())?.is_empty() {
         return Ok(None);
     }
     super::super::root_creation::verify_indexed(
@@ -78,18 +76,40 @@ pub(super) fn confirmation(
     )?;
     let binding = root_binding::encode_binding(&scope(context, &data, &client)?, Some(origin))?;
     let tree = TreeSnapshot::read(&client)?;
+    if head.state == State::CaptureReserved && !tree.first_root_execution_baseline() {
+        return Ok(None);
+    }
+    let capture_vault = vault_history::inspect(
+        &data,
+        &client,
+        &context.working_directory,
+        &binding,
+        head,
+        history,
+    )?;
     let profile = PinnedDirectory::open(&context.working_directory)?;
     let grok = GrokSnapshot::read(&profile)?;
     let digest = digest(&encode(&(
-        "macos-first-root-preparation-review-v1",
+        "macos-first-root-preparation-review-v2",
         head,
         origin,
         digest(&binding),
         history,
         &tree,
         &grok,
+        &capture_vault,
     ))?);
-    if TreeSnapshot::read(&client)? != tree || GrokSnapshot::read(&profile)? != grok {
+    if TreeSnapshot::read(&client)? != tree
+        || GrokSnapshot::read(&profile)? != grok
+        || vault_history::inspect(
+            &data,
+            &client,
+            &context.working_directory,
+            &binding,
+            head,
+            history,
+        )? != capture_vault
+    {
         return Err(denied("first-root cancellation confirmation changed"));
     }
     Ok(Some(digest))

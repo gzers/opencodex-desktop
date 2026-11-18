@@ -86,9 +86,81 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         working_directory: profile.clone(),
         opencodex_home: home.clone(),
     };
+    let partial_point = std::env::var("OCXD024_ROOT_CANCEL_PARTIAL_POINT").ok();
     let started = Instant::now();
-    let end = started + Duration::from_secs(10);
-    let (index, head) = Index::prepare_start_capture(&context, &data, end).unwrap();
+    let start_end = started + Duration::from_secs(if partial_point.is_some() { 30 } else { 10 });
+    let (index, head) = Index::prepare_start_capture(&context, &data, start_end).unwrap();
+    let head = if let Some(point) = &partial_point {
+        assert!([
+            "directory_created",
+            "codex_archived",
+            "grok_archived",
+            "original_published"
+        ]
+        .contains(&point.as_str()));
+        let grok = profile.join(".grok");
+        fs::DirBuilder::new().mode(0o700).create(&grok).unwrap();
+        fs::write(
+            grok.join("config.toml"),
+            b"model = \"synthetic-partial-grok\"\n",
+        )
+        .unwrap();
+        fs::set_permissions(grok.join("config.toml"), fs::Permissions::from_mode(0o600)).unwrap();
+        let reserved = index.reserve_first_root_capture(&head).unwrap();
+        let reservation = index.capture_reservation(&reserved).unwrap();
+        let coordinator = Context {
+            runtime: context.runtime.clone(),
+            user_profile: profile.clone(),
+            codex_home: profile.join(".codex"),
+            opencodex_home: home.clone(),
+            control_root: index.control_root().unwrap(),
+        };
+        let captured =
+            crate::infrastructure::official_client_coordination::native::with_native_coordination(
+                &coordinator,
+                start_end,
+                |native| {
+                    crate::infrastructure::macos_client_originals::session::StartupSession::begin_reserved(&context,&data,&profile.join(".codex"),native,start_end,&reservation)
+                },
+            );
+        assert!(
+            captured.is_err(),
+            "real capture must interrupt at requested point"
+        );
+        assert_eq!(
+            crate::infrastructure::macos_client_originals::fixture_take_root_capture_point()
+                .as_deref(),
+            Some(point.as_str()),
+            "an unrelated early error cannot satisfy the capture counterexample"
+        );
+        assert!(Instant::now() < start_end);
+        assert!(reserved.references.is_none());
+        reserved
+    } else {
+        head
+    };
+    let partial_before = partial_point.as_ref().map(|_| {
+        super::super::super::TreeSnapshot::read_mode(
+            &PinnedDirectory::open(
+                &data
+                    .join("manager-state/client-originals")
+                    .join(&head.ticket),
+            )
+            .unwrap(),
+            false,
+        )
+        .unwrap()
+    });
+    let started = if partial_point.is_some() {
+        Instant::now()
+    } else {
+        started
+    };
+    let end = if partial_point.is_some() {
+        started + Duration::from_secs(10)
+    } else {
+        start_end
+    };
     let review = index
         .review_first_root_preparation(&context, &head, end)
         .unwrap();
@@ -101,7 +173,14 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         drop(index);
         let preview = super::super::preview::inspect_preview(&context, &data);
         assert!(preview.can_cancel_preparation);
-        assert_eq!(preview.preparation_kind, Some("created_root"));
+        assert_eq!(
+            preview.preparation_kind,
+            Some(if head.state == State::CaptureReserved {
+                "created_root_capture"
+            } else {
+                "created_root"
+            })
+        );
         let request = super::super::finalization::Request {
             attempt_id: head.ticket.clone(),
             revision: head.revision,
@@ -122,7 +201,15 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         let reopened = Index::open_existing(&context, &data, &profile.join(".codex")).unwrap();
         let closed = reopened.head().unwrap().unwrap();
         drop(reopened);
-        successor_and_history(&root, &context, &data, closed, action_elapsed, &case);
+        successor_and_history(
+            &root,
+            &context,
+            &data,
+            closed,
+            action_elapsed,
+            &case,
+            partial_before.as_ref(),
+        );
         let result_path = root.join("native-preservation-result.json");
         let mut result: serde_json::Value =
             serde_json::from_slice(&fs::read(&result_path).unwrap()).unwrap();
@@ -251,6 +338,7 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         closed,
         started.elapsed().as_millis(),
         &case,
+        partial_before.as_ref(),
     );
 }
 fn successor_and_history(
@@ -260,8 +348,24 @@ fn successor_and_history(
     closed: Head,
     cancellation_elapsed: u128,
     case: &str,
+    partial_before: Option<&super::super::super::TreeSnapshot>,
 ) {
     let profile = context.working_directory.clone();
+    let partial_point = std::env::var("OCXD024_ROOT_CANCEL_PARTIAL_POINT").ok();
+    std::env::remove_var("OCXD024_ROOT_CANCEL_PARTIAL_POINT");
+    let partial_path = data
+        .join("manager-state/client-originals")
+        .join(&closed.ticket);
+    if let Some(before) = partial_before {
+        assert_eq!(
+            &super::super::super::TreeSnapshot::read_mode(
+                &PinnedDirectory::open(&partial_path).unwrap(),
+                false
+            )
+            .unwrap(),
+            before
+        );
+    }
     let reopened = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
     assert!(reopened.head().unwrap().as_ref() == Some(&closed));
     assert!(reopened.reserve_start().is_err());
@@ -296,11 +400,25 @@ fn successor_and_history(
         .join("manager-state/client-root-cancel-plans")
         .join(&closed.root_retirement.as_ref().unwrap().plan.id);
     // A historical old-root edit is not hidden by the later active generation.
+    if let Some(before) = partial_before {
+        assert_eq!(
+            &super::super::super::TreeSnapshot::read_mode(
+                &PinnedDirectory::open(&partial_path).unwrap(),
+                false
+            )
+            .unwrap(),
+            before
+        );
+    }
     fs::write(
-        old_slot.join("root/unexpected"),
+        if partial_before.is_some() {
+            partial_path.join("unexpected")
+        } else {
+            old_slot.join("root/unexpected")
+        },
         b"preserve historical corruption fixture",
     )
     .unwrap();
     assert!(Index::open_existing(context, data, &profile.join(".codex")).is_err());
-    fs::write(root.join("native-preservation-result.json"),serde_json::to_vec_pretty(&serde_json::json!({"scenario":case,"actualCurrentServiceAdmission":true,"originalFourNativeScopesReleased":true,"canonicalHead":closed,"canonicalCancellationClosed":true,"normalStop":false,"successorEligible":true,"elapsedActionMs":cancellation_elapsed,"budgetMs":10000,"successorCaptureElapsedMs":successor_elapsed,"successorCaptureBudgetMs":30000,"successorCapturedHead":captured,"syntheticCaptureScopeOnlyNotService":true,"oldArchiveTamperReopenRefused":true,"serviceStarted":false,"releaseAcceptance":false})).unwrap()).unwrap();
+    fs::write(root.join("native-preservation-result.json"),serde_json::to_vec_pretty(&serde_json::json!({"scenario":case,"actualCurrentServiceAdmission":true,"originalFourNativeScopesReleased":true,"canonicalHead":closed,"canonicalCancellationClosed":true,"normalStop":false,"successorEligible":true,"elapsedActionMs":cancellation_elapsed,"budgetMs":10000,"successorCaptureElapsedMs":successor_elapsed,"successorCaptureBudgetMs":30000,"successorCapturedHead":captured,"syntheticCaptureScopeOnlyNotService":true,"oldArchiveTamperReopenRefused":true,"partialCaptureRetainedWithoutAdoption":partial_before.is_some(),"partialCapturePoint":partial_point,"serviceStarted":false,"releaseAcceptance":false})).unwrap()).unwrap();
 }

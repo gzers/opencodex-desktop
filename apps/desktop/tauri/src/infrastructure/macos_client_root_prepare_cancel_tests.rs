@@ -114,6 +114,98 @@ fn first_root_cancel_review_is_stable_readonly_and_never_closes_or_moves_root() 
     }
 }
 #[test]
+fn first_root_reserved_partial_capture_is_exactly_retained_without_original_admission() {
+    for mode in ["empty-vault", "empty-slot", "partial-bytes"] {
+        let f = Fixture::new();
+        let reserved = f.index.reserve_first_root_capture(&f.head).unwrap();
+        let manager = f
+            .index
+            .action_parent
+            .child_private("client-originals", true)
+            .unwrap();
+        if mode != "empty-vault" {
+            let slot = manager.child_private(&reserved.ticket, true).unwrap();
+            if mode == "partial-bytes" {
+                create(
+                    &slot,
+                    "unpublished-capture.bin",
+                    b"synthetic partial bytes; not Originals",
+                )
+                .unwrap();
+            }
+        }
+        let before = bytes(f.data.parent().unwrap());
+        let review = f
+            .index
+            .review_first_root_preparation(&f.context, &reserved, end())
+            .unwrap();
+        review.recheck().unwrap();
+        assert!(reserved.references.is_none());
+        assert_eq!(bytes(f.data.parent().unwrap()), before);
+        let history = vault_history::read(f.index.connection().unwrap(), &reserved).unwrap();
+        assert_eq!(
+            super::super::root_cancellation::confirmation(
+                &f.context,
+                &f.data,
+                &reserved,
+                &history,
+                f.index.root_registration.as_ref()
+            )
+            .unwrap()
+            .as_deref(),
+            Some(review.fingerprint())
+        );
+        let foreign = manager
+            .child_private("ffffffff-ffff-4fff-bfff-ffffffffffff", true)
+            .unwrap();
+        assert!(review.recheck().is_err());
+        drop(foreign);
+        assert!(read_head(f.index.connection().unwrap()).unwrap().as_ref() == Some(&reserved));
+        f.close();
+    }
+}
+#[test]
+fn first_root_partial_capture_late_bytes_and_permissions_invalidate_original_confirmation() {
+    for mutation in ["bytes", "protection"] {
+        let f = Fixture::new();
+        let reserved = f.index.reserve_first_root_capture(&f.head).unwrap();
+        let vault = f
+            .index
+            .action_parent
+            .child_private("client-originals", true)
+            .unwrap();
+        let slot = vault.child_private(&reserved.ticket, true).unwrap();
+        create(&slot, "part.bin", b"old partial").unwrap();
+        let review = f
+            .index
+            .review_first_root_preparation(&f.context, &reserved, end())
+            .unwrap();
+        if mutation == "bytes" {
+            let original = fs::metadata(slot.path().join("part.bin"))
+                .unwrap()
+                .permissions();
+            fs::set_permissions(
+                slot.path().join("part.bin"),
+                fs::Permissions::from_mode(0o600),
+            )
+            .unwrap();
+            fs::write(slot.path().join("part.bin"), b"late partial").unwrap();
+            fs::set_permissions(slot.path().join("part.bin"), original).unwrap();
+        } else {
+            fs::set_permissions(
+                slot.path().join("part.bin"),
+                fs::Permissions::from_mode(0o644),
+            )
+            .unwrap();
+        }
+        assert!(review.recheck().is_err());
+        assert!(reserved.references.is_none());
+        drop(slot);
+        drop(vault);
+        f.close();
+    }
+}
+#[test]
 fn first_root_cancel_review_refuses_new_data_even_if_head_has_no_original_references() {
     for target in ["root-data", "partial-capture", "empty-capture-storage"] {
         let f = Fixture::new();

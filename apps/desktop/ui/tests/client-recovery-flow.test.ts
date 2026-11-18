@@ -65,6 +65,39 @@ describe('already retired root finalization',()=>{
 });
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('reconciles a retained latch using unchanged closed-root previews around a fresh live snapshot without mutation',async()=>{
+    const closed={...preparing(),status:'restored' as const,phase:'root_cancellation_absent' as const,revision:4,planEvidence:'verified' as const,completionEvidence:'verified' as const,canCancelPreparation:false,preparationDigest:null}
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(closed)
+    const store=await inspect();expect(store.ready).toBe(true);expect(useLifecycleStore().clientRecoveryRequired).toBe(false)
+    expect(clientRecoveryApi.preview).toHaveBeenCalledTimes(2);expect(clientRecoveryApi.status).toHaveBeenCalledTimes(1)
+    expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled();expect(clientRecoveryApi.finalize).not.toHaveBeenCalled()
+  })
+  it.each(['changed','foreign-home','required','busy'] as const)('keeps the recovery latch when closed-root reinspection is %s',async mode=>{
+    const closed={...preparing(),status:'restored' as const,phase:'root_cancellation_absent' as const,revision:4,planEvidence:'verified' as const,completionEvidence:'verified' as const,canCancelPreparation:false,preparationDigest:null}
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(closed).mockResolvedValue(mode==='changed'?{...closed,revision:5}:closed)
+    if(mode==='busy')vi.mocked(clientRecoveryApi.status).mockRejectedValue({code:'status_sample_in_progress'})
+    else vi.mocked(clientRecoveryApi.status).mockResolvedValue(mode==='required'?status(true):mode==='foreign-home'?{...status(),facts:{...status().facts,opencodex_home:'/foreign'}}:status())
+    const store=await inspect();expect(store.ready).toBe(false);expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled();expect(clientRecoveryApi.finalize).not.toHaveBeenCalled()
+  })
+  it.each([
+    {phase:'preparing' as const,preparationKind:'created_root_capture' as const},
+    {phase:'capture_reserved' as const,preparationKind:'created_root' as const},
+  ])('refuses mismatched created-root confirmation kind and durable phase %#',async wrong=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),...wrong})
+    const store=await inspect();expect(store.canCancelPreparation).toBe(false);store.choose('cancelPreparation')
+    expect(await store.apply('cancelPreparation')).toBe(false);expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled()
+  })
+  it('keeps reserved first-root partial captures and requires the distinct root two-event receipt',async()=>{
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),phase:'capture_reserved',revision:2,preparationKind:'created_root_capture'})
+    vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:4,status:'root_cancelled'})
+    const {view,button}=render();await button('检查客户端恢复')!.trigger('click');await flushPromises()
+    await button('取消启动准备')!.trigger('click')
+    expect(view.text()).toContain('已经捕获的文件会完整保留');expect(view.text()).toContain('不会用作新的原件')
+    await button('确认取消启动准备')!.trigger('click');await flushPromises()
+    expect(clientRecoveryApi.cancelPreparation).toHaveBeenCalledWith({attemptId:preparing().attemptId,revision:2,confirmationDigest:'f'.repeat(64)})
+    expect(useClientRecoveryStore().outcome?.revision).toBe(4);expect(useClientRecoveryStore().ready).toBe(true)
+  })
   it('shows completed root cancellation while reconciliation waits and keeps the lifecycle gate',async()=>{
     vi.mocked(clientRecoveryApi.preview).mockResolvedValue({...preparing(),preparationKind:'created_root'})
     vi.mocked(clientRecoveryApi.cancelPreparation).mockResolvedValue({...result(),revision:3,status:'root_cancelled'})

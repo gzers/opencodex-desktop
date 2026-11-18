@@ -53,7 +53,7 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   const canCancelPreparation=computed(()=>{
     const p=preview.value
     return p?.status==='pending'&&(p.phase==='preparing'||p.phase==='capture_reserved')&&p.canCancelPreparation
-      && (p.preparationKind==null||p.preparationKind==='created_root')
+      && (p.preparationKind==null||p.preparationKind==='created_root'&&p.phase==='preparing'||p.preparationKind==='created_root_capture'&&p.phase==='capture_reserved')
       && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm && !p.canPreparePlan&&!p.canFinishUnchanged
       && p.originalEvidence==='not_recorded'&&p.planEvidence==='not_recorded'&&p.completionEvidence==='not_recorded'&&p.phaseCount===0
       && !!p.attemptId&&Number.isSafeInteger(p.revision)&&p.revision!>0&&hash(p.preparationDigest)
@@ -68,6 +68,13 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   const can = (value: ClientRecoveryAction) => ({ finalize: canFinalize.value, continue: canContinue.value, rollback: canRollback.value, rearm: canRearm.value, finishUnchanged: canFinishUnchanged.value, cancelPreparation: canCancelPreparation.value, preparePlan: canPreparePlan.value })[value]
   let generation = 0
   let completionScope: { dataRoot: string; home: string } | null = null
+  function verifiedClosedRoot(p: ClientRecoveryPreview): boolean {
+    return p.status==='restored' && (p.phase==='root_cancellation_absent'||p.phase==='root_absent')
+      && !!p.attemptId && Number.isSafeInteger(p.revision) && p.revision!>0
+      && p.planEvidence==='verified' && p.completionEvidence==='verified'
+      && (p.phase==='root_cancellation_absent'?p.originalEvidence==='not_recorded':p.originalEvidence==='verified')
+      && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm&&!p.canPreparePlan&&!p.canFinishUnchanged&&!p.canCancelPreparation
+  }
   async function inspect() {
     if (executing.value || refreshing.value) return
     const seq = ++generation
@@ -78,6 +85,24 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       const p = await clientRecoveryApi.preview()
       if (seq !== generation || !open.value) return
       preview.value = p; checked.value = true
+      if (verifiedClosedRoot(p) && useLifecycleStore().clientRecoveryRequired) {
+        // Explicit read-only reinspection can reconcile a stale UI latch after
+        // a fully indexed root close. Preview alone never clears it: bracket a
+        // live same-scope status with another complete, unchanged preview.
+        const current=useLifecycleStore().statusSnapshot?.facts
+        if (!current?.data_root||!current.opencodex_home) return
+        const scope={dataRoot:current.data_root,home:current.opencodex_home}
+        try {
+          const snapshot=await clientRecoveryApi.status()
+          const confirmed=await clientRecoveryApi.preview()
+          if(seq!==generation||!open.value)return
+          if (!verifiedClosedRoot(confirmed)||confirmed.phase!==p.phase||confirmed.attemptId!==p.attemptId||confirmed.revision!==p.revision) {
+            preview.value=null;checked.value=false;error.value='原恢复记录已变化，请重新检查。';return
+          }
+          ready.value=useLifecycleStore().acceptFinalizedClientRecovery(scope,snapshot)
+          if(!ready.value) refreshError.value='恢复记录已核对，当前运行状态仍待核对；请重新检查。'
+        } catch { if(seq===generation&&open.value)refreshError.value='恢复记录已核对，运行状态读取失败；请重新检查。' }
+      }
     } catch (cause) { if (seq === generation && open.value) error.value = runtimeErrorText(cause) }
     finally { if (seq === generation) reading.value = false }
   }
@@ -136,8 +161,8 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       if (before.source !== 'live' || !before.facts.data_root || !before.facts.opencodex_home) throw new Error('当前配置位置尚未核对，请重新检查客户端恢复。')
       completionScope = { dataRoot: before.facts.data_root, home: before.facts.opencodex_home }
       const result = await clientRecoveryApi[next](request)
-      const expected = next === 'cancelPreparation' ? (p.preparationKind==='created_root'?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
-      if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + (next==='cancelPreparation'&&p.preparationKind==='created_root'?2:1)) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
+      const expected = next === 'cancelPreparation' ? ((p.preparationKind==='created_root'||p.preparationKind==='created_root_capture')?'root_cancelled':p.phase==='capture_reserved'?'cancelled_capture':'cancelled_before_capture') : next === 'finishUnchanged' ? 'unchanged' : next === 'rollback' ? 'rolled_back' : next==='preparePlan' ? (p.phase==='stopped'?'restore_prepared':'recovery_prepared') : next==='rearm' ? ([1,2].includes(p.phaseCount)?'recovery_prepared':'restore_prepared') : 'restored'
+      if (result.status !== expected || result.attemptId !== request.attemptId || result.revision !== request.revision + (next==='cancelPreparation'&&(p.preparationKind==='created_root'||p.preparationKind==='created_root_capture')?2:1)) throw new Error('恢复回执与本次确认不一致，请重新核对原会话。')
       outcome.value = result; preview.value = null; checked.value = false; choice.value = null
       // The mutation receipt is complete. The following read is observation,
       // so show its outcome while keeping the lifecycle gate until a verified

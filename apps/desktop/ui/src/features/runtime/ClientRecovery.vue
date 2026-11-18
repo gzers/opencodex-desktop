@@ -41,10 +41,11 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
     </template>
     <template v-else-if="recovery.choice === 'cancelPreparation'">
       <p class="client-recovery-lead">取消这次启动准备？</p>
-      <p v-if="recovery.preview?.preparationKind==='created_root'">确认后保管这次启动新建的空目录，恢复启动前的目录缺席状态；不会删除后来写入的内容。</p>
+      <p v-if="recovery.preview?.preparationKind==='created_root_capture'">确认后保管这次新建的目录及初始化记录，恢复启动前的目录缺席状态。已经捕获的文件会完整保留，不会用作新的原件。</p>
+      <p v-else-if="recovery.preview?.preparationKind==='created_root'">确认后保管这次启动新建的空目录，恢复启动前的目录缺席状态；不会删除后来写入的内容。</p>
       <p v-else-if="recovery.preview?.phase==='capture_reserved'">原件捕获已中断。确认后重新核对服务已停止，保留已捕获文件，再取消本次启动。</p>
       <p v-else>本次准备尚未产生新的原件目录。确认后重新核对服务已停止，再取消这次未完成的启动准备。</p>
-      <p v-if="recovery.preview?.preparationKind!=='created_root'">保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
+      <p v-if="recovery.preview?.preparationKind!=='created_root'&&recovery.preview?.preparationKind!=='created_root_capture'">保持当前配置和已保留原件，不恢复或删除文件，也不会自动启动。</p>
       <p v-else>重新核对服务停止与目录内容；保管完成后不会自动启动。</p>
     </template>
     <template v-else-if="recovery.choice === 'finishUnchanged'">
@@ -85,7 +86,11 @@ const confirmLabel = computed(() => recovery.choice === 'rollback' ? '确认撤�
         <p class="client-recovery-lead">客户端配置恢复中断，可以继续原恢复计划。</p>
         <p>确认后恢复到本次启动前的配置，保留当前已归档的文件。服务保持停止。</p>
       </template>
-      <p v-else-if="recovery.preview.status === 'not_required' || recovery.preview.status === 'restored'" role="status">没有待处理的客户端配置恢复。</p>
+      <template v-else-if="recovery.preview.status === 'not_required' || recovery.preview.status === 'restored'">
+        <p role="status">没有待处理的客户端配置恢复。</p>
+        <p v-if="recovery.ready">服务保持停止，现在可以启动。</p>
+        <p v-else-if="lifecycle.clientRecoveryRequired">当前运行状态尚未核实，请重新检查后再启动。</p>
+      </template>
       <p v-else-if="recovery.preview.status === 'active'" role="status">当前会话正在使用。请先正常停止 OpenCodex，再检查恢复状态。</p>
       <template v-else-if="recovery.preview.status === 'pending' && recovery.preview.phase === 'restore_rolled_back'"><p role="status">本次恢复已撤销，文件已回到恢复前的停止状态。</p><p>启动前原件仍保留，尚未恢复；服务保持停止。</p></template>
       <template v-else-if="recovery.preview.status === 'pending'"><p role="status">配置恢复尚未完成，原会话已保留。</p><p>当前现场不能直接收尾，请查看诊断详情和应用日志。</p></template>

@@ -47,6 +47,20 @@ function snapshot(runtime: StatusSnapshot['matrix']['runtime'], pid = '39421'): 
 }
 
 describe('process action integration', () => {
+  it('keeps a ready observation busy until the original Start reply releases its mutation request',async()=>{
+    let complete!: (value:ReturnType<typeof backendResult>)=>void
+    const waiting=new Promise<ReturnType<typeof backendResult>>(resolve=>{complete=resolve})
+    invoke.mockImplementation((name:string)=>name==='process_action'?waiting:Promise.resolve(snapshot('running')))
+    const app=useAppStore(),store=useLifecycleStore();const action=app.requestProcessAction('start')
+    await vi.waitFor(()=>expect(invoke).toHaveBeenCalledWith('process_action',{request:{action:'start',confirm:true}}))
+    app.setStatusSnapshot(snapshot('running'))
+    expect(store.processRequestPending).toBe(true);expect(app.processActionBusy).toBe(true);expect(app.processProgressCompleted).toBe(false)
+    expect(app.processActionBlocked('stop')).toBe(true);expect(await app.requestProcessAction('stop')).toBeUndefined()
+    complete(backendResult('starting'));await action
+    expect(store.processRequestPending).toBe(false);expect(app.processActionBusy).toBe(false);expect(app.processProgressCompleted).toBe(true)
+    expect(app.processActionBlocked('stop')).toBe(false)
+    expect(invoke.mock.calls.filter(([name])=>name==='process_action')).toHaveLength(1)
+  })
   beforeEach(() => {
     setActivePinia(createPinia())
     invoke.mockReset()

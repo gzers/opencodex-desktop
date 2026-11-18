@@ -29,7 +29,7 @@ def write(path, value):
 
 
 def run(app, expected_sha, output, seed_host, flow="root-cancel"):
-    if flow not in ('root-cancel','stop-progress'):raise ValueError('unknown explicit GUI flow')
+    if flow not in ('root-cancel','root-partial-cancel','stop-progress'):raise ValueError('unknown explicit GUI flow')
     app = app.resolve(strict=True)
     if app.name != base.APP or base.sha(app / 'Contents/MacOS/opencodex-desktop') != expected_sha:
         raise ValueError('explicit exact sealed app required')
@@ -148,6 +148,16 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
             log=(output/('application-'+str(generation)+'.log')).open('xb')
             proc=subprocess.Popen(['/usr/bin/sandbox-exec','-f',str(policy),str(exe)],cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
             print(json.dumps({'generation':generation,'pid':proc.pid,'phase':'started'}),flush=True)
+            # A visible WebKit surface can exist before its accessibility tree
+            # is activated. Activate only this exact original process after the
+            # OS registers it; never restart just because AX is not ready yet.
+            activation_end=time.monotonic()+12
+            while time.monotonic()<activation_end:
+                activated=command([helper,'focus',proc.pid,exe],required=False)
+                if activated.returncode==0:break
+                if activated.returncode!=3 or proc.poll() is not None:raise RuntimeError('candidate activation unconfirmed')
+                time.sleep(.3)
+            else:raise RuntimeError('candidate OS registration did not complete')
             current=profile/'Library/Application Support/OpenCodeX Desktop/runtime/current.json'
             wait_for('startup-'+str(generation),lambda v:current.is_file() and any('运行状态与常用操作' in str(n.get('value','')) or n.get('title')=='版本升级' for n in v['nodes']),180)
         def head():
@@ -163,16 +173,25 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
             finally:c.close()
         launch(1)
         closed=None
-        if flow=='root-cancel':
+        if flow in ('root-cancel','root-partial-cancel'):
             end_process()
             seed=root/'seed-host';shutil.copyfile(seed_host,seed);seed.chmod(0o700)
             command(['/usr/bin/codesign','--verify','--strict',seed])
             seed_env=dict(env,OCXD024_GUI_ROOT_CANCEL_SEED=str(root))
+            if flow=='root-partial-cancel':seed_env['OCXD024_GUI_ROOT_PARTIAL_SEED']='1'
             command(['/usr/bin/sandbox-exec','-f',str(policy),str(seed),'--exact','prepare_exact_owned_first_root_for_real_gui','--ignored','--nocapture'],60,env=seed_env)
-            shutil.copyfile(root/'seed-result.json',output/'seed-result.json');write(output/'head-before-cancel.json',head())
+            shutil.copyfile(root/'seed-result.json',output/'seed-result.json');before_cancel=head();write(output/'head-before-cancel.json',before_cancel)
+            partial_before=None
+            if flow=='root-partial-cancel':
+                fragment=profile/'.codex-desktop/desktop/manager-state/client-originals'/before_cancel['ticket']/'synthetic-unpublished-fragment.json'
+                def partial_image():
+                    info=fragment.stat();raw=fragment.read_bytes()
+                    return {'device':info.st_dev,'inode':info.st_ino,'mode':info.st_mode & 0o777,'uid':info.st_uid,'gid':info.st_gid,'bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),'rawBase64':base64.b64encode(raw).decode()}
+                partial_before=partial_image();write(output/'partial-fragment-before.json',partial_before)
             launch(2);press('诊断')
             press('检查客户端恢复');press('取消启动准备')
-            value=wait_for('first-root-confirmation',lambda v:any('保管这次启动新建的空目录' in str(n.get('value','')) for n in v['nodes']))
+            confirmation_text='已经捕获的文件会完整保留' if flow=='root-partial-cancel' else '保管这次启动新建的空目录'
+            value=wait_for('first-root-confirmation',lambda v:any(confirmation_text in str(n.get('value','')) for n in v['nodes']))
             if status.get('screenCaptureAllowed'):
                 windows=[w for w in value.get('windows',[]) if w.get('onscreen') and w.get('layer')==0]
                 if windows:command([capture,windows[0]['id'],output/'cancel-confirmation.png'])
@@ -191,7 +210,7 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
                 if '原目录缺席已恢复' in text:
                     cancel_attempts.append({'attempt':attempt,'outcome':'completed'});break
                 current_head=head()
-                if current_head is None or current_head['state']!='preparing' or current_head['revision']!=1:
+                if current_head!=before_cancel:
                     raise RuntimeError('busy retry refused: original preparation changed')
                 cancel_attempts.append({'attempt':attempt,'outcome':'preflight-busy-no-mutation','head':current_head})
                 write(output/'explicit-cancel-attempts.json',cancel_attempts)
@@ -201,12 +220,34 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
             closed=head();assert closed['state']=='root_cancellation_absent' and closed['completionSha256'] and not client.exists()
             write(output/'head-after-cancel.json',closed);report['guiCancellationObservedMs']=round((time.monotonic()-clicked)*1000)
             report['actualGuiCancellationPassed']=True
+            if partial_before is not None:
+                assert partial_image()==partial_before;write(output/'partial-fragment-after-cancel.json',partial_image());report['partialPreservedAfterGuiCancellation']=True
             # Close just the app dialog using its explicit WebView button.
             press('关闭');press('概览')
         if flow=='stop-progress':
             # Production startup supply and its first status are asynchronous;
             # observing readiness here precedes any lifecycle action/budget.
             wait_for('pre-action-ui-ready',lambda v:bool(matches(v,'启动 OpenCodex','AXButton')),120)
+        if flow in ('root-cancel','root-partial-cancel'):
+            # Reopening explicit inspection may reconcile an old UI latch using
+            # final indexed previews + live status, never a repeated mutation.
+            for recheck in range(4):
+                value=snapshot('post-cancel-start-gate')
+                if value is not None and matches(value,'启动 OpenCodex','AXButton'):break
+                press('诊断');press('检查客户端恢复')
+                end=time.monotonic()+12
+                while time.monotonic()<end:
+                    value=snapshot('closed-root-readonly-reconcile')
+                    if value is not None:
+                        content='\n'.join(str(n.get('value')or n.get('title')or'') for n in value['nodes'])
+                        if '现在可以启动' in content:break
+                        if matches(value,'刷新运行状态','AXButton'):
+                            press('刷新运行状态')
+                    time.sleep(.6)
+                if head()!=closed:raise RuntimeError('readonly root reconciliation changed canonical state')
+                report['explicitReadonlyPostCancelRechecks']=recheck+1
+                press('关闭');press('概览')
+            else:raise RuntimeError('closed-root current status not confirmed; no Start replayed')
         service_requested=True;report['serviceActionRequested']=True;press('启动 OpenCodex')
         home=profile/'.codex-desktop/opencodex/home';record=home/'runtime-port.json'
         wait_for('successor-service-ready',lambda v:record.exists() and head() is not None and head()['state']=='ready',60)
@@ -235,7 +276,9 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
         if status.get('screenCaptureAllowed'):
             windows=[w for w in dismissed.get('windows',[]) if w.get('onscreen') and w.get('layer')==0]
             if windows:command([capture,windows[0]['id'],output/'stop-card-dismissed.png'])
-        report.update(result='passed',actualGuiSuccessorStartStop=flow=='root-cancel',actualGuiCancellationPassed=flow=='root-cancel',normalStopAndOriginalAbsence=True)
+        if flow=='root-partial-cancel':
+            assert partial_image()==partial_before;write(output/'partial-fragment-after-official-stop.json',partial_image());report['partialPreservedAfterSuccessorNormalStop']=True
+        report.update(result='passed',actualGuiSuccessorStartStop=flow in ('root-cancel','root-partial-cancel'),actualGuiCancellationPassed=flow in ('root-cancel','root-partial-cancel'),normalStopAndOriginalAbsence=True)
         end_process()
     except BaseException as exc:
         report.update(result='failed', error=repr(exc))
@@ -249,7 +292,7 @@ def run(app, expected_sha, output, seed_host, flow="root-cancel"):
                         value=snapshot('failure-stop-check')
                         if value is not None and matches(value,'关闭','AXButton'):press('关闭')
                         press('概览');press('停止')
-                        wait_for('failure-normal-stop',lambda v:not (profile/'.codex-desktop/opencodex/home/runtime-port.json').exists(),35)
+                        wait_for('failure-normal-stop',lambda v:not (profile/'.codex-desktop/opencodex/home/runtime-port.json').exists() and head() is not None and head()['state']=='root_absent',35)
                         service_verified_stopped=True
                     except Exception as e:report['normalStopCleanupError']=repr(e)
             if not service_requested or service_verified_stopped:end_process()
@@ -296,7 +339,7 @@ if __name__ == '__main__':
     parser.add_argument('--expected-sha256', required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--seed-host', type=Path, required=True)
-    parser.add_argument('--flow',choices=['root-cancel','stop-progress'],default='root-cancel')
+    parser.add_argument('--flow',choices=['root-cancel','root-partial-cancel','stop-progress'],default='root-cancel')
     args = parser.parse_args()
     result = run(args.app, args.expected_sha256, args.output, args.seed_host, args.flow)
     print(json.dumps({k:v for k,v in result.items() if k != 'coordinatorCleanup'}, ensure_ascii=False), flush=True)
