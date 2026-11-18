@@ -88,9 +88,11 @@ fn first_root_registration_atomically_binds_original_absence_and_preparing_witho
     drop(reopened);
     let preview = preview::inspect_preview(&context, &data);
     assert_eq!(preview.status, preview::Status::Pending);
+    assert!(preview.can_cancel_preparation);
+    assert_eq!(preview.preparation_kind, Some("created_root"));
+    assert_eq!(preview.preparation_digest.as_deref().map(str::len), Some(64));
     assert!(
-        !preview.can_cancel_preparation
-            && !preview.can_finish_unchanged
+        !preview.can_finish_unchanged
             && !preview.can_prepare_plan
             && !preview.can_continue
     );

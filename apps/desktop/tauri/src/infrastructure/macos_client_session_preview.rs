@@ -209,6 +209,7 @@ fn project_history(
                 preview.preparation_digest =
                     Some(view.fingerprint(&context.working_directory, head, history, origin)?);
                 preview.preparation_kind = Some("successor_root");
+                preview.can_cancel_preparation = true;
                 preview.attempt_id = Some(head.ticket.clone());
                 return Ok(preview);
             }

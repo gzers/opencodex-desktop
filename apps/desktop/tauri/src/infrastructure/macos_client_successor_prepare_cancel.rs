@@ -3,23 +3,12 @@
 use super::*;
 use crate::infrastructure::macos_client_originals::{GrokSnapshot, TreeSnapshot};
 
-pub struct Review<'a> {
-    index: &'a Index,
-    context: &'a ProcessContext,
-    head: Head,
-    deadline: Instant,
-    fingerprint: String,
-}
-impl Review<'_> {
-    pub fn fingerprint(&self) -> &str {
-        &self.fingerprint
-    }
-    pub fn recheck(&self) -> io::Result<()> {
-        if snapshot(self.index, self.context, &self.head, self.deadline)? != self.fingerprint {
-            return Err(denied("successor preparation review changed"));
-        }
-        Ok(())
-    }
+pub(in crate::infrastructure::macos_client_originals::session_index) struct Facts {
+    pub fingerprint: String,
+    pub tree: TreeSnapshot,
+    pub grok: GrokSnapshot,
+    pub history_sha256: String,
+    pub closures_sha256: String,
 }
 fn time(deadline: Instant) -> io::Result<()> {
     if Instant::now() >= deadline {
@@ -27,12 +16,12 @@ fn time(deadline: Instant) -> io::Result<()> {
     }
     Ok(())
 }
-fn snapshot(
+pub(in crate::infrastructure::macos_client_originals::session_index) fn snapshot(
     index: &Index,
     context: &ProcessContext,
     head: &Head,
     deadline: Instant,
-) -> io::Result<String> {
+) -> io::Result<Facts> {
     time(deadline)?;
     index.check()?;
     if index.head()?.as_ref() != Some(head)
@@ -55,13 +44,13 @@ fn snapshot(
         data: &index.data,
         client: &index.client,
     };
-    let fingerprint = view.fingerprint(&index.profile, head, &history, origin)?;
+    let facts = view.facts(&index.profile, head, &history, origin)?;
     index.check()?;
     if index.head()?.as_ref() != Some(head) || vault_history::read(connection, head)? != history {
         return Err(denied("successor preparation changed during full review"));
     }
     time(deadline)?;
-    Ok(fingerprint)
+    Ok(facts)
 }
 
 /// Read-only facts pinned by the caller's original index access and action lock.
@@ -79,6 +68,16 @@ impl View<'_> {
         history: &[Head],
         origin: &super::super::super::root_creation::References,
     ) -> io::Result<String> {
+        Ok(self.facts(profile_path, head, history, origin)?.fingerprint)
+    }
+
+    fn facts(
+        &self,
+        profile_path: &Path,
+        head: &Head,
+        history: &[Head],
+        origin: &super::super::super::root_creation::References,
+    ) -> io::Result<Facts> {
         let Self {
             connection,
             binding,
@@ -151,7 +150,7 @@ impl View<'_> {
             digest(binding),
             history,
             &closures,
-            tree,
+            &tree,
             &grok,
         ))?);
         if GrokSnapshot::read(&profile)? != grok
@@ -166,7 +165,13 @@ impl View<'_> {
             client,
             origin,
         )?;
-        Ok(fingerprint)
+        Ok(Facts {
+            fingerprint,
+            tree,
+            grok,
+            history_sha256: digest(&encode(&history)?),
+            closures_sha256: digest(&encode(&closures)?),
+        })
     }
 }
 
@@ -178,20 +183,14 @@ impl Index {
         context: &'a ProcessContext,
         head: &Head,
         deadline: Instant,
-    ) -> io::Result<Review<'a>> {
+    ) -> io::Result<super::root_preparation::Review<'a>> {
         let first = snapshot(self, context, head, deadline)?;
-        if snapshot(self, context, head, deadline)? != first {
+        if snapshot(self, context, head, deadline)?.fingerprint != first.fingerprint {
             return Err(denied(
                 "successor preparation was not stable across both observations",
             ));
         }
-        Ok(Review {
-            index: self,
-            context,
-            head: head.clone(),
-            deadline,
-            fingerprint: first,
-        })
+        Ok(super::root_preparation::Review::successor(self, context, head, deadline, first))
     }
 }
 

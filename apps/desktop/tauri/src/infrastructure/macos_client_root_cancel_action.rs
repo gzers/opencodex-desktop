@@ -1,4 +1,4 @@
-//! Explicit user cancellation of the independently registered empty first root.
+//! Explicit user cancellation of independently registered root preparation.
 //! The preview supplies a confirmation digest only, never movement permission.
 use super::finalization::{Outcome, Request};
 use super::*;
@@ -12,7 +12,7 @@ use crate::{
 fn fail(e: impl std::fmt::Display) -> AppError {
     AppError::RuntimeManaged {
         code: "client_first_root_cancel_refused".into(),
-        detail: format!("首次目录取消未完成，原现场已保留；{e}"),
+        detail: format!("启动目录取消未完成，原现场已保留；{e}"),
     }
 }
 pub fn applies(data: &Path) -> AppResult<bool> {
@@ -122,13 +122,20 @@ pub fn cancel(context: &ProcessContext, data: &Path, request: Request) -> AppRes
         .head()
         .map_err(fail)?
         .ok_or_else(|| fail("independent preparation missing"))?;
-    let review = index
-        .review_first_root_preparation(context, &head, deadline)
-        .map_err(fail)?;
-    if request.attempt_id != head.ticket
-        || request.revision != head.revision
-        || request.confirmation_digest != review.fingerprint()
+    if request.attempt_id != head.ticket || request.revision != head.revision {
+        return Err(fail("confirmation changed"));
+    }
+    let review = if index
+        .root_registration
+        .as_ref()
+        .is_some_and(|origin| origin.generation_slot.is_some())
     {
+        index.review_successor_root_preparation(context, &head, deadline)
+    } else {
+        index.review_first_root_preparation(context, &head, deadline)
+    }
+    .map_err(fail)?;
+    if request.confirmation_digest != review.fingerprint() {
         return Err(fail("confirmation changed"));
     }
     let service = super::root_preparation::preservation::service::CurrentService::begin(&review)

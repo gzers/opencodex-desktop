@@ -116,6 +116,11 @@ pub struct Head {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub root_generation: Option<RootGeneration>,
 }
+impl Head {
+    fn can_source_root_cancellation(&self, successor: bool) -> bool {
+        self.state == State::Preparing || (self.state == State::CaptureReserved && !successor)
+    }
+}
 /// Only a generation's initial Preparing event carries its immutable source.
 /// All later phases resolve it by their independently indexed ticket.
 #[derive(Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -2155,9 +2160,13 @@ impl Index {
         if self.root_registration.is_some()
             && !(expected.is_some_and(|h| h.state == State::Preparing)
                 && next.state == State::CaptureReserved
-                || expected
-                    .is_some_and(|h| matches!(h.state, State::Preparing | State::CaptureReserved))
-                    && next.state == State::RootCancellationPrepared
+                || expected.is_some_and(|h| {
+                    h.can_source_root_cancellation(
+                        self.root_registration
+                            .as_ref()
+                            .is_some_and(|origin| origin.generation_slot.is_some()),
+                    )
+                }) && next.state == State::RootCancellationPrepared
                 || expected.is_some_and(|h| h.state == State::RootCancellationPrepared)
                     && next.state == State::RootCancellationAbsent
                 || expected.is_some_and(|h| h.state == State::CaptureReserved)

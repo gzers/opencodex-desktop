@@ -109,15 +109,18 @@ fn validate_segment(heads: &[Head], origin: &super::root_creation::References) -
                     State::Captured | State::Ready | State::StopPrepared,
                     State::Failed
                 )
-        ) || before.references.as_ref().is_some_and(|refs| {
-            after.references.as_ref().is_none_or(|next| {
-                next.attempt != refs.attempt
-                    || next.original_sha256 != refs.original_sha256
-                    || next.scope_sha256 != refs.scope_sha256
-                    || !next.phases.starts_with(&refs.phases)
-                    || refs.live_sha256.is_some() && next.live_sha256 != refs.live_sha256
+        ) || after.state == State::RootCancellationPrepared
+            && !before.can_source_root_cancellation(origin.generation_slot.is_some())
+            || before.references.as_ref().is_some_and(|refs| {
+                after.references.as_ref().is_none_or(|next| {
+                    next.attempt != refs.attempt
+                        || next.original_sha256 != refs.original_sha256
+                        || next.scope_sha256 != refs.scope_sha256
+                        || !next.phases.starts_with(&refs.phases)
+                        || refs.live_sha256.is_some() && next.live_sha256 != refs.live_sha256
+                })
             })
-        }) || before.root_retirement.is_some() && before.root_retirement != after.root_retirement
+            || before.root_retirement.is_some() && before.root_retirement != after.root_retirement
             || before.restore_plan.is_some() && before.restore_plan != after.restore_plan
         {
             return Err(denied(

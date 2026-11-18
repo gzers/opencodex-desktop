@@ -21,7 +21,7 @@ export interface ClientRecoveryPreview {
   canRearm: boolean
   canCancelPreparation: boolean
   preparationDigest: string | null
-  preparationKind?: 'created_root' | 'created_root_capture' | null
+  preparationKind?: 'created_root' | 'created_root_capture' | 'successor_root' | null
   canFinishUnchanged: boolean
   unchangedDigest: string | null
   rollbackDigest: string | null

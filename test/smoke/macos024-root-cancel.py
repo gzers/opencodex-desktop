@@ -84,7 +84,10 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
     if len(artifacts) != 1: raise ValueError('one actual test-host artifact required')
     parent = Path(tempfile.mkdtemp(prefix='ocxd024-root-cancel-', dir='/private/tmp')); parent.chmod(0o700)
     root = parent / 'fixture'; root.mkdir(mode=0o700)
-    (root / 'profile').mkdir(mode=0o700); (root / 'resources').mkdir(mode=0o700)
+    ordinary_predecessor = scope == 'ordinary-successor-action'
+    if not ordinary_predecessor:
+        (root / 'profile').mkdir(mode=0o700)
+    (root / 'resources').mkdir(mode=0o700)
     task_coordinators = coordinators(root / 'profile')
     if any(os.path.lexists(str(path)+suffix) for path in task_coordinators for suffix in ('','-journal','-wal','-shm')):
         raise RuntimeError('fresh fixture task coordination path already exists; not adopted')
@@ -101,14 +104,19 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
         policy.write_text('(version 1) (allow default) (deny network*) (deny file-read* file-write* (subpath ' + json.dumps(pwd.getpwuid(os.getuid()).pw_dir) + ')) (deny file-read* file-write* (subpath "/Library/Keychains")) (deny mach-lookup (global-name "com.apple.securityd") (global-name "com.apple.secd"))')
         shutil.copyfile(policy, output / 'native.sb')
         test = TEST if scope == 'storage' else 'infrastructure::macos_client_originals::session_index::root_preparation::preservation::service_tests::current_service_movement_and_native_release_bind_a_distinct_cancellation_terminal'
-        if scope not in ('storage', 'current-service', 'user-action', 'partial-capture', 'successor-review'): raise ValueError('unknown root cancellation test scope')
+        if scope not in ('storage', 'current-service', 'user-action', 'partial-capture', 'successor-review', 'successor-action', 'ordinary-successor-action'): raise ValueError('unknown root cancellation test scope')
         argv = ['/usr/bin/sandbox-exec', '-f', str(policy), str(host), '--exact', test, '--ignored', '--nocapture', '--test-threads=1']
         env = {'HOME': str(root / 'profile'), 'CFFIXED_USER_HOME': str(root / 'profile'), 'PATH': '/usr/bin:/bin', 'TMPDIR': str(parent), 'OCXD024_ROOT_CANCEL_NATIVE': str(root)}
         env['OCXD024_ROOT_CANCEL_CASE'] = scenario
         if scope == 'successor-review':
             if scenario != 'success': raise ValueError('successor review requires the exact successful predecessor setup')
             env['OCXD024_SUCCESSOR_CANCEL_REVIEW_ONLY'] = '1'
-        if scope in ('user-action', 'partial-capture'): env['OCXD024_ROOT_CANCEL_USER_ACTION'] = '1'
+        if scope in ('successor-action', 'ordinary-successor-action'):
+            if scenario != 'success': raise ValueError('successor action requires a successfully closed predecessor')
+            env['OCXD024_SUCCESSOR_CANCEL_ACTION'] = '1'
+            if ordinary_predecessor:
+                env['OCXD024_SUCCESSOR_ORDINARY_PREDECESSOR'] = '1'
+        if scope in ('user-action', 'partial-capture', 'successor-action'): env['OCXD024_ROOT_CANCEL_USER_ACTION'] = '1'
         if scope == 'partial-capture':
             if partial_point not in ('directory_created','codex_archived','grok_archived','original_published'): raise ValueError('explicit capture boundary required')
             env['OCXD024_ROOT_CANCEL_PARTIAL_POINT'] = partial_point
@@ -119,6 +127,7 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
             proc.wait(timeout=180)
         result = {'argv': argv, 'pid': proc.pid, 'exitCode': proc.returncode, 'elapsedMs': round((time.monotonic() - started) * 1000),
                   'source': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(), 'scenario': scenario, 'scope': scope,
+                  'trackedDiffSha256': hashlib.sha256(subprocess.check_output(['git', 'diff', '--binary', 'HEAD'], cwd=ROOT)).hexdigest(),
                   'hostSha256': host_hash, 'hostUnchanged': sha(host) == host_hash, 'releaseAcceptance': False, 'serviceStarted': False}
         print(json.dumps(result), flush=True)
         print((output / 'stdout.log').read_text()[-2000:], flush=True)
@@ -131,7 +140,8 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
         residues = owned_group(proc.pid) if proc else []
         for name in ('native-preservation-result.json', 'native-preservation-error.json'):
             if (root / name).exists(): shutil.copyfile(root / name, output / name)
-        records = root / 'profile/desktop/manager-state'
+        data = root / ('desktop' if ordinary_predecessor else 'profile/desktop')
+        records = data / 'manager-state'
         if records.exists():
             for path in records.rglob('*'):
                 if path.is_file() and (path.suffix == '.json' or path.name == 'client-session-index.sqlite'):
@@ -154,13 +164,13 @@ def run(output, scenario='success', shared_program=None, scope='storage', partia
                      if p.is_file() and not p.is_symlink() and not p.is_relative_to(root / 'program') and not p.is_relative_to(root / 'resources')]
         write(output / 'fixture-content-inventory.json', inventory)
         write(output / 'result.json', result or {'failedBeforeRun': True, 'releaseAcceptance': False})
-        retain_review = scope == 'successor-review' and (result is None or result.get('exitCode') != 0 or residues)
-        if not residues and not retain_review:
+        retain_successor = scope in ('successor-review', 'successor-action', 'ordinary-successor-action') and (result is None or result.get('exitCode') != 0 or residues)
+        if not residues and not retain_successor:
             clean_coordinators(task_coordinators,output)
             shutil.rmtree(parent)
         write(output / 'cleanup.json', {'ownedRoot': str(parent), 'absent': not parent.exists(), 'ownedGroupResidues': residues, 'serviceStarted': False,
                                        'scope': 'new synthetic profile/program/copied test host only; evidence retained',
-                                       'failedSuccessorReviewSceneRetained': bool(retain_review)})
+                                       'failedSuccessorSceneRetained': bool(retain_successor)})
     if result is None or result['exitCode'] or residues: raise RuntimeError('official guarded preservation test or cleanup failed')
 
 
@@ -168,7 +178,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--case', choices=['success', 'before_move', 'after_move', 'new_data', 'new_root'], default='success')
-    parser.add_argument('--scope', choices=['storage', 'current-service', 'user-action', 'partial-capture', 'successor-review'], default='storage')
+    parser.add_argument('--scope', choices=['storage', 'current-service', 'user-action', 'partial-capture', 'successor-review', 'successor-action', 'ordinary-successor-action'], default='storage')
     parser.add_argument('--partial-point', choices=['directory_created','codex_archived','grok_archived','original_published'])
     args = parser.parse_args()
     run(args.output, args.case, scope=args.scope, partial_point=args.partial_point)

@@ -31,10 +31,25 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         std::env::var_os("HOME"),
         Some(profile.clone().into_os_string())
     );
-    let data = profile.join("desktop");
+    let ordinary_predecessor = std::env::var_os("OCXD024_SUCCESSOR_ORDINARY_PREDECESSOR")
+        .is_some()
+        .then(|| {
+            let (_, index, head) =
+                super::super::super::root_retirement::fixture_closed_generation_at(root.clone());
+            assert_eq!(index.head().unwrap(), Some(head.clone()));
+            assert_eq!(head.state, State::RootAbsent);
+            head
+        });
+    let data = if ordinary_predecessor.is_some() {
+        root.join("desktop")
+    } else {
+        profile.join("desktop")
+    };
     let home = profile.join("home");
-    for p in [&data, &home] {
-        fs::DirBuilder::new().mode(0o700).create(p).unwrap();
+    if ordinary_predecessor.is_none() {
+        for p in [&data, &home] {
+            fs::DirBuilder::new().mode(0o700).create(p).unwrap();
+        }
     }
     fs::write(home.join("config.json"), b"{\"providers\":{},\"port\":0}").unwrap();
     fs::set_permissions(home.join("config.json"), fs::Permissions::from_mode(0o600)).unwrap();
@@ -86,6 +101,10 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         working_directory: profile.clone(),
         opencodex_home: home.clone(),
     };
+    if let Some(closed) = ordinary_predecessor {
+        successor_and_history(&root, &context, &data, closed, None, "success", None);
+        return;
+    }
     let partial_point = std::env::var("OCXD024_ROOT_CANCEL_PARTIAL_POINT").ok();
     let started = Instant::now();
     let start_end = started + Duration::from_secs(if partial_point.is_some() { 30 } else { 10 });
@@ -206,7 +225,7 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
             &context,
             &data,
             closed,
-            action_elapsed,
+            Some(action_elapsed),
             &case,
             partial_before.as_ref(),
         );
@@ -336,7 +355,7 @@ fn current_service_movement_and_native_release_bind_a_distinct_cancellation_term
         &context,
         &data,
         closed,
-        started.elapsed().as_millis(),
+        Some(started.elapsed().as_millis()),
         &case,
         partial_before.as_ref(),
     );
@@ -346,7 +365,7 @@ fn successor_and_history(
     context: &ProcessContext,
     data: &Path,
     closed: Head,
-    cancellation_elapsed: u128,
+    cancellation_elapsed: Option<u128>,
     case: &str,
     partial_before: Option<&super::super::super::TreeSnapshot>,
 ) {
@@ -371,7 +390,7 @@ fn successor_and_history(
     assert!(reopened.reserve_start().is_err());
     drop(reopened);
     let preview = super::super::preview::inspect_preview(context, data);
-    assert_eq!(preview.phase, Some(State::RootCancellationAbsent));
+    assert_eq!(preview.phase, Some(closed.state));
     assert_eq!(preview.status, super::super::preview::Status::Restored);
     assert_eq!(
         preview.completion_evidence,
@@ -386,12 +405,14 @@ fn successor_and_history(
     assert_ne!(preparing.ticket, closed.ticket);
     assert_eq!(preparing.revision, closed.revision + 1);
     assert!(preparing.root_generation.is_some());
-    if std::env::var_os("OCXD024_SUCCESSOR_CANCEL_REVIEW_ONLY").as_deref()
-        == Some(std::ffi::OsStr::new("1"))
+    let run_action = std::env::var_os("OCXD024_SUCCESSOR_CANCEL_ACTION").is_some();
+    if run_action
+        || std::env::var_os("OCXD024_SUCCESSOR_CANCEL_REVIEW_ONLY").as_deref()
+            == Some(std::ffi::OsStr::new("1"))
     {
         // This is a fresh read-only cancellation review, not a resumed Start
-        // window or a grant to move the successor root. The predecessor was
-        // just closed through the actual native CurrentService/Guard path.
+        // window or a grant to move the successor root. The ordinary predecessor
+        // is a storage fixture; the cancellation predecessor uses a native action.
         let review_started = Instant::now();
         let review_end = review_started + Duration::from_secs(10);
         let review = successor
@@ -404,6 +425,9 @@ fn successor_and_history(
         assert_eq!(successor.head().unwrap(), Some(preparing.clone()));
         assert!(successor
             .review_first_root_preparation(context, &preparing, review_end)
+            .is_err());
+        assert!(successor
+            .review_successor_root_preparation(context, &preparing, Instant::now())
             .is_err());
         drop(review);
         drop(successor);
@@ -418,28 +442,95 @@ fn successor_and_history(
             preview.preparation_digest.as_deref(),
             Some(fingerprint.as_str())
         );
-        assert!(!preview.can_cancel_preparation);
+        assert!(preview.can_cancel_preparation);
         let reopened = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
         reopened
             .review_successor_root_preparation(context, &preparing, review_end)
             .unwrap()
             .recheck()
             .unwrap();
-        let old_slot = data
-            .join("manager-state/client-root-cancel-plans")
-            .join(&closed.root_retirement.as_ref().unwrap().plan.id);
+        let plan_id = &closed.root_retirement.as_ref().unwrap().plan.id;
+        let old_root = if closed.state == State::RootAbsent {
+            data.join("manager-state/client-originals")
+                .join(&closed.references.as_ref().unwrap().attempt)
+                .join(format!("root-retired-{plan_id}"))
+        } else {
+            data.join("manager-state/client-root-cancel-plans")
+                .join(plan_id)
+                .join("root")
+        };
         fs::write(
-            old_slot.join("root/unexpected"),
-            b"explicit cancelled predecessor drift fixture",
+            old_root.join("unexpected"),
+            b"explicit predecessor archive drift fixture",
         )
         .unwrap();
         assert!(reopened
             .review_successor_root_preparation(context, &preparing, review_end)
             .is_err());
         assert_eq!(
-            fs::read(old_slot.join("root/unexpected")).unwrap(),
-            b"explicit cancelled predecessor drift fixture"
+            fs::read(old_root.join("unexpected")).unwrap(),
+            b"explicit predecessor archive drift fixture"
         );
+        if run_action {
+            drop(reopened);
+            let cancel = |revision, confirmation_digest: String| {
+                super::super::root_cancellation::cancel(
+                    context,
+                    data,
+                    super::super::finalization::Request {
+                        attempt_id: preparing.ticket.clone(),
+                        revision,
+                        confirmation_digest,
+                    },
+                )
+            };
+            assert!(cancel(preparing.revision, fingerprint.clone()).is_err());
+            assert!(profile.join(".codex").is_dir());
+            fs::remove_file(old_root.join("unexpected")).unwrap();
+            let predecessor_tree =
+                super::super::super::TreeSnapshot::read(&PinnedDirectory::open(&old_root).unwrap())
+                    .unwrap();
+            assert!(cancel(preparing.revision + 1, fingerprint.clone()).is_err());
+            assert!(cancel(preparing.revision, "0".repeat(64)).is_err());
+            let action_started = Instant::now();
+            let outcome = cancel(preparing.revision, fingerprint).unwrap();
+            let action_ms = action_started.elapsed().as_millis();
+            assert!(action_ms < 10000);
+            assert_eq!(outcome.status, "root_cancelled");
+            assert_eq!(outcome.attempt_id, preparing.ticket);
+            assert_eq!(outcome.revision, preparing.revision + 2);
+            let index = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
+            let terminal = index.head().unwrap().unwrap();
+            assert_eq!(terminal.state, State::RootCancellationAbsent);
+            assert_eq!(terminal.revision, outcome.revision);
+            assert!(index.successor_eligible(context, &terminal).unwrap());
+            assert!(
+                matches!(fs::symlink_metadata(profile.join(".codex")), Err(e) if e.kind() == std::io::ErrorKind::NotFound)
+            );
+            assert_eq!(
+                super::super::super::TreeSnapshot::read(
+                    &PinnedDirectory::open(&old_root).unwrap(),
+                )
+                .unwrap(),
+                predecessor_tree
+            );
+            fs::write(
+                root.join("native-preservation-result.json"),
+                serde_json::to_vec_pretty(&serde_json::json!({
+                    "scenario":"successor-cancel-action", "predecessor":closed,
+                    "successorPreparing":preparing, "successorTerminal":terminal,
+                    "predecessorActionElapsedMs":cancellation_elapsed,
+                    "actionElapsedMs":action_ms, "budgetMs":10000,
+                    "oldArchiveDriftRefused":true, "expiredReviewRefused":true,
+                    "revisionAndDigestMismatchRefused":true,
+                    "oldArchivePreserved":true, "eligibleForNextExplicitStart":true,
+                    "serviceStarted":false, "releaseAcceptance":false
+                }))
+                .unwrap(),
+            )
+            .unwrap();
+            return;
+        }
         fs::write(
             root.join("native-preservation-result.json"),
             serde_json::to_vec_pretty(&serde_json::json!({
