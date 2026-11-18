@@ -10,8 +10,9 @@ use sha2::{Digest, Sha256};
 use std::{
     fs::{self, File, OpenOptions},
     io::{self, Read, Seek, SeekFrom},
-    os::windows::fs::OpenOptionsExt,
+    os::windows::{fs::OpenOptionsExt, io::AsRawHandle},
     path::{Path, PathBuf},
+    sync::Mutex,
     time::Instant,
 };
 
@@ -195,13 +196,130 @@ pub(super) fn coordination_paths(client: &Path, root: &Path, digest: &str) -> [P
     ]
 }
 
+enum ClientPins {
+    Strict([PinnedDirectory; 2]),
+    Preflight([File; 2]),
+}
+
+struct ClientRoots {
+    pins: ClientPins,
+    children: [(PathBuf, FileIdentity); 2],
+}
+
+fn require_ntfs(file: &File, expected_volume: u32) -> io::Result<()> {
+    use std::ptr::null_mut;
+    use windows_sys::Win32::Storage::FileSystem::GetVolumeInformationByHandleW;
+
+    let mut name = [0u16; 16];
+    let mut volume = 0;
+    if unsafe {
+        GetVolumeInformationByHandleW(
+            file.as_raw_handle(),
+            null_mut(),
+            0,
+            &mut volume,
+            null_mut(),
+            null_mut(),
+            name.as_mut_ptr(),
+            name.len() as u32,
+        )
+    } == 0
+    {
+        return Err(io::Error::last_os_error());
+    }
+    if volume != expected_volume || !name[..5].iter().copied().eq("NTFS\0".encode_utf16()) {
+        return Err(invalid(
+            "fixture preflight requires the original NTFS volume",
+        ));
+    }
+    Ok(())
+}
+
+impl ClientRoots {
+    fn pins(&self) -> io::Result<&[PinnedDirectory; 2]> {
+        match &self.pins {
+            ClientPins::Strict(pins) => Ok(pins),
+            ClientPins::Preflight(_) => Err(invalid("fixture client pins unavailable")),
+        }
+    }
+
+    fn preflight(
+        &mut self,
+        parent: &PinnedDirectory,
+        end: Instant,
+        read: impl FnOnce(&Path, Instant) -> io::Result<()>,
+    ) -> io::Result<()> {
+        before(Some(end))?;
+        let [codex, grok] = self.pins()?;
+        let paths = [codex.path().to_owned(), grok.path().to_owned()];
+        let lineages = [
+            codex.owned_file_identities()?,
+            grok.owned_file_identities()?,
+        ];
+        let parent_ids = parent.owned_file_identities()?;
+        let fence = |index: usize| -> io::Result<File> {
+            let (path, expected) = &self.children[index];
+            if paths[index].parent() != Some(parent.path())
+                || path.parent() != Some(paths[index].as_path())
+                || lineages[index].len() != parent_ids.len() + 1
+                || !lineages[index].starts_with(&parent_ids)
+                || expected.volume != parent.identity().volume
+            {
+                return Err(invalid("fixture preflight path or lineage differs"));
+            }
+            let file = open_file(path, 1, true)?;
+            if coordination::file_id(&file)? != *expected {
+                return Err(invalid("fixture preflight child identity changed"));
+            }
+            require_ntfs(&file, expected.volume)?;
+            Ok(file)
+        };
+        // On NTFS the no-delete child handles prevent renaming either client
+        // root while the full preflight opens those roots with DELETE access.
+        // Keep the strict ancestor pin and both exact children until the strict
+        // leaf pins have been restored and checked. On failure keep the child
+        // handles and refuse any further actions on this test descriptor.
+        let guards = [fence(0)?, fence(1)?];
+        before(Some(end))?;
+        self.pins = ClientPins::Preflight(guards);
+        read(parent.path(), end)?;
+        before(Some(end))?;
+        let pins = [
+            canonical_pin(&paths[0], true)?,
+            canonical_pin(&paths[1], true)?,
+        ];
+        let ClientPins::Preflight(guards) = &self.pins else {
+            return Err(invalid("fixture preflight child pins unavailable"));
+        };
+        for ((pin, expected), (guard, (child, child_id))) in pins
+            .iter()
+            .zip(&lineages)
+            .zip(guards.iter().zip(&self.children))
+        {
+            if pin.owned_file_identities()? != *expected
+                || coordination::file_id(guard)? != *child_id
+                || coordination::file_id(&open_file(child, 1, true)?)? != *child_id
+            {
+                return Err(invalid("fixture preflight object changed"));
+            }
+            native::verify_private_file(guard)?;
+        }
+        parent.recheck()?;
+        before(Some(end))?;
+        self.pins = ClientPins::Strict(pins);
+        Ok(())
+    }
+}
+
 pub(crate) struct Isolation {
     token: TokenIdentity,
     profile: PinnedDirectory,
     installation: PinnedDirectory,
     data: PinnedDirectory,
     home: PinnedDirectory,
-    clients: [PinnedDirectory; 4],
+    client_parent: PinnedDirectory,
+    clients: Mutex<ClientRoots>,
+    coordination: PinnedDirectory,
     lock_paths: [PathBuf; 4],
     lock_files: [(File, FileIdentity); 4],
     host: RetainedPeer,
@@ -214,6 +332,7 @@ impl Isolation {
         config: &EmptyBootstrap,
         clients: [PinnedDirectory; 4],
         lock_paths: [PathBuf; 4],
+        grok_config_id: FileIdentity,
     ) -> io::Result<Self> {
         let host = RetainedPeer::current()?;
         let token = host.identity().token.clone();
@@ -241,7 +360,7 @@ impl Isolation {
         let installation = canonical_pin(&config.installation, true)?;
         let data = canonical_pin(&config.data, true)?;
         let home = canonical_pin(&config.home, true)?;
-        let lock_files = lock_paths
+        let lock_files: [(File, FileIdentity); 4] = lock_paths
             .iter()
             .map(|path| {
                 let file = open_file(path, 3, true)?;
@@ -254,13 +373,23 @@ impl Isolation {
         let image_path = installation.path().join("ocxd.exe");
         let image = checked_image(&image_path, &config.broker_sha256, None, true)?;
         host.verify_image(&image_path)?;
+        let [client_parent, codex, grok, coordination] = clients;
+        let children = [
+            (lock_paths[0].clone(), lock_files[0].1),
+            (grok.path().join("config.json"), grok_config_id),
+        ];
         let isolation = Self {
             token,
             profile,
             installation,
             data,
             home,
-            clients,
+            client_parent,
+            clients: Mutex::new(ClientRoots {
+                pins: ClientPins::Strict([codex, grok]),
+                children,
+            }),
+            coordination,
             lock_paths,
             lock_files,
             host,
@@ -271,16 +400,24 @@ impl Isolation {
         Ok(isolation)
     }
 
-    pub(crate) fn client_parent(&self) -> &Path {
-        self.clients[0].path()
+    pub(crate) fn preflight(&self, end: Instant) -> io::Result<()> {
+        self.recheck(end)?;
+        self.clients()?
+            .preflight(&self.client_parent, end, super::super::preflight_bounded)
+    }
+
+    fn clients(&self) -> io::Result<std::sync::MutexGuard<'_, ClientRoots>> {
+        self.clients
+            .try_lock()
+            .map_err(|_| invalid("fixture client pins busy or poisoned"))
     }
 
     pub(crate) fn pin_client_parent(&self) -> io::Result<PinnedDirectory> {
-        repeat_pin(&self.clients[0])
+        repeat_pin(&self.client_parent)
     }
 
     pub(crate) fn pin_client(&self) -> io::Result<PinnedDirectory> {
-        repeat_pin(&self.clients[1])
+        repeat_pin(&self.clients()?.pins()?[0])
     }
 
     pub(crate) fn lock_paths(&self) -> &[PathBuf; 4] {
@@ -348,9 +485,17 @@ impl Isolation {
             ids.push(id);
             Ok(())
         };
-        for pin in [&self.profile, &self.installation, &self.data, &self.home]
-            .into_iter()
-            .chain(&self.clients)
+        let clients = self.clients()?;
+        for pin in [
+            &self.profile,
+            &self.installation,
+            &self.data,
+            &self.home,
+            &self.client_parent,
+            &self.coordination,
+        ]
+        .into_iter()
+        .chain(clients.pins()?)
         {
             pin.owned_file_identities()?;
             unique(pin.identity())?;
@@ -380,6 +525,176 @@ fn repeat_pin(original: &PinnedDirectory) -> io::Result<PinnedDirectory> {
         return Err(invalid("fixture directory lineage changed"));
     }
     Ok(pin)
+}
+
+fn test_client_roots() -> (tempfile::TempDir, PinnedDirectory, ClientRoots) {
+    let temp = tempfile::tempdir().unwrap();
+    let real = fs::canonicalize(temp.path()).unwrap();
+    let base = canonical_pin(dunce::simplified(&real), false).unwrap();
+    let parent = create(&base, &base.path().join("clients")).unwrap();
+    let codex = create(&parent, &parent.path().join(".codex")).unwrap();
+    let grok = create(&parent, &parent.path().join(".grok")).unwrap();
+    let child = |path: PathBuf| {
+        let file = super::platform::create_new_private_file(&path, 0o600).unwrap();
+        let id = coordination::file_id(&file).unwrap();
+        (path, id)
+    };
+    let children = [
+        child(codex.path().join(".opencodex-native-main.claim.sqlite")),
+        child(grok.path().join("config.json")),
+    ];
+    let roots = ClientRoots {
+        pins: ClientPins::Strict([codex, grok]),
+        children,
+    };
+    (temp, parent, roots)
+}
+
+#[test]
+fn wl2_r7_isolation_preflight_keeps_client_names_and_restores_strict_pins() {
+    use super::super::{coordination::NativeLease, tree::AnchoredTree};
+    use std::time::Duration;
+
+    let (temp, parent, mut roots) = test_client_roots();
+    let children = roots.children.clone();
+    let claim_witness = open_file(&children[0].0, 3, true).unwrap();
+    let originals = roots
+        .pins()
+        .unwrap()
+        .each_ref()
+        .map(PinnedDirectory::identity);
+    let deadline = Instant::now() + Duration::from_secs(30);
+    let baseline = super::super::preflight_bounded(parent.path(), deadline).unwrap_err();
+    println!(
+        "strict pin full preflight raw={:?}",
+        baseline.raw_os_error()
+    );
+    assert_eq!(baseline.raw_os_error(), Some(32));
+    roots
+        .preflight(&parent, deadline, |path, end| {
+            assert_eq!(end, deadline);
+            for (name, (child, _)) in [".codex", ".grok"].into_iter().zip(&children) {
+                let leaf = path.join(name);
+                let moved = path.join("moved");
+                let file = OpenOptions::new()
+                    .access_mode(0x80030000)
+                    .share_mode(1)
+                    .custom_flags(0x2200000)
+                    .open(&leaf)?;
+                let rename = native::rename_original_handle(&file, &moved).unwrap_err();
+                println!(
+                    "{name} original DELETE handle rename raw={:?}",
+                    rename.raw_os_error()
+                );
+                drop(file);
+                let leaf_denied = fs::rename(&leaf, &moved).unwrap_err();
+                let child_denied = fs::rename(child, leaf.join("moved")).unwrap_err();
+                println!(
+                    "{name} leaf rename raw={:?}, child rename raw={:?}",
+                    leaf_denied.raw_os_error(),
+                    child_denied.raw_os_error()
+                );
+            }
+            let ancestor = fs::rename(path, path.with_extension("moved")).unwrap_err();
+            println!("ancestor rename raw={:?}", ancestor.raw_os_error());
+            super::super::preflight_bounded(path, end)?;
+            println!("fenced full preflight raw=0");
+            Ok(())
+        })
+        .unwrap();
+    let pins = roots.pins().unwrap();
+    assert_eq!(pins.each_ref().map(PinnedDirectory::identity), originals);
+    assert_eq!(
+        coordination::file_id(&claim_witness).unwrap(),
+        children[0].1
+    );
+    let restored = super::super::preflight_bounded(parent.path(), deadline).unwrap_err();
+    println!("restored strict pins raw={:?}", restored.raw_os_error());
+    assert_eq!(restored.raw_os_error(), Some(32));
+    fs::write(&children[1].0, b"fixture fence released").unwrap();
+
+    let [codex, grok] = pins.each_ref().map(PinnedDirectory::path);
+    let coordination = parent.path().with_file_name("coordination");
+    let coordination_pin = native::create_private_directory(&coordination).unwrap();
+    let paths = coordination_paths(codex, &coordination, &"a".repeat(64));
+    let stable = super::ANCHORED_CODEX_STABLE_FILES
+        .iter()
+        .skip(1)
+        .map(|name| codex.join(name));
+    for path in stable.chain(paths.iter().skip(1).cloned()) {
+        drop(super::platform::create_new_private_file(&path, 0o600).unwrap());
+    }
+    let witnesses = paths
+        .each_ref()
+        .map(|path| open_file(path, 3, true).unwrap());
+    let custody = ["custody-codex", "custody-grok"].map(|name| {
+        let path = parent.path().join(name);
+        drop(native::create_private_directory(&path).unwrap());
+        path
+    });
+    let mut lease = NativeLease::acquire_synthetic(&paths, deadline).unwrap();
+    {
+        let mut claim = lease.anchored_claim(codex, deadline).unwrap();
+        AnchoredTree::capture(codex, &custody[0], &mut claim, codex, deadline).unwrap();
+        AnchoredTree::capture(grok, &custody[1], &mut claim, codex, deadline).unwrap();
+    }
+    println!("restored strict pins with native claim/N/L/K and both anchored captures raw=0");
+    drop((lease, witnesses, coordination_pin));
+    drop((roots, parent, claim_witness));
+    let path = temp.path().to_owned();
+    temp.close().unwrap();
+    assert!(!path.exists());
+    println!("native preflight success fixture absent after cleanup");
+}
+
+#[test]
+fn wl2_r7_isolation_preflight_refuses_missing_identity_and_does_not_retry() {
+    use std::time::Duration;
+
+    let (temp, parent, mut roots) = test_client_roots();
+    let expired = roots
+        .preflight(&parent, Instant::now(), |_, _| panic!("expired preflight"))
+        .unwrap_err();
+    println!("expired preflight kind={:?}", expired.kind());
+    assert_eq!(expired.kind(), io::ErrorKind::TimedOut);
+    let deadline = Instant::now() + Duration::from_secs(30);
+    let original_id = roots.children[1].1;
+    roots.children[1].1 = roots.children[0].1;
+    let mismatch = roots
+        .preflight(&parent, deadline, |_, _| {
+            panic!("mismatched child accepted")
+        })
+        .unwrap_err();
+    println!("child identity mismatch={mismatch}");
+    assert!(mismatch.to_string().contains("child identity changed"));
+    assert!(roots.pins().is_ok());
+    roots.children[1].1 = original_id;
+    let failure = roots
+        .preflight(&parent, deadline, |_, _| {
+            Err(io::Error::from_raw_os_error(31))
+        })
+        .unwrap_err();
+    println!(
+        "original rejected preflight raw={:?}",
+        failure.raw_os_error()
+    );
+    assert_eq!(failure.raw_os_error(), Some(31));
+    assert!(roots.pins().is_err());
+    let denied = fs::rename(parent.path().join(".grok"), parent.path().join("moved")).unwrap_err();
+    println!(
+        "leaf still pinned after failure raw={:?}",
+        denied.raw_os_error()
+    );
+    assert!(roots
+        .preflight(&parent, deadline, |_, _| panic!(
+            "failed descriptor retried"
+        ))
+        .is_err());
+    drop((roots, parent));
+    let path = temp.path().to_owned();
+    temp.close().unwrap();
+    assert!(!path.exists());
+    println!("native preflight negative fixture absent after cleanup");
 }
 
 #[test]

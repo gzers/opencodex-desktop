@@ -1191,12 +1191,19 @@ async fn execute_admitted(
     // Original capture must precede the first official mutation. This read-only
     // gate uses the fixed r4 scope for NEW sessions, never a Full fallback. The
     // still-unfinished durable custody adapter cannot be bypassed on success.
-    let client_parent = plan.user_profile();
+    let preflight = || {
+        super::windows_client_originals024::preflight_bounded(
+            plan.user_profile(),
+            window.deadline(),
+        )
+    };
     #[cfg(test)]
-    let client_parent = isolation
+    let preflight = isolation
         .as_ref()
-        .map_or(client_parent, |scope| scope.client_parent());
-    super::windows_client_originals024::preflight_bounded(client_parent, window.deadline()).map_err(
+        .map_or_else(preflight, |scope| scope.preflight(window.deadline()));
+    #[cfg(not(test))]
+    let preflight = preflight();
+    preflight.map_err(
         |e| {
             fail(
                 "windows024_originals_security_unconfirmed",

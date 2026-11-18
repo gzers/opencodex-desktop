@@ -34,10 +34,10 @@ use std::{
 pub(crate) const SCOPE: &str = "isolated-r7-partial-capture-original-worker";
 pub(crate) const PROFILE: &str = r"C:\Users\marenben";
 const SID: &str = "S-1-5-21-587408064-856152790-2583328096-1003";
-const BASE: &str = r"C:\Users\marenben\ocx024-r7-isolated-owner-nine-r1";
-const PUBLIC: &str = r"C:\Users\Public\ocx-r7-isolated-owner-nine-r1";
+const BASE: &str = r"C:\Users\marenben\ocx024-r7-isolated-owner-nine-r2";
+const PUBLIC: &str = r"C:\Users\Public\ocx-r7-isolated-owner-nine-r2";
 const BUNDLE: &str =
-    r"C:\Users\Public\ocx-r7-isolated-owner-nine-r1\input\runtime-bundle-0.2.24-win32-x64.tar.gz";
+    r"C:\Users\Public\ocx-r7-isolated-owner-nine-r2\input\runtime-bundle-0.2.24-win32-x64.tar.gz";
 
 const BUNDLE_SHA: &str = "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7";
 
@@ -400,15 +400,17 @@ impl Fixture {
             .iter()
             .map(|name| (codex.join(name), &b""[..]))
             .collect();
+        let grok_config = grok.join("config.json");
         files.extend([
             (codex.join("config.toml"), &b"# synthetic r7 fixture\n"[..]),
             (codex.join("auth.json"), &b"{}\n"[..]),
-            (grok.join("config.json"), &b"{}\n"[..]),
+            (grok_config.clone(), &b"{}\n"[..]),
             (config, CONFIG),
         ]);
         let coordination_pin = isolation::create(base_pin, &root)?;
         let paths = isolation::coordination_paths(&codex, &root, &digest);
         files.extend(paths.iter().skip(1).map(|path| (path.clone(), &b""[..])));
+        let mut grok_config_id = None;
         for (path, bytes) in files {
             let parent = [&codex_pin, &grok_pin, home, &coordination_pin]
                 .into_iter()
@@ -427,6 +429,9 @@ impl Fixture {
                 return Err(invalid("fixture file differs from the create-only object"));
             }
             parent.recheck()?;
+            if path == grok_config {
+                grok_config_id = Some(created);
+            }
             rows.push(existing_file_snapshot(
                 &path,
                 bytes,
@@ -441,6 +446,7 @@ impl Fixture {
             c,
             [clients_pin, codex_pin, grok_pin, coordination_pin],
             paths,
+            grok_config_id.ok_or_else(|| invalid("fixture Grok config identity missing"))?,
         )?));
         let prepared = ledger.path().join("prepared.json");
         isolation::fixed_leaf(&ledger, &prepared)?;

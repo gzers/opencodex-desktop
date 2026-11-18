@@ -2,9 +2,9 @@ param(
     [Parameter(Mandatory)][ValidateSet('Host','DiagnosticBefore','Explicit','DiagnosticAfter')][string]$Mode
 )
 $ErrorActionPreference = 'Stop'
-$public = 'C:\Users\Public\ocx-r7-isolated-owner-nine-r1'
+$public = 'C:\Users\Public\ocx-r7-isolated-owner-nine-r2'
 $profile = 'C:\Users\marenben'
-$base = Join-Path $profile 'ocx024-r7-isolated-owner-nine-r1'
+$base = Join-Path $profile 'ocx024-r7-isolated-owner-nine-r2'
 $out = Join-Path $public 'out01'
 $image = Join-Path $base 'I\ocxd.exe'
 $utf8 = [Text.UTF8Encoding]::new($false)
