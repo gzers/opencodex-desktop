@@ -57,6 +57,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
     clientRecoveryRequired: false,
     lastStartFailed: false,
     processActionBusy: false,
+    processRequestPending: false,
     processAction: null as LifecycleAction | null,
     processProgressAction: null as LifecycleAction | null,
     processProgressOpen: false,
@@ -84,13 +85,14 @@ export const useLifecycleStore = defineStore("lifecycle", {
         || snapshot.source !== 'live' || snapshot.facts.data_root !== scope.dataRoot
         || snapshot.facts.opencodex_home !== scope.home || snapshot.facts.client_recovery !== 'not_required'
         || snapshot.matrix.runtime !== 'stopped' || snapshot.pid !== null || snapshot.port !== null
-        || !snapshot.can_start || snapshot.can_stop || snapshot.can_restart || this.processActionBusy) return false
+        || !snapshot.can_start || snapshot.can_stop || snapshot.can_restart || this.processActionBusy || this.processRequestPending) return false
       this.setStatusSnapshot(snapshot)
       this.clientRecoveryRequired = false; this.lastStartFailed = false; this.statusError = false
       this.lifecycleState = 'stopped'; this.runtimeState = 'stopped'
       return true
     },
     processActionBlocked(action: LifecycleAction) {
+      if (this.processRequestPending) return true
       const recovery = this.statusSnapshot?.facts.client_recovery
       if (recovery && recovery !== 'not_required') {
         if (action === 'start' || action === 'restart' && recovery !== 'active') return true
@@ -208,6 +210,10 @@ export const useLifecycleStore = defineStore("lifecycle", {
       if (runtime === "starting" || runtime === "pending" || runtime === "stopping") {
         this.processProgressSawTransition = true
       }
+      // Readiness can arrive before the lifecycle command returns and releases
+      // its backend mutation lease. Keep the original action busy until that
+      // exact request settles; the observed snapshot still updates normally.
+      if (this.processRequestPending) return
       const action = this.processAction
       const pidChanged = Boolean(
         this.processProgressStartPid &&
@@ -256,7 +262,8 @@ export const useLifecycleStore = defineStore("lifecycle", {
       if (this.processProgressAction) this.processProgressOpen = true
     },
     async requestProcessAction(action: LifecycleAction) {
-      if (this.processActionBusy || this.processActionBlocked(action)) return undefined
+      if (this.processActionBusy || this.processRequestPending || this.processActionBlocked(action)) return undefined
+      this.processRequestPending = true
       this.processActionBusy = true
       this.processAction = action
       this.processProgressAction = action
@@ -292,6 +299,7 @@ export const useLifecycleStore = defineStore("lifecycle", {
       }, action === "stop" ? LIFECYCLE_NOTICE_STOP_MS : LIFECYCLE_NOTICE_START_MS)
       try {
         const result = await runProcessAction(action)
+        this.processRequestPending = false
         this.lifecycleState = result.lifecycleState
         if (result.clientRecoveryRequired) this.clientRecoveryRequired = true
         else if (result.result === 'started' || result.result === 'stopped') this.clientRecoveryRequired = false
@@ -310,10 +318,13 @@ export const useLifecycleStore = defineStore("lifecycle", {
           this.finishProcessAction()
         } else if (action === "stop" && result.result === "stopped") {
           this.finishProcessAction()
+        } else {
+          this.syncProcessProgress(this.statusSnapshot)
         }
         void this.loadStatusSnapshot()
         return result
       } catch (error) {
+        this.processRequestPending = false
         this.processProgressError =
           action === "stop"
             ? "停止请求失败；已保留当前状态。"
