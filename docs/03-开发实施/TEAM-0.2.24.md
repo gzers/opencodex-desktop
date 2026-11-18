@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 63；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 65；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -486,3 +486,9 @@ Windows 源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 e479ab8a5b657fe
 共享 main 040f411e6d48d97bde6e7b2e6c22860e547b6173。原线程探针源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7，证据 007dd301f16e47ed9afd59f91a17b3687e8b4dd7，固定路径和摘要见 IMP203。写集沿 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 与 TEAM63。Mac 并行推进后继准备取消。
 
 > fetch 最新 docs/governance-main，按 TEAM64／IMP203／r7 执行。先消费已有 nine-r2/out01，为空时才在 marenben 普通 session 7、WinSta0/Default、无外层 Job 单跑固定 daae8ffff7f304ec28b9c0214db26691e930a395 的 Host。用 a7d7284a3280d973aaacddf361adae6f6dcc8a3c 核验原 30 秒内九次完整扫描、首次 Intent 前 raw31 且 Node 从未 Resume。保全该轮，停在 Explicit 前。新 range-r1 配对须现场确认真实桌面、令牌、Job 和父目录身份，独立证明同一存活 PID/FILETIME，并由原 worker 在 5 秒内复核原失败和准确 claim/N/L/K。齐备才跑 10 秒 Explicit 与 5 秒读回，证明唯一持久 V2 Intent/Pending 和独立字节回读。保留原失败及旧 r2，固定签名候选前保持单 SID 定向范围。回交 Git 原始证据。
+
+## revision65 nine-r2 证据已接收，转入 range-r1
+
+nine-r2 证据 cdf54c6a1cd095f8421c5e07a14929c30d6cc913 已按 IMP204 接收。沿 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 和 TEAM64 的单 SID、固定配对和写集继续。Mac 并行推进后继取消。
+
+> fetch 最新 docs/governance-main，按 TEAM65／IMP204／r7，保全已完成的 nine-r2。用 IMP203 的 range-r1 固定配对在 marenben session 7 真实普通桌面单跑 Host，现场核 WinSta0/Default、普通令牌、无外层 Job 及父目录身份。独立确认同一存活 PID/FILETIME，并在原 DiagnosticBefore 5 秒由原 worker 核原失败和准确 claim/N/L/K。齐备才做 10 秒 Explicit 和 5 秒读回，证明唯一持久 V2 Intent/Pending 和独立字节读回。首错或未知保全并回交 Git。旧现场继续保全，固定签名候选前维持单 SID 定向验证。

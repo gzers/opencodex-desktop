@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 202；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 204；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2206,3 +2206,13 @@ Windows 核验器源码 673d1166334c4fb78d5094bc09ef130e578e0991，证据 644f8b
 固定测试配对位于 `C:/Users/Public/ocx-r7-isolated-owner-range-r1`。EXE SHA-256 `1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8`，运行时 SHA-256 `14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7`。源码改动沿 TEAM63／r7 的测试专用范围，三个路径常量 BASE、PUBLIC、BUNDLE 与启动器同批绑定。此处接收制品与暂存证据，真实 Host 与 5／10／5 秒动作按 TEAM64 取证。
 
 nine-r1 在 6,460 ms 后 raw32，仅三次完整扫描且未建立原 worker。PID 95724 的 raw5 无法确认身份或缺席。独立旧官方 r2 三件原件仍在保管，24 个 Job 成员 Unknown/raw50，命令谱系 raw64，executionReady=false。普通用户 MSI raw1625、原件恢复、生产单 SID 及签名候选仍待验收。公开 Start 保持拒绝。[固定证据](https://github.com/gzers/opencodex-desktop/tree/007dd301f16e47ed9afd59f91a17b3687e8b4dd7/.adg/evidence/0.2.24/windows-dev/wl2-r7-probe-staging-20261118-r1)
+
+## revision204 接收 Windows nine-r2 单宿主诊断
+
+证据提交 cdf54c6a1cd095f8421c5e07a14929c30d6cc913，测试源码配对 daae8ffff7f304ec28b9c0214db26691e930a395，镜像 SHA-256 ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030。独立复核全部 14 项清单成员、字节数与 SHA-256。归档核验器与 a7d7284a3280d973aaacddf361adae6f6dcc8a3c 源码逐字节一致，本机离线重算退出码 0。
+
+原生回执记录普通用户 marenben 的 session 7，WinSta0/Default，无外层 Job。九次完整扫描用时 20,064 ms，在首次 Intent 前返回 raw31 windows024_v3_capture_required。注入时两棵树已捕获，两个 Intent/文件对均缺席，Node 从未 Resume。宿主 PID 133584、创建 FILETIME 134394870078415414、worker ThreadId(51)。离线结果的 liveProcessVerified 和 laterRangeContinuityVerified 均为 false。该轮保留原现场，止于宿主诊断。
+
+后继按 TEAM65 使用 IMP203 的固定 range-r1 配对独立补验。nine-r1 的 PID 95724 仍为 raw5，身份与缺席未知。独立旧官方 r2 仍保有三件原件，24 个 Job 成员 Unknown/raw50，谱系 raw64，executionReady=false。普通用户 MSI raw1625、生产恢复、生产单 SID 与签名候选仍待验。公开 Start 保持拒绝。
+
+[原始证据](https://github.com/gzers/opencodex-desktop/tree/cdf54c6a1cd095f8421c5e07a14929c30d6cc913/.adg/evidence/0.2.24/windows-dev/wl2-r7-nine-r2-host-20261118-r1)
