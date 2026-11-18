@@ -1,0 +1,35 @@
+$ErrorActionPreference='Stop'
+$launcher='C:/Users/Public/ocx-r7-isolated-owner-range-r1/launch-r7-partial-owner.ps1'
+$sha=(Get-FileHash -LiteralPath $launcher -Algorithm SHA256).Hash.ToLowerInvariant()
+if ($sha -cne 'b7207c94ceb391230639fb6230e4fe228faed874e39ece68e75c27f2d3487b4f') { throw 'Unexpected launcher bytes' }
+$tokens=$null; $parseErrors=$null
+$ast=[System.Management.Automation.Language.Parser]::ParseFile($launcher,[ref]$tokens,[ref]$parseErrors)
+if ($parseErrors.Count) { throw 'Launcher parse failed' }
+$gate=@($ast.FindAll({param($node) $node -is [System.Management.Automation.Language.IfStatementAst] -and $node.Extent.Text.Contains('Diagnostic did not observe Required within the original Status budget.') -and $node.Extent.Text.Contains('CheckAttachment $facts.snapshot')},$true))
+if ($gate.Count -ne 1) { throw 'Expected one diagnostic acceptance branch' }
+$line=$gate[0].Extent.StartLineNumber
+$gateBlock=[scriptblock]::Create($gate[0].Extent.Text)
+function Check($Condition,$Reason) { if (!$Condition) { throw $Reason } }
+function SameData($Left,$Right) { return $Left -eq $Right }
+function CheckOriginalWorker($Worker,$Injection) {}
+function CheckPendingWorker($Snapshot,$Injection) {}
+function ReadJson($Path) { if ($Path -like '*Explicit-result.json') { @{passed=$true;recoveryActionId='synthetic-action'} } else { @{} } }
+function CheckAttachment($Snapshot,$Injection,$ImageProof) { Start-Sleep -Milliseconds $delay; $script:readbackCompletedMs=$clock.ElapsedMilliseconds; return @('synthetic-byte-readback') }
+function ReadPreparationScans($Path) { return @() }
+function CheckPreparationScans($Scans,$FailedAction,$SourceDigest) {}
+$Mode='DiagnosticAfter'
+$out='unused'
+$injection=@{}
+$expectedWorker=@{actionId='synthetic-action';workerThread='synthetic-thread';preparationPending='synthetic-pending'}
+$facts=@{snapshot=$expectedWorker;sameSampleStatus=@{sameSample=$true;recovery='Required';payload=@{recoveryWorker=$expectedWorker}}}
+$results=@(foreach ($delay in @(0,5100)) {
+    $result=@{manager=@{elapsedMs=0;result=@{refused=$false}}}
+    $readbackCompletedMs=$null
+    $clock=[Diagnostics.Stopwatch]::StartNew()
+    & $gateBlock
+    $clock.Stop()
+    if (!$result.attachment -or $null -eq $readbackCompletedMs) { throw 'Expected to reach independent readback' }
+    [ordered]@{mockedReadbackDelayMs=$delay;managerReportedMs=$result.manager.elapsedMs;readbackCompletedMs=$readbackCompletedMs;acceptanceBranchReturned=$true;outsideOriginalBudget=($readbackCompletedMs -ge 5000)}
+})
+if ($results[0].outsideOriginalBudget -or !$results[1].outsideOriginalBudget) { throw 'Synthetic timings did not straddle original deadline' }
+[ordered]@{launcher=$launcher;launcherSha256=$sha;launcherBranchStartLine=$line;powerShellVersion=$PSVersionTable.PSVersion.ToString();observedAtUtc=[DateTime]::UtcNow.ToString('o');isolatedSyntheticDependencies=$true;cases=$results} | ConvertTo-Json -Depth 6

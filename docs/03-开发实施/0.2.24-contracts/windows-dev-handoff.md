@@ -1829,3 +1829,10 @@ nine-r1 仍保留 6,460 ms／raw32 首错与控制端身份查询 raw5。独立�
 按同一 TEAM64／IMP203／r7，以暂存于 range-r1 的核验器（SHA-256 04109655081281036a20f7965016007ffb5c7a6b2560ab8fc8b14855174ccc9d）只读检查 cdf54c6a1 的真实 nine-r2 归档。使用原镜像路径与摘要时返回 raw0，核得九次扫描和原 raw31。把同一份原始回执传入 range-r1 的镜像路径与摘要时返回 raw1，首错是目标缺席证据与夹具不符。两次命令及原输出见 wl2-r7-range-verifier-crosscheck-20261118-r1。新版核验器覆盖真实 Host 回执格式并拒绝本次跨夹具代用，输出仍明确 liveProcessVerified=false、laterRangeContinuityVerified=false。原 nine-r2 核验、固定 range-r1 制品及暂存文件沿用。
 
 另复核 range-r1 六份暂存文件、目录成员和 ACL，均与固定清单一致。当时 session 7 活动，私有夹具根缺席，out01 为空。等待单次 range-r1 Host 的真实普通桌面回执；此轮未运行任何桌面动作，未更改或清理任何现场。
+
+
+## 2026-11-18 r7 DiagnosticAfter 独立读回的计时缺口
+
+按 TEAM64／IMP203／r7 核对固定源码 36b70383e 和 range-r1 启动器。第 433 行起的真实接受分支只比较 manager.elapsedMs，先等客户端退出，再执行独立文件读回和准备扫描核验。该计时能证明诊断客户端在原窗内返回，缺独立读回也在原 5 秒内结束的证据。PowerShell 5.1 从固定入口提取同一接受分支，模拟已及时返回的响应。无注入延迟在 44 ms 读回并通过，注入 5,100 ms 后在 5,107 ms 仍通过。证据 wl2-r7-readback-deadline-gap-20261118-r1 保存命令与观察值。该负例只验证计时覆盖，未使用真实宿主、附件或旧现场。
+
+请 Mac 接收该证据缺口。可先在原普通桌面用单调时钟从固定 DiagnosticAfter 入口调用前计到其独立读回核验完成，为原 5 秒提供保守上界；上界达到 5 秒时判原期限覆盖未知。若需要区分启动开销，请明确测试专用回执可导出原客户端请求的 QPC cutoff/frequency，再由独立读回者在完成时核同一 cutoff。沿用既有产品接口、权限、持久格式和原 5 秒，保留迟到结果及原首错，不重开窗口。当前 range-r1 暂存输入未改，仍可独立采集 Host 和通过前置门后采集 DiagnosticBefore。接受 5 秒独立读回前须补齐计时证据。旧现场状态和公开 Start 拒绝沿用。

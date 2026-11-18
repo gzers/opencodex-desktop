@@ -1,0 +1,28 @@
+{
+  "contract": "TEAM64 / IMP203 / windows-preresume-recovery-performance-r7",
+  "sourceCommit": "36b70383eac5c44dffc51d34a4c4673cd8a3dbf7",
+  "launcher": "C:/Users/Public/ocx-r7-isolated-owner-range-r1/launch-r7-partial-owner.ps1",
+  "launcherSha256": "b7207c94ceb391230639fb6230e4fe228faed874e39ece68e75c27f2d3487b4f",
+  "launcherBranchStartLine": 433,
+  "powerShellVersion": "5.1.26100.33438",
+  "observedAtUtc": "2026-11-18T15:45:42.9552300Z",
+  "raw": 0,
+  "isolatedSyntheticDependencies": true,
+  "cases": [
+    {
+      "mockedReadbackDelayMs": 0,
+      "managerReportedMs": 0,
+      "readbackCompletedMs": 44,
+      "acceptanceBranchReturned": true,
+      "outsideOriginalBudget": false
+    },
+    {
+      "mockedReadbackDelayMs": 5100,
+      "managerReportedMs": 0,
+      "readbackCompletedMs": 5107,
+      "acceptanceBranchReturned": true,
+      "outsideOriginalBudget": true
+    }
+  ],
+  "method": "Executed the exact staged launcher acceptance branch extracted by the PowerShell parser, with synthetic diagnostics and a delayed independent-readback stand-in. The measured interval bounds the whole synthetic branch, whose manager result is already available. No product, fixture, or old scene operation ran."
+}
