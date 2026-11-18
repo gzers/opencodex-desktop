@@ -1,0 +1,50 @@
+{
+  "arguments": [
+    "D:\\Users\\15119\\WorkSpace\\Code\\tools\\opencodex-desktop\\.toolchain\\rustup\\toolchains\\stable-x86_64-pc-windows-msvc\\bin\\cargo.exe",
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps\\desktop\\tauri\\Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "4",
+    "external_steps",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "targetDir": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product",
+  "sources": [
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_record.rs",
+      "bytes": 8035,
+      "sha256": "f5d3413f98aec87da71183997cd641d9edb64b078579d1fdf0684fae4b5c06ea"
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_whole_tree.rs",
+      "bytes": 20518,
+      "sha256": "c3f93d3028a6e3dd99d0b9804036a7f314e872600c64192e592da54a514f7745"
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+      "bytes": 17850,
+      "sha256": "dd134b31001f6cc3ba18c81ceb84370a8a22a9df568bd2f5cb2f39befb104e8d"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs",
+      "bytes": 24825,
+      "sha256": "f664fda231ab9f998264eef23fc290aa7714ae0beaeca0652dbb693fb1fd3bc2"
+    }
+  ]
+}

@@ -1757,3 +1757,11 @@ Harness 10/10、MSVC x64 产品测试库 13/13，均 raw0。制品 SHA-256 分�
 消费 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 65835a0b3726d50f18018fbb8d8b8f6375ad286b、TEAM59／IMP198／r7。Windows 代码 a7d7284a3280d973aaacddf361adae6f6dcc8a3c 已推送。独立校验重算固定官方 2.99 镜像清单的原序列化摘要，核对 current、官方归档、运行时包及完整读回。此前仅核导出摘要，改写 Node 摘要并同步更新导出长度与摘要后仍会被接受。此批一组有效合成信封、六组改写反例、旧校验复现及真实 nine-r1 拒绝均符合预期。首启动 raw9009 为本地 Python shim，改用同一 Python 的真实路径后通过。原输出、测试源、暂存输入摘要及夹具缺席见 wl2-r7-runtime-report-gate-20261118-r1。
 
 marenben session 7 的已运行入口为 nine-r1，首错 6,460 ms／raw32，worker 尚未创建，PID 95724 和文件保留。nine-r2 的五个暂存文件已核 SHA-256，入口语法通过，out01 仍空。待普通桌面单次 Host 回执，核九次完整扫描、原 worker、raw31 和从未 Resume 后才进入 5／10／5 秒。旧原包 r2 继续受 Job 24 项 Unknown/raw50 与命令谱系 raw64 阻塞，executionReady=false、approvalRequested=false。普通 per-user MSI raw1625、生产单 SID、正式原包闭环和固定候选待验，公开 Start 维持拒绝。
+
+## 2026-11-18 r7 外部修复释放后原件读回
+
+输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 65835a0b3726d50f18018fbb8d8b8f6375ad286b、TEAM59／IMP198／r7 D 节。源码 def21dfe1c3645c8d838b1ec01727b8dc392f546 已推送。产品链接的合成反例在准确 claim/N/L/K 显式释放和独立重取后，改写已经归还的 config.toml。旧夹具错误写出第十三条 completion.json，测试首错为 raw101，反例得到 Ok。修复在原 10 秒期限内，于完成记录发布前重读已有记录、完整成员、四处留位、三件归还原件和三份退休副本的身份、八项安全投影和字节。反例保留原编辑与十二条移动记录，正常路径继续通过。
+
+MSVC x64 产品测试库 14/14、raw0，制品 SHA-256 8be7b249774d2f10f4f1ccdca7d1bd4a186362031c62c26e3225a846a71641e2。原始日志、被错误签为完整的合成现场归档、制品摘要和 28 个已核缺席的夹具根见 wl2-r7-post-release-drift-20261118-r1。首次构建缓存冷启动以单任务排队，主动中止后以四任务继续，单独保留中止记录。失败现场逐文件摘要与归档回读通过后才清理，构建生成的未跟踪 schema 也已核摘要并移除。
+
+当前旧原包 r2 仍缺原 Job 完整覆盖和命令谱系，无法形成可执行恢复计划，executionReady=false、approvalRequested=false。marenben 的 nine-r1 PID 95724 和现场保留，nine-r2 仍未见 Host 回执。公开 Start 维持拒绝。该批通过范围为外部修复合成测试夹具。
