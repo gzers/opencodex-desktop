@@ -53,9 +53,24 @@ fn r7_partial_actual_collect_keeps_pending_invalid_coordinator_handle_and_comple
     std::fs::write(&owner, b"invalid original SQLite fixture").unwrap();
     let mut nodes = Vec::new();
     let mut pending = None;
+    let mut pending_locator = None;
     let end = Instant::now() + Duration::from_secs(5);
-    assert!(collect(&root, "", true, &mut nodes, &mut 0, &mut pending, end).is_err());
+    assert!(collect(
+        &root,
+        "",
+        true,
+        &mut nodes,
+        &mut 0,
+        &mut pending,
+        &mut pending_locator,
+        end
+    )
+    .is_err());
     assert!(!nodes.is_empty() && pending.is_some());
+    assert_eq!(
+        pending_locator,
+        Some((ANCHORED_CODEX_STABLE_FILES[1].into(), Kind::Coordinator))
+    );
     assert!(nodes.iter().all(|n| n.state == State::Original));
     let retained_id = id(pending.as_ref().unwrap(), false).unwrap();
     let file = OpenOptions::new()
@@ -87,6 +102,7 @@ fn r7_partial_actual_collect_unknown_stream_retains_deny_write_delete_original_a
     std::fs::write(&ads, b"unknown original stream").unwrap();
     let mut nodes = Vec::new();
     let mut pending = None;
+    let mut pending_locator = None;
     assert!(collect(
         &root,
         "",
@@ -94,10 +110,12 @@ fn r7_partial_actual_collect_unknown_stream_retains_deny_write_delete_original_a
         &mut nodes,
         &mut 0,
         &mut pending,
+        &mut pending_locator,
         Instant::now() + Duration::from_secs(5)
     )
     .is_err());
     assert!(pending.is_some());
+    assert_eq!(pending_locator, Some(("config.toml".into(), Kind::File)));
     assert!(nodes.iter().all(|n| n.state == State::Original));
     assert!(std::fs::OpenOptions::new().write(true).open(&file).is_err());
     assert!(std::fs::remove_file(&file).is_err());
@@ -116,11 +134,23 @@ fn r7_partial_actual_collect_success_retains_all_native_ids8_and_bytes_without_p
     let end = Instant::now() + Duration::from_secs(5);
     let mut nodes = Vec::new();
     let mut pending = None;
+    let mut pending_locator = None;
     let mut bytes = 0;
-    collect(&root, "", true, &mut nodes, &mut bytes, &mut pending, end).unwrap();
+    collect(
+        &root,
+        "",
+        true,
+        &mut nodes,
+        &mut bytes,
+        &mut pending,
+        &mut pending_locator,
+        end,
+    )
+    .unwrap();
     assert_eq!(nodes.len(), 4);
     assert_eq!(bytes, b"synthetic existing original bytes".len());
     assert!(pending.is_none());
+    assert!(pending_locator.is_none());
     for node in &nodes {
         assert_eq!(node.state, State::Original);
         assert_eq!(

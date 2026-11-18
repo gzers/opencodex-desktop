@@ -87,6 +87,27 @@ fn main() {
         &repo,
         "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
     );
+    let attachment = source(
+        &repo,
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record.rs",
+    );
+    let storage_module = "#[cfg(windows)]\nmod storage;\n#[cfg(windows)]\npub(super) use storage::AttachmentStorage;\n";
+    let data_tests = "#[path = \"before_resume_record/tests.rs\"]\nmod tests;";
+    assert_eq!(attachment.matches(storage_module).count(), 1);
+    assert_eq!(attachment.matches(data_tests).count(), 1);
+    let tests = source(
+        &repo,
+        "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record/tests.rs",
+    );
+    fs::write(out.join("before_resume_record_tests.rs"), tests).unwrap();
+    fs::write(
+        out.join("before_resume_record_data.rs"),
+        outer_docs(&attachment.replace(storage_module, "").replace(
+            data_tests,
+            "mod tests { include!(concat!(env!(\"OUT_DIR\"), \"/before_resume_record_tests.rs\")); }",
+        )),
+    )
+    .unwrap();
     let between = |text: &str, start: &str, end: &str| -> String {
         let start = text.find(start).expect("exact native source section start");
         let end = text[start..]
