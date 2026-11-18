@@ -1634,3 +1634,11 @@ Public 暂存已核验，输出为零，私有夹具根缺席。marenben session
 最小共享请求：请在 program_selection.rs 提供复用现有 CompleteImage 实现的 action-deadline 入口，将调用方原 Instant 向下传给 Windows inventory_until，并对同一读取的成功返回核对期限。由共享 LaunchPlan::prepare 与 verify_full 在 Windows 上分别使用该入口和现有 verify_until；保留原 Current 前后围栏、树和关键文件覆盖、首错与未知拒绝。请回交同一原期限传递、正常完整读回和期限已过拒绝的证据。Windows 接到共享接口后自行接入第三次读取，并逐项记录两处缺失计时。只涉及共享实现和其验证，四 trait、持久格式与各动作预算沿用。这里缺的是扫描内部的协作式截止检查，单次同步系统调用仍可能逾期；没有跨调用持续固定同一整树和全部字节的等价证据，保留九次读取。
 
 此 Git 请求只阻塞入口预算修正。现有 marenben 定向制品和七条计时门槛仍可按原合同执行并分开报告，独立 10 秒恢复仍核三条扫描。此次源码复核未运行扫描或改变暂存。session 7 为 Disc，out01 零文件。旧 r2 的 24 项 Unknown／raw50 和 executionReady=false 沿用。
+
+## 2026-11-18 r7 九次首启扫描计时补齐
+
+输入 main 6bafdd342e69ee83e842f4b35a20bafa1320645a，governance f1f041bf1e783a2cef54eb6fdc08b39697926cf5，TEAM55／IMP194／r7。Windows 源码 21d1e31bebf336b78a5bedcccf27dbcc44304279，测试制品 SHA-256 89028619e4015fca83ea7beb9a44ea79631478d256ad32d818dc666934dd3296。仅测试路径新增 LaunchPlan::prepare 与 Windows read_complete 计时。新启动器核对三条入口再接六条原线程扫描，各阶段序号从一开始，九条记录共享 Start 原 30 秒。准备扫描仍核原失败动作、原镜像摘要及同一 10 秒。入口 inventory 传入原截止时间仍待上文共享接口。
+
+原始证据见 wl2-r7-nine-scan-timing-20261118-r1。MSVC 定向编译 raw0，146071 ms。原线程测试 3/3，PowerShell 5.1 扫描夹具 16/16，包含遗漏入口、错序、失败与截止拒绝。首错为调用命令遗漏目录分隔符 raw-196608，随后夹具误依赖旧启动器 RequireAbsent raw1，两次原输出均保留。成功夹具已核实缺席。编译生成的 schema 归档并回验摘要，代码工作树清洁。
+
+marenben session 7 已连接。既有暂存五件输入复核摘要一致，仍与七条门槛和原制品 f0e00e93b49f47f565b2aa2f8096e041b8bc9d22ad30c83935dfcb598f22ff0a 配对。out01 仍为空，未观察到新 Host。真实原 Owner 的 30／5／10／5 秒、未 Resume、原范围、V2 Intent/Pending 刷盘回读及清理仍待。旧 r2 的 24 项 Unknown／raw50、首错 command-lineage raw64、三件原件和执行拒绝沿用。完整归还、生产生命周期与普通 per-user MSI 仍待，公开 Start 持续拒绝。

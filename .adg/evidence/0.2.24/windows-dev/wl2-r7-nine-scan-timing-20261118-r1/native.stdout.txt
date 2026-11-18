@@ -1,0 +1,9 @@
+
+running 3 tests
+test infrastructure::windows_official_lifecycle024::start_worker::tests::wl2_r7_same_start_queue_admits_only_one_known_unresumed_failure ... one recovery dispatched to original Start thread; Running/Unknown/uncertain Resume and replay refused; first raw33 preserved
+ok
+test infrastructure::windows_official_lifecycle024::start_worker::tests::wl2_r7_start_worker_status_stays_bounded_and_reports_lost_worker_unknown ... ok
+test infrastructure::windows_official_lifecycle024::start_worker::tests::wl2_r7_start_worker_waiter_drop_preserves_first_result_and_rejects_late_success ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2306 filtered out; finished in 0.01s
+

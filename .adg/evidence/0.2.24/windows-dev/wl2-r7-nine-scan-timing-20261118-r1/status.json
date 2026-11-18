@@ -1,0 +1,33 @@
+{
+  "code": "21d1e31bebf336b78a5bedcccf27dbcc44304279",
+  "main": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+  "governance": "f1f041bf1e783a2cef54eb6fdc08b39697926cf5",
+  "team": 55,
+  "imp": 194,
+  "contract": "windows-preresume-recovery-performance-r7",
+  "hypothesis": "The existing seven-scan fixture remains usable for original Owner qualification. The next artifact can separately measure all nine Start scans under the original deadline.",
+  "priorMatrix": "../wl2-r7-isolated-owner-20261118-r1/status.json",
+  "matrix": [
+    {"scope": "MSVC test artifact", "state": "passed", "raw": 0, "receipt": "compile-result.json"},
+    {"scope": "Native Start worker regression", "state": "passed, 3/3", "raw": 0, "receipt": "native-result.json"},
+    {"scope": "PowerShell 5.1 nine Start scan gate and three preparation scan gate", "state": "passed, 16/16 generated DATA checks", "raw": 0, "receipt": "gate.stdout.txt"},
+    {"scope": "Original seven-scan Public staging", "state": "verified all five input digests; this staging remains paired with its original launcher", "receipt": "desktop-readonly.json"},
+    {"scope": "Existing marenben session 7 ordinary desktop", "state": "connected; actual token, desktop and no-Job checks pending Host", "receipt": "desktop-readonly.json"},
+    {"scope": "Real Start 30s with pre-Resume raw31 and original claim/N/L/K", "state": "pending Host; no output or fixture-test process observed"},
+    {"scope": "DiagnosticBefore 5s, explicit V2 same-thread preparation 10s and DiagnosticAfter 5s", "state": "pending Host and three actual preparation scans"},
+    {"scope": "Nine actual scan durations and internal entry deadline", "state": "new artifact compiled; durations unobserved and internal deadline forwarding awaits shared API"},
+    {"scope": "New desktop fixture release and cleanup", "state": "pending authenticated desktop verification; local gate fixture absent", "receipt": "cleanup.json"},
+    {"scope": "Old r2 original return", "state": "blocked; 24 Unknown/raw50, command-lineage raw64, three originals held, executionReady=false", "receipt": "../wl2-r7-r2-readonly-20261117-receive-r1/exact-repair-plan.json"},
+    {"scope": "Production lifecycle, complete original return and ordinary per-user MSI", "state": "pending; historical MSI raw1625 retained"}
+  ],
+  "firstErrors": [
+    {"attempt": "initial PowerShell 5.1 gate invocation", "raw": -196608, "firstError": "The -File argument lacked the path separator and the runner did not open the script.", "receipt": "gate-first.stderr.txt"},
+    {"attempt": "second PowerShell 5.1 gate invocation", "raw": 1, "firstError": "The reusable harness called RequireAbsent, which this launcher does not define.", "receipt": "gate-second.stderr.txt"}
+  ],
+  "publicStartOpen": false,
+  "productionAccepted": false,
+  "currentR2Touched": false,
+  "published": false,
+  "dualSidRun": false,
+  "w2Run": false
+}
