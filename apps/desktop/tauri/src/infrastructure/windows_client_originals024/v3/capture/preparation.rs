@@ -97,3 +97,38 @@ impl PartialCaptureAnchor {
         })
     }
 }
+#[cfg(test)]
+impl CaptureSlot {
+    pub(in crate::infrastructure::windows_client_originals024) fn component_enroll_journal_prefix_for_test(
+        &mut self,
+        scope: String,
+        session: uuid::Uuid,
+        host: uuid::Uuid,
+        prefix: super::super::journal::JournalPreparation,
+    ) -> io::Result<()> {
+        if self.partial.is_some() || self.retained.is_some() {
+            return Err(invalid());
+        }
+        let mut anchor = PartialCaptureAnchor::new(scope, session, host);
+        anchor.journal_prefix = prefix;
+        self.partial = Some(anchor);
+        Ok(())
+    }
+    pub(in crate::infrastructure::windows_client_originals024) fn component_read_v2_preparation_for_test(
+        &mut self,
+        end: Instant,
+    ) -> io::Result<(serde_json::Value, serde_json::Value)> {
+        let (reference, data) = self
+            .partial
+            .as_mut()
+            .ok_or_else(invalid)?
+            .v2_reference_data(end)?;
+        if !reference.pending() {
+            return Err(invalid());
+        }
+        Ok((
+            serde_json::to_value(reference).map_err(|_| invalid())?,
+            data,
+        ))
+    }
+}

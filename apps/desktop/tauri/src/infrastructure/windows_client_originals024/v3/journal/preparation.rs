@@ -1,6 +1,7 @@
 //! Actual original initializer resources retained by the original CaptureSlot.
 //! No receipt/JSON constructor or fallback from failed initialization exists.
 use super::*;
+mod read;
 #[derive(Default)]
 pub(in crate::infrastructure::windows_client_originals024) struct JournalPreparation {
     directory: Option<PinnedDirectory>,

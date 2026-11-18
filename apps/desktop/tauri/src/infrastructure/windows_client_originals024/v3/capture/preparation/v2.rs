@@ -73,7 +73,7 @@ fn component(role: Role, objects: Vec<Object>) -> io::Result<Component> {
 }
 impl PartialCaptureAnchor {
     pub(in crate::infrastructure::windows_client_originals024) fn v2_reference_data(
-        &self,
+        &mut self,
         end: Instant,
     ) -> io::Result<(ReferenceV2, serde_json::Value)> {
         if Instant::now() >= end {
@@ -172,15 +172,13 @@ impl PartialCaptureAnchor {
                 &self.owner_scope,
             )?);
         }
-        if journal_members["attempted"] == true {
-            journal.push(opaque(
-                session,
-                Role::Journal,
-                journal.len(),
-                "journalPreparation",
-                &self.owner_scope,
-            )?);
-        }
+        let native_journal = if journal_members["attempted"] == true && self.journal.is_none() {
+            let (actual, observation) = self.journal_prefix.v2_native_objects(session, end)?;
+            journal.extend(actual);
+            Some(observation)
+        } else {
+            None
+        };
         let mut components = vec![
             component(Role::Source, source)?,
             component(Role::Custody, custody)?,
@@ -199,15 +197,19 @@ impl PartialCaptureAnchor {
             })
             .unwrap_or(SourceState::Unobserved {});
         let intent_projection = serde_json::json!({"sessionId":session.to_string(),"ownerInstanceId":self.host_instance_id.to_string(),"scope":self.owner_scope,"intents":self.intents.iter().map(projection_digest).collect::<io::Result<Vec<_>>>()?});
-        let stage_projection = serde_json::json!({"components":components,"directoryStages":stages.iter().map(projection_digest).collect::<io::Result<Vec<_>>>()?,"journalMembership":journal_members,"nativeReadErrors":errors,"failed":self.failed});
+        let stage_projection = serde_json::json!({"components":components,"directoryStages":stages.iter().map(projection_digest).collect::<io::Result<Vec<_>>>()?,"journalMembership":journal_members,"nativeJournalRead":native_journal,"nativeReadErrors":errors,"failed":self.failed});
         let reference = ReferenceV2::Preparation {
             owner_instance_id: self.host_instance_id.to_string(),
             source: source_state,
             intent_prefix_digest: projection_digest(&intent_projection)?,
             native_stage_prefix_digest: projection_digest(&stage_projection)?,
-            last_stage: if self.journal.is_some() {
+            last_stage: if self.journal.is_some()
+                || journal_members["completeOriginalJournal"] == true
+            {
                 Stage::CurrentPublished
-            } else if journal_members["currentOriginalHandle"] == true {
+            } else if journal_members["currentOriginalHandle"] == true
+                || journal_members["manifestOriginalHandle"] == true
+            {
                 Stage::HandleRetained
             } else if journal_members["manifestRecord"] == true {
                 Stage::JournalPublished
@@ -218,6 +220,11 @@ impl PartialCaptureAnchor {
                 || self.context.is_some()
                 || self.routes.is_some()
                 || self.content_start.is_some()
+                || journal_members["directory"] == true
+                || journal_members["peer"] == true
+                || journal_members["pins"]
+                    .as_u64()
+                    .is_some_and(|count| count > 0)
                 || stages.iter().any(|stage| {
                     stage["pendingOriginalHandle"] == true || stage["completePin"] == true
                 })

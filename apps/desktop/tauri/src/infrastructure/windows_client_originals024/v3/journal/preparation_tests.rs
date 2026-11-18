@@ -1,4 +1,6 @@
 use super::*;
+#[path = "preparation/read_tests.rs"]
+mod read_tests;
 use crate::infrastructure::windows_client_originals024::{tree::tests::Fixture, v3::tests::plan};
 use std::time::Duration;
 struct Scene {
