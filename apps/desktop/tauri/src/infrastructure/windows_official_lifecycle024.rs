@@ -1112,7 +1112,14 @@ async fn execute_admitted(
     {
         return Err(unknown(()));
     }
-    let plan = shared::LaunchPlan::prepare(runtime, command, window.deadline())?;
+    let prepare_plan = || shared::LaunchPlan::prepare(runtime, command, window.deadline());
+    #[cfg(test)]
+    let plan = super::windows_client_originals024::recovery_timing::verify_initial_image(
+        "launch-plan-prepare",
+        prepare_plan,
+    )?;
+    #[cfg(not(test))]
+    let plan = prepare_plan()?;
     if !same(
         plan.user_profile(),
         &platform::home_dir().ok_or_else(|| unknown(()))?,
@@ -1142,12 +1149,21 @@ async fn execute_admitted(
     #[cfg(not(test))]
     plan.verify_full(runtime)?;
     let root = plan.program_root().to_path_buf();
-    let selected = program_selection::read_complete(
-        &root,
-        crate::modules::data_root::layout::Platform::Windows,
-        "win32-x64",
-    )?
-    .ok_or_else(|| unknown(()))?;
+    let read_selection = || {
+        program_selection::read_complete(
+            &root,
+            crate::modules::data_root::layout::Platform::Windows,
+            "win32-x64",
+        )?
+        .ok_or_else(|| unknown(()))
+    };
+    #[cfg(test)]
+    let selected = super::windows_client_originals024::recovery_timing::verify_initial_image(
+        "windows-read-complete",
+        read_selection,
+    )?;
+    #[cfg(not(test))]
+    let selected = read_selection()?;
     let dir = data
         .join("logs")
         .join(format!("windows024-{}", uuid::Uuid::new_v4()));

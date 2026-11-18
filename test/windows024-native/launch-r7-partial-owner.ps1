@@ -68,16 +68,17 @@ function ReadInitialScans([string]$Path) {
 function CheckInitialScans($Reports) {
     $entry = @($Reports[1].scans)
     $worker = @($Reports[0].scans)
+    $expectedEntry = @('launch-plan-prepare', 'launch-plan', 'windows-read-complete')
     # Source capture includes a readback. Content capture and journal context
     # then both bracket their work with Source rechecks.
     $expectedWorker = @('source-capture') + (@('source-readback') * 5)
-    Check ($entry.Count -eq 1 -and $worker.Count -eq $expectedWorker.Count) 'Initial Start full scan count differs.'
+    Check ($entry.Count -eq $expectedEntry.Count -and $worker.Count -eq $expectedWorker.Count) 'Initial Start full scan count differs.'
     $scans = $entry + $worker
-    $operations = @('launch-plan') + $expectedWorker
+    $operations = $expectedEntry + $expectedWorker
     $remaining = 30000000
     for ($i = 0; $i -lt $scans.Count; $i++) {
         $scan = $scans[$i]
-        $ordinal = if ($i -eq 0) { 1 } else { $i }
+        $ordinal = if ($i -lt $entry.Count) { $i + 1 } else { $i - $entry.Count + 1 }
         $before = $scan.remainingBeforeUs
         $after = $scan.remainingAfterUs
         $elapsed = $scan.elapsedUs
