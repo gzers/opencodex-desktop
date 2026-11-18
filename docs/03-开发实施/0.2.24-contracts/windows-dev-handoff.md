@@ -1519,3 +1519,13 @@ MSVC 七组定向测试全部通过，15/15。产品三制品编译 raw0。58 �
 首编译 raw101，测试格式串报 expected comma，原日志保留。修正后 MSVC 起编 raw0，定向 5/5。测试制品 SHA-256 805630fe64161e3e21d4fb392b0bbd5878e4affc34a9faace182a26104986fcb。14 个成功夹具根核实缺席，Windows 生成 schema 归档后清理。本批无新产品制品。原始日志、源码摘要及累计 258 项状态见 wl2-r7-journal-replay-cost-20261118-r1。
 
 r2 继续沿用已核验归档。生产首错 command-lineage raw64，原 Job 24 项未知、raw50，executionReady=false。原现场保留。严格 V2 Pending 首次持久化等待已提交的 Mac 接口答复，公开 Start 保持拒绝。
+
+## 2026-11-18 r7 Journal 完整读回分段计量
+
+代码 6dbffae54c528750bfb6d5ad9b9e08dabaf78495 已推送并独立回读。输入仍为 main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 7cc64ed4ffd0f8b67f642e676290fbcfae7eac84、TEAM48／IMP187／r7。上轮独立重放证据 db96a3ebe7d816c081226297787c8a1fb0463d41 已独立回读。
+
+同一 MSVC debug 合成前缀含 12 次追加及最终复查，完整 Journal 读回 25 次、97869 μs。181 次 fresh 对象核验 51906 μs，配对的保留记录核验与字节读取 7529 μs，合占 60.73%。Current 字节和 typed 核验共 1907 μs，占 1.95%。逐组核对了顺序、记录数和预计读取字节，末次在原 10 秒内尚余 9572923 μs。保留记录读包含 pin、私有安全、身份及长度检查。fresh 读内的 8 项投影及前后读回用于拒绝漂移，本轮没有等价证据可去掉该检查或跨动作复用。数据仅覆盖一个合成初始前缀，真实恢复整链预算继续沿用既有失败结果。
+
+MSVC 测试编译和三开发制品编译均 raw0，定向 5/5。14 个已报告夹具根核实缺席，生成 schema 归档核摘要后清理。原日志、源绑定、测试与产品 SHA-256、清理清单、累计 260 项状态见 wl2-r7-journal-readback-stages-20261118-r1。
+
+r2 沿用既有全归档与 10 份只读回执。原 Job 24 项未知／raw50，executionReady=false，生产首错 command-lineage raw64。当前原件及进程继续保留。普通桌面私有 V2 无输出，严格 V2 Pending 初次持久化沿既有接口请求等待 Mac。公开 Start 保持拒绝。

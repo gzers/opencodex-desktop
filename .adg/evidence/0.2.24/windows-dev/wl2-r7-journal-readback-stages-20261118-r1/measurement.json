@@ -1,0 +1,54 @@
+{
+  "appends": 12,
+  "wholeReadbacks": 25,
+  "originalDeadlineSeconds": 10,
+  "lastCheckRemainingUs": 9572923,
+  "wholeReadbackUs": 97869,
+  "aggregateExpectedBytes": 1404813,
+  "stages": {
+    "journal-context-native": {
+      "count": 25,
+      "sumUs": 18340,
+      "medianUs": 566
+    },
+    "journal-record-fresh": {
+      "count": 181,
+      "sumUs": 51906,
+      "medianUs": 242
+    },
+    "journal-record-retained-read": {
+      "count": 181,
+      "sumUs": 7529,
+      "medianUs": 31
+    },
+    "journal-current-native": {
+      "count": 25,
+      "sumUs": 14286,
+      "medianUs": 463
+    },
+    "journal-current-bytes": {
+      "count": 25,
+      "sumUs": 395,
+      "medianUs": 12
+    },
+    "journal-current-typed": {
+      "count": 25,
+      "sumUs": 1512,
+      "medianUs": 52
+    },
+    "journal-membership": {
+      "count": 25,
+      "sumUs": 1862,
+      "medianUs": 59
+    }
+  },
+  "residualUs": 2039,
+  "perRecordPercent": 60.7291379292728,
+  "currentBytesAndTypedPercent": 1.9485230256771808,
+  "scope": [
+    "Debug MSVC synthetic initial node-event prefix, including final independent readback.",
+    "Retained record read includes native pin, private security, identity, length and byte checks.",
+    "Time includes stage instrumentation. The residual is unassigned wall time, including instrumentation and integer rounding.",
+    "No variance control, no full recovery or product acceptance."
+  ]
+}

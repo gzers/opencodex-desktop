@@ -1,0 +1,5 @@
+{
+  "hypothesis": "Within a complete Journal readback for the retained synthetic prefix, per-record fresh native proofs and retained record reads take more time than Current byte reads and typed validation.",
+  "falsifier": "Combined per-record work is no larger than Current byte read and typed validation, or aggregate rows fail exact prefix coverage.",
+  "scope": "Existing synthetic node prefix, same 10-second action. PrivateRecord retained read includes its internal pin/private/identity/size checks. No changes to production checks."
+}
