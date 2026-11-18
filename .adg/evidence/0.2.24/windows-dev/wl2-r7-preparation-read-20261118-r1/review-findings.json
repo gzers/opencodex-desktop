@@ -1,0 +1,10 @@
+{
+  "method":"source review during actual compilation; findings are not independent native acceptance",
+  "findings":[
+    {"item":"Native SnapshotData must stay nonClone","fix":"borrow original record security/raw/path fields directly; no baseline type/API widened","product01":"E0599 compile error retained; no native execution"},
+    {"item":"Complete native member-set read needs a second full file pass","fix":"read all original file rows again after first complete pass and compare, plus directory/pins/peer fences; add late member/file-security native negatives","expected":"any late drift refuses; no original mutation capability from successful diagnostic"},
+    {"item":"Journal role object IDs must remain stable as files appear","finding":"An aggregate ordinal derived from current row count would move as manifest/current become enrolled","nextAction":"reserve finite manifest/current/aggregate slots independent of current subset; assert stable labels/IDs across all initializer stage fixtures"}
+  ],
+  "nativeFullPartialRecoveryAccepted":false,
+  "currentR2Touched":false
+}

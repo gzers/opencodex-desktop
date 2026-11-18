@@ -1,0 +1,48 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::v3::journal::preparation::tests::read_tests::wl2_r7_preparation_read_native_every_original_initializer_prefix_preserves_pending_and_bytes ... r7 preparationread actualjournal fault1: retained files=0 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpzsER9l
+r7 preparationread actualjournal fault2: retained files=1 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmphEzxC0
+r7 preparationread actualjournal fault3: retained files=1 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpqnzyz6
+r7 preparationread actualjournal fault4: retained files=1 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpOjf6MA
+r7 preparationread actualjournal fault5: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpIJ2xaL
+r7 preparationread actualjournal fault6: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmptF5035
+r7 preparationread actualjournal fault7: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpJPQ21X
+r7 preparationread actualjournal fault8: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp2iPuTr
+r7 preparationread actualjournal fault10: retained files=1 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpQ8LooB
+r7 preparationread actualjournal fault11: retained files=2 originalbytes/IDs/all8/ADS/memberbeforeafter; rawprefix Pending unchanged, no Source/Owner/restore permission
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp40rJP4
+ok
+test infrastructure::windows_client_originals024::v3::journal::preparation::tests::read_tests::wl2_r7_preparation_read_native_expired_start_prefix_reads_without_mutation_reactivation ... r7 preparationread expired originalStart: same actual halfmanifest bytes read in caller5, no oldmutationreactivation/newcurrent/nativeproof
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmppWRfgB
+ok
+test infrastructure::windows_client_originals024::v3::journal::preparation::tests::read_tests::wl2_r7_preparation_read_native_mismatch_member_security_ads_and_cutoff_refuse ... r7 preparationread actualjournal refuses member: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp76wnqM
+r7 preparationread actualjournal refuses file-security: raw=None kind=PermissionDenied, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpip8jSf
+r7 preparationread actualjournal refuses directory-security: raw=None kind=PermissionDenied, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpFzZkQt
+r7 preparationread actualjournal refuses ads: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpKxqjxT
+r7 preparationread actualjournal refuses wrong-prefix: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpUAscID
+r7 preparationread actualjournal refuses expired: raw=None kind=TimedOut, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp8kESxo
+r7 preparationread actualjournal refuses unregistered: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpYCrQhT
+r7 preparationread actualjournal refuses late-member: raw=None kind=InvalidData, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpIIvSEy
+r7 preparationread actualjournal refuses late-file-security: raw=None kind=PermissionDenied, original resources retained/no repair
+r7-journal-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpjtRZzw
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2260 filtered out; finished in 3.56s
+

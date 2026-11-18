@@ -1,0 +1,26 @@
+{
+  "preparation": "rustfmt raw1 extra replaced-branch brace; exact v2-before-brace-fix.rs kept; no product/native started",
+  "product01": {
+    "raw": 101,
+    "elapsedMs": 71333,
+    "error": "E0599 immutable native SnapshotData has no Clone; native not executed",
+    "fix": "borrow original stored raw/path/security fields; no native type/API widening"
+  },
+  "product02": {
+    "raw": 0,
+    "elapsedMs": 161281,
+    "passed": "3actualnative tests20scenes"
+  },
+  "product03": {
+    "raw": 0,
+    "elapsedMs": 157895,
+    "passed": "10initializerstage nativefixtures stablemanifest/current/aggregate slots"
+  },
+  "product08": {
+    "raw": 0,
+    "elapsedMs": 158641,
+    "passed": "actual original CaptureSlot/PartialCaptureAnchor receives sameJournalPreparation in10faultstates; Sourceunknown meansPending"
+  },
+  "unexpectedNativeError": null,
+  "currentR2Touched": false
+}

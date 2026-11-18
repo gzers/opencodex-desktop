@@ -1,0 +1,46 @@
+{
+  "codeBefore": "077cbd56e103b9208450cbc3bc31274217a00656",
+  "mainInput": "88b8fc33d5ec21b54c494cdb529fd68026b3f8b9",
+  "docsInput": "4a09aa011c18d2880ed63bfb211694d49ed84669",
+  "authority": "TEAM33/IMP171/r7 unchanged",
+  "files": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation.rs",
+      "bytes": 14766,
+      "sha256": "5e401bb7200d0d91f27f5e50660be8dcf058f272ddfc856d303dd8ee844e382b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation/read.rs",
+      "bytes": 14224,
+      "sha256": "8d9b91c58f3d06b6855df9ee99947b8d31772a1003421798d14fea898ce6306b"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation_tests.rs",
+      "bytes": 10895,
+      "sha256": "ae611acdcba7fd53a7ae147fa87f8a5b5cb2ca998b0b75166c488aeab89f629e"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation/read_tests.rs",
+      "bytes": 13546,
+      "sha256": "346ff6283e5a24759cb7479e37f2dd3d1bcc86d3b85beef5458b821cdd8017b6"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2.rs",
+      "bytes": 9577,
+      "sha256": "4db42cf9df94ef45617164f5a3a01e57508f12327fdbf8a3b453ad532d1c0db0"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs",
+      "bytes": 4952,
+      "sha256": "389bed018192a8da0ca707dba142db22b084fe03e3b48aabaeec890fe9b9d7a1"
+    }
+  ],
+  "postProduct03Changes": [
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/journal/preparation/read_tests.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2.rs",
+    "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation.rs"
+  ],
+  "nativeReadImplementationUnchangedAfterProduct03": true,
+  "product02RefusalAndExpiredReadReused": "only later file_row output fixed finite slot label and stable DATA ordinal, no native-read checks/rights/limits changed; native read old negative assertions unchanged",
+  "notRealProductOwnerQualification": true
+}
