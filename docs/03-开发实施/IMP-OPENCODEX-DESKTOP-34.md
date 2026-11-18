@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 177；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 178；2026-11-18。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 15dbb82869ff02c4c2b5cf154869489afa92390d（非冻结候选）；Windows实现检查点codex/024-windows-native 96396f19bb03add0fdd29c56ec20fbeab189e6d3（r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -1952,3 +1952,12 @@ P24-NAME本次补齐配置事务＋官方新进程重新加载/目录回退组�
 main15dbb8286只收紧验证器：开跑先记录该新Profile的12准确路径全缺席，已有任何对象则拒绝，不进入cargo/官方进程；成功后复用已原生验证的准确task-key清理helper。清理失败即allPhasesPassed=false/保fixture，三个child raw0不能覆盖末端失败。新定向负例实际放一个自有task K后执行原driver预检，真实拒绝且0子进程调用/原字节不变/失败fixture保留；明确测试清理后原根与12key缺席。Python语法/diff过；真实原K释放清理和已有helper范围复用，不重跑未变的名称事务及六次官方刷新。新driver源码/实际负例/全部原字节摘要保留。
 
 产品后端与名称语义未改，Windows独占/四trait/r7和原30/5/10预算不变。NAME真实ChatGPT选择器工具禁用依赖、最终候选/重启回退、其它代次取消/中断与一般图、Windows完整原生和旧现场范围均按原计划保持。无正式发布或W2/双SID，目标active。
+
+
+### 2026-11-18 revision178：同验证器三份历史名称测试的准确协调清理
+
+按revision177已确认的同一生成路径，只补查channel-display-native-r1中native02/03/04三份已绑定结果；原结果逐Git字节一致、准确新/private/tmp/ocxd024-name-refresh-* Profile可追溯、根已缺席，原官方子进程均terminal（失败轮1、两成功轮各0/0/0），serviceStarted均false。每Profile只发现其catalog-write-locks单个任务K，其余N/H及sidecar缺席。
+
+[三例独立补证](../../.adg/evidence/0.2.24/channel-name-rollback-coordination-r1/historical/result.json)先留原字节/identity/owner/mode/nlink，原SQLite排他取得并释放、重核后只删三个准确K；原三根及36准确路径全部缺席，global L未动，当前其它Profile/Windows现场未选中。运行前外部缺席回执原轮次未采，仍不补造；native02的功能失败和原清理记录不改成通过。原round01及本三轮的后续清理事实分别保留，不重复原保存/六刷新或扩跑全量验收。
+
+本批只有事实/证据补充，main仍15dbb8286、TEAM39/r7与产品/Windows写集保持；实际ChatGPT选择器工具禁用和其余正式候选/原生/恢复未完项按revision176/177继续，目标active，不发布。
