@@ -65,6 +65,21 @@ describe('already retired root finalization',()=>{
 });
 afterEach(() => { views.forEach(v => v.unmount()); views = []; vi.restoreAllMocks() })
 describe('explicit client recovery interaction', () => {
+  it('reconciles a retained latch using unchanged closed-root previews around a fresh live snapshot without mutation',async()=>{
+    const closed={...preparing(),status:'restored' as const,phase:'root_cancellation_absent' as const,revision:4,planEvidence:'verified' as const,completionEvidence:'verified' as const,canCancelPreparation:false,preparationDigest:null}
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValue(closed)
+    const store=await inspect();expect(store.ready).toBe(true);expect(useLifecycleStore().clientRecoveryRequired).toBe(false)
+    expect(clientRecoveryApi.preview).toHaveBeenCalledTimes(2);expect(clientRecoveryApi.status).toHaveBeenCalledTimes(1)
+    expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled();expect(clientRecoveryApi.finalize).not.toHaveBeenCalled()
+  })
+  it.each(['changed','foreign-home','required','busy'] as const)('keeps the recovery latch when closed-root reinspection is %s',async mode=>{
+    const closed={...preparing(),status:'restored' as const,phase:'root_cancellation_absent' as const,revision:4,planEvidence:'verified' as const,completionEvidence:'verified' as const,canCancelPreparation:false,preparationDigest:null}
+    vi.mocked(clientRecoveryApi.preview).mockResolvedValueOnce(closed).mockResolvedValue(mode==='changed'?{...closed,revision:5}:closed)
+    if(mode==='busy')vi.mocked(clientRecoveryApi.status).mockRejectedValue({code:'status_sample_in_progress'})
+    else vi.mocked(clientRecoveryApi.status).mockResolvedValue(mode==='required'?status(true):mode==='foreign-home'?{...status(),facts:{...status().facts,opencodex_home:'/foreign'}}:status())
+    const store=await inspect();expect(store.ready).toBe(false);expect(useLifecycleStore().clientRecoveryRequired).toBe(true)
+    expect(clientRecoveryApi.cancelPreparation).not.toHaveBeenCalled();expect(clientRecoveryApi.finalize).not.toHaveBeenCalled()
+  })
   it.each([
     {phase:'preparing' as const,preparationKind:'created_root_capture' as const},
     {phase:'capture_reserved' as const,preparationKind:'created_root' as const},

@@ -68,6 +68,13 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
   const can = (value: ClientRecoveryAction) => ({ finalize: canFinalize.value, continue: canContinue.value, rollback: canRollback.value, rearm: canRearm.value, finishUnchanged: canFinishUnchanged.value, cancelPreparation: canCancelPreparation.value, preparePlan: canPreparePlan.value })[value]
   let generation = 0
   let completionScope: { dataRoot: string; home: string } | null = null
+  function verifiedClosedRoot(p: ClientRecoveryPreview): boolean {
+    return p.status==='restored' && (p.phase==='root_cancellation_absent'||p.phase==='root_absent')
+      && !!p.attemptId && Number.isSafeInteger(p.revision) && p.revision!>0
+      && p.planEvidence==='verified' && p.completionEvidence==='verified'
+      && (p.phase==='root_cancellation_absent'?p.originalEvidence==='not_recorded':p.originalEvidence==='verified')
+      && !p.canContinue&&!p.canRollback&&!p.canFinalize&&!p.canRearm&&!p.canPreparePlan&&!p.canFinishUnchanged&&!p.canCancelPreparation
+  }
   async function inspect() {
     if (executing.value || refreshing.value) return
     const seq = ++generation
@@ -78,6 +85,24 @@ export const useClientRecoveryStore = defineStore('client-recovery', () => {
       const p = await clientRecoveryApi.preview()
       if (seq !== generation || !open.value) return
       preview.value = p; checked.value = true
+      if (verifiedClosedRoot(p) && useLifecycleStore().clientRecoveryRequired) {
+        // Explicit read-only reinspection can reconcile a stale UI latch after
+        // a fully indexed root close. Preview alone never clears it: bracket a
+        // live same-scope status with another complete, unchanged preview.
+        const current=useLifecycleStore().statusSnapshot?.facts
+        if (!current?.data_root||!current.opencodex_home) return
+        const scope={dataRoot:current.data_root,home:current.opencodex_home}
+        try {
+          const snapshot=await clientRecoveryApi.status()
+          const confirmed=await clientRecoveryApi.preview()
+          if(seq!==generation||!open.value)return
+          if (!verifiedClosedRoot(confirmed)||confirmed.phase!==p.phase||confirmed.attemptId!==p.attemptId||confirmed.revision!==p.revision) {
+            preview.value=null;checked.value=false;error.value='原恢复记录已变化，请重新检查。';return
+          }
+          ready.value=useLifecycleStore().acceptFinalizedClientRecovery(scope,snapshot)
+          if(!ready.value) refreshError.value='恢复记录已核对，当前运行状态仍待核对；请重新检查。'
+        } catch { if(seq===generation&&open.value)refreshError.value='恢复记录已核对，运行状态读取失败；请重新检查。' }
+      }
     } catch (cause) { if (seq === generation && open.value) error.value = runtimeErrorText(cause) }
     finally { if (seq === generation) reading.value = false }
   }
