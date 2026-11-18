@@ -1619,3 +1619,18 @@ Windows 代码 4fc73cd1c26aa51fa288a3b436d2f0c050d36e1c 已推送并回读。启
 最终 MSVC 测试编译 raw0，五项隔离／引导负例全部通过，Windows PowerShell 5.1 解析通过。提交后复编三个正式形状的开发制品 raw0／119025 ms，均无测试入口特征。复用此前 15/15 扫描门槛与 11/11 DATA 证据。保留首编译 E0433／raw101、首个 junction 用例的入口路径 raw123 和筛选数误差时的原日志。新证据见 wl2-r7-isolated-owner-20261118-r1，含源／制品 SHA-256、暂存摘要及 ACL、原始编译／测试输出和清理回执。
 
 Public 暂存已核验，输出为零，私有夹具根缺席。marenben session 7 仍断开。重连后先执行 Host，先读取实际原 Owner 的 30 秒 Start、原锁及未 Resume 回执；符合准入后依次执行 DiagnosticBefore、Explicit、DiagnosticAfter，核对 5／10／5 秒独立期限、三次完整恢复扫描与 V2 flush／精确读回。旧 r2 的三件原件、原进程、原锁及已有只读归档继续保全。Job 24 项 Unknown／raw50、command-lineage raw64，executionReady=false。未启动旧原包或执行现场恢复。普通 MSI raw1625 与生产验收仍待。
+
+## 2026-11-18 r7 首启入口完整扫描预算接续
+
+源码复核固定在 1478fbd15a5acde54373bcee2af0559bade49afd，输入 TEAM54／IMP193。只统计已有隔离制品一次 Start 从 LaunchPlan 到 pre-manifest 注入的路径。若此前各步成功，源码显示入口三次，加原线程六次，共九次完整镜像扫描。实际到达次数和用时待 Host 日志。夹具安装与独立恢复另行计时。
+
+| 顺序 | 调用与覆盖 | 计时与期限 |
+| --- | --- | --- |
+| 1 | 共享 official_lifecycle024.rs 的 LaunchPlan::prepare 调用 program_selection::read_complete。读取 Current、版本清单、稳定入口和整树，按清单核对六个关键文件；返回前再执行 check_current。 | 原 Start 期限在 prepare 入口及最终 check_current 核对；内部 Windows inventory 收到 None。当前暂存 Host 没有该条计时。 |
+| 2 | Windows 生命周期入口调用 LaunchPlan::verify_full。对第一次选定的镜像核对前后 Current，并重算完整树摘要、读回原镜像清单。 | 现有 launch-plan 计时覆盖整个调用；内部 Windows inventory 收到 None，外侧 check_current 沿用原期限。 |
+| 3 | Windows 生命周期入口再次调用 program_selection::read_complete，取得后续 Owner 保存的 SelectedProgram，并用于打开固定的四个关键文件的句柄。后续另行核对客户端预检及原作用域。 | 内部 Windows inventory 收到 None。当前暂存 Host 没有该条计时；因此七条计时完整也无法逐次归因入口三次扫描。 |
+| 4–9 | 原 worker 的 Source 捕获和立即读回，随后内容捕获及 Journal 上下文各做前后 Source 读回。 | 六条计时，调用 program_image::verify_until，Windows inventory 收到同一原 Start 绝对期限。 |
+
+最小共享请求：请在 program_selection.rs 提供复用现有 CompleteImage 实现的 action-deadline 入口，将调用方原 Instant 向下传给 Windows inventory_until，并对同一读取的成功返回核对期限。由共享 LaunchPlan::prepare 与 verify_full 在 Windows 上分别使用该入口和现有 verify_until；保留原 Current 前后围栏、树和关键文件覆盖、首错与未知拒绝。请回交同一原期限传递、正常完整读回和期限已过拒绝的证据。Windows 接到共享接口后自行接入第三次读取，并逐项记录两处缺失计时。只涉及共享实现和其验证，四 trait、持久格式与各动作预算沿用。这里缺的是扫描内部的协作式截止检查，单次同步系统调用仍可能逾期；没有跨调用持续固定同一整树和全部字节的等价证据，保留九次读取。
+
+此 Git 请求只阻塞入口预算修正。现有 marenben 定向制品和七条计时门槛仍可按原合同执行并分开报告，独立 10 秒恢复仍核三条扫描。此次源码复核未运行扫描或改变暂存。session 7 为 Disc，out01 零文件。旧 r2 的 24 项 Unknown／raw50 和 executionReady=false 沿用。
