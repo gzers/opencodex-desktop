@@ -36,104 +36,140 @@ fn snapshot(
     time(deadline)?;
     index.check()?;
     if index.head()?.as_ref() != Some(head)
-        || head.state != State::Preparing
-        || head.references.is_some()
-        || head.restore_plan.is_some()
-        || head.root_retirement.is_some()
-        || head.completion_sha256.is_some()
         || context.working_directory != index.profile
         || context.opencodex_home != index.context_home
-        || index.client.path() != context.working_directory.join(".codex")
     {
         return Err(denied(
             "successor cancellation is not the current preparation",
         ));
     }
+    let connection = index.connection()?;
+    let history = vault_history::read(connection, head)?;
     let origin = index
         .root_registration
         .as_ref()
-        .filter(|r| r.id == head.ticket && r.generation_slot.as_deref() == Some(r.id.as_str()))
         .ok_or_else(|| denied("successor preparation lacks registered generation origin"))?;
-    let generation = head
-        .root_generation
-        .as_ref()
-        .ok_or_else(|| denied("successor preparation lacks its atomic initial event"))?;
-    let history = vault_history::read(index.connection()?, head)?;
-    let lineage = root_lineage::parse(&index.binding, &history)?;
-    let current = lineage.current();
-    let predecessor = history
-        .get(history.len().saturating_sub(2))
-        .ok_or_else(|| denied("successor predecessor is missing"))?;
-    if lineage.generations().len() < 2
-        || current.origin != *origin
-        || current.heads != std::slice::from_ref(head)
-        || generation.preparing_revision != head.revision
-        || generation.predecessor_revision != predecessor.revision
-        || predecessor.revision.checked_add(1) != Some(head.revision)
-        || generation.predecessor_sha256 != digest(&encode(predecessor)?)
-        || !matches!(
-            predecessor.state,
-            State::RootAbsent | State::RootCancellationAbsent
-        )
-        || predecessor.completion_sha256.is_none()
-    {
-        return Err(denied(
-            "successor preparation differs from its complete indexed predecessor",
-        ));
-    }
-    root_binding::verify_initial_event(index.connection()?, origin)?;
-    let manager = index.data.child_private("manager-state", false)?;
-    super::super::super::root_creation::verify_indexed(
-        &manager,
-        &index.data,
-        &index.profile,
-        &index.client,
-        origin,
-    )?;
-    if !super::super::super::tree::names(index.client.file())?.is_empty() {
-        return Err(denied("successor preparation contains new client data"));
-    }
-    // Ordinary cancellation's vault inspection accepts Restored/Unchanged
-    // attempts. Created-root generations instead require the full independent
-    // RootAbsent/cancelled-root lineage, archives and exact slot namespace.
-    let closures = vault_history::inspect_root_history(
-        &index.data,
-        &index.profile,
-        &index.binding,
-        &history,
-        None,
-    )?;
-    let tree = TreeSnapshot::read(&index.client)?;
-    let profile = PinnedDirectory::open(&index.profile)?;
-    let grok = GrokSnapshot::read(&profile)?;
-    let fingerprint = digest(&encode(&(
-        "macos-successor-preparation-review-v1",
-        head,
-        origin,
-        digest(&index.binding),
-        &history,
-        &closures,
-        tree,
-        &grok,
-    ))?);
+    let view = View {
+        connection,
+        binding: &index.binding,
+        data: &index.data,
+        client: &index.client,
+    };
+    let fingerprint = view.fingerprint(&index.profile, head, &history, origin)?;
     index.check()?;
-    if index.head()?.as_ref() != Some(head)
-        || vault_history::read(index.connection()?, head)? != history
-        || GrokSnapshot::read(&profile)? != grok
-        || !super::super::super::tree::names(index.client.file())?.is_empty()
-    {
+    if index.head()?.as_ref() != Some(head) || vault_history::read(connection, head)? != history {
         return Err(denied("successor preparation changed during full review"));
     }
-    super::super::super::root_creation::verify_indexed(
-        &manager,
-        &index.data,
-        &index.profile,
-        &index.client,
-        origin,
-    )?;
     time(deadline)?;
     Ok(fingerprint)
 }
+
+/// Read-only facts pinned by the caller's original index access and action lock.
+pub(in crate::infrastructure::macos_client_originals::session_index) struct View<'a> {
+    pub connection: &'a Connection,
+    pub binding: &'a [u8],
+    pub data: &'a PinnedDirectory,
+    pub client: &'a PinnedDirectory,
+}
+impl View<'_> {
+    pub fn fingerprint(
+        &self,
+        profile_path: &Path,
+        head: &Head,
+        history: &[Head],
+        origin: &super::super::super::root_creation::References,
+    ) -> io::Result<String> {
+        let Self {
+            connection,
+            binding,
+            data,
+            client,
+        } = *self;
+        if head.state != State::Preparing
+            || head.references.is_some()
+            || head.restore_plan.is_some()
+            || head.root_retirement.is_some()
+            || head.completion_sha256.is_some()
+            || client.path() != profile_path.join(".codex")
+            || origin.id != head.ticket
+            || origin.generation_slot.as_deref() != Some(origin.id.as_str())
+        {
+            return Err(denied(
+                "successor cancellation is not the current preparation",
+            ));
+        }
+        let generation = head
+            .root_generation
+            .as_ref()
+            .ok_or_else(|| denied("successor preparation lacks its atomic initial event"))?;
+        let lineage = root_lineage::parse(binding, history)?;
+        let current = lineage.current();
+        let predecessor = history
+            .get(history.len().saturating_sub(2))
+            .ok_or_else(|| denied("successor predecessor is missing"))?;
+        if lineage.generations().len() < 2
+            || current.origin != *origin
+            || current.heads != std::slice::from_ref(head)
+            || generation.preparing_revision != head.revision
+            || generation.predecessor_revision != predecessor.revision
+            || predecessor.revision.checked_add(1) != Some(head.revision)
+            || generation.predecessor_sha256 != digest(&encode(predecessor)?)
+            || !matches!(
+                predecessor.state,
+                State::RootAbsent | State::RootCancellationAbsent
+            )
+            || predecessor.completion_sha256.is_none()
+        {
+            return Err(denied(
+                "successor preparation differs from its complete indexed predecessor",
+            ));
+        }
+        root_binding::verify_initial_event(connection, origin)?;
+        let manager = data.child_private("manager-state", false)?;
+        super::super::super::root_creation::verify_indexed(
+            &manager,
+            data,
+            profile_path,
+            client,
+            origin,
+        )?;
+        if !super::super::super::tree::names(client.file())?.is_empty() {
+            return Err(denied("successor preparation contains new client data"));
+        }
+        // Ordinary cancellation's vault inspection accepts Restored/Unchanged
+        // attempts. Created-root generations instead require the full independent
+        // RootAbsent/cancelled-root lineage, archives and exact slot namespace.
+        let closures =
+            vault_history::inspect_root_history(data, profile_path, binding, history, None)?;
+        let tree = TreeSnapshot::read(client)?;
+        let profile = PinnedDirectory::open(profile_path)?;
+        let grok = GrokSnapshot::read(&profile)?;
+        let fingerprint = digest(&encode(&(
+            "macos-successor-preparation-review-v1",
+            head,
+            origin,
+            digest(binding),
+            history,
+            &closures,
+            tree,
+            &grok,
+        ))?);
+        if GrokSnapshot::read(&profile)? != grok
+            || !super::super::super::tree::names(client.file())?.is_empty()
+        {
+            return Err(denied("successor preparation changed during full review"));
+        }
+        super::super::super::root_creation::verify_indexed(
+            &manager,
+            data,
+            profile_path,
+            client,
+            origin,
+        )?;
+        Ok(fingerprint)
+    }
+}
+
 impl Index {
     /// This fact review borrows the original index. It creates no file, plan,
     /// receipt, native lease or mutation capability and never renews a deadline.

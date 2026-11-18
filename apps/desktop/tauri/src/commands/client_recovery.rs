@@ -54,15 +54,47 @@ pub async fn client_recovery_preview(
     data: tauri::State<'_, SharedDataRoot>,
     context: tauri::State<'_, SharedProcessContext>,
 ) -> AppResult<Preview> {
-    let data = data.0.clone();
-    let context = context.inner().clone();
-    super::run_readonly("inspect current client recovery",move||{
-        #[cfg(target_os="macos")]
-        {Ok(crate::infrastructure::macos_client_originals::session_index::preview::inspect_preview(&context,&data))}
-        #[cfg(not(target_os="macos"))]
-        {let _=(data,context);Ok(Preview{status:"unsupported",phase:None,revision:None,attempt_id:None,
-            original_evidence:"unknown",plan_evidence:"unknown",completion_evidence:"unknown",phase_count:0,can_continue:false,can_rollback:false,can_finalize:false,can_rearm:false,can_prepare_plan:false,plan_digest:None,can_finish_unchanged:false,can_cancel_preparation:false,preparation_digest:None,unchanged_digest:None,rollback_digest:None,rearm_digest:None,confirmation_digest:None})}
-    }).await
+    #[cfg(target_os = "macos")]
+    {
+        use crate::infrastructure::macos_client_originals::session_index::preview;
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+        let data = data.0.clone();
+        let context = context.inner().clone();
+        let work = super::run_readonly("inspect current client recovery", move || {
+            Ok(preview::inspect_preview_until(&context, &data, deadline))
+        });
+        match tokio::time::timeout_at(tokio::time::Instant::from_std(deadline), work).await {
+            Ok(result) if std::time::Instant::now() < deadline => result,
+            _ => Ok(Preview::unknown()),
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        let _ = (data, context);
+        Ok(Preview {
+            status: "unsupported",
+            phase: None,
+            revision: None,
+            attempt_id: None,
+            original_evidence: "unknown",
+            plan_evidence: "unknown",
+            completion_evidence: "unknown",
+            phase_count: 0,
+            can_continue: false,
+            can_rollback: false,
+            can_finalize: false,
+            can_rearm: false,
+            can_prepare_plan: false,
+            plan_digest: None,
+            can_finish_unchanged: false,
+            can_cancel_preparation: false,
+            preparation_digest: None,
+            unchanged_digest: None,
+            rollback_digest: None,
+            rearm_digest: None,
+            confirmation_digest: None,
+        })
+    }
 }
 #[tauri::command]
 pub async fn client_recovery_finalize(

@@ -407,6 +407,18 @@ fn successor_and_history(
             .is_err());
         drop(review);
         drop(successor);
+        let preview_started = Instant::now();
+        let preview = super::super::preview::inspect_preview(context, data);
+        let preview_ms = preview_started.elapsed().as_millis();
+        assert!(preview_ms < 5000);
+        assert_eq!(preview.status, super::super::preview::Status::Pending);
+        assert_eq!(preview.phase, Some(State::Preparing));
+        assert_eq!(preview.preparation_kind, Some("successor_root"));
+        assert_eq!(
+            preview.preparation_digest.as_deref(),
+            Some(fingerprint.as_str())
+        );
+        assert!(!preview.can_cancel_preparation);
         let reopened = Index::open_existing(context, data, &profile.join(".codex")).unwrap();
         reopened
             .review_successor_root_preparation(context, &preparing, review_end)
@@ -435,6 +447,7 @@ fn successor_and_history(
                 "originalFourNativeScopesReleased":true, "canonicalCancellationClosed":true,
                 "predecessor":closed, "successorPreparing":preparing,
                 "reviewElapsedMs":review_ms,"reviewBudgetMs":10000,"fingerprint":fingerprint,
+                "previewElapsedMs":preview_ms,"previewBudgetMs":5000,"previewFingerprintMatches":true,
                 "factsOnlyReopenReviewed":true,"oldCancelledArchiveDriftRefused":true,
                 "successorCaptureOrMovementStarted":false,"serviceStarted":false,
                 "elapsedActionMs":cancellation_elapsed,"budgetMs":10000,"releaseAcceptance":false

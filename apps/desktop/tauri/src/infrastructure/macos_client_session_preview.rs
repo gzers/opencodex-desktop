@@ -1,6 +1,6 @@
 //! Read-only projection inside the index observer's existing shared action
 //! lock. No source/baseline learning, receipt adoption or mutation authority.
-use super::*;
+use super::{generation::preparation_cancellation::View, *};
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Status {
@@ -47,6 +47,9 @@ pub struct Preview {
     pub confirmation_digest: Option<String>,
 }
 impl Preview {
+    pub fn unknown() -> Self {
+        Self::unavailable(Status::Unknown)
+    }
     pub fn unsupported() -> Self {
         Self::unavailable(Status::Unsupported)
     }
@@ -82,7 +85,7 @@ pub(super) fn project(
     data: &Path,
     head: Option<&Head>,
 ) -> io::Result<Preview> {
-    project_history(context, data, head, &[], None)
+    project_history(context, data, head, &[], None, None)
 }
 fn project_history(
     context: &ProcessContext,
@@ -90,6 +93,7 @@ fn project_history(
     head: Option<&Head>,
     history: &[Head],
     root_origin: Option<&super::super::root_creation::References>,
+    view: Option<View<'_>>,
 ) -> io::Result<Preview> {
     let Some(head) = head else {
         return Ok(Preview {
@@ -198,7 +202,16 @@ fn project_history(
         return Ok(preview);
     }
     if matches!(head.state, State::Preparing | State::CaptureReserved) {
-        if root_origin.is_some() {
+        if let Some(origin) = root_origin {
+            if head.state == State::Preparing && origin.generation_slot.is_some() {
+                let view =
+                    view.ok_or_else(|| denied("successor preview lacks pinned observation"))?;
+                preview.preparation_digest =
+                    Some(view.fingerprint(&context.working_directory, head, history, origin)?);
+                preview.preparation_kind = Some("successor_root");
+                preview.attempt_id = Some(head.ticket.clone());
+                return Ok(preview);
+            }
             preview.preparation_digest =
                 root_cancellation::confirmation(context, data, head, history, root_origin)?;
             preview.can_cancel_preparation = preview.preparation_digest.is_some();
@@ -350,8 +363,27 @@ fn project_history(
     Ok(preview)
 }
 pub fn inspect_preview(context: &ProcessContext, data: &Path) -> Preview {
-    observation::inspect_map_history_root(context, data, |head, history, origin| {
-        project_history(context, data, head, history, origin)
-    })
-    .unwrap_or_else(|_| Preview::unavailable(Status::Unknown))
+    let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+    inspect_preview_until(context, data, deadline)
+}
+
+pub fn inspect_preview_until(
+    context: &ProcessContext,
+    data: &Path,
+    deadline: std::time::Instant,
+) -> Preview {
+    if std::time::Instant::now() >= deadline {
+        return Preview::unknown();
+    }
+    let observed =
+        observation::inspect_map_history_view(context, data, |head, history, origin, view| {
+            if std::time::Instant::now() >= deadline {
+                return Err(denied("recovery preview expired"));
+            }
+            project_history(context, data, head, history, origin, view)
+        });
+    if std::time::Instant::now() >= deadline {
+        return Preview::unknown();
+    }
+    observed.unwrap_or_else(|_| Preview::unknown())
 }
