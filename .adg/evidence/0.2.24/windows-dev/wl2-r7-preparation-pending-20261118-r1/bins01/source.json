@@ -1,0 +1,56 @@
+{
+  "sources": [
+    {
+      "bytes": 16345,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/adapter/before_resume.rs",
+      "sha256": "567cae056b50817bb229ed83a2f7b5e9b178dd21e22b72ab19d8ff4b740a0f75"
+    },
+    {
+      "bytes": 21367,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/before_resume_record_v2.rs",
+      "sha256": "165cb07549e99c295ca59fcbacfae825e70426effefdfc01242d16ccb37f6652"
+    },
+    {
+      "bytes": 26638,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "sha256": "c7028eb0097530400df853918aacfda2c2612f61e50bf59cfa2a418d28ecb24e"
+    },
+    {
+      "bytes": 5747,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/bound.rs",
+      "sha256": "7f456116b1dcf4735f85d074539864217b709432478275833d6069a967183255"
+    },
+    {
+      "bytes": 5246,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture/preparation/v2/tests/binding_tests.rs",
+      "sha256": "828e13a0d8f113340c6ef5bb84312e8d8767421355d2ee07b27289fc219d1ace"
+    },
+    {
+      "bytes": 20147,
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024/start_worker.rs",
+      "sha256": "fbf46f30af56c304b80ef02709d82b2fd68c0cf51568ff6d6ca40ee4146fa38d"
+    }
+  ],
+  "codeRoot": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code",
+  "arguments": [
+    "build",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.dev.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.dev.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.dev.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--bins",
+    "-j",
+    "1"
+  ],
+  "currentR2Touched": false
+}

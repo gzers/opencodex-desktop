@@ -1,0 +1,17 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_same_start_native_recovery_keeps_original_ranges_until_explicit_release ... same Start epoch and actual four ranges blocked competing handles (raw33) until explicit recovery release; pinned identities/security/bytes equal
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmped58kV
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_same_start_native_rejects_wrong_origin_epoch_expiry_and_missing_range ... same Start recovery wrong-action refused; no receipt and every surviving range remained locked
+same Start recovery wrong-epoch refused; no receipt and every surviving range remained locked
+same Start recovery expired refused; no receipt and every surviving range remained locked
+same Start recovery missing-range refused; no receipt and every surviving range remained locked
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpg6jZtY
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmplfggLv
+ok
+test infrastructure::windows_official_lifecycle024::start_worker::tests::wl2_r7_same_start_queue_admits_only_one_known_unresumed_failure ... one recovery dispatched to original Start thread; Running/Unknown/uncertain Resume and replay refused; first raw33 preserved
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2287 filtered out; finished in 0.30s
+

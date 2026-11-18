@@ -1,0 +1,14 @@
+{
+  "historicExeSha256": null,
+  "tests": [
+    "infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_each_partial_open_and_range_failure_retains_exact_owned_resources",
+    "infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_invalid_bytes_or_ads_keep_original_open_and_preceding_ranges",
+    "infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_missing_reserved_range_revokes_authority_and_keeps_claim",
+    "infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_real_sqlite_busy_each_role_keeps_foreign_transaction_and_own_prefix",
+    "infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_success_transfers_same_files_ranges_once_and_expiry_never_retries"
+  ],
+  "reason": "Original binary was overwritten before an attributable hash.",
+  "historicAccepted": false,
+  "historicSource": ".adg/evidence/0.2.24/windows-dev/wl2-r7-start-worker-20261118-r1/r1",
+  "sameNames": true
+}

@@ -1,0 +1,13 @@
+{
+  "id": "r7-partial-preparation-durability",
+  "scope": "future Windows Owner isolated D only",
+  "decisionNeeded": "Confirm whether the original worker may create a strict V2 attachment in the original host-private D when complete claim/NLK cannot be proved, or define the point that may first become durable.",
+  "boundaries": [
+    "Use a private attachment parent tied to the original Owner and directory object identity before the first capture, if approved.",
+    "Keep the exact original session/action/source/partial prefix, per-action new directory, same worker and original 10-second recovery window.",
+    "No writes to client roots, claim or coordination, no fabricated manifest, no unlock/reacquire, no termination, no restore authority.",
+    "Keep exact bytes only in memory and expose two digests with durable=false until the boundary is settled."
+  ],
+  "currentR2Unaffected": true,
+  "publicStartOpen": false
+}

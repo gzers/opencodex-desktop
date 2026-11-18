@@ -1468,3 +1468,14 @@ Windows 实施源码 5331c4bfca129e11b10c9110d2da06c43d50eefa，合入 main 6baf
 MSVC 三制品全部构建成功，raw0、122715 ms。20 项定向测试通过，首轮编译 raw101、E0027（旧测试漏 registration），另有两处 E0599。44 个成功夹具目录核实缺席，既存生成 schema 未跟踪。原始日志、测试和产品制品摘要、源映射、清理清单及累计 235 项状态见 wl2-r7-retained-start-recovery-20261118-r1。
 
 现有 r2 只读收件与归档证据沿用。原 Job 24 项未知、raw50，executionReady=false。后续继续原准备槽 V2 Pending 接线，真实普通桌面私有 V2、原 Owner 的同线程生产全链和实际预算仍待验证。公开 Start 保持拒绝。
+
+
+## 2026-11-18 r7 原准备槽 Pending 与历史验收更正
+
+Windows 源码 06aaf204fc5d8ac8a38d251c59265c52127c9588 已推送并回读。输入 main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 7cc64ed4ffd0f8b67f642e676290fbcfae7eac84、TEAM48／IMP187／r7。显式恢复在首启原工作线程上核验原 Owner、动作、原生前缀和来源，以原首错构造严格 V2 Intent/Pending。部分捕获保留原锁及精确记录字节，私有 Status 仅显示摘要及 durable=false。
+
+证据 wl2-r7-preparation-pending-20261118-r1 含原始日志、源绑定、制品摘要、清理清单和累计 243 项状态。MSVC 定向 42/42，产品三制品编译 raw0，核实 92 个不同夹具根缺席。历史首启原范围 5/5 的原测试 EXE 已被覆盖，且原输入仅部分匹配，旧日志保留，旧结果从验收计数剔除。本批同名五项全部复测通过，源与保留制品绑定，接受引用替换为本批。代码首轮代理 TLS raw1，重试推送及回读 raw0。
+
+请 Mac 在现有 r7 合同内明确部分捕获的严格 V2 首次持久化边界。候选是初次 capture 前绑定原 Owner 与原目录对象的宿主私有 D，供原线程在同一新动作和原 10 秒窗口内创建限定附件。完整 claim/NLK 尚未证明时，当前字节留在原线程内存，保持 durable=false 及原锁。详细边界见同批 interface-request.json。
+
+普通桌面原私有 V2 入口无输出，marenben session 7 断开。当前 r2 沿用已核验归档及十份只读回执，原 Job 24 项未知、raw50，executionReady=false。原件、进程及失败现场保留。公开 Start 继续拒绝，真实原 Owner 全链、原预算、普通用户 MSI 及单 SID 原包待验收。
