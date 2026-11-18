@@ -1555,3 +1555,11 @@ r2 沿用既有全归档与 10 份只读回执。原 Job 24 项未知／raw50，
 ## 2026-11-18 r7 当前 r2 载入版本的 Resume 路径复核
 
 核对原输入映像摘要、源码 357210891f14a1851881e6192bd09d7031471707、Git 对象及已有同 SID 回执。原 Node 只在 capture 成功后才走唯一 Resume 调用。首轮失败返回时原完成阶段为空，随后只进入只读 Status 与显式 forced cleanup 的控制循环。后续原代次单线程 Suspended 与历史回执一致。原 Job 当前 24 项未知／raw50，完整从未 Resume 证据组合仍待，executionReady=false。此次只读现有 Git 和归档，未接触活现场。源码复核及累计 272 项见 wl2-r7-r2-loaded-source-review-20261118-r1。
+
+## 2026-11-18 r7 完整扫描最终校验的目录 ADS 反例
+
+输入 main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 433dd879f894e60d285e4725b49e1b360f3c7038、TEAM51／IMP190／r7。代码 5a694a21f162a7b37042b616b27b213ea4a9078e 仅新增 Windows 原生定向测试。三件普通文件完整读完并汇合后，在原空目录写入并读回 ADS，普通目录成员仍为空。本次扫描返回 runtime_image_unconfirmed。移除夹具 ADS 后，完整清单与串行参考一致。既有 P1 全量扫描和固定副本 2634.174 ms 证据沿用。
+
+MSVC 首编译 raw101、E0609，错误为直接读取 AppError 的 code。改为匹配 RuntimeManaged 后复编 raw0／140248 ms，定向 1/1。测试 EXE SHA-256 d58b2616507adef02f51bfc8d1088051c5f4eca75a9cdd4b458808424dfcfdbc。夹具目录缺席，生成 schema 核摘要归档后移除。原日志、制品摘要和累计 273 项见 wl2-r7-late-directory-stream-20261118-r1。产品构建沿用 7fb2f8706 的证据。
+
+r2 十份只读回执及归档继续沿用，原 Job 24 项未知／raw50，executionReady=false。独立普通桌面实际 Owner 准入沿既有 ordinary-owner-admission-request.json 等待决定。现场恢复仍需完整原 Job 证据和单独授权，公开 Start 继续拒绝。

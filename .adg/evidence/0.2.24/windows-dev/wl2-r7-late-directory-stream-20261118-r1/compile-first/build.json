@@ -1,0 +1,30 @@
+{
+  "elapsedMs": 51790,
+  "base": "7fb2f870683566487cd0fee236f03dfa90fee93c",
+  "schemaInitiallyAbsent": true,
+  "source": "apps/desktop/tauri/src/modules/runtime/program_image_windows_tests.rs",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "sourceSha256": "acb76f71fa67ce480d958234b32e168bd23d72492101e9719f120a3ca1c4800b",
+  "raw": 101
+}
