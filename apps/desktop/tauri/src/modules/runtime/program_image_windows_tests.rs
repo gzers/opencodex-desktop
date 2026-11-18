@@ -246,6 +246,45 @@ fn r7_image_pinned_objects_deny_content_write_delete_and_same_name_replacement()
     assert_ne!(windows::inventory(&root, None).unwrap(), pinned);
 }
 #[test]
+fn r7_image_stale_enumeration_type_refuses_both_replacement_directions() {
+    use std::sync::atomic::{AtomicBool, Ordering};
+
+    for initially_directory in [false, true] {
+        let scene = Scene::new();
+        let root = scene.root();
+        let leaf = root.join("child");
+        if initially_directory {
+            fs::create_dir(&leaf).unwrap();
+        } else {
+            fs::write(&leaf, b"original file").unwrap();
+        }
+        let replaced = AtomicBool::new(false);
+        let result = windows::inventory_checked(&root, None, 4, &|stage| {
+            if stage == "root-children-listed" {
+                assert!(!replaced.swap(true, Ordering::AcqRel));
+                if initially_directory {
+                    fs::remove_dir(&leaf).unwrap();
+                    fs::write(&leaf, b"replacement file").unwrap();
+                } else {
+                    fs::remove_file(&leaf).unwrap();
+                    fs::create_dir(&leaf).unwrap();
+                }
+            }
+            assert_ne!(stage, "all-objects-pinned");
+            Ok(())
+        });
+        assert!(replaced.load(Ordering::Acquire));
+        assert!(
+            matches!(result, Err(crate::errors::AppError::RuntimeManaged { ref code, .. }) if code == "runtime_image_unconfirmed")
+        );
+        assert_eq!(
+            windows::inventory(&root, None).unwrap(),
+            inventory_serial(&root).unwrap()
+        );
+    }
+}
+
+#[test]
 fn r7_image_pinned_full_membership_detects_extra_file_and_directory_in_final_fence() {
     for directory in [false, true] {
         let scene = Scene::new();
@@ -288,6 +327,36 @@ fn r7_image_pinned_ads_hardlink_sparse_and_expired_deadline_are_refused() {
         };
         assert!(windows::inventory(&root, end).is_err(), "{case}");
     }
+}
+#[test]
+fn r7_image_pinned_refuses_directory_stream_added_after_payload_reads() {
+    let scene = Scene::new();
+    let root = scene.root();
+    populate(&root);
+    let reference = inventory_serial(&root).unwrap();
+    assert_eq!(windows::inventory(&root, None).unwrap(), reference);
+
+    let stream = root.join("empty:r7-late-stream");
+    let read_jobs = std::sync::atomic::AtomicUsize::new(0);
+    let result = windows::inventory_checked(&root, None, 4, &|stage| {
+        if stage == "before-file-read" {
+            read_jobs.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        }
+        if stage == "before-final-fence" {
+            assert_eq!(read_jobs.load(std::sync::atomic::Ordering::Relaxed), 3);
+            fs::write(&stream, b"late directory stream").unwrap();
+        }
+        Ok(())
+    });
+    assert_eq!(fs::read(&stream).unwrap(), b"late directory stream");
+    assert!(matches!(
+        result,
+        Err(AppError::RuntimeManaged { code, .. }) if code == "runtime_image_unconfirmed"
+    ));
+    assert_eq!(fs::read_dir(root.join("empty")).unwrap().count(), 0);
+    fs::remove_file(&stream).unwrap();
+    assert_eq!(windows::inventory(&root, None).unwrap(), reference);
+    println!("R7_LATE_DIRECTORY_STREAM root={} reads=3", root.display());
 }
 #[test]
 fn r7_image_pinned_worker_error_and_panic_join_all_started_readers() {
@@ -584,6 +653,30 @@ fn r7_image_pinned_aggregate2gib_bound_refuses_before_any_payload_read() {
     assert_eq!(calls.load(std::sync::atomic::Ordering::SeqCst), 0);
 }
 #[test]
+fn r7_image_pinned_full_inventory_accepts_long_native_paths() {
+    use std::os::windows::ffi::OsStrExt;
+    let scene = Scene::new();
+    let root = scene.root();
+    let component = "n".repeat(180);
+    let directory = root.join(&component).join(&component).join(&component);
+    let path = directory.join("payload");
+    assert!(path.as_os_str().encode_wide().count() > 512);
+    fs::create_dir_all(&directory).unwrap();
+    let payload = b"read through the long path query";
+    fs::write(&path, payload).unwrap();
+    let rows = windows::inventory(&root, None).unwrap();
+    let key = format!("{component}/{component}/{component}/payload");
+    assert_eq!(rows.len(), 4);
+    assert_eq!(
+        rows[&key],
+        Entry::File {
+            bytes: payload.len() as u64,
+            sha256: hash::sha256_hex(payload),
+            executable: false,
+        }
+    );
+}
+#[test]
 fn r7_image_pinned_depth65_preserves_original64_directory_bound() {
     let scene = Scene::new();
     let root = scene.root();
@@ -630,6 +723,7 @@ fn r7_image_fixed_pinned_entry_full_verify_with_original10s_deadline() {
     assert!(root
         .to_string_lossy()
         .contains("r6-source-scan-cost-d57c32d10af74ab888fcde86e6ec97cd"));
+    cost::begin();
     let started = Instant::now();
     let end = started + Duration::from_secs(10);
     let result = verify_inventory(
@@ -639,9 +733,10 @@ fn r7_image_fixed_pinned_entry_full_verify_with_original10s_deadline() {
         Some(end),
     );
     let elapsed = started.elapsed();
+    let metrics = cost::end();
     println!(
         "R7_PINNED_ENTRY_FULL_VERIFY {}",
-        serde_json::json!({"passed":result.is_ok(),"elapsedUs":elapsed.as_micros(),"budgetMs":10000,"error":result.as_ref().err().map(|e|e.to_string()),"completeInventoryAndManifestReadback":true,"copiedFixture":true,"officialExecuted":false,"productionRecoveryAccepted":false})
+        serde_json::json!({"passed":result.is_ok(),"elapsedUs":elapsed.as_micros(),"budgetMs":10000,"error":result.as_ref().err().map(|e|e.to_string()),"completeInventoryAndManifestReadback":result.is_ok(),"metrics":metrics,"copiedFixture":true,"officialExecuted":false,"productionRecoveryAccepted":false})
     );
     result.unwrap();
     assert!(elapsed <= Duration::from_secs(10));

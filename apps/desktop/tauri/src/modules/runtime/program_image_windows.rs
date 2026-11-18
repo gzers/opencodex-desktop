@@ -90,9 +90,30 @@ fn stamp(file: &File, directory: bool) -> AppResult<Stamp> {
     })
 }
 fn final_path(file: &File, path: &Path) -> AppResult<()> {
-    let mut raw = vec![0u16; 32768];
-    let n = unsafe { GetFinalPathNameByHandleW(file.as_raw_handle(), raw.as_mut_ptr(), 32768, 0) };
-    if n == 0 || n >= 32768 {
+    const MAX_PATH_UNITS: u32 = 32768;
+    let mut inline = [0u16; 512];
+    let query = |buffer: &mut [u16]| unsafe {
+        GetFinalPathNameByHandleW(
+            file.as_raw_handle(),
+            buffer.as_mut_ptr(),
+            buffer.len() as u32,
+            0,
+        )
+    };
+    let mut n = query(&mut inline);
+    // An insufficient-buffer result includes the terminating NUL.
+    if n == 0 || n > MAX_PATH_UNITS {
+        return Err(fail());
+    }
+    let mut long_path;
+    let raw = if n as usize >= inline.len() {
+        long_path = vec![0u16; n as usize];
+        n = query(&mut long_path);
+        &long_path[..]
+    } else {
+        &inline[..]
+    };
+    if n == 0 || n as usize >= raw.len() {
         return Err(fail());
     }
     let text = String::from_utf16(&raw[..n as usize]).map_err(|_| fail())?;
@@ -248,16 +269,21 @@ impl Pin {
         streams(&self.path, self.directory)?;
         check(end)
     }
-    fn hash(&self, end: Option<Instant>, cancelled: &AtomicBool) -> AppResult<Entry> {
+    fn hash(
+        &self,
+        end: Option<Instant>,
+        cancelled: &AtomicBool,
+        buffer: &mut [u8],
+    ) -> AppResult<Entry> {
         #[cfg(test)]
         let _cost = super::cost::span("windows-file-full-read-hash");
         if self.directory || self.before.bytes > MAX_FILE {
             return Err(fail());
         }
+        check(end)?;
         let mut source = &self.file;
         source.seek(SeekFrom::Start(0)).map_err(|_| fail())?;
         let mut source = source.take(self.before.bytes.checked_add(1).ok_or_else(fail)?);
-        let mut buffer = [0u8; 65536];
         let mut bytes = 0u64;
         let mut digest = Sha256::new();
         loop {
@@ -265,7 +291,7 @@ impl Pin {
             if cancelled.load(Ordering::Acquire) {
                 return Err(fail());
             }
-            let n = source.read(&mut buffer).map_err(|_| fail())?;
+            let n = source.read(buffer).map_err(|_| fail())?;
             if n == 0 {
                 break;
             }
@@ -275,6 +301,7 @@ impl Pin {
             }
             digest.update(&buffer[..n]);
         }
+        check(end)?;
         if bytes != self.before.bytes || stamp(&self.file, false)? != self.before {
             return Err(fail());
         }
@@ -286,32 +313,59 @@ impl Pin {
         })
     }
 }
-fn names(path: &Path) -> AppResult<Vec<String>> {
+fn list_children<T>(
+    path: &Path,
+    end: Option<Instant>,
+    details: impl Fn(&fs::DirEntry) -> AppResult<T>,
+) -> AppResult<Vec<(String, T)>> {
+    check(end)?;
+    let mut children = fs::read_dir(path).map_err(|_| fail())?;
     let mut rows = Vec::new();
-    for item in fs::read_dir(path).map_err(|_| fail())? {
+    loop {
+        check(end)?;
+        let Some(item) = children.next() else {
+            break;
+        };
+        check(end)?;
         if rows.len() >= MAX_ENTRIES {
             return Err(fail());
         }
-        let name = item
-            .map_err(|_| fail())?
-            .file_name()
-            .into_string()
-            .map_err(|_| fail())?;
+        let item = item.map_err(|_| fail())?;
+        let name = item.file_name().into_string().map_err(|_| fail())?;
         if name.is_empty() || name.contains(['/', '\\']) || name == "." || name == ".." {
             return Err(fail());
         }
-        rows.push(name);
+        rows.push((name, details(&item)?));
     }
-    rows.sort();
-    if rows.windows(2).any(|x| x[0] == x[1]) {
+    rows.sort_by(|a, b| a.0.cmp(&b.0));
+    check(end)?;
+    if rows.windows(2).any(|x| x[0].0 == x[1].0) {
         return Err(fail());
     }
     Ok(rows)
 }
+fn opening_hints(path: &Path, end: Option<Instant>) -> AppResult<Vec<(String, bool)>> {
+    list_children(path, end, |item| {
+        Ok(item.file_type().map_err(|_| fail())?.is_dir())
+    })
+}
 struct Directory {
     pin: Pin,
-    children: Vec<String>,
+    children: Vec<(String, bool)>,
     depth: usize,
+}
+impl Directory {
+    fn check_membership(&self, end: Option<Instant>) -> AppResult<()> {
+        let current = list_children(&self.pin.path, end, |_| Ok(()))?;
+        if current
+            .iter()
+            .map(|(name, ())| name)
+            .ne(self.children.iter().map(|(name, _)| name))
+        {
+            return Err(fail());
+        }
+        Ok(())
+    }
 }
 struct FileJob {
     name: String,
@@ -324,20 +378,25 @@ struct Inventory {
     rows: BTreeMap<String, Entry>,
 }
 impl Inventory {
-    fn collect(root: &Path, end: Option<Instant>) -> AppResult<Self> {
+    fn collect(
+        root: &Path,
+        end: Option<Instant>,
+        checkpoint: &impl Fn(&str) -> AppResult<()>,
+    ) -> AppResult<Self> {
         #[cfg(test)]
         let _cost = super::cost::span("windows-native-enumeration-pin");
         let pin = Pin::open(root, true, end)?;
         let volume = pin.before.volume;
         let mut out = Self {
             directories: vec![Directory {
-                children: names(root)?,
+                children: opening_hints(root, end)?,
                 pin,
                 depth: 0,
             }],
             files: Vec::new(),
             rows: BTreeMap::new(),
         };
+        checkpoint("root-children-listed")?;
         let mut cursor = 0;
         let mut count = 0usize;
         let mut bytes = 0u64;
@@ -351,15 +410,16 @@ impl Inventory {
             }
             let parent = directory.pin.path.clone();
             let children = directory.children.clone();
-            for leaf in children {
+            for (leaf, directory_hint) in children {
                 check(end)?;
                 count += 1;
                 if count > MAX_ENTRIES {
                     return Err(fail());
                 }
                 let path = parent.join(leaf);
-                let meta = fs::symlink_metadata(&path).map_err(|_| fail())?;
-                let pin = Pin::open(&path, meta.is_dir(), end)?;
+                // Enumeration chooses the open mode. The opened handle must
+                // independently prove its type and reject any reparse point.
+                let pin = Pin::open(&path, directory_hint, end)?;
                 if pin.before.volume != volume {
                     return Err(fail());
                 }
@@ -378,7 +438,7 @@ impl Inventory {
                     if manifest || depth >= 64 {
                         return Err(fail());
                     }
-                    let children = names(&path)?;
+                    let children = opening_hints(&path, end)?;
                     out.rows.insert(relative, Entry::Directory);
                     out.directories.push(Directory {
                         pin,
@@ -407,9 +467,7 @@ impl Inventory {
                 return Err(fail());
             }
             check(end)?;
-            if names(&parent)? != out.directories[cursor].children {
-                return Err(fail());
-            }
+            out.directories[cursor].check_membership(end)?;
             cursor += 1;
         }
         check(end)?;
@@ -434,6 +492,11 @@ impl Inventory {
             let mut handles = Vec::new();
             let mut failure = None;
             for _ in 0..workers {
+                if let Err(e) = check(end) {
+                    cancelled.store(true, Ordering::Release);
+                    failure = Some(e);
+                    break;
+                }
                 let next = &next;
                 let cancelled = &cancelled;
                 let files = &self.files;
@@ -454,6 +517,7 @@ impl Inventory {
                         #[cfg(test)]
                         let _metrics = super::cost::Worker::new(measured, metrics, false);
                         let mut rows = Vec::new();
+                        let mut buffer = [0u8; 65536];
                         while !cancelled.load(Ordering::Acquire) {
                             let i = next.fetch_add(1, Ordering::Relaxed);
                             let Some(job) = files.get(i) else {
@@ -462,8 +526,9 @@ impl Inventory {
                             if job.excluded_manifest {
                                 continue;
                             }
-                            let result = checkpoint("before-file-read")
-                                .and_then(|()| job.pin.hash(end, cancelled));
+                            let result = check(end)
+                                .and_then(|()| checkpoint("before-file-read"))
+                                .and_then(|()| job.pin.hash(end, cancelled, &mut buffer));
                             match result {
                                 Ok(entry) => rows.push((job.name.clone(), entry)),
                                 Err(e) => {
@@ -527,9 +592,7 @@ impl Inventory {
         }
         for directory in &self.directories {
             directory.pin.check(end)?;
-            if names(&directory.pin.path)? != directory.children {
-                return Err(fail());
-            }
+            directory.check_membership(end)?;
         }
         check(end)?;
         Ok(rows)
@@ -546,5 +609,99 @@ pub(super) fn inventory_checked(
 ) -> AppResult<BTreeMap<String, Entry>> {
     #[cfg(test)]
     let _cost = super::cost::span("windows-inventory-total");
-    Inventory::collect(root, end)?.finish(end, workers, checkpoint)
+    Inventory::collect(root, end, checkpoint)?.finish(end, workers, checkpoint)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::{cell::Cell, time::Duration};
+
+    #[test]
+    fn r7_image_expiry_after_pinning_prevents_file_dispatch() {
+        let scene = tempfile::Builder::new()
+            .prefix("ocx024-r7-dispatch-deadline-")
+            .tempdir()
+            .unwrap();
+        fs::write(scene.path().join("source"), b"pinned bytes").unwrap();
+        let inventory = Inventory::collect(scene.path(), None, &|_| Ok(())).unwrap();
+        let deadline = Instant::now() + Duration::from_secs(1);
+        let pinned = AtomicBool::new(false);
+        let dispatches = AtomicUsize::new(0);
+        let result = inventory.finish(Some(deadline), 1, &|stage| {
+            if stage == "all-objects-pinned" {
+                pinned.store(true, Ordering::Release);
+                std::thread::sleep(
+                    deadline.saturating_duration_since(Instant::now()) + Duration::from_millis(10),
+                );
+            } else if stage == "before-file-read" {
+                dispatches.fetch_add(1, Ordering::Relaxed);
+            }
+            Ok(())
+        });
+        let dispatches = dispatches.load(Ordering::Relaxed);
+        if !pinned.load(Ordering::Acquire) || result.is_ok() || dispatches != 0 {
+            panic!(
+                "expired inventory returned {result:?} with {dispatches} file dispatches; fixture {}",
+                scene.keep().display()
+            );
+        }
+        scene.close().unwrap();
+    }
+
+    #[test]
+    fn r7_image_expired_reader_stops_before_seeking_pinned_file() {
+        let scene = tempfile::Builder::new()
+            .prefix("ocx024-r7-file-deadline-")
+            .tempdir()
+            .unwrap();
+        let path = scene.path().join("source");
+        fs::write(&path, b"pinned bytes").unwrap();
+        let pin = Pin::open(&path, false, None).unwrap();
+        let mut file = &pin.file;
+        file.seek(SeekFrom::Start(1)).unwrap();
+
+        let result = pin.hash(Some(Instant::now()), &AtomicBool::new(false), &mut [0; 8]);
+        let offset = file.stream_position().unwrap();
+        drop(pin);
+        if result.is_ok() || offset != 1 {
+            panic!(
+                "expired read returned {result:?} with offset {offset}; fixture {}",
+                scene.keep().display()
+            );
+        }
+        scene.close().unwrap();
+    }
+
+    #[test]
+    fn r7_image_directory_enumeration_aborts_without_returning_partial_membership() {
+        let scene = tempfile::Builder::new()
+            .prefix("ocx024-r7-directory-deadline-")
+            .tempdir()
+            .unwrap();
+        for name in ["one", "two", "three"] {
+            File::create(scene.path().join(name)).unwrap();
+        }
+        let visited = Cell::new(0);
+        let deadline = Instant::now() + Duration::from_secs(1);
+        let result = list_children(scene.path(), Some(deadline), |_| {
+            visited.set(visited.get() + 1);
+            std::thread::sleep(
+                deadline.saturating_duration_since(Instant::now()) + Duration::from_millis(10),
+            );
+            Ok(())
+        });
+        if result.is_ok() || visited.get() != 1 {
+            panic!(
+                "expired enumeration returned {result:?} after {} entries; fixture {}",
+                visited.get(),
+                scene.keep().display()
+            );
+        }
+        assert_eq!(
+            list_children(scene.path(), None, |_| Ok(())).unwrap().len(),
+            3
+        );
+        scene.close().unwrap();
+    }
 }

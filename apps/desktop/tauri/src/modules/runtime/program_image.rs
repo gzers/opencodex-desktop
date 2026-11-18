@@ -618,9 +618,15 @@ fn verify_inventory(
             inventory(root)?
         }
     };
+    #[cfg(test)]
+    let tree_cost = cost::span("verify-tree-digest");
     if rows.is_empty() || inventory_digest(&rows)? != expected_tree {
         return Err(fail());
     }
+    #[cfg(test)]
+    drop(tree_cost);
+    #[cfg(test)]
+    let _manifest_cost = cost::span("verify-root-manifest");
     let manifest_path = root.join(super::program_selection::IMAGE_MANIFEST);
     safety::check_path(root, &manifest_path, false)?;
     let file = safety::open_file(&manifest_path, false)?;
