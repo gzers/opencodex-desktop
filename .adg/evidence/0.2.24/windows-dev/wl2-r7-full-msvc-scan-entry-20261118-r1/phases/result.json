@@ -1,0 +1,193 @@
+{
+  "raw": 0,
+  "processElapsedMs": 12000,
+  "fixtureReport": {
+    "productionBudgetAccepted": false,
+    "sameOriginalCompleteBytes": true,
+    "samples": [
+      {
+        "elapsedUs": 2976062,
+        "entries": 12213,
+        "exactInventoryEqual": true,
+        "fileBytes": 623970751,
+        "implementation": "reference",
+        "metrics": {
+          "stages": {
+            "directory-enumeration": [
+              1628,
+              653880500
+            ],
+            "directory-final-fence": [
+              1628,
+              180488100
+            ],
+            "directory-path-admission": [
+              1628,
+              196933900
+            ],
+            "entry-inspect-name": [
+              12214,
+              546459800
+            ],
+            "existing-path-boundary": [
+              13842,
+              2269926400
+            ],
+            "file-admission-open": [
+              10586,
+              822055300
+            ],
+            "file-read-hash": [
+              10586,
+              4329933900
+            ],
+            "file-total": [
+              10586,
+              5194338800
+            ],
+            "inventory-enumeration-total": [
+              1,
+              877984500
+            ],
+            "inventory-read-and-fence-total": [
+              1,
+              2096468700
+            ],
+            "worker-join-wait": [
+              4,
+              1910343800
+            ]
+          }
+        },
+        "ordinal": 0,
+        "productionAccepted": false,
+        "treeSha256": "306e50d0620aa99b61200ec4c0af8c200fb2f12f3b45ee2068dd85dc35f5fd55",
+        "workers": 4
+      },
+      {
+        "elapsedUs": 2698961,
+        "entries": 12213,
+        "exactInventoryEqual": true,
+        "fileBytes": 623970751,
+        "implementation": "native-pinned",
+        "metrics": {
+          "stages": {
+            "windows-all-native-final-fence": [
+              1,
+              864931300
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              557927200
+            ],
+            "windows-inventory-total": [
+              1,
+              2698958200
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1638789300
+            ]
+          }
+        },
+        "ordinal": 1,
+        "productionAccepted": false,
+        "treeSha256": "306e50d0620aa99b61200ec4c0af8c200fb2f12f3b45ee2068dd85dc35f5fd55",
+        "workers": 4
+      },
+      {
+        "elapsedUs": 3082380,
+        "entries": 12213,
+        "exactInventoryEqual": true,
+        "fileBytes": 623970751,
+        "implementation": "reference",
+        "metrics": {
+          "stages": {
+            "directory-enumeration": [
+              1628,
+              293938000
+            ],
+            "directory-final-fence": [
+              1628,
+              186135900
+            ],
+            "directory-path-admission": [
+              1628,
+              186223200
+            ],
+            "entry-inspect-name": [
+              12214,
+              213883000
+            ],
+            "existing-path-boundary": [
+              13842,
+              1678047100
+            ],
+            "file-admission-open": [
+              10586,
+              346391000
+            ],
+            "file-read-hash": [
+              10586,
+              585887200
+            ],
+            "file-total": [
+              10586,
+              963438100
+            ],
+            "inventory-enumeration-total": [
+              1,
+              504155400
+            ],
+            "inventory-read-and-fence-total": [
+              1,
+              2576794200
+            ],
+            "worker-join-wait": [
+              1,
+              2385605400
+            ]
+          }
+        },
+        "ordinal": 2,
+        "productionAccepted": false,
+        "treeSha256": "306e50d0620aa99b61200ec4c0af8c200fb2f12f3b45ee2068dd85dc35f5fd55",
+        "workers": 1
+      },
+      {
+        "elapsedUs": 3015499,
+        "entries": 12213,
+        "exactInventoryEqual": true,
+        "fileBytes": 623970751,
+        "implementation": "native-pinned",
+        "metrics": {
+          "stages": {
+            "windows-all-native-final-fence": [
+              1,
+              778539800
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              527777500
+            ],
+            "windows-inventory-total": [
+              1,
+              3015497900
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1652037300
+            ]
+          }
+        },
+        "ordinal": 3,
+        "productionAccepted": false,
+        "treeSha256": "306e50d0620aa99b61200ec4c0af8c200fb2f12f3b45ee2068dd85dc35f5fd55",
+        "workers": 1
+      }
+    ]
+  },
+  "officialExecuted": false,
+  "productionAccepted": false,
+  "fixtureCleanup": "reused read-only retained fixture"
+}

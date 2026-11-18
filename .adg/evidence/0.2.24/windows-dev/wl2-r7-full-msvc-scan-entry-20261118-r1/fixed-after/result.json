@@ -1,0 +1,45 @@
+{
+  "raw": 0,
+  "processElapsedMs": 2656,
+  "fixtureReport": {
+    "budgetMs": 10000,
+    "completeInventoryAndManifestReadback": true,
+    "copiedFixture": true,
+    "elapsedUs": 2634174,
+    "error": null,
+    "metrics": {
+      "stages": {
+        "verify-root-manifest": [
+          1,
+          826500
+        ],
+        "verify-tree-digest": [
+          1,
+          46564600
+        ],
+        "windows-all-native-final-fence": [
+          1,
+          767199700
+        ],
+        "windows-file-full-read-hash": [
+          10586,
+          553149700
+        ],
+        "windows-inventory-total": [
+          1,
+          2584541300
+        ],
+        "windows-native-enumeration-pin": [
+          1,
+          1610243800
+        ]
+      }
+    },
+    "officialExecuted": false,
+    "passed": true,
+    "productionRecoveryAccepted": false
+  },
+  "officialExecuted": false,
+  "productionAccepted": false,
+  "fixtureCleanup": "reused read-only retained fixture"
+}

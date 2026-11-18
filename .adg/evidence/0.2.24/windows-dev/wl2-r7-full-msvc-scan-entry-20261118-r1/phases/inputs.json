@@ -1,0 +1,28 @@
+{
+  "hypothesis": "Measure independent reference and native phase costs in the complete test executable. This diagnostic has no acceptance deadline. The original 10 second failure remains recorded.",
+  "prior": {
+    "lightweightFixedEntry": "passed 6366.008 ms previously",
+    "ordinaryOfficialLifecycle": "not run",
+    "currentR2Repair": "executionReady=false",
+    "owningWorkerDecision": "pending",
+    "publicStartOpen": false
+  },
+  "code": "dc3e3248550081c9070d1a56664a76148a01219b",
+  "executable": {
+    "path": "C:/Users/15119/.codex/worktrees/r6-windows-native-resume/code/test/windows024-native/target/w1c-product/x86_64-pc-windows-msvc/debug/build/opencodex-desktop/bdc9ec5a3f66e096/out/opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+    "bytes": 101989376,
+    "sha256": "7b177e0c3884442e7bae099a946ed98b1d48674728cf595055d242974fd4b639",
+    "run": "product05",
+    "kind": "MSVC Tauri library test executable"
+  },
+  "fixture": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r6-source-scan-cost-d57c32d10af74ab888fcde86e6ec97cd\\I\\runtime\\versions\\2.99.0",
+  "arguments": [
+    "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\bdc9ec5a3f66e096\\out\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+    "--exact",
+    "modules::runtime::program_image::windows_tests::r7_image_fixed_pinned_reference_same_full_bytes_and_digest",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "fullTauriLibrary": true
+}

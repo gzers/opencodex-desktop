@@ -1405,3 +1405,11 @@ Windows 代码 dc3e3248550081c9070d1a56664a76148a01219b 已推送并核对远端
 证据 wl2-r7-bound-preparation-20261118-r1。最终 MSVC 构建 raw0 / 135738 ms，3 项通过。前一 MSVC 制品 product04 的 37 项受影响回归全部通过。最终 TEST EXE SHA-256 7b177e0c3884442e7bae099a946ed98b1d48674728cf595055d242974fd4b639。首错 LLVM 内存不足，Cargo raw101、rustc 0xc0000409，原日志保留。仅将单次命令 codegen units 由 16 调至 4。product03 中断且无退出回执。39 个可定位测试根均缺席，原生成 schema 已归档并还原代码工作树。完整状态表 179 项。
 
 当前 r2 归档完整，原 Job 仍有 24 项未知并返回 raw50，计划 executionReady=false。普通桌面的原私有 V2 入口仍待结果，session 7 断开且 out01 为空。查到主线仍缺初始 Start worker 归属和同原范围的恢复准入。生产 Start 继续拒绝，原预算保持。旧两处被自动审批拒绝删除的目录保留，未运行 W2、双 SID 或发布。
+
+## 2026-11-18 r7 完整 MSVC 10 秒入口复验
+
+代码 0816047f30f667e56bea4167ec012f6e12bfcbdd 仅改三处 program_image 文件。相同只读固定副本在初版完整 MSVC 制品上于 10079.394 ms raw101，runtime_image_unconfirmed。原制品独立计量时 1/4 worker 和参考实现的 12213 条目、623970751 字节和树摘要一致。四 worker 原生 inventory 2698.961 ms，其中枚举保留句柄 1638.789 ms。独立诊断未设总 deadline，不能定位首轮超时阶段。
+
+每 worker 复用读取缓冲区，短路径使用栈缓冲区，长路径有界重查。原完整文件字节和 native admission/fence 保持。完整 MSVC scanner 16 项回归通过，同一固定副本全树与 manifest 在原 10000 ms 窗口内通过，raw0 / 2634.174 ms。制品 SHA-256 0b900fa43f2c9d2e3001cfcd9545d77d669a14684f88b8e592886eea20b13664。两轮缓存及负载未控制，尚无因果提速或生产预算结论。原始日志、计量、受测源的提交和摘要及 185 项状态在 wl2-r7-full-msvc-scan-entry-20261118-r1。生成 schema 已归档，工作树已还原，无新增测试根。封存前代理 TLS 握手失败，远端交付以独立回执为准。
+
+本轮确认 r7 只读归档 Public out01 全部十文件与先前证据逐字节相同。r2 原 Job 的 24 项未知/raw50 延续，现场计划仍 executionReady=false。初次 Start 原 worker 接口沿既有 handoff 待集成决定。普通桌面私有 V2 输出为空，session 7 断开。公开 Start 继续拒绝。

@@ -1,0 +1,12 @@
+{
+  "proxy": "127.0.0.1:3060",
+  "attempts": [
+    {"operation": "push code over HTTP CONNECT", "backend": "schannel", "raw": 128, "error": "schannel: failed to receive handshake, SSL/TLS connection failed"},
+    {"operation": "push code over HTTP CONNECT", "backend": "openssl", "raw": 1, "error": "TLS connect error: error:0A000126:SSL routines::unexpected eof while reading"},
+    {"operation": "read branch tips over SOCKS5h", "backend": "schannel", "raw": 1, "error": "schannel: failed to receive handshake, SSL/TLS connection failed"}
+  ],
+  "proxyPortReachable": true,
+  "certificateVerificationChanged": false,
+  "persistentSettingsChanged": false,
+  "codeRemoteVerifiedAtSeal": false
+}

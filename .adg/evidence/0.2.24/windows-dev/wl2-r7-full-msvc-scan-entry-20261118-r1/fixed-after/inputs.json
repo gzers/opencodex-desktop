@@ -1,0 +1,40 @@
+{
+  "code": "0816047f30f667e56bea4167ec012f6e12bfcbdd",
+  "sourceFiles": [
+    {
+      "path": "apps/desktop/tauri/Cargo.toml",
+      "sha256": "8a4ba748ccaec01ef2b7655ca4084b191b16eea84994d1906ef33f74b37c0f38",
+      "bytes": 4881
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image.rs",
+      "sha256": "9b4f1c72b410140ce8dc90a28d0c166a814c572b3edc335a85ee8be8b946c266",
+      "bytes": 33947
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_windows.rs",
+      "sha256": "90ad342d792e538dbd80442e8e1b546521848ad5df4ab00a741f9b0101c23018",
+      "bytes": 20217
+    },
+    {
+      "path": "apps/desktop/tauri/src/modules/runtime/program_image_windows_tests.rs",
+      "sha256": "892e96565ab052e31891009cf16f285103b6f9dfc880bebc012cc2e5d491347e",
+      "bytes": 24402
+    }
+  ],
+  "executable": {
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\bdc9ec5a3f66e096\\out\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+    "sha256": "0b900fa43f2c9d2e3001cfcd9545d77d669a14684f88b8e592886eea20b13664",
+    "bytes": 101999616
+  },
+  "fixture": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r6-source-scan-cost-d57c32d10af74ab888fcde86e6ec97cd\\I\\runtime\\versions\\2.99.0",
+  "arguments": [
+    "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\bdc9ec5a3f66e096\\out\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+    "--exact",
+    "modules::runtime::program_image::windows_tests::r7_image_fixed_pinned_entry_full_verify_with_original10s_deadline",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "deadlineMs": 10000
+}

@@ -1,0 +1,4 @@
+
+thread 'modules::runtime::program_image::windows_tests::r7_image_fixed_pinned_entry_full_verify_with_original10s_deadline' (120728) panicked at src\modules\runtime\program_image_windows_tests.rs:646:12:
+called `Result::unwrap()` on an `Err` value: RuntimeManaged { code: "runtime_image_unconfirmed", detail: "运行版本文件树无法核对，原目录保留" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

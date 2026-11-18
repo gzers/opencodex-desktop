@@ -1,0 +1,10 @@
+{
+  "hypotheses": [
+    {"test": "same full MSVC binary and fixed copy, independent reference/native inventory", "prediction": "phase timing identifies the largest measured stage and all worker/reference inventories have the same full bytes and digest"},
+    {"test": "complete verification with instrumented 10s entry and allocation changes", "prediction": "the new MSVC binary completes all stages within the existing window with a complete tree and independently checked manifest"},
+    {"test": "pin and final fence with a native path longer than the stack lookup buffer", "prediction": "native fallback binds the exact long handle path and reads the full payload"}
+  ],
+  "constraints": {"fixtureBudgetMs": 10000, "officialExecuted": false, "productionAccepted": false, "originalR2Touched": false},
+  "diagnosticLauncherFirstError": {"raw": 1, "stage": "load prior artifact before any subprocess or evidence outputs", "error": "FileNotFoundError: run-phases.py initially resolved sibling prior evidence relative to the wrong parent", "recovery": "corrected parent before the first diagnostic execution"},
+  "baselineTempRoots": ["ocx024-r7-image-g2HcUo", "ocx024-r7-image-T4enpc", "ocx024-r7-image-xt2hs7"]
+}
