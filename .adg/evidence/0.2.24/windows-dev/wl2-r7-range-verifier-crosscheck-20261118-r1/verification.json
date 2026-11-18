@@ -1,0 +1,47 @@
+{
+  "verifierSha256": "04109655081281036a20f7965016007ffb5c7a6b2560ab8fc8b14855174ccc9d",
+  "archiveManifestSha256": "d7a816b348b0432053ea95b75aec8117472acd67a9a55d7b0b1f262a3d14abdc",
+  "checkedAtUtc": "2026-11-18T15:43:54.6595709Z",
+  "cases": {
+    "archivedBinding": {
+      "arguments": [
+        "-B",
+        "C:/Users/Public/ocx-r7-isolated-owner-range-r1/input/verify-r7-host-receipts.py",
+        ".adg\\evidence\\0.2.24\\windows-dev\\wl2-r7-nine-r2-host-20261118-r1\\raw",
+        "--sid",
+        "S-1-5-21-587408064-856152790-2583328096-1003",
+        "--session",
+        "7",
+        "--profile",
+        "C:/Users/marenben",
+        "--image",
+        "C:/Users/marenben/ocx024-r7-isolated-owner-nine-r2/I/ocxd.exe",
+        "--image-sha256",
+        "ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030"
+      ],
+      "raw": 0,
+      "stdout": "{\"hostReceiptsVerified\": true, \"pid\": 133584, \"creationFiletime\": \"134394870078415414\", \"initialFullScans\": 9, \"raw\": 31, \"originalWorker\": \"ThreadId(51)\", \"originalRanges\": {\"claimKey\": \"d7a284704ae5ea89f599258d6a29b3f8a39042d564fb236fa89a665c7ba536bb\", \"epoch\": \"d6f3362d-fe4b-4c70-bd2d-efd1b56fed34\", \"objectsDigest\": \"82b48778fdc142d1fc987ef7a5fa2af6bf245b7c4e0c2055a06b4ca5b219ce41\"}, \"liveProcessVerified\": false, \"laterRangeContinuityVerified\": false}\r\n",
+      "stderr": ""
+    },
+    "differentFixture": {
+      "arguments": [
+        "-B",
+        "C:/Users/Public/ocx-r7-isolated-owner-range-r1/input/verify-r7-host-receipts.py",
+        ".adg\\evidence\\0.2.24\\windows-dev\\wl2-r7-nine-r2-host-20261118-r1\\raw",
+        "--sid",
+        "S-1-5-21-587408064-856152790-2583328096-1003",
+        "--session",
+        "7",
+        "--profile",
+        "C:/Users/marenben",
+        "--image",
+        "C:/Users/marenben/ocx024-r7-isolated-owner-range-r1/I/ocxd.exe",
+        "--image-sha256",
+        "1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8"
+      ],
+      "raw": 1,
+      "stdout": "",
+      "stderr": "Host target absence evidence differs\r\n"
+    }
+  }
+}

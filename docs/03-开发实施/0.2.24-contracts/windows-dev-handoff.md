@@ -1822,3 +1822,10 @@ marenben session 7 活动，nine-r2/out01 仍空。用户提供的窗口命令�
 range-r1 使用 IMP203 已接收的源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7、测试 EXE SHA-256 1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8、运行时 SHA-256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7，暂存证据 007dd301f16e47ed9afd59f91a17b3687e8b4dd7。marenben session 7 活动，range-r1/out01 为空。待原桌面单次 Host 通过后，在同普通桌面独立核活跃 Host 的 PID、FILETIME、镜像和会话，再取原 worker 在同一 DiagnosticBefore 5 秒窗口对原失败、原生对象和 claim/N/L/K 的新鲜证明。两项通过后才进入 Explicit 10 秒和 DiagnosticAfter 5 秒，证明唯一 V2 Intent/Pending、刷盘及独立逐字节回读。任一失败或未知则保全首错与原现场。Mac 的后继准备取消继续独立推进。
 
 nine-r1 仍保留 6,460 ms／raw32 首错与控制端身份查询 raw5。独立旧官方 r2 保留两进程、三件原件、锁和 seq9，Job 24 项 Unknown／raw50，命令谱系 raw64，executionReady=false、approvalRequested=false。普通 per-user MSI 仍为 raw1625。真实归还、正常 Stop/Closed、单 SID 生产验收及签名候选仍待，公开 Start 继续拒绝。
+
+
+## 2026-11-18 r7 新版 Host 核验器实证交叉检查
+
+按同一 TEAM64／IMP203／r7，以暂存于 range-r1 的核验器（SHA-256 04109655081281036a20f7965016007ffb5c7a6b2560ab8fc8b14855174ccc9d）只读检查 cdf54c6a1 的真实 nine-r2 归档。使用原镜像路径与摘要时返回 raw0，核得九次扫描和原 raw31。把同一份原始回执传入 range-r1 的镜像路径与摘要时返回 raw1，首错是目标缺席证据与夹具不符。两次命令及原输出见 wl2-r7-range-verifier-crosscheck-20261118-r1。新版核验器覆盖真实 Host 回执格式并拒绝本次跨夹具代用，输出仍明确 liveProcessVerified=false、laterRangeContinuityVerified=false。原 nine-r2 核验、固定 range-r1 制品及暂存文件沿用。
+
+另复核 range-r1 六份暂存文件、目录成员和 ACL，均与固定清单一致。当时 session 7 活动，私有夹具根缺席，out01 为空。等待单次 range-r1 Host 的真实普通桌面回执；此轮未运行任何桌面动作，未更改或清理任何现场。
