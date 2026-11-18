@@ -46,6 +46,7 @@ pub(in super::super) struct AnchoredTree {
     custody_security: SnapshotData,
     nodes: Vec<Node>,
     pending_capture: Option<File>,
+    pending_capture_locator: Option<(String, Kind)>,
     poisoned: bool,
     work_mode: WorkMode,
     observed: Option<observation::WorkFrame>,
@@ -138,6 +139,7 @@ fn collect(
     out: &mut Vec<Node>,
     total: &mut usize,
     pending: &mut Option<File>,
+    pending_locator: &mut Option<(String, Kind)>,
     end: Instant,
 ) -> io::Result<()> {
     check(end)?;
@@ -161,9 +163,12 @@ fn collect(
     {
         return Err(invalid());
     }
-    if pending.is_some() {
+    if pending.is_some() || pending_locator.is_some() {
         return Err(invalid());
     }
+    // Original intended scope is enrolled before the fallible native open.
+    // A failed open cannot be retried/adopted or inferred Absent from this DATA.
+    *pending_locator = Some((relative.to_string(), kind));
     *pending = Some(open_node(&path, kind, false)?);
     let file = pending.as_mut().ok_or_else(invalid)?;
     if kind == Kind::Directory {
@@ -192,13 +197,23 @@ fn collect(
         pending_work: None,
         work_open: false,
     });
+    *pending_locator = None;
     for name in children {
         let child = if relative.is_empty() {
             name
         } else {
             format!("{relative}/{name}")
         };
-        collect(root, &child, codex, out, total, pending, end)?;
+        collect(
+            root,
+            &child,
+            codex,
+            out,
+            total,
+            pending,
+            pending_locator,
+            end,
+        )?;
     }
     Ok(())
 }
@@ -347,6 +362,7 @@ impl AnchoredTree {
             custody_security,
             nodes: Vec::new(),
             pending_capture: None,
+            pending_capture_locator: None,
             poisoned: false,
             work_mode: WorkMode::Sealed,
             observed: None,
@@ -367,6 +383,7 @@ impl AnchoredTree {
                 &mut out.nodes,
                 &mut 0,
                 &mut out.pending_capture,
+                &mut out.pending_capture_locator,
                 end,
             )?;
             out.nodes
@@ -464,6 +481,7 @@ impl AnchoredTree {
     // prefix, but no mutation caller may bypass verify_image's poison gate.
     fn read_retained_image(&mut self, end: Instant) -> io::Result<()> {
         if self.pending_capture.is_some()
+            || self.pending_capture_locator.is_some()
             || self.nodes.is_empty()
             || self.nodes[0].kind != Kind::Directory
             || !self.nodes[0].original.relative.is_empty()

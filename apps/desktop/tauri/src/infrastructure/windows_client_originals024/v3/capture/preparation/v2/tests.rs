@@ -134,10 +134,23 @@ fn wl2_r7_v2_reference_native_invalid_coordinator_retains_all_known_and_pending_
     );
     let objects = v["components"][2]["objects"].as_array().unwrap();
     assert!(objects.len() >= 4);
-    assert!(objects.iter().any(|o| o["identityDigest"].is_null()));
-    assert!(objects
+    let pending = objects
         .iter()
-        .all(|o| o["securityDigest"].is_null() && o["contentDigest"].is_null()));
+        .find(|o| o["pathDigest"] == projection_digest(&bad).unwrap())
+        .unwrap();
+    assert!(pending["identityDigest"].is_string() && pending["contentDigest"].is_string());
+    assert!(
+        pending["securityDigest"].is_null(),
+        "current observation cannot supply missing original pending-node security baseline"
+    );
+    assert!(
+        objects.iter().any(|o| o["securityDigest"].is_string()),
+        "known original snapshots independently matched actual native all8"
+    );
+    assert!(
+        objects.iter().any(|o| o["contentDigest"].is_null()),
+        "partial whole-set/ancestor assurance remains incomplete"
+    );
     assert_eq!(details["sessionId"], prefix.session_id.to_string());
     assert!(std::fs::remove_file(&bad).is_err());
     assert_eq!(

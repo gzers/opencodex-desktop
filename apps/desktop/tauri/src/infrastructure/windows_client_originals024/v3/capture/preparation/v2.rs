@@ -156,7 +156,7 @@ impl PartialCaptureAnchor {
         }
         let mut tree_components = Vec::new();
         for (i, role) in [Role::Codex, Role::Grok].into_iter().enumerate() {
-            let objects = if let Some(tree) = &self.trees[i] {
+            let objects = if let Some(tree) = &mut self.trees[i] {
                 let (objects, observed_errors) =
                     tree.v2_retained_object_data(session, role, end)?;
                 errors.extend(observed_errors);

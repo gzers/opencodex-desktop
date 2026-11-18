@@ -58,6 +58,7 @@ fn restored(trees: &mut [AnchoredTree; 2], end: Instant) -> io::Result<serde_jso
                 .path()
                 .join(if r == 0 { ".codex" } else { ".grok" })
             || t.pending_capture.is_some()
+            || t.pending_capture_locator.is_some()
             || t.nodes.iter().any(|n| {
                 n.pending_work.is_some()
                     || n.kind == Kind::File && !matches!(n.state, State::Original | State::Restored)
