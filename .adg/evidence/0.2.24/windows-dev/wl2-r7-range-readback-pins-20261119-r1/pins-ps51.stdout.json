@@ -1,0 +1,54 @@
+{
+    "powerShell":  "5.1.26100.33438",
+    "fixedSha256":  [
+                        "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2",
+                        "b7207c94ceb391230639fb6230e4fe228faed874e39ece68e75c27f2d3487b4f",
+                        "5567494d2174270d77bac6f862ab789c0d43eb3aaab7689e4e5a20e771a2f426"
+                    ],
+    "candidateLauncherSha256":  "6b553204560d59ba7a292f64c322404028eceb1a0899661f5f9dc9d76953e990",
+    "candidateLauncherBytes":  30158,
+    "candidateObserverSha256":  "f3a0c5ed9f8ba698d0b5d3e37d1b1209b4b88fa5ee4714a5fe06c1ff000aba5f",
+    "candidateObserverBytes":  6394,
+    "launcherReplacements":  [
+                                 {
+                                     "before":  "function ExportExact([string]$Path, [string]$Name, [int]$Limit) {",
+                                     "after":  "function ExportExact([string]$Path, [string]$Name, [int]$Limit, [IO.FileShare]$Share = [IO.FileShare]::Read) {"
+                                 },
+                                 {
+                                     "before":  "[IO.File]::Open($Path, \u0027Open\u0027, \u0027Read\u0027, \u0027Read\u0027)",
+                                     "after":  "[IO.File]::Open($Path, \u0027Open\u0027, \u0027Read\u0027, $Share)"
+                                 },
+                                 {
+                                     "before":  "ExportExact $path (\"DiagnosticAfter-\" + $name) 65536",
+                                     "after":  "ExportExact $path (\"DiagnosticAfter-\" + $name) 65536 ([IO.FileShare]::ReadWrite)"
+                                 }
+                             ],
+    "guardCases":  [
+                       {
+                           "name":  "old-complete",
+                           "accepted":  true,
+                           "firstError":  null
+                       },
+                       {
+                           "name":  "new-complete",
+                           "accepted":  true,
+                           "firstError":  null
+                       },
+                       {
+                           "name":  "old-observer-new-launcher",
+                           "accepted":  false,
+                           "firstError":  "The fixed DiagnosticAfter launcher bytes differ."
+                       },
+                       {
+                           "name":  "new-observer-old-launcher",
+                           "accepted":  false,
+                           "firstError":  "The fixed DiagnosticAfter launcher bytes differ."
+                       },
+                       {
+                           "name":  "new-complete-changed-cmd",
+                           "accepted":  false,
+                           "firstError":  "The fixed DiagnosticAfter launcher bytes differ."
+                       }
+                   ],
+    "materializedCandidate":  false
+}

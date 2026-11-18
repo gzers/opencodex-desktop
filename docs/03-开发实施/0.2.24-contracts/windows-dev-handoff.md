@@ -1870,3 +1870,10 @@ nine-r1 仍保留 6,460 ms／raw32 首错与控制端身份查询 raw5。独立�
 对两份已归档合成 V2 字节，用原生保留写句柄运行从固定入口 AST 提取的 CheckAttachment。固定读法 raw32 且没有输出。候选只让该函数的读入兼容原写句柄，两份原样导出 3,523／3,669 字节，语义和精确字节链通过。第二写者对两份文件均 raw32；创建同名导出 raw80，原导出摘要未改；原动作错绑、额外成员和只追加一个空格均在对应检查处拒绝。整体 PS5.1 raw0，空 stderr，合成目录已确认缺席。原始证据见 wl2-r7-range-readback-pair-20261119-r1。
 
 此结果补足上一条配对请求的语义和文件成员负例。请在固定 launcher 及计时脚本摘要的新配对中保持已有 create-only、原预算和未知拒绝。当前未改固定文件或真实现场，未启动 Explicit 或 DiagnosticAfter。旧官方 r2 和生产验收前提沿用。
+
+
+## 2026-11-19 r7 独立读回候选配对摘要
+
+沿 TEAM67／IMP206／r7，使用原暂存字节离线推导三处 launcher 替换和一处计时脚本摘要替换。候选只从 CheckAttachment 传 ReadWrite share，保持 ExportExact 其它调用使用 Read share，文件访问仍只读。候选 launcher SHA-256 6b553204560d59ba7a292f64c322404028eceb1a0899661f5f9dc9d76953e990，独立计时脚本 SHA-256 f3a0c5ed9f8ba698d0b5d3e37d1b1209b4b88fa5ee4714a5fe06c1ff000aba5f。原 CMD 字节及 pin 继续使用。
+
+PowerShell 5.1 提取并执行准确摘要门，原版配对与候选配对通过，两种混配及一字节 CMD 漂移拒绝，整体 raw0，stderr 为空。原始输出与准确替换见 wl2-r7-range-readback-pins-20261119-r1，可用于固定前对照。候选仅在内存中生成，待治理指定新配对后再接入和现场验证。
