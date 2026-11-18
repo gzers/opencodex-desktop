@@ -2175,3 +2175,11 @@ nine-r2 继续使用已固定的源码与二进制配对 daae8ffff7f304ec28b9c02
 [固定 Windows 交接](https://github.com/gzers/opencodex-desktop/blob/f9bf34095e06e1fd5e267be89356e57fb96406e5/docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md)
 
 上述为组件通过。旧 r2 的三件真实原件和锁继续保全，24 项 Job 仍是 Unknown／raw50，命令谱系 raw64，`executionReady=false`，普通用户 MSI 为 raw1625。生产恢复仍需证明整树成员、进程已静止、claim/N/L/K 连续持有、持久记录、精确锁释放和原件正常归还。强制清理不能签署 Stop 或 Closed。真实桌面沿 TEAM58 的原配对，`nine-r2/out01` 尚无 Host 结果。
+
+## revision200 Windows 释放后漂移复核与实际锁范围准入
+
+组件源码 def21dfe1c3645c8d838b1ec01727b8dc392f546，固定证据 582e759fbd160ef1b0052d315fc7aff338f3288f。本机复核原日志、ZIP 总摘要及 24 件成员摘要和 28 条缺席记录。释放后修改归还的 config.toml，原端点仍允许写 completion.json，回归 raw101。修复后重查全成员、锚点、归还与退役对象身份、八项安全投影、字节和持久记录，拒绝漂移并保留十二件移动记录。MSVC 定向 14/14、raw0。EXE 摘要及测试根缺席均为 Windows 回执。[固定证据](https://github.com/gzers/opencodex-desktop/tree/582e759fbd160ef1b0052d315fc7aff338f3288f/.adg/evidence/0.2.24/windows-dev/wl2-r7-post-release-drift-20261118-r1)
+
+新源码 f3564fbb34713beee97ed221fb4797b422b11d57 仅改测试 harness 的 external_repair_whole_tree.rs，把已准备节点及持久移动记录绑定到原 WholeTree，增加交叉夹具拒绝用例。净差及空白检查已复核。最新证据 ref 2e08a4463ec572c08787402cb8453b56a760a0f2 尚未绑定这份新源码的执行结果。
+
+固定 nine-r2 真实普通会话允许一次 Host。当前 DiagnosticBefore 提供元数据与 Status 投影，实际范围仍需原线程检查。旧 nine-r1 PID 95724 独立观察 raw5，进程缺席与同 FILETIME 均未证明。Explicit 需独立进程代次证据和原 worker 的新鲜只读范围证明。具体合同见 TEAM61 和 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。旧 nine-r1 和独立的官方 r2 保全，生产恢复、普通 MSI、单 SID 生命周期及签名候选仍待验收。

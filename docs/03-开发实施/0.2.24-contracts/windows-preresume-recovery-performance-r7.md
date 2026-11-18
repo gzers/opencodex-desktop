@@ -267,3 +267,11 @@ TEAM58／IMP197。此前真实首轮在三次入口扫描后以 raw32 拒绝。�
 固定配对 C:/Users/Public/ocx-r7-isolated-owner-nine-r2，测试镜像 SHA-256 ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030，运行时 SHA-256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。按 staging.json、原启动器和原隔离准入确认 SID、会话 7、实际普通令牌、WinSta0/Default、无外层 Job 及独立根。e19642724 的只读核验器作为发送诊断前的回执前置检查。另以系统证据确认 Host 仍是同一 PID/FILETIME，以当前原 Owner 的受控回执确认原工作线程及 claim/N/L/K 仍持有。离线回执不能代替这两项。
 
 前三项齐备后进入 DiagnosticBefore／Explicit／DiagnosticAfter 原 5／10／5 秒窗口。保留恢复准备全量扫描、同线程 V2 Intent/Pending 唯一创建、flush 和逐字节读回；不能证实任一条件则停在对应首错。原权限、持久格式、完整校验及未知拒绝沿用。旧原件恢复 r2 的三件原件、锁和宿主与 nine-r2 分开保护。任何强制清理均不能作为正常 Stop 或 Closed。
+
+## 2026-11-18 执行增量：原 Worker 实际范围准入
+
+TEAM61／IMP200。沿用 nine-r2 源码 daae8ffff7f304ec28b9c0214db26691e930a395、测试制品 ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030、官方运行时 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7 和独立回执核验器 a7d7284a3280d973aaacddf361adae6f6dcc8a3c。先查 out01 无 Host 回执，核实际 SID、session 7、普通令牌、WinSta0/Default、无外层 Job 和既定独立根，再跑一次 Host。待证伪判断为九次完整扫描在原 30 秒内完成，首错是首次 Intent 前 raw31，Node 始终未 Resume。已有 Host 回执时直接消费，旧失败现场继续保存。
+
+Explicit 前分别取得同一存活 Host PID/FILETIME 的独立系统观察，以及由原注册 worker 在原 DiagnosticBefore 5 秒内出具的新鲜原生范围证明。控制端无法读取时可在原普通 SID 和真实会话内独立观察。raw5、PID 单独匹配、注入时快照、当前 worker 元数据、Status 或离线 JSON 均不满足范围门。只读探针从 ReadWorkerDiagnostic 经原 registry 调度到持有对象的原线程，绑定准确 failure、action、worker、线程、claim/N/L/K 和同一原生对象，前后核同次请求、原期限和连续持有。保持完整覆盖、活性和未知拒绝。探针禁止持久写入、释放、恢复、重取锁、Resume 或改变生产权限及合约。两个前置条件齐备后才进入原 10 秒 Explicit 与 5 秒 DiagnosticAfter，验证唯一 V2 Intent/Pending、刷盘和逐字节独立回读。
+
+测试接线写集限 apps/desktop/tauri/src/infrastructure/ 下 windows_owner_host024/recovery_control/{server,client,wire,wire_tests}.rs、windows_official_lifecycle024.rs、windows_official_lifecycle024/start_worker.rs、windows_client_originals024/recovery_worker.rs、windows_client_originals024/coordination/retained_start.rs。定向入口限 test/windows024-native/ 下 launch-r7-partial-owner.{cmd,ps1}、launch-r7-private-native-empty.{cmd,ps1}、verify-r7-host-receipts.py。生产入口、共享 trait 与持久格式维持现行合同。原二进制缺少实际范围探针时，保全 Host 结果并暂停 Explicit。需要重建时固定新源码、测试二进制与脚本摘要，使用新隔离配对，保留原始证据和运行对象。旧 nine-r1 与旧官方 r2 均独立保全。公开 Start、普通 MSI、生产 Stop/Closed 和单 SID 生命周期仍独立验收，固定候选前保持原范围。

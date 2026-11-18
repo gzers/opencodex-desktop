@@ -462,3 +462,9 @@ Windows 源码 `0e9f9cf486425d9fa4ba70ddcef376340f1abe5e`，证据 `87e664831c57
 Windows 源码 a7d7284a3280d973aaacddf361adae6f6dcc8a3c，证据 f9bf34095e06e1fd5e267be89356e57fb96406e5。接收范围归 IMP199。Windows 继续独占原生与定向夹具写集，Mac 继续后继准备取消及客户端验收准备。
 
 > fetch 最新 docs/governance-main，按 TEAM60／IMP199／r7 复用 daae8ffff7f304ec28b9c0214db26691e930a395 的 nine-r2 固定制品，用 a7d7284a3 核验回执。在 marenben 普通交互 session 7、WinSta0/Default、无外层 Job、Public 下 ocx-r7-isolated-owner-nine-r2 隔离根继续原定向试验。证伪目标是原 30 秒内九次完整扫描并到达首次 Intent 前 raw31，Node 未 Resume。独立证明同一存活 PID/FILETIME、原 Owner/线程和 claim/N/L/K 后，再做 5／10／5 秒诊断与刷盘读回。保留 nine-r1 raw32 和独立的旧官方 r2 现场。回交 Git 原始证据，固定签名候选前保持单 SID 定向范围。
+
+## revision61 nine-r2 宿主与同线程范围验证
+
+共享 main 040f411e6d48d97bde6e7b2e6c22860e547b6173，Windows 源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 ref 2e08a4463ec572c08787402cb8453b56a760a0f2。接收范围归 IMP200。Mac 与 Windows 分别推进，读探针限 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 的测试写集。
+
+> fetch docs/governance-main，按 TEAM61／IMP200／r7 复用固定 nine-r2，在 marenben 普通桌面只执行一次 Host。验证原 30 秒九次完整扫描、首次 Intent 前 raw31、Node 未 Resume。独立核同一存活 PID/FILETIME，并在原 DiagnosticBefore 5 秒内由原 worker 实查 claim/N/L/K。两项齐备再执行原 10 秒 Explicit 与 5 秒回读。现有制品无范围探针时停在已取证阶段，另固定含探针的配对并保留本轮。回交 Git 原始证据。保全旧现场，候选冻结前保持单 SID 定向范围。
