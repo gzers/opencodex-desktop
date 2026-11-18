@@ -2158,4 +2158,20 @@ Windows 分支保留第三次入口和四文件定向变更。交接时普通桌
 
 [单文件证据](https://github.com/gzers/opencodex-desktop/tree/65e58f12d5ea3952cd63fc0e7230c8c70a8e816c/.adg/evidence/0.2.24/windows-dev) · [成对预检证据](https://github.com/gzers/opencodex-desktop/tree/87e664831c5774ee099a1d5929e0d217da03bf44/.adg/evidence/0.2.24/windows-dev/wl2-r7-external-pair-preflight-20261118-r1/)
 
+## revision199 Windows r7 外部整树恢复与宿主回执核验
+
+Windows 代码 a7d7284a3280d973aaacddf361adae6f6dcc8a3c，交接 f9bf34095e06e1fd5e267be89356e57fb96406e5。按固定 Git 对象复核各组清单、长度及 SHA-256。外部恢复相对 IMP198 增量限五个测试源码路径，其中一个为产品模块的测试代码，生产接线待做。
+
+| 回交 | 复核结果 |
+| --- | --- |
+| 成对文件与原生租约 | 2afe0fa98，25 件证据，54 个清理标记。K 占用时首个 Intent 前 raw33，释放后独立重新获取。 |
+| 整树移动 | bcf533209，19 件证据、80,736 字节。宿主 10/10，产品定向测试 12/12。六次移动、十二条刷盘记录、八个安全投影。raw183 保持七条记录的精确前缀。 |
+| 整树租约 | 82f48aa05，14 件证据。宿主 10/10，产品定向测试 13/13。26 个检查点验证 raw33 与实际释放后重新获取。保留首次 E0502。 |
+| 整树记录绑定 | 6e4e2e274，16 件证据、67,751 字节。宿主 10/10，产品定向测试 13/13。验证六步记录绑定、异常记录拒绝、中断前缀、精确读回及租约释放。保留首次 E0463。 |
+| 宿主回执核验 | 最新代码净差只改回执核验脚本。九件原始证据共 13,862 字节。核验器重建 13 字段镜像清单摘要并绑定配对输入。合成正例及六项拒绝通过，旧脚本接受伪造 Node 摘要的回执已保留。真实 nine-r1 仍是 raw32，保留首次 Python 启动 raw9009 与后继 raw0。 |
+
+nine-r2 继续使用已固定的源码与二进制配对 daae8ffff7f304ec28b9c0214db26691e930a395，新脚本独立核验。截至复核，out01 尚无回执。原 nine-r1 的 PID 95724 在 6,460 ms 后 raw32，仅三次入口扫描，未启动 worker。旧官方 r2 另有三件原件处于保管，24 个 Job 成员 Unknown/raw50，谱系 raw64，executionReady 与 approvalRequested 均为 false，继续保全。普通用户 MSI raw1625、原预算完整 Stop/Closed、生产单 SID 与固定候选仍待完成。公开 Start 保持拒绝。
+
+[固定 Windows 交接](https://github.com/gzers/opencodex-desktop/blob/f9bf34095e06e1fd5e267be89356e57fb96406e5/docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md)
+
 上述为组件通过。旧 r2 的三件真实原件和锁继续保全，24 项 Job 仍是 Unknown／raw50，命令谱系 raw64，`executionReady=false`，普通用户 MSI 为 raw1625。生产恢复仍需证明整树成员、进程已静止、claim/N/L/K 连续持有、持久记录、精确锁释放和原件正常归还。强制清理不能签署 Stop 或 Closed。真实桌面沿 TEAM58 的原配对，`nine-r2/out01` 尚无 Host 结果。

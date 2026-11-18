@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 58；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 60；2026-11-18。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -455,3 +455,10 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 ## revision59 接收外部恢复原语与成对预检
 
 Windows 源码 `0e9f9cf486425d9fa4ba70ddcef376340f1abe5e`，证据 `87e664831c5774ee099a1d5929e0d217da03bf44`。组件接收和生产缺口见 IMP198。Windows 保持定向写集，组件接收无需重跑。真实 Host 沿 TEAM58 已固定的 nine-r2 配对和原回执核验器，原 30 秒和后续 5／10／5 秒预算照旧。新手工回执仍待交接。旧 r2 独立保全，候选冻结后再做 W2／双 SID。
+
+
+## revision60 整树恢复组件与宿主回执独立核验
+
+Windows 源码 a7d7284a3280d973aaacddf361adae6f6dcc8a3c，证据 f9bf34095e06e1fd5e267be89356e57fb96406e5。接收范围归 IMP199。Windows 继续独占原生与定向夹具写集，Mac 继续后继准备取消及客户端验收准备。
+
+> fetch 最新 docs/governance-main，按 TEAM60／IMP199／r7 复用 daae8ffff7f304ec28b9c0214db26691e930a395 的 nine-r2 固定制品，用 a7d7284a3 核验回执。在 marenben 普通交互 session 7、WinSta0/Default、无外层 Job、Public 下 ocx-r7-isolated-owner-nine-r2 隔离根继续原定向试验。证伪目标是原 30 秒内九次完整扫描并到达首次 Intent 前 raw31，Node 未 Resume。独立证明同一存活 PID/FILETIME、原 Owner/线程和 claim/N/L/K 后，再做 5／10／5 秒诊断与刷盘读回。保留 nine-r1 raw32 和独立的旧官方 r2 现场。回交 Git 原始证据，固定签名候选前保持单 SID 定向范围。
