@@ -1387,3 +1387,11 @@ status.json169项完整状态，普通desktopV2仍Pending（原Publicout空/mare
 ### 2026-11-18 原树成员回交传输停点
 
 代码a22f6ebe81b6d298525842af5bd3b90f355e0ab0与独立证据72c5814均已localcommit/原payload逐字节核，但code两次push/docs一次push和同授权127.0.0.1:3060端口有界读取诊断均schannel TLS handshake失败，当前未交远端；完整证据SHA与准确pending事实见同级wl2-r7-tree-membership-20261118-r1-delivery-pending.json。未直连绕过代理/改proxyservice/证书校验或持久配置。当前remote仍上一codeb1ef52972/doc7adf93a64，本地源/测试/原raw/32根清理证据完备，传输恢复后推相同提交，不重跑已过native。旧desktop仍outempty/session7Disconnected，本轮不触r2/旧授权/历史失败，不W2/双SID/发布，目标active。
+
+## 2026-11-18 原initial Start活动lease归属最小接口请求
+
+源码复核新增依赖见wl2-r7-initial-start-worker-request-20261118-r1/interface-request.json及4原source/Git绑定：CaptureStore::capture_held中的初始activeNativeLease在stack，preparation错误消费release(end)/忽略结果；capture_existing_with_predecessors中的原work动作失败也take/release，NativeLease Drop另尝试unlock。它们未签normalStop/Closed，但不能证明原失败initialStart范围始终原worker保留。当前新recovery WorkerControl只从实际failedResult+freshBeforeResumeRecoveryWindow准入，不能倒回接管初次已过期的活动lease；直接把!Send/!Synclease放SendOwner/PartialAnchor或unsafeSend/改Drop都不合合同。此为准确源码事实，未重跑原包/现场。
+
+请Mac集成线明确最小选择：是否由同一个原宿主持久owningworker在初始Start capture取任何活动lease前拥有唯一原Owner/槽，失败后同线程保原partialranges/前缀；新显式恢复如何以typed只读/受限准入借这些同原expiredStartranges而不续oldmutation/释放claim后仅NLK动作；全Start/Status/Stop/Restart是否同worker，或准确有界Start-to-recovery控制交接，仍原30/5/10/Restart30、registry独立control/Required/原Result/raw、原nativeSource/scope。若需共享持久control合同须明确，Windows不先绕过原锁线程/Drop/未知边界。只暂停这个initialStart资源归属依赖，原V2owner绑定/strictPendingproducer及其它native反例独立继续，不要求用户中转。
+
+原r7Gitblob对最新docs227aff029仍f9d39b1600974a2e4353e347034f29ce775300c0相同；新TEAM40/IMP179正文已可读、Windows原写集不变，sharedstatusdiff后续正常消费，未以新refs冒完整集成。当前r2Job24raw50、原21500/75744/原件/work/seq9/40588与synthetic27960/旧拒删原源均不动，无force/归还/自动unlock或newofficialStart，不W2/双SID/发布，publicStartfalse、目标active。

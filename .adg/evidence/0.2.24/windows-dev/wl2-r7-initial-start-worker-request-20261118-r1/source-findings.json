@@ -1,0 +1,39 @@
+{
+  "codeSha": "a22f6ebe81b6d298525842af5bd3b90f355e0ab0",
+  "sources": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/v3/capture.rs",
+      "bytes": 44737,
+      "sha256": "54698698d53ea7f9223b83b7a7402b75fc864c10beabce618f4d92429b7df999",
+      "gitNormalizedBytesEqual": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination.rs",
+      "bytes": 22131,
+      "sha256": "833e213362eca3de73ede14034980c64832548fe499c7675bb166a636d7e015f",
+      "gitNormalizedBytesEqual": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/recovery_worker.rs",
+      "bytes": 19810,
+      "sha256": "787d38e640f027362a7d7dff8470c657cb98c3c683eab29a34bb4f3e1aa72baf",
+      "gitNormalizedBytesEqual": true
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "bytes": 55052,
+      "sha256": "13f7ed35f19c97938c8ef57a1c0497a189f3e626774446188946b24a737d375d",
+      "gitNormalizedBytesEqual": true
+    }
+  ],
+  "method": "exact current originalsource inspection, not actual initialStart runtime reproduction",
+  "facts": [
+    "CaptureStore::capture_held has a local active NativeLease; preparation error consumes release(end) and ignores its result",
+    "capture_existing_with_predecessors keeps lease on stack through working move/create/open; error consumes held.release(end) and ignores result",
+    "NativeLease::release checks cutoff but still attempts unlock and Drop attempts unlock again; no normal Stop/Closed result is created, yet original range retention is lost",
+    "Current dedicated WorkerControl is admitted only from an actual failed Start prepared recovery window and therefore does not own that initial Start lease"
+  ],
+  "nativeOrOfficialExecuted": false,
+  "currentR2Touched": false,
+  "scope": "only original initialStart failure custody/range ownership dependency paused; independent V2 binding work continues"
+}

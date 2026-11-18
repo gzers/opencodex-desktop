@@ -1,0 +1,18 @@
+{
+  "authority":"last consumed TEAM33/IMP171/r7; fetched latest refs7765271ff/227aff029 contents still incomplete; r7 exact Git blob f9d39b1600974a2e4353e347034f29ce775300c0 unchanged",
+  "dependency":"original INITIAL Start capture/activity failure ownership, distinct from the already implemented fresh beforeResume recovery worker",
+  "evidence":"source-findings.json plus 4 original-source snapshots, no new runtime/official test",
+  "problem":"Active initial NativeLease and a possible acquisition prefix are local to the Start caller; error paths consume release(end) even on expiry and then Drop can unlock. Adding active fields to Send Owner/PartialCaptureAnchor conflicts with original !Send/!Sync NativeLease; current recovery control starts only after failed Result and cannot retroactively retain those original ranges.",
+  "minimalDecisionRequestedFromIntegrationLine":[
+    "Confirm whether one persistent original owning worker should own initial Start capture/native resources before the first actual lease acquisition, and retain the original failure prefix/ranges across later explicit recovery; registry stays independent control/ordinary actions Required, no shared trait ABI change.",
+    "Specify a typed readonly/fresh-recovery authority for that SAME original expired Start lease/ranges. Old mutation cutoff must remain expired; ordinary NativeLease::check cannot be called with a renewed end. No release-claim/reacquire/NLK-only interval or automatic FailedLeaseDisposition is allowed.",
+    "Clarify whether full initial Start/Status/Stop/Restart ownership belongs on that worker or a bounded original Start-to-recovery control handoff suffices; keep original30/5/10/Restart30 budgets, actual Result/raw codes, exact retained source/scope and native stage provenance."
+  ],
+  "suggestedScopeOnlyAfterDecision":"Windows-only worker/lifecycle/capture/coordination/existingqualification tests under existing exclusive paths; native active resources never unsafeSend/Clone/JSON adoption. A shared persistent/control contract change, if needed, must be explicit before implementation.",
+  "noActionAuthorizedByThisRequest":["currentr2 forced/restore","oldlease automatic unlock/drop","elevation/privilege/policy change","new official Start before old originals returned","W2/dualSID/release"],
+  "independentWorkContinues":["V2 actual Owner/action/partial-anchor read binding","strict V2 native record producer/Pending durability","original no-mutation native negatives and existing evidence intake"],
+  "publicStartOpen":false,
+  "actualInitialStartExecutedThisRound":false,
+  "currentR2Touched":false,
+  "goal":"active"
+}
