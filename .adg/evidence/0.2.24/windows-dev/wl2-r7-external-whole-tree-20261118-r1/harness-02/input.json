@@ -1,0 +1,38 @@
+{
+  "arguments": [
+    "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/cargo.exe",
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.debug=0",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.incremental=false",
+    "--config",
+    "profile.test.package.windows024-r7-query-proof.codegen-units=256",
+    "--manifest-path",
+    "test/windows024-native/r7-query-harness/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--lib",
+    "-j",
+    "1",
+    "external_steps",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "targetDir": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-query",
+  "sources": [
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_whole_tree.rs",
+      "bytes": 15584,
+      "sha256": "68886e77ce8af520dd94eb0e8cdca34070fcc7b31e296c520f2313f2eeb64b06"
+    },
+    {
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+      "bytes": 17699,
+      "sha256": "24a04c58663753554476874356ae0e3d4487836d734c6f59c34b81dc046a0e6a"
+    }
+  ]
+}

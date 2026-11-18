@@ -1724,3 +1724,12 @@ MSVC x64 最终 11/11，制品 SHA-256 08c69095386e22b5b8825d0394dcc2d7114a77175
 MSVC x64 原生两轮各 9/9，harness 两轮各 7/7；最终产品测试制品原 lease 回归 8/8。结果均 raw0。产品测试 EXE SHA-256 82db400192dc30180f852104be5a1265f54c92fd3114b5015331d47b91b76fd3，harness 4c631855ef1ccb5e1d5be0d48aefd0ea77ab13606cea76eba6a9a2d197204560。原始回执与逐文件摘要归档于 wl2-r7-external-native-lease-20261118-r1。没有非预期原生测试失败。预期反例保留 raw33、raw32、raw80 和 raw183。归档首个操作错误为 harness 制品路径提取失败，已根据 Cargo 原输出重新核对；清理解析随后兼容同一行的 Rust 用例名与标记，确认 54 个夹具目录均缺席。此次编译生成的未跟踪 Windows schema 已核对并移除。
 
 旧原包 r2 的三个真实原件、两 custody、原 Job 及锁现场继续保留。下一批须验证三原件与固定 anchors 的准确成员、逐节点持久记录、完整读回和释放，并独立证明原进程静止。旧 Job 24 项 Unknown/raw50，命令谱系 raw64，executionReady=false；当前无新的实际恢复授权请求。nine-r1 宿主 95724 仍存活，首错 6460 ms/raw32；TEAM58 的修复版 nine-r2 仍无 Host 回执。普通 MSI 残留 raw1625，生产单 SID 未验收，公开 Start 仍拒绝。
+
+
+## 2026-11-18 r7 外部恢复三原件整树回执
+
+输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 65835a0b3726d50f18018fbb8d8b8f6375ad286b、TEAM59／IMP198／r7 D 节。Windows 测试源码 bcf5332091431a67719f8a6442ce53d5e29745fd 已推送。合成夹具预先固定两处客户端根、两处 custody、三件原件和三份工作副本。原 10 秒内完成六次同卷移动、十二份刷盘记录及逐字节回读。每个节点边界核对完整成员，最终核对四处留位、原对象身份、内容及八项安全投影。
+
+第二处 custody 在预检后出现额外成员时，首份 Intent 前拒绝，六份文件保持。第二件原件归还碰撞返回原 raw183，七份记录、已执行移动及最后未动节点均核实。首次编译 raw101／E0502，修正借用后 MSVC harness 两轮各 10/10，最终 MSVC 产品测试库定向 12/12。最终制品 SHA-256 分别为 60ad54a97259cccec46d4c4ac2791e585e162750afcfd785e650fb282f345682 和 84dda39041961c74f646fbf28f51e305c107206b4dc4d837cd25f561a6d809cc。原始日志及已执行源码摘要见 wl2-r7-external-whole-tree-20261118-r1。32 个夹具根核实缺席，未跟踪的生成 schema 已核摘要后移除。
+
+三原件整树回执使用合成留位文件。原生连续 claim/N/L/K 与准确释放由此前单对原件回执覆盖，组合验收、原进程静止来源及外部修复正式记录继续待证。marenben session 7 活动，nine-r2 out01 仍空，nine-r1 宿主 95724 和 raw32 首错现场保留。旧原包 r2 继续保留，Job 24 项 Unknown/raw50、命令谱系 raw64、executionReady=false。公开 Start 维持拒绝，生产单 SID 与普通 per-user MSI 验收仍待。

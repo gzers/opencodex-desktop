@@ -1,0 +1,265 @@
+{
+  "codeCommit": "bcf5332091431a67719f8a6442ce53d5e29745fd",
+  "codeTree": "f10f1b02999e6588d3d00ac707ef7948dc2eb80d",
+  "main": "040f411e6d48d97bde6e7b2e6c22860e547b6173",
+  "governance": "65835a0b3726d50f18018fbb8d8b8f6375ad286b",
+  "contract": "TEAM59/IMP198/r7 section D",
+  "scope": "synthetic component tests",
+  "budgetMs": 10000,
+  "runs": [
+    {
+      "name": "harness-01",
+      "result": {
+        "raw": 101,
+        "elapsedMs": 1156
+      },
+      "artifact": null,
+      "passed": 0,
+      "matchesFinalSource": false,
+      "sources": [
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_whole_tree.rs",
+          "bytes": 15175,
+          "sha256": "709293fd698469887d7349c3182f508f8156ab02b341843ad5592ab97fccb40f"
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+          "bytes": 17699,
+          "sha256": "24a04c58663753554476874356ae0e3d4487836d734c6f59c34b81dc046a0e6a"
+        }
+      ],
+      "verifiedAbsentFixtureRoots": []
+    },
+    {
+      "name": "harness-02",
+      "result": {
+        "raw": 0,
+        "elapsedMs": 3781
+      },
+      "artifact": {
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-query\\x86_64-pc-windows-msvc\\debug\\build\\windows024-r7-query-proof\\803c99ecdabf4233\\out\\windows024_r7_query_proof-803c99ecdabf4233.exe",
+        "sha256": "ab10577283d86d3a759ae25e252c1275a3dddeefb791d3c40d76b6f665796316",
+        "bytes": 3551744
+      },
+      "passed": 10,
+      "matchesFinalSource": false,
+      "sources": [
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_whole_tree.rs",
+          "bytes": 15584,
+          "sha256": "68886e77ce8af520dd94eb0e8cdca34070fcc7b31e296c520f2313f2eeb64b06"
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+          "bytes": 17699,
+          "sha256": "24a04c58663753554476874356ae0e3d4487836d734c6f59c34b81dc046a0e6a"
+        }
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-nqsbrS",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-yLIoXN",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-DF68OF",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-FbsOYi",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-kLWTnG",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-2VGJs4",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-jwxClH",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-Zlpt8u",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-APZYL8",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-wwsikA"
+      ]
+    },
+    {
+      "name": "harness-03",
+      "result": {
+        "raw": 0,
+        "elapsedMs": 4641
+      },
+      "artifact": {
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-query\\x86_64-pc-windows-msvc\\debug\\build\\windows024-r7-query-proof\\803c99ecdabf4233\\out\\windows024_r7_query_proof-803c99ecdabf4233.exe",
+        "sha256": "60ad54a97259cccec46d4c4ac2791e585e162750afcfd785e650fb282f345682",
+        "bytes": 3558912
+      },
+      "passed": 10,
+      "matchesFinalSource": true,
+      "sources": [
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_whole_tree.rs",
+          "bytes": 15784,
+          "sha256": "4b213bc1e7bd200f8eb1fdad280f0af61822870cbbd762fee11a0574f654d21d"
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+          "bytes": 17839,
+          "sha256": "4742566ee3ba6f0c81c2470164aff0972376860e96eb4e21c980f6b756deb708"
+        }
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-syzDHj",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-yeAdww",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-tjoPid",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-elN4zd",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Ue75fB",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-TsuGd8",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-EEsd1P",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-b0ZSsn",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-PP7361",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-BtOPaK"
+      ]
+    },
+    {
+      "name": "product-01",
+      "result": {
+        "raw": 0,
+        "elapsedMs": 162032
+      },
+      "artifact": {
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\182e378daf0091d7\\out\\opencodex_desktop_lib-182e378daf0091d7.exe",
+        "sha256": "84dda39041961c74f646fbf28f51e305c107206b4dc4d837cd25f561a6d809cc",
+        "bytes": 104404480
+      },
+      "passed": 12,
+      "matchesFinalSource": true,
+      "sources": [
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_whole_tree.rs",
+          "bytes": 15784,
+          "sha256": "4b213bc1e7bd200f8eb1fdad280f0af61822870cbbd762fee11a0574f654d21d"
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+          "bytes": 17839,
+          "sha256": "4742566ee3ba6f0c81c2470164aff0972376860e96eb4e21c980f6b756deb708"
+        },
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs",
+          "bytes": 21003,
+          "sha256": "7c2afedafcabc6631945fd89856008310a269d9c3741d4f7837461cde715a2f7"
+        }
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Zdy1Sj",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-YeXZpi",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-RfVWwd",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-6AeqWD",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-ECBhtz",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-1vv6hI",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Hx4hTJ",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-XBGzE9",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-ZjyD9R",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-whole-tree-TxahCs",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-ISFEpt",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-PBes4c"
+      ]
+    }
+  ],
+  "rawPayloads": [
+    {
+      "path": "harness-01/input.json",
+      "sha256": "e9a47f820c3595e807945a896f0abfab38e2725361252bc62501428cd0af81ac",
+      "bytes": 1376
+    },
+    {
+      "path": "harness-01/result.json",
+      "sha256": "cc86baddb8def8efa8a61ec0d177eef4ca645e445c2b03fd8a1c33590644a958",
+      "bytes": 42
+    },
+    {
+      "path": "harness-01/stderr.log",
+      "sha256": "e2cdfc4bfc0058af23170f62e48a76955234c08045e47e5c6e855038bfc039b7",
+      "bytes": 4839
+    },
+    {
+      "path": "harness-01/stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "harness-02/artifact.json",
+      "sha256": "5475b88fa0e73e76f24c85ce46c3a3b80c6f47dcedf52508125c7be9961a1518",
+      "bytes": 368
+    },
+    {
+      "path": "harness-02/input.json",
+      "sha256": "b215c665395642de7a96fa7916666adce7d0f4d1eb9fae3fb0257672525e1930",
+      "bytes": 1376
+    },
+    {
+      "path": "harness-02/result.json",
+      "sha256": "5d582c2485a4f47a29e6ecf3270e2e99953d705035eb566c83fd5e9cc27be2f9",
+      "bytes": 40
+    },
+    {
+      "path": "harness-02/stderr.log",
+      "sha256": "2805040a1fcd60a5265b8451368dac4266060cbf46c3a51604abc6e8becf410f",
+      "bytes": 8237
+    },
+    {
+      "path": "harness-02/stdout.log",
+      "sha256": "56b61bde2fae0f2659a4ff55e1ee880dced296cdbf2f483081c7a99357a086ab",
+      "bytes": 3018
+    },
+    {
+      "path": "harness-03/artifact.json",
+      "sha256": "bb3f37550bdf743d0eb1adef11bf22ad7d0f426ffc4fc285cc3a29a031f578bf",
+      "bytes": 368
+    },
+    {
+      "path": "harness-03/input.json",
+      "sha256": "562a5f8889a6f836ecb3051645154ee5ee64f159b6ab6c39f364f34a018a6708",
+      "bytes": 1376
+    },
+    {
+      "path": "harness-03/result.json",
+      "sha256": "c8bb57379468b083c18a291e6d16ad627a20a76ef0b14b91bf5e326645cc2e5f",
+      "bytes": 40
+    },
+    {
+      "path": "harness-03/stderr.log",
+      "sha256": "988de35add032cd5000a76d03b03121aa6d1ca78775d003ea03aaee9287c63fa",
+      "bytes": 8237
+    },
+    {
+      "path": "harness-03/stdout.log",
+      "sha256": "235506001bcedd905ce359fd9c69eef2dbf35563301e872ffc125073db74dc23",
+      "bytes": 3018
+    },
+    {
+      "path": "product-01/artifact.json",
+      "sha256": "eb4476e25a214837d88ddf54de66445dd71bd0aabfd66d3abf0880bb7432b7d0",
+      "bytes": 361
+    },
+    {
+      "path": "product-01/input.json",
+      "sha256": "8e2ad3224af9cd7bcf91469ad4ef90858a58566e28e897599529c81e9ba520a1",
+      "bytes": 1616
+    },
+    {
+      "path": "product-01/result.json",
+      "sha256": "74a3547a21e9d9af2b158e92eebe8e64e5fa5cdcc3bf39e906dbff208a0d369c",
+      "bytes": 42
+    },
+    {
+      "path": "product-01/stderr.log",
+      "sha256": "a6275e27fe505392a7ed09e8a02697d76c7d4bc07510716d87841de2786b311b",
+      "bytes": 42186
+    },
+    {
+      "path": "product-01/stdout.log",
+      "sha256": "a8fb69ce8deb77cc7cf2c1dba69fdd41d4a4b83ca2436478affd8e25d4ce4376",
+      "bytes": 4196
+    }
+  ],
+  "verifiedAbsentFixtureCount": 32,
+  "firstError": {
+    "stage": "harness compile",
+    "raw": 101,
+    "rust": "E0502"
+  },
+  "firstExpectedMutationError": {
+    "stage": "second original return, occupied target",
+    "raw": 183
+  },
+  "publicStartOpen": false,
+  "productionAccepted": false,
+  "oldR2Touched": false
+}
