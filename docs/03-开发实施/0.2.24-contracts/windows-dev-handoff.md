@@ -1791,3 +1791,9 @@ MSVC x64 产品测试库 14/14、raw0，制品 SHA-256 8be7b249774d2f10f4f1ccdca
 新隔离配对的源码提交与暂存待合同补充。请 Mac 将 apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture.rs 的 BASE、PUBLIC、BUNDLE 三个测试路径常量列入本轮写集。它们与允许写入的 launch-r7-partial-owner.ps1 固定配对，需同时指向新 Public／Profile 根。其余原生门槛、生产权限、原 30／5／10／5 秒及持久格式沿用。两处新根均查证缺席，当前探针仍是测试草稿。固定制品须绑定提交与全部暂存输入，真实普通桌面仍待验收。
 
 用户贴录的入口是 nine-r1，工作目录为 C:/Users/15119，最后一行为 Initial Start prerequisite failed. Preserve this window and do not rerun. 该文字无 SID 或令牌证明。nine-r1 已有首错 6,460 ms／raw32，三次扫描后未建立原 worker。固定 nine-r2 的 EXE 和运行时摘要已复核，out01 空，现有 marenben 普通 session 7 活动，可单次采集 Host。该已固定制品缺原线程范围探针，回执合格后停在 Explicit 前。独立的旧官方 r2 仍保全，Job 24 项 Unknown/raw50、谱系 raw64，executionReady=false。普通 MSI raw1625、真实原件归还、生产单 SID 及固定候选仍待，公开 Start 保持拒绝。
+
+## 2026-11-18 r7 宿主隔离预检独立核验
+
+输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 e083f35b4bb7266b1837860818a4458cc0c501ca、TEAM62／IMP201。Windows 源码 673d1166334c4fb78d5094bc09ef130e578e0991 仅更新独立 Host 核验器，核对普通令牌类型、精确夹具布局、五个缺席目标和四个排除根，并拒绝路径重叠。沿用原九次完整扫描、30 秒、原线程、首次 Intent 前 raw31 和从未 Resume 的断言。使用已归档的 nine-r1 原生预检，原件通过，14 个内存改写反例拒绝，含失败结果的完整旧 Host 回执仍拒绝，保留 6,460 ms／raw32。检查 raw0，stderr 为空，未落地临时夹具。原输出和逐文件 SHA-256 见 wl2-r7-host-preflight-gate-20261118-r1。
+
+marenben session 7 活动，nine-r2/out01 仍空。用户提供的窗口命令与既有 nine-r1 首错记录吻合。固定 nine-r2 仅待真实普通桌面单次 Host，独立核验后仍须满足存活 PID/FILETIME 和原线程新鲜锁范围才能做 Explicit。原锁探针固定配对继续依赖上一条交接所列的三个测试路径常量写集。独立旧官方 r2 的进程及原件保留，executionReady=false。Hyper-V 查询被当前令牌拒绝，现有 VM 是否存在未知。普通用户 MSI 真实补验仍待满足环境前提。
