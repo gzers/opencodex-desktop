@@ -1,0 +1,33 @@
+{
+  "evidenceCommitted": true,
+  "observedPriorCodeRemote": "b1ef529722a503e4b36a0b3b99f9ca66e1ff1cec",
+  "goal": "active",
+  "codeCommitted": true,
+  "proxy": "127.0.0.1:3060 only, command environment settings, TLS verification/persistent config unchanged",
+  "nativeRawCodes": "see exact result.json files, unchanged",
+  "oldDeletionRetried": false,
+  "codeSha": "a22f6ebe81b6d298525842af5bd3b90f355e0ab0",
+  "toolResults": [
+    {
+      "shellExit": 1,
+      "stage": "code first/retry push",
+      "error": "schannel TLS failed to receive handshake"
+    },
+    {
+      "shellExit": 1,
+      "stage": "evidence push",
+      "error": "same schannel TLS failed"
+    },
+    {
+      "shellExit": 1,
+      "stage": "same authorized proxy port SOCKS5h bounded ls-remote diagnosis",
+      "error": "same TLS failure; not direct connection/bypass"
+    }
+  ],
+  "observedPriorDocsRemote": "7adf93a64d7b5f9afdd4c87963b744c4c39ca47f",
+  "evidenceSha": "72c5814edd371bc7355710e09c86280e6023b7a3",
+  "ordinaryDesktop": "Pending old exactentry/outempty/session7disconnected",
+  "codePushConfirmed": false,
+  "currentR2Touched": false,
+  "evidencePushConfirmed": false
+}

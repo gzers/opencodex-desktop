@@ -1383,3 +1383,7 @@ TEST EXE SHA547d50530139edcf728e4a1161847dbc413409c74b358aa60c076787b5b95dfe；6
 原13受影响tests全raw0：treeprefix5/1172ms、v2native3/94ms、partialcapture3/219ms、concretepipeline1两模式/9250ms、Send1/31ms。pipeline仅自有syntheticJob242/原两树/canonical/附件/显式release原语，不冒普通Profile固定官方预算或Stop/Closed。最终TEST EXE SHA6a5e7f400712e6c8b6af36fb3468850c5ec74578ad6b1e0b424d3ca92e7b28b2；7最终源逐Git行尾归一核，所有source/raw stdout-stderr/首错保。32新root缺席（15/1/11/3/2），oldpartial只有FixtureDrop不冒全历史清理；无意外nativefailure，schema生成raw归档还原/移出。旧失败/拒删/synthetic27960/40588缺口保留，不绕过或重试两旧blocked by policy删除拒绝。
 
 status.json169项完整状态，普通desktopV2仍Pending（原Publicout空/marenbensession7Disconnected），原ocxd55cd6ef…/入口未覆盖或重跑。完整Source/初始原件集合与恢复permission、nativeV2pre-manifest/partial/缺根恢复、普通Profile固定官方Owner预算整链、容量/CAPtrust/普通MSI/最终候选未完。r2Job24raw50Unknown不重复PSS/旧cleanup探Status，原21500/75744/原件/work/custody/anchors/协调/seq9不动，无newforce/归还批准，旧50580/54692授权不延用。公共Start/production/allAcceptedfalse，原预算/unknown/普通token/官方2.99及日常PATH配置策略不变，不W2/双SID/发布，目标active。
+
+### 2026-11-18 原树成员回交传输停点
+
+代码a22f6ebe81b6d298525842af5bd3b90f355e0ab0与独立证据72c5814均已localcommit/原payload逐字节核，但code两次push/docs一次push和同授权127.0.0.1:3060端口有界读取诊断均schannel TLS handshake失败，当前未交远端；完整证据SHA与准确pending事实见同级wl2-r7-tree-membership-20261118-r1-delivery-pending.json。未直连绕过代理/改proxyservice/证书校验或持久配置。当前remote仍上一codeb1ef52972/doc7adf93a64，本地源/测试/原raw/32根清理证据完备，传输恢复后推相同提交，不重跑已过native。旧desktop仍outempty/session7Disconnected，本轮不触r2/旧授权/历史失败，不W2/双SID/发布，目标active。
