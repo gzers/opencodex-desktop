@@ -1,0 +1,9 @@
+{
+  "hypothesis": "Only the original retained worker can write a new strict two-record V2 partial-capture attachment. A cutoff or mismatch leaves all enrolled handles and any written prefix in place, with no restoration authority.",
+  "falsifiers": ["owner and capture session incorrectly treated as one", "input parent, token, thread, failed action or recovery action drift accepted", "existing action path adopted", "short-write, flush or readback failure projected as durable", "out-of-window admission or lost attachment handles", "public Start opened"],
+  "fixture": "controller medium integrity synthetic data; no old r2 scene or official service",
+  "sharedMain": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+  "governance": "ec5c597b77701811d60a2f1c394c3dd06cef0b43",
+  "team": 49,
+  "imp": 188
+}

@@ -1,0 +1,38 @@
+
+running 3 tests
+test infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_refuses_identity_action_thread_and_expiry_drift ... r7-pending parent-path refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpQW1xcT
+r7-pending parent-object refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmphYGS2b
+r7-pending parent-stream refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp6KmfJP
+r7-pending owner-host refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpBMKSnS
+r7-pending owner-session refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpZnz09M
+r7-pending capture-session refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpXiM1M7
+r7-pending failed-action refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp3QAH6X
+r7-pending new-action refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpkO1AD8
+r7-pending thread refused before creating files raw=None kind=InvalidData
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpQT5PVm
+r7-pending expired refused before creating files raw=None kind=TimedOut
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpon7NWn
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_same_thread_exact_readback_and_create_only ... r7-pending exact two-record native readback, no second admission
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmptqEwY8
+r7-pending collision raw=Some(183)
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpGEg5Pu
+ok
+test infrastructure::windows_client_originals024::before_resume_record_v2::pending_attachment::tests::wl2_r7_pending_attachment_native_short_write_flush_and_readback_keep_diagnostic_prefix ... r7-pending injected short-write, retained bytes=743 raw=None
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpbev2fT
+r7-pending injected flush, retained bytes=1486 raw=Some(1117)
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpLb5E0T
+r7-pending injected readback, retained bytes=1486 raw=None
+r7-pending-attachment-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpkktGOU
+ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 2293 filtered out; finished in 0.09s
+

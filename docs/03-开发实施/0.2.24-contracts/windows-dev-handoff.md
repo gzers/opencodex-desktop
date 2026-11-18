@@ -1529,3 +1529,11 @@ r2 继续沿用已核验归档。生产首错 command-lineage raw64，原 Job 24
 MSVC 测试编译和三开发制品编译均 raw0，定向 5/5。14 个已报告夹具根核实缺席，生成 schema 归档核摘要后清理。原日志、源绑定、测试与产品 SHA-256、清理清单、累计 260 项状态见 wl2-r7-journal-readback-stages-20261118-r1。
 
 r2 沿用既有全归档与 10 份只读回执。原 Job 24 项未知／raw50，executionReady=false，生产首错 command-lineage raw64。当前原件及进程继续保留。普通桌面私有 V2 无输出，严格 V2 Pending 初次持久化沿既有接口请求等待 Mac。公开 Start 保持拒绝。
+
+## 2026-11-18 r7 准备失败的 V2 保全附件
+
+代码 `0d0c9d29ccd9075d59f92350c158c256c835924b` 已推送并独立回读。输入为 main `6bafdd342e69ee83e842f4b35a20bafa1320645a`、governance `ec5c597b77701811d60a2f1c394c3dd06cef0b43`，TEAM49／IMP188／r7。实现仅在未来隔离宿主使用原私有 D。捕获前核对 D 对象、普通令牌、原线程、宿主、Owner session、独立 capture session 和失败 Start action。显式恢复动作沿用一个绝对期限，原线程只创建本动作目录，写入、flush 并逐字节回读严格 V2 Intent 与 Pending，复核父目录及原 Owner 后才投影 `durable=true`。附件失败保留准确前缀，完整 claim／NLK 恢复门槛与公开 Start 拒绝保持。
+
+最终 MSVC 测试及三个开发制品编译均 raw0。七组定向 28/28；原生同名冲突 raw183，短写、flush 和回读注入保全准确前缀，flush 原测试码 raw1117。首轮 Cargo raw0，包装器因把生成 schema 纳入源码断言而 raw1，原编译日志保留。51 个报告夹具根核实缺席，生成 schema 核摘要归档后清理。证据 `wl2-r7-pending-durable-20261118-r1` 含四份制品 SHA-256、源码绑定、原日志和累计 263 项状态。真实普通桌面私有 V2、实际原 Owner 回执及恢复原预算仍待验。
+
+用户已运行的 r2 入口产出十份回执，重新核对大小和摘要均与已提交原件一致。沿用完整归档及精确计划；首错 command-lineage raw64，原 Job 24 项 unknown/raw50，`executionReady=false`。原进程、三原件、锁和 seq9 保留。本轮未执行现场修复、重跑原包、W2、双 SID 或发布。
