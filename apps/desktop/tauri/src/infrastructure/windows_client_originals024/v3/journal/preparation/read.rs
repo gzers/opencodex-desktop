@@ -221,7 +221,7 @@ fn read_initial_journal(
         .check_native(&journal.peer, &journal.pins)?;
     before(end)?;
     Ok((
-        serde_json::json!({"members":expected,"directoryIdentityDigest":projection_digest(&(journal.directory.identity().volume,journal.directory.identity().index.to_string()))?,"observedDirectorySecurityDigest":projection_digest(&journal.directory_security)?,"fullInitialJournal":true}),
+        serde_json::json!({"members":expected,"directoryPathDigest":projection_digest(&("originalJournalPreparation", path))?,"directoryIdentityDigest":projection_digest(&(journal.directory.identity().volume,journal.directory.identity().index.to_string()))?,"observedDirectorySecurityDigest":projection_digest(&journal.directory_security)?,"fullInitialJournal":true}),
         vec![manifest, current],
     ))
 }
@@ -317,7 +317,7 @@ impl JournalPreparation {
         }
         before(end)?;
         Ok(
-            serde_json::json!({"directory":{"members":members,"directoryIdentityDigest":projection_digest(&(directory.identity().volume,directory.identity().index.to_string()))?,"observedDirectorySecurityDigest":projection_digest(&directory_sd)?,"fullInitialJournal":false},"objects":objects,"membership":self.retained_v2_membership_data(),"pending":true,"runtimeAuthority":false}),
+            serde_json::json!({"directory":{"members":members,"directoryPathDigest":projection_digest(&("originalJournalPreparation", &path))?,"directoryIdentityDigest":projection_digest(&(directory.identity().volume,directory.identity().index.to_string()))?,"observedDirectorySecurityDigest":projection_digest(&directory_sd)?,"fullInitialJournal":false},"objects":objects,"membership":self.retained_v2_membership_data(),"pending":true,"runtimeAuthority":false}),
         )
     }
     pub(in crate::infrastructure::windows_client_originals024) fn read_v2_retained_native(
@@ -378,15 +378,20 @@ impl JournalPreparation {
             )?);
         }
         // Include the original directory/pins/peer/metadata aggregate as a
-        // separate pending native member. Full Source/coverage still required.
+        // separate pending native member. Its locator follows the retained
+        // directory path, while the observation carries changing membership.
+        let directory = &data["directory"];
         objects.push(retained_object(
             session,
             Role::Journal,
             2,
             Stage::HandleRetained,
-            projection_digest(&("originalJournalPreparation", &data["membership"]))?,
+            directory["directoryPathDigest"]
+                .as_str()
+                .ok_or_else(invalid)?
+                .into(),
             Some(
-                data["directory"]["directoryIdentityDigest"]
+                directory["directoryIdentityDigest"]
                     .as_str()
                     .ok_or_else(invalid)?
                     .into(),

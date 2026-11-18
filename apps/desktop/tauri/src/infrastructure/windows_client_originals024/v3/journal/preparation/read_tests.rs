@@ -81,6 +81,8 @@ fn wl2_r7_preparation_read_native_every_original_initializer_prefix_preserves_pe
         let scene = Scene::new();
         let (mut original, path) = scene.prefix(fault);
         let end = Instant::now() + Duration::from_secs(10);
+        let (enrolled, _) = original.v2_native_objects(data_session, end).unwrap();
+        let enrolled = serde_json::to_value(&enrolled[0]).unwrap();
         assert!(original
             .initialize(
                 &uuid::Uuid::new_v4().to_string(),
@@ -127,7 +129,13 @@ fn wl2_r7_preparation_read_native_every_original_initializer_prefix_preserves_pe
         assert_eq!(objects.len(), rows.len() + 1);
         assert_eq!(again, data);
         let encoded = serde_json::to_value(&objects).unwrap();
-        let observed_aggregate = encoded.as_array().unwrap().last().unwrap()["objectId"].clone();
+        let aggregate = encoded.as_array().unwrap().last().unwrap();
+        assert_eq!(aggregate["identityDigest"], enrolled["identityDigest"]);
+        assert_eq!(
+            aggregate["pathDigest"], enrolled["pathDigest"],
+            "same original directory path must stay stable at initializer fault {fault}"
+        );
+        let observed_aggregate = aggregate["objectId"].clone();
         if let Some(expected) = &aggregate_id {
             assert_eq!(
                 *expected, observed_aggregate,
