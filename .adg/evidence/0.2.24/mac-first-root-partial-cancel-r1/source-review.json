@@ -1,0 +1,12 @@
+{
+  "exactNativeBackendSourceFiles": 9,
+  "postNativeChangesOnly": [
+    "apps/desktop/ui/src/features/runtime/client-recovery-store.ts",
+    "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+    "test/smoke/macos024-root-cancel.py"
+  ],
+  "uiChanges": "strict kind/phase mismatch rejection only; final94tests passed",
+  "runnerChanges": "accurate coordination preflight/cleanup after all assertions; separately tested with five actual filesystem/SQLite cases; no mutation test rerun",
+  "nativeNoOfficialServiceStart": true,
+  "scope": "source equality review, not independent whole tree security audit"
+}

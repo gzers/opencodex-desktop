@@ -1,0 +1,8 @@
+   Compiling opencodex-desktop v0.2.24 (/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/apps/desktop/tauri)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 46.77s
+     Running unittests src/lib.rs (apps/desktop/tauri/target/debug/deps/opencodex_desktop_lib-114f658f3f2e2b97)
+
+thread 'infrastructure::macos_client_originals::session_index::root_preparation::tests::first_root_partial_capture_late_bytes_and_permissions_invalidate_original_confirmation' (166602951) panicked at src/infrastructure/macos_client_root_prepare_cancel_tests.rs:184:70:
+called `Result::unwrap()` on an `Err` value: Os { code: 13, kind: PermissionDenied, message: "Permission denied" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--lib`

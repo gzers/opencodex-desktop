@@ -1,0 +1,30 @@
+{
+  "code": "ea7e258bafcabc8128d98afa976fdba21cef9f4c",
+  "fixCode": "0d44a46438ad8f1383eeed34c8b4ce65f49f8bb4",
+  "files": [
+    {
+      "path": "apps/desktop/ui/src/features/runtime/client-recovery-store.ts",
+      "bytes": 14773,
+      "sha256": "1b1bf36e53deb827a5241b4304a1dea44df5e65a3b727f6b20aaffb3aed45918"
+    },
+    {
+      "path": "apps/desktop/ui/src/features/runtime/ClientRecovery.vue",
+      "bytes": 14507,
+      "sha256": "f41e45e1268a3c9f1d712821df3035e0c71d9ec8a6eec9cd9c3f286b4942a57f"
+    },
+    {
+      "path": "apps/desktop/ui/tests/client-recovery-flow.test.ts",
+      "bytes": 49452,
+      "sha256": "f855a37c2da8ede0a166413add7f80f0aa89f509a86f989d1bff8019e03b5587"
+    },
+    {
+      "path": "test/smoke/macos024-gui-root-cancel.py",
+      "bytes": 23760,
+      "sha256": "86d8735214b767ea5fe98bdc01fdf558c315534899a70bf61c7b1df731673e1c"
+    }
+  ],
+  "sameRootMutationBackendAsEbe80": true,
+  "gui01NoStartOccurred": true,
+  "hypothesisBeforeSecondGui": "explicit closed-root read-only inspection reconciles stale Required only with same final indexed session and valid live status; then actual official successor lifecycle proceeds; no cancellation replay",
+  "releaseAcceptance": false
+}

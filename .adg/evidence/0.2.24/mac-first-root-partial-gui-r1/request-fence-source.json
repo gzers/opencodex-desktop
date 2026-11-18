@@ -1,0 +1,23 @@
+{
+  "source": "bb13a7f12570bff10cb117fabdeefcf1b30d27d5",
+  "files": [
+    {
+      "path": "apps/desktop/ui/src/app/lifecycle/store.ts",
+      "sha256": "f6675b3932b45be496994feb107d1a99897bf2ca3473c466df37014e79679bd9",
+      "bytes": 17790
+    },
+    {
+      "path": "apps/desktop/ui/tests/process-action.test.ts",
+      "sha256": "6fb1b9610a6f66f39a88ec9b5c22989e69e1e375ba5a63417f26760222fbce43",
+      "bytes": 17879
+    },
+    {
+      "path": "test/smoke/macos024-gui-root-cancel.py",
+      "sha256": "f6f716575438cd2e7aad4935ea6825730095de4834de04a913c14eedcf1b7639",
+      "bytes": 23818
+    }
+  ],
+  "productNativeBackendUnchanged": true,
+  "hypothesisBeforeGui03": "do not exposeStop fromReady until actual original invoke returned; keep current truth and native gates; cleanup only completeRootAbsent",
+  "releaseAcceptance": false
+}

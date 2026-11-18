@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "cargo",
+    "clippy",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--lib",
+    "--test",
+    "macos024_gui_root_seed",
+    "--",
+    "-D",
+    "warnings"
+  ],
+  "exitCode": 0,
+  "elapsedMs": 26616
+}

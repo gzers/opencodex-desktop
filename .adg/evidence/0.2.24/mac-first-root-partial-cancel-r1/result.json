@@ -1,0 +1,40 @@
+{
+  "sourceCommit": "346b46a69b1d9951335359a334cda7bf21ddd132",
+  "nativeBackendMatchesExecutedSource": true,
+  "actualNativeHostSha256": "afa8e44994045d68ab6007e909cb1fa2693224b13a33d1cfd95b2a7042c8cc9e",
+  "actualCaptureInterruptionPoints": [
+    "directory_created",
+    "codex_archived",
+    "grok_archived",
+    "original_published"
+  ],
+  "cancelElapsedMs": [
+    9488,
+    8888,
+    8957,
+    9306
+  ],
+  "cancelBudgetMs": 10000,
+  "successorStorageCaptureMs": [
+    2736,
+    2307,
+    3089,
+    3060
+  ],
+  "successorBudgetMs": 30000,
+  "scopedTestsPassed": 9,
+  "affectedRegressionTestsPassed": 12,
+  "uiInteractionTestsPassed": 94,
+  "typecheckPassed": true,
+  "strictClippyPassed": true,
+  "cleanupHelperCasesPassed": 5,
+  "externalExactTaskDatabasesArchivedAndRemoved": 8,
+  "externalPreRunAbsenceReceiptMissingForOriginalNativeRound": true,
+  "sharedGlobalLModifiedByCleanup": false,
+  "originalsAdoptedFromPartialOrDisk": false,
+  "actualSignedGuiPartialCaptureRun": false,
+  "officialSuccessorServiceLifecycleRun": false,
+  "serviceStarted": false,
+  "modelOrBusinessRequests": false,
+  "releaseAcceptance": false
+}

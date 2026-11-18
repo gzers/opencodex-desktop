@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 334, in <module>
+    result = run(args.app, args.expected_sha256, args.output, args.seed_host, args.flow)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 164, in run
+    launch(1)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 152, in launch
+    wait_for('startup-'+str(generation),lambda v:current.is_file() and any('运行状态与常用操作' in str(n.get('value','')) or n.get('title')=='版本升级' for n in v['nodes']),180)
+  File "/Users/ezio/.codex/worktrees/ocxd-023-integration/ocx-0219-fixes/test/smoke/macos024-gui-root-cancel.py", line 78, in wait_for
+    raise RuntimeError('observation timeout: ' + label)
+RuntimeError: observation timeout: startup-1
