@@ -1,0 +1,19 @@
+{
+  "source": "bec99201e6ef4addaed61d6d50bf8b67a956d0e2",
+  "argv": [
+    "cargo",
+    "tauri",
+    "build",
+    "--bundles",
+    "app",
+    "--features",
+    "custom-protocol",
+    "--config",
+    "/Users/ezio/WorkSpace/Code/tools/opencodex-desktop/governance-main/.adg/evidence/0.2.24/mac-first-root-partial-gui-r1/build/resources.conf.json",
+    "--",
+    "--message-format=json-render-diagnostics"
+  ],
+  "beforeBuild": true,
+  "hypothesis": "actual packaged status IPC with background polling completes under original5s after nonblocking scheduling; no cancel/Start/Stop",
+  "releaseAcceptance": false
+}
