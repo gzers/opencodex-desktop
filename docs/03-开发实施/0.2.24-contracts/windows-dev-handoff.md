@@ -1750,3 +1750,10 @@ Harness 10/10，最终 MSVC x64 产品测试库 13/13，均 raw0。制品 SHA-25
 Harness 10/10、MSVC x64 产品测试库 13/13，均 raw0。制品 SHA-256 分别为 92c6ef7e7b99ea2e0c8100d79a5a65411ffe642e0a38a94a443c49038f1f2ecd 和 7e7e360e6dd052a7263b9e3f6a09b7aa92f399bc7943408d675177397605239e。验证篡改绑定、未知字段、前缀重排、七条中断前缀、缺观测或缺步骤的完成记录均保持拒绝或 Pending。Cargo 首错 raw101／E0463，显式指定现有 MSVC rustc/rustdoc 后通过；原输出保留。23 个夹具根确认缺席，独立证据见 wl2-r7-external-record-20261118-r1。
 
 当前真实 r2 的原进程静止和最终外部修复仍待。旧 Job 24 项 Unknown/raw50、命令谱系 raw64，executionReady=false、approvalRequested=false；旧 r2 现场、旧 seq9 和既有失败文件保持。marenben 已运行 nine-r1，6460 ms/raw32 首错与 PID 95724 保留；nine-r2 尚无桌面 Host 回执。普通 per-user MSI raw1625、生产单 SID、真实原包闭环和固定候选待验。公开 Start 维持拒绝。
+
+
+## 2026-11-18 r7 普通桌面宿主固定镜像回执核验
+
+消费 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 65835a0b3726d50f18018fbb8d8b8f6375ad286b、TEAM59／IMP198／r7。Windows 代码 a7d7284a3280d973aaacddf361adae6f6dcc8a3c 已推送。独立校验重算固定官方 2.99 镜像清单的原序列化摘要，核对 current、官方归档、运行时包及完整读回。此前仅核导出摘要，改写 Node 摘要并同步更新导出长度与摘要后仍会被接受。此批一组有效合成信封、六组改写反例、旧校验复现及真实 nine-r1 拒绝均符合预期。首启动 raw9009 为本地 Python shim，改用同一 Python 的真实路径后通过。原输出、测试源、暂存输入摘要及夹具缺席见 wl2-r7-runtime-report-gate-20261118-r1。
+
+marenben session 7 的已运行入口为 nine-r1，首错 6,460 ms／raw32，worker 尚未创建，PID 95724 和文件保留。nine-r2 的五个暂存文件已核 SHA-256，入口语法通过，out01 仍空。待普通桌面单次 Host 回执，核九次完整扫描、原 worker、raw31 和从未 Resume 后才进入 5／10／5 秒。旧原包 r2 继续受 Job 24 项 Unknown/raw50 与命令谱系 raw64 阻塞，executionReady=false、approvalRequested=false。普通 per-user MSI raw1625、生产单 SID、正式原包闭环和固定候选待验，公开 Start 维持拒绝。

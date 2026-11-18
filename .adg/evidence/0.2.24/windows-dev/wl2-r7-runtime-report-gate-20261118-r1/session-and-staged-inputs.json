@@ -1,0 +1,47 @@
+{
+  "observedAt": "2026-11-18T21:18:46.3746822+08:00",
+  "sessions": [
+    " marenben              rdp-tcp#3           7  Active       1:37  2026/11/14 22:10"
+  ],
+  "nineR1": {
+    "hostResultSha256": "c516f1aa3824d718e0c13047c1e34ceb6532c1e75c0039551cd656c0599f5d8e",
+    "nativeResultSha256": "3f4b456c9aa35cc9f794808ef6f0d9bf9778e1373aecc981eaac79e4850df48d",
+    "processObserved": true,
+    "observedPid": 95724,
+    "observedSession": 7,
+    "observedCreationCim": "2026-11-18T19:41:01.6993800+08:00",
+    "receiptCreationFiletime": "134394756616993808"
+  },
+  "nineR2": {
+    "path": "C:\\Users\\Public\\ocx-r7-isolated-owner-nine-r2",
+    "receipts": [],
+    "stagedInputs": [
+      {
+        "path": "input\\fixture-test.exe",
+        "bytes": 103972352,
+        "sha256": "ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030"
+      },
+      {
+        "path": "input\\runtime-bundle-0.2.24-win32-x64.tar.gz",
+        "bytes": 274033721,
+        "sha256": "14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7"
+      },
+      {
+        "path": "input\\manifest.json",
+        "bytes": 329,
+        "sha256": "24a9e54ea54d122b59129cb207a521269cdb5dbb783a0fd5fcf0e01ea7243525"
+      },
+      {
+        "path": "launch-r7-partial-owner.cmd",
+        "bytes": 109,
+        "sha256": "85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2"
+      },
+      {
+        "path": "launch-r7-partial-owner.ps1",
+        "bytes": 28277,
+        "sha256": "9467b0b3ae267c062656972adb65750f9b993a15cc94b1061f38885fbbcda3b8"
+      }
+    ],
+    "launcherParseErrors": []
+  }
+}

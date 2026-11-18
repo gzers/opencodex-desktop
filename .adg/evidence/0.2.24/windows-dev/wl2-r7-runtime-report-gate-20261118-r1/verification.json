@@ -1,0 +1,87 @@
+{
+  "sourceCommit": "a7d7284a3280d973aaacddf361adae6f6dcc8a3c",
+  "priorVerifierTestedAt": "6e4e2e274113e155d29867f6591937ec4a2915ef",
+  "fixtureSourceCommit": "daae8ffff7f304ec28b9c0214db26691e930a395",
+  "main": "040f411e6d48d97bde6e7b2e6c22860e547b6173",
+  "governance": "65835a0b3726d50f18018fbb8d8b8f6375ad286b",
+  "contract": "TEAM59/IMP198/r7",
+  "firstRunnerAttempt": {
+    "raw": 9009,
+    "reason": "PyEnv shim selected by Start-Process; Python did not start."
+  },
+  "directed": {
+    "raw": 0,
+    "validSyntheticEnvelopes": 1,
+    "refusals": 6,
+    "oldVerifierAcceptedChangedNodeDigest": true,
+    "existingNineR1Refused": true,
+    "temporaryReceiptRootAbsent": true
+  },
+  "productionExecution": false,
+  "nineR1": {
+    "elapsedMs": 6460,
+    "nativeRaw": 32,
+    "publicStartOpen": false,
+    "workerCreated": false,
+    "processObservedPid": 95724,
+    "scenePreserved": true
+  },
+  "nineR2": {
+    "receiptCountAtObservation": 0,
+    "actualDesktopVerified": false,
+    "laterRangeContinuityVerified": false
+  },
+  "oldOfficialR2": {
+    "jobUnknownRaw": 50,
+    "commandLineageRaw": 64,
+    "executionReady": false,
+    "approvalRequested": false
+  },
+  "evidence": [
+    {
+      "path": "verify-runtime-report-cases.py",
+      "bytes": 6054,
+      "sha256": "b86559f237a314b7bbe2adb6d4ab383c948637fb1eb3469ceb161cabb40d9713"
+    },
+    {
+      "path": "directed.stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "directed.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "directed-r2.stdout.log",
+      "bytes": 2451,
+      "sha256": "fbdb93b6366c0ab3487c13b928d00379778e2d116f019030d7da4e076c198f20"
+    },
+    {
+      "path": "directed-r2.stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "Host-result.json",
+      "bytes": 1717,
+      "sha256": "c516f1aa3824d718e0c13047c1e34ceb6532c1e75c0039551cd656c0599f5d8e"
+    },
+    {
+      "path": "Host-fixture-result.json",
+      "bytes": 608,
+      "sha256": "3f4b456c9aa35cc9f794808ef6f0d9bf9778e1373aecc981eaac79e4850df48d"
+    },
+    {
+      "path": "Host-image-created-verified.json",
+      "bytes": 1428,
+      "sha256": "d99edee9de401d5146512796e8c2679fcd91b54639536a6a24d5ef15b5470496"
+    },
+    {
+      "path": "session-and-staged-inputs.json",
+      "bytes": 1604,
+      "sha256": "6a4f2f99c57052db9e4b31489d73bdb2ea49efbbcab81e12dbd6fe62941a4b54"
+    }
+  ]
+}
