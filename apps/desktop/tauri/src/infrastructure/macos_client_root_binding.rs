@@ -66,13 +66,14 @@ pub(super) fn active_binding(
     stored: &[u8],
     head: &Head,
 ) -> io::Result<(Vec<u8>, root_creation::References)> {
-    active_binding_projected(connection, stored, head, &|_, _, _| Ok(()))
+    active_binding_projected(connection, stored, head, &|_, _, _| Ok(()), None)
 }
 fn active_binding_projected(
     connection: &Connection,
     stored: &[u8],
     head: &Head,
     project: RootProjection<'_>,
+    registering: Option<&root_cancel_namespace::RegisteringSlot>,
 ) -> io::Result<(Vec<u8>, root_creation::References)> {
     let history = vault_history::read(connection, head)?;
     let lineage = root_lineage::parse(stored, &history)?;
@@ -93,7 +94,7 @@ fn active_binding_projected(
     let manager = data.child_private("manager-state", false)?;
     let slots = lineage.slots();
     root_creation::verify_generation_slots(&manager, &slots)?;
-    vault_history::inspect_root_history(&data, Path::new(profile), stored, &history)?;
+    vault_history::inspect_root_history(&data, Path::new(profile), stored, &history, registering)?;
     root_creation::verify_generation_slots(&manager, &slots)?;
     let confirmed: Vec<u8> = connection
         .query_row("SELECT document FROM binding WHERE singleton=1", [], |r| {
@@ -213,7 +214,7 @@ pub(super) fn resolve_originals(
         stored,
         head,
         connection,
-        &|_, _, _| Ok(()),
+        (&|_, _, _| Ok(()), None),
     )
 }
 pub(super) fn resolve_originals_projected(
@@ -223,12 +224,16 @@ pub(super) fn resolve_originals_projected(
     stored: &[u8],
     head: Option<&Head>,
     connection: &Connection,
-    project: RootProjection<'_>,
+    observation: (
+        RootProjection<'_>,
+        Option<&root_cancel_namespace::RegisteringSlot>,
+    ),
 ) -> io::Result<(
     PinnedDirectory,
     Option<root_creation::References>,
     Option<Originals>,
 )> {
+    let (project, registering) = observation;
     let logical = context.working_directory.join(".codex");
     let value = crate::modules::model_config::schema_v2::parse_strict_json_v2(stored)
         .map_err(|_| denied("root scope binding is not strict JSON"))?;
@@ -247,7 +252,8 @@ pub(super) fn resolve_originals_projected(
         return Ok((client, None, None));
     }
     let current = head.ok_or_else(|| denied("registered root has no independent head"))?;
-    let (active, origin) = active_binding_projected(connection, stored, current, project)?;
+    let (active, origin) =
+        active_binding_projected(connection, stored, current, project, registering)?;
     let stored = active.as_slice();
     let mut binding: RootBinding = decode(stored)?;
     binding.original_root.inherit_namespace(&origin)?;

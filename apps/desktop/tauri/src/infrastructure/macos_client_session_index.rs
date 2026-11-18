@@ -67,12 +67,12 @@ pub mod preview;
 pub mod rearm;
 #[path = "macos_client_recovery_rollback.rs"]
 pub mod rollback;
+#[path = "macos_client_root_cancel_namespace.rs"]
+mod root_cancel_namespace;
 #[path = "macos_client_root_cancel_action.rs"]
 pub mod root_cancellation;
 #[path = "macos_client_root_prepare_cancel.rs"]
 pub mod root_preparation;
-#[path = "macos_client_root_cancel_namespace.rs"]
-mod root_cancel_namespace;
 #[path = "macos_client_unchanged.rs"]
 pub mod unchanged;
 #[path = "macos_client_vault_history.rs"]
@@ -1037,11 +1037,12 @@ impl Index {
         self.checked_head_originals().map(|v| v.0)
     }
     fn checked_head_originals(&self) -> io::Result<(Option<Head>, Option<Originals>)> {
-        self.checked_head_originals_projected(&|_, _, _| Ok(()))
+        self.checked_head_originals_projected(&|_, _, _| Ok(()), None)
     }
     fn checked_head_originals_projected(
         &self,
         project: RootProjection<'_>,
+        registering: Option<&root_cancel_namespace::RegisteringSlot>,
     ) -> io::Result<(Option<Head>, Option<Originals>)> {
         let mut originals = None;
         let observed_head = read_head(self.connection()?)?;
@@ -1073,7 +1074,7 @@ impl Index {
                 &stored,
                 current.as_ref(),
                 self.connection()?,
-                project,
+                (project, registering),
             )?;
             originals = observed_originals;
             if resolved.identity() != self.client.identity() || origin.as_ref() != Some(refs) {
@@ -1834,7 +1835,14 @@ impl Index {
             root_retirement: expected.root_retirement.clone(),
             root_generation: None,
         };
-        self.write_checked_projected(Some(expected), &next, &|_| Ok(()), &|_| Ok(()), project)?;
+        self.write_checked_projected(
+            Some(expected),
+            &next,
+            &|_| Ok(()),
+            &|_| Ok(()),
+            project,
+            None,
+        )?;
         if let Err(error) = proof.require(&self.data, &self.profile, expected) {
             let mut pending = expected.clone();
             pending.revision = next
@@ -2107,7 +2115,7 @@ impl Index {
         checkpoint: &impl Fn(&str) -> io::Result<()>,
         admit: &impl Fn(Option<&Originals>) -> io::Result<()>,
     ) -> io::Result<()> {
-        self.write_checked_projected(expected, next, checkpoint, admit, &|_, _, _| Ok(()))
+        self.write_checked_projected(expected, next, checkpoint, admit, &|_, _, _| Ok(()), None)
     }
     fn write_checked_projected(
         &self,
@@ -2116,8 +2124,25 @@ impl Index {
         checkpoint: &impl Fn(&str) -> io::Result<()>,
         admit: &impl Fn(Option<&Originals>) -> io::Result<()>,
         project: RootProjection<'_>,
+        registering: Option<&root_cancel_namespace::RegisteringSlot>,
     ) -> io::Result<()> {
         validate(next)?;
+        if let Some(slot) = registering {
+            let reference = next.root_retirement.as_ref().filter(|reference| {
+                expected.is_some_and(|head| {
+                    head.revision == reference.source_revision && head.ticket == next.ticket
+                })
+            });
+            if next.state != State::RootCancellationPrepared
+                || !reference.is_some_and(|reference| {
+                    slot.directory().path().file_name() == Some(OsStr::new(&reference.plan.id))
+                })
+            {
+                return Err(denied(
+                    "cancellation registration slot differs from its next event",
+                ));
+            }
+        }
         if matches!(
             next.state,
             State::RootCancellationPrepared | State::RootCancellationAbsent
@@ -2191,7 +2216,8 @@ impl Index {
                     r.get(0)
                 })
                 .map_err(database_error)?;
-            let (head, originals) = self.checked_head_originals()?;
+            let (head, originals) =
+                self.checked_head_originals_projected(&|_, _, _| Ok(()), registering)?;
             if binding != self.binding || head.as_ref() != expected {
                 return Err(denied("current session changed before reference commit"));
             }
@@ -2244,7 +2270,12 @@ impl Index {
         }
         #[cfg(test)]
         let _metric = observation_metrics::span("transaction_postcommit");
-        if self.checked_head_originals_projected(project)?.0.as_ref() != Some(next) {
+        if self
+            .checked_head_originals_projected(project, None)?
+            .0
+            .as_ref()
+            != Some(next)
+        {
             return Err(denied("session references commit readback differs"));
         }
         self.check_capture_publication(next)?;

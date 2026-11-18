@@ -234,6 +234,35 @@ fn first_root_cancel_review_refuses_new_data_even_if_head_has_no_original_refere
     }
 }
 #[test]
+fn first_root_cancel_rejects_unregistered_slot_before_any_plan_is_indexed() {
+    let f = Fixture::new();
+    let parent = f
+        .index
+        .action_parent
+        .child_private("client-root-cancel-plans", true)
+        .unwrap();
+    let id = uuid::Uuid::new_v4().to_string();
+    let rogue = parent.child_private(&id, true).unwrap();
+    create(&rogue, "plan.json", b"unregistered test evidence").unwrap();
+    let before = bytes(f.data.parent().unwrap());
+
+    assert!(f.index.checked_head().is_err());
+    assert!(root_cancel_namespace::RegisteringSlot::create(&parent, &id).is_err());
+    assert!(f
+        .index
+        .review_first_root_preparation(&f.context, &f.head, end())
+        .is_err());
+    assert_eq!(
+        read_head(f.index.connection().unwrap()).unwrap(),
+        Some(f.head.clone())
+    );
+    assert_eq!(bytes(f.data.parent().unwrap()), before);
+    drop(rogue);
+    drop(parent);
+    f.close();
+}
+
+#[test]
 fn first_root_cancel_review_keeps_original_deadline_and_exact_index_revision() {
     let f = Fixture::new();
     assert!(f
