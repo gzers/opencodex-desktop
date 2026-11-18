@@ -1,0 +1,15 @@
+{
+  "nativeCompileOrTestError": null,
+  "priorBatchCompilerError": "E0609",
+  "firstVerificationToolError": "rustfmt was not on PATH",
+  "rustfmtResolvedWithMsvcToolchain": true,
+  "firstEvidenceStagingError": {
+    "raw": 1,
+    "ignoredPaths": [
+      ".adg",
+      "docs"
+    ],
+    "resolution": "Stage the exact documented evidence directory with git add -f and the tracked handoff with git add -u."
+  },
+  "rawLogWhitespace": "Rust test stdout ends with blank lines. The scoped log attribute exempts only blank-at-eof, preserving all raw bytes."
+}

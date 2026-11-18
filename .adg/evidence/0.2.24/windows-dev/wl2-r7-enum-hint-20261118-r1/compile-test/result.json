@@ -1,0 +1,32 @@
+{
+  "raw": 0,
+  "elapsedMs": 176656,
+  "cargo": "D:/Users/15119/WorkSpace/Code/tools/opencodex-desktop/.toolchain/rustup/toolchains/stable-x86_64-pc-windows-msvc/bin/cargo.exe",
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "base": "5a694a21f162a7b37042b616b27b213ea4a9078e",
+  "sourceHashes": {
+    "apps/desktop/tauri/src/modules/runtime/program_image_windows.rs": "3eef90b157f7bf53cc9e78b84217dbb4f3057f307c0da8088b0fd6c28f84267c",
+    "apps/desktop/tauri/src/modules/runtime/program_image_windows_tests.rs": "11a837ce1c28310d0a049f689385ccb037fcd1e7429e4a10b05b028c2cc974af"
+  }
+}

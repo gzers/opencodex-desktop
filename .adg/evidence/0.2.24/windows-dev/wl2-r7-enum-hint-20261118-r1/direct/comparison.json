@@ -1,0 +1,546 @@
+{
+  "valid": true,
+  "regression": {
+    "raw": 0,
+    "elapsedMs": 313,
+    "argv": [
+      "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-enum-hint-20261118-r1\\compile-test\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+      "modules::runtime::program_image::windows_tests::",
+      "--nocapture",
+      "--test-threads=1"
+    ]
+  },
+  "fixture": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r6-source-scan-cost-d57c32d10af74ab888fcde86e6ec97cd\\I\\runtime\\versions\\2.99.0",
+  "fixtureRootAbsent": true,
+  "baselineSha256": "d58b2616507adef02f51bfc8d1088051c5f4eca75a9cdd4b458808424dfcfdbc",
+  "candidate": {
+    "name": "opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+    "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-enum-hint-20261118-r1\\compile-test\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+    "bytes": 102957568,
+    "sha256": "c2e40222918802332f88d5d735711257e7a3b8fb2fc6a400fb420c79560eacc4"
+  },
+  "rows": [
+    {
+      "ordinal": 1,
+      "label": "baseline",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 5855232,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              454300
+            ],
+            "verify-tree-digest": [
+              1,
+              50693500
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              779601700
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              5820058300
+            ],
+            "windows-inventory-total": [
+              1,
+              5801821800
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              3509148300
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 2,
+      "label": "candidate",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2459210,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              569700
+            ],
+            "verify-tree-digest": [
+              1,
+              47972600
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              791545300
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              553830600
+            ],
+            "windows-inventory-total": [
+              1,
+              2408326400
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1417555700
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 3,
+      "label": "candidate",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2549088,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              293300
+            ],
+            "verify-tree-digest": [
+              1,
+              48182400
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              795224600
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              552056400
+            ],
+            "windows-inventory-total": [
+              1,
+              2498333600
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1504376600
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 4,
+      "label": "baseline",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2589659,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              275400
+            ],
+            "verify-tree-digest": [
+              1,
+              47485300
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              769910900
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              548889400
+            ],
+            "windows-inventory-total": [
+              1,
+              2539628800
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1572854000
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 5,
+      "label": "baseline",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2657336,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              376000
+            ],
+            "verify-tree-digest": [
+              1,
+              48527100
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              806444300
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              548830000
+            ],
+            "windows-inventory-total": [
+              1,
+              2606031600
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1600921600
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 6,
+      "label": "candidate",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2448063,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              274900
+            ],
+            "verify-tree-digest": [
+              1,
+              47848000
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              786588200
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              553974000
+            ],
+            "windows-inventory-total": [
+              1,
+              2397738300
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1413615300
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 7,
+      "label": "candidate",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2462116,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              288600
+            ],
+            "verify-tree-digest": [
+              1,
+              47586300
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              814323500
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              549843300
+            ],
+            "windows-inventory-total": [
+              1,
+              2411839500
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1399347100
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 8,
+      "label": "baseline",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2787028,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              338400
+            ],
+            "verify-tree-digest": [
+              1,
+              52377700
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              805744800
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              568688400
+            ],
+            "windows-inventory-total": [
+              1,
+              2731833700
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1722599800
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 9,
+      "label": "baseline",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2731867,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              328200
+            ],
+            "verify-tree-digest": [
+              1,
+              46800500
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              851035400
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              555060200
+            ],
+            "windows-inventory-total": [
+              1,
+              2682371200
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1632239400
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 10,
+      "label": "candidate",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2486129,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              299000
+            ],
+            "verify-tree-digest": [
+              1,
+              47793500
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              785020300
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              562807100
+            ],
+            "windows-inventory-total": [
+              1,
+              2435780100
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1451974900
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 11,
+      "label": "candidate",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2426839,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              370100
+            ],
+            "verify-tree-digest": [
+              1,
+              47397500
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              781509300
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              545770300
+            ],
+            "windows-inventory-total": [
+              1,
+              2376890400
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1400052300
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    },
+    {
+      "ordinal": 12,
+      "label": "baseline",
+      "raw": 0,
+      "report": {
+        "budgetMs": 10000,
+        "completeInventoryAndManifestReadback": true,
+        "copiedFixture": true,
+        "elapsedUs": 2653519,
+        "error": null,
+        "metrics": {
+          "stages": {
+            "verify-root-manifest": [
+              1,
+              277600
+            ],
+            "verify-tree-digest": [
+              1,
+              47682000
+            ],
+            "windows-all-native-final-fence": [
+              1,
+              779595600
+            ],
+            "windows-file-full-read-hash": [
+              10586,
+              552663600
+            ],
+            "windows-inventory-total": [
+              1,
+              2603344600
+            ],
+            "windows-native-enumeration-pin": [
+              1,
+              1622866400
+            ]
+          }
+        },
+        "officialExecuted": false,
+        "passed": true,
+        "productionRecoveryAccepted": false
+      }
+    }
+  ],
+  "medianUs": {
+    "baseline": 2694601.5,
+    "candidate": 2460663.0
+  },
+  "officialExecuted": false,
+  "productionAccepted": false
+}

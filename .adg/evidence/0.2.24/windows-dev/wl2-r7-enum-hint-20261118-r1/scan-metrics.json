@@ -1,0 +1,42 @@
+{
+  "order": [
+    "baseline",
+    "candidate",
+    "candidate",
+    "baseline",
+    "baseline",
+    "candidate",
+    "candidate",
+    "baseline",
+    "baseline",
+    "candidate",
+    "candidate",
+    "baseline"
+  ],
+  "median": {
+    "baseline": {
+      "totalMs": 2694.6015,
+      "enumPinMs": 1627.5529
+    },
+    "candidate": {
+      "totalMs": 2460.663,
+      "enumPinMs": 1415.5855
+    }
+  },
+  "withoutFirstBaselineSample": {
+    "baseline": {
+      "totalMs": 2657.336,
+      "enumPinMs": 1622.8664
+    },
+    "candidate": {
+      "totalMs": 2460.663,
+      "enumPinMs": 1415.5855
+    }
+  },
+  "firstBaselineMs": 5855.232,
+  "firstBaselineDisposition": "Retained in primary result; sensitivity reported separately.",
+  "readbackSamples": 12,
+  "payloadFilesPerSample": 10586,
+  "copiedFixtureOnly": true,
+  "productionBudgetProven": false
+}

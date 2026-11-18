@@ -1,0 +1,48 @@
+{
+  "source": "766d1f010be60865e7a425dab242ab5d861773b5",
+  "base": "5a694a21f162a7b37042b616b27b213ea4a9078e",
+  "main": "6bafdd342e69ee83e842f4b35a20bafa1320645a",
+  "governance": "81904340f107f391fec62bf3f282e91e8504b263",
+  "team": 52,
+  "imp": 191,
+  "buildInputs": {
+    "apps/desktop/tauri/src/modules/runtime/program_image_windows.rs": {
+      "workingInputSha256": "3eef90b157f7bf53cc9e78b84217dbb4f3057f307c0da8088b0fd6c28f84267c",
+      "gitBlobSha256": "3eef90b157f7bf53cc9e78b84217dbb4f3057f307c0da8088b0fd6c28f84267c"
+    },
+    "apps/desktop/tauri/src/modules/runtime/program_image_windows_tests.rs": {
+      "workingInputSha256": "11a837ce1c28310d0a049f689385ccb037fcd1e7429e4a10b05b028c2cc974af",
+      "gitBlobSha256": "11a837ce1c28310d0a049f689385ccb037fcd1e7429e4a10b05b028c2cc974af"
+    }
+  },
+  "artifacts": {
+    "test": [
+      {
+        "name": "opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-enum-hint-20261118-r1\\compile-test\\opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+        "bytes": 102957568,
+        "sha256": "c2e40222918802332f88d5d735711257e7a3b8fb2fc6a400fb420c79560eacc4"
+      }
+    ],
+    "products": [
+      {
+        "name": "ocx.exe",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-enum-hint-20261118-r1\\compile-products\\ocx.exe",
+        "bytes": 303104,
+        "sha256": "071b9d313cb42288655ebe4c30e778e25194e376d43802e30e60e03a497ffa5d"
+      },
+      {
+        "name": "opencodex-desktop.exe",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-enum-hint-20261118-r1\\compile-products\\opencodex-desktop.exe",
+        "bytes": 79225856,
+        "sha256": "dc2d1e2bfce14387d0e39e487dbcdc9acb8dd3f3679ef98f8829176c22067c62"
+      },
+      {
+        "name": "ocxd.exe",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-enum-hint-20261118-r1\\compile-products\\ocxd.exe",
+        "bytes": 19341824,
+        "sha256": "2f9f45e2148151952008fe611ccf1f75ec64c3325615a0ace0a36118cb643a7d"
+      }
+    ]
+  }
+}
