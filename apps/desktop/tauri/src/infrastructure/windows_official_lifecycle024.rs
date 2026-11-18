@@ -477,14 +477,16 @@ impl Owner {
     }
     fn capture_originals(
         &mut self,
+        capture_session: uuid::Uuid,
         window: &shared::ActionWindow,
         ranges: &mut StartRanges,
     ) -> AppResult<()> {
         if self.original_phase.is_some() {
             return Err(recovery_required());
         }
-        let original = self
-            .with_originals(|originals, owner| originals.capture_retained(owner, window, ranges))?;
+        let original = self.with_originals(|originals, owner| {
+            originals.capture_retained(owner, capture_session, window, ranges)
+        })?;
         self.original_phase = Some(LivePhase::Original(original));
         Ok(())
     }
@@ -971,7 +973,7 @@ async fn execute_async(
     window: shared::ActionWindow,
 ) -> AppResult<LifecycleResult> {
     execute_admitted(runtime, command, data, window, |_, _, _, _| {
-        super::windows_client_originals024::require_durable_capture()
+        super::windows_client_originals024::require_durable_capture().map(|()| None)
     })
     .await
 }
@@ -988,7 +990,7 @@ async fn execute_admitted(
         &ProcessCommand,
         &Path,
         &shared::ActionWindow,
-    ) -> AppResult<()>,
+    ) -> AppResult<Option<native::PinnedDirectory>>,
 ) -> AppResult<LifecycleResult> {
     window.remaining()?;
     let entry = slot(
@@ -1101,7 +1103,7 @@ async fn execute_admitted(
             )
         },
     )?;
-    admission(runtime, command, data, &window)?;
+    let pending_parent = admission(runtime, command, data, &window)?;
     // This remains BELOW the unchanged public production gate. Qualification
     // consumes the one original Closed tag only after actual new source/plan
     // admission. Failure retains the old Owner and all old native stores.
@@ -1169,7 +1171,7 @@ async fn execute_admitted(
     });
     let worker = (|| {
         let mut start_gate = entry.start_worker.try_lock().map_err(unknown)?;
-        StartWorker::dispatch(&entry, &mut guard, &mut start_gate, plan, window)
+        StartWorker::dispatch(&entry, &mut guard, &mut start_gate, plan, window, pending_parent)
     })();
     if let Err(error) = &worker {
         if let Some(owner) = guard.as_mut() {
@@ -1194,7 +1196,10 @@ pub(crate) fn qualify_existing(
         command,
         data,
         window,
-        |r, c, d, w| qualification.admit(r, c, d, w),
+        |r, c, d, w| {
+            qualification.admit(r, c, d, w)?;
+            qualification.pin_attachment_parent(d, w).map(Some)
+        },
     ))
 }
 #[cfg(debug_assertions)]

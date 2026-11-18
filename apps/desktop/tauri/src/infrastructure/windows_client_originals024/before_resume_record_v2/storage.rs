@@ -79,6 +79,31 @@ fn bytes(file: &mut File) -> io::Result<Vec<u8>> {
 fn stamp(file: &File, end: Instant) -> io::Result<SnapshotData> {
     native_stamp(file, end).map_err(io::Error::other)
 }
+pub(super) fn open_directory_data(directory: &PinnedDirectory) -> io::Result<File> {
+    OpenOptions::new()
+        .access_mode(0x20080)
+        .share_mode(3)
+        .custom_flags(0x2200000)
+        .open(directory.path())
+}
+pub(super) fn private_directory_stamp(
+    directory: &PinnedDirectory,
+    file: &File,
+    end: Instant,
+) -> io::Result<SnapshotData> {
+    if Instant::now() >= end {
+        return Err(io::ErrorKind::TimedOut.into());
+    }
+    directory.recheck()?;
+    native::verify_private_directory(file)?;
+    if native_id(file, true)? != directory.identity() {
+        return Err(invalid());
+    }
+    tree::streams(directory.path(), true)?;
+    let snapshot = stamp(file, end)?;
+    directory.recheck()?;
+    Ok(snapshot)
+}
 fn members(path: &std::path::Path) -> io::Result<Vec<String>> {
     let mut names = std::fs::read_dir(path)?
         .map(|e| e.and_then(|e| e.file_name().into_string().map_err(|_| invalid())))
@@ -118,6 +143,11 @@ impl NativeRecord {
     }
 }
 impl AttachmentStorageV2 {
+    #[cfg(test)]
+    pub(super) fn inject_pending_fixture_fault(&mut self, stage: u8) {
+        self.fault = stage;
+    }
+
     fn cutoff(&self, end: Instant) -> io::Result<()> {
         if self.end != Some(end) {
             return Err(invalid());
@@ -158,13 +188,7 @@ impl AttachmentStorageV2 {
             if token.elevated || token.elevation_type == 2 {
                 return Err(io::ErrorKind::PermissionDenied.into());
             }
-            self.directory_file = Some(
-                OpenOptions::new()
-                    .access_mode(0x20080)
-                    .share_mode(3)
-                    .custom_flags(0x2200000)
-                    .open(self.directory.as_ref().unwrap().path())?,
-            );
+            self.directory_file = Some(open_directory_data(self.directory.as_ref().unwrap())?);
             let file = self.directory_file.as_ref().unwrap();
             native::verify_private_directory(file)?;
             if native_id(file, true)? != self.directory.as_ref().unwrap().identity() {
@@ -327,9 +351,13 @@ impl AttachmentStorageV2 {
                     "injected actual half-written V2 attachment file",
                 ));
             }
-            let file = self.pending_file.as_mut().unwrap();
-            file.write_all(self.pending_raw.as_ref().unwrap())?;
-            file.sync_all()?;
+            self.pending_file.as_mut().unwrap().write_all(self.pending_raw.as_ref().unwrap())?;
+            self.cutoff(end)?;
+            #[cfg(test)]
+            if self.fault == 6 {
+                return Err(io::Error::from_raw_os_error(1117));
+            }
+            self.pending_file.as_ref().unwrap().sync_all()?;
             self.checkpoint(4, end)?;
             let file = self.pending_file.as_mut().unwrap();
             if bytes(file)? != *self.pending_raw.as_ref().unwrap()

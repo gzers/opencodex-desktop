@@ -82,7 +82,7 @@ fn wl2_r7_bound_preparation_data_encoder_rejects_canonical_origin_clock_and_prev
 fn reference() -> Value {
     json!({"kind":"canonical","manifestDigest":"a".repeat(64),"bindingDigest":"b".repeat(64),"storagePlanDigest":"c".repeat(64),"failedPrefixDigest":"d".repeat(64)})
 }
-fn preparation(complete: bool) -> Value {
+pub(super) fn preparation(complete: bool) -> Value {
     let components=["source","custody","codex","grok","journal"].into_iter().enumerate().map(|(i,role)|{
         if complete {json!({"role":role,"state":"retained","prefixDigest":format!("{i:064x}"),"objects":[{"objectId":format!("{:064x}",i+10),"role":role,"originalStage":"handleRetained","pathDigest":format!("{:064x}",i+20),"identityDigest":format!("{:064x}",i+30),"securityDigest":format!("{:064x}",i+40),"contentDigest":format!("{:064x}",i+50)}]})}
         else if i==1{json!({"role":role,"state":"retained","prefixDigest":"e".repeat(64),"objects":[{"objectId":"f".repeat(64),"role":role,"originalStage":"nativeCreated","pathDigest":"a".repeat(64),"identityDigest":null,"securityDigest":null,"contentDigest":null}]})}

@@ -440,6 +440,24 @@ impl ExistingQualification {
             base: base.into(),
         })
     }
+    pub(crate) fn pin_attachment_parent(
+        &self,
+        data: &Path,
+        window: &ActionWindow,
+    ) -> AppResult<native::PinnedDirectory> {
+        window.remaining()?;
+        let original = self.pins.iter().find(|pin| pin.path() == data)
+            .filter(|_| data == self.base.join("D"))
+            .ok_or_else(|| app("original qualification data pin missing"))?;
+        original.recheck().map_err(app)?;
+        let parent = native::PinnedDirectory::open_private(data).map_err(app)?;
+        if parent.identity() != original.identity() {
+            return Err(app("original qualification data identity changed"));
+        }
+        window.remaining()?;
+        Ok(parent)
+    }
+
     pub(crate) fn admit(
         &self,
         runtime: &SharedRuntimeExecutable,

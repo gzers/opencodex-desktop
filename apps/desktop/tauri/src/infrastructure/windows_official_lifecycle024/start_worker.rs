@@ -2,7 +2,7 @@ use super::*;
 use crate::{
     infrastructure::windows_client_originals024::{
         recovery_worker::{RetainedRequest, WorkerControl},
-        StartRanges,
+        PendingAttachment, StartRanges,
     },
     modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow,
 };
@@ -70,6 +70,7 @@ impl StartWorker {
         registered: &mut Option<Arc<Self>>,
         plan: shared::LaunchPlan,
         window: shared::ActionWindow,
+        pending_parent: Option<native::PinnedDirectory>,
     ) -> AppResult<Arc<Self>> {
         window.remaining()?;
         if registered.is_some() {
@@ -105,7 +106,7 @@ impl StartWorker {
             .name("windows024-original-start".into())
             .spawn(move || {
                 if let Ok(owner) = receive.recv() {
-                    worker_control.run(worker_entry, owner, plan, window);
+                    worker_control.run(worker_entry, owner, plan, window, pending_parent);
                 }
             })
             .map_err(|error| {
@@ -218,9 +219,12 @@ impl StartWorker {
         owner: Owner,
         plan: shared::LaunchPlan,
         window: shared::ActionWindow,
+        pending_parent: Option<native::PinnedDirectory>,
     ) {
         let mut owner = Some(owner);
         let mut ranges = StartRanges::retained();
+        let mut pending_attachment = None;
+        let capture_session = uuid::Uuid::new_v4();
         let mut raw = None;
         let mut launcher_exit = None;
         let run = catch_unwind(AssertUnwindSafe(|| {
@@ -240,11 +244,29 @@ impl StartWorker {
                 state.snapshot.phase = Phase::Running;
                 state.thread = Some(thread::current().id());
             }
+            if let Some(parent) = pending_parent {
+                let original_data = original.scope_pins.first().ok_or_else(recovery_required)?;
+                if parent.path() != original.data_path()
+                    || parent.identity() != original_data.identity()
+                {
+                    return Err(recovery_required());
+                }
+                pending_attachment = Some(
+                    PendingAttachment::bind(
+                        parent,
+                        [original.original_host_instance(), self.session, self.action],
+                        capture_session,
+                        self.deadline,
+                    )
+                    .map_err(unknown)?,
+                );
+            }
             tauri::async_runtime::block_on(self.start(
                 &entry,
                 original,
                 plan,
                 window,
+                capture_session,
                 &mut ranges,
                 &mut raw,
                 &mut launcher_exit,
@@ -310,6 +332,7 @@ impl StartWorker {
                         original,
                         &mut ranges,
                         start_raw,
+                        pending_attachment.take(),
                         |owner| {
                             let thread = self
                                 .thread
@@ -342,6 +365,7 @@ impl StartWorker {
         owner: &mut Owner,
         plan: shared::LaunchPlan,
         window: shared::ActionWindow,
+        capture_session: uuid::Uuid,
         ranges: &mut StartRanges,
         raw: &mut Option<i32>,
         launcher_exit: &mut Option<u32>,
@@ -349,7 +373,7 @@ impl StartWorker {
         window.remaining()?;
         check_cancel(entry)?;
         self.stage(Stage::Capture);
-        owner.capture_originals(&window, ranges)?;
+        owner.capture_originals(capture_session, &window, ranges)?;
         plan.check_current(&entry.runtime)?;
         check_cancel(entry)?;
         self.stage(Stage::BeforeResume);

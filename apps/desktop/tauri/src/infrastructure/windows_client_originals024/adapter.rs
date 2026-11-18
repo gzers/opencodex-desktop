@@ -282,6 +282,7 @@ impl WindowsOriginals {
     pub(crate) fn capture_retained(
         &mut self,
         owner: &mut Owner,
+        session: uuid::Uuid,
         window: &ActionWindow,
         ranges: &mut StartRanges,
     ) -> AppResult<OriginalSession> {
@@ -314,7 +315,6 @@ impl WindowsOriginals {
                 return Err(refused("后继票据不是原有序前驱/来源/完整动作截止"));
             }
         }
-        let session = uuid::Uuid::new_v4();
         self.session = Some(session);
         self.owner_scope = Some(owner.scope()?);
         self.slot.capture_existing_with_predecessors(

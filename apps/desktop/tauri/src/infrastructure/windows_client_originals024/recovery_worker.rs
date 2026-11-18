@@ -6,7 +6,7 @@ use super::{
         AnchoredClaim, LeasePreparation, NativeLease, RecoveryPermit, ReleaseProbe, ReleasedLease,
     },
     phase::invalid,
-    StartRanges,
+    PendingAttachment, StartRanges,
 };
 use crate::infrastructure::windows_official_lifecycle024::Owner;
 use crate::modules::runtime::windows_lifecycle024_contract::BeforeResumeRecoveryWindow;
@@ -69,6 +69,7 @@ pub(crate) struct WorkerLocal {
     directory_pins: Vec<crate::infrastructure::windows_official_runtime024::PinnedDirectory>,
     canonical: Option<Box<canonical_trait::Attempt>>,
     projection: Option<Arc<Mutex<State>>>,
+    pending_attachment: Option<PendingAttachment>,
 }
 impl WorkerLocal {
     pub(crate) fn finish_released_stage(
@@ -129,6 +130,7 @@ impl WorkerLocal {
             directory_pins: Vec::new(),
             canonical: None,
             projection: None,
+            pending_attachment: None,
         }
     }
     pub(crate) fn acquire(
@@ -290,7 +292,12 @@ struct State {
     raw: Option<i32>,
     kind: Option<String>,
     binding: Option<TransferBinding>,
-    preparation_pending: Option<[Vec<u8>; 2]>,
+    preparation_pending: Option<PreparationPending>,
+}
+struct PreparationPending {
+    records: [Vec<u8>; 2],
+    start_raw: Option<i32>,
+    attachment: Option<io::Result<()>>,
 }
 enum WorkerThread {
     Dedicated(thread::JoinHandle<()>),
@@ -395,6 +402,7 @@ impl<T: Original> WorkerControl<T> {
                     window,
                     worker_state,
                     returner,
+                    WorkerLocal::new(),
                     |_, _, _, _| Ok(()),
                     run,
                 );
@@ -421,6 +429,7 @@ fn run_worker<T: Original>(
     window: BeforeResumeRecoveryWindow,
     state: Arc<Mutex<State>>,
     returner: mpsc::Sender<Returned<T>>,
+    mut local: WorkerLocal,
     prepare: impl FnOnce(
         &mut T,
         &mut WorkerLocal,
@@ -429,7 +438,6 @@ fn run_worker<T: Original>(
     ) -> io::Result<()>,
     run: impl FnOnce(&mut T, &mut WorkerLocal, &BeforeResumeRecoveryWindow) -> io::Result<()>,
 ) {
-    let mut local = WorkerLocal::new();
     local.projection = Some(state.clone());
     let result = catch_unwind(AssertUnwindSafe(|| {
         if Instant::now() >= window.deadline() {
@@ -526,14 +534,18 @@ impl RetainedRequest {
         owner: Owner,
         ranges: &mut StartRanges,
         start_raw: Option<i32>,
+        pending_attachment: Option<PendingAttachment>,
         check: impl FnOnce(&Owner) -> io::Result<()>,
         run: fn(&mut Owner, &mut WorkerLocal, &BeforeResumeRecoveryWindow) -> io::Result<()>,
     ) {
+        let mut local = WorkerLocal::new();
+        local.pending_attachment = pending_attachment;
         run_worker(
             Box::new(owner),
             self.window,
             self.state,
             self.returner,
+            local,
             |owner, local, window, state| {
                 check(owner)?;
                 let partial = owner
@@ -549,13 +561,38 @@ impl RetainedRequest {
                         })
                         .map_err(io::Error::other)?
                         .preparation_pending_data(start_raw)?;
-                    let binding = owner.binding(window)?;
-                    let mut state = state.lock().map_err(|_| invalid())?;
-                    if Instant::now() >= window.deadline() {
-                        return Err(io::ErrorKind::TimedOut.into());
+                    {
+                        let mut projection = state.lock().map_err(|_| invalid())?;
+                        projection.preparation_pending = Some(PreparationPending {
+                            records: records.clone(),
+                            start_raw,
+                            attachment: None,
+                        });
                     }
-                    state.binding = Some(binding);
-                    state.preparation_pending = Some(records);
+                    let binding = owner.binding(window)?;
+                    state.lock().map_err(|_| invalid())?.binding = Some(binding);
+                    if let Some(attachment) = &mut local.pending_attachment {
+                        let end = window.deadline();
+                        let outcome = (|| {
+                            let origin = owner.before_resume_lease_binding(window).map_err(io::Error::other)?;
+                            attachment.persist(
+                                owner.data_path(),
+                                [owner.original_host_instance(), origin.owner, origin.failed_start],
+                                origin.recovery,
+                                &records,
+                                end,
+                            )?;
+                            owner.check_before_resume_process(window).map_err(io::Error::other)
+                        })();
+                        let mut projection = state.lock().map_err(|_| invalid())?;
+                        projection.preparation_pending.as_mut().ok_or_else(invalid)?.attachment =
+                            Some(outcome.and_then(|()| {
+                                if Instant::now() >= end {
+                                    return Err(io::ErrorKind::TimedOut.into());
+                                }
+                                Ok(())
+                            }));
+                    }
                     // A partial prefix supplies observation only. StartRanges
                     // stays on this thread, even if it holds a complete lease.
                     return Err(io::Error::new(
@@ -618,13 +655,18 @@ impl<T> WorkerControl<T> {
         };
         let pending = state.preparation_pending.as_ref().filter(|_| {
             matches!(phase, Phase::FailedRetained | Phase::ExpiredRetained)
-        }).map(|records| {
-            let [intent, pending] = records;
+        }).map(|original| {
+            let [intent, pending] = &original.records;
+            let failure = original.attachment.as_ref().and_then(|result| result.as_ref().err());
             use crate::infrastructure::hash::sha256_hex;
             serde_json::json!({
                 "intentDigest": sha256_hex(intent),
                 "pendingDigest": sha256_hex(pending),
-                "durable": false
+                "startRawError": original.start_raw,
+                "attachmentAttempted": original.attachment.is_some(),
+                "attachmentRawError": failure.and_then(io::Error::raw_os_error),
+                "attachmentErrorKind": failure.map(|error| format!("{:?}", error.kind())),
+                "durable": matches!(&original.attachment, Some(Ok(())))
             })
         });
         let data = serde_json::json!({"schema":"windows-original-recovery-worker-v1","phase":format!("{phase:?}"),"stage":state.stage.map(|stage|format!("{stage:?}")),"sessionId":session,

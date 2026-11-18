@@ -13,6 +13,7 @@ use std::{
 mod adapter;
 mod before_resume_record;
 mod before_resume_record_v2;
+pub(crate) use before_resume_record_v2::PendingAttachment;
 mod binding;
 mod bounded;
 mod content;
