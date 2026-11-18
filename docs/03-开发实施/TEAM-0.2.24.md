@@ -480,3 +480,9 @@ Windows 源码 f3564fbb34713beee97ed221fb4797b422b11d57，证据 e479ab8a5b657fe
 共享 main 040f411e6d48d97bde6e7b2e6c22860e547b6173，Windows 核验器源码 673d1166334c4fb78d5094bc09ef130e578e0991，证据 644f8bc861bd7a1009aed9c5789699ff569f0895。接收结果见 IMP202。按 [r7 增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 配对调整三个测试路径常量及启动器，沿用原线程探针写集。Mac 并行承接后继取消。固定签名候选前保持单 SID 定向验证。
 
 > fetch 最新 docs/governance-main，按 TEAM63／IMP202／r7 推进。先查 nine-r2/out01，空时用固定制品在 marenben 普通 session 7 只跑一次 Host，用 a7d7284a3 核九次全量扫描、30 秒、首次 Intent 前 raw31、Node 未 Resume。旧制品取证后停在 Explicit 前。同步固定含原线程探针的新隔离配对及全量输入摘要。新配对先独立证明同一存活 PID/FILETIME，再由原 worker 在 5 秒内核原失败与 claim/N/L/K，齐备才跑 10 秒 Explicit 和 5 秒读回。保留原失败及旧 r2，回交 Git 证据。
+
+## revision64 接收探针配对，等待真实普通桌面回执
+
+共享 main 040f411e6d48d97bde6e7b2e6c22860e547b6173。原线程探针源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7，证据 007dd301f16e47ed9afd59f91a17b3687e8b4dd7，固定路径和摘要见 IMP203。写集沿 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 与 TEAM63。Mac 并行推进后继准备取消。
+
+> fetch 最新 docs/governance-main，按 TEAM64／IMP203／r7 执行。先消费已有 nine-r2/out01，为空时才在 marenben 普通 session 7、WinSta0/Default、无外层 Job 单跑固定 daae8ffff7f304ec28b9c0214db26691e930a395 的 Host。用 a7d7284a3280d973aaacddf361adae6f6dcc8a3c 核验原 30 秒内九次完整扫描、首次 Intent 前 raw31 且 Node 从未 Resume。保全该轮，停在 Explicit 前。新 range-r1 配对须现场确认真实桌面、令牌、Job 和父目录身份，独立证明同一存活 PID/FILETIME，并由原 worker 在 5 秒内复核原失败和准确 claim/N/L/K。齐备才跑 10 秒 Explicit 与 5 秒读回，证明唯一持久 V2 Intent/Pending 和独立字节回读。保留原失败及旧 r2，固定签名候选前保持单 SID 定向范围。回交 Git 原始证据。

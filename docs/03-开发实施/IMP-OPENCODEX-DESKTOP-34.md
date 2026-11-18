@@ -2198,3 +2198,11 @@ Windows 核验器源码 673d1166334c4fb78d5094bc09ef130e578e0991，证据 644f8b
 最新交接时 nine-r2/out01 无 Host 回执。按 TEAM63／r7 采集固定配对单次 Host，旧制品缺原线程探针，取证后停在 Explicit 前。含探针的后继配对待绑定源码、制品和全量暂存清单，再执行真实普通桌面定向验证。旧 nine-r1 首错 6,460 ms／raw32，三次扫描且无 worker。独立旧官方 r2 三件原件仍在 custody，24 个 Job 成员 Unknown／raw50，命令谱系 raw64，executionReady=false。普通用户 MSI raw1625、生产单 SID、完整恢复和固定候选待验，公开 Start 维持拒绝。
 
 [固定证据](https://github.com/gzers/opencodex-desktop/tree/644f8bc861bd7a1009aed9c5789699ff569f0895/.adg/evidence/0.2.24/windows-dev/wl2-r7-original-range-probe-20261118-r1)
+
+## revision203 接收 Windows 原线程探针固定配对
+
+固定源码 `36b70383eac5c44dffc51d34a4c4673cd8a3dbf7`，证据 `007dd301f16e47ed9afd59f91a17b3687e8b4dd7`。独立复核清单的 25 份载荷与 Git 树文件集合、长度和 SHA-256，并核对九项源码输入与提交对象，包含清单声明的换行规范化。Windows 暂存退出 raw0，随后独立读回六份暂存文件、两级目录、ACL 与 SHA-256。读回时 Profile 夹具缺席，两个 out01 均空。首次读回对 nine-r1 的扫描次数误计为一次，最终读回按原日志校正为三次。原生桌面、普通令牌、Job 和进程代次仍待现场证明。
+
+固定测试配对位于 `C:/Users/Public/ocx-r7-isolated-owner-range-r1`。EXE SHA-256 `1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8`，运行时 SHA-256 `14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7`。源码改动沿 TEAM63／r7 的测试专用范围，三个路径常量 BASE、PUBLIC、BUNDLE 与启动器同批绑定。此处接收制品与暂存证据，真实 Host 与 5／10／5 秒动作按 TEAM64 取证。
+
+nine-r1 在 6,460 ms 后 raw32，仅三次完整扫描且未建立原 worker。PID 95724 的 raw5 无法确认身份或缺席。独立旧官方 r2 三件原件仍在保管，24 个 Job 成员 Unknown/raw50，命令谱系 raw64，executionReady=false。普通用户 MSI raw1625、原件恢复、生产单 SID 及签名候选仍待验收。公开 Start 保持拒绝。[固定证据](https://github.com/gzers/opencodex-desktop/tree/007dd301f16e47ed9afd59f91a17b3687e8b4dd7/.adg/evidence/0.2.24/windows-dev/wl2-r7-probe-staging-20261118-r1)
