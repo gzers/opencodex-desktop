@@ -13,7 +13,17 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
     connection: &Connection,
 ) -> std::io::Result<PinnedDirectory> {
     let history = vault_history::read(connection, head)?;
-    observe(data, profile, stored, head, origin, &history, false).map(|(root, _)| root)
+    let namespace = root_cancel_namespace::Namespace::from_history(&history)?;
+    observe(
+        data,
+        profile,
+        stored,
+        head,
+        origin,
+        &history,
+        (false, &namespace),
+    )
+    .map(|(root, _)| root)
 }
 /// One independently indexed initial cancellation, checked without reading the
 /// live client/Grok of a later generation. It grants no current permission.
@@ -24,22 +34,32 @@ pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservati
     history: Vec<Head>,
     fingerprint: String,
     retained_slot: Option<String>,
+    namespace: root_cancel_namespace::Namespace,
 }
 impl HistoricalObservation {
-    pub(in crate::infrastructure::macos_client_originals) fn begin(
+    pub(in crate::infrastructure::macos_client_originals::session_index) fn begin(
         data: &PinnedDirectory,
         profile: &Path,
         binding: &[u8],
         head: &Head,
         origin: &super::super::super::root_creation::References,
         history: &[Head],
+        namespace: &root_cancel_namespace::Namespace,
     ) -> std::io::Result<(Self, PinnedDirectory)> {
         if head.state != State::RootCancellationAbsent || history.last() != Some(head) {
             return Err(denied(
                 "cancellation history is not the independently closed prefix",
             ));
         }
-        let (root, fingerprint) = observe(data, profile, binding, head, origin, history, true)?;
+        let (root, fingerprint) = observe(
+            data,
+            profile,
+            binding,
+            head,
+            origin,
+            history,
+            (true, namespace),
+        )?;
         let reference = head
             .root_retirement
             .as_ref()
@@ -67,6 +87,7 @@ impl HistoricalObservation {
                 history: history.to_vec(),
                 fingerprint,
                 retained_slot,
+                namespace: namespace.clone(),
             },
             root,
         ))
@@ -86,7 +107,7 @@ impl HistoricalObservation {
             &self.head,
             &self.origin,
             &self.history,
-            true,
+            (true, &self.namespace),
         )?;
         if fingerprint != self.fingerprint {
             return Err(denied(
@@ -103,8 +124,9 @@ fn observe(
     head: &Head,
     origin: &super::super::super::root_creation::References,
     history: &[Head],
-    historical: bool,
+    mode: (bool, &root_cancel_namespace::Namespace),
 ) -> std::io::Result<(PinnedDirectory, String)> {
+    let (historical, namespace) = mode;
     validate(head)?;
     if !matches!(
         head.state,
@@ -136,8 +158,8 @@ fn observe(
     }
     let manager = data.child_private("manager-state", false)?;
     let parent = manager.child_private("client-root-cancel-plans", false)?;
-    let names = super::super::super::tree::names(parent.file())?;
-    if names != vec![OsString::from(&reference.plan.id)] {
+    namespace.require(&parent)?;
+    if !namespace.contains(&reference.plan.id) {
         return Err(denied(
             "root-cancel namespace differs from its independent reference",
         ));
@@ -299,7 +321,6 @@ fn observe(
         || capture_file(&directory, "move-intent.json", MAX_FRAME)? != intent
         || capture_file(&directory, "preserved-readback.json", MAX_FRAME)? != receipt
         || capture_file(&directory, "cancellation-completed.json", MAX_FRAME)? != completed
-        || super::super::super::tree::names(parent.file())? != names
         || !historical
             && observation::entry(&profile, ".codex")?.map(|s| identity(&s))
                 != logical.map(|s| identity(&s))
@@ -309,7 +330,6 @@ fn observe(
         return Err(denied("indexed root-cancel readback changed"));
     }
     directory.private()?;
-    parent.private()?;
     plan.capture_vault
         .verify_root_retained(data, &plan.source, source_history, historical)?;
     super::super::super::root_creation::verify_indexed_anchor(
@@ -320,6 +340,7 @@ fn observe(
         origin,
         &path,
     )?;
+    namespace.require(&parent)?;
     let fingerprint = digest(&encode(&(
         head,
         &plan_image,
@@ -332,18 +353,27 @@ fn observe(
 }
 /// Pending first-root movement already has an independently indexed plan.
 /// Its retained capture is checked as DATA, never as admitted Originals.
-pub(in crate::infrastructure::macos_client_originals) fn pending_retained(
+pub(in crate::infrastructure::macos_client_originals::session_index) fn pending_retained(
     data: &PinnedDirectory,
     profile: &Path,
     binding: &[u8],
     head: &Head,
     origin: &super::super::super::root_creation::References,
     history: &[Head],
+    namespace: &root_cancel_namespace::Namespace,
 ) -> std::io::Result<Option<String>> {
     if head.state != State::RootCancellationPrepared {
         return Err(denied("pending retained capture phase differs"));
     }
-    observe(data, profile, binding, head, origin, history, false)?;
+    observe(
+        data,
+        profile,
+        binding,
+        head,
+        origin,
+        history,
+        (false, namespace),
+    )?;
     let reference = head
         .root_retirement
         .as_ref()

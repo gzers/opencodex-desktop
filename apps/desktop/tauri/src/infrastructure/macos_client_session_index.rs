@@ -71,6 +71,8 @@ pub mod rollback;
 pub mod root_cancellation;
 #[path = "macos_client_root_prepare_cancel.rs"]
 pub mod root_preparation;
+#[path = "macos_client_root_cancel_namespace.rs"]
+mod root_cancel_namespace;
 #[path = "macos_client_unchanged.rs"]
 pub mod unchanged;
 #[path = "macos_client_vault_history.rs"]
