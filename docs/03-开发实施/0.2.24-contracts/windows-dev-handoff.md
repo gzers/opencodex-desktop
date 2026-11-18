@@ -1587,3 +1587,9 @@ Windows 源码 18833e7b65c4cb48316f37ee15a3dc584650877e 已推送并核对远端
 Windows 源码 18833e7b65c4cb48316f37ee15a3dc584650877e 与原构建证据不变。证据 wl2-r7-partial-owner-staging-20261118-r1 记录四份输入的字节摘要及两个启动器的 Git blob，以及 PowerShell 5.1 本地 ACL 探针的回执。以合成 SID 核对输入的继承只读权限和输出目录的写入权限。重复创建拒绝。首轮嵌套子进程继承的模块路径导致 Get-FileHash 和 Get-Acl 不可用，保留 raw1；只在子进程指定系统模块路径后两项 raw0。探针目录核实已清除。
 
 ocxr7owner、对应 Profile 与 Public 暂存根仍缺席。真实桌面与产品运行仍待，旧 r2 保持隔离。
+
+## 2026-11-18 r7 原 Owner 清理计数勘误
+
+证据提交 `78736de0fc6bf5ebc4ea0c53148f45f8c6e22dcc` 的 `wl2-r7-partial-owner-20261118-r1/status.json` 中，顶层 `cleanupUniqueRoots=1` 沿用了扫描组件基线的计数。本批实际为 **72** 个不同的本地原生测试根。`targeted-01`、`targeted-02`、`targeted-03` 的原始 stdout 各记录 24 个，三组无重复，合并后与 `cleanup.json` 的 `verifiedAbsentLocalTestRoots` 逐项一致，当前路径也均缺席。PowerShell DATA 夹具和已归档的生成 schema 单独核实缺席。
+
+Mac 接收时以原 stdout 与 `cleanup.json` 为准。原回执、283 项矩阵、证据清单及制品 SHA 保留，真实普通桌面和旧 r2 恢复的准入状态仍待。
