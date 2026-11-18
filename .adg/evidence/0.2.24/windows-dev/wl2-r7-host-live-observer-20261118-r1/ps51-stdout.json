@@ -1,0 +1,74 @@
+{
+    "powerShellVersion":  "5.1.26100.33438",
+    "nativeSha256":  "1959b81e02779b9a88bb64f7321c1cc1975c68c506f4746340178b81e7d05603",
+    "cases":  {
+                  "match":  {
+                                "liveProcessVerified":  true,
+                                "raw":  0,
+                                "firstError":  null,
+                                "facts":  {
+                                              "pid":  55932,
+                                              "filetime":  "134394909008460440",
+                                              "image":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                              "session":  2,
+                                              "exited":  false,
+                                              "source":  "fresh query-only native handle; no Job/Owner/NormalExit or cleanup authority"
+                                          },
+                                "queryStartedUtc":  "2026-11-18T15:55:01.3836520Z",
+                                "queryFinishedUtc":  "2026-11-18T15:55:01.3955039Z"
+                            },
+                  "wrongTime":  {
+                                    "liveProcessVerified":  false,
+                                    "raw":  0,
+                                    "firstError":  "Live PID, creation FILETIME, session or image differs from the verified Host receipt.",
+                                    "facts":  {
+                                                  "pid":  55932,
+                                                  "filetime":  "134394909008460440",
+                                                  "image":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                                  "session":  2,
+                                                  "exited":  false,
+                                                  "source":  "fresh query-only native handle; no Job/Owner/NormalExit or cleanup authority"
+                                              },
+                                    "queryStartedUtc":  "2026-11-18T15:55:01.3970205Z",
+                                    "queryFinishedUtc":  "2026-11-18T15:55:01.4036703Z"
+                                },
+                  "wrongSession":  {
+                                       "liveProcessVerified":  false,
+                                       "raw":  0,
+                                       "firstError":  "Live PID, creation FILETIME, session or image differs from the verified Host receipt.",
+                                       "facts":  {
+                                                     "pid":  55932,
+                                                     "filetime":  "134394909008460440",
+                                                     "image":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                                     "session":  2,
+                                                     "exited":  false,
+                                                     "source":  "fresh query-only native handle; no Job/Owner/NormalExit or cleanup authority"
+                                                 },
+                                       "queryStartedUtc":  "2026-11-18T15:55:01.4046729Z",
+                                       "queryFinishedUtc":  "2026-11-18T15:55:01.4046729Z"
+                                   },
+                  "wrongImage":  {
+                                     "liveProcessVerified":  false,
+                                     "raw":  0,
+                                     "firstError":  "Live PID, creation FILETIME, session or image differs from the verified Host receipt.",
+                                     "facts":  {
+                                                   "pid":  55932,
+                                                   "filetime":  "134394909008460440",
+                                                   "image":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                                                   "session":  2,
+                                                   "exited":  false,
+                                                   "source":  "fresh query-only native handle; no Job/Owner/NormalExit or cleanup authority"
+                                               },
+                                     "queryStartedUtc":  "2026-11-18T15:55:01.4046729Z",
+                                     "queryFinishedUtc":  "2026-11-18T15:55:01.4056713Z"
+                                 },
+                  "unknown":  {
+                                  "liveProcessVerified":  false,
+                                  "raw":  87,
+                                  "firstError":  "The parameter is incorrect",
+                                  "facts":  null,
+                                  "queryStartedUtc":  "2026-11-18T15:55:01.4056713Z",
+                                  "queryFinishedUtc":  "2026-11-18T15:55:01.4121888Z"
+                              }
+              }
+}
