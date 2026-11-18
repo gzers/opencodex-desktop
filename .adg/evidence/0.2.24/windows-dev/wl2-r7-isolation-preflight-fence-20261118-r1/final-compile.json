@@ -1,0 +1,46 @@
+{
+  "raw": 0,
+  "elapsedMs": 146912,
+  "rustc": "rustc 1.100.0 (0ef1bc386 2026-11-09)",
+  "args": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=4",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "-j",
+    "1",
+    "--message-format=json",
+    "--lib",
+    "--no-run"
+  ],
+  "base": "5ff7d6aea46857ac89159c3cf6e45735bf364a9d",
+  "inputs": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture.rs",
+      "sha256": "2d1f8d1cdca7b7d223f01da3cccbf27430a35119e32d0a01b66bffe1c76d28ea"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/partial_capture_fixture/isolation.rs",
+      "sha256": "c0e835b1b1b5bea8a030dbc03e8296a32ae9f7797971211a12c73745e1153941"
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "sha256": "38eee9bfd0ca16e0d2d1d7b420caa0a2daef775d4888776b733735a9122b6f1a"
+    },
+    {
+      "path": "test/windows024-native/launch-r7-partial-owner.ps1",
+      "sha256": "9467b0b3ae267c062656972adb65750f9b993a15cc94b1061f38885fbbcda3b8"
+    }
+  ]
+}

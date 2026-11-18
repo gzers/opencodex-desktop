@@ -1682,3 +1682,13 @@ TEAM57／IMP196 的固定配对在 marenben session 7 实际执行。宿主 9572
 首错出现在启动第 6460 毫秒的原件捕获前安全门，为 windows024_originals_security_unconfirmed，原错误 raw32。六次 worker 扫描、raw31 注入和 5／10／5 秒恢复均未到达。Status 返回 Unreachable。该门位于子进程创建前。原宿主仍驻留，仅观察到 conhost 子进程。宿主、私有夹具与 Public 日志原样保留。原始证据归档在 wl2-r7-nine-desktop-first-20261118-r1。Windows 已接入 040f411e6，分支提交 5ff7d6aea 与固定实测源码 8266cf6a 的 Git 树相同。
 
 待证伪判断是测试描述为两个客户端叶目录长期持有不共享 DELETE 的目录句柄，而完整捕获前门须以 DELETE 权限打开同一原目录。用独立夹具复现共享冲突，再验证与完整门共存的同对象身份安全留位。旧 r2 继续保留，公开 Start 维持拒绝。
+
+## 2026-11-18 r7 九扫描隔离夹具预检修复
+
+继续按 TEAM57／IMP196／r7，主线 040f411e6、治理 be7854deb。Windows 源码 daae8ffff7f304ec28b9c0214db26691e930a395 已推送并核对远端。首轮真实桌面首错为 6460 毫秒、原 raw32，原宿主 95724 和对应私有树、Public 现场继续保留。
+
+全预检基线在严格叶句柄下复现 raw32。修复限定测试夹具。保持祖先和协调句柄，在同一 NTFS 卷核对两个直接子文件的身份及私有 ACL，持有两者后交接严格叶句柄。完整预检沿用同一原期限和现有扫描。成功后复核原目录谱系、子身份与 ACL 并恢复严格叶句柄。交接后遇错时保留两个子文件句柄，拒绝该描述符接续。
+
+MSVC x64 产品编译及测试编译均 raw0。products.json 记录 ocx.exe、ocxd.exe 和 opencodex-desktop.exe 的 SHA-256，三者均无测试夹具标记。MSVC x64 定向 6/6。完整预检 raw0，两个 DELETE 能力原句柄改名均 raw5，叶改名 raw5，子文件与祖先改名 raw32。严格叶句柄恢复后，真实 native claim/N/L/K 与两棵树 anchored capture 同时成立。错误码保留、超期、身份不符和 junction 拒绝均验证。定向临时夹具已删除并核对缺席。原始证据见 wl2-r7-isolation-preflight-fence-20261118-r1，首轮原始桌面收据仍在 wl2-r7-nine-desktop-first-20261118-r1。
+
+新配对固定于现有 marenben/session 7，测试制品 SHA-256 ab282752940b875b98e5e957a102ee8f4b1d32829f7524eb2dbe45959defc030，运行时包 SHA-256 14ef6025a9554e9b37ae2bce0c32d6206a4f82ccacb3d07ade20d5e3adaacba7。暂存路径为 C:/Users/Public/ocx-r7-isolated-owner-nine-r2，启动脚本已通过 Windows PowerShell 5.1 语法检查，out01 空，私有树缺席。等待单次真实 Host；只有原工作线程、原锁、九次完整扫描和 raw31/no-Resume 齐备后才进入 5／10／5 秒。旧原包 r2 完整原件归还仍受原 Job raw50 和命令谱系 raw64 阻塞。普通用户 MSI raw1625，单 SID 生产启停待验证，公开 Start 仍拒绝。

@@ -1,0 +1,21 @@
+
+running 2 tests
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_preflight_keeps_client_names_and_restores_strict_pins ... strict pin full preflight raw=Some(32)
+.codex original DELETE handle rename raw=Some(5)
+.codex leaf rename raw=Some(5), child rename raw=Some(32)
+.grok original DELETE handle rename raw=Some(5)
+.grok leaf rename raw=Some(5), child rename raw=Some(32)
+ancestor rename raw=Some(32)
+fenced full preflight raw=0
+restored strict pins raw=Some(32)
+native preflight success fixture absent after cleanup
+ok
+test infrastructure::windows_client_originals024::partial_capture_fixture::isolation::wl2_r7_isolation_preflight_refuses_missing_identity_and_does_not_retry ... expired preflight kind=TimedOut
+child identity mismatch=fixture preflight child identity changed
+original rejected preflight raw=Some(31)
+leaf still pinned after failure raw=Some(5)
+native preflight negative fixture absent after cleanup
+ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 2312 filtered out; finished in 0.11s
+
