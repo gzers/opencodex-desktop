@@ -12,6 +12,9 @@ use std::{
     time::{Duration, Instant},
 };
 
+#[path = "external_repair_whole_tree.rs"]
+mod whole_tree;
+
 const RECORD_LIMIT: usize = 128 * 1024;
 
 #[derive(PartialEq)]
@@ -62,11 +65,51 @@ struct FileStep<'a> {
     held: RetainedFileMove,
 }
 
+impl<'a> FileStep<'a> {
+    fn retain(
+        (from, source_name): (&'a PinnedDirectory, &str),
+        (to, target_name): (&'a PinnedDirectory, &'static str),
+        expected: &'a FileImage,
+        intent: &'static str,
+        end: Instant,
+    ) -> io::Result<Self> {
+        check_time(end)?;
+        let source = from.path().join(source_name);
+        from.recheck()?;
+        to.recheck()?;
+        let held = RetainedFileMove::open(&source, end)?;
+        let expected_security = serde_json::to_value(&expected.security)?;
+        if &read_image(&source, end)? != expected
+            || held.identity().index.to_string() != expected_security["fileId"]
+            || held.identity().volume != expected_security["volume"]
+            || from.identity().volume != to.identity().volume
+        {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                "native source differs from fixed fixture image",
+            ));
+        }
+        check_time(end)?;
+        Ok(Self {
+            from,
+            to,
+            target_name,
+            expected,
+            intent,
+            held,
+        })
+    }
+}
+
 impl FileStep<'_> {
     fn verify_source(&mut self, end: Instant) -> io::Result<()> {
         self.from.recheck()?;
         self.to.recheck()?;
         self.held.verify(end)?;
+        crate::infrastructure::windows_client_originals024::tree::streams(
+            self.held.location(),
+            false,
+        )?;
         if &read_image(self.held.location(), end)? != self.expected {
             return Err(io::Error::new(
                 io::ErrorKind::InvalidData,
@@ -143,10 +186,7 @@ impl Scene {
     }
 
     fn check_time(&self) -> io::Result<()> {
-        if Instant::now() >= self.end {
-            return Err(io::ErrorKind::TimedOut.into());
-        }
-        Ok(())
+        check_time(self.end)
     }
 
     fn retain(&self, retire_work: bool) -> io::Result<FileStep<'_>> {
@@ -170,30 +210,13 @@ impl Scene {
                 "OriginalReturnIntent",
             )
         };
-        let source = from.path().join(source_name);
-        from.recheck()?;
-        to.recheck()?;
-        let held = RetainedFileMove::open(&source, self.end)?;
-        let expected_security = serde_json::to_value(&expected.security)?;
-        if &read_image(&source, self.end)? != expected
-            || held.identity().index.to_string() != expected_security["fileId"]
-            || held.identity().volume != expected_security["volume"]
-            || from.identity().volume != to.identity().volume
-        {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidData,
-                "native source differs from fixed fixture image",
-            ));
-        }
-        self.check_time()?;
-        Ok(FileStep {
-            from,
-            to,
-            target_name,
+        FileStep::retain(
+            (from, source_name),
+            (to, target_name),
             expected,
             intent,
-            held,
-        })
+            self.end,
+        )
     }
 
     fn require_members(
@@ -274,13 +297,7 @@ impl Scene {
         }))?;
         let record_path = self.records.path().join(format!("{}.json", step.intent));
         self.check_time()?;
-        let mut record = PrivateRecord::create(&record_path, &payload, RECORD_LIMIT)?;
-        if record.read()? != payload {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidData,
-                "intent readback differs",
-            ));
-        }
+        let mut record = publish_record(&record_path, &payload)?;
         after_intent(&target)?;
         step.verify_source(self.end)?;
         self.check_time()?;
@@ -326,6 +343,24 @@ impl Drop for Scene {
             }
         }
     }
+}
+
+fn check_time(end: Instant) -> io::Result<()> {
+    if Instant::now() >= end {
+        return Err(io::ErrorKind::TimedOut.into());
+    }
+    Ok(())
+}
+
+fn publish_record(path: &Path, payload: &[u8]) -> io::Result<PrivateRecord> {
+    let mut record = PrivateRecord::create(path, payload, RECORD_LIMIT)?;
+    if record.read()? != payload {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            "record readback differs",
+        ));
+    }
+    Ok(record)
 }
 
 fn require_absent(path: &Path) -> io::Result<()> {
