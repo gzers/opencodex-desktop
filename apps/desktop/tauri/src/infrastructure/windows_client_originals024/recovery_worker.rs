@@ -689,7 +689,7 @@ impl<T> WorkerControl<T> {
 }
 mod return_validation;
 #[cfg(test)]
-mod tests;
+pub(super) mod tests;
 #[cfg(test)]
 pub(in crate::infrastructure::windows_client_originals024) mod component {
     use super::*;

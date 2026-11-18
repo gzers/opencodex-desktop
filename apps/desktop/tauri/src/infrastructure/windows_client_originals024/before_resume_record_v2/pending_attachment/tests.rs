@@ -1,4 +1,5 @@
 use super::*;
+use crate::infrastructure::windows_client_originals024::recovery_worker::tests::assert_pending_attachment_projection;
 use std::{fs, time::Duration};
 
 struct Fixture(Option<tempfile::TempDir>);
@@ -82,11 +83,12 @@ fn wl2_r7_pending_attachment_native_same_thread_exact_readback_and_create_only()
             assert_eq!(fs::read(action.join("untouched")).unwrap(), b"existing");
             assert_eq!(fs::read_dir(&action).unwrap().count(), 1);
             println!("r7-pending collision raw={:?}", error.raw_os_error());
+            assert_pending_attachment_projection(&records, Err(error));
             existing.recheck().unwrap();
         } else {
-            attachment
-                .persist(&data, origin, recovery, &records, end)
-                .unwrap();
+            let outcome = attachment.persist(&data, origin, recovery, &records, end);
+            assert!(outcome.is_ok(), "{outcome:?}");
+            assert_pending_attachment_projection(&records, outcome);
             assert_eq!(fs::read_dir(&action).unwrap().count(), 2);
             for (index, raw) in records.iter().enumerate() {
                 let file = action.join(format!("v2-record-{:06}.json", index + 1));
@@ -207,5 +209,6 @@ fn wl2_r7_pending_attachment_native_short_write_flush_and_readback_keep_diagnost
             first.len(),
             error.raw_os_error()
         );
+        assert_pending_attachment_projection(&records, Err(error));
     }
 }

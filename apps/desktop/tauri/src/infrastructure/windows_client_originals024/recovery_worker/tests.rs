@@ -119,6 +119,75 @@ fn complete_probe(control: &WorkerControl<SyntheticOriginal>) -> serde_json::Val
         std::thread::sleep(Duration::from_millis(5));
     }
 }
+
+pub(in crate::infrastructure::windows_client_originals024) fn assert_pending_attachment_projection(
+    records: &[Vec<u8>; 2],
+    outcome: io::Result<()>,
+) {
+    let started = Instant::now();
+    let end = started + Duration::from_secs(5);
+    let window = BeforeResumeRecoveryWindow::begin(started, end).unwrap();
+    let session = uuid::Uuid::new_v4().to_string();
+    let scope = hash::sha256_hex(b"synthetic pending attachment scope");
+    let (done, parked) = mpsc::channel::<()>();
+    let worker = Arc::new(OnceLock::from(thread::spawn(move || {
+        let _ = parked.recv();
+    })));
+    let (control, _) = WorkerControl::register_retained_start(
+        session.clone(),
+        scope.clone(),
+        window,
+        worker.clone(),
+    );
+    let durable = outcome.is_ok();
+    let error = outcome.as_ref().err();
+    let expected = serde_json::json!({
+        "intentDigest": hash::sha256_hex(&records[0]),
+        "pendingDigest": hash::sha256_hex(&records[1]),
+        "startRawError": 64,
+        "attachmentAttempted": true,
+        "attachmentRawError": error.and_then(io::Error::raw_os_error),
+        "attachmentErrorKind": error.map(|error| format!("{:?}", error.kind())),
+        "durable": durable,
+    });
+    {
+        let mut state = control.state.lock().unwrap();
+        state.phase = Phase::Running;
+        state.preparation_pending = Some(PreparationPending {
+            records: records.clone(),
+            start_raw: Some(64),
+            attachment: Some(outcome),
+        });
+    }
+    assert!(control.observe(end).unwrap()["preparationPending"].is_null());
+    for phase in [Phase::FailedRetained, Phase::ExpiredRetained] {
+        control.state.lock().unwrap().phase = phase;
+        let status = control.observe(end).unwrap();
+        assert_eq!(status["phase"], format!("{phase:?}"));
+        assert_eq!(status["sessionId"], session);
+        assert_eq!(status["scopeDigest"], scope);
+        assert_eq!(status["preparationPending"], expected);
+        assert_eq!(status["recoveryRequired"], true);
+        for flag in ["normalStop", "closed", "runtimeAuthority"] {
+            assert_eq!(status[flag], false);
+        }
+    }
+    control.state.lock().unwrap().phase = Phase::LostWorkerUnknown;
+    assert!(control.observe(end).unwrap()["preparationPending"].is_null());
+    assert_eq!(
+        control.observe(started).unwrap_err().kind(),
+        io::ErrorKind::TimedOut
+    );
+    drop(done);
+    drop(control);
+    Arc::try_unwrap(worker)
+        .unwrap()
+        .into_inner()
+        .unwrap()
+        .join()
+        .unwrap();
+    println!("r7-pending worker Status fixture projection={expected}");
+}
 #[test]
 #[ignore = "explicit subprocess fixture only; parent tests invoke this exact entry"]
 fn wl2_r7_worker_subprocess_fixture() {
