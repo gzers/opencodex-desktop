@@ -2061,3 +2061,9 @@ Mac main 6bafdd342e69ee83e842f4b35a20bafa1320645a 用原 Index 和 SQLite 连接
 第一轮 12 次追加包含 24 次全读回，合计 88,909 μs，独立重放 21,159 μs。第二轮 25 次全读回合计 97,869 μs，其中每次重新检查记录及保留文件身份、属性和字节占 60.73%，当前记录字节和解析占 1.95%。该合成结果只供后续定位，生产完整恢复在原 10 秒内仍未证明，保留此前 10,144 和 10,039 ms 失败。[重放证据](https://github.com/gzers/opencodex-desktop/tree/8777e862f0b2017e94b77ad426ea7a6a324bcd9e/.adg/evidence/0.2.24/windows-dev/wl2-r7-journal-replay-cost-20261118-r1) [分段证据](https://github.com/gzers/opencodex-desktop/tree/8777e862f0b2017e94b77ad426ea7a6a324bcd9e/.adg/evidence/0.2.24/windows-dev/wl2-r7-journal-readback-stages-20261118-r1)
 
 Windows 继续原 worker 的严格 V2 部分捕获附件与同线程恢复，公开 Start 保持拒绝。旧 r2 的 Node 从未 Resume，三个原件仍在保管中，Job 的 24 项查询为 Unknown（raw50），生产首错仍为 command-lineage raw64，executionReady=false。旧现场保持原状。普通桌面 private V2、普通用户 MSI、官方单 SID 生命周期及原预算仍待完成。固定签名候选后进入 W2／双 SID。
+
+## revision190：Windows r7 准备失败的 V2 保全附件
+
+Windows 代码 `0d0c9d29ccd9075d59f92350c158c256c835924b`，证据 `3155e8fa0b9f6f82d023d415996e9edabffdc3f4`。复核 11 个改动文件及最终执行源、67 项清单的字节数和 SHA-256、七组原始日志及 263 项矩阵。定向 28/28、最终测试和三个 MSVC 开发制品编译通过，51 个不同夹具根在本批前后经报告核实缺席。首次 Cargo 成功而包装器因生成 schema 拒绝的日志保留。原 `status.json` 回执把治理提交 ec5c597b77701811d60a2f1c394c3dd06cef0b43 写为 TEAM48／IMP187，实际为 TEAM49／IMP188，以原交接与提交内容为准。[固定证据](https://github.com/gzers/opencodex-desktop/tree/3155e8fa0b9f6f82d023d415996e9edabffdc3f4/.adg/evidence/0.2.24/windows-dev/wl2-r7-pending-durable-20261118-r1)
+
+本次接收隔离宿主的持久化组件证据。原 worker 绑定原私有 D、普通令牌、原线程及动作，严格 V2 Intent／Pending 独占创建、刷盘、读回并复核后才报告 durable=true；失败保留准确前缀。本次未向 main 合入 Windows 分支。普通桌面私有 V2、实际原 Owner 回执、同线程整链 10 秒恢复、普通用户 MSI 和官方单 SID 生命周期待验。继续保留 10,144 与 10,039 ms 的整链超时。公开 Start 保持拒绝；旧 r2 现场维持原状，三件原件仍在 custody，Node 未 Resume，Job 24 项 unknown／raw50，executionReady=false。固定签名候选前不进入 W2／双 SID。

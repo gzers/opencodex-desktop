@@ -400,3 +400,9 @@ main 9daf5599151b65437f94ab2cadb1988060ee38c3 是 macOS 首次取消目录槽修
 共同基线 6bafdd342e69ee83e842f4b35a20bafa1320645a，Windows 代码 6dbffae54c528750bfb6d5ad9b9e08dabaf78495，证据 8777e862f0b2017e94b77ad426ea7a6a324bcd9e。复核结果归 IMP189。Windows 按现有独占写集继续原 worker、Mac 并行承接后继准备取消。四个共享 trait、CONTRACT_VERSION4 与验收预算沿用 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。
 
 > fetch 最新 docs/governance-main，按 TEAM50／IMP189／r7 从 6dbffae5 接续。完成原 worker 的严格 V2 部分捕获附件创建及准确读回，再验证同原线程的显式恢复和完整原预算。Journal 计时只作诊断，继续执行全量验证。保留旧 r2、公开 Start 拒绝与既有失败证据，固定候选前按单 SID 定向验证。
+
+## revision51 Windows r7 持久化组件接续
+
+共同 main 6bafdd342e69ee83e842f4b35a20bafa1320645a，Windows 代码 0d0c9d29ccd9075d59f92350c158c256c835924b，证据 3155e8fa0b9f6f82d023d415996e9edabffdc3f4。组件复核归 IMP190。四个共享 trait、CONTRACT_VERSION4、写集和时限沿用 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。Mac 并行承接后继取消及最终客户端验收。
+
+> fetch 最新 docs/governance-main，按 TEAM51／IMP190／r7 接续原 worker。复用隔离 D 的 V2 持久化组件证据，继续真实普通桌面私有 V2、实际原 Owner 同线程完整恢复、普通用户 MSI 及官方单 SID 原预算验收。保留原超时和旧 r2 现场，公开 Start 维持拒绝，固定签名候选前不跑 W2／双 SID。
