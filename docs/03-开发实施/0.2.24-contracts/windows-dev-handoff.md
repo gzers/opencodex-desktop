@@ -1551,3 +1551,7 @@ r2 沿用既有全归档与 10 份只读回执。原 Job 24 项未知／raw50，
 代码 7fb2f870683566487cd0fee236f03dfa90fee93c，main 6bafdd342e69ee83e842f4b35a20bafa1320645a、governance 6ef21eb5f144905318d94f5080b2acf408e258bf，TEAM50／IMP189／r7。用测试构建计量原准备围栏在实际全量 verify 进入与退出的序号、失败 Start action、来源 SHA、同一截止、剩余预算和实际失败。原 Source/Current/两次原引用读回及校验顺序不变。MSVC raw0／150172 ms，三个产品 MSVC 开发构建 raw0／112922 ms。原生定向 1/1。合成镜像同一截止下前两次成功，第三次等长字节改变仍返回 runtime_image_unconfirmed，与直接复验一致。一个自有夹具根和生成 schema 核实清理。证据 wl2-r7-preparation-scan-trace-20261118-r1。
 
 合成镜像仅证明调用点观测与原验证结果一致。真实 Owner 同线程三次围栏及原 10 秒预算仍待独立普通桌面入场。独立入场的最小合同请求见同轮 ordinary-owner-admission-request.json。固定副本计量与合成端到端超时沿用。当前 r2 原 Job 完整覆盖和新的现场执行授权仍是独立依赖，公开 Start 保持拒绝。
+
+## 2026-11-18 r7 当前 r2 载入版本的 Resume 路径复核
+
+核对原输入映像摘要、源码 357210891f14a1851881e6192bd09d7031471707、Git 对象及已有同 SID 回执。原 Node 只在 capture 成功后才走唯一 Resume 调用。首轮失败返回时原完成阶段为空，随后只进入只读 Status 与显式 forced cleanup 的控制循环。后续原代次单线程 Suspended 与历史回执一致。原 Job 当前 24 项未知／raw50，完整从未 Resume 证据组合仍待，executionReady=false。此次只读现有 Git 和归档，未接触活现场。源码复核及累计 272 项见 wl2-r7-r2-loaded-source-review-20261118-r1。

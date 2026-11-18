@@ -1,0 +1,119 @@
+{
+  "sourceHead": "357210891f14a1851881e6192bd09d7031471707",
+  "sourceTree": "a284da0e1bd517daa26848857b8189bbc88838c0",
+  "sourceBlobs": [
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_lifecycle024.rs",
+      "gitBlob": "1258ed7951e33eb3fc4052d32a329d4dd4f7f4ea",
+      "sha256": "5637c60fcf856f6e7ed8aa33effc9e614b25b245a46b20297c4e8172d98a9ad5",
+      "reviewedAnchors": [
+        295,
+        299,
+        300,
+        911,
+        941,
+        955,
+        963,
+        965,
+        1041
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/process.rs",
+      "gitBlob": "19a25cec22e3ef968a8d40ccaaa4b9ddf828aeb1",
+      "sha256": "a1409642c0908ffe84056c1997ec991227bf3700ef8dd163060f7bc7ebc8b5aa",
+      "reviewedAnchors": [
+        494,
+        505,
+        525,
+        556,
+        571,
+        715,
+        770,
+        778,
+        931
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/existing_qualification.rs",
+      "gitBlob": "589e2db89a1b7c7f794809748a3914cccc834abe",
+      "sha256": "b77e125984edd54d6bca3dbaaaa2233d5eef6fdcda52ce708a012b30ba8d8703",
+      "reviewedAnchors": [
+        134,
+        141,
+        189
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/failure_control.rs",
+      "gitBlob": "304419caf84e0231cd77cc3f6867d509f90ec3e3",
+      "sha256": "b3c0544954a9ae3849d751891d9d42eff6740debea19dc6ec423e3ff225f8427",
+      "reviewedAnchors": [
+        209,
+        212,
+        227,
+        250
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_owner_host024/empty_host.rs",
+      "gitBlob": "382c2320ffb33058c17937d57b2fab06734326ff",
+      "sha256": "59f3f1ef3d68279881439ba368bad05dc61e473892a926a67255c28ea8bba487",
+      "reviewedAnchors": [
+        433
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_official_runtime024/host_process.rs",
+      "gitBlob": "97e83ce4e460afabf095d3f92f51ef96c49cab7f",
+      "sha256": "075619dea0612b101bf1905123fa50e577f6386f552d11d3789aa897009dee10",
+      "reviewedAnchors": [
+        141
+      ]
+    },
+    {
+      "path": "apps/desktop/tauri/src/infrastructure/windows_query_job.rs",
+      "gitBlob": "c7145404da7ec71d043f4b60d1312a12a3ffbe60",
+      "sha256": "d10c1f18310fb07df3094c0a0ef1e9feb6fefdc177e5d53157efa2ed1cfdd05e",
+      "reviewedAnchors": [
+        100
+      ]
+    }
+  ],
+  "evidenceInputs": [
+    {
+      "path": ".adg/evidence/0.2.24/windows-dev/wl2-r6-fresh-existing-fixture-20261117-receive-r1/raw-public/input-manifest.json",
+      "sha256": "adbe1f45939d0c4d2b8ff2f84807bb962014f44e6baba7c5789d77f988c8b477"
+    },
+    {
+      "path": ".adg/evidence/0.2.24/windows-dev/wl2-r6-fresh-existing-fixture-20261117-receive-r1/raw-public/out01/raw-export/D/qualification-start1.json",
+      "sha256": "378a0406ba15ec135fac206519895ba9f61d1365654c6ca8674b5b7ee29e1b44"
+    },
+    {
+      "path": ".adg/evidence/0.2.24/windows-dev/wl2-r6-fresh-existing-fixture-20261117-receive-r1/raw-public/out01/raw-export/D/qualification-events.jsonl",
+      "sha256": "7bf3f58d40721e9d4b3cdf0e6223c02e7d4b5f4ee105e7ec400188855ff6750e"
+    },
+    {
+      "path": ".adg/evidence/0.2.24/windows-dev/wl2-r7-r2-readonly-20261117-receive-r1/exact-repair-plan.json",
+      "sha256": "9381a00b303375071be43f43120d56f4abadf0f8fd6073e5238b899651278fec"
+    },
+    {
+      "path": ".adg/evidence/0.2.24/windows-dev/wl2-r7-r2-readonly-20261117-receive-r1/receive-result.json",
+      "sha256": "ecfcdf5406aa247fc62d9d908ac2a31a1657022c3d8a4a3db7cc18bf9dd827e9"
+    },
+    {
+      "path": ".adg/evidence/0.2.24/windows-dev/wl2-r7-r2-readonly-20261117-receive-r1/SUMMARY.md",
+      "sha256": "f3f6bbe407f7f62f8a0904f5458bf7885ed6d76724d179a25c37b3d3b97b5d14"
+    }
+  ],
+  "hypothesis": "The first failing Start exits before the original Node Resume and the loaded failure host has no post-failure Resume dispatch.",
+  "sourceReviewComplete": true,
+  "neverResumedEvidenceComplete": false,
+  "liveQueriesRun": false,
+  "executionReady": false,
+  "currentOriginalJob": {
+    "status": "unknown",
+    "unknownTypes": 24,
+    "raw": 50
+  }
+}
