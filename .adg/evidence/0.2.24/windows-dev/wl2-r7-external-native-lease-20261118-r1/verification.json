@@ -1,0 +1,346 @@
+{
+  "codeCommit": "2afe0fa98e62f90d32f834a1e1138d1ec39a07fe",
+  "codeTree": "00595b663d3d687bf46eb8e5c940bfaa9791be31",
+  "main": "040f411e6d48d97bde6e7b2e6c22860e547b6173",
+  "governance": "65835a0b3726d50f18018fbb8d8b8f6375ad286b",
+  "contract": "TEAM58/IMP197/r7 section D",
+  "receivedDuringRun": "TEAM59/IMP198",
+  "target": "x86_64-pc-windows-msvc",
+  "budgetMs": 10000,
+  "runs": [
+    {
+      "name": "run-01",
+      "passed": 9,
+      "final": false,
+      "artifact": {
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\182e378daf0091d7\\out\\opencodex_desktop_lib-182e378daf0091d7.exe",
+        "sha256": "11e07957d55c5b8514aab35a344c71bdc71b21146a8077966fe52bfdbc48b868",
+        "bytes": 104265728
+      },
+      "raw": 0,
+      "elapsedMs": 161737,
+      "sources": [
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs",
+          "sha256": "f13e1c95c6563d2402e44beca63c589f6f92aa0a7eaf97fb418f399a34f8693c",
+          "matchesFinalCommitAfterCRLFNormalization": false
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+          "sha256": "ec474811d5f7f44606132f62a23311d3e65eebf1a1bba63d1daaa1075e346e1a",
+          "matchesFinalCommitAfterCRLFNormalization": false
+        }
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-iKQJFW",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-PfyWNK",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-GoXp7U",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-PPZpaD",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-UK8Ihl",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-uDmmi2",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-fakZ4U",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-M1BbAm",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-HqdXKj"
+      ]
+    },
+    {
+      "name": "run-02",
+      "passed": 9,
+      "final": true,
+      "artifact": {
+        "sha256": "82db400192dc30180f852104be5a1265f54c92fd3114b5015331d47b91b76fd3",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\182e378daf0091d7\\out\\opencodex_desktop_lib-182e378daf0091d7.exe",
+        "bytes": 104293888
+      },
+      "raw": 0,
+      "elapsedMs": 149714,
+      "sources": [
+        {
+          "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs",
+          "sha256": "7c2afedafcabc6631945fd89856008310a269d9c3741d4f7837461cde715a2f7",
+          "matchesFinalCommitAfterCRLFNormalization": true
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+          "sha256": "3ee3780db7ad77434981a68f4ea0890f71f9c2d4cbc8b2c8cfe49e799a25391a",
+          "matchesFinalCommitAfterCRLFNormalization": true
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+          "sha256": "07e58f667929071219e243f681a477f8904d88e1119a6c8877ece6fb1cf845dd",
+          "matchesFinalCommitAfterCRLFNormalization": true
+        }
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-fbmtJ9",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-g7PPoY",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-zY5lgY",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-oFkxbd",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-xr87BA",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-XEwGnm",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-xQk9g2",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-PhF4Up",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-cBoWEP"
+      ]
+    },
+    {
+      "name": "harness-01",
+      "passed": 7,
+      "final": false,
+      "artifact": {
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-query\\x86_64-pc-windows-msvc\\debug\\build\\windows024-r7-query-proof\\803c99ecdabf4233\\out\\windows024_r7_query_proof-803c99ecdabf4233.exe",
+        "sha256": "a95afff4c2578bf43d246cb508100ceb2eb49f78ff66aadbe3774e05df8bc3e0",
+        "bytes": 3430912
+      },
+      "raw": 0,
+      "elapsedMs": null,
+      "sources": [
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+          "sha256": "ec474811d5f7f44606132f62a23311d3e65eebf1a1bba63d1daaa1075e346e1a",
+          "matchesFinalCommitAfterCRLFNormalization": false
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+          "sha256": "07e58f667929071219e243f681a477f8904d88e1119a6c8877ece6fb1cf845dd",
+          "matchesFinalCommitAfterCRLFNormalization": true
+        }
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-n767nh",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-R8Irnc",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-n7Qk0Y",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-OglgRh",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-UahzGz",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-qO3N6K",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-TCYPqj"
+      ]
+    },
+    {
+      "name": "harness-02",
+      "passed": 7,
+      "final": true,
+      "artifact": {
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\r7-query\\x86_64-pc-windows-msvc\\debug\\build\\windows024-r7-query-proof\\803c99ecdabf4233\\out\\windows024_r7_query_proof-803c99ecdabf4233.exe",
+        "bytes": 3431424,
+        "sha256": "4c631855ef1ccb5e1d5be0d48aefd0ea77ab13606cea76eba6a9a2d197204560"
+      },
+      "raw": 0,
+      "elapsedMs": 3878,
+      "sources": [
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+          "sha256": "3ee3780db7ad77434981a68f4ea0890f71f9c2d4cbc8b2c8cfe49e799a25391a",
+          "matchesFinalCommitAfterCRLFNormalization": true
+        },
+        {
+          "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/mod.rs",
+          "sha256": "07e58f667929071219e243f681a477f8904d88e1119a6c8877ece6fb1cf845dd",
+          "matchesFinalCommitAfterCRLFNormalization": true
+        }
+      ],
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-po0i4d",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Poj581",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-PbTAa5",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-Nd4ORr",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-oSE4Bx",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-XLZESr",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\ocx024-r7-external-steps-hOP8H6"
+      ]
+    },
+    {
+      "name": "lease-regression",
+      "passed": 8,
+      "final": true,
+      "artifact": {
+        "sha256": "82db400192dc30180f852104be5a1265f54c92fd3114b5015331d47b91b76fd3",
+        "path": "C:\\Users\\15119\\.codex\\worktrees\\r6-windows-native-resume\\code\\test\\windows024-native\\target\\w1c-product\\x86_64-pc-windows-msvc\\debug\\build\\opencodex-desktop\\182e378daf0091d7\\out\\opencodex_desktop_lib-182e378daf0091d7.exe",
+        "bytes": 104293888
+      },
+      "raw": 0,
+      "elapsedMs": 1389,
+      "verifiedAbsentFixtureRoots": [
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpfEmXiq",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpvK5WED",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp9cu2fB",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpYN6ndo",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpVqt1sx",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpUfkDB8",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp59Ve2C",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpnmgZfp",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEer4l0",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpUBnpVI",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpmuCDYd",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpuQMjMQ",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpqYnxKJ",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpHnJUYq",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpf4Yzhc",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmp06guML",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpZEXVDl",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpXg7HfR",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpcwDHkb",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpfc47eu",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpEI6u6C",
+        "C:\\Users\\15119\\AppData\\Local\\Temp\\.tmpazStfV"
+      ]
+    }
+  ],
+  "rawPayloads": [
+    {
+      "path": "run-01/artifact.json",
+      "sha256": "aeb962a7d9218bc68ad4c178da90a9358a70e0264f152b8f7ca0bdc4420a7a3d",
+      "bytes": 361
+    },
+    {
+      "path": "run-01/result.json",
+      "sha256": "703a19971187e7a17b22d5f0b8fb901fd8410e86bb472c2378d93e579cf7e29e",
+      "bytes": 675
+    },
+    {
+      "path": "run-01/source.json",
+      "sha256": "83811a7ccd12fd2c99801d6d4a9af592813daf826c6c1f828bd64324a8b2b2e4",
+      "bytes": 1199
+    },
+    {
+      "path": "run-01/stderr.log",
+      "sha256": "a6275e27fe505392a7ed09e8a02697d76c7d4bc07510716d87841de2786b311b",
+      "bytes": 42186
+    },
+    {
+      "path": "run-01/stdout.log",
+      "sha256": "b1ddfa10b60d323b12ffd65ad59370fd08e6bbc77b2595085ffe2b67eb6cc08a",
+      "bytes": 3032
+    },
+    {
+      "path": "run-02/artifact.json",
+      "sha256": "4c24d6c928de511a830809505fae502bdf4ad05029cb28e9980005c908f270d7",
+      "bytes": 361
+    },
+    {
+      "path": "run-02/result.json",
+      "sha256": "a6611fd921b0ede7918b5df63334cafba0d8989049215f6ed9c737f0c738acdf",
+      "bytes": 675
+    },
+    {
+      "path": "run-02/source.json",
+      "sha256": "122d742a16ad1b53962713f3f1eb5a52a8c67f6d60bfd539c2074b6c4ff3662d",
+      "bytes": 1431
+    },
+    {
+      "path": "run-02/stderr.log",
+      "sha256": "a34f364818b0a9fb49330347c4e7e3f8667eb7cd00f373c9556720bac9994f40",
+      "bytes": 42186
+    },
+    {
+      "path": "run-02/stdout.log",
+      "sha256": "0bfc248ac740fb625d4a21fcb905f9da959ea1ce79071b278c59a3b5e8bae1b8",
+      "bytes": 3032
+    },
+    {
+      "path": "harness-01/artifact.json",
+      "sha256": "8f525211f744e8e88f0ffd8b058671d43913261dbd460f56a940c2cada067776",
+      "bytes": 368
+    },
+    {
+      "path": "harness-01/input.json",
+      "sha256": "c7aaa74a00e9738d6aeecaf3caf1b58ded5bac8d9222ddb113eade585713402e",
+      "bytes": 715
+    },
+    {
+      "path": "harness-01/result.json",
+      "sha256": "f847b3a6c9c0bab3abfafb716cb2b68ef9d346830ec88c4d4ba9bcc5451fdfa0",
+      "bytes": 18
+    },
+    {
+      "path": "harness-01/stderr.log",
+      "sha256": "9f26005b8e65adea704bb7c9f6187de2a98ae4be9855be0169236cd974c56d1e",
+      "bytes": 9085
+    },
+    {
+      "path": "harness-01/stdout.log",
+      "sha256": "d3ab90cffcf09991132a3c3a4908c6be07c6cb055f3bf7382f142fa247627df8",
+      "bytes": 1956
+    },
+    {
+      "path": "harness-02/artifact.json",
+      "sha256": "fe9d7fea02adab73e3fd6b5265e69d234796f709186efae4ce68f2fbd18eb25c",
+      "bytes": 368
+    },
+    {
+      "path": "harness-02/input.json",
+      "sha256": "c7aaa74a00e9738d6aeecaf3caf1b58ded5bac8d9222ddb113eade585713402e",
+      "bytes": 715
+    },
+    {
+      "path": "harness-02/result.json",
+      "sha256": "cb38836d2d0a50ba40f1749820fe140dcc2e42b30cab7fbef40cdae97a66af74",
+      "bytes": 40
+    },
+    {
+      "path": "harness-02/stderr.log",
+      "sha256": "a19021240f59abb8f3c5fbb71a6d5a926a0cf17c48d769cf012c9e871dedafd6",
+      "bytes": 8237
+    },
+    {
+      "path": "harness-02/stdout.log",
+      "sha256": "cff61bffc137a0d0d1db886ee69d4d55a6781875bf62329bca15f15c817f2623",
+      "bytes": 1956
+    },
+    {
+      "path": "lease-regression/cleanup.json",
+      "sha256": "7a80fe0b6ff7f80251d71384f676832052b629cee4a061f850fa59d5516e7aa1",
+      "bytes": 1359
+    },
+    {
+      "path": "lease-regression/input.json",
+      "sha256": "d125849ed9a7e608175eb2a6690e771f44cc2e31c4b47653c0d136bfc462f743",
+      "bytes": 545
+    },
+    {
+      "path": "lease-regression/result.json",
+      "sha256": "d24a0ad63078225b86a90b2ccf2fdfd269aba2f2b92f84b00857112067b59b8a",
+      "bytes": 40
+    },
+    {
+      "path": "lease-regression/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "lease-regression/stdout.log",
+      "sha256": "5e457d35b35a6fe3bc7382e0c9b888e12a0f7abb6423fa10b310c173e4519d21",
+      "bytes": 6156
+    }
+  ],
+  "verifiedAbsentFixtureCount": 54,
+  "firstUnexpectedTestError": null,
+  "firstExpectedRefusal": {
+    "stage": "late K before first Intent",
+    "raw": 33
+  },
+  "covered": [
+    "one synthetic file pair with product NativeLease",
+    "foreign SQLite writer on K remains active while prepared move refuses before first Intent",
+    "claim/N/L/K ranges reject exclusive competitors at five boundaries through both moves and readback",
+    "independent reacquisition after explicit release, unchanged coordination identities, security and bytes"
+  ],
+  "pending": [
+    "old official r2 complete three-original return and independent quiescence proof",
+    "native production records and release receipts for old r2",
+    "ordinary desktop nine-r2 and V2 Intent/Pending",
+    "ordinary single-SID production lifecycle and per-user MSI"
+  ],
+  "desktop": {
+    "testedHost": "nine-r1",
+    "pid": 95724,
+    "session": 7,
+    "raw": 32,
+    "elapsedMs": 6460,
+    "nineR2Receipts": 0
+  },
+  "publicStartOpen": false,
+  "productionAccepted": false,
+  "currentR2Touched": false,
+  "evidenceControlNote": "Initial harness artifact lookup failed on a path extraction error. Corrected lookup used the original Cargo output and verified the executable hash. The initial line-start cleanup parser found 19 regression paths and stopped before copying or deleting. The corrected parser accepts markers printed after the Rust test label and finds 22 distinct regression paths, all independently verified absent. A temporary parser syntax error was corrected before copying."
+}

@@ -1,0 +1,55 @@
+
+running 8 tests
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_each_partial_open_and_range_failure_retains_exact_owned_resources ... r7 actual retained lease stage1: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpfEmXiq
+r7 actual retained lease stage2: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpvK5WED
+r7 actual retained lease stage3: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp9cu2fB
+r7 actual retained lease stage4: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpYN6ndo
+r7 actual retained lease stage5: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpVqt1sx
+r7 actual retained lease stage6: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpUfkDB8
+r7 actual retained lease stage7: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp59Ve2C
+r7 actual retained lease stage8: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpnmgZfp
+r7 actual retained lease stage20: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEer4l0
+r7 actual retained lease stage21: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpUBnpVI
+r7 actual retained lease stage22: own original handles/ranges kept, native competitor refused held ranges; no retry/take/normal release proof; explicit own fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpmuCDYd
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_invalid_bytes_or_ads_keep_original_open_and_preceding_ranges ... r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpuQMjMQ
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpqYnxKJ
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_missing_reserved_range_revokes_authority_and_keeps_claim ... r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpHnJUYq
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_real_sqlite_busy_each_role_keeps_foreign_transaction_and_own_prefix ... r7 real SQLite busy role0 raw33: original foreign transaction remains, exact own partial ranges retained until explicit fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpf4Yzhc
+r7 real SQLite busy role1 raw33: original foreign transaction remains, exact own partial ranges retained until explicit fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmp06guML
+r7 real SQLite busy role2 raw33: original foreign transaction remains, exact own partial ranges retained until explicit fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpZEXVDl
+r7 real SQLite busy role3 raw33: original foreign transaction remains, exact own partial ranges retained until explicit fixture cleanup
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpXg7HfR
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_native_success_transfers_same_files_ranges_once_and_expiry_never_retries ... r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpcwDHkb
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_lease_prefix_type_boundary_stays_non_send_and_non_sync_without_unsafe_impl ... ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_same_start_native_recovery_keeps_original_ranges_until_explicit_release ... same Start epoch and actual four ranges blocked competing handles (raw33) until explicit recovery release; pinned identities/security/bytes equal
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpfc47eu
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_same_start_native_rejects_wrong_origin_epoch_expiry_and_missing_range ... same Start recovery wrong-action refused; no receipt and every surviving range remained locked
+same Start recovery wrong-epoch refused; no receipt and every surviving range remained locked
+same Start recovery expired refused; no receipt and every surviving range remained locked
+same Start recovery missing-range refused; no receipt and every surviving range remained locked
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpEI6u6C
+r7-lease-prefix-cleanup-absent=C:\Users\15119\AppData\Local\Temp\.tmpazStfV
+ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 2315 filtered out; finished in 1.32s
+

@@ -1,0 +1,29 @@
+
+running 9 tests
+test infrastructure::windows_client_originals024::coordination::preparation::tests::external_repair_steps::r7_external_steps_collision_after_durable_intent_keeps_exact_prefix ... collision raw=Some(183) kind=AlreadyExists
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-fbmtJ9
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::external_repair_steps::r7_external_steps_preflight_denies_late_source_before_any_intent ... preflight refused before first intent: raw32
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-g7PPoY
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::external_repair_steps::r7_external_steps_preflight_rechecks_members_before_first_intent ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-zY5lgY
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::external_repair_steps::r7_external_steps_prepared_pair_carries_both_native_handles_into_moves ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-oFkxbd
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::external_repair_steps::r7_external_steps_publish_failure_prevents_any_move ... publication raw=Some(80) kind=AlreadyExists
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-xr87BA
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::external_repair_steps::r7_external_steps_retire_then_return_bound_native_objects ... synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-XEwGnm
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::external_repair_steps::r7_external_steps_unreleased_source_handle_retains_original_after_retirement ... retained source sharing error raw=Some(32)
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-xQk9g2
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_external_steps_native_lease_denies_busy_last_role_before_first_intent ... external repair pair: K contention raw33 before Intent; original pair/records and SQLite transaction preserved
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-PhF4Up
+ok
+test infrastructure::windows_client_originals024::coordination::preparation::tests::wl2_r7_external_steps_native_lease_keeps_claim_and_nlk_through_moves_until_release ... external repair pair: claim/N/L/K refused competing ranges (raw33) at five mutation/readback boundaries; independent reacquisition after explicit release; unchanged coordination IDs/security/bytes
+synthetic fixture removed: C:\Users\15119\AppData\Local\Temp\ocx024-r7-external-steps-cBoWEP
+ok
+
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 2314 filtered out; finished in 0.32s
+

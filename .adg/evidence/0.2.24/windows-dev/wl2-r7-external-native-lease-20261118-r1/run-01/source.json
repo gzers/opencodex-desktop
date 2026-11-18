@@ -1,0 +1,40 @@
+{
+  "arguments": [
+    "test",
+    "--locked",
+    "--offline",
+    "--config",
+    "profile.test.package.opencodex-desktop.debug=0",
+    "--config",
+    "profile.test.package.opencodex-desktop.incremental=false",
+    "--config",
+    "profile.test.package.opencodex-desktop.codegen-units=16",
+    "--manifest-path",
+    "apps/desktop/tauri/Cargo.toml",
+    "--target",
+    "x86_64-pc-windows-msvc",
+    "--features",
+    "custom-protocol",
+    "--lib",
+    "-j",
+    "1",
+    "external_steps",
+    "--",
+    "--test-threads=1",
+    "--nocapture"
+  ],
+  "currentR2Touched": false,
+  "codeRoot": "C:/Users/15119/.codex/worktrees/r6-windows-native-resume/code",
+  "sources": [
+    {
+      "sha256": "f13e1c95c6563d2402e44beca63c589f6f92aa0a7eaf97fb418f399a34f8693c",
+      "path": "apps/desktop/tauri/src/infrastructure/windows_client_originals024/coordination/preparation/tests.rs",
+      "bytes": 20849
+    },
+    {
+      "sha256": "ec474811d5f7f44606132f62a23311d3e65eebf1a1bba63d1daaa1075e346e1a",
+      "path": "test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs",
+      "bytes": 17004
+    }
+  ]
+}

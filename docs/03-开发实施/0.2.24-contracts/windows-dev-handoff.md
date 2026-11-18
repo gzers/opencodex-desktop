@@ -1715,3 +1715,12 @@ MSVC x64 最终 11/11，制品 SHA-256 08c69095386e22b5b8825d0394dcc2d7114a77175
 按 TEAM58／IMP197／r7 D 节，Windows 测试源码 0e9f9cf486425d9fa4ba70ddcef376340f1abe5e 使用一对合成工作副本及原件。两只同卷原生移动句柄在写首份意图之前同时固定，核对各文件的字节、对象和 8 项投影，以及 client、custody、retired 和记录目录的准确成员。持两只原句柄通过同一 10 秒窗口执行意图写回、移动和最终对象／固定目录成员读回。夹具先验成功后再加入额外成员，执行前复核拒绝。末源预先占用时原 raw32 保留，工作、原件和记录目录均保持原样。
 
 两轮 MSVC x64 定向各 7/7、raw0，14 个临时夹具核实缺席。最终制品 SHA-256 e4252d6ed4dcb57135f81e9e5e37e89f0269e5117719836e69161e5afc84750b。原日志、Git 源码绑定和清理见 wl2-r7-external-pair-preflight-20261118-r1。此批覆盖一对固定文件和四处合成目录。旧现场的三原件整树、进程静止、连续 claim/N/L/K、原生产记录和精确锁释放仍待。原文件级证据保留。nine-r2 待真实 Host 回执，旧原包现场未执行动作，公开 Start 维持拒绝。
+
+
+## 2026-11-18 r7 外部原件恢复的 claim/N/L/K 连续性
+
+输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173，治理 65835a0b3726d50f18018fbb8d8b8f6375ad286b，TEAM59／IMP198／r7 D 节。Windows 定向源码 2afe0fa98e62f90d32f834a1e1138d1ec39a07fe，Git 树 00595b663d3d687bf46eb8e5c940bfaa9791be31。使用产品 NativeLease 和两只同卷原生移动句柄验证一对合成文件。独立 SQLite BEGIN IMMEDIATE 占用最后一个 K，原 raw33 在首个 Intent 之前返回，原件、工作副本、记录目录和外部事务均保持。成功路径在五处移动及读回边界验证原 claim/N/L/K 拒绝竞争；显式释放后独立重取，并复核全部协调对象 ID、字节及八项安全投影。
+
+MSVC x64 原生两轮各 9/9，harness 两轮各 7/7；最终产品测试制品原 lease 回归 8/8。结果均 raw0。产品测试 EXE SHA-256 82db400192dc30180f852104be5a1265f54c92fd3114b5015331d47b91b76fd3，harness 4c631855ef1ccb5e1d5be0d48aefd0ea77ab13606cea76eba6a9a2d197204560。原始回执与逐文件摘要归档于 wl2-r7-external-native-lease-20261118-r1。没有非预期原生测试失败。预期反例保留 raw33、raw32、raw80 和 raw183。归档首个操作错误为 harness 制品路径提取失败，已根据 Cargo 原输出重新核对；清理解析随后兼容同一行的 Rust 用例名与标记，确认 54 个夹具目录均缺席。此次编译生成的未跟踪 Windows schema 已核对并移除。
+
+旧原包 r2 的三个真实原件、两 custody、原 Job 及锁现场继续保留。下一批须验证三原件与固定 anchors 的准确成员、逐节点持久记录、完整读回和释放，并独立证明原进程静止。旧 Job 24 项 Unknown/raw50，命令谱系 raw64，executionReady=false；当前无新的实际恢复授权请求。nine-r1 宿主 95724 仍存活，首错 6460 ms/raw32；TEAM58 的修复版 nine-r2 仍无 Host 回执。普通 MSI 残留 raw1625，生产单 SID 未验收，公开 Start 仍拒绝。
