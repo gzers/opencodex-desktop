@@ -1741,3 +1741,12 @@ TEAM59／IMP198／r7 D 节。Windows 测试源码 82f48aa0591bbeee263ce54429c062
 Harness 10/10，最终 MSVC x64 产品测试库 13/13，均 raw0。制品 SHA-256 分别为 1cd9edf93d874949d788a2d063fd54b386fae81133c6d167807ac9982a24db73 和 8a11bedea080b7af4e8ebade044d93210bcc786811215503c7d928d2b287af30。本地工具链初次定位到容器目录，修正到实际解包根后启动。Cargo 首错 raw101／E0502，修正锁代次借用后通过。原始日志、已执行源码摘要和清理见 wl2-r7-external-whole-tree-lease-20261118-r1。23 个夹具根确认缺席，生成 schema 核对摘要后移除。
 
 此组合覆盖合成硬盘原件和产品锁。实际原进程静止、旧 manifest/current 绑定、独立正式修复记录及旧 r2 执行仍待。旧 r2 的 Job 24 项 Unknown/raw50 和命令谱系 raw64 原样保留，executionReady=false、approvalRequested=false。真实普通桌面修复版 nine-r2 尚无新 Host 回执，保留 nine-r1 首错现场。无需重跑现有通过的组件测试。公开 Start 维持拒绝，生产单 SID 与普通 per-user MSI 仍待验收。
+
+
+## 2026-11-18 r7 外部修复记录定向验证
+
+输入 main 040f411e6d48d97bde6e7b2e6c22860e547b6173、治理 65835a0b3726d50f18018fbb8d8b8f6375ad286b、TEAM59／IMP198／r7 D 节。Windows 定向测试源码 6e4e2e274113e155d29867f6591937ec4a2915ef。三件合成原件的修复记录绑定合成失败 manifest/current、准确六步范围、动作、10 秒窗口、静止来源与前序原始字节摘要。每一步沿既有原生句柄检查发布 Intent 与读回记录，十二条完整移动记录仍为 RepairPending。链接产品 NativeLease 的测试在完整树读回、四把锁明确释放并独立重取再释放、协调文件身份／内容／八投影复核后写完成记录。记录只在合成夹具运行，旧失败 journal 或原生权限不从记录生成。
+
+Harness 10/10、MSVC x64 产品测试库 13/13，均 raw0。制品 SHA-256 分别为 92c6ef7e7b99ea2e0c8100d79a5a65411ffe642e0a38a94a443c49038f1f2ecd 和 7e7e360e6dd052a7263b9e3f6a09b7aa92f399bc7943408d675177397605239e。验证篡改绑定、未知字段、前缀重排、七条中断前缀、缺观测或缺步骤的完成记录均保持拒绝或 Pending。Cargo 首错 raw101／E0463，显式指定现有 MSVC rustc/rustdoc 后通过；原输出保留。23 个夹具根确认缺席，独立证据见 wl2-r7-external-record-20261118-r1。
+
+当前真实 r2 的原进程静止和最终外部修复仍待。旧 Job 24 项 Unknown/raw50、命令谱系 raw64，executionReady=false、approvalRequested=false；旧 r2 现场、旧 seq9 和既有失败文件保持。marenben 已运行 nine-r1，6460 ms/raw32 首错与 PID 95724 保留；nine-r2 尚无桌面 Host 回执。普通 per-user MSI raw1625、生产单 SID、真实原包闭环和固定候选待验。公开 Start 维持拒绝。

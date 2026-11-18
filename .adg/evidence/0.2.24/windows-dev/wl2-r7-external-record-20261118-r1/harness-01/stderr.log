@@ -1,0 +1,8 @@
+   Compiling windows024-r7-query-proof v0.1.0 (C:\Users\15119\.codex\worktrees\r6-windows-native-resume\code\test\windows024-native\r7-query-harness)
+error[E0463]: can't find crate for `std`
+  |
+  = note: the `x86_64-pc-windows-msvc` target may not be installed
+  = help: consider downloading the target with `rustup target add x86_64-pc-windows-msvc`
+
+For more information about this error, try `rustc --explain E0463`.
+error: could not compile `windows024-r7-query-proof` (lib test) due to 1 previous error
