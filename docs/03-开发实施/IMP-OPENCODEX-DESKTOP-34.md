@@ -2079,3 +2079,15 @@ Windows 代码 `0d0c9d29ccd9075d59f92350c158c256c835924b`，证据 `3155e8fa0b9f
 | 旧 r2 源码复核，4 件 | 原宿主提交 357210891f14a1851881e6192bd09d7031471707，树 a284da0e1bd517daa26848857b8189bbc88838c0。唯一 Resume 在捕获成功之后。实际捕获 30,699 ms，created-suspended，originalPhaseRetained=false。24 个 Job 观察为 Unknown／raw50。 |
 
 后继隔离准入与注入点见 [r7 合同](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。仍缺普通桌面原 Owner V2 回执、同原线程完整恢复 10 秒、普通用户 MSI 和官方单 SID 生命周期。整链 10,144／10,039 ms 超时保留。旧 r2 保持原状，三件原件仍在 custody，Node 未 Resume，首错 command-lineage raw64，executionReady=false。公开 Start 保持拒绝，签名固定候选后再进入 W2／双 SID。
+
+## revision192 Windows r7 完整镜像扫描组件复核
+
+复核代码 `766d1f010be60865e7a425dab242ab5d861773b5`、证据 `f4bd13e48a82474b1cb23e000bfe86976733e4ce`。相对 IMP191 净差为两个 Windows 镜像扫描文件，两批共 81 件证据的成员、Git 字节长度、SHA-256 和执行源绑定一致。制品摘要来自 Windows 回执。[固定交接](https://github.com/gzers/opencodex-desktop/blob/f4bd13e48a82474b1cb23e000bfe86976733e4ce/docs/03-开发实施/0.2.24-contracts/windows-dev-handoff.md)
+
+| 证据 | 复核结果 |
+| --- | --- |
+| 晚到目录 ADS，21 件 | 1/1。完整文件读取后新增目录 ADS 仍拒绝。初版 E0609 和修正后 MSVC raw0 均保留。 |
+| 枚举类型提示，60 件 | 18 通过、3 忽略，测试和三个 MSVC 开发制品 raw0。文件与目录双向替换均拒绝。持有句柄仍核实际类型、非重解析、路径、卷、身份、八项安全投影、ADS、内容及两次独立成员复查。rustfmt 的 PATH 首错和固定工具链通过记录均保留。 |
+| 固定副本配对计时 | 12 次扫描各哈希 10,586 个文件，均在 10 秒内。总中位 2694.602 → 2460.663 ms，枚举与固定中位 1627.553 → 1415.586 ms，保留 5855.232 ms 基线样本。回执记录夹具及生成 schema 已清理，固定只读副本仍保留。 |
+
+本次接收组件证据。普通桌面原 Owner V2、同线程完整恢复 10 秒、普通用户 MSI 和官方单 SID 生命周期待验。沿用 TEAM52 的独立桌面准入和 pre-manifest 注入点，完整执行三次扫描。保留既有 10,144／10,039 ms 整链超时，旧 r2 现场维持隔离，公开 Start 保持拒绝。签名固定候选后才进入 W2／双 SID。
