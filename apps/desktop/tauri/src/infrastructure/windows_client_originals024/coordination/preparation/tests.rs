@@ -3,6 +3,7 @@ use crate::infrastructure::windows_client_originals024::{bounded, tree::tests::F
 use native as backend;
 use native::{create_private_directory, PrivateRecord};
 use rusqlite::Connection;
+use std::fs;
 use std::time::Duration;
 
 #[path = "../../../../../../../../test/windows024-native/r7-query-harness/src/infrastructure/windows_client_originals024/external_repair_steps.rs"]
@@ -192,6 +193,15 @@ fn wl2_r7_external_steps_native_lease_keeps_claim_and_nlk_through_moves_until_re
 
 #[test]
 fn wl2_r7_external_steps_whole_tree_requires_continuous_native_lease() {
+    whole_tree_native_release(false);
+}
+
+#[test]
+fn wl2_r7_external_steps_whole_tree_refuses_drift_after_native_release() {
+    whole_tree_native_release(true);
+}
+
+fn whole_tree_native_release(change_original: bool) {
     let (scene, paths) =
         external_repair_steps::whole_tree::WholeTree::with_claim(CLAIM_NAME, |client, root| {
             let coordination = create_private_directory(&root.join("coordination")).unwrap();
@@ -237,8 +247,27 @@ fn wl2_r7_external_steps_whole_tree_requires_continuous_native_lease() {
     let lease_release_sha256 = crate::infrastructure::hash::sha256_hex(
         &serde_json::to_vec(&(epoch, coordination)).unwrap(),
     );
-    scene.record_released(moves, lease_release_sha256).unwrap();
-    println!("completion record followed exact native release and coordination readback");
+    if change_original {
+        let original = root.join("config.toml");
+        let contents = b"edited original after lease release\n";
+        fs::write(&original, contents).unwrap();
+        let error = scene.record_released(moves, lease_release_sha256).unwrap_err();
+        assert_eq!(
+            error.to_string(),
+            "returned original changed after lease release"
+        );
+        assert_eq!(fs::read(original).unwrap(), contents);
+        assert_eq!(
+            fs::read_dir(root.parent().unwrap().join("records"))
+                .unwrap()
+                .count(),
+            12
+        );
+        println!("post-release original drift refused; twelve move records and edited original retained");
+    } else {
+        scene.record_released(moves, lease_release_sha256).unwrap();
+        println!("completion record followed exact native release and coordination readback");
+    }
     println!("three originals: same claim/N/L/K epoch and raw33 contention at 26 checkpoints; explicit release, independent reacquisition and unchanged coordination images");
     scene.finish();
 }

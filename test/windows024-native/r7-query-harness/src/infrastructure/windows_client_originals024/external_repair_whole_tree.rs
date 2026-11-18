@@ -341,6 +341,23 @@ impl WholeTree {
         lease_release_sha256: String,
     ) -> io::Result<()> {
         check_time(self.end)?;
+        moves.reread()?;
+        let names: Vec<_> = moves
+            .records
+            .iter()
+            .map(|(name, _, _)| name.as_str())
+            .collect();
+        self.verify_members(&LEAVES, &names, LEAVES.len())?;
+        self.verify_anchors()?;
+        for index in 0..LEAVES.len() {
+            let (client, _, retired) = self.node_paths(index);
+            if observe_file(&client, self.end)? != self.originals[index] {
+                return Err(invalid("returned original changed after lease release"));
+            }
+            if observe_file(&retired, self.end)? != self.working[index] {
+                return Err(invalid("retired working file changed after lease release"));
+            }
+        }
         let observed = CompletionObservations::synthetic(
             moves.full_readback_sha256.clone(),
             lease_release_sha256,
