@@ -32,6 +32,92 @@ function Check([bool]$Condition, [string]$Message) {
     if (!$Condition) { throw $Message }
 }
 
+function ReadScanLines([string]$Path, [string]$Prefix) {
+    # stdout is still open for writing by the resident host launcher.
+    $file = [IO.File]::Open($Path, 'Open', 'Read', 'ReadWrite')
+    try {
+        $length = $file.Length
+        Check ($length -le 1048576) 'Resident host stdout exceeds 1 MiB.'
+        $reader = [IO.BinaryReader]::new($file, $utf8, $true)
+        try { $bytes = $reader.ReadBytes([int]$length) } finally { $reader.Dispose() }
+        Check ($bytes.Length -eq $length) 'Short read of resident host stdout.'
+    } finally { $file.Dispose() }
+    $lines = $utf8.GetString($bytes).Split([char]10)
+    $testPrefix = 'test infrastructure::windows_owner_host024::partial_capture_tests::isolated_r7_partial_capture_host ... '
+    for ($i = 0; $i -lt $lines.Length - 1; $i++) {
+        $line = $lines[$i]
+        if ($line.StartsWith($testPrefix, [StringComparison]::Ordinal)) {
+            $line = $line.Substring($testPrefix.Length)
+        }
+        if ($line.StartsWith($Prefix, [StringComparison]::Ordinal)) {
+            $line.Substring($Prefix.Length)
+        }
+    }
+}
+
+function ReadInitialScans([string]$Path) {
+    $reports = @(foreach ($line in (ReadScanLines $Path 'r7-initial-image-scans=')) {
+        $line | ConvertFrom-Json -ErrorAction Stop
+    })
+    if ($reports.Count -lt 2) { return }
+    Check ($reports.Count -eq 2 -and $reports[0].phase -ceq 'start-worker' -and
+        $reports[1].phase -ceq 'start-entry') 'Initial Start scan report count or phase order differs.'
+    return ,$reports
+}
+
+function CheckInitialScans($Reports) {
+    $entry = @($Reports[1].scans)
+    $worker = @($Reports[0].scans)
+    # Source capture includes a readback. Content capture and journal context
+    # then both bracket their work with Source rechecks.
+    $expectedWorker = @('source-capture') + (@('source-readback') * 5)
+    Check ($entry.Count -eq 1 -and $worker.Count -eq $expectedWorker.Count) 'Initial Start full scan count differs.'
+    $scans = $entry + $worker
+    $operations = @('launch-plan') + $expectedWorker
+    $remaining = 30000000
+    for ($i = 0; $i -lt $scans.Count; $i++) {
+        $scan = $scans[$i]
+        $ordinal = if ($i -eq 0) { 1 } else { $i }
+        $before = $scan.remainingBeforeUs
+        $after = $scan.remainingAfterUs
+        $elapsed = $scan.elapsedUs
+        Check ($scan.ordinal -eq $ordinal -and $scan.operation -ceq $operations[$i] -and
+            $scan.completed -eq $true -and $null -eq $scan.firstError) 'Initial Start full scan did not complete in the expected order.'
+        Check ($before -le $remaining -and $after -gt 0 -and $before -ge $after -and
+            $elapsed -gt 0 -and [Math]::Abs(($before - $after) - $elapsed) -le 1) 'Initial Start scans did not share the original 30-second deadline.'
+        $remaining = $after
+    }
+}
+
+function ReadPreparationScans([string]$Path) {
+    $lines = @(ReadScanLines $Path 'r7-preparation-image-scans=')
+    Check ($lines.Count -eq 1) 'Expected one recovery preparation scan report.'
+    Check ($lines[0].StartsWith('[')) 'Recovery preparation scan report is not an array.'
+    $scans = $lines[0] | ConvertFrom-Json -ErrorAction Stop
+    return ,$scans
+}
+
+function CheckPreparationScans($Scans, [string]$FailedAction, [string]$SourceDigest) {
+    Check ($Scans.Count -eq 3) 'Recovery preparation full scan count differs.'
+    $deadline = $Scans[0].deadlineUs
+    Check ($deadline -gt 0 -and $deadline -le 10000000) 'Recovery preparation deadline exceeds the original 10-second window.'
+    $lastFinish = 0
+    $remaining = $deadline
+    for ($i = 0; $i -lt $Scans.Count; $i++) {
+        $scan = $Scans[$i]
+        Check ($scan.ordinal -eq ($i + 1) -and $scan.phase -ceq 'preparation-full-image-verify' -and
+            $scan.failedAction -ceq $FailedAction -and $scan.sourceDigest -ceq $SourceDigest -and
+            $scan.completed -eq $true -and $null -eq $scan.errorCode) 'Recovery preparation scan failed or its action, image or order differs.'
+        Check ($scan.deadlineUs -eq $deadline -and $scan.startedUs -ge $lastFinish -and
+            $scan.finishedUs -gt $scan.startedUs -and $scan.finishedUs -lt $deadline -and
+            $scan.remainingBeforeUs -le $remaining -and $scan.remainingAfterUs -gt 0 -and
+            [Math]::Abs($deadline - $scan.startedUs - $scan.remainingBeforeUs) -le 1 -and
+            [Math]::Abs($deadline - $scan.finishedUs - $scan.remainingAfterUs) -le 1) 'Recovery preparation scans did not share the original 10-second deadline.'
+        $lastFinish = $scan.finishedUs
+        $remaining = $scan.remainingAfterUs
+    }
+}
+
 function SameData($Left, $Right) {
     return ($Left | ConvertTo-Json -Compress -Depth 32) -ceq ($Right | ConvertTo-Json -Compress -Depth 32)
 }
@@ -187,7 +273,8 @@ try {
         $test = 'isolated_r7_partial_capture_host'
     } else {
         $ready = ReadJson (Join-Path $out 'Host-ready.json')
-        if (!$ready.reachedOriginalInjection -or !$ready.privateEvidenceComplete) { throw 'Original worker injection and private evidence must be proven first.' }
+        if ($ready.reachedOriginalInjection -ne $true -or $ready.privateEvidenceComplete -ne $true -or
+            $ready.initialScansVerified -ne $true) { throw 'Original worker injection, full scans and private evidence must be proven first.' }
         $resident = [Diagnostics.Process]::GetProcessById([int]$ready.pid)
         try {
             if ($resident.HasExited -or $resident.SessionId -ne $session -or
@@ -218,7 +305,8 @@ try {
     $info.RedirectStandardInput = $true
     $info.RedirectStandardOutput = $true
     $info.RedirectStandardError = $true
-    $outFile = [IO.FileStream]::new((Join-Path $out "$Mode.stdout.log"), 'CreateNew', 'Write', 'Read', 1)
+    $stdoutPath = Join-Path $out "$Mode.stdout.log"
+    $outFile = [IO.FileStream]::new($stdoutPath, 'CreateNew', 'Write', 'Read', 1)
     $errFile = [IO.FileStream]::new((Join-Path $out "$Mode.stderr.log"), 'CreateNew', 'Write', 'Read', 1)
     $process = [Diagnostics.Process]::Start($info)
     $result.pid = $process.Id
@@ -278,8 +366,24 @@ try {
         if (!$result.privateEvidenceComplete -and $result.reachedOriginalInjection) {
             $result.firstError = @{ message='Private fixture exports were incomplete.' }
         }
-        WriteOnce 'Host-ready.json' @{ pid=$result.pid; creationFiletime=$result.creationFiletime; reachedOriginalInjection=$result.reachedOriginalInjection; privateEvidenceComplete=$result.privateEvidenceComplete; nativeResult=$record }
-        $result.passed = $result.reachedOriginalInjection -and $result.privateEvidenceComplete
+        $result.initialScansVerified = $false
+        if ($result.reachedOriginalInjection) {
+            try {
+                do {
+                    $result.initialScans = ReadInitialScans $stdoutPath
+                    if ($null -ne $result.initialScans) { break }
+                    Start-Sleep -Milliseconds 50
+                } while (!$process.HasExited -and $observation.Elapsed.TotalSeconds -lt 210)
+                Check ($null -ne $result.initialScans) 'Initial Start full scan reports are missing.'
+                CheckInitialScans $result.initialScans
+                $result.initialScansVerified = $true
+            } catch {
+                $result.initialScanError = $_.Exception.Message
+                if (!$result.firstError) { $result.firstError = @{ message=$result.initialScanError } }
+            }
+        }
+        WriteOnce 'Host-ready.json' @{ pid=$result.pid; creationFiletime=$result.creationFiletime; reachedOriginalInjection=$result.reachedOriginalInjection; privateEvidenceComplete=$result.privateEvidenceComplete; initialScansVerified=$result.initialScansVerified; nativeResult=$record }
+        $result.passed = $result.reachedOriginalInjection -and $result.privateEvidenceComplete -and $result.initialScansVerified
         if ($result.passed) { Write-Host 'Original worker retained. Leave this window open for the separate diagnostic.' }
         else { Write-Host 'Initial Start prerequisite failed. Preserve this window and do not rerun.' }
         WriteOnce 'Host-result.json' $result
@@ -323,6 +427,8 @@ try {
             Check ($explicit.passed -eq $true -and $explicit.recoveryActionId -ceq $facts.snapshot.actionId) 'Explicit result and subsequent diagnostic action differ.'
             $imageProof = ReadJson (Join-Path $out 'Host-image-created-verified.json')
             $result.attachment = CheckAttachment $facts.snapshot $injection $imageProof
+            $result.preparationScans = ReadPreparationScans (Join-Path $out 'Host.stdout.log')
+            CheckPreparationScans $result.preparationScans $injection.failedActionId $imageProof.current.imageSha256
         }
     }
     if ($Mode -ceq 'Explicit') { $result.recoveryActionId = $snapshot.actionId }
