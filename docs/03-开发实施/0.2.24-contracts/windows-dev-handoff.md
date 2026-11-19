@@ -1888,3 +1888,12 @@ PowerShell 5.1 提取并执行准确摘要门，原版配对与候选配对通�
 主线 040f411e6d48d97bde6e7b2e6c22860e547b6173，治理 55dff7d7b6aad0357d310757981641c0f38d5a03，TEAM68／IMP207／r7。Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0 已推送，唯一改动为测试 launcher 的三处合同替换。固定 range-r1 原位置两份脚本已成对更新。launcher 30,158 字节，SHA-256 6b553204560d59ba7a292f64c322404028eceb1a0899661f5f9dc9d76953e990；观察脚本 6,394 字节，SHA-256 f3a0c5ed9f8ba698d0b5d3e37d1b1209b4b88fa5ee4714a5fe06c1ff000aba5f。Git blob、实际暂存原字节、三处目录与七份文件的 ACL、成员集合均已复核。EXE、固定官方运行时、CMD 和其余输入摘要维持。PowerShell 5.1 解析和实际配对摘要门通过，旧 launcher 混配拒绝。首次准备因路径分隔符转换 raw1，未写入；修正后准备、暂存及 PS5.1 检查均 raw0。原始回执、观察脚本原字节与摘要见 wl2-r7-team68-readback-stage-20261119-r1。
 
 现有 marenben session 7 活动，range-r1/out01 仍空，私有夹具根未创建。已满足固定配对门，继续等待该普通桌面单次 Host。随后独立核活进程身份及原线程五秒范围诊断。齐备方可做一次 Explicit 与一次严格小于五秒的 DiagnosticAfter。旧官方 r2 保全与生产验收缺项沿用；公开 Start 维持拒绝。
+
+
+## 2026-11-19 TEAM69 range-r1 原宿主回执通过
+
+已消费治理 8a6deecf8ae1731b698977a5b70e3ce941c06af2、TEAM69／IMP212／r7。main cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2 接入 Windows 分支 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756，复核合并树及文件归属。现场沿用 36b70383e 构建的固定 EXE 与 TEAM68 launcher 配对。
+
+range-r1 唯一 Host 回执经固定核验器通过。marenben 普通令牌、session 7、WinSta0/Default、无外层 Job，PID 25144／FILETIME 134395302283231479。九次完整扫描通过，原 30 秒窗在 20,820 ms 触发计划内 raw31，原 worker ThreadId(51) 保留，Node 未 Resume。Host-result.json SHA-256 97d40caf5661aec2c16464d32d7ec4cbbff608d4e2d2b0ee757972c3fbac7346。归档首轮日志共享冲突已留证，修正只读快照后九份原始记录逐字节核对，复核 raw0。证据见 wl2-r7-range-host-20261119-r1。
+
+同一普通桌面的独立活进程代次和原 5 秒 DiagnosticBefore 待执行。齐备后才允许单次 Explicit 和 DiagnosticAfter。保全本轮及旧官方 r2，持续公开 Start 拒绝，生产原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID 和签名候选仍待验。

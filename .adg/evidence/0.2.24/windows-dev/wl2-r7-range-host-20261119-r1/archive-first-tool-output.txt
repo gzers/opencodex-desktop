@@ -1,0 +1,5 @@
+Get-FileHash:
+Line |
+  22 |    $before=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash
+     |             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     | The process cannot access the file 'C:UsersPublicocx-r7-isolated-owner-range-r1out01Host.stderr.log' because it is being used by another process.
