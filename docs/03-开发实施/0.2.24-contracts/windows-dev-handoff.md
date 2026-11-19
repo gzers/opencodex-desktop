@@ -1921,3 +1921,12 @@ DiagnosticBefore raw0，定向测试 1/1，stderr 为空。原 worker ThreadId(5
 接收 main cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2 与治理 8d9a27d5a03aa3a650345b0f3017029bfc1e28cc，按 TEAM72／IMP215／r7。原普通 SID 的 session 7 两次确认 PID 25144／FILETIME 134395302283231479 存活。五项路径及句柄身份和保护一致，独立句柄重复读取 [0,5622) 的 SHA-256 同为 4faebbaf1807aa1aeb9ef7524892d681645974172ab3d81ff129bf733aaf7819。原始失败回执 4,273 字节，SHA-256 ba74770fa579a673d2a402383552c9f842825a55aff52efde051d5e5fa5dc3e4，见 wl2-r7-team72-event-snapshot-20261119-r1。私有日志原件留在原隔离目录。
 
 采集首错 private-copy（RuntimeException，HRESULT -2146233087，raw=null），具体 ACL 或创建检查未区分。回执无事件投影，故同次 Explicit 最末阶段、扫描、V2 持久化和回传为 Unknown。拟在同一普通桌面以内存快照复核相同原件、保护及已证明前缀，只导出白名单事件字段，省去持久副本步骤。本轮未发新请求或改权限，生产门槛保持。请集成线先接收部分证据，待绑定结果后再判断是否需要分段计量新配对。
+
+
+## 2026-11-19 TEAM73 原桌面只读投影定位到服务端超时结果
+
+按 TEAM73／IMP216／r7 接收治理 fb7d0b3cbe455a1d8c1e31071035de547df453da，主线 cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2。原普通 SID、session 7、WinSta0/Default 与原 PID 25144／FILETIME 134395302283231479 已复核。五项路径和句柄身份、原保护与首轮一致，独立双读范围恰为 [0,5622)，SHA-256 4faebbaf1807aa1aeb9ef7524892d681645974172ab3d81ff129bf733aaf7819。六条完整记录，内存投影通过。5,217 字节原始投影回执 SHA-256 8044e1de42b1f3ff21ddcfa0c45edc0c3ded4944f4cb41829de1f9a22dff4942，见 wl2-r7-team73-event-projection-20261119-r2。
+
+同次 Explicit 有一个绑定的 intent 和一个后续 result。固定源码确认最末阶段 v2-original-request-result 在 dispatch 返回后，服务端记录 refused／TimedOut／raw=null，后面才做最终重验、传输回复和等 ACK。原客户端 9,999 ms 超时及 raw101、首轮 private-copy 首错均保留。ThreadId(51) 是已通过的前置观察，原 worker 实际接手、内部扫描、V2 持久状态和回传仍为 Unknown。未见 DiagnosticAfter 或有效 recoveryActionId，私有原日志和宿主留置。
+
+请集成线依据该分界决定是否启用新隔离配对的定向计量。建议在同一原时钟内分别取 dispatch 入口、worker 注册及首次观测、全量扫描与校验栅栏、Intent/Pending 写入及读回、最终重验及回复的阶段时间和首错，区分预算耗尽位置。旧现场维持只读，30／10／5 秒和未知拒绝维持。真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID 与签名候选仍待验。
