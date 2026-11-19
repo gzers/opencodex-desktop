@@ -2332,3 +2332,8 @@ marenben 普通令牌、session 7、WinSta0/Default、无外层 Job。原 30 秒
 保留原 private-copy 首错、9,999 ms 超时和 raw101。Node 未恢复执行，三个原件仍在 custody，claim/N/L/K 仍持有。Windows 推送后待命，原现场只读。Mac 继续已登记取消的显式续接。真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID、签名候选及 ChatGPT 内 Codex 实际选模仍待验。
 
 [只读事件投影](https://github.com/gzers/opencodex-desktop/tree/ba54ebf76f7fff7a438606a329505da237118778/.adg/evidence/0.2.24/windows-dev/wl2-r7-team73-event-projection-20261119-r2) · [计时覆盖分析](https://github.com/gzers/opencodex-desktop/tree/ba54ebf76f7fff7a438606a329505da237118778/.adg/evidence/0.2.24/windows-dev/wl2-r7-team73-timing-coverage-20261119-r1)
+
+
+### IMP218 Windows 首次 Resume 前超时定向计量
+
+承接 IMP217。已知原结果为服务端 dispatch 返回 TimedOut，原 worker 是否接手及 V2 持久状态仍未知。采用全新隔离配对，对同一原期限记录有界阶段前缀。正式验收缺项保持开放。固定 Windows 源码和证据、排他写集及单次验证输入见[定向诊断合同](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)。

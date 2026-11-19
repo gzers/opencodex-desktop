@@ -546,3 +546,8 @@ Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0、证据 bd29ce9c75a259a
 ## revision74 接收投影后 Windows 待命
 
 按 IMP217 消费 ba54ebf76f7fff7a438606a329505da237118778，Windows 保全原现场和既有失败，保持待命。Mac 继续按[后继代次准备取消合同](0.2.24-contracts/client-successor-prepare-cancel-r1.md)推进显式续接。下一次 Windows 定向诊断的环境与计量约束见 [r7 执行增量](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。
+
+
+## TEAM75 Windows 定向计量与 Mac 并行
+
+按 IMP218 消费最新 Windows 回交，Windows 从固定 Windows 源码准备一组新隔离配对，仅运行单次首次 Resume 前恢复定向诊断。Mac 同步推进后继准备取消显式续接。源码、写集、原期限及回交见[定向诊断合同](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)。
