@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 216；2026-11-19。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 217；2026-11-19。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2321,3 +2321,14 @@ marenben 普通令牌、session 7、WinSta0/Default、无外层 Job。原 30 秒
 快照首错在 private-copy（RuntimeException，HRESULT -2146233087，raw=null）。缺少事件投影，原 Explicit 的 dispatch、扫描、V2 Intent/Pending、最末阶段和最终回传仍为 Unknown。按 TEAM73 与 r7 在同一环境做只读内存投影，保留原失败。真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID、签名候选及 ChatGPT 内 Codex 实际选模仍待验。
 
 [Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/832378a92959783c11d99dcad4d4aef1a2722d2a/.adg/evidence/0.2.24/windows-dev/wl2-r7-team72-event-snapshot-20261119-r1)
+
+
+## revision217 接收 Windows 日志投影与计时覆盖分析
+
+证据固定至 ba54ebf76f7fff7a438606a329505da237118778，生产输入仍为 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756。独立按 Git blob 核对投影 manifest 六份载荷的字节数和 SHA-256，以归档核验器复算回执并与入库 JSON 逐字节一致。原普通 SID 后缀 -1003、session 7、WinSta0/Default 下，PID 25144 与 FILETIME 134395302283231479 绑定同一日志稳定前缀 [0,5622)。来源摘要 4faebbaf1807aa1aeb9ef7524892d681645974172ab3d81ff129bf733aaf7819，脱敏投影摘要 8044e1de42b1f3ff21ddcfa0c45edc0c3ded4944f4cb41829de1f9a22dff4942。核验覆盖归档载荷与来源声明，私有原始字节保留现场。
+
+同次 Explicit 的一条 intent 及一条 result 证明服务端至 dispatch 返回后记录 refused / TimedOut / raw=null。结合固定源码，预 dispatch 期限检查通过。114 ms DiagnosticBefore 的 ThreadId(51) 仅绑定该观察。Explicit 的 worker 接手、各独立扫描、V2 Intent/Pending 和最后回复 I/O 保持 Unknown。零计时事件不足以定位耗时阶段。
+
+保留原 private-copy 首错、9,999 ms 超时和 raw101。Node 未恢复执行，三个原件仍在 custody，claim/N/L/K 仍持有。Windows 推送后待命，原现场只读。Mac 继续已登记取消的显式续接。真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID、签名候选及 ChatGPT 内 Codex 实际选模仍待验。
+
+[只读事件投影](https://github.com/gzers/opencodex-desktop/tree/ba54ebf76f7fff7a438606a329505da237118778/.adg/evidence/0.2.24/windows-dev/wl2-r7-team73-event-projection-20261119-r2) · [计时覆盖分析](https://github.com/gzers/opencodex-desktop/tree/ba54ebf76f7fff7a438606a329505da237118778/.adg/evidence/0.2.24/windows-dev/wl2-r7-team73-timing-coverage-20261119-r1)

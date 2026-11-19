@@ -318,3 +318,12 @@ TEAM73／IMP216。固定证据 832378a92959783c11d99dcad4d4aef1a2722d2a。原普
 - 复验原宿主存活、路径/句柄文件身份及保护、同一已证明范围 [0,5622) 的两次独立读取。摘要必须同为 4faebbaf1807aa1aeb9ef7524892d681645974172ab3d81ff129bf733aaf7819。只在内存中解析该范围的完整记录。不一致或无法绑定时报告首错并保持 Unknown。
 - 只回交白名单事件字段、来源范围、宿主/线程/请求绑定及最后可归因阶段。私有日志原字节留原现场，原 private-copy 失败保留。intent 只证明该日志点，不能证明执行完成或 V2 已持久化。
 - 写集仅新不可覆盖证据目录和 windows-dev-handoff.md。禁止新 Explicit、DiagnosticAfter、Host、Start、权限变更、强清、W2、双 SID 及发布。原预算和完整检查保持。
+
+
+## 2026-11-19 执行增量：投影结论与下次计量边界
+
+TEAM74／IMP217。固定输入 ba54ebf76f7fff7a438606a329505da237118778。同次 Explicit 已观察至 dispatch 返回后的结果日志。原服务端在回复前还会复核期限。现有计时在绑定和隔离检查之后启动，扫描返回后才记点，部分输出依赖 worker Drop 与异步 stdout。零条计时维持阶段 Unknown。
+
+后续若继续定位，只在新隔离配对上使用有界实时阶段前缀，由服务端在超时时读取快照并绑定同一请求。覆盖 dispatch 进入与返回、worker 注册与首次观察、每道独立来源校验、Intent/Pending 写入与读回、回复前期限复核及回复 I/O。等价性未证实前保留各道完整校验。沿用 30/10/5 秒与未知拒绝。当前 Windows 待命，原宿主及三个保管原件保全。
+
+[只读事件投影](https://github.com/gzers/opencodex-desktop/tree/ba54ebf76f7fff7a438606a329505da237118778/.adg/evidence/0.2.24/windows-dev/wl2-r7-team73-event-projection-20261119-r2) · [计时覆盖分析](https://github.com/gzers/opencodex-desktop/tree/ba54ebf76f7fff7a438606a329505da237118778/.adg/evidence/0.2.24/windows-dev/wl2-r7-team73-timing-coverage-20261119-r1)
