@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 70；2026-11-19。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 71；2026-11-19。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -521,3 +521,9 @@ Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0、证据 bd29ce9c75a259a
 按 IMP213 接收 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756 与 b130bf93eaefb7f7a05494fa1f4571104b3958b3。固定现场、脚本配对与排他写集仍沿 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。Mac 并行处理已登记取消的显式续接与隔离选模验证。
 
 > fetch docs/governance-main，按 TEAM70／IMP213／r7 消费 range-r1 已有 Host 回执。保留 marenben 普通 session 7 原现场，独立核存活 PID 25144／FILETIME 134395302283231479，再由原 worker 在 5 秒内通过 DiagnosticBefore 核原失败及 claim/N/L/K。两项、固定脚本配对及 ACL 均通过后，跑一次 10 秒 Explicit 和一次严格小于 5 秒的独立 DiagnosticAfter，核唯一持久 V2 Intent/Pending、原字节和语义。首错或未知即停，保全本轮及旧 r2 并推送原证据。维持公开 Start 拒绝，候选固定前维持单 SID 定向范围。
+
+## revision71 同一宿主的定向 Explicit 与独立读回
+
+按 IMP214 接收源码 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756、证据 d88b1839e456751268ae2bf741cca64e665c548e。范围和排他写集沿 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。Mac 并行推进已登记取消的显式续接。
+
+> fetch docs/governance-main，按 TEAM71／IMP214／r7 接续 range-r1。先找已有 Explicit 和 DiagnosticAfter 回执，已执行就消费结果。未执行时，现场确认 marenben 普通 session 7、PID 25144／FILETIME 134395302283231479 与原 worker ThreadId(51) 仍连续，复核原件、固定配对与 ACL 仍符合合同。齐备后只做一次 10 秒 Explicit，绑定唯一持久 V2 Intent/Pending，固定原始 Explicit 回执 SHA-256。随后只做一次独立 DiagnosticAfter，将实际逐字节及语义读回纳入 QPC 区间，差值严格小于五倍频率。首错或未知即停并回交 Git 原始证据，保全首失败与独立旧 r2。保持公共 Start 拒绝，不另起 Host／Start，固定签名候选前不做 W2／双 SID，不发布。

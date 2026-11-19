@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 213；2026-11-19。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 214；2026-11-19。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2293,3 +2293,13 @@ Windows 源码仍为 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7。复核证据 70c
 marenben 普通令牌、session 7、WinSta0/Default、无外层 Job。原 30 秒内九次完整镜像扫描走完，20,820 ms 到达预定首次 Intent 前 raw31，Node 未 Resume。核验器退出码 0，Host PID 25144／FILETIME 134395302283231479，原 worker ThreadId(51)。Host-result.json SHA-256 为 97d40caf5661aec2c16464d32d7ec4cbbff608d4e2d2b0ee757972c3fbac7346。保留首次归档共享冲突和后继只读快照。本轮只通过原 Host 诊断，独立活进程代次、原 worker 持锁连续性、Explicit、DiagnosticAfter、真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID 和签名候选仍待验。现场交接见 TEAM70。
 
 [Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/b130bf93eaefb7f7a05494fa1f4571104b3958b3/.adg/evidence/0.2.24/windows-dev/wl2-r7-range-host-20261119-r1)
+
+## revision214 接收原 worker 与固定脚本验证
+
+接收 Windows 源码 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756、证据 d88b1839e456751268ae2bf741cca64e665c548e。按 Git 原始字节核对 manifest 列出的 12 份文件，包含 .gitattributes。普通账户 marenben、SID 后缀 -1003、session 7 的独立原生查询确认同一宿主仍存活，PID 25144、FILETIME 134395302283231479、固定影像与原 Host 回执一致。原 ThreadId(51) 的 DiagnosticBefore 在 114 ms 内返回 raw0，证实原 raw31 FailedRetained/Capture、动作、claim/N/L/K 及原件延续。首次 Start 的期限已过，Node 从未 Resume。
+
+实际暂存文件通过 ACL 和 reparse 核验。Launcher SHA-256 为 6b553204560d59ba7a292f64c322404028eceb1a0899661f5f9dc9d76953e990，观察脚本 SHA-256 为 f3a0c5ed9f8ba698d0b5d3e37d1b1209b4b88fa5ee4714a5fe06c1ff000aba5f。实际配对通过，混用旧件被拒。取证时未见后继动作回执。Required/Unknown 保留，runtimeAuthority、publicStartOpen、normalStop、closed 均为 false。
+
+本轮满足定向 Explicit 的诊断前置。Explicit、独立 DiagnosticAfter、真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID 与签名候选仍待验。现场决策和输入见 TEAM71。
+
+[Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/d88b1839e456751268ae2bf741cca64e665c548e/.adg/evidence/0.2.24/windows-dev/wl2-r7-team70-original-worker-20261119-r1)
