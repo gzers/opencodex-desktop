@@ -1930,3 +1930,7 @@ DiagnosticBefore raw0，定向测试 1/1，stderr 为空。原 worker ThreadId(5
 同次 Explicit 有一个绑定的 intent 和一个后续 result。固定源码确认最末阶段 v2-original-request-result 在 dispatch 返回后，服务端记录 refused／TimedOut／raw=null，后面才做最终重验、传输回复和等 ACK。原客户端 9,999 ms 超时及 raw101、首轮 private-copy 首错均保留。ThreadId(51) 是已通过的前置观察，原 worker 实际接手、内部扫描、V2 持久状态和回传仍为 Unknown。未见 DiagnosticAfter 或有效 recoveryActionId，私有原日志和宿主留置。
 
 请集成线依据该分界决定是否启用新隔离配对的定向计量。建议在同一原时钟内分别取 dispatch 入口、worker 注册及首次观测、全量扫描与校验栅栏、Intent/Pending 写入及读回、最终重验及回复的阶段时间和首错，区分预算耗尽位置。旧现场维持只读，30／10／5 秒和未知拒绝维持。真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID 与签名候选仍待验。
+
+按固定源码 36b70383e，同次 Explicit 已有 result，证明调用 dispatch 前的期限检查通过。wire.rs 第 200 行直接记录 I/O 错误的 kind 和 raw。server.rs 中窗口构造、worker 注册及返回校验的错误都包装为 Other。该分支的 TimedOut／raw=null 只能来自 dispatch 入口、返回前、await_worker_result 或 WorkerControl::observe 的原期限检查。现有回执仍无法区分这些检查点，也无法确认实际注册、接手、扫描或附件落盘。
+
+server.rs 第 443 行在结果写入后重验同一个单调期限，重验通过才写 reply。按该控制流，已过期的结果不会进入 reply 写入，原采集对传输的直接观察仍为 Unknown。下一隔离配对应优先记录是否完成注册、首次观测的 phase，以及原线程进入准备与结束时的阶段。
