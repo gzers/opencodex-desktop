@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 71；2026-11-19。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 72；2026-11-19。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -527,3 +527,10 @@ Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0、证据 bd29ce9c75a259a
 按 IMP214 接收源码 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756、证据 d88b1839e456751268ae2bf741cca64e665c548e。范围和排他写集沿 [r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md)。Mac 并行推进已登记取消的显式续接。
 
 > fetch docs/governance-main，按 TEAM71／IMP214／r7 接续 range-r1。先找已有 Explicit 和 DiagnosticAfter 回执，已执行就消费结果。未执行时，现场确认 marenben 普通 session 7、PID 25144／FILETIME 134395302283231479 与原 worker ThreadId(51) 仍连续，复核原件、固定配对与 ACL 仍符合合同。齐备后只做一次 10 秒 Explicit，绑定唯一持久 V2 Intent/Pending，固定原始 Explicit 回执 SHA-256。随后只做一次独立 DiagnosticAfter，将实际逐字节及语义读回纳入 QPC 区间，差值严格小于五倍频率。首错或未知即停并回交 Git 原始证据，保全首失败与独立旧 r2。保持公共 Start 拒绝，不另起 Host／Start，固定签名候选前不做 W2／双 SID，不发布。
+
+
+## revision72 单次 Explicit 超时后保全现场与取证
+
+按 IMP215 接收 85f317434aab0663c5d282ee5edb0bdfb4532f0a。本轮 Windows 仅在原普通账户 session 7 读取既有私有日志，Git 写集为新证据目录与 windows-dev-handoff.md。Mac 并行推进已登记取消的显式续接。
+
+> fetch docs/governance-main，按 TEAM72／IMP215／[r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 取证。保持 range-r1 原普通 SID/session，在原 PID 25144／FILETIME 134395302283231479、worker ThreadId(51) 的上下文只读快照既有 before-resume-private-control-v2-events.jsonl。回交采集前后文件身份和范围、原字节长度及摘要、首错，以及能绑定到同次 Explicit 的最末阶段。未知保持 Unknown。证据脱敏后提交新目录和 handoff，保全原件与旧失败。不重试 Explicit、DiagnosticAfter、Host 或 Start，不改权限、不强清、不启动 W2 或双 SID、不发布。

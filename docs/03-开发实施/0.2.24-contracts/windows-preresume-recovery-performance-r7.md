@@ -300,3 +300,12 @@ TEAM68／IMP207。合成用例证明回读请求保持 FileAccess.Read，同时�
 - Windows 测试源码的唯一增量为 test/windows024-native/launch-r7-partial-owner.ps1 的三处替换，按证据 896bbd71105a08562943d56d39230db368486d7e 的 wl2-r7-range-readback-pins-20261119-r1/check-pins.ps1 推导：为 ExportExact 增加默认 Read 的类型化 Share 参数，File.Open 使用该参数，仅 CheckAttachment 调用传 ReadWrite。新 launcher 为 30,158 字节，SHA-256 6b553204560d59ba7a292f64c322404028eceb1a0899661f5f9dc9d76953e990。CMD 字节保持 SHA-256 85f56dd180ee907b70e68ed531d90a4e5a480cb104264bdad4890053e5da60f2。
 - 观察脚本只替换原 launcher 的固定摘要。原证据目录保留。新观察脚本为 6,394 字节，SHA-256 f3a0c5ed9f8ba698d0b5d3e37d1b1209b4b88fa5ee4714a5fe06c1ff000aba5f，由 Windows 在本轮新证据目录回交，并在固定 range-r1 位置完成受控成对暂存。先核 Git 与实际暂存载荷的原字节（含换行）、ACL、路径，再启用新配对；任一不符停止。其它脚本、EXE、官方运行时和生产源码维持原固定输入。
 - 现场沿 TEAM67 消费 Host，独立证明活 PID/FILETIME，由同一原 worker 在 5 秒内核原失败、同一对象和 claim/N/L/K；这些只读前置可与配对落地并行。配对及前置均已证实才做一次原 10 秒 Explicit，并绑定唯一已刷盘 V2 Intent/Pending 和 Explicit 回执摘要。之后仅做一次 DiagnosticAfter，要求独立字节读回和语义核验在固定观察脚本的原始 QPC 区间内结束，上界严格小于 5 倍频率。保全首错、未知或超限及原现场。范围仍是单 SID 定向诊断。
+
+
+## 2026-11-19 执行增量：原普通会话的私有事件日志取证
+
+TEAM72／IMP215。固定输入为证据 85f317434aab0663c5d282ee5edb0bdfb4532f0a、唯一 Explicit-result.json SHA-256 f06070f4f474b94289323872db63f73657f7a39b1eccc571d07d80326967648b。原 9,999 ms TimedOut、raw=null、raw101 测试 panic、launcher 首错及核验失败全部保留。请求路径、扫描和 V2 持久状态仍为 Unknown。
+
+- 只在原 marenben 普通 SID（后缀 -1003）、session 7、WinSta0/Default 下只读快照 C:Usersmarenbenocx024-r7-isolated-owner-range-r1Defore-resume-private-control-v2-events.jsonl。记录前后路径/句柄文件身份、保护、稳定读取范围与长度、原字节 SHA-256、首错。绑定原存活 PID 25144／FILETIME 134395302283231479、ThreadId(51) 以及唯一 Explicit 请求。日志变化或缺失时保留可证实的稳定范围，标记缺失或不能绑定的阶段为 Unknown。私有原件保留在隔离环境，Git 载荷先筛除秘密。
+- 只陈述可归因于同次请求的最末阶段。日志 intent 仅证明到达 intent 日志写入。result 需结合原线程 dispatch、底层操作写回和客户端核验分别解释。旧扫描计时仅供提出假设。无回复不证明服务端未执行，日志标记不替代原生回执和独立持久读回。
+- Windows Git 写集只含新不可覆盖证据目录及 windows-dev-handoff.md。禁止发出 Explicit、DiagnosticAfter、Host、Start 或任何恢复/停止动作，禁止提权、改 ACL 或强制清理。回交后再判定是否准备带分段计量的新隔离配对。原 30/10/5 秒、完整校验、未知拒绝和固定候选前不 W2／双 SID 保持。

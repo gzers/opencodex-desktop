@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 214；2026-11-19。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 215；2026-11-19。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2303,3 +2303,12 @@ marenben 普通令牌、session 7、WinSta0/Default、无外层 Job。原 30 秒
 本轮满足定向 Explicit 的诊断前置。Explicit、独立 DiagnosticAfter、真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID 与签名候选仍待验。现场决策和输入见 TEAM71。
 
 [Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/d88b1839e456751268ae2bf741cca64e665c548e/.adg/evidence/0.2.24/windows-dev/wl2-r7-team70-original-worker-20261119-r1)
+
+
+## revision215 接收单次 Explicit 超时并锁定只读取证
+
+接收 Windows 源码 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756、证据 85f317434aab0663c5d282ee5edb0bdfb4532f0a。从 Git blob 独立核对 manifest 的 13 份载荷、长度、SHA-256 及目录成员。原 114 ms DiagnosticBefore 继续有效。单次 Explicit 于 9,999 ms 返回 TimedOut、raw=null，测试 unwrap panic 产生 raw101，launcher 首错为 Manager transport or refusal authority differs.。无有效原生回复、recoveryActionId 或 DiagnosticAfter，验收核验器为 passed:false。
+
+请求是否准入、原 worker 是否收到、镜像扫描覆盖及 V2 Intent/Pending 持久状态仍为 Unknown。控制账户读私有日志得到 raw5。保留原现场和首错，按 TEAM72 与 r7 只取同 SID/session 的既有私有日志快照。真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID、签名候选及 ChatGPT 内 Codex 实际选模显示仍待验证。
+
+[Windows 原始证据](https://github.com/gzers/opencodex-desktop/tree/85f317434aab0663c5d282ee5edb0bdfb4532f0a/.adg/evidence/0.2.24/windows-dev/wl2-r7-team70-explicit-20261119-r1)
