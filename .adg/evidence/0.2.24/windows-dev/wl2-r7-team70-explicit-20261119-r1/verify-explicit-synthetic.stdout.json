@@ -1,0 +1,51 @@
+{
+  "synthetic": true,
+  "realDesktopActionExecuted": false,
+  "syntheticTempRemoved": true,
+  "cases": [
+    {
+      "case": "expected-refusal",
+      "accepted": true
+    },
+    {
+      "case": "wrong-manager-raw",
+      "accepted": false,
+      "firstError": "Explicit raw manager reply differs"
+    },
+    {
+      "case": "failed-exit",
+      "accepted": false,
+      "firstError": "Explicit launcher failed or is incomplete"
+    },
+    {
+      "case": "over-budget",
+      "accepted": false,
+      "firstError": "Explicit reply lacks the original 10-second bound"
+    },
+    {
+      "case": "different-host-generation",
+      "accepted": false,
+      "firstError": "Explicit original Host differs"
+    },
+    {
+      "case": "different-worker",
+      "accepted": false,
+      "firstError": "Retained recovery action or worker binding differs"
+    },
+    {
+      "case": "different-original-binding",
+      "accepted": false,
+      "firstError": "Explicit original Start failure or process binding differs"
+    },
+    {
+      "case": "missing-durability",
+      "accepted": false,
+      "firstError": "Durable Intent/Pending or original ranges differ"
+    },
+    {
+      "case": "same-digests",
+      "accepted": false,
+      "firstError": "Durable Intent/Pending or original ranges differ"
+    }
+  ]
+}

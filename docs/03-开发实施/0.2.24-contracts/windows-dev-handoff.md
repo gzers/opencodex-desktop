@@ -1905,3 +1905,12 @@ range-r1 唯一 Host 回执经固定核验器通过。marenben 普通令牌、se
 DiagnosticBefore raw0，定向测试 1/1，stderr 为空。原 worker ThreadId(51) 在原 5,000 ms 预算内用 114 ms 证明原失败动作、claim/N/L/K 连续持有、原 Start 期限已到和 Node 从未 Resume。同样本为 Required，原 raw31 保留。核对 manager 原始行、结构化回执和已接收 Host。七份固定文件的路径、长度、摘要、DACL，三处目录 DACL、成员集合及无重解析点均符合 TEAM68；实际脚本配对通过，旧 launcher 混配拒绝。原字节和校验记录见 wl2-r7-team70-original-worker-20261119-r1。
 
 单次 Explicit 前置已齐。现有普通桌面待跑原 10 秒 Explicit，取得并核对原回执摘要后，才进入固定计时的单次 DiagnosticAfter。旧官方 r2 保全、生产 Start 拒绝及普通用户 MSI 缺项沿用。
+
+
+## 2026-11-19 TEAM71 range-r1 单次 Explicit 超时
+
+接收 main cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2、治理 0e62df7e6cfb7a12b21718241f0a84c099db5d11、TEAM71／IMP214／r7。固定现场源码 36b70383eac5c44dffc51d34a4c4673cd8a3dbf7，测试 EXE SHA-256 1b482ce541885a141dbd672497643ed65d16fee28644b81d36f0d5478fd427b8，Windows 分支 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756。
+
+单次 Explicit 在原 10 秒窗接近到期时失败。管理器 begin-canonical-abort 记录 9,999 ms、TimedOut、raw=null。raw101 来自测试 unwrap panic，launcher 首断言为 Manager transport or refusal authority differs.。无已验证原生回复或 recoveryActionId，无 DiagnosticAfter 回执。六份原始载荷和接受核验器拒绝回执见 wl2-r7-team70-explicit-20261119-r1。Explicit-result.json SHA-256 为 f06070f4f474b94289323872db63f73657f7a39b1eccc571d07d80326967648b。
+
+源代码核对确认原生 intent 刷盘在 dispatch 前，result 刷盘在最终回传前。本机控制账户对私有事件日志读取 raw5，公开 Host 三份回执与已接收快照摘要一致。当前请求准入、原线程、扫描覆盖以及 V2 Intent/Pending 留置状态均为 Unknown。请集成线确认后续按 marenben 原 SID/session 对既有私有事件日志做只读快照，必要时再确定新隔离配对的分段计量。初始扫描时间仅供提出假设，不能归因本次超时。保全原 Host 和首错，旧官方 r2 独立留置，公开 Start 拒绝。正常 Stop/Closed、真实原件归还、普通用户 MSI、生产单 SID 和签名候选仍待验。
