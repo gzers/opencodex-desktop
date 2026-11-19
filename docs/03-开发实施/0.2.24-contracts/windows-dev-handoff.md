@@ -1897,3 +1897,11 @@ PowerShell 5.1 提取并执行准确摘要门，原版配对与候选配对通�
 range-r1 唯一 Host 回执经固定核验器通过。marenben 普通令牌、session 7、WinSta0/Default、无外层 Job，PID 25144／FILETIME 134395302283231479。九次完整扫描通过，原 30 秒窗在 20,820 ms 触发计划内 raw31，原 worker ThreadId(51) 保留，Node 未 Resume。Host-result.json SHA-256 97d40caf5661aec2c16464d32d7ec4cbbff608d4e2d2b0ee757972c3fbac7346。归档首轮日志共享冲突已留证，修正只读快照后九份原始记录逐字节核对，复核 raw0。证据见 wl2-r7-range-host-20261119-r1。
 
 同一普通桌面的独立活进程代次和原 5 秒 DiagnosticBefore 待执行。齐备后才允许单次 Explicit 和 DiagnosticAfter。保全本轮及旧官方 r2，持续公开 Start 拒绝，生产原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID 和签名候选仍待验。
+
+## 2026-11-19 TEAM70 原宿主活性及原 worker 范围通过
+
+主线 cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2、治理 f8c846f9c2955911d5b701a16d097eb76d0b4ed9，TEAM70／IMP213／r7。range-r1 独立原生只读观察 raw0，同一普通 SID 和 session 7 的 PID 25144／FILETIME 134395302283231479、镜像与原 Host 及后继诊断一致。
+
+DiagnosticBefore raw0，定向测试 1/1，stderr 为空。原 worker ThreadId(51) 在原 5,000 ms 预算内用 114 ms 证明原失败动作、claim/N/L/K 连续持有、原 Start 期限已到和 Node 从未 Resume。同样本为 Required，原 raw31 保留。核对 manager 原始行、结构化回执和已接收 Host。七份固定文件的路径、长度、摘要、DACL，三处目录 DACL、成员集合及无重解析点均符合 TEAM68；实际脚本配对通过，旧 launcher 混配拒绝。原字节和校验记录见 wl2-r7-team70-original-worker-20261119-r1。
+
+单次 Explicit 前置已齐。现有普通桌面待跑原 10 秒 Explicit，取得并核对原回执摘要后，才进入固定计时的单次 DiagnosticAfter。旧官方 r2 保全、生产 Start 拒绝及普通用户 MSI 缺项沿用。
