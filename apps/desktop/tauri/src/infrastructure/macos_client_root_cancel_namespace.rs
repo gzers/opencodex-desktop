@@ -60,7 +60,7 @@ impl<'a> Namespace<'a> {
             let source = history
                 .get(source_pos)
                 .ok_or_else(|| denied("cancellation plan independent source missing"))?;
-            if !matches!(source.state, State::Preparing | State::CaptureReserved)
+            if !source.can_source_root_cancellation(source.ticket != history[0].ticket)
                 || source.ticket != head.ticket
                 || source.references.is_some()
                 || source.restore_plan.is_some()

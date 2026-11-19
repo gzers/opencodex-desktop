@@ -254,8 +254,7 @@ pub(super) fn resolve_originals_projected(
     let current = head.ok_or_else(|| denied("registered root has no independent head"))?;
     let (active, origin) =
         active_binding_projected(connection, stored, current, project, registering)?;
-    let stored = active.as_slice();
-    let mut binding: RootBinding = decode(stored)?;
+    let mut binding: RootBinding = decode(&active)?;
     binding.original_root.inherit_namespace(&origin)?;
     if binding.schema_version != 1 {
         return Err(denied("unknown first root binding schema"));
@@ -269,7 +268,7 @@ pub(super) fn resolve_originals_projected(
         let client = super::root_preparation::preservation::indexed::inspect(
             data,
             &context.working_directory,
-            &active,
+            stored,
             head,
             &binding.original_root,
             connection,
@@ -378,7 +377,7 @@ pub(super) fn resolve_originals_projected(
         &binding.original_root,
     )?;
     let originals = verify_capture(
-        stored,
+        &active,
         &binding.original_root,
         data,
         &context.working_directory,

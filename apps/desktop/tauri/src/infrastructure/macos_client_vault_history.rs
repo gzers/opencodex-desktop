@@ -170,7 +170,7 @@ fn check_historical_scope(originals: &Originals, binding: &[u8]) -> io::Result<(
         binding,
     )
 }
-fn check_historical_scope_pins(
+pub(super) fn check_historical_scope_pins(
     data: &PinnedDirectory,
     profile: &PinnedDirectory,
     client: &PinnedDirectory,
@@ -237,7 +237,7 @@ fn inspect_root_lineage(
             if let Some(attempt) = super::root_preparation::preservation::indexed::pending_retained(
                 data,
                 profile,
-                &generation.binding,
+                binding,
                 closed,
                 &generation.origin,
                 history
@@ -260,7 +260,7 @@ fn inspect_root_lineage(
                 super::root_preparation::preservation::indexed::HistoricalObservation::begin(
                     data,
                     profile,
-                    &generation.binding,
+                    binding,
                     closed,
                     &generation.origin,
                     prefix,

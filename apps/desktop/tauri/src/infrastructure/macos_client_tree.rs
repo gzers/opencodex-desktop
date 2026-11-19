@@ -393,6 +393,10 @@ fn walk(
     Ok(())
 }
 impl TreeSnapshot {
+    pub(super) fn is_empty_root(&self) -> bool {
+        self.valid() && self.entries.is_empty()
+    }
+
     /// This is an INITIALIZED execution tree, not a pre-existing user root.
     /// Native coordination may initialize only its exact claim and held
     /// sidecars before Original capture; the service owner does not exist yet. Any client data introduced meanwhile refuses.

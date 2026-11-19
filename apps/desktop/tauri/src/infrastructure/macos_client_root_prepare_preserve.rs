@@ -16,7 +16,10 @@ struct Plan {
     binding_sha256: String,
     initial_review_sha256: String,
     history_sha256: String,
-    capture_vault: vault_history::Evidence,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    capture_vault: Option<vault_history::Evidence>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    successor: Option<SuccessorFacts>,
     root: super::super::super::TreeSnapshot,
     grok: super::super::super::GrokSnapshot,
     writer: super::super::super::Image,
@@ -65,7 +68,12 @@ fn io(error: crate::errors::AppError) -> std::io::Error {
     let _ = error;
     denied("root-cancel native coordinator unconfirmed")
 }
-fn facts(review: &Review<'_>, physical: &PinnedDirectory, expected: &Head) -> std::io::Result<()> {
+fn facts(
+    review: &Review<'_>,
+    physical: &PinnedDirectory,
+    expected: &Head,
+    registering: Option<&root_cancel_namespace::RegisteringSlot>,
+) -> std::io::Result<()> {
     check_time(review.deadline)?;
     review.index.check_storage()?;
     if read_head(review.index.connection()?)?.as_ref() != Some(expected) {
@@ -102,22 +110,40 @@ fn facts(review: &Review<'_>, physical: &PinnedDirectory, expected: &Head) -> st
         origin,
         physical.path(),
     )?;
-    let history = vault_history::read(review.index.connection()?, &review.head)?;
-    review
-        .capture_vault
-        .verify_root_retained(&review.index.data, &review.head, &history, false)?;
-    if vault_history::inspect(
-        &review.index.data,
-        physical,
-        &review.index.profile,
-        &review.index.binding,
-        &review.head,
-        &history,
-    )? != review.capture_vault
-        || super::super::super::GrokSnapshot::read(&PinnedDirectory::open(&review.index.profile)?)?
-            != review.initial_grok
+    match &review.source {
+        Source::Initial(capture) => {
+            let history = vault_history::read(review.index.connection()?, &review.head)?;
+            capture.verify_root_retained(&review.index.data, &review.head, &history, false)?;
+            if vault_history::inspect(
+                &review.index.data,
+                physical,
+                &review.index.profile,
+                &review.index.binding,
+                &review.head,
+                &history,
+            )? != *capture
+            {
+                return Err(denied("root-cancel capture storage changed"));
+            }
+        }
+        Source::Successor(source) => {
+            let history = vault_history::read(review.index.connection()?, expected)?;
+            let closures = vault_history::inspect_root_history(
+                &review.index.data,
+                &review.index.profile,
+                &review.index.binding,
+                &history,
+                registering,
+            )?;
+            if digest(&encode(&closures)?) != source.closures_sha256 {
+                return Err(denied("root-cancel predecessor closure history changed"));
+            }
+        }
+    }
+    if super::super::super::GrokSnapshot::read(&PinnedDirectory::open(&review.index.profile)?)?
+        != review.initial_grok
     {
-        return Err(denied("root-cancel capture storage or Grok changed"));
+        return Err(denied("root-cancel Grok changed"));
     }
     check_time(review.deadline)
 }
@@ -160,7 +186,7 @@ impl<'a> Prepared<'a> {
         native
             .require_context(review.context, review.index.client.path())
             .map_err(io)?;
-        facts(&review, &review.index.client, &review.head)?;
+        facts(&review, &review.index.client, &review.head, None)?;
         let image = guard
             .root_image(native, review.index.client.path())
             .map_err(io)?;
@@ -178,15 +204,23 @@ impl<'a> Prepared<'a> {
         if !released.first_root_execution_baseline() {
             return Err(denied("root-cancel root contains unexpected client data"));
         }
+        let (schema_version, capture_vault, successor) = match &review.source {
+            Source::Initial(capture) => (2, Some(capture.clone()), None),
+            Source::Successor(source) => {
+                source.require_baseline(&released)?;
+                (3, None, Some(source.clone()))
+            }
+        };
         let plan = Plan {
-            schema_version: 2,
+            schema_version,
             id: uuid::Uuid::new_v4().to_string(),
             source: review.head.clone(),
             origin: review.index.root_registration.clone().unwrap(),
             binding_sha256: digest(&review.index.binding),
             initial_review_sha256: review.fingerprint.clone(),
             history_sha256: review.history_sha256.clone(),
-            capture_vault: review.capture_vault.clone(),
+            capture_vault,
+            successor,
             root: tree,
             grok: review.initial_grok.clone(),
             writer: image,
@@ -195,11 +229,8 @@ impl<'a> Prepared<'a> {
             .index
             .action_parent
             .child_private("client-root-cancel-plans", true)?;
-        if !super::super::super::tree::names(parent.file())?.is_empty() {
-            return Err(denied(
-                "root-cancel retained plan namespace requires resolution",
-            ));
-        }
+        let history = vault_history::read(review.index.connection()?, &review.head)?;
+        root_cancel_namespace::Namespace::from_history(&history)?.require(&parent)?;
         let slot = root_cancel_namespace::RegisteringSlot::create(&parent, &plan.id)?;
         let bytes = encode(&plan)?;
         let sha256 = digest(&bytes);
@@ -279,13 +310,24 @@ impl<'a> Prepared<'a> {
             } if bytes == self.bytes && digest(&bytes) == self.sha256 => {
                 require_private(&protection, false)?;
                 let plan: Plan = decode(&bytes)?;
-                if plan.schema_version != 2
+                let source_matches = match &self.review.source {
+                    Source::Initial(capture) => {
+                        plan.schema_version == 2
+                            && plan.capture_vault.as_ref() == Some(capture)
+                            && plan.successor.is_none()
+                    }
+                    Source::Successor(source) => {
+                        plan.schema_version == 3
+                            && plan.capture_vault.is_none()
+                            && plan.successor.as_ref() == Some(source)
+                    }
+                };
+                if !source_matches
                     || plan.id != self.id
                     || plan.source != self.review.head
                     || plan.initial_review_sha256 != self.review.fingerprint
                     || plan.binding_sha256 != digest(&self.review.index.binding)
                     || plan.history_sha256 != self.review.history_sha256
-                    || plan.capture_vault != self.review.capture_vault
                 {
                     return Err(denied("root-cancel plan source changed"));
                 }
@@ -296,7 +338,12 @@ impl<'a> Prepared<'a> {
     }
     fn require_live(&self) -> std::io::Result<()> {
         let plan = self.plan()?;
-        facts(&self.review, &self.review.index.client, self.expected())?;
+        facts(
+            &self.review,
+            &self.review.index.client,
+            self.expected(),
+            self.registered.is_none().then_some(&self.slot),
+        )?;
         if observation::entry(self.slot.directory(), "root")?.is_some()
             || super::super::super::TreeSnapshot::read(&self.review.index.client)? != plan.root
         {
@@ -391,7 +438,7 @@ impl<'a> Prepared<'a> {
         native.reanchor_claim(&target).map_err(io)?;
         guard.reanchor(&target).map_err(io)?;
         checkpoint("after_reanchor")?;
-        facts(&self.review, &archived, self.expected())?;
+        facts(&self.review, &archived, self.expected(), None)?;
         native.check().map_err(io)?;
         guard.check().map_err(io)?;
         if let Some(service) = authority.service {
@@ -405,7 +452,7 @@ impl<'a> Prepared<'a> {
         {
             return Err(denied("root-cancel release or logical absence unconfirmed"));
         }
-        facts(&self.review, &archived, self.expected())?;
+        facts(&self.review, &archived, self.expected(), None)?;
         native.check().map_err(io)?;
         check_time(end)?;
         let bytes = encode(&serde_json::json!({

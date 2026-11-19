@@ -88,7 +88,8 @@ fn successor_preparation_review_audits_history_without_mutation_or_first_root_pe
         preview.preparation_digest.as_deref(),
         Some(fingerprint.as_str())
     );
-    assert!(!preview.can_cancel_preparation);
+    assert!(preview.can_cancel_preparation);
+    assert!(!preview.can_prepare_plan && !preview.can_continue && !preview.can_finalize);
     let expired = preview::inspect_preview_until(&context, &data, Instant::now());
     assert_eq!(expired.status, Status::Unknown);
     assert!(expired.preparation_digest.is_none());
@@ -128,6 +129,41 @@ fn successor_review_refuses_wrong_head_context_deadline_and_later_capture_phase(
     assert!(index
         .review_successor_root_preparation(&context, &reserved, end())
         .is_err());
+    let pending = Head {
+        revision: reserved.revision + 1,
+        ticket: reserved.ticket.clone(),
+        state: State::RootCancellationPrepared,
+        references: None,
+        restore_plan: None,
+        completion_sha256: None,
+        root_retirement: Some(RootRetirement {
+            source_revision: reserved.revision,
+            plan: RestorePlan {
+                id: uuid::Uuid::new_v4().to_string(),
+                sha256: "a".repeat(64),
+            },
+        }),
+        root_generation: None,
+    };
+    validate(&pending).unwrap();
+    let error = index
+        .write_checked_projected(
+            Some(&reserved),
+            &pending,
+            &|_| Ok(()),
+            &|_| panic!("rejected source must not reach admission"),
+            &|_, _, _| Ok(()),
+            None,
+        )
+        .unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("unintegrated ordinary lifecycle"));
+    let mut history = vault_history::read(index.connection().unwrap(), &reserved).unwrap();
+    history.push(pending);
+    assert!(root_lineage::parse(&index.binding, &history).is_err());
+    assert!(root_cancel_namespace::Namespace::from_history(&history).is_err());
+    assert_eq!(index.head().unwrap(), Some(reserved));
     assert_eq!(bytes(&temp), reserved_bytes);
     close(temp, context, index);
 }

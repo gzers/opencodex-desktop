@@ -25,7 +25,7 @@ pub(in crate::infrastructure::macos_client_originals) fn inspect(
     )
     .map(|(root, _)| root)
 }
-/// One independently indexed initial cancellation, checked without reading the
+/// One independently indexed cancellation, checked without reading the
 /// live client/Grok of a later generation. It grants no current permission.
 pub(in crate::infrastructure::macos_client_originals) struct HistoricalObservation<'a> {
     binding: Vec<u8>,
@@ -78,7 +78,7 @@ impl<'a> HistoricalObservation<'a> {
             raw.bytes()
                 .ok_or_else(|| denied("cancelled capture plan missing"))?,
         )?;
-        let retained_slot = plan.capture_vault.root_retained_slot().map(str::to_owned);
+        let retained_slot = plan.capture_vault.as_ref().and_then(vault_history::Evidence::root_retained_slot).map(str::to_owned);
         Ok((
             Self {
                 binding: binding.to_vec(),
@@ -136,10 +136,9 @@ fn observe(
         || (head.state == State::RootCancellationPrepared && head.completion_sha256.is_some())
         || head.root_generation.is_some()
         || origin.id != head.ticket
-        || origin.generation_slot.is_some()
     {
         return Err(denied(
-            "indexed root cancellation is not an initial pending plan",
+            "indexed root cancellation does not match its registered phase",
         ));
     }
     let reference = head
@@ -182,16 +181,20 @@ fn observe(
         }
         _ => return Err(denied("indexed root-cancel plan missing")),
     };
-    if plan.schema_version != 2
-        || plan.id != reference.plan.id
+    let successor = origin.generation_slot.is_some();
+    if !matches!(
+        (plan.schema_version, successor, &plan.capture_vault, &plan.successor),
+        (2, false, Some(_), None) | (3, true, None, Some(_))
+    ) || plan.id != reference.plan.id
         || plan.source.revision != reference.source_revision
         || plan.source.ticket != head.ticket
-        || !matches!(plan.source.state, State::Preparing | State::CaptureReserved)
+        || !plan
+            .source
+            .can_source_root_cancellation(successor)
         || plan.source.references.is_some()
         || plan.source.restore_plan.is_some()
         || plan.source.root_retirement.is_some()
         || plan.source.completion_sha256.is_some()
-        || plan.source.root_generation.is_some()
         || plan.origin != *origin
         || plan.binding_sha256 != digest(stored)
         || !valid_hash(&plan.initial_review_sha256)
@@ -211,21 +214,17 @@ fn observe(
     {
         return Err(denied("indexed root-cancel source event/history changed"));
     }
-    plan.capture_vault
-        .verify_root_retained(data, &plan.source, source_history, historical)?;
-    if !historical {
-        let profile_pin = PinnedDirectory::open(profile)?;
-        let root_path = if observation::entry(&profile_pin, ".codex")?.is_some() {
-            profile_pin.path().join(".codex")
-        } else {
-            directory.path().join("root")
-        };
-        let client = PinnedDirectory::open(&root_path)?;
-        if vault_history::inspect(data, &client, profile, stored, &plan.source, source_history)?
-            != plan.capture_vault
-        {
-            return Err(denied("indexed partial capture or vault namespace changed"));
+    let lineage = root_lineage::parse(stored, source_history)?;
+    let generation = lineage.current();
+    if generation.origin != *origin {
+        return Err(denied("indexed cancellation source belongs to another generation"));
+    }
+    let released = plan.root.without_config_guard(&plan.writer)?;
+    if let Some(source) = &plan.successor {
+        if !source.empty_root.is_empty_root() || !valid_hash(&source.closures_sha256) {
+            return Err(denied("indexed successor review evidence is invalid"));
         }
+        source.require_baseline(&released)?;
     }
     let profile = PinnedDirectory::open(profile)?;
     let logical = if historical {
@@ -267,8 +266,18 @@ fn observe(
         origin,
         &path,
     )?;
+    vault_history::check_historical_scope_pins(data, &profile, &root, &generation.binding)?;
+    if let Some(capture) = &plan.capture_vault {
+        capture.verify_root_retained(data, &plan.source, source_history, historical)?;
+        if !historical
+            && vault_history::inspect(data, &root, profile.path(), stored, &plan.source, source_history)?
+                != *capture
+        {
+            return Err(denied("indexed partial capture or vault namespace changed"));
+        }
+    }
     let tree = super::super::super::TreeSnapshot::read(&root)?;
-    if tree != plan.root && tree != plan.root.without_config_guard(&plan.writer)? {
+    if tree != plan.root && tree != released {
         return Err(denied("root-cancel exact indexed tree changed"));
     }
     // Explicit namespace, not a scan to discover a plan or invent a source.
@@ -298,7 +307,7 @@ fn observe(
             }
             _ => return Err(denied("root-cancel preservation receipt differs")),
         }
-        if tree != plan.root.without_config_guard(&plan.writer)? {
+        if tree != released {
             return Err(denied("root-cancel preservation receipt has a live writer"));
         }
         expected.push(OsString::from("preserved-readback.json"));
@@ -330,8 +339,10 @@ fn observe(
         return Err(denied("indexed root-cancel readback changed"));
     }
     directory.private()?;
-    plan.capture_vault
-        .verify_root_retained(data, &plan.source, source_history, historical)?;
+    if let Some(capture) = &plan.capture_vault {
+        capture.verify_root_retained(data, &plan.source, source_history, historical)?;
+    }
+    vault_history::check_historical_scope_pins(data, &profile, &root, &generation.binding)?;
     super::super::super::root_creation::verify_indexed_anchor(
         &manager,
         data,
@@ -351,7 +362,7 @@ fn observe(
     ))?);
     Ok((root, fingerprint))
 }
-/// Pending first-root movement already has an independently indexed plan.
+/// Pending root movement already has an independently indexed plan.
 /// Its retained capture is checked as DATA, never as admitted Originals.
 pub(in crate::infrastructure::macos_client_originals::session_index) fn pending_retained(
     data: &PinnedDirectory,
@@ -387,5 +398,5 @@ pub(in crate::infrastructure::macos_client_originals::session_index) fn pending_
         return Err(denied("pending retained capture plan changed"));
     }
     let plan: Plan = decode(image.bytes().unwrap())?;
-    Ok(plan.capture_vault.root_retained_slot().map(str::to_owned))
+    Ok(plan.capture_vault.as_ref().and_then(vault_history::Evidence::root_retained_slot).map(str::to_owned))
 }

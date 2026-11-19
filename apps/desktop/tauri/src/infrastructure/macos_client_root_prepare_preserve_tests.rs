@@ -49,28 +49,33 @@ fn cancellation_registration_rejects_missing_or_unbound_plan_and_rolls_back_the_
         }),
         root_generation: None,
     };
-    for stage in 0..3 {
-        if stage == 1 {
-            let parent = index
-                .action_parent
-                .child_private("client-root-cancel-plans", true)
-                .unwrap();
-            let slot = parent.child_private(&id, true).unwrap();
-            create(&slot, "plan.json", b"not-a-registered-plan").unwrap();
-        }
-        let mut wrong = candidate.clone();
-        if stage == 2 {
-            wrong.completion_sha256 = Some(digest(b"sidecar claims success"));
-        }
-        assert!(index.write(Some(&head), &wrong).is_err());
-        assert_eq!(index.head().unwrap().as_ref(), Some(&head));
-        assert!(
-            vault_history::read(index.connection().unwrap(), &head).unwrap() == vec![head.clone()]
-        );
-        assert!(super::super::super::tree::names(index.client.file())
-            .unwrap()
-            .is_empty());
-    }
+    assert!(index.write(Some(&head), &candidate).is_err());
+    assert_eq!(index.head().unwrap().as_ref(), Some(&head));
+    let mut forged = candidate.clone();
+    forged.completion_sha256 = Some(digest(b"sidecar claims success"));
+    assert!(index.write(Some(&head), &forged).is_err());
+    assert_eq!(index.head().unwrap().as_ref(), Some(&head));
+
+    let parent = index
+        .action_parent
+        .child_private("client-root-cancel-plans", true)
+        .unwrap();
+    let slot = parent.child_private(&id, true).unwrap();
+    create(&slot, "plan.json", b"not-a-registered-plan").unwrap();
+    assert!(index.write(Some(&head), &candidate).is_err());
+    assert!(index
+        .head()
+        .is_err_and(|error| error.to_string().contains("namespace differs")));
+    assert_eq!(
+        fs::read(slot.path().join("plan.json")).unwrap(),
+        b"not-a-registered-plan"
+    );
+    assert!(
+        vault_history::read(index.connection().unwrap(), &head).unwrap() == vec![head.clone()]
+    );
+    assert!(super::super::super::tree::names(index.client.file())
+        .unwrap()
+        .is_empty());
     drop(index);
     drop(context);
     let path = temp.path().to_path_buf();

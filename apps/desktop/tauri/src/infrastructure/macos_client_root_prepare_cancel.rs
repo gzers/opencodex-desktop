@@ -1,7 +1,7 @@
 //! Read-only preflight for cancelling a registered first-root preparation.
 //! This is NOT a movement, service-absence, restore, Closed or successor permit.
 //! No public disk reference can construct the borrowed independent index.
-use super::*;
+use super::{generation::preparation_cancellation as successor_preparation, *};
 use std::time::Instant;
 #[path = "macos_client_root_prepare_preserve.rs"]
 pub mod preservation;
@@ -14,16 +14,71 @@ pub struct Review<'a> {
     deadline: Instant,
     initial_grok: super::super::GrokSnapshot,
     history_sha256: String,
-    capture_vault: vault_history::Evidence,
+    source: Source,
 }
-impl Review<'_> {
+
+enum Source {
+    Initial(vault_history::Evidence),
+    Successor(SuccessorFacts),
+}
+
+#[derive(Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+struct SuccessorFacts {
+    empty_root: super::super::TreeSnapshot,
+    closures_sha256: String,
+}
+
+impl SuccessorFacts {
+    fn require_baseline(&self, root: &super::super::TreeSnapshot) -> io::Result<()> {
+        if self.empty_root.root != root.root
+            || self.empty_root.root_protection != root.root_protection
+            || !root.first_root_execution_baseline()
+        {
+            return Err(denied("successor cancellation root baseline changed"));
+        }
+        Ok(())
+    }
+}
+impl<'a> Review<'a> {
+    pub(super) fn successor(
+        index: &'a Index,
+        context: &'a ProcessContext,
+        head: &Head,
+        deadline: Instant,
+        facts: successor_preparation::Facts,
+    ) -> Self {
+        Self {
+            index,
+            context,
+            head: head.clone(),
+            deadline,
+            fingerprint: facts.fingerprint,
+            history_sha256: facts.history_sha256,
+            initial_grok: facts.grok,
+            source: Source::Successor(SuccessorFacts {
+                empty_root: facts.tree,
+                closures_sha256: facts.closures_sha256,
+            }),
+        }
+    }
+
     pub fn fingerprint(&self) -> &str {
         &self.fingerprint
     }
     /// The original deadline is retained, never reset by a later readback.
     pub fn recheck(&self) -> io::Result<()> {
-        if snapshot(self.index, self.context, &self.head, self.deadline)? != self.fingerprint {
-            return Err(denied("first-root cancellation review changed"));
+        let observed = match &self.source {
+            Source::Initial(_) => snapshot(self.index, self.context, &self.head, self.deadline)?,
+            Source::Successor(_) => successor_preparation::snapshot(
+                self.index,
+                self.context,
+                &self.head,
+                self.deadline,
+            )?.fingerprint,
+        };
+        if observed != self.fingerprint {
+            return Err(denied("root cancellation review changed"));
         }
         Ok(())
     }
@@ -197,7 +252,7 @@ impl Index {
             deadline,
             initial_grok,
             history_sha256,
-            capture_vault,
+            source: Source::Initial(capture_vault),
         })
     }
 }
