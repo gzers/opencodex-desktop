@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 72；2026-11-19。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 73；2026-11-19。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -534,3 +534,10 @@ Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0、证据 bd29ce9c75a259a
 按 IMP215 接收 85f317434aab0663c5d282ee5edb0bdfb4532f0a。本轮 Windows 仅在原普通账户 session 7 读取既有私有日志，Git 写集为新证据目录与 windows-dev-handoff.md。Mac 并行推进已登记取消的显式续接。
 
 > fetch docs/governance-main，按 TEAM72／IMP215／[r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 取证。保持 range-r1 原普通 SID/session，在原 PID 25144／FILETIME 134395302283231479、worker ThreadId(51) 的上下文只读快照既有 before-resume-private-control-v2-events.jsonl。回交采集前后文件身份和范围、原字节长度及摘要、首错，以及能绑定到同次 Explicit 的最末阶段。未知保持 Unknown。证据脱敏后提交新目录和 handoff，保全原件与旧失败。不重试 Explicit、DiagnosticAfter、Host 或 Start，不改权限、不强清、不启动 W2 或双 SID、不发布。
+
+
+## revision73 原桌面稳定前缀与只读内存投影
+
+按 IMP216 接收 832378a92959783c11d99dcad4d4aef1a2722d2a 的部分取证。Windows 只在原桌面读取日志并提交脱敏回执，Mac 继续原件恢复接线。
+
+> fetch docs/governance-main，按 TEAM73／IMP216／[r7](0.2.24-contracts/windows-preresume-recovery-performance-r7.md) 接续。仅以原普通 SID/session 7 复核原 PID 25144／FILETIME、日志身份和保护，双读已证实的 5,622 字节前缀，用内存解析导出可绑定 ThreadId(51) 同次 Explicit 的白名单事件。无法绑定保持 Unknown。新证据和 handoff 走 Git，原失败及私有日志保留。不发新动作、不改权限、不强清、不跑 W2 或双 SID、不发布。

@@ -306,6 +306,15 @@ TEAM68／IMP207。合成用例证明回读请求保持 FileAccess.Read，同时�
 
 TEAM72／IMP215。固定输入为证据 85f317434aab0663c5d282ee5edb0bdfb4532f0a、唯一 Explicit-result.json SHA-256 f06070f4f474b94289323872db63f73657f7a39b1eccc571d07d80326967648b。原 9,999 ms TimedOut、raw=null、raw101 测试 panic、launcher 首错及核验失败全部保留。请求路径、扫描和 V2 持久状态仍为 Unknown。
 
-- 只在原 marenben 普通 SID（后缀 -1003）、session 7、WinSta0/Default 下只读快照 C:Usersmarenbenocx024-r7-isolated-owner-range-r1Defore-resume-private-control-v2-events.jsonl。记录前后路径/句柄文件身份、保护、稳定读取范围与长度、原字节 SHA-256、首错。绑定原存活 PID 25144／FILETIME 134395302283231479、ThreadId(51) 以及唯一 Explicit 请求。日志变化或缺失时保留可证实的稳定范围，标记缺失或不能绑定的阶段为 Unknown。私有原件保留在隔离环境，Git 载荷先筛除秘密。
+- 只在原 marenben 普通 SID（后缀 -1003）、session 7、WinSta0/Default 下只读快照 `C:\Users\marenben\ocx024-r7-isolated-owner-range-r1\D\before-resume-private-control-v2-events.jsonl`。记录前后路径/句柄文件身份、保护、稳定读取范围与长度、原字节 SHA-256、首错。绑定原存活 PID 25144／FILETIME 134395302283231479、ThreadId(51) 以及唯一 Explicit 请求。日志变化或缺失时保留可证实的稳定范围，标记缺失或不能绑定的阶段为 Unknown。私有原件保留在隔离环境，Git 载荷先筛除秘密。
 - 只陈述可归因于同次请求的最末阶段。日志 intent 仅证明到达 intent 日志写入。result 需结合原线程 dispatch、底层操作写回和客户端核验分别解释。旧扫描计时仅供提出假设。无回复不证明服务端未执行，日志标记不替代原生回执和独立持久读回。
 - Windows Git 写集只含新不可覆盖证据目录及 windows-dev-handoff.md。禁止发出 Explicit、DiagnosticAfter、Host、Start 或任何恢复/停止动作，禁止提权、改 ACL 或强制清理。回交后再判定是否准备带分段计量的新隔离配对。原 30/10/5 秒、完整校验、未知拒绝和固定候选前不 W2／双 SID 保持。
+
+
+## 2026-11-19 执行增量：原会话内存投影
+
+TEAM73／IMP216。固定证据 832378a92959783c11d99dcad4d4aef1a2722d2a。原普通 SID 后缀 -1003、session 7、WinSta0/Default，原宿主 PID 25144／FILETIME 134395302283231479，原 worker ThreadId(51)，唯一 Explicit-result.json SHA-256 f06070f4f474b94289323872db63f73657f7a39b1eccc571d07d80326967648b。
+
+- 复验原宿主存活、路径/句柄文件身份及保护、同一已证明范围 [0,5622) 的两次独立读取。摘要必须同为 4faebbaf1807aa1aeb9ef7524892d681645974172ab3d81ff129bf733aaf7819。只在内存中解析该范围的完整记录。不一致或无法绑定时报告首错并保持 Unknown。
+- 只回交白名单事件字段、来源范围、宿主/线程/请求绑定及最后可归因阶段。私有日志原字节留原现场，原 private-copy 失败保留。intent 只证明该日志点，不能证明执行完成或 V2 已持久化。
+- 写集仅新不可覆盖证据目录和 windows-dev-handoff.md。禁止新 Explicit、DiagnosticAfter、Host、Start、权限变更、强清、W2、双 SID 及发布。原预算和完整检查保持。
