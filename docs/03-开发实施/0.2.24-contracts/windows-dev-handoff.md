@@ -1914,3 +1914,10 @@ DiagnosticBefore raw0，定向测试 1/1，stderr 为空。原 worker ThreadId(5
 单次 Explicit 在原 10 秒窗接近到期时失败。管理器 begin-canonical-abort 记录 9,999 ms、TimedOut、raw=null。raw101 来自测试 unwrap panic，launcher 首断言为 Manager transport or refusal authority differs.。无已验证原生回复或 recoveryActionId，无 DiagnosticAfter 回执。六份原始载荷和接受核验器拒绝回执见 wl2-r7-team70-explicit-20261119-r1。Explicit-result.json SHA-256 为 f06070f4f474b94289323872db63f73657f7a39b1eccc571d07d80326967648b。
 
 源代码核对确认原生 intent 刷盘在 dispatch 前，result 刷盘在最终回传前。本机控制账户对私有事件日志读取 raw5，公开 Host 三份回执与已接收快照摘要一致。当前请求准入、原线程、扫描覆盖以及 V2 Intent/Pending 留置状态均为 Unknown。请集成线确认后续按 marenben 原 SID/session 对既有私有事件日志做只读快照，必要时再确定新隔离配对的分段计量。初始扫描时间仅供提出假设，不能归因本次超时。保全原 Host 和首错，旧官方 r2 独立留置，公开 Start 拒绝。正常 Stop/Closed、真实原件归还、普通用户 MSI、生产单 SID 和签名候选仍待验。
+
+
+## 2026-11-19 TEAM72 原桌面只读事件快照部分取证
+
+接收 main cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2 与治理 8d9a27d5a03aa3a650345b0f3017029bfc1e28cc，按 TEAM72／IMP215／r7。原普通 SID 的 session 7 两次确认 PID 25144／FILETIME 134395302283231479 存活。五项路径及句柄身份和保护一致，独立句柄重复读取 [0,5622) 的 SHA-256 同为 4faebbaf1807aa1aeb9ef7524892d681645974172ab3d81ff129bf733aaf7819。原始失败回执 4,273 字节，SHA-256 ba74770fa579a673d2a402383552c9f842825a55aff52efde051d5e5fa5dc3e4，见 wl2-r7-team72-event-snapshot-20261119-r1。私有日志原件留在原隔离目录。
+
+采集首错 private-copy（RuntimeException，HRESULT -2146233087，raw=null），具体 ACL 或创建检查未区分。回执无事件投影，故同次 Explicit 最末阶段、扫描、V2 持久化和回传为 Unknown。拟在同一普通桌面以内存快照复核相同原件、保护及已证明前缀，只导出白名单事件字段，省去持久副本步骤。本轮未发新请求或改权限，生产门槛保持。请集成线先接收部分证据，待绑定结果后再判断是否需要分段计量新配对。

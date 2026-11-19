@@ -1,0 +1,94 @@
+{
+    "schema":  "team72-event-snapshot-r1",
+    "passed":  false,
+    "startedUtc":  "2026-11-19T05:01:21.4593998Z",
+    "firstError":  {
+                       "stage":  "private-copy",
+                       "type":  "RuntimeException",
+                       "hresult":  -2146233087,
+                       "raw":  null
+                   },
+    "explicitReceiptSha256":  "f06070f4f474b94289323872db63f73657f7a39b1eccc571d07d80326967648b",
+    "acceptedWorker":  "ThreadId(51)",
+    "acceptedWorkerEvidenceCommit":  "d88b1839e456751268ae2bf741cca64e665c548e",
+    "fileName":  "before-resume-private-control-v2-events.jsonl",
+    "pathResolution":  "fixed source and TEAM72 filename, normalized r7 path",
+    "context":  {
+                    "sid":  "S-1-5-21-587408064-856152790-2583328096-1003",
+                    "session":  7,
+                    "desktop":  "WinSta0/Default",
+                    "elevated":  0,
+                    "elevationType":  1
+                },
+    "hostBefore":  {
+                       "pid":  25144,
+                       "filetime":  "134395302283231479",
+                       "session":  7,
+                       "exited":  false
+                   },
+    "handleBefore":  {
+                         "key":  "0ebd4e59:00010000001a4e61",
+                         "creationFiletime":  "134395302700540299",
+                         "lastWriteFiletime":  "134395359926889682",
+                         "length":  5622,
+                         "attributes":  32,
+                         "links":  1
+                     },
+    "protectionBefore":  {
+                             "protectedDacl":  true,
+                             "ownerIsOriginalSid":  true,
+                             "grantCount":  2,
+                             "ownerAndDaclSha256":  "2e65b8119cde90e80709f5ccff35de45a725be8e167ed03d241eee1b96044951"
+                         },
+    "pathBefore":  {
+                       "key":  "0ebd4e59:00010000001a4e61",
+                       "creationFiletime":  "134395302700540299",
+                       "lastWriteFiletime":  "134395359926889682",
+                       "length":  5622,
+                       "attributes":  32,
+                       "links":  1
+                   },
+    "repeatHandle":  {
+                         "key":  "0ebd4e59:00010000001a4e61",
+                         "creationFiletime":  "134395302700540299",
+                         "lastWriteFiletime":  "134395359926889682",
+                         "length":  5622,
+                         "attributes":  32,
+                         "links":  1
+                     },
+    "handleAfter":  {
+                        "key":  "0ebd4e59:00010000001a4e61",
+                        "creationFiletime":  "134395302700540299",
+                        "lastWriteFiletime":  "134395359926889682",
+                        "length":  5622,
+                        "attributes":  32,
+                        "links":  1
+                    },
+    "protectionAfter":  {
+                            "protectedDacl":  true,
+                            "ownerIsOriginalSid":  true,
+                            "grantCount":  2,
+                            "ownerAndDaclSha256":  "2e65b8119cde90e80709f5ccff35de45a725be8e167ed03d241eee1b96044951"
+                        },
+    "pathAfter":  {
+                      "key":  "0ebd4e59:00010000001a4e61",
+                      "creationFiletime":  "134395302700540299",
+                      "lastWriteFiletime":  "134395359926889682",
+                      "length":  5622,
+                      "attributes":  32,
+                      "links":  1
+                  },
+    "range":  {
+                  "start":  0,
+                  "endExclusive":  5622,
+                  "sha256":  "4faebbaf1807aa1aeb9ef7524892d681645974172ab3d81ff129bf733aaf7819",
+                  "completeFileAtLastObservation":  true
+              },
+    "hostAfter":  {
+                      "pid":  25144,
+                      "filetime":  "134395302283231479",
+                      "session":  7,
+                      "exited":  false
+                  },
+    "finishedUtc":  "2026-11-19T05:01:21.9302228Z"
+}
