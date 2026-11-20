@@ -2345,3 +2345,13 @@ marenben 普通令牌、session 7、WinSta0/Default、无外层 Job。原 30 秒
 新真实桌面序列仍待执行，首次 Explicit 超时的具体阶段为 Unknown，`accepted:false`。按 TEAM76 及[定向诊断合同 revision 2](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)扩展最小测试写集，同一新样本保留原 30／10／5 秒与未知拒绝。真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID、签名候选与 ChatGPT 内 Codex 实际选模仍待验证。
 
 [Windows 定向证据](https://github.com/gzers/opencodex-desktop/tree/32b0483e33fef37370bc13d9c0807edb151c9eb5/.adg/evidence/0.2.24/windows-dev/wl2-r7-team75-preresume-timing-20261120-r1)
+
+### IMP220 Windows 待命及 Mac 停止诊断
+
+截至本轮核对，Windows 远端源码为 6532cbb6e612f2cc4e21684f685b28c92279ee51，证据为 32b0483e33fef37370bc13d9c0807edb151c9eb5。定向 MSVC 结果沿用 IMP219。首次 Explicit 的具体耗时阶段仍为 Unknown，原件真实归还、正常 Stop/Closed 和正式候选验收保持开放。按 TEAM77 等待下次明确交接。
+
+Mac 隔离实屏已验证取消和后继 Start 就绪。该后继的 Stop 约 10.8 秒，服务及监听已退出，原件恢复在 root-close 返回未确认，索引保留 root_absent rev12。该轮保留失败，测试清理单列，`accepted:false`。Mac 定向核验提交后读回、资格投影、最终期限检查及超时降级，依据首错决定修复位置。Start／Stop／读回 30／10／5 秒、完整检查和未知拒绝保持。独立客户端列表实测仍待 ChatGPT 内 Codex 复验。
+
+### IMP221 Mac 第二代 Stop 超时与索引降级
+
+同轮两代真实启停中，第一代 Stop 7,281 ms，第二代 11,642 ms。两代原生进程及监听退出，第二代提交 root_absent rev18 后降级为 root_retirement_prepared rev19，对外返回 client_original_restore_pending，accepted:false。前代归档无变化，测试残留清理单列。一次检查点内合并归档读取仍不足以满足第二代期限。接下来分解恢复与提交后证明耗时，保持 30／10／5 秒与独立读回。见[失败证据投影](../../.adg/evidence/0.2.24/mac-root-stop-archive-observation-r1/result.md)。

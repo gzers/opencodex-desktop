@@ -555,3 +555,11 @@ Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0、证据 bd29ce9c75a259a
 ## TEAM76 Windows 单轮真实桌面诊断与 Mac 并行
 
 按 IMP219 接收 Windows 代码和定向证据。Windows 立即按[定向诊断合同 revision 2](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)固定新隔离配对并补齐 V2 内部计量，复核后只执行一次新桌面序列。Mac 独立推进后继准备取消续接。真实运行时最先耗尽期限的阶段待取证。
+
+## TEAM77 Windows 推送后待命，Mac 接续
+
+依用户最新安排，Windows 保留已推送的源码、证据和原现场，等待 Mac 的下一次 Git 交接。此条替代 TEAM76 的立即执行安排。[定向诊断合同 revision 2](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)留作后续明确下发时的执行依据。当前不新建诊断配对，不重跑原失败，不运行 W2 或双 SID。
+
+Mac 核验后继代次的正常 Stop，固定下一交接的源码与证据。见 IMP220。
+
+Mac 第二代真实 Stop 超时且终态降级，见 IMP221。Windows 延续待命，待 Mac 固定后继输入并明确 Git 交接。
