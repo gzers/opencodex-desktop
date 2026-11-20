@@ -551,3 +551,7 @@ Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0、证据 bd29ce9c75a259a
 ## TEAM75 Windows 定向计量与 Mac 并行
 
 按 IMP218 消费最新 Windows 回交，Windows 从固定 Windows 源码准备一组新隔离配对，仅运行单次首次 Resume 前恢复定向诊断。Mac 同步推进后继准备取消显式续接。源码、写集、原期限及回交见[定向诊断合同](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)。
+
+## TEAM76 Windows 单轮真实桌面诊断与 Mac 并行
+
+按 IMP219 接收 Windows 代码和定向证据。Windows 立即按[定向诊断合同 revision 2](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)固定新隔离配对并补齐 V2 内部计量，复核后只执行一次新桌面序列。Mac 独立推进后继准备取消续接。真实运行时最先耗尽期限的阶段待取证。

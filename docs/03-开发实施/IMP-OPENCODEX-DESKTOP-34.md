@@ -2337,3 +2337,11 @@ marenben 普通令牌、session 7、WinSta0/Default、无外层 Job。原 30 秒
 ### IMP218 Windows 首次 Resume 前超时定向计量
 
 承接 IMP217。已知原结果为服务端 dispatch 返回 TimedOut，原 worker 是否接手及 V2 持久状态仍未知。采用全新隔离配对，对同一原期限记录有界阶段前缀。正式验收缺项保持开放。固定 Windows 源码和证据、排他写集及单次验证输入见[定向诊断合同](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)。
+
+### IMP219 接收 Windows 计量证据并下发新隔离序列
+
+接收源码 6532cbb6e612f2cc4e21684f685b28c92279ee51、证据 32b0483e33fef37370bc13d9c0807edb151c9eb5。按 Git 对象核对父提交、主线祖先、六文件写集、测试树 7ee052909df0c1e478cad78c8d33a98b00e667e6 及证据净差。Windows 回交记载 MSVC 测试构建和非测试库检查 raw0、定向断言 12/12，EXE 摘要 83fec3f05a6c356c25e0585b2199d15914baee30d4ad481080a9c5669adbd802。原日志和 EXE 留存在 Windows，本次核对范围为 Git 对象与记录的元数据。
+
+新真实桌面序列仍待执行，首次 Explicit 超时的具体阶段为 Unknown，`accepted:false`。按 TEAM76 及[定向诊断合同 revision 2](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)扩展最小测试写集，同一新样本保留原 30／10／5 秒与未知拒绝。真实原件归还、正常 Stop/Closed、普通用户 MSI、生产单 SID、签名候选与 ChatGPT 内 Codex 实际选模仍待验证。
+
+[Windows 定向证据](https://github.com/gzers/opencodex-desktop/tree/32b0483e33fef37370bc13d9c0807edb151c9eb5/.adg/evidence/0.2.24/windows-dev/wl2-r7-team75-preresume-timing-20261120-r1)
