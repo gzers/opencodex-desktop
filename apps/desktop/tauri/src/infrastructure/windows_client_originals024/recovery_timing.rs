@@ -1,4 +1,193 @@
-//! Buffer timings on the fixture thread and emit them after native work.
+//! Test-only timing for the initial scans and the original recovery request.
+use std::{
+    sync::{
+        atomic::{AtomicUsize, Ordering},
+        Arc,
+    },
+    thread::{self, ThreadId},
+};
+
+const PREFIX_CAPACITY: usize = 128;
+
+#[derive(Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub(in crate::infrastructure) struct RequestBinding {
+    pub request_id: String,
+    pub transport_action_id: String,
+    pub host_instance_id: String,
+    pub broker_pid: u32,
+    pub broker_filetime: String,
+    pub started_qpc: u64,
+    pub deadline_qpc: u64,
+    pub qpc_frequency: u64,
+}
+
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+struct PrefixRow {
+    phase: &'static str,
+    transition: &'static str,
+    tick: Option<u64>,
+    thread: String,
+    detail: Option<String>,
+    raw: Option<i32>,
+}
+
+pub(in crate::infrastructure) struct RequestTrace {
+    binding: RequestBinding,
+    rows: Box<[OnceLock<PrefixRow>]>,
+    reserved: AtomicUsize,
+}
+
+impl RequestTrace {
+    pub(in crate::infrastructure) fn new(binding: RequestBinding) -> Arc<Self> {
+        Arc::new(Self {
+            binding,
+            rows: (0..PREFIX_CAPACITY).map(|_| OnceLock::new()).collect(),
+            reserved: AtomicUsize::new(0),
+        })
+    }
+
+    fn tick(&self) -> Option<u64> {
+        let (tick, frequency) = crate::infrastructure::windows_owner_host024::qpc().ok()?;
+        (frequency == self.binding.qpc_frequency && tick >= self.binding.started_qpc)
+            .then_some(tick)
+    }
+
+    fn push(
+        &self,
+        phase: &'static str,
+        transition: &'static str,
+        detail: Option<String>,
+        raw: Option<i32>,
+    ) {
+        let index = self.reserved.fetch_add(1, Ordering::Relaxed);
+        if let Some(slot) = self.rows.get(index) {
+            let _ = slot.set(PrefixRow {
+                phase,
+                transition,
+                tick: self.tick(),
+                thread: format!("{:?}", thread::current().id()),
+                detail,
+                raw,
+            });
+        }
+    }
+
+    // OnceLock::get never waits for a publisher. A gap ends the visible prefix.
+    pub(in crate::infrastructure) fn snapshot(&self, reason: &'static str) -> serde_json::Value {
+        let captured_qpc = self.tick();
+        let reserved = self.reserved.load(Ordering::Acquire);
+        let rows: Vec<_> = self
+            .rows
+            .iter()
+            .take(reserved)
+            .map_while(OnceLock::get)
+            .collect();
+        let unknown_qpc = rows.iter().filter(|row| row.tick.is_none()).count();
+        let first_error = rows.iter().position(|row| row.transition == "error");
+        serde_json::json!({"binding":self.binding,"reason":reason,"capturedQpc":captured_qpc,
+            "rows":rows,"firstErrorIndex":first_error,"reserved":reserved,
+            "overflow":reserved.saturating_sub(self.rows.len()),
+            "unpublishedOrAfterGap":reserved.min(self.rows.len())-rows.len(),
+            "unknownQpc":unknown_qpc,"runtimeAuthority":false})
+    }
+}
+
+thread_local! {
+    static REQUEST_TRACE: RefCell<Option<Arc<RequestTrace>>> = const { RefCell::new(None) };
+}
+
+pub(in crate::infrastructure) struct RequestTraceScope;
+
+impl RequestTraceScope {
+    pub(in crate::infrastructure) fn enter(trace: Option<Arc<RequestTrace>>) -> Self {
+        REQUEST_TRACE.with_borrow_mut(|slot| {
+            assert!(slot.is_none());
+            *slot = trace;
+        });
+        Self
+    }
+}
+
+impl Drop for RequestTraceScope {
+    fn drop(&mut self) {
+        REQUEST_TRACE.with_borrow_mut(Option::take);
+    }
+}
+
+pub(in crate::infrastructure) fn active_request() -> Option<Arc<RequestTrace>> {
+    REQUEST_TRACE.with_borrow(Clone::clone)
+}
+
+pub(in crate::infrastructure) fn mark(
+    phase: &'static str,
+    transition: &'static str,
+    detail: Option<String>,
+    raw: Option<i32>,
+) {
+    REQUEST_TRACE.with_borrow(|trace| {
+        if let Some(trace) = trace {
+            trace.push(phase, transition, detail, raw);
+        }
+    });
+}
+
+pub(in crate::infrastructure) fn original_worker(
+    thread: ThreadId,
+    failed_action: uuid::Uuid,
+    session: uuid::Uuid,
+) {
+    if active_request().is_some() {
+        mark(
+            "original-worker-binding",
+            "return",
+            Some(format!("{thread:?}/{failed_action}/{session}")),
+            None,
+        );
+    }
+}
+
+pub(in crate::infrastructure) fn io_stage<T>(
+    phase: &'static str,
+    run: impl FnOnce() -> io::Result<T>,
+) -> io::Result<T> {
+    mark(phase, "enter", None, None);
+    let result = run();
+    match &result {
+        Ok(_) => mark(phase, "return", None, None),
+        Err(error) if active_request().is_some() => mark(
+            phase,
+            "error",
+            Some(format!("{:?}", error.kind())),
+            error.raw_os_error(),
+        ),
+        Err(_) => {}
+    }
+    result
+}
+
+pub(in crate::infrastructure) fn app_stage<T>(
+    phase: &'static str,
+    run: impl FnOnce() -> AppResult<T>,
+) -> AppResult<T> {
+    mark(phase, "enter", None, None);
+    let result = run();
+    match &result {
+        Ok(_) => mark(phase, "return", None, None),
+        Err(error) if active_request().is_some() => {
+            let detail = match error {
+                AppError::RuntimeManaged { code, .. } => code.chars().take(120).collect(),
+                AppError::Timeout => "Timeout".into(),
+                _ => "AppError".into(),
+            };
+            mark(phase, "error", Some(detail), None);
+        }
+        Err(_) => {}
+    }
+    result
+}
+
 use serde::Serialize;
 use std::{cell::RefCell, io, sync::OnceLock, time::Instant};
 
@@ -155,6 +344,23 @@ pub(super) fn verify_preparation_image(
     selected: &SelectedProgram,
     end: Instant,
 ) -> AppResult<()> {
+    let phase = match ordinal {
+        1 => "source-fence-1-full-image",
+        2 => "source-fence-2-full-image",
+        3 => "source-fence-3-full-image",
+        _ => "source-fence-unrecognized",
+    };
+    app_stage(phase, || {
+        verify_preparation_image_observed(ordinal, failed_action, selected, end)
+    })
+}
+
+fn verify_preparation_image_observed(
+    ordinal: u8,
+    failed_action: &str,
+    selected: &SelectedProgram,
+    end: Instant,
+) -> AppResult<()> {
     let origin = TRACE.with_borrow(|slot| {
         slot.as_ref()
             .filter(|trace| trace.preparation_scans.len() < 3)
@@ -267,6 +473,58 @@ pub(super) fn journal_stage<T>(
         timing.finish(&result);
     }
     result
+}
+
+#[test]
+fn wl2_r7_timing_prefix_is_readable_during_inflight_worker_and_retains_raw_error() {
+    let (start, frequency) = crate::infrastructure::windows_owner_host024::qpc().unwrap();
+    let binding = RequestBinding {
+        request_id: uuid::Uuid::new_v4().to_string(),
+        transport_action_id: uuid::Uuid::new_v4().to_string(),
+        host_instance_id: uuid::Uuid::new_v4().to_string(),
+        broker_pid: std::process::id(),
+        broker_filetime: "0".into(),
+        started_qpc: start,
+        deadline_qpc: start + frequency,
+        qpc_frequency: frequency,
+    };
+    let trace = RequestTrace::new(binding.clone());
+    let (entered, waiting) = std::sync::mpsc::channel();
+    let (release, held) = std::sync::mpsc::channel();
+    let worker_trace = trace.clone();
+    let worker = thread::spawn(move || {
+        let _scope = RequestTraceScope::enter(Some(worker_trace));
+        io_stage("held-worker", || {
+            entered.send(()).unwrap();
+            held.recv().unwrap();
+            Err::<(), _>(io::Error::from_raw_os_error(5))
+        })
+    });
+    waiting
+        .recv_timeout(std::time::Duration::from_secs(3))
+        .unwrap();
+    let in_flight = trace.snapshot("held-worker-test");
+    release.send(()).unwrap();
+    assert_eq!(worker.join().unwrap().unwrap_err().raw_os_error(), Some(5));
+    let returned = trace.snapshot("returned-worker-test");
+    assert_eq!(in_flight["binding"], serde_json::to_value(binding).unwrap());
+    assert_eq!(in_flight["rows"].as_array().unwrap().len(), 1);
+    assert_eq!(in_flight["rows"][0]["transition"], "enter");
+    assert!(in_flight["firstErrorIndex"].is_null());
+    assert_eq!(returned["rows"][0], in_flight["rows"][0]);
+    assert_eq!(returned["rows"][1]["raw"], 5);
+    assert_eq!(returned["firstErrorIndex"], 1);
+    assert_eq!(returned["unknownQpc"], 0);
+    assert_eq!(returned["runtimeAuthority"], false);
+
+    trace.reserved.fetch_add(1, Ordering::Relaxed); // Reserved but not published.
+    for _ in 0..PREFIX_CAPACITY {
+        trace.push("later", "return", None, None);
+    }
+    let overflow = trace.snapshot("gap-test");
+    assert_eq!(overflow["rows"], returned["rows"]);
+    assert_eq!(overflow["unpublishedOrAfterGap"], PREFIX_CAPACITY - 2);
+    assert_eq!(overflow["overflow"], 3);
 }
 
 #[test]

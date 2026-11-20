@@ -18,6 +18,16 @@ use std::{
     time::Instant,
 };
 mod canonical_trait;
+
+macro_rules! timing {
+    ($method:ident, $phase:literal, $result:expr) => {{
+        #[cfg(test)]
+        let result = super::recovery_timing::$method($phase, || $result);
+        #[cfg(not(test))]
+        let result = $result;
+        result
+    }};
+}
 #[cfg(test)]
 pub(crate) fn inspect_fixture_start_ranges(
     ranges: &mut StartRanges,
@@ -368,6 +378,8 @@ struct RetainedRegistration {
     deadline: Instant,
 }
 pub(crate) struct RetainedRequest {
+    #[cfg(test)]
+    timing: Option<Arc<super::recovery_timing::RequestTrace>>,
     window: BeforeResumeRecoveryWindow,
     state: Arc<Mutex<State>>,
     returner: mpsc::Sender<Returned<Owner>>,
@@ -549,6 +561,8 @@ impl WorkerControl<Owner> {
         (
             control,
             RetainedRequest {
+                #[cfg(test)]
+                timing: super::recovery_timing::active_request(),
                 window,
                 state,
                 returner,
@@ -573,6 +587,10 @@ impl RetainedRequest {
         check: impl FnOnce(&Owner) -> io::Result<()>,
         run: fn(&mut Owner, &mut WorkerLocal, &BeforeResumeRecoveryWindow) -> io::Result<()>,
     ) {
+        #[cfg(test)]
+        let _timing_scope = super::recovery_timing::RequestTraceScope::enter(self.timing);
+        #[cfg(test)]
+        super::recovery_timing::mark("original-worker-consume", "enter", None, start_raw);
         let mut local = WorkerLocal::new();
         local.pending_attachment = pending_attachment;
         run_worker(
@@ -582,13 +600,21 @@ impl RetainedRequest {
             self.returner,
             local,
             |owner, local, window, state| {
+                #[cfg(test)]
+                let check = |owner: &Owner| {
+                    super::recovery_timing::io_stage("original-worker-binding-recheck", || {
+                        check(owner)
+                    })
+                };
                 check(owner)?;
                 let partial = owner
                     .with_originals(|originals, _| Ok(originals.has_failed_preparation()))
                     .map_err(io::Error::other)?;
                 #[cfg(test)]
                 if let Some(isolation) = owner.fixture_isolation() {
-                    isolation.verify_owner(owner, window.deadline())?;
+                    super::recovery_timing::io_stage("original-fixture-isolation", || {
+                        isolation.verify_owner(owner, window.deadline())
+                    })?;
                     if !partial || local.pending_attachment.is_none() {
                         return Err(invalid());
                     }
@@ -599,14 +625,20 @@ impl RetainedRequest {
                         .pending_attachment
                         .as_ref()
                         .map(|_| super::recovery_timing::Capture::begin());
-                    owner
-                        .prepare_before_resume_process(window)
-                        .map_err(io::Error::other)?;
-                    let record = owner
-                        .with_originals(|originals, owner| {
+                    timing!(
+                        app_stage,
+                        "original-process-prepare",
+                        owner.prepare_before_resume_process(window)
+                    )
+                    .map_err(io::Error::other)?;
+                    let record = timing!(
+                        app_stage,
+                        "preparation-record-full-read",
+                        owner.with_originals(|originals, owner| {
                             originals.read_before_resume_preparation_record(owner, window)
                         })
-                        .map_err(io::Error::other)?;
+                    )
+                    .map_err(io::Error::other)?;
                     let records = record.preparation_pending_data(start_raw)?;
                     {
                         let mut projection = state.lock().map_err(|_| invalid())?;
@@ -624,23 +656,34 @@ impl RetainedRequest {
                             let origin = owner
                                 .before_resume_lease_binding(window)
                                 .map_err(io::Error::other)?;
-                            let held = ranges.inspect_failed_start(owner, &origin, end)?;
-                            attachment.persist(
-                                owner.data_path(),
-                                [
-                                    owner.original_host_instance(),
-                                    origin.owner,
-                                    origin.failed_start,
-                                ],
-                                origin.recovery,
-                                &records,
-                                end,
+                            let held = timing!(
+                                io_stage,
+                                "original-ranges-before-v2",
+                                ranges.inspect_failed_start(owner, &origin, end)
                             )?;
-                            owner
-                                .with_originals(|originals, owner| {
+                            timing!(
+                                io_stage,
+                                "v2-intent-pending-persist-and-readback",
+                                attachment.persist(
+                                    owner.data_path(),
+                                    [
+                                        owner.original_host_instance(),
+                                        origin.owner,
+                                        origin.failed_start,
+                                    ],
+                                    origin.recovery,
+                                    &records,
+                                    end,
+                                )
+                            )?;
+                            timing!(
+                                app_stage,
+                                "preparation-reference-recheck",
+                                owner.with_originals(|originals, owner| {
                                     originals.recheck_preparation_reference(owner, &record, window)
                                 })
-                                .map_err(io::Error::other)?;
+                            )
+                            .map_err(io::Error::other)?;
                             if owner
                                 .before_resume_lease_binding(window)
                                 .map_err(io::Error::other)?
@@ -669,10 +712,14 @@ impl RetainedRequest {
                     }
                     // A partial prefix supplies observation only. StartRanges
                     // stays on this thread, even if it holds a complete lease.
-                    return Err(io::Error::new(
-                        io::ErrorKind::InvalidData,
-                        "original preparation pending; restore authority unavailable",
-                    ));
+                    return timing!(
+                        io_stage,
+                        "partial-prefix-refusal",
+                        Err(io::Error::new(
+                            io::ErrorKind::InvalidData,
+                            "original preparation pending; restore authority unavailable",
+                        ))
+                    );
                 }
                 // If Start acquired only a prefix, its exact original ranges stay
                 // where they were enrolled and this action cannot acquire replacements.
@@ -686,6 +733,8 @@ impl RetainedRequest {
             },
             run,
         );
+        #[cfg(test)]
+        super::recovery_timing::mark("original-worker-consume", "return", None, None);
     }
 }
 impl<T> WorkerControl<T> {

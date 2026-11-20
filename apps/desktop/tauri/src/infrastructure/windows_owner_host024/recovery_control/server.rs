@@ -2,6 +2,8 @@
 //! namespace/Job. Install before capture, keep original RuntimeArc and native
 //! peer/locator handles for the lifetime of the host. No cleanup/shutdown RPC.
 use super::wire::{self, AckV2, CommandV2, HelloV2, LocatorV2, ReplyV2, RequestV2};
+#[cfg(test)]
+use crate::infrastructure::windows_client_originals024::recovery_timing;
 use crate::{
     infrastructure::{
         hash, platform, runtime_executable::SharedRuntimeExecutable,
@@ -18,6 +20,17 @@ use std::{
     thread,
     time::{Duration, Instant},
 };
+
+macro_rules! timing {
+    ($phase:literal, $result:expr) => {{
+        #[cfg(test)]
+        let result = recovery_timing::io_stage($phase, || $result);
+        #[cfg(not(test))]
+        let result = $result;
+        result
+    }};
+}
+
 pub(super) const LOCATOR: &str = "before-resume-private-control-v2.json";
 fn denied(reason: impl std::fmt::Display) -> io::Error {
     io::Error::new(io::ErrorKind::PermissionDenied, reason.to_string())
@@ -360,10 +373,51 @@ impl Control {
                 if window.deadline() != end {
                     return Err(denied("wire original recovery end changed"));
                 }
-                let worker =
+                let worker = timing!(
+                    "worker-registration",
                     lifecycle::start_canonical_before_resume_recovery(&runtime, &self.home, window)
-                        .map_err(io::Error::other)?;
-                let observed = await_worker_result(end, |end| worker.observe(end))?;
+                        .map_err(io::Error::other)
+                )?;
+                let observe = |end| worker.observe(end);
+                #[cfg(test)]
+                let (mut first, mut last) = (true, None);
+                #[cfg(test)]
+                let observe = |end| {
+                    let first_poll = std::mem::take(&mut first);
+                    if first_poll {
+                        recovery_timing::mark("worker-first-observe", "enter", None, None);
+                    }
+                    let result = observe(end);
+                    if first_poll {
+                        recovery_timing::mark("worker-first-observe", "return", None, None);
+                    }
+                    if recovery_timing::active_request().is_some() {
+                        let state = match &result {
+                            Ok(facts) => facts["phase"].as_str().unwrap_or("Unknown"),
+                            Err(error) if error.kind() == io::ErrorKind::WouldBlock => {
+                                "ProjectionBusy"
+                            }
+                            Err(_) => "ObserveError",
+                        };
+                        // Keep only first sightings so contention cannot fill the prefix.
+                        let seen = last.get_or_insert_with(BTreeSet::<String>::new);
+                        if !seen.contains(state) {
+                            seen.insert(state.to_owned());
+                            let error = result
+                                .as_ref()
+                                .err()
+                                .filter(|error| error.kind() != io::ErrorKind::WouldBlock);
+                            recovery_timing::mark(
+                                "worker-observed-state",
+                                if error.is_some() { "error" } else { "observe" },
+                                Some(state.to_owned()),
+                                error.and_then(io::Error::raw_os_error),
+                            );
+                        }
+                    }
+                    result
+                };
+                let observed = timing!("worker-result-wait", await_worker_result(end, observe))?;
                 if observed["phase"] != "ReturnedForValidation" {
                     let facts = lifecycle::before_resume_worker_status(&runtime, &self.home, end)
                         .ok()
@@ -373,10 +427,12 @@ impl Control {
                         "original recovery retained/unknown; worker DATA={facts}"
                     )));
                 }
-                let result =
+                let result = timing!(
+                    "worker-return-validation",
                     lifecycle::validate_canonical_before_resume_return(&runtime, &self.home, end)
-                        .map_err(io::Error::other)?
-                        .ok_or_else(|| denied("original return not delivered for validation"))?;
+                        .map_err(io::Error::other)
+                )?
+                .ok_or_else(|| denied("original return not delivered for validation"))?;
                 before(end)?;
                 Ok(
                     serde_json::json!({"purpose":"actual-original-slot-validated-before-resume-abort","transportActionId":request.transport_action_id,"history":result,"recoveryRequired":true,"normalStop":false,"closed":false,"runtimeAuthority":false}),
@@ -404,6 +460,8 @@ impl Control {
                 }
             };
             let handshake_end = Instant::now() + Duration::from_secs(5);
+            #[cfg(test)]
+            let mut trace = None;
             let result = (|| {
                 self.recheck(&peer, handshake_end)?;
                 generation = generation
@@ -423,32 +481,73 @@ impl Control {
                 )?;
                 let request = RequestV2::decode(&self.pipe.read_frame(handshake_end)?)?
                     .admit(&hello, &mut used)?;
-                self.recheck(&peer, request.deadline.end)?;
-                event(
-                    log,
-                    "v2-original-request-intent",
-                    serde_json::json!({"requestId":request.request_id,"transportActionId":request.transport_action_id,"instance":self.locator.instance_id,"peer":peer_data(&peer),"broker":peer_data(&self.broker),"bothNoOuterJobObservedAtAdmission":true,"nativePeerAndLocatorRechecked":true}),
+                #[cfg(test)]
+                if self.partial_capture_fixture && request.command == CommandV2::BeginCanonicalAbort
+                {
+                    trace = Some(request.timing_trace(&self.locator));
+                }
+                #[cfg(test)]
+                let _timing_scope = recovery_timing::RequestTraceScope::enter(trace.clone());
+                #[cfg(test)]
+                if let Some(deadline_trace) = trace.clone() {
+                    let deadline = request.deadline.end;
+                    let spawn = thread::Builder::new()
+                        .name("r7-recovery-deadline-evidence".into())
+                        .spawn(move || {
+                            thread::sleep(deadline.saturating_duration_since(Instant::now()));
+                            let prefix = deadline_trace.snapshot("original-deadline");
+                            println!("r7-recovery-prefix={prefix}");
+                        });
+                    if let Err(error) = spawn {
+                        recovery_timing::mark(
+                            "deadline-observer",
+                            "sampling-error",
+                            None,
+                            error.raw_os_error(),
+                        );
+                    }
+                }
+                timing!(
+                    "request-native-admission-recheck",
+                    self.recheck(&peer, request.deadline.end)
                 )?;
-                before(request.deadline.end)?;
-                let facts = self.dispatch(&request, &mut attempted);
+                timing!(
+                    "request-intent-log",
+                    event(
+                        log,
+                        "v2-original-request-intent",
+                        serde_json::json!({"requestId":request.request_id,"transportActionId":request.transport_action_id,"instance":self.locator.instance_id,"peer":peer_data(&peer),"broker":peer_data(&self.broker),"bothNoOuterJobObservedAtAdmission":true,"nativePeerAndLocatorRechecked":true}),
+                    )
+                )?;
+                timing!("pre-dispatch-deadline", before(request.deadline.end))?;
+                let facts = timing!("dispatch", self.dispatch(&request, &mut attempted));
                 let reply = match &facts {
                     Ok(data) => ReplyV2::result(&request, &self.locator.scope_digest, data.clone()),
                     Err(error) => ReplyV2::refused(&request, &self.locator.scope_digest, error),
                 };
-                event(
-                    log,
-                    "v2-original-request-result",
-                    serde_json::to_value(&reply).map_err(io::Error::other)?,
+                timing!(
+                    "request-result-log",
+                    event(
+                        log,
+                        "v2-original-request-result",
+                        serde_json::to_value(&reply).map_err(io::Error::other)?,
+                    )
                 )?;
-                self.recheck(&peer, request.deadline.end)?;
-                self.pipe.write_frame(
-                    &serde_json::to_vec(&reply).map_err(io::Error::other)?,
-                    request.deadline.end,
+                timing!(
+                    "final-native-recheck",
+                    self.recheck(&peer, request.deadline.end)
                 )?;
-                AckV2::check(
-                    &self.pipe.read_frame(request.deadline.end)?,
-                    &request,
-                    &self.locator.scope_digest,
+                timing!(
+                    "reply-write",
+                    self.pipe.write_frame(
+                        &serde_json::to_vec(&reply).map_err(io::Error::other)?,
+                        request.deadline.end,
+                    )
+                )?;
+                let ack = timing!("reply-ack-read", self.pipe.read_frame(request.deadline.end))?;
+                timing!(
+                    "reply-ack-check",
+                    AckV2::check(&ack, &request, &self.locator.scope_digest)
                 )?;
                 #[cfg(test)]
                 if self.partial_capture_fixture
@@ -466,6 +565,8 @@ impl Control {
                 // observed result or authorize another original action.
                 before(request.deadline.end)
             })();
+            #[cfg(test)]
+            let prefix = trace.as_ref().map(|trace| trace.snapshot("server-return"));
             if let Err(error) = result {
                 let _ = event(
                     log,
@@ -474,6 +575,10 @@ impl Control {
                 );
             }
             let _ = self.pipe.disconnect();
+            #[cfg(test)]
+            if let Some(prefix) = prefix {
+                println!("r7-recovery-prefix={prefix}");
+            }
             // No client disconnect, failed evidence/response or elapsed end can
             // drop an original Owner or restart/force/release its retained work.
         }

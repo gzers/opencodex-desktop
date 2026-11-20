@@ -1,5 +1,18 @@
 //! Same ordinary exact-image private client; locator/reply are DATA only. The
 //! caller supplies the already-started original10/5 window, including bootstrap.
+macro_rules! timing {
+    ($phase:literal, $result:expr) => {{
+        #[cfg(test)]
+        let result = crate::infrastructure::windows_client_originals024::recovery_timing::io_stage(
+            $phase,
+            || $result,
+        );
+        #[cfg(not(test))]
+        let result = $result;
+        result
+    }};
+}
+
 use super::{
     server::LOCATOR,
     wire::{self, AckV2, CommandV2, HelloV2, LocatorV2, ReplyV2, RequestV2},
@@ -108,33 +121,55 @@ pub(in crate::infrastructure::windows_owner_host024) fn request(
     let request = RequestV2::for_client(&hello, command, start_qpc, cutoff, frequency)?;
     let receipt = request.client_receipt(end, started);
     recheck(true)?;
-    pipe.write_frame(
-        &serde_json::to_vec(&request).map_err(io::Error::other)?,
-        end,
-    )?;
-    let reply = ReplyV2::decode(&pipe.read_frame(end)?, &receipt, &locator.scope_digest)?;
-    recheck(true)?;
-    let refused = reply.is_refused();
-    let data = reply.into_data()?;
     #[cfg(test)]
-    if let Some(proof) = data["facts"]
-        .get("originalRangeProof")
-        .filter(|proof| !proof.is_null())
-    {
-        if command != CommandV2::ReadWorkerDiagnostic
-            || proof["requestId"] != receipt.request_id
-            || proof["transportActionId"] != receipt.transport_action_id
+    let trace = (c.scope
+        == crate::infrastructure::windows_client_originals024::partial_capture_fixture::SCOPE
+        && command == CommandV2::BeginCanonicalAbort)
+        .then(|| receipt.timing_trace(&locator));
+    #[cfg(test)]
+    let _timing_scope = crate::infrastructure::windows_client_originals024::recovery_timing::RequestTraceScope::enter(trace.clone());
+    let exchange = || {
+        timing!(
+            "client-request-write",
+            pipe.write_frame(
+                &serde_json::to_vec(&request).map_err(io::Error::other)?,
+                end,
+            )
+        )?;
+        let frame = timing!("client-reply-read", pipe.read_frame(end))?;
+        let reply = timing!(
+            "client-reply-verify",
+            ReplyV2::decode(&frame, &receipt, &locator.scope_digest)
+        )?;
+        timing!("client-final-native-recheck", recheck(true))?;
+        let refused = reply.is_refused();
+        let data = reply.into_data()?;
+        #[cfg(test)]
+        if let Some(proof) = data["facts"]
+            .get("originalRangeProof")
+            .filter(|proof| !proof.is_null())
         {
-            return Err(denied("original range proof differs from admitted request"));
+            if command != CommandV2::ReadWorkerDiagnostic
+                || proof["requestId"] != receipt.request_id
+                || proof["transportActionId"] != receipt.transport_action_id
+            {
+                return Err(denied("original range proof differs from admitted request"));
+            }
         }
+        pipe.write_frame(
+            &serde_json::to_vec(&AckV2::for_request(&receipt, &locator.scope_digest))
+                .map_err(io::Error::other)?,
+            end,
+        )?;
+        // The same native peer/locator/pins are still checked after terminal ACK.
+        // The server may now disconnect: no new action depends on connection state.
+        recheck(false)?;
+        Ok((data, refused))
+    };
+    let result = exchange();
+    #[cfg(test)]
+    if let Some(trace) = trace {
+        println!("r7-recovery-prefix={}", trace.snapshot("client-return"));
     }
-    pipe.write_frame(
-        &serde_json::to_vec(&AckV2::for_request(&receipt, &locator.scope_digest))
-            .map_err(io::Error::other)?,
-        end,
-    )?;
-    // The same native peer/locator/pins are still checked after terminal ACK.
-    // The server may now disconnect: no new action depends on connection state.
-    recheck(false)?;
-    Ok((data, refused))
+    result
 }

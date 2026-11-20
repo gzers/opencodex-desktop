@@ -275,6 +275,12 @@ impl StartWorker {
             return Err(recovery_required());
         }
         budget(window.deadline())?;
+        #[cfg(test)]
+        super::super::windows_client_originals024::recovery_timing::original_worker(
+            worker.thread().id(),
+            self.action,
+            self.session,
+        );
         let (control, request) = WorkerControl::register_retained_start(
             self.session.to_string(),
             self.scope.clone(),
@@ -284,6 +290,13 @@ impl StartWorker {
         state.recovery_queued = true;
         state.recovery = Some(request);
         drop(state);
+        #[cfg(test)]
+        super::super::windows_client_originals024::recovery_timing::mark(
+            "original-worker-enqueued",
+            "return",
+            None,
+            None,
+        );
         worker.thread().unpark();
         Ok(control)
     }

@@ -124,6 +124,32 @@ pub(super) struct AdmittedV2 {
     pub(super) transport_action_id: String,
     pub(super) command: CommandV2,
     pub(super) deadline: ReadDeadline,
+    #[cfg(test)]
+    pub(super) timing_ticks: [u64; 3],
+}
+#[cfg(test)]
+impl AdmittedV2 {
+    pub(super) fn timing_trace(
+        &self,
+        locator: &LocatorV2,
+    ) -> std::sync::Arc<
+        crate::infrastructure::windows_client_originals024::recovery_timing::RequestTrace,
+    > {
+        use crate::infrastructure::windows_client_originals024::recovery_timing::{
+            RequestBinding, RequestTrace,
+        };
+        let [started_qpc, deadline_qpc, qpc_frequency] = self.timing_ticks;
+        RequestTrace::new(RequestBinding {
+            request_id: self.request_id.clone(),
+            transport_action_id: self.transport_action_id.clone(),
+            host_instance_id: locator.instance_id.clone(),
+            broker_pid: locator.broker_pid,
+            broker_filetime: locator.broker_filetime.clone(),
+            started_qpc,
+            deadline_qpc,
+            qpc_frequency,
+        })
+    }
 }
 fn decode_frame<T: serde::de::DeserializeOwned>(frame: &[u8]) -> io::Result<T> {
     if frame.len() < 4 {
@@ -302,6 +328,12 @@ impl RequestV2 {
             transport_action_id: self.budget.transport_action_id.clone(),
             command: self.command,
             deadline: ReadDeadline { started, end },
+            #[cfg(test)]
+            timing_ticks: [
+                self.budget.started_qpc.parse().unwrap(),
+                self.budget.deadline_qpc.parse().unwrap(),
+                self.budget.qpc_frequency.parse().unwrap(),
+            ],
         }
     }
     pub(super) fn decode(frame: &[u8]) -> io::Result<Self> {
@@ -430,6 +462,8 @@ impl RequestV2 {
             transport_action_id: self.budget.transport_action_id,
             command: self.command,
             deadline,
+            #[cfg(test)]
+            timing_ticks: [start, end, freq],
         })
     }
 }
