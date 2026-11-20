@@ -1,0 +1,97 @@
+{
+  "accepted": false,
+  "source": "6532cbb6e612f2cc4e21684f685b28c92279ee51",
+  "tree": "7ee052909df0c1e478cad78c8d33a98b00e667e6",
+  "baseline": "9a49ea219e8f34dfa1867ecebfc6050fa6dcb756",
+  "build": {
+    "raw": 0,
+    "elapsedMs": 152887,
+    "arguments": [
+      "test",
+      "--locked",
+      "--offline",
+      "--config",
+      "profile.test.package.opencodex-desktop.debug=0",
+      "--config",
+      "profile.test.package.opencodex-desktop.incremental=false",
+      "--config",
+      "profile.test.package.opencodex-desktop.codegen-units=4",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--target",
+      "x86_64-pc-windows-msvc",
+      "--features",
+      "custom-protocol",
+      "--lib",
+      "-j",
+      "1",
+      "--no-run",
+      "--message-format=json"
+    ]
+  },
+  "nonTestCheck": {
+    "raw": 0,
+    "elapsedMs": 44762,
+    "arguments": [
+      "check",
+      "--locked",
+      "--offline",
+      "--manifest-path",
+      "apps/desktop/tauri/Cargo.toml",
+      "--target",
+      "x86_64-pc-windows-msvc",
+      "--features",
+      "custom-protocol",
+      "--lib",
+      "-j",
+      "1",
+      "--message-format=json"
+    ]
+  },
+  "directed": {
+    "raw": 0,
+    "startedUtc": "2026-11-20T22:25:06.6627378+08:00",
+    "finishedUtc": "2026-11-20T22:25:06.8860769+08:00",
+    "discoveredAndPassed": 12,
+    "tests": [
+      "infrastructure::windows_client_originals024::recovery_timing::wl2_r7_preparation_image_scan_observation_keeps_deadline_and_original_error",
+      "infrastructure::windows_client_originals024::recovery_timing::wl2_r7_timing_prefix_is_readable_during_inflight_worker_and_retains_raw_error",
+      "infrastructure::windows_owner_host024::recovery_control::server::worker_result_tests::wl2_r7_private_worker_wait_preserves_terminal_unknown_error_and_expiry",
+      "infrastructure::windows_owner_host024::recovery_control::server::worker_result_tests::wl2_r7_private_worker_wait_uses_same_deadline_after_projection_contention",
+      "infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_native_v2_refusal_preserves_raw_without_success_flags",
+      "infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_native_v2_reply_and_ack_strict_no_release_authority_or_wrong_request",
+      "infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_exact_original10_or5_qpc_window_floor_and_elapsed_notrenewed",
+      "infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_frame_and_confirmation_refuse_unknown_beforeadmission",
+      "infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_fresh_challenge_scope_and_every_replay_key_refuse",
+      "infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_future_expiry_freq_overflow_and_clock_substitutions_refuse",
+      "infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_locator_native_target_data_is_strict_local_and_notauthority",
+      "infrastructure::windows_owner_host024::recovery_control::wire::tests::wl2_r7_private_wire_v2_strict_every_field_duplicate_unknown_and_oldprotocol_refuse"
+    ],
+    "stderrBytes": 0,
+    "syntheticTempDirectoryAbsent": true
+  },
+  "testExe": {
+    "name": "opencodex_desktop_lib-bdc9ec5a3f66e096.exe",
+    "bytes": 104755200,
+    "sha256": "83fec3f05a6c356c25e0585b2199d15914baee30d4ad481080a9c5669adbd802"
+  },
+  "freshDesktop": {
+    "executed": false,
+    "hostRaw": null,
+    "explicitRaw": null,
+    "firstTimeoutStage": "Unknown",
+    "budgetSeconds": {
+      "host": 30,
+      "explicit": 10,
+      "diagnostic": 5
+    }
+  },
+  "baselineExplicit": {
+    "firstError": "Manager transport or refusal authority differs.",
+    "clientElapsedMs": 9999,
+    "testRaw": 101,
+    "serverKind": "TimedOut",
+    "serverRaw": null,
+    "replyVerified": false
+  }
+}

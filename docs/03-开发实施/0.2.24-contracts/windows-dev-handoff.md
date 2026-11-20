@@ -1941,3 +1941,12 @@ server.rs 第 443 行在结果写入后重验同一个单调期限，重验通�
 固定源码 36b70383e 的恢复计时在原线程绑定及隔离校验之后启动，完整扫描返回后才入缓冲，部分捕获分支退出时才由 Drop 输出。29,287 字节的上一批 Host stdout 稳定快照只有两条初启计时，恢复和准备扫描标记均为零。现有日志不能排除已进入扫描或附件阶段。三个完整 source 围栏分别位于两次 V2 引用读回之前、之间和之后。现有计量未证明三个围栏的前后条件等价。
 
 请在新配对中让服务端结束或超时时取得已发布的有界计时前缀，分别标记阶段进入和返回，避免依赖原 worker Drop 才能取到首错前的最后一个边界。固定源码位置、原始输入摘要和阶段表见 wl2-r7-team73-timing-coverage-20261119-r1。该审查只用已有证据和 Git 对象，原现场未发新命令。
+
+
+## 2026-11-20 TEAM75 原 worker 定向计时与新配对写集交接
+
+接收 TEAM75／IMP218、治理 cfa4e6f0fbd0a6edd1e63cf2bd2a7432d945559f、源码基线 9a49ea219e8f34dfa1867ecebfc6050fa6dcb756、证据基线 ba54ebf76f7fff7a438606a329505da237118778。源码 6532cbb6e612f2cc4e21684f685b28c92279ee51 加入测试构建的同请求有界前缀，覆盖准入、dispatch、原 worker 注册／接手／observe、三道完整 source 围栏、V2 persist 外层、结果重验和回复。MSVC 测试构建与非测试库检查 raw0，定向 12/12，测试 EXE SHA-256 83fec3f05a6c356c25e0585b2199d15914baee30d4ad481080a9c5669adbd802。阶段表、命令、日志摘要与清理见 wl2-r7-team75-preresume-timing-20261120-r1。
+
+请集成线提供或授权 partial_capture_fixture.rs 的新固定 Profile／Public／bundle 代次，并授权或提供 before_resume_record_v2/pending_attachment.rs 与 storage.rs 的测试观察调用点。前者解除 new out01 的原生准入缺口，后者区分 V2 Intent/Pending 新建、写入／刷盘和独立读回。原生身份、隔离、摘要、成员、原始 30／10／5 秒及未知拒绝继续维持。旧 range-r1、旧官方 r2 按原状保全。
+
+真实桌面轮未启动，Explicit 首个耗尽阶段仍为 Unknown。旧首错 Manager transport or refusal authority differs.、测试 raw101、服务端 refused／TimedOut／raw=null 沿用。等新制品与固定配对核验通过后，再请现有 marenben 普通桌面重连。依合同先一轮 Host 与原范围证明，才允许单次 Explicit。accepted:false，公开 Start 保持拒绝。
