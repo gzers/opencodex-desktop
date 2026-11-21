@@ -1,6 +1,6 @@
 # 0.2.24 Mac/Windows双线协作与Git交接
 
-revision: 78；2026-11-21。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
+revision: 79；2026-11-21。实施顺序/状态唯一归[IMP-34](IMP-OPENCODEX-DESKTOP-34.md)，采用范围见其源链接。此文件只定义角色、排他写集、交接与提示词，不继承0.2.23 TEAM的旧派发状态。W0及W1三批组件已通过Git回交；管理员MSI补验与未完清理已接收，普通用户验收保持；当前r6实际r2首Start超时且原件已保管，Mac已定beforeResume受限恢复与共享扫描r7；Windows先当前现场修复准备再未来接口/性能，未整批集成Windows生产代码，Mac不并行改该写集。实际状态归IMP-34。最终W2仍须固定候选后由用户转交提示词。本对话不额外开Mac贡献对话。
 
 ## 角色和排他写集
 
@@ -569,3 +569,9 @@ Mac 后继的 ARM64 Release 原生宿主双代启停通过，见 IMP222。打包
 ## TEAM78 固定 Mac 交接输入，Windows 待用户转交
 
 Mac 打包定向结果见 IMP223。Windows 保持 TEAM77 的待命状态。代码分支 `codex/024-mac-integration-candidate` 固定到 `57073c4e5df13294e9c067ee86bf4535ded7f9b8`。文档分支 `docs/024-mac-candidate-handoff` 的精确提交随交接提供。Windows 收到用户转交后，按[定向诊断合同 revision 3](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)只执行新普通用户隔离配对的一次定向诊断，并验证两种实际构建产物的 GUI 探针隔离。回交只走 Git，原失败及现场保全。完成后等待主线接收。
+
+## TEAM79 Windows 推送后等待 Mac
+
+用户安排 Windows 推送后等待 Mac。已按 IMP219 接收 Windows 源码 6532cbb6e612f2cc4e21684f685b28c92279ee51、证据 32b0483e33fef37370bc13d9c0807edb151c9eb5。Windows 保留既有现场和失败记录，处于待命状态。本条记录当前协作状态。Mac 装配见 IMP226。
+
+TEAM78 已固定的[定向诊断合同 revision 3](0.2.24-contracts/windows-preresume-recovery-timing-r1.md)仍绑定源码 57073c4e5df13294e9c067ee86bf4535ded7f9b8、文档 c1857f653d04228a536ee9e2d2cbd11ff275b113。Mac 装配分支新增提交属于装配工作。后续执行以明确 Git 交接为准。

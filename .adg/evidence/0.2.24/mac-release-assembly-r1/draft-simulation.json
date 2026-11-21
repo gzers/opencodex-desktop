@@ -1,0 +1,28 @@
+{
+  "verification": "verified-draft-assets",
+  "refusalCases": {
+    "wrong source": "release tag does not resolve to specified source",
+    "wrong draft": "expected the specified v0.2.24 prerelease draft",
+    "wrong run": "expected a completed successful release workflow attempt at the exact source",
+    "wrong attempt": "expected a completed successful release workflow attempt at the exact source",
+    "receipt attempt": "wrong source/draft/run receipt: release-windows-installer-content",
+    "report bytes": "receipt evidence changed: release-windows-installer-content",
+    "wrong platform": "wrong manifest asset or signature: windows-x86_64-msi",
+    "missing platform": "updater platforms differ from the release matrix",
+    "manifest signature": "wrong manifest asset or signature: darwin-aarch64",
+    "detached signature": "Minisign refused a valid signature for different bytes",
+    "payload bytes": "downloaded bytes differ from GitHub metadata: releases/assets/204",
+    "extra ZIP member": "unexpected or duplicate ZIP members: release-windows-installer-content",
+    "uncompressed ZIP budget": "uncompressed ZIP is too large: release-windows-installer-content",
+    "asset metadata drift": "release evidence changed during verification"
+  },
+  "prepareDraftCases": [
+    "existing draft",
+    "create draft in memory",
+    "refuse mismatched workflow SHA"
+  ],
+  "signatures": "real Minisign signatures with ephemeral key",
+  "acceptance": false,
+  "remoteCalls": 0,
+  "fixtureRemovedAfterRun": true
+}

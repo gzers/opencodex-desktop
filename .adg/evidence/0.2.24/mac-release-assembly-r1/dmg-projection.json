@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "status": "verified-candidate",
+  "inputKind": "release-input",
+  "expectedVersion": "0.2.24",
+  "layout": "single-app",
+  "sourceInfo": {
+    "CFBundleShortVersionString": "0.2.24",
+    "CFBundleVersion": "0.2.24",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "mountedInfo": {
+    "CFBundleShortVersionString": "0.2.24",
+    "CFBundleVersion": "0.2.24",
+    "CFBundleIdentifier": "com.gzers.opencodex.desktop",
+    "CFBundleExecutable": "opencodex-desktop"
+  },
+  "sourceAppTreeSha256": "e1a9c4994c244303836256593c208c73b66e3d99541e6857b42d05079974aaae",
+  "mountedAppTreeSha256": "e1a9c4994c244303836256593c208c73b66e3d99541e6857b42d05079974aaae",
+  "mountedTopLevel": [
+    "Applications",
+    "Install.txt",
+    "OpenCodeX Desktop.app"
+  ],
+  "resources": {
+    "schemaVersion": 1,
+    "status": "verified-offline",
+    "platform": "darwin-arm64",
+    "descriptorSha256": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "officialRuntimeVersion": "2.99.0",
+    "officialRuntimeSha256": "b920ba0214a046e3c6a73447933ea467d52368d1eefb300e274394247414259c",
+    "platformArchiveSha256": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+    "platformArchiveBytes": 246638059,
+    "entries": 11467,
+    "unpackedBytes": 633363932,
+    "upstreamFiles": 2664,
+    "lockedPackages": 102,
+    "codeExecuted": false,
+    "releaseAcceptance": false
+  },
+  "readOnlyVerified": true,
+  "appNeverLaunched": true,
+  "runtimeAbsentBesideApp": true,
+  "sourceUnchanged": true,
+  "artifactSha256": "8326bbe6a80732262e4a2b1f347fafe11616b07a11428994b0486f57715b81c4",
+  "artifactBytes": 278417517,
+  "cleanup": {
+    "ownMountDetached": true,
+    "scratchRemoved": true,
+    "outputPublished": true
+  },
+  "installationPerformed": false,
+  "releaseAcceptance": false,
+  "assemblySource": "dab98839015209516ff3ccad9b0b81caa90c1175",
+  "sealedAppSource": "57073c4e5df13294e9c067ee86bf4535ded7f9b8",
+  "rawReportSha256": "aacd7ea9edd9b0fc46ad6d21b1d53a6c86beffdccf0c8d7a581d14f156ec34ef",
+  "rawReportBytes": 15675,
+  "commandResults": [
+    {
+      "program": "codesign",
+      "exitCode": 0
+    },
+    {
+      "program": "ditto",
+      "exitCode": 0
+    },
+    {
+      "program": "codesign",
+      "exitCode": 0
+    },
+    {
+      "program": "hdiutil",
+      "exitCode": 0
+    },
+    {
+      "program": "hdiutil",
+      "exitCode": 0
+    },
+    {
+      "program": "hdiutil",
+      "exitCode": 0
+    },
+    {
+      "program": "codesign",
+      "exitCode": 0
+    },
+    {
+      "program": "hdiutil",
+      "exitCode": 0
+    },
+    {
+      "program": "codesign",
+      "exitCode": 0
+    }
+  ]
+}
