@@ -2444,3 +2444,7 @@ IMP232 的隔离对照复现官方 2.99.0 换代和丢失扩展属性。IMP231 �
 ### IMP237 Mac 渠道保存与官方目录发布的接线缺口
 
 代码 b33369498525854f0c9f7e335f11b3261cc6af41 的 V2 渠道保存负责落盘与文件读回。界面提供经用户确认的 Codex 重启入口，但 V2 没有生成旧改名准备依赖的记录，因此尚未建立本次保存到官方 live 配置接管与目录收敛的证据。原样官方 2.99.0 的渠道 reload 与批量 PUT 路由仍具备相关能力，兼容性及持久代次绑定待实际验证。整文件回退要求确定停止，需分别证明回退落盘、下一次启动消费和真实客户端读回。IMP235 的隔离后端消费结果保持。TEAM79 继续待命，整版 accepted:false。[调用链复核](../../.adg/evidence/0.2.24/mac-v2-save-publication-trace-r1/result.md) · [显示合同 revision 3](0.2.24-contracts/official-channel-display-r1.md)
+
+### IMP238 Mac 原样官方 2.99.0 渠道发布定向诊断
+
+Run07 的自动发现选择了官方拒绝的 ChatGPT wrapper，回退入口无法供目录发布。Run08 显式使用 ChatGPT 随包真实二进制 0.169.1，同键改名、换键、原名恢复、人工名称及陈旧基线拒绝等 18 项定向断言通过。换键时逐渠道 reload 暂留旧 key 与 slug，官方全量 PUT 后才收敛。两轮正常 Stop 及隔离夹具清理通过。生产 V2 接线、停止态整文件回退、真实 ChatGPT 选择器与正式候选仍待验。TEAM79 继续待命，整版 accepted:false。[原失败、对照及摘要](../../.adg/evidence/0.2.24/mac-official-http-publication-r1/result.md)

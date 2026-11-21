@@ -1,0 +1,90 @@
+{
+  "accepted": false,
+  "candidateSource": "b33369498525854f0c9f7e335f11b3261cc6af41",
+  "startMs": 1616.918,
+  "stopMs": 852.3,
+  "stopExit": 0,
+  "launcherExit": 0,
+  "fixtureAbsent": true,
+  "listenerAbsent": true,
+  "publicationExit": 1,
+  "firstError": {
+    "phase": "publication",
+    "kind": "RuntimeError"
+  },
+  "guards": {
+    "externalDialDenied": true,
+    "defaultClientReadDenied": true
+  },
+  "remainingProcessCount": 0,
+  "catalogProbeAfterWait": {
+    "modelCount": 2,
+    "nativeTemplate": false,
+    "activeTemplate": false
+  },
+  "clientResolution": {
+    "source": "fallback",
+    "version": null,
+    "untrustedTargetRejected": true
+  },
+  "checks": {
+    "initialCatalog": true,
+    "same-key-staleRejectedWithoutMutation": true,
+    "same-key-reload": false,
+    "same-key-projection": true,
+    "same-key-officialPublication": false,
+    "same-key-readback": false,
+    "different-key-staleRejectedWithoutMutation": true,
+    "different-key-reload": false,
+    "different-key-projection": true,
+    "different-key-officialPublication": false,
+    "different-key-readback": false,
+    "rollback-input-staleRejectedWithoutMutation": true,
+    "rollback-input-reload": true,
+    "rollback-input-projection": true,
+    "rollback-input-officialPublication": false,
+    "rollback-input-readback": true,
+    "officialMutationSaved": true,
+    "officialMutationRestoredCatalog": true
+  },
+  "cases": [
+    {
+      "label": "same-key",
+      "afterIndividualReload": {
+        "priorKeyPresent": true,
+        "priorDefaultStillActive": true,
+        "priorSlugPresent": true,
+        "targetModelsVisible": false
+      },
+      "catalogStatus": "skipped",
+      "putPreservedBytes": true
+    },
+    {
+      "label": "different-key",
+      "afterIndividualReload": {
+        "priorKeyPresent": true,
+        "priorDefaultStillActive": true,
+        "priorSlugPresent": true,
+        "targetModelsVisible": false
+      },
+      "catalogStatus": "skipped",
+      "putPreservedBytes": true
+    },
+    {
+      "label": "rollback-input",
+      "afterIndividualReload": {
+        "priorKeyPresent": true,
+        "priorDefaultStillActive": true,
+        "priorSlugPresent": false,
+        "targetModelsVisible": true
+      },
+      "catalogStatus": "skipped",
+      "putPreservedBytes": true
+    }
+  ],
+  "sourceSha256": {
+    "run.json": "30d7a0b537f173168f6fa4a0be8ad4ae705fc2765e137669db7fbebf17d131aa",
+    "publication.json": "5fd31e895f27cb7182beffa316acd5ffafc22dcec8ea3f95af1d253d61156b71",
+    "resolution.json": "865ac7e10c5bdea9a28afa1b790b3db457ac422ed054265486c94e433a8b1b88"
+  }
+}
