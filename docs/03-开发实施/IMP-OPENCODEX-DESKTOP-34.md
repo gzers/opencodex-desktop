@@ -2355,3 +2355,7 @@ Mac 隔离实屏已验证取消和后继 Start 就绪。该后继的 Stop 约 10
 ### IMP221 Mac 第二代 Stop 超时与索引降级
 
 同轮两代真实启停中，第一代 Stop 7,281 ms，第二代 11,642 ms。两代原生进程及监听退出，第二代提交 root_absent rev18 后降级为 root_retirement_prepared rev19，对外返回 client_original_restore_pending，accepted:false。前代归档无变化，测试残留清理单列。一次检查点内合并归档读取仍不足以满足第二代期限。接下来分解恢复与提交后证明耗时，保持 30／10／5 秒与独立读回。见[失败证据投影](../../.adg/evidence/0.2.24/mac-root-stop-archive-observation-r1/result.md)。
+
+### IMP222 Mac ARM64 Release 两代正常启停通过
+
+在 cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2 加冻结补丁、官方 OpenCodex 2.99.0 的隔离 ARM64 Release 原生宿主中，两代 Start 分别用时 7,278 ms 和 9,049 ms，正常 Stop 用时 5,317 ms 和 8,152 ms。独立 Status 均满足 5 秒预算，终态分别为 root_absent rev9 和 rev18。原件恢复、独立读回与前代归档完整性通过。测试进程退出 0，本轮夹具、进程、监听及所属协调器已清理。IMP221 的 Debug 失败独立保留。整版 accepted:false。[原生验证证据](../../.adg/evidence/0.2.24/mac-release-native-root-cycles-r1/result.md)

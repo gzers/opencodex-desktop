@@ -1,0 +1,65 @@
+{
+  "accepted": false,
+  "scope": "macOS arm64 release native host, two normal root lifecycles, isolated test profile",
+  "sourceBase": "cfb3c8aa79de85e5a4ecdbf613acc668945ed0d2",
+  "officialVersion": "2.99.0",
+  "exitCode": 0,
+  "budgetsMs": {
+    "start": 30000,
+    "stop": 10000,
+    "independentStatus": 5000
+  },
+  "oldArchiveUnchanged": true,
+  "clientProvenanceAndReadback": true,
+  "nativeClientRestored": {
+    "codex/config.toml": true,
+    "codex/models_cache.json": true,
+    "codex/opencodex-catalog-audit.jsonl": true,
+    "codex/opencodex-catalog.json": true,
+    "grok/agents/AGENTS.md": true,
+    "grok/config.toml": true,
+    "grok/config.toml.bak-opencodex": true
+  },
+  "runInputsSha256": {
+    "test-host": "11b2c77d99ade83bbb5e954a39313bce00a57dfe3f6ccd8c3cc1bf0d6207e017",
+    "runtime-bundle.manifest.json": "e0464990b4ab42a519332ba567f8c866aca712621570c5fc22230eea2d5d5fe3",
+    "runtime-bundle-0.2.24-darwin-arm64.tar.gz": "5b10c1a888000d54d14783622d9d8330c33f4e1b14a5f163d007337d0424ec7f",
+    "native.sb": "bd6d0f74632390c66df1db4418c94e15c67cbb71b6b1c06775013f5ebd184c34",
+    "source.patch": "00e2f2c5fb55bdf2ea16ba9eae6bb3eccb1777745e024eae3392a9e71927730f"
+  },
+  "rawEvidenceSha256": {
+    "source.patch": "00e2f2c5fb55bdf2ea16ba9eae6bb3eccb1777745e024eae3392a9e71927730f",
+    "app.log": "dab89a25ccc3049e2e489646897f509892ebfa9a42bf796bd026a0809dccaaa2",
+    "focused.log": "fdfb17a9829353f3efa8267f93aa3291ef7e368a80f96f28841ec068b08121e2",
+    "cleanup.json": "37eb7b8299a139e6b76491e1916064c05c7029c5c8cfd1eb5fbe9a8b090b5ad2",
+    "owned-coordinator-cleanup.json": "8bace30a22da9b4dcd7753b255172d425286d44eff39d4d5aa4a9148b5ae910d",
+    "native-evidence/root-cycles.json": "ded0788ee84ea92c7d74cfd64364e3a9f823d473014dc206120edeb3e3cc7a49",
+    "native-evidence/summary.json": "ce3d21ff51f4583ba3c2ee40b4b565dd5100d42ac4e3b8b5091da5e2eea96506",
+    "native-evidence/two-cycle-index-events.json": "de222ad498bd5f8aad72ee328a017cf624762912ddccf88361c97480fee3ac4e",
+    "preserved-manager-state.tar.gz": "70554dc1b6676bc5d54562c5b98c12893f6cd56ed4498e24224a69f487eaf887"
+  },
+  "cleanup": {
+    "fixtureAbsent": true,
+    "residualProcesses": 0,
+    "residualListeners": 0,
+    "ownedCoordinatorFilesRemoved": 3
+  },
+  "runs": [
+    {
+      "startMs": 7278,
+      "runningStatusMs": 220,
+      "stopMs": 5317,
+      "stoppedStatusMs": 1025,
+      "closedState": "root_absent",
+      "closedRevision": 9
+    },
+    {
+      "startMs": 9049,
+      "runningStatusMs": 715,
+      "stopMs": 8152,
+      "stoppedStatusMs": 1614,
+      "closedState": "root_absent",
+      "closedRevision": 18
+    }
+  ]
+}

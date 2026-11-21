@@ -563,3 +563,5 @@ Windows 源码 a8d7a08002c3af21b2c7ad8f9bcc06cda9d107d0、证据 bd29ce9c75a259a
 Mac 核验后继代次的正常 Stop，固定下一交接的源码与证据。见 IMP220。
 
 Mac 第二代真实 Stop 超时且终态降级，见 IMP221。Windows 延续待命，待 Mac 固定后继输入并明确 Git 交接。
+
+Mac 后继的 ARM64 Release 原生宿主双代启停通过，见 IMP222。打包 GUI 与原生宿主证据分别记录。
