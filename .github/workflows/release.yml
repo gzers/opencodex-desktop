@@ -170,7 +170,7 @@ jobs:
           releaseId: ${{ steps.draft.outputs.id }}
           releaseDraft: true
           prerelease: true
-          args: --features custom-protocol --config tauri.updater.conf.json --config tauri.runtime-bundle.conf.json ${{ matrix.args }} -- --message-format=json-render-diagnostics
+          args: --features custom-protocol --config tauri.updater.conf.json --config ../../../test/out/runtime-stage/tauri.runtime-bundle.conf.json ${{ matrix.args }} -- --message-format=json-render-diagnostics
 
       - name: Preserve every packaging-tool download attempt
         if: always()

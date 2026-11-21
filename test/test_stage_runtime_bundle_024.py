@@ -3,6 +3,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import re
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -30,6 +31,14 @@ class OfficialStageBoundary(unittest.TestCase):
     def run_stage(self):
         return stage.stage('darwin-arm64', self.root / 'node', self.root / 'npm.js',
                            self.output, self.archive, resource_directory=self.resources)
+
+    def test_release_cli_uses_configuration_from_stager_output(self):
+        workflow = (ROOT / '.github/workflows/release.yml').read_text()
+        stage_output, = re.findall(r'stage_runtime_bundle_024\.py [^\n]* --output (\S+)', workflow)
+        project_path, = re.findall(r'^\s+projectPath: (\S+)$', workflow, re.MULTILINE)
+        config_path, = re.findall(r'--config (\S*tauri\.runtime-bundle\.conf\.json)\b', workflow)
+        self.assertEqual((ROOT / project_path / config_path).resolve(),
+                         ROOT / stage_output / 'tauri.runtime-bundle.conf.json')
 
     def test_official_policy_preserves_transitive_lock_and_both_platforms(self):
         before = json.loads((ROOT / '.github/runtime-platforms-023.json').read_bytes())
