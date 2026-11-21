@@ -1,0 +1,50 @@
+{
+  "result": "passed",
+  "accepted": false,
+  "scope": "One normal Start and one normal Stop in the isolated packaged macOS GUI after provisioning",
+  "packagedSourceSha": "57073c4e5df13294e9c067ee86bf4535ded7f9b8",
+  "assemblySourceSha": "dab98839015209516ff3ccad9b0b81caa90c1175",
+  "arm64AppExecutableSha256": "666060f66d015fd5b82449ec5947bf31d4188942a79953ee04430e23a254660e",
+  "officialOpenCodexVersion": "2.99.0",
+  "sourceAndProbeAppUnchanged": true,
+  "start": {
+    "startDispatchMonotonicNs": 65492181666,
+    "startAXReturnedMonotonicNs": 65543373416,
+    "startConfirmedMonotonicNs": 72455850583,
+    "startUpperBoundUs": 6963669,
+    "budgetMs": 30000,
+    "guiText": [
+      "运行状态：运行中",
+      "启动已完成"
+    ],
+    "pid": 67448,
+    "listener": "127.0.0.1:56524",
+    "readyRevision": 4,
+    "startupLiveSha256": "688a18479625d5853816a66b86ebdfe0fe9d94fc4f7148342591e8542d26de0a",
+    "runtimeRecordSha256": "917b1dd58d35a8c663ee92f79ba3fa676ccef0b13857be5b9f2e8335a143cc9e"
+  },
+  "stop": {
+    "elapsedMs": 5536,
+    "budgetMs": 10000,
+    "guiText": "停止已完成",
+    "state": "root_absent",
+    "revision": 9,
+    "matchesStartTicket": true,
+    "retirementReadbackSha256": "f42fe8e1eba1a3a6841dbf8768563eba6b5d5793391af62d89f09cc4824556fc",
+    "activeAndOriginalRootsAbsent": true,
+    "psExitCode": 1,
+    "listenerCheckExitCode": 1
+  },
+  "cleanup": {
+    "ownedManagerExitedAfterNormalServiceStop": true,
+    "remainingProcessGroupMembers": 0,
+    "temporaryRootAbsent": true,
+    "ownedCoordinatorFilesAbsent": 3
+  },
+  "environment": {
+    "nonLoopbackDenied": true,
+    "dailyConfigurationModified": false,
+    "businessRequests": false
+  },
+  "localRawEvidence": "/private/tmp/ocxd024-mac-gui-start-budget.t2pgq_y4/result"
+}

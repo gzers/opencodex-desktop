@@ -11,7 +11,7 @@ summary: "0.2.24共享与Mac原生实现持续集成；Windows W0及W1三批组�
 ---
 # 0.2.24 发布后修复与双线集成计划
 
-revision: 224；2026-11-21。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
+revision: 225；2026-11-21。用户要求本机与Windows可独立开发部分并行、Windows分批提交、最终再通过Git交接Windows验收。本文件为本版实际实施顺序/依赖的唯一来源；[TEAM](TEAM-0.2.24.md)只拥有执行角色/写集/回交，不另维护进度。范围及既有采用规则承接[开发前边界](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-后继修复开发前边界确认.md)和[同源矩阵](../04-项目资料/01-项目支撑资料/06-问题记录/20261110-0.2.24开发前收口矩阵.md)。本对话已按用户授权执行开发/测试/集成，Windows W0及W1三批组件已回交并注册；当前不授权发布或改日常配置。
 
 初始代码集成基线main 0828a3955615df0a2a3e52fb96ab8249f2e04d1b；当前共享检查点main 9daf5599151b65437f94ab2cadb1988060ee38c3（非冻结候选）；Windows实现检查点codex/024-windows-native e54a1156de42d445903faedb93aed4923f400b3a（旧r2实际载入357210891）（未整批集成main），发行基线v0.2.23 e3728109e93498bfbd6e993d49904d57dfd75315；目标0.2.24。两个基线不能互相冒用。后继实际开工时核对main新提交；发现新增共享变化由本对话承接。新版本范围已由DMD-POST023承接，本计划已进入in_progress；尚无新正式TASK或关闭证书，不挂旧已发行TASK，也不为排期篡改旧证书。
 
@@ -2381,3 +2381,9 @@ Windows GUI 探针改为显式构建特性，普通构建源码已核对，Windo
 本机模拟 Tauri 子进程，使用 57073c4e5df13294e9c067ee86bf4535ded7f9b8 封装的 ARM64 应用执行真实镜像及验签。三组生产回执写入、ZIP 与只读核验器的模拟往返通过，临时 Minisign 密钥下 14 种错配全部拒绝。Python 40 项定向、43 项发布检查、Node 重试 3 项以及 actionlint、Git 差异和发版输入检查通过。真实 GitHub 草稿及候选签名仍待核验，打包 GUI 的 Start 计时尚缺独立证据。真实原件归还、正常 Stop/Closed、普通用户 MSI 和清理、Windows 生产单 SID、ChatGPT 内 Codex 实际选模仍开放。整版 accepted:false。[装配证据](../../.adg/evidence/0.2.24/mac-release-assembly-r1/result.md)
 
 Windows 已推送并等待 Mac。TEAM78 定向诊断 revision 3 的源码 57073c4e5df13294e9c067ee86bf4535ded7f9b8 与文档 c1857f653d04228a536ee9e2d2cbd11ff275b113 继续作为原配对，见 TEAM79。
+
+### IMP227 Mac 打包应用正常启停预算通过
+
+同一 ARM64 Release 应用源码 57073c4e5df13294e9c067ee86bf4535ded7f9b8 及官方 2.99.0。隔离环境完成供应后单次实屏 Start 上界 6,963.669 ms，30 秒内核到界面完成、Ready rev4、启动回执和同一 PID／端口。正常 Stop 为 5,536 ms，10 秒内进入同票据 root_absent rev9，归还读回匹配，已独立确认 PID、监听及自有测试残留缺席。本轮闭合 IMP226 所列的 Mac 打包 GUI Start 计时。[Mac 启停证据](../../.adg/evidence/0.2.24/mac-packaged-gui-start-budget-r1/result.md)
+
+Windows 继续待命，TEAM78 固定配对及首次耗尽阶段 Unknown 的超时原证据保留。Windows 真实原件归还、正常 Stop/Closed、普通用户 MSI 与清理、生产单 SID、正式签名候选与真实 GitHub 草稿流程、ChatGPT 内 Codex 实际选模仍待验。整版 accepted:false。
