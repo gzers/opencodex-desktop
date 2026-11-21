@@ -5,6 +5,7 @@ import argparse
 import base64
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -14,9 +15,10 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from zipfile import BadZipFile
 
 
-class PublishError(Exception):
+class PublishError(ValueError):
     pass
 
 
@@ -179,16 +181,22 @@ def verify_maintained_runtime(repo, tag, release, policy, root, key_file):
     print(f"Cryptographically verified adopted runtime {policy['version']}: sha256={digest}", flush=True)
 
 
-def verify_public_manifest(url, expected):
+def verify_public_manifest(url, expected, *, asset=None):
     last_error = None
     for attempt in range(5):
         try:
             request = urllib.request.Request(url, headers={"User-Agent": "opencodex-release-verifier"})
             # No GH_TOKEN is sent: the updater must be able to read anonymously.
             with urllib.request.urlopen(request, timeout=20) as response:
-                actual = json.load(response)
-            if actual == expected:
-                return
+                if asset is None:
+                    if json.load(response) == expected:
+                        return
+                else:
+                    raw = response.read(asset['size'] + 1)
+                    if (len(raw) == asset['size']
+                            and 'sha256:' + hashlib.sha256(raw).hexdigest() == asset['digest']
+                            and json.loads(raw.decode('utf-8-sig')) == expected):
+                        return
             last_error = "public manifest differs from the candidate manifest"
         except (urllib.error.URLError, OSError, ValueError) as error:
             last_error = str(error)
@@ -216,12 +224,74 @@ def verify_public_runtime(repo, tag, policy):
     raise PublishError(f"Public maintained runtime verification failed: {last_error}")
 
 
-def publish(repo, tag, mode):
-    version(tag)
+def publish_official(repo, tag, mode, inputs):
+    from verify_release_draft_024 import (GitHub, REPO, asset_snapshot, get_release as get_bound_release,
+                                          tagged_source, verify_release)
+
+    if repo != REPO or inputs is None:
+        raise PublishError("0.2.24 requires the official repository and --assembly SOURCE DRAFT RUN ATTEMPT")
+    source, draft, run, attempt = inputs
+    if not re.fullmatch(r'[0-9a-f]{40}', source):
+        raise PublishError("Assembly source must be a full lowercase SHA")
+    if any(not re.fullmatch(r'[1-9][0-9]*', value) for value in (draft, run, attempt)):
+        raise PublishError("Assembly draft ID, run ID and attempt must be positive integers")
+    draft, run, attempt = map(int, (draft, run, attempt))
+    before, expected_latest = publication_channel(repo, tag, mode)
+    api = GitHub(actions_token=os.environ.get("ASSEMBLY_ACTIONS_TOKEN"))
+    proof, manifest, release = verify_release(api, source, draft, run, attempt, allow_public=True)
+    print(f"Verified assembly source={source}; draft={draft}; run={run}; attempt={attempt}; "
+          f"state={proof['status']}", flush=True)
+    expected_assets = asset_snapshot(release, canonical_urls=True)
+    if (latest(repo) != before or get_bound_release(api, draft, allow_public=True) != release
+            or tagged_source(api)[1] != source):
+        raise PublishError("Release, tag or Latest changed before publication")
+
+    # Edit the exact release ID verified by the assembly receipts.
+    gh("api", "--method", "PATCH", f"repos/{repo}/releases/{draft}",
+       "-F", "draft=false", "-F", "prerelease=false",
+       "-f", f"make_latest={'true' if expected_latest == tag else 'false'}")
+
+    print(f"GitHub accepted the edit of release {draft}; verifying public state", flush=True)
+    after = get_bound_release(api, draft, allow_public=True)
+    if (after['draft'] or after['prerelease'] or tagged_source(api)[1] != source
+            or asset_snapshot(after, canonical_urls=True) != expected_assets):
+        raise PublishError("Public release identity or uploaded assets differ from the verified assembly")
+    if latest(repo) != expected_latest:
+        raise PublishError("Latest does not match the requested publication mode")
+    base = f"https://github.com/{repo}/releases"
+    verify_public_manifest(f"{base}/download/{tag}/latest.json", manifest, asset=proof['manifest'])
+    if expected_latest == tag:
+        verify_public_manifest(f"{base}/latest/download/latest.json", manifest, asset=proof['manifest'])
+    print(f"Verified public release {tag}; Latest={expected_latest}", flush=True)
+
+
+def restore_latest(repo, tag, mode, before):
+    if mode == "preserve-latest" and before != tag:
+        gh("release", "edit", before, "--repo", repo, "--latest=true")
+
+
+def publication_channel(repo, tag, mode):
+    before = latest(repo)
+    if mode == "preserve-latest" and before is None:
+        raise PublishError("No existing Latest to preserve; explicitly select stable for the first release")
+    if mode == "stable" and before and version(tag) < version(before):
+        raise PublishError(f"Refusing stable downgrade: {before} -> {tag}")
+    return before, tag if mode == "stable" else before
+
+
+def publish(repo, tag, mode, assembly=None):
+    release_version = version(tag)
     if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repo):
         raise PublishError("Expected an owner/repository name")
     if mode not in ("preserve-latest", "stable"):
         raise PublishError("Unknown publication mode")
+    if release_version > (0, 2, 24):
+        raise PublishError("No publication verification contract for this release version")
+    if release_version == (0, 2, 24):
+        publish_official(repo, tag, mode, assembly)
+        return
+    if assembly is not None:
+        raise PublishError("--assembly applies only to 0.2.24")
     print(f"Reading release metadata for {tag}", flush=True)
     release = get_release(repo, tag)
     if release.get("tag_name") != tag:
@@ -230,19 +300,13 @@ def publish(repo, tag, mode):
     manifest = json.loads(gh("release", "download", tag, "--repo", repo,
                              "--pattern", "latest.json", "--output", "-"))
     validate_manifest(manifest, release, tag, repo)
-    before = latest(repo)
-    if mode == "preserve-latest" and before is None:
-        raise PublishError("No existing Latest to preserve; explicitly select stable for the first release")
-    if mode == "stable" and before and version(tag) < version(before):
-        raise PublishError(f"Refusing stable downgrade: {before} -> {tag}")
+    before, expected_latest = publication_channel(repo, tag, mode)
     runtime_policy = verify_artifacts(repo, tag, manifest, release)
 
     print(f"Target: {tag}; mode: {mode}; previous Latest: {before}", flush=True)
-    expected_latest = tag if mode == "stable" else before
     gh("release", "edit", tag, "--repo", repo, "--draft=false", "--prerelease=false",
        f"--latest={'true' if expected_latest == tag else 'false'}")
-    if mode == "preserve-latest" and before != tag:
-        gh("release", "edit", before, "--repo", repo, "--latest=true")
+    restore_latest(repo, tag, mode, before)
 
     after = get_release(repo, tag)
     if after.get("tag_name") != tag or after.get("draft") is not False or after.get("prerelease") is not False:
@@ -265,13 +329,16 @@ def main():
     parser.add_argument("tag")
     parser.add_argument("--repo", required=True)
     parser.add_argument("--mode", choices=["preserve-latest", "stable"], default="preserve-latest")
+    parser.add_argument("--assembly", nargs=4, metavar=("SOURCE", "DRAFT", "RUN", "ATTEMPT"),
+                        help="exact source SHA, release ID, build run ID and attempt for v0.2.24")
     args = parser.parse_args()
     try:
-        publish(args.repo, args.tag, args.mode)
+        publish(args.repo, args.tag, args.mode, args.assembly)
     except subprocess.CalledProcessError as error:
         print(f"Release operation failed (exit {error.returncode}): {error.stderr}", file=sys.stderr)
         return error.returncode if error.returncode > 0 else 1
-    except (PublishError, ValueError, KeyError, TypeError, OSError) as error:
+    except (ValueError, KeyError, TypeError, OSError, AttributeError, IndexError, BadZipFile,
+            subprocess.TimeoutExpired) as error:
         print(f"Release verification failed: {error}", file=sys.stderr)
         return 1
     return 0

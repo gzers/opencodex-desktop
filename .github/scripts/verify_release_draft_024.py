@@ -44,17 +44,27 @@ PLATFORMS = {
 
 
 class GitHub:
+    def __init__(self, *, actions_token=None):
+        self.actions_token = actions_token
+
+    def environment(self, path):
+        if path.startswith('actions/') and self.actions_token:
+            return {**os.environ, 'GH_TOKEN': self.actions_token}
+        return None
+
     @staticmethod
     def command(path):
         return ['gh', 'api', '--hostname', 'github.com', f'repos/{REPO}/{path}']
 
     def json(self, path, *options):
-        return load_json(subprocess.check_output(self.command(path) + list(options), timeout=60))
+        return load_json(subprocess.check_output(self.command(path) + list(options), timeout=60,
+                                                 env=self.environment(path)))
 
     def download(self, path, destination):
         headers = ['-H', 'Accept: application/octet-stream'] if path.startswith('releases/assets/') else []
         with destination.open('xb') as file:
-            subprocess.run(self.command(path) + headers, stdout=file, check=True, timeout=600)
+            subprocess.run(self.command(path) + headers, stdout=file, check=True, timeout=600,
+                           env=self.environment(path))
 
     def create_draft(self, body):
         return load_json(subprocess.check_output(self.command('releases') + ['--input', '-'],
@@ -74,12 +84,19 @@ def artifact_name(group, run, attempt):
     return f'{group}-{run}-{attempt}'
 
 
-def get_draft(api, draft):
+def get_release(api, draft, *, allow_public=False):
     release = api.json(f'releases/{draft}')
-    require(release['id'] == draft and release['tag_name'] == TAG
-            and release['draft'] is True and release['prerelease'] is True,
-            'expected the specified v0.2.24 prerelease draft')
+    require(release['id'] == draft and release['tag_name'] == TAG,
+            'release ID or tag differs from the assembly receipt')
+    prerelease_draft = release['draft'] is True and release['prerelease'] is True
+    public = release['draft'] is False and release['prerelease'] is False
+    require(prerelease_draft or (allow_public and public),
+            'expected the specified v0.2.24 prerelease draft or an explicitly allowed stable release')
     return release
+
+
+def get_draft(api, draft):
+    return get_release(api, draft)
 
 
 def find_draft(api):
@@ -324,8 +341,24 @@ def download_asset(api, asset, directory, limit=ASSET_LIMIT):
     return path
 
 
-def verify_asset_bindings(api, release, reports, bindings, config, directory):
+def receipt_asset(receipt, release):
+    if release['draft'] is True:
+        return receipt
+    # Only the validated draft URL can move to the canonical tagged URL.
+    urls = release_assets(REPO, TAG, {'draft': True, 'assets': [receipt]})
+    return {**receipt, 'browser_download_url': next(iter(urls))}
+
+
+def asset_snapshot(release, *, canonical_urls=False):
     assets = {url: uploaded_asset(asset) for url, asset in release_assets(REPO, TAG, release).items()}
+    if canonical_urls:
+        for url, asset in assets.items():
+            asset['browser_download_url'] = url
+    return assets
+
+
+def verify_asset_bindings(api, release, reports, bindings, config, directory):
+    assets = asset_snapshot(release, canonical_urls=release['draft'] is False)
     by_name = {asset['name']: asset for asset in assets.values()}
     require(len({asset['id'] for asset in assets.values()}) == len(assets), 'duplicate asset ID')
     key = directory / 'tagged.pub'
@@ -336,7 +369,7 @@ def verify_asset_bindings(api, release, reports, bindings, config, directory):
     require(set(manifest['platforms']) == set(PLATFORMS), 'updater platforms differ from the release matrix')
     signatures = {}
     for role, bound in bindings.items():
-        payload = bound['payload']
+        payload = receipt_asset(bound['payload'], release)
         require(payload == match_asset(by_name.values(), SUFFIXES[role], report_asset(role, reports)),
                 f'uploaded payload differs from receipt: {role}')
         binary = download_asset(api, payload, directory)
@@ -344,7 +377,7 @@ def verify_asset_bindings(api, release, reports, bindings, config, directory):
             require(set(bound) == {'payload'}, 'unexpected DMG signature binding')
             continue
         detached = by_name[payload['name'] + '.sig']
-        require(set(bound) == {'payload', 'signature'} and detached == bound['signature'],
+        require(set(bound) == {'payload', 'signature'} and detached == receipt_asset(bound['signature'], release),
                 f'uploaded signature differs from receipt: {role}')
         signature_text = download_asset(api, detached, directory, REPORT_LIMIT).read_bytes()
         signatures[role] = signature_text
@@ -354,17 +387,17 @@ def verify_asset_bindings(api, release, reports, bindings, config, directory):
                        check=True, capture_output=True, timeout=120)
     for platform, row in manifest['platforms'].items():
         asset = assets[urllib.parse.unquote(row['url'])]
-        require(any(asset == bindings[role]['payload'] and row['signature'].encode() == signatures[role]
+        require(any(asset == receipt_asset(bindings[role]['payload'], release) and row['signature'].encode() == signatures[role]
                     for role in PLATFORMS[platform]), f'wrong manifest asset or signature: {platform}')
     return {'manifest': by_name['latest.json'], 'platforms': sorted(manifest['platforms']),
-            'boundAssets': bindings}
+            'boundAssets': bindings}, manifest
 
 
-def verify_draft(api, source, draft, run, attempt):
+def verify_release(api, source, draft, run, attempt, *, allow_public=False):
     result = identity(source, draft, run, attempt, 'draft')
     tag = tagged_source(api)
     require(tag[1] == source, 'release tag does not resolve to specified source')
-    release = get_draft(api, draft)
+    release = get_release(api, draft, allow_public=allow_public)
     interval = completed_attempt(api, source, run, attempt)
     archives = report_archives(api, run, attempt, source, interval)
     config = source_file(api, source, CONFIG)
@@ -381,14 +414,22 @@ def verify_draft(api, source, draft, run, attempt):
             reports.update(group_reports)
             bindings.update(group_bindings)
         check_reports(reports, source, policy['runtime'])
-        result.update(verify_asset_bindings(api, release, reports, bindings, config, root))
-    require(tagged_source(api) == tag and get_draft(api, draft) == release
+        asset_result, manifest = verify_asset_bindings(api, release, reports, bindings, config, root)
+        result.update(asset_result)
+    require(tagged_source(api) == tag
+            and get_release(api, draft, allow_public=allow_public) == release
             and completed_attempt(api, source, run, attempt) == interval
             and report_archives(api, run, attempt, source, interval) == archives,
             'release evidence changed during verification')
     result['reportArtifacts'] = {group: {key: archive[key] for key in ('id', 'name', 'digest', 'size_in_bytes')}
                                  for group, archive in archives.items()}
-    return dict(result, status='verified-draft-assets')
+    state = 'draft' if release['draft'] else 'public'
+    return dict(result, status=f'verified-{state}-assets'), manifest, release
+
+
+def verify_draft(api, source, draft, run, attempt):
+    result, _, _ = verify_release(api, source, draft, run, attempt)
+    return result
 
 
 def main():

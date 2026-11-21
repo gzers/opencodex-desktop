@@ -17,8 +17,21 @@ on:
         type: choice
         default: preserve-latest
         options: [preserve-latest, stable]
+      source:
+        description: 'v0.2.24 装配使用的完整源码 SHA'
+        type: string
+      draft:
+        description: 'v0.2.24 装配回执绑定的 Release ID'
+        type: string
+      run:
+        description: 'v0.2.24 装配的 Release 工作流 Run ID'
+        type: string
+      attempt:
+        description: 'v0.2.24 装配的 Release 工作流 Attempt'
+        type: string
 
 permissions:
+  actions: read
   contents: write
 
 concurrency:
@@ -36,13 +49,21 @@ jobs:
       - name: 公开版本并验证所选通道
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
+          ASSEMBLY_ACTIONS_TOKEN: ${{ github.token }}
           INPUT_TAG: ${{ inputs.tag }}
+          ASSEMBLY_SOURCE: ${{ inputs.source }}
+          ASSEMBLY_DRAFT: ${{ inputs.draft }}
+          ASSEMBLY_RUN: ${{ inputs.run }}
+          ASSEMBLY_ATTEMPT: ${{ inputs.attempt }}
           PUBLISH_MODE: ${{ inputs.mode || (startsWith(github.ref_name, 'promote-stable/') && 'stable' || 'preserve-latest') }}
         run: |
           set -euo pipefail
           tag="${INPUT_TAG:-${GITHUB_REF_NAME#*/}}"
-          python3 .github/scripts/publish_release.py "$tag" \
-            --repo "$GITHUB_REPOSITORY" --mode "$PUBLISH_MODE" 2>&1 | tee /tmp/publish-diag.txt
+          set -- "$tag" --repo "$GITHUB_REPOSITORY" --mode "$PUBLISH_MODE"
+          if [[ -n "${ASSEMBLY_SOURCE:-}${ASSEMBLY_DRAFT:-}${ASSEMBLY_RUN:-}${ASSEMBLY_ATTEMPT:-}" ]]; then
+            set -- "$@" --assembly "${ASSEMBLY_SOURCE:-}" "${ASSEMBLY_DRAFT:-}" "${ASSEMBLY_RUN:-}" "${ASSEMBLY_ATTEMPT:-}"
+          fi
+          python3 .github/scripts/publish_release.py "$@" 2>&1 | tee /tmp/publish-diag.txt
 
       # 失败也公开诊断，但不掩盖上一发布步骤的退出码。
       - name: 公开诊断结果

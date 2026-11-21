@@ -18,6 +18,7 @@ import urllib.error
 
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / ".github/scripts"))
 SPEC = importlib.util.spec_from_file_location("publish_release", ROOT / ".github/scripts/publish_release.py")
 publisher = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(publisher)
@@ -374,6 +375,40 @@ class ArtifactSignatureTests(unittest.TestCase):
 
 
 class OfficialDistributionGateTests(unittest.TestCase):
+    def test_official_release_requires_exact_assembly_coordinates_before_authentication(self):
+        repo = "gzers/opencodex-desktop"
+        source = "a" * 40
+        invalid = ([], ["--assembly", "a" * 8, "12", "34", "1"],
+                   ["--assembly", source, "0", "34", "1"],
+                   ["--assembly", source, "12", "34", ""])
+        for coordinates in invalid:
+            with self.subTest(coordinates=coordinates), \
+                    patch.object(sys, "argv", ["publish_release.py", "v0.2.24", "--repo", repo, *coordinates]), \
+                    patch.object(publisher, "gh") as gh, \
+                    patch.object(sys, "stderr", new_callable=io.StringIO):
+                self.assertEqual(publisher.main(), 1)
+                gh.assert_not_called()
+
+    def test_workflow_actions_token_is_limited_to_runs_and_artifact_downloads(self):
+        from verify_release_draft_024 import GitHub
+
+        api = GitHub(actions_token="fixture-workflow")
+        with patch.dict(os.environ, {"GH_TOKEN": "fixture-release"}), \
+                patch.object(subprocess, "check_output", return_value=b"{}") as query, \
+                patch.object(subprocess, "run") as download, \
+                tempfile.TemporaryDirectory() as temporary:
+            api.json("actions/runs/34/attempts/1")
+            self.assertEqual(query.call_args.kwargs["env"]["GH_TOKEN"], "fixture-workflow")
+            api.json("releases/12")
+            self.assertIsNone(query.call_args.kwargs["env"])
+            api.json("contents/key?ref=" + "a" * 40)
+            self.assertIsNone(query.call_args.kwargs["env"])
+            root = Path(temporary)
+            api.download("actions/artifacts/56/zip", root / "report.zip")
+            self.assertEqual(download.call_args.kwargs["env"]["GH_TOKEN"], "fixture-workflow")
+            api.download("releases/assets/78", root / "latest.json")
+            self.assertIsNone(download.call_args.kwargs["env"])
+
     def test_new_official_distribution_cannot_reuse_the_old_maintained_runtime_publication_gate(self):
         with patch.object(publisher,"gh") as gh:
             with self.assertRaisesRegex(publisher.PublishError,"Official runtime distribution verification"):
